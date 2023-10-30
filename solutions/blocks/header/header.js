@@ -379,7 +379,7 @@ export default async function decorate(block) {
 
   // fetch nav content
   const navPath = getMetadata('nav') || '/nav';
-  const resp = await fetch(`${navPath}.plain.html`);
+  const resp = await fetch(`/${window.location.pathname.split('/')[1]}${navPath}.plain.html`);
 
   if (resp.ok) {
     const html = await resp.text();
