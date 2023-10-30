@@ -322,7 +322,7 @@ export async function fetchPlaceholders(prefix = 'default') {
   const loaded = window.placeholders[`${prefix}-loaded`];
   if (!loaded) {
     window.placeholders[`${prefix}-loaded`] = new Promise((resolve, reject) => {
-      fetch(`${prefix === 'default' ? '' : prefix}/solutions/placeholders.json`)
+      fetch(`/${window.location.pathname.split('/')[1]}${prefix === 'default' ? '' : prefix}/solutions/placeholders.json`)
         .then((resp) => {
           if (resp.ok) {
             return resp.json();
