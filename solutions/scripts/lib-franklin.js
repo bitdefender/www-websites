@@ -925,7 +925,7 @@ class TemplatesRegistry {
 export function setup() {
   window.hlx = window.hlx || {};
   window.hlx.RUM_MASK_URL = 'full';
-  window.hlx.codeBasePathp = `/${window.location.pathname.split('/')[1]}`;
+  window.hlx.codeBasePath = `/${window.location.pathname.split('/')[1]}`;
   window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
   window.hlx.patchBlockConfig = [];
   window.hlx.plugins = new PluginsRegistry();
