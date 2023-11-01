@@ -3,5 +3,5 @@ Please always provide the [GitHub issue(s)](../issues) your PR is for, as well a
 Fix #<gh-issue-id>
 
 Test URLs:
-- Before: https://main--bitdefender--hlxsites.hlx.page/solutions/
-- After: https://<branch>--bitdefender--hlxsites.hlx.page/solutions/
+- Before: https://main--bitdefender--hlxsites.hlx.page/zh-hk/solutions/
+- After: https://<branch>--bitdefender--hlxsites.hlx.page/zh-hk/solutions/

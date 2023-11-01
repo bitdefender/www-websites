@@ -150,12 +150,9 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
         const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || ''
         const newMatch = [match, datasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
-        // const [name] = parseParams(match.slice(1, -1));
         const [newName, ...params] = parseParams(newMatch);
-        // const datasetValue = getDatasetFromSection(parent);
         const renderer = nanoBlocks.get(newName.toLowerCase());
         if (renderer) {
-          // const datasetEntryValue = index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()];
           const element = mv ? renderer(mv, ...params) : renderer(...params);
           element.classList.add('nanoblock');
           const oldElement = node.parentNode;

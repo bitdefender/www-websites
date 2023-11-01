@@ -12,7 +12,7 @@ import {
   loadBlocks,
   loadCSS,
   getMetadata,
-  toClassName, decorateTranslations,
+  toClassName,
 } from './lib-franklin.js';
 
 import {
@@ -295,7 +295,6 @@ export function decorateMain(main) {
   decorateButtons(main);
   decorateIcons(main);
   decorateTags(main);
-  // decorateTranslations(main);
   decorateLinkedPictures(main);
   decorateSections(main);
   decorateBlocks(main);
