@@ -2,7 +2,7 @@ import { createNanoBlock, renderNanoBlocks, fetchProduct } from '../../scripts/u
 
 const fetchedProducts = [];
 
-createNanoBlock('price-comparison', (code, variant, label) => {
+createNanoBlock('priceComparison', (code, variant, label) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   const oldPriceElement = document.createElement('p');
@@ -266,5 +266,9 @@ export default function decorate(block) {
   }
 
   extractTextFromStrongTagToParent(block);
-  renderNanoBlocks(block);
+  console.log(block);
+  [...block.children[0].children].slice(1).forEach((item, idx) => {
+    renderNanoBlocks(item, undefined, idx);
+  });
+
 }

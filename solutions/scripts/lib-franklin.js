@@ -312,6 +312,41 @@ export async function decorateTags(element) {
   replaceTagsInNode(element);
 }
 
+export function decorateTranslations(element) {
+  const tagTypes = [
+    { regex: /\[#(.*?)#\]/g, className: 'dark-blue' },
+    { regex: /\[{(.*?)}\]/g, className: 'light-blue' },
+    { regex: /\[\$(.*?)\$\]/g, className: 'green' },
+  ];
+
+  function replaceTags(inputValue) {
+    let nodeValue = inputValue; // Create a local copy to work on
+    let replaced = false;
+
+    tagTypes.forEach((tagType) => {
+      let match = tagType.regex.exec(nodeValue);
+      while (match !== null) {
+        nodeValue = nodeValue.replace(match[0], `<span class="tag tag-${tagType.className}">${match[1]}</span>`);
+        replaced = true;
+        tagType.regex.lastIndex = 0; // Reset regex index
+        match = tagType.regex.exec(nodeValue);
+      }
+    });
+
+    return { nodeValue, replaced };
+  }
+
+  function replaceTagsInNode(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      node.childNodes.forEach(replaceTagsInNode);
+    }
+  }
+
+  replaceTagsInNode(element);
+}
+
 /**
  * Gets placeholders object.
  * @param {string} [prefix] Location of placeholders
