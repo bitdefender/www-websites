@@ -306,6 +306,26 @@ main .section {
   overflow: hidden;
 }
 
+main .section.margin-0 {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+main .section.link-right a {
+  float: right;
+}
+
+main .section.images-floated .default-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+main .section.images-floated .default-content-wrapper p {
+  max-width: 140px;
+}
+
 .default-content-wrapper {
   width: 100%;
   margin: 0 auto;
@@ -393,9 +413,66 @@ main .section.center .products .product-card {
   justify-self: center;
 }
 
+main .section.bitdefender-ferrari .default-content-wrapper {
+  background-color: #e4f2ff;
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+}
+
+main .section.bitdefender-ferrari .default-content-wrapper p {
+  padding: 0;
+  margin: 0;
+}
+
+main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
+  width: 25%;
+}
+
+main .section.bitdefender-ferrari .default-content-wrapper img {
+  width: 100%;
+  margin-right: 10%;
+  margin-bottom: -10px;
+}
+
+main .section.bitdefender-ferrari .default-content-wrapper h2 {
+  width: 50%;
+  font-size: 22px;
+  margin: 10px 0;
+}
+
+main .section.bitdefender-ferrari .default-content-wrapper h2 em {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  margin-top: 12px;
+  display: block;
+}
+
+main .section.bitdefender-ferrari .default-content-wrapper .button-container {
+  width: 15%;
+}
+
+main .section.bitdefender-ferrari .default-content-wrapper .button-container a {
+  background-color: transparent;
+  color: black;
+  border-color: black;
+}
+
+main .section.bitdefender-ferrari .default-content-wrapper .button-container a.button::after {
+  background-color: black;
+}
+
 @media (min-width: 768px) {
   main .section.center .products .product-card {
     min-width: 380px;
+  }
+
+  main .section.images-floated .default-content-wrapper {
+    flex-direction: row;
   }
 }
 
