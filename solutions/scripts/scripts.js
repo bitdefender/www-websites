@@ -175,8 +175,11 @@ export function getEnvironment(hostname, country) {
  */
 function setPageLanguage(param) {
   document.documentElement.lang = param.language;
-  createMetadata('nav', '/solutions/nav');
-  createMetadata('footer', '/solutions/footer');
+  const pages = window.location.pathname.split('/').filter(item => item);
+  const domain = pages.shift();
+  const basePath = pages.length > 1 ? `${domain}/solutions` : domain;
+  createMetadata('nav', `/${basePath}/nav`);
+  createMetadata('footer', `/${basePath}/footer`);
 }
 
 export function pushToDataLayer(event, payload) {

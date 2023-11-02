@@ -51,7 +51,7 @@ export default async function decorate(block) {
 
   // fetch footer content
   const footerPath = getMetadata('footer') || '/footer';
-  const resp = await fetch(`/${window.location.pathname.split('/')[1]}${footerPath}.plain.html`, window.location.pathname.endsWith('/footer') ? { cache: 'reload' } : {});
+  const resp = await fetch(`${footerPath}.plain.html`, window.location.pathname.endsWith('/footer') ? { cache: 'reload' } : {});
 
   if (resp.ok) {
     const html = await resp.text();
