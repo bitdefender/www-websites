@@ -313,17 +313,22 @@ main .section.margin-0 {
 
 main .section.link-right a {
   float: right;
+  display: flex;
 }
 
 main .section.images-floated .default-content-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-direction: column;
 }
 
 main .section.images-floated .default-content-wrapper p {
   max-width: 140px;
+  margin: 0 5px;
+}
+
+main .section.images-floated .default-content-wrapper p.button-container {
+  width: 100%;
 }
 
 .default-content-wrapper {
@@ -419,9 +424,8 @@ main .section.bitdefender-ferrari .default-content-wrapper {
   align-items: center;
   justify-content: space-between;
   background-color: #e4f2ff;
-  border-radius: 10px;
   overflow: hidden;
-  padding: 0;
+  padding: var(--body-padding);
 }
 
 main .section.bitdefender-ferrari .default-content-wrapper p {
@@ -431,6 +435,7 @@ main .section.bitdefender-ferrari .default-content-wrapper p {
 
 main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
   width: 100%;
+  order: 3;
 }
 
 main .section.bitdefender-ferrari .default-content-wrapper img {
@@ -438,24 +443,22 @@ main .section.bitdefender-ferrari .default-content-wrapper img {
 }
 
 main .section.bitdefender-ferrari .default-content-wrapper h2 {
-  width: 98%;
-  padding: 0 1%;
-  font-size: 22px;
-  margin: 10px 0;
+  order: 0;
 }
 
 main .section.bitdefender-ferrari .default-content-wrapper h2 em {
   font-style: normal;
   font-weight: normal;
-  font-size: 15px;
+  font-size: var(--body-font-size-s);
   margin-top: 12px;
   display: block;
 }
 
 main .section.bitdefender-ferrari .default-content-wrapper .button-container {
-  width: 98%;
-  padding: 0 1% 10px;
+  width: 100%;
   text-align: right;
+  order: 2;
+  margin-bottom: 10px;
 }
 
 main .section.bitdefender-ferrari .default-content-wrapper .button-container a {
@@ -479,23 +482,29 @@ main .section.bitdefender-ferrari .default-content-wrapper .button-container a.b
 
   main .section.bitdefender-ferrari .default-content-wrapper {
     flex-direction: row;
+    padding: 0;
+    border-radius: 10px;
+    overflow: hidden;
   }
 
   main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
-    width: 25%;
+    width: 200px;
+    order: 0;
   }
 
   main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) img {
-    margin-right: 10%;
+    margin-right: 10px;
 	  margin-bottom: -10px;
   }
 
   main .section.bitdefender-ferrari .default-content-wrapper h2 {
-    width: 50%;
+    width: 400px;
+    font-size: var(--heading-font-size-m);
 	}
 
   main .section.bitdefender-ferrari .default-content-wrapper .button-container {
-    width: 15%;
+    width: 150px;
+    margin-right: 15px;
     padding: 0;
     text-align: center;
   }
@@ -535,6 +544,27 @@ main .section.bitdefender-ferrari .default-content-wrapper .button-container a.b
     padding: 0 var(--section-desktop-padding);
   }
 
+  main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
+    width: 200px;
+  }
+
+  main .section.bitdefender-ferrari .default-content-wrapper h2 {
+    width: 540px;
+	}
+}
+
+@media (min-width: 1200px) {
+  main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
+    width: 350px;
+  }
+
+  main .section.bitdefender-ferrari .default-content-wrapper h2 {
+    width: 700px;
+	}
+
+  main .section.bitdefender-ferrari .default-content-wrapper .button-container {
+    margin-right: var(--section-desktop-padding);
+  }
 }
 
 @media (min-width: 1400px) {
@@ -705,7 +735,7 @@ p.info-button-container a.info-button.modal:hover {
   color: var(--link-color);
 }
 
-a.button::after, input[type="submit"]::after {
+a.button::after, input[type="submit"]::after, main .section.link-right a::after {
   content: '';
   width: 24px;
   height: 24px;
@@ -767,7 +797,7 @@ a.button:hover.secondary {
   color: var(--white-color)
 }
 
-a.button.modal {
+a.button.modal, main .section.link-right a {
   color: var(--link-color);
   font-weight: var(--font-weight-bold);
   background-color: transparent;
@@ -779,7 +809,7 @@ a.button.modal {
   text-overflow: ellipsis;
 }
 
-a.button.modal::after {
+a.button.modal::after, main .section.link-right a::after {
   background-color: var(--link-color);
   opacity: 1;
   margin: 0;
@@ -794,13 +824,13 @@ a.button:has(.icon)::after {
   opacity: 0;
 }
 
-a.button.modal:hover {
+a.button.modal:hover, main .section.link-right a:hover {
   color: var(--link-hover-color);
   text-decoration: none;
   transform: none;
 }
 
-a.button.modal:hover::after {
+a.button.modal:hover::after, main .section.link-right a:hover::after {
   transform: translateX(3px);
   background-color: var(--link-hover-color);
 }
