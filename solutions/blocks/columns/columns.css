@@ -124,6 +124,10 @@
     top: 15%;
     border-radius: 5px;
   }
+
+  .columns.highlight-text.black.imageleft {
+    left: 2.5%;
+  }
 }
 
 @media (min-width: 992px) { /* desktop */
@@ -145,9 +149,13 @@
     margin: 0 auto;
   }
 
-  .columns.highlight-text.black { 
+  .columns.highlight-text.black {
     right: 10%;
     top: 10%;
+  }
+
+  .columns.highlight-text.black.imageleft {
+    left: 10%;
   }
 }
 
@@ -233,7 +241,7 @@
   padding-top: 1px;
 }
 
-.columns.vpn-presentation .button-container, 
+.columns.vpn-presentation .button-container,
 .columns.vpn-presentation .info-button-container{
   display: inline-block;
   padding-right: 13px;
