@@ -3,7 +3,7 @@ import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
-  fetchProduct, getDatasetFromSection,
+  fetchProduct,
 } from '../../scripts/utils/utils.js';
 
 /**
