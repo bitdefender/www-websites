@@ -1,5 +1,13 @@
+export function getDefaultLanguage() {
+  const localisationList = ['au', 'zh-hk', 'zh-tw'];
+  const currentPathUrl = window.location.pathname;
+  const foundLanguage = localisationList.find((item) => currentPathUrl.indexOf(`/${item}/`) !== -1);
+  return foundLanguage.replace('zh-','') || 'site';
+}
+
 const cacheResponse = new Map();
-const FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
+const siteName = getDefaultLanguage();
+const FETCH_URL = `https://www.bitdefender.${siteName === 'au' ? 'com.au' : 'com'}/site/Store/ajax`;
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
@@ -47,6 +55,7 @@ async function findProductVariant(cachedResponse, variant) {
  * @param code The product code
  * @param variant The product variant
  * @returns {Promise<*>}
+ * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y') {
   const data = new FormData();
@@ -54,11 +63,20 @@ export async function fetchProduct(code = 'av', variant = '1u-1y') {
     ev: 1,
     product_id: code,
     config: {
+      force_region: '51',
       extra_params: {
         pid: null,
       },
     },
   }));
+
+  if (siteName === 'hk' || siteName === 'tw') {
+    // append force_region for hk and tw
+    const newData = JSON.parse(data.get('data'));
+    newData.config.force_region = siteName === 'hk' ? '52' : '52';
+
+    data.set('data', JSON.stringify(newData));
+  }
 
   if (cacheResponse.has(code)) {
     return findProductVariant(cacheResponse.get(code), variant);
