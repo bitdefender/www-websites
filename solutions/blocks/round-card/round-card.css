@@ -11,8 +11,14 @@
     padding: 40px 23px 2pc;
 }
 
-.round-card-container .inner-wrapper > div:nth-child(1) {
-    width: 50%;
+/* title */
+.round-card-container .inner-wrapper > div:nth-child(2) > *:nth-child(2) {
+    max-width: 150px;
+}
+
+/* first paragraph */
+.round-card-container .inner-wrapper > div:nth-child(2) > p:nth-child(3) {
+    margin-top: 40px;
 }
 
 .round-card-container .inner-wrapper > div:last-child {
@@ -52,6 +58,9 @@
     /* tablet */
     .round-card-container .inner-wrapper p {
         font-size: 18px;
+    }
+    .round-card-container .inner-wrapper > div:nth-child(2) {
+        max-width: calc(100% - 280px);
     }
     .round-card-container .inner-wrapper > div:last-child {
         width: 325px;

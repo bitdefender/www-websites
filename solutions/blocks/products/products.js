@@ -371,9 +371,6 @@ export default function decorate(block) {
 
       const mv = new ProductCard(col);
 
-      console.log('idxParent', idxParent);
-      console.log('idxChild', idxChild);
-
       renderNanoBlocks(col, mv, idxParent);
 
       // listen to ProductCard change and update the buttons pointing to the store url
