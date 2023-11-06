@@ -73,7 +73,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y') {
   if (siteName === 'hk' || siteName === 'tw') {
     // append force_region for hk and tw
     const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = siteName === 'hk' ? '52' : '52';
+    newData.config.force_region = siteName === 'hk' ? '51' : '52';
 
     data.set('data', JSON.stringify(newData));
   }
