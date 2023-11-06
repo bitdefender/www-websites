@@ -169,6 +169,10 @@ export function getEnvironment(hostname, country) {
   return 'dev';
 }
 
+export function getDomain() {
+  return window.location.pathname.split('/').filter(item => item)[0];
+}
+
 /**
  * Sets the page language.
  * @param {Object} param The language and country
@@ -176,7 +180,7 @@ export function getEnvironment(hostname, country) {
 function setPageLanguage(param) {
   document.documentElement.lang = param.language;
   const pages = window.location.pathname.split('/').filter(item => item);
-  const domain = pages.shift();
+  const domain = pages[0];
   const basePath = pages.length > 1 ? `${domain}/solutions` : domain;
   createMetadata('nav', `/${basePath}/nav`);
   createMetadata('footer', `/${basePath}/footer`);

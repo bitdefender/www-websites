@@ -12,9 +12,12 @@
   <script src="/solutions/scripts/scripts.js" type="module" crossorigin="use-credentials"></script>
   <script type="module">
     import { decorateButtons, sampleRUM } from '/solutions/scripts/lib-franklin.js';
-  
+    import { getDomain } from '/solutions/scripts/scripts.js';
+
+    const domain = getDomain();
+
     window.addEventListener('load', async () => {
-      const response = await fetch('/solutions/404.plain.html');
+      const response = await fetch(`/${domain}/solutions/404.plain.html`);
       if (response.ok) {
         const htmlContent = await response.text();
         const specialSection = document.querySelector('.link-section');
@@ -23,7 +26,7 @@
       }
       sampleRUM('404', { source: document.referrer, target: window.location.href });
     });
-  </script>  
+  </script>
   <link rel="stylesheet" href="/solutions/styles/styles.css">
   <style>
 
@@ -67,7 +70,7 @@
       font-weight: var(--font-weight-bold);
     }
 
-   
+
 /* Default styles (mobile-first) */
 
 main .link-section {
@@ -91,10 +94,10 @@ main .link-section {
 
 .link-section > div:last-child {
   margin-top: 1rem;
-  column-count: 1; 
+  column-count: 1;
   width: 100%;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center;
 }
 
@@ -126,7 +129,7 @@ main .link-section {
 
   .link-section > div:last-child {
     column-count: 2;
-    display: block; 
+    display: block;
     align-items: initial;
   }
 }
@@ -146,7 +149,7 @@ main .link-section {
       <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
     </div>
     <div class="link-section">
-    </div>  
+    </div>
   </main>
   <footer></footer>
 </body>

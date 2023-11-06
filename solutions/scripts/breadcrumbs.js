@@ -5,14 +5,14 @@ import {
 } from './utils/utils.js';
 
 // eslint-disable-next-line import/no-cycle
-import { decorateBlockWithRegionId } from './scripts.js';
+import {decorateBlockWithRegionId, getDomain} from './scripts.js';
 
 function prependSlash(path) {
   return path.startsWith('/') ? path : `/${path}`;
 }
 
-function getName(pageIndex, path, part, current) {
-  const pg = pageIndex.find((page) => page.path === path);
+function getName(pageIndex, path, part, current, domain) {
+  const pg = pageIndex.find((page) => page.path ===  path);
   if (pg && pg.breadcrumbtitle && pg.breadcrumbtitle !== '0') {
     return pg.breadcrumbtitle;
   }
@@ -40,7 +40,8 @@ async function createBreadcrumbs(container) {
   const { pathname } = window.location;
   const pathSeparator = '/';
   // split pathname into parts add / at the end and remove empty parts
-  const pathSplit = pathname.split('/').reduce((acc, curr, index, array) => {
+  const domain = getDomain();
+  const pathSplit = pathname.split('/').filter(item => item !== domain).reduce((acc, curr, index, array) => {
     if (index < array.length - 1) {
       acc.push(`${curr}/`);
     } else if (curr !== '') {
@@ -57,19 +58,19 @@ async function createBreadcrumbs(container) {
   const breadcrumbs = [
     {
       name: 'Home',
-      url_path: '/',
+      url_path: `/${domain}/`,
     },
     ...pathSplit.slice(1, -1).map((part, index) => {
       const url = urlForIndex(index);
       return {
-        name: getName(pageIndex, url, part, false),
-        url_path: url,
+        name: getName(pageIndex, `/${domain}${url}`, part, false, domain),
+        url_path: `/${domain}${url}`,
       };
     }),
     {
       // get the breadcrumb title from the metadata; if the metadata does not contain it,
       // the last part of the path is used as the breadcrumb title
-      name: getName(pageIndex, pathname, pathSplit[pathSplit.length - 1], true),
+      name: getName(pageIndex, pathname, pathSplit[pathSplit.length - 1], true, domain),
     },
   ];
 

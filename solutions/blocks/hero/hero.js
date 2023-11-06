@@ -20,8 +20,12 @@ function buildHeroBlock(element) {
     const subSection = document.querySelector('div.hero div');
     subSection.classList.add('hero-content');
 
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    document.querySelector('div.hero div div:first-child').prepend(breadcrumb);
+    const isHomePage = window.location.pathname.split('/').filter(item => item).length === 1;
+
+    if (!isHomePage) {
+      const breadcrumb = createTag('div', { class: 'breadcrumb' });
+      document.querySelector('div.hero div div:first-child').prepend(breadcrumb);
+    }
 
     const pictureEl = document.createElement('div');
     pictureEl.classList.add('hero-picture');
