@@ -191,7 +191,7 @@ function renderOldPrice(mv, text = '', monthly = '') {
  * @param monthly Show the monthly price if equal to 'monthly'
  * @returns Root node of the nanoblock
  */
-function renderPrice(mv, text = '', monthly = '') {
+function renderPrice(mv, text = '', monthly = '', monthTranslation = 'mo') {
   // TODO simplify CSS
   const root = createTag(
     'div',
@@ -206,9 +206,9 @@ function renderPrice(mv, text = '', monthly = '') {
   mv.subscribe(() => {
     if (monthly.toLowerCase() === 'monthly') {
       if (mv.model.discountedPrice) {
-        priceElt.innerHTML = `${text} ${mv.model.discountedMonthlyPrice} ${mv.model.currency} <sup>/mo</sup>`;
+        priceElt.innerHTML = `${text} ${mv.model.discountedMonthlyPrice} ${mv.model.currency} <sup>/${monthTranslation}</sup>`;
       } else {
-        priceElt.innerHTML = `${text} ${mv.model.monthlyBasePrice} ${mv.model.currency} <sup>/mo</sup>`;
+        priceElt.innerHTML = `${text} ${mv.model.monthlyBasePrice} ${mv.model.currency} <sup>/${monthTranslation}</sup>`;
       }
     } else if (mv.model.discountedPrice) {
       priceElt.innerHTML = `${text} ${mv.model.discountedPrice} ${mv.model.currency}`;
