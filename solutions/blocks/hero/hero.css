@@ -222,7 +222,6 @@ main .hero img {
 }
 
 main .hero .hero-picture picture img {
-  position: absolute;
   display: none;
   padding-left: 200px;
 }
@@ -418,8 +417,8 @@ main .hero .hero-awards li::after {
 
   main .hero .hero-picture {
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: -8em;
+    bottom: auto;
     left: 0;
     right: 0;
   }
