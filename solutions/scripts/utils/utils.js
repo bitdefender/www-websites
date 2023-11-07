@@ -63,18 +63,21 @@ export async function fetchProduct(code = 'av', variant = '1u-1y') {
     ev: 1,
     product_id: code,
     config: {
-      force_region: '51',
       extra_params: {
         pid: null,
       },
     },
   }));
 
-  if (siteName === 'hk' || siteName === 'tw') {
+  if ((siteName === 'hk' || siteName === 'tw')) {
     // append force_region for hk and tw
     const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = siteName === 'hk' ? '41' : '52';
-
+    if (code === 'psp' || code === 'dip') {
+      newData.config.force_region = '16';
+    } else {
+      newData.config.force_region = siteName === 'hk' ? '41' : '52';
+    }
+    
     data.set('data', JSON.stringify(newData));
   }
 
