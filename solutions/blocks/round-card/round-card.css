@@ -16,11 +16,6 @@ main .section.round-card-container.mt-n60 {
     padding: 40px 23px 2pc;
 }
 
-/* title */
-.round-card-container .inner-wrapper > div:nth-child(2) > *:nth-child(2) {
-    max-width: 150px;
-}
-
 /* first paragraph */
 .round-card-container .inner-wrapper > div:nth-child(2) > p:nth-child(3) {
     margin-top: 40px;
@@ -34,11 +29,6 @@ main .section.round-card-container.mt-n60 {
     width: 225px;
     height: 225px;
     overflow: hidden;
-}
-
-.round-card-container .icon-apple {
-    width: 60px;
-    transform: none;
 }
 
 .round-card-container img {
@@ -59,17 +49,26 @@ main .section.round-card-container.mt-n60 {
     text-indent: -999999px;
 }
 
+.round-card-container .inner-wrapper > div:nth-child(2) > * {
+    max-width: 150px;
+}
+
 @media(min-width: 767px) {
     /* tablet */
-    .round-card-container .inner-wrapper p {
-        font-size: 18px;
-    }
     .round-card-container .inner-wrapper > div:nth-child(2) {
         max-width: calc(100% - 280px);
     }
+
+    .round-card-container .inner-wrapper > div:nth-child(2) > * {
+        max-width: unset;
+    }
+
+    .round-card-container .inner-wrapper p {
+        font-size: 18px;
+    }
     .round-card-container .inner-wrapper > div:last-child {
-        width: 325px;
-        height: 325px;
+        width: 285px;
+        height: 285px;
     }
     .round-card-container .inner-wrapper > a:first-child:hover ~ div p.button-container > a::after {
         transform: translateX(5px);
