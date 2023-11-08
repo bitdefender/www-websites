@@ -1,5 +1,5 @@
 export function getDefaultLanguage() {
-  const localisationList = ['au', 'zh-hk', 'zh-tw'];
+  const localisationList = ['zh-hk', 'zh-tw'];
   const currentPathUrl = window.location.pathname;
   const foundLanguage = localisationList.find((item) => currentPathUrl.indexOf(`/${item}/`) !== -1);
   return foundLanguage.replace('zh-','') || 'site';
@@ -7,7 +7,7 @@ export function getDefaultLanguage() {
 
 const cacheResponse = new Map();
 const siteName = getDefaultLanguage();
-const FETCH_URL = `https://www.bitdefender.${siteName === 'au' ? 'com.au' : 'com'}/site/Store/ajax`;
+const FETCH_URL = `https://www.bitdefender.com/site/Store/ajax`;
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
@@ -77,7 +77,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y') {
     } else {
       newData.config.force_region = siteName === 'hk' ? '41' : '52';
     }
-    
+
     data.set('data', JSON.stringify(newData));
   }
 

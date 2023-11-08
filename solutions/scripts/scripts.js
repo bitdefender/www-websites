@@ -23,10 +23,10 @@ const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 const TRACKED_PRODUCTS = [];
 
 export const SUPPORTED_LANGUAGES = ['en'];
-export const DEFAULT_LANGUAGE = 'en';
+export const DEFAULT_LANGUAGE = 'zh-hk';
 
-export const SUPPORTED_COUNTRIES = ['au'];
-export const DEFAULT_COUNTRY = 'au';
+export const SUPPORTED_COUNTRIES = ['zh-hk'];
+export const DEFAULT_COUNTRY = 'zh-hk';
 
 export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
 
