@@ -417,7 +417,7 @@ main .hero .hero-awards li::after {
 
   main .hero .hero-picture {
     position: absolute;
-    top: -8em;
+    top: 0;
     bottom: auto;
     left: 0;
     right: 0;
