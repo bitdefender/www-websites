@@ -365,13 +365,13 @@ createNanoBlock('lowestPrice', renderLowestPrice);
  */
 export default function decorate(block) {
   [...block.children].forEach((row, idxParent) => {
-    [...(row.children)].forEach((col, idxChild) => {
+    [...(row.children)].forEach((col) => {
       col.classList.add('product-card');
       block.appendChild(col);
 
       const mv = new ProductCard(col);
 
-      renderNanoBlocks(col, mv, idxParent);
+      renderNanoBlocks(col, mv, 'products');
 
       // listen to ProductCard change and update the buttons pointing to the store url
       mv.subscribe((card) => {
