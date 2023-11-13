@@ -180,7 +180,7 @@ function findClosestParentRowIndex(child, type, parent = child.parentNode) {
  */
 export function renderNanoBlocks(parent = document.body, mv = undefined, type) {
   const regex = /{([^}]+)}/g;
-  findTextNodes(parent).forEach((node, parIdx) => {
+  findTextNodes(parent).forEach((node) => {
     const text = node.textContent.trim();
     const matches = text.match(regex);
     if (matches) {
