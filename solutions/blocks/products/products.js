@@ -55,7 +55,7 @@ function toModel(productCode, variantId, v) {
       ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
     currency: v.currency_label,
-    url: `https://www.bitdefender.com.au/site/Store/buy/${productCode}/${v.variation.dimension_value}/${v.variation.years}/`,
+    url: `https://www.bitdefender.com/site/Store/buy/${productCode}/${v.variation.dimension_value}/${v.variation.years}/`,
   };
 }
 
@@ -376,7 +376,7 @@ export default function decorate(block) {
       // listen to ProductCard change and update the buttons pointing to the store url
       mv.subscribe((card) => {
         col.querySelectorAll('.button-container a').forEach((link) => {
-          if (link && link.href.startsWith('https://www.bitdefender.com.au/site/Store/buy')) {
+          if (link && link.href.startsWith('https://www.bitdefender.com/site/Store/buy')) {
             link.href = card.url;
           }
         });
