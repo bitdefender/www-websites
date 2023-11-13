@@ -16,7 +16,7 @@ import {
 } from './lib-franklin.js';
 
 import {
-  createTag, getDefaultLanguage,
+  createTag, getDefaultLanguage, localisationList,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
