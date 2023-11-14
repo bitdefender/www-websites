@@ -155,41 +155,20 @@ function parseParams(params) {
   return result;
 }
 
-function findClosestParentRowIndex(child, type, parent = child.parentNode) {
-  let condition;
-
-  switch (type) {
-    case 'products':
-      condition = parent.dataset.blockName === 'products';
-      break;
-
-    case 'product-comparison-table':
-      condition =  parent.role === 'row' || child.role === 'row';
-  }
-
-  if (parent && condition) {
-    return Array.prototype.indexOf.call(parent.children, child);
-  }
-
-  return findClosestParentRowIndex(parent, type);
-}
-
 /**
  * Renders nano blocks
  * @param parent The parent element
  */
-export function renderNanoBlocks(parent = document.body, mv = undefined, type) {
+export function renderNanoBlocks(parent = document.body, mv = undefined, index = undefined) {
   const regex = /{([^}]+)}/g;
   findTextNodes(parent).forEach((node) => {
     const text = node.textContent.trim();
     const matches = text.match(regex);
     if (matches) {
-      matches.forEach((match, idx) => {
-        const index = type ? findClosestParentRowIndex(node, type) : undefined;
-
+      matches.forEach((match) => {
         const [name] = parseParams(match.slice(1, -1));
         const datasetValue = getDatasetFromSection(parent);
-        const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index}`] : datasetValue[name.toLowerCase()]) || ''
+        const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || ''
         const newMatch = [match, datasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
         const [newName, ...params] = parseParams(newMatch);

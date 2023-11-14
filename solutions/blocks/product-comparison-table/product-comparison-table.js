@@ -266,5 +266,9 @@ export default function decorate(block) {
   }
 
   extractTextFromStrongTagToParent(block);
-  renderNanoBlocks(block, undefined, 'product-comparison-table');
+  console.log(block);
+  [...block.children[0].children].slice(1).forEach((item, idx) => {
+    renderNanoBlocks(item, undefined, idx);
+  });
+
 }
