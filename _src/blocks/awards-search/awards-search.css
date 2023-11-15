@@ -102,8 +102,8 @@ main .section .awards-search .awards-results-container .award-item-container h2 
     width: 1.5rem;
     height: 1.3125rem;
     /* stylelint-disable-next-line property-no-vendor-prefix */
-    -webkit-mask: url('/solutions/icons/arrow-right.svg');
-    mask: url('/solutions/icons/arrow-right.svg');
+    -webkit-mask: url('/_src/icons/arrow-right.svg');
+    mask: url('/_src/icons/arrow-right.svg');
     background-color: var(--read-more-text-color);
     display: inline-block;
     opacity: 1;

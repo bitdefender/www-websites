@@ -325,7 +325,7 @@ export async function fetchPlaceholders(prefix = 'default') {
   const loaded = window.placeholders[`${prefix}-loaded`];
   if (!loaded) {
     window.placeholders[`${prefix}-loaded`] = new Promise((resolve, reject) => {
-      fetch(`/${window.location.pathname.split('/')[1]}${prefix === 'default' ? '' : prefix}/solutions/placeholders.json`)
+      fetch(`/${window.location.pathname.split('/')[1]}${prefix === 'default' ? '' : prefix}/_src/placeholders.json`)
         .then((resp) => {
           if (resp.ok) {
             return resp.json();
@@ -934,7 +934,7 @@ export function setup() {
   window.hlx.plugins = new PluginsRegistry();
   window.hlx.templates = new TemplatesRegistry();
 
-  const scriptEl = document.querySelector('script[src$="/solutions/scripts/scripts.js"]');
+  const scriptEl = document.querySelector('script[src$="/_src/scripts/scripts.js"]');
   if (scriptEl) {
     try {
       [window.hlx.codeBasePath] = new URL(scriptEl.src).pathname.split('/scripts/scripts.js');

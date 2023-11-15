@@ -456,7 +456,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 
 .two-columns .left-col p a.info-button.modal::before {
-  content: url("/solutions/icons/user-guide-white.svg");
+  content: url("/_src/icons/user-guide-white.svg");
   color: white;
   padding-right: 8px;
 }

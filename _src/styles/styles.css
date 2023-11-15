@@ -759,7 +759,7 @@ a.info-button.modal {
 }
 
 a.info-button.modal::before {
-  content: url('/solutions/icons/user-guide.svg');
+  content: url('/_src/icons/user-guide.svg');
   display: flex;
 }
 
@@ -779,8 +779,8 @@ a.button::after, input[type="submit"]::after, main .section.link-right a::after 
   width: 24px;
   height: 24px;
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-mask:url('/solutions/icons/arrow-right.svg');
-  mask: url('/solutions/icons/arrow-right.svg');
+  -webkit-mask:url('/_src/icons/arrow-right.svg');
+  mask: url('/_src/icons/arrow-right.svg');
   background-color: var(--button-link-color);
   display: inline-block;
   transition: all .2s cubic-bezier(.4,0,.2,1);
@@ -1179,7 +1179,7 @@ main .section.blue a.button.modal::after {
 
 @media (min-width: 992px) {
   main .section.circle {
-    background-image: url("/solutions/icons/blue-circle.svg");
+    background-image: url("/_src/icons/blue-circle.svg");
     background-position: top 0 right 60%;
     background-repeat: no-repeat;
     background-size: auto 100%;

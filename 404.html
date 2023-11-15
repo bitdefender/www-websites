@@ -9,15 +9,15 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:title" content="Page not found">
-  <script src="/solutions/scripts/scripts.js" type="module" crossorigin="use-credentials"></script>
+  <script src="/_src/scripts/scripts.js" type="module" crossorigin="use-credentials"></script>
   <script type="module">
-    import { decorateButtons, sampleRUM } from '/solutions/scripts/lib-franklin.js';
-    import { getDomain } from '/solutions/scripts/scripts.js';
+    import { decorateButtons, sampleRUM } from '/_src/scripts/lib-franklin.js';
+    import { getDomain } from '/_src/scripts/scripts.js';
 
     const domain = getDomain();
 
     window.addEventListener('load', async () => {
-      const response = await fetch(`/${domain}/solutions/404.plain.html`);
+      const response = await fetch(`/${domain}/_src/404.plain.html`);
       if (response.ok) {
         const htmlContent = await response.text();
         const specialSection = document.querySelector('.link-section');
@@ -27,7 +27,7 @@
       sampleRUM('404', { source: document.referrer, target: window.location.href });
     });
   </script>
-  <link rel="stylesheet" href="/solutions/styles/styles.css">
+  <link rel="stylesheet" href="/_src/styles/styles.css">
   <style>
 
     :root {
@@ -135,7 +135,7 @@ main .link-section {
 }
 
   </style>
-  <link rel="stylesheet" href="/solutions/styles/lazy-styles.css">
+  <link rel="stylesheet" href="/_src/styles/lazy-styles.css">
 </head>
 
 <body>

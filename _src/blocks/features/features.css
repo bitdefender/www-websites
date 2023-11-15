@@ -90,7 +90,7 @@
   width: 14px;
   height: 8px;
   margin: 0 3px;
-  background: url("/solutions/icons/tabs_arrow.svg") no-repeat;
+  background: url("/_src/icons/tabs_arrow.svg") no-repeat;
   background-size: 100%;;
   transform: rotate(180deg);
   transition: all .3s linear;

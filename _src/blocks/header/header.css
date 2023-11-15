@@ -352,8 +352,8 @@ header a.button:hover span.button-text {
   width: 24px;
   height: 24px;
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-mask:url('/solutions/icons/arrow-right.svg');
-  mask: url('/solutions/icons/arrow-right.svg');
+  -webkit-mask:url('/_src/icons/arrow-right.svg');
+  mask: url('/_src/icons/arrow-right.svg');
   background-color: var(--button-link-color);
   display: inline-block;
   transition: all .2s cubic-bezier(.4,0,.2,1);
@@ -901,8 +901,8 @@ header a.button:hover span.button-text {
     width: 24px;
     height: 24px;
     /* stylelint-disable-next-line property-no-vendor-prefix */
-    -webkit-mask:url('/solutions/icons/arrow-right.svg');
-    mask: url('/solutions/icons/arrow-right.svg');
+    -webkit-mask:url('/_src/icons/arrow-right.svg');
+    mask: url('/_src/icons/arrow-right.svg');
     background-color: var(--button-link-color);
     display: inline-block;
     transition: all .2s cubic-bezier(.4,0,.2,1);
