@@ -208,7 +208,7 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   const handleIndex = async (offset) => {
     const sheetParam = sheet ? `&sheet=${sheet}` : '';
 
-    const resp = await fetch(`/${window.location.pathname.split('/')[1]}/_src/${indexFile}.json?limit=${pageSize}&offset=${offset}${sheetParam}`);
+    const resp = await fetch(`/${window.location.pathname.split('/')[1]}/${indexFile}.json?limit=${pageSize}&offset=${offset}${sheetParam}`);
     const json = await resp.json();
 
     const newIndex = {
