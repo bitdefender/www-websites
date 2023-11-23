@@ -162,7 +162,7 @@ export function getEnvironment(hostname, country) {
   if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
     return 'stage';
   }
-  if (hostname.includes(`.${country}`)) {
+  if (hostname.includes(`www.bitdefender`)) {
     return 'prod';
   }
   return 'dev';
