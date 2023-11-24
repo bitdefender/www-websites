@@ -525,7 +525,6 @@ export function generateHrefLang() {
     const lastCharFromHref = window.location.pathname.slice(-1);
     const isCurrentIndexPage = lastCharFromHref === '/';
 
-    // let href = `${baseUrl}${window.location.pathname.replace(/\/us\/en/, '')}${suffix}`;
     let href = `${baseUrl}${window.location.pathname.replace(/\/us\/en/, '')}`;
     href = isCurrentIndexPage && !hasIndexPages && !isHomePage ? href.slice(0, -1) : href;
     href = `${href}${suffix}`;
