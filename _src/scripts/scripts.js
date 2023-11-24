@@ -29,6 +29,27 @@ export const DEFAULT_COUNTRY = getDefaultLanguage();
 
 export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
 
+const hreflangMap = new Map([
+  ['en-ro', { baseUrl: 'https://www.bitdefender.ro', pageType: 'html' }],
+  ['de', { baseUrl: 'https://www.bitdefender.de', pageType: 'html' }],
+  ['sv', { baseUrl: 'https://www.bitdefender.se', pageType: 'html' }],
+  ['pt', { baseUrl: 'https://www.bitdefender.pt', pageType: 'html' }],
+  ['en-sv', { baseUrl: 'https://www.bitdefender.se', pageType: 'html' }],
+  ['pt-BR', { baseUrl: 'https://www.bitdefender.com.br', pageType: 'html' }],
+  ['en', { baseUrl: 'https://www.bitdefender.com', pageType: 'html' }],
+  ['it', { baseUrl: 'https://www.bitdefender.it', pageType: 'html' }],
+  ['fr', { baseUrl: 'https://www.bitdefender.fr', pageType: 'html' }],
+  ['nl-BE', { baseUrl: 'https://www.bitdefender.br', pageType: 'html' }],
+  ['es', { baseUrl: 'https://www.bitdefender.es', pageType: 'html' }],
+  ['en-AU', { baseUrl: 'https://www.bitdefender.com.au', pageType: '', hasIndexPages: true }],
+  ['ro', { baseUrl: 'https://www.bitdefender.ro', pageType: 'html' }],
+  ['nl', { baseUrl: 'https://www.bitdefender.nl', pageType: 'html' }],
+  ['en-GB', { baseUrl: 'https://www.bitdefender.co.uk', pageType: 'html' }],
+  ['zh-hk', { baseUrl: 'https://www.bitdefender.com/zh-hk', pageType: '', hasIndexPages: true }],
+  ['zh-tw', { baseUrl: 'https://www.bitdefender.com/zh-tw', pageType: '', hasIndexPages: true }],
+  ['x-default', { baseUrl: 'https://www.bitdefender.com', pageType: 'html' }],
+]);
+
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
   url: '../plugins/rum-conversion/src/index.js',
@@ -490,6 +511,32 @@ async function loadEager(doc) {
   }
 }
 
+// todo remove export after having a clear path for the overall unit testing strategy of the all page
+export function generateHrefLang() {
+  hreflangMap.forEach(({ baseUrl, pageType, hasIndexPages }, key) => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'alternate');
+    link.setAttribute('hreflang', key);
+
+    const foundLanguage = localisationList.find((item) => baseUrl.indexOf(`/${item}/`) !== -1 || window.location.pathname.indexOf(`/${item}/`) !== -1);
+    const isHomePage = window.location.pathname === `/${foundLanguage}/`;
+
+    let suffix = `${!isHomePage && pageType ? `.${pageType}` : ''}`;
+    const lastCharFromHref = window.location.pathname.slice(-1);
+    const isCurrentIndexPage = lastCharFromHref === '/';
+
+    // let href = `${baseUrl}${window.location.pathname.replace(/\/us\/en/, '')}${suffix}`;
+    let href = `${baseUrl}${window.location.pathname.replace(/\/us\/en/, '')}`;
+    href = isCurrentIndexPage && !hasIndexPages && !isHomePage ? href.slice(0, -1) : href;
+    href = `${href}${suffix}`;
+
+    href = href.replace(`/${foundLanguage}`, '');
+
+    link.setAttribute('href', href);
+    document.head.appendChild(link);
+  });
+}
+
 /**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
@@ -514,6 +561,20 @@ async function loadLazy(doc) {
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
+
+  Object.entries(hreflangMap).forEach(([key, value]) => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'alternate');
+    link.setAttribute('hreflang', key);
+
+    let href = `${value}${window.location.pathname.replace(/\/us\/en/, '')}`;
+    const foundLanguage = localisationList.find((item) => value.indexOf(`/${item}/`) !== -1 || window.location.pathname.indexOf(`/${item}/`) !== -1);
+
+    href = href.replace(`/${foundLanguage}`, '');
+
+    link.setAttribute('href', href);
+    document.head.appendChild(link);
+  });
 }
 
 /**
