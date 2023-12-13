@@ -57,10 +57,9 @@ function decorateBuyLink(buyLink, onSelectorClass) {
 }
 
 export default function decorate(block, options) {
-  const metaData = block.closest('.section').dataset;
   const {
     product, conditionText, saveText,
-  } = metaData;
+  } = options.metadata;
 
   const [richText, mainDesktopImage] = block.children;
 
