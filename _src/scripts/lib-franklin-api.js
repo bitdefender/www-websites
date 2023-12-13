@@ -67,21 +67,22 @@ const loadCSS = async (shadowRoot, offer) => {
 /**
  * @param {ShadowRoot} shadowRoot
  * @param {string} offer
+ * @param {object} options
  * @returns {Promise<void>}
  * load the block HTML
  */
 const loadJS = async (shadowRoot, offer) => {
   const logicModule = await import(offer);
-  logicModule.default(shadowRoot, parseMetadata(shadowRoot));
+  logicModule.default(shadowRoot, {...options, metadata: parseMetadata(shadowRoot)});
 };
 
-export async function loadComponent(offer, block, selector)  {
+export async function loadComponent(offer, block, options, selector)  {
   const origin = new URL(offer).origin;
   const container = selector ? document.querySelector(selector) : document.createElement('div');
   const shadowRoot = container.attachShadow({ mode: 'open' });
 
   loadHTML(shadowRoot, offer);
   loadCSS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.css`);
-  loadJS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.js`);
+  loadJS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.js`, options);
   return container;
 }
