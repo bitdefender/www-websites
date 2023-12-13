@@ -81,8 +81,8 @@ export async function loadComponent(offer, block, options, selector)  {
   const container = selector ? document.querySelector(selector) : document.createElement('div');
   const shadowRoot = container.attachShadow({ mode: 'open' });
 
-  loadHTML(shadowRoot, offer);
+  await loadHTML(shadowRoot, offer);
   loadCSS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.css`);
-  loadJS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.js`, options);
+  await loadJS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.js`, options);
   return container;
 }
