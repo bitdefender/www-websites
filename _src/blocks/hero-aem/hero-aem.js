@@ -24,7 +24,7 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
     <div class="hero-aem__price mt-3">
       <div>
           <span class="prod-oldprice">${price}</span>
-          <span class="prod-save">${saveText} <span class="save-${onSelectorClass}"></span></span>
+          <span class="prod-save">${saveText} <span class="save"></span></span>
       </div>
       <div class="newprice-container mt-2">
         <span class="prod-newprice">${discountedPrice}</span>
@@ -100,7 +100,7 @@ export default function decorate(block, options) {
     decorateBuyLink(buyLink, onSelectorClass);
 
     const pricesBox = createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears);
-    block.innerHTML.appendChild(pricesBox)
+    buyLink.appendChild(pricesBox);
   }
 
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
