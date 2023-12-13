@@ -12,17 +12,22 @@ function productAliases(name) {
   return newName;
 }
 
-function createPricesElement(onSelectorClass, conditionText, saveText) {
+async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears) {
+  let [storeProduct] = await storeOBJ.getProducts([new ProductInfo(prodName, "consumer")]);
+  let storeOption = storeProduct.getOption(prodUsers, prodYears);
+  let price = storeOption.getPrice();
+  let discountedPrice = storeOption.getDiscountedPrice();
+
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
     <div class="hero-aem__price mt-3">
       <div>
-          <span class="prod-oldprice oldprice-${onSelectorClass}"></span>
+          <span class="prod-oldprice">${price}</span>
           <span class="prod-save">${saveText} <span class="save-${onSelectorClass}"></span></span>
       </div>
       <div class="newprice-container mt-2">
-        <span class="prod-newprice newprice-${onSelectorClass}"></span>
+        <span class="prod-newprice">${discountedPrice}</span>
         <sup>${conditionText}</sup>
       </div>
     </div>`;
@@ -60,7 +65,7 @@ export default function decorate(block, options) {
   const {
     product, conditionText, saveText,
   } = options.metadata;
-  
+
   const aemContainer = block.children[0];
   aemContainer.classList.add('hero-aem-container');
   const underShadow = aemContainer.children[0];
@@ -94,7 +99,7 @@ export default function decorate(block, options) {
     const buyLink = block.querySelector('a[href*="#buylink"]');
     decorateBuyLink(buyLink, onSelectorClass);
 
-    const pricesBox = createPricesElement(onSelectorClass, conditionText, saveText);
+    const pricesBox = createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears);
     buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
   }
 
