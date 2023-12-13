@@ -61,7 +61,7 @@ function decorateBuyLink(buyLink, onSelectorClass) {
   }
 }
 
-export default function decorate(block, options) {
+export default async function decorate(block, options) {
   const {
     product, conditionText, saveText,
   } = options.metadata;
@@ -99,7 +99,7 @@ export default function decorate(block, options) {
     const buyLink = block.querySelector('a[href*="#buylink"]');
     decorateBuyLink(buyLink, onSelectorClass);
 
-    const pricesBox = createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears);
+    const pricesBox = await createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears);
     buyLink.appendChild(pricesBox);
   }
 
