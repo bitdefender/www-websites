@@ -60,7 +60,7 @@ export default function decorate(block, options) {
   const {
     product, conditionText, saveText,
   } = options.metadata;
-  const underShadow = block.children[0]
+  const underShadow = block.children[0].children[0];
   const [richText, mainDesktopImage] = underShadow.children;
 
   // Configuration for new elements
