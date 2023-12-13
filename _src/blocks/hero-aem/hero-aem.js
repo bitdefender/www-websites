@@ -13,7 +13,7 @@ function productAliases(name) {
 }
 
 async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears) {
-  let [storeProduct] = await storeOBJ.getProducts([new ProductInfo(prodName, "consumer")]);
+  let storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, "consumer")]);
   let storeOption = storeProduct.getOption(prodUsers, prodYears);
   let price = storeOption.getPrice();
   let discountedPrice = storeOption.getDiscountedPrice();
