@@ -60,8 +60,8 @@ export default function decorate(block, options) {
   const {
     product, conditionText, saveText,
   } = options.metadata;
-
-  const [richText, mainDesktopImage] = block.children;
+  const underShadow = block.children[0]
+  const [richText, mainDesktopImage] = underShadow.children;
 
   // Configuration for new elements
   richText.classList.add('hero-aem__card__desktop', 'col-md-6');
