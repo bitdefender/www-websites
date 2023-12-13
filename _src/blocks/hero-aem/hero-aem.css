@@ -1,0 +1,116 @@
+.hero-aem-container .hero-aem p:first-of-type {
+    margin: 0;
+  }
+  .hero-aem-container .hero-aem h1 {
+    color: #006DFF;
+    font-size: 40px;
+    font-weight: normal;
+    margin-top: 10px;
+  }
+  .hero-aem-container .hero-aem h2 {
+    margin-top: 0;
+    font-size: 24px;
+    font-weight: normal;
+  }
+  .hero-aem-container .hero-aem .hero-aem__mobile-image img {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    width: 100%;
+  }
+  .hero-aem-container .hero-aem .hero-aem__desktop-image {
+    display: none;
+  }
+  .hero-aem-container .hero-aem .hero-aem__card-text {
+    padding: 27px;
+    background-color: #F7F7F7;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  .hero-aem-container .hero-aem p.button-container {
+    text-align: center;
+  }
+  .hero-aem-container .hero-aem p.button-container .button.primary {
+    width: 100%;
+  }
+  .hero-aem-container .hero-aem .prod-oldprice {
+    font-size: 16px;
+  }
+  .hero-aem-container .hero-aem .prod-save {
+    color: #1C7928;
+    font-weight: bold;
+  }
+  .hero-aem-container .hero-aem .prod-newprice {
+    font-size: 40px;
+  }
+  .hero-aem-container .hero-aem .newprice-container {
+    line-height: 1;
+  }
+  .hero-aem-container .hero-aem .newprice-container sup {
+    position: relative;
+    top: -20px;
+  }
+  .hero-aem-container .aem-two-cards h1 {
+    font-size: 36px;
+    font-weight: bold;
+  }
+  .hero-aem-container .aem-two-cards h2 {
+    color: #006DFF;
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0;
+  }
+  .hero-aem-container .aem-two-cards_card {
+    border-radius: 20px;
+    background-color: #F7F7F7;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .hero-aem-container .aem-two-cards_card p:not(.button-container, :has(span)) {
+    height: 100%;
+  }
+  
+  @media (width >= 768px) {
+    .hero-aem-container .hero-aem {
+      display: flex;
+    }
+    .hero-aem-container .hero-aem .hero-aem__mobile-image {
+      display: none;
+    }
+    .hero-aem-container .hero-aem .hero-aem__desktop-image {
+      display: block;
+      height: 100%;
+    }
+    .hero-aem-container .hero-aem .hero-aem__desktop-image img {
+      height: 100%;
+      object-fit: cover;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+    .hero-aem-container .hero-aem .hero-aem__card-text {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background-color: initial;
+      padding: 0;
+    }
+    .hero-aem-container .hero-aem .hero-aem__card__desktop {
+      padding: 4%;
+      background-color: #F7F7F7;
+      border-bottom-left-radius: 20px;
+      border-top-left-radius: 20px;
+    }
+    .hero-aem-container .hero-aem p.button-container {
+      text-align: left;
+      display: inline-block;
+    }
+    .hero-aem-container .hero-aem p.button-container .button.primary {
+      width: auto;
+    }
+    .hero-aem-container .aem-two-cards h1 {
+      font-size: 56px;
+    }
+    .hero-aem-container .aem-two-cards h1 + p {
+      font-size: 18px;
+    }
+  }

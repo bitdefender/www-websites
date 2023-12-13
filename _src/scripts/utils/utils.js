@@ -1,4 +1,4 @@
-export const localisationList = ['zh-hk', 'zh-tw'];
+export const localisationList = ['zh-hk', 'zh-tw', 'en-us'];
 export function getDefaultLanguage() {
   const currentPathUrl = window.location.pathname;
   const foundLanguage = localisationList.find((item) => currentPathUrl.indexOf(`/${item}/`) !== -1);
