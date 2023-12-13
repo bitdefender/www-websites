@@ -100,7 +100,7 @@ export default function decorate(block, options) {
     decorateBuyLink(buyLink, onSelectorClass);
 
     const pricesBox = createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears);
-    richText.appendChild(pricesBox);
+    block.appendChild(pricesBox)
   }
 
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
