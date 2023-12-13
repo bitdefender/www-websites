@@ -40,14 +40,15 @@ const updateLinkSources = (shadoRoot, origin) => {
 /**
  * @param {ShadowRoot} shadowRoot
  * @param {string} offer
+ * @param {string} origin
  * @returns {Promise<void>}
  * load the block HTML
  */
-const loadHTML = async (shadowRoot, offer) => {
+const loadHTML = async (shadowRoot, offer, origin) => {
   // make a call to get all the plain HTML
   shadowRoot.innerHTML = await fetch(offer).then(r => r.text())
 
-  updateLinkSources(shadowRoot);
+  updateLinkSources(shadowRoot, origin);
 };
 
 /**
@@ -81,7 +82,7 @@ export async function loadComponent(offer, block, options, selector)  {
   const container = selector ? document.querySelector(selector) : document.createElement('div');
   const shadowRoot = container.attachShadow({ mode: 'open' });
 
-  await loadHTML(shadowRoot, offer);
+  await loadHTML(shadowRoot, offer, origin);
   loadCSS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.css`);
   await loadJS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.js`, options);
   return container;
