@@ -60,7 +60,10 @@ export default function decorate(block, options) {
   const {
     product, conditionText, saveText,
   } = options.metadata;
-  const underShadow = block.children[0].children[0];
+  
+  const aemContainer = block.children[0];
+  aemContainer.classList.add('hero-aem-container');
+  const underShadow = aemContainer.children[0];
   const [richText, mainDesktopImage] = underShadow.children;
 
   // Configuration for new elements
