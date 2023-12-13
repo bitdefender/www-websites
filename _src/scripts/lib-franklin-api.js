@@ -71,7 +71,7 @@ const loadCSS = async (shadowRoot, offer) => {
  * @returns {Promise<void>}
  * load the block HTML
  */
-const loadJS = async (shadowRoot, offer) => {
+const loadJS = async (shadowRoot, offer, options) => {
   const logicModule = await import(offer);
   logicModule.default(shadowRoot, {...options, metadata: parseMetadata(shadowRoot)});
 };
