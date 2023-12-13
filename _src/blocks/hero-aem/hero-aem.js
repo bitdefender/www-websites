@@ -66,7 +66,6 @@ export default function decorate(block, options) {
   // Configuration for new elements
   richText.classList.add('hero-aem__card__desktop', 'col-md-6');
   mainDesktopImage.classList.add('col-md-6');
-  mainDesktopImage.children[0].classList.add('h-100');
 
   const mobileImage = block.querySelector('.hero-aem > div > div picture');
   mobileImage.classList.add('hero-aem__mobile-image');
