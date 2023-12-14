@@ -17,6 +17,7 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
   let storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
   let price = storeOption.getPrice();
   let discountedPrice = storeOption.getDiscountedPrice();
+  let discount = storeOption.getDiscount("valueWithCurrency");
 
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
@@ -24,7 +25,7 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
     <div class="hero-aem__price mt-3">
       <div>
           <span class="prod-oldprice">${price}</span>
-          <span class="prod-save">${saveText} <span class="save"></span></span>
+          <span class="prod-save">${saveText} ${discount}<span class="save"></span></span>
       </div>
       <div class="newprice-container mt-2">
         <span class="prod-newprice">${discountedPrice}</span>
@@ -68,14 +69,17 @@ export default async function decorate(block, options) {
 
   const aemContainer = block.children[0];
   aemContainer.classList.add('hero-aem-container');
+  aemContainer.classList.add('we-container');
   const underShadow = aemContainer.children[0];
-  const [richText, mainDesktopImage] = underShadow.children;
+  let [richText, mainDesktopImage, richTextCard, columnsCard] = underShadow.children;
+  console.log(options.metadata)
 
   // Configuration for new elements
   richText.classList.add('hero-aem__card__desktop', 'col-md-6');
   mainDesktopImage.classList.add('col-md-6');
-
-  const mobileImage = block.querySelector('.hero-aem > div > div picture');
+  mainDesktopImage.children[0].classList.add("h-100");
+  
+  const mobileImage = block.querySelector('.hero-aem__card__desktop div > p > picture');
   mobileImage.classList.add('hero-aem__mobile-image');
 
   // Get all the siblings after h1
@@ -100,11 +104,32 @@ export default async function decorate(block, options) {
     decorateBuyLink(buyLink, onSelectorClass);
 
     const pricesBox = await createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears);
-    buyLink.appendChild(pricesBox);
+    buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
   }
 
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
     bubbles: true,
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
+
+  columnsCard = [...columnsCard.children];
+  const cardElement = document.createElement('div');
+  cardElement.classList.add('aem-two-cards');
+  cardElement.innerHTML = `
+    <div class="d-flex">
+      <div class="col-md-6">
+        ${richTextCard.innerHTML}
+      </div>
+      ${columnsCard.map((col) => `
+        <div class="col-md-3">
+          <div class="aem-two-cards_card">
+            ${col.innerHTML}
+          </div>
+        </div>`).join('')}
+    </div>
+  `;
+  aemContainer.appendChild(cardElement);
+  richTextCard.innerHTML = '';
+  columnsCard.forEach((col) => col.remove());
+  
 }

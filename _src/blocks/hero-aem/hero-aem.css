@@ -16,6 +16,9 @@
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     width: 100%;
+    height: fit-content;
+    position: relative;
+    top: 6px;
   }
   .hero-aem-container .hero-aem .hero-aem__desktop-image {
     display: none;
@@ -49,6 +52,9 @@
     position: relative;
     top: -20px;
   }
+  .hero-aem-container .aem-two-cards {
+    margin-top: 20px;
+  }
   .hero-aem-container .aem-two-cards h1 {
     font-size: 36px;
     font-weight: bold;
@@ -65,15 +71,88 @@
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    height: 100%;
   }
-  .hero-aem-container .aem-two-cards_card p:not(.button-container, :has(span)) {
-    height: 100%;
+  .hero-aem-container .aem-two-cards_card p:not(.button-container, :has(a), :has(picture)) {
+    min-height: 120px;
   }
+  .h-100 {
+    height: 100% !important;
+  }
+
+  .hero-aem-container.we-container {
+    max-width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-aem-container .button.primary {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    text-decoration: none;
+    padding: 10px 26px 8px 28px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    background-color: #eb0000;
+    border: 2px solid #eb0000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 8px;
+    height: fit-content;
+  }
+
+  .hero-aem-container .aem-two-cards p a {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    text-decoration: none;
+    padding: 10px 26px 8px 28px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    background-color: #eb0000;
+    border: 2px solid #eb0000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 8px;
+    height: fit-content;
+  }
+
+  .hero-aem-container .aem-two-cards h1 {
+    font-size: 36px;
+    font-weight: bold;
+  }
+  .hero-aem-container .aem-two-cards h2 {
+    color: #006DFF;
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0;
+  }
+  .hero-aem-container .d-flex {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 1rem;
+    justify-content: space-between;
+  }
+
   
   @media (width >= 768px) {
     .hero-aem-container .hero-aem {
       display: flex;
+      flex-wrap: wrap;
     }
     .hero-aem-container .hero-aem .hero-aem__mobile-image {
       display: none;
@@ -84,6 +163,7 @@
     }
     .hero-aem-container .hero-aem .hero-aem__desktop-image img {
       height: 100%;
+      width: 100%;
       object-fit: cover;
       border-top-right-radius: 20px;
       border-bottom-right-radius: 20px;
@@ -95,10 +175,12 @@
       padding: 0;
     }
     .hero-aem-container .hero-aem .hero-aem__card__desktop {
-      padding: 4%;
       background-color: #F7F7F7;
       border-bottom-left-radius: 20px;
       border-top-left-radius: 20px;
+    }
+    .hero-aem-container .hero-aem .hero-aem__card__desktop > div {
+      padding: 4%;
     }
     .hero-aem-container .hero-aem p.button-container {
       text-align: left;
@@ -107,10 +189,40 @@
     .hero-aem-container .hero-aem p.button-container .button.primary {
       width: auto;
     }
-    .hero-aem-container .aem-two-cards h1 {
-      font-size: 56px;
+
+    .hero-aem-container .col-md-6 {
+      flex: 0 0 auto;
+      width: 50%;
     }
+
+    .hero-aem-container .col-md-3 {
+      flex: 0 0 auto;
+      width: 24%;
+    }
+
     .hero-aem-container .aem-two-cards h1 + p {
       font-size: 18px;
+    }
+
+    .hero-aem-container .hero-aem p:has(a) {
+      display: inline-block;
+    }
+
+    .hero-aem-container .hero-aem p:has(em) {
+      margin-left: 10px;
+    }
+  }
+  @media (width >= 992px) {
+    .hero-aem-container.we-container {
+      max-width: 1300px;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+  }
+  @media (width >= 1600px) {
+    .hero-aem-container.we-container {
+      max-width: 1332px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
   }
