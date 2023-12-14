@@ -2,7 +2,7 @@ export const localisationList = ['zh-hk', 'zh-tw'];
 export function getDefaultLanguage() {
   const currentPathUrl = window.location.pathname;
   const foundLanguage = localisationList.find((item) => currentPathUrl.indexOf(`/${item}/`) !== -1);
-  return foundLanguage.replace('zh-','') || 'site';
+  return foundLanguage?.replace('zh-','') || 'site';
 }
 
 const cacheResponse = new Map();
