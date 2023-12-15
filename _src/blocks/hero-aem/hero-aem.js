@@ -83,8 +83,8 @@ export default async function decorate(block, options) {
   mobileImage.classList.add('hero-aem__mobile-image');
 
   // Get all the siblings after h1
-  const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
-
+  const cardElements = Array.from(underShadow.querySelectorAll('h1 ~ *'));
+  console.log(underShadow.innerHTML)
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
 
@@ -112,16 +112,17 @@ export default async function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 
+  console.log(richTextCard.innerHTML);
   columnsCard = [...columnsCard.children];
   const cardElement = document.createElement('div');
   cardElement.classList.add('aem-two-cards');
   cardElement.innerHTML = `
     <div class="d-flex">
-      <div class="col-md-6">
+      <div class="col-lg-6">
         ${richTextCard.innerHTML}
       </div>
       ${columnsCard.map((col) => `
-        <div class="col-md-3">
+        <div class="col-md-6 col-lg-3">
           <div class="aem-two-cards_card">
             ${col.innerHTML}
           </div>

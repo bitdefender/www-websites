@@ -44,6 +44,7 @@
   }
   .hero-aem-container .hero-aem .prod-newprice {
     font-size: 40px;
+    font-weight: bold;
   }
   .hero-aem-container .hero-aem .newprice-container {
     line-height: 1;
@@ -55,15 +56,9 @@
   .hero-aem-container .aem-two-cards {
     margin-top: 20px;
   }
-  .hero-aem-container .aem-two-cards h1 {
+  .hero-aem-container .aem-two-cards h2 {
     font-size: 36px;
     font-weight: bold;
-  }
-  .hero-aem-container .aem-two-cards h2 {
-    color: #006DFF;
-    font-size: 24px;
-    font-weight: normal;
-    margin: 0;
   }
   .hero-aem-container .aem-two-cards_card {
     border-radius: 20px;
@@ -71,6 +66,12 @@
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
+  }
+  .hero-aem-container .aem-two-cards .aem-two-cards_card h2 {
+    color: #006DFF;
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0;
   }
   .hero-aem-container .aem-two-cards_card p:not(.button-container, :has(a), :has(picture)) {
     min-height: 120px;
@@ -109,6 +110,10 @@
     height: fit-content;
   }
 
+  .hero-aem-container .hero-aem p em a {
+    color: black;
+  }
+
   .hero-aem-container .aem-two-cards p a {
     font-size: 16px;
     font-style: normal;
@@ -131,11 +136,11 @@
     height: fit-content;
   }
 
-  .hero-aem-container .aem-two-cards h1 {
+  .hero-aem-container .aem-two-cards h2 {
     font-size: 36px;
     font-weight: bold;
   }
-  .hero-aem-container .aem-two-cards h2 {
+  .hero-aem-container .aem-two-cards .aem-two-cards_card h2 {
     color: #006DFF;
     font-size: 24px;
     font-weight: normal;
@@ -192,7 +197,7 @@
 
     .hero-aem-container .col-md-6 {
       flex: 0 0 auto;
-      width: 50%;
+      width: 49%;
     }
 
     .hero-aem-container .col-md-3 {
@@ -217,6 +222,15 @@
       max-width: 1300px;
       padding-left: 50px;
       padding-right: 50px;
+    }
+
+    .hero-aem-container .col-lg-6 {
+      flex: 0 0 auto;
+      width: 49%;
+    }
+    .hero-aem-container .col-lg-3 {
+      flex: 0 0 auto;
+      width: 24%;
     }
   }
   @media (width >= 1600px) {
