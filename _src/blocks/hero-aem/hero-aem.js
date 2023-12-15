@@ -8,7 +8,21 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
   const discountedPrice = storeOption.getDiscountedPrice();
   const discount = storeOption.getDiscount("valueWithCurrency");
   const buyLink = await storeOption.getStoreUrl();
-
+  window.adobeDataLayer.push({
+    event: "product loaded",
+    product: [{info : {
+      ID: storeOption.getAvangateId(),
+      name: storeOption.getName(),
+      devices: storeOption.getDevices(),
+      subscription: storeOption.getSubscription("months"),
+      version: storeOption.getSubscription("months") === 1 ? "monthly" : "yearly",
+      basePrice: storeOption.getPrice("value"),
+      discountValue: storeOption.getDiscount("value"),
+      discountRate: storeOption.getDiscount("percentage"),
+      currency: storeOption.getCurrency(),
+      priceWithTax: storeOption.getDiscountedPrice("value") || storeOption.getPrice("value"),
+    }}]
+  })
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
