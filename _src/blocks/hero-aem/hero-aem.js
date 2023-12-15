@@ -60,7 +60,7 @@ function createCardElementContainer(elements, mobileImage) {
   return cardElementContainer;
 }
 
-export default async function decorate(block, options) {
+export default function decorate(block, options) {
   const {
     product, conditionText, saveText,
   } = options.metadata;
@@ -96,14 +96,15 @@ export default async function decorate(block, options) {
     const buyLink = block.querySelector('a[href*="#buylink"]');
     buyLink.classList.add('button', 'primary');
 
-    const pricesBox = await createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink);
-    buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
+    createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink)
+    .then(pricesBox => {
+      buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
+      window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+        bubbles: true,
+        composed: true, // This allows the event to cross the shadow DOM boundary
+      });
+    })
   }
-
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
-  });
 
   columnsCard = [...columnsCard.children];
   const cardElement = document.createElement('div');
