@@ -37,53 +37,21 @@ const updateLinkSources = (shadoRoot, origin) => {
   });
 };
 
-/**
- * @param {ShadowRoot} shadowRoot
- * @param {string} offer
- * @param {string} origin
- * @returns {Promise<void>}
- * load the block HTML
- */
-const loadHTML = async (shadowRoot, offer, origin) => {
-  // make a call to get all the plain HTML
-  shadowRoot.innerHTML = await fetch(offer).then(r => r.text())
-
-  updateLinkSources(shadowRoot, origin);
-};
-
-/**
- * @param {ShadowRoot} shadowRoot
- * @param {string} offer
- * @returns {Promise<void>}
- * load the block HTML
- */
-const loadCSS = async (shadowRoot, offer) => {
-  const style = await import(offer, {
-    assert: { type: 'css' }
-  });
-
-  shadowRoot.adoptedStyleSheets = [style.default];
-};
-
-/**
- * @param {ShadowRoot} shadowRoot
- * @param {string} offer
- * @param {object} options
- * @returns {Promise<void>}
- * load the block HTML
- */
-const loadJS = async (shadowRoot, offer, options) => {
-  const logicModule = await import(offer);
-  logicModule.default(shadowRoot, {...options, metadata: parseMetadata(shadowRoot)});
-};
-
 export async function loadComponent(offer, block, options, selector)  {
   const origin = new URL(offer).origin;
   const container = selector ? document.querySelector(selector) : document.createElement('div');
   const shadowRoot = container.attachShadow({ mode: 'open' });
 
-  await loadHTML(shadowRoot, offer, origin);
-  loadCSS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.css`);
-  await loadJS(shadowRoot, `${origin}/_src/blocks/${block}/${block}.js`, options);
+  shadowRoot.innerHTML = `<link rel="stylesheet" href="${origin}/_src/blocks/${block}/${block}.css" type="text/css">`;
+
+  const [html, js] = await Promise.all([
+    fetch(offer).then(r => r.text()),
+    import(`${origin}/_src/blocks/${block}/${block}.js`)
+  ])
+
+  shadowRoot.innerHTML +=  html;
+  updateLinkSources(shadowRoot, origin);
+  await js.default(shadowRoot, {...options, metadata: parseMetadata(shadowRoot)});
+
   return container;
 }
