@@ -5,6 +5,7 @@
 /* stylelint-disable rule-empty-line-before */
 .hero-aem-container .hero-aem p:first-of-type {
     margin: 0;
+    margin-bottom: 5px;
   }
   .hero-aem-container .hero-aem h1 {
     color: #006DFF;
@@ -75,6 +76,7 @@
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
+    width: 80%;
   }
   .hero-aem-container .aem-two-cards .aem-two-cards_card h2 {
     color: #006DFF;
@@ -208,7 +210,7 @@
 
     .hero-aem-container .col-md-6 {
       flex: 0 0 auto;
-      width: 49%;
+      width: 50%;
     }
 
     .hero-aem-container .col-md-3 {
