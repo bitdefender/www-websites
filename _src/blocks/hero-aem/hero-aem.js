@@ -51,12 +51,11 @@ export default async function decorate(block, options) {
     product, conditionText, saveText,
   } = options.metadata;
 
-  const aemContainer = block.children[0];
+  const aemContainer = block.children[1];
   aemContainer.classList.add('hero-aem-container');
   aemContainer.classList.add('we-container');
   const underShadow = aemContainer.children[0];
   let [richText, mainDesktopImage, richTextCard, columnsCard] = underShadow.children;
-  console.log(options.metadata)
 
   // Configuration for new elements
   richText.classList.add('hero-aem__card__desktop', 'col-md-6');
@@ -68,7 +67,6 @@ export default async function decorate(block, options) {
 
   // Get all the siblings after h1
   const cardElements = Array.from(underShadow.querySelectorAll('h1 ~ *'));
-  console.log(underShadow.innerHTML)
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
 
