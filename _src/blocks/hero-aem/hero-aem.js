@@ -1,23 +1,13 @@
-// const { loadPage } = await import('../../scripts/scripts.js');
-// import { updateProductsList } from '../../scripts/utils.js';
-
-function productAliases(name) {
-  let newName = name.trim();
-  if (newName === 'elite') {
-    newName = 'elite_1000';
-  } else if (newName === 'bs') {
-    newName = 'bus-security';
-  }
-
-  return newName;
-}
-
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears) {
-  let storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, "consumer")]);
-  let storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
-  let price = storeOption.getPrice();
-  let discountedPrice = storeOption.getDiscountedPrice();
-  let discount = storeOption.getDiscount("valueWithCurrency");
+/* eslint-disable prefer-const */
+/* eslint-disable no-undef */
+/* eslint-disable max-len */
+async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink) {
+  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, "consumer")]);
+  const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
+  const price = storeOption.getPrice();
+  const discountedPrice = storeOption.getDiscountedPrice();
+  const discount = storeOption.getDiscount("valueWithCurrency");
+  const buyLink = await storeOption.getStoreUrl();
 
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
@@ -32,6 +22,7 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
         <sup>${conditionText}</sup>
       </div>
     </div>`;
+  buylink.href = buyLink;
   return priceElement;
 }
 
@@ -53,13 +44,6 @@ function createCardElementContainer(elements, mobileImage) {
   cardElementContainer.appendChild(cardElementText);
 
   return cardElementContainer;
-}
-
-function decorateBuyLink(buyLink, onSelectorClass) {
-  if (buyLink) {
-    buyLink.classList.add('button', 'primary', `buylink-${onSelectorClass}`);
-    buyLink.innerHTML = buyLink.innerHTML.replace(/0%/g, `<span class="percent-${onSelectorClass}">10%</span>`);
-  }
 }
 
 export default async function decorate(block, options) {
@@ -96,14 +80,11 @@ export default async function decorate(block, options) {
 
   if (product) {
     const [prodName, prodUsers, prodYears] = product.split('/');
-    const onSelectorClass = `${productAliases(prodName)}-${prodUsers}${prodYears}`;
-
-    // updateProductsList(product);
 
     const buyLink = block.querySelector('a[href*="#buylink"]');
-    decorateBuyLink(buyLink, onSelectorClass);
+    buyLink.classList.add('button', 'primary');
 
-    const pricesBox = await createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears);
+    const pricesBox = await createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink);
     buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
   }
 
@@ -112,7 +93,6 @@ export default async function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 
-  console.log(richTextCard.innerHTML);
   columnsCard = [...columnsCard.children];
   const cardElement = document.createElement('div');
   cardElement.classList.add('aem-two-cards');
@@ -122,7 +102,7 @@ export default async function decorate(block, options) {
         ${richTextCard.innerHTML}
       </div>
       ${columnsCard.map((col) => `
-        <div class="col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-3">
           <div class="aem-two-cards_card">
             ${col.innerHTML}
           </div>

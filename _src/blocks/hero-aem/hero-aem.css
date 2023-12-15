@@ -1,16 +1,23 @@
+/* stylelint-disable at-rule-empty-line-before */
+/* stylelint-disable no-duplicate-selectors */
+/* stylelint-disable no-descending-specificity */
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable rule-empty-line-before */
 .hero-aem-container .hero-aem p:first-of-type {
     margin: 0;
   }
   .hero-aem-container .hero-aem h1 {
     color: #006DFF;
-    font-size: 40px;
+    font-size: 38px;
     font-weight: normal;
     margin-top: 10px;
+    line-height: 1.1;
   }
   .hero-aem-container .hero-aem h2 {
     margin-top: 0;
     font-size: 24px;
     font-weight: normal;
+    line-height: 1.1;
   }
   .hero-aem-container .hero-aem .hero-aem__mobile-image img {
     border-top-left-radius: 20px;
@@ -37,6 +44,7 @@
   }
   .hero-aem-container .hero-aem .prod-oldprice {
     font-size: 16px;
+    text-decoration: line-through;
   }
   .hero-aem-container .hero-aem .prod-save {
     color: #1C7928;
@@ -59,6 +67,7 @@
   .hero-aem-container .aem-two-cards h2 {
     font-size: 36px;
     font-weight: bold;
+    line-height: 1.1;
   }
   .hero-aem-container .aem-two-cards_card {
     border-radius: 20px;
@@ -73,9 +82,7 @@
     font-weight: normal;
     margin: 0;
   }
-  .hero-aem-container .aem-two-cards_card p:not(.button-container, :has(a), :has(picture)) {
-    min-height: 120px;
-  }
+  
   .h-100 {
     height: 100% !important;
   }
@@ -152,6 +159,10 @@
     row-gap: 1rem;
     justify-content: space-between;
   }
+  .hero-aem-container .col-12 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
 
   
   @media (width >= 768px) {
@@ -205,7 +216,7 @@
       width: 24%;
     }
 
-    .hero-aem-container .aem-two-cards h1 + p {
+    .hero-aem-container .aem-two-cards h2 + p {
       font-size: 18px;
     }
 
@@ -216,12 +227,18 @@
     .hero-aem-container .hero-aem p:has(em) {
       margin-left: 10px;
     }
+    .hero-aem-container .aem-two-cards_card p:not(.button-container, :has(a), :has(picture)) {
+      min-height: 90px;
+    }
   }
   @media (width >= 992px) {
     .hero-aem-container.we-container {
       max-width: 1300px;
       padding-left: 50px;
       padding-right: 50px;
+    }
+    .hero-aem-container .aem-two-cards_card p:not(.button-container, :has(a), :has(picture)) {
+      min-height: 165px;
     }
 
     .hero-aem-container .col-lg-6 {
@@ -231,6 +248,18 @@
     .hero-aem-container .col-lg-3 {
       flex: 0 0 auto;
       width: 24%;
+    }
+  }
+  @media (width >= 1200px) {
+
+    .hero-aem-container .aem-two-cards_card p:not(.button-container, :has(a), :has(picture)) {
+      min-height: 120px;
+    }
+
+    .hero-aem-container.we-container {
+      max-width: 1332px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
   }
   @media (width >= 1600px) {
