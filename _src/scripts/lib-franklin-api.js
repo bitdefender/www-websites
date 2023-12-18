@@ -20,21 +20,13 @@ const parseMetadata = (shadowRoot) => {
  * @param {string} origin - prepends the origin to the relative links
  */
 const updateLinkSources = (shadoRoot, origin) => {
-  const allSources = shadoRoot.querySelectorAll('source');
-  allSources.forEach((source) => {
-    if (source.srcset.startsWith('./') || source.srcset.startsWith('/')) {
-      const srcSet = source.srcset.startsWith('.') ? source.srcset.slice(1) : source.srcset;
-      source.srcset = `${origin}${srcSet}`;
-    }
-  });
+  shadoRoot
+    .querySelectorAll('source')
+    .forEach(source => source.srcset = new URL(source.getAttribute("srcset"), origin).href);
 
-  const allImages = shadoRoot.querySelectorAll('img');
-  allImages.forEach((image) => {
-    if (image.src.startsWith('./') || image.src.startsWith('/')) {
-      const imgSrc = image.src.startsWith('.') ? image.src.slice(1) : image.src;
-      image.src = `${origin}${imgSrc}`;
-    }
-  });
+  shadoRoot
+    .querySelectorAll('img')
+    .forEach(image => image.src = new URL(image.getAttribute("src"), origin).href);
 };
 
 export async function loadComponent(offer, block, options, selector)  {
