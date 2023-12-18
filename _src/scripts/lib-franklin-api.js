@@ -30,7 +30,9 @@ const updateLinkSources = (shadoRoot, origin) => {
 };
 
 export async function loadComponent(offer, block, options, selector)  {
-  const origin = new URL(offer).origin;
+  const offerURL = new URL(offer);
+  const origin = offerURL.origin;
+  const offerFolder = offerURL.pathname.split("/").slice(0,-1).join("/");
   const container = selector ? document.querySelector(selector) : document.createElement('div');
   const shadowRoot = container.attachShadow({ mode: 'open' });
 
@@ -42,7 +44,7 @@ export async function loadComponent(offer, block, options, selector)  {
   ])
 
   shadowRoot.innerHTML +=  html;
-  updateLinkSources(shadowRoot, origin);
+  updateLinkSources(shadowRoot, `${origin}${offerFolder}/`);
   await js.default(shadowRoot, {...options, metadata: parseMetadata(shadowRoot)});
 
   return container;
