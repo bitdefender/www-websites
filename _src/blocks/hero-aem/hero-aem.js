@@ -110,7 +110,7 @@ export default function decorate(block, options) {
   const cardElement = document.createElement('div');
   cardElement.classList.add('aem-two-cards');
   cardElement.innerHTML = `
-    <div class="d-flex">
+    <div class="row justify-space-between">
       <div class="col-lg-6">
         ${richTextCard.innerHTML}
       </div>

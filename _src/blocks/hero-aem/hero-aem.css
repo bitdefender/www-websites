@@ -76,13 +76,15 @@
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    width: 80%;
   }
   .hero-aem-container .aem-two-cards .aem-two-cards_card h2 {
     color: #006DFF;
     font-size: 24px;
     font-weight: normal;
     margin: 0;
+  }
+  .hero-aem-container .aem-two-cards .justify-space-between {
+    justify-content: space-between;
   }
   
   .h-100 {
@@ -93,6 +95,7 @@
     max-width: 100%;
     padding-left: 20px;
     padding-right: 20px;
+    margin-top: 15px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -155,12 +158,26 @@
     font-weight: normal;
     margin: 0;
   }
-  .hero-aem-container .d-flex {
+  .hero-aem-container .row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
     display: flex;
     flex-wrap: wrap;
-    row-gap: 1rem;
-    justify-content: space-between;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-.5 * var(--bs-gutter-x));
+    margin-left: calc(-.5 * var(--bs-gutter-x));
   }
+  .hero-aem-container .row>* {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-top: var(--bs-gutter-y);
+    box-sizing: border-box;
+  }
+
+
   .hero-aem-container .col-12 {
     flex: 0 0 auto;
     width: 100%;
