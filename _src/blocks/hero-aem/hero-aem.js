@@ -105,6 +105,9 @@ export default function decorate(block, options) {
       });
     })
   } else {
+    // If there is no product, just add the button class and dispatch the event
+    const simpleLink = block.querySelector('.hero-aem__card-text a');
+    simpleLink.classList.add('button', 'primary');
     window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
       bubbles: true,
       composed: true, // This allows the event to cross the shadow DOM boundary
