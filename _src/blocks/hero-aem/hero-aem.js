@@ -104,6 +104,11 @@ export default function decorate(block, options) {
         composed: true, // This allows the event to cross the shadow DOM boundary
       });
     })
+  } else {
+    window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+      bubbles: true,
+      composed: true, // This allows the event to cross the shadow DOM boundary
+    });
   }
 
   columnsCard = [...columnsCard.children];
