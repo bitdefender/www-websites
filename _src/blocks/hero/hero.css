@@ -1,532 +1,588 @@
   /* block specific CSS goes here */
-:root {
-  /* hero font size */
-  --hero-font-size-xxxl: 50px;
-  --hero-font-size-xxl: 48px;
-  --hero-font-size-xl: 40px;
-  --hero-font-size-l: 32px;
-  --hero-font-size-m: 22px;
-  --hero-font-size-s: 20px;
-  --hero-font-size-xs: 18px;
-  --hero-font-size-xxs: 16px;
-  --hero-font-size-xxxs: 14px;
-  --hero-h1-font-size: 32px;
-  --hero-h2-font-size: 24px;
-  --hero-botton-border-color: #616161;
-  --hero-p-color: #3c3c3c;
-
-  /* breadcrumbs font size */  
-  --breadcrumb-text-color-dark: #c5c5c5;
-  --breadcrumb-text-color-dark-hover: #616161;
-  --breadcrumbs-font-size-s: 12px;
-}
-
-
-/* breadcrumbs */
-
-main .hero .hero-content .breadcrumb {
-  font-weight: var(--font-weight-bold);
-  color: #dedede;
-  min-height: 82px;
-  padding: 12px 0;
-  margin-bottom: 12px;
-}
-
-main .hero .hero-content .breadcrumb a {
-  font-size: var(--breadcrumbs-font-size-s);
-  font-weight: var(--font-weight-bold);
-  color: var(--breadcrumb-text-color-dark-hover);
-  text-decoration: none;
-  line-height: 1.7;
-  letter-spacing: .96px;
-}
-
-main .hero .hero-content .breadcrumb a:last-child {
-  padding: 0;
-  margin: 0;
-  pointer-events: none;
-}
-
-main .hero .hero-content .breadcrumb a::after {
-  content: "/";
-  display: inline-block;
-  color: var(--color-dark-gray);
-  margin: 0 3px;
-  font-size: 9pt;
-}
-
-main .hero .hero-content .breadcrumb a:hover {
-  color: var(--text-color);
-}
-
-main .hero.black-background .hero-content .breadcrumb a {
-  color: var(--breadcrumb-text-color-dark);
-  text-decoration: none;
-}
-
-main .hero.black-background .hero-content .breadcrumb a::after {
-  color: #dedede;
-}
-
-main .hero.black-background .hero-content .breadcrumb a:hover {
-  color: var(--breadcrumb-text-color-dark-hover);
-}
-
-/* hero */
-
-main .hero-container > div {
-  max-width: unset;
-}
-  
-main .hero-container {
-  padding: 0;
-  margin: 0 auto;
-}
-
-main .hero .hero-content > div {
-  width: 100%;
-}
-
-main .hero-container .hero-wrapper {
-  padding: 0;
-}
-
-main .hero {
-  position: relative;
-  padding: 0;
-  min-height: 300px;
-}
-
-main .hero.black-background {
-  background-color: var(--dark-background-color);
-}
-
-main .hero.comparison {
-  height: 600px;
-}
-
-main .hero .hero-picture {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-main .hero .hero-content {
-  display: flex;
-  flex-direction: column;
-  padding: 17px var(--body-padding) 56px;
-  margin: 0 auto;
-  position: relative;
-}
-
-main .hero .hero-content .right-col {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-
-main .hero.black-background .hero-content {
-  padding: 17px var(--body-padding) 56px;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(90deg, #000 0%, #000 15%, #fff0 100%);
-}
-
-main .hero.comparison .hero-content {
-  height: 100%;
-  padding: 40px;
-  justify-content: center;
-  flex-direction: column;
-}
-
-main .hero h1 {
-  font-size: var(--hero-h1-font-size);
-  margin: 0 0 25px;
-}
-
-main .hero h2 {
-  font-size: 18px;
-  color: var(--text-color);
-  margin: 0 0 9px;
-  padding: 15px 0 0;
-  letter-spacing: .003em;
-}
-
-main .hero h2,
-main .hero h4 {
-  padding: 0;
-  letter-spacing: normal;
-  margin: 0 0 9px;
-}
-
-main .hero.black-background h1, 
-main .hero.black-background h2,
-main .hero.black-background h4 {
-  color: var(--text-dark-color);
-}
-
-main .hero.comparison h1 {
-  font-weight: var(--font-weight-regular);
-}
-
-main .hero p {
-  color: var(--hero-p-color);
-  font-size: var(--hero-font-size-xxxs);
-  font-weight: var(--font-weight-regular);
-  line-height: 1.5;
-  display: block;
-  letter-spacing: .006em;
-  margin: 0;
-}
-
-main .hero h1 + p {
-  margin: 8px 0 0;
-  color: #616161;
-  font-size: var(--hero-font-size-xxs);
-  font-weight: var(--font-weight-bold);
-  line-height: 1.5;
-}
-
-main .hero.comparison p {
-  font-size: 18px;
-  font-weight: 400;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #fff;
-  margin: 24px 0 0;
-}
-
-main .hero.black-background h1 + p {
-  color: var(--text-dark-color);
-}
-
-main .hero p.button-container {
-  margin: 0;
-  padding: 10px 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 2px;
-}
-
-main .hero p.button-container.discount-bubble-container{
-  padding-top: 0;
-}
-
-main .hero img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-
-main .hero .hero-picture picture img {
-  display: none;
-  padding-left: 200px;
-}
-
-main .hero a.button {
-  margin: 8px 13px 0 0;
-} 
-
-main .hero a.button.modal {
-  padding: 0 28px 0 0;
-  min-width: unset;
-}
-
-@media (min-width: 1400px){
-  main .hero a.button {
-    min-width: 360px;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
-main .hero a.button span.button-text {
-  transition: all .25s cubic-bezier(.4,0,.2,1);
-  display: inline-block;
-  position: relative;
-  font-size: var(--hero-font-size-xs);
-  font-weight: var(--font-weight-bold);
-}
-
-
-main .hero .discount-bubble {
-  background: #2cb43d;
-  border-radius: 50%;
-  width: 72px;
-  height: 72px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 2px;
-  bottom: -5px;
-  right: 0;
-  position: relative;
-}
-
-main .hero .discount-bubble .discount-bubble-0 {
-  font-size: 24px;
-  color: #fff;
-  font-weight: var(--font-weight-boldest);
-  line-height: .8;
-  text-decoration: none;
-  padding-top: 12px;
-}
-
-main .hero .discount-bubble .discount-bubble-1 {
-  font-size: 11px;
-  color: #fff;
-  line-height: 1.71;
-  font-weight: var(--font-weight-bold);
-  font-style: normal;
-  text-decoration: none;
-}
-
-main .hero .wrapper-plan-discount {
-  margin: 0 0 10px;
-  display: -webkit-box;
-  display: flex;
-  flex-wrap: wrap;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center
-}
-
-main .hero .hero-content ul {
-  margin: 20px 0 0;
-  padding: 0;
-  text-align: left;
-  list-style-type: none;
-}
-
-main .hero .hero-content ul li {
-  font-size: var(--hero-font-size-xxxs);
-  font-weight: var(--font-weight-regular);
-  letter-spacing: 0.096px;
-  line-height: 1.5;
-  color: var(--hero-p-color);
-  margin: 13px 0 0;
-  padding: 0 0 0 20px;
-  position: relative;
-  list-style: none;
-}
-
-main .hero .hero-content ul li:first-child {
-  margin: 9px 0 0;
-}
-  
-main .hero ul li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 3px;
-  width: 15px;
-  height: 15px;
-  background-color: var(--background-checkmark);
-  border-radius: 50%;
-  z-index: 1;
-}
-
-main .hero ul li::after {
-  content: "";
-  position: absolute;
-  left: 5px;
-  top: 5px;
-  width: 3px;
-  height: 7px;
-  border-bottom: 2px solid var( --white-color);
-  border-right: 2px solid var( --white-color);
-  transform: rotate(45deg);
-  z-index: 2;
-}
-
-main .hero ul.hero-awards {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 0;
-  padding: 40px 0 48px;
-  text-align: left;
-}
-
-main .hero .hero-content ul.hero-awards li {
-  display: block;
-  min-height: 20px;
-  margin: 0 20px 30px 0;
-  padding: 0;
-  width: auto;
-}
-
-main .hero ul.hero-awards li::before {
-  content: none;
-}
-
-main .hero ul.hero-awards li picture img {
-  display: block;
-  height: 80px;
-  width: auto;
-}
-
-main .hero .hero-awards li::after {
-  content: none;
-}
-
-@media(min-width: 767px) { /* tablet */
   :root {
-    --hero-h1-font-size: 42px;
+    /* hero font size */
+    --hero-font-size-xxxl: 50px;
+    --hero-font-size-xxl: 48px;
+    --hero-font-size-xl: 40px;
+    --hero-font-size-l: 32px;
+    --hero-font-size-m: 22px;
+    --hero-font-size-s: 20px;
+    --hero-font-size-xs: 18px;
+    --hero-font-size-xxs: 16px;
+    --hero-font-size-xxxs: 14px;
+    --hero-h1-font-size: 32px;
+    --hero-h2-font-size: 24px;
+    --hero-botton-border-color: #616161;
+    --hero-p-color: #3c3c3c;
+  
+    /* breadcrumbs font size */  
+    --breadcrumb-text-color-dark: #c5c5c5;
+    --breadcrumb-text-color-dark-hover: #616161;
+    --breadcrumbs-font-size-s: 12px;
   }
-
-  main .hero h2 {
-    font-size: 20px;
-  }
-
+  
+  
+  /* breadcrumbs */
+  
   main .hero .hero-content .breadcrumb {
-    min-height: 58px;
+    padding: 14px 0 20px;
+    margin-bottom: 20px;
+    font-weight: var(--font-weight-bold);
+    color: #dedede;
+    min-height: 82px;
   }
-
+  
+  main .hero.black-background .hero-content .breadcrumb{
+    padding: 12px 0;
+    margin-bottom: 12px;
+  }
+  
+  main .hero .hero-content .breadcrumb a {
+    font-size: var(--breadcrumbs-font-size-s);
+    font-weight: var(--font-weight-bold);
+    color: var(--breadcrumb-text-color-dark-hover);
+    text-decoration: none;
+    line-height: 1.7;
+    letter-spacing: .96px;
+  }
+  
+  main .hero .hero-content .breadcrumb a:last-child {
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+  
   main .hero .hero-content .breadcrumb a::after {
-    margin: 0 9px;
+    content: "/";
+    display: inline-block;
+    color: var(--color-dark-gray);
+    margin: 0 3px;
+    font-size: 9pt;
   }
-
-}
-
-@media (min-width: 990px) { /* desktop */
-
-  main .hero .hero-content > div.left-col {
-    width: 50%;
+  
+  main .hero .hero-content .breadcrumb a:hover {
+    color: var(--text-color);
   }
-
-  main .hero .hero-content > div.right-col {
-    width: 50%;
-    padding-left: 1.25rem;
+  
+  main .hero.black-background .hero-content .breadcrumb a {
+    color: var(--breadcrumb-text-color-dark);
+    text-decoration: none;
   }
-
-  main .hero h2 {
-    font-size: 22px;
-    margin-bottom: 10px;
+  
+  main .hero.black-background .hero-content .breadcrumb a::after {
+    color: #dedede;
   }
-
-  main .hero h1 {
-    font-size: 50px;
+  
+  main .hero.black-background .hero-content .breadcrumb a:hover {
+    color: var(--breadcrumb-text-color-dark-hover);
   }
-
+  
+  /* hero */
+  
+  main .hero-container > div {
+    max-width: unset;
+  }
+    
+  main .hero-container {
+    padding: 0;
+    margin: 0 auto;
+  }
+  
+  main .hero .hero-content > div {
+    width: 100%;
+  }
+  
+  main .hero-container .hero-wrapper {
+    padding: 0;
+  }
+  
+  main .hero {
+    position: relative;
+    padding: 0;
+    min-height: 300px;
+  }
+  
+  main .hero::after{
+      position: absolute;
+      content: "";
+      left: 0;
+      bottom: 0;
+      height: 32px;
+      width: 100%;
+      background-color: #e4f2ff;
+  }
+  
+  main .hero.black-background {
+    background-color: var(--dark-background-color);
+  }
+  
+  main .hero.black-background::after {
+    content: none;
+    background-color: transparent;
+  }
+  
+  main .hero.comparison {
+    height: 600px;
+  }
+  
   main .hero .hero-picture {
     position: absolute;
     top: 0;
-    bottom: auto;
+    bottom: 0;
     left: 0;
     right: 0;
   }
-
+  
+  main .hero .hero-content {
+    display: flex;
+    flex-direction: column;
+    padding: 15px var(--body-padding) 65px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  main .hero .hero-content .right-col {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  main .hero.black-background .hero-content {
+    padding: 17px var(--body-padding) 56px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(90deg, #000 0%, #000 15%, #fff0 100%);
+  }
+  
+  main .hero.comparison .hero-content {
+    height: 100%;
+    padding: 40px;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  main .hero h1 {
+    font-size: var(--hero-font-size-xl);
+    margin: 0;
+  
+  }
+  
+  main .hero h2 {
+    font-size: 18px;
+    color: var(--text-color);
+    margin: 0 0 9px;
+    padding: 15px 0 0;
+    letter-spacing: .003em;
+  }
+  
+  main .hero.black-background h1 {
+    font-size: var(--hero-h1-font-size);
+    margin: 0 0 25px; 
+  }
+  
+  main .hero.black-background h1, 
+  main .hero.black-background h2,
+  main .hero.black-background h4 {
+    color: var(--text-dark-color);
+  }
+  
+  main .hero.black-background h2,
+  main .hero.black-background h4 {
+    padding: 0;
+    letter-spacing: normal;
+    margin: 0 0 9px;
+  }
+  
+  main .hero.comparison h1 {
+    font-weight: var(--font-weight-regular);
+  }
+  
   main .hero p {
-    font-size: 14px;
+    color: var(--hero-p-color);
+    font-size: var(--hero-font-size-xxxs);
+    font-weight: var(--font-weight-regular);
+    line-height: 1.5;
+    display: block;
+    letter-spacing: .006em;
     margin: 0;
   }
-
+  
+  main .hero h1 + p {
+    margin: 8px 0 0;
+    color: #616161;
+    font-size: var(--hero-font-size-xxs);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.5;
+  }
+  
+  main .hero.comparison p {
+    font-size: 18px;
+    font-weight: 400;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #fff;
+    margin: 24px 0 0;
+  }
+  
+  main .hero.black-background h1 + p {
+    color: var(--text-dark-color);
+  }
+  
+  main .hero p.button-container {
+    margin: 0;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  main .hero p.button-container.discount-bubble-container{
+    padding-top: 0;
+  }
+  
+  main .hero img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  
   main .hero .hero-picture picture img {
-    display: block;
-    padding-left: 0;
+    display: none;
+    padding-left: 200px;
   }
-
-  main .hero .hero-content {
-    max-width: var(--section-desktop-max-width);
-    min-height: unset;
-    padding: 112px var(--section-desktop-padding) 54px var(--section-desktop-padding);
-    padding-top: 115px;
+  
+  main .hero a.button {
+    margin: 8px 13px 0 0;
+  } 
+  
+  main .hero a.button.modal {
+    padding: 0 28px 0 0;
+    min-width: unset;
+  }
+  
+  @media (min-width: 1400px){
+    main .hero a.button {
+      min-width: 360px;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  
+  main .hero a.button span.button-text {
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    display: inline-block;
+    position: relative;
+    font-size: var(--hero-font-size-xs);
+    font-weight: var(--font-weight-bold);
+  }
+  
+  
+  main .hero .discount-bubble {
+    background: #2cb43d;
+    border-radius: 50%;
+    width: 72px;
+    height: 72px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 2px;
+    bottom: -5px;
+    right: 0;
+    position: relative;
   }
-
-  main .hero a.button.primary {
-    min-width: 360px;
+  
+  main .hero .discount-bubble .discount-bubble-0 {
+    font-size: 24px;
+    color: #fff;
+    font-weight: var(--font-weight-boldest);
+    line-height: .8;
+    text-decoration: none;
+    padding-top: 12px;
   }
-
-  main .hero .hero-content > div {
-    width: 60%;
-    padding: 0 20px 0 0;
+  
+  main .hero .discount-bubble .discount-bubble-1 {
+    font-size: 11px;
+    color: #fff;
+    line-height: 1.71;
+    font-weight: var(--font-weight-bold);
+    font-style: normal;
+    text-decoration: none;
   }
-
-  main .hero.comparison .hero-content > div {
-    width: 65%;
-    padding: 40px 0 0;
-  }
-
-  main .hero .hero-content .breadcrumb a {
-    line-height: 1;
-    letter-spacing: .96px;
-  }
-
-  main .hero ul.hero-awards {
+  
+  main .hero .wrapper-plan-discount {
+    margin: 0 0 10px;
+    display: -webkit-box;
+    display: flexbox;
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center
+  }
+  
+  main .hero .hero-content ul {
+    margin: 20px 0 0;
+    padding: 0;
+    text-align: left;
+    list-style-type: none;
+  }
+  
+  main .hero .hero-content ul li {
+    font-size: var(--hero-font-size-xxxs);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: 0.096px;
+    line-height: 1.5;
+    color: var(--hero-p-color);
+    margin: 13px 0 0;
+    padding: 0 0 0 20px;
+    position: relative;
+    list-style: none;
+  }
+  
+  main .hero .hero-content ul li:first-child {
+    margin: 9px 0 0;
+  }
+    
+  main .hero ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 15px;
+    height: 15px;
+    background-color: var(--background-checkmark);
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  main .hero ul li::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 3px;
+    height: 7px;
+    border-bottom: 2px solid var( --white-color);
+    border-right: 2px solid var( --white-color);
+    transform: rotate(45deg);
+    z-index: 2;
+  }
+  
+  main .hero.black-background ul.hero-awards {
+    display: flex;
+    flex-flow: row wrap;
     align-items: center;
     justify-content: flex-start;
     margin: 0;
-    padding: 40px 0 0;
+    padding: 40px 0 48px;
+    text-align: left;
   }
-
-  main .hero ul.hero-awards li {
+  
+  main .hero.black-background ul.hero-awards li {
     display: block;
     min-height: 20px;
-    margin: 9px 20px 0 0;
+    margin: 0 20px 30px 0;
     padding: 0;
     width: auto;
   }
-
-}
-
-@media (min-width: 1300px) {
-  main .hero .hero-picture picture img {
-    padding-left: 20%;
-  }
-}
-
-@media (min-width: 1600px) { /* large desktop */
   
-
-  main .hero .hero-content .breadcrumb {
-    padding: 9px 0;
-    margin-bottom: 15px;
+  main .hero.black-background ul.hero-awards li::before {
+    content: none;
   }
-
-  main .hero h2 {
-    font-size: 24px;
-  }
-
-  main .hero h1 {
-    font-size: 56px;
-  }
-
-  main .hero .hero-picture picture img {
+  
+  main .hero.black-background ul.hero-awards li picture img{
     display: block;
-    padding-left: 25%;
+    height: 80px;
+    width: auto;
   }
-
-  main .hero .discount-bubble {
-    width: 83px;
-    height: 83px;
+  
+  main .hero .hero-awards li::after {
+    content: none;
   }
-
-  main .hero .discount-bubble .discount-bubble-0 {
-    font-size: 32px;
+  
+  @media(min-width: 767px) { /* tablet */
+    :root {
+      --hero-h1-font-size: 42px;
+    }
+  
+    main .hero h2 {
+      font-size: 20px;
+    }
+  
+    main .hero .hero-content .breadcrumb {
+      margin-bottom: 0;
+      min-height: 58px;
+    }
+  
+    main .hero .hero-content .breadcrumb a::after {
+      margin: 0 9px;
+    }
+  
   }
-
-  main .hero .discount-bubble .discount-bubble-1 {
-    font-size: 14px;
+  
+  @media (min-width: 990px) { /* desktop */
+  
+    main .hero .hero-content > div {
+      width: 60%;
+    }
+  
+    main .hero .hero-content > div.left-col {
+      width: 50%;
+    }
+  
+    main .hero .hero-content > div.right-col {
+      width: 50%;
+      padding-left: 1.25rem;
+    }
+  
+    main .hero h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+  
+    main .hero.black-background h1 {
+      font-size: 50px;
+    }
+  
+    main .hero.black-background  h2 {
+      font-size: 22px;
+    }
+  
+    main .hero .hero-picture {
+      position: absolute;
+      top: 0;
+      bottom: auto;
+      left: 0;
+      right: 0;
+    }
+  
+    main .hero p {
+      font-size: 14px;
+      margin: 0;
+    }
+  
+    main .hero .hero-picture picture img {
+      display: block;
+      padding-left: 0;
+    }
+  
+    main .hero .hero-content {
+      min-height: 725px;
+      flex-direction: row;
+      max-width: var(--section-desktop-max-width);
+      padding: 112px var(--section-desktop-padding) 54px var(--section-desktop-padding)
+    }
+  
+    main .hero.black-background .hero-content {
+      max-width: var(--section-desktop-max-width);
+      padding-left: var(--section-desktop-padding);
+      padding-right: var(--section-desktop-padding);
+      padding-top: 115px;
+      display: flex;
+      flex-direction: row;
+      min-height: unset;
+    }
+  
+    main .hero a.button.primary {
+      min-width: 360px;
+    }
+  
+    main .hero.black-background .hero-content > div {
+      width: 60%;
+      padding: 0 20px 0 0;
+    }
+  
+    main .hero.comparison .hero-content > div {
+      width: 65%;
+      padding: 40px 0 0;
+    }
+  
+    main .hero .hero-content .breadcrumb a {
+      line-height: 1;
+      letter-spacing: .96px;
+    }
+    
+    main .hero.black-background ul.hero-awards {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 0;
+      padding: 40px 0 0;
+    }
+  
+    main .hero.black-background ul.hero-awards li {
+      display: block;
+      min-height: 20px;
+      margin: 9px 20px 0 0;
+      padding: 0;
+      width: auto;
+    }
+  
   }
-
-  main .hero .hero-content {
-    min-height: 725px;
-    max-width: var(--section-large-desktop-max-width);
-    padding-left: var(--section-large-desktop-padding);
-    padding-right: var(--section-large-desktop-padding);
+  
+  @media (min-width: 1300px) {
+    main .hero .hero-picture picture img {
+      padding-left: 20%;
+    }
   }
-}
+  
+  @media (min-width: 1600px) { /* large desktop */
+    
+  
+    main .hero.black-background .hero-content .breadcrumb {
+      padding: 9px 0;
+      margin-bottom: 15px;
+    }
+  
+    main .hero h2 {
+      font-size: 24px;
+    }
+  
+    main .hero.black-background h2 {
+      font-size: 24px;
+    }
+  
+    main .hero.black-background h1 {
+      font-size: 56px;
+    }
+  
+    main .hero .hero-picture picture img {
+      display: block;
+      padding-left: 25%;
+    }
+  
+    main .hero .discount-bubble {
+      width: 83px;
+      height: 83px;
+    }
+  
+    main .hero .discount-bubble .discount-bubble-0 {
+      font-size: 32px;
+    }
+  
+    main .hero .discount-bubble .discount-bubble-1 {
+      font-size: 14px;
+    }
+  
+    main .hero .hero-content {
+      min-height: 725px;
+      max-width: var(--section-large-desktop-max-width);
+      padding-left: var(--section-large-desktop-padding);
+      padding-right: var(--section-large-desktop-padding);
+    }
+  
+    main .hero.black-background .hero-content {
+      max-width: var(--section-large-desktop-max-width);
+      padding-left: var(--section-large-desktop-padding);
+      padding-right: var(--section-large-desktop-padding);
+    }
+   
+  }
+  
