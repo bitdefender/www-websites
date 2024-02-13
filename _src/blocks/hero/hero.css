@@ -128,6 +128,9 @@ main .hero .hero-content .right-col {
 }
 
 main .hero.black-background .hero-content {
+  padding: 17px var(--body-padding) 56px;
+  display: flex;
+  flex-direction: column;
   background: linear-gradient(90deg, #000 0%, #000 15%, #fff0 100%);
 }
 
