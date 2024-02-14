@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 /*
  * Copyright 2020 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -477,7 +479,6 @@ main .section.bitdefender-ferrari .default-content-wrapper .button-container {
   justify-content: center;
   text-align: right;
   order: 2;
-  margin-bottom: 10px;
   background-color: #e4f2ff;
   margin-bottom: 0;
   overflow: hidden;
