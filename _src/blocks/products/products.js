@@ -365,7 +365,7 @@ createNanoBlock('lowestPrice', renderLowestPrice);
  */
 export default function decorate(block) {
   [...block.children].forEach((row, idxParent) => {
-    [...(row.children)].forEach((col, idxChild) => {
+    [...(row.children)].forEach((col) => {
       col.classList.add('product-card');
       block.appendChild(col);
 

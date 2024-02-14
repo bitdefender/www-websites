@@ -266,9 +266,7 @@ export default function decorate(block) {
   }
 
   extractTextFromStrongTagToParent(block);
-  console.log(block);
   [...block.children[0].children].slice(1).forEach((item, idx) => {
     renderNanoBlocks(item, undefined, idx);
   });
-
 }

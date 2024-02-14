@@ -5,14 +5,14 @@ import {
 } from './utils/utils.js';
 
 // eslint-disable-next-line import/no-cycle
-import {decorateBlockWithRegionId, getDomain} from './scripts.js';
+import { decorateBlockWithRegionId, getDomain } from './scripts.js';
 
 function prependSlash(path) {
   return path.startsWith('/') ? path : `/${path}`;
 }
 
-function getName(pageIndex, path, part, current, domain) {
-  const pg = pageIndex.find((page) => page.path ===  path);
+function getName(pageIndex, path, part, current) {
+  const pg = pageIndex.find((page) => page.path === path);
   if (pg && pg.breadcrumbtitle && pg.breadcrumbtitle !== '0') {
     return pg.breadcrumbtitle;
   }
@@ -41,7 +41,7 @@ async function createBreadcrumbs(container) {
   const pathSeparator = '/';
   // split pathname into parts add / at the end and remove empty parts
   const domain = getDomain();
-  const pathSplit = pathname.split('/').filter(item => item !== domain).reduce((acc, curr, index, array) => {
+  const pathSplit = pathname.split('/').filter((item) => item !== domain).reduce((acc, curr, index, array) => {
     if (index < array.length - 1) {
       acc.push(`${curr}/`);
     } else if (curr !== '') {

@@ -2,27 +2,29 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink) {
-  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, "consumer")]);
+  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
   const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
   const price = storeOption.getPrice();
   const discountedPrice = storeOption.getDiscountedPrice();
-  const discount = storeOption.getDiscount("valueWithCurrency");
+  const discount = storeOption.getDiscount('valueWithCurrency');
   const buyLink = await storeOption.getStoreUrl();
   window.adobeDataLayer.push({
-    event: "product loaded",
-    product: [{info : {
-      ID: storeOption.getAvangateId(),
-      name: storeOption.getName(),
-      devices: storeOption.getDevices(),
-      subscription: storeOption.getSubscription("months"),
-      version: storeOption.getSubscription("months") === 1 ? "monthly" : "yearly",
-      basePrice: storeOption.getPrice("value"),
-      discountValue: storeOption.getDiscount("value"),
-      discountRate: storeOption.getDiscount("percentage"),
-      currency: storeOption.getCurrency(),
-      priceWithTax: storeOption.getDiscountedPrice("value") || storeOption.getPrice("value"),
-    }}]
-  })
+    event: 'product loaded',
+    product: [{
+      info: {
+        ID: storeOption.getAvangateId(),
+        name: storeOption.getName(),
+        devices: storeOption.getDevices(),
+        subscription: storeOption.getSubscription('months'),
+        version: storeOption.getSubscription('months') === 1 ? 'monthly' : 'yearly',
+        basePrice: storeOption.getPrice('value'),
+        discountValue: storeOption.getDiscount('value'),
+        discountRate: storeOption.getDiscount('percentage'),
+        currency: storeOption.getCurrency(),
+        priceWithTax: storeOption.getDiscountedPrice('value') || storeOption.getPrice('value'),
+      },
+    }],
+  });
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
@@ -74,8 +76,8 @@ export default function decorate(block, options) {
   // Configuration for new elements
   richText.classList.add('hero-aem__card__desktop', 'col-md-6');
   mainDesktopImage.classList.add('col-md-6');
-  mainDesktopImage.children[0].classList.add("h-100");
-  
+  mainDesktopImage.children[0].classList.add('h-100');
+
   const mobileImage = block.querySelector('.hero-aem__card__desktop div > p > picture');
   mobileImage.classList.add('hero-aem__mobile-image');
 
@@ -97,13 +99,13 @@ export default function decorate(block, options) {
     buyLink.classList.add('button', 'primary');
 
     createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink)
-    .then(pricesBox => {
-      buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
-      window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-        bubbles: true,
-        composed: true, // This allows the event to cross the shadow DOM boundary
+      .then((pricesBox) => {
+        buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
+        window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+          bubbles: true,
+          composed: true, // This allows the event to cross the shadow DOM boundary
+        });
       });
-    })
   } else {
     // If there is no product, just add the button class and dispatch the event
     const simpleLink = block.querySelector('.hero-aem__card-text a');
@@ -133,5 +135,4 @@ export default function decorate(block, options) {
   aemContainer.appendChild(cardElement);
   richTextCard.innerHTML = '';
   columnsCard.forEach((col) => col.remove());
-  
 }

@@ -1,3 +1,4 @@
 helix-importer-ui
 tools/sitemap
-solutions/plugins/experimentation
+_src/plugins/experimentation
+_src/scripts/lib-franklin-api.js

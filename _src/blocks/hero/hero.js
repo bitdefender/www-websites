@@ -20,7 +20,7 @@ function buildHeroBlock(element) {
     const subSection = document.querySelector('div.hero div');
     subSection.classList.add('hero-content');
 
-    const isHomePage = window.location.pathname.split('/').filter(item => item).length === 1;
+    const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
     if (!isHomePage) {
       const breadcrumb = createTag('div', { class: 'breadcrumb' });
