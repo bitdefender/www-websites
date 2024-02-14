@@ -12,7 +12,6 @@ import {
   loadBlocks,
   loadCSS,
   getMetadata,
-  toClassName,
 } from './lib-franklin.js';
 
 import {
@@ -179,18 +178,18 @@ function getCurrentDate() {
  * Returns the environment name based on the hostname
  * @returns {String}
  */
-export function getEnvironment(hostname, country) {
+export function getEnvironment(hostname) {
   if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
     return 'stage';
   }
-  if (hostname.includes(`www.bitdefender`)) {
+  if (hostname.includes('www.bitdefender')) {
     return 'prod';
   }
   return 'dev';
 }
 
 export function getDomain() {
-  return window.location.pathname.split('/').filter(item => item)[0];
+  return window.location.pathname.split('/').filter((item) => item)[0];
 }
 
 /**
@@ -199,7 +198,7 @@ export function getDomain() {
  */
 function setPageLanguage(param) {
   document.documentElement.lang = param.language;
-  const pages = window.location.pathname.split('/').filter(item => item);
+  const pages = window.location.pathname.split('/').filter((item) => item);
   const domain = pages[0];
   const basePath = pages.length > 1 ? `${domain}/solutions` : domain;
   createMetadata('nav', `/${basePath}/nav`);
@@ -511,7 +510,8 @@ async function loadEager(doc) {
   }
 }
 
-// todo remove export after having a clear path for the overall unit testing strategy of the all page
+// todo remove export after having a
+// clear path for the overall unit testing strategy of the all page
 export function generateHrefLang() {
   hreflangMap.forEach(({ baseUrl, pageType }, key) => {
     const link = document.createElement('link');

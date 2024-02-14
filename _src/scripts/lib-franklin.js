@@ -163,9 +163,9 @@ export function getMetadata(name) {
 export function toClassName(name) {
   return typeof name === 'string'
     ? name.toLowerCase()
-      .replace(/[^\w\u4e00-\u9fa5]/g, '-')  // Include Chinese characters in the regular expression
-      .replace(/-+/g, '-')  // Replace consecutive hyphens with a single hyphen
-      .replace(/^-|-$/g, '')  // Remove leading and trailing hyphens
+      .replace(/[^\w\u4e00-\u9fa5]/g, '-') // Include Chinese characters in the regular expression
+      .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
+      .replace(/^-|-$/g, '') // Remove leading and trailing hyphens
     : '';
 }
 

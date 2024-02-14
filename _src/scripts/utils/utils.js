@@ -2,12 +2,12 @@ export const localisationList = ['zh-hk', 'zh-tw', 'en-us'];
 export function getDefaultLanguage() {
   const currentPathUrl = window.location.pathname;
   const foundLanguage = localisationList.find((item) => currentPathUrl.indexOf(`/${item}/`) !== -1);
-  return foundLanguage?.replace('zh-','') || 'site';
+  return foundLanguage?.replace('zh-', '') || 'site';
 }
 
 const cacheResponse = new Map();
 const siteName = getDefaultLanguage();
-const FETCH_URL = `https://www.bitdefender.com/site/Store/ajax`;
+const FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
@@ -155,6 +155,11 @@ function parseParams(params) {
   return result;
 }
 
+export function getDatasetFromSection(block) {
+  const parentSelector = block.closest('.section');
+  return parentSelector.dataset;
+}
+
 /**
  * Renders nano blocks
  * @param parent The parent element
@@ -168,7 +173,7 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
       matches.forEach((match) => {
         const [name] = parseParams(match.slice(1, -1));
         const datasetValue = getDatasetFromSection(parent);
-        const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || ''
+        const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || '';
         const newMatch = [match, datasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
         const [newName, ...params] = parseParams(newMatch);
@@ -242,9 +247,4 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   window.index[idxKey] = newIndex;
 
   return newIndex;
-}
-
-export function getDatasetFromSection(block) {
-  const parentSelector = block.closest('.section');
-  return parentSelector.dataset;
 }
