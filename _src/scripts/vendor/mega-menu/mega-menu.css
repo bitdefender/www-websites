@@ -238,7 +238,7 @@
     will-change: transform;
 }
 .mega-menu a.we-btn-black span:after, .mega-menu button.we-btn-black span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
@@ -302,7 +302,7 @@
     will-change: transform;
 }
 .mega-menu a.we-btn-red span:after, .mega-menu button.we-btn-red span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
@@ -370,7 +370,7 @@
     will-change: transform;
 }
 .mega-menu a.we-btn-green span:after, .mega-menu button.we-btn-green span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
@@ -438,7 +438,7 @@
     will-change: transform;
 }
 .mega-menu a.we-btn-blue span:after, .mega-menu button.we-btn-blue span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
@@ -511,7 +511,7 @@
     will-change: transform;
 }
 .mega-menu a.we-app-store span:after, .mega-menu button.we-app-store span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
@@ -591,7 +591,7 @@
     will-change: transform;
 }
 .mega-menu a.we-btn-white span:after, .mega-menu button.we-btn-white span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     content: "";
     display: inline-block;
     height: 10px;
@@ -619,7 +619,7 @@
     color: #000;
 }
 .mega-menu a.we-btn-white span:after, .mega-menu button.we-btn-white span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/blue-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/blue-arrow.svg) no-repeat;
     background-size: cover;
 }
 .mega-menu a.we-btn-transparent, .mega-menu button.we-btn-transparent {
@@ -661,7 +661,7 @@
     will-change: transform;
 }
 .mega-menu a.we-btn-transparent span:after, .mega-menu button.we-btn-transparent span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     content: "";
     display: inline-block;
     height: 10px;
@@ -686,7 +686,7 @@
     right: -22px;
 }
 .mega-menu a.we-btn-transparent span:after, .mega-menu button.we-btn-transparent span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/blue-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/blue-arrow.svg) no-repeat;
     background-size: cover;
 }
 .mega-menu a.we-btn-transparent:hover, .mega-menu button.we-btn-transparent:hover {
@@ -760,7 +760,7 @@
     color: #000;
 }
 .mega-menu a.we-btn-black-border span:after, .mega-menu button.we-btn-black-border span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
 }
@@ -834,7 +834,7 @@
     right: -22px;
 }
 .mega-menu .button.we-btn-search:before, .mega-menu a.we-btn-search:before, .mega-menu button.we-btn-search:before {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/search-icon.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/search-icon.svg) no-repeat;
     background-size: cover;
     content: "";
     height: 30px;
@@ -852,7 +852,7 @@
     color: #000;
 }
 .mega-menu .button.we-btn-search span:after, .mega-menu a.we-btn-search span:after, .mega-menu button.we-btn-search span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
 }
@@ -868,7 +868,7 @@
     text-align: left;
 }
 .mega-menu .button.we-btn-search:hover:before, .mega-menu a.we-btn-search:hover:before, .mega-menu button.we-btn-search:hover:before {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/search-icon.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/search-icon.svg) no-repeat;
     background-size: cover;
     content: "";
     height: 30px;
@@ -881,7 +881,7 @@
     color: #000;
 }
 .mega-menu .button.we-btn-search:hover span:after, .mega-menu a.we-btn-search:hover span:after, .mega-menu button.we-btn-search:hover span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
 }
@@ -965,7 +965,7 @@
     color: #006eff;
 }
 .mega-menu a.we-btn-blue-border span:after, .mega-menu button.we-btn-blue-border span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
 }
@@ -996,7 +996,7 @@
     position: relative;
 }
 .mega-menu .we-link-with-white span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
@@ -1033,7 +1033,7 @@
     position: relative;
 }
 .mega-menu .we-link-with-blue span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
@@ -1049,19 +1049,19 @@
     transform: translateX(4px);
 }
 .mega-menu .we-link-with-blue span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/blue-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/blue-arrow.svg) no-repeat;
 }
 .mega-menu .we-link-with-blue:hover {
     color: #00439c;
 }
 .mega-menu .we-link-with-blue:hover span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/dark-blue-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/dark-blue-arrow.svg) no-repeat;
 }
 .mega-menu .we-link-with-blue.download {
     padding-left: 20px;
 }
 .mega-menu .we-link-with-blue.download:before {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/download.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/download.svg) no-repeat;
     content: "";
     display: inline-block;
     height: 14px;
@@ -1095,7 +1095,7 @@
     opacity: 0.8;
 }
 .mega-menu .we-link-download:before {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/download_icon.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/download_icon.svg) no-repeat;
     content: "";
     display: inline-block;
     height: 14px;
@@ -1113,7 +1113,7 @@
     opacity: 0.8;
 }
 .mega-menu .we-link-user-guide:before {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/mannual_icon.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/mannual_icon.svg) no-repeat;
     content: "";
     display: inline-block;
     height: 16px;
@@ -2990,7 +2990,7 @@
     height: 24px;
 }
 .mega-menu .play-video:after {
-    background: #006eff url(https://www.bitdefender.com/content/dam/bitdefender/play_icon_blue.png) no-repeat 50%;
+    background: #006eff url(../../../content/dam/bitdefender/play_icon_blue.png) no-repeat 50%;
     background-size: 100%;
     border-radius: 50%;
     content: "";
@@ -3194,7 +3194,7 @@
     will-change: transform;
 }
 .mega-menu .popup-form input[type=submit] span:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
@@ -3224,7 +3224,7 @@
     border: 2px solid #d80000;
 }
 .mega-menu .popup-form .close-btn {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/close-icon.svg) no-repeat;
+    background: url(../../../content/dam/bitdefender/close-icon.svg) no-repeat;
     background-size: 40px;
     cursor: pointer;
     height: 32px;
@@ -3277,21 +3277,20 @@
 .mega-menu .newpar.section {
     padding: 0;
 }
-.mega-menu {
+.mega-menu .mega-menu {
     position: relative;
     z-index: 5;
 }
-.mega-menu__container {
+.mega-menu .mega-menu__container {
     background: #fff;
     position: relative;
-    border-bottom: solid;
 }
 @media (min-width: 992px) {
-    .mega-menu__container {
+    .mega-menu .mega-menu__container {
         padding-bottom: 66px;
     }
 }
-.mega-menu__container:after {
+.mega-menu .mega-menu__container:after {
     background: #f0f0f0;
     content: "";
     height: 1px;
@@ -3299,9 +3298,9 @@
     pointer-events: none;
     position: absolute;
     width: 100%;
-    z-index: 5;
+    z-index: 2;
 }
-.mega-menu__content {
+.mega-menu .mega-menu__content {
     align-items: center;
     display: flex;
     height: 64px;
@@ -3310,25 +3309,25 @@
     width: 100%;
 }
 @media (min-width: 992px) {
-    .mega-menu__content {
+    .mega-menu .mega-menu__content {
         justify-content: flex-start;
     }
 }
-.mega-menu a, .mega-menu span {
+.mega-menu .mega-menu a, .mega-menu .mega-menu span {
     font-family: Arial, sans-serif;
 }
-.mega-menu__l2-link, .mega-menu__link, .mega-menu__right-link {
+.mega-menu .mega-menu__l2-link, .mega-menu .mega-menu__link, .mega-menu .mega-menu__right-link {
     color: #000;
 }
-.mega-menu__category-links {
+.mega-menu .mega-menu__category-links {
     display: none;
 }
 @media (min-width: 992px) {
-    .mega-menu__category-links {
+    .mega-menu .mega-menu__category-links {
         display: block;
     }
 }
-.mega-menu__category-link {
+.mega-menu .mega-menu__category-link {
     color: #006dff;
     display: inline-block;
     font-size: 0.875rem;
@@ -3336,39 +3335,39 @@
     margin-right: 20px;
 }
 @media (max-width: 991px) {
-    .mega-menu__category-link {
+    .mega-menu .mega-menu__category-link {
         font-size: 1rem;
     }
 }
-.mega-menu ul {
+.mega-menu .mega-menu ul {
     list-style: none;
     padding-left: 0;
 }
-.mega-menu li {
+.mega-menu .mega-menu li {
     margin-bottom: 0;
     padding-left: 0;
 }
-.mega-menu__logo {
+.mega-menu .mega-menu__logo {
     display: block;
     margin-right: 20px;
     width: 164px;
 }
-.mega-menu__button-wrap {
+.mega-menu .mega-menu__button-wrap {
     display: flex;
     flex-grow: 1;
     justify-content: flex-end;
 }
 @media (min-width: 992px) {
-    .mega-menu__button-wrap {
+    .mega-menu .mega-menu__button-wrap {
         display: none;
     }
 }
-.mega-menu__button {
+.mega-menu .mega-menu__button {
     cursor: pointer;
     display: block;
     position: relative;
 }
-.mega-menu__button-bar {
+.mega-menu .mega-menu__button-bar {
     background-color: #000;
     display: block;
     height: 3px;
@@ -3377,40 +3376,39 @@
     transition: transform 0.3s ease-in-out, opacity 0.3s;
     width: 25px;
 }
-.mega-menu__button-bar:last-child {
+.mega-menu .mega-menu__button-bar:last-child {
     margin-bottom: 0;
 }
 @media (min-width: 992px) {
-    .mega-menu__left-container {
+    .mega-menu .mega-menu__left-container {
         flex-grow: 1;
     }
 }
-.mega-menu__left, .mega-menu__right {
+.mega-menu .mega-menu__left, .mega-menu .mega-menu__right {
     display: none;
 }
 @media (min-width: 992px) {
-    .mega-menu__left, .mega-menu__right {
+    .mega-menu .mega-menu__left, .mega-menu .mega-menu__right {
         display: flex;
     }
 }
 @media (max-width: 991px) {
-    .mega-menu__left {
+    .mega-menu .mega-menu__left {
         background: #fff;
         left: 0;
         min-height: 100vh;
         position: absolute;
         top: 100%;
         width: 100%;
-        z-index: 5;
     }
 }
 @media (min-width: 992px) {
-    .mega-menu__left {
+    .mega-menu .mega-menu__left {
         flex-grow: 1;
     }
 }
 @media (max-width: 991px) {
-    .mega-menu__right {
+    .mega-menu .mega-menu__right {
         background: #fff;
         left: 0;
         min-height: calc(100vh - var(--right-links-offset, 193px));
@@ -3419,7 +3417,7 @@
         width: 100%;
     }
 }
-.mega-menu__link, .mega-menu__right-link {
+.mega-menu .mega-menu__link, .mega-menu .mega-menu__right-link {
     border-bottom: 4px solid transparent;
     color: #000;
     cursor: pointer;
@@ -3429,21 +3427,21 @@
     margin-top: 15px;
     padding: 16px 0;
 }
-.mega-menu__link:hover, .mega-menu__right-link:hover {
+.mega-menu .mega-menu__link:hover, .mega-menu .mega-menu__right-link:hover {
     color: #006dff;
 }
 @media (max-width: 991px) {
-    .mega-menu__link, .mega-menu__right-link {
+    .mega-menu .mega-menu__link, .mega-menu .mega-menu__right-link {
         font-size: 1rem;
     }
-    .mega-menu__right-link {
+    .mega-menu .mega-menu__right-link {
         border-bottom: none;
         margin-top: 0;
     }
-    .mega-menu__right-item:before {
+    .mega-menu .mega-menu__right-item:before {
         content: none;
     }
-    .mega-menu__right-item:after {
+    .mega-menu .mega-menu__right-item:after {
         background-color: #f0f0f0;
         content: "";
         display: block;
@@ -3454,15 +3452,15 @@
         position: absolute;
         width: calc(100% + 40px);
     }
-    .mega-menu__right-item .navigation__heading + .navigation__links {
+    .mega-menu .mega-menu__right-item .navigation__heading + .navigation__links {
         display: block;
     }
 }
-.mega-menu__item, .mega-menu__right-item {
+.mega-menu .mega-menu__item, .mega-menu .mega-menu__right-item {
     margin: 0 20px;
 }
 @media (max-width: 991px) {
-    .mega-menu__item:after {
+    .mega-menu .mega-menu__item:after {
         background: #f0f0f0;
         content: "";
         height: 1px;
@@ -3470,14 +3468,14 @@
         position: absolute;
         width: 100%;
     }
-    .mega-menu__link {
+    .mega-menu .mega-menu__link {
         border-bottom: none;
         font-weight: 900;
         margin-top: 0;
         position: relative;
     }
-    .mega-menu__link:after {
-        background: url(https://www.bitdefender.com/content/dam/bitdefender/arrow_black.svg) 50% 50% no-repeat;
+    .mega-menu .mega-menu__link:after {
+        background: url(../../../content/dam/bitdefender/arrow_black.svg) 50% 50% no-repeat;
         background-size: 100%;
         content: "";
         height: 16px;
@@ -3488,10 +3486,10 @@
         width: 16px;
     }
 }
-.mega-menu__right-item {
+.mega-menu .mega-menu__right-item {
     position: relative;
 }
-.mega-menu__right-item:before {
+.mega-menu .mega-menu__right-item:before {
     background: #f0f0f0;
     content: "";
     display: block;
@@ -3501,17 +3499,17 @@
     top: 28px;
     width: 1px;
 }
-.mega-menu__first-level {
+.mega-menu .mega-menu__first-level {
     display: flex;
     width: 100%;
 }
 @media (max-width: 991px) {
-    .mega-menu__first-level {
+    .mega-menu .mega-menu__first-level {
         flex-direction: column;
     }
 }
-.mega-menu__back-button, .mega-menu__back-button-l2 {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/black-arrow.svg) 50% 50%/contain no-repeat;
+.mega-menu .mega-menu__back-button, .mega-menu .mega-menu__back-button-l2 {
+    background: url(../../../content/dam/bitdefender/black-arrow.svg) 50% 50%/contain no-repeat;
     background-size: 20px;
     cursor: pointer;
     display: inline-block;
@@ -3524,38 +3522,38 @@
     width: 50px;
 }
 @media (min-width: 992px) {
-    .mega-menu__back-button,  .mega-menu__back-button-l2 {
+    .mega-menu .mega-menu__back-button, .mega-menu .mega-menu__back-button-l2 {
         display: none;
     }
 }
- .mega-menu__second-level {
+.mega-menu .mega-menu__second-level {
     background: #fff;
     display: none;
     left: 0;
     position: absolute;
     width: 100%;
-    z-index: 5;
+    z-index: 1;
 }
 @media (max-width: 991px) {
-     .mega-menu__second-level {
+    .mega-menu .mega-menu__second-level {
         background: #fff;
         min-height: 100vh;
         top: 0;
     }
 }
- .mega-menu__second-level-content {
+.mega-menu .mega-menu__second-level-content {
     align-items: center;
     display: flex;
     justify-content: space-between;
     position: static;
 }
 @media (max-width: 991px) {
-     .mega-menu__second-level-content {
+    .mega-menu .mega-menu__second-level-content {
         align-items: flex-start;
         flex-direction: column;
     }
 }
- .mega-menu__second-level:after {
+.mega-menu .mega-menu__second-level:after {
     background: #f0f0f0;
     bottom: -1px;
     content: "";
@@ -3566,21 +3564,21 @@
     width: 100%;
     z-index: 2;
 }
- .mega-menu__list {
+.mega-menu .mega-menu__list {
     align-items: center;
     display: flex;
     height: 64px;
     padding-left: 0;
 }
 @media (max-width: 991px) {
-     .mega-menu__list {
+    .mega-menu .mega-menu__list {
         align-items: flex-start;
         flex-direction: column;
         height: 100%;
         padding-top: 66px;
         width: 100%;
     }
-     .mega-menu__list:after {
+    .mega-menu .mega-menu__list:after {
         background-color: #f0f0f0;
         content: "";
         display: block;
@@ -3591,19 +3589,19 @@
     }
 }
 @media (min-width: 1025px) {
-    .mega-menu ul.mega-menu__list {
+    .mega-menu .mega-menu ul.mega-menu__list {
         padding-left: 204px;
     }
 }
- .mega-menu__l2-link {
+.mega-menu .mega-menu__l2-link {
     color: #000;
     font-size: 0.875rem;
     line-height: 1;
     padding-right: 18px;
     position: relative;
 }
- .mega-menu__l2-link:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/arrow_black.svg) 50% 50% no-repeat;
+.mega-menu .mega-menu__l2-link:after {
+    background: url(../../../content/dam/bitdefender/arrow_black.svg) 50% 50% no-repeat;
     background-size: 100%;
     content: "";
     height: 10px;
@@ -3614,38 +3612,38 @@
     width: 10px;
 }
 @media (max-width: 991px) {
-     .mega-menu__l2-link {
+    .mega-menu .mega-menu__l2-link {
         display: block;
         font-size: 1rem;
         font-weight: 900;
         padding: 13px 0;
         width: 100%;
     }
-     .mega-menu__l2-link:after {
+    .mega-menu .mega-menu__l2-link:after {
         height: 16px;
         top: 12px;
         transform: rotate(90deg);
         width: 16px;
     }
 }
- .mega-menu__l2-item {
+.mega-menu .mega-menu__l2-item {
     cursor: pointer;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 24px;
 }
 @media (min-width: 992px) {
-     .mega-menu__l2-item {
+    .mega-menu .mega-menu__l2-item {
         padding-bottom: 20px;
         padding-top: 20px;
     }
 }
 @media (max-width: 991px) {
-     .mega-menu__l2-item {
+    .mega-menu .mega-menu__l2-item {
         padding-right: 0;
         width: 100%;
     }
-     .mega-menu__l2-item:after {
+    .mega-menu .mega-menu__l2-item:after {
         background-color: #f0f0f0;
         content: "";
         display: block;
@@ -3656,38 +3654,38 @@
     }
 }
 @media (min-width: 992px) {
-     .mega-menu__l2-item:hover .mega-menu__third-level {
+    .mega-menu .mega-menu__l2-item:hover .mega-menu__third-level {
         display: block;
     }
-     .mega-menu__l2-item:hover .mega-menu__l2-link {
+    .mega-menu .mega-menu__l2-item:hover .mega-menu__l2-link {
         color: #006dff;
     }
-     .mega-menu__l2-item:hover .mega-menu__l2-link:after {
+    .mega-menu .mega-menu__l2-item:hover .mega-menu__l2-link:after {
         transform: rotate(0deg);
     }
 }
- .mega-menu__l2-item.active .mega-menu__third-level {
+.mega-menu .mega-menu__l2-item.active .mega-menu__third-level {
     display: block;
 }
 @media (min-width: 992px) {
-     .mega-menu__item.active .mega-menu__link,  .mega-menu__item.mega-menu--item-opened .mega-menu__link {
+    .mega-menu .mega-menu__item.active .mega-menu__link, .mega-menu .mega-menu__item.mega-menu--item-opened .mega-menu__link {
         border-bottom: 4px solid #006dff;
     }
-     .mega-menu__item.active .mega-menu__second-level,  .mega-menu__item.mega-menu--item-opened .mega-menu__second-level {
+    .mega-menu .mega-menu__item.active .mega-menu__second-level, .mega-menu .mega-menu__item.mega-menu--item-opened .mega-menu__second-level {
         display: block;
     }
 }
 @media (max-width: 991px) {
-    .mega-menu--item-opened .mega-menu__second-level {
+    .mega-menu .mega-menu--item-opened .mega-menu__second-level {
         display: block;
     }
 }
- .mega-menu__right-top-link {
+.mega-menu .mega-menu__right-top-link {
     margin-bottom: 15px;
     margin-top: 15px;
 }
 @media (min-width: 992px) {
-     .mega-menu__right-top-link {
+    .mega-menu .mega-menu__right-top-link {
         display: flex;
         flex-grow: 1;
         justify-content: flex-end;
@@ -3695,24 +3693,24 @@
         text-align: right;
     }
 }
- .mega-menu__right-top-link-target {
+.mega-menu .mega-menu__right-top-link-target {
     color: #006dff;
     font-size: 0.875rem;
 }
- .mega-menu__right-top-link-target:hover {
+.mega-menu .mega-menu__right-top-link-target:hover {
     text-decoration: underline;
 }
 @media (max-width: 991px) {
-     .mega-menu__right-top-link-target {
+    .mega-menu .mega-menu__right-top-link-target {
         font-size: 1rem;
     }
 }
- .mega-menu__view-all {
+.mega-menu .mega-menu__view-all {
     color: #006dff;
     font-size: 1rem;
     margin-bottom: 10px;
 }
- .mega-menu__third-level {
+.mega-menu .mega-menu__third-level {
     background: #fafafa;
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
     display: none;
@@ -3723,43 +3721,43 @@
     z-index: 2;
 }
 @media (max-width: 991px) {
-     .mega-menu__third-level {
+    .mega-menu .mega-menu__third-level {
         background: #fff;
         min-height: 100vh;
         top: 0;
         z-index: 3;
     }
 }
- .mega-menu__third-level-content {
+.mega-menu .mega-menu__third-level-content {
     padding-bottom: 46px;
     padding-top: 66px;
     width: 100%;
 }
 @media (min-width: 992px) {
-     .mega-menu__third-level-content {
+    .mega-menu .mega-menu__third-level-content {
         padding-top: 40px;
     }
 }
 @media (min-width: 1025px) {
-     .mega-menu__third-level-content {
+    .mega-menu .mega-menu__third-level-content {
         padding-left: 254px;
     }
 }
 @media (min-width: 1601px) {
-     .mega-menu__third-level-content {
+    .mega-menu .mega-menu__third-level-content {
         padding-left: 224px;
     }
 }
- .mega-menu__row {
+.mega-menu .mega-menu__row {
     display: flex;
     margin-bottom: 34px;
 }
 @media (max-width: 991px) {
-     .mega-menu__row {
+    .mega-menu .mega-menu__row {
         flex-direction: column;
         margin-bottom: 0;
     }
-     .mega-menu__row:before {
+    .mega-menu .mega-menu__row:before {
         background-color: #f0f0f0;
         content: "";
         display: block;
@@ -3768,16 +3766,16 @@
         position: absolute;
         width: 100%;
     }
-     .mega-menu__row:last-child:before {
+    .mega-menu .mega-menu__row:last-child:before {
         content: none;
     }
 }
 @media (min-width: 992px) {
-     .mega-menu__col {
+    .mega-menu .mega-menu__col {
         margin-right: 40px;
     }
 }
- .mega-menu__second-level-right {
+.mega-menu .mega-menu__second-level-right {
     background: #fff;
     border-radius: 6px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
@@ -3791,35 +3789,35 @@
     z-index: 3;
 }
 @media (max-width: 991px) {
-     .mega-menu__second-level-right {
+    .mega-menu .mega-menu__second-level-right {
         min-width: none;
         top: calc(100% + 8px);
         width: 100%;
     }
 }
- .mega-menu__right .navigation__header-link {
+.mega-menu .mega-menu__right .navigation__header-link {
     color: #3c3c3c;
     font-size: 18px;
     font-weight: 900;
     line-height: 1.5;
 }
 @media (max-width: 991px) {
-     .mega-menu__right .navigation__header-link:after {
+    .mega-menu .mega-menu__right .navigation__header-link:after {
         content: none;
     }
 }
- .mega-menu__right .navigation__header-link:hover {
+.mega-menu .mega-menu__right .navigation__header-link:hover {
     color: #3c3c3c;
 }
 @media (max-width: 991px) {
-     .mega-menu__right .navigation__container:after {
+    .mega-menu .mega-menu__right .navigation__container:after {
         content: none;
     }
-     .mega-menu__right .navigation__links {
+    .mega-menu .mega-menu__right .navigation__links {
         display: block;
     }
 }
- .mega-menu__right .navigation__link {
+.mega-menu .mega-menu__right .navigation__link {
     color: #006dff;
     font-size: 18px;
     font-weight: 500;
@@ -3830,8 +3828,8 @@
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
 }
- .mega-menu__right .navigation__link:after {
-    background: url(https://www.bitdefender.com/content/dam/bitdefender/white-arrow.svg) no-repeat;
+.mega-menu .mega-menu__right .navigation__link:after {
+    background: url(../../../content/dam/bitdefender/white-arrow.svg) no-repeat;
     background-size: cover;
     content: "";
     display: block;
@@ -3846,12 +3844,12 @@
     will-change: transform, opacity;
 }
 @media (max-width: 991px) {
-     .mega-menu__right .navigation__link {
+    .mega-menu .mega-menu__right .navigation__link {
         padding-bottom: 0;
         padding-top: 0;
     }
 }
- .mega-menu__right .navigation__item {
+.mega-menu .mega-menu__right .navigation__item {
     background-color: transparent;
     border: 2px solid #006dff;
     border-radius: 8px;
@@ -3866,36 +3864,36 @@
     position: relative;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
- .mega-menu__right .navigation__item:hover {
+.mega-menu .mega-menu__right .navigation__item:hover {
     background-color: #006dff;
 }
- .mega-menu__right .navigation__item:hover .navigation__link {
+.mega-menu .mega-menu__right .navigation__item:hover .navigation__link {
     color: #fff;
     transform: translate3d(-11px, 0, 0);
 }
- .mega-menu__right .navigation__item:hover .navigation__link:after {
+.mega-menu .mega-menu__right .navigation__item:hover .navigation__link:after {
     opacity: 1;
     transform: translate(22px, -5px);
 }
- .mega-menu__popup-container.popup-active .mega-menu__right-link {
+.mega-menu .mega-menu__popup-container.popup-active .mega-menu__right-link {
     color: #006dff;
 }
-.mega-menu--active .mega-menu__left, .mega-menu--active .mega-menu__right,  .mega-menu__popup-container.popup-active .mega-menu__second-level-right {
+.mega-menu .mega-menu--active .mega-menu__left, .mega-menu .mega-menu--active .mega-menu__right, .mega-menu .mega-menu__popup-container.popup-active .mega-menu__second-level-right {
     display: block;
 }
-.mega-menu--active .mega-menu__button-bar:first-child {
+.mega-menu .mega-menu--active .mega-menu__button-bar:first-child {
     transform: rotate(-45deg) translate(-5px, 5px);
 }
-.mega-menu--active .mega-menu__button-bar:nth-child(2) {
+.mega-menu .mega-menu--active .mega-menu__button-bar:nth-child(2) {
     opacity: 0;
 }
-.mega-menu--active .mega-menu__button-bar:nth-child(3) {
+.mega-menu .mega-menu--active .mega-menu__button-bar:nth-child(3) {
     transform: rotate(45deg) translate(-6px, -6px);
 }
- .mega-menu__quick-links-mobile .navigation__link {
+.mega-menu .mega-menu__quick-links-mobile .navigation__link {
     color: #006dff;
 }
- .mega-menu__quick-links-mobile .navigation__item:first-child .navigation__link {
+.mega-menu .mega-menu__quick-links-mobile .navigation__item:first-child .navigation__link {
     border: 2px solid #006dff;
     border-radius: 6px;
     display: block;
@@ -3905,7 +3903,7 @@
     padding: 14px;
     text-align: center;
 }
- .mega-menu__quick-links-mobile .navigation__item:nth-child(2) .navigation__link {
+.mega-menu .mega-menu__quick-links-mobile .navigation__item:nth-child(2) .navigation__link {
     background: #006dff;
     border-radius: 6px;
     color: #fff;
@@ -3915,18 +3913,18 @@
     padding: 14px;
     text-align: center;
 }
- .mega-menu__quick-links-mobile .navigation__item:nth-child(2) .navigation__link:hover {
+.mega-menu .mega-menu__quick-links-mobile .navigation__item:nth-child(2) .navigation__link:hover {
     color: #fff;
 }
- .mega-menu__quick-links-mobile .mega-menu__category-links {
+.mega-menu .mega-menu__quick-links-mobile .mega-menu__category-links {
     display: block;
 }
 @media (min-width: 992px) {
-     .mega-menu__quick-links-mobile {
+    .mega-menu .mega-menu__quick-links-mobile {
         display: none;
     }
 }
- .mega-menu__login-container .mega-menu__login.mega-menu__right-link {
+.mega-menu .mega-menu__login-container .mega-menu__login.mega-menu__right-link {
     --tw-bg-opacity: 1;
     --tw-text-opacity: 1;
     align-items: center;
@@ -3942,12 +3940,12 @@
     text-align: center;
     width: 43px;
 }
- .mega-menu__login-container .mega-menu__login.mega-menu__right-link:hover {
+.mega-menu .mega-menu__login-container .mega-menu__login.mega-menu__right-link:hover {
     --tw-text-opacity: 1;
     color: rgb(255 255 255/var(--tw-text-opacity));
 }
 @media (min-width: 992px) {
-     .mega-menu__login-container .mega-menu__login.mega-menu__right-link {
+    .mega-menu .mega-menu__login-container .mega-menu__login.mega-menu__right-link {
         display: block;
         height: 45px;
         margin-bottom: 0.25rem;
@@ -3955,35 +3953,35 @@
         width: 45px;
     }
 }
- .mega-menu__login-container.popup-active .mega-menu__login.mega-menu__right-link {
+.mega-menu .mega-menu__login-container.popup-active .mega-menu__login.mega-menu__right-link {
     --tw-text-opacity: 1;
     color: rgb(255 255 255/var(--tw-text-opacity));
 }
 @media (min-width: 992px) {
-    .mega-menu--no-active.mega-menu__container {
+    .mega-menu .mega-menu--no-active.mega-menu__container {
         padding-bottom: 0;
     }
-    .mega-menu--no-active .mega-menu__link:hover {
+    .mega-menu .mega-menu--no-active .mega-menu__link:hover {
         border-bottom: 4px solid #006dff;
     }
-    .mega-menu--no-active .mega-menu__link:hover + .mega-menu__second-level, .mega-menu--no-active .mega-menu__second-level:hover {
+    .mega-menu .mega-menu--no-active .mega-menu__link:hover + .mega-menu__second-level, .mega-menu .mega-menu--no-active .mega-menu__second-level:hover {
         display: block;
     }
-    .mega-menu--no-active .mega-menu__second-level:hover ~ .mega-menu__link {
+    .mega-menu .mega-menu--no-active .mega-menu__second-level:hover ~ .mega-menu__link {
         border-bottom: 4px solid #006dff;
     }
-    .mega-menu--right {
+    .mega-menu .mega-menu--right {
         display: flex;
         flex-grow: 1;
         justify-content: flex-end;
     }
-    .mega-menu--right .mega-menu__second-level {
+    .mega-menu .mega-menu--right .mega-menu__second-level {
         top: 64px;
     }
-    .mega-menu--right .mega-menu__link {
+    .mega-menu .mega-menu--right .mega-menu__link {
         position: relative;
     }
-    .mega-menu--right .mega-menu__link:before {
+    .mega-menu .mega-menu--right .mega-menu__link:before {
         background: #f0f0f0;
         content: "";
         display: block;
@@ -3994,10 +3992,10 @@
         width: 1px;
     }
 }
- .mega-menu__no-l3 .mega-menu__l2-link {
+.mega-menu .mega-menu__no-l3 .mega-menu__l2-link {
     padding-right: 0;
 }
- .mega-menu__no-l3 .mega-menu__l2-link:after {
+.mega-menu .mega-menu__no-l3 .mega-menu__l2-link:after {
     content: none;
 }
 @media (min-width: 992px) {
@@ -4018,7 +4016,7 @@
 }
 @media (max-width: 991px) {
     .mega-menu .navigation__header-link:after {
-        background: url(https://www.bitdefender.com/content/dam/bitdefender/arrow_black.svg) 50% 50% no-repeat;
+        background: url(../../../content/dam/bitdefender/arrow_black.svg) 50% 50% no-repeat;
         background-size: 100%;
         content: "";
         height: 16px;
@@ -4035,7 +4033,7 @@
         margin-bottom: 12px;
     }
     .mega-menu .navigation a.navigation__header-link:after {
-        background: url(https://www.bitdefender.com/content/dam/bitdefender/black-arrow.svg) 50% 50%/contain no-repeat;
+        background: url(../../../content/dam/bitdefender/black-arrow.svg) 50% 50%/contain no-repeat;
         background-size: contain;
         content: "";
         display: inline-block;
@@ -4044,7 +4042,7 @@
         width: 9px;
     }
     .mega-menu .navigation a.navigation__header-link:hover:after {
-        background: url(https://www.bitdefender.com/content/dam/bitdefender/blue-arrow.svg) 50% 50%/contain no-repeat;
+        background: url(../../../content/dam/bitdefender/blue-arrow.svg) 50% 50%/contain no-repeat;
     }
 }
 @media (max-width: 991px) {
