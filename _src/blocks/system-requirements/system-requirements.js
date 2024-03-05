@@ -60,4 +60,9 @@ export default function decorate(block) {
 
   const paragraph = document.querySelector('.system-requirements .default-content-wrapper p');
   paragraph.innerHTML = paragraph.innerHTML.replace(/\|/g, '');
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
 }

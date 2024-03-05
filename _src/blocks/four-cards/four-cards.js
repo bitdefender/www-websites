@@ -12,4 +12,9 @@ export default function decorate(block) {
   block.textContent = '';
   block.append(ul);
   decorateIcons(block);
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
 }

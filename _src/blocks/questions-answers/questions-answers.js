@@ -57,4 +57,9 @@ export default function decorate(block) {
   if (block.classList.contains('first-open')) {
     items[0].classList.add('expanded');
   }
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
 }

@@ -364,7 +364,9 @@ function renderMobileHeader(nav) {
 
 export default async function decorate(block) {
   const hero = document.querySelector('.hero');
+  /* eslint-disable no-unused-vars */
   const isErrorPage = window.isErrorPage || false;
+  /* eslint-enable no-unused-vars */
 
   // Check if the page isn't an error page and if the hero doesn't exist
   // if (!hero && !isErrorPage) return;
