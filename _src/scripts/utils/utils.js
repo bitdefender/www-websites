@@ -311,6 +311,7 @@ export function appendAdobeMcLinks(selector) {
     }
 
     const hrefSelector = '[href*="--bitdefender."]';
+    console.log(wrapperSelector);
     console.log(wrapperSelector.querySelectorAll(hrefSelector));
     wrapperSelector.querySelectorAll(hrefSelector).forEach((link) => {
       const destinationURLWithVisitorIDs = visitor.appendVisitorIDsTo(link.href);
