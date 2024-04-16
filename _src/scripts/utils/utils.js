@@ -310,7 +310,7 @@ export function appendAdobeMcLinks(selector) {
       wrapperSelector = selector;
     }
 
-    const hrefSelector = '[href*="--bitdefender."]';
+    const hrefSelector = '[href*=".bitdefender."]';
     console.log(wrapperSelector);
     console.log(wrapperSelector.querySelectorAll(hrefSelector));
     wrapperSelector.querySelectorAll(hrefSelector).forEach((link) => {
