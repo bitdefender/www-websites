@@ -129,7 +129,9 @@ export default function decorate(block, options) {
   mainDesktopImage.children[0].classList.add('h-100');
 
   const mobileImage = block.querySelector('.hero-aem__card__desktop div > p > picture');
-  mobileImage.classList.add('hero-aem__mobile-image');
+  if (mobileImage) {
+    mobileImage.classList.add('hero-aem__mobile-image');
+  }
 
   // Get all the siblings after h1
   const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
