@@ -145,7 +145,7 @@ export default function decorate(block, options) {
   desktopImage.classList.add('hero-aem__desktop-image');
 
   if (hidemobilebox === 'true') {
-    let cardElementContainerSelector = block.querySelector('hero-aem__card');
+    let cardElementContainerSelector = block.querySelector('.hero-aem__card');
     cardElementContainerSelector.style.display = 'none';
   }
 
