@@ -102,7 +102,7 @@ function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, selector) {
 export default function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
-    alignContent, height, hideMobileBox,
+    alignContent, height, hidemobilebox,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -144,8 +144,8 @@ export default function decorate(block, options) {
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
   desktopImage.classList.add('hero-aem__desktop-image');
 
-  if (hideMobileBox === 'true') {
-    let cardElementContainerSelector = block.que('hero-aem__card');
+  if (hidemobilebox === 'true') {
+    let cardElementContainerSelector = block.querySelector('hero-aem__card');
     cardElementContainerSelector.style.display = 'none';
   }
 
