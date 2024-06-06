@@ -146,7 +146,7 @@ export default function decorate(block, options) {
 
   if (hidemobilebox === 'true') {
     let cardElementContainerSelector = block.querySelector('.hero-aem__card');
-    cardElementContainerSelector.style.display = 'none';
+    cardElementContainerSelector.classList.add('hero-aem__card--hide-mobile');
   }
 
   if (product) {

@@ -305,6 +305,9 @@
     width: 100%;
   }
 
+  .hero-aem-container .hero-aem__card--hide-mobile {
+    display: none;
+  }
 
   @media (min-width: 768px) {
     .hero-aem-container .hero-aem {
@@ -412,6 +415,10 @@
     .hero-aem-container .col-lg-3 {
       flex: 0 0 auto;
       width: 24%;
+    }
+
+    .hero-aem-container .hero-aem__card--hide-mobile {
+      display: block;
     }
   }
   @media (min-width: 1200px) {
