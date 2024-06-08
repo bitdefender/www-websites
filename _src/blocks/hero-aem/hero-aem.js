@@ -102,7 +102,7 @@ function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, selector) {
 export default function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
-    alignContent, height,
+    alignContent, height, hidemobilebox,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -129,7 +129,9 @@ export default function decorate(block, options) {
   mainDesktopImage.children[0].classList.add('h-100');
 
   const mobileImage = block.querySelector('.hero-aem__card__desktop div > p > picture');
-  mobileImage.classList.add('hero-aem__mobile-image');
+  if (mobileImage) {
+    mobileImage.classList.add('hero-aem__mobile-image');
+  }
 
   // Get all the siblings after h1
   const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
@@ -141,6 +143,11 @@ export default function decorate(block, options) {
 
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
   desktopImage.classList.add('hero-aem__desktop-image');
+
+  if (hidemobilebox === 'true') {
+    let cardElementContainerSelector = block.querySelector('.hero-aem__card');
+    cardElementContainerSelector.classList.add('hero-aem__card--hide-mobile');
+  }
 
   if (product) {
     const [prodName, prodUsers, prodYears] = product.split('/');
