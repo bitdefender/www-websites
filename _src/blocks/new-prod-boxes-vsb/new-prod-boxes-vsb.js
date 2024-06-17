@@ -285,9 +285,9 @@ export default async function decorate(block, options) {
               ${hideProducts === 'true' ? '' : `
                 <div class="price_box"></div>
                 ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-${onSelectorClass}"></span>`)}</div>` : ''}
-        
+
                 ${buyLink.innerHTML}
-        
+
                 ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}`}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
@@ -312,7 +312,7 @@ export default async function decorate(block, options) {
                 </div>
                 <div class="newprice-container mt-2">
                   <span class="prod-newprice">${newPrice}${currencyLabel}</span>
-                  
+
                 </div>
               </div>`;
               block.children[key].querySelector('.price_box').appendChild(priceElement);
@@ -364,7 +364,9 @@ export default async function decorate(block, options) {
     });
   }
 
-  window.hj=window.hj||function(){(hj.q=hj.q||[]).push(arguments);} 
+  window.hj = window.hj || function initHotjar(...args) {
+    (hj.q = hj.q || []).push(...args);
+  };
   hj('event', 'new-prod-boxes-vsb');
 
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {

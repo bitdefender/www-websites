@@ -227,7 +227,7 @@ export default async function decorate(block, options) {
                   ${subtitle.innerText.trim() ? `<p class="subtitle">${subtitle.querySelector('td').innerHTML.trim()}</p>` : ''}
 
                   ${radioButtons ? planSwitcher.outerHTML : ''}
-                  
+
                   ${pricesBox.outerHTML}
 
                   ${buyLink.outerHTML}
@@ -258,12 +258,12 @@ export default async function decorate(block, options) {
               ${blueTag.innerText.trim() ? `<div class="blueTag"><div>${blueTag.innerHTML.trim()}</div></div>` : ''}
               ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 5 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
               <hr />
-      
+
               <div class="price_box"></div>
               ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-${onSelectorClass}"></span>`)}</div>` : ''}
-      
+
               ${buyLink.innerHTML}
-      
+
               ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
@@ -286,7 +286,7 @@ export default async function decorate(block, options) {
                 </div>
                 <div class="newprice-container mt-2">
                   <span class="prod-newprice">${newPrice}${currencyLabel}</span>
-                  
+
                 </div>
               </div>`;
             block.children[key].querySelector('.price_box').appendChild(priceElement);
@@ -337,7 +337,9 @@ export default async function decorate(block, options) {
     });
   }
 
-  window.hj=window.hj||function(){(hj.q=hj.q||[]).push(arguments);} 
+  window.hj = window.hj || function initHotjar(...args) {
+    (hj.q = hj.q || []).push(...args);
+  };
   hj('event', 'new-prod-boxes');
 
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
