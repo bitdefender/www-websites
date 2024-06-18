@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink) {
+async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, send2datalayer) {
   const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
   const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
   const price = storeOption.getPrice();
@@ -27,7 +27,7 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
-    <p class="hero-aem__pill">Yearly - individual</p>
+    ${!send2datalayer && '<p class="hero-aem__pill">Yearly - individual</p>'}
     <div class="hero-aem__price mt-3">
       <div>
           <span class="prod-oldprice">${price}</span>
@@ -129,7 +129,7 @@ function dispatchShadowDomLoadedEvent() {
 export default function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS, mainProduct,
-    alignContent, height, type,
+    alignContent, height, type, send2datalayer,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -179,10 +179,10 @@ export default function decorate(block, options) {
     const [prodName, prodUsers, prodYears] = product.split('/');
 
     const buyLink = block.querySelector('a[href*="buylink"]');
-    createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink)
+    createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink, send2datalayer)
       .then((pricesBox) => {
         // dataLayer push with all the products
-        if (options) {
+        if (options && send2datalayer) {
           window.adobeDataLayer.push({
             event: 'product loaded',
             product: {
