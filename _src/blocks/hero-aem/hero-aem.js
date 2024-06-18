@@ -27,7 +27,7 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
-    ${!send2datalayer && `<p class="hero-aem__pill">Yearly - individual</p>`}
+    ${!send2datalayer && '<p class="hero-aem__pill">Yearly - individual</p>'}
     <div class="hero-aem__price mt-3">
       <div>
           <span class="prod-oldprice">${price}</span>
