@@ -3,9 +3,8 @@
 /* eslint-disable max-len */
 let dataLayerProducts = [];
 async function createPricesElement(storeOBJ, hideProducts, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed) {
-
-  if (hideProducts === "true") {
-    return document.createElement("div");
+  if (hideProducts === 'true') {
+    return document.createElement('div');
   }
 
   const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
