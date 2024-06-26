@@ -1,4 +1,4 @@
-import { createTag } from '../../scripts/utils/utils.js';
+import { createTag } from '../../scripts/utils.js';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 const SLIDE_PREFIX = 'carousel-slide-';
@@ -8,7 +8,7 @@ function createSlide(item, index) {
   const paragraphs = Array.from(item.querySelectorAll('p'));
   const quote = paragraphs.find((paragraph) => {
     const strongOrEm = paragraph.querySelector('strong, em');
-    return !strongOrEm && paragraph.textContent.trim() !== '';
+    return !strongOrEm && paragraph.innerHTML !== '';
   });
 
   const author = item.querySelector('p > strong');
@@ -16,6 +16,7 @@ function createSlide(item, index) {
   if (!quote) {
     return null;
   }
+
   return createTag(
     'div',
     {
@@ -30,9 +31,9 @@ function createSlide(item, index) {
         <span class="icon icon-dark-blue-quote"/>
     </div>
     <div class="quote-content">
-        <h4>${quote?.textContent}</h4>
+        <h4>${quote?.innerHTML}</h4>
         <h5>${author?.textContent}</h5>
-        <p>${description?.textContent}</p>
+        <p>${description?.innerHTML}</p>
     </div>`,
   );
 }
@@ -121,8 +122,8 @@ export default async function decorate(block) {
       slides.append(slide);
     }
   });
-  slides.children[0].classList.add('active');
 
+  slides.children[0].classList.add('active');
   const dotsControls = createDotsControls(slides, block);
 
   /* Add carousel action button if it exists */
@@ -138,5 +139,5 @@ export default async function decorate(block) {
   block.replaceChildren(slidesContainer);
   updateControlsState(block, 0);
   addDotsListeners(dotsControls, slides);
-  await decorateIcons(block);
+  decorateIcons(block);
 }

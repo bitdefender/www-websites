@@ -3,7 +3,7 @@ import {
   renderNanoBlocks,
   fetchProduct,
   createTag,
-} from '../../scripts/utils/utils.js';
+} from '../../scripts/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
 
