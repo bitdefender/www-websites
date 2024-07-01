@@ -1,17 +1,33 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink) {
+let dataLayerProducts = [];
+async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, send2datalayer) {
   const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
   const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
   const price = storeOption.getPrice();
   const discountedPrice = storeOption.getDiscountedPrice();
   const discount = storeOption.getDiscount('valueWithCurrency');
   const buyLink = await storeOption.getStoreUrl();
+
+  let product = {
+    ID: storeOption.getAvangateId(),
+    name: storeOption.getName(),
+    devices: storeOption.getDevices(),
+    subscription: storeOption.getSubscription('months'),
+    version: storeOption.getSubscription('months') === 1 ? 'monthly' : 'yearly',
+    basePrice: storeOption.getPrice('value'),
+    discountValue: storeOption.getDiscount('value'),
+    discountRate: storeOption.getDiscount('percentage'),
+    currency: storeOption.getCurrency(),
+    priceWithTax: storeOption.getDiscountedPrice('value') || storeOption.getPrice('value'),
+  };
+  dataLayerProducts.push(product);
+
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
-    <p class="hero-aem__pill">Yearly - individual</p>
+    ${!send2datalayer ? '<p class="hero-aem__pill">Yearly - individual</p>' : ''}
     <div class="hero-aem__price mt-3">
       <div>
           <span class="prod-oldprice">${price}</span>
@@ -23,7 +39,9 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
       </div>
     </div>
     <p class="hero-aem__underPriceText">Protection for 5 PCs, Macs, tablets, or smartphones.<br> Windows® | macOS® | Android™ | iOS®</p>`;
-  buylink.href = buyLink;
+  if (buylink) {
+    buylink.href = buyLink;
+  }
   return priceElement;
 }
 
@@ -99,10 +117,19 @@ function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, selector) {
   }
 }
 
+// Function to dispatch 'shadowDomLoaded' event
+function dispatchShadowDomLoadedEvent() {
+  const event = new CustomEvent('shadowDomLoaded', {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
+  window.dispatchEvent(event);
+}
+
 export default function decorate(block, options) {
   const {
-    product, conditionText, saveText, MacOS, Windows, Android, IOS,
-    alignContent, height, type,
+    product, conditionText, saveText, MacOS, Windows, Android, IOS, mainProduct,
+    alignContent, height, type, send2datalayer,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -148,19 +175,38 @@ export default function decorate(block, options) {
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
   desktopImage.classList.add('hero-aem__desktop-image');
 
-  if (product) {
+  if (product && options?.store) {
     const [prodName, prodUsers, prodYears] = product.split('/');
 
     const buyLink = block.querySelector('a[href*="buylink"]');
-    buyLink.classList.add('button', 'primary');
-
-    createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink)
+    createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink, send2datalayer)
       .then((pricesBox) => {
-        buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
-        window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-          bubbles: true,
-          composed: true, // This allows the event to cross the shadow DOM boundary
-        });
+        // dataLayer push with all the products
+        if (options && send2datalayer) {
+          window.adobeDataLayer.push({
+            event: 'product loaded',
+            product: {
+              [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
+            },
+          });
+        }
+
+        // If buyLink exists, apply styles and insert pricesBox
+        if (buyLink) {
+          buyLink.classList.add('button', 'primary');
+          buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
+          dispatchShadowDomLoadedEvent();
+          return;
+        }
+
+        // If buyLink does not exist, apply styles to simpleLink
+        const simpleLink = block.querySelector('.hero-aem__card-text a');
+        if (simpleLink) {
+          simpleLink.classList.add('button', 'primary');
+          simpleLink.parentNode.parentNode.insertBefore(pricesBox, simpleLink.parentNode);
+        }
+
+        dispatchShadowDomLoadedEvent();
       });
   } else {
     // If there is no product, just add the button class and dispatch the event
@@ -189,24 +235,31 @@ export default function decorate(block, options) {
   }
 
   if (columnsCard) {
-    columnsCard = [...columnsCard.children];
+    const columnsCardChildren = Array.from(columnsCard.children);
     const cardElement = document.createElement('div');
     cardElement.classList.add('aem-two-cards');
+    // Determine the appropriate column width class based on the number of cards
+    const columnWidthMdClass = columnsCardChildren.length === 2 ? 'col-md-6' : 'col-md-4';
+    const columnWidthLgClass = columnsCardChildren.length === 2 ? 'col-lg-3' : 'col-lg-3';
+
+    const columnCardsHtml = columnsCardChildren.map((col) => `
+      <div class="col-12 ${columnWidthMdClass} ${columnWidthLgClass}">
+        <div class="aem-two-cards_card">
+          ${col.innerHTML}
+        </div>
+      </div>`).join('');
+
     cardElement.innerHTML = `
-    <div class="row justify-space-between">
-      <div class="col-lg-6">
-        ${richTextCard.innerHTML}
+      <div class="row justify-space-between">
+        <div class="col-lg-3">
+          ${richTextCard.innerHTML}
+        </div>
+        ${columnCardsHtml}
       </div>
-      ${columnsCard.map((col) => `
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="aem-two-cards_card">
-            ${col.innerHTML}
-          </div>
-        </div>`).join('')}
-    </div>
-  `;
-    aemContainer.appendChild(cardElement);
+    `;
+
+    block.appendChild(cardElement);
     richTextCard.innerHTML = '';
-    columnsCard.forEach((col) => col.remove());
+    columnsCardChildren.forEach((col) => col.remove());
   }
 }

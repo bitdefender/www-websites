@@ -2,7 +2,11 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed) {
+async function createPricesElement(storeOBJ, hideProducts, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed) {
+  if (hideProducts === 'true') {
+    return document.createElement('div');
+  }
+
   const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
   const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
   const price = storeOption.getPrice();
@@ -237,7 +241,7 @@ export default async function decorate(block, options) {
       }
       // create the prices element based on where the component is being called from, aem of www-websites
       if (options) {
-        await createPricesElement(options.store, '', 'Save', prodName, prodUsers, prodYears, buyLinkSelector, billed)
+        await createPricesElement(options.store, hideProducts, '', 'Save', prodName, prodUsers, prodYears, buyLinkSelector, billed)
           .then((pricesBox) => {
             yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = pricesBox;
             // buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
@@ -264,7 +268,7 @@ export default async function decorate(block, options) {
             </div>`;
           });
         if (monthlyProducts) {
-          const montlyPriceBox = await createPricesElement(options.store, '', 'Save', prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, buyLinkSelector, billed);
+          const montlyPriceBox = await createPricesElement(options.store, hideProducts, '', 'Save', prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, buyLinkSelector, billed);
           monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
         }
       } else {
@@ -285,9 +289,9 @@ export default async function decorate(block, options) {
               ${hideProducts === 'true' ? '' : `
                 <div class="price_box"></div>
                 ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-${onSelectorClass}"></span>`)}</div>` : ''}
-        
+
                 ${buyLink.innerHTML}
-        
+
                 ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}`}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
@@ -312,7 +316,7 @@ export default async function decorate(block, options) {
                 </div>
                 <div class="newprice-container mt-2">
                   <span class="prod-newprice">${newPrice}${currencyLabel}</span>
-                  
+
                 </div>
               </div>`;
               block.children[key].querySelector('.price_box').appendChild(priceElement);
@@ -355,7 +359,7 @@ export default async function decorate(block, options) {
   }
 
   // dataLayer push with all the products
-  if (options) {
+  if (options && dataLayerProducts.length && hideProducts !== 'true') {
     window.adobeDataLayer.push({
       event: 'product loaded',
       product: {
@@ -363,6 +367,11 @@ export default async function decorate(block, options) {
       },
     });
   }
+
+  window.hj = window.hj || function initHotjar(...args) {
+    (hj.q = hj.q || []).push(...args);
+  };
+  hj('event', 'new-prod-boxes-vsb');
 
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
     bubbles: true,
