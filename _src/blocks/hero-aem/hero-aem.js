@@ -6,6 +6,7 @@ async function createPricesElement(blockParent, conditionText, saveText, prodNam
   blockParent.setAttribute('data-store-id', prodName);
   blockParent.setAttribute('data-store-option', `${prodUsers}u-${prodYears}y`);
   blockParent.setAttribute('data-store-department', 'consumer');
+  blockParent.setAttribute('data-store-event', 'main-product-loaded');
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
