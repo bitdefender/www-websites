@@ -1,46 +1,28 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, send2datalayer) {
-  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
-  const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
-  const price = storeOption.getPrice();
-  const discountedPrice = storeOption.getDiscountedPrice();
-  const discount = storeOption.getDiscount('valueWithCurrency');
-  const buyLink = await storeOption.getStoreUrl();
-
-  let product = {
-    ID: storeOption.getAvangateId(),
-    name: storeOption.getName(),
-    devices: storeOption.getDevices(),
-    subscription: storeOption.getSubscription('months'),
-    version: storeOption.getSubscription('months') === 1 ? 'monthly' : 'yearly',
-    basePrice: storeOption.getPrice('value'),
-    discountValue: storeOption.getDiscount('value'),
-    discountRate: storeOption.getDiscount('percentage'),
-    currency: storeOption.getCurrency(),
-    priceWithTax: storeOption.getDiscountedPrice('value') || storeOption.getPrice('value'),
-  };
-  dataLayerProducts.push(product);
-
+async function createPricesElement(blockParent, conditionText, saveText, prodName, prodUsers, prodYears, buylink, send2datalayer) {
+  blockParent.setAttribute('data-store-context', true);
+  blockParent.setAttribute('data-store-id', prodName);
+  blockParent.setAttribute('data-store-option', `${prodUsers}u-${prodYears}y`);
+  blockParent.setAttribute('data-store-department', 'consumer');
   const priceElement = document.createElement('div');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
     ${!send2datalayer ? '<p class="hero-aem__pill">Yearly - individual</p>' : ''}
     <div class="hero-aem__price mt-3">
-      <div>
-          <span class="prod-oldprice">${price}</span>
-          <span class="prod-save">${saveText} ${discount}<span class="save"></span></span>
+      <div data-store-hide="no-price=discounted">
+          <span class="prod-oldprice" data-store-price="full"></span>
+          <span class="prod-save" data-store-text-variable>${saveText} {DISCOUNT_VALUE}<span class="save"></span></span>
       </div>
       <div class="newprice-container mt-2">
-        <span class="prod-newprice">${discountedPrice}</span>
+        <span class="prod-newprice" data-store-price="discounted||full"></span>
         <sup>${conditionText || ''}</sup>
       </div>
     </div>
     <p class="hero-aem__underPriceText">Protection for 5 PCs, Macs, tablets, or smartphones.<br> Windows® | macOS® | Android™ | iOS®</p>`;
   if (buylink) {
-    buylink.href = buyLink;
+    buylink.setAttribute('data-store-buy-link', true);
   }
   return priceElement;
 }
@@ -179,17 +161,8 @@ export default function decorate(block, options) {
     const [prodName, prodUsers, prodYears] = product.split('/');
 
     const buyLink = block.querySelector('a[href*="buylink"]');
-    createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink, send2datalayer)
+    createPricesElement(block.closest('.section'), conditionText, saveText, prodName, prodUsers, prodYears, buyLink, send2datalayer)
       .then((pricesBox) => {
-        // dataLayer push with all the products
-        if (options && send2datalayer) {
-          window.adobeDataLayer.push({
-            event: 'product loaded',
-            product: {
-              [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-            },
-          });
-        }
 
         // If buyLink exists, apply styles and insert pricesBox
         if (buyLink) {
