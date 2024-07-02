@@ -1,8 +1,17 @@
 export default function decorate(block, options) {
+  const {
+    solutions,
+  } = options ? options.metadata : block.closest('.section').dataset;
+
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
   }
+
+  if (solutions) {
+    block.closest('.section').classList.add('solutions');
+  }
+
   const blockParent = block.closest('.section');
   setTimeout(() => {
     const elementLink = block.querySelector('.news-bar a');
