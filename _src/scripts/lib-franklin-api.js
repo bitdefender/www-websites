@@ -9,6 +9,11 @@ const parseMetadata = (shadowRoot) => {
   }
   for (const child of sectionMetadata.children) {
     const [keyChild, valueChild] = child.children;
+    if (keyChild === 'style') {
+      const styles = valueChild.textContent.split(',').map((style) => toClassName(style.trim()));
+      console.log(shadowRoot);
+      // styles.forEach((style) => shadowRoot.querySelector(".section-metadata").classList.add(style));
+    }
     metadata[keyChild.textContent] = valueChild.textContent;
   }
 
