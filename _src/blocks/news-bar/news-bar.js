@@ -1,25 +1,28 @@
 export default function decorate(block, options) {
-
   const {
-    hideDate,
+    solutions, hideDate,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
+    // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
-    let blockParent = block.closest('.section');
   }
 
+  if (solutions) {
+    block.closest('.section').classList.add('solutions');
+  }
+
+  const blockParent = block.closest('.section');
   setTimeout(() => {
-    const elementLink = block.querySelector('.news-bar a');
+    const elementLink = block.querySelector('a');
     block.style.backgroundColor = '#E4F2FF';
     block.style.color = '#006EFF';
-    if (elementLink) elementLink.style.color = '#006EFF';
+    if (elementLink && !blockParent.classList.contains('solutions')) elementLink.style.color = '#006EFF';
   }, 2000);
 
   if (hideDate) {
     const currentDate = new Date();
-    let hiddenDate = new Date(hideDate);
-    console.log(hiddenDate, currentDate )
+    const hiddenDate = new Date(hideDate);
     if (hiddenDate < currentDate) {
       block.style.display = 'none';
     }
