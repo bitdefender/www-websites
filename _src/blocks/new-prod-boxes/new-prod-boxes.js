@@ -1,43 +1,29 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
-  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
-  const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
-  const price = storeOption.getPrice();
-  const discountedPrice = storeOption.getDiscountedPrice();
-  const discount = storeOption.getDiscount('valueWithCurrency');
-  const buyLink = await storeOption.getStoreUrl();
-
-  let product = {
-    ID: storeOption.getAvangateId(),
-    name: storeOption.getName(),
-    devices: storeOption.getDevices(),
-    subscription: storeOption.getSubscription('months'),
-    version: storeOption.getSubscription('months') === 1 ? 'monthly' : 'yearly',
-    basePrice: storeOption.getPrice('value'),
-    discountValue: storeOption.getDiscount('value'),
-    discountRate: storeOption.getDiscount('percentage'),
-    currency: storeOption.getCurrency(),
-    priceWithTax: storeOption.getDiscountedPrice('value') || storeOption.getPrice('value'),
-  };
-  dataLayerProducts.push(product);
+async function createPricesElement(options, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
   const priceElement = document.createElement('div');
+  priceElement.setAttribute('data-store-context', true);
+  priceElement.setAttribute('data-store-id', prodName);
+  priceElement.setAttribute('data-store-option', `${prodUsers}u-${prodYears}y`);
+  priceElement.setAttribute('data-store-department', 'consumer');
+  priceElement.setAttribute('data-store-event', 'main-product-loaded');
   priceElement.classList.add('hero-aem__prices');
   priceElement.innerHTML = `
     <div class="hero-aem__price mt-3">
       <div>
-          <span class="prod-oldprice">${price}</span>
-          <span class="prod-save">${saveText} ${discount}<span class="save"></span></span>
+          <span class="prod-oldprice" data-store-price="full"></span>
+          <span class="prod-save" data-store-text-variable>${saveText} {DISCOUNT_VALUE}<span class="save"></span></span>
       </div>
       <div class="newprice-container mt-2">
-        <span class="prod-newprice">${discountedPrice}</span>
+        <span class="prod-newprice" data-store-price="discounted||full">${discountedPrice}</span>
         <sup>${conditionText || ''}</sup>
       </div>
     </div>
     ${billed ? `<div class="billed">${billed.innerHTML}</div>` : ''}
-    <a href="${customLink === 1 ? buylink.href : buyLink}" class="button primary">${buylink.text}</a>`;
+    <a data-store-buy-link class="button primary">${buylink.text}</a>`;
   buylink.remove();
   return priceElement;
 }
