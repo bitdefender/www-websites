@@ -14,7 +14,7 @@ export default function decorate(block, options) {
 
   const blockParent = block.closest('.section');
   setTimeout(() => {
-    const elementLink = block.querySelector('.news-bar a');
+    const elementLink = block.querySelector('a');
     block.style.backgroundColor = '#E4F2FF';
     block.style.color = '#006EFF';
     if (elementLink && !blockParent.classList.contains('solutions')) elementLink.style.color = '#006EFF';
