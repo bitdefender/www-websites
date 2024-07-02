@@ -18,7 +18,7 @@ async function createPricesElement(options, conditionText, saveText, prodName, p
           <span class="prod-save" data-store-text-variable>${saveText} {DISCOUNT_VALUE}<span class="save"></span></span>
       </div>
       <div class="newprice-container mt-2">
-        <span class="prod-newprice" data-store-price="discounted||full">${discountedPrice}</span>
+        <span class="prod-newprice" data-store-price="discounted||full"></span>
         <sup>${conditionText || ''}</sup>
       </div>
     </div>
