@@ -751,6 +751,16 @@ main pre {
   }
 }
 
+main .single-blue-quote .default-content-wrapper {
+  color: #006dff;
+}
+
+main .single-blue-quote .default-content-wrapper p:nth-of-type(1) {
+  line-height: 55px;
+  font-size: 40px;
+  font-weight: 300;
+}
+
 a:any-link {
   color: var(--link-color);
   text-decoration: none;
