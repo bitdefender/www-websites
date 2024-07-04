@@ -70,7 +70,6 @@ export default async function decorate(block) {
     block.classList.remove('scrollable');
 
     if (isView('desktop')) {
-      // const cardsNotFullyVisible = window.innerWidth < (slides.length * 410) + (slides.length * 20);
       const cardsNotFullyVisible = window.innerWidth > 767;
       return cardsNotFullyVisible ? `
       <a href class="arrow disabled left-arrow">
