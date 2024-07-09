@@ -72,6 +72,66 @@ async function runDefaultFooterLogic(block) {
   }
 }
 
+async function runAemFooterLogic(block) {
+  // fetch footer content
+  const footerPath = getMetadata('footer') || '/footer';
+  const aemFooterFetch = await fetch('https://dev3.bitdefender.com/content/experience-fragments/bitdefender/language_master/en/footer-fragment-v1/master/jcr:content/root/footer.html');
+  if (!aemFooterFetch.ok) {
+    return;
+  }
+  const aemFooterHtml = await aemFooterFetch.text();
+  const footer = document.createElement('footer');
+  const shadowRoot = footer.attachShadow({ mode: 'open' });
+
+  const contentDiv = document.createElement('div');
+  // contentDiv.style.display = 'none';
+  // contentDiv.classList.add('footer');
+  // contentDiv.classList.add('default-content-wrapper');
+  contentDiv.innerHTML = aemFooterHtml;
+  // const cssFile = contentDiv.querySelector('link[rel="stylesheet"]');
+  // if (cssFile) {
+  //   cssFile.href = '/_src/scripts/vendor/mega-menu/mega-menu.css';
+  //   cssFile.as = 'style';
+
+  //   // wait for the css to load before displaying the content
+  //   // this is to avoid the content being displayed without the styles
+  //   cssFile.onload = () => {
+  //     contentDiv.style.display = 'block';
+  //   };
+  //   shadowRoot.appendChild(contentDiv);
+  // }
+
+  // select all the scripts from contet div and
+  const scripts = contentDiv.querySelectorAll('script');
+  scripts.forEach((script) => {
+    const newScript = document.createElement('script');
+    newScript.src = `https://dev3.bitdefender.com${script.getAttribute('src')}`;
+    shadowRoot.appendChild(newScript);
+  });
+
+  // select all the css from content div and
+  const styles = contentDiv.querySelectorAll('link[rel="stylesheet"]');
+  styles.forEach((style) => {
+    style.href = `https://dev3.bitdefender.com${style.getAttribute('href')}`;
+    style.rel = 'stylesheet';
+  });
+
+  shadowRoot.appendChild(contentDiv);
+  document.querySelector('footer').replaceWith(footer);
+  // const newScriptFile = document.createElement('script');
+  // newScriptFile.src = '/_src/scripts/vendor/mega-menu/mega-menu.js';
+
+  // const shadowRootScriptTag = shadowRoot.querySelector('script');
+  // if (shadowRootScriptTag) {
+  //   shadowRootScriptTag.replaceWith(newScriptFile);
+  // }
+  // window.runFooterLogic(shadowRoot);
+  // adobeMcAppendVisitorId(shadowRoot);
+  window.addEventListener('footer-logic-finished', () => {
+    window.runFooterLogic(shadowRoot);
+  });
+}
+
 async function runLandingpageLogic(block) {
   const footerPath = getMetadata('footer') || '/footer';
   const resp = await fetch(`${footerPath}.plain.html`);
@@ -120,6 +180,9 @@ function applyFooterFactorySetup(footerMetadata, block) {
     case 'landingpage':
       runLandingpageLogic(block);
       break;
+    case 'aem':
+      runAemFooterLogic(block);
+      break;
     default:
       runDefaultFooterLogic(block);
       break;
@@ -133,7 +196,7 @@ function applyFooterFactorySetup(footerMetadata, block) {
 export default async function decorate(block) {
   const footerMetadata = getMetadata('footer-type');
   block.parentNode.classList.add(footerMetadata || 'default');
-
+  console.log(footerMetadata);
   block.textContent = '';
 
   applyFooterFactorySetup(footerMetadata, block);
