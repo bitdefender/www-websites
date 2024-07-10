@@ -27,10 +27,10 @@ function applyHeaderFactorySetup(headerMetadata, header, link) {
 }
 export default async function decorate(block, options) {
   const {
-    headerType, link,
+    header, link,
   } = options ? options.metadata : block.closest('.section').dataset;
-  console.log('headerType', headerType);
-  console.log('link', link);
+  console.log('header ', header);
+  console.log('link ', link);
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
@@ -38,7 +38,7 @@ export default async function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
-  block.parentNode.classList.add(headerType || 'default');
+  block.parentNode.classList.add(header || 'default');
 
-  applyHeaderFactorySetup(headerType, block, link);
+  applyHeaderFactorySetup(header, block, link);
 }
