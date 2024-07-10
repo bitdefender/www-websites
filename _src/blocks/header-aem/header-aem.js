@@ -21,7 +21,6 @@ function applyHeaderFactorySetup(headerMetadata, header, link) {
       runWhitePageHeaderLogic(header, link);
       break;
     default:
-      console.log('default header');
       break;
   }
 }
@@ -29,8 +28,7 @@ export default async function decorate(block, options) {
   const {
     header, link,
   } = options ? options.metadata : block.closest('.section').dataset;
-  console.log('header ', header);
-  console.log('link ', link);
+
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
