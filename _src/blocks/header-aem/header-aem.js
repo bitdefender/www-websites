@@ -1,13 +1,15 @@
 async function runWhitePageHeaderLogic(block, link) {
   block.classList.add('white', 'py-3', 'default-content-wrapper');
 
-  // create a link and inside it put the logo
-  const logoLink = document.createElement('a');
-  logoLink.href = link;
-  logoLink.classList.add('logo-link');
-  const image = block.querySelector('picture');
-  logoLink.appendChild(image);
-  block.appendChild(logoLink);
+  if (link) {
+    // create a link and inside it put the logo
+    const logoLink = document.createElement('a');
+    logoLink.href = link;
+    logoLink.classList.add('logo-link');
+    const image = block.querySelector('picture');
+    logoLink.appendChild(image);
+    block.appendChild(logoLink);
+  }
 }
 
 /**
