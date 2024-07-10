@@ -18,24 +18,27 @@
   border-bottom: 1px solid #EDEDED;
 }
 
-.header-aem-wrapper.we-container {
-  margin: 0 auto;
-  max-width: 1332px;
-  padding: 0 20px;
-  position: relative;
-  width: 100%;
+.new-prod-boxes-container.we-container {
+  max-width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-@media (max-width: 991px) {
-  .header-aem-wrapper.we-container {
+@media (min-width: 992px) {
+  .new-prod-boxes-container.we-container {
     max-width: 1300px;
-    padding: 0 20px;
+    padding-left: 50px;
+    padding-right: 50px;
   }
 }
 
-@media (max-width: 1599px) {
-  .header-aem-wrapper.we-container {
-    max-width: 1300px;
-    padding: 0 50px;
+@media (min-width: 1200px) {
+  .new-prod-boxes-container.we-container {
+    max-width: 1290px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
