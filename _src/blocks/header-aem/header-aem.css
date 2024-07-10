@@ -37,8 +37,15 @@
 
 @media (min-width: 1200px) {
   .header-aem-wrapper.we-container {
-    max-width: 1290px;
+    max-width: 1210px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+@media (min-width: 1599px) {
+  .header-aem-wrapper.we-container {
+    padding-left: 50px;
+    padding-right: 50px;
   }
 }
