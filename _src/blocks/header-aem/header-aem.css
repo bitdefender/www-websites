@@ -1,0 +1,18 @@
+.header-aem-wrapper {
+  background-color: #fff;
+  border-bottom: 1px solid #EDEDED;
+
+  .header-aem {
+
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    
+    img {
+      height: 26px;
+      width: auto;
+    }
+  }
+}
+
