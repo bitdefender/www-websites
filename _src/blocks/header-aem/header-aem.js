@@ -29,7 +29,8 @@ export default async function decorate(block, options) {
   const {
     headerType, link,
   } = options ? options.metadata : block.closest('.section').dataset;
-
+  console.log('headerType', headerType);
+  console.log('link', link);
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
