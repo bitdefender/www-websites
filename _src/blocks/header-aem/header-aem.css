@@ -16,3 +16,27 @@
   }
 }
 
+.header-aem-container.we-container {
+  max-width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 992px) {
+  .header-aem-container.we-container {
+    max-width: 1300px;
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .header-aem-container.we-container {
+    max-width: 1350px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
