@@ -45,6 +45,7 @@
 
 @media (min-width: 1599px) {
   .header-aem-wrapper.we-container {
+    max-width: 1300px;
     padding-left: 50px;
     padding-right: 50px;
   }
