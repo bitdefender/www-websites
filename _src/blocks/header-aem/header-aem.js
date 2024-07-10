@@ -10,6 +10,11 @@ async function runWhitePageHeaderLogic(block, link) {
     logoLink.appendChild(image);
     block.appendChild(logoLink);
   }
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
 }
 
 /**
