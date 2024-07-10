@@ -1,6 +1,4 @@
 .header-aem-wrapper {
-  background-color: #fff;
-  border-bottom: 1px solid #EDEDED;
 
   .header-aem {
 
@@ -22,6 +20,11 @@
   margin-top: 15px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.header-aem-container {
+  background-color: #fff;
+  border-bottom: 1px solid #EDEDED;
 }
 
 @media (min-width: 992px) {
