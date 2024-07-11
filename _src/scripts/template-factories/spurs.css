@@ -5,6 +5,13 @@
     margin: unset;
 }
 
+.spurs.sferrari .red_logo_svg p {
+    color: transparent;
+    background: url('../../icons/b-logo-red.svg') no-repeat center transparent;
+    font-size: 120px;
+    margin: 0 auto 0.5em;
+}
+
 .spurs * {
     font-family: "IBM Plex Sans", sans-serif;
 }
@@ -87,6 +94,20 @@
         height: 600px;
     }
 
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p:first-child {
+        font-size: 28px;
+    }
+
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p:first-child strong {
+        font-size: 20px;
+        font-weight: 600;
+        margin-top: 10em;
+    }
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p:first-child em {
+        font-size: 20px;
+        font-style: normal;
+    }
+
     .spurs .section-testimonials .default-content-wrapper > p:first-child {
         font-size: 25px;
         line-height: 1.33;
@@ -120,6 +141,12 @@
         gap: 20px;
     }
 
+    .spurs.sferrari .section-two h2,
+    .spurs.sferrari .section-two h3,
+    .spurs.sferrari .section-two h4 {
+        font-size: 60px;
+    }
+
     .spurs .section-two h2,
     .spurs .section-two h3,
     .spurs .section-two h4 {
@@ -134,6 +161,13 @@
 
     .spurs .section-two .default-content-wrapper > * {
         width: 50%;
+    }
+
+    .spurs.sferrari .section-two .default-content-wrapper > div,
+    .spurs.sferrari .section-two .default-content-wrapper > p {
+        font-size: 28px;
+        line-height: 1.33;
+        font-weight: 300;
     }
 
     .spurs .section-two .default-content-wrapper > div,

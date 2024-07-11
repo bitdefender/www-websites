@@ -638,6 +638,14 @@ header, main, footer {
     padding: 60px 0;
   }
 
+  main .section.py-1 {
+    padding: 1em 0;
+  }
+
+  main .section.pt-0 {
+    padding-top: 0;
+  }
+
   main .section.less-padding {
     padding: 1em 0;
   }

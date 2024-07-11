@@ -83,6 +83,17 @@
 }
 
 @media (min-width: 992px) {
+    .spurs-hero-container.hero-ferrari h1 {
+        font-size: 48px;
+        font-weight: 300;
+        line-height: 57px;
+    }
+
+    .spurs-hero-container.hero-ferrari h2 {
+        font-size: 32px;
+        font-weight: 300;
+    }
+
     .spurs-hero-container h1 {
         /* font: normal normal normal 60px/66px "IBM Plex Sans"; */
         font-size: 40px;
@@ -140,6 +151,11 @@
         align-items: center;
         justify-content: center;
         background-color: #006EFF;
+    }
+
+    .spurs-hero-container.hero-ferrari .img-container {
+        align-items: normal;
+        justify-content: left;
     }
 
     .spurs-hero-container .img-container picture {
