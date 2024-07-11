@@ -84,6 +84,15 @@
     width: 100%;
 }
 
+.spurs.sferrari .section-two .default-content-wrapper:not(:first-of-type) {
+    display: none;
+}
+
+.spurs.sferrari .section-testimonials .default-content-wrapper > p {
+    height: auto;
+}
+
+
 @media (min-width: 768px) {
     .spurs .section-testimonials .default-content-wrapper {
         display: flex;

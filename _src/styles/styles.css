@@ -633,6 +633,10 @@ header, main, footer {
   }
 }
 
+main .section.py-1 {
+  padding: 0;
+}
+
 @media (min-width: 1400px) {
   main .section {
     padding: 60px 0;
