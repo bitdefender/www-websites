@@ -107,6 +107,18 @@ async function runLandingpageLogic(block) {
     footer.innerHTML = footer.innerHTML.replace(pattern, replacement);
   });
 
+  const privacyButton = footer.querySelector('a[href="#privacybutton"]');
+
+  if (privacyButton) {
+    privacyButton.href = '#';
+    privacyButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.UC_UI) {
+        window.UC_UI.showSecondLayer();
+      }
+    });
+  }
+
   adobeMcAppendVisitorId('footer');
 }
 
