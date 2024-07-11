@@ -67,6 +67,10 @@ const Config = {
 const isMobile = () => {return window.innerWidth < 991};
 
 function initMegaMenu (container) {
+  if (window.location.href.indexOf('scuderiaferrari') !== -1) {
+    container.setAttribute('id', 'header-ferrari');
+  }
+
   let prevWidth = window.innerWidth;
 
   const setMobileRightLinksOffset = () => {

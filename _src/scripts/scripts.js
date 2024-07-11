@@ -515,6 +515,9 @@ async function loadEager(doc) {
     buildTwoColumnsSection(main);
     detectModalButtons(main);
     document.body.classList.add('appear');
+    if (window.location.href.indexOf('scuderiaferrari') !== -1) {
+      document.body.classList.add('sferrari');
+    }
     await waitForLCP(LCP_BLOCKS);
   }
 }
