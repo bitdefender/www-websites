@@ -100,6 +100,12 @@
 }
 
 @media (min-width: 992px) {
+    .spurs-hero-container h1 {
+        font-size: 40px;
+        font-weight: 300;
+        line-height: 1;
+    }
+
     .spurs-hero-container.hero-ferrari h1 {
         font-size: 48px;
         font-weight: 300;
@@ -109,13 +115,6 @@
     .spurs-hero-container.hero-ferrari h2 {
         font-size: 32px;
         font-weight: 300;
-    }
-
-    .spurs-hero-container h1 {
-        /* font: normal normal normal 60px/66px "IBM Plex Sans"; */
-        font-size: 40px;
-        font-weight: 300;
-        line-height: 1;
     }
 
     .spurs-hero-container p,
