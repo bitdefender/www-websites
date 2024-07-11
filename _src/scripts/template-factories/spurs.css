@@ -88,10 +88,34 @@
     display: none;
 }
 
-.spurs.sferrari .section-testimonials .default-content-wrapper > p {
-    height: auto;
-}
+@media (max-width: 992px) {
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p {
+        height: auto;
+    }
 
+    .spurs.sferrari .section-two h2, .spurs .section-two h3, .spurs .section-two h4 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        font-weight: 300;
+    }
+
+    .spurs.sferrari .section-testimonials {
+        margin-top: -2em;
+    }
+
+    .spurs.sferrari .section-two .default-content-wrapper > div, .spurs .section-two .default-content-wrapper > p {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p:first-of-type {
+        margin-bottom: 2em;
+    }
+
+    .spurs.sferrari .section-testimonials p:first-child strong {
+        margin-top: 4em;
+    }
+}
 
 @media (min-width: 768px) {
     .spurs .section-testimonials .default-content-wrapper {
