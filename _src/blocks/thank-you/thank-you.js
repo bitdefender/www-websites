@@ -42,4 +42,6 @@ export default function decorate(block, options) {
   `;
 
   block.innerHTML = html;
+
+  dispatchShadowDomLoadedEvent();
 }
