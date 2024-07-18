@@ -25,6 +25,17 @@
   width: 100%;
 }
 
+.form input[type="text"] {
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+  font-size: var(--body-font-size-s);
+  line-height: 50px;
+  padding: 0 15px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
 .checkbox {
   display: flex;
   align-items: flex-start;

@@ -26,14 +26,45 @@ async function handleSubmit(e, handler) {
   }
 }
 
+async function handleSubmitEmarsys(e, form) {
+  e.preventDefault();
+  const formData = new FormData(form);
+
+  const jsonObject = {
+    email: 'jdoe@bitdefender.com',
+    flow: 'EMM_DIP_POPUP_OFFER',
+    first_name: 'John',
+    last_name: 'Doe',
+    update: 'true',
+  };
+
+  const response = await fetch('https://www.bitdefender.com/site/Store/offerSubscribe', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(jsonObject),
+  });
+
+  if (response.ok) {
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+  } else {
+    console.error('Failed to submit form');
+  }
+}
+
 export async function createForm(formURL) {
   const { pathname, search } = new URL(formURL);
   const data = await fetchData(`${pathname}${search}`);
   const form = document.createElement('form');
-
+  console.log(data);
   form.setAttribute('method', 'post');
 
   data.forEach((field, index) => {
+    console.log(field.Default);
     const input = document.createElement('input');
     input.id = `form-${index}-${field.Field}`;
     input.addEventListener('change', () => onChange(form));
@@ -65,6 +96,8 @@ export async function createForm(formURL) {
 
     if (field.Field === 'handler') {
       form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
+    } else {
+      form.addEventListener('submit', (e) => handleSubmitEmarsys(e, form));
     }
 
     if (field.Type === 'checkbox') {
@@ -84,7 +117,13 @@ export async function createForm(formURL) {
   return form;
 }
 
-export default async function decorate(block) {
+export default async function decorate(block, options) {
+  const {
+    isModalForm,
+  } = options ? options.metadata : block.closest('.section').dataset;
+
+  console.log(block.textContent);
   const form = await createForm(block.textContent.trim());
+
   if (form) block.append(form);
 }
