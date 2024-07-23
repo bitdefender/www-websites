@@ -51,31 +51,15 @@ async function handleSubmitEmarsys(e, form) {
   }
 }
 
-async function createModal(path, template) {
+async function createModal(form) {
   const modalContainer = document.createElement('div');
   modalContainer.classList.add('modal-container');
 
   const modalContent = document.createElement('div');
   modalContent.classList.add('modal-content');
 
-  // fetch modal content
-  const resp = await fetch(`${path}.plain.html`);
-
-  if (!resp.ok) {
-    // eslint-disable-next-line no-console
-    console.error(`modal url cannot be loaded: ${path}`);
-    return modalContainer;
-  }
-
-  const html = await resp.text();
-  modalContent.innerHTML = html;
-
-  decorateMain(modalContent);
-  await loadBlocks(modalContent);
+  modalContent.innerHTML = form;
   modalContainer.append(modalContent);
-
-  // add class to modal container for opportunity to add custom modal styling
-  if (template) modalContainer.classList.add(template);
 
   const closeModal = () => modalContainer.remove();
   const close = document.createElement('div');
@@ -172,7 +156,7 @@ export default async function decorate(block, options) {
   let form;
   if (isModalForm) {
     form = await createForm(block.textContent.trim());
-    const modal = await createModal(form, 'modal-form');
+    const modal = await createModal(form);
     modal.append(block);
   } else {
     form = await createForm(block.textContent.trim());
