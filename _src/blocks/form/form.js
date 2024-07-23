@@ -160,18 +160,19 @@ export default async function decorate(block, options) {
   // } else {
 
   const form = await createForm(block.textContent.trim());
+  block.innerHTML = '';
   if (form) block.append(form);
 
-  // if (subtitle) {
-  //   const p = document.createElement('p');
-  //   p.textContent = subtitle;
-  //   block.prepend(p);
-  // }
+  if (subtitle) {
+    const p = document.createElement('p');
+    p.textContent = subtitle;
+    block.prepend(p);
+  }
 
-  // if (title) {
-  //   const h2 = document.createElement('h2');
-  //   h2.textContent = title;
-  //   block.prepend(h2);
-  // }
+  if (title) {
+    const h2 = document.createElement('h2');
+    h2.textContent = title;
+    block.prepend(h2);
+  }
   // }
 }
