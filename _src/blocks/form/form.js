@@ -165,12 +165,14 @@ export default async function decorate(block, options) {
 
   if (subtitle) {
     const p = document.createElement('p');
+    p.classList.add('subtitle');
     p.textContent = subtitle;
     block.prepend(p);
   }
 
   if (title) {
     const h2 = document.createElement('h2');
+    h2.classList.add('title');
     h2.textContent = title;
     block.prepend(h2);
   }

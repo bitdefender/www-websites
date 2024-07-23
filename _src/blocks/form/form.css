@@ -77,3 +77,13 @@ input[type="submit"].disabled:hover .button-text {
   font-size: var(--body-font-size-xxs);
   font-weight: var(--font-weight-bold);
 }
+
+.form-container .title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+
+.form-container .subtitle {
+  font-size: 16px;
+}
