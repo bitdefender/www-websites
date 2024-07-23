@@ -30,12 +30,19 @@ async function handleSubmitEmarsys(e, form) {
   e.preventDefault();
   const formData = new FormData(form);
 
+  const email = formData.get('email');
+  const flow = 'EMM_DIP_POPUP_OFFER';
+  const name = formData.get('Name');
+  const firstName = name.split(' ')[0];
+  const lastName = name.split(' ')[1];
+  const update = formData.get('aware');
+
   const jsonObject = {
-    email: 'jdoe@bitdefender.com',
-    flow: 'EMM_DIP_POPUP_OFFER',
-    first_name: 'John',
-    last_name: 'Doe',
-    update: 'true',
+    email,
+    flow,
+    first_name: firstName,
+    last_name: lastName,
+    update,
   };
 
   const response = await fetch('https://www.bitdefender.com/site/Store/offerSubscribe', {
