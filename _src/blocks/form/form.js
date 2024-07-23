@@ -51,6 +51,40 @@ async function handleSubmitEmarsys(e, form) {
   }
 }
 
+async function createModal(path, template) {
+  const modalContainer = document.createElement('div');
+  modalContainer.classList.add('modal-container');
+
+  const modalContent = document.createElement('div');
+  modalContent.classList.add('modal-content');
+
+  // fetch modal content
+  const resp = await fetch(`${path}.plain.html`);
+
+  if (!resp.ok) {
+    // eslint-disable-next-line no-console
+    console.error(`modal url cannot be loaded: ${path}`);
+    return modalContainer;
+  }
+
+  const html = await resp.text();
+  modalContent.innerHTML = html;
+
+  decorateMain(modalContent);
+  await loadBlocks(modalContent);
+  modalContainer.append(modalContent);
+
+  // add class to modal container for opportunity to add custom modal styling
+  if (template) modalContainer.classList.add(template);
+
+  const closeModal = () => modalContainer.remove();
+  const close = document.createElement('div');
+  close.classList.add('modal-close');
+  close.addEventListener('click', closeModal);
+  modalContent.append(close);
+  return modalContainer;
+}
+
 export async function createForm(formURL) {
   const { pathname, search } = new URL(formURL);
 
@@ -133,7 +167,15 @@ export default async function decorate(block, options) {
   }
 
   console.log(block.textContent);
-  const form = await createForm(block.textContent.trim());
+
+  let form;
+  if (isModalForm) {
+    form = await createForm(block.textContent.trim());
+    const modal = await createModal(form, 'modal-form');
+    modal.append(block);
+  } else {
+    form = await createForm(block.textContent.trim());
+  }
 
   if (form) block.append(form);
 }
