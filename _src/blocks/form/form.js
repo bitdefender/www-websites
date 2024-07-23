@@ -34,7 +34,7 @@ async function handleSubmitEmarsys(e, form) {
   const flow = 'EMM_DIP_POPUP_OFFER';
   const name = formData.get('Name');
   const firstName = name.split(' ')[0];
-  const lastName = name.split(' ')[1];
+  const lastName = name.split(' ')[1] || '';
   const update = formData.get('aware');
 
   const jsonObject = {
