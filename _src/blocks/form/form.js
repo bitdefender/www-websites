@@ -167,7 +167,7 @@ export default async function decorate(block, options) {
   }
 
   console.log(block.textContent);
-
+  console.log(ismodalform);
   let form;
   if (ismodalform) {
     form = await createForm(block.textContent.trim());
