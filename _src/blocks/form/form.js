@@ -69,74 +69,74 @@ async function createModal(form) {
   return modalContainer;
 }
 
-export async function createForm(formURL) {
-  const { pathname, search } = new URL(formURL);
+// export async function createForm(formURL) {
+//   const { pathname, search } = new URL(formURL);
 
-  // check if the window is dev3.bitdefender.com
-  let data;
-  if (window.location.hostname === 'dev3.bitdefender.com' || window.location.hostname === 'dev3.bitdefender.co.uk') {
-    data = await fetchData(formURL);
-  } else {
-    data = await fetchData(`${pathname}${search}`);
-  }
+//   // check if the window is dev3.bitdefender.com
+//   let data;
+//   if (window.location.hostname === 'dev3.bitdefender.com' || window.location.hostname === 'dev3.bitdefender.co.uk') {
+//     data = await fetchData(formURL);
+//   } else {
+//     data = await fetchData(`${pathname}${search}`);
+//   }
 
-  const form = document.createElement('form');
-  console.log(data);
-  form.setAttribute('method', 'post');
+//   const form = document.createElement('form');
+//   console.log(data);
+//   form.setAttribute('method', 'post');
 
-  data.forEach((field, index) => {
-    console.log(field.Default);
-    const input = document.createElement('input');
-    input.id = `form-${index}-${field.Field}`;
-    input.addEventListener('change', () => onChange(form));
-    input.addEventListener('input', () => onChange(form));
-    input.setAttribute('type', field.Type);
-    input.setAttribute('name', field.Field);
-    input.setAttribute('placeholder', field.Default);
-    input.setAttribute('value', field.Value);
+//   data.forEach((field, index) => {
+//     console.log(field.Default);
+//     const input = document.createElement('input');
+//     input.id = `form-${index}-${field.Field}`;
+//     input.addEventListener('change', () => onChange(form));
+//     input.addEventListener('input', () => onChange(form));
+//     input.setAttribute('type', field.Type);
+//     input.setAttribute('name', field.Field);
+//     input.setAttribute('placeholder', field.Default);
+//     input.setAttribute('value', field.Value);
 
-    if (field.Required && field.Required.toLowerCase() === 'true') {
-      input.setAttribute('required', '');
-      input.setAttribute('aria-required', 'true');
-    }
+//     if (field.Required && field.Required.toLowerCase() === 'true') {
+//       input.setAttribute('required', '');
+//       input.setAttribute('aria-required', 'true');
+//     }
 
-    form.append(input);
+//     form.append(input);
 
-    // Only create a label if the field.Label is not null
-    if (field.Label) {
-      const label = document.createElement('label');
-      label.setAttribute('for', input.id);
-      label.textContent = field.Label;
-      form.append(label);
-    }
+//     // Only create a label if the field.Label is not null
+//     if (field.Label) {
+//       const label = document.createElement('label');
+//       label.setAttribute('for', input.id);
+//       label.textContent = field.Label;
+//       form.append(label);
+//     }
 
-    if (field.Type === 'submit') {
-      input.classList.add('disabled');
-      input.disabled = true;
-    }
+//     if (field.Type === 'submit') {
+//       input.classList.add('disabled');
+//       input.disabled = true;
+//     }
 
-    if (field.Field === 'handler') {
-      form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
-    } else {
-      form.addEventListener('submit', (e) => handleSubmitEmarsys(e, form));
-    }
+//     if (field.Field === 'handler') {
+//       form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
+//     } else {
+//       form.addEventListener('submit', (e) => handleSubmitEmarsys(e, form));
+//     }
 
-    if (field.Type === 'checkbox') {
-      const div = document.createElement('div');
-      div.classList.add('checkbox');
+//     if (field.Type === 'checkbox') {
+//       const div = document.createElement('div');
+//       div.classList.add('checkbox');
 
-      const label = input.nextElementSibling;
-      if (label && label.tagName === 'LABEL') {
-        input.before(div);
-        div.append(input, label);
-      } else {
-        input.after(div);
-        div.append(input);
-      }
-    }
-  });
-  return form;
-}
+//       const label = input.nextElementSibling;
+//       if (label && label.tagName === 'LABEL') {
+//         input.before(div);
+//         div.append(input, label);
+//       } else {
+//         input.after(div);
+//         div.append(input);
+//       }
+//     }
+//   });
+//   return form;
+// }
 
 export default async function decorate(block, options) {
   const {
@@ -153,14 +153,13 @@ export default async function decorate(block, options) {
   console.log(block.textContent);
   console.log(options?.metadata);
   console.log(isModalForm);
-  let form;
-  if (isModalForm) {
-    form = await createForm(block.textContent.trim());
-    const modal = await createModal(form);
-    modal.append(block);
-  } else {
-    form = await createForm(block.textContent.trim());
-  }
+  // if (isModalForm) {
+  //   form = await createForm(block.textContent.trim());
+  //   const modal = await createModal(form);
+  //   modal.append(block);
+  // } else {
+  const form = await createForm(block.textContent.trim());
+  // }
 
   if (form) block.append(form);
 }
