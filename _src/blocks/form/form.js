@@ -158,7 +158,9 @@ export default async function decorate(block, options) {
   //   const modal = await createModal(form);
   //   modal.append(block);
   // } else {
+
   const form = await createForm(block.textContent.trim());
+  if (form) block.append(form);
 
   if (subtitle) {
     const p = document.createElement('p');
@@ -172,6 +174,4 @@ export default async function decorate(block, options) {
     block.prepend(h2);
   }
   // }
-
-  if (form) block.append(form);
 }
