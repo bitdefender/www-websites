@@ -61,8 +61,8 @@ export async function createForm(formURL) {
 
   // check if the window is dev3.bitdefender.com
   let data;
-  if (window.location.hostname === 'dev3.bitdefender.com') {
-    data = await fetchData(`https://dev3.bitdefender.com${pathname}${search}`);
+  if (window.location.hostname === 'dev3.bitdefender.com' || window.location.hostname === 'dev3.bitdefender.co.uk') {
+    data = await fetchData(formURL);
   } else {
     data = await fetchData(`${pathname}${search}`);
   }
