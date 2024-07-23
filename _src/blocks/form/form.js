@@ -125,6 +125,13 @@ export default async function decorate(block, options) {
     isModalForm,
   } = options ? options.metadata : block.closest('.section').dataset;
 
+  if (options) {
+    // eslint-disable-next-line no-param-reassign
+    block = block.querySelector('.block');
+    const blockParent = block.closest('.section');
+    blockParent.classList.add('we-container');
+  }
+
   console.log(block.textContent);
   const form = await createForm(block.textContent.trim());
 
