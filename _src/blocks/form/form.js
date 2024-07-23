@@ -140,7 +140,7 @@ export async function createForm(formURL) {
 
 export default async function decorate(block, options) {
   const {
-    isModalForm,
+    isModalForm, title, subtitle,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -159,6 +159,18 @@ export default async function decorate(block, options) {
   //   modal.append(block);
   // } else {
   const form = await createForm(block.textContent.trim());
+
+  if (subtitle) {
+    const p = document.createElement('p');
+    p.textContent = subtitle;
+    block.prepend(p);
+  }
+
+  if (title) {
+    const h2 = document.createElement('h2');
+    h2.textContent = title;
+    block.prepend(h2);
+  }
   // }
 
   if (form) block.append(form);
