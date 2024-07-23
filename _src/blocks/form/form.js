@@ -51,92 +51,92 @@ async function handleSubmitEmarsys(e, form) {
   }
 }
 
-async function createModal(form) {
-  const modalContainer = document.createElement('div');
-  modalContainer.classList.add('modal-container');
+// async function createModal(form) {
+//   const modalContainer = document.createElement('div');
+//   modalContainer.classList.add('modal-container');
 
-  const modalContent = document.createElement('div');
-  modalContent.classList.add('modal-content');
+//   const modalContent = document.createElement('div');
+//   modalContent.classList.add('modal-content');
 
-  modalContent.innerHTML = form;
-  modalContainer.append(modalContent);
+//   modalContent.innerHTML = form;
+//   modalContainer.append(modalContent);
 
-  const closeModal = () => modalContainer.remove();
-  const close = document.createElement('div');
-  close.classList.add('modal-close');
-  close.addEventListener('click', closeModal);
-  modalContent.append(close);
-  return modalContainer;
-}
-
-// export async function createForm(formURL) {
-//   const { pathname, search } = new URL(formURL);
-
-//   // check if the window is dev3.bitdefender.com
-//   let data;
-//   if (window.location.hostname === 'dev3.bitdefender.com' || window.location.hostname === 'dev3.bitdefender.co.uk') {
-//     data = await fetchData(formURL);
-//   } else {
-//     data = await fetchData(`${pathname}${search}`);
-//   }
-
-//   const form = document.createElement('form');
-//   console.log(data);
-//   form.setAttribute('method', 'post');
-
-//   data.forEach((field, index) => {
-//     console.log(field.Default);
-//     const input = document.createElement('input');
-//     input.id = `form-${index}-${field.Field}`;
-//     input.addEventListener('change', () => onChange(form));
-//     input.addEventListener('input', () => onChange(form));
-//     input.setAttribute('type', field.Type);
-//     input.setAttribute('name', field.Field);
-//     input.setAttribute('placeholder', field.Default);
-//     input.setAttribute('value', field.Value);
-
-//     if (field.Required && field.Required.toLowerCase() === 'true') {
-//       input.setAttribute('required', '');
-//       input.setAttribute('aria-required', 'true');
-//     }
-
-//     form.append(input);
-
-//     // Only create a label if the field.Label is not null
-//     if (field.Label) {
-//       const label = document.createElement('label');
-//       label.setAttribute('for', input.id);
-//       label.textContent = field.Label;
-//       form.append(label);
-//     }
-
-//     if (field.Type === 'submit') {
-//       input.classList.add('disabled');
-//       input.disabled = true;
-//     }
-
-//     if (field.Field === 'handler') {
-//       form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
-//     } else {
-//       form.addEventListener('submit', (e) => handleSubmitEmarsys(e, form));
-//     }
-
-//     if (field.Type === 'checkbox') {
-//       const div = document.createElement('div');
-//       div.classList.add('checkbox');
-
-//       const label = input.nextElementSibling;
-//       if (label && label.tagName === 'LABEL') {
-//         input.before(div);
-//         div.append(input, label);
-//       } else {
-//         input.after(div);
-//         div.append(input);
-//       }
-//     }
-//   });
-//   return form;
+//   const closeModal = () => modalContainer.remove();
+//   const close = document.createElement('div');
+//   close.classList.add('modal-close');
+//   close.addEventListener('click', closeModal);
+//   modalContent.append(close);
+//   return modalContainer;
 // }
+
+export async function createForm(formURL) {
+  const { pathname, search } = new URL(formURL);
+
+  // check if the window is dev3.bitdefender.com
+  let data;
+  if (window.location.hostname === 'dev3.bitdefender.com' || window.location.hostname === 'dev3.bitdefender.co.uk') {
+    data = await fetchData(formURL);
+  } else {
+    data = await fetchData(`${pathname}${search}`);
+  }
+
+  const form = document.createElement('form');
+  console.log(data);
+  form.setAttribute('method', 'post');
+
+  data.forEach((field, index) => {
+    console.log(field.Default);
+    const input = document.createElement('input');
+    input.id = `form-${index}-${field.Field}`;
+    input.addEventListener('change', () => onChange(form));
+    input.addEventListener('input', () => onChange(form));
+    input.setAttribute('type', field.Type);
+    input.setAttribute('name', field.Field);
+    input.setAttribute('placeholder', field.Default);
+    input.setAttribute('value', field.Value);
+
+    if (field.Required && field.Required.toLowerCase() === 'true') {
+      input.setAttribute('required', '');
+      input.setAttribute('aria-required', 'true');
+    }
+
+    form.append(input);
+
+    // Only create a label if the field.Label is not null
+    if (field.Label) {
+      const label = document.createElement('label');
+      label.setAttribute('for', input.id);
+      label.textContent = field.Label;
+      form.append(label);
+    }
+
+    if (field.Type === 'submit') {
+      input.classList.add('disabled');
+      input.disabled = true;
+    }
+
+    if (field.Field === 'handler') {
+      form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
+    } else {
+      form.addEventListener('submit', (e) => handleSubmitEmarsys(e, form));
+    }
+
+    if (field.Type === 'checkbox') {
+      const div = document.createElement('div');
+      div.classList.add('checkbox');
+
+      const label = input.nextElementSibling;
+      if (label && label.tagName === 'LABEL') {
+        input.before(div);
+        div.append(input, label);
+      } else {
+        input.after(div);
+        div.append(input);
+      }
+    }
+  });
+  return form;
+}
 
 export default async function decorate(block, options) {
   const {
