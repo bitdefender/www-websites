@@ -58,7 +58,15 @@ async function handleSubmitEmarsys(e, form) {
 
 export async function createForm(formURL) {
   const { pathname, search } = new URL(formURL);
-  const data = await fetchData(`${pathname}${search}`);
+
+  // check if the window is dev3.bitdefender.com
+  let data;
+  if (window.location.hostname === 'dev3.bitdefender.com') {
+    data = await fetchData(`https://dev3.bitdefender.com${pathname}${search}`);
+  } else {
+    data = await fetchData(`${pathname}${search}`);
+  }
+
   const form = document.createElement('form');
   console.log(data);
   form.setAttribute('method', 'post');
