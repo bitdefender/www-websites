@@ -156,7 +156,7 @@ export async function createForm(formURL) {
 
 export default async function decorate(block, options) {
   const {
-    ismodalform,
+    isModalForm,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -168,9 +168,9 @@ export default async function decorate(block, options) {
 
   console.log(block.textContent);
   console.log(options?.metadata);
-  console.log(ismodalform);
+  console.log(isModalForm);
   let form;
-  if (ismodalform) {
+  if (isModalForm) {
     form = await createForm(block.textContent.trim());
     const modal = await createModal(form, 'modal-form');
     modal.append(block);
