@@ -40,11 +40,6 @@ async function handleSubmitEmarsys(e, form) {
 
   const response = await fetch('https://www.bitdefender.com/site/Store/offerSubscribe', {
     method: 'POST',
-    mode: 'no-cors',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(jsonObject),
   });
 
