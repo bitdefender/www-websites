@@ -4,6 +4,15 @@ async function fetchData(url) {
   return json.data;
 }
 
+async function hashEmail(email) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(email);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 function onChange(form) {
   // Targeting the anchor inside .button-container
   const submitButton = form.querySelector('input[type="submit"]');
@@ -53,6 +62,19 @@ async function handleSubmitEmarsys(e, form) {
   if (response.ok) {
     const jsonResponse = await response.json();
     console.log(jsonResponse);
+    const hashedEmail = await hashEmail(email);
+    window.adobeDataLayer = window.adobeDataLayer || [];
+    window.adobeDataLayer.push({
+      event: 'form completed',
+      user: {
+        form: 'newsletter',
+        formID: hashedEmail,
+      },
+    });
+
+    const successMessage = document.createElement('p');
+    successMessage.textContent = 'Thank you for subscribing!';
+    form.replaceWith(successMessage);
   } else {
     console.error('Failed to submit form');
   }
