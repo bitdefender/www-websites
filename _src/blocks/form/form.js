@@ -35,7 +35,7 @@ async function handleSubmit(e, handler) {
   }
 }
 
-async function handleSubmitEmarsys(e, form) {
+async function handleSubmitNewsletter(e, form) {
   e.preventDefault();
   const formData = new FormData(form);
 
@@ -73,7 +73,7 @@ async function handleSubmitEmarsys(e, form) {
     });
 
     const successMessage = document.createElement('p');
-    successMessage.textContent = 'Thank you for subscribing!';
+    successMessage.textContent = 'Thank you for signing up!';
     form.replaceWith(successMessage);
   } else {
     console.error('Failed to submit form');
@@ -83,8 +83,8 @@ async function handleSubmitEmarsys(e, form) {
 export async function createForm(formURL) {
   const { pathname, search } = new URL(formURL);
 
-  // check if the window is dev3.bitdefender.com
   let data;
+
   if (window.location.hostname === 'dev3.bitdefender.com' || window.location.hostname === 'dev3.bitdefender.co.uk') {
     data = await fetchData(formURL);
   } else {
@@ -128,8 +128,10 @@ export async function createForm(formURL) {
 
     if (field.Field === 'handler') {
       form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
-    } else {
-      form.addEventListener('submit', (e) => handleSubmitEmarsys(e, form));
+    }
+
+    if (field.Field === 'blog') {
+      form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form));
     }
 
     if (field.Type === 'checkbox') {
