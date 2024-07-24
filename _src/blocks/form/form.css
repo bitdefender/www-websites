@@ -185,6 +185,7 @@ input[type="submit"].disabled:hover .button-text {
   .form.blog-template {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 390px;
+    padding: 15px;
 
     input[type="email"] {
       box-sizing: border-box;;
