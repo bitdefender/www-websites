@@ -179,3 +179,18 @@ input[type="submit"].disabled:hover .button-text {
   --section-desktop-padding-vertical: 48px;
   --section-mobile-padding-vertical: 32px;
 }
+
+.form-container{
+
+  .form.blog-template {
+    border-box: 1px solid #d6d6d6;
+
+    input[type="email"] {
+      box-sizing: border-box;;
+    }
+    
+    input[type="text"] {
+      box-sizing: border-box;;
+    }
+  }  
+}

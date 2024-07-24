@@ -58,24 +58,6 @@ async function handleSubmitEmarsys(e, form) {
   }
 }
 
-// async function createModal(form) {
-//   const modalContainer = document.createElement('div');
-//   modalContainer.classList.add('modal-container');
-
-//   const modalContent = document.createElement('div');
-//   modalContent.classList.add('modal-content');
-
-//   modalContent.innerHTML = form;
-//   modalContainer.append(modalContent);
-
-//   const closeModal = () => modalContainer.remove();
-//   const close = document.createElement('div');
-//   close.classList.add('modal-close');
-//   close.addEventListener('click', closeModal);
-//   modalContent.append(close);
-//   return modalContainer;
-// }
-
 export async function createForm(formURL) {
   const { pathname, search } = new URL(formURL);
 
@@ -147,7 +129,7 @@ export async function createForm(formURL) {
 
 export default async function decorate(block, options) {
   const {
-    isModalForm, title, subtitle,
+    title, subtitle, template,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -157,18 +139,13 @@ export default async function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
-  console.log(block.textContent);
-  console.log(options?.metadata);
-  console.log(isModalForm);
-  // if (isModalForm) {
-  //   form = await createForm(block.textContent.trim());
-  //   const modal = await createModal(form);
-  //   modal.append(block);
-  // } else {
-
   const form = await createForm(block.textContent.trim());
   block.innerHTML = '';
   if (form) block.append(form);
+
+  if (template === 'blog') {
+    block.classList.add('blog-template');
+  }
 
   if (subtitle) {
     const p = document.createElement('p');
@@ -183,5 +160,4 @@ export default async function decorate(block, options) {
     h2.textContent = title;
     block.prepend(h2);
   }
-  // }
 }
