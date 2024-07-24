@@ -9,7 +9,7 @@ async function hashEmail(email) {
   const data = encoder.encode(email);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
   return hashHex;
 }
 
@@ -127,11 +127,13 @@ export async function createForm(formURL) {
     }
 
     if (field.Field === 'handler') {
-      form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
-    }
-
-    if (field.Field === 'blog') {
-      form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form));
+      switch (field.Value) {
+        case 'blog':
+          form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form));
+          break;
+        default:
+          form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
+      }
     }
 
     if (field.Type === 'checkbox') {
