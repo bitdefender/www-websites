@@ -182,18 +182,24 @@ input[type="submit"].disabled:hover .button-text {
 
 /* stylelint-disable-next-line no-duplicate-selectors */
 .form-container{
-  .form.blog-template {
-    box-shadow: 0 0 15px 20px rgb(0 0 0 / 10%);
-    max-width: 390px;
-    padding: 15px;
+
+  .form-wrapper {
     box-sizing: border-box;
 
-    input[type="email"] {
-      box-sizing: border-box;;
-    }
-    
-    input[type="text"] {
-      box-sizing: border-box;;
-    }
-  }  
+    .form.blog-template {
+      box-shadow: 0 0 15px 20px rgb(0 0 0 / 10%);
+      max-width: 390px;
+      padding: 15px;
+      box-sizing: border-box;
+  
+      input[type="email"] {
+        box-sizing: border-box;;
+      }
+      
+      input[type="text"] {
+        box-sizing: border-box;;
+      }
+    }  
+  }
+  
 }
