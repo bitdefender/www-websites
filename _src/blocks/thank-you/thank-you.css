@@ -11,6 +11,12 @@
             }
         }
 
+        img {
+            max-width: 100%;
+            width: auto;
+            height: auto;
+        }
+
         .content-right {
             padding-left: 20px;
             display: flex;
@@ -56,12 +62,6 @@
                     box-shadow: 0 35px 40px 0 #0000000F;
                 }
             }
-        }
-
-        img {
-            max-width: 100%;
-            width: auto;
-            height: auto;
         }
 
         /* Importing from styles.css to be able to import in aem */
@@ -157,7 +157,7 @@
     
 }
 
-/* stylelint-disable-next-line property-no-duplicate-selectors */
+/* stylelint-disable-next-line no-duplicate-selectors */
 .thank-you-container {
     /* colors */
     --dark-background-color: #000;
