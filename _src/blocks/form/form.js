@@ -60,8 +60,6 @@ async function handleSubmitNewsletter(e, form) {
   });
 
   if (response.ok) {
-    const jsonResponse = await response.json();
-    console.log(jsonResponse);
     const hashedEmail = await hashEmail(email);
     window.adobeDataLayer = window.adobeDataLayer || [];
     window.adobeDataLayer.push({
@@ -92,11 +90,9 @@ export async function createForm(formURL) {
   }
 
   const form = document.createElement('form');
-  console.log(data);
   form.setAttribute('method', 'post');
 
   data.forEach((field, index) => {
-    console.log(field.Default);
     const input = document.createElement('input');
     input.id = `form-${index}-${field.Field}`;
     input.addEventListener('change', () => onChange(form));
