@@ -35,12 +35,11 @@ async function handleSubmit(e, handler) {
   }
 }
 
-async function handleSubmitNewsletter(e, form) {
+async function handleSubmitNewsletter(e, form, flow) {
   e.preventDefault();
   const formData = new FormData(form);
 
   const email = formData.get('email');
-  const flow = 'EMM_DIP_POPUP_OFFER';
   const name = formData.get('Name');
   const firstName = name.split(' ')[0];
   const lastName = name.split(' ')[1] || '';
@@ -74,11 +73,17 @@ async function handleSubmitNewsletter(e, form) {
     successMessage.textContent = 'Thank you for signing up!';
     form.replaceWith(successMessage);
   } else {
-    console.error('Failed to submit form');
+    const failMessageText = `Subscription Error
+        We apologize, but it seems there's an issue with our server and your 
+        subscription couldn't be processed at this time. Please try again later. 
+        If the problem persists, feel free to contact our support team for assistance.`
+    const failMessage = document.createElement('p');
+    failMessage.textContent = failMessageText;
+    form.replaceWith(failMessage);
   }
 }
 
-export async function createForm(formURL) {
+export async function createForm(formURL, flow) {
   const { pathname, search } = new URL(formURL);
 
   let data;
@@ -125,7 +130,7 @@ export async function createForm(formURL) {
     if (field.Field === 'handler') {
       switch (field.Value) {
         case 'blog':
-          form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form));
+          form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form, flow));
           break;
         default:
           form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
@@ -151,7 +156,7 @@ export async function createForm(formURL) {
 
 export default async function decorate(block, options) {
   const {
-    title, subtitle, template,
+    title, subtitle, template, flow,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -161,7 +166,7 @@ export default async function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
-  const form = await createForm(block.textContent.trim());
+  const form = await createForm(block.textContent.trim(), flow);
   block.innerHTML = '';
   if (form) block.append(form);
 
