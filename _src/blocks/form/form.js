@@ -156,7 +156,7 @@ export async function createForm(formURL, flow) {
 
 export default async function decorate(block, options) {
   const {
-    title, subtitle, template, flow,
+    template, flow,
   } = options ? options.metadata : block.closest('.section').dataset;
 
   if (options) {
@@ -166,25 +166,11 @@ export default async function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
-  const form = await createForm(block.textContent.trim(), flow);
-  block.innerHTML = '';
+  const jsonLink = block.querySelector('a');
+  const form = await createForm(jsonLink.textContent.trim(), flow);
   if (form) block.append(form);
 
   if (template === 'blog') {
     block.classList.add('blog-template');
-  }
-
-  if (subtitle) {
-    const p = document.createElement('p');
-    p.classList.add('subtitle');
-    p.textContent = subtitle;
-    block.prepend(p);
-  }
-
-  if (title) {
-    const h2 = document.createElement('h2');
-    h2.classList.add('title');
-    h2.textContent = title;
-    block.prepend(h2);
   }
 }
