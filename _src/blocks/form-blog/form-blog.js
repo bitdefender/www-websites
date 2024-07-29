@@ -18,77 +18,9 @@ async function hashEmail(email) {
   return hashHex;
 }
 
-export async function createForm(formURL, flow) {
-  const { pathname, search } = new URL(formURL);
-
-  let data;
-
-  const form = document.createElement('form');
-  form.setAttribute('method', 'post');
-
-  data.forEach((field, index) => {
-    const input = document.createElement('input');
-    input.id = `form-${index}-${field.Field}`;
-    input.addEventListener('change', () => onChange(form));
-    input.addEventListener('input', () => onChange(form));
-    input.setAttribute('type', field.Type);
-    input.setAttribute('name', field.Field);
-    input.setAttribute('placeholder', field.Default);
-    input.setAttribute('value', field.Value);
-
-    if (field.Required && field.Required.toLowerCase() === 'true') {
-      input.setAttribute('required', '');
-      input.setAttribute('aria-required', 'true');
-    }
-
-    form.append(input);
-
-    // Only create a label if the field.Label is not null
-    if (field.Label) {
-      const label = document.createElement('label');
-      label.setAttribute('for', input.id);
-      label.textContent = field.Label;
-      form.append(label);
-    }
-
-    if (field.Type === 'submit') {
-      input.classList.add('disabled');
-      input.disabled = true;
-    }
-
-    if (field.Field === 'handler') {
-      switch (field.Value) {
-        case 'blog':
-          form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form, flow));
-          break;
-        default:
-          form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
-      }
-    }
-
-    if (field.Type === 'checkbox') {
-      const div = document.createElement('div');
-      div.classList.add('checkbox');
-
-      const label = input.nextElementSibling;
-      if (label && label.tagName === 'LABEL') {
-        input.before(div);
-        div.append(input, label);
-      } else {
-        input.after(div);
-        div.append(input);
-      }
-    }
-  });
-  return form;
-}
-
 async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage) {
   e.preventDefault();
-  console.log('tasad');
-  console.log(form);
   const formData = new FormData(form);
-  console.log(formData);
   const email = formData.get('email');
   const name = formData.get('name');
   const firstName = name.split(' ')[0];
@@ -102,7 +34,6 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
     last_name: lastName,
     update,
   };
-  console.log(jsonObject);
 
   const response = await fetch('https://www.bitdefender.com/site/Store/offerSubscribe', {
     method: 'POST',
@@ -157,13 +88,12 @@ function parseHTML(html) {
 }
 
 // Function to create the form
-async function createFormCool(types, labels, flow, successMessage, failMessage) {
+async function createForm(types, labels, flow, successMessage, failMessage) {
   const form = document.createElement('form');
   form.setAttribute('method', 'post');
 
-  for (let i = 0; i < types.length; i++) {
+  for (let i = 0; i < types.length; i += 1) {
     const type = types[i].toLowerCase();
-    console.log(type);
     const input = document.createElement('input');
     input.id = `form-${i}-${type}`;
     input.addEventListener('change', () => onChange(form));
@@ -209,12 +139,9 @@ export default async function decorate(block, options) {
   const formDataHTML = block.children[1];
   const successMessage = block.children[2].children[1].innerHTML;
   const failMessage = block.children[3].children[1].innerHTML;
-  console.log(formDataHTML, typeof formDataHTML, typeof formDataHTML.innerHTML);
   const formData = parseHTML(formDataHTML.innerHTML);
   const [types, labels] = [formData.insideCurlyBrackets, formData.insideSquareBrackets];
-  console.log(formData);
-  console.log(block.children);
-  const form = await createFormCool(types, labels, flow, successMessage, failMessage);
+  const form = await createForm(types, labels, flow, successMessage, failMessage);
   if (form) block.append(form);
   block.children[1].innerHTML = '';
   block.children[2].innerHTML = '';
@@ -222,4 +149,9 @@ export default async function decorate(block, options) {
   if (template === 'blog') {
     block.classList.add('blog-template');
   }
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
 }
