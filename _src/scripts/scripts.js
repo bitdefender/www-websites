@@ -29,6 +29,7 @@ export const DEFAULT_COUNTRY = getDefaultLanguage();
 
 export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
 
+// DEX-19087
 const hreflangMap = new Map([
   ['en-ro', { baseUrl: 'https://www.bitdefender.com/en-ro', pageType: 'html' }],
   ['de', { baseUrl: 'https://www.bitdefender.com/de-de', pageType: 'html' }],
