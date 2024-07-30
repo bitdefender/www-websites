@@ -29,28 +29,6 @@ export const DEFAULT_COUNTRY = getDefaultLanguage();
 
 export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
 
-// DEX-19087
-const hreflangMap = new Map([
-  ['x-default', { baseUrl: 'https://www.bitdefender.com/en-us', pageType: 'html' }],
-  ['en', { baseUrl: 'https://www.bitdefender.com/en-en', pageType: 'html' }],
-  ['de', { baseUrl: 'https://www.bitdefender.com/de-de', pageType: 'html' }],
-  ['it', { baseUrl: 'https://www.bitdefender.com/it-it', pageType: 'html' }],
-  ['fr', { baseUrl: 'https://www.bitdefender.com/fr-fr', pageType: 'html' }],
-  ['en-AU', { baseUrl: 'https://www.bitdefender.com/en-au', pageType: '', hasIndexPages: true }],
-  ['ro', { baseUrl: 'https://www.bitdefender.com/ro-ro', pageType: 'html' }],
-  ['nl', { baseUrl: 'https://www.bitdefender.com/nl-nl', pageType: 'html' }],
-  ['en-GB', { baseUrl: 'https://www.bitdefender.com/en-gb', pageType: 'html' }],
-  ['en-ro', { baseUrl: 'https://www.bitdefender.com/en-ro', pageType: 'html' }],
-  ['sv', { baseUrl: 'https://www.bitdefender.com/se-se', pageType: 'html' }],
-  ['pt', { baseUrl: 'https://www.bitdefender.com/pt-pt', pageType: 'html' }],
-  ['en-sv', { baseUrl: 'https://www.bitdefender.com/se-se', pageType: 'html' }],
-  ['pt-BR', { baseUrl: 'https://www.bitdefender.com/pt-br', pageType: 'html' }],
-  ['nl-BE', { baseUrl: 'https://www.bitdefender.com/nl-be', pageType: 'html' }],
-  ['es', { baseUrl: 'https://www.bitdefender.com/es-es', pageType: 'html' }],
-  ['zh-hk', { baseUrl: 'https://www.bitdefender.com/zh-hk', pageType: '', hasIndexPages: true }],
-  ['zh-tw', { baseUrl: 'https://www.bitdefender.com/zh-tw', pageType: '', hasIndexPages: true }],
-]);
-
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
   url: '../plugins/rum-conversion/src/index.js',
@@ -523,42 +501,6 @@ async function loadEager(doc) {
   }
 }
 
-// todo remove export after having a clear path for the
-// overall unit testing strategy of the all page
-export function generateHrefLang() {
-  hreflangMap.forEach(({ baseUrl, pageType }, key) => {
-    // DEX-19087
-    const segments = window.location.pathname.split('/');
-    if (segments[segments.length - 1] === '') {
-      segments.pop();
-    }
-    const nonTrusted = ['en-ro', 'sv', 'pt', 'en-sv', 'pt-BR', 'nl-BE', 'es', 'zh-hk', 'zh-tw'];
-    const lastSegment = segments.pop();
-    if (lastSegment === 'trusted' && nonTrusted.includes(key)) {
-      return;
-    }
-
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'alternate');
-    link.setAttribute('hreflang', key);
-
-    const foundLanguage = localisationList.find((item) => baseUrl.indexOf(`/${item}/`) !== -1 || window.location.pathname.indexOf(`/${item}/`) !== -1);
-    const isHomePage = window.location.pathname === `/${foundLanguage}/`;
-
-    const lastCharFromHref = window.location.pathname.slice(-1);
-    const isCurrentIndexPage = lastCharFromHref === '/';
-    const suffix = `${!isHomePage && pageType && !isCurrentIndexPage ? `.${pageType}` : ''}`;
-
-    let href = `${baseUrl}${window.location.pathname.replace(/\/us\/en/, '')}`;
-    href = `${href}${suffix}`;
-
-    href = href.replace(`/${foundLanguage}`, '');
-
-    link.setAttribute('href', href);
-    document.head.appendChild(link);
-  });
-}
-
 export async function loadTrackers() {
   const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
 
@@ -622,8 +564,6 @@ async function loadLazy(doc) {
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
-
-  generateHrefLang();
 }
 
 /**
