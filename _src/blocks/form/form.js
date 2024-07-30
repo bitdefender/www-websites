@@ -4,15 +4,6 @@ async function fetchData(url) {
   return json.data;
 }
 
-async function hashEmail(email) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(email);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
-}
-
 function onChange(form) {
   // Targeting the anchor inside .button-container
   const submitButton = form.querySelector('input[type="submit"]');
@@ -35,66 +26,11 @@ async function handleSubmit(e, handler) {
   }
 }
 
-async function handleSubmitNewsletter(e, form, flow) {
-  e.preventDefault();
-  const formData = new FormData(form);
-
-  const email = formData.get('email');
-  const name = formData.get('Name');
-  const firstName = name.split(' ')[0];
-  const lastName = name.split(' ')[1] || '';
-  const update = formData.get('aware');
-
-  const jsonObject = {
-    email,
-    flow,
-    first_name: firstName,
-    last_name: lastName,
-    update,
-  };
-
-  const response = await fetch('https://www.bitdefender.com/site/Store/offerSubscribe', {
-    method: 'POST',
-    body: JSON.stringify(jsonObject),
-  });
-
-  if (response.ok) {
-    const hashedEmail = await hashEmail(email);
-    window.adobeDataLayer = window.adobeDataLayer || [];
-    window.adobeDataLayer.push({
-      event: 'form completed',
-      user: {
-        form: 'newsletter',
-        formID: hashedEmail,
-      },
-    });
-
-    const successMessage = document.createElement('p');
-    successMessage.textContent = 'Thank you for signing up!';
-    form.replaceWith(successMessage);
-  } else {
-    const failMessageText = `Subscription Error
-        We apologize, but it seems there's an issue with our server and your 
-        subscription couldn't be processed at this time. Please try again later. 
-        If the problem persists, feel free to contact our support team for assistance.`
-    const failMessage = document.createElement('p');
-    failMessage.textContent = failMessageText;
-    form.replaceWith(failMessage);
-  }
-}
-
-export async function createForm(formURL, flow) {
+export async function createForm(formURL) {
   const { pathname, search } = new URL(formURL);
-
-  let data;
-
-  if (window.location.hostname === 'dev3.bitdefender.com' || window.location.hostname === 'dev3.bitdefender.co.uk') {
-    data = await fetchData(formURL);
-  } else {
-    data = await fetchData(`${pathname}${search}`);
-  }
-
+  const data = await fetchData(`${pathname}${search}`);
   const form = document.createElement('form');
+
   form.setAttribute('method', 'post');
 
   data.forEach((field, index) => {
@@ -128,13 +64,7 @@ export async function createForm(formURL, flow) {
     }
 
     if (field.Field === 'handler') {
-      switch (field.Value) {
-        case 'blog':
-          form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form, flow));
-          break;
-        default:
-          form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
-      }
+      form.addEventListener('submit', (e) => handleSubmit(e, field.Value));
     }
 
     if (field.Type === 'checkbox') {
@@ -154,23 +84,7 @@ export async function createForm(formURL, flow) {
   return form;
 }
 
-export default async function decorate(block, options) {
-  const {
-    template, flow,
-  } = options ? options.metadata : block.closest('.section').dataset;
-
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-    const blockParent = block.closest('.section');
-    blockParent.classList.add('we-container');
-  }
-
-  const jsonLink = block.querySelector('a');
-  const form = await createForm(jsonLink.textContent.trim(), flow);
+export default async function decorate(block) {
+  const form = await createForm(block.textContent.trim());
   if (form) block.append(form);
-
-  if (template === 'blog') {
-    block.classList.add('blog-template');
-  }
 }
