@@ -16,7 +16,7 @@ import {
 
 import {
   adobeMcAppendVisitorId,
-  createTag, getDefaultLanguage, GLOBAL_EVENTS, localisationList,
+  createTag, getDefaultLanguage, GLOBAL_EVENTS,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
@@ -28,27 +28,6 @@ export const DEFAULT_LANGUAGE = getDefaultLanguage();
 export const DEFAULT_COUNTRY = getDefaultLanguage();
 
 export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
-
-const hreflangMap = new Map([
-  ['en-ro', { baseUrl: 'https://www.bitdefender.ro', pageType: 'html' }],
-  ['de', { baseUrl: 'https://www.bitdefender.de', pageType: 'html' }],
-  ['sv', { baseUrl: 'https://www.bitdefender.se', pageType: 'html' }],
-  ['pt', { baseUrl: 'https://www.bitdefender.pt', pageType: 'html' }],
-  ['en-sv', { baseUrl: 'https://www.bitdefender.se', pageType: 'html' }],
-  ['pt-BR', { baseUrl: 'https://www.bitdefender.com.br', pageType: 'html' }],
-  ['en', { baseUrl: 'https://www.bitdefender.com', pageType: 'html' }],
-  ['it', { baseUrl: 'https://www.bitdefender.it', pageType: 'html' }],
-  ['fr', { baseUrl: 'https://www.bitdefender.fr', pageType: 'html' }],
-  ['nl-BE', { baseUrl: 'https://www.bitdefender.br', pageType: 'html' }],
-  ['es', { baseUrl: 'https://www.bitdefender.es', pageType: 'html' }],
-  ['en-AU', { baseUrl: 'https://www.bitdefender.com.au', pageType: '', hasIndexPages: true }],
-  ['ro', { baseUrl: 'https://www.bitdefender.ro', pageType: 'html' }],
-  ['nl', { baseUrl: 'https://www.bitdefender.nl', pageType: 'html' }],
-  ['en-GB', { baseUrl: 'https://www.bitdefender.co.uk', pageType: 'html' }],
-  ['zh-hk', { baseUrl: 'https://www.bitdefender.com/zh-hk', pageType: '', hasIndexPages: true }],
-  ['zh-tw', { baseUrl: 'https://www.bitdefender.com/zh-tw', pageType: '', hasIndexPages: true }],
-  ['x-default', { baseUrl: 'https://www.bitdefender.com', pageType: 'html' }],
-]);
 
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
@@ -522,31 +501,6 @@ async function loadEager(doc) {
   }
 }
 
-// todo remove export after having a clear path for the
-// overall unit testing strategy of the all page
-export function generateHrefLang() {
-  hreflangMap.forEach(({ baseUrl, pageType }, key) => {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'alternate');
-    link.setAttribute('hreflang', key);
-
-    const foundLanguage = localisationList.find((item) => baseUrl.indexOf(`/${item}/`) !== -1 || window.location.pathname.indexOf(`/${item}/`) !== -1);
-    const isHomePage = window.location.pathname === `/${foundLanguage}/`;
-
-    const lastCharFromHref = window.location.pathname.slice(-1);
-    const isCurrentIndexPage = lastCharFromHref === '/';
-    const suffix = `${!isHomePage && pageType && !isCurrentIndexPage ? `.${pageType}` : ''}`;
-
-    let href = `${baseUrl}${window.location.pathname.replace(/\/us\/en/, '')}`;
-    href = `${href}${suffix}`;
-
-    href = href.replace(`/${foundLanguage}`, '');
-
-    link.setAttribute('href', href);
-    document.head.appendChild(link);
-  });
-}
-
 export async function loadTrackers() {
   const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
 
@@ -610,8 +564,6 @@ async function loadLazy(doc) {
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
-
-  generateHrefLang();
 }
 
 /**
