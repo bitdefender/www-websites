@@ -16,7 +16,7 @@ import {
 
 import {
   adobeMcAppendVisitorId,
-  createTag, getDefaultLanguage, GLOBAL_EVENTS, localisationList,
+  createTag, getDefaultLanguage, GLOBAL_EVENTS,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
