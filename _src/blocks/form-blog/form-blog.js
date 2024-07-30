@@ -51,9 +51,11 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
       },
     });
 
-    form.parentElement.replaceWith(successMessage);
+    form.innerHTML = '';
+    form.appendChild(successMessage);
   } else {
-    form.parentElement.replaceWith(failMessage);
+    form.innerHTML = '';
+    form.appendChild(failMessage);
   }
 }
 
