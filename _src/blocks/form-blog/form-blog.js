@@ -68,14 +68,15 @@ function parseHTML(html) {
   const insideSquareBrackets = [];
 
   // Match all occurrences of the curly braces regex
-  let match = curlyRegex.exec(html);
-  while (match !== null) {
+  let match;
+  // eslint-disable-next-line no-cond-assign
+  while ((match = curlyRegex.exec(html)) !== null) {
     insideCurlyBrackets.push(match[1].trim());
   }
 
   // Match all occurrences of the square brackets regex
-  match = squareRegex.exec(html);
-  while (match !== null) {
+  // eslint-disable-next-line no-cond-assign
+  while ((match = squareRegex.exec(html)) !== null) {
     insideSquareBrackets.push(match[1].trim());
   }
 
