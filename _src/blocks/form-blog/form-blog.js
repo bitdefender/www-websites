@@ -39,7 +39,7 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
     method: 'POST',
     body: JSON.stringify(jsonObject),
   });
-
+  const formParent = form.parentElement;
   if (response.ok) {
     const hashedEmail = await hashEmail(email);
     window.adobeDataLayer = window.adobeDataLayer || [];
@@ -51,11 +51,11 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
       },
     });
 
-    form.parentElement.innerHTML = '';
-    form.appendChild(successMessage);
+    formParent.innerHTML = '';
+    formParent.appendChild(successMessage);
   } else {
-    form.parentElement.innerHTML = '';
-    form.appendChild(failMessage);
+    formParent.innerHTML = '';
+    formParent.appendChild(failMessage);
   }
 }
 
