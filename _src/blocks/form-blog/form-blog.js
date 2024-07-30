@@ -51,10 +51,10 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
       },
     });
 
-    form.innerHTML = '';
+    form.parentElement.innerHTML = '';
     form.appendChild(successMessage);
   } else {
-    form.innerHTML = '';
+    form.parentElement.innerHTML = '';
     form.appendChild(failMessage);
   }
 }
