@@ -60,7 +60,6 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
 }
 
 function parseHTML(html) {
-  // Regular expression to match text inside and outside double curly braces
   // Regular expressions to match text inside curly braces and square brackets
   const curlyRegex = /{{(.*?)}}/g;
   const squareRegex = /\[\[(.*?)\]\]/g;
@@ -69,20 +68,17 @@ function parseHTML(html) {
   const insideSquareBrackets = [];
 
   // Match all occurrences of the curly braces regex
-  let match;
-  while ((match = curlyRegex.exec(html)) !== null) {
+  let match = curlyRegex.exec(html);
+  while (match !== null) {
     insideCurlyBrackets.push(match[1].trim());
   }
 
   // Match all occurrences of the square brackets regex
-  while ((match = squareRegex.exec(html)) !== null) {
+  match = squareRegex.exec(html);
+  while (match !== null) {
     insideSquareBrackets.push(match[1].trim());
   }
 
-  console.log('Inside curly brackets:', insideCurlyBrackets);
-  console.log('Inside square brackets:', insideSquareBrackets);
-
-  // Return the parsed data
   return {
     insideCurlyBrackets,
     insideSquareBrackets,
