@@ -51,9 +51,9 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
       },
     });
 
-    form.replaceWith(successMessage);
+    form.parentElement.replaceWith(successMessage);
   } else {
-    form.replaceWith(failMessage);
+    form.parentElement.replaceWith(failMessage);
   }
 }
 
@@ -98,7 +98,13 @@ async function createForm(types, labels, flow, successMessage, failMessage) {
     input.id = `form-${i}-${type}`;
     input.addEventListener('change', () => onChange(form));
     input.addEventListener('input', () => onChange(form));
-    input.setAttribute('type', type);
+
+    if (type === 'name') {
+      input.setAttribute('type', 'text');
+    } else {
+      input.setAttribute('type', type);
+    }
+
     input.setAttribute('name', type);
     input.setAttribute('placeholder', labels[i]);
     input.setAttribute('required', '');
