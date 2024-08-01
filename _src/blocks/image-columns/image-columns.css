@@ -42,7 +42,7 @@
 }
 
 .image-columns > div > .image-columns-txt-col {
-  flex: 0 1 25%;
+  flex: 0 1 45%;
 }
 
 .image-columns > div > .image-columns-img-col .img-container {

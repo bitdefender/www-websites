@@ -1,4 +1,4 @@
-import { createTag } from '../../scripts/utils.js';
+import { createTag } from '../../scripts/utils/utils.js';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 function createQuote(item) {

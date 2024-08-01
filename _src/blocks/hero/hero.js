@@ -4,7 +4,7 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   fetchProduct,
-} from '../../scripts/utils.js';
+} from '../../scripts/utils/utils.js';
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -36,7 +36,11 @@ function buildHeroBlock(element) {
   }
 }
 
-createNanoBlock('discount', (code, variant) => {
+createNanoBlock('discount', (code) => {
+  // code = "av/3/1"
+  const [product, unit, year] = code.split('/');
+  const variant = `${unit}u-${year}y`;
+
   const root = document.createElement('div');
   root.classList.add('discount-bubble');
   root.innerHTML = `
@@ -44,11 +48,11 @@ createNanoBlock('discount', (code, variant) => {
     <span class="discount-bubble-1">Discount</span>
   `;
 
-  fetchProduct(code, variant)
-    .then((product) => {
-      if (product.discount) {
+  fetchProduct(product, variant)
+    .then((productResponse) => {
+      if (productResponse.discount) {
         const discount = Math.round(
-          (1 - (product.discount.discounted_price) / product.price) * 100,
+          (1 - (productResponse.discount.discounted_price) / productResponse.price) * 100,
         );
         root.querySelector('.discount-bubble-0').textContent = `${discount}%`;
       } else {

@@ -567,6 +567,16 @@ main .hero .hero-awards li::after {
     flex-direction: row;
   }
 
+  main .hero.black-background .hero-content {
+    max-width: var(--section-desktop-max-width);
+    padding-left: var(--section-desktop-padding);
+    padding-right: var(--section-desktop-padding);
+    padding-top: 115px;
+    display: flex;
+    flex-direction: row;
+    min-height: unset;
+  }
+
   main .hero a.button.primary {
     min-width: 360px;
   }

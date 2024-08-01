@@ -149,7 +149,7 @@ export async function loadComponent(offer, block, options, selector)  {
     fetch(offer).then(r => r.text()),
     import(`${origin}/_src/blocks/${block}/${block}.js`)
   ])
-  // If the block is a particle background, 
+  // If the block is a particle background,
   // a new div is created and appended to the body so the external library can work
   if (block === "particle-background") {
     const newDiv = document.createElement('div');
@@ -176,6 +176,7 @@ export async function loadComponent(offer, block, options, selector)  {
     decorateIcons(shadowRoot);
     // get all the links that pointing within the page with a hash
     shadowRoot.querySelectorAll('a[href*="#"]').forEach(link => {
+      debugger;
       link.addEventListener('click', (event) => {
         event.preventDefault();
 

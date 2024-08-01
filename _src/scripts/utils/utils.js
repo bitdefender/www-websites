@@ -113,6 +113,12 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
     data.set('data', JSON.stringify(newData));
   }
 
+  if (url.pathname.includes('/en-au/')) {
+    const newData = JSON.parse(data.get('data'));
+    newData.config.force_region = '4';
+    data.set('data', JSON.stringify(newData));
+  }
+
   if ((siteName === 'hk' || siteName === 'tw')) {
     // append force_region for hk and tw
     const newData = JSON.parse(data.get('data'));
@@ -209,7 +215,13 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
       matches.forEach((match) => {
         const [name] = parseParams(match.slice(1, -1));
         const datasetValue = getDatasetFromSection(parent);
+
         const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || '';
+
+        // const currentIndexForSectionMetadata = index;
+        // const datasetAllValues = datasetValue[name.toLowerCase()].split(',').map((item) => item.trim());
+        // const datasetEntryValue = (index !== undefined ? datasetAllValues[0] : datasetAllValues[currentIndexForSectionMetadata]) || '';
+
         const newMatch = [match, datasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
         const [newName, ...params] = parseParams(newMatch);

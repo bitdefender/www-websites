@@ -1,4 +1,4 @@
-import { createNanoBlock, renderNanoBlocks, fetchProduct } from '../../scripts/utils.js';
+import { createNanoBlock, renderNanoBlocks, fetchProduct } from '../../scripts/utils/utils.js';
 
 const fetchedProducts = [];
 
