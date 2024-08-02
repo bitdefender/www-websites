@@ -43,6 +43,7 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
 }
 
 export default async function decorate(block, options) {
+  console.log(block);
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
@@ -52,6 +53,8 @@ export default async function decorate(block, options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
   }
+
+  console.log(block.closest('.section').dataset);
   const blockParent = block.closest('.section');
   blockParent.classList.add('we-container');
 
