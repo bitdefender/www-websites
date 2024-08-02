@@ -46,7 +46,7 @@
   
   .checkbox input[type="checkbox"] {
     margin: 5px 10px;
-    width: 15px;
+    width: fit-content;
   }
   
   input[type="submit"] {
