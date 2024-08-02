@@ -47,6 +47,11 @@
   .checkbox input[type="checkbox"] {
     margin: 5px 10px;
     width: fit-content;
+    zoom: 1.25;
+
+    @media (min-width: 768px) {
+      zoom: 1;
+    }
   }
   
   input[type="submit"] {
@@ -171,42 +176,41 @@
     --section-mobile-padding-vertical: 32px;
   }
   
-  /* stylelint-disable-next-line no-duplicate-selectors */
-  .form-blog-container{
-    .form-blog-wrapper {
+/* stylelint-disable-next-line no-duplicate-selectors */
+.form-blog-container{
+  .form-blog-wrapper {
+    box-sizing: border-box;
+
+    .form-blog.blog-template {
+      box-shadow: 0 5px 15px 5px rgb(0 0 0 / 10%);
+      max-width: 390px;
+      padding: 15px;
       box-sizing: border-box;
   
-      .form-blog.blog-template {
-        box-shadow: 0 5px 15px 5px rgb(0 0 0 / 10%);
-        max-width: 390px;
-        padding: 15px;
-        box-sizing: border-box;
-    
-        input[type="email"] {
-          box-sizing: border-box;;
+      input[type="email"] {
+        box-sizing: border-box;;
+      }
+      
+      input[type="text"] {
+        box-sizing: border-box;;
+      }
+
+      > div:first-child {
+        display: block;
+
+        h2 {
+          font-size: 22px;
+          font-weight: bold;
         }
         
-        input[type="text"] {
-          box-sizing: border-box;;
+        p {
+          font-size: 16px;
         }
-  
-        > div:first-child {
-          display: block;
-  
-          h2 {
-            font-size: 22px;
-            font-weight: bold;
-          }
-          
-          p {
-            font-size: 16px;
-          }
-  
-          p.button-container {
-            display: none;
-          }
+
+        p.button-container {
+          display: none;
         }
-      }  
-    }
-    
+      }
+    }  
   }
+}

@@ -119,7 +119,9 @@ async function createForm(types, labels, flow, successMessage, failMessage) {
       const div = document.createElement('div');
       div.classList.add('checkbox');
 
-      const label = labels[i];
+      const label = document.createElement('label');
+      label.setAttribute('for', `form-${i}-${type}`);
+      label.innerHTML = labels[i];
       input.before(div);
       div.append(input, label);
     }
