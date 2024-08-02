@@ -46,7 +46,8 @@
   
   .checkbox input[type="checkbox"] {
     margin: 5px 10px;
-    width: fit-content;
+    width: 25px;
+    height: auto;
     zoom: 1.25;
 
     @media (min-width: 768px) {
