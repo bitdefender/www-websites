@@ -366,10 +366,16 @@
   background-color: #0D499B;
 }
 
+.new-prod-boxes-container .icon {
+  width: 12px;
+  height: 14px;
+  margin: 0;
+}
+
 .new-prod-boxes-container .icon svg {
   width: 12px;
   height: 14px;
-  padding-right: 2px;
+  margin-left: -1px;
   fill: #fff;
 }
 
