@@ -53,7 +53,6 @@ export default async function decorate(block, options) {
     block = block.querySelector('.block');
   }
 
-  // console.log(options.metadata);
   const blockParent = block.closest('.section');
   blockParent.classList.add('we-container');
 
