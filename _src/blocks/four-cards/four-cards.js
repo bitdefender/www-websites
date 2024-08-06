@@ -1,4 +1,4 @@
-export default function decorate(block, options) {
+export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
     margintop,
@@ -35,4 +35,10 @@ export default function decorate(block, options) {
     bubbles: true,
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
+
+  // decorate icons if the component is being called from www-websites
+  if (!options) {
+    const { decorateIcons } = await import('../../scripts/lib-franklin.js');
+    decorateIcons(block.closest('.section'));
+  }
 }
