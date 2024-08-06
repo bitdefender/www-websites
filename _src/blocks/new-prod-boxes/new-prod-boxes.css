@@ -565,6 +565,7 @@
     flex-direction: row;
     padding-bottom: 60px;
     align-items: initial;
+    margin-top: 37px;
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box.hasGreenTag {
