@@ -16,6 +16,19 @@
 
 .new-prod-boxes-container .default-content-wrapper p:has(> a) {
   text-align: center;
+  font-size: 16px;
+}
+
+.new-prod-boxes-container .default-content-wrapper p:has(> a) a {
+  text-align: center;
+  font-size: 16px;
+  color: #005ed9;
+  text-decoration: none;
+}
+
+.new-prod-boxes-container .default-content-wrapper p:has(> a) a:hover {
+  color: #00439c;
+  text-decoration: underline;
 }
 
 .new-prod-boxes-container .default-content-wrapper h2 {
