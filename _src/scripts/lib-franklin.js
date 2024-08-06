@@ -202,7 +202,10 @@ export async function decorateIcons(element) {
     if (!ICONS_CACHE[iconName]) {
       ICONS_CACHE[iconName] = true;
       try {
-        const dynamicIconsSharepointPath = '/common/icons/';
+        let dynamicIconsSharepointPath = '/common/icons/';
+        if (window.location.hostname.includes('www-landing-pages') || window.location.hostname.includes('bitdefender.com/pages')) {
+          dynamicIconsSharepointPath = '/icons/';
+        }
         const response = await fetch(`${dynamicIconsSharepointPath}${iconName}.svg`);
         if (!response.ok) {
           ICONS_CACHE[iconName] = false;
