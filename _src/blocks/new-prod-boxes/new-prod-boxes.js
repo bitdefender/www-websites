@@ -354,4 +354,9 @@ export default async function decorate(block, options) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
   }
+
+  if (isInLandingPages) {
+    const { decorateIcons } = await import('../../scripts/utils/utils.js');
+    decorateIcons(block.closest('.section'));
+  }
 }
