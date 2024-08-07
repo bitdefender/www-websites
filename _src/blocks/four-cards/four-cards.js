@@ -36,8 +36,9 @@ export default async function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 
-  // decorate icons if the component is being called from www-websites
-  if (!options) {
+  // decorate icons only if the component is being called from www-websites
+  const isInLandingPages = window.location.hostname.includes('www-landing-pages') || window.location.hostname.includes('bitdefender.com/pages');
+  if (!options && !isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
   }

@@ -349,7 +349,8 @@ export default async function decorate(block, options) {
   });
 
   // decorate icons if the component is being called from www-websites
-  if (!options) {
+  const isInLandingPages = window.location.hostname.includes('www-landing-pages') || window.location.hostname.includes('bitdefender.com/pages');
+  if (!options && !isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
   }
