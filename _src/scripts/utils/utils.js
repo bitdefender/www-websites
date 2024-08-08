@@ -340,7 +340,7 @@ export function adobeMcAppendVisitorId(selector) {
   }
 }
 
-let ICONS_CACHE = {};
+const ICONS_CACHE = {};
 export async function decorateIcons(element) {
   // Prepare the inline sprite
   let svgSprite = document.getElementById('franklin-svg-sprite');
