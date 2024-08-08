@@ -55,6 +55,7 @@ export default async function decorate(block, options) {
 
   const blockParent = block.closest('.section');
   blockParent.classList.add('we-container');
+  blockParent.id = 'new-prod-boxes';
 
   let defaultContentWrapperElements = block.closest('.section').querySelector('.default-content-wrapper')?.children;
   let individualSwitchText;
