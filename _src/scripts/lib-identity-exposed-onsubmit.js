@@ -26,25 +26,25 @@ export default async function onSubmit(e) {
     document.querySelector('.scan-loading h3:nth-child(1)').classList.remove('show');
     document.querySelector('.scan-loading h3:nth-child(2)').classList.add('show');
 
-    // const firstRequest = await fetchData('https://nimbus.bitdefender.net/lid/privacy_check', {
-    //   id: 1,
-    //   jsonrpc: '2.0',
-    //   method: 'on_demand_scan',
-    //   params: {
-    //     app_id: 'com.bitdefender.vpn',
-    //     type: 'emails',
-    //     value: email,
-    //   },
-    // });
+    const firstRequest = await fetchData('https://nimbus.bitdefender.net/lid/privacy_check', {
+      id: 1,
+      jsonrpc: '2.0',
+      method: 'on_demand_scan',
+      params: {
+        app_id: 'com.bitdefender.vpn',
+        type: 'emails',
+        value: email,
+      },
+    });
 
     await sleep(1000);
 
-    // const secondRequest = await fetchData('https://nimbus.bitdefender.net/lid/privacy_check', {
-    //   id: 2,
-    //   jsonrpc: '2.0',
-    //   method: 'get_on_demand_issues',
-    //   params: { scan_id: firstRequest.scan_id },
-    // });
+    const secondRequest = await fetchData('https://nimbus.bitdefender.net/lid/privacy_check', {
+      id: 2,
+      jsonrpc: '2.0',
+      method: 'get_on_demand_issues',
+      params: { scan_id: firstRequest.scan_id },
+    });
 
     document.querySelector('.scan-loading h3:nth-child(2)').classList.remove('show');
     document.querySelector('.scan-loading h3:nth-child(3)').classList.add('show');
