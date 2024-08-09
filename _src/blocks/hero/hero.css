@@ -99,16 +99,6 @@ main .hero {
   min-height: 300px;
 }
 
-main .hero::after {
-    position: absolute;
-    content: "";
-    left: 0;
-    bottom: 0;
-    height: 32px;
-    width: 100%;
-    background-color: #e4f2ff;
-}
-
 main .hero.new2024design::after {
   display: none;
 }
@@ -308,6 +298,7 @@ main .hero img {
 }
 
 main .hero .hero-picture picture img {
+  position: absolute;
   display: none;
   padding-left: 200px;
 }
@@ -451,7 +442,7 @@ main .hero ul.hero-awards li::before {
   content: none;
 }
 
-main .hero.black-background ul.hero-awards li picture img {
+main .hero ul.hero-awards li picture img {
   display: block;
   height: 80px;
   width: auto;
@@ -546,6 +537,7 @@ main .hero .hero-awards li::after {
     bottom: auto;
     left: 0;
     right: 0;
+    height: 100%;
   }
 
   main .hero p {
@@ -596,7 +588,7 @@ main .hero .hero-awards li::after {
     letter-spacing: .96px;
   }
 
-  main .hero.black-background ul.hero-awards {
+  main .hero ul.hero-awards {
     display: flex;
     flex-direction: row;
     align-items: center;
