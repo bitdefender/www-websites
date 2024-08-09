@@ -393,7 +393,6 @@ export async function detectModalButtons(main) {
       // if we wish for the button to not generate a new modal everytime
       if (stopAutomaticModalRefresh) {
 
-        //may want to refactor this (at least a part of it)
         // we use the last part of the link to identify the modals
         const modalClass = link.href.split('/').pop();
 
