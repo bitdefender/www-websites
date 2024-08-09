@@ -8,7 +8,7 @@ async function sleep(ms) {
 async function fetchData(url, body) {
   const resp = await fetch(url, { method: 'POST', body: JSON.stringify(body) });
   const json = await resp.json();
-  return json.result;
+  return json.result || json;
 }
 
 export default async function onSubmit(e) {
