@@ -1,8 +1,8 @@
-export default function decorate(block, options) {
+export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
     margintop,
-  } = options ? options.metadata : block.closest('.section').dataset;
+  } = block.closest('.section').dataset;
 
   if (options) {
     // eslint-disable-next-line no-param-reassign
@@ -35,4 +35,16 @@ export default function decorate(block, options) {
     bubbles: true,
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
+
+  // decorate icons only if the component is being called from www-websites
+  const isInLandingPages = window.location.hostname.includes('www-landing-pages') || window.location.hostname.includes('bitdefender.com/pages');
+  if (!options && !isInLandingPages) {
+    const { decorateIcons } = await import('../../scripts/lib-franklin.js');
+    decorateIcons(block.closest('.section'));
+  }
+
+  if (isInLandingPages) {
+    const { decorateIcons } = await import('../../scripts/utils/utils.js');
+    decorateIcons(block.closest('.section'));
+  }
 }

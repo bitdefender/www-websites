@@ -16,6 +16,19 @@
 
 .new-prod-boxes-container .default-content-wrapper p:has(> a) {
   text-align: center;
+  font-size: 16px;
+}
+
+.new-prod-boxes-container .default-content-wrapper p:has(> a) a {
+  text-align: center;
+  font-size: 16px;
+  color: #005ed9;
+  text-decoration: none;
+}
+
+.new-prod-boxes-container .default-content-wrapper p:has(> a) a:hover {
+  color: #00439c;
+  text-decoration: underline;
 }
 
 .new-prod-boxes-container .default-content-wrapper h2 {
@@ -331,25 +344,25 @@
 }
 
 .new-prod-boxes-container p em a {
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  -webkit-font-smoothing: antialiased;
-  display: block;
-  align-items: center;
-  box-sizing: border-box;
-  text-decoration: none;
-  padding: 10px 26px 8px 28px;
-  text-align: center;
-  cursor: pointer;
-  color: #006EFF;
-  background-color: transparent;
-  border: 2px solid #006EFF;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-radius: 8px;
-  height: fit-content;
+  font-size: 16px !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  -webkit-font-smoothing: antialiased !important;
+  display: block !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  text-decoration: none !important;
+  padding: 10px 26px 8px 28px !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  color: #006EFF !important;
+  background-color: transparent !important;
+  border: 2px solid #006EFF !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important; 
+  border-radius: 8px !important;
+  height: fit-content !important;
 }
 
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons p em a {
@@ -358,18 +371,24 @@
 }
 
 .new-prod-boxes-container p em a:hover {
-  color: white;
-  background-color: #006DFF;
+  color: white !important;
+  background-color: #006DFF !important;
 }
 
 .new-prod-boxes-container p em a:active {
-  background-color: #0D499B;
+  background-color: #0D499B !important;
+}
+
+.new-prod-boxes-container .icon {
+  width: 12px;
+  height: 14px;
+  margin: 0;
 }
 
 .new-prod-boxes-container .icon svg {
   width: 12px;
   height: 14px;
-  padding-right: 2px;
+  margin-left: -1px;
   fill: #fff;
 }
 
@@ -399,7 +418,7 @@
 
 .switchBox {
   text-align: center;
-  padding-bottom: 75px;
+  padding-bottom: 35px;
 }
 
 .switch {
@@ -546,6 +565,7 @@
     flex-direction: row;
     padding-bottom: 60px;
     align-items: initial;
+    margin-top: 37px;
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box.hasGreenTag {

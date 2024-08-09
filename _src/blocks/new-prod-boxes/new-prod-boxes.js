@@ -46,14 +46,16 @@ export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
-  } = options ? options.metadata : block.closest('.section').dataset;
+  } = block.closest('.section').dataset;
   // if options exists, this means the component is being called from aem
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
   }
+
   const blockParent = block.closest('.section');
   blockParent.classList.add('we-container');
+  blockParent.id = 'new-prod-boxes';
 
   let defaultContentWrapperElements = block.closest('.section').querySelector('.default-content-wrapper')?.children;
   let individualSwitchText;
@@ -251,15 +253,15 @@ export default async function decorate(block, options) {
         buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
 
         block.children[key].outerHTML = `
-          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'}">
+          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
             <div class="inner_prod_box">
               ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
               ${title.innerText.trim() ? `<h2>${title.innerHTML}</h2>` : ''}
               ${blueTag.innerText.trim() ? `<div class="blueTag"><div>${blueTag.innerHTML.trim()}</div></div>` : ''}
               ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 5 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
               <hr />
-
-              <div class="price_box"></div>
+              ${radioButtons ? planSwitcher.outerHTML : ''}
+              <div class="hero-aem__prices"></div>
               ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-${onSelectorClass}"></span>`)}</div>` : ''}
 
               ${buyLink.innerHTML}
@@ -277,7 +279,7 @@ export default async function decorate(block, options) {
             oldPrice = product.price;
             newPrice = product.discount.discounted_price;
             let currencyLabel = product.currency_label;
-            priceElement.classList.add('hero-aem__prices');
+            // priceElement.classList.add('hero-aem__prices');
             priceElement.innerHTML = `
               <div class="hero-aem__price mt-3">
                 <div>
@@ -289,7 +291,7 @@ export default async function decorate(block, options) {
 
                 </div>
               </div>`;
-            block.children[key].querySelector('.price_box').appendChild(priceElement);
+            block.children[key].querySelector('.hero-aem__prices').appendChild(priceElement);
           })
           .catch((err) => {
             // eslint-disable-next-line no-console
@@ -346,4 +348,16 @@ export default async function decorate(block, options) {
     bubbles: true,
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
+
+  // decorate icons if the component is being called from www-websites
+  const isInLandingPages = window.location.hostname.includes('www-landing-pages') || window.location.hostname.includes('bitdefender.com/pages');
+  if (!options && !isInLandingPages) {
+    const { decorateIcons } = await import('../../scripts/lib-franklin.js');
+    decorateIcons(block.closest('.section'));
+  }
+
+  if (isInLandingPages) {
+    const { decorateIcons } = await import('../../scripts/utils/utils.js');
+    decorateIcons(block.closest('.section'));
+  }
 }

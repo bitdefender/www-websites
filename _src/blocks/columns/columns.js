@@ -174,7 +174,7 @@ export default function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
-  const { linksOpenInNewTab } = options ? options.metadata : block.closest('.section').dataset;
+  const { linksOpenInNewTab } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 

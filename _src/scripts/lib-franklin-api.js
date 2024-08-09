@@ -1,24 +1,5 @@
 /**
  * @param {HTMLDivElement} shadoRoot
- */
-const parseMetadata = (shadowRoot) => {
-  const metadata = {};
-  const sectionMetadata = shadowRoot.querySelector(".section-metadata");
-  if (sectionMetadata === null) {
-    return metadata;
-  }
-  for (const child of sectionMetadata.children) {
-    const [keyChild, valueChild] = child.children;
-    metadata[keyChild.textContent] = valueChild.textContent;
-  }
-
-  sectionMetadata.remove();
-
-  return metadata;
-}
-
-/**
- * @param {HTMLDivElement} shadoRoot
  * @param {string} origin - prepends the origin to the relative links
  */
 const updateLinkSources = (shadoRoot, origin) => {
@@ -105,7 +86,73 @@ async function decorateIcons(element) {
   });
 }
 
-function decorateSections(main) {
+/**
+ * Sanitizes a string for use as a js property name.
+ * @param {string} name The unsanitized string
+ * @returns {string} The camelCased name
+ */
+export function toCamelCase(name) {
+  return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+}
+
+/**
+ * Sanitizes a string for use as class name.
+ * @param {string} name The unsanitized string
+ * @returns {string} The class name
+ */
+export function toClassName(name) {
+  return typeof name === 'string'
+    ? name.toLowerCase()
+      .replace(/[^\w\u4e00-\u9fa5]/g, '-') // Include Chinese characters in the regular expression
+      .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
+      .replace(/^-|-$/g, '') // Remove leading and trailing hyphens
+    : '';
+}
+
+/**
+ * Extracts the config from a block.
+ * @param {Element} block The block element
+ * @returns {object} The block config
+ */
+export function readBlockConfig(block) {
+  const config = {};
+  block.querySelectorAll(':scope > div').forEach((row) => {
+    if (row.children) {
+      const cols = [...row.children];
+      if (cols[1]) {
+        const col = cols[1];
+        const name = toClassName(cols[0].textContent);
+        let value = '';
+        if (col.querySelector('a')) {
+          const as = [...col.querySelectorAll('a')];
+          if (as.length === 1) {
+            value = as[0].href;
+          } else {
+            value = as.map((a) => a.href);
+          }
+        } else if (col.querySelector('img')) {
+          const imgs = [...col.querySelectorAll('img')];
+          if (imgs.length === 1) {
+            value = imgs[0].src;
+          } else {
+            value = imgs.map((img) => img.src);
+          }
+        } else if (col.querySelector('p')) {
+          const ps = [...col.querySelectorAll('p')];
+          if (ps.length === 1) {
+            value = ps[0].textContent;
+          } else {
+            value = ps.map((p) => p.textContent);
+          }
+        } else value = row.children[1].textContent;
+        config[name] = value;
+      }
+    }
+  });
+  return config;
+}
+
+export function decorateSections(main) {
   main.querySelectorAll(':scope > div').forEach((section) => {
     const wrappers = [];
     let defaultContent = false;
@@ -120,6 +167,21 @@ function decorateSections(main) {
     });
     wrappers.forEach((wrapper) => section.append(wrapper));
     section.classList.add('section');
+
+    /* process section metadata */
+    const sectionMeta = section.querySelector('div.section-metadata');
+    if (sectionMeta) {
+      const meta = readBlockConfig(sectionMeta);
+      Object.keys(meta).forEach((key) => {
+        if (key === 'style') {
+          const styles = meta.style.split(',').map((style) => toClassName(style.trim()));
+          styles.forEach((style) => section.classList.add(style));
+        } else {
+          section.dataset[toCamelCase(key)] = meta[key];
+        }
+      });
+      sectionMeta.parentNode.remove();
+    }
   });
 }
 
@@ -159,7 +221,7 @@ export async function loadComponent(offer, block, options, selector)  {
     decorateBlock(newDiv.querySelector(`.${block}`));
     updateLinkSources(newDiv, `${origin}${offerFolder}/`);
     document.body.appendChild(newDiv);
-    await js.default(newDiv, {...options, metadata: parseMetadata(newDiv)});
+    await js.default(newDiv, {...options});
     shadowRoot.appendChild(newDiv);
     newDiv.style.display = "block";
   } else {
@@ -172,7 +234,7 @@ export async function loadComponent(offer, block, options, selector)  {
     decorateBlock(franklinHTMLStructure.querySelector(`.${block}`));
     shadowRoot.innerHTML +=  franklinHTMLStructure.innerHTML;
     updateLinkSources(shadowRoot, `${origin}${offerFolder}/`);
-    await js.default(shadowRoot.querySelector('.section'), {...options, metadata: parseMetadata(shadowRoot)});
+    await js.default(shadowRoot.querySelector('.section'), {...options});
     decorateIcons(shadowRoot);
 
     // Get the current page path without the hash part and query
