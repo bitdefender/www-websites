@@ -266,7 +266,9 @@ export default function decorate(block) {
   }
 
   extractTextFromStrongTagToParent(block);
-  [...block.children[0].children].slice(1).forEach((item, idx) => {
+  const headerList = [...block.children[0].children].slice(1);
+  const lastRowWithPrice = block.querySelector('.product-comparison-last-row-with-prices');
+  [...headerList, lastRowWithPrice].forEach((item, idx) => {
     renderNanoBlocks(item, undefined, idx);
   });
 }
