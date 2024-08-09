@@ -1,3 +1,5 @@
+import {ALL_FRANKLIN_DEV_SUBDOMAINS} from './lib-franklin';
+
 async function sleep(ms) {
   // eslint-disable-next-line no-promise-executor-return
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -48,7 +50,9 @@ export default async function onSubmit(e) {
 
     await sleep(1000);
 
-    const domain = window.location.hostname === 'localhost' ? 'https://www.bitdefender.com' : '';
+    const domain = ALL_FRANKLIN_DEV_SUBDOMAINS.some(subdomain => window.location.hostname.includes(subdomain)) ?
+      'https://www.bitdefender.com' :
+      '';
     const emarsysRequest = await fetchData(`${domain}/site/Store/offerSubscribe`, {
       email: email,
       flow: 'EMM_DIP_POPUP_OFFER'

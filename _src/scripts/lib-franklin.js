@@ -12,6 +12,7 @@
  */
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
+export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.hlx.page', '.hlx.live']; 
 export const STICKY_NAVIGATION_DATASET_KEY = 'stickyNavName';
 
 /**
