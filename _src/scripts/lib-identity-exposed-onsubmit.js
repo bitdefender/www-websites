@@ -1,4 +1,4 @@
-import {ALL_FRANKLIN_DEV_SUBDOMAINS} from './lib-franklin';
+import {ALL_FRANKLIN_DEV_SUBDOMAINS} from './lib-franklin.js';
 
 async function sleep(ms) {
   // eslint-disable-next-line no-promise-executor-return
