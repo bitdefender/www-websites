@@ -68,6 +68,11 @@ createNanoBlock('discount', (code, variant) => {
  * @param {Element} block The hero block element
  */
 export default async function decorate(block) {
+  const {
+    // eslint-disable-next-line no-unused-vars
+    stopAutomaticModalRefresh
+  } = block.closest('.section').dataset;
+
   buildHeroBlock(block);
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
@@ -96,6 +101,13 @@ export default async function decorate(block) {
         }
         sibling = sibling.previousElementSibling;
       }
+    }
+
+    // set the buttons in the hero banner to not refresh the modal on click
+    if (stopAutomaticModalRefresh && stopAutomaticModalRefresh === 'true') {
+      block.querySelectorAll('a.modal.button').forEach(modalButton => {
+        modalButton.setAttribute('data-stop-automatic-modal-refresh', true);
+      });
     }
   }
 }

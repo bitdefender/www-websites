@@ -11,6 +11,8 @@ async function fetchData(url, body) {
 
 export default async function onSubmit(e) {
   try {
+    const email = e.target.querySelector('input[type=email]').value;
+
     document.querySelector('.scan-error').classList.remove('show');
     document.querySelector('.form-container').classList.add('hide');
     document.querySelector('.scan-loading').classList.add('show');
@@ -28,14 +30,9 @@ export default async function onSubmit(e) {
       params: {
         app_id: 'com.bitdefender.vpn',
         type: 'emails',
-        value: e.target.querySelector('input[type=email]').value,
+        value: email,
       },
     });
-
-    await sleep(1000);
-
-    document.querySelector('.scan-loading h3:nth-child(2)').classList.remove('show');
-    document.querySelector('.scan-loading h3:nth-child(3)').classList.add('show');
 
     await sleep(1000);
 
@@ -46,8 +43,24 @@ export default async function onSubmit(e) {
       params: { scan_id: firstRequest.scan_id },
     });
 
+    document.querySelector('.scan-loading h3:nth-child(2)').classList.remove('show');
+    document.querySelector('.scan-loading h3:nth-child(3)').classList.add('show');
+
+    await sleep(1000);
+
+    const domain = window.location.hostname === 'localhost' ? 'https://www.bitdefender.com' : '';
+    const emarsysRequest = await fetchData(`${domain}/site/Store/offerSubscribe`, {
+      email: email,
+      flow: 'EMM_DIP_POPUP_OFFER'
+    });
+
     document.querySelector('.scan-loading h3:nth-child(3)').classList.remove('show');
     document.querySelector('.scan-loading').classList.remove('show');
+
+    if (!emarsysRequest.success) {
+      throw new Error('Scan error');
+    }
+
     document.querySelectorAll('.scan-results').forEach((el) => el.classList.add('show'));
 
     if (secondRequest.total_count === 0) {

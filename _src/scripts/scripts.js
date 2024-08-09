@@ -330,12 +330,20 @@ export function decorateMain(main) {
  *
  * @param {String} path The path to the modal
  * @param {String} template The template to use for the modal styling
+ * @param {Boolean} stopAutomaticRefresh Wether the modal refreshes after exiting or not
  * @returns {Promise<Element>}
  * @example
  */
-export async function createModal(path, template) {
+export async function createModal(path, template, stopAutomaticRefresh = 'false') {
   const modalContainer = document.createElement('div');
   modalContainer.classList.add('modal-container');
+
+  if (stopAutomaticRefresh === 'true') {
+    const splitedLink = path.split('/');
+    const modalClass = splitedLink[splitedLink.length - 1];
+
+    modalContainer.classList.add(modalClass);
+  }
 
   const modalContent = document.createElement('div');
   modalContent.classList.add('modal-content');
@@ -359,7 +367,14 @@ export async function createModal(path, template) {
   // add class to modal container for opportunity to add custom modal styling
   if (template) modalContainer.classList.add(template);
 
-  const closeModal = () => modalContainer.remove();
+  const closeModal = () => {
+    if (stopAutomaticRefresh === 'true') {
+      modalContainer.classList.add('global-display-none');
+      return;
+    }
+
+    modalContainer.remove();
+  }
   const close = document.createElement('div');
   close.classList.add('modal-close');
   close.addEventListener('click', closeModal);
@@ -371,7 +386,19 @@ export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
     link.addEventListener('click', async (e) => {
       e.preventDefault();
-      document.body.append(await createModal(link.href));
+
+      if (link.dataset.stopAutomaticModalRefresh === 'true') {
+        const splitedLink = link.href.split('/');
+        const modalClass = splitedLink[splitedLink.length - 1];
+
+        const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+        if (existingModal) {
+          existingModal.classList.remove('global-display-none');
+          return;
+        }
+      }
+
+      document.body.append(await createModal(link.href, undefined, link.dataset.stopAutomaticModalRefresh));
     });
   });
 }
