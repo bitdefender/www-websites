@@ -13,7 +13,8 @@ async function fetchData(url, body) {
 
 export default async function onSubmit(e) {
   try {
-    const email = e.target.querySelector('input[type=email]').value;
+    const campaign = e.target.querySelector('input[name="campaign"]')?.value;
+    const email = e.target.querySelector('input[type=email]')?.value;
 
     document.querySelector('.scan-error').classList.remove('show');
     document.querySelector('.form-container').classList.add('hide');
@@ -55,7 +56,7 @@ export default async function onSubmit(e) {
       '';
     const emarsysRequest = await fetchData(`${domain}/site/Store/offerSubscribe`, {
       email: email,
-      flow: 'EMM_DIP_POPUP_OFFER'
+      flow: campaign
     });
 
     document.querySelector('.scan-loading h3:nth-child(3)').classList.remove('show');

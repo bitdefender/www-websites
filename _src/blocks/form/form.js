@@ -26,6 +26,11 @@ async function handleSubmit(e, handler) {
   }
 }
 
+/**
+ * 
+ * @param {string} formURL url to form html
+ * @returns {HTMLFormElement} returns the form
+ */
 export async function createForm(formURL) {
   const { pathname, search } = new URL(formURL);
   const data = await fetchData(`${pathname}${search}`);
