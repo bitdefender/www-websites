@@ -334,14 +334,13 @@ export function decorateMain(main) {
  * @returns {Promise<Element>}
  * @example
  */
-export async function createModal(path, template, stopAutomaticRefresh = 'false') {
+export async function createModal(path, template, stopAutomaticRefresh) {
   const modalContainer = document.createElement('div');
   modalContainer.classList.add('modal-container');
 
-  if (stopAutomaticRefresh === 'true') {
-    const splitedLink = path.split('/');
-    const modalClass = splitedLink[splitedLink.length - 1];
-
+  // add the class which makes the modal identifiable in the page
+  if (stopAutomaticRefresh) {
+    const modalClass = path.split('/').pop();
     modalContainer.classList.add(modalClass);
   }
 
@@ -368,13 +367,16 @@ export async function createModal(path, template, stopAutomaticRefresh = 'false'
   if (template) modalContainer.classList.add(template);
 
   const closeModal = () => {
-    if (stopAutomaticRefresh === 'true') {
+    // if the modal is still supposed to exist just hide it
+    if (stopAutomaticRefresh) {
       modalContainer.classList.add('global-display-none');
       return;
     }
 
+    // if it's supposed to refresh delete it so that it can be rerendered
     modalContainer.remove();
   }
+
   const close = document.createElement('div');
   close.classList.add('modal-close');
   close.addEventListener('click', closeModal);
@@ -386,19 +388,27 @@ export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
     link.addEventListener('click', async (e) => {
       e.preventDefault();
+      const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
 
-      if (link.dataset.stopAutomaticModalRefresh === 'true') {
-        const splitedLink = link.href.split('/');
-        const modalClass = splitedLink[splitedLink.length - 1];
+      // if we wish for the button to not generate a new modal everytime
+      if (stopAutomaticModalRefresh) {
 
+        //may want to refactor this (at least a part of it)
+        // we use the last part of the link to identify the modals
+        const modalClass = link.href.split('/').pop();
+
+        // check if the modal exists in the page
         const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
         if (existingModal) {
+
+          // if it exists just display it
           existingModal.classList.remove('global-display-none');
           return;
         }
       }
 
-      document.body.append(await createModal(link.href, undefined, link.dataset.stopAutomaticModalRefresh));
+      // generate new modal
+      document.body.append(await createModal(link.href, undefined, stopAutomaticModalRefresh));
     });
   });
 }
