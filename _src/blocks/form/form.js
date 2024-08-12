@@ -33,6 +33,7 @@ function onChange(form) {
     const emailInputErrorField = emailInput.parentElement.querySelector('.input-error-field');
 
     if (!emailPopulatedCorrectly || !validateEmail(emailInput.value)) {
+      submitButton.disabled = true;
       emailInputErrorField.classList.remove('global-display-none');
       return;
     }
