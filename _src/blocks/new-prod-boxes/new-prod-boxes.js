@@ -360,4 +360,51 @@ export default async function decorate(block, options) {
     const { decorateIcons } = await import('../../scripts/utils/utils.js');
     decorateIcons(block.closest('.section'));
   }
+
+  // General function to match the height of elements based on a selector
+  const matchHeights = (targetNode, selector) => {
+    const resetHeights = () => {
+      const elements = targetNode.querySelectorAll(selector);
+      elements.forEach((element) => {
+        element.style.minHeight = '';
+      });
+    };
+
+    const adjustHeights = () => {
+      if (window.innerWidth >= 768) {
+        resetHeights();
+        const elements = targetNode.querySelectorAll(selector);
+        const elementsHeight = Array.from(elements).map((element) => element.offsetHeight);
+        const maxHeight = Math.max(...elementsHeight);
+
+        elements.forEach((element) => {
+          element.style.minHeight = `${maxHeight}px`;
+        });
+      } else {
+        resetHeights();
+      }
+    };
+
+    const matchHeightsCallback = (mutationsList) => {
+      Array.from(mutationsList).forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          adjustHeights();
+        }
+      });
+    };
+
+    const observer = new MutationObserver(matchHeightsCallback);
+
+    if (targetNode) {
+      observer.observe(targetNode, { childList: true, subtree: true });
+    }
+
+    window.addEventListener('resize', () => {
+      adjustHeights();
+    });
+  };
+
+  const targetNode = document.querySelector('.new-prod-boxes');
+  matchHeights(targetNode, '.subtitle');
+  matchHeights(targetNode, 'h2');
 }
