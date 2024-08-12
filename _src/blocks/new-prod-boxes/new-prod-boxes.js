@@ -404,7 +404,6 @@ export default async function decorate(block, options) {
     });
   };
 
-  const targetNode = document.querySelector('.new-prod-boxes');
-  matchHeights(targetNode, '.subtitle');
-  matchHeights(targetNode, 'h2');
+  matchHeights(block, '.subtitle');
+  matchHeights(block, 'h2');
 }
