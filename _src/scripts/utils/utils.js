@@ -21,7 +21,6 @@ export function getDefaultLanguage() {
 
 const cacheResponse = new Map();
 const siteName = getDefaultLanguage();
-const FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
@@ -72,6 +71,7 @@ async function findProductVariant(cachedResponse, variant) {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
+  let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
   const data = new FormData();
   // extract pid from url
   const url = new URL(window.location.href);
@@ -119,6 +119,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
     const newData = JSON.parse(data.get('data'));
     newData.config.force_region = '4';
     data.set('data', JSON.stringify(newData));
+    FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
   }
 
   if ((siteName === 'hk' || siteName === 'tw')) {
