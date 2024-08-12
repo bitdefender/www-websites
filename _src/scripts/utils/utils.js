@@ -1,4 +1,6 @@
 /* eslint-disable no-use-before-define */
+import { getMetadata } from '../lib-franklin.js';
+
 export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
 export function getDefaultLanguage() {
   // TODO: refactor. It's not working as should for en locales.
@@ -75,7 +77,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   const url = new URL(window.location.href);
   if (!pid) {
     // eslint-disable-next-line no-param-reassign
-    pid = url.searchParams.get('pid');
+    pid = url.searchParams.get('pid') || getMetadata('pid');
   }
 
   data.append('data', JSON.stringify({
