@@ -16,33 +16,74 @@ const validateEmail = (email) => {
 
 /**
  * 
+ * @param {HTMLInputElement} inputElement
+ * @returns {Boolean} validation status of the field
+ */
+const checkInputValue = (inputElement) => {
+
+  // real time field validation for the email field (For DIP only)
+  switch(inputElement.type) {
+    case 'email':
+      // validate the email inputs using the validation function if there are error fields
+      if (!validateEmail(inputElement.value)) {
+        return false;
+      }
+
+      break;
+    case 'checkbox':
+      if (!inputElement.checked && inputElement.required) {
+        return false;
+      }
+
+      break;
+    default:
+      break;
+  }
+
+  return true;
+};
+
+/**
+ * 
+ * @param {HTMLInputElement} inputElement 
+ */
+const displayInputError = (inputElement) => {
+  const inputElementError = inputElement.parentElement.querySelector('.input-error-field');
+  if (inputElementError) {
+    inputElementError.classList.remove('global-display-none');
+  }
+};
+
+/**
+ * 
+ * @param {HTMLInputElement} inputElement 
+ */
+const hideInputError = (inputElement) => {
+  const inputElementError = inputElement.parentElement.querySelector('.input-error-field');
+  if (inputElementError) {
+    inputElementError.classList.add('global-display-none');
+  }
+};
+
+/**
+ * 
  * @param {HTMLFormElement} form
  * set the onChange function for all the form inputs 
  */
-function onChange(form) {
-  // Targeting the anchor inside .button-container
+function checkFormValues(form) {
+
   const submitButton = form.querySelector('input[type="submit"]');
-  const emailInput = form.querySelector('input[type="email"]');
 
-  // set the initial values for normal Forms (except DIP)
-  let emailPopulatedCorrectly = emailInput.value.trim() !== '';
-
-  // real time field validation for the email field (For DIP only)
-  // NEEDS TO BE EXTENDED TO WORK FOR ALL FIELDS
-  if (emailInput.classList.contains('input-with-error-field')) {
-    const emailInputErrorField = emailInput.parentElement.querySelector('.input-error-field');
-
-    if (!emailPopulatedCorrectly || !validateEmail(emailInput.value)) {
+  // Targeting the anchor inside .button-container
+  const allInputFields = form.querySelectorAll('input:not([type="hidden"])');
+  for (const inputField of [...allInputFields]) {
+    if (!checkInputValue(inputField)) {
       submitButton.disabled = true;
-      emailInputErrorField.classList.remove('global-display-none');
       return;
     }
-
-    emailInputErrorField.classList.add('global-display-none');
   }
 
-  const allCheckboxesChecked = [...form.querySelectorAll('input[type="checkbox"]:required')].every((checkbox) => checkbox.checked);
-  submitButton.disabled = !((allCheckboxesChecked && emailPopulatedCorrectly));
+  submitButton.disabled = false;
 }
 
 async function handleSubmit(e, handler) {
@@ -89,12 +130,36 @@ export async function createForm(formURL) {
   data.forEach((field, index) => {
     const input = document.createElement('input');
     input.id = `form-${index}-${field.Field}`;
-    input.addEventListener('change', () => onChange(form));
-    input.addEventListener('input', () => onChange(form));
     input.setAttribute('type', field.Type);
     input.setAttribute('name', field.Field);
     input.setAttribute('placeholder', field.Default);
     input.setAttribute('value', field.Value);
+    input.setAttribute('data-contains-error-field', Boolean(field.Error));
+
+    // add listeners to the form inputs
+    input.addEventListener('change', () => {
+      if (input.dataset.containsErrorField) {
+        if (checkInputValue(input)) {
+          hideInputError(input);
+        } else {
+          displayInputError(input);
+        }
+      }
+
+      checkFormValues(form);
+    });
+
+    input.addEventListener('input', () => {
+      if (input.dataset.containsErrorField) {
+        if (checkInputValue(input)) {
+          hideInputError(input);
+        } else {
+          displayInputError(input);
+        }
+      }
+      
+      checkFormValues(form);
+    });
 
     if (field.Required && field.Required.toLowerCase() === 'true') {
       input.setAttribute('required', '');

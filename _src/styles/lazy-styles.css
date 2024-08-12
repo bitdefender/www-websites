@@ -247,6 +247,10 @@
 .identity-exposed .modal-container.has-your-identity-been-exposed .default-content-wrapper {
   padding: 0;
 }
+
+.identity-exposed .modal-container.has-your-identity-been-exposed .form-wrapper {
+  padding: 0;
+}
   
 .identity-exposed .modal-container.has-your-identity-been-exposed .modal-content img {
   width: 32px;
