@@ -76,13 +76,25 @@ export default async function onSubmit(e) {
 
     document.querySelectorAll('.scan-results').forEach((el) => el.classList.add('show'));
 
-    if (emarsysRequest.total_count === 0) {
+    if (secondRequest.total_count === 0) {
       document.querySelector('.scan-result-leaks').classList.remove('show');
       document.querySelector('.scan-result-zero').classList.add('show');
     } else {
       document.querySelector('.scan-result-leaks').classList.add('show');
       document.querySelector('.scan-result-zero').classList.remove('show');
       document.querySelector('.scan-result-leaks h3').textContent = document.querySelector('.scan-result-leaks h3').textContent.replace('{numberOfLeaks}', secondRequest.total_count);
+    }
+
+    // add smooth scrolling functionality to ToS area
+    const tosButton = document.querySelector('.modal-container.has-your-identity-been-exposed .product-card p:nth-of-type(2) a');
+    const tosArea = document.querySelector('.section.accordion-container:has(.accordion.terms-of-use)');
+    if (tosButton && tosArea) {
+      tosButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        tosArea.scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
     }
   } catch (error) {
     document.querySelector('.form-container').classList.remove('hide');
