@@ -7,6 +7,14 @@ import {
 
 import { trackProduct } from '../../scripts/scripts.js';
 
+// all avaiable text variables
+const TEXT_VARIABLES_AND_VALUES = [
+  {
+    variable: 'percent',
+    getValue: (mv) => `${mv.model.discountRate}%`
+  }
+];
+
 /**
  * Utility function to round prices and percentages
  * @param  value value to round
@@ -238,7 +246,6 @@ function renderHighlightSavings(mv, text = 'Save', percent = '') {
     },
     '<span></span>',
   );
-
   mv.subscribe(() => {
     if (mv.model.discountRate) {
       root.querySelector('span').innerText = (percent.toLowerCase() === 'percent')
@@ -271,6 +278,30 @@ function renderHighlight(mv, text) {
 }
 
 /**
+ * 
+ * @param mv The modelview holding the state of the view
+ * @param {string} text Text of the featured nanoblock
+ * @return {string} Text with variables replaced
+ */
+const replaceVariablesInText = (mv, text) => {
+  // replace the percent variable with correct percentage of the produc
+  TEXT_VARIABLES_AND_VALUES.forEach(textVariableAndValue => {
+    text = text.replaceAll(textVariableAndValue.variable, textVariableAndValue.getValue(mv));
+  });
+
+  return text;
+};
+
+/**
+ * 
+ * @param {string} text
+ * @return {boolean} wether the text contains variables or not 
+ */
+const checkIfTextContainsVariables = (text) => {
+  return TEXT_VARIABLES_AND_VALUES.some(textVariableAndValue => text.includes(textVariableAndValue.variable));
+};
+
+/**
  * Nanoblock representing a text to Featured
  * @param mv The modelview holding the state of the view
  * @param text Text of the featured nanoblock
@@ -280,6 +311,15 @@ function renderFeatured(mv, text) {
   const root = document.createElement('div');
   root.classList.add('featured');
   root.innerText = text;
+
+  if (checkIfTextContainsVariables(text)) {
+    root.classList.add('global-display-none');
+    mv.subscribe(() => {
+        root.innerText = replaceVariablesInText(mv, root.innerText);
+        root.classList.remove('global-display-none');
+    });
+  }
+
   return root;
 }
 

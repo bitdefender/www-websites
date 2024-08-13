@@ -21,10 +21,10 @@ export default async function onSubmit(e) {
     document.querySelector('.scan-loading').classList.add('show');
     document.querySelector('.scan-loading h3:nth-child(1)').classList.add('show');
 
-    // await sleep(1000);
+    await sleep(1000);
 
-    // document.querySelector('.scan-loading h3:nth-child(1)').classList.remove('show');
-    // document.querySelector('.scan-loading h3:nth-child(2)').classList.add('show');
+    document.querySelector('.scan-loading h3:nth-child(1)').classList.remove('show');
+    document.querySelector('.scan-loading h3:nth-child(2)').classList.add('show');
 
     // const firstRequest = await fetchData('https://nimbus.bitdefender.net/lid/privacy_check', {
     //   id: 1,
@@ -37,7 +37,7 @@ export default async function onSubmit(e) {
     //   },
     // });
 
-    // await sleep(1000);
+    await sleep(1000);
 
     // const secondRequest = await fetchData('https://nimbus.bitdefender.net/lid/privacy_check', {
     //   id: 2,
@@ -46,10 +46,10 @@ export default async function onSubmit(e) {
     //   params: { scan_id: firstRequest.scan_id },
     // });
 
-    // document.querySelector('.scan-loading h3:nth-child(2)').classList.remove('show');
-    // document.querySelector('.scan-loading h3:nth-child(3)').classList.add('show');
+    document.querySelector('.scan-loading h3:nth-child(2)').classList.remove('show');
+    document.querySelector('.scan-loading h3:nth-child(3)').classList.add('show');
 
-    // await sleep(1000);
+    await sleep(1000);
 
     // const domain = ALL_FRANKLIN_DEV_SUBDOMAINS.some(subdomain => window.location.hostname.includes(subdomain)) ?
     //   'https://www.bitdefender.com' :
@@ -59,12 +59,12 @@ export default async function onSubmit(e) {
     //   flow: campaign
     // });
 
-    // document.querySelector('.scan-loading h3:nth-child(3)').classList.remove('show');
-    // document.querySelector('.scan-loading').classList.remove('show');
+    document.querySelector('.scan-loading h3:nth-child(3)').classList.remove('show');
+    document.querySelector('.scan-loading').classList.remove('show');
 
-    if (!emarsysRequest.success) {
-      throw new Error('Scan error');
-    }
+    // if (!emarsysRequest.success) {
+    //   throw new Error('Scan error');
+    // }
 
     document.querySelectorAll('.scan-results').forEach((el) => el.classList.add('show'));
 

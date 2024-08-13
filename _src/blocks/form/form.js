@@ -115,6 +115,47 @@ const wrapInputInsideDiv = (input, newDivParent) => {
   }
 }
 
+// Debounce function to improve performance of input calls
+/**
+ * 
+ * @param {Function} func 
+ * @param {Number} wait 
+ * @param {Boolean} immediate 
+ */
+const debounce = (func, wait, immediate) => {
+  let timeout;
+  return (...args) => {
+      const later = () => {
+          timeout = null;
+          if (!immediate) {
+              func(args);
+          }
+      };
+      const callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) {
+          func(args);
+      }
+  };
+};
+
+/**
+ * 
+ * @param {HTMLInputElement} input 
+ * @param {HTMLFormElement} form
+ * add the validations which get triggered whenever an input is filled with data 
+ */
+const addInputValidation = (input, form) => {
+  if (input.dataset.containsErrorField && checkInputValue(input)) {
+    hideInputError(input);
+  } else if (input.dataset.containsErrorField) {
+    displayInputError(input);
+  }
+  
+  checkFormValues(form);
+};
+
 /**
  * 
  * @param {string} formURL url to form html
@@ -136,30 +177,8 @@ export async function createForm(formURL) {
     input.setAttribute('value', field.Value);
     input.setAttribute('data-contains-error-field', Boolean(field.Error));
 
-    // add listeners to the form inputs
-    input.addEventListener('change', () => {
-      if (input.dataset.containsErrorField) {
-        if (checkInputValue(input)) {
-          hideInputError(input);
-        } else {
-          displayInputError(input);
-        }
-      }
-
-      checkFormValues(form);
-    });
-
-    input.addEventListener('input', () => {
-      if (input.dataset.containsErrorField) {
-        if (checkInputValue(input)) {
-          hideInputError(input);
-        } else {
-          displayInputError(input);
-        }
-      }
-      
-      checkFormValues(form);
-    });
+    // add event listeners to the fields
+    input.addEventListener('input', debounce(() => addInputValidation(input, form), 100, false));
 
     if (field.Required && field.Required.toLowerCase() === 'true') {
       input.setAttribute('required', '');
