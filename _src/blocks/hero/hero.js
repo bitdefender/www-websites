@@ -69,8 +69,8 @@ createNanoBlock('discount', (code, variant) => {
  */
 export default async function decorate(block) {
   const {
-    // eslint-disable-next-line no-unused-vars
-    stopAutomaticModalRefresh // this defines wether the modals automatically refresh or not in the hero banner
+    // this defines wether the modals automatically refresh or not in the hero banner
+    stopAutomaticModalRefresh,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -105,7 +105,7 @@ export default async function decorate(block) {
 
     // set the modal buttons in the hero banner to not refresh the modal on click
     if (stopAutomaticModalRefresh === 'true') {
-      block.querySelectorAll('a.modal.button').forEach(modalButton => {
+      block.querySelectorAll('a.modal.button').forEach((modalButton) => {
         modalButton.setAttribute('data-stop-automatic-modal-refresh', true);
       });
     }

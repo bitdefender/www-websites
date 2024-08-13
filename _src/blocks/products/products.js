@@ -8,11 +8,11 @@ import {
 import { trackProduct } from '../../scripts/scripts.js';
 
 // all avaiable text variables
-const TEXT_VARIABLES_AND_VALUES = [
+const TEXT_VARIABLES_MAPPING = [
   {
     variable: 'percent',
-    getValue: (mv) => `${mv.model.discountRate}%`
-  }
+    getValue: (mv) => `${mv.model.discountRate}%`,
+  },
 ];
 
 /**
@@ -278,28 +278,33 @@ function renderHighlight(mv, text) {
 }
 
 /**
- * 
+ *
  * @param mv The modelview holding the state of the view
  * @param {string} text Text of the featured nanoblock
  * @return {string} Text with variables replaced
  */
 const replaceVariablesInText = (mv, text) => {
+  let replacedText = text;
+
   // replace the percent variable with correct percentage of the produc
-  TEXT_VARIABLES_AND_VALUES.forEach(textVariableAndValue => {
-    text = text.replaceAll(textVariableAndValue.variable, textVariableAndValue.getValue(mv));
+  TEXT_VARIABLES_MAPPING.forEach((textVariableMapping) => {
+    replacedText = replacedText.replaceAll(
+      textVariableMapping.variable,
+      textVariableMapping.getValue(mv),
+    );
   });
 
-  return text;
+  return replacedText;
 };
 
 /**
- * 
+ *
  * @param {string} text
- * @return {boolean} wether the text contains variables or not 
+ * @return {boolean} wether the text contains variables or not
  */
-const checkIfTextContainsVariables = (text) => {
-  return TEXT_VARIABLES_AND_VALUES.some(textVariableAndValue => text.includes(textVariableAndValue.variable));
-};
+const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
+  (textVariableMapping) => text.includes(textVariableMapping.variable),
+);
 
 /**
  * Nanoblock representing a text to Featured
@@ -315,8 +320,8 @@ function renderFeatured(mv, text) {
   if (checkIfTextContainsVariables(text)) {
     root.classList.add('global-display-none');
     mv.subscribe(() => {
-        root.innerText = replaceVariablesInText(mv, root.innerText);
-        root.classList.remove('global-display-none');
+      root.innerText = replaceVariablesInText(mv, root.innerText);
+      root.classList.remove('global-display-none');
     });
   }
 

@@ -1,4 +1,4 @@
-import {ALL_FRANKLIN_DEV_SUBDOMAINS} from './lib-franklin.js';
+import { ALL_FRANKLIN_DEV_SUBDOMAINS } from './lib-franklin.js';
 
 async function sleep(ms) {
   // eslint-disable-next-line no-promise-executor-return
@@ -59,12 +59,13 @@ export default async function onSubmit(e) {
 
     await sleep(1000);
 
-    const domain = ALL_FRANKLIN_DEV_SUBDOMAINS.some(subdomain => window.location.hostname.includes(subdomain)) ?
-      'https://www.bitdefender.com' :
-      '';
+    const domain = ALL_FRANKLIN_DEV_SUBDOMAINS.some(
+      (subdomain) => window.location.hostname.includes(subdomain),
+    ) ? 'https://www.bitdefender.com' : '';
+
     const emarsysRequest = await fetchData(`${domain}/site/Store/offerSubscribe`, {
-      email: email,
-      flow: campaign
+      email,
+      flow: campaign,
     });
 
     document.querySelector('.scan-loading h3:nth-child(3)').classList.remove('show');
@@ -89,10 +90,10 @@ export default async function onSubmit(e) {
     const tosButton = document.querySelector('.modal-container.has-your-identity-been-exposed .product-card p:nth-of-type(2) a');
     const tosArea = document.querySelector('.section.accordion-container:has(.accordion.terms-of-use)');
     if (tosButton && tosArea) {
-      tosButton.addEventListener('click', (e) => {
-        e.preventDefault();
+      tosButton.addEventListener('click', (clickEvent) => {
+        clickEvent.preventDefault();
         tosArea.scrollIntoView({
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       });
     }

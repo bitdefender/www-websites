@@ -5,24 +5,23 @@ async function fetchData(url) {
 }
 
 /**
- * 
- * @param {String} email 
+ *
+ * @param {String} email
  * @returns {Boolean} wether the email passed is valid or not
  */
 const validateEmail = (email) => {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email.toLowerCase());
-}
+};
 
 /**
- * 
+ *
  * @param {HTMLInputElement} inputElement
  * @returns {Boolean} validation status of the field
  */
 const checkInputValue = (inputElement) => {
-
   // real time field validation for the email field (For DIP only)
-  switch(inputElement.type) {
+  switch (inputElement.type) {
     case 'email':
       // validate the email inputs using the validation function if there are error fields
       if (!validateEmail(inputElement.value)) {
@@ -44,8 +43,8 @@ const checkInputValue = (inputElement) => {
 };
 
 /**
- * 
- * @param {HTMLInputElement} inputElement 
+ *
+ * @param {HTMLInputElement} inputElement
  */
 const displayInputError = (inputElement) => {
   const inputElementError = inputElement.parentElement.querySelector('.input-error-field');
@@ -55,8 +54,8 @@ const displayInputError = (inputElement) => {
 };
 
 /**
- * 
- * @param {HTMLInputElement} inputElement 
+ *
+ * @param {HTMLInputElement} inputElement
  */
 const hideInputError = (inputElement) => {
   const inputElementError = inputElement.parentElement.querySelector('.input-error-field');
@@ -66,24 +65,23 @@ const hideInputError = (inputElement) => {
 };
 
 /**
- * 
+ *
  * @param {HTMLFormElement} form
- * set the onChange function for all the form inputs 
+ * set the onChange function for all the form inputs
  */
 function checkFormValues(form) {
-
   const submitButton = form.querySelector('input[type="submit"]');
 
   // Targeting the anchor inside .button-container
   const allInputFields = form.querySelectorAll('input:not([type="hidden"])');
-  for (const inputField of [...allInputFields]) {
-    if (!checkInputValue(inputField)) {
-      submitButton.disabled = true;
-      return;
+  let disabledStatus = false;
+  allInputFields.forEach((inputField) => {
+    if (!disabledStatus && !checkInputValue(inputField)) {
+      disabledStatus = true;
     }
-  }
+  });
 
-  submitButton.disabled = false;
+  submitButton.disabled = disabledStatus;
 }
 
 async function handleSubmit(e, handler) {
@@ -98,14 +96,14 @@ async function handleSubmit(e, handler) {
 }
 
 /**
- * 
+ *
  * @param {HTMLInputElement} input the input to be adde inside the div wrapper
  * @param {HTMLDivElement} newDivParent the div wrapper to hold the input
  */
 const wrapInputInsideDiv = (input, newDivParent) => {
   const label = input.nextElementSibling;
 
-  //if the input has a label, also add it inside the wrapper
+  // if the input has a label, also add it inside the wrapper
   if (label && label.tagName === 'LABEL') {
     input.before(newDivParent);
     newDivParent.append(input, label);
@@ -113,38 +111,40 @@ const wrapInputInsideDiv = (input, newDivParent) => {
     input.after(newDivParent);
     newDivParent.append(input);
   }
-}
+};
 
 // Debounce function to improve performance of input calls
 /**
- * 
- * @param {Function} func 
- * @param {Number} wait 
- * @param {Boolean} immediate 
+ *
+ * @param {Function} func
+ * @param {Number} wait
+ * @param {Boolean} immediate
  */
 const debounce = (func, wait, immediate) => {
   let timeout;
+
   return (...args) => {
-      const later = () => {
-          timeout = null;
-          if (!immediate) {
-              func(args);
-          }
-      };
-      const callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) {
-          func(args);
+    const later = () => {
+      timeout = null;
+      if (!immediate) {
+        func(args);
       }
+    };
+
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) {
+      func(args);
+    }
   };
 };
 
 /**
- * 
- * @param {HTMLInputElement} input 
+ *
+ * @param {HTMLInputElement} input
  * @param {HTMLFormElement} form
- * add the validations which get triggered whenever an input is filled with data 
+ * add the validations which get triggered whenever an input is filled with data
  */
 const addInputValidation = (input, form) => {
   if (input.dataset.containsErrorField && checkInputValue(input)) {
@@ -152,12 +152,12 @@ const addInputValidation = (input, form) => {
   } else if (input.dataset.containsErrorField) {
     displayInputError(input);
   }
-  
+
   checkFormValues(form);
 };
 
 /**
- * 
+ *
  * @param {string} formURL url to form html
  * @returns {Promise<HTMLFormElement>} returns the form
  */
@@ -215,7 +215,7 @@ export async function createForm(formURL) {
       const newDivWrapper = document.createElement('div');
       newDivWrapper.classList.add('input-container-with-error');
 
-      //add the error field
+      // add the error field
       const errorField = document.createElement('p');
       errorField.classList.add('input-error-field', 'global-display-none');
       errorField.textContent = field.Error;
