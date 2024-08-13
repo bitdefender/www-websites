@@ -147,7 +147,6 @@ function renderPlanSelector(mv, plans, defaultSelection) {
     }
 
     li.addEventListener('click', () => {
-      debugger;
       mv.selectProductVariant(code, variant);
     });
 
