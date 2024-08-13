@@ -142,6 +142,7 @@
   margin-top: 15px;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
 }
 
 .hero-aem-container .button.primary {
@@ -324,6 +325,42 @@
 .hero-aem-container .col-12 {
   flex: 0 0 auto;
   width: 100%;
+}
+
+.hero-aem-container.blue-buttons {
+
+  .button.primary, p em a {
+    color: #006DFF;
+    border-color: #006DFF;
+    background-color: transparent;
+    margin-right: 16px;
+    transition: all .2s cubic-bezier(.4,0,.2,1);
+
+    &:hover {
+      color: white;
+      background-color: #006DFF;
+
+      &::after {
+        transform: translateX(5px);
+        opacity: 1;
+      }
+    }
+
+    &::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      -webkit-mask: url("/_src/icons/arrow-right.svg");
+      mask: url("/_src/icons/arrow-right.svg");
+      background-color: #fff;
+      display: inline-block;
+      transition: all .2s cubic-bezier(.4,0,.2,1);
+      transform: translateX(0);
+      opacity: 0;
+    }
+  }
+
+
 }
 
 
