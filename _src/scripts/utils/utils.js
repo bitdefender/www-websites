@@ -205,6 +205,26 @@ function parseParams(params) {
   return result;
 }
 
+// this was added as a translation support ( adding new breaklines in content was needed )
+// as a part of a new line metadata
+// values could be something like "value, value2, ,,new text on new line"
+function replaceDoubleCommas(str) {
+  // Convert the string to an array for easy manipulation
+  const arr = str.split('');
+
+  // Loop through the array from the end to the beginning
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    // Check if there are two consecutive commas
+    if (arr[i] === ',' && arr[i - 1] === ',') {
+      // Replace the two consecutive commas with a single comma
+      arr.splice(i, 1);
+    }
+  }
+
+  // Convert the array back to a string
+  return arr.join('');
+}
+
 /**
  * Renders nano blocks
  * @param parent The parent element
@@ -220,12 +240,9 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
         const datasetValue = getDatasetFromSection(parent);
 
         const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || '';
+        const formattedDatasetEntryValue = replaceDoubleCommas(datasetEntryValue);
 
-        // const currentIndexForSectionMetadata = index;
-        // const datasetAllValues = datasetValue[name.toLowerCase()].split(',').map((item) => item.trim());
-        // const datasetEntryValue = (index !== undefined ? datasetAllValues[0] : datasetAllValues[currentIndexForSectionMetadata]) || '';
-
-        const newMatch = [match, datasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
+        const newMatch = [match, formattedDatasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
         const [newName, ...params] = parseParams(newMatch);
         const renderer = nanoBlocks.get(newName.toLowerCase());

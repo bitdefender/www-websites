@@ -36,7 +36,7 @@ function buildHeroBlock(element) {
   }
 }
 
-createNanoBlock('discount', (code) => {
+createNanoBlock('discount', (code, label = 'Discount') => {
   // code = "av/3/1"
   const [product, unit, year] = code.split('/');
   const variant = `${unit}u-${year}y`;
@@ -45,7 +45,7 @@ createNanoBlock('discount', (code) => {
   root.classList.add('discount-bubble');
   root.innerHTML = `
     <span class="discount-bubble-0">--%</span>
-    <span class="discount-bubble-1">Discount</span>
+    <span class="discount-bubble-1">${label}</span>
   `;
 
   fetchProduct(product, variant)
