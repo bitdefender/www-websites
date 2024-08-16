@@ -579,31 +579,6 @@ async function loadEager(doc) {
   }
 }
 
-// todo remove export after having a clear path for the
-// overall unit testing strategy of the all page
-export function generateHrefLang() {
-  HREFLANG_MAP.forEach(({ baseUrl, pageType }, key) => {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'alternate');
-    link.setAttribute('hreflang', key);
-
-    const foundLanguage = localisationList.find((item) => baseUrl.indexOf(`/${item}/`) !== -1 || window.location.pathname.indexOf(`/${item}/`) !== -1);
-    const isHomePage = window.location.pathname === `/${foundLanguage}/`;
-
-    const lastCharFromHref = window.location.pathname.slice(-1);
-    const isCurrentIndexPage = lastCharFromHref === '/';
-    const suffix = `${!isHomePage && pageType && !isCurrentIndexPage ? `.${pageType}` : ''}`;
-
-    let href = `${baseUrl}${window.location.pathname.replace(/\/us\/en/, '')}`;
-    href = `${href}${suffix}`;
-
-    href = href.replace(`/${foundLanguage}`, '');
-
-    link.setAttribute('href', href);
-    document.head.appendChild(link);
-  });
-}
-
 export async function loadTrackers() {
   const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
 
