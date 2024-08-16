@@ -29,7 +29,7 @@ export const DEFAULT_LANGUAGE = getDefaultLanguage();
 
 export const DEFAULT_COUNTRY = getDefaultLanguage();
 
-export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
+export const METADATA_ANALYTICS_TAGS = 'analytics-tags';
 
 const TARGET_TENANT = 'bitdefender';
 
@@ -257,7 +257,7 @@ export function getTags(tags) {
 export function trackProduct(product) {
   // eslint-disable-next-line max-len
   const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
-  const tags = getTags(getMetadata(METADATA_ANAYTICS_TAGS));
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
   const isTrackedPage = tags.includes('product') || tags.includes('service');
   if (isTrackedPage && !isDuplicate) TRACKED_PRODUCTS.push(product);
 }
@@ -503,7 +503,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(window.location.pathname);
   const environment = getEnvironment(hostname, languageCountry.country);
-  const tags = getTags(getMetadata(METADATA_ANAYTICS_TAGS));
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
   const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
   // eslint-disable-next-line no-console
