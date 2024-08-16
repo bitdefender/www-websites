@@ -499,10 +499,6 @@ main .hero .hero-awards li::after {
 }
 
 @media (min-width: 990px) { /* desktop */
-  main .hero .hero-content > div {
-    width: 60%;
-  }
-
   main .hero.new2024design .hero-content:last-of-type {
     min-height: 360px;
     padding: 2em;
