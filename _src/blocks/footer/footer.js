@@ -44,6 +44,19 @@ function disableSelectedCountry(container) {
   });
 }
 
+function setupPrivacyButton(container) {
+  const privacyButton = container.querySelector('a[href="#privacybutton"]');
+  if (privacyButton) {
+    privacyButton.href = '#';
+    privacyButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.UC_UI) {
+        window.UC_UI.showSecondLayer();
+      }
+    });
+  }
+}
+
 async function runDefaultFooterLogic(block) {
   // fetch footer content
   const footerPath = getMetadata('footer') || '/footer';
@@ -67,6 +80,8 @@ async function runDefaultFooterLogic(block) {
 
     decorateIcons(footer);
     block.append(footer);
+
+    setupPrivacyButton(footer);
 
     adobeMcAppendVisitorId('footer');
   }
@@ -106,6 +121,8 @@ async function runLandingpageLogic(block) {
   replacements.forEach(([pattern, replacement]) => {
     footer.innerHTML = footer.innerHTML.replace(pattern, replacement);
   });
+
+  setupPrivacyButton(footer);
 
   adobeMcAppendVisitorId('footer');
 }

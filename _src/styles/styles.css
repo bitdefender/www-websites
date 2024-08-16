@@ -633,9 +633,29 @@ header, main, footer {
   }
 }
 
+main .section.py-1 {
+  padding: 0;
+}
+
+main .section.pt-0 {
+  padding-top: 0;
+}
+
+main .section.pb-0 {
+  padding-bottom: 0!important;
+}
+
 @media (min-width: 1400px) {
   main .section {
     padding: 60px 0;
+  }
+
+  main .section.py-1 {
+    padding: 1em 0;
+  }
+
+  main .section.pt-0 {
+    padding-top: 0;
   }
 
   main .section.less-padding {
@@ -749,6 +769,16 @@ main pre {
   p {
     font-size: var(--body-font-size-s);
   }
+}
+
+main .single-blue-quote .default-content-wrapper {
+  color: #006dff;
+}
+
+main .single-blue-quote .default-content-wrapper p:nth-of-type(1) {
+  line-height: 55px;
+  font-size: 40px;
+  font-weight: 300;
 }
 
 a:any-link {

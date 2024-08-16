@@ -67,6 +67,41 @@ const Config = {
 const isMobile = () => {return window.innerWidth < 991};
 
 function initMegaMenu (container) {
+  // megamenu Franklin adition
+
+const menuMapping = [
+  {
+    parent: '/company',
+    subpages: ['/scuderiaferrari']
+  }
+]
+const setElementActive = (partentPath) => {
+  const parentEl = container.querySelector(`.mega-menu__item:has(.mega-menu__link[href*="${partentPath}"])`);
+
+  parentEl.classList.add('active');
+  parentEl.classList.add('mega-menu--item-opened');
+}
+
+const checkMapping = () => {
+  const path = window.location.pathname
+
+  menuMapping.forEach((mainMenuItem) => {
+    let found = false;
+
+    mainMenuItem.subpages.forEach((key) => {
+      if (path.includes(key)) {
+        found = true;
+      }
+    })
+
+    if (found) {
+      setElementActive(mainMenuItem.parent);
+    }
+  })
+}
+
+checkMapping();
+
   let prevWidth = window.innerWidth;
 
   const setMobileRightLinksOffset = () => {
