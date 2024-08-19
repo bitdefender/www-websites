@@ -257,7 +257,10 @@ export default async function decorate(block, options) {
   let [richText, mainDesktopImage, richTextCard, columnsCard] = block.children;
 
   let pricesContainers = new Map();
-  let dropdownProductsArray = dropdownProducts.split(',').map((item) => item.trim());
+  let dropdownProductsArray = [];
+  if (dropdownProducts) {
+    dropdownProductsArray = dropdownProducts.split(',').map((item) => item.trim());
+  }
 
   // Configuration for new elements
   richText.classList.add('hero-aem__card__desktop', 'col-md-6');
