@@ -590,6 +590,90 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   transform: translateX(10px);
 }
 
+.columns-container.dlp-variant {
+  font-family: 'Arial', sans-serif !important;
+
+  .default-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+
+    h2 {
+      text-align: center;
+      max-width: 630px;
+    }
+  }
+  
+
+  h3 {
+    font-size: 24px;
+    line-height: 26px;
+  }
+
+  h4 {
+    font-size: 22px;
+    line-height: 26px;
+    color: #006EFF;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  p em a {
+    min-width: 185px;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    text-decoration: none;
+    padding: 10px 20px 8px 20px;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #006DFF;
+    background-color: transparent;
+    border: 2px solid #006DFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 8px;
+    height: fit-content;
+    transition: all .2s cubic-bezier(.4, 0, .2, 1);
+    position: relative;
+
+    &:hover {
+      background-color: #006DFF;
+      color: white;
+
+      .icon {
+        filter: invert(100%) sepia(98%) saturate(2%) hue-rotate(127deg) brightness(106%) contrast(101%);
+      }
+    }
+
+    &:active {
+      background-color: #0D499B;
+    }
+
+    .icon {
+      width: 16px;
+      height: 18px;
+      margin-bottom: 0;
+      margin-left: 0.6rem;
+    }
+  }
+}
+
+.columns-container {
+  font-family: 'Arial', sans-serif;
+}
+
 @media (max-width: 768px) {
   .columns img, .columns.new-v2 > div > .columns-img-col img {
     height: auto!important;
