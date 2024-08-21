@@ -493,3 +493,7 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 .display-price-below .product-comparison-price {
     border: none;
 }
+
+.product-comparison-table.two-products {
+    width: 100%;
+}
