@@ -253,6 +253,7 @@ export async function decorateTags(element) {
   const tagTypes = [
     { regex: /\[#(.*?)#\]/g, className: 'dark-blue' },
     { regex: /\[{(.*?)}\]/g, className: 'light-blue' },
+    { regex: /\[blue-round(.*?)blue-round\]/g, className: 'light-blue-round' },
     { regex: /\[\$(.*?)\$\]/g, className: 'green' },
   ];
 

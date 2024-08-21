@@ -1328,6 +1328,13 @@ main .section.blue a.button.modal::after {
   background-color: var(--light-blue-tag);
 }
 
+.tag-light-blue-round {
+  background-color: #026DFF;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size:  var(--body-font-size-xxs);
+}
+
 .tag-green {
   background-color: var(--green-tag);
 }
