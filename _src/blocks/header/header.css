@@ -652,15 +652,6 @@ header.quiz {
     color: var(--text-dark-color);
   }
 
-  header.header-wrapper {
-    height: 64px;
-    position: fixed;
-    z-index: 999;
-    margin: auto;
-    left: 0;
-    right: 0;
-  }
-
   header.header-wrapper .menu-wrapper {
     display: none;
   }

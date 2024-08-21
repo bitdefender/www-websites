@@ -211,7 +211,7 @@ export async function loadComponent(offer, block, options, selector)  {
     fetch(offer).then(r => r.text()),
     import(`${origin}/_src/blocks/${block}/${block}.js`)
   ])
-  // If the block is a particle background, 
+  // If the block is a particle background,
   // a new div is created and appended to the body so the external library can work
   if (block === "particle-background") {
     const newDiv = document.createElement('div');
