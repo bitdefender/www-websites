@@ -63,6 +63,130 @@ async function findProductVariant(cachedResponse, variant) {
   throw new Error('Variant not found');
 }
 
+export function getProductLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/ajax';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/ajax';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/ajax';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/ajax';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/ajax';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/ajax';
+}
+
+export function getBuyLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/buy';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/buy';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/buy';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/buy';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/buy';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/buy';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/buy';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/buy';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/buy';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/buy';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/buy';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/buy';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/buy';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/buy';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/buy';
+}
+
 /**
  * Fetches a product from the Bitdefender store.
  * @param code The product code
@@ -71,7 +195,7 @@ async function findProductVariant(cachedResponse, variant) {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
-  let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
+  let FETCH_URL = getProductLinkCountryPrefix();
   const data = new FormData();
   // extract pid from url
   const url = new URL(window.location.href);
