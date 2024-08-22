@@ -1,6 +1,3 @@
-/* eslint-disable no-use-before-define */
-import { getMetadata } from '../lib-franklin.js';
-
 export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
 export function getDefaultLanguage() {
   // TODO: refactor. It's not working as should for en locales.
@@ -61,6 +58,12 @@ async function findProductVariant(cachedResponse, variant) {
   }
 
   throw new Error('Variant not found');
+}
+
+function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  return meta || '';
 }
 
 /**
