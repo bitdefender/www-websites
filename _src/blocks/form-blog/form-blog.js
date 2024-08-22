@@ -1,3 +1,5 @@
+import { Cookie } from "../../scripts/utils/cookie";
+
 function onChange(form) {
   // Targeting the anchor inside .button-container
   const submitButton = form.querySelector('input[type="submit"]');
@@ -18,7 +20,7 @@ async function hashEmail(email) {
   return hashHex;
 }
 
-async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage) {
+async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage, formType = 'newsletter') {
   e.preventDefault();
   const formData = new FormData(form);
   const email = formData.get('email');
@@ -46,13 +48,15 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
     window.adobeDataLayer.push({
       event: 'form completed',
       user: {
-        form: 'newsletter',
+        form: formType,
         formID: hashedEmail,
       },
     });
 
     formParent.innerHTML = '';
     formParent.appendChild(successMessage);
+
+    Cookie.set('newsLetterIntentShown', '1');
   } else {
     formParent.innerHTML = '';
     formParent.appendChild(failMessage);
@@ -87,7 +91,7 @@ function parseHTML(html) {
 }
 
 // Function to create the form
-async function createForm(types, labels, flow, successMessage, failMessage) {
+async function createForm(types, labels, flow, successMessage, failMessage, formType) {
   const form = document.createElement('form');
   form.setAttribute('method', 'post');
 
@@ -127,7 +131,7 @@ async function createForm(types, labels, flow, successMessage, failMessage) {
     }
   }
 
-  form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form, flow, successMessage, failMessage));
+  form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form, flow, successMessage, failMessage, formType));
   return form;
 }
 
@@ -148,7 +152,7 @@ export default async function decorate(block, options) {
   const failMessage = block.children[3].children[1];
   const formData = parseHTML(formDataHTML.innerHTML);
   const [types, labels] = [formData.insideCurlyBrackets, formData.insideSquareBrackets];
-  const form = await createForm(types, labels, flow, successMessage, failMessage);
+  const form = await createForm(types, labels, flow, successMessage, failMessage, options.formType);
   if (form) block.append(form);
   block.children[1].innerHTML = '';
   block.children[2].innerHTML = '';
