@@ -616,21 +616,23 @@ function eventOnDropdownSlider() {
     // Set the initial active item
     moveToNextItem();
 
-    // Start automatic movement after the loading is complete
-    setTimeout(() => {
-      startAutomaticMovement();
-    }, 1000);
-
-    // Click event listener on titles
-    titles.forEach((title, index) => {
-      title.addEventListener('click', () => {
-        stopAutomaticMovement();
-        activeIndex = index;
-        showLoadingBar(index);
-        moveToNextItem();
+    if (loadingBars.length) {
+      // Start automatic movement after the loading is complete
+      setTimeout(() => {
         startAutomaticMovement();
+      }, 1000);
+
+      // Click event listener on titles
+      titles.forEach((title, index) => {
+        title.addEventListener('click', () => {
+          stopAutomaticMovement();
+          activeIndex = index;
+          showLoadingBar(index);
+          moveToNextItem();
+          startAutomaticMovement();
+        });
       });
-    });
+    }
   });
 }
 
