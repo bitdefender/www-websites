@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
 export function getDefaultLanguage() {
   // TODO: refactor. It's not working as should for en locales.
@@ -19,15 +18,14 @@ export function getDefaultLanguage() {
 
 const cacheResponse = new Map();
 const siteName = getDefaultLanguage();
-const FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
   const el = document.createElement(tag);
   if (html) {
     if (html instanceof HTMLElement
-        || html instanceof SVGElement
-        || html instanceof DocumentFragment) {
+      || html instanceof SVGElement
+      || html instanceof DocumentFragment) {
       el.append(html);
     } else if (Array.isArray(html)) {
       el.append(...html);
@@ -62,6 +60,12 @@ async function findProductVariant(cachedResponse, variant) {
   throw new Error('Variant not found');
 }
 
+function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  return meta || '';
+}
+
 /**
  * Fetches a product from the Bitdefender store.
  * @param code The product code
@@ -70,12 +74,13 @@ async function findProductVariant(cachedResponse, variant) {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
+  let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
   const data = new FormData();
   // extract pid from url
   const url = new URL(window.location.href);
   if (!pid) {
     // eslint-disable-next-line no-param-reassign
-    pid = url.searchParams.get('pid');
+    pid = url.searchParams.get('pid') || getMetadata('pid');
   }
 
   data.append('data', JSON.stringify({
@@ -111,6 +116,13 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
     const newData = JSON.parse(data.get('data'));
     newData.config.force_region = '14';
     data.set('data', JSON.stringify(newData));
+  }
+
+  if (url.pathname.includes('/en-au/')) {
+    const newData = JSON.parse(data.get('data'));
+    newData.config.force_region = '4';
+    data.set('data', JSON.stringify(newData));
+    FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
   }
 
   if ((siteName === 'hk' || siteName === 'tw')) {
@@ -196,6 +208,31 @@ function parseParams(params) {
   return result;
 }
 
+// this was added as a translation support ( adding new breaklines in content was needed )
+// as a part of a new line metadata
+// values could be something like "value, value2, ,,new text on new line"
+function replaceDoubleCommas(str) {
+  // Convert the string to an array for easy manipulation
+  const arr = str.split('');
+
+  // Loop through the array from the end to the beginning
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    // Check if there are two consecutive commas
+    if (arr[i] === ',' && arr[i - 1] === ',') {
+      // Replace the two consecutive commas with a single comma
+      arr.splice(i, 1);
+    }
+  }
+
+  // Convert the array back to a string
+  return arr.join('');
+}
+
+export function getDatasetFromSection(block) {
+  const parentSelector = block.closest('.section');
+  return parentSelector.dataset;
+}
+
 /**
  * Renders nano blocks
  * @param parent The parent element
@@ -209,8 +246,11 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
       matches.forEach((match) => {
         const [name] = parseParams(match.slice(1, -1));
         const datasetValue = getDatasetFromSection(parent);
+
         const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || '';
-        const newMatch = [match, datasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
+        const formattedDatasetEntryValue = replaceDoubleCommas(datasetEntryValue);
+
+        const newMatch = [match, formattedDatasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
         const [newName, ...params] = parseParams(newMatch);
         const renderer = nanoBlocks.get(newName.toLowerCase());
@@ -285,11 +325,6 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export function getDatasetFromSection(block) {
-  const parentSelector = block.closest('.section');
-  return parentSelector.dataset;
-}
-
 export function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -327,6 +362,11 @@ export function appendAdobeMcLinks(selector) {
     console.error(e);
   }
 }
+
+export const GLOBAL_EVENTS = {
+  ADOBE_MC_LOADED: 'adobe_mc::loaded',
+  PAGE_LOADED: 'page::loaded',
+};
 
 export function adobeMcAppendVisitorId(selector) {
   // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
@@ -407,11 +447,6 @@ export async function decorateIcons(element) {
     }
   });
 }
-
-export const GLOBAL_EVENTS = {
-  ADOBE_MC_LOADED: 'adobe_mc::loaded',
-  PAGE_LOADED: 'page::loaded',
-};
 
 // General function to match the height of elements based on a selector
 export async function matchHeights(targetNode, selector) {
