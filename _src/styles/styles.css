@@ -897,7 +897,7 @@ a.button:hover.secondary {
   color: var(--white-color)
 }
 
-a.button.modal, main .section.link-right a {
+a.button.modal, a.button.central, main .section.link-right a {
   color: var(--link-color);
   font-weight: var(--font-weight-bold);
   background-color: transparent;
@@ -909,7 +909,7 @@ a.button.modal, main .section.link-right a {
   text-overflow: ellipsis;
 }
 
-a.button.modal::after, main .section.link-right a::after {
+a.button.modal::after, a.button.central::after, main .section.link-right a::after {
   background-color: var(--link-color);
   opacity: 1;
   margin: 0;
@@ -924,13 +924,13 @@ a.button:has(.icon)::after {
   opacity: 0;
 }
 
-a.button.modal:hover, main .section.link-right a:hover {
+a.button.modal:hover, a.button.central:hover, main .section.link-right a:hover {
   color: var(--link-hover-color);
   text-decoration: none;
   transform: none;
 }
 
-a.button.modal:hover::after, main .section.link-right a:hover::after {
+a.button.modal:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
   transform: translateX(3px);
   background-color: var(--link-hover-color);
 }

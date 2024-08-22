@@ -733,12 +733,19 @@ export function decorateButtons(element) {
           return;
         }
         // Example: <p><a href="example.com">Text</a> (example.com)</p>
-        const isFragmentOrCentralLink = a.href.includes('/fragments/') || a.href.includes('central.bitdefender');
-        if (up.childNodes.length === 1 && up.tagName === 'P' && isFragmentOrCentralLink) {
+        if (up.childNodes.length === 1 && up.tagName === 'P' && a.href.includes('/fragments/')) {
           a.className = 'button modal';
           up.classList.add('button-container');
           return;
         }
+
+        // Example: <p><a href="https://central.bitdefender.com">Text</a> (example text)</p>
+        if (up.childNodes.length === 1 && up.tagName === 'P' && a.href.includes('central.bitdefender')) {
+          a.className = 'button central';
+          up.classList.add('button-container');
+          return;
+        }
+
         // Example: <p><a href="example.com">Text</a> <em>50% Discount</em></p>
         if (up.childNodes.length === 3 && up.tagName === 'P' && a.nextElementSibling?.tagName === 'EM') {
           a.className = 'button';
