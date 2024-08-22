@@ -14,7 +14,7 @@ export default async function decorate(block, options) {
   const videoFormat = videoUrl.split('.').pop();
 
   // const blockDataset = getDatasetFromSection(block);
-  const { videoPlayerSettings, videoPlayerPoster } = options.metadata;
+  const { videoPlayerSettings, videoPlayerPoster } = block.closest('.section').dataset;
 
   function appendPreloadedVideo() {
     const linkVideoEl = document.createElement('link');

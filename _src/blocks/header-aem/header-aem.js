@@ -34,7 +34,7 @@ function applyHeaderFactorySetup(headerMetadata, header, link) {
 export default async function decorate(block, options) {
   const {
     header, link,
-  } = options ? options.metadata : block.closest('.section').dataset;
+  } = block.closest('.section').dataset;
 
   if (options) {
     // eslint-disable-next-line no-param-reassign

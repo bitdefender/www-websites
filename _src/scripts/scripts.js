@@ -19,6 +19,8 @@ import {
   createTag, getDefaultLanguage, GLOBAL_EVENTS,
 } from './utils/utils.js';
 
+import { loadAnalytics } from './analytics.js';
+
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 const TRACKED_PRODUCTS = [];
 
@@ -27,12 +29,45 @@ export const DEFAULT_LANGUAGE = getDefaultLanguage();
 
 export const DEFAULT_COUNTRY = getDefaultLanguage();
 
-export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
+export const METADATA_ANALYTICS_TAGS = 'analytics-tags';
+
+const TARGET_TENANT = 'bitdefender';
+
+const HREFLANG_MAP = new Map([
+  ['en-ro', { baseUrl: 'https://www.bitdefender.ro', pageType: '.html' }],
+  ['de', { baseUrl: 'https://www.bitdefender.de', pageType: '.html' }],
+  ['sv', { baseUrl: 'https://www.bitdefender.se', pageType: '.html' }],
+  ['pt', { baseUrl: 'https://www.bitdefender.pt', pageType: '.html' }],
+  ['en-sv', { baseUrl: 'https://www.bitdefender.se', pageType: '.html' }],
+  ['pt-BR', { baseUrl: 'https://www.bitdefender.com.br', pageType: '.html' }],
+  ['en', { baseUrl: 'https://www.bitdefender.com', pageType: '.html' }],
+  ['it', { baseUrl: 'https://www.bitdefender.it', pageType: '.html' }],
+  ['fr', { baseUrl: 'https://www.bitdefender.fr', pageType: '.html' }],
+  ['nl-BE', { baseUrl: 'https://www.bitdefender.be', pageType: '.html' }],
+  ['es', { baseUrl: 'https://www.bitdefender.es', pageType: '.html' }],
+  ['en-AU', { baseUrl: 'https://www.bitdefender.com.au', pageType: '' }],
+  ['ro', { baseUrl: 'https://www.bitdefender.ro', pageType: '.html' }],
+  ['nl', { baseUrl: 'https://www.bitdefender.nl', pageType: '.html' }],
+  ['en-GB', { baseUrl: 'https://www.bitdefender.co.uk', pageType: '.html' }],
+  ['zh-hk', { baseUrl: 'https://www.bitdefender.com/zh-hk', pageType: '' }],
+  ['zh-tw', { baseUrl: 'https://www.bitdefender.com/zh-tw', pageType: '' }],
+  ['x-default', { baseUrl: 'https://www.bitdefender.com', pageType: '.html' }],
+]);
 
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
   url: '../plugins/rum-conversion/src/index.js',
 });
+
+window.hlx.plugins.add('experimentation', {
+  condition: () => getMetadata('experiment'),
+  options: {
+    prodHost: 'www.bitdefender.com.au',
+  },
+  url: '../plugins/experimentation/src/index.js',
+});
+
+window.ADOBE_MC_EVENT_LOADED = false;
 
 function initMobileDetector(viewport) {
   const mobileDetectorDiv = document.createElement('div');
@@ -222,7 +257,7 @@ export function getTags(tags) {
 export function trackProduct(product) {
   // eslint-disable-next-line max-len
   const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
-  const tags = getTags(getMetadata(METADATA_ANAYTICS_TAGS));
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
   const isTrackedPage = tags.includes('product') || tags.includes('service');
   if (isTrackedPage && !isDuplicate) TRACKED_PRODUCTS.push(product);
 }
@@ -311,6 +346,23 @@ export default function decorateLinkedPictures(main) {
   });
 }
 
+function addHreflangTags() {
+  if (document.querySelectorAll('head link[hreflang]').length > 0) return;
+
+  const path = window.location.pathname;
+  const pathCount = path.split('/').filter(String).length;
+
+  Object.keys(HREFLANG_MAP).forEach((key) => {
+    const hreflang = HREFLANG_MAP[key][0];
+    const href = `${HREFLANG_MAP[key][1].baseUrl}${path}${pathCount > 1 ? HREFLANG_MAP[key][1].pageType : ''}`;
+    const ln = document.createElement('link');
+    ln.setAttribute('rel', 'alternate');
+    ln.setAttribute('hreflang', hreflang);
+    ln.setAttribute('href', href);
+    document.querySelector('head').appendChild(ln);
+  });
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -324,6 +376,7 @@ export function decorateMain(main) {
   decorateLinkedPictures(main);
   decorateSections(main);
   decorateBlocks(main);
+  addHreflangTags();
 }
 
 /**
@@ -467,16 +520,29 @@ function getDomainInfo(hostname) {
   };
 }
 
-function pushPageLoadToDataLayer() {
+function getExperimentDetails() {
+  if (!window.hlx || !window.hlx.experiment) {
+    return null;
+  }
+
+  const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
+  return { experimentId, experimentVariant };
+}
+
+function pushPageLoadToDataLayer(targetExperimentDetails) {
   const { hostname } = window.location;
   if (!hostname) {
     return;
   }
-
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(window.location.pathname);
   const environment = getEnvironment(hostname, languageCountry.country);
-  const tags = getTags(getMetadata(METADATA_ANAYTICS_TAGS));
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
+
+  const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
+  // eslint-disable-next-line no-console
+  console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
+
   pushToDataLayer('page load started', {
     pageInstanceID: environment,
     page: {
@@ -492,6 +558,7 @@ function pushPageLoadToDataLayer() {
         serverName: 'hlx.live', // indicator for AEM Success Edge
         language: navigator.language || navigator.userLanguage || languageCountry.language,
         sysEnv: getOperatingSystem(window.navigator.userAgent),
+        ...(experimentDetails && { experimentDetails }),
       },
       attributes: {
         promotionID: getParamValue('pid') || '',
@@ -513,6 +580,17 @@ function pushPageLoadToDataLayer() {
 async function loadEager(doc) {
   setPageLanguage(getLanguageCountryFromPath(window.location.pathname));
   decorateTemplateAndTheme();
+
+  await window.hlx.plugins.run('loadEager');
+
+  let targetExperimentDetails = null;
+  if (getMetadata('target-experiment') !== '') {
+    const { runTargetExperiment } = await import('./target.js');
+    targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
+  }
+
+  pushPageLoadToDataLayer(targetExperimentDetails);
+
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
@@ -575,17 +653,25 @@ export async function loadTrackers() {
 async function loadLazy(doc) {
   const main = doc.querySelector('main');
 
-  // eslint-disable-next-line no-unused-vars
-  loadHeader(doc.querySelector('header'));
+  const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
+
+  if (pageIsNotInFragmentsFolder) {
+    // eslint-disable-next-line no-unused-vars
+    loadHeader(doc.querySelector('header'));
+  }
   await loadBlocks(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadFooter(doc.querySelector('footer'));
+  if (pageIsNotInFragmentsFolder) {
+    loadFooter(doc.querySelector('footer'));
+  }
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
+  window.hlx.plugins.run('loadLazy');
 
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
@@ -615,13 +701,20 @@ function loadDelayed() {
 }
 
 async function loadPage() {
-  pushPageLoadToDataLayer();
   await window.hlx.plugins.load('eager');
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await loadLazy(document);
+
+  const setupAnalytics = loadAnalytics(document, {
+    edgeConfigId: '7275417f-3870-465c-af3e-84f8f4670b3c',
+    orgId: '0E920C0F53DA9E9B0A490D45@AdobeOrg',
+  });
+
   adobeMcAppendVisitorId('main');
+
   loadDelayed();
+  await setupAnalytics;
 }
 
 initMobileDetector('mobile');
