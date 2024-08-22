@@ -167,7 +167,6 @@ div[role="cell"] p:last-of-type.product-comparison-header-subtitle,
 .product-comparison-header div[role="columnheader"] h3 {
     margin: 3rem 0.625rem 0.25rem;
     font-size: var(--heading-font-size-s);
-    min-height: 4rem;
 }
 
 .product-comparison-header div[role="columnheader"] .old-price-container p{

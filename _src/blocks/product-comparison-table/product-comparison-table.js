@@ -1,4 +1,4 @@
-import { createNanoBlock, renderNanoBlocks, fetchProduct } from '../../scripts/utils/utils.js';
+import { createNanoBlock, renderNanoBlocks, fetchProduct, matchHeights } from '../../scripts/utils/utils.js';
 
 const fetchedProducts = [];
 
@@ -269,4 +269,6 @@ export default function decorate(block) {
   [...block.children[0].children].slice(1).forEach((item, idx) => {
     renderNanoBlocks(item, undefined, idx);
   });
+
+  matchHeights(block, 'h3');
 }

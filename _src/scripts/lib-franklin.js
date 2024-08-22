@@ -706,7 +706,8 @@ export function decorateButtons(element) {
           return;
         }
         // Example: <p><a href="example.com">Text</a> (example.com)</p>
-        if (up.childNodes.length === 1 && up.tagName === 'P' && a.href.includes('/fragments/')) {
+        const isFragmentOrCentralLink = a.href.includes('/fragments/') || a.href.includes('central.bitdefender');
+        if (up.childNodes.length === 1 && up.tagName === 'P' && isFragmentOrCentralLink) {
           a.className = 'button modal';
           up.classList.add('button-container');
           return;

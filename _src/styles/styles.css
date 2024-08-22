@@ -1330,6 +1330,7 @@ main .section.blue a.button.modal::after {
 
 .tag-light-blue-round {
   background-color: #026DFF;
+  display: inline-block;
   padding: 6px 16px;
   border-radius: 20px;
   font-size:  var(--body-font-size-xxs);
