@@ -1,6 +1,5 @@
-export class Cookie {
-
-    /**
+export default class Cookie {
+  /**
    * Set cookie
    * @param {String} name - cookie name
    * @param {String} value - cookie value
@@ -13,7 +12,7 @@ export class Cookie {
     }
 
     document.cookie = `${name}=${value}${
-      days ? ";expires=" + d.toUTCString() : ""
+      days ? `;expires=${d.toUTCString()}` : ''
     };path=/;secure`;
   }
 
@@ -23,9 +22,9 @@ export class Cookie {
    * @return {String}
    */
   static get(name) {
-    const  cookie = {};
-    document.cookie.split(";").forEach((el) => {
-      const [key, value] = el.split("=");
+    const cookie = {};
+    document.cookie.split(';').forEach((el) => {
+      const [key, value] = el.split('=');
       cookie[key.trim()] = value;
     });
     return cookie[name];
@@ -38,11 +37,11 @@ export class Cookie {
    */
   static has(name) {
     const cookieChecked = this.get(name);
-    if ( cookieChecked !== '' && typeof cookieChecked !== 'undefined' ) {
-        return true;
-    } else {
-        return false;
+    if (cookieChecked !== '' && typeof cookieChecked !== 'undefined') {
+      return true;
     }
+
+    return false;
   }
 }
 
