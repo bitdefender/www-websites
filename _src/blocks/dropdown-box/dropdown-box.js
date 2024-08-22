@@ -41,9 +41,9 @@ export default function decorate(block) {
 
   // if it's slider
   if (type === 'slider') {
-    block.closest('.dropdown-box-container').classList.add('container', 'dropdownSlider');
+    block.closest('.dropdown-box-container').classList.add('container', 'dropdown-slider');
     const sliderBox = document.createElement('div');
-    sliderBox.className = 'slider_box';
+    sliderBox.className = 'slider-box';
 
     const infoTextEl = block.children[0].children[0];
     const infoTextEl2 = block.children[1].children[0];
@@ -62,9 +62,9 @@ export default function decorate(block) {
 
   // if it's slider
   if (type === 'slider-no-load-bar') {
-    block.closest('.dropdown-box-container').classList.add('container', 'dropdownSlider');
+    block.closest('.dropdown-box-container').classList.add('container', 'dropdown-slider', 'no-load-bar');
     const sliderBox = document.createElement('div');
-    sliderBox.className = 'slider_box';
+    sliderBox.className = 'slider-box';
 
     const infoTextEl = block.children[0].children[0];
     const infoTextEl2 = block.children[1].children[0];
