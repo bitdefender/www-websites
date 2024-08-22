@@ -228,6 +228,11 @@ function replaceDoubleCommas(str) {
   return arr.join('');
 }
 
+export function getDatasetFromSection(block) {
+  const parentSelector = block.closest('.section');
+  return parentSelector.dataset;
+}
+
 /**
  * Renders nano blocks
  * @param parent The parent element
@@ -320,11 +325,6 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export function getDatasetFromSection(block) {
-  const parentSelector = block.closest('.section');
-  return parentSelector.dataset;
-}
-
 export function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -362,6 +362,11 @@ export function appendAdobeMcLinks(selector) {
     console.error(e);
   }
 }
+
+export const GLOBAL_EVENTS = {
+  ADOBE_MC_LOADED: 'adobe_mc::loaded',
+  PAGE_LOADED: 'page::loaded',
+};
 
 export function adobeMcAppendVisitorId(selector) {
   // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
@@ -442,8 +447,3 @@ export async function decorateIcons(element) {
     }
   });
 }
-
-export const GLOBAL_EVENTS = {
-  ADOBE_MC_LOADED: 'adobe_mc::loaded',
-  PAGE_LOADED: 'page::loaded',
-};
