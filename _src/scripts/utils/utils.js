@@ -1,6 +1,3 @@
-/* eslint-disable no-use-before-define */
-import { getMetadata } from '../lib-franklin.js';
-
 export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
 export function getDefaultLanguage() {
   // TODO: refactor. It's not working as should for en locales.
@@ -61,6 +58,12 @@ async function findProductVariant(cachedResponse, variant) {
   }
 
   throw new Error('Variant not found');
+}
+
+function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  return meta || '';
 }
 
 export function getProductLinkCountryPrefix() {
@@ -195,7 +198,7 @@ export function getBuyLinkCountryPrefix() {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
-  let FETCH_URL = getProductLinkCountryPrefix();
+  let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
   const data = new FormData();
   // extract pid from url
   const url = new URL(window.location.href);
@@ -349,6 +352,11 @@ function replaceDoubleCommas(str) {
   return arr.join('');
 }
 
+export function getDatasetFromSection(block) {
+  const parentSelector = block.closest('.section');
+  return parentSelector.dataset;
+}
+
 /**
  * Renders nano blocks
  * @param parent The parent element
@@ -441,11 +449,6 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export function getDatasetFromSection(block) {
-  const parentSelector = block.closest('.section');
-  return parentSelector.dataset;
-}
-
 export function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -483,6 +486,11 @@ export function appendAdobeMcLinks(selector) {
     console.error(e);
   }
 }
+
+export const GLOBAL_EVENTS = {
+  ADOBE_MC_LOADED: 'adobe_mc::loaded',
+  PAGE_LOADED: 'page::loaded',
+};
 
 export function adobeMcAppendVisitorId(selector) {
   // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
@@ -563,8 +571,3 @@ export async function decorateIcons(element) {
     }
   });
 }
-
-export const GLOBAL_EVENTS = {
-  ADOBE_MC_LOADED: 'adobe_mc::loaded',
-  PAGE_LOADED: 'page::loaded',
-};
