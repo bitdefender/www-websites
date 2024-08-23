@@ -2,72 +2,10 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   fetchProduct,
-  createTag,
+  createTag, getBuyLinkCountryPrefix,
 } from '../../scripts/utils/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
-
-function getBuyLinkCountryPrefix() {
-  const { pathname } = window.location;
-
-  if (pathname.includes('/en-au/')) {
-    return 'https://www.bitdefender.com.au/site/Store/buy';
-  }
-
-  if (pathname.includes('/en-gb/')) {
-    return 'https://www.bitdefender.com.uk/site/Store/buy';
-  }
-
-  if (pathname.includes('/ro-ro/')) {
-    return 'https://www.bitdefender.ro/site/Store/buy';
-  }
-
-  if (pathname.includes('/it-it/')) {
-    return 'https://www.bitdefender.it/site/Store/buy';
-  }
-
-  if (pathname.includes('/fr-fr/')) {
-    return 'https://www.bitdefender.fr/site/Store/buy';
-  }
-
-  if (pathname.includes('/fr-be/')) {
-    return 'https://www.bitdefender.be/site/Store/buy';
-  }
-
-  if (pathname.includes('/nl-be/')) {
-    return 'https://www.bitdefender.be/site/Store/buy';
-  }
-
-  if (pathname.includes('/nl-nl/')) {
-    return 'https://www.bitdefender.nl/site/Store/buy';
-  }
-
-  if (pathname.includes('/de-de/')) {
-    return 'https://www.bitdefender.de/site/Store/buy';
-  }
-
-  if (pathname.includes('/de-ch/')) {
-    return 'https://www.bitdefender.de/site/Store/buy';
-  }
-
-  if (pathname.includes('/sv-se/')) {
-    return 'https://www.bitdefender.se/site/Store/buy';
-  }
-
-  if (pathname.includes('/pt-br/')) {
-    return 'https://www.bitdefender.com.br/site/Store/buy';
-  }
-
-  if (pathname.includes('/pt-pt/')) {
-    return 'https://www.bitdefender.pt/site/Store/buy';
-  }
-
-  if (pathname.includes('/es-es/')) {
-    return 'https://www.bitdefender.es/site/Store/buy';
-  }
-
-  return 'https://www.bitdefender.com/site/Store/buy';
-}
 
 /**
  * Utility function to round prices and percentages
@@ -438,7 +376,7 @@ export default function decorate(block) {
       // listen to ProductCard change and update the buttons pointing to the store url
       mv.subscribe((card) => {
         col.querySelectorAll('.button-container a').forEach((link) => {
-          if (link && link.href.startsWith(getBuyLinkCountryPrefix())) {
+          if (link && link.href.includes('/site/Store/buy/')) {
             link.href = card.url;
           }
         });
@@ -494,6 +432,3 @@ export default function decorate(block) {
     }
   });
 }
-
-// https://www.bitdefender.com.au/site/Store/buy/tsmd/5/1
-// https://www.bitdefender.com.au/site/Store/buy/tsmd/5/1
