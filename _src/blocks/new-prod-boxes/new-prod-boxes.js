@@ -42,6 +42,34 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
   return priceElement;
 }
 
+async function updateProductPrice(prodName, prodUsers, prodYears, pid) {
+  try {
+    const { fetchProduct } = await import('../../scripts/utils/utils.js');
+    const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
+
+    const { price, discount, currency_label: currencyLabel } = product;
+    const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
+    const oldPrice = price;
+    const newPrice = discount.discounted_price;
+    let priceElement = document.createElement('div');
+
+    priceElement.innerHTML = `
+      <div class="hero-aem__price mt-3">
+        <div>
+          <span class="prod-oldprice">${oldPrice}${currencyLabel}</span>
+          <span class="prod-save">Save ${discountPercentage}%<span class="save"></span></span>
+        </div>
+        <div class="newprice-container mt-2">
+          <span class="prod-newprice">${newPrice}${currencyLabel}</span>
+        </div>
+      </div>`;
+    return priceElement;
+  } catch (err) {
+    console.error('Error fetching product:', err);
+  }
+  return null;
+}
+
 export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
@@ -126,9 +154,8 @@ export default async function decorate(block, options) {
   if (combinedProducts.length) {
     await Promise.all([...block.children].map(async (prod, key) => {
       // eslint-disable-next-line no-unused-vars
-      const [greenTag, title, blueTag, subtitle, radioButtons, price, billed, buyLink, undeBuyLink, benefitsLists] = [...prod.querySelectorAll('tr')];
+      const [greenTag, title, blueTag, subtitle, radioButtons, placeholder, billed, buyLink, undeBuyLink, benefitsLists] = [...prod.querySelectorAll('tr')];
       // const [prodName, prodUsers, prodYears] = productsAsList[key].split('/');
-      const onSelectorClass = 'tsmd-10-1';
       const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
       const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
       const featuresSet = benefitsLists.querySelectorAll('table');
@@ -182,6 +209,10 @@ export default async function decorate(block, options) {
             firstTdContent = firstTdContent.replace('-&gt;', '<span class="arrow-right"></span>');
           }
 
+          if (firstTdContent.indexOf('[checkmark]') !== -1) {
+            firstTdContent = firstTdContent.replace('[checkmark]', '<span class="checkmark"></span>');
+          }
+
           const liContent = `<li class="${liClass}">${firstTdContent}${secondTdContent}</li>`;
 
           return liContent;
@@ -191,7 +222,7 @@ export default async function decorate(block, options) {
       });
 
       if (title.innerHTML.indexOf('href') !== -1) {
-        title.innerHTML = `<a href="#" title="${title.innerText}" class="buylink-${onSelectorClass} await-loader prodload prodload-${onSelectorClass}">${title.querySelector('tr a').innerHTML}</a>`;
+        title.innerHTML = `<a href="#" title="${title.innerText}">${title.querySelector('tr a').innerHTML}</a>`;
       }
 
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
@@ -245,14 +276,10 @@ export default async function decorate(block, options) {
           monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
         }
       } else {
-        const { fetchProduct } = await import('../../scripts/utils/utils.js');
-        let oldPrice;
-        let newPrice;
-        let discountPercentage;
-        let priceElement = document.createElement('div');
         buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
 
-        block.children[key].outerHTML = `
+        const prodBox = document.createElement('div');
+        prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
             <div class="inner_prod_box">
               ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
@@ -262,7 +289,7 @@ export default async function decorate(block, options) {
               <hr />
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices"></div>
-              ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-${onSelectorClass}"></span>`)}</div>` : ''}
+              ${billed ? `<div class="billed">${billed.innerHTML}</div>` : ''}
 
               ${buyLink.innerHTML}
 
@@ -271,32 +298,37 @@ export default async function decorate(block, options) {
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
             </div>
           </div>`;
-        fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid)
-          .then((product) => {
-            discountPercentage = Math.round(
-              (1 - (product.discount.discounted_price) / product.price) * 100,
-            );
-            oldPrice = product.price;
-            newPrice = product.discount.discounted_price;
-            let currencyLabel = product.currency_label;
-            // priceElement.classList.add('hero-aem__prices');
-            priceElement.innerHTML = `
-              <div class="hero-aem__price mt-3">
-                <div>
-                    <span class="prod-oldprice">${oldPrice}${currencyLabel}</span>
-                    <span class="prod-save">Save ${discountPercentage}%<span class="save"></span></span>
-                </div>
-                <div class="newprice-container mt-2">
-                  <span class="prod-newprice">${newPrice}${currencyLabel}</span>
 
-                </div>
-              </div>`;
-            block.children[key].querySelector('.hero-aem__prices').appendChild(priceElement);
-          })
-          .catch((err) => {
-            // eslint-disable-next-line no-console
-            console.error(err);
-          });
+        block.children[key].outerHTML = prodBox.innerHTML;
+
+        let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, pid);
+        block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
+        yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = priceBox;
+
+        if (monthlyProducts) {
+          const montlyPriceBox = await updateProductPrice(prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, pid);
+          monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
+        }
+      }
+
+      let checkmark = block.children[key].querySelector('.checkmark');
+      if (checkmark) {
+        let ul = checkmark.closest('ul');
+        ul.classList.add('checkmark-list');
+
+        let li = checkmark.closest('li');
+        li.removeChild(checkmark);
+
+        let checkBox = document.createElement('input');
+        checkBox.setAttribute('type', 'checkbox');
+        checkBox.classList.add('checkmark');
+
+        // rewrite the list element so flexbox can work
+        let newLi = document.createElement('li');
+        newLi.innerHTML = `
+          ${checkBox.outerHTML}
+          <div>${li.innerHTML}</div>`;
+        li.replaceWith(newLi);
       }
     }));
   } else {

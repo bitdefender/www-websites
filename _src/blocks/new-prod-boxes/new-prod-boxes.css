@@ -200,6 +200,11 @@
   padding: 0;
   color: black;
 }
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li {
+  padding-left: 0;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:first-of-type {
   font-size: 16px;
   line-height: 18px;
@@ -558,6 +563,22 @@
 .plan-switcher input[type=radio]:focus + .radio-label:before {
   outline: none;
   border-color: #3197EE;
+}
+
+.new-prod-boxes {
+  .checkmark-list {
+    li:first-of-type {
+      display: flex;
+      align-items: center;
+      font-weight: normal;
+
+      .checkmark {
+        width: 16px;
+        height: 16px;
+        margin: 0 16px 0 0;
+      }
+    }
+  }
 }
 
 @media (min-width: 768px) {
