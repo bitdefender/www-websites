@@ -84,22 +84,7 @@ async function runAemFooterLogic(block) {
   const shadowRoot = footer.attachShadow({ mode: 'open' });
 
   const contentDiv = document.createElement('div');
-  // contentDiv.style.display = 'none';
-  // contentDiv.classList.add('footer');
-  // contentDiv.classList.add('default-content-wrapper');
   contentDiv.innerHTML = aemFooterHtml;
-  // const cssFile = contentDiv.querySelector('link[rel="stylesheet"]');
-  // if (cssFile) {
-  //   cssFile.href = '/_src/scripts/vendor/mega-menu/mega-menu.css';
-  //   cssFile.as = 'style';
-
-  //   // wait for the css to load before displaying the content
-  //   // this is to avoid the content being displayed without the styles
-  //   cssFile.onload = () => {
-  //     contentDiv.style.display = 'block';
-  //   };
-  //   shadowRoot.appendChild(contentDiv);
-  // }
 
   // select all the scripts from contet div and
   const scripts = contentDiv.querySelectorAll('script');
@@ -116,20 +101,12 @@ async function runAemFooterLogic(block) {
     style.rel = 'stylesheet';
   });
 
-  shadowRoot.appendChild(contentDiv);
-  document.querySelector('footer').replaceWith(footer);
-  // const newScriptFile = document.createElement('script');
-  // newScriptFile.src = '/_src/scripts/vendor/mega-menu/mega-menu.js';
-
-  // const shadowRootScriptTag = shadowRoot.querySelector('script');
-  // if (shadowRootScriptTag) {
-  //   shadowRootScriptTag.replaceWith(newScriptFile);
-  // }
-  // window.runFooterLogic(shadowRoot);
-  // adobeMcAppendVisitorId(shadowRoot);
   window.addEventListener('footer-logic-finished', () => {
     window.runFooterLogic(shadowRoot);
   });
+
+  shadowRoot.appendChild(contentDiv);
+  document.querySelector('footer').replaceWith(footer);
 }
 
 async function runLandingpageLogic(block) {
