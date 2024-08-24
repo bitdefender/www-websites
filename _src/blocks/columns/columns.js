@@ -248,6 +248,10 @@ export default function decorate(block, options) {
   console.log|('colsadfasfdsadsfdsafdfadsdas ');
   if (type && type === 'video_left') {
     block.closest('.section').classList.add(type);
-    block.querySelector('.columns-left-col').innreHTML = `<video data-type="dam" data-video="" src="${cols[0].innerText}" disableremoteplayback="" playsinline="" controls="" poster="https://www.bitdefender.com/content/dam/bitdefender/solutions/small-business-security/EPP---proteted-v2.jpg"></video>`;
+    const leftCol = block.querySelector('.columns-img-col');
+    const videoPath = leftCol.querySelector('tr:last-of-type').innerText.trim();
+    const videoImg = leftCol.querySelector('img').getAttribute('src');
+
+    leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
   }
 }

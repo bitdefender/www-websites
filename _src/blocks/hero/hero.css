@@ -23,9 +23,11 @@
   --breadcrumbs-font-size-s: 12px;
 }
 
+main .hero {
+  background-color: #F6F6F6;
+}
 
 /* breadcrumbs */
-
 main .hero .hero-content .breadcrumb {
   font-weight: var(--font-weight-bold);
   color: #dedede;
@@ -86,18 +88,12 @@ main .hero-container {
 }
 
 main .hero-container.blue_title .hero-content > div {
-  width: 630px;
+  width: 100%;
 }
 
 main .hero-container.blue_title .hero-content h1 {
   --tw-text-opacity: 1;
   color: rgb(0 110 255 / var(--tw-text-opacity));
-}
-
-main .hero-container.migration .hero-content h1 {
-  font-size: 2.5rem;
-  line-height: 1.21;
-  margin-bottom: 25px;
 }
 
 main .hero-container.migration .hero-content h2 {
@@ -523,6 +519,10 @@ main .hero .hero-awards li::after {
 
   main .hero .hero-content .breadcrumb a::after {
     margin: 0 9px;
+  }
+
+  main .hero-container.blue_title .hero-content > div {
+    width: 630px;
   }
 }
 

@@ -2,6 +2,47 @@
   padding: 0 var(--body-padding);
 }
 
+.columns-container.video_left {
+  video {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .columns-right-col {
+    width: 100%;
+    flex: none;
+     p {
+      margin: 1.5em 0;
+     }
+  }
+}
+
+.grey-version .columns > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.grey-version .columns > div > div {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 247 / var(--tw-bg-opacity));
+  border-radius: 1rem;
+  padding: 3em;
+  margin-bottom: 1em;
+}
+
+.grey-version .columns > div > div h4 {
+  font-size: var(--heading-font-size-l);
+}
+
+.grey-version .columns > div > div img, .small-icons .columns > div > div img {
+  height: 60px;
+  width: auto;
+}
+
+.grey-version .columns > div > div p.button-container {
+  margin-bottom: auto;
+}
+
 .columns-container.we-container {
   max-width: 100%;
   padding-left: 20px;
@@ -65,6 +106,30 @@
   line-height: 1.25;
 }
 
+.section.subtitle_blue h2 {
+  margin: 0 auto 3em;
+  width: 100%;
+  text-align: center;
+}
+
+.section.subtitle_blue h3 {
+  font-size: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(0 110 255 / var(--tw-text-opacity));
+}
+
+.section.subtitle_blue .columns.benefits > div {
+  gap: 45px;
+  margin-bottom: 2em;
+}
+
+.section.subtitle_blue .columns.benefits p {
+  font-size: var(--body-font-size-s);
+  font-weight: 400;
+  letter-spacing: .006em;
+  line-height: 24px;
+}
+
 .columns.awards > div > div {
   flex-direction: column;
   width: 100%;
@@ -114,6 +179,7 @@
 .columns > div > .columns-img-col {
   order: 0;
   text-align: center;
+  margin-bottom: 2em;
 }
 
 .columns > div > .columns-img-col img {
@@ -169,6 +235,23 @@
 
   .columns.highlight-text.black.imageleft {
     left: 10%;
+  }
+
+  .section.subtitle_blue h2 {
+    margin: 0 auto 3em;
+    width: 630px;
+  }
+
+  .section.subtitle_blue h3 {
+    font-size: 1.25rem;
+  }
+
+  .section.subtitle_blue .columns.benefits > div {
+    margin-bottom: 0;
+  }
+
+  .columns > div > .columns-img-col {
+    margin-bottom: 1em;
   }
 }
 
@@ -229,9 +312,10 @@
   font-size: var(--body-font-size-s);
 }
 
-.columns.carousel > div > div >p {
+.columns.carousel > div > div > p {
   width: inherit;
   padding: 0 50px;
+  text-align: center;
 }
 
 .columns.awards > div > div > p:not(:last-of-type) {
@@ -289,9 +373,43 @@
   list-style: disc;
 }
 
+.section.migration.columns-container ul {
+  padding: 0;
+}
+
+.section.migration.columns-container ul li {
+  display: flex;
+  padding-left: 0;
+  margin-bottom: 1em;
+}
+
+.section.migration.columns-container ul li::before {
+  content: url("/_src/icons/checkmark-light-green-circle.svg");
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  top: 4px;
+  margin-right: 9px;
+  flex-shrink: 0;
+}
+
+.section.migration.columns-container .columns-img-col img {
+  border-radius: 10px;
+}
+
 .columns.video-presentation .modal-video-container {
   max-width: 520px;
   max-height: 293px;
+}
+
+.section.migration .columns.carousel {
+  margin-top: 0;
+  height: auto;
+}
+
+.section.migration .columns.carousel .carousel-buttons {
+  top: -10px;
 }
 
 .columns.carousel {
@@ -301,7 +419,11 @@
   height: 437px;
 }
 
-.columns.carousel button{
+.columns.carousel > div {
+  gap: 22px;
+}
+
+.columns.carousel button {
   align-items: flex-start;
   width: 10px;
   height: 10px;
@@ -310,6 +432,7 @@
   padding: 0;
   background-color: var(--black-color);
   border: none;
+  cursor: pointer;
 }
 
 .columns.carousel button:hover {
@@ -365,7 +488,7 @@
 }
 
 @media (min-width: 990px) {
-  .columns.carousel button{
+  .columns.carousel button {
     margin: -5px;
   }
 
@@ -377,6 +500,11 @@
     border-bottom: none;
     border-right: 2px solid var(--overlay-background-color);
     min-height: 350px;
+  }
+
+  .columns-container.video_left .columns-right-col {
+      width: 440px;
+      flex: none;
   }
 }
 
