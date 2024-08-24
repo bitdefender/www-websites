@@ -85,6 +85,34 @@ main .hero-container {
   margin: 0 auto;
 }
 
+main .hero-container.blue_title .hero-content > div {
+  width: 630px;
+}
+
+main .hero-container.blue_title .hero-content h1 {
+  --tw-text-opacity: 1;
+  color: rgb(0 110 255 / var(--tw-text-opacity));
+}
+
+main .hero-container.migration .hero-content h1 {
+  font-size: 2.5rem;
+  line-height: 1.21;
+  margin-bottom: 25px;
+}
+
+main .hero-container.migration .hero-content h2 {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-top: 1em;
+  margin-bottom: 9px;
+}
+
+main .hero-container.migration .hero-content p em {
+  font-size: 1.125rem;
+  font-style: normal;
+}
+
 main .hero .hero-content > div {
   width: 100%;
 }

@@ -174,7 +174,7 @@ export default function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
-  const { linksOpenInNewTab } = block.closest('.section').dataset;
+  const { linksOpenInNewTab, type } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
@@ -244,4 +244,9 @@ export default function decorate(block, options) {
     bubbles: true,
     composed: true,
   });
+
+  console.log|('colsadfasfdsadsfdsafdfadsdas ');
+  if (type && type === 'video_left') {
+    cols[0].inneHTML = `<video data-type="dam" data-video="" src="${cols[0].innerText}" disableremoteplayback="" playsinline="" controls="" poster="https://www.bitdefender.com/content/dam/bitdefender/solutions/small-business-security/EPP---proteted-v2.jpg"></video>`;
+  }
 }
