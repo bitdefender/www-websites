@@ -17,6 +17,57 @@
   }
 }
 
+.columns-container.chat-options .columns > div > div {
+  padding: 2em;
+}
+
+.columns-container.chat-options p.button-container a {
+  background-color: transparent;
+  border: 2px solid black;
+  color: black
+}
+
+.columns-container.chat-options p.button-container a:hover {
+  background-color: black;
+  color: white;
+}
+
+.columns-container.chat-options table {
+  width: 100%;
+}
+
+.columns-container.chat-options table tr {
+  display: flex;
+  justify-content: space-between;
+}
+
+.columns-container.chat-options table tr td:first-of-type img {
+  height: 40px;
+}
+
+.columns-container.chat-options table tr td:last-of-type img {
+  height: 133px;
+}
+
+.columns-container.chat-options p {
+  font-size: var(--body-font-size-s) !important;
+}
+
+.percent-table .columns table tr {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.percent-table .columns table tr td:first-of-type {
+  font-size: var(--heading-font-size-l);
+  padding-right: 1.5em;
+}
+
+.percent-table .columns table tr td:last-of-type {
+  width: 220px;
+}
+
 .grey-version .columns > div {
   display: flex;
   justify-content: space-between;

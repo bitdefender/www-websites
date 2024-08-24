@@ -408,6 +408,57 @@ main .section.wide h2 {
   margin-bottom: 50px;
 }
 
+main .section.table-align-top table {
+  vertical-align: top;
+}
+
+main .section.table-align-top table tr {
+  display: flex;
+  text-align: left;
+  align-items: center;
+}
+
+main .section.gap-2em table tr {
+  gap: 2em;
+}
+
+main .section.baby-blue-bck .columns-wrapper {
+  background-color: #E4F2FF;
+}
+
+main .section.grey-bck .columns-wrapper {
+  background-color: #F5F5F7;
+}
+
+main .section.radius-corners .columns-wrapper {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+main .section.radius-corners-10px .columns-wrapper {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+main .section.pl-0 .columns-wrapper {
+  padding-left: 0;
+}
+
+main .section.pr-0 .columns-wrapper {
+  padding-right: 0;
+}
+
+main .section.radius-corners .columns-wrapper .columns-img-col {
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+main .section.radius-corners-10px .columns-wrapper .columns-img-col, main .section.radius-corners-10px .columns-wrapper .columns-img-col img {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
 main .section.migration .carousel img {
   height: 56px!important;
 }
