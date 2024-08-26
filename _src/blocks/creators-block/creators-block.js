@@ -30,7 +30,7 @@ export default function decorate(block) {
       tr.querySelectorAll('td').forEach((td) => {
         const innerDiv = document.createElement('div');
         innerDiv.innerHTML = td.innerHTML;
-        newDiv.style.backgroundImage = backgroundImage;
+        newDiv.style.background = `linear-gradient(to bottom, rgba(0, 0, 0, 0) 60%, #000 100%), ${backgroundImage}`;
         newDiv.style.backgroundSize = 'cover'; // Cover the whole div
         newDiv.style.backgroundPosition = 'center'; // Center the image
         newDiv.appendChild(innerDiv);
