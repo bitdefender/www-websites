@@ -2,7 +2,7 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   fetchProduct,
-  createTag,
+  createTag, getBuyLinkCountryPrefix,
 } from '../../scripts/utils/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
@@ -483,7 +483,7 @@ export default function decorate(block) {
       // listen to ProductCard change and update the buttons pointing to the store url
       mv.subscribe((card) => {
         col.querySelectorAll('.button-container a').forEach((link) => {
-          if (link && link.href.startsWith(getBuyLinkCountryPrefix())) {
+          if (link && link.href.includes('/site/Store/buy/')) {
             link.href = card.url;
           }
         });
@@ -539,6 +539,3 @@ export default function decorate(block) {
     }
   });
 }
-
-// https://www.bitdefender.com.au/site/Store/buy/tsmd/5/1
-// https://www.bitdefender.com.au/site/Store/buy/tsmd/5/1

@@ -1,6 +1,3 @@
-/* eslint-disable no-use-before-define */
-import { getMetadata } from '../lib-franklin.js';
-
 export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
 export function getDefaultLanguage() {
   // TODO: refactor. It's not working as should for en locales.
@@ -61,6 +58,136 @@ async function findProductVariant(cachedResponse, variant) {
   }
 
   throw new Error('Variant not found');
+}
+
+function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  return meta || '';
+}
+
+export function getProductLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/ajax';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/ajax';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/ajax';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/ajax';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/ajax';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/ajax';
+}
+
+export function getBuyLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/buy';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/buy';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/buy';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/buy';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/buy';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/buy';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/buy';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/buy';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/buy';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/buy';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/buy';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/buy';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/buy';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/buy';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/buy';
 }
 
 /**
@@ -225,6 +352,11 @@ function replaceDoubleCommas(str) {
   return arr.join('');
 }
 
+export function getDatasetFromSection(block) {
+  const parentSelector = block.closest('.section');
+  return parentSelector.dataset;
+}
+
 /**
  * Renders nano blocks
  * @param parent The parent element
@@ -317,11 +449,6 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export function getDatasetFromSection(block) {
-  const parentSelector = block.closest('.section');
-  return parentSelector.dataset;
-}
-
 export function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -359,6 +486,11 @@ export function appendAdobeMcLinks(selector) {
     console.error(e);
   }
 }
+
+export const GLOBAL_EVENTS = {
+  ADOBE_MC_LOADED: 'adobe_mc::loaded',
+  PAGE_LOADED: 'page::loaded',
+};
 
 export function adobeMcAppendVisitorId(selector) {
   // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
@@ -439,8 +571,3 @@ export async function decorateIcons(element) {
     }
   });
 }
-
-export const GLOBAL_EVENTS = {
-  ADOBE_MC_LOADED: 'adobe_mc::loaded',
-  PAGE_LOADED: 'page::loaded',
-};
