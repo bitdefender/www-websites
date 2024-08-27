@@ -95,6 +95,10 @@
   --cta-background-light-blue: var(--background-light-blue)
 }
 
+.global-display-none {
+  display: none;
+}
+
 .font-arial {
   font-family: "Arial", sans-serif;
 }
