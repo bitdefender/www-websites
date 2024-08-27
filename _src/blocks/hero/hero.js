@@ -11,6 +11,12 @@ import {
  * @param {Element} element The container element
  */
 function buildHeroBlock(element) {
+
+  const {
+    // check if a signature needs to be added into the banner
+    signature
+  } = element.closest('.section').dataset;
+
   const h1 = element.querySelector('h1');
   const picture = element.querySelector('picture');
   const pictureParent = picture ? picture.parentNode : false;
@@ -25,6 +31,12 @@ function buildHeroBlock(element) {
     if (!isHomePage) {
       const breadcrumb = createTag('div', { class: 'breadcrumb' });
       document.querySelector('div.hero div div:first-child').prepend(breadcrumb);
+    }
+
+    if (signature) {
+      const signatureElement = createTag('div', { class: 'signature' });
+      signatureElement.textContent = signature;
+      document.querySelector('div.hero div div:first-child').prepend(signatureElement);
     }
 
     const pictureEl = document.createElement('div');
@@ -75,6 +87,7 @@ export default async function decorate(block) {
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
+    signature
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
