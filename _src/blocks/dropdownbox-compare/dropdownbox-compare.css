@@ -1,0 +1,187 @@
+/* b-boxes .dropdownbox-compare-container */
+.dropdownbox-compare-container {
+  clear: both;
+}
+
+.dropdownbox-compare-container .block img {
+  width: 20px;
+}
+
+.dropdownbox-compare-container .block > div {
+  padding: 15px 30px;
+}
+
+/* blue tbs */
+.dropdownbox-compare-container .block > div > div {
+  border-bottom: 1px solid #D6D6D6;
+}
+
+.dropdownbox-compare-container .block > div {
+  padding: 0;
+  font-weight: 500;
+  display: flex;
+}
+
+.dropdownbox-compare-container .block > div:nth-child(1) > div:nth-child(1) {
+  color: #fff;
+  background-color: #006eff;
+  padding: 0;
+}
+
+.dropdownbox-compare-container .block > div:first-of-type > div, .dropdownbox-compare-container .block > div:last-of-type > div {
+  border-bottom: 0 none;
+}
+
+.dropdownbox-compare-container .block > div:nth-child(1) > div {
+  font-weight: bold;
+  cursor: pointer;
+  padding: 15px 30px;
+}
+
+.dropdownbox-compare-container .block > div > div {
+  flex: 1;
+  padding: 15px 2%;
+  display: inline-block;
+}
+
+.dropdownbox-compare-container .block > div > div strong em {
+  color: red;
+  font-style: normal;
+}
+
+.dropdownbox-compare-container .block:not(.selected-2) > div > div:nth-child(2), .dropdownbox-compare-container .block.selected-1 > div > div:nth-child(2), .dropdownbox-compare-container .block.selected-2 > div > div:nth-child(3), .dropdownbox-compare-container .block.selected-3 > div > div:nth-child(4) {
+  background-color: #f6f6f6;
+}
+
+.dropdownbox-compare-container.selected-1 .block > div > div:nth-child(2), .dropdownbox-compare-container.selected-2 .block > div > div:nth-child(3), .dropdownbox-compare-container.selected-3 .block > div > div:nth-child(4) {
+  background-color: #f6f6f6;
+}
+
+.dropdownbox-compare-container.selected-2 .block > div > div:nth-child(2), .dropdownbox-compare-container.selected-3 .block > div > div:nth-child(2) {
+  background-color: white;
+}
+
+.dropdownbox-compare-container .block > div:not(:first-child) > div:first-child {
+  display: block;
+  align-items: center;
+}
+
+.dropdownbox-compare-container .block > div:not(:first-child) > div:first-child p {
+  margin: 0;
+}
+
+.dropdownbox-compare-container .block > div:not(:first-child) > div:first-child span {
+  margin-left: 10px;
+}
+
+.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div {
+  display: none;
+}
+
+.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block.closed > div:not(:first-child) > div {
+  display: inline-block;
+}
+
+.dropdownbox-compare-container .block.closed > div:nth-child(1) > div:nth-child(1)::before {
+  width: 10px;
+  height: 10px;
+  float: left;
+  content: "";
+  margin-right: 10px;
+  margin-top: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(-135deg);
+}
+
+.dropdownbox-compare-container.arrow-dark .block.closed > div:nth-child(1) > div:nth-child(1)::before {
+  width: 10px;
+  height: 10px;
+  float: left;
+  content: "";
+  margin-right: 10px;
+  margin-top: 10px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  transform: rotate(-135deg);
+}
+
+/* handling - arrow down/up */
+/* stylelint-disable no-descending-specificity */
+.dropdownbox-compare-container .block > div:nth-child(1) > div::before,
+.dropdownbox-compare-container .block.closed > div:nth-child(1) > div::before {
+  width: 10px;
+  height: 10px;
+  float: left;
+  content: "";
+  margin-right: 10px;
+  margin-top: 4px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.dropdownbox-compare-container .dropdownbox-compare-wrapper {
+  position: relative;
+}
+
+@media (width <= 991px) {
+  .dropdownbox-compare-container .default-content-wrapper h5 {
+    font-size: 33px;
+  }
+}
+
+.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div {
+  display: none;
+}
+
+/* for mobile */
+@media (width <= 768px) {
+  .dropdownbox-compare-container {
+    clear: both;
+    padding: 0 15px 5px;
+  }
+  .dropdownbox-compare-container .block > div:not(:first-child) {
+    display: block;
+  }
+  .dropdownbox-compare-container .block > div:nth-child(1) > div:nth-child(1)::before, .dropdownbox-compare-container .block.closed.close > div:nth-child(1) > div:nth-child(1)::before {
+    margin-top: 1px !important;
+  }
+  .dropdownbox-compare-container .block > div:nth-child(1) > div {
+    padding: 10px 3% !important;
+    display: flex;
+    font-size: 15px;
+    line-height: 17px;
+  }
+  .dropdownbox-compare-container .new > div:nth-child(1) > div:nth-child(1)::after, .dropdownbox-compare-container.new .block > div:nth-child(1) > div:nth-child(1)::after {
+    position: static;
+    margin-left: 15px;
+    flex: 0 0 auto;
+  }
+  .dropdownbox-compare-container > div:nth-child(2) .new::after {
+    top: -90px;
+    right: 0;
+    width: 135px;
+    height: 90pt;
+    display: none;
+  }
+  .dropdownbox-compare-container .block > div:not(:first-child) > div {
+    padding: 8px 2% !important;
+    font-size: 15px;
+  }
+  .dropdownbox-compare-container .block img {
+    width: 15px;
+  }
+  .dropdownbox-compare-container .block > div:not(:first-child) > div:nth-child(1) {
+    width: 100%;
+    text-align: center;
+  }
+  .dropdownbox-compare-container .block > div:not(:first-child) > div:not(:first-child) {
+    width: 50%;
+    float: left;
+  }
+  .dropdownbox-compare-container .default-content-wrapper h5 {
+    font-size: 30px;
+    line-height: 32px;
+  }
+}

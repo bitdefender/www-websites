@@ -47,6 +47,7 @@
 
 .columns-container.chat-options table tr td:last-of-type img {
   height: 133px;
+  display: none;
 }
 
 .columns-container.chat-options p {
@@ -241,6 +242,7 @@
   .columns.benefits > div {
     flex-direction: unset;
     gap: 32px;
+    align-items: stretch;
   }
 
   .columns.highlight-text.black {
@@ -303,6 +305,10 @@
 
   .columns > div > .columns-img-col {
     margin-bottom: 1em;
+  }
+
+  .columns-container.chat-options table tr td:last-of-type img {
+    display: block;
   }
 }
 
