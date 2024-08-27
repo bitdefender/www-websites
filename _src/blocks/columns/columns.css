@@ -11,6 +11,52 @@
   margin-right: auto;
 }
 
+.columns-container.creators h5 {
+  color: #006DFF;
+  font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
+}
+
+.columns-container.creators h3 {
+  font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+}
+
+.columns-container.creators p {
+  font: normal normal normal 24px/33px Arial;
+}
+
+.columns-container.creators a.button {
+  min-width: 230px;
+  height: 48px;
+  background: #E72325 0% 0% no-repeat padding-box;
+  border-radius: 40px;
+  justify-content: center;
+  font: normal normal 500 18px/24px "Roboto";
+}
+
+.columns-container.creators .columns > div {
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
+.columns-container.creators .columns > div:last-of-type {
+  margin-bottom: 0;
+}
+
+.columns-container.creators .columns > div > div.columns-left-col, .columns-container.creators .columns > div > div.columns-right-col {
+  width: 45%;
+  flex: none;
+}
+
+.columns-container.creators .columns > div > div.columns-img-col {
+  width: 45%;
+  flex: none;
+}
+
+.columns-container.creators.baby-blue-subtitles h3 {
+  color: #006DFF;
+}
+
+
 .columns > div {
   display: flex;
   flex-direction: column;
