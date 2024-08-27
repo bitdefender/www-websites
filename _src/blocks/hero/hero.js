@@ -11,10 +11,9 @@ import {
  * @param {Element} element The container element
  */
 function buildHeroBlock(element) {
-
   const {
     // check if a signature needs to be added into the banner
-    signature
+    signature,
   } = element.closest('.section').dataset;
 
   const h1 = element.querySelector('h1');
@@ -87,7 +86,6 @@ export default async function decorate(block) {
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
-    signature
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
