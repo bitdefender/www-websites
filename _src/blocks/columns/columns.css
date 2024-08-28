@@ -234,29 +234,15 @@
 
   .creators .columns-container h5 {
     color: #006DFF;
-    /* stylelint-disable font-family-no-missing-generic-family-keyword */
-    font-family: "IBM Plex Sans", sans-serif;
-    /* stylelint-enable font-family-no-missing-generic-family-keyword */
-    font-style: normal;
-    font-variant: normal;
-    font-weight: bold;
-    font-size: 32px;
-    line-height: 45px;
+    font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
   }
 
   .creators .columns-container h3 {
-    /* stylelint-disable font-family-no-missing-generic-family-keyword */
-    font-family: "IBM Plex Sans", sans-serif;
-    /* stylelint-enable font-family-no-missing-generic-family-keyword */
-    font-style: normal;
-    font-variant: normal;
-    font-weight: bold;
-    font-size: 60px;
-    line-height: 70px;
+    font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
   }
 
   .creators .columns-container p {
-    font: normal normal normal 24px/33px "Arial";
+    font: normal normal normal 24px/33px "Arial", sans-serif;
   }
 
   .creators .columns-container p.button-container {
