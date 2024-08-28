@@ -1,8 +1,30 @@
 /* stylelint-disable  */
+.creators .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
+  border: 1px solid #ECECEC;
+}
+
+.creators .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .undeBuyLink {
+  text-align: center;
+  font-weight: bold;
+}
+
 .new-prod-boxes-container {
   padding-bottom: 0;
   font-family: 'Arial', sans-serif;
   margin: clamp(10px, 25px, 15px) 0;
+}
+
+.new-prod-boxes-container div.default-content-wrapper:last-of-type {
+  padding: 0;
+}
+
+.new-prod-boxes-container div.default-content-wrapper:last-of-type * {
+  font: normal normal normal 12px/14px Arial;
+  color: black;
+}
+
+.new-prod-boxes-container div.default-content-wrapper:last-of-type a {
+  text-decoration: underline;
 }
 
 .new-prod-boxes-container.we-container {
@@ -360,7 +382,7 @@
   border: 2px solid #006EFF !important;
   white-space: nowrap !important;
   overflow: hidden !important;
-  text-overflow: ellipsis !important; 
+  text-overflow: ellipsis !important;
   border-radius: 8px !important;
   height: fit-content !important;
 }
@@ -382,7 +404,7 @@
 .new-prod-boxes-container .icon {
   width: 12px;
   height: 14px;
-  margin: 0;
+  margin: 0 5px 0 0;
 }
 
 .new-prod-boxes-container .icon svg {
@@ -421,7 +443,7 @@
   padding-bottom: 35px;
 }
 
-.switch {
+.switchBox .switch {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -431,11 +453,11 @@
   border-radius: 22px;
 }
 
-.switch input {
+.switchBox .switch input {
   display: none;
 }
 
-.slider {
+.switchBox .slider {
   position: absolute;
   content: "";
   height: 40px;
@@ -447,11 +469,11 @@
   transition: all 0.4s;
 }
 
-.switch input:checked + .slider {
+.switchBox .switch input:checked + .slider {
   transform: translateX(149px);
 }
 
-.label {
+.switchBox .label {
   font-family: Arial, Helvetica, sans-serif;
   width: 50%;
   text-align: center;
@@ -460,47 +482,48 @@
   font-size: 16px;
   color: white;
   transition: color 0.4s;
+  cursor: pointer;
 }
 
-.label.right {
+.switchBox .label.right {
   z-index: 10;
   color: black;
 }
 
-.label.left {
+.switchBox .label.left {
   z-index: 10;
 }
 
-.switch input:checked ~ .label.right {
+.switchBox .switch input:checked ~ .label.right {
   transition: color 0.4s;
   color: white !important;
 }
 
-.switch input ~ .label .icon {
+.switchBox .switch input ~ .label .icon {
   position: relative;
   margin-right: 10px;
   top: 2px;
 }
 
-.switch input ~ .label .icon svg {
+.switchBox .switch input ~ .label .icon svg {
   width: 14px;
   height: 16px;
 }
 
-.switch input ~ .label.right .icon svg {
+.switchBox .switch input ~ .label.right .icon svg {
   fill: #026DFF;
 }
 
-.switch input:checked ~ .label.right .icon svg {
+.switchBox .switch input:checked ~ .label.right .icon svg {
   fill: white;
 }
 
-.switch input:checked ~ .label.left {
+.switchBox .switch input:checked ~ .label.left {
   transition: color 0.4s;
   color: black;
 }
 
-.switch input:checked ~ .label.left .icon svg {
+.switchBox .switch input:checked ~ .label.left .icon svg {
   fill: #026DFF;
 }
 
@@ -561,6 +584,10 @@
 }
 
 @media (min-width: 768px) {
+  .creators .new-prod-boxes-container .new-prod-boxes {
+    padding-bottom: 10px;
+  }
+
   .new-prod-boxes-container .new-prod-boxes {
     flex-direction: row;
     padding-bottom: 60px;

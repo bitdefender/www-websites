@@ -529,6 +529,18 @@ header, main, footer {
     margin: 0 auto;
 }
 
+body.creators {
+  background: linear-gradient(to bottom, #F6FCFF, white);
+}
+
+.creators * {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.creators .default-content-wrapper h2 {
+  font-weight: bold;
+}
+
 @media (min-width: 768px) {
   main .section.center .products .product-card {
     min-width: 380px;
@@ -613,6 +625,20 @@ header, main, footer {
     width: 540px;
     font-size: 19px;
 	}
+
+  main .section.width-medium .block {
+    width: 940px;
+    margin: 0 auto;
+  }
+
+  main .section.width-smaller .block, main .section.width-smaller .default-content-wrapper {
+    width: 750px;
+    margin: 0 auto;
+  }
+
+  .creators .default-content-wrapper h2 {
+    font: normal normal bold 60px/69px Arial;
+  }
 }
 
 @media (min-width: 1065px) {
