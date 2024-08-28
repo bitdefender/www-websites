@@ -1,38 +1,3 @@
-
-.creators .columns-container .columns > div {
-  justify-content: space-between;
-  margin-bottom: 3em;
-}
-
-.creators .columns-container .columns > div:last-of-type {
-  margin-bottom: 0;
-}
-
-.creators .columns-container.baby-blue-subtitles h3, .creators .columns-container h5 {
-  color: #006DFF;
-}
-
-.creators .columns-container h3, .creators .columns-container h5 {
-  font-weight: bold;
-}
-
-.creators .columns-container.baby-blue-subtitles h3 br {
-  display: block;
-}
-
-.creators .columns-container p.button-container {
-  text-align: center;
-}
-
-.creators .columns-container a.button {
-  height: auto;
-  background: #E72325 0% 0% no-repeat padding-box;
-  border-radius: 30px;
-  justify-content: center;
-  padding: 5px 10px;
-  font-size: 14px;
-}
-
 .columns-wrapper {
   padding: 0 var(--body-padding);
 }
@@ -153,6 +118,40 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+}
+
+.creators .columns-container .columns > div {
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
+.creators .columns-container .columns > div:last-of-type {
+  margin-bottom: 0;
+}
+
+.creators .columns-container h5, .creators .columns-container.baby-blue-subtitles h3 {
+  color: #006DFF;
+}
+
+.creators .columns-container h3, .creators .columns-container h5 {
+  font-weight: bold;
+}
+
+.creators .columns-container.baby-blue-subtitles h3 br {
+  display: block;
+}
+
+.creators .columns-container p.button-container {
+  text-align: center;
+}
+
+.creators .columns-container a.button {
+  height: auto;
+  background: #E72325 0% 0% no-repeat padding-box;
+  border-radius: 30px;
+  justify-content: center;
+  padding: 5px 10px;
+  font-size: 14px;
 }
 
 @media (min-width: 767px) {
