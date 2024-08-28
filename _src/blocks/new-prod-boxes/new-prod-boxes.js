@@ -59,7 +59,9 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   }
 
   let buyLinkHref = new URL(`${getProductLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/`);
-  buyLinkHref.searchParams.append('pid', buyLinkPid);
+  if (buyLinkPid) {
+    buyLinkHref.searchParams.append('pid', buyLinkPid);
+  }
   return buyLinkHref;
 }
 async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, buyLinkSelector = null, billed = null) {
