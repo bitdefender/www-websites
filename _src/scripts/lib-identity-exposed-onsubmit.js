@@ -1,3 +1,5 @@
+import { ALL_FRANKLIN_DEV_SUBDOMAINS } from './lib-franklin.js';
+
 async function sleep(ms) {
   // eslint-disable-next-line no-promise-executor-return
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -6,11 +8,14 @@ async function sleep(ms) {
 async function fetchData(url, body) {
   const resp = await fetch(url, { method: 'POST', body: JSON.stringify(body) });
   const json = await resp.json();
-  return json.result;
+  return json.result || json;
 }
 
 export default async function onSubmit(e) {
   try {
+    const campaign = e.target.querySelector('input[name="campaign"]')?.value;
+    const email = e.target.querySelector('input[type=email]')?.value;
+
     document.querySelector('.scan-error').classList.remove('show');
     document.querySelector('.form-container').classList.add('hide');
     document.querySelector('.scan-loading').classList.add('show');
@@ -28,14 +33,13 @@ export default async function onSubmit(e) {
       params: {
         app_id: 'com.bitdefender.vpn',
         type: 'emails',
-        value: e.target.querySelector('input[type=email]').value,
+        value: email,
       },
     });
 
-    await sleep(1000);
-
-    document.querySelector('.scan-loading h3:nth-child(2)').classList.remove('show');
-    document.querySelector('.scan-loading h3:nth-child(3)').classList.add('show');
+    if (firstRequest.error) {
+      throw new Error('Scan error');
+    }
 
     await sleep(1000);
 
@@ -46,8 +50,31 @@ export default async function onSubmit(e) {
       params: { scan_id: firstRequest.scan_id },
     });
 
+    document.querySelector('.scan-loading h3:nth-child(2)').classList.remove('show');
+    document.querySelector('.scan-loading h3:nth-child(3)').classList.add('show');
+
+    if (secondRequest.error) {
+      throw new Error('Scan error');
+    }
+
+    await sleep(1000);
+
+    const domain = ALL_FRANKLIN_DEV_SUBDOMAINS.some(
+      (subdomain) => window.location.hostname.includes(subdomain),
+    ) ? 'https://www.bitdefender.com' : '';
+
+    const emarsysRequest = await fetchData(`${domain}/site/Store/offerSubscribe`, {
+      email,
+      flow: campaign,
+    });
+
     document.querySelector('.scan-loading h3:nth-child(3)').classList.remove('show');
     document.querySelector('.scan-loading').classList.remove('show');
+
+    if (!emarsysRequest.success) {
+      throw new Error('Scan error');
+    }
+
     document.querySelectorAll('.scan-results').forEach((el) => el.classList.add('show'));
 
     if (secondRequest.total_count === 0) {
@@ -57,6 +84,18 @@ export default async function onSubmit(e) {
       document.querySelector('.scan-result-leaks').classList.add('show');
       document.querySelector('.scan-result-zero').classList.remove('show');
       document.querySelector('.scan-result-leaks h3').textContent = document.querySelector('.scan-result-leaks h3').textContent.replace('{numberOfLeaks}', secondRequest.total_count);
+    }
+
+    // add smooth scrolling functionality to ToS area
+    const tosButton = document.querySelector('.modal-container.has-your-identity-been-exposed .product-card p:nth-of-type(2) a');
+    const tosArea = document.querySelector('.section.accordion-container:has(.accordion.terms-of-use)');
+    if (tosButton && tosArea) {
+      tosButton.addEventListener('click', (clickEvent) => {
+        clickEvent.preventDefault();
+        tosArea.scrollIntoView({
+          behavior: 'smooth',
+        });
+      });
     }
   } catch (error) {
     document.querySelector('.form-container').classList.remove('hide');
