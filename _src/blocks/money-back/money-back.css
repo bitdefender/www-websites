@@ -64,6 +64,10 @@
     display: inline-block;
   }
 
+.creator-money-back  .money-back > ul {
+    display: flex;
+  }
+
 .money-back > ul > li {
     display: inline-block;
     padding: 8px;
@@ -75,11 +79,11 @@
   }
 
   .creator-money-back .money-back > ul > li {
-    display: inline-block;
     background: #F5F5F7;
     border-radius: 20px;
     padding: 60px 68px;
-    width: 550px;
+    flex: 1;
+    width: auto;
     text-align: left;
     margin: 0 30px;
     vertical-align: top;
