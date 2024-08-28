@@ -234,11 +234,21 @@
 
   .creators .columns-container h5 {
     color: #006DFF;
-    font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 45px;
+    font-family: "IBM Plex Sans", sans-serif;
   }
 
   .creators .columns-container h3 {
-    font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    font-size: 60px;
+    line-height: 70px;
+    font-family: "IBM Plex Sans", sans-serif;
   }
 
   .creators .columns-container p {
