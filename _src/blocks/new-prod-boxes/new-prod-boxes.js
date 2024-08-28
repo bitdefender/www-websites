@@ -57,10 +57,9 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   if (!buyLinkPid) {
     buyLinkPid = '';
   }
-  let pidInLink = buyLinkPid ? `&pid=${buyLinkPid}` : '';
 
-  let buyLinkHref = buyLinkSelector.href;
-  buyLinkHref = `${getProductLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/${pidInLink}`;
+  let buyLinkHref = new URL(`${getProductLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/`);
+  buyLinkHref.searchParams.append('pid', buyLinkPid);
   return buyLinkHref;
 }
 async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, buyLinkSelector = null, billed = null) {
