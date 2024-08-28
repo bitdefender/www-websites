@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { getMetadata, getBuyLinkCountryPrefix } from '../../scripts/utils/utils.js';
+import { getMetadata, getProductLinkCountryPrefix } from '../../scripts/utils/utils.js';
 
 let dataLayerProducts = [];
 async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
@@ -60,7 +60,7 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   let pidInLink = buyLinkPid ? `&pid=${buyLinkPid}` : '';
 
   let buyLinkHref = buyLinkSelector.href;
-  buyLinkHref = `${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/${pidInLink}`;
+  buyLinkHref = `${getProductLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/${pidInLink}`;
   return buyLinkHref;
 }
 async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, buyLinkSelector = null, billed = null) {
@@ -79,7 +79,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
     }
     let priceElement = document.createElement('div');
     priceElement.classList.add('hero-aem__prices__box');
-    // console.log("selector    : ",updatedBuyLinkSelector);
 
     priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
@@ -93,7 +92,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
         ${billed ? `<div class="billed">${billed.innerHTML}</div>` : ''}
         <a href="${updatedBuyLinkSelector ? updatedBuyLinkSelector.href : ''}" class="button primary no-arrow">${updatedBuyLinkSelector ? updatedBuyLinkSelector.text : ''}</a>
       </div>`;
-    console.log(priceElement);
     return priceElement;
   } catch (err) {
     console.error('Error fetching product:', err);
