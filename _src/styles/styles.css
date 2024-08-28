@@ -529,7 +529,7 @@ header, main, footer {
     margin: 0 auto;
 }
 
-.creators {
+body.creators {
   background: linear-gradient(to bottom, #F6FCFF, white);
 }
 

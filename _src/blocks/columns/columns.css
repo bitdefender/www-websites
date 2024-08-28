@@ -16,6 +16,10 @@
   font-weight: bold;
 }
 
+.creators .columns-container.baby-blue-subtitles h3 br {
+  display: block;
+}
+
 .creators .columns-container p.button-container {
   text-align: center;
 }
@@ -225,9 +229,14 @@
     font: normal normal normal 24px/33px Arial;
   }
 
+  .creators .columns-container p.button-container {
+    text-align: left;
+  }
+
   .creators .columns-container a.button {
     min-width: 230px;
     height: 48px;
+    padding: 10px 10px 10px 25px;
     background: #E72325 0% 0% no-repeat padding-box;
     border-radius: 40px;
     justify-content: center;
