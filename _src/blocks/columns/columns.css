@@ -234,7 +234,9 @@
 
   .creators .columns-container h5 {
     color: #006DFF;
-    font-family: "IBM Plex Sans", sans-serif;/* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+    /* stylelint-disable font-family-no-missing-generic-family-keyword */
+    font-family: "IBM Plex Sans", sans-serif;
+    /* stylelint-enable font-family-no-missing-generic-family-keyword */
     font-style: normal;
     font-variant: normal;
     font-weight: bold;
@@ -243,7 +245,9 @@
   }
 
   .creators .columns-container h3 {
-    font-family: "IBM Plex Sans", sans-serif;/* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+    /* stylelint-disable font-family-no-missing-generic-family-keyword */
+    font-family: "IBM Plex Sans", sans-serif;
+    /* stylelint-enable font-family-no-missing-generic-family-keyword */
     font-style: normal;
     font-variant: normal;
     font-weight: bold;
