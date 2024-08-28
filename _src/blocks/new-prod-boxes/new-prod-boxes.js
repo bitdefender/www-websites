@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { getMetadata, getProductLinkCountryPrefix } from '../../scripts/utils/utils.js';
+import { getMetadata, getBuyLinkCountryPrefix } from '../../scripts/utils/utils.js';
 
 let dataLayerProducts = [];
 async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
@@ -58,7 +58,7 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
     buyLinkPid = '';
   }
 
-  let buyLinkHref = new URL(`${getProductLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/`);
+  let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/`);
   if (buyLinkPid) {
     buyLinkHref.searchParams.append('pid', buyLinkPid);
   }
