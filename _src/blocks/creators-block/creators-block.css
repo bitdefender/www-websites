@@ -57,14 +57,15 @@
 }
 
 .creators-block.block>div:nth-child(3) a.button:any-link {
+  min-width: 230px;
+  height: 48px;
+  padding: 10px 10px 10px 25px;
+  background: #E72325 0% 0% no-repeat padding-box;
   border-radius: 40px;
-  padding: 18px 25px;
-  font-size: 18px;
-  line-height: 24px;
-  font-family: Roboto, sans-serif;
-  font-weight: bold;
-  color: #fff;
+  justify-content: center;
+  font: normal normal 500 18px / 24px Roboto, sans-serif;
   margin-bottom: 35px;
+  color: white;
 }
 
 .creators-block.block>div:nth-child(2)>div {
