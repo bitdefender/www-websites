@@ -251,22 +251,56 @@
               padding: 13px 48px 16px 10px;
               filter: grayscale(1);
               border-radius: 8px;
+              margin-bottom: 8px;
               li {
                 &:first-of-type {
                   display: flex;
                   align-items: center;
-                  font-weight: normal;
                   font-size: 14px;
 
                   .checkmark {
-                    width: 16px;
-                    height: 16px;
-                    margin: 0 16px 0 0;
+                      appearance: none;
+                      -webkit-appearance: none;
+                      display: grid;
+                      width: 18px;
+                      height: 18px;
+                      padding: 0;
+                      border: 1px solid #FFFFFF;
+                      border-radius: 1px;
+                      margin-right: 16px;
+                      transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+
+                      &::after {
+                        content: "";
+                        width: 18px;
+                        height: 18px;
+                        clip-path: polygon(17% 54%, 28% 43%, 38% 54%, 70% 22%, 81% 33%, 38% 75%, 17% 54%);
+                        transform: scale(0);
+                        background-color: white;
+                      }
+                      &:checked {
+                        background: #016DFF 0% 0% no-repeat padding-box;
+                        -webkit-box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
+                        -moz-box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
+                        box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
+                      }
+                      &:checked::after {
+                        transform: scale(1);
+                      }
                   }
                 }
               }
+
+              &.checked {
+                filter: grayscale(0);
+                background-color: #EAF5EC;
+              }
             }
           }
+        }
+
+        .add-on-product {
+          transition: all 0.4s;
         }
       }
     }
@@ -304,7 +338,7 @@
   position: relative;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type)>span:last-of-type {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content {
   position: absolute;
   background-color: white;
   padding: 10px;
@@ -318,7 +352,7 @@
   display: none;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type)>span:last-of-type::before {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content::before {
   content: "";
   position: absolute;
   left: 17px;
@@ -328,7 +362,7 @@
   border-color: white transparent transparent;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type):hover>span:last-of-type {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type):hover .white-pill-content{
   display: block;
 }
 
@@ -661,7 +695,6 @@
 
 @media (min-width: 1200px) {
   .new-prod-boxes-container.we-container {
-    max-width: 1290px;
     padding-left: 20px;
     padding-right: 20px;
   }
