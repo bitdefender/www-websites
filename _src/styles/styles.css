@@ -529,6 +529,10 @@ header, main, footer {
     margin: 0 auto;
 }
 
+.creators {
+  background: linear-gradient(to bottom, #F6FCFF, white);
+}
+
 .creators * {
   font-family: Arial, Helvetica, sans-serif;
 }
