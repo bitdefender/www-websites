@@ -161,8 +161,6 @@ function updatePrice(block) {
 }
 
 function renderPrice(block, firstProduct, secondProduct) {
-  console.log('firstProduct', firstProduct);
-  console.log('secondProduct', secondProduct);
   const variant = '3u-1y';
 
   const el = document.createElement('DIV');
@@ -236,7 +234,6 @@ function updateBenefits(block) {
           li.append(numberOfBenefitsTag);
         }
       });
-      console.log('benefitsList', benefitsList);
     } catch (e) {
       console.log("couldn't load the benefits");
     }
@@ -244,7 +241,6 @@ function updateBenefits(block) {
 }
 
 function renderSelector(block, ...options) {
-  console.log('options', options);
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
@@ -277,7 +273,6 @@ createNanoBlock('monthlyYearly', renderRadioGroup);
 createNanoBlock('selectMembers', renderSelector);
 
 export default function decorate(block) {
-  console.log('products-sideview', block);
   block.firstElementChild.classList.add('d-flex');
   block.firstElementChild.firstElementChild.classList.add('pricing-wrapper');
   block.firstElementChild.lastElementChild.classList.add('features-wrapper');
