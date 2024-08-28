@@ -98,6 +98,11 @@
   height: 200px;
 }
 
+.creators .columns-container .columns > div {
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
 .columns.bg-image > div > div:first-child {
   font-size: var(--heading-font-size-xl);
   font-weight: bold;
@@ -120,20 +125,32 @@
   display: block;
 }
 
-.creators .columns-container .columns > div {
-  justify-content: space-between;
-  margin-bottom: 3em;
+.columns.with-box-shadow > div > div:last-child {
+  border: none;
 }
 
 .creators .columns-container .columns > div:last-of-type {
   margin-bottom: 0;
 }
 
+.creators .columns-container h3, .creators .columns-container h5 {
+  font-weight: bold;
+}
+
+.columns.new-v2 h3 {
+  font-family: "IBM Plex Sans" ,sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: left;
+  color: #006EFF;
+}
+
 .creators .columns-container h5, .creators .columns-container.baby-blue-subtitles h3 {
   color: #006DFF;
 }
 
-.creators .columns-container h3, .creators .columns-container h5 {
+.creators .columns-container h5 {
   font-weight: bold;
 }
 
@@ -225,7 +242,7 @@
   }
 
   .creators .columns-container p {
-    font: normal normal normal 24px/33px Arial;
+    font: normal normal normal 24px/33px "Arial";
   }
 
   .creators .columns-container p.button-container {
@@ -394,10 +411,6 @@
   justify-content: center;
   align-items: center;
   transition: all .4s ease-in-out;
-}
-
-.columns.with-box-shadow > div > div:last-child{
-  border: none;
 }
 
 .section.wide.light-sky-blue.columns-container {
@@ -613,7 +626,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   opacity: .8;
 }
 
-
 .two-columns .left-col p a.info-button.modal::before {
   content: url("/_src/icons/user-guide-white.svg");
   color: white;
@@ -636,15 +648,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns.new-v2 > div > .columns-img-col {
   margin-bottom: 1em;
-}
-
-.columns.new-v2 h3 {
-  font-family: "IBM Plex Sans" ,sans-serif;
-  font-size: 25px;
-  font-weight: 700;
-  line-height: 30px;
-  text-align: left;
-  color: #006EFF;
 }
 
 .columns.new-v2 a {
