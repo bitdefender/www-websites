@@ -255,7 +255,7 @@ export default async function decorate(block, options) {
         let discountPercentage;
         let priceElement = document.createElement('div');
         if (buyLink.querySelector('a')) {
-          buyLink.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
+          buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
         } else {
           const buyLinkText = buyLink.textContent;
           buyLink.innerHTML = `<a class="button primary no-arrow" href="${getBuyLinkCountryPrefix()}/${prodName.trim()}/${prodUsers.trim()}/${prodYears.trim()}/" title="${buyLinkText}">${buyLinkText}</a>`;
