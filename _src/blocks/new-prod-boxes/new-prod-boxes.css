@@ -5,6 +5,10 @@
   margin: clamp(10px, 25px, 15px) 0;
 }
 
+.new-prod-boxes-container div.default-content-wrapper:last-of-type {
+  padding: 0;
+}
+
 .new-prod-boxes-container.we-container {
   max-width: 100%;
   padding-left: 20px;
@@ -360,7 +364,7 @@
   border: 2px solid #006EFF !important;
   white-space: nowrap !important;
   overflow: hidden !important;
-  text-overflow: ellipsis !important; 
+  text-overflow: ellipsis !important;
   border-radius: 8px !important;
   height: fit-content !important;
 }
@@ -382,7 +386,7 @@
 .new-prod-boxes-container .icon {
   width: 12px;
   height: 14px;
-  margin: 0;
+  margin: 0 5px 0 0;
 }
 
 .new-prod-boxes-container .icon svg {

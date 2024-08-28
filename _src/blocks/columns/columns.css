@@ -1,3 +1,34 @@
+
+.creators .columns-container .columns > div {
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
+.creators .columns-container .columns > div:last-of-type {
+  margin-bottom: 0;
+}
+
+.creators .columns-container.baby-blue-subtitles h3, .creators .columns-container h5 {
+  color: #006DFF;
+}
+
+.creators .columns-container h3, .creators .columns-container h5 {
+  font-weight: bold;
+}
+
+.creators .columns-container p.button-container {
+  text-align: center;
+}
+
+.creators .columns-container a.button {
+  height: auto;
+  background: #E72325 0% 0% no-repeat padding-box;
+  border-radius: 30px;
+  justify-content: center;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
 .columns-wrapper {
   padding: 0 var(--body-padding);
 }
@@ -10,52 +41,6 @@
   margin-left: auto;
   margin-right: auto;
 }
-
-.columns-container.creators h5 {
-  color: #006DFF;
-  font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
-}
-
-.columns-container.creators h3 {
-  font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
-}
-
-.columns-container.creators p {
-  font: normal normal normal 24px/33px Arial;
-}
-
-.columns-container.creators a.button {
-  min-width: 230px;
-  height: 48px;
-  background: #E72325 0% 0% no-repeat padding-box;
-  border-radius: 40px;
-  justify-content: center;
-  font: normal normal 500 18px/24px "Roboto";
-}
-
-.columns-container.creators .columns > div {
-  justify-content: space-between;
-  margin-bottom: 3em;
-}
-
-.columns-container.creators .columns > div:last-of-type {
-  margin-bottom: 0;
-}
-
-.columns-container.creators .columns > div > div.columns-left-col, .columns-container.creators .columns > div > div.columns-right-col {
-  width: 45%;
-  flex: none;
-}
-
-.columns-container.creators .columns > div > div.columns-img-col {
-  width: 45%;
-  flex: none;
-}
-
-.columns-container.creators.baby-blue-subtitles h3 {
-  color: #006DFF;
-}
-
 
 .columns > div {
   display: flex;
@@ -215,6 +200,38 @@
 
   .columns.highlight-text.black.imageleft {
     left: 10%;
+  }
+
+  .creators .columns-container .columns > div > div.columns-left-col, .creators .columns-container .columns > div > div.columns-right-col {
+    width: 45%;
+    flex: none;
+  }
+
+  .creators .columns-container .columns > div > div.columns-img-col {
+    width: 45%;
+    flex: none;
+  }
+
+  .creators .columns-container h5 {
+    color: #006DFF;
+    font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
+  }
+
+  .creators .columns-container h3 {
+    font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+  }
+
+  .creators .columns-container p {
+    font: normal normal normal 24px/33px Arial;
+  }
+
+  .creators .columns-container a.button {
+    min-width: 230px;
+    height: 48px;
+    background: #E72325 0% 0% no-repeat padding-box;
+    border-radius: 40px;
+    justify-content: center;
+    font: normal normal 500 18px/24px "Roboto";
   }
 }
 
