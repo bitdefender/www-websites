@@ -319,6 +319,9 @@
   font-size: 40px;
   font-weight: bold;
 }
+.new-prod-boxes-container .prod-newprice .per-m {
+  font-size: 20px;
+}
 .new-prod-boxes-container .newprice-container {
   line-height: 1;
 }

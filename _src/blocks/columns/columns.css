@@ -242,7 +242,7 @@
   }
 
   .creators .columns-container p {
-    font: normal normal normal 24px/33px "Arial", sans-serif;
+    font: normal normal normal 24px/33px Arial, sans-serif;
   }
 
   .creators .columns-container.smaller-text p {
@@ -260,7 +260,7 @@
     background: #E72325 0% 0% no-repeat padding-box;
     border-radius: 40px;
     justify-content: center;
-    font: normal normal 500 18px/24px "Roboto", sans-serif;
+    font: normal normal 500 18px/24px Roboto, sans-serif;
   }
 }
 
