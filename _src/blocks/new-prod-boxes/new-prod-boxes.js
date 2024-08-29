@@ -233,7 +233,7 @@ export default async function decorate(block, options) {
                   ${subtitle.innerText.trim() ? `<p class="subtitle">${subtitle.querySelector('td').innerHTML.trim()}</p>` : ''}
 
                   ${radioButtons ? planSwitcher.outerHTML : ''}
-                  
+
                   ${pricesBox.outerHTML}
 
                   ${buyLink.outerHTML}
@@ -289,7 +289,7 @@ export default async function decorate(block, options) {
             oldPrice = product.price;
             newPrice = `${product.discount.discounted_price}${currencyLabel}`;
             if (!prodName.endsWith('m') && type === 'monthly') {
-              newPrice = `${(parseInt(newPrice, 10) / 12).toFixed(2).replace('.00', '')}${currencyLabel} <span class="per-m">${price.textContent.replace('0', '')}</span>`;
+              newPrice = `${(parseInt(newPrice, 10) / 12).toFixed(2).replace('.00', '')}${currencyLabel} <sup class="per-m">${price.textContent.replace('0', '')}</sup>`;
             }
             // priceElement.classList.add('hero-aem__prices');
             priceElement.innerHTML = `

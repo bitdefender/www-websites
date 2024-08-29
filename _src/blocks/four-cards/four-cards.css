@@ -150,6 +150,9 @@
   text-align: center;
 }
 
+.creator-cards .default-content-wrapper:last-of-type {
+  padding-top: 0;
+}
 /* a/b test styles, should be deleted after */
 .four-cards-container.we-container .default-content-wrapper {
   text-align: center;
