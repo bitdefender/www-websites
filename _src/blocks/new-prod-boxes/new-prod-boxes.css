@@ -1,4 +1,8 @@
 /* stylelint-disable  */
+.new-prod-boxes-container.remove-first > div.default-content-wrapper:first-of-type {
+  display: none;
+}
+
 .creators .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
   border: 1px solid #ECECEC;
 }

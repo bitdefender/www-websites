@@ -538,7 +538,30 @@ body.creators {
 }
 
 .creators .default-content-wrapper h2 {
-  font-weight: bold;
+  font-weight: 300;
+}
+
+.remove-first > div.default-content-wrapper {
+  display: none;
+  padding: 0;
+}
+
+.creators .no-space-top .default-content-wrapper {
+  padding-top: 0;
+}
+
+.creators .no-space-top .default-content-wrapper h2 {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.creators .no-space-bottom .default-content-wrapper {
+  padding-bottom: 0;
+}
+
+.creators .no-space-bottom .default-content-wrapper h2 {
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 @media (min-width: 768px) {
@@ -637,7 +660,7 @@ body.creators {
   }
 
   .creators .default-content-wrapper h2 {
-    font: normal normal bold 60px/69px Arial;
+    font: normal normal 300 60px/69px "IBM Plex Sans", sans-serif;
   }
 }
 

@@ -228,7 +228,7 @@
   }
 
   .creators .columns-container .columns > div > div.columns-img-col {
-    width: 45%;
+    width: 50%;
     flex: none;
   }
 
@@ -243,6 +243,10 @@
 
   .creators .columns-container p {
     font: normal normal normal 24px/33px "Arial", sans-serif;
+  }
+
+  .creators .columns-container.smaller-text p {
+    font: normal normal normal 18px / 27px "Arial", sans-serif;
   }
 
   .creators .columns-container p.button-container {
