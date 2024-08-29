@@ -439,6 +439,7 @@
         padding-right: calc(var(--bs-gutter-x)* .5);
         padding-left: calc(var(--bs-gutter-x)* .5);
         margin-right: auto;
+        margin-left: auto;
 
         @media (min-width: 576px) {
             max-width: 540px;
@@ -520,6 +521,15 @@
         position: static;
         margin-left: 15px;
         flex: 0 0 auto;
+    }
+
+    .dropdown-box-container.no-dropdown-logic .block>div:nth-child(1)>div {
+        display: block;
+    }
+
+    .dropdown-box-container.no-dropdown-logic .new>div:nth-child(1)>div::after,
+    .dropdown-box-container.no-dropdown-logic.new .block>div:nth-child(1)>div::after {
+        display: none;
     }
 
     .dropdown-box-container>div:nth-child(2) .new::after {
