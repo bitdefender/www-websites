@@ -47,6 +47,7 @@ export default function decorate(block) {
     if (creatorLink) {
       const anchor = document.createElement('a');
       anchor.href = creatorLink;
+      anchor.target = '_blank';
       anchor.appendChild(newDiv);
       table.parentNode.replaceChild(anchor, table);
     } else {
