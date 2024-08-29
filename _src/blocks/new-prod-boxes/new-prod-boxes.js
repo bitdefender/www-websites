@@ -268,7 +268,7 @@ export default async function decorate(block, options) {
             );
             let currencyLabel = product.currency_label;
             oldPrice = product.price;
-            let newPrice2 =  '';
+            let newPrice2 = '';
             newPrice = `${product.discount.discounted_price} ${currencyLabel}`;
             if (!prodName.endsWith('m') && type === 'monthly') {
               newPrice2 = `${product.discount.discounted_price.replace('.00', '')} ${currencyLabel}`;
