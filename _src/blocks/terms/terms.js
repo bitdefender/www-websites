@@ -1,4 +1,6 @@
 export default async function decorate(block, options) {
+  block.closest('.section').id = 'tos';
+
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');

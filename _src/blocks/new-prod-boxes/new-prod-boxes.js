@@ -1,3 +1,7 @@
+import {
+  getBuyLinkCountryPrefix,
+} from '../../scripts/utils/utils.js';
+
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
@@ -45,7 +49,7 @@ async function createPricesElement(storeOBJ, conditionText, saveText, prodName, 
 export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
-    products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
+    products, familyProducts, monthlyProducts, priceType, pid, mainProduct, type,
   } = block.closest('.section').dataset;
   // if options exists, this means the component is being called from aem
   if (options) {
@@ -229,7 +233,7 @@ export default async function decorate(block, options) {
                   ${subtitle.innerText.trim() ? `<p class="subtitle">${subtitle.querySelector('td').innerHTML.trim()}</p>` : ''}
 
                   ${radioButtons ? planSwitcher.outerHTML : ''}
-
+                  
                   ${pricesBox.outerHTML}
 
                   ${buyLink.outerHTML}
@@ -250,7 +254,12 @@ export default async function decorate(block, options) {
         let newPrice;
         let discountPercentage;
         let priceElement = document.createElement('div');
-        buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
+        if (buyLink.querySelector('a')) {
+          buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
+        } else {
+          const buyLinkText = buyLink.textContent;
+          buyLink.innerHTML = `<a class="button primary no-arrow" href="${getBuyLinkCountryPrefix()}/${prodName.trim()}/${prodUsers.trim()}/${prodYears.trim()}/" title="${buyLinkText}">${buyLinkText}</a>`;
+        }
 
         block.children[key].outerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
@@ -276,9 +285,12 @@ export default async function decorate(block, options) {
             discountPercentage = Math.round(
               (1 - (product.discount.discounted_price) / product.price) * 100,
             );
-            oldPrice = product.price;
-            newPrice = product.discount.discounted_price;
             let currencyLabel = product.currency_label;
+            oldPrice = product.price;
+            newPrice = `${product.discount.discounted_price}${currencyLabel}`;
+            if (!prodName.endsWith('m') && type === 'monthly') {
+              newPrice = `${(parseInt(newPrice, 10) / 12).toFixed(2).replace('.00', '')}${currencyLabel} <span class="per-m">${price.textContent.replace('0', '')}</span>`;
+            }
             // priceElement.classList.add('hero-aem__prices');
             priceElement.innerHTML = `
               <div class="hero-aem__price mt-3">
@@ -287,8 +299,7 @@ export default async function decorate(block, options) {
                     <span class="prod-save">Save ${discountPercentage}%<span class="save"></span></span>
                 </div>
                 <div class="newprice-container mt-2">
-                  <span class="prod-newprice">${newPrice}${currencyLabel}</span>
-
+                  <span class="prod-newprice">${newPrice.replace('.00', '')}</span>
                 </div>
               </div>`;
             block.children[key].querySelector('.hero-aem__prices').appendChild(priceElement);

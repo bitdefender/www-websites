@@ -72,6 +72,11 @@ createNanoBlock('discount', (code, label = 'Discount') => {
  * @param {Element} block The hero block element
  */
 export default async function decorate(block) {
+  const {
+    // this defines wether the modals automatically refresh or not in the hero banner
+    stopAutomaticModalRefresh,
+  } = block.closest('.section').dataset;
+
   buildHeroBlock(block);
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
@@ -100,6 +105,13 @@ export default async function decorate(block) {
         }
         sibling = sibling.previousElementSibling;
       }
+    }
+
+    // set the modal buttons in the hero banner to not refresh the modal on click
+    if (stopAutomaticModalRefresh === 'true') {
+      block.querySelectorAll('a.modal.button').forEach((modalButton) => {
+        modalButton.setAttribute('data-stop-automatic-modal-refresh', true);
+      });
     }
   }
 }
