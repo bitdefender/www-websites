@@ -337,7 +337,7 @@ export default async function decorate(block, options) {
                   ${subtitle.innerText.trim() ? `<p class="subtitle">${subtitle.querySelector('td').innerHTML.trim()}</p>` : ''}
 
                   ${radioButtons ? planSwitcher.outerHTML : ''}
-                  
+
                   ${pricesBox.outerHTML}
 
                   ${buyLink.outerHTML}

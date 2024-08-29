@@ -281,6 +281,7 @@ export async function decorateTags(element) {
   const tagTypes = [
     { regex: /\[#(.*?)#\]/g, className: 'dark-blue' },
     { regex: /\[{(.*?)}\]/g, className: 'light-blue' },
+    { regex: /\[blue-round(.*?)blue-round\]/g, className: 'light-blue-round' },
     { regex: /\[\$(.*?)\$\]/g, className: 'green' },
   ];
 
@@ -738,6 +739,14 @@ export function decorateButtons(element) {
           up.classList.add('button-container');
           return;
         }
+
+        // Example: <p><a href="https://central.bitdefender.com">Text</a> (example text)</p>
+        if (up.childNodes.length === 1 && up.tagName === 'P' && a.href.includes('central.bitdefender')) {
+          a.className = 'button central';
+          up.classList.add('button-container');
+          return;
+        }
+
         // Example: <p><a href="example.com">Text</a> <em>50% Discount</em></p>
         if (up.childNodes.length === 3 && up.tagName === 'P' && a.nextElementSibling?.tagName === 'EM') {
           a.className = 'button';

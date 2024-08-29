@@ -1,5 +1,5 @@
 import {
-  createNanoBlock, renderNanoBlocks, fetchProduct, getBuyLinkCountryPrefix,
+  createNanoBlock, renderNanoBlocks, fetchProduct, getBuyLinkCountryPrefix, matchHeights,
 } from '../../scripts/utils/utils.js';
 
 const fetchedProducts = [];
@@ -276,6 +276,7 @@ export default function decorate(block) {
     }
   });
 
+  matchHeights(block, 'h3');
   block.querySelectorAll('.button-container a').forEach((link) => {
     if (link && link.href.includes('/site/Store/buy/')) {
       link.href = getBuyLinkCountryPrefix();
