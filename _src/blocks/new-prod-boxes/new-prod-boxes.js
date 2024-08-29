@@ -1,7 +1,3 @@
-import {
-  getBuyLinkCountryPrefix,
-} from '../../scripts/utils/utils.js';
-
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
