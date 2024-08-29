@@ -1,4 +1,8 @@
 /* stylelint-disable  */
+.new-prod-boxes-container.remove-first > div.default-content-wrapper:first-of-type {
+  display: none;
+}
+
 .creators .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
   border: 1px solid #ECECEC;
 }
@@ -99,10 +103,10 @@
 }
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h2 {
   font-weight: bold;
-  font-size: 24px;
+  font-size: 22px;
   line-height: 26px;
   font-family: Arial, sans-serif;
-  margin-top: 10px;
+  margin-top: 0;
   margin-bottom: 4px;
 }
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h2 a {
@@ -121,6 +125,7 @@
   display: inline-block;
   border-radius: 20px;
   padding: 6px 16px;
+  margin-bottom: 10px;
 }
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag div {
   display: flex;
@@ -189,7 +194,7 @@
   font-size: 12px;
   font-family: Arial, sans-serif;
   line-height: 13px;
-  margin: 7px 0;
+  margin: 7px 0 20px;
 }
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .buy-btn a.red-buy-button {
   width: 100%;
@@ -203,7 +208,7 @@
   font-size: 12px;
   font-family: Arial, sans-serif;
   line-height: 13px;
-  margin: 7px 0;
+  margin: 10px 0;
 }
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
   font-family: Arial, sans-serif;
@@ -317,6 +322,7 @@
 }
 .new-prod-boxes-container .prod-newprice .per-m {
   font-size: 20px;
+  top: -12px;
 }
 .new-prod-boxes-container .newprice-container {
   line-height: 1;

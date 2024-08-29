@@ -538,8 +538,62 @@ body.creators {
 }
 
 .creators .default-content-wrapper h2 {
-  font-weight: bold;
+  font-weight: 300;
 }
+
+.creators .no-space-top .default-content-wrapper {
+  padding-top: 0;
+}
+
+.creators .no-space-top .default-content-wrapper h2 {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.creators .no-space-bottom .default-content-wrapper {
+  padding-bottom: 0;
+}
+
+.creators .no-space-bottom .default-content-wrapper h2 {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/*.creators a.button {
+  min-width: 230px!important;
+  height: 48px!important;
+  padding: 10px 10px 10px 25px!important;
+  background: #E72325 0% 0% no-repeat padding-box!important;
+  border-radius: 40px!important;
+  justify-content: center!important;
+  font: normal normal 500 18px / 24px Roboto, sans-serif!important;
+  color: white;
+}
+.creators a.button::after {
+  content: '';
+  width: 24px!important;
+  height: 24px!important;
+  background-color: var(--button-link-color)!important;
+  display: inline-block!important;
+  transition: all .2s cubic-bezier(.4,0,.2,1)!important;
+  transform: translateX(0)!important;
+  opacity: 0!important;
+}
+
+
+.creators a.button:hover::after {
+  content: '';
+  width: 24px!important;
+  height: 24px!important;
+  background-color: var(--button-link-color)!important;
+  display: inline-block!important;
+  transition: all .2s cubic-bezier(.4,0,.2,1)!important;
+  transform: translateX(0)!important;
+  opacity: 0!important;
+  margin-left: -10px!important;
+  transform: translateX(5px);
+  opacity: 1;
+}*/
 
 @media (min-width: 768px) {
   main .section.center .products .product-card {
@@ -637,7 +691,7 @@ body.creators {
   }
 
   .creators .default-content-wrapper h2 {
-    font: normal normal bold 60px/69px Arial;
+    font: normal normal 300 60px/69px "IBM Plex Sans", sans-serif;
   }
 }
 
