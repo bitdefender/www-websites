@@ -307,7 +307,7 @@ main .hero a.button {
   margin: 8px 13px 0 0;
 }
 
-main .hero a.button.modal {
+main .hero a.button.modal, main .hero a.button.central {
   padding: 0 28px 0 0;
   min-width: unset;
 }
