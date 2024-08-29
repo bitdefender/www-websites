@@ -261,25 +261,6 @@ export default async function decorate(block, options) {
           buyLink.innerHTML = `<a class="button primary no-arrow" href="${getBuyLinkCountryPrefix()}/${prodName.trim()}/${prodUsers.trim()}/${prodYears.trim()}/" title="${buyLinkText}">${buyLinkText}</a>`;
         }
 
-        block.children[key].outerHTML = `
-          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
-            <div class="inner_prod_box">
-              ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
-              ${title.innerText.trim() ? `<h2>${title.innerHTML}</h2>` : ''}
-              ${blueTag.innerText.trim() ? `<div class="blueTag"><div>${blueTag.innerHTML.trim()}</div></div>` : ''}
-              ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 5 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
-              <hr />
-              ${radioButtons ? planSwitcher.outerHTML : ''}
-              <div class="hero-aem__prices"></div>
-              ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-${onSelectorClass}"></span>`)}</div>` : ''}
-
-              ${buyLink.innerHTML}
-
-              ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
-              <hr />
-              ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
-            </div>
-          </div>`;
         fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid)
           .then((product) => {
             discountPercentage = Math.round(
@@ -287,15 +268,37 @@ export default async function decorate(block, options) {
             );
             let currencyLabel = product.currency_label;
             oldPrice = product.price;
-            newPrice = `${product.discount.discounted_price}${currencyLabel}`;
+            let newPrice2 = '';
+            newPrice = `${product.discount.discounted_price} ${currencyLabel}`;
             if (!prodName.endsWith('m') && type === 'monthly') {
-              newPrice = `${(parseInt(newPrice, 10) / 12).toFixed(2).replace('.00', '')}${currencyLabel} <sup class="per-m">${price.textContent.replace('0', '')}</sup>`;
+              newPrice2 = `${product.discount.discounted_price.replace('.00', '')} ${currencyLabel}`;
+              newPrice = `${(parseInt(newPrice, 10) / 12).toFixed(2).replace('.00', '')} ${currencyLabel} <sup class="per-m">${price.textContent.replace('0', '')}</sup>`;
             }
-            // priceElement.classList.add('hero-aem__prices');
+
+            block.children[key].outerHTML = `
+            <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
+              <div class="inner_prod_box">
+                ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
+                ${title.innerText.trim() ? `<h2>${title.innerHTML}</h2>` : ''}
+                ${blueTag.innerText.trim() ? `<div class="blueTag"><div>${blueTag.innerHTML.trim()}</div></div>` : ''}
+                ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 5 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
+                <hr />
+                ${radioButtons ? planSwitcher.outerHTML : ''}
+                <div class="hero-aem__prices"></div>
+                ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2">${newPrice2}</span>`)}</div>` : ''}
+
+                ${buyLink.innerHTML}
+
+                ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
+                <hr />
+                ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
+              </div>
+            </div>`;
+
             priceElement.innerHTML = `
               <div class="hero-aem__price mt-3">
                 <div>
-                    <span class="prod-oldprice">${oldPrice}${currencyLabel}</span>
+                    <span class="prod-oldprice">${oldPrice} ${currencyLabel}</span>
                     <span class="prod-save">Save ${discountPercentage}%<span class="save"></span></span>
                 </div>
                 <div class="newprice-container mt-2">
