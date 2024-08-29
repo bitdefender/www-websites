@@ -1,3 +1,7 @@
+import {
+  getBuyLinkCountryPrefix,
+} from '../../scripts/utils/utils.js';
+
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
@@ -337,7 +341,7 @@ export default async function decorate(block, options) {
                   ${subtitle.innerText.trim() ? `<p class="subtitle">${subtitle.querySelector('td').innerHTML.trim()}</p>` : ''}
 
                   ${radioButtons ? planSwitcher.outerHTML : ''}
-
+                  
                   ${pricesBox.outerHTML}
 
                   ${buyLink.outerHTML}
