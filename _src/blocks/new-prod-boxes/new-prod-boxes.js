@@ -95,6 +95,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
       </div>`;
     return priceElement;
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching product:', err);
   }
   return null;
@@ -188,15 +189,14 @@ export default async function decorate(block, options) {
     await Promise.all([...block.children].map(async (prod, key) => {
       // eslint-disable-next-line no-unused-vars
       const mainTable = prod.querySelector('tbody');
+      // eslint-disable-next-line no-unused-vars
       const [greenTag, title, blueTag, subtitle, radioButtons, placeholder, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2] = [...mainTable.querySelectorAll(':scope > tr')];
-      // const [prodName, prodUsers, prodYears] = productsAsList[key].split('/');
       const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
       const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
       let addOn = 0;
       const addOnProductsAsList = addOnProducts && addOnProducts.split(',');
       const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.split(',');
       const featuresSet = benefitsLists.querySelectorAll('table');
-      console.log(featuresSet);
       const featureList = Array.from(featuresSet).map((table) => {
         const trList = Array.from(table.querySelectorAll('tr'));
         const liString = trList.map((tr) => {
