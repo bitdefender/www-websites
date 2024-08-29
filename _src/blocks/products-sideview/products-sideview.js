@@ -1,5 +1,10 @@
 import {
-  createNanoBlock, fetchProduct, getBuyLinkCountryPrefix, getDatasetFromSection, getPidFromUrl, renderNanoBlocks,
+  createNanoBlock,
+  fetchProduct,
+  getBuyLinkCountryPrefix,
+  getDatasetFromSection,
+  getPidFromUrl,
+  renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
 
 const state = {
