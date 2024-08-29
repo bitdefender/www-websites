@@ -64,7 +64,7 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   }
   return buyLinkHref;
 }
-async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, buyLinkSelector = null, billed = null) {
+async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
   try {
     const { fetchProduct } = await import('../../scripts/utils/utils.js');
     const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
@@ -72,7 +72,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
     const { price, discount, currency_label: currencyLabel } = product;
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     const oldPrice = price;
-    const newPrice = discount.discounted_price;
+    let newPrice = discount.discounted_price;
     // eslint-disable-next-line no-param-reassign
     let updatedBuyLinkSelector = buyLinkSelector;
     if (updatedBuyLinkSelector) {
@@ -81,16 +81,26 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
     let priceElement = document.createElement('div');
     priceElement.classList.add('hero-aem__prices__box');
 
+    let newPriceBilled = '';
+    if (hideDecimals === 'true') {
+      newPriceBilled = `${product.discount.discounted_price.replace('.00', '')} ${currencyLabel}`;
+      newPrice = newPrice.replace('.00', '');
+    }
+
+    if (!prodName.endsWith('m') && type === 'monthly') {
+      newPrice = `${(parseInt(newPrice, 10) / 12)}`;
+    }
+
     priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div>
-          <span class="prod-oldprice">${oldPrice}${currencyLabel}</span>
+          <span class="prod-oldprice">${oldPrice} ${currencyLabel}</span>
           <span class="prod-save">Save ${discountPercentage}%<span class="save"></span></span>
         </div>
         <div class="newprice-container mt-2">
-          <span class="prod-newprice">${newPrice}${currencyLabel}</span>
+          <span class="prod-newprice">${newPrice} ${currencyLabel} ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
-        ${billed ? `<div class="billed">${billed.innerHTML}</div>` : ''}
+        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2">${newPriceBilled}</span>`)}</div>` : ''}
         <a href="${updatedBuyLinkSelector ? updatedBuyLinkSelector.href : ''}" class="button primary no-arrow">${updatedBuyLinkSelector ? updatedBuyLinkSelector.text : ''}</a>
       </div>`;
     return priceElement;
@@ -105,7 +115,7 @@ export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
-    addOnProducts, addOnMonthlyProducts,
+    addOnProducts, addOnMonthlyProducts, type, hideDecimals,
   } = block.closest('.section').dataset;
   // if options exists, this means the component is being called from aem
   if (options) {
@@ -190,7 +200,7 @@ export default async function decorate(block, options) {
       // eslint-disable-next-line no-unused-vars
       const mainTable = prod.querySelector('tbody');
       // eslint-disable-next-line no-unused-vars
-      const [greenTag, title, blueTag, subtitle, radioButtons, placeholder, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2] = [...mainTable.querySelectorAll(':scope > tr')];
+      const [greenTag, title, blueTag, subtitle, radioButtons, perPrice, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2] = [...mainTable.querySelectorAll(':scope > tr')];
       const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
       const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
       let addOn = 0;
@@ -380,24 +390,24 @@ export default async function decorate(block, options) {
           </div>`;
 
         block.children[key].outerHTML = prodBox.innerHTML;
-        let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, pid, buyLink.querySelector('a'), billed);
+        let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
         block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
         yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = priceBox;
 
         if (monthlyProducts) {
-          const montlyPriceBox = await updateProductPrice(prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, pid, buyLink.querySelector('a'), billed);
+          const montlyPriceBox = await updateProductPrice(prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
           monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
         }
 
         if (addOn && addOnMonthlyProductsAsList) {
           const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
-          let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, pid, buyLink2.querySelector('a'), billed2);
+          let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
           monthlyAddOnPricesBoxes[`${key}-add-on-monthly-${addOnProdMonthlyName.trim()}`] = monthlyAddOnPriceBox;
         }
 
         if (addOn && addOnProductsAsList) {
           const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
-          yearlyAddOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, pid, buyLink2.querySelector('a'), billed2);
+          yearlyAddOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
           block.children[key].querySelector('.hero-aem__prices__addon').appendChild(yearlyAddOnPriceBox);
           yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = yearlyAddOnPriceBox;
         }
