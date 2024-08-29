@@ -571,3 +571,8 @@ export async function decorateIcons(element) {
     }
   });
 }
+
+export function getPidFromUrl() {
+  const url = new URL(window.location.href);
+  return url.searchParams.get('pid') || getMetadata('pid');
+}

@@ -1,5 +1,5 @@
 import {
-  createNanoBlock, fetchProduct, getBuyLinkCountryPrefix, getDatasetFromSection, renderNanoBlocks,
+  createNanoBlock, fetchProduct, getBuyLinkCountryPrefix, getDatasetFromSection, getPidFromUrl, renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
 
 const state = {
@@ -138,9 +138,10 @@ function updateBuyLink(block) {
   const productCode = state.currentProduct.alias;
   const dimension = MEMBERS_MAP.get(state.membersIndex);
   const { years } = state.currentProduct.variation;
+  const pid = getPidFromUrl();
 
   if (buyLink) {
-    buyLink.href = `${getBuyLinkCountryPrefix()}/${productCode}/${dimension}/${years}/`;
+    buyLink.href = `${getBuyLinkCountryPrefix()}/${productCode}/${dimension}/${years}/${pid ? `pid.${pid}` : ''}`;
   }
 }
 
@@ -165,7 +166,6 @@ function renderPrice(block, firstProduct, secondProduct) {
 
   const el = document.createElement('DIV');
   el.classList.add('price');
-  el.innerHTML = '100 euroi';
 
   Promise.all([
     fetchProduct(firstProduct, variant),
