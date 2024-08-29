@@ -6,7 +6,7 @@ import {
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink,) {
+async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
   const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
   const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
   const price = storeOption.getPrice();
@@ -288,8 +288,8 @@ export default async function decorate(block, options) {
             let currencyLabel = product.currency_label;
             oldPrice = product.price;
             newPrice = `${product.discount.discounted_price}${currencyLabel}`;
-            if (!prodName.endsWith("m") && type === "monthly") {
-              newPrice = `${(parseInt(newPrice) / 12).toFixed(2).replace('.00', '')}${currencyLabel} <span class="per-m">${price.textContent.replace('0', '')}</span>`;
+            if (!prodName.endsWith('m') && type === 'monthly') {
+              newPrice = `${(parseInt(newPrice, 10) / 12).toFixed(2).replace('.00', '')}${currencyLabel} <span class="per-m">${price.textContent.replace('0', '')}</span>`;
             }
             // priceElement.classList.add('hero-aem__prices');
             priceElement.innerHTML = `
