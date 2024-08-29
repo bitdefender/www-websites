@@ -65,6 +65,7 @@
   margin: auto;
   margin-bottom: 20px;
 }
+
 .new-prod-boxes-container .new-prod-boxes {
   margin: 0 auto;
   display: flex;
@@ -72,11 +73,13 @@
   justify-content: center;
   align-items: center;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box {
   flex: 1;
   max-width: 410px;
   margin: 8px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
   position: relative;
   height: 100%;
@@ -85,6 +88,7 @@
   padding: 25px;
   margin: 0 auto;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
   height: 30px;
   max-width: 350px;
@@ -101,6 +105,7 @@
   left: 7%;
   box-sizing: content-box;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h2 {
   font-weight: bold;
   font-size: 22px;
@@ -109,13 +114,16 @@
   margin-top: 0;
   margin-bottom: 4px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h2 a {
   transition: all 0.5s ease;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h2 a:hover {
   text-decoration: none;
   transition: all 0.5s ease;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag {
   font-size: var(--body-font-size-xs);
   font-family: Arial, sans-serif;
@@ -127,23 +135,28 @@
   padding: 6px 16px;
   margin-bottom: 10px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag div {
   display: flex;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag img {
   height: 14px;
   margin-right: 5px;
   margin-top: -5px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .subtitle {
   font-size: clamp(10px, 14px, 14px);
   font-family: Arial, sans-serif;
   margin-bottom: 0;
   line-height: 1.25;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .subtitle.fixed_height {
   min-height: 80px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box hr {
   border: 1px solid #D1D1D1;
   margin: 10px 0;
@@ -163,12 +176,14 @@
   align-items: center;
   margin-bottom: 8px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .save_price_box .prod-oldprice {
   font-size: var(--heading-font-size-xs);
   line-height: var(--heading-font-size-xs);
   text-decoration: line-through;
   margin-right: 10px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .save_price_box .prod-percent {
   font-size: 13px;
   line-height: 15px;
@@ -177,25 +192,30 @@
   border-radius: 11px;
   padding: 4px 10px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .prices_box {
   display: flex;
   justify-content: left;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .prices_box .prod-newprice {
   font-size: var(--heading-font-size-xl);
   line-height: var(--heading-font-size-xl);
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .prices_box sup {
   margin: 15px 0 0 5px;
   font-size: var(--heading-font-size-s);
   line-height: var(--heading-font-size-s);
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .billed {
   font-size: 12px;
   font-family: Arial, sans-serif;
   line-height: 13px;
   margin: 7px 0 20px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .buy-btn a.red-buy-button {
   width: 100%;
   text-transform: none;
@@ -204,29 +224,39 @@
   font-weight: 500 !important;
   padding: 10px 1% !important;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .undeBuyLink {
   font-size: 12px;
   font-family: Arial, sans-serif;
   line-height: 13px;
   margin: 10px 0;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
   font-family: Arial, sans-serif;
   color: transparent;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists p {
   margin: 0;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists u {
   font-size: var(--body-font-size-xs);
   text-decoration: none;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul {
   margin: 0;
   margin-bottom: -5px;
   padding: 0;
   color: black;
 }
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li {
+  padding-left: 0;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:first-of-type {
   font-size: 16px;
   line-height: 18px;
@@ -236,6 +266,74 @@
   font-family: Arial, sans-serif;
   margin-bottom: 0.5rem;
 }
+
+.new-prod-boxes-container {
+  .new-prod-boxes {
+    .prod_box {
+      .inner_prod_box {
+        .benefitsLists {
+          ul {
+            &.checkmark-list {
+              background-color: #E7E7E7;
+              padding: 13px 48px 16px 10px;
+              filter: grayscale(1);
+              border-radius: 8px;
+              margin-bottom: 8px;
+              li {
+                &:first-of-type {
+                  display: flex;
+                  align-items: center;
+                  font-size: 14px;
+
+                  .checkmark {
+                      appearance: none;
+                      -webkit-appearance: none;
+                      display: grid;
+                      width: 18px;
+                      height: 18px;
+                      padding: 0;
+                      border: 1px solid #FFFFFF;
+                      border-radius: 1px;
+                      margin-right: 16px;
+                      transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+
+                      &::after {
+                        content: "";
+                        width: 18px;
+                        height: 18px;
+                        clip-path: polygon(17% 54%, 28% 43%, 38% 54%, 70% 22%, 81% 33%, 38% 75%, 17% 54%);
+                        transform: scale(0);
+                        background-color: white;
+                      }
+                      &:checked {
+                        background: #016DFF 0% 0% no-repeat padding-box;
+                        -webkit-box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
+                        -moz-box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
+                        box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
+                      }
+                      &:checked::after {
+                        transform: scale(1);
+                      }
+                  }
+                }
+              }
+
+              &.checked {
+                filter: grayscale(0);
+                background-color: #EAF5EC;
+              }
+            }
+          }
+        }
+
+        .add-on-product {
+          transition: all 0.4s;
+        }
+      }
+    }
+  }
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:first-of-type.has_arrow::before {
   content: "";
   margin: 0 5px 20px 0;
@@ -245,6 +343,7 @@
   background-size: 15px 12px;
   float: left;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:first-of-type.has_arrow_right .arrow-right {
   background: url("https://bitdefender.com/icons/arrow-right-solid.svg") no-repeat center transparent;
   width: 20px;
@@ -254,6 +353,7 @@
   top: 4px;
   display: inline-flex;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) {
   font-size: 14px;
   line-height: 17px;
@@ -264,7 +364,8 @@
   background-size: 13px;
   position: relative;
 }
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) > span:last-of-type {
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content {
   position: absolute;
   background-color: white;
   padding: 10px;
@@ -277,7 +378,8 @@
   box-shadow: 4px 4px 7px -8px #000;
   display: none;
 }
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) > span:last-of-type::before {
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content::before {
   content: "";
   position: absolute;
   left: 17px;
@@ -286,9 +388,11 @@
   border-style: solid;
   border-color: white transparent transparent;
 }
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type):hover > span:last-of-type {
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type):hover .white-pill-content{
   display: block;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) u {
   font-size: 14px;
   font-weight: bold;
@@ -298,12 +402,15 @@
   background: url("https://bitdefender.com/pages/images/icons/individual.svg") center right 6px no-repeat #026DFF;
   background-size: auto 12px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul:nth-of-type(2) {
   min-height: 5em;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box.hasGreenTag {
   margin-top: 45px;
 }
+
 .new-prod-boxes-container .new-prod-boxes .prod_box.hasGreenTag .inner_prod_box {
   box-shadow: 0 3px 7px 0 #C1C1C1;
 }
@@ -312,10 +419,12 @@
   font-size: 16px;
   text-decoration: line-through;
 }
+
 .new-prod-boxes-container .prod-save {
   color: #1C7928;
   font-weight: bold;
 }
+
 .new-prod-boxes-container .prod-newprice {
   font-size: 40px;
   font-weight: bold;
@@ -327,6 +436,7 @@
 .new-prod-boxes-container .newprice-container {
   line-height: 1;
 }
+
 .new-prod-boxes-container .newprice-container sup {
   position: relative;
   top: -20px;
@@ -583,11 +693,12 @@
   transition: all 250ms ease;
 }
 
-.plan-switcher input[type=radio]:checked + .radio-label:before {
+.plan-switcher input[type=radio]:checked+.radio-label:before {
   background-color: #3197EE;
   box-shadow: inset 0 0 0 4px #f4f4f4;
 }
-.plan-switcher input[type=radio]:focus + .radio-label:before {
+
+.plan-switcher input[type=radio]:focus+.radio-label:before {
   outline: none;
   border-color: #3197EE;
 }
@@ -619,7 +730,6 @@
 
 @media (min-width: 1200px) {
   .new-prod-boxes-container.we-container {
-    max-width: 1290px;
     padding-left: 20px;
     padding-right: 20px;
   }

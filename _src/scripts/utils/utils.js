@@ -60,7 +60,7 @@ async function findProductVariant(cachedResponse, variant) {
   throw new Error('Variant not found');
 }
 
-function getMetadata(name) {
+export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
   return meta || '';
