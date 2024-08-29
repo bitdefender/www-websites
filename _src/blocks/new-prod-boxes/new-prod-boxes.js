@@ -1,3 +1,7 @@
+import {
+  getBuyLinkCountryPrefix,
+} from '../../scripts/utils/utils.js';
+
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
@@ -250,7 +254,12 @@ export default async function decorate(block, options) {
         let newPrice;
         let discountPercentage;
         let priceElement = document.createElement('div');
-        buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
+        if (buyLink.querySelector('a')) {
+          buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
+        } else {
+          const buyLinkText = buyLink.textContent;
+          buyLink.innerHTML = `<a class="button primary no-arrow" href="${getBuyLinkCountryPrefix()}/${prodName.trim()}/${prodUsers.trim()}/${prodYears.trim()}/" title="${buyLinkText}">${buyLinkText}</a>`;
+        }
 
         block.children[key].outerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
@@ -288,7 +297,6 @@ export default async function decorate(block, options) {
                 </div>
                 <div class="newprice-container mt-2">
                   <span class="prod-newprice">${newPrice}${currencyLabel}</span>
-
                 </div>
               </div>`;
             block.children[key].querySelector('.hero-aem__prices').appendChild(priceElement);
