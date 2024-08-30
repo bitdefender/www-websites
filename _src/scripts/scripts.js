@@ -16,8 +16,10 @@ import {
 
 import {
   adobeMcAppendVisitorId,
-  createTag, getDefaultLanguage, GLOBAL_EVENTS, localisationList,
+  createTag, getDefaultLanguage, GLOBAL_EVENTS,
 } from './utils/utils.js';
+
+import { loadAnalytics } from './analytics.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 const TRACKED_PRODUCTS = [];
@@ -27,33 +29,45 @@ export const DEFAULT_LANGUAGE = getDefaultLanguage();
 
 export const DEFAULT_COUNTRY = getDefaultLanguage();
 
-export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
+export const METADATA_ANALYTICS_TAGS = 'analytics-tags';
 
-const hreflangMap = new Map([
-  ['en-ro', { baseUrl: 'https://www.bitdefender.ro', pageType: 'html' }],
-  ['de', { baseUrl: 'https://www.bitdefender.de', pageType: 'html' }],
-  ['sv', { baseUrl: 'https://www.bitdefender.se', pageType: 'html' }],
-  ['pt', { baseUrl: 'https://www.bitdefender.pt', pageType: 'html' }],
-  ['en-sv', { baseUrl: 'https://www.bitdefender.se', pageType: 'html' }],
-  ['pt-BR', { baseUrl: 'https://www.bitdefender.com.br', pageType: 'html' }],
-  ['en', { baseUrl: 'https://www.bitdefender.com', pageType: 'html' }],
-  ['it', { baseUrl: 'https://www.bitdefender.it', pageType: 'html' }],
-  ['fr', { baseUrl: 'https://www.bitdefender.fr', pageType: 'html' }],
-  ['nl-BE', { baseUrl: 'https://www.bitdefender.br', pageType: 'html' }],
-  ['es', { baseUrl: 'https://www.bitdefender.es', pageType: 'html' }],
-  ['en-AU', { baseUrl: 'https://www.bitdefender.com.au', pageType: '', hasIndexPages: true }],
-  ['ro', { baseUrl: 'https://www.bitdefender.ro', pageType: 'html' }],
-  ['nl', { baseUrl: 'https://www.bitdefender.nl', pageType: 'html' }],
-  ['en-GB', { baseUrl: 'https://www.bitdefender.co.uk', pageType: 'html' }],
-  ['zh-hk', { baseUrl: 'https://www.bitdefender.com/zh-hk', pageType: '', hasIndexPages: true }],
-  ['zh-tw', { baseUrl: 'https://www.bitdefender.com/zh-tw', pageType: '', hasIndexPages: true }],
-  ['x-default', { baseUrl: 'https://www.bitdefender.com', pageType: 'html' }],
+const TARGET_TENANT = 'bitdefender';
+
+const HREFLANG_MAP = new Map([
+  ['en-ro', { baseUrl: 'https://www.bitdefender.ro', pageType: '.html' }],
+  ['de', { baseUrl: 'https://www.bitdefender.de', pageType: '.html' }],
+  ['sv', { baseUrl: 'https://www.bitdefender.se', pageType: '.html' }],
+  ['pt', { baseUrl: 'https://www.bitdefender.pt', pageType: '.html' }],
+  ['en-sv', { baseUrl: 'https://www.bitdefender.se', pageType: '.html' }],
+  ['pt-BR', { baseUrl: 'https://www.bitdefender.com.br', pageType: '.html' }],
+  ['en', { baseUrl: 'https://www.bitdefender.com', pageType: '.html' }],
+  ['it', { baseUrl: 'https://www.bitdefender.it', pageType: '.html' }],
+  ['fr', { baseUrl: 'https://www.bitdefender.fr', pageType: '.html' }],
+  ['nl-BE', { baseUrl: 'https://www.bitdefender.be', pageType: '.html' }],
+  ['es', { baseUrl: 'https://www.bitdefender.es', pageType: '.html' }],
+  ['en-AU', { baseUrl: 'https://www.bitdefender.com.au', pageType: '' }],
+  ['ro', { baseUrl: 'https://www.bitdefender.ro', pageType: '.html' }],
+  ['nl', { baseUrl: 'https://www.bitdefender.nl', pageType: '.html' }],
+  ['en-GB', { baseUrl: 'https://www.bitdefender.co.uk', pageType: '.html' }],
+  ['zh-hk', { baseUrl: 'https://www.bitdefender.com/zh-hk', pageType: '' }],
+  ['zh-tw', { baseUrl: 'https://www.bitdefender.com/zh-tw', pageType: '' }],
+  ['x-default', { baseUrl: 'https://www.bitdefender.com', pageType: '.html' }],
 ]);
 
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
   url: '../plugins/rum-conversion/src/index.js',
 });
+
+window.hlx.plugins.add('experimentation', {
+  condition: () => getMetadata('experiment'),
+  options: {
+    prodHost: 'www.bitdefender.com.au',
+  },
+  url: '../plugins/experimentation/src/index.js',
+});
+
+window.ADOBE_MC_EVENT_LOADED = false;
 
 function initMobileDetector(viewport) {
   const mobileDetectorDiv = document.createElement('div');
@@ -243,7 +257,7 @@ export function getTags(tags) {
 export function trackProduct(product) {
   // eslint-disable-next-line max-len
   const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
-  const tags = getTags(getMetadata(METADATA_ANAYTICS_TAGS));
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
   const isTrackedPage = tags.includes('product') || tags.includes('service');
   if (isTrackedPage && !isDuplicate) TRACKED_PRODUCTS.push(product);
 }
@@ -332,6 +346,23 @@ export default function decorateLinkedPictures(main) {
   });
 }
 
+function addHreflangTags() {
+  if (document.querySelectorAll('head link[hreflang]').length > 0) return;
+
+  const path = window.location.pathname;
+  const pathCount = path.split('/').filter(String).length;
+
+  Object.keys(HREFLANG_MAP).forEach((key) => {
+    const hreflang = HREFLANG_MAP[key][0];
+    const href = `${HREFLANG_MAP[key][1].baseUrl}${path}${pathCount > 1 ? HREFLANG_MAP[key][1].pageType : ''}`;
+    const ln = document.createElement('link');
+    ln.setAttribute('rel', 'alternate');
+    ln.setAttribute('hreflang', hreflang);
+    ln.setAttribute('href', href);
+    document.querySelector('head').appendChild(ln);
+  });
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -345,18 +376,26 @@ export function decorateMain(main) {
   decorateLinkedPictures(main);
   decorateSections(main);
   decorateBlocks(main);
+  addHreflangTags();
 }
 
 /**
  *
  * @param {String} path The path to the modal
  * @param {String} template The template to use for the modal styling
+ * @param {Boolean} stopAutomaticRefresh Wether the modal refreshes after exiting or not
  * @returns {Promise<Element>}
  * @example
  */
-export async function createModal(path, template) {
+export async function createModal(path, template, stopAutomaticRefresh) {
   const modalContainer = document.createElement('div');
   modalContainer.classList.add('modal-container');
+
+  // add the class which makes the modal identifiable in the page
+  if (stopAutomaticRefresh) {
+    const modalClass = path.split('/').pop();
+    modalContainer.classList.add(modalClass);
+  }
 
   const modalContent = document.createElement('div');
   modalContent.classList.add('modal-content');
@@ -380,7 +419,17 @@ export async function createModal(path, template) {
   // add class to modal container for opportunity to add custom modal styling
   if (template) modalContainer.classList.add(template);
 
-  const closeModal = () => modalContainer.remove();
+  const closeModal = () => {
+    // if the modal is still supposed to exist just hide it
+    if (stopAutomaticRefresh) {
+      modalContainer.classList.add('global-display-none');
+      return;
+    }
+
+    // if it's supposed to refresh delete it so that it can be rerendered
+    modalContainer.remove();
+  };
+
   const close = document.createElement('div');
   close.classList.add('modal-close');
   close.addEventListener('click', closeModal);
@@ -392,7 +441,24 @@ export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
     link.addEventListener('click', async (e) => {
       e.preventDefault();
-      document.body.append(await createModal(link.href));
+      const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
+
+      // if we wish for the button to not generate a new modal everytime
+      if (stopAutomaticModalRefresh) {
+        // we use the last part of the link to identify the modals
+        const modalClass = link.href.split('/').pop();
+
+        // check if the modal exists in the page
+        const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+        if (existingModal) {
+          // if it exists just display it
+          existingModal.classList.remove('global-display-none');
+          return;
+        }
+      }
+
+      // generate new modal
+      document.body.append(await createModal(link.href, undefined, stopAutomaticModalRefresh));
     });
   });
 }
@@ -454,16 +520,29 @@ function getDomainInfo(hostname) {
   };
 }
 
-function pushPageLoadToDataLayer() {
+function getExperimentDetails() {
+  if (!window.hlx || !window.hlx.experiment) {
+    return null;
+  }
+
+  const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
+  return { experimentId, experimentVariant };
+}
+
+function pushPageLoadToDataLayer(targetExperimentDetails) {
   const { hostname } = window.location;
   if (!hostname) {
     return;
   }
-
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(window.location.pathname);
   const environment = getEnvironment(hostname, languageCountry.country);
-  const tags = getTags(getMetadata(METADATA_ANAYTICS_TAGS));
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
+
+  const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
+  // eslint-disable-next-line no-console
+  console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
+
   pushToDataLayer('page load started', {
     pageInstanceID: environment,
     page: {
@@ -479,6 +558,7 @@ function pushPageLoadToDataLayer() {
         serverName: 'hlx.live', // indicator for AEM Success Edge
         language: navigator.language || navigator.userLanguage || languageCountry.language,
         sysEnv: getOperatingSystem(window.navigator.userAgent),
+        ...(experimentDetails && { experimentDetails }),
       },
       attributes: {
         promotionID: getParamValue('pid') || '',
@@ -500,6 +580,17 @@ function pushPageLoadToDataLayer() {
 async function loadEager(doc) {
   setPageLanguage(getLanguageCountryFromPath(window.location.pathname));
   decorateTemplateAndTheme();
+
+  await window.hlx.plugins.run('loadEager');
+
+  let targetExperimentDetails = null;
+  if (getMetadata('target-experiment') !== '') {
+    const { runTargetExperiment } = await import('./target.js');
+    targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
+  }
+
+  pushPageLoadToDataLayer(targetExperimentDetails);
+
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
@@ -515,33 +606,11 @@ async function loadEager(doc) {
     buildTwoColumnsSection(main);
     detectModalButtons(main);
     document.body.classList.add('appear');
+    if (window.location.href.indexOf('scuderiaferrari') !== -1) {
+      document.body.classList.add('sferrari');
+    }
     await waitForLCP(LCP_BLOCKS);
   }
-}
-
-// todo remove export after having a clear path for the
-// overall unit testing strategy of the all page
-export function generateHrefLang() {
-  hreflangMap.forEach(({ baseUrl, pageType }, key) => {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'alternate');
-    link.setAttribute('hreflang', key);
-
-    const foundLanguage = localisationList.find((item) => baseUrl.indexOf(`/${item}/`) !== -1 || window.location.pathname.indexOf(`/${item}/`) !== -1);
-    const isHomePage = window.location.pathname === `/${foundLanguage}/`;
-
-    const lastCharFromHref = window.location.pathname.slice(-1);
-    const isCurrentIndexPage = lastCharFromHref === '/';
-    const suffix = `${!isHomePage && pageType && !isCurrentIndexPage ? `.${pageType}` : ''}`;
-
-    let href = `${baseUrl}${window.location.pathname.replace(/\/us\/en/, '')}`;
-    href = `${href}${suffix}`;
-
-    href = href.replace(`/${foundLanguage}`, '');
-
-    link.setAttribute('href', href);
-    document.head.appendChild(link);
-  });
 }
 
 export async function loadTrackers() {
@@ -584,17 +653,25 @@ export async function loadTrackers() {
 async function loadLazy(doc) {
   const main = doc.querySelector('main');
 
-  // eslint-disable-next-line no-unused-vars
-  loadHeader(doc.querySelector('header'));
+  const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
+
+  if (pageIsNotInFragmentsFolder) {
+    // eslint-disable-next-line no-unused-vars
+    loadHeader(doc.querySelector('header'));
+  }
   await loadBlocks(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadFooter(doc.querySelector('footer'));
+  if (pageIsNotInFragmentsFolder) {
+    loadFooter(doc.querySelector('footer'));
+  }
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
+  window.hlx.plugins.run('loadLazy');
 
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
@@ -607,8 +684,78 @@ async function loadLazy(doc) {
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
+}
 
-  generateHrefLang();
+/**
+ * Event listener for dropdown slider dropdown-box.js component.
+ * This is imported from www-landing-pages repo.
+ * @returns {void}
+* */
+function eventOnDropdownSlider() {
+  document.querySelectorAll('.dropdown-slider').forEach((slider) => {
+    const titles = slider.querySelectorAll('.title');
+    const loadingBars = slider.querySelectorAll('.loading-bar');
+    let activeIndex = 0;
+    let interval;
+
+    function showLoadingBar(index) {
+      const loadingBar = loadingBars[index];
+      loadingBar.style.width = '0';
+      let width = 0;
+      const interval2 = setInterval(() => {
+        width += 1;
+        loadingBar.style.width = `${width}%`;
+        if (width >= 100) {
+          clearInterval(interval2);
+        }
+      }, 30); // Adjust the interval for smoother animation
+    }
+
+    function moveToNextItem() {
+      titles.forEach((title, index) => {
+        if (index === activeIndex) {
+          title.parentNode.classList.add('active');
+          title.closest('.dropdown-slider').setAttribute('style', `min-height: ${title.parentNode.querySelector('.description').offsetHeight + 50}px`);
+          if (loadingBars.length) {
+            showLoadingBar(index);
+          }
+        } else {
+          title.parentNode.classList.remove('active');
+        }
+      });
+
+      activeIndex = (activeIndex + 1) % titles.length; // Move to the next item and handle wrapping
+    }
+
+    function startAutomaticMovement() {
+      interval = setInterval(moveToNextItem, 4000); // Set the interval
+    }
+
+    function stopAutomaticMovement() {
+      clearInterval(interval); // Clear the interval
+    }
+
+    // Set the initial active item
+    moveToNextItem();
+
+    if (loadingBars.length) {
+      // Start automatic movement after the loading is complete
+      setTimeout(() => {
+        startAutomaticMovement();
+      }, 1000);
+
+      // Click event listener on titles
+      titles.forEach((title, index) => {
+        title.addEventListener('click', () => {
+          stopAutomaticMovement();
+          activeIndex = index;
+          showLoadingBar(index);
+          moveToNextItem();
+          startAutomaticMovement();
+        });
+      });
+    }
+  });
 }
 
 /**
@@ -620,19 +767,27 @@ function loadDelayed() {
     window.hlx.plugins.load('delayed');
     window.hlx.plugins.run('loadDelayed');
     // load anything that can be postponed to the latest here
+    eventOnDropdownSlider();
     // eslint-disable-next-line import/no-cycle
     return import('./delayed.js');
   }, 3000);
 }
 
 async function loadPage() {
-  pushPageLoadToDataLayer();
   await window.hlx.plugins.load('eager');
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await loadLazy(document);
+
+  const setupAnalytics = loadAnalytics(document, {
+    edgeConfigId: '7275417f-3870-465c-af3e-84f8f4670b3c',
+    orgId: '0E920C0F53DA9E9B0A490D45@AdobeOrg',
+  });
+
   adobeMcAppendVisitorId('main');
+
   loadDelayed();
+  await setupAnalytics;
 }
 
 initMobileDetector('mobile');

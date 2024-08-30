@@ -36,19 +36,23 @@ function buildHeroBlock(element) {
   }
 }
 
-createNanoBlock('discount', (code, variant) => {
+createNanoBlock('discount', (code, label = 'Discount') => {
+  // code = "av/3/1"
+  const [product, unit, year] = code.split('/');
+  const variant = `${unit}u-${year}y`;
+
   const root = document.createElement('div');
   root.classList.add('discount-bubble');
   root.innerHTML = `
     <span class="discount-bubble-0">--%</span>
-    <span class="discount-bubble-1">Discount</span>
+    <span class="discount-bubble-1">${label}</span>
   `;
 
-  fetchProduct(code, variant)
-    .then((product) => {
-      if (product.discount) {
+  fetchProduct(product, variant)
+    .then((productResponse) => {
+      if (productResponse.discount) {
         const discount = Math.round(
-          (1 - (product.discount.discounted_price) / product.price) * 100,
+          (1 - (productResponse.discount.discounted_price) / productResponse.price) * 100,
         );
         root.querySelector('.discount-bubble-0').textContent = `${discount}%`;
       } else {
@@ -68,6 +72,11 @@ createNanoBlock('discount', (code, variant) => {
  * @param {Element} block The hero block element
  */
 export default async function decorate(block) {
+  const {
+    // this defines wether the modals automatically refresh or not in the hero banner
+    stopAutomaticModalRefresh,
+  } = block.closest('.section').dataset;
+
   buildHeroBlock(block);
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
@@ -96,6 +105,13 @@ export default async function decorate(block) {
         }
         sibling = sibling.previousElementSibling;
       }
+    }
+
+    // set the modal buttons in the hero banner to not refresh the modal on click
+    if (stopAutomaticModalRefresh === 'true') {
+      block.querySelectorAll('a.modal.button').forEach((modalButton) => {
+        modalButton.setAttribute('data-stop-automatic-modal-refresh', true);
+      });
     }
   }
 }

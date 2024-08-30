@@ -71,7 +71,6 @@
   flex: 1;
   line-height: 1.13;
   text-align: center;
-  margin: 0 10px;
 }
 
 /* video presentation */
@@ -99,6 +98,11 @@
   height: 200px;
 }
 
+.creators .columns-container .columns > div {
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
 .columns.bg-image > div > div:first-child {
   font-size: var(--heading-font-size-xl);
   font-weight: bold;
@@ -119,6 +123,52 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+}
+
+.columns.with-box-shadow > div > div:last-child {
+  border: none;
+}
+
+.creators .columns-container .columns > div:last-of-type {
+  margin-bottom: 0;
+}
+
+.creators .columns-container h3, .creators .columns-container h5 {
+  font-weight: bold;
+}
+
+.columns.new-v2 h3 {
+  font-family: "IBM Plex Sans" ,sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: left;
+  color: #006EFF;
+}
+
+.creators .columns-container h5, .creators .columns-container.baby-blue-subtitles h3 {
+  color: #006DFF;
+}
+
+.creators .columns-container h5 {
+  font-weight: bold;
+}
+
+.creators .columns-container.baby-blue-subtitles h3 br {
+  display: block;
+}
+
+.creators .columns-container p.button-container {
+  text-align: center;
+}
+
+.creators .columns-container a.button {
+  height: auto;
+  background: #E72325 0% 0% no-repeat padding-box;
+  border-radius: 30px;
+  justify-content: center;
+  padding: 5px 10px;
+  font-size: 14px;
 }
 
 @media (min-width: 767px) {
@@ -170,6 +220,47 @@
 
   .columns.highlight-text.black.imageleft {
     left: 10%;
+  }
+
+  .creators .columns-container .columns > div > div.columns-left-col, .creators .columns-container .columns > div > div.columns-right-col {
+    width: 45%;
+    flex: none;
+  }
+
+  .creators .columns-container .columns > div > div.columns-img-col {
+    width: 50%;
+    flex: none;
+  }
+
+  .creators .columns-container h5 {
+    color: #006DFF;
+    font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
+  }
+
+  .creators .columns-container h3 {
+    font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+  }
+
+  .creators .columns-container p {
+    font: normal normal normal 24px/33px Arial, sans-serif;
+  }
+
+  .creators .columns-container.smaller-text p {
+    font: normal normal normal 18px / 27px "Arial", sans-serif;
+  }
+
+  .creators .columns-container p.button-container {
+    text-align: left;
+  }
+
+  .creators .columns-container a.button {
+    min-width: 230px;
+    height: 48px;
+    padding: 10px 10px 10px 25px;
+    background: #E72325 0% 0% no-repeat padding-box;
+    border-radius: 40px;
+    justify-content: center;
+    font: normal normal 500 18px/24px Roboto, sans-serif;
   }
 }
 
@@ -324,10 +415,6 @@
   justify-content: center;
   align-items: center;
   transition: all .4s ease-in-out;
-}
-
-.columns.with-box-shadow > div > div:last-child{
-  border: none;
 }
 
 .section.wide.light-sky-blue.columns-container {
@@ -543,7 +630,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   opacity: .8;
 }
 
-
 .two-columns .left-col p a.info-button.modal::before {
   content: url("/_src/icons/user-guide-white.svg");
   color: white;
@@ -566,15 +652,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns.new-v2 > div > .columns-img-col {
   margin-bottom: 1em;
-}
-
-.columns.new-v2 h3 {
-  font-family: "IBM Plex Sans" ,sans-serif;
-  font-size: 25px;
-  font-weight: 700;
-  line-height: 30px;
-  text-align: left;
-  color: #006EFF;
 }
 
 .columns.new-v2 a {

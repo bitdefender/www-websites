@@ -167,6 +167,15 @@ main .section.link-right a {
     color: black;
 }
 
+.trusted .section.apartnership_box.v2 {
+    background: white;
+}
+
+.trusted .section.apartnership_box.v2 img {
+    max-height: 70px;
+    margin-bottom: 2em;
+}
+
 .trusted .section.apartnership_box p.button-container {
     margin-top: 30px;
 }
@@ -351,7 +360,7 @@ main .section.link-right a {
 }
 
 .trusted .box-carousel-container.testimonials .carousel-item {
-    width: calc(100% / 3 - 22px);
+    width: calc(100% / 3 - 25px);
     min-height: 470px;
     padding: 50px 50px 45px;
 }
@@ -594,6 +603,10 @@ main .section.link-right a {
 
     .trusted h2 {
         font: normal normal bold 41px/48px var(--font-ibm);
+    }
+
+    .trusted .v2 h2 {
+        font: normal normal bold 39px/45px var(--font-ibm);
     }
 
     .trusted h3 {

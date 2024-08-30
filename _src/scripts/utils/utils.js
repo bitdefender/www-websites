@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
 export function getDefaultLanguage() {
   // TODO: refactor. It's not working as should for en locales.
@@ -19,15 +18,14 @@ export function getDefaultLanguage() {
 
 const cacheResponse = new Map();
 const siteName = getDefaultLanguage();
-const FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
   const el = document.createElement(tag);
   if (html) {
     if (html instanceof HTMLElement
-        || html instanceof SVGElement
-        || html instanceof DocumentFragment) {
+      || html instanceof SVGElement
+      || html instanceof DocumentFragment) {
       el.append(html);
     } else if (Array.isArray(html)) {
       el.append(...html);
@@ -62,6 +60,136 @@ async function findProductVariant(cachedResponse, variant) {
   throw new Error('Variant not found');
 }
 
+export function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  return meta || '';
+}
+
+export function getProductLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/ajax';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/ajax';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/ajax';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/ajax';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/ajax';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/ajax';
+}
+
+export function getBuyLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/buy';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/buy';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/buy';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/buy';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/buy';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/buy';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/buy';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/buy';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/buy';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/buy';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/buy';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/buy';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/buy';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/buy';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/buy';
+}
+
 /**
  * Fetches a product from the Bitdefender store.
  * @param code The product code
@@ -70,12 +198,13 @@ async function findProductVariant(cachedResponse, variant) {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
+  let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
   const data = new FormData();
   // extract pid from url
   const url = new URL(window.location.href);
   if (!pid) {
     // eslint-disable-next-line no-param-reassign
-    pid = url.searchParams.get('pid');
+    pid = url.searchParams.get('pid') || getMetadata('pid');
   }
 
   data.append('data', JSON.stringify({
@@ -111,6 +240,13 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
     const newData = JSON.parse(data.get('data'));
     newData.config.force_region = '14';
     data.set('data', JSON.stringify(newData));
+  }
+
+  if (url.pathname.includes('/en-au/')) {
+    const newData = JSON.parse(data.get('data'));
+    newData.config.force_region = '4';
+    data.set('data', JSON.stringify(newData));
+    FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
   }
 
   if ((siteName === 'hk' || siteName === 'tw')) {
@@ -196,6 +332,31 @@ function parseParams(params) {
   return result;
 }
 
+// this was added as a translation support ( adding new breaklines in content was needed )
+// as a part of a new line metadata
+// values could be something like "value, value2, ,,new text on new line"
+function replaceDoubleCommas(str) {
+  // Convert the string to an array for easy manipulation
+  const arr = str.split('');
+
+  // Loop through the array from the end to the beginning
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    // Check if there are two consecutive commas
+    if (arr[i] === ',' && arr[i - 1] === ',') {
+      // Replace the two consecutive commas with a single comma
+      arr.splice(i, 1);
+    }
+  }
+
+  // Convert the array back to a string
+  return arr.join('');
+}
+
+export function getDatasetFromSection(block) {
+  const parentSelector = block.closest('.section');
+  return parentSelector.dataset;
+}
+
 /**
  * Renders nano blocks
  * @param parent The parent element
@@ -209,8 +370,11 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
       matches.forEach((match) => {
         const [name] = parseParams(match.slice(1, -1));
         const datasetValue = getDatasetFromSection(parent);
+
         const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || '';
-        const newMatch = [match, datasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
+        const formattedDatasetEntryValue = replaceDoubleCommas(datasetEntryValue);
+
+        const newMatch = [match, formattedDatasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
         const [newName, ...params] = parseParams(newMatch);
         const renderer = nanoBlocks.get(newName.toLowerCase());
@@ -285,11 +449,6 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export function getDatasetFromSection(block) {
-  const parentSelector = block.closest('.section');
-  return parentSelector.dataset;
-}
-
 export function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -328,6 +487,11 @@ export function appendAdobeMcLinks(selector) {
   }
 }
 
+export const GLOBAL_EVENTS = {
+  ADOBE_MC_LOADED: 'adobe_mc::loaded',
+  PAGE_LOADED: 'page::loaded',
+};
+
 export function adobeMcAppendVisitorId(selector) {
   // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
 
@@ -340,7 +504,113 @@ export function adobeMcAppendVisitorId(selector) {
   }
 }
 
-export const GLOBAL_EVENTS = {
-  ADOBE_MC_LOADED: 'adobe_mc::loaded',
-  PAGE_LOADED: 'page::loaded',
-};
+const ICONS_CACHE = {};
+export async function decorateIcons(element) {
+  // Prepare the inline sprite
+  let svgSprite = document.getElementById('franklin-svg-sprite');
+  if (!svgSprite) {
+    const div = document.createElement('div');
+    div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" id="franklin-svg-sprite" style="display: none"></svg>';
+    svgSprite = div.firstElementChild;
+    document.body.append(div.firstElementChild);
+  }
+
+  // Download all new icons
+  const icons = [...element.querySelectorAll('span.icon')];
+  await Promise.all(icons.map(async (span) => {
+    const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
+    if (!ICONS_CACHE[iconName]) {
+      ICONS_CACHE[iconName] = true;
+      try {
+        let dynamicIconsSharepointPath = '/common/icons/';
+        if (window.location.hostname.includes('www-landing-pages') || window.location.hostname.includes('bitdefender.com/pages')) {
+          dynamicIconsSharepointPath = '/icons/';
+        }
+        const response = await fetch(`${dynamicIconsSharepointPath}${iconName}.svg`);
+        if (!response.ok) {
+          ICONS_CACHE[iconName] = false;
+          return;
+        }
+        // Styled icons don't play nice with the sprite approach because of shadow dom isolation
+        const svg = await response.text();
+        if (svg.match(/(<style | class=)/)) {
+          ICONS_CACHE[iconName] = { styled: true, html: svg };
+        } else {
+          ICONS_CACHE[iconName] = {
+            html: svg
+              .replace('<svg', `<symbol id="icons-sprite-${iconName}"`)
+              .replace(/ width=".*?"/, '')
+              .replace(/ height=".*?"/, '')
+              .replace('</svg>', '</symbol>'),
+          };
+        }
+      } catch (error) {
+        ICONS_CACHE[iconName] = false;
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    }
+  }));
+
+  const symbols = Object
+    .keys(ICONS_CACHE).filter((k) => !svgSprite.querySelector(`#icons-sprite-${k}`))
+    .map((k) => ICONS_CACHE[k])
+    .filter((v) => !v.styled)
+    .map((v) => v.html)
+    .join('\n');
+  svgSprite.innerHTML += symbols;
+
+  icons.forEach((span) => {
+    const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
+    const parent = span.firstElementChild?.tagName === 'A' ? span.firstElementChild : span;
+    // Styled icons need to be inlined as-is, while unstyled ones can leverage the sprite
+    if (ICONS_CACHE[iconName].styled) {
+      parent.innerHTML = ICONS_CACHE[iconName].html;
+    } else {
+      parent.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-${iconName}"/></svg>`;
+    }
+  });
+}
+
+// General function to match the height of elements based on a selector
+export async function matchHeights(targetNode, selector) {
+  const resetHeights = () => {
+    const elements = targetNode.querySelectorAll(selector);
+    elements.forEach((element) => {
+      element.style.minHeight = '';
+    });
+  };
+
+  const adjustHeights = () => {
+    if (window.innerWidth >= 768) {
+      resetHeights();
+      const elements = targetNode.querySelectorAll(selector);
+      const elementsHeight = Array.from(elements).map((element) => element.offsetHeight);
+      const maxHeight = Math.max(...elementsHeight);
+
+      elements.forEach((element) => {
+        element.style.minHeight = `${maxHeight}px`;
+      });
+    } else {
+      resetHeights();
+    }
+  };
+
+  const matchHeightsCallback = (mutationsList) => {
+    Array.from(mutationsList).forEach((mutation) => {
+      if (mutation.type === 'childList') {
+        adjustHeights();
+      }
+    });
+  };
+
+  const observer = new MutationObserver(matchHeightsCallback);
+
+  if (targetNode) {
+    observer.observe(targetNode, { childList: true, subtree: true });
+  }
+
+  window.addEventListener('resize', () => {
+    adjustHeights();
+  });
+}

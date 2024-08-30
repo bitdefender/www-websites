@@ -39,16 +39,16 @@
 
 @media (min-width: 992px) {
   .thank-you
-    .product-comparison-table
-    div[role="columnheader"]:nth-child(1)
-    > h2 {
+  .product-comparison-table
+  div[role="columnheader"]:nth-child(1)
+  > h2 {
     font-size: 30px;
     font-weight: var(--font-weight-regular);
   }
 
   .thank-you
-    .product-comparison-header
-    div[role="columnheader"]:not(:first-child) {
+  .product-comparison-header
+  div[role="columnheader"]:not(:first-child) {
     padding-left: 30px;
     padding-right: 30px;
   }
@@ -143,9 +143,9 @@
 }
 
 .thank-you
-  .image-columns
-  > div
-  > .image-columns-txt-col:nth-child(even)::after {
+.image-columns
+> div
+> .image-columns-txt-col:nth-child(even)::after {
   left: calc(50% - 9px);
   top: -40px;
 }
@@ -163,9 +163,9 @@
   }
 
   .thank-you
-    .image-columns
-    > div
-    > .image-columns-txt-col:nth-child(even)::after {
+  .image-columns
+  > div
+  > .image-columns-txt-col:nth-child(even)::after {
     left: -11px;
     top: calc(50% - 9px);
   }

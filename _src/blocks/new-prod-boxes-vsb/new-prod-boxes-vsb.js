@@ -51,7 +51,7 @@ export default async function decorate(block, options) {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
     hideProducts, addRichTextZone, margintop,
-  } = options ? options.metadata : block.closest('.section').dataset;
+  } = block.closest('.section').dataset;
   // if options exists, this means the component is being called from aem
   if (options) {
     // eslint-disable-next-line no-param-reassign

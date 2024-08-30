@@ -45,8 +45,8 @@ function createQuote(item) {
     </div>
     <div class="quote-content">
         <p class="stars">${starsContainer?.innerHTML}</p>
-        <p class="description">${quote?.textContent}</p>
-        <p class="author">${author?.textContent}</p>
+        <p class="description">${quote?.innerHTML}</p>
+        <p class="author">${author?.innerHTML}</p>
     </div>`,
   );
 }
@@ -60,5 +60,5 @@ export default async function decorate(block) {
   });
   block.replaceChildren(quoteWrap);
 
-  await decorateIcons(block);
+  decorateIcons(block);
 }
