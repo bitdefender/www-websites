@@ -246,7 +246,7 @@
   }
 
   .creators .columns-container.smaller-text p {
-    font: normal normal normal 18px / 27px "Arial", sans-serif;
+    font: normal normal normal 18px / 27px Arial, sans-serif;
   }
 
   .creators .columns-container p.button-container {
@@ -677,29 +677,37 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .creators .header-mobile.columns-container div.columns-img-col {
     display: none;
   }
-  .creators .header-mobile.columns-container div {
-    text-align: center;
-  }
+
   .creators .columns > div > div {
     text-align: center;
   }
+
+  .creators .header-mobile.columns-container div {
+    text-align: center;
+  }
+
   .creators .header-mobile h3 {
     font-size: var(--heading-font-size-l);
     line-height: 1.2;
   }
+
   .creators .columns-container h3, .creators .columns-container h5 {
     font-family: "IBM Plex Sans", sans-serif;
   }
+
   .creators .default-content-wrapper h2 {
     font-family: "IBM Plex Sans", sans-serif;
   }
+
   .creators .image-position.columns-container div.columns-img-col {
     position: relative;
     left: -16%;
   }
+
   .creators .image-position.columns-container .columns > div > div {
     text-align: center;
   }
+
   .creators .no-space-top .default-content-wrapper h2 {
     padding-top: 23px;
   }

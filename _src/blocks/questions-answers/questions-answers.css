@@ -123,12 +123,14 @@
         font: normal normal bold 29px / 28px var(--body-font-family);
         margin: 0;
     }
+
     .qa-creators.questions-answers-container h3 {
         font-size: var(--heading-font-size-l);
         line-height: 1.2;
         font-family: "IBM Plex Sans", sans-serif;
         font-weight: 300;
     }
+
     .qa-creators.questions-answers-container h4 {
         margin-bottom: 0;
         font-weight: 300;

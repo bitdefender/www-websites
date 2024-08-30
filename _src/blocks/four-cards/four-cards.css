@@ -89,10 +89,6 @@
   justify-content: center;
 }
 
-.creator-cards .four-cards > ul > li {
-  font-size: 18px;
-}
-
 .creator-cards .four-cards.block ul li strong {
   font-size: 22px;
 }
@@ -150,6 +146,10 @@
   font: normal normal normal 16px/24px var(--body-font-family);
 }
 
+.creator-cards .four-cards > ul > li {
+  font-size: 18px;
+}
+
 .four-cards .default-content-wrapper {
   text-align: center;
 }
@@ -161,6 +161,7 @@
 .creator-cards .default-content-wrapper:last-of-type {
   padding-top: 0;
 }
+
 /* a/b test styles, should be deleted after */
 .four-cards-container.we-container .default-content-wrapper {
   text-align: center;
@@ -287,6 +288,7 @@
   .creators .title-size .default-content-wrapper h2 {
     font-size: 31px;
   }
+
   .creator-cards .default-content-wrapper a.button:any-link {
     margin-top: 0;
   }

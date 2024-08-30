@@ -123,33 +123,6 @@
     display: block;
   }
 
-  .creator-money-back .money-back > ul > li a {
-    min-width: 230px;
-    height: 48px;
-    padding: 10px 10px 10px 25px;
-    background: #E72325 0% 0% no-repeat padding-box;
-    border-radius: 40px;
-    justify-content: center;
-    font: normal normal 500 18px / 24px Roboto, sans-serif;
-    color: white;
-  }
-
-  .creator-money-back .money-back > ul > li a:hover {
-    color: white;
-    background-color: var(--button-background-color);
-    text-decoration: none;
-  }
-
-  .creator-money-back .money-back > ul > li a.button:hover span.button-text {
-    transform: translate(-10px, 0);
-  }
-
-  .creator-money-back .money-back > ul > li a:active {
-    color: white;
-    background-color: var(--button-background-color);
-    border: 0;
-  }
-
   .money-back > ul > li strong {
     display: inline-block;
     font: normal normal bold 18px/16px var(--body-font-family);
@@ -183,14 +156,6 @@
     transition: none;
   }
 
-  .creator-money-back .money-back a.button span.button-text {
-    transition: transform .2s cubic-bezier(.4,0,.2,1);
-  }
-
-  .money-back a.button:hover span.button-text {
-    transform: none;
-  }
-
   .money-back a.button:hover span.button-text {
     transform: none;
   }
@@ -201,6 +166,37 @@
     height: 0;
     margin: 0;
     transition: none;
+  }
+
+  .creator-money-back .money-back > ul > li a {
+    min-width: 230px;
+    height: 48px;
+    padding: 10px 10px 10px 25px;
+    background: #E72325 0% 0% no-repeat padding-box;
+    border-radius: 40px;
+    justify-content: center;
+    font: normal normal 500 18px / 24px Roboto, sans-serif;
+    color: white;
+  }
+
+  .creator-money-back .money-back > ul > li a:hover {
+    color: white;
+    background-color: var(--button-background-color);
+    text-decoration: none;
+  }
+
+  .creator-money-back .money-back a.button span.button-text {
+    transition: transform .2s cubic-bezier(.4,0,.2,1);
+  }
+
+  .creator-money-back .money-back > ul > li a.button:hover span.button-text {
+    transform: translate(-10px, 0);
+  }
+
+  .creator-money-back .money-back > ul > li a:active {
+    color: white;
+    background-color: var(--button-background-color);
+    border: 0;
   }
 
   .creator-money-back .money-back a.button::after {
