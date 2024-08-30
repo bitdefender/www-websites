@@ -12,7 +12,7 @@
 
 .qa-creators.questions-answers-container h3 {
     text-align: center;
-    font: bold 60px/69px Arial, sans-serif;
+    font: bold 60px/69px "IBM Plex Sans", sans-serif;
     margin-bottom: 32px;
 }
 
@@ -24,7 +24,7 @@
 
 .qa-creators.questions-answers-container h4 {
     text-align: center;
-    font: bold 24px/26px var(--body-font-family);
+    font: bold 24px/26px "IBM Plex Sans", sans-serif;
     margin-bottom: 32px;
 }
 
@@ -118,10 +118,23 @@
     margin: 0 auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
     .questions-answers-container h4 {
         font: normal normal bold 29px / 28px var(--body-font-family);
         margin: 0;
+    }
+
+    .qa-creators.questions-answers-container h3 {
+        font-size: var(--heading-font-size-l);
+        line-height: 1.2;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-weight: 300;
+    }
+
+    .qa-creators.questions-answers-container h4 {
+        margin-bottom: 0;
+        font-weight: 300;
+        font-family: "IBM Plex Sans", sans-serif;
     }
 }
 
