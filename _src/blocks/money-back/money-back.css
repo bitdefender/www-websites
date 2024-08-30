@@ -99,11 +99,11 @@
   }
 
   .creator-money-back .money-back > ul > li h6 {
-    font: normal normal bold 32px/38px Arial, sans-serif;
+    font: normal normal bold 32px/38px "IBM Plex Sans", sans-serif;
   }
 
   .creator-money-back .money-back > ul > li p {
-    font: normal normal normal 20px/23px Arial, sans-serif;
+    font: normal normal normal 20px/26px Arial, sans-serif;
   }
 
   .money-back > ul > li p:first-of-type {
@@ -124,22 +124,30 @@
   }
 
   .creator-money-back .money-back > ul > li a {
-    display: inline-flex;
-    justify-content: center;
-    min-width: 170px;
-    text-align: center;
-    padding: 10px 13px;
-    height: 44px;
+    min-width: 230px;
+    height: 48px;
+    padding: 10px 10px 10px 25px;
     background: #E72325 0% 0% no-repeat padding-box;
-    border-radius: 5px;
-    font: normal normal bold 16px/18px Arial, sans-serif;
+    border-radius: 40px;
+    justify-content: center;
+    font: normal normal 500 18px / 24px Roboto, sans-serif;
     color: white;
   }
 
   .creator-money-back .money-back > ul > li a:hover {
-    text-decoration: none;
     color: white;
-    background: #D70000;
+    background-color: var(--button-background-color);
+    text-decoration: none;
+  }
+
+  .creator-money-back .money-back > ul > li a.button:hover span.button-text {
+    transform: translate(-10px, 0);
+  }
+
+  .creator-money-back .money-back > ul > li a:active {
+    color: white;
+    background-color: var(--button-background-color);
+    border: 0;
   }
 
   .money-back > ul > li strong {
@@ -175,6 +183,14 @@
     transition: none;
   }
 
+  .creator-money-back .money-back a.button span.button-text {
+    transition: transform .2s cubic-bezier(.4,0,.2,1);
+  }
+
+  .money-back a.button:hover span.button-text {
+    transform: none;
+  }
+
   .money-back a.button:hover span.button-text {
     transform: none;
   }
@@ -189,10 +205,10 @@
 
   .creator-money-back .money-back a.button::after {
     content: '';
-    width: 0;
-    height: 0;
-    margin: 0;
-    transition: none;
+    width: 24px;
+    height: 24px;
+    margin-left: -10px;
+    transition: all .2s cubic-bezier(.4,0,.2,1);
   }
 
   .money-back .icon {
@@ -256,5 +272,16 @@
     max-width: 1332px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+@media (max-width: 991px) {
+  .creator-money-back .money-back > ul > li {
+    margin: 0;
+    padding: 24px;
+  }
+
+  .creator-money-back .money-back > ul > li p.button-container {
+    text-align: center;
   }
 }
