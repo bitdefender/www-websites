@@ -674,10 +674,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 @media (max-width: 991px) {
-  .creators .header-mobile.columns-container div.columns-img-col {
-    display: none;
-  }
-
   .creators .columns > div > div {
     text-align: center;
   }
@@ -700,8 +696,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .creators .image-position.columns-container div.columns-img-col {
-    position: relative;
-    left: -16%;
+    display: none;
   }
 
   .creators .image-position.columns-container .columns > div > div {
