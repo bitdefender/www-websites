@@ -595,6 +595,12 @@ body.creators {
   opacity: 1;
 }*/
 
+@media (max-width: 991px) {
+  .creators main .section.hide-on-mobile {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) {
   main .section.center .products .product-card {
     min-width: 380px;
