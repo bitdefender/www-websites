@@ -95,6 +95,10 @@
   --cta-background-light-blue: var(--background-light-blue)
 }
 
+.global-display-none {
+  display: none;
+}
+
 .font-arial {
   font-family: "Arial", sans-serif;
 }
@@ -580,6 +584,78 @@ header, main, footer {
     margin: 0 auto;
 }
 
+body.creators {
+  background: linear-gradient(to bottom, #F6FCFF, white);
+}
+
+.creators * {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.creators .default-content-wrapper h2 {
+  font-weight: 300;
+}
+
+.creators .no-space-top .default-content-wrapper {
+  padding-top: 0;
+}
+
+.creators .no-space-top .default-content-wrapper h2 {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.creators .no-space-bottom .default-content-wrapper {
+  padding-bottom: 0;
+}
+
+.creators .no-space-bottom .default-content-wrapper h2 {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/*.creators a.button {
+  min-width: 230px!important;
+  height: 48px!important;
+  padding: 10px 10px 10px 25px!important;
+  background: #E72325 0% 0% no-repeat padding-box!important;
+  border-radius: 40px!important;
+  justify-content: center!important;
+  font: normal normal 500 18px / 24px Roboto, sans-serif!important;
+  color: white;
+}
+.creators a.button::after {
+  content: '';
+  width: 24px!important;
+  height: 24px!important;
+  background-color: var(--button-link-color)!important;
+  display: inline-block!important;
+  transition: all .2s cubic-bezier(.4,0,.2,1)!important;
+  transform: translateX(0)!important;
+  opacity: 0!important;
+}
+
+
+.creators a.button:hover::after {
+  content: '';
+  width: 24px!important;
+  height: 24px!important;
+  background-color: var(--button-link-color)!important;
+  display: inline-block!important;
+  transition: all .2s cubic-bezier(.4,0,.2,1)!important;
+  transform: translateX(0)!important;
+  opacity: 0!important;
+  margin-left: -10px!important;
+  transform: translateX(5px);
+  opacity: 1;
+}*/
+
+@media (max-width: 991px) {
+  .creators main .section.hide-on-mobile {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) {
   main .section.center .products .product-card {
     min-width: 380px;
@@ -664,6 +740,20 @@ header, main, footer {
     width: 540px;
     font-size: 19px;
 	}
+
+  main .section.width-medium .block {
+    width: 940px;
+    margin: 0 auto;
+  }
+
+  main .section.width-smaller .block, main .section.width-smaller .default-content-wrapper {
+    width: 750px;
+    margin: 0 auto;
+  }
+
+  .creators .default-content-wrapper h2 {
+    font: normal normal 300 60px/69px "IBM Plex Sans", sans-serif;
+  }
 }
 
 @media (min-width: 1065px) {
@@ -966,7 +1056,7 @@ a.button:hover.secondary {
   color: var(--white-color)
 }
 
-a.button.modal, main .section.link-right a {
+a.button.modal, a.button.central, main .section.link-right a {
   color: var(--link-color);
   font-weight: var(--font-weight-bold);
   background-color: transparent;
@@ -978,7 +1068,7 @@ a.button.modal, main .section.link-right a {
   text-overflow: ellipsis;
 }
 
-a.button.modal::after, main .section.link-right a::after {
+a.button.modal::after, a.button.central::after, main .section.link-right a::after {
   background-color: var(--link-color);
   opacity: 1;
   margin: 0;
@@ -993,13 +1083,13 @@ a.button:has(.icon)::after {
   opacity: 0;
 }
 
-a.button.modal:hover, main .section.link-right a:hover {
+a.button.modal:hover, a.button.central:hover, main .section.link-right a:hover {
   color: var(--link-hover-color);
   text-decoration: none;
   transform: none;
 }
 
-a.button.modal:hover::after, main .section.link-right a:hover::after {
+a.button.modal:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
   transform: translateX(3px);
   background-color: var(--link-hover-color);
 }
@@ -1399,6 +1489,14 @@ main .section.blue a.button.modal::after {
 
 .tag-light-blue {
   background-color: var(--light-blue-tag);
+}
+
+.tag-light-blue-round {
+  background-color: #026DFF;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size:  var(--body-font-size-xxs);
 }
 
 .tag-green {

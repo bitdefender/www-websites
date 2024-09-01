@@ -2,72 +2,18 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   fetchProduct,
-  createTag,
+  createTag, getBuyLinkCountryPrefix,
 } from '../../scripts/utils/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
 
-function getBuyLinkCountryPrefix() {
-  const { pathname } = window.location;
-
-  if (pathname.includes('/en-au/')) {
-    return 'https://www.bitdefender.com.au/site/Store/buy';
-  }
-
-  if (pathname.includes('/en-gb/')) {
-    return 'https://www.bitdefender.com.uk/site/Store/buy';
-  }
-
-  if (pathname.includes('/ro-ro/')) {
-    return 'https://www.bitdefender.ro/site/Store/buy';
-  }
-
-  if (pathname.includes('/it-it/')) {
-    return 'https://www.bitdefender.it/site/Store/buy';
-  }
-
-  if (pathname.includes('/fr-fr/')) {
-    return 'https://www.bitdefender.fr/site/Store/buy';
-  }
-
-  if (pathname.includes('/fr-be/')) {
-    return 'https://www.bitdefender.be/site/Store/buy';
-  }
-
-  if (pathname.includes('/nl-be/')) {
-    return 'https://www.bitdefender.be/site/Store/buy';
-  }
-
-  if (pathname.includes('/nl-nl/')) {
-    return 'https://www.bitdefender.nl/site/Store/buy';
-  }
-
-  if (pathname.includes('/de-de/')) {
-    return 'https://www.bitdefender.de/site/Store/buy';
-  }
-
-  if (pathname.includes('/de-ch/')) {
-    return 'https://www.bitdefender.de/site/Store/buy';
-  }
-
-  if (pathname.includes('/sv-se/')) {
-    return 'https://www.bitdefender.se/site/Store/buy';
-  }
-
-  if (pathname.includes('/pt-br/')) {
-    return 'https://www.bitdefender.com.br/site/Store/buy';
-  }
-
-  if (pathname.includes('/pt-pt/')) {
-    return 'https://www.bitdefender.pt/site/Store/buy';
-  }
-
-  if (pathname.includes('/es-es/')) {
-    return 'https://www.bitdefender.es/site/Store/buy';
-  }
-
-  return 'https://www.bitdefender.com/site/Store/buy';
-}
+// all avaiable text variables
+const TEXT_VARIABLES_MAPPING = [
+  {
+    variable: 'percent',
+    getValue: (mv) => `${mv.model.discountRate}%`,
+  },
+];
 
 /**
  * Utility function to round prices and percentages
@@ -300,7 +246,6 @@ function renderHighlightSavings(mv, text = 'Save', percent = '') {
     },
     '<span></span>',
   );
-
   mv.subscribe(() => {
     if (mv.model.discountRate) {
       root.querySelector('span').innerText = (percent.toLowerCase() === 'percent')
@@ -333,6 +278,35 @@ function renderHighlight(mv, text) {
 }
 
 /**
+ *
+ * @param mv The modelview holding the state of the view
+ * @param {string} text Text of the featured nanoblock
+ * @return {string} Text with variables replaced
+ */
+const replaceVariablesInText = (mv, text) => {
+  let replacedText = text;
+
+  // replace the percent variable with correct percentage of the produc
+  TEXT_VARIABLES_MAPPING.forEach((textVariableMapping) => {
+    replacedText = replacedText.replaceAll(
+      textVariableMapping.variable,
+      textVariableMapping.getValue(mv),
+    );
+  });
+
+  return replacedText;
+};
+
+/**
+ *
+ * @param {string} text
+ * @return {boolean} wether the text contains variables or not
+ */
+const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
+  (textVariableMapping) => text.includes(textVariableMapping.variable),
+);
+
+/**
  * Nanoblock representing a text to Featured
  * @param mv The modelview holding the state of the view
  * @param text Text of the featured nanoblock
@@ -342,6 +316,15 @@ function renderFeatured(mv, text) {
   const root = document.createElement('div');
   root.classList.add('featured');
   root.innerText = text;
+
+  if (checkIfTextContainsVariables(text)) {
+    root.classList.add('global-display-none');
+    mv.subscribe(() => {
+      root.innerText = replaceVariablesInText(mv, root.innerText);
+      root.classList.remove('global-display-none');
+    });
+  }
+
   return root;
 }
 
@@ -438,7 +421,7 @@ export default function decorate(block) {
       // listen to ProductCard change and update the buttons pointing to the store url
       mv.subscribe((card) => {
         col.querySelectorAll('.button-container a').forEach((link) => {
-          if (link && link.href.startsWith(getBuyLinkCountryPrefix())) {
+          if (link && link.href.includes('/site/Store/buy/')) {
             link.href = card.url;
           }
         });
@@ -494,6 +477,3 @@ export default function decorate(block) {
     }
   });
 }
-
-// https://www.bitdefender.com.au/site/Store/buy/tsmd/5/1
-// https://www.bitdefender.com.au/site/Store/buy/tsmd/5/1

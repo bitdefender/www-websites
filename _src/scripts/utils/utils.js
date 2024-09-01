@@ -60,10 +60,134 @@ async function findProductVariant(cachedResponse, variant) {
   throw new Error('Variant not found');
 }
 
-function getMetadata(name) {
+export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
   return meta || '';
+}
+
+export function getProductLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/ajax';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/ajax';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/ajax';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/ajax';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/ajax';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/ajax';
+}
+
+export function getBuyLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/buy';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/buy';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/buy';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/buy';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/buy';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/buy';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/buy';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/buy';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/buy';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/buy';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/buy';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/buy';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/buy';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/buy';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/buy';
 }
 
 /**
@@ -445,5 +569,48 @@ export async function decorateIcons(element) {
     } else {
       parent.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-${iconName}"/></svg>`;
     }
+  });
+}
+
+// General function to match the height of elements based on a selector
+export async function matchHeights(targetNode, selector) {
+  const resetHeights = () => {
+    const elements = targetNode.querySelectorAll(selector);
+    elements.forEach((element) => {
+      element.style.minHeight = '';
+    });
+  };
+
+  const adjustHeights = () => {
+    if (window.innerWidth >= 768) {
+      resetHeights();
+      const elements = targetNode.querySelectorAll(selector);
+      const elementsHeight = Array.from(elements).map((element) => element.offsetHeight);
+      const maxHeight = Math.max(...elementsHeight);
+
+      elements.forEach((element) => {
+        element.style.minHeight = `${maxHeight}px`;
+      });
+    } else {
+      resetHeights();
+    }
+  };
+
+  const matchHeightsCallback = (mutationsList) => {
+    Array.from(mutationsList).forEach((mutation) => {
+      if (mutation.type === 'childList') {
+        adjustHeights();
+      }
+    });
+  };
+
+  const observer = new MutationObserver(matchHeightsCallback);
+
+  if (targetNode) {
+    observer.observe(targetNode, { childList: true, subtree: true });
+  }
+
+  window.addEventListener('resize', () => {
+    adjustHeights();
   });
 }

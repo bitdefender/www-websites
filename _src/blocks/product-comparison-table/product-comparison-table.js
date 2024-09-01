@@ -1,4 +1,6 @@
-import { createNanoBlock, renderNanoBlocks, fetchProduct } from '../../scripts/utils/utils.js';
+import {
+  createNanoBlock, renderNanoBlocks, fetchProduct, getBuyLinkCountryPrefix, matchHeights,
+} from '../../scripts/utils/utils.js';
 
 const fetchedProducts = [];
 
@@ -271,6 +273,13 @@ export default function decorate(block) {
   [...headerList, lastRowWithPrice].forEach((item, idx) => {
     if (item) {
       renderNanoBlocks(item, undefined, idx);
+    }
+  });
+
+  matchHeights(block, 'h3');
+  block.querySelectorAll('.button-container a').forEach((link) => {
+    if (link && link.href.includes('/site/Store/buy/')) {
+      link.href = getBuyLinkCountryPrefix();
     }
   });
 }
