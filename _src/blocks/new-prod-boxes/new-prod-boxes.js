@@ -433,9 +433,19 @@ export default async function decorate(block, options) {
         li.replaceWith(newLi);
 
         let addOnNewPrice = newLi.querySelector('.add-on-newprice');
+        let newPrice = block.children[key].querySelector('.prod-newprice');
+
+        // get only the number from the new price
+        const priceRegex = /\d+(\.\d+)?/;
+        let newPriceNumberString = newPrice.textContent.match(priceRegex)[0];
+        let newPriceNumber = parseFloat(newPriceNumberString);
+        let priceNumberString = yearlyAddOnPriceBox.querySelector('.prod-newprice').textContent.match(priceRegex)[0];
+        let priceNumber = parseFloat(priceNumberString);
+        let correctPrice = parseInt(priceNumber - newPriceNumber, 10);
+
         let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
         let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-        addOnNewPrice.textContent = yearlyAddOnPriceBox.querySelector('.prod-newprice').textContent;
+        addOnNewPrice.textContent = yearlyAddOnPriceBox.querySelector('.prod-newprice').textContent.replace(priceRegex, correctPrice);
         addOnOldPrice.textContent = yearlyAddOnPriceBox.querySelector('.prod-oldprice').textContent;
         addOnPercentSave.textContent = yearlyAddOnPriceBox.querySelector('.prod-save').textContent;
 
