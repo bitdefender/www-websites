@@ -162,6 +162,11 @@
   padding-top: 0;
 }
 
+.creator-cards .four-cards ul li div img {
+  height: 48px;
+  margin-bottom: 16px;
+}
+
 /* a/b test styles, should be deleted after */
 .four-cards-container.we-container .default-content-wrapper {
   text-align: center;

@@ -217,7 +217,7 @@
   .creator-money-back .money-back .icon {
     height: 60px;
     margin-bottom: 23px;
-    fill: #006EFF;
+    fill: #006DFF;
     display: flex;
   }
 
@@ -225,6 +225,12 @@
     height: 55px;
     margin-bottom: 9px;
     fill: #006EFF;
+  }
+
+  .creator-money-back .money-back img {
+    height: 60px;
+    fill: #006df7;
+    display: flex;
   }
 
 @media (max-width: 991px) { /* mobile/tablet */
