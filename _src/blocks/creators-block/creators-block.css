@@ -119,6 +119,7 @@
 .creators-block.block>div:nth-child(2) .creator-box>div:nth-child(1) img {
   position: relative;
   top: 10px;
+  width: 30px;
 }
 
 @media (max-width: 1320px) {
