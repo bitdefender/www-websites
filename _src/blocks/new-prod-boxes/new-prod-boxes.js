@@ -111,6 +111,24 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
   return null;
 }
 
+function calculateAddOnCost(selector1, selector2) {
+  if (!selector1 || !selector2) {
+    return null;
+  }
+
+  // get only the number from the new price
+  const numberRegex = /\d+(\.\d+)?/;
+
+  const firstPriceString = selector1.textContent.match(numberRegex)[0];
+  const firstPriceFloat = parseFloat(firstPriceString);
+
+  const secondPriceString = selector2.textContent.match(numberRegex)[0];
+  const secondPriceFloat = parseFloat(secondPriceString);
+  const correctPrice = parseInt(secondPriceFloat - firstPriceFloat, 10);
+
+  return correctPrice;
+}
+
 export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
@@ -332,7 +350,7 @@ export default async function decorate(block, options) {
         <label for="add-on-monthly-${addOnProdMonthlyName.trim()}" class='radio-label'>${rightRadio}</label>`;
       }
 
-      let yearlyAddOnPriceBox;
+      let addOnPriceBox;
       // create the prices element based on where the component is being called from, aem of www-websites
       if (options) {
         await createPricesElement(options.store, '', 'Save', prodName, prodUsers, prodYears, buyLinkSelector, billed, customLink)
@@ -407,9 +425,9 @@ export default async function decorate(block, options) {
 
         if (addOn && addOnProductsAsList) {
           const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
-          yearlyAddOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-          block.children[key].querySelector('.hero-aem__prices__addon').appendChild(yearlyAddOnPriceBox);
-          yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = yearlyAddOnPriceBox;
+          addOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+          block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
+          yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = addOnPriceBox;
         }
       }
 
@@ -433,11 +451,17 @@ export default async function decorate(block, options) {
         li.replaceWith(newLi);
 
         let addOnNewPrice = newLi.querySelector('.add-on-newprice');
+        let newPriceSelector = block.children[key].querySelector('.prod-newprice');
+        let addOnPriceSelector = addOnPriceBox.querySelector('.prod-newprice');
+
+        const numberRegex = /\d+(\.\d+)?/;
+        const addOnCost = calculateAddOnCost(newPriceSelector, addOnPriceSelector);
+
         let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
         let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-        addOnNewPrice.textContent = yearlyAddOnPriceBox.querySelector('.prod-newprice').textContent;
-        addOnOldPrice.textContent = yearlyAddOnPriceBox.querySelector('.prod-oldprice').textContent;
-        addOnPercentSave.textContent = yearlyAddOnPriceBox.querySelector('.prod-save').textContent;
+        addOnNewPrice.textContent = addOnPriceBox.querySelector('.prod-newprice').textContent.replace(numberRegex, addOnCost);
+        addOnOldPrice.textContent = addOnPriceBox.querySelector('.prod-oldprice').textContent;
+        addOnPercentSave.textContent = addOnPriceBox.querySelector('.prod-save').textContent;
 
         let checkBoxSelector = newLi.querySelector('.checkmark');
         checkBoxSelector.addEventListener('change', () => {
