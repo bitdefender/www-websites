@@ -1,19 +1,15 @@
 export default class ZuoraNLClass {
   static async fetchCampaignName() {
-    // const jsonFilePath = 'https://www.bitdefender.com/pages/zuoracampaign.json';
-    //
-    // const resp = await fetch(jsonFilePath);
-    // if (!resp.ok) {
-    //   console.error(`Failed to fetch data. Status: ${resp.status}`);
-    //   return '';
-    // }
-    // const data = await resp.json();
-    //
-    // return data.data[0].CAMPAIGN_NAME;
-    //
-    await new Promise((res) => setTimeout(res, 50));
+    const jsonFilePath = 'https://www.bitdefender.com/pages/zuoracampaign.json';
 
-    return 'Summer2024';
+    const resp = await fetch(jsonFilePath);
+    if (!resp.ok) {
+      console.error(`Failed to fetch data. Status: ${resp.status}`);
+      return '';
+    }
+    const data = await resp.json();
+
+    return data.data[0].CAMPAIGN_NAME;
   }
 
   static monthlyProducts = ['psm', 'pspm', 'vpn-monthly', 'passm', 'pass_spm', 'dipm', 'vsbm'];
