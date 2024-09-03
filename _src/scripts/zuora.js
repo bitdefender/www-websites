@@ -1,6 +1,6 @@
 export default class ZuoraNLClass {
   static async fetchCampaignName() {
-    const jsonFilePath = 'https://www.bitdefender.com/pages/zuoracampaign.json';
+    const jsonFilePath = 'https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json';
 
     const resp = await fetch(jsonFilePath);
     if (!resp.ok) {

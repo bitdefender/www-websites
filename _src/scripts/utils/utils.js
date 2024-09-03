@@ -84,6 +84,7 @@ async function findProductVariant(cachedResponse, variant) {
   const units = cachedResponse.selected_users;
 
   const zuoraFormatedVariant = {
+    buy_link: cachedResponse.buy_link,
     active_platform: null,
     avangate_variation_prefix: null,
     currency_id: null,
@@ -244,6 +245,14 @@ export function getBuyLinkCountryPrefix() {
   }
 
   return 'https://www.bitdefender.com/site/Store/buy';
+}
+
+export function generateProductBuyLink(product, productCode) {
+  if (isZuora()) {
+    return product.buy_link;
+  }
+
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${product.variation.dimension_value}/${product.variation.years}/`;
 }
 
 /**
@@ -436,7 +445,12 @@ export function getDatasetFromSection(block) {
  * Renders nano blocks
  * @param parent The parent element
  */
-export function renderNanoBlocks(parent = document.body, mv = undefined, index = undefined) {
+export function renderNanoBlocks(
+  parent = document.body,
+  mv = undefined,
+  index = undefined,
+  block = undefined,
+) {
   const regex = /{([^}]+)}/g;
   findTextNodes(parent).forEach((node) => {
     const text = node.textContent.trim();
@@ -454,7 +468,7 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
         const [newName, ...params] = parseParams(newMatch);
         const renderer = nanoBlocks.get(newName.toLowerCase());
         if (renderer) {
-          const element = mv ? renderer(mv, ...params) : renderer(...params);
+          const element = mv ? renderer(mv, ...params, block) : renderer(...params, block);
           element.classList.add('nanoblock');
           const oldElement = node.parentNode;
           oldElement.parentNode.replaceChild(element, oldElement);

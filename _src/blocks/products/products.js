@@ -2,7 +2,8 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   fetchProduct,
-  createTag, getBuyLinkCountryPrefix,
+  createTag,
+  generateProductBuyLink,
 } from '../../scripts/utils/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
@@ -63,7 +64,7 @@ function toModel(productCode, variantId, v) {
       ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
     currency: v.currency_label,
-    url: `${getBuyLinkCountryPrefix()}/${productCode}/${v.variation.dimension_value}/${v.variation.years}/`,
+    url: generateProductBuyLink(v, productCode),
   };
 }
 
