@@ -77,12 +77,11 @@ async function findProductVariant(cachedResponse, variant) {
   }
 
   // zuora logic
-  console.log('findProductVariant() => json', cachedResponse);
+  // eslint-disable-next-line no-promise-executor-return
   await new Promise((res) => setTimeout(res, 50));
 
   const resp = cachedResponse.selected_variation;
   const units = cachedResponse.selected_users;
-  const years = cachedResponse.selected_years;
 
   const zuoraFormatedVariant = {
     active_platform: null,
@@ -309,11 +308,6 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
     }
 
-    if (url.pathname.includes('/nl-nl/')) {
-      console.log('3');
-      // addapt logic to zl zuora
-    }
-
     if ((siteName === 'hk' || siteName === 'tw')) {
       // append force_region for hk and tw
       const newData = JSON.parse(data.get('data'));
@@ -342,12 +336,12 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   //   return findProductVariant(cacheResponse.get(code), variant);
   // }
 
-  const units = variant.split('-')[0][0];
-  const years = variant.split('-')[1][0];
+  const variantSplit = variant.split('-');
+  const units = variantSplit[0].split('u')[0];
+  const years = variantSplit[1].split('y')[0];
   const campaign = getParamValue('campaign');
   const zuoraResponse = await ZuoraNLClass.loadProduct(`${code}/${units}/${years}`, campaign);
   // zuoraResponse.ok = true;
-  console.log('zuoraResponse', zuoraResponse);
 
   // cacheResponse.set(code, zuoraResponse);
   return findProductVariant(zuoraResponse, variant);
