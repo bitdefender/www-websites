@@ -246,7 +246,7 @@ export default function decorate(block, options) {
   });
 
   if (type && type === 'video_left') {
-    block.closest('.section').classList.add(type);
+    block.closest('.section').classList.add('VideoLeft');
     const leftCol = block.querySelector('.columns-img-col');
     const videoPath = leftCol.querySelector('tr:last-of-type').innerText.trim();
     const videoImg = leftCol.querySelector('img').getAttribute('src');

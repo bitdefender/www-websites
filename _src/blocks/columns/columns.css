@@ -2,19 +2,45 @@
   padding: 0 var(--body-padding);
 }
 
-.columns-container.video_left {
-  video {
-    width: 100%;
-    border-radius: 10px;
-  }
+.columns-container.VideoLeft video {
+  width: 100%;
+  border-radius: 10px;
+}
 
-  .columns-right-col {
-    width: 100%;
-    flex: none;
-     p {
-      margin: 1.5em 0;
-     }
-  }
+.columns-container.VideoLeft .columns-right-col {
+  width: 100%;
+  flex: none;
+}
+
+.columns-container.chat-options p {
+  font-size: var(--body-font-size-s) !important;
+}
+
+.columns-container.VideoLeft .columns-right-col p {
+  margin: 1.5em 0;
+}
+
+.grey-version .columns > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.grey-version .columns > div > div {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 247 / var(--tw-bg-opacity));
+  border-radius: 1rem;
+  padding: 3em;
+  margin-bottom: 1em;
+}
+
+.columns > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.columns > div > div {
+  order: 1;
 }
 
 .columns-container.chat-options .columns > div > div {
@@ -41,6 +67,11 @@
   justify-content: space-between;
 }
 
+.grey-version .columns > div > div img, .small-icons .columns > div > div img {
+  height: 60px;
+  width: auto;
+}
+
 .columns-container.chat-options table tr td:first-of-type img {
   height: 40px;
 }
@@ -48,10 +79,6 @@
 .columns-container.chat-options table tr td:last-of-type img {
   height: 133px;
   display: none;
-}
-
-.columns-container.chat-options p {
-  font-size: var(--body-font-size-s) !important;
 }
 
 .percent-table .columns table tr {
@@ -69,26 +96,8 @@
   width: 220px;
 }
 
-.grey-version .columns > div {
-  display: flex;
-  justify-content: space-between;
-}
-
-.grey-version .columns > div > div {
-  --tw-bg-opacity: 1;
-  background-color: rgb(245 245 247 / var(--tw-bg-opacity));
-  border-radius: 1rem;
-  padding: 3em;
-  margin-bottom: 1em;
-}
-
 .grey-version .columns > div > div h4 {
   font-size: var(--heading-font-size-l);
-}
-
-.grey-version .columns > div > div img, .small-icons .columns > div > div img {
-  height: 60px;
-  width: auto;
 }
 
 .grey-version .columns > div > div p.button-container {
@@ -102,16 +111,6 @@
   margin-top: 15px;
   margin-left: auto;
   margin-right: auto;
-}
-
-.columns > div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.columns > div > div {
-  order: 1;
 }
 
 .columns.highlight-text.black {
@@ -647,7 +646,7 @@
     min-height: 350px;
   }
 
-  .columns-container.video_left .columns-right-col {
+  .columns-container.VideoLeft .columns-right-col {
       width: 440px;
       flex: none;
   }
