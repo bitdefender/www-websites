@@ -279,7 +279,11 @@ export default function decorate(block) {
   matchHeights(block, 'h3');
   block.querySelectorAll('.button-container a').forEach((link) => {
     if (link && link.href.includes('/site/Store/buy/')) {
-      link.href = getBuyLinkCountryPrefix();
+      // replace the link with the correct country prefix but keep the rest of the link
+      const url = new URL(link.href);
+      const prefix = `${getBuyLinkCountryPrefix()}/`;
+      url.pathname = prefix + url.pathname.split('/site/Store/buy/')[1];
+      link.href = url.toString();
     }
   });
 }
