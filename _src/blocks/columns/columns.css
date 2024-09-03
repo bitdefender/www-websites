@@ -237,6 +237,16 @@
     font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
   }
 
+  .creators .header-mobile.columns-container h1 {
+    font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+  }
+
+  .creators .header-mobile.columns-container h2 {
+    color: #006DFF;
+    font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
+    margin-bottom: 0;
+  }
+
   .creators .columns-container h3 {
     font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
   }
@@ -682,12 +692,25 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     text-align: center;
   }
 
+  .creators .header-mobile h1 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  .creators .header-mobile h2 {
+    font-size: 16px;
+    line-height: 1.2;
+    color: #006DFF;
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+
   .creators .header-mobile h3 {
     font-size: var(--heading-font-size-l);
     line-height: 1.2;
   }
 
-  .creators .columns-container h3, .creators .columns-container h5 {
+  .creators .columns-container h3, .creators .columns-container h5, .creators .columns-container h2, .creators .columns-container h1 {
     font-family: "IBM Plex Sans", sans-serif;
   }
 

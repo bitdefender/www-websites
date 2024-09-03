@@ -98,7 +98,7 @@
     font: normal normal normal 14px/16px var(--body-font-family);
   }
 
-  .creator-money-back .money-back > ul > li h6 {
+  .creator-money-back .money-back > ul > li h4 {
     font: normal normal bold 32px/38px "IBM Plex Sans", sans-serif;
   }
 
