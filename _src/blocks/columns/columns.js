@@ -245,7 +245,6 @@ export default function decorate(block, options) {
     composed: true,
   });
 
-  console.log|('colsadfasfdsadsfdsafdfadsdas ');
   if (type && type === 'video_left') {
     block.closest('.section').classList.add(type);
     const leftCol = block.querySelector('.columns-img-col');
