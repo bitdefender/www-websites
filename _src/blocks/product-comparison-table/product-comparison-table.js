@@ -27,7 +27,6 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
       priceElement.innerHTML = `${discounted} ${currency}`;
       priceAppliedOnTime.innerHTML = label;
 
-      // todo check why buy links are not set properly
       // update buy link
       const currentProductIndex = fetchedProducts.length - 1;
       const buyLink = block.querySelectorAll('.button-container a')[currentProductIndex];
@@ -283,15 +282,4 @@ export default function decorate(block) {
   });
 
   matchHeights(block, 'h3');
-  // block.querySelectorAll('.button-container a').forEach((link, index) => {
-  //   if (link && link.href.includes('/site/Store/buy/')) {
-  //     // // replace the link with the correct country prefix but keep the rest of the link
-  //     // const url = new URL(link.href);
-  //     // const prefix = `${getBuyLinkCountryPrefix()}/`;
-  //     // url.pathname = prefix + url.pathname.split('/site/Store/buy/')[1];
-  //     // link.href = url.toString();
-  //
-  //     link.href = fetchedProducts[index].buy_link;
-  //   }
-  // });
 }
