@@ -2,12 +2,12 @@
   padding: 0 var(--body-padding);
 }
 
-.columns-container.VideoLeft video {
+.columns-container.video-left video {
   width: 100%;
   border-radius: 10px;
 }
 
-.columns-container.VideoLeft .columns-right-col {
+.columns-container.video-left .columns-right-col {
   width: 100%;
   flex: none;
 }
@@ -16,21 +16,8 @@
   font-size: var(--body-font-size-s) !important;
 }
 
-.columns-container.VideoLeft .columns-right-col p {
+.columns-container.video-left .columns-right-col p {
   margin: 1.5em 0;
-}
-
-.grey-version .columns > div {
-  display: flex;
-  justify-content: space-between;
-}
-
-.grey-version .columns > div > div {
-  --tw-bg-opacity: 1;
-  background-color: rgb(245 245 247 / var(--tw-bg-opacity));
-  border-radius: 1rem;
-  padding: 3em;
-  margin-bottom: 1em;
 }
 
 .columns > div {
@@ -39,8 +26,21 @@
   justify-content: center;
 }
 
+.grey-version .columns > div {
+  display: flex;
+  justify-content: space-between;
+}
+
 .columns > div > div {
   order: 1;
+}
+
+.grey-version .columns > div > div {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 247 / var(--tw-bg-opacity));
+  border-radius: 1rem;
+  padding: 3em;
+  margin-bottom: 1em;
 }
 
 .columns-container.chat-options .columns > div > div {
@@ -157,24 +157,24 @@
   line-height: 1.25;
 }
 
-.section.subtitle_blue h2 {
+.section.subtitle-blue h2 {
   margin: 0 auto 3em;
   width: 100%;
   text-align: center;
 }
 
-.section.subtitle_blue h3 {
+.section.subtitle-blue h3 {
   font-size: 1.25rem;
   --tw-text-opacity: 1;
   color: rgb(0 110 255 / var(--tw-text-opacity));
 }
 
-.section.subtitle_blue .columns.benefits > div {
+.section.subtitle-blue .columns.benefits > div {
   gap: 45px;
   margin-bottom: 2em;
 }
 
-.section.subtitle_blue .columns.benefits p {
+.section.subtitle-blue .columns.benefits p {
   font-size: var(--body-font-size-s);
   font-weight: 400;
   letter-spacing: .006em;
@@ -340,16 +340,16 @@
     left: 10%;
   }
 
-  .section.subtitle_blue h2 {
+  .section.subtitle-blue h2 {
     margin: 0 auto 3em;
     width: 630px;
   }
 
-  .section.subtitle_blue h3 {
+  .section.subtitle-blue h3 {
     font-size: 1.25rem;
   }
 
-  .section.subtitle_blue .columns.benefits > div {
+  .section.subtitle-blue .columns.benefits > div {
     margin-bottom: 0;
   }
 
@@ -646,7 +646,7 @@
     min-height: 350px;
   }
 
-  .columns-container.VideoLeft .columns-right-col {
+  .columns-container.video-left .columns-right-col {
       width: 440px;
       flex: none;
   }
