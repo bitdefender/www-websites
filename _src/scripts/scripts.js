@@ -16,7 +16,10 @@ import {
 
 import {
   adobeMcAppendVisitorId,
-  createTag, getDefaultLanguage, GLOBAL_EVENTS,
+  createTag,
+  getDefaultLanguage,
+  getParamValue,
+  GLOBAL_EVENTS,
 } from './utils/utils.js';
 
 import { loadAnalytics } from './analytics.js';
@@ -121,15 +124,6 @@ export function getOperatingSystem(userAgent) {
   ];
 
   return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
-/**
- * Returns the value of a query parameter
- * @returns {String}
- */
-function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
 }
 
 export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos) {
