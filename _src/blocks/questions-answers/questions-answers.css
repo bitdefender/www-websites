@@ -32,12 +32,6 @@
     font: italic normal normal 14px/16px var(--body-font-family);
 }
 
-.qa-creators.questions-answers-container .default-content-wrapper p {
-    font: bold 24px / 26px "IBM Plex Sans", sans-serif;
-    margin-bottom: 32px;
-    text-align: center;
-}
-
 .questions-answers .questions-answers-item {
     margin: 16px 0;
     padding: 16px 16px 16px 40px;
@@ -117,6 +111,12 @@
 
 .questions-answers-item .answer p a {
     color: #006EFF;
+}
+
+.qa-creators.questions-answers-container .default-content-wrapper p {
+    font: bold 24px / 26px "IBM Plex Sans", sans-serif;
+    margin-bottom: 32px;
+    text-align: center;
 }
 
 .questions-answers-item.expanded .answer {
