@@ -2,10 +2,19 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   fetchProduct,
-  createTag, getBuyLinkCountryPrefix,
+  createTag,
+  generateProductBuyLink,
 } from '../../scripts/utils/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
+
+// all avaiable text variables
+const TEXT_VARIABLES_MAPPING = [
+  {
+    variable: 'percent',
+    getValue: (mv) => `${mv.model.discountRate}%`,
+  },
+];
 
 /**
  * Utility function to round prices and percentages
@@ -55,7 +64,7 @@ function toModel(productCode, variantId, v) {
       ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
     currency: v.currency_label,
-    url: `${getBuyLinkCountryPrefix()}/${productCode}/${v.variation.dimension_value}/${v.variation.years}/`,
+    url: generateProductBuyLink(v, productCode),
   };
 }
 
@@ -238,7 +247,6 @@ function renderHighlightSavings(mv, text = 'Save', percent = '') {
     },
     '<span></span>',
   );
-
   mv.subscribe(() => {
     if (mv.model.discountRate) {
       root.querySelector('span').innerText = (percent.toLowerCase() === 'percent')
@@ -271,6 +279,35 @@ function renderHighlight(mv, text) {
 }
 
 /**
+ *
+ * @param mv The modelview holding the state of the view
+ * @param {string} text Text of the featured nanoblock
+ * @return {string} Text with variables replaced
+ */
+const replaceVariablesInText = (mv, text) => {
+  let replacedText = text;
+
+  // replace the percent variable with correct percentage of the produc
+  TEXT_VARIABLES_MAPPING.forEach((textVariableMapping) => {
+    replacedText = replacedText.replaceAll(
+      textVariableMapping.variable,
+      textVariableMapping.getValue(mv),
+    );
+  });
+
+  return replacedText;
+};
+
+/**
+ *
+ * @param {string} text
+ * @return {boolean} wether the text contains variables or not
+ */
+const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
+  (textVariableMapping) => text.includes(textVariableMapping.variable),
+);
+
+/**
  * Nanoblock representing a text to Featured
  * @param mv The modelview holding the state of the view
  * @param text Text of the featured nanoblock
@@ -280,6 +317,15 @@ function renderFeatured(mv, text) {
   const root = document.createElement('div');
   root.classList.add('featured');
   root.innerText = text;
+
+  if (checkIfTextContainsVariables(text)) {
+    root.classList.add('global-display-none');
+    mv.subscribe(() => {
+      root.innerText = replaceVariablesInText(mv, root.innerText);
+      root.classList.remove('global-display-none');
+    });
+  }
+
   return root;
 }
 

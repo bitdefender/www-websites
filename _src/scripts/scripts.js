@@ -16,7 +16,10 @@ import {
 
 import {
   adobeMcAppendVisitorId,
-  createTag, getDefaultLanguage, GLOBAL_EVENTS,
+  createTag,
+  getDefaultLanguage,
+  getParamValue,
+  GLOBAL_EVENTS,
 } from './utils/utils.js';
 
 import { loadAnalytics } from './analytics.js';
@@ -121,15 +124,6 @@ export function getOperatingSystem(userAgent) {
   ];
 
   return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
-/**
- * Returns the value of a query parameter
- * @returns {String}
- */
-function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
 }
 
 export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos) {
@@ -383,12 +377,19 @@ export function decorateMain(main) {
  *
  * @param {String} path The path to the modal
  * @param {String} template The template to use for the modal styling
+ * @param {Boolean} stopAutomaticRefresh Wether the modal refreshes after exiting or not
  * @returns {Promise<Element>}
  * @example
  */
-export async function createModal(path, template) {
+export async function createModal(path, template, stopAutomaticRefresh) {
   const modalContainer = document.createElement('div');
   modalContainer.classList.add('modal-container');
+
+  // add the class which makes the modal identifiable in the page
+  if (stopAutomaticRefresh) {
+    const modalClass = path.split('/').pop();
+    modalContainer.classList.add(modalClass);
+  }
 
   const modalContent = document.createElement('div');
   modalContent.classList.add('modal-content');
@@ -412,7 +413,17 @@ export async function createModal(path, template) {
   // add class to modal container for opportunity to add custom modal styling
   if (template) modalContainer.classList.add(template);
 
-  const closeModal = () => modalContainer.remove();
+  const closeModal = () => {
+    // if the modal is still supposed to exist just hide it
+    if (stopAutomaticRefresh) {
+      modalContainer.classList.add('global-display-none');
+      return;
+    }
+
+    // if it's supposed to refresh delete it so that it can be rerendered
+    modalContainer.remove();
+  };
+
   const close = document.createElement('div');
   close.classList.add('modal-close');
   close.addEventListener('click', closeModal);
@@ -424,7 +435,24 @@ export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
     link.addEventListener('click', async (e) => {
       e.preventDefault();
-      document.body.append(await createModal(link.href));
+      const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
+
+      // if we wish for the button to not generate a new modal everytime
+      if (stopAutomaticModalRefresh) {
+        // we use the last part of the link to identify the modals
+        const modalClass = link.href.split('/').pop();
+
+        // check if the modal exists in the page
+        const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+        if (existingModal) {
+          // if it exists just display it
+          existingModal.classList.remove('global-display-none');
+          return;
+        }
+      }
+
+      // generate new modal
+      document.body.append(await createModal(link.href, undefined, stopAutomaticModalRefresh));
     });
   });
 }
@@ -653,6 +681,78 @@ async function loadLazy(doc) {
 }
 
 /**
+ * Event listener for dropdown slider dropdown-box.js component.
+ * This is imported from www-landing-pages repo.
+ * @returns {void}
+* */
+function eventOnDropdownSlider() {
+  document.querySelectorAll('.dropdown-slider').forEach((slider) => {
+    const titles = slider.querySelectorAll('.title');
+    const loadingBars = slider.querySelectorAll('.loading-bar');
+    let activeIndex = 0;
+    let interval;
+
+    function showLoadingBar(index) {
+      const loadingBar = loadingBars[index];
+      loadingBar.style.width = '0';
+      let width = 0;
+      const interval2 = setInterval(() => {
+        width += 1;
+        loadingBar.style.width = `${width}%`;
+        if (width >= 100) {
+          clearInterval(interval2);
+        }
+      }, 30); // Adjust the interval for smoother animation
+    }
+
+    function moveToNextItem() {
+      titles.forEach((title, index) => {
+        if (index === activeIndex) {
+          title.parentNode.classList.add('active');
+          title.closest('.dropdown-slider').setAttribute('style', `min-height: ${title.parentNode.querySelector('.description').offsetHeight + 50}px`);
+          if (loadingBars.length) {
+            showLoadingBar(index);
+          }
+        } else {
+          title.parentNode.classList.remove('active');
+        }
+      });
+
+      activeIndex = (activeIndex + 1) % titles.length; // Move to the next item and handle wrapping
+    }
+
+    function startAutomaticMovement() {
+      interval = setInterval(moveToNextItem, 4000); // Set the interval
+    }
+
+    function stopAutomaticMovement() {
+      clearInterval(interval); // Clear the interval
+    }
+
+    // Set the initial active item
+    moveToNextItem();
+
+    if (loadingBars.length) {
+      // Start automatic movement after the loading is complete
+      setTimeout(() => {
+        startAutomaticMovement();
+      }, 1000);
+
+      // Click event listener on titles
+      titles.forEach((title, index) => {
+        title.addEventListener('click', () => {
+          stopAutomaticMovement();
+          activeIndex = index;
+          showLoadingBar(index);
+          moveToNextItem();
+          startAutomaticMovement();
+        });
+      });
+    }
+  });
+}
+
+/**
  * Loads everything that happens a lot later,
  * without impacting the user experience.
  */
@@ -661,6 +761,7 @@ function loadDelayed() {
     window.hlx.plugins.load('delayed');
     window.hlx.plugins.run('loadDelayed');
     // load anything that can be postponed to the latest here
+    eventOnDropdownSlider();
     // eslint-disable-next-line import/no-cycle
     return import('./delayed.js');
   }, 3000);
