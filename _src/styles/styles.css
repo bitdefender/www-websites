@@ -1471,3 +1471,7 @@ header,
 body > div:first-child {
     height: 64px;
 }
+
+.d-flex {
+    display: flex;
+}

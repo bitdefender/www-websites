@@ -703,3 +703,8 @@ export async function matchHeights(targetNode, selector) {
     adjustHeights();
   });
 }
+
+export function getPidFromUrl() {
+  const url = new URL(window.location.href);
+  return url.searchParams.get('pid') || getMetadata('pid');
+}
