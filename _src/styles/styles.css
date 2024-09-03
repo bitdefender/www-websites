@@ -782,6 +782,10 @@ main .section.migration h2 {
   font-size: var(--heading-font-size-m);
 }
 
+.d-none {
+  display: none;
+}
+
 main .section.py-1 {
   padding: 0;
 }
@@ -790,7 +794,7 @@ main .section.pt-0 {
   padding-top: 0;
 }
 
-main .section.pb-0 {
+main .section.pb-0, .pb-0 {
   padding-bottom: 0!important;
 }
 

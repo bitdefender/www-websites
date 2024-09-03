@@ -23,8 +23,16 @@ createNanoBlock('priceComparison', (code, variant, label) => {
       fetchedProducts.push({ code, variant, product });
       // eslint-disable-next-line camelcase
       const { price, discount: { discounted_price: discounted }, currency_iso: currency } = product;
-      oldPriceElement.innerHTML = `Old Price <del>${price} ${currency}</del>`;
-      priceElement.innerHTML = `${discounted} ${currency}`;
+      const savings = price - discounted;
+
+      oldPriceElement.innerHTML = `<div class="old-price-box">
+        <span>Old Price <del>${price} ${currency}</del></span>
+        <span class="savings d-none">Savings <del>${savings.toFixed(2)} ${currency}</del></span>
+      </div>`;
+      priceElement.innerHTML = `<div class="new-price-box">
+        <span class="d-none total-text">Your total price:</span>
+        ${discounted} ${currency}
+      </div>`;
       priceAppliedOnTime.innerHTML = label;
     })
     .catch((err) => {

@@ -1,6 +1,7 @@
 /* b-boxes .dropdownbox-compare-container */
 .dropdownbox-compare-container {
   clear: both;
+  padding: 0!important;
 }
 
 .dropdownbox-compare-container .block img {
@@ -13,7 +14,8 @@
 
 /* blue tbs */
 .dropdownbox-compare-container .block > div > div {
-  border-bottom: 1px solid #D6D6D6;
+  border-bottom: 1px solid #e4f2ff;
+  border: 1px solid #e4f2ff;
 }
 
 .dropdownbox-compare-container .block > div {
@@ -25,7 +27,10 @@
 .dropdownbox-compare-container .block > div:nth-child(1) > div:nth-child(1) {
   color: #fff;
   background-color: #006eff;
-  padding: 0;
+}
+
+.dropdownbox-compare-container .block > div:not(:nth-child(1)) > div:nth-child(1) {
+  background: #e4f2ff;
 }
 
 .dropdownbox-compare-container .block > div:first-of-type > div, .dropdownbox-compare-container .block > div:last-of-type > div {
@@ -35,12 +40,11 @@
 .dropdownbox-compare-container .block > div:nth-child(1) > div {
   font-weight: bold;
   cursor: pointer;
-  padding: 15px 30px;
 }
 
 .dropdownbox-compare-container .block > div > div {
   flex: 1;
-  padding: 15px 2%;
+  padding: 15px 20px;
   display: inline-block;
 }
 
@@ -61,24 +65,76 @@
   background-color: white;
 }
 
+.dropdownbox-compare-container.selected-2 .block > div > div:nth-child(2), .dropdownbox-compare-container.selected-3 .block > div > div:nth-child(2) {
+  background-color: white;
+}
+
+.dropdownbox-compare-container .block > div > div:not(:nth-child(1)) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .dropdownbox-compare-container .block > div:not(:first-child) > div:first-child {
   display: block;
   align-items: center;
 }
 
-.dropdownbox-compare-container .block > div:not(:first-child) > div:first-child p {
-  margin: 0;
+.dropdownbox-compare-container .block > div > div p {
+  font-family: roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
 }
 
-.dropdownbox-compare-container .block > div:not(:first-child) > div:first-child span {
-  margin-left: 10px;
+.dropdownbox-compare-container .block > div:first-child > div p {
+  color: white;
+}
+
+.dropdownbox-compare-container .block > div:not(:first-child) > div p {
+  color: #616161;
+}
+
+.dropdownbox-compare-container .block > div > div:first-child p {
+  margin: 0;
+  margin-left: 26px;
+}
+
+.dropdownbox-compare-container .block > div > div span.greenTag {
+  background: #2cb43d;
+  border-radius: 50px;
+  color: #3c3c3c;
+  color: #fff !important;
+  display: block;
+  font-family: roboto, sans-serif;
+  font-size: 10px !important;
+  font-style: normal;
+  font-weight: 700;
+  margin: -5px 0 6px;
+  padding: 0 20px;
+  padding: 3px 9px !important;
+  text-transform: uppercase;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+
+.dropdownbox-compare-container .block > div > div strong {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: normal;
 }
 
 .dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div {
   display: none;
 }
 
-.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block.closed > div:not(:first-child) > div {
+.dropdownbox-compare-container .block.closed > div > div:not(:nth-child(1)) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdownbox-compare-container .block.closed > div:not(:first-child) > div:first-of-type, .dropdownbox-compare-container.closed .block.closed > div:not(:first-child) > div:first-of-type {
   display: inline-block;
 }
 
@@ -94,20 +150,12 @@
   transform: rotate(-135deg);
 }
 
-.dropdownbox-compare-container.arrow-dark .block.closed > div:nth-child(1) > div:nth-child(1)::before {
-  width: 10px;
-  height: 10px;
-  float: left;
-  content: "";
-  margin-right: 10px;
-  margin-top: 10px;
-  border: solid black;
-  border-width: 0 2px 2px 0;
-  transform: rotate(-135deg);
-}
-
 /* handling - arrow down/up */
 /* stylelint-disable no-descending-specificity */
+.dropdownbox-compare-container.no-arrow .block > div:nth-child(1) > div::before {
+  visibility: hidden;
+}
+
 .dropdownbox-compare-container .block > div:nth-child(1) > div::before,
 .dropdownbox-compare-container .block.closed > div:nth-child(1) > div::before {
   width: 10px;
@@ -131,11 +179,22 @@
   }
 }
 
-.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div {
-  display: none;
+/* for mobile */
+@media (width <= 991px) {
+  .dropdownbox-compare-container .block > div {
+    display: block;
+  }
+
+  .dropdownbox-compare-container .block > div > div:nth-child(1) {
+    width: 100%;
+  }
+
+  .dropdownbox-compare-container .block > div > div:not(:nth-child(1)) {
+    width: 33%!important;
+    float: left;
+  }
 }
 
-/* for mobile */
 @media (width <= 768px) {
   .dropdownbox-compare-container {
     clear: both;
@@ -183,5 +242,57 @@
   .dropdownbox-compare-container .default-content-wrapper h5 {
     font-size: 30px;
     line-height: 32px;
+  }
+  .section.product-comparison-table-container.migration .old-price-box {
+    flex-direction: column;
+  }
+  .section.product-comparison-table-container.migration .old-price-box span {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0;
+  }
+  .section.product-comparison-table-container.migration .old-price-box span del {
+    margin-left: 10px;
+  }
+  .section.product-comparison-table-container.migration .new-price-box {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .section.product-comparison-table-container.migration .new-price-box span {
+    margin: 0 0 7px;
+  }
+
+  .section.product-comparison-table-container.migration .product-comparison-price > p:last-of-type, .section.product-comparison-table-container.migration .product-comparison-header div[role="columnheader"] p {
+    text-align: center;
+    min-height: auto;
+  }
+  .section.product-comparison-table-container.migration h3 {
+    font-size: 15px !important;
+  }
+
+  .section.product-comparison-table-container.migration p.button-container {
+    margin-bottom: 1em;
+  }
+
+  .section.product-comparison-table-container.migration .product-comparison-price {
+    margin: 3px;
+  }
+}
+
+@media (min-width: 992px) {
+  .dropdownbox-compare-wrapper {
+      max-width: var(--section-desktop-max-width);
+      padding: 0 var(--section-desktop-padding);
+  }
+}
+
+@media (min-width: 580px) {
+  .dropdownbox-compare-wrapper {
+      margin: 0 auto;
+      overflow-y: visible;
+
   }
 }
