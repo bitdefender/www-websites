@@ -390,6 +390,41 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
     }
 
+    if (url.pathname.includes('/en-gb/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '3';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.co.uk/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/pt-br/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '13';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.com.br/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/de-de/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '5';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.de/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/de-ch/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '17';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.de/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/fr-fr/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '14';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.fr/site/Store/ajax';
+    }
+
     if ((siteName === 'hk' || siteName === 'tw')) {
       // append force_region for hk and tw
       const newData = JSON.parse(data.get('data'));
