@@ -1,5 +1,73 @@
 import ZuoraNLClass from '../zuora.js';
 
+export const IANA_BY_REGION_MAP = new Map([
+  [3, { locale: 'en-GB', label: 'united kingdom' }],
+  [4, { locale: 'au-AU', label: 'australia' }],
+  [5, { locale: 'de-DE', label: 'germany' }],
+  [6, { locale: 'ro-RO', label: 'romania' }],
+  [7, { locale: 'es-ES', label: 'spain' }],
+  [8, { locale: 'en-US', label: 'com' }],
+  [9, { locale: 'it-IT', label: 'italy' }],
+  [10, { locale: 'en-CA', label: 'canada' }],
+  [12, { locale: 'pt-PT', label: 'portugal' }],
+  [13, { locale: 'br-BR', label: 'brazil' }],
+  [14, { locale: 'fr-FR', label: 'france' }],
+  [15, { locale: 'en-GB', label: 'united kingdom' }],
+  [16, { locale: 'en-US', label: 'rest of the world EU countries' }],
+  [17, { locale: 'de-CH', label: 'germany-switzerland' }],
+  [19, { locale: 'en-ZA', label: 'en south africa' }],
+  [22, { locale: 'nl-NL', label: 'netherlands' }],
+  [24, { locale: 'en-VN', label: 'en vietnam' }],
+  [20, { locale: 'en-MX', label: 'en es mexico' }],
+  [21, { locale: 'en-CO', label: 'en es columbia' }],
+  [25, { locale: 'en-SG', label: 'en singapore' }],
+  [26, { locale: 'en-SE', label: 'en sweden' }],
+  [27, { locale: 'en-DK', label: 'en denmark' }],
+  [28, { locale: 'en-HU', label: 'en hungary' }],
+  [29, { locale: 'en-BG', label: 'en bulgaria' }],
+  [30, { locale: 'en-HR', label: 'en croatia' }],
+  [31, { locale: 'en-NO', label: 'en norway' }],
+  [32, { locale: 'en-MD', label: 'en moldova' }],
+  [33, { locale: 'en-RS', label: 'en serbia' }],
+  [34, { locale: 'en-RU', label: 'en russia' }],
+  [35, { locale: 'en-EG', label: 'en egypt' }],
+  [36, { locale: 'en-SA', label: 'en saudi arabia' }],
+  [37, { locale: 'fr-DZ', label: 'en Algeria' }],
+  [38, { locale: 'en-AE', label: 'en united arab emirates' }],
+  [39, { locale: 'en-PS', label: 'en palestinia' }],
+  [40, { locale: 'en-CN', label: 'en china' }],
+  [41, { locale: 'en-HK', label: 'en hong kong' }],
+  [42, { locale: 'en-CK', label: 'Cook Islands' }],
+  [43, { locale: 'en-KE', label: 'en kenya' }],
+  [44, { locale: 'en-NG', label: 'en nigeria' }],
+  [45, { locale: 'fr-TN', label: 'en Tunisia' }],
+  [46, { locale: 'en-PL', label: 'en poland' }],
+  [47, { locale: 'en-CZ', label: 'en Czech' }],
+  [48, { locale: 'es-VE', label: 'en Venezuela' }],
+  [49, { locale: 'en-TR', label: 'en turkey' }],
+  [50, { locale: 'en-ID', label: 'en Indonesia' }],
+  [51, { locale: 'en-PH', label: 'en Philippines' }],
+  [52, { locale: 'en-TW', label: 'en taiwan' }],
+  [53, { locale: 'en-UA', label: 'en Ukraine' }],
+  [54, { locale: 'es-CL', label: 'en Chile' }],
+  [55, { locale: 'en-MY', label: 'en Malaysia' }],
+  [56, { locale: 'es-AR', label: 'en Argentina' }],
+  [57, { locale: 'es-PE', label: 'en Peru' }],
+  [59, { locale: 'hr-HR', label: 'Croatia' }],
+  [60, { locale: 'ma-MA', label: 'Morocco' }],
+  [61, { locale: 'pk-PK', label: 'Pakistan' }],
+  [62, { locale: 'bo-BO', label: 'Bolivia' }],
+  [63, { locale: 'do-DO', label: 'Dominican Republic' }],
+  [64, { locale: 'kw-KW', label: 'Kuwait' }],
+  [65, { locale: 'jo-JO', label: 'Jordan' }],
+  [66, { locale: 'th-TH', label: 'Thailand' }],
+  [67, { locale: 'en-BD', label: 'en Bangladesh' }],
+  [68, { locale: 'en-LK', label: 'en Sri Lanka' }],
+  [69, { locale: 'en-PY', label: 'en Paraguay' }],
+  [70, { locale: 'en-UY', label: 'en Uruguay' }],
+  [72, { locale: 'en-JP', label: 'en Japan' }],
+]);
+
 /**
  * Returns the value of a query parameter
  * @returns {String}
@@ -253,6 +321,11 @@ export function generateProductBuyLink(product, productCode) {
   }
 
   return `${getBuyLinkCountryPrefix()}/${productCode}/${product.variation.dimension_value}/${product.variation.years}/`;
+}
+
+export function formatPrice(price, currency, region) {
+  const ianaRegionFormat = IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US';
+  return new Intl.NumberFormat(ianaRegionFormat, { style: 'currency', currency }).format(price);
 }
 
 /**
