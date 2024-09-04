@@ -71,7 +71,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
 
     const { price, discount, currency_label: currencyLabel } = product;
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
-    const oldPrice = price;
+    let oldPrice = `${price} ${currencyLabel}`;
     let newPrice = discount.discounted_price;
     // eslint-disable-next-line no-param-reassign
     let updatedBuyLinkSelector = buyLinkSelector;
@@ -82,23 +82,31 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
     priceElement.classList.add('hero-aem__prices__box');
 
     let newPriceBilled = '';
-    if (hideDecimals === 'true') {
-      newPriceBilled = `${product.discount.discounted_price.replace('.00', '')} ${currencyLabel}`;
-      newPrice = newPrice.replace('.00', '');
-    }
-
+    let newPriceListed = '';
     if (!prodName.endsWith('m') && type === 'monthly') {
       newPrice = `${(parseInt(newPrice, 10) / 12)}`;
     }
 
+    if (hideDecimals === 'true') {
+      newPriceBilled = `${product.discount.discounted_price.replace('.00', '')} ${currencyLabel}`;
+      newPriceListed = `${newPrice.replace('.00', '')} ${currencyLabel}`;
+      if (currencyLabel === '$') {
+        newPriceBilled = `${currencyLabel}${product.discount.discounted_price.replace('.00', '')}`;
+        newPriceListed = `${currencyLabel}${newPrice.replace('.00', '')}`;
+        oldPrice = ` ${currencyLabel}${price}`;
+      }
+    }
+
+    
+
     priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div>
-          <span class="prod-oldprice">${oldPrice} ${currencyLabel}</span>
+          <span class="prod-oldprice">${oldPrice}</span>
           <span class="prod-save">Save ${discountPercentage}%<span class="save"></span></span>
         </div>
         <div class="newprice-container mt-2">
-          <span class="prod-newprice">${newPrice} ${currencyLabel} ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
+          <span class="prod-newprice">${newPriceListed} ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
         ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2">${newPriceBilled}</span>`)}</div>` : ''}
         <a href="${updatedBuyLinkSelector ? updatedBuyLinkSelector.href : ''}" class="button primary no-arrow">${updatedBuyLinkSelector ? updatedBuyLinkSelector.text : ''}</a>
