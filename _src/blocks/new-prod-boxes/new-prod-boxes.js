@@ -69,7 +69,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
     const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
 
-    const { price, discount, currency_label: currencyLabel } = product;
+    const { price, discount } = product;
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     let oldPrice = price;
     let newPrice = discount.discounted_price;
@@ -87,9 +87,8 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
       newPrice = `${(parseInt(newPrice, 10) / 12)}`;
     }
 
-    oldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');;
+    oldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
     if (hideDecimals === 'true') {
-      console.log(product);
       newPriceBilled = formatPrice(product.discount.discounted_price, product.currency_iso, product.region_id).replace('.00', '');
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id).replace('.00', '');
     }
