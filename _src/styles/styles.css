@@ -1475,3 +1475,7 @@ body > div:first-child {
 .visibility-hidden {
   visibility: hidden;
 }
+
+.d-flex {
+    display: flex;
+}
