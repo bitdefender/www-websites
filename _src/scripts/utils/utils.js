@@ -425,6 +425,13 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       FETCH_URL = 'https://www.bitdefender.fr/site/Store/ajax';
     }
 
+    if (url.pathname.includes('/es-es/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '7';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.es/site/Store/ajax';
+    }
+
     if ((siteName === 'hk' || siteName === 'tw')) {
       // append force_region for hk and tw
       const newData = JSON.parse(data.get('data'));
