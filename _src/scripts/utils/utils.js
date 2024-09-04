@@ -410,7 +410,6 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
         newData.config.force_region = '7';
         FETCH_URL = 'https://www.bitdefender.es/site/Store/ajax';
       } else {
-        newData.config.force_region = '8'; // Default region if no specific region is matched
         FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
       }
       data.set('data', JSON.stringify(newData));
