@@ -90,7 +90,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
     if (hideDecimals === 'true') {
       newPriceBilled = `${product.discount.discounted_price.replace('.00', '')} ${currencyLabel}`;
       newPriceListed = `${newPrice.replace('.00', '')} ${currencyLabel}`;
-      if (currencyLabel === '$') {
+      if (currencyLabel === '$' || currencyLabel === '£') {
         newPriceBilled = `${currencyLabel}${product.discount.discounted_price.replace('.00', '')}`;
         newPriceListed = `${currencyLabel}${newPrice.replace('.00', '')}`;
         oldPrice = ` ${currencyLabel}${price}`;
