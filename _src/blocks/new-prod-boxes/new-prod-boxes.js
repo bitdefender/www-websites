@@ -97,8 +97,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
       }
     }
 
-    
-
     priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div>

@@ -240,6 +240,7 @@ function updateBenefits(block) {
         }
       });
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log("couldn't load the benefits");
     }
   }
