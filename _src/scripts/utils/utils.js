@@ -383,6 +383,13 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       data.set('data', JSON.stringify(newData));
     }
 
+    if (url.pathname.includes('/en-us/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '2';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
+    }
+
     if (url.pathname.includes('/en-au/')) {
       const newData = JSON.parse(data.get('data'));
       newData.config.force_region = '4';
