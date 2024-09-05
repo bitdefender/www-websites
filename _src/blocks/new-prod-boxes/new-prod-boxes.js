@@ -107,7 +107,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
         ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2">${newPriceBilled}</span>`)}</div>` : ''}
         <a href="${updatedBuyLinkSelector ? updatedBuyLinkSelector.href : ''}" class="button primary no-arrow">${updatedBuyLinkSelector ? updatedBuyLinkSelector.text : ''}</a>
       </div>`;
-    console.log(priceElement);
     return priceElement;
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -123,8 +122,6 @@ function calculateAddOnCost(selector1, selector2) {
 
   // get only the number from the new price
   const numberRegex = /\d+(\.\d+)?/;
-  console.log(selector1.textContent);
-  console.log(selector2.textContent);
   const firstPriceString = selector1.textContent.match(numberRegex)[0];
   const firstPriceFloat = parseFloat(firstPriceString);
 
