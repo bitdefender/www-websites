@@ -68,7 +68,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
   try {
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
     const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
-
     const { price, discount } = product;
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     let oldPrice = price;
@@ -83,9 +82,26 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
 
     let newPriceBilled = '';
     let newPriceListed = '';
+    let prodVersion = 'monthly';
+
     if (!prodName.endsWith('m') && type === 'monthly') {
       newPrice = `${(parseInt(newPrice, 10) / 12)}`;
+      prodVersion = 'yearly';
     }
+
+    let adobeDataLayerProduct = {
+      ID: product.platform_product_id,
+      name: prodName.trim(),
+      devices: product.variation.dimension_value,
+      subscription: prodVersion,
+      version: prodVersion,
+      basePrice: price,
+      discountValue: discount.discounted_price,
+      discountRate: discountPercentage,
+      currency: product.currency_label,
+      priceWithTax: discount.discounted_price,
+    };
+    dataLayerProducts.push(adobeDataLayerProduct);
 
     oldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
     if (hideDecimals === 'true') {
@@ -586,16 +602,6 @@ export default async function decorate(block, options) {
     block.parentNode.insertBefore(switchBox, block);
   }
 
-  // dataLayer push with all the products
-  if (options) {
-    window.adobeDataLayer.push({
-      event: 'product loaded',
-      product: {
-        [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-      },
-    });
-  }
-
   window.hj = window.hj || function initHotjar(...args) {
     (hj.q = hj.q || []).push(...args);
   };
@@ -616,6 +622,16 @@ export default async function decorate(block, options) {
   if (isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/utils/utils.js');
     decorateIcons(block.closest('.section'));
+  }
+
+  if (!isInLandingPages) {
+    // dataLayer push with all the products
+    window.adobeDataLayer.push({
+      event: 'product loaded',
+      product: {
+        [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
+      },
+    });
   }
 
   matchHeights(block, '.subtitle');
