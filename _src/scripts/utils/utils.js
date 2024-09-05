@@ -261,7 +261,7 @@ export function getBuyLinkCountryPrefix() {
   }
 
   if (pathname.includes('/en-gb/')) {
-    return 'https://www.bitdefender.com.uk/site/Store/buy';
+    return 'https://www.bitdefender.co.uk/site/Store/buy';
   }
 
   if (pathname.includes('/ro-ro/')) {
