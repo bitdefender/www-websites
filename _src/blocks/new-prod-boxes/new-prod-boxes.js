@@ -91,6 +91,8 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
     if (hideDecimals === 'true') {
       newPriceBilled = formatPrice(product.discount.discounted_price, product.currency_iso, product.region_id).replace('.00', '');
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id).replace('.00', '');
+    } else {
+      newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id);
     }
 
     priceElement.innerHTML = `
@@ -120,7 +122,6 @@ function calculateAddOnCost(selector1, selector2) {
 
   // get only the number from the new price
   const numberRegex = /\d+(\.\d+)?/;
-
   const firstPriceString = selector1.textContent.match(numberRegex)[0];
   const firstPriceFloat = parseFloat(firstPriceString);
 
