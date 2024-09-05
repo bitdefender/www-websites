@@ -131,11 +131,17 @@ function calculateAddOnCost(selector1, selector2) {
   return correctPrice;
 }
 
-function createPlanSwitcher(radioButtons, cardNumber, prodName, prodMonthlyName, prodThirdRadioButtonName) {
+function createPlanSwitcher(radioButtons, cardNumber, prodName, prodMonthlyName, prodThirdRadioButtonName, variant = 'default') {
   const planSwitcher = document.createElement('div');
   planSwitcher.classList.add('plan-switcher');
+  planSwitcher.classList.toggle('addon', variant === 'addon');
+
   let radioArray = ['yearly', 'monthly', '3-rd-button'];
+  if (variant === 'addon') {
+    radioArray = ['add-on-yearly', 'add-on-monthly'];
+  }
   let prodNamesArray = [prodName, prodMonthlyName, prodThirdRadioButtonName];
+
   Array.from(radioButtons.children).forEach((radio, idx) => {
     let radioText = radio.textContent;
     let plan = radioArray[idx];
@@ -149,7 +155,7 @@ function createPlanSwitcher(radioButtons, cardNumber, prodName, prodMonthlyName,
 
     if (productName) {
       planSwitcher.innerHTML += `
-        <input type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-plan" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
+        <input type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
         <label for="${plan}-${productName.trim()}" class="radio-label">${radioText}</label><br>
       `;
     }
@@ -367,14 +373,15 @@ export default async function decorate(block, options) {
         const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
         // eslint-disable-next-line no-unused-vars
         const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
-        let leftRadio = radioButtons.querySelector('td:first-child')?.textContent;
-        let rightRadio = radioButtons.querySelector('td:last-child')?.textContent;
-        planSwitcher2.classList.add('plan-switcher', 'addon');
-        planSwitcher2.innerHTML = `
-        <input type="radio" id="add-on-yearly-${addOnProdName.trim()}" name="${key}-add-on-plan" value="${key}-add-on-yearly-${addOnProdName.trim()}" checked>
-        <label for="add-on-yearly-${addOnProdName.trim()}" class="radio-label">${leftRadio}</label><br>
-        <input type="radio" id="add-on-monthly-${addOnProdMonthlyName.trim()}" name="${key}-add-on-plan" value="${key}-add-on-monthly-${addOnProdMonthlyName.trim()}">
-        <label for="add-on-monthly-${addOnProdMonthlyName.trim()}" class='radio-label'>${rightRadio}</label>`;
+        // let firstRadio = radioButtons.querySelector('td:first-child')?.textContent;
+        // let secondRadio = radioButtons.querySelector('td:nth-child(2)')?.textContent;
+        // planSwitcher2.classList.add('plan-switcher', 'addon');
+        // planSwitcher2.innerHTML = `
+        // <input type="radio" id="add-on-yearly-${addOnProdName.trim()}" name="${key}-add-on-plan" value="${key}-add-on-yearly-${addOnProdName.trim()}" checked>
+        // <label for="add-on-yearly-${addOnProdName.trim()}" class="radio-label">${firstRadio}</label><br>
+        // <input type="radio" id="add-on-monthly-${addOnProdMonthlyName.trim()}" name="${key}-add-on-plan" value="${key}-add-on-monthly-${addOnProdMonthlyName.trim()}">
+        // <label for="add-on-monthly-${addOnProdMonthlyName.trim()}" class='radio-label'>${secondRadio}</label>`;
+        planSwitcher2 = createPlanSwitcher(radioButtons, key, addOnProdName, addOnProdMonthlyName, null, 'addon');
       }
 
       let addOnPriceBox;
@@ -534,7 +541,6 @@ export default async function decorate(block, options) {
         });
 
         if (radio.checked) {
-          // trigger the input event
           radio.dispatchEvent(new Event('input'));
         }
       });
@@ -556,6 +562,29 @@ export default async function decorate(block, options) {
             priceBox.appendChild(yearlyAddOnPricesBoxes[event.target.value]);
           }
         });
+
+        if (radio.checked) {
+          radio.dispatchEvent(new Event('input'));
+          let addOnPriceBox = prod.querySelector('.hero-aem__prices__addon');
+          let priceBox = prod.querySelector('.hero-aem__prices');
+
+          let addOnPriceBoxNewPrice = addOnPriceBox.querySelector('.prod-newprice');
+          let priceBoxNewPrice = priceBox.querySelector('.prod-newprice');
+          let planSwitcherNewPrice = prod.querySelector('.add-on-newprice');
+
+          let addOnPriceBoxOldPrice = addOnPriceBox.querySelector('.prod-oldprice');
+          let planSwitcherOldPrice = prod.querySelector('.add-on-oldprice');
+
+          let addOnPriceBoxDiscountPercentage = addOnPriceBox.querySelector('.prod-save');
+          let planSwitcherDiscountPercentage = prod.querySelector('.add-on-percent-save');
+
+          const numberRegex = /\d+(\.\d+)?/;
+          const addOnCost = calculateAddOnCost(priceBoxNewPrice, addOnPriceBoxNewPrice);
+
+          planSwitcherNewPrice.textContent = planSwitcherNewPrice.textContent.replace(numberRegex, addOnCost);
+          planSwitcherOldPrice.textContent = addOnPriceBoxOldPrice.textContent;
+          planSwitcherDiscountPercentage.textContent = addOnPriceBoxDiscountPercentage.textContent;
+        }
       });
     });
   }
