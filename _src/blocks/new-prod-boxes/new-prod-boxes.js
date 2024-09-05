@@ -542,14 +542,6 @@ export default async function decorate(block, options) {
     block.parentNode.insertBefore(switchBox, block);
   }
 
-  // dataLayer push with all the products
-  window.adobeDataLayer.push({
-    event: 'product loaded',
-    product: {
-      [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-    },
-  });
-
   window.hj = window.hj || function initHotjar(...args) {
     (hj.q = hj.q || []).push(...args);
   };
@@ -570,6 +562,16 @@ export default async function decorate(block, options) {
   if (isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/utils/utils.js');
     decorateIcons(block.closest('.section'));
+  }
+
+  if (!isInLandingPages) {
+    // dataLayer push with all the products
+    window.adobeDataLayer.push({
+      event: 'product loaded',
+      product: {
+        [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
+      },
+    });
   }
 
   // General function to match the height of elements based on a selector
