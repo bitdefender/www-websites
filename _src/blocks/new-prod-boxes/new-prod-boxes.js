@@ -68,7 +68,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
   try {
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
     const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
-    prodName = prodName.trim();
     const { price, discount } = product;
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     let oldPrice = price;
@@ -92,7 +91,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
 
     let adobeDataLayerProduct = {
       ID: product.platform_product_id,
-      name: prodName,
+      name: prodName.trim(),
       devices: product.variation.dimension_value,
       subscription: prodVersion,
       version: prodVersion,
