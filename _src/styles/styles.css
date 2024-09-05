@@ -1472,6 +1472,10 @@ body > div:first-child {
     height: 64px;
 }
 
+.visibility-hidden {
+  visibility: hidden;
+}
+
 .d-flex {
     display: flex;
 }
