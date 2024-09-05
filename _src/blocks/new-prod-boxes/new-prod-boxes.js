@@ -374,14 +374,6 @@ export default async function decorate(block, options) {
         const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
         // eslint-disable-next-line no-unused-vars
         const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
-        // let firstRadio = radioButtons.querySelector('td:first-child')?.textContent;
-        // let secondRadio = radioButtons.querySelector('td:nth-child(2)')?.textContent;
-        // planSwitcher2.classList.add('plan-switcher', 'addon');
-        // planSwitcher2.innerHTML = `
-        // <input type="radio" id="add-on-yearly-${addOnProdName.trim()}" name="${key}-add-on-plan" value="${key}-add-on-yearly-${addOnProdName.trim()}" checked>
-        // <label for="add-on-yearly-${addOnProdName.trim()}" class="radio-label">${firstRadio}</label><br>
-        // <input type="radio" id="add-on-monthly-${addOnProdMonthlyName.trim()}" name="${key}-add-on-plan" value="${key}-add-on-monthly-${addOnProdMonthlyName.trim()}">
-        // <label for="add-on-monthly-${addOnProdMonthlyName.trim()}" class='radio-label'>${secondRadio}</label>`;
         planSwitcher2 = createPlanSwitcher(radioButtons, key, addOnProdName, addOnProdMonthlyName, null, 'addon');
       }
 
