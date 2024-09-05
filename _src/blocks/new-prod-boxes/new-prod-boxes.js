@@ -68,7 +68,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
   try {
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
     const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
-
+    prodName = prodName.trim();
     const { price, discount } = product;
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     let oldPrice = price;
@@ -83,9 +83,26 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
 
     let newPriceBilled = '';
     let newPriceListed = '';
+    let prodVersion = 'monthly';
+
     if (!prodName.endsWith('m') && type === 'monthly') {
       newPrice = `${(parseInt(newPrice, 10) / 12)}`;
+      prodVersion = 'yearly';
     }
+
+    let adobeDataLayerProduct = {
+      ID: product.platform_product_id,
+      name: prodName,
+      devices: product.variation.dimension_value,
+      subscription: prodVersion,
+      version: prodVersion,
+      basePrice: price,
+      discountValue: discount.discounted_price,
+      discountRate: discountPercentage,
+      currency: product.currency_label,
+      priceWithTax: discount.discounted_price,
+    };
+    dataLayerProducts.push(adobeDataLayerProduct);
 
     oldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
     if (hideDecimals === 'true') {
@@ -527,14 +544,12 @@ export default async function decorate(block, options) {
   }
 
   // dataLayer push with all the products
-  if (options) {
-    window.adobeDataLayer.push({
-      event: 'product loaded',
-      product: {
-        [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-      },
-    });
-  }
+  window.adobeDataLayer.push({
+    event: 'product loaded',
+    product: {
+      [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
+    },
+  });
 
   window.hj = window.hj || function initHotjar(...args) {
     (hj.q = hj.q || []).push(...args);
