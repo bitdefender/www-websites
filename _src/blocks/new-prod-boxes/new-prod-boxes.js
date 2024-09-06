@@ -626,6 +626,13 @@ export default async function decorate(block, options) {
     decorateIcons(block.closest('.section'));
 
     document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
+      window.adobeDataLayer.push({
+        event: 'product loaded',
+        product: {
+          [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
+        },
+      });
+
       sendAnalyticsPageLoadedEvent(true);
     });
   }
