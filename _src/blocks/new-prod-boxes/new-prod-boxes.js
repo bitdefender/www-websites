@@ -64,7 +64,7 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   }
   return buyLinkHref;
 }
-async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
+async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
   try {
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
     const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
@@ -151,7 +151,7 @@ export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
-    addOnProducts, addOnMonthlyProducts, type, hideDecimals,
+    addOnProducts, addOnMonthlyProducts, type, hideDecimals, saveText,
   } = block.closest('.section').dataset;
   // if options exists, this means the component is being called from aem
   if (options) {
@@ -426,24 +426,24 @@ export default async function decorate(block, options) {
           </div>`;
 
         block.children[key].outerHTML = prodBox.innerHTML;
-        let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+        let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
         block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
         yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = priceBox;
 
         if (monthlyProducts) {
-          const montlyPriceBox = await updateProductPrice(prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+          const montlyPriceBox = await updateProductPrice(prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
           monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
         }
 
         if (addOn && addOnMonthlyProductsAsList) {
           const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
-          let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+          let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
           monthlyAddOnPricesBoxes[`${key}-add-on-monthly-${addOnProdMonthlyName.trim()}`] = monthlyAddOnPriceBox;
         }
 
         if (addOn && addOnProductsAsList) {
           const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
-          addOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+          addOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
           block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
           yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = addOnPriceBox;
         }
