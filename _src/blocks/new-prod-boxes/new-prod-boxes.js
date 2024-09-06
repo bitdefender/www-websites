@@ -619,8 +619,9 @@ export default async function decorate(block, options) {
   }
 
   if (isInLandingPages) {
-    const { decorateIcons, GLOBAL_EVENTS } = await import('../../scripts/utils/utils.js');
+    const { decorateIcons } = await import('../../scripts/utils/utils.js');
     // eslint-disable-next-line import/no-unresolved
+    const { GLOBAL_EVENTS } = await import(`https://${window.location.hostname}/_src-lp/scripts/utils/utils.js`);
     const { sendAnalyticsPageLoadedEvent } = await import(`https://${window.location.hostname}/_src-lp/scripts/adobeDataLayer.js`);
     decorateIcons(block.closest('.section'));
 
