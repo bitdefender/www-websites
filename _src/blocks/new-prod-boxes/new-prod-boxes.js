@@ -639,8 +639,6 @@ export default async function decorate(block, options) {
 
   if (!isInLandingPages) {
     // dataLayer push with all the products
-    // add event listener for adobe data layer
-
     window.adobeDataLayer.push({
       event: 'product loaded',
       product: {
