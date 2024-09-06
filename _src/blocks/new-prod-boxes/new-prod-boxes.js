@@ -115,7 +115,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, pid = null, bu
       <div class="hero-aem__price mt-3">
         <div>
           <span class="prod-oldprice">${oldPrice}</span>
-          <span class="prod-save">Save ${discountPercentage}%<span class="save"></span></span>
+          <span class="prod-save">${saveText} ${discountPercentage}%<span class="save"></span></span>
         </div>
         <div class="newprice-container mt-2">
           <span class="prod-newprice">${newPriceListed} ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
