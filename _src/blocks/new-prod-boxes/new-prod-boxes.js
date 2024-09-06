@@ -627,7 +627,7 @@ export default async function decorate(block, options) {
 
     document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
       window.adobeDataLayer.push({
-        event: 'product loaded',
+        event: 'campaign product',
         product: {
           [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
         },
