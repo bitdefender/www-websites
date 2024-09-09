@@ -389,7 +389,7 @@ async function runDefaultHeaderLogic(block) {
       } else {
         domain = domain.split('-').join('_');
       }
-      const aemHeaderFetch = await fetch(`https://www.bitdefender.com/content/experience-fragments/bitdefender/language_master/${domain}/header-navigation/mega-menu/master/jcr:content/root/mega_menu.styled.html`);
+      const aemHeaderFetch = await fetch(`https://stage.bitdefender.com/content/experience-fragments/bitdefender/language_master/${domain}/header-navigation/mega-menu/master/jcr:content/root/mega_menu.html`);
       if (!aemHeaderFetch.ok) {
         return;
       }
