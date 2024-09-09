@@ -395,7 +395,7 @@ async function runDefaultHeaderLogic(block) {
         ? 'https://stage.bitdefender.com'
         : '';
 
-      //TODO: this needs to be updated to also bring the language bar in the future !!!
+      // TODO: this needs to be updated to also bring the language bar in the future !!!
       const aemHeaderFetch = await fetch(`${aemHeaderLink}/content/experience-fragments/bitdefender/language_master/${domain}/header-navigation/mega-menu/master/jcr:content/root/mega_menu.html`);
       if (!aemHeaderFetch.ok) {
         return;
