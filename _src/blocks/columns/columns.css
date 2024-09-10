@@ -56,6 +56,14 @@
   row-gap: 30px;
 }
 
+.columns img {
+  width: 100%;
+}
+
+.modal-container.get-bitdefender-familypack img {
+  height: auto;
+}
+
 .columns.awards > div img {
   display: block;
   object-fit: contain;
@@ -171,6 +179,10 @@
   font-weight: bold;
 }
 
+.columns.with-box-shadow > div > div:last-child {
+  border: none;
+}
+
 .section.subtitle-blue .columns.benefits > div {
   gap: 45px;
   margin-bottom: 2em;
@@ -183,14 +195,6 @@
   line-height: 24px;
 }
 
-.columns img {
-  width: 100%;
-}
-
-.modal-container.get-bitdefender-familypack img {
-  height: auto;
-}
-
 .columns > div > .columns-img-col {
   order: 0;
   text-align: center;
@@ -199,10 +203,6 @@
 
 .columns > div > .columns-img-col img {
   display: block;
-}
-
-.columns.with-box-shadow > div > div:last-child {
-  border: none;
 }
 
 .creators .columns-container .columns > div:last-of-type {
