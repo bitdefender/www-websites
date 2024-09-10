@@ -18,17 +18,14 @@
 .dropdownbox-compare-container .block > div > div {
   border-bottom: 1px solid #e4f2ff;
   border: 1px solid #e4f2ff;
+  flex: 1;
+  padding: 15px 20px;
+  display: inline-block;
 }
 
 .dropdownbox-compare-container .block > div:nth-child(1) > div {
   font-weight: bold;
   cursor: pointer;
-}
-
-.dropdownbox-compare-container .block > div > div {
-  flex: 1;
-  padding: 15px 20px;
-  display: inline-block;
 }
 
 .dropdownbox-compare-container .block > div > div strong em {
@@ -61,10 +58,6 @@
 
 .dropdownbox-compare-container.selected-1 .block > div > div:nth-child(2), .dropdownbox-compare-container.selected-2 .block > div > div:nth-child(3), .dropdownbox-compare-container.selected-3 .block > div > div:nth-child(4) {
   background-color: #f6f6f6;
-}
-
-.dropdownbox-compare-container.selected-2 .block > div > div:nth-child(2), .dropdownbox-compare-container.selected-3 .block > div > div:nth-child(2) {
-  background-color: white;
 }
 
 .dropdownbox-compare-container.selected-2 .block > div > div:nth-child(2), .dropdownbox-compare-container.selected-3 .block > div > div:nth-child(2) {
@@ -120,7 +113,7 @@
   font-weight: normal;
 }
 
-.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div {
+.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div {
   display: none;
 }
 

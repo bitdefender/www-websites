@@ -25,6 +25,9 @@
 
 main .hero {
   background-color: #F6F6F6;
+  position: relative;
+  padding: 0;
+  min-height: 300px;
 }
 
 /* breadcrumbs */
@@ -115,12 +118,6 @@ main .hero .hero-content > div {
 
 main .hero-container .hero-wrapper {
   padding: 0;
-}
-
-main .hero {
-  position: relative;
-  padding: 0;
-  min-height: 300px;
 }
 
 main .hero.new2024design::after {
