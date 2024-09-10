@@ -23,9 +23,14 @@
   --breadcrumbs-font-size-s: 12px;
 }
 
+main .hero {
+  background-color: #F6F6F6;
+  position: relative;
+  padding: 0;
+  min-height: 300px;
+}
 
 /* breadcrumbs */
-
 main .hero .hero-content .breadcrumb {
   font-weight: var(--font-weight-bold);
   color: #dedede;
@@ -85,18 +90,34 @@ main .hero-container {
   margin: 0 auto;
 }
 
+main .hero-container.blue-title .hero-content > div {
+  width: 100%;
+}
+
+main .hero-container.blue-title .hero-content h1 {
+  --tw-text-opacity: 1;
+  color: rgb(0 110 255 / var(--tw-text-opacity));
+}
+
+main .hero-container.migration .hero-content h2 {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-top: 1em;
+  margin-bottom: 9px;
+}
+
+main .hero-container.migration .hero-content p em {
+  font-size: 1.125rem;
+  font-style: normal;
+}
+
 main .hero .hero-content > div {
   width: 100%;
 }
 
 main .hero-container .hero-wrapper {
   padding: 0;
-}
-
-main .hero {
-  position: relative;
-  padding: 0;
-  min-height: 300px;
 }
 
 main .hero.new2024design::after {
@@ -495,6 +516,10 @@ main .hero .hero-awards li::after {
 
   main .hero .hero-content .breadcrumb a::after {
     margin: 0 9px;
+  }
+
+  main .hero-container.blue-title .hero-content > div {
+    width: 630px;
   }
 }
 
