@@ -185,6 +185,11 @@ div[role="row"] div[role="cell"]:first-of-type p:last-of-type {
     margin-bottom: 0;
 }
 
+.section.product-comparison-table-container.migration p {
+    color: #7e7e7e;
+    font-size: 12px;
+}
+
 div[role="row"].expandable-row div[role="cell"] p:first-of-type {
     color: var(--expandable-row-text-color);
     text-align: center;
@@ -513,16 +518,12 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
     }
 
     .section.product-comparison-table-container.migration h3 {
-      font-size: 21px !important;
+        font-size: 21px !important;
+        margin-top: 1em !important;
     }
 
     .section.product-comparison-table-container.migration .new-price-box .total-text {
       font-size: 16px;
-    }
-
-    .section.product-comparison-table-container.migration h3 {
-      font-size: 21px !important;
-      margin-top: 1em !important;
     }
   }
 
@@ -582,11 +583,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
 .section.product-comparison-table-container.migration p.button-container {
     margin-bottom: 2em;
-}
-
-.section.product-comparison-table-container.migration p {
-    color: #7e7e7e;
-    font-size: 12px;
 }
 
 .section.product-comparison-table-container.migration .product-comparison-price > p:last-of-type{
