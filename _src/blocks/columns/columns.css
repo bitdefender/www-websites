@@ -73,44 +73,6 @@
   margin-bottom: -10px;
 }
 
-.columns-container.chat-options .columns > div > div {
-  padding: 2em;
-}
-
-.columns-container.chat-options p.button-container a {
-  background-color: transparent;
-  border: 2px solid black;
-  color: black
-}
-
-.columns-container.chat-options p.button-container a:hover {
-  background-color: black;
-  color: white;
-}
-
-.columns-container.chat-options table {
-  width: 100%;
-}
-
-.columns-container.chat-options table tr {
-  display: flex;
-  justify-content: space-between;
-}
-
-.grey-version .columns > div > div img, .small-icons .columns > div > div img {
-  height: 60px;
-  width: auto;
-}
-
-.columns-container.chat-options table tr td:first-of-type img {
-  height: 40px;
-}
-
-.columns-container.chat-options table tr td:last-of-type img {
-  height: 133px;
-  display: none;
-}
-
 .percent-table .columns table tr {
   align-items: center;
   display: flex;
@@ -169,6 +131,16 @@
   color: rgb(0 110 255 / var(--tw-text-opacity));
 }
 
+.columns.video-presentation > div > div {
+  margin: 0 auto;
+}
+
+.columns.carousel > div > div {
+  margin: 10px 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .section.subtitle-blue .columns.benefits > div {
   gap: 45px;
   margin-bottom: 2em;
@@ -179,17 +151,6 @@
   font-weight: 400;
   letter-spacing: .006em;
   line-height: 24px;
-}
-
-/* video presentation */
-.columns.video-presentation > div > div {
-  margin: 0 auto;
-}
-
-.columns.carousel > div > div {
-  margin: 10px 5px;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .columns.with-box-shadow > div > div {
@@ -278,6 +239,45 @@
   justify-content: center;
   padding: 5px 10px;
   font-size: 14px;
+}
+
+
+.columns-container.chat-options .columns > div > div {
+  padding: 2em;
+}
+
+.columns-container.chat-options p.button-container a {
+  background-color: transparent;
+  border: 2px solid black;
+  color: black
+}
+
+.columns-container.chat-options p.button-container a:hover {
+  background-color: black;
+  color: white;
+}
+
+.columns-container.chat-options table {
+  width: 100%;
+}
+
+.columns-container.chat-options table tr {
+  display: flex;
+  justify-content: space-between;
+}
+
+.grey-version .columns > div > div img, .small-icons .columns > div > div img {
+  height: 60px;
+  width: auto;
+}
+
+.columns-container.chat-options table tr td:first-of-type img {
+  height: 40px;
+}
+
+.columns-container.chat-options table tr td:last-of-type img {
+  height: 133px;
+  display: none;
 }
 
 @media (min-width: 767px) {
