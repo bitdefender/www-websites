@@ -141,18 +141,6 @@
   box-sizing: border-box;
 }
 
-.section.subtitle-blue .columns.benefits > div {
-  gap: 45px;
-  margin-bottom: 2em;
-}
-
-.section.subtitle-blue .columns.benefits p {
-  font-size: var(--body-font-size-s);
-  font-weight: 400;
-  letter-spacing: .006em;
-  line-height: 24px;
-}
-
 .columns.with-box-shadow > div > div {
   padding: 0 20px;
   border-right: none;
@@ -175,6 +163,18 @@
 .columns.bg-image > div > div:first-child {
   font-size: var(--heading-font-size-xl);
   font-weight: bold;
+}
+
+.section.subtitle-blue .columns.benefits > div {
+  gap: 45px;
+  margin-bottom: 2em;
+}
+
+.section.subtitle-blue .columns.benefits p {
+  font-size: var(--body-font-size-s);
+  font-weight: 400;
+  letter-spacing: .006em;
+  line-height: 24px;
 }
 
 .columns img {
