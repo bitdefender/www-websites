@@ -16,7 +16,10 @@ import {
 
 import {
   adobeMcAppendVisitorId,
-  createTag, getDefaultLanguage, GLOBAL_EVENTS,
+  createTag,
+  getDefaultLanguage,
+  getParamValue,
+  GLOBAL_EVENTS,
 } from './utils/utils.js';
 
 import { loadAnalytics } from './analytics.js';
@@ -121,15 +124,6 @@ export function getOperatingSystem(userAgent) {
   ];
 
   return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
-/**
- * Returns the value of a query parameter
- * @returns {String}
- */
-function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
 }
 
 export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos) {
@@ -757,6 +751,46 @@ function eventOnDropdownSlider() {
     }
   });
 }
+function addIdsToEachSection() {
+  document.querySelectorAll('main .section > div:first-of-type').forEach((item) => {
+    // Find the first sibling that is not a default-content-wrapper
+    let componentWrapper = item;
+    while (componentWrapper && componentWrapper.classList.contains('default-content-wrapper')) {
+      if (!componentWrapper.nextElementSibling) {
+        return;
+      }
+      componentWrapper = componentWrapper.nextElementSibling;
+    }
+
+    const baseId = componentWrapper.className.split('-wrapper')[0];
+    let uniqueId = baseId;
+
+    let idCounter = 0;
+    // avoid infinite loops
+    const MAX_ID_ATTEMPTS = 100;
+    // Ensure the ID is unique by checking existing IDs and appending a counter if necessary
+    while (document.getElementById(uniqueId) && idCounter < MAX_ID_ATTEMPTS) {
+      idCounter += 1;
+      // append a number only if it's not the first attempt
+      if (idCounter !== 1) {
+        uniqueId = `${baseId}-${idCounter}`;
+      }
+    }
+
+    if (idCounter >= MAX_ID_ATTEMPTS) {
+      // eslint-disable-next-line
+      console.error('Unable to generate a unique ID after maximum attempts');
+      return;
+    }
+
+    if (baseId === 'terms') {
+      uniqueId = `tos${idCounter ? `-${idCounter}` : ''}`;
+    }
+
+    // Assign the unique ID to the parent element
+    componentWrapper.parentElement.id = uniqueId;
+  });
+}
 
 /**
  * Loads everything that happens a lot later,
@@ -778,6 +812,8 @@ async function loadPage() {
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await loadLazy(document);
+
+  addIdsToEachSection();
 
   const setupAnalytics = loadAnalytics(document, {
     edgeConfigId: '7275417f-3870-465c-af3e-84f8f4670b3c',

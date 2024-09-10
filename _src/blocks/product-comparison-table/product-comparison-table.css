@@ -54,6 +54,8 @@
 .product-comparison-header div[role="columnheader"]:not(:first-child) {
     border: 1px solid var(--first-table-cell-color);
     flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-comparison-header div[role="columnheader"]:not(:first-child).active {
@@ -118,6 +120,7 @@ div[role="cell"] .button-container , .product-comparison-header div[role="column
     color: var(--product-comparison-text-color);
     text-align: center;
     font-size: var(--body-font-size-xs);
+    flex-grow: 1;
 }
 
 .product-comparison-header div[role="cell"] p:first-of-type {

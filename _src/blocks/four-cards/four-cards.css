@@ -83,6 +83,10 @@
     }
 }
 
+.creators .title-size .default-content-wrapper p {
+  font-size: 24px;
+}
+
 
 .creator-cards .four-cards.block {
   display: flex;
@@ -100,15 +104,15 @@
 }
 
 .creator-cards.four-cards-container h3 {
-  font: normal normal bold 60px/69px Arial, sans-serif;
+  font: normal normal bold 60px/69px "IBM Plex Sans", sans-serif;
   text-align: center;
   margin-bottom: 28px;
 }
 
 .creator-cards.four-cards-container h4 {
-  font: normal normal normal 24px/26px Arial, sans-serif;
-  text-align: center;
-  margin-bottom: 72px;
+  font: normal normal bold 22px/24px "IBM Plex Sans", sans-serif;
+  text-align: left;
+
 }
 
 .four-cards-container.we-container {
@@ -160,6 +164,11 @@
 
 .creator-cards .default-content-wrapper:last-of-type {
   padding-top: 0;
+}
+
+.creator-cards .four-cards ul li div img {
+  height: 48px;
+  margin-bottom: 0;
 }
 
 /* a/b test styles, should be deleted after */
@@ -282,11 +291,18 @@
     padding-left: 20px;
     padding-right: 20px;
   }
+  
 }
 
 @media (max-width: 991px) {
   .creators .title-size .default-content-wrapper h2 {
     font-size: 31px;
+  }
+
+  .creators .title-size .default-content-wrapper p {
+    font-size: 18px;
+    line-height: 1.25;
+    margin-bottom: 9px;
   }
 
   .creator-cards .default-content-wrapper a.button:any-link {

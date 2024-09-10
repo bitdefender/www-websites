@@ -1,10 +1,10 @@
 import {
-  createNanoBlock, renderNanoBlocks, fetchProduct, getBuyLinkCountryPrefix, matchHeights,
+  createNanoBlock, renderNanoBlocks, fetchProduct, matchHeights,
 } from '../../scripts/utils/utils.js';
 
 const fetchedProducts = [];
 
-createNanoBlock('priceComparison', (code, variant, label) => {
+createNanoBlock('priceComparison', (code, variant, label, block) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   const oldPriceElement = document.createElement('p');
@@ -34,6 +34,11 @@ createNanoBlock('priceComparison', (code, variant, label) => {
         ${discounted} ${currency}
       </div>`;
       priceAppliedOnTime.innerHTML = label;
+
+      // update buy link
+      const currentProductIndex = fetchedProducts.length - 1;
+      const buyLink = block.querySelectorAll('.button-container a')[currentProductIndex];
+      buyLink.href = fetchedProducts[currentProductIndex].product.buy_link;
     })
     .catch((err) => {
       // eslint-disable-next-line no-console
@@ -280,14 +285,9 @@ export default function decorate(block) {
   const lastRowWithPrice = block.querySelector('.product-comparison-last-row-with-prices');
   [...headerList, lastRowWithPrice].forEach((item, idx) => {
     if (item) {
-      renderNanoBlocks(item, undefined, idx);
+      renderNanoBlocks(item, undefined, idx, block);
     }
   });
 
   matchHeights(block, 'h3');
-  block.querySelectorAll('.button-container a').forEach((link) => {
-    if (link && link.href.includes('/site/Store/buy/')) {
-      link.href = getBuyLinkCountryPrefix();
-    }
-  });
 }

@@ -1,3 +1,81 @@
+import ZuoraNLClass from '../zuora.js';
+
+export const IANA_BY_REGION_MAP = new Map([
+  [3, { locale: 'en-GB', label: 'united kingdom' }],
+  [4, { locale: 'au-AU', label: 'australia' }],
+  [5, { locale: 'de-DE', label: 'germany' }],
+  [6, { locale: 'ro-RO', label: 'romania' }],
+  [7, { locale: 'es-ES', label: 'spain' }],
+  [8, { locale: 'en-US', label: 'com' }],
+  [9, { locale: 'it-IT', label: 'italy' }],
+  [10, { locale: 'en-CA', label: 'canada' }],
+  [12, { locale: 'pt-PT', label: 'portugal' }],
+  [13, { locale: 'br-BR', label: 'brazil' }],
+  [14, { locale: 'fr-FR', label: 'france' }],
+  [15, { locale: 'en-GB', label: 'united kingdom' }],
+  [16, { locale: 'en-US', label: 'rest of the world EU countries' }],
+  [17, { locale: 'de-CH', label: 'germany-switzerland' }],
+  [19, { locale: 'en-ZA', label: 'en south africa' }],
+  [22, { locale: 'nl-NL', label: 'netherlands' }],
+  [24, { locale: 'en-VN', label: 'en vietnam' }],
+  [20, { locale: 'en-MX', label: 'en es mexico' }],
+  [21, { locale: 'en-CO', label: 'en es columbia' }],
+  [25, { locale: 'en-SG', label: 'en singapore' }],
+  [26, { locale: 'en-SE', label: 'en sweden' }],
+  [27, { locale: 'en-DK', label: 'en denmark' }],
+  [28, { locale: 'en-HU', label: 'en hungary' }],
+  [29, { locale: 'en-BG', label: 'en bulgaria' }],
+  [30, { locale: 'en-HR', label: 'en croatia' }],
+  [31, { locale: 'en-NO', label: 'en norway' }],
+  [32, { locale: 'en-MD', label: 'en moldova' }],
+  [33, { locale: 'en-RS', label: 'en serbia' }],
+  [34, { locale: 'en-RU', label: 'en russia' }],
+  [35, { locale: 'en-EG', label: 'en egypt' }],
+  [36, { locale: 'en-SA', label: 'en saudi arabia' }],
+  [37, { locale: 'fr-DZ', label: 'en Algeria' }],
+  [38, { locale: 'en-AE', label: 'en united arab emirates' }],
+  [39, { locale: 'en-PS', label: 'en palestinia' }],
+  [40, { locale: 'en-CN', label: 'en china' }],
+  [41, { locale: 'en-HK', label: 'en hong kong' }],
+  [42, { locale: 'en-CK', label: 'Cook Islands' }],
+  [43, { locale: 'en-KE', label: 'en kenya' }],
+  [44, { locale: 'en-NG', label: 'en nigeria' }],
+  [45, { locale: 'fr-TN', label: 'en Tunisia' }],
+  [46, { locale: 'en-PL', label: 'en poland' }],
+  [47, { locale: 'en-CZ', label: 'en Czech' }],
+  [48, { locale: 'es-VE', label: 'en Venezuela' }],
+  [49, { locale: 'en-TR', label: 'en turkey' }],
+  [50, { locale: 'en-ID', label: 'en Indonesia' }],
+  [51, { locale: 'en-PH', label: 'en Philippines' }],
+  [52, { locale: 'en-TW', label: 'en taiwan' }],
+  [53, { locale: 'en-UA', label: 'en Ukraine' }],
+  [54, { locale: 'es-CL', label: 'en Chile' }],
+  [55, { locale: 'en-MY', label: 'en Malaysia' }],
+  [56, { locale: 'es-AR', label: 'en Argentina' }],
+  [57, { locale: 'es-PE', label: 'en Peru' }],
+  [59, { locale: 'hr-HR', label: 'Croatia' }],
+  [60, { locale: 'ma-MA', label: 'Morocco' }],
+  [61, { locale: 'pk-PK', label: 'Pakistan' }],
+  [62, { locale: 'bo-BO', label: 'Bolivia' }],
+  [63, { locale: 'do-DO', label: 'Dominican Republic' }],
+  [64, { locale: 'kw-KW', label: 'Kuwait' }],
+  [65, { locale: 'jo-JO', label: 'Jordan' }],
+  [66, { locale: 'th-TH', label: 'Thailand' }],
+  [67, { locale: 'en-BD', label: 'en Bangladesh' }],
+  [68, { locale: 'en-LK', label: 'en Sri Lanka' }],
+  [69, { locale: 'en-PY', label: 'en Paraguay' }],
+  [70, { locale: 'en-UY', label: 'en Uruguay' }],
+  [72, { locale: 'en-JP', label: 'en Japan' }],
+]);
+
+/**
+ * Returns the value of a query parameter
+ * @returns {String}
+ */
+export function getParamValue(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
 export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
 export function getDefaultLanguage() {
   // TODO: refactor. It's not working as should for en locales.
@@ -41,23 +119,70 @@ export function createTag(tag, attributes, html) {
   return el;
 }
 
-async function findProductVariant(cachedResponse, variant) {
-  const response = await cachedResponse;
-  if (!response.ok) throw new Error(`${response.statusText}`);
-  const json = await response.clone().json();
+function isZuora() {
+  const url = new URL(window.location.href);
+  return url.pathname.includes('/nl-nl/') || url.pathname.includes('/nl-be/');
+}
 
-  // eslint-disable-next-line guard-for-in,no-restricted-syntax
-  for (const i in json.data.product.variations) {
+async function findProductVariant(cachedResponse, variant) {
+  if (!isZuora()) {
+    const response = await cachedResponse;
+    if (!response.ok) throw new Error(`${response.statusText}`);
+    const json = await response.clone().json();
+
     // eslint-disable-next-line guard-for-in,no-restricted-syntax
-    for (const j in json.data.product.variations[i]) {
-      const v = json.data.product.variations[i][j];
-      if (v.variation.variation_name === variant) {
-        return v;
+    for (const i in json.data.product.variations) {
+      // eslint-disable-next-line guard-for-in,no-restricted-syntax
+      for (const j in json.data.product.variations[i]) {
+        const v = json.data.product.variations[i][j];
+        if (v.variation.variation_name === variant) {
+          return v;
+        }
       }
     }
+
+    throw new Error('Variant not found');
   }
 
-  throw new Error('Variant not found');
+  // zuora logic
+  // eslint-disable-next-line no-promise-executor-return
+  await new Promise((res) => setTimeout(res, 50));
+
+  const resp = cachedResponse.selected_variation;
+  const units = cachedResponse.selected_users;
+
+  const zuoraFormatedVariant = {
+    buy_link: cachedResponse.buy_link,
+    active_platform: null,
+    avangate_variation_prefix: null,
+    currency_id: null,
+    currency_iso: resp.currency_iso,
+    currency_label: resp.currency_label,
+    discount: {
+      discounted_price: resp.discount.discounted_price,
+      discount_value: resp.discount.discount_value,
+      discount_type: null,
+    },
+    in_selector: null,
+    platform_id: resp.platform_id,
+    platform_product_id: null, // todo not present '30338209',
+    price: resp.price,
+    product_id: resp.product_id,
+    promotion: resp.promotion,
+    promotion_functions: null,
+    region_id: resp.region_id,
+    variation: {
+      variation_id: null,
+      variation_name: resp.variation.variation_name, // todo not present
+      dimension_id: null,
+      dimension_value: units, // todo not present
+      years: resp.variation.years,
+    },
+    variation_active: null,
+    variation_id: resp.variation_id,
+  };
+
+  return zuoraFormatedVariant;
 }
 
 export function getMetadata(name) {
@@ -136,7 +261,7 @@ export function getBuyLinkCountryPrefix() {
   }
 
   if (pathname.includes('/en-gb/')) {
-    return 'https://www.bitdefender.com.uk/site/Store/buy';
+    return 'https://www.bitdefender.co.uk/site/Store/buy';
   }
 
   if (pathname.includes('/ro-ro/')) {
@@ -190,6 +315,19 @@ export function getBuyLinkCountryPrefix() {
   return 'https://www.bitdefender.com/site/Store/buy';
 }
 
+export function generateProductBuyLink(product, productCode) {
+  if (isZuora()) {
+    return product.buy_link;
+  }
+
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${product.variation.dimension_value}/${product.variation.years}/`;
+}
+
+export function formatPrice(price, currency, region) {
+  const ianaRegionFormat = IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US';
+  return new Intl.NumberFormat(ianaRegionFormat, { style: 'currency', currency }).format(price);
+}
+
 /**
  * Fetches a product from the Bitdefender store.
  * @param code The product code
@@ -198,78 +336,139 @@ export function getBuyLinkCountryPrefix() {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
-  let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
-  const data = new FormData();
-  // extract pid from url
   const url = new URL(window.location.href);
-  if (!pid) {
-    // eslint-disable-next-line no-param-reassign
-    pid = url.searchParams.get('pid') || getMetadata('pid');
-  }
 
-  data.append('data', JSON.stringify({
-    ev: 1,
-    product_id: code,
-    config: {
-      extra_params: {
-        // eslint-disable-next-line object-shorthand
-        pid: pid,
+  if (!isZuora()) {
+    let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
+    const data = new FormData();
+    // extract pid from url
+
+    if (!pid) {
+      // eslint-disable-next-line no-param-reassign
+      pid = url.searchParams.get('pid') || getMetadata('pid');
+    }
+
+    data.append('data', JSON.stringify({
+      ev: 1,
+      product_id: code,
+      config: {
+        extra_params: {
+          // eslint-disable-next-line object-shorthand
+          pid: pid,
+        },
       },
-    },
-  }));
+    }));
 
-  if (url.hostname.includes('bitdefender.co.uk')) {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '3';
-    data.set('data', JSON.stringify(newData));
+    if (url.hostname.includes('bitdefender.co.uk')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '3';
+      data.set('data', JSON.stringify(newData));
+    }
+
+    if (url.hostname.includes('bitdefender.fr')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '14';
+      data.set('data', JSON.stringify(newData));
+    }
+
+    if (siteName === 'uk') {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '3';
+      data.set('data', JSON.stringify(newData));
+    }
+
+    if (siteName === 'fr') {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '14';
+      data.set('data', JSON.stringify(newData));
+    }
+
+    if (url.pathname.includes('/en-au/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '4';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/en-gb/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '3';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.co.uk/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/pt-br/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '13';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.com.br/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/de-de/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '5';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.de/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/de-ch/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '17';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.de/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/fr-fr/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '14';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.fr/site/Store/ajax';
+    }
+
+    if (url.pathname.includes('/es-es/')) {
+      const newData = JSON.parse(data.get('data'));
+      newData.config.force_region = '7';
+      data.set('data', JSON.stringify(newData));
+      FETCH_URL = 'https://www.bitdefender.es/site/Store/ajax';
+    }
+
+    if ((siteName === 'hk' || siteName === 'tw')) {
+      // append force_region for hk and tw
+      const newData = JSON.parse(data.get('data'));
+
+      newData.config.force_region = siteName === 'hk' ? '41' : '52';
+
+      data.set('data', JSON.stringify(newData));
+    }
+
+    if (cacheResponse.has(code)) {
+      return findProductVariant(cacheResponse.get(code), variant);
+    }
+
+    // we don't await the response here, because we want to cache it
+    const response = fetch(FETCH_URL, {
+      method: 'POST',
+      body: data,
+    });
+
+    cacheResponse.set(code, response);
+    return findProductVariant(response, variant);
   }
 
-  if (url.hostname.includes('bitdefender.fr')) {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '14';
-    data.set('data', JSON.stringify(newData));
-  }
+  // zuora logic
+  // if (cacheResponse.has(code)) {
+  //   return findProductVariant(cacheResponse.get(code), variant);
+  // }
 
-  if (siteName === 'uk') {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '3';
-    data.set('data', JSON.stringify(newData));
-  }
+  const variantSplit = variant.split('-');
+  const units = variantSplit[0].split('u')[0];
+  const years = variantSplit[1].split('y')[0];
+  const campaign = getParamValue('campaign');
+  const zuoraResponse = await ZuoraNLClass.loadProduct(`${code}/${units}/${years}`, campaign);
+  // zuoraResponse.ok = true;
 
-  if (siteName === 'fr') {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '14';
-    data.set('data', JSON.stringify(newData));
-  }
-
-  if (url.pathname.includes('/en-au/')) {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '4';
-    data.set('data', JSON.stringify(newData));
-    FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
-  }
-
-  if ((siteName === 'hk' || siteName === 'tw')) {
-    // append force_region for hk and tw
-    const newData = JSON.parse(data.get('data'));
-
-    newData.config.force_region = siteName === 'hk' ? '41' : '52';
-
-    data.set('data', JSON.stringify(newData));
-  }
-
-  if (cacheResponse.has(code)) {
-    return findProductVariant(cacheResponse.get(code), variant);
-  }
-
-  // we don't await the response here, because we want to cache it
-  const response = fetch(FETCH_URL, {
-    method: 'POST',
-    body: data,
-  });
-
-  cacheResponse.set(code, response);
-  return findProductVariant(response, variant);
+  // cacheResponse.set(code, zuoraResponse);
+  return findProductVariant(zuoraResponse, variant);
 }
 
 const nanoBlocks = new Map();
@@ -361,7 +560,12 @@ export function getDatasetFromSection(block) {
  * Renders nano blocks
  * @param parent The parent element
  */
-export function renderNanoBlocks(parent = document.body, mv = undefined, index = undefined) {
+export function renderNanoBlocks(
+  parent = document.body,
+  mv = undefined,
+  index = undefined,
+  block = undefined,
+) {
   const regex = /{([^}]+)}/g;
   findTextNodes(parent).forEach((node) => {
     const text = node.textContent.trim();
@@ -379,7 +583,7 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
         const [newName, ...params] = parseParams(newMatch);
         const renderer = nanoBlocks.get(newName.toLowerCase());
         if (renderer) {
-          const element = mv ? renderer(mv, ...params) : renderer(...params);
+          const element = mv ? renderer(mv, ...params, block) : renderer(...params, block);
           element.classList.add('nanoblock');
           const oldElement = node.parentNode;
           oldElement.parentNode.replaceChild(element, oldElement);
@@ -613,4 +817,9 @@ export async function matchHeights(targetNode, selector) {
   window.addEventListener('resize', () => {
     adjustHeights();
   });
+}
+
+export function getPidFromUrl() {
+  const url = new URL(window.location.href);
+  return url.searchParams.get('pid') || getMetadata('pid');
 }

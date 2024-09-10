@@ -389,7 +389,14 @@ async function runDefaultHeaderLogic(block) {
       } else {
         domain = domain.split('-').join('_');
       }
-      const aemHeaderFetch = await fetch(`https://www.bitdefender.com/content/experience-fragments/bitdefender/language_master/${domain}/header-navigation/mega-menu/master/jcr:content/root/mega_menu.styled.html`);
+
+      const aemHeaderLink = window.location.hostname.includes('.hlx.')
+        || window.location.hostname.includes('localhost')
+        ? 'https://stage.bitdefender.com'
+        : '';
+
+      // TODO: this needs to be updated to also bring the language bar in the future !!!
+      const aemHeaderFetch = await fetch(`${aemHeaderLink}/content/experience-fragments/bitdefender/language_master/${domain}/header-navigation/mega-menu/master/jcr:content/root/mega_menu.html`);
       if (!aemHeaderFetch.ok) {
         return;
       }
