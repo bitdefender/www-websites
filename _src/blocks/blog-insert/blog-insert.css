@@ -1,3 +1,8 @@
 .blog-insert-container {
     text-align: center;
 }
+
+.blog-insert-container img {
+    width: 100%;
+    height: auto;
+}
