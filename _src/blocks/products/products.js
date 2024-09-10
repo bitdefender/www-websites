@@ -4,6 +4,7 @@ import {
   fetchProduct,
   createTag,
   generateProductBuyLink,
+  matchHeights,
 } from '../../scripts/utils/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
@@ -477,71 +478,27 @@ export default function decorate(block) {
       }
     }
   });
-  const matchHeights = (targetNode, selector) => {
-    const resetHeights = () => {
-      const elements = targetNode.querySelectorAll(selector);
-      elements.forEach((element) => {
-        element.style.minHeight = '';
-      });
-    };
-
-    const adjustHeights = () => {
-      if (window.innerWidth >= 768) {
-        resetHeights();
-        const elements = targetNode.querySelectorAll(selector);
-        const elementsHeight = Array.from(elements).map((element) => element.offsetHeight);
-        const maxHeight = Math.max(...elementsHeight);
-
-        elements.forEach((element) => {
-          element.style.minHeight = `${maxHeight}px`;
-        });
-      } else {
-        resetHeights();
-      }
-    };
-
-    const matchHeightsCallback = (mutationsList) => {
-      Array.from(mutationsList).forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          adjustHeights();
-        }
-      });
-    };
-
-    const observer = new MutationObserver(matchHeightsCallback);
-
-    if (targetNode) {
-      observer.observe(targetNode, { childList: true, subtree: true });
-    }
-
-    window.addEventListener('resize', () => {
-      adjustHeights();
-    });
-  };
 
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
     if (!card.classList.contains('featured')) {
-      console.log(typeof cards);
       // If there is no featured card, do nothing
       if (!featuredCard) {
         return;
       }
-      const neededHeight = '28px'; // featuredCard.querySelector('.featured').offsetHeight;
-
+      const neededHeight = '2rem';
       let space = card.querySelector('h3');
       space = space.nextElementSibling;
       const emptyDiv = document.createElement('div');
       space.insertAdjacentElement('afterend', emptyDiv);
+      emptyDiv.classList.add('featured');
+      emptyDiv.style.visibility = 'hidden';
       emptyDiv.style.minHeight = neededHeight;
-      emptyDiv.style.marginTop = '10px';
-      emptyDiv.style.marginBottom = '15px';
-      matchHeights(card, 'h3');
-      matchHeights(card, 'p:nth-of-type(2)');
-      matchHeights(card, 'p:nth-of-type(3)');
     }
   });
-
+  matchHeights(block, 'h3');
+  matchHeights(block, 'p:nth-of-type(2)');
+  matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');
 }
