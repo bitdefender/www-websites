@@ -9,32 +9,15 @@
 }
 
 .dropdownbox-compare-container .block > div {
-  padding: 15px 30px;
+  padding: 0;
+  font-weight: 500;
+  display: flex;
 }
 
 /* blue tbs */
 .dropdownbox-compare-container .block > div > div {
   border-bottom: 1px solid #e4f2ff;
   border: 1px solid #e4f2ff;
-}
-
-.dropdownbox-compare-container .block > div {
-  padding: 0;
-  font-weight: 500;
-  display: flex;
-}
-
-.dropdownbox-compare-container .block > div:nth-child(1) > div:nth-child(1) {
-  color: #fff;
-  background-color: #006eff;
-}
-
-.dropdownbox-compare-container .block > div:not(:nth-child(1)) > div:nth-child(1) {
-  background: #e4f2ff;
-}
-
-.dropdownbox-compare-container .block > div:first-of-type > div, .dropdownbox-compare-container .block > div:last-of-type > div {
-  border-bottom: 0 none;
 }
 
 .dropdownbox-compare-container .block > div:nth-child(1) > div {
@@ -53,6 +36,25 @@
   font-style: normal;
 }
 
+.dropdownbox-compare-container .block > div:first-of-type > div, .dropdownbox-compare-container .block > div:last-of-type > div {
+  border-bottom: 0 none;
+}
+
+.dropdownbox-compare-container .block > div > div:not(:nth-child(1)) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdownbox-compare-container .block > div:nth-child(1) > div:nth-child(1) {
+  color: #fff;
+  background-color: #006eff;
+}
+
+.dropdownbox-compare-container .block > div:not(:nth-child(1)) > div:nth-child(1) {
+  background: #e4f2ff;
+}
+
 .dropdownbox-compare-container .block:not(.selected-2) > div > div:nth-child(2), .dropdownbox-compare-container .block.selected-1 > div > div:nth-child(2), .dropdownbox-compare-container .block.selected-2 > div > div:nth-child(3), .dropdownbox-compare-container .block.selected-3 > div > div:nth-child(4) {
   background-color: #f6f6f6;
 }
@@ -67,12 +69,6 @@
 
 .dropdownbox-compare-container.selected-2 .block > div > div:nth-child(2), .dropdownbox-compare-container.selected-3 .block > div > div:nth-child(2) {
   background-color: white;
-}
-
-.dropdownbox-compare-container .block > div > div:not(:nth-child(1)) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .dropdownbox-compare-container .block > div:not(:first-child) > div:first-child {
@@ -99,7 +95,7 @@
   margin-left: 26px;
 }
 
-.dropdownbox-compare-container .block > div > div span.greenTag {
+.dropdownbox-compare-container .block > div > div span.green-tag {
   background: #2cb43d;
   border-radius: 50px;
   color: #3c3c3c;
@@ -124,7 +120,7 @@
   font-weight: normal;
 }
 
-.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div {
+.dropdownbox-compare-container .block.closed > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div, .dropdownbox-compare-container.closed .block > div:not(:first-child) > div {
   display: none;
 }
 

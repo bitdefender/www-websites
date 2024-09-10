@@ -2,7 +2,7 @@ export default function decorate(block) {
   // search for [] to replace with span greeenTag class
   const getFirstDivs = block.querySelectorAll('.dropdownbox-compare-container .block > div > div:nth-child(1)');
   getFirstDivs.forEach((item) => {
-    item.innerHTML = item.innerHTML.replace('[', '<span class="greenTag">');
+    item.innerHTML = item.innerHTML.replace('[', '<span class="green-tag">');
     item.innerHTML = item.innerHTML.replace(']', '</span>');
   });
 
