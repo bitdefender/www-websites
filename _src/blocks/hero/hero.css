@@ -87,11 +87,11 @@ main .hero-container {
   margin: 0 auto;
 }
 
-main .hero-container.blue_title .hero-content > div {
+main .hero-container.blue-title .hero-content > div {
   width: 100%;
 }
 
-main .hero-container.blue_title .hero-content h1 {
+main .hero-container.blue-title .hero-content h1 {
   --tw-text-opacity: 1;
   color: rgb(0 110 255 / var(--tw-text-opacity));
 }
@@ -521,7 +521,7 @@ main .hero .hero-awards li::after {
     margin: 0 9px;
   }
 
-  main .hero-container.blue_title .hero-content > div {
+  main .hero-container.blue-title .hero-content > div {
     width: 630px;
   }
 }
