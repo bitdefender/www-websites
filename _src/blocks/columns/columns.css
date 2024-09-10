@@ -56,6 +56,11 @@
   row-gap: 30px;
 }
 
+.columns.awards > div img {
+  display: block;
+  object-fit: contain;
+}
+
 .grey-version .columns > div {
   display: flex;
   justify-content: space-between;
@@ -247,10 +252,27 @@
   padding: 2em;
 }
 
+.columns.bg-image a{
+  color: white
+}
+
+.columns.new-v2 a {
+  color: #006EFF!important;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all .2s cubic-bezier(.4,0,.2,1);
+}
+
 .columns-container.chat-options p.button-container a {
   background-color: transparent;
   border: 2px solid black;
   color: black
+}
+
+.columns.new-v2 a:hover {
+  color: #0A53C5;
+  transform: translateX(10px);
 }
 
 .columns-container.chat-options p.button-container a:hover {
@@ -270,6 +292,15 @@
 .grey-version .columns > div > div img, .small-icons .columns > div > div img {
   height: 60px;
   width: auto;
+}
+
+.columns.video-presentation .linked-image-container img {
+  width: 150px;
+  height: 44px;
+}
+
+.columns.new-v2 > div > .columns-img-col img {
+  object-fit: contain;
 }
 
 .columns-container.chat-options table tr td:first-of-type img {
@@ -467,11 +498,6 @@
   margin-bottom: 24px;
 }
 
-.columns.awards > div img {
-  display: block;
-  object-fit: contain;
-}
-
 .columns.video-presentation .button-container {
   display: inline-block;
   padding-right: 13px;
@@ -482,11 +508,6 @@
   padding-right: 3px;
   margin-top: 0;
   margin-bottom: 0;
-}
-
-.columns.video-presentation .linked-image-container img {
-  width: 150px;
-  height: 44px;
 }
 
 .columns.video-presentation ul {
@@ -544,6 +565,13 @@
   max-height: 293px;
 }
 
+.columns.carousel {
+  width: 100%;
+  margin-top: 50px;
+  overflow: hidden;
+  height: 437px;
+}
+
 .section.migration .columns.carousel {
   margin-top: 0;
   height: auto;
@@ -551,13 +579,6 @@
 
 .section.migration .columns.carousel .carousel-buttons {
   top: -10px;
-}
-
-.columns.carousel {
-  width: 100%;
-  margin-top: 50px;
-  overflow: hidden;
-  height: 437px;
 }
 
 .columns.carousel button {
@@ -592,10 +613,6 @@
 .section.white.columns-container .columns.awards > div {
   flex-direction: unset;
   align-items: center;
-}
-
-.columns.new-v2 > div > .columns-img-col img {
-  object-fit: contain;
 }
 
 .section.white.columns-container .columns.awards > div img {
@@ -767,10 +784,6 @@
   padding: 10px 0 0;
 }
 
-.columns.bg-image a{
-  color: white
-}
-
 .columns.bg-image svg {
   filter: invert(1) grayscale(1) brightness(100);
 }
@@ -825,19 +838,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns.new-v2 > div > .columns-img-col {
   margin-bottom: 1em;
-}
-
-.columns.new-v2 a {
-  color: #006EFF!important;
-  font-size: 18px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all .2s cubic-bezier(.4,0,.2,1);
-}
-
-.columns.new-v2 a:hover {
-  color: #0A53C5;
-  transform: translateX(10px);
 }
 
 @media (max-width: 768px) {
