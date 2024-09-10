@@ -519,42 +519,29 @@ export default function decorate(block) {
     });
   };
 
-  const targetNodes = document.querySelectorAll('.products');
-  let hasFeaturedCard = false;
-  let neededHeight ='28px';
-  let counter = 0;
-  let index;
-  targetNodes.forEach(targetNode => {
-    console.log(targetNode);
-    let childrenArray= [...targetNode.children];
-    childrenArray.forEach(child=>{
-      if(child.classList.contains('featured')){
-        hasFeaturedCard = true;
-        index = counter;
-      };
-      
-    });
-    counter++;
-  });
-  counter=0;
-  targetNodes.forEach(targetNode => {
-   if(hasFeaturedCard && counter===index){
-     const cards=targetNode.querySelectorAll('.product-card');
-     cards.forEach(card => {
-      if (!card.classList.contains('featured')){
-        let space = card.querySelector('h3');
-        space= space.nextElementSibling;
-        let emptyDiv = document.createElement('div');
-        space.insertAdjacentElement('afterend', emptyDiv);
-        emptyDiv.style.minHeight= neededHeight;
+  const cards = block.querySelectorAll('.product-card');
+  const featuredCard = block.querySelector('.product-card.featured');
+  cards.forEach((card) => {
+    if (!card.classList.contains('featured')) {
+      console.log(typeof cards);
+      // If there is no featured card, do nothing
+      if (!featuredCard) {
+        return;
       }
-     }); 
+      const neededHeight = '28px'; // featuredCard.querySelector('.featured').offsetHeight;
+
+      let space = card.querySelector('h3');
+      space = space.nextElementSibling;
+      const emptyDiv = document.createElement('div');
+      space.insertAdjacentElement('afterend', emptyDiv);
+      emptyDiv.style.minHeight = neededHeight;
+      emptyDiv.style.marginTop = '10px';
+      emptyDiv.style.marginBottom = '15px';
+      matchHeights(card, 'h3');
+      matchHeights(card, 'p:nth-of-type(2)');
+      matchHeights(card, 'p:nth-of-type(3)');
     }
-    counter++;
-    matchHeights(targetNode, 'h4');
-    matchHeights(targetNode, 'h3');
-    matchHeights(targetNode, 'p:nth-of-type(2)');
-    matchHeights(targetNode, 'p:nth-of-type(3)');
   });
 
+  matchHeights(block, 'h4');
 }
