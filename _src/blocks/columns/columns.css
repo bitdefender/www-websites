@@ -44,6 +44,7 @@
 
 .columns.carousel > div {
   flex-direction: row;
+  gap: 22px;
 }
 
 .columns.benefits > div {
@@ -557,10 +558,6 @@
   margin-top: 50px;
   overflow: hidden;
   height: 437px;
-}
-
-.columns.carousel > div {
-  gap: 22px;
 }
 
 .columns.carousel button {
