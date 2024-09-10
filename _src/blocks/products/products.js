@@ -520,10 +520,41 @@ export default function decorate(block) {
   };
 
   const targetNodes = document.querySelectorAll('.products');
+  let hasFeaturedCard = false;
+  let neededHeight ='28px';
+  let counter = 0;
+  let index;
   targetNodes.forEach(targetNode => {
+    console.log(targetNode);
+    let childrenArray= [...targetNode.children];
+    childrenArray.forEach(child=>{
+      if(child.classList.contains('featured')){
+        hasFeaturedCard = true;
+        index = counter;
+      };
+      
+    });
+    counter++;
+  });
+  counter=0;
+  targetNodes.forEach(targetNode => {
+   if(hasFeaturedCard && counter===index){
+     const cards=targetNode.querySelectorAll('.product-card');
+     cards.forEach(card => {
+      if (!card.classList.contains('featured')){
+        let space = card.querySelector('h3');
+        space= space.nextElementSibling;
+        let emptyDiv = document.createElement('div');
+        space.insertAdjacentElement('afterend', emptyDiv);
+        emptyDiv.style.minHeight= neededHeight;
+      }
+     }); 
+    }
+    counter++;
     matchHeights(targetNode, 'h4');
     matchHeights(targetNode, 'h3');
     matchHeights(targetNode, 'p:nth-of-type(2)');
     matchHeights(targetNode, 'p:nth-of-type(3)');
-  })
+  });
+
 }
