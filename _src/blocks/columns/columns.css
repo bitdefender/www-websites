@@ -99,6 +99,7 @@
 
 .grey-version .columns > div > div {
   --tw-bg-opacity: 1;
+
   background-color: rgb(245 245 247 / var(--tw-bg-opacity));
   border-radius: 1rem;
   padding: 3em;
@@ -168,7 +169,9 @@
 
 .section.subtitle-blue h3 {
   font-size: 1.25rem;
+
   --tw-text-opacity: 1;
+
   color: rgb(0 110 255 / var(--tw-text-opacity));
 }
 

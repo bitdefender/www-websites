@@ -102,7 +102,6 @@
   padding: 0 20px;
   padding: 3px 9px !important;
   text-transform: uppercase;
-  width: -moz-fit-content;
   width: fit-content;
 }
 
@@ -189,23 +188,28 @@
     clear: both;
     padding: 0 15px 5px;
   }
+
   .dropdownbox-compare-container .block > div:not(:first-child) {
     display: block;
   }
+
   .dropdownbox-compare-container .block > div:nth-child(1) > div:nth-child(1)::before, .dropdownbox-compare-container .block.closed.close > div:nth-child(1) > div:nth-child(1)::before {
     margin-top: 1px !important;
   }
+
   .dropdownbox-compare-container .block > div:nth-child(1) > div {
     padding: 10px 3% !important;
     display: flex;
     font-size: 15px;
     line-height: 17px;
   }
+
   .dropdownbox-compare-container .new > div:nth-child(1) > div:nth-child(1)::after, .dropdownbox-compare-container.new .block > div:nth-child(1) > div:nth-child(1)::after {
     position: static;
     margin-left: 15px;
     flex: 0 0 auto;
   }
+
   .dropdownbox-compare-container > div:nth-child(2) .new::after {
     top: -90px;
     right: 0;
@@ -213,43 +217,53 @@
     height: 90pt;
     display: none;
   }
+
   .dropdownbox-compare-container .block > div:not(:first-child) > div {
     padding: 8px 2% !important;
     font-size: 15px;
   }
+
   .dropdownbox-compare-container .block img {
     width: 15px;
   }
+
   .dropdownbox-compare-container .block > div:not(:first-child) > div:nth-child(1) {
     width: 100%;
     text-align: center;
   }
+
   .dropdownbox-compare-container .block > div:not(:first-child) > div:not(:first-child) {
     width: 50%;
     float: left;
   }
+
   .dropdownbox-compare-container .default-content-wrapper h5 {
     font-size: 30px;
     line-height: 32px;
   }
+
   .section.product-comparison-table-container.migration .old-price-box {
     flex-direction: column;
   }
+
   .section.product-comparison-table-container.migration .old-price-box span {
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 5px 0;
   }
+
   .section.product-comparison-table-container.migration .old-price-box span del {
     margin-left: 10px;
   }
+
   .section.product-comparison-table-container.migration .new-price-box {
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: 22px;
   }
+
   .section.product-comparison-table-container.migration .new-price-box span {
     margin: 0 0 7px;
   }
@@ -258,6 +272,7 @@
     text-align: center;
     min-height: auto;
   }
+
   .section.product-comparison-table-container.migration h3 {
     font-size: 15px !important;
   }
