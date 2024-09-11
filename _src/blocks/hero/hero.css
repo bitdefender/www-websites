@@ -96,6 +96,7 @@ main .hero-container.blue-title .hero-content > div {
 
 main .hero-container.blue-title .hero-content h1 {
   --tw-text-opacity: 1;
+
   color: rgb(0 110 255 / var(--tw-text-opacity));
 }
 

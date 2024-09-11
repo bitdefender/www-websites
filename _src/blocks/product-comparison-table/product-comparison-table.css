@@ -552,7 +552,7 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
 .section.product-comparison-table-container.migration .old-price-box .savings {
     display: block;
-    background: rgba(44, 180, 61, .2);
+    background: rgb(44 180 61 / 20%);
     border-radius: 8px;
     padding: 1px 9px 5px;
     text-align: right;
@@ -574,7 +574,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 }
 
 .section.product-comparison-table-container.migration .new-price-box .total-text {
-    display: block;
     color: #3c3c3c;
     display: inline-block;
     font-size: 18px;

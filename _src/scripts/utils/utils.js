@@ -68,6 +68,54 @@ export const IANA_BY_REGION_MAP = new Map([
   [72, { locale: 'en-JP', label: 'en Japan' }],
 ]);
 
+const PRICE_LOCALE_MAP = new Map([
+  ['en-us', { force_country: 'en', country_code: 'us' }],
+  ['en-bg', { force_country: 'en', country_code: 'bg' }],
+  ['en-ca', { force_country: 'en', country_code: 'ca' }],
+  ['en-cl', { force_country: 'en', country_code: 'cl' }],
+  ['en-dk', { force_country: 'en', country_code: 'dk' }],
+  ['en-hu', { force_country: 'en', country_code: 'hu' }],
+  ['en-id', { force_country: 'en', country_code: 'id' }],
+  ['en-il', { force_country: 'en', country_code: 'il' }],
+  ['en-in', { force_country: 'en', country_code: 'in' }],
+  ['en-kr', { force_country: 'en', country_code: 'kr' }],
+  ['en-my', { force_country: 'en', country_code: 'my' }],
+  ['en-no', { force_country: 'en', country_code: 'no' }],
+  ['en-ph', { force_country: 'en', country_code: 'ph' }],
+  ['en-pl', { force_country: 'en', country_code: 'pl' }],
+  ['en-sa', { force_country: 'en', country_code: 'sa' }],
+  ['en-th', { force_country: 'en', country_code: 'th' }],
+  ['en-za', { force_country: 'en', country_code: 'za' }],
+  ['en-ae', { force_country: 'en', country_code: 'ae' }],
+  ['en-sg', { force_country: 'en', country_code: 'sg' }],
+  ['en-sd', { force_country: 'en', country_code: 'sd' }],
+  ['en-mt', { force_country: 'en', country_code: 'mt' }],
+  ['en-lv', { force_country: 'en', country_code: 'lv' }],
+  ['en-jm', { force_country: 'en', country_code: 'jm' }],
+  ['en-bz', { force_country: 'en', country_code: 'bz' }],
+  ['en-gb', { force_country: 'uk', country_code: 'gb' }],
+  ['en-au', { force_country: 'au', country_code: 'au' }],
+  ['en-nz', { force_country: 'au', country_code: 'nz' }],
+  ['es-cl', { force_country: 'en', country_code: 'cl' }],
+  ['es-co', { force_country: 'en', country_code: 'co' }],
+  ['es-mx', { force_country: 'en', country_code: 'mx' }],
+  ['es-pe', { force_country: 'en', country_code: 'pe' }],
+  ['es-bz', { force_country: 'en', country_code: 'bz' }],
+  ['es-es', { force_country: 'es', country_code: 'es' }],
+  ['ro-ro', { force_country: 'ro', country_code: 'ro' }],
+  ['it-it', { force_country: 'it', country_code: 'it' }],
+  ['fr-fr', { force_country: 'fr', country_code: 'fr' }],
+  ['fr-be', { force_country: null, country_code: null, isZuora: true }],
+  ['nl-be', { force_country: null, country_code: null, isZuora: true }],
+  ['nl-nl', { force_country: null, country_code: null, isZuora: true }],
+  ['de-de', { force_country: 'de', country_code: 'de' }],
+  ['sv-se', { force_country: 'se', country_code: 'se' }],
+  ['pt-br', { force_country: 'br', country_code: 'br' }],
+  ['pt-pt', { force_country: 'pt', country_code: 'pt' }],
+  ['zh-hk', { force_country: 'en', country_code: 'hk' }],
+  ['zh-tw', { force_country: 'en', country_code: 'tw' }],
+]);
+
 /**
  * Returns the value of a query parameter
  * @returns {String}
@@ -383,63 +431,12 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       data.set('data', JSON.stringify(newData));
     }
 
-    if (url.pathname.includes('/en-au/')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '4';
-      data.set('data', JSON.stringify(newData));
-      FETCH_URL = 'https://www.bitdefender.com.au/site/Store/ajax';
-    }
-
-    if (url.pathname.includes('/en-gb/')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '3';
-      data.set('data', JSON.stringify(newData));
-      FETCH_URL = 'https://www.bitdefender.co.uk/site/Store/ajax';
-    }
-
-    if (url.pathname.includes('/pt-br/')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '13';
-      data.set('data', JSON.stringify(newData));
-      FETCH_URL = 'https://www.bitdefender.com.br/site/Store/ajax';
-    }
-
-    if (url.pathname.includes('/de-de/')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '5';
-      data.set('data', JSON.stringify(newData));
-      FETCH_URL = 'https://www.bitdefender.de/site/Store/ajax';
-    }
-
-    if (url.pathname.includes('/de-ch/')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '17';
-      data.set('data', JSON.stringify(newData));
-      FETCH_URL = 'https://www.bitdefender.de/site/Store/ajax';
-    }
-
-    if (url.pathname.includes('/fr-fr/')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '14';
-      data.set('data', JSON.stringify(newData));
-      FETCH_URL = 'https://www.bitdefender.fr/site/Store/ajax';
-    }
-
-    if (url.pathname.includes('/es-es/')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '7';
-      data.set('data', JSON.stringify(newData));
-      FETCH_URL = 'https://www.bitdefender.es/site/Store/ajax';
-    }
-
-    if ((siteName === 'hk' || siteName === 'tw')) {
-      // append force_region for hk and tw
-      const newData = JSON.parse(data.get('data'));
-
-      newData.config.force_region = siteName === 'hk' ? '41' : '52';
-
-      data.set('data', JSON.stringify(newData));
-    }
+    const locale = window.location.pathname.split('/')[1];
+    const currentPriceSetup = PRICE_LOCALE_MAP.get(locale) || 'en-us';
+    const newData = JSON.parse(data.get('data'));
+    FETCH_URL = `${FETCH_URL}?force_country=${currentPriceSetup.force_country}`;
+    newData.config.country_code = currentPriceSetup.country_code;
+    data.set('data', JSON.stringify(newData));
 
     if (cacheResponse.has(code)) {
       return findProductVariant(cacheResponse.get(code), variant);
