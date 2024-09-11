@@ -4,6 +4,7 @@ import {
   fetchProduct,
   createTag,
   generateProductBuyLink,
+  matchHeights,
 } from '../../scripts/utils/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
@@ -477,4 +478,27 @@ export default function decorate(block) {
       }
     }
   });
+
+  const cards = block.querySelectorAll('.product-card');
+  const featuredCard = block.querySelector('.product-card.featured');
+  cards.forEach((card) => {
+    if (!card.classList.contains('featured')) {
+      // If there is no featured card, do nothing
+      if (!featuredCard) {
+        return;
+      }
+      const neededHeight = '2rem';
+      let space = card.querySelector('h3');
+      space = space.nextElementSibling;
+      const emptyDiv = document.createElement('div');
+      space.insertAdjacentElement('afterend', emptyDiv);
+      emptyDiv.classList.add('featured');
+      emptyDiv.style.visibility = 'hidden';
+      emptyDiv.style.minHeight = neededHeight;
+    }
+  });
+  matchHeights(block, 'h3');
+  matchHeights(block, 'p:nth-of-type(2)');
+  matchHeights(block, 'p:nth-of-type(3)');
+  matchHeights(block, 'h4');
 }
