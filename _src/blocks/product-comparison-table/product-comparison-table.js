@@ -38,7 +38,9 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
       // update buy link
       const currentProductIndex = fetchedProducts.length - 1;
       const buyLink = block.querySelectorAll('.button-container a')[currentProductIndex];
-      buyLink.href = fetchedProducts[currentProductIndex].product.buy_link;
+      if (fetchedProducts[currentProductIndex].product.buy_link) {
+        buyLink.href = fetchedProducts[currentProductIndex].product.buy_link;
+      }
     })
     .catch((err) => {
       // eslint-disable-next-line no-console
