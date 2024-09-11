@@ -523,7 +523,7 @@
 .new-prod-boxes-container .icon {
   width: 12px;
   height: 14px;
-  margin: 0 5px 0 0;
+  margin: 0 0 0 0;
 }
 
 .new-prod-boxes-container .icon svg {
@@ -548,8 +548,11 @@
 
 .new-prod-boxes-container .blue-pill .icon {
   position: relative;
-  top: 1px;
-  margin-left: 1px;
+  top: 1.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .new-prod-boxes-container .blue-pill svg {
