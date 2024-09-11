@@ -7,6 +7,8 @@ const fetchedProducts = [];
 createNanoBlock('priceComparison', (code, variant, label, block) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
+  let oldPriceText = 'Old Price';
+  oldPriceText = block.closest('.section').dataset.old_price_text;
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '-';
@@ -26,7 +28,7 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
       const savings = price - discounted;
 
       oldPriceElement.innerHTML = `<div class="old-price-box">
-        <span>Old Price <del>${price} ${currency}</del></span>
+        <span>${oldPriceText} <del>${price} ${currency}</del></span>
         <span class="savings d-none">Savings <del>${savings.toFixed(2)} ${currency}</del></span>
       </div>`;
       priceElement.innerHTML = `<div class="new-price-box">
