@@ -47,7 +47,8 @@ const Config = {
     navigation: '.navigation',
     menuLinkText: '.mega-menu__l2-link-text',
     firstLevel: '.mega-menu__first-level',
-    navigationItems: '.navigation__list .navigation__item'
+    navigationItems: '.navigation__list .navigation__item',
+    menuList: '.mega-menu__list'
   },
   classes: {
     popupActive: 'popup-active',
@@ -60,48 +61,14 @@ const Config = {
     menuItemFirst: 'mega-menu__item',
     menuLinkText: 'mega-menu__l2-link-text',
     navigation: 'navigation',
-    megamenuNoL3: 'mega-menu__no-l3'
+    megamenuNoL3: 'mega-menu__no-l3',
+    firstLevelItemText: 'mega-menu__link-text'
   }
 }
 
-const isMobile = () => {return window.innerWidth < 991};
+const isMobile = () => {return window.innerWidth < 1200};
 
 function initMegaMenu (container) {
-  // megamenu Franklin adition
-
-const menuMapping = [
-  {
-    parent: '/company',
-    subpages: ['/scuderiaferrari']
-  }
-]
-const setElementActive = (partentPath) => {
-  const parentEl = container.querySelector(`.mega-menu__item:has(.mega-menu__link[href*="${partentPath}"])`);
-
-  parentEl.classList.add('active');
-  parentEl.classList.add('mega-menu--item-opened');
-}
-
-const checkMapping = () => {
-  const path = window.location.pathname
-
-  menuMapping.forEach((mainMenuItem) => {
-    let found = false;
-
-    mainMenuItem.subpages.forEach((key) => {
-      if (path.includes(key)) {
-        found = true;
-      }
-    })
-
-    if (found) {
-      setElementActive(mainMenuItem.parent);
-    }
-  })
-}
-
-checkMapping();
-
   let prevWidth = window.innerWidth;
 
   const setMobileRightLinksOffset = () => {
@@ -220,7 +187,7 @@ checkMapping();
 
     Array.from(menuElements).forEach((el) => {
       el.addEventListener('click', (event) => {
-        if(isHoverableDevice && window.innerWidth > 991) {
+        if(isHoverableDevice && window.innerWidth > 1199) {
           return;
         }
 
@@ -295,6 +262,10 @@ checkMapping();
           const target = event.target;
           let menuItem = null;
 
+          if (target.classList.contains(Config.classes.firstLevelItemText)) {
+            return;
+          }
+
           if (target.classList.contains(Config.classes.menuItemFirst)) {
             menuItem = target;
           } else {
@@ -302,7 +273,11 @@ checkMapping();
           }
 
           const menuLink = menuItem.querySelector(Config.selectors.menuLinkRoot);
+          const childrenList = menuItem.querySelector(Config.selectors.menuList);
 
+          if (!childrenList) {
+            return;
+          }
 
           if (isMobile() && (menuLink === target || menuLink.contains(target))) {
             event.preventDefault();
@@ -407,6 +382,12 @@ checkMapping();
   addAnalytics();
   addQuickLinksToMobile();
 }
+
+// const megamenuEl = document.querySelector('.mega-menu__container');
+//
+// if (megamenuEl) {
+//   new initMegaMenu(megamenuEl);
+// }
 
 const shadowRoot = document.querySelector('body > div:first-child').shadowRoot;
 const megamenuEl = shadowRoot.querySelector('.mega-menu__container');
