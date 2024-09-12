@@ -392,6 +392,16 @@ export default async function decorate(block, options) {
         planSwitcher2 = createPlanSwitcher(radioButtons, key, addOnProdName, addOnProdMonthlyName, null, 'addon');
       }
 
+      let newBlueTag = document.createElement('div');
+      if (blueTag) {
+        let blueTagChildren = blueTag.children;
+        blueTagChildren = Array.from(blueTagChildren);
+        blueTagChildren.forEach((child) => {
+          // create a different blueTag element
+          newBlueTag.innerHTML += `<div class="blueTag">${child.innerHTML}</div>`;
+        });
+      }
+
       let addOnPriceBox;
       // create the prices element based on where the component is being called from, aem of www-websites
       if (options) {
@@ -432,7 +442,8 @@ export default async function decorate(block, options) {
             <div class="inner_prod_box">
               ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
               ${title.innerText.trim() ? `<h4>${title.innerHTML}</h4>` : ''}
-              ${blueTag.innerText.trim() ? `<div class="blueTag"><div>${blueTag.innerHTML.trim()}</div></div>` : ''}
+
+              <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
               ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 5 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
               <hr />
               ${radioButtons ? planSwitcher.outerHTML : ''}
@@ -448,7 +459,6 @@ export default async function decorate(block, options) {
               </div>
             </div>
           </div>`;
-
         block.children[key].outerHTML = prodBox.innerHTML;
         let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
         block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
@@ -651,4 +661,5 @@ export default async function decorate(block, options) {
   matchHeights(block, 'h2');
   matchHeights(block, 'h4');
   matchHeights(block, '.plan-switcher');
+  matchHeights(block, '.blueTagsWrapper');
 }

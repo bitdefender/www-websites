@@ -806,6 +806,12 @@ export async function matchHeights(targetNode, selector) {
   };
 
   const observer = new MutationObserver(matchHeightsCallback);
+  const resizeObserver = new ResizeObserver((entries) => {
+    // eslint-disable-next-line no-unused-vars
+    entries.forEach((entry) => {
+      adjustHeights();
+    });
+  });
 
   if (targetNode) {
     observer.observe(targetNode, { childList: true, subtree: true });
@@ -814,6 +820,13 @@ export async function matchHeights(targetNode, selector) {
   window.addEventListener('resize', () => {
     adjustHeights();
   });
+
+  const elements = targetNode.querySelectorAll(selector);
+  elements.forEach((element) => {
+    resizeObserver.observe(element);
+  });
+
+  adjustHeights();
 }
 
 export function getPidFromUrl() {
