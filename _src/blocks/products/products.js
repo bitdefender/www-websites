@@ -342,7 +342,7 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
     'div',
     {
       class: 'featured',
-      style: 'visibility=hidden',
+      style: 'visibility=hidden; min-height:2rem',
     },
     `<span>${text}</span>`,
   );
