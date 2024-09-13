@@ -342,7 +342,7 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
     'div',
     {
       class: 'featured',
-      style: 'visibility=hidden; min-height:2rem',
+      style: 'visibility=hidden',
     },
     `<span>${text}</span>`,
   );
@@ -502,4 +502,5 @@ export default function decorate(block) {
   matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');
   matchHeights(block, 'ul');
+  matchHeights(block, '.featured.nanoblock');
 }
