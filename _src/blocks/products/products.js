@@ -497,7 +497,7 @@ export default function decorate(block) {
       emptyDiv.style.minHeight = neededHeight;
     }
   });
-  matchHeights(block, 'h3:nth-oftype(2)');
+  matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');
