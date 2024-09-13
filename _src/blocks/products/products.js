@@ -501,4 +501,6 @@ export default function decorate(block) {
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');
+  matchHeights(block, 'ul:not(.variant-selector)');
+  matchHeights(block, '.featured.nanoblock');
 }
