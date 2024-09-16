@@ -1546,7 +1546,11 @@ main .section.blue a.button.modal::after {
 
 header,
 body > div:first-child {
-    height: 64px;
+  height: 64px;
+}
+
+body > div.header-with-language-banner {
+  height: auto;
 }
 
 .visibility-hidden {

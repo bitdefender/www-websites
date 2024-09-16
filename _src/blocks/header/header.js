@@ -384,19 +384,21 @@ async function runDefaultHeaderLogic(block) {
 
     if (html.includes('aem-banner')) {
       let domain = getDomain();
+
       if (domain === 'en-us') {
         domain = 'en';
+      } else if (domain.includes('-global')) {
+        domain = domain.split('-')[0];
       } else {
         domain = domain.split('-').join('_');
       }
 
-      const aemHeaderLink = window.location.hostname.includes('.hlx.')
+      const aemHeaderHostname = window.location.hostname.includes('.hlx.')
         || window.location.hostname.includes('localhost')
         ? 'https://stage.bitdefender.com'
         : '';
 
-      // TODO: this needs to be updated to also bring the language bar in the future !!!
-      const aemHeaderFetch = await fetch(`${aemHeaderLink}/content/experience-fragments/bitdefender/language_master/${domain}/header-navigation/mega-menu/master/jcr:content/root/mega_menu.html`);
+      const aemHeaderFetch = await fetch(`${aemHeaderHostname}/content/experience-fragments/bitdefender/language_master/${domain}/header-navigation/mega-menu/master/jcr:content/root.html`);
       if (!aemHeaderFetch.ok) {
         return;
       }
@@ -407,35 +409,72 @@ async function runDefaultHeaderLogic(block) {
 
       const contentDiv = document.createElement('div');
       contentDiv.style.display = 'none';
-      contentDiv.classList.add('mega-menu');
-      contentDiv.classList.add('default-content-wrapper');
+
       contentDiv.innerHTML = aemHeaderHtml;
-      const cssFile = contentDiv.querySelector('link[rel="stylesheet"]');
-      if (cssFile) {
-        cssFile.href = '/_src/scripts/vendor/mega-menu/mega-menu.css';
-        cssFile.as = 'style';
+      const loadedLinks = [];
+      contentDiv.querySelectorAll('link').forEach(linkElement => {
+        //update the links so that they work on all Franklin domains
+        linkElement.href = `${aemHeaderHostname}${linkElement.getAttribute('href')}`;
 
-        // wait for the css to load before displaying the content
-        // this is to avoid the content being displayed without the styles
-        cssFile.onload = () => {
-          contentDiv.style.display = 'block';
-        };
-        shadowRoot.appendChild(contentDiv);
-      }
+        // add a promise for each link element in the code
+        // so that we can wait on all the CSS before displaying the component
+        loadedLinks.push(new Promise((resolve, reject) => {
+          linkElement.onload = () => {
+            resolve();
+          };
 
-      const newScriptFile = document.createElement('script');
-      newScriptFile.src = '/_src/scripts/vendor/mega-menu/mega-menu.js';
+          linkElement.onerror = () => {
+            reject();
+          };
+        }));
+      });
 
-      const shadowRootScriptTag = shadowRoot.querySelector('script');
-      if (shadowRootScriptTag) {
-        shadowRootScriptTag.replaceWith(newScriptFile);
-      }
+      // a list of all the components to be received from aem components
+      const aemComponents = ['languageBanner', 'megaMenu'];
 
-      const navHeader = shadowRoot.querySelector('header');
-      if (navHeader) {
-        navHeader.style.height = 'auto';
-      }
+      // add logic so that every time an AEM function is fully loaded
+      // it is directly run using the shadow dom as parameter
+      aemComponents.forEach(aemComponentName => {
+        window.addEventListener(aemComponentName, () => {
+          window[aemComponentName](shadowRoot);
+        });
+      });
 
+      // select all the scripts from contet div and
+      const scripts = contentDiv.querySelectorAll('script');
+      scripts.forEach((script) => {
+        const newScript = document.createElement('script');
+        newScript.src = `${aemHeaderHostname}${script.getAttribute('src')}`;
+        newScript.defer = true;
+        contentDiv.appendChild(newScript);
+      });
+
+      // if (cssFile) {
+      //   cssFile.href = '/_src/scripts/vendor/mega-menu/mega-menu.css';
+      //   cssFile.as = 'style';
+
+      //   // wait for the css to load before displaying the content
+      //   // this is to avoid the content being displayed without the styles
+      //   cssFile.onload = () => {
+      //     contentDiv.style.display = 'block';
+      //   };
+      //   shadowRoot.appendChild(contentDiv);
+      // }
+
+      // const newScriptFile = document.createElement('script');
+      // newScriptFile.src = '/_src/scripts/vendor/mega-menu/mega-menu.js';
+
+      // const shadowRootScriptTag = shadowRoot.querySelector('script');
+      // if (shadowRootScriptTag) {
+      //   shadowRootScriptTag.replaceWith(newScriptFile);
+      // }
+
+      // const navHeader = shadowRoot.querySelector('header');
+      // if (navHeader) {
+      //   navHeader.style.height = 'auto';
+      // }
+
+      shadowRoot.appendChild(contentDiv);
       const body = document.querySelector('body');
       body.style.maxWidth = 'initial';
 
@@ -445,6 +484,10 @@ async function runDefaultHeaderLogic(block) {
       }
 
       document.querySelector('body').prepend(nav);
+
+      await Promise.allSettled(loadedLinks);
+      contentDiv.style.display = 'block';
+      document.querySelector('body > div:first-child').classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
       return;

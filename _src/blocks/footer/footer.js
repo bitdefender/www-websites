@@ -127,6 +127,71 @@ async function runLandingpageLogic(block) {
   adobeMcAppendVisitorId('footer');
 }
 
+async function runAemFooterLogic(block) {
+  // fetch footer content
+  const aemFooterHostname = window.location.hostname.includes('.hlx.')
+  || window.location.hostname.includes('localhost')
+  ? 'https://stage.bitdefender.com'
+  : '';
+
+  const aemFooterFetch = await fetch(`${aemFooterHostname}/content/experience-fragments/bitdefender/language_master/en/footer-fragment-v1/master/jcr:content/root.html`);
+  if (!aemFooterFetch.ok) {
+    return;
+  }
+
+  const aemFooterHtml = await aemFooterFetch.text();
+  const footer = document.createElement('footer');
+  const shadowRoot = footer.attachShadow({ mode: 'open' });
+  const contentDiv = document.createElement('div');
+  contentDiv.innerHTML = aemFooterHtml;
+
+  const loadedLinks = [];
+  contentDiv.querySelectorAll('link').forEach(linkElement => {
+    //update the links so that they work on all Franklin domains
+    linkElement.href = `${aemFooterHostname}${linkElement.getAttribute('href')}`;
+    linkElement.rel = 'stylesheet';
+
+    // add a promise for each link element in the code
+    // so that we can wait on all the CSS before displaying the component
+    loadedLinks.push(new Promise((resolve, reject) => {
+      linkElement.onload = () => {
+        resolve();
+      };
+
+      linkElement.onerror = () => {
+        reject();
+      };
+    }));
+  });
+
+  // a list of all the components to be received from aem components
+  const aemComponents = ['footer'];
+
+  // add logic so that every time an AEM function is fully loaded
+  // it is directly run using the shadow dom as parameter
+  aemComponents.forEach(aemComponentName => {
+    window.addEventListener(aemComponentName, () => {
+      window[aemComponentName](shadowRoot);
+    });
+  });
+
+  // select all the scripts from contet div and
+  const scripts = contentDiv.querySelectorAll('script');
+  scripts.forEach((script) => {
+    //  multiple reruns of runtime lead to all the scripts
+    // being run multiple times
+    if (!script.src.includes('runtime')) {
+      const newScript = document.createElement('script');
+      newScript.src = `${aemFooterHostname}${script.getAttribute('src')}`;
+      newScript.defer = true;
+      shadowRoot.appendChild(newScript);
+    }
+  });
+
+  shadowRoot.appendChild(contentDiv);
+  document.querySelector('footer').replaceWith(footer);
+}
+
 /**
  * applies footer factory based on footer variation
  * @param {String} footerMetadata The footer variation: landingpage' or none
@@ -138,7 +203,7 @@ function applyFooterFactorySetup(footerMetadata, block) {
       runLandingpageLogic(block);
       break;
     default:
-      runDefaultFooterLogic(block);
+      runAemFooterLogic(block);
       break;
   }
 }
