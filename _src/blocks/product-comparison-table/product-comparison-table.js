@@ -1,5 +1,10 @@
 import {
-  createNanoBlock, renderNanoBlocks, fetchProduct, matchHeights, setDataOnBuyLinks, generateProductBuyLink,
+  createNanoBlock,
+  renderNanoBlocks,
+  fetchProduct,
+  matchHeights,
+  setDataOnBuyLinks,
+  generateProductBuyLink,
 } from '../../scripts/utils/utils.js';
 
 const fetchedProducts = [];
@@ -7,8 +12,7 @@ const fetchedProducts = [];
 createNanoBlock('priceComparison', (code, variant, label, block) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
-  let oldPriceText = 'Old Price';
-  oldPriceText = block.closest('.section').dataset.old_price_text;
+  const oldPriceText = block.closest('.section').dataset.old_price_text ?? 'Old Price';
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '-';

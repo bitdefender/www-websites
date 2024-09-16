@@ -376,7 +376,8 @@ export function generateProductBuyLink(product, productCode, month = null, years
   const m = product.variation?.dimension_value || month;
   const y = product.variation?.years || years;
 
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/`;
+  const forceCountry = getPriceLocalMapByLocale().force_country;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/?force_country=${forceCountry}`;
 }
 
 export function setDataOnBuyLinks(element, dataInfo) {
