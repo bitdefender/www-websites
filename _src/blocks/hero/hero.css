@@ -26,7 +26,7 @@
 main .hero {
   background-color: white;
   position: relative;
-  padding: 0;
+  padding: 1em 0 3em;
   min-height: 300px;
 }
 
@@ -408,7 +408,7 @@ main .hero .hero-content ul {
 }
 
 main .hero .hero-content ul li {
-  font-size: var(--hero-font-size-s);
+  font-size: var(--hero-font-size-xxs);
   font-weight: var(--font-weight-regular);
   letter-spacing: 0.096px;
   line-height: 1.5;
