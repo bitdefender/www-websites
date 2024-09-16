@@ -363,6 +363,11 @@ export function getBuyLinkCountryPrefix() {
   return 'https://www.bitdefender.com/site/Store/buy';
 }
 
+export function getPriceLocalMapByLocale() {
+  const locale = window.location.pathname.split('/')[1];
+  return PRICE_LOCALE_MAP.get(locale) || 'en-us';
+}
+
 export function generateProductBuyLink(product, productCode, month = null, years = null) {
   if (isZuora()) {
     return product.buy_link;
@@ -386,9 +391,9 @@ export function setDataOnBuyLinks(element, dataInfo) {
   if (variation.variation_name) element.dataset.variation = variation.variation_name;
 }
 
-export function formatPrice(price, currency, region) {
-  const ianaRegionFormat = IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US';
-  return new Intl.NumberFormat(ianaRegionFormat, { style: 'currency', currency }).format(price);
+export function formatPrice(price, currency, region = null, locale = null) {
+  const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
+  return new Intl.NumberFormat(loc, { style: 'currency', currency }).format(price);
 }
 
 /**
