@@ -388,7 +388,8 @@ async function runDefaultHeaderLogic(block) {
       if (domain === 'en-us') {
         domain = 'en';
       } else if (domain.includes('-global')) {
-        domain = domain.split('-')[0];
+        const [singleDomain] = domain.split('-');
+        domain = singleDomain;
       } else {
         domain = domain.split('-').join('_');
       }
@@ -412,8 +413,8 @@ async function runDefaultHeaderLogic(block) {
 
       contentDiv.innerHTML = aemHeaderHtml;
       const loadedLinks = [];
-      contentDiv.querySelectorAll('link').forEach(linkElement => {
-        //update the links so that they work on all Franklin domains
+      contentDiv.querySelectorAll('link').forEach((linkElement) => {
+        // update the links so that they work on all Franklin domains
         linkElement.href = `${aemHeaderHostname}${linkElement.getAttribute('href')}`;
 
         // add a promise for each link element in the code
@@ -434,7 +435,7 @@ async function runDefaultHeaderLogic(block) {
 
       // add logic so that every time an AEM function is fully loaded
       // it is directly run using the shadow dom as parameter
-      aemComponents.forEach(aemComponentName => {
+      aemComponents.forEach((aemComponentName) => {
         window.addEventListener(aemComponentName, () => {
           window[aemComponentName](shadowRoot);
         });
@@ -448,31 +449,6 @@ async function runDefaultHeaderLogic(block) {
         newScript.defer = true;
         contentDiv.appendChild(newScript);
       });
-
-      // if (cssFile) {
-      //   cssFile.href = '/_src/scripts/vendor/mega-menu/mega-menu.css';
-      //   cssFile.as = 'style';
-
-      //   // wait for the css to load before displaying the content
-      //   // this is to avoid the content being displayed without the styles
-      //   cssFile.onload = () => {
-      //     contentDiv.style.display = 'block';
-      //   };
-      //   shadowRoot.appendChild(contentDiv);
-      // }
-
-      // const newScriptFile = document.createElement('script');
-      // newScriptFile.src = '/_src/scripts/vendor/mega-menu/mega-menu.js';
-
-      // const shadowRootScriptTag = shadowRoot.querySelector('script');
-      // if (shadowRootScriptTag) {
-      //   shadowRootScriptTag.replaceWith(newScriptFile);
-      // }
-
-      // const navHeader = shadowRoot.querySelector('header');
-      // if (navHeader) {
-      //   navHeader.style.height = 'auto';
-      // }
 
       shadowRoot.appendChild(contentDiv);
       const body = document.querySelector('body');
