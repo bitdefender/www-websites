@@ -363,17 +363,23 @@ export function getBuyLinkCountryPrefix() {
   return 'https://www.bitdefender.com/site/Store/buy';
 }
 
+export function getPriceLocalMapByLocale() {
+  const locale = window.location.pathname.split('/')[1];
+  return PRICE_LOCALE_MAP.get(locale) || 'en-us';
+}
+
 export function generateProductBuyLink(product, productCode) {
   if (isZuora()) {
     return product.buy_link;
   }
 
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${product.variation.dimension_value}/${product.variation.years}/`;
+  const forceCountry = getPriceLocalMapByLocale().force_country;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${product.variation.dimension_value}/${product.variation.years}/?force_country=${forceCountry}`;
 }
 
-export function formatPrice(price, currency, region) {
-  const ianaRegionFormat = IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US';
-  return new Intl.NumberFormat(ianaRegionFormat, { style: 'currency', currency }).format(price);
+export function formatPrice(price, currency, region = null, locale = null) {
+  const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
+  return new Intl.NumberFormat(loc, { style: 'currency', currency }).format(price);
 }
 
 /**
@@ -431,8 +437,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       data.set('data', JSON.stringify(newData));
     }
 
-    const locale = window.location.pathname.split('/')[1];
-    const currentPriceSetup = PRICE_LOCALE_MAP.get(locale) || 'en-us';
+    const currentPriceSetup = getPriceLocalMapByLocale();
     const newData = JSON.parse(data.get('data'));
     FETCH_URL = `${FETCH_URL}?force_country=${currentPriceSetup.force_country}`;
     newData.config.country_code = currentPriceSetup.country_code;
@@ -806,6 +811,12 @@ export async function matchHeights(targetNode, selector) {
   };
 
   const observer = new MutationObserver(matchHeightsCallback);
+  const resizeObserver = new ResizeObserver((entries) => {
+    // eslint-disable-next-line no-unused-vars
+    entries.forEach((entry) => {
+      adjustHeights();
+    });
+  });
 
   if (targetNode) {
     observer.observe(targetNode, { childList: true, subtree: true });
@@ -814,6 +825,13 @@ export async function matchHeights(targetNode, selector) {
   window.addEventListener('resize', () => {
     adjustHeights();
   });
+
+  const elements = targetNode.querySelectorAll(selector);
+  elements.forEach((element) => {
+    resizeObserver.observe(element);
+  });
+
+  adjustHeights();
 }
 
 export function getPidFromUrl() {

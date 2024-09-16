@@ -449,6 +449,8 @@ export function decorateSections(main) {
         } else if (key === STICKY_NAVIGATION_SECTION_METADATA_KEY) {
           section.id = `section-${toClassName(meta[key])}`;
           section.dataset[STICKY_NAVIGATION_DATASET_KEY] = meta[key];
+        } else if (key === 'id') {
+          section.id = meta[key];
         } else {
           section.dataset[toCamelCase(key)] = meta[key];
         }

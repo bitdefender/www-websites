@@ -423,7 +423,7 @@ export default function decorate(block) {
       // listen to ProductCard change and update the buttons pointing to the store url
       mv.subscribe((card) => {
         col.querySelectorAll('.button-container a').forEach((link) => {
-          if (link && link.href.includes('/site/Store/buy/')) {
+          if (link && (link.href.includes('/site/Store/buy/') || link.href.includes('checkout.bitdefender.com'))) {
             link.href = card.url;
           }
         });
@@ -501,4 +501,6 @@ export default function decorate(block) {
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');
+  matchHeights(block, 'ul:not(.variant-selector)');
+  matchHeights(block, '.featured.nanoblock');
 }
