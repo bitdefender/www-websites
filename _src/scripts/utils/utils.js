@@ -363,12 +363,27 @@ export function getBuyLinkCountryPrefix() {
   return 'https://www.bitdefender.com/site/Store/buy';
 }
 
-export function generateProductBuyLink(product, productCode) {
+export function generateProductBuyLink(product, productCode, month = null, years = null) {
   if (isZuora()) {
     return product.buy_link;
   }
 
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${product.variation.dimension_value}/${product.variation.years}/`;
+  const m = product.variation?.dimension_value || month;
+  const y = product.variation?.years || years;
+
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/`;
+}
+
+export function setDataOnBuyLinks(element, dataInfo) {
+  const { productId, variation } = dataInfo;
+  if (productId) element.dataset.product = productId;
+
+  element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
+
+  if (variation.price) element.dataset.oldPrice = variation.price;
+  if (variation.currency_label) element.dataset.dataCurrency = variation.currency_label;
+  if (variation.region_id) element.dataset.dataRegion = variation.region_id;
+  if (variation.variation_name) element.dataset.variation = variation.variation_name;
 }
 
 export function formatPrice(price, currency, region) {

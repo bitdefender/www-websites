@@ -5,6 +5,7 @@ import {
   createTag,
   generateProductBuyLink,
   matchHeights,
+  setDataOnBuyLinks,
 } from '../../scripts/utils/utils.js';
 
 import { trackProduct } from '../../scripts/scripts.js';
@@ -47,6 +48,7 @@ function toModel(productCode, variantId, v) {
   return {
     productCode,
     variantId,
+    regionId: v.region_id,
     platformProductId: v.platform_product_id,
     devices: +v.variation.dimension_value,
     subscription: v.variation.years * 12,
@@ -425,6 +427,17 @@ export default function decorate(block) {
         col.querySelectorAll('.button-container a').forEach((link) => {
           if (link && (link.href.includes('/site/Store/buy/') || link.href.includes('checkout.bitdefender.com'))) {
             link.href = card.url;
+            const dataInfo = {
+              productId: card.productCode,
+              variation: {
+                price: card.price,
+                discounted_price: card.discountedPrice,
+                variation_name: card.variantId,
+                currency_label: card.currency,
+                region_id: card.regionId,
+              },
+            };
+            setDataOnBuyLinks(link, dataInfo);
           }
         });
       });
