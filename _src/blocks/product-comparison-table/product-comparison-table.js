@@ -8,7 +8,10 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   let oldPriceText = 'Old Price';
-  oldPriceText = block.closest('.section').dataset.old_price_text;
+  if (block.closest('.section').dataset.old_price_text) {
+    oldPriceText = block.closest('.section').dataset.old_price_text;
+  }
+
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '-';

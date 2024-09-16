@@ -27,10 +27,15 @@
 .columns.awards > div > div > p {
   margin: 0;
   padding: 0 5px;
+  text-align: center;
 }
 
 .columns.video-presentation > div > div > p {
   font-size: var(--body-font-size-s);
+}
+
+.columns.video-presentation > div > div > h3 {
+  font-size: var(--heading-font-size-xl);
 }
 
 .columns.carousel > div > div > p {
@@ -68,6 +73,8 @@
 .columns.carousel > div {
   flex-direction: row;
   gap: 22px;
+  height: 15px;
+  top: 0;
 }
 
 .columns.benefits > div {
@@ -507,7 +514,7 @@
 /* paragraph with image */
 .columns.video-presentation .button-container {
   display: inline-block;
-  padding-right: 13px;
+  padding-right: 0;
 }
 
 .columns.video-presentation .linked-image-container {
@@ -567,16 +574,11 @@
   border-radius: 10px;
 }
 
-.columns.video-presentation .modal-video-container {
-  max-width: 520px;
-  max-height: 293px;
-}
-
 .columns.carousel {
   width: 100%;
-  margin-top: 50px;
+  margin-top: 0;
   overflow: hidden;
-  height: 437px;
+  height: auto;
 }
 
 .section.migration .columns.carousel {
@@ -626,16 +628,6 @@
   display: block;
   height: 120px;
   object-fit: contain;
-}
-
-@media (min-width: 676px) {
-  .columns.carousel > div > div {
-    transition: transform 0.3s, opacity 0.3s;
-  }
-
-  .columns.carousel > div:nth-child(1) {
-    width: max-content;
-  }
 }
 
 @media (min-width: 676px) and (max-width: 989px) {
@@ -847,13 +839,33 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   margin-bottom: 1em;
 }
 
-@media (max-width: 768px) {
-  .columns img, .columns.new-v2 > div > .columns-img-col img {
-    height: auto!important;
+.columns.carousel > div {
+  justify-content: flex-start;
+}
+
+.columns.carousel > div > div {
+  flex: 1 0 33%;
+}
+
+.columns.carousel > div.carousel-buttons {
+  justify-content: center;
+}
+
+@media (max-width: 1399px) {
+  .columns-wrapper {
+    padding: 0 var(--section-large-desktop-padding);
+  }
+
+  .columns.video-presentation .button-container {
+    margin-right: 10px;
   }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 992px) {
+  .columns.carousel > div {
+    gap: 0;
+  }
+
   .creators .columns > div > div {
     text-align: center;
   }
@@ -898,5 +910,43 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .creators .no-space-top .default-content-wrapper h2 {
     padding-top: 23px;
+  }
+
+  .columns.video-presentation > div > div {
+    width: 520px;
+  }
+}
+
+@media (max-width: 768px) {
+  .columns-wrapper {
+    padding: var(--body-padding) var(--body-padding) 0;
+  }
+
+  .cta .columns-img-col picture {
+    width: 345px;
+  }
+
+  .columns.video-presentation > div > div > h3 {
+    font-size: var(--heading-font-size-l);
+  }
+
+  .columns.carousel > div > div {
+    flex: 0 0 98%;
+  }
+}
+
+@media (max-width: 500px) {
+  .columns.video-presentation > div > div {
+    width: 100%;
+  }
+
+  .columns.carousel > div > div {
+    flex: 1 0 100%;
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  .columns.carousel > div > div {
+    width: 100%;
   }
 }

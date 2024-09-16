@@ -175,7 +175,7 @@ function renderOldPrice(mv, text = '', monthly = '') {
     {
       class: 'price',
     },
-    `<span class='old-price'>${text} <del>${mv.model.basePrice ?? ''} ${mv.model.currency ?? ''}</del>`,
+    `<span class='old-price ${!mv.model.basePrice ? 'no-old-price' : ''}'>${text} <del>${mv.model.basePrice ?? ''} ${mv.model.currency ?? ''}</del>`,
   );
 
   const oldPriceElt = root.querySelector('span');
@@ -355,6 +355,7 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
       root.style.visibility = 'visible';
     } else {
       root.style.visibility = 'hidden';
+      root.classList.add('no-save-price');
     }
   });
 

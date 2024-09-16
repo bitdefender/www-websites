@@ -63,7 +63,11 @@ function renderStickyNavigation(block) {
   menuWithButton.appendChild(stickyNavMenu);
 
   /** close the dropdown menu after user selection */
-  stickyNavMenu.addEventListener('click', () => {
+  stickyNavMenu.addEventListener('click', (event) => {
+    event.target.closest('ul').querySelectorAll('li').forEach(item => {
+      item.classList.remove('opened');
+    })
+    event.target.closest('li').classList.toggle('opened');
     mobileDropDown.classList.toggle('opened');
   });
 
