@@ -58,8 +58,9 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
         const dataInfo = {
           productId: prd.code,
           variation: {
-            price: prd.product.price,
-            discounted_price: prd.product.discount.discounted_price,
+            price: prd.product.discount
+              ? +prd.product.discount.discounted_price : +prd.product.price,
+            discounted_price: prd.product.discount?.discounted_price,
             variation_name: prd.variant,
             currency_label: prd.product.currency_label,
             region_id: prd.product.region_id,

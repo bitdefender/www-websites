@@ -4,7 +4,7 @@ import {
   getBuyLinkCountryPrefix,
   getDatasetFromSection,
   getPidFromUrl,
-  renderNanoBlocks,
+  renderNanoBlocks, setDataOnBuyLinks,
 } from '../../scripts/utils/utils.js';
 
 const state = {
@@ -147,6 +147,19 @@ function updateBuyLink(block) {
 
   if (buyLink) {
     buyLink.href = `${getBuyLinkCountryPrefix()}/${productCode}/${dimension}/${years}/${pid ? `pid.${pid}` : ''}`;
+    const dataInfo = {
+      productId: productCode,
+      variation: {
+        price: state.currentProduct.discount
+          ? +state.currentProduct.discount.discounted_price : +state.currentProduct.price,
+        discounted_price: state.currentProduct.discount?.discounted_price,
+        variation_name: state.currentProduct.variation.variation_name,
+        currency_label: state.currentProduct.currency_label,
+        region_id: state.currentProduct.region_id,
+      },
+    };
+
+    setDataOnBuyLinks(buyLink, dataInfo);
   }
 }
 
