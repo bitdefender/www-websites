@@ -37,6 +37,36 @@
   flex-grow: 0;
 }
 
+.v2 .product-card .price {
+  flex: 1;
+  justify-content: center;
+  align-items: flex-end;
+  display: flex;
+}
+
+.v2 .product-card .price:last-of-type {
+  flex: 0;
+}
+
+.v2 .product-card .price:last-of-type em {
+  color: #7e7e7e;
+  font-size: var(--body-font-size-xxxs);
+  font-weight: var(--font-weight-bold);
+  line-height: 2.4;
+}
+
+.v2 .product-card p:last-of-type {
+  line-height: 16px;
+}
+
+.v2 .product-card hr {
+  margin: 12px 0;
+}
+
+.v2 .product-card .button-container {
+  margin: 15px 0;
+}
+
 .product-card .button-container {
   flex-grow: 0;
   display: flex;

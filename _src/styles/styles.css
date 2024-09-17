@@ -247,6 +247,16 @@ hr {
   border-bottom: 1px solid var(--horizontal-separator-color);
 }
 
+.my-0 {
+  margin-top: 0!important;
+  margin-bottom: 0!important;
+}
+
+.py-0 {
+  padding-top: 0!important;
+  padding-bottom: 0!important;
+}
+
 code, pre, samp {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
@@ -776,7 +786,7 @@ body.creators {
     font-size: 19px;
 	}
 
-  main .section.width-medium .block {
+  main .section.width-medium .block, main .section.width-medium .default-content-wrapper, main .section.width-medium-p .block p, main .section.width-medium-p .default-content-wrapper p {
     width: 940px;
     margin: 0 auto;
   }
@@ -951,7 +961,7 @@ main pre {
 
 @media (min-width: 1400px) {
   p {
-    font-size: var(--body-font-size-s);
+    font-size: var(--body-font-size-m);
   }
 
   .section.migration p {
@@ -1231,6 +1241,14 @@ main .section.cta {
 
 .cta .columns-img-col picture {
   width: 270px;
+}
+
+.has_user_guide .info-button-container a {
+  display: flex;
+}
+
+.has_user_guide .info-button-container a::before {
+  margin-right: 5px;
 }
 
 main .cta.bigger-text h2 {

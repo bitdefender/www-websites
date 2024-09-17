@@ -2,8 +2,48 @@
   padding: 0 var(--body-padding);
 }
 
+.columns-wrapper > div.grey-bck {
+  background-color: #F5F5F7;
+  border-radius: 1em;
+  padding: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.columns-wrapper > div.grey-bck h5 {
+  font-size: var(--heading-font-size-m);
+  line-height: var(--heading-font-size-l);
+}
+
+.columns-wrapper > div.grey-bck p:first-of-type {
+  margin: 1em 0;
+}
+
+.columns-wrapper > div.grey-bck div.columns-text-col {
+  padding-left: 4em;
+  padding-right: 1em;
+}
+
+.columns-wrapper > div.grey-bck > div {
+  flex: 1;
+}
+
+.columns-wrapper > div.grey-bck > div > div {
+  margin: 0!important;
+  flex: 0 0 50%;
+}
+
 .columns-container.chat-options p {
   font-size: var(--body-font-size-s) !important;
+}
+
+.columns-container.linear-gradient h3 {
+  font-size: var(--heading-font-size-xl);
+  margin-bottom: 1em;
+}
+
+.columns-container.linear-gradient p {
+  font-size: var(--body-font-size-m);
 }
 
 .columns.benefits > p {
@@ -442,8 +482,22 @@
     font-weight: var(--font-weight-regular);
   }
 
-  .section.bd_woman .right-col {
+  .section.bd_woman .columns-img-col {
     margin-top: -122px;
+  }
+
+  .section.b_mark {
+    margin-bottom: 5em;
+  }
+
+  .section.b_mark > div {
+    padding: 5em 0 3em 0;
+    margin-top: 0;
+  }
+
+  .section.b_mark .columns-img-col img {
+    margin-top: -200px;
+    margin-bottom: -3em;
   }
 
   .columns.screenshots {
@@ -452,6 +506,14 @@
 
   .columns > div > .columns-img-col {
     margin-bottom: 1em;
+  }
+
+  .v2 .columns > div > .columns-text-col {
+    flex: 0 0 40%;
+  }
+
+  .v2 .columns > div > .columns-text-col.columns-right-col {
+    margin-left: 4em;
   }
 
   .columns-container.chat-options table tr td:last-of-type img {
@@ -759,7 +821,7 @@
 
 @media (min-width: 768px) {
   .linear-gradient.columns-container[data-bg-image]{
-    background-image: linear-gradient(to right, rgb(0 0 0 / 100%) 20%, rgb(0 0 0 / 0%)), var(--bg-image-url);
+    background-image: linear-gradient(to right, rgb(39 1 107 / 100%) 20%, rgb(0 0 0 / 0%)), var(--bg-image-url);
   }
 
   .columns-container[data-bg-image]{
@@ -980,6 +1042,14 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     width: 100%;
     padding: 0;
     margin: 4em 0 2em;
+  }
+
+  .columns-wrapper > div.grey-bck div.columns-text-col {
+    padding: 2em;
+  }
+
+  .columns-wrapper > div.grey-bck > div > div {
+    flex: 1;
   }
 }
 
