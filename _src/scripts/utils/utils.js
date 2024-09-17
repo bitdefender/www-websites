@@ -368,13 +368,28 @@ export function getPriceLocalMapByLocale() {
   return PRICE_LOCALE_MAP.get(locale) || 'en-us';
 }
 
-export function generateProductBuyLink(product, productCode) {
+export function generateProductBuyLink(product, productCode, month = null, years = null) {
   if (isZuora()) {
     return product.buy_link;
   }
 
+  const m = product.variation?.dimension_value || month;
+  const y = product.variation?.years || years;
+
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${product.variation.dimension_value}/${product.variation.years}/?force_country=${forceCountry}`;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/?force_country=${forceCountry}`;
+}
+
+export function setDataOnBuyLinks(element, dataInfo) {
+  const { productId, variation } = dataInfo;
+  if (productId) element.dataset.product = productId;
+
+  element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
+
+  if (variation.price) element.dataset.oldPrice = variation.price;
+  if (variation.currency_label) element.dataset.dataCurrency = variation.currency_label;
+  if (variation.region_id) element.dataset.dataRegion = variation.region_id;
+  if (variation.variation_name) element.dataset.variation = variation.variation_name;
 }
 
 export function formatPrice(price, currency, region = null, locale = null) {
@@ -437,7 +452,8 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       data.set('data', JSON.stringify(newData));
     }
 
-    const currentPriceSetup = getPriceLocalMapByLocale();
+    const locale = window.location.pathname.split('/')[1];
+    const currentPriceSetup = PRICE_LOCALE_MAP.get(locale) || 'en-us';
     const newData = JSON.parse(data.get('data'));
     FETCH_URL = `${FETCH_URL}?force_country=${currentPriceSetup.force_country}`;
     newData.config.country_code = currentPriceSetup.country_code;

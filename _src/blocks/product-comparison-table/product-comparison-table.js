@@ -1,5 +1,10 @@
 import {
-  createNanoBlock, renderNanoBlocks, fetchProduct, matchHeights,
+  createNanoBlock,
+  renderNanoBlocks,
+  fetchProduct,
+  matchHeights,
+  setDataOnBuyLinks,
+  generateProductBuyLink,
 } from '../../scripts/utils/utils.js';
 
 const fetchedProducts = [];
@@ -39,8 +44,29 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
       // update buy link
       const currentProductIndex = fetchedProducts.length - 1;
       const buyLink = block.querySelectorAll('.button-container a')[currentProductIndex];
-      if (fetchedProducts[currentProductIndex].product.buy_link) {
-        buyLink.href = fetchedProducts[currentProductIndex].product.buy_link;
+      const prd = fetchedProducts[currentProductIndex];
+
+      const variantSplit = variant.split('-');
+      const units = variantSplit[0].split('u')[0];
+      const years = variantSplit[1].split('y')[0];
+
+      const isBuyLink = buyLink.href.includes('/site/Store/buy/');
+
+      if (isBuyLink) {
+        buyLink.href = prd.product.buy_link || generateProductBuyLink(prd, prd.code, units, years);
+
+        const dataInfo = {
+          productId: prd.code,
+          variation: {
+            price: prd.product.price,
+            discounted_price: prd.product.discount.discounted_price,
+            variation_name: prd.variant,
+            currency_label: prd.product.currency_label,
+            region_id: prd.product.region_id,
+          },
+        };
+
+        setDataOnBuyLinks(buyLink, dataInfo);
       }
     })
     .catch((err) => {
@@ -169,7 +195,7 @@ function extractTextFromStrongTagToParent(element) {
     });
   }
 
-  if (element.tagName === 'STRONG') {
+  if (element.tagName === 'STRONG' && element.parentElement) {
     element.parentElement.innerHTML = element.textContent;
   }
 }
