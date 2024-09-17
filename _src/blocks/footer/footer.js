@@ -1,6 +1,48 @@
-import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
+import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
 import { adobeMcAppendVisitorId } from '../../scripts/utils/utils.js';
 import { decorateMain } from '../../scripts/scripts.js';
+
+function wrapImgsInLinks(container) {
+  const pictures = container.querySelectorAll('picture');
+  pictures.forEach((pic) => {
+    const link = pic.nextElementSibling;
+    if (link && link.tagName === 'A' && link.href) {
+      link.innerHTML = pic.outerHTML;
+      pic.replaceWith(link);
+    }
+  });
+}
+
+function onFooterElementClick(evt) {
+  const header = evt.target;
+  const ul = header.nextElementSibling;
+  header.classList.toggle('active');
+
+  if (ul.classList.contains('open')) {
+    ul.addEventListener('transitionend', function callback() {
+      if (!ul.classList.contains('open')) { // Ensure the ul is still closed
+        ul.classList.remove('visible');
+      }
+      ul.removeEventListener('transitionend', callback);
+    });
+    ul.classList.remove('open');
+  } else {
+    ul.classList.add('visible');
+    setTimeout(() => {
+      ul.classList.add('open');
+    }, 10); // slight delay to allow the browser to apply the "visible" class first
+  }
+}
+
+function disableSelectedCountry(container) {
+  const listOfCountries = container.querySelectorAll('li');
+  listOfCountries.forEach((countryLanguage) => {
+    if (countryLanguage.innerHTML.includes('selected')) {
+      countryLanguage.classList.add('deactivated');
+      countryLanguage.innerHTML = countryLanguage.innerHTML.replace('(selected)', '');
+    }
+  });
+}
 
 function setupPrivacyButton(container) {
   const privacyButton = container.querySelector('a[href="#privacybutton"]');
@@ -12,6 +54,36 @@ function setupPrivacyButton(container) {
         window.UC_UI.showSecondLayer();
       }
     });
+  }
+}
+
+async function runDefaultFooterLogic(block) {
+  // fetch footer content
+  const footerPath = getMetadata('footer') || '/footer';
+  const resp = await fetch(`${footerPath}.plain.html`, window.location.pathname.endsWith('/footer') ? { cache: 'reload' } : {});
+
+  if (resp.ok) {
+    const html = await resp.text();
+
+    // decorate footer DOM
+    const footer = document.createElement('div');
+    footer.innerHTML = html;
+
+    wrapImgsInLinks(footer);
+
+    const sectionHeaders = footer.querySelectorAll('div > div > p');
+    sectionHeaders[2].addEventListener('click', onFooterElementClick);
+    sectionHeaders[3].addEventListener('click', onFooterElementClick);
+
+    const sectionsData = footer.querySelectorAll('div > div > ul');
+    disableSelectedCountry(sectionsData[3]);
+
+    decorateIcons(footer);
+    block.append(footer);
+
+    setupPrivacyButton(footer);
+
+    adobeMcAppendVisitorId('footer');
   }
 }
 
@@ -126,9 +198,21 @@ async function runAemFooterLogic() {
  * @param {Element} footer The footer element
  */
 function applyFooterFactorySetup(footerMetadata, block) {
+  // TODO: please remove this if after creating the zh-hk and zh-tw
+  // headers in AEM
+  const regex = /\/(zh-hk|zh-tw)\//i;
+  const matches = window.location.href.match(regex);
+  if (matches) {
+    runDefaultFooterLogic(block);
+    return;
+  }
+
   switch (footerMetadata) {
     case 'landingpage':
       runLandingpageLogic(block);
+      break;
+    case 'franklinFooter':
+      runDefaultFooterLogic(block);
       break;
     default:
       runAemFooterLogic(block);
