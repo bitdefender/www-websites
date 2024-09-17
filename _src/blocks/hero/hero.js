@@ -36,7 +36,7 @@ function buildHeroBlock(element) {
   }
 }
 
-createNanoBlock('discount', (code, label = 'Discount') => {
+createNanoBlock('discount', (code, label = '{label}') => {
   // code = "av/3/1"
   const [product, unit, year] = code.split('/');
   const variant = `${unit}u-${year}y`;
@@ -75,6 +75,7 @@ export default async function decorate(block) {
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
+    label,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -96,6 +97,10 @@ export default async function decorate(block) {
     // move discount bubble inside the closest button
     const bubble = block.querySelector('.discount-bubble');
     if (bubble) {
+      if (label) {
+        bubble.innerHTML = bubble.innerHTML.replace('{label}', label);
+      }
+
       let sibling = bubble.previousElementSibling;
 
       while (sibling) {
