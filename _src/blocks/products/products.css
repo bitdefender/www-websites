@@ -79,6 +79,11 @@
   color: #7e7e7e;
 }
 
+.product-card .price:last-of-type {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 0;
+}
+
 .v2 .product-card p:last-of-type {
   line-height: 16px;
 }
@@ -326,11 +331,6 @@
 .product-card li a {
   color: inherit;
   text-decoration: underline;
-}
-
-.product-card .price:last-of-type {
-  font-weight: var(--font-weight-bold);
-  margin-bottom: 0;
 }
 
 .products.plans .product-card .price .old-price {
