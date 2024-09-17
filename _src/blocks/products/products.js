@@ -368,14 +368,14 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
  * @param variant Product variant
  * @returns root node of the nanoblock
  */
-function renderLowestPrice(code, variant, monthly = '') {
+function renderLowestPrice(code, variant, monthly = '', text = '') {
   const root = document.createElement('p');
 
   fetchProduct(code, variant).then((product) => {
     const m = toModel(code, variant, product);
     const isMonthly = monthly.toLowerCase() === 'monthly';
     const price = isMonthly ? customRound(m.actualPrice / 12) : m.actualPrice;
-    root.innerHTML = `Start today for as low as  ${price} ${product.currency_label}${isMonthly ? '/mo' : ''}`;
+    root.innerHTML = `${text.replace('0', `${price} ${product.currency_label}`)}`;
   });
 
   return root;

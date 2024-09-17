@@ -313,7 +313,7 @@ main .hero p.button-container {
 }
 
 main .hero p.button-container:last-of-type {
-  margin: 2em 0;
+  margin: 0 0 10px;
 }
 
 main .hero p.button-container.discount-bubble-container {
@@ -480,6 +480,48 @@ main .hero .hero-awards li::after {
   content: none;
 }
 
+main .hero.pb-0 .hero-content {
+  padding-bottom: 0;
+}
+
+main .v2 .hero h1 {
+  font-weight: var(--font-weight-regular);
+  font-family: var(--body-font-family);
+}
+
+main .v2 .hero h1 + p {
+  font-size: var(--body-font-size-s);
+}
+
+main .v2 .hero .hero-content > div:first-of-type {
+  width: 100%;
+}
+
+main .v2 .hero .hero-content > div:last-of-type img {
+  height: auto;
+  width: 360px;
+  position: absolute;
+  bottom: 0;
+}
+
+main .v2 .hero .hero-content > div table tr {
+  display: flex;
+}
+
+main .v2 .hero .hero-content > div table tr td:first-of-type {
+  margin-right: 2em;
+  width: 280px;
+}
+
+main .v2 .hero .hero-content > div table tr td:last-of-type {
+  width: 465px;
+}
+
+main .v2 .hero .hero-content > div table tr td img {
+  width: 100%;
+  height: auto;
+}
+
 @media(max-width: 989px) {
   main .hero.new2024design {
     background-color: #006FFF;
@@ -634,11 +676,19 @@ main .hero .hero-awards li::after {
     width: auto;
   }
 
+  main .v2 .hero .hero-content > div:last-of-type img {
+    width: 360px;
+    right: -6em;
+  }
 }
 
 @media (max-width: 1399px) {
   main .hero .hero-content ul li {
     font-size: var(--body-font-size-xs);
+  }
+
+  main .v2 .hero h1 {
+    font-size: var(--heading-font-size-xxl1);
   }
 }
 
@@ -648,6 +698,16 @@ main .hero .hero-awards li::after {
     margin-bottom: 15px;
   }
 
+  main .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    font-family: IBM Plex Sans, sans-serif;
+  }
+
+  main .v2 .hero h1 {
+    font-size: var(--heading-font-size-xxl2);
+  }
+
   main .hero h2 {
     color: #000;
     font-size: 24px;
@@ -655,12 +715,6 @@ main .hero .hero-awards li::after {
     line-height: 1.25;
     margin-bottom: 9px;
     margin-top: 10px;
-  }
-
-  main .hero h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    font-family: IBM Plex Sans, sans-serif;
   }
 
   main .hero .discount-bubble {
@@ -690,9 +744,44 @@ main .hero .hero-awards li::after {
   }
 }
 
-@media (max-width: 768px) {
-  main .hero .hero-picture {
+@media (max-width: 990px) {
+  main .v2 .hero h1 {
+    font-size: var(--heading-font-size-xl1);
+  }
+
+  main .hero .hero-content > div table tr td:last-of-type {
+    width: 510px;
+  }
+
+  main .hero .hero-content > div table tr td:first-of-type {
     display: none;
+  }
+
+  main .v2 .hero .hero-picture picture img {
+    padding-left: 0;
+  }
+
+  main .v2 .hero .hero-content > div:last-of-type img {
+    width: 265px;
+    right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  main .hero .hero-picture, main .v2 .hero .hero-content > div:last-of-type img {
+    display: none;
+  }
+
+  main .v2 .hero .hero-content > div table tr td:last-of-type {
+    width: 100%;
+  }
+
+  main .v2 .hero h1 {
+    font-size: var(--heading-font-size-l2);
+  }
+
+  main .v2 .hero h1 + p {
+    font-size: var(--body-font-size-xs);
   }
 }
 

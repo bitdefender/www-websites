@@ -299,16 +299,17 @@
 }
 
 .products.compact .product-card .price strong, .products.plans .product-card .price strong {
-  font-size: var(--heading-font-size-xl);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--heading-font-size-l);
+  font-weight: var(--font-weight-bolder);
 }
 
 .product-card .price em {
-  color: #7e7e7e;
+  color: black;
   font-size: var(--body-font-size-xxs);
   display: block;
   font-style: normal;
   line-height: 1.4em;
+  font-weight: bold;
 }
 
 .product-card hr {

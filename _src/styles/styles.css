@@ -71,8 +71,12 @@
 
   /* heading sizes */
   --heading-font-size-xxxl: 60px;
+  --heading-font-size-xxl2: 56px;
+  --heading-font-size-xxl1: 50px;
   --heading-font-size-xxl: 48px;
+  --heading-font-size-xl1: 42px;
   --heading-font-size-xl: 40px;
+  --heading-font-size-l2: 38px;
   --heading-font-size-l: 32px;
   --heading-font-size-m: 24px;
   --heading-font-size-s: 20px;
@@ -1230,7 +1234,8 @@ main .section.cta {
 }
 
 main .cta.bigger-text h2 {
-  font-size: 34px;
+  font-size: var(--heading-font-size-l);
+  font-weight: var(--font-weight-regular);
 }
 
 main .section.cta p {
@@ -1458,6 +1463,14 @@ main .section.blue a.button.modal::after {
   text-align: right;
 }
 
+.buttons-align-right .default-content-wrapper {
+  padding: 1em 3em !important;
+}
+
+.buttons-align-right .default-content-wrapper p.button-container:last-of-type {
+  margin-left: 1em;
+}
+
 .buttons-align-right > div {
   display: flex;
   flex-direction: column;
@@ -1610,6 +1623,22 @@ body > div:first-child {
     padding-top: 2em;
     padding-bottom: 2em;
     margin-bottom: 1em;
+  }
+
+  .buttons-align-right .default-content-wrapper {
+    padding: 1em!important;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .buttons-align-right .default-content-wrapper h2 {
+    flex: 0 1 auto;
+    font-size: var(--heading-font-size-s)!important;
+  }
+
+  .buttons-align-right .default-content-wrapper p.button-container {
+    flex: 1;
   }
 }
 

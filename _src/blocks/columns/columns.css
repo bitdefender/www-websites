@@ -34,6 +34,10 @@
   font-size: var(--body-font-size-s);
 }
 
+.columns.awards.v2 > div > div > p:last-of-type {
+  margin-top: 10px;
+}
+
 .columns.video-presentation > div > div > h3 {
   font-size: var(--heading-font-size-xl);
 }
@@ -166,6 +170,23 @@
   font-size: var(--heading-font-size-m);
   font-weight: var(--font-weight-bold);
   line-height: 1.25;
+}
+
+.v2_benefits .columns-container .default-content-wrapper {
+  margin-bottom: 3em;
+}
+
+.v2_benefits .columns.benefits h3 {
+  font-size: var(--heading-font-size-l);
+}
+
+.v2_benefits .columns.benefits > div {
+  gap: 35px;
+}
+
+.v2_benefits .columns.benefits > div > div {
+  font-size: var(--body-font-size-m);
+  flex: 1;
 }
 
 .section.subtitle-blue h2 {
@@ -413,6 +434,22 @@
     margin-bottom: 0;
   }
 
+  .section.bd_woman {
+    margin-top: 2em;
+  }
+
+  .section.bd_woman h2 {
+    font-weight: var(--font-weight-regular);
+  }
+
+  .section.bd_woman .right-col {
+    margin-top: -122px;
+  }
+
+  .columns.screenshots {
+    margin-top: 4em;
+  }
+
   .columns > div > .columns-img-col {
     margin-bottom: 1em;
   }
@@ -470,6 +507,13 @@
     border-radius: 40px;
     justify-content: center;
     font: normal normal 500 18px/24px Roboto, sans-serif;
+  }
+}
+
+@media (max-width: 1200px) {
+  .v2_benefits .columns.benefits h3 {
+    font-size: var(--heading-font-size-m);
+    margin-bottom: 10px;
   }
 }
 
@@ -851,13 +895,29 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   justify-content: center;
 }
 
+.v2 .columns.awards > div {
+  align-items: flex-start;
+}
+
+.v2 .columns.awards > div > div > p {
+  font-size: var(--body-font-size-s);
+}
+
 @media (max-width: 1399px) {
   .columns-wrapper {
     padding: 0 var(--section-large-desktop-padding);
   }
 
+  .v2_benefits .columns-wrapper {
+    padding: var(--section-mobile-padding-vertical);
+  }
+
   .columns.video-presentation .button-container {
     margin-right: 10px;
+  }
+
+  .columns.screenshots > div {
+    justify-content: space-evenly;
   }
 }
 
@@ -914,6 +974,35 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns.video-presentation > div > div {
     width: 520px;
+  }
+
+  .section.wide.light-sky-blue.columns-container.awards.v2 {
+    width: 100%;
+    padding: 0;
+    margin: 4em 0 2em;
+  }
+}
+
+@media (min-width: 768px) {
+  .v2 .columns > div {
+    flex-direction: row;
+  }
+
+  .v2 .columns.awards .columns-wrapper {
+    padding: 0 10px 5em;
+  }
+
+  .v2 .columns.awards > div > div > p:last-of-type {
+    max-width: 325px;
+    margin: 10px auto 0;
+  }
+
+  .columns.screenshots > div {
+    flex-direction: row;
+  }
+
+  .columns.screenshots > div > .columns-img-col {
+    flex: 0 0 230px;
   }
 }
 
