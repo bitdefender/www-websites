@@ -383,7 +383,6 @@ async function runDefaultHeaderLogic(block) {
     const html = await resp.text();
 
     if (html.includes('aem-banner')) {
-
       const websiteDomain = getDomain();
       let aemFetchDomain;
 
