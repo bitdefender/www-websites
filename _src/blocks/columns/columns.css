@@ -235,6 +235,15 @@
   border-bottom: 2px solid var(--overlay-background-color);
 }
 
+.columns-wrapper > div.grey-bck > div {
+  flex: 1;
+}
+
+.columns-wrapper > div.grey-bck > div > div {
+  margin: 0!important;
+  flex: 0 0 50%;
+}
+
 .columns.carousel > div:nth-child(1) {
   position: relative;
   left: 0;
@@ -246,6 +255,17 @@
 .creators .columns-container .columns > div {
   justify-content: space-between;
   margin-bottom: 3em;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.v2_benefits .columns.benefits > div {
+  gap: 35px;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.v2_benefits .columns.benefits > div > div {
+  font-size: var(--body-font-size-m);
+  flex: 1;
 }
 
 .columns.bg-image > div > div:first-child {
@@ -333,6 +353,18 @@
   transition: all .2s cubic-bezier(.4,0,.2,1);
 }
 
+.green-button .button-container a {
+  background-color: #51a71d;
+  border: 2px solid #51a71d;
+  text-transform: uppercase;
+}
+
+.green-button p:last-of-type a {
+  text-decoration: underline;
+  font-size: var(--body-font-size-xs);
+  margin: 0 10px;
+}
+
 .columns.new-v2 a:hover {
   color: #0A53C5;
   transform: translateX(10px);
@@ -392,18 +424,6 @@
   display: none;
 }
 
-.green-button .button-container a {
-  background-color: #51a71d;
-  border: 2px solid #51a71d;
-  text-transform: uppercase;
-}
-
-.green-button p:last-of-type a {
-  text-decoration: underline;
-  font-size: var(--body-font-size-xs);
-  margin: 0 10px;
-}
-
 .columns-wrapper > div.grey-bck {
   background-color: #F5F5F7;
   border-radius: 1em;
@@ -424,26 +444,6 @@
 .columns-wrapper > div.grey-bck div.columns-text-col {
   padding-left: 4em;
   padding-right: 1em;
-}
-
-.columns-wrapper > div.grey-bck > div {
-  flex: 1;
-}
-
-.columns-wrapper > div.grey-bck > div > div {
-  margin: 0!important;
-  flex: 0 0 50%;
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.v2_benefits .columns.benefits > div {
-  gap: 35px;
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.v2_benefits .columns.benefits > div > div {
-  font-size: var(--body-font-size-m);
-  flex: 1;
 }
 
 @media (min-width: 767px) {
