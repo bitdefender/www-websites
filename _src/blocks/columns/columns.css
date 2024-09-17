@@ -270,6 +270,10 @@
   gap: 35px;
 }
 
+.v2 .columns.awards > div {
+  align-items: flex-start;
+}
+
 /* stylelint-disable-next-line selector-class-pattern */
 .v2_benefits .columns.benefits > div > div {
   font-size: var(--body-font-size-m);
@@ -1009,10 +1013,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns.carousel > div.carousel-buttons {
   justify-content: center;
-}
-
-.v2 .columns.awards > div {
-  align-items: flex-start;
 }
 
 .v2 .columns.awards > div > div > p {
