@@ -96,12 +96,14 @@ const PRICE_LOCALE_MAP = new Map([
   ['en-gb', { force_country: 'uk', country_code: 'gb' }],
   ['en-au', { force_country: 'au', country_code: 'au' }],
   ['en-nz', { force_country: 'au', country_code: 'nz' }],
+  ['en-global', { force_country: 'en', country_code: null }],
   ['es-cl', { force_country: 'en', country_code: 'cl' }],
   ['es-co', { force_country: 'en', country_code: 'co' }],
   ['es-mx', { force_country: 'en', country_code: 'mx' }],
   ['es-pe', { force_country: 'en', country_code: 'pe' }],
   ['es-bz', { force_country: 'en', country_code: 'bz' }],
   ['es-es', { force_country: 'es', country_code: 'es' }],
+  ['es-global', { force_country: 'en', country_code: null }],
   ['ro-ro', { force_country: 'ro', country_code: 'ro' }],
   ['it-it', { force_country: 'it', country_code: 'it' }],
   ['fr-fr', { force_country: 'fr', country_code: 'fr' }],
@@ -365,31 +367,16 @@ export function getBuyLinkCountryPrefix() {
 
 export function getPriceLocalMapByLocale() {
   const locale = window.location.pathname.split('/')[1];
-  return PRICE_LOCALE_MAP.get(locale) || 'en-us';
+  return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
-export function generateProductBuyLink(product, productCode, month = null, years = null) {
+export function generateProductBuyLink(product, productCode) {
   if (isZuora()) {
     return product.buy_link;
   }
 
-  const m = product.variation?.dimension_value || month;
-  const y = product.variation?.years || years;
-
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/?force_country=${forceCountry}`;
-}
-
-export function setDataOnBuyLinks(element, dataInfo) {
-  const { productId, variation } = dataInfo;
-  if (productId) element.dataset.product = productId;
-
-  element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
-
-  if (variation.price) element.dataset.oldPrice = variation.price;
-  if (variation.currency_label) element.dataset.dataCurrency = variation.currency_label;
-  if (variation.region_id) element.dataset.dataRegion = variation.region_id;
-  if (variation.variation_name) element.dataset.variation = variation.variation_name;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${product.variation.dimension_value}/${product.variation.years}/?force_country=${forceCountry}`;
 }
 
 export function formatPrice(price, currency, region = null, locale = null) {
@@ -452,8 +439,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       data.set('data', JSON.stringify(newData));
     }
 
-    const locale = window.location.pathname.split('/')[1];
-    const currentPriceSetup = PRICE_LOCALE_MAP.get(locale) || 'en-us';
+    const currentPriceSetup = getPriceLocalMapByLocale();
     const newData = JSON.parse(data.get('data'));
     FETCH_URL = `${FETCH_URL}?force_country=${currentPriceSetup.force_country}`;
     newData.config.country_code = currentPriceSetup.country_code;
