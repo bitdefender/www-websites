@@ -48,6 +48,15 @@
   flex: 0;
 }
 
+.product-card .price em {
+  color: black;
+  font-size: var(--body-font-size-xxs);
+  display: block;
+  font-style: normal;
+  line-height: 1.4em;
+  font-weight: bold;
+}
+
 .v2 .product-card .price:last-of-type em {
   color: #7e7e7e;
   font-size: var(--body-font-size-xxxs);
@@ -55,16 +64,33 @@
   line-height: 2.4;
 }
 
+.product-card p {
+  font-size: var(--body-font-size-s);
+  color: #3c3c3c;
+  margin: 0;
+}
+
+.product-card p:nth-of-type(2) {
+  font-size: var(--body-font-size-xs);
+}
+
+.product-card .price ~ p {
+  font-size:var(--body-font-size-xxs);
+  color: #7e7e7e;
+}
+
 .v2 .product-card p:last-of-type {
   line-height: 16px;
 }
 
-.v2 .product-card hr {
-  margin: 12px 0;
+.product-card hr {
+  margin: 17px 0;
+  border-bottom: 1px solid #e5e7eb;
+  width: 100%;
 }
 
-.v2 .product-card .button-container {
-  margin: 15px 0;
+.v2 .product-card hr {
+  margin: 12px 0;
 }
 
 .product-card .button-container {
@@ -73,6 +99,10 @@
   flex-direction: column;
   justify-content: flex-end;
   margin: 25px 0 5px;
+}
+
+.v2 .product-card .button-container {
+  margin: 15px 0;
 }
 
 .products.compact .product-card, .products.plans .product-card {
@@ -87,25 +117,10 @@
   padding-top: var(--highlight-spacing);
 }
 
-.product-card p {
-  font-size: var(--body-font-size-s);
-  color: #3c3c3c;
-  margin: 0;
-}
-
-.product-card p:nth-of-type(2) {
-  font-size: var(--body-font-size-xs);
-}
-
 .product-card p a {
   text-decoration: none;
   color: inherit;
   color: var(--link-color);
-}
-
-.product-card .price ~ p {
-  font-size:var(--body-font-size-xxs);
-  color: #7e7e7e;
 }
 
 .products.plans .product-card p {
@@ -331,21 +346,6 @@
 .products.compact .product-card .price strong, .products.plans .product-card .price strong {
   font-size: var(--heading-font-size-l);
   font-weight: var(--font-weight-bolder);
-}
-
-.product-card .price em {
-  color: black;
-  font-size: var(--body-font-size-xxs);
-  display: block;
-  font-style: normal;
-  line-height: 1.4em;
-  font-weight: bold;
-}
-
-.product-card hr {
-  margin: 17px 0;
-  border-bottom: 1px solid #e5e7eb;
-  width: 100%;
 }
 
 .two-columns .columns .product-card hr {

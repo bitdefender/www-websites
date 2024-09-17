@@ -516,6 +516,7 @@ main .v2 .hero .hero-content > div table tr td:last-of-type {
   width: 465px;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 main .smaller_icon .hero .hero-content > div table tr td:last-of-type {
   width: fit-content;
 }
@@ -525,6 +526,7 @@ main .v2 .hero .hero-content > div table tr td img {
   height: auto;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   width: 70px;
 }
@@ -579,10 +581,6 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   main .hero.new2024design .hero-content:last-of-type {
     min-height: 360px;
     padding: 2em;
-  }
-
-  main .hero.new2024design .hero-picture {
-    display: none;
   }
 
   main .hero.new2024design .hero-picture {
@@ -683,10 +681,12 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     width: auto;
   }
 
+  /* stylelint-disable-next-line selector-class-pattern */
   main .smaller_icon .hero .hero-content > div:last-of-type img {
     width: 40%!important;
   }
 
+  /* stylelint-disable-next-line selector-class-pattern */
   main .new_v2 .hero .hero-content > div:last-of-type img {
     width: 60%!important;
     right: 0;

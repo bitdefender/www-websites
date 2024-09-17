@@ -21,6 +21,29 @@
     margin-bottom: 2em;
 }
 
+.current-price-container p {
+    font-size: var(--body-font-size-m);
+    font-weight: var(--font-weight-boldest);
+}
+
+.product-comparison-price p:last-of-type {
+    color: #7e7e7e;
+    font-size: var(--body-font-size-xs);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--body-font-size-xs);
+    border-bottom: 1px dashed #dedede;
+    margin-bottom: 4px !important;
+    padding-bottom: 1.5em;
+}
+
+div[role="cell"] p {
+    margin: 0;
+}
+
+.product-comparison-header div[role="columnheader"] p {
+    margin: 0;
+}
+
 .section.product-comparison-table-container .default-content-wrapper p {
     font-size: var(--body-font-size-m);
 }
@@ -94,33 +117,6 @@
     padding-top: 0.9375rem;
     margin: 0.9375rem 0.625rem 0;
     border-top: 1px solid var(--horizontal-separator-color);
-}
-
-.current-price-container p {
-    font-size: var(--body-font-size-m);
-    font-weight: var(--font-weight-boldest);
-}
-
-.product-comparison-price p:last-of-type {
-    color: #7e7e7e!important;
-    font-size: var(--body-font-size-xs);
-    font-weight: var(--font-weight-regular);
-    line-height: var(--body-font-size-xs);
-    border-bottom: 1px dashed #dedede;
-    margin-bottom: 4px !important;
-    padding-bottom: 1.5em;
-}
-
-div[role="cell"] p {
-    margin: 0;
-}
-
-.product-comparison-price p:last-of-type {
-    color: var(--product-comparison-text-color);
-}
-
-.product-comparison-header div[role="columnheader"] p {
-    margin: 0;
 }
 
 div[role="cell"] .button-container , .product-comparison-header div[role="columnheader"] .button-container{
@@ -668,10 +664,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 }
 
 @media (max-width: 500px) {
-    .section.product-comparison-table-container .default-content-wrapper p {
-        font-size: var(--body-font-size-s);
-    }
-
     .product-comparison-header div[role="columnheader"]:not(:first-child) {
         width: 33%;
     }
@@ -696,5 +688,9 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
     .product-comparison-table div[role='cell']:not(:first-child) {
         padding: 1em;
+    }
+
+    .section.product-comparison-table-container .default-content-wrapper p {
+        font-size: var(--body-font-size-s);
     }
 }
