@@ -1,48 +1,6 @@
-import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
+import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
 import { adobeMcAppendVisitorId } from '../../scripts/utils/utils.js';
 import { decorateMain } from '../../scripts/scripts.js';
-
-function wrapImgsInLinks(container) {
-  const pictures = container.querySelectorAll('picture');
-  pictures.forEach((pic) => {
-    const link = pic.nextElementSibling;
-    if (link && link.tagName === 'A' && link.href) {
-      link.innerHTML = pic.outerHTML;
-      pic.replaceWith(link);
-    }
-  });
-}
-
-function onFooterElementClick(evt) {
-  const header = evt.target;
-  const ul = header.nextElementSibling;
-  header.classList.toggle('active');
-
-  if (ul.classList.contains('open')) {
-    ul.addEventListener('transitionend', function callback() {
-      if (!ul.classList.contains('open')) { // Ensure the ul is still closed
-        ul.classList.remove('visible');
-      }
-      ul.removeEventListener('transitionend', callback);
-    });
-    ul.classList.remove('open');
-  } else {
-    ul.classList.add('visible');
-    setTimeout(() => {
-      ul.classList.add('open');
-    }, 10); // slight delay to allow the browser to apply the "visible" class first
-  }
-}
-
-function disableSelectedCountry(container) {
-  const listOfCountries = container.querySelectorAll('li');
-  listOfCountries.forEach((countryLanguage) => {
-    if (countryLanguage.innerHTML.includes('selected')) {
-      countryLanguage.classList.add('deactivated');
-      countryLanguage.innerHTML = countryLanguage.innerHTML.replace('(selected)', '');
-    }
-  });
-}
 
 function setupPrivacyButton(container) {
   const privacyButton = container.querySelector('a[href="#privacybutton"]');
@@ -54,36 +12,6 @@ function setupPrivacyButton(container) {
         window.UC_UI.showSecondLayer();
       }
     });
-  }
-}
-
-async function runDefaultFooterLogic(block) {
-  // fetch footer content
-  const footerPath = getMetadata('footer') || '/footer';
-  const resp = await fetch(`${footerPath}.plain.html`, window.location.pathname.endsWith('/footer') ? { cache: 'reload' } : {});
-
-  if (resp.ok) {
-    const html = await resp.text();
-
-    // decorate footer DOM
-    const footer = document.createElement('div');
-    footer.innerHTML = html;
-
-    wrapImgsInLinks(footer);
-
-    const sectionHeaders = footer.querySelectorAll('div > div > p');
-    sectionHeaders[2].addEventListener('click', onFooterElementClick);
-    sectionHeaders[3].addEventListener('click', onFooterElementClick);
-
-    const sectionsData = footer.querySelectorAll('div > div > ul');
-    disableSelectedCountry(sectionsData[3]);
-
-    decorateIcons(footer);
-    block.append(footer);
-
-    setupPrivacyButton(footer);
-
-    adobeMcAppendVisitorId('footer');
   }
 }
 
@@ -127,6 +55,71 @@ async function runLandingpageLogic(block) {
   adobeMcAppendVisitorId('footer');
 }
 
+async function runAemFooterLogic() {
+  // fetch footer content
+  const aemFooterHostname = window.location.hostname.includes('.hlx.')
+    || window.location.hostname.includes('localhost')
+    ? 'https://stage.bitdefender.com'
+    : '';
+
+  const aemFooterFetch = await fetch(`${aemFooterHostname}/content/experience-fragments/bitdefender/language_master/en/footer-fragment-v1/master/jcr:content/root.html`);
+  if (!aemFooterFetch.ok) {
+    return;
+  }
+
+  const aemFooterHtml = await aemFooterFetch.text();
+  const footer = document.createElement('footer');
+  const shadowRoot = footer.attachShadow({ mode: 'open' });
+  const contentDiv = document.createElement('div');
+  contentDiv.innerHTML = aemFooterHtml;
+
+  const loadedLinks = [];
+  contentDiv.querySelectorAll('link').forEach((linkElement) => {
+    // update the links so that they work on all Franklin domains
+    linkElement.href = `${aemFooterHostname}${linkElement.getAttribute('href')}`;
+    linkElement.rel = 'stylesheet';
+
+    // add a promise for each link element in the code
+    // so that we can wait on all the CSS before displaying the component
+    loadedLinks.push(new Promise((resolve, reject) => {
+      linkElement.onload = () => {
+        resolve();
+      };
+
+      linkElement.onerror = () => {
+        reject();
+      };
+    }));
+  });
+
+  // a list of all the components to be received from aem components
+  const aemComponents = ['footer'];
+
+  // add logic so that every time an AEM function is fully loaded
+  // it is directly run using the shadow dom as parameter
+  aemComponents.forEach((aemComponentName) => {
+    window.addEventListener(aemComponentName, () => {
+      window[aemComponentName](shadowRoot);
+    });
+  });
+
+  // select all the scripts from contet div and
+  const scripts = contentDiv.querySelectorAll('script');
+  scripts.forEach((script) => {
+    //  multiple reruns of runtime lead to all the scripts
+    // being run multiple times
+    if (!script.src.includes('runtime')) {
+      const newScript = document.createElement('script');
+      newScript.src = `${aemFooterHostname}${script.getAttribute('src')}`;
+      newScript.defer = true;
+      shadowRoot.appendChild(newScript);
+    }
+  });
+
+  shadowRoot.appendChild(contentDiv);
+  document.querySelector('footer').replaceWith(footer);
+}
+
 /**
  * applies footer factory based on footer variation
  * @param {String} footerMetadata The footer variation: landingpage' or none
@@ -138,7 +131,7 @@ function applyFooterFactorySetup(footerMetadata, block) {
       runLandingpageLogic(block);
       break;
     default:
-      runDefaultFooterLogic(block);
+      runAemFooterLogic(block);
       break;
   }
 }

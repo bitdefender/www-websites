@@ -75,7 +75,7 @@ export default async function decorate(block) {
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
-    label
+    label,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -98,9 +98,9 @@ export default async function decorate(block) {
     const bubble = block.querySelector('.discount-bubble');
     if (bubble) {
       if (label) {
-        bubble.innerHTML = bubble.innerHTML.replace("{label}", label);
+        bubble.innerHTML = bubble.innerHTML.replace('{label}', label);
       }
-    
+
       let sibling = bubble.previousElementSibling;
 
       while (sibling) {
