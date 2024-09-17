@@ -35,10 +35,10 @@ function createNavigationButtons(numberOfSlides, carousel) {
     const button = document.createElement('button');
     button.setAttribute('aria-label', `Slide ${i + 1}`);
     button.addEventListener('click', () => {
-        if (!button.classList.contains('active-button')) {
-            showSlides(carousel, i);
-            setActiveButton(button, buttonsWrapper);
-        }
+      if (!button.classList.contains('active-button')) {
+        showSlides(carousel, i);
+        setActiveButton(button, buttonsWrapper);
+      }
     });
     buttonsWrapper.appendChild(button);
     return button;
