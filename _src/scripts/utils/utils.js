@@ -99,7 +99,7 @@ const PRICE_LOCALE_MAP = new Map([
   ['en-global', { force_country: 'en', country_code: null }],
   ['es-cl', { force_country: 'en', country_code: 'cl' }],
   ['es-co', { force_country: 'en', country_code: 'co' }],
-  ['es-mx', { force_country: 'mx', country_code: 'mx' }],
+  ['es-mx', { force_country: 'en', country_code: 'mx' }],
   ['es-pe', { force_country: 'en', country_code: 'pe' }],
   ['es-bz', { force_country: 'en', country_code: 'bz' }],
   ['es-es', { force_country: 'es', country_code: 'es' }],
