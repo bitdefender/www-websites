@@ -1,6 +1,6 @@
 import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
 import { adobeMcAppendVisitorId } from '../../scripts/utils/utils.js';
-import { decorateMain } from '../../scripts/scripts.js';
+import { decorateMain, getDomain } from '../../scripts/scripts.js';
 
 function wrapImgsInLinks(container) {
   const pictures = container.querySelectorAll('picture');
@@ -134,7 +134,19 @@ async function runAemFooterLogic() {
     ? 'https://stage.bitdefender.com'
     : '';
 
-  const aemFooterFetch = await fetch(`${aemFooterHostname}/content/experience-fragments/bitdefender/language_master/en/footer-fragment-v1/master/jcr:content/root.html`);
+  const websiteDomain = getDomain();
+  let aemFetchDomain;
+
+  if (websiteDomain === 'en-us') {
+    aemFetchDomain = 'en';
+  } else if (websiteDomain.includes('-global')) {
+    const [singleDomain] = websiteDomain.split('-');
+    aemFetchDomain = singleDomain;
+  } else {
+    aemFetchDomain = websiteDomain.split('-').join('_');
+  }
+
+  const aemFooterFetch = await fetch(`${aemFooterHostname}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/footer-fragment-v1/master/jcr:content/root.html`);
   if (!aemFooterFetch.ok) {
     return;
   }
@@ -202,7 +214,7 @@ function applyFooterFactorySetup(footerMetadata, block) {
   // headers in AEM
   const regex = /\/(zh-hk|zh-tw)\//i;
   const matches = window.location.href.match(regex);
-  if (matches) {
+  if (matches || window.location.hostname.includes('www.')) {
     runDefaultFooterLogic(block);
     return;
   }
