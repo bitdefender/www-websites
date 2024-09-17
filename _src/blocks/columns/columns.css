@@ -58,6 +58,10 @@
   font-size: var(--body-font-size-s);
 }
 
+.columns-wrapper > div.grey-bck p:first-of-type {
+  margin: 1em 0;
+}
+
 .v2 .columns.awards > div > div > p {
   font-size: var(--body-font-size-s);
 }
@@ -66,8 +70,11 @@
   margin-bottom: 24px;
 }
 
-.columns-wrapper > div.grey-bck p:first-of-type {
-  margin: 1em 0;
+.section.subtitle-blue .columns.benefits p {
+  font-size: var(--body-font-size-s);
+  font-weight: 400;
+  letter-spacing: .006em;
+  line-height: 24px;
 }
 
 .columns.awards.v2 > div > div > p:last-of-type {
@@ -84,6 +91,10 @@
   font-size: 1.25rem;
   --tw-text-opacity: 1;
   color: rgb(0 110 255 / var(--tw-text-opacity));
+}
+
+.creators .columns-container h3 {
+  font-weight: bold;
 }
 
 .columns.video-presentation > div > div > h3 {
@@ -140,6 +151,15 @@
 .columns.awards > div img {
   display: block;
   object-fit: contain;
+}
+
+.columns > div > .columns-img-col img {
+  display: block;
+}
+
+.grey-version .columns > div > div img, .small-icons .columns > div > div img {
+  height: 60px;
+  width: auto;
 }
 
 .columns.awards.smaller-icons > div img {
@@ -300,28 +320,17 @@
   margin-bottom: 2em;
 }
 
-.section.subtitle-blue .columns.benefits p {
-  font-size: var(--body-font-size-s);
-  font-weight: 400;
-  letter-spacing: .006em;
-  line-height: 24px;
-}
-
 .columns > div > .columns-img-col {
   order: 0;
   text-align: center;
   margin-bottom: 2em;
 }
 
-.columns > div > .columns-img-col img {
-  display: block;
-}
-
 .creators .columns-container .columns > div:last-of-type {
   margin-bottom: 0;
 }
 
-.creators .columns-container h3, .creators .columns-container h5 {
+.creators .columns-container h5 {
   font-weight: bold;
 }
 
@@ -355,7 +364,7 @@
   font-size: 14px;
 }
 
-.columns.bg-image a{
+.columns.bg-image a {
   color: white
 }
 
@@ -402,11 +411,6 @@
 .columns-container.chat-options table tr {
   display: flex;
   justify-content: space-between;
-}
-
-.grey-version .columns > div > div img, .small-icons .columns > div > div img {
-  height: 60px;
-  width: auto;
 }
 
 .small-icons-v2 .columns > div > div.columns-img-col {
