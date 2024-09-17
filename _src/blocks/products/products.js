@@ -430,7 +430,7 @@ export default function decorate(block) {
             const dataInfo = {
               productId: card.productCode,
               variation: {
-                price: card.price,
+                price: card.actualPrice,
                 discounted_price: card.discountedPrice,
                 variation_name: card.variantId,
                 currency_label: card.currency,
