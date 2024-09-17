@@ -129,6 +129,10 @@
     font-size: var(--body-font-size-xl);
   }
 
+  .accordion.smaller-text .accordion-item-content p {
+    font-size: var(--body-font-size-s)!important;
+  }
+
   .accordion.terms-of-use .accordion-item-header h3 {
     font-size: var(--heading-font-size-xs);
   }

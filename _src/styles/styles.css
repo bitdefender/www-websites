@@ -786,8 +786,13 @@ body.creators {
     font-size: 19px;
 	}
 
-  main .section.width-medium .block, main .section.width-medium .default-content-wrapper, main .section.width-medium-p .block p, main .section.width-medium-p .default-content-wrapper p {
+  main .section.width-medium .block, main .section.width-medium .default-content-wrapper {
     width: 940px;
+    margin: 0 auto;
+  }
+
+  main .section.width-medium-p .block p, main .section.width-medium-p .default-content-wrapper p {
+    max-width: 940px;
     margin: 0 auto;
   }
 
@@ -965,7 +970,7 @@ main pre {
   }
 
   .section.migration p {
-    font-size: var(--heading-font-size-xs);
+    font-size: var(--heading-font-size-xxs);
   }
 }
 

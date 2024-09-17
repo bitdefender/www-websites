@@ -80,7 +80,6 @@ main .hero.black-background .hero-content .breadcrumb a:hover {
 }
 
 /* hero */
-
 main .hero-container > div {
   max-width: unset;
 }
@@ -517,9 +516,17 @@ main .v2 .hero .hero-content > div table tr td:last-of-type {
   width: 465px;
 }
 
+main .smaller_icon .hero .hero-content > div table tr td:last-of-type {
+  width: fit-content;
+}
+
 main .v2 .hero .hero-content > div table tr td img {
   width: 100%;
   height: auto;
+}
+
+main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
+  width: 70px;
 }
 
 @media(max-width: 989px) {
@@ -676,9 +683,19 @@ main .v2 .hero .hero-content > div table tr td img {
     width: auto;
   }
 
+  main .smaller_icon .hero .hero-content > div:last-of-type img {
+    width: 40%!important;
+  }
+
+  main .new_v2 .hero .hero-content > div:last-of-type img {
+    width: 60%!important;
+    right: 0;
+  }
+
   main .v2 .hero .hero-content > div:last-of-type img {
     width: 360px;
-    right: -6em;
+    right: -11em !important;
+    bottom: -3em;
   }
 }
 
