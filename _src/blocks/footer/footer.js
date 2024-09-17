@@ -198,7 +198,6 @@ async function runAemFooterLogic() {
  * @param {Element} footer The footer element
  */
 function applyFooterFactorySetup(footerMetadata, block) {
-
   // TODO: please remove this if after creating the zh-hk and zh-tw
   // headers in AEM
   const regex = /\/(zh-hk|zh-tw)\//i;
