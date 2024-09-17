@@ -43,14 +43,6 @@
   font-size: var(--body-font-size-s);
 }
 
-.columns.awards.v2 > div > div > p:last-of-type {
-  margin-top: 10px;
-}
-
-.columns.video-presentation > div > div > h3 {
-  font-size: var(--heading-font-size-xl);
-}
-
 .columns.carousel > div > div > p {
   width: inherit;
   padding: 0 50px;
@@ -59,6 +51,20 @@
 
 .columns-container.video-left .columns-right-col p {
   margin: 1.5em 0;
+}
+
+.columns.awards.v2 > div > div > p:last-of-type {
+  margin-top: 10px;
+}
+
+.columns.benefits h3 {
+  font-size: var(--heading-font-size-m);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.25;
+}
+
+.columns.video-presentation > div > div > h3 {
+  font-size: var(--heading-font-size-xl);
 }
 
 .columns > div {
@@ -181,33 +187,33 @@
   width: 100%;
 }
 
-.columns.benefits h3 {
-  font-size: var(--heading-font-size-m);
-  font-weight: var(--font-weight-bold);
-  line-height: 1.25;
-}
-
+/* stylelint-disable-next-line selector-class-pattern */
 .v2_benefits .columns-container .default-content-wrapper {
   margin-bottom: 3em;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .bigger_title .columns.benefits h3 {
   font-size: var(--heading-font-size-l);
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .v2_benefits .columns.benefits h3 {
   font-size: var(--heading-font-size-l);
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .v2_benefits .columns.benefits > div {
   gap: 35px;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .v2_benefits .columns.benefits > div > div {
   font-size: var(--body-font-size-m);
   flex: 1;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .v3_benefits .columns.benefits p {
   font-size: var(--body-font-size-s);
 }
@@ -615,6 +621,7 @@
 }
 
 @media (max-width: 1200px) {
+  /* stylelint-disable-next-line selector-class-pattern */
   .v2_benefits .columns.benefits h3 {
     font-size: var(--heading-font-size-m);
     margin-bottom: 10px;
@@ -1012,6 +1019,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     padding: 0 var(--section-large-desktop-padding);
   }
 
+  /* stylelint-disable-next-line selector-class-pattern */
   .v2_benefits .columns-wrapper {
     padding: var(--section-mobile-padding-vertical);
   }
