@@ -96,12 +96,14 @@ const PRICE_LOCALE_MAP = new Map([
   ['en-gb', { force_country: 'uk', country_code: 'gb' }],
   ['en-au', { force_country: 'au', country_code: 'au' }],
   ['en-nz', { force_country: 'au', country_code: 'nz' }],
+  ['en-global', { force_country: 'en', country_code: null }],
   ['es-cl', { force_country: 'en', country_code: 'cl' }],
   ['es-co', { force_country: 'en', country_code: 'co' }],
   ['es-mx', { force_country: 'en', country_code: 'mx' }],
   ['es-pe', { force_country: 'en', country_code: 'pe' }],
   ['es-bz', { force_country: 'en', country_code: 'bz' }],
   ['es-es', { force_country: 'es', country_code: 'es' }],
+  ['es-global', { force_country: 'en', country_code: null }],
   ['ro-ro', { force_country: 'ro', country_code: 'ro' }],
   ['it-it', { force_country: 'it', country_code: 'it' }],
   ['fr-fr', { force_country: 'fr', country_code: 'fr' }],
@@ -365,7 +367,7 @@ export function getBuyLinkCountryPrefix() {
 
 export function getPriceLocalMapByLocale() {
   const locale = window.location.pathname.split('/')[1];
-  return PRICE_LOCALE_MAP.get(locale) || 'en-us';
+  return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
 export function generateProductBuyLink(product, productCode, month = null, years = null) {
