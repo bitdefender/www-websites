@@ -1,3 +1,4 @@
+import { Target } from '../target.js';
 import ZuoraNLClass from '../zuora.js';
 
 export const IANA_BY_REGION_MAP = new Map([
@@ -405,6 +406,7 @@ export function formatPrice(price, currency, region = null, locale = null) {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
+  const targetCampain = await Target.getCampaign();
   const url = new URL(window.location.href);
 
   if (!isZuora()) {
@@ -414,7 +416,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
 
     if (!pid) {
       // eslint-disable-next-line no-param-reassign
-      pid = url.searchParams.get('pid') || getMetadata('pid');
+      pid = targetCampain || url.searchParams.get('pid') || getMetadata('pid');
     }
 
     data.append('data', JSON.stringify({
@@ -481,7 +483,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   const variantSplit = variant.split('-');
   const units = variantSplit[0].split('u')[0];
   const years = variantSplit[1].split('y')[0];
-  const campaign = getParamValue('campaign');
+  const campaign = targetCampain || getParamValue('campaign');
   const zuoraResponse = await ZuoraNLClass.loadProduct(`${code}/${units}/${years}`, campaign);
   // zuoraResponse.ok = true;
 
