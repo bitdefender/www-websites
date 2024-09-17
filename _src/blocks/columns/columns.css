@@ -140,6 +140,14 @@
   justify-content: space-between;
 }
 
+.columns.carousel > div {
+  justify-content: flex-start;
+}
+
+.columns.carousel > div > div {
+  flex: 1 0 33%;
+}
+
 .grey-version .columns > div > div {
   --tw-bg-opacity: 1;
 
@@ -997,14 +1005,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns.new-v2 > div > .columns-img-col {
   margin-bottom: 1em;
-}
-
-.columns.carousel > div {
-  justify-content: flex-start;
-}
-
-.columns.carousel > div > div {
-  flex: 1 0 33%;
 }
 
 .columns.carousel > div.carousel-buttons {
