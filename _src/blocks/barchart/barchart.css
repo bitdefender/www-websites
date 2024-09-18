@@ -147,6 +147,7 @@
   .barchart.block h3 {
     font-size: var(--body-font-size-m);
   }
+
   .barchart > ul > li {
     padding: 1em;
   }

@@ -217,7 +217,7 @@
 
 .product-card .featured {
   color: #2cb43d;
-  background-color: rgba(44,180,61,.2);
+  background-color: rgb(44 180 61 / 20%);
   border-radius: 8px;
   font-size: var(--body-font-size-xs);
   font-weight: var(--font-weight-bold);
@@ -759,6 +759,7 @@
 @media (max-width: 992px) {
   .products.compact, .products.plans {
       --max-columns: 2;
+
       display: flex;
       flex-wrap: wrap;
       text-align: center;

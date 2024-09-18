@@ -337,6 +337,9 @@ export function setDataOnBuyLinks(element, dataInfo) {
 }
 
 export function formatPrice(price, currency, region = null, locale = null) {
+  if (!price) {
+    return null;
+  }
   const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
   return new Intl.NumberFormat(loc, { style: 'currency', currency }).format(price);
 }
