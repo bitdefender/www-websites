@@ -4,8 +4,9 @@ import {
   fetchProduct,
   matchHeights,
   setDataOnBuyLinks,
-  generateProductBuyLink,
+  generateProductBuyLink, formatPrice,
 } from '../../scripts/utils/utils.js';
+import { getDomain } from '../../scripts/scripts.js';
 
 const fetchedProducts = [];
 
@@ -29,15 +30,19 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
       fetchedProducts.push({ code, variant, product });
       // eslint-disable-next-line camelcase
       const { price, discount: { discounted_price: discounted }, currency_iso: currency } = product;
-      const savings = price - discounted;
+      const formattedPriceParams = [currency, null, getDomain()];
+      // eslint-disable-next-line max-len
+      const formattedSavings = formatPrice((price - discounted).toFixed(2), ...formattedPriceParams);
+      const formattedPrice = formatPrice(price, ...formattedPriceParams);
+      const formattedDiscount = formatPrice(discounted, ...formattedPriceParams);
 
       oldPriceElement.innerHTML = `<div class="old-price-box">
-        <span>${oldPriceText} <del>${price} ${currency}</del></span>
-        <span class="savings d-none">Savings <del>${savings.toFixed(2)} ${currency}</del></span>
+        <span>${oldPriceText} <del>${formattedPrice}</del></span>
+        <span class="savings d-none">Savings <del>${formattedSavings}</del></span>
       </div>`;
       priceElement.innerHTML = `<div class="new-price-box">
         <span class="d-none total-text">Your total price:</span>
-        ${discounted} ${currency}
+        ${formattedDiscount}
       </div>`;
       priceAppliedOnTime.innerHTML = label;
 

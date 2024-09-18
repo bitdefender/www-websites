@@ -278,7 +278,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
     background-color: var(--first-table-cell-color);
     padding: 0.875rem 1.75rem 1.0625rem 2.125rem;
     width: 100%;
-    font-weight: var(--font-weight-bold);
     text-align: center;
     font-size: var(--body-font-size-s);
     font-weight: var(--font-weight-regular);
@@ -670,7 +669,7 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
     .product-comparison-header div[role="columnheader"] h3 {
         font-size: var(--heading-font-size-xxs);
-        margin: 1em 0em 5px;
+        margin: 1em 0 5px;
     }
 
     .product-comparison-price p:last-of-type {

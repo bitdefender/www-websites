@@ -1,11 +1,12 @@
 import {
   createNanoBlock,
-  fetchProduct,
+  fetchProduct, formatPrice,
   getBuyLinkCountryPrefix,
   getDatasetFromSection,
   getPidFromUrl,
   renderNanoBlocks, setDataOnBuyLinks,
 } from '../../scripts/utils/utils.js';
+import { getDomain } from '../../scripts/scripts.js';
 
 const state = {
   firstProduct: null,
@@ -175,7 +176,10 @@ function updatePrice(block) {
     state.currentProduct = product;
     const variant = `${MEMBERS_MAP.get(state.membersIndex)}u-1y`;
     const resp = await fetchProduct(product.alias, variant);
-    priceEl.textContent = `${resp.currency_label} ${resp.price}`;
+
+    const formattedPrice = formatPrice(resp.price, resp.currency_iso, null, getDomain());
+
+    priceEl.textContent = `${formattedPrice}`;
   })();
 }
 

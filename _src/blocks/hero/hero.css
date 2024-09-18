@@ -340,7 +340,8 @@ main .hero img {
 
 main .hero .hero-picture picture img {
   position: absolute;
-  /*display: none;*/
+
+  /* display: none; */
   padding-left: 200px;
 }
 
@@ -618,7 +619,7 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   main .hero h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: IBM Plex Sans, sans-serif;
+    font-family: "IBM Plex Sans", sans-serif;
   }
 
   main .hero .hero-picture {
@@ -731,7 +732,7 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   main .hero h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: IBM Plex Sans, sans-serif;
+    font-family: "IBM Plex Sans", sans-serif;
   }
 
   main .v2 .hero h1 {
