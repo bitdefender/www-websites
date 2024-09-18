@@ -17,7 +17,7 @@
     const domain = getDomain();
 
     window.addEventListener('load', async () => {
-      const response = await fetch(`/${domain}/_src/404.plain.html`);
+      const response = await fetch(`/${domain}/consumer/404.plain.html`);
       if (response.ok) {
         const htmlContent = await response.text();
         const specialSection = document.querySelector('.link-section');

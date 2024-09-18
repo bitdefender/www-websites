@@ -83,10 +83,36 @@
     }
 }
 
+.creators .title-size .default-content-wrapper p {
+  font-size: 24px;
+}
+
+
+.creator-cards .four-cards.block {
+  display: flex;
+  justify-content: center;
+}
+
+.creator-cards .four-cards.block ul li strong {
+  font-size: 22px;
+}
+
 .four-cards-container h3 {
     font: normal normal bold 32px/37px var(--body-font-family);
     text-align: center;
     margin-bottom: 56px;
+}
+
+.creator-cards.four-cards-container h3 {
+  font: normal normal bold 60px/69px "IBM Plex Sans", sans-serif;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.creator-cards.four-cards-container h4 {
+  font: normal normal bold 22px/24px "IBM Plex Sans", sans-serif;
+  text-align: left;
+
 }
 
 .four-cards-container.we-container {
@@ -124,8 +150,25 @@
   font: normal normal normal 16px/24px var(--body-font-family);
 }
 
+.creator-cards .four-cards > ul > li {
+  font-size: 18px;
+}
+
 .four-cards .default-content-wrapper {
   text-align: center;
+}
+
+.creator-cards .default-content-wrapper {
+  text-align: center;
+}
+
+.creator-cards .default-content-wrapper:last-of-type {
+  padding-top: 0;
+}
+
+.creator-cards .four-cards ul li div img {
+  height: 48px;
+  margin-bottom: 0;
 }
 
 /* a/b test styles, should be deleted after */
@@ -179,6 +222,28 @@
   background-color: #0D499B;
 }
 
+.creator-cards .default-content-wrapper a.button:any-link {
+  min-width: 230px;
+  height: 48px;
+  padding: 10px 10px 10px 25px;
+  background: #E72325 0% 0% no-repeat padding-box;
+  border-radius: 40px;
+  justify-content: center;
+  font: normal normal 500 18px / 24px Roboto, sans-serif;
+  color: white;
+}
+
+.creator-cards .default-content-wrapper a.button:hover {
+  color: white;
+  background-color: var(--button-background-color);
+}
+
+.creator-cards .default-content-wrapper a.button:active {
+  color: white;
+  background-color: var(--button-background-color);
+  border: 0;
+}
+
 .four-cards .icon {
   width: 48px;
   height: 48px;
@@ -202,7 +267,7 @@
   }
 }
 
-@media (min-width: 991px) {
+@media (min-width: 992px) {
   .four-cards-container.we-container {
     max-width: 1300px;
     padding-left: 50px;
@@ -213,6 +278,11 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 14px;
   }
+
+  .creator-cards .four-cards > ul {
+    grid-template-columns: 300px 300px 300px;
+    grid-gap: 14px;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -220,5 +290,22 @@
     max-width: 1350px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+  
+}
+
+@media (max-width: 991px) {
+  .creators .title-size .default-content-wrapper h2 {
+    font-size: 31px;
+  }
+
+  .creators .title-size .default-content-wrapper p {
+    font-size: 18px;
+    line-height: 1.25;
+    margin-bottom: 9px;
+  }
+
+  .creator-cards .default-content-wrapper a.button:any-link {
+    margin-top: 0;
   }
 }

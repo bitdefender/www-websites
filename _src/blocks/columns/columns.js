@@ -174,7 +174,7 @@ export default function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
-  const { linksOpenInNewTab } = block.closest('.section').dataset;
+  const { linksOpenInNewTab, type } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
@@ -244,4 +244,13 @@ export default function decorate(block, options) {
     bubbles: true,
     composed: true,
   });
+
+  if (type && type === 'video_left') {
+    block.closest('.section').classList.add('video-left');
+    const leftCol = block.querySelector('.columns-img-col');
+    const videoPath = leftCol.querySelector('tr:last-of-type').innerText.trim();
+    const videoImg = leftCol.querySelector('img').getAttribute('src');
+
+    leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
+  }
 }

@@ -54,6 +54,8 @@
 .product-comparison-header div[role="columnheader"]:not(:first-child) {
     border: 1px solid var(--first-table-cell-color);
     flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-comparison-header div[role="columnheader"]:not(:first-child).active {
@@ -107,12 +109,18 @@ div[role="cell"] .button-container , .product-comparison-header div[role="column
     margin-bottom: 0.3125rem;
 }
 
+.section.product-comparison-table-container.migration p {
+    color: #7e7e7e;
+    font-size: 12px;
+}
+
 .product-comparison-header div[role="columnheader"] p:first-of-type {
     font-weight: var(--font-weight-bold);
     padding: 0;
     color: var(--product-comparison-text-color);
     text-align: center;
     font-size: var(--body-font-size-xs);
+    flex-grow: 1;
 }
 
 .product-comparison-header div[role="cell"] p:first-of-type {
@@ -167,10 +175,9 @@ div[role="cell"] p:last-of-type.product-comparison-header-subtitle,
 .product-comparison-header div[role="columnheader"] h3 {
     margin: 3rem 0.625rem 0.25rem;
     font-size: var(--heading-font-size-s);
-    min-height: 4rem;
 }
 
-.product-comparison-header div[role="columnheader"] .old-price-container p{
+.product-comparison-header div[role="columnheader"] .old-price-container p {
     font-size: var(--body-font-size-xxs);
     line-height: 1.2;
     color: var(--product-comparison-text-color);
@@ -492,4 +499,100 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
 .display-price-below .product-comparison-price {
     border: none;
+}
+
+.product-comparison-table.two-products {
+    width: 100%;
+}
+
+@media (width <= 1202px) {
+    .product-comparison-table div[role='columnheader']:nth-child(1) > h2 {
+      font-size: var(--heading-font-size-l);
+    }
+
+    .section.product-comparison-table-container.migration .old-price-box span {
+      font-size: 13px;
+      flex-direction: column;
+      display: flex !important;
+    }
+
+    .section.product-comparison-table-container.migration .old-price-box span:first-of-type {
+      text-align: left;
+    }
+
+    .section.product-comparison-table-container.migration h3 {
+        font-size: 21px !important;
+        margin-top: 1em !important;
+    }
+
+    .section.product-comparison-table-container.migration .new-price-box .total-text {
+      font-size: 16px;
+    }
+  }
+
+  .section.product-comparison-table-container.migration .product-comparison-price {
+    border: 0 none!important;
+}
+
+.section.product-comparison-table-container.migration h3 {
+    font-family: roboto, sans-serif;
+    font-size: 24px !important;
+    color: black !important;
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+.section.product-comparison-table-container.migration .old-price-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #dedede;
+    padding-bottom: 10px;
+}
+
+.section.product-comparison-table-container.migration .old-price-box .savings {
+    display: block;
+    background: rgb(44 180 61 / 20%);
+    border-radius: 8px;
+    padding: 1px 9px 5px;
+    text-align: right;
+    color: #2cb43d;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.section.product-comparison-table-container.migration .new-price-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px auto 0;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: .9;
+    color: black;
+}
+
+.section.product-comparison-table-container.migration .new-price-box .total-text {
+    color: #3c3c3c;
+    display: inline-block;
+    font-size: 18px;
+    line-height: 1.25;
+    margin-right: auto;
+    padding: 0;
+    font-weight: normal;
+}
+
+.section.product-comparison-table-container.migration p.button-container {
+    margin-bottom: 2em;
+}
+
+.section.product-comparison-table-container.migration .product-comparison-price > p:last-of-type{
+    text-align: right;
+    color: #3c3c3c;
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 2;
+    margin-bottom: 0;
 }

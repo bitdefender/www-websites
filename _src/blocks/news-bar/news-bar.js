@@ -1,6 +1,6 @@
 export default function decorate(block, options) {
   const {
-    solutions,
+    solutions, hideDate,
   } = block.closest('.section').dataset;
 
   if (options) {
@@ -19,6 +19,14 @@ export default function decorate(block, options) {
     block.style.color = '#006EFF';
     if (elementLink && !blockParent.classList.contains('solutions')) elementLink.style.color = '#006EFF';
   }, 2000);
+
+  if (hideDate) {
+    const currentDate = new Date();
+    const hiddenDate = new Date(hideDate);
+    if (hiddenDate < currentDate) {
+      block.style.display = 'none';
+    }
+  }
 
   setTimeout(() => {
     window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {

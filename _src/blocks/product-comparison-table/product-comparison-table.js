@@ -1,12 +1,18 @@
 import {
-  createNanoBlock, renderNanoBlocks, fetchProduct, getBuyLinkCountryPrefix,
+  createNanoBlock,
+  renderNanoBlocks,
+  fetchProduct,
+  matchHeights,
+  setDataOnBuyLinks,
+  generateProductBuyLink,
 } from '../../scripts/utils/utils.js';
 
 const fetchedProducts = [];
 
-createNanoBlock('priceComparison', (code, variant, label) => {
+createNanoBlock('priceComparison', (code, variant, label, block) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
+  const oldPriceText = block.closest('.section').dataset.old_price_text ?? 'Old Price';
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '-';
@@ -23,9 +29,45 @@ createNanoBlock('priceComparison', (code, variant, label) => {
       fetchedProducts.push({ code, variant, product });
       // eslint-disable-next-line camelcase
       const { price, discount: { discounted_price: discounted }, currency_iso: currency } = product;
-      oldPriceElement.innerHTML = `Old Price <del>${price} ${currency}</del>`;
-      priceElement.innerHTML = `${discounted} ${currency}`;
+      const savings = price - discounted;
+
+      oldPriceElement.innerHTML = `<div class="old-price-box">
+        <span>${oldPriceText} <del>${price} ${currency}</del></span>
+        <span class="savings d-none">Savings <del>${savings.toFixed(2)} ${currency}</del></span>
+      </div>`;
+      priceElement.innerHTML = `<div class="new-price-box">
+        <span class="d-none total-text">Your total price:</span>
+        ${discounted} ${currency}
+      </div>`;
       priceAppliedOnTime.innerHTML = label;
+
+      // update buy link
+      const currentProductIndex = fetchedProducts.length - 1;
+      const buyLink = block.querySelectorAll('.button-container a')[currentProductIndex];
+      const prd = fetchedProducts[currentProductIndex];
+
+      const variantSplit = variant.split('-');
+      const units = variantSplit[0].split('u')[0];
+      const years = variantSplit[1].split('y')[0];
+
+      const isBuyLink = buyLink.href.includes('/site/Store/buy/');
+
+      if (isBuyLink) {
+        buyLink.href = prd.product.buy_link || generateProductBuyLink(prd, prd.code, units, years);
+
+        const dataInfo = {
+          productId: prd.code,
+          variation: {
+            price: prd.product.price,
+            discounted_price: prd.product.discount.discounted_price,
+            variation_name: prd.variant,
+            currency_label: prd.product.currency_label,
+            region_id: prd.product.region_id,
+          },
+        };
+
+        setDataOnBuyLinks(buyLink, dataInfo);
+      }
     })
     .catch((err) => {
       // eslint-disable-next-line no-console
@@ -153,7 +195,7 @@ function extractTextFromStrongTagToParent(element) {
     });
   }
 
-  if (element.tagName === 'STRONG') {
+  if (element.tagName === 'STRONG' && element.parentElement) {
     element.parentElement.innerHTML = element.textContent;
   }
 }
@@ -272,13 +314,9 @@ export default function decorate(block) {
   const lastRowWithPrice = block.querySelector('.product-comparison-last-row-with-prices');
   [...headerList, lastRowWithPrice].forEach((item, idx) => {
     if (item) {
-      renderNanoBlocks(item, undefined, idx);
+      renderNanoBlocks(item, undefined, idx, block);
     }
   });
 
-  block.querySelectorAll('.button-container a').forEach((link) => {
-    if (link && link.href.includes('/site/Store/buy/')) {
-      link.href = getBuyLinkCountryPrefix();
-    }
-  });
+  matchHeights(block, 'h3');
 }
