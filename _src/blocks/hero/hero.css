@@ -39,6 +39,19 @@ main .hero .hero-content .breadcrumb {
   margin-bottom: 12px;
 }
 
+main .hero .hero-content .signature {
+  font-size: 24px;
+  color: #006dff;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+@media (min-width: 480px) {
+  main .hero .hero-content .signature {
+    margin-bottom: 12px;
+  }
+}
+
 main .hero .hero-content .breadcrumb a {
   font-size: var(--breadcrumbs-font-size-s);
   font-weight: var(--font-weight-bold);
