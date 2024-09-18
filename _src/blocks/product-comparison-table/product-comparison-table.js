@@ -10,7 +10,7 @@ import { getDomain } from '../../scripts/scripts.js';
 
 const fetchedProducts = [];
 
-createNanoBlock('priceComparison', (code, variant, label, block) => {
+createNanoBlock('priceComparison', (code, variant, label, block, productIndex) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   const oldPriceText = block.closest('.section').dataset.old_price_text ?? 'Old Price';
@@ -27,7 +27,8 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
 
   fetchProduct(code, variant)
     .then((product) => {
-      fetchedProducts.push({ code, variant, product });
+      const currentProduct = { code, variant, product };
+      fetchedProducts.push(currentProduct);
       // eslint-disable-next-line camelcase
       const { price, discount: { discounted_price: discounted }, currency_iso: currency } = product;
       const formattedPriceParams = [currency, null, getDomain()];
@@ -47,9 +48,7 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
       priceAppliedOnTime.innerHTML = label;
 
       // update buy link
-      const currentProductIndex = fetchedProducts.length - 1;
-      const buyLink = block.querySelectorAll('.button-container a')[currentProductIndex];
-      const prd = fetchedProducts[currentProductIndex];
+      const buyLink = block.querySelectorAll('.button-container a')[productIndex];
 
       const variantSplit = variant.split('-');
       const units = variantSplit[0].split('u')[0];
@@ -58,17 +57,18 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
       const isBuyLink = buyLink.href.includes('/site/Store/buy/');
 
       if (isBuyLink) {
-        buyLink.href = prd.product.buy_link || generateProductBuyLink(prd, prd.code, units, years);
+        // eslint-disable-next-line max-len
+        buyLink.href = currentProduct.product.buy_link || generateProductBuyLink(currentProduct, currentProduct.code, units, years);
 
         const dataInfo = {
-          productId: prd.code,
+          productId: currentProduct.code,
           variation: {
-            price: prd.product.discount
-              ? +prd.product.discount.discounted_price : +prd.product.price,
-            discounted_price: prd.product.discount?.discounted_price,
-            variation_name: prd.variant,
-            currency_label: prd.product.currency_label,
-            region_id: prd.product.region_id,
+            price: currentProduct.product.discount
+              ? +currentProduct.product.discount.discounted_price : +currentProduct.product.price,
+            discounted_price: currentProduct.product.discount?.discounted_price,
+            variation_name: currentProduct.variant,
+            currency_label: currentProduct.product.currency_label,
+            region_id: currentProduct.product.region_id,
           },
         };
 
