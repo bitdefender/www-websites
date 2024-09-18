@@ -75,6 +75,7 @@ export default async function decorate(block) {
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
+    signature,
     label,
   } = block.closest('.section').dataset;
 
@@ -110,6 +111,13 @@ export default async function decorate(block) {
         }
         sibling = sibling.previousElementSibling;
       }
+    }
+
+    // add signature to the top of the banner
+    if (signature) {
+      const signatureElement = createTag('div', { class: 'signature' });
+      signatureElement.textContent = signature;
+      document.querySelector('div.hero div div:first-child').prepend(signatureElement);
     }
 
     // set the modal buttons in the hero banner to not refresh the modal on click
