@@ -2,19 +2,55 @@ import { getMetadata, sampleRUM } from './lib-franklin.js';
 
 const ADOBE_TARGET_SESSION_ID_PARAM = 'adobeTargetSessionId';
 
-export class Target {
-  static events = {
-    LIBRARY_LOADED: "at-library-loaded",
-    REQUEST_START: "at-request-start",
-    REQUEST_SUCCEEDED: "at-request-succeeded",
-    REQUEST_FAILED: "at-request-failed",
-    CONTENT_RENDERING_START: "at-content-rendering-start",
-    CONTENT_RENDERING_SUCCEEDED: "at-content-rendering-succeeded",
-    CONTENT_RENDERING_FAILED: "at-content-rendering-failed",
-    CONTENT_RENDERING_NO_OFFERS: "at-content-rendering-no-offers",
-    CONTENT_RENDERING_REDIRECT: "at-content-rendering-redirect"
+export class Visitor {
+  static #instanceID = '0E920C0F53DA9E9B0A490D45@AdobeOrg';
+  static #instance = null;
+  static #staticInit = new Promise(resolve => {
+    if (window.Visitor) {
+      Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
+      resolve();
+      return;
+    }
+
+    window.addEventListener("at-library-loaded", () => {
+      if (window.Visitor) {
+        Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
+      }
+      resolve();
+    })
+  });
+
+  /**
+   *
+   * @param {string} url 
+   * @returns {Promise<string>}
+   */
+  static async appendVisitorIDsTo(url) {
+    await this.#staticInit;
+    return !this.#instance || url.includes("adobe_mc") ? url : this.#instance.appendVisitorIDsTo(url);
   }
 
+  /**
+   *
+   * @returns {Promise<string>}
+   */
+  static async getConsumerId() {
+    await this.#staticInit;
+    return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : "";
+  }
+
+  /**
+   *
+   * @returns {Promise<string>}
+   */
+  static async getMarketingCloudVisitorId() {
+    await this.#staticInit;
+    return this.#instance ? this.#instance.getMarketingCloudVisitorID() : "";
+  }
+};
+window.BD = {Visitor, ...window.BD};
+
+export class Target {
   /**
    * Mbox describing an offer
    * @typedef {{content: {offer: string, block:string} | {pid}, type: string|null}} Mbox
@@ -32,30 +68,10 @@ export class Target {
       return;
     }
 
-    /** 
-     * Semaphor to mark that the offer call was made 
-     * This helps avoid doubled call fot the getOffer
-     * Set before any 'await' as those triggered jumps in the code
-     */
-    let offerCallMade = false;
-
-    /** Target wasn't loaded we wait for events from it */
-    [this.events.CONTENT_RENDERING_SUCCEEDED, this.events.CONTENT_RENDERING_NO_OFFERS]
-      .forEach(event => document.addEventListener(event, async () => {
-        if (!offerCallMade) {
-          offerCallMade = true;
-          await this.#getOffers();
-          resolve();
-        }
-      }, { once: true }));
-
-    [this.events.CONTENT_RENDERING_FAILED, this.events.REQUEST_FAILED]
-      .forEach(event => document.addEventListener(event, async () => {
-        if (!offerCallMade) {
-          offerCallMade = true;
-          resolve();
-        }
-      }, { once: true }));
+    document.addEventListener("at-library-loaded", async () => {
+      await this.#getOffers();
+      resolve();
+    });
   });
 
   /**
@@ -67,35 +83,7 @@ export class Target {
     return this.offers?.["initSelector-mbox"]?.content?.pid || null;
   }
 
-  /**
-   * @returns {[string]}
-   */
-  static #getAllMboxes() {
-    const mboxes = [...document.querySelectorAll("[data-mboxes]")]
-      .map(mboxes => {
-        try {
-          return JSON.parse(mboxes.dataset.mboxes)
-        } catch (error) {
-          console.warn(error);
-          return null;
-        }
-      })
-      .filter(Boolean)
-      .reduce((acc, mboxes) => {
-        mboxes.forEach(mbox => acc.add(mbox));
-        return acc;
-      }, new Set());
-
-    if (!mboxes) {
-      return [];
-    }
-
-    return [...mboxes].map((name, index) => { return { index: ++index, name } });
-  }
-
   static async #getOffers() {
-    const mboxes = this.#getAllMboxes();
-
     try {
       this.offers = await window.adobe?.target?.getOffers({
         consumerId: await Visitor.getConsumerId(),
@@ -105,8 +93,7 @@ export class Target {
           },
           execute: {
             mboxes: [
-              { index: 0, name: "initSelector-mbox" },
-              ...mboxes
+              { index: 0, name: "initSelector-mbox" }
             ]
           }
         }
@@ -124,7 +111,7 @@ export class Target {
     }
   }
 };
-window.Target = Target;
+window.BD = {Target, ...window.BD};
 
 /**
  * Convert a URL to a relative URL.
