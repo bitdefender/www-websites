@@ -10,7 +10,7 @@ import { getDomain } from '../../scripts/scripts.js';
 
 const fetchedProducts = [];
 
-createNanoBlock('priceComparison', (code, variant, label, block, productIndex) => {
+createNanoBlock('priceComparison', (code, variant, label, block, productIndex, columnEl) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   const oldPriceText = block.closest('.section').dataset.old_price_text ?? 'Old Price';
@@ -48,15 +48,14 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex) =
       priceAppliedOnTime.innerHTML = label;
 
       // update buy link
-      const buyLink = block.querySelectorAll('.button-container a')[productIndex];
-
-      const variantSplit = variant.split('-');
-      const units = variantSplit[0].split('u')[0];
-      const years = variantSplit[1].split('y')[0];
-
-      const isBuyLink = buyLink.href.includes('/site/Store/buy/');
+      const buyLink = columnEl.querySelector('.button-container a');
+      const isBuyLink = buyLink?.href?.includes('/site/Store/buy/');
 
       if (isBuyLink) {
+        const variantSplit = variant.split('-');
+        const units = variantSplit[0].split('u')[0];
+        const years = variantSplit[1].split('y')[0];
+
         // eslint-disable-next-line max-len
         buyLink.href = currentProduct.product.buy_link || generateProductBuyLink(currentProduct, currentProduct.code, units, years);
 

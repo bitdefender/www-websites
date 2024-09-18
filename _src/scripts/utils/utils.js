@@ -549,7 +549,7 @@ export function renderNanoBlocks(
         const renderer = nanoBlocks.get(newName.toLowerCase());
         if (renderer) {
           // eslint-disable-next-line max-len
-          const element = mv ? renderer(mv, ...params, block, index) : renderer(...params, block, index);
+          const element = mv ? renderer(mv, ...params, block, index, parent) : renderer(...params, block, index, parent);
           element.classList.add('nanoblock');
           const oldElement = node.parentNode;
           oldElement.parentNode.replaceChild(element, oldElement);
