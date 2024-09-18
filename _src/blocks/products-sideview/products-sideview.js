@@ -264,12 +264,13 @@ function updateBenefits(block) {
 }
 
 function renderSelector(block, ...options) {
+  const selectorOptions = options.filter((option) => option && !Number.isNaN(Number(option)));
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
   el.innerHTML = `
     <select>
-        ${options.map((opt, index) => `
+        ${selectorOptions.map((opt, index) => `
           <option value="${index}">${opt} members</option>
         `).join(',')}
     </select>
