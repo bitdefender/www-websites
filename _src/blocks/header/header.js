@@ -383,15 +383,16 @@ async function runDefaultHeaderLogic(block) {
     const html = await resp.text();
 
     if (html.includes('aem-banner')) {
-      let domain = getDomain();
+      const websiteDomain = getDomain();
+      let aemFetchDomain;
 
-      if (domain === 'en-us') {
-        domain = 'en';
-      } else if (domain.includes('-global')) {
-        const [singleDomain] = domain.split('-');
-        domain = singleDomain;
+      if (websiteDomain === 'en-us') {
+        aemFetchDomain = 'en';
+      } else if (websiteDomain.includes('-global')) {
+        const [singleDomain] = websiteDomain.split('-');
+        aemFetchDomain = singleDomain;
       } else {
-        domain = domain.split('-').join('_');
+        aemFetchDomain = websiteDomain.split('-').join('_');
       }
 
       const aemHeaderHostname = window.location.hostname.includes('.hlx.')
@@ -399,7 +400,7 @@ async function runDefaultHeaderLogic(block) {
         ? 'https://stage.bitdefender.com'
         : '';
 
-      const aemHeaderFetch = await fetch(`${aemHeaderHostname}/content/experience-fragments/bitdefender/language_master/${domain}/header-navigation/mega-menu/master/jcr:content/root.html`);
+      const aemHeaderFetch = await fetch(`${aemHeaderHostname}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`);
       if (!aemHeaderFetch.ok) {
         return;
       }
@@ -441,14 +442,25 @@ async function runDefaultHeaderLogic(block) {
         });
       });
 
-      // select all the scripts from contet div and
-      const scripts = contentDiv.querySelectorAll('script');
-      scripts.forEach((script) => {
-        const newScript = document.createElement('script');
-        newScript.src = `${aemHeaderHostname}${script.getAttribute('src')}`;
-        newScript.defer = true;
-        contentDiv.appendChild(newScript);
-      });
+      // TODO: please remove second condition when the banner changes reach
+      if (window.location.hostname.includes('www.')) {
+        const newScriptFile = document.createElement('script');
+        newScriptFile.src = '/_src/scripts/vendor/mega-menu/mega-menu.js';
+        newScriptFile.defer = true;
+        shadowRoot.appendChild(newScriptFile);
+      } else {
+        // TODO: please keep the below code and move
+        // it outside the if
+
+        // select all the scripts from contet div and
+        const scripts = contentDiv.querySelectorAll('script');
+        scripts.forEach((script) => {
+          const newScript = document.createElement('script');
+          newScript.src = `${aemHeaderHostname}${script.getAttribute('src')}`;
+          newScript.defer = true;
+          contentDiv.appendChild(newScript);
+        });
+      }
 
       shadowRoot.appendChild(contentDiv);
       const body = document.querySelector('body');

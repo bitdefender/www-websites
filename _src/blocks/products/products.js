@@ -177,7 +177,7 @@ function renderOldPrice(mv, text = '', monthly = '') {
     {
       class: 'price',
     },
-    `<span class='old-price'>${text} <del>${mv.model.basePrice ?? ''} ${mv.model.currency ?? ''}</del>`,
+    `<span class='old-price ${!mv.model.basePrice ? 'no-old-price' : ''}'>${text} <del>${mv.model.basePrice ?? ''} ${mv.model.currency ?? ''}</del>`,
   );
 
   const oldPriceElt = root.querySelector('span');
@@ -357,6 +357,7 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
       root.style.visibility = 'visible';
     } else {
       root.style.visibility = 'hidden';
+      root.classList.add('no-save-price');
     }
   });
 
@@ -369,14 +370,14 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
  * @param variant Product variant
  * @returns root node of the nanoblock
  */
-function renderLowestPrice(code, variant, monthly = '') {
+function renderLowestPrice(code, variant, monthly = '', text = '') {
   const root = document.createElement('p');
 
   fetchProduct(code, variant).then((product) => {
     const m = toModel(code, variant, product);
     const isMonthly = monthly.toLowerCase() === 'monthly';
     const price = isMonthly ? customRound(m.actualPrice / 12) : m.actualPrice;
-    root.innerHTML = `Start today for as low as  ${price} ${product.currency_label}${isMonthly ? '/mo' : ''}`;
+    root.innerHTML = `${text.replace('0', `${price} ${product.currency_label}`)}`;
   });
 
   return root;
@@ -430,7 +431,7 @@ export default function decorate(block) {
             const dataInfo = {
               productId: card.productCode,
               variation: {
-                price: card.price,
+                price: card.actualPrice,
                 discounted_price: card.discountedPrice,
                 variation_name: card.variantId,
                 currency_label: card.currency,

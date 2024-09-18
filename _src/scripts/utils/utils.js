@@ -304,64 +304,6 @@ export function getProductLinkCountryPrefix() {
 }
 
 export function getBuyLinkCountryPrefix() {
-  const { pathname } = window.location;
-
-  if (pathname.includes('/en-au/')) {
-    return 'https://www.bitdefender.com.au/site/Store/buy';
-  }
-
-  if (pathname.includes('/en-gb/')) {
-    return 'https://www.bitdefender.co.uk/site/Store/buy';
-  }
-
-  if (pathname.includes('/ro-ro/')) {
-    return 'https://www.bitdefender.ro/site/Store/buy';
-  }
-
-  if (pathname.includes('/it-it/')) {
-    return 'https://www.bitdefender.it/site/Store/buy';
-  }
-
-  if (pathname.includes('/fr-fr/')) {
-    return 'https://www.bitdefender.fr/site/Store/buy';
-  }
-
-  if (pathname.includes('/fr-be/')) {
-    return 'https://www.bitdefender.be/site/Store/buy';
-  }
-
-  if (pathname.includes('/nl-be/')) {
-    return 'https://www.bitdefender.be/site/Store/buy';
-  }
-
-  if (pathname.includes('/nl-nl/')) {
-    return 'https://www.bitdefender.nl/site/Store/buy';
-  }
-
-  if (pathname.includes('/de-de/')) {
-    return 'https://www.bitdefender.de/site/Store/buy';
-  }
-
-  if (pathname.includes('/de-ch/')) {
-    return 'https://www.bitdefender.de/site/Store/buy';
-  }
-
-  if (pathname.includes('/sv-se/')) {
-    return 'https://www.bitdefender.se/site/Store/buy';
-  }
-
-  if (pathname.includes('/pt-br/')) {
-    return 'https://www.bitdefender.com.br/site/Store/buy';
-  }
-
-  if (pathname.includes('/pt-pt/')) {
-    return 'https://www.bitdefender.pt/site/Store/buy';
-  }
-
-  if (pathname.includes('/es-es/')) {
-    return 'https://www.bitdefender.es/site/Store/buy';
-  }
-
   return 'https://www.bitdefender.com/site/Store/buy';
 }
 
@@ -389,8 +331,8 @@ export function setDataOnBuyLinks(element, dataInfo) {
   element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
 
   if (variation.price) element.dataset.oldPrice = variation.price;
-  if (variation.currency_label) element.dataset.dataCurrency = variation.currency_label;
-  if (variation.region_id) element.dataset.dataRegion = variation.region_id;
+  if (variation.currency_label) element.dataset.currency = variation.currency_label;
+  if (variation.region_id) element.dataset.region = variation.region_id;
   if (variation.variation_name) element.dataset.variation = variation.variation_name;
 }
 

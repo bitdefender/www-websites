@@ -1,7 +1,9 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { getMetadata, getBuyLinkCountryPrefix, matchHeights } from '../../scripts/utils/utils.js';
+import {
+  getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks,
+} from '../../scripts/utils/utils.js';
 
 let dataLayerProducts = [];
 async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
@@ -67,8 +69,11 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
 async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
   try {
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
-    const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
-    const { price, discount } = product;
+    const variant = `${prodUsers}u-${prodYears}y`;
+    const product = await fetchProduct(prodName, variant, pid);
+    const {
+      price, discount, currency_label: currencyLabel,
+    } = product;
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     let oldPrice = price;
     let newPrice = discount.discounted_price;
@@ -76,6 +81,20 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
     let updatedBuyLinkSelector = buyLinkSelector;
     if (updatedBuyLinkSelector) {
       updatedBuyLinkSelector.href = dynamicBuyLink(updatedBuyLinkSelector, prodName, prodUsers, prodYears, pid);
+
+      const dataInfo = {
+        productId: prodName,
+        variation: {
+          price: discount
+            ? +newPrice : +oldPrice,
+          discounted_price: discount.discounted_price,
+          variation_name: variant,
+          currency_label: currencyLabel,
+          region_id: product.region_id,
+        },
+      };
+
+      setDataOnBuyLinks(updatedBuyLinkSelector, dataInfo);
     }
     let priceElement = document.createElement('div');
     priceElement.classList.add('hero-aem__prices__box');
@@ -121,7 +140,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
           <span class="prod-newprice">${newPriceListed} ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
         ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2">${newPriceBilled}</span>`)}</div>` : ''}
-        <a href="${updatedBuyLinkSelector ? updatedBuyLinkSelector.href : ''}" class="button primary no-arrow">${updatedBuyLinkSelector ? updatedBuyLinkSelector.text : ''}</a>
+        ${updatedBuyLinkSelector.outerHTML}
       </div>`;
     return priceElement;
   } catch (err) {

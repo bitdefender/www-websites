@@ -24,9 +24,9 @@
 }
 
 main .hero {
-  background-color: #F6F6F6;
+  background-color: white;
   position: relative;
-  padding: 0;
+  padding: 1em 0 3em;
   min-height: 300px;
 }
 
@@ -34,7 +34,7 @@ main .hero {
 main .hero .hero-content .breadcrumb {
   font-weight: var(--font-weight-bold);
   color: #dedede;
-  min-height: 82px;
+  min-height: unset;
   padding: 12px 0;
   margin-bottom: 12px;
 }
@@ -93,7 +93,6 @@ main .hero.black-background .hero-content .breadcrumb a:hover {
 }
 
 /* hero */
-
 main .hero-container > div {
   max-width: unset;
 }
@@ -245,7 +244,7 @@ main .hero.comparison .hero-content {
 }
 
 main .hero h1 {
-  font-size: var(--hero-h1-font-size);
+  font-size: 2.125rem;
   margin: 0 0 25px;
 }
 
@@ -292,9 +291,12 @@ main .hero p {
 main .hero h1 + p {
   margin: 8px 0 0;
   color: #616161;
-  font-size: var(--hero-font-size-xxs);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--hero-font-size-xxxs);
   line-height: 1.5;
+}
+
+main .hero h1 + p strong {
+  font-weight: var(--font-weight-bold);
 }
 
 main .hero.comparison p {
@@ -322,6 +324,10 @@ main .hero p.button-container {
   gap: 2px;
 }
 
+main .hero p.button-container:last-of-type {
+  margin: 0 0 10px;
+}
+
 main .hero p.button-container.discount-bubble-container {
   padding-top: 0;
 }
@@ -334,7 +340,7 @@ main .hero img {
 
 main .hero .hero-picture picture img {
   position: absolute;
-  display: none;
+  /*display: none;*/
   padding-left: 200px;
 }
 
@@ -364,7 +370,7 @@ main .hero a.button span.button-text {
 }
 
 main .hero .discount-bubble {
-  background: #2cb43d;
+  background: #16A34A;
   border-radius: 50%;
   width: 72px;
   height: 72px;
@@ -374,7 +380,6 @@ main .hero .discount-bubble {
   align-items: center;
   text-align: center;
   gap: 2px;
-  bottom: -5px;
   right: 0;
   position: relative;
 }
@@ -385,7 +390,7 @@ main .hero .discount-bubble .discount-bubble-0 {
   font-weight: var(--font-weight-boldest);
   line-height: .8;
   text-decoration: none;
-  padding-top: 12px;
+  padding-top: 5px;
 }
 
 main .hero .discount-bubble .discount-bubble-1 {
@@ -415,7 +420,7 @@ main .hero .hero-content ul {
 }
 
 main .hero .hero-content ul li {
-  font-size: var(--hero-font-size-xxxs);
+  font-size: var(--hero-font-size-xxs);
   font-weight: var(--font-weight-regular);
   letter-spacing: 0.096px;
   line-height: 1.5;
@@ -427,14 +432,14 @@ main .hero .hero-content ul li {
 }
 
 main .hero .hero-content ul li:first-child {
-  margin: 9px 0 0;
+  margin: 5px 0;
 }
 
 main .hero ul li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 3px;
+  top: 4px;
   width: 15px;
   height: 15px;
   background-color: var(--background-checkmark);
@@ -446,7 +451,7 @@ main .hero ul li::after {
   content: "";
   position: absolute;
   left: 5px;
-  top: 5px;
+  top: 6px;
   width: 3px;
   height: 7px;
   border-bottom: 2px solid var( --white-color);
@@ -487,15 +492,63 @@ main .hero .hero-awards li::after {
   content: none;
 }
 
+main .hero.pb-0 .hero-content {
+  padding-bottom: 0;
+}
+
+main .v2 .hero h1 {
+  font-weight: var(--font-weight-regular);
+  font-family: var(--body-font-family);
+}
+
+main .v2 .hero h1 + p {
+  font-size: var(--body-font-size-s);
+}
+
+main .v2 .hero .hero-content > div:first-of-type {
+  width: 100%;
+}
+
+main .v2 .hero .hero-content > div:last-of-type img {
+  height: auto;
+  width: 360px;
+  position: absolute;
+  bottom: 0;
+}
+
+main .v2 .hero .hero-content > div table tr {
+  display: flex;
+}
+
+main .v2 .hero .hero-content > div table tr td:first-of-type {
+  margin-right: 2em;
+  width: 280px;
+}
+
+main .v2 .hero .hero-content > div table tr td:last-of-type {
+  width: 465px;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+main .smaller_icon .hero .hero-content > div table tr td:last-of-type {
+  width: fit-content;
+}
+
+main .v2 .hero .hero-content > div table tr td img {
+  width: 100%;
+  height: auto;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
+  width: 70px;
+}
+
 @media(max-width: 989px) {
   main .hero.new2024design {
     background-color: #006FFF;
     min-height: auto;
     padding: 2em 0;
-  }
-
-  main .hero.new2024design .hero-picture {
-    display: none;
   }
 }
 
@@ -563,7 +616,9 @@ main .hero .hero-awards li::after {
   }
 
   main .hero h1 {
-    font-size: 50px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    font-family: IBM Plex Sans, sans-serif;
   }
 
   main .hero .hero-picture {
@@ -576,7 +631,7 @@ main .hero .hero-awards li::after {
   }
 
   main .hero p {
-    font-size: 14px;
+    font-size: var(--hero-font-size-xxs);
     margin: 0;
   }
 
@@ -588,8 +643,7 @@ main .hero .hero-awards li::after {
   main .hero .hero-content {
     max-width: var(--section-desktop-max-width);
     min-height: unset;
-    padding: 112px var(--section-desktop-padding) 54px var(--section-desktop-padding);
-    padding-top: 115px;
+    padding: 1em var(--section-desktop-padding) 1em var(--section-desktop-padding);
     display: flex;
     flex-direction: row;
   }
@@ -640,22 +694,57 @@ main .hero .hero-awards li::after {
     width: auto;
   }
 
+  /* stylelint-disable-next-line selector-class-pattern */
+  main .smaller_icon .hero .hero-content > div:last-of-type img {
+    width: 40%!important;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  main .new_v2 .hero .hero-content > div:last-of-type img {
+    width: 60%!important;
+    right: 0;
+  }
+
+  main .v2 .hero .hero-content > div:last-of-type img {
+    width: 360px;
+    right: -11em !important;
+    bottom: -3em;
+  }
+}
+
+@media (max-width: 1399px) {
+  main .hero .hero-content ul li {
+    font-size: var(--body-font-size-xs);
+  }
+
+  main .v2 .hero h1 {
+    font-size: var(--heading-font-size-xxl1);
+  }
 }
 
 @media (min-width: 1600px) { /* large desktop */
-
-
   main .hero .hero-content .breadcrumb {
     padding: 9px 0;
     margin-bottom: 15px;
   }
 
-  main .hero h2 {
-    font-size: 24px;
+  main .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    font-family: IBM Plex Sans, sans-serif;
   }
 
-  main .hero h1 {
-    font-size: 56px;
+  main .v2 .hero h1 {
+    font-size: var(--heading-font-size-xxl2);
+  }
+
+  main .hero h2 {
+    color: #000;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.25;
+    margin-bottom: 9px;
+    margin-top: 10px;
   }
 
   main .hero .discount-bubble {
@@ -672,7 +761,7 @@ main .hero .hero-awards li::after {
   }
 
   main .hero .hero-content {
-    min-height: 725px;
+    min-height: 640px;
     max-width: var(--section-large-desktop-max-width);
     padding-left: var(--section-large-desktop-padding);
     padding-right: var(--section-large-desktop-padding);
@@ -683,5 +772,51 @@ main .hero .hero-awards li::after {
     padding-left: var(--section-large-desktop-padding);
     padding-right: var(--section-large-desktop-padding);
   }
+}
 
+@media (max-width: 990px) {
+  main .v2 .hero h1 {
+    font-size: var(--heading-font-size-xl1);
+  }
+
+  main .hero .hero-content > div table tr td:last-of-type {
+    width: 510px;
+  }
+
+  main .hero .hero-content > div table tr td:first-of-type {
+    display: none;
+  }
+
+  main .v2 .hero .hero-picture picture img {
+    padding-left: 0;
+  }
+
+  main .v2 .hero .hero-content > div:last-of-type img {
+    width: 265px;
+    right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  main .hero .hero-picture, main .v2 .hero .hero-content > div:last-of-type img {
+    display: none;
+  }
+
+  main .v2 .hero .hero-content > div table tr td:last-of-type {
+    width: 100%;
+  }
+
+  main .v2 .hero h1 {
+    font-size: var(--heading-font-size-l2);
+  }
+
+  main .v2 .hero h1 + p {
+    font-size: var(--body-font-size-xs);
+  }
+}
+
+@media (max-width: 450px) {
+  main .hero h1 {
+    font-size: var(--heading-font-size-m);
+  }
 }
