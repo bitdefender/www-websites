@@ -1,4 +1,4 @@
-import { debounce } from '../../scripts/utils/utils.js';
+import { debounce, matchHeights } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
@@ -164,5 +164,15 @@ export default function decorate(block, options) {
     const videoImg = leftCol.querySelector('img').getAttribute('src');
 
     leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
+  }
+
+  const chatOptions = document.querySelector('.chat-options');
+  if (chatOptions) {
+    const cardButtons = chatOptions.querySelectorAll('.button-container');
+    cardButtons.forEach((button) => {
+      button.previousElementSibling.classList.add('chat-options-text');
+    });
+    matchHeights(chatOptions, '.chat-options-text');
+    matchHeights(chatOptions, 'table');
   }
 }
