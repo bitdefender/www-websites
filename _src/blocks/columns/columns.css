@@ -405,7 +405,8 @@
 .columns-container.chat-options p.button-container a {
   background-color: transparent;
   border: 2px solid black;
-  color: black
+  color: black;
+  white-space: normal; 
 }
 
 .columns-container.chat-options p.button-container a:hover {
@@ -466,6 +467,10 @@
     align-items: stretch;
   }
 
+  .columns-container.chat-options .columns > div > div {
+    padding: 2em;
+  }
+
   .columns.highlight-text.black {
     width: 520px;
     right: 2.5%;
@@ -475,6 +480,10 @@
 
   .columns.highlight-text.black.imageleft {
     left: 2.5%;
+  }
+
+  .percent-table .columns table tr td:first-of-type {
+    padding-right: 0.5em;
   }
 }
 
@@ -645,6 +654,9 @@
     max-width: 1350px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+  .percent-table .columns table tr td:first-of-type {
+    padding-right: 1.5em;
   }
 }
 
