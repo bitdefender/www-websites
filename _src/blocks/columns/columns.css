@@ -459,14 +459,15 @@
   padding-left: 4em;
   padding-right: 1em;
 }
-
-@media (min-width: 767px) {
+@media (min-width: 991px) {
   .columns.benefits > div {
     flex-direction: unset;
     gap: 32px;
     align-items: stretch;
   }
+}
 
+@media (min-width: 767px) {
   .columns-container.chat-options .columns > div > div {
     padding: 2em;
   }
