@@ -167,11 +167,11 @@ export default function decorate(block, options) {
   }
 
   const chatOptions = document.querySelector('.chat-options');
-  if(chatOptions) {
+  if (chatOptions) {
     const cardButtons = chatOptions.querySelectorAll('.button-container');
-    cardButtons.forEach(button => {
+    cardButtons.forEach((button) => {
       button.previousElementSibling.classList.add('chat-options-text');
-    })
+    });
     matchHeights(chatOptions, '.chat-options-text');
     matchHeights(chatOptions, 'table');
   }
