@@ -385,7 +385,6 @@ export default async function decorate(block, options) {
         return `<ul>${liString}</ul>`;
       });
 
-
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
       let customLink = 0;
       if (buyLinkSelector) {
