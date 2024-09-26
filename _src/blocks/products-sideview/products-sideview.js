@@ -151,9 +151,9 @@ function updateBuyLink(block) {
     const dataInfo = {
       productId: productCode,
       variation: {
-        price: state.currentProduct.discount
+        price: state.currentProduct.discount?.discounted_price,
+        oldPrice: state.currentProduct.discount
           ? +state.currentProduct.discount.discounted_price : +state.currentProduct.price,
-        discounted_price: state.currentProduct.discount?.discounted_price,
         variation_name: state.currentProduct.variation.variation_name,
         currency_label: state.currentProduct.currency_label,
         region_id: state.currentProduct.region_id,
@@ -179,6 +179,7 @@ function updatePrice(block) {
 
     const formattedPrice = formatPrice(resp.price, resp.currency_iso, null, getDomain());
 
+    priceEl.dataset.price = resp.price;
     priceEl.textContent = `${formattedPrice}`;
   })();
 }

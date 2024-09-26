@@ -45,8 +45,6 @@ function customRound(value) {
  * @returns a model
  */
 function toModel(productCode, variantId, v) {
-  const currentDomain = getDomain();
-  const formattedPriceParams = [v.currency_iso, null, currentDomain];
   return {
     productCode,
     variantId,
@@ -55,22 +53,24 @@ function toModel(productCode, variantId, v) {
     devices: +v.variation.dimension_value,
     subscription: v.variation.years * 12,
     version: v.variation.years ? 'yearly' : 'monthly',
-    basePrice: formatPrice(+v.price, ...formattedPriceParams),
+    basePrice: +v.price,
     // eslint-disable-next-line max-len
-    actualPrice: formatPrice(v.discount ? +v.discount.discounted_price : +v.price, ...formattedPriceParams),
-    monthlyBasePrice: formatPrice(customRound(v.price / 12), ...formattedPriceParams),
-    discountedPrice: formatPrice(v.discount?.discounted_price, ...formattedPriceParams),
-    discountedMonthlyPrice: formatPrice(v.discount
-      ? customRound(v.discount.discounted_price / 12)
-      : 0, ...formattedPriceParams),
-    discount: formatPrice(v.discount
+    actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
+    monthlyBasePrice: customRound(v.price / 12),
+    discountedPrice: v.discount?.discounted_price,
+    discountedMonthlyPrice: v.discount
+      ? v.discount.discounted_price / 12
+      : 0,
+    discount: v.discount
       ? customRound((v.price - v.discount.discounted_price) * 100) / 100
-      : 0, ...formattedPriceParams),
+      : 0,
     discountRate: v.discount
       ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
     currency: v.currency_label,
+    currency_iso: v.currency_iso,
     url: generateProductBuyLink(v, productCode),
+    test: {},
   };
 }
 
@@ -186,14 +186,25 @@ function renderOldPrice(mv, text = '', monthly = '') {
   const oldPriceElt = root.querySelector('span');
 
   mv.subscribe(() => {
+    const currentDomain = getDomain();
+    const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
+
+    let oldPrice = 0;
+
     if (mv.model.discountedPrice) {
-      oldPriceElt.innerHTML = monthly.toLowerCase() === 'monthly'
-        ? `${text} <del>${mv.model.monthlyBasePrice} <sup>/mo</sup></del>`
-        : `${text} <del>${mv.model.basePrice}</del>`;
+      if (monthly.toLowerCase() === 'monthly') {
+        oldPrice = mv.model.monthlyBasePrice;
+        oldPriceElt.innerHTML = `${text} <del>${formatPrice(mv.model.monthlyBasePrice, ...formattedPriceParams)} <sup>/mo</sup></del>`;
+      } else {
+        oldPrice = mv.model.basePrice;
+        oldPriceElt.innerHTML = `${text} <del>${formatPrice(mv.model.basePrice, ...formattedPriceParams)}</del>`;
+      }
       oldPriceElt.style.visibility = 'visible';
     } else {
       oldPriceElt.style.visibility = 'hidden';
     }
+
+    mv.model.test.oldPrice = oldPrice;
   });
 
   return root;
@@ -219,17 +230,27 @@ function renderPrice(mv, text = '', monthly = '', monthTranslation = 'mo') {
   const priceElt = root.querySelector('strong');
 
   mv.subscribe(() => {
+    const currentDomain = getDomain();
+    const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
+
+    let price;
     if (monthly.toLowerCase() === 'monthly') {
       if (mv.model.discountedPrice) {
-        priceElt.innerHTML = `${text} ${mv.model.discountedMonthlyPrice} <sup>/${monthTranslation}</sup>`;
+        price = mv.model.discountedMonthlyPrice;
+        priceElt.innerHTML = `${text} ${formatPrice(mv.model.discountedMonthlyPrice, ...formattedPriceParams)} <sup>/${monthTranslation}</sup>`;
       } else {
-        priceElt.innerHTML = `${text} ${mv.model.monthlyBasePrice} <sup>/${monthTranslation}</sup>`;
+        price = mv.model.monthlyBasePrice;
+        priceElt.innerHTML = `${text} ${formatPrice(mv.model.monthlyBasePrice, ...formattedPriceParams)} <sup>/${monthTranslation}</sup>`;
       }
     } else if (mv.model.discountedPrice) {
-      priceElt.innerHTML = `${text} ${mv.model.discountedPrice}`;
+      price = mv.model.discountedPrice;
+      priceElt.innerHTML = `${text} ${formatPrice(mv.model.discountedPrice, ...formattedPriceParams)}`;
     } else {
-      priceElt.innerHTML = `${text} ${mv.model.basePrice}`;
+      price = mv.model.basePrice;
+      priceElt.innerHTML = `${text} ${formatPrice(mv.model.basePrice, ...formattedPriceParams)}`;
     }
+
+    mv.model.test.price = price;
 
     trackProduct(mv.model);
   });
@@ -375,11 +396,13 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
  */
 function renderLowestPrice(code, variant, monthly = '', text = '') {
   const root = document.createElement('p');
-
   fetchProduct(code, variant).then((product) => {
+    const currentDomain = getDomain();
+    const formattedPriceParams = [product.currency_iso, null, currentDomain];
     const m = toModel(code, variant, product);
     const isMonthly = monthly.toLowerCase() === 'monthly';
-    const price = isMonthly ? customRound(m.actualPrice / 12) : m.actualPrice;
+    // eslint-disable-next-line max-len
+    const price = formatPrice(isMonthly ? customRound(m.actualPrice / 12) : m.actualPrice, ...formattedPriceParams);
     root.innerHTML = `${text.replace('0', `${price}`)}`;
   });
 
@@ -431,11 +454,13 @@ export default function decorate(block) {
         col.querySelectorAll('.button-container a').forEach((link) => {
           if (link && (link.href.includes('/site/Store/buy/') || link.href.includes('checkout.bitdefender.com'))) {
             link.href = card.url;
+            // console.log('test', mv.model.test)
+
             const dataInfo = {
               productId: card.productCode,
               variation: {
-                price: card.actualPrice,
-                discounted_price: card.discountedPrice,
+                price: card.test.price,
+                oldPrice: card.test.oldPrice,
                 variation_name: card.variantId,
                 currency_label: card.currency,
                 region_id: card.regionId,
