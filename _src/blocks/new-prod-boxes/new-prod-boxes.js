@@ -81,20 +81,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
     let updatedBuyLinkSelector = buyLinkSelector;
     if (updatedBuyLinkSelector) {
       updatedBuyLinkSelector.href = dynamicBuyLink(updatedBuyLinkSelector, prodName, prodUsers, prodYears, pid);
-
-      const dataInfo = {
-        productId: prodName,
-        variation: {
-          price: discount
-            ? +newPrice : +oldPrice,
-          discounted_price: discount.discounted_price,
-          variation_name: variant,
-          currency_label: currencyLabel,
-          region_id: product.region_id,
-        },
-      };
-
-      setDataOnBuyLinks(updatedBuyLinkSelector, dataInfo);
     }
     let priceElement = document.createElement('div');
     priceElement.classList.add('hero-aem__prices__box');
@@ -129,6 +115,22 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
     } else {
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id);
     }
+
+    const dataInfo = {
+      productId: prodName,
+      variation: {
+        price: newPrice,
+        oldPrice,
+        variation_name: variant,
+        currency_label: currencyLabel,
+        region_id: product.region_id,
+      },
+    };
+
+    setDataOnBuyLinks(updatedBuyLinkSelector, dataInfo);
+
+    // const currentDomain = getDomain();
+    // const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
 
     priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
@@ -385,10 +387,6 @@ export default async function decorate(block, options) {
         return `<ul>${liString}</ul>`;
       });
 
-      if (title.innerHTML.indexOf('href') !== -1) {
-        title.innerHTML = `<a href="#" title="${title.innerText}">${title.querySelector('tr a').innerHTML}</a>`;
-      }
-
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
       let customLink = 0;
       if (buyLinkSelector) {
@@ -474,6 +472,7 @@ export default async function decorate(block, options) {
               <div class="add-on-product" style="display: none;">
                 ${billed2 ? '<hr>' : ''}
                 ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
+                <h4>${title.innerHTML}</h4>
                 <div class="hero-aem__prices__addon"></div>
               </div>
             </div>

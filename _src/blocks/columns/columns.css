@@ -405,7 +405,8 @@
 .columns-container.chat-options p.button-container a {
   background-color: transparent;
   border: 2px solid black;
-  color: black
+  color: black;
+  white-space: normal; 
 }
 
 .columns-container.chat-options p.button-container a:hover {
@@ -458,12 +459,17 @@
   padding-left: 4em;
   padding-right: 1em;
 }
-
-@media (min-width: 767px) {
+@media (min-width: 991px) {
   .columns.benefits > div {
     flex-direction: unset;
     gap: 32px;
     align-items: stretch;
+  }
+}
+
+@media (min-width: 767px) {
+  .columns-container.chat-options .columns > div > div {
+    padding: 2em;
   }
 
   .columns.highlight-text.black {
@@ -475,6 +481,10 @@
 
   .columns.highlight-text.black.imageleft {
     left: 2.5%;
+  }
+
+  .percent-table .columns table tr td:first-of-type {
+    padding-right: 0.5em;
   }
 }
 
@@ -645,6 +655,9 @@
     max-width: 1350px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+  .percent-table .columns table tr td:first-of-type {
+    padding-right: 1.5em;
   }
 }
 
