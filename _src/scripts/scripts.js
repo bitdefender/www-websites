@@ -274,7 +274,7 @@ export function pushProductsToDataLayer() {
           basePrice: p.basePrice,
           discountValue: p.discount,
           discountRate: p.discountRate,
-          currency: p.currency,
+          currency: p.currency_iso,
           priceWithTax: p.actualPrice,
         })),
       },
@@ -290,7 +290,7 @@ export function pushProductsToDataLayer() {
         basePrice: p.basePrice,
         discountValue: p.discount,
         discountRate: p.discountRate,
-        currency: p.currency,
+        currency: p.currency_iso,
         priceWithTax: p.actualPrice,
       }));
     }
