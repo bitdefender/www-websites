@@ -343,7 +343,6 @@ main .hero .hero-picture picture img {
 
   /* display: none; */
   padding-left: 200px;
-  object-position: 70%;
 }
 
 main .hero a.button {
@@ -588,7 +587,7 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   }
 
   main .hero-container.blue-title .hero-content > div {
-    width: 60%;
+    width: 630px;
   }
 }
 
