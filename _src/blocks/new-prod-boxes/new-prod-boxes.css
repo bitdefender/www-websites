@@ -124,6 +124,12 @@
   transition: all 0.5s ease;
 }
 
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTagsWrapper {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag {
   font-size: var(--body-font-size-xs);
   font-family: Arial, sans-serif;
@@ -134,6 +140,16 @@
   border-radius: 20px;
   padding: 6px 16px;
   margin-bottom: 10px;
+  display: flex;
+  gap: 5px;
+  height: fit-content;
+}
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag .icon {
+  width: fit-content;
+  height: auto;
+  display: flex;
+  align-items: center;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag div {
@@ -523,7 +539,7 @@
 .new-prod-boxes-container .icon {
   width: 12px;
   height: 14px;
-  margin: 0 5px 0 0;
+  margin: 0 0 0 0;
 }
 
 .new-prod-boxes-container .icon svg {
@@ -548,8 +564,11 @@
 
 .new-prod-boxes-container .blue-pill .icon {
   position: relative;
-  top: 1px;
-  margin-left: 1px;
+  top: 1.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .new-prod-boxes-container .blue-pill svg {

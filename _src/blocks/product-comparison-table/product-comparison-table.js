@@ -1,12 +1,19 @@
 import {
-  createNanoBlock, renderNanoBlocks, fetchProduct, matchHeights,
+  createNanoBlock,
+  renderNanoBlocks,
+  fetchProduct,
+  matchHeights,
+  setDataOnBuyLinks,
+  generateProductBuyLink, formatPrice,
 } from '../../scripts/utils/utils.js';
+import { getDomain } from '../../scripts/scripts.js';
 
 const fetchedProducts = [];
 
-createNanoBlock('priceComparison', (code, variant, label, block) => {
+createNanoBlock('priceComparison', (code, variant, label, block, productIndex, columnEl) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
+  const oldPriceText = block.closest('.section').dataset.old_price_text ?? 'Old Price';
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '-';
@@ -20,17 +27,52 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
 
   fetchProduct(code, variant)
     .then((product) => {
-      fetchedProducts.push({ code, variant, product });
+      const currentProduct = { code, variant, product };
+      fetchedProducts.push(currentProduct);
       // eslint-disable-next-line camelcase
       const { price, discount: { discounted_price: discounted }, currency_iso: currency } = product;
-      oldPriceElement.innerHTML = `Old Price <del>${price} ${currency}</del>`;
-      priceElement.innerHTML = `${discounted} ${currency}`;
+      const formattedPriceParams = [currency, null, getDomain()];
+      // eslint-disable-next-line max-len
+      const formattedSavings = formatPrice((price - discounted).toFixed(2), ...formattedPriceParams);
+      const formattedPrice = formatPrice(price, ...formattedPriceParams);
+      const formattedDiscount = formatPrice(discounted, ...formattedPriceParams);
+
+      oldPriceElement.innerHTML = `<div class="old-price-box">
+        <span>${oldPriceText} <del>${formattedPrice}</del></span>
+        <span class="savings d-none">Savings <del>${formattedSavings}</del></span>
+      </div>`;
+      priceElement.innerHTML = `<div class="new-price-box">
+        <span class="d-none total-text">Your total price:</span>
+        ${formattedDiscount}
+      </div>`;
       priceAppliedOnTime.innerHTML = label;
 
       // update buy link
-      const currentProductIndex = fetchedProducts.length - 1;
-      const buyLink = block.querySelectorAll('.button-container a')[currentProductIndex];
-      buyLink.href = fetchedProducts[currentProductIndex].product.buy_link;
+      const buyLink = columnEl.querySelector('.button-container a');
+      const isBuyLink = buyLink?.href?.includes('/site/Store/buy/');
+
+      if (isBuyLink) {
+        const variantSplit = variant.split('-');
+        const units = variantSplit[0].split('u')[0];
+        const years = variantSplit[1].split('y')[0];
+
+        // eslint-disable-next-line max-len
+        buyLink.href = currentProduct.product.buy_link || generateProductBuyLink(currentProduct, currentProduct.code, units, years);
+
+        const dataInfo = {
+          productId: currentProduct.code,
+          variation: {
+            price: currentProduct.product.discount
+              ? +currentProduct.product.discount.discounted_price : +currentProduct.product.price,
+            discounted_price: currentProduct.product.discount?.discounted_price,
+            variation_name: currentProduct.variant,
+            currency_label: currentProduct.product.currency_label,
+            region_id: currentProduct.product.region_id,
+          },
+        };
+
+        setDataOnBuyLinks(buyLink, dataInfo);
+      }
     })
     .catch((err) => {
       // eslint-disable-next-line no-console
@@ -158,7 +200,7 @@ function extractTextFromStrongTagToParent(element) {
     });
   }
 
-  if (element.tagName === 'STRONG') {
+  if (element.tagName === 'STRONG' && element.parentElement) {
     element.parentElement.innerHTML = element.textContent;
   }
 }

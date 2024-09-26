@@ -2,9 +2,9 @@ version: 1
 indices:
   default:
     include:
-      - /_src/**
+      - /**
     exclude:
-      - /_src/fragments/**  
+      - /**/consumer/**/fragmets/**
     target: /query-index.json
     properties:
       title:
