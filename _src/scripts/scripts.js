@@ -26,6 +26,7 @@ import { loadAnalytics } from './analytics.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 const TRACKED_PRODUCTS = [];
+const TRACKED_PRODUCTS_COMPARISON = [];
 
 export const SUPPORTED_LANGUAGES = ['en'];
 export const DEFAULT_LANGUAGE = getDefaultLanguage();
@@ -248,34 +249,75 @@ export function getTags(tags) {
   return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
 }
 
-export function trackProduct(product) {
+export function trackProduct(product, location = '') {
   // eslint-disable-next-line max-len
-  const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
-  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
-  const isTrackedPage = tags.includes('product') || tags.includes('service');
-  if (isTrackedPage && !isDuplicate) TRACKED_PRODUCTS.push(product);
+  if (!product && product.length === 0) return;
+  if (location && location === 'comparison') {
+    const isDuplicate = TRACKED_PRODUCTS_COMPARISON.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
+    if (!isDuplicate) TRACKED_PRODUCTS_COMPARISON.push(product);
+  } else {
+    const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
+    if (!isDuplicate) TRACKED_PRODUCTS.push(product);
+  }
 }
 
 export function pushProductsToDataLayer() {
   if (TRACKED_PRODUCTS.length > 0) {
-    pushToDataLayer('product loaded', {
-      product: TRACKED_PRODUCTS
-        .map((p) => ({
-          info: {
-            ID: p.platformProductId,
-            name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
-            devices: p.devices,
-            subscription: p.subscription,
-            version: p.version,
-            basePrice: p.basePrice,
-            discountValue: p.discount,
-            discountRate: p.discountRate,
-            currency: p.currency,
-            priceWithTax: p.actualPrice,
-          },
+    const dataLayerProduct = {
+      product: {
+        info: TRACKED_PRODUCTS.map((p) => ({
+          ID: p.platformProductId,
+          name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
+          devices: p.devices,
+          subscription: p.subscription,
+          version: p.version,
+          basePrice: p.basePrice,
+          discountValue: p.discount,
+          discountRate: p.discountRate,
+          currency: p.currency,
+          priceWithTax: p.actualPrice,
         })),
-    });
+      },
+    };
+
+    if (TRACKED_PRODUCTS_COMPARISON.length > 0) {
+      dataLayerProduct.product.comparison = TRACKED_PRODUCTS_COMPARISON.map((p) => ({
+        ID: p.platformProductId,
+        name: p.productCode,
+        devices: p.devices,
+        subscription: p.subscription,
+        version: p.version,
+        basePrice: p.basePrice,
+        discountValue: p.discount,
+        discountRate: p.discountRate,
+        currency: p.currency,
+        priceWithTax: p.actualPrice,
+      }));
+    }
+
+    pushToDataLayer('product loaded', dataLayerProduct);
   }
+}
+
+export function pushTrialDownloadToDataLayer() {
+  const sections = document.querySelectorAll('a.button.modal');
+
+  sections.forEach((button) => {
+    if (button.getAttribute('href').includes('fragments/thank-you-for-downloading')) {
+      button.addEventListener('click', () => {
+        const dataLayerDownload = {
+          trial: {
+            ID: (TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode)
+                || getMetadata('breadcrumb-title')
+                || getMetadata('og:title')
+          }
+        };
+
+        pushToDataLayer('trial downloaded', dataLayerDownload);
+      });
+    }
+  });
+
 }
 
 export function decorateBlockWithRegionId(element, id) {
@@ -542,7 +584,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
     page: {
       info: {
         name: [languageCountry.country, ...tags].join(':'), // e.g. au:consumer:product:internet security
-        section: languageCountry.country || '',
+        section: navigator.language.toLowerCase() || navigator.userLanguage.toLowerCase() || languageCountry.language.toLowerCase(),
         subSection: tags[0] || '',
         subSubSection: tags[1] || '',
         subSubSubSection: tags[2] || '',
