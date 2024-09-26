@@ -502,7 +502,7 @@ export default function decorate(block) {
     const priceElements = card.querySelectorAll('.price.nanoblock');
     if (priceElements.length >= 2) {
       const secondToLastPrice = priceElements[priceElements.length - 2];
-      let previousElement = secondToLastPrice.previousElementSibling;
+      const previousElement = secondToLastPrice.previousElementSibling;
       if (previousElement && previousElement.tagName.toLowerCase() === 'p') {
         previousElement.classList.add('first-year-price-text');
       } else {
@@ -510,7 +510,6 @@ export default function decorate(block) {
         newP.classList.add('first-year-price-text');
         secondToLastPrice.before(newP);
       }
-      
     }
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
