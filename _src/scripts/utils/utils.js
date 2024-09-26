@@ -328,9 +328,10 @@ export function setDataOnBuyLinks(element, dataInfo) {
   const { productId, variation } = dataInfo;
   if (productId) element.dataset.product = productId;
 
-  element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
+  // element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
 
-  if (variation.price) element.dataset.oldPrice = variation.price;
+  if (variation.price) element.dataset.buyPrice = variation.price;
+  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice;
   if (variation.currency_label) element.dataset.currency = variation.currency_label;
   if (variation.region_id) element.dataset.region = variation.region_id;
   if (variation.variation_name) element.dataset.variation = variation.variation_name;
