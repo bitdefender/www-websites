@@ -262,49 +262,40 @@ export function trackProduct(product, location = '') {
 }
 
 export function pushProductsToDataLayer() {
-  if (TRACKED_PRODUCTS.length > 0) {
-    const url = window.location.href;
-    let isHomepageSolutions = url.split('/').filter(Boolean).pop();
-    let key = 'info';
-    if (isHomepageSolutions === 'consumer') {
-      key = 'all';
-    }
+  const url = window.location.href;
+  let isHomepageSolutions = url.split('/').filter(Boolean).pop();
+  const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
+  const mapProductData = (products) => products.map((p) => ({
+    ID: p.platformProductId,
+    name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
+    devices: p.devices,
+    subscription: p.subscription,
+    version: p.version,
+    basePrice: p.basePrice,
+    discountValue: p.discount,
+    discountRate: p.discountRate,
+    currency: p.currency_iso,
+    priceWithTax: p.actualPrice,
+  }));
+
+  const pushDataLayer = (products, comparison = []) => {
     const dataLayerProduct = {
       product: {
-        [key]: TRACKED_PRODUCTS.map((p) => ({
-          ID: p.platformProductId,
-          name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
-          devices: p.devices,
-          subscription: p.subscription,
-          version: p.version,
-          basePrice: p.basePrice,
-          discountValue: p.discount,
-          discountRate: p.discountRate,
-          currency: p.currency_iso,
-          priceWithTax: p.actualPrice,
-        })),
+        [key]: mapProductData(products),
+        ...(comparison.length && { comparison: mapProductData(comparison) })
       },
     };
-
-    if (TRACKED_PRODUCTS_COMPARISON.length > 0) {
-      dataLayerProduct.product.comparison = TRACKED_PRODUCTS_COMPARISON.map((p) => ({
-        ID: p.platformProductId,
-        name: p.productCode,
-        devices: p.devices,
-        subscription: p.subscription,
-        version: p.version,
-        basePrice: p.basePrice,
-        discountValue: p.discount,
-        discountRate: p.discountRate,
-        currency: p.currency_iso,
-        priceWithTax: p.actualPrice,
-      }));
-    }
-
     pushToDataLayer('product loaded', dataLayerProduct);
+  };
+
+  if (TRACKED_PRODUCTS.length) {
+    pushDataLayer(TRACKED_PRODUCTS, TRACKED_PRODUCTS_COMPARISON);
+  } else if (TRACKED_PRODUCTS_COMPARISON.length) {
+    pushDataLayer(TRACKED_PRODUCTS_COMPARISON);
   }
 }
+
 
 export function pushTrialDownloadToDataLayer() {
   const sections = document.querySelectorAll('a.button.modal');
