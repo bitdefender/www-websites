@@ -117,11 +117,13 @@
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 a {
   transition: all 0.5s ease;
+  color: #000;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 a:hover {
   text-decoration: none;
   transition: all 0.5s ease;
+  color: #005ed9;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTagsWrapper {
