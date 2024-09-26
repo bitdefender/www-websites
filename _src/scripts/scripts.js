@@ -263,9 +263,16 @@ export function trackProduct(product, location = '') {
 
 export function pushProductsToDataLayer() {
   if (TRACKED_PRODUCTS.length > 0) {
+    const url = window.location.href;
+    let isHomepageSolutions = url.split('/').filter(Boolean).pop();
+    let key = 'info';
+    if (isHomepageSolutions === 'consumer') {
+      key = 'all';
+    }
+
     const dataLayerProduct = {
       product: {
-        all: TRACKED_PRODUCTS.map((p) => ({
+        [key]: TRACKED_PRODUCTS.map((p) => ({
           ID: p.platformProductId,
           name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
           devices: p.devices,
