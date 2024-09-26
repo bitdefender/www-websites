@@ -265,7 +265,7 @@ export function pushProductsToDataLayer() {
   if (TRACKED_PRODUCTS.length > 0) {
     const dataLayerProduct = {
       product: {
-        info: TRACKED_PRODUCTS.map((p) => ({
+        all: TRACKED_PRODUCTS.map((p) => ({
           ID: p.platformProductId,
           name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
           devices: p.devices,
