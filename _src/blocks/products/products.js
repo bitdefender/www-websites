@@ -504,7 +504,7 @@ export default function decorate(block) {
       space = space.nextElementSibling;
       const emptyDiv = document.createElement('div');
       space.insertAdjacentElement('afterend', emptyDiv);
-      emptyDiv.classList.add('featured');
+      emptyDiv.classList.add('featured', 'nanoblock');
       emptyDiv.style.visibility = 'hidden';
     }
   });
