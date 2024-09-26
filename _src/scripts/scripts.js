@@ -303,7 +303,7 @@ export function pushTrialDownloadToDataLayer() {
   const sections = document.querySelectorAll('a.button.modal');
 
   sections.forEach((button) => {
-    if (button.getAttribute('href').includes('fragments/thank-you-for-downloading')) {
+    if (button.getAttribute('href').includes('fragments/thank-you-for-downloading') || button.getAttribute('href').includes('fragments/get-bitdefender')) {
       button.addEventListener('click', () => {
         const dataLayerDownload = {
           trial: {
