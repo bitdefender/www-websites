@@ -11,7 +11,13 @@ export default function decorate(block) {
   } = readBlockConfig(block);
 
   if (template) {
-    document.body.classList.add(template);
+    // make sure that the added class is a string
+    // not a variable caught between '{' and '}'
+    const variableRegex = /^\{([\s\S]*)\}$/;
+    const variableMatch = template.match(variableRegex);
+    const classTemplate = variableMatch ? variableMatch[1] : template;
+
+    document.body.classList.add(classTemplate);
   }
 
   if (urlMacos || urlWindows || urlAndroid || urlIos) {
