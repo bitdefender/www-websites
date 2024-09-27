@@ -299,7 +299,7 @@ function renderHighlight(mv, text) {
     'div',
     {
       class: 'highlight',
-      style: 'visibility=hidden',
+      style: 'visibility:hidden',
     },
     `<span>${text}</span>`,
   );
@@ -524,22 +524,34 @@ export default function decorate(block) {
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
+    const priceElements = card.querySelectorAll('.price.nanoblock');
+    if (priceElements.length >= 2) {
+      const secondToLastPrice = priceElements[priceElements.length - 2];
+      const previousElement = secondToLastPrice.previousElementSibling;
+      if (previousElement && previousElement.tagName.toLowerCase() === 'p') {
+        previousElement.classList.add('first-year-price-text');
+      } else {
+        const newP = document.createElement('p');
+        newP.classList.add('first-year-price-text');
+        secondToLastPrice.before(newP);
+      }
+    }
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
         return;
       }
-      const neededHeight = '2rem';
       let space = card.querySelector('h3');
       space = space.nextElementSibling;
       const emptyDiv = document.createElement('div');
       space.insertAdjacentElement('afterend', emptyDiv);
-      emptyDiv.classList.add('featured');
+      emptyDiv.classList.add('featured', 'nanoblock');
       emptyDiv.style.visibility = 'hidden';
-      emptyDiv.style.minHeight = neededHeight;
     }
   });
-  matchHeights(block, 'h3');
+  matchHeights(block, '.first-year-price-text');
+  matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');
