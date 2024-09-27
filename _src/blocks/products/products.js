@@ -45,6 +45,8 @@ function customRound(value) {
  * @returns a model
  */
 function toModel(productCode, variantId, v) {
+  const currentDomain = getDomain();
+  const formattedPriceParams = [v.currency_iso, null, currentDomain];
   return {
     productCode,
     variantId,
@@ -61,9 +63,9 @@ function toModel(productCode, variantId, v) {
     discountedMonthlyPrice: v.discount
       ? v.discount.discounted_price / 12
       : 0,
-    discount: v.discount
+    discount: formatPrice(v.discount
       ? customRound((v.price - v.discount.discounted_price) * 100) / 100
-      : 0,
+      : 0, ...formattedPriceParams),
     discountRate: v.discount
       ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
@@ -190,7 +192,6 @@ function renderOldPrice(mv, text = '', monthly = '') {
     const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
 
     let oldPrice = 0;
-
     if (mv.model.discountedPrice) {
       if (monthly.toLowerCase() === 'monthly') {
         oldPrice = mv.model.monthlyBasePrice;
