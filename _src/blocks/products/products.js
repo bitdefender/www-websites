@@ -192,7 +192,6 @@ function renderOldPrice(mv, text = '', monthly = '') {
     const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
 
     let oldPrice = 0;
-    
     if (mv.model.discountedPrice) {
       if (monthly.toLowerCase() === 'monthly') {
         oldPrice = mv.model.monthlyBasePrice;
