@@ -30,11 +30,8 @@ const TRACKED_PRODUCTS_COMPARISON = [];
 
 export const SUPPORTED_LANGUAGES = ['en'];
 export const DEFAULT_LANGUAGE = getDefaultLanguage();
-
 export const DEFAULT_COUNTRY = getDefaultLanguage();
-
 export const METADATA_ANALYTICS_TAGS = 'analytics-tags';
-
 const TARGET_TENANT = 'bitdefender';
 
 const HREFLANG_MAP = new Map([
@@ -289,7 +286,7 @@ export function pushProductsToDataLayer() {
           devices,
           subscription,
           version,
-          basePrice,
+          basePrice: basePrice,
           discountValue: discount,
           discountRate,
           currency: currency_iso,
@@ -614,40 +611,44 @@ function getExperimentDetails() {
 }
 
 function pushPageLoadToDataLayer(targetExperimentDetails) {
-  const { hostname } = window.location;
-  if (!hostname) {
-    return;
-  }
-  const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const languageCountry = getLanguageCountryFromPath(window.location.pathname);
-  const environment = getEnvironment(hostname, languageCountry.country);
+  const { hostname, pathname, href, search } = window.location;
+if (!hostname || !pathname) {
+  return;
+}
+
   const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
   // eslint-disable-next-line no-console
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
-  const langCountry = navigator.language || navigator.userLanguage || languageCountry.language;
-  let [lang, country] = langCountry ? langCountry.split('-') : ['', ''];
-  country = country ? country.toLowerCase() : '';
+  const { domain, domainPartsCount } = getDomainInfo(hostname);
+  const [lang, country] = pathname.split('/')[1].split('-');
+  const environment = getEnvironment(hostname, country);
+  const allSegments = pathname.split('/').filter(segment => segment !== '');
+  const lastSegment = allSegments[allSegments.length - 1];
+  const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
+  const subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
 
-  const urlPath = window.location.pathname;
-  const allSegments = urlPath.split('/');
-  const lastSegment = allSegments[allSegments.length - 1].replace('-', ' ');
-  let siteSubSection = urlPath.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
-  const tagName = `${lang}:${siteSubSection}:product:${lastSegment}`;
+  let subSubSection = 'product';
+  let tagName = `${lang}:${subSection}:product:${subSubSubSection}`;
+  if (lastSegment === 'consumer') {
+    subSubSection = 'solutions';
+    tagName = `${lang}:${subSection}:solutions`;
+  }
+
 
   pushToDataLayer('page load started', {
     pageInstanceID: environment,
     page: {
       info: {
-        name: tagName, // e.g. au:consumer:product:internet security
+        name: tagName,
         section: country,
-        subSection: siteSubSection,
-        subSubSection: 'product',
-        subSubSubSection: lastSegment,
-        destinationURL: window.location.href,
-        queryString: window.location.search,
+        subSection,
+        subSubSection,
+        subSubSubSection,
+        destinationURL: href,
+        queryString: search,
         referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
-        serverName: 'hlx.live', // indicator for AEM Success Edge
+        serverName: domain,
         language: lang,
         sysEnv: getOperatingSystem(window.navigator.userAgent),
         ...(experimentDetails && { experimentDetails }),

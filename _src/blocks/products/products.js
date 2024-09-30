@@ -67,8 +67,8 @@ function toModel(productCode, variantId, v) {
     discountRate: v.discount
       ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
-    currency: v.currency_label,
     currency_iso: v.currency_iso,
+    currency: v.currency_label,
     url: generateProductBuyLink(v, productCode),
     test: {},
   };

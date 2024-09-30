@@ -48,21 +48,22 @@ function toModel(productCode, variantId, v) {
     devices: +v.variation.dimension_value,
     subscription: v.variation.years * 12,
     version: v.variation.years ? 'yearly' : 'monthly',
-    basePrice: formatPrice(+v.price, ...formattedPriceParams),
+    basePrice: +v.price,
     // eslint-disable-next-line max-len
-    actualPrice: formatPrice(v.discount ? +v.discount.discounted_price : +v.price, ...formattedPriceParams),
-    monthlyBasePrice: formatPrice(customRound(v.price / 12), ...formattedPriceParams),
-    discountedPrice: formatPrice(v.discount?.discounted_price, ...formattedPriceParams),
-    discountedMonthlyPrice: formatPrice(v.discount
-      ? customRound(v.discount.discounted_price / 12)
-      : 0, ...formattedPriceParams),
-    discount: formatPrice(v.discount
-      ? customRound((v.price - v.discount.discounted_price) * 100) / 100
-      : 0, ...formattedPriceParams),
+    actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
+    monthlyBasePrice: customRound(v.price / 12),
+    discountedPrice: v.discount?.discounted_price,
+    discountedMonthlyPrice: v.discount
+    ? customRound(v.discount.discounted_price / 12)
+    : 0,
+    discount: v.discount
+    ? customRound((v.price - v.discount.discounted_price) * 100) / 100
+    : 0,
     discountRate: v.discount
       ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
     currency_iso: v.currency_iso,
+    currency: v.currency_label,
     url: generateProductBuyLink(v, productCode),
   };
 }
