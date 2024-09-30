@@ -266,36 +266,44 @@ export function pushProductsToDataLayer() {
   let isHomepageSolutions = url.split('/').filter(Boolean).pop();
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
-  const mapProductData = (products) => products.map((p) => ({
-    ID: p.platformProductId,
-    name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
-    devices: p.devices,
-    subscription: p.subscription,
-    version: p.version,
-    basePrice: p.basePrice,
-    discountValue: p.discount,
-    discountRate: p.discountRate,
-    currency: p.currency_iso,
-    priceWithTax: p.actualPrice,
-  }));
+  const mapProductData = (products) => products.map((p) => {
+    const mappedProduct = {
+      ID: p.platformProductId || p.productId,
+      name: p.platformProductId ? p.productCode : undefined,
+      devices: p.devices,
+      subscription: p.subscription,
+      version: p.version,
+      basePrice: p.basePrice,
+      discountValue: p.discount,
+      discountRate: p.discountRate,
+      currency: p.currency_iso,
+      priceWithTax: p.actualPrice,
+    };
+
+    // Filter out properties with undefined values
+    return Object.fromEntries(
+      Object.entries(mappedProduct).filter(([_, value]) => value !== undefined)
+    );
+  });
 
   const pushDataLayer = (products, comparison = []) => {
     const dataLayerProduct = {
       product: {
         [key]: mapProductData(products),
-        ...(comparison.length && { comparison: mapProductData(comparison) })
+        ...(comparison.length && { comparison: mapProductData(comparison) }),
       },
     };
     pushToDataLayer('product loaded', dataLayerProduct);
   };
 
-  if (TRACKED_PRODUCTS.length) {
-    pushDataLayer(TRACKED_PRODUCTS, TRACKED_PRODUCTS_COMPARISON);
-  } else if (TRACKED_PRODUCTS_COMPARISON.length) {
-    pushDataLayer(TRACKED_PRODUCTS_COMPARISON);
+  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
+    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
   }
-}
 
+  pushDataLayer(TRACKED_PRODUCTS, TRACKED_PRODUCTS_COMPARISON);
+
+  console.log('adobeDataLayer ', adobeDataLayer)
+}
 
 export function pushTrialDownloadToDataLayer() {
   const sections = document.querySelectorAll('a.button.modal');

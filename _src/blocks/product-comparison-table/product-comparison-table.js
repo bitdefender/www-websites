@@ -40,6 +40,7 @@ function toModel(productCode, variantId, v) {
   const currentDomain = getDomain();
   const formattedPriceParams = [v.currency_iso, null, currentDomain];
   return {
+    productId: v.product_id,
     productCode,
     variantId,
     regionId: v.region_id,
@@ -61,7 +62,7 @@ function toModel(productCode, variantId, v) {
     discountRate: v.discount
       ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
-    currency: v.currency_label,
+    currency_iso: v.currency_iso,
     url: generateProductBuyLink(v, productCode),
   };
 }
