@@ -637,7 +637,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
     page: {
       info: {
         name: tagName, // e.g. au:consumer:product:internet security
-        section: country.toLowerCase(),
+        section: '',
         subSection: siteSubSection,
         subSubSection: 'product',
         subSubSubSection: lastSegment,
