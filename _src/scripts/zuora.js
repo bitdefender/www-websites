@@ -154,6 +154,10 @@ export default class ZuoraNLClass {
         return;
       }
 
+      if (Number(yearsNo) !== billingPeriod && billingPeriod !== 0) {
+        return;
+      }
+
       if (this.monthlyProducts.indexOf(id) !== -1) {
         billingPeriod = 1;
       }
