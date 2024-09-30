@@ -345,15 +345,16 @@ export function pushTrialDownloadToDataLayer() {
     || getMetadata('og:title')
   );
 
+  const url = window.location.href;
+  const currentPage = url.split('/').filter(Boolean).pop();
+  const downloadType = currentPage === 'thank-you' ? 'product downloaded' : 'trial downloaded';
+
   const pushTrialData = () => {
-    const dataLayerDownload = { trial: { ID: getTrialID() } };
-    pushToDataLayer('trial downloaded', dataLayerDownload);
+    const dataLayerDownload = { product: {trial: [{ ID: getTrialID() }] } };
+    pushToDataLayer(downloadType, dataLayerDownload);
   };
 
   const sections = document.querySelectorAll('a.button.modal');
-  const url = window.location.href;
-  const currentPage = url.split('/').filter(Boolean).pop();
-
   if (sections.length) {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
@@ -619,26 +620,32 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(window.location.pathname);
   const environment = getEnvironment(hostname, languageCountry.country);
-  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
-
   const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
   // eslint-disable-next-line no-console
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
+
+  const langCountry = navigator.language || navigator.userLanguage || languageCountry.language;
+  const [lang, country] = langCountry.split('-');
+  const urlPath = window.location.pathname;
+  const allSegments = urlPath.split('/');
+  const lastSegment = allSegments[allSegments.length - 1].replace('-', ' ');
+  let siteSubSection = urlPath.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
+  const tagName = `${lang}:${siteSubSection}:product:${lastSegment}`;
 
   pushToDataLayer('page load started', {
     pageInstanceID: environment,
     page: {
       info: {
-        name: [languageCountry.country, ...tags].join(':'), // e.g. au:consumer:product:internet security
-        section: navigator.language.toLowerCase() || navigator.userLanguage.toLowerCase() || languageCountry.language.toLowerCase(),
-        subSection: tags[0] || '',
-        subSubSection: tags[1] || '',
-        subSubSubSection: tags[2] || '',
+        name: tagName, // e.g. au:consumer:product:internet security
+        section: country.toLowerCase(),
+        subSection: siteSubSection,
+        subSubSection: 'product',
+        subSubSubSection: lastSegment,
         destinationURL: window.location.href,
         queryString: window.location.search,
         referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
         serverName: 'hlx.live', // indicator for AEM Success Edge
-        language: navigator.language || navigator.userLanguage || languageCountry.language,
+        language: lang,
         sysEnv: getOperatingSystem(window.navigator.userAgent),
         ...(experimentDetails && { experimentDetails }),
       },
