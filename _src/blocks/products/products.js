@@ -176,7 +176,7 @@ function renderPlanSelector(mv, plans, defaultSelection) {
  * @returns Root node of the nanoblock
  */
 function renderOldPrice(mv, text = '', monthly = '') {
-  // TODO simplify CSS
+  // TODO: simplify CSS
   const root = createTag(
     'div',
     {
@@ -192,7 +192,7 @@ function renderOldPrice(mv, text = '', monthly = '') {
     const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
 
     let oldPrice = 0;
-    if (mv.model.discountedPrice) {
+    if (mv.model.discountedPrice && mv.model.discountRate !== 0) {
       if (monthly.toLowerCase() === 'monthly') {
         oldPrice = mv.model.monthlyBasePrice;
         oldPriceElt.innerHTML = `${text} <del>${formatPrice(mv.model.monthlyBasePrice, ...formattedPriceParams)} <sup>/mo</sup></del>`;

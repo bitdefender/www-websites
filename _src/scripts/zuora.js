@@ -150,10 +150,13 @@ export default class ZuoraNLClass {
           billingPeriod = 10;
       }
 
+      // Non monthly product (e.g 'tsmd') and monthly billing period => fast exit
+      // same thing if we have a monthly product (e.g 'psm') and non monthly billing period
       if ((this.monthlyProducts.indexOf(id) === -1 && billingPeriod === 0) || (this.monthlyProducts.indexOf(id) !== -1 && billingPeriod !== 0)) {
         return;
       }
 
+      // make sure that the billing period is the one we are searching for
       if (Number(yearsNo) !== billingPeriod && billingPeriod !== 0) {
         return;
       }
