@@ -559,7 +559,7 @@ export default function decorate(block) {
     }
   });
   matchHeights(block, '.first-year-price-text');
-  matchHeights(block, '.price:not(:last-of-type)');
+  matchHeights(block, '.price.nanoblock');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
