@@ -625,7 +625,9 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
   const langCountry = navigator.language || navigator.userLanguage || languageCountry.language;
-  const [lang, country] = langCountry ? langCountry.split('-') : ['', ''];
+  let [lang, country] = langCountry ? langCountry.split('-') : ['', ''];
+  country = country ? country.toLowerCase() : '';
+
   const urlPath = window.location.pathname;
   const allSegments = urlPath.split('/');
   const lastSegment = allSegments[allSegments.length - 1].replace('-', ' ');
@@ -637,7 +639,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
     page: {
       info: {
         name: tagName, // e.g. au:consumer:product:internet security
-        section: country.toLowerCase(),
+        section: country,
         subSection: siteSubSection,
         subSubSection: 'product',
         subSubSubSection: lastSegment,
