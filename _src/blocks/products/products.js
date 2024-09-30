@@ -527,11 +527,11 @@ export default function decorate(block) {
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
     const firstButton = card.querySelector('.button-container');
-    if(firstButton.firstChild.classList.contains('primary')){
-      const emptyButtonContainer = document.createElement('div');
+    const hasBuyInHref = Array.from(card.querySelectorAll('a')).some(el => el.href.includes('buy'));
+    if(firstButton.firstChild.classList.contains('primary') && !hasBuyInHref){
+      const emptyButtonContainer = document.createElement('p');
       emptyButtonContainer.classList.add('button-container');
       firstButton.insertAdjacentElement('beforebegin', emptyButtonContainer);
-      
     }
     const priceElements = card.querySelectorAll('.price.nanoblock');
     if (priceElements.length >= 2) {
@@ -559,7 +559,7 @@ export default function decorate(block) {
     }
   });
   matchHeights(block, '.first-year-price-text');
-  matchHeights(block, '.price.nanoblock');
+  matchHeights(block, '.price:not(:last-of-type)');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
