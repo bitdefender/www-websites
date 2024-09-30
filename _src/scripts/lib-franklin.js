@@ -253,10 +253,16 @@ async function internalDecorateIcons(element) {
     const parent = span.firstElementChild?.tagName === 'A' ? span.firstElementChild : span;
 
     // Set aria-label if the parent is an anchor tag
-    const spanParent = span.parentElement;
-    if (spanParent.tagName === 'A' && !spanParent.hasAttribute('aria-label')) {
-      spanParent.setAttribute('aria-label', iconName);
+    try {
+      const spanParent = span.parentElement;
+      if (spanParent?.tagName === 'A' && !spanParent?.hasAttribute('aria-label')) {
+        spanParent.setAttribute('aria-label', iconName);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Error setting aria-label for icon ${iconName}:`, error);
     }
+
     // Styled icons need to be inlined as-is, while unstyled ones can leverage the sprite
     if (ICONS_CACHE[iconName] && ICONS_CACHE[iconName].styled) {
       parent.innerHTML = ICONS_CACHE[iconName].html;
