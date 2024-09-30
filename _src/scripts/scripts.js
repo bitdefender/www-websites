@@ -263,67 +263,107 @@ export function trackProduct(product, location = '') {
 
 export function pushProductsToDataLayer() {
   const url = window.location.href;
-  let isHomepageSolutions = url.split('/').filter(Boolean).pop();
+  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
-  const mapProductData = (products) => products.map((p) => {
-    const mappedProduct = {
-      ID: p.platformProductId || p.productId,
-      name: p.platformProductId ? p.productCode : undefined,
-      devices: p.devices,
-      subscription: p.subscription,
-      version: p.version,
-      basePrice: p.basePrice,
-      discountValue: p.discount,
-      discountRate: p.discountRate,
-      currency: p.currency_iso,
-      priceWithTax: p.actualPrice,
-    };
+  const mapProductData = (products) =>
+    products.map((product) => {
+      const {
+        platformProductId,
+        productId,
+        productCode,
+        devices,
+        subscription,
+        version,
+        basePrice,
+        discount,
+        discountRate,
+        currency_iso,
+        actualPrice,
+      } = product;
 
-    // remove undefined values
-    return Object.fromEntries(
-      Object.entries(mappedProduct).filter(([_, value]) => value !== undefined)
-    );
+      return Object.fromEntries(
+        Object.entries({
+          ID: platformProductId || productId,
+          name: platformProductId ? productCode : undefined,
+          devices,
+          subscription,
+          version,
+          basePrice,
+          discountValue: discount,
+          discountRate,
+          currency: currency_iso,
+          priceWithTax: actualPrice,
+        }).filter(([_, value]) => value !== undefined)
+      );
+    });
+
+  let productAlreadyLoaded = adobeDataLayer.some(item => item.event === 'product loaded');
+
+  // if product loaded already exists we only add comparison array if e have it in the page
+  if (productAlreadyLoaded) {
+    adobeDataLayer.forEach(item => {
+      if (item.event === 'product loaded') {
+          // Ensure item.product exists and has the expected structure
+          if (key === 'all' && item.product && item.product.info) {
+            item.product = {
+              ...item.product,
+              all: item.product.info
+            };
+              delete item.product.info;
+          }
+
+          // check if TRACKED_PRODUCTS_COMPARISON has items and add it to the event
+          if (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length && item.product) {
+              item.product.comparison = TRACKED_PRODUCTS_COMPARISON;
+          }
+      }
   });
 
-  const pushDataLayer = (products, comparison = []) => {
+  } else {
+    if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
+      TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
+    }
+
     const dataLayerProduct = {
       product: {
-        [key]: mapProductData(products),
-        ...(comparison.length && { comparison: mapProductData(comparison) }),
+        [key]: mapProductData(TRACKED_PRODUCTS),
+        ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
       },
     };
-    pushToDataLayer('product loaded', dataLayerProduct);
-  };
 
-  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
-    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
+    pushToDataLayer('product loaded', dataLayerProduct);
   }
 
-  pushDataLayer(TRACKED_PRODUCTS, TRACKED_PRODUCTS_COMPARISON);
-
-  console.log('adobeDataLayer ', adobeDataLayer)
+  console.log('adobeDataLayer', adobeDataLayer);
 }
 
 export function pushTrialDownloadToDataLayer() {
+  const getTrialID = () => (
+    ((TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode) || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode))
+    || getMetadata('breadcrumb-title')
+    || getMetadata('og:title')
+  );
+
+  const pushTrialData = () => {
+    const dataLayerDownload = { trial: { ID: getTrialID() } };
+    pushToDataLayer('trial downloaded', dataLayerDownload);
+  };
+
   const sections = document.querySelectorAll('a.button.modal');
+  const url = window.location.href;
+  const currentPage = url.split('/').filter(Boolean).pop();
 
-  sections.forEach((button) => {
-    if (button.getAttribute('href').includes('fragments/thank-you-for-downloading') || button.getAttribute('href').includes('fragments/get-bitdefender')) {
-      button.addEventListener('click', () => {
-        const dataLayerDownload = {
-          trial: {
-            ID: (TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode)
-                || getMetadata('breadcrumb-title')
-                || getMetadata('og:title')
-          }
-        };
-
-        pushToDataLayer('trial downloaded', dataLayerDownload);
-      });
-    }
-  });
-
+  if (sections.length) {
+    sections.forEach((button) => {
+      const href = button.getAttribute('href');
+      if (href.includes('fragments/thank-you-for-downloading') || href.includes('fragments/get-bitdefender')) {
+        button.addEventListener('click', pushTrialData);
+      }
+    });
+  } else if (currentPage === 'thank-you') {
+    pushTrialData();
+  }
 }
 
 export function decorateBlockWithRegionId(element, id) {
