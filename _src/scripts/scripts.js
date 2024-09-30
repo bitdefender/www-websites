@@ -280,7 +280,7 @@ export function pushProductsToDataLayer() {
       priceWithTax: p.actualPrice,
     };
 
-    // Filter out properties with undefined values
+    // remove undefined values
     return Object.fromEntries(
       Object.entries(mappedProduct).filter(([_, value]) => value !== undefined)
     );
