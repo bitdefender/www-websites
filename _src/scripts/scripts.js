@@ -347,11 +347,11 @@ export function pushTrialDownloadToDataLayer() {
 
   const url = window.location.href;
   const currentPage = url.split('/').filter(Boolean).pop();
-  const downloadType = currentPage === 'thank-you' ? 'product downloaded' : 'trial downloaded';
+  const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
 
   const pushTrialData = () => {
-    const dataLayerDownload = { product: {trial: [{ ID: getTrialID() }] } };
-    pushToDataLayer(downloadType, dataLayerDownload);
+    const dataLayerDownload = { product: {[downloadType]: [{ ID: getTrialID() }] } };
+    pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
   };
 
   const sections = document.querySelectorAll('a.button.modal');
