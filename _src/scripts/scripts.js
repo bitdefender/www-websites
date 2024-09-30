@@ -348,9 +348,10 @@ export function pushTrialDownloadToDataLayer() {
   const url = window.location.href;
   const currentPage = url.split('/').filter(Boolean).pop();
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
+  const downloadType2 = currentPage === 'thank-you' ? 'downloaded' : 'trial';
 
   const pushTrialData = () => {
-    const dataLayerDownload = { product: {[downloadType]: [{ ID: getTrialID() }] } };
+    const dataLayerDownload = { product: {[downloadType2]: [{ ID: getTrialID() }] } };
     pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
   };
 
