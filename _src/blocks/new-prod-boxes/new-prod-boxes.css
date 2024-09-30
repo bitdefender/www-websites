@@ -707,6 +707,7 @@
 
 .plan-switcher .radio-label {
   margin-right: 8px;
+  cursor: pointer;
 }
 
 .plan-switcher .radio-label::before {
