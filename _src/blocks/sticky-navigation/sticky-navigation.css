@@ -26,7 +26,7 @@ main .section.sticky-navigation-container {
   display: none;
   flex-direction: column;
   justify-content: center;
-  align-items: baseline;
+  align-items: center;
   box-shadow: 0 3px 6px 0 rgb(0 0 0 / 8%);
   padding: 0 var(--body-padding) var(--body-padding) var(--body-padding);
 
