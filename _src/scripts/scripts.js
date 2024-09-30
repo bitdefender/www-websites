@@ -625,7 +625,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
   const langCountry = navigator.language || navigator.userLanguage || languageCountry.language;
-  const [lang, country] = langCountry ? langCountry.split('-') : '';
+  const [lang, country] = langCountry ? langCountry.split('-') : ['', ''];
   const urlPath = window.location.pathname;
   const allSegments = urlPath.split('/');
   const lastSegment = allSegments[allSegments.length - 1].replace('-', ' ');
