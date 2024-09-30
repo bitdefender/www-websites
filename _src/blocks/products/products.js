@@ -522,9 +522,17 @@ export default function decorate(block) {
     }
   });
 
+  //Product cards alignment logic
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
+    const firstButton = card.querySelector('.button-container');
+    if(firstButton.firstChild.classList.contains('primary')){
+      const emptyButtonContainer = document.createElement('div');
+      emptyButtonContainer.classList.add('button-container');
+      firstButton.insertAdjacentElement('beforebegin', emptyButtonContainer);
+      
+    }
     const priceElements = card.querySelectorAll('.price.nanoblock');
     if (priceElements.length >= 2) {
       const secondToLastPrice = priceElements[priceElements.length - 2];
@@ -551,11 +559,12 @@ export default function decorate(block) {
     }
   });
   matchHeights(block, '.first-year-price-text');
-  matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, '.price.nanoblock');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');
   matchHeights(block, 'ul:not(.variant-selector)');
   matchHeights(block, '.featured.nanoblock');
+  matchHeights(block, '.button-container');
 }
