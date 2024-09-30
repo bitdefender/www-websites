@@ -453,6 +453,11 @@ export default async function decorate(block, options) {
         buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
         buyLink2?.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
 
+        let secondButton = buyLink?.querySelectorAll('a')[1];
+        if (secondButton) {
+          secondButton.classList.add('button', 'secondary', 'no-arrow');
+        }
+
         const prodBox = document.createElement('div');
         prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
@@ -465,7 +470,7 @@ export default async function decorate(block, options) {
               <hr />
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices"></div>
-
+              ${secondButton ? secondButton.outerHTML : ''}
               ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
