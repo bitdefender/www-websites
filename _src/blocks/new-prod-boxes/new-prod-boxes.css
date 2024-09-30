@@ -487,7 +487,16 @@
   min-width: 144px;
 }
 
+.new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.secondary {
+  display: inline-block;
+  min-width: 144px;
+}
+
 .new-prod-boxes-container .button.primary.no-arrow::after {
+  content: none;
+}
+
+.new-prod-boxes-container .button.secondary.no-arrow::after {
   content: none;
 }
 
