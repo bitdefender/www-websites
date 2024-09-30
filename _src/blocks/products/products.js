@@ -67,7 +67,7 @@ function toModel(productCode, variantId, v) {
       ? customRound((v.price - v.discount.discounted_price) * 100) / 100
       : 0, ...formattedPriceParams),
     discountRate: v.discount
-      ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
+      ? Math.round(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
     currency: v.currency_label,
     currency_iso: v.currency_iso,
