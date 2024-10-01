@@ -41,10 +41,6 @@ const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlac
   window.ADOBE_MC_EVENT_LOADED = true;
 })();
 
-pushProductsToDataLayer();
-pushTrialDownloadToDataLayer();
-pushToDataLayer('page loaded');
-
 // Load breadcrumbs
 loadBreadcrumbs();
 

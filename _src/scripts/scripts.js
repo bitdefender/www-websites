@@ -265,11 +265,13 @@ export function pushProductsToDataLayer() {
   const isHomepageSolutions = url.split('/').filter(Boolean).pop();
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
+  console.log('TRACKED_PRODUCTS ', TRACKED_PRODUCTS)
+  console.log('TRACKED_PRODUCTS_COMPARISON ', TRACKED_PRODUCTS_COMPARISON)
+
   // eslint-disable-next-line arrow-body-style
   const mapProductData = (products) => {
     return products.map((product) => {
       const {
-        platformProductId,
         productId,
         productName,
         devices,
@@ -284,7 +286,7 @@ export function pushProductsToDataLayer() {
 
       return Object.fromEntries(
         Object.entries({
-          ID: platformProductId || productId,
+          ID: productId,
           name: productName,
           devices,
           subscription,
@@ -834,6 +836,10 @@ async function loadLazy(doc) {
   }
 
   await loadBlocks(main);
+
+  pushProductsToDataLayer();
+  pushTrialDownloadToDataLayer();
+  pushToDataLayer('page loaded');
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
