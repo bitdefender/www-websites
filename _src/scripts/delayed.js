@@ -10,6 +10,7 @@ import {
 import {
   getLanguageCountryFromPath,
   pushProductsToDataLayer,
+  pushTrialDownloadToDataLayer,
   pushToDataLayer,
   getEnvironment,
   openUrlForOs,
@@ -41,6 +42,7 @@ const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlac
 })();
 
 pushProductsToDataLayer();
+pushTrialDownloadToDataLayer();
 pushToDataLayer('page loaded');
 
 // Load breadcrumbs

@@ -26,14 +26,12 @@ import { loadAnalytics } from './analytics.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 const TRACKED_PRODUCTS = [];
+const TRACKED_PRODUCTS_COMPARISON = [];
 
 export const SUPPORTED_LANGUAGES = ['en'];
 export const DEFAULT_LANGUAGE = getDefaultLanguage();
-
 export const DEFAULT_COUNTRY = getDefaultLanguage();
-
 export const METADATA_ANALYTICS_TAGS = 'analytics-tags';
-
 const TARGET_TENANT = 'bitdefender';
 
 const HREFLANG_MAP = new Map([
@@ -248,33 +246,129 @@ export function getTags(tags) {
   return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
 }
 
-export function trackProduct(product) {
+export function trackProduct(product, location = '') {
   // eslint-disable-next-line max-len
-  const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
-  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
-  const isTrackedPage = tags.includes('product') || tags.includes('service');
-  if (isTrackedPage && !isDuplicate) TRACKED_PRODUCTS.push(product);
+  if (!product && product.length === 0) return;
+  if (location && location === 'comparison') {
+    // eslint-disable-next-line max-len
+    const isDuplicate = TRACKED_PRODUCTS_COMPARISON.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
+    if (!isDuplicate) TRACKED_PRODUCTS_COMPARISON.push(product);
+  } else {
+    // eslint-disable-next-line max-len
+    const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
+    if (!isDuplicate) TRACKED_PRODUCTS.push(product);
+  }
 }
 
 export function pushProductsToDataLayer() {
-  if (TRACKED_PRODUCTS.length > 0) {
-    pushToDataLayer('product loaded', {
-      product: TRACKED_PRODUCTS
-        .map((p) => ({
-          info: {
-            ID: p.platformProductId,
-            name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
-            devices: p.devices,
-            subscription: p.subscription,
-            version: p.version,
-            basePrice: p.basePrice,
-            discountValue: p.discount,
-            discountRate: p.discountRate,
-            currency: p.currency,
-            priceWithTax: p.actualPrice,
-          },
-        })),
+  const url = window.location.href;
+  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
+  const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
+
+  const mapProductData = (products) => {
+    products.map((product) => {
+      const {
+        platformProductId,
+        productId,
+        productCode,
+        devices,
+        subscription,
+        version,
+        basePrice,
+        discount,
+        discountRate,
+        currencyIso,
+        actualPrice,
+      } = product;
+
+      return Object.fromEntries(
+        Object.entries({
+          ID: platformProductId || productId,
+          name: platformProductId ? productCode : undefined,
+          devices,
+          subscription,
+          version,
+          basePrice,
+          discountValue: discount,
+          discountRate,
+          currency: currencyIso,
+          priceWithTax: actualPrice,
+        }).filter(([, value]) => value !== undefined),
+      );
     });
+  };
+
+  const adobeDataLayer = window.adobeDataLayer || [];
+  const productAlreadyLoaded = adobeDataLayer.some((item) => item.event === 'product loaded');
+
+  // if product loaded already exists we only add comparison array if e have it in the page
+  if (productAlreadyLoaded) {
+    adobeDataLayer.forEach((item) => {
+      if (item.event === 'product loaded') {
+        // Ensure item.product exists and has the expected structure
+        if (key === 'all' && item.product && item.product.info) {
+          item.product = {
+            ...item.product,
+            all: item.product.info,
+          };
+          delete item.product.info;
+        }
+
+        // check if TRACKED_PRODUCTS_COMPARISON has items and add it to the event
+        if (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length && item.product) {
+          item.product.comparison = TRACKED_PRODUCTS_COMPARISON;
+        }
+      }
+    });
+  } else {
+    if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
+      TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
+    }
+
+    const dataLayerProduct = {
+      product: {
+        [key]: mapProductData(TRACKED_PRODUCTS),
+        // eslint-disable-next-line max-len
+        ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
+      },
+    };
+
+    pushToDataLayer('product loaded', dataLayerProduct);
+  }
+}
+
+export function pushTrialDownloadToDataLayer() {
+  const getTrialID = () => (
+    // eslint-disable-next-line max-len
+    ((TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode) || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode))
+    || getMetadata('breadcrumb-title')
+    || getMetadata('og:title')
+  );
+
+  const url = window.location.href;
+  const currentPage = url.split('/').filter(Boolean).pop();
+  const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
+  const downloadType2 = currentPage === 'thank-you' ? 'downloaded' : 'trial';
+
+  const pushTrialData = () => {
+    const dataLayerDownload = {
+      product: {
+        [downloadType2]: [{ ID: getTrialID() }],
+      },
+    };
+    pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
+  };
+
+  const sections = document.querySelectorAll('a.button.modal');
+  if (sections.length) {
+    sections.forEach((button) => {
+      const href = button.getAttribute('href');
+      if (href.includes('fragments/thank-you-for-downloading') || href.includes('fragments/get-bitdefender')) {
+        button.addEventListener('click', pushTrialData);
+      }
+    });
+  } else if (currentPage === 'thank-you') {
+    pushTrialData();
   }
 }
 
@@ -524,47 +618,98 @@ function getExperimentDetails() {
 }
 
 function pushPageLoadToDataLayer(targetExperimentDetails) {
-  const { hostname } = window.location;
+  const {
+    hostname,
+    pathname,
+    href,
+    search,
+  } = window.location;
+
   if (!hostname) {
     return;
   }
-  const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const languageCountry = getLanguageCountryFromPath(window.location.pathname);
-  const environment = getEnvironment(hostname, languageCountry.country);
-  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
   const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
   // eslint-disable-next-line no-console
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
-  pushToDataLayer('page load started', {
-    pageInstanceID: environment,
-    page: {
-      info: {
-        name: [languageCountry.country, ...tags].join(':'), // e.g. au:consumer:product:internet security
-        section: languageCountry.country || '',
-        subSection: tags[0] || '',
-        subSubSection: tags[1] || '',
-        subSubSubSection: tags[2] || '',
-        destinationURL: window.location.href,
-        queryString: window.location.search,
-        referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
-        serverName: 'hlx.live', // indicator for AEM Success Edge
-        language: navigator.language || navigator.userLanguage || languageCountry.language,
-        sysEnv: getOperatingSystem(window.navigator.userAgent),
-        ...(experimentDetails && { experimentDetails }),
+  const { domain, domainPartsCount } = getDomainInfo(hostname);
+  const languageCountry = getLanguageCountryFromPath(window.location.pathname);
+  const environment = getEnvironment(hostname, languageCountry.country);
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
+
+  if (tags.length) {
+    pushToDataLayer('page load started', {
+      pageInstanceID: environment,
+      page: {
+        info: {
+          name: [languageCountry.country, ...tags].join(':'), // e.g. au:consumer:product:internet security
+          section: languageCountry.country || '',
+          subSection: tags[0] || '',
+          subSubSection: tags[1] || '',
+          subSubSubSection: tags[2] || '',
+          destinationURL: window.location.href,
+          queryString: window.location.search,
+          referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
+          serverName: 'hlx.live', // indicator for AEM Success Edge
+          language: navigator.language || navigator.userLanguage || languageCountry.language,
+          sysEnv: getOperatingSystem(window.navigator.userAgent),
+          ...(experimentDetails && { experimentDetails }),
+        },
+        attributes: {
+          promotionID: getParamValue('pid') || '',
+          internalPromotionID: getParamValue('icid') || '',
+          trackingID: getParamValue('cid') || '',
+          time: getCurrentTime(),
+          date: getCurrentDate(),
+          domain,
+          domainPeriod: domainPartsCount,
+        },
       },
-      attributes: {
-        promotionID: getParamValue('pid') || '',
-        internalPromotionID: getParamValue('icid') || '',
-        trackingID: getParamValue('cid') || '',
-        time: getCurrentTime(),
-        date: getCurrentDate(),
-        domain,
-        domainPeriod: domainPartsCount,
+    });
+  } else {
+    const [lang, country] = pathname.split('/')[1].split('-');
+    const allSegments = pathname.split('/').filter((segment) => segment !== '');
+    const lastSegment = allSegments[allSegments.length - 1];
+    const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
+    const subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
+
+    let subSubSection = 'product';
+    let tagName = `${lang}:${subSection}:product:${subSubSubSection}`;
+    if (lastSegment === 'consumer') {
+      subSubSection = 'solutions';
+      tagName = `${lang}:${subSection}:solutions`;
+    }
+
+    pushToDataLayer('page load started', {
+      pageInstanceID: environment,
+      page: {
+        info: {
+          name: tagName,
+          section: country,
+          subSection,
+          subSubSection,
+          subSubSubSection,
+          destinationURL: href,
+          queryString: search,
+          referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
+          serverName: domain,
+          language: lang,
+          sysEnv: getOperatingSystem(window.navigator.userAgent),
+          ...(experimentDetails && { experimentDetails }),
+        },
+        attributes: {
+          promotionID: getParamValue('pid') || '',
+          internalPromotionID: getParamValue('icid') || '',
+          trackingID: getParamValue('cid') || '',
+          time: getCurrentTime(),
+          date: getCurrentDate(),
+          domain,
+          domainPeriod: domainPartsCount,
+        },
       },
-    },
-  });
+    });
+  }
 }
 
 /**
