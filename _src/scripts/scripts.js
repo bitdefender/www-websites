@@ -12,6 +12,7 @@ import {
   loadBlocks,
   loadCSS,
   getMetadata, loadScript,
+  fetchPlaceholders,
 } from './lib-franklin.js';
 
 import {
@@ -959,6 +960,28 @@ async function loadPage() {
   });
 
   adobeMcAppendVisitorId('main');
+
+  const LANGUAGE_COUNTRY = getLanguageCountryFromPath(window.location.pathname);
+  const LAUNCH_URL = 'https://assets.adobedtm.com';
+  const ENVIRONMENT = getEnvironment(window.location.hostname, LANGUAGE_COUNTRY.country);
+
+  // Load Adobe Experience platform data collection (Launch) script
+  const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();
+
+  const ADOBE_MC_URL_ENV_MAP = new Map([
+    ['prod', launchProdScript],
+    ['stage', launchStageScript],
+  ]);
+
+  const adobeMcScriptUrl = `${LAUNCH_URL}${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT) || launchDevScript}`;
+  await loadScript(adobeMcScriptUrl);
+
+  document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
+  window.ADOBE_MC_EVENT_LOADED = true;
+
+  pushProductsToDataLayer();
+  pushTrialDownloadToDataLayer();
+  pushToDataLayer('page loaded');
 
   loadDelayed();
   await setupAnalytics;
