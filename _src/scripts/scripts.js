@@ -275,7 +275,7 @@ export function pushProductsToDataLayer() {
         basePrice,
         discount,
         discountRate,
-        currency_iso,
+        currencyIso,
         actualPrice,
       } = product;
 
@@ -286,37 +286,36 @@ export function pushProductsToDataLayer() {
           devices,
           subscription,
           version,
-          basePrice: basePrice,
+          basePrice,
           discountValue: discount,
           discountRate,
-          currency: currency_iso,
+          currency: currencyIso,
           priceWithTax: actualPrice,
-        }).filter(([_, value]) => value !== undefined)
+        }).filter(([_, value]) => value !== undefined),
       );
     });
 
-  let productAlreadyLoaded = adobeDataLayer.some(item => item.event === 'product loaded');
+  const productAlreadyLoaded = adobeDataLayer?.some((item) => item.event === 'product loaded');
 
   // if product loaded already exists we only add comparison array if e have it in the page
   if (productAlreadyLoaded) {
-    adobeDataLayer.forEach(item => {
+    adobeDataLayer?.forEach((item) => {
       if (item.event === 'product loaded') {
-          // Ensure item.product exists and has the expected structure
-          if (key === 'all' && item.product && item.product.info) {
-            item.product = {
-              ...item.product,
-              all: item.product.info
-            };
-              delete item.product.info;
-          }
+        // Ensure item.product exists and has the expected structure
+        if (key === 'all' && item.product && item.product.info) {
+          item.product = {
+            ...item.product,
+            all: item.product.info,
+          };
+          delete item.product.info;
+        }
 
-          // check if TRACKED_PRODUCTS_COMPARISON has items and add it to the event
-          if (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length && item.product) {
-              item.product.comparison = TRACKED_PRODUCTS_COMPARISON;
-          }
+        // check if TRACKED_PRODUCTS_COMPARISON has items and add it to the event
+        if (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length && item.product) {
+          item.product.comparison = TRACKED_PRODUCTS_COMPARISON;
+        }
       }
-  });
-
+    });
   } else {
     if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
       TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
@@ -331,8 +330,6 @@ export function pushProductsToDataLayer() {
 
     pushToDataLayer('product loaded', dataLayerProduct);
   }
-
-  console.log('adobeDataLayer', adobeDataLayer);
 }
 
 export function pushTrialDownloadToDataLayer() {
@@ -612,9 +609,9 @@ function getExperimentDetails() {
 
 function pushPageLoadToDataLayer(targetExperimentDetails) {
   const { hostname, pathname, href, search } = window.location;
-if (!hostname || !pathname) {
-  return;
-}
+  if (!hostname) {
+    return;
+  }
 
   const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
   // eslint-disable-next-line no-console
@@ -623,47 +620,80 @@ if (!hostname || !pathname) {
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const [lang, country] = pathname.split('/')[1].split('-');
   const environment = getEnvironment(hostname, country);
-  const allSegments = pathname.split('/').filter(segment => segment !== '');
-  const lastSegment = allSegments[allSegments.length - 1];
-  const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
-  const subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
-  let subSubSection = 'product';
-  let tagName = `${lang}:${subSection}:product:${subSubSubSection}`;
-  if (lastSegment === 'consumer') {
-    subSubSection = 'solutions';
-    tagName = `${lang}:${subSection}:solutions`;
+  if (tags.length) {
+    pushToDataLayer('page load started', {
+      pageInstanceID: environment,
+      page: {
+        info: {
+          name: [languageCountry.country, ...tags].join(':'), // e.g. au:consumer:product:internet security
+          section: languageCountry.country || '',
+          subSection: tags[0] || '',
+          subSubSection: tags[1] || '',
+          subSubSubSection: tags[2] || '',
+          destinationURL: window.location.href,
+          queryString: window.location.search,
+          referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
+          serverName: 'hlx.live', // indicator for AEM Success Edge
+          language: navigator.language || navigator.userLanguage || languageCountry.language,
+          sysEnv: getOperatingSystem(window.navigator.userAgent),
+          ...(experimentDetails && { experimentDetails }),
+        },
+        attributes: {
+          promotionID: getParamValue('pid') || '',
+          internalPromotionID: getParamValue('icid') || '',
+          trackingID: getParamValue('cid') || '',
+          time: getCurrentTime(),
+          date: getCurrentDate(),
+          domain,
+          domainPeriod: domainPartsCount,
+        },
+      },
+    });
+  } else {
+    const allSegments = pathname.split('/').filter(segment => segment !== '');
+    const lastSegment = allSegments[allSegments.length - 1];
+    const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
+    const subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
+
+    let subSubSection = 'product';
+    let tagName = `${lang}:${subSection}:product:${subSubSubSection}`;
+    if (lastSegment === 'consumer') {
+      subSubSection = 'solutions';
+      tagName = `${lang}:${subSection}:solutions`;
+    }
+
+    pushToDataLayer('page load started', {
+      pageInstanceID: environment,
+      page: {
+        info: {
+          name: tagName,
+          section: country,
+          subSection,
+          subSubSection,
+          subSubSubSection,
+          destinationURL: href,
+          queryString: search,
+          referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
+          serverName: domain,
+          language: lang,
+          sysEnv: getOperatingSystem(window.navigator.userAgent),
+          ...(experimentDetails && { experimentDetails }),
+        },
+        attributes: {
+          promotionID: getParamValue('pid') || '',
+          internalPromotionID: getParamValue('icid') || '',
+          trackingID: getParamValue('cid') || '',
+          time: getCurrentTime(),
+          date: getCurrentDate(),
+          domain,
+          domainPeriod: domainPartsCount,
+        },
+      },
+    });
   }
 
-
-  pushToDataLayer('page load started', {
-    pageInstanceID: environment,
-    page: {
-      info: {
-        name: tagName,
-        section: country,
-        subSection,
-        subSubSection,
-        subSubSubSection,
-        destinationURL: href,
-        queryString: search,
-        referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
-        serverName: domain,
-        language: lang,
-        sysEnv: getOperatingSystem(window.navigator.userAgent),
-        ...(experimentDetails && { experimentDetails }),
-      },
-      attributes: {
-        promotionID: getParamValue('pid') || '',
-        internalPromotionID: getParamValue('icid') || '',
-        trackingID: getParamValue('cid') || '',
-        time: getCurrentTime(),
-        date: getCurrentDate(),
-        domain,
-        domainPeriod: domainPartsCount,
-      },
-    },
-  });
 }
 
 /**

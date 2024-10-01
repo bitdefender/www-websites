@@ -25,6 +25,7 @@ export async function updateUserConsentStatus(isConsentGiven) {
   return alloy('setConsent', consentObject);
 }
 
+/* eslint-disable-next-line no-unused-vars */
 export async function loadAnalytics(targetDocument, datastreamConfig) {
   import('../vendor/adobe/adobe-client-data-layer.min.js');
 

@@ -38,7 +38,6 @@ function customRound(value) {
  */
 function toModel(productCode, variantId, v) {
   const currentDomain = getDomain();
-  const formattedPriceParams = [v.currency_iso, null, currentDomain];
   return {
     productId: v.product_id,
     productCode,
@@ -53,15 +52,9 @@ function toModel(productCode, variantId, v) {
     actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
     monthlyBasePrice: customRound(v.price / 12),
     discountedPrice: v.discount?.discounted_price,
-    discountedMonthlyPrice: v.discount
-    ? customRound(v.discount.discounted_price / 12)
-    : 0,
-    discount: v.discount
-    ? customRound((v.price - v.discount.discounted_price) * 100) / 100
-    : 0,
-    discountRate: v.discount
-      ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
-      : 0,
+    discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
+    discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
+    discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
     currency_iso: v.currency_iso,
     currency: v.currency_label,
     url: generateProductBuyLink(v, productCode),
