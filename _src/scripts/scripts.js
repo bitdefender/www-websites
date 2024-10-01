@@ -794,11 +794,20 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
-
   if (pageIsNotInFragmentsFolder) {
     // eslint-disable-next-line no-unused-vars
     loadHeader(doc.querySelector('header'));
   }
+
+  loadTrackers();
+  if (window.ADOBE_MC_EVENT_LOADED) {
+    initializeMbox();
+  } else {
+    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
+      initializeMbox();
+    });
+  }
+
   await loadBlocks(main);
 
   const { hash } = window.location;
@@ -818,8 +827,6 @@ async function loadLazy(doc) {
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`);
   }
-
-  loadTrackers();
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
@@ -925,14 +932,6 @@ async function loadPage() {
   });
 
   adobeMcAppendVisitorId('main');
-
-  if (window.ADOBE_MC_EVENT_LOADED) {
-    initializeMbox();
-  } else {
-    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
-      initializeMbox();
-    });
-  }
 
   loadDelayed();
   await setupAnalytics;
