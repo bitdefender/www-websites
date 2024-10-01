@@ -3,6 +3,7 @@
 /* eslint-disable max-len */
 import {
   getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks,
+  getPriceLocalMapByLocale,
 } from '../../scripts/utils/utils.js';
 
 let dataLayerProducts = [];
@@ -60,7 +61,8 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
     buyLinkPid = '';
   }
 
-  let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/`);
+  const forceCountry = getPriceLocalMapByLocale().country_code;
+  let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/?force_country=${forceCountry}`);
   if (buyLinkPid) {
     buyLinkHref.searchParams.append('pid', buyLinkPid);
   }
