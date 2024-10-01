@@ -265,39 +265,21 @@ export function pushProductsToDataLayer() {
   const isHomepageSolutions = url.split('/').filter(Boolean).pop();
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
-  console.log('TRACKED_PRODUCTS ', TRACKED_PRODUCTS)
-  console.log('TRACKED_PRODUCTS_COMPARISON ', TRACKED_PRODUCTS_COMPARISON)
-
   // eslint-disable-next-line arrow-body-style
   const mapProductData = (products) => {
     return products.map((product) => {
-      const {
-        productId,
-        productName,
-        devices,
-        subscription,
-        version,
-        basePrice,
-        discount,
-        discountRate,
-        currencyIso,
-        actualPrice,
-      } = product;
-
-      return Object.fromEntries(
-        Object.entries({
-          ID: productId,
-          name: productName,
-          devices,
-          subscription,
-          version,
-          basePrice,
-          discountValue: discount,
-          discountRate,
-          currency: currencyIso,
-          priceWithTax: actualPrice,
-        }).filter(([, value]) => value !== undefined),
-      );
+      return {
+        ID: product.productId,
+        name: product.productName,
+        devices: product.devices,
+        subscription: product.subscription,
+        version: product.version,
+        basePrice: product.basePrice,
+        discountValue: product.discount,
+        discountRate: product.discountRate,
+        currency: product.currencyIso,
+        priceWithTax: product.actualPrice,
+      };
     });
   };
 
@@ -322,6 +304,7 @@ export function pushProductsToDataLayer2() {
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
   const mapProductData = (products) => {
+    console.log('products ',products)
     products.map((product) => {
       const {
         platformProductId,
@@ -837,10 +820,6 @@ async function loadLazy(doc) {
 
   await loadBlocks(main);
 
-  pushProductsToDataLayer();
-  pushTrialDownloadToDataLayer();
-  pushToDataLayer('page loaded');
-
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
@@ -965,6 +944,10 @@ async function loadPage() {
   });
 
   adobeMcAppendVisitorId('main');
+
+  pushProductsToDataLayer();
+  pushTrialDownloadToDataLayer();
+  pushToDataLayer('page loaded');
 
   loadDelayed();
   await setupAnalytics;
