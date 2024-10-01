@@ -635,6 +635,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
 
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(window.location.pathname);
+  console.log('languageCountry ', languageCountry)
   const environment = getEnvironment(hostname, languageCountry.country);
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
@@ -643,7 +644,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       pageInstanceID: environment,
       page: {
         info: {
-          name: [languageCountry.country, ...tags].join(':'), // e.g. au:consumer:product:internet security
+          name: [`${languageCountry.language}-${languageCountry.country}`, ...tags].join(':'), // e.g. au:consumer:product:internet security
           section: languageCountry.country || '',
           subSection: tags[0] || '',
           subSubSection: tags[1] || '',
