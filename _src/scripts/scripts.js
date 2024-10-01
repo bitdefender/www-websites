@@ -633,18 +633,23 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   // eslint-disable-next-line no-console
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
+  const pathName = window.location.pathname;
   const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const languageCountry = getLanguageCountryFromPath(window.location.pathname);
+  const languageCountry = getLanguageCountryFromPath(pathName);
   const environment = getEnvironment(hostname, languageCountry.country);
   const [lang, country] = pathname.split('/')[1].split('-');
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
+
+  // get locale
+  const regex = /([a-z]{2}-[a-z]{2})/i;
+  const locale = pathName.match(regex)[0];
 
   if (tags.length) {
     pushToDataLayer('page load started', {
       pageInstanceID: environment,
       page: {
         info: {
-          name: [`${lang}-${country}`, ...tags].join(':'), // e.g. au:consumer:product:internet security
+          name: [locale, ...tags].join(':'), // e.g. au:consumer:product:internet security
           section: languageCountry.country || '',
           subSection: tags[0] || '',
           subSubSection: tags[1] || '',
@@ -675,10 +680,10 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
     const subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
 
     let subSubSection = 'product';
-    let tagName = `${lang}:${subSection}:product:${subSubSubSection}`;
+    let tagName = `${locale}:product:${subSubSubSection}`;
     if (lastSegment === 'consumer') {
       subSubSection = 'solutions';
-      tagName = `${lang}:${subSection}:solutions`;
+      tagName = `${locale}:consumer:solutions`;
     }
 
     pushToDataLayer('page load started', {
