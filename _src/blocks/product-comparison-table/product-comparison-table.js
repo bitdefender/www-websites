@@ -39,6 +39,7 @@ function customRound(value) {
 function toModel(productCode, variantId, v) {
   return {
     productId: v.product_id,
+    productName: v.product_name,
     productCode,
     variantId,
     regionId: v.region_id,

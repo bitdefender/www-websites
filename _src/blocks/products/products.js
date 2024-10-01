@@ -49,6 +49,7 @@ function toModel(productCode, variantId, v) {
   const formattedPriceParams = [v.currency_iso, null, currentDomain];
   return {
     productId: v.product_id,
+    productName: v.product_name,
     productCode,
     variantId,
     regionId: v.region_id,

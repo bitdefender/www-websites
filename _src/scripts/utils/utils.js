@@ -185,6 +185,7 @@ async function findProductVariant(cachedResponse, variant) {
       // eslint-disable-next-line guard-for-in,no-restricted-syntax
       for (const j in json.data.product.variations[i]) {
         const v = json.data.product.variations[i][j];
+        v.product_name = json.data.product.product_name;
         if (v.variation.variation_name === variant) {
           return v;
         }

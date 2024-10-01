@@ -96,7 +96,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
 
     let adobeDataLayerProduct = {
       ID: product.platform_product_id,
-      name: prodName.trim(),
+      name: product.product_name,
       devices: product.variation.dimension_value,
       subscription: prodVersion,
       version: prodVersion,

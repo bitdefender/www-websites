@@ -270,7 +270,7 @@ export function pushProductsToDataLayer() {
       const {
         platformProductId,
         productId,
-        productCode,
+        productName,
         devices,
         subscription,
         version,
@@ -284,7 +284,7 @@ export function pushProductsToDataLayer() {
       return Object.fromEntries(
         Object.entries({
           ID: platformProductId || productId,
-          name: platformProductId ? productCode : undefined,
+          name: productName,
           devices,
           subscription,
           version,
@@ -637,7 +637,6 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(pathName);
   const environment = getEnvironment(hostname, languageCountry.country);
-  const [lang, country] = pathname.split('/')[1].split('-');
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
   // get locale
@@ -658,7 +657,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
           queryString: window.location.search,
           referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
           serverName: 'hlx.live', // indicator for AEM Success Edge
-          language: navigator.language || navigator.userLanguage || languageCountry.language,
+          language: locale,
           sysEnv: getOperatingSystem(window.navigator.userAgent),
           ...(experimentDetails && { experimentDetails }),
         },
@@ -699,7 +698,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
           queryString: search,
           referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
           serverName: domain,
-          language: lang,
+          language: locale,
           sysEnv: getOperatingSystem(window.navigator.userAgent),
           ...(experimentDetails && { experimentDetails }),
         },
