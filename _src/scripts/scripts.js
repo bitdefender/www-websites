@@ -350,7 +350,9 @@ export function pushTrialDownloadToDataLayer() {
   const downloadType2 = currentPage === 'thank-you' ? 'downloaded' : 'trial';
 
   const pushTrialData = () => {
-    const dataLayerDownload = { product: {[downloadType2]: [{ ID: getTrialID() }] } };
+    const dataLayerDownload = {
+      product: {[downloadType2]: [{ ID: getTrialID() }] }
+    };
     pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
   };
 
@@ -613,7 +615,12 @@ function getExperimentDetails() {
 }
 
 function pushPageLoadToDataLayer(targetExperimentDetails) {
-  const { hostname, pathname, href, search } = window.location;
+  const {
+    hostname,
+    pathname,
+    href,
+    search
+  } = window.location;
   if (!hostname) {
     return;
   }
