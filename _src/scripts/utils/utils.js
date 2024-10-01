@@ -1,3 +1,4 @@
+/* eslint-disable import/no-mutable-exports */
 import ZuoraNLClass from '../zuora.js';
 
 export const IANA_BY_REGION_MAP = new Map([
@@ -117,6 +118,8 @@ const PRICE_LOCALE_MAP = new Map([
   ['zh-hk', { force_country: 'en', country_code: 'hk' }],
   ['zh-tw', { force_country: 'en', country_code: 'tw' }],
 ]);
+
+export let CONTENT = null;
 
 /**
  * Returns the value of a query parameter
@@ -241,6 +244,41 @@ export function getMetadata(name) {
   return meta || '';
 }
 
+export async function initializeMbox() {
+  try {
+    const visitor = window.Visitor.getInstance('0E920C0F53DA9E9B0A490D45@AdobeOrg');
+    /* eslint no-underscore-dangle: ["error", { "allow": ["_supplementalDataIDCurrent"] }] */
+    const theCurrentSDID = visitor._supplementalDataIDCurrent ? visitor._supplementalDataIDCurrent : '';
+    const mcID = visitor.getMarketingCloudVisitorID();
+
+    /* global adobe */
+    const targetResponse = await adobe.target.getOffers({
+      consumerId: theCurrentSDID,
+      request: {
+        id: {
+          marketingCloudVisitorId: mcID,
+        },
+        execute: {
+          mboxes: [{ index: 0, name: 'initSelector-mbox' }],
+        },
+      },
+    });
+
+    const mboxOptions = targetResponse?.execute?.mboxes[0]?.options;
+    CONTENT = mboxOptions?.[0]?.content;
+
+    if (CONTENT) {
+      const promotionID = CONTENT.pid || CONTENT.campaign;
+
+      if (promotionID) {
+        window.adobeDataLayer.push({
+          page: { attributes: { promotionID } },
+        });
+      }
+    }
+  } catch (ex) { /* empty */ }
+}
+
 export function getProductLinkCountryPrefix() {
   const { pathname } = window.location;
 
@@ -362,7 +400,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
 
     if (!pid) {
       // eslint-disable-next-line no-param-reassign
-      pid = url.searchParams.get('pid') || getMetadata('pid');
+      pid = CONTENT.pid || url.searchParams.get('pid') || getMetadata('pid');
     }
 
     data.append('data', JSON.stringify({

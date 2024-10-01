@@ -19,6 +19,7 @@ import {
   createTag,
   getDefaultLanguage,
   getParamValue,
+  initializeMbox,
   GLOBAL_EVENTS,
 } from './utils/utils.js';
 
@@ -924,6 +925,8 @@ async function loadPage() {
   });
 
   adobeMcAppendVisitorId('main');
+
+  initializeMbox();
 
   loadDelayed();
   await setupAnalytics;
