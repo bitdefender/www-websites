@@ -642,14 +642,14 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
 
   // get locale
   const regex = /([a-z]{2}-[a-z]{2})/i;
-  const locale = pathName.match(regex);
+  const locale = pathName.match(regex)[0];
 
   if (tags.length) {
     pushToDataLayer('page load started', {
       pageInstanceID: environment,
       page: {
         info: {
-          name: [locale[0], ...tags].join(':'), // e.g. au:consumer:product:internet security
+          name: [locale, ...tags].join(':'), // e.g. au:consumer:product:internet security
           section: languageCountry.country || '',
           subSection: tags[0] || '',
           subSubSection: tags[1] || '',
@@ -680,10 +680,10 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
     const subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
 
     let subSubSection = 'product';
-    let tagName = `${locale[0]}:product:${subSubSubSection}`;
+    let tagName = `${locale}:product:${subSubSubSection}`;
     if (lastSegment === 'consumer') {
       subSubSection = 'solutions';
-      tagName = `${locale[0]}:consumer:solutions`;
+      tagName = `${locale}:consumer:solutions`;
     }
 
     pushToDataLayer('page load started', {
