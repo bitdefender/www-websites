@@ -733,6 +733,9 @@ async function loadEager(doc) {
   }
 
   pushPageLoadToDataLayer(targetExperimentDetails);
+  pushProductsToDataLayer();
+  pushTrialDownloadToDataLayer();
+  pushToDataLayer('page loaded');
 
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
@@ -928,10 +931,6 @@ async function loadPage() {
   });
 
   adobeMcAppendVisitorId('main');
-
-  pushProductsToDataLayer();
-  pushTrialDownloadToDataLayer();
-  pushToDataLayer('page loaded');
 
   loadDelayed();
   await setupAnalytics;
