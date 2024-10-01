@@ -214,7 +214,7 @@ function applyFooterFactorySetup(footerMetadata, block) {
   // headers in AEM
   const regex = /\/(zh-hk|zh-tw)\//i;
   const matches = window.location.href.match(regex);
-  if (matches || window.location.hostname.includes('www.')) {
+  if (matches) {
     runDefaultFooterLogic(block);
     return;
   }
