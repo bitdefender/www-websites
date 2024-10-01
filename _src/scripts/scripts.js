@@ -298,6 +298,7 @@ export function pushProductsToDataLayer() {
     });
   };
 
+  const adobeDataLayer = window.adobeDataLayer || [];
   const productAlreadyLoaded = adobeDataLayer.some((item) => item.event === 'product loaded');
 
   // if product loaded already exists we only add comparison array if e have it in the page
@@ -352,8 +353,8 @@ export function pushTrialDownloadToDataLayer() {
   const pushTrialData = () => {
     const dataLayerDownload = {
       product: {
-        [downloadType2]: [{ ID: getTrialID() }] ,
-      }
+        [downloadType2]: [{ ID: getTrialID() }],
+      },
     };
     pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
   };
@@ -633,12 +634,11 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
   const { domain, domainPartsCount } = getDomainInfo(hostname);
+  const languageCountry = getLanguageCountryFromPath(window.location.pathname);
   const environment = getEnvironment(hostname, languageCountry.country);
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
   if (tags.length) {
-    const languageCountry = getLanguageCountryFromPath(window.location.pathname);
-
     pushToDataLayer('page load started', {
       pageInstanceID: environment,
       page: {
