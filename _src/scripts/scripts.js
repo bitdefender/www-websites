@@ -351,7 +351,9 @@ export function pushTrialDownloadToDataLayer() {
 
   const pushTrialData = () => {
     const dataLayerDownload = {
-      product: {[downloadType2]: [{ ID: getTrialID() }] }
+      product: {
+        [downloadType2]: [{ ID: getTrialID() }] ,
+      }
     };
     pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
   };
@@ -619,8 +621,9 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
     hostname,
     pathname,
     href,
-    search
+    search,
   } = window.location;
+
   if (!hostname) {
     return;
   }
@@ -630,7 +633,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
   const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const environment = getEnvironment(hostname, country);
+  const environment = getEnvironment(hostname, languageCountry.country);
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
   if (tags.length) {
@@ -666,7 +669,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
     });
   } else {
     const [lang, country] = pathname.split('/')[1].split('-');
-    const allSegments = pathname.split('/').filter(segment => segment !== '');
+    const allSegments = pathname.split('/').filter((segment) => segment !== '');
     const lastSegment = allSegments[allSegments.length - 1];
     const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
     const subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
@@ -707,7 +710,6 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       },
     });
   }
-
 }
 
 /**
