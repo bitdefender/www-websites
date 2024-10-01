@@ -265,12 +265,13 @@ export function pushProductsToDataLayer() {
   const isHomepageSolutions = url.split('/').filter(Boolean).pop();
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
+  // eslint-disable-next-line arrow-body-style
   const mapProductData = (products) => {
-    products.map((product) => {
+    return products.map((product) => {
       const {
         platformProductId,
         productId,
-        productCode,
+        productName,
         devices,
         subscription,
         version,
@@ -284,7 +285,7 @@ export function pushProductsToDataLayer() {
       return Object.fromEntries(
         Object.entries({
           ID: platformProductId || productId,
-          name: platformProductId ? productCode : undefined,
+          name: productName,
           devices,
           subscription,
           version,
@@ -298,43 +299,72 @@ export function pushProductsToDataLayer() {
     });
   };
 
-  const adobeDataLayer = window.adobeDataLayer || [];
-  const productAlreadyLoaded = adobeDataLayer.some((item) => item.event === 'product loaded');
-
-  // if product loaded already exists we only add comparison array if e have it in the page
-  if (productAlreadyLoaded) {
-    adobeDataLayer.forEach((item) => {
-      if (item.event === 'product loaded') {
-        // Ensure item.product exists and has the expected structure
-        if (key === 'all' && item.product && item.product.info) {
-          item.product = {
-            ...item.product,
-            all: item.product.info,
-          };
-          delete item.product.info;
-        }
-
-        // check if TRACKED_PRODUCTS_COMPARISON has items and add it to the event
-        if (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length && item.product) {
-          item.product.comparison = TRACKED_PRODUCTS_COMPARISON;
-        }
-      }
-    });
-  } else {
-    if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
-      TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
-    }
-
-    const dataLayerProduct = {
-      product: {
-        [key]: mapProductData(TRACKED_PRODUCTS),
-        // eslint-disable-next-line max-len
-        ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
-      },
-    };
-
-    pushToDataLayer('product loaded', dataLayerProduct);
+  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
+    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
   }
+
+  const dataLayerProduct = {
+    product: {
+      [key]: mapProductData(TRACKED_PRODUCTS),
+      // eslint-disable-next-line max-len
+      ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
+    },
+  };
+
+  pushToDataLayer('product loaded', dataLayerProduct);
+}
+
+export function pushProductsToDataLayer2() {
+  const url = window.location.href;
+  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
+  const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
+
+  const mapProductData = (products) => {
+    products.map((product) => {
+      const {
+        platformProductId,
+        productId,
+        productName,
+        devices,
+        subscription,
+        version,
+        basePrice,
+        discount,
+        discountRate,
+        currencyIso,
+        actualPrice,
+      } = product;
+
+      return Object.fromEntries(
+        Object.entries({
+          ID: platformProductId || productId,
+          name: productName,
+          devices,
+          subscription,
+          version,
+          basePrice,
+          discountValue: discount,
+          discountRate,
+          currency: currencyIso,
+          priceWithTax: actualPrice,
+        }).filter(([, value]) => value !== undefined),
+      );
+    });
+  };
+
+  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
+    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
+  }
+
+  const dataLayerProduct = {
+    product: {
+      [key]: mapProductData(TRACKED_PRODUCTS),
+      // eslint-disable-next-line max-len
+      ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
+    },
+  };
+
+  pushToDataLayer('product loaded', dataLayerProduct);
 }
 
 export function pushTrialDownloadToDataLayer() {
@@ -637,7 +667,6 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(pathName);
   const environment = getEnvironment(hostname, languageCountry.country);
-  const [lang, country] = pathname.split('/')[1].split('-');
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
   // get locale
@@ -650,7 +679,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       page: {
         info: {
           name: [locale, ...tags].join(':'), // e.g. au:consumer:product:internet security
-          section: languageCountry.country || '',
+          section: locale,
           subSection: tags[0] || '',
           subSubSection: tags[1] || '',
           subSubSubSection: tags[2] || '',
@@ -658,7 +687,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
           queryString: window.location.search,
           referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
           serverName: 'hlx.live', // indicator for AEM Success Edge
-          language: navigator.language || navigator.userLanguage || languageCountry.language,
+          language: locale,
           sysEnv: getOperatingSystem(window.navigator.userAgent),
           ...(experimentDetails && { experimentDetails }),
         },
@@ -691,7 +720,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       page: {
         info: {
           name: tagName,
-          section: country,
+          section: locale,
           subSection,
           subSubSection,
           subSubSubSection,
@@ -699,7 +728,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
           queryString: search,
           referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
           serverName: domain,
-          language: lang,
+          language: locale,
           sysEnv: getOperatingSystem(window.navigator.userAgent),
           ...(experimentDetails && { experimentDetails }),
         },
@@ -803,6 +832,7 @@ async function loadLazy(doc) {
     // eslint-disable-next-line no-unused-vars
     loadHeader(doc.querySelector('header'));
   }
+
   await loadBlocks(main);
 
   const { hash } = window.location;
