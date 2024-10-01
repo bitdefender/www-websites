@@ -12,7 +12,6 @@ import {
   loadBlocks,
   loadCSS,
   getMetadata, loadScript,
-  fetchPlaceholders,
 } from './lib-franklin.js';
 
 import {
