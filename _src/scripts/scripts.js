@@ -636,6 +636,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(window.location.pathname);
   const environment = getEnvironment(hostname, languageCountry.country);
+  const [lang, country] = pathname.split('/')[1].split('-');
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
   if (tags.length) {
@@ -643,7 +644,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       pageInstanceID: environment,
       page: {
         info: {
-          name: [languageCountry.country, ...tags].join(':'), // e.g. au:consumer:product:internet security
+          name: [`${lang}-${country}`, ...tags].join(':'), // e.g. au:consumer:product:internet security
           section: languageCountry.country || '',
           subSection: tags[0] || '',
           subSubSection: tags[1] || '',
@@ -668,7 +669,6 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       },
     });
   } else {
-    const [lang, country] = pathname.split('/')[1].split('-');
     const allSegments = pathname.split('/').filter((segment) => segment !== '');
     const lastSegment = allSegments[allSegments.length - 1];
     const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
