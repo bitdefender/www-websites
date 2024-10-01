@@ -399,8 +399,13 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
     // extract pid from url
 
     if (!pid) {
-      // eslint-disable-next-line no-param-reassign
-      pid = CONTENT.pid || url.searchParams.get('pid') || getMetadata('pid');
+      if (CONTENT.pid) {
+        // eslint-disable-next-line no-param-reassign
+        pid = CONTENT.pid;
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        pid = url.searchParams.get('pid') || getMetadata('pid');
+      }
     }
 
     data.append('data', JSON.stringify({
