@@ -561,7 +561,7 @@ export default async function decorate(block, options) {
     [...block.children].forEach((prod) => {
       let planSwitcher = prod.querySelector('.plan-switcher');
       planSwitcher.querySelectorAll('input[type="radio"]').forEach((radio) => {
-        radio.addEventListener('input', (event) => {
+        radio.addEventListener('click', (event) => {
           let planType = event.target.value.split('-')[1];
           let priceBox = prod.querySelector('.hero-aem__prices');
           if (planType === 'monthly') {
@@ -575,9 +575,8 @@ export default async function decorate(block, options) {
             priceBox.appendChild(yearlyPricesBoxes[event.target.value]);
           }
         });
-
-        if (radio.checked) {
-          radio.dispatchEvent(new Event('input'));
+        if(radio.checked){
+          radio.dispatchEvent(new Event('click'));
         }
       });
     });
@@ -599,8 +598,8 @@ export default async function decorate(block, options) {
           }
         });
 
-        if (radio.checked) {
-          radio.dispatchEvent(new Event('input'));
+        if (radio.checked) { 
+
           let addOnPriceBox = prod.querySelector('.hero-aem__prices__addon');
           let priceBox = prod.querySelector('.hero-aem__prices');
 
