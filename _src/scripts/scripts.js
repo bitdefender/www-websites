@@ -312,59 +312,6 @@ export function pushProductsToDataLayer() {
   pushToDataLayer('product loaded', dataLayerProduct);
 }
 
-export function pushProductsToDataLayer2() {
-  const url = window.location.href;
-  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
-  const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
-
-  const mapProductData = (products) => {
-    products.map((product) => {
-      const {
-        platformProductId,
-        productId,
-        productName,
-        devices,
-        subscription,
-        version,
-        basePrice,
-        discount,
-        discountRate,
-        currencyIso,
-        actualPrice,
-      } = product;
-
-      return Object.fromEntries(
-        Object.entries({
-          ID: platformProductId || productId,
-          name: productName,
-          devices,
-          subscription,
-          version,
-          basePrice,
-          discountValue: discount,
-          discountRate,
-          currency: currencyIso,
-          priceWithTax: actualPrice,
-        }).filter(([, value]) => value !== undefined),
-      );
-    });
-  };
-
-  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
-    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
-  }
-
-  const dataLayerProduct = {
-    product: {
-      [key]: mapProductData(TRACKED_PRODUCTS),
-      // eslint-disable-next-line max-len
-      ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
-    },
-  };
-
-  pushToDataLayer('product loaded', dataLayerProduct);
-}
-
 export function pushTrialDownloadToDataLayer() {
   const getTrialID = () => (
     // eslint-disable-next-line max-len
