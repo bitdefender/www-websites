@@ -701,7 +701,8 @@
 }
 
 .plan-switcher input[type=radio] {
-  position: absolute;
+  position: relative;
+  display: none;
   opacity: 0;
   width: auto;
 }
