@@ -276,7 +276,9 @@ export async function initializeMbox() {
         });
       }
     }
-  } catch (ex) { /* empty */ }
+  } catch (ex) {
+    console.error(ex);
+    /* empty */ }
 }
 
 export function getProductLinkCountryPrefix() {
