@@ -45,7 +45,6 @@ function customRound(value) {
  * @returns a model
  */
 function toModel(productCode, variantId, v) {
-  const currentDomain = getDomain();
   return {
     productId: v.product_id,
     productName: v.product_name,
