@@ -251,7 +251,6 @@ export async function initializeMbox() {
     const theCurrentSDID = visitor._supplementalDataIDCurrent ? visitor._supplementalDataIDCurrent : '';
     const mcID = visitor.getMarketingCloudVisitorID();
 
-    /* global adobe */
     const targetResponse = await window.adobe.target.getOffers({
       consumerId: theCurrentSDID,
       request: {
