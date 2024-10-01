@@ -621,11 +621,12 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
   const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const [lang, country] = pathname.split('/')[1].split('-');
   const environment = getEnvironment(hostname, country);
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
   if (tags.length) {
+    const languageCountry = getLanguageCountryFromPath(window.location.pathname);
+
     pushToDataLayer('page load started', {
       pageInstanceID: environment,
       page: {
@@ -655,6 +656,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       },
     });
   } else {
+    const [lang, country] = pathname.split('/')[1].split('-');
     const allSegments = pathname.split('/').filter(segment => segment !== '');
     const lastSegment = allSegments[allSegments.length - 1];
     const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
