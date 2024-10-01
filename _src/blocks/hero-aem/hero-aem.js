@@ -128,7 +128,7 @@ function dispatchShadowDomLoadedEvent() {
 
 export default function decorate(block, options) {
   const {
-    product, conditionText, saveText, MacOS, Windows, Android, IOS, mainProduct,
+    product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, send2datalayer,
   } = block.closest('.section').dataset;
 

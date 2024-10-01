@@ -265,6 +265,7 @@ export function pushProductsToDataLayer() {
   const isHomepageSolutions = url.split('/').filter(Boolean).pop();
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
+  // eslint-disable-next-line arrow-body-style
   const mapProductData = (products) => {
     return products.map((product) => {
       const {
