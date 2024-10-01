@@ -2,9 +2,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 import {
-  getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks, generateProductBuyLink,
-  getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks,
-  getPriceLocalMapByLocale,
+  getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks, generateProductBuyLink, getPriceLocalMapByLocale,
 } from '../../scripts/utils/utils.js';
 import { trackProduct } from '../../scripts/scripts.js';
 
