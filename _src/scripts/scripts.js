@@ -250,11 +250,11 @@ export function trackProduct(product, location = '') {
   // eslint-disable-next-line max-len
   if (!product && product.length === 0) return;
   if (location && location === 'comparison') {
-     // eslint-disable-next-line max-len
+    // eslint-disable-next-line max-len
     const isDuplicate = TRACKED_PRODUCTS_COMPARISON.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
     if (!isDuplicate) TRACKED_PRODUCTS_COMPARISON.push(product);
   } else {
-     // eslint-disable-next-line max-len
+    // eslint-disable-next-line max-len
     const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
     if (!isDuplicate) TRACKED_PRODUCTS.push(product);
   }
@@ -265,7 +265,7 @@ export function pushProductsToDataLayer() {
   const isHomepageSolutions = url.split('/').filter(Boolean).pop();
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
-  const mapProductData = (products) =>
+  const mapProductData = (products) => {
     products.map((product) => {
       const {
         platformProductId,
@@ -293,9 +293,10 @@ export function pushProductsToDataLayer() {
           discountRate,
           currency: currencyIso,
           priceWithTax: actualPrice,
-        }).filter(([_, value]) => value !== undefined),
+        }).filter(([, value]) => value !== undefined),
       );
     });
+  }
 
   const productAlreadyLoaded = adobeDataLayer?.some((item) => item.event === 'product loaded');
 
