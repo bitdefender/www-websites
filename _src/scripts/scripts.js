@@ -683,7 +683,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
     let tagName = `${locale[0]}:product:${subSubSubSection}`;
     if (lastSegment === 'consumer') {
       subSubSection = 'solutions';
-      tagName = `${locale[0]}:solutions`;
+      tagName = `${locale[0]}:consumer:solutions`;
     }
 
     pushToDataLayer('page load started', {
