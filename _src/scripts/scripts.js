@@ -305,6 +305,7 @@ export function pushProductsToDataLayer() {
   const dataLayerProduct = {
     product: {
       [key]: mapProductData(TRACKED_PRODUCTS),
+      // eslint-disable-next-line max-len
       ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
     },
   };
@@ -354,18 +355,15 @@ export function pushProductsToDataLayer2() {
     TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
   }
 
-  console.log('TRACKED_PRODUCTS:', TRACKED_PRODUCTS);
-  console.log('TRACKED_PRODUCTS_COMPARISON:', TRACKED_PRODUCTS_COMPARISON);
-
   const dataLayerProduct = {
     product: {
       [key]: mapProductData(TRACKED_PRODUCTS),
+      // eslint-disable-next-line max-len
       ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
     },
   };
 
   pushToDataLayer('product loaded', dataLayerProduct);
-  console.log('dataLayerProduct:', dataLayerProduct);
 }
 
 export function pushTrialDownloadToDataLayer() {
