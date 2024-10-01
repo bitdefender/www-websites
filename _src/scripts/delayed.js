@@ -1,8 +1,6 @@
 // eslint-disable-next-line import/no-cycle
 import {
-  loadScript,
   sampleRUM,
-  fetchPlaceholders,
   getMetadata,
 } from './lib-franklin.js';
 

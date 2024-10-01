@@ -813,8 +813,6 @@ export async function loadTrackers() {
     await loadScript(adobeMcScriptUrl);
 
     onAdobeMcLoaded();
-
-    await loadScript('https://www.googletagmanager.com/gtm.js?id=GTM-PLJJB3');
   } else {
     onAdobeMcLoaded();
   }
@@ -954,37 +952,13 @@ async function loadPage() {
   await window.hlx.plugins.load('lazy');
   await loadLazy(document);
 
-  const setupAnalytics = loadAnalytics(document, {
-    edgeConfigId: '7275417f-3870-465c-af3e-84f8f4670b3c',
-    orgId: '0E920C0F53DA9E9B0A490D45@AdobeOrg',
-  });
-
   adobeMcAppendVisitorId('main');
-
-  const LANGUAGE_COUNTRY = getLanguageCountryFromPath(window.location.pathname);
-  const LAUNCH_URL = 'https://assets.adobedtm.com';
-  const ENVIRONMENT = getEnvironment(window.location.hostname, LANGUAGE_COUNTRY.country);
-
-  // Load Adobe Experience platform data collection (Launch) script
-  const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();
-
-  const ADOBE_MC_URL_ENV_MAP = new Map([
-    ['prod', launchProdScript],
-    ['stage', launchStageScript],
-  ]);
-
-  const adobeMcScriptUrl = `${LAUNCH_URL}${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT) || launchDevScript}`;
-  await loadScript(adobeMcScriptUrl);
-
-  document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
-  window.ADOBE_MC_EVENT_LOADED = true;
 
   pushProductsToDataLayer();
   pushTrialDownloadToDataLayer();
   pushToDataLayer('page loaded');
 
   loadDelayed();
-  await setupAnalytics;
 }
 
 initMobileDetector('mobile');
