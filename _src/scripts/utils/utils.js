@@ -252,7 +252,7 @@ export async function initializeMbox() {
     const mcID = visitor.getMarketingCloudVisitorID();
 
     /* global adobe */
-    const targetResponse = await adobe.target.getOffers({
+    const targetResponse = await window.adobe.target.getOffers({
       consumerId: theCurrentSDID,
       request: {
         id: {
