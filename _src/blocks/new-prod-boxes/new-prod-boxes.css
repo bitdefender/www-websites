@@ -703,6 +703,7 @@
 .plan-switcher input[type=radio] {
   position: absolute;
   opacity: 0;
+  width: auto;
 }
 
 .plan-switcher .radio-label {
