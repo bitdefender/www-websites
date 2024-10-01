@@ -331,7 +331,6 @@ export function setDataOnBuyLinks(element, dataInfo) {
   if (productId) element.dataset.product = productId;
 
   // element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
-
   if (variation.price) element.dataset.buyPrice = variation.price;
   if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice;
   if (variation.currency_label) element.dataset.currency = variation.currency_label;

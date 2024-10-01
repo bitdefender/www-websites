@@ -56,7 +56,7 @@ function toModel(productCode, variantId, v) {
     discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
     // eslint-disable-next-line max-len
     discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
-    currency_iso: v.currency_iso,
+    currencyIso: v.currency_iso,
     url: generateProductBuyLink(v, productCode),
   };
 }

@@ -45,8 +45,6 @@ function customRound(value) {
  * @returns a model
  */
 function toModel(productCode, variantId, v) {
-  const currentDomain = getDomain();
-  const formattedPriceParams = [v.currency_iso, null, currentDomain];
   return {
     productId: v.product_id,
     productName: v.product_name,
@@ -62,16 +60,11 @@ function toModel(productCode, variantId, v) {
     actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
     monthlyBasePrice: customRound(v.price / 12),
     discountedPrice: v.discount?.discounted_price,
-    discountedMonthlyPrice: v.discount
-      ? v.discount.discounted_price / 12
-      : 0,
-    discount: formatPrice(v.discount
-      ? customRound((v.price - v.discount.discounted_price) * 100) / 100
-      : 0, ...formattedPriceParams),
-    discountRate: v.discount
-      ? Math.round(((v.price - v.discount.discounted_price) / v.price) * 100)
-      : 0,
-    currency_iso: v.currency_iso,
+    discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
+    discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
+    // eslint-disable-next-line max-len
+    discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
+    currencyIso: v.currency_iso,
     url: generateProductBuyLink(v, productCode),
     test: {},
   };
@@ -190,7 +183,7 @@ function renderOldPrice(mv, text = '', monthly = '') {
 
   mv.subscribe(() => {
     const currentDomain = getDomain();
-    const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
+    const formattedPriceParams = [mv.model.currencyIso, null, currentDomain];
 
     let oldPrice = 0;
     if (mv.model.discountedPrice && mv.model.discountRate !== 0) {
@@ -233,7 +226,7 @@ function renderPrice(mv, text = '', monthly = '', monthTranslation = 'mo') {
 
   mv.subscribe(() => {
     const currentDomain = getDomain();
-    const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
+    const formattedPriceParams = [mv.model.currencyIso, null, currentDomain];
 
     let price;
     if (monthly.toLowerCase() === 'monthly') {
