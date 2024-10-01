@@ -296,13 +296,13 @@ export function pushProductsToDataLayer() {
         }).filter(([, value]) => value !== undefined),
       );
     });
-  }
+  };
 
-  const productAlreadyLoaded = adobeDataLayer?.some((item) => item.event === 'product loaded');
+  const productAlreadyLoaded = adobeDataLayer.some((item) => item.event === 'product loaded');
 
   // if product loaded already exists we only add comparison array if e have it in the page
   if (productAlreadyLoaded) {
-    adobeDataLayer?.forEach((item) => {
+    adobeDataLayer.forEach((item) => {
       if (item.event === 'product loaded') {
         // Ensure item.product exists and has the expected structure
         if (key === 'all' && item.product && item.product.info) {
@@ -327,6 +327,7 @@ export function pushProductsToDataLayer() {
     const dataLayerProduct = {
       product: {
         [key]: mapProductData(TRACKED_PRODUCTS),
+        // eslint-disable-next-line max-len
         ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
       },
     };
@@ -337,6 +338,7 @@ export function pushProductsToDataLayer() {
 
 export function pushTrialDownloadToDataLayer() {
   const getTrialID = () => (
+    // eslint-disable-next-line max-len
     ((TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode) || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode))
     || getMetadata('breadcrumb-title')
     || getMetadata('og:title')
