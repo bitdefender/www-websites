@@ -399,7 +399,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
     // extract pid from url
 
     if (!pid) {
-      if (CONTENT.pid) {
+      if (CONTENT?.pid) {
         // eslint-disable-next-line no-param-reassign
         pid = CONTENT.pid;
       } else {
