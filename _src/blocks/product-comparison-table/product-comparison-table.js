@@ -53,7 +53,7 @@ function toModel(productCode, variantId, v) {
     discountedPrice: v.discount?.discounted_price,
     discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
     discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
-     // eslint-disable-next-line max-len
+    // eslint-disable-next-line max-len
     discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
     currency_iso: v.currency_iso,
     currency: v.currency_label,

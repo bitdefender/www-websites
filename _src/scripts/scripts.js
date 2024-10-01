@@ -250,9 +250,11 @@ export function trackProduct(product, location = '') {
   // eslint-disable-next-line max-len
   if (!product && product.length === 0) return;
   if (location && location === 'comparison') {
+     // eslint-disable-next-line max-len
     const isDuplicate = TRACKED_PRODUCTS_COMPARISON.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
     if (!isDuplicate) TRACKED_PRODUCTS_COMPARISON.push(product);
   } else {
+     // eslint-disable-next-line max-len
     const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
     if (!isDuplicate) TRACKED_PRODUCTS.push(product);
   }
