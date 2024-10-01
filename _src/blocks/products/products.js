@@ -46,7 +46,6 @@ function customRound(value) {
  */
 function toModel(productCode, variantId, v) {
   const currentDomain = getDomain();
-  const formattedPriceParams = [v.currency_iso, null, currentDomain];
   return {
     productId: v.product_id,
     productName: v.product_name,
@@ -185,7 +184,6 @@ function renderOldPrice(mv, text = '', monthly = '') {
 
   mv.subscribe(() => {
     const currentDomain = getDomain();
-    console.log('mv.model.currency_iso ', mv.model)
     const formattedPriceParams = [mv.model.currencyIso, null, currentDomain];
 
     let oldPrice = 0;
