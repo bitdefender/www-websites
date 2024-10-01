@@ -926,7 +926,13 @@ async function loadPage() {
 
   adobeMcAppendVisitorId('main');
 
-  initializeMbox();
+  if (window.ADOBE_MC_EVENT_LOADED) {
+    initializeMbox();
+  } else {
+    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
+      initializeMbox();
+    });
+  }
 
   loadDelayed();
   await setupAnalytics;
