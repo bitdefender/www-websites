@@ -635,7 +635,6 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
 
   const { domain, domainPartsCount } = getDomainInfo(hostname);
   const languageCountry = getLanguageCountryFromPath(window.location.pathname);
-  console.log('languageCountry ', languageCountry)
   const environment = getEnvironment(hostname, languageCountry.country);
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
