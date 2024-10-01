@@ -113,6 +113,7 @@
   font-family: Arial, sans-serif;
   margin-top: 0;
   margin-bottom: 4px;
+  width: 80%
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 a {
@@ -487,7 +488,16 @@
   min-width: 144px;
 }
 
+.new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.secondary {
+  display: inline-block;
+  min-width: 144px;
+}
+
 .new-prod-boxes-container .button.primary.no-arrow::after {
+  content: none;
+}
+
+.new-prod-boxes-container .button.secondary.no-arrow::after {
   content: none;
 }
 
@@ -697,6 +707,7 @@
 
 .plan-switcher .radio-label {
   margin-right: 8px;
+  cursor: pointer;
 }
 
 .plan-switcher .radio-label::before {

@@ -45,6 +45,8 @@ function customRound(value) {
  * @returns a model
  */
 function toModel(productCode, variantId, v) {
+  const currentDomain = getDomain();
+  const formattedPriceParams = [v.currency_iso, null, currentDomain];
   return {
     productCode,
     variantId,
@@ -61,11 +63,11 @@ function toModel(productCode, variantId, v) {
     discountedMonthlyPrice: v.discount
       ? v.discount.discounted_price / 12
       : 0,
-    discount: v.discount
+    discount: formatPrice(v.discount
       ? customRound((v.price - v.discount.discounted_price) * 100) / 100
-      : 0,
+      : 0, ...formattedPriceParams),
     discountRate: v.discount
-      ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
+      ? Math.round(((v.price - v.discount.discounted_price) / v.price) * 100)
       : 0,
     currency_iso: v.currency_iso,
     currency: v.currency_label,
@@ -174,7 +176,7 @@ function renderPlanSelector(mv, plans, defaultSelection) {
  * @returns Root node of the nanoblock
  */
 function renderOldPrice(mv, text = '', monthly = '') {
-  // TODO simplify CSS
+  // TODO: simplify CSS
   const root = createTag(
     'div',
     {
@@ -190,8 +192,7 @@ function renderOldPrice(mv, text = '', monthly = '') {
     const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
 
     let oldPrice = 0;
-
-    if (mv.model.discountedPrice) {
+    if (mv.model.discountedPrice && mv.model.discountRate !== 0) {
       if (monthly.toLowerCase() === 'monthly') {
         oldPrice = mv.model.monthlyBasePrice;
         oldPriceElt.innerHTML = `${text} <del>${formatPrice(mv.model.monthlyBasePrice, ...formattedPriceParams)} <sup>/mo</sup></del>`;
@@ -299,7 +300,7 @@ function renderHighlight(mv, text) {
     'div',
     {
       class: 'highlight',
-      style: 'visibility=hidden',
+      style: 'visibility:hidden',
     },
     `<span>${text}</span>`,
   );
@@ -524,22 +525,34 @@ export default function decorate(block) {
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
+    const priceElements = card.querySelectorAll('.price.nanoblock');
+    if (priceElements.length >= 2) {
+      const secondToLastPrice = priceElements[priceElements.length - 2];
+      const previousElement = secondToLastPrice.previousElementSibling;
+      if (previousElement && previousElement.tagName.toLowerCase() === 'p') {
+        previousElement.classList.add('first-year-price-text');
+      } else {
+        const newP = document.createElement('p');
+        newP.classList.add('first-year-price-text');
+        secondToLastPrice.before(newP);
+      }
+    }
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
         return;
       }
-      const neededHeight = '2rem';
       let space = card.querySelector('h3');
       space = space.nextElementSibling;
       const emptyDiv = document.createElement('div');
       space.insertAdjacentElement('afterend', emptyDiv);
-      emptyDiv.classList.add('featured');
+      emptyDiv.classList.add('featured', 'nanoblock');
       emptyDiv.style.visibility = 'hidden';
-      emptyDiv.style.minHeight = neededHeight;
     }
   });
-  matchHeights(block, 'h3');
+  matchHeights(block, '.first-year-price-text');
+  matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');

@@ -206,7 +206,7 @@ export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
-    addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText,
+    addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
   // if options exists, this means the component is being called from aem
   if (options) {
@@ -453,6 +453,11 @@ export default async function decorate(block, options) {
         buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
         buyLink2?.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
 
+        let secondButton = buyLink?.querySelectorAll('a')[1];
+        if (secondButton) {
+          secondButton.classList.add('button', 'secondary', 'no-arrow');
+        }
+
         const prodBox = document.createElement('div');
         prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
@@ -465,14 +470,14 @@ export default async function decorate(block, options) {
               <hr />
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices"></div>
-
+              ${secondButton ? secondButton.outerHTML : ''}
               ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
               <div class="add-on-product" style="display: none;">
                 ${billed2 ? '<hr>' : ''}
                 ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
-                <h4>${title.innerHTML}</h4>
+                <h4>${addonProductName}</h4>
                 <div class="hero-aem__prices__addon"></div>
               </div>
             </div>
