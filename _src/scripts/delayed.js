@@ -9,6 +9,9 @@ import {
 // eslint-disable-next-line import/no-cycle
 import {
   getLanguageCountryFromPath,
+  pushProductsToDataLayer,
+  pushTrialDownloadToDataLayer,
+  pushToDataLayer,
   getEnvironment,
   openUrlForOs,
 } from './scripts.js';
@@ -37,6 +40,10 @@ const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlac
   document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
   window.ADOBE_MC_EVENT_LOADED = true;
 })();
+
+pushProductsToDataLayer();
+pushTrialDownloadToDataLayer();
+pushToDataLayer('page loaded');
 
 // Load breadcrumbs
 loadBreadcrumbs();

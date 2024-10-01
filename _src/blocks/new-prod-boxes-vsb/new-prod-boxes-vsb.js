@@ -358,16 +358,6 @@ export default async function decorate(block, options) {
     block.parentNode.insertBefore(switchBox, block);
   }
 
-  // dataLayer push with all the products
-  if (options && dataLayerProducts.length && hideProducts !== 'true') {
-    window.adobeDataLayer.push({
-      event: 'product loaded',
-      product: {
-        [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-      },
-    });
-  }
-
   window.hj = window.hj || function initHotjar(...args) {
     (hj.q = hj.q || []).push(...args);
   };

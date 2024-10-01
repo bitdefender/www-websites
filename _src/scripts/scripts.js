@@ -266,6 +266,58 @@ export function pushProductsToDataLayer() {
   const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
 
   const mapProductData = (products) => {
+    return products.map((product) => {
+      const {
+        platformProductId,
+        productId,
+        productName,
+        devices,
+        subscription,
+        version,
+        basePrice,
+        discount,
+        discountRate,
+        currencyIso,
+        actualPrice,
+      } = product;
+
+      return Object.fromEntries(
+        Object.entries({
+          ID: platformProductId || productId,
+          name: productName,
+          devices,
+          subscription,
+          version,
+          basePrice,
+          discountValue: discount,
+          discountRate,
+          currency: currencyIso,
+          priceWithTax: actualPrice,
+        }).filter(([, value]) => value !== undefined),
+      );
+    });
+  };
+
+  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
+    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
+  }
+
+  const dataLayerProduct = {
+    product: {
+      [key]: mapProductData(TRACKED_PRODUCTS),
+      ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
+    },
+  };
+
+  pushToDataLayer('product loaded', dataLayerProduct);
+}
+
+export function pushProductsToDataLayer2() {
+  const url = window.location.href;
+  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
+  const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
+
+  const mapProductData = (products) => {
     products.map((product) => {
       const {
         platformProductId,
@@ -298,43 +350,22 @@ export function pushProductsToDataLayer() {
     });
   };
 
-  const adobeDataLayer = window.adobeDataLayer || [];
-  const productAlreadyLoaded = adobeDataLayer.some((item) => item.event === 'product loaded');
-
-  // if product loaded already exists we only add comparison array if e have it in the page
-  if (productAlreadyLoaded) {
-    adobeDataLayer.forEach((item) => {
-      if (item.event === 'product loaded') {
-        // Ensure item.product exists and has the expected structure
-        if (key === 'all' && item.product && item.product.info) {
-          item.product = {
-            ...item.product,
-            all: item.product.info,
-          };
-          delete item.product.info;
-        }
-
-        // check if TRACKED_PRODUCTS_COMPARISON has items and add it to the event
-        if (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length && item.product) {
-          item.product.comparison = TRACKED_PRODUCTS_COMPARISON;
-        }
-      }
-    });
-  } else {
-    if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
-      TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
-    }
-
-    const dataLayerProduct = {
-      product: {
-        [key]: mapProductData(TRACKED_PRODUCTS),
-        // eslint-disable-next-line max-len
-        ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
-      },
-    };
-
-    pushToDataLayer('product loaded', dataLayerProduct);
+  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
+    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
   }
+
+  console.log('TRACKED_PRODUCTS:', TRACKED_PRODUCTS);
+  console.log('TRACKED_PRODUCTS_COMPARISON:', TRACKED_PRODUCTS_COMPARISON);
+
+  const dataLayerProduct = {
+    product: {
+      [key]: mapProductData(TRACKED_PRODUCTS),
+      ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
+    },
+  };
+
+  pushToDataLayer('product loaded', dataLayerProduct);
+  console.log('dataLayerProduct:', dataLayerProduct);
 }
 
 export function pushTrialDownloadToDataLayer() {
@@ -733,9 +764,6 @@ async function loadEager(doc) {
   }
 
   pushPageLoadToDataLayer(targetExperimentDetails);
-  pushProductsToDataLayer();
-  pushTrialDownloadToDataLayer();
-  pushToDataLayer('page loaded');
 
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
@@ -805,6 +833,7 @@ async function loadLazy(doc) {
     // eslint-disable-next-line no-unused-vars
     loadHeader(doc.querySelector('header'));
   }
+
   await loadBlocks(main);
 
   const { hash } = window.location;

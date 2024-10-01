@@ -181,16 +181,6 @@ export default function decorate(block, options) {
     const buyLink = block.querySelector('a[href*="buylink"]');
     createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink, send2datalayer)
       .then((pricesBox) => {
-        // dataLayer push with all the products
-        if (options && send2datalayer) {
-          window.adobeDataLayer.push({
-            event: 'product loaded',
-            product: {
-              [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-            },
-          });
-        }
-
         // If buyLink exists, apply styles and insert pricesBox
         if (buyLink) {
           buyLink.classList.add('button', 'primary');

@@ -2,8 +2,60 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 import {
-  getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks,
+  getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks, generateProductBuyLink,
 } from '../../scripts/utils/utils.js';
+import { trackProduct } from '../../scripts/scripts.js';
+
+/**
+ * Utility function to round prices and percentages
+ * @param  value value to round
+ * @returns rounded value
+ */
+function customRound(value) {
+  const numValue = parseFloat(value);
+
+  if (Number.isNaN(numValue)) {
+    return value;
+  }
+
+  // Convert to a fixed number of decimal places then back to a number to deal with precision issues
+  const roundedValue = Number(numValue.toFixed(2));
+
+  // If it's a whole number, return it as an integer
+  return (roundedValue % 1 === 0) ? Math.round(roundedValue) : roundedValue;
+}
+
+/**
+ * Convert a product variant returned by the remote service into a model
+ * @param productCode product code
+ * @param variantId variant identifier
+ * @param v variant
+ * @returns a model
+ */
+function toModel(productCode, variantId, v) {
+  return {
+    productId: v.product_id,
+    productName: v.product_name,
+    productCode,
+    variantId,
+    regionId: v.region_id,
+    platformProductId: v.platform_product_id,
+    devices: +v.variation.dimension_value,
+    subscription: v.variation.years * 12,
+    version: v.variation.years ? '12' : '1',
+    basePrice: +v.price,
+    // eslint-disable-next-line max-len
+    actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
+    monthlyBasePrice: customRound(v.price / 12),
+    discountedPrice: v.discount?.discounted_price,
+    discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
+    discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
+    // eslint-disable-next-line max-len
+    discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
+    currency_iso: v.currency_iso,
+    url: generateProductBuyLink(v, productCode),
+  };
+}
 
 let dataLayerProducts = [];
 async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
@@ -71,6 +123,8 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
     const variant = `${prodUsers}u-${prodYears}y`;
     const product = await fetchProduct(prodName, variant, pid);
+    const m = toModel(prodName, variant, product);
+    trackProduct(m);
     const {
       price, discount, currency_label: currencyLabel,
     } = product;
@@ -667,16 +721,6 @@ export default async function decorate(block, options) {
       });
 
       sendAnalyticsPageLoadedEvent(true);
-    });
-  }
-
-  if (!isInLandingPages) {
-    // dataLayer push with all the products
-    window.adobeDataLayer.push({
-      event: 'product loaded',
-      product: {
-        [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-      },
     });
   }
 
