@@ -12,7 +12,6 @@ import {
   loadBlocks,
   loadCSS,
   getMetadata, loadScript,
-  fetchPlaceholders,
 } from './lib-franklin.js';
 
 import {
@@ -22,8 +21,6 @@ import {
   getParamValue,
   GLOBAL_EVENTS,
 } from './utils/utils.js';
-
-import { loadAnalytics } from './analytics.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 const TRACKED_PRODUCTS = [];
