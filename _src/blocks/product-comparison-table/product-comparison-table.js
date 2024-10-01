@@ -45,7 +45,7 @@ function toModel(productCode, variantId, v) {
     platformProductId: v.platform_product_id,
     devices: +v.variation.dimension_value,
     subscription: v.variation.years * 12,
-    version: v.variation.years ? 'yearly' : 'monthly',
+    version: v.variation.years ? '12' : '1',
     basePrice: +v.price,
     // eslint-disable-next-line max-len
     actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
@@ -56,7 +56,6 @@ function toModel(productCode, variantId, v) {
     // eslint-disable-next-line max-len
     discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
     currency_iso: v.currency_iso,
-    currency: v.currency_label,
     url: generateProductBuyLink(v, productCode),
   };
 }

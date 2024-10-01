@@ -650,7 +650,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       page: {
         info: {
           name: [locale, ...tags].join(':'), // e.g. au:consumer:product:internet security
-          section: languageCountry.country || '',
+          section: locale,
           subSection: tags[0] || '',
           subSubSection: tags[1] || '',
           subSubSubSection: tags[2] || '',
@@ -691,7 +691,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
       page: {
         info: {
           name: tagName,
-          section: country,
+          section: locale,
           subSection,
           subSubSection,
           subSubSubSection,
@@ -929,6 +929,10 @@ async function loadPage() {
   });
 
   adobeMcAppendVisitorId('main');
+
+  pushProductsToDataLayer();
+  pushTrialDownloadToDataLayer();
+  pushToDataLayer('page loaded');
 
   loadDelayed();
   await setupAnalytics;
