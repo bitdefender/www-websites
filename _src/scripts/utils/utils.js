@@ -356,6 +356,7 @@ export function formatPrice(price, currency, region = null, locale = null) {
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   const targetCampain = await Target.getCampaign();
+  console.log('targetCampain', targetCampain);
   const url = new URL(window.location.href);
 
   if (!isZuora()) {

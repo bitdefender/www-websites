@@ -1,33 +1,36 @@
+/* eslint-disable max-classes-per-file */
 import { getMetadata, sampleRUM } from './lib-franklin.js';
 
 const ADOBE_TARGET_SESSION_ID_PARAM = 'adobeTargetSessionId';
 
 export class Visitor {
   static #instanceID = '0E920C0F53DA9E9B0A490D45@AdobeOrg';
+
   static #instance = null;
-  static #staticInit = new Promise(resolve => {
+
+  static #staticInit = new Promise((resolve) => {
     if (window.Visitor) {
       Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
       resolve();
       return;
     }
 
-    window.addEventListener("at-library-loaded", () => {
+    document.addEventListener('at-library-loaded', () => {
       if (window.Visitor) {
         Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
       }
       resolve();
-    })
+    });
   });
 
   /**
    *
-   * @param {string} url 
+   * @param {string} url
    * @returns {Promise<string>}
    */
   static async appendVisitorIDsTo(url) {
     await this.#staticInit;
-    return !this.#instance || url.includes("adobe_mc") ? url : this.#instance.appendVisitorIDsTo(url);
+    return !this.#instance || url.includes('adobe_mc') ? url : this.#instance.appendVisitorIDsTo(url);
   }
 
   /**
@@ -36,7 +39,7 @@ export class Visitor {
    */
   static async getConsumerId() {
     await this.#staticInit;
-    return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : "";
+    return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : '';
   }
 
   /**
@@ -45,10 +48,10 @@ export class Visitor {
    */
   static async getMarketingCloudVisitorId() {
     await this.#staticInit;
-    return this.#instance ? this.#instance.getMarketingCloudVisitorID() : "";
+    return this.#instance ? this.#instance.getMarketingCloudVisitorID() : '';
   }
-};
-window.BD = {Visitor, ...window.BD};
+}
+window.BD = { Visitor, ...window.BD };
 
 export class Target {
   /**
@@ -61,14 +64,14 @@ export class Target {
    */
   static offers = null;
 
-  static #staticInit = new Promise(resolve => {
+  static #staticInit = new Promise((resolve) => {
     /** Target is loaded and we wait for it to finish so we can get the offer */
     if (window.adobe?.target) {
       this.#getOffers().then(resolve);
       return;
     }
 
-    document.addEventListener("at-library-loaded", async () => {
+    document.addEventListener('at-library-loaded', async () => {
       await this.#getOffers();
       resolve();
     });
@@ -80,7 +83,7 @@ export class Target {
    */
   static async getCampaign() {
     await this.#staticInit;
-    return this.offers?.["initSelector-mbox"]?.content?.pid || null;
+    return this.offers?.['initSelector-mbox']?.content?.pid || null;
   }
 
   static async #getOffers() {
@@ -89,14 +92,14 @@ export class Target {
         consumerId: await Visitor.getConsumerId(),
         request: {
           id: {
-            marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
+            marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId(),
           },
           execute: {
             mboxes: [
-              { index: 0, name: "initSelector-mbox" }
-            ]
-          }
-        }
+              { index: 0, name: 'initSelector-mbox' },
+            ],
+          },
+        },
       });
 
       this.offers = this.offers?.execute?.mboxes?.reduce((acc, mbox) => {
@@ -105,13 +108,12 @@ export class Target {
         acc[mbox.name].type = mbox?.options?.[0]?.type;
         return acc;
       }, {});
-
     } catch (e) {
       console.warn(e);
     }
   }
-};
-window.BD = {Target, ...window.BD};
+}
+window.BD = { Target, ...window.BD };
 
 /**
  * Convert a URL to a relative URL.
