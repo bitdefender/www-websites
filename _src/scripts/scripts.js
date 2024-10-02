@@ -439,10 +439,10 @@ function addHreflangTags() {
 
   const path = window.location.pathname;
   const pathCount = path.split('/').filter(String).length;
-
-  Object.keys(HREFLANG_MAP).forEach((key) => {
-    const hreflang = HREFLANG_MAP[key][0];
-    const href = `${HREFLANG_MAP[key][1].baseUrl}${path}${pathCount > 1 ? HREFLANG_MAP[key][1].pageType : ''}`;
+  const HREFLANG_MAP_OBJECT = Object.fromEntries(HREFLANG_MAP);
+  Object.keys(HREFLANG_MAP_OBJECT).forEach((key) => {
+    const hreflang = key;
+    const href = `${HREFLANG_MAP_OBJECT[key].baseUrl}${path}${pathCount > 1 ? HREFLANG_MAP_OBJECT[key].pageType : ''}`;
     const ln = document.createElement('link');
     ln.setAttribute('rel', 'alternate');
     ln.setAttribute('hreflang', hreflang);
