@@ -1,11 +1,12 @@
 import {
   createNanoBlock,
-  fetchProduct,
+  fetchProduct, formatPrice,
   getBuyLinkCountryPrefix,
   getDatasetFromSection,
   getPidFromUrl,
-  renderNanoBlocks,
+  renderNanoBlocks, setDataOnBuyLinks,
 } from '../../scripts/utils/utils.js';
+import { getDomain } from '../../scripts/scripts.js';
 
 const state = {
   firstProduct: null,
@@ -147,6 +148,19 @@ function updateBuyLink(block) {
 
   if (buyLink) {
     buyLink.href = `${getBuyLinkCountryPrefix()}/${productCode}/${dimension}/${years}/${pid ? `pid.${pid}` : ''}`;
+    const dataInfo = {
+      productId: productCode,
+      variation: {
+        price: state.currentProduct.discount?.discounted_price,
+        oldPrice: state.currentProduct.discount
+          ? +state.currentProduct.discount.discounted_price : +state.currentProduct.price,
+        variation_name: state.currentProduct.variation.variation_name,
+        currency_label: state.currentProduct.currency_label,
+        region_id: state.currentProduct.region_id,
+      },
+    };
+
+    setDataOnBuyLinks(buyLink, dataInfo);
   }
 }
 
@@ -162,7 +176,11 @@ function updatePrice(block) {
     state.currentProduct = product;
     const variant = `${MEMBERS_MAP.get(state.membersIndex)}u-1y`;
     const resp = await fetchProduct(product.alias, variant);
-    priceEl.textContent = `${resp.currency_label} ${resp.price}`;
+
+    const formattedPrice = formatPrice(resp.price, resp.currency_iso, null, getDomain());
+
+    priceEl.dataset.price = resp.price;
+    priceEl.textContent = `${formattedPrice}`;
   })();
 }
 
@@ -247,12 +265,13 @@ function updateBenefits(block) {
 }
 
 function renderSelector(block, ...options) {
+  const selectorOptions = options.filter((option) => option && !Number.isNaN(Number(option)));
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
   el.innerHTML = `
     <select>
-        ${options.map((opt, index) => `
+        ${selectorOptions.map((opt, index) => `
           <option value="${index}">${opt} members</option>
         `).join(',')}
     </select>

@@ -4,12 +4,64 @@ import {
   fetchProduct,
   matchHeights,
   setDataOnBuyLinks,
-  generateProductBuyLink,
+  generateProductBuyLink, formatPrice,
 } from '../../scripts/utils/utils.js';
+import { getDomain, trackProduct } from '../../scripts/scripts.js';
 
 const fetchedProducts = [];
 
-createNanoBlock('priceComparison', (code, variant, label, block) => {
+/**
+ * Utility function to round prices and percentages
+ * @param  value value to round
+ * @returns rounded value
+ */
+function customRound(value) {
+  const numValue = parseFloat(value);
+
+  if (Number.isNaN(numValue)) {
+    return value;
+  }
+
+  // Convert to a fixed number of decimal places then back to a number to deal with precision issues
+  const roundedValue = Number(numValue.toFixed(2));
+
+  // If it's a whole number, return it as an integer
+  return (roundedValue % 1 === 0) ? Math.round(roundedValue) : roundedValue;
+}
+
+/**
+ * Convert a product variant returned by the remote service into a model
+ * @param productCode product code
+ * @param variantId variant identifier
+ * @param v variant
+ * @returns a model
+ */
+function toModel(productCode, variantId, v) {
+  return {
+    productId: v.product_id,
+    productName: v.product_name,
+    productCode,
+    variantId,
+    regionId: v.region_id,
+    platformProductId: v.platform_product_id,
+    devices: +v.variation.dimension_value,
+    subscription: v.variation.years * 12,
+    version: v.variation.years ? '12' : '1',
+    basePrice: +v.price,
+    // eslint-disable-next-line max-len
+    actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
+    monthlyBasePrice: customRound(v.price / 12),
+    discountedPrice: v.discount?.discounted_price,
+    discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
+    discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
+    // eslint-disable-next-line max-len
+    discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
+    currencyIso: v.currency_iso,
+    url: generateProductBuyLink(v, productCode),
+  };
+}
+
+createNanoBlock('priceComparison', (code, variant, label, block, productIndex, columnEl) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   const oldPriceText = block.closest('.section').dataset.old_price_text ?? 'Old Price';
@@ -23,51 +75,56 @@ createNanoBlock('priceComparison', (code, variant, label, block) => {
   priceElement.classList.add('current-price-container');
   const priceAppliedOnTime = document.createElement('p');
   priceRoot.appendChild(priceAppliedOnTime);
-
   fetchProduct(code, variant)
     .then((product) => {
-      fetchedProducts.push({ code, variant, product });
+      const m = toModel(code, variant, product);
+      const currentProduct = { code, variant, product };
+      fetchedProducts.push(currentProduct);
       // eslint-disable-next-line camelcase
       const { price, discount: { discounted_price: discounted }, currency_iso: currency } = product;
-      const savings = price - discounted;
+      const formattedPriceParams = [currency, null, getDomain()];
+      // eslint-disable-next-line max-len
+      const formattedSavings = formatPrice((price - discounted).toFixed(2), ...formattedPriceParams);
+      const formattedPrice = formatPrice(price, ...formattedPriceParams);
+      const formattedDiscount = formatPrice(discounted, ...formattedPriceParams);
 
       oldPriceElement.innerHTML = `<div class="old-price-box">
-        <span>${oldPriceText} <del>${price} ${currency}</del></span>
-        <span class="savings d-none">Savings <del>${savings.toFixed(2)} ${currency}</del></span>
+        <span>${oldPriceText} <del>${formattedPrice}</del></span>
+        <span class="savings d-none">Savings <del>${formattedSavings}</del></span>
       </div>`;
       priceElement.innerHTML = `<div class="new-price-box">
         <span class="d-none total-text">Your total price:</span>
-        ${discounted} ${currency}
+        ${formattedDiscount}
       </div>`;
       priceAppliedOnTime.innerHTML = label;
 
       // update buy link
-      const currentProductIndex = fetchedProducts.length - 1;
-      const buyLink = block.querySelectorAll('.button-container a')[currentProductIndex];
-      const prd = fetchedProducts[currentProductIndex];
-
-      const variantSplit = variant.split('-');
-      const units = variantSplit[0].split('u')[0];
-      const years = variantSplit[1].split('y')[0];
-
-      const isBuyLink = buyLink.href.includes('/site/Store/buy/');
+      const buyLink = columnEl.querySelector('.button-container a');
+      const isBuyLink = buyLink?.href?.includes('/site/Store/buy/');
 
       if (isBuyLink) {
-        buyLink.href = prd.product.buy_link || generateProductBuyLink(prd, prd.code, units, years);
+        const variantSplit = variant.split('-');
+        const units = variantSplit[0].split('u')[0];
+        const years = variantSplit[1].split('y')[0];
+
+        // eslint-disable-next-line max-len
+        buyLink.href = currentProduct.product.buy_link || generateProductBuyLink(currentProduct, currentProduct.code, units, years);
 
         const dataInfo = {
-          productId: prd.code,
+          productId: currentProduct.code,
           variation: {
-            price: prd.product.price,
-            discounted_price: prd.product.discount.discounted_price,
-            variation_name: prd.variant,
-            currency_label: prd.product.currency_label,
-            region_id: prd.product.region_id,
+            price: discounted,
+            oldPrice: price,
+            variation_name: currentProduct.variant,
+            currency_label: currentProduct.product.currency_label,
+            region_id: currentProduct.product.region_id,
           },
         };
 
         setDataOnBuyLinks(buyLink, dataInfo);
       }
+
+      trackProduct(m, 'comparison');
     })
     .catch((err) => {
       // eslint-disable-next-line no-console

@@ -71,38 +71,40 @@ export const IANA_BY_REGION_MAP = new Map([
 
 const PRICE_LOCALE_MAP = new Map([
   ['en-us', { force_country: 'en', country_code: 'us' }],
-  ['en-bg', { force_country: 'en', country_code: 'bg' }],
-  ['en-ca', { force_country: 'en', country_code: 'ca' }],
-  ['en-cl', { force_country: 'en', country_code: 'cl' }],
-  ['en-dk', { force_country: 'en', country_code: 'dk' }],
-  ['en-hu', { force_country: 'en', country_code: 'hu' }],
-  ['en-id', { force_country: 'en', country_code: 'id' }],
-  ['en-il', { force_country: 'en', country_code: 'il' }],
-  ['en-in', { force_country: 'en', country_code: 'in' }],
-  ['en-kr', { force_country: 'en', country_code: 'kr' }],
-  ['en-my', { force_country: 'en', country_code: 'my' }],
-  ['en-no', { force_country: 'en', country_code: 'no' }],
-  ['en-ph', { force_country: 'en', country_code: 'ph' }],
-  ['en-pl', { force_country: 'en', country_code: 'pl' }],
-  ['en-sa', { force_country: 'en', country_code: 'sa' }],
-  ['en-th', { force_country: 'en', country_code: 'th' }],
-  ['en-za', { force_country: 'en', country_code: 'za' }],
-  ['en-ae', { force_country: 'en', country_code: 'ae' }],
-  ['en-sg', { force_country: 'en', country_code: 'sg' }],
-  ['en-sd', { force_country: 'en', country_code: 'sd' }],
-  ['en-mt', { force_country: 'en', country_code: 'mt' }],
-  ['en-lv', { force_country: 'en', country_code: 'lv' }],
-  ['en-jm', { force_country: 'en', country_code: 'jm' }],
-  ['en-bz', { force_country: 'en', country_code: 'bz' }],
+  ['en-bg', { force_country: 'bg', country_code: 'bg' }],
+  ['en-ca', { force_country: 'ca', country_code: 'ca' }],
+  ['en-cl', { force_country: 'cl', country_code: 'cl' }],
+  ['en-dk', { force_country: 'dk', country_code: 'dk' }],
+  ['en-hu', { force_country: 'hu', country_code: 'hu' }],
+  ['en-id', { force_country: 'id', country_code: 'id' }],
+  ['en-il', { force_country: 'il', country_code: 'il' }],
+  ['en-in', { force_country: 'in', country_code: 'in' }],
+  ['en-kr', { force_country: 'kr', country_code: 'kr' }],
+  ['en-my', { force_country: 'my', country_code: 'my' }],
+  ['en-no', { force_country: 'no', country_code: 'no' }],
+  ['en-ph', { force_country: 'ph', country_code: 'ph' }],
+  ['en-pl', { force_country: 'pl', country_code: 'pl' }],
+  ['en-sa', { force_country: 'sa', country_code: 'sa' }],
+  ['en-th', { force_country: 'th', country_code: 'th' }],
+  ['en-za', { force_country: 'za', country_code: 'za' }],
+  ['en-ae', { force_country: 'ae', country_code: 'ae' }],
+  ['en-sg', { force_country: 'sg', country_code: 'sg' }],
+  ['en-sd', { force_country: 'sd', country_code: 'sd' }],
+  ['en-mt', { force_country: 'mt', country_code: 'mt' }],
+  ['en-lv', { force_country: 'lv', country_code: 'lv' }],
+  ['en-jm', { force_country: 'jm', country_code: 'jm' }],
+  ['en-bz', { force_country: 'bz', country_code: 'bz' }],
   ['en-gb', { force_country: 'uk', country_code: 'gb' }],
   ['en-au', { force_country: 'au', country_code: 'au' }],
-  ['en-nz', { force_country: 'au', country_code: 'nz' }],
-  ['es-cl', { force_country: 'en', country_code: 'cl' }],
-  ['es-co', { force_country: 'en', country_code: 'co' }],
-  ['es-mx', { force_country: 'en', country_code: 'mx' }],
-  ['es-pe', { force_country: 'en', country_code: 'pe' }],
-  ['es-bz', { force_country: 'en', country_code: 'bz' }],
+  ['en-nz', { force_country: 'nz', country_code: 'nz' }],
+  ['en-global', { force_country: 'en', country_code: null }],
+  ['es-cl', { force_country: 'cl', country_code: 'cl' }],
+  ['es-co', { force_country: 'co', country_code: 'co' }],
+  ['es-mx', { force_country: 'mx', country_code: 'mx' }],
+  ['es-pe', { force_country: 'pe', country_code: 'pe' }],
+  ['es-bz', { force_country: 'bz', country_code: 'bz' }],
   ['es-es', { force_country: 'es', country_code: 'es' }],
+  ['es-global', { force_country: 'en', country_code: null }],
   ['ro-ro', { force_country: 'ro', country_code: 'ro' }],
   ['it-it', { force_country: 'it', country_code: 'it' }],
   ['fr-fr', { force_country: 'fr', country_code: 'fr' }],
@@ -110,6 +112,7 @@ const PRICE_LOCALE_MAP = new Map([
   ['nl-be', { force_country: null, country_code: null, isZuora: true }],
   ['nl-nl', { force_country: null, country_code: null, isZuora: true }],
   ['de-de', { force_country: 'de', country_code: 'de' }],
+  ['de-at', { force_country: 'de', country_code: 'at' }],
   ['sv-se', { force_country: 'se', country_code: 'se' }],
   ['pt-br', { force_country: 'br', country_code: 'br' }],
   ['pt-pt', { force_country: 'pt', country_code: 'pt' }],
@@ -184,6 +187,7 @@ async function findProductVariant(cachedResponse, variant) {
       // eslint-disable-next-line guard-for-in,no-restricted-syntax
       for (const j in json.data.product.variations[i]) {
         const v = json.data.product.variations[i][j];
+        v.product_name = json.data.product.product_name;
         if (v.variation.variation_name === variant) {
           return v;
         }
@@ -303,70 +307,12 @@ export function getProductLinkCountryPrefix() {
 }
 
 export function getBuyLinkCountryPrefix() {
-  const { pathname } = window.location;
-
-  if (pathname.includes('/en-au/')) {
-    return 'https://www.bitdefender.com.au/site/Store/buy';
-  }
-
-  if (pathname.includes('/en-gb/')) {
-    return 'https://www.bitdefender.co.uk/site/Store/buy';
-  }
-
-  if (pathname.includes('/ro-ro/')) {
-    return 'https://www.bitdefender.ro/site/Store/buy';
-  }
-
-  if (pathname.includes('/it-it/')) {
-    return 'https://www.bitdefender.it/site/Store/buy';
-  }
-
-  if (pathname.includes('/fr-fr/')) {
-    return 'https://www.bitdefender.fr/site/Store/buy';
-  }
-
-  if (pathname.includes('/fr-be/')) {
-    return 'https://www.bitdefender.be/site/Store/buy';
-  }
-
-  if (pathname.includes('/nl-be/')) {
-    return 'https://www.bitdefender.be/site/Store/buy';
-  }
-
-  if (pathname.includes('/nl-nl/')) {
-    return 'https://www.bitdefender.nl/site/Store/buy';
-  }
-
-  if (pathname.includes('/de-de/')) {
-    return 'https://www.bitdefender.de/site/Store/buy';
-  }
-
-  if (pathname.includes('/de-ch/')) {
-    return 'https://www.bitdefender.de/site/Store/buy';
-  }
-
-  if (pathname.includes('/sv-se/')) {
-    return 'https://www.bitdefender.se/site/Store/buy';
-  }
-
-  if (pathname.includes('/pt-br/')) {
-    return 'https://www.bitdefender.com.br/site/Store/buy';
-  }
-
-  if (pathname.includes('/pt-pt/')) {
-    return 'https://www.bitdefender.pt/site/Store/buy';
-  }
-
-  if (pathname.includes('/es-es/')) {
-    return 'https://www.bitdefender.es/site/Store/buy';
-  }
-
   return 'https://www.bitdefender.com/site/Store/buy';
 }
 
 export function getPriceLocalMapByLocale() {
   const locale = window.location.pathname.split('/')[1];
-  return PRICE_LOCALE_MAP.get(locale) || 'en-us';
+  return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
 export function generateProductBuyLink(product, productCode, month = null, years = null) {
@@ -385,15 +331,18 @@ export function setDataOnBuyLinks(element, dataInfo) {
   const { productId, variation } = dataInfo;
   if (productId) element.dataset.product = productId;
 
-  element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
-
-  if (variation.price) element.dataset.oldPrice = variation.price;
-  if (variation.currency_label) element.dataset.dataCurrency = variation.currency_label;
-  if (variation.region_id) element.dataset.dataRegion = variation.region_id;
+  // element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
+  if (variation.price) element.dataset.buyPrice = variation.price;
+  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice;
+  if (variation.currency_label) element.dataset.currency = variation.currency_label;
+  if (variation.region_id) element.dataset.region = variation.region_id;
   if (variation.variation_name) element.dataset.variation = variation.variation_name;
 }
 
 export function formatPrice(price, currency, region = null, locale = null) {
+  if (!price) {
+    return null;
+  }
   const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
   return new Intl.NumberFormat(loc, { style: 'currency', currency }).format(price);
 }
@@ -603,7 +552,8 @@ export function renderNanoBlocks(
         const [newName, ...params] = parseParams(newMatch);
         const renderer = nanoBlocks.get(newName.toLowerCase());
         if (renderer) {
-          const element = mv ? renderer(mv, ...params, block) : renderer(...params, block);
+          // eslint-disable-next-line max-len
+          const element = mv ? renderer(mv, ...params, block, index, parent) : renderer(...params, block, index, parent);
           element.classList.add('nanoblock');
           const oldElement = node.parentNode;
           oldElement.parentNode.replaceChild(element, oldElement);

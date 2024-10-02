@@ -5,7 +5,8 @@ main .quote-carousel {
 
 main .quote-carousel .slides-container {
   border-radius: 8px;
-  max-width: 630px;
+  max-width: auto;
+  width: 100%;
   margin-bottom: 30px;
   box-shadow: 0 3px 8px 0 rgb(0 0 0 / 10%);
   background: var(--background-color);
@@ -30,11 +31,12 @@ main .quote-carousel .slides-container {
 
 @media (min-width: 992px) {
   main .quote-carousel {
-    max-width: 90%;
+    max-width: 100%;
     margin: 55px 0 0;
   }
 
   main .quote-carousel .slides-container {
+    max-width: 590px;
     margin-bottom: 80px;
   }
 }
@@ -59,7 +61,7 @@ main .quote-carousel .slides-container {
   flex-shrink: 0;
   width: 100%;
   transition: all 0.3s ease-in-out;
-  padding: 30px 30px 40px 25px;
+  padding: 2em 2em 1em;
   gap: 8px;
 }
 
@@ -67,6 +69,10 @@ main .quote-carousel .slides-container {
   .slides-container .slide {
     gap: 8px;
     padding-left: 30px;
+  }
+
+  main .quote-carousel .slides-container {
+    max-width: 630px;
   }
 }
 
@@ -134,6 +140,10 @@ main .quote-carousel .slides-container {
   padding-top: 16px;
 }
 
+.slides-container .slide p:last-of-type {
+  padding-top: 5px;
+}
+
 @media (min-width: 768px) {
   .slides-container .slide p {
     line-height: 1.25;
@@ -162,7 +172,7 @@ main .quote-carousel .slides-container {
   align-self: flex-start;
   display: flex;
   list-style: none;
-  gap: 16px;
+  gap: 8px;
 }
 
 .slides-container .slides-dots li {
@@ -201,4 +211,10 @@ main .quote-carousel .slides-container {
 .slides-container .slides-dots li.active button,
 .slides-container .slides-dots li:hover button {
   background: #006eff;
+}
+
+@media (max-width: 992px) {
+  main .quote-carousel {
+    margin-top: 0;
+  }
 }

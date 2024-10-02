@@ -113,15 +113,18 @@
   font-family: Arial, sans-serif;
   margin-top: 0;
   margin-bottom: 4px;
+  width: 80%
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 a {
   transition: all 0.5s ease;
+  color: #000;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 a:hover {
   text-decoration: none;
   transition: all 0.5s ease;
+  color: #005ed9;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTagsWrapper {
@@ -485,7 +488,16 @@
   min-width: 144px;
 }
 
+.new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.secondary {
+  display: inline-block;
+  min-width: 144px;
+}
+
 .new-prod-boxes-container .button.primary.no-arrow::after {
+  content: none;
+}
+
+.new-prod-boxes-container .button.secondary.no-arrow::after {
   content: none;
 }
 
@@ -689,12 +701,15 @@
 }
 
 .plan-switcher input[type=radio] {
-  position: absolute;
+  position: relative;
+  display: none;
   opacity: 0;
+  width: auto;
 }
 
 .plan-switcher .radio-label {
   margin-right: 8px;
+  cursor: pointer;
 }
 
 .plan-switcher .radio-label::before {

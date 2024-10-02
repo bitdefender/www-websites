@@ -12,7 +12,7 @@ function prependSlash(path) {
 }
 
 function getName(pageIndex, path, part, current) {
-  const pg = pageIndex.find((page) => page.path === path);
+  const pg = pageIndex.find((page) => page.path.replace(/^\/[^/]+/, '') === path.replace(/^\/[^/]+/, ''));
   if (pg && pg.breadcrumbtitle && pg.breadcrumbtitle !== '0') {
     return pg.breadcrumbtitle;
   }

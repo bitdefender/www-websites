@@ -1,7 +1,61 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { getMetadata, getBuyLinkCountryPrefix, matchHeights } from '../../scripts/utils/utils.js';
+import {
+  getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks, generateProductBuyLink, getPriceLocalMapByLocale,
+} from '../../scripts/utils/utils.js';
+import { trackProduct } from '../../scripts/scripts.js';
+
+/**
+ * Utility function to round prices and percentages
+ * @param  value value to round
+ * @returns rounded value
+ */
+function customRound(value) {
+  const numValue = parseFloat(value);
+
+  if (Number.isNaN(numValue)) {
+    return value;
+  }
+
+  // Convert to a fixed number of decimal places then back to a number to deal with precision issues
+  const roundedValue = Number(numValue.toFixed(2));
+
+  // If it's a whole number, return it as an integer
+  return (roundedValue % 1 === 0) ? Math.round(roundedValue) : roundedValue;
+}
+
+/**
+ * Convert a product variant returned by the remote service into a model
+ * @param productCode product code
+ * @param variantId variant identifier
+ * @param v variant
+ * @returns a model
+ */
+function toModel(productCode, variantId, v) {
+  return {
+    productId: v.product_id,
+    productName: v.product_name,
+    productCode,
+    variantId,
+    regionId: v.region_id,
+    platformProductId: v.platform_product_id,
+    devices: +v.variation.dimension_value,
+    subscription: v.variation.years * 12,
+    version: v.variation.years ? '12' : '1',
+    basePrice: +v.price,
+    // eslint-disable-next-line max-len
+    actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
+    monthlyBasePrice: customRound(v.price / 12),
+    discountedPrice: v.discount?.discounted_price,
+    discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
+    discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
+    // eslint-disable-next-line max-len
+    discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
+    currencyIso: v.currency_iso,
+    url: generateProductBuyLink(v, productCode),
+  };
+}
 
 let dataLayerProducts = [];
 async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
@@ -58,7 +112,8 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
     buyLinkPid = '';
   }
 
-  let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/`);
+  const forceCountry = getPriceLocalMapByLocale().country_code;
+  let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/?force_country=${forceCountry}`);
   if (buyLinkPid) {
     buyLinkHref.searchParams.append('pid', buyLinkPid);
   }
@@ -67,8 +122,13 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
 async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
   try {
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
-    const product = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`, pid);
-    const { price, discount } = product;
+    const variant = `${prodUsers}u-${prodYears}y`;
+    const product = await fetchProduct(prodName, variant, pid);
+    const m = toModel(prodName, variant, product);
+    trackProduct(m);
+    const {
+      price, discount, currency_label: currencyLabel,
+    } = product;
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     let oldPrice = price;
     let newPrice = discount.discounted_price;
@@ -91,7 +151,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
 
     let adobeDataLayerProduct = {
       ID: product.platform_product_id,
-      name: prodName.trim(),
+      name: product.product_name,
       devices: product.variation.dimension_value,
       subscription: prodVersion,
       version: prodVersion,
@@ -111,6 +171,22 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id);
     }
 
+    const dataInfo = {
+      productId: prodName,
+      variation: {
+        price: newPrice,
+        oldPrice,
+        variation_name: variant,
+        currency_label: currencyLabel,
+        region_id: product.region_id,
+      },
+    };
+
+    setDataOnBuyLinks(updatedBuyLinkSelector, dataInfo);
+
+    // const currentDomain = getDomain();
+    // const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
+
     priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div>
@@ -121,7 +197,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
           <span class="prod-newprice">${newPriceListed} ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
         ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2">${newPriceBilled}</span>`)}</div>` : ''}
-        <a href="${updatedBuyLinkSelector ? updatedBuyLinkSelector.href : ''}" class="button primary no-arrow">${updatedBuyLinkSelector ? updatedBuyLinkSelector.text : ''}</a>
+        ${updatedBuyLinkSelector.outerHTML}
       </div>`;
     return priceElement;
   } catch (err) {
@@ -185,7 +261,7 @@ export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
-    addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText,
+    addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
   // if options exists, this means the component is being called from aem
   if (options) {
@@ -366,10 +442,6 @@ export default async function decorate(block, options) {
         return `<ul>${liString}</ul>`;
       });
 
-      if (title.innerHTML.indexOf('href') !== -1) {
-        title.innerHTML = `<a href="#" title="${title.innerText}">${title.querySelector('tr a').innerHTML}</a>`;
-      }
-
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
       let customLink = 0;
       if (buyLinkSelector) {
@@ -436,6 +508,11 @@ export default async function decorate(block, options) {
         buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
         buyLink2?.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
 
+        let secondButton = buyLink?.querySelectorAll('a')[1];
+        if (secondButton) {
+          secondButton.classList.add('button', 'secondary', 'no-arrow');
+        }
+
         const prodBox = document.createElement('div');
         prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
@@ -448,13 +525,14 @@ export default async function decorate(block, options) {
               <hr />
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices"></div>
-
+              ${secondButton ? secondButton.outerHTML : ''}
               ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
               <div class="add-on-product" style="display: none;">
                 ${billed2 ? '<hr>' : ''}
                 ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
+                <h4>${addonProductName}</h4>
                 <div class="hero-aem__prices__addon"></div>
               </div>
             </div>
@@ -644,16 +722,6 @@ export default async function decorate(block, options) {
       });
 
       sendAnalyticsPageLoadedEvent(true);
-    });
-  }
-
-  if (!isInLandingPages) {
-    // dataLayer push with all the products
-    window.adobeDataLayer.push({
-      event: 'product loaded',
-      product: {
-        [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-      },
     });
   }
 

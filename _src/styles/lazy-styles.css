@@ -319,6 +319,7 @@
 
 .identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card .featured {
   position: relative;
+  color: white;
   border-radius: 20px;
   background-color: #2cb43d;
   margin: 0 0 0 -0.5rem;

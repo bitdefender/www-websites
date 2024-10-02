@@ -1,98 +1,29 @@
-import { debounce } from '../../scripts/utils/utils.js';
+import { debounce, matchHeights } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
-  if (window.innerWidth <= 676) {
-    return 1; // Show 1 item for mobile screens
-  } if (window.innerWidth <= 990) {
-    return 2; // Show 2 items for tablets
-  }
-  return 3; // Show 3 items for desktops
+  const width = window.innerWidth;
+  return width <= 767 ? 1 : 3; // 1 item for mobile, 2 for tablet, 3 for desktop
 }
 
 function countSlides(carouselContent) {
-  const numberOfItems = carouselContent.children.length;
-  return Math.ceil(numberOfItems / getItemsToShow());
+  return Math.ceil(carouselContent.children.length / getItemsToShow());
 }
 
 function showSlides(carousel, slideNumber) {
-  const carouselContent = carousel.querySelector('.columns.carousel > div:nth-child(1)');
+  const carouselContent = carousel.querySelector('.columns.carousel > div:first-child');
+  const itemsToShow = getItemsToShow();
+  const translateXValue = -(carousel.clientWidth * slideNumber) / itemsToShow;
 
-  function handleSlideDisplay(childDivs) {
-    // Hide all elements
-    childDivs.forEach((div) => {
-      div.style.opacity = '0';
-      if (window.innerWidth <= 676) {
-        div.style.width = '0px';
-      }
-    });
-
-    // Calculate the start and end for the items to display based on slideNumber
-    let start;
-    let end;
-
-    const itemsToShow = getItemsToShow();
-
-    if (childDivs.length % itemsToShow === 0) {
-      start = slideNumber * itemsToShow;
-      end = start + itemsToShow;
-    } else {
-      start = slideNumber * (itemsToShow - 1);
-      end = start + itemsToShow;
-
-      if (end > childDivs.length) {
-        start = childDivs.length - itemsToShow;
-        end = childDivs.length;
-      }
-    }
-    // Get the width of the container in pixels
-    const containerWidth = carousel.clientWidth;
-    // Calculate column width in pixels
-    const columnWidthPx = containerWidth / itemsToShow;
-
-    for (let i = start; i < end && i < childDivs.length; i += 1) {
-      if (childDivs[i]) {
-        childDivs[i].style.opacity = '1';
-        childDivs[i].style.position = 'relative';
-        childDivs[i].style.width = `${columnWidthPx}px`;
-      }
-    }
-  }
-
-  // Apply the display logic for both images and texts
-  handleSlideDisplay(carouselContent.querySelectorAll('div'));
+  carouselContent.style.transform = `translateX(${translateXValue}px)`;
+  carouselContent.style.transition = 'transform 0.5s ease';
 }
 
 function hideExcessElements(carousel) {
-  showSlides(carousel, 0); // Default: Show the first set of three elements
+  showSlides(carousel, 0); // Always show the first set initially
 }
 
-function getButtonIndex(button) {
-  const buttons = Array.from(button.parentElement.children);
-  return buttons.indexOf(button);
-}
-
-function setActiveButton(button, buttonsWrapper, carousel) {
-  const activeButton = buttonsWrapper.querySelector('.active-button');
-  // Determine the index of the active button and the clicked button
-  const activeButtonIndex = getButtonIndex(activeButton);
-  const clickedButtonIndex = getButtonIndex(button);
-
-  const carouselContent = carousel.querySelector('.columns.carousel > div:nth-child(1)');
-
-  // Clear any previous slide classes
-  carouselContent.classList.remove('slide-left');
-
-  if (clickedButtonIndex > activeButtonIndex) {
-    carouselContent.classList.add('slide-left');
-  } else if (clickedButtonIndex < activeButtonIndex) {
-    carouselContent.classList.remove('slide-left');
-  }
-
-  // Remove active class from all buttons
-  buttonsWrapper.querySelectorAll('button').forEach((btn) => {
-    btn.classList.remove('active-button');
-  });
-
+function setActiveButton(button, buttonsWrapper) {
+  buttonsWrapper.querySelector('.active-button')?.classList.remove('active-button');
   button.classList.add('active-button');
 }
 
@@ -100,48 +31,29 @@ function createNavigationButtons(numberOfSlides, carousel) {
   const buttonsWrapper = document.createElement('div');
   buttonsWrapper.className = 'carousel-buttons';
 
-  for (let i = 0; i < numberOfSlides; i += 1) {
+  Array.from({ length: numberOfSlides }, (_, i) => {
     const button = document.createElement('button');
     button.setAttribute('aria-label', `Slide ${i + 1}`);
-
     button.addEventListener('click', () => {
-      // Return early if the button clicked is already active
-      if (button.classList.contains('active-button')) {
-        return;
+      if (!button.classList.contains('active-button')) {
+        showSlides(carousel, i);
+        setActiveButton(button, buttonsWrapper);
       }
-
-      showSlides(carousel, i);
-      setActiveButton(button, buttonsWrapper, carousel);
     });
-
     buttonsWrapper.appendChild(button);
-  }
+    return button;
+  });
 
-  // By default, set the first button as the active button
-  if (buttonsWrapper.firstChild) {
-    buttonsWrapper.firstChild.classList.add('active-button');
-  }
-
+  buttonsWrapper.firstChild?.classList.add('active-button'); // Set first button as active
   return buttonsWrapper;
 }
 
 function setupCarousel(carousel, resetSlidePosition = false) {
   const carouselContent = carousel.querySelector('.columns.carousel > div');
+  if (resetSlidePosition) carouselContent.style.transform = 'translateX(0px)';
 
-  // Remove the slide-left class if necessary
-  if (resetSlidePosition) {
-    carouselContent.classList.remove('slide-left');
-  }
-
-  // Remove existing navigation buttons
-  const existingButtonsWrapper = carousel.querySelector('.carousel-buttons');
-  if (existingButtonsWrapper) {
-    existingButtonsWrapper.remove();
-  }
-
-  const numberOfSlides = countSlides(carouselContent);
-  const buttonsWrapper = createNavigationButtons(numberOfSlides, carousel);
-
+  const buttonsWrapper = createNavigationButtons(countSlides(carouselContent), carousel);
+  carousel.querySelector('.carousel-buttons')?.remove(); // Remove existing buttons
   carousel.appendChild(buttonsWrapper);
   hideExcessElements(carousel);
 }
@@ -252,5 +164,15 @@ export default function decorate(block, options) {
     const videoImg = leftCol.querySelector('img').getAttribute('src');
 
     leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
+  }
+
+  const chatOptions = document.querySelector('.chat-options');
+  if (chatOptions) {
+    const cardButtons = chatOptions.querySelectorAll('.button-container');
+    cardButtons.forEach((button) => {
+      button.previousElementSibling.classList.add('chat-options-text');
+    });
+    matchHeights(chatOptions, '.chat-options-text');
+    matchHeights(chatOptions, 'table');
   }
 }

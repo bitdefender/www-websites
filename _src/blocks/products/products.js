@@ -5,10 +5,10 @@ import {
   createTag,
   generateProductBuyLink,
   matchHeights,
-  setDataOnBuyLinks,
+  setDataOnBuyLinks, formatPrice,
 } from '../../scripts/utils/utils.js';
 
-import { trackProduct } from '../../scripts/scripts.js';
+import { getDomain, trackProduct } from '../../scripts/scripts.js';
 
 // all avaiable text variables
 const TEXT_VARIABLES_MAPPING = [
@@ -46,28 +46,27 @@ function customRound(value) {
  */
 function toModel(productCode, variantId, v) {
   return {
+    productId: v.product_id,
+    productName: v.product_name,
     productCode,
     variantId,
     regionId: v.region_id,
     platformProductId: v.platform_product_id,
     devices: +v.variation.dimension_value,
     subscription: v.variation.years * 12,
-    version: v.variation.years ? 'yearly' : 'monthly',
+    version: v.variation.years ? '12' : '1',
     basePrice: +v.price,
+    // eslint-disable-next-line max-len
     actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
     monthlyBasePrice: customRound(v.price / 12),
     discountedPrice: v.discount?.discounted_price,
-    discountedMonthlyPrice: v.discount
-      ? customRound(v.discount.discounted_price / 12)
-      : 0,
-    discount: v.discount
-      ? customRound((v.price - v.discount.discounted_price) * 100) / 100
-      : 0,
-    discountRate: v.discount
-      ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
-      : 0,
-    currency: v.currency_label,
+    discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
+    discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
+    // eslint-disable-next-line max-len
+    discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
+    currencyIso: v.currency_iso,
     url: generateProductBuyLink(v, productCode),
+    test: {},
   };
 }
 
@@ -171,26 +170,36 @@ function renderPlanSelector(mv, plans, defaultSelection) {
  * @returns Root node of the nanoblock
  */
 function renderOldPrice(mv, text = '', monthly = '') {
-  // TODO simplify CSS
+  // TODO: simplify CSS
   const root = createTag(
     'div',
     {
       class: 'price',
     },
-    `<span class='old-price'>${text} <del>${mv.model.basePrice ?? ''} ${mv.model.currency ?? ''}</del>`,
+    `<span class='old-price ${!mv.model.basePrice ? 'no-old-price' : ''}'>${text} <del>${mv.model.basePrice ?? ''}</del>`,
   );
 
   const oldPriceElt = root.querySelector('span');
 
   mv.subscribe(() => {
-    if (mv.model.discountedPrice) {
-      oldPriceElt.innerHTML = monthly.toLowerCase() === 'monthly'
-        ? `${text} <del>${mv.model.monthlyBasePrice} ${mv.model.currency}<sup>/mo</sup></del>`
-        : `${text} <del>${mv.model.basePrice} ${mv.model.currency}</del>`;
+    const currentDomain = getDomain();
+    const formattedPriceParams = [mv.model.currencyIso, null, currentDomain];
+
+    let oldPrice = 0;
+    if (mv.model.discountedPrice && mv.model.discountRate !== 0) {
+      if (monthly.toLowerCase() === 'monthly') {
+        oldPrice = mv.model.monthlyBasePrice;
+        oldPriceElt.innerHTML = `${text} <del>${formatPrice(mv.model.monthlyBasePrice, ...formattedPriceParams)} <sup>/mo</sup></del>`;
+      } else {
+        oldPrice = mv.model.basePrice;
+        oldPriceElt.innerHTML = `${text} <del>${formatPrice(mv.model.basePrice, ...formattedPriceParams)}</del>`;
+      }
       oldPriceElt.style.visibility = 'visible';
     } else {
       oldPriceElt.style.visibility = 'hidden';
     }
+
+    mv.model.test.oldPrice = oldPrice;
   });
 
   return root;
@@ -216,17 +225,27 @@ function renderPrice(mv, text = '', monthly = '', monthTranslation = 'mo') {
   const priceElt = root.querySelector('strong');
 
   mv.subscribe(() => {
+    const currentDomain = getDomain();
+    const formattedPriceParams = [mv.model.currencyIso, null, currentDomain];
+
+    let price;
     if (monthly.toLowerCase() === 'monthly') {
       if (mv.model.discountedPrice) {
-        priceElt.innerHTML = `${text} ${mv.model.discountedMonthlyPrice} ${mv.model.currency} <sup>/${monthTranslation}</sup>`;
+        price = mv.model.discountedMonthlyPrice;
+        priceElt.innerHTML = `${text} ${formatPrice(mv.model.discountedMonthlyPrice, ...formattedPriceParams)} <sup>/${monthTranslation}</sup>`;
       } else {
-        priceElt.innerHTML = `${text} ${mv.model.monthlyBasePrice} ${mv.model.currency} <sup>/${monthTranslation}</sup>`;
+        price = mv.model.monthlyBasePrice;
+        priceElt.innerHTML = `${text} ${formatPrice(mv.model.monthlyBasePrice, ...formattedPriceParams)} <sup>/${monthTranslation}</sup>`;
       }
     } else if (mv.model.discountedPrice) {
-      priceElt.innerHTML = `${text} ${mv.model.discountedPrice} ${mv.model.currency}`;
+      price = mv.model.discountedPrice;
+      priceElt.innerHTML = `${text} ${formatPrice(mv.model.discountedPrice, ...formattedPriceParams)}`;
     } else {
-      priceElt.innerHTML = `${text} ${mv.model.basePrice} ${mv.model.currency}`;
+      price = mv.model.basePrice;
+      priceElt.innerHTML = `${text} ${formatPrice(mv.model.basePrice, ...formattedPriceParams)}`;
     }
+
+    mv.model.test.price = price;
 
     trackProduct(mv.model);
   });
@@ -254,7 +273,7 @@ function renderHighlightSavings(mv, text = 'Save', percent = '') {
     if (mv.model.discountRate) {
       root.querySelector('span').innerText = (percent.toLowerCase() === 'percent')
         ? `${text} ${mv.model.discountRate}%`
-        : `${text} ${mv.model.discount} ${mv.model.currency}`;
+        : `${text} ${mv.model.discount}`;
       root.style.visibility = 'visible';
     } else {
       root.style.visibility = 'hidden';
@@ -275,7 +294,7 @@ function renderHighlight(mv, text) {
     'div',
     {
       class: 'highlight',
-      style: 'visibility=hidden',
+      style: 'visibility:hidden',
     },
     `<span>${text}</span>`,
   );
@@ -353,10 +372,11 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
     if (mv.model.discountRate) {
       root.innerText = (percent.toLowerCase() === 'percent')
         ? `${text} ${mv.model.discountRate}%`
-        : `${text} ${mv.model.discount} ${mv.model.currency}`;
+        : `${text} ${mv.model.discount}`;
       root.style.visibility = 'visible';
     } else {
       root.style.visibility = 'hidden';
+      root.classList.add('no-save-price');
     }
   });
 
@@ -369,14 +389,16 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
  * @param variant Product variant
  * @returns root node of the nanoblock
  */
-function renderLowestPrice(code, variant, monthly = '') {
+function renderLowestPrice(code, variant, monthly = '', text = '') {
   const root = document.createElement('p');
-
   fetchProduct(code, variant).then((product) => {
+    const currentDomain = getDomain();
+    const formattedPriceParams = [product.currency_iso, null, currentDomain];
     const m = toModel(code, variant, product);
     const isMonthly = monthly.toLowerCase() === 'monthly';
-    const price = isMonthly ? customRound(m.actualPrice / 12) : m.actualPrice;
-    root.innerHTML = `Start today for as low as  ${price} ${product.currency_label}${isMonthly ? '/mo' : ''}`;
+    // eslint-disable-next-line max-len
+    const price = formatPrice(isMonthly ? customRound(m.actualPrice / 12) : m.actualPrice, ...formattedPriceParams);
+    root.innerHTML = `${text.replace('0', `${price}`)}`;
   });
 
   return root;
@@ -427,11 +449,13 @@ export default function decorate(block) {
         col.querySelectorAll('.button-container a').forEach((link) => {
           if (link && (link.href.includes('/site/Store/buy/') || link.href.includes('checkout.bitdefender.com'))) {
             link.href = card.url;
+            // console.log('test', mv.model.test)
+
             const dataInfo = {
               productId: card.productCode,
               variation: {
-                price: card.price,
-                discounted_price: card.discountedPrice,
+                price: card.test.price,
+                oldPrice: card.test.oldPrice,
                 variation_name: card.variantId,
                 currency_label: card.currency,
                 region_id: card.regionId,
@@ -495,22 +519,34 @@ export default function decorate(block) {
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
+    const priceElements = card.querySelectorAll('.price.nanoblock');
+    if (priceElements.length >= 2) {
+      const secondToLastPrice = priceElements[priceElements.length - 2];
+      const previousElement = secondToLastPrice.previousElementSibling;
+      if (previousElement && previousElement.tagName.toLowerCase() === 'p') {
+        previousElement.classList.add('first-year-price-text');
+      } else {
+        const newP = document.createElement('p');
+        newP.classList.add('first-year-price-text');
+        secondToLastPrice.before(newP);
+      }
+    }
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
         return;
       }
-      const neededHeight = '2rem';
       let space = card.querySelector('h3');
       space = space.nextElementSibling;
       const emptyDiv = document.createElement('div');
       space.insertAdjacentElement('afterend', emptyDiv);
-      emptyDiv.classList.add('featured');
+      emptyDiv.classList.add('featured', 'nanoblock');
       emptyDiv.style.visibility = 'hidden';
-      emptyDiv.style.minHeight = neededHeight;
     }
   });
-  matchHeights(block, 'h3');
+  matchHeights(block, '.first-year-price-text');
+  matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
   matchHeights(block, 'h4');

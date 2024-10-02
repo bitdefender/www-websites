@@ -253,10 +253,16 @@ async function internalDecorateIcons(element) {
     const parent = span.firstElementChild?.tagName === 'A' ? span.firstElementChild : span;
 
     // Set aria-label if the parent is an anchor tag
-    const spanParent = span.parentElement;
-    if (spanParent.tagName === 'A' && !spanParent.hasAttribute('aria-label')) {
-      spanParent.setAttribute('aria-label', iconName);
+    try {
+      const spanParent = span.parentElement;
+      if (spanParent?.tagName === 'A' && !spanParent?.hasAttribute('aria-label')) {
+        spanParent.setAttribute('aria-label', iconName);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Error setting aria-label for icon ${iconName}:`, error);
     }
+
     // Styled icons need to be inlined as-is, while unstyled ones can leverage the sprite
     if (ICONS_CACHE[iconName] && ICONS_CACHE[iconName].styled) {
       parent.innerHTML = ICONS_CACHE[iconName].html;
@@ -317,43 +323,6 @@ export async function decorateTags(element) {
   }
 
   replaceTagsInNode(element);
-}
-
-/**
- * Gets placeholders object.
- * @param {string} [prefix] Location of placeholders
- * @returns {object} Window placeholders object
- */
-export async function fetchPlaceholders(prefix = 'default') {
-  window.placeholders = window.placeholders || {};
-  const loaded = window.placeholders[`${prefix}-loaded`];
-  if (!loaded) {
-    window.placeholders[`${prefix}-loaded`] = new Promise((resolve, reject) => {
-      const secondRootFolder = window.location.pathname.split('/').filter((item) => item).filter((item, idx) => idx < 2).join('/');
-      fetch(`/${secondRootFolder}/placeholders.json`)
-        .then((resp) => {
-          if (resp.ok) {
-            return resp.json();
-          }
-          throw new Error(`${resp.status}: ${resp.statusText}`);
-        }).then((json) => {
-          const placeholders = {};
-          json.data
-            .filter((placeholder) => placeholder.Key)
-            .forEach((placeholder) => {
-              placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
-            });
-          window.placeholders[prefix] = placeholders;
-          resolve();
-        }).catch((error) => {
-          // error loading placeholders
-          window.placeholders[prefix] = {};
-          reject(error);
-        });
-    });
-  }
-  await window.placeholders[`${prefix}-loaded`];
-  return window.placeholders[prefix];
 }
 
 /**

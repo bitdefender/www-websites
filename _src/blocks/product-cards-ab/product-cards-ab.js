@@ -196,20 +196,6 @@ export default async function decorate(block, options) {
     element.remove();
   });
 
-  if (options) {
-    window.addEventListener('codeBaseFinishedRunning', () => {
-      window.adobeDataLayer.push({
-        event: 'product loaded',
-        product: null,
-      });
-
-      window.adobeDataLayer.push({
-        event: 'product loaded',
-        product: adobeDataLayerArray,
-      });
-    });
-  }
-
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
     bubbles: true,
     composed: true, // This allows the event to cross the shadow DOM boundary
