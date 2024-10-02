@@ -611,14 +611,22 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   } else {
     const allSegments = pathname.split('/').filter((segment) => segment !== '');
     const lastSegment = allSegments[allSegments.length - 1];
-    const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
-    const subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
+    let subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
+    let subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
 
     let subSubSection = 'product';
     let tagName = `${locale}:product:${subSubSubSection}`;
     if (lastSegment === 'consumer') {
       subSubSection = 'solutions';
       tagName = `${locale}:consumer:solutions`;
+    }
+
+    if (window.errorCode === '404') {
+      tagName = `${locale}:404`;
+      subSection = '404';
+      subSubSection = undefined;
+      subSubSubSection = undefined;
+      pushToDataLayer('page error', {});
     }
 
     pushToDataLayer('page load started', {
