@@ -1,3 +1,5 @@
+import { matchHeights } from "../../scripts/utils/utils.js";
+
 function expandItem(content) {
   content.style.height = `${content.scrollHeight}px`;
   const transitionEndCallback = () => {
@@ -134,4 +136,13 @@ export default function decorate(block) {
       col.appendChild(extractFeatures(col));
     });
   });
+
+  const featuresList = block.querySelectorAll('ul');
+  if (featuresList) {
+    featuresList.forEach((list) => {
+      const featureText = list.previousElementSibling;
+      featureText.classList.add('feature-text');
+    });
+  }
+  matchHeights(block, '.feature-text');
 }
