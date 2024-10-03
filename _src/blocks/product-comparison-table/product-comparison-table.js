@@ -36,7 +36,7 @@ function customRound(value) {
  * @param v variant
  * @returns a model
  */
-function toModel(productCode, variantId, v) {
+async function toModel(productCode, variantId, v) {
   return {
     productId: v.product_id,
     productName: v.product_name,
@@ -57,7 +57,7 @@ function toModel(productCode, variantId, v) {
     // eslint-disable-next-line max-len
     discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
     currencyIso: v.currency_iso,
-    url: generateProductBuyLink(v, productCode),
+    url: await generateProductBuyLink(v, productCode),
   };
 }
 
@@ -76,8 +76,8 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   const priceAppliedOnTime = document.createElement('p');
   priceRoot.appendChild(priceAppliedOnTime);
   fetchProduct(code, variant)
-    .then((product) => {
-      const m = toModel(code, variant, product);
+    .then(async (product) => {
+      const m = await toModel(code, variant, product);
       const currentProduct = { code, variant, product };
       fetchedProducts.push(currentProduct);
       // eslint-disable-next-line camelcase

@@ -1,4 +1,4 @@
-import { Target } from '../target.js';
+import { Target, Visitor } from '../target.js';
 import ZuoraNLClass from '../zuora.js';
 
 export const IANA_BY_REGION_MAP = new Map([
@@ -315,7 +315,7 @@ export function getPriceLocalMapByLocale() {
   return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
-export function generateProductBuyLink(product, productCode, month = null, years = null) {
+export async function generateProductBuyLink(product, productCode, month = null, years = null) {
   if (isZuora()) {
     return product.buy_link;
   }
@@ -324,7 +324,15 @@ export function generateProductBuyLink(product, productCode, month = null, years
   const y = product.variation?.years || years;
 
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/?force_country=${forceCountry}`;
+  const url = new URL(window.location.href);
+  const targetCampain = await Target.getCampaign();
+  const pid = targetCampain || url.searchParams.get('pid') || getMetadata('pid');
+  const buyLink = new URL(`${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/`);
+  buyLink.searchParams.append('force_country', forceCountry);
+  if (pid) {
+    buyLink.searchParams.append('pid', pid);
+  }
+  return Visitor.appendVisitorIDsTo(buyLink.href);
 }
 
 export function setDataOnBuyLinks(element, dataInfo) {

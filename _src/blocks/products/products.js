@@ -44,7 +44,7 @@ function customRound(value) {
  * @param v variant
  * @returns a model
  */
-function toModel(productCode, variantId, v) {
+async function toModel(productCode, variantId, v) {
   return {
     productId: v.product_id,
     productName: v.product_name,
@@ -65,7 +65,7 @@ function toModel(productCode, variantId, v) {
     // eslint-disable-next-line max-len
     discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
     currencyIso: v.currency_iso,
-    url: generateProductBuyLink(v, productCode),
+    url: await generateProductBuyLink(v, productCode),
     test: {},
   };
 }
@@ -100,7 +100,7 @@ class ProductCard {
   async selectProductVariant(productCode, variantId) {
     const p = await fetchProduct(productCode, variantId);
 
-    this.model = toModel(productCode, variantId, p);
+    this.model = await toModel(productCode, variantId, p);
 
     this.notify();
   }
@@ -391,10 +391,10 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
  */
 function renderLowestPrice(code, variant, monthly = '', text = '') {
   const root = document.createElement('p');
-  fetchProduct(code, variant).then((product) => {
+  fetchProduct(code, variant).then(async (product) => {
     const currentDomain = getDomain();
     const formattedPriceParams = [product.currency_iso, null, currentDomain];
-    const m = toModel(code, variant, product);
+    const m = await toModel(code, variant, product);
     const isMonthly = monthly.toLowerCase() === 'monthly';
     // eslint-disable-next-line max-len
     const price = formatPrice(isMonthly ? customRound(m.actualPrice / 12) : m.actualPrice, ...formattedPriceParams);
