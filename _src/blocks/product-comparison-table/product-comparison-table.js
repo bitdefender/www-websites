@@ -108,7 +108,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
         const years = variantSplit[1].split('y')[0];
 
         // eslint-disable-next-line max-len
-        buyLink.href = currentProduct.product.buy_link || generateProductBuyLink(currentProduct, currentProduct.code, units, years);
+        buyLink.href = currentProduct.product.buy_link || await generateProductBuyLink(currentProduct, currentProduct.code, units, years);
 
         const dataInfo = {
           productId: currentProduct.code,
