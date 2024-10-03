@@ -39,6 +39,7 @@ export class Visitor {
    */
   static async getConsumerId() {
     await this.#staticInit;
+    // eslint-disable-next-line no-underscore-dangle
     return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : '';
   }
 
@@ -109,6 +110,7 @@ export class Target {
         return acc;
       }, {});
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.warn(e);
     }
   }
