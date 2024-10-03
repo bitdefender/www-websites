@@ -5,7 +5,7 @@ import {
   createTag,
   generateProductBuyLink,
   matchHeights,
-  setDataOnBuyLinks, formatPrice,
+  setDataOnBuyLinks, formatPrice, appendAdobeMcLinks,
 } from '../../scripts/utils/utils.js';
 
 import { getDomain, trackProduct } from '../../scripts/scripts.js';
@@ -449,7 +449,6 @@ export default function decorate(block) {
         col.querySelectorAll('.button-container a').forEach((link) => {
           if (link && (link.href.includes('/site/Store/buy/') || link.href.includes('checkout.bitdefender.com'))) {
             link.href = card.url;
-            // console.log('test', mv.model.test)
 
             const dataInfo = {
               productId: card.productCode,
@@ -464,6 +463,8 @@ export default function decorate(block) {
             setDataOnBuyLinks(link, dataInfo);
           }
         });
+
+        appendAdobeMcLinks(block);
       });
     });
     row.remove();
