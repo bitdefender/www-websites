@@ -1,4 +1,4 @@
-import { matchHeights } from "../../scripts/utils/utils.js";
+import { matchHeights } from '../../scripts/utils/utils.js';
 
 function expandItem(content) {
   content.style.height = `${content.scrollHeight}px`;
