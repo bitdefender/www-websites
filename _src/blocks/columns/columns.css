@@ -699,6 +699,10 @@
     font-size: var(--heading-font-size-m);
     margin-bottom: 10px;
   }
+
+  .columns.awards > div > div{
+    flex: unset;
+  }
 }
 
 @media (min-width: 1200px) {
