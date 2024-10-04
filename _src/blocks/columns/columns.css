@@ -557,6 +557,10 @@
     order: unset;
   }
 
+  .columns.awards > div > div {
+    flex: 0;
+  }
+
   .columns-wrapper {
     max-width: var(--section-desktop-max-width);
     padding: 0 var(--section-desktop-padding);
@@ -699,10 +703,6 @@
     font-size: var(--heading-font-size-m);
     margin-bottom: 10px;
   }
-
-  .columns.awards > div > div{
-    flex: unset;
-  }
 }
 
 @media (min-width: 1200px) {
@@ -710,6 +710,10 @@
     max-width: 1350px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+
+  .columns.awards > div > div {
+    flex: 1;
   }
 
   .percent-table .columns table tr td:first-of-type {
