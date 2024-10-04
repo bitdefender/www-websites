@@ -1,6 +1,8 @@
 import { Target, Visitor } from '../target.js';
 import ZuoraNLClass from '../zuora.js';
 
+const TRACKED_PRODUCTS = [];
+const TRACKED_PRODUCTS_COMPARISON = [];
 export const IANA_BY_REGION_MAP = new Map([
   [3, { locale: 'en-GB', label: 'united kingdom' }],
   [4, { locale: 'au-AU', label: 'australia' }],
@@ -813,4 +815,124 @@ export async function matchHeights(targetNode, selector) {
 export function getPidFromUrl() {
   const url = new URL(window.location.href);
   return url.searchParams.get('pid') || getMetadata('pid');
+}
+
+export function pushToDataLayer(event, payload) {
+  if (!event) {
+    // eslint-disable-next-line no-console
+    console.error('The data layer event is missing');
+    return;
+  }
+  if (!window.adobeDataLayer) {
+    window.adobeDataLayer = [];
+    window.adobeDataLayerInPage = true;
+  }
+  window.adobeDataLayer.push({ event, ...payload });
+}
+
+export function trackProduct(product, location = '') {
+  // eslint-disable-next-line max-len
+  if (!product && product.length === 0) return;
+  if (location && location === 'comparison') {
+    // eslint-disable-next-line max-len
+    const isDuplicate = TRACKED_PRODUCTS_COMPARISON.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
+    if (!isDuplicate) TRACKED_PRODUCTS_COMPARISON.push(product);
+  } else {
+    // eslint-disable-next-line max-len
+    const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
+    if (!isDuplicate) TRACKED_PRODUCTS.push(product);
+  }
+}
+
+export function pushTrialDownloadToDataLayer() {
+  const getTrialID = () => (
+    // eslint-disable-next-line max-len
+    ((TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode) || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode))
+    || getMetadata('breadcrumb-title')
+    || getMetadata('og:title')
+  );
+
+  const url = window.location.href;
+  const currentPage = url.split('/').filter(Boolean).pop();
+  const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
+  const downloadType2 = currentPage === 'thank-you' ? 'downloaded' : 'trial';
+
+  const pushTrialData = () => {
+    const dataLayerDownload = {
+      product: {
+        [downloadType2]: [{ ID: getTrialID() }],
+      },
+    };
+    pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
+  };
+
+  const sections = document.querySelectorAll('a.button.modal');
+  if (sections.length) {
+    sections.forEach((button) => {
+      const href = button.getAttribute('href');
+      if (href.includes('fragments/thank-you-for-downloading') || href.includes('fragments/get-bitdefender')) {
+        button.addEventListener('click', pushTrialData);
+      }
+    });
+  } else if (currentPage === 'thank-you') {
+    pushTrialData();
+  }
+}
+
+export function pushProductsToDataLayer() {
+  const url = window.location.href;
+  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
+  const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
+
+  // eslint-disable-next-line arrow-body-style
+  const mapProductData = (products) => {
+    return products.map((product) => {
+      const {
+        platformProductId,
+        productId,
+        productName,
+        devices,
+        subscription,
+        version,
+        basePrice,
+        discount,
+        discountRate,
+        currencyIso,
+        actualPrice,
+      } = product;
+
+      return Object.fromEntries(
+        Object.entries({
+          ID: platformProductId || productId,
+          name: productName,
+          devices,
+          subscription,
+          version,
+          basePrice,
+          discountValue: discount,
+          discountRate,
+          currency: currencyIso,
+          priceWithTax: actualPrice,
+        }).filter(([, value]) => value !== undefined),
+      );
+    });
+  };
+
+  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
+    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
+  }
+
+  const dataLayerProduct = {
+    product: {
+      [key]: mapProductData(TRACKED_PRODUCTS),
+      // eslint-disable-next-line max-len
+      ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
+    },
+  };
+
+  pushToDataLayer('product loaded', dataLayerProduct);
+}
+
+export function getDomain() {
+  return window.location.pathname.split('/').filter((item) => item)[0];
 }

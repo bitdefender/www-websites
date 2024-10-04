@@ -2,10 +2,11 @@ import {
   createTag,
   fetchIndex,
   fixExcelFilterZeroes,
+  getDomain,
 } from './utils/utils.js';
 
 // eslint-disable-next-line import/no-cycle
-import { decorateBlockWithRegionId, getDomain } from './scripts.js';
+import { decorateBlockWithRegionId } from './scripts.js';
 
 function prependSlash(path) {
   return path.startsWith('/') ? path : `/${path}`;
