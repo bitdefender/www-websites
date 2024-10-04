@@ -578,7 +578,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   // get locale
   const regex = /\/([a-z]{2}-[a-z]{2})\//i; // match locale with slashes
   // extract locale without slashes
-  const locale = pathName.match(regex)[1]; 
+  const locale = pathName.match(regex)[1];
 
   if (tags.length) {
     pushToDataLayer('page load started', {
