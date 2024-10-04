@@ -150,8 +150,8 @@
 .columns.awards > div {
   gap:30px;
   display: flex;
-  flex-direction: column;
   flex-wrap: wrap;
+  flex-direction: row;
   align-items: center;
 }
 
@@ -1165,12 +1165,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 @media (min-width: 768px) {
-  .columns.awards > div{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
- }
-
   .v2 .columns > div {
     flex-direction: row;
   }
