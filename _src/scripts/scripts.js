@@ -746,6 +746,7 @@ async function loadLazy(doc) {
     loadHeader(doc.querySelector('header'));
   }
 
+  loadTrackers();
   await loadBlocks(main);
 
   const { hash } = window.location;
@@ -765,8 +766,6 @@ async function loadLazy(doc) {
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`);
   }
-
-  loadTrackers();
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
