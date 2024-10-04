@@ -753,7 +753,6 @@ export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector('.block');
   const hasLCPBlock = (block && lcpBlocks.includes(block.dataset.blockName));
   if (hasLCPBlock) {
-    document.body.style.display = null;
     for (const lcpBlockName of lcpBlocks) {
       const lcpBlock = document.querySelector(`.${lcpBlockName}`);
       if (!lcpBlock) {
@@ -762,6 +761,7 @@ export async function waitForLCP(lcpBlocks) {
       await loadBlock(lcpBlock);
     }
 
+    document.body.style.display = null;
     const lcpCandidate = document.querySelector('main img');
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
