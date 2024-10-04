@@ -3,6 +3,7 @@ import {
   sampleRUM,
   getMetadata,
 } from './lib-franklin.js';
+import { pushToDataLayer, pushProductsToDataLayer } from './utils/utils.js';
 
 // eslint-disable-next-line import/no-cycle
 import {
@@ -12,6 +13,10 @@ import { loadBreadcrumbs } from './breadcrumbs.js';
 
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
+
+// add products to data layer
+pushProductsToDataLayer();
+pushToDataLayer('page loaded');
 
 // Load breadcrumbs
 loadBreadcrumbs();

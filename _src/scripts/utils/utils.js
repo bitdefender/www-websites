@@ -1,8 +1,15 @@
-import { Target, Visitor } from '../target.js';
 import ZuoraNLClass from '../zuora.js';
 
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
+
+export function getLocale() {
+  const regex = /\/([a-z]{2}-[a-z]{2})\//i; // match locale with slashes
+  // extract locale without slashes
+  return window.location.pathname.match(regex)[1];
+}
+
+export const GLOBAL_V2_LOCALES = ['en-bz', 'en-lv'];
 export const IANA_BY_REGION_MAP = new Map([
   [3, { locale: 'en-GB', label: 'united kingdom' }],
   [4, { locale: 'au-AU', label: 'australia' }],
@@ -317,24 +324,21 @@ export function getPriceLocalMapByLocale() {
   return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
-export async function generateProductBuyLink(product, productCode, month = null, years = null) {
+export function generateProductBuyLink(product, productCode, month = null, years = null) {
   if (isZuora()) {
     return product.buy_link;
   }
 
   const m = product.variation?.dimension_value || month;
   const y = product.variation?.years || years;
+  let pid = '';
+
+  if (GLOBAL_V2_LOCALES.includes(getLocale())) {
+    pid = 'pid.global_v2';
+  }
 
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  const url = new URL(window.location.href);
-  const targetCampain = await Target.getCampaign();
-  const pid = targetCampain || url.searchParams.get('pid') || getMetadata('pid');
-  const buyLink = new URL(`${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/`);
-  buyLink.searchParams.append('force_country', forceCountry);
-  if (pid) {
-    buyLink.searchParams.append('pid', pid);
-  }
-  return Visitor.appendVisitorIDsTo(buyLink.href);
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${pid}?force_country=${forceCountry}`;
 }
 
 export function setDataOnBuyLinks(element, dataInfo) {
@@ -365,8 +369,12 @@ export function formatPrice(price, currency, region = null, locale = null) {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
-  const targetCampain = await Target.getCampaign();
   const url = new URL(window.location.href);
+  const locale = getLocale();
+  if (GLOBAL_V2_LOCALES.includes(locale)) {
+    // eslint-disable-next-line no-param-reassign
+    pid = 'global_v2';
+  }
 
   if (!isZuora()) {
     let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
@@ -375,7 +383,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
 
     if (!pid) {
       // eslint-disable-next-line no-param-reassign
-      pid = targetCampain || url.searchParams.get('pid') || getMetadata('pid');
+      pid = url.searchParams.get('pid') || getMetadata('pid');
     }
 
     data.append('data', JSON.stringify({
@@ -413,7 +421,6 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       data.set('data', JSON.stringify(newData));
     }
 
-    const locale = window.location.pathname.split('/')[1];
     const currentPriceSetup = PRICE_LOCALE_MAP.get(locale) || 'en-us';
     const newData = JSON.parse(data.get('data'));
     FETCH_URL = `${FETCH_URL}?force_country=${currentPriceSetup.force_country}`;
@@ -430,7 +437,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       body: data,
     });
 
-    cacheResponse.set(code, response);
+    // cacheResponse.set(code, response);
     return findProductVariant(response, variant);
   }
 
@@ -442,7 +449,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   const variantSplit = variant.split('-');
   const units = variantSplit[0].split('u')[0];
   const years = variantSplit[1].split('y')[0];
-  const campaign = targetCampain || getParamValue('campaign');
+  const campaign = getParamValue('campaign');
   const zuoraResponse = await ZuoraNLClass.loadProduct(`${code}/${units}/${years}`, campaign);
   // zuoraResponse.ok = true;
 
