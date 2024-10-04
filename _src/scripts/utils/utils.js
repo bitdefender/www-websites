@@ -1,3 +1,4 @@
+import { Target, Visitor } from '../target.js';
 import ZuoraNLClass from '../zuora.js';
 
 export const IANA_BY_REGION_MAP = new Map([
@@ -314,7 +315,7 @@ export function getPriceLocalMapByLocale() {
   return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
-export function generateProductBuyLink(product, productCode, month = null, years = null) {
+export async function generateProductBuyLink(product, productCode, month = null, years = null) {
   if (isZuora()) {
     return product.buy_link;
   }
@@ -323,7 +324,15 @@ export function generateProductBuyLink(product, productCode, month = null, years
   const y = product.variation?.years || years;
 
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/?force_country=${forceCountry}`;
+  const url = new URL(window.location.href);
+  const targetCampain = await Target.getCampaign();
+  const pid = targetCampain || url.searchParams.get('pid') || getMetadata('pid');
+  const buyLink = new URL(`${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/`);
+  buyLink.searchParams.append('force_country', forceCountry);
+  if (pid) {
+    buyLink.searchParams.append('pid', pid);
+  }
+  return Visitor.appendVisitorIDsTo(buyLink.href);
 }
 
 export function setDataOnBuyLinks(element, dataInfo) {
@@ -354,6 +363,7 @@ export function formatPrice(price, currency, region = null, locale = null) {
  * hk - 51, tw - 52
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
+  const targetCampain = await Target.getCampaign();
   const url = new URL(window.location.href);
 
   if (!isZuora()) {
@@ -363,7 +373,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
 
     if (!pid) {
       // eslint-disable-next-line no-param-reassign
-      pid = url.searchParams.get('pid') || getMetadata('pid');
+      pid = targetCampain || url.searchParams.get('pid') || getMetadata('pid');
     }
 
     data.append('data', JSON.stringify({
@@ -430,7 +440,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   const variantSplit = variant.split('-');
   const units = variantSplit[0].split('u')[0];
   const years = variantSplit[1].split('y')[0];
-  const campaign = getParamValue('campaign');
+  const campaign = targetCampain || getParamValue('campaign');
   const zuoraResponse = await ZuoraNLClass.loadProduct(`${code}/${units}/${years}`, campaign);
   // zuoraResponse.ok = true;
 

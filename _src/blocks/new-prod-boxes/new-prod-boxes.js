@@ -5,6 +5,7 @@ import {
   getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks, generateProductBuyLink, getPriceLocalMapByLocale,
 } from '../../scripts/utils/utils.js';
 import { trackProduct } from '../../scripts/scripts.js';
+import { Target } from '../../scripts/target.js';
 
 /**
  * Utility function to round prices and percentages
@@ -102,7 +103,6 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   if (!buyLinkSelector) {
     return null;
   }
-
   const url = new URL(window.location.href);
   let buyLinkPid = pid;
   if (!buyLinkPid) {
@@ -260,13 +260,19 @@ function createPlanSwitcher(radioButtons, cardNumber, prodName, prodMonthlyName,
 export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
-    products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
+    products, familyProducts, monthlyProducts, priceType, mainProduct,
     addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
   // if options exists, this means the component is being called from aem
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
+  }
+
+  const targetCampain = await Target.getCampaign();
+  let { pid } = block.closest('.section').dataset;
+  if (targetCampain) {
+    pid = targetCampain;
   }
 
   const blockParent = block.closest('.section');
