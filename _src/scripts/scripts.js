@@ -745,7 +745,7 @@ async function loadLazy(doc) {
     loadHeader(doc.querySelector('header'));
   }
 
-  // loadTrackers();
+  loadTrackers();
   await loadBlocks(main);
 
   const { hash } = window.location;
