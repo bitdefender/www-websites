@@ -4,7 +4,7 @@
 import {
   getMetadata, getBuyLinkCountryPrefix, matchHeights, setDataOnBuyLinks, generateProductBuyLink, getPriceLocalMapByLocale,
 } from '../../scripts/utils/utils.js';
-import { trackProduct } from '../../scripts/scripts.js';
+// import { trackProduct } from '../../scripts/scripts.js';
 
 /**
  * Utility function to round prices and percentages
@@ -125,7 +125,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
     const variant = `${prodUsers}u-${prodYears}y`;
     const product = await fetchProduct(prodName, variant, pid);
     const m = toModel(prodName, variant, product);
-    trackProduct(m);
+    // trackProduct(m);
     const {
       price, discount, currency_label: currencyLabel,
     } = product;
