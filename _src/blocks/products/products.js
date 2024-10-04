@@ -464,7 +464,7 @@ export default function decorate(block) {
           }
         });
 
-        appendAdobeMcLinks(block);
+        adobeMcAppendVisitorId(block);
       });
     });
     row.remove();
