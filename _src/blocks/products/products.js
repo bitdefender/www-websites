@@ -5,7 +5,7 @@ import {
   createTag,
   generateProductBuyLink,
   matchHeights,
-  setDataOnBuyLinks, formatPrice, appendAdobeMcLinks,
+  setDataOnBuyLinks, formatPrice, adobeMcAppendVisitorId,
 } from '../../scripts/utils/utils.js';
 
 import { getDomain, trackProduct } from '../../scripts/scripts.js';
@@ -464,7 +464,7 @@ export default function decorate(block) {
           }
         });
 
-        appendAdobeMcLinks(block);
+        adobeMcAppendVisitorId(block);
       });
     });
     row.remove();
