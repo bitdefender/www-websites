@@ -5,10 +5,8 @@ import {
   createTag,
   generateProductBuyLink,
   matchHeights,
-  setDataOnBuyLinks, formatPrice, adobeMcAppendVisitorId,
+  setDataOnBuyLinks, formatPrice, adobeMcAppendVisitorId, trackProduct, getDomain,
 } from '../../scripts/utils/utils.js';
-
-import { getDomain, trackProduct } from '../../scripts/scripts.js';
 
 // all avaiable text variables
 const TEXT_VARIABLES_MAPPING = [

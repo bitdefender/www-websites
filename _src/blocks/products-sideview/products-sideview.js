@@ -4,9 +4,8 @@ import {
   getBuyLinkCountryPrefix,
   getDatasetFromSection,
   getPidFromUrl,
-  renderNanoBlocks, setDataOnBuyLinks,
+  renderNanoBlocks, setDataOnBuyLinks, getDomain,
 } from '../../scripts/utils/utils.js';
-import { getDomain } from '../../scripts/scripts.js';
 
 const state = {
   firstProduct: null,

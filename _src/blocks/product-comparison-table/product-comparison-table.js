@@ -4,9 +4,9 @@ import {
   fetchProduct,
   matchHeights,
   setDataOnBuyLinks,
-  generateProductBuyLink, formatPrice,
+  generateProductBuyLink, formatPrice, trackProduct,
+  getDomain,
 } from '../../scripts/utils/utils.js';
-import { getDomain, trackProduct } from '../../scripts/scripts.js';
 
 const fetchedProducts = [];
 

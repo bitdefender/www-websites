@@ -1,6 +1,6 @@
 import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
-import { adobeMcAppendVisitorId } from '../../scripts/utils/utils.js';
-import { decorateMain, getDomain } from '../../scripts/scripts.js';
+import { adobeMcAppendVisitorId, getDomain } from '../../scripts/utils/utils.js';
+import { decorateMain } from '../../scripts/scripts.js';
 
 function wrapImgsInLinks(container) {
   const pictures = container.querySelectorAll('picture');
