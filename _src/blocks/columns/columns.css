@@ -148,7 +148,15 @@
 
 /* awards styling */
 .columns.awards > div {
-  row-gap: 30px;
+  gap:30px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.columns.awards div > .columns-img-col{
+  margin-bottom: 0;
 }
 
 .columns img {
@@ -1153,6 +1161,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 @media (min-width: 768px) {
+  .columns.awards > div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+ }
+
   .v2 .columns > div {
     flex-direction: row;
   }
