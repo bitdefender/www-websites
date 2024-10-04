@@ -80,14 +80,14 @@ async function renderStickyNavigation(block) {
   const stickyNavLink = stickyNavButtonContainer?.querySelector('a');
 
   // append visitor IDs and pid to everything that is not a hash link
-  if (!stickyNavLink.href.includes('#')) {
+  if (stickyNavLink && !stickyNavLink.href.includes('#')) {
     const targetCampain = await Target.getCampaign();
 
     const pageUrl = new URL(window.location.href);
     const buyLinkUrl = new URL(stickyNavLink.href);
 
     const pid = targetCampain || pageUrl.searchParams.get('pid') || getMetadata('pid');
-    if (pid) {
+    if (pid && stickyNavLink.href.includes('/buy/')) {
       buyLinkUrl.searchParams.set('pid', pid);
     }
 
