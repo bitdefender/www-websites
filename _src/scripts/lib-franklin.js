@@ -752,27 +752,19 @@ export function decorateButtons(element) {
 export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector('.block');
   const hasLCPBlock = (block && lcpBlocks.includes(block.dataset.blockName));
-  if (hasLCPBlock) {
-    for (const lcpBlockName of lcpBlocks) {
-      const lcpBlock = document.querySelector(`.${lcpBlockName}`);
-      if (!lcpBlock) {
-        continue;
-      }
-      await loadBlock(lcpBlock);
-    }
+  if (hasLCPBlock) await loadBlock(block);
 
-    document.body.style.display = null;
-    const lcpCandidate = document.querySelector('main img');
-    await new Promise((resolve) => {
-      if (lcpCandidate && !lcpCandidate.complete) {
-        lcpCandidate.setAttribute('loading', 'eager');
-        lcpCandidate.addEventListener('load', resolve);
-        lcpCandidate.addEventListener('error', resolve);
-      } else {
-        resolve();
-      }
-    });
-  }
+  document.body.style.display = null;
+  const lcpCandidate = document.querySelector('main img');
+  await new Promise((resolve) => {
+    if (lcpCandidate && !lcpCandidate.complete) {
+      lcpCandidate.setAttribute('loading', 'eager');
+      lcpCandidate.addEventListener('load', resolve);
+      lcpCandidate.addEventListener('error', resolve);
+    } else {
+      resolve();
+    }
+  });
 }
 
 /**

@@ -22,7 +22,7 @@ import {
   GLOBAL_EVENTS,
 } from './utils/utils.js';
 
-const LCP_BLOCKS = ['hero', 'news-bar']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
 
