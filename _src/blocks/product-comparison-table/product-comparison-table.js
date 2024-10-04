@@ -36,7 +36,7 @@ function customRound(value) {
  * @param v variant
  * @returns a model
  */
-async function toModel(productCode, variantId, v) {
+function toModel(productCode, variantId, v) {
   return {
     productId: v.product_id,
     productName: v.product_name,
@@ -57,7 +57,7 @@ async function toModel(productCode, variantId, v) {
     // eslint-disable-next-line max-len
     discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
     currencyIso: v.currency_iso,
-    url: await generateProductBuyLink(v, productCode),
+    url: generateProductBuyLink(v, productCode),
   };
 }
 
@@ -76,8 +76,8 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   const priceAppliedOnTime = document.createElement('p');
   priceRoot.appendChild(priceAppliedOnTime);
   fetchProduct(code, variant)
-    .then(async (product) => {
-      const m = await toModel(code, variant, product);
+    .then((product) => {
+      const m = toModel(code, variant, product);
       const currentProduct = { code, variant, product };
       fetchedProducts.push(currentProduct);
       // eslint-disable-next-line camelcase
@@ -108,7 +108,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
         const years = variantSplit[1].split('y')[0];
 
         // eslint-disable-next-line max-len
-        buyLink.href = currentProduct.product.buy_link || await generateProductBuyLink(currentProduct, currentProduct.code, units, years);
+        buyLink.href = currentProduct.product.buy_link || generateProductBuyLink(currentProduct, currentProduct.code, units, years);
 
         const dataInfo = {
           productId: currentProduct.code,

@@ -1,6 +1,4 @@
 import { STICKY_NAVIGATION_DATASET_KEY } from '../../scripts/lib-franklin.js';
-import { Target, Visitor } from '../../scripts/target.js';
-import { getMetadata } from '../../scripts/utils/utils.js';
 
 function scrollToAnchorWithOffset(anchorId) {
   const anchorElement = document.getElementById(anchorId);
@@ -55,7 +53,7 @@ function renderStickyNavMenu() {
   return stickyNavMenu;
 }
 
-async function renderStickyNavigation(block) {
+function renderStickyNavigation(block) {
   const menuWithButton = document.createElement('div');
   menuWithButton.classList.add('menu-with-button');
 
@@ -75,26 +73,8 @@ async function renderStickyNavigation(block) {
 
   mobileDropDown.innerText = stickyNavMenu.querySelector('li').innerText;
 
-  const stickyNavButtonContainer = block.querySelector('.button-container');
-
-  const stickyNavLink = stickyNavButtonContainer?.querySelector('a');
-
-  // append visitor IDs and pid to everything that is not a hash link
-  if (stickyNavLink && !stickyNavLink.href.includes('#')) {
-    const targetCampain = await Target.getCampaign();
-
-    const pageUrl = new URL(window.location.href);
-    const buyLinkUrl = new URL(stickyNavLink.href);
-
-    const pid = targetCampain || pageUrl.searchParams.get('pid') || getMetadata('pid');
-    if (pid && stickyNavLink.href.includes('/buy/')) {
-      buyLinkUrl.searchParams.set('pid', pid);
-    }
-
-    stickyNavLink.href = await Visitor.appendVisitorIDsTo(buyLinkUrl.href);
-  }
-
-  if (stickyNavButtonContainer) menuWithButton.appendChild(stickyNavButtonContainer);
+  const stickyNavButton = block.querySelector('.button-container');
+  if (stickyNavButton) menuWithButton.appendChild(stickyNavButton);
 
   block.replaceChildren(mobileDropDown);
   block.appendChild(menuWithButton);
@@ -158,8 +138,8 @@ function onScroll(stickyNav) {
   updateStickyNavActiveMenuItem(stickyNav);
 }
 
-export default async function decorate(block) {
-  const stickyNav = await renderStickyNavigation(block);
+export default function decorate(block) {
+  const stickyNav = renderStickyNavigation(block);
 
   // listen to scroll event to stick the nav on the top and update the current visible section
   document.addEventListener('scroll', () => onScroll(stickyNav));
