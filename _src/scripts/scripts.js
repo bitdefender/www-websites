@@ -51,11 +51,6 @@ function initMobileDetector(viewport) {
   document.body.append(mobileDetectorDiv);
 }
 
-export function isView(viewport) {
-  const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
-  return !!(element && getComputedStyle(element).display !== 'none');
-}
-
 /**
  * Creates a meta tag with the given name and value and appends it to the head.
  * @param {String} name The name of the meta tag

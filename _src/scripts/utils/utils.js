@@ -936,3 +936,8 @@ export function pushProductsToDataLayer() {
 export function getDomain() {
   return window.location.pathname.split('/').filter((item) => item)[0];
 }
+
+export function isView(viewport) {
+  const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
+  return !!(element && getComputedStyle(element).display !== 'none');
+}
