@@ -442,7 +442,8 @@ async function runDefaultHeaderLogic(block) {
         });
       });
 
-      // TODO: please remove this if statement when the mega menu for these domains gets created in AEM
+      // TODO: please remove this if statement when the mega menu
+      // for these domains gets created in AEM
       const regex = /\/(zh-hk|zh-tw)\//i;
       const matches = window.location.href.match(regex);
       if (matches) {
