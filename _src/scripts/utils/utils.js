@@ -6,7 +6,13 @@ const TRACKED_PRODUCTS_COMPARISON = [];
 export function getLocale() {
   const regex = /\/([a-z]{2}-[a-z]{2})\//i; // match locale with slashes
   // extract locale without slashes
-  return window.location.pathname.match(regex)[1];
+  const match = window.location.pathname.match(regex);
+  const defaultLocale = 'en-us';
+  if (match) {
+    return match[1];
+  }
+
+  return defaultLocale;
 }
 
 export const GLOBAL_V2_LOCALES = ['en-bz', 'en-lv'];
