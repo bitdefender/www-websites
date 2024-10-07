@@ -347,7 +347,7 @@ export function setDataOnBuyLinks(element, dataInfo) {
   if (variation.variation_name) element.dataset.variation = variation.variation_name;
 }
 
-export function formatPrice(price, currency, region = null, locale = null) {
+export function formatPrice(price, currency) {
   if (!price) {
     return null;
   }
