@@ -126,6 +126,10 @@ main .section.sticky-navigation-container {
   text-transform: capitalize;
 }
 
+.sticky-navigation .button-container a .button-text{
+  white-space: nowrap;
+}
+
 @media (min-width: 992px) { /* desktop */
   .sticky-navigation {
     border-bottom: 1px solid var(--sticky-nav-border-color);
