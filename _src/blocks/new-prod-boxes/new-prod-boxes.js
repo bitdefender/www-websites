@@ -124,12 +124,10 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   }
 
   const forceCountry = getPriceLocalMapByLocale().country_code;
-  let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/?force_country=${forceCountry}`);
-  if (buyLinkPid) {
-    buyLinkHref.searchParams.append('pid', buyLinkPid);
-  }
+  let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/${buyLinkPid}?force_country=${forceCountry}`);
   return buyLinkHref;
 }
+
 async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
   try {
     const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
