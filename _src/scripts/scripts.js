@@ -20,6 +20,7 @@ import {
   getDefaultLanguage,
   getParamValue,
   GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
+  getLocale,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
@@ -448,10 +449,7 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   const environment = getEnvironment(hostname, languageCountry.country);
   const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
 
-  // get locale
-  const regex = /\/([a-z]{2}-[a-z]{2})\//i; // match locale with slashes
-  // extract locale without slashes
-  const locale = pathName.match(regex)[1];
+  const locale = getLocale();
 
   if (tags.length) {
     pushToDataLayer('page load started', {
