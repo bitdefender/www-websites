@@ -1034,6 +1034,7 @@ a.button span.icon {
 a.button span.button-text {
   transition: transform .2s cubic-bezier(.4,0,.2,1);
   transform: translate(0, 0);
+  white-space: normal;
 }
 
 a.button:hover span.button-text {
