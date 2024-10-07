@@ -155,10 +155,6 @@
   align-items: center;
 }
 
-.columns.awards div > .columns-img-col{
-  margin-bottom: 0;
-}
-
 .columns img {
   width: 100%;
 }
@@ -711,7 +707,7 @@
     padding-left: 20px;
     padding-right: 20px;
   }
-
+  /* stylelint-disable-next-line selector-class-pattern */
   .columns.awards > div > div {
     flex: 1;
   }
