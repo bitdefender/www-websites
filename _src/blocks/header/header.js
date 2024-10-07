@@ -442,8 +442,10 @@ async function runDefaultHeaderLogic(block) {
         });
       });
 
-      // TODO: please remove second condition when the banner changes reach
-      if (window.location.hostname.includes('www.')) {
+      // TODO: please remove this if statement when the mega menu for these domains gets created in AEM
+      const regex = /\/(zh-hk|zh-tw)\//i;
+      const matches = window.location.href.match(regex);
+      if (matches) {
         const newScriptFile = document.createElement('script');
         newScriptFile.src = '/_src/scripts/vendor/mega-menu/mega-menu.js';
         newScriptFile.defer = true;
