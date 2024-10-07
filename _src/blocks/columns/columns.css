@@ -553,9 +553,6 @@
     order: unset;
   }
 
-  .columns.awards > div > div {
-    flex: 0;
-  }
 
   .columns-wrapper {
     max-width: var(--section-desktop-max-width);
@@ -586,6 +583,10 @@
     padding: 5em 0 3em;
     margin-top: 0;
   }
+
+  .columns.awards > div > div {
+    flex: 0;
+  }
   
   /* stylelint-disable-next-line selector-class-pattern */
   .section.b_mark .columns-img-col img {
@@ -593,10 +594,6 @@
     margin-bottom: -3em;
   }
 
-  .columns.awards > div > div{
-    flex:0;
-  }
-  
   .columns-container.chat-options .columns > div > div {
     padding: 2em;
   }
