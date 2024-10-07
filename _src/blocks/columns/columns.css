@@ -148,7 +148,11 @@
 
 /* awards styling */
 .columns.awards > div {
-  row-gap: 30px;
+  gap:30px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
 }
 
 .columns img {
@@ -549,6 +553,7 @@
     order: unset;
   }
 
+
   .columns-wrapper {
     max-width: var(--section-desktop-max-width);
     padding: 0 var(--section-desktop-padding);
@@ -579,6 +584,10 @@
     margin-top: 0;
   }
 
+  .columns.awards > div > div {
+    flex: 0;
+  }
+  
   /* stylelint-disable-next-line selector-class-pattern */
   .section.b_mark .columns-img-col img {
     margin-top: -200px;
@@ -698,6 +707,10 @@
     max-width: 1350px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+
+  .columns.awards > div > div {
+    flex: 1;
   }
 
   .percent-table .columns table tr td:first-of-type {
