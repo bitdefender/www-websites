@@ -359,12 +359,12 @@ export function setDataOnBuyLinks(element, dataInfo) {
   if (variation.variation_name) element.dataset.variation = variation.variation_name;
 }
 
-export function formatPrice(price, currency, region = null, locale = null) {
+export function formatPrice(price, currency) {
   if (!price) {
     return null;
   }
-  const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
-  return new Intl.NumberFormat(loc, { style: 'currency', currency }).format(price);
+  // const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price);
 }
 
 /**
