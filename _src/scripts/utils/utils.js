@@ -147,17 +147,7 @@ export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'f
 export function getDefaultLanguage() {
   // TODO: refactor. It's not working as should for en locales.
   const currentPathUrl = window.location.pathname;
-  const foundLanguage = localisationList.find((item) => currentPathUrl.indexOf(`/${item}/`) !== -1);
-  let lang = 'site';
-
-  if (foundLanguage) {
-    if (foundLanguage.startsWith('zh-') || foundLanguage.startsWith('en-')) {
-      lang = foundLanguage.replace('zh-', '').replace('en-', '') || 'site';
-    } else {
-      [, lang] = foundLanguage.split('-');
-    }
-  }
-
+  const lang = currentPathUrl.split('/')[1].split('-')[0];
   return lang;
 }
 
