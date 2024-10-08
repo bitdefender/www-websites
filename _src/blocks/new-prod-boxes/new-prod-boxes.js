@@ -65,45 +65,6 @@ function toModel(productCode, variantId, v) {
 }
 
 let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
-  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
-  const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
-  const price = storeOption.getPrice();
-  const discountedPrice = storeOption.getDiscountedPrice();
-  const discount = storeOption.getDiscount('valueWithCurrency');
-  const buyLink = await storeOption.getStoreUrl();
-
-  let product = {
-    ID: storeOption.getAvangateId(),
-    name: storeOption.getName(),
-    devices: storeOption.getDevices(),
-    subscription: storeOption.getSubscription('months'),
-    version: storeOption.getSubscription('months') === 1 ? 'monthly' : 'yearly',
-    basePrice: storeOption.getPrice('value'),
-    discountValue: storeOption.getDiscount('value'),
-    discountRate: storeOption.getDiscount('percentage'),
-    currency: storeOption.getCurrency(),
-    priceWithTax: storeOption.getDiscountedPrice('value') || storeOption.getPrice('value'),
-  };
-  dataLayerProducts.push(product);
-  const priceElement = document.createElement('div');
-  priceElement.classList.add('hero-aem__prices');
-  priceElement.innerHTML = `
-    <div class="hero-aem__price mt-3">
-      <div>
-          <span class="prod-oldprice">${price}</span>
-          <span class="prod-save">${saveText} ${discount}<span class="save"></span></span>
-      </div>
-      <div class="newprice-container mt-2">
-        <span class="prod-newprice">${discountedPrice}</span>
-        <sup>${conditionText || ''}</sup>
-      </div>
-    </div>
-    ${billed ? `<div class="billed">${billed.innerHTML}</div>` : ''}
-    <a href="${customLink === 1 ? buylink.href : buyLink}" class="button primary">${buylink.text}</a>`;
-  buylink.remove();
-  return priceElement;
-}
 
 function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = null) {
   if (!buyLinkSelector) {
@@ -452,12 +413,8 @@ export default async function decorate(block, options) {
       });
 
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
-      let customLink = 0;
       if (buyLinkSelector) {
         buyLinkSelector.classList.add('button', 'primary');
-      } else {
-        buyLinkSelector = buyLink.querySelector('a');
-        customLink = 1;
       }
 
       let planSwitcher = document.createElement('div');
@@ -484,46 +441,16 @@ export default async function decorate(block, options) {
       }
 
       let addOnPriceBox;
-      // create the prices element based on where the component is being called from, aem of www-websites
-      if (options) {
-        await createPricesElement(options.store, '', 'Save', prodName, prodUsers, prodYears, buyLinkSelector, billed, customLink)
-          .then((pricesBox) => {
-            yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = pricesBox;
-            prod.outerHTML = `
-              <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
-                <div class="inner_prod_box">
-                  ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
-                  ${title.innerText.trim() ? `<h4>${title.innerHTML}</h4>` : ''}
-                  ${blueTag.innerText.trim() ? `<div class="blueTag"><div>${blueTag.innerHTML.trim()}</div></div>` : ''}
-                  ${subtitle.innerText.trim() ? `<p class="subtitle">${subtitle.querySelector('td').innerHTML.trim()}</p>` : ''}
+      buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
+      buyLink2?.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
 
-                  ${radioButtons ? planSwitcher.outerHTML : ''}
+      let secondButton = buyLink?.querySelectorAll('a')[1];
+      if (secondButton) {
+        secondButton.classList.add('button', 'secondary', 'no-arrow');
+      }
 
-                  ${pricesBox.outerHTML}
-
-                  ${buyLink.outerHTML}
-
-                  ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
-                  <hr />
-                  ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
-                </div>
-            </div>`;
-          });
-        if (monthlyProducts) {
-          const montlyPriceBox = await createPricesElement(options.store, '', 'Save', prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, buyLinkSelector, billed);
-          monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
-        }
-      } else {
-        buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
-        buyLink2?.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
-
-        let secondButton = buyLink?.querySelectorAll('a')[1];
-        if (secondButton) {
-          secondButton.classList.add('button', 'secondary', 'no-arrow');
-        }
-
-        const prodBox = document.createElement('div');
-        prodBox.innerHTML = `
+      const prodBox = document.createElement('div');
+      prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
             <div class="inner_prod_box">
               ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
@@ -546,33 +473,32 @@ export default async function decorate(block, options) {
               </div>
             </div>
           </div>`;
-        block.children[key].outerHTML = prodBox.innerHTML;
-        let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
-        block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
-        yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = priceBox;
+      block.children[key].outerHTML = prodBox.innerHTML;
+      let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+      block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
+      yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = priceBox;
 
-        if (monthlyProducts) {
-          const montlyPriceBox = await updateProductPrice(prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
-          monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
-        }
+      if (monthlyProducts) {
+        const montlyPriceBox = await updateProductPrice(prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+        monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
+      }
 
-        if (radioButtons.children.length === 3 && thirdRadioButtonProducts) {
-          const thirdRadioButtonBox = await updateProductPrice(prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
-          thirdRadioButtonProductsBoxes[`${key}-3-rd-button-${prodThirdRadioButtonName.trim()}`] = thirdRadioButtonBox;
-        }
+      if (radioButtons.children.length === 3 && thirdRadioButtonProducts) {
+        const thirdRadioButtonBox = await updateProductPrice(prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+        thirdRadioButtonProductsBoxes[`${key}-3-rd-button-${prodThirdRadioButtonName.trim()}`] = thirdRadioButtonBox;
+      }
 
-        if (addOn && addOnMonthlyProductsAsList) {
-          const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
-          let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-          monthlyAddOnPricesBoxes[`${key}-add-on-monthly-${addOnProdMonthlyName.trim()}`] = monthlyAddOnPriceBox;
-        }
+      if (addOn && addOnMonthlyProductsAsList) {
+        const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
+        let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+        monthlyAddOnPricesBoxes[`${key}-add-on-monthly-${addOnProdMonthlyName.trim()}`] = monthlyAddOnPriceBox;
+      }
 
-        if (addOn && addOnProductsAsList) {
-          const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
-          addOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-          block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
-          yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = addOnPriceBox;
-        }
+      if (addOn && addOnProductsAsList) {
+        const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
+        addOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+        block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
+        yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = addOnPriceBox;
       }
 
       let checkmark = block.children[key].querySelector('.checkmark');
