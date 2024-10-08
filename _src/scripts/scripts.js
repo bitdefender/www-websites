@@ -184,16 +184,6 @@ export function getLocalizedResourceUrl(resourceName) {
   return `${pathnameAsArray.join('/')}/${resourceName}`;
 }
 
-/**
- * Sets the page language.
- * @param {Object} param The language and country
- */
-function setPageLanguage(param) {
-  document.documentElement.lang = param.language;
-  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
-  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
-}
-
 export function getTags(tags) {
   return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
 }
