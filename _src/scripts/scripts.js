@@ -522,13 +522,17 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
 
 async function sendAnalyticsUserInfo() {
   const url = window.location.href;
-  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
+  const isPage = url.split('/').filter(Boolean).pop().toLowerCase();
 
-  let productFinding = '';
-  if (isHomepageSolutions === 'consumer') {
+  let productFinding = 'product page';
+  if (isPage === 'consumer') {
     productFinding = 'solutions page';
-  } else {
-    productFinding = `${isHomepageSolutions} page`;
+  } else if (isPage === 'thank-you') {
+    productFinding = 'thank you page';
+  } else if (isPage === 'toolbox') {
+    productFinding = 'toolbox page';
+  } else if (isPage === 'downloads') {
+    productFinding = 'downloads page';
   }
 
   window.adobeDataLayer = window.adobeDataLayer || [];
