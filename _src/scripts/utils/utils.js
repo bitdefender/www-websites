@@ -848,11 +848,9 @@ export function pushTrialDownloadToDataLayer() {
     || getMetadata('og:title')
   );
 
-  console.log(getTrialID())
-
-  /*if (TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av') {
+  if (TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av') {
     getTrialID = '8430';
-  }*/
+  }
 
   const url = window.location.href;
   const currentPage = url.split('/').filter(Boolean).pop();
