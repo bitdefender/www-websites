@@ -3,7 +3,7 @@ import {
   sampleRUM,
   getMetadata,
 } from './lib-franklin.js';
-import { pushToDataLayer, pushProductsToDataLayer } from './utils/utils.js';
+import { pushToDataLayer, sendAnalyticsUserInfo, pushProductsToDataLayer } from './utils/utils.js';
 
 // eslint-disable-next-line import/no-cycle
 import {
@@ -15,6 +15,7 @@ import { loadBreadcrumbs } from './breadcrumbs.js';
 sampleRUM('cwv');
 
 // add products to data layer
+sendAnalyticsUserInfo();
 pushProductsToDataLayer();
 pushToDataLayer('page loaded');
 
