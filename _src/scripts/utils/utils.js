@@ -143,16 +143,8 @@ export function getParamValue(param) {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
 }
-export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
-export function getDefaultLanguage() {
-  // TODO: refactor. It's not working as should for en locales.
-  const currentPathUrl = window.location.pathname;
-  const lang = currentPathUrl.split('/')[1].split('-')[0];
-  return lang;
-}
 
 const cacheResponse = new Map();
-const siteName = getDefaultLanguage();
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
@@ -400,18 +392,6 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
     }
 
     if (url.hostname.includes('bitdefender.fr')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '14';
-      data.set('data', JSON.stringify(newData));
-    }
-
-    if (siteName === 'uk') {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '3';
-      data.set('data', JSON.stringify(newData));
-    }
-
-    if (siteName === 'fr') {
       const newData = JSON.parse(data.get('data'));
       newData.config.force_region = '14';
       data.set('data', JSON.stringify(newData));

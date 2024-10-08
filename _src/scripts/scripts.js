@@ -17,7 +17,6 @@ import {
 import {
   adobeMcAppendVisitorId,
   createTag,
-  getDefaultLanguage,
   getParamValue,
   GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
   getLocale,
@@ -26,8 +25,6 @@ import {
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
-export const DEFAULT_LANGUAGE = getDefaultLanguage();
-export const DEFAULT_COUNTRY = getDefaultLanguage();
 export const METADATA_ANALYTICS_TAGS = 'analytics-tags';
 const TARGET_TENANT = 'bitdefender';
 
@@ -65,9 +62,10 @@ export function createMetadata(name, value) {
 }
 
 export function getLanguageCountryFromPath() {
+  const currentPathUrl = window.location.pathname;
   return {
-    language: DEFAULT_LANGUAGE,
-    country: DEFAULT_COUNTRY,
+    language: currentPathUrl.split('/')[1].split('-')[0],
+    country: currentPathUrl.split('/')[1].split('-')[1],
   };
 }
 
@@ -537,7 +535,6 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  setPageLanguage(getLanguageCountryFromPath(window.location.pathname));
   decorateTemplateAndTheme();
 
   await window.hlx.plugins.run('loadEager');
