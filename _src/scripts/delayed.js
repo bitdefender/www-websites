@@ -16,8 +16,8 @@ sampleRUM('cwv');
 
 // add products to data layer
 pushProductsToDataLayer();
-pushToDataLayer('page loaded');
 sendAnalyticsUserInfo();
+pushToDataLayer('page loaded');
 
 // Load breadcrumbs
 loadBreadcrumbs();

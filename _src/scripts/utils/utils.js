@@ -841,19 +841,16 @@ export function trackProduct(product, location = '') {
 }
 
 export function pushTrialDownloadToDataLayer() {
-  const getTrialID = () => {
-    const productCode = TRACKED_PRODUCTS?.[0]?.productCode || TRACKED_PRODUCTS_COMPARISON?.[0]?.productCode;
+  let getTrialID = () => (
+    // eslint-disable-next-line max-len
+    ((TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode) || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode))
+    || getMetadata('breadcrumb-title')
+    || getMetadata('og:title')
+  );
 
-    return productCode || getMetadata('breadcrumb-title') || getMetadata('og:title') || '8430';
-  };
-
-  if (
-    (TRACKED_PRODUCTS[0]?.productCode === 'av') ||
-    (TRACKED_PRODUCTS_COMPARISON[0]?.productCode === 'av')
-  ) {
-    getTrialID = () => '8430';
-  }
-
+  /*if ((TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode === 'av') || (TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av')) {
+    getTrialID = '8430';
+  }*/
 
   const url = window.location.href;
   const currentPage = url.split('/').filter(Boolean).pop();
