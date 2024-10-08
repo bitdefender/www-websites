@@ -841,12 +841,18 @@ export function trackProduct(product, location = '') {
 }
 
 export function pushTrialDownloadToDataLayer() {
-  const getTrialID = () => (
+  let getTrialID = () => (
     // eslint-disable-next-line max-len
     ((TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode) || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode))
     || getMetadata('breadcrumb-title')
     || getMetadata('og:title')
   );
+
+  console.log(getTrialID())
+
+  /*if (TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av') {
+    getTrialID = '8430';
+  }*/
 
   const url = window.location.href;
   const currentPage = url.split('/').filter(Boolean).pop();
@@ -934,6 +940,20 @@ export function pushProductsToDataLayer() {
 }
 
 export async function sendAnalyticsUserInfo() {
+  const url = window.location.href;
+  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
+
+  let productFinding = '';
+  if (isHomepageSolutions === 'consumer') {
+    productFinding = 'solutions page';
+  } else if (isHomepageSolutions === 'thank-you') {
+    productFinding = 'thank you page';
+  } else if (TRACKED_PRODUCTS.length || TRACKED_PRODUCTS_COMPARISON.length) {
+    productFinding = 'product page';
+  } else {
+    productFinding = `${isHomepageSolutions} page`;
+  }
+
   window.adobeDataLayer = window.adobeDataLayer || [];
   const user = {};
   user.loggedIN = 'false';
@@ -951,7 +971,7 @@ export async function sendAnalyticsUserInfo() {
   }
 
   user.ID = userID;
-  user.productFinding = 'campaign page';
+  user.productFinding = productFinding;
 
   if (typeof user.ID !== 'undefined') {
     user.loggedIN = 'true';
