@@ -19,7 +19,7 @@ import {
   createTag,
   getParamValue,
   GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
-  getLocale,
+  getLocale, getCookie,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
