@@ -848,7 +848,7 @@ export function pushTrialDownloadToDataLayer() {
     || getMetadata('og:title')
   );
 
-  if (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av') {
+  if ((TRACKED_PRODUCTS && TRACKED_PRODUCTS[0].productCode === 'av') || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av')) {
     getTrialID = '8430';
   }
 
