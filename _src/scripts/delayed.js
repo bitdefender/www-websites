@@ -15,9 +15,9 @@ import { loadBreadcrumbs } from './breadcrumbs.js';
 sampleRUM('cwv');
 
 // add products to data layer
-sendAnalyticsUserInfo();
 pushProductsToDataLayer();
 pushToDataLayer('page loaded');
+sendAnalyticsUserInfo();
 
 // Load breadcrumbs
 loadBreadcrumbs();
