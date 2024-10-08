@@ -915,8 +915,8 @@ export function pushProductsToDataLayer() {
   };
 
   if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
-    let productId = TRACKED_PRODUCTS_COMPARISON[0].productId;
-    if (TRACKED_PRODUCTS_COMPARISON[0]['productCode'] === 'av') {
+    let { productId } = TRACKED_PRODUCTS_COMPARISON[0];
+    if (TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av') {
       productId = '8430';
     }
     TRACKED_PRODUCTS.push({ productId });
