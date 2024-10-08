@@ -524,7 +524,7 @@ async function sendAnalyticsUserInfo() {
   const url = window.location.href;
   const isPage = url.split('/').filter(Boolean).pop().toLowerCase();
 
-  let productFinding = 'product page';
+  let productFinding = 'product pages';
   if (isPage === 'consumer') {
     productFinding = 'solutions page';
   } else if (isPage === 'thank-you') {
