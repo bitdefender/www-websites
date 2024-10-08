@@ -525,6 +525,8 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
+  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
+  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
 
   await window.hlx.plugins.run('loadEager');
