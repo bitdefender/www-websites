@@ -520,17 +520,13 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   }
 }
 
-export async function sendAnalyticsUserInfo() {
+async function sendAnalyticsUserInfo() {
   const url = window.location.href;
   const isHomepageSolutions = url.split('/').filter(Boolean).pop();
 
   let productFinding = '';
   if (isHomepageSolutions === 'consumer') {
     productFinding = 'solutions page';
-  } else if (isHomepageSolutions === 'thank-you') {
-    productFinding = 'thank you page';
-  } else if (TRACKED_PRODUCTS.length || TRACKED_PRODUCTS_COMPARISON.length) {
-    productFinding = 'product page';
   } else {
     productFinding = `${isHomepageSolutions} page`;
   }
