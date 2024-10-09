@@ -353,8 +353,10 @@ export default async function decorate(block, options) {
 
   let yearlyAddOnPricesBoxes = {};
   let monthlyAddOnPricesBoxes = {};
+
+  let pricePromises = [];
   if (combinedProducts.length) {
-    await Promise.all([...block.children].map(async (prod, key) => {
+    pricePromises = [...block.children].map(async (prod, key) => {
       // eslint-disable-next-line no-unused-vars
       const mainTable = prod.querySelector('tbody');
       // eslint-disable-next-line no-unused-vars
@@ -533,7 +535,7 @@ export default async function decorate(block, options) {
               ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 5 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
               <hr />
               ${radioButtons ? planSwitcher.outerHTML : ''}
-              <div class="hero-aem__prices"></div>
+              <div class="hero-aem__prices await-loader"></div>
               ${secondButton ? secondButton.outerHTML : ''}
               ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
               <hr />
@@ -618,7 +620,7 @@ export default async function decorate(block, options) {
           }
         });
       }
-    }));
+    });
   } else {
     block.innerHTML = `
     <div class="container-fluid">
@@ -626,10 +628,10 @@ export default async function decorate(block, options) {
     </div>`;
   }
 
-  if (monthlyProducts) {
+  Promise.all(pricePromises).then(() => {
     [...block.children].forEach((prod) => {
       let planSwitcher = prod.querySelector('.plan-switcher');
-      planSwitcher.querySelectorAll('input[type="radio"]').forEach((radio) => {
+      planSwitcher?.querySelectorAll('input[type="radio"]').forEach((radio) => {
         radio.addEventListener('input', (event) => {
           let planType = event.target.value.split('-')[1];
           let priceBox = prod.querySelector('.hero-aem__prices');
@@ -649,8 +651,11 @@ export default async function decorate(block, options) {
           radio.dispatchEvent(new Event('input'));
         }
       });
+
+      let priceBox = prod.querySelector('.hero-aem__prices');
+      priceBox?.classList.remove('await-loader');
     });
-  }
+  });
 
   if (addOnProducts && addOnMonthlyProducts) {
     [...block.children].forEach((prod) => {
