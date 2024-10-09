@@ -341,7 +341,7 @@ export function generateProductBuyLink(product, productCode, month = null, years
   }
 
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${buyLinkPid}?force_country=${forceCountry}`;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/pid.${buyLinkPid}?force_country=${forceCountry}`;
 }
 
 export function setDataOnBuyLinks(element, dataInfo) {
