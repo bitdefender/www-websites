@@ -334,14 +334,14 @@ export function generateProductBuyLink(product, productCode, month = null, years
   const m = product.variation?.dimension_value || month;
   const y = product.variation?.years || years;
   const url = new URL(window.location.href);
-  let buyLinkPid = pid || url.searchParams.get('pid') || getMetadata('pid') || '';
+  let buyLinkPid = pid ? `pid.${pid}` : (url.searchParams.get('pid') ? `pid.${url.searchParams.get('pid')}` : (getMetadata('pid') ? `pid.${getMetadata('pid')}` : ''));
 
   if (GLOBAL_V2_LOCALES.includes(getLocale())) {
     buyLinkPid = 'pid.global_v2';
   }
 
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/pid.${buyLinkPid}?force_country=${forceCountry}`;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${buyLinkPid}?force_country=${forceCountry}`;
 }
 
 export function setDataOnBuyLinks(element, dataInfo) {
