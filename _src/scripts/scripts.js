@@ -20,6 +20,7 @@ import {
   getParamValue,
   GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
   getLocale, getCookie,
+  pushProductsToDataLayer,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
@@ -36,7 +37,7 @@ window.hlx.plugins.add('rum-conversion', {
 window.hlx.plugins.add('experimentation', {
   condition: () => getMetadata('experiment'),
   options: {
-    prodHost: 'www.bitdefender.com.au',
+    prodHost: 'www.bitdefender.com',
   },
   url: '../plugins/experimentation/src/index.js',
 });
@@ -709,6 +710,18 @@ async function loadLazy(doc) {
   }
 
   loadTrackers();
+
+  if (window.ADOBE_MC_EVENT_LOADED) {
+    // add products to data layer
+    pushProductsToDataLayer();
+    pushToDataLayer('page loaded');
+  } else {
+    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
+      // add products to data layer
+      pushProductsToDataLayer();
+      pushToDataLayer('page loaded');
+    });
+  }
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));

@@ -110,17 +110,10 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
     return null;
   }
   const url = new URL(window.location.href);
-  let buyLinkPid = pid;
-  if (!buyLinkPid) {
-    buyLinkPid = url.searchParams.get('pid') || getMetadata('pid');
-  }
+  let buyLinkPid = pid || url.searchParams.get('pid') || getMetadata('pid') || '';
 
   if (GLOBAL_V2_LOCALES.includes(getLocale())) {
     buyLinkPid = 'pid.global_v2';
-  }
-
-  if (!buyLinkPid) {
-    buyLinkPid = '';
   }
 
   const forceCountry = getPriceLocalMapByLocale().country_code;

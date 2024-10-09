@@ -325,21 +325,23 @@ export function getPriceLocalMapByLocale() {
   return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
-export function generateProductBuyLink(product, productCode, month = null, years = null) {
+// eslint-disable-next-line max-len
+export function generateProductBuyLink(product, productCode, month = null, years = null, pid = null) {
   if (isZuora()) {
     return product.buy_link;
   }
 
   const m = product.variation?.dimension_value || month;
   const y = product.variation?.years || years;
-  let pid = '';
+  const url = new URL(window.location.href);
+  let buyLinkPid = pid || url.searchParams.get('pid') || getMetadata('pid') || '';
 
   if (GLOBAL_V2_LOCALES.includes(getLocale())) {
-    pid = 'pid.global_v2';
+    buyLinkPid = 'pid.global_v2';
   }
 
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${pid}?force_country=${forceCountry}`;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${buyLinkPid}?force_country=${forceCountry}`;
 }
 
 export function setDataOnBuyLinks(element, dataInfo) {
@@ -426,7 +428,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       body: data,
     });
 
-    // cacheResponse.set(code, response);
+    cacheResponse.set(code, response);
     return findProductVariant(response, variant);
   }
 
