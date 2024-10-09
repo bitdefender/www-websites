@@ -19,7 +19,7 @@ import {
   createTag,
   getParamValue,
   GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
-  getLocale,
+  getLocale, getCookie,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
@@ -520,6 +520,87 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   }
 }
 
+async function sendAnalyticsUserInfo() {
+  const url = window.location.href;
+  const isPage = url.split('/').filter(Boolean).pop().toLowerCase();
+
+  let productFinding = 'product pages';
+  if (isPage === 'consumer') {
+    productFinding = 'solutions page';
+  } else if (isPage === 'thank-you') {
+    productFinding = 'thank you page';
+  } else if (isPage === 'toolbox') {
+    productFinding = 'toolbox page';
+  } else if (isPage === 'downloads') {
+    productFinding = 'downloads page';
+  }
+
+  window.adobeDataLayer = window.adobeDataLayer || [];
+  const user = {};
+  user.loggedIN = 'false';
+  user.emarsysID = getParamValue('ems-uid') || getParamValue('sc_uid') || undefined;
+
+  let userID;
+  try {
+    userID = (typeof localStorage !== 'undefined' && localStorage.getItem('rhvID')) || getParamValue('sc_customer') || getCookie('bdcsufp') || undefined;
+  } catch (e) {
+    if (e instanceof DOMException) {
+      userID = getParamValue('sc_customer') || getCookie('bdcsufp') || undefined;
+    } else {
+      throw e;
+    }
+  }
+
+  user.ID = userID;
+  user.productFinding = productFinding;
+
+  if (typeof user.ID !== 'undefined') {
+    user.loggedIN = 'true';
+  } else {
+    const headers = new Headers({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Pragma: 'no-cache',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      Expires: 'Tue, 01 Jan 1971 02:00:00 GMT',
+      BDUS_A312C09A2666456D9F2B2AA5D6B463D6: 'check.bitdefender',
+    });
+
+    const currentUrl = new URL(window.location.href);
+    const queryParams = currentUrl.searchParams;
+    const apiUrl = `https://www.bitdefender.com/site/Main/dummyPost?${Math.random()}`;
+    const apiWithParams = new URL(apiUrl);
+    queryParams.forEach((value, key) => {
+      apiWithParams.searchParams.append(key, value);
+    });
+
+    try {
+      const response = await fetch(apiWithParams, {
+        method: 'POST',
+        headers,
+      });
+
+      if (response.ok) {
+        const rhv = response.headers.get('BDUSRH_8D053E77FD604F168345E0F77318E993');
+        if (rhv !== null) {
+          localStorage.setItem('rhvID', rhv);
+          user.ID = rhv;
+          user.loggedIN = 'true';
+        }
+      }
+    } catch (error) {
+      // console.error('Fetch failed:', error);
+    }
+  }
+
+  // Remove properties that are undefined
+  Object.keys(user).forEach((key) => user[key] === undefined && delete user[key]);
+
+  window.adobeDataLayer.push({
+    event: 'user detected',
+    user,
+  });
+}
+
 /**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
@@ -538,6 +619,7 @@ async function loadEager(doc) {
   }
 
   pushPageLoadToDataLayer(targetExperimentDetails);
+  sendAnalyticsUserInfo();
 
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';

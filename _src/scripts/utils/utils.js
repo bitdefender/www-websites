@@ -3,6 +3,19 @@ import ZuoraNLClass from '../zuora.js';
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
 
+/**
+ * Get cookie
+ * @param {String} name - cookie name
+ */
+export function getCookie(name) {
+  const cookie = {};
+  document.cookie.split(';').forEach((el) => {
+    const [key, value] = el.split('=');
+    cookie[key.trim()] = value;
+  });
+  return cookie[name];
+}
+
 export function getLocale() {
   const regex = /\/([a-z]{2}-[a-z]{2})\//i; // match locale with slashes
   // extract locale without slashes
@@ -902,7 +915,11 @@ export function pushProductsToDataLayer() {
   };
 
   if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
-    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
+    let { productId } = TRACKED_PRODUCTS_COMPARISON[0];
+    if (TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av') {
+      productId = '8430';
+    }
+    TRACKED_PRODUCTS.push({ productId });
   }
 
   const dataLayerProduct = {
@@ -914,6 +931,87 @@ export function pushProductsToDataLayer() {
   };
 
   pushToDataLayer('product loaded', dataLayerProduct);
+}
+
+export async function sendAnalyticsUserInfo() {
+  const url = window.location.href;
+  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
+
+  let productFinding = '';
+  if (isHomepageSolutions === 'consumer') {
+    productFinding = 'solutions page';
+  } else if (isHomepageSolutions === 'thank-you') {
+    productFinding = 'thank you page';
+  } else if (TRACKED_PRODUCTS.length || TRACKED_PRODUCTS_COMPARISON.length) {
+    productFinding = 'product page';
+  } else {
+    productFinding = `${isHomepageSolutions} page`;
+  }
+
+  window.adobeDataLayer = window.adobeDataLayer || [];
+  const user = {};
+  user.loggedIN = 'false';
+  user.emarsysID = getParamValue('ems-uid') || getParamValue('sc_uid') || undefined;
+
+  let userID;
+  try {
+    userID = (typeof localStorage !== 'undefined' && localStorage.getItem('rhvID')) || getParamValue('sc_customer') || getCookie('bdcsufp') || undefined;
+  } catch (e) {
+    if (e instanceof DOMException) {
+      userID = getParamValue('sc_customer') || getCookie('bdcsufp') || undefined;
+    } else {
+      throw e;
+    }
+  }
+
+  user.ID = userID;
+  user.productFinding = productFinding;
+
+  if (typeof user.ID !== 'undefined') {
+    user.loggedIN = 'true';
+  } else {
+    const headers = new Headers({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Pragma: 'no-cache',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      Expires: 'Tue, 01 Jan 1971 02:00:00 GMT',
+      BDUS_A312C09A2666456D9F2B2AA5D6B463D6: 'check.bitdefender',
+    });
+
+    const currentUrl = new URL(window.location.href);
+    const queryParams = currentUrl.searchParams;
+    const apiUrl = `https://www.bitdefender.com/site/Main/dummyPost?${Math.random()}`;
+    const apiWithParams = new URL(apiUrl);
+    queryParams.forEach((value, key) => {
+      apiWithParams.searchParams.append(key, value);
+    });
+
+    try {
+      const response = await fetch(apiWithParams, {
+        method: 'POST',
+        headers,
+      });
+
+      if (response.ok) {
+        const rhv = response.headers.get('BDUSRH_8D053E77FD604F168345E0F77318E993');
+        if (rhv !== null) {
+          localStorage.setItem('rhvID', rhv);
+          user.ID = rhv;
+          user.loggedIN = 'true';
+        }
+      }
+    } catch (error) {
+      // console.error('Fetch failed:', error);
+    }
+  }
+
+  // Remove properties that are undefined
+  Object.keys(user).forEach((key) => user[key] === undefined && delete user[key]);
+
+  window.adobeDataLayer.push({
+    event: 'user detected',
+    user,
+  });
 }
 
 export function getDomain() {
