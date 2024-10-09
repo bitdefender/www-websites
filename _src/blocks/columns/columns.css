@@ -150,8 +150,7 @@
 .columns.awards > div {
   gap:30px;
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+  flex-flow: row wrap;
   align-items: center;
 }
 
