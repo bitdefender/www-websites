@@ -175,7 +175,7 @@ function renderOldPrice(mv, text = '', monthly = '') {
   const root = createTag(
     'div',
     {
-      class: 'price',
+      class: 'price await-loader',
     },
     `<span class='old-price ${!mv.model.basePrice ? 'no-old-price' : ''}'>${text} <del>${mv.model.basePrice ?? ''}</del>`,
   );
@@ -200,6 +200,7 @@ function renderOldPrice(mv, text = '', monthly = '') {
       oldPriceElt.style.visibility = 'hidden';
     }
 
+    root.classList.remove('await-loader');
     mv.model.test.oldPrice = oldPrice;
   });
 
@@ -218,7 +219,7 @@ function renderPrice(mv, text = '', monthly = '', monthTranslation = 'mo') {
   const root = createTag(
     'div',
     {
-      class: 'price',
+      class: 'price await-loader',
     },
     `<strong>${mv.model.basePrice}</strong>`,
   );
@@ -247,7 +248,7 @@ function renderPrice(mv, text = '', monthly = '', monthTranslation = 'mo') {
     }
 
     mv.model.test.price = price;
-
+    root.classList.remove('await-loader');
     trackProduct(mv.model);
   });
 
@@ -368,6 +369,7 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
     },
     `<span>${text}</span>`,
   );
+  root.classList.add('await-loader');
 
   mv.subscribe(() => {
     if (mv.model.discountRate) {
@@ -379,6 +381,7 @@ function renderFeaturedSavings(mv, text = 'Save', percent = '') {
       root.style.visibility = 'hidden';
       root.classList.add('no-save-price');
     }
+    root.classList.remove('await-loader');
   });
 
   return root;
