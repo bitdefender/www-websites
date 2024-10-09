@@ -43,6 +43,7 @@ createNanoBlock('discount', (code, label = '{label}') => {
 
   const root = document.createElement('div');
   root.classList.add('discount-bubble');
+  root.classList.add('await-loader');
   root.innerHTML = `
     <span class="discount-bubble-0">--%</span>
     <span class="discount-bubble-1">${label}</span>
@@ -55,14 +56,17 @@ createNanoBlock('discount', (code, label = '{label}') => {
           (1 - (productResponse.discount.discounted_price) / productResponse.price) * 100,
         );
         root.querySelector('.discount-bubble-0').textContent = `${discount}%`;
+        root.classList.remove('await-loader');
       } else {
         // eslint-disable-next-line no-console
         console.error('no discount available');
+        root.classList.remove('await-loader');
       }
     })
     .catch((err) => {
       // eslint-disable-next-line no-console
       console.error(err);
+      root.classList.remove('await-loader');
     });
   return root;
 });
