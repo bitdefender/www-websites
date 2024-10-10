@@ -1,5 +1,6 @@
 import { Constants } from "../constants";
 import { Target, Visitor } from "../data-layer";
+import { Constants } from "../constants";
 import Page from "../page";
 
 export const monthlyProducts = {
@@ -936,25 +937,13 @@ class BitCheckout {
 
 class StoreConfig {
 
-	/**
-	 *
-	 * @param {{
-	 * provider: "init" | "zuora"
-	 * promotion: string,
-	 * httpMethod: "POST", "GET",
-	 * zuoraEnvironment: "production" | "development"
-	 * }} config
-	 */
-	constructor(config) {
+	constructor() {
 		/**
 		 * Api used to fetch the prices
 		 * @type {"init"|"zuora"}
 		 */
-		this.provider = config.provider || "init";
-		/**
-		 * @type {string} - AWARDS2023
-		 */
-		this.promotion = config.promotion || null;
+		this.provider = Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
+
 		/**
 		 * @type {{
 		 * cartUrl: string
@@ -964,7 +953,7 @@ class StoreConfig {
 		 */
 		this.zuora;
 
-		if (config.zuoraEnvironment === "development") {
+		if (Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))) {
 			this.zuora = {
 				cartUrl: "https://checkout-sdk-react.checkout-app.nmbapp.net",
 				key: "44ebf520-622d-11eb-bd68-cd0bd0caf67c",
@@ -982,13 +971,10 @@ class StoreConfig {
 		/**
 		 * @type {"POST"|"GET"}
 		 */
-		this.httpMethod = config.httpMethod || "POST";
-
-		if (Object.keys(config).length === 0) {
-			console.warn(`No CA Config Found. Default pricing config is used:`, this)
-		}
+		this.httpMethod = "GET";
 	}
 }
+
 export class Store {
 	static countriesMapping = {
 		gb: "uk"
@@ -1002,7 +988,7 @@ export class Store {
 	/** Private variables */
 	static baseUrl = Constants.DEV_BASE_URL;
 
-	static config = new StoreConfig(JSON.parse(document.querySelector("[data-store-ca-config]")?.dataset.storeCaConfig || "{}"));
+	static config = new StoreConfig();
 
 	/**
 	 * Get a product from the api.2checkout.com
@@ -1022,8 +1008,7 @@ export class Store {
 					//url > produs > global_campaign
 					product.promotion = await Target.getCampaign()
 						|| this.#getUrlPromotion()
-						|| product.promotion
-						|| this.config.promotion;
+						|| product.promotion;
 
 					return await this.#apiCall(
 						product

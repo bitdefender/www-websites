@@ -6,5 +6,9 @@ export const Constants = {
 
   NO_FINGERPRINT_COOKIE_NAME: 'fgpnoneBD',
 
-  LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME: 'bdcslue', 
+  LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME: 'bdcslue',
+
+  ZUROA_LOCALES: ['nl-nl'],
+
+  DEV_DOMAINS: ["localhost", "stage", ".hlx."],
 }
