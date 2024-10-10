@@ -97,6 +97,10 @@
   font-size: 22px;
 }
 
+.dlp.four-cards-container .default-content-wrapper{
+  text-align: center;
+}
+
 .four-cards-container h3 {
     font: normal normal bold 32px/37px var(--body-font-family);
     text-align: center;
