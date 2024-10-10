@@ -334,7 +334,15 @@ export function generateProductBuyLink(product, productCode, month = null, years
   const m = product.variation?.dimension_value || month;
   const y = product.variation?.years || years;
   const url = new URL(window.location.href);
-  let buyLinkPid = pid || url.searchParams.get('pid') || getMetadata('pid') || '';
+  let buyLinkPid = '';
+
+  if (pid) {
+    buyLinkPid = `pid.${pid}`;
+  } else if (url.searchParams.get('pid')) {
+    buyLinkPid = `pid.${url.searchParams.get('pid')}`;
+  } else if (getMetadata('pid')) {
+    buyLinkPid = `pid.${getMetadata('pid')}`;
+  }
 
   if (GLOBAL_V2_LOCALES.includes(getLocale())) {
     buyLinkPid = 'pid.global_v2';
