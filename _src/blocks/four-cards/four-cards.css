@@ -97,6 +97,18 @@
   font-size: 22px;
 }
 
+.four-cards .default-content-wrapper {
+  text-align: center;
+}
+
+.creator-cards .default-content-wrapper {
+  text-align: center;
+}
+
+.dlp.four-cards-container .default-content-wrapper{
+  text-align: center;
+}
+
 .four-cards-container h3 {
     font: normal normal bold 32px/37px var(--body-font-family);
     text-align: center;
@@ -152,14 +164,6 @@
 
 .creator-cards .four-cards > ul > li {
   font-size: 18px;
-}
-
-.four-cards .default-content-wrapper {
-  text-align: center;
-}
-
-.creator-cards .default-content-wrapper {
-  text-align: center;
 }
 
 .creator-cards .default-content-wrapper:last-of-type {
