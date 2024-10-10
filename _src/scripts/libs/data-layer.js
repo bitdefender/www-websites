@@ -1,5 +1,5 @@
-import { UserAgent } from "./user-agent";
-import { User } from "./user";
+import { UserAgent } from "./user-agent/index.js";
+import { User } from "./user.js";
 import { getMetadata, getParamValue } from "../utils/utils.js";
 import Page from "./page.js";
 
@@ -125,7 +125,8 @@ export class PageLoadStartedEvent {
 
   /**
    * 
-   * @param {object} pageSectionData 
+   * @param {object} pageSectionData
+   * @param {string} pageSectionData.tagName
    * @param {string} pageSectionData.locale
    * @param {string} pageSectionData.subSection
    * @param {string} pageSectionData.subSubSection
@@ -183,6 +184,7 @@ export class PageLoadStartedEvent {
     console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
   
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
+    const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(getMetadata(METADATA_ANALYTICS_TAGS));
     const locale = Page.locale;
 
@@ -228,7 +230,7 @@ export class PageLoadStartedEvent {
       pageSectionData.subSubSubSection = subSubSubSection;
     }
 
-    this.#trackPageLoadStartedEventStatus();
+    this.#trackPageLoadStartedEventStatus(pageSectionData);
     return this;
   };
 };

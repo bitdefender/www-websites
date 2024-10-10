@@ -1,11 +1,11 @@
-import { resolve as buyLink } from "./buyLink";
-import { resolve as devices } from "./devices";
-import { resolve as discount} from "./discount";
-import { resolve as hide } from "./hide";
-import { resolve as price} from "./price";
-import { resolve as subscription} from "./subscription";
-import { resolve as textVariable} from "./textVariable";
-import { resolve as addClass} from "./addClass";
+import { resolve as buyLink } from "./buyLink.js";
+import { resolve as devices } from "./devices.js";
+import { resolve as discount} from "./discount.js";
+import { resolve as hide } from "./hide.js";
+import { resolve as price} from "./price.js";
+import { resolve as subscription} from "./subscription.js";
+import { resolve as textVariable} from "./textVariable.js";
+import { resolve as addClass} from "./addClass.js";
 
 export const staticAttributesResolvers = [
     hide,

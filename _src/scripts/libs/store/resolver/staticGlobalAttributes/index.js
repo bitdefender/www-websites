@@ -1,4 +1,4 @@
-import { resolve as globalTextVariable } from "./globalTextVariable";
+import { resolve as globalTextVariable } from "./globalTextVariable.js";
 
 /**
  * Global Attributes are computed based on the products from the page

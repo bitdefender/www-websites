@@ -1,8 +1,8 @@
-import { Store, ProductInfo, ProductOption } from "../store";
-import { AdobeDataLayerService, MainProductLoadedEvent, ProductComparisonEvent, ProductsLoadedEvent } from "../../data-layer";
-import { staticAttributesResolvers, staticAttributes } from "./staticAttributes";
-import { clickAttributeResolvers, clickAttributes } from "./clickAttributes";
-import { staticGlobalAttributesResolvers } from "./staticGlobalAttributes";
+import { Store, ProductInfo, ProductOption } from "../store.js";
+import { AdobeDataLayerService, MainProductLoadedEvent, ProductComparisonEvent, ProductsLoadedEvent } from "../../data-layer.js";
+import { staticAttributesResolvers, staticAttributes } from "./staticAttributes/index.js";
+import { clickAttributeResolvers, clickAttributes } from "./clickAttributes/index.js";
+import { staticGlobalAttributesResolvers } from "./staticGlobalAttributes/index.js";
 
 export class GlobalContext {
 	/**

@@ -1,8 +1,7 @@
-import { Constants } from "../constants";
-import { Target, Visitor } from "../data-layer";
-import { Constants } from "../constants";
-import { GLOBAL_V2_LOCALES } from "../../utils/utils";
-import Page from "../page";
+import { Constants } from "../constants.js";
+import { Target, Visitor } from "../data-layer.js";
+import { GLOBAL_V2_LOCALES } from "../../utils/utils.js";
+import Page from "../page.js";
 
 export const monthlyProducts = {
 	"ultsecm": "ultsecm",

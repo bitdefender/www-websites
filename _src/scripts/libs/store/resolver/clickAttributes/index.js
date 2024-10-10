@@ -1,11 +1,11 @@
-import { resolve as classToggle } from "./classToggle";
-import { resolve as decrement } from "./decrement";
-import { resolve as increment } from "./increment";
-import { resolve as setDevices } from "./setDevices";
-import { resolve as setOption } from "./setOption";
-import { resolve as setYears} from "./setYears";
-import { resolve as setProduct} from "./setProduct";
-import { resolve as toggleBundle} from "./toggleBundle";
+import { resolve as classToggle } from "./classToggle.js";
+import { resolve as decrement } from "./decrement.js";
+import { resolve as increment } from "./increment.js";
+import { resolve as setDevices } from "./setDevices.js";
+import { resolve as setOption } from "./setOption.js";
+import { resolve as setYears} from "./setYears.js";
+import { resolve as setProduct} from "./setProduct.js";
+import { resolve as toggleBundle} from "./toggleBundle.js";
 
 export const clickAttributeResolvers = [
     classToggle,

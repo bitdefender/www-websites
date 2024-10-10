@@ -13,6 +13,7 @@ import {
   loadCSS,
   getMetadata, loadScript,
 } from './lib-franklin.js';
+import { AdobeDataLayerService, PageLoadStartedEvent } from './libs/data-layer.js';
 import Page from './libs/page.js';
 
 import {
@@ -27,8 +28,6 @@ import {
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
-export const METADATA_ANALYTICS_TAGS = 'analytics-tags';
-const TARGET_TENANT = 'bitdefender';
 
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
@@ -356,125 +355,6 @@ function buildCtaSections(main) {
     .forEach(buildCta);
 }
 
-function getDomainInfo(hostname) {
-  const domain = hostname.match(/^(?:.*?\.)?([a-zA-Z0-9\\_]{3,}(\.|:)?(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/);
-  return {
-    domain: domain[1],
-    domainPartsCount: domain[1].split('.').length,
-  };
-}
-
-function getExperimentDetails() {
-  if (!window.hlx || !window.hlx.experiment) {
-    return null;
-  }
-
-  const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
-  return { experimentId, experimentVariant };
-}
-
-// TODO: delete
-function pushPageLoadToDataLayer(targetExperimentDetails) {
-  const {
-    hostname,
-    pathname,
-    href,
-    search,
-  } = window.location;
-
-  if (!hostname) {
-    return;
-  }
-
-  const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
-  // eslint-disable-next-line no-console
-  console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
-
-  const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const environment = Page.environment;
-  const locale = Page.locale;
-
-  if (tags.length) {
-    pushToDataLayer('page load started', {
-      pageInstanceID: environment,
-      page: {
-        info: {
-          name: [locale, ...tags].join(':'), // e.g. au:consumer:product:internet security
-          section: locale,
-          subSection: tags[0] || '',
-          subSubSection: tags[1] || '',
-          subSubSubSection: tags[2] || '',
-          destinationURL: window.location.href,
-          queryString: window.location.search,
-          referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
-          serverName: 'hlx.live', // indicator for AEM Success Edge
-          language: locale,
-          sysEnv: getOperatingSystem(window.navigator.userAgent),
-          ...(experimentDetails && { experimentDetails }),
-        },
-        attributes: {
-          promotionID: getParamValue('pid') || '',
-          internalPromotionID: getParamValue('icid') || '',
-          trackingID: getParamValue('cid') || '',
-          time: getCurrentTime(),
-          date: getCurrentDate(),
-          domain,
-          domainPeriod: domainPartsCount,
-        },
-      },
-    });
-  } else {
-    const allSegments = pathname.split('/').filter((segment) => segment !== '');
-    const lastSegment = allSegments[allSegments.length - 1];
-    let subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
-    let subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
-
-    let subSubSection = 'product';
-    let tagName = `${locale}:product:${subSubSubSection}`;
-    if (lastSegment === 'consumer') {
-      subSubSection = 'solutions';
-      tagName = `${locale}:consumer:solutions`;
-    }
-
-    if (window.errorCode === '404') {
-      tagName = `${locale}:404`;
-      subSection = '404';
-      subSubSection = undefined;
-      subSubSubSection = undefined;
-      pushToDataLayer('page error', {});
-    }
-
-    pushToDataLayer('page load started', {
-      pageInstanceID: environment,
-      page: {
-        info: {
-          name: tagName,
-          section: locale,
-          subSection,
-          subSubSection,
-          subSubSubSection,
-          destinationURL: href,
-          queryString: search,
-          referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
-          serverName: domain,
-          language: locale,
-          sysEnv: getOperatingSystem(window.navigator.userAgent),
-          ...(experimentDetails && { experimentDetails }),
-        },
-        attributes: {
-          promotionID: getParamValue('pid') || '',
-          internalPromotionID: getParamValue('icid') || '',
-          trackingID: getParamValue('cid') || '',
-          time: getCurrentTime(),
-          date: getCurrentDate(),
-          domain,
-          domainPeriod: domainPartsCount,
-        },
-      },
-    });
-  }
-}
-
 async function sendAnalyticsUserInfo() {
   const url = window.location.href;
   const isPage = url.split('/').filter(Boolean).pop().toLowerCase();
@@ -567,13 +447,7 @@ async function loadEager(doc) {
 
   await window.hlx.plugins.run('loadEager');
 
-  let targetExperimentDetails = null;
-  if (getMetadata('target-experiment') !== '') {
-    const { runTargetExperiment } = await import('./target.js');
-    targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
-  }
-
-  pushPageLoadToDataLayer(targetExperimentDetails);
+  AdobeDataLayerService.push(await new PageLoadStartedEvent());
   sendAnalyticsUserInfo();
 
   const templateMetadata = getMetadata('template');

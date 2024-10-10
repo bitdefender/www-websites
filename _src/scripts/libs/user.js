@@ -1,6 +1,6 @@
-import Cookie from "./cookie";
-import { Constants } from "./constants";
-import { UserAgent } from "./user-agent";
+import Cookie from "./cookie.js";
+import { Constants } from "./constants.js";
+import { UserAgent } from "./user-agent/index.js";
 
 export class User {
 

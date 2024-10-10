@@ -1,4 +1,4 @@
-import cssua from "./cssua";
+import cssua from "./cssua.js";
 
 export class UserAgent {
   // OS
