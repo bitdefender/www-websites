@@ -13,14 +13,20 @@ const state = {
   currentProduct: null,
   mode: 'm', // "m" or "y",
   membersIndex: 0,
+  blockDataset: null,
 };
 
-const MEMBERS_MAP = new Map([
-  [0, 3],
-  [1, 5],
-  [2, 10],
-  [3, 25],
-]);
+const MEMBERS_MAP = new Map();
+
+function getKeyByValue(map, targetValue) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, value] of map.entries()) {
+    if (value === targetValue) {
+      return key;
+    }
+  }
+  return undefined; // Return undefined if the value is not found
+}
 
 function expandItem(content) {
   content.style.height = `${content.scrollHeight}px`;
@@ -139,6 +145,7 @@ function extractFeatures(col) {
 }
 
 function updateBuyLink(block) {
+  if (!state.currentProduct) return;
   const buyLink = block.querySelector('.button-container > .button');
   const productCode = state.currentProduct.alias;
   const dimension = MEMBERS_MAP.get(state.membersIndex);
@@ -164,6 +171,8 @@ function updateBuyLink(block) {
 }
 
 function updatePrice(block) {
+  if (!state.secondProduct || !state.secondProduct) return;
+
   const isMonthly = state.mode === 'm';
   const priceEl = block.querySelector('.price');
 
@@ -263,31 +272,45 @@ function updateBenefits(block) {
   }
 }
 
+function changeSelection(el, value) {
+  el.value = value;
+  el.dispatchEvent(new Event('change'));
+}
+
 function renderSelector(block, ...options) {
-  const selectorOptions = options.filter((option) => option && !Number.isNaN(Number(option)));
+  const selectorOptions = options
+    .filter((option) => option && !Number.isNaN(Number(option)))
+    .map((opt) => Number(opt));
+
+  const defaultSelection = Number(state.blockDataset.defaultselection) || selectorOptions[0];
+
+  const defaultFirstSelection = getKeyByValue(MEMBERS_MAP, defaultSelection);
+
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
   el.innerHTML = `
     <select>
-        ${selectorOptions.map((opt, index) => `
+        ${selectorOptions.sort((first, second) => first - second).map((opt, index) => `
           <option value="${index}">${opt} members</option>
         `).join(',')}
     </select>
   `;
 
-  el.querySelector('select').addEventListener('change', (e) => {
-    const value = JSON.parse(e.target.value);
+  const selectEl = el.querySelector('select');
+
+  selectEl.addEventListener('change', (e) => {
+    const value = Number(e.target.value);
     state.membersIndex = value;
-    // update benefits
+
     updateBenefits(block);
 
-    // update price
     updatePrice(block);
 
-    // update buy link
     updateBuyLink(block);
   });
+
+  changeSelection(selectEl, defaultFirstSelection);
 
   return el;
 }
@@ -296,7 +319,17 @@ createNanoBlock('price', renderPrice);
 createNanoBlock('monthlyYearly', renderRadioGroup);
 createNanoBlock('selectMembers', renderSelector);
 
+function initMembersMap() {
+  const selectMembers = state.blockDataset.selectmembers.trim().split(',');
+  selectMembers.forEach((member, index) => MEMBERS_MAP.set(index, Number(member)));
+}
+
 export default function decorate(block) {
+  const blockDataset = getDatasetFromSection(block);
+  state.blockDataset = blockDataset;
+
+  initMembersMap();
+
   block.firstElementChild.classList.add('d-flex');
   block.firstElementChild.firstElementChild.classList.add('pricing-wrapper');
   block.firstElementChild.lastElementChild.classList.add('features-wrapper');
