@@ -1,5 +1,7 @@
 import { UserAgent } from "./user-agent";
 import { User } from "./user";
+import { getMetadata, getParamValue } from "../utils/utils.js";
+import Page from "./page.js";
 
 /**
  * 
@@ -32,116 +34,201 @@ export class PageLoadStartedEvent {
   event = "page load started";
   pageInstanceID = "";
   page = null;
+  TARGET_TENANT = "bitdefender";
 
   /**
    * 
    * @param {any} overwriteObject 
    * @returns {Promise<PageLoadStartedEvent>}
    */
-  constructor(overwriteObject = {}) {
-    return this.#generatePageLoadedEventData(overwriteObject);
+  constructor() {
+    return this.#generatePageLoadStartedEventData();
   };
 
   /**
-   * Timezone Conversion
-   * @param {"d" | "h" | "t" | "z"} type
-  */
-  #__time(type) {
-    const c = new Date();
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    let h = c.getHours();
-
-    if (h < 10) {
-      h = '0' + h
+   * get experiment details from Target
+   * @returns {object | null}
+   */
+  async #getTargetExperimentDetails() {
+    let targetExperimentDetails = null;
+    if (getMetadata('target-experiment') !== '') {
+      const { runTargetExperiment } = await import('../target.js');
+      targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
     }
 
-    let m = c.getMinutes();
-    if (m < 10) {
-      m = '0' + m
-    }
-
-    const d = days[c.getDay()];
-    const z = c.getTimezoneOffset() / 60 * -1;
-    let r = null;
-
-    switch(type) {
-      case "t":
-        r = h + ':' + m;
-        break;
-      case "h":
-        r = h + ':00-' + h + ':59'
-        break;
-      case "d":
-        r = d;
-        break;
-      case "z":
-        if (z == 0) {
-          r = 'GMT'
-        } else if (z > 0) {
-          r = 'GMT +' + z
-        } else {
-          r = 'GMT ' + z
-        }
-        break;
-      default:
-        r = 'unavailable';
-        break;
-    }
-
-    return r;
+    return targetExperimentDetails;
   }
 
-  async #generatePageLoadedEventData(overwriteObject) {
-
-    // Handling referral logic with cookie
-    const dataLayerElement = document.getElementById('tracking-footer-data-layer');
-    if (!dataLayerElement) {
-      return this;
+  /**
+   * 
+   * @returns {object} - get experiment information
+   */
+  #getExperimentDetails() {
+    if (!window.hlx || !window.hlx.experiment) {
+      return null;
     }
+  
+    const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
+    return { experimentId, experimentVariant };
+  }
 
-    const dataLayer = dataLayerElement.dataset;
-    const urlParams = getURLParameters();
-
-    // Handling time
-    const timeStr = this.#__time('t') + "|" + this.#__time('h') + "|" + this.#__time('d') + "|" + this.#__time('z');
-
-    this.pageInstanceID = dataLayer.layerPageinstanceid;
-    this.page = {
-      "info": {
-        "name": overwriteObject.name || dataLayer.layerPagename,
-        "section": dataLayer.layerSection,
-        "subSection": overwriteObject.subSection || dataLayer.layerSubsection,
-        "subSubSection": overwriteObject.subSubSection || dataLayer.layerSubsubsection,
-        "subSubSubSection": overwriteObject.subSubSubSection || dataLayer.layerSubsubsubsection,
-        "destinationURL": window.location.href,
-        "queryString": dataLayer.layerQuerystring?.replace("&amp;", "&"),
-        "referringURL": urlParams['ref'] || urlParams['adobe_mc_ref'] || document.referrer,
-        "serverName": window.location.hostname,
-        "sysEnv": UserAgent.os,
-        "language": dataLayer.layerLanguage,
-        "geoRegion": await User.country
-      },
-      "attributes": {
-        "promotionID": dataLayer.layerPromotionid,
-        "internalPromotionID": dataLayer.layerInternalpromotionid,
-        "trackingID": dataLayer.layerTrackingid,
-        "time": timeStr,
-        "date": dataLayer.layerDate,
-        "domain": dataLayer.layerDomain,
-        "domainPeriod": dataLayer.layerDomainperiod
-      }
+  /**
+   * 
+   * @param {string} hostname 
+   * @returns {{
+   *  domain: string,
+   *  domainPartsCount: number
+   * }} get domain information
+   */
+  #getDomainInfo(hostname) {
+    const domain = hostname.match(/^(?:.*?\.)?([a-zA-Z0-9\\_]{3,}(\.|:)?(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/);
+    return {
+      domain: domain[1],
+      domainPartsCount: domain[1].split('.').length,
     };
+  }
 
-    // CBS code from tracking-footer.html
-    window.CBSTags = [];
-    window.CBSGeoip = '';
-    try {
-      window.CBSTags = ["homepage", "theme:draco"];
-      window.CBSGeoip = 'us';
-    } catch (ex) {
-      console.log('error in CBS tracking footer', ex);
+  /**
+   * 
+   * @param {string[]} tags 
+   * @returns {string[]} get all analytic tags
+   */
+  #getTags(tags) {
+    return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
+  }
+
+  /**
+   * Returns the current user time in the format HH:MM|HH:00-HH:59|dayOfWeek|timezone
+   * @returns {String}
+   */
+  #getCurrentTime() {
+    const date = new Date();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const dayOfWeek = date.getDay();
+    const timezone = date.toTimeString().split(' ')[1];
+    const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return `${hours}:${minutes}|${hours}:00-${hours}:59|${weekday[dayOfWeek]}|${timezone}`;
+  }
+
+  /**
+   * Returns the current GMT date in the format DD/MM/YYYY
+   * @returns {String}
+   */
+  #getCurrentDate() {
+    const date = new Date();
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  /**
+   * 
+   * @param {object} pageSectionData 
+   * @param {string} pageSectionData.locale
+   * @param {string} pageSectionData.subSection
+   * @param {string} pageSectionData.subSubSection
+   * @param {string} pageSectionData.subSubSubSection
+   * @param {string} pageSectionData.domain
+   * @param {number} pageSectionData.domainPartsCount
+   * @param {object} pageSectionData.experimentDetails
+   */
+  #trackPageLoadStartedEventStatus(pageSectionData) {
+    this.pageInstanceID = Page.environment;
+    this.page = {
+      info: {
+        name: pageSectionData.tagName, // e.g. au:consumer:product:internet security
+        section: pageSectionData.locale,
+        subSection: pageSectionData.subSection,
+        subSubSection: pageSectionData.subSubSection,
+        subSubSubSection: pageSectionData.subSubSubSection,
+        destinationURL: window.location.href,
+        queryString: window.location.search,
+        referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
+        serverName: 'hlx.live', // indicator for AEM Success Edge
+        language: pageSectionData.locale,
+        sysEnv: UserAgent.os,
+        ...(pageSectionData.experimentDetails &&
+          { experimentDetails: pageSectionData.experimentDetails }),
+      },
+      attributes: {
+        promotionID: getParamValue('pid') || '',
+        internalPromotionID: getParamValue('icid') || '',
+        trackingID: getParamValue('cid') || '',
+        time: this.#getCurrentTime(),
+        date: this.#getCurrentDate(),
+        domain: pageSectionData.domain,
+        domainPeriod: pageSectionData.domainPartsCount,
+      },
+    };
+  }
+
+  /**
+   * get the object to be inserted into the data layer as a Promise
+   * @returns {Promise<PageLoadStartedEvent>}
+   */
+  async #generatePageLoadStartedEventData() {
+    const {
+      hostname,
+      pathname
+    } = window.location;
+  
+    if (!hostname) {
+      return;
     }
 
+    const experimentDetails = (await this.#getTargetExperimentDetails()) ?? this.#getExperimentDetails();
+    // eslint-disable-next-line no-console
+    console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
+  
+    const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
+    const tags = this.#getTags(getMetadata(METADATA_ANALYTICS_TAGS));
+    const locale = Page.locale;
+
+    const pageSectionData = {
+      tagName: null, // e.g. au:consumer:product:internet security
+      locale: locale,
+      subSection: null,
+      subSubSection: null,
+      subSubSubSection: null,
+      domain: domain,
+      domainPartsCount: domainPartsCount,
+      experimentDetails: experimentDetails
+    }
+  
+    if (tags.length) {
+      pageSectionData.tagName = [locale, ...tags].join(':'); // e.g. au:consumer:product:internet security
+      pageSectionData.subSection = tags[0] || '';
+      pageSectionData.subSubSection = tags[1] || '';
+      pageSectionData.subSubSubSection = tags[2] || '';
+    } else {
+      const allSegments = pathname.split('/').filter((segment) => segment !== '');
+      const lastSegment = allSegments[allSegments.length - 1];
+      let subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
+      let subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
+  
+      let subSubSection = 'product';
+      let tagName = `${locale}:product:${subSubSubSection}`;
+      if (lastSegment === 'consumer') {
+        subSubSection = 'solutions';
+        tagName = `${locale}:consumer:solutions`;
+      }
+  
+      if (window.errorCode === '404') {
+        tagName = `${locale}:404`;
+        subSection = '404';
+        subSubSection = undefined;
+        subSubSubSection = undefined;
+      }
+  
+      pageSectionData.tagName = tagName; // e.g. au:consumer:product:internet security
+      pageSectionData.subSection = subSection;
+      pageSectionData.subSubSection = subSubSection;
+      pageSectionData.subSubSubSection = subSubSubSection;
+    }
+
+    this.#trackPageLoadStartedEventStatus();
     return this;
   };
 };
@@ -172,7 +259,23 @@ export class UserDetectedEvent {
       this.user.loggedIN = true;
     }
 
-    const productFinding = document.getElementById('tracking-footer-data-layer')?.dataset.layerProductFinding;
+    const pageName = window.location.href.split('/').filter(Boolean).pop().toLowerCase();
+    let productFinding = 'product pages';
+    switch(pageName) {
+      case 'consumer':
+        productFinding = 'solutions page';
+        break;
+      case 'thank-you':
+        productFinding = 'thank you page';
+        break;
+      case 'toolbox page':
+        productFinding = 'toolbox page';
+        break;
+      case 'downloads':
+        productFinding = 'downloads page';
+        break;
+    }
+
     if (productFinding) {
       this.user.productFinding = productFinding;
     }
@@ -254,18 +357,6 @@ export class ButtonClickEvent {
   }
 };
 
-export class ComponentLoadedEvent {
-  component = null;
-
-  /**
-   * 
-   * @param {Object} component 
-   */
-  constructor(component) {
-    this.component = component;
-  }
-};
-
 export class FormEvent {
   event = "";
   user = null;
@@ -336,8 +427,8 @@ export class AdobeDataLayerService {
   /**
    * 
    * @param { ProductsLoadedEvent | MainProductLoadedEvent | ProductComparisonEvent | PageLoadStartedEvent | UserDetectedEvent |
-   * ButtonClickEvent | ComponentLoadedEvent | FormEvent | PromotionIdEvent | 
-   * OneClickPurchaseEvent | PageErrorEvent | PageLoadedEvent} event 
+   * ButtonClickEvent | FormEvent | PromotionIdEvent | OneClickPurchaseEvent
+   * PageErrorEvent | PageLoadedEvent} event 
    */
   static push(event) {
 
@@ -616,9 +707,9 @@ window.Target = Target;
  * Page Error Handling
  */
 const pageErrorHandling = () => {
-    const notFoundInstance = document.getElementsByClassName("404 page-not-found");
-    if(notFoundInstance && notFoundInstance.length) {
-        AdobeDataLayerService.push(new PageErrorEvent());
+    const isErrorPage = window.errorCode === '404';
+    if(isErrorPage) {
+      AdobeDataLayerService.push(new PageErrorEvent());
     }
 }
 
@@ -663,7 +754,7 @@ const getFreeProductsEvents = () => {
 /**
  * Resolve the data layer
  */
-export const resolveDataLayer = async () => {
+export const resolveNonProductsDataLayer = async () => {
   pageErrorHandling();
 
   AdobeDataLayerService.push(await new UserDetectedEvent());

@@ -13,13 +13,14 @@ import {
   loadCSS,
   getMetadata, loadScript,
 } from './lib-franklin.js';
+import Page from './libs/page.js';
 
 import {
   adobeMcAppendVisitorId,
   createTag,
   getParamValue,
   GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
-  getLocale, getCookie,
+  getCookie,
   pushProductsToDataLayer,
 } from './utils/utils.js';
 
@@ -128,46 +129,6 @@ export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos) {
   }
 }
 
-/**
- * Returns the current user time in the format HH:MM|HH:00-HH:59|dayOfWeek|timezone
- * @returns {String}
- */
-function getCurrentTime() {
-  const date = new Date();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const dayOfWeek = date.getDay();
-  const timezone = date.toTimeString().split(' ')[1];
-  const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  return `${hours}:${minutes}|${hours}:00-${hours}:59|${weekday[dayOfWeek]}|${timezone}`;
-}
-
-/**
- * Returns the current GMT date in the format DD/MM/YYYY
- * @returns {String}
- */
-function getCurrentDate() {
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-}
-
-/**
- * Returns the environment name based on the hostname
- * @returns {String}
- */
-export function getEnvironment(hostname) {
-  if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
-    return 'stage';
-  }
-  if (hostname.includes('www.bitdefender')) {
-    return 'prod';
-  }
-  return 'dev';
-}
-
 export function getLocalizedResourceUrl(resourceName) {
   const { pathname } = window.location;
   const lastCharFromUrl = pathname.charAt(pathname.length - 1);
@@ -183,10 +144,6 @@ export function getLocalizedResourceUrl(resourceName) {
   pathnameAsArray = pathnameAsArray.slice(0, basePathIndex + 1); // "/consumer/en";
 
   return `${pathnameAsArray.join('/')}/${resourceName}`;
-}
-
-export function getTags(tags) {
-  return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
 }
 
 export function decorateBlockWithRegionId(element, id) {
@@ -416,6 +373,7 @@ function getExperimentDetails() {
   return { experimentId, experimentVariant };
 }
 
+// TODO: delete
 function pushPageLoadToDataLayer(targetExperimentDetails) {
   const {
     hostname,
@@ -432,13 +390,9 @@ function pushPageLoadToDataLayer(targetExperimentDetails) {
   // eslint-disable-next-line no-console
   console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
 
-  const pathName = window.location.pathname;
   const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const languageCountry = getLanguageCountryFromPath(pathName);
-  const environment = getEnvironment(hostname, languageCountry.country);
-  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
-
-  const locale = getLocale();
+  const environment = Page.environment;
+  const locale = Page.locale;
 
   if (tags.length) {
     pushToDataLayer('page load started', {
@@ -653,9 +607,8 @@ export async function loadTrackers() {
   };
 
   if (isPageNotInDraftsFolder) {
-    const LANGUAGE_COUNTRY = getLanguageCountryFromPath(window.location.pathname);
     const LAUNCH_URL = 'https://assets.adobedtm.com';
-    const ENVIRONMENT = getEnvironment(window.location.hostname, LANGUAGE_COUNTRY.country);
+    const ENVIRONMENT = Page.environment;
 
     // Load Adobe Experience platform data collection (Launch) script
     // const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();

@@ -10,8 +10,8 @@ import {
   getPriceLocalMapByLocale,
   trackProduct,
   GLOBAL_V2_LOCALES,
-  getLocale,
 } from '../../scripts/utils/utils.js';
+import Page from '../../scripts/libs/page.js';
 
 /**
  * Utility function to round prices and percentages
@@ -112,7 +112,7 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   const url = new URL(window.location.href);
   let buyLinkPid = pid || url.searchParams.get('pid') || getMetadata('pid') || '';
 
-  if (GLOBAL_V2_LOCALES.includes(getLocale())) {
+  if (GLOBAL_V2_LOCALES.includes(Page.locale)) {
     buyLinkPid = 'pid.global_v2';
   }
 

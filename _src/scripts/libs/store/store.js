@@ -1,6 +1,6 @@
 import { Constants } from "../constants";
 import { Target, Visitor } from "../data-layer";
-import { Page } from "../page";
+import Page from "../page";
 
 export const monthlyProducts = {
 	"ultsecm": "ultsecm",

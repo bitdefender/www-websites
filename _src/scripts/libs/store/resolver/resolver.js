@@ -11,7 +11,7 @@ export class GlobalContext {
 	static variations = [];
 
 	static solveStaticAttributes() {
-		StoreResolver.resolveStaticGlobalAttributes(document.querySelector(".root .aem-Grid") || document.querySelector("body"));
+		StoreResolver.resolveStaticGlobalAttributes(document.querySelector("main") || document.querySelector("body"));
 	}
 }
 

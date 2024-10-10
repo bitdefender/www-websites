@@ -1,3 +1,4 @@
+import Page from '../libs/page.js';
 import ZuoraNLClass from '../zuora.js';
 
 const TRACKED_PRODUCTS = [];
@@ -14,18 +15,6 @@ export function getCookie(name) {
     cookie[key.trim()] = value;
   });
   return cookie[name];
-}
-
-export function getLocale() {
-  const regex = /\/([a-z]{2}-[a-z]{2})\//i; // match locale with slashes
-  // extract locale without slashes
-  const match = window.location.pathname.match(regex);
-  const defaultLocale = 'en-us';
-  if (match) {
-    return match[1];
-  }
-
-  return defaultLocale;
 }
 
 export const GLOBAL_V2_LOCALES = ['en-bz', 'en-lv'];
@@ -344,7 +333,7 @@ export function generateProductBuyLink(product, productCode, month = null, years
     buyLinkPid = `pid.${getMetadata('pid')}`;
   }
 
-  if (GLOBAL_V2_LOCALES.includes(getLocale())) {
+  if (GLOBAL_V2_LOCALES.includes(Page.locale)) {
     buyLinkPid = 'pid.global_v2';
   }
 
@@ -381,7 +370,7 @@ export function formatPrice(price, currency) {
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   const url = new URL(window.location.href);
-  const locale = getLocale();
+  const locale = Page.locale;
   if (GLOBAL_V2_LOCALES.includes(locale)) {
     // eslint-disable-next-line no-param-reassign
     pid = 'global_v2';
