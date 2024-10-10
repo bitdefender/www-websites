@@ -16,7 +16,7 @@ const state = {
   blockDataset: null,
 };
 
-const MEMBERS_MAP = new Map();
+const MEMBERS_MAP = new Map([]);
 
 function getKeyByValue(map, targetValue) {
   // eslint-disable-next-line no-restricted-syntax
@@ -278,10 +278,11 @@ function changeSelection(el, value) {
 }
 
 function renderSelector(block, ...options) {
-  const defaultSelection = Number(state.blockDataset.defaultselection) || 0;
   const selectorOptions = options
     .filter((option) => option && !Number.isNaN(Number(option)))
     .map((opt) => Number(opt));
+
+  const defaultSelection = Number(state.blockDataset.defaultselection) || selectorOptions[0];
 
   const defaultFirstSelection = getKeyByValue(MEMBERS_MAP, defaultSelection);
 
