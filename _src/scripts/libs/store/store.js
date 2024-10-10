@@ -1,6 +1,7 @@
 import { Constants } from "../constants";
 import { Target, Visitor } from "../data-layer";
 import { Constants } from "../constants";
+import { GLOBAL_V2_LOCALES } from "../../utils/utils";
 import Page from "../page";
 
 export const monthlyProducts = {
@@ -268,7 +269,7 @@ export class Product {
 		this.name = product.product_name;
 		this.options = product.variations;
 		this.department = product.department;
-		this.promotion = product.promotion;
+		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : null);
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
 		this.symbol = option.currency_label;
