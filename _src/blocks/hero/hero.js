@@ -61,6 +61,7 @@ createNanoBlock('discount', (code, label = '{label}') => {
         // eslint-disable-next-line no-console
         console.error('no discount available');
         root.classList.remove('await-loader');
+        root.remove();
       }
     })
     .catch((err) => {
