@@ -16,7 +16,7 @@ const state = {
   blockDataset: null,
 };
 
-const MEMBERS_MAP = new Map([]);
+const MEMBERS_MAP = new Map();
 
 function getKeyByValue(map, targetValue) {
   // eslint-disable-next-line no-restricted-syntax
