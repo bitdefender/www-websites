@@ -11,6 +11,8 @@ main .exit-popup-container {
   padding: 1em;
   color: black;
   padding: 0;
+  box-shadow: 0px 3px 6px #00000029;
+  display: none;
 }
 
 main .exit-popup-container #exitAction {
@@ -52,10 +54,6 @@ main .exit-popup-container .block > div:first-of-type h5 {
   font-size: 32px;
   line-height: 35px;
   font-weight: 500;
-}
-
-main .exit-popup-container .block > div:last-of-type {
-  box-shadow: 0px 3px 6px #00000029;
 }
 
 main .exit-popup-container .block > div:last-of-type a:last-of-type {

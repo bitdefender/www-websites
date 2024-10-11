@@ -24,12 +24,12 @@ export default async function decorate(block) {
   const { product } = parentSelector.dataset;
   const url = new URL(window.location.href);
   const pid = url.searchParams.get('pid') || getMetadata('pid') || '';
-
   const productData = product ? product.split('/') : [];
   const [prodName, prodUsers, prodYears] = productData;
   const variant = `${prodUsers}u-${prodYears}y`;
   const buyLinkSelector = block.querySelector('p.button-container a');
 
+  // create exit x element
   const existEl = document.createElement('span');
   existEl.id = 'exitAction';
   existEl.innerHTML = '<img src="/_src/icons/close_x.JPG" alt="Bitdefender">';
@@ -38,7 +38,7 @@ export default async function decorate(block) {
   // add buyLink
   dynamicBuyLink(buyLinkSelector, prodName, prodUsers, prodYears, pid);
 
-
+  // fetch product data
   const fetchProductData = async (prodName, variant, pid) => {
     const { fetchProduct } = await import('../../scripts/utils/utils.js');
     return await fetchProduct(prodName, variant, pid);
@@ -51,5 +51,49 @@ export default async function decorate(block) {
     block.innerHTML = block.innerHTML.replace(/0%/g, `${discountPercentage}%`);
   } catch (error) {
     console.error('Error fetching product data:', error);
+  }
+
+  // exit action:
+  // Constants for logic
+  const POPUP_DISPLAY_LIMIT = 2;
+  const POPUP_TIMEOUT_DAYS = 30;
+  let popupDisplayCount = parseInt(localStorage.getItem('popupDisplayCount')) || 0;
+  const lastPopupDate = parseInt(localStorage.getItem('lastPopupDate')) || 0;
+
+  // Utility function to check if 30 days have passed
+  function hasThirtyDaysPassed(lastDisplayDate) {
+    const thirtyDaysInMs = POPUP_TIMEOUT_DAYS * 24 * 60 * 60 * 1000;
+    const now = new Date().getTime();
+    return (now - lastDisplayDate) > thirtyDaysInMs;
+  }
+
+  // If 30 days have passed, reset the count
+  if (lastPopupDate && hasThirtyDaysPassed(lastPopupDate)) {
+    localStorage.removeItem('popupDisplayCount');
+    localStorage.removeItem('lastPopupDate');
+    popupDisplayCount = 0;  // Reset count for the session
+  }
+
+  // Mouseout event to display the popup
+  document.addEventListener('mouseout', function(event) {
+    // Check if popup can still be shown
+    if (popupDisplayCount < POPUP_DISPLAY_LIMIT && event.clientY < 0 && parentSelector) {
+      parentSelector.style.display = 'block';
+
+      // add the count
+      popupDisplayCount++;
+      localStorage.setItem('popupDisplayCount', popupDisplayCount);
+
+      // store last display time
+      localStorage.setItem('lastPopupDate', new Date().getTime());
+    }
+  });
+
+  // Close the popup
+  if (existEl) {
+    existEl.addEventListener('click', function() {
+      const popup = document.querySelector('main .exit-popup-container');
+      if (popup) popup.style.display = 'none';
+    });
   }
 }
