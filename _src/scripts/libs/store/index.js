@@ -1,5 +1,5 @@
-import { StoreResolver } from "./resolver/resolver";
-import { Store, Product, ProductInfo, ProductOption, loadScript } from "./store";
+import { StoreResolver } from "./resolver/resolver.js";
+import { Store, Product, ProductInfo, ProductOption, loadScript } from "./store.js";
 
 export {
 	StoreResolver,

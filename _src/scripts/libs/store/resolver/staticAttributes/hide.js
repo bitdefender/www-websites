@@ -1,4 +1,4 @@
-import { parseKey } from "../resolver";
+import { parseKey } from "../resolver.js";
 
 /**
  * @param {HTMLElement} element 

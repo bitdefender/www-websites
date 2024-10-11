@@ -14,6 +14,7 @@ import {
   getMetadata, loadScript,
 } from './lib-franklin.js';
 import { AdobeDataLayerService, PageLoadStartedEvent } from './libs/data-layer.js';
+import { StoreResolver } from './libs/store/index.js';
 import Page from './libs/page.js';
 
 import {
@@ -647,6 +648,12 @@ async function loadPage() {
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await loadLazy(document);
+
+  await StoreResolver.resolve();
+  const elements = document.querySelectorAll('.await-loader');
+  elements.forEach((element) => {
+    element.classList.remove('await-loader');
+  });
 
   adobeMcAppendVisitorId('main');
 

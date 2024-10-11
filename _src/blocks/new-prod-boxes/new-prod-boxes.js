@@ -2,218 +2,43 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 import {
-  getMetadata,
-  getBuyLinkCountryPrefix,
-  matchHeights,
-  setDataOnBuyLinks,
-  generateProductBuyLink,
-  getPriceLocalMapByLocale,
-  trackProduct,
-  GLOBAL_V2_LOCALES,
+  matchHeights, formatPrice
 } from '../../scripts/utils/utils.js';
-import Page from '../../scripts/libs/page.js';
-
-/**
- * Utility function to round prices and percentages
- * @param  value value to round
- * @returns rounded value
- */
-function customRound(value) {
-  const numValue = parseFloat(value);
-
-  if (Number.isNaN(numValue)) {
-    return value;
-  }
-
-  // Convert to a fixed number of decimal places then back to a number to deal with precision issues
-  const roundedValue = Number(numValue.toFixed(2));
-
-  // If it's a whole number, return it as an integer
-  return (roundedValue % 1 === 0) ? Math.round(roundedValue) : roundedValue;
-}
-
-/**
- * Convert a product variant returned by the remote service into a model
- * @param productCode product code
- * @param variantId variant identifier
- * @param v variant
- * @returns a model
- */
-function toModel(productCode, variantId, v) {
-  return {
-    productId: v.product_id,
-    productName: v.product_name,
-    productCode,
-    variantId,
-    regionId: v.region_id,
-    platformProductId: v.platform_product_id,
-    devices: +v.variation.dimension_value,
-    subscription: v.variation.years * 12,
-    version: v.variation.years ? '12' : '1',
-    basePrice: +v.price,
-    // eslint-disable-next-line max-len
-    actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
-    monthlyBasePrice: customRound(v.price / 12),
-    discountedPrice: v.discount?.discounted_price,
-    discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
-    discount: v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0,
-    // eslint-disable-next-line max-len
-    discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
-    currencyIso: v.currency_iso,
-    url: generateProductBuyLink(v, productCode),
-  };
-}
+import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
 let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, billed, customLink) {
-  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
-  const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
-  const price = storeOption.getPrice();
-  const discountedPrice = storeOption.getDiscountedPrice();
-  const discount = storeOption.getDiscount('valueWithCurrency');
-  const buyLink = await storeOption.getStoreUrl();
 
-  let product = {
-    ID: storeOption.getAvangateId(),
-    name: storeOption.getName(),
-    devices: storeOption.getDevices(),
-    subscription: storeOption.getSubscription('months'),
-    version: storeOption.getSubscription('months') === 1 ? 'monthly' : 'yearly',
-    basePrice: storeOption.getPrice('value'),
-    discountValue: storeOption.getDiscount('value'),
-    discountRate: storeOption.getDiscount('percentage'),
-    currency: storeOption.getCurrency(),
-    priceWithTax: storeOption.getDiscountedPrice('value') || storeOption.getPrice('value'),
-  };
-  dataLayerProducts.push(product);
-  const priceElement = document.createElement('div');
-  priceElement.classList.add('hero-aem__prices');
+async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
+  let priceElement = document.createElement('div');
+  let newPrice = document.createElement('span');
+  if (type === 'monthly') {
+    console.log('monthly');
+    newPrice.setAttribute('data-store-price', 'discounted-monthly||full-monthly');
+  } else {
+    newPrice.setAttribute('data-store-price', 'discounted||full');
+  }
+
   priceElement.innerHTML = `
-    <div class="hero-aem__price mt-3">
-      <div>
-          <span class="prod-oldprice">${price}</span>
-          <span class="prod-save">${saveText} ${discount}<span class="save"></span></span>
-      </div>
-      <div class="newprice-container mt-2">
-        <span class="prod-newprice">${discountedPrice}</span>
-        <sup>${conditionText || ''}</sup>
-      </div>
-    </div>
-    ${billed ? `<div class="billed">${billed.innerHTML}</div>` : ''}
-    <a href="${customLink === 1 ? buylink.href : buyLink}" class="button primary">${buylink.text}</a>`;
-  buylink.remove();
+      <div class="hero-aem__price mt-3">
+        <div>
+          <span class="prod-oldprice" data-store-price="full" data-store-hide="no-price=discounted"></span>
+          <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
+        </div>
+        <div class="newprice-container mt-2">
+          <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
+        </div>
+        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', '<span class="newprice-2" data-store-price="discounted||full"></span>')}</div>` : ''}
+        <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector.innerText}</a>
+      </div>`;
   return priceElement;
 }
 
-function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = null) {
-  if (!buyLinkSelector) {
-    return null;
-  }
-  const url = new URL(window.location.href);
-  let buyLinkPid = pid || url.searchParams.get('pid') || getMetadata('pid') || '';
-
-  if (GLOBAL_V2_LOCALES.includes(Page.locale)) {
-    buyLinkPid = 'pid.global_v2';
-  }
-
-  const forceCountry = getPriceLocalMapByLocale().country_code;
-  let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/${buyLinkPid}?force_country=${forceCountry}`);
-  return buyLinkHref;
-}
-
-async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
-  try {
-    const { fetchProduct, formatPrice } = await import('../../scripts/utils/utils.js');
-    const variant = `${prodUsers}u-${prodYears}y`;
-    const product = await fetchProduct(prodName, variant, pid);
-    const m = toModel(prodName, variant, product);
-    trackProduct(m);
-    const {
-      price, discount, currency_label: currencyLabel,
-    } = product;
-    const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
-    let oldPrice = price;
-    let newPrice = discount.discounted_price;
-    // eslint-disable-next-line no-param-reassign
-    let updatedBuyLinkSelector = buyLinkSelector;
-    if (updatedBuyLinkSelector) {
-      updatedBuyLinkSelector.href = dynamicBuyLink(updatedBuyLinkSelector, prodName, prodUsers, prodYears, pid);
-    }
-    let priceElement = document.createElement('div');
-    priceElement.classList.add('hero-aem__prices__box');
-
-    let newPriceBilled = '';
-    let newPriceListed = '';
-    let prodVersion = 'monthly';
-
-    if (!prodName.endsWith('m') && type === 'monthly') {
-      newPrice = `${(parseInt(newPrice, 10) / 12)}`;
-      prodVersion = 'yearly';
-    }
-
-    let adobeDataLayerProduct = {
-      ID: product.platform_product_id,
-      name: product.product_name,
-      devices: product.variation.dimension_value,
-      subscription: prodVersion,
-      version: prodVersion,
-      basePrice: price,
-      discountValue: discount.discounted_price,
-      discountRate: discountPercentage,
-      currency: product.currency_label,
-      priceWithTax: discount.discounted_price,
-    };
-    dataLayerProducts.push(adobeDataLayerProduct);
-
-    oldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
-    if (hideDecimals === 'true') {
-      newPriceBilled = formatPrice(product.discount.discounted_price, product.currency_iso, product.region_id).replace('.00', '');
-      newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id).replace('.00', '');
-    } else {
-      newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id);
-    }
-
-    const dataInfo = {
-      productId: prodName,
-      variation: {
-        price: newPrice,
-        oldPrice,
-        variation_name: variant,
-        currency_label: currencyLabel,
-        region_id: product.region_id,
-      },
-    };
-
-    setDataOnBuyLinks(updatedBuyLinkSelector, dataInfo);
-
-    // const currentDomain = getDomain();
-    // const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
-
-    priceElement.innerHTML = `
-      <div class="hero-aem__price mt-3">
-        <div>
-          <span class="prod-oldprice">${oldPrice}</span>
-          <span class="prod-save">${saveText} ${discountPercentage}%<span class="save"></span></span>
-        </div>
-        <div class="newprice-container mt-2">
-          <span class="prod-newprice">${newPriceListed} ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
-        </div>
-        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2">${newPriceBilled}</span>`)}</div>` : ''}
-        ${updatedBuyLinkSelector.outerHTML}
-      </div>`;
-    return priceElement;
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('Error fetching product:', err);
-  }
-  return null;
-}
-
 function calculateAddOnCost(selector1, selector2) {
+  console.log(selector1, selector2);
   if (!selector1 || !selector2) {
     return null;
   }
-
+  console.log(selector1.textContent, selector2.textContent);
   // get only the number from the new price
   const numberRegex = /\d+(\.\d+)?/;
   const firstPriceString = selector1.textContent.match(numberRegex)[0];
@@ -226,7 +51,7 @@ function calculateAddOnCost(selector1, selector2) {
   return correctPrice;
 }
 
-function createPlanSwitcher(radioButtons, cardNumber, prodName, prodMonthlyName, prodThirdRadioButtonName, variant = 'default') {
+function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = 'default') {
   const planSwitcher = document.createElement('div');
   planSwitcher.classList.add('plan-switcher');
   planSwitcher.classList.toggle('addon', variant === 'addon');
@@ -235,12 +60,13 @@ function createPlanSwitcher(radioButtons, cardNumber, prodName, prodMonthlyName,
   if (variant === 'addon') {
     radioArray = ['add-on-yearly', 'add-on-monthly'];
   }
-  let prodNamesArray = [prodName, prodMonthlyName, prodThirdRadioButtonName];
 
   Array.from(radioButtons.children).forEach((radio, idx) => {
     let radioText = radio.textContent;
     let plan = radioArray[idx];
-    let productName = prodNamesArray[idx];
+    let productName = prodsNames[idx];
+    let prodUser = prodsUsers[idx];
+    let prodYear = prodsYears[idx];
     let checked = idx === 0 ? 'checked' : '';
     let defaultCheck = radio.textContent.match(/\[checked\]/g);
     if (defaultCheck) {
@@ -250,7 +76,7 @@ function createPlanSwitcher(radioButtons, cardNumber, prodName, prodMonthlyName,
 
     if (productName) {
       planSwitcher.innerHTML += `
-        <input type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
+        <input data-store-click-set-product data-store-product-id="${productName}" data-store-product-option="${prodUser}-${prodYear}" data-store-product-department="consumer" type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
         <label for="${plan}-${productName.trim()}" class="radio-label">${radioText}</label><br>
       `;
     }
@@ -340,7 +166,7 @@ export default async function decorate(block, options) {
   const monthlyPricesAsList = monthlyProducts && monthlyProducts.split(',');
   const thirdRadioButtonProductsAsList = thirdRadioButtonProducts && thirdRadioButtonProducts.split(',');
 
-  let monthlyPriceBoxes = {};
+  // let monthlyPriceBoxes = {};
   let yearlyPricesBoxes = {};
   let thirdRadioButtonProductsBoxes = {};
 
@@ -447,17 +273,18 @@ export default async function decorate(block, options) {
       });
 
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
-      let customLink = 0;
       if (buyLinkSelector) {
         buyLinkSelector.classList.add('button', 'primary');
       } else {
         buyLinkSelector = buyLink.querySelector('a');
-        customLink = 1;
       }
 
       let planSwitcher = document.createElement('div');
       if (radioButtons && monthlyProducts) {
-        planSwitcher = createPlanSwitcher(radioButtons, key, prodName, prodMonthlyName, prodThirdRadioButtonName);
+        let prodsNames = [prodName, prodMonthlyName, prodThirdRadioButtonName];
+        let prodsUsers = [prodUsers, prodMonthlyUsers, prodThirdRadioButtonUsers];
+        let prodsYears = [prodYears, prodMonthlyYears, prodThirdRadioButtonYears];
+        planSwitcher = createPlanSwitcher(radioButtons, key, prodsNames, prodsUsers, prodsYears);
       }
       let planSwitcher2 = document.createElement('div');
       if (addOn && addOnProductsAsList && addOnMonthlyProductsAsList) {
@@ -479,47 +306,19 @@ export default async function decorate(block, options) {
       }
 
       let addOnPriceBox;
-      // create the prices element based on where the component is being called from, aem of www-websites
-      if (options) {
-        await createPricesElement(options.store, '', 'Save', prodName, prodUsers, prodYears, buyLinkSelector, billed, customLink)
-          .then((pricesBox) => {
-            yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = pricesBox;
-            prod.outerHTML = `
-              <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
-                <div class="inner_prod_box">
-                  ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
-                  ${title.innerText.trim() ? `<h4>${title.innerHTML}</h4>` : ''}
-                  ${blueTag.innerText.trim() ? `<div class="blueTag"><div>${blueTag.innerHTML.trim()}</div></div>` : ''}
-                  ${subtitle.innerText.trim() ? `<p class="subtitle">${subtitle.querySelector('td').innerHTML.trim()}</p>` : ''}
 
-                  ${radioButtons ? planSwitcher.outerHTML : ''}
+      buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
+      buyLink2?.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
 
-                  ${pricesBox.outerHTML}
+      let secondButton = buyLink?.querySelectorAll('a')[1];
+      if (secondButton) {
+        secondButton.classList.add('button', 'secondary', 'no-arrow');
+      }
 
-                  ${buyLink.outerHTML}
-
-                  ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
-                  <hr />
-                  ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
-                </div>
-            </div>`;
-          });
-        if (monthlyProducts) {
-          const montlyPriceBox = await createPricesElement(options.store, '', 'Save', prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, buyLinkSelector, billed);
-          monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
-        }
-      } else {
-        buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
-        buyLink2?.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
-
-        let secondButton = buyLink?.querySelectorAll('a')[1];
-        if (secondButton) {
-          secondButton.classList.add('button', 'secondary', 'no-arrow');
-        }
-
-        const prodBox = document.createElement('div');
-        prodBox.innerHTML = `
-          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
+      const prodBox = document.createElement('div');
+      prodBox.innerHTML = `
+          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}" 
+          data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" data-store-event="main-product-loaded">
             <div class="inner_prod_box">
               ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
               ${title.innerText.trim() ? `<h4>${title.innerHTML}</h4>` : ''}
@@ -541,33 +340,27 @@ export default async function decorate(block, options) {
               </div>
             </div>
           </div>`;
-        block.children[key].outerHTML = prodBox.innerHTML;
-        let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
-        block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
-        yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = priceBox;
+      block.children[key].outerHTML = prodBox.innerHTML;
+      let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+      block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
+      yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = priceBox;
 
-        if (monthlyProducts) {
-          const montlyPriceBox = await updateProductPrice(prodMonthlyName, prodMonthlyUsers, prodMonthlyYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
-          monthlyPriceBoxes[`${key}-monthly-${prodMonthlyName.trim()}`] = montlyPriceBox;
-        }
+      if (radioButtons.children.length === 3 && thirdRadioButtonProducts) {
+        const thirdRadioButtonBox = await updateProductPrice(prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+        thirdRadioButtonProductsBoxes[`${key}-3-rd-button-${prodThirdRadioButtonName.trim()}`] = thirdRadioButtonBox;
+      }
 
-        if (radioButtons.children.length === 3 && thirdRadioButtonProducts) {
-          const thirdRadioButtonBox = await updateProductPrice(prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
-          thirdRadioButtonProductsBoxes[`${key}-3-rd-button-${prodThirdRadioButtonName.trim()}`] = thirdRadioButtonBox;
-        }
+      if (addOn && addOnMonthlyProductsAsList) {
+        const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
+        let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+        monthlyAddOnPricesBoxes[`${key}-add-on-monthly-${addOnProdMonthlyName.trim()}`] = monthlyAddOnPriceBox;
+      }
 
-        if (addOn && addOnMonthlyProductsAsList) {
-          const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
-          let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-          monthlyAddOnPricesBoxes[`${key}-add-on-monthly-${addOnProdMonthlyName.trim()}`] = monthlyAddOnPriceBox;
-        }
-
-        if (addOn && addOnProductsAsList) {
-          const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
-          addOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-          block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
-          yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = addOnPriceBox;
-        }
+      if (addOn && addOnProductsAsList) {
+        const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
+        addOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+        block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
+        yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = addOnPriceBox;
       }
 
       let checkmark = block.children[key].querySelector('.checkmark');
@@ -590,17 +383,24 @@ export default async function decorate(block, options) {
         li.replaceWith(newLi);
 
         let addOnNewPrice = newLi.querySelector('.add-on-newprice');
-        let newPriceSelector = block.children[key].querySelector('.prod-newprice');
-        let addOnPriceSelector = addOnPriceBox.querySelector('.prod-newprice');
+        const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
+        block.children[key].querySelector('.add-on-product').setAttribute('data-store-context', '');
+        block.children[key].querySelector('.add-on-product').setAttribute('data-store-id', addOnProdName);
+        block.children[key].querySelector('.add-on-product').setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
+        block.children[key].querySelector('.add-on-product').setAttribute('data-store-department', 'consumer');
+        block.children[key].querySelector('.add-on-product').setAttribute('data-store-event', 'main-product-loaded');
 
-        const numberRegex = /\d+(\.\d+)?/;
-        const addOnCost = calculateAddOnCost(newPriceSelector, addOnPriceSelector);
+        let productObject = await Store.getProducts([new ProductInfo(prodName), new ProductInfo(addOnProdName)]);
+        let product = productObject[prodName];
+        let addOnProduct = productObject[addOnProdName];
+        let addOnCost = addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscountedPrice('value') - product.getOption(prodUsers, prodYears).getDiscountedPrice('value');
+        addOnCost = formatPrice(addOnCost, product.getCurrency());
 
+        addOnNewPrice.textContent = addOnCost;
         let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
+        addOnOldPrice.textContent = formatPrice(addOnProduct.getOption(addOnProdUsers, addOnProdYears).getPrice('value'), addOnProduct.getCurrency());
         let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-        addOnNewPrice.textContent = addOnPriceBox.querySelector('.prod-newprice').textContent.replace(numberRegex, addOnCost);
-        addOnOldPrice.textContent = addOnPriceBox.querySelector('.prod-oldprice').textContent;
-        addOnPercentSave.textContent = addOnPriceBox.querySelector('.prod-save').textContent;
+        addOnPercentSave.textContent = `${addOnPriceBox.querySelector('.prod-save').textContent} ${addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscount('percentageWithProcent')}`;
 
         let checkBoxSelector = newLi.querySelector('.checkmark');
         checkBoxSelector.addEventListener('change', () => {
@@ -620,35 +420,6 @@ export default async function decorate(block, options) {
       add some products
     </div>`;
   }
-
-  Promise.all(pricePromises).then(() => {
-    [...block.children].forEach((prod) => {
-      let planSwitcher = prod.querySelector('.plan-switcher');
-      planSwitcher?.querySelectorAll('input[type="radio"]').forEach((radio) => {
-        radio.addEventListener('input', (event) => {
-          let planType = event.target.value.split('-')[1];
-          let priceBox = prod.querySelector('.hero-aem__prices');
-          if (planType === 'monthly') {
-            priceBox.innerHTML = '';
-            priceBox.appendChild(monthlyPriceBoxes[event.target.value]);
-          } else if (planType === '3') {
-            priceBox.innerHTML = '';
-            priceBox.appendChild(thirdRadioButtonProductsBoxes[event.target.value]);
-          } else {
-            priceBox.innerHTML = '';
-            priceBox.appendChild(yearlyPricesBoxes[event.target.value]);
-          }
-        });
-
-        if (radio.checked) {
-          radio.dispatchEvent(new Event('input'));
-        }
-      });
-
-      let priceBox = prod.querySelector('.hero-aem__prices');
-      priceBox?.classList.remove('await-loader');
-    });
-  });
 
   if (addOnProducts && addOnMonthlyProducts) {
     [...block.children].forEach((prod) => {

@@ -1,5 +1,5 @@
-import { GlobalContext } from "../resolver";
-import { monthlyProducts } from "../../store";
+import { GlobalContext } from "../resolver.js";
+import { monthlyProducts } from "../../store.js";
 
 /**
  * @param {string} hideCondition

@@ -1,5 +1,5 @@
-import { Store } from "../../store";
-import { writeValue } from "../resolver";
+import { Store } from "../../store.js";
+import { writeValue } from "../resolver.js";
 
 /**
  * @param {HTMLElement} element 

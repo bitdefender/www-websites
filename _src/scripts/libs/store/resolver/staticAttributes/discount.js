@@ -1,4 +1,4 @@
-import { writeValue } from "../resolver";
+import { writeValue } from "../resolver.js";
 
 /**
  * @param {HTMLElement} element 

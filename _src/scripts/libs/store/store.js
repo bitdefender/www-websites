@@ -1,6 +1,6 @@
 import { Constants } from "../constants.js";
 import { Target, Visitor } from "../data-layer.js";
-import { GLOBAL_V2_LOCALES } from "../../utils/utils.js";
+import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 
 export const monthlyProducts = {
@@ -39,10 +39,6 @@ export class ProductInfo {
 	 * @param {string} promotion
 	 */
 	constructor(id, department, promotion = null) {
-		if (![Store.consumer, Store.business].includes(department)) {
-			throw new Error(`ProductInfo: department should be ${Store.consumer} or ${Store.business}`);
-		}
-
 		this.id = id;
 		this.department = department;
 		this.promotion = promotion;
@@ -237,7 +233,7 @@ export class ProductOption {
 		}
 
 		return await Visitor.appendVisitorIDsTo(
-			window.setUrlParams(this.buyLink, params)
+			setUrlParams(this.buyLink, params)
 		);
 	}
 
@@ -1124,7 +1120,7 @@ export class Store {
 	static placeSymbol(price, currency) {
 		if (!price) { return ""; }
 
-		return new Intl.NumberFormat(Page.locale, { style: 'currency', currency }).format(
+		return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(
 			price,
 		);
 	}

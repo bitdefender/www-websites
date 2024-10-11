@@ -370,7 +370,7 @@ export function formatPrice(price, currency) {
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   const url = new URL(window.location.href);
-  const locale = Page.locale;
+  const { locale } = Page;
   if (GLOBAL_V2_LOCALES.includes(locale)) {
     // eslint-disable-next-line no-param-reassign
     pid = 'global_v2';
@@ -1011,6 +1011,34 @@ export async function sendAnalyticsUserInfo() {
     event: 'user detected',
     user,
   });
+}
+
+export function setUrlParams(urlIn, paramsIn = []) {
+  const isRelativeLink = /^(?!\/\/|[a-z]+:)/i;
+
+  if (!Array.isArray(paramsIn)) {
+    console.error(`paramsIn must be an Array but you provided an ${typeof paramsIn}`);
+    return urlIn;
+  }
+
+  const url = isRelativeLink.test(urlIn) ? new URL(urlIn, window.location.origin) : new URL(urlIn);
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const param of paramsIn) {
+    if (!param) {
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    const [key, value] = param.split('=');
+
+    if (value === '') {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, value || '');
+    }
+  }
+
+  return url.href;
 }
 
 export function getDomain() {
