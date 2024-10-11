@@ -3,7 +3,6 @@ import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
-  fetchProduct,
 } from '../../scripts/utils/utils.js';
 
 /**
@@ -39,35 +38,15 @@ function buildHeroBlock(element) {
 createNanoBlock('discount', (code, label = '{label}') => {
   // code = "av/3/1"
   const [product, unit, year] = code.split('/');
-  const variant = `${unit}u-${year}y`;
 
   const root = document.createElement('div');
   root.classList.add('discount-bubble');
   root.classList.add('await-loader');
+ 
   root.innerHTML = `
-    <span class="discount-bubble-0">--%</span>
+    <span class="discount-bubble-0"  data-store-context data-store-id="${product}" data-store-option="${unit}}-${year}" data-store-department="consumer" data-store-event="main-product-loaded"data-store-discount="percentage">--%</span>
     <span class="discount-bubble-1">${label}</span>
-  `;
-
-  fetchProduct(product, variant)
-    .then((productResponse) => {
-      if (productResponse.discount) {
-        const discount = Math.round(
-          (1 - (productResponse.discount.discounted_price) / productResponse.price) * 100,
-        );
-        root.querySelector('.discount-bubble-0').textContent = `${discount}%`;
-        root.classList.remove('await-loader');
-      } else {
-        // eslint-disable-next-line no-console
-        console.error('no discount available');
-        root.classList.remove('await-loader');
-      }
-    })
-    .catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-      root.classList.remove('await-loader');
-    });
+    `;
   return root;
 });
 
