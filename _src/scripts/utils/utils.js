@@ -125,6 +125,7 @@ const PRICE_LOCALE_MAP = new Map([
   ['en-gb', { force_country: 'uk', country_code: 'gb' }],
   ['en-au', { force_country: 'au', country_code: 'au' }],
   ['en-nz', { force_country: 'nz', country_code: 'nz' }],
+  ['en-cz', { force_country: 'cz', country_code: 'cz' }],
   ['en-global', { force_country: 'en', country_code: null }],
   ['es-cl', { force_country: 'cl', country_code: 'cl' }],
   ['es-co', { force_country: 'co', country_code: 'co' }],
