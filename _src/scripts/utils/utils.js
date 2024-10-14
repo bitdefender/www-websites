@@ -354,14 +354,14 @@ export function generateProductBuyLink(product, productCode, month = null, years
 
 export function setDataOnBuyLinks(element, dataInfo) {
   const { productId, variation } = dataInfo;
-  if (productId) element.dataset.product = productId;
+  if (productId) element.dataset.product = productId.trim();
 
   // element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
-  if (variation.price) element.dataset.buyPrice = variation.price;
-  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice;
-  if (variation.currency_label) element.dataset.currency = variation.currency_label;
-  if (variation.region_id) element.dataset.region = variation.region_id;
-  if (variation.variation_name) element.dataset.variation = variation.variation_name;
+  if (variation.price) element.dataset.buyPrice = variation.price.trim();
+  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice.trim();
+  if (variation.currency_label) element.dataset.currency = variation.currency_label.trim();
+  if (variation.region_id) element.dataset.region = variation.region_id.trim();
+  if (variation.variation_name) element.dataset.variation = variation.variation_name.trim();
 }
 
 export function formatPrice(price, currency) {
