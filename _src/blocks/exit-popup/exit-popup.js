@@ -6,7 +6,7 @@ function dynamicBuyLink (buyLinkSelector, prodName, ProdUsers, prodYears, pid = 
     return null;
   }
   const url = new URL(window.location.href);
-  let buyLinkPid = pid || url.searchParams.get('pid') || getMetadata('pid') || '';
+  let buyLinkPid = `pid.${pid}` || `pid.${url.searchParams.get('pid')}` || `pid.${getMetadata('pid')}` || '';
 
   if (GLOBAL_V2_LOCALES.includes(getLocale())) {
     buyLinkPid = 'pid.global_v2';
@@ -21,9 +21,9 @@ function dynamicBuyLink (buyLinkSelector, prodName, ProdUsers, prodYears, pid = 
 // eslint-disable-next-line no-unused-vars
 export default async function decorate(block) {
   const parentSelector = block.closest('.section');
-  const { product } = parentSelector.dataset;
+  const { product, custom_pid } = parentSelector.dataset;
   const url = new URL(window.location.href);
-  const pid = url.searchParams.get('pid') || getMetadata('pid') || '';
+  const pid = url.searchParams.get('pid') || getMetadata('pid') || custom_pid || '';
   const productData = product ? product.split('/') : [];
   const [prodName, prodUsers, prodYears] = productData;
   const variant = `${prodUsers}u-${prodYears}y`;
@@ -47,6 +47,7 @@ export default async function decorate(block) {
   try {
     const fetchProduct = await fetchProductData(prodName, variant, pid);
     const { price, discount } = fetchProduct;
+    console.log('discount.discounted_price ', fetchProduct)
     const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     block.innerHTML = block.innerHTML.replace(/0%/g, `${discountPercentage}%`);
   } catch (error) {
