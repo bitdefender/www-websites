@@ -2,13 +2,13 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 import {
-  matchHeights, formatPrice
+  matchHeights, formatPrice,
 } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
 let dataLayerProducts = [];
 
-async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
+async function updateProductPrice(saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
   if (type === 'monthly') {
@@ -30,22 +30,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
         <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector.innerText}</a>
       </div>`;
   return priceElement;
-}
-
-function calculateAddOnCost(selector1, selector2) {
-  if (!selector1 || !selector2) {
-    return null;
-  }
-  // get only the number from the new price
-  const numberRegex = /\d+(\.\d+)?/;
-  const firstPriceString = selector1.textContent.match(numberRegex)[0];
-  const firstPriceFloat = parseFloat(firstPriceString);
-
-  const secondPriceString = selector2.textContent.match(numberRegex)[0];
-  const secondPriceFloat = parseFloat(secondPriceString);
-  const correctPrice = parseInt(secondPriceFloat - firstPriceFloat, 10);
-
-  return correctPrice;
 }
 
 function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = 'default') {
@@ -82,17 +66,108 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
   return planSwitcher;
 }
 
-export default async function decorate(block, options) {
+function createFeatureList(featuresSet) {
+  return Array.from(featuresSet).map((table) => {
+    const trList = Array.from(table.querySelectorAll('tr'));
+    const liString = trList.map((tr) => {
+      const tdList = Array.from(tr.querySelectorAll('td'));
+      let firstTdContent = tdList.length > 0 && tdList[0].textContent.trim() !== '' ? `${tdList[0].innerHTML}` : '';
+      const secondTdContent = tdList.length > 1 && tdList[1].textContent.trim() !== '' ? `<span class="white-pill-content">${tdList[1].innerHTML}</span>` : '';
+      let liClass = '';
+
+      if (firstTdContent === '') {
+        liClass += 'd-none';
+      }
+
+      if (firstTdContent.indexOf('?pill') !== -1) {
+        let pillText = firstTdContent.match(/\?pill (\w+)/);
+        let iconElement = firstTdContent.match(/<span class="[^"]*">(.*?)<\/span>/);
+        if (pillText) {
+          let icon = tdList[0].querySelector('span');
+          const pillElement = document.createElement('span');
+          pillElement.classList.add('blue-pill');
+          pillElement.innerHTML = `${pillText[1]}${iconElement ? iconElement[0] : ''}`;
+          firstTdContent = firstTdContent.replace(pillText[0], `${pillElement.outerHTML}`);
+          if (icon) {
+            let count = 0;
+            firstTdContent = firstTdContent.replace(new RegExp(icon.outerHTML, 'g'), (match) => {
+              count += 1;
+              return (count === 2) ? '' : match;
+            });
+          }
+        }
+      }
+
+      if (firstTdContent.indexOf('&lt;pill') !== -1 || firstTdContent.indexOf('&lt;') !== -1) {
+        liClass += ' has_arrow';
+        firstTdContent = firstTdContent.replace('&lt;-', '');
+      }
+
+      if (firstTdContent.indexOf('-&gt;') !== -1 || firstTdContent.indexOf('&gt;') !== -1) {
+        liClass += ' has_arrow_right';
+        firstTdContent = firstTdContent.replace('-&gt;', '<span class="arrow-right"></span>');
+      }
+
+      if (firstTdContent.indexOf('[checkmark]') !== -1) {
+        firstTdContent = firstTdContent.replace('[checkmark]', '<span class="checkmark"></span>');
+      }
+
+      if (firstTdContent.indexOf('[add-on]') !== -1) {
+        firstTdContent = firstTdContent.replace('[add-on]', '');
+      }
+
+      if (firstTdContent.indexOf('&lt;&lt;add-on-newprice&gt;&gt;') !== -1) {
+        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-newprice&gt;&gt;', '<span class="add-on-newprice"></span>');
+      }
+      if (firstTdContent.indexOf('&lt;&lt;add-on-oldprice&gt;&gt;') !== -1) {
+        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-oldprice&gt;&gt;', '<span class="add-on-oldprice"></span>');
+      }
+
+      if (firstTdContent.indexOf('&lt;&lt;add-on-percent-save&gt;&gt;') !== -1) {
+        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-percent-save&gt;&gt;', '<span class="add-on-percent-save"></span>');
+      }
+
+      if (firstTdContent.indexOf('[[') !== -1) {
+        firstTdContent = firstTdContent.replace('[[', '(');
+      }
+
+      if (firstTdContent.indexOf(']]') !== -1) {
+        firstTdContent = firstTdContent.replace(']]', ')');
+      }
+
+      const liContent = `<li class="${liClass}">${firstTdContent}${secondTdContent}</li>`;
+      return liContent;
+    }).join(' ');
+
+    return `<ul>${liString}</ul>`;
+  });
+}
+
+// Function to check if content contains [add-on] text
+function checkAddOn(featuresSet) {
+  let addOn = false;
+  // eslint-disable-next-line array-callback-return
+  Array.from(featuresSet).map((table) => {
+    const trList = Array.from(table.querySelectorAll('tr'));
+    // eslint-disable-next-line array-callback-return
+    trList.map((tr) => {
+      const tdList = Array.from(tr.querySelectorAll('td'));
+      let firstTdContent = tdList.length > 0 && tdList[0].textContent.trim() !== '' ? `${tdList[0].innerHTML}` : '';
+      if (firstTdContent.indexOf('[add-on]') !== -1) {
+        addOn = true;
+      }
+    });
+  });
+
+  return addOn;
+}
+
+export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
-    products, familyProducts, monthlyProducts, priceType, pid, mainProduct,
+    products, familyProducts, monthlyProducts, pid, mainProduct,
     addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
-  // if options exists, this means the component is being called from aem
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-  }
 
   const blockParent = block.closest('.section');
   blockParent.classList.add('we-container');
@@ -162,111 +237,21 @@ export default async function decorate(block, options) {
   const combinedProducts = productsAsList.concat(familyProductsAsList);
   const monthlyPricesAsList = monthlyProducts && monthlyProducts.split(',');
   const thirdRadioButtonProductsAsList = thirdRadioButtonProducts && thirdRadioButtonProducts.split(',');
-
-  // let monthlyPriceBoxes = {};
-  let yearlyPricesBoxes = {};
-  let thirdRadioButtonProductsBoxes = {};
-
-  let yearlyAddOnPricesBoxes = {};
-  let monthlyAddOnPricesBoxes = {};
+  const addOnProductsAsList = addOnProducts && addOnProducts.split(',');
+  const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.split(',');
 
   if (combinedProducts.length) {
     [...block.children].map(async (prod, key) => {
-      // eslint-disable-next-line no-unused-vars
       const mainTable = prod.querySelector('tbody');
-      // eslint-disable-next-line no-unused-vars
       const [greenTag, title, blueTag, subtitle, radioButtons, perPrice, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2] = [...mainTable.querySelectorAll(':scope > tr')];
       const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
       const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
       const [prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears] = thirdRadioButtonProductsAsList ? thirdRadioButtonProductsAsList[key].split('/') : [];
-      let addOn = 0;
-      const addOnProductsAsList = addOnProducts && addOnProducts.split(',');
-      const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.split(',');
+      const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList ? addOnProductsAsList[key].split('/') : [];
+      const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList ? addOnMonthlyProductsAsList[key].split('/') : [];
       const featuresSet = benefitsLists.querySelectorAll('table');
-      const featureList = Array.from(featuresSet).map((table) => {
-        const trList = Array.from(table.querySelectorAll('tr'));
-        const liString = trList.map((tr) => {
-          const tdList = Array.from(tr.querySelectorAll('td'));
-          // Extract the content of the first <td> to be placed outside the <li>
-          let firstTdContent = tdList.length > 0 && tdList[0].textContent.trim() !== '' ? `${tdList[0].innerHTML}` : '';
-          // Extract the content of the second <td> (if present) inside a <span>
-          const secondTdContent = tdList.length > 1 && tdList[1].textContent.trim() !== '' ? `<span class="white-pill-content">${tdList[1].innerHTML}</span>` : '';
-          // Create the <li> combining the first and second td content
-          let liClass = '';
-          if (firstTdContent === '') {
-            liClass += 'd-none';
-          }
-
-          if (firstTdContent.indexOf('?pill') !== -1) {
-            let pillText = firstTdContent.match(/\?pill (\w+)/);
-            let iconElement = firstTdContent.match(/<span class="[^"]*">(.*?)<\/span>/);
-            if (pillText) {
-              let icon = tdList[0].querySelector('span');
-              const pillElement = document.createElement('span');
-              pillElement.classList.add('blue-pill');
-              pillElement.innerHTML = `${pillText[1]}${iconElement ? iconElement[0] : ''}`;
-              firstTdContent = firstTdContent.replace(pillText[0], `${pillElement.outerHTML}`);
-              if (icon) {
-                let count = 0;
-                firstTdContent = firstTdContent.replace(new RegExp(icon.outerHTML, 'g'), (match) => {
-                  count += 1;
-                  return (count === 2) ? '' : match;
-                });
-              }
-            }
-          }
-          // &lt reffers to '<' character
-          if (firstTdContent.indexOf('&lt;pill') !== -1 || firstTdContent.indexOf('&lt;') !== -1) {
-            liClass += ' has_arrow';
-            firstTdContent = firstTdContent.replace('&lt;-', '');
-          }
-
-          // &lt reffers to '<' character
-          if (firstTdContent.indexOf('&lt;-') !== -1 || firstTdContent.indexOf('&lt;') !== -1) {
-            liClass += ' has_arrow';
-            firstTdContent = firstTdContent.replace('&lt;-', '');
-          }
-
-          // &gt reffers to '>' character
-          if (firstTdContent.indexOf('-&gt;') !== -1 || firstTdContent.indexOf('&gt;') !== -1) {
-            liClass += ' has_arrow_right';
-            firstTdContent = firstTdContent.replace('-&gt;', '<span class="arrow-right"></span>');
-          }
-
-          if (firstTdContent.indexOf('[checkmark]') !== -1) {
-            firstTdContent = firstTdContent.replace('[checkmark]', '<span class="checkmark"></span>');
-          }
-
-          if (firstTdContent.indexOf('[add-on]') !== -1) {
-            firstTdContent = firstTdContent.replace('[add-on]', '');
-            addOn = 1;
-          }
-
-          if (firstTdContent.indexOf('&lt;&lt;add-on-newprice&gt;&gt;') !== -1) {
-            firstTdContent = firstTdContent.replace('&lt;&lt;add-on-newprice&gt;&gt;', '<span class="add-on-newprice"></span>');
-          }
-          if (firstTdContent.indexOf('&lt;&lt;add-on-oldprice&gt;&gt;') !== -1) {
-            firstTdContent = firstTdContent.replace('&lt;&lt;add-on-oldprice&gt;&gt;', '<span class="add-on-oldprice"></span>');
-          }
-
-          if (firstTdContent.indexOf('&lt;&lt;add-on-percent-save&gt;&gt;') !== -1) {
-            firstTdContent = firstTdContent.replace('&lt;&lt;add-on-percent-save&gt;&gt;', '<span class="add-on-percent-save"></span>');
-          }
-
-          if (firstTdContent.indexOf('[[') !== -1) {
-            firstTdContent = firstTdContent.replace('[[', '(');
-          }
-
-          if (firstTdContent.indexOf(']]') !== -1) {
-            firstTdContent = firstTdContent.replace(']]', ')');
-          }
-
-          const liContent = `<li class="${liClass}">${firstTdContent}${secondTdContent}</li>`;
-          return liContent;
-        }).join(' ');
-
-        return `<ul>${liString}</ul>`;
-      });
+      const featureList = createFeatureList(featuresSet);
+      let addOn = checkAddOn(featuresSet);
 
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
       if (buyLinkSelector) {
@@ -283,12 +268,11 @@ export default async function decorate(block, options) {
         planSwitcher = createPlanSwitcher(radioButtons, key, prodsNames, prodsUsers, prodsYears);
       }
       let planSwitcher2 = document.createElement('div');
-      if (addOn && addOnProductsAsList && addOnMonthlyProductsAsList) {
-        // eslint-disable-next-line no-unused-vars
-        const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
-        // eslint-disable-next-line no-unused-vars
-        const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
-        planSwitcher2 = createPlanSwitcher(radioButtons, key, addOnProdName, addOnProdMonthlyName, null, 'addon');
+      if (addOn && addOnProducts && addOnMonthlyProducts) {
+        let prodsNames = [addOnProdName, addOnProdMonthlyName];
+        let prodsUsers = [addOnProdUsers, addOnProdMonthlyUsers];
+        let prodsYears = [addOnProdYears, addOnProdMonthlyYears];
+        planSwitcher2 = createPlanSwitcher(radioButtons, key, prodsNames, prodsUsers, prodsYears, 'addon');
       }
 
       let newBlueTag = document.createElement('div');
@@ -300,11 +284,6 @@ export default async function decorate(block, options) {
           newBlueTag.innerHTML += `<div class="blueTag">${child.innerHTML}</div>`;
         });
       }
-
-      let addOnPriceBox;
-
-      buyLink.querySelector('a').classList.add('button', 'primary', 'no-arrow');
-      buyLink2?.querySelector('a')?.classList.add('button', 'primary', 'no-arrow');
 
       let secondButton = buyLink?.querySelectorAll('a')[1];
       if (secondButton) {
@@ -331,32 +310,19 @@ export default async function decorate(block, options) {
               <div class="add-on-product" style="display: none;">
                 ${billed2 ? '<hr>' : ''}
                 ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
-                <h4>${addonProductName}</h4>
+                ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
                 <div class="hero-aem__prices__addon"></div>
               </div>
             </div>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
-      let priceBox = await updateProductPrice(prodName, prodUsers, prodYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+      let priceBox = await updateProductPrice(saveText, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
-      yearlyPricesBoxes[`${key}-yearly-${prodName.trim()}`] = priceBox;
 
-      if (radioButtons.children.length === 3 && thirdRadioButtonProducts) {
-        const thirdRadioButtonBox = await updateProductPrice(prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears, saveText, pid, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
-        thirdRadioButtonProductsBoxes[`${key}-3-rd-button-${prodThirdRadioButtonName.trim()}`] = thirdRadioButtonBox;
-      }
-
-      if (addOn && addOnMonthlyProductsAsList) {
-        const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList[key].split('/');
-        let monthlyAddOnPriceBox = await updateProductPrice(addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-        monthlyAddOnPricesBoxes[`${key}-add-on-monthly-${addOnProdMonthlyName.trim()}`] = monthlyAddOnPriceBox;
-      }
-
-      if (addOn && addOnProductsAsList) {
-        const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
-        addOnPriceBox = await updateProductPrice(addOnProdName, addOnProdUsers, addOnProdYears, saveText, pid, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+      let addOnPriceBox;
+      if (addOn && addOnProducts) {
+        addOnPriceBox = await updateProductPrice(saveText, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
         block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
-        yearlyAddOnPricesBoxes[`${key}-add-on-yearly-${addOnProdName.trim()}`] = addOnPriceBox;
       }
 
       let checkmark = block.children[key].querySelector('.checkmark');
@@ -378,8 +344,6 @@ export default async function decorate(block, options) {
           <div>${li.innerHTML}</div>`;
         li.replaceWith(newLi);
 
-        let addOnNewPrice = newLi.querySelector('.add-on-newprice');
-        const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList[key].split('/');
         block.children[key].querySelector('.add-on-product').setAttribute('data-store-context', '');
         block.children[key].querySelector('.add-on-product').setAttribute('data-store-id', addOnProdName);
         block.children[key].querySelector('.add-on-product').setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
@@ -392,6 +356,7 @@ export default async function decorate(block, options) {
         let addOnCost = addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscountedPrice('value') - product.getOption(prodUsers, prodYears).getDiscountedPrice('value');
         addOnCost = formatPrice(addOnCost, product.getCurrency());
 
+        let addOnNewPrice = newLi.querySelector('.add-on-newprice');
         addOnNewPrice.textContent = addOnCost;
         let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
         addOnOldPrice.textContent = formatPrice(addOnProduct.getOption(addOnProdUsers, addOnProdYears).getPrice('value'), addOnProduct.getCurrency());
@@ -409,53 +374,6 @@ export default async function decorate(block, options) {
           }
         });
       }
-    });
-  } else {
-    block.innerHTML = `
-    <div class="container-fluid">
-      add some products
-    </div>`;
-  }
-
-  if (addOnProducts && addOnMonthlyProducts) {
-    [...block.children].forEach((prod) => {
-      let planSwitcher = prod.querySelector('.plan-switcher.addon');
-      planSwitcher?.querySelectorAll('input[type="radio"]').forEach((radio) => {
-        radio.addEventListener('input', (event) => {
-          let planType = event.target.value.split('-')[3];
-          let priceBox = prod.querySelector('.hero-aem__prices__addon');
-          if (planType === 'monthly') {
-            priceBox.innerHTML = '';
-            priceBox.appendChild(monthlyAddOnPricesBoxes[event.target.value]);
-          } else {
-            priceBox.innerHTML = '';
-            priceBox.appendChild(yearlyAddOnPricesBoxes[event.target.value]);
-          }
-        });
-
-        if (radio.checked) {
-          radio.dispatchEvent(new Event('input'));
-          let addOnPriceBox = prod.querySelector('.hero-aem__prices__addon');
-          let priceBox = prod.querySelector('.hero-aem__prices');
-
-          let addOnPriceBoxNewPrice = addOnPriceBox.querySelector('.prod-newprice');
-          let priceBoxNewPrice = priceBox.querySelector('.prod-newprice');
-          let planSwitcherNewPrice = prod.querySelector('.add-on-newprice');
-
-          let addOnPriceBoxOldPrice = addOnPriceBox.querySelector('.prod-oldprice');
-          let planSwitcherOldPrice = prod.querySelector('.add-on-oldprice');
-
-          let addOnPriceBoxDiscountPercentage = addOnPriceBox.querySelector('.prod-save');
-          let planSwitcherDiscountPercentage = prod.querySelector('.add-on-percent-save');
-
-          const numberRegex = /\d+(\.\d+)?/;
-          const addOnCost = calculateAddOnCost(priceBoxNewPrice, addOnPriceBoxNewPrice);
-
-          planSwitcherNewPrice.textContent = planSwitcherNewPrice.textContent.replace(numberRegex, addOnCost);
-          planSwitcherOldPrice.textContent = addOnPriceBoxOldPrice.textContent;
-          planSwitcherDiscountPercentage.textContent = addOnPriceBoxDiscountPercentage.textContent;
-        }
-      });
     });
   }
 
@@ -475,7 +393,7 @@ export default async function decorate(block, options) {
 
   // decorate icons if the component is being called from www-websites
   const isInLandingPages = window.location.href.includes('www-landing-pages') || window.location.href.includes('bitdefender.com/pages');
-  if (!options && !isInLandingPages) {
+  if (!isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
   }
