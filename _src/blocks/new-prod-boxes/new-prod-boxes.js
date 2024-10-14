@@ -12,7 +12,6 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
   if (type === 'monthly') {
-    console.log('monthly');
     newPrice.setAttribute('data-store-price', 'discounted-monthly||full-monthly');
   } else {
     newPrice.setAttribute('data-store-price', 'discounted||full');
@@ -34,11 +33,9 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
 }
 
 function calculateAddOnCost(selector1, selector2) {
-  console.log(selector1, selector2);
   if (!selector1 || !selector2) {
     return null;
   }
-  console.log(selector1.textContent, selector2.textContent);
   // get only the number from the new price
   const numberRegex = /\d+(\.\d+)?/;
   const firstPriceString = selector1.textContent.match(numberRegex)[0];
@@ -173,9 +170,8 @@ export default async function decorate(block, options) {
   let yearlyAddOnPricesBoxes = {};
   let monthlyAddOnPricesBoxes = {};
 
-  let pricePromises = [];
   if (combinedProducts.length) {
-    pricePromises = [...block.children].map(async (prod, key) => {
+    [...block.children].map(async (prod, key) => {
       // eslint-disable-next-line no-unused-vars
       const mainTable = prod.querySelector('tbody');
       // eslint-disable-next-line no-unused-vars
