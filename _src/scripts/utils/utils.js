@@ -142,6 +142,7 @@ const PRICE_LOCALE_MAP = new Map([
   ['nl-nl', { force_country: null, country_code: null, isZuora: true }],
   ['de-de', { force_country: 'de', country_code: 'de' }],
   ['de-at', { force_country: 'de', country_code: 'at' }],
+  ['de-ch', { force_country: 'de', country_code: 'ch' }],
   ['sv-se', { force_country: 'se', country_code: 'se' }],
   ['pt-br', { force_country: 'br', country_code: 'br' }],
   ['pt-pt', { force_country: 'pt', country_code: 'pt' }],
