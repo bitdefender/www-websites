@@ -28,7 +28,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
     </div>`;
   priceElement.innerHTML = `
     <div class="new-price-box">
-      <span class="await-loader total-text" data-store-price="discounted||full">Your total price:</span>
+      <span class="await-loader total-text" data-store-price="discounted||full"></span>
     </div>`;
   priceAppliedOnTime.innerHTML = label;
 

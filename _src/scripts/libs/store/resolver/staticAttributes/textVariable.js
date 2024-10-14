@@ -89,6 +89,27 @@ const replaceVariable = (text, context, variableParameters, textVariable) => {
                 text = text.replaceAll(textVariable, context.option.getDiscount("valueWithCurrency"));
                 stopVariableSearch = true;
                 break;
+            case "SMALLEST_PRICE":
+                {
+                    let smallestPrice = Number.MAX_SAFE_INTEGER;
+                    let currency = "";
+
+                    if (context.contexts.length === 0) { break; }
+
+                    for (const { product } of context.contexts) {
+                        const productSmallestPrice = product.getSmallestPrice("value");
+                        if (productSmallestPrice && productSmallestPrice < smallestPrice) {
+                            smallestPrice = productSmallestPrice;
+                            currency = product.getCurrency();
+                        }
+                    }
+
+                    if (smallestPrice === Number.MAX_SAFE_INTEGER) { break; }
+
+                    text = text.replaceAll(textVariable, Store.placeSymbol(smallestPrice, currency));
+                    stopVariableSearch = true;
+                    break;
+                }
             case "SMALLEST_PRICE_PER_MONTH":
                 let smallestPrice = Number.MAX_SAFE_INTEGER;
                 let currency = "";

@@ -109,6 +109,10 @@
   display: none;
 }
 
+.global-visibility-hidden {
+  visibility: hidden;
+}
+
 .font-arial {
   font-family: "Arial", sans-serif;
 }
