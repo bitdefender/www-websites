@@ -165,7 +165,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
     };
     dataLayerProducts.push(adobeDataLayerProduct);
 
-    oldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
+    const formattedOldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
     if (hideDecimals === 'true') {
       newPriceBilled = formatPrice(product.discount.discounted_price, product.currency_iso, product.region_id).replace('.00', '');
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id).replace('.00', '');
@@ -192,7 +192,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
     priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div>
-          <span class="prod-oldprice">${oldPrice}</span>
+          <span class="prod-oldprice">${formattedOldPrice}</span>
           <span class="prod-save">${saveText} ${discountPercentage}%<span class="save"></span></span>
         </div>
         <div class="newprice-container mt-2">
