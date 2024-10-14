@@ -81,16 +81,30 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
       const currentProduct = { code, variant, product };
       fetchedProducts.push(currentProduct);
       // eslint-disable-next-line camelcase
-      const { price, discount: { discounted_price: discounted }, currency_iso: currency } = product;
+      const {
+        price,
+        discount: {
+          discounted_price: discounted = 0,
+        } = {},
+        currency_iso: currency,
+      } = product;
       const formattedPriceParams = [currency, null, getDomain()];
+
+      let discountedPrice = discounted;
+      if (discounted === 0) {
+        discountedPrice = price;
+      }
+
       // eslint-disable-next-line max-len
-      const formattedSavings = formatPrice((price - discounted).toFixed(2), ...formattedPriceParams);
+      const formattedSavings = formatPrice((price - discountedPrice).toFixed(2), ...formattedPriceParams);
       const formattedPrice = formatPrice(price, ...formattedPriceParams);
-      const formattedDiscount = formatPrice(discounted, ...formattedPriceParams);
+      const formattedDiscount = formatPrice(discountedPrice, ...formattedPriceParams);
 
       oldPriceElement.innerHTML = `<div class="old-price-box">
-        <span>${oldPriceText} <del>${formattedPrice}</del></span>
-        <span class="savings d-none">Savings <del>${formattedSavings}</del></span>
+        ${discounted !== 0 ? `
+            <span>${oldPriceText} <del>${formattedPrice}</del></span>
+            <span class="savings d-none">Savings <del>${formattedSavings}</del></span>
+          ` : ''}
       </div>`;
       priceElement.innerHTML = `<div class="new-price-box">
         <span class="d-none total-text">Your total price:</span>
@@ -113,7 +127,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
         const dataInfo = {
           productId: currentProduct.code,
           variation: {
-            price: discounted,
+            price: discountedPrice,
             oldPrice: price,
             variation_name: currentProduct.variant,
             currency_label: currentProduct.product.currency_label,
@@ -376,4 +390,5 @@ export default function decorate(block) {
   });
 
   matchHeights(block, 'h3');
+  matchHeights(block, '.old-price-container');
 }
