@@ -8,29 +8,43 @@ import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
 let dataLayerProducts = [];
 
-async function updateProductPrice(saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
+function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
+  let priceAttribute = 'discounted||full';
+
+  if (type === 'monthly') {
+    priceAttribute = hideDecimals === 'true' ? 'discounted-monthly-no-decimal||full-monthly' : 'discounted-monthly||full-monthly';
+    if (prodName.endsWith('m')) {
+      priceAttribute = hideDecimals === 'true' ? 'discounted-no-decimal||full' : 'discounted||full';
+    }
+  }
+
+  return priceAttribute;
+}
+
+async function updateProductPrice(prodName, saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
-  if (type === 'monthly') {
-    if (hideDecimals === 'true') {
-      newPrice.setAttribute('data-store-price', 'discounted-monthly-no-decimal||full-monthly');
-    } else {
-      newPrice.setAttribute('data-store-price', 'discounted-monthly||full-monthly');
-    }
-  } else {
-    newPrice.setAttribute('data-store-price', 'discounted||full');
+
+  let priceAttribute = setDiscountedPriceAttribute(type, hideDecimals, prodName);
+  newPrice.setAttribute('data-store-price', priceAttribute);
+
+  let oldPrice = 'data-store-price="full"';
+  let billedPrice = 'data-store-price="discounted||full"';
+  if (hideDecimals === 'true') {
+    oldPrice = 'data-store-price="full-no-decimal"';
+    billedPrice = 'data-store-price="discounted-no-decimal||full-no-decimal"';
   }
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div>
-          <span class="prod-oldprice" data-store-price="full" data-store-hide="no-price=discounted"></span>
+          <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
           <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
         </div>
         <div class="newprice-container mt-2">
           <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
-        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', '<span class="newprice-2" data-store-price="discounted||full"></span>')}</div>` : ''}
+        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
         <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector.innerText}</a>
       </div>`;
   return priceElement;
@@ -320,12 +334,12 @@ export default async function decorate(block) {
             </div>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
-      let priceBox = await updateProductPrice(saveText, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
 
       let addOnPriceBox;
       if (addOn && addOnProducts) {
-        addOnPriceBox = await updateProductPrice(saveText, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+        addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
         block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
       }
 

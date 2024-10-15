@@ -16,9 +16,17 @@ export const resolve = (element, context) => {
                 if (!option.getPrice("valueWithCurrency")) { continue; }
                 writeValue(element, option.getPrice("valueWithCurrency"));
                 return;
+            case "full-no-decimal":
+                if (!option.getPrice("valueWithCurrency").replace('.00', '')) { continue; }
+                writeValue(element, option.getPrice("valueWithCurrency").replace('.00', ''));
+                return;
             case "discounted":
                 if (!option.getDiscountedPrice("valueWithCurrency")) { continue; }
                 writeValue(element, option.getDiscountedPrice("valueWithCurrency"));
+                return;
+            case "discounted-no-decimal":
+                if (!option.getDiscountedPrice("valueWithCurrency").replace('.00', '')) { continue; }
+                writeValue(element, option.getDiscountedPrice("valueWithCurrency").replace('.00', ''));
                 return;
             case "full-monthly":
                 if (!option.getPrice("monthlyWithCurrency")) { continue; }
