@@ -117,7 +117,6 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
   }
 
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  console.log(forceCountry);
   let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/${buyLinkPid}?force_country=${forceCountry}`);
   return buyLinkHref;
 }
