@@ -6,8 +6,6 @@ import {
 } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
-let dataLayerProducts = [];
-
 function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
   let priceAttribute = 'discounted||full';
 
@@ -404,35 +402,11 @@ export default async function decorate(block) {
   };
   hj('event', 'new-prod-boxes');
 
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
-  });
-
   // decorate icons if the component is being called from www-websites
   const isInLandingPages = window.location.href.includes('www-landing-pages') || window.location.href.includes('bitdefender.com/pages');
   if (!isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
-  }
-
-  if (isInLandingPages) {
-    const { decorateIcons } = await import('../../scripts/utils/utils.js');
-    // eslint-disable-next-line import/no-unresolved
-    const { GLOBAL_EVENTS } = await import(`https://${window.location.hostname}/_src-lp/scripts/utils.js`);
-    const { sendAnalyticsPageLoadedEvent } = await import(`https://${window.location.hostname}/_src-lp/scripts/adobeDataLayer.js`);
-    decorateIcons(block.closest('.section'));
-
-    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
-      window.adobeDataLayer.push({
-        event: 'campaign product',
-        product: {
-          [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-        },
-      });
-
-      sendAnalyticsPageLoadedEvent(true);
-    });
   }
 
   matchHeights(block, '.subtitle');

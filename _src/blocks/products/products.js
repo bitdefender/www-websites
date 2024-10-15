@@ -241,11 +241,14 @@ function renderFeaturedSavings(text = 'Save', percent = '') {
  * Nanoblock representing the lowest product price
  * @returns root node of the nanoblock
  */
-function renderLowestPrice(monthly = '', text = '') {
+function renderLowestPrice(...params) {
+  const fileteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
+  const text = fileteredParams.length > 1 ? fileteredParams[1] : fileteredParams[0];
+  const monthly = fileteredParams.length > 1 ? fileteredParams[0] : '';
+
   const root = document.createElement('p');
   root.setAttribute('data-store-text-variable', '');
   root.textContent = text.replace('0', monthly.toLowerCase() === 'monthly' ? '{SMALLEST_PRICE_PER_MONTH}' : '{SMALLEST_PRICE}');
-
   return root;
 }
 
@@ -258,7 +261,7 @@ function renderPriceCondition(text) {
   return createTag(
     'div',
     {
-      class: 'price test-123',
+      class: 'price',
     },
     `<em>${text}</em>`,
   );
@@ -293,7 +296,7 @@ export default function decorate(block) {
     }
   });
 
-  block.setAttribute('data-store-context', '');
+  block.parentElement.parentElement.setAttribute('data-store-context', '');
   [...block.children].forEach((row, idxParent) => {
     [...(row.children)].forEach((col, idxCol) => {
       const plansIndex = idxParent * row.children.length + idxCol;
