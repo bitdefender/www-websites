@@ -282,7 +282,7 @@ export default function decorate(block) {
   const metadata = block.closest('.section').dataset;
   const plans = [];
 
-  Object.entries(metadata).forEach((key, value) => {
+  Object.entries(metadata).forEach(([key, value]) => {
     if (key.includes('plans')) {
       const allImportantData = value.match(/[a-zA-Z0-9-]+/g);
       plans.push({
