@@ -156,6 +156,16 @@
 
 .columns img {
   width: 100%;
+
+}
+
+.dlp.columns-container img{
+  width: 67%;
+  margin-left: auto;
+}
+
+.dlp.columns-container h2{
+  color: #006DFF;
 }
 
 .modal-container.get-bitdefender-familypack img {

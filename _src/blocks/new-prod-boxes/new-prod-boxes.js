@@ -131,9 +131,9 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
     const {
       price, discount, currency_label: currencyLabel,
     } = product;
-    const discountPercentage = Math.round((1 - discount.discounted_price / price) * 100);
     let oldPrice = price;
-    let newPrice = discount.discounted_price;
+    let newPrice = discount?.discounted_price || oldPrice;
+    const discountPercentage = Math.round((1 - newPrice / oldPrice) * 100);
     // eslint-disable-next-line no-param-reassign
     let updatedBuyLinkSelector = buyLinkSelector;
     if (updatedBuyLinkSelector) {
@@ -158,16 +158,16 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
       subscription: prodVersion,
       version: prodVersion,
       basePrice: price,
-      discountValue: discount.discounted_price,
+      discountValue: newPrice,
       discountRate: discountPercentage,
       currency: product.currency_label,
-      priceWithTax: discount.discounted_price,
+      priceWithTax: newPrice,
     };
     dataLayerProducts.push(adobeDataLayerProduct);
 
-    oldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
+    const formattedOldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
     if (hideDecimals === 'true') {
-      newPriceBilled = formatPrice(product.discount.discounted_price, product.currency_iso, product.region_id).replace('.00', '');
+      newPriceBilled = formatPrice(discount?.discounted_price, product.currency_iso, product.region_id).replace('.00', '');
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id).replace('.00', '');
     } else {
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id);
@@ -186,15 +186,15 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
 
     setDataOnBuyLinks(updatedBuyLinkSelector, dataInfo);
 
-    // const currentDomain = getDomain();
-    // const formattedPriceParams = [mv.model.currency_iso, null, currentDomain];
+    const hasDiscount = discountPercentage !== 0;
+    const discountHtml = `<div>
+                            <span class="prod-oldprice">${formattedOldPrice}</span>
+                            <span class="prod-save">${saveText} ${discountPercentage}%<span class="save"></span></span>
+                          </div>`;
 
     priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div>
-          <span class="prod-oldprice">${oldPrice}</span>
-          <span class="prod-save">${saveText} ${discountPercentage}%<span class="save"></span></span>
-        </div>
+        ${hasDiscount ? `${discountHtml}` : ''}
         <div class="newprice-container mt-2">
           <span class="prod-newprice">${newPriceListed} ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
