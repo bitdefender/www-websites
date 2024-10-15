@@ -116,7 +116,10 @@ function dynamicBuyLink(buyLinkSelector, prodName, ProdUsers, prodYears, pid = n
     buyLinkPid = 'pid.global_v2';
   }
 
-  const forceCountry = getPriceLocalMapByLocale().country_code;
+  let forceCountry = getPriceLocalMapByLocale().country_code;
+  if (forceCountry === 'gb') {
+    forceCountry = 'uk';
+  }
   let buyLinkHref = new URL(`${getBuyLinkCountryPrefix()}/${prodName.trim()}/${ProdUsers}/${prodYears}/${buyLinkPid}?force_country=${forceCountry}`);
   return buyLinkHref;
 }
