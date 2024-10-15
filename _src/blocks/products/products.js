@@ -1,11 +1,8 @@
 import {
   createNanoBlock,
   renderNanoBlocks,
-  fetchProduct,
   createTag,
-  generateProductBuyLink,
   matchHeights,
-  setDataOnBuyLinks, formatPrice, adobeMcAppendVisitorId, trackProduct, getDomain,
 } from '../../scripts/utils/utils.js';
 
 // all avaiable text variables
@@ -15,97 +12,6 @@ const TEXT_VARIABLES_MAPPING = [
     storeVariable: '{DISCOUNT_PERCENTAGE}',
   },
 ];
-
-/**
- * Utility function to round prices and percentages
- * @param  value value to round
- * @returns rounded value
- */
-function customRound(value) {
-  const numValue = parseFloat(value);
-
-  if (Number.isNaN(numValue)) {
-    return value;
-  }
-
-  // Convert to a fixed number of decimal places then back to a number to deal with precision issues
-  const roundedValue = Number(numValue.toFixed(2));
-
-  // If it's a whole number, return it as an integer
-  return (roundedValue % 1 === 0) ? Math.round(roundedValue) : roundedValue;
-}
-
-/**
- * Convert a product variant returned by the remote service into a model
- * @param productCode product code
- * @param variantId variant identifier
- * @param v variant
- * @returns a model
- */
-function toModel(productCode, variantId, v) {
-  const currentDomain = getDomain();
-  const formattedPriceParams = [v.currency_iso, null, currentDomain];
-  return {
-    productId: v.product_id,
-    productName: v.product_name,
-    productCode,
-    variantId,
-    regionId: v.region_id,
-    platformProductId: v.platform_product_id,
-    devices: +v.variation.dimension_value,
-    subscription: v.variation.years * 12,
-    version: v.variation.years ? '12' : '1',
-    basePrice: +v.price,
-    // eslint-disable-next-line max-len
-    actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
-    monthlyBasePrice: customRound(v.price / 12),
-    discountedPrice: v.discount?.discounted_price,
-    discountedMonthlyPrice: v.discount ? customRound(v.discount.discounted_price / 12) : 0,
-    // eslint-disable-next-line max-len
-    discount: formatPrice(v.discount ? customRound((v.price - v.discount.discounted_price) * 100) / 100 : 0, ...formattedPriceParams),
-    // eslint-disable-next-line max-len
-    discountRate: v.discount ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100) : 0,
-    currencyIso: v.currency_iso,
-    url: generateProductBuyLink(v, productCode),
-    test: {},
-  };
-}
-
-/**
- * Represents the current state of a product card.
- * The state is exposed by the _model_ attribute.
- * Views can react to state change by subscribing with a listener
- * This class is also repsonsible for fetching the product variants
- * from the remote service and presenting them to the view.
- */
-class ProductCard {
-  constructor(root) {
-    this.root = root;
-    this.listeners = [];
-    this.model = {};
-  }
-
-  notify() {
-    this.listeners.forEach((listener) => listener(this.model));
-  }
-
-  subscribe(listener) {
-    this.listeners.push(listener);
-  }
-
-  /**
-   * Fetch a product variant from the remote service and update the model state
-   * @param productCode
-   * @param variantId
-   */
-  async selectProductVariant(productCode, variantId) {
-    const p = await fetchProduct(productCode, variantId);
-
-    this.model = toModel(productCode, variantId, p);
-
-    this.notify();
-  }
-}
 
 /**
  * Nanoblock representing the plan selectors.
@@ -121,6 +27,10 @@ function renderPlanSelector(plans, defaultSelection) {
   ul.classList.add('variant-selector');
   root.appendChild(ul);
 
+  if (plans.length === 3) {
+    ul.style.display = 'none';
+  }
+
   for (let idx = 0; idx < plans.length - 2; idx += 3) {
     const label = plans[idx];
     const variant = plans[idx + 2];
@@ -134,9 +44,15 @@ function renderPlanSelector(plans, defaultSelection) {
       `<span>${label}</span>`,
     );
 
-    if (plans.length === 3) {
-      ul.style.display = 'none';
+    // set the
+    if (defaultSelection === devices) {
+      li.classList.add('active');
     }
+
+    li.addEventListener('click', () => {
+      root.querySelectorAll('.active').forEach((option) => option.classList.remove('active'));
+      li.classList.add('active');
+    });
 
     ul.appendChild(li);
   }
@@ -214,7 +130,6 @@ function renderPrice(text = '', monthly = '', monthTranslation = 'mo') {
  * @returns Root node of the nanoblock
  */
 function renderHighlightSavings(text = 'Save', percent = '') {
-
   const highlighSaving = document.createElement('span');
   highlighSaving.setAttribute('data-store-text-variable', '');
   highlighSaving.textContent = `${text} ${
@@ -303,7 +218,6 @@ function renderFeatured(text) {
  * @returns Root node of the nanoblock
  */
 function renderFeaturedSavings(text = 'Save', percent = '') {
-
   const featuredSaving = document.createElement('span');
   featuredSaving.setAttribute('data-store-text-variable', '');
   featuredSaving.textContent = `${text} ${
@@ -365,34 +279,28 @@ createNanoBlock('lowestPrice', renderLowestPrice);
  * Main decorate function
  */
 export default function decorate(block) {
-
   const metadata = block.closest('.section').dataset;
-  let numberOfPlansInMetadata = 0;
   const plans = [];
-  
-  while(true) {
-    numberOfPlansInMetadata++;
-    if (!metadata[`plans${numberOfPlansInMetadata}`]) {
-      break;
+
+  Object.entries(metadata).forEach((key, value) => {
+    if (key.includes('plans')) {
+      const allImportantData = value.match(/[a-zA-Z0-9-]+/g);
+      plans.push({
+        productCode: allImportantData[1],
+        variant: allImportantData[2].match(/[0-9-]+/g).join(''),
+        defaultVariant: `${allImportantData[3]}${allImportantData[2].match(/[0-9-]+/g)[1]}`,
+      });
     }
+  });
 
-    const allImportantData = metadata[`plans${numberOfPlansInMetadata}`].match(/[a-zA-Z0-9\-]+/g);
-    plans.push({
-      productCode: allImportantData[1],
-      variant: allImportantData[2].match(/[0-9\-]+/g).join(''),
-    });
-  }
-
-  console.log(plans, metadata);
   block.setAttribute('data-store-context', '');
   [...block.children].forEach((row, idxParent) => {
     [...(row.children)].forEach((col, idxCol) => {
-      const plansIndex = idxParent*row.children.length + idxCol;
-      console.log(plansIndex, idxParent, row.children.length, idxCol);
+      const plansIndex = idxParent * row.children.length + idxCol;
       col.classList.add('product-card');
       col.setAttribute('data-store-context', '');
       col.setAttribute('data-store-id', plans[plansIndex].productCode);
-      col.setAttribute('data-store-option', plans[plansIndex].variant);
+      col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', 'main-product-loaded');
 
@@ -449,6 +357,7 @@ export default function decorate(block) {
     }
   });
 
+  // Height matching logic
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {

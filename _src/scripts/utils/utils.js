@@ -1017,6 +1017,7 @@ export function setUrlParams(urlIn, paramsIn = []) {
   const isRelativeLink = /^(?!\/\/|[a-z]+:)/i;
 
   if (!Array.isArray(paramsIn)) {
+    // eslint-disable-next-line no-console
     console.error(`paramsIn must be an Array but you provided an ${typeof paramsIn}`);
     return urlIn;
   }

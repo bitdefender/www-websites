@@ -8,6 +8,7 @@ import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
 let dataLayerProducts = [];
 
+// eslint-disable-next-line no-unused-vars
 async function updateProductPrice(saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
