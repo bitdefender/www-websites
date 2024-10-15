@@ -44,18 +44,18 @@ createNanoBlock('discount', (code, label = '{label}') => {
   root.classList.add('await-loader');
 
   // Add the required attributes to the root element
-  
+
   root.setAttribute('data-store-context', '');
   root.setAttribute('data-store-id', product);
   root.setAttribute('data-store-option', `${unit}-${year}`);
   root.setAttribute('data-store-department', 'consumer');
   root.setAttribute('data-store-event', 'main-product-loaded');
-  root.setAttribute('data-store-hide', 'no-price=discounted');
+  root.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
   root.innerHTML = `
     <span class="discount-bubble-0" data-store-discount="percentage">--%</span>
     <span class="discount-bubble-1">${label}</span>
   `;
-  
+
   return root;
 });
 

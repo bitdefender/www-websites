@@ -1,4 +1,4 @@
-import Cookie from '../../scripts/libs/cookie';
+import Cookie from '../../scripts/libs/cookie.js';
 
 function onChange(form) {
   // Targeting the anchor inside .button-container
