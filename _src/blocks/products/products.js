@@ -303,6 +303,7 @@ export default function decorate(block) {
       col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', 'main-product-loaded');
+      col.querySelector('.button-container a').setAttribute('data-store-buy-link', '');
 
       block.appendChild(col);
       renderNanoBlocks(col, undefined, idxParent);
