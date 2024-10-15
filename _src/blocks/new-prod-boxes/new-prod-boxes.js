@@ -12,7 +12,11 @@ async function updateProductPrice(saveText, buyLinkSelector = null, billed = nul
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
   if (type === 'monthly') {
-    newPrice.setAttribute('data-store-price', 'discounted-monthly||full-monthly');
+    if (hideDecimals === 'true') {
+      newPrice.setAttribute('data-store-price', 'discounted-monthly-no-decimal||full-monthly');
+    } else {
+      newPrice.setAttribute('data-store-price', 'discounted-monthly||full-monthly');
+    }
   } else {
     newPrice.setAttribute('data-store-price', 'discounted||full');
   }

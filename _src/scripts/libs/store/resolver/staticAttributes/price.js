@@ -28,6 +28,10 @@ export const resolve = (element, context) => {
                 if (!option.getDiscountedPrice("monthlyWithCurrency")) { continue; }
                 writeValue(element, option.getDiscountedPrice("monthlyWithCurrency"));
                 return;
+            case "discounted-monthly-no-decimal":
+                if (!option.getDiscountedPrice("monthlyWithCurrency").replace('.00', '')) { continue; }
+                writeValue(element, option.getDiscountedPrice("monthlyWithCurrency").replace('.00', ''));
+                return;
             case "smallest-monthly":
                 let smallestPrice = Number.MAX_SAFE_INTEGER;
                 for (const { product } of context.contexts) {
