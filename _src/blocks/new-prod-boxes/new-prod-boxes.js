@@ -167,7 +167,7 @@ async function updateProductPrice(prodName, prodUsers, prodYears, saveText, pid 
 
     const formattedOldPrice = formatPrice(oldPrice, product.currency_iso, product.region_id).replace('.00', '');
     if (hideDecimals === 'true') {
-      newPriceBilled = formatPrice(newPrice, product.currency_iso, product.region_id).replace('.00', '');
+      newPriceBilled = formatPrice(discount?.discounted_price, product.currency_iso, product.region_id).replace('.00', '');
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id).replace('.00', '');
     } else {
       newPriceListed = formatPrice(newPrice, product.currency_iso, product.region_id);
