@@ -175,4 +175,6 @@ export default function decorate(block, options) {
     matchHeights(chatOptions, '.chat-options-text');
     matchHeights(chatOptions, 'table');
   }
+  matchHeights(block, 'h3');
+  matchHeights(block, 'h4');
 }
