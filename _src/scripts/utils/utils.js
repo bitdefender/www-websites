@@ -825,21 +825,28 @@ export function trackProduct(product, location = '') {
 }
 
 export function pushTrialDownloadToDataLayer() {
-  const getTrialID = () => (
+  const getTrialID = (currentPage, button) => {
+    if (currentPage === 'thank-you') {
+      return '8430';
+    }
+
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
+    if (closestStoreElementWithId) {
+      return closestStoreElementWithId.dataset.storeId;
+    }
+
     // eslint-disable-next-line max-len
-    ((TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode) || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode))
-    || getMetadata('breadcrumb-title')
-    || getMetadata('og:title')
-  );
+    return getMetadata('breadcrumb-title') || getMetadata('og:title');
+  };
 
   const url = window.location.href;
   const currentPage = url.split('/').filter(Boolean).pop();
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
 
-  const pushTrialData = () => {
+  const pushTrialData = (button) => {
     AdobeDataLayerService.push(new ButtonClickEvent(
       `${downloadType} downloaded`,
-      getTrialID(),
+      getTrialID(currentPage, button),
     ));
   };
 
@@ -848,7 +855,7 @@ export function pushTrialDownloadToDataLayer() {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
       if (href.includes('fragments/thank-you-for-downloading') || href.includes('fragments/get-bitdefender')) {
-        button.addEventListener('click', pushTrialData);
+        button.addEventListener('click', () => { pushTrialData(button); });
       }
     });
   } else if (currentPage === 'thank-you') {
