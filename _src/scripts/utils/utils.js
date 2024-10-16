@@ -5,19 +5,6 @@ import ZuoraNLClass from '../zuora.js';
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
 
-/**
- * Get cookie
- * @param {String} name - cookie name
- */
-export function getCookie(name) {
-  const cookie = {};
-  document.cookie.split(';').forEach((el) => {
-    const [key, value] = el.split('=');
-    cookie[key.trim()] = value;
-  });
-  return cookie[name];
-}
-
 export const GLOBAL_V2_LOCALES = ['en-bz', 'en-lv'];
 export const IANA_BY_REGION_MAP = new Map([
   [3, { locale: 'en-GB', label: 'united kingdom' }],
@@ -137,6 +124,14 @@ const PRICE_LOCALE_MAP = new Map([
   ['zh-hk', { force_country: 'en', country_code: 'hk' }],
   ['zh-tw', { force_country: 'en', country_code: 'tw' }],
 ]);
+
+/**
+ * @returns {boolean} check if you are on exactly the consumer page (e.g /en-us/consumer/)
+ */
+export function checkIfConsumerPage() {
+  const lastSegmentInPath = window.location.pathname?.split('/')?.filter(Boolean)?.slice(-1)[0];
+  return lastSegmentInPath === 'consumer';
+}
 
 /**
  * Returns the value of a query parameter

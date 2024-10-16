@@ -3,6 +3,7 @@
 /* eslint-disable max-len */
 import {
   matchHeights, formatPrice,
+  checkIfConsumerPage,
 } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
@@ -254,6 +255,7 @@ export default async function decorate(block) {
   const monthlyPricesAsList = monthlyProducts && monthlyProducts.split(',');
   const thirdRadioButtonProductsAsList = thirdRadioButtonProducts && thirdRadioButtonProducts.split(',');
   const addOnProductsAsList = addOnProducts && addOnProducts.split(',');
+  const addOnProductsInitial = addOnProductsAsList && addOnProductsAsList.slice(0, productsAsList.length);
   const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.split(',');
 
   if (combinedProducts.length) {
@@ -306,10 +308,16 @@ export default async function decorate(block) {
         secondButton.classList.add('button', 'secondary', 'no-arrow');
       }
 
+      // set the store event on the component
+      let storeEvent = 'main-product-loaded';
+      if (checkIfConsumerPage()) {
+        storeEvent = 'product-loaded';
+      }
+
       const prodBox = document.createElement('div');
       prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}" 
-          data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" data-store-event="main-product-loaded">
+          data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
             <div class="inner_prod_box">
               ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
               ${title.innerText.trim() ? `<h4>${title.innerHTML}</h4>` : ''}
@@ -364,7 +372,9 @@ export default async function decorate(block) {
         block.children[key].querySelector('.add-on-product').setAttribute('data-store-id', addOnProdName);
         block.children[key].querySelector('.add-on-product').setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
         block.children[key].querySelector('.add-on-product').setAttribute('data-store-department', 'consumer');
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-event', 'main-product-loaded');
+        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(addOnProdName))) {
+          block.children[key].querySelector('.add-on-product').setAttribute('data-store-event', storeEvent);
+        }
 
         let productObject = await Store.getProducts([new ProductInfo(prodName), new ProductInfo(addOnProdName)]);
         let product = productObject[prodName];

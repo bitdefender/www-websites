@@ -3,6 +3,7 @@ import {
   renderNanoBlocks,
   createTag,
   matchHeights,
+  checkIfConsumerPage,
 } from '../../scripts/utils/utils.js';
 
 // all avaiable text variables
@@ -300,12 +301,19 @@ export default function decorate(block) {
   [...block.children].forEach((row, idxParent) => {
     [...(row.children)].forEach((col, idxCol) => {
       const plansIndex = idxParent * row.children.length + idxCol;
+
+      // set the store event on the component
+      let storeEvent = 'main-product-loaded';
+      if (checkIfConsumerPage()) {
+        storeEvent = 'product-loaded';
+      }
+
       col.classList.add('product-card');
       col.setAttribute('data-store-context', '');
       col.setAttribute('data-store-id', plans[plansIndex].productCode);
       col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
       col.setAttribute('data-store-department', 'consumer');
-      col.setAttribute('data-store-event', 'main-product-loaded');
+      col.setAttribute('data-store-event', storeEvent);
       col.querySelector('.button-container a').setAttribute('data-store-buy-link', '');
 
       block.appendChild(col);
