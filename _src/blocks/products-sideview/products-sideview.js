@@ -143,6 +143,7 @@ function renderPrice(block, _firstProduct, secondProduct) {
   const variant = '5-1';
   const el = document.createElement('DIV');
   el.classList.add('price');
+  el.classList.add('await-loader');
   block.setAttribute('data-store-context', '');
   block.setAttribute('data-store-id', secondProduct);
   block.setAttribute('data-store-option', variant);
