@@ -1,6 +1,5 @@
 import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
-import { getMetadata, getParamValue } from "../utils/utils.js";
 import Page from "./page.js";
 
 /**
@@ -46,12 +45,33 @@ export class PageLoadStartedEvent {
   };
 
   /**
+   * 
+   * @param {string} name -> properties 
+   * @returns {string} metadata
+   */
+  #getMetadata(name) {
+    const attr = name && name.includes(':') ? 'property' : 'name';
+    const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+    return meta || '';
+  }
+
+  /**
+   * 
+   * @param {string} param -> the parameter to be searched in the URL 
+   * @returns {string} -> value of the parameter
+   */
+  #getParamValue(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  }
+
+  /**
    * get experiment details from Target
    * @returns {object | null}
    */
   async #getTargetExperimentDetails() {
     let targetExperimentDetails = null;
-    if (getMetadata('target-experiment') !== '') {
+    if (this.#getMetadata('target-experiment') !== '') {
       const { runTargetExperiment } = await import('../target.js');
       targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
     }
@@ -146,7 +166,7 @@ export class PageLoadStartedEvent {
         subSubSubSection: pageSectionData.subSubSubSection,
         destinationURL: window.location.href,
         queryString: window.location.search,
-        referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
+        referringURL: this.#getParamValue('adobe_mc_ref') || this.#getParamValue('ref') || document.referrer || '',
         serverName: 'hlx.live', // indicator for AEM Success Edge
         language: pageSectionData.locale,
         sysEnv: UserAgent.os,
@@ -154,9 +174,9 @@ export class PageLoadStartedEvent {
           { experimentDetails: pageSectionData.experimentDetails }),
       },
       attributes: {
-        promotionID: getParamValue('pid') || '',
-        internalPromotionID: getParamValue('icid') || '',
-        trackingID: getParamValue('cid') || '',
+        promotionID: this.#getParamValue('pid') || '',
+        internalPromotionID: this.#getParamValue('icid') || '',
+        trackingID: this.#getParamValue('cid') || '',
         time: this.#getCurrentTime(),
         date: this.#getCurrentDate(),
         domain: pageSectionData.domain,
@@ -185,7 +205,7 @@ export class PageLoadStartedEvent {
   
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
-    const tags = this.#getTags(getMetadata(METADATA_ANALYTICS_TAGS));
+    const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
     const locale = Page.locale;
 
     const pageSectionData = {
@@ -243,8 +263,23 @@ export class UserDetectedEvent {
     return this.#generateUserDetectedEventData();
   };
 
+  /**
+   * 
+   * @returns {object} get an object with all the query parameters
+   */
+  #getURLParameters() {
+    // Return object from URL parameter string
+    const result = {};
+    const params = new URLSearchParams(window.location.search);
+    for(const [key, value] of params) { // each 'entry' is a [key, value] tupple
+      result[key] = value;
+    }
+
+    return  result;
+  }
+
   async #generateUserDetectedEventData() {
-    const paramsUrl = getURLParameters();
+    const paramsUrl = this.#getURLParameters();
     this.user = { loggedIN: false };
 
     if (Object.keys(paramsUrl).length > 0) {

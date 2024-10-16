@@ -1,4 +1,5 @@
 import Cookie from '../../scripts/libs/cookie.js';
+import { AdobeDataLayerService, FormEvent } from '../../scripts/libs/data-layer.js';
 
 function onChange(form) {
   // Targeting the anchor inside .button-container
@@ -44,14 +45,13 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
   const formParent = form.parentElement;
   if (response.ok) {
     const hashedEmail = await hashEmail(email);
-    window.adobeDataLayer = window.adobeDataLayer || [];
-    window.adobeDataLayer.push({
-      event: 'form completed',
-      user: {
+    AdobeDataLayerService.push(new FormEvent(
+      'form completed',
+      {
         form: formType,
         formID: hashedEmail,
       },
-    });
+    ));
 
     formParent.innerHTML = '';
     formParent.appendChild(successMessage);

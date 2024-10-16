@@ -1,3 +1,4 @@
+import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
 import Page from '../libs/page.js';
 import ZuoraNLClass from '../zuora.js';
 
@@ -812,19 +813,6 @@ export function getPidFromUrl() {
   return url.searchParams.get('pid') || getMetadata('pid');
 }
 
-export function pushToDataLayer(event, payload) {
-  if (!event) {
-    // eslint-disable-next-line no-console
-    console.error('The data layer event is missing');
-    return;
-  }
-  if (!window.adobeDataLayer) {
-    window.adobeDataLayer = [];
-    window.adobeDataLayerInPage = true;
-  }
-  window.adobeDataLayer.push({ event, ...payload });
-}
-
 export function trackProduct(product, location = '') {
   // eslint-disable-next-line max-len
   if (!product && product.length === 0) return;
@@ -850,15 +838,12 @@ export function pushTrialDownloadToDataLayer() {
   const url = window.location.href;
   const currentPage = url.split('/').filter(Boolean).pop();
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
-  const downloadType2 = currentPage === 'thank-you' ? 'downloaded' : 'trial';
 
   const pushTrialData = () => {
-    const dataLayerDownload = {
-      product: {
-        [downloadType2]: [{ ID: getTrialID() }],
-      },
-    };
-    pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
+    AdobeDataLayerService.push(new ButtonClickEvent(
+      `${downloadType} downloaded`,
+      getTrialID(),
+    ));
   };
 
   const sections = document.querySelectorAll('a.button.modal');
@@ -872,145 +857,6 @@ export function pushTrialDownloadToDataLayer() {
   } else if (currentPage === 'thank-you') {
     pushTrialData();
   }
-}
-
-export function pushProductsToDataLayer() {
-  const url = window.location.href;
-  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
-  const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
-
-  // eslint-disable-next-line arrow-body-style
-  const mapProductData = (products) => {
-    return products.map((product) => {
-      const {
-        platformProductId,
-        productId,
-        productName,
-        devices,
-        subscription,
-        version,
-        basePrice,
-        discount,
-        discountRate,
-        currencyIso,
-        actualPrice,
-      } = product;
-
-      return Object.fromEntries(
-        Object.entries({
-          ID: platformProductId || productId,
-          name: productName,
-          devices,
-          subscription,
-          version,
-          basePrice,
-          discountValue: discount,
-          discountRate,
-          currency: currencyIso,
-          priceWithTax: actualPrice,
-        }).filter(([, value]) => value !== undefined),
-      );
-    });
-  };
-
-  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
-    let { productId } = TRACKED_PRODUCTS_COMPARISON[0];
-    if (TRACKED_PRODUCTS_COMPARISON[0].productCode === 'av') {
-      productId = '8430';
-    }
-    TRACKED_PRODUCTS.push({ productId });
-  }
-
-  const dataLayerProduct = {
-    product: {
-      [key]: mapProductData(TRACKED_PRODUCTS),
-      // eslint-disable-next-line max-len
-      ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
-    },
-  };
-
-  pushToDataLayer('product loaded', dataLayerProduct);
-}
-
-export async function sendAnalyticsUserInfo() {
-  const url = window.location.href;
-  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
-
-  let productFinding = '';
-  if (isHomepageSolutions === 'consumer') {
-    productFinding = 'solutions page';
-  } else if (isHomepageSolutions === 'thank-you') {
-    productFinding = 'thank you page';
-  } else if (TRACKED_PRODUCTS.length || TRACKED_PRODUCTS_COMPARISON.length) {
-    productFinding = 'product page';
-  } else {
-    productFinding = `${isHomepageSolutions} page`;
-  }
-
-  window.adobeDataLayer = window.adobeDataLayer || [];
-  const user = {};
-  user.loggedIN = 'false';
-  user.emarsysID = getParamValue('ems-uid') || getParamValue('sc_uid') || undefined;
-
-  let userID;
-  try {
-    userID = (typeof localStorage !== 'undefined' && localStorage.getItem('rhvID')) || getParamValue('sc_customer') || getCookie('bdcsufp') || undefined;
-  } catch (e) {
-    if (e instanceof DOMException) {
-      userID = getParamValue('sc_customer') || getCookie('bdcsufp') || undefined;
-    } else {
-      throw e;
-    }
-  }
-
-  user.ID = userID;
-  user.productFinding = productFinding;
-
-  if (typeof user.ID !== 'undefined') {
-    user.loggedIN = 'true';
-  } else {
-    const headers = new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Pragma: 'no-cache',
-      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-      Expires: 'Tue, 01 Jan 1971 02:00:00 GMT',
-      BDUS_A312C09A2666456D9F2B2AA5D6B463D6: 'check.bitdefender',
-    });
-
-    const currentUrl = new URL(window.location.href);
-    const queryParams = currentUrl.searchParams;
-    const apiUrl = `https://www.bitdefender.com/site/Main/dummyPost?${Math.random()}`;
-    const apiWithParams = new URL(apiUrl);
-    queryParams.forEach((value, key) => {
-      apiWithParams.searchParams.append(key, value);
-    });
-
-    try {
-      const response = await fetch(apiWithParams, {
-        method: 'POST',
-        headers,
-      });
-
-      if (response.ok) {
-        const rhv = response.headers.get('BDUSRH_8D053E77FD604F168345E0F77318E993');
-        if (rhv !== null) {
-          localStorage.setItem('rhvID', rhv);
-          user.ID = rhv;
-          user.loggedIN = 'true';
-        }
-      }
-    } catch (error) {
-      // console.error('Fetch failed:', error);
-    }
-  }
-
-  // Remove properties that are undefined
-  Object.keys(user).forEach((key) => user[key] === undefined && delete user[key]);
-
-  window.adobeDataLayer.push({
-    event: 'user detected',
-    user,
-  });
 }
 
 export function setUrlParams(urlIn, paramsIn = []) {

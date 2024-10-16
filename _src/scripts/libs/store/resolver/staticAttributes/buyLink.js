@@ -17,7 +17,7 @@ export const resolve = async (element, { product, option }) => {
 
     button.href = await option.getStoreUrl(attributes);
     button.setAttribute("data-product", option.getId());
-    button.setAttribute("data-buy-price", option.getDiscountedPrice("value"));
+    button.setAttribute("data-buy-price", option.getDiscountedPrice("value") || option.getPrice("value"));
     button.setAttribute("data-old-price", option.getPrice("value"));
     button.setAttribute("data-currency", option.getSymbol());
     button.setAttribute("data-region", product.getRegionId());

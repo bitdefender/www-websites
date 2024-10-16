@@ -13,7 +13,12 @@ import {
   loadCSS,
   getMetadata, loadScript,
 } from './lib-franklin.js';
-import { AdobeDataLayerService, PageLoadStartedEvent } from './libs/data-layer.js';
+import {
+  AdobeDataLayerService,
+  PageLoadedEvent,
+  PageLoadStartedEvent,
+  UserDetectedEvent,
+} from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 import Page from './libs/page.js';
 
@@ -21,9 +26,8 @@ import {
   adobeMcAppendVisitorId,
   createTag,
   getParamValue,
-  GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
+  GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
   getCookie,
-  pushProductsToDataLayer,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
@@ -371,7 +375,6 @@ async function sendAnalyticsUserInfo() {
     productFinding = 'downloads page';
   }
 
-  window.adobeDataLayer = window.adobeDataLayer || [];
   const user = {};
   user.loggedIN = 'false';
   user.emarsysID = getParamValue('ems-uid') || getParamValue('sc_uid') || undefined;
@@ -430,11 +433,7 @@ async function sendAnalyticsUserInfo() {
 
   // Remove properties that are undefined
   Object.keys(user).forEach((key) => user[key] === undefined && delete user[key]);
-
-  window.adobeDataLayer.push({
-    event: 'user detected',
-    user,
-  });
+  AdobeDataLayerService.push(await new UserDetectedEvent());
 }
 
 /**
@@ -538,18 +537,6 @@ async function loadLazy(doc) {
   }
 
   loadTrackers();
-
-  if (window.ADOBE_MC_EVENT_LOADED) {
-    // add products to data layer
-    pushProductsToDataLayer();
-    pushToDataLayer('page loaded');
-  } else {
-    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
-      // add products to data layer
-      pushProductsToDataLayer();
-      pushToDataLayer('page loaded');
-    });
-  }
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
@@ -658,6 +645,8 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
+  AdobeDataLayerService.pushEventsToDataLayer();
+  AdobeDataLayerService.push(new PageLoadedEvent());
 
   loadDelayed();
 }
