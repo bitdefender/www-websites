@@ -282,4 +282,5 @@ export default function decorate(block) {
   });
 
   matchHeights(block, 'h3');
+  matchHeights(block, '.old-price-container');
 }

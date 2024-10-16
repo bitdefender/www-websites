@@ -102,6 +102,7 @@ const PRICE_LOCALE_MAP = new Map([
   ['en-gb', { force_country: 'uk', country_code: 'gb' }],
   ['en-au', { force_country: 'au', country_code: 'au' }],
   ['en-nz', { force_country: 'nz', country_code: 'nz' }],
+  ['en-cz', { force_country: 'cz', country_code: 'cz' }],
   ['en-global', { force_country: 'en', country_code: null }],
   ['es-cl', { force_country: 'cl', country_code: 'cl' }],
   ['es-co', { force_country: 'co', country_code: 'co' }],
@@ -118,6 +119,7 @@ const PRICE_LOCALE_MAP = new Map([
   ['nl-nl', { force_country: null, country_code: null, isZuora: true }],
   ['de-de', { force_country: 'de', country_code: 'de' }],
   ['de-at', { force_country: 'de', country_code: 'at' }],
+  ['de-ch', { force_country: 'ch', country_code: 'ch' }],
   ['sv-se', { force_country: 'se', country_code: 'se' }],
   ['pt-br', { force_country: 'br', country_code: 'br' }],
   ['pt-pt', { force_country: 'pt', country_code: 'pt' }],
@@ -339,14 +341,14 @@ export function generateProductBuyLink(product, productCode, month = null, years
 
 export function setDataOnBuyLinks(element, dataInfo) {
   const { productId, variation } = dataInfo;
-  if (productId) element.dataset.product = productId;
+  if (productId) element.dataset.product = productId.trim();
 
   // element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
-  if (variation.price) element.dataset.buyPrice = variation.price;
-  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice;
-  if (variation.currency_label) element.dataset.currency = variation.currency_label;
-  if (variation.region_id) element.dataset.region = variation.region_id;
-  if (variation.variation_name) element.dataset.variation = variation.variation_name;
+  if (variation.price) element.dataset.buyPrice = variation.price.trim();
+  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice.trim();
+  if (variation.currency_label) element.dataset.currency = variation.currency_label.trim();
+  if (variation.region_id) element.dataset.region = variation.region_id.trim();
+  if (variation.variation_name) element.dataset.variation = variation.variation_name.trim();
 }
 
 export function formatPrice(price, currency) {
