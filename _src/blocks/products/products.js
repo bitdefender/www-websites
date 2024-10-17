@@ -34,19 +34,26 @@ function renderPlanSelector(plans, defaultSelection) {
 
   for (let idx = 0; idx < plans.length - 2; idx += 3) {
     const label = plans[idx];
-    const variant = plans[idx + 2];
-    const devices = variant?.split('-')[0]?.split('u')[0];
+    const liStoreParameters = {};
+
+    if (Number(defaultSelection)) {
+      liStoreParameters['data-store-click-set-devices'] = label;
+    } else {
+      const productCode = plans[idx + 1];
+      liStoreParameters['data-store-click-set-product'] = '';
+      liStoreParameters['data-store-product-id'] = productCode;
+      liStoreParameters['data-store-department'] = 'consumer';
+      liStoreParameters['data-product-type'] = productCode.slice(-1) === 'm' ? 'monthly' : 'yearly';
+    }
 
     const li = createTag(
       'li',
-      {
-        'data-store-click-set-devices': devices,
-      },
+      liStoreParameters,
       `<span>${label}</span>`,
     );
 
     // set the
-    if (defaultSelection === devices) {
+    if (defaultSelection === label) {
       li.classList.add('active');
     }
 
@@ -248,8 +255,11 @@ function renderLowestPrice(...params) {
   const monthly = fileteredParams.length > 1 ? fileteredParams[0] : '';
 
   const root = document.createElement('p');
-  root.setAttribute('data-store-text-variable', '');
-  root.textContent = text.replace('0', monthly.toLowerCase() === 'monthly' ? '{SMALLEST_PRICE_PER_MONTH}' : '{SMALLEST_PRICE}');
+  const textArea = document.createElement('span');
+  root.classList.add('await-loader');
+  textArea.setAttribute('data-store-text-variable', '');
+  textArea.textContent = text.replace('0', monthly.toLowerCase() === 'monthly' ? '{SMALLEST_PRICE_PER_MONTH}' : '{SMALLEST_PRICE}');
+  root.appendChild(textArea);
   return root;
 }
 
@@ -288,11 +298,13 @@ export default function decorate(block) {
 
   Object.entries(metadata).forEach(([key, value]) => {
     if (key.includes('plans')) {
-      const allImportantData = value.match(/[a-zA-Z0-9-]+/g);
+      const allImportantData = value.match(/[^,{}[\]]+/gu).map((importantData) => importantData.trim());
+
       plans.push({
         productCode: allImportantData[1],
-        variant: allImportantData[2].match(/[0-9-]+/g).join(''),
-        defaultVariant: `${allImportantData[3]}${allImportantData[2].match(/[0-9-]+/g)[1]}`,
+        defaultVariant: `${Number(allImportantData.slice(-1)[0])
+          ? allImportantData.slice(-1)[0] : '1'
+        }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
       });
     }
   });
