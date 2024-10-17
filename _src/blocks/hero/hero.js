@@ -41,7 +41,6 @@ createNanoBlock('discount', (code, label = '{label}') => {
 
   const root = document.createElement('div');
   root.classList.add('discount-bubble');
-  root.classList.add('d-none');
   root.classList.add('await-loader');
 
   // Add the required attributes to the root element
