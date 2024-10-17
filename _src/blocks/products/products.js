@@ -303,7 +303,7 @@ export default function decorate(block) {
       plans.push({
         productCode: allImportantData[1],
         defaultVariant: `${Number(allImportantData.slice(-1)[0])
-          ? allImportantData.slice(-1)[0] : '1'
+          ? allImportantData.slice(-1)[0] : allImportantData[2].match(/[0-9-]+/g)[0]
         }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
       });
     }
