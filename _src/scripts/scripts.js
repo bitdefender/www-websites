@@ -13,21 +13,24 @@ import {
   loadCSS,
   getMetadata, loadScript,
 } from './lib-franklin.js';
+import {
+  AdobeDataLayerService,
+  PageLoadedEvent,
+  PageLoadStartedEvent,
+  resolveNonProductsDataLayer,
+} from './libs/data-layer.js';
+import { StoreResolver } from './libs/store/index.js';
+import Page from './libs/page.js';
 
 import {
   adobeMcAppendVisitorId,
   createTag,
-  getParamValue,
-  GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
-  getLocale, getCookie,
-  pushProductsToDataLayer,
+  GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
-export const METADATA_ANALYTICS_TAGS = 'analytics-tags';
-const TARGET_TENANT = 'bitdefender';
 
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
@@ -128,46 +131,6 @@ export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos) {
   }
 }
 
-/**
- * Returns the current user time in the format HH:MM|HH:00-HH:59|dayOfWeek|timezone
- * @returns {String}
- */
-function getCurrentTime() {
-  const date = new Date();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const dayOfWeek = date.getDay();
-  const timezone = date.toTimeString().split(' ')[1];
-  const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  return `${hours}:${minutes}|${hours}:00-${hours}:59|${weekday[dayOfWeek]}|${timezone}`;
-}
-
-/**
- * Returns the current GMT date in the format DD/MM/YYYY
- * @returns {String}
- */
-function getCurrentDate() {
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-}
-
-/**
- * Returns the environment name based on the hostname
- * @returns {String}
- */
-export function getEnvironment(hostname) {
-  if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
-    return 'stage';
-  }
-  if (hostname.includes('www.bitdefender')) {
-    return 'prod';
-  }
-  return 'dev';
-}
-
 export function getLocalizedResourceUrl(resourceName) {
   const { pathname } = window.location;
   const lastCharFromUrl = pathname.charAt(pathname.length - 1);
@@ -183,10 +146,6 @@ export function getLocalizedResourceUrl(resourceName) {
   pathnameAsArray = pathnameAsArray.slice(0, basePathIndex + 1); // "/consumer/en";
 
   return `${pathnameAsArray.join('/')}/${resourceName}`;
-}
-
-export function getTags(tags) {
-  return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
 }
 
 export function decorateBlockWithRegionId(element, id) {
@@ -399,209 +358,6 @@ function buildCtaSections(main) {
     .forEach(buildCta);
 }
 
-function getDomainInfo(hostname) {
-  const domain = hostname.match(/^(?:.*?\.)?([a-zA-Z0-9\\_]{3,}(\.|:)?(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/);
-  return {
-    domain: domain[1],
-    domainPartsCount: domain[1].split('.').length,
-  };
-}
-
-function getExperimentDetails() {
-  if (!window.hlx || !window.hlx.experiment) {
-    return null;
-  }
-
-  const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
-  return { experimentId, experimentVariant };
-}
-
-function pushPageLoadToDataLayer(targetExperimentDetails) {
-  const {
-    hostname,
-    pathname,
-    href,
-    search,
-  } = window.location;
-
-  if (!hostname) {
-    return;
-  }
-
-  const experimentDetails = targetExperimentDetails ?? getExperimentDetails();
-  // eslint-disable-next-line no-console
-  console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
-
-  const pathName = window.location.pathname;
-  const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const languageCountry = getLanguageCountryFromPath(pathName);
-  const environment = getEnvironment(hostname, languageCountry.country);
-  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
-
-  const locale = getLocale();
-
-  if (tags.length) {
-    pushToDataLayer('page load started', {
-      pageInstanceID: environment,
-      page: {
-        info: {
-          name: [locale, ...tags].join(':'), // e.g. au:consumer:product:internet security
-          section: locale,
-          subSection: tags[0] || '',
-          subSubSection: tags[1] || '',
-          subSubSubSection: tags[2] || '',
-          destinationURL: window.location.href,
-          queryString: window.location.search,
-          referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
-          serverName: 'hlx.live', // indicator for AEM Success Edge
-          language: locale,
-          sysEnv: getOperatingSystem(window.navigator.userAgent),
-          ...(experimentDetails && { experimentDetails }),
-        },
-        attributes: {
-          promotionID: getParamValue('pid') || '',
-          internalPromotionID: getParamValue('icid') || '',
-          trackingID: getParamValue('cid') || '',
-          time: getCurrentTime(),
-          date: getCurrentDate(),
-          domain,
-          domainPeriod: domainPartsCount,
-        },
-      },
-    });
-  } else {
-    const allSegments = pathname.split('/').filter((segment) => segment !== '');
-    const lastSegment = allSegments[allSegments.length - 1];
-    let subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
-    let subSection = pathname.indexOf('/consumer/') !== -1 ? 'consumer' : 'business';
-
-    let subSubSection = 'product';
-    let tagName = `${locale}:product:${subSubSubSection}`;
-    if (lastSegment === 'consumer') {
-      subSubSection = 'solutions';
-      tagName = `${locale}:consumer:solutions`;
-    }
-
-    if (window.errorCode === '404') {
-      tagName = `${locale}:404`;
-      subSection = '404';
-      subSubSection = undefined;
-      subSubSubSection = undefined;
-      pushToDataLayer('page error', {});
-    }
-
-    pushToDataLayer('page load started', {
-      pageInstanceID: environment,
-      page: {
-        info: {
-          name: tagName,
-          section: locale,
-          subSection,
-          subSubSection,
-          subSubSubSection,
-          destinationURL: href,
-          queryString: search,
-          referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
-          serverName: domain,
-          language: locale,
-          sysEnv: getOperatingSystem(window.navigator.userAgent),
-          ...(experimentDetails && { experimentDetails }),
-        },
-        attributes: {
-          promotionID: getParamValue('pid') || '',
-          internalPromotionID: getParamValue('icid') || '',
-          trackingID: getParamValue('cid') || '',
-          time: getCurrentTime(),
-          date: getCurrentDate(),
-          domain,
-          domainPeriod: domainPartsCount,
-        },
-      },
-    });
-  }
-}
-
-async function sendAnalyticsUserInfo() {
-  const url = window.location.href;
-  const isPage = url.split('/').filter(Boolean).pop().toLowerCase();
-
-  let productFinding = 'product pages';
-  if (isPage === 'consumer') {
-    productFinding = 'solutions page';
-  } else if (isPage === 'thank-you') {
-    productFinding = 'thank you page';
-  } else if (isPage === 'toolbox') {
-    productFinding = 'toolbox page';
-  } else if (isPage === 'downloads') {
-    productFinding = 'downloads page';
-  }
-
-  window.adobeDataLayer = window.adobeDataLayer || [];
-  const user = {};
-  user.loggedIN = 'false';
-  user.emarsysID = getParamValue('ems-uid') || getParamValue('sc_uid') || undefined;
-
-  let userID;
-  try {
-    userID = (typeof localStorage !== 'undefined' && localStorage.getItem('rhvID')) || getParamValue('sc_customer') || getCookie('bdcsufp') || undefined;
-  } catch (e) {
-    if (e instanceof DOMException) {
-      userID = getParamValue('sc_customer') || getCookie('bdcsufp') || undefined;
-    } else {
-      throw e;
-    }
-  }
-
-  user.ID = userID;
-  user.productFinding = productFinding;
-
-  if (typeof user.ID !== 'undefined') {
-    user.loggedIN = 'true';
-  } else {
-    const headers = new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Pragma: 'no-cache',
-      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-      Expires: 'Tue, 01 Jan 1971 02:00:00 GMT',
-      BDUS_A312C09A2666456D9F2B2AA5D6B463D6: 'check.bitdefender',
-    });
-
-    const currentUrl = new URL(window.location.href);
-    const queryParams = currentUrl.searchParams;
-    const apiUrl = `https://www.bitdefender.com/site/Main/dummyPost?${Math.random()}`;
-    const apiWithParams = new URL(apiUrl);
-    queryParams.forEach((value, key) => {
-      apiWithParams.searchParams.append(key, value);
-    });
-
-    try {
-      const response = await fetch(apiWithParams, {
-        method: 'POST',
-        headers,
-      });
-
-      if (response.ok) {
-        const rhv = response.headers.get('BDUSRH_8D053E77FD604F168345E0F77318E993');
-        if (rhv !== null) {
-          localStorage.setItem('rhvID', rhv);
-          user.ID = rhv;
-          user.loggedIN = 'true';
-        }
-      }
-    } catch (error) {
-      // console.error('Fetch failed:', error);
-    }
-  }
-
-  // Remove properties that are undefined
-  Object.keys(user).forEach((key) => user[key] === undefined && delete user[key]);
-
-  window.adobeDataLayer.push({
-    event: 'user detected',
-    user,
-  });
-}
-
 /**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
@@ -613,14 +369,8 @@ async function loadEager(doc) {
 
   await window.hlx.plugins.run('loadEager');
 
-  let targetExperimentDetails = null;
-  if (getMetadata('target-experiment') !== '') {
-    const { runTargetExperiment } = await import('./target.js');
-    targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
-  }
-
-  pushPageLoadToDataLayer(targetExperimentDetails);
-  sendAnalyticsUserInfo();
+  AdobeDataLayerService.push(await new PageLoadStartedEvent());
+  await resolveNonProductsDataLayer();
 
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
@@ -653,9 +403,8 @@ export async function loadTrackers() {
   };
 
   if (isPageNotInDraftsFolder) {
-    const LANGUAGE_COUNTRY = getLanguageCountryFromPath(window.location.pathname);
     const LAUNCH_URL = 'https://assets.adobedtm.com';
-    const ENVIRONMENT = getEnvironment(window.location.hostname, LANGUAGE_COUNTRY.country);
+    const ENVIRONMENT = Page.environment;
 
     // Load Adobe Experience platform data collection (Launch) script
     // const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();
@@ -710,18 +459,6 @@ async function loadLazy(doc) {
   }
 
   loadTrackers();
-
-  if (window.ADOBE_MC_EVENT_LOADED) {
-    // add products to data layer
-    pushProductsToDataLayer();
-    pushToDataLayer('page loaded');
-  } else {
-    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
-      // add products to data layer
-      pushProductsToDataLayer();
-      pushToDataLayer('page loaded');
-    });
-  }
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
@@ -821,9 +558,17 @@ async function loadPage() {
   await window.hlx.plugins.load('lazy');
   await loadLazy(document);
 
+  await StoreResolver.resolve();
+  const elements = document.querySelectorAll('.await-loader');
+  elements.forEach((element) => {
+    element.classList.remove('await-loader');
+  });
+
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
+  AdobeDataLayerService.pushEventsToDataLayer();
+  AdobeDataLayerService.push(new PageLoadedEvent());
 
   loadDelayed();
 }
