@@ -1,0 +1,70 @@
+.webview-wrapper {
+    max-width: 768px;
+    max-height: 512px;
+    padding: 0 var(--section-desktop-padding);
+    margin: 0 auto;
+    background: url(../../icons/pattern.png) repeat-x;
+    background-size: 188px 104px;
+    text-align: center;
+    font-family: "Segoe UI", Arial, sans-serif;
+
+    .webview {
+        max-width: 438px;
+        margin: auto;
+
+        img {
+            width: 92px;
+            height: auto;
+        }
+
+        h2 {
+            margin-top: 16px;
+            font-size: 32px;
+            line-height: 32px;
+            font-weight: 700;
+            color: #006EFF;
+        }
+
+        h3 {
+            margin-top: 30px;
+            margin-bottom: 16px;
+            font-size: 18px;
+            line-height: 24px;
+            font-weight: 700;
+            color: black;
+        }
+
+        .button-container {
+            margin-top: 14px;
+            margin-bottom: 0;
+        }
+
+        .button {
+            background-color: #006EFF;
+            border-color: #006EFF;
+            color: white;
+            font-size: 14px;
+            width: 264px;
+            justify-content: center;
+
+            &::after {
+                content: none;
+            }
+
+            &:hover {
+                background-color: #0056CC;
+                border-color: #0056CC;
+
+                span {
+                    transform: translateX(0);
+                }
+            }
+        }
+
+        .button.secondary {
+            background-color: white;
+            border-color: white;
+            color: #006EFF;
+        }
+    }
+}
