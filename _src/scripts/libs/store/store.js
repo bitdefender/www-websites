@@ -764,7 +764,25 @@ class BitCheckout {
 		ios: "com.bitdefender.iosprotection",
 		mobileios: "com.bitdefender.iosprotection",
 		dip: "com.bitdefender.dataprivacy",
-		dipm: "com.bitdefender.dataprivacy"
+		dipm: "com.bitdefender.dataprivacy",
+		avpm: 'com.bitdefender.cl.avplus.v2',
+		// DLP
+		ts_i: 'com.bitdefender.tsmd.v2',
+		ts_f: 'com.bitdefender.tsmd.v2',
+		ps_i: 'com.bitdefender.premiumsecurity.v2',
+		ps_f: 'com.bitdefender.premiumsecurity.v2',
+		us_i: 'com.bitdefender.ultimatesecurityeu.v2',
+		us_i_m: 'com.bitdefender.ultimatesecurityeu.v2',
+		us_f: 'com.bitdefender.ultimatesecurityeu.v2',
+		us_f_m: 'com.bitdefender.ultimatesecurityeu.v2',
+		us_pf: 'com.bitdefender.ultimatesecurityeu.v2',
+		us_pf_m: 'com.bitdefender.ultimatesecurityeu.v2',
+		us_pi: 'com.bitdefender.ultimatesecurityplusus.v2',
+		us_pi_m: 'com.bitdefender.ultimatesecurityplusus.v2',
+		us_pie: 'com.bitdefender.ultimatesecurityplusus.v2',
+		us_pie_m: 'com.bitdefender.ultimatesecurityplusus.v2',
+		us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
+		us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
 	}
 
 	static names = {
@@ -782,7 +800,7 @@ class BitCheckout {
 		if (/^(localhost|local.bitdefender.com)/.test(hostname)) {
 			return '3405af40-c88e-11ed-9a49-e17059797c0c';
 		}
-		if (/^(author-p23952-e81192|dev1)/.test(hostname)) {
+		if (/^(author-p23952-e81192|dev1|.hlx.)/.test(hostname)) {
 			return '91d619d0-c88e-11ed-9ff9-3bfdc38b7fc4';
 		}
 		if (/^(author-p23952-e68355|stage)/.test(hostname)) {
@@ -941,33 +959,41 @@ class StoreConfig {
 		this.provider = Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
 
 		/**
+		 * default promotion
+		 * @type {string}
+		 */
+		this.campaign = this.getCampaign();
+
+		/**
 		 * @type {{
 		 * cartUrl: string
 		 * key: string,
 		 * endpoint: string
 		 * }}
 		 */
-		this.zuora;
-
-		if (Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))) {
-			this.zuora = {
-				cartUrl: "https://checkout-sdk-react.checkout-app.nmbapp.net",
-				key: "44ebf520-622d-11eb-bd68-cd0bd0caf67c",
-				endpoint: "https://checkout-service-mars.checkout-app.nmbapp.net"
-
-			};
-		} else {
-			this.zuora = {
-				cartUrl: "https://checkout.bitdefender.com",
-				key: "bb22f980-fa19-11ed-b443-87a99951e6d5",
-				endpoint: "https://checkout-service.bitdefender.com"
-			};
-		}
+		this.zuora = {
+			cartUrl: "https://checkout.bitdefender.com",
+			key: "bb22f980-fa19-11ed-b443-87a99951e6d5",
+			endpoint: "https://checkout-service.bitdefender.com"
+		};
 
 		/**
-		 * @type {"POST"|"GET"}
+		 * @type {"GET"}
 		 */
 		this.httpMethod = "GET";
+	}
+
+	async getCampaign() {
+		const jsonFilePath = 'https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json';
+	
+		const resp = await fetch(jsonFilePath);
+		if (!resp.ok) {
+			console.error(`Failed to fetch data. Status: ${resp.status}`);
+			return '';
+		}
+		const data = await resp.json();
+	
+		return data.data[0].CAMPAIGN_NAME;
 	}
 }
 
@@ -1004,7 +1030,7 @@ export class Store {
 					//url > produs > global_campaign
 					product.promotion = await Target.getCampaign()
 						|| this.#getUrlPromotion()
-						|| product.promotion;
+						|| await this.config.campaign;
 
 					return await this.#apiCall(
 						product

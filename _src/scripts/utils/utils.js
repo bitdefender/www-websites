@@ -826,7 +826,7 @@ export function trackProduct(product, location = '') {
 
 export function pushTrialDownloadToDataLayer() {
   const getTrialID = (currentPage, button) => {
-    if (currentPage === 'thank-you') {
+    if (['thank-you', 'free-antivirus'].includes(currentPage)) {
       return '8430';
     }
 
@@ -843,7 +843,7 @@ export function pushTrialDownloadToDataLayer() {
   const currentPage = url.split('/').filter(Boolean).pop();
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
 
-  const pushTrialData = (button) => {
+  const pushTrialData = (button = null) => {
     AdobeDataLayerService.push(new ButtonClickEvent(
       `${downloadType} downloaded`,
       getTrialID(currentPage, button),

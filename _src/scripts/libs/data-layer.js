@@ -769,22 +769,12 @@ const checkClickEventAfterRedirect = () => {
  * Add entry for free products
  */
 const getFreeProductsEvents = () => {
-  const dataLayers = document.querySelectorAll(".data-layer div");
-
-  if (dataLayers.length <= 0) {
-    return;
-  }
-
-  for (const dataLayer of dataLayers) {
-    switch (dataLayer.dataset.event) {
-      case "product loaded":
-        AdobeDataLayerService.push(new MainProductLoadedEvent(
-          {ID: dataLayer.dataset.productId}
-        ));
-        break;
-      default:
-        break;
-    }
+  const currentPage = window.location.href.split('/').filter(Boolean).pop();
+  if (currentPage === 'free-antivirus') {
+    // on Free Antivirus page we should add Free Antivirus as the main product
+    AdobeDataLayerService.push(new MainProductLoadedEvent({
+      ID: '8430',
+    }));
   }
 }
 
@@ -793,9 +783,7 @@ const getFreeProductsEvents = () => {
  */
 export const resolveNonProductsDataLayer = async () => {
   pageErrorHandling();
-
   AdobeDataLayerService.push(await new UserDetectedEvent());
   checkClickEventAfterRedirect();
-
   getFreeProductsEvents();
 }

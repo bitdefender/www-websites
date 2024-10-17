@@ -249,14 +249,14 @@ export default async function decorate(block) {
     });
   }
 
-  const productsAsList = products && products.split(',');
-  const familyProductsAsList = familyProducts && familyProducts.split(',');
+  const productsAsList = products && products.replaceAll(' ', '').split(',');
+  const familyProductsAsList = familyProducts && familyProducts.replaceAll(' ', '').split(',');
   const combinedProducts = productsAsList.concat(familyProductsAsList);
-  const monthlyPricesAsList = monthlyProducts && monthlyProducts.split(',');
-  const thirdRadioButtonProductsAsList = thirdRadioButtonProducts && thirdRadioButtonProducts.split(',');
-  const addOnProductsAsList = addOnProducts && addOnProducts.split(',');
+  const monthlyPricesAsList = monthlyProducts && monthlyProducts.replaceAll(' ', '').split(',');
+  const thirdRadioButtonProductsAsList = thirdRadioButtonProducts && thirdRadioButtonProducts.replaceAll(' ', '').split(',');
+  const addOnProductsAsList = addOnProducts && addOnProducts.replaceAll(' ', '').split(',');
   const addOnProductsInitial = addOnProductsAsList && addOnProductsAsList.slice(0, productsAsList.length);
-  const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.split(',');
+  const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.replaceAll(' ', '').split(',');
 
   if (combinedProducts.length) {
     [...block.children].map(async (prod, key) => {

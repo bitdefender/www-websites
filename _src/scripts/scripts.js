@@ -17,7 +17,7 @@ import {
   AdobeDataLayerService,
   PageLoadedEvent,
   PageLoadStartedEvent,
-  UserDetectedEvent,
+  resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 import Page from './libs/page.js';
@@ -370,7 +370,7 @@ async function loadEager(doc) {
   await window.hlx.plugins.run('loadEager');
 
   AdobeDataLayerService.push(await new PageLoadStartedEvent());
-  AdobeDataLayerService.push(await new UserDetectedEvent());
+  await resolveNonProductsDataLayer();
 
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
