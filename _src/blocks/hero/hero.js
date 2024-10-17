@@ -60,16 +60,36 @@ createNanoBlock('discount', (code, label = '{label}') => {
   return root;
 });
 
+async function renderBubble(block) {
+  await renderNanoBlocks(block);
+  const bubble = block?.querySelector('.discount-bubble');
+  if (bubble) {
+    const { label } = block.closest('.section').dataset;
+    if (label) {
+      bubble.innerHTML = bubble.innerHTML.replace('{label}', label);
+    }
+
+    let sibling = bubble.previousElementSibling;
+
+    while (sibling) {
+      if (sibling.matches('.button-container')) {
+        sibling.append(bubble);
+        break;
+      }
+      sibling = sibling.previousElementSibling;
+    }
+  }
+}
+
 /**
  * decorates hero block
  * @param {Element} block The hero block element
  */
-export default async function decorate(block) {
+export default function decorate(block) {
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
     signature,
-    label,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -78,33 +98,13 @@ export default async function decorate(block) {
 
   // get div class hero-content
   const elementHeroContent = block.querySelector('.hero div.hero-content div');
-
+  renderBubble(block);
   if (elementHeroContent !== null) {
     // Select  <ul> elements that contain a <picture> tag
     const ulsWithPicture = Array.from(document.querySelectorAll('ul')).filter((ul) => ul.querySelector('picture'));
 
     // Apply a CSS class to each selected <ul> element
     ulsWithPicture.forEach((ul) => ul.classList.add('hero-awards'));
-
-    renderNanoBlocks(block);
-
-    // move discount bubble inside the closest button
-    const bubble = block.querySelector('.discount-bubble');
-    if (bubble) {
-      if (label) {
-        bubble.innerHTML = bubble.innerHTML.replace('{label}', label);
-      }
-
-      let sibling = bubble.previousElementSibling;
-
-      while (sibling) {
-        if (sibling.matches('.button-container')) {
-          sibling.append(bubble);
-          break;
-        }
-        sibling = sibling.previousElementSibling;
-      }
-    }
 
     // add signature to the top of the banner
     if (signature) {
