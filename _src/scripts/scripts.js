@@ -562,9 +562,6 @@ async function loadPage() {
   const elements = document.querySelectorAll('.await-loader');
   elements.forEach((element) => {
     element.classList.remove('await-loader');
-    if (element.classList.contains('discount-bubble')) {
-      element.classList.remove('d-none');
-    }
   });
 
   adobeMcAppendVisitorId('main');

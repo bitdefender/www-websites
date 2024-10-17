@@ -532,7 +532,7 @@ export function getDatasetFromSection(block) {
  * Renders nano blocks
  * @param parent The parent element
  */
-export function renderNanoBlocks(
+export async function renderNanoBlocks(
   parent = document.body,
   mv = undefined,
   index = undefined,

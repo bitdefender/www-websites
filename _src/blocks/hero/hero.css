@@ -385,10 +385,6 @@ main .hero .discount-bubble {
   position: relative;
 }
 
-main .hero .discount-bubble.d-none {
-  visibility: hidden;
-}
-
 main .hero .discount-bubble .discount-bubble-0 {
   font-size: 24px;
   color: #fff;
