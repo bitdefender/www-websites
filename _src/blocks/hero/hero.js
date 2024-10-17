@@ -82,6 +82,7 @@ export default async function decorate(block) {
     stopAutomaticModalRefresh,
     signature,
     label,
+    product,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -131,5 +132,23 @@ export default async function decorate(block) {
         modalButton.setAttribute('data-stop-automatic-modal-refresh', true);
       });
     }
+  }
+
+  if (product) {
+    const [alias, unit, year] = product.split('/');
+    const variant = `${unit}u-${year}y`;
+    fetchProduct(product, variant)
+    .then((productResponse) => {
+      console.log('productResponse ', productResponse)
+      if (productResponse.discount) {
+        const discount = Math.round(
+          (1 - (productResponse.discount.discounted_price) / productResponse.price) * 100,
+        );
+        block.querySelector('h1').textContent.replace('50%', `${discount}%`);
+      }
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error(err);
+    });
   }
 }
