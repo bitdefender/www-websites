@@ -3,6 +3,7 @@ import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
+  fetchProduct,
 } from '../../scripts/utils/utils.js';
 
 /**
@@ -122,21 +123,22 @@ export default function decorate(block) {
     }
   }
 
+  // make discount dynamic
   if (product) {
     const [alias, unit, year] = product.split('/');
     const variant = `${unit}u-${year}y`;
-    fetchProduct(product, variant)
-    .then((productResponse) => {
-      console.log('productResponse ', productResponse)
-      if (productResponse.discount) {
-        const discount = Math.round(
-          (1 - (productResponse.discount.discounted_price) / productResponse.price) * 100,
-        );
-        block.querySelector('h1').textContent.replace('50%', `${discount}%`);
-      }
-    }).catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-    });
+    fetchProduct(alias, variant)
+      .then((productResponse) => {
+        console.log('productResponse ', productResponse);
+        if (productResponse.discount) {
+          const discount = Math.round(
+            (1 - productResponse.discount.discounted_price / productResponse.price) * 100
+          );
+          block.innerHTML = block.innerHTML.replace('0%', `<b>${discount}%</b>`);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 }
