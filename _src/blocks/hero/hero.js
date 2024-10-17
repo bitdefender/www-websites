@@ -3,7 +3,6 @@ import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
-  fetchProduct,
 } from '../../scripts/utils/utils.js';
 
 /**
@@ -39,83 +38,72 @@ function buildHeroBlock(element) {
 createNanoBlock('discount', (code, label = '{label}') => {
   // code = "av/3/1"
   const [product, unit, year] = code.split('/');
-  const variant = `${unit}u-${year}y`;
 
   const root = document.createElement('div');
   root.classList.add('discount-bubble');
   root.classList.add('await-loader');
+
+  // Add the required attributes to the root element
+
+  root.setAttribute('data-store-context', '');
+  root.setAttribute('data-store-id', product);
+  root.setAttribute('data-store-option', `${unit}-${year}`);
+  root.setAttribute('data-store-department', 'consumer');
+  root.setAttribute('data-store-event', 'main-product-loaded');
+  root.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
   root.innerHTML = `
-    <span class="discount-bubble-0">--%</span>
+    <span class="discount-bubble-0" data-store-discount="percentage">--%</span>
     <span class="discount-bubble-1">${label}</span>
   `;
 
-  fetchProduct(product, variant)
-    .then((productResponse) => {
-      if (productResponse.discount) {
-        const discount = Math.round(
-          (1 - (productResponse.discount.discounted_price) / productResponse.price) * 100,
-        );
-        root.querySelector('.discount-bubble-0').textContent = `${discount}%`;
-        root.classList.remove('await-loader');
-      } else {
-        // eslint-disable-next-line no-console
-        console.error('no discount available');
-        root.classList.remove('await-loader');
-      }
-    })
-    .catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-      root.classList.remove('await-loader');
-    });
   return root;
 });
+
+async function renderBubble(block) {
+  await renderNanoBlocks(block);
+  const bubble = block?.querySelector('.discount-bubble');
+  if (bubble) {
+    const { label } = block.closest('.section').dataset;
+    if (label) {
+      bubble.innerHTML = bubble.innerHTML.replace('{label}', label);
+    }
+
+    let sibling = bubble.previousElementSibling;
+
+    while (sibling) {
+      if (sibling.matches('.button-container')) {
+        sibling.append(bubble);
+        break;
+      }
+      sibling = sibling.previousElementSibling;
+    }
+  }
+}
 
 /**
  * decorates hero block
  * @param {Element} block The hero block element
  */
-export default async function decorate(block) {
+export default function decorate(block) {
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
     signature,
-    label,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
+  renderBubble(block);
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
 
   // get div class hero-content
   const elementHeroContent = block.querySelector('.hero div.hero-content div');
-
   if (elementHeroContent !== null) {
     // Select  <ul> elements that contain a <picture> tag
     const ulsWithPicture = Array.from(document.querySelectorAll('ul')).filter((ul) => ul.querySelector('picture'));
 
     // Apply a CSS class to each selected <ul> element
     ulsWithPicture.forEach((ul) => ul.classList.add('hero-awards'));
-
-    renderNanoBlocks(block);
-
-    // move discount bubble inside the closest button
-    const bubble = block.querySelector('.discount-bubble');
-    if (bubble) {
-      if (label) {
-        bubble.innerHTML = bubble.innerHTML.replace('{label}', label);
-      }
-
-      let sibling = bubble.previousElementSibling;
-
-      while (sibling) {
-        if (sibling.matches('.button-container')) {
-          sibling.append(bubble);
-          break;
-        }
-        sibling = sibling.previousElementSibling;
-      }
-    }
 
     // add signature to the top of the banner
     if (signature) {

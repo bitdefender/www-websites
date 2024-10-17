@@ -42,6 +42,25 @@ export default class ZuoraNLClass {
     dipm: 'com.bitdefender.dataprivacy',
     vsb: 'com.bitdefender.vsb',
     vsbm: 'com.bitdefender.vsb',
+
+    // dlp
+    avpm: 'com.bitdefender.cl.avplus.v2',
+    ts_i: 'com.bitdefender.tsmd.v2',
+    ts_f: 'com.bitdefender.tsmd.v2',
+    ps_i: 'com.bitdefender.premiumsecurity.v2',
+    ps_f: 'com.bitdefender.premiumsecurity.v2',
+    us_i: 'com.bitdefender.ultimatesecurityeu.v2',
+    us_i_m: 'com.bitdefender.ultimatesecurityeu.v2',
+    us_f: 'com.bitdefender.ultimatesecurityeu.v2',
+    us_f_m: 'com.bitdefender.ultimatesecurityeu.v2',
+    us_pf: 'com.bitdefender.ultimatesecurityeu.v2',
+    us_pf_m: 'com.bitdefender.ultimatesecurityeu.v2',
+    us_pi: 'com.bitdefender.ultimatesecurityplusus.v2',
+    us_pi_m: 'com.bitdefender.ultimatesecurityplusus.v2',
+    us_pie: 'com.bitdefender.ultimatesecurityplusus.v2',
+    us_pie_m: 'com.bitdefender.ultimatesecurityplusus.v2',
+    us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
+    us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
   };
 
   static names = {
@@ -53,8 +72,9 @@ export default class ZuoraNLClass {
 
   static zuoraConfig = {
     cartUrl: 'https://checkout.bitdefender.com',
-    key: 'bb22f980-fa19-11ed-b443-87a99951e6d5',
+    key: 'bb22f980-fa19-11ed-b443-87a99951e6d5', // prod
     endpoint: 'https://checkout-service.bitdefender.com',
+    // endpoint: 'https://checkout-service-mars.checkout-app.nmbapp.net', // sandbox
   };
 
   static config(key) {
@@ -101,7 +121,7 @@ export default class ZuoraNLClass {
   }
 
   static async getProductVariationsPrice(product, campaign) {
-    const prod = product.split('/');
+    const prod = product.trim().split('/');
     const id = prod[0];
     const devicesNo = prod[1];
     const yearsNo = prod[2];
