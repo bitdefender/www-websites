@@ -127,13 +127,12 @@ export default function decorate(block) {
     const [alias, variant] = product.split(',');
     fetchProduct(alias, variant).then((productResponse) => {
       if (productResponse.discount) {
-        const discount = Math.round(
-          (1 - productResponse.discount.discounted_price / productResponse.price) * 100
-        );
+        const discount = Math.round((1 - productResponse.discount.discounted_price / productResponse.price) * 100);
         block.innerHTML = block.innerHTML.replace('0%', discount);
       }
     }).catch((err) => {
-      // console.error(err);
+      // eslint-disable-next-line no-console
+      console.error(err);
     });
   }
 }
