@@ -90,7 +90,6 @@ export default function decorate(block) {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
     signature,
-    label,
     product,
   } = block.closest('.section').dataset;
 
@@ -127,18 +126,15 @@ export default function decorate(block) {
   if (product) {
     const [alias, unit, year] = product.split('/');
     const variant = `${unit}u-${year}y`;
-    fetchProduct(alias, variant)
-      .then((productResponse) => {
-        console.log('productResponse ', productResponse);
-        if (productResponse.discount) {
-          const discount = Math.round(
-            (1 - productResponse.discount.discounted_price / productResponse.price) * 100
-          );
-          block.innerHTML = block.innerHTML.replace('0%', `<b>${discount}%</b>`);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    fetchProduct(alias, variant).then((productResponse) => {
+      if (productResponse.discount) {
+        const discount = Math.round(
+          (1 - productResponse.discount.discounted_price / productResponse.price) * 100
+        );
+        block.innerHTML = block.innerHTML.replace('0%', `<b>${discount}%</b>`);
+      }
+    }).catch((err) => {
+      // console.error(err);
+    });
   }
 }
