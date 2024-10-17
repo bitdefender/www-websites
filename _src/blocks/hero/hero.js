@@ -92,12 +92,12 @@ export default function decorate(block) {
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
+  renderBubble(block);
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
 
   // get div class hero-content
   const elementHeroContent = block.querySelector('.hero div.hero-content div');
-  renderBubble(block);
   if (elementHeroContent !== null) {
     // Select  <ul> elements that contain a <picture> tag
     const ulsWithPicture = Array.from(document.querySelectorAll('ul')).filter((ul) => ul.querySelector('picture'));
