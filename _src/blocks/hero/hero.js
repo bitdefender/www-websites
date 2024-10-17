@@ -124,14 +124,13 @@ export default function decorate(block) {
 
   // make discount dynamic
   if (product) {
-    const [alias, unit, year] = product.split('/');
-    const variant = `${unit}u-${year}y`;
+    const [alias, variant] = product.split(',');
     fetchProduct(alias, variant).then((productResponse) => {
       if (productResponse.discount) {
         const discount = Math.round(
           (1 - productResponse.discount.discounted_price / productResponse.price) * 100
         );
-        block.innerHTML = block.innerHTML.replace('0%', `<b>${discount}%</b>`);
+        block.innerHTML = block.innerHTML.replace('0%', discount);
       }
     }).catch((err) => {
       // console.error(err);
