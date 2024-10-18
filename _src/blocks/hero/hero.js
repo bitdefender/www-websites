@@ -3,8 +3,7 @@
 import {
   createTag,
   createNanoBlock,
-  renderNanoBlocks,
-  fetchProduct,
+  renderNanoBlocks
 } from '../../scripts/utils/utils.js';
 
 /**
@@ -91,7 +90,7 @@ export default function decorate(block) {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
     signature,
-    product,
+    percentProduct,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -124,16 +123,12 @@ export default function decorate(block) {
   }
 
   // make discount dynamic
-  if (product) {
-    const [alias, variant] = product.split(',');
-    fetchProduct(alias, variant).then((productResponse) => {
-      if (productResponse.discount) {
-        const discount = Math.round((1 - productResponse.discount.discounted_price / productResponse.price) * 100);
-        block.innerHTML = block.innerHTML.replace('0%', `${discount}%`);
-      }
-    }).catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-    });
+  if (percentProduct) {
+    const [alias, variant] = percentProduct.split(',');
+    block.setAttribute('data-store-context', '');
+    block.setAttribute('data-store-text-variable', '');
+    block.setAttribute('data-store-id', alias);
+    block.setAttribute('data-store-department', 'consumer');
+    block.setAttribute('data-store-option', variant);
   }
 }
