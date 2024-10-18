@@ -322,11 +322,13 @@ export default function decorate(block) {
 
       col.classList.add('product-card');
       col.setAttribute('data-store-context', '');
-      col.setAttribute('data-store-id', plans[plansIndex].productCode);
-      col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
+      if (plans[plansIndex]) {
+        col.setAttribute('data-store-id', plans[plansIndex].productCode);
+        col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
+      }
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', storeEvent);
-      col.querySelector('.button-container a').setAttribute('data-store-buy-link', '');
+      col.querySelector('.button-container a')?.setAttribute('data-store-buy-link', '');
 
       block.appendChild(col);
       renderNanoBlocks(col, undefined, idxParent);
