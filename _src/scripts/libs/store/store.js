@@ -2,7 +2,7 @@ import { Constants } from "../constants.js";
 import { Target, Visitor } from "../data-layer.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
-import { getMetadata } from "../../lib-franklin.js";
+import { getMetadata } from "../../utils/utils.js";
 
 export const monthlyProducts = {
 	"ultsecm": "ultsecm",
