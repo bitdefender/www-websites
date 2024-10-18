@@ -985,14 +985,14 @@ class StoreConfig {
 
 	async getCampaign() {
 		const jsonFilePath = 'https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json';
-	
+
 		const resp = await fetch(jsonFilePath);
 		if (!resp.ok) {
 			console.error(`Failed to fetch data. Status: ${resp.status}`);
 			return '';
 		}
 		const data = await resp.json();
-	
+
 		return data.data[0].CAMPAIGN_NAME;
 	}
 }
@@ -1030,6 +1030,7 @@ export class Store {
 					//url > produs > global_campaign
 					product.promotion = await Target.getCampaign()
 						|| this.#getUrlPromotion()
+						|| product.promotion
 						|| await this.config.campaign;
 
 					return await this.#apiCall(
