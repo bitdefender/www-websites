@@ -2,6 +2,7 @@ import { Constants } from "../constants.js";
 import { Target, Visitor } from "../data-layer.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
+import { getMetadata } from "../../utils/utils.js";
 
 export const monthlyProducts = {
 	"ultsecm": "ultsecm",
@@ -1030,6 +1031,7 @@ export class Store {
 					//url > produs > global_campaign
 					product.promotion = await Target.getCampaign()
 						|| this.#getUrlPromotion()
+						|| getMetadata("pid")
 						|| await this.config.campaign;
 
 					return await this.#apiCall(
