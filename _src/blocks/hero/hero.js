@@ -129,7 +129,7 @@ export default function decorate(block) {
     fetchProduct(alias, variant).then((productResponse) => {
       if (productResponse.discount) {
         const discount = Math.round((1 - productResponse.discount.discounted_price / productResponse.price) * 100);
-        block.innerHTML = block.innerHTML.replace('0%', discount);
+        block.innerHTML = block.innerHTML.replace('0%', `${discount}%`);
       }
     }).catch((err) => {
       // eslint-disable-next-line no-console
