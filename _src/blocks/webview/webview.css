@@ -1,6 +1,5 @@
 .webview-wrapper {
     max-width: 768px;
-    max-height: 512px;
     padding: 0 var(--section-desktop-padding);
     margin: 0 auto;
     background: url(../../icons/pattern.png) repeat-x;
@@ -65,6 +64,46 @@
             background-color: white;
             border-color: white;
             color: #006EFF;
+        }
+
+        .prod-oldprice {
+            font-size: var(--body-font-size-xs);
+            line-height: var(--body-font-size-xs);
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+
+        .prod-percent {
+            font-size: 13px;
+            line-height: 15px;
+            color: white;
+            background-color: #61A851;
+            border-radius: 11px;
+            padding: 4px 10px;
+            font-weight: bold;
+        }
+
+        .prod-newprice {
+            font-size: var(--body-font-size-xl);
+            line-height: var(--body-font-size-xl);
+            font-weight: 700;
+        }
+
+        .under-price-text {
+            font-size: var(--body-font-size-xxs);
+            line-height: var(--body-font-size-xxs);
+            color: #666666;
+
+            p {
+                margin: 0;
+                font-size: var(--body-font-size-xxxs);
+            }
+        }
+
+        .price_box {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
         }
     }
 }
