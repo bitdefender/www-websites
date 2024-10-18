@@ -337,6 +337,7 @@
   font-weight: normal;
   font-size: var(--body-font-size-xl);
   color: #666;
+  white-space: nowrap;
 }
 
 .products .product-card .price del {
