@@ -295,7 +295,6 @@ function renderHighlight(mv, text) {
     'div',
     {
       class: 'highlight',
-      style: 'visibility:hidden',
     },
     `<span>${text}</span>`,
   );
