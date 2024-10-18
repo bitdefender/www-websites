@@ -4,4 +4,5 @@ _src/scripts/vendor
 _src/scripts/zuora.js
 _src/vendor
 _src/plugins
+_src/scripts/libs/**
 tools

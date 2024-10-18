@@ -150,13 +150,22 @@
 .columns.awards > div {
   gap:30px;
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+  flex-flow: row wrap;
   align-items: center;
 }
 
 .columns img {
   width: 100%;
+
+}
+
+.dlp.columns-container img{
+  width: 67%;
+  margin-left: auto;
+}
+
+.dlp.columns-container h2{
+  color: #006DFF;
 }
 
 .modal-container.get-bitdefender-familypack img {

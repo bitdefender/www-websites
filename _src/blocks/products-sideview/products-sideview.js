@@ -1,10 +1,7 @@
 import {
   createNanoBlock,
-  fetchProduct, formatPrice,
-  getBuyLinkCountryPrefix,
   getDatasetFromSection,
-  getPidFromUrl,
-  renderNanoBlocks, setDataOnBuyLinks, getDomain,
+  renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
 
 const state = {
@@ -13,14 +10,10 @@ const state = {
   currentProduct: null,
   mode: 'm', // "m" or "y",
   membersIndex: 0,
+  blockDataset: null,
 };
 
-const MEMBERS_MAP = new Map([
-  [0, 3],
-  [1, 5],
-  [2, 10],
-  [3, 25],
-]);
+const MEMBERS_MAP = new Map();
 
 function expandItem(content) {
   content.style.height = `${content.scrollHeight}px`;
@@ -140,154 +133,107 @@ function extractFeatures(col) {
 
 function updateBuyLink(block) {
   const buyLink = block.querySelector('.button-container > .button');
-  const productCode = state.currentProduct.alias;
-  const dimension = MEMBERS_MAP.get(state.membersIndex);
-  const { years } = state.currentProduct.variation;
-  const pid = getPidFromUrl();
-
   if (buyLink) {
-    buyLink.href = `${getBuyLinkCountryPrefix()}/${productCode}/${dimension}/${years}/${pid ? `pid.${pid}` : ''}`;
-    const dataInfo = {
-      productId: productCode,
-      variation: {
-        price: state.currentProduct.discount?.discounted_price,
-        oldPrice: state.currentProduct.discount
-          ? +state.currentProduct.discount.discounted_price : +state.currentProduct.price,
-        variation_name: state.currentProduct.variation.variation_name,
-        currency_label: state.currentProduct.currency_label,
-        region_id: state.currentProduct.region_id,
-      },
-    };
-
-    setDataOnBuyLinks(buyLink, dataInfo);
+    buyLink.href = '#';
+    buyLink.setAttribute('data-store-buy-link', '');
   }
 }
 
-function updatePrice(block) {
-  const isMonthly = state.mode === 'm';
-  const priceEl = block.querySelector('.price');
-
-  (async () => {
-    const product = isMonthly
-      ? state.secondProduct
-      : state.firstProduct;
-
-    state.currentProduct = product;
-    const variant = `${MEMBERS_MAP.get(state.membersIndex)}u-1y`;
-    const resp = await fetchProduct(product.alias, variant);
-
-    const formattedPrice = formatPrice(resp.price, resp.currency_iso, null, getDomain());
-
-    priceEl.dataset.price = resp.price;
-    priceEl.textContent = `${formattedPrice}`;
-  })();
-}
-
-function renderPrice(block, firstProduct, secondProduct) {
-  const variant = '3u-1y';
-
+function renderPrice(block, _firstProduct, secondProduct) {
+  const variant = '5-1';
   const el = document.createElement('DIV');
   el.classList.add('price');
-
-  Promise.all([
-    fetchProduct(firstProduct, variant),
-    fetchProduct(secondProduct, variant),
-  ]).then(([vsb, vsbm]) => {
-    state.firstProduct = vsb;
-    state.firstProduct.alias = firstProduct;
-    state.secondProduct = vsbm;
-    state.secondProduct.alias = secondProduct;
-    updatePrice(block);
-    updateBuyLink(block);
-  });
-
+  el.classList.add('await-loader');
+  block.setAttribute('data-store-context', '');
+  block.setAttribute('data-store-id', secondProduct);
+  block.setAttribute('data-store-option', variant);
+  block.setAttribute('data-store-department', 'consumer');
+  block.setAttribute('data-store-event', 'main-product-loaded');
+  el.setAttribute('data-store-price', 'discounted||full');
+  updateBuyLink(block);
   return el;
 }
 
 function renderRadioGroup(block) {
+  const metadata = block.parentElement.parentElement.dataset;
+  const [firstProduct, secondProduct] = metadata.price.split(',');
   const el = document.createElement('DIV');
   el.classList.add('products-sideview-radio');
-
   el.innerHTML = `
-    <input type="radio" name="type" id="monthly" value="m" checked/>
+    <input type="radio" name="type" id="monthly" 
+    data-store-click-set-product data-store-product-id="${secondProduct}"
+    data-store-product-department="consumer"
+    data-product-type="monthly" checked/>
     <label for="monthly">Monthly</label>
-    
-    <input type="radio" name="type" id="yearly" value="y" />
+     
+    <input type="radio" name="type" id="yearly" data-store-click-set-product 
+    data-store-product-id="${firstProduct}" 
+    data-store-product-department="consumer"
+    data-product-type="yearly"/>
     <label for="yearly">Yearly</label>
   `;
-
-  const radioButtons = el.querySelectorAll('input[name="type"]');
-
-  radioButtons.forEach((radio) => {
-    radio.addEventListener('change', (event) => {
-      state.mode = event.target.value;
-
-      updatePrice(block);
-
-      // update buy link
-      updateBuyLink(block);
-    });
-  });
-
   return el;
 }
 
-function updateBenefits(block) {
-  const blockDataset = getDatasetFromSection(block);
-  const ul = block.querySelector('ul');
-  if (ul) {
-    ul.classList.add('benefits-list');
-    try {
-      const benefitsList = blockDataset.benefits.split(',,').map((b) => JSON.parse(b));
-      const currentBenefitSelection = benefitsList[state.membersIndex];
-      ul.querySelectorAll('li').forEach((li, index) => {
-        const numberOfBenefitsTag = document.createElement('SPAN');
-        numberOfBenefitsTag.textContent = `x${currentBenefitSelection[index]}`;
-        numberOfBenefitsTag.classList.add('tag-blue');
-
-        // Find the last span element within the li
-        const lastSpan = li.querySelector('span:last-of-type');
-
-        // Replace the last span element with the new one
-        if (lastSpan) {
-          li.replaceChild(numberOfBenefitsTag, lastSpan);
-        } else {
-          // If no span is found, just append the new one
-          li.append(numberOfBenefitsTag);
-        }
-      });
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log("couldn't load the benefits");
-    }
+function getBlueTags(block) {
+  let blueTags = block.querySelectorAll('.tag-blue');
+  if (!blueTags.length) {
+    const benefitsList = block.querySelector('ul');
+    benefitsList?.classList.add('benefits-list');
+    const benefitsListElements = benefitsList?.querySelectorAll('li');
+    benefitsListElements?.forEach((element) => {
+      const blueTag = document.createElement('span');
+      blueTag.classList.add('tag-blue');
+      element.insertAdjacentElement('beforeend', blueTag);
+    });
+    blueTags = block.querySelectorAll('.tag-blue');
   }
+  return blueTags;
+}
+
+function updateBenefits(block, selectEl, metadata) {
+  const blueTags = getBlueTags(block);
+  const selectedOption = [...selectEl.options].find((option) => option.hasAttribute('selected'));
+  const neededIndex = [...selectEl.options].indexOf(selectedOption);
+  const updatedBenefits = JSON.parse(metadata[neededIndex]);
+  let counter = 0;
+  blueTags.forEach((tag) => {
+    // eslint-disable-next-line no-plusplus
+    tag.textContent = `x${updatedBenefits[counter++]}`;
+  });
 }
 
 function renderSelector(block, ...options) {
-  const selectorOptions = options.filter((option) => option && !Number.isNaN(Number(option)));
+  const selectorOptions = options
+    .filter((option) => option && !Number.isNaN(Number(option)))
+    .map((opt) => Number(opt));
+  const defaultSelection = Number(state.blockDataset.defaultselection) || selectorOptions[1];
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
   el.innerHTML = `
-    <select>
-        ${selectorOptions.map((opt, index) => `
-          <option value="${index}">${opt} members</option>
-        `).join(',')}
+    <select data-store-devices-text-plural="members"
+    data-store-devices-text-singular="member"
+    data-store-click-set-devices
+    data-store-devices>
+
+        ${selectorOptions.sort((first, second) => first - second).map((opt) => `
+          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}></option>
+        `).join('/n')}
     </select>
   `;
 
-  el.querySelector('select').addEventListener('change', (e) => {
-    const value = JSON.parse(e.target.value);
-    state.membersIndex = value;
-    // update benefits
-    updateBenefits(block);
+  const selectEl = el.querySelector('select');
+  const metadata = block.parentElement.parentElement.dataset;
+  selectEl.value = defaultSelection;
 
-    // update price
-    updatePrice(block);
-
-    // update buy link
-    updateBuyLink(block);
+  selectEl.addEventListener('change', (e) => {
+    [...selectEl.options].forEach((option) => option.removeAttribute('selected'));
+    [...selectEl.options].find((option) => option.value === e.target.value)?.setAttribute('selected', '');
+    updateBenefits(block, selectEl, metadata.benefits.split(',,'));
   });
+
+  updateBenefits(block, selectEl, metadata.benefits.split(',,'));
 
   return el;
 }
@@ -296,12 +242,20 @@ createNanoBlock('price', renderPrice);
 createNanoBlock('monthlyYearly', renderRadioGroup);
 createNanoBlock('selectMembers', renderSelector);
 
+function initMembersMap() {
+  const selectMembers = state.blockDataset.selectmembers.trim().split(',');
+  selectMembers.forEach((member, index) => MEMBERS_MAP.set(index, Number(member)));
+}
+
 export default function decorate(block) {
+  const blockDataset = getDatasetFromSection(block);
+  state.blockDataset = blockDataset;
+
+  initMembersMap();
+
   block.firstElementChild.classList.add('d-flex');
   block.firstElementChild.firstElementChild.classList.add('pricing-wrapper');
   block.firstElementChild.lastElementChild.classList.add('features-wrapper');
-
-  updateBenefits(block);
 
   renderNanoBlocks(block.firstElementChild, block);
 

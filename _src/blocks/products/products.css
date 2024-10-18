@@ -347,6 +347,8 @@
 .products.compact .product-card .price strong, .products.plans .product-card .price strong {
   font-size: var(--heading-font-size-l);
   font-weight: var(--font-weight-bolder);
+  display: flex;
+  justify-content: center;
 }
 
 .two-columns .columns .product-card hr {

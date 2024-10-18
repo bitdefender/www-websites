@@ -1,19 +1,9 @@
+import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
+import Page from '../libs/page.js';
 import ZuoraNLClass from '../zuora.js';
 
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
-
-export function getLocale() {
-  const regex = /\/([a-z]{2}-[a-z]{2})\//i; // match locale with slashes
-  // extract locale without slashes
-  const match = window.location.pathname.match(regex);
-  const defaultLocale = 'en-us';
-  if (match) {
-    return match[1];
-  }
-
-  return defaultLocale;
-}
 
 export const GLOBAL_V2_LOCALES = ['en-bz', 'en-lv'];
 export const IANA_BY_REGION_MAP = new Map([
@@ -112,6 +102,7 @@ const PRICE_LOCALE_MAP = new Map([
   ['en-gb', { force_country: 'uk', country_code: 'gb' }],
   ['en-au', { force_country: 'au', country_code: 'au' }],
   ['en-nz', { force_country: 'nz', country_code: 'nz' }],
+  ['en-cz', { force_country: 'cz', country_code: 'cz' }],
   ['en-global', { force_country: 'en', country_code: null }],
   ['es-cl', { force_country: 'cl', country_code: 'cl' }],
   ['es-co', { force_country: 'co', country_code: 'co' }],
@@ -128,12 +119,21 @@ const PRICE_LOCALE_MAP = new Map([
   ['nl-nl', { force_country: null, country_code: null, isZuora: true }],
   ['de-de', { force_country: 'de', country_code: 'de' }],
   ['de-at', { force_country: 'de', country_code: 'at' }],
+  ['de-ch', { force_country: 'ch', country_code: 'ch' }],
   ['sv-se', { force_country: 'se', country_code: 'se' }],
   ['pt-br', { force_country: 'br', country_code: 'br' }],
   ['pt-pt', { force_country: 'pt', country_code: 'pt' }],
   ['zh-hk', { force_country: 'en', country_code: 'hk' }],
   ['zh-tw', { force_country: 'en', country_code: 'tw' }],
 ]);
+
+/**
+ * @returns {boolean} check if you are on exactly the consumer page (e.g /en-us/consumer/)
+ */
+export function checkIfConsumerPage() {
+  const lastSegmentInPath = window.location.pathname?.split('/')?.filter(Boolean)?.slice(-1)[0];
+  return lastSegmentInPath === 'consumer';
+}
 
 /**
  * Returns the value of a query parameter
@@ -312,41 +312,51 @@ export function getPriceLocalMapByLocale() {
   return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
-export function generateProductBuyLink(product, productCode, month = null, years = null) {
+// eslint-disable-next-line max-len
+export function generateProductBuyLink(product, productCode, month = null, years = null, pid = null) {
   if (isZuora()) {
     return product.buy_link;
   }
 
   const m = product.variation?.dimension_value || month;
   const y = product.variation?.years || years;
-  let pid = '';
+  const url = new URL(window.location.href);
+  let buyLinkPid = '';
 
-  if (GLOBAL_V2_LOCALES.includes(getLocale())) {
-    pid = 'pid.global_v2';
+  if (pid) {
+    buyLinkPid = `pid.${pid}`;
+  } else if (url.searchParams.get('pid')) {
+    buyLinkPid = `pid.${url.searchParams.get('pid')}`;
+  } else if (getMetadata('pid')) {
+    buyLinkPid = `pid.${getMetadata('pid')}`;
+  }
+
+  if (GLOBAL_V2_LOCALES.includes(Page.locale)) {
+    buyLinkPid = 'pid.global_v2';
   }
 
   const forceCountry = getPriceLocalMapByLocale().force_country;
-  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${pid}?force_country=${forceCountry}`;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${buyLinkPid}?force_country=${forceCountry}`;
 }
 
 export function setDataOnBuyLinks(element, dataInfo) {
   const { productId, variation } = dataInfo;
-  if (productId) element.dataset.product = productId;
+  if (productId) element.dataset.product = productId.trim();
 
   // element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
-  if (variation.price) element.dataset.buyPrice = variation.price;
-  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice;
-  if (variation.currency_label) element.dataset.currency = variation.currency_label;
-  if (variation.region_id) element.dataset.region = variation.region_id;
-  if (variation.variation_name) element.dataset.variation = variation.variation_name;
+  if (variation.price) element.dataset.buyPrice = variation.price.trim();
+  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice.trim();
+  if (variation.currency_label) element.dataset.currency = variation.currency_label.trim();
+  if (variation.region_id) element.dataset.region = variation.region_id.trim();
+  if (variation.variation_name) element.dataset.variation = variation.variation_name.trim();
 }
 
-export function formatPrice(price, currency, region = null, locale = null) {
+export function formatPrice(price, currency) {
   if (!price) {
     return null;
   }
-  const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
-  return new Intl.NumberFormat(loc, { style: 'currency', currency }).format(price);
+  // const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price);
 }
 
 /**
@@ -358,7 +368,7 @@ export function formatPrice(price, currency, region = null, locale = null) {
  */
 export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
   const url = new URL(window.location.href);
-  const locale = getLocale();
+  const { locale } = Page;
   if (GLOBAL_V2_LOCALES.includes(locale)) {
     // eslint-disable-next-line no-param-reassign
     pid = 'global_v2';
@@ -413,7 +423,7 @@ export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
       body: data,
     });
 
-    // cacheResponse.set(code, response);
+    cacheResponse.set(code, response);
     return findProductVariant(response, variant);
   }
 
@@ -522,7 +532,7 @@ export function getDatasetFromSection(block) {
  * Renders nano blocks
  * @param parent The parent element
  */
-export function renderNanoBlocks(
+export async function renderNanoBlocks(
   parent = document.body,
   mv = undefined,
   index = undefined,
@@ -800,19 +810,6 @@ export function getPidFromUrl() {
   return url.searchParams.get('pid') || getMetadata('pid');
 }
 
-export function pushToDataLayer(event, payload) {
-  if (!event) {
-    // eslint-disable-next-line no-console
-    console.error('The data layer event is missing');
-    return;
-  }
-  if (!window.adobeDataLayer) {
-    window.adobeDataLayer = [];
-    window.adobeDataLayerInPage = true;
-  }
-  window.adobeDataLayer.push({ event, ...payload });
-}
-
 export function trackProduct(product, location = '') {
   // eslint-disable-next-line max-len
   if (!product && product.length === 0) return;
@@ -828,25 +825,29 @@ export function trackProduct(product, location = '') {
 }
 
 export function pushTrialDownloadToDataLayer() {
-  const getTrialID = () => (
+  const getTrialID = (currentPage, button) => {
+    if (['thank-you', 'free-antivirus'].includes(currentPage)) {
+      return '8430';
+    }
+
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
+    if (closestStoreElementWithId) {
+      return closestStoreElementWithId.dataset.storeId;
+    }
+
     // eslint-disable-next-line max-len
-    ((TRACKED_PRODUCTS && TRACKED_PRODUCTS.length > 0 && TRACKED_PRODUCTS[0].productCode) || (TRACKED_PRODUCTS_COMPARISON && TRACKED_PRODUCTS_COMPARISON.length > 0 && TRACKED_PRODUCTS_COMPARISON[0].productCode))
-    || getMetadata('breadcrumb-title')
-    || getMetadata('og:title')
-  );
+    return getMetadata('breadcrumb-title') || getMetadata('og:title');
+  };
 
   const url = window.location.href;
   const currentPage = url.split('/').filter(Boolean).pop();
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
-  const downloadType2 = currentPage === 'thank-you' ? 'downloaded' : 'trial';
 
-  const pushTrialData = () => {
-    const dataLayerDownload = {
-      product: {
-        [downloadType2]: [{ ID: getTrialID() }],
-      },
-    };
-    pushToDataLayer(`${downloadType} downloaded`, dataLayerDownload);
+  const pushTrialData = (button = null) => {
+    AdobeDataLayerService.push(new ButtonClickEvent(
+      `${downloadType} downloaded`,
+      getTrialID(currentPage, button),
+    ));
   };
 
   const sections = document.querySelectorAll('a.button.modal');
@@ -854,7 +855,7 @@ export function pushTrialDownloadToDataLayer() {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
       if (href.includes('fragments/thank-you-for-downloading') || href.includes('fragments/get-bitdefender')) {
-        button.addEventListener('click', pushTrialData);
+        button.addEventListener('click', () => { pushTrialData(button); });
       }
     });
   } else if (currentPage === 'thank-you') {
@@ -862,58 +863,33 @@ export function pushTrialDownloadToDataLayer() {
   }
 }
 
-export function pushProductsToDataLayer() {
-  const url = window.location.href;
-  const isHomepageSolutions = url.split('/').filter(Boolean).pop();
-  const key = isHomepageSolutions === 'consumer' ? 'all' : 'info';
+export function setUrlParams(urlIn, paramsIn = []) {
+  const isRelativeLink = /^(?!\/\/|[a-z]+:)/i;
 
-  // eslint-disable-next-line arrow-body-style
-  const mapProductData = (products) => {
-    return products.map((product) => {
-      const {
-        platformProductId,
-        productId,
-        productName,
-        devices,
-        subscription,
-        version,
-        basePrice,
-        discount,
-        discountRate,
-        currencyIso,
-        actualPrice,
-      } = product;
-
-      return Object.fromEntries(
-        Object.entries({
-          ID: platformProductId || productId,
-          name: productName,
-          devices,
-          subscription,
-          version,
-          basePrice,
-          discountValue: discount,
-          discountRate,
-          currency: currencyIso,
-          priceWithTax: actualPrice,
-        }).filter(([, value]) => value !== undefined),
-      );
-    });
-  };
-
-  if (!TRACKED_PRODUCTS.length && TRACKED_PRODUCTS_COMPARISON.length) {
-    TRACKED_PRODUCTS.push({ productId: TRACKED_PRODUCTS_COMPARISON[0].productId });
+  if (!Array.isArray(paramsIn)) {
+    // eslint-disable-next-line no-console
+    console.error(`paramsIn must be an Array but you provided an ${typeof paramsIn}`);
+    return urlIn;
   }
 
-  const dataLayerProduct = {
-    product: {
-      [key]: mapProductData(TRACKED_PRODUCTS),
-      // eslint-disable-next-line max-len
-      ...(TRACKED_PRODUCTS_COMPARISON.length && { comparison: mapProductData(TRACKED_PRODUCTS_COMPARISON) }),
-    },
-  };
+  const url = isRelativeLink.test(urlIn) ? new URL(urlIn, window.location.origin) : new URL(urlIn);
 
-  pushToDataLayer('product loaded', dataLayerProduct);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const param of paramsIn) {
+    if (!param) {
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    const [key, value] = param.split('=');
+
+    if (value === '') {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, value || '');
+    }
+  }
+
+  return url.href;
 }
 
 export function getDomain() {
