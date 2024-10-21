@@ -15,7 +15,7 @@ main .exit-popup-container {
   display: none;
 }
 
-main .exit-popup-container #exitAction {
+main .exit-popup-container #exit-action {
   position: absolute;
   top: 1em;
   right: 1em;
@@ -24,7 +24,7 @@ main .exit-popup-container #exitAction {
   cursor: pointer;
 }
 
-main .exit-popup-container #exitAction:hover {
+main .exit-popup-container #exit-action:hover {
   opacity: 0.6;
 }
 

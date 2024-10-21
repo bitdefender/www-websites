@@ -28,7 +28,7 @@ export default async function decorate(block) {
 
   // create exit x element
   const existEl = document.createElement('span');
-  existEl.id = 'exitAction';
+  existEl.id = 'exit-action';
   existEl.innerHTML = '<img src="/_src/icons/close_x.JPG" alt="Bitdefender">';
   parentSelector.appendChild(existEl);
 
