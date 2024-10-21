@@ -299,7 +299,7 @@
 
     .products-sideview .features-wrapper {
         width: 66.66%;
-        height: fit-content;
+        min-height: fit-content;
     }
 
     .products-sideview .features-tabs > li {
