@@ -36,8 +36,8 @@ export default async function decorate(block) {
   // Constants for logic
   const POPUP_DISPLAY_LIMIT = 2;
   const POPUP_TIMEOUT_DAYS = 30;
-  let popupDisplayCount = parseInt(localStorage.getItem('popupDisplayCount')) || 0;
-  const lastPopupDate = parseInt(localStorage.getItem('lastPopupDate')) || 0;
+  let popupDisplayCount = localStorage.getItem('popupDisplayCount') || 0;
+  const lastPopupDate = localStorage.getItem('lastPopupDate') || 0;
 
   // Utility function to check if 30 days have passed
   function hasThirtyDaysPassed(lastDisplayDate) {
@@ -50,17 +50,17 @@ export default async function decorate(block) {
   if (lastPopupDate && hasThirtyDaysPassed(lastPopupDate)) {
     localStorage.removeItem('popupDisplayCount');
     localStorage.removeItem('lastPopupDate');
-    popupDisplayCount = 0;  // Reset count for the session
+    popupDisplayCount = 0; // Reset count for the session
   }
 
   // Mouseout event to display the popup
-  document.addEventListener('mouseout', function(event) {
+  document.addEventListener('mouseout', (event) => {
     // Check if popup can still be shown
     if (popupDisplayCount < POPUP_DISPLAY_LIMIT && event.clientY < 0 && parentSelector) {
       parentSelector.style.display = 'block';
 
       // add the count
-      popupDisplayCount++;
+      popupDisplayCount += 1;
       localStorage.setItem('popupDisplayCount', popupDisplayCount);
 
       // store last display time
@@ -70,7 +70,7 @@ export default async function decorate(block) {
 
   // Close the popup
   if (existEl) {
-    existEl.addEventListener('click', function() {
+    existEl.addEventListener('click', () => {
       const popup = document.querySelector('main .exit-popup-container');
       if (popup) popup.style.display = 'none';
     });
