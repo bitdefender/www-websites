@@ -3,10 +3,8 @@ import {
   fetchIndex,
   fixExcelFilterZeroes,
   getDomain,
+  decorateBlockWithRegionId,
 } from './utils/utils.js';
-
-// eslint-disable-next-line import/no-cycle
-import { decorateBlockWithRegionId } from './scripts.js';
 
 function prependSlash(path) {
   return path.startsWith('/') ? path : `/${path}`;
