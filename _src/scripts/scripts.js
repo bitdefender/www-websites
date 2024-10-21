@@ -21,6 +21,7 @@ import {
   GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
   getLocale, getCookie,
   pushProductsToDataLayer,
+  getOperatingSystem,
 } from './utils/utils.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
@@ -68,64 +69,6 @@ export function getLanguageCountryFromPath() {
     language: currentPathUrl.split('/')[1].split('-')[0],
     country: currentPathUrl.split('/')[1].split('-')[1],
   };
-}
-
-/**
- * Returns the current user operating system based on userAgent
- * @returns {String}
- */
-export function getOperatingSystem(userAgent) {
-  const systems = [
-    ['Windows NT 10.0', 'Windows 10'],
-    ['Windows NT 6.2', 'Windows 8'],
-    ['Windows NT 6.1', 'Windows 7'],
-    ['Windows NT 6.0', 'Windows Vista'],
-    ['Windows NT 5.1', 'Windows XP'],
-    ['Windows NT 5.0', 'Windows 2000'],
-    ['X11', 'X11'],
-    ['Linux', 'Linux'],
-    ['Android', 'Android'],
-    ['iPhone', 'iOS'],
-    ['iPod', 'iOS'],
-    ['iPad', 'iOS'],
-    ['Mac', 'MacOS'],
-  ];
-
-  return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
-export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos) {
-  // Get user's operating system
-  const { userAgent } = navigator;
-  const userOS = getOperatingSystem(userAgent);
-
-  // Open the appropriate URL based on the OS
-  let openUrl;
-  switch (userOS) {
-    case 'MacOS':
-      openUrl = urlMacos;
-      break;
-    case 'Windows 10':
-    case 'Windows 8':
-    case 'Windows 7':
-    case 'Windows Vista':
-    case 'Windows XP':
-    case 'Windows 2000':
-      openUrl = urlWindows;
-      break;
-    case 'Android':
-      openUrl = urlAndroid;
-      break;
-    case 'iOS':
-      openUrl = urlIos;
-      break;
-    default:
-      openUrl = null; // Fallback or 'Unknown' case
-  }
-
-  if (openUrl) {
-    window.open(openUrl, '_self');
-  }
 }
 
 /**
@@ -187,15 +130,6 @@ export function getLocalizedResourceUrl(resourceName) {
 
 export function getTags(tags) {
   return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
-}
-
-export function decorateBlockWithRegionId(element, id) {
-  // we could consider to use `element.setAttribute('s-object-region', id);` in the future
-  if (element) element.id = id;
-}
-
-export function decorateLinkWithLinkTrackingId(element, id) {
-  if (element) element.setAttribute('s-object-id', id);
 }
 
 /**
