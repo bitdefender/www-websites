@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 export default async function decorate(block) {
   const parentSelector = block.closest('.section');
-  const { product, customPid } = parentSelector.dataset;
+  const { product, custompid } = parentSelector.dataset;
   const [alias, variant] = product.split(',');
 
   block.setAttribute('data-store-context', '');
@@ -10,8 +10,8 @@ export default async function decorate(block) {
   block.setAttribute('data-store-option', variant);
 
   // add custom pid
-  if (customPid) {
-    block.setAttribute('data-store-promotion', customPid);
+  if (custompid) {
+    block.setAttribute('data-store-promotion', custompid);
   }
 
   // config percennt from title
