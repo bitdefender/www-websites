@@ -26,13 +26,7 @@ import {
   adobeMcAppendVisitorId,
   createTag,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
-  getParamValue,
-  GLOBAL_EVENTS, pushToDataLayer, pushTrialDownloadToDataLayer,
-  getLocale, getCookie,
-  pushProductsToDataLayer,
-  getOperatingSystem,
 } from './utils/utils.js';
-
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
@@ -76,46 +70,6 @@ export function getLanguageCountryFromPath() {
     language: currentPathUrl.split('/')[1].split('-')[0],
     country: currentPathUrl.split('/')[1].split('-')[1],
   };
-}
-
-/**
- * Returns the current user time in the format HH:MM|HH:00-HH:59|dayOfWeek|timezone
- * @returns {String}
- */
-function getCurrentTime() {
-  const date = new Date();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const dayOfWeek = date.getDay();
-  const timezone = date.toTimeString().split(' ')[1];
-  const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  return `${hours}:${minutes}|${hours}:00-${hours}:59|${weekday[dayOfWeek]}|${timezone}`;
-}
-
-/**
- * Returns the current GMT date in the format DD/MM/YYYY
- * @returns {String}
- */
-function getCurrentDate() {
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-}
-
-/**
- * Returns the environment name based on the hostname
- * @returns {String}
- */
-export function getEnvironment(hostname) {
-  if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
-    return 'stage';
-  }
-  if (hostname.includes('www.bitdefender')) {
-    return 'prod';
-  }
-  return 'dev';
 }
 
 export function getLocalizedResourceUrl(resourceName) {
