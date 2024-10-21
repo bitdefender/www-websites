@@ -177,6 +177,4 @@ export default function decorate(block, options) {
   }
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
-
-  block.innerHTML = block.innerHTML.replace(/\[bluetag:\s*([^\]]+)\]/g, '<span class="bluetag">$1</span>');
 }
