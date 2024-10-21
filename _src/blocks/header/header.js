@@ -2,9 +2,9 @@ import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
 } from '../../scripts/lib-franklin.js';
 
-import {
-  adobeMcAppendVisitorId, getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
-} from '../../scripts/utils/utils.js';
+import { adobeMcAppendVisitorId, getDomain } from '../../scripts/utils/utils.js';
+
+import { decorateBlockWithRegionId, decorateLinkWithLinkTrackingId } from '../../scripts/scripts.js';
 
 function createLoginModal() {
   const loginModal = document.querySelector('nav > div:nth-child(4)');

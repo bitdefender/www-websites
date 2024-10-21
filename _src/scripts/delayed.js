@@ -4,8 +4,11 @@ import {
   getMetadata,
 } from './lib-franklin.js';
 
+// eslint-disable-next-line import/no-cycle
+import {
+  openUrlForOs,
+} from './scripts.js';
 import { loadBreadcrumbs } from './breadcrumbs.js';
-import { openUrlForOs } from './utils/utils.js';
 
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
