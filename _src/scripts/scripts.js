@@ -89,10 +89,6 @@ export function getLocalizedResourceUrl(resourceName) {
   return `${pathnameAsArray.join('/')}/${resourceName}`;
 }
 
-export function getTags(tags) {
-  return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
-}
-
 /**
  * Decorates picture elements with a link to a video.
  * @param {Element} main The main element
