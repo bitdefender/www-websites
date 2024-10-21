@@ -3,7 +3,7 @@
 import {
   createTag,
   createNanoBlock,
-  renderNanoBlocks
+  renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
 
 /**
