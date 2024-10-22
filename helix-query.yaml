@@ -4,7 +4,11 @@ indices:
     include:
       - /**
     exclude:
-      - /**/consumer/**/fragmets/**
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
     target: /query-index.json
     properties:
       title:
@@ -18,7 +22,7 @@ indices:
         # Assumptions:
         # 1. if the h1 is in a block, than that block is the first one in the document => main > div:first-child > div:first-child h1
         # 2. if the h1 is in the default content, than there are no other blocks before this default content => main > div > h1
-        select: main > div:first-child > div:first-child h1, main > div > h1
+        select: main > div:first-child > div:first-child h1, main div > h1
         value: textContent(el)
       breadcrumbtitle:
         select: head > meta[name="breadcrumb-title"]
