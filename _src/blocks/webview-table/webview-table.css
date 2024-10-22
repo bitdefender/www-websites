@@ -1,0 +1,366 @@
+:root {
+    --first-table-cell-color: #e4f2ff;
+    --table-cell-color: #eee;
+    --yes-check-color: #44AA44;
+    --no-check-color: #FD3434;
+    --column-header-highlight-color: #de2985;
+    --product-comparison-text-color: #5d5c5c;
+    --expandable-row-background-color: #0040F0;
+    --expandable-row-text-color: #fff;
+    --product-table-badge-color: #2cb43d;
+    --current-price-color: #000;
+    --expandable-row-arrow-color: #c5c5c5;
+}
+.await-loader{
+    min-height: 4rem;
+}
+.webview-wrapper {
+    width: 768px;
+    max-height: 512px;
+    padding: 0;
+    margin: 0 auto;
+    
+    background-color: #141517;
+    background-size: 188px 104px;
+    text-align: center;
+    font-family: "Segoe UI", Arial, sans-serif;
+
+    .webview {
+        max-width: 438px;
+        margin: auto;
+        img {
+            width: 92px;
+            height: auto;
+        }
+
+        h3 {
+            margin-top: 30px;
+            margin-bottom: 16px;
+            font-size: 18px;
+            line-height: 24px;
+            font-weight: 700;
+            color: black;
+        }
+
+        .button-container {
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        .button.secondary {
+            background-color: white;
+            border-color: white;
+            color: #006EFF;
+        }
+
+        .prod-oldprice {
+            font-size: var(--body-font-size-xs);
+            line-height: var(--body-font-size-xs);
+            text-decoration: line-through;
+        }
+
+        .prod-percent {
+            font-size: 13px;
+            line-height: 15px;
+            color: white;
+            background-color: #61A851;
+            border-radius: 11px;
+            padding: 4px 10px;
+            font-weight: bold;
+        }
+
+        .prod-newprice {
+            font-size: var(--body-font-size-xl);
+            line-height: var(--body-font-size-xl);
+            font-weight: 700;
+        }
+
+        .under-price-text {
+            font-size: var(--body-font-size-xxs);
+            line-height: var(--body-font-size-xxs);
+            color: #666666;
+
+            p {
+                margin: 0;
+                font-size: var(--body-font-size-xxxs);
+            }
+        }
+
+        .price_box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+    }
+}
+
+
+.webview {
+    display: table;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    font-size: 14px;
+}
+
+.webview h1{
+    text-align: center;
+    font: normal normal bold 24px Segoe UI;
+    letter-spacing: 0px;
+    color: #F7F7F7;
+    opacity: 1;
+    margin-bottom: 8px;
+    margin-top: 2px;
+}
+
+.webview .webview-comparison-header div[role="columnheader"]:first-child{
+    min-width: 292px;
+}
+
+.webview .webview-comparison-header strong{
+    font-size: 16px;
+}
+
+.webview .webview-comparison-header div[role="columnheader"]:not(:first-child) {
+    flex: 1;
+    min-width: 142px;
+    flex-flow:column;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+    color: #e4f2ff;
+}
+
+.webview .webview-comparison-header div[role="columnheader"] p{
+    text-align: center;
+    font: normal normal normal 16px Segoe UI;
+    letter-spacing: 0px;
+    opacity: 1;
+    margin: 0;
+    margin-top: 8px;
+    line-height: 0.9;
+}
+.webview .webview-comparison-header div[role="columnheader"] p:last-of-type{
+    margin-bottom: 8px;
+}
+
+.webview-comparison-header div[role="columnheader"] {
+    padding-bottom: 8px;
+}
+
+.webview div[role='row']:not(.webview-comparison-header) {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: normal;
+    justify-content: space-around;
+    font-size: var(--body-font-size-xs);
+    font: normal normal 600 14px Segoe UI;
+    color: var(--color-dark-gray);
+    min-width: 94px;
+    width: 100%;
+}
+
+.webview div[role='row']:not(.webview-comparison-header):last-of-type{
+    border-bottom-left-radius: 8px;
+    padding-bottom: 6.27px;
+}
+
+.webview-comparison-header{
+    display: flex;
+}
+
+.webview div[role='cell']{
+    min-width: 142px;
+    border: 0.1px solid #3c3c3c;
+    border-left: none;
+    border-right: none;
+    display: flex;
+    flex-flow:column nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.webview div[role='cell']:first-child {
+    white-space: normal;
+    display: table-cell;
+    min-width: 292px;
+    height: auto;
+    text-align: left;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    opacity: 1;
+    font: normal normal 600 14px Segoe UI;
+    border: 0.1px solid #141517;
+    border-right: none;
+    background: #333333 0% 0% no-repeat padding-box;
+}
+
+.webview div[role='row']:first-of-type div[role='cell']:first-child{
+    border-top-left-radius: 8px;
+}
+
+.webview div[role='row']:last-of-type div[role='cell']{
+    border:none;
+    border-radius: 0 0 4px 4px;
+}
+
+.webview  div[role="cell"] .yes-check {
+    position: relative;
+    top:1px;
+    width: 18px; 
+    height: 18px; 
+    background-color: #4CAF50; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color:  black; 
+    font-size: 16px; 
+}
+
+
+.webview  div[role="cell"] .yes-check::after {
+    content: '';
+    position: relative;
+    width: 3px; 
+    height: 7px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    bottom: 1px;
+    left: 0%;
+}
+
+
+.webview  div[role="cell"] .no-check {
+    height: 1rem;
+    width: 0.625rem;
+    position: relative;
+    top:1px;
+}
+
+.webview  div[role="cell"] .no-check::after {
+    position: absolute;
+    width: 0.17rem;
+    transform: rotate(45deg);
+    content: ' ';
+    background-color: var(--no-check-color);
+    height: 16px;
+}
+
+.webview div[role="cell"] .no-check::before {
+    position: absolute;
+    height: 16px;
+    width: 0.17rem;
+    transform: rotate(-45deg);
+    content: ' ';
+    background-color: var(--no-check-color);
+}
+
+.webview .button{
+    border: 1px solid #006EFF ;
+    opacity: 1;
+    background-color: black !important;
+    width: 122px;
+    padding: 6px 16px  6px 16px !important;
+    border-radius: 4px !important;
+}
+.webview .button .button-text{
+    color: #006EFF;
+}
+
+.webview .savings-tag-container{
+    background-color: #2cb43d;
+    color: white;
+    font-weight: bold;
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    padding: 2px;
+}
+
+.webview .featured{
+    background-color: #202123;
+}
+
+
+.webview .price_box{
+    padding: 0;
+    color:#e4f2ff;
+    text-align: center;
+}
+
+.webview .under-price-text{
+    font-size: 12px;
+}
+
+
+.webview .featured .button{
+    background: #006EFF 0% 0% no-repeat padding-box !important;
+    opacity: 1; 
+}
+
+.webview .featured .button-text{
+    color: white !important;
+}
+
+.webview .current .button{
+    border-color: #767676 !important; 
+}
+
+.webview .current .button-text{
+    color: #767676 !important; 
+}
+.light-mode{
+    color: black;
+    background-color: #FFFFFF !important;
+}
+
+.light-mode h1{
+    color: black !important;
+}
+
+
+.light-mode div[role="columnheader"]{
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+.light-mode div[role='cell']:first-child:not(:last-of-type){
+    color: #000000 !important;
+    background-color: #F9F9FE !important;
+    border-color: #FFFF;
+}
+.light-mode div[role='cell']:first-child:last-of-type{
+    background-color: #fff;
+}
+
+.light-mode .yes-check::after{
+    border-color: #FFFFFF !important;
+}
+
+.light-mode .price_box{
+    color:  black !important;
+}
+
+.light-mode div[role="cell"]{
+    color: #515B6D !important;
+    background-color: #FFFFFF !important;
+    border-color: #F5F5F5;
+}
+
+.light-mode div[role="cell"] .featured {
+    background-color: #F9F9FE !important;
+}
+
+.light-mode .prod-oldprice{
+    color:#515B6D !important;
+}
+
+.light-mode .under-price-text{
+    color:#515B6D !important;
+}
+
+.light-mode .button{
+    background-color: #FFFFFF !important;
+}
