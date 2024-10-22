@@ -955,9 +955,9 @@ class StoreConfig {
 	constructor() {
 		/**
 		 * Api used to fetch the prices
-		 * @type {"init"|"zuora"}
+		 * @type {"init"|"zuora"|"vlaicu"}
 		 */
-		this.provider = Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
+		this.provider = this.#getProvider();
 
 		/**
 		 * default promotion
@@ -982,6 +982,18 @@ class StoreConfig {
 		 * @type {"GET"}
 		 */
 		this.httpMethod = "GET";
+	}
+
+	/**
+	 * 
+	 * @returns {string} the prices provider to be used
+	 */
+	#getProvider() {
+		if (Constants.VLAICU_LOCALES.includes(Page.locale) && Constants.VLAICU_PAGES.includes(Page.pageName)) {
+			return "vlaicu";
+		}
+
+		return Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
 	}
 
 	async getCampaign() {
