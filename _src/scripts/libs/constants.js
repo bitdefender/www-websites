@@ -8,7 +8,7 @@ export const Constants = {
 
   LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME: 'bdcslue',
 
-  ZUROA_LOCALES: ['nl-nl'],
+  ZUROA_LOCALES: ['nl-nl', 'nl-be'],
 
   VLAICU_LOCALES: ['en-us'],
 

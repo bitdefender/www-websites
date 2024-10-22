@@ -1,7 +1,6 @@
 helix-importer-ui
 _src/scripts/lib-franklin-api.js
 _src/scripts/vendor
-_src/scripts/zuora.js
 _src/vendor
 _src/plugins
 _src/scripts/libs/**

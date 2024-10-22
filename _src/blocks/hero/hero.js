@@ -131,4 +131,10 @@ export default function decorate(block) {
     block.setAttribute('data-store-department', 'consumer');
     block.setAttribute('data-store-option', variant);
   }
+
+  // Add the await-loader class to the button that leads to the thank you page, this is an exception
+  // for the free antivirus page
+  if (block.querySelector('.button-container a[href*="/consumer/thank-you"]')) {
+    block.querySelector('.button-container a[href*="/consumer/thank-you"]').classList.add('await-loader');
+  }
 }
