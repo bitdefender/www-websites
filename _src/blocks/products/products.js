@@ -412,6 +412,7 @@ export default function decorate(block) {
           firstPElement.style.maxWidth = '';
         }
       });
+      window.dispatchEvent(new Event('resize'));
     }
 
     if (!card.classList.contains('featured')) {
