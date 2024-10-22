@@ -1587,7 +1587,8 @@ main .section.blue a.button.modal::after {
   opacity: 0.4;
   cursor: default;
   min-height: 2rem;
-}
+  pointer-events: none;
+} 
 
 .await-loader * {
   visibility: hidden;
