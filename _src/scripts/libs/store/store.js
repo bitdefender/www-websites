@@ -743,56 +743,6 @@ class BitCheckout {
 	// this products come with device_no set differently from the init-selector api where they are set to 1
 	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
 
-	static productId = {
-		av: "com.bitdefender.cl.av",
-		is: "com.bitdefender.cl.is",
-		tsmd: "com.bitdefender.cl.tsmd",
-		fp: "com.bitdefender.fp",
-		ps: "com.bitdefender.premiumsecurity",
-		psm: "com.bitdefender.premiumsecurity",
-		psp: "com.bitdefender.premiumsecurityplus",
-		pspm: "com.bitdefender.premiumsecurityplus",
-		soho: "com.bitdefender.soho",
-		mac: "com.bitdefender.avformac",
-		vpn: "com.bitdefender.vpn",
-		"vpn-monthly": "com.bitdefender.vpn",
-		pass: "com.bitdefender.passwordmanager",
-		passm: "com.bitdefender.passwordmanager",
-		pass_sp: "com.bitdefender.passwordmanager",
-		pass_spm: "com.bitdefender.passwordmanager",
-		bms: "com.bitdefender.bms",
-		mobile: "com.bitdefender.bms",
-		ios: "com.bitdefender.iosprotection",
-		mobileios: "com.bitdefender.iosprotection",
-		dip: "com.bitdefender.dataprivacy",
-		dipm: "com.bitdefender.dataprivacy",
-		avpm: 'com.bitdefender.cl.avplus.v2',
-		// DLP
-		ts_i: 'com.bitdefender.tsmd.v2',
-		ts_f: 'com.bitdefender.tsmd.v2',
-		ps_i: 'com.bitdefender.premiumsecurity.v2',
-		ps_f: 'com.bitdefender.premiumsecurity.v2',
-		us_i: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_i_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_f: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_f_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pf: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pf_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pi: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pi_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pie: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pie_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-	}
-
-	static names = {
-		pass: "Bitdefender Password Manager",
-		pass_sp: "Bitdefender Password Manager Shared Plan",
-		passm: "Bitdefender Password Manager",
-		pass_spm: "Bitdefender Password Manager Shared Plan"
-	}
-
 	static getKey() {
 		const hostname = window.location.hostname;
 		if (/^(author-p23952-e68330|www|new)/.test(hostname)) {
@@ -855,7 +805,7 @@ class BitCheckout {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		let payload = (await this.getProductVariations(this.productId[id], campaignId))?.payload;
+		let payload = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId))?.payload;
 
 		if (!payload || payload.length === 0) {
 			return null
@@ -866,13 +816,13 @@ class BitCheckout {
 		 * for example com.bitdefender.passwordmanager maps 2 products
 		 * Password Manager and Password Manager Shared Plan
 		 */
-		if (this.names[id]) {
-			payload = payload.filter(product => product.name === this.names[id])
+		if (Constants.PRODUCT_ID_NAME_MAPPINGS[id]) {
+			payload = payload.filter(product => product.name === Constants.PRODUCT_ID_NAME_MAPPINGS[id])
 		}
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: this.productId[id],
+			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 			product_name: payload[0].name,
 			variations: {}
 		}
@@ -916,8 +866,8 @@ class BitCheckout {
 				const devicesObj = {
 					currency_iso: devices.currency,
 					currency_label: "€",
-					product_id: this.productId[id],
-					platform_product_id: this.productId[id],
+					product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+					platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 					promotion: campaignId,
 					region_id: 22,
 					platform_id: 16,
@@ -946,6 +896,127 @@ class BitCheckout {
 	static async loadProduct(id, campaign) {
 		window.StoreProducts = window.StoreProducts || [];
 		window.StoreProducts.product = window.StoreProducts.product || {}
+		return await this.getProductVariationsPrice(id, campaign);
+	}
+}
+
+class Vlaicu {
+
+	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
+	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
+
+	// TODO: delete this parameter
+	static campaign = "TSExpired0MRDLP24";
+
+	static async getProductVariations(productId, campaign) {
+
+		const pathVariablesResolverObject = {
+			"{locale}": Page.locale,
+			"{bundleId}": productId,
+			"{campaignId}": campaign || this.campaign
+		};
+
+		// get the correct path to get the prices
+		let productPath = campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+
+		// replace all variables from the path
+		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
+		productPath = productPath.replace(pathVariablesRegex, (matched) => {
+			return pathVariablesResolverObject[matched]
+		});
+
+		const endpoint = new URL(productPath, Store.config.vlaicuEndpoint);
+
+		try {
+			const response = await fetch(
+				endpoint.href,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				}
+			);
+
+			if (!response.ok) {
+				return null;
+			}
+
+			return await response.json();
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
+	}
+
+	static async getProductVariationsPrice(id, campaignId) {
+		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId))?.product;
+		if (!productInfo) {
+			return null;
+		}
+
+		let payload = productInfo?.options;
+		if (!payload || !payload.length) {
+			return null;
+		}
+
+		/**
+		 * this rules splits one product into multiple products
+		 * for example com.bitdefender.passwordmanager maps 2 products
+		 * Password Manager and Password Manager Shared Plan
+		 */
+		if (Constants.PRODUCT_ID_NAME_MAPPINGS[id]) {
+			payload = payload.filter(product => product.name === Constants.PRODUCT_ID_NAME_MAPPINGS[id])
+		}
+
+		window.StoreProducts.product[id] = {
+			product_alias: id,
+			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+			product_name: productInfo.productName,
+			variations: {}
+		}
+
+		payload.forEach(productVariation => {
+			const yearsSubscription = productVariation.months / 12;
+			const devices_no = productVariation.slots;
+
+			const devicesObj = {
+				currency_iso: productVariation.currency,
+				currency_label: "€",
+				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				promotion: campaignId,
+				region_id: 22,
+				platform_id: 16,
+				price: productVariation.price,
+				variation: {
+					variation_name: `${productVariation.slots}u-${yearsSubscription}y`,
+					years: yearsSubscription,
+					months: productVariation.months,
+					// billing_period: period.billing_period,
+					// payment_period: period.payment_period
+				}
+			}
+
+			if (productVariation.discountAmount > 0) {
+				devicesObj['discount'] = {
+					discounted_price: productVariation.discountedPrice,
+					discount_value: productVariation.discountAmount,
+				}
+			}
+
+			window.StoreProducts.product[id].variations[devices_no] = window.StoreProducts.product[id].variations[devices_no]
+				? window.StoreProducts.product[id].variations[devices_no]
+				: {};
+			window.StoreProducts.product[id].variations[devices_no][yearsSubscription] = devicesObj;
+		});
+
+		return window.StoreProducts.product[id];
+	}
+
+	static async loadProduct(id, campaign) {
+		window.StoreProducts = window.StoreProducts || [];
+		window.StoreProducts.product = window.StoreProducts.product || {};
 		return await this.getProductVariationsPrice(id, campaign);
 	}
 }
@@ -979,6 +1050,14 @@ class StoreConfig {
 		};
 
 		/**
+		 * @type {string}
+		 */
+		this.vlaicuEndpoint = "";
+		if (Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))) {
+			this.vlaicuEndpoint = "https://service-delivery.nmbapp.net";
+		}
+
+		/**
 		 * @type {"GET"}
 		 */
 		this.httpMethod = "GET";
@@ -997,12 +1076,16 @@ class StoreConfig {
 	}
 
 	async getCampaign() {
-		const jsonFilePath = 'https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json';
+		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
+			return "";
+		}
+
+		const jsonFilePath = "https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json";
 
 		const resp = await fetch(jsonFilePath);
 		if (!resp.ok) {
 			console.error(`Failed to fetch data. Status: ${resp.status}`);
-			return '';
+			return "";
 		}
 		const data = await resp.json();
 
@@ -1067,6 +1150,24 @@ export class Store {
 		if (this.config.provider === "zuora") {
 			try {
 				const product = await BitCheckout.loadProduct(productInfo.id, productInfo.promotion);
+
+				if (!product) {
+					return null
+				}
+
+				return {
+					...product,
+					...productInfo
+				}
+			} catch (error) {
+				return null;
+			}
+		}
+
+		// TODO: setup vlaicu as an option here
+		if (this.config.provider === "vlaicu") {
+			try {
+				const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);
 
 				if (!product) {
 					return null
