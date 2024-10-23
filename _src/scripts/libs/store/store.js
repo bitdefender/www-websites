@@ -1006,7 +1006,7 @@ class StoreConfig {
 		this.provider = this.#getProvider();
 
 		/**
-		 * default promotion
+		 * default promotion for zuora
 		 * @type {string}
 		 */
 		this.campaign = this.#getCampaign();
@@ -1033,10 +1033,22 @@ class StoreConfig {
 		}
 
 		/**
-		 * @type {"GET"}
+		 * @type {"GET"|"POST"}
 		 */
-		this.httpMethod = "POST";
+		this.httpMethod = this.#getHTTPMethod();
 	}
+
+	/**
+	 * 
+	 * @returns {string} the http method used to get prices
+	 */
+	#getHTTPMethod() {
+		if (Constants.VLAICU_LOCALES.includes(Page.locale) && Constants.VLAICU_PAGES.includes(Page.pageName)) {
+			return "GET";
+		}
+
+		return "POST";
+	};
 
 	/**
 	 * 
@@ -1103,7 +1115,7 @@ export class Store {
 		this.products = (await Promise
 			.allSettled(
 				productsInfo.map(async product => {
-					//url > produs > global_campaign
+					// target > url > produs > global_campaign > default campaign for zuora
 					product.promotion = await Target.getCampaign()
 						|| this.#getUrlPromotion()
 						|| product.promotion
