@@ -1035,7 +1035,7 @@ class StoreConfig {
 		/**
 		 * @type {"GET"}
 		 */
-		this.httpMethod = "GET";
+		this.httpMethod = "POST";
 	}
 
 	/**
@@ -1070,14 +1070,19 @@ class StoreConfig {
 
 export class Store {
 	static countriesMapping = {
-		gb: "uk"
+		gb: "uk",
+		ch: "de",
+		us: "en",
+		mx: "en"
 	}
+
 	static consumer = "consumer";
 	static business = "business";
 	static NO_PROMOTION = "ignore";
 	static products = {};
 	/** country equals the geographic location given by IP */
-	static country = this.getCountry();
+	static country = Page.country;
+	static mappedCountry = this.getCountry();
 	/** Private variables */
 	static baseUrl = Constants.DEV_BASE_URL;
 
@@ -1170,7 +1175,7 @@ export class Store {
 		const apiURL = new URL(`https://www.bitdefender.com/site/Store/ajax${this.config.httpMethod === "GET" ? `/${encodeURI(btoa(data))}/` : ""
 			}`);
 
-		apiURL.searchParams.set("force_country", this.country);
+		apiURL.searchParams.set("force_country", this.mappedCountry);
 
 		try {
 			let response
