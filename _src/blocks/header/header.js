@@ -383,6 +383,14 @@ async function runDefaultHeaderLogic(block) {
     const html = await resp.text();
 
     if (html.includes('aem-banner')) {
+      const header = document.querySelector('header');
+      if (header) {
+        header.remove();
+      }
+      const nav = document.createElement('div');
+      const shadowRoot = nav.attachShadow({ mode: 'open' });
+      nav.classList.add('header-with-language-banner');
+      document.querySelector('body').prepend(nav);
       const websiteDomain = getDomain();
       let aemFetchDomain;
 
@@ -397,7 +405,7 @@ async function runDefaultHeaderLogic(block) {
 
       const aemHeaderHostname = window.location.hostname.includes('.hlx.')
         || window.location.hostname.includes('localhost')
-        ? 'https://stage.bitdefender.com'
+        ? 'https://www.bitdefender.com'
         : '';
 
       const aemHeaderFetch = await fetch(`${aemHeaderHostname}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`);
@@ -405,9 +413,6 @@ async function runDefaultHeaderLogic(block) {
         return;
       }
       const aemHeaderHtml = await aemHeaderFetch.text();
-
-      const nav = document.createElement('div');
-      const shadowRoot = nav.attachShadow({ mode: 'open' });
 
       const contentDiv = document.createElement('div');
       contentDiv.style.display = 'none';
@@ -469,17 +474,22 @@ async function runDefaultHeaderLogic(block) {
       const body = document.querySelector('body');
       body.style.maxWidth = 'initial';
 
-      const header = document.querySelector('header');
-      if (header) {
-        header.remove();
-      }
-
-      document.querySelector('body').prepend(nav);
+      // document.querySelector('body').prepend(nav);
 
       await Promise.allSettled(loadedLinks);
       contentDiv.style.display = 'block';
-      document.querySelector('body > div:first-child').classList.add('header-with-language-banner');
+      shadowRoot.querySelector('.language-banner__decline-button').addEventListener('click', () => {
+        const languageBannerSectionHeight = shadowRoot.querySelector('.language-banner__section').offsetHeight;
+        const newHeight = nav.offsetHeight - languageBannerSectionHeight;
+        nav.style.height = `${newHeight}px`;
+      });
 
+      // eslint-disable-next-line no-inner-declarations
+      // function randomfunc() {
+      //   nav.style.height = 'auto';
+      //   window.removeEventListener('resize', randomfunc, false);
+      // }
+      // window.addEventListener('resize', randomfunc, false);
       adobeMcAppendVisitorId(shadowRoot);
       return;
     }

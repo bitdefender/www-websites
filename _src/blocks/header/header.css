@@ -4,7 +4,7 @@
 header.header-wrapper {
   position: sticky;
   top: 0;
-  transition: height 0.3s ease-in-out;
+  /* transition: height 0.3s ease-in-out; */
   background-color: var(--white-color);
   z-index: 100;
 }
