@@ -399,6 +399,22 @@ export default function decorate(block) {
         secondToLastPrice.before(newP);
       }
     }
+
+    const hasImage = card.querySelector('img') !== null;
+
+    if (hasImage) {
+      // If the image exists, set max-width to the paragraph next to the image
+      const firstPElement = card.querySelector('p:not(:has(img, svg))');
+      window.addEventListener('resize', () => {
+        if (firstPElement && window.matchMedia('(min-width: 1200px)').matches) {
+          firstPElement.style.maxWidth = '75%';
+        } else {
+          firstPElement.style.maxWidth = '';
+        }
+      });
+      window.dispatchEvent(new Event('resize'));
+    }
+
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
