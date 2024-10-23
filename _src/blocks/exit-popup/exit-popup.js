@@ -6,20 +6,20 @@ export default async function decorate(block) {
 
   if (product) {
     const [alias, devices, years] = product.split(',');
-    const products = await Store.getProducts([new ProductInfo(alias, "consumer", custompid)]);
+    // eslint-disable-next-line no-undef
+    const products = await Store.getProducts([new ProductInfo(alias, 'consumer', custompid)]);
     const variation = products[alias].getOption(Number(devices), Number(years));
     const percentPrice = variation.getDiscount('percentage');
 
-    // config percennt from title
+    // config percent from title
     const tileDiscountEl = block.querySelector('h5');
-    if (tileDiscountEl) tileDiscountEl.innerHTML = tileDiscountEl.innerHTML.replace('50%', `${percentPrice}% `);
+    if (tileDiscountEl) tileDiscountEl.innerHTML = tileDiscountEl.innerHTML.replace('50%', `${percentPrice}%`);
 
     // config buy btn
     const buyBtnEl = block.querySelector('p.button-container a');
     if (buyBtnEl) {
-      buyBtnEl.textContent = buyBtnEl.textContent.replace('50%', `${percentPrice}% `);
-      const buyLink = await variation.getStoreUrl();
-      buyBtnEl.setAttribute('href', buyLink);
+      buyBtnEl.textContent = buyBtnEl.textContent.replace('50%', `${percentPrice}%`);
+      buyBtnEl.setAttribute('href', await variation.getStoreUrl());
     }
   }
 
