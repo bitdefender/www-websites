@@ -552,6 +552,16 @@
   .percent-table .columns table tr td:first-of-type {
     padding-right: 0.5em;
   }
+
+  .columns-container.space-between .columns > div {
+    align-items: stretch;
+  }
+
+  .columns-container.space-between .columns > div > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }
 
 @media (min-width: 992px) { /* desktop */
