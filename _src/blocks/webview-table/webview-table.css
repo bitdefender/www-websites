@@ -265,3 +265,7 @@
 .webview-table-wrapper .light-mode .button {
     background-color: #fff;
 }
+
+.webview-table-wrapper .light-mode div .featured{
+    background-color: #F9F9FE;
+}
