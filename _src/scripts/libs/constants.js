@@ -60,9 +60,9 @@ export const Constants = {
   },
 
   PRODUCT_ID_NAME_MAPPINGS: {
-    pass: "Bitdefender Password Manager",
-		pass_sp: "Bitdefender Password Manager Shared Plan",
-		passm: "Bitdefender Password Manager",
-		pass_spm: "Bitdefender Password Manager Shared Plan"
+	pass: "Bitdefender Password Manager",
+	pass_sp: "Bitdefender Password Manager Shared Plan",
+	passm: "Bitdefender Password Manager",
+	pass_spm: "Bitdefender Password Manager Shared Plan"
   }
 }

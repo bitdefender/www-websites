@@ -268,8 +268,6 @@ export class Product {
 		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : null);
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
-		this.symbol = option.currency_label;
-		this.regionId = option.region_id;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
 		this.yearDevicesMapping = Object.entries(this.options).reduce((acc, [deviceKey, values]) => {
 			Object.keys(values).forEach(yearKey => {
@@ -302,13 +300,6 @@ export class Product {
 	}
 
 	/**
-	 * @returns {string}
-	 */
-	getRegionId() {
-		return this.regionId;
-	}
-
-	/**
 	 * Returns product API ALIAS
 	 * @returns {string} - Product Id : tsmd/com.bitdefender.cl.tsmd
 	 */
@@ -338,14 +329,6 @@ export class Product {
 	 */
 	getCurrency() {
 		return this.currency;
-	}
-
-	/**
-	 *
-	 * @returns {string} - $ | € ...
-	 */
-	getSymbol() {
-		return this.symbol;
 	}
 
 	/**
@@ -865,12 +848,9 @@ class BitCheckout {
 				}
 				const devicesObj = {
 					currency_iso: devices.currency,
-					currency_label: "€",
 					product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 					platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 					promotion: campaignId,
-					region_id: 22,
-					platform_id: 16,
 					price: devices.price,
 					variation: {
 						variation_name: `${devices_no}u-${billingPeriod}y`,
@@ -917,6 +897,7 @@ class Vlaicu {
 		};
 
 		// get the correct path to get the prices
+		// TODO: add a check for campaign to be not null
 		let productPath = campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
@@ -977,24 +958,18 @@ class Vlaicu {
 		}
 
 		payload.forEach(productVariation => {
-			const yearsSubscription = productVariation.months / 12;
+			const yearsSubscription = Math.ceil(productVariation.months / 12);
 			const devices_no = productVariation.slots;
 
 			const devicesObj = {
 				currency_iso: productVariation.currency,
-				currency_label: "€",
 				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 				promotion: campaignId,
-				region_id: 22,
-				platform_id: 16,
 				price: productVariation.price,
 				variation: {
-					variation_name: `${productVariation.slots}u-${yearsSubscription}y`,
+					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,
-					months: productVariation.months,
-					// billing_period: period.billing_period,
-					// payment_period: period.payment_period
 				}
 			}
 
@@ -1034,7 +1009,7 @@ class StoreConfig {
 		 * default promotion
 		 * @type {string}
 		 */
-		this.campaign = this.getCampaign();
+		this.campaign = this.#getCampaign();
 
 		/**
 		 * @type {{
@@ -1075,7 +1050,7 @@ class StoreConfig {
 		return Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
 	}
 
-	async getCampaign() {
+	async #getCampaign() {
 		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
 			return "";
 		}
