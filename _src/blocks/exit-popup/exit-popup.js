@@ -1,29 +1,26 @@
+import { ProductInfo } from '../../scripts/libs/store/store.js';
 // eslint-disable-next-line no-unused-vars
 export default async function decorate(block) {
   const parentSelector = block.closest('.section');
   const { product, custompid } = parentSelector.dataset;
-  const [alias, variant] = product.split(',');
 
-  block.setAttribute('data-store-context', '');
-  block.setAttribute('data-store-id', alias);
-  block.setAttribute('data-store-department', 'consumer');
-  block.setAttribute('data-store-option', variant);
+  if (product) {
+    const [alias, devices, years] = product.split(',');
+    const products = await Store.getProducts([new ProductInfo(alias, "consumer", custompid)]);
+    const variation = products[alias].getOption(Number(devices), Number(years));
+    const percentPrice = variation.getDiscount('percentage');
 
-  // add custom pid
-  if (custompid) {
-    block.setAttribute('data-store-promotion', custompid);
-  }
+    // config percennt from title
+    const tileDiscountEl = block.querySelector('h5');
+    if (tileDiscountEl) tileDiscountEl.innerHTML = tileDiscountEl.innerHTML.replace('50%', `${percentPrice}% `);
 
-  // config percennt from title
-  const tileDiscountEl = block.querySelector('h5');
-  if (tileDiscountEl) tileDiscountEl.setAttribute('data-store-text-variable', '');
-
-  // config buy btn
-  const buyBtnEl = block.querySelector('p.button-container a');
-  if (buyBtnEl) {
-    buyBtnEl.setAttribute('data-store-buy-link', '');
-    buyBtnEl.querySelector('span').setAttribute('data-store-text-variable', '');
-    buyBtnEl.setAttribute('title', 'Bitdefender');
+    // config buy btn
+    const buyBtnEl = block.querySelector('p.button-container a');
+    if (buyBtnEl) {
+      buyBtnEl.textContent = buyBtnEl.textContent.replace('50%', `${percentPrice}% `);
+      const buyLink = await variation.getStoreUrl();
+      buyBtnEl.setAttribute('href', buyLink);
+    }
   }
 
   // create exit x element
