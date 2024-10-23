@@ -960,10 +960,10 @@ class StoreConfig {
 		this.provider = Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
 
 		/**
-		 * default promotion
-		 * @type {string}
+		 * default promotion for zuora
+		 * @type {Promise<string>}
 		 */
-		this.campaign = this.getCampaign();
+		this.zuoraCampaign = this.#getZuoraCampaign();
 
 		/**
 		 * @type {{
@@ -984,7 +984,11 @@ class StoreConfig {
 		this.httpMethod = "GET";
 	}
 
-	async getCampaign() {
+	async #getZuoraCampaign() {
+		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
+			return "";
+		}
+
 		const jsonFilePath = 'https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json';
 
 		const resp = await fetch(jsonFilePath);
@@ -1033,7 +1037,7 @@ export class Store {
 						|| this.#getUrlPromotion()
 						|| product.promotion
 						|| getMetadata("pid")
-						|| await this.config.campaign;
+						|| await this.config.zuoraCampaign;
 
 					return await this.#apiCall(
 						product
