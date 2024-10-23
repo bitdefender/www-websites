@@ -1052,7 +1052,7 @@ class StoreConfig {
 		/**
 		 * @type {string}
 		 */
-		this.vlaicuEndpoint = "";
+		this.vlaicuEndpoint = window.location.origin;
 		if (Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))) {
 			this.vlaicuEndpoint = "https://service-delivery.nmbapp.net";
 		}
