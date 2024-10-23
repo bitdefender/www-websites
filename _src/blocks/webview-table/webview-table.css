@@ -191,6 +191,7 @@
     height: 1rem;
     width: 0.625rem;
     position: relative;
+    margin-left: 7px;
 }
 
 .webview-table .no-check::after, .webview-table .no-check::before {
