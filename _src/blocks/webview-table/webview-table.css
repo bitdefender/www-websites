@@ -256,6 +256,11 @@
     }
 }
 
+.webview-table-wrapper .light-mode .yes-check::after {
+    border: solid #FFFFFF;
+    border-width: 0 2px 2px 0;
+}
+
 .webview-table-wrapper .light-mode .button {
     background-color: #fff;
 }
