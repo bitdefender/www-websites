@@ -979,7 +979,7 @@ class StoreConfig {
 		};
 
 		/**
-		 * @type {"GET"}
+		 * @type {"POST"}
 		 */
 		this.httpMethod = "POST";
 	}
