@@ -90,6 +90,7 @@
     color: #fff;
     font-weight: 600;
     border: 0.1px solid black;
+    align-items: baseline;
 }
 .webview-table div[role="row"]:last-of-type div[role='cell']:first-child{
     visibility: hidden;
