@@ -490,7 +490,7 @@ main .hero ul.hero-awards li picture img {
 }
 
 main .hero-container.bigger-awards {
-  .ul.hero-awards{
+  .hero-awards{
     padding-bottom: 0px;
   }
 
