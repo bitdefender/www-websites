@@ -467,7 +467,7 @@ main .hero ul.hero-awards {
   align-items: center;
   justify-content: flex-start;
   margin: 0;
-  padding: 40px 0 48px;
+  padding: 40px 0 0px;
   text-align: left;
 }
 
@@ -490,10 +490,6 @@ main .hero ul.hero-awards li picture img {
 }
 
 main .hero-container.bigger-awards {
-  .hero-awards{
-    padding-bottom: 0px;
-  }
-
   .hero ul.hero-awards li picture img {
     height: 96px;
   }
