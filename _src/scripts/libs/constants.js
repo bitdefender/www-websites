@@ -10,10 +10,6 @@ export const Constants = {
 
   ZUROA_LOCALES: ['nl-nl', 'nl-be'],
 
-  VLAICU_LOCALES: ['en-gb'],
-
-  VLAICU_PAGES: ['total-security'],
-
   DEV_DOMAINS: ['localhost', 'stage', '.hlx.'],
 
   PRODUCT_ID_MAPPINGS: {
