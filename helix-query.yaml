@@ -1,12 +1,16 @@
 version: 1
 indices:
-  default:
+  index_en_us:
     include:
-      - /**
+      - /en-us/**
     exclude:
-      - /**/consumer/**/fragmets/**
-    target: /query-index.json
-    properties:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /en-us/query-index.json
+    properties: &minPros
       title:
         select: head > meta[property="og:title"]
         value: attribute(el, "content")
@@ -18,7 +22,7 @@ indices:
         # Assumptions:
         # 1. if the h1 is in a block, than that block is the first one in the document => main > div:first-child > div:first-child h1
         # 2. if the h1 is in the default content, than there are no other blocks before this default content => main > div > h1
-        select: main > div:first-child > div:first-child h1, main > div > h1
+        select: main > div:first-child > div:first-child h1, main div > h1
         value: textContent(el)
       breadcrumbtitle:
         select: head > meta[name="breadcrumb-title"]
@@ -26,3 +30,160 @@ indices:
       robots:
         select: head > meta[name="robots"]
         value: attribute(el, "content")  
+  index_de_de:
+    include:
+      - /de-de/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /de-de/query-index.json
+    properties: *minPros
+  index_en_global:
+    include:
+      - /en-global/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /en-global/query-index.json
+    properties: *minPros
+  index_en_au:
+    include:
+      - /en-au/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /en-au/query-index.json
+    properties: *minPros
+  index_en_gb:
+    include:
+      - /en-gb/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /en-gb/query-index.json
+    properties: *minPros
+  index_es_es:
+    include:
+      - /es-es/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /es-es/query-index.json
+    properties: *minPros
+  index_es_global:
+    include:
+      - /es-global/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /es-global/query-index.json
+    properties: *minPros
+  index_fr_fr:
+    include:
+      - /fr-fr/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /fr-fr/query-index.json
+    properties: *minPros
+  index_it_it:
+    include:
+      - /it-it/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /it-it/query-index.json
+    properties: *minPros
+  index_nl_nl:
+    include:
+      - /nl-nl/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /nl-nl/query-index.json
+    properties: *minPros
+  index_pt_br:
+    include:
+      - /pt-br/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /pt-br/query-index.json
+    properties: *minPros
+  index_pt_pt:
+    include:
+      - /pt-pt/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /pt-pt/query-index.json
+    properties: *minPros
+  index_ro_ro:
+    include:
+      - /ro-ro/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /ro-ro/query-index.json
+    properties: *minPros
+  index_sv_se:
+    include:
+      - /sv-se/**
+    exclude:
+      - /**/consumer/**/fragments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /sv-se/query-index.json
+    properties: *minPros
+  index_zh_hk:
+    include:
+      - /zh-hk/**
+    exclude:
+      - /**/solutions/**/fragments/**
+    target: /zh-hk/query-index.json
+    properties: *minPros
+  index_zh_tw:
+    include:
+      - /zh-tw/**
+    exclude:
+      - /**/consumer/**/fragments/**
+    target: /zh-tw/query-index.json
+    properties: *minPros
