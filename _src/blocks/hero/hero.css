@@ -467,7 +467,7 @@ main .hero ul.hero-awards {
   align-items: center;
   justify-content: flex-start;
   margin: 0;
-  padding: 40px 0 48px;
+  padding: 40px 0 0px;
   text-align: left;
 }
 
@@ -487,6 +487,12 @@ main .hero ul.hero-awards li picture img {
   display: block;
   height: 80px;
   width: auto;
+}
+
+main .hero-container.bigger-awards {
+  .hero ul.hero-awards li picture img {
+    height: 96px;
+  }
 }
 
 main .hero .hero-awards li::after {
@@ -544,6 +550,7 @@ main .v2 .hero .hero-content > div table tr td img {
 main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   width: 70px;
 }
+
 
 @media(max-width: 989px) {
   main .hero.new2024design {
