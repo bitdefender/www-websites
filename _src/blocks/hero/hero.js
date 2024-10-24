@@ -130,6 +130,7 @@ export default function decorate(block) {
     block.setAttribute('data-store-id', alias);
     block.setAttribute('data-store-department', 'consumer');
     block.setAttribute('data-store-option', variant);
+    block.querySelector('div').classList.add('await-loader');
   }
 
   // Add the await-loader class to the button that leads to the thank you page, this is an exception
