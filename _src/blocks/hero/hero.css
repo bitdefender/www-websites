@@ -551,9 +551,6 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   width: 70px;
 }
 
-main .bigger-awards .ul.hero-awards li picture img{
-  width: 96px;
-}
 
 @media(max-width: 989px) {
   main .hero.new2024design {
