@@ -489,6 +489,16 @@ main .hero ul.hero-awards li picture img {
   width: auto;
 }
 
+main .hero-container.bigger-awards {
+  .ul.hero-awards{
+    padding-bottom: 0px;
+  }
+
+  .hero ul.hero-awards li picture img {
+    height: 96px;
+  }
+}
+
 main .hero .hero-awards li::after {
   content: none;
 }
@@ -543,6 +553,10 @@ main .v2 .hero .hero-content > div table tr td img {
 /* stylelint-disable-next-line selector-class-pattern */
 main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   width: 70px;
+}
+
+main .bigger-awards .ul.hero-awards li picture img{
+  width: 96px;
 }
 
 @media(max-width: 989px) {
