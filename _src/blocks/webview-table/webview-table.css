@@ -61,10 +61,12 @@
         line-height: 1;
     }
     p:first-of-type{
-        margin-top: 4px;
+        margin-top: 8px;
+        font-size: 14px;
     }
     p:last-of-type{
-        margin-bottom: 2px;
+        margin-bottom: 4px;
+        font-size: 16px;
     }
 }
 .webview-comparison-header div[role="columnheader"]:first-child {
