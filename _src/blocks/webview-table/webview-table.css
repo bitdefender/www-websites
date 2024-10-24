@@ -34,7 +34,7 @@
     text-align: center;
     font: bold 24px "Segoe UI";
     color: #F7F7F7;
-    margin: 8px 0 2px;
+    margin: 10px 0 10px;
 }
 
 .webview-comparison-header {
@@ -58,9 +58,10 @@
     p{
         margin: 1px;
         padding: 0;
+        line-height: 1;
     }
     p:first-of-type{
-        margin-top: 2px;
+        margin-top: 4px;
     }
     p:last-of-type{
         margin-bottom: 2px;
@@ -87,7 +88,7 @@
     background: #333;
     color: #fff;
     font-weight: 600;
-    border: 0.1px solid black;
+    border-top: 1px solid black;
     align-items: baseline;
 }
 .webview-table div[role="row"]:last-of-type div[role='cell']:first-child{
@@ -95,30 +96,32 @@
 }
 
 .webview-table div[role='row']:last-of-type div[role='cell'] {
+    border-radius: 0 0 4px 4px;
     .buy-box{
         .prod-oldprice{
             text-align: center;
             text-decoration: line-through;
-            font: normal normal normal 14px/19px Segoe UI;
+            font: normal normal normal 14px Segoe UI;
             letter-spacing: 0px;
             opacity: 1;
         }
+
         .prod-newprice{
             text-align: center;
-            font: normal normal bold 20px/26px Segoe UI;
+            font: normal normal bold 24px Segoe UI;
             letter-spacing: 0px;
             color: #FFFFFF;
             opacity: 1;
+            line-height: 0.8;
         }
-
     }
-
 }
 
 .webview-table-wrapper .webview-table .button-container{
     margin-top: 2px;
     margin-bottom: 2px;
 }
+
 .webview-table-wrapper .webview-table .button{
     justify-content: center;
     border: 2px solid #006EFF;
@@ -216,10 +219,6 @@
     .button-text{
         color: #FFFFFF;
     }
-    div[role="cell"]:last-of-type{
-        border-radius: 4px 4px 0 0;
-    }
-
 }
 
 .webview-table-wrapper .light-mode {
@@ -250,6 +249,9 @@
 
 .webview-table-wrapper .light-mode  div[role="cell"] .price_box {
     color: black;
+    .prod-oldprice{
+        color: #515B6D;
+    }
     .prod-newprice{
         color: #000000 !important;
     }
