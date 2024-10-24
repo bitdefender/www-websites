@@ -40,10 +40,12 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters['data-store-click-set-devices'] = label;
     } else {
       const productCode = plans[idx + 1];
+      const variation = plans[idx + 2];
       liStoreParameters['data-store-click-set-product'] = '';
       liStoreParameters['data-store-product-id'] = productCode;
       liStoreParameters['data-store-department'] = 'consumer';
       liStoreParameters['data-product-type'] = productCode.slice(-1) === 'm' ? 'monthly' : 'yearly';
+      liStoreParameters['data-store-product-option'] = variation;
     }
 
     const li = createTag(
