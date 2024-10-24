@@ -441,6 +441,12 @@ export class Product {
 			return option;
 		}
 
+		if (Store.config.provider === "vlaicu" && yearsOption.buyLink) {
+			option.buyLink = yearsOption.buyLink;
+
+			return option;
+		}
+
 		//Zuora settings
 		const windowURL = new URL(window.location.href)
 		const zuoraCart = new URL("/index.html:step=cart?theme=light", Store.config.zuora.cartUrl)
@@ -967,6 +973,7 @@ class Vlaicu {
 				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 				promotion: campaignId,
 				price: productVariation.price,
+				buyLink: productVariation.buyLink,
 				variation: {
 					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,
@@ -998,16 +1005,20 @@ class Vlaicu {
 
 class StoreConfig {
 
-	constructor() {
+	/**
+	 * 
+	 * @param {boolean} vlaicuFlag 
+	 */
+	constructor(vlaicuFlag) {
 		/**
 		 * Api used to fetch the prices
 		 * @type {"init"|"zuora"|"vlaicu"}
 		 */
-		this.provider = this.#getProvider();
+		this.provider = this.#getProvider(vlaicuFlag);
 
 		/**
-		 * default promotion for zuora
-		 * @type {string}
+		 * default promotion
+		 * @type {Promise<string>}
 		 */
 		this.campaign = this.#getCampaign();
 
@@ -1035,31 +1046,7 @@ class StoreConfig {
 		/**
 		 * @type {"GET"|"POST"}
 		 */
-		this.httpMethod = this.#getHTTPMethod();
-	}
-
-	/**
-	 * 
-	 * @returns {string} the http method used to get prices
-	 */
-	#getHTTPMethod() {
-		if (Constants.VLAICU_LOCALES.includes(Page.locale) && Constants.VLAICU_PAGES.includes(Page.pageName)) {
-			return "GET";
-		}
-
-		return "POST";
-	};
-
-	/**
-	 * 
-	 * @returns {string} the prices provider to be used
-	 */
-	#getProvider() {
-		if (Constants.VLAICU_LOCALES.includes(Page.locale) && Constants.VLAICU_PAGES.includes(Page.pageName)) {
-			return "vlaicu";
-		}
-
-		return Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
+		this.httpMethod = this.#getHTTPMethod(vlaicuFlag);
 	}
 
 	async #getCampaign() {
@@ -1077,6 +1064,30 @@ class StoreConfig {
 		const data = await resp.json();
 
 		return data.data[0].CAMPAIGN_NAME;
+	}
+
+	/**
+	 * 
+	 * @returns {"GET"|"POST"} the http method used to get prices
+	 */
+	#getHTTPMethod(vlaicuFlag) {
+		if (vlaicuFlag) {
+			return "GET";
+		}
+
+		return "POST";
+	};
+
+	/**
+	 * @param {boolean} vlaicuFlag
+	 * @returns {"init"|"zuora"|"vlaicu"} the prices provider to be used
+	 */
+	#getProvider(vlaicuFlag) {
+		if (vlaicuFlag) {
+			return "vlaicu";
+		}
+
+		return Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
 	}
 }
 
@@ -1097,8 +1108,7 @@ export class Store {
 	static mappedCountry = this.getCountry();
 	/** Private variables */
 	static baseUrl = Constants.DEV_BASE_URL;
-
-	static config = new StoreConfig();
+	static config = null;
 
 	/**
 	 * Get a product from the api.2checkout.com
@@ -1108,6 +1118,10 @@ export class Store {
 	 */
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
+		
+		if (!this.config) {
+			this.config = new StoreConfig(await Target.getVlaicuFlag());
+		}
 
 		// remove duplicates by id
 		productsInfo = [...new Map(productsInfo.map((product) => [`${product.id}`, product])).values()];
@@ -1156,7 +1170,6 @@ export class Store {
 			}
 		}
 
-		// TODO: setup vlaicu as an option here
 		if (this.config.provider === "vlaicu") {
 			try {
 				const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);

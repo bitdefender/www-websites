@@ -654,12 +654,21 @@ export class Target {
   });
 
   /**
+   * get the flag which marks wether the page should use Vlaicu or not
+   * @returns {Promise<boolean>}
+   */
+  static async getVlaicuFlag() {
+    await this.#staticInit;
+    return Boolean(this.offers?.["vlaicu-flag-mbox"]?.content?.vlaicuFlag || null);
+  }
+
+  /**
    * https://bitdefender.atlassian.net/wiki/spaces/WWW/pages/1661993460/Activating+Promotions+Enhancements+Target
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
     await this.#staticInit;
-    return this.offers?.["initSelector-mbox"]?.content?.pid || null
+    return this.offers?.["initSelector-mbox"]?.content?.pid || null;
   }
 
   /**
@@ -693,7 +702,7 @@ export class Target {
       return [];
     }
 
-    return [...mboxes].map((name, index) => { return { index: ++index, name } });
+    return [...mboxes].map((name, index) => { return { index: index + 2, name } });
   }
 
   static async #getOffers() {
@@ -709,6 +718,7 @@ export class Target {
           execute: {
             mboxes: [
               { index: 0, name: "initSelector-mbox" },
+              { index: 1, name: "vlaicu-flag-mbox" },
               ...mboxes
             ]
           }
