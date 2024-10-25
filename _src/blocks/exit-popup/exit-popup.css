@@ -78,6 +78,10 @@ main .exit-popup-container .block > div:last-of-type a:last-of-type {
   margin: 1em auto;
 }
 
+main .exit-popup-container .block > div:last-of-type a:last-of-type:hover {
+  margin-left: 0;
+}
+
 main .exit-popup-container .block > div:last-of-type p strong {
   font-family: roboto, sans-serif;
   font-size: 24px;
