@@ -1680,7 +1680,6 @@ body > div.header-with-language-banner {
 }
 
 .dex-20729 {
-
   .default-content-wrapper {
     padding: 0 var(--section-desktop-padding);
   }
@@ -1699,6 +1698,15 @@ body > div.header-with-language-banner {
     margin-bottom: 2rem;
     margin-top: 0.5rem;
     font-size: 18px;
+  }
+
+  .products-container h2 {
+    font-size: 32px;
+    margin-bottom: 0;
+  }
+
+  .products-container .default-content-wrapper {
+    margin-bottom: 40px;
   }
 
   h3 {
@@ -1725,6 +1733,12 @@ body > div.header-with-language-banner {
     img {
       height: 100%;
       object-fit: cover;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .new-prod-boxes-container .new-prod-boxes {
+      padding-bottom: 30px;
     }
   }
 }
