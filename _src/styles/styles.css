@@ -1689,4 +1689,31 @@ body > div.header-with-language-banner {
     border-radius: 20px;
     box-shadow: 0px 0px 6px #00000029;
   }
+
+  .columns {
+    min-height: 420px;
+  }
+
+  .columns-img-col {
+    height: 100%;
+
+    picture {
+      position: relative;
+    }
+
+    picture::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0%;
+      bottom: 0;
+      left: -100%;
+      background: transparent linear-gradient(90deg, rgba(246, 246, 246, 1) 0%, rgba(224, 224, 224, 0) 50%);
+    }
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 }
