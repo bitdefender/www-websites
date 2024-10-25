@@ -1038,7 +1038,9 @@ class StoreConfig {
 		/**
 		 * @type {string}
 		 */
-		this.vlaicuEndpoint = "https://www.bitdefender.com";
+		this.vlaicuEndpoint = Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))
+			? "https://www.bitdefender.com"
+			: window.location.origin;
 
 		/**
 		 * @type {"GET"|"POST"}
