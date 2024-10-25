@@ -102,6 +102,61 @@
   height: 225px;
 }
 
+.modal-container .modal-content .section.popup-v2:first-child {
+  border-bottom: 0 none;
+  padding-bottom: 0;
+}
+
+.modal-container .popup-v2 .block div {
+  align-items: baseline;
+}
+.modal-container .popup-v2 p {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 10px 0;
+  font-family: "Arial", sans-serif;
+}
+
+.modal-container .popup-v2 .default-content-wrapper {
+  border-top: 1px solid #dedede;
+  text-align: center;
+  margin-top: 1em;
+  padding-top: 1em;
+}
+
+.modal-container .popup-v2 .default-content-wrapper * {
+  font-family: "Arial", sans-serif;
+}
+
+.modal-container .popup-v2 .default-content-wrapper a {
+  background: #e72325;
+  color: #fff;
+  display: inline-flex;
+  text-align: center;
+  border-radius: 8px;
+  padding: 10px 3em;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  width: auto;
+  border-style: none;
+  cursor: pointer;
+}
+
+.modal-container .popup-v2 .default-content-wrapper a::after {
+  background-color: white;
+}
+
+.modal-container .popup-v2 .default-content-wrapper p {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.modal-container .popup-v2 .columns-wrapper img {
+  height: 28px;
+  width: auto;
+}
+
 @media (min-width: 900px) {
   .modal-container .modal-content {
     padding: 52px 62px 54px 55px;
@@ -259,7 +314,7 @@
 .identity-exposed .modal-container.has-your-identity-been-exposed .form-wrapper .input-error-field {
   margin-bottom: 0.625rem;
 }
-  
+
 .identity-exposed .modal-container.has-your-identity-been-exposed .modal-content img {
   width: 32px;
   height: 32px;
@@ -379,7 +434,7 @@
 
   .identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card .button-container .button-text {
     font-size: 14px;
-  }  
+  }
 }
 
 @media (min-width: 992px) {
