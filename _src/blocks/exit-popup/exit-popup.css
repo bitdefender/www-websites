@@ -7,6 +7,7 @@ main .exit-popup-container {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 9999;
+  display: none;
 }
 
 main .exit-popup-wrapper {
@@ -78,7 +79,7 @@ main .exit-popup-container .block > div:last-of-type a:last-of-type {
   margin: 1em auto;
 }
 
-main .exit-popup-container .block > div:last-of-type a:last-of-type:hover {
+main .exit-popup-container .block > div:last-of-type a:last-of-type:hover::after {
   margin-left: 0;
 }
 
@@ -88,10 +89,8 @@ main .exit-popup-container .block > div:last-of-type p strong {
   line-height: 32px;
 }
 
-
 @media (max-width: 460px) {
   main .exit-popup-container {
     width: 90%;
-
   }
 }
