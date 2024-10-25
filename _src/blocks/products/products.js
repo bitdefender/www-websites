@@ -417,7 +417,6 @@ export default function decorate(block) {
       emptyDiv.style.visibility = 'hidden';
     }
   });
-  matchHeights(block, '.first-year-price-text');
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
