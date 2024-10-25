@@ -1678,3 +1678,15 @@ body > div.header-with-language-banner {
     padding: 10px 0px 8px 13px;
   }
 }
+
+.dex-20729 {
+
+  .default-content-wrapper {
+    padding: 0 var(--section-desktop-padding);
+  }
+
+  .product-card {
+    border-radius: 20px;
+    box-shadow: 0px 0px 6px #00000029;
+  }
+}
