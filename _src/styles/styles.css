@@ -1692,6 +1692,17 @@ body > div.header-with-language-banner {
 
   .columns {
     min-height: 420px;
+    font-family: 'IBM Plex Sans';
+  }
+
+  .columns-wrapper > div.grey-bck p:first-of-type {
+    margin-bottom: 2rem;
+    margin-top: 0.5rem;
+    font-size: 18px;
+  }
+
+  h3 {
+    margin-bottom: 0;
   }
 
   .columns-img-col {
