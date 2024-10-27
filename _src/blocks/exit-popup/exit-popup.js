@@ -64,7 +64,7 @@ export default async function decorate(block) {
     }
   });
 
-  // Close the popup
+  // Close the popup: x-icon + background
   const closePopup = () => {
     const popup = document.querySelector('main .exit-popup-container');
     if (popup) popup.style.display = 'none';
