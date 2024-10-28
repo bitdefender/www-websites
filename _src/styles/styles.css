@@ -1749,6 +1749,10 @@ body > div.header-with-language-banner {
     border: 0.1px solid #00000029;
   }
 
+  .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 {
+    width: 100%;
+  }
+
   @media (min-width: 768px) {
     .new-prod-boxes-container .new-prod-boxes {
       padding-bottom: 30px;
