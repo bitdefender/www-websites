@@ -905,7 +905,7 @@ class Vlaicu {
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
-	// TODO: delete this parameter
+	// TODO: delete this parameter as it is for testing purposes only
 	static campaign = "TSExpired0MRDLP24";
 
 	static async getProductVariations(productId, campaign) {
@@ -913,7 +913,7 @@ class Vlaicu {
 		const pathVariablesResolverObject = {
 			"{locale}": Page.locale,
 			"{bundleId}": productId,
-			"{campaignId}": campaign || this.campaign
+			"{campaignId}": this.campaign // TODO: replace with campaign received as parameter
 		};
 
 		// get the correct path to get the prices
