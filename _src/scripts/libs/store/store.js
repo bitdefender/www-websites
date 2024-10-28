@@ -406,7 +406,7 @@ export class Product {
 		buyCart.searchParams.set("CARD", "2");
 		buyCart.searchParams.set("SHORT_FORM", "1");
 		buyCart.searchParams.set("LANG", Page.langauge);
-		buyCart.searchParams.set("force_country", Store.country);
+		buyCart.searchParams.set("force_country", Store.getCountry());
 
 		if (window.UC_UI) {
 			buyCart.searchParams.set("ucControllerId", window.UC_UI.getControllerId());
