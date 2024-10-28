@@ -265,7 +265,7 @@ export class Product {
 		this.name = product.product_name;
 		this.options = product.variations;
 		this.department = product.department;
-		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : null);
+		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : '');
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
@@ -281,6 +281,22 @@ export class Product {
 
 			return acc;
 		}, {});
+
+		// TODO: remove this if after finishing Vlaicu migration. It is used because in init selector the variation
+		// is wrongly placed as 1-1 instead of 4-1 as it should be for 'pass_sp' and 'pass_spm'
+		// for 'vpn' in init selector it was 10-1 which also needs to be changed
+		if (Store.config.provider === 'vlaicu'
+			&& Object.keys(Constants.WRONG_DEVICES_PRODUCT_IDS).includes(product.product_alias)) {
+			const contentDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].contentDevices;
+			const providerDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].providerDevices
+
+			this.options[contentDevices] = this.options[providerDevices];
+			if (!this.yearDevicesMapping[contentDevices]) {
+				this.yearDevicesMapping[contentDevices] = [providerDevices]
+			} else {
+				this.yearDevicesMapping[contentDevices].push(providerDevices);
+			}	
+		}
 	}
 
 	/**
@@ -727,8 +743,6 @@ export class Product {
 
 class BitCheckout {
 
-	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm"]
-
 	// this products come with device_no set differently from the init-selector api where they are set to 1
 	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
 
@@ -842,7 +856,7 @@ class BitCheckout {
 				return;
 			}
 
-			if (this.monthlyProducts.indexOf(id) !== -1) {
+			if (Constants.MONTHLY_PRODUCTS.indexOf(id) !== -1) {
 				billingPeriod = 1;
 			}
 
@@ -947,15 +961,6 @@ class Vlaicu {
 			return null;
 		}
 
-		/**
-		 * this rules splits one product into multiple products
-		 * for example com.bitdefender.passwordmanager maps 2 products
-		 * Password Manager and Password Manager Shared Plan
-		 */
-		if (Constants.PRODUCT_ID_NAME_MAPPINGS[id]) {
-			payload = payload.filter(product => product.name === Constants.PRODUCT_ID_NAME_MAPPINGS[id])
-		}
-
 		window.StoreProducts.product[id] = {
 			product_alias: id,
 			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
@@ -964,6 +969,24 @@ class Vlaicu {
 		}
 
 		payload.forEach(productVariation => {
+
+			/**
+			 * for monthly products only add the monthly variations
+			 * e.g for vpn-monthly we do not care about the product variation if it passes 12 months (more than a year)
+			 */ 
+			if (Constants.MONTHLY_PRODUCTS.includes(id) && productVariation.months >= 12) {
+				return;
+			}
+
+			/**
+			 * for yearly products only add the yearly variations
+			 * e.g for tsmd we do not care about the product variation if it is below 12 months (less than a year)
+			 */
+
+			if (!Constants.MONTHLY_PRODUCTS.includes(id) && productVariation.months < 12) {
+				return;
+			}
+
 			const yearsSubscription = Math.ceil(productVariation.months / 12);
 			const devices_no = productVariation.slots;
 
@@ -992,6 +1015,11 @@ class Vlaicu {
 				: {};
 			window.StoreProducts.product[id].variations[devices_no][yearsSubscription] = devicesObj;
 		});
+
+		// for the cases where there is no variation available in the price call
+		if (!Object.keys(window.StoreProducts.product[id].variations).length) {
+			return null;
+		}
 
 		return window.StoreProducts.product[id];
 	}
@@ -1049,6 +1077,10 @@ class StoreConfig {
 	}
 
 	async #getCampaign() {
+		if (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain)) {
+			return "global_v2";
+		}
+
 		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
 			return "";
 		}
@@ -1107,6 +1139,10 @@ export class Store {
 	static mappedCountry = this.getCountry();
 	/** Private variables */
 	static baseUrl = Constants.DEV_BASE_URL;
+
+	/**
+	 * @type {StoreConfig | null}
+	 */
 	static config = null;
 
 	/**
@@ -1174,7 +1210,7 @@ export class Store {
 				const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);
 
 				if (!product) {
-					return null
+					return null;
 				}
 
 				return {
