@@ -73,7 +73,7 @@ export class PageLoadStartedEvent {
     let targetExperimentDetails = null;
     if (this.#getMetadata('target-experiment') !== '') {
       const { runTargetExperiment } = await import('../target.js');
-      targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
+      targetExperimentDetails = await runTargetExperiment(this.TARGET_TENANT);
     }
 
     return targetExperimentDetails;
