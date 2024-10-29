@@ -37,4 +37,6 @@ export default async function decorate(block) {
       child.classList.add('under-price-text');
     }
   });
+
+  block.querySelector('a').setAttribute('target', '_blank');
 }
