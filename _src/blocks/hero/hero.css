@@ -545,6 +545,27 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   width: 70px;
 }
 
+main .hero.ferrari{
+  background-color: #006DFF;
+}
+
+main .hero.ferrari .hero-content{
+  display: flex;
+  flex-direction: column;
+  color: #FFF;
+  padding: 20px;
+}
+
+main .hero.ferrari .hero-content img{
+  position: relative;
+  right: 10%;
+}
+
+main .hero.ferrari .breadcrumb{
+  display: none;
+}
+
+
 @media(max-width: 989px) {
   main .hero.new2024design {
     background-color: #006FFF;
@@ -560,6 +581,48 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
 }
 
 @media(min-width: 767px) { /* tablet */
+  main .hero.ferrari{
+    min-height: 715px;
+  }
+
+  main .hero.ferrari .hero-picture picture img{
+    padding-left: 0;
+    object-fit:cover;
+    object-position: bottom;
+  }
+
+  main .hero.ferrari .hero-content{
+    flex-flow: column;
+    padding: 20px 0px 20px 20px;
+    text-align: center;
+    color: #fff;
+    max-width: 85%;
+  }
+
+  main .hero.hero.ferrari .hero-content img{
+    right: 0;
+  }
+
+  main .hero.ferrari .hero-content > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0px 20px 0px 0px;
+
+  }
+  main .hero.ferrari .hero-content > div img{
+    max-height: 225px;
+    max-width: 813px;
+  }
+  main .hero.ferrari h1{
+    font-size: 60px;
+    font-weight: 300;
+  }
+
+  main .hero.ferrari h1 strong{
+    font-weight: 700;
+  }
+
   :root {
     --hero-h1-font-size: 42px;
   }
@@ -590,7 +653,6 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     width: 630px;
   }
 }
-
 @media (min-width: 990px) { /* desktop */
   main .hero.new2024design .hero-content:last-of-type {
     min-height: 360px;
@@ -766,6 +828,10 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     max-width: var(--section-large-desktop-max-width);
     padding-left: var(--section-large-desktop-padding);
     padding-right: var(--section-large-desktop-padding);
+  }
+
+  main.hero.ferrari .hero-content{
+    min-height: 715px;
   }
 
   main .hero.black-background .hero-content {
