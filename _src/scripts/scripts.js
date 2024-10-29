@@ -433,10 +433,11 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
-  console.log('pageIsNotInFragmentsFolder', pageIsNotInFragmentsFolder);
+  doc.querySelector('header').style.height = '0px';
 
   if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     // eslint-disable-next-line no-unused-vars
+    doc.querySelector('header').style.height = 'initial';
     loadHeader(doc.querySelector('header'));
   }
 
