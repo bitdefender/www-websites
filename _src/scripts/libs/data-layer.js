@@ -69,28 +69,28 @@ export class PageLoadStartedEvent {
    * get experiment details from Target
    * @returns {object | null}
    */
-  async #getTargetExperimentDetails() {
-    let targetExperimentDetails = null;
-    if (this.#getMetadata('target-experiment') !== '') {
-      const { runTargetExperiment } = await import('../target.js');
-      targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
-    }
+  // async #getTargetExperimentDetails() {
+  //   let targetExperimentDetails = null;
+  //   if (this.#getMetadata('target-experiment') !== '') {
+  //     const { runTargetExperiment } = await import('../target.js');
+  //     targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
+  //   }
 
-    return targetExperimentDetails;
-  }
+  //   return targetExperimentDetails;
+  // }
 
   /**
    * 
    * @returns {object} - get experiment information
    */
-  #getExperimentDetails() {
-    if (!window.hlx || !window.hlx.experiment) {
-      return null;
-    }
+  // #getExperimentDetails() {
+  //   if (!window.hlx || !window.hlx.experiment) {
+  //     return null;
+  //   }
   
-    const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
-    return { experimentId, experimentVariant };
-  }
+  //   const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
+  //   return { experimentId, experimentVariant };
+  // }
 
   /**
    * 
@@ -198,10 +198,6 @@ export class PageLoadStartedEvent {
     if (!hostname) {
       return;
     }
-
-    const experimentDetails = (await this.#getTargetExperimentDetails()) ?? this.#getExperimentDetails();
-    // eslint-disable-next-line no-console
-    console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
   
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
@@ -216,7 +212,6 @@ export class PageLoadStartedEvent {
       subSubSubSection: null,
       domain: domain,
       domainPartsCount: domainPartsCount,
-      experimentDetails: experimentDetails
     }
   
     if (tags.length) {
@@ -572,15 +567,7 @@ window._Visitor = Visitor;
 
 export class Target {
   static events = {
-    LIBRARY_LOADED: "at-library-loaded",
-    REQUEST_START: "at-request-start",
-    REQUEST_SUCCEEDED: "at-request-succeeded",
-    REQUEST_FAILED: "at-request-failed",
-    CONTENT_RENDERING_START: "at-content-rendering-start",
-    CONTENT_RENDERING_SUCCEEDED: "at-content-rendering-succeeded",
-    CONTENT_RENDERING_FAILED: "at-content-rendering-failed",
-    CONTENT_RENDERING_NO_OFFERS: "at-content-rendering-no-offers",
-    CONTENT_RENDERING_REDIRECT: "at-content-rendering-redirect"
+    LIBRARY_LOADED: "at-library-loaded"
   }
 
   /**
@@ -600,56 +587,10 @@ export class Target {
       return;
     }
 
-    /** 
-     * Semaphor to mark that the offer call was made 
-     * This helps avoid doubled call fot the getOffer
-     * Set before any 'await' as those triggered jumps in the code
-     */
-    let offerCallMade = false;
-
     /** Target wasn't loaded we wait for events from it */
-    [this.events.CONTENT_RENDERING_SUCCEEDED, this.events.CONTENT_RENDERING_NO_OFFERS]
-      .forEach(event => document.addEventListener(event, async () => {
-        if (!offerCallMade) {
-          offerCallMade = true;
-          await this.#getOffers();
-          resolve();
-        }
-      }, { once: true }));
-
-    [this.events.CONTENT_RENDERING_FAILED, this.events.REQUEST_FAILED]
-      .forEach(event => document.addEventListener(event, async () => {
-        if (!offerCallMade) {
-          offerCallMade = true;
-          resolve();
-        }
-      }, { once: true }));
-
-    /** 
-     * Worst case the load event is triggered before the event from Target
-     * as such we try to make the offer call again checking if at least the library was loaded
-     */
-    window.addEventListener("load", async () => {
-      if (!offerCallMade) {
-
-        if (window.adobe?.target) {
-          offerCallMade = true;
-          await this.#getOffers();
-          resolve();
-        } else if (window.location.hostname !== 'localhost') {
-          /** 
-           * Wait for 4 seconds and check if adobe launch was loaded and triggered the offer call
-           */
-          setTimeout(() => {
-            if (!offerCallMade) {
-              offerCallMade = true;
-              resolve();
-            }
-          }, 4000);
-        } else {
-          resolve();
-        }
-      }
+    document.addEventListener(this.events.LIBRARY_LOADED, async () => {
+      await this.#getOffers();
+      resolve();
     }, { once: true });
   });
 

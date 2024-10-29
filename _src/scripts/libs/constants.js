@@ -36,6 +36,14 @@ export const Constants = {
 		dip: "com.bitdefender.dataprivacy",
 		dipm: "com.bitdefender.dataprivacy",
 		avpm: 'com.bitdefender.cl.avplus.v2',
+		ultsec: "",
+		ultsecplus: "",
+		ultsecm: "",
+		ultsecplusm: "",
+		idthefts: "",
+		idtheftp: "",
+		idtheftsm: "",
+		idtheftpm: "",
 		// DLP
 		ts_i: 'com.bitdefender.tsmd.v2',
 		ts_f: 'com.bitdefender.tsmd.v2',
@@ -62,7 +70,7 @@ export const Constants = {
 	pass_spm: "Bitdefender Password Manager Shared Plan"
   },
 
-  MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"],
+  MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m", "ultsecm", "ultsecplusm", "idtheftsm", "idtheftpm"],
 
   WRONG_DEVICES_PRODUCT_IDS: {
 	'pass_sp': {
