@@ -1,5 +1,16 @@
 /* stylelint-disable no-descending-specificity */
 main .exit-popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: none;
+}
+
+main .exit-popup-wrapper {
   width: 460px;
   position: fixed;
   z-index: 999;
@@ -11,7 +22,7 @@ main .exit-popup-container {
   color: black;
   padding: 0;
   box-shadow: 0 3px 6px #00000029;
-  display: none;
+  overflow: hidden;
 }
 
 main .exit-popup-container #exit-action {
@@ -68,16 +79,18 @@ main .exit-popup-container .block > div:last-of-type a:last-of-type {
   margin: 1em auto;
 }
 
+main .exit-popup-container .block > div:last-of-type a:last-of-type:hover::after {
+  margin-left: 0;
+}
+
 main .exit-popup-container .block > div:last-of-type p strong {
   font-family: roboto, sans-serif;
   font-size: 24px;
   line-height: 32px;
 }
 
-
 @media (max-width: 460px) {
   main .exit-popup-container {
     width: 90%;
-
   }
 }
