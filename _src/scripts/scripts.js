@@ -433,8 +433,9 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
+  console.log('pageIsNotInFragmentsFolder', pageIsNotInFragmentsFolder);
 
-  if (pageIsNotInFragmentsFolder || pageIsNotInWebviewFolder) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     // eslint-disable-next-line no-unused-vars
     loadHeader(doc.querySelector('header'));
   }
@@ -445,7 +446,7 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  if (pageIsNotInFragmentsFolder || pageIsNotInWebviewFolder) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     loadFooter(doc.querySelector('footer'));
   }
 
