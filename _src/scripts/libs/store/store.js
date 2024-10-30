@@ -738,7 +738,8 @@ export class Product {
 
 class BitCheckout {
 
-	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm"]
+	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m",
+		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
 
 	// this products come with device_no set differently from the init-selector api where they are set to 1
 	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
