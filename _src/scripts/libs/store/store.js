@@ -17,7 +17,13 @@ export const monthlyProducts = {
 	"smarthome_m": "smarthome_m",
 	"vipsupport_m": "vipsupport_m",
 	"pctuneup_m": "pctuneup_m",
-	"pass_spm": "pass_spm"
+	"pass_spm": "pass_spm",
+	"us_i_m": "us_i_m",
+	"us_f_m": "us_f_m",
+	"us_pf_m": "us_pf_m",
+	"us_pi_m": "us_pi_m",
+	"us_pie_m": "us_pie_m",
+	"us_pfe_m": "us_pfe_m"
 }
 
 export const loadScript = (baseUrl, url) => {
