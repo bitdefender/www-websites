@@ -189,11 +189,11 @@
 
 .trusted-main-carousel.ferrari {
     background-color: #F4F4F4;
-    padding-bottom: 10%;
-    padding-top: 10%;
+    padding-bottom: 5%;
+    padding-top: 5%;
 
     .carousel-container {
-        padding-left: 10%;
+        padding-left: 20px;
         padding-right: 0;
         display: flex;
         justify-content: right;
@@ -220,7 +220,7 @@
     }
 
     .carousel-item iframe {
-        border-radius: 40px;
+        border-radius: 20px;
         width: 200px;
         height: 120px;
     }
@@ -275,15 +275,27 @@
     }
 
     @media (min-width: 767px) {
+        .carousel-container{
+            padding-left: 10%;
+        }
+
+        .carousel-track{
+            gap:50px;
+        }
+
         .carousel-item iframe {
-            min-width: 350px;
-            height: 220px;
+            min-width: 400px;
+            height: 250px;
+            border-radius: 40px;
         }
     }
 
     @media (min-width:1200px) {
+        .carousel-container{
+            padding-left: 15%;
+        }
         .carousel-item iframe {
-            min-width: 500px;
+            min-width: 600px;
             height: 360px;
         }
     }

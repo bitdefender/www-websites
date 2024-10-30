@@ -55,7 +55,7 @@ main .custom-section-container, main .custom-section-wrapper{
     }
 }
 
-.custom-section.quotes-left, .custom-section.custom-section.quotes-right{
+.custom-section.quotes-left, .custom-section.quotes-right{
     width: 100%;
     background-color: #FF2800;
     padding: 20px;
@@ -93,7 +93,7 @@ main .custom-section-container, main .custom-section-wrapper{
     }
 }    
 
-@media (min-width: 800px){
+@media (min-width: 767px){
     .custom-section{
         h3{
             font-size: 54px;
@@ -112,17 +112,7 @@ main .custom-section-container, main .custom-section-wrapper{
         div:last-of-type{
             max-height: 80%;
         }
-        img{
-            display: block;
-            position: absolute;
-            object-fit: cover;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            width: auto;
-            height: 90%;
-            z-index: 0;
-        }
+        
     }
 
     .custom-section.video-block{
@@ -177,8 +167,9 @@ main .custom-section-container, main .custom-section-wrapper{
     .custom-section.quotes-right, .custom-section.quotes-left{
         min-height: 900px;
         font-family: IBM Plex Sans;
-        padding: 7% !important;
+        padding: 7%;
         img{
+            display: block;
             position: absolute;
             top: 0;
             bottom: auto;
@@ -203,10 +194,6 @@ main .custom-section-container, main .custom-section-wrapper{
             font-size: 22px;
             font-weight: 700;
         }
-        
-        >div>div{
-            padding: 12%;
-        }
         p:last-of-type{
             font-size: 26px;
             font-weight: 400;
@@ -227,6 +214,17 @@ main .custom-section-container, main .custom-section-wrapper{
         div:last-of-type{
             max-width: 80%;
         }
+        img{
+            display: block;
+            position: absolute;
+            object-fit: cover;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: auto;
+            height: 90%;
+            z-index: 0;
+        }
     }
 
     .custom-section.image-right{
@@ -246,11 +244,18 @@ main .custom-section-container, main .custom-section-wrapper{
             min-width: auto;
             max-width: 70%;
         }
-    } 
+    }
+    
+    .custom-section.video-block{
+        div:last-of-type {
+            max-width: 100%;
+        }
+    }
 }
 
 @media (min-width: 1200px){
     .custom-section{
+        padding: 7%;
         h3{
             font-size: 54px;
         }
@@ -265,11 +270,12 @@ main .custom-section-container, main .custom-section-wrapper{
         }
 
         .video-container iframe{
-            min-height: 715px;
+            min-height: 550px;
         }
     }
 
     .custom-section.quotes-right, .custom-section.quotes-left{
+        padding: 15%;
         p{
             font-size: 64px;
         }
@@ -280,6 +286,11 @@ main .custom-section-container, main .custom-section-wrapper{
 
 
     .custom-section.image-right{
+        padding: 10% 15%;
+        div:first-child{
+            padding: 0;
+            padding-right: 5%;
+        }
         h2{
             font-size: 42px;
         }
@@ -294,6 +305,7 @@ main .custom-section-container, main .custom-section-wrapper{
         }
         img{
             max-width: 35%;
+            right: 12%;
         }
         div:first-child{
             max-width: 75%;

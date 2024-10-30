@@ -28,7 +28,7 @@ function createCarousel(block, videos, titles) {
     carouselItem.appendChild(videoTitle);
     carouselTrack.appendChild(carouselItem);
     carouselTrack.scroll({
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   });
 
@@ -57,6 +57,7 @@ function createCarousel(block, videos, titles) {
     dots[index].classList.add('active');
 
     currentIndex = index;
+    // eslint-disable-next-line no-unsafe-optional-chaining
     carouselTrack.style.transform = `translateX(-${block.querySelector('.carousel-item')?.offsetWidth * index}px)`;
   }
 }
