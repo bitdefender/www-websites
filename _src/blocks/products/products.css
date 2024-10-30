@@ -517,7 +517,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #2cb43d;
+  background: #2cb43d;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   font-weight: var(--font-weight-bolder);
