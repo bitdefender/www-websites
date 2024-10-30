@@ -1,5 +1,5 @@
 export const Constants = {
-  DEV_BASE_URL: ["localhost", "stage", ".hlx."].some((domain) => 
+  DEV_BASE_URL: ["localhost", "stage", ".aem."].some((domain) => 
     window.location.hostname.includes(domain)) ? 'https://www.bitdefender.com' : '',
 
   FINGERPRINT_LOCAL_STORAGE_NAME: 'rhvID',
@@ -10,5 +10,5 @@ export const Constants = {
 
   ZUROA_LOCALES: ['nl-nl', 'nl-be'],
 
-  DEV_DOMAINS: ["localhost", "stage", ".hlx."],
+  DEV_DOMAINS: ["localhost", "stage", ".aem."],
 }

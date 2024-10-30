@@ -801,7 +801,7 @@ class BitCheckout {
 		if (/^(localhost|local.bitdefender.com)/.test(hostname)) {
 			return '3405af40-c88e-11ed-9a49-e17059797c0c';
 		}
-		if (/^(author-p23952-e81192|dev1|.hlx.)/.test(hostname)) {
+		if (/^(author-p23952-e81192|dev1|.aem.)/.test(hostname)) {
 			return '91d619d0-c88e-11ed-9ff9-3bfdc38b7fc4';
 		}
 		if (/^(author-p23952-e68355|stage)/.test(hostname)) {

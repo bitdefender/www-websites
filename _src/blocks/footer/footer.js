@@ -129,7 +129,7 @@ async function runLandingpageLogic(block) {
 
 async function runAemFooterLogic() {
   // fetch footer content
-  const aemFooterHostname = window.location.hostname.includes('.hlx.')
+  const aemFooterHostname = window.location.hostname.includes('.aem.')
     || window.location.hostname.includes('localhost')
     ? 'https://stage.bitdefender.com'
     : '';
