@@ -414,7 +414,7 @@ async function runDefaultHeaderLogic(block) {
 
       const aemHeaderHostname = window.location.hostname.includes('.hlx.')
         || window.location.hostname.includes('localhost')
-        ? 'https://www.bitdefender.com'
+        ? 'https://stage.bitdefender.com'
         : '';
 
       const aemHeaderFetch = await fetch(`${aemHeaderHostname}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`);
@@ -431,7 +431,7 @@ async function runDefaultHeaderLogic(block) {
       contentDiv.innerHTML = aemHeaderHtml;
 
       // make image paths absolute for non-production environments
-      if (aemHeaderHostname === 'https://www.bitdefender.com') {
+      if (aemHeaderHostname === 'https://stage.bitdefender.com') {
         makeImagePathsAbsolute(contentDiv, aemHeaderHostname);
       }
 
