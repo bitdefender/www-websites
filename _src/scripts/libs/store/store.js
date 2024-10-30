@@ -400,6 +400,7 @@ export class Product {
 	 * @returns {ProductOption} - option containing price, discounted price and store url
 	 */
 	getOption(devices, years, bundle) {
+		const productVariation = `${devices}-${years}`;
 		const devicesOption = this.options[devices];
 		const yearsOption = devicesOption && devicesOption[years];
 
@@ -453,6 +454,13 @@ export class Product {
 			if (!option.priceDiscounted && !bundle.priceDiscounted) {
 				option.price = Number(Number(option.price + bundle.price).toFixed(2));
 			}
+		}
+
+		// replace the buy links with target links if they exist and return the option
+		if (Store.targetBuyLinkMappings[this.productAlias]
+			&& Store.targetBuyLinkMappings[this.productAlias][productVariation]) {
+			option.buyLink = Store.targetBuyLinkMappings[this.productAlias][productVariation];
+			return option;
 		}
 
 		//Init Selector Settings
@@ -1028,6 +1036,7 @@ export class Store {
 	static baseUrl = Constants.DEV_BASE_URL;
 
 	static config = new StoreConfig();
+	static targetBuyLinkMappings = null;
 
 	/**
 	 * Get a product from the api.2checkout.com
@@ -1037,6 +1046,11 @@ export class Store {
 	 */
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
+
+		// get the target buyLink mappings
+		if (!this.targetBuyLinkMappings) {
+			this.targetBuyLinkMappings = await Target.getBuyLinksMapping();
+		}
 
 		// remove duplicates by id
 		productsInfo = [...new Map(productsInfo.map((product) => [`${product.id}`, product])).values()];
