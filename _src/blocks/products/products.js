@@ -150,7 +150,7 @@ function renderHighlightSavings(text = 'Save', percent = '') {
     'div',
     {
       'data-store-hide': 'no-price=discounted;type=visibility',
-      class: 'highlight',
+      class: 'highlight await-loader',
       style: 'display=none',
     },
     `${highlighSaving.outerHTML}`,
