@@ -419,6 +419,14 @@ export default async function decorate(block) {
     decorateIcons(block.closest('.section'));
   }
 
+  if (blockParent.classList.contains('same-height-lists')) {
+    const prodCard = block.querySelector('.prod_box');
+    const featureLists = prodCard?.querySelectorAll('ul');
+    featureLists?.forEach((list, idx) => {
+      matchHeights(block, `ul:nth-of-type(${idx + 1})`);
+    });
+  }
+
   matchHeights(block, '.subtitle');
   matchHeights(block, 'h2');
   matchHeights(block, 'h4');
