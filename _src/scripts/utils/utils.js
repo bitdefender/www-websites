@@ -633,12 +633,12 @@ export async function matchHeights(targetNode, selector) {
   };
 
   const observer = new MutationObserver(matchHeightsCallback);
-  const resizeObserver = new ResizeObserver((entries) => {
+  const resizeObserver = new ResizeObserver(debounce((entries) => {
     // eslint-disable-next-line no-unused-vars
     entries.forEach((entry) => {
       adjustHeights();
     });
-  });
+  }), 100);
 
   if (targetNode) {
     observer.observe(targetNode, { childList: true, subtree: true });
