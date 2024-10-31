@@ -40,10 +40,12 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters['data-store-click-set-devices'] = label;
     } else {
       const productCode = plans[idx + 1];
+      const variation = plans[idx + 2];
       liStoreParameters['data-store-click-set-product'] = '';
       liStoreParameters['data-store-product-id'] = productCode;
       liStoreParameters['data-store-department'] = 'consumer';
       liStoreParameters['data-product-type'] = productCode.slice(-1) === 'm' ? 'monthly' : 'yearly';
+      liStoreParameters['data-store-product-option'] = variation;
     }
 
     const li = createTag(
@@ -148,7 +150,7 @@ function renderHighlightSavings(text = 'Save', percent = '') {
     'div',
     {
       'data-store-hide': 'no-price=discounted;type=visibility',
-      class: 'highlight',
+      class: 'highlight await-loader',
       style: 'display=none',
     },
     `${highlighSaving.outerHTML}`,
@@ -322,11 +324,13 @@ export default function decorate(block) {
 
       col.classList.add('product-card');
       col.setAttribute('data-store-context', '');
-      col.setAttribute('data-store-id', plans[plansIndex].productCode);
-      col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
+      if (plans[plansIndex]) {
+        col.setAttribute('data-store-id', plans[plansIndex].productCode);
+        col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
+      }
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', storeEvent);
-      col.querySelector('.button-container a').setAttribute('data-store-buy-link', '');
+      col.querySelector('.button-container a')?.setAttribute('data-store-buy-link', '');
 
       block.appendChild(col);
       renderNanoBlocks(col, undefined, idxParent);
@@ -385,18 +389,21 @@ export default function decorate(block) {
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
-    const priceElements = card.querySelectorAll('.price.nanoblock');
-    if (priceElements.length >= 2) {
-      const secondToLastPrice = priceElements[priceElements.length - 2];
-      const previousElement = secondToLastPrice.previousElementSibling;
-      if (previousElement && previousElement.tagName.toLowerCase() === 'p') {
-        previousElement.classList.add('first-year-price-text');
-      } else {
-        const newP = document.createElement('p');
-        newP.classList.add('first-year-price-text');
-        secondToLastPrice.before(newP);
-      }
+    const hasImage = card.querySelector('img') !== null;
+
+    if (hasImage) {
+      // If the image exists, set max-width to the paragraph next to the image
+      const firstPElement = card.querySelector('p:not(:has(img, svg))');
+      window.addEventListener('resize', () => {
+        if (firstPElement && window.matchMedia('(min-width: 1200px)').matches) {
+          firstPElement.style.maxWidth = '75%';
+        } else {
+          firstPElement.style.maxWidth = '';
+        }
+      });
+      window.dispatchEvent(new Event('resize'));
     }
+
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
@@ -410,7 +417,6 @@ export default function decorate(block) {
       emptyDiv.style.visibility = 'hidden';
     }
   });
-  matchHeights(block, '.first-year-price-text');
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');

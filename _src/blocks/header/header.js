@@ -2,9 +2,26 @@ import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
 } from '../../scripts/lib-franklin.js';
 
-import { adobeMcAppendVisitorId, getDomain } from '../../scripts/utils/utils.js';
+import {
+  adobeMcAppendVisitorId, getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
+} from '../../scripts/utils/utils.js';
 
-import { decorateBlockWithRegionId, decorateLinkWithLinkTrackingId } from '../../scripts/scripts.js';
+function makeImagePathsAbsolute(contentDiv, baseUrl) {
+  contentDiv.querySelectorAll('img').forEach((imgElement) => {
+    // Update the `src` attribute with an absolute URL
+    imgElement.src = `${baseUrl}${imgElement.getAttribute('src')}`;
+
+    // Function to update relative paths in `srcset` with absolute URLs
+    function makeSrcsetAbsolute(srcset) {
+      return srcset.replace(/(?:,|^)\s*(\/[^\s,]+)/g, (match, path) => match.replace(path, `${baseUrl}${path}`));
+    }
+
+    // Update the `srcset` attribute with absolute URLs
+    if (imgElement.srcset) {
+      imgElement.srcset = makeSrcsetAbsolute(imgElement.srcset, baseUrl);
+    }
+  });
+}
 
 function createLoginModal() {
   const loginModal = document.querySelector('nav > div:nth-child(4)');
@@ -405,7 +422,6 @@ async function runDefaultHeaderLogic(block) {
         return;
       }
       const aemHeaderHtml = await aemHeaderFetch.text();
-
       const nav = document.createElement('div');
       const shadowRoot = nav.attachShadow({ mode: 'open' });
 
@@ -413,6 +429,12 @@ async function runDefaultHeaderLogic(block) {
       contentDiv.style.display = 'none';
 
       contentDiv.innerHTML = aemHeaderHtml;
+
+      // make image paths absolute for non-production environments
+      if (aemHeaderHostname === 'https://stage.bitdefender.com') {
+        makeImagePathsAbsolute(contentDiv, aemHeaderHostname);
+      }
+
       const loadedLinks = [];
       contentDiv.querySelectorAll('link').forEach((linkElement) => {
         // update the links so that they work on all Franklin domains

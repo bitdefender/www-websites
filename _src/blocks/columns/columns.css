@@ -515,6 +515,16 @@
   border-radius: 0;
 }
 
+.columns .tag-dark-blue {
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  padding: 4px 15px;
+  border-radius: 16px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     flex-direction: unset;
@@ -524,6 +534,11 @@
 }
 
 @media (min-width: 767px) {
+  .columns-container.space-between .columns > div {
+    align-items: stretch;
+  }
+
+
   .columns-container.chat-options .columns > div > div {
     padding: 2em;
   }
@@ -541,6 +556,12 @@
 
   .percent-table .columns table tr td:first-of-type {
     padding-right: 0.5em;
+  }
+
+  .columns-container.space-between .columns > div > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 }
 
@@ -596,7 +617,7 @@
   .columns.awards > div > div {
     flex: 0;
   }
-  
+
   /* stylelint-disable-next-line selector-class-pattern */
   .section.b_mark .columns-img-col img {
     margin-top: -200px;

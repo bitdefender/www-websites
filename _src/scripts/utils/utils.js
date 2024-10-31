@@ -1,6 +1,5 @@
 import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
 import Page from '../libs/page.js';
-import ZuoraNLClass from '../zuora.js';
 
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
@@ -144,8 +143,6 @@ export function getParamValue(param) {
   return urlParams.get(param);
 }
 
-const cacheResponse = new Map();
-
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
   const el = document.createElement(tag);
@@ -171,68 +168,6 @@ export function createTag(tag, attributes, html) {
 function isZuora() {
   const url = new URL(window.location.href);
   return url.pathname.includes('/nl-nl/') || url.pathname.includes('/nl-be/');
-}
-
-async function findProductVariant(cachedResponse, variant) {
-  if (!isZuora()) {
-    const response = await cachedResponse;
-    if (!response.ok) throw new Error(`${response.statusText}`);
-    const json = await response.clone().json();
-
-    // eslint-disable-next-line guard-for-in,no-restricted-syntax
-    for (const i in json.data.product.variations) {
-      // eslint-disable-next-line guard-for-in,no-restricted-syntax
-      for (const j in json.data.product.variations[i]) {
-        const v = json.data.product.variations[i][j];
-        v.product_name = json.data.product.product_name;
-        if (v.variation.variation_name === variant) {
-          return v;
-        }
-      }
-    }
-
-    throw new Error('Variant not found');
-  }
-
-  // zuora logic
-  // eslint-disable-next-line no-promise-executor-return
-  await new Promise((res) => setTimeout(res, 50));
-
-  const resp = cachedResponse.selected_variation;
-  const units = cachedResponse.selected_users;
-
-  const zuoraFormatedVariant = {
-    buy_link: cachedResponse.buy_link,
-    active_platform: null,
-    avangate_variation_prefix: null,
-    currency_id: null,
-    currency_iso: resp.currency_iso,
-    currency_label: resp.currency_label,
-    discount: {
-      discounted_price: resp.discount.discounted_price,
-      discount_value: resp.discount.discount_value,
-      discount_type: null,
-    },
-    in_selector: null,
-    platform_id: resp.platform_id,
-    platform_product_id: null, // todo not present '30338209',
-    price: resp.price,
-    product_id: resp.product_id,
-    promotion: resp.promotion,
-    promotion_functions: null,
-    region_id: resp.region_id,
-    variation: {
-      variation_id: null,
-      variation_name: resp.variation.variation_name, // todo not present
-      dimension_id: null,
-      dimension_value: units, // todo not present
-      years: resp.variation.years,
-    },
-    variation_active: null,
-    variation_id: resp.variation_id,
-  };
-
-  return zuoraFormatedVariant;
 }
 
 export function getMetadata(name) {
@@ -357,90 +292,6 @@ export function formatPrice(price, currency) {
   }
   // const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price);
-}
-
-/**
- * Fetches a product from the Bitdefender store.
- * @param code The product code
- * @param variant The product variant
- * @returns {Promise<*>}
- * hk - 51, tw - 52
- */
-export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
-  const url = new URL(window.location.href);
-  const { locale } = Page;
-  if (GLOBAL_V2_LOCALES.includes(locale)) {
-    // eslint-disable-next-line no-param-reassign
-    pid = 'global_v2';
-  }
-
-  if (!isZuora()) {
-    let FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
-    const data = new FormData();
-    // extract pid from url
-
-    if (!pid) {
-      // eslint-disable-next-line no-param-reassign
-      pid = url.searchParams.get('pid') || getMetadata('pid');
-    }
-
-    data.append('data', JSON.stringify({
-      ev: 1,
-      product_id: code,
-      config: {
-        extra_params: {
-          // eslint-disable-next-line object-shorthand
-          pid: pid,
-        },
-      },
-    }));
-
-    if (url.hostname.includes('bitdefender.co.uk')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '3';
-      data.set('data', JSON.stringify(newData));
-    }
-
-    if (url.hostname.includes('bitdefender.fr')) {
-      const newData = JSON.parse(data.get('data'));
-      newData.config.force_region = '14';
-      data.set('data', JSON.stringify(newData));
-    }
-
-    const currentPriceSetup = PRICE_LOCALE_MAP.get(locale) || 'en-us';
-    const newData = JSON.parse(data.get('data'));
-    FETCH_URL = `${FETCH_URL}?force_country=${currentPriceSetup.force_country}`;
-    newData.config.country_code = currentPriceSetup.country_code;
-    data.set('data', JSON.stringify(newData));
-
-    if (cacheResponse.has(code)) {
-      return findProductVariant(cacheResponse.get(code), variant);
-    }
-
-    // we don't await the response here, because we want to cache it
-    const response = fetch(FETCH_URL, {
-      method: 'POST',
-      body: data,
-    });
-
-    cacheResponse.set(code, response);
-    return findProductVariant(response, variant);
-  }
-
-  // zuora logic
-  // if (cacheResponse.has(code)) {
-  //   return findProductVariant(cacheResponse.get(code), variant);
-  // }
-
-  const variantSplit = variant.split('-');
-  const units = variantSplit[0].split('u')[0];
-  const years = variantSplit[1].split('y')[0];
-  const campaign = getParamValue('campaign');
-  const zuoraResponse = await ZuoraNLClass.loadProduct(`${code}/${units}/${years}`, campaign);
-  // zuoraResponse.ok = true;
-
-  // cacheResponse.set(code, zuoraResponse);
-  return findProductVariant(zuoraResponse, variant);
 }
 
 const nanoBlocks = new Map();
@@ -782,12 +633,12 @@ export async function matchHeights(targetNode, selector) {
   };
 
   const observer = new MutationObserver(matchHeightsCallback);
-  const resizeObserver = new ResizeObserver((entries) => {
+  const resizeObserver = new ResizeObserver(debounce((entries) => {
     // eslint-disable-next-line no-unused-vars
     entries.forEach((entry) => {
       adjustHeights();
     });
-  });
+  }), 100);
 
   if (targetNode) {
     observer.observe(targetNode, { childList: true, subtree: true });
@@ -899,4 +750,76 @@ export function getDomain() {
 export function isView(viewport) {
   const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
   return !!(element && getComputedStyle(element).display !== 'none');
+}
+
+/**
+ * Returns the current user operating system based on userAgent
+ * @returns {String}
+ */
+export function getOperatingSystem(userAgent) {
+  const systems = [
+    ['Windows NT 10.0', 'Windows 10'],
+    ['Windows NT 6.2', 'Windows 8'],
+    ['Windows NT 6.1', 'Windows 7'],
+    ['Windows NT 6.0', 'Windows Vista'],
+    ['Windows NT 5.1', 'Windows XP'],
+    ['Windows NT 5.0', 'Windows 2000'],
+    ['X11', 'X11'],
+    ['Linux', 'Linux'],
+    ['Android', 'Android'],
+    ['iPhone', 'iOS'],
+    ['iPod', 'iOS'],
+    ['iPad', 'iOS'],
+    ['Mac', 'MacOS'],
+  ];
+
+  return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
+}
+
+export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSelector = null) {
+  // Get user's operating system
+  const { userAgent } = navigator;
+  const userOS = getOperatingSystem(userAgent);
+
+  // Open the appropriate URL based on the OS
+  let openUrl;
+  switch (userOS) {
+    case 'MacOS':
+      openUrl = urlMacos;
+      break;
+    case 'Windows 10':
+    case 'Windows 8':
+    case 'Windows 7':
+    case 'Windows Vista':
+    case 'Windows XP':
+    case 'Windows 2000':
+      openUrl = urlWindows;
+      break;
+    case 'Linux':
+    case 'Android':
+      openUrl = urlAndroid;
+      break;
+    case 'iOS':
+      openUrl = urlIos;
+      break;
+    default:
+      openUrl = null; // Fallback or 'Unknown' case
+  }
+
+  if (openUrl) {
+    if (anchorSelector) {
+      anchorSelector.href = openUrl;
+    } else {
+      window.open(openUrl, '_self');
+    }
+  }
+}
+
+export function decorateBlockWithRegionId(element, id) {
+  // we could consider to use `element.setAttribute('s-object-region', id);` in the future
+  if (element) element.id = id;
+}
+
+export function decorateLinkWithLinkTrackingId(element, id) {
+  if (element) element.setAttribute('s-object-id', id);
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // Description: Hero block
 import {
   createTag,
@@ -89,6 +90,7 @@ export default function decorate(block) {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
     signature,
+    percentProduct,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -118,5 +120,22 @@ export default function decorate(block) {
         modalButton.setAttribute('data-stop-automatic-modal-refresh', true);
       });
     }
+  }
+
+  // make discount dynamic
+  if (percentProduct) {
+    const [alias, variant] = percentProduct.split(',');
+    block.setAttribute('data-store-context', '');
+    block.setAttribute('data-store-text-variable', '');
+    block.setAttribute('data-store-id', alias);
+    block.setAttribute('data-store-department', 'consumer');
+    block.setAttribute('data-store-option', variant);
+    block.querySelector('div').classList.add('await-loader');
+  }
+
+  // Add the await-loader class to the button that leads to the thank you page, this is an exception
+  // for the free antivirus page
+  if (block.querySelector('.button-container a[href*="/consumer/thank-you"]')) {
+    block.querySelector('.button-container a[href*="/consumer/thank-you"]').classList.add('await-loader');
   }
 }
