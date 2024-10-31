@@ -202,6 +202,7 @@
 .thank-you-for-downloading .modal-content img {
   width: 164px;
   height: 164px;
+  object-fit: contain;
 }
 
 .thank-you-for-downloading .modal-content .columns p {
