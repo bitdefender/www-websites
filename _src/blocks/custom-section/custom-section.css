@@ -316,7 +316,10 @@ main .custom-section-container, main .custom-section-wrapper{
         }
         a.button.primary{
             font-size: 23px;
-            padding: 16px  23px;
+            padding: 15px  29px;
+        }
+        a.button span.button-text{
+            margin-left: 14px;
         }
     }
 }
