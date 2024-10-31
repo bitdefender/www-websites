@@ -69,28 +69,28 @@ export class PageLoadStartedEvent {
    * get experiment details from Target
    * @returns {object | null}
    */
-  // async #getTargetExperimentDetails() {
-  //   let targetExperimentDetails = null;
-  //   if (this.#getMetadata('target-experiment') !== '') {
-  //     const { runTargetExperiment } = await import('../target.js');
-  //     targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
-  //   }
+  async #getTargetExperimentDetails() {
+    let targetExperimentDetails = null;
+    if (this.#getMetadata('target-experiment') !== '') {
+      const { runTargetExperiment } = await import('../target.js');
+      targetExperimentDetails = await runTargetExperiment(this.TARGET_TENANT);
+    }
 
-  //   return targetExperimentDetails;
-  // }
+    return targetExperimentDetails;
+  }
 
   /**
    * 
    * @returns {object} - get experiment information
    */
-  // #getExperimentDetails() {
-  //   if (!window.hlx || !window.hlx.experiment) {
-  //     return null;
-  //   }
+  #getExperimentDetails() {
+    if (!window.hlx || !window.hlx.experiment) {
+      return null;
+    }
   
-  //   const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
-  //   return { experimentId, experimentVariant };
-  // }
+    const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
+    return { experimentId, experimentVariant };
+  }
 
   /**
    * 
@@ -198,6 +198,10 @@ export class PageLoadStartedEvent {
     if (!hostname) {
       return;
     }
+
+    const experimentDetails = (await this.#getTargetExperimentDetails()) ?? this.#getExperimentDetails();
+    // eslint-disable-next-line no-console
+    console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
   
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
@@ -212,6 +216,7 @@ export class PageLoadStartedEvent {
       subSubSubSection: null,
       domain: domain,
       domainPartsCount: domainPartsCount,
+      experimentDetails: experimentDetails
     }
   
     if (tags.length) {
@@ -604,6 +609,26 @@ export class Target {
   }
 
   /**
+   * get the product-buy link mappings from Target (
+   *  e.g
+   *  {
+   *    "is": {
+   *      "5-1": [buyLink],
+   *      "10-1": [buyLink]
+   *    },
+   *    "tsmd": {
+   *      ...
+   *    }
+   *  }
+   * )
+   * @returns {Promise<object>}
+   */
+  static async getBuyLinksMapping() {
+    await this.#staticInit;
+    return this.offers?.["buyLinks-mbox"]?.content || {};
+  }
+
+  /**
    * https://bitdefender.atlassian.net/wiki/spaces/WWW/pages/1661993460/Activating+Promotions+Enhancements+Target
    * @returns {Promise<string|null>}
    */
@@ -643,7 +668,7 @@ export class Target {
       return [];
     }
 
-    return [...mboxes].map((name, index) => { return { index: index + 2, name } });
+    return [...mboxes].map((name, index) => { return { index: index + 3, name } });
   }
 
   static async #getOffers() {
@@ -660,6 +685,7 @@ export class Target {
             mboxes: [
               { index: 0, name: "initSelector-mbox" },
               { index: 1, name: "vlaicu-flag-mbox" },
+              { index: 2, name: "buyLinks-mbox"},
               ...mboxes
             ]
           }

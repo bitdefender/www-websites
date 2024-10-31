@@ -17,7 +17,13 @@ export const monthlyProducts = {
 	"smarthome_m": "smarthome_m",
 	"vipsupport_m": "vipsupport_m",
 	"pctuneup_m": "pctuneup_m",
-	"pass_spm": "pass_spm"
+	"pass_spm": "pass_spm",
+	"us_i_m": "us_i_m",
+	"us_f_m": "us_f_m",
+	"us_pf_m": "us_pf_m",
+	"us_pi_m": "us_pi_m",
+	"us_pie_m": "us_pie_m",
+	"us_pfe_m": "us_pfe_m"
 }
 
 export const loadScript = (baseUrl, url) => {
@@ -393,6 +399,7 @@ export class Product {
 	 * @returns {ProductOption} - option containing price, discounted price and store url
 	 */
 	getOption(devices, years, bundle) {
+		const productVariation = `${devices}-${years}`;
 		const devicesOption = this.options[devices];
 		const yearsOption = devicesOption && devicesOption[years];
 
@@ -446,6 +453,13 @@ export class Product {
 			if (!option.priceDiscounted && !bundle.priceDiscounted) {
 				option.price = Number(Number(option.price + bundle.price).toFixed(2));
 			}
+		}
+
+		// replace the buy links with target links if they exist and return the option
+		if (Store.targetBuyLinkMappings[this.productAlias]
+			&& Store.targetBuyLinkMappings[this.productAlias][productVariation]) {
+			option.buyLink = Store.targetBuyLinkMappings[this.productAlias][productVariation];
+			return option;
 		}
 
 		//Init Selector Settings
@@ -852,7 +866,7 @@ class BitCheckout {
 					billingPeriod = 10;
 			}
 
-			if (this.monthlyProducts.indexOf(id) === -1 && billingPeriod === 0 || this.monthlyProducts.indexOf(id) !== -1 && billingPeriod !== 0) {
+			if (Constants.MONTHLY_PRODUCTS.indexOf(id) === -1 && billingPeriod === 0 || Constants.MONTHLY_PRODUCTS.indexOf(id) !== -1 && billingPeriod !== 0) {
 				return;
 			}
 
@@ -1127,7 +1141,8 @@ export class Store {
 		gb: "uk",
 		ch: "de",
 		us: "en",
-		mx: "en"
+		mx: "en",
+		nz: "au",
 	}
 
 	static consumer = "consumer";
@@ -1144,6 +1159,7 @@ export class Store {
 	 * @type {StoreConfig | null}
 	 */
 	static config = null;
+	static targetBuyLinkMappings = null;
 
 	/**
 	 * Get a product from the api.2checkout.com
@@ -1154,8 +1170,14 @@ export class Store {
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
 		
+		// create the store config if it does not exist
 		if (!this.config) {
 			this.config = new StoreConfig(await Target.getVlaicuFlag());
+		}
+
+		// get the target buyLink mappings
+		if (!this.targetBuyLinkMappings) {
+			this.targetBuyLinkMappings = await Target.getBuyLinksMapping();
 		}
 
 		// remove duplicates by id
