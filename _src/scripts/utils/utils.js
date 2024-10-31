@@ -632,8 +632,7 @@ export async function matchHeights(targetNode, selector) {
     });
   };
 
-
-  const debounce2 = (func, wait, immediate) => {
+  const debounceObserver = (func, wait, immediate) => {
     let timeout;
 
     return (...args) => {
@@ -654,7 +653,7 @@ export async function matchHeights(targetNode, selector) {
   };
 
   const observer = new MutationObserver(matchHeightsCallback);
-  const resizeObserver = new ResizeObserver(debounce2((entries) => {
+  const resizeObserver = new ResizeObserver(debounceObserver((entries) => {
     // eslint-disable-next-line no-unused-vars
     entries.forEach((entry) => {
       adjustHeights();
