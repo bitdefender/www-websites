@@ -360,6 +360,10 @@ main .hero a.button.modal, main .hero a.button.central {
     justify-content: center;
     align-items: center;
   }
+
+  main .hero.ferrari h1{
+    max-width: 80%;
+  }
 }
 
 main .hero a.button span.button-text {
@@ -617,6 +621,7 @@ main .hero.ferrari .breadcrumb{
   main .hero.ferrari h1{
     font-size: 60px;
     font-weight: 300;
+    align-self: center;
   }
 
   main .hero.ferrari h1 strong{
