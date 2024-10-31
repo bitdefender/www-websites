@@ -674,20 +674,11 @@ export class Target {
    * @returns {[string]}
    */
   static #getAllMboxes() {
-    const mboxes = [...document.querySelectorAll("[data-mboxes]")]
-      .map(mboxes => {
-        try {
-          return JSON.parse(mboxes.dataset.mboxes)
-        } catch (error) {
-          console.warn(error);
-          return null;
-        }
+    const mboxes = new Set([...document.querySelectorAll("[data-mbox]")]
+      .map(mbox => {
+        return mbox.dataset.mbox;
       })
-      .filter(Boolean)
-      .reduce((acc, mboxes) => {
-        mboxes.forEach(mbox => acc.add(mbox));
-        return acc;
-      }, new Set());
+      .filter(Boolean));
 
     if (!mboxes) {
       return [];
