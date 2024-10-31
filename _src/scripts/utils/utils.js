@@ -632,33 +632,13 @@ export async function matchHeights(targetNode, selector) {
     });
   };
 
-  const debounceObserver = (func, wait, immediate) => {
-    let timeout;
-
-    return (...args) => {
-      const later = () => {
-        timeout = null;
-        if (!immediate) {
-          func(args);
-        }
-      };
-
-      const callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) {
-        func(args);
-      }
-    };
-  };
-
   const observer = new MutationObserver(matchHeightsCallback);
-  const resizeObserver = new ResizeObserver(debounceObserver((entries) => {
+  const resizeObserver = new ResizeObserver(debounce((entries) => {
     // eslint-disable-next-line no-unused-vars
     entries.forEach((entry) => {
       adjustHeights();
     });
-  }), 100, false);
+  }), 100);
 
   if (targetNode) {
     observer.observe(targetNode, { childList: true, subtree: true });
