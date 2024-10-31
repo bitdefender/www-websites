@@ -1014,7 +1014,8 @@ export class Store {
 		gb: "uk",
 		ch: "de",
 		us: "en",
-		mx: "en"
+		mx: "en",
+		nz: "au",
 	}
 
 	static consumer = "consumer";
