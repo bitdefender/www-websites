@@ -1588,7 +1588,7 @@ main .section.blue a.button.modal::after {
   cursor: default;
   min-height: 2rem;
   pointer-events: none;
-} 
+}
 
 .await-loader * {
   visibility: hidden;
@@ -1618,6 +1618,7 @@ body > div:first-child {
 
 body > div.header-with-language-banner {
   height: auto;
+  overflow: hidden;
 }
 
 .visibility-hidden {

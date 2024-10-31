@@ -17,7 +17,7 @@
     color: var(--white);
     font-family: var(--font-ibm);
     position: relative;
-    background: var(--blue);
+    background: black;
 }
 
 .trusted p {
@@ -360,7 +360,7 @@ main .section.link-right a {
 }
 
 .trusted .box-carousel-container.testimonials .carousel-item {
-    width: calc(100% / 3 - 25px);
+    width: calc(100% / 3 - 220px);
     min-height: 470px;
     padding: 50px 50px 45px;
 }
@@ -589,6 +589,11 @@ main .section.link-right a {
     width: auto;
     max-width: unset;
     margin-left: -12em;
+}
+
+.trusted footer {
+    width: 100%;
+    overflow: hidden;
 }
 
 @-webkit-keyframes animated-mouse {
@@ -869,12 +874,6 @@ main .section.link-right a {
         padding: 14px 0;
         margin-bottom: 0;
     }
-
-    .trusted .box-carousel-container.testimonials .carousel-item {
-        width: 300px;
-        min-height: 350px;
-        padding: 1em 50px;
-    }
 }
 
 @media (max-width: 992px) {
@@ -911,5 +910,10 @@ main .section.link-right a {
 
     .trusted .section.dealsbluebanner .columns-img-col::before {
         display: none;
+    }
+
+    .trusted .box-carousel-container.testimonials .carousel-item {
+        width: 300px;
+        padding: 1em 50px;
     }
 }
