@@ -95,24 +95,17 @@ main .custom-section-container, main .custom-section-wrapper{
 
 @media (min-width: 767px){
     .custom-section{
+        padding:10%;
         h3{
-            font-size: 54px;
+            font-size: 40px;
         }
         p{
             font-size: 26px;
         }
-        div{
-            padding-bottom: 5%;
+        div:first-child{
+            display: flex;
+            flex-flow: column;
         }
-    
-        > div{
-            padding: 10%;
-        }
-    
-        div:last-of-type{
-            max-height: 80%;
-        }
-        
     }
 
     .custom-section.video-block{
@@ -138,6 +131,7 @@ main .custom-section-container, main .custom-section-wrapper{
     }
     
     .custom-section.image-right{
+        padding: 10%;
         background-color: #F4FAFF;
         color: #000000;
         h2{
@@ -204,6 +198,9 @@ main .custom-section-container, main .custom-section-wrapper{
             font-weight: 700;
             margin: 0;
         }
+        div:last-of-type{
+            max-width: 80%;
+        }
         
     }
     
@@ -211,6 +208,10 @@ main .custom-section-container, main .custom-section-wrapper{
 
 @media (min-width:1020px){
     .custom-section{
+        div:first-child{
+            max-width: 80%;
+        }
+
         div:last-of-type{
             max-width: 80%;
         }
@@ -220,7 +221,7 @@ main .custom-section-container, main .custom-section-wrapper{
             object-fit: cover;
             top: 0;
             bottom: 0;
-            right: 0;
+            right: -2%;
             width: auto;
             height: 90%;
             z-index: 0;
@@ -255,7 +256,6 @@ main .custom-section-container, main .custom-section-wrapper{
 
 @media (min-width: 1200px){
     .custom-section{
-        padding: 7%;
         h3{
             font-size: 54px;
         }
@@ -275,7 +275,6 @@ main .custom-section-container, main .custom-section-wrapper{
     }
 
     .custom-section.quotes-right, .custom-section.quotes-left{
-        padding: 15%;
         p{
             font-size: 64px;
         }
@@ -284,9 +283,14 @@ main .custom-section-container, main .custom-section-wrapper{
         }
     }
 
+    .custom-section.quotes-left{
+        div:last-of-type{
+            max-width: 80%;
+        }
+    }
+
 
     .custom-section.image-right{
-        padding: 10% 15%;
         div:first-child{
             padding: 0;
             padding-right: 5%;
@@ -314,5 +318,35 @@ main .custom-section-container, main .custom-section-wrapper{
             font-size: 23px;
             padding: 16px  23px;
         }
+    }
+}
+
+@media (min-width:1750px){
+    .custom-section{
+        padding: 5% 15%;
+        h3{
+            font-size: 54px;
+        }
+        div:first-child{
+            gap: 10px;
+        }
+        img{
+            right: 0;
+        }
+    }
+
+    .custom-section.image-right{
+        padding: 15%;
+    }
+    
+    .custom-section.video-block{
+        padding:5% 15%;
+    }
+
+    .custom-section.quotes-right{
+        padding: 15%;
+    }
+    .custom-section.quotes-left{
+        padding: 15% 15% 5% 15%;
     }
 }

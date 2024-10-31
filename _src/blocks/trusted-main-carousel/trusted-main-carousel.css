@@ -221,8 +221,8 @@
 
     .carousel-item iframe {
         border-radius: 20px;
-        width: 200px;
-        height: 120px;
+        width: 250px;
+        height: 150px;
     }
 
     .video-thumbnail {
@@ -292,11 +292,17 @@
 
     @media (min-width:1200px) {
         .carousel-container{
-            padding-left: 15%;
+            padding-left: 10%;
         }
         .carousel-item iframe {
             min-width: 600px;
             height: 360px;
+        }
+    }
+
+    @media (min-width: 1750px) {
+        .carousel-container{
+            padding-left: 16%;
         }
     }
 }
