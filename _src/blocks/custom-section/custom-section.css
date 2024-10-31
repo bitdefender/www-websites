@@ -330,9 +330,6 @@ main .custom-section-container, main .custom-section-wrapper{
         h3{
             font-size: 54px;
         }
-        div:first-child{
-            gap: 10px;
-        }
         img{
             right: 0;
         }
@@ -348,8 +345,15 @@ main .custom-section-container, main .custom-section-wrapper{
 
     .custom-section.quotes-right{
         padding: 15%;
+        div:last-of-type{
+            max-width: 70%;
+        }
     }
+
     .custom-section.quotes-left{
-        padding: 15% 15% 5% 15%;
+        padding: 25% 15% 5% 15%;
+        div:last-of-type{
+            max-width: 70%;
+        }
     }
 }
