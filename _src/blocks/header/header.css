@@ -1053,6 +1053,7 @@ header.quiz {
 
   header.quiz {
     height: unset;
+
     .icon {
       width: 200px;
       height: 64px;

@@ -468,7 +468,7 @@ main .hero ul.hero-awards {
   align-items: center;
   justify-content: flex-start;
   margin: 0;
-  padding: 40px 0 0px;
+  padding: 40px 0 0;
   text-align: left;
 }
 
@@ -566,7 +566,7 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
     right: 25%;
     bottom: 0;
     left: 50%;
-    background: transparent linear-gradient(90deg, rgba(246, 246, 246, 1) 0%, rgba(224, 224, 224, 0) 100%);
+    background: transparent linear-gradient(90deg, rgb(246 246 246 / 100%) 0%, rgb(224 224 224 / 0%) 100%);
   }
 }
 
@@ -601,7 +601,6 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
 }
 
 @media(max-width: 991px) {
-
   /* tablet */
   main .hero.new2024design .breadcrumb {
     display: none;
@@ -609,7 +608,6 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
 }
 
 @media(min-width: 767px) {
-
   /* tablet */
   :root {
     --hero-h1-font-size: 42px;
@@ -643,7 +641,6 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
 }
 
 @media (min-width: 990px) {
-
   /* desktop */
   main .hero.new2024design .hero-content:last-of-type {
     min-height: 360px;
@@ -777,7 +774,6 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
 }
 
 @media (min-width: 1600px) {
-
   /* large desktop */
   main .hero .hero-content .breadcrumb {
     padding: 9px 0;
@@ -853,7 +849,6 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
 }
 
 @media (max-width: 768px) {
-
   main .hero .hero-picture,
   main .v2 .hero .hero-content>div:last-of-type img {
     display: none;
