@@ -324,6 +324,20 @@ main .custom-section-container, main .custom-section-wrapper{
     }
 }
 
+@media (min-width: 1400px){
+    .custom-section.quotes-right{
+        div:last-of-type{
+            max-width: 70%;
+        }
+    }
+
+    .custom-section.quotes-left{
+        div:last-of-type{
+            max-width: 70%;
+        }
+    }
+}
+
 @media (min-width:1750px){
     .custom-section{
         padding: 5% 15%;
@@ -345,15 +359,9 @@ main .custom-section-container, main .custom-section-wrapper{
 
     .custom-section.quotes-right{
         padding: 15%;
-        div:last-of-type{
-            max-width: 70%;
-        }
     }
 
     .custom-section.quotes-left{
         padding: 25% 15% 5% 15%;
-        div:last-of-type{
-            max-width: 70%;
-        }
     }
 }
