@@ -198,6 +198,10 @@ export class PageLoadStartedEvent {
     if (!hostname) {
       return;
     }
+
+    const experimentDetails = (await this.#getTargetExperimentDetails()) ?? this.#getExperimentDetails();
+    // eslint-disable-next-line no-console
+    console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
   
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
@@ -212,6 +216,7 @@ export class PageLoadStartedEvent {
       subSubSubSection: null,
       domain: domain,
       domainPartsCount: domainPartsCount,
+      experimentDetails: experimentDetails
     }
   
     if (tags.length) {
