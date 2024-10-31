@@ -573,14 +573,6 @@ window._Visitor = Visitor;
 export class Target {
   static events = {
     LIBRARY_LOADED: "at-library-loaded",
-    REQUEST_START: "at-request-start",
-    REQUEST_SUCCEEDED: "at-request-succeeded",
-    REQUEST_FAILED: "at-request-failed",
-    CONTENT_RENDERING_START: "at-content-rendering-start",
-    CONTENT_RENDERING_SUCCEEDED: "at-content-rendering-succeeded",
-    CONTENT_RENDERING_FAILED: "at-content-rendering-failed",
-    CONTENT_RENDERING_NO_OFFERS: "at-content-rendering-no-offers",
-    CONTENT_RENDERING_REDIRECT: "at-content-rendering-redirect"
   }
 
   /**
@@ -600,58 +592,32 @@ export class Target {
       return;
     }
 
-    /** 
-     * Semaphor to mark that the offer call was made 
-     * This helps avoid doubled call fot the getOffer
-     * Set before any 'await' as those triggered jumps in the code
-     */
-    let offerCallMade = false;
-
     /** Target wasn't loaded we wait for events from it */
-    [this.events.CONTENT_RENDERING_SUCCEEDED, this.events.CONTENT_RENDERING_NO_OFFERS]
-      .forEach(event => document.addEventListener(event, async () => {
-        if (!offerCallMade) {
-          offerCallMade = true;
-          await this.#getOffers();
-          resolve();
-        }
-      }, { once: true }));
-
-    [this.events.CONTENT_RENDERING_FAILED, this.events.REQUEST_FAILED]
-      .forEach(event => document.addEventListener(event, async () => {
-        if (!offerCallMade) {
-          offerCallMade = true;
-          resolve();
-        }
-      }, { once: true }));
-
-    /** 
-     * Worst case the load event is triggered before the event from Target
-     * as such we try to make the offer call again checking if at least the library was loaded
-     */
-    window.addEventListener("load", async () => {
-      if (!offerCallMade) {
-
-        if (window.adobe?.target) {
-          offerCallMade = true;
-          await this.#getOffers();
-          resolve();
-        } else if (window.location.hostname !== 'localhost') {
-          /** 
-           * Wait for 4 seconds and check if adobe launch was loaded and triggered the offer call
-           */
-          setTimeout(() => {
-            if (!offerCallMade) {
-              offerCallMade = true;
-              resolve();
-            }
-          }, 4000);
-        } else {
-          resolve();
-        }
-      }
+    document.addEventListener(this.events.LIBRARY_LOADED, async () => {
+      await this.#getOffers();
+      resolve();
     }, { once: true });
   });
+
+  /**
+   * get the product-buy link mappings from Target (
+   *  e.g
+   *  {
+   *    "is": {
+   *      "5-1": [buyLink],
+   *      "10-1": [buyLink]
+   *    },
+   *    "tsmd": {
+   *      ...
+   *    }
+   *  }
+   * )
+   * @returns {Promise<object>}
+   */
+  static async getBuyLinksMapping() {
+    await this.#staticInit;
+    return this.offers?.["buyLinks-mbox"]?.content || {};
+  }
 
   /**
    * https://bitdefender.atlassian.net/wiki/spaces/WWW/pages/1661993460/Activating+Promotions+Enhancements+Target
@@ -693,7 +659,7 @@ export class Target {
       return [];
     }
 
-    return [...mboxes].map((name, index) => { return { index: ++index, name } });
+    return [...mboxes].map((name, index) => { return { index: index + 2, name } });
   }
 
   static async #getOffers() {
@@ -709,6 +675,7 @@ export class Target {
           execute: {
             mboxes: [
               { index: 0, name: "initSelector-mbox" },
+              { index: 1, name: "buyLinks-mbox"},
               ...mboxes
             ]
           }
