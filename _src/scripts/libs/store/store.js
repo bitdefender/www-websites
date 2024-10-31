@@ -17,7 +17,13 @@ export const monthlyProducts = {
 	"smarthome_m": "smarthome_m",
 	"vipsupport_m": "vipsupport_m",
 	"pctuneup_m": "pctuneup_m",
-	"pass_spm": "pass_spm"
+	"pass_spm": "pass_spm",
+	"us_i_m": "us_i_m",
+	"us_f_m": "us_f_m",
+	"us_pf_m": "us_pf_m",
+	"us_pi_m": "us_pi_m",
+	"us_pie_m": "us_pie_m",
+	"us_pfe_m": "us_pfe_m"
 }
 
 export const loadScript = (baseUrl, url) => {
@@ -394,6 +400,7 @@ export class Product {
 	 * @returns {ProductOption} - option containing price, discounted price and store url
 	 */
 	getOption(devices, years, bundle) {
+		const productVariation = `${devices}-${years}`;
 		const devicesOption = this.options[devices];
 		const yearsOption = devicesOption && devicesOption[years];
 
@@ -406,7 +413,7 @@ export class Product {
 		buyCart.searchParams.set("CARD", "2");
 		buyCart.searchParams.set("SHORT_FORM", "1");
 		buyCart.searchParams.set("LANG", Page.langauge);
-		buyCart.searchParams.set("force_country", Store.country);
+		buyCart.searchParams.set("force_country", Store.getCountry());
 
 		if (window.UC_UI) {
 			buyCart.searchParams.set("ucControllerId", window.UC_UI.getControllerId());
@@ -447,6 +454,13 @@ export class Product {
 			if (!option.priceDiscounted && !bundle.priceDiscounted) {
 				option.price = Number(Number(option.price + bundle.price).toFixed(2));
 			}
+		}
+
+		// replace the buy links with target links if they exist and return the option
+		if (Store.targetBuyLinkMappings[this.productAlias]
+			&& Store.targetBuyLinkMappings[this.productAlias][productVariation]) {
+			option.buyLink = Store.targetBuyLinkMappings[this.productAlias][productVariation];
+			return option;
 		}
 
 		//Init Selector Settings
@@ -738,7 +752,8 @@ export class Product {
 
 class BitCheckout {
 
-	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm"]
+	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m",
+		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
 
 	// this products come with device_no set differently from the init-selector api where they are set to 1
 	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
@@ -1007,7 +1022,8 @@ export class Store {
 		gb: "uk",
 		ch: "de",
 		us: "en",
-		mx: "en"
+		mx: "en",
+		nz: "au",
 	}
 
 	static consumer = "consumer";
@@ -1021,6 +1037,7 @@ export class Store {
 	static baseUrl = Constants.DEV_BASE_URL;
 
 	static config = new StoreConfig();
+	static targetBuyLinkMappings = null;
 
 	/**
 	 * Get a product from the api.2checkout.com
@@ -1030,6 +1047,11 @@ export class Store {
 	 */
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
+
+		// get the target buyLink mappings
+		if (!this.targetBuyLinkMappings) {
+			this.targetBuyLinkMappings = await Target.getBuyLinksMapping();
+		}
 
 		// remove duplicates by id
 		productsInfo = [...new Map(productsInfo.map((product) => [`${product.id}`, product])).values()];

@@ -795,6 +795,7 @@ export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSel
     case 'Windows 2000':
       openUrl = urlWindows;
       break;
+    case 'Linux':
     case 'Android':
       openUrl = urlAndroid;
       break;

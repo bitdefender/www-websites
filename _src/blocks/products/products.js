@@ -150,7 +150,7 @@ function renderHighlightSavings(text = 'Save', percent = '') {
     'div',
     {
       'data-store-hide': 'no-price=discounted;type=visibility',
-      class: 'highlight',
+      class: 'highlight await-loader',
       style: 'display=none',
     },
     `${highlighSaving.outerHTML}`,
@@ -389,19 +389,6 @@ export default function decorate(block) {
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
-    const priceElements = card.querySelectorAll('.price.nanoblock');
-    if (priceElements.length >= 2) {
-      const secondToLastPrice = priceElements[priceElements.length - 2];
-      const previousElement = secondToLastPrice.previousElementSibling;
-      if (previousElement && previousElement.tagName.toLowerCase() === 'p') {
-        previousElement.classList.add('first-year-price-text');
-      } else {
-        const newP = document.createElement('p');
-        newP.classList.add('first-year-price-text');
-        secondToLastPrice.before(newP);
-      }
-    }
-
     const hasImage = card.querySelector('img') !== null;
 
     if (hasImage) {
@@ -430,7 +417,6 @@ export default function decorate(block) {
       emptyDiv.style.visibility = 'hidden';
     }
   });
-  matchHeights(block, '.first-year-price-text');
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
