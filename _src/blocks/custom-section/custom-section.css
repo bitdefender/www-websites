@@ -332,6 +332,8 @@ main .custom-section-container, main .custom-section-wrapper{
     }
 
     .custom-section.quotes-left{
+        padding-top: 20%;
+        padding-bottom: 5%;
         div:last-of-type{
             max-width: 70%;
         }
