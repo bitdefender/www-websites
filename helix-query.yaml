@@ -4,12 +4,13 @@ indices:
     include:
       - /en-us/**
     exclude: &excludeList
-      - /**/consumer/**/fragments/**
-      - /**/consumer/experiments/**
+      - /**/fragments/**
+      - /**/experiments/**
       - /**/webview/**
-      - /**/consumer/404
-      - /**/consumer/footer
-      - /**/consumer/nav
+      - /**/404
+      - /**/footer
+      - /**/nav
+      - /**/dlp-components/**
       - /**/consumer/thank-you
     target: /en-us/query-index.json
     properties: &minPros
