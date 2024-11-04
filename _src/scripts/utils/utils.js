@@ -676,6 +676,12 @@ export function trackProduct(product, location = '') {
 }
 
 export function pushTrialDownloadToDataLayer() {
+  const trialPaths = [
+    'fragments/thank-you-for-downloading',
+    'fragments/get-bitdefender',
+    'fragments/trial',
+  ];
+
   const getTrialID = (currentPage, button) => {
     if (['thank-you', 'free-antivirus'].includes(currentPage)) {
       return '8430';
@@ -705,7 +711,7 @@ export function pushTrialDownloadToDataLayer() {
   if (sections.length) {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
-      if (href.includes('fragments/thank-you-for-downloading') || href.includes('fragments/get-bitdefender')) {
+      if (trialPaths.some((trialPath) => href.includes(trialPath))) {
         button.addEventListener('click', () => { pushTrialData(button); });
       }
     });

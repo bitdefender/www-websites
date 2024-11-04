@@ -1,6 +1,7 @@
 import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
 import Page from "./page.js";
+import { Constants } from "./constants.js";
 
 /**
  * 
@@ -586,6 +587,14 @@ export class Target {
   static offers = null;
 
   static #staticInit = new Promise(resolve => {
+
+    /** This is a special case for when adobe.target is disabled using dotest query param */
+    const windowSearchParams = new URLSearchParams(window.location.search);
+    if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key) === Constants.DISABLE_TARGET_PARAMS.value) {
+      resolve();
+      return;
+    }
+
     /** Target is loaded and we wait for it to finish so we can get the offer */
     if (window.adobe?.target) {
       this.#getOffers().then(resolve);

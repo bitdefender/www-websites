@@ -1618,7 +1618,6 @@ body > div:first-child {
 
 body > div.header-with-language-banner {
   height: auto;
-  overflow: hidden;
 }
 
 .visibility-hidden {
