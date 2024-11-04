@@ -653,10 +653,6 @@ main .section.link-right a {
 }
 
 @media (min-width: 768px) {
-    body.trusted > div.header-with-language-banner {
-        overflow: hidden;
-    }
-
     .trusted h1, .trusted main .hero h1 {
         font: normal normal bold 96px/82px var(--font-ibm);
     }
