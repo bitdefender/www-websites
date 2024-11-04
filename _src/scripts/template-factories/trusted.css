@@ -654,7 +654,6 @@ main .section.link-right a {
 
 @media (min-width: 768px) {
     body.trusted > div.header-with-language-banner {
-        height: auto;
         overflow: hidden;
     }
 
