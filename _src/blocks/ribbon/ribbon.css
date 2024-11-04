@@ -5,13 +5,19 @@
   text-align: center;
 }
 
+.ribbon-container * {
+  font-family: "Arial", sans-serif!important;
+  font-size: var(--body-font-size-xs);
+}
+
 .ribbon-container p {
   text-align: center;
+  margin: 5px 0;
 }
 
 .ribbon-container img {
   width: 27px;
-  margin-right: 10px;
+  float: left;
 }
 
 .ribbon-container a:any-link {
@@ -20,6 +26,9 @@
 }
 
 .ribbon-container.bf24 .block > div > div {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   text-shadow: 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00;
 }
