@@ -1,0 +1,25 @@
+.ribbon-container {
+  background-color: black;
+  background-position: 0 0;
+  color: white;
+  text-align: center;
+}
+
+.ribbon-container p {
+  text-align: center;
+}
+
+.ribbon-container img {
+  width: 27px;
+  margin-right: 10px;
+}
+
+.ribbon-container a:any-link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ribbon-container.bf24 .block > div > div {
+  display: inline-block;
+  text-shadow: 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00;
+}
