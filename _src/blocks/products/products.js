@@ -330,7 +330,11 @@ export default function decorate(block) {
       }
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', storeEvent);
-      col.querySelector('.button-container a')?.setAttribute('data-store-buy-link', '');
+      const buyLink = col.querySelector('.button-container a');
+      if (buyLink?.href?.includes('/buy/') || buyLink?.href?.includes('#buylink')) {
+        buyLink.href = '#';
+        buyLink.setAttribute('data-store-buy-link', '');
+      }
 
       block.appendChild(col);
       renderNanoBlocks(col, undefined, idxParent);
