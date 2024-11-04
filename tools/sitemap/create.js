@@ -7,126 +7,154 @@ const COUNTRIES = 'https://www.bitdefender.com/p-api/v1/locales/{locale}/countri
 const QUERY_INDEX_URL = 'https://www.bitdefender.com/{locale}/query-index.json';
 const DOMAIN_URL = 'https://www.bitdefender.com';
 
-// const hreflangMap = [
-//   ['en-ro', { baseUrl: 'https://www.bitdefender.ro', pageType: '.html' }],
-//   ['de', { baseUrl: 'https://www.bitdefender.de', pageType: '.html' }],
-//   ['sv', { baseUrl: 'https://www.bitdefender.se', pageType: '.html' }],
-//   ['pt', { baseUrl: 'https://www.bitdefender.pt', pageType: '.html' }],
-//   ['en-sv', { baseUrl: 'https://www.bitdefender.se', pageType: '.html' }],
-//   ['pt-BR', { baseUrl: 'https://www.bitdefender.com.br', pageType: '.html' }],
-//   ['en', { baseUrl: 'https://www.bitdefender.com', pageType: '.html' }],
-//   ['it', { baseUrl: 'https://www.bitdefender.it', pageType: '.html' }],
-//   ['fr', { baseUrl: 'https://www.bitdefender.fr', pageType: '.html' }],
-//   ['nl-BE', { baseUrl: 'https://www.bitdefender.be', pageType: '.html' }],
-//   ['es', { baseUrl: 'https://www.bitdefender.es', pageType: '.html' }],
-//   ['en-AU', { baseUrl: 'https://www.bitdefender.com.au', pageType: '' }],
-//   ['ro', { baseUrl: 'https://www.bitdefender.ro', pageType: '.html' }],
-//   ['nl', { baseUrl: 'https://www.bitdefender.nl', pageType: '.html' }],
-//   ['en-GB', { baseUrl: 'https://www.bitdefender.co.uk', pageType: '.html' }],
-//   ['zh-hk', { baseUrl: 'https://www.bitdefender.com/zh-hk', pageType: '' }],
-//   ['zh-tw', { baseUrl: 'https://www.bitdefender.com/zh-tw', pageType: '' }],
-//   ['x-default', { baseUrl: 'https://www.bitdefender.com', pageType: '.html' }],
-// ];
-
-// please make sure that these buckets are in sync with Vlaicu
+/**
+ * these are not a content buckets
+ * these locales are alocated to multiple countries
+*/
 const buckets = [
-  'en-mt', // Global EUR
-  'en-jm', // Global USD
-  'en-lv', // Global EUR V2
-  'en-bz', //Global USD V2
+  'en-mt', 'en-jm', 'en-lv', 'en-bz'
 ];
 
-const hreflangMap = [];
+// Set to cache checked URLs that have a 200 status
+const checkedValidUrls = new Set();
+// Set to cache checked URLs that are invalid (do not return a 200 status)
+const checkedNotValidUrls = new Set();
 
-try {
-  const responseLocales = await fetch(LOCALES);
-  const jsonLocales = await responseLocales.json();
-  const getUniqueLocales = (data) => {
-    const uniqueLocales = [...new Set(data.map(item => item.locale.toLowerCase()))];
-    return uniqueLocales;
-  }
+async function fetchJson(url) {
+  try {
+    const response = await fetch(url);
 
-  const localesArr = getUniqueLocales(jsonLocales);
-
-  for (let i = 0; i < localesArr.length; i++) {
-    let locale = localesArr[i];
-    hreflangMap.push([locale, { baseUrl: 'https://www.bitdefender.com/' , bucketLocale: ''}])
-  }
-
-  // logic for buckets 
-  for (let i = 0; i < buckets.length; i++) {
-    const bucketLocale = buckets[i];
-    let countriesUrls = COUNTRIES.replace('{locale}', bucketLocale);
-    let json = {};
-
-    try {
-      let resp = await fetch(countriesUrls);
-      json = await resp.json();
-    } catch (error) {
-      console.error("ERROR: ", countriesUrls);
-      console.error(error);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status} for URL: ${url}`);
     }
 
-    for (let j = 0; j < json.length; j++) {
-      const country = json[j].country.toLowerCase();
-      hreflangMap.push([`en-${country}`, { baseUrl: 'https://www.bitdefender.com/' , bucketLocale: bucketLocale}])
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error(`Expected JSON but received ${contentType} from ${url}`);
     }
-  
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+function getUniqueLocales(data) {
+  return [...new Set(data.map(item => item.locale.toLowerCase()))];
+}
+
+function generateHreflangMap(localesArr) {
+  return localesArr.map(locale => [locale, { baseUrl: `${DOMAIN_URL}/`, bucketLocale: '' }]);
+}
+
+async function checkUrlExists(url) {
+  if (checkedValidUrls.has(url)) {
+    return true;
   }
 
-  localesArr.forEach(async locale => {
-    let json = {};
-    let queryIndex = QUERY_INDEX_URL.replace('{locale}', locale);
+  if (checkedNotValidUrls.has(url)) {
+    return false;
+  }
 
-    try {
-      const response = await fetch(queryIndex);
-      json = await response.json();
-      json.data = json.data.filter(entry => entry.path !== "0");
-      json.total = json.data.length;
-    } catch (error) {
-      console.error("ERROR: ", queryIndex);
-      console.error(error);
-      return;
+  try {
+    const min = 1500, max = 2500;
+    const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+    await new Promise(resolve => setTimeout(resolve, 1700));
+    const response = await fetch(url);
+    if (response.ok) {
+      checkedValidUrls.add(url);
+      return true;
+    } else {
+      checkedNotValidUrls.add(url);
+      return false;
     }
+  } catch (error) {
+    console.error(`Failed to check URL: ${url}`, error);
+    checkedNotValidUrls.add(url);
+    return false; // Return false if there’s any error
+  }
+}
 
-    // remove locale from href lang
-    const updatedHreflangMap = hreflangMap.filter(([lang]) => lang !== locale);
+async function addBucketCountriesToHreflangMap() {
+  const hreflangMap = [];
 
-    const sitemapPath = path.join(process.cwd(), '../../_src/sitemap/csg/sitemap_' + locale + '.xml');
+  for (const bucketLocale of buckets) {
+    const countriesUrl = COUNTRIES.replace('{locale}', bucketLocale);
+    const countriesData = await fetchJson(countriesUrl);
 
-    const output = {
-      urlset: {
-        _attributes: {
-          'xmlns:xhtml': 'http://www.w3.org/1999/xhtml',
-          xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
-        },
-        url: json?.data.map((row) => ({
-          loc: `${DOMAIN_URL}${row.path}`,
-          'xhtml:link': Object.keys(updatedHreflangMap).map((key) => {
-            const hreflang = updatedHreflangMap[key][0];
-            const pathCount = row.path.split('/').filter(String).length;
-            const pathWithoutLocale = row.path.replace(/^\/[a-z]{2}-[a-z]{2}\//, "/");
-            const bucketLocale = updatedHreflangMap[key][1].bucketLocale;
-            const localeUrl = bucketLocale || hreflang;
-            const href = `${updatedHreflangMap[key][1].baseUrl}${localeUrl}${pathWithoutLocale}`;
-            return {
+    if (countriesData) {
+      countriesData.forEach(country =>
+        hreflangMap.push([`en-${country.country.toLowerCase()}`, { baseUrl: `${DOMAIN_URL}/`, bucketLocale }])
+      );
+    }
+  }
+  return hreflangMap;
+}
+
+async function processLocaleSitemap(locale, hreflangMap) {
+  const queryIndexUrl = QUERY_INDEX_URL.replace('{locale}', locale);
+  const queryData = await fetchJson(queryIndexUrl);
+
+  if (!queryData) return;
+
+  const validData = queryData.data.filter(entry => entry.path !== "0");
+  const filteredHreflangMap = hreflangMap.filter(([lang]) => lang !== locale);
+  const sitemapPath = path.join(process.cwd(), '../../_src/sitemap/csg/sitemap_' + locale + '.xml');
+
+  const output = {
+    urlset: {
+      _attributes: {
+        'xmlns:xhtml': 'http://www.w3.org/1999/xhtml',
+        xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
+      },
+      url: await Promise.all(validData.map(async (row) => {
+        const alternateLinks = [];
+
+        for (const [hreflang, { baseUrl, bucketLocale }] of filteredHreflangMap) {
+          const pathWithoutLocale = row.path.replace(/^\/[a-z]{2}-[a-z]{2}\//, '/');
+          const localeUrl = bucketLocale || hreflang;
+          const href = `${baseUrl}${localeUrl}${pathWithoutLocale}`;
+
+          if (await checkUrlExists(href)) { // Only include URLs with a 200 status code
+            alternateLinks.push({
               _attributes: {
                 rel: 'alternate',
                 hreflang,
                 href,
               },
-            };
-          }),
-        })),
-      },
-    };
+            });
+          } else {
+            console.warn(`Skipping URL with non-200 status: ${href}`);
+          }
+        }
 
-    const options = { compact: true, ignoreComment: true, spaces: 4 };
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n${convert.json2xml(output, options)}`;
-    await fs.writeFile(sitemapPath, xml);
-    console.log("DONE: ", queryIndex);
-  })
-} catch (error) {
-  // eslint-disable-next-line no-console
-  console.error(error);
+        return {
+          loc: `${DOMAIN_URL}${row.path}`,
+          'xhtml:link': alternateLinks,
+        };
+      })),
+    },
+  };
+
+  const xmlOptions = { compact: true, ignoreComment: true, spaces: 4 };
+  const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n${convert.json2xml(output, xmlOptions)}`;
+  await fs.writeFile(sitemapPath, xmlContent);
+  console.log("Sitemap generated for locale:", locale);
 }
+
+(async () => {
+  try {
+    const localesData = await fetchJson(LOCALES);
+    const localesArr = getUniqueLocales(localesData);
+
+    let hreflangMap = generateHreflangMap(localesArr);
+    hreflangMap = hreflangMap.concat(await addBucketCountriesToHreflangMap());
+
+    for (const locale of localesArr) {
+      await processLocaleSitemap(locale, hreflangMap);
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+})();
