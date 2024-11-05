@@ -331,8 +331,8 @@ export default function decorate(block) {
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', storeEvent);
       const cardButtons = col.querySelectorAll('.button-container a');
-      cardButtons.forEach((button) => {
-        if (button?.href?.includes('/buy/') || button?.href?.includes('#buylink')) {
+      cardButtons?.forEach((button) => {
+        if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
           button.href = '#';
           button.setAttribute('data-store-buy-link', '');
         }
