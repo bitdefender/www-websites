@@ -1140,6 +1140,7 @@ export class Store {
 	static countriesMapping = {
 		gb: "uk",
 		ch: "de",
+		at: "de",
 		us: "en",
 		mx: "en",
 		nz: "au",
