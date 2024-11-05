@@ -608,6 +608,7 @@
 
     .dropdown-box-container .new div:nth-child(1)>div,
     .dropdown-box-container.new .block div:nth-child(1)>div {
+        gap:24px;
         font-size: 18px;
         line-height: 24px;
     }
