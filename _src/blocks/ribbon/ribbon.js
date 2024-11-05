@@ -1,5 +1,5 @@
 export default function decorate(block) {
-  const [content, backgroundEl] = block.children;
+  const [, backgroundEl] = block.children;
 
   if (backgroundEl) {
     const backgroundImgEl = backgroundEl.querySelector('img');
