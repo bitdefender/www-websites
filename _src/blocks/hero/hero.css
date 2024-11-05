@@ -340,9 +340,6 @@ main .hero img {
 
 main .hero .hero-picture picture img {
   position: absolute;
-
-  /* display: none; */
-  padding-left: 200px;
 }
 
 main .hero a.button {
