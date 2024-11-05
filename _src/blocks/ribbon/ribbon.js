@@ -1,55 +1,14 @@
-function applySpacing(sectionStyle, spacing) {
-  const {
-    paddingTop,
-    paddingBottom,
-    marginTop,
-    marginBottom,
-  } = spacing;
-
-  if (paddingTop) sectionStyle.paddingTop = `${paddingTop}rem`;
-  if (paddingBottom) sectionStyle.paddingBottom = `${paddingBottom}rem`;
-  if (marginTop) sectionStyle.marginTop = `${marginTop}rem`;
-  if (marginBottom) sectionStyle.marginBottom = `${marginBottom}rem`;
-}
-
-function applyBackground(sectionStyle, backgroundImage, backgroundRepeat, backgroundPosition) {
-  sectionStyle.backgroundImage = `url("${backgroundImage}")`;
-  sectionStyle.backgroundPosition = backgroundPosition || '0 0';
-  sectionStyle.backgroundRepeat = backgroundRepeat || 'no-repeat';
-  sectionStyle.backgroundBlendMode = 'unset';
-}
-
 export default function decorate(block) {
-  const section = block.closest('.section');
-  const sectionStyle = section.style;
-  const blockStyle = block.style;
-  const {
-    backgroundImage,
-    backgroundRepeat,
-    backgroundPosition,
-    backgroundColor,
-    textColor,
-    paddingTop,
-    paddingBottom,
-    marginTop,
-    marginBottom,
-  } = section.dataset;
+  const [content, backgroundEl] = block.children;
 
-  // padding and margin
-  applySpacing(sectionStyle, {
-    paddingTop,
-    paddingBottom,
-    marginTop,
-    marginBottom,
-  });
+  if (backgroundEl) {
+    const backgroundImgEl = backgroundEl.querySelector('img');
+    const backgroundImgSrc = backgroundImgEl?.getAttribute('src');
 
-  // text color
-  blockStyle.color = textColor || 'white';
-
-  // background properties
-  if (backgroundImage) {
-    applyBackground(sectionStyle, backgroundImage, backgroundRepeat, backgroundPosition);
+    if (backgroundImgSrc) {
+      block.closest('.section').style.backgroundImage = `url("${backgroundImgSrc}")`;
+      // Remove the row after setting background
+      backgroundEl.remove();
+    }
   }
-
-  sectionStyle.backgroundColor = backgroundColor || 'black';
 }

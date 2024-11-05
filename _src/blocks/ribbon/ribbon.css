@@ -1,8 +1,14 @@
-.ribbon-container {
+main .ribbon-container {
   background-color: black;
   background-position: 0 0;
   color: white;
   text-align: center;
+  background-position: 0px -18px;
+  background-repeat: repeat;
+  background-blend-mode: unset;
+  background-color: black;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .ribbon-container * {
@@ -25,7 +31,7 @@
   text-decoration: underline;
 }
 
-.ribbon-container.bf24 .block > div > div {
+.ribbon-container .block > div > div {
   display: flex;
   justify-content: center;
   align-items: center;
