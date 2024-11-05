@@ -573,7 +573,7 @@ window._Visitor = Visitor;
 
 export class Target {
   static events = {
-    LIBRARY_LOADED: "at-library-loaded",
+    LIBRARY_LOADED: "at-library-loaded"
   }
 
   /**
@@ -606,6 +606,16 @@ export class Target {
       resolve();
     }, { once: true });
   });
+
+  /**
+   * get the flag which marks wether the page should use Vlaicu or not
+   * @returns {Promise<boolean>}
+   */
+  static async getVlaicuFlag() {
+    return Boolean(await this.getOffers([{
+      name: 'vlaicu-flag-mbox'
+    }])?.content?.vlaicuFlag || null);
+  }
 
   /**
    * get the product-buy link mappings from Target (
