@@ -597,13 +597,12 @@ export class Target {
 
     /** Target is loaded and we wait for it to finish so we can get the offer */
     if (window.adobe?.target) {
-      this.#getOffers().then(resolve);
+      resolve();
       return;
     }
 
     /** Target wasn't loaded we wait for events from it */
-    document.addEventListener(this.events.LIBRARY_LOADED, async () => {
-      await this.#getOffers();
+    document.addEventListener(this.events.LIBRARY_LOADED, () => {
       resolve();
     }, { once: true });
   });
@@ -623,18 +622,20 @@ export class Target {
    * )
    * @returns {Promise<object>}
    */
-  static async getBuyLinksMapping() {
-    await this.#staticInit;
-    return this.offers?.["buyLinks-mbox"]?.content || {};
+  static getBuyLinksMapping() {
+    return this.getOffers([{
+      name: 'buyLinks-mbox'
+    }])?.content || {};
   }
 
   /**
    * https://bitdefender.atlassian.net/wiki/spaces/WWW/pages/1661993460/Activating+Promotions+Enhancements+Target
    * @returns {Promise<string|null>}
    */
-  static async getCampaign() {
-    await this.#staticInit;
-    return this.offers?.["initSelector-mbox"]?.content?.pid || null
+  static getCampaign() {
+    return this.getOffers([{
+      name: 'initSelector-mbox'
+    }])?.content?.pid || null;
   }
 
   /**
@@ -645,28 +646,12 @@ export class Target {
     await this.#staticInit;
   }
 
-  /**
-   * @returns {[string]}
-   */
-  static #getAllMboxes() {
-    const mboxes = new Set([...document.querySelectorAll("[data-mbox]")]
-      .map(mbox => {
-        return mbox.dataset.mbox;
-      })
-      .filter(Boolean));
-
-    if (!mboxes) {
-      return [];
-    }
-
-    return [...mboxes].map((name, index) => { return { index: index + 2, name } });
-  }
-
-  static async #getOffers() {
-    const mboxes = this.#getAllMboxes();
-
+  static async getOffers(mboxes) {
+    // const mboxes = this.#getAllMboxes();
+    await this.#staticInit;
+    let offers = {};
     try {
-      this.offers = await window.adobe?.target?.getOffers({
+      offers = await window.adobe?.target?.getOffers({
         consumerId: await Visitor.getConsumerId(),
         request: {
           id: {
@@ -674,15 +659,13 @@ export class Target {
           },
           execute: {
             mboxes: [
-              { index: 0, name: "initSelector-mbox" },
-              { index: 1, name: "buyLinks-mbox"},
-              ...mboxes
+              ...mboxes.map((mbox, index) => {return { index, ...mbox}})
             ]
           }
         }
       });
 
-      this.offers = this.offers?.execute?.mboxes?.reduce((acc, mbox) => {
+      offers = offers?.execute?.mboxes?.reduce((acc, mbox) => {
         acc[mbox.name] = {};
         acc[mbox.name].content = mbox?.options?.[0]?.content;
         acc[mbox.name].type = mbox?.options?.[0]?.type;
@@ -692,16 +675,8 @@ export class Target {
     } catch (e) {
       console.warn(e);
     }
-  }
 
-  /**
-   * 
-   * @param {string} mbox 
-   * @returns {Promise<Mbox|null>}
-   */
-  static async getMbox(mbox) {
-    await this.#staticInit;
-    return this.offers?.[mbox];
+    return offers;
   }
 };
 
