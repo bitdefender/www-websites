@@ -73,21 +73,26 @@ export const Constants = {
   MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m", "ultsecm", "ultsecplusm", "idtheftsm", "idtheftpm"],
 
   WRONG_DEVICES_PRODUCT_IDS: {
-	'pass_sp': {
-		contentDevices: 1,
-		providerDevices: 4,
+		'pass_sp': {
+			contentDevices: 1,
+			providerDevices: 4,
+		},
+		'pass_spm': {
+			contentDevices: 1,
+			providerDevices: 4,
+		},
+		'vpn': {
+			contentDevices: 10,
+			providerDevices: 1,
+		},
+		'vpn-monthly': {
+			contentDevices: 10,
+			providerDevices: 1,
+		}
 	},
-	'pass_spm': {
-		contentDevices: 1,
-		providerDevices: 4,
-	},
-	'vpn': {
-		contentDevices: 10,
-		providerDevices: 1,
-	},
-	'vpn-monthly': {
-		contentDevices: 10,
-		providerDevices: 1,
-	}
+
+  DISABLE_TARGET_PARAMS: {
+	key: "dotest",
+	value: "1"
   }
 }

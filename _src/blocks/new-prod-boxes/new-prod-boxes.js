@@ -257,6 +257,7 @@ export default async function decorate(block) {
   const addOnProductsAsList = addOnProducts && addOnProducts.replaceAll(' ', '').split(',');
   const addOnProductsInitial = addOnProductsAsList && addOnProductsAsList.slice(0, productsAsList.length);
   const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.replaceAll(' ', '').split(',');
+  const billedTexts = [];
 
   if (combinedProducts.length) {
     [...block.children].map(async (prod, key) => {
@@ -269,8 +270,8 @@ export default async function decorate(block) {
       const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList ? addOnMonthlyProductsAsList[key].split('/') : [];
       const featuresSet = benefitsLists.querySelectorAll('table');
       const featureList = createFeatureList(featuresSet);
+      billedTexts.push(billed);
       let addOn = checkAddOn(featuresSet);
-
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
       if (buyLinkSelector) {
         buyLinkSelector.classList.add('button', 'primary');
@@ -308,6 +309,15 @@ export default async function decorate(block) {
         secondButton.classList.add('button', 'secondary', 'no-arrow');
       }
 
+      // default billedText will be the first one
+      let billedText = billed?.children[0];
+      // default billed text changes if we have the [checked] flag in the planSwitcher
+      Array.from(radioButtons?.children)?.forEach((radio, idx) => {
+        if (radio.textContent.match(/\[checked\]/g)) {
+          billedText = billed.children[idx];
+        }
+      });
+
       // set the store event on the component
       let storeEvent = 'main-product-loaded';
       if (checkIfConsumerPage()) {
@@ -340,7 +350,7 @@ export default async function decorate(block) {
             </div>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
-      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billed, type, hideDecimals, perPrice);
+      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice);
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
 
       let addOnPriceBox;
@@ -409,6 +419,18 @@ export default async function decorate(block) {
     block.parentNode.insertBefore(switchBox, block);
   }
 
+  // handling of the billedText below the price
+  [...block.children].forEach((box, key) => {
+    box.querySelectorAll('.plan-switcher input').forEach((radio, idx) => {
+      radio.addEventListener('change', () => {
+        let billedText = billedTexts[key].children[idx]?.innerHTML;
+        if (billedText) {
+          box.querySelector('.billed').innerHTML = billedText;
+        }
+      });
+    });
+  });
+
   window.hj = window.hj || function initHotjar(...args) {
     (hj.q = hj.q || []).push(...args);
   };
@@ -419,6 +441,14 @@ export default async function decorate(block) {
   if (!isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
+  }
+
+  if (blockParent.classList.contains('same-height-lists')) {
+    const prodCard = block.querySelector('.prod_box');
+    const featureLists = prodCard?.querySelectorAll('ul');
+    featureLists?.forEach((list, idx) => {
+      matchHeights(block, `ul:nth-of-type(${idx + 1})`);
+    });
   }
 
   matchHeights(block, '.subtitle');
