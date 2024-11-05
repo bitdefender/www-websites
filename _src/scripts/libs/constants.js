@@ -11,4 +11,9 @@ export const Constants = {
   ZUROA_LOCALES: ['nl-nl', 'nl-be'],
 
   DEV_DOMAINS: ["localhost", "stage", ".hlx."],
+
+  DISABLE_TARGET_PARAMS: {
+	key: "dotest",
+	value: "1"
+  }
 }
