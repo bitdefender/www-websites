@@ -88,6 +88,7 @@ async function runDefaultFooterLogic(block) {
 }
 
 async function runLandingpageLogic(block) {
+  // TODO: remove this as it is for testing only
   const footerPath = getMetadata('footer')?.split(', ')[0] || '/footer';
   const resp = await fetch(`${footerPath}.plain.html`);
 
