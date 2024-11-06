@@ -134,16 +134,20 @@
         justify-self: center ;
         justify-content: space-around;
         grid-auto-flow: row;
+        gap: 10px;
     }
     .carousel-item{
         padding: 0;
         padding-bottom: 10px;
         text-align: left;
+        justify-items: center;
     }
 
     .carousel-navigation{
         display: none;
     }
+
+
     .carousel-item iframe {
         min-width: auto;
         height: auto;
@@ -151,24 +155,37 @@
 
     @media (min-width:767px){
         .carousel-track{
-            grid-auto-flow: column;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap:50px;
         }
 
         .carousel-container{
-            padding:2%;
+            padding:4%;
         }
         .carousel-item{
-            width: 190px;
+            width: 300px;
             font-size: 16px;
         }
+
+        .video-carousel-container .carousel-item:nth-child(3) {
+            justify-self: center;
+          }
+
         .carousel-item iframe{
-            min-width: 100%;
+            min-width: 300px;
             max-width: 100%;
-            min-height: 150px;
+            min-height: 200px;
         }
     }
 
     @media (min-width:1020px){
+        .carousel-track{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
         .carousel-container{
             padding:5%;
         }
@@ -177,7 +194,7 @@
             font-size: 18px;
         }
         .carousel-item iframe{
-            min-width: 100%;
+            min-width: 280px;
             min-height: 200px;
         }
     } 
@@ -188,10 +205,10 @@
         }
         .carousel-item{
             width: 320px;
-            font-size: 20px;
+            font-size: 23px;
         }
         .carousel-item iframe{
-            min-width: 100%;
+            min-width: 320px;
             min-height: 240px;
         }
     }
@@ -202,11 +219,10 @@
         }
         .carousel-item{
             width: 380px;
-            font-size: 20px;
         }
         .carousel-item iframe{
-            min-width: 100%;
-            min-height: 300px;
+            min-width: 380px;
+            min-height: 280px;
         }
     }
 
@@ -219,7 +235,7 @@
             font-size: 23px;
         }
         .carousel-item iframe{
-            min-width: 100%;
+            min-width: 440px;
             min-height: 300px;
         }
     }

@@ -5,7 +5,6 @@ function createCarousel(block, videos, titles) {
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
 
-  // Create a carousel item for each video
   videos.forEach((video, index) => {
     const carouselItem = document.createElement('div');
     carouselItem.classList.add('carousel-item');
@@ -21,7 +20,6 @@ function createCarousel(block, videos, titles) {
     videoTitle.classList.add('video-title');
     videoTitle.textContent = titles[index];
 
-    // Append the iframe and title to the carousel item
     carouselItem.appendChild(iframeElement);
     carouselItem.appendChild(videoTitle);
     carouselTrack.appendChild(carouselItem);
@@ -33,7 +31,7 @@ function createCarousel(block, videos, titles) {
   carouselContainer.appendChild(carouselTrack);
   block.appendChild(carouselContainer);
 
-  // Carousel Navigation
+  // Carousel navigation logic
   const carouselNav = document.createElement('div');
   carouselNav.classList.add('carousel-navigation');
 

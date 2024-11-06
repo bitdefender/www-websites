@@ -1,6 +1,5 @@
 import { debounce, isView } from '../../scripts/utils/utils.js';
 
-
 export default async function decorate(block) {
   const slides = [...block.children];
   const AUTOMATIC_SLIDING = {
