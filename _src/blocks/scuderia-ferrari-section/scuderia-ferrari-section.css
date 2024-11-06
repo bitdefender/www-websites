@@ -148,6 +148,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 
     .scuderia-ferrari-section.video-block{
+        padding:5%;
         h2{ 
             line-height: 1;
             font-size: 44px;
@@ -324,6 +325,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 
     .scuderia-ferrari-section.video-block{
+        padding: 10%;
         h2{
             font-size: 64px;
         }
