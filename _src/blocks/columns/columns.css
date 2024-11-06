@@ -1218,7 +1218,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .columns-wrapper {
     padding: var(--body-padding) var(--body-padding) 0;
   }
