@@ -518,8 +518,8 @@
 
     .dropdown-box-container .new>div:nth-child(1)>div::after,
     .dropdown-box-container.new .block>div:nth-child(1)>div::after {
-        position: static;
-        margin-left: 15px;
+        position: absolute;
+        right: -10px;
         flex: 0 0 auto;
     }
 
@@ -609,6 +609,7 @@
     .dropdown-box-container .new div:nth-child(1)>div,
     .dropdown-box-container.new .block div:nth-child(1)>div {
         display: inline-block;
+        width: 95%;
         font-size: 18px;
         line-height: 24px;
     }
