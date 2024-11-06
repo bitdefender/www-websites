@@ -266,8 +266,7 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul {
-  margin: 0;
-  margin-bottom: -5px;
+  margin-top: -5px;
   padding: 0;
   color: black;
 }
