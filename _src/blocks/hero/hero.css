@@ -569,7 +569,6 @@ main .hero.ferrari .hero-content{
 
 main .hero.ferrari .hero-content img{
   position: relative;
-  right: 10%;
 }
 
 main .hero.ferrari .breadcrumb{
@@ -937,6 +936,24 @@ main .hero.ferrari .breadcrumb{
 
   main .v2 .hero h1+p {
     font-size: var(--body-font-size-xs);
+  }
+  main .hero.ferrari .hero-picture{
+    display: block;
+  }
+
+  main .hero.ferrari .hero-content >div{
+    text-align: center;
+  }
+
+  main .hero.ferrari .hero-picture picture img{
+    display: block;
+    position: absolute;
+    object-fit: cover;
+    padding: 0; 
+  }
+
+  main .hero.ferrari h1{
+    font-weight: 400;
   }
 }
 
