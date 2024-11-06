@@ -88,7 +88,7 @@ async function runDefaultFooterLogic(block) {
 }
 
 async function runLandingpageLogic(block) {
-  const footerPath = getMetadata('footer') || '/footer';
+  const footerPath = getMetadata('footer')?.split(', ')[0] || '/footer';
   const resp = await fetch(`${footerPath}.plain.html`);
 
   const fragment = document.createElement('main');
