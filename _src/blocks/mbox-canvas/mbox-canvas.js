@@ -17,7 +17,7 @@ function createOfferParameters() {
   const feature = urlParams.get('feature');
   urlParams.forEach((value, key) => {
     if (value === feature) {
-      parameters['feature'] = feature;
+      parameters.feature = feature;
     }
   })
 
@@ -41,8 +41,8 @@ export default async function decorate(block) {
     parameters: parameters
   }]);
   const page = await fetch(`${offer[mboxName].content.offer}`);
-  const aemHeaderHtml = await page.text();
-  let decoratedHTML = decorateHTMLOffer(aemHeaderHtml);
-  block.querySelector('.canvas-content').innerHTML = decoratedHTML.innerHTML;
+  const offerHtml = await page.text();
+  let decoratedOfferHtml = decorateHTMLOffer(offerHtml);
+  block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));
 }
