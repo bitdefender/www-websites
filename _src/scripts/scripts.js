@@ -18,6 +18,7 @@ import {
   PageLoadedEvent,
   PageLoadStartedEvent,
   resolveNonProductsDataLayer,
+  Target,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 import Page from './libs/page.js';
@@ -27,6 +28,7 @@ import {
   createTag,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
+import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
@@ -372,6 +374,9 @@ async function loadLazy(doc) {
   }
 
   loadTrackers();
+  Target.getOffers([{
+    name: getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY),
+  }]);
   await loadBlocks(main);
 
   const { hash } = window.location;

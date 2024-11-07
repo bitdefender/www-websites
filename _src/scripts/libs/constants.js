@@ -13,7 +13,9 @@ export const Constants = {
   DEV_DOMAINS: ["localhost", "stage", ".hlx."],
 
   DISABLE_TARGET_PARAMS: {
-	key: "dotest",
-	value: "1"
-  }
+    key: "dotest",
+    value: "1"
+  },
+
+  TARGET_EXPERIMENT_METADATA_KEY: "target-experiment-location"
 }
