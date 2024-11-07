@@ -585,7 +585,14 @@ export class Target {
    * @type {Mbox}
    */
   static offers = null;
-  static campaign = undefined;
+
+  /**
+   * @typedef {{content: {pid: string}}} PidMbox
+   * @type {Promise<PidMbox|undefined>}
+   */
+  static campaign = this.getOffers([{
+    name: 'initSelector-mbox'
+  }]);
 
   static #staticInit = new Promise(resolve => {
 
@@ -644,15 +651,7 @@ export class Target {
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    if (this.campaign !== undefined) {
-      return this.campaign;
-    }
-
-    this.campaign = (await this.getOffers([{
-      name: 'initSelector-mbox'
-    }]))?.content?.pid || null;
-
-    return this.campaign;
+    return (await this.campaign)?.content?.pid || null;
   }
 
   /**
