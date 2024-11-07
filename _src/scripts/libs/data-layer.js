@@ -573,7 +573,7 @@ window._Visitor = Visitor;
 
 export class Target {
   static events = {
-    LIBRARY_LOADED: "at-library-loaded",
+    LIBRARY_LOADED: "at-library-loaded"
   }
 
   /**
@@ -585,6 +585,7 @@ export class Target {
    * @type {Mbox}
    */
   static offers = null;
+  static campaign = undefined;
 
   static #staticInit = new Promise(resolve => {
 
@@ -597,16 +598,25 @@ export class Target {
 
     /** Target is loaded and we wait for it to finish so we can get the offer */
     if (window.adobe?.target) {
-      this.#getOffers().then(resolve);
+      resolve();
       return;
     }
 
     /** Target wasn't loaded we wait for events from it */
-    document.addEventListener(this.events.LIBRARY_LOADED, async () => {
-      await this.#getOffers();
+    document.addEventListener(this.events.LIBRARY_LOADED, () => {
       resolve();
     }, { once: true });
   });
+
+  /**
+   * get the flag which marks wether the page should use Vlaicu or not
+   * @returns {Promise<boolean>}
+   */
+  static async getVlaicuFlag() {
+    return Boolean(await this.getOffers([{
+      name: 'vlaicu-flag-mbox'
+    }])?.content?.vlaicuFlag || null);
+  }
 
   /**
    * get the product-buy link mappings from Target (
@@ -624,8 +634,9 @@ export class Target {
    * @returns {Promise<object>}
    */
   static async getBuyLinksMapping() {
-    await this.#staticInit;
-    return this.offers?.["buyLinks-mbox"]?.content || {};
+    return (await this.getOffers([{
+      name: 'buyLinks-mbox'
+    }]))?.content || {};
   }
 
   /**
@@ -633,8 +644,15 @@ export class Target {
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    await this.#staticInit;
-    return this.offers?.["initSelector-mbox"]?.content?.pid || null
+    if (this.campaign !== undefined) {
+      return this.campaign;
+    }
+
+    this.campaign = (await this.getOffers([{
+      name: 'initSelector-mbox'
+    }]))?.content?.pid || null;
+
+    return this.campaign;
   }
 
   /**
@@ -645,37 +663,12 @@ export class Target {
     await this.#staticInit;
   }
 
-  /**
-   * @returns {[string]}
-   */
-  static #getAllMboxes() {
-    const mboxes = [...document.querySelectorAll("[data-mboxes]")]
-      .map(mboxes => {
-        try {
-          return JSON.parse(mboxes.dataset.mboxes)
-        } catch (error) {
-          console.warn(error);
-          return null;
-        }
-      })
-      .filter(Boolean)
-      .reduce((acc, mboxes) => {
-        mboxes.forEach(mbox => acc.add(mbox));
-        return acc;
-      }, new Set());
-
-    if (!mboxes) {
-      return [];
-    }
-
-    return [...mboxes].map((name, index) => { return { index: index + 2, name } });
-  }
-
-  static async #getOffers() {
-    const mboxes = this.#getAllMboxes();
-
+  static async getOffers(mboxes) {
+    // const mboxes = this.#getAllMboxes();
+    await this.#staticInit;
+    let offers = {};
     try {
-      this.offers = await window.adobe?.target?.getOffers({
+      offers = await window.adobe?.target?.getOffers({
         consumerId: await Visitor.getConsumerId(),
         request: {
           id: {
@@ -683,15 +676,13 @@ export class Target {
           },
           execute: {
             mboxes: [
-              { index: 0, name: "initSelector-mbox" },
-              { index: 1, name: "buyLinks-mbox"},
-              ...mboxes
+              ...mboxes.map((mbox, index) => {return { index, ...mbox}})
             ]
           }
         }
       });
 
-      this.offers = this.offers?.execute?.mboxes?.reduce((acc, mbox) => {
+      offers = offers?.execute?.mboxes?.reduce((acc, mbox) => {
         acc[mbox.name] = {};
         acc[mbox.name].content = mbox?.options?.[0]?.content;
         acc[mbox.name].type = mbox?.options?.[0]?.type;
@@ -701,16 +692,8 @@ export class Target {
     } catch (e) {
       console.warn(e);
     }
-  }
 
-  /**
-   * 
-   * @param {string} mbox 
-   * @returns {Promise<Mbox|null>}
-   */
-  static async getMbox(mbox) {
-    await this.#staticInit;
-    return this.offers?.[mbox];
+    return offers;
   }
 };
 
