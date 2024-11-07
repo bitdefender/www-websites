@@ -11,20 +11,36 @@ function decorateHTMLOffer(aemHeaderHtml) {
   return newHtml;
 }
 
-export default async function decorate(block) {
-  let parametersJSON = {
-    feature : 'main_ui'
-  }
-  block.innerHTML += `
-      <div class="canvas-content">
+function createOfferParameters() {
+  let parameters = {}
+  const urlParams = new URLSearchParams(window.location.search);
+  const feature = urlParams.get('feature');
+  urlParams.forEach((value, key) => {
+    if (value === feature) {
+      parameters['feature'] = feature;
+    }
+  })
 
-      </div>
-    `;
+  return parameters;
+}
+
+export default async function decorate(block) {
+  const {
+    // eslint-disable-next-line no-unused-vars
+    mboxName,
+  } = block.closest('.section').dataset;
+
+  let parameters = createOfferParameters();
+  block.innerHTML += `
+    <div class="canvas-content">
+
+    </div>
+  `;
   const offer = await Target.getOffers([{
-    name: 'something',
-    parameters: parametersJSON
+    name: mboxName,
+    parameters: parameters
   }]);
-  const page = await fetch(`${offer['something'].content.offer}`);
+  const page = await fetch(`${offer[mboxName].content.offer}`);
   const aemHeaderHtml = await page.text();
   let decoratedHTML = decorateHTMLOffer(aemHeaderHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedHTML.innerHTML;
