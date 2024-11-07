@@ -26,7 +26,8 @@
     }
 
     .carousel-item {
-        padding: 10px;
+        padding: 10%;
+        padding-right: 40px;
         text-align: center;
     }
 
@@ -88,19 +89,20 @@
     @media (min-width: 767px) {
         .carousel-item{
             text-align: left;
+            padding-right: 50px;
         }
 
         .carousel-container{
             padding-left: 2%;
         }
 
-        .carousel-track{
-            gap:50px;
+        .carousel-dot:last-of-type{
+            display: none;
         }
 
         .carousel-item iframe {
-            min-width: 400px;
-            height: 250px;
+            min-width: 300px;
+            height: 220px;
             border-radius: 40px;
         }
     }
@@ -108,6 +110,11 @@
     @media (min-width:1020px){
         .carousel-container{
             padding-left: 3%;
+        }
+
+        .carousel-item iframe{
+            min-width: 400px;
+            min-height: 280px;
         }
     }
 
