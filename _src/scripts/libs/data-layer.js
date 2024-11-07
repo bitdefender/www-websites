@@ -585,6 +585,7 @@ export class Target {
    * @type {Mbox}
    */
   static offers = null;
+  static campaign = undefined;
 
   static #staticInit = new Promise(resolve => {
 
@@ -632,20 +633,26 @@ export class Target {
    * )
    * @returns {Promise<object>}
    */
-  static getBuyLinksMapping() {
-    return this.getOffers([{
+  static async getBuyLinksMapping() {
+    return (await this.getOffers([{
       name: 'buyLinks-mbox'
-    }])?.content || {};
+    }]))?.content || {};
   }
 
   /**
    * https://bitdefender.atlassian.net/wiki/spaces/WWW/pages/1661993460/Activating+Promotions+Enhancements+Target
    * @returns {Promise<string|null>}
    */
-  static getCampaign() {
-    return this.getOffers([{
+  static async getCampaign() {
+    if (this.campaign !== undefined) {
+      return this.campaign;
+    }
+
+    this.campaign = (await this.getOffers([{
       name: 'initSelector-mbox'
-    }])?.content?.pid || null;
+    }]))?.content?.pid || null;
+
+    return this.campaign;
   }
 
   /**
