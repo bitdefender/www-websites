@@ -70,6 +70,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 .scuderia-ferrari-section.quotes-left{
     align-items: baseline;
     text-align: left;
+    /* eslint-disable-next-line no-descending-specificity */
     div{
         justify-content: flex-end;
     }
@@ -83,7 +84,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     text-align: right;
     align-items: end;
     justify-content: right;
-
+    /* eslint-disable-next-line no-descending-specificity */
     div{
         align-items: end;
     }
