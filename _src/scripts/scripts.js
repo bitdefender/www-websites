@@ -374,9 +374,13 @@ async function loadLazy(doc) {
   }
 
   loadTrackers();
-  Target.getOffers([{
-    name: getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY),
-  }]);
+
+  // make an offer call to stitch the data on the Target side
+  const targetExperimentMetadata = getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
+  if (targetExperimentMetadata) {
+    Target.getOffers([{ name: targetExperimentMetadata }]);
+  }
+
   await loadBlocks(main);
 
   const { hash } = window.location;
