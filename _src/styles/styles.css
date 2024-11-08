@@ -1516,6 +1516,7 @@ main .section.blue a.button.modal::after {
   letter-spacing: .8px;
   padding: 3px 7px 3px 8px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .tag-dark-blue {
