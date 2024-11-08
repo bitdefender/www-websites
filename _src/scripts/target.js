@@ -35,12 +35,9 @@ function generateSessionID(length = 16) {
  */
 function getOrCreateSessionId() {
   let sessionId = sessionStorage.getItem(ADOBE_TARGET_SESSION_ID_PARAM);
-  // eslint-disable-next-line no-console
-  console.debug(`Session id: ${sessionId}`);
+
   if (!sessionId) {
     sessionId = generateSessionID();
-    // eslint-disable-next-line no-console
-    console.debug(`Generated new session id: ${sessionId}`);
     sessionStorage.setItem(ADOBE_TARGET_SESSION_ID_PARAM, sessionId);
   }
   return sessionId;
@@ -51,8 +48,6 @@ function getOrCreateSessionId() {
  * @returns {Promise<boolean>}
  */
 async function fetchChallengerPageUrl(tenant, targetLocation) {
-  // eslint-disable-next-line no-console
-  console.debug(`Fetching target offers for location: ${targetLocation}`);
   const res = await fetch(`https://${tenant}.tt.omtrdc.net/rest/v1/delivery?client=${tenant}&sessionId=${getOrCreateSessionId()}`, {
     method: 'POST',
     headers: {
@@ -76,15 +71,15 @@ async function fetchChallengerPageUrl(tenant, targetLocation) {
 
   const payload = await res.json();
   const mbox = payload.execute.mboxes.find((m) => m.name === targetLocation);
-  const { url } = mbox?.options[0].content ?? { url: null };
-  if (!url) {
-    // eslint-disable-next-line no-console
-    console.error('No challenger url found');
-    throw new Error('No challenger url found');
+  let url = null;
+  if (mbox && mbox.options && mbox.options[0].content) {
+    url = mbox.options[0].content.url;
   }
 
-  // eslint-disable-next-line no-console
-  console.debug(`Resolved challenger url: ${url}`);
+  if (!url) {
+    throw new Error('No challsenger url found');
+  }
+
   return url;
 }
 
@@ -95,9 +90,6 @@ async function fetchChallengerPageUrl(tenant, targetLocation) {
  */
 async function navigateToChallengerPage(url) {
   const plainPath = getPlainPageUrl(url);
-
-  // eslint-disable-next-line no-console
-  console.debug(`Navigating to challenger page: ${plainPath}`);
 
   const resp = await fetch(plainPath);
   if (!resp.ok) {
@@ -119,16 +111,10 @@ export async function runTargetExperiment(clientId) {
     const targetLocation = getMetadata('target-experiment-location');
     if (!experimentId || !targetLocation) {
       // eslint-disable-next-line no-console
-      console.log('Experiment id or target location not found');
       return null;
     }
 
-    // eslint-disable-next-line no-console
-    console.debug(`Running Target experiment ${experimentId} at location ${targetLocation}`);
-
     const pageUrl = await fetchChallengerPageUrl(clientId, targetLocation);
-    // eslint-disable-next-line no-console
-    console.debug(`Challenger page url: ${pageUrl}`);
 
     await navigateToChallengerPage(pageUrl);
 
@@ -142,8 +128,6 @@ export async function runTargetExperiment(clientId) {
       experimentVariant: pageUrl,
     };
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error('Error running target experiment:', e);
     return null;
   }
 }
