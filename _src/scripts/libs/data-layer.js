@@ -5,6 +5,20 @@ import { Constants } from "./constants.js";
 
 /**
  * 
+ * @returns {boolean} returns wether A/B tests should be disabled or not
+ */
+const shouldABTestsBeDisabled = () => {
+  /** This is a special case for when adobe.target is disabled using dotest query param */
+  const windowSearchParams = new URLSearchParams(window.location.search);
+  if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key) === Constants.DISABLE_TARGET_PARAMS.value) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * 
  * @param {import("./store").ProductOption} option
  */
 const getOptionInfo = (option) => {
@@ -72,7 +86,8 @@ export class PageLoadStartedEvent {
    */
   async #getTargetExperimentDetails() {
     let targetExperimentDetails = null;
-    if (this.#getMetadata('target-experiment') !== '') {
+
+    if (this.#getMetadata('target-experiment') !== '' && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
       targetExperimentDetails = await runTargetExperiment(this.TARGET_TENANT);
     }
@@ -201,9 +216,6 @@ export class PageLoadStartedEvent {
     }
 
     const experimentDetails = (await this.#getTargetExperimentDetails()) ?? this.#getExperimentDetails();
-    // eslint-disable-next-line no-console
-    console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
-  
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
@@ -589,8 +601,7 @@ export class Target {
   static #staticInit = new Promise(resolve => {
 
     /** This is a special case for when adobe.target is disabled using dotest query param */
-    const windowSearchParams = new URLSearchParams(window.location.search);
-    if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key) === Constants.DISABLE_TARGET_PARAMS.value) {
+    if (shouldABTestsBeDisabled()) {
       resolve();
       return;
     }
@@ -609,19 +620,19 @@ export class Target {
 
   /**
    * @typedef {{content: {pid: string}}} PidMbox
-   * @type {Promise<PidMbox|undefined>}
+   * @type {Promise<PidMbox|null>}
    */
    static #campaignMbox = this.getOffer('initSelector-mbox');
 
   /**
    * @typedef {{content: object}} BuyLinksMbox
-   * @type {Promise<BuyLinksMbox|undefined>}
+   * @type {Promise<BuyLinksMbox|null>}
    */
   static #buyLinksMbox = this.getOffer('buyLinks-mbox');
 
   /**
    * @typedef {{content: {vlaicuFlag: string}}} VlaicuFlagMbox
-   * @type {Promise<VlaicuFlagMbox|undefined>}
+   * @type {Promise<VlaicuFlagMbox|null>}
    */
   static #vlaicuFlagMbox = this.getOffer('vlaicu-flag-mbox');
 
@@ -673,7 +684,8 @@ export class Target {
    * @param {object} params 
    */
   static async getOffer(mboxName, params) {
-    return (await this.getOffers([{name: mboxName, params}]))[mboxName];
+    const receivedOffers = await this.getOffers([{name: mboxName, params}]);
+    return receivedOffers ? receivedOffers[mboxName] : null;
   }
 
   static async getOffers(mboxes) {
