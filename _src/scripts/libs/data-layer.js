@@ -585,7 +585,6 @@ export class Target {
    * @type {Mbox}
    */
   static offers = null;
-  static campaign = undefined;
 
   static #staticInit = new Promise(resolve => {
 
@@ -609,13 +608,29 @@ export class Target {
   });
 
   /**
+   * @typedef {{content: {pid: string}}} PidMbox
+   * @type {Promise<PidMbox|undefined>}
+   */
+   static #campaignMbox = this.getOffer('initSelector-mbox');
+
+  /**
+   * @typedef {{content: object}} BuyLinksMbox
+   * @type {Promise<BuyLinksMbox|undefined>}
+   */
+  static #buyLinksMbox = this.getOffer('buyLinks-mbox');
+
+  /**
+   * @typedef {{content: {vlaicuFlag: string}}} VlaicuFlagMbox
+   * @type {Promise<VlaicuFlagMbox|undefined>}
+   */
+  static #vlaicuFlagMbox = this.getOffer('vlaicu-flag-mbox');
+
+  /**
    * get the flag which marks wether the page should use Vlaicu or not
    * @returns {Promise<boolean>}
    */
   static async getVlaicuFlag() {
-    return Boolean(await this.getOffers([{
-      name: 'vlaicu-flag-mbox'
-    }])?.content?.vlaicuFlag || null);
+    return Boolean((await this.#vlaicuFlagMbox)?.content?.vlaicuFlag || null);
   }
 
   /**
@@ -634,9 +649,7 @@ export class Target {
    * @returns {Promise<object>}
    */
   static async getBuyLinksMapping() {
-    return (await this.getOffers([{
-      name: 'buyLinks-mbox'
-    }]))?.content || {};
+    return (await this.#buyLinksMbox)?.content || {};
   }
 
   /**
@@ -644,15 +657,7 @@ export class Target {
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    if (this.campaign !== undefined) {
-      return this.campaign;
-    }
-
-    this.campaign = (await this.getOffers([{
-      name: 'initSelector-mbox'
-    }]))?.content?.pid || null;
-
-    return this.campaign;
+    return (await this.#campaignMbox)?.content?.pid || null;
   }
 
   /**
@@ -663,8 +668,15 @@ export class Target {
     await this.#staticInit;
   }
 
+  /**
+   * @param {string} mboxName
+   * @param {object} params 
+   */
+  static async getOffer(mboxName, params) {
+    return (await this.getOffers([{name: mboxName, params}]))[mboxName];
+  }
+
   static async getOffers(mboxes) {
-    // const mboxes = this.#getAllMboxes();
     await this.#staticInit;
     let offers = {};
     try {
