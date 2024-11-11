@@ -525,6 +525,15 @@
   vertical-align: middle;
 }
 
+.columns-container.black-version{
+  background-color: #000;
+    color: white;
+}
+
+.columns-container.black-version.dlp h2{
+  color: #e72325;
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     flex-direction: unset;
