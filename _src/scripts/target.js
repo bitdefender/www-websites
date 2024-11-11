@@ -1,7 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { getMetadata, sampleRUM } from './lib-franklin.js';
-
-const ADOBE_TARGET_SESSION_ID_PARAM = 'adobeTargetSessionId';
+import { Constants } from './libs/constants.js';
 
 /**
  * Convert a URL to a relative URL.
@@ -34,21 +33,24 @@ function generateSessionID(length = 16) {
  * @returns {string}
  */
 function getOrCreateSessionId() {
-  let sessionId = sessionStorage.getItem(ADOBE_TARGET_SESSION_ID_PARAM);
+  let sessionId = sessionStorage.getItem(Constants.ADOBE_TARGET_SESSION_ID_PARAM);
 
   if (!sessionId) {
     sessionId = generateSessionID();
-    sessionStorage.setItem(ADOBE_TARGET_SESSION_ID_PARAM, sessionId);
+    sessionStorage.setItem(Constants.ADOBE_TARGET_SESSION_ID_PARAM, sessionId);
   }
   return sessionId;
 }
 
 /**
  * Fetch the target offers for the current location.
- * @returns {Promise<boolean>}
+ * @returns {Promise<{
+ * url: string;
+ * eventTokens: string[];
+ * }>}
  */
-async function fetchChallengerPageUrl(tenant, targetLocation) {
-  const res = await fetch(`https://${tenant}.tt.omtrdc.net/rest/v1/delivery?client=${tenant}&sessionId=${getOrCreateSessionId()}`, {
+async function fetchChallengerPageUrl(targetLocation) {
+  const res = await fetch(`https://${Constants.TARGET_TENANT}.tt.omtrdc.net/rest/v1/delivery?client=${Constants.TARGET_TENANT}&sessionId=${getOrCreateSessionId()}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -57,8 +59,7 @@ async function fetchChallengerPageUrl(tenant, targetLocation) {
       context: {
         channel: 'web',
       },
-      execute: {
-        pageLoad: {},
+      prefetch: {
         mboxes: [
           {
             name: targetLocation,
@@ -70,17 +71,22 @@ async function fetchChallengerPageUrl(tenant, targetLocation) {
   });
 
   const payload = await res.json();
-  const mbox = payload.execute.mboxes.find((m) => m.name === targetLocation);
-  let url = null;
-  if (mbox && mbox.options && mbox.options[0].content) {
-    url = mbox.options[0].content.url;
+  const mbox = payload.prefetch.mboxes.find((m) => m.name === targetLocation);
+  let pageUrl = null;
+  const eventTokens = [];
+  if (mbox && mbox.options) {
+    mbox.options.forEach((option) => {
+      if (option.eventToken) {
+        eventTokens.push(option.eventToken);
+      }
+    });
+
+    if (mbox.options[0].content) {
+      pageUrl = mbox.options[0].content.url;
+    }
   }
 
-  if (!url) {
-    throw new Error('No challsenger url found');
-  }
-
-  return url;
+  return { pageUrl, eventTokens };
 }
 
 /**
@@ -105,7 +111,7 @@ async function navigateToChallengerPage(url) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export async function runTargetExperiment(clientId) {
+export async function runTargetExperiment() {
   try {
     const experimentId = getMetadata('target-experiment');
     const targetLocation = getMetadata('target-experiment-location');
@@ -114,16 +120,19 @@ export async function runTargetExperiment(clientId) {
       return null;
     }
 
-    const pageUrl = await fetchChallengerPageUrl(clientId, targetLocation);
+    const { pageUrl, eventTokens } = await fetchChallengerPageUrl(targetLocation);
 
-    await navigateToChallengerPage(pageUrl);
+    if (pageUrl) {
+      await navigateToChallengerPage(pageUrl);
 
-    sampleRUM('target-experiment', {
-      source: `target:${experimentId}`,
-      target: pageUrl,
-    });
+      sampleRUM('target-experiment', {
+        source: `target:${experimentId}`,
+        target: pageUrl,
+      });
+    }
 
     return {
+      eventTokens,
       experimentId,
       experimentVariant: pageUrl,
     };

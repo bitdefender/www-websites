@@ -48,7 +48,6 @@ export class PageLoadStartedEvent {
   event = "page load started";
   pageInstanceID = "";
   page = null;
-  TARGET_TENANT = "bitdefender";
 
   /**
    * 
@@ -81,15 +80,30 @@ export class PageLoadStartedEvent {
   }
 
   /**
-   * get experiment details from Target
-   * @returns {object | null}
+  * get experiment details from Target
+  * @returns {{
+  *  experimentId: string;
+  *  experimentVariant: any;
+  * } | null}
    */
   async #getTargetExperimentDetails() {
+    /**
+     * @type {{
+     *  eventTokens: string[];
+     *  experimentId: string;
+     *  experimentVariant: any;
+     * }|null}
+     */
     let targetExperimentDetails = null;
 
     if (this.#getMetadata('target-experiment') !== '' && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      targetExperimentDetails = await runTargetExperiment(this.TARGET_TENANT);
+      targetExperimentDetails = await runTargetExperiment();
+      if (targetExperimentDetails) {
+        Target.setEventTokens(targetExperimentDetails.eventTokens);
+        delete targetExperimentDetails.eventTokens;
+        targetExperimentDetails = targetExperimentDetails.experimentVariant ? targetExperimentDetails : null;
+      }
     }
 
     return targetExperimentDetails;
@@ -539,14 +553,14 @@ export class Visitor {
   static #instance = null;
   static #staticInit = new Promise(resolve => {
     if (window.Visitor) {
-      Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
+      Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
       resolve();
       return;
     }
 
-    window.addEventListener("load", () => {
+    document.addEventListener('at-library-loaded', () => {
       if (window.Visitor) {
-        Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
+        Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
       }
       resolve();
     })
@@ -586,6 +600,18 @@ window._Visitor = Visitor;
 export class Target {
   static events = {
     LIBRARY_LOADED: "at-library-loaded"
+  }
+
+  /**
+   * @type {string[]}
+   */
+  static eventTokens = [];
+
+  /**
+   * @param {string[]}
+   */
+  static setEventTokens(value) {
+    this.eventTokens = value;
   }
 
   /**
@@ -691,6 +717,7 @@ export class Target {
   static async getOffers(mboxes) {
     await this.#staticInit;
     let offers = {};
+
     try {
       offers = await window.adobe?.target?.getOffers({
         consumerId: await Visitor.getConsumerId(),
@@ -718,6 +745,48 @@ export class Target {
     }
 
     return offers;
+  }
+
+  /**
+   * @param {{name: string}[]} mboxes
+   */
+  static async notifyTarget(mboxes) {
+    const sessionId = sessionStorage.getItem(Constants.ADOBE_TARGET_SESSION_ID_PARAM);
+    if (!sessionId || !this.eventTokens.length) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`https://${Constants.TARGET_TENANT}.tt.omtrdc.net/rest/v1/delivery?client=${Constants.TARGET_TENANT}&sessionId=${sessionId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: {
+            marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
+          },
+          context: {
+            channel: 'web',
+          },
+          notifications: mboxes.map(mbox => {
+            return {
+              id: `${mbox.name}:notification`,
+              type: "display",
+              timestamp: new Date().getTime(),
+              mbox,
+              tokens: this.eventTokens
+            }
+          }),
+        }),
+      });
+
+      if (!res.ok) {
+        console.warn("Notification to Target failed");
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   }
 };
 
