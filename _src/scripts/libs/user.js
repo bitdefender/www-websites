@@ -68,7 +68,7 @@ export class User {
     }
 
     try {
-      const response = await fetch(`${Constants.DEV_BASE_URL}/geoip`);
+      const response = await fetch(`/geoip`);
 
       if (!response.ok) {
         console.error(`FETCH-GEO-COOKIE-ERROR-CODE:${response.status} MESSAGE:${response.statusText}`);
