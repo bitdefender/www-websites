@@ -508,7 +508,7 @@ async function runDefaultHeaderLogic(block) {
         if (nav && nav.shadowRoot) {
           const languageBanner = nav.shadowRoot.querySelector('.language-banner.parbase');
           if (languageBanner) {
-            languageBanner.style.display = 'none';  
+            languageBanner.style.display = 'none';
           }
         }
       }
