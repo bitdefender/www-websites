@@ -3,7 +3,7 @@ import { decorateMain , detectModalButtons } from '../../scripts/scripts.js';
 import { loadBlocks } from '../../scripts/lib-franklin.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
-  let newHtml = document.createElement('div');
+  const newHtml = document.createElement('div');
   newHtml.innerHTML = aemHeaderHtml;
   decorateMain(newHtml);
   detectModalButtons(newHtml);
@@ -12,14 +12,18 @@ function decorateHTMLOffer(aemHeaderHtml) {
 }
 
 function createOfferParameters() {
-  let parameters = {}
+  const parameters = {};
   const urlParams = new URLSearchParams(window.location.search);
   const feature = urlParams.get('feature');
-  urlParams.forEach((value, key) => {
+  const language = urlParams.get('lang');
+  urlParams.forEach((value) => {
     if (value === feature) {
       parameters.feature = feature;
     }
-  })
+    if (value === language) {
+      parameters.language = language;
+    }
+  });
 
   return parameters;
 }
@@ -30,7 +34,7 @@ export default async function decorate(block) {
     mboxName,
   } = block.closest('.section').dataset;
 
-  let parameters = createOfferParameters();
+  const parameters = createOfferParameters();
   block.innerHTML += `
     <div class="canvas-content">
 
@@ -38,11 +42,11 @@ export default async function decorate(block) {
   `;
   const offer = await Target.getOffers([{
     name: mboxName,
-    parameters: parameters
+    parameters,
   }]);
   const page = await fetch(`${offer[mboxName].content.offer}`);
   const offerHtml = await page.text();
-  let decoratedOfferHtml = decorateHTMLOffer(offerHtml);
+  const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));
 }
