@@ -275,7 +275,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
             display: block;
             position: absolute;
             object-fit: cover;
-            top: 0;
+            top: 5%;
             bottom: 0;
             right: 0;
             width: auto;
@@ -314,7 +314,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 
 @media (min-width: 1200px){
     .scuderia-ferrari-section{
-        padding: 10%;
+        padding:7% 10%;
         h2{
             font-size: 36px;
         }
@@ -329,7 +329,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 
     .scuderia-ferrari-section.video-block{
-        padding: 10%;
+        padding:5% 10%;
         h2{
             font-size: 54px;
         }
@@ -407,7 +407,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 
 @media (min-width:1750px){
     .scuderia-ferrari-section{
-        padding: 10% 15%;
+        padding: 5% 15%;
         h2{
             font-size: 42px;
         }
