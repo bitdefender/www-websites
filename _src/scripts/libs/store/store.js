@@ -3,6 +3,7 @@ import { Target, Visitor } from "../data-layer.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
+import { User } from "../../libs/user.js"
 
 export const monthlyProducts = {
 	"ultsecm": "ultsecm",
@@ -923,7 +924,9 @@ class Vlaicu {
 	static campaign = "TSExpired0MRDLP24";
 
 	static async getProductVariations(productId, campaign) {
-
+		const userCountry = await User.country;
+		const userGeoIp = await fetch(`${Constants.DEV_BASE_URL}/p-api/v1/countries/${userCountry.toUpperCase()}/locales`);
+		console.log(userGeoIp);
 		const pathVariablesResolverObject = {
 			"{locale}": Page.locale,
 			"{bundleId}": productId,
@@ -965,7 +968,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId))?.product;
+		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()], campaignId))?.product;
 		if (!productInfo) {
 			return null;
 		}
@@ -1053,7 +1056,7 @@ class StoreConfig {
 	 */
 	constructor(vlaicuFlag) {
 		/**
-		 * Api used to fetch the prices
+		 * Api §d to fetch the prices
 		 * @type {"init"|"zuora"|"vlaicu"}
 		 */
 		this.provider = this.#getProvider(vlaicuFlag);
