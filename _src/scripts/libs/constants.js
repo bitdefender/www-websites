@@ -92,7 +92,13 @@ export const Constants = {
 	},
 
   DISABLE_TARGET_PARAMS: {
-	key: "dotest",
-	value: "1"
-  }
+    key: "dotest",
+    value: "1"
+  },
+
+  TARGET_EXPERIMENT_METADATA_KEY: "target-experiment-location",
+
+  ADOBE_TARGET_SESSION_ID_PARAM: "adobeTargetSessionId",
+
+  TARGET_TENANT: "bitdefender"
 }
