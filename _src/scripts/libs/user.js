@@ -8,6 +8,8 @@ export class User {
 
   static country = this.#getGeolocation();
 
+  static locale = this.#getUserLocale();
+
   /**
    * 
    * @returns {Promise<string | null>}
@@ -86,6 +88,21 @@ export class User {
     } catch(err) {
       console.warn('FETCH-GEO-COOKIE-ERROR');
       return "us";
+    }
+  }
+
+  /**
+   * Handling User Locale
+   * @return {Promise<string>}
+   */
+  static async #getUserLocale() {
+    const userCountry = await this.country;
+    try {
+		  const userGeoIpCall = await fetch(`${Constants.DEV_BASE_URL}/p-api/v1/countries/${userCountry.toUpperCase()}/locales`);
+      const userGeoIpData = await userGeoIpCall.json();
+      return userGeoIpData[0].locale.toLowerCase();
+    } catch {
+      return "en-us"
     }
   }
 };

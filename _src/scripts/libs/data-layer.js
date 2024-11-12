@@ -677,6 +677,14 @@ export class Target {
   }
 
   /**
+   * get the flag which marks wether the page should use geoIpPricing or not
+   * @returns {Promise<boolean>}
+   */
+  static async getVlaicuGeoIpPrice() {
+    return Boolean((await this.#vlaicuFlagMbox)?.content?.geoIpPrice || null);
+  }
+
+  /**
    * get the product-buy link mappings from Target (
    *  e.g
    *  {
