@@ -503,6 +503,14 @@ async function runDefaultHeaderLogic(block) {
       document.querySelector('body > div:first-child').classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
+      if (window.location.href.includes('scuderiaferrari')) {
+        if (nav && nav.shadowRoot) {
+          const languageBanner = nav.shadowRoot.querySelector('.language-banner.parbase');
+          if (languageBanner) {
+            languageBanner.style.display = 'none';  
+          }
+        }
+      }
       return;
     }
 
@@ -625,6 +633,5 @@ function applyHeaderFactorySetup(headerMetadata, header) {
 export default async function decorate(block) {
   const headerMetadata = getMetadata('header-type');
   block.parentNode.classList.add(headerMetadata || 'default');
-
   applyHeaderFactorySetup(headerMetadata, block);
 }
