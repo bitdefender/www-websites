@@ -504,10 +504,10 @@ async function runDefaultHeaderLogic(block) {
 
       adobeMcAppendVisitorId(shadowRoot);
       if (window.location.href.includes('scuderiaferrari')) {
-        if (nav && nav.shadowRoot) {
+        if (nav?.shadowRoot) {
           const languageBanner = nav.shadowRoot.querySelector('.language-banner.parbase');
           if (languageBanner) {
-            languageBanner.style.display = 'none';  
+            languageBanner.style.display = 'none';
           }
         }
       }
