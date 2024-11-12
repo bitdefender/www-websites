@@ -552,6 +552,12 @@ export class Visitor {
   static #instanceID = '0E920C0F53DA9E9B0A490D45@AdobeOrg';
   static #instance = null;
   static #staticInit = new Promise(resolve => {
+
+    if (shouldABTestsBeDisabled()) {
+      resolve();
+      return;
+    }
+
     if (window.Visitor) {
       Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
       resolve();
