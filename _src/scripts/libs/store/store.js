@@ -924,11 +924,9 @@ class Vlaicu {
 	static campaign = "TSExpired0MRDLP24";
 
 	static async getProductVariations(productId, campaign) {
-		const userCountry = await User.country;
-		const userGeoIp = await fetch(`${Constants.DEV_BASE_URL}/p-api/v1/countries/${userCountry.toUpperCase()}/locales`);
-		console.log(userGeoIp.json());
+		const locale = await Target.getVlaicuGeoIpPrice() ? await User.locale : Page.locale;
 		const pathVariablesResolverObject = {
-			"{locale}": Page.locale,
+			"{locale}": locale,
 			"{bundleId}": productId,
 			"{campaignId}": this.campaign // TODO: replace with campaign received as parameter
 		};
@@ -1176,7 +1174,7 @@ export class Store {
 		
 		// create the store config if it does not exist
 		if (!this.config) {
-			this.config = new StoreConfig(await Target.getVlaicuFlag());
+			this.config = new StoreConfig(await Target.getVlaicuFlag().vlaicuFlag);
 		}
 
 		// get the target buyLink mappings
