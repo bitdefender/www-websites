@@ -503,6 +503,15 @@ async function runDefaultHeaderLogic(block) {
       document.querySelector('body > div:first-child').classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
+     //TODO: remove this code once localizations are done 
+      if (window.location.href.includes('scuderiaferrari')) {
+        if (nav && nav.shadowRoot) {
+          const languageBanner = nav.shadowRoot.querySelector('.language-banner.parbase');
+          if (languageBanner) {
+            languageBanner.style.display = 'none';  
+          }
+        }
+      }
       return;
     }
 
