@@ -61,7 +61,7 @@
 
     .video-title {
         font-size: 16px;
-        font-weight: bold;
+        font-weight: 400;
         margin-top: 10px;
         color: #333;
     }
@@ -104,6 +104,10 @@
             min-width: 300px;
             height: 220px;
             border-radius: 40px;
+        }
+
+        .video-title{
+            font-size: 23px;
         }
     }
 
