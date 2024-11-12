@@ -926,7 +926,7 @@ class Vlaicu {
 	static async getProductVariations(productId, campaign) {
 		const userCountry = await User.country;
 		const userGeoIp = await fetch(`${Constants.DEV_BASE_URL}/p-api/v1/countries/${userCountry.toUpperCase()}/locales`);
-		console.log(userGeoIp);
+		console.log(userGeoIp.json());
 		const pathVariablesResolverObject = {
 			"{locale}": Page.locale,
 			"{bundleId}": productId,
