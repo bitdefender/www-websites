@@ -81,8 +81,7 @@ export class User {
         return "us";
       }
 
-      Cookie.set("cf-ipcountry", country["cf-ipcountry"], 0.02);
-      return country["cf-ipcountry"].toLowerCase();
+      return country.country.toLowerCase();
 
     } catch(err) {
       console.warn('FETCH-GEO-COOKIE-ERROR');
