@@ -503,14 +503,6 @@ async function runDefaultHeaderLogic(block) {
       document.querySelector('body > div:first-child').classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
-      if (window.location.href.includes('scuderiaferrari')) {
-        if (nav?.shadowRoot) {
-          const languageBanner = nav.shadowRoot.querySelector('.language-banner.parbase');
-          if (languageBanner) {
-            languageBanner.style.display = 'none';
-          }
-        }
-      }
       return;
     }
 
