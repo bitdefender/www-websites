@@ -1174,7 +1174,7 @@ export class Store {
 		
 		// create the store config if it does not exist
 		if (!this.config) {
-			this.config = new StoreConfig(await Target.getVlaicuFlag().vlaicuFlag);
+			this.config = new StoreConfig(await Target.getVlaicuFlag());
 		}
 
 		// get the target buyLink mappings
