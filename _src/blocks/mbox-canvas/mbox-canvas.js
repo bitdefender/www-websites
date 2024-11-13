@@ -21,7 +21,7 @@ function createOfferParameters() {
       parameters.feature = feature;
     }
     if (value === language) {
-      parameters.language = language;
+      parameters.lang = language;
     }
   });
 
