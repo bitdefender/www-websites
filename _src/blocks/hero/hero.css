@@ -38,7 +38,7 @@ main .section.bfoffer .hero .hero-content {
   background-color: transparent;
 }
 
-main .bfoffer .hero .hero-content picture img {
+main .bfoffer .hero .hero-content p:last-of-type picture img {
   display: none;
 }
 
@@ -940,7 +940,7 @@ main .hero.ferrari .breadcrumb{
     padding-bottom: 0;
   }
 
-  main .bfoffer .hero .hero-content picture img {
+  main .bfoffer .hero .hero-content p:last-of-type picture img {
     display: block;
   }
 
