@@ -1135,7 +1135,7 @@ main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a {
   color: white;
 }
 
-main .section[data-hidebreadcrumb='yes'] .hero .hero-content .breadcrumb, main .section[data-hidebreadcrumb='yes'] .hero .hero-content .signature {
+main .section[data-hidebreadcrumb='yes'] .hero .hero-content .breadcrumb, main .section[data-hidesgnature='yes'] .hero .hero-content .signature {
   display: none;
 }
 
