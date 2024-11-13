@@ -30,11 +30,15 @@ main .hero {
   min-height: 300px;
 }
 
-main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a {
-  color: white;
+main .section.bfoffer .hero {
+  background-color: transparent;
 }
 
-main .section[data-hidebreadcrumb='yes'] .hero .hero-content .breadcrumb {
+main .section.bfoffer .hero .hero-content {
+  background-color: transparent;
+}
+
+main .bfoffer .hero .hero-content picture img {
   display: none;
 }
 
@@ -929,6 +933,15 @@ main .hero.ferrari .breadcrumb{
   main .hero .hero-picture,
   main .v2 .hero .hero-content>div:last-of-type img {
     display: none;
+  }
+
+  main .bfoffer main .hero {
+    padding-top: 3rem;
+    padding-bottom: 0;
+  }
+
+  main .bfoffer .hero .hero-content picture img {
+    display: block;
   }
 
   main .v2 .hero .hero-content>div table tr td:last-of-type {
