@@ -1135,6 +1135,10 @@ main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a {
   color: white;
 }
 
+main .section[data-hidebreadcrumb='yes'] .hero .hero-content .breadcrumb {
+  display: none;
+}
+
 /* linked pictures with video button overlay */
 main a.video-placeholder {
   position: relative;
