@@ -1131,12 +1131,8 @@ main .section[data-textcolor='white'] * {
   color: white;
 }
 
-main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a {
+main .section[data-textcolor='white'] * {
   color: white;
-}
-
-main .section[data-hidebreadcrumb='yes'] .hero .hero-content .breadcrumb, main .section[data-hidesgnature='yes'] .hero .hero-content .signature {
-  display: none;
 }
 
 /* linked pictures with video button overlay */

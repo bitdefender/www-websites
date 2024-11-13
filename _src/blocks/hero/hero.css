@@ -30,6 +30,14 @@ main .hero {
   min-height: 300px;
 }
 
+main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a {
+  color: white;
+}
+
+main .section[data-hidebreadcrumb='yes'] .hero .hero-content .breadcrumb, main .section[data-hidesgnature='yes'] .hero .hero-content .signature {
+  display: none;
+}
+
 /* breadcrumbs */
 main .hero .hero-content .breadcrumb {
   font-weight: var(--font-weight-bold);
@@ -946,7 +954,7 @@ main .hero.ferrari .breadcrumb{
     display: block;
     position: absolute;
     object-fit: cover;
-    padding: 0; 
+    padding: 0;
   }
 
   main .hero.ferrari h1{
