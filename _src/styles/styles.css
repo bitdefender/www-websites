@@ -1131,10 +1131,6 @@ main .section[data-textcolor='white'] * {
   color: white;
 }
 
-main .section[data-textcolor='white'] * {
-  color: white;
-}
-
 /* linked pictures with video button overlay */
 main a.video-placeholder {
   position: relative;
