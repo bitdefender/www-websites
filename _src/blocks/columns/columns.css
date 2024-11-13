@@ -164,10 +164,6 @@
   margin-left: auto;
 }
 
-.columns-container.black-version.dlp h2{
-  color: #e72325;
-}
-
 .dlp.columns-container h2{
   color: #006DFF;
 }
@@ -987,7 +983,9 @@
   margin: 1em auto;
 }
 
-
+.columns-container.black-version.dlp h2{
+  color: #e72325;
+}
 
 @media (min-width: 768px) {
   .linear-gradient.columns-container[data-bg-image]{
