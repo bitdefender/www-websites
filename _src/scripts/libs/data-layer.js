@@ -613,6 +613,8 @@ export class Target {
    */
   static eventTokens = [];
 
+  static urlParameters = this.#getUrlParameters();
+
   /**
    * @param {string[]}
    */
@@ -728,6 +730,21 @@ export class Target {
     return receivedOffers ? receivedOffers[mboxName] : null;
   }
 
+  /**
+   * Function to get all URL parameters and put them in an object
+   * @returns {Object} An object containing all URL parameters
+   */
+  static #getUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const parameters = {};
+
+    urlParams.forEach((value, key) => {
+      parameters[key] = value;
+    });
+
+    return parameters;
+  }
+
   static async getOffers(mboxes) {
     await this.#staticInit;
     let offers = {};
@@ -741,7 +758,9 @@ export class Target {
           },
           execute: {
             mboxes: [
-              ...mboxes.map((mbox, index) => {return { index, ...mbox}})
+              ...mboxes.map((mbox, index) => {
+                return { index, name: mbox.name, parameters: Object.assign(urlParameters, mbox.parameters) }
+              })
             ]
           }
         }
