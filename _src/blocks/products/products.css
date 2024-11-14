@@ -384,7 +384,7 @@
   right: 17px;
 }
 
-.product-card .price.nanoblock{
+.product-card .price.nanoblock, .product-card .featured.nanoblock{
   font-family: 'Arial', sans-serif;
 }
 
