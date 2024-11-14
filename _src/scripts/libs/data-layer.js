@@ -613,7 +613,10 @@ export class Target {
    */
   static eventTokens = [];
 
-  static urlParameters = this.#getUrlParameters();
+  /**
+   * @type {Object{}}
+   */
+  static #urlParameters = this.#getUrlParameters();
 
   /**
    * @param {string[]}
@@ -759,7 +762,7 @@ export class Target {
           execute: {
             mboxes: [
               ...mboxes.map((mbox, index) => {
-                return { index, name: mbox.name, parameters: Object.assign(urlParameters, mbox.parameters) }
+                return { index, name: mbox.name, parameters: Object.assign(this.#urlParameters, mbox.parameters) }
               })
             ]
           }
