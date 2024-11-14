@@ -309,6 +309,10 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
     border-right: 1px solid var(--background-color-light-sky-blue);
 }
 
+.product-comparison-table .old-price-box, .product-comparison-table .new-price-box{
+    font-family: 'Arial', sans-serif;
+}
+
 @media (max-width: 580px) {
     .product-comparison-table.with-fixed-width {
         width: 100%;
@@ -634,10 +638,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
     font-weight: 400;
     line-height: 2;
     margin-bottom: 0;
-}
-
-.product-comparison-table .old-price-box, .product-comparison-table .new-price-box{
-    font-family: 'Arial', sans-serif;
 }
 
 @media (max-width: 992px) {
