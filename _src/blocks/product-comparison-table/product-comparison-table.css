@@ -636,6 +636,10 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
     margin-bottom: 0;
 }
 
+.product-comparison-table .old-price-box, .product-comparison-table .new-price-box{
+    font-family: 'Arial', sans-serif;
+}
+
 @media (max-width: 992px) {
     .section.product-comparison-table-container .old-price-box span {
         font-size: var(--body-font-size-xxs);
