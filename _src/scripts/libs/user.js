@@ -4,9 +4,26 @@ import { UserAgent } from "./user-agent/index.js";
 
 export class User {
 
+  static #staticInit = this.#staticInitialise();
+
   static fingerprint = this.#getFingerprint();
 
   static country = this.#getGeolocation();
+
+  static async #staticInitialise() {
+
+    const megaMenuLoginContainer = document.querySelector('li.mega-menu__login-container');
+    if (!megaMenuLoginContainer || !Cookie.has(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME)) {
+        return null;
+    }
+
+    try {
+        const userDataResponse = await fetch('/bin/login/userInfo.json');
+        return userDataResponse.ok ? (await userDataResponse.json()).result : null;
+    } catch {
+        return null;
+    }
+}
 
   /**
    * 
@@ -18,6 +35,12 @@ export class User {
       const storageFingerprint = localStorage.getItem(Constants.FINGERPRINT_LOCAL_STORAGE_NAME);
       if (storageFingerprint) {
         return storageFingerprint;
+      }
+
+      // Try to grab fingerprint from login data
+      const loginData = await this.#staticInit;
+      if (loginData) {
+        return loginData.fingerprint;
       }
   
       // Try to grab fingerprint from dummyPost (from user local antivirus instance)
@@ -46,6 +69,7 @@ export class User {
   
           if (fingerprintReq.ok && fingerprintReq.headers.has(fingerprintHeader)) {
             const fingerprint = fingerprintReq.headers.get(fingerprintHeader);
+            localStorage.setItem(Constants.FINGERPRINT_LOCAL_STORAGE_NAME, fingerprint);
             return fingerprint;
           } else {
             Cookie.set(Constants.NO_FINGERPRINT_COOKIE_NAME, true, 1);
@@ -58,7 +82,7 @@ export class User {
 
     /**
    * Handling User Geolocation
-   * This wil fetch the cf-ipcountry
+   * This wil fetch the user's country
    * @return {Promise<string>}
    */
   static async #getGeolocation() {
@@ -68,25 +92,34 @@ export class User {
     }
 
     try {
-      const response = await fetch(`${Constants.DEV_BASE_URL}/bin/json/v1/geolocation?timestamp=${Date.now()}`);
+      const response = await fetch(`${Constants.GEO_IP_URL}/geoip`);
 
       if (!response.ok) {
-        console.error(`FETCH-GEO-COOKIE-ERROR-CODE:${response.status} MESSAGE:${response.statusText}`);
         return "us";
       }
 
       const country = await response.json();
       if (country.error_code) {
-        console.error(`FETCH-GEO-COOKIE:${country.error_code} MESSAGE:${country.message}`);
         return "us";
       }
 
-      Cookie.set("cf-ipcountry", country["cf-ipcountry"], 0.02);
+      Cookie.set("cf-ipcountry", country["country"], 0.02);
       return country["cf-ipcountry"].toLowerCase();
 
     } catch(err) {
-      console.warn('FETCH-GEO-COOKIE-ERROR');
       return "us";
     }
+  }
+
+  /**
+  * 
+  * @returns {Promise<{
+	*   fingerprint: string,
+  *   email: string,
+  *   firstname: string
+  * } | null>}
+  */
+  static async getUserInfo() {
+    return await this.#staticInit;
   }
 };
