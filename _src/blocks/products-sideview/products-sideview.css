@@ -30,6 +30,7 @@
 
 .products-sideview .price-element-wrapper {
     margin: 20px 0;
+    font-family: 'Arial', sans-serif;;
 }
 
 .products-sideview .pricing-wrapper > p:last-child {
@@ -42,7 +43,6 @@
 }
 
 .products-sideview .price {
-    font-family: 'Arial', sans-serif;
     font-size: 32px;
     font-weight: bold;
 }
