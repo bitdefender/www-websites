@@ -240,6 +240,11 @@ export async function detectModalButtons(main) {
 
       // generate new modal
       document.body.append(await createModal(link.href, undefined, stopAutomaticModalRefresh));
+      await StoreResolver.resolve();
+      const elements = document.querySelectorAll('.await-loader');
+      elements.forEach((element) => {
+        element.classList.remove('await-loader');
+      });
     });
   });
 }
