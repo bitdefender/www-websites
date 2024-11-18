@@ -581,15 +581,6 @@ async function runDefaultHeaderLogic(block) {
 
       adobeMcAppendVisitorId(shadowRoot);
       loginFunctionality(shadowRoot);
-      // TODO: remove this code once localizations are done
-      if (window.location.href.includes('scuderiaferrari')) {
-        if (nav && nav.shadowRoot) {
-          const languageBanner = nav.shadowRoot.querySelector('.language-banner.parbase');
-          if (languageBanner) {
-            languageBanner.style.display = 'none';
-          }
-        }
-      }
       return;
     }
 
