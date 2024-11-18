@@ -18,6 +18,11 @@ export default class Page {
   static locale;
 
   /**
+   * @type {string} - 'consumer', 'total-security'
+   */
+  static pageName;
+
+  /**
    * @type {'dev' | 'stage' | 'prod'}
    */
   static environment
@@ -31,6 +36,8 @@ export default class Page {
     this.langauge = this.locale.split('-')[0];
 
     this.environment = this.#getEnvironment();
+
+    this.pageName = window.location.pathname.split('/').filter(Boolean).pop();
   }
 
   static #getLocale() {

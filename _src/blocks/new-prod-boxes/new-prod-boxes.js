@@ -389,26 +389,28 @@ export default async function decorate(block) {
         let productObject = await Store.getProducts([new ProductInfo(prodName), new ProductInfo(addOnProdName)]);
         let product = productObject[prodName];
         let addOnProduct = productObject[addOnProdName];
-        let addOnCost = addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscountedPrice('value') - product.getOption(prodUsers, prodYears).getDiscountedPrice('value');
-        addOnCost = formatPrice(addOnCost, product.getCurrency());
+        if (addOnProduct) {
+          let addOnCost = addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscountedPrice('value') - product.getOption(prodUsers, prodYears).getDiscountedPrice('value');
+          addOnCost = formatPrice(addOnCost, product.getCurrency());
 
-        let addOnNewPrice = newLi.querySelector('.add-on-newprice');
-        addOnNewPrice.textContent = addOnCost;
-        let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
-        addOnOldPrice.textContent = formatPrice(addOnProduct.getOption(addOnProdUsers, addOnProdYears).getPrice('value'), addOnProduct.getCurrency());
-        let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-        addOnPercentSave.textContent = `${addOnPriceBox.querySelector('.prod-save').textContent} ${addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscount('percentageWithProcent')}`;
+          let addOnNewPrice = newLi.querySelector('.add-on-newprice');
+          addOnNewPrice.textContent = addOnCost;
+          let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
+          addOnOldPrice.textContent = formatPrice(addOnProduct.getOption(addOnProdUsers, addOnProdYears).getPrice('value'), addOnProduct.getCurrency());
+          let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
+          addOnPercentSave.textContent = `${addOnPriceBox.querySelector('.prod-save').textContent} ${addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscount('percentageWithProcent')}`;
 
-        let checkBoxSelector = newLi.querySelector('.checkmark');
-        checkBoxSelector.addEventListener('change', () => {
-          if (checkBoxSelector.checked) {
-            checkmarkList.classList.add('checked');
-            block.children[key].querySelector('.add-on-product').style.display = 'block';
-          } else {
-            checkmarkList.classList.remove('checked');
-            block.children[key].querySelector('.add-on-product').style.display = 'none';
-          }
-        });
+          let checkBoxSelector = newLi.querySelector('.checkmark');
+          checkBoxSelector.addEventListener('change', () => {
+            if (checkBoxSelector.checked) {
+              checkmarkList.classList.add('checked');
+              block.children[key].querySelector('.add-on-product').style.display = 'block';
+            } else {
+              checkmarkList.classList.remove('checked');
+              block.children[key].querySelector('.add-on-product').style.display = 'none';
+            }
+          });
+        }
       }
     });
   }

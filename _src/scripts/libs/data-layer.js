@@ -614,6 +614,11 @@ export class Target {
   static eventTokens = [];
 
   /**
+   * @type {Object{}}
+   */
+  static #urlParameters = this.#getUrlParameters();
+
+  /**
    * @param {string[]}
    */
   static setEventTokens(value) {
@@ -677,6 +682,14 @@ export class Target {
   }
 
   /**
+   * get the flag which marks wether the page should use geoIpPricing or not
+   * @returns {Promise<boolean>}
+   */
+  static async getVlaicuGeoIpPrice() {
+    return Boolean((await this.#vlaicuFlagMbox)?.content?.geoIpPrice || null);
+  }
+
+  /**
    * get the product-buy link mappings from Target (
    *  e.g
    *  {
@@ -720,6 +733,21 @@ export class Target {
     return receivedOffers ? receivedOffers[mboxName] : null;
   }
 
+  /**
+   * Function to get all URL parameters and put them in an object
+   * @returns {Object} An object containing all URL parameters
+   */
+  static #getUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const parameters = {};
+
+    urlParams.forEach((value, key) => {
+      parameters[key] = value;
+    });
+
+    return parameters;
+  }
+
   static async getOffers(mboxes) {
     await this.#staticInit;
     let offers = {};
@@ -733,7 +761,9 @@ export class Target {
           },
           execute: {
             mboxes: [
-              ...mboxes.map((mbox, index) => {return { index, ...mbox}})
+              ...mboxes.map((mbox, index) => {
+                return { index, name: mbox.name, parameters: Object.assign(this.#urlParameters, mbox.parameters) }
+              })
             ]
           }
         }

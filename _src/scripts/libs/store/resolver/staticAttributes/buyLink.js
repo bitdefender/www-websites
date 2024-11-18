@@ -20,6 +20,5 @@ export const resolve = async (element, { product, option }) => {
     button.setAttribute("data-buy-price", option.getDiscountedPrice("value") || option.getPrice("value"));
     button.setAttribute("data-old-price", option.getPrice("value"));
     button.setAttribute("data-currency", option.getSymbol());
-    button.setAttribute("data-region", product.getRegionId());
     button.setAttribute("data-variation", `${option.getDevices()}u-${option.getSubscription("years")}y`);
 }

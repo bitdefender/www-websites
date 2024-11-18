@@ -3,6 +3,7 @@ import { Target, Visitor } from "../data-layer.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
+import { User } from "../../libs/user.js"
 
 export const monthlyProducts = {
 	"ultsecm": "ultsecm",
@@ -271,11 +272,9 @@ export class Product {
 		this.name = product.product_name;
 		this.options = product.variations;
 		this.department = product.department;
-		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : null);
+		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : '');
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
-		this.symbol = option.currency_label;
-		this.regionId = option.region_id;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
 		this.yearDevicesMapping = Object.entries(this.options).reduce((acc, [deviceKey, values]) => {
 			Object.keys(values).forEach(yearKey => {
@@ -289,6 +288,22 @@ export class Product {
 
 			return acc;
 		}, {});
+
+		// TODO: remove this if after finishing Vlaicu migration. It is used because in init selector the variation
+		// is wrongly placed as 1-1 instead of 4-1 as it should be for 'pass_sp' and 'pass_spm'
+		// for 'vpn' in init selector it was 10-1 which also needs to be changed
+		if (Store.config.provider === 'vlaicu'
+			&& Object.keys(Constants.WRONG_DEVICES_PRODUCT_IDS).includes(product.product_alias)) {
+			const contentDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].contentDevices;
+			const providerDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].providerDevices
+
+			this.options[contentDevices] = this.options[providerDevices];
+			if (!this.yearDevicesMapping[contentDevices]) {
+				this.yearDevicesMapping[contentDevices] = [providerDevices]
+			} else {
+				this.yearDevicesMapping[contentDevices].push(providerDevices);
+			}	
+		}
 	}
 
 	/**
@@ -305,13 +320,6 @@ export class Product {
 	 */
 	getProductId() {
 		return this.productId;
-	}
-
-	/**
-	 * @returns {string}
-	 */
-	getRegionId() {
-		return this.regionId;
 	}
 
 	/**
@@ -344,14 +352,6 @@ export class Product {
 	 */
 	getCurrency() {
 		return this.currency;
-	}
-
-	/**
-	 *
-	 * @returns {string} - $ | € ...
-	 */
-	getSymbol() {
-		return this.symbol;
 	}
 
 	/**
@@ -468,6 +468,12 @@ export class Product {
 			if (bundle) {
 				option.buyLink = option.buyLink.replace("buy", "buybundle");
 			}
+
+			return option;
+		}
+
+		if (Store.config.provider === "vlaicu" && yearsOption.buyLink) {
+			option.buyLink = yearsOption.buyLink;
 
 			return option;
 		}
@@ -752,61 +758,8 @@ export class Product {
 
 class BitCheckout {
 
-	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m",
-		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
-
 	// this products come with device_no set differently from the init-selector api where they are set to 1
 	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
-
-	static productId = {
-		av: "com.bitdefender.cl.av",
-		is: "com.bitdefender.cl.is",
-		tsmd: "com.bitdefender.cl.tsmd",
-		fp: "com.bitdefender.fp",
-		ps: "com.bitdefender.premiumsecurity",
-		psm: "com.bitdefender.premiumsecurity",
-		psp: "com.bitdefender.premiumsecurityplus",
-		pspm: "com.bitdefender.premiumsecurityplus",
-		soho: "com.bitdefender.soho",
-		mac: "com.bitdefender.avformac",
-		vpn: "com.bitdefender.vpn",
-		"vpn-monthly": "com.bitdefender.vpn",
-		pass: "com.bitdefender.passwordmanager",
-		passm: "com.bitdefender.passwordmanager",
-		pass_sp: "com.bitdefender.passwordmanager",
-		pass_spm: "com.bitdefender.passwordmanager",
-		bms: "com.bitdefender.bms",
-		mobile: "com.bitdefender.bms",
-		ios: "com.bitdefender.iosprotection",
-		mobileios: "com.bitdefender.iosprotection",
-		dip: "com.bitdefender.dataprivacy",
-		dipm: "com.bitdefender.dataprivacy",
-		avpm: 'com.bitdefender.cl.avplus.v2',
-		// DLP
-		ts_i: 'com.bitdefender.tsmd.v2',
-		ts_f: 'com.bitdefender.tsmd.v2',
-		ps_i: 'com.bitdefender.premiumsecurity.v2',
-		ps_f: 'com.bitdefender.premiumsecurity.v2',
-		us_i: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_i_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_f: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_f_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pf: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pf_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pi: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pi_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pie: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pie_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-	}
-
-	static names = {
-		pass: "Bitdefender Password Manager",
-		pass_sp: "Bitdefender Password Manager Shared Plan",
-		passm: "Bitdefender Password Manager",
-		pass_spm: "Bitdefender Password Manager Shared Plan"
-	}
 
 	static getKey() {
 		const hostname = window.location.hostname;
@@ -870,7 +823,7 @@ class BitCheckout {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		let payload = (await this.getProductVariations(this.productId[id], campaignId))?.payload;
+		let payload = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId))?.payload;
 
 		if (!payload || payload.length === 0) {
 			return null
@@ -881,13 +834,13 @@ class BitCheckout {
 		 * for example com.bitdefender.passwordmanager maps 2 products
 		 * Password Manager and Password Manager Shared Plan
 		 */
-		if (this.names[id]) {
-			payload = payload.filter(product => product.name === this.names[id])
+		if (Constants.PRODUCT_ID_NAME_MAPPINGS[id]) {
+			payload = payload.filter(product => product.name === Constants.PRODUCT_ID_NAME_MAPPINGS[id])
 		}
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: this.productId[id],
+			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 			product_name: payload[0].name,
 			variations: {}
 		}
@@ -914,11 +867,11 @@ class BitCheckout {
 					billingPeriod = 10;
 			}
 
-			if (this.monthlyProducts.indexOf(id) === -1 && billingPeriod === 0 || this.monthlyProducts.indexOf(id) !== -1 && billingPeriod !== 0) {
+			if (Constants.MONTHLY_PRODUCTS.indexOf(id) === -1 && billingPeriod === 0 || Constants.MONTHLY_PRODUCTS.indexOf(id) !== -1 && billingPeriod !== 0) {
 				return;
 			}
 
-			if (this.monthlyProducts.indexOf(id) !== -1) {
+			if (Constants.MONTHLY_PRODUCTS.indexOf(id) !== -1) {
 				billingPeriod = 1;
 			}
 
@@ -930,12 +883,9 @@ class BitCheckout {
 				}
 				const devicesObj = {
 					currency_iso: devices.currency,
-					currency_label: "€",
-					product_id: this.productId[id],
-					platform_product_id: this.productId[id],
+					product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+					platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 					promotion: campaignId,
-					region_id: 22,
-					platform_id: 16,
 					price: devices.price,
 					variation: {
 						variation_name: `${devices_no}u-${billingPeriod}y`,
@@ -965,20 +915,155 @@ class BitCheckout {
 	}
 }
 
+class Vlaicu {
+
+	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
+	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
+
+	// TODO: delete this parameter as it is for testing purposes only
+	static campaign = "TSExpired0MRDLP24";
+
+	static async getProductVariations(productId, campaign) {
+		const locale = await Target.getVlaicuGeoIpPrice() ? await User.locale : Page.locale;
+		const pathVariablesResolverObject = {
+			"{locale}": locale,
+			"{bundleId}": productId,
+			"{campaignId}": this.campaign // TODO: replace with campaign received as parameter
+		};
+
+		// get the correct path to get the prices
+		// TODO: add a check for campaign to be not null
+		let productPath = campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+
+		// replace all variables from the path
+		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
+		productPath = productPath.replace(pathVariablesRegex, (matched) => {
+			return pathVariablesResolverObject[matched]
+		});
+
+		const endpoint = new URL(productPath, Store.config.vlaicuEndpoint);
+
+		try {
+			const response = await fetch(
+				endpoint.href,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				}
+			);
+
+			if (!response.ok) {
+				return null;
+			}
+
+			return await response.json();
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
+	}
+
+	static async getProductVariationsPrice(id, campaignId) {
+		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()], campaignId))?.product;
+		if (!productInfo) {
+			return null;
+		}
+
+		let payload = productInfo?.options;
+		if (!payload || !payload.length) {
+			return null;
+		}
+
+		window.StoreProducts.product[id] = {
+			product_alias: id,
+			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+			product_name: productInfo.productName,
+			variations: {}
+		}
+
+		payload.forEach(productVariation => {
+
+			/**
+			 * for monthly products only add the monthly variations
+			 * e.g for vpn-monthly we do not care about the product variation if it passes 12 months (more than a year)
+			 */ 
+			if (Constants.MONTHLY_PRODUCTS.includes(id) && productVariation.months >= 12) {
+				return;
+			}
+
+			/**
+			 * for yearly products only add the yearly variations
+			 * e.g for tsmd we do not care about the product variation if it is below 12 months (less than a year)
+			 */
+
+			if (!Constants.MONTHLY_PRODUCTS.includes(id) && productVariation.months < 12) {
+				return;
+			}
+
+			const yearsSubscription = Math.ceil(productVariation.months / 12);
+			const devices_no = productVariation.slots;
+
+			const devicesObj = {
+				currency_iso: productVariation.currency,
+				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				promotion: campaignId,
+				price: productVariation.price,
+				buyLink: productVariation.buyLink,
+				variation: {
+					variation_name: `${devices_no}u-${yearsSubscription}y`,
+					years: yearsSubscription,
+				}
+			}
+
+			if (productVariation.discountAmount > 0) {
+				devicesObj['discount'] = {
+					discounted_price: productVariation.discountedPrice,
+					discount_value: productVariation.discountAmount,
+				}
+			}
+
+			window.StoreProducts.product[id].variations[devices_no] = window.StoreProducts.product[id].variations[devices_no]
+				? window.StoreProducts.product[id].variations[devices_no]
+				: {};
+			window.StoreProducts.product[id].variations[devices_no][yearsSubscription] = devicesObj;
+		});
+
+		// for the cases where there is no variation available in the price call
+		if (!Object.keys(window.StoreProducts.product[id].variations).length) {
+			return null;
+		}
+
+		return window.StoreProducts.product[id];
+	}
+
+	static async loadProduct(id, campaign) {
+		window.StoreProducts = window.StoreProducts || [];
+		window.StoreProducts.product = window.StoreProducts.product || {};
+		return await this.getProductVariationsPrice(id, campaign);
+	}
+}
+
 class StoreConfig {
 
-	constructor() {
+	/**
+	 * 
+	 * @param {boolean} vlaicuFlag 
+	 */
+	constructor(vlaicuFlag) {
 		/**
-		 * Api used to fetch the prices
-		 * @type {"init"|"zuora"}
+		 * Api §d to fetch the prices
+		 * @type {"init"|"zuora"|"vlaicu"}
 		 */
-		this.provider = Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
+		this.provider = this.#getProvider(vlaicuFlag);
 
 		/**
-		 * default promotion for zuora
+		 * default promotion
 		 * @type {Promise<string>}
 		 */
-		this.zuoraCampaign = this.#getZuoraCampaign();
+		this.campaign = this.#getCampaign();
 
 		/**
 		 * @type {{
@@ -994,26 +1079,61 @@ class StoreConfig {
 		};
 
 		/**
-		 * @type {"POST"}
+		 * @type {string}
 		 */
-		this.httpMethod = "POST";
+		this.vlaicuEndpoint = Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))
+			? "https://www.bitdefender.com"
+			: window.location.origin;
+
+		/**
+		 * @type {"GET"|"POST"}
+		 */
+		this.httpMethod = this.#getHTTPMethod(vlaicuFlag);
 	}
 
-	async #getZuoraCampaign() {
+	async #getCampaign() {
+		if (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain)) {
+			return "global_v2";
+		}
+
 		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
 			return "";
 		}
 
-		const jsonFilePath = 'https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json';
+		const jsonFilePath = "https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json";
 
 		const resp = await fetch(jsonFilePath);
 		if (!resp.ok) {
 			console.error(`Failed to fetch data. Status: ${resp.status}`);
-			return '';
+			return "";
 		}
 		const data = await resp.json();
 
 		return data.data[0].CAMPAIGN_NAME;
+	}
+
+	/**
+	 * 
+	 * @returns {"GET"|"POST"} the http method used to get prices
+	 */
+	#getHTTPMethod(vlaicuFlag) {
+		if (vlaicuFlag) {
+			return "GET";
+		}
+
+		return "POST";
+	};
+
+	/**
+	 * @param {boolean} vlaicuFlag
+	 * @returns {"init"|"zuora"|"vlaicu"} the prices provider to be used
+	 */
+	#getProvider(vlaicuFlag) {
+		if (vlaicuFlag) {
+			return "vlaicu";
+		}
+
+		return Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
 	}
 }
 
@@ -1037,7 +1157,10 @@ export class Store {
 	/** Private variables */
 	static baseUrl = Constants.DEV_BASE_URL;
 
-	static config = new StoreConfig();
+	/**
+	 * @type {StoreConfig | null}
+	 */
+	static config = null;
 	static targetBuyLinkMappings = null;
 
 	/**
@@ -1048,6 +1171,11 @@ export class Store {
 	 */
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
+		
+		// create the store config if it does not exist
+		if (!this.config) {
+			this.config = new StoreConfig(await Target.getVlaicuFlag());
+		}
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
@@ -1060,7 +1188,7 @@ export class Store {
 		this.products = (await Promise
 			.allSettled(
 				productsInfo.map(async product => {
-					//url > produs > global_campaign
+					// target > url > produs > global_campaign > default campaign for zuora
 					product.promotion = await Target.getCampaign()
 						|| this.#getUrlPromotion()
 						|| product.promotion
@@ -1090,6 +1218,23 @@ export class Store {
 
 				if (!product) {
 					return null
+				}
+
+				return {
+					...product,
+					...productInfo
+				}
+			} catch (error) {
+				return null;
+			}
+		}
+
+		if (this.config.provider === "vlaicu") {
+			try {
+				const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);
+
+				if (!product) {
+					return null;
 				}
 
 				return {
