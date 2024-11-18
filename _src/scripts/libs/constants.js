@@ -23,6 +23,6 @@ export const Constants = {
 
   TARGET_TENANT: "bitdefender",
 
-  GEO_IP_URL: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
+  PUBLIC_URL: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
     ? '' : 'https://www.bitdefender.com'
 }

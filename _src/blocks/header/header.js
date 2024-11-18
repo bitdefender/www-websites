@@ -71,21 +71,11 @@ const loginFunctionality = async (root = document) => {
     // change login container to display that the user is logged in
     // if the previous call was successfull
     const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
-    const loginAttempt = sessionStorage.getItem('login-attempt');
-    const loginComponent = document.querySelector('div.login');
     const userData = await User.getUserInfo();
 
-    if (!loginAttempt && !userData) {
-      const userLoggedInExpirationDate = Cookie.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
-      if (userLoggedInExpirationDate > Date.now()) {
-        sessionStorage.setItem('login-attempt', true);
-        window.location.href = megaMenuLoginContainer.dataset.loginEndpoint;
-      }
-    } else if (userData) {
+    // TODO: add a session storage check after setting up a BE static route
+    if (userData) {
       updateMegaMenu(userData.firstname, userData.email, megaMenuLoginContainer);
-    } else if (loginAttempt && loginComponent) {
-      loginComponent.querySelector('.retry-container').classList.remove('global-display-none');
-      loginComponent.querySelector('.login-container').classList.add('global-display-none');
     }
   } catch (error) {
     // eslint-disable-next-line no-console

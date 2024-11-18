@@ -12,16 +12,15 @@ export class User {
 
   static async #staticInitialise() {
 
-    const megaMenuLoginContainer = document.querySelector('li.mega-menu__login-container');
-    if (!megaMenuLoginContainer || !Cookie.has(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME)) {
-        return null;
+    if (!Cookie.has(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME)) {
+      return null;
     }
 
     try {
-        const userDataResponse = await fetch('/bin/login/userInfo.json');
-        return userDataResponse.ok ? (await userDataResponse.json()).result : null;
+      const userDataResponse = await fetch(`${Constants.PUBLIC_URL}/bin/login/userInfo.json`);
+      return userDataResponse.ok ? (await userDataResponse.json()).result : null;
     } catch {
-        return null;
+      return null;
     }
 }
 
@@ -40,6 +39,7 @@ export class User {
       // Try to grab fingerprint from login data
       const loginData = await this.#staticInit;
       if (loginData) {
+        localStorage.setItem(Constants.FINGERPRINT_LOCAL_STORAGE_NAME, fingerprint);
         return loginData.fingerprint;
       }
   
@@ -86,13 +86,8 @@ export class User {
    * @return {Promise<string>}
    */
   static async #getGeolocation() {
-    const countryCookie = Cookie.country;
-    if (countryCookie && countryCookie !== "undefined") {
-      return countryCookie.toLowerCase();
-    }
-
     try {
-      const response = await fetch(`${Constants.GEO_IP_URL}/geoip`);
+      const response = await fetch(`${Constants.PUBLIC_URL}/geoip`);
 
       if (!response.ok) {
         return "us";
@@ -103,8 +98,7 @@ export class User {
         return "us";
       }
 
-      Cookie.set("cf-ipcountry", country["country"], 0.02);
-      return country["cf-ipcountry"].toLowerCase();
+      return country["country"].toLowerCase();
 
     } catch(err) {
       return "us";
