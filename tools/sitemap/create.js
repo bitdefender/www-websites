@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import convert from 'xml-js';
 import path from 'path';
+import 'dotenv/config';
 
 const LOCALES = 'https://www.bitdefender.com/p-api/v1/locales-and-countries';
 const COUNTRIES = 'https://www.bitdefender.com/p-api/v1/locales/{locale}/countries';
@@ -58,10 +59,15 @@ async function checkUrlExists(url) {
   }
 
   try {
-    const min = 1500, max = 2500;
+    const min = 1000, max = 3000;
     const delay = Math.floor(Math.random() * (max - min + 1)) + min;
-    await new Promise(resolve => setTimeout(resolve, 1700));
-    const response = await fetch(url);
+    await new Promise(resolve => setTimeout(resolve, delay));
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'X-Client-Id': process.env.X_CLIENT_ID,
+      }
+    });
     if (response.ok) {
       checkedValidUrls.add(url);
       return true;
@@ -110,6 +116,13 @@ async function processLocaleSitemap(locale, hreflangMap) {
       },
       url: await Promise.all(validData.map(async (row) => {
         const alternateLinks = [];
+        alternateLinks.push({
+          _attributes: {
+            rel: 'alternate',
+            hreflang: locale,
+            href: `${DOMAIN_URL}${row.path}`,
+          },
+        });
 
         for (const [hreflang, { baseUrl, bucketLocale }] of filteredHreflangMap) {
           const pathWithoutLocale = row.path.replace(/^\/[a-z]{2}-[a-z]{2}\//, '/');
