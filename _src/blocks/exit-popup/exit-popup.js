@@ -25,12 +25,12 @@ export default async function decorate(block) {
     if (buyBtnEl) {
       buyBtnEl.textContent = buyBtnEl.textContent.replace('50%', `${percentPrice}%`);
       buyBtnEl.setAttribute('href', await variation.getStoreUrl());
-      buyBtnEl.setAttribute("data-product", alias);
-      buyBtnEl.setAttribute("data-buy-price", newPrice);
-      buyBtnEl.setAttribute("data-old-price", oldPrice);
-      buyBtnEl.setAttribute("data-currency", productCurrency);
-      buyBtnEl.setAttribute("data-region", productRegionId);
-      buyBtnEl.setAttribute("data-variation", `${devices}u-${years}y`);
+      buyBtnEl.setAttribute('data-product', alias);
+      buyBtnEl.setAttribute('data-buy-price', newPrice);
+      buyBtnEl.setAttribute('data-old-price', oldPrice);
+      buyBtnEl.setAttribute('data-currency', productCurrency);
+      buyBtnEl.setAttribute('data-region', productRegionId);
+      buyBtnEl.setAttribute('data-variation', `${devices}u-${years}y`);
     }
   }
 
