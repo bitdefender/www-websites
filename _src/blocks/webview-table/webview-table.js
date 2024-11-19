@@ -135,7 +135,6 @@ export default async function decorate(block) {
   matchHeights(block, '.savings-tag-container');
   matchHeights(block, '.buy-box');
 
-  // THIS IS TEMPORARY, DONT FORGET TO DELETE
   const url = new URL(window.location.href);
   if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'light') {
     block.classList.add('light-mode');

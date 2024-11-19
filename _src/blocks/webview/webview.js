@@ -38,5 +38,10 @@ export default async function decorate(block) {
     }
   });
 
+  const url = new URL(window.location.href);
+  if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'dark') {
+    block.parentElement.classList.add('dark-mode');
+  }
+
   block.querySelector('a').setAttribute('target', '_blank');
 }
