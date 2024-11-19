@@ -129,6 +129,10 @@ body [data-desktop-detector] {
     display: none;
 }
 
+body.dark-mode {
+  background-color: #141517;
+}
+
 @media (min-width: 768px) {
     body [data-mobile-detector] {
         display: none;

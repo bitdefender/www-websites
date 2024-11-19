@@ -2,10 +2,6 @@
     display: flex;
     justify-content: center;
 
-    &.dark-mode {
-        background-color: #141517;
-    }
-
     .mbox-canvas-wrapper {
         height: 512px;
         width: 770px;
