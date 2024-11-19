@@ -40,6 +40,7 @@ export default async function decorate(block) {
 
     </div>
   `;
+  block.classList.add('loader');
   const offer = await Target.getOffers([{
     name: mboxName,
     parameters,
@@ -49,4 +50,5 @@ export default async function decorate(block) {
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));
+  block.classList.remove('loader');
 }

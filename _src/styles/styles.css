@@ -1595,6 +1595,34 @@ main .section.blue a.button.modal::after {
   visibility: hidden;
 }
 
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #006EFF;;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+.loader * {
+  visibility: hidden;
+  display: none;
+}
+
 @media (min-width: 768px) {
   .buttons-align-right > div {
     flex-direction: row;
