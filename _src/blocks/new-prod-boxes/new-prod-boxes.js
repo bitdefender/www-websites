@@ -333,7 +333,7 @@ export default async function decorate(block) {
               ${title.innerText.trim() ? `<h4>${title.innerHTML}</h4>` : ''}
 
               <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
-              ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 5 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
+              ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
               <hr />
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices await-loader"></div>

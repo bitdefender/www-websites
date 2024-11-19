@@ -18,6 +18,7 @@ import {
   PageLoadedEvent,
   PageLoadStartedEvent,
   resolveNonProductsDataLayer,
+  Target,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 import Page from './libs/page.js';
@@ -27,6 +28,7 @@ import {
   createTag,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
+import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
@@ -237,7 +239,12 @@ export async function detectModalButtons(main) {
       }
 
       // generate new modal
-      document.body.append(await createModal(link.href, undefined, stopAutomaticModalRefresh));
+      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
+      document.body.append(modalContainer);
+      await StoreResolver.resolve(modalContainer);
+      modalContainer.querySelectorAll('.await-loader').forEach((element) => {
+        element.classList.remove('await-loader');
+      });
     });
   });
 }
@@ -374,6 +381,12 @@ async function loadLazy(doc) {
   loadTrackers();
   await loadBlocks(main);
 
+  // make an offer call to stitch the data on the Target side
+  const targetExperimentMetadata = getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
+  if (targetExperimentMetadata) {
+    Target.notifyTarget([{ name: targetExperimentMetadata }]);
+  }
+
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
@@ -492,6 +505,8 @@ async function loadPage() {
 
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
+  document.dispatchEvent(new Event('bd_page_ready'));
+  window.bd_page_ready = true;
   elements.forEach((element) => {
     element.classList.remove('await-loader');
   });

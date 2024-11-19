@@ -211,6 +211,7 @@ const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
  */
 function renderFeatured(text) {
   const root = document.createElement('div');
+  root.setAttribute('data-store-text-variable', '');
   root.classList.add('featured');
   root.textContent = text;
 
@@ -331,12 +332,13 @@ export default function decorate(block) {
       }
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', storeEvent);
-      const buyLink = col.querySelector('.button-container a');
-      if (buyLink?.href?.includes('/buy/') || buyLink?.href?.includes('#buylink')) {
-        buyLink.href = '#';
-        buyLink.setAttribute('data-store-buy-link', '');
-      }
-
+      const cardButtons = col.querySelectorAll('.button-container a');
+      cardButtons?.forEach((button) => {
+        if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
+          button.href = '#';
+          button.setAttribute('data-store-buy-link', '');
+        }
+      });
       block.appendChild(col);
       renderNanoBlocks(col, undefined, idxParent);
     });

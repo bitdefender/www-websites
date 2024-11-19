@@ -30,6 +30,18 @@ main .hero {
   min-height: 300px;
 }
 
+main .section.bfoffer .hero {
+  background-color: transparent;
+}
+
+main .section.bfoffer .hero .hero-content {
+  background-color: transparent;
+}
+
+main .bfoffer .hero .hero-content p:last-of-type picture img {
+  display: none;
+}
+
 /* breadcrumbs */
 main .hero .hero-content .breadcrumb {
   font-weight: var(--font-weight-bold);
@@ -340,9 +352,6 @@ main .hero img {
 
 main .hero .hero-picture picture img {
   position: absolute;
-
-  /* display: none; */
-  padding-left: 200px;
 }
 
 main .hero a.button {
@@ -360,6 +369,10 @@ main .hero a.button.central {
     min-width: 360px;
     justify-content: center;
     align-items: center;
+  }
+
+  main .hero.ferrari h1{
+    max-width: 80%;
   }
 }
 
@@ -552,6 +565,25 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
   width: 70px;
 }
 
+main .hero.ferrari{
+  background-color: #006DFF;
+}
+
+main .hero.ferrari .hero-content{
+  display: flex;
+  flex-direction: column;
+  color: #FFF;
+  padding: 20px;
+}
+
+main .hero.ferrari .hero-content img{
+  position: relative;
+}
+
+main .hero.ferrari .breadcrumb{
+  display: none;
+}
+
 .hero-container.grey-background .hero-picture {
   background-color: #f6f6f6;
 }
@@ -607,8 +639,50 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
   }
 }
 
-@media(min-width: 767px) {
-  /* tablet */
+@media(min-width: 767px) { /* tablet */
+  main .hero.ferrari{
+    min-height: 715px;
+  }
+
+  main .hero.ferrari .hero-picture picture img{
+    padding-left: 0;
+    object-fit:cover;
+    object-position: bottom;
+  }
+
+  main .hero.ferrari .hero-content{
+    flex-flow: column;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    max-width: 85%;
+  }
+
+  main .hero.hero.ferrari .hero-content img{
+    right: 0;
+  }
+
+  main .hero.ferrari .hero-content > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0px 20px 0px 0px;
+
+  }
+  main .hero.ferrari .hero-content > div img{
+    max-height: 225px;
+    max-width: 813px;
+  }
+  main .hero.ferrari h1{
+    font-size: 60px;
+    font-weight: 300;
+    align-self: center;
+  }
+
+  main .hero.ferrari h1 strong{
+    font-weight: 700;
+  }
+
   :root {
     --hero-h1-font-size: 42px;
   }
@@ -818,6 +892,13 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
     padding-right: var(--section-large-desktop-padding);
   }
 
+  main .hero.ferrari .hero-content {
+    min-height: 768px;
+  }
+  main .hero.ferrari h1 {
+    max-width: 60%;
+  }
+
   main .hero.black-background .hero-content {
     max-width: var(--section-large-desktop-max-width);
     padding-left: var(--section-large-desktop-padding);
@@ -854,6 +935,15 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
     display: none;
   }
 
+  main .bfoffer main .hero {
+    padding-top: 3rem;
+    padding-bottom: 0;
+  }
+
+  main .bfoffer .hero .hero-content p:last-of-type picture img {
+    display: block;
+  }
+
   main .v2 .hero .hero-content>div table tr td:last-of-type {
     width: 100%;
   }
@@ -864,6 +954,24 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
 
   main .v2 .hero h1+p {
     font-size: var(--body-font-size-xs);
+  }
+  main .hero.ferrari .hero-picture{
+    display: block;
+  }
+
+  main .hero.ferrari .hero-content >div{
+    text-align: center;
+  }
+
+  main .hero.ferrari .hero-picture picture img{
+    display: block;
+    position: absolute;
+    object-fit: cover;
+    padding: 0;
+  }
+
+  main .hero.ferrari h1{
+    font-weight: 400;
   }
 }
 

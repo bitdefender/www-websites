@@ -525,6 +525,11 @@
   vertical-align: middle;
 }
 
+.columns-container.black-version{
+  background-color: #000;
+    color: white;
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     flex-direction: unset;
@@ -978,7 +983,9 @@
   margin: 1em auto;
 }
 
-
+.columns-container.black-version.dlp h2{
+  color: #e72325;
+}
 
 @media (min-width: 768px) {
   .linear-gradient.columns-container[data-bg-image]{
@@ -1001,6 +1008,10 @@
     text-align: center;
     width: 600px;
     margin: 2em auto;
+  }
+
+  .columns-container.black-version.dlp h2{
+    color: #e72325;
   }
 
   .columns.new-v2 h3 {
@@ -1218,7 +1229,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .columns-wrapper {
     padding: var(--body-padding) var(--body-padding) 0;
   }

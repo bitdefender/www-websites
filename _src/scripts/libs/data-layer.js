@@ -5,6 +5,20 @@ import { Constants } from "./constants.js";
 
 /**
  * 
+ * @returns {boolean} returns wether A/B tests should be disabled or not
+ */
+const shouldABTestsBeDisabled = () => {
+  /** This is a special case for when adobe.target is disabled using dotest query param */
+  const windowSearchParams = new URLSearchParams(window.location.search);
+  if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key) === Constants.DISABLE_TARGET_PARAMS.value) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * 
  * @param {import("./store").ProductOption} option
  */
 const getOptionInfo = (option) => {
@@ -34,7 +48,6 @@ export class PageLoadStartedEvent {
   event = "page load started";
   pageInstanceID = "";
   page = null;
-  TARGET_TENANT = "bitdefender";
 
   /**
    * 
@@ -67,14 +80,30 @@ export class PageLoadStartedEvent {
   }
 
   /**
-   * get experiment details from Target
-   * @returns {object | null}
+  * get experiment details from Target
+  * @returns {{
+  *  experimentId: string;
+  *  experimentVariant: any;
+  * } | null}
    */
   async #getTargetExperimentDetails() {
+    /**
+     * @type {{
+     *  eventTokens: string[];
+     *  experimentId: string;
+     *  experimentVariant: any;
+     * }|null}
+     */
     let targetExperimentDetails = null;
-    if (this.#getMetadata('target-experiment') !== '') {
+
+    if (this.#getMetadata('target-experiment') !== '' && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      targetExperimentDetails = await runTargetExperiment(this.TARGET_TENANT);
+      targetExperimentDetails = await runTargetExperiment();
+      if (targetExperimentDetails) {
+        Target.setEventTokens(targetExperimentDetails.eventTokens);
+        delete targetExperimentDetails.eventTokens;
+        targetExperimentDetails = targetExperimentDetails.experimentVariant ? targetExperimentDetails : null;
+      }
     }
 
     return targetExperimentDetails;
@@ -201,9 +230,6 @@ export class PageLoadStartedEvent {
     }
 
     const experimentDetails = (await this.#getTargetExperimentDetails()) ?? this.#getExperimentDetails();
-    // eslint-disable-next-line no-console
-    console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
-  
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
@@ -526,15 +552,21 @@ export class Visitor {
   static #instanceID = '0E920C0F53DA9E9B0A490D45@AdobeOrg';
   static #instance = null;
   static #staticInit = new Promise(resolve => {
-    if (window.Visitor) {
-      Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
+
+    if (shouldABTestsBeDisabled()) {
       resolve();
       return;
     }
 
-    window.addEventListener("load", () => {
+    if (window.Visitor) {
+      Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
+      resolve();
+      return;
+    }
+
+    document.addEventListener('at-library-loaded', () => {
       if (window.Visitor) {
-        Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
+        Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
       }
       resolve();
     })
@@ -577,6 +609,18 @@ export class Target {
   }
 
   /**
+   * @type {string[]}
+   */
+  static eventTokens = [];
+
+  /**
+   * @param {string[]}
+   */
+  static setEventTokens(value) {
+    this.eventTokens = value;
+  }
+
+  /**
    * Mbox describing an offer
    * @typedef {{content: {offer: string, block:string} | {pid}, type: string|null}} Mbox
    */
@@ -589,32 +633,47 @@ export class Target {
   static #staticInit = new Promise(resolve => {
 
     /** This is a special case for when adobe.target is disabled using dotest query param */
-    const windowSearchParams = new URLSearchParams(window.location.search);
-    if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key) === Constants.DISABLE_TARGET_PARAMS.value) {
+    if (shouldABTestsBeDisabled()) {
       resolve();
       return;
     }
 
     /** Target is loaded and we wait for it to finish so we can get the offer */
     if (window.adobe?.target) {
-      this.#getOffers().then(resolve);
+      resolve();
       return;
     }
 
     /** Target wasn't loaded we wait for events from it */
-    document.addEventListener(this.events.LIBRARY_LOADED, async () => {
-      await this.#getOffers();
+    document.addEventListener(this.events.LIBRARY_LOADED, () => {
       resolve();
     }, { once: true });
   });
+
+  /**
+   * @typedef {{content: {pid: string}}} PidMbox
+   * @type {Promise<PidMbox|null>}
+   */
+   static #campaignMbox = this.getOffer('initSelector-mbox');
+
+  /**
+   * @typedef {{content: object}} BuyLinksMbox
+   * @type {Promise<BuyLinksMbox|null>}
+   */
+  static #buyLinksMbox = this.getOffer('buyLinks-mbox');
+
+  /**
+   * @typedef {{content: {vlaicuFlag: string}}} VlaicuFlagMbox
+   * @type {Promise<VlaicuFlagMbox|null>}
+   */
+  static #vlaicuFlagMbox = this.getOffer('vlaicu-flag-mbox');
 
   /**
    * get the flag which marks wether the page should use Vlaicu or not
    * @returns {Promise<boolean>}
    */
   static async getVlaicuFlag() {
-    await this.#staticInit;
-    return Boolean(this.offers?.["vlaicu-flag-mbox"]?.content?.vlaicuFlag || null);
+    return Boolean((await this.#vlaicuFlagMbox)?.content?.vlaicuFlag || null);
   }
 
   /**
@@ -633,8 +692,7 @@ export class Target {
    * @returns {Promise<object>}
    */
   static async getBuyLinksMapping() {
-    await this.#staticInit;
-    return this.offers?.["buyLinks-mbox"]?.content || {};
+    return (await this.#buyLinksMbox)?.content || {};
   }
 
   /**
@@ -642,8 +700,7 @@ export class Target {
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    await this.#staticInit;
-    return this.offers?.["initSelector-mbox"]?.content?.pid || null;
+    return (await this.#campaignMbox)?.content?.pid || null;
   }
 
   /**
@@ -655,36 +712,20 @@ export class Target {
   }
 
   /**
-   * @returns {[string]}
+   * @param {string} mboxName
+   * @param {object} params 
    */
-  static #getAllMboxes() {
-    const mboxes = [...document.querySelectorAll("[data-mboxes]")]
-      .map(mboxes => {
-        try {
-          return JSON.parse(mboxes.dataset.mboxes)
-        } catch (error) {
-          console.warn(error);
-          return null;
-        }
-      })
-      .filter(Boolean)
-      .reduce((acc, mboxes) => {
-        mboxes.forEach(mbox => acc.add(mbox));
-        return acc;
-      }, new Set());
-
-    if (!mboxes) {
-      return [];
-    }
-
-    return [...mboxes].map((name, index) => { return { index: index + 3, name } });
+  static async getOffer(mboxName, params) {
+    const receivedOffers = await this.getOffers([{name: mboxName, params}]);
+    return receivedOffers ? receivedOffers[mboxName] : null;
   }
 
-  static async #getOffers() {
-    const mboxes = this.#getAllMboxes();
+  static async getOffers(mboxes) {
+    await this.#staticInit;
+    let offers = {};
 
     try {
-      this.offers = await window.adobe?.target?.getOffers({
+      offers = await window.adobe?.target?.getOffers({
         consumerId: await Visitor.getConsumerId(),
         request: {
           id: {
@@ -692,16 +733,13 @@ export class Target {
           },
           execute: {
             mboxes: [
-              { index: 0, name: "initSelector-mbox" },
-              { index: 1, name: "vlaicu-flag-mbox" },
-              { index: 2, name: "buyLinks-mbox"},
-              ...mboxes
+              ...mboxes.map((mbox, index) => {return { index, ...mbox}})
             ]
           }
         }
       });
 
-      this.offers = this.offers?.execute?.mboxes?.reduce((acc, mbox) => {
+      offers = offers?.execute?.mboxes?.reduce((acc, mbox) => {
         acc[mbox.name] = {};
         acc[mbox.name].content = mbox?.options?.[0]?.content;
         acc[mbox.name].type = mbox?.options?.[0]?.type;
@@ -711,16 +749,50 @@ export class Target {
     } catch (e) {
       console.warn(e);
     }
+
+    return offers;
   }
 
   /**
-   * 
-   * @param {string} mbox 
-   * @returns {Promise<Mbox|null>}
+   * @param {{name: string}[]} mboxes
    */
-  static async getMbox(mbox) {
-    await this.#staticInit;
-    return this.offers?.[mbox];
+  static async notifyTarget(mboxes) {
+    const sessionId = sessionStorage.getItem(Constants.ADOBE_TARGET_SESSION_ID_PARAM);
+    if (!sessionId || !this.eventTokens.length) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`https://${Constants.TARGET_TENANT}.tt.omtrdc.net/rest/v1/delivery?client=${Constants.TARGET_TENANT}&sessionId=${sessionId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: {
+            marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
+          },
+          context: {
+            channel: 'web',
+          },
+          notifications: mboxes.map(mbox => {
+            return {
+              id: `${mbox.name}:notification`,
+              type: "display",
+              timestamp: new Date().getTime(),
+              mbox,
+              tokens: this.eventTokens
+            }
+          }),
+        }),
+      });
+
+      if (!res.ok) {
+        console.warn("Notification to Target failed");
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   }
 };
 

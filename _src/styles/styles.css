@@ -1123,8 +1123,19 @@ a.button.modal:hover::after, a.button.central:hover::after, main .section.link-r
   width: 100%;
 }
 
-/* linked pictures with video button overlay */
+main .section[data-backgroundcolor='black'] {
+  background-color: black;
+}
 
+main .section[data-textcolor='white'] * {
+  color: white;
+}
+
+main .section[data-hidebreadcrumb='yes'] .breadcrumb {
+  display: none;
+}
+
+/* linked pictures with video button overlay */
 main a.video-placeholder {
   position: relative;
   display: inline-block;
@@ -1516,6 +1527,7 @@ main .section.blue a.button.modal::after {
   letter-spacing: .8px;
   padding: 3px 7px 3px 8px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .tag-dark-blue {
