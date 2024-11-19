@@ -1,0 +1,9 @@
+.mbox-canvas-container {
+    display: flex;
+    justify-content: center;
+
+    .mbox-canvas-wrapper {
+        height: 512px;
+        width: 768px;
+    }
+}

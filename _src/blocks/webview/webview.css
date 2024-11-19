@@ -7,9 +7,24 @@
     text-align: center;
     font-family: "Segoe UI", Arial, sans-serif;
 
+    &.dark-mode {
+        background-color: black;
+
+        .webview {
+            color: white;
+
+            .button.secondary {
+                background-color: black;
+                border-color: black;
+            }
+        }
+    }
+
     .webview {
         max-width: 438px;
         margin: auto;
+        padding-top: 48px;
+        padding-bottom: 35px;
 
         img {
             width: 92px;
@@ -30,7 +45,6 @@
             font-size: 18px;
             line-height: 24px;
             font-weight: 700;
-            color: black;
         }
 
         .button-container {
@@ -64,6 +78,9 @@
             background-color: white;
             border-color: white;
             color: #006EFF;
+            padding: 0;
+            margin: 0;
+            border: 0;
         }
 
         .prod-oldprice {
@@ -84,9 +101,8 @@
         }
 
         .prod-newprice {
-            font-size: var(--body-font-size-xl);
-            line-height: var(--body-font-size-xl);
-            font-weight: 700;
+            font: normal normal bold 24px / 30px Segoe UI;
+            line-height: 0.7;
         }
 
         .under-price-text {

@@ -1,6 +1,6 @@
 import { Constants } from "../constants.js";
 import { Target, Visitor } from "../data-layer.js";
-import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
+import { getParamValue, GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
 import { User } from "../../libs/user.js"
@@ -920,20 +920,19 @@ class Vlaicu {
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
-	// TODO: delete this parameter as it is for testing purposes only
-	static campaign = "TSExpired0MRDLP24";
+	static campaign = getParamValue('vcampaign');
 
 	static async getProductVariations(productId, campaign) {
 		const locale = await Target.getVlaicuGeoIpPrice() ? await User.locale : Page.locale;
 		const pathVariablesResolverObject = {
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.campaign // TODO: replace with campaign received as parameter
+			"{campaignId}": this.campaign
 		};
 
 		// get the correct path to get the prices
 		// TODO: add a check for campaign to be not null
-		let productPath = campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+		let productPath = ( campaign !== Store.NO_PROMOTION && this.campaign != null ) ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
