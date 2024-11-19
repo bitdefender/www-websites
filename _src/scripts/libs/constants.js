@@ -21,5 +21,8 @@ export const Constants = {
 
   ADOBE_TARGET_SESSION_ID_PARAM: "adobeTargetSessionId",
 
-  TARGET_TENANT: "bitdefender"
+  TARGET_TENANT: "bitdefender",
+
+  PUBLIC_URL: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
+    ? '' : 'https://www.bitdefender.com'
 }
