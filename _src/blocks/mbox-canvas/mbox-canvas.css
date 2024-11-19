@@ -5,5 +5,8 @@
     .mbox-canvas-wrapper {
         height: 512px;
         width: 770px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }

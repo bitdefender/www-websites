@@ -40,10 +40,6 @@ export default async function decorate(block) {
 
     </div>
   `;
-  const url = new URL(window.location.href);
-  if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'dark') {
-    block.closest('.section').classList.add('dark-mode');
-  }
   block.classList.add('loader');
   const offer = await Target.getOffers([{
     name: mboxName,
