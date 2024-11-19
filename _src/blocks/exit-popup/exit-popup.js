@@ -54,6 +54,8 @@ export default async function decorate(block) {
   document.addEventListener('mouseout', (event) => {
     if (popupDisplayCount < POPUP_DISPLAY_LIMIT && event.clientY < 0 && parentSelector) {
       parentSelector.style.display = 'block';
+      document.dispatchEvent(new Event('exit_popup_display'));
+      window.exit_popup_display = true;
 
       // add to the count
       popupDisplayCount += 1;
