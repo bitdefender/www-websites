@@ -239,7 +239,7 @@ export async function detectModalButtons(main) {
       }
 
       // generate new modal
-      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh)
+      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
       document.body.append(modalContainer);
       await StoreResolver.resolve(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
