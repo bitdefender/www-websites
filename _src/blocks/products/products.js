@@ -210,6 +210,7 @@ const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
  */
 function renderFeatured(text) {
   const root = document.createElement('div');
+  root.setAttribute('data-store-text-variable', '');
   root.classList.add('featured');
   root.textContent = text;
 

@@ -367,11 +367,11 @@
 }
 
 .identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card {
-  padding: 0;
-  text-align: left;
+  text-align: center;
   box-shadow: none;
-  background-color: transparent;
+  background-color: white;
   overflow: visible;
+  padding:0 20px 20px 20px;
 }
 
 .identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card .featured {
@@ -385,6 +385,21 @@
   font-weight: 400;
   width: fit-content;
   align-self: flex-start;
+}
+
+.identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card .highlight{
+  position: relative;
+  color: white;
+  top: 0;
+  background-color: #2cb43d;
+  margin: 0 0 0 -0.5rem;
+  font-size: 14px;
+  padding: 0.125rem 0.5rem;
+  margin-bottom: 10px;
+  font-weight: 400;
+  width: inherit;
+  left: 5px;
+  align-self: center;
 }
 
 .identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card p:first-of-type {
@@ -437,6 +452,10 @@
   .identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card .button-container .button-text {
     font-size: 14px;
   }
+
+  .identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card .highlight{
+    width: 116%;
+  }
 }
 
 @media (min-width: 992px) {
@@ -447,6 +466,9 @@
 
   .identity-exposed .modal-container.has-your-identity-been-exposed .modal-content .default-content-wrapper {
     padding: 0;
+  }
+  .identity-exposed .modal-container.has-your-identity-been-exposed .products.plans .product-card .highlight{
+    width: 110%;
   }
 }
 
