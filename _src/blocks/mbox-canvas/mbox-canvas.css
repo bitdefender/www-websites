@@ -4,6 +4,10 @@
 
     .mbox-canvas-wrapper {
         height: 512px;
-        width: 768px;
+        width: 770px;
+
+        &.dark-mode {
+            background-color: black;
+        }
     }
 }

@@ -40,6 +40,10 @@ export default async function decorate(block) {
 
     </div>
   `;
+  const url = new URL(window.location.href);
+  if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'dark') {
+    block.parentElement.classList.add('dark-mode');
+  }
   block.classList.add('loader');
   const offer = await Target.getOffers([{
     name: mboxName,
@@ -50,5 +54,4 @@ export default async function decorate(block) {
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));
-  block.classList.remove('loader');
 }

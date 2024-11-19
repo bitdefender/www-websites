@@ -507,6 +507,11 @@ async function loadPage() {
     element.classList.remove('await-loader');
   });
 
+  const awaitLoader = document.querySelectorAll('.loader');
+  awaitLoader.forEach((element) => {
+    element.classList.remove('loader');
+  });
+
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
