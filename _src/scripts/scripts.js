@@ -18,7 +18,6 @@ import {
   PageLoadedEvent,
   PageLoadStartedEvent,
   resolveNonProductsDataLayer,
-  Target,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 import Page from './libs/page.js';
@@ -26,9 +25,9 @@ import Page from './libs/page.js';
 import {
   adobeMcAppendVisitorId,
   createTag,
+  getPageExperimentKey,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
-import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
@@ -298,42 +297,6 @@ function buildCtaSections(main) {
     .forEach(buildCta);
 }
 
-/**
- * Loads everything needed to get to LCP.
- * @param {Element} doc The container element
- */
-async function loadEager(doc) {
-  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
-  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
-  decorateTemplateAndTheme();
-
-  await window.hlx.plugins.run('loadEager');
-
-  AdobeDataLayerService.push(await new PageLoadStartedEvent());
-  await resolveNonProductsDataLayer();
-
-  const templateMetadata = getMetadata('template');
-  const hasTemplate = getMetadata('template') !== '';
-  if (hasTemplate) {
-    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
-    // loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
-    //   type: 'module',
-    // });
-  }
-  const main = doc.querySelector('main');
-  if (main) {
-    decorateMain(main);
-    buildCtaSections(main);
-    buildTwoColumnsSection(main);
-    detectModalButtons(main);
-    document.body.classList.add('appear');
-    if (window.location.href.indexOf('scuderiaferrari') !== -1) {
-      document.body.classList.add('sferrari');
-    }
-    await waitForLCP(LCP_BLOCKS);
-  }
-}
-
 export async function loadTrackers() {
   const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
 
@@ -365,6 +328,47 @@ export async function loadTrackers() {
 }
 
 /**
+ * Loads everything needed to get to LCP.
+ * @param {Element} doc The container element
+ */
+async function loadEager(doc) {
+  // load trackers early if there is a target experiment on the page
+  if (getPageExperimentKey()) {
+    loadTrackers();
+  }
+
+  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
+  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
+  decorateTemplateAndTheme();
+
+  await window.hlx.plugins.run('loadEager');
+
+  AdobeDataLayerService.push(await new PageLoadStartedEvent());
+  await resolveNonProductsDataLayer();
+
+  const templateMetadata = getMetadata('template');
+  const hasTemplate = getMetadata('template') !== '';
+  if (hasTemplate) {
+    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
+    // loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
+    //   type: 'module',
+    // });
+  }
+  const main = doc.querySelector('main');
+  if (main) {
+    decorateMain(main);
+    buildCtaSections(main);
+    buildTwoColumnsSection(main);
+    detectModalButtons(main);
+    document.body.classList.add('appear');
+    if (window.location.href.indexOf('scuderiaferrari') !== -1) {
+      document.body.classList.add('sferrari');
+    }
+    await waitForLCP(LCP_BLOCKS);
+  }
+}
+
+/**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
  */
@@ -378,14 +382,11 @@ async function loadLazy(doc) {
     loadHeader(doc.querySelector('header'));
   }
 
-  loadTrackers();
-  await loadBlocks(main);
-
-  // make an offer call to stitch the data on the Target side
-  const targetExperimentMetadata = getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
-  if (targetExperimentMetadata) {
-    Target.notifyTarget([{ name: targetExperimentMetadata }]);
+  // only call load Trackers here if there is no experiment on the page
+  if (!getPageExperimentKey()) {
+    loadTrackers();
   }
+  await loadBlocks(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;

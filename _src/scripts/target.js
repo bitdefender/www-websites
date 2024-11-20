@@ -1,6 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { getMetadata, sampleRUM } from './lib-franklin.js';
-import { Constants } from './libs/constants.js';
+import { sampleRUM } from './lib-franklin.js';
 
 /**
  * Convert a URL to a relative URL.
@@ -11,82 +10,6 @@ function getPlainPageUrl(url) {
   const { pathname, search, hash } = new URL(url, window.location.href);
   const plainPagePathname = pathname.endsWith('/') ? `${pathname}index.plain.html` : `${pathname}.plain.html`;
   return `${plainPagePathname}${search}${hash}`;
-}
-
-/**
- * Generate a random session id.
- * @param length
- * @returns {string}
- */
-function generateSessionID(length = 16) {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let sessionID = '';
-  for (let i = 0; i < length; i += 1) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    sessionID += characters.charAt(randomIndex);
-  }
-  return sessionID;
-}
-
-/**
- * Get or create a session id for the current user.
- * @returns {string}
- */
-function getOrCreateSessionId() {
-  let sessionId = sessionStorage.getItem(Constants.ADOBE_TARGET_SESSION_ID_PARAM);
-
-  if (!sessionId) {
-    sessionId = generateSessionID();
-    sessionStorage.setItem(Constants.ADOBE_TARGET_SESSION_ID_PARAM, sessionId);
-  }
-  return sessionId;
-}
-
-/**
- * Fetch the target offers for the current location.
- * @returns {Promise<{
- * url: string;
- * eventTokens: string[];
- * }>}
- */
-async function fetchChallengerPageUrl(targetLocation) {
-  const res = await fetch(`https://${Constants.TARGET_TENANT}.tt.omtrdc.net/rest/v1/delivery?client=${Constants.TARGET_TENANT}&sessionId=${getOrCreateSessionId()}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      context: {
-        channel: 'web',
-      },
-      prefetch: {
-        mboxes: [
-          {
-            name: targetLocation,
-            index: 0,
-          },
-        ],
-      },
-    }),
-  });
-
-  const payload = await res.json();
-  const mbox = payload.prefetch.mboxes.find((m) => m.name === targetLocation);
-  let pageUrl = null;
-  const eventTokens = [];
-  if (mbox && mbox.options) {
-    mbox.options.forEach((option) => {
-      if (option.eventToken) {
-        eventTokens.push(option.eventToken);
-      }
-    });
-
-    if (mbox.options[0].content) {
-      pageUrl = mbox.options[0].content.url;
-    }
-  }
-
-  return { pageUrl, eventTokens };
 }
 
 /**
@@ -110,31 +33,31 @@ async function navigateToChallengerPage(url) {
   mainElement.innerHTML = await resp.text();
 }
 
+/**
+* @param {string} experimentUrl
+* @param {string} experimentId
+* @return {Promise<{
+*  experimentId: string;
+*  experimentVariant: string;
+* }|null>}
+*/
 // eslint-disable-next-line import/prefer-default-export
-export async function runTargetExperiment() {
+export async function runTargetExperiment(experimentUrl, experimentId) {
+  if (!experimentUrl) {
+    return null;
+  }
+
   try {
-    const experimentId = getMetadata('target-experiment');
-    const targetLocation = getMetadata('target-experiment-location');
-    if (!experimentId || !targetLocation) {
-      // eslint-disable-next-line no-console
-      return null;
-    }
+    await navigateToChallengerPage(experimentUrl);
 
-    const { pageUrl, eventTokens } = await fetchChallengerPageUrl(targetLocation);
-
-    if (pageUrl) {
-      await navigateToChallengerPage(pageUrl);
-
-      sampleRUM('target-experiment', {
-        source: `target:${experimentId}`,
-        target: pageUrl,
-      });
-    }
+    sampleRUM('target-experiment', {
+      source: `target:${experimentId}`,
+      target: experimentUrl,
+    });
 
     return {
-      eventTokens,
       experimentId,
-      experimentVariant: pageUrl,
+      experimentVariant: experimentUrl,
     };
   } catch (e) {
     return null;
