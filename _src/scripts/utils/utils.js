@@ -1,5 +1,6 @@
 import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
 import Page from '../libs/page.js';
+import { Constants } from '../libs/constants.js';
 
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
@@ -829,3 +830,5 @@ export function decorateBlockWithRegionId(element, id) {
 export function decorateLinkWithLinkTrackingId(element, id) {
   if (element) element.setAttribute('s-object-id', id);
 }
+
+export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
