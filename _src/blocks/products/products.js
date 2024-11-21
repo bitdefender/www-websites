@@ -253,10 +253,9 @@ function renderFeaturedSavings(text = 'Save', percent = '') {
  * @returns root node of the nanoblock
  */
 function renderLowestPrice(...params) {
-  const fileteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
-  const text = fileteredParams.length > 1 ? fileteredParams[1] : fileteredParams[0];
-  const monthly = fileteredParams.length > 1 ? fileteredParams[0] : '';
-
+  const filteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
+  const text = filteredParams.length > 1 ? filteredParams[1] : filteredParams[0];
+  const monthly = filteredParams.length > 1 ? filteredParams[0] : '';
   const root = document.createElement('p');
   const textArea = document.createElement('span');
   root.classList.add('await-loader');
@@ -302,7 +301,6 @@ export default function decorate(block) {
   Object.entries(metadata).forEach(([key, value]) => {
     if (key.includes('plans')) {
       const allImportantData = value.match(/[^,{}[\]]+/gu).map((importantData) => importantData.trim());
-
       plans.push({
         productCode: allImportantData[1],
         defaultVariant: `${Number(allImportantData.slice(-1)[0])
