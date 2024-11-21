@@ -256,17 +256,11 @@ function renderLowestPrice(...params) {
   const filteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
   const text = filteredParams.length > 1 ? filteredParams[1] : filteredParams[0];
   const monthly = filteredParams.length > 1 ? filteredParams[0] : '';
-  const product = params[0]
-  const prodVariation = params[1];
   const root = document.createElement('p');
   const textArea = document.createElement('span');
   root.classList.add('await-loader');
-  root.setAttribute('data-store-context', '');
-  root.setAttribute('data-store-text-variable', '');
-  root.setAttribute('data-store-option', `${prodVariation}`);
-  root.setAttribute('data-store-id', `${product}`);
-  root.setAttribute('data-store-department', 'consumer');
-  root.textContent = text.replace('0', monthly.toLowerCase() === 'monthly' ? '{SMALLEST_PRICE_PER_MONTH}' : '{SMALLEST_PRICE}');
+  textArea.setAttribute('data-store-text-variable', '');
+  textArea.textContent = text.replace('0', monthly.toLowerCase() === 'monthly' ? '{SMALLEST_PRICE_PER_MONTH}' : '{SMALLEST_PRICE}');
   root.appendChild(textArea);
   return root;
 }

@@ -114,16 +114,17 @@ const replaceVariable = (text, context, variableParameters, textVariable) => {
                 let smallestPrice = Number.MAX_SAFE_INTEGER;
                 let currency = "";
 
-                if (context.contexts.length === 0) { break; }
-
-                for (const { product } of context.contexts) {
-                    const productSmallestPrice = product.getSmallestPrice("monthly");
+                if (context.contextProducts.length === 0) {
+                    break;
+                }
+                
+                for (const contextProduct of context.contextProducts) {
+                    const productSmallestPrice = contextProduct.getSmallestPrice("monthly");
                     if (productSmallestPrice && productSmallestPrice < smallestPrice) {
                         smallestPrice = productSmallestPrice;
-                        currency = product.getCurrency();
+                        currency = contextProduct.getCurrency();
                     }
                 }
-
                 if (smallestPrice === Number.MAX_SAFE_INTEGER) { break; }
 
                 text = text.replaceAll(textVariable, Store.placeSymbol(smallestPrice, currency));

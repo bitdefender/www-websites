@@ -23,7 +23,8 @@ export const monthlyProducts = {
 	"us_pf_m": "us_pf_m",
 	"us_pi_m": "us_pi_m",
 	"us_pie_m": "us_pie_m",
-	"us_pfe_m": "us_pfe_m"
+	"us_pfe_m": "us_pfe_m",
+	"secpassm": "secpassm"
 }
 
 export const loadScript = (baseUrl, url) => {
