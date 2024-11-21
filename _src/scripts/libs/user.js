@@ -39,7 +39,7 @@ export class User {
       // Try to grab fingerprint from login data
       const loginData = await this.#staticInit;
       if (loginData) {
-        localStorage.setItem(Constants.FINGERPRINT_LOCAL_STORAGE_NAME, fingerprint);
+        localStorage.setItem(Constants.FINGERPRINT_LOCAL_STORAGE_NAME, loginData.fingerprint);
         return loginData.fingerprint;
       }
   
