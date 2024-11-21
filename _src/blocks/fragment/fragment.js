@@ -24,6 +24,7 @@ async function loadFragment(path) {
       // eslint-disable-next-line no-param-reassign
       path = path.replace(/lang/g, `${language}-${country}`);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log(error);
     }
     const resp = await fetch(`${path}.plain.html`);
