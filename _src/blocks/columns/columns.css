@@ -1117,6 +1117,14 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   justify-content: center;
 }
 
+.columns.medium-image-size p:has(picture) {
+  text-align: center;
+
+  img {
+    width: 50%;
+  }
+}
+
 @media (max-width: 1399px) {
   .columns-wrapper {
     padding: 0 var(--section-large-desktop-padding);
