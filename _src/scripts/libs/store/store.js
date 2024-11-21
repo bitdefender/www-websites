@@ -24,7 +24,9 @@ export const monthlyProducts = {
 	"us_pi_m": "us_pi_m",
 	"us_pie_m": "us_pie_m",
 	"us_pfe_m": "us_pfe_m",
-	"secpassm": "secpassm"
+	"secpassm": "secpassm",
+	"vbsm": "vbsm",
+	"scm": "scm",
 }
 
 export const loadScript = (baseUrl, url) => {
