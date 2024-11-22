@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns-wrapper {
   padding: 0 var(--body-padding);
 }
@@ -31,6 +32,19 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 22px;
+}
+
+.columns.medium-image-size p:has(picture) {
+  text-align: center;
+
+  img {
+    width: 140px;
+    height: 144px;
+  }
+}
+
+.columns.smaller-title h4 {
+  font-size: 16px;
 }
 
 .columns.awards > div > div > p {
@@ -581,6 +595,10 @@
     align-items: center;
     flex-direction: unset;
     gap: 32px;
+  }
+
+  .columns.awards-fragment > div{
+    align-items: baseline;
   }
 
   .columns > div > div {
