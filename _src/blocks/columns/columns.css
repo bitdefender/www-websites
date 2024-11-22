@@ -597,6 +597,10 @@
     gap: 32px;
   }
 
+  .columns.awards-fragment > div{
+    align-items: baseline;
+  }
+
   .columns > div > div {
     flex: 1;
     order: unset;
