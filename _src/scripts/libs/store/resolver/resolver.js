@@ -665,4 +665,4 @@ export class StoreResolver {
 	}
 }
 
-window.StoreResolver = StoreResolver;
+window.StoreResolverWebsites = StoreResolver;
