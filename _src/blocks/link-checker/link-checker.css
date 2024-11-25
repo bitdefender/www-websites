@@ -1,0 +1,98 @@
+
+main .section.link-checker-container {
+
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 20px; 
+    max-width: 1350px;
+    background: #007BFF;
+    padding-top: 50px;
+    padding-bottom: 0px;
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+
+    .link-checker-wrapper {
+        max-width: 960px;
+        width: 100%;
+    }
+
+    .link-checker {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        border-radius: 20px;
+        padding: 48px 160px 68px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+    
+        h2 {
+            font-weight: bold;
+            font-size: 40px;
+            color: #006EFF;
+            margin-bottom: 40px;
+        }
+
+        p {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding: 0;
+        }
+
+        p:first-of-type {
+            margin: 0;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            gap: 15px;
+        }
+
+        input[type="text"] {
+            padding: 15px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: 1px solid #006EFF;
+            width: 100%;
+            max-width: 444px;
+            margin: 0;
+        }
+
+        button {
+            padding: 15px 40px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .safe {
+            color: green;
+        }
+        .warning {
+            color: orange;
+        }
+        .danger {
+            color: red;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .link-checker {
+            bottom: -20%;
+        }
+}
