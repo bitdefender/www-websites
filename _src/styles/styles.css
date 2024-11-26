@@ -767,6 +767,11 @@ body.creators {
     margin: 0 auto;
   }
 
+  main .section.width-smallest .block, main .section.width-smallest .default-content-wrapper {
+    width: 640px;
+    margin: 0 auto;
+  }
+
   .creators .default-content-wrapper h2 {
     font: normal normal 300 60px/69px "IBM Plex Sans", sans-serif;
   }
