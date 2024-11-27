@@ -63,21 +63,6 @@ async function checkLink(input, result) {
   result.className = message.className;
 }
 
-function copyToClipboard(block) {
-  // Get the text field
-  const copyText = document.getElementById('link-checker-input');
-
-  // Select the text field
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); // For mobile devices
-
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.value);
-
-  // Alert the copied text
-  alert(`Copied the text: ${copyText.value}`);
-}
-
 export default function decorate(block) {
   const inputContainer = document.createElement('div');
   inputContainer.classList.add('input-container');
@@ -105,7 +90,6 @@ export default function decorate(block) {
   const shareButton = document.createElement('button');
   shareButton.innerHTML = '<span>Share Result</span>';
   shareButton.classList.add('share-button');
-  shareButton.addEventListener('click', copyToClipboard(block));
 
   const checkAnother = document.createElement('button');
   checkAnother.innerHTML = '<span>Check Another Link</span>';
