@@ -1,7 +1,7 @@
 
 main .section.link-checker-container {
 
-    margin: 50px auto;
+    margin: 50px auto 100px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 20px; 
@@ -98,6 +98,8 @@ main .section.link-checker-container {
             font-size: 16px;
             display: inline-flex;
             align-items: center;
+            flex-flow: column;
+            height: 40px;
         }
         button.share-button:before {
             content: url("../../icons/share.svg");
@@ -114,6 +116,40 @@ main .section.link-checker-container {
             display: inline-block;
         }
 
+        .share-popup {
+            position:relative;
+            top: -6em;
+            background-color: #000; 
+            color: #fff; 
+            padding: 8px 12px; 
+            border-radius: 5px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            white-space: nowrap; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+            z-index: 10; 
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+          }
+          
+          .share-popup::after {
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent; 
+            border-right: 6px solid transparent;
+            border-top: 6px solid #000;
+          }
+        .button-container .share-button:hover + .share-popup,
+        .button-container .share-button:focus + .share-popup {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        }
         .result {
             margin-top: 20px;
             font-size: 16px;

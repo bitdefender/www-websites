@@ -63,6 +63,33 @@ async function checkLink(input, result) {
   result.className = message.className;
 }
 
+function createSharePopup(buttonsContainer) {
+  const shareButton = buttonsContainer.querySelector('.share-button');
+  const sharePopup = document.createElement('div');
+  sharePopup.classList.add('share-popup');
+  shareButton?.insertAdjacentElement('beforeend', sharePopup);
+  return sharePopup;
+}
+
+function copyToClipboard(block) {
+  // Get the text field
+  const copyText = document.getElementById('link-checker-input');
+
+  // Select the text field
+  copyText?.select();
+  copyText?.setSelectionRange(0, 99999); // For mobile devices
+
+  // Copy the text inside the text field
+  navigator.clipboard.writeText(copyText.value);
+  const buttonsContainer = block.querySelector('.buttons-container');
+  if (buttonsContainer) {
+    const sharePopup = block.querySelector('.share-popup') || createSharePopup(buttonsContainer);
+    sharePopup.textContent = `Copied the text: ${copyText.value}`;
+    sharePopup.style = 'opacity: 1';
+    setTimeout(() => { sharePopup.style = 'opacity:0;'; }, 2500);
+  }
+}
+
 export default function decorate(block) {
   const inputContainer = document.createElement('div');
   inputContainer.classList.add('input-container');
@@ -101,4 +128,8 @@ export default function decorate(block) {
   block.appendChild(buttonsContainer);
 
   button.addEventListener('click', () => checkLink(input, result));
+  shareButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    copyToClipboard(block);
+  });
 }

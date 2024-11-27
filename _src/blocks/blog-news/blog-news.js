@@ -12,7 +12,7 @@ async function renderBlogGrid(block, endpoint, articlesNumber) {
     items.forEach((item) => {
       // eslint-disable-next-line no-plusplus
       currentCount++;
-      if (currentCount>articlesNumber) return;
+      if (currentCount > articlesNumber) return;
       const link = item.querySelector('link').textContent;
 
       const title = item.querySelector('title').textContent;
