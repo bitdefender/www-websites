@@ -26,7 +26,20 @@ class StatusMessageFactory {
   }
 }
 
-async function checkLink(input, result) {
+function changeTexts(block, result) {
+  switch (result) {
+    case 'safe':
+      block.querySelector('h2').textContent = "You're safe";
+      break;
+    case 'danger':
+      block.querySelector('h2').textContent = 'Definitely Don’t Go There';
+      break;
+    default:
+      break;
+  }
+}
+
+async function checkLink(block, input, result) {
   let url = input.value.trim();
   if (!url) {
     result.textContent = 'Please enter a URL.';
@@ -56,11 +69,35 @@ async function checkLink(input, result) {
   }
 
   const data = await response.json();
-  console.log(data);
   const { status } = data;
   const message = StatusMessageFactory.createMessage(status, url);
   result.textContent = message.text;
   result.className = message.className;
+  block.closest('.section').classList.add(message.className.split(' ')[1]);
+  input.setAttribute('disabled', '');
+
+  changeTexts(block, message.className.split(' ')[1]);
+}
+
+function resetChecker(block) {
+  const classesToRemove = ['danger', 'safe'];
+  const section = block.closest('.section');
+
+  // Iterate over the classes and remove them from the section
+  classesToRemove.forEach((className) => {
+    if (section.classList.contains(className)) {
+      section.classList.remove(className);
+    }
+  });
+
+  // Reset the input and result elements
+  const input = block.querySelector('#link-checker-input');
+  const result = block.querySelector('.result');
+  const h2 = block.querySelector('h2');
+  input.removeAttribute('disabled');
+  result.textContent = 'Add your link or paste it from the device’s clipboard.';
+  result.className = 'result';
+  h2.textContent = 'Is This Link Really Safe?';
 }
 
 export default function decorate(block) {
@@ -100,5 +137,10 @@ export default function decorate(block) {
 
   block.appendChild(buttonsContainer);
 
-  button.addEventListener('click', () => checkLink(input, result));
+  const [safeImage, dangerImage] = block.querySelectorAll('picture');
+  safeImage.classList.add('safe-image');
+  dangerImage.classList.add('danger-image');
+
+  button.addEventListener('click', () => checkLink(block, input, result));
+  checkAnother.addEventListener('click', () => resetChecker(block));
 }
