@@ -384,6 +384,10 @@
   right: 17px;
 }
 
+.product-card .price.nanoblock, .product-card .featured.nanoblock{
+  font-family: 'Arial', sans-serif;
+}
+
 @media (max-width: 480px) {
   .product-card a.button::after {
     top: calc(50% - 10px);

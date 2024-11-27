@@ -19,7 +19,7 @@ export class User {
     }
 
     try {
-      const userDataResponse = await fetch(`${Constants.PUBLIC_URL}/bin/login/userInfo.json`);
+      const userDataResponse = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/bin/login/userInfo.json`);
       return userDataResponse.ok ? (await userDataResponse.json()).result : null;
     } catch {
       return null;
@@ -41,7 +41,7 @@ export class User {
       // Try to grab fingerprint from login data
       const loginData = await this.#staticInit;
       if (loginData) {
-        localStorage.setItem(Constants.FINGERPRINT_LOCAL_STORAGE_NAME, fingerprint);
+        localStorage.setItem(Constants.FINGERPRINT_LOCAL_STORAGE_NAME, loginData.fingerprint);
         return loginData.fingerprint;
       }
   
@@ -89,7 +89,7 @@ export class User {
    */
   static async #getGeolocation() {
     try {
-      const response = await fetch(`${Constants.PUBLIC_URL}/geoip`);
+      const response = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/geoip`);
 
       if (!response.ok) {
         return "us";

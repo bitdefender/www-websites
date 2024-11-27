@@ -503,6 +503,8 @@ async function loadPage() {
 
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
+  document.dispatchEvent(new Event('bd_page_ready'));
+  window.bd_page_ready = true;
   elements.forEach((element) => {
     element.classList.remove('await-loader');
   });
