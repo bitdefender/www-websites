@@ -1375,6 +1375,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     width: 100%;
     justify-content: center;
   }
+  table{
+    margin-bottom: 15px;
+  }
 
   td{
     display: flex;
@@ -1397,7 +1400,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     }
 
     p{
-      margin:0 0 0 10px;
       align-content: center;
     }
 
@@ -1410,6 +1412,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       width: 25px;
       line-height: 0;
     }
+  }
+
+  tr:last-of-type td{
+    height: 25px;
   }
   .columns > div > .columns-img-col {
     margin-bottom: 0;
