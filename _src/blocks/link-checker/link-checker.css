@@ -97,8 +97,7 @@ main .section.link-checker-container {
             font-weight: bold;
             font-size: 16px;
             display: inline-flex;
-            align-items: center;
-            flex-flow: column;
+            flex-wrap: wrap;
             height: 40px;
         }
         button.share-button:before {

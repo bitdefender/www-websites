@@ -65,6 +65,7 @@ async function checkLink(input, result) {
 
 function createSharePopup(buttonsContainer) {
   const shareButton = buttonsContainer.querySelector('.share-button');
+  shareButton.style.maxWidth = `${shareButton.offsetWidth}px`;
   const sharePopup = document.createElement('div');
   sharePopup.classList.add('share-popup');
   shareButton?.insertAdjacentElement('beforeend', sharePopup);
@@ -86,7 +87,10 @@ function copyToClipboard(block) {
     const sharePopup = block.querySelector('.share-popup') || createSharePopup(buttonsContainer);
     sharePopup.textContent = `Copied the text: ${copyText.value}`;
     sharePopup.style = 'opacity: 1';
-    setTimeout(() => { sharePopup.style = 'opacity:0;'; }, 2500);
+    setTimeout(() => {
+      const popupWidth = sharePopup.offsetWidth;
+      sharePopup.style = `transform: translateX(-${popupWidth}) opacity:0;`;
+    }, 2500);
   }
 }
 
