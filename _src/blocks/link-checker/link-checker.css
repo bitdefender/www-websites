@@ -69,8 +69,13 @@ main .section.link-checker-container {
         }
 
 
+        .buttons-container {
+            margin-top: 40px;
+            display: flex;
+            gap: 40px;
+        }
 
-        button {
+        button.check-url {
             padding: 15px 40px;
             cursor: pointer;
             background-color: #007BFF;
@@ -80,15 +85,52 @@ main .section.link-checker-container {
             font-weight: bold;
             font-size: 1em;
         }
-        button:hover {
+        button.check-url:hover {
             background-color: #0056b3;
         }
+
+        button.share-button, button.check-another-button {
+            cursor: pointer;
+            color: #007BFF;
+            border: none;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+        }
+        button.share-button:before {
+            content: url("../../icons/share.svg");
+            margin-right: 10px;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+        }
+        button.check-another-button:before {
+            content: url("../../icons/check.svg");
+            margin-right: 10px;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+        }
+
         .result {
             margin-top: 20px;
-            font-weight: bold;
+            font-size: 16px;
+            border-radius: 8px;
         }
         .safe {
-            color: green;
+            background-color: #F3FEF8;
+            padding: 17px 30px 17px 46px;
+            position: relative;
+
+            &::before {
+                content: url("../../icons/safe.svg");
+                position: absolute;
+                left: 30px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
         }
         .warning {
             color: orange;
