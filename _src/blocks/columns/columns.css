@@ -1361,8 +1361,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .columns > div > .columns-img-col img {
     display: none;
   }
-  
+
   p{
+    font-size: 16px;
     margin: 0;
   }
 
