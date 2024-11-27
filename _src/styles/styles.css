@@ -1554,6 +1554,10 @@ main .section.blue a.button.modal::after {
   text-align: center;
 }
 
+.align-left {
+  text-align: left;
+}
+
 .icon-apple, .icon-android {
   width: 18px;
   transform: translateY(22px);
