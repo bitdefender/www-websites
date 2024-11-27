@@ -125,7 +125,7 @@ function copyToClipboard(block) {
     sharePopup.textContent = `Copied the text: ${copyText.value}`;
     sharePopup.style = 'opacity: 1';
     setTimeout(() => {
-      sharePopup.style = `opacity:0;`;
+      sharePopup.style = 'opacity:0;';
     }, 2500);
   }
 }
