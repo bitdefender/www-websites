@@ -11,7 +11,6 @@
 
 .blog-news .blog-grid {
     display: grid;
-    grid-auto-flow: row;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     justify-content: center;
     gap: 30px;
@@ -27,26 +26,26 @@
 }
 
 .blog-news .blog-card:hover {
-    transform: scale(1.02);
+    transform: scale(1.05);
 }
 
 .blog-news .blog-card img {
     width: 420px;
     height: 308px;
     object-fit: cover;
-    background-color: #f8d7da; /* Placeholder color */
+    background-color: #FFD6D6;
     border-radius: 20px;
 }
 
 .blog-news .blog-card h3 {
     font-size: 1.2rem;
     margin-bottom: 24px;
-    color: #333;
+    color: #000000;
 }
 
 .blog-news .blog-card a {
     text-decoration: none;
-    color: #007bff;
+    color:#006EFF;
     font-weight: bold;
 }
 
