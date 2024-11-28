@@ -109,7 +109,7 @@ function createSharePopup(buttonsContainer) {
   return sharePopup;
 }
 
-function copyToClipboard(block) {
+function copyToClipboard(block, caller) {
   // Get the text field
   const copyText = document.getElementById('link-checker-input');
 
@@ -123,10 +123,11 @@ function copyToClipboard(block) {
   if (buttonsContainer) {
     const sharePopup = block.querySelector('.share-popup') || createSharePopup(buttonsContainer);
     sharePopup.textContent = `Copied the text: ${copyText.value}`;
-    sharePopup.style = 'opacity: 1';
+    const translateXValue = Math.abs((sharePopup.offsetWidth - caller.offsetWidth) / 2);
+    sharePopup.style = `transform:translateX(-${translateXValue}px); opacity: 1`;
     setTimeout(() => {
-      sharePopup.style = 'opacity:0;';
-    }, 2500);
+      sharePopup.style = `transform:translateX(-${translateXValue}px); opacity:0;`;
+    }, 2000);
   }
 }
 
@@ -175,6 +176,6 @@ export default function decorate(block) {
   checkAnother.addEventListener('click', () => resetChecker(block));
   shareButton.addEventListener('click', (e) => {
     e.preventDefault();
-    copyToClipboard(block);
+    copyToClipboard(block, shareButton);
   });
 }
