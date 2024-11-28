@@ -12,7 +12,7 @@ main .section.link-checker-container {
     overflow: visible;
 
     &::before {
-        content: url("../../icons/link-checker-pattern.svg");
+        content: ' ';
         position: absolute;
         top: 0;
         left: 0;
@@ -86,7 +86,7 @@ main .section.link-checker-container {
             display: none;
         }
 
-        .link-checke .buttons-container {
+        .link-checker .buttons-container {
             display: flex;
         }
     }
