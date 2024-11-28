@@ -132,9 +132,13 @@ function copyToClipboard(block, caller, popupText) {
 
 export default function decorate(block) {
   const { clipboardText } = block.closest('.section').dataset;
+
+  const formContainer = document.createElement('div');
+  formContainer.classList.add('link-checker-form');
+
   const inputContainer = document.createElement('div');
   inputContainer.classList.add('input-container');
-  block.appendChild(inputContainer);
+  formContainer.appendChild(inputContainer);
 
   const input = document.createElement('input');
   input.type = 'text';
@@ -150,7 +154,7 @@ export default function decorate(block) {
   const result = document.createElement('div');
   result.textContent = 'Add your link or paste it from the device’s clipboard.';
   result.className = 'result';
-  block.appendChild(result);
+  formContainer.appendChild(result);
 
   const buttonsContainer = document.createElement('div');
   buttonsContainer.classList.add('buttons-container');
@@ -166,7 +170,9 @@ export default function decorate(block) {
   buttonsContainer.appendChild(shareButton);
   buttonsContainer.appendChild(checkAnother);
 
-  block.appendChild(buttonsContainer);
+  formContainer.appendChild(buttonsContainer);
+  console.log(block.querySelectorAll(':scope > div')[1]);
+  block.querySelectorAll(':scope > div')[1].replaceWith(formContainer);
 
   const [safeImage, dangerImage] = block.querySelectorAll('picture');
   safeImage.classList.add('safe-image');
