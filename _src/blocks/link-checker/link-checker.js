@@ -126,14 +126,10 @@ function createSharePopup(buttonsContainer) {
 }
 
 function copyToClipboard(block, caller, popupText) {
-  const copyText = document.getElementById('link-checker-input');
-
-  // Select the text field
-  copyText?.select();
-  copyText?.setSelectionRange(0, 99999); // For mobile devices
+  const copyText = document.getElementsByClassName('result')[0];
 
   // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.value);
+  navigator.clipboard.writeText(copyText.textContent);
   const buttonsContainer = block.querySelector('.buttons-container');
   if (buttonsContainer) {
     const sharePopup = block.querySelector('.share-popup') || createSharePopup(buttonsContainer);
