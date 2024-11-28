@@ -40,18 +40,19 @@ function changeTexts(block, result) {
 }
 
 async function checkLink(block, input, result) {
-  let url = input.value.trim();
+  const url = input.value.trim();
   if (!url) {
     result.textContent = 'Please enter a URL.';
-    result.className = 'result warning';
+    result.className = 'result danger';
     return;
   }
+  // Create the regex for URL validation
+  const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-_\.]{1}[a-z0-9]+)*\.[a-z]{2,10}(:[0-9]{1,5})?(\/.*)?$/;
 
-  try {
-    url = new URL(`http://${url}`);
-  } catch (_) {
+  // Validate the input URL
+  if (!urlRegex.test(url)) {
     result.textContent = 'Please enter a valid URL.';
-    result.className = 'result warning';
+    result.className = 'result danger';
     return;
   }
 
