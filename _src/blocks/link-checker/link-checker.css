@@ -177,6 +177,7 @@ main .section.link-checker-container {
             margin-top: 40px;
             display: none;
             gap: 40px;
+            margin-bottom: 20px;
         }
 
         button.check-url {
@@ -319,9 +320,8 @@ main .section.link-checker-container {
 
             button.share-button, button.check-another-button {
                 flex-wrap: wrap;
-                align-items: center;
+                align-items: baseline;
                 flex-flow: wrap;
-                height: 50%;
             }
             .share-popup{
                 top: -80px;
