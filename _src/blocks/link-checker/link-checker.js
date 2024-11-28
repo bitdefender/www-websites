@@ -103,6 +103,7 @@ function resetChecker(block) {
 function createSharePopup(buttonsContainer) {
   const shareButton = buttonsContainer.querySelector('.share-button');
   shareButton.style.maxWidth = `${shareButton.offsetWidth}px`;
+  shareButton.style.maxHeight = `${shareButton.offsetHeight}px`;
   const sharePopup = document.createElement('div');
   sharePopup.classList.add('share-popup');
   shareButton.insertAdjacentElement('beforeend', sharePopup);
