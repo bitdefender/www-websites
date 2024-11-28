@@ -2,9 +2,7 @@
 main .section.link-checker-container {
     padding: 20px;
     background-color: #fff;
-    border-radius: 20px; 
     max-width: 1350px;
-    background-color: #006EFF;
     padding-top: 50px;
     padding-bottom: 50px;
     display: flex;
@@ -18,14 +16,17 @@ main .section.link-checker-container {
         left: 0;
         width: 100%;
         height: 100%;
+        max-height: 400px;
         background-image: url("../../icons/link-checker-pattern.svg");
+        background-color: #006EFF;
+        border-radius: 20px;
     }
 
     &.danger {
-        background-color: #3e030b;
 
         &::before {
-            filter: invert(100%) sepia(0%) saturate(1%) hue-rotate(4deg) brightness(105%) contrast(101%);
+            background-color: #3e030b;
+            background-image: url("../../icons/link-checker-pattern-red.svg");
         }
 
         .check-url {
@@ -61,10 +62,10 @@ main .section.link-checker-container {
     }
 
     &.safe {
-        background-color: #3d8648;
 
         &::before {
-            filter: invert(50%) sepia(17%) saturate(1255%) hue-rotate(91deg) brightness(96%) contrast(95%);
+            background-color: #3d8648;
+            background-image: url("../../icons/link-checker-pattern-green.svg");
         }
 
         .check-url {
@@ -195,6 +196,7 @@ main .section.link-checker-container {
         }
 
         button.share-button, button.check-another-button {
+            position: relative;
             cursor: pointer;
             color: #007BFF;
             border: none;
@@ -206,6 +208,7 @@ main .section.link-checker-container {
             align-items: center;
             height: 4em;
             flex-flow: column;
+            max-height: fit-content;
         }
         button.share-button:before {
             content: url("../../icons/share.svg");
@@ -223,8 +226,8 @@ main .section.link-checker-container {
         }
 
         .share-popup {
-            position:relative;
-            top: -125px;
+            position: absolute;
+            top: -85px;
             min-width: fit-content;
             background-color: #000; 
             color: #fff; 
@@ -262,33 +265,33 @@ main .section.link-checker-container {
             border-radius: 8px;
             padding-bottom: 20px;
         }
-        .safe {
+        .result.safe {
             background-color: #F3FEF8;
-            padding: 17px 30px 17px 46px;
+            padding: 8px 30px 8px 46px;
             position: relative;
+            text-align: left;
 
             &::before {
                 content: url("../../icons/safe.svg");
                 position: absolute;
-                left: 30px;
-                top: 50%;
-                transform: translateY(-50%);
+                left: 14px;
+                top: 7px;
             }
         }
-        .danger {
+        .result.danger {
             background-color: #FDF3F4;
-            padding: 17px 30px 17px 46px;
+            padding: 8px 30px 8px 46px;
             position: relative;
+            text-align: left;
 
             &::before {
                 content: url("../../icons/bulb-pink.svg");
                 position: absolute;
-                left: 30px;
-                top: 50%;
-                transform: translateY(-50%);
+                left: 14px;
+                top: 7px;
             }
         }
-        .danger.no-response {
+        .result.danger.no-response {
             text-align: left;
             font-size: 14px;
             margin-bottom: 19px;
@@ -305,11 +308,11 @@ main .section.link-checker-container {
         }
     }
     @media (min-width:768px) {
-        margin: 50px auto 100px auto;
+        margin: 0 auto;
         padding-bottom: 50px;
+
         .link-checker{
-            padding: 48px 160px 35px;
-            bottom: -20%;
+            bottom: -5%;
             .input-container{
                 flex-direction: unset;
             }
@@ -317,9 +320,13 @@ main .section.link-checker-container {
                 max-width: 444px;
             }
             .buttons-container{
-                flex-flow: unset;
+                flex-flow: row;
                 margin-top: 50px;
                 justify-content: center;
+            }
+
+            button.check-url {
+                white-space: nowrap;
             }
 
             button.share-button, button.check-another-button {
@@ -328,7 +335,7 @@ main .section.link-checker-container {
                 flex-flow: wrap;
             }
             .share-popup{
-                top: -80px;
+                top: -40px;
                 max-width: unset;
                 white-space: nowrap;
             }
@@ -346,7 +353,7 @@ main .section.link-checker-container {
 
             .result {
                 margin-top: 20px;
-                font-size: 16px;
+                font-size: 14px;
                 border-radius: 8px;
                 padding-bottom: 30px;
             }
@@ -358,6 +365,14 @@ main .section.link-checker-container {
     }
 
     @media (min-width: 991px) {
+
+        .link-checker {
+            padding: 48px 160px 35px;
+            bottom: -10%;
+        }
+    }
+
+    @media (min-width: 1200px) {
 
         .link-checker {
             bottom: -15%;

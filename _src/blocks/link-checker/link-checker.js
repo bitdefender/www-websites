@@ -1,10 +1,21 @@
 class StatusMessageFactory {
   static createMessage(status, url) {
-    console.log(status);
+    let urlObject = url;
+    // Ensure the URL has a protocol
+    if (!/^https?:\/\//i.test(url)) {
+      urlObject = `http://${url}`;
+    }
+    urlObject = new URL(urlObject);
+
+    // Ensure the URL contains www
+    if (!urlObject.hostname.startsWith('www.')) {
+      urlObject.hostname = `www.${urlObject.hostname}`;
+    }
+
     const messages = {
       1: { text: 'The link is safe with no signs of harmful activity. You can go ahead and keep staying cautious online.', className: 'result safe' },
       2: { text: 'We haven\'t seen any suspicious activity from this link.', className: 'result safe' },
-      3: { text: `This link looks safe, but the domain '${url.hostname}' has been connected to harmful links in the past. To stay protected, check any other links from this domain using our tool and keep your security software updated.`, className: 'result safe' },
+      3: { text: `This link looks safe, but the domain '${urlObject.hostname}' has been connected to harmful links in the past. To stay protected, check any other links from this domain using our tool and keep your security software updated.`, className: 'result safe' },
       5: { text: 'This link is known to distribute malware. Accessing it may harm your device, steal your data, or allow unauthorized access. Stay away from the site and ensure your security software is active.', className: 'result danger' },
       17: { text: 'This link appears suspicious and may not be trustworthy. It’s best to avoid accessing it. Keep your security software active and steer clear of the site.', className: 'result danger' },
       8: { text: 'This link directs to a fraudulent site intended to trick users and steal sensitive data. Stay away from the site and ensure your security software is active.', className: 'result danger' },
@@ -147,7 +158,7 @@ export default function decorate(block) {
 
   const input = document.createElement('input');
   input.type = 'text';
-  input.placeholder = 'Enter URL to check';
+  input.placeholder = 'exaple-url.com';
   input.id = 'link-checker-input';
   inputContainer.appendChild(input);
 
@@ -176,7 +187,6 @@ export default function decorate(block) {
   buttonsContainer.appendChild(checkAnother);
 
   formContainer.appendChild(buttonsContainer);
-  console.log(block.querySelectorAll(':scope > div')[1]);
   block.querySelectorAll(':scope > div')[1].replaceWith(formContainer);
 
   const [safeImage, dangerImage] = block.querySelectorAll('picture');
