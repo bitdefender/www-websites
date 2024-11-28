@@ -61,7 +61,7 @@ async function checkLink(block, input, result) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ }),
+    body: JSON.stringify({ url }),
   });
 
   if (!response.ok) {
