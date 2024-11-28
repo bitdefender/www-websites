@@ -52,6 +52,10 @@ main .section.link-checker-container {
         .link-checker p:not(:has(img)) {
             display: none;
         }
+
+        .link-checke .buttons-container {
+            display: flex;
+        }
     }
 
     &.safe {
@@ -82,10 +86,18 @@ main .section.link-checker-container {
         .link-checker p:not(:has(img)) {
             display: none;
         }
+
+        .link-checke .buttons-container {
+            display: flex;
+        }
     }
 
     .link-checker-wrapper {
         max-width: 960px;
+        width: 100%;
+    }
+
+    .link-checker-form {
         width: 100%;
     }
 
@@ -155,7 +167,7 @@ main .section.link-checker-container {
 
         .buttons-container {
             margin-top: 40px;
-            display: flex;
+            display: none;
             gap: 40px;
         }
 
@@ -232,7 +244,7 @@ main .section.link-checker-container {
             opacity: 1;
             pointer-events: auto;
         }
-        }
+
         .result {
             margin-top: 20px;
             font-size: 16px;
@@ -268,7 +280,7 @@ main .section.link-checker-container {
 
     @media (min-width: 1200px) {
         .link-checker {
-            bottom: -20%;
+            bottom: -15%;
         }
     }
 }
