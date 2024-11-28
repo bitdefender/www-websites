@@ -61,11 +61,14 @@ async function checkLink(block, input, result) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ url }),
+    body: JSON.stringify({ }),
   });
 
   if (!response.ok) {
-    result.textContent = 'Something went wrong on our end';
+    result.innerHTML = `
+      <strong>Something went wrong on our end</strong><br>
+      Something went wrong on our end The system encountered an error while trying to check the link you provided. Please try again in a few minutes.`;
+    result.className = 'result danger no-response';
     return;
   }
 

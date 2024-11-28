@@ -19,7 +19,6 @@ main .section.link-checker-container {
         width: 100%;
         height: 100%;
         background-image: url("../../icons/link-checker-pattern.svg");
-        overflow-y: hidden;
     }
 
     &.danger {
@@ -286,6 +285,17 @@ main .section.link-checker-container {
                 left: 30px;
                 top: 50%;
                 transform: translateY(-50%);
+            }
+        }
+        .danger.no-response {
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 19px;
+
+            &::before {
+                content: url("../../icons/no-response.svg");
+                top: 30%;
+                left: 15px;
             }
         }
     }
