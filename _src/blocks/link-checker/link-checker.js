@@ -105,32 +105,26 @@ function createSharePopup(buttonsContainer) {
   shareButton.style.maxWidth = `${shareButton.offsetWidth}px`;
   const sharePopup = document.createElement('div');
   sharePopup.classList.add('share-popup');
-  shareButton?.insertAdjacentElement('beforeend', sharePopup);
+  shareButton.insertAdjacentElement('beforeend', sharePopup);
   return sharePopup;
 }
 
-function copyToClipboard(block) {
-  // Get the text field
-  const copyText = document.getElementById('link-checker-input');
-
-  // Select the text field
-  copyText?.select();
-  copyText?.setSelectionRange(0, 99999); // For mobile devices
-
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.value);
+function copyToClipboard(block, caller, popupText) {
   const buttonsContainer = block.querySelector('.buttons-container');
   if (buttonsContainer) {
     const sharePopup = block.querySelector('.share-popup') || createSharePopup(buttonsContainer);
-    sharePopup.textContent = `Copied the text: ${copyText.value}`;
-    sharePopup.style = 'opacity: 1';
+    sharePopup.textContent = `${popupText}`;
+    const translateXValue = Math.abs((sharePopup.offsetWidth - caller.offsetWidth) / 2);
+    sharePopup.style = `transform:translateX(-${translateXValue}px); opacity: 1`;
     setTimeout(() => {
-      sharePopup.style = 'opacity:0;';
-    }, 2500);
+      sharePopup.style = `transform:translateX(-${translateXValue}px); opacity:0;`;
+    }, 2000);
   }
 }
 
 export default function decorate(block) {
+  const { clipboardText } = block.closest('.section').dataset;
+
   const formContainer = document.createElement('div');
   formContainer.classList.add('link-checker-form');
 
@@ -180,6 +174,6 @@ export default function decorate(block) {
   checkAnother.addEventListener('click', () => resetChecker(block));
   shareButton.addEventListener('click', (e) => {
     e.preventDefault();
-    copyToClipboard(block);
+    copyToClipboard(block, shareButton, clipboardText);
   });
 }

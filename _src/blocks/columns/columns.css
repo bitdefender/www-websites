@@ -1182,6 +1182,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     transform: rotateY(180deg);
     z-index: 0;
   }
+
+  @media (min-width:768px){
+    .columns > div {
+      align-items: baseline;
+    }
+  }
 }
 
 @media (max-width: 1399px) {

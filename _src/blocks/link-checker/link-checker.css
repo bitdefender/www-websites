@@ -1,14 +1,12 @@
 
 main .section.link-checker-container {
-
-    margin: 50px auto 100px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 20px; 
     max-width: 1350px;
     background-color: #006EFF;
     padding-top: 50px;
-    padding-bottom: 0px;
+    padding-bottom: 50px;
     display: flex;
     justify-content: center;
     overflow: visible;
@@ -21,6 +19,7 @@ main .section.link-checker-container {
         width: 100%;
         height: 100%;
         background-image: url("../../icons/link-checker-pattern.svg");
+        overflow-y: hidden;
     }
 
     &.danger {
@@ -107,7 +106,7 @@ main .section.link-checker-container {
         align-items: center;
         background-color: white;
         border-radius: 20px;
-        padding: 48px 160px 68px;
+        padding: 20px;
         text-align: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         position: relative;
@@ -145,9 +144,11 @@ main .section.link-checker-container {
 
         .input-container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             width: 100%;
             gap: 15px;
+            padding-top: 10px;
         }
 
         input[type="text"] {
@@ -156,7 +157,6 @@ main .section.link-checker-container {
             border-radius: 8px;
             border: 1px solid #006EFF;
             width: 100%;
-            max-width: 444px;
             margin: 0;
             position: relative;
             background: url("../../icons/link-checker-example.svg") no-repeat;
@@ -192,9 +192,11 @@ main .section.link-checker-container {
             background-color: transparent;
             font-weight: bold;
             font-size: 16px;
+            gap:10px;
             display: inline-flex;
-            flex-wrap: wrap;
-            height: 40px;
+            align-items: center;
+            height: 4em;
+            flex-flow: column;
         }
         button.share-button:before {
             content: url("../../icons/share.svg");
@@ -213,14 +215,14 @@ main .section.link-checker-container {
 
         .share-popup {
             position:relative;
-            top: -6em;
+            top: -125px;
+            min-width: fit-content;
             background-color: #000; 
             color: #fff; 
             padding: 8px 12px; 
             border-radius: 5px; 
             font-size: 14px; 
-            font-weight: bold; 
-            white-space: nowrap; 
+            font-weight: bold;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
             z-index: 10; 
             transition: opacity 0.3s ease-in-out;
@@ -274,6 +276,36 @@ main .section.link-checker-container {
                 left: 30px;
                 top: 50%;
                 transform: translateY(-50%);
+            }
+        }
+
+    @media (min-width:768px){
+        margin: 50px auto 100px auto;
+        padding-bottom: 0;
+        .link-checker{
+            padding: 48px 160px 68px;
+            bottom: -10%;
+            .input-container{
+                flex-direction: unset;
+            }
+            input [type="text"]{
+                max-width: 444px;
+            }
+            .buttons-container{
+                flex-flow: unset;
+                margin-top: 50px;
+            }
+
+            button.share-button, button.check-another-button {
+                flex-wrap: wrap;
+                align-items: center;
+                flex-flow: wrap;
+                height: 50%;
+            }
+            .share-popup{
+                top: -80px;
+                max-width: unset;
+                white-space: nowrap;
             }
         }
     }
