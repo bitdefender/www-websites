@@ -55,6 +55,10 @@ main .section.link-checker-container {
         .link-checker .buttons-container {
             display: flex;
         }
+
+        .link-checker > div:nth-child(3) {
+            display: none;
+        }
     }
 
     &.safe {
@@ -88,6 +92,10 @@ main .section.link-checker-container {
 
         .link-checker .buttons-container {
             display: flex;
+        }
+
+        .link-checker > div:nth-child(3) {
+            display: none;
         }
     }
 
@@ -251,6 +259,7 @@ main .section.link-checker-container {
             margin-top: 20px;
             font-size: 16px;
             border-radius: 8px;
+            padding-bottom: 30px;
         }
         .safe {
             background-color: #F3FEF8;
@@ -278,13 +287,12 @@ main .section.link-checker-container {
                 transform: translateY(-50%);
             }
         }
-
     }
-    @media (min-width:768px){
+    @media (min-width:768px) {
         margin: 50px auto 100px auto;
         padding-bottom: 50px;
         .link-checker{
-            padding: 48px 160px 68px;
+            padding: 48px 160px 35px;
             bottom: -10%;
             .input-container{
                 flex-direction: unset;
@@ -295,6 +303,7 @@ main .section.link-checker-container {
             .buttons-container{
                 flex-flow: unset;
                 margin-top: 50px;
+                justify-content: center;
             }
 
             button.share-button, button.check-another-button {
