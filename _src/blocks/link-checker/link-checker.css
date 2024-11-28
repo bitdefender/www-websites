@@ -52,7 +52,7 @@ main .section.link-checker-container {
             display: none;
         }
 
-        .link-checke .buttons-container {
+        .link-checker .buttons-container {
             display: flex;
         }
     }
