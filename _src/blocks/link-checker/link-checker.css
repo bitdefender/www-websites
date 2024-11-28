@@ -279,9 +279,10 @@ main .section.link-checker-container {
             }
         }
 
+    }
     @media (min-width:768px){
         margin: 50px auto 100px auto;
-        padding-bottom: 0;
+        padding-bottom: 50px;
         .link-checker{
             padding: 48px 160px 68px;
             bottom: -10%;
