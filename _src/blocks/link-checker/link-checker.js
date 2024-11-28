@@ -109,20 +109,11 @@ function createSharePopup(buttonsContainer) {
   return sharePopup;
 }
 
-function copyToClipboard(block, caller) {
-  // Get the text field
-  const copyText = document.getElementById('link-checker-input');
-
-  // Select the text field
-  copyText?.select();
-  copyText?.setSelectionRange(0, 99999); // For mobile devices
-
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.value);
+function copyToClipboard(block, caller, popupText) {
   const buttonsContainer = block.querySelector('.buttons-container');
   if (buttonsContainer) {
     const sharePopup = block.querySelector('.share-popup') || createSharePopup(buttonsContainer);
-    sharePopup.textContent = `Copied the text: ${copyText.value}`;
+    sharePopup.textContent = `${popupText}`;
     const translateXValue = Math.abs((sharePopup.offsetWidth - caller.offsetWidth) / 2);
     sharePopup.style = `transform:translateX(-${translateXValue}px); opacity: 1`;
     setTimeout(() => {
@@ -132,6 +123,7 @@ function copyToClipboard(block, caller) {
 }
 
 export default function decorate(block) {
+  const { clipboardText } = block.closest('.section').dataset;
   const inputContainer = document.createElement('div');
   inputContainer.classList.add('input-container');
   block.appendChild(inputContainer);
@@ -176,6 +168,6 @@ export default function decorate(block) {
   checkAnother.addEventListener('click', () => resetChecker(block));
   shareButton.addEventListener('click', (e) => {
     e.preventDefault();
-    copyToClipboard(block, shareButton);
+    copyToClipboard(block, shareButton, clipboardText);
   });
 }
