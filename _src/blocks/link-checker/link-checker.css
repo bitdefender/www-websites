@@ -8,6 +8,7 @@ main .section.link-checker-container {
     display: flex;
     justify-content: center;
     overflow: visible;
+    font-family: 'IBM Plex Sans', 'Roboto', sans-serif;
 
     &::before {
         content: ' ';
