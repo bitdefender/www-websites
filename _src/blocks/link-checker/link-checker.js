@@ -105,7 +105,7 @@ function createSharePopup(buttonsContainer) {
   shareButton.style.maxWidth = `${shareButton.offsetWidth}px`;
   const sharePopup = document.createElement('div');
   sharePopup.classList.add('share-popup');
-  shareButton?.insertAdjacentElement('beforeend', sharePopup);
+  shareButton.insertAdjacentElement('beforeend', sharePopup);
   return sharePopup;
 }
 
