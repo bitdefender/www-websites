@@ -358,18 +358,9 @@ main .section.link-checker-container {
     }
 
     @media (min-width: 991px) {
-        max-height: 400px;
 
         .link-checker {
             bottom: -15%;
-        }
-    }
-
-    @media (max-width: 768px) {
-        max-height: 400px;
-        margin-bottom: 100px;
-        .link-checker {
-            bottom: -5%;
         }
     }
 }
