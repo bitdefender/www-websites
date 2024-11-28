@@ -120,14 +120,14 @@ main .section.link-checker-container {
     
         h2 {
             font-weight: bold;
-            font-size: 40px;
+            font-size: 32px;
             color: #006EFF;
-            margin-bottom: 40px;
+            margin-bottom: 10px;
         }
 
         p {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 16px;
+            margin-bottom: 10px;
             padding: 0;
         }
 
@@ -258,9 +258,9 @@ main .section.link-checker-container {
 
         .result {
             margin-top: 20px;
-            font-size: 16px;
+            font-size: 14px;
             border-radius: 8px;
-            padding-bottom: 30px;
+            padding-bottom: 20px;
         }
         .safe {
             background-color: #F3FEF8;
@@ -299,6 +299,10 @@ main .section.link-checker-container {
                 left: 15px;
             }
         }
+
+        > div:nth-child(3) {
+            font-size: 12px;
+        }
     }
     @media (min-width:768px) {
         margin: 50px auto 100px auto;
@@ -327,6 +331,28 @@ main .section.link-checker-container {
                 top: -80px;
                 max-width: unset;
                 white-space: nowrap;
+            }
+
+            p {
+                font-size: 20px;
+                margin-bottom: 20px;
+                padding: 0;
+            }
+
+            h2 {
+                font-size: 40px;
+                margin-bottom: 40px;
+            }
+
+            .result {
+                margin-top: 20px;
+                font-size: 16px;
+                border-radius: 8px;
+                padding-bottom: 30px;
+            }
+
+            > div:nth-child(3) {
+                font-size: 16px;
             }
         }
     }
