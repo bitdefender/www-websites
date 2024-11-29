@@ -110,29 +110,28 @@ function resetChecker(block) {
   const result = block.querySelector('.result');
   const h2 = block.querySelector('h2');
   input.removeAttribute('disabled');
-  result.textContent = 'Add your link or paste it from the device’s clipboard.';
+  input.value = '';
   result.className = 'result';
   h2.textContent = 'Is This Link Really Safe?';
 }
 
-function createSharePopup(buttonsContainer) {
-  const shareButton = buttonsContainer.querySelector('.share-button');
-  shareButton.style.maxWidth = `${shareButton.offsetWidth}px`;
-  shareButton.style.maxHeight = `${shareButton.offsetHeight}px`;
+function createSharePopup(element) {
+  element.style.maxWidth = `${element.offsetWidth}px`;
+  element.style.maxHeight = `${element.offsetHeight}px`;
   const sharePopup = document.createElement('div');
   sharePopup.classList.add('share-popup');
-  shareButton.insertAdjacentElement('beforeend', sharePopup);
+  element.insertAdjacentElement('beforeend', sharePopup);
   return sharePopup;
 }
 
 function copyToClipboard(block, caller, popupText) {
-  const copyText = document.getElementsByClassName('result')[0];
+  const copyText = window.location.href;
 
   // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.textContent);
+  navigator.clipboard.writeText(copyText);
   const buttonsContainer = block.querySelector('.buttons-container');
   if (buttonsContainer) {
-    const sharePopup = block.querySelector('.share-popup') || createSharePopup(buttonsContainer);
+    const sharePopup = block.querySelector('.share-popup') || createSharePopup(caller);
     sharePopup.textContent = `${popupText}`;
     const translateXValue = Math.abs((sharePopup.offsetWidth - caller.offsetWidth) / 2);
     sharePopup.style = `transform:translateX(-${translateXValue}px); opacity: 1`;
@@ -154,9 +153,27 @@ export default function decorate(block) {
 
   const input = document.createElement('input');
   input.type = 'text';
-  input.placeholder = 'exaple-url.com';
+  input.placeholder = 'example-url.com';
   input.id = 'link-checker-input';
-  inputContainer.appendChild(input);
+
+  const copyElement = document.createElement('span');
+  copyElement.id = 'copy-to-clipboard';
+
+  const divContainer = document.createElement('div');
+  divContainer.className = 'input-container__container';
+  divContainer.appendChild(input);
+  divContainer.appendChild(copyElement);
+
+  inputContainer.appendChild(divContainer);
+
+  copyElement.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      input.value += text;
+    } catch (error) {
+      // continue regardless of error
+    }
+  });
 
   const button = document.createElement('button');
   button.textContent = 'Check URL';
@@ -164,7 +181,6 @@ export default function decorate(block) {
   inputContainer.appendChild(button);
 
   const result = document.createElement('div');
-  result.textContent = 'Add your link or paste it from the device’s clipboard.';
   result.className = 'result';
   formContainer.appendChild(result);
 
