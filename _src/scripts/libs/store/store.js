@@ -494,7 +494,7 @@ export class Product {
 		if (windowURL.searchParams.has("channel")) {
 			zuoraCart.searchParams.set("channel", windowURL.searchParams.get("channel"));
 		}
-		console.log('this ', this)
+
 		zuoraCart.searchParams.set("product_id", this.productId);
 		zuoraCart.searchParams.set("payment_period", monthlyProducts[this.id] ? `${devices}d1m` : `${devices}d${years}y`);
 		zuoraCart.searchParams.set("country", "NL");
@@ -756,7 +756,7 @@ export class Product {
 
 class BitCheckout {
 
-	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m",
+	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "secpassm", "dipm", "us_i_m",
 		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
 
 	// this products come with device_no set differently from the init-selector api where they are set to 1
