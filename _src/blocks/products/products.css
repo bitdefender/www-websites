@@ -498,7 +498,7 @@
   .products:not(.compact) .product-card img {
     display: inline;
     position: absolute;
-    object-position: bottom right;
+    object-position: -20px center;
     object-fit:fill;
     border-radius: 50%;
     width: 250px;
