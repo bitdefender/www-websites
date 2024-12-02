@@ -20,15 +20,16 @@ async function renderBlogGrid(block, endpoint, articlesNumber) {
       const image = media.getAttribute('url');
 
       // Create a blog card
-      const blogCard = document.createElement('div');
+      const blogCard = document.createElement('a');
+      blogCard.setAttribute('href', link);
       blogCard.classList.add('blog-card');
 
       blogCard.innerHTML = `
-        <img src="${image}" alt="${title}">
-        <div class="blog-card-content">
-            <h3>${title}</h3>
-            <a href="${link}" target="_blank">Find out more</a>
-        </div>
+          <img src="${image}" alt="${title}">
+          <div class="blog-card-content">
+              <h3>${title}</h3>
+              <a href="${link}">Find out more</a>
+          </div>
       `;
 
       blogGrid.appendChild(blogCard);

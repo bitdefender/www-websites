@@ -1,3 +1,10 @@
+import {
+  AdobeDataLayerService,
+  PageLoadedEvent,
+  PageLoadStartedEvent,
+  UserDetectedEvent,
+} from '../../scripts/libs/data-layer.js';
+
 class StatusMessageFactory {
   static createMessage(status, url) {
     let urlObject = url;
@@ -13,25 +20,25 @@ class StatusMessageFactory {
     }
 
     const messages = {
-      1: { text: 'The link is safe with no signs of harmful activity. You can go ahead and keep staying cautious online.', className: 'result safe' },
-      2: { text: 'We haven\'t seen any suspicious activity from this link.', className: 'result safe' },
-      3: { text: `This link looks safe, but the domain '${urlObject.hostname}' has been connected to harmful links in the past. To stay protected, check any other links from this domain using our tool and keep your security software updated.`, className: 'result safe' },
-      5: { text: 'This link is known to distribute malware. Accessing it may harm your device, steal your data, or allow unauthorized access. Stay away from the site and ensure your security software is active.', className: 'result danger' },
-      17: { text: 'This link appears suspicious and may not be trustworthy. It’s best to avoid accessing it. Keep your security software active and steer clear of the site.', className: 'result danger' },
-      8: { text: 'This link directs to a fraudulent site intended to trick users and steal sensitive data. Stay away from the site and ensure your security software is active.', className: 'result danger' },
-      15: { text: 'This link has been identified in spam emails, which often contain malicious content. Avoid clicking on it, as it may lead to harmful sites or scams. Ensure your security measures are in place.', className: 'result danger' },
-      11: { text: 'This link is associated with apps that could slow down your device or compromise your privacy. It’s best to avoid the site and make sure your security settings are active.', className: 'result danger' },
-      13: { text: 'This URL is linked to cryptocurrency mining activities, which may use your device\'s resources without your consent. Avoid visiting the site and ensure your security protections are in place.', className: 'result danger' },
-      16: { text: 'This URL is likely to contain malware, posing a significant threat. It\'s strongly advised to avoid accessing it and ensure your security protections are active and up to date.', className: 'result danger' },
-      12: { text: 'This link is designed to look like a trusted site using tricky characters. Don’t click the link and make sure your security software is updated to protect your device.', className: 'result danger' },
-      6: { text: 'This URL is linked to a server used to command and control malware on infected devices. Don’t click the link and make sure your security software is up to date to keep your device safe.', className: 'result danger' },
-      14: { text: 'This URL is linked to crypto mining activity, which could use your device\'s resources if accessed. It’s recommended not to click the link and ensure your security software is up to date.', className: 'result danger' },
-      10: { text: 'This link is connected to harmful ads that could affect your device and expose your personal data, such as your passwords, credit card information, email addresses, or browsing history. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger' },
-      18: { text: 'This link is unsafe and could harm your device or steal your personal information. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger' },
-      4: { text: 'This link is dangerous and can compromise your personal information or harm your device. Do not click it, and ensure your security software is up-to-date to stay protected from threats.', className: 'result danger' },
-      7: { text: 'This link is a threat, exposing you to malicious ads and phishing attempts that can steal your information and damage your device. Do not interact with it, and ensure your security software is updated.', className: 'result danger' },
-      9: { text: 'This link leads to a phishing site designed to steal personal information like passwords or financial data. Stay away from the site and ensure your security software is active.', className: 'result danger' },
-      other: { text: 'This link is unsafe and could harm your device or steal your personal information. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger' },
+      1: { text: 'The link is safe with no signs of harmful activity. You can go ahead and keep staying cautious online.', className: 'result safe', status: 'safe' },
+      2: { text: 'We haven\'t seen any suspicious activity from this link.', className: 'result safe', status: 'so_far_so_good_1' },
+      3: { text: `This link looks safe, but the domain '${urlObject.hostname}' has been connected to harmful links in the past. To stay protected, check any other links from this domain using our tool and keep your security software updated.`, className: 'result safe', status: 'so_far_so_good_2' },
+      4: { text: 'This link is dangerous and can compromise your personal information or harm your device. Do not click it, and ensure your security software is up-to-date to stay protected from threats.', className: 'result danger', status: 'malware & phishing' },
+      5: { text: 'This link is known to distribute malware. Accessing it may harm your device, steal your data, or allow unauthorized access. Stay away from the site and ensure your security software is active.', className: 'result danger', status: 'malware' },
+      6: { text: 'This URL is linked to a server used to command and control malware on infected devices. Don’t click the link and make sure your security software is up to date to keep your device safe.', className: 'result danger', status: 'c&c' },
+      7: { text: 'This link is a threat, exposing you to malicious ads and phishing attempts that can steal your information and damage your device. Do not interact with it, and ensure your security software is updated.', className: 'result danger', status: 'malvertising & fraud & phishing' },
+      8: { text: 'This link directs to a fraudulent site intended to trick users and steal sensitive data. Stay away from the site and ensure your security software is active.', className: 'result danger', status: 'fraud' },
+      9: { text: 'This link leads to a phishing site designed to steal personal information like passwords or financial data. Stay away from the site and ensure your security software is active.', className: 'result danger', status: 'phishing' },
+      10: { text: 'This link is connected to harmful ads that could affect your device and expose your personal data, such as your passwords, credit card information, email addresses, or browsing history. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger', status: 'malvertising' },
+      11: { text: 'This link is associated with apps that could slow down your device or compromise your privacy. It’s best to avoid the site and make sure your security settings are active.', className: 'result danger', status: 'pua' },
+      12: { text: 'This link is designed to look like a trusted site using tricky characters. Don’t click the link and make sure your security software is updated to protect your device.', className: 'result danger', status: 'homograph' },
+      13: { text: 'This URL is linked to cryptocurrency mining activities, which may use your device\'s resources without your consent. Avoid visiting the site and ensure your security protections are in place.', className: 'result danger', status: 'miner' },
+      14: { text: 'This URL is linked to crypto mining activity, which could use your device\'s resources if accessed. It’s recommended not to click the link and ensure your security software is up to date.', className: 'result danger', status: 'miner-server' },
+      15: { text: 'This link has been identified in spam emails, which often contain malicious content. Avoid clicking on it, as it may lead to harmful sites or scams. Ensure your security measures are in place.', className: 'result danger', status: 'spam' },
+      16: { text: 'This URL is likely to contain malware, posing a significant threat. It\'s strongly advised to avoid accessing it and ensure your security protections are active and up to date.', className: 'result danger', status: 'malware-hd' },
+      17: { text: 'This link appears suspicious and may not be trustworthy. It’s best to avoid accessing it. Keep your security software active and steer clear of the site.', className: 'result danger', status: 'untrusted' },
+      18: { text: 'This link is unsafe and could harm your device or steal your personal information. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger', status: 'malicious' },
+      other: { text: 'This link is unsafe and could harm your device or steal your personal information. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger', status: 'other' },
     };
     return messages[status] || { text: `Status: ${status}`, className: 'result warning' };
   }
@@ -50,19 +57,20 @@ function changeTexts(block, result) {
   }
 }
 
-async function checkLink(block, input, result) {
-  const url = input.value.trim();
-  if (!url) {
-    result.textContent = 'Please enter a URL.';
-    result.className = 'result danger';
-    return;
-  }
-  // Create the regex for URL validation
-  const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-_\.]{1}[a-z0-9]+)*\.[a-z]{2,10}(:[0-9]{1,5})?(\/.*)?$/;
+const isValidUrl = (urlString) => {
+  const urlPattern = new RegExp('^(https?:\\/\\/)?' // validate protocol
+      + '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' // validate domain name
+      + '((\\d{1,3}\\.){3}\\d{1,3}))' // validate OR ip (v4) address
+      + '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' // validate port and path
+      + '(\\?[;&a-z\\d%_.~+=-]*)?' // validate query string
+      + '(\\#[-a-z\\d_]*)?$', 'i'); // validate fragment locator
+  return !!urlPattern.test(urlString);
+};
 
-  // Validate the input URL
-  if (!urlRegex.test(url)) {
-    result.textContent = 'Please enter a valid URL.';
+async function checkLink(block, input, result) {
+  const url = input.value.toLowerCase().trim();
+  if (!url || !isValidUrl(url)) {
+    result.textContent = 'Please enter a valid URL';
     result.className = 'result danger';
     return;
   }
@@ -92,6 +100,12 @@ async function checkLink(block, input, result) {
   input.setAttribute('disabled', '');
 
   changeTexts(block, message.className.split(' ')[1]);
+
+  const newObject = await new PageLoadStartedEvent();
+  newObject.page.info.name = `${newObject.page.info.name}::${message.status}`;
+  AdobeDataLayerService.push(newObject);
+  AdobeDataLayerService.push(await new UserDetectedEvent());
+  AdobeDataLayerService.push(new PageLoadedEvent());
 }
 
 function resetChecker(block) {

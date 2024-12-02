@@ -230,20 +230,21 @@ main .section.link-checker-container {
             gap:10px;
             display: inline-flex;
             align-items: center;
-            height: 4em;
-            flex-flow: column;
-            max-height: fit-content;
+            padding: 15px;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                background-color: #dbf0f9;
+            }
         }
         button.share-button:before {
             content: url("../../icons/share.svg");
-            margin-right: 10px;
             height: 20px;
             width: 20px;
             display: inline-block;
         }
         button.check-another-button:before {
             content: url("../../icons/check.svg");
-            margin-right: 10px;
             height: 20px;
             width: 20px;
             display: inline-block;
@@ -320,7 +321,7 @@ main .section.link-checker-container {
                 background: url("../../icons/bulb-pink.svg") no-repeat;
                 position: absolute;
                 left: 14px;
-                top: 25%;
+                top: 15%;
                 width: 30px;
                 height: 30px;
                 background-size: contain;
@@ -364,10 +365,10 @@ main .section.link-checker-container {
                 white-space: nowrap;
             }
 
-            button.share-button, button.check-another-button {
+            /* button.share-button, button.check-another-button {
                 flex-wrap: wrap;
                 flex-flow: wrap;
-            }
+            } */
             .share-popup{
                 top: -40px;
                 max-width: unset;

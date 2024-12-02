@@ -25,10 +25,6 @@
     gap: 30px;
 }
 
-.blog-news .blog-card:hover {
-    transform: scale(1.05);
-}
-
 .blog-news .blog-card img {
     width: 420px;
     height: 308px;
