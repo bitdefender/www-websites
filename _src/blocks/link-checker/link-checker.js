@@ -102,6 +102,7 @@ async function checkLink(block, input, result) {
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
+  document.getElementById('inputDiv').textContent = url;
 
   changeTexts(block, message);
 
@@ -182,9 +183,13 @@ export default function decorate(block) {
   const copyElement = document.createElement('span');
   copyElement.id = 'copy-to-clipboard';
 
+  const inputDiv = document.createElement('div');
+  inputDiv.setAttribute('id', 'inputDiv');
+
   const divContainer = document.createElement('div');
   divContainer.className = 'input-container__container';
   divContainer.appendChild(input);
+  divContainer.appendChild(inputDiv);
   divContainer.appendChild(copyElement);
 
   inputContainer.appendChild(divContainer);

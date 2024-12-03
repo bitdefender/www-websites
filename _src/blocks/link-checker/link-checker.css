@@ -34,11 +34,19 @@ main .section.link-checker-container {
             display: none;
         }
 
-        .link-checker input[type="text"] {
+        .link-checker input[type="text"], .link-checker #inputDiv {
             max-width: 100%;
             border: 2px solid #D82E21;
             padding-right: 15px;
             pointer-events: none;
+        }
+
+        .link-checker input[type="text"] {
+            display: none;
+        }
+
+        .link-checker #inputDiv {
+            display: block;
         }
 
         .link-checker .danger-image {
@@ -82,11 +90,19 @@ main .section.link-checker-container {
             margin-bottom: 16px;
         }
 
-        .link-checker input[type="text"] {
+        .link-checker input[type="text"], .link-checker #inputDiv {
             max-width: 100%;
             border: 2px solid #3D8648;
             padding-right: 15px;
             pointer-events: none;
+        }
+
+        .link-checker input[type="text"] {
+            display: none;
+        }
+
+        .link-checker #inputDiv {
+            display: block;
         }
 
         .link-checker .safe-image {
@@ -170,7 +186,7 @@ main .section.link-checker-container {
             padding-top: 10px;
         }
 
-        input[type="text"] {
+        input[type="text"],#inputDiv {
             padding: 15px;
             padding-right: 35px;
             font-size: 1em;
@@ -179,6 +195,13 @@ main .section.link-checker-container {
             width: 100%;
             margin: 0;
             position: relative;
+        }
+
+        #inputDiv {
+            text-align: left;
+            word-wrap: break-word;
+            pointer-events: none;
+            display: none;
         }
 
         .input-container__container {
