@@ -106,13 +106,13 @@ async function checkLink(block, input, result) {
   changeTexts(block, message);
 
   const newObject = await new PageLoadStartedEvent();
-  newObject.page.info.name = `${newObject.page.info.name}::${message.status}`;
+  newObject.page.info.name = `${newObject.page.info.name}:${message.status}`;
   AdobeDataLayerService.push(newObject);
   AdobeDataLayerService.push(await new UserDetectedEvent());
   AdobeDataLayerService.push(new PageLoadedEvent());
 }
 
-function resetChecker(block) {
+async function resetChecker(block) {
   const classesToRemove = ['danger', 'safe'];
   const section = block.closest('.section');
 
@@ -131,6 +131,11 @@ function resetChecker(block) {
   input.value = '';
   result.className = 'result';
   h2.textContent = 'Is This Link Really Safe?';
+
+  const newObject = await new PageLoadStartedEvent();
+  AdobeDataLayerService.push(newObject);
+  AdobeDataLayerService.push(await new UserDetectedEvent());
+  AdobeDataLayerService.push(new PageLoadedEvent());
 }
 
 function createSharePopup(element) {
@@ -206,7 +211,7 @@ export default function decorate(block) {
   buttonsContainer.classList.add('buttons-container');
 
   const shareButton = document.createElement('button');
-  shareButton.innerHTML = '<span>Share Result</span>';
+  shareButton.innerHTML = '<span>Share Link Checker</span>';
   shareButton.classList.add('share-button');
 
   const checkAnother = document.createElement('button');
