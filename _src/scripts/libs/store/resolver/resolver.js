@@ -273,7 +273,7 @@ export class StoreResolver {
 			const globalClickAttributes = context.dataset.storeId ? [] : this.getAllAttributes(context, this.clickAttributes);
 
 			const pageContexts = [];
-			const contextProducts = products.map(product =>storeProducts[product.dataset.storeId])
+			const contextProducts = [...products, ...this.getAdditionalProducts(context)].map(product =>storeProducts[product.dataset.storeId])
 			for (const product of products) {
 				const storeProduct = storeProducts[product.dataset.storeId];
 				const productDataMapping = JSON.parse(product.dataset?.storeDevicePropertiesMapping || '{}');
