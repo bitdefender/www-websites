@@ -353,9 +353,6 @@ main .section.link-checker-container {
             .input-container{
                 flex-direction: unset;
             }
-            .input-container__container {
-                max-width: 444px;
-            }
             .buttons-container{
                 flex-flow: row;
                 margin-top: 50px;
@@ -366,10 +363,6 @@ main .section.link-checker-container {
                 white-space: nowrap;
             }
 
-            /* button.share-button, button.check-another-button {
-                flex-wrap: wrap;
-                flex-flow: wrap;
-            } */
             .share-popup{
                 top: -40px;
                 max-width: unset;
