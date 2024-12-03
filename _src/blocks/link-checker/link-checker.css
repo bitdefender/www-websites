@@ -395,7 +395,7 @@ main .section.link-checker-container {
             }
 
             > div:nth-child(3) {
-                font-size: 16px;
+                font-size: 14px;
             }
         }
     }
