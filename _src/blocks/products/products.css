@@ -495,7 +495,7 @@
 }
 
 @media (min-width: 1200px) { /* desktop variation */
-  .products:not(.compact) .product-card img {
+  .products:not(.compact, .plans) .product-card img {
     display: inline;
     position: absolute;
     object-position: -10px center;
@@ -506,6 +506,9 @@
     top: -42px;
     right: -60px;
     border: 20px white solid;
+  }
+  .product-card .img-adjacent-text{
+    width: 74%;
   }
 }
 
