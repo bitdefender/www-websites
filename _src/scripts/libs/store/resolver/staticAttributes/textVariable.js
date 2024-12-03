@@ -113,7 +113,6 @@ const replaceVariable = (text, context, variableParameters, textVariable) => {
             case "SMALLEST_PRICE_PER_MONTH":
                 let smallestPrice = Number.MAX_SAFE_INTEGER;
                 let currency = "";
-
                 if (context.contextProducts.length === 0) {
                     break;
                 }
