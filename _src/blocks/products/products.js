@@ -394,10 +394,9 @@ export default function decorate(block) {
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
     const hasImage = card.querySelector('img') !== null;
-
     if (hasImage) {
       // If the image exists, set max-width to the paragraph next to the image
-      const firstPElement = card.querySelector('p:not(:has(img, svg))');
+      const firstPElement = card.querySelector('p:not(:has(img, .icon))');
       window.addEventListener('resize', () => {
         if (firstPElement && window.matchMedia('(min-width: 1200px)').matches) {
           firstPElement.style.maxWidth = '75%';
