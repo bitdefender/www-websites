@@ -45,26 +45,30 @@ class StatusMessageFactory {
 }
 
 function changeTexts(block, result) {
-  switch (result) {
+  switch (result.status) {
     case 'safe':
       block.querySelector('h2').textContent = "You're safe";
       break;
-    case 'danger':
-      block.querySelector('h2').textContent = 'Definitely Don’t Go There';
+    case 'so_far_so_good_1':
+      block.querySelector('h2').textContent = 'So far, so good';
+      break;
+    case 'so_far_so_good_2':
+      block.querySelector('h2').textContent = 'So far, so good';
       break;
     default:
+      block.querySelector('h2').textContent = 'Definitely Don’t Go There';
       break;
   }
 }
 
 const isValidUrl = (urlString) => {
   const urlPattern = new RegExp('^(https?:\\/\\/)?' // validate protocol
-      + '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' // validate domain name
+      + '((([a-z\\d]([a-z\\d-_]*[a-z\\d])*)\\.)+[a-z]{2,}|' // validate domain name
       + '((\\d{1,3}\\.){3}\\d{1,3}))' // validate OR ip (v4) address
       + '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' // validate port and path
       + '(\\?[;&a-z\\d%_.~+=-]*)?' // validate query string
       + '(\\#[-a-z\\d_]*)?$', 'i'); // validate fragment locator
-  return !!urlPattern.test(urlString);
+  return urlPattern.test(urlString);
 };
 
 async function checkLink(block, input, result) {
@@ -99,7 +103,7 @@ async function checkLink(block, input, result) {
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
 
-  changeTexts(block, message.className.split(' ')[1]);
+  changeTexts(block, message);
 
   const newObject = await new PageLoadStartedEvent();
   newObject.page.info.name = `${newObject.page.info.name}::${message.status}`;

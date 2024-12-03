@@ -235,6 +235,7 @@ main .section.link-checker-container {
 
             &:hover {
                 background-color: #dbf0f9;
+                border-radius: 8px;
             }
         }
         button.share-button:before {
