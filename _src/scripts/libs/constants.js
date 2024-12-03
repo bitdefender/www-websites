@@ -23,6 +23,9 @@ export const Constants = {
 
   TARGET_TENANT: "bitdefender",
 
-  PUBLIC_URL: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
-    ? '' : 'https://www.bitdefender.com'
+  PUBLIC_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
+    ? '' : 'https://www.bitdefender.com',
+  
+  LOGIN_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
+    ? window.location.origin : 'https://www.bitdefender.com',
 }
