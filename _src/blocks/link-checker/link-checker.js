@@ -4,6 +4,9 @@ import {
   PageLoadStartedEvent,
   UserDetectedEvent,
 } from '../../scripts/libs/data-layer.js';
+import {
+  BotPrevention,
+} from '../../scripts/utils/bot-prevention.js';
 
 class StatusMessageFactory {
   static createMessage(status, url) {
@@ -79,13 +82,26 @@ async function checkLink(block, input, result) {
     return;
   }
 
-  const response = await fetch('https://beta.nimbus.bitdefender.net/tools/link-checker', {
+  let response = await fetch('https://beta.nimbus.bitdefender.net/tools/link-checker', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ url }),
   });
+
+  if (response.status === 401) {
+    const challengeData = await response.json();
+    const solvedChallenge = await BotPrevention.solveChallange(challengeData);
+    response = await fetch('https://beta.nimbus.bitdefender.net/tools/link-checker', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // eslint-disable-next-line max-len
+      body: JSON.stringify({ url, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
+    });
+  }
 
   if (!response.ok) {
     result.innerHTML = `
@@ -97,6 +113,7 @@ async function checkLink(block, input, result) {
 
   const data = await response.json();
   const { status } = data;
+  console.log(data);
   const message = StatusMessageFactory.createMessage(status, url);
   result.textContent = message.text;
   result.className = message.className;
