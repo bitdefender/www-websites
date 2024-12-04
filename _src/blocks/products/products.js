@@ -210,6 +210,7 @@ const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
  */
 function renderFeatured(text) {
   const root = document.createElement('div');
+  root.setAttribute('data-store-text-variable', '');
   root.classList.add('featured');
   root.textContent = text;
 
@@ -252,10 +253,9 @@ function renderFeaturedSavings(text = 'Save', percent = '') {
  * @returns root node of the nanoblock
  */
 function renderLowestPrice(...params) {
-  const fileteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
-  const text = fileteredParams.length > 1 ? fileteredParams[1] : fileteredParams[0];
-  const monthly = fileteredParams.length > 1 ? fileteredParams[0] : '';
-
+  const filteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
+  const text = filteredParams.length > 1 ? filteredParams[1] : filteredParams[0];
+  const monthly = filteredParams.length > 1 ? filteredParams[0] : '';
   const root = document.createElement('p');
   const textArea = document.createElement('span');
   root.classList.add('await-loader');
@@ -301,7 +301,6 @@ export default function decorate(block) {
   Object.entries(metadata).forEach(([key, value]) => {
     if (key.includes('plans')) {
       const allImportantData = value.match(/[^,{}[\]]+/gu).map((importantData) => importantData.trim());
-
       plans.push({
         productCode: allImportantData[1],
         defaultVariant: `${Number(allImportantData.slice(-1)[0])
@@ -330,8 +329,13 @@ export default function decorate(block) {
       }
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', storeEvent);
-      col.querySelector('.button-container a')?.setAttribute('data-store-buy-link', '');
-
+      const cardButtons = col.querySelectorAll('.button-container a');
+      cardButtons?.forEach((button) => {
+        if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
+          button.href = '#';
+          button.setAttribute('data-store-buy-link', '');
+        }
+      });
       block.appendChild(col);
       renderNanoBlocks(col, undefined, idxParent);
     });
@@ -390,18 +394,10 @@ export default function decorate(block) {
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
     const hasImage = card.querySelector('img') !== null;
-
-    if (hasImage) {
+    if (hasImage && !block.classList.contains('plans') && !block.classList.contains('compact')) {
       // If the image exists, set max-width to the paragraph next to the image
-      const firstPElement = card.querySelector('p:not(:has(img, svg))');
-      window.addEventListener('resize', () => {
-        if (firstPElement && window.matchMedia('(min-width: 1200px)').matches) {
-          firstPElement.style.maxWidth = '75%';
-        } else {
-          firstPElement.style.maxWidth = '';
-        }
-      });
-      window.dispatchEvent(new Event('resize'));
+      const firstPElement = card.querySelector('p:not(:has(img, .icon))');
+      firstPElement.classList.add('img-adjacent-text');
     }
 
     if (!card.classList.contains('featured')) {

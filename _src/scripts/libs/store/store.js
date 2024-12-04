@@ -23,7 +23,10 @@ export const monthlyProducts = {
 	"us_pf_m": "us_pf_m",
 	"us_pi_m": "us_pi_m",
 	"us_pie_m": "us_pie_m",
-	"us_pfe_m": "us_pfe_m"
+	"us_pfe_m": "us_pfe_m",
+	"secpassm": "secpassm",
+	"vbsm": "vbsm",
+	"scm": "scm",
 }
 
 export const loadScript = (baseUrl, url) => {
@@ -400,6 +403,7 @@ export class Product {
 	 * @returns {ProductOption} - option containing price, discounted price and store url
 	 */
 	getOption(devices, years, bundle) {
+		const productVariation = `${devices}-${years}`;
 		const devicesOption = this.options[devices];
 		const yearsOption = devicesOption && devicesOption[years];
 
@@ -455,6 +459,13 @@ export class Product {
 			}
 		}
 
+		// replace the buy links with target links if they exist and return the option
+		if (Store.targetBuyLinkMappings[this.productAlias]
+			&& Store.targetBuyLinkMappings[this.productAlias][productVariation]) {
+			option.buyLink = Store.targetBuyLinkMappings[this.productAlias][productVariation];
+			return option;
+		}
+
 		//Init Selector Settings
 		if (Store.config.provider === "init") {
 			if (bundle) {
@@ -483,6 +494,7 @@ export class Product {
 		if (windowURL.searchParams.has("channel")) {
 			zuoraCart.searchParams.set("channel", windowURL.searchParams.get("channel"));
 		}
+
 		zuoraCart.searchParams.set("product_id", this.productId);
 		zuoraCart.searchParams.set("payment_period", monthlyProducts[this.id] ? `${devices}d1m` : `${devices}d${years}y`);
 		zuoraCart.searchParams.set("country", "NL");
@@ -744,7 +756,7 @@ export class Product {
 
 class BitCheckout {
 
-	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m",
+	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "secpassm", "dipm", "us_i_m",
 		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
 
 	// this products come with device_no set differently from the init-selector api where they are set to 1
@@ -767,6 +779,8 @@ class BitCheckout {
 		passm: "com.bitdefender.passwordmanager",
 		pass_sp: "com.bitdefender.passwordmanager",
 		pass_spm: "com.bitdefender.passwordmanager",
+		secpass: 'com.bitdefender.securepass',
+    	secpassm: 'com.bitdefender.securepass',
 		bms: "com.bitdefender.bms",
 		mobile: "com.bitdefender.bms",
 		ios: "com.bitdefender.iosprotection",
@@ -797,7 +811,7 @@ class BitCheckout {
 		pass: "Bitdefender Password Manager",
 		pass_sp: "Bitdefender Password Manager Shared Plan",
 		passm: "Bitdefender Password Manager",
-		pass_spm: "Bitdefender Password Manager Shared Plan"
+		pass_spm: "Bitdefender Password Manager Shared Plan",
 	}
 
 	static getKey() {
@@ -1013,8 +1027,10 @@ export class Store {
 	static countriesMapping = {
 		gb: "uk",
 		ch: "de",
-		us: "en",
-		mx: "en"
+		at: "de",
+		us: "us",
+		mx: "en",
+		nz: "au",
 	}
 
 	static consumer = "consumer";
@@ -1028,6 +1044,7 @@ export class Store {
 	static baseUrl = Constants.DEV_BASE_URL;
 
 	static config = new StoreConfig();
+	static targetBuyLinkMappings = null;
 
 	/**
 	 * Get a product from the api.2checkout.com
@@ -1037,6 +1054,11 @@ export class Store {
 	 */
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
+
+		// get the target buyLink mappings
+		if (!this.targetBuyLinkMappings) {
+			this.targetBuyLinkMappings = await Target.getBuyLinksMapping();
+		}
 
 		// remove duplicates by id
 		productsInfo = [...new Map(productsInfo.map((product) => [`${product.id}`, product])).values()];

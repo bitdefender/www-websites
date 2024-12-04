@@ -1,5 +1,6 @@
 import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
 import Page from '../libs/page.js';
+import { Constants } from '../libs/constants.js';
 
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
@@ -633,12 +634,12 @@ export async function matchHeights(targetNode, selector) {
   };
 
   const observer = new MutationObserver(matchHeightsCallback);
-  const resizeObserver = new ResizeObserver((entries) => {
+  const resizeObserver = new ResizeObserver(debounce((entries) => {
     // eslint-disable-next-line no-unused-vars
     entries.forEach((entry) => {
       adjustHeights();
     });
-  });
+  }), 100);
 
   if (targetNode) {
     observer.observe(targetNode, { childList: true, subtree: true });
@@ -676,6 +677,12 @@ export function trackProduct(product, location = '') {
 }
 
 export function pushTrialDownloadToDataLayer() {
+  const trialPaths = [
+    'fragments/thank-you-for-downloading',
+    'fragments/get-bitdefender',
+    'fragments/trial',
+  ];
+
   const getTrialID = (currentPage, button) => {
     if (['thank-you', 'free-antivirus'].includes(currentPage)) {
       return '8430';
@@ -705,7 +712,7 @@ export function pushTrialDownloadToDataLayer() {
   if (sections.length) {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
-      if (href.includes('fragments/thank-you-for-downloading') || href.includes('fragments/get-bitdefender')) {
+      if (trialPaths.some((trialPath) => href.includes(trialPath))) {
         button.addEventListener('click', () => { pushTrialData(button); });
       }
     });
@@ -823,3 +830,5 @@ export function decorateBlockWithRegionId(element, id) {
 export function decorateLinkWithLinkTrackingId(element, id) {
   if (element) element.setAttribute('s-object-id', id);
 }
+
+export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
