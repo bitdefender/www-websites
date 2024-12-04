@@ -12,7 +12,7 @@
  */
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
-export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.hlx.page', '.hlx.live'];
+export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.aem.page', '.aem.live'];
 export const STICKY_NAVIGATION_DATASET_KEY = 'stickyNavName';
 
 /**
@@ -26,7 +26,7 @@ export const STICKY_NAVIGATION_DATASET_KEY = 'stickyNavName';
  */
 export function sampleRUM(checkpoint, data = {}) {
   const SESSION_STORAGE_KEY = 'aem-rum';
-  sampleRUM.baseURL = sampleRUM.baseURL || new URL(window.RUM_BASE == null ? 'https://rum.hlx.page' : window.RUM_BASE, window.location);
+  sampleRUM.baseURL = sampleRUM.baseURL || new URL(window.RUM_BASE == null ? 'https://rum.aem.page' : window.RUM_BASE, window.location);
   sampleRUM.defer = sampleRUM.defer || [];
   const defer = (fnname) => {
     sampleRUM[fnname] = sampleRUM[fnname]
@@ -87,7 +87,7 @@ export function sampleRUM(checkpoint, data = {}) {
         lazy: () => {
           // use classic script to avoid CORS issues
           const script = document.createElement('script');
-          script.src = 'https://rum.hlx.page/.rum/@adobe/helix-rum-enhancer@^1/src/index.js';
+          script.src = 'https://rum.aem.page/.rum/@adobe/helix-rum-enhancer@^1/src/index.js';
           document.head.appendChild(script);
           return true;
         },

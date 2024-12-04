@@ -57,7 +57,7 @@ async function init(block, aemOptions) {
     // await window.tsParticles.load({ id: particleIdSelector, options });
     // let script = document.createElement('script');
     // script.src = 'https://cdn.jsdelivr.net/npm/tsparticles@3.3.0/tsparticles.bundle.min.js';
-    // script.src = 'https://dlp-fixes--www-websites--bitdefender.hlx.page/_src/scripts/vendor/tsparticles/tsparticles.bundle.min.js';
+    // script.src = 'https://dlp-fixes--www-websites--bitdefender.aem.page/_src/scripts/vendor/tsparticles/tsparticles.bundle.min.js';
     // script.src = '../../../_src/scripts/vendor/tsparticles/tsparticles.bundle.min.js';
     // block.appendChild(script);
     // script.onload = () => {

@@ -489,7 +489,7 @@ async function runDefaultHeaderLogic(block) {
         aemFetchDomain = websiteDomain.split('-').join('_');
       }
 
-      const aemHeaderHostname = window.location.hostname.includes('.hlx.')
+      const aemHeaderHostname = window.location.hostname.includes('.aem.')
         || window.location.hostname.includes('localhost')
         ? 'https://stage.bitdefender.com'
         : '';

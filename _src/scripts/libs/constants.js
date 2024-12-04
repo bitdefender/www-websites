@@ -1,5 +1,5 @@
 export const Constants = {
-  DEV_BASE_URL: ["localhost", "stage", ".hlx."].some((domain) => 
+  DEV_BASE_URL: ["localhost", "stage", ".aem."].some((domain) => 
     window.location.hostname.includes(domain)) ? 'https://www.bitdefender.com' : '',
 
   FINGERPRINT_LOCAL_STORAGE_NAME: 'rhvID',
