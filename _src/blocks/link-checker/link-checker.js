@@ -87,6 +87,7 @@ async function checkLink(block, input, result) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
     },
     body: JSON.stringify({ url }),
   });
@@ -98,6 +99,7 @@ async function checkLink(block, input, result) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
       },
       // eslint-disable-next-line max-len
       body: JSON.stringify({ url, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
@@ -109,6 +111,7 @@ async function checkLink(block, input, result) {
       <strong>Something went wrong</strong><br>
       The system encountered an error while trying to check the link you provided. Please try again in a few minutes.`;
     result.className = 'result danger no-response';
+    input.closest('.input-container').classList.remove('loader-circle');
     return;
   }
 
