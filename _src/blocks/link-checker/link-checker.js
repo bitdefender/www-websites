@@ -82,6 +82,7 @@ async function checkLink(block, input, result) {
     return;
   }
 
+  input.closest('.input-container').classList.add('loader-circle');
   let response = await fetch('https://beta.nimbus.bitdefender.net/tools/link-checker', {
     method: 'POST',
     headers: {
@@ -113,7 +114,6 @@ async function checkLink(block, input, result) {
 
   const data = await response.json();
   const { status } = data;
-  console.log(data);
   const message = StatusMessageFactory.createMessage(status, url);
   result.textContent = message.text;
   result.className = message.className;
@@ -122,6 +122,7 @@ async function checkLink(block, input, result) {
   document.getElementById('inputDiv').textContent = url;
 
   changeTexts(block, message);
+  input.closest('.input-container').classList.remove('loader-circle');
 
   const newObject = await new PageLoadStartedEvent();
   newObject.page.info.name = `${newObject.page.info.name}:${message.status}`;

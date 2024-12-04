@@ -1610,6 +1610,33 @@ main .section.blue a.button.modal::after {
   visibility: hidden;
 }
 
+
+.loader-circle {
+  width: 48px !important;
+  height: 48px !important;
+  border: 5px solid #006EFF !important;
+  border-bottom-color: transparent !important;
+  border-radius: 50% !important;
+  position: relative !important;
+  display: inline-block !important;
+  box-sizing: border-box !important;
+  animation: rotation 1s linear infinite !important;
+}
+
+.loader-circle * {
+  visibility: hidden !important;
+  display: none !important;
+}
+
+@keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
 @media (min-width: 768px) {
   .buttons-align-right > div {
     flex-direction: row;
