@@ -187,4 +187,7 @@ export default function decorate(block, options) {
     matchHeights(block.closest('.section'), 'table');
     matchHeights(block.closest('.section'), 'p:nth-last-of-type(2)');
   }
+  if (block.classList.contains('awards-fragment')) {
+    matchHeights(block, 'p:last-of-type');
+  }
 }

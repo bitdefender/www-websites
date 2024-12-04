@@ -557,6 +557,13 @@
     align-items: stretch;
   }
 
+  .columns.awards-fragment > div{
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap:20px;
+  }
+
 
   .columns-container.chat-options .columns > div > div {
     padding: 2em;
