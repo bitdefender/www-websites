@@ -50,16 +50,16 @@ class StatusMessageFactory {
 function changeTexts(block, result) {
   switch (result.status) {
     case 'safe':
-      block.querySelector('h2').textContent = "You're safe";
+      block.querySelector('h1').textContent = "You're safe";
       break;
     case 'so_far_so_good_1':
-      block.querySelector('h2').textContent = 'So far, so good';
+      block.querySelector('h1').textContent = 'So far, so good';
       break;
     case 'so_far_so_good_2':
-      block.querySelector('h2').textContent = 'So far, so good';
+      block.querySelector('h1').textContent = 'So far, so good';
       break;
     default:
-      block.querySelector('h2').textContent = 'Definitely Don’t Go There';
+      block.querySelector('h1').textContent = 'Definitely Don’t Go There';
       break;
   }
 }
@@ -148,11 +148,11 @@ async function resetChecker(block) {
   // Reset the input and result elements
   const input = block.querySelector('#link-checker-input');
   const result = block.querySelector('.result');
-  const h2 = block.querySelector('h2');
+  const h1 = block.querySelector('h1');
   input.removeAttribute('disabled');
   input.value = '';
   result.className = 'result';
-  h2.textContent = 'Is This Link Really Safe?';
+  h1.textContent = 'Is This Link Really Safe?';
 
   const newObject = await new PageLoadStartedEvent();
   AdobeDataLayerService.push(newObject);

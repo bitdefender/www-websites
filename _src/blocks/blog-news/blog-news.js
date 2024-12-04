@@ -27,7 +27,7 @@ async function renderBlogGrid(block, endpoint, articlesNumber) {
       blogCard.innerHTML = `
           <img src="${image}" alt="${title}">
           <div class="blog-card-content">
-              <h3>${title}</h3>
+              <p>${title}</p>
               <a href="${link}">Find out more</a>
           </div>
       `;

@@ -33,9 +33,10 @@
     border-radius: 20px;
 }
 
-.blog-news .blog-card h3 {
+.blog-news .blog-card p {
     font-size: 1.2rem;
     margin-bottom: 24px;
+    font-weight: bold;
     color: #000000;
 }
 

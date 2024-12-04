@@ -53,7 +53,7 @@ main .section.link-checker-container {
             display: block;
         }
 
-        .link-checker h2 {
+        .link-checker h1 {
             color: #EA0220;
             margin-bottom: 16px;
         }
@@ -86,7 +86,7 @@ main .section.link-checker-container {
             display: none;
         }
 
-        .link-checker h2 {
+        .link-checker h1 {
             margin-bottom: 16px;
         }
 
@@ -146,7 +146,7 @@ main .section.link-checker-container {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         position: relative;
     
-        h2 {
+        h1 {
             font-weight: bold;
             font-size: 32px;
             color: #006EFF;
@@ -403,7 +403,7 @@ main .section.link-checker-container {
                 padding: 0;
             }
 
-            h2 {
+            h1 {
                 font-size: 40px;
                 margin-bottom: 40px;
             }
