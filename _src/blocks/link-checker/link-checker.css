@@ -378,6 +378,8 @@ main .section.link-checker-container {
         padding-bottom: 50px;
 
         .link-checker{
+            padding: 48px 60px 35px;
+            
             .input-container{
                 flex-direction: unset;
             }

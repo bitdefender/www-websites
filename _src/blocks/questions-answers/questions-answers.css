@@ -4,7 +4,7 @@
 
 @media (min-width: 992px) { /* desktop */
     .questions-answers-wrapper {
-        max-width: var(--section-desktop-max-width);
+        max-width: 1330px;
         padding: 0 var(--section-desktop-padding);
         margin: 0 auto;
     }

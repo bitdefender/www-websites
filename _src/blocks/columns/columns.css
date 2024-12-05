@@ -1358,9 +1358,16 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 .columns-container.multi-blocks{
-  .columns-wrapper{
-    padding: 20px;
-    min-width: 99%;
+  max-width: 1330px;
+  padding: 0 var(--section-desktop-padding);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  .columns-wrapper {
+    padding: 0;
+    margin: 0;
   }
 
   .columns{
@@ -1368,7 +1375,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     background: #F6F6F6 0% 0% no-repeat padding-box;
     border-radius: 20px;
     opacity: 1;
-    padding:20px; 
+    padding: 20px;
   }
   
   .columns > div > .columns-img-col img {
@@ -1434,53 +1441,28 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     margin-bottom: 0;
   }
 
-  @media (min-width:767px) {
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: center;
-
-    div{
-      height: 100%;
-      gap: 20px;
-      align-content: flex-start;
-    }
+  @media (min-width: 991px) {
+    max-width: 1330px;
+    padding: 0 var(--section-desktop-padding);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
 
     .columns{
-      max-width: 500px;
-    }
-
-    .columns > div > div {
-      flex: unset;
-      align-content: center;
-    }
-  }
-
-  @media (min-width: 1200px){
-    .columns{
-      min-width: 560px;
-    }
-
-    .columns > div >div{
-      width: 50%;
+      max-width: 630px;
     }
 
     .columns > div > .columns-img-col img {
-      position: static;
       object-fit: cover;
       display: block;
       border-radius: 20px;
     }
   }
 
-  @media(min-width:1400px){
-    .columns{
-      min-width: 640px;
-    }
-  }
-
-  @media(min-width:1600px){
-    .columns{
-      min-width: 650px;
+  @media (min-width: 1200px){
+    .columns > div >div{
+      width: 50%;
     }
   }
 }
