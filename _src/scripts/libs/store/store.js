@@ -923,19 +923,15 @@ class Vlaicu {
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
-	// TODO: delete this parameter as it is for testing purposes only
-	static campaign = "TSExpired0MRDLP24";
-
 	static async getProductVariations(productId, campaign) {
 
 		const pathVariablesResolverObject = {
 			"{locale}": Page.locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.campaign // TODO: replace with campaign received as parameter
+			"{campaignId}": campaign
 		};
 
 		// get the correct path to get the prices
-		// TODO: add a check for campaign to be not null
 		let productPath = campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
@@ -1100,7 +1096,7 @@ class StoreConfig {
 		}
 
 		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
-			return "";
+			return Store.NO_PROMOTION;
 		}
 
 		const jsonFilePath = "https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json";
