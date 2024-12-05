@@ -399,15 +399,17 @@ export default function decorate(block) {
     }
     const planSelector = card.querySelector('.variant-selector');
     const dynamicPriceTextsKey = `dynamicPriceTexts${cardIndex + 1}`;
-    const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
-    const priceConditionEl = card.querySelector('.price.condition em');
-    planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
-      option.addEventListener('click', () => {
-        if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
-          priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
-        }
+    if (metadata[dynamicPriceTextsKey]) {
+      const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
+      const priceConditionEl = card.querySelector('.price.condition em');
+      planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
+        option.addEventListener('click', () => {
+          if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
+            priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
+          }
+        });
       });
-    });
+    }
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
