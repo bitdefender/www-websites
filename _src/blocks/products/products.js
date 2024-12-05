@@ -56,6 +56,7 @@ function renderPlanSelector(plans, defaultSelection) {
     li.addEventListener('click', () => {
       root.querySelector('.active')?.classList.remove('active');
       li.classList.add('active');
+      li.checked = true;
     });
     // set the default selection
     if (defaultSelection === label) {
