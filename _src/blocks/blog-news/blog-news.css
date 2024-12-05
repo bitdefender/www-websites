@@ -38,6 +38,7 @@
     margin-bottom: 24px;
     font-weight: bold;
     color: #000000;
+    margin: 0;
 }
 
 .blog-news .blog-card a {
@@ -48,6 +49,12 @@
 
 .blog-news .blog-card a:hover {
     text-decoration: underline;
+}
+
+.blog-news .blog-card .blog-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
 @media (min-width:767px){
