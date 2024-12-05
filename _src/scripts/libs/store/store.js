@@ -24,7 +24,10 @@ export const monthlyProducts = {
 	"us_pf_m": "us_pf_m",
 	"us_pi_m": "us_pi_m",
 	"us_pie_m": "us_pie_m",
-	"us_pfe_m": "us_pfe_m"
+	"us_pfe_m": "us_pfe_m",
+	"secpassm": "secpassm",
+	"vbsm": "vbsm",
+	"scm": "scm",
 }
 
 export const loadScript = (baseUrl, url) => {
@@ -497,6 +500,7 @@ export class Product {
 		if (windowURL.searchParams.has("channel")) {
 			zuoraCart.searchParams.set("channel", windowURL.searchParams.get("channel"));
 		}
+
 		zuoraCart.searchParams.set("product_id", this.productId);
 		zuoraCart.searchParams.set("payment_period", monthlyProducts[this.id] ? `${devices}d1m` : `${devices}d${years}y`);
 		zuoraCart.searchParams.set("country", "NL");
@@ -927,12 +931,11 @@ class Vlaicu {
 		const pathVariablesResolverObject = {
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.campaign
+			"{campaignId}": campaign !== Store.NO_PROMOTION ? campaign : this.campaign
 		};
 
 		// get the correct path to get the prices
-		// TODO: add a check for campaign to be not null
-		let productPath = ( campaign !== Store.NO_PROMOTION && this.campaign != null ) ? this.promotionPath : this.defaultPromotionPath;
+		let productPath = (campaign !== Store.NO_PROMOTION || this.campaign) ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
@@ -1096,7 +1099,7 @@ class StoreConfig {
 		}
 
 		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
-			return "";
+			return Store.NO_PROMOTION;
 		}
 
 		const jsonFilePath = "https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json";
@@ -1141,7 +1144,7 @@ export class Store {
 		gb: "uk",
 		ch: "de",
 		at: "de",
-		us: "en",
+		us: "us",
 		mx: "en",
 		nz: "au",
 	}

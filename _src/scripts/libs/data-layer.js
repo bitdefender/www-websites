@@ -81,29 +81,26 @@ export class PageLoadStartedEvent {
 
   /**
   * get experiment details from Target
-  * @returns {{
+  * @returns {Promise<{
   *  experimentId: string;
-  *  experimentVariant: any;
-  * } | null}
+  *  experimentVariant: string;
+  * } | null>}
    */
   async #getTargetExperimentDetails() {
     /**
      * @type {{
-     *  eventTokens: string[];
      *  experimentId: string;
-     *  experimentVariant: any;
+     *  experimentVariant: string;
      * }|null}
      */
     let targetExperimentDetails = null;
 
-    if (this.#getMetadata('target-experiment') !== '' && !shouldABTestsBeDisabled()) {
+    const targetExperimentLocation = this.#getMetadata('target-experiment-location');
+    const targetExperimentId = this.#getMetadata('target-experiment');
+    if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      targetExperimentDetails = await runTargetExperiment();
-      if (targetExperimentDetails) {
-        Target.setEventTokens(targetExperimentDetails.eventTokens);
-        delete targetExperimentDetails.eventTokens;
-        targetExperimentDetails = targetExperimentDetails.experimentVariant ? targetExperimentDetails : null;
-      }
+      const experimentUrl = (await Target.getOffer(targetExperimentLocation))?.content?.url;
+      targetExperimentDetails = await runTargetExperiment(experimentUrl, targetExperimentId);
     }
 
     return targetExperimentDetails;
@@ -726,10 +723,10 @@ export class Target {
 
   /**
    * @param {string} mboxName
-   * @param {object} params 
+   * @param {object} parameters 
    */
-  static async getOffer(mboxName, params) {
-    const receivedOffers = await this.getOffers([{name: mboxName, params}]);
+  static async getOffer(mboxName, parameters = {}) {
+    const receivedOffers = await this.getOffers([{name: mboxName, parameters}]);
     return receivedOffers ? receivedOffers[mboxName] : null;
   }
 
@@ -781,48 +778,6 @@ export class Target {
     }
 
     return offers;
-  }
-
-  /**
-   * @param {{name: string}[]} mboxes
-   */
-  static async notifyTarget(mboxes) {
-    const sessionId = sessionStorage.getItem(Constants.ADOBE_TARGET_SESSION_ID_PARAM);
-    if (!sessionId || !this.eventTokens.length) {
-      return;
-    }
-
-    try {
-      const res = await fetch(`https://${Constants.TARGET_TENANT}.tt.omtrdc.net/rest/v1/delivery?client=${Constants.TARGET_TENANT}&sessionId=${sessionId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: {
-            marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
-          },
-          context: {
-            channel: 'web',
-          },
-          notifications: mboxes.map(mbox => {
-            return {
-              id: `${mbox.name}:notification`,
-              type: "display",
-              timestamp: new Date().getTime(),
-              mbox,
-              tokens: this.eventTokens
-            }
-          }),
-        }),
-      });
-
-      if (!res.ok) {
-        console.warn("Notification to Target failed");
-      }
-    } catch (e) {
-      console.warn(e);
-    }
   }
 };
 
