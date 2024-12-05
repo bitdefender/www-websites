@@ -23,7 +23,10 @@ export const monthlyProducts = {
 	"us_pf_m": "us_pf_m",
 	"us_pi_m": "us_pi_m",
 	"us_pie_m": "us_pie_m",
-	"us_pfe_m": "us_pfe_m"
+	"us_pfe_m": "us_pfe_m",
+	"secpassm": "secpassm",
+	"vbsm": "vbsm",
+	"scm": "scm",
 }
 
 export const loadScript = (baseUrl, url) => {
@@ -496,6 +499,7 @@ export class Product {
 		if (windowURL.searchParams.has("channel")) {
 			zuoraCart.searchParams.set("channel", windowURL.searchParams.get("channel"));
 		}
+
 		zuoraCart.searchParams.set("product_id", this.productId);
 		zuoraCart.searchParams.set("payment_period", monthlyProducts[this.id] ? `${devices}d1m` : `${devices}d${years}y`);
 		zuoraCart.searchParams.set("country", "NL");
@@ -1141,7 +1145,7 @@ export class Store {
 		gb: "uk",
 		ch: "de",
 		at: "de",
-		us: "en",
+		us: "us",
 		mx: "en",
 		nz: "au",
 	}

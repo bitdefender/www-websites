@@ -182,4 +182,7 @@ export default function decorate(block, options) {
   });
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
+  if (block.classList.contains('awards-fragment')) {
+    matchHeights(block, 'p:last-of-type');
+  }
 }

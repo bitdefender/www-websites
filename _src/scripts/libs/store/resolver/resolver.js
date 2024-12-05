@@ -16,7 +16,7 @@ export class GlobalContext {
 }
 
 export class Context {
-	constructor(product, devices, years, staticAttributes, clickAttributes, contexts, products, devicePropertiesMapping) {
+	constructor(product, devices, years, staticAttributes, clickAttributes, contexts, contextProducts, products, devicePropertiesMapping) {
 		/**
 		 * @type {import("..").Product}
 		 */
@@ -37,6 +37,10 @@ export class Context {
 		 * @type {Context[]}
 		 */
 		this.contexts = contexts;
+		/**
+		 * @type {import("..").Product[]}
+		*/
+		this.contextProducts = contextProducts;
 		/**
 		 * @type {import("..").ProductOption}
 		 */
@@ -264,8 +268,8 @@ export class StoreResolver {
 			const globalStaticAttributes = context.dataset.storeId ? [] : this.getAllAttributes(context, this.staticAttributes);
 			const globalClickAttributes = context.dataset.storeId ? [] : this.getAllAttributes(context, this.clickAttributes);
 
-			const localContexts = [];
-
+			const pageContexts = [];
+			const contextProducts = [...products, ...this.getAdditionalProducts(context)].map(product =>storeProducts[product.dataset.storeId])
 			for (const product of products) {
 				const storeProduct = storeProducts[product.dataset.storeId];
 				const productDataMapping = JSON.parse(product.dataset?.storeDevicePropertiesMapping || '{}');
@@ -288,12 +292,13 @@ export class StoreResolver {
 						years,
 						optionStaticAttributes,
 						optionClickAttributes,
-						localContexts,
+						pageContexts,
+						contextProducts,
 						storeProducts,
 						productDataMapping
 					);
 
-					localContexts.push(context);
+					pageContexts.push(context);
 					GlobalContext.variations.push(...this.getAllVariationsFromContext(context));
 					optionStaticAttributes.forEach(staticAttribute => this.resolveStaticAttributes(staticAttribute, context));
 					optionClickAttributes.forEach(clickAttribute => this.resolveClickAttributes(clickAttribute, context));
@@ -656,4 +661,4 @@ export class StoreResolver {
 	}
 }
 
-window.StoreResolver = StoreResolver;
+window.StoreResolverWebsites = StoreResolver;
