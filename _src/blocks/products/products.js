@@ -53,15 +53,22 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters,
       `<span>${label}</span>`,
     );
+
+    // set the default selection
+    if (defaultSelection === label) {
+      li.classList.add('active');
+      li.checked = true;
+    }
+
     li.addEventListener('click', () => {
-      root.querySelector('.active')?.classList.remove('active');
+      const previousButtonActive = root.querySelector('.active');
+      if (previousButtonActive) {
+        previousButtonActive.classList.remove('active');
+        previousButtonActive.checked = false;
+      }
       li.classList.add('active');
       li.checked = true;
     });
-    // set the default selection
-    if (defaultSelection === label) {
-      li.click();
-    }
 
     ul.appendChild(li);
   }
@@ -404,6 +411,9 @@ export default function decorate(block) {
       const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
       const priceConditionEl = card.querySelector('.price.condition em');
       planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
+        if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
+          priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
+        }
         option.addEventListener('click', () => {
           if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
             priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
