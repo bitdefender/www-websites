@@ -46,5 +46,5 @@ export default function decorate(block) {
   block.appendChild(blogGrid);
   blogGrid.classList.add('blog-grid');
   renderBlogGrid(block, endpoint, articlesNumber);
-  matchHeights(block, 'h3');
+  matchHeights(block, 'p');
 }
