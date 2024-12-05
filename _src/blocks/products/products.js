@@ -53,16 +53,14 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters,
       `<span>${label}</span>`,
     );
-
-    // set the
-    if (defaultSelection === label) {
-      li.classList.add('active');
-    }
-
     li.addEventListener('click', () => {
       root.querySelectorAll('.active').forEach((option) => option.classList.remove('active'));
       li.classList.add('active');
     });
+    // set the default selection
+    if (defaultSelection === label) {
+      li.click();
+    }
 
     ul.appendChild(li);
   }
@@ -274,7 +272,7 @@ function renderPriceCondition(text) {
   return createTag(
     'div',
     {
-      class: 'price',
+      class: 'price condition',
     },
     `<em>${text}</em>`,
   );
@@ -389,7 +387,7 @@ export default function decorate(block) {
     }
   });
 
-  // Height matching logic
+  // Height matching and Dynamic texts logic and Dynamic texts
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card) => {
@@ -399,7 +397,16 @@ export default function decorate(block) {
       const firstPElement = card.querySelector('p:not(:has(img, .icon))');
       firstPElement.classList.add('img-adjacent-text');
     }
-
+    const planSelector = card.querySelector('.variant-selector');
+    const dynamicPriceTexts = [...metadata.dynamicPriceTexts.split(',')];
+    const priceConditionEl = card.querySelector('.price.condition em');
+    planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
+      option.addEventListener('click', () => {
+        if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
+          priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
+        }
+      });
+    });
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
@@ -414,6 +421,7 @@ export default function decorate(block) {
     }
   });
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, '.price.condition');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
