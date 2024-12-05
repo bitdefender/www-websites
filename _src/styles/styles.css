@@ -129,6 +129,10 @@ body [data-desktop-detector] {
     display: none;
 }
 
+body.dark-mode {
+  background-color: #141517;
+}
+
 @media (min-width: 768px) {
     body [data-mobile-detector] {
         display: none;
@@ -1599,6 +1603,31 @@ main .section.blue a.button.modal::after {
 
 .await-loader * {
   visibility: hidden;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #006EFF;;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+.loader * {
+  visibility: hidden;
+  display: none;
 }
 
 @media (min-width: 768px) {

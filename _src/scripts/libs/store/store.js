@@ -1,8 +1,9 @@
 import { Constants } from "../constants.js";
 import { Target, Visitor } from "../data-layer.js";
-import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
+import { getParamValue, GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
+import { User } from "../../libs/user.js"
 
 export const monthlyProducts = {
 	"ultsecm": "ultsecm",
@@ -923,16 +924,18 @@ class Vlaicu {
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
-	static async getProductVariations(productId, campaign) {
+	static campaign = getParamValue('vcampaign');
 
+	static async getProductVariations(productId, campaign) {
+		const locale = await Target.getVlaicuGeoIpPrice() ? await User.locale : Page.locale;
 		const pathVariablesResolverObject = {
-			"{locale}": Page.locale,
+			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": campaign
+			"{campaignId}": campaign !== Store.NO_PROMOTION ? campaign : this.campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+		let productPath = (campaign !== Store.NO_PROMOTION || this.campaign) ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
@@ -965,7 +968,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId))?.product;
+		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()], campaignId))?.product;
 		if (!productInfo) {
 			return null;
 		}
@@ -1053,7 +1056,7 @@ class StoreConfig {
 	 */
 	constructor(vlaicuFlag) {
 		/**
-		 * Api used to fetch the prices
+		 * Api §d to fetch the prices
 		 * @type {"init"|"zuora"|"vlaicu"}
 		 */
 		this.provider = this.#getProvider(vlaicuFlag);
