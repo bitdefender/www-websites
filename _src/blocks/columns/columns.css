@@ -1406,7 +1406,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     span{
       margin: 0;
-      height: 50px;
     }
 
     h3{
@@ -1458,6 +1457,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       object-fit: cover;
       display: block;
       border-radius: 20px;
+    }
+
+    .columns > div > .columns-text-col {
+      align-self: flex-start;
     }
   }
 
