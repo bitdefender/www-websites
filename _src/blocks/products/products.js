@@ -54,7 +54,7 @@ function renderPlanSelector(plans, defaultSelection) {
       `<span>${label}</span>`,
     );
     li.addEventListener('click', () => {
-      root.querySelectorAll('.active').forEach((option) => option.classList.remove('active'));
+      root.querySelector('.active')?.classList.remove('active');
       li.classList.add('active');
     });
     // set the default selection
@@ -387,7 +387,7 @@ export default function decorate(block) {
     }
   });
 
-  // Height matching and Dynamic texts logic and Dynamic texts
+  // Height matching and Dynamic texts logic
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
   cards.forEach((card, cardIndex) => {
