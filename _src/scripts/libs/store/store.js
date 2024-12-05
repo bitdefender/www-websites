@@ -827,7 +827,7 @@ class BitCheckout {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		let payload = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId))?.payload;
+		let payload = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS_ZUORA[id], campaignId))?.payload;
 
 		if (!payload || payload.length === 0) {
 			return null
@@ -844,7 +844,7 @@ class BitCheckout {
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+			product_id: Constants.PRODUCT_ID_MAPPINGS_ZUORA[id],
 			product_name: payload[0].name,
 			variations: {}
 		}
@@ -887,8 +887,8 @@ class BitCheckout {
 				}
 				const devicesObj = {
 					currency_iso: devices.currency,
-					product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-					platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+					product_id: Constants.PRODUCT_ID_MAPPINGS_ZUORA[id],
+					platform_product_id: Constants.PRODUCT_ID_MAPPINGS_ZUORA[id],
 					promotion: campaignId,
 					price: devices.price,
 					variation: {
@@ -968,7 +968,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()], campaignId))?.product;
+		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS_VLAICU[id.trim()], campaignId))?.product;
 		if (!productInfo) {
 			return null;
 		}
@@ -980,7 +980,7 @@ class Vlaicu {
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+			product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
 			product_name: productInfo.productName,
 			variations: {}
 		}
@@ -1009,8 +1009,8 @@ class Vlaicu {
 
 			const devicesObj = {
 				currency_iso: productVariation.currency,
-				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
+				platform_product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
 				promotion: campaignId,
 				price: productVariation.price,
 				buyLink: productVariation.buyLink,
