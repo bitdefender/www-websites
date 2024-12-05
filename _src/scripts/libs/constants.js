@@ -1,4 +1,4 @@
-import Page from "./page"
+import Page from "./page.js"
 
 export const Constants = {
   DEV_BASE_URL: ['localhost', 'stage', '.hlx.'].some((domain) => 
