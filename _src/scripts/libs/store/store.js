@@ -1195,7 +1195,7 @@ export class Store {
 						|| this.#getUrlPromotion()
 						|| product.promotion
 						|| getMetadata("pid")
-						|| await this.config.zuoraCampaign;
+						|| await this.config.campaign;
 
 					return await this.#apiCall(
 						product
