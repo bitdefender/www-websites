@@ -1406,6 +1406,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     span{
       margin: 0;
+      height: 50px;
     }
 
     h3{
