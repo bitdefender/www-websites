@@ -390,7 +390,7 @@ export default function decorate(block) {
   // Height matching and Dynamic texts logic and Dynamic texts
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
-  cards.forEach((card) => {
+  cards.forEach((card, cardIndex) => {
     const hasImage = card.querySelector('img') !== null;
     if (hasImage && !block.classList.contains('plans') && !block.classList.contains('compact')) {
       // If the image exists, set max-width to the paragraph next to the image
@@ -398,7 +398,8 @@ export default function decorate(block) {
       firstPElement.classList.add('img-adjacent-text');
     }
     const planSelector = card.querySelector('.variant-selector');
-    const dynamicPriceTexts = [...metadata.dynamicPriceTexts.split(',')];
+    const dynamicPriceTextsKey = `dynamicPriceTexts${cardIndex + 1}`;
+    const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
     const priceConditionEl = card.querySelector('.price.condition em');
     planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
       option.addEventListener('click', () => {
