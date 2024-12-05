@@ -135,15 +135,6 @@ export function checkIfConsumerPage() {
   return lastSegmentInPath === 'consumer';
 }
 
-/**
- * Returns the value of a query parameter
- * @returns {String}
- */
-export function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
-
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
   const el = document.createElement(tag);

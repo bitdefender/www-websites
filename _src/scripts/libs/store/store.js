@@ -1,6 +1,6 @@
 import { Constants } from "../constants.js";
 import { Target, Visitor } from "../data-layer.js";
-import { getParamValue, GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
+import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
 import { User } from "../../libs/user.js"
@@ -924,7 +924,7 @@ class Vlaicu {
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
-	static campaign = getParamValue('vcampaign');
+	static campaign = Page.getParamValue('vcampaign');
 
 	static async getProductVariations(productId, campaign) {
 		const locale = await Target.getVlaicuGeoIpPrice() ? await User.locale : Page.locale;
