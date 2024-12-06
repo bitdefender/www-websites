@@ -26,8 +26,6 @@
 }
 
 .blog-news .blog-card img {
-    width: 420px;
-    height: 308px;
     object-fit: cover;
     background-color: #FFD6D6;
     border-radius: 20px;
@@ -57,15 +55,21 @@
     gap: 24px;
 }
 
-@media (min-width:767px){
-    .blog-news .blog-card{
-        text-align: left;
-    }
+.blog-news .blog-card .blog-card-content {
+    text-align: left;
 }
 
 @media (min-width: 1440px){
     .blog-news .blog-grid{
         grid-template-columns: repeat(3, 1fr)
+    }
+
+    .blog-news .blog-card img {
+        width: 420px;
+        height: 308px;
+        object-fit: cover;
+        background-color: #FFD6D6;
+        border-radius: 20px;
     }
 
 }
