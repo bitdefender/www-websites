@@ -189,6 +189,9 @@ function copyToClipboard(block, caller, popupText) {
 export default function decorate(block) {
   const { clipboardText } = block.closest('.section').dataset;
 
+  const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
+  privacyPolicyDiv.classList.add('privacy-policy');
+
   const formContainer = document.createElement('div');
   formContainer.classList.add('link-checker-form');
 
@@ -204,13 +207,13 @@ export default function decorate(block) {
   const copyElement = document.createElement('span');
   copyElement.id = 'copy-to-clipboard';
 
-  const inputDiv = document.createElement('div');
+  const inputDiv = document.createElement('p');
   inputDiv.setAttribute('id', 'inputDiv');
 
   const divContainer = document.createElement('div');
   divContainer.className = 'input-container__container';
   divContainer.appendChild(input);
-  divContainer.appendChild(inputDiv);
+  block.prepend(inputDiv);
   divContainer.appendChild(copyElement);
 
   inputContainer.appendChild(divContainer);
@@ -249,7 +252,6 @@ export default function decorate(block) {
 
   formContainer.appendChild(buttonsContainer);
   block.querySelectorAll(':scope > div')[1].replaceWith(formContainer);
-
   const [safeImage, dangerImage] = block.querySelectorAll('picture');
   safeImage.classList.add('safe-image');
   dangerImage.classList.add('danger-image');

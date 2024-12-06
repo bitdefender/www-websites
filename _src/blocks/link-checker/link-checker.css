@@ -36,7 +36,7 @@ main .section.link-checker-container {
 
         .link-checker input[type="text"], .link-checker #inputDiv {
             max-width: 100%;
-            border: 2px solid #D82E21;
+            border: 2px dashed #D82E21;
             padding-right: 15px;
             pointer-events: none;
         }
@@ -47,6 +47,7 @@ main .section.link-checker-container {
 
         .link-checker #inputDiv {
             display: block;
+            margin-bottom: 24px;
         }
 
         .link-checker .danger-image {
@@ -66,7 +67,7 @@ main .section.link-checker-container {
             display: flex;
         }
 
-        .link-checker > div:nth-child(3) {
+        .link-checker .privacy-policy {
             display: none;
         }
 
@@ -92,7 +93,7 @@ main .section.link-checker-container {
 
         .link-checker input[type="text"], .link-checker #inputDiv {
             max-width: 100%;
-            border: 2px solid #3D8648;
+            border: 2px dashed #3D8648;
             padding-right: 15px;
             pointer-events: none;
         }
@@ -103,6 +104,8 @@ main .section.link-checker-container {
 
         .link-checker #inputDiv {
             display: block;
+            margin-bottom: 24px;
+
         }
 
         .link-checker .safe-image {
@@ -117,7 +120,7 @@ main .section.link-checker-container {
             display: flex;
         }
 
-        .link-checker > div:nth-child(3) {
+        .link-checker .privacy-policy {
             display: none;
         }
 
@@ -368,7 +371,7 @@ main .section.link-checker-container {
             }
         }
 
-        > div:nth-child(3) {
+        .privacy-policy {
             margin-top: 20px;
             font-size: 12px;
         }
@@ -417,7 +420,7 @@ main .section.link-checker-container {
                 padding-bottom: 30px;
             }
 
-            > div:nth-child(3) {
+            .privacy-policy {
                 font-size: 14px;
             }
         }
