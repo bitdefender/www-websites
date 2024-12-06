@@ -48,6 +48,7 @@ main .section.link-checker-container {
         .link-checker #inputDiv {
             display: block;
             margin-bottom: 24px;
+            text-align: center;
         }
 
         .link-checker .danger-image {
@@ -105,7 +106,7 @@ main .section.link-checker-container {
         .link-checker #inputDiv {
             display: block;
             margin-bottom: 24px;
-
+            text-align: center;
         }
 
         .link-checker .safe-image {
