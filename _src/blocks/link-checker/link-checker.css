@@ -75,6 +75,9 @@ main .section.link-checker-container {
         #copy-to-clipboard {
             display: none;
         }
+        .link-checker .result.danger {
+            margin-top: 0;
+        }
     }
 
     &.safe {
@@ -337,6 +340,7 @@ main .section.link-checker-container {
             }
         }
         .result.danger {
+            margin-top: 24px;
             background-color: #FDF3F4;
             padding: 8px 30px 8px 55px;
             position: relative;
