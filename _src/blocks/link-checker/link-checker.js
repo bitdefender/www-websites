@@ -262,4 +262,14 @@ export default function decorate(block) {
     e.preventDefault();
     copyToClipboard(block, shareButton, clipboardText);
   });
+
+  // if the text is cleared, do not display any error
+  input.addEventListener('input', () => {
+    const url = input.value.trim();
+    // If the input is cleared, reset the result text and class
+    if (url === '') {
+      result.textContent = '';
+      result.className = '';
+    }
+  });
 }
