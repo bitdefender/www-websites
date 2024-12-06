@@ -24,7 +24,7 @@ class StatusMessageFactory {
 
     const messages = {
       1: { text: 'The link is safe with no signs of harmful activity. You can go ahead and keep staying cautious online.', className: 'result safe', status: 'safe' },
-      2: { text: 'We haven\'t seen any suspicious activity from this link.', className: 'result safe', status: 'so_far_so_good_1' },
+      2: { text: 'We haven\'t found any suspicious activity with this link. However, to stay safe going forward, make sure to use reliable security software and scan your system regularly.', className: 'result safe', status: 'so_far_so_good_1' },
       3: { text: `This link looks safe, but the domain '${urlObject.hostname}' has been connected to harmful links in the past. To stay protected, check any other links from this domain using our tool and keep your security software updated.`, className: 'result safe', status: 'so_far_so_good_2' },
       4: { text: 'This link is dangerous and can compromise your personal information or harm your device. Do not click it, and ensure your security software is up-to-date to stay protected from threats.', className: 'result danger', status: 'malware & phishing' },
       5: { text: 'This link is known to distribute malware. Accessing it may harm your device, steal your data, or allow unauthorized access. Stay away from the site and ensure your security software is active.', className: 'result danger', status: 'malware' },
