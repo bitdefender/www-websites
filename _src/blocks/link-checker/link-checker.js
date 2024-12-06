@@ -272,4 +272,8 @@ export default function decorate(block) {
       result.className = '';
     }
   });
+  input.addEventListener('paste', () => {
+    result.textContent = '';
+    result.className = '';
+  });
 }
