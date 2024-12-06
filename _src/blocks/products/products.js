@@ -54,14 +54,20 @@ function renderPlanSelector(plans, defaultSelection) {
       `<span>${label}</span>`,
     );
 
-    // set the
+    // set the default selection
     if (defaultSelection === label) {
       li.classList.add('active');
+      li.checked = true;
     }
 
     li.addEventListener('click', () => {
-      root.querySelectorAll('.active').forEach((option) => option.classList.remove('active'));
+      const previousButtonActive = root.querySelector('.active');
+      if (previousButtonActive) {
+        previousButtonActive.classList.remove('active');
+        previousButtonActive.checked = false;
+      }
       li.classList.add('active');
+      li.checked = true;
     });
 
     ul.appendChild(li);
@@ -274,7 +280,7 @@ function renderPriceCondition(text) {
   return createTag(
     'div',
     {
-      class: 'price',
+      class: 'price condition',
     },
     `<em>${text}</em>`,
   );
@@ -389,17 +395,32 @@ export default function decorate(block) {
     }
   });
 
-  // Height matching logic
+  // Height matching and Dynamic texts logic
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
-  cards.forEach((card) => {
+  cards.forEach((card, cardIndex) => {
     const hasImage = card.querySelector('img') !== null;
     if (hasImage && !block.classList.contains('plans') && !block.classList.contains('compact')) {
       // If the image exists, set max-width to the paragraph next to the image
       const firstPElement = card.querySelector('p:not(:has(img, .icon))');
       firstPElement.classList.add('img-adjacent-text');
     }
-
+    const planSelector = card.querySelector('.variant-selector');
+    const dynamicPriceTextsKey = `dynamicPriceTexts${cardIndex + 1}`;
+    if (metadata[dynamicPriceTextsKey]) {
+      const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
+      const priceConditionEl = card.querySelector('.price.condition em');
+      planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
+        if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
+          priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
+        }
+        option.addEventListener('click', () => {
+          if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
+            priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
+          }
+        });
+      });
+    }
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
@@ -414,6 +435,7 @@ export default function decorate(block) {
     }
   });
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, '.price.condition');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
