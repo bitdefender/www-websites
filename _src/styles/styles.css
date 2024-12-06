@@ -1006,11 +1006,11 @@ p.info-button-container a.info-button.modal:hover {
 
 a.button::after, input[type="submit"]::after, main .section.link-right a::after {
   content: '';
-  width: 24px;
-  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-mask:url('/_src/icons/arrow-right.svg');
-  mask: url('/_src/icons/arrow-right.svg');
+  -webkit-mask:url('/_src/icons/arrow-right.svg') no-repeat;
+  mask: url('/_src/icons/arrow-right.svg') no-repeat;
   background-color: var(--button-link-color);
   display: inline-block;
   transition: all .2s cubic-bezier(.4,0,.2,1);
