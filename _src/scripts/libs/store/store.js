@@ -755,6 +755,46 @@ export class Product {
 }
 
 class BitCheckout {
+	static async fetchZuoraConfig() {
+		const defaultJsonFilePath = '/zuoraconfig.json';
+		const jsonFilePath = window.location.hostname === 'www.bitdefender.com'
+		? `https://${window.location.hostname}/pages/zuoraconfig.json`
+		: defaultJsonFilePath;
+
+		try {
+			const response = await fetch(jsonFilePath);
+
+			if (!response.ok) {
+			console.error(`Failed to fetch data. Status: ${response.status}`);
+			return {};
+			}
+
+			const { data = [] } = await response.json();
+			const zuoraConfigData = {
+			CAMPAIGN_NAME: data[0]?.CAMPAIGN_NAME || '',
+			CAMPAIGN_PRODS: {},
+			CAMPAIGN_MONTHLY_PRODS: [],
+			};
+
+			data.forEach(item => {
+			if (item.ZUORA_PRODS) {
+				const [key, value] = item.ZUORA_PRODS.split(':').map(s => s.trim());
+				const clearKey = key.replace('*', '');
+				zuoraConfigData.CAMPAIGN_PRODS[clearKey] = value;
+
+				if (key.includes('*')) {
+				zuoraConfigData.CAMPAIGN_MONTHLY_PRODS.push(clearKey);
+				}
+			}
+			});
+
+			return zuoraConfigData;
+		} catch (error) {
+			console.error(`Error fetching Zuora config: ${error.message}`);
+			return {};
+		}
+	}
+
 
 	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "secpassm", "dipm", "us_i_m",
 		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
