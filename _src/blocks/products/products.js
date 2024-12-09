@@ -277,12 +277,13 @@ function renderLowestPrice(...params) {
  * @returns Root node of the nanoblock
  */
 function renderPriceCondition(text) {
+  const updatedText = text.replace('BilledPrice', '<em data-store-price="discounted||full" class="await-loader"></em>');
   return createTag(
     'div',
     {
       class: 'price condition',
     },
-    `<em>${text}</em>`,
+    `<em>${updatedText}</em>`,
   );
 }
 
@@ -411,12 +412,24 @@ export default function decorate(block) {
       const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
       const priceConditionEl = card.querySelector('.price.condition em');
       planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
-        if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
-          priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
-        }
         option.addEventListener('click', () => {
           if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
-            priceConditionEl.textContent = dynamicPriceTexts[idx] || ''; // Fallback to empty if text not found
+            const textTemplate = dynamicPriceTexts[idx] || '';
+            // in order to preserve the store eventListeners we can't replace the priceElement
+            // every time another option is selected therefore we're using a string template
+            if (textTemplate.includes('{BilledPrice}')) {
+              const [before, after] = textTemplate.split('{BilledPrice}');
+              const nodesToRemove = Array.from(priceConditionEl.childNodes).filter(
+                (node) => node.nodeType === Node.TEXT_NODE,
+              );
+              // Clear only non-<em> text nodes (this element contains store events)
+              nodesToRemove.forEach((node) => priceConditionEl.removeChild(node));
+              // eslint-disable-next-line max-len
+              if (before) priceConditionEl.insertBefore(document.createTextNode(before), priceConditionEl.firstChild);
+              if (after) priceConditionEl.appendChild(document.createTextNode(after));
+            } else {
+              priceConditionEl.textContent = textTemplate;
+            }
           }
         });
       });
