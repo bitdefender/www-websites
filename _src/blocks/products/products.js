@@ -412,36 +412,24 @@ export default function decorate(block) {
       const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
       const priceConditionEl = card.querySelector('.price.condition em');
       planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
-        if (dynamicPriceTexts.some((text) => text.includes('{BilledPrice}'))) {
-          option.addEventListener('click', () => {
-            if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
-              const textTemplate = dynamicPriceTexts[idx] || '';
-              const [before, after] = textTemplate.split('{BilledPrice}');
-
-              if (priceConditionEl) {
-                const nodesToRemove = Array.from(priceConditionEl.childNodes).filter(
-                  (node) => node.nodeType === Node.TEXT_NODE,
-                );
-
-                // Clear only non-<em> text nodes so that the priceEl is untouched
-                nodesToRemove.forEach((node) => priceConditionEl.removeChild(node));
-
-                // eslint-disable-next-line max-len
-                if (before) priceConditionEl.insertBefore(document.createTextNode(before), priceConditionEl.firstChild);
-                if (after) priceConditionEl.appendChild(document.createTextNode(after));
-              }
-            }
-          });
-        } else {
+        option.addEventListener('click', () => {
           if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
-            priceConditionEl.textContent = dynamicPriceTexts[idx] || '';
-          }
-          option.addEventListener('click', () => {
-            if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
-              priceConditionEl.textContent = dynamicPriceTexts[idx] || '';
+            const textTemplate = dynamicPriceTexts[idx] || '';
+            if (textTemplate.includes('{BilledPrice}')) {
+              const [before, after] = textTemplate.split('{BilledPrice}');
+              const nodesToRemove = Array.from(priceConditionEl.childNodes).filter(
+                (node) => node.nodeType === Node.TEXT_NODE,
+              );
+              // Clear only non-<em> text nodes
+              nodesToRemove.forEach((node) => priceConditionEl.removeChild(node));
+              // eslint-disable-next-line max-len
+              if (before) priceConditionEl.insertBefore(document.createTextNode(before), priceConditionEl.firstChild);
+              if (after) priceConditionEl.appendChild(document.createTextNode(after));
+            } else {
+              priceConditionEl.textContent = textTemplate;
             }
-          });
-        }
+          }
+        });
       });
     }
     if (!card.classList.contains('featured')) {
