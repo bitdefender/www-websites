@@ -27,6 +27,10 @@ export const monthlyProducts = {
 	"secpassm": "secpassm",
 	"vbsm": "vbsm",
 	"scm": "scm",
+	"us_pfe_m": "us_pfe_m",
+	"secpassm": "secpassm",
+	"vbsm": "vbsm",
+	"scm": "scm",
 }
 
 export const loadScript = (baseUrl, url) => {
@@ -1029,6 +1033,7 @@ export class Store {
 		gb: "uk",
 		ch: "de",
 		at: "de",
+		us: "us",
 		us: "us",
 		mx: "en",
 		nz: "au",

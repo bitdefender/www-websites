@@ -43,6 +43,14 @@ export default class Cookie {
 
     return false;
   }
+
+  /**
+   * Get the cookie depicting the country of the user
+   * For now the cookie name is cf-ipcountry
+   */
+  static get country() {
+    return this.get("cf-ipcountry");
+  }
 }
 
 window.Cookie = Cookie;

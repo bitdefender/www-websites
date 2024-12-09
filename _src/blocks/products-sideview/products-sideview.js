@@ -141,6 +141,14 @@ function updateBuyLink(block) {
 
 function renderPrice(block, _firstProduct, secondProduct) {
   const variant = '5-1';
+  const priceElement = document.createElement('div');
+  priceElement.classList.add('price-element-wrapper');
+
+  const oldPrice = document.createElement('div');
+  oldPrice.classList.add('prod-oldprice', 'await-loader');
+  oldPrice.setAttribute('data-store-price', 'full');
+  oldPrice.setAttribute('data-store-hide', 'data-store-hide="no-price=discounted"');
+
   const el = document.createElement('DIV');
   el.classList.add('price');
   el.classList.add('await-loader');
@@ -150,8 +158,11 @@ function renderPrice(block, _firstProduct, secondProduct) {
   block.setAttribute('data-store-department', 'consumer');
   block.setAttribute('data-store-event', 'main-product-loaded');
   el.setAttribute('data-store-price', 'discounted||full');
+
+  priceElement.appendChild(oldPrice);
+  priceElement.appendChild(el);
   updateBuyLink(block);
-  return el;
+  return priceElement;
 }
 
 function renderRadioGroup(block) {

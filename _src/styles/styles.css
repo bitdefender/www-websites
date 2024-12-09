@@ -90,7 +90,7 @@
   /* body width */
   --body-max-width: 1920px;
   --body-padding: 20px;
-  --section-desktop-max-width: 1300px;
+  --section-desktop-max-width: 1290px;
   --section-desktop-padding: 20px;
   --section-large-desktop-max-width: 1332px;
   --section-large-desktop-padding: 50px;
@@ -448,11 +448,6 @@ main .section.wide h2 {
   font-weight: var(--font-weight-bold);
 }
 
-.centered img {
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
-
 main .section.table-align-top table {
   vertical-align: top;
 }
@@ -772,6 +767,11 @@ body.creators {
     margin: 0 auto;
   }
 
+  main .section.width-smallest .block, main .section.width-smallest .default-content-wrapper {
+    width: 640px;
+    margin: 0 auto;
+  }
+
   .creators .default-content-wrapper h2 {
     font: normal normal 300 60px/69px "IBM Plex Sans", sans-serif;
   }
@@ -1011,11 +1011,11 @@ p.info-button-container a.info-button.modal:hover {
 
 a.button::after, input[type="submit"]::after, main .section.link-right a::after {
   content: '';
-  width: 24px;
-  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-mask:url('/_src/icons/arrow-right.svg');
-  mask: url('/_src/icons/arrow-right.svg');
+  -webkit-mask:url('/_src/icons/arrow-right.svg') no-repeat;
+  mask: url('/_src/icons/arrow-right.svg') no-repeat;
   background-color: var(--button-link-color);
   display: inline-block;
   transition: all .2s cubic-bezier(.4,0,.2,1);
@@ -1079,7 +1079,6 @@ a.button.modal, a.button.central, main .section.link-right a {
   border: none;
   margin: 0;
   padding: 0;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -1123,8 +1122,19 @@ a.button.modal:hover::after, a.button.central:hover::after, main .section.link-r
   width: 100%;
 }
 
-/* linked pictures with video button overlay */
+main .section[data-backgroundcolor='black'] {
+  background-color: black;
+}
 
+main .section[data-textcolor='white'] * {
+  color: white;
+}
+
+main .section[data-hidebreadcrumb='yes'] .breadcrumb {
+  display: none;
+}
+
+/* linked pictures with video button overlay */
 main a.video-placeholder {
   position: relative;
   display: inline-block;
@@ -1516,6 +1526,7 @@ main .section.blue a.button.modal::after {
   letter-spacing: .8px;
   padding: 3px 7px 3px 8px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .tag-dark-blue {
@@ -1540,6 +1551,10 @@ main .section.blue a.button.modal::after {
 
 .centered {
   text-align: center;
+}
+
+.align-left {
+  text-align: left;
 }
 
 .icon-apple, .icon-android {
@@ -1592,6 +1607,33 @@ main .section.blue a.button.modal::after {
 
 .await-loader * {
   visibility: hidden;
+}
+
+
+.loader-circle {
+  width: 48px !important;
+  height: 48px !important;
+  border: 5px solid #006EFF !important;
+  border-bottom-color: transparent !important;
+  border-radius: 50% !important;
+  position: relative !important;
+  display: inline-block !important;
+  box-sizing: border-box !important;
+  animation: rotation 1s linear infinite !important;
+}
+
+.loader-circle * {
+  visibility: hidden !important;
+  display: none !important;
+}
+
+@keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
 }
 
 @media (min-width: 768px) {

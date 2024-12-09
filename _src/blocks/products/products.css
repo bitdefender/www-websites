@@ -56,7 +56,7 @@
 .product-card .price em {
   color: black;
   font-size: var(--body-font-size-xxs);
-  display: block;
+  display: inline-block;
   font-style: normal;
   line-height: 1.4em;
   font-weight: bold;
@@ -384,6 +384,10 @@
   right: 17px;
 }
 
+.product-card .price.nanoblock, .product-card .featured.nanoblock{
+  font-family: 'Arial', sans-serif;
+}
+
 @media (max-width: 480px) {
   .product-card a.button::after {
     top: calc(50% - 10px);
@@ -491,17 +495,20 @@
 }
 
 @media (min-width: 1200px) { /* desktop variation */
-  .products:not(.compact) .product-card img {
+  .products:not(.compact, .plans) .product-card img {
     display: inline;
     position: absolute;
-    object-position: -40px 22px;
-    object-fit: cover;
+    object-position: -10px center;
+    object-fit:fill;
     border-radius: 50%;
     width: 250px;
     height: 250px;
     top: -42px;
     right: -60px;
     border: 20px white solid;
+  }
+  .product-card .img-adjacent-text{
+    width: 74%;
   }
 }
 

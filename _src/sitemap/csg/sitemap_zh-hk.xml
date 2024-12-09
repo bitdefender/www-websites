@@ -2,6 +2,7 @@
 <urlset xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://www.bitdefender.com/zh-hk/</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/"/>
@@ -226,90 +227,112 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/footer</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/footer"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/footer"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/nav</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/nav"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/nav"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/accordion</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/accordion"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/accordion"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/awards-search</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/awards-search"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/awards-search"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/barchart</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/barchart"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/barchart"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/buttons</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/buttons"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/buttons"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/columns</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/columns"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/columns"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/embed</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/embed"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/embed"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/features</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/features"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/features"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/form</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/form"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/form"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/fragment-metadata</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/fragment-metadata"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/fragment-metadata"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/hero</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/hero"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/hero"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/image-columns</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/image-columns"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/image-columns"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/product-comparison-table</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/product-comparison-table"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/product-comparison-table"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/products</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/products"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/products"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/quote-carousel</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/quote-carousel"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/quote-carousel"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/section-metadata</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/section-metadata"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/section-metadata"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/stickynav</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/stickynav"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/stickynav"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/tabs</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/tabs"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/tabs"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/blocks/tags</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/blocks/tags"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/blocks/tags"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/sidekick/icons/standard-icons</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/sidekick/icons/standard-icons"/>
         <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/sidekick/icons/standard-icons"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/"/>
@@ -534,6 +557,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/404</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/404"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/404"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/404"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/404"/>
@@ -758,6 +782,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/antivirus</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/antivirus"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/antivirus"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/antivirus"/>
@@ -982,6 +1007,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/antivirus-for-mac</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/antivirus-for-mac"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/antivirus-for-mac"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/antivirus-for-mac"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/antivirus-for-mac"/>
@@ -1206,6 +1232,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/antivirus-free-for-android</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/antivirus-free-for-android"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/antivirus-free-for-android"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/antivirus-free-for-android"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/antivirus-free-for-android"/>
@@ -1430,6 +1457,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/awards</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/awards"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/awards"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/awards"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/awards"/>
@@ -1654,6 +1682,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/digital-identity-protection</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/digital-identity-protection"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/digital-identity-protection"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/digital-identity-protection"/>
         <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/solutions/digital-identity-protection"/>
@@ -1873,6 +1902,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/family-pack</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/family-pack"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/family-pack"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/family-pack"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/family-pack"/>
@@ -2097,6 +2127,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/footer</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/footer"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/footer"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/footer"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/footer"/>
@@ -2321,6 +2352,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/free-antivirus</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/free-antivirus"/>
@@ -2545,6 +2577,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/internet-security</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/internet-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/internet-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/internet-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/internet-security"/>
@@ -2769,6 +2802,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/mobile-security-android</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/mobile-security-android"/>
@@ -2993,6 +3027,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/mobile-security-ios</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/mobile-security-ios"/>
@@ -3217,6 +3252,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/nav</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/nav"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/nav"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/nav"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/nav"/>
@@ -3441,6 +3477,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/password-manager</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/password-manager"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/password-manager"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/password-manager"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/password-manager"/>
@@ -3665,6 +3702,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/premium-security</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/premium-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/premium-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/premium-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/premium-security"/>
@@ -3889,6 +3927,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/small-office-security</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/small-office-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/small-office-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/small-office-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/small-office-security"/>
@@ -4113,6 +4152,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/thank-you</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/thank-you"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/thank-you"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/thank-you"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/thank-you"/>
@@ -4337,6 +4377,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/total-security</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/total-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/total-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/total-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/total-security"/>
@@ -4561,6 +4602,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/trafficlight</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/trafficlight"/>
@@ -4784,6 +4826,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/virus-scanner-for-mac</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/virus-scanner-for-mac"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/virus-scanner-for-mac"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/virus-scanner-for-mac"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/virus-scanner-for-mac"/>
@@ -5007,6 +5050,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/zh-hk/solutions/vpn</loc>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/solutions/vpn"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/solutions/vpn"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/solutions/vpn"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/solutions/vpn"/>
