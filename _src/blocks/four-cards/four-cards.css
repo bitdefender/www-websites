@@ -258,7 +258,8 @@
   ul {
     li:not(:first-child) {
       position: relative;
-      &:before {
+
+      &::before {
         content: "";
         display: block;
         width: 1px;
@@ -292,7 +293,7 @@
   .four-cards-container.dotted-lines {
     ul {
       li:not(:first-child) {
-        &:before {
+        &::before {
           display: none;
         }
       }
@@ -312,15 +313,12 @@
     grid-gap: 14px;
   }
 
-  .four-cards-container.dotted-lines .four-cards > ul {
-    grid-gap: 30px;
-  }
-
   .four-cards-container.dotted-lines {
     ul {
       li:not(:first-child) {
         position: relative;
-        &:before {
+
+        &::before {
           content: "";
           display: block;
           width: 30px;
@@ -335,10 +333,14 @@
       }
     }
   }
-
+  
   .creator-cards .four-cards > ul {
     grid-template-columns: 300px 300px 300px;
     grid-gap: 14px;
+  }
+
+  .four-cards-container.dotted-lines .four-cards > ul {
+    grid-gap: 30px;
   }
 }
 

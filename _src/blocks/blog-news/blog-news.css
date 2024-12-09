@@ -33,10 +33,10 @@
 
 .blog-news .blog-card p {
     font-size: 1.2rem;
+    margin: 0;
     margin-bottom: 24px;
     font-weight: bold;
-    color: #000000;
-    margin: 0;
+    color: #000;
 }
 
 .blog-news .blog-card a {
@@ -53,9 +53,6 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-}
-
-.blog-news .blog-card .blog-card-content {
     text-align: left;
 }
 

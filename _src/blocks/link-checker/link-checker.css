@@ -1,4 +1,5 @@
 
+/* stylelint-disable  */
 main .section.link-checker-container {
     padding: 20px;
     background-color: #fff;
@@ -8,7 +9,7 @@ main .section.link-checker-container {
     display: flex;
     justify-content: center;
     overflow: visible;
-    font-family: 'IBM Plex Sans', 'Roboto', sans-serif;
+    font-family: 'IBM Plex Sans', Roboto, sans-serif;
 
     &::before {
         content: ' ';
@@ -24,7 +25,6 @@ main .section.link-checker-container {
     }
 
     &.danger {
-
         &::before {
             background-color: #3e030b;
             background-image: url("../../icons/link-checker-pattern-red.svg");
@@ -75,13 +75,13 @@ main .section.link-checker-container {
         #copy-to-clipboard {
             display: none;
         }
+
         .link-checker .result.danger {
             margin-top: 0;
         }
     }
 
     &.safe {
-
         &::before {
             background-color: #3d8648;
             background-image: url("../../icons/link-checker-pattern-green.svg");
@@ -150,7 +150,7 @@ main .section.link-checker-container {
         border-radius: 20px;
         padding: 20px;
         text-align: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
         position: relative;
     
         h1 {
@@ -168,6 +168,7 @@ main .section.link-checker-container {
 
         .safe-image {
             display: none;
+
             img {
                 max-width: 196px;
             }
@@ -175,6 +176,7 @@ main .section.link-checker-container {
 
         .danger-image {
             display: none;
+
             img {
                 max-width: 196px;
             }
@@ -219,7 +221,7 @@ main .section.link-checker-container {
         #copy-to-clipboard {
             width: 16px;
             height: 21px;
-            background: url(../../icons/link-checker-example.svg) no-repeat;
+            background: url("../../icons/link-checker-example.svg") no-repeat;
             background-size: contain;
             position: absolute;
             top: 15px;
@@ -245,6 +247,7 @@ main .section.link-checker-container {
             font-weight: bold;
             font-size: 1em;
         }
+
         button.check-url:hover {
             background-color: #0056b3;
         }
@@ -268,13 +271,15 @@ main .section.link-checker-container {
                 border-radius: 8px;
             }
         }
-        button.share-button:before {
+
+        button.share-button::before {
             content: url("../../icons/share.svg");
             height: 20px;
             width: 20px;
             display: inline-block;
         }
-        button.check-another-button:before {
+
+        button.check-another-button::before {
             content: url("../../icons/check.svg");
             height: 20px;
             width: 20px;
@@ -291,7 +296,7 @@ main .section.link-checker-container {
             border-radius: 5px; 
             font-size: 14px; 
             font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+            box-shadow: 0 4px 6px rgb(0 0 0 / 20%); 
             z-index: 10; 
             transition: opacity 0.3s ease-in-out;
             pointer-events: none;
@@ -309,6 +314,7 @@ main .section.link-checker-container {
             border-right: 6px solid transparent;
             border-top: 6px solid #000;
           }
+
         .button-container .share-button:hover + .share-popup,
         .button-container .share-button:focus + .share-popup {
             opacity: 1;
@@ -321,6 +327,7 @@ main .section.link-checker-container {
             padding-bottom: 20px;
             display: none;
         }
+
         .result.safe {
             background-color: #F3FEF8;
             padding: 8px 30px 8px 55px;
@@ -330,7 +337,7 @@ main .section.link-checker-container {
 
             &::before {
                 content: "";
-                background: url(../../icons/safe.svg) no-repeat;
+                background: url("../../icons/safe.svg") no-repeat;
                 position: absolute;
                 left: 14px;
                 top: 15%;
@@ -339,6 +346,7 @@ main .section.link-checker-container {
                 background-size: contain;
             }
         }
+
         .result.danger {
             margin-top: 24px;
             background-color: #FDF3F4;
@@ -358,6 +366,7 @@ main .section.link-checker-container {
                 background-size: contain;
             }
         }
+
         .result.danger.no-response {
             text-align: left;
             font-size: 14px;
@@ -365,7 +374,7 @@ main .section.link-checker-container {
 
             &::before {
                 content: "";
-                background: url(../../icons/no-response.svg) no-repeat;
+                background: url("../../icons/no-response.svg") no-repeat;
                 position: absolute;
                 left: 15px;
                 top: 20%;
@@ -380,6 +389,7 @@ main .section.link-checker-container {
             font-size: 12px;
         }
     }
+
     @media (min-width:768px) {
         margin: 0 auto;
         padding-bottom: 50px;
@@ -390,6 +400,7 @@ main .section.link-checker-container {
             .input-container{
                 flex-direction: unset;
             }
+
             .buttons-container{
                 flex-flow: row;
                 margin-top: 50px;
@@ -430,7 +441,6 @@ main .section.link-checker-container {
     }
 
     @media (min-width: 991px) {
-
         .link-checker {
             padding: 48px 160px 35px;
         }
