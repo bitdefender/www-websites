@@ -1079,7 +1079,6 @@ a.button.modal, a.button.central, main .section.link-right a {
   border: none;
   margin: 0;
   padding: 0;
-  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
 }
