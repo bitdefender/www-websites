@@ -341,7 +341,8 @@ async function loadEager(doc) {
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
 
-  await window.hlx.plugins.run('loadEager');
+  // TODO: if experiments stop working correctly please consider bringing this back:
+  // await window.hlx.plugins.run('loadEager');
 
   AdobeDataLayerService.push(await new PageLoadStartedEvent());
   await resolveNonProductsDataLayer();
