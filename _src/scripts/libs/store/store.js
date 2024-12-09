@@ -476,7 +476,10 @@ export class Product {
 		}
 
 		if (Store.config.provider === "vlaicu" && yearsOption.buyLink) {
-			option.buyLink = yearsOption.buyLink;
+			const buyLink = new URL(yearsOption.buyLink);
+			buyLink.searchParams.set("SHOPURL", `${window.location.origin}${window.location.pathname}`);
+			buyLink.searchParams.set("SRC", this.promotion !== Store.NO_PROMOTION ? this.promotion : "N/A");
+			option.buyLink = buyLink.href;
 
 			return option;
 		}
@@ -968,10 +971,14 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS_VLAICU[id.trim()], campaignId))?.product;
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS_VLAICU[id.trim()], campaignId);
+		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
 			return null;
 		}
+		const isReceivedPromotionValid = productInfoResponse.campaign &&
+			productInfoResponse.campaignType &&
+			productInfoResponse.campaignType === "def";
 
 		let payload = productInfo?.options;
 		if (!payload || !payload.length) {
@@ -982,6 +989,7 @@ class Vlaicu {
 			product_alias: id,
 			product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
 			product_name: productInfo.productName,
+			promotion: isReceivedPromotionValid ? productInfoResponse.campaign : campaignId, 
 			variations: {}
 		}
 
@@ -1011,7 +1019,9 @@ class Vlaicu {
 				currency_iso: productVariation.currency,
 				product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
 				platform_product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
-				promotion: campaignId,
+				promotion: isReceivedPromotionValid ?
+					productInfoResponse.campaign :
+					campaignId,
 				price: productVariation.price,
 				buyLink: productVariation.buyLink,
 				variation: {
@@ -1240,8 +1250,8 @@ export class Store {
 				}
 
 				return {
-					...product,
-					...productInfo
+					...productInfo,
+					...product
 				}
 			} catch (error) {
 				return null;

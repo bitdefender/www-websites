@@ -18,7 +18,7 @@ export const Constants = {
 		av: "com.bitdefender.cl.av",
 		is: "com.bitdefender.cl.is",
 		tsmd: "com.bitdefender.cl.tsmd",
-		fp: "com.bitdefender.fp",
+		fp: ['nl-nl', 'nl-be'].includes(Page.locale) ? "com.bitdefender.fp" : "com.bitdefender.cl.fp",
 		ps: "com.bitdefender.premiumsecurity",
 		psm: "com.bitdefender.premiumsecurity",
 		psp: "com.bitdefender.premiumsecurityplus",
