@@ -277,12 +277,13 @@ function renderLowestPrice(...params) {
  * @returns Root node of the nanoblock
  */
 function renderPriceCondition(text) {
+  const updatedText = text.replace('BilledPrice', '<em data-store-price="discounted||full" class="await-loader"></em>');
   return createTag(
     'div',
     {
       class: 'price condition',
     },
-    `<em>${text}</em>`,
+    `<em>${updatedText}</em>`,
   );
 }
 
