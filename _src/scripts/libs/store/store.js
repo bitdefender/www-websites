@@ -1034,7 +1034,6 @@ export class Store {
 		ch: "de",
 		at: "de",
 		us: "us",
-		us: "us",
 		mx: "en",
 		nz: "au",
 	}
