@@ -23,7 +23,10 @@ export const monthlyProducts = {
 	"us_pf_m": "us_pf_m",
 	"us_pi_m": "us_pi_m",
 	"us_pie_m": "us_pie_m",
-	"us_pfe_m": "us_pfe_m"
+	"us_pfe_m": "us_pfe_m",
+	"secpassm": "secpassm",
+	"vbsm": "vbsm",
+	"scm": "scm",
 }
 
 export const loadScript = (baseUrl, url) => {
@@ -491,6 +494,7 @@ export class Product {
 		if (windowURL.searchParams.has("channel")) {
 			zuoraCart.searchParams.set("channel", windowURL.searchParams.get("channel"));
 		}
+
 		zuoraCart.searchParams.set("product_id", this.productId);
 		zuoraCart.searchParams.set("payment_period", monthlyProducts[this.id] ? `${devices}d1m` : `${devices}d${years}y`);
 		zuoraCart.searchParams.set("country", "NL");
@@ -753,15 +757,10 @@ export class Product {
 class BitCheckout {
 	static cachedZuoraConfig = null;
 	static async fetchZuoraConfig() {
-		// If cached data exists, return it directly
-		if (this.cachedZuoraConfig) {
-			return this.cachedZuoraConfig;
-		}
-
 		const defaultJsonFilePath = '/zuoraconfig.json';
 		const jsonFilePath = window.location.hostname === 'www.bitdefender.com'
-			? `https://${window.location.hostname}/pages/zuoraconfig.json`
-			: defaultJsonFilePath;
+		? `https://${window.location.hostname}/pages/zuoraconfig.json`
+		: defaultJsonFilePath;
 
 		try {
 			const response = await fetch(jsonFilePath);
@@ -778,10 +777,9 @@ class BitCheckout {
 			CAMPAIGN_MONTHLY_PRODS: [],
 			};
 
-			// build zuoraConfigData
-			data.forEach((item) => {
+			data.forEach(item => {
 			if (item.ZUORA_PRODS) {
-				const [key, value] = item.ZUORA_PRODS.split(':').map((itm) => itm.trim());
+				const [key, value] = item.ZUORA_PRODS.split(':').map(s => s.trim());
 				const clearKey = key.replace('*', '');
 				zuoraConfigData.CAMPAIGN_PRODS[clearKey] = value;
 
@@ -791,9 +789,6 @@ class BitCheckout {
 			}
 			});
 
-			// Cache the fetched data
-			this.cachedZuoraConfig = zuoraConfigData;
-
 			return zuoraConfigData;
 		} catch (error) {
 			console.error(`Error fetching Zuora config: ${error.message}`);
@@ -801,13 +796,14 @@ class BitCheckout {
 		}
 	}
 
-	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m",
+
+	static monthlyProducts2 = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "secpassm", "dipm", "us_i_m",
 		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
 
 	// this products come with device_no set differently from the init-selector api where they are set to 1
 	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
 
-	static productId = {
+	static productId2 = {
 		av: "com.bitdefender.cl.av",
 		is: "com.bitdefender.cl.is",
 		tsmd: "com.bitdefender.cl.tsmd",
@@ -824,6 +820,8 @@ class BitCheckout {
 		passm: "com.bitdefender.passwordmanager",
 		pass_sp: "com.bitdefender.passwordmanager",
 		pass_spm: "com.bitdefender.passwordmanager",
+		secpass: 'com.bitdefender.securepass',
+    	secpassm: 'com.bitdefender.securepass',
 		bms: "com.bitdefender.bms",
 		mobile: "com.bitdefender.bms",
 		ios: "com.bitdefender.iosprotection",
@@ -854,7 +852,7 @@ class BitCheckout {
 		pass: "Bitdefender Password Manager",
 		pass_sp: "Bitdefender Password Manager Shared Plan",
 		passm: "Bitdefender Password Manager",
-		pass_spm: "Bitdefender Password Manager Shared Plan"
+		pass_spm: "Bitdefender Password Manager Shared Plan",
 	}
 
 	static getKey() {
@@ -923,7 +921,7 @@ class BitCheckout {
 			CAMPAIGN_MONTHLY_PRODS: monthlyProducts,
 			CAMPAIGN_NAME: campaign,
 			CAMPAIGN_PRODS: productId,
-		} = fetchedData;
+		  } = fetchedData;
 
 		let payload = (await this.getProductVariations(productId[id], campaign))?.payload;
 
@@ -988,7 +986,7 @@ class BitCheckout {
 					currency_label: "€",
 					product_id: productId[id],
 					platform_product_id: productId[id],
-					promotion: campaignId,
+					promotion: campaign,
 					region_id: 22,
 					platform_id: 16,
 					price: devices.price,
@@ -1019,7 +1017,6 @@ class BitCheckout {
 
 		const fetchedData = await this.fetchZuoraConfig();
       	if (campaign) fetchedData.CAMPAIGN_NAME = campaign;
-
 		return await this.getProductVariationsPrice(id, fetchedData);
 	}
 }
@@ -1081,7 +1078,7 @@ export class Store {
 		gb: "uk",
 		ch: "de",
 		at: "de",
-		us: "en",
+		us: "us",
 		mx: "en",
 		nz: "au",
 	}
