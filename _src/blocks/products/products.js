@@ -415,12 +415,14 @@ export default function decorate(block) {
         option.addEventListener('click', () => {
           if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
             const textTemplate = dynamicPriceTexts[idx] || '';
+            // in order to preserve the store eventListeners we can't replace the priceElement
+            // every time another option is selected therefore we're using a string template
             if (textTemplate.includes('{BilledPrice}')) {
               const [before, after] = textTemplate.split('{BilledPrice}');
               const nodesToRemove = Array.from(priceConditionEl.childNodes).filter(
                 (node) => node.nodeType === Node.TEXT_NODE,
               );
-              // Clear only non-<em> text nodes
+              // Clear only non-<em> text nodes (this element contains store events)
               nodesToRemove.forEach((node) => priceConditionEl.removeChild(node));
               // eslint-disable-next-line max-len
               if (before) priceConditionEl.insertBefore(document.createTextNode(before), priceConditionEl.firstChild);
