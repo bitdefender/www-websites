@@ -751,6 +751,55 @@ export class Product {
 }
 
 class BitCheckout {
+	static cachedZuoraConfig = null;
+	static async fetchZuoraConfig() {
+		// If cached data exists, return it directly
+		if (this.cachedZuoraConfig) {
+			return this.cachedZuoraConfig;
+		}
+
+		const defaultJsonFilePath = '/zuoraconfig.json';
+		const jsonFilePath = window.location.hostname === 'www.bitdefender.com'
+			? `https://${window.location.hostname}/pages/zuoraconfig.json`
+			: defaultJsonFilePath;
+
+		try {
+			const response = await fetch(jsonFilePath);
+
+			if (!response.ok) {
+			console.error(`Failed to fetch data. Status: ${response.status}`);
+			return {};
+			}
+
+			const { data = [] } = await response.json();
+			const zuoraConfigData = {
+			CAMPAIGN_NAME: data[0]?.CAMPAIGN_NAME || '',
+			CAMPAIGN_PRODS: {},
+			CAMPAIGN_MONTHLY_PRODS: [],
+			};
+
+			// build zuoraConfigData
+			data.forEach((item) => {
+			if (item.ZUORA_PRODS) {
+				const [key, value] = item.ZUORA_PRODS.split(':').map((itm) => itm.trim());
+				const clearKey = key.replace('*', '');
+				zuoraConfigData.CAMPAIGN_PRODS[clearKey] = value;
+
+				if (key.includes('*')) {
+				zuoraConfigData.CAMPAIGN_MONTHLY_PRODS.push(clearKey);
+				}
+			}
+			});
+
+			// Cache the fetched data
+			this.cachedZuoraConfig = zuoraConfigData;
+
+			return zuoraConfigData;
+		} catch (error) {
+			console.error(`Error fetching Zuora config: ${error.message}`);
+			return {};
+		}
+	}
 
 	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m",
 		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
@@ -869,8 +918,14 @@ class BitCheckout {
 		}
 	}
 
-	static async getProductVariationsPrice(id, campaignId) {
-		let payload = (await this.getProductVariations(this.productId[id], campaignId))?.payload;
+	static async getProductVariationsPrice(id, fetchedData) {
+		const {
+			CAMPAIGN_MONTHLY_PRODS: monthlyProducts,
+			CAMPAIGN_NAME: campaign,
+			CAMPAIGN_PRODS: productId,
+		} = fetchedData;
+
+		let payload = (await this.getProductVariations(productId[id], campaign))?.payload;
 
 		if (!payload || payload.length === 0) {
 			return null
@@ -887,7 +942,7 @@ class BitCheckout {
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: this.productId[id],
+			product_id: productId[id],
 			product_name: payload[0].name,
 			variations: {}
 		}
@@ -914,11 +969,11 @@ class BitCheckout {
 					billingPeriod = 10;
 			}
 
-			if (this.monthlyProducts.indexOf(id) === -1 && billingPeriod === 0 || this.monthlyProducts.indexOf(id) !== -1 && billingPeriod !== 0) {
+			if (monthlyProducts.indexOf(id) === -1 && billingPeriod === 0 || monthlyProducts.indexOf(id) !== -1 && billingPeriod !== 0) {
 				return;
 			}
 
-			if (this.monthlyProducts.indexOf(id) !== -1) {
+			if (monthlyProducts.indexOf(id) !== -1) {
 				billingPeriod = 1;
 			}
 
@@ -931,8 +986,8 @@ class BitCheckout {
 				const devicesObj = {
 					currency_iso: devices.currency,
 					currency_label: "€",
-					product_id: this.productId[id],
-					platform_product_id: this.productId[id],
+					product_id: productId[id],
+					platform_product_id: productId[id],
 					promotion: campaignId,
 					region_id: 22,
 					platform_id: 16,
@@ -961,7 +1016,11 @@ class BitCheckout {
 	static async loadProduct(id, campaign) {
 		window.StoreProducts = window.StoreProducts || [];
 		window.StoreProducts.product = window.StoreProducts.product || {}
-		return await this.getProductVariationsPrice(id, campaign);
+
+		const fetchedData = await this.fetchZuoraConfig();
+      	if (campaign) fetchedData.CAMPAIGN_NAME = campaign;
+
+		return await this.getProductVariationsPrice(id, fetchedData);
 	}
 }
 
