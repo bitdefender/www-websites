@@ -1,3 +1,4 @@
+import { Constants } from '../../scripts/libs/constants.js';
 import {
   createNanoBlock,
   renderNanoBlocks,
@@ -44,7 +45,7 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters['data-store-click-set-product'] = '';
       liStoreParameters['data-store-product-id'] = productCode;
       liStoreParameters['data-store-department'] = 'consumer';
-      liStoreParameters['data-product-type'] = productCode.slice(-1) === 'm' ? 'monthly' : 'yearly';
+      liStoreParameters['data-product-type'] = Constants.MONTHLY_PRODUCTS.includes(productCode) ? 'monthly' : 'yearly';
       liStoreParameters['data-store-product-option'] = variation;
     }
 

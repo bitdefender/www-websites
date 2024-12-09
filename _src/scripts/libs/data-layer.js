@@ -70,16 +70,6 @@ export class PageLoadStartedEvent {
   }
 
   /**
-   * 
-   * @param {string} param -> the parameter to be searched in the URL 
-   * @returns {string} -> value of the parameter
-   */
-  #getParamValue(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-  }
-
-  /**
   * get experiment details from Target
   * @returns {Promise<{
   *  experimentId: string;
@@ -193,7 +183,7 @@ export class PageLoadStartedEvent {
         subSubSubSection: pageSectionData.subSubSubSection,
         destinationURL: window.location.href,
         queryString: window.location.search,
-        referringURL: this.#getParamValue('adobe_mc_ref') || this.#getParamValue('ref') || document.referrer || '',
+        referringURL: Page.getParamValue('adobe_mc_ref') || Page.getParamValue('ref') || document.referrer || '',
         serverName: 'hlx.live', // indicator for AEM Success Edge
         language: pageSectionData.locale,
         sysEnv: UserAgent.os,
@@ -201,9 +191,9 @@ export class PageLoadStartedEvent {
           { experimentDetails: pageSectionData.experimentDetails }),
       },
       attributes: {
-        promotionID: this.#getParamValue('pid') || '',
-        internalPromotionID: this.#getParamValue('icid') || '',
-        trackingID: this.#getParamValue('cid') || '',
+        promotionID: Page.getParamValue('pid') || '',
+        internalPromotionID: Page.getParamValue('icid') || '',
+        trackingID: Page.getParamValue('cid') || '',
         time: this.#getCurrentTime(),
         date: this.#getCurrentDate(),
         domain: pageSectionData.domain,
