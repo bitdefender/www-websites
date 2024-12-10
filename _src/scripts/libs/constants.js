@@ -63,6 +63,7 @@ export const Constants = {
 		us_pie_m: 'com.bitdefender.ultimatesecurityplusus.v2',
 		us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
 		us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
+		secpass: 'com.bitdefender.securepass'
   },
 
   PRODUCT_ID_MAPPINGS_VLAICU: {

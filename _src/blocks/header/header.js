@@ -580,7 +580,7 @@ async function runDefaultHeaderLogic(block) {
 
       await Promise.allSettled(loadedLinks);
       contentDiv.style.display = 'block';
-      document.querySelector('body > div:first-child').classList.add('header-with-language-banner');
+      nav.classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
       loginFunctionality(shadowRoot);
