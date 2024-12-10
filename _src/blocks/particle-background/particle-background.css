@@ -18,7 +18,7 @@
 .we-container {
     margin: 0 auto;
     padding: 0 20px;
-    max-width: 1290px;
+    max-width: 1330px;
     position: relative;
 }
 
@@ -54,18 +54,9 @@
   }
 }
 
-@media (min-width: 991px) { /* mobile/tablet */
-    .particle-background-container.we-container {
-      max-width: 1300px;
-      padding-left: 50px;
-      padding-right: 50px;
-    }
-}
-
 @media (min-width: 1200px) {
   .particle-background-container.we-container {
-    max-width: 1290px;
-    padding-left: 20px;
-    padding-right: 20px;
+    max-width: 1330px;
+    padding: 0 20px;
   }
 }

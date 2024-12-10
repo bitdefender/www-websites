@@ -763,9 +763,58 @@ export class Product {
 }
 
 class BitCheckout {
+	static cachedZuoraConfig = this.#fetchZuoraConfig();
+	
+	static async #fetchZuoraConfig() {
+		const defaultJsonFilePath = '/zuoraconfig.json';
+		const jsonFilePath = window.location.hostname === 'www.bitdefender.com'
+		? `https://${window.location.hostname}/pages/zuoraconfig.json`
+		: defaultJsonFilePath;
+
+		try {
+			const response = await fetch(jsonFilePath);
+
+			if (!response.ok) {
+				console.error(`Failed to fetch data. Status: ${response.status}`);
+				return {};
+			}
+
+			const { data = [] } = await response.json();
+			const zuoraConfigData = {
+				CAMPAIGN_NAME: data[0]?.CAMPAIGN_NAME || '',
+				CAMPAIGN_PRODS: {},
+				CAMPAIGN_MONTHLY_PRODS: [],
+			};
+
+			data.forEach(item => {
+				if (item.ZUORA_PRODS) {
+					const [key, value] = item.ZUORA_PRODS.split(':').map(s => s.trim());
+					const clearKey = key.replace('*', '');
+					zuoraConfigData.CAMPAIGN_PRODS[clearKey] = value;
+
+					if (key.includes('*')) {
+					zuoraConfigData.CAMPAIGN_MONTHLY_PRODS.push(clearKey);
+					}
+				}
+			});
+
+			cachedZuoraConfig = zuoraConfigData;
+			return zuoraConfigData;
+		} catch (error) {
+			console.error(`Error fetching Zuora config: ${error.message}`);
+			return {};
+		}
+	}
 
 	// this products come with device_no set differently from the init-selector api where they are set to 1
 	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
+
+	static names = {
+		pass: "Bitdefender Password Manager",
+		pass_sp: "Bitdefender Password Manager Shared Plan",
+		passm: "Bitdefender Password Manager",
+		pass_spm: "Bitdefender Password Manager Shared Plan",
+	}
 
 	static getKey() {
 		const hostname = window.location.hostname;
@@ -828,8 +877,14 @@ class BitCheckout {
 		}
 	}
 
-	static async getProductVariationsPrice(id, campaignId) {
-		let payload = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId))?.payload;
+	static async getProductVariationsPrice(id, fetchedData) {
+		const {
+			CAMPAIGN_MONTHLY_PRODS: monthlyProducts,
+			CAMPAIGN_NAME: campaign,
+			CAMPAIGN_PRODS: productId,
+		} = fetchedData;
+
+		let payload = (await this.getProductVariations(productId[id], campaign))?.payload;
 
 		if (!payload || payload.length === 0) {
 			return null
@@ -846,7 +901,7 @@ class BitCheckout {
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+			product_id: productId[id],
 			product_name: payload[0].name,
 			variations: {}
 		}
@@ -873,11 +928,11 @@ class BitCheckout {
 					billingPeriod = 10;
 			}
 
-			if (Constants.MONTHLY_PRODUCTS.indexOf(id) === -1 && billingPeriod === 0 || Constants.MONTHLY_PRODUCTS.indexOf(id) !== -1 && billingPeriod !== 0) {
+			if (monthlyProducts.indexOf(id) === -1 && billingPeriod === 0 || monthlyProducts.indexOf(id) !== -1 && billingPeriod !== 0) {
 				return;
 			}
 
-			if (Constants.MONTHLY_PRODUCTS.indexOf(id) !== -1) {
+			if (monthlyProducts.indexOf(id) !== -1) {
 				billingPeriod = 1;
 			}
 
@@ -889,9 +944,9 @@ class BitCheckout {
 				}
 				const devicesObj = {
 					currency_iso: devices.currency,
-					product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-					platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-					promotion: campaignId,
+					product_id: productId[id],
+					platform_product_id: productId[id],
+					promotion: campaign,
 					price: devices.price,
 					variation: {
 						variation_name: `${devices_no}u-${billingPeriod}y`,
@@ -917,7 +972,10 @@ class BitCheckout {
 	static async loadProduct(id, campaign) {
 		window.StoreProducts = window.StoreProducts || [];
 		window.StoreProducts.product = window.StoreProducts.product || {}
-		return await this.getProductVariationsPrice(id, campaign);
+
+		const fetchedData = await this.cachedZuoraConfig;
+      	if (campaign) fetchedData.CAMPAIGN_NAME = campaign;
+		return await this.getProductVariationsPrice(id, fetchedData);
 	}
 }
 
@@ -1109,16 +1167,13 @@ class StoreConfig {
 			return Store.NO_PROMOTION;
 		}
 
-		const jsonFilePath = "https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json";
-
-		const resp = await fetch(jsonFilePath);
-		if (!resp.ok) {
-			console.error(`Failed to fetch data. Status: ${resp.status}`);
+		const fetchedData = await BitCheckout.cachedZuoraConfig;
+		if (!Object.keys(fetchedData).length) {
+			console.error(`Failed to fetch data.`);
 			return "";
 		}
-		const data = await resp.json();
 
-		return data.data[0].CAMPAIGN_NAME;
+		return fetchedData.CAMPAIGN_NAME;
 	}
 
 	/**
