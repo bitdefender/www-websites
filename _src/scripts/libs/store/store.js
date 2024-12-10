@@ -798,7 +798,7 @@ class BitCheckout {
 				}
 			});
 
-			cachedZuoraConfig = zuoraConfigData;
+			this.cachedZuoraConfig = zuoraConfigData;
 			return zuoraConfigData;
 		} catch (error) {
 			console.error(`Error fetching Zuora config: ${error.message}`);
