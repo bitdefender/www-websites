@@ -755,57 +755,49 @@ export class Product {
 }
 
 class BitCheckout {
+	static cachedZuoraConfig = null;
+	static async fetchZuoraConfig() {
+		const defaultJsonFilePath = '/zuoraconfig.json';
+		const jsonFilePath = window.location.hostname === 'www.bitdefender.com'
+		? `https://${window.location.hostname}/pages/zuoraconfig.json`
+		: defaultJsonFilePath;
 
-	static monthlyProducts = ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "secpassm", "dipm", "us_i_m",
-		"us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m"]
+		try {
+			const response = await fetch(jsonFilePath);
+
+			if (!response.ok) {
+			console.error(`Failed to fetch data. Status: ${response.status}`);
+			return {};
+			}
+
+			const { data = [] } = await response.json();
+			const zuoraConfigData = {
+			CAMPAIGN_NAME: data[0]?.CAMPAIGN_NAME || '',
+			CAMPAIGN_PRODS: {},
+			CAMPAIGN_MONTHLY_PRODS: [],
+			};
+
+			data.forEach(item => {
+			if (item.ZUORA_PRODS) {
+				const [key, value] = item.ZUORA_PRODS.split(':').map(s => s.trim());
+				const clearKey = key.replace('*', '');
+				zuoraConfigData.CAMPAIGN_PRODS[clearKey] = value;
+
+				if (key.includes('*')) {
+				zuoraConfigData.CAMPAIGN_MONTHLY_PRODS.push(clearKey);
+				}
+			}
+			});
+
+			return zuoraConfigData;
+		} catch (error) {
+			console.error(`Error fetching Zuora config: ${error.message}`);
+			return {};
+		}
+	}
 
 	// this products come with device_no set differently from the init-selector api where they are set to 1
 	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
-
-	static productId = {
-		av: "com.bitdefender.cl.av",
-		is: "com.bitdefender.cl.is",
-		tsmd: "com.bitdefender.cl.tsmd",
-		fp: "com.bitdefender.fp",
-		ps: "com.bitdefender.premiumsecurity",
-		psm: "com.bitdefender.premiumsecurity",
-		psp: "com.bitdefender.premiumsecurityplus",
-		pspm: "com.bitdefender.premiumsecurityplus",
-		soho: "com.bitdefender.soho",
-		mac: "com.bitdefender.avformac",
-		vpn: "com.bitdefender.vpn",
-		"vpn-monthly": "com.bitdefender.vpn",
-		pass: "com.bitdefender.passwordmanager",
-		passm: "com.bitdefender.passwordmanager",
-		pass_sp: "com.bitdefender.passwordmanager",
-		pass_spm: "com.bitdefender.passwordmanager",
-		secpass: 'com.bitdefender.securepass',
-    	secpassm: 'com.bitdefender.securepass',
-		bms: "com.bitdefender.bms",
-		mobile: "com.bitdefender.bms",
-		ios: "com.bitdefender.iosprotection",
-		mobileios: "com.bitdefender.iosprotection",
-		dip: "com.bitdefender.dataprivacy",
-		dipm: "com.bitdefender.dataprivacy",
-		avpm: 'com.bitdefender.cl.avplus.v2',
-		// DLP
-		ts_i: 'com.bitdefender.tsmd.v2',
-		ts_f: 'com.bitdefender.tsmd.v2',
-		ps_i: 'com.bitdefender.premiumsecurity.v2',
-		ps_f: 'com.bitdefender.premiumsecurity.v2',
-		us_i: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_i_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_f: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_f_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pf: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pf_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pi: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pi_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pie: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pie_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-	}
 
 	static names = {
 		pass: "Bitdefender Password Manager",
@@ -875,8 +867,14 @@ class BitCheckout {
 		}
 	}
 
-	static async getProductVariationsPrice(id, campaignId) {
-		let payload = (await this.getProductVariations(this.productId[id], campaignId))?.payload;
+	static async getProductVariationsPrice(id, fetchedData) {
+		const {
+			CAMPAIGN_MONTHLY_PRODS: monthlyProducts,
+			CAMPAIGN_NAME: campaign,
+			CAMPAIGN_PRODS: productId,
+		  } = fetchedData;
+
+		let payload = (await this.getProductVariations(productId[id], campaign))?.payload;
 
 		if (!payload || payload.length === 0) {
 			return null
@@ -893,7 +891,7 @@ class BitCheckout {
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: this.productId[id],
+			product_id: productId[id],
 			product_name: payload[0].name,
 			variations: {}
 		}
@@ -920,11 +918,11 @@ class BitCheckout {
 					billingPeriod = 10;
 			}
 
-			if (this.monthlyProducts.indexOf(id) === -1 && billingPeriod === 0 || this.monthlyProducts.indexOf(id) !== -1 && billingPeriod !== 0) {
+			if (monthlyProducts.indexOf(id) === -1 && billingPeriod === 0 || monthlyProducts.indexOf(id) !== -1 && billingPeriod !== 0) {
 				return;
 			}
 
-			if (this.monthlyProducts.indexOf(id) !== -1) {
+			if (monthlyProducts.indexOf(id) !== -1) {
 				billingPeriod = 1;
 			}
 
@@ -937,9 +935,9 @@ class BitCheckout {
 				const devicesObj = {
 					currency_iso: devices.currency,
 					currency_label: "€",
-					product_id: this.productId[id],
-					platform_product_id: this.productId[id],
-					promotion: campaignId,
+					product_id: productId[id],
+					platform_product_id: productId[id],
+					promotion: campaign,
 					region_id: 22,
 					platform_id: 16,
 					price: devices.price,
@@ -967,7 +965,10 @@ class BitCheckout {
 	static async loadProduct(id, campaign) {
 		window.StoreProducts = window.StoreProducts || [];
 		window.StoreProducts.product = window.StoreProducts.product || {}
-		return await this.getProductVariationsPrice(id, campaign);
+
+		const fetchedData = await this.fetchZuoraConfig();
+      	if (campaign) fetchedData.CAMPAIGN_NAME = campaign;
+		return await this.getProductVariationsPrice(id, fetchedData);
 	}
 }
 
