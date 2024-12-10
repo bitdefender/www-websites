@@ -1138,7 +1138,8 @@ class StoreConfig {
 	 * @returns {"init"|"zuora"|"vlaicu"} the prices provider to be used
 	 */
 	#getProvider(vlaicuFlag) {
-		if (vlaicuFlag) {
+		// TODO: please remove the locale check when we start using only Vlaicu
+		if (vlaicuFlag || Page.locale === "ro-ro") {
 			return "vlaicu";
 		}
 
