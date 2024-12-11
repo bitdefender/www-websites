@@ -477,7 +477,7 @@ export class Product {
 		if (Store.config.provider === "vlaicu" && yearsOption.buyLink) {
 			const buyLink = new URL(yearsOption.buyLink);
 			buyLink.searchParams.set("SHOPURL", `${window.location.origin}${window.location.pathname}`);
-			buyLink.searchParams.set("SRC", this.promotion !== Store.NO_PROMOTION ? this.promotion : "N/A");
+			buyLink.searchParams.set("SRC", this.promotion && this.promotion !== Store.NO_PROMOTION ? this.promotion : "N/A");
 			option.buyLink = buyLink.href;
 
 			return option;
@@ -994,7 +994,7 @@ class Vlaicu {
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+		let productPath = campaign && campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
@@ -1165,13 +1165,13 @@ class StoreConfig {
 		}
 
 		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
-			return Store.NO_PROMOTION;
+			return "";
 		}
 
 		const fetchedData = await BitCheckout.fetchZuoraConfig();
 		if (!Object.keys(fetchedData).length) {
 			console.error(`Failed to fetch data.`);
-			return Store.NO_PROMOTION;
+			return "";
 		}
 
 		return fetchedData.CAMPAIGN_NAME;
