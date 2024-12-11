@@ -1173,7 +1173,7 @@ class StoreConfig {
 		const fetchedData = await BitCheckout.cachedZuoraConfig;
 		if (!Object.keys(fetchedData).length) {
 			console.error(`Failed to fetch data.`);
-			return "";
+			return Store.NO_PROMOTION;
 		}
 
 		return fetchedData.CAMPAIGN_NAME;
