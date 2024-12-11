@@ -764,19 +764,19 @@ export class Product {
 }
 
 class BitCheckout {
-	static cachedZuoraConfig = this.#fetchZuoraConfig();
+	static #cachedZuoraConfig = null;
 	
-	static async #fetchZuoraConfig() {
-		const defaultJsonFilePath = '/zuoraconfig.json';
-		const jsonFilePath = window.location.hostname === 'www.bitdefender.com'
-		? `https://${window.location.hostname}/pages/zuoraconfig.json`
-		: defaultJsonFilePath;
+	static async fetchZuoraConfig() {
+		if (this.#cachedZuoraConfig) {
+			return this.#cachedZuoraConfig
+		}
 
 		try {
-			const response = await fetch(jsonFilePath);
+			const response = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/nl-nl/consumer/zuoraconfig.json`);
 
 			if (!response.ok) {
 				console.error(`Failed to fetch data. Status: ${response.status}`);
+				this.#cachedZuoraConfig = {};
 				return {};
 			}
 
@@ -799,10 +799,11 @@ class BitCheckout {
 				}
 			});
 
-			this.cachedZuoraConfig = zuoraConfigData;
+			this.#cachedZuoraConfig = zuoraConfigData;
 			return zuoraConfigData;
 		} catch (error) {
 			console.error(`Error fetching Zuora config: ${error.message}`);
+			this.#cachedZuoraConfig = {};
 			return {};
 		}
 	}
@@ -974,7 +975,7 @@ class BitCheckout {
 		window.StoreProducts = window.StoreProducts || [];
 		window.StoreProducts.product = window.StoreProducts.product || {}
 
-		const fetchedData = await this.cachedZuoraConfig;
+		const fetchedData = await this.fetchZuoraConfig();
       	if (campaign) fetchedData.CAMPAIGN_NAME = campaign;
 		return await this.getProductVariationsPrice(id, fetchedData);
 	}
@@ -1170,10 +1171,10 @@ class StoreConfig {
 			return Store.NO_PROMOTION;
 		}
 
-		const fetchedData = await BitCheckout.cachedZuoraConfig;
+		const fetchedData = await BitCheckout.fetchZuoraConfig();
 		if (!Object.keys(fetchedData).length) {
 			console.error(`Failed to fetch data.`);
-			return "";
+			return Store.NO_PROMOTION;
 		}
 
 		return fetchedData.CAMPAIGN_NAME;
