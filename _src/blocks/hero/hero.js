@@ -4,6 +4,7 @@ import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
+  getBrowserName,
 } from '../../scripts/utils/utils.js';
 
 /**
@@ -91,6 +92,7 @@ export default function decorate(block) {
     stopAutomaticModalRefresh,
     signature,
     percentProduct,
+    firefoxUrl,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -137,5 +139,9 @@ export default function decorate(block) {
   // for the free antivirus page
   if (block.querySelector('.button-container a[href*="/consumer/thank-you"]')) {
     block.querySelector('.button-container a[href*="/consumer/thank-you"]').classList.add('await-loader');
+  }
+
+  if (firefoxUrl && getBrowserName() === 'Firefox') {
+    block.querySelector('a').href = firefoxUrl;
   }
 }
