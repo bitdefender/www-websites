@@ -18,6 +18,16 @@ export default class Page {
   static locale;
 
   /**
+   * @type {string} - 'consumer', 'total-security'
+   */
+  static pageName;
+
+  /**
+   * @type {object} - {theme: 'dark', key: 'value'}
+   */
+  static queryParams;
+
+  /**
    * @type {'dev' | 'stage' | 'prod'}
    */
   static environment
@@ -31,6 +41,10 @@ export default class Page {
     this.langauge = this.locale.split('-')[0];
 
     this.environment = this.#getEnvironment();
+
+    this.pageName = window.location.pathname.split('/').filter(Boolean).pop();
+
+    this.queryParams = this.#getQueryParams();
   }
 
   static #getLocale() {
@@ -58,5 +72,21 @@ export default class Page {
       return 'prod';
     }
     return 'dev';
+  }
+
+  /**
+  * Returns the environment name based on the hostname
+  * @returns {object}
+  */
+  static #getQueryParams() {
+    return new URLSearchParams(window.location.search);
+  }
+
+  /**
+   * Returns the value of the respective key from the query params
+   * @param {string} key
+   */
+  static getParamValue(key) {
+    return this.queryParams[key];
   }
 }

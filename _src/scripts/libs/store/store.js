@@ -274,11 +274,9 @@ export class Product {
 		this.name = product.product_name;
 		this.options = product.variations;
 		this.department = product.department;
-		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : null);
+		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : '');
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
-		this.symbol = option.currency_label;
-		this.regionId = option.region_id;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
 		this.yearDevicesMapping = Object.entries(this.options).reduce((acc, [deviceKey, values]) => {
 			Object.keys(values).forEach(yearKey => {
@@ -292,6 +290,22 @@ export class Product {
 
 			return acc;
 		}, {});
+
+		// TODO: remove this if after finishing Vlaicu migration. It is used because in init selector the variation
+		// is wrongly placed as 1-1 instead of 4-1 as it should be for 'pass_sp' and 'pass_spm'
+		// for 'vpn' in init selector it was 10-1 which also needs to be changed
+		if (Store.config.provider === 'vlaicu'
+			&& Object.keys(Constants.WRONG_DEVICES_PRODUCT_IDS).includes(product.product_alias)) {
+			const contentDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].contentDevices;
+			const providerDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].providerDevices
+
+			this.options[contentDevices] = this.options[providerDevices];
+			if (!this.yearDevicesMapping[contentDevices]) {
+				this.yearDevicesMapping[contentDevices] = [providerDevices]
+			} else {
+				this.yearDevicesMapping[contentDevices].push(providerDevices);
+			}	
+		}
 	}
 
 	/**
@@ -308,13 +322,6 @@ export class Product {
 	 */
 	getProductId() {
 		return this.productId;
-	}
-
-	/**
-	 * @returns {string}
-	 */
-	getRegionId() {
-		return this.regionId;
 	}
 
 	/**
@@ -347,14 +354,6 @@ export class Product {
 	 */
 	getCurrency() {
 		return this.currency;
-	}
-
-	/**
-	 *
-	 * @returns {string} - $ | € ...
-	 */
-	getSymbol() {
-		return this.symbol;
 	}
 
 	/**
@@ -471,6 +470,15 @@ export class Product {
 			if (bundle) {
 				option.buyLink = option.buyLink.replace("buy", "buybundle");
 			}
+
+			return option;
+		}
+
+		if (Store.config.provider === "vlaicu" && yearsOption.buyLink) {
+			const buyLink = new URL(yearsOption.buyLink);
+			buyLink.searchParams.set("SHOPURL", `${window.location.origin}${window.location.pathname}`);
+			buyLink.searchParams.set("SRC", this.promotion !== Store.NO_PROMOTION ? this.promotion : "N/A");
+			option.buyLink = buyLink.href;
 
 			return option;
 		}
@@ -755,43 +763,46 @@ export class Product {
 }
 
 class BitCheckout {
-	static cachedZuoraConfig = null;
+	static #cachedZuoraConfig = null;
+	
 	static async fetchZuoraConfig() {
-		const defaultJsonFilePath = '/zuoraconfig.json';
-		const jsonFilePath = window.location.hostname === 'www.bitdefender.com'
-		? `https://${window.location.hostname}/pages/zuoraconfig.json`
-		: defaultJsonFilePath;
+		if (this.#cachedZuoraConfig) {
+			return this.#cachedZuoraConfig
+		}
 
 		try {
-			const response = await fetch(jsonFilePath);
+			const response = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/nl-nl/consumer/zuoraconfig.json`);
 
 			if (!response.ok) {
-			console.error(`Failed to fetch data. Status: ${response.status}`);
-			return {};
+				console.error(`Failed to fetch data. Status: ${response.status}`);
+				this.#cachedZuoraConfig = {};
+				return {};
 			}
 
 			const { data = [] } = await response.json();
 			const zuoraConfigData = {
-			CAMPAIGN_NAME: data[0]?.CAMPAIGN_NAME || '',
-			CAMPAIGN_PRODS: {},
-			CAMPAIGN_MONTHLY_PRODS: [],
+				CAMPAIGN_NAME: data[0]?.CAMPAIGN_NAME || '',
+				CAMPAIGN_PRODS: {},
+				CAMPAIGN_MONTHLY_PRODS: [],
 			};
 
 			data.forEach(item => {
-			if (item.ZUORA_PRODS) {
-				const [key, value] = item.ZUORA_PRODS.split(':').map(s => s.trim());
-				const clearKey = key.replace('*', '');
-				zuoraConfigData.CAMPAIGN_PRODS[clearKey] = value;
+				if (item.ZUORA_PRODS) {
+					const [key, value] = item.ZUORA_PRODS.split(':').map(s => s.trim());
+					const clearKey = key.replace('*', '');
+					zuoraConfigData.CAMPAIGN_PRODS[clearKey] = value;
 
-				if (key.includes('*')) {
-				zuoraConfigData.CAMPAIGN_MONTHLY_PRODS.push(clearKey);
+					if (key.includes('*')) {
+					zuoraConfigData.CAMPAIGN_MONTHLY_PRODS.push(clearKey);
+					}
 				}
-			}
 			});
 
+			this.#cachedZuoraConfig = zuoraConfigData;
 			return zuoraConfigData;
 		} catch (error) {
 			console.error(`Error fetching Zuora config: ${error.message}`);
+			this.#cachedZuoraConfig = {};
 			return {};
 		}
 	}
@@ -872,7 +883,7 @@ class BitCheckout {
 			CAMPAIGN_MONTHLY_PRODS: monthlyProducts,
 			CAMPAIGN_NAME: campaign,
 			CAMPAIGN_PRODS: productId,
-		  } = fetchedData;
+		} = fetchedData;
 
 		let payload = (await this.getProductVariations(productId[id], campaign))?.payload;
 
@@ -885,8 +896,8 @@ class BitCheckout {
 		 * for example com.bitdefender.passwordmanager maps 2 products
 		 * Password Manager and Password Manager Shared Plan
 		 */
-		if (this.names[id]) {
-			payload = payload.filter(product => product.name === this.names[id])
+		if (Constants.PRODUCT_ID_NAME_MAPPINGS[id]) {
+			payload = payload.filter(product => product.name === Constants.PRODUCT_ID_NAME_MAPPINGS[id])
 		}
 
 		window.StoreProducts.product[id] = {
@@ -934,12 +945,9 @@ class BitCheckout {
 				}
 				const devicesObj = {
 					currency_iso: devices.currency,
-					currency_label: "€",
 					product_id: productId[id],
 					platform_product_id: productId[id],
 					promotion: campaign,
-					region_id: 22,
-					platform_id: 16,
 					price: devices.price,
 					variation: {
 						variation_name: `${devices_no}u-${billingPeriod}y`,
@@ -972,20 +980,158 @@ class BitCheckout {
 	}
 }
 
+class Vlaicu {
+
+	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
+	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
+
+	static async getProductVariations(productId, campaign) {
+
+		const pathVariablesResolverObject = {
+			"{locale}": Page.locale,
+			"{bundleId}": productId,
+			"{campaignId}": campaign
+		};
+
+		// get the correct path to get the prices
+		let productPath = campaign !== Store.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+
+		// replace all variables from the path
+		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
+		productPath = productPath.replace(pathVariablesRegex, (matched) => {
+			return pathVariablesResolverObject[matched]
+		});
+
+		const endpoint = new URL(productPath, Store.config.vlaicuEndpoint);
+
+		try {
+			const response = await fetch(
+				endpoint.href,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				}
+			);
+
+			if (!response.ok) {
+				return null;
+			}
+
+			return await response.json();
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
+	}
+
+	static async getProductVariationsPrice(id, campaignId) {
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId);
+		const productInfo = productInfoResponse?.product;
+		if (!productInfo) {
+			return null;
+		}
+		const isReceivedPromotionValid = productInfoResponse.campaign &&
+			productInfoResponse.campaignType &&
+			productInfoResponse.campaignType === "def";
+
+		let payload = productInfo?.options;
+		if (!payload || !payload.length) {
+			return null;
+		}
+
+		window.StoreProducts.product[id] = {
+			product_alias: id,
+			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+			product_name: productInfo.productName,
+			promotion: isReceivedPromotionValid ? productInfoResponse.campaign : campaignId, 
+			variations: {}
+		}
+
+		payload.forEach(productVariation => {
+
+			/**
+			 * for monthly products only add the monthly variations
+			 * e.g for vpn-monthly we do not care about the product variation if it passes 12 months (more than a year)
+			 */ 
+			if (Constants.MONTHLY_PRODUCTS.includes(id) && productVariation.months >= 12) {
+				return;
+			}
+
+			/**
+			 * for yearly products only add the yearly variations
+			 * e.g for tsmd we do not care about the product variation if it is below 12 months (less than a year)
+			 */
+
+			if (!Constants.MONTHLY_PRODUCTS.includes(id) && productVariation.months < 12) {
+				return;
+			}
+
+			const yearsSubscription = Math.ceil(productVariation.months / 12);
+			const devices_no = productVariation.slots;
+
+			const devicesObj = {
+				currency_iso: productVariation.currency,
+				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				promotion: isReceivedPromotionValid ?
+					productInfoResponse.campaign :
+					campaignId,
+				price: productVariation.price,
+				buyLink: productVariation.buyLink,
+				variation: {
+					variation_name: `${devices_no}u-${yearsSubscription}y`,
+					years: yearsSubscription,
+				}
+			}
+
+			if (productVariation.discountAmount > 0) {
+				devicesObj['discount'] = {
+					discounted_price: productVariation.discountedPrice,
+					discount_value: productVariation.discountAmount,
+				}
+			}
+
+			window.StoreProducts.product[id].variations[devices_no] = window.StoreProducts.product[id].variations[devices_no]
+				? window.StoreProducts.product[id].variations[devices_no]
+				: {};
+			window.StoreProducts.product[id].variations[devices_no][yearsSubscription] = devicesObj;
+		});
+
+		// for the cases where there is no variation available in the price call
+		if (!Object.keys(window.StoreProducts.product[id].variations).length) {
+			return null;
+		}
+
+		return window.StoreProducts.product[id];
+	}
+
+	static async loadProduct(id, campaign) {
+		window.StoreProducts = window.StoreProducts || [];
+		window.StoreProducts.product = window.StoreProducts.product || {};
+		return await this.getProductVariationsPrice(id, campaign);
+	}
+}
+
 class StoreConfig {
 
-	constructor() {
+	/**
+	 * 
+	 * @param {boolean} vlaicuFlag 
+	 */
+	constructor(vlaicuFlag) {
 		/**
 		 * Api used to fetch the prices
-		 * @type {"init"|"zuora"}
+		 * @type {"init"|"zuora"|"vlaicu"}
 		 */
-		this.provider = Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
+		this.provider = this.#getProvider(vlaicuFlag);
 
 		/**
-		 * default promotion for zuora
+		 * default promotion
 		 * @type {Promise<string>}
 		 */
-		this.zuoraCampaign = this.#getZuoraCampaign();
+		this.campaign = this.#getCampaign();
 
 		/**
 		 * @type {{
@@ -1001,26 +1147,59 @@ class StoreConfig {
 		};
 
 		/**
-		 * @type {"POST"}
+		 * @type {string}
 		 */
-		this.httpMethod = "POST";
+		this.vlaicuEndpoint = Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))
+			? "https://www.bitdefender.com"
+			: window.location.origin;
+
+		/**
+		 * @type {"GET"|"POST"}
+		 */
+		this.httpMethod = this.#getHTTPMethod(vlaicuFlag);
 	}
 
-	async #getZuoraCampaign() {
+	async #getCampaign() {
+		if (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain)) {
+			return "global_v2";
+		}
+
 		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
-			return "";
+			return Store.NO_PROMOTION;
 		}
 
-		const jsonFilePath = 'https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json';
-
-		const resp = await fetch(jsonFilePath);
-		if (!resp.ok) {
-			console.error(`Failed to fetch data. Status: ${resp.status}`);
-			return '';
+		const fetchedData = await BitCheckout.fetchZuoraConfig();
+		if (!Object.keys(fetchedData).length) {
+			console.error(`Failed to fetch data.`);
+			return Store.NO_PROMOTION;
 		}
-		const data = await resp.json();
 
-		return data.data[0].CAMPAIGN_NAME;
+		return fetchedData.CAMPAIGN_NAME;
+	}
+
+	/**
+	 * 
+	 * @returns {"GET"|"POST"} the http method used to get prices
+	 */
+	#getHTTPMethod(vlaicuFlag) {
+		if (vlaicuFlag) {
+			return "GET";
+		}
+
+		return "POST";
+	};
+
+	/**
+	 * @param {boolean} vlaicuFlag
+	 * @returns {"init"|"zuora"|"vlaicu"} the prices provider to be used
+	 */
+	#getProvider(vlaicuFlag) {
+		// TODO: please remove the locale check when we start using only Vlaicu
+		if (vlaicuFlag || Page.locale === "ro-ro") {
+			return "vlaicu";
+		}
+
+		return Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
 	}
 }
 
@@ -1044,7 +1223,10 @@ export class Store {
 	/** Private variables */
 	static baseUrl = Constants.DEV_BASE_URL;
 
-	static config = new StoreConfig();
+	/**
+	 * @type {StoreConfig | null}
+	 */
+	static config = null;
 	static targetBuyLinkMappings = null;
 
 	/**
@@ -1055,6 +1237,11 @@ export class Store {
 	 */
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
+		
+		// create the store config if it does not exist
+		if (!this.config) {
+			this.config = new StoreConfig(await Target.getVlaicuFlag());
+		}
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
@@ -1067,12 +1254,12 @@ export class Store {
 		this.products = (await Promise
 			.allSettled(
 				productsInfo.map(async product => {
-					//url > produs > global_campaign
+					// target > url > produs > global_campaign > default campaign for zuora
 					product.promotion = await Target.getCampaign()
 						|| this.#getUrlPromotion()
 						|| product.promotion
 						|| getMetadata("pid")
-						|| await this.config.zuoraCampaign;
+						|| await this.config.campaign;
 
 					return await this.#apiCall(
 						product
@@ -1102,6 +1289,23 @@ export class Store {
 				return {
 					...product,
 					...productInfo
+				}
+			} catch (error) {
+				return null;
+			}
+		}
+
+		if (this.config.provider === "vlaicu") {
+			try {
+				const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);
+
+				if (!product) {
+					return null;
+				}
+
+				return {
+					...productInfo,
+					...product
 				}
 			} catch (error) {
 				return null;
