@@ -111,4 +111,6 @@ export const Constants = {
   
   LOGIN_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
     ? window.location.origin : 'https://www.bitdefender.com',
+
+  NO_PROMOTION: "ignore"
 }
