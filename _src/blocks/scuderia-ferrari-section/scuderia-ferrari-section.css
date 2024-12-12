@@ -18,13 +18,9 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 .scuderia-ferrari-section.quotes-left{
     align-items: baseline;
     text-align: left;
-
+  
     div{
         justify-content: flex-end;
-    }
-
-    p:last-of-type{
-        line-height: 1.23;
     }
 }
 
@@ -37,8 +33,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     div{
         align-items: end;
     }
-
-    p:last-of-type, p:nth-last-of-type(2){
+    p:nth-last-of-type(2){
         line-height: 1.23;
         font-size: 12px;
     }
@@ -61,16 +56,17 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         z-index: 1;
         padding: 0;
     }
-
+    
     p{
         font-size: 24px;
     }
-    
+
     p strong{
         font-size: 16px;    
     }
 
     p:last-of-type{
+        line-height: 1.23;
         font-size: 12px;
     }
 
