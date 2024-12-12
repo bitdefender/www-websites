@@ -655,28 +655,6 @@ export class Target {
   static #buyLinksMbox = this.getOffer('buyLinks-mbox');
 
   /**
-   * @typedef {{content: {vlaicuFlag: string}}} VlaicuFlagMbox
-   * @type {Promise<VlaicuFlagMbox|null>}
-   */
-  static #vlaicuFlagMbox = this.getOffer('vlaicu-flag-mbox');
-
-  /**
-   * get the flag which marks wether the page should use Vlaicu or not
-   * @returns {Promise<boolean>}
-   */
-  static async getVlaicuFlag() {
-    return Boolean((await this.#vlaicuFlagMbox)?.content?.vlaicuFlag || null);
-  }
-
-  /**
-   * get the flag which marks wether the page should use geoIpPricing or not
-   * @returns {Promise<boolean>}
-   */
-  static async getVlaicuGeoIpPrice() {
-    return Boolean((await this.#vlaicuFlagMbox)?.content?.geoIpPrice || null);
-  }
-
-  /**
    * get the product-buy link mappings from Target (
    *  e.g
    *  {
