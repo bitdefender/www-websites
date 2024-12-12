@@ -63,7 +63,8 @@ export const Constants = {
 		us_pie_m: 'com.bitdefender.ultimatesecurityplusus.v2',
 		us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
 		us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
-		secpass: 'com.bitdefender.securepass'
+		secpass: 'com.bitdefender.securepass',
+		secpassm: 'com.bitdefender.securepass'
   },
 
   PRODUCT_ID_MAPPINGS_VLAICU: {
@@ -124,7 +125,7 @@ export const Constants = {
 	pass_spm: "Bitdefender Password Manager Shared Plan"
   },
 
-  MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m", "ultsecm", "ultsecplusm", "idtheftsm", "idtheftpm"],
+  MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m", "ultsecm", "ultsecplusm", "idtheftsm", "idtheftpm", "secpassm"],
 
   WRONG_DEVICES_PRODUCT_IDS: {
 		'pass_sp': {
@@ -161,4 +162,6 @@ export const Constants = {
   
   LOGIN_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
     ? window.location.origin : 'https://www.bitdefender.com',
+
+  NO_PROMOTION: "ignore"
 }
