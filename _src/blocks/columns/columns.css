@@ -1143,7 +1143,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 .columns-container.icon-corners {
-
   .columns-wrapper {
     border-radius: 20px;
   }
@@ -1309,7 +1308,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .columns-container.icon-corners {
-  
     .columns {
       padding: 100px;
     }
@@ -1395,6 +1393,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     width: 100%;
     justify-content: center;
   }
+
   table{
     margin-bottom: 15px;
   }
@@ -1437,6 +1436,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   tr:last-of-type td{
     height: 25px;
   }
+
   .columns > div > .columns-img-col {
     margin-bottom: 0;
   }

@@ -135,7 +135,6 @@ main .section.wide .image-columns img{
   }
 
   .image-columns > div {
-    align-items: flex-start;
     flex-direction: unset;
     column-gap: 58px;
     align-items: center;
