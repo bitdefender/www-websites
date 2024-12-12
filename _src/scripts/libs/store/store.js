@@ -476,8 +476,9 @@ export class Product {
 
 		if (Store.config.provider === "vlaicu" && yearsOption.buyLink) {
 			const buyLink = new URL(yearsOption.buyLink);
-			buyLink.searchParams.set("SHOPURL", `${window.location.origin}${window.location.pathname}`);
-			buyLink.searchParams.set("SRC", this.promotion && this.promotion !== Store.NO_PROMOTION ? this.promotion : "N/A");
+			buyLink.searchParams.set("SHOPURL", `${window.location.origin}/${window.location.pathname.split('/')[1]}/`);
+            buyLink.searchParams.set("REF", this.promotion && this.promotion !== Store.NO_PROMOTION ? this.promotion : "N/A");
+            buyLink.searchParams.set("SRC", `${window.location.origin}${window.location.pathname}`);
 			option.buyLink = buyLink.href;
 
 			return option;
