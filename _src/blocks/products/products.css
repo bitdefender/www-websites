@@ -385,7 +385,7 @@
 }
 
 .product-card .price.nanoblock, .product-card .featured.nanoblock{
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 @media (max-width: 480px) {
@@ -507,6 +507,7 @@
     right: -60px;
     border: 20px white solid;
   }
+
   .product-card .img-adjacent-text{
     width: 74%;
   }
