@@ -710,14 +710,14 @@ class Vlaicu {
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
-	static campaign = Page.getParamValue('vcampaign');
+	static campaign = "WINTERMCWEB24";
 
 	static async getProductVariations(productId, campaign) {
 		const locale = await Target.getVlaicuGeoIpPrice() ? await User.locale : Page.locale;
 		const pathVariablesResolverObject = {
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": campaign !== Store.NO_PROMOTION ? campaign : this.campaign
+			"{campaignId}": this.campaign
 		};
 
 		// get the correct path to get the prices
