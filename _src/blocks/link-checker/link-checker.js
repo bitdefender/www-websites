@@ -75,7 +75,7 @@ const isValidUrl = (urlString) => {
 };
 
 async function checkLink(block, input, result) {
-  const url = input.value.toLowerCase().trim();
+  const url = input.value.trim();
   if (!url || !isValidUrl(url)) {
     result.textContent = 'Please enter a valid URL';
     result.className = 'result danger';
