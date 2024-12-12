@@ -717,7 +717,10 @@ class Vlaicu {
 		const pathVariablesResolverObject = {
 			"{locale}": Page.locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.campaign
+			"{campaignId}": campaign !== Constants.NO_PROMOTION &&
+				Page.locale === 'de-de' && productId === 'com.bitdefender.soho' ?
+				campaign :
+				this.campaign
 		};
 
 		// get the correct path to get the prices
