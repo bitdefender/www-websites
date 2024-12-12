@@ -720,7 +720,7 @@ class Vlaicu {
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+		let productPath = this.promotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
