@@ -710,8 +710,9 @@ class Vlaicu {
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
-	static campaign = "WINTERMCWEB24";
 
+	// TODO: please remove this.campaign from here and only use campaign received as parameter
+	static campaign = "WINTERMCWEB24";
 	static async getProductVariations(productId, campaign) {
 		const pathVariablesResolverObject = {
 			"{locale}": Page.locale,
@@ -720,7 +721,10 @@ class Vlaicu {
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+		let productPath = this.promotionPath;
+
+		// TODO: please uncomment the code below and remove the one above
+		// let productPath = campaign !== Constants.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
