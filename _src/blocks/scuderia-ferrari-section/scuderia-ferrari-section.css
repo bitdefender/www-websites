@@ -16,6 +16,11 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 }
 
 .scuderia-ferrari-section.quotes-left {
+    width: 100%;
+    background-color: #FF2800;
+    padding: 20px;
+    flex-flow: column;
+    display: flex;
     align-items: baseline;
     text-align: left;
 
@@ -35,51 +40,6 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     div:last-of-type {
         max-width: 80%;
     }
-
-    p {
-        font-size: 24px;
-    }
-}
-
-.scuderia-ferrari-section.quotes-right {
-    display: inline-flex;
-    text-align: right;
-    align-items: end;
-    justify-content: right;
-
-    > div {
-        display: flex;
-        flex-flow: column;
-        justify-content: center;
-        z-index: 1;
-        padding: 0;
-    }
-
-    div {
-        align-items: end;
-        padding: 10px;
-    }
-
-    div:last-of-type {
-        max-width: 80%;
-    }
-
-    p {
-        font-size: 24px;
-    }
-
-    p:nth-last-of-type(2) {
-        line-height: 1.23;
-        font-size: 12px;
-    }
-}
-
-.scuderia-ferrari-section.quotes-left,
-.scuderia-ferrari-section.quotes-right {
-    width: 100%;
-    background-color: #FF2800;
-    padding: 20px;
-    flex-flow: column;
 
     p {
         font-size: 24px;
@@ -109,6 +69,69 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         width: 100%;
         object-fit: cover;
         z-index: 0;
+    }
+}
+
+.scuderia-ferrari-section.quotes-right {
+    width: 100%;
+    background-color: #FF2800;
+    padding: 20px;
+    flex-flow: column;
+    display: inline-flex;
+    text-align: right;
+    align-items: end;
+    justify-content: right;
+
+    > div {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        z-index: 1;
+        padding: 0;
+    }
+
+    div {
+        align-items: end;
+        padding: 10px;
+    }
+
+    div:last-of-type {
+        max-width: 80%;
+    }
+
+    p {
+        font-size: 24px;
+
+        strong {
+            font-size: 16px;
+        }
+
+        &:last-of-type {
+            line-height: 1.23;
+            font-size: 12px;
+        }
+    }
+
+    h2 {
+        line-height: 0.66;
+    }
+
+    img {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: auto;
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    p:nth-last-of-type(2) {
+        line-height: 1.23;
+        font-size: 12px;
     }
 }
 
