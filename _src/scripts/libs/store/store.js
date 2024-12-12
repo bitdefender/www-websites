@@ -713,9 +713,8 @@ class Vlaicu {
 	static campaign = "WINTERMCWEB24";
 
 	static async getProductVariations(productId, campaign) {
-		const locale = await Target.getVlaicuGeoIpPrice() ? await User.locale : Page.locale;
 		const pathVariablesResolverObject = {
-			"{locale}": locale,
+			"{locale}": Page.locale,
 			"{bundleId}": productId,
 			"{campaignId}": this.campaign
 		};
@@ -754,7 +753,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS_VLAICU[id.trim()], campaignId);
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()], campaignId);
 		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
 			return null;
@@ -770,7 +769,7 @@ class Vlaicu {
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
+			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 			product_name: productInfo.productName,
 			promotion: isReceivedPromotionValid ? productInfoResponse.campaign : campaignId, 
 			variations: {}
@@ -800,8 +799,8 @@ class Vlaicu {
 
 			const devicesObj = {
 				currency_iso: productVariation.currency,
-				product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
-				platform_product_id: Constants.PRODUCT_ID_MAPPINGS_VLAICU[id],
+				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 				promotion: isReceivedPromotionValid ?
 					productInfoResponse.campaign :
 					campaignId,
