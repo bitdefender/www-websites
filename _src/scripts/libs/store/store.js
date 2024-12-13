@@ -715,10 +715,12 @@ class Vlaicu {
 	static campaign = "WINTERMCWEB24";
 	static async getProductVariations(productId, campaign) {
 		const pathVariablesResolverObject = {
-			"{locale}": Page.locale,
+			"{locale}": Page.locale === "de-de" && productId === "com.bitdefender.soho" ?
+				"" :
+				Page.locale,
 			"{bundleId}": productId,
 			"{campaignId}": campaign !== Constants.NO_PROMOTION &&
-				Page.locale === 'de-de' && productId === 'com.bitdefender.soho' ?
+				Page.locale === "de-de" && productId === "com.bitdefender.soho" ?
 				campaign :
 				this.campaign
 		};
