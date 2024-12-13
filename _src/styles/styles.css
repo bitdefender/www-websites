@@ -986,7 +986,6 @@ a.button:any-link, input[type="submit"] {
   color: var(--button-link-color);
   background-color: var(--button-background-color);
   border: 2px solid var(--button-background-color);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 8px;
