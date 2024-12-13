@@ -716,7 +716,7 @@ class Vlaicu {
 	static async getProductVariations(productId, campaign) {
 		const pathVariablesResolverObject = {
 			"{locale}": Page.locale === "de-de" && productId === "com.bitdefender.soho" ?
-				"" :
+				"en-mt" :
 				Page.locale,
 			"{bundleId}": productId,
 			"{campaignId}": campaign !== Constants.NO_PROMOTION &&
