@@ -345,8 +345,8 @@ main .hero p.button-container.discount-bubble-container {
 }
 
 main .hero img {
+  object-fit: cover;
   height: 100%;
-  max-width: unset;
 }
 
 main .hero .hero-picture picture img {
