@@ -346,6 +346,7 @@ main .hero p.button-container.discount-bubble-container {
 
 main .hero img {
   height: 100%;
+  max-width: unset;
 }
 
 main .hero .hero-picture picture img {
