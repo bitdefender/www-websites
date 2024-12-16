@@ -111,4 +111,9 @@ export const Constants = {
   
   LOGIN_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
     ? window.location.origin : 'https://www.bitdefender.com',
+
+  NO_PROMOTION: "ignore",
+
+  // TODO: please remove this once digital river starts working correctly
+  SOHO_CORNER_CASES_LOCALSE: ["de-de", "de-at", "de-ch"]
 }
