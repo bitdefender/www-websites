@@ -140,14 +140,14 @@ function updateBuyLink(block) {
 }
 
 function renderPrice(block, _firstProduct, secondProduct) {
-  const variant = '5-1';
+  const variant = '7-1';
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
 
   const oldPrice = document.createElement('div');
   oldPrice.classList.add('prod-oldprice', 'await-loader');
   oldPrice.setAttribute('data-store-price', 'full');
-  oldPrice.setAttribute('data-store-hide', 'data-store-hide="no-price=discounted"');
+  oldPrice.setAttribute('data-store-hide', 'no-price=discounted');
 
   const el = document.createElement('DIV');
   el.classList.add('price');
