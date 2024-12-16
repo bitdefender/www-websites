@@ -24,7 +24,10 @@ export const monthlyProducts = {
 	"us_pf_m": "us_pf_m",
 	"us_pi_m": "us_pi_m",
 	"us_pie_m": "us_pie_m",
-	"us_pfe_m": "us_pfe_m"
+	"us_pfe_m": "us_pfe_m",
+	"secpassm": "secpassm",
+	"vbsm": "vbsm",
+	"scm": "scm",
 }
 
 export const loadScript = (baseUrl, url) => {
@@ -406,23 +409,9 @@ export class Product {
 
 		if (!yearsOption) { return null; }
 
-		const buyCart = new URL(`https://www.bitdefender.com/site/Store/buy/${this.id}/${devices}/${years}/${this.promotion ? `pid.${this.promotion}` : ""}`);
-		buyCart.searchParams.set("CURRENCY", this.currency);
-		buyCart.searchParams.set("DCURRENCY", this.currency);
-		buyCart.searchParams.set("CART", "1");
-		buyCart.searchParams.set("CARD", "2");
-		buyCart.searchParams.set("SHORT_FORM", "1");
-		buyCart.searchParams.set("LANG", Page.langauge);
-		buyCart.searchParams.set("force_country", Store.getCountry());
-
-		if (window.UC_UI) {
-			buyCart.searchParams.set("ucControllerId", window.UC_UI.getControllerId());
-		}
-
 		const option = new ProductOption({
 			price: Number(Number(yearsOption.price).toFixed(2)),
 			priceDiscounted: Number(Number(yearsOption.discount?.discounted_price).toFixed(2)),
-			buyLink: buyCart.href,
 			isDiscounted: yearsOption.discount?.discounted_price ? true : false,
 			currency: this.currency,
 			symbol: this.symbol,
@@ -456,61 +445,21 @@ export class Product {
 			}
 		}
 
+		let buyLink = new URL(yearsOption.buyLink);
+		buyLink.searchParams.set("SHOPURL", `${window.location.origin}/${window.location.pathname.split('/')[1]}/`);
+		buyLink.searchParams.set("REF", this.promotion && this.promotion !== Store.NO_PROMOTION ? `WEBSITES_${this.promotion}` : "N/A");
+		buyLink.searchParams.set("SRC", `${window.location.origin}${window.location.pathname}`);
+
 		// replace the buy links with target links if they exist and return the option
 		if (Store.targetBuyLinkMappings[this.productAlias]
 			&& Store.targetBuyLinkMappings[this.productAlias][productVariation]) {
-			option.buyLink = Store.targetBuyLinkMappings[this.productAlias][productVariation];
-			return option;
+			buyLink = new URL(Store.targetBuyLinkMappings[this.productAlias][productVariation]);
 		}
 
-		//Init Selector Settings
-		if (Store.config.provider === "init") {
-			if (bundle) {
-				option.buyLink = option.buyLink.replace("buy", "buybundle");
-			}
-
-			return option;
+		if (window.UC_UI) {
+			buyLink.searchParams.set("ucControllerId", window.UC_UI.getControllerId());
 		}
-
-		if (Store.config.provider === "vlaicu" && yearsOption.buyLink) {
-			option.buyLink = yearsOption.buyLink;
-
-			return option;
-		}
-
-		//Zuora settings
-		const windowURL = new URL(window.location.href)
-		const zuoraCart = new URL("/index.html:step=cart?theme=light", Store.config.zuora.cartUrl)
-
-		if (this.promotion) {
-			zuoraCart.searchParams.set("campaign", this.promotion);
-		}
-		if (windowURL.searchParams.has("lang")) {
-			zuoraCart.searchParams.set("language", windowURL.searchParams.get("lang"));
-		}
-		if (windowURL.searchParams.has("language")) {
-			zuoraCart.searchParams.set("language", windowURL.searchParams.get("language"));
-		}
-		if (windowURL.searchParams.has("event")) {
-			zuoraCart.searchParams.set("event", windowURL.searchParams.get("event"));
-		}
-		if (windowURL.searchParams.has("channel")) {
-			zuoraCart.searchParams.set("channel", windowURL.searchParams.get("channel"));
-		}
-		zuoraCart.searchParams.set("product_id", this.productId);
-		zuoraCart.searchParams.set("payment_period", monthlyProducts[this.id] ? `${devices}d1m` : `${devices}d${years}y`);
-		zuoraCart.searchParams.set("country", "NL");
-		zuoraCart.searchParams.set("language", "nl_NL");
-		zuoraCart.searchParams.set("client", "8f768650-6915-11ed-83e3-e514e761ac46");
-
-		if (bundle) {
-			zuoraCart.searchParams.set("bundle_id", this.productId);
-			zuoraCart.searchParams.set("bundle_payment_period", monthlyProducts[bundle.id]
-				? `${bundle.getDevices()}d1m`
-				: `${bundle.getDevices()}d${bundle.getSubscription("years")}y`);
-		}
-
-		option.buyLink = zuoraCart.href;
+		option.buyLink = buyLink.href;
 
 		return option;
 	}
@@ -756,183 +705,32 @@ export class Product {
 	}
 }
 
-class BitCheckout {
-
-	// this products come with device_no set differently from the init-selector api where they are set to 1
-	static wrongDeviceNumber = ["bms", "mobile", "ios", "mobileios", "psm", "passm"]
-
-	static getKey() {
-		const hostname = window.location.hostname;
-		if (/^(author-p23952-e68330|www|new)/.test(hostname)) {
-			return 'bb22f980-fa19-11ed-b443-87a99951e6d5';
-		}
-		if (/^(localhost|local.bitdefender.com)/.test(hostname)) {
-			return '3405af40-c88e-11ed-9a49-e17059797c0c';
-		}
-		if (/^(author-p23952-e81192|dev1|.hlx.)/.test(hostname)) {
-			return '91d619d0-c88e-11ed-9ff9-3bfdc38b7fc4';
-		}
-		if (/^(author-p23952-e68355|stage)/.test(hostname)) {
-			return '213462b0-c88d-11ed-87f8-99121213a0e3';
-		}
-	}
-
-	static config(key) {
-		return {
-			key: key || this.getKey(),
-			country: 'NL',
-			language: 'nl_NL',
-			debug: false,
-			request_timeout: 15000, //default value if not set 3500
-			default_scenario: 'www.checkout.v1',
-			disable_auto_generated_new_session: false,
-			return_url: document.referrer ? document.referrer : window.location.href,
-			central: true
-		};
-	}
-
-	static async getProductVariations(productId, campaign) {
-		const endpoint = new URL("/v1/info/variations/price", Store.config.zuora.endpoint);
-		endpoint.searchParams.set("product_id", productId);
-		if (campaign !== Store.NO_PROMOTION) {
-			endpoint.searchParams.set("campaign", campaign);
-		}
-		endpoint.searchParams.set("country_code", "NL");
-
-		try {
-			const response = await fetch(
-				endpoint.href,
-				{
-					method: "GET",
-					headers: {
-						"X-Public-Key": Store.config.zuora.key,
-						"Content-Type": "application/json"
-					}
-				}
-			);
-
-			if (!response.ok) {
-				return null;
-			}
-
-			return await response.json();
-		} catch (error) {
-			console.error(error);
-			return null;
-		}
-	}
-
-	static async getProductVariationsPrice(id, campaignId) {
-		let payload = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId))?.payload;
-
-		if (!payload || payload.length === 0) {
-			return null
-		}
-
-		/**
-		 * this rules splits one product into multiple products
-		 * for example com.bitdefender.passwordmanager maps 2 products
-		 * Password Manager and Password Manager Shared Plan
-		 */
-		if (Constants.PRODUCT_ID_NAME_MAPPINGS[id]) {
-			payload = payload.filter(product => product.name === Constants.PRODUCT_ID_NAME_MAPPINGS[id])
-		}
-
-		window.StoreProducts.product[id] = {
-			product_alias: id,
-			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-			product_name: payload[0].name,
-			variations: {}
-		}
-
-		payload.forEach(period => {
-			let billingPeriod;
-			switch (period.billing_period) {
-				case "Month":
-					billingPeriod = 0;
-					break;
-				case "Annual":
-					billingPeriod = 1;
-					break;
-				case "Two_Years":
-					billingPeriod = 2;
-					break;
-				case "Three_Years":
-					billingPeriod = 3;
-					break;
-				case "Five_Years":
-					billingPeriod = 5;
-					break;
-				default:
-					billingPeriod = 10;
-			}
-
-			if (Constants.MONTHLY_PRODUCTS.indexOf(id) === -1 && billingPeriod === 0 || Constants.MONTHLY_PRODUCTS.indexOf(id) !== -1 && billingPeriod !== 0) {
-				return;
-			}
-
-			if (Constants.MONTHLY_PRODUCTS.indexOf(id) !== -1) {
-				billingPeriod = 1;
-			}
-
-			period.pricing.forEach(devices => {
-				let devices_no = devices.devices_no;
-
-				if (this.wrongDeviceNumber.includes(id)) {
-					devices_no = 1;
-				}
-				const devicesObj = {
-					currency_iso: devices.currency,
-					product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-					platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-					promotion: campaignId,
-					price: devices.price,
-					variation: {
-						variation_name: `${devices_no}u-${billingPeriod}y`,
-						years: billingPeriod,
-						billing_period: period.billing_period,
-						payment_period: period.payment_period
-					}
-				}
-				if (devices.discount > 0) {
-					devicesObj['discount'] = {
-						discounted_price: devices.total,
-						discount_value: devices.discount,
-					}
-				}
-
-				window.StoreProducts.product[id].variations[devices_no] = window.StoreProducts.product[id].variations[devices_no] ? window.StoreProducts.product[id].variations[devices_no] : {}
-				window.StoreProducts.product[id].variations[devices_no][billingPeriod] = devicesObj
-			})
-		})
-		return window.StoreProducts.product[id];
-	}
-
-	static async loadProduct(id, campaign) {
-		window.StoreProducts = window.StoreProducts || [];
-		window.StoreProducts.product = window.StoreProducts.product || {}
-		return await this.getProductVariationsPrice(id, campaign);
-	}
-}
-
 class Vlaicu {
 
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
-	static campaign = getParamValue('vcampaign');
+	/**
+	 * TODO: please remove this function and all its calls once digital river works correctly
+	 * @param {string} productId 
+	 * @returns {boolean} -> check if the product is soho and the domain is de-de
+	 */
+	static #isSohoCornerCase = (productId) =>
+	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
 
 	static async getProductVariations(productId, campaign) {
-		const locale = await Target.getVlaicuGeoIpPrice() ? await User.locale : Page.locale;
 		const pathVariablesResolverObject = {
-			"{locale}": locale,
+			// TODO: please remove the ternary operators below and only use Page.locale
+			// and campaign once digital river works correctly
+			"{locale}": this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.campaign
+			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : campaign
 		};
 
 		// get the correct path to get the prices
-		// TODO: add a check for campaign to be not null
-		let productPath = ( campaign !== Store.NO_PROMOTION && this.campaign != null ) ? this.promotionPath : this.defaultPromotionPath;
+		let productPath = campaign !== Constants.NO_PROMOTION || this.#isSohoCornerCase(productId) ?
+			this.promotionPath :
+			this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
@@ -965,10 +763,14 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfo = (await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()], campaignId))?.product;
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId);
+		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
 			return null;
 		}
+		const isReceivedPromotionValid = productInfoResponse.campaign &&
+			productInfoResponse.campaignType &&
+			productInfoResponse.campaignType === "def";
 
 		let payload = productInfo?.options;
 		if (!payload || !payload.length) {
@@ -979,6 +781,7 @@ class Vlaicu {
 			product_alias: id,
 			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 			product_name: productInfo.productName,
+			promotion: isReceivedPromotionValid ? productInfoResponse.campaign : campaignId, 
 			variations: {}
 		}
 
@@ -1008,7 +811,9 @@ class Vlaicu {
 				currency_iso: productVariation.currency,
 				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
 				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-				promotion: campaignId,
+				promotion: isReceivedPromotionValid ?
+					productInfoResponse.campaign :
+					campaignId,
 				price: productVariation.price,
 				buyLink: productVariation.buyLink,
 				variation: {
@@ -1047,35 +852,18 @@ class Vlaicu {
 
 class StoreConfig {
 
-	/**
-	 * 
-	 * @param {boolean} vlaicuFlag 
-	 */
-	constructor(vlaicuFlag) {
+	constructor() {
 		/**
-		 * Api §d to fetch the prices
-		 * @type {"init"|"zuora"|"vlaicu"}
+		 * Api used to fetch the prices
+		 * @type {"vlaicu"}
 		 */
-		this.provider = this.#getProvider(vlaicuFlag);
+		this.provider = "vlaicu";
 
 		/**
 		 * default promotion
 		 * @type {Promise<string>}
 		 */
 		this.campaign = this.#getCampaign();
-
-		/**
-		 * @type {{
-		 * cartUrl: string
-		 * key: string,
-		 * endpoint: string
-		 * }}
-		 */
-		this.zuora = {
-			cartUrl: "https://checkout.bitdefender.com",
-			key: "bb22f980-fa19-11ed-b443-87a99951e6d5",
-			endpoint: "https://checkout-service.bitdefender.com"
-		};
 
 		/**
 		 * @type {string}
@@ -1085,9 +873,9 @@ class StoreConfig {
 			: window.location.origin;
 
 		/**
-		 * @type {"GET"|"POST"}
+		 * @type {"GET"}
 		 */
-		this.httpMethod = this.#getHTTPMethod(vlaicuFlag);
+		this.httpMethod = "GET";
 	}
 
 	async #getCampaign() {
@@ -1096,43 +884,22 @@ class StoreConfig {
 		}
 
 		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
-			return "";
+			return Constants.NO_PROMOTION;
 		}
 
-		const jsonFilePath = "https://www.bitdefender.com/pages/fragment-collection/zuoracampaign.json";
+		try {
+			const response = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/nl-nl/consumer/zuoraconfig.json`);
+			if (!response.ok) {
+				console.error(`Failed to fetch data.`);
+				return Constants.NO_PROMOTION;
+			}
 
-		const resp = await fetch(jsonFilePath);
-		if (!resp.ok) {
-			console.error(`Failed to fetch data. Status: ${resp.status}`);
-			return "";
+			const { data = [] } = await response.json();
+			return data[0].CAMPAIGN_NAME ? data[0].CAMPAIGN_NAME : Constants.NO_PROMOTION;
+		} catch(e) {
+			console.error(`Failed to fetch data.`);
+			return Constants.NO_PROMOTION;
 		}
-		const data = await resp.json();
-
-		return data.data[0].CAMPAIGN_NAME;
-	}
-
-	/**
-	 * 
-	 * @returns {"GET"|"POST"} the http method used to get prices
-	 */
-	#getHTTPMethod(vlaicuFlag) {
-		if (vlaicuFlag) {
-			return "GET";
-		}
-
-		return "POST";
-	};
-
-	/**
-	 * @param {boolean} vlaicuFlag
-	 * @returns {"init"|"zuora"|"vlaicu"} the prices provider to be used
-	 */
-	#getProvider(vlaicuFlag) {
-		if (vlaicuFlag) {
-			return "vlaicu";
-		}
-
-		return Constants.ZUROA_LOCALES.includes(Page.locale) ? "zuora" : "init";
 	}
 }
 
@@ -1141,14 +908,13 @@ export class Store {
 		gb: "uk",
 		ch: "de",
 		at: "de",
-		us: "en",
+		us: "us",
 		mx: "en",
 		nz: "au",
 	}
 
 	static consumer = "consumer";
 	static business = "business";
-	static NO_PROMOTION = "ignore";
 	static products = {};
 	/** country equals the geographic location given by IP */
 	static country = Page.country;
@@ -1157,9 +923,9 @@ export class Store {
 	static baseUrl = Constants.DEV_BASE_URL;
 
 	/**
-	 * @type {StoreConfig | null}
+	 * @type {StoreConfig}
 	 */
-	static config = null;
+	static config = new StoreConfig();
 	static targetBuyLinkMappings = null;
 
 	/**
@@ -1170,11 +936,6 @@ export class Store {
 	 */
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
-		
-		// create the store config if it does not exist
-		if (!this.config) {
-			this.config = new StoreConfig(await Target.getVlaicuFlag());
-		}
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
@@ -1187,12 +948,12 @@ export class Store {
 		this.products = (await Promise
 			.allSettled(
 				productsInfo.map(async product => {
-					// target > url > produs > global_campaign > default campaign for zuora
+					// target > url > produs > global_campaign > default campaign
 					product.promotion = await Target.getCampaign()
 						|| this.#getUrlPromotion()
 						|| product.promotion
 						|| getMetadata("pid")
-						|| await this.config.zuoraCampaign;
+						|| await this.config.campaign;
 
 					return await this.#apiCall(
 						product
@@ -1211,92 +972,18 @@ export class Store {
 	 * @returns {Promise<Product>}
 	 */
 	static async #apiCall(productInfo) {
-		if (this.config.provider === "zuora") {
-			try {
-				const product = await BitCheckout.loadProduct(productInfo.id, productInfo.promotion);
-
-				if (!product) {
-					return null
-				}
-
-				return {
-					...product,
-					...productInfo
-				}
-			} catch (error) {
-				return null;
-			}
-		}
-
-		if (this.config.provider === "vlaicu") {
-			try {
-				const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);
-
-				if (!product) {
-					return null;
-				}
-
-				return {
-					...product,
-					...productInfo
-				}
-			} catch (error) {
-				return null;
-			}
-		}
-
-		const data = JSON.stringify({
-			ev: 1,
-			product_id: productInfo.id,
-			config: {
-				country_code: this.country,
-				...(productInfo.promotion !== Store.NO_PROMOTION && { extra_params: { pid: productInfo.promotion } }),
-				...(productInfo.promotion === Store.NO_PROMOTION && { ignore_promotions: true })
-			}
-		});
-
-		const apiURL = new URL(`https://www.bitdefender.com/site/Store/ajax${this.config.httpMethod === "GET" ? `/${encodeURI(btoa(data))}/` : ""
-			}`);
-
-		apiURL.searchParams.set("force_country", this.mappedCountry);
-
 		try {
-			let response
+			const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);
 
-			switch (this.config.httpMethod) {
-				case "POST":
-					const formData = new FormData();
-					formData.append('data', data);
-					response = await fetch(apiURL.href,
-						{
-							body: formData,
-							method: "post"
-						}
-					);
-					break;
-				case "GET":
-					response = await fetch(apiURL.href);
-					break;
-				default:
-					return null;
-			}
-
-			if (!response.ok) {
-				return null;
-			}
-
-			const product = await response.json();
-
-			if (!product.data.product.variations || product.data.product.variations.length === 0) {
+			if (!product) {
 				return null;
 			}
 
 			return {
-				...product.data.product,
-				...productInfo
+				...productInfo,
+				...product
 			}
 		} catch (error) {
-			console.error(error);
 			return null;
 		}
 	}
@@ -1335,4 +1022,3 @@ window.Store = Store;
 window.Product = Product;
 window.ProductOption = ProductOption;
 window.ProductInfo = ProductInfo;
-window.BitCheckout = BitCheckout;

@@ -24,6 +24,15 @@
     padding: 30px;
 }
 
+.products-sideview .prod-oldprice {
+    text-decoration: line-through;
+}
+
+.products-sideview .price-element-wrapper {
+    margin: 20px 0;
+    font-family: 'Arial', sans-serif;;
+}
+
 .products-sideview .pricing-wrapper > p:last-child {
     text-align: center;
 }
@@ -36,7 +45,6 @@
 .products-sideview .price {
     font-size: 32px;
     font-weight: bold;
-    margin: 20px 0;
 }
 
 .products-sideview .tag-blue {

@@ -9,8 +9,12 @@ export default async function decorate(block) {
     // eslint-disable-next-line no-undef
     const products = await Store.getProducts([new ProductInfo(alias, 'consumer', custompid)]);
     const productItem = products[alias];
+    const productCurrency = productItem.currency;
+    const productRegionId = productItem.regionId;
     const variation = productItem.getOption(Number(devices), Number(years));
     const percentPrice = variation.getDiscount('percentage');
+    const newPrice = variation.priceDiscounted;
+    const oldPrice = variation.price;
 
     // discount in the title
     const tileDiscountEl = block.querySelector('h5');
@@ -21,6 +25,12 @@ export default async function decorate(block) {
     if (buyBtnEl) {
       buyBtnEl.textContent = buyBtnEl.textContent.replace('50%', `${percentPrice}%`);
       buyBtnEl.setAttribute('href', await variation.getStoreUrl());
+      buyBtnEl.setAttribute('data-product', alias);
+      buyBtnEl.setAttribute('data-buy-price', newPrice);
+      buyBtnEl.setAttribute('data-old-price', oldPrice);
+      buyBtnEl.setAttribute('data-currency', productCurrency);
+      buyBtnEl.setAttribute('data-region', productRegionId);
+      buyBtnEl.setAttribute('data-variation', `${devices}u-${years}y`);
     }
   }
 
@@ -54,6 +64,8 @@ export default async function decorate(block) {
   document.addEventListener('mouseout', (event) => {
     if (popupDisplayCount < POPUP_DISPLAY_LIMIT && event.clientY < 0 && parentSelector) {
       parentSelector.style.display = 'block';
+      document.dispatchEvent(new Event('exit_popup_display'));
+      window.exit_popup_display = true;
 
       // add to the count
       popupDisplayCount += 1;

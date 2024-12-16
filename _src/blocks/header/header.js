@@ -6,6 +6,91 @@ import {
   adobeMcAppendVisitorId, getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
 
+import { User } from '../../scripts/libs/user.js';
+import Cookie from '../../scripts/libs/cookie.js';
+import { Constants } from '../../scripts/libs/constants.js';
+import { Visitor } from '../../scripts/libs/data-layer.js';
+
+/**
+ * @param {string} username
+ * @param {string} email
+ * @param {HTMLLIElement} newMegaMenuLoginTab
+ * updates the mega menu login popup and avatar
+ */
+const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
+  let firstInitial;
+  let secondInitial;
+
+  // if the cookies are still valid update the menu
+  if (username) {
+    const splitUserName = username.split(' ');
+    firstInitial = splitUserName[0].charAt(0).toUpperCase();
+    // eslint-disable-next-line no-nested-ternary
+    secondInitial = splitUserName.length > 1
+      ? splitUserName[1].charAt(0).toUpperCase()
+      : (splitUserName[0].length > 1 ? splitUserName[0].charAt(1).toUpperCase() : '');
+  } else {
+    const splitEmail = email.split('@')[0].replace(/[^a-zA-Z]+/g, '');
+    firstInitial = splitEmail.charAt(0).toUpperCase();
+    secondInitial = splitEmail.length > 1 ? splitEmail.charAt(1).toUpperCase() : '';
+  }
+
+  // set user initials in the avatar section
+  const avatar = newMegaMenuLoginTab.querySelector('.mega-menu__right-link');
+  avatar.classList.add('mega-menu__login');
+  avatar.textContent = `${firstInitial}${secondInitial}`;
+
+  // switch to the logged in popup
+  const loginPopup = newMegaMenuLoginTab.querySelector('.mega-menu__second-level-container');
+  const loginPopupHeaderLink = loginPopup.querySelector('.mega-menu__column .navigation__header-link');
+  const loginPopupLinksThatNeedToChange = [...loginPopup.querySelectorAll('.navigation__link')]
+    .filter((navigationLink) => navigationLink.dataset.loggedInLink);
+
+  if (loginPopupHeaderLink) {
+    loginPopupHeaderLink.textContent = username
+      ? `${avatar.dataset.loginText}, ${username}`
+      : `${avatar.dataset.loginText}, ${email}`;
+  }
+
+  const userLoggedInExpirationDate = Cookie.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
+
+  if (!userLoggedInExpirationDate
+    || (userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now())) {
+    loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
+      loginPopupLink.href = await Visitor.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
+    });
+  }
+};
+
+/**
+ * @param {Element} root
+ * run the login logic after the menu is loaded in
+ */
+const loginFunctionality = async (root = document) => {
+  try {
+    // change login container to display that the user is logged in
+    // if the previous call was successfull
+    const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
+    const loginAttempt = sessionStorage.getItem('login-attempt');
+    const userData = await User.getUserInfo();
+
+    if (!loginAttempt && !userData) {
+      const userLoggedInExpirationDate = Cookie.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
+      if (userLoggedInExpirationDate > Date.now()) {
+        sessionStorage.setItem('login-attempt', true);
+        const loginEndpointUrl = new URL(`${Constants.LOGIN_URL_ORIGIN}${megaMenuLoginContainer.dataset.loginEndpoint}`);
+        loginEndpointUrl.searchParams.set('origin', `${window.location.pathname}${window.location.search}`);
+        window.location.href = loginEndpointUrl.href;
+      }
+    } else if (userData) {
+      updateMegaMenu(userData.firstname, userData.email, megaMenuLoginContainer);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn(error);
+  }
+};
+
 function makeImagePathsAbsolute(contentDiv, baseUrl) {
   contentDiv.querySelectorAll('img').forEach((imgElement) => {
     // Update the `src` attribute with an absolute URL
@@ -412,12 +497,7 @@ async function runDefaultHeaderLogic(block) {
         aemFetchDomain = websiteDomain.split('-').join('_');
       }
 
-      const aemHeaderHostname = window.location.hostname.includes('.hlx.')
-        || window.location.hostname.includes('localhost')
-        ? 'https://stage.bitdefender.com'
-        : '';
-
-      const aemHeaderFetch = await fetch(`${aemHeaderHostname}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`);
+      const aemHeaderFetch = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`);
       if (!aemHeaderFetch.ok) {
         return;
       }
@@ -431,14 +511,14 @@ async function runDefaultHeaderLogic(block) {
       contentDiv.innerHTML = aemHeaderHtml;
 
       // make image paths absolute for non-production environments
-      if (aemHeaderHostname === 'https://stage.bitdefender.com') {
-        makeImagePathsAbsolute(contentDiv, aemHeaderHostname);
+      if (Constants.PUBLIC_URL_ORIGIN === 'https://stage.bitdefender.com') {
+        makeImagePathsAbsolute(contentDiv, Constants.PUBLIC_URL_ORIGIN);
       }
 
       const loadedLinks = [];
       contentDiv.querySelectorAll('link').forEach((linkElement) => {
         // update the links so that they work on all Franklin domains
-        linkElement.href = `${aemHeaderHostname}${linkElement.getAttribute('href')}`;
+        linkElement.href = `${Constants.PUBLIC_URL_ORIGIN}${linkElement.getAttribute('href')}`;
 
         // add a promise for each link element in the code
         // so that we can wait on all the CSS before displaying the component
@@ -481,7 +561,7 @@ async function runDefaultHeaderLogic(block) {
         const scripts = contentDiv.querySelectorAll('script');
         scripts.forEach((script) => {
           const newScript = document.createElement('script');
-          newScript.src = `${aemHeaderHostname}${script.getAttribute('src')}`;
+          newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
           newScript.defer = true;
           contentDiv.appendChild(newScript);
         });
@@ -500,18 +580,10 @@ async function runDefaultHeaderLogic(block) {
 
       await Promise.allSettled(loadedLinks);
       contentDiv.style.display = 'block';
-      document.querySelector('body > div:first-child').classList.add('header-with-language-banner');
+      nav.classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
-      // TODO: remove this code once localizations are done
-      if (window.location.href.includes('scuderiaferrari')) {
-        if (nav && nav.shadowRoot) {
-          const languageBanner = nav.shadowRoot.querySelector('.language-banner.parbase');
-          if (languageBanner) {
-            languageBanner.style.display = 'none';
-          }
-        }
-      }
+      loginFunctionality(shadowRoot);
       return;
     }
 

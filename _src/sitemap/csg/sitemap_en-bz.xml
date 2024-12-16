@@ -2,6 +2,7 @@
 <urlset xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/awards</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/awards"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/awards"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/awards"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/awards"/>
@@ -223,6 +224,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/antivirus-free-for-android</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/antivirus-free-for-android"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/antivirus-free-for-android"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/antivirus-free-for-android"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/antivirus-free-for-android"/>
@@ -444,6 +446,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/trafficlight</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/trafficlight"/>
@@ -664,14 +667,18 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/renewal/</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/renewal/"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/renewal/"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/renewal/"/>
+        <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/renewal/"/>
+        <xhtml:link rel="alternate" hreflang="es-co" href="https://www.bitdefender.com/es-co/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-ph" href="https://www.bitdefender.com/en-ph/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-sa" href="https://www.bitdefender.com/en-sa/renewal/"/>
+        <xhtml:link rel="alternate" hreflang="es-cl" href="https://www.bitdefender.com/es-cl/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-il" href="https://www.bitdefender.com/en-il/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-za" href="https://www.bitdefender.com/en-za/renewal/"/>
         <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/renewal/"/>
@@ -688,6 +695,7 @@
         <xhtml:link rel="alternate" hreflang="en-cz" href="https://www.bitdefender.com/en-cz/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-hu" href="https://www.bitdefender.com/en-hu/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-ae" href="https://www.bitdefender.com/en-ae/renewal/"/>
+        <xhtml:link rel="alternate" hreflang="es-pe" href="https://www.bitdefender.com/es-pe/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-th" href="https://www.bitdefender.com/en-th/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-ca" href="https://www.bitdefender.com/en-ca/renewal/"/>
         <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/renewal/"/>
@@ -695,6 +703,7 @@
         <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-bg" href="https://www.bitdefender.com/en-bg/renewal/"/>
+        <xhtml:link rel="alternate" hreflang="es-bz" href="https://www.bitdefender.com/es-bz/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-jm" href="https://www.bitdefender.com/en-jm/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-mt" href="https://www.bitdefender.com/en-mt/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/renewal/"/>
@@ -880,6 +889,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/free-antivirus</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/free-antivirus"/>
@@ -1101,6 +1111,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/mobile-security-android</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/mobile-security-android"/>
@@ -1322,6 +1333,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/premium-security</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/premium-security"/>
@@ -1543,6 +1555,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/upgrade/free</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/upgrade/free"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/upgrade/free"/>
         <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/consumer/upgrade/free"/>
         <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/consumer/upgrade/free"/>
@@ -1747,6 +1760,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/total-security</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/total-security"/>
@@ -1968,6 +1982,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/ultimate-security</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/ultimate-security"/>
@@ -2189,6 +2204,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/password-manager</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/password-manager"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/password-manager"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/password-manager"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/password-manager"/>
@@ -2410,6 +2426,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/scamio</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/scamio"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/scamio"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/scamio"/>
         <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/consumer/scamio"/>
@@ -2622,6 +2639,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/mobile-security-ios</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/mobile-security-ios"/>
@@ -2843,6 +2861,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/"/>
@@ -3064,6 +3083,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/family-pack</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/family-pack"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/family-pack"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/family-pack"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/family-pack"/>
@@ -3285,6 +3305,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/digital-identity-protection</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/digital-identity-protection"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/digital-identity-protection"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/digital-identity-protection"/>
         <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/consumer/digital-identity-protection"/>
@@ -3501,6 +3522,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/virus-scanner-for-mac</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/virus-scanner-for-mac"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/virus-scanner-for-mac"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/virus-scanner-for-mac"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/virus-scanner-for-mac"/>
@@ -3721,6 +3743,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/antivirus</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/antivirus"/>
@@ -3942,6 +3965,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/small-office-security</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/small-office-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/small-office-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/small-office-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/small-office-security"/>
@@ -4163,6 +4187,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/antivirus-for-mac</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/antivirus-for-mac"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/antivirus-for-mac"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/antivirus-for-mac"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/antivirus-for-mac"/>
@@ -4384,6 +4409,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/internet-security</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/internet-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/internet-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/internet-security"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/internet-security"/>
@@ -4605,6 +4631,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-bz/consumer/vpn</loc>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/vpn"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/vpn"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/vpn"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/vpn"/>

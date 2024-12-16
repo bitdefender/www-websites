@@ -1,3 +1,5 @@
+import Page from "./page.js"
+
 export const Constants = {
   DEV_BASE_URL: ['localhost', 'stage', '.hlx.'].some((domain) => 
     window.location.hostname.includes(domain)) ? 'https://www.bitdefender.com' : '',
@@ -16,7 +18,7 @@ export const Constants = {
 		av: "com.bitdefender.cl.av",
 		is: "com.bitdefender.cl.is",
 		tsmd: "com.bitdefender.cl.tsmd",
-		fp: "com.bitdefender.fp",
+		fp: ['nl-nl', 'nl-be'].includes(Page.locale) ? "com.bitdefender.fp" : "com.bitdefender.cl.fp",
 		ps: "com.bitdefender.premiumsecurity",
 		psm: "com.bitdefender.premiumsecurity",
 		psp: "com.bitdefender.premiumsecurityplus",
@@ -36,14 +38,14 @@ export const Constants = {
 		dip: "com.bitdefender.dataprivacy",
 		dipm: "com.bitdefender.dataprivacy",
 		avpm: 'com.bitdefender.cl.avplus.v2',
-		ultsec: "",
-		ultsecplus: "",
-		ultsecm: "",
-		ultsecplusm: "",
-		idthefts: "",
-		idtheftp: "",
-		idtheftsm: "",
-		idtheftpm: "",
+		ultsec: "com.bitdefender.ultimatesecurityus",
+		ultsecplus: "com.bitdefender.ultimatesecurityplusus",
+		ultsecm: "com.bitdefender.ultimatesecurityus",
+		ultsecplusm: "com.bitdefender.ultimatesecurityplusus",
+		idthefts: "com.bitdefender.idtheftstandard",
+		idtheftp: "com.bitdefender.idtheftpremium",
+		idtheftsm: "com.bitdefender.idtheftstandard",
+		idtheftpm: "com.bitdefender.idtheftpremium",
 		// DLP
 		ts_i: 'com.bitdefender.tsmd.v2',
 		ts_f: 'com.bitdefender.tsmd.v2',
@@ -53,14 +55,16 @@ export const Constants = {
 		us_i_m: 'com.bitdefender.ultimatesecurityeu.v2',
 		us_f: 'com.bitdefender.ultimatesecurityeu.v2',
 		us_f_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pf: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pf_m: 'com.bitdefender.ultimatesecurityeu.v2',
-		us_pi: 'com.bitdefender.ultimatesecurityplusus.v2',
-		us_pi_m: 'com.bitdefender.ultimatesecurityplusus.v2',
+		us_pf: 'com.bitdefender.ultimatesecurityus.v2',
+		us_pf_m: 'com.bitdefender.ultimatesecurityus.v2',
+		us_pi: 'com.bitdefender.ultimatesecurityus.v2',
+		us_pi_m: 'com.bitdefender.ultimatesecurityus.v2',
 		us_pie: 'com.bitdefender.ultimatesecurityplusus.v2',
 		us_pie_m: 'com.bitdefender.ultimatesecurityplusus.v2',
 		us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
 		us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
+		secpass: 'com.bitdefender.securepass',
+		secpassm: 'com.bitdefender.securepass'
   },
 
   PRODUCT_ID_NAME_MAPPINGS: {
@@ -70,7 +74,7 @@ export const Constants = {
 	pass_spm: "Bitdefender Password Manager Shared Plan"
   },
 
-  MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m", "ultsecm", "ultsecplusm", "idtheftsm", "idtheftpm"],
+  MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m", "ultsecm", "ultsecplusm", "idtheftsm", "idtheftpm", "secpassm"],
 
   WRONG_DEVICES_PRODUCT_IDS: {
 		'pass_sp': {
@@ -100,5 +104,16 @@ export const Constants = {
 
   ADOBE_TARGET_SESSION_ID_PARAM: "adobeTargetSessionId",
 
-  TARGET_TENANT: "bitdefender"
+  TARGET_TENANT: "bitdefender",
+
+  PUBLIC_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
+    ? '' : 'https://www.bitdefender.com',
+  
+  LOGIN_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
+    ? window.location.origin : 'https://www.bitdefender.com',
+
+  NO_PROMOTION: "ignore",
+
+  // TODO: please remove this once digital river starts working correctly
+  SOHO_CORNER_CASES_LOCALSE: ["de-de", "de-at", "de-ch"]
 }

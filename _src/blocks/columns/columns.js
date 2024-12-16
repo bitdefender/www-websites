@@ -175,6 +175,20 @@ export default function decorate(block, options) {
     matchHeights(chatOptions, '.chat-options-text');
     matchHeights(chatOptions, 'table');
   }
+  block.querySelectorAll('h3')?.forEach((element) => {
+    if (element.textContent.includes('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}')) {
+      element.classList.add('await-loader');
+    }
+  });
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
+  if (block.closest('.section').classList.contains('multi-blocks')) {
+    matchHeights(block.closest('.section'), '.columns');
+    matchHeights(block.closest('.section'), 'table');
+    matchHeights(block.closest('.section'), 'p:nth-last-of-type(2)');
+    matchHeights(block.closest('.section'), '.columns > div');
+  }
+  if (block.classList.contains('awards-fragment')) {
+    matchHeights(block, 'p:last-of-type');
+  }
 }

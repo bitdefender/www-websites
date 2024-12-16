@@ -1,5 +1,6 @@
 import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
 import Page from '../libs/page.js';
+import { Constants } from '../libs/constants.js';
 
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
@@ -132,15 +133,6 @@ const PRICE_LOCALE_MAP = new Map([
 export function checkIfConsumerPage() {
   const lastSegmentInPath = window.location.pathname?.split('/')?.filter(Boolean)?.slice(-1)[0];
   return lastSegmentInPath === 'consumer';
-}
-
-/**
- * Returns the value of a query parameter
- * @returns {String}
- */
-export function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -821,6 +813,21 @@ export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSel
   }
 }
 
+export function getBrowserName() {
+  const { userAgent } = navigator;
+
+  if (userAgent.includes('Firefox')) {
+    return 'Firefox';
+  } if (userAgent.includes('Edg')) {
+    return 'Edge';
+  } if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) {
+    return 'Chrome';
+  } if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+    return 'Safari';
+  }
+  return 'Unknown';
+}
+
 export function decorateBlockWithRegionId(element, id) {
   // we could consider to use `element.setAttribute('s-object-region', id);` in the future
   if (element) element.id = id;
@@ -829,3 +836,5 @@ export function decorateBlockWithRegionId(element, id) {
 export function decorateLinkWithLinkTrackingId(element, id) {
   if (element) element.setAttribute('s-object-id', id);
 }
+
+export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
