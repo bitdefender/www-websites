@@ -557,8 +557,6 @@ main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
 }
 
 .hero-container.half-width-picture .hero-picture picture {
-  position: relative;
-
   &::after {
     content: '';
     position: absolute;
