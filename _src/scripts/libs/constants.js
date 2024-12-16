@@ -64,7 +64,11 @@ export const Constants = {
 		us_pfe: 'com.bitdefender.ultimatesecurityplusus.v2',
 		us_pfe_m: 'com.bitdefender.ultimatesecurityplusus.v2',
 		secpass: 'com.bitdefender.securepass',
-		secpassm: 'com.bitdefender.securepass'
+		secpassm: 'com.bitdefender.securepass',
+		vsb: 'com.bitdefender.vsb',
+		vsbm: 'com.bitdefender.vsb',
+		sc: 'com.bitdefender.ccp',
+		scm: 'com.bitdefender.ccp'
   },
 
   PRODUCT_ID_NAME_MAPPINGS: {
@@ -74,7 +78,7 @@ export const Constants = {
 	pass_spm: "Bitdefender Password Manager Shared Plan"
   },
 
-  MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m", "ultsecm", "ultsecplusm", "idtheftsm", "idtheftpm", "secpassm"],
+  MONTHLY_PRODUCTS: ["psm", "pspm", "vpn-monthly", "passm", "pass_spm", "dipm", "us_i_m", "us_f_m", "us_pf_m", "us_pi_m", "us_pie_m", "us_pfe_m", "ultsecm", "ultsecplusm", "idtheftsm", "idtheftpm", "secpassm", "vsbm", "scm"],
 
   WRONG_DEVICES_PRODUCT_IDS: {
 		'pass_sp': {
