@@ -140,7 +140,7 @@ function updateBuyLink(block) {
 }
 
 function renderPrice(block, _firstProduct, secondProduct) {
-  const variant = '7-1';
+  const variant = '12-1';
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
 
