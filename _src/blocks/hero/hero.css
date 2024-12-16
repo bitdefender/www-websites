@@ -589,8 +589,6 @@ main .hero.ferrari .breadcrumb{
 }
 
 .hero-container.half-width-picture .hero-picture picture {
-  position: relative;
-
   &::after {
     content: '';
     position: absolute;
