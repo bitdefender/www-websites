@@ -15,30 +15,13 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 }
 
-.scuderia-ferrari-section.quotes-left {
-    width: 100%;
-    background-color: #FF2800;
-    padding: 20px;
-    flex-flow: column;
-    display: flex;
-    align-items: baseline;
-    text-align: left;
-
+.scuderia-ferrari-section.quotes-right, .scuderia-ferrari-section.quotes-left {
     > div {
         display: flex;
         flex-flow: column;
         justify-content: center;
         z-index: 1;
         padding: 0;
-    }
-
-    div {
-        justify-content: flex-end;
-        padding: 10px;
-    }
-
-    div:last-of-type {
-        max-width: 80%;
     }
 
     p {
@@ -54,10 +37,6 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         }
     }
 
-    h2 {
-        line-height: 0.66;
-    }
-
     img {
         display: block;
         position: absolute;
@@ -70,6 +49,28 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         object-fit: cover;
         z-index: 0;
     }
+
+    h2 {
+        line-height: 0.66;
+    }
+
+    div {
+        padding: 10px;
+
+        &:last-of-type {
+            max-width: 80%;
+        }
+    }
+}
+
+.scuderia-ferrari-section.quotes-left {
+    width: 100%;
+    background-color: #FF2800;
+    padding: 20px;
+    flex-flow: column;
+    display: flex;
+    align-items: baseline;
+    text-align: left;
 }
 
 .scuderia-ferrari-section.quotes-right {
@@ -82,51 +83,8 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     align-items: end;
     justify-content: right;
 
-    > div {
-        display: flex;
-        flex-flow: column;
-        justify-content: center;
-        z-index: 1;
-        padding: 0;
-    }
-
-    div {
-        align-items: end;
-        padding: 10px;
-    }
-
     div:last-of-type {
-        max-width: 80%;
-    }
-
-    p {
-        font-size: 24px;
-
-        strong {
-            font-size: 16px;
-        }
-
-        &:last-of-type {
-            line-height: 1.23;
-            font-size: 12px;
-        }
-    }
-
-    h2 {
-        line-height: 0.66;
-    }
-
-    img {
-        display: block;
-        position: absolute;
-        top: 0;
-        bottom: auto;
-        left: 0;
-        right: 0;
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        z-index: 0;
+        align-items: end;
     }
 
     p:nth-last-of-type(2) {
@@ -303,8 +261,6 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 
     .scuderia-ferrari-section.quotes-right{
-        align-items: center;
-
         p:nth-last-of-type(2){
             font-size: 26px;
             font-weight: 400;
