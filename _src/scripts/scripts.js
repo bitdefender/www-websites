@@ -25,6 +25,7 @@ import Page from './libs/page.js';
 import {
   adobeMcAppendVisitorId,
   createTag,
+  getPageExperimentKey,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
 
@@ -237,7 +238,12 @@ export async function detectModalButtons(main) {
       }
 
       // generate new modal
-      document.body.append(await createModal(link.href, undefined, stopAutomaticModalRefresh));
+      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
+      document.body.append(modalContainer);
+      await StoreResolver.resolve(modalContainer);
+      modalContainer.querySelectorAll('.await-loader').forEach((element) => {
+        element.classList.remove('await-loader');
+      });
     });
   });
 }
@@ -291,42 +297,6 @@ function buildCtaSections(main) {
     .forEach(buildCta);
 }
 
-/**
- * Loads everything needed to get to LCP.
- * @param {Element} doc The container element
- */
-async function loadEager(doc) {
-  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
-  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
-  decorateTemplateAndTheme();
-
-  await window.hlx.plugins.run('loadEager');
-
-  AdobeDataLayerService.push(await new PageLoadStartedEvent());
-  await resolveNonProductsDataLayer();
-
-  const templateMetadata = getMetadata('template');
-  const hasTemplate = getMetadata('template') !== '';
-  if (hasTemplate) {
-    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
-    // loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
-    //   type: 'module',
-    // });
-  }
-  const main = doc.querySelector('main');
-  if (main) {
-    decorateMain(main);
-    buildCtaSections(main);
-    buildTwoColumnsSection(main);
-    detectModalButtons(main);
-    document.body.classList.add('appear');
-    if (window.location.href.indexOf('scuderiaferrari') !== -1) {
-      document.body.classList.add('sferrari');
-    }
-    await waitForLCP(LCP_BLOCKS);
-  }
-}
-
 export async function loadTrackers() {
   const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
 
@@ -358,6 +328,48 @@ export async function loadTrackers() {
 }
 
 /**
+ * Loads everything needed to get to LCP.
+ * @param {Element} doc The container element
+ */
+async function loadEager(doc) {
+  // load trackers early if there is a target experiment on the page
+  if (getPageExperimentKey()) {
+    loadTrackers();
+  }
+
+  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
+  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
+  decorateTemplateAndTheme();
+
+  // TODO: if experiments stop working correctly please consider bringing this back:
+  // await window.hlx.plugins.run('loadEager');
+
+  AdobeDataLayerService.push(await new PageLoadStartedEvent());
+  await resolveNonProductsDataLayer();
+
+  const templateMetadata = getMetadata('template');
+  const hasTemplate = getMetadata('template') !== '';
+  if (hasTemplate) {
+    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
+    // loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
+    //   type: 'module',
+    // });
+  }
+  const main = doc.querySelector('main');
+  if (main) {
+    decorateMain(main);
+    buildCtaSections(main);
+    buildTwoColumnsSection(main);
+    detectModalButtons(main);
+    document.body.classList.add('appear');
+    if (window.location.href.indexOf('scuderiaferrari') !== -1) {
+      document.body.classList.add('sferrari');
+    }
+    await waitForLCP(LCP_BLOCKS);
+  }
+}
+
+/**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
  */
@@ -371,6 +383,10 @@ async function loadLazy(doc) {
     loadHeader(doc.querySelector('header'));
   }
 
+  // only call load Trackers here if there is no experiment on the page
+  if (!getPageExperimentKey()) {
+    loadTrackers();
+  }
   await loadBlocks(main);
 
   const { hash } = window.location;
@@ -390,8 +406,6 @@ async function loadLazy(doc) {
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`);
   }
-
-  loadTrackers();
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
@@ -493,6 +507,8 @@ async function loadPage() {
 
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
+  document.dispatchEvent(new Event('bd_page_ready'));
+  window.bd_page_ready = true;
   elements.forEach((element) => {
     element.classList.remove('await-loader');
   });

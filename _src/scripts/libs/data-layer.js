@@ -1,6 +1,21 @@
 import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
 import Page from "./page.js";
+import { Constants } from "./constants.js";
+
+/**
+ * 
+ * @returns {boolean} returns wether A/B tests should be disabled or not
+ */
+const shouldABTestsBeDisabled = () => {
+  /** This is a special case for when adobe.target is disabled using dotest query param */
+  const windowSearchParams = new URLSearchParams(window.location.search);
+  if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key) === Constants.DISABLE_TARGET_PARAMS.value) {
+    return true;
+  }
+
+  return false;
+};
 
 /**
  * 
@@ -33,7 +48,6 @@ export class PageLoadStartedEvent {
   event = "page load started";
   pageInstanceID = "";
   page = null;
-  TARGET_TENANT = "bitdefender";
 
   /**
    * 
@@ -56,24 +70,27 @@ export class PageLoadStartedEvent {
   }
 
   /**
-   * 
-   * @param {string} param -> the parameter to be searched in the URL 
-   * @returns {string} -> value of the parameter
-   */
-  #getParamValue(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-  }
-
-  /**
-   * get experiment details from Target
-   * @returns {object | null}
+  * get experiment details from Target
+  * @returns {Promise<{
+  *  experimentId: string;
+  *  experimentVariant: string;
+  * } | null>}
    */
   async #getTargetExperimentDetails() {
+    /**
+     * @type {{
+     *  experimentId: string;
+     *  experimentVariant: string;
+     * }|null}
+     */
     let targetExperimentDetails = null;
-    if (this.#getMetadata('target-experiment') !== '') {
+
+    const targetExperimentLocation = this.#getMetadata('target-experiment-location');
+    const targetExperimentId = this.#getMetadata('target-experiment');
+    if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      targetExperimentDetails = await runTargetExperiment(TARGET_TENANT);
+      const experimentUrl = (await Target.getOffer(targetExperimentLocation))?.content?.url;
+      targetExperimentDetails = await runTargetExperiment(experimentUrl, targetExperimentId);
     }
 
     return targetExperimentDetails;
@@ -166,7 +183,7 @@ export class PageLoadStartedEvent {
         subSubSubSection: pageSectionData.subSubSubSection,
         destinationURL: window.location.href,
         queryString: window.location.search,
-        referringURL: this.#getParamValue('adobe_mc_ref') || this.#getParamValue('ref') || document.referrer || '',
+        referringURL: Page.getParamValue('adobe_mc_ref') || Page.getParamValue('ref') || document.referrer || '',
         serverName: 'hlx.live', // indicator for AEM Success Edge
         language: pageSectionData.locale,
         sysEnv: UserAgent.os,
@@ -174,9 +191,9 @@ export class PageLoadStartedEvent {
           { experimentDetails: pageSectionData.experimentDetails }),
       },
       attributes: {
-        promotionID: this.#getParamValue('pid') || '',
-        internalPromotionID: this.#getParamValue('icid') || '',
-        trackingID: this.#getParamValue('cid') || '',
+        promotionID: Page.getParamValue('pid') || '',
+        internalPromotionID: Page.getParamValue('icid') || '',
+        trackingID: Page.getParamValue('cid') || '',
         time: this.#getCurrentTime(),
         date: this.#getCurrentDate(),
         domain: pageSectionData.domain,
@@ -200,9 +217,6 @@ export class PageLoadStartedEvent {
     }
 
     const experimentDetails = (await this.#getTargetExperimentDetails()) ?? this.#getExperimentDetails();
-    // eslint-disable-next-line no-console
-    console.debug(`Experiment details: ${JSON.stringify(experimentDetails)}`);
-  
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
@@ -525,15 +539,21 @@ export class Visitor {
   static #instanceID = '0E920C0F53DA9E9B0A490D45@AdobeOrg';
   static #instance = null;
   static #staticInit = new Promise(resolve => {
-    if (window.Visitor) {
-      Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
+
+    if (shouldABTestsBeDisabled()) {
       resolve();
       return;
     }
 
-    window.addEventListener("load", () => {
+    if (window.Visitor) {
+      Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
+      resolve();
+      return;
+    }
+
+    document.addEventListener('at-library-loaded', () => {
       if (window.Visitor) {
-        Visitor.#instance = window.Visitor.getInstance(Visitor.#instanceID);
+        Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
       }
       resolve();
     })
@@ -572,15 +592,7 @@ window._Visitor = Visitor;
 
 export class Target {
   static events = {
-    LIBRARY_LOADED: "at-library-loaded",
-    REQUEST_START: "at-request-start",
-    REQUEST_SUCCEEDED: "at-request-succeeded",
-    REQUEST_FAILED: "at-request-failed",
-    CONTENT_RENDERING_START: "at-content-rendering-start",
-    CONTENT_RENDERING_SUCCEEDED: "at-content-rendering-succeeded",
-    CONTENT_RENDERING_FAILED: "at-content-rendering-failed",
-    CONTENT_RENDERING_NO_OFFERS: "at-content-rendering-no-offers",
-    CONTENT_RENDERING_REDIRECT: "at-content-rendering-redirect"
+    LIBRARY_LOADED: "at-library-loaded"
   }
 
   /**
@@ -594,72 +606,62 @@ export class Target {
   static offers = null;
 
   static #staticInit = new Promise(resolve => {
-    /** Target is loaded and we wait for it to finish so we can get the offer */
-    if (window.adobe?.target) {
-      this.#getOffers().then(resolve);
+
+    /** This is a special case for when adobe.target is disabled using dotest query param */
+    if (shouldABTestsBeDisabled()) {
+      resolve();
       return;
     }
 
-    /** 
-     * Semaphor to mark that the offer call was made 
-     * This helps avoid doubled call fot the getOffer
-     * Set before any 'await' as those triggered jumps in the code
-     */
-    let offerCallMade = false;
+    /** Target is loaded and we wait for it to finish so we can get the offer */
+    if (window.adobe?.target) {
+      resolve();
+      return;
+    }
 
     /** Target wasn't loaded we wait for events from it */
-    [this.events.CONTENT_RENDERING_SUCCEEDED, this.events.CONTENT_RENDERING_NO_OFFERS]
-      .forEach(event => document.addEventListener(event, async () => {
-        if (!offerCallMade) {
-          offerCallMade = true;
-          await this.#getOffers();
-          resolve();
-        }
-      }, { once: true }));
-
-    [this.events.CONTENT_RENDERING_FAILED, this.events.REQUEST_FAILED]
-      .forEach(event => document.addEventListener(event, async () => {
-        if (!offerCallMade) {
-          offerCallMade = true;
-          resolve();
-        }
-      }, { once: true }));
-
-    /** 
-     * Worst case the load event is triggered before the event from Target
-     * as such we try to make the offer call again checking if at least the library was loaded
-     */
-    window.addEventListener("load", async () => {
-      if (!offerCallMade) {
-
-        if (window.adobe?.target) {
-          offerCallMade = true;
-          await this.#getOffers();
-          resolve();
-        } else if (window.location.hostname !== 'localhost') {
-          /** 
-           * Wait for 4 seconds and check if adobe launch was loaded and triggered the offer call
-           */
-          setTimeout(() => {
-            if (!offerCallMade) {
-              offerCallMade = true;
-              resolve();
-            }
-          }, 4000);
-        } else {
-          resolve();
-        }
-      }
+    document.addEventListener(this.events.LIBRARY_LOADED, () => {
+      resolve();
     }, { once: true });
   });
+
+  /**
+   * @typedef {{content: {pid: string}}} PidMbox
+   * @type {Promise<PidMbox|null>}
+   */
+   static #campaignMbox = this.getOffer('initSelector-mbox');
+
+  /**
+   * @typedef {{content: object}} BuyLinksMbox
+   * @type {Promise<BuyLinksMbox|null>}
+   */
+  static #buyLinksMbox = this.getOffer('buyLinks-mbox');
+
+  /**
+   * get the product-buy link mappings from Target (
+   *  e.g
+   *  {
+   *    "is": {
+   *      "5-1": [buyLink],
+   *      "10-1": [buyLink]
+   *    },
+   *    "tsmd": {
+   *      ...
+   *    }
+   *  }
+   * )
+   * @returns {Promise<object>}
+   */
+  static async getBuyLinksMapping() {
+    return (await this.#buyLinksMbox)?.content || {};
+  }
 
   /**
    * https://bitdefender.atlassian.net/wiki/spaces/WWW/pages/1661993460/Activating+Promotions+Enhancements+Target
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    await this.#staticInit;
-    return this.offers?.["initSelector-mbox"]?.content?.pid || null
+    return (await this.#campaignMbox)?.content?.pid || null;
   }
 
   /**
@@ -671,36 +673,20 @@ export class Target {
   }
 
   /**
-   * @returns {[string]}
+   * @param {string} mboxName
+   * @param {object} parameters 
    */
-  static #getAllMboxes() {
-    const mboxes = [...document.querySelectorAll("[data-mboxes]")]
-      .map(mboxes => {
-        try {
-          return JSON.parse(mboxes.dataset.mboxes)
-        } catch (error) {
-          console.warn(error);
-          return null;
-        }
-      })
-      .filter(Boolean)
-      .reduce((acc, mboxes) => {
-        mboxes.forEach(mbox => acc.add(mbox));
-        return acc;
-      }, new Set());
-
-    if (!mboxes) {
-      return [];
-    }
-
-    return [...mboxes].map((name, index) => { return { index: ++index, name } });
+  static async getOffer(mboxName, parameters = {}) {
+    const receivedOffers = await this.getOffers([{name: mboxName, parameters}]);
+    return receivedOffers ? receivedOffers[mboxName] : null;
   }
 
-  static async #getOffers() {
-    const mboxes = this.#getAllMboxes();
+  static async getOffers(mboxes) {
+    await this.#staticInit;
+    let offers = {};
 
     try {
-      this.offers = await window.adobe?.target?.getOffers({
+      offers = await window.adobe?.target?.getOffers({
         consumerId: await Visitor.getConsumerId(),
         request: {
           id: {
@@ -708,14 +694,13 @@ export class Target {
           },
           execute: {
             mboxes: [
-              { index: 0, name: "initSelector-mbox" },
-              ...mboxes
+              ...mboxes.map((mbox, index) => {return { index, ...mbox}})
             ]
           }
         }
       });
 
-      this.offers = this.offers?.execute?.mboxes?.reduce((acc, mbox) => {
+      offers = offers?.execute?.mboxes?.reduce((acc, mbox) => {
         acc[mbox.name] = {};
         acc[mbox.name].content = mbox?.options?.[0]?.content;
         acc[mbox.name].type = mbox?.options?.[0]?.type;
@@ -725,16 +710,8 @@ export class Target {
     } catch (e) {
       console.warn(e);
     }
-  }
 
-  /**
-   * 
-   * @param {string} mbox 
-   * @returns {Promise<Mbox|null>}
-   */
-  static async getMbox(mbox) {
-    await this.#staticInit;
-    return this.offers?.[mbox];
+    return offers;
   }
 };
 

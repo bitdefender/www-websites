@@ -1,5 +1,6 @@
 import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
 import Page from '../libs/page.js';
+import { Constants } from '../libs/constants.js';
 
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
@@ -132,15 +133,6 @@ const PRICE_LOCALE_MAP = new Map([
 export function checkIfConsumerPage() {
   const lastSegmentInPath = window.location.pathname?.split('/')?.filter(Boolean)?.slice(-1)[0];
   return lastSegmentInPath === 'consumer';
-}
-
-/**
- * Returns the value of a query parameter
- * @returns {String}
- */
-export function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -633,12 +625,12 @@ export async function matchHeights(targetNode, selector) {
   };
 
   const observer = new MutationObserver(matchHeightsCallback);
-  const resizeObserver = new ResizeObserver((entries) => {
+  const resizeObserver = new ResizeObserver(debounce((entries) => {
     // eslint-disable-next-line no-unused-vars
     entries.forEach((entry) => {
       adjustHeights();
     });
-  });
+  }), 100);
 
   if (targetNode) {
     observer.observe(targetNode, { childList: true, subtree: true });
@@ -676,6 +668,12 @@ export function trackProduct(product, location = '') {
 }
 
 export function pushTrialDownloadToDataLayer() {
+  const trialPaths = [
+    'fragments/thank-you-for-downloading',
+    'fragments/get-bitdefender',
+    'fragments/trial',
+  ];
+
   const getTrialID = (currentPage, button) => {
     if (['thank-you', 'free-antivirus'].includes(currentPage)) {
       return '8430';
@@ -705,7 +703,7 @@ export function pushTrialDownloadToDataLayer() {
   if (sections.length) {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
-      if (href.includes('fragments/thank-you-for-downloading') || href.includes('fragments/get-bitdefender')) {
+      if (trialPaths.some((trialPath) => href.includes(trialPath))) {
         button.addEventListener('click', () => { pushTrialData(button); });
       }
     });
@@ -795,6 +793,7 @@ export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSel
     case 'Windows 2000':
       openUrl = urlWindows;
       break;
+    case 'Linux':
     case 'Android':
       openUrl = urlAndroid;
       break;
@@ -814,6 +813,21 @@ export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSel
   }
 }
 
+export function getBrowserName() {
+  const { userAgent } = navigator;
+
+  if (userAgent.includes('Firefox')) {
+    return 'Firefox';
+  } if (userAgent.includes('Edg')) {
+    return 'Edge';
+  } if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) {
+    return 'Chrome';
+  } if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+    return 'Safari';
+  }
+  return 'Unknown';
+}
+
 export function decorateBlockWithRegionId(element, id) {
   // we could consider to use `element.setAttribute('s-object-region', id);` in the future
   if (element) element.id = id;
@@ -822,3 +836,5 @@ export function decorateBlockWithRegionId(element, id) {
 export function decorateLinkWithLinkTrackingId(element, id) {
   if (element) element.setAttribute('s-object-id', id);
 }
+
+export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);

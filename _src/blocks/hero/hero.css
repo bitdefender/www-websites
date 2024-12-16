@@ -1,6 +1,6 @@
 /* stylelint-disable no-descending-specificity */
 
-  /* block specific CSS goes here */
+/* block specific CSS goes here */
 :root {
   /* hero font size */
   --hero-font-size-xxxl: 50px;
@@ -26,8 +26,20 @@
 main .hero {
   background-color: white;
   position: relative;
-  padding: 1em 0 3em;
+  padding: 1em 0 2em;
   min-height: 300px;
+}
+
+main .section.bfoffer .hero {
+  background-color: transparent;
+}
+
+main .section.bfoffer .hero .hero-content {
+  background-color: transparent;
+}
+
+main .bfoffer .hero .hero-content p:last-of-type picture img {
+  display: none;
 }
 
 /* breadcrumbs */
@@ -93,7 +105,7 @@ main .hero.black-background .hero-content .breadcrumb a:hover {
 }
 
 /* hero */
-main .hero-container > div {
+main .hero-container>div {
   max-width: unset;
 }
 
@@ -102,7 +114,7 @@ main .hero-container {
   margin: 0 auto;
 }
 
-main .hero-container.blue-title .hero-content > div {
+main .hero-container.blue-title .hero-content>div {
   width: 100%;
 }
 
@@ -125,7 +137,7 @@ main .hero-container.migration .hero-content p em {
   font-style: normal;
 }
 
-main .hero .hero-content > div {
+main .hero .hero-content>div {
   width: 100%;
 }
 
@@ -288,14 +300,14 @@ main .hero p {
   margin: 0;
 }
 
-main .hero h1 + p {
+main .hero h1+p {
   margin: 8px 0 0;
   color: #616161;
   font-size: var(--hero-font-size-xxxs);
   line-height: 1.5;
 }
 
-main .hero h1 + p strong {
+main .hero h1+p strong {
   font-weight: var(--font-weight-bold);
 }
 
@@ -310,7 +322,7 @@ main .hero.comparison p {
   margin: 24px 0 0;
 }
 
-main .hero.black-background h1 + p {
+main .hero.black-background h1+p {
   color: var(--text-dark-color);
 }
 
@@ -348,7 +360,8 @@ main .hero a.button {
   margin: 8px 13px 0 0;
 }
 
-main .hero a.button.modal, main .hero a.button.central {
+main .hero a.button.modal,
+main .hero a.button.central {
   padding: 0 28px 0 0;
   min-width: unset;
 }
@@ -359,10 +372,14 @@ main .hero a.button.modal, main .hero a.button.central {
     justify-content: center;
     align-items: center;
   }
+
+  main .hero.ferrari h1{
+    max-width: 80%;
+  }
 }
 
 main .hero a.button span.button-text {
-  transition: all .25s cubic-bezier(.4,0,.2,1);
+  transition: all .25s cubic-bezier(.4, 0, .2, 1);
   display: inline-block;
   position: relative;
   font-size: var(--hero-font-size-xs);
@@ -454,8 +471,8 @@ main .hero ul li::after {
   top: 6px;
   width: 3px;
   height: 7px;
-  border-bottom: 2px solid var( --white-color);
-  border-right: 2px solid var( --white-color);
+  border-bottom: 2px solid var(--white-color);
+  border-right: 2px solid var(--white-color);
   transform: rotate(45deg);
   z-index: 2;
 }
@@ -466,7 +483,7 @@ main .hero ul.hero-awards {
   align-items: center;
   justify-content: flex-start;
   margin: 0;
-  padding: 40px 0 48px;
+  padding: 40px 0 0;
   text-align: left;
 }
 
@@ -488,6 +505,12 @@ main .hero ul.hero-awards li picture img {
   width: auto;
 }
 
+main .hero-container.bigger-awards {
+  .hero ul.hero-awards li picture img {
+    height: 96px;
+  }
+}
+
 main .hero .hero-awards li::after {
   content: none;
 }
@@ -501,47 +524,106 @@ main .v2 .hero h1 {
   font-family: var(--body-font-family);
 }
 
-main .v2 .hero h1 + p {
+main .v2 .hero h1+p {
   font-size: var(--body-font-size-s);
 }
 
-main .v2 .hero .hero-content > div:first-of-type {
+main .v2 .hero .hero-content>div:first-of-type {
   width: 100%;
 }
 
-main .v2 .hero .hero-content > div:last-of-type img {
+main .v2 .hero .hero-content>div:last-of-type img {
   height: auto;
   width: 360px;
   position: absolute;
   bottom: 0;
 }
 
-main .v2 .hero .hero-content > div table tr {
+main .v2 .hero .hero-content>div table tr {
   display: flex;
 }
 
-main .v2 .hero .hero-content > div table tr td:first-of-type {
+main .v2 .hero .hero-content>div table tr td:first-of-type {
   margin-right: 2em;
   width: 280px;
 }
 
-main .v2 .hero .hero-content > div table tr td:last-of-type {
+main .v2 .hero .hero-content>div table tr td:last-of-type {
   width: 465px;
 }
 
 /* stylelint-disable-next-line selector-class-pattern */
-main .smaller_icon .hero .hero-content > div table tr td:last-of-type {
+main .smaller_icon .hero .hero-content>div table tr td:last-of-type {
   width: fit-content;
 }
 
-main .v2 .hero .hero-content > div table tr td img {
+main .v2 .hero .hero-content>div table tr td img {
   width: 100%;
   height: auto;
 }
 
 /* stylelint-disable-next-line selector-class-pattern */
-main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
+main .smaller_icon .hero .hero-content>div table tr td:first-of-type {
   width: 70px;
+}
+
+main .hero.ferrari{
+  background-color: #006DFF;
+}
+
+main .hero.ferrari .hero-content{
+  display: flex;
+  flex-direction: column;
+  color: #FFF;
+  padding: 20px;
+}
+
+main .hero.ferrari .hero-content img{
+  position: relative;
+}
+
+main .hero.ferrari .breadcrumb{
+  display: none;
+}
+
+.hero-container.grey-background .hero-picture {
+  background-color: #f6f6f6;
+}
+
+.hero-container.half-width-picture .hero-picture picture {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 25%;
+    bottom: 0;
+    left: 50%;
+    background: transparent linear-gradient(90deg, rgb(246 246 246 / 100%) 0%, rgb(224 224 224 / 0%) 100%);
+  }
+}
+
+.hero-container.half-width-picture .hero-picture picture img {
+  padding-left: 50%;
+  position: relative;
+}
+
+.hero-container.blue-title .h1 {
+  color: #006DFF;
+}
+
+.hero-container.smaller-awards .hero ul.hero-awards {
+  gap: 20px;
+  padding: 0;
+
+  li {
+    margin: 0;
+  }
+}
+
+.hero-container.smaller-awards .hero ul.hero-awards li picture img {
+  height: 50px;
 }
 
 @media(max-width: 989px) {
@@ -552,13 +634,57 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   }
 }
 
-@media(max-width: 991px) { /* tablet */
+@media(max-width: 991px) {
+  /* tablet */
   main .hero.new2024design .breadcrumb {
     display: none;
   }
 }
 
 @media(min-width: 767px) { /* tablet */
+  main .hero.ferrari{
+    min-height: 715px;
+  }
+
+  main .hero.ferrari .hero-picture picture img{
+    padding-left: 0;
+    object-fit:cover;
+    object-position: bottom;
+  }
+
+  main .hero.ferrari .hero-content{
+    flex-flow: column;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    max-width: 85%;
+  }
+
+  main .hero.hero.ferrari .hero-content img{
+    right: 0;
+  }
+
+  main .hero.ferrari .hero-content > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0px 20px 0px 0px;
+
+  }
+  main .hero.ferrari .hero-content > div img{
+    max-height: 225px;
+    max-width: 813px;
+  }
+  main .hero.ferrari h1{
+    font-size: 60px;
+    font-weight: 300;
+    align-self: center;
+  }
+
+  main .hero.ferrari h1 strong{
+    font-weight: 700;
+  }
+
   :root {
     --hero-h1-font-size: 42px;
   }
@@ -585,12 +711,13 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     margin: 0 9px;
   }
 
-  main .hero-container.blue-title .hero-content > div {
+  main .hero-container.blue-title .hero-content>div {
     width: 630px;
   }
 }
 
-@media (min-width: 990px) { /* desktop */
+@media (min-width: 990px) {
+  /* desktop */
   main .hero.new2024design .hero-content:last-of-type {
     min-height: 360px;
     padding: 2em;
@@ -601,11 +728,11 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     height: 430px;
   }
 
-  main .hero .hero-content > div.left-col {
+  main .hero .hero-content>div.left-col {
     width: 50%;
   }
 
-  main .hero .hero-content > div.right-col {
+  main .hero .hero-content>div.right-col {
     width: 50%;
     padding-left: 1.25rem;
   }
@@ -662,12 +789,12 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     min-width: 360px;
   }
 
-  main .hero .hero-content > div {
+  main .hero .hero-content>div {
     width: 60%;
     padding: 0 20px 0 0;
   }
 
-  main .hero.comparison .hero-content > div {
+  main .hero.comparison .hero-content>div {
     width: 65%;
     padding: 40px 0 0;
   }
@@ -695,17 +822,17 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   }
 
   /* stylelint-disable-next-line selector-class-pattern */
-  main .smaller_icon .hero .hero-content > div:last-of-type img {
-    width: 40%!important;
+  main .smaller_icon .hero .hero-content>div:last-of-type img {
+    width: 40% !important;
   }
 
   /* stylelint-disable-next-line selector-class-pattern */
-  main .new_v2 .hero .hero-content > div:last-of-type img {
-    width: 60%!important;
+  main .new_v2 .hero .hero-content>div:last-of-type img {
+    width: 60% !important;
     right: 0;
   }
 
-  main .v2 .hero .hero-content > div:last-of-type img {
+  main .v2 .hero .hero-content>div:last-of-type img {
     width: 360px;
     right: -11em !important;
     bottom: -3em;
@@ -722,7 +849,8 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   }
 }
 
-@media (min-width: 1600px) { /* large desktop */
+@media (min-width: 1600px) {
+  /* large desktop */
   main .hero .hero-content .breadcrumb {
     padding: 9px 0;
     margin-bottom: 15px;
@@ -761,10 +889,16 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
   }
 
   main .hero .hero-content {
-    min-height: 640px;
     max-width: var(--section-large-desktop-max-width);
     padding-left: var(--section-large-desktop-padding);
     padding-right: var(--section-large-desktop-padding);
+  }
+
+  main .hero.ferrari .hero-content {
+    min-height: 768px;
+  }
+  main .hero.ferrari h1 {
+    max-width: 60%;
   }
 
   main .hero.black-background .hero-content {
@@ -779,11 +913,11 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     font-size: var(--heading-font-size-xl1);
   }
 
-  main .hero .hero-content > div table tr td:last-of-type {
+  main .hero .hero-content>div table tr td:last-of-type {
     width: 510px;
   }
 
-  main .hero .hero-content > div table tr td:first-of-type {
+  main .hero .hero-content>div table tr td:first-of-type {
     display: none;
   }
 
@@ -791,18 +925,28 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     padding-left: 0;
   }
 
-  main .v2 .hero .hero-content > div:last-of-type img {
+  main .v2 .hero .hero-content>div:last-of-type img {
     width: 265px;
     right: 0;
   }
 }
 
 @media (max-width: 768px) {
-  main .hero .hero-picture, main .v2 .hero .hero-content > div:last-of-type img {
+  main .hero .hero-picture,
+  main .v2 .hero .hero-content>div:last-of-type img {
     display: none;
   }
 
-  main .v2 .hero .hero-content > div table tr td:last-of-type {
+  main .bfoffer main .hero {
+    padding-top: 3rem;
+    padding-bottom: 0;
+  }
+
+  main .bfoffer .hero .hero-content p:last-of-type picture img {
+    display: block;
+  }
+
+  main .v2 .hero .hero-content>div table tr td:last-of-type {
     width: 100%;
   }
 
@@ -810,8 +954,26 @@ main .smaller_icon .hero .hero-content > div table tr td:first-of-type {
     font-size: var(--heading-font-size-l2);
   }
 
-  main .v2 .hero h1 + p {
+  main .v2 .hero h1+p {
     font-size: var(--body-font-size-xs);
+  }
+  main .hero.ferrari .hero-picture{
+    display: block;
+  }
+
+  main .hero.ferrari .hero-content >div{
+    text-align: center;
+  }
+
+  main .hero.ferrari .hero-picture picture img{
+    display: block;
+    position: absolute;
+    object-fit: cover;
+    padding: 0;
+  }
+
+  main .hero.ferrari h1{
+    font-weight: 400;
   }
 }
 

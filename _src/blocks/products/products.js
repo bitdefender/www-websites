@@ -1,3 +1,4 @@
+import { Constants } from '../../scripts/libs/constants.js';
 import {
   createNanoBlock,
   renderNanoBlocks,
@@ -40,10 +41,12 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters['data-store-click-set-devices'] = label;
     } else {
       const productCode = plans[idx + 1];
+      const variation = plans[idx + 2];
       liStoreParameters['data-store-click-set-product'] = '';
       liStoreParameters['data-store-product-id'] = productCode;
       liStoreParameters['data-store-department'] = 'consumer';
-      liStoreParameters['data-product-type'] = productCode.slice(-1) === 'm' ? 'monthly' : 'yearly';
+      liStoreParameters['data-product-type'] = Constants.MONTHLY_PRODUCTS.includes(productCode) ? 'monthly' : 'yearly';
+      liStoreParameters['data-store-product-option'] = variation;
     }
 
     const li = createTag(
@@ -52,14 +55,20 @@ function renderPlanSelector(plans, defaultSelection) {
       `<span>${label}</span>`,
     );
 
-    // set the
+    // set the default selection
     if (defaultSelection === label) {
       li.classList.add('active');
+      li.checked = true;
     }
 
     li.addEventListener('click', () => {
-      root.querySelectorAll('.active').forEach((option) => option.classList.remove('active'));
+      const previousButtonActive = root.querySelector('.active');
+      if (previousButtonActive) {
+        previousButtonActive.classList.remove('active');
+        previousButtonActive.checked = false;
+      }
       li.classList.add('active');
+      li.checked = true;
     });
 
     ul.appendChild(li);
@@ -148,7 +157,7 @@ function renderHighlightSavings(text = 'Save', percent = '') {
     'div',
     {
       'data-store-hide': 'no-price=discounted;type=visibility',
-      class: 'highlight',
+      class: 'highlight await-loader',
       style: 'display=none',
     },
     `${highlighSaving.outerHTML}`,
@@ -208,6 +217,7 @@ const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
  */
 function renderFeatured(text) {
   const root = document.createElement('div');
+  root.setAttribute('data-store-text-variable', '');
   root.classList.add('featured');
   root.textContent = text;
 
@@ -250,10 +260,9 @@ function renderFeaturedSavings(text = 'Save', percent = '') {
  * @returns root node of the nanoblock
  */
 function renderLowestPrice(...params) {
-  const fileteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
-  const text = fileteredParams.length > 1 ? fileteredParams[1] : fileteredParams[0];
-  const monthly = fileteredParams.length > 1 ? fileteredParams[0] : '';
-
+  const filteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
+  const text = filteredParams.length > 1 ? filteredParams[1] : filteredParams[0];
+  const monthly = filteredParams.length > 1 ? filteredParams[0] : '';
   const root = document.createElement('p');
   const textArea = document.createElement('span');
   root.classList.add('await-loader');
@@ -269,12 +278,13 @@ function renderLowestPrice(...params) {
  * @returns Root node of the nanoblock
  */
 function renderPriceCondition(text) {
+  const updatedText = text.replace('BilledPrice', '<em data-store-price="discounted||full" class="await-loader"></em>');
   return createTag(
     'div',
     {
-      class: 'price',
+      class: 'price condition',
     },
-    `<em>${text}</em>`,
+    `<em>${updatedText}</em>`,
   );
 }
 
@@ -299,7 +309,6 @@ export default function decorate(block) {
   Object.entries(metadata).forEach(([key, value]) => {
     if (key.includes('plans')) {
       const allImportantData = value.match(/[^,{}[\]]+/gu).map((importantData) => importantData.trim());
-
       plans.push({
         productCode: allImportantData[1],
         defaultVariant: `${Number(allImportantData.slice(-1)[0])
@@ -328,8 +337,13 @@ export default function decorate(block) {
       }
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', storeEvent);
-      col.querySelector('.button-container a')?.setAttribute('data-store-buy-link', '');
-
+      const cardButtons = col.querySelectorAll('.button-container a');
+      cardButtons?.forEach((button) => {
+        if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
+          button.href = '#';
+          button.setAttribute('data-store-buy-link', '');
+        }
+      });
       block.appendChild(col);
       renderNanoBlocks(col, undefined, idxParent);
     });
@@ -383,38 +397,44 @@ export default function decorate(block) {
     }
   });
 
-  // Height matching logic
+  // Height matching and Dynamic texts logic
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
-  cards.forEach((card) => {
-    const priceElements = card.querySelectorAll('.price.nanoblock');
-    if (priceElements.length >= 2) {
-      const secondToLastPrice = priceElements[priceElements.length - 2];
-      const previousElement = secondToLastPrice.previousElementSibling;
-      if (previousElement && previousElement.tagName.toLowerCase() === 'p') {
-        previousElement.classList.add('first-year-price-text');
-      } else {
-        const newP = document.createElement('p');
-        newP.classList.add('first-year-price-text');
-        secondToLastPrice.before(newP);
-      }
-    }
-
+  cards.forEach((card, cardIndex) => {
     const hasImage = card.querySelector('img') !== null;
-
-    if (hasImage) {
+    if (hasImage && !block.classList.contains('plans') && !block.classList.contains('compact')) {
       // If the image exists, set max-width to the paragraph next to the image
-      const firstPElement = card.querySelector('p:not(:has(img, svg))');
-      window.addEventListener('resize', () => {
-        if (firstPElement && window.matchMedia('(min-width: 1200px)').matches) {
-          firstPElement.style.maxWidth = '75%';
-        } else {
-          firstPElement.style.maxWidth = '';
-        }
-      });
-      window.dispatchEvent(new Event('resize'));
+      const firstPElement = card.querySelector('p:not(:has(img, .icon))');
+      firstPElement.classList.add('img-adjacent-text');
     }
-
+    const planSelector = card.querySelector('.variant-selector');
+    const dynamicPriceTextsKey = `dynamicPriceTexts${cardIndex + 1}`;
+    if (metadata[dynamicPriceTextsKey]) {
+      const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
+      const priceConditionEl = card.querySelector('.price.condition em');
+      planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
+        option.addEventListener('click', () => {
+          if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
+            const textTemplate = dynamicPriceTexts[idx] || '';
+            // in order to preserve the store eventListeners we can't replace the priceElement
+            // every time another option is selected therefore we're using a string template
+            if (textTemplate.includes('{BilledPrice}')) {
+              const [before, after] = textTemplate.split('{BilledPrice}');
+              const nodesToRemove = Array.from(priceConditionEl.childNodes).filter(
+                (node) => node.nodeType === Node.TEXT_NODE,
+              );
+              // Clear only non-<em> text nodes (this element contains store events)
+              nodesToRemove.forEach((node) => priceConditionEl.removeChild(node));
+              // eslint-disable-next-line max-len
+              if (before) priceConditionEl.insertBefore(document.createTextNode(before), priceConditionEl.firstChild);
+              if (after) priceConditionEl.appendChild(document.createTextNode(after));
+            } else {
+              priceConditionEl.textContent = textTemplate;
+            }
+          }
+        });
+      });
+    }
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
@@ -428,8 +448,8 @@ export default function decorate(block) {
       emptyDiv.style.visibility = 'hidden';
     }
   });
-  matchHeights(block, '.first-year-price-text');
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, '.price.condition');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');
