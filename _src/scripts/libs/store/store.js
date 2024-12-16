@@ -446,7 +446,7 @@ export class Product {
 
 		let buyLink = new URL(yearsOption.buyLink);
 		buyLink.searchParams.set("SHOPURL", `${window.location.origin}/${window.location.pathname.split('/')[1]}/`);
-		buyLink.searchParams.set("REF", this.promotion && this.promotion !== Store.NO_PROMOTION ? this.promotion : "N/A");
+		buyLink.searchParams.set("REF", this.promotion && this.promotion !== Store.NO_PROMOTION ? `WEBSITES_${this.promotion}` : "N/A");
 		buyLink.searchParams.set("SRC", `${window.location.origin}${window.location.pathname}`);
 
 		// replace the buy links with target links if they exist and return the option
