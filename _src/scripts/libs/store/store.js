@@ -709,7 +709,6 @@ class Vlaicu {
 
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
-	static campaign = "WINTERMCWEB24";
 
 	/**
 	 * TODO: please remove this function and all its calls once digital river works correctly
@@ -725,11 +724,11 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : this.campaign
+			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = this.promotionPath
+		let productPath = campaign !== Constants.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
