@@ -250,7 +250,9 @@
 
 .percent-table .columns table tr td:first-of-type {
   font-size: var(--heading-font-size-l);
-  padding-right: 1.5em;
+  padding-right: 1em;
+  text-align: right;
+  width: 125px;
 }
 
 .percent-table .columns table tr td:last-of-type {
@@ -505,9 +507,6 @@
   overflow: hidden;
 }
 
-.section.pl-0 .columns-wrapper {
-  padding-left: 0;
-}
 
 .section.pr-0 .columns-wrapper {
   padding-right: 0;
@@ -588,6 +587,15 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+
+  .section.pl-0 .columns-wrapper {
+    padding-left: 0;
+  }
+  
+  .percent-table .columns table tr td:first-of-type{
+    min-width: 140px;
+    padding-right: 1.5em;
   }
 }
 
@@ -871,6 +879,11 @@
   border-radius: 10px;
 }
 
+.section.migration.table-align-top tr{
+  flex-direction: column;
+}
+
+
 .columns.carousel {
   width: 100%;
   margin-top: 0;
@@ -972,6 +985,9 @@
     order: unset;
     justify-content: center;
     align-items: center;
+  }
+  .section.migration.table-align-top tr{
+    flex-direction: unset;
   }
 }
 
