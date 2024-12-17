@@ -719,10 +719,15 @@ class Vlaicu {
 	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
 
 	static async getProductVariations(productId, campaign) {
+		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
+		let geoIpFlag = await Target.getOffer('vlaicu-flag-mbox').geoIpPrice;
+		if (geoIpFlag) {
+			locale = await User.locale;
+		}
 		const pathVariablesResolverObject = {
 			// TODO: please remove the ternary operators below and only use Page.locale
 			// and campaign once digital river works correctly
-			"{locale}": this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale,
+			"{locale}": locale,
 			"{bundleId}": productId,
 			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : campaign
 		};
