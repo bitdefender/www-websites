@@ -720,7 +720,7 @@ class Vlaicu {
 
 	static async getProductVariations(productId, campaign) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
-		let geoIpFlag = await Target.getOffer('vlaicu-flag-mbox').geoIpPrice;
+		let geoIpFlag = await Target.getOffer('vlaicu-flag-mbox')[0].content.geoIpPrice;
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
