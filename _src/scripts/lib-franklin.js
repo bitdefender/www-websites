@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { getParamValue } from "./utils/utils.js";
+import Page from './libs/page.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
 export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.hlx.page', '.hlx.live'];
@@ -661,7 +661,7 @@ export function decorateTemplateAndTheme() {
       element.classList.add(toClassName(c.trim()));
     });
   };
-  const dark = getParamValue('theme');
+  const dark = Page.getParamValue('theme');
   if (dark) addClasses(document.body, 'dark-mode');
   const template = getMetadata('template');
   if (template) addClasses(document.body, template);

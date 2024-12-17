@@ -1,6 +1,6 @@
 import { Constants } from "../constants.js";
 import { Target, Visitor } from "../data-layer.js";
-import { getParamValue, GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
+import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
 import { User } from "../../libs/user.js"
@@ -709,6 +709,7 @@ class Vlaicu {
 
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
+	static campaign = "WINTERMCWEB24";
 
 	/**
 	 * TODO: please remove this function and all its calls once digital river works correctly
@@ -724,13 +725,11 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : campaign
+			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : this.campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION || this.#isSohoCornerCase(productId) ?
-			this.promotionPath :
-			this.defaultPromotionPath;
+		let productPath = this.promotionPath
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
@@ -763,7 +762,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id], campaignId);
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()], campaignId);
 		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
 			return null;

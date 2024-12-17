@@ -10,6 +10,8 @@ export class User {
 
   static country = this.#getGeolocation();
 
+  static locale = this.#getUserLocale();
+
   static async #staticInitialise() {
 
     if (!Cookie.has(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME)) {
@@ -22,7 +24,7 @@ export class User {
     } catch {
       return null;
     }
-}
+  }
 
   /**
    * 
@@ -106,6 +108,18 @@ export class User {
   }
 
   /**
+  * 
+  * @returns {Promise<{
+	*   fingerprint: string,
+  *   email: string,
+  *   firstname: string
+  * } | null>}
+  */
+  static async getUserInfo() {
+    return await this.#staticInit;
+  }
+
+  /*
    * Handling User Locale
    * @return {Promise<string>}
    */
@@ -118,16 +132,5 @@ export class User {
     } catch {
       return "en-us"
     }
-  }
-
-  /* 
-  * @returns {Promise<{
-	*   fingerprint: string,
-  *   email: string,
-  *   firstname: string
-  * } | null>}
-  */
-  static async getUserInfo() {
-    return await this.#staticInit;
   }
 };
