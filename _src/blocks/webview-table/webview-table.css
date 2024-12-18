@@ -1,6 +1,6 @@
 :root {
     --first-table-cell-color: #e4f2ff;
-    --yes-check-color: #44AA44;
+    --yes-check-color: #4A4;
     --no-check-color: #FD3434;
     --expandable-row-background-color: #0040F0;
     --expandable-row-text-color: #fff;
@@ -12,27 +12,20 @@
     min-height: 4rem;
 }
 
-.webview-table-wrapper {
-    max-width: 770px;
-    height: 512px;
-    margin: 0 auto;
-    font-family: "Segoe UI", Arial, sans-serif;
-}
-
 .webview-table {
     width: 100%;
     height: 512px;
-
     padding: 0 25px;
     display: table;
     font-size: 14px;
     background-color: #141517;
-    color: #999999;
+    color: #999;
 }
 
 .webview-table h1 {
     text-align: center;
-    font: bold 24px "Segoe UI";
+    font: bold 24px;
+    font-family: "Segoe UI", Arial, sans-serif;
     color: #F7F7F7;
     margin: 10px 0 14px;
 }
@@ -55,20 +48,24 @@
     padding-bottom: 8px;
     border-right: none;
     border-left: none;
+
     p{
         margin: 1px;
         padding: 0;
         line-height: 1;
     }
+
     p:first-of-type{
         margin-top: 8px;
         font-size: 14px;
     }
+
     p:last-of-type{
         margin-bottom: 4px;
         font-size: 16px;
     }
 }
+
 .webview-comparison-header div[role="columnheader"]:first-child {
     min-width: 292px;
 }
@@ -93,29 +90,107 @@
     border-top: 1px solid black;
     align-items: baseline;
 }
-.webview-table div[role="row"]:last-of-type div[role='cell']:first-child{
-    visibility: hidden;
+
+.webview-table .yes-check::after {
+    content: '';
+    width: 3px;
+    height: 7px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.webview-table .price-box {
+    flex-flow: column;
+    color: #e4f2ff;
+    text-align: center;
+}
+
+.webview-table-wrapper {
+    max-width: 770px;
+    height: 512px;
+    margin: 0 auto;
+    font-family: "Segoe UI", Arial, sans-serif;
+
+    &.light-mode {
+        background-color: #fff;
+        color: black;
+
+        h1 {
+            color: black;
+        }
+
+        div[role="columnheader"] {
+            background-color: #fff;
+            color: #000;
+        }
+
+        div[role="cell"] {
+            color: #515B6D;
+            background-color: #fff;
+            border-color: #F5F5F5;
+
+            &:first-child {
+                color: #000;
+                background-color: #F9F9FE;
+                border-color: #FFF;
+            }
+
+            .price-box {
+                color: black;
+            
+                .prod-oldprice{
+                    color: #515B6D;
+                }
+            
+                .prod-newprice{
+                    color: #000 !important;
+                }
+            }
+        }
+
+        .yes-check::after {
+            border: solid #FFF;
+            border-width: 0 2px 2px 0;
+        }
+
+        .button {
+            background-color: #fff;
+        }
+
+        .featured{
+            background-color: #F9F9FE;
+        }
+    }
 }
 
 .webview-table div[role='row']:last-of-type div[role='cell'] {
     border-radius: 0 0 4px 4px;
+
+    &:first-child {
+        visibility: hidden;
+    }
+
     .buy-box{
         display: flex;
         flex-direction: column;
-        gap: 0px;
+        gap: 0;
+
         .prod-oldprice{
             text-align: center;
             text-decoration: line-through;
-            font: normal normal normal 14px Segoe UI;
-            letter-spacing: 0px;
+            font: normal normal normal 14px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            letter-spacing: 0;
             opacity: 1;
         }
     
         .prod-newprice{
             text-align: center;
-            font: normal normal bold 20px Segoe UI;
-            letter-spacing: 0px;
-            color: #FFFFFF;
+            font: normal normal bold 20px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            letter-spacing: 0;
+            color: #FFF;
             opacity: 1;
             line-height: 1;
         }
@@ -139,6 +214,7 @@
     padding: 6px 16px;
     border-radius: 4px;
     text-align: center;
+
     &::after {
         display: none;
         content: none;
@@ -151,11 +227,25 @@
     text-align: center;
 }
 
+.webview-table-wrapper .webview-table .featured {
+    background-color: #202123;
+
+    .button{
+        background-color: #006EFF;
+    }
+
+    .button-text{
+        color: #FFF;
+    }
+}
+
 .webview-table-wrapper .webview-table .current .button{
     border-color: #767676;
+
     .button-text{
         color: #767676;
     }
+
     &::after {
         display: none;
         content: none;
@@ -171,12 +261,6 @@
     padding: 2px;
 }
 
-.webview-table .price_box {
-    flex-flow: column;
-    color: #e4f2ff;
-    text-align: center;
-}
-
 .webview-table .yes-check {
     width: 18px;
     height: 18px;
@@ -186,15 +270,6 @@
     justify-content: center;
     align-items: center;
     color: black;
-}
-
-.webview-table .yes-check::after {
-    content: '';
-    width: 3px;
-    height: 7px;
-    border: solid black;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
 }
 
 .webview-table .no-check {
@@ -218,63 +293,4 @@
 
 .webview-table .no-check::before {
     transform: rotate(-45deg);
-}
-
-.webview-table-wrapper .webview-table .featured{
-    background-color: #202123;
-    .button{
-        background-color: #006EFF;
-    }
-    .button-text{
-        color: #FFFFFF;
-    }
-}
-
-.webview-table-wrapper .light-mode {
-    background-color: #fff;
-    color: black;
-}
-
-.webview-table-wrapper .light-mode h1 {
-    color: black;
-}
-
-.webview-table-wrapper .light-mode div[role="columnheader"] {
-    background-color: #fff;
-    color: #000;
-}
-
-.webview-table-wrapper .light-mode div[role='cell']:first-child {
-    color: #000;
-    background-color: #F9F9FE;
-    border-color: #FFF;
-}
-
-.webview-table-wrapper .light-mode div[role="cell"] {
-    color: #515B6D;
-    background-color: #fff;
-    border-color: #F5F5F5;
-}
-
-.webview-table-wrapper .light-mode  div[role="cell"] .price_box {
-    color: black;
-    .prod-oldprice{
-        color: #515B6D;
-    }
-    .prod-newprice{
-        color: #000000 !important;
-    }
-}
-
-.webview-table-wrapper .light-mode .yes-check::after {
-    border: solid #FFFFFF;
-    border-width: 0 2px 2px 0;
-}
-
-.webview-table-wrapper .light-mode .button {
-    background-color: #fff;
-}
-
-.webview-table-wrapper .light-mode div .featured{
-    background-color: #F9F9FE;
 }

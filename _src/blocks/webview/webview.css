@@ -2,23 +2,10 @@
     max-width: 768px;
     padding: 0 var(--section-desktop-padding);
     margin: 0 auto;
-    background: url(../../icons/pattern.png) repeat-x;
+    background: url("../../icons/pattern.png") repeat-x;
     background-size: 188px 104px;
     text-align: center;
     font-family: "Segoe UI", Arial, sans-serif;
-
-    &.dark-mode {
-        background-color: black;
-
-        .webview {
-            color: white;
-
-            .button.secondary {
-                background-color: black;
-                border-color: black;
-            }
-        }
-    }
 
     .webview {
         max-width: 438px;
@@ -101,14 +88,15 @@
         }
 
         .prod-newprice {
-            font: normal normal bold 24px / 30px Segoe UI;
+            font: normal normal bold 24px / 30px;
+            font-family: "Segoe UI", Arial, sans-serif;
             line-height: 0.7;
         }
 
         .under-price-text {
             font-size: var(--body-font-size-xxs);
             line-height: var(--body-font-size-xxs);
-            color: #666666;
+            color: #666;
 
             p {
                 margin: 0;
@@ -116,10 +104,23 @@
             }
         }
 
-        .price_box {
+        .price-box {
             display: flex;
             flex-direction: column;
             gap: 9px;
+        }
+    }
+
+    &.dark-mode {
+        background-color: black;
+
+        .webview {
+            color: white;
+
+            .button.secondary {
+                background-color: black;
+                border-color: black;
+            }
         }
     }
 }
