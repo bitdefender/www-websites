@@ -718,9 +718,19 @@ class Vlaicu {
 	static #isSohoCornerCase = (productId) =>
 	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
 
+	static $getGeoIpFlag = async () => {
+		const offer = await Target.getOffer('vlaicu-flag-mbox');
+
+		if (offer && offer.content && typeof offer.content.geoIpPrice !== 'undefined') {
+            return offer.content.geoIpPrice;
+		}
+
+		return null;
+	}
+
 	static async getProductVariations(productId, campaign) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
-		let geoIpFlag = await Target.getOffer('vlaicu-flag-mbox').content.geoIpPrice;
+		let geoIpFlag = await this.$getGeoIpFlag();
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
