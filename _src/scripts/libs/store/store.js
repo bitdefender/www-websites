@@ -5,31 +5,6 @@ import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
 import { User } from "../../libs/user.js"
 
-export const monthlyProducts = {
-	"ultsecm": "ultsecm",
-	"ultsecplusm": "ultsecplusm",
-	"psm": "psm",
-	"pspm": "pspm",
-	"vpn-monthly": "vpn-monthly",
-	"passm": "passm",
-	"idtheftsm": "idtheftsm",
-	"idtheftpm": "idtheftpm",
-	"dipm": "dipm",
-	"smarthome_m": "smarthome_m",
-	"vipsupport_m": "vipsupport_m",
-	"pctuneup_m": "pctuneup_m",
-	"pass_spm": "pass_spm",
-	"us_i_m": "us_i_m",
-	"us_f_m": "us_f_m",
-	"us_pf_m": "us_pf_m",
-	"us_pi_m": "us_pi_m",
-	"us_pie_m": "us_pie_m",
-	"us_pfe_m": "us_pfe_m",
-	"secpassm": "secpassm",
-	"vbsm": "vbsm",
-	"scm": "scm",
-}
-
 export const loadScript = (baseUrl, url) => {
 	return new Promise(function (resolve) {
 		const script = document.createElement("script");
@@ -260,7 +235,7 @@ export class ProductOption {
 	getSubscription(modifier = "years") {
 		switch (modifier) {
 			case "years":
-				return monthlyProducts[this.id] ? this.subscription : this.subscription / 12;
+				return Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? this.subscription : this.subscription / 12;
 			case "months":
 				return this.subscription;
 		}
@@ -421,7 +396,7 @@ export class Product {
 			productAlias: this.productAlias,
 			department: this.department,
 			devices,
-			subscription: monthlyProducts[this.id] ? 1 : years * 12,
+			subscription: Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : years * 12,
 			avangateId: this.avangateId
 		});
 
@@ -493,7 +468,7 @@ export class Product {
 				const priceFull = Number(Number(entries.price).toFixed(2));
 				if ((value === "min" && priceFull < price) || (value === "max" && priceFull > price)) {
 					price = priceFull;
-					subscription = monthlyProducts[this.id] ? 1 : Number(years) * 12;
+					subscription = Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : Number(years) * 12;
 				}
 			}
 		}
@@ -532,7 +507,7 @@ export class Product {
 				const priceDiscounted = Number(Number(entry.discount?.discounted_price).toFixed(2));
 				if ((value === "min" && priceDiscounted < price) || (value === "max" && priceDiscounted > price)) {
 					price = priceDiscounted;
-					subscription = monthlyProducts[this.id] ? 1 : Number(years) * 12;
+					subscription = Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : Number(years) * 12;
 				}
 			}
 		}
@@ -612,7 +587,7 @@ export class Product {
 				const priceDiscounted = Number(Number(value.discount?.discounted_price || value.price).toFixed(2));
 				if (priceDiscounted < price) {
 					price = priceDiscounted;
-					subscription = monthlyProducts[this.id] ? 1 : Number(years) * 12;
+					subscription = Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : Number(years) * 12;
 				}
 			}
 		}
@@ -698,7 +673,7 @@ export class Product {
 			case "years":
 				return subscriptions.map(subscription => Number(subscription));
 			case "months":
-				return monthlyProducts[this.id]
+				return Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct
 					? subscriptions.map(subscription => Number(subscription))
 					: subscriptions.map(subscription => Number(subscription) * 12);
 		}
@@ -776,7 +751,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()], campaignId);
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()].bundleId, campaignId);
 		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
 			return null;
@@ -792,7 +767,7 @@ class Vlaicu {
 
 		window.StoreProducts.product[id] = {
 			product_alias: id,
-			product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+			product_id: Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
 			product_name: productInfo.productName,
 			promotion: isReceivedPromotionValid ? productInfoResponse.campaign : campaignId, 
 			variations: {}
@@ -804,7 +779,7 @@ class Vlaicu {
 			 * for monthly products only add the monthly variations
 			 * e.g for vpn-monthly we do not care about the product variation if it passes 12 months (more than a year)
 			 */ 
-			if (Constants.MONTHLY_PRODUCTS.includes(id) && productVariation.months >= 12) {
+			if (Constants.PRODUCT_ID_MAPPINGS[id].isMonthlyProduct && productVariation.months >= 12) {
 				return;
 			}
 
@@ -813,7 +788,7 @@ class Vlaicu {
 			 * e.g for tsmd we do not care about the product variation if it is below 12 months (less than a year)
 			 */
 
-			if (!Constants.MONTHLY_PRODUCTS.includes(id) && productVariation.months < 12) {
+			if (!Constants.PRODUCT_ID_MAPPINGS[id].isMonthlyProduct && productVariation.months < 12) {
 				return;
 			}
 
@@ -822,8 +797,8 @@ class Vlaicu {
 
 			const devicesObj = {
 				currency_iso: productVariation.currency,
-				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-				platform_product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				product_id: Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
+				platform_product_id: productInfoResponse.platformProductId || Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
 				promotion: isReceivedPromotionValid ?
 					productInfoResponse.campaign :
 					campaignId,
@@ -900,19 +875,7 @@ class StoreConfig {
 			return Constants.NO_PROMOTION;
 		}
 
-		try {
-			const response = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/nl-nl/consumer/zuoraconfig.json`);
-			if (!response.ok) {
-				console.error(`Failed to fetch data.`);
-				return Constants.NO_PROMOTION;
-			}
-
-			const { data = [] } = await response.json();
-			return data[0].CAMPAIGN_NAME ? data[0].CAMPAIGN_NAME : Constants.NO_PROMOTION;
-		} catch(e) {
-			console.error(`Failed to fetch data.`);
-			return Constants.NO_PROMOTION;
-		}
+		return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
 	}
 }
 
@@ -949,6 +912,10 @@ export class Store {
 	 */
 	static async getProducts(productsInfo) {
 		if (!Array.isArray(productsInfo)) { return null; }
+
+		if (!Constants.PRODUCT_ID_MAPPINGS) {
+			return null;
+		}
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {

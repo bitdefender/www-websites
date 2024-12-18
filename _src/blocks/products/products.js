@@ -45,7 +45,7 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters['data-store-click-set-product'] = '';
       liStoreParameters['data-store-product-id'] = productCode;
       liStoreParameters['data-store-department'] = 'consumer';
-      liStoreParameters['data-product-type'] = Constants.MONTHLY_PRODUCTS.includes(productCode) ? 'monthly' : 'yearly';
+      liStoreParameters['data-product-type'] = Constants.PRODUCT_ID_MAPPINGS[productCode].isMonthlyProduct ? 'monthly' : 'yearly';
       liStoreParameters['data-store-product-option'] = variation;
     }
 
