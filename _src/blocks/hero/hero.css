@@ -712,6 +712,10 @@ main .hero.ferrari .breadcrumb{
   main .hero-container.blue-title .hero-content>div {
     width: 630px;
   }
+  main .hero-container.blue-title .scamio .hero-content>div {
+    width: 480px;
+  }
+
 }
 
 @media (min-width: 990px) {
@@ -844,6 +848,12 @@ main .hero.ferrari .breadcrumb{
 
   main .v2 .hero h1 {
     font-size: var(--heading-font-size-xxl1);
+  }
+}
+
+@media (min-width:1200px){
+  main .hero-container.blue-title .scamio .hero-content>div {
+    width: 630px;
   }
 }
 
