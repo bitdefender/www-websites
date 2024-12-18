@@ -589,8 +589,6 @@ main .hero.ferrari .breadcrumb{
 }
 
 .hero-container.half-width-picture .hero-picture picture {
-  position: relative;
-
   &::after {
     content: '';
     position: absolute;
@@ -666,13 +664,15 @@ main .hero.ferrari .breadcrumb{
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 0px 20px 0px 0px;
+    padding: 0 20px 0 0;
 
   }
+
   main .hero.ferrari .hero-content > div img{
     max-height: 225px;
     max-width: 813px;
   }
+
   main .hero.ferrari h1{
     font-size: 60px;
     font-weight: 300;
@@ -895,6 +895,7 @@ main .hero.ferrari .breadcrumb{
   main .hero.ferrari .hero-content {
     min-height: 768px;
   }
+
   main .hero.ferrari h1 {
     max-width: 60%;
   }
@@ -955,6 +956,7 @@ main .hero.ferrari .breadcrumb{
   main .v2 .hero h1+p {
     font-size: var(--body-font-size-xs);
   }
+
   main .hero.ferrari .hero-picture{
     display: block;
   }

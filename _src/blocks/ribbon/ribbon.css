@@ -1,7 +1,7 @@
 main .ribbon-container {
   color: white;
   text-align: center;
-  background-position: 0px -18px;
+  background-position: 0 -18px;
   background-repeat: repeat;
   background-blend-mode: unset;
   background-color: black;
@@ -10,7 +10,7 @@ main .ribbon-container {
 }
 
 .ribbon-container * {
-  font-family: "Arial", sans-serif!important;
+  font-family: Arial, sans-serif!important;
   font-size: var(--body-font-size-xs);
 }
 
