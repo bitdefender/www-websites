@@ -540,6 +540,30 @@
     color: #161616;
 }
 
+@media (min-width: 1600px) {
+    main .hero-container .block {
+        max-width: var(--section-large-desktop-max-width);
+        padding-left: var(--section-large-desktop-padding);
+        padding-right: var(--section-large-desktop-padding);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 1em auto;
+        background-color: #F8F8F8;
+    }
+}
+
+@media (min-width: 990px) {
+    main .hero-container .block {
+        max-width: var(--section-desktop-max-width);
+        min-height: unset;
+        padding: 1em var(--section-desktop-padding) 1em var(--section-desktop-padding);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 1em auto;
+        background-color: #F8F8F8;
+    }
+}
+
 @media(max-width: 767px) {
     .ab-downloads main {
         display: grid;
