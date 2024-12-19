@@ -28,6 +28,7 @@ import {
   getPageExperimentKey,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
+import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
@@ -503,6 +504,7 @@ async function loadPage() {
   await window.hlx.plugins.load('eager');
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
+  await Constants.PRODUCT_ID_MAPPINGS_CALL;
   await loadLazy(document);
 
   await StoreResolver.resolve();
