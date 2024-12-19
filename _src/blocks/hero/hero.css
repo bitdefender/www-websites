@@ -712,10 +712,6 @@ main .hero.ferrari .breadcrumb{
   main .hero-container.blue-title .hero-content>div {
     width: 630px;
   }
-  main .hero-container.blue-title .scamio .hero-content>div {
-    width: 480px;
-  }
-
 }
 
 @media (min-width: 990px) {
@@ -851,9 +847,9 @@ main .hero.ferrari .breadcrumb{
   }
 }
 
-@media (min-width:1200px){
-  main .hero-container.blue-title .scamio .hero-content>div {
-    width: 630px;
+@media (max-width: 1200px){
+  main .hero-container.blue-title .scamio .hero-picture img {
+    display: none;
   }
 }
 
