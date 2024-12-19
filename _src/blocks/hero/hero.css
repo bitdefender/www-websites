@@ -850,6 +850,12 @@ main .hero.ferrari .breadcrumb{
   }
 }
 
+@media (max-width: 1200px){
+  main .hero-container.blue-title .scamio .hero-picture img {
+    display: none;
+  }
+}
+
 @media (min-width: 1600px) {
   /* large desktop */
   main .hero .hero-content .breadcrumb {
