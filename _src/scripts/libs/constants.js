@@ -1,5 +1,6 @@
 import Page from "./page.js"
 
+
 export const Constants = {
   DEV_BASE_URL: ['localhost', 'stage', '.hlx.'].some((domain) => 
     window.location.hostname.includes(domain)) ? 'https://www.bitdefender.com' : '',
@@ -97,27 +98,68 @@ export const Constants = {
 			contentDevices: 10,
 			providerDevices: 1,
 		}
-	},
+	};
 
-  DISABLE_TARGET_PARAMS: {
+  static DISABLE_TARGET_PARAMS = {
     key: "dotest",
     value: "1"
-  },
+  };
 
-  TARGET_EXPERIMENT_METADATA_KEY: "target-experiment-location",
+  static TARGET_EXPERIMENT_METADATA_KEY = "target-experiment-location";
 
-  ADOBE_TARGET_SESSION_ID_PARAM: "adobeTargetSessionId",
+  static ADOBE_TARGET_SESSION_ID_PARAM = "adobeTargetSessionId";
 
-  TARGET_TENANT: "bitdefender",
+  static TARGET_TENANT = "bitdefender";
 
-  PUBLIC_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
-    ? '' : 'https://www.bitdefender.com',
+  static PUBLIC_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
+    ? '' : 'https://www.bitdefender.com';
   
-  LOGIN_URL_ORIGIN: ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
-    ? window.location.origin : 'https://www.bitdefender.com',
+  static LOGIN_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
+    ? window.location.origin : 'https://www.bitdefender.com';
 
-  NO_PROMOTION: "ignore",
+  static NO_PROMOTION = "ignore";
 
   // TODO: please remove this once digital river starts working correctly
-  SOHO_CORNER_CASES_LOCALSE: ["de-de", "de-at", "de-ch"]
+  static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
+
+  /**
+   * fetch all the product id mappings for Vlaicu from websites
+   */
+  static async #getVlaicuProductIdsMapping() {
+		try {
+			const localeForVlaicuConfig = this.ZUROA_LOCALES.includes(Page.locale) ? "nl-nl" : "en-us";
+			const response = await fetch(`/${localeForVlaicuConfig}/consumer/vlaicuconfig.json`);
+			if (!response.ok) {
+				console.error(`Failed to fetch data.`);
+				return;
+			}
+
+			/**
+			* @type {{
+			* 	websiteId: string,
+			* 	bundleId: string,
+			* 	isMonthlyProduct: boolean,
+			* 	campaign: string
+			* }[]}
+			*/
+			const data = (await response.json())?.data;
+			if (!data) {
+				return;
+			}
+
+			const vlaicuProductIdsMapping = data.reduce((accumulator, currentValue) => {
+				accumulator[currentValue.websiteId] = {
+					...currentValue,
+					isMonthlyProduct: currentValue.isMonthlyProduct === "false" ? false : true
+				};
+				return accumulator;
+			}, {});
+			vlaicuProductIdsMapping.campaign = data[0].campaign || this.NO_PROMOTION;
+
+			this.PRODUCT_ID_MAPPINGS = vlaicuProductIdsMapping;
+		} catch(e) {
+			console.error(`Failed to fetch data.`);
+			return;
+		}
+  };
 }
