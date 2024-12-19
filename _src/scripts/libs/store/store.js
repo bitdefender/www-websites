@@ -799,8 +799,8 @@ class Vlaicu {
 
 			const devicesObj = {
 				currency_iso: productVariation.currency,
-				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
-				platform_product_id: productInfoResponse.platformProductId || Constants.PRODUCT_ID_MAPPINGS[id],
+				product_id: Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
+				platform_product_id: productInfoResponse.platformProductId || Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
 				promotion: isReceivedPromotionValid ?
 					productInfoResponse.campaign :
 					campaignId,
