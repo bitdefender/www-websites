@@ -100,7 +100,7 @@ function renderPrices(block, metadata) {
       // Populate buy box for non-current products
       if (!isCurrent) {
         buyBox.innerHTML = `
-          <div class="price_box">
+          <div class="price-box">
             <div>
               <span class="prod-oldprice" data-store-price="full" data-store-hide="no-price=discounted"></span>
             </div>

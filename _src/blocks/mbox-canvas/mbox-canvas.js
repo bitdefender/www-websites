@@ -1,5 +1,5 @@
 import { Target } from '../../scripts/libs/data-layer.js';
-import { decorateMain , detectModalButtons } from '../../scripts/scripts.js';
+import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { loadBlocks } from '../../scripts/lib-franklin.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {

@@ -20,7 +20,7 @@ export default async function decorate(block) {
     if (child.textContent.includes('{PRICE_BOX}') && product) {
       child.innerHTML = child.innerHTML.replace('{PRICE_BOX}', '<div class="price-box">Price box</div>');
       child.innerHTML = `
-      <div class="price_box">
+      <div class="price-box">
         <div>
           <span class="prod-oldprice" data-store-price="full" data-store-hide="no-price=discounted"></span>
           <span class="prod-percent" data-store-hide="no-price=discounted"> <span data-store-discount="percentage"></span> ${saveText || ''} </span>

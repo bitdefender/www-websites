@@ -693,8 +693,8 @@ class Vlaicu {
 	static #isSohoCornerCase = (productId) =>
 	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
 
-	static $getGeoIpFlag = async () => {
-		const offer = await Target.getOffer('vlaicu-flag-mbox');
+	static #getGeoIpFlag = async () => {
+		const offer = await Target.getOffer('geoip-flag-mbox');
 
 		if (offer && offer.content && typeof offer.content.geoIpPrice !== 'undefined') {
             return offer.content.geoIpPrice;
@@ -705,7 +705,7 @@ class Vlaicu {
 
 	static async getProductVariations(productId, campaign) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
-		let geoIpFlag = await this.$getGeoIpFlag();
+		let geoIpFlag = await this.#getGeoIpFlag();
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
@@ -718,7 +718,9 @@ class Vlaicu {
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
+		let productPath = campaign !== Constants.NO_PROMOTION || this.#isSohoCornerCase(productId) ?
+			this.promotionPath :
+			this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
@@ -797,8 +799,8 @@ class Vlaicu {
 
 			const devicesObj = {
 				currency_iso: productVariation.currency,
-				product_id: Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
-				platform_product_id: productInfoResponse.platformProductId || Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
+				product_id: Constants.PRODUCT_ID_MAPPINGS[id],
+				platform_product_id: productInfoResponse.platformProductId || Constants.PRODUCT_ID_MAPPINGS[id],
 				promotion: isReceivedPromotionValid ?
 					productInfoResponse.campaign :
 					campaignId,
