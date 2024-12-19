@@ -15,6 +15,21 @@
     margin: 0 auto;
 }
 
+.ab-downloads main .section.wide.awards .default-content-wrapper {
+    border-radius: 15px;
+    background-color: #0853C5;
+    padding: 2em;
+}
+
+.ab-downloads main .section.wide.awards .default-content-wrapper * {
+    color: white;
+    text-align: center;
+}
+
+.ab-downloads main .section.wide.awards .default-content-wrapper a {
+    background-color: #006DFF;
+}
+
 .ab-downloads main .section.wide.awards h2 {
     font-size: 40px;
     font-weight: 700;
@@ -221,6 +236,10 @@
     color: #3D3D3D;
 }
 
+.ab-downloads main .blue-titles.image-columns-container {
+    padding-top: 0;
+}
+
 .ab-downloads main .blue-titles.image-columns-container .block {
     margin-top: 3em;
 }
@@ -276,7 +295,7 @@
     text-align: center;
 }
 
-.ab-downloads main .full-grey-bck.columns-container {
+.ab-downloads main .full-grey-bck.columns-container > div.columns-wrapper {
     background-color: #F6F6F6;
     border-radius: 20px;
     padding: 2em;
@@ -284,6 +303,7 @@
 
 .ab-downloads main .full-grey-bck.columns-container .block > div {
     gap: 5em;
+    align-items: flex-start;
 }
 
 .ab-downloads main .full-grey-bck.columns-container h3 {
@@ -328,10 +348,6 @@
     padding: 0;
 }
 
-.ab-downloads main .full-grey-bck.columns-container .block > div > div:last-of-type p.button-container {
-    display: none;
-}
-
 .ab-downloads main .full-grey-bck.columns-container p.button-container {
     margin: 0;
 }
@@ -343,7 +359,12 @@
     line-height: 18.4px;
 }
 
+.ab-downloads main .has-dropdown.columns-container {
+    padding-bottom: 0;
+}
+
 .ab-downloads main .has-dropdown.columns-container h2 {
+    max-width: 100%;
     margin: 0;
     text-align: left;
 }
@@ -355,19 +376,52 @@
 .ab-downloads main .has-dropdown.columns-container .block {
     border-top: 1px solid #E5E7EB;
     margin-top: 1.5em;
-    padding-top: 1em;
+    padding-top: 0;
 }
 
 .ab-downloads main .has-dropdown.columns-container .block > div {
     align-items: self-start;
 }
 
-.ab-downloads main .has-dropdown.columns-container h3 {
-    color: #006DFF;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 26px;
-    min-height: unset !important;
+.ab-downloads main .has-dropdown.columns-container .block > div:first-of-type {
+    background-color: #E4F2FF;
+    padding: 1em 3em;
+    margin-bottom: 1em;
+}
+
+.ab-downloads main .has-dropdown.columns-container .block > div:first-of-type img {
+    width: 170px;
+}
+
+.ab-downloads main .has-dropdown.columns-container .block > div:first-of-type > div {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+}
+
+.ab-downloads main .has-dropdown.columns-container .block > div:first-of-type p {
+    font-family: Roboto;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+}
+
+.ab-downloads main .has-dropdown.columns-container .block > div:first-of-type p strong {
+    padding-bottom: 15px;
+    display: inline-block;
+}
+
+.ab-downloads main .has-dropdown.columns-container .block > div:last-of-type {
+    min-height: 17em;
+}
+
+.ab-downloads main .has-dropdown.columns-container p {
+    font-family: Roboto;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.5px;
 }
 
 .ab-downloads main .has-dropdown.columns-container .columns-left-col p {
@@ -739,13 +793,6 @@
 
     .ab-downloads main .section.wide.awards .default-content-wrapper {
         border-radius: 0;
-        background-color: #0853C5;
-        padding: 2em;
-    }
-
-    .ab-downloads main .section.wide.awards .default-content-wrapper * {
-        color: white;
-        text-align: center;
     }
 
     .ab-downloads main .section.wide.awards .default-content-wrapper h2 {
@@ -765,7 +812,6 @@
     }
 
     .ab-downloads main .section.wide.awards .default-content-wrapper a {
-        background-color: #006DFF;
         font-size: 14px;
         font-weight: 700;
         line-height: 16.1px;
@@ -791,8 +837,30 @@
         display: none;
     }
 
-    .ab-downloads main .full-grey-bck.columns-container .block > div > div:last-of-type p.button-container {
+    .ab-downloads main .has-dropdown.columns-container .block > div:first-of-type {
+        background-color: transparent;
+        padding: 0;
+    }
+
+    .ab-downloads main .has-dropdown.columns-container .block > div:first-of-type img {
+        display: none;
+    }
+
+    .ab-downloads main .has-dropdown.columns-container .block > div:first-of-type > div {
         display: block;
+    }
+
+    .ab-downloads main .has-dropdown.columns-container .block > div:first-of-type p {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 15.6px;
+    }
+
+    .ab-downloads main .has-dropdown.columns-container .block > div:first-of-type p strong {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 16.9px;
+        color: #006DFF;
     }
 }
 
