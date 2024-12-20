@@ -24,7 +24,8 @@
 
 .webview-table h1 {
     text-align: center;
-    font: bold 24px;
+    font-size: 24px;
+    font-weight: 700;
     font-family: "Segoe UI", Arial, sans-serif;
     color: #F7F7F7;
     margin: 10px 0 14px;
@@ -112,12 +113,16 @@
     margin: 0 auto;
     font-family: "Segoe UI", Arial, sans-serif;
 
-    &.light-mode {
+    .webview-table.light-mode {
         background-color: #fff;
         color: black;
 
         h1 {
             color: black;
+        }
+
+        .webview-comparison-header{
+            background-color: #FFF;
         }
 
         div[role="columnheader"] {
@@ -159,7 +164,7 @@
         }
 
         .featured{
-            background-color: #F9F9FE;
+            background-color: #F9F9FE !important;
         }
     }
 }
@@ -179,7 +184,7 @@
         .prod-oldprice{
             text-align: center;
             text-decoration: line-through;
-            font: normal normal normal 14px;
+            font-size: 14px;
             font-family: "Segoe UI", Arial, sans-serif;
             letter-spacing: 0;
             opacity: 1;
@@ -187,7 +192,8 @@
     
         .prod-newprice{
             text-align: center;
-            font: normal normal bold 20px;
+            font-size: 20px;
+            font-weight: 700;
             font-family: "Segoe UI", Arial, sans-serif;
             letter-spacing: 0;
             color: #FFF;
@@ -220,6 +226,13 @@
         content: none;
     }
 
+    &:hover{
+        filter: brightness(0.9);
+    }
+
+    &:hover span.button-text{
+        transform: none;
+    }
 }
 
  .webview-table .button .button-text {
