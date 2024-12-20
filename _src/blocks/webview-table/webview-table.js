@@ -69,7 +69,7 @@ function renderPrices(block, metadata) {
       // Determine if current product or featured product
       const isFeatured = index + 1 === Number(featuredProduct);
       const isCurrent = Number(currentProduct) === index + 1;
-      if (prodName) {
+      if (prodName && !isCurrent) {
         cell.setAttribute('data-store-context', '');
         cell.setAttribute('data-store-id', prodName);
         cell.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
