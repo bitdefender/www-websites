@@ -3,6 +3,7 @@ import { Target, Visitor } from "../data-layer.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
+import { User } from "../../libs/user.js"
 
 export const loadScript = (baseUrl, url) => {
 	return new Promise(function (resolve) {
@@ -692,11 +693,26 @@ class Vlaicu {
 	static #isSohoCornerCase = (productId) =>
 	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
 
+	static #getGeoIpFlag = async () => {
+		const offer = await Target.getOffer('geoip-flag-mbox');
+
+		if (offer && offer.content && typeof offer.content.geoIpPrice !== 'undefined') {
+            return offer.content.geoIpPrice;
+		}
+
+		return null;
+	}
+
 	static async getProductVariations(productId, campaign) {
+		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
+		let geoIpFlag = await this.#getGeoIpFlag();
+		if (geoIpFlag) {
+			locale = await User.locale;
+		}
 		const pathVariablesResolverObject = {
 			// TODO: please remove the ternary operators below and only use Page.locale
 			// and campaign once digital river works correctly
-			"{locale}": this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale,
+			"{locale}": locale,
 			"{bundleId}": productId,
 			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : campaign
 		};
@@ -737,7 +753,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId) {
-		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id].bundleId, campaignId);
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()].bundleId, campaignId);
 		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
 			return null;
