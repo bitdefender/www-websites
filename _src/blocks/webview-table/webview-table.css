@@ -113,7 +113,7 @@
     margin: 0 auto;
     font-family: "Segoe UI", Arial, sans-serif;
 
-    .webview-table.light-mode {
+    .light-mode {
         background-color: #fff;
         color: black;
 
@@ -160,11 +160,15 @@
         }
 
         .button {
-            background-color: #fff;
+            background-color: #fff !important;
         }
 
         .featured{
             background-color: #F9F9FE !important;
+        }
+
+        .featured .button-text{
+            color: #006EFF !important;
         }
     }
 }
