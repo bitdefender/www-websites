@@ -107,6 +107,25 @@
     text-align: center;
 }
 
+.webview-table-wrapper .webview-table .button{
+    justify-content: center;
+    border: 2px solid #006EFF;
+    background-color: black;
+    width: 122px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    text-align: center;
+
+    &::after {
+        display: none;
+        content: none;
+    }
+
+    &:hover span.button-text{
+        transform: none;
+    }
+}
+
 .webview-table .button .button-text {
     color: #006EFF;
     text-align: center;
@@ -172,8 +191,8 @@
             background-color: #F9F9FE !important;
         }
 
-        .featured .button-text{
-            color: #006EFF !important;
+        .featured .button{
+            background-color: #006EFF !important;
         }
     }
 }
@@ -219,28 +238,9 @@
 .webview-table-wrapper .webview-table .button-container{
     margin-top: 2px;
     margin-bottom: 4px;
-}
-
-.webview-table-wrapper .webview-table .button{
-    justify-content: center;
-    border: 2px solid #006EFF;
-    background-color: black;
-    width: 122px;
-    padding: 6px 16px;
-    border-radius: 4px;
-    text-align: center;
-
-    &::after {
-        display: none;
-        content: none;
-    }
 
     &:hover{
         filter: brightness(0.9);
-    }
-
-    &:hover span.button-text{
-        transform: none;
     }
 }
 
@@ -258,6 +258,7 @@
 
 .webview-table-wrapper .webview-table .current .button{
     border-color: #767676;
+    pointer-events: none;
 
     .button-text{
         color: #767676;
