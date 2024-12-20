@@ -107,6 +107,11 @@
     text-align: center;
 }
 
+.webview-table .button .button-text {
+    color: #006EFF;
+    text-align: center;
+}
+
 .webview-table-wrapper {
     max-width: 770px;
     height: 512px;
@@ -237,11 +242,6 @@
     &:hover span.button-text{
         transform: none;
     }
-}
-
- .webview-table .button .button-text {
-    color: #006EFF;
-    text-align: center;
 }
 
 .webview-table-wrapper .webview-table .featured {
