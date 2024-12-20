@@ -625,6 +625,44 @@ main .hero.ferrari .breadcrumb{
   height: 50px;
 }
 
+main .hero-container.ferrari-migration .hero{
+  background-color:#006DFF;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content h1{
+  color: #FFF;
+  line-height: 0.8;
+}
+main .hero-container.ferrari-migration .hero .hero-content h2{
+  color: #FFF;
+  font-weight: 300;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content p{
+  color: #fff;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content .breadcrumb{
+  display: none;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content a{
+  font-size: 18px;
+  font-weight: 700;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px 10px;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content a img{
+  position: relative;
+  bottom: -10px;
+  height: 87px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
 @media(max-width: 989px) {
   main .hero.new2024design {
     background-color: #006FFF;
@@ -837,6 +875,26 @@ main .hero.ferrari .breadcrumb{
     width: 360px;
     right: -11em !important;
     bottom: -3em;
+  }
+  main .hero-container.ferrari-migration .hero{
+    min-height: 600px;
+    align-content: center;
+  }
+
+  main .hero-container.ferrari-migration .hero .hero-content h1{
+    font-size: 60px;
+    font-weight: 300;
+    line-height: 0.7;
+  }
+
+  main .hero-container.ferrari-migration .hero .hero-content h2{
+    font-size: 32px;
+    font-weight: 300;
+    margin-top: 50px;
+  }
+  
+  main .hero-container.ferrari-migration .hero .hero-picture img{
+    width: 50%;
   }
 }
 

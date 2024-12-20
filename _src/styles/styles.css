@@ -1552,6 +1552,16 @@ main .section.blue a.button.modal::after {
   text-align: center;
 }
 
+.centered-img{
+  text-align: center;
+}
+
+.centered-img img{
+  position: relative;
+  width: 70%;
+  left: -3%;
+}
+
 .align-left {
   text-align: left;
 }
