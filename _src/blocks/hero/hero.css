@@ -352,9 +352,6 @@ main .hero img {
 main .hero .hero-picture picture img {
   position: absolute;
   right: 0;
-
-  /* display: none; */
-  padding-left: 200px;
 }
 
 main .hero a.button {
@@ -688,6 +685,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     padding-left: 0;
     object-fit:cover;
     object-position: bottom;
+    width: 100%;
   }
 
   main .hero.ferrari .hero-content{
