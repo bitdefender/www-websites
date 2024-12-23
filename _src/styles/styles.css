@@ -1121,6 +1121,13 @@ a.button.modal:hover::after, a.button.central:hover::after, main .section.link-r
   width: 100%;
 }
 
+.red_logo_svg p {
+  color: transparent;
+  background: url('../../_src/icons/b-logo-red.svg') no-repeat center transparent;
+  font-size: 120px;
+  margin: 0 auto 0.5em;
+}
+
 main .section[data-backgroundcolor='black'] {
   background-color: black;
 }

@@ -286,6 +286,36 @@
   width: 100%;
 }
 
+.columns.ferrari-text > div{
+  align-items: unset;
+}
+
+.columns.ferrari-text h2{
+  color:#006DFF;
+  font-weight: 300;
+}
+.columns.ferrari-text .columns-text-col{
+  font-weight: 300;
+}
+
+.section.ferrari-quote .columns.ferrari-text .columns-text-col{
+  color:#006DFF;
+}
+
+.columns.ferrari-text .columns-text-col.button-container{
+  align-self: flex-end;
+}
+
+.section.ferrari-quote .columns.ferrari-text .columns-text-col a{
+  background: none;
+  border: none;
+  color:#006DFF;
+  text-align: right;
+  text-decoration: underline;
+  letter-spacing: 0;
+  display: block;
+}
+
 /* stylelint-disable-next-line selector-class-pattern */
 .v2_benefits .columns-container .default-content-wrapper {
   margin-bottom: 3em;
@@ -588,6 +618,17 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+
+  .columns.ferrari-text h2{
+    font-size: 45px;
+  }
+  .columns.ferrari-text .columns-text-col{
+    font-size: 30px;
+  }
+  
+  .section.ferrari-quote .columns.ferrari-text .columns-text-col{
+    font-size: 20px;
   }
 }
 
