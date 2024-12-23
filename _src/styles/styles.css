@@ -1559,13 +1559,12 @@ main .section.blue a.button.modal::after {
   text-align: center;
 }
 
-.centered-img{
-  text-align: center;
-}
 
-.centered-img img{
+
+.ferrari-img img{
+  display: block;
   position: relative;
-  width: 70%;
+  margin: auto;
   left: -3%;
 }
 
@@ -1659,6 +1658,10 @@ main .section.blue a.button.modal::after {
 
   .buttons-align-right > div > :nth-child(1) {
     font-size: var(--heading-font-size-l) !important;
+  }
+
+  .ferrari-img img{
+    max-width: 80%;
   }
 }
 
