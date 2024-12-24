@@ -65,3 +65,12 @@ main .embed .embed-placeholder-play button::before {
   top: 0.25rem;
   left: 0.4375rem;
 }
+
+main .ferrari.embed-container .embed{
+  max-width: 1332px;
+  padding: 0 20px;
+}
+
+main .ferrari.embed-container .embed iframe{
+  border-radius: 10px;
+}
