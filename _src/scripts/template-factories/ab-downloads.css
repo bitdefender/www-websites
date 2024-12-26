@@ -540,6 +540,74 @@
     color: #161616;
 }
 
+.ab-downloads .modal-container .modal-content {
+    padding: 0;
+    max-width: 787px;
+    height: 350px;
+    overflow: hidden;
+}
+
+.ab-downloads .modal-container .column-container {
+    padding-bottom: 0;
+}
+
+.ab-downloads .modal-container .block > div {
+    align-items: center;
+    gap: 0;
+}
+
+.ab-downloads .modal-container .block * {
+    text-align: center;
+}
+
+.ab-downloads .modal-container .block .columns-img-col img {
+    height: 100%;
+}
+
+.ab-downloads .modal-container .block h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.ab-downloads .modal-container .block p {
+    color: #3c3c3c;
+    font-stretch: normal;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: normal;
+    line-height: 1.5;
+}
+
+.ab-downloads .modal-container .block p u {
+    text-decoration: none;
+    color: rgb(81 167 29 / 1);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.ab-downloads .modal-container .block p.button-container a {
+    background-color: #51a71d;
+    border: 2px solid #51a71d;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    padding: 10px 26px 8px 28px;
+    text-transform: uppercase;
+}
+
+.ab-downloads .modal-container .block p.button-container a::after {
+    display: none;
+}
+
+.ab-downloads .modal-container .block p.button-container a:hover {
+    background-color: #469c12;
+    border: 2px solid #469c12;
+}
+
+.ab-downloads .modal-container .block .columns-text-col {
+    padding: 1em;
+}
+
 @media (min-width: 1600px) {
     main .hero-container .block {
         max-width: var(--section-large-desktop-max-width);
@@ -569,9 +637,41 @@
         display: grid;
     }
 
+    .ab-downloads .modal-container .block .columns-img-col {
+        order: 2;
+        margin-bottom: 0;
+        display: none;
+    }
+
+    .ab-downloads .modal-container .modal-content {
+        height: auto;
+    }
+
+    .ab-downloads .modal-container .modal-content .modal-close {
+        top: 10px;
+        right: 10px;
+    }
+
+    .ab-downloads .modal-container .columns-container {
+        padding-bottom: 0;
+    }
+
+    .ab-downloads .modal-container .columns-wrapper {
+        padding: 0;
+    }
+
+    .ab-downloads .modal-container .block h2 {
+        font-size: 21px;
+    }
+
+    .ab-downloads .modal-container .block p u {
+        font-size: 17px;
+    }
+
     .ab-downloads main .main .hero-container {
         order: 1
     }
+
     .ab-downloads main .has-dropdown.columns-container {
         order: 2;
         padding-top: 0;
