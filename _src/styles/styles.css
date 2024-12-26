@@ -129,6 +129,10 @@ body [data-desktop-detector] {
     display: none;
 }
 
+body.dark-mode {
+  background-color: #141517;
+}
+
 @media (min-width: 768px) {
     body [data-mobile-detector] {
         display: none;
@@ -1121,6 +1125,13 @@ a.button.modal:hover::after, a.button.central:hover::after, main .section.link-r
   width: 100%;
 }
 
+.red_logo_svg p {
+  color: transparent;
+  background: url('../../_src/icons/b-logo-red.svg') no-repeat center transparent;
+  font-size: 120px;
+  margin: 0 auto 0.5em;
+}
+
 main .section[data-backgroundcolor='black'] {
   background-color: black;
 }
@@ -1552,6 +1563,13 @@ main .section.blue a.button.modal::after {
   text-align: center;
 }
 
+.ferrari-img img{
+  display: block;
+  position: relative;
+  margin: auto;
+  left: -3%;
+}
+
 .align-left {
   text-align: left;
 }
@@ -1608,6 +1626,16 @@ main .section.blue a.button.modal::after {
   visibility: hidden;
 }
 
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #006EFF;;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
 
 .loader-circle {
   width: 48px !important;
@@ -1635,6 +1663,11 @@ main .section.blue a.button.modal::after {
   }
 }
 
+.loader * {
+  visibility: hidden;
+  display: none;
+}
+
 @media (min-width: 768px) {
   .buttons-align-right > div {
     flex-direction: row;
@@ -1642,6 +1675,10 @@ main .section.blue a.button.modal::after {
 
   .buttons-align-right > div > :nth-child(1) {
     font-size: var(--heading-font-size-l) !important;
+  }
+
+  .ferrari-img img{
+    max-width: 80%;
   }
 }
 

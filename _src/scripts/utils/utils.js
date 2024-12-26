@@ -828,6 +828,15 @@ export function getBrowserName() {
   return 'Unknown';
 }
 
+/**
+ * Returns the value of a query parameter
+ * @returns {String}
+ */
+export function getParamValue(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
 export function decorateBlockWithRegionId(element, id) {
   // we could consider to use `element.setAttribute('s-object-region', id);` in the future
   if (element) element.id = id;
