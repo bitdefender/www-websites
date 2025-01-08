@@ -32,7 +32,7 @@
     .section.blue-title{
         h3{
             color: #006DFF;
-            font-size: 24px;
+            font-size: 18px;
         }
         .columns p{
             font-size: 16px;
@@ -106,7 +106,7 @@
                 }  
 
                 h3{
-                    font-size: 22px;
+                    font-size: 18px;
                     margin-bottom: 6px;
                 }
             }
@@ -136,6 +136,7 @@
                 flex-wrap: wrap;
                 width: 95%;
                 margin-top: 24px;
+                gap: 20px;
             }
             img{
                 height: 62px;
@@ -289,9 +290,18 @@
         .four-cards.white-cards{
             h3{
                 text-align: left;
-                font-size: 24px;
+                font-size: 17px;
                 line-height: 1.25;
                 margin-bottom: 0;
+            }
+
+            p{
+                font-size: 12px;
+                margin-bottom: 0;
+            }
+            
+            a{
+                margin-top: 10px;
             }
 
             li{
@@ -345,12 +355,29 @@
     }
 
     @media (max-width: 767px) {
+        .section{
+            padding-top: 0;
+            a{
+                width: 100%;
+                justify-content: center;
+                
+            }
+        }
+
+        .section.centered:not(.light-gray-wide){
+            text-align: left;
+        }
+
         .hero-container.grey-background .hero{
             background-color: #f8f8f8f8;
         }
 
         .hero .hero-content{
             padding-bottom: 0;
+        }
+
+        .image-columns > div > .image-columns-img-col img {
+                display: none;
         }
 
         .product-comparison-table-wrapper{
@@ -382,10 +409,15 @@
             }
         }
 
-        .questions-answers-container .questions-answers-item .question h3{
-            font-size: 12px;
-            padding-right: 0;
-            text-align: left;
+        .questions-answers-container{
+            .default-content-wrapper{
+                padding-bottom: 0;
+            }
+            .questions-answers-item .question h3{
+                font-size: 12px !important;
+                padding-right: 0;
+                text-align: left;
+            }
         }
     }
 
@@ -436,6 +468,18 @@
 
             .four-cards.white-cards{
                 margin-bottom: 40px;
+                h3{
+                    font-size: 24px;
+                }
+
+                p{
+                    font-size: 16px;
+                }
+
+                a{
+                    margin-top: 32px;
+                }
+                
                 > ul {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr); 
