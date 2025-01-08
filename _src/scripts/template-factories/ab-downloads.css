@@ -355,8 +355,19 @@
 .ab-downloads main .full-grey-bck.columns-container p.button-container a {
     background-color: #D70000;
     font-size: 16px;
-    font-weight: 700;
     line-height: 18.4px;
+    padding: 1em;
+    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 500;
+    margin: 1em 0;
+}
+
+.ab-downloads main .full-grey-bck.columns-container p.button-container a::after {
+    display: none;
 }
 
 .ab-downloads main .has-dropdown.columns-container {
