@@ -88,8 +88,8 @@ export class Constants {
 	 */
 	static async #getVlaicuProductIdsMapping() {
 		  try {
-			  const localeForVlaicuConfig = this.ZUROA_LOCALES.includes(Page.locale) ? "nl-nl" : "en-us";
-			  const response = await fetch(`/${localeForVlaicuConfig}/consumer/vlaicuconfig.json`);
+			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(Page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
+			  const response = await fetch(`/common/vlaicuconfig/${nameForVlaicuConfig}.json`);
 			  if (!response.ok) {
 				  console.error(`Failed to fetch data.`);
 				  return;
