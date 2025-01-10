@@ -511,6 +511,7 @@
         }
 
         .benefits{
+            text-align: center;
             padding-top: 24px;
             >div{
                 flex-direction: row;
