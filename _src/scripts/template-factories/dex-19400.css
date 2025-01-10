@@ -621,7 +621,7 @@
 }
 
 @media (min-width: 820px) {
-    .hero-container.grey-background .hero-content x>div:first-of-type{
+    .hero-container.grey-background .hero-content > div:first-of-type{
         width: 60%;
     }
 }
