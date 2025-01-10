@@ -24,7 +24,8 @@
 
 .webview-table h1 {
     text-align: center;
-    font: bold 24px;
+    font-size: 24px;
+    font-weight: 700;
     font-family: "Segoe UI", Arial, sans-serif;
     color: #F7F7F7;
     margin: 10px 0 14px;
@@ -106,18 +107,46 @@
     text-align: center;
 }
 
+.webview-table-wrapper .webview-table .button{
+    justify-content: center;
+    border: 2px solid #006EFF;
+    background-color: black;
+    width: 122px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    text-align: center;
+
+    &::after {
+        display: none;
+        content: none;
+    }
+
+    &:hover span.button-text{
+        transform: none;
+    }
+}
+
+.webview-table .button .button-text {
+    color: #006EFF;
+    text-align: center;
+}
+
 .webview-table-wrapper {
     max-width: 770px;
     height: 512px;
     margin: 0 auto;
     font-family: "Segoe UI", Arial, sans-serif;
 
-    &.light-mode {
+    .light-mode {
         background-color: #fff;
         color: black;
 
         h1 {
             color: black;
+        }
+
+        .webview-comparison-header{
+            background-color: #FFF;
         }
 
         div[role="columnheader"] {
@@ -155,11 +184,15 @@
         }
 
         .button {
-            background-color: #fff;
+            background-color: #fff !important;
         }
 
         .featured{
-            background-color: #F9F9FE;
+            background-color: #F9F9FE !important;
+        }
+
+        .featured .button{
+            background-color: #006EFF !important;
         }
     }
 }
@@ -179,7 +212,7 @@
         .prod-oldprice{
             text-align: center;
             text-decoration: line-through;
-            font: normal normal normal 14px;
+            font-size: 14px;
             font-family: "Segoe UI", Arial, sans-serif;
             letter-spacing: 0;
             opacity: 1;
@@ -187,7 +220,8 @@
     
         .prod-newprice{
             text-align: center;
-            font: normal normal bold 20px;
+            font-size: 20px;
+            font-weight: 700;
             font-family: "Segoe UI", Arial, sans-serif;
             letter-spacing: 0;
             color: #FFF;
@@ -204,27 +238,10 @@
 .webview-table-wrapper .webview-table .button-container{
     margin-top: 2px;
     margin-bottom: 4px;
-}
 
-.webview-table-wrapper .webview-table .button{
-    justify-content: center;
-    border: 2px solid #006EFF;
-    background-color: black;
-    width: 122px;
-    padding: 6px 16px;
-    border-radius: 4px;
-    text-align: center;
-
-    &::after {
-        display: none;
-        content: none;
+    &:hover{
+        filter: brightness(0.9);
     }
-
-}
-
- .webview-table .button .button-text {
-    color: #006EFF;
-    text-align: center;
 }
 
 .webview-table-wrapper .webview-table .featured {
@@ -241,6 +258,7 @@
 
 .webview-table-wrapper .webview-table .current .button{
     border-color: #767676;
+    pointer-events: none;
 
     .button-text{
         color: #767676;
