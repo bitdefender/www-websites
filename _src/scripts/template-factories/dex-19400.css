@@ -208,7 +208,7 @@
                 font-weight: 700;
             }
 
-            .button-container {
+            .button {
                 width: 100%;
                 background-color: var(--button-background-color);
                 border: 2px solid var(--button-background-color);
@@ -595,7 +595,7 @@
         .section {
             padding-top: 0;
 
-            a {
+            .button-container,  a{
                 width: 100%;
                 justify-content: center;
                 
