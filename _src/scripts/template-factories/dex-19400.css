@@ -208,7 +208,7 @@
                 font-weight: 700;
             }
 
-            .button {
+            .button-container {
                 width: 100%;
                 background-color: var(--button-background-color);
                 border: 2px solid var(--button-background-color);
