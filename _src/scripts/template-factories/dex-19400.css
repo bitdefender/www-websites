@@ -166,13 +166,14 @@
         .column-fixed-width{
             text-align: left;
             padding: 15px;
-            p{
+            
+            p {
                 text-align: left;
                 padding: 0;
-            }
 
-            p:first-of-type{
-                flex-grow: 0;
+                &:first-of-type{
+                    flex-grow: 0;
+                }
             }
 
             h3{
