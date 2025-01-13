@@ -397,6 +397,10 @@
         text-align: left;
     }
 
+    .system-requirements .info-button-container{
+        align-self: baseline;
+    }
+
     .system-requirements-item .requirement > ul {
         display: flex;
         flex-flow: column;
