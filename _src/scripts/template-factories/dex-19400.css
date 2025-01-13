@@ -42,6 +42,12 @@
         }
     }
 
+    .default-content-wrapper{
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+    }
+
     .benefits {
         svg {
             width: 31px;
@@ -64,10 +70,14 @@
 
     }
 
+    .hero-wrapper{
+        display: flex;
+        justify-content: center;
+    }
+
     .hero.block {
         width: 100%;
         max-width: 1350px;
-        justify-self: center;
 
         h3, strong {
             color: #000;
