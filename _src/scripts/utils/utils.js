@@ -135,15 +135,6 @@ export function checkIfConsumerPage() {
   return lastSegmentInPath === 'consumer';
 }
 
-/**
- * Returns the value of a query parameter
- * @returns {String}
- */
-export function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
-
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
   const el = document.createElement(tag);
@@ -820,6 +811,30 @@ export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSel
       window.open(openUrl, '_self');
     }
   }
+}
+
+export function getBrowserName() {
+  const { userAgent } = navigator;
+
+  if (userAgent.includes('Firefox')) {
+    return 'Firefox';
+  } if (userAgent.includes('Edg')) {
+    return 'Edge';
+  } if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) {
+    return 'Chrome';
+  } if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+    return 'Safari';
+  }
+  return 'Unknown';
+}
+
+/**
+ * Returns the value of a query parameter
+ * @returns {String}
+ */
+export function getParamValue(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
 }
 
 export function decorateBlockWithRegionId(element, id) {

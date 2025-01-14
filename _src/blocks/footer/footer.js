@@ -226,6 +226,8 @@ function applyFooterFactorySetup(footerMetadata, block) {
     case 'franklinFooter':
       runDefaultFooterLogic(block);
       break;
+    case 'hidden':
+      break;
     default:
       runAemFooterLogic(block);
       break;

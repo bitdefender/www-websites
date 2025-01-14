@@ -1,3 +1,4 @@
+import { Constants } from '../../scripts/libs/constants.js';
 import {
   createNanoBlock,
   renderNanoBlocks,
@@ -44,7 +45,7 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters['data-store-click-set-product'] = '';
       liStoreParameters['data-store-product-id'] = productCode;
       liStoreParameters['data-store-department'] = 'consumer';
-      liStoreParameters['data-product-type'] = productCode.slice(-1) === 'm' ? 'monthly' : 'yearly';
+      liStoreParameters['data-product-type'] = Constants.PRODUCT_ID_MAPPINGS[productCode].isMonthlyProduct ? 'monthly' : 'yearly';
       liStoreParameters['data-store-product-option'] = variation;
     }
 
@@ -54,14 +55,20 @@ function renderPlanSelector(plans, defaultSelection) {
       `<span>${label}</span>`,
     );
 
-    // set the
+    // set the default selection
     if (defaultSelection === label) {
       li.classList.add('active');
+      li.checked = true;
     }
 
     li.addEventListener('click', () => {
-      root.querySelectorAll('.active').forEach((option) => option.classList.remove('active'));
+      const previousButtonActive = root.querySelector('.active');
+      if (previousButtonActive) {
+        previousButtonActive.classList.remove('active');
+        previousButtonActive.checked = false;
+      }
       li.classList.add('active');
+      li.checked = true;
     });
 
     ul.appendChild(li);
@@ -271,12 +278,13 @@ function renderLowestPrice(...params) {
  * @returns Root node of the nanoblock
  */
 function renderPriceCondition(text) {
+  const updatedText = text.replace('BilledPrice', '<em data-store-price="discounted||full" class="await-loader"></em>');
   return createTag(
     'div',
     {
-      class: 'price',
+      class: 'price condition',
     },
-    `<em>${text}</em>`,
+    `<em>${updatedText}</em>`,
   );
 }
 
@@ -389,17 +397,44 @@ export default function decorate(block) {
     }
   });
 
-  // Height matching logic
+  // Height matching and Dynamic texts logic
   const cards = block.querySelectorAll('.product-card');
   const featuredCard = block.querySelector('.product-card.featured');
-  cards.forEach((card) => {
+  cards.forEach((card, cardIndex) => {
     const hasImage = card.querySelector('img') !== null;
     if (hasImage && !block.classList.contains('plans') && !block.classList.contains('compact')) {
       // If the image exists, set max-width to the paragraph next to the image
       const firstPElement = card.querySelector('p:not(:has(img, .icon))');
       firstPElement.classList.add('img-adjacent-text');
     }
-
+    const planSelector = card.querySelector('.variant-selector');
+    const dynamicPriceTextsKey = `dynamicPriceTexts${cardIndex + 1}`;
+    if (metadata[dynamicPriceTextsKey]) {
+      const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
+      const priceConditionEl = card.querySelector('.price.condition em');
+      planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
+        option.addEventListener('click', () => {
+          if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
+            const textTemplate = dynamicPriceTexts[idx] || '';
+            // in order to preserve the store eventListeners we can't replace the priceElement
+            // every time another option is selected therefore we're using a string template
+            if (textTemplate.includes('{BilledPrice}')) {
+              const [before, after] = textTemplate.split('{BilledPrice}');
+              const nodesToRemove = Array.from(priceConditionEl.childNodes).filter(
+                (node) => node.nodeType === Node.TEXT_NODE,
+              );
+              // Clear only non-<em> text nodes (this element contains store events)
+              nodesToRemove.forEach((node) => priceConditionEl.removeChild(node));
+              // eslint-disable-next-line max-len
+              if (before) priceConditionEl.insertBefore(document.createTextNode(before), priceConditionEl.firstChild);
+              if (after) priceConditionEl.appendChild(document.createTextNode(after));
+            } else {
+              priceConditionEl.textContent = textTemplate;
+            }
+          }
+        });
+      });
+    }
     if (!card.classList.contains('featured')) {
       // If there is no featured card, do nothing
       if (!featuredCard) {
@@ -414,6 +449,7 @@ export default function decorate(block) {
     }
   });
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, '.price.condition');
   matchHeights(block, 'h3:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(2)');
   matchHeights(block, 'p:nth-of-type(3)');

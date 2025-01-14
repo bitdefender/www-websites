@@ -286,6 +286,36 @@
   width: 100%;
 }
 
+.columns.ferrari-text > div{
+  align-items: unset;
+}
+
+.columns.ferrari-text h2{
+  color:#006DFF;
+  font-weight: 300;
+}
+.columns.ferrari-text .columns-text-col{
+  font-weight: 300;
+}
+
+.section.ferrari-quote .columns.ferrari-text .columns-text-col{
+  color:#006DFF;
+}
+
+.columns.ferrari-text .columns-text-col.button-container{
+  align-self: flex-end;
+}
+
+.section.ferrari-quote .columns.ferrari-text .columns-text-col a{
+  background: none;
+  border: none;
+  color:#006DFF;
+  text-align: right;
+  text-decoration: underline;
+  letter-spacing: 0;
+  display: block;
+}
+
 /* stylelint-disable-next-line selector-class-pattern */
 .v2_benefits .columns-container .default-content-wrapper {
   margin-bottom: 3em;
@@ -588,6 +618,17 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+
+  .columns.ferrari-text h2{
+    font-size: 45px;
+  }
+  .columns.ferrari-text .columns-text-col{
+    font-size: 30px;
+  }
+  
+  .section.ferrari-quote .columns.ferrari-text .columns-text-col{
+    font-size: 20px;
   }
 }
 
@@ -1142,6 +1183,60 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   justify-content: center;
 }
 
+.columns-container.icon-corners {
+  .columns-wrapper {
+    border-radius: 20px;
+  }
+
+  .columns {
+    padding: 40px;
+  }
+
+  > div {
+    position: relative;
+  }
+
+  .columns > div {
+    align-items: center;
+  }
+
+  > div > div > div:nth-child(1) > div:nth-child(2) {
+    flex: 2;
+
+    h2 {
+      font-size: 32px;
+      text-align: center;
+      z-index: 1;
+      position: relative;
+    }
+  }
+
+  span.icon-corner-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 180px;
+    height: 180px;
+    z-index: 0;
+  }
+
+  span.icon-corner-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 180px;
+    height: 180px;
+    transform: rotateY(180deg);
+    z-index: 0;
+  }
+
+  @media (min-width:768px){
+    .columns > div {
+      align-items: baseline;
+    }
+  }
+}
+
 @media (max-width: 1399px) {
   .columns-wrapper {
     padding: 0 var(--section-large-desktop-padding);
@@ -1252,6 +1347,22 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .columns.screenshots > div > .columns-img-col {
     flex: 0 0 230px;
   }
+
+  .columns-container.icon-corners {
+    .columns {
+      padding: 100px;
+    }
+  
+    span.icon-corner-left {
+      width: 400px;
+      height: 300px;
+    }
+  
+    span.icon-corner-right {
+      width: 400px;
+      height: 300px;
+    }
+  }
 }
 
 @media (max-width: 767px) {
@@ -1282,5 +1393,121 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     flex: 1 0 100%;
     box-sizing: border-box;
     margin: 0;
+  }
+}
+
+.columns-container.multi-blocks{
+  max-width: 1330px;
+  padding: 0 var(--section-desktop-padding);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  .columns-wrapper {
+    padding: 0;
+    margin: 0;
+  }
+
+  .columns{
+    width: 100%;
+    background: #F6F6F6 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    opacity: 1;
+    padding: 20px;
+  }
+  
+  .columns > div > .columns-img-col img {
+    display: none;
+  }
+
+  p{
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .button-container{
+    margin-top: 20px;
+  }
+
+  .button-container a{
+    width: 100%;
+    justify-content: center;
+  }
+
+  table{
+    margin-bottom: 15px;
+  }
+
+  td{
+    display: flex;
+    gap:15px;
+    align-items: center;
+
+    span{
+      margin: 0;
+    }
+
+    h3{
+      font-size: 24px;
+      margin: 0;
+    }
+
+    h6{
+      font-size: 14px;
+      color: #5F5F5F;
+      line-height: 0;
+    }
+
+    p{
+      align-content: center;
+    }
+
+    p:nth-last-of-type(2){
+      margin: 0;
+    }
+
+    hr{
+      border: 1px solid #006EFF;
+      width: 25px;
+      line-height: 0;
+    }
+  }
+
+  tr:last-of-type td{
+    height: 25px;
+  }
+
+  .columns > div > .columns-img-col {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 991px) {
+    max-width: 1330px;
+    padding: 0 var(--section-desktop-padding);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+
+    .columns{
+      max-width: 630px;
+    }
+
+    .columns > div > .columns-img-col img {
+      object-fit: cover;
+      display: block;
+      border-radius: 20px;
+    }
+
+    .columns > div > .columns-text-col {
+      align-self: flex-start;
+    }
+  }
+
+  @media (min-width: 1200px){
+    .columns > div >div{
+      width: 50%;
+    }
   }
 }

@@ -10,6 +10,8 @@ export class User {
 
   static country = this.#getGeolocation();
 
+  static locale = this.#getUserLocale();
+
   static async #staticInitialise() {
 
     if (!Cookie.has(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME)) {
@@ -17,12 +19,12 @@ export class User {
     }
 
     try {
-      const userDataResponse = await fetch(`${Constants.PUBLIC_URL}/bin/login/userInfo.json`);
+      const userDataResponse = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/bin/login/userInfo.json`);
       return userDataResponse.ok ? (await userDataResponse.json()).result : null;
     } catch {
       return null;
     }
-}
+  }
 
   /**
    * 
@@ -87,7 +89,7 @@ export class User {
    */
   static async #getGeolocation() {
     try {
-      const response = await fetch(`${Constants.PUBLIC_URL}/geoip`);
+      const response = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/geoip`);
 
       if (!response.ok) {
         return "us";
@@ -115,5 +117,20 @@ export class User {
   */
   static async getUserInfo() {
     return await this.#staticInit;
+  }
+
+  /*
+   * Handling User Locale
+   * @return {Promise<string>}
+   */
+  static async #getUserLocale() {
+    const userCountry = await this.country;
+    try {
+		  const userGeoIpCall = await fetch(`${Constants.DEV_BASE_URL}/p-api/v1/countries/${userCountry.toUpperCase()}/locales`);
+      const userGeoIpData = await userGeoIpCall.json();
+      return userGeoIpData[0].locale.toLowerCase();
+    } catch {
+      return "en-us"
+    }
   }
 };

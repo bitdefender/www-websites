@@ -28,6 +28,7 @@ import {
   getPageExperimentKey,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
+import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
@@ -341,7 +342,8 @@ async function loadEager(doc) {
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
 
-  await window.hlx.plugins.run('loadEager');
+  // TODO: if experiments stop working correctly please consider bringing this back:
+  // await window.hlx.plugins.run('loadEager');
 
   AdobeDataLayerService.push(await new PageLoadStartedEvent());
   await resolveNonProductsDataLayer();
@@ -376,9 +378,12 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
+  const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
+  doc.querySelector('header').style.height = '0px';
 
-  if (pageIsNotInFragmentsFolder) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     // eslint-disable-next-line no-unused-vars
+    doc.querySelector('header').style.height = 'initial';
     loadHeader(doc.querySelector('header'));
   }
 
@@ -392,7 +397,7 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  if (pageIsNotInFragmentsFolder) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     loadFooter(doc.querySelector('footer'));
   }
 
@@ -500,8 +505,16 @@ function loadDelayed() {
 
 async function loadPage() {
   await window.hlx.plugins.load('eager');
+
+  // specific for webview
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('theme') === 'dark' && window.location.href.includes('canvas')) {
+    document.body.style = 'background-color: #141517';
+  }
+
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
+  await Constants.PRODUCT_ID_MAPPINGS_CALL;
   await loadLazy(document);
 
   await StoreResolver.resolve();
@@ -510,6 +523,12 @@ async function loadPage() {
   window.bd_page_ready = true;
   elements.forEach((element) => {
     element.classList.remove('await-loader');
+  });
+
+  // loader circle used in mbox-canvas
+  const loaderCircle = document.querySelectorAll('.loader-circle');
+  loaderCircle.forEach((element) => {
+    element.classList.remove('loader-circle');
   });
 
   adobeMcAppendVisitorId('main');

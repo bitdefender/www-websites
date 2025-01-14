@@ -254,6 +254,26 @@
   margin-bottom: 16px;
 }
 
+.four-cards-container.dotted-lines {
+  ul {
+    li:not(:first-child) {
+      position: relative;
+
+      &::before {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 24px;
+        border: none;
+        border-left: 2px dotted #006EFF;
+        position: absolute;
+        top: -24px;
+        left: 50%;
+      }
+    }
+  }
+}
+
 @media (max-width: 991px) { /* mobile/tablet */
     .four-cards-wrapper {
         padding: var(--body-padding);
@@ -269,6 +289,16 @@
     grid-template-columns: 1fr 1fr;
     grid-gap: 14px;
   }
+
+  .four-cards-container.dotted-lines {
+    ul {
+      li:not(:first-child) {
+        &::before {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 @media (min-width: 992px) {
@@ -283,9 +313,34 @@
     grid-gap: 14px;
   }
 
+  .four-cards-container.dotted-lines {
+    ul {
+      li:not(:first-child) {
+        position: relative;
+
+        &::before {
+          content: "";
+          display: block;
+          width: 30px;
+          height: 1px;
+          border: none;
+          border-top: 2px dotted #006EFF;
+          margin: 24px 0;
+          position: absolute;
+          top: 50%;
+          left: -30px;
+        }
+      }
+    }
+  }
+  
   .creator-cards .four-cards > ul {
     grid-template-columns: 300px 300px 300px;
     grid-gap: 14px;
+  }
+
+  .four-cards-container.dotted-lines .four-cards > ul {
+    grid-gap: 30px;
   }
 }
 

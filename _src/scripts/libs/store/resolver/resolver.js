@@ -230,8 +230,6 @@ export class StoreResolver {
 		storeEvent: "[data-store-event]",
 		storeKey: "[data-store-key]",
 		storeContext: "[data-store-context]",
-		storeRegion: "[data-store-region]",
-		storePlatform: "[data-store-platform]",
 		storeDevicePropertiesMapping: "[data-store-device-properties-mapping]"
 	}
 
@@ -255,8 +253,6 @@ export class StoreResolver {
 					element.dataset.storeId,
 					element.dataset.storeDepartment,
 					element.dataset.storePromotion,
-					element.dataset.storeRegion,
-					element.dataset.storePlatform
 				)
 			} catch (error) {
 				console.error(error.message)

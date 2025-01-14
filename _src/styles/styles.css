@@ -90,7 +90,7 @@
   /* body width */
   --body-max-width: 1920px;
   --body-padding: 20px;
-  --section-desktop-max-width: 1300px;
+  --section-desktop-max-width: 1290px;
   --section-desktop-padding: 20px;
   --section-large-desktop-max-width: 1332px;
   --section-large-desktop-padding: 50px;
@@ -127,6 +127,10 @@ body [data-tablet-detector] {
 
 body [data-desktop-detector] {
     display: none;
+}
+
+body.dark-mode {
+  background-color: #141517;
 }
 
 @media (min-width: 768px) {
@@ -767,6 +771,11 @@ body.creators {
     margin: 0 auto;
   }
 
+  main .section.width-smallest .block, main .section.width-smallest .default-content-wrapper {
+    width: 640px;
+    margin: 0 auto;
+  }
+
   .creators .default-content-wrapper h2 {
     font: normal normal 300 60px/69px "IBM Plex Sans", sans-serif;
   }
@@ -977,7 +986,6 @@ a.button:any-link, input[type="submit"] {
   color: var(--button-link-color);
   background-color: var(--button-background-color);
   border: 2px solid var(--button-background-color);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 8px;
@@ -1006,11 +1014,11 @@ p.info-button-container a.info-button.modal:hover {
 
 a.button::after, input[type="submit"]::after, main .section.link-right a::after {
   content: '';
-  width: 24px;
-  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-mask:url('/_src/icons/arrow-right.svg');
-  mask: url('/_src/icons/arrow-right.svg');
+  -webkit-mask:url('/_src/icons/arrow-right.svg') no-repeat;
+  mask: url('/_src/icons/arrow-right.svg') no-repeat;
   background-color: var(--button-link-color);
   display: inline-block;
   transition: all .2s cubic-bezier(.4,0,.2,1);
@@ -1074,7 +1082,6 @@ a.button.modal, a.button.central, main .section.link-right a {
   border: none;
   margin: 0;
   padding: 0;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -1116,6 +1123,13 @@ a.button.modal:hover::after, a.button.central:hover::after, main .section.link-r
 .icon svg {
   height: 100%;
   width: 100%;
+}
+
+.red_logo_svg p {
+  color: transparent;
+  background: url('../../_src/icons/b-logo-red.svg') no-repeat center transparent;
+  font-size: 120px;
+  margin: 0 auto 0.5em;
 }
 
 main .section[data-backgroundcolor='black'] {
@@ -1549,6 +1563,17 @@ main .section.blue a.button.modal::after {
   text-align: center;
 }
 
+.ferrari-img img{
+  display: block;
+  position: relative;
+  margin: auto;
+  left: -3%;
+}
+
+.align-left {
+  text-align: left;
+}
+
 .icon-apple, .icon-android {
   width: 18px;
   transform: translateY(22px);
@@ -1601,6 +1626,32 @@ main .section.blue a.button.modal::after {
   visibility: hidden;
 }
 
+.loader-circle {
+  width: 48px !important;
+  height: 48px !important;
+  border: 5px solid #006EFF !important;
+  border-bottom-color: transparent !important;
+  border-radius: 50% !important;
+  position: relative !important;
+  display: inline-block !important;
+  box-sizing: border-box !important;
+  animation: rotation 1s linear infinite !important;
+}
+
+.loader-circle * {
+  visibility: hidden !important;
+  display: none !important;
+}
+
+@keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
 @media (min-width: 768px) {
   .buttons-align-right > div {
     flex-direction: row;
@@ -1608,6 +1659,10 @@ main .section.blue a.button.modal::after {
 
   .buttons-align-right > div > :nth-child(1) {
     font-size: var(--heading-font-size-l) !important;
+  }
+
+  .ferrari-img img{
+    max-width: 80%;
   }
 }
 

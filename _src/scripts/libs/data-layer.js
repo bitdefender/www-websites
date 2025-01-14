@@ -70,16 +70,6 @@ export class PageLoadStartedEvent {
   }
 
   /**
-   * 
-   * @param {string} param -> the parameter to be searched in the URL 
-   * @returns {string} -> value of the parameter
-   */
-  #getParamValue(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-  }
-
-  /**
   * get experiment details from Target
   * @returns {Promise<{
   *  experimentId: string;
@@ -193,7 +183,7 @@ export class PageLoadStartedEvent {
         subSubSubSection: pageSectionData.subSubSubSection,
         destinationURL: window.location.href,
         queryString: window.location.search,
-        referringURL: this.#getParamValue('adobe_mc_ref') || this.#getParamValue('ref') || document.referrer || '',
+        referringURL: Page.getParamValue('adobe_mc_ref') || Page.getParamValue('ref') || document.referrer || '',
         serverName: 'hlx.live', // indicator for AEM Success Edge
         language: pageSectionData.locale,
         sysEnv: UserAgent.os,
@@ -201,9 +191,9 @@ export class PageLoadStartedEvent {
           { experimentDetails: pageSectionData.experimentDetails }),
       },
       attributes: {
-        promotionID: this.#getParamValue('pid') || '',
-        internalPromotionID: this.#getParamValue('icid') || '',
-        trackingID: this.#getParamValue('cid') || '',
+        promotionID: Page.getParamValue('pid') || '',
+        internalPromotionID: Page.getParamValue('icid') || '',
+        trackingID: Page.getParamValue('cid') || '',
         time: this.#getCurrentTime(),
         date: this.#getCurrentDate(),
         domain: pageSectionData.domain,
@@ -606,6 +596,23 @@ export class Target {
   }
 
   /**
+   * @type {string[]}
+   */
+  static eventTokens = [];
+
+  /**
+   * @type {Object{}}
+   */
+  static #urlParameters = this.#getUrlParameters();
+
+  /**
+   * @param {string[]}
+   */
+  static setEventTokens(value) {
+    this.eventTokens = value;
+  }
+
+  /**
    * Mbox describing an offer
    * @typedef {{content: {offer: string, block:string} | {pid}, type: string|null}} Mbox
    */
@@ -646,20 +653,6 @@ export class Target {
    * @type {Promise<BuyLinksMbox|null>}
    */
   static #buyLinksMbox = this.getOffer('buyLinks-mbox');
-
-  /**
-   * @typedef {{content: {vlaicuFlag: string}}} VlaicuFlagMbox
-   * @type {Promise<VlaicuFlagMbox|null>}
-   */
-  static #vlaicuFlagMbox = this.getOffer('vlaicu-flag-mbox');
-
-  /**
-   * get the flag which marks wether the page should use Vlaicu or not
-   * @returns {Promise<boolean>}
-   */
-  static async getVlaicuFlag() {
-    return Boolean((await this.#vlaicuFlagMbox)?.content?.vlaicuFlag || null);
-  }
 
   /**
    * get the product-buy link mappings from Target (
@@ -705,6 +698,21 @@ export class Target {
     return receivedOffers ? receivedOffers[mboxName] : null;
   }
 
+  /**
+   * Function to get all URL parameters and put them in an object
+   * @returns {Object} An object containing all URL parameters
+   */
+  static #getUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const parameters = {};
+
+    urlParams.forEach((value, key) => {
+      parameters[key] = value;
+    });
+
+    return parameters;
+  }
+
   static async getOffers(mboxes) {
     await this.#staticInit;
     let offers = {};
@@ -718,7 +726,9 @@ export class Target {
           },
           execute: {
             mboxes: [
-              ...mboxes.map((mbox, index) => {return { index, ...mbox}})
+              ...mboxes.map((mbox, index) => {
+                return { index, name: mbox.name, parameters: Object.assign(this.#urlParameters, mbox.parameters) }
+              })
             ]
           }
         }

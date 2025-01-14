@@ -1,5 +1,5 @@
 import { GlobalContext } from "../resolver.js";
-import { monthlyProducts } from "../../store.js";
+import { Constants } from "../../../constants.js";
 
 /**
  * @param {string} hideCondition
@@ -33,7 +33,7 @@ const getMinOrMax = (value, options, fn) => {
 
     for (const option of options) {
         let localValue = fn(option);
-        localValue = monthlyProducts[option.getId()] ? localValue * 12 : localValue;
+        localValue = Constants.PRODUCT_ID_MAPPINGS[option.getId()].isMonthlyProduct ? localValue * 12 : localValue;
         if (localValue && (value === "min" && localValue < minOrMax) || (value === "max" && localValue > minOrMax)) {
             minOrMax = localValue;
             productValue = option;
