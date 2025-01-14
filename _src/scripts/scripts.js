@@ -28,6 +28,7 @@ import {
   getPageExperimentKey,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
+import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
 
@@ -377,9 +378,12 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
+  const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
+  doc.querySelector('header').style.height = '0px';
 
-  if (pageIsNotInFragmentsFolder) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     // eslint-disable-next-line no-unused-vars
+    doc.querySelector('header').style.height = 'initial';
     loadHeader(doc.querySelector('header'));
   }
 
@@ -393,7 +397,7 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  if (pageIsNotInFragmentsFolder) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     loadFooter(doc.querySelector('footer'));
   }
 
@@ -503,6 +507,7 @@ async function loadPage() {
   await window.hlx.plugins.load('eager');
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
+  await Constants.PRODUCT_ID_MAPPINGS_CALL;
   await loadLazy(document);
 
   await StoreResolver.resolve();
@@ -511,6 +516,11 @@ async function loadPage() {
   window.bd_page_ready = true;
   elements.forEach((element) => {
     element.classList.remove('await-loader');
+  });
+
+  const awaitLoader = document.querySelectorAll('.loader');
+  awaitLoader.forEach((element) => {
+    element.classList.remove('loader');
   });
 
   adobeMcAppendVisitorId('main');

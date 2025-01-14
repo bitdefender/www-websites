@@ -1819,6 +1819,7 @@
         <xhtml:link rel="alternate" hreflang="es-bz" href="https://www.bitdefender.com/es-bz/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="en-jm" href="https://www.bitdefender.com/en-jm/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="en-mt" href="https://www.bitdefender.com/en-mt/consumer/trafficlight"/>
+        <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="en-gr" href="https://www.bitdefender.com/en-mt/consumer/trafficlight"/>
@@ -2933,6 +2934,7 @@
         <xhtml:link rel="alternate" hreflang="es-bz" href="https://www.bitdefender.com/es-bz/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="en-jm" href="https://www.bitdefender.com/en-jm/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="en-mt" href="https://www.bitdefender.com/en-mt/consumer/mobile-security-android"/>
+        <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="en-gr" href="https://www.bitdefender.com/en-mt/consumer/mobile-security-android"/>
@@ -4463,11 +4465,5 @@
         <xhtml:link rel="alternate" hreflang="en-sd" href="https://www.bitdefender.com/en-bz/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="en-sy" href="https://www.bitdefender.com/en-bz/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="en-tv" href="https://www.bitdefender.com/en-bz/consumer/ultimate-security"/>
-    </url>
-    <url>
-        <loc>https://www.bitdefender.com/nl-nl/consumer/small-business-security</loc>
-        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/small-business-security"/>
-        <xhtml:link rel="alternate" hreflang="sv-se" href="https://www.bitdefender.com/sv-se/consumer/small-business-security"/>
-        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/small-business-security"/>
     </url>
 </urlset>

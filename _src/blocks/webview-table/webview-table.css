@@ -1,0 +1,314 @@
+:root {
+    --first-table-cell-color: #e4f2ff;
+    --yes-check-color: #4A4;
+    --no-check-color: #FD3434;
+    --expandable-row-background-color: #0040F0;
+    --expandable-row-text-color: #fff;
+    --product-comparison-text-color: #5d5c5c;
+    --current-price-color: #000;
+}
+
+.await-loader {
+    min-height: 4rem;
+}
+
+.webview-table {
+    width: 100%;
+    height: 512px;
+    padding: 0 25px;
+    display: table;
+    font-size: 14px;
+    background-color: #141517;
+    color: #999;
+}
+
+.webview-table h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #F7F7F7;
+    margin: 10px 0 14px;
+}
+
+.webview-comparison-header {
+    display: flex;
+    background-color: #141517;
+    border: none;
+}
+
+.webview-table div[role="row"]{
+    display: flex;
+}
+
+.webview-comparison-header div[role="columnheader"] {
+    width: 142px;
+    text-align: center;
+    justify-content: center;
+    color: #e4f2ff;
+    padding-bottom: 8px;
+    border-right: none;
+    border-left: none;
+
+    p{
+        margin: 1px;
+        padding: 0;
+        line-height: 1;
+    }
+
+    p:first-of-type{
+        margin-top: 8px;
+        font-size: 14px;
+    }
+
+    p:last-of-type{
+        margin-bottom: 4px;
+        font-size: 16px;
+    }
+}
+
+.webview-comparison-header div[role="columnheader"]:first-child {
+    min-width: 292px;
+}
+
+.webview-table div[role='cell'] {
+    width: 142px;
+    padding: 8px;
+    background: #141517;
+    border-top: 0.1px solid #3c3c3c;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.webview-table div[role='cell']:first-child {
+    min-width: 292px;
+    max-width: 292px;
+    background: #333;
+    color: #fff;
+    font-weight: 600;
+    border-top: 1px solid black;
+    align-items: baseline;
+}
+
+.webview-table .yes-check::after {
+    content: '';
+    width: 3px;
+    height: 7px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.webview-table .price-box {
+    flex-flow: column;
+    color: #e4f2ff;
+    text-align: center;
+}
+
+.webview-table-wrapper .webview-table .button{
+    justify-content: center;
+    border: 2px solid #006EFF;
+    background-color: black;
+    width: 122px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    text-align: center;
+
+    &::after {
+        display: none;
+        content: none;
+    }
+
+    &:hover span.button-text{
+        transform: none;
+    }
+}
+
+.webview-table .button .button-text {
+    color: #006EFF;
+    text-align: center;
+}
+
+.webview-table-wrapper {
+    max-width: 770px;
+    height: 512px;
+    margin: 0 auto;
+    font-family: "Segoe UI", Arial, sans-serif;
+
+    .light-mode {
+        background-color: #fff;
+        color: black;
+
+        h1 {
+            color: black;
+        }
+
+        .webview-comparison-header{
+            background-color: #FFF;
+        }
+
+        div[role="columnheader"] {
+            background-color: #fff;
+            color: #000;
+        }
+
+        div[role="cell"] {
+            color: #515B6D;
+            background-color: #fff;
+            border-color: #F5F5F5;
+
+            &:first-child {
+                color: #000;
+                background-color: #F9F9FE;
+                border-color: #FFF;
+            }
+
+            .price-box {
+                color: black;
+            
+                .prod-oldprice{
+                    color: #515B6D;
+                }
+            
+                .prod-newprice{
+                    color: #000 !important;
+                }
+            }
+        }
+
+        .yes-check::after {
+            border: solid #FFF;
+            border-width: 0 2px 2px 0;
+        }
+
+        .button {
+            background-color: #fff !important;
+        }
+
+        .featured{
+            background-color: #F9F9FE !important;
+        }
+
+        .featured .button{
+            background-color: #006EFF !important;
+        }
+    }
+}
+
+.webview-table div[role='row']:last-of-type div[role='cell'] {
+    border-radius: 0 0 4px 4px;
+
+    &:first-child {
+        visibility: hidden;
+    }
+
+    .buy-box{
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+
+        .prod-oldprice{
+            text-align: center;
+            text-decoration: line-through;
+            font-size: 14px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            letter-spacing: 0;
+            opacity: 1;
+        }
+    
+        .prod-newprice{
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            font-family: "Segoe UI", Arial, sans-serif;
+            letter-spacing: 0;
+            color: #FFF;
+            opacity: 1;
+            line-height: 1;
+        }
+    
+        .under-price-text{
+            font-size: 10px;
+        }
+    }
+}
+
+.webview-table-wrapper .webview-table .button-container{
+    margin-top: 2px;
+    margin-bottom: 4px;
+
+    &:hover{
+        filter: brightness(0.9);
+    }
+}
+
+.webview-table-wrapper .webview-table .featured {
+    background-color: #202123;
+
+    .button{
+        background-color: #006EFF;
+    }
+
+    .button-text{
+        color: #FFF;
+    }
+}
+
+.webview-table-wrapper .webview-table .current .button{
+    border-color: #767676;
+    pointer-events: none;
+
+    .button-text{
+        color: #767676;
+    }
+
+    &::after {
+        display: none;
+        content: none;
+    }
+}
+
+.webview-table .savings-tag-container {
+    background-color: #2cb43d;
+    color: white;
+    font-weight: bold;
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    padding: 2px;
+}
+
+.webview-table .yes-check {
+    width: 18px;
+    height: 18px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.webview-table .no-check {
+    height: 1rem;
+    width: 0.625rem;
+    position: relative;
+    margin-left: 7px;
+}
+
+.webview-table .no-check::after, .webview-table .no-check::before {
+    content: '';
+    position: absolute;
+    width: 0.17rem;
+    height: 16px;
+    background-color: var(--no-check-color);
+}
+
+.webview-table .no-check::after {
+    transform: rotate(45deg);
+}
+
+.webview-table .no-check::before {
+    transform: rotate(-45deg);
+}

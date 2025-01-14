@@ -697,6 +697,8 @@ function applyHeaderFactorySetup(headerMetadata, header) {
     case 'quiz':
       runQuizPageHeaderLogic(header);
       break;
+    case 'hidden':
+      break;
     default:
       runDefaultHeaderLogic(header);
       break;

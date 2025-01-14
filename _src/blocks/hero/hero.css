@@ -346,12 +346,12 @@ main .hero p.button-container.discount-bubble-container {
 
 main .hero img {
   object-fit: cover;
-  width: 100%;
   height: 100%;
 }
 
 main .hero .hero-picture picture img {
   position: absolute;
+  right: 0;
 }
 
 main .hero a.button {
@@ -622,6 +622,45 @@ main .hero.ferrari .breadcrumb{
   height: 50px;
 }
 
+main .hero-container.ferrari-migration .hero{
+  background-color:#006DFF;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 300;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content h1{
+  color: #FFF;
+  line-height: 1;
+}
+main .hero-container.ferrari-migration .hero .hero-content h2{
+  color: #FFF;
+  font-weight: 300;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content p{
+  color: #fff;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content .breadcrumb{
+  display: none;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content a{
+  font-size: 18px;
+  font-weight: 700;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px 10px;
+}
+
+main .hero-container.ferrari-migration .hero .hero-content a img{
+  position: relative;
+  bottom: -10px;
+  height: 87px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
 @media(max-width: 989px) {
   main .hero.new2024design {
     background-color: #006FFF;
@@ -646,6 +685,7 @@ main .hero.ferrari .breadcrumb{
     padding-left: 0;
     object-fit:cover;
     object-position: bottom;
+    width: 100%;
   }
 
   main .hero.ferrari .hero-content{
@@ -666,11 +706,6 @@ main .hero.ferrari .breadcrumb{
     width: 100%;
     padding: 0 20px 0 0;
 
-  }
-
-  main .hero.ferrari .hero-content > div img{
-    max-height: 225px;
-    max-width: 813px;
   }
 
   main .hero.ferrari h1{
@@ -834,6 +869,31 @@ main .hero.ferrari .breadcrumb{
     width: 360px;
     right: -11em !important;
     bottom: -3em;
+  }
+
+  main .hero.ferrari .hero-content > div img{
+    max-height: 225px;
+    max-width: 813px;
+  }
+  
+  main .hero-container.ferrari-migration .hero{
+    min-height: 600px;
+    align-content: center;
+  }
+
+  main .hero-container.ferrari-migration .hero .hero-content h1{
+    font-size: 60px;
+    font-weight: 300;
+  }
+
+  main .hero-container.ferrari-migration .hero .hero-content h2{
+    font-size: 32px;
+    font-weight: 300;
+    margin-top: 50px;
+  }
+  
+  main .hero-container.ferrari-migration .hero .hero-picture img{
+    width: 50%;
   }
 }
 
