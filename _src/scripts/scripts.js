@@ -505,6 +505,13 @@ function loadDelayed() {
 
 async function loadPage() {
   await window.hlx.plugins.load('eager');
+
+  // specific for webview
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('theme') === 'dark' && window.location.href.includes('canvas')) {
+    document.body.style = 'background-color: #141517';
+  }
+
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
