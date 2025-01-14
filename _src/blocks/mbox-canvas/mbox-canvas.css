@@ -8,5 +8,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
+        .mbox-canvas {
+            width: 100%;
+        }
     }
 }
