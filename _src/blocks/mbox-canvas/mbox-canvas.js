@@ -50,4 +50,7 @@ export default async function decorate(block) {
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));
+
+  // make all the links from the canvas open in a new browser window
+  block.querySelectorAll('a').forEach((link) => link.setAttribute('_target', 'blank'));
 }
