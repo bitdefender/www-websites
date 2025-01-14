@@ -93,6 +93,7 @@ export default function decorate(block) {
     signature,
     percentProduct,
     firefoxUrl,
+    buttonImage,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
@@ -121,6 +122,13 @@ export default function decorate(block) {
       block.querySelectorAll('a.modal.button').forEach((modalButton) => {
         modalButton.setAttribute('data-stop-automatic-modal-refresh', true);
       });
+    }
+
+    if (buttonImage) {
+      const buttonImageEl = document.createElement('img');
+      buttonImageEl.setAttribute('src', buttonImage);
+      const heroBtn = block.querySelector('a');
+      heroBtn.insertAdjacentElement('afterbegin', buttonImageEl);
     }
   }
 
