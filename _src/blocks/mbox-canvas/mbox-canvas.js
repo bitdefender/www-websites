@@ -40,7 +40,7 @@ export default async function decorate(block) {
 
     </div>
   `;
-  block.classList.add('loader');
+  block.classList.add('loader-circle');
   const offer = await Target.getOffers([{
     name: mboxName,
     parameters,

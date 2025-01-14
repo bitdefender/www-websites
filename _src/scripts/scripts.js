@@ -525,9 +525,10 @@ async function loadPage() {
     element.classList.remove('await-loader');
   });
 
-  const awaitLoader = document.querySelectorAll('.loader');
-  awaitLoader.forEach((element) => {
-    element.classList.remove('loader');
+  // loader circle used in mbox-canvas
+  const loaderCircle = document.querySelectorAll('.loader-circle');
+  loaderCircle.forEach((element) => {
+    element.classList.remove('loader-circle');
   });
 
   adobeMcAppendVisitorId('main');
