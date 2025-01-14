@@ -2,6 +2,7 @@ import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
 import Page from "./page.js";
 import { Constants } from "./constants.js";
+import { loadCSS } from '../lib-franklin.js';
 
 /**
  * 
@@ -89,8 +90,12 @@ export class PageLoadStartedEvent {
     const targetExperimentId = this.#getMetadata('target-experiment');
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      const experimentUrl = (await Target.getOffer(targetExperimentLocation))?.content?.url;
-      targetExperimentDetails = await runTargetExperiment(experimentUrl, targetExperimentId);
+      const { url, template } = (await Target.getOffer(targetExperimentLocation))?.content;
+      if (template) {
+        loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
+        document.body.classList.add(template);
+      }
+      targetExperimentDetails = await runTargetExperiment(url, targetExperimentId);
     }
 
     return targetExperimentDetails;
