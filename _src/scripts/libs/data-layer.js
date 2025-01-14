@@ -90,6 +90,10 @@ export class PageLoadStartedEvent {
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
       const experimentUrl = (await Target.getOffer(targetExperimentLocation))?.content?.url;
+      const template = (await Target.getOffer(targetExperimentLocation))?.content?.template;
+      if (template) {
+        loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
+      }
       targetExperimentDetails = await runTargetExperiment(experimentUrl, targetExperimentId);
     }
 
