@@ -335,6 +335,13 @@
                 }
             }
         }
+
+        tr:last-of-type {
+            td, p {
+                font-weight: 700;
+                font-size: 12px;
+            }
+        }
     }
 
     .creator-cards {
@@ -591,6 +598,12 @@
 
             div[role='columnheader']:nth-child(1) {
                 width: 33%;
+            }
+
+            tr:last-of-type {
+                td, p {
+                    font-size: 16px;
+                }
             }
         }
     }
