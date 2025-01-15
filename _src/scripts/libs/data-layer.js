@@ -90,7 +90,8 @@ export class PageLoadStartedEvent {
     const targetExperimentId = this.#getMetadata('target-experiment');
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      const { url, template } = (await Target.getOffer(targetExperimentLocation))?.content;
+      const offer = await Target.getOffer(targetExperimentLocation);
+      const { url, template } = offer?.content || {};
       if (template) {
         loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
         document.body.classList.add(template);
