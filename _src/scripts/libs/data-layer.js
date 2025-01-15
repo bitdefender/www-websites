@@ -2,7 +2,7 @@ import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
 import Page from "./page.js";
 import { Constants } from "./constants.js";
-import { loadCSS } from '../lib-franklin.js';
+import { loadCSS } from "../lib-franklin.js";
 
 /**
  * 
