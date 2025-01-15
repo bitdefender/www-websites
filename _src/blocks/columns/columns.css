@@ -31,7 +31,7 @@
 .columns.new-v2 p {
   font-size: 16px;
   font-weight: 400;
-  line-height: 21px;
+  line-height: 22px;
 }
 
 .columns.medium-image-size p:has(picture) {
