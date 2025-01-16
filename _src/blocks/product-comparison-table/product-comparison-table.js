@@ -10,6 +10,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   const oldPriceText = block.closest('.section').dataset.old_price_text ?? '';
+  const newPriceLabel = block.closest('.section').dataset.new_price_label ?? '';
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '-';
@@ -37,12 +38,12 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   oldPriceElement.innerHTML = `
     <div class="old-price-box">
       <span  data-store-hide="no-price=discounted;type=visibility">${oldPriceText} <del data-store-price="full"></del></span>
-      <span class="savings d-none">Savings <span data-store-discount="percentage"><span></span>
+      <span class="savings d-none" data-store-hide="no-price=discounted;type=visibility">Savings <span data-store-discount="percentage"><span></span>
     </div>`;
   priceElement.innerHTML = `
     <div class="new-price-box">
       <span class="await-loader total-text" data-store-price="discounted||full"> </span>
-      <sup class="per-price"> /year </sup>
+      <sup class="per-price"> ${newPriceLabel} </sup>
     </div>`;
   priceAppliedOnTime.innerHTML = label;
 
@@ -294,10 +295,6 @@ export default function decorate(block) {
       renderNanoBlocks(item, undefined, idx, block);
     }
   });
-
-  if (block.classList.contains('green-tag')) {
-    block.querySelector('.savings').classList.remove('d-none');
-  }
 
   matchHeights(block, 'h3');
   matchHeights(block, '.old-price-container');

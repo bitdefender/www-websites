@@ -3,7 +3,12 @@
     .section.centered {
         h2 {
             font-size: 23px;
-            justify-self: center;
+        }
+
+        .default-content-wrapper {
+            display: flex;
+            flex-flow: column;
+            align-items: center;
         }
     }
 
@@ -15,7 +20,7 @@
         background-color: #F6F6F6;
     }
 
-    .section.light-sky-blue .default-content-wrapper, .section.light-gray .default-content-wrappe {
+    .section.light-sky-blue .default-content-wrapper, .section.light-gray .default-content-wrapper {
         h2 {
             font-size: 23px;
             margin-bottom: 24px;
@@ -40,12 +45,6 @@
         .columns p {
             font-size: 16px;
         }
-    }
-
-    .default-content-wrapper{
-        display: flex;
-        flex-flow: column;
-        align-items: center;
     }
 
     .benefits {
