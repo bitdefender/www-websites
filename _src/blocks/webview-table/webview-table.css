@@ -56,15 +56,16 @@
         line-height: 1;
     }
 
-    p:first-of-type{
+    p:first-of-type, p:last-of-type{
         margin-top: 8px;
         font-size: 14px;
     }
 
-    p:last-of-type{
+    p:nth-of-type(2){
         margin-bottom: 4px;
         font-size: 16px;
     }
+    
 }
 
 .webview-comparison-header div[role="columnheader"]:first-child {
