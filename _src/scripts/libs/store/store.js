@@ -431,6 +431,13 @@ export class Product {
 			buyLink = new URL(Store.targetBuyLinkMappings[this.productAlias][productVariation]);
 		}
 
+		// if there are extra parameters which need to be added to the links, add them
+		if (Store.targetBuyLinkMappings.extraParameters) {
+			Store.targetBuyLinkMappings.extraParameters.forEach(extraParameter => {
+				buyLink.searchParams.set(extraParameter.key, extraParameter.value);
+			});
+		}
+
 		if (window.UC_UI) {
 			buyLink.searchParams.set("ucControllerId", window.UC_UI.getControllerId());
 		}
