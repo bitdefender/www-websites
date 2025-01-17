@@ -7,6 +7,33 @@ import {
   getBrowserName,
 } from '../../scripts/utils/utils.js';
 
+import { UserAgent } from '../../scripts/libs/user-agent/user-agent.js';
+
+function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, block) {
+  const button = block.querySelector('a.button');
+  const dynamicTextElement = button.parentNode.nextElementSibling;
+  switch (UserAgent.os) {
+    case 'android':
+      button.classList.add('android');
+      button.href = osLinkMapping.android.googlePlay;
+      dynamicTextElement.querySelectorAll('a').forEach((anchor, index) => {
+        anchor.textContent = osLinkMapping[androidTemplate.split(',')[index].trim()].text;
+        anchor.href = osLinkMapping[androidTemplate.split(',')[index].trim()].link;
+      });
+      break;
+    case 'ios':
+      button.classList.add('ios');
+      button.href = osLinkMapping.ios.appStore;
+      dynamicTextElement.querySelectorAll('a').forEach((anchor, index) => {
+        anchor.textContent = osLinkMapping[iosTemplate.split(',')[index].trim()].text;
+        anchor.href = osLinkMapping[iosTemplate.split(',')[index].trim()].link;
+      });
+      break;
+    default:
+      break;
+  }
+}
+
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} element The container element
@@ -94,10 +121,41 @@ export default function decorate(block) {
     percentProduct,
     firefoxUrl,
     buttonImage,
+    iosLink,
+    androidLink,
+    windowsLink,
+    macLink,
+    androidTemplate,
+    iosTemplate,
+    appStoreLink,
+    googlePlayLink,
   } = block.closest('.section').dataset;
 
   buildHeroBlock(block);
   renderBubble(block);
+  if (androidLink && iosLink) {
+    const osLinkMapping = {
+      android: {
+        link: androidLink,
+        googlePlay: googlePlayLink,
+        text: 'Android',
+      },
+      ios: {
+        link: iosLink,
+        appStore: appStoreLink,
+        text: 'iOS',
+      },
+      windows: {
+        link: windowsLink,
+        text: 'Windows',
+      },
+      mac: {
+        link: macLink,
+        text: 'macOS',
+      },
+    };
+    detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, block);
+  }
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
 

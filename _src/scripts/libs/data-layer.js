@@ -85,12 +85,32 @@ export class PageLoadStartedEvent {
      */
     let targetExperimentDetails = null;
 
+    async function loadCSS(href) {
+      return new Promise((resolve, reject) => {
+        if (!document.querySelector(`head > link[href="${href}"]`)) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          link.onload = resolve;
+          link.onerror = reject;
+          document.head.append(link);
+        } else {
+          resolve();
+        }
+      });
+    }
+
     const targetExperimentLocation = this.#getMetadata('target-experiment-location');
     const targetExperimentId = this.#getMetadata('target-experiment');
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      const experimentUrl = (await Target.getOffer(targetExperimentLocation))?.content?.url;
-      targetExperimentDetails = await runTargetExperiment(experimentUrl, targetExperimentId);
+      const offer = await Target.getOffer(targetExperimentLocation);
+      const { url, template } = offer?.content || {};
+      if (template) {
+        loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
+        document.body.classList.add(template);
+      }
+      targetExperimentDetails = await runTargetExperiment(url, targetExperimentId);
     }
 
     return targetExperimentDetails;
