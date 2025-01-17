@@ -87,6 +87,6 @@ export default class Page {
    * @param {string} key
    */
   static getParamValue(key) {
-    return this.queryParams.get(key);
+    return this.queryParams[key];
   }
 }

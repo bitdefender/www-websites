@@ -1,5 +1,3 @@
-import { matchHeights } from '../../scripts/utils/utils.js';
-
 export default async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
@@ -49,6 +47,4 @@ export default async function decorate(block, options) {
     const { decorateIcons } = await import('../../scripts/utils/utils.js');
     decorateIcons(block.closest('.section'));
   }
-
-  matchHeights(block, 'h3');
 }
