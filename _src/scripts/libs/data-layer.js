@@ -90,7 +90,7 @@ export class PageLoadStartedEvent {
     const targetExperimentId = this.#getMetadata('target-experiment');
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      const offer = await Target.getOffer(targetExperimentLocation);
+      const offer = await Target.getOffers([targetExperimentLocation]);
       const { url, template } = offer?.content || {};
       if (template) {
         loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
@@ -602,21 +602,37 @@ export class Target {
   }
 
   /**
-   * @type {string[]}
+   * @type {Map<string, object>}
    */
-  static eventTokens = [];
+  static #cachedMboxes = new Map();
 
   /**
    * @type {Object{}}
    */
   static #urlParameters = this.#getUrlParameters();
 
-  /**
-   * @param {string[]}
-   */
-  static setEventTokens(value) {
-    this.eventTokens = value;
-  }
+  static {
+    if (!window.alloy) {
+      // eslint-disable-next-line no-underscore-dangle
+      if (!window.__alloyNS) {
+        // eslint-disable-next-line no-underscore-dangle
+        window.__alloyNS = [];
+      }
+
+      // eslint-disable-next-line no-underscore-dangle
+      window.__alloyNS.push('alloy');
+
+      // eslint-disable-next-line no-underscore-dangle, no-inner-declarations
+      function __alloy(...args) {
+        return new Promise((resolve, reject) => {
+          window.alloy.q.push([resolve, reject, args]);
+        });
+      }
+      __alloy.q = [];
+
+      window.alloy = __alloy;
+    }
+  };
 
   /**
    * Mbox describing an offer
@@ -624,41 +640,9 @@ export class Target {
    */
 
   /**
-   * @type {Mbox}
+   * @type {Promise<Mbox>}
    */
-  static offers = null;
-
-  static #staticInit = new Promise(resolve => {
-
-    /** This is a special case for when adobe.target is disabled using dotest query param */
-    if (shouldABTestsBeDisabled()) {
-      resolve();
-      return;
-    }
-
-    /** Target is loaded and we wait for it to finish so we can get the offer */
-    if (window.adobe?.target) {
-      resolve();
-      return;
-    }
-
-    /** Target wasn't loaded we wait for events from it */
-    document.addEventListener(this.events.LIBRARY_LOADED, () => {
-      resolve();
-    }, { once: true });
-  });
-
-  /**
-   * @typedef {{content: {pid: string}}} PidMbox
-   * @type {Promise<PidMbox|null>}
-   */
-   static #campaignMbox = this.getOffer('initSelector-mbox');
-
-  /**
-   * @typedef {{content: object}} BuyLinksMbox
-   * @type {Promise<BuyLinksMbox|null>}
-   */
-  static #buyLinksMbox = this.getOffer('buyLinks-mbox');
+  static #storeOffers = this.getOffers(['initSelector-mbox', 'buyLinks-mbox']);
 
   /**
    * get the product-buy link mappings from Target (
@@ -676,7 +660,7 @@ export class Target {
    * @returns {Promise<object>}
    */
   static async getBuyLinksMapping() {
-    return (await this.#buyLinksMbox)?.content || {};
+    return (await this.#storeOffers)?.content || {};
   }
 
   /**
@@ -684,24 +668,7 @@ export class Target {
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    return (await this.#campaignMbox)?.content?.pid || null;
-  }
-
-  /**
-   * Awaits Target to apply load and apply its changes
-   * @returns {Promise<void>}
-   */
-  static async loadAndRun() {
-    await this.#staticInit;
-  }
-
-  /**
-   * @param {string} mboxName
-   * @param {object} parameters 
-   */
-  static async getOffer(mboxName, parameters = {}) {
-    const receivedOffers = await this.getOffers([{name: mboxName, parameters}]);
-    return receivedOffers ? receivedOffers[mboxName] : null;
+    return (await this.#storeOffers)?.content?.pid || null;
   }
 
   /**
@@ -719,39 +686,34 @@ export class Target {
     return parameters;
   }
 
-  static async getOffers(mboxes) {
-    await this.#staticInit;
-    let offers = {};
+  /**
+   * 
+   * @param {string[]} mboxes
+   * @param {object} parameters
+   * @returns {object}
+   */
+  static async getOffers(mboxes, parameters) {
+    const notRequestedMboxes = mboxes.filter(mbox => this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
 
-    try {
-      offers = await window.adobe?.target?.getOffers({
-        consumerId: await Visitor.getConsumerId(),
-        request: {
-          id: {
-            marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
-          },
-          execute: {
-            mboxes: [
-              ...mboxes.map((mbox, index) => {
-                return { index, name: mbox.name, parameters: Object.assign(this.#urlParameters, mbox.parameters) }
-              })
-            ]
-          }
-        }
-      });
+    if (notRequestedMboxes.length) {
+      try {
+        const notRequestedOffers = await window.alloy('sendEvent', {
+          decisionScopes: mboxes.map(mbox => mbox.name),
+          data: Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
+        });
 
-      offers = offers?.execute?.mboxes?.reduce((acc, mbox) => {
-        acc[mbox.name] = {};
-        acc[mbox.name].content = mbox?.options?.[0]?.content;
-        acc[mbox.name].type = mbox?.options?.[0]?.type;
-        return acc;
-      }, {});
-
-    } catch (e) {
-      console.warn(e);
+        notRequestedMboxes.forEach(mbox => {
+          this.#cachedMboxes.set(`${mbox}_${JSON.stringify(parameters)}`, notRequestedOffers.propositions);
+        });
+      } catch (e) {
+        console.warn(e);
+      }
     }
 
-    return offers;
+    return mboxes.reduce((acc, mbox) => {
+      acc[mbox] = this.#cachedMboxes.get(`${mbox}_${JSON.stringify(parameters)}`)
+      return acc;
+    }, {});
   }
 };
 
