@@ -77,10 +77,110 @@ function dispatchShadowDomLoadedEvent() {
   window.dispatchEvent(event);
 }
 
+function createDropdownElement(paragraph, dropdownTagText, buyLink, dropdownProducts, pricesContainers) {
+  let dropdownItems = paragraph.textContent.slice(1, -1).split(',').map((item) => item.trim());
+  console.log('1');
+  // Remove the first item as it does not need to be worked on
+  dropdownItems.shift();
+
+  // Create a container for the dropdown
+  let dropdownContainer = document.createElement('div');
+  dropdownContainer.classList.add('custom-dropdown-container');
+
+  if (dropdownTagText) {
+    let dropdownTagElement = document.createElement('div');
+    dropdownTagElement.classList.add('custom-dropdown-tag');
+    dropdownTagElement.textContent = dropdownTagText;
+    dropdownContainer.appendChild(dropdownTagElement);
+  }
+
+  // Create the dropdown element
+  let dropdown = document.createElement('div');
+  dropdown.classList.add('custom-dropdown');
+
+  // Create the button element
+  let dropdownButton = document.createElement('button');
+  dropdownButton.classList.add('dropdown-button');
+  // eslint-disable-next-line prefer-destructuring
+  dropdownButton.textContent = dropdownItems[0];
+  dropdown.appendChild(dropdownButton);
+
+  // Create the options element
+  let dropdownOptions = document.createElement('div');
+  dropdownOptions.classList.add('dropdown-options');
+  dropdown.appendChild(dropdownOptions);
+
+  dropdownItems.forEach((item, idx) => {
+    let dropdownItem = document.createElement('div');
+    dropdownItem.classList.add('custom-dropdown-item');
+    dropdownItem.textContent = item;
+    dropdownItem.setAttribute('data-value', dropdownProducts[idx]);
+    dropdownOptions.appendChild(dropdownItem);
+  });
+
+  dropdownContainer.appendChild(dropdown);
+  paragraph.replaceWith(dropdownContainer);
+
+  dropdownButton.addEventListener('click', () => {
+    let option = dropdownOptions.style.display === 'block' ? 'none' : 'block';
+    dropdownOptions.style.display = option;
+    dropdownButton.classList.add('active');
+  });
+
+  const dropdownItemsNodes = dropdownOptions.querySelectorAll('.custom-dropdown-item');
+  dropdownItemsNodes.forEach((item) => {
+    console.log(item);
+    item.addEventListener('click', function () {
+      dropdownButton.textContent = this.textContent;
+      dropdownOptions.style.display = 'none';
+      dropdownButton.classList.remove('active');
+      dropdownItemsNodes.forEach((i) => i.classList.remove('selected'));
+      this.classList.add('selected');
+      let priceBox = pricesContainers.get(item.getAttribute('data-value'));
+      console.log(pricesContainers);
+      console.log(priceBox);
+      buyLink.parentElement.previousElementSibling.replaceWith(priceBox);
+    });
+  });
+
+  // Close the dropdown if clicked outside
+  // document.addEventListener('click', (event) => {
+  //   if (!dropdown.contains(event.target)) {
+  //     dropdownOptions.style.display = 'none';
+  //     dropdownButton.classList.remove('active');
+  //   }
+  // });
+}
+
+async function createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText) {
+  const [prodName, prodUsers, prodYears] = product.split('/');
+  let oldPrice;
+  let newPrice;
+  let discountValue;
+
+  const pricesBox = document.createElement('div');
+  pricesBox.classList.add('hero-aem__prices');
+  pricesBox.innerHTML = `
+          ${bluePillText ? `<p class="hero-aem__pill">${bluePillText}</p>` : ''}
+          <div class="hero-aem__price mt-3">
+            <div>
+                <span class="prod-oldprice" data-store-price="full">${oldPrice}${currencyLabel}</span>
+                <span class="prod-save">${saveText} ${discountValue}${currencyLabel}<span class="save"></span></span>
+            </div>
+            <div class="newprice-container mt-2">
+              <span class="prod-newprice">${newPrice}${currencyLabel}</span>
+              <sup>${conditionText || ''}</sup>
+            </div>
+          </div>
+          <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
+  buyLink.href = `https://www.bitdefender.com/site/Store/buy/${prodName}/${prodUsers}/${prodYears}/`;
+  return pricesBox;
+}
+
 export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
-    alignContent, height, type, send2datalayer,
+    alignContent, height, type, send2datalayer, dropdownProducts, bluePillText, underPriceText,
   } = block.closest('.section').dataset;
 
   if (options) {
