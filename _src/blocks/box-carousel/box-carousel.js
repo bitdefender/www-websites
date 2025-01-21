@@ -1,6 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { debounce } from '../../scripts/utils/utils.js';
-import { isView } from '../../scripts/scripts.js';
+import { debounce, isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];

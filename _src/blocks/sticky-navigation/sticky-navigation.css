@@ -4,6 +4,7 @@
 
 main .section.sticky-navigation-container {
   padding-top: 0;
+  padding-bottom: 0;
 }
 
 .sticky-navigation {
@@ -25,10 +26,10 @@ main .section.sticky-navigation-container {
   display: none;
   flex-direction: column;
   justify-content: center;
-  align-items: baseline;
+  align-items: center;
   box-shadow: 0 3px 6px 0 rgb(0 0 0 / 8%);
   padding: 0 var(--body-padding) var(--body-padding) var(--body-padding);
-  
+
 }
 
 .sticky-navigation ul {
@@ -37,6 +38,16 @@ main .section.sticky-navigation-container {
   padding: 0;
   margin:0;
   list-style-type: none;
+}
+
+.sticky-navigation ul li {
+  border-bottom: 1px solid var(--sticky-nav-border-color);
+  padding: 0;
+  margin: 0;
+}
+
+.sticky-navigation ul li.opened {
+  border-bottom: 1px solid #006EFF;
 }
 
 .sticky-navigation ul li a {
@@ -48,12 +59,6 @@ main .section.sticky-navigation-container {
   transition: color .3s ease-in-out;
   text-decoration:none;
   padding: 22px 0;
-}
-
-.sticky-navigation ul li {
-  border-bottom: 1px solid var(--sticky-nav-border-color);
-  padding: 0;
-  margin: 0;
 }
 
 .sticky-navigation ul li.active::after {
@@ -111,13 +116,18 @@ main .section.sticky-navigation-container {
 
 .sticky-navigation .button-container {
   margin:0;
-  padding: 40px 0 20px 20px;  
+  padding: 40px 0 20px 20px;
 }
 
 .sticky-navigation .button-container a {
-  font-size: var(--body-font-size-xxs);
+  font-size: var(--body-font-size-s);
   vertical-align: middle;
-  padding: 6px 15px;
+  padding: 6px 9px 6px 18px;
+  text-transform: capitalize;
+}
+
+.sticky-navigation .button-container a .button-text{
+  white-space: nowrap;
 }
 
 @media (min-width: 992px) { /* desktop */
@@ -142,7 +152,7 @@ main .section.sticky-navigation-container {
 
   .sticky-navigation ul li {
     border: none;
-    margin-right: 20px;
+    margin-right: 40px;
   }
 
   .sticky-navigation ul li a {
@@ -157,19 +167,25 @@ main .section.sticky-navigation-container {
 
   .sticky-navigation .button-container {
     vertical-align: middle;
-    padding: 0;  
+    padding: 0;
+  }
+}
+
+@media (max-width: 1399px) { /* desktop */
+  .sticky-navigation .menu-with-button {
+    padding: 0 var(--section-large-desktop-padding);
   }
 }
 
 @media (min-width: 1600px) { /* large desktop */
   .sticky-navigation .button-container a {
-    font-size: var(--body-font-size-xs);
-    padding: 8px 15px;
+    font-size: var(--body-font-size-s);
+    font-weight: var(--font-weight-bold);
+    padding: 8px 8px 8px 20px;
   }
 
   .sticky-navigation .menu-with-button {
     max-width: var(--section-large-desktop-max-width);
     padding: 0 var(--section-large-desktop-padding);
   }
-
 }

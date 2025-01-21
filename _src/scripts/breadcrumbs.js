@@ -2,17 +2,16 @@ import {
   createTag,
   fetchIndex,
   fixExcelFilterZeroes,
+  getDomain,
+  decorateBlockWithRegionId,
 } from './utils/utils.js';
-
-// eslint-disable-next-line import/no-cycle
-import { decorateBlockWithRegionId, getDomain } from './scripts.js';
 
 function prependSlash(path) {
   return path.startsWith('/') ? path : `/${path}`;
 }
 
 function getName(pageIndex, path, part, current) {
-  const pg = pageIndex.find((page) => page.path === path);
+  const pg = pageIndex.find((page) => page.path.replace(/^\/[^/]+/, '') === path.replace(/^\/[^/]+/, ''));
   if (pg && pg.breadcrumbtitle && pg.breadcrumbtitle !== '0') {
     return pg.breadcrumbtitle;
   }

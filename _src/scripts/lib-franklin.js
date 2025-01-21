@@ -11,15 +11,24 @@
  * governing permissions and limitations under the License.
  */
 
+import Page from './libs/page.js';
+
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
+export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.hlx.page', '.hlx.live'];
 export const STICKY_NAVIGATION_DATASET_KEY = 'stickyNavName';
 
 /**
  * log RUM if part of the sample.
  * @param {string} checkpoint identifies the checkpoint in funnel
  * @param {Object} data additional data for RUM sample
+ * @param {string} data.source DOM node that is the source of a checkpoint event
+ * identified by #id or .classname
+ * @param {string} data.target subject of the checkpoint event,
+ * for instance the href of a link, or a search term
  */
 export function sampleRUM(checkpoint, data = {}) {
+  const SESSION_STORAGE_KEY = 'aem-rum';
+  sampleRUM.baseURL = sampleRUM.baseURL || new URL(window.RUM_BASE == null ? 'https://rum.hlx.page' : window.RUM_BASE, window.location);
   sampleRUM.defer = sampleRUM.defer || [];
   const defer = (fnname) => {
     sampleRUM[fnname] = sampleRUM[fnname]
@@ -43,24 +52,33 @@ export function sampleRUM(checkpoint, data = {}) {
       const usp = new URLSearchParams(window.location.search);
       const weight = (usp.get('rum') === 'on') ? 1 : 100; // with parameter, weight is 1. Defaults to 100.
       // eslint-disable-next-line no-bitwise
-      const hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
-      const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
+      const id = Array.from({ length: 75 }, (_, i) => String.fromCharCode(48 + i)).filter((a) => /\d|[A-Z]/i.test(a)).filter(() => Math.random() * 75 > 70).join('');
       const random = Math.random();
       const isSelected = (random * weight < 1);
+      const firstReadTime = window.performance ? window.performance.timeOrigin : Date.now();
       const urlSanitizers = {
         full: () => window.location.href,
         origin: () => window.location.origin,
         path: () => window.location.href.replace(/\?.*$/, ''),
       };
+      // eslint-disable-next-line max-len
+      const rumSessionStorage = sessionStorage.getItem(SESSION_STORAGE_KEY) ? JSON.parse(sessionStorage.getItem(SESSION_STORAGE_KEY)) : {};
       // eslint-disable-next-line object-curly-newline, max-len
-      window.hlx.rum = { weight, id, random, isSelected, sampleRUM, sanitizeURL: urlSanitizers[window.hlx.RUM_MASK_URL || 'path'] };
+      rumSessionStorage.pages = (rumSessionStorage.pages ? rumSessionStorage.pages : 0) + 1 + /* noise */ (Math.floor(Math.random() * 20) - 10);
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(rumSessionStorage));
+      window.hlx.rum = {
+        weight, id, random, isSelected, firstReadTime, sampleRUM, sanitizeURL: urlSanitizers[window.hlx.RUM_MASK_URL || 'path'], rumSessionStorage,
+      };
     }
-    const { weight, id } = window.hlx.rum;
+    const { weight, id, firstReadTime } = window.hlx.rum;
     if (window.hlx && window.hlx.rum && window.hlx.rum.isSelected) {
+      const knownProperties = ['weight', 'id', 'referer', 'checkpoint', 't', 'source', 'target', 'cwv', 'CLS', 'FID', 'LCP', 'INP', 'TTFB'];
       const sendPing = (pdata = data) => {
+        // eslint-disable-next-line max-len
+        const t = Math.round(window.performance ? window.performance.now() : (Date.now() - firstReadTime));
         // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
-        const body = JSON.stringify({ weight, id, referer: window.hlx.rum.sanitizeURL(), checkpoint, ...data });
-        const url = `https://rum.hlx.page/.rum/${weight}`;
+        const body = JSON.stringify({ weight, id, referer: window.hlx.rum.sanitizeURL(), checkpoint, t, ...data }, knownProperties);
+        const url = new URL(`.rum/${weight}`, sampleRUM.baseURL).href;
         // eslint-disable-next-line no-unused-expressions
         navigator.sendBeacon(url, body);
         // eslint-disable-next-line no-console
@@ -110,7 +128,7 @@ export async function loadCSS(href) {
  * @param {Object} attrs additional optional attributes
  */
 
-export async function loadScript(src, attrs) {
+export async function loadScript(src, attrs = null) {
   return new Promise((resolve, reject) => {
     if (!document.querySelector(`head > script[src="${src}"]`)) {
       const script = document.createElement('script');
@@ -185,7 +203,7 @@ const ICONS_CACHE = {};
  * Replace icons with inline SVG and prefix with codeBasePath.
  * @param {Element} [element] Element containing icons
  */
-export async function decorateIcons(element) {
+async function internalDecorateIcons(element) {
   // Prepare the inline sprite
   let svgSprite = document.getElementById('franklin-svg-sprite');
   if (!svgSprite) {
@@ -229,19 +247,26 @@ export async function decorateIcons(element) {
     }
   }));
 
-  const symbols = Object
-    .keys(ICONS_CACHE).filter((k) => !svgSprite.querySelector(`#icons-sprite-${k}`))
-    .map((k) => ICONS_CACHE[k])
-    .filter((v) => !v.styled)
-    .map((v) => v.html)
-    .join('\n');
+  const symbols = Object.values(ICONS_CACHE).filter((v) => !v.styled).map((v) => v.html).join('\n');
   svgSprite.innerHTML += symbols;
 
   icons.forEach((span) => {
     const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
     const parent = span.firstElementChild?.tagName === 'A' ? span.firstElementChild : span;
+
+    // Set aria-label if the parent is an anchor tag
+    try {
+      const spanParent = span.parentElement;
+      if (spanParent?.tagName === 'A' && !spanParent?.hasAttribute('aria-label')) {
+        spanParent.setAttribute('aria-label', iconName);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Error setting aria-label for icon ${iconName}:`, error);
+    }
+
     // Styled icons need to be inlined as-is, while unstyled ones can leverage the sprite
-    if (ICONS_CACHE[iconName].styled) {
+    if (ICONS_CACHE[iconName] && ICONS_CACHE[iconName].styled) {
       parent.innerHTML = ICONS_CACHE[iconName].html;
     } else {
       parent.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-${iconName}"/></svg>`;
@@ -249,10 +274,22 @@ export async function decorateIcons(element) {
   });
 }
 
+let previousDecoration = Promise.resolve();
+
+/**
+ * Replace icons with inline SVG and prefix with codeBasePath.
+ * @param {Element} [element] Element containing icons
+ */
+export async function decorateIcons(element) {
+  previousDecoration = previousDecoration.then(() => internalDecorateIcons(element));
+  await previousDecoration;
+}
+
 export async function decorateTags(element) {
   const tagTypes = [
     { regex: /\[#(.*?)#\]/g, className: 'dark-blue' },
     { regex: /\[{(.*?)}\]/g, className: 'light-blue' },
+    { regex: /\[blue-round(.*?)blue-round\]/g, className: 'light-blue-round' },
     { regex: /\[\$(.*?)\$\]/g, className: 'green' },
   ];
 
@@ -288,43 +325,6 @@ export async function decorateTags(element) {
   }
 
   replaceTagsInNode(element);
-}
-
-/**
- * Gets placeholders object.
- * @param {string} [prefix] Location of placeholders
- * @returns {object} Window placeholders object
- */
-export async function fetchPlaceholders(prefix = 'default') {
-  window.placeholders = window.placeholders || {};
-  const loaded = window.placeholders[`${prefix}-loaded`];
-  if (!loaded) {
-    window.placeholders[`${prefix}-loaded`] = new Promise((resolve, reject) => {
-      const secondRootFolder = window.location.pathname.split('/').filter((item) => item).filter((item, idx) => idx < 2).join('/');
-      fetch(`/${secondRootFolder}/placeholders.json`)
-        .then((resp) => {
-          if (resp.ok) {
-            return resp.json();
-          }
-          throw new Error(`${resp.status}: ${resp.statusText}`);
-        }).then((json) => {
-          const placeholders = {};
-          json.data
-            .filter((placeholder) => placeholder.Key)
-            .forEach((placeholder) => {
-              placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
-            });
-          window.placeholders[prefix] = placeholders;
-          resolve();
-        }).catch((error) => {
-          // error loading placeholders
-          window.placeholders[prefix] = {};
-          reject(error);
-        });
-    });
-  }
-  await window.placeholders[`${prefix}-loaded`];
-  return window.placeholders[prefix];
 }
 
 /**
@@ -420,6 +420,8 @@ export function decorateSections(main) {
         } else if (key === STICKY_NAVIGATION_SECTION_METADATA_KEY) {
           section.id = `section-${toClassName(meta[key])}`;
           section.dataset[STICKY_NAVIGATION_DATASET_KEY] = meta[key];
+        } else if (key === 'id') {
+          section.id = meta[key];
         } else {
           section.dataset[toCamelCase(key)] = meta[key];
         }
@@ -659,6 +661,8 @@ export function decorateTemplateAndTheme() {
       element.classList.add(toClassName(c.trim()));
     });
   };
+  const dark = Page.getParamValue('theme');
+  if (dark) addClasses(document.body, 'dark-mode');
   const template = getMetadata('template');
   if (template) addClasses(document.body, template);
   const theme = getMetadata('theme');
@@ -710,6 +714,14 @@ export function decorateButtons(element) {
           up.classList.add('button-container');
           return;
         }
+
+        // Example: <p><a href="https://central.bitdefender.com">Text</a> (example text)</p>
+        if (up.childNodes.length === 1 && up.tagName === 'P' && a.href.includes('central.bitdefender')) {
+          a.className = 'button central';
+          up.classList.add('button-container');
+          return;
+        }
+
         // Example: <p><a href="example.com">Text</a> <em>50% Discount</em></p>
         if (up.childNodes.length === 3 && up.tagName === 'P' && a.nextElementSibling?.tagName === 'EM') {
           a.className = 'button';

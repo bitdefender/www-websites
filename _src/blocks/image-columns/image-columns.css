@@ -1,7 +1,7 @@
 /* stylelint-disable no-descending-specificity */
 /* stylelint-disable selector-class-pattern */
-.image-columns-wrapper {
-  padding: 0;
+.image-columns-container ul {
+  padding-left: 0;
 }
 
 .image-columns {
@@ -37,16 +37,19 @@
   justify-items: center;
 }
 
+.affiliate .image-columns > div > .image-columns-img-col{
+  flex: 0 1 50%;
+}
+
 .image-columns.text_smaller > div > .image-columns-txt-col {
   flex: 0 1 45%;
 }
 
 .image-columns > div > .image-columns-txt-col {
-  flex: 0 1 25%;
+  flex: 0 1 45%;
 }
 
 .image-columns > div > .image-columns-img-col .img-container {
-  max-width: 645px;
   width: 100%;
   height: auto;
   margin: 0 auto;
@@ -63,7 +66,6 @@
   position: relative;
   font-size: var(--body-font-size-l);
   list-style: none;
-  transform: translateX(-35px);
 }
 
 .image-columns ul li::before {
@@ -101,6 +103,58 @@
   flex: 0 1 25%;
 }
 
+main .section.wide .image-columns img{
+  height: auto;
+} 
+
+.ferrari .image-columns-wrapper{
+  padding: 20px;
+}
+
+main .image-columns.quotes > div{
+  gap: 20px;
+}
+
+main .image-columns.quotes >div > .image-columns-txt-col{
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  padding: 30px;
+  border-radius: 10px;
+  background-color: #006dff;
+  color: #fff;
+  font-size: 20px;
+}
+
+main .image-columns.quotes > div > .image-columns-txt-col p{
+  font-size: 25px;
+  font-weight: 300;
+  padding: 0;
+}
+
+main .image-columns.quotes > div > .image-columns-img-col{
+  align-items: unset;
+}
+
+main .image-columns.quotes > div > .image-columns-img-col img{
+  position: static;
+  height: auto;
+  max-width: 100%;
+}
+
+@media (min-width: 767px){
+  .image-columns.quotes > div {
+    flex-direction: unset;
+    column-gap: 58px;
+    align-items: center;
+  }
+
+  .image-columns.quotes > div > div {
+    flex: 1;
+    order: unset;
+  }
+}
+
 @media (min-width: 992px) {
   .image-columns > div > .image-columns-txt-col h3 {
     margin-bottom: 26px;
@@ -117,11 +171,28 @@
   font-size: 16px;
   line-height: 1.5;
   margin: 0 0 20px;
+  padding-left: var(--body-padding);
+}
+
+.affiliate .image-columns > div > .image-columns-txt-col p {
+  padding-left: 0;
+  margin-top: 16px;
 }
 
 @media (min-width: 1400px) {
   .image-columns > div > .image-columns-txt-col p {
     font-size: 18px;
+  }
+
+  .affiliate .image-columns > div > .image-columns-txt-col p {
+    font-size: 16px;
+    padding-left: 0;
+    margin-top: 16px;
+  }
+
+  .ferrari .image-columns-wrapper{
+    padding: 0;
+    max-width: 1292px;
   }
 }
 
@@ -132,20 +203,14 @@
   }
 
   .image-columns > div {
-    align-items: flex-start;
     flex-direction: unset;
     column-gap: 58px;
+    align-items: center;
   }
 
   .image-columns > div > div {
     flex: 1;
     order: unset;
-  }
-
-  .image-columns-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 36px 0;
-    margin: 0 auto;
   }
 }
 

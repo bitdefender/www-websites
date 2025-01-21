@@ -4,19 +4,11 @@ import {
   getMetadata,
 } from './lib-franklin.js';
 
-// eslint-disable-next-line import/no-cycle
-import {
-  pushProductsToDataLayer,
-  pushToDataLayer,
-  openUrlForOs,
-} from './scripts.js';
 import { loadBreadcrumbs } from './breadcrumbs.js';
+import { openUrlForOs } from './utils/utils.js';
 
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
-
-pushProductsToDataLayer();
-pushToDataLayer('page loaded');
 
 // Load breadcrumbs
 loadBreadcrumbs();

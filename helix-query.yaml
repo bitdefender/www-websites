@@ -1,12 +1,19 @@
 version: 1
 indices:
-  default:
+  index_en_us:
     include:
-      - /_src/**
-    exclude:
-      - /_src/fragments/**  
-    target: /query-index.json
-    properties:
+      - /en-us/**
+    exclude: &excludeList
+      - /**/fragments/**
+      - /**/experiments/**
+      - /**/webview/**
+      - /**/404
+      - /**/footer
+      - /**/nav
+      - /**/dlp-components/**
+      - /**/consumer/thank-you
+    target: /en-us/query-index.json
+    properties: &minPros
       title:
         select: head > meta[property="og:title"]
         value: attribute(el, "content")
@@ -18,7 +25,7 @@ indices:
         # Assumptions:
         # 1. if the h1 is in a block, than that block is the first one in the document => main > div:first-child > div:first-child h1
         # 2. if the h1 is in the default content, than there are no other blocks before this default content => main > div > h1
-        select: main > div:first-child > div:first-child h1, main > div > h1
+        select: main > div:first-child > div:first-child h1, main div > h1
         value: textContent(el)
       breadcrumbtitle:
         select: head > meta[name="breadcrumb-title"]
@@ -26,3 +33,109 @@ indices:
       robots:
         select: head > meta[name="robots"]
         value: attribute(el, "content")  
+  index_de_de:
+    include:
+      - /de-de/**
+    exclude: *excludeList
+    target: /de-de/query-index.json
+    properties: *minPros
+  index_en_global:
+    include:
+      - /en-global/**
+    exclude: *excludeList
+    target: /en-global/query-index.json
+    properties: *minPros
+  index_en_au:
+    include:
+      - /en-au/**
+    exclude: *excludeList
+    target: /en-au/query-index.json
+    properties: *minPros
+  index_en_gb:
+    include:
+      - /en-gb/**
+    exclude: *excludeList
+    target: /en-gb/query-index.json
+    properties: *minPros
+  index_es_es:
+    include:
+      - /es-es/**
+    exclude: *excludeList
+    target: /es-es/query-index.json
+    properties: *minPros
+  index_es_global:
+    include:
+      - /es-global/**
+    exclude: *excludeList
+    target: /es-global/query-index.json
+    properties: *minPros
+  index_fr_fr:
+    include:
+      - /fr-fr/**
+    exclude: *excludeList
+    target: /fr-fr/query-index.json
+    properties: *minPros
+  index_it_it:
+    include:
+      - /it-it/**
+    exclude: *excludeList
+    target: /it-it/query-index.json
+    properties: *minPros
+  index_nl_nl:
+    include:
+      - /nl-nl/**
+    exclude: *excludeList
+    target: /nl-nl/query-index.json
+    properties: *minPros
+  index_pt_br:
+    include:
+      - /pt-br/**
+    exclude: *excludeList
+    target: /pt-br/query-index.json
+    properties: *minPros
+  index_pt_pt:
+    include:
+      - /pt-pt/**
+    exclude: *excludeList
+    target: /pt-pt/query-index.json
+    properties: *minPros
+  index_ro_ro:
+    include:
+      - /ro-ro/**
+    exclude: *excludeList
+    target: /ro-ro/query-index.json
+    properties: *minPros
+  index_sv_se:
+    include:
+      - /sv-se/**
+    exclude: *excludeList
+    target: /sv-se/query-index.json
+    properties: *minPros
+  index_zh_hk:
+    include:
+      - /zh-hk/**
+    exclude:
+      - /**/solutions/**/fragments/**
+      - /**/solutions/**/experiments/**
+      - /**/consumer/**/fragments/**
+      - /**/consumer/**/experiments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /zh-hk/query-index.json
+    properties: *minPros
+  index_zh_tw:
+    include:
+      - /zh-tw/**
+    exclude:
+      - /**/solutions/**/fragments/**
+      - /**/solutions/**/experiments/**
+      - /**/consumer/**/fragments/**
+      - /**/consumer/**/experiments/**
+      - /**/consumer/404
+      - /**/consumer/footer
+      - /**/consumer/nav
+      - /**/consumer/thank-you
+    target: /zh-tw/query-index.json
+    properties: *minPros

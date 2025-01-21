@@ -1,0 +1,278 @@
+import {
+  createNanoBlock,
+  getDatasetFromSection,
+  renderNanoBlocks,
+} from '../../scripts/utils/utils.js';
+
+const state = {
+  firstProduct: null,
+  secondProduct: null,
+  currentProduct: null,
+  mode: 'm', // "m" or "y",
+  membersIndex: 0,
+  blockDataset: null,
+};
+
+const MEMBERS_MAP = new Map();
+
+function expandItem(content) {
+  content.style.height = `${content.scrollHeight}px`;
+  const transitionEndCallback = () => {
+    content.removeEventListener('transitionend', transitionEndCallback);
+    content.style.height = 'auto';
+  };
+  content.addEventListener('transitionend', transitionEndCallback);
+  content.classList.add('expanded');
+}
+
+function collapseItem(content) {
+  content.style.height = `${content.scrollHeight}px`;
+  requestAnimationFrame(() => {
+    content.classList.remove('expanded');
+    content.style.height = 0;
+  });
+}
+
+function eventListener(ul) {
+  return (event) => {
+    let target = null;
+
+    // find ancestor a tag
+    if (event.target.tagName !== 'A') {
+      target = event.target.closest('a');
+    } else {
+      target = event.target;
+    }
+
+    // if the clicked node is not open then open it
+    if (!target.classList.contains('is-open')) {
+      target.classList.add('is-open');
+
+      // if the clicked node has children then toggle the expanded class
+      if (target.parentNode.children.length > 1) {
+        target.parentNode.querySelectorAll('.features-tabs-content').forEach((content) => {
+          expandItem(content);
+        });
+      }
+
+      // hid the other tabs
+      ul.querySelectorAll('li').forEach((collapsedLi) => {
+        if (collapsedLi !== target.parentNode) {
+          collapsedLi.children[0].classList.remove('is-open');
+          collapsedLi.querySelectorAll('.features-tabs-content').forEach((content) => {
+            collapseItem(content);
+          });
+        }
+      });
+    } else {
+      target.classList.remove('is-open');
+      // if the clicked node has children then toggle the expanded class
+      if (target.parentNode.children.length > 1) {
+        target.parentNode.querySelectorAll('.features-tabs-content').forEach((content) => {
+          collapseItem(content);
+        });
+      }
+    }
+  };
+}
+
+function extractFeatures(col) {
+  const ul = document.createElement('ul');
+  ul.classList.add('features-tabs');
+
+  // select all h4 tags as feature titles
+  col.querySelectorAll('h4').forEach((h4) => {
+    const li = document.createElement('li');
+    ul.appendChild(li);
+
+    const a = document.createElement('a');
+    a.setAttribute('href', '#');
+
+    // register click event on a tag
+
+    a.addEventListener('click', (event) => {
+      event.preventDefault();
+      eventListener(ul)(event);
+    });
+
+    h4.childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        a.appendChild(document.createTextNode(node.textContent));
+      } else {
+        a.appendChild(node);
+      }
+    });
+
+    a.classList.add('features-tabs-title');
+
+    li.appendChild(a);
+
+    // all descendants of a that have class tag
+    a.querySelectorAll('.tag').forEach((tag) => {
+      li.appendChild(tag);
+    });
+
+    const content = document.createElement('div');
+    content.classList.add('features-tabs-content');
+    li.appendChild(content);
+
+    // every oaragraph until next h4
+    let nextElement = h4.nextElementSibling;
+    while (nextElement && nextElement.tagName !== 'H4') {
+      content.appendChild(nextElement);
+      nextElement = h4.nextElementSibling;
+    }
+
+    ul.appendChild(li);
+
+    h4.remove();
+  });
+
+  return ul;
+}
+
+function updateBuyLink(block) {
+  const buyLink = block.querySelector('.button-container > .button');
+  if (buyLink) {
+    buyLink.href = '#';
+    buyLink.setAttribute('data-store-buy-link', '');
+  }
+}
+
+function renderPrice(block, _firstProduct, secondProduct) {
+  const variant = '5-1';
+  const priceElement = document.createElement('div');
+  priceElement.classList.add('price-element-wrapper');
+
+  const oldPrice = document.createElement('div');
+  oldPrice.classList.add('prod-oldprice', 'await-loader');
+  oldPrice.setAttribute('data-store-price', 'full');
+  oldPrice.setAttribute('data-store-hide', 'no-price=discounted');
+
+  const el = document.createElement('DIV');
+  el.classList.add('price');
+  el.classList.add('await-loader');
+  block.setAttribute('data-store-context', '');
+  block.setAttribute('data-store-id', secondProduct);
+  block.setAttribute('data-store-option', variant);
+  block.setAttribute('data-store-department', 'consumer');
+  block.setAttribute('data-store-event', 'main-product-loaded');
+  el.setAttribute('data-store-price', 'discounted||full');
+
+  priceElement.appendChild(oldPrice);
+  priceElement.appendChild(el);
+  updateBuyLink(block);
+  return priceElement;
+}
+
+function renderRadioGroup(block) {
+  const metadata = block.parentElement.parentElement.dataset;
+  const [firstProduct, secondProduct] = metadata.price.split(',');
+  const el = document.createElement('DIV');
+  el.classList.add('products-sideview-radio');
+  el.innerHTML = `
+    <input type="radio" name="type" id="monthly" 
+    data-store-click-set-product data-store-product-id="${secondProduct}"
+    data-store-product-department="consumer"
+    data-product-type="monthly" checked/>
+    <label for="monthly">Monthly</label>
+     
+    <input type="radio" name="type" id="yearly" data-store-click-set-product 
+    data-store-product-id="${firstProduct}" 
+    data-store-product-department="consumer"
+    data-product-type="yearly"/>
+    <label for="yearly">Yearly</label>
+  `;
+  return el;
+}
+
+function getBlueTags(block) {
+  let blueTags = block.querySelectorAll('.tag-blue');
+  if (!blueTags.length) {
+    const benefitsList = block.querySelector('ul');
+    benefitsList?.classList.add('benefits-list');
+    const benefitsListElements = benefitsList?.querySelectorAll('li');
+    benefitsListElements?.forEach((element) => {
+      const blueTag = document.createElement('span');
+      blueTag.classList.add('tag-blue');
+      element.insertAdjacentElement('beforeend', blueTag);
+    });
+    blueTags = block.querySelectorAll('.tag-blue');
+  }
+  return blueTags;
+}
+
+function updateBenefits(block, selectEl, metadata) {
+  const blueTags = getBlueTags(block);
+  const selectedOption = [...selectEl.options].find((option) => option.hasAttribute('selected'));
+  const neededIndex = [...selectEl.options].indexOf(selectedOption);
+  const updatedBenefits = JSON.parse(metadata[neededIndex]);
+  let counter = 0;
+  blueTags.forEach((tag) => {
+    // eslint-disable-next-line no-plusplus
+    tag.textContent = `x${updatedBenefits[counter++]}`;
+  });
+}
+
+function renderSelector(block, ...options) {
+  const selectorOptions = options
+    .filter((option) => option && !Number.isNaN(Number(option)))
+    .map((opt) => Number(opt));
+  const defaultSelection = Number(state.blockDataset.defaultselection) || selectorOptions[1];
+  const el = document.createElement('div');
+  el.classList.add('products-sideview-selector');
+
+  el.innerHTML = `
+    <select data-store-devices-text-plural="members"
+    data-store-devices-text-singular="member"
+    data-store-click-set-devices
+    data-store-devices>
+
+        ${selectorOptions.sort((first, second) => first - second).map((opt) => `
+          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}></option>
+        `).join('/n')}
+    </select>
+  `;
+
+  const selectEl = el.querySelector('select');
+  const metadata = block.parentElement.parentElement.dataset;
+  selectEl.value = defaultSelection;
+
+  selectEl.addEventListener('change', (e) => {
+    [...selectEl.options].forEach((option) => option.removeAttribute('selected'));
+    [...selectEl.options].find((option) => option.value === e.target.value)?.setAttribute('selected', '');
+    updateBenefits(block, selectEl, metadata.benefits.split(',,'));
+  });
+
+  updateBenefits(block, selectEl, metadata.benefits.split(',,'));
+
+  return el;
+}
+
+createNanoBlock('price', renderPrice);
+createNanoBlock('monthlyYearly', renderRadioGroup);
+createNanoBlock('selectMembers', renderSelector);
+
+function initMembersMap() {
+  const selectMembers = state.blockDataset.selectmembers.trim().split(',');
+  selectMembers.forEach((member, index) => MEMBERS_MAP.set(index, Number(member)));
+}
+
+export default function decorate(block) {
+  const blockDataset = getDatasetFromSection(block);
+  state.blockDataset = blockDataset;
+
+  initMembersMap();
+
+  block.firstElementChild.classList.add('d-flex');
+  block.firstElementChild.firstElementChild.classList.add('pricing-wrapper');
+  block.firstElementChild.lastElementChild.classList.add('features-wrapper');
+
+  renderNanoBlocks(block.firstElementChild, block);
+
+  const cols = [...block.firstElementChild.children];
+  block.classList.add(`features-${cols.length}-cols`);
+
+  const col = block.children[0].children[1];
+  col.appendChild(extractFeatures(col));
+}

@@ -1,10 +1,16 @@
-import { createNanoBlock, renderNanoBlocks, fetchProduct } from '../../scripts/utils/utils.js';
+import { createNanoBlock, renderNanoBlocks, matchHeights } from '../../scripts/utils/utils.js';
 
-const fetchedProducts = [];
+createNanoBlock('priceComparison', (code, variant, label, block, productIndex, columnEl) => {
+  columnEl.setAttribute('data-store-id', code);
+  columnEl.setAttribute('data-store-option', variant);
+  columnEl.setAttribute('data-store-department', 'consumer');
+  columnEl.setAttribute('data-store-event', 'product-comparison');
+  columnEl.setAttribute('data-store-context', '');
 
-createNanoBlock('priceComparison', (code, variant, label) => {
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
+  const oldPriceText = block.closest('.section').dataset.old_price_text ?? '';
+  const newPriceLabel = block.closest('.section').dataset.new_price_label ?? '';
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '-';
@@ -15,20 +21,38 @@ createNanoBlock('priceComparison', (code, variant, label) => {
   priceElement.classList.add('current-price-container');
   const priceAppliedOnTime = document.createElement('p');
   priceRoot.appendChild(priceAppliedOnTime);
+  // create a mock buyzone for free products
+  if (code.includes('free')) {
+    oldPriceElement.innerHTML = `
+     <div class="old-price-box">
+      </div>
+    `;
+    priceElement.innerHTML = `<div class="new-price-box">
+      <span class="await-loader total-text">${label} </span>
+      <sup class="per-price"> </sup>
+    </div>`;
+    priceAppliedOnTime.innerHTML = '<p><p>';
+    return priceRoot;
+  }
 
-  fetchProduct(code, variant)
-    .then((product) => {
-      fetchedProducts.push({ code, variant, product });
-      // eslint-disable-next-line camelcase
-      const { price, discount: { discounted_price: discounted }, currency_iso: currency } = product;
-      oldPriceElement.innerHTML = `Old Price <del>${price} ${currency}</del>`;
-      priceElement.innerHTML = `${discounted} ${currency}`;
-      priceAppliedOnTime.innerHTML = label;
-    })
-    .catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-    });
+  oldPriceElement.innerHTML = `
+    <div class="old-price-box">
+      <span  data-store-hide="no-price=discounted;type=visibility">${oldPriceText} <del data-store-price="full"></del></span>
+      <span class="savings d-none" data-store-hide="no-price=discounted;type=visibility">Savings <span data-store-discount="percentage"><span></span>
+    </div>`;
+  priceElement.innerHTML = `
+    <div class="new-price-box">
+      <span class="await-loader total-text" data-store-price="discounted||full"> </span>
+      <sup class="per-price"> ${newPriceLabel} </sup>
+    </div>`;
+  priceAppliedOnTime.innerHTML = label;
+
+  // update buy link
+  const buyLink = columnEl.querySelector('.button-container a');
+  if (buyLink.href.includes('/buy/') || buyLink.href.includes('#buylink')) {
+    buyLink.href = '#';
+    buyLink.setAttribute('data-store-buy-link', '');
+  }
 
   return priceRoot;
 });
@@ -151,7 +175,7 @@ function extractTextFromStrongTagToParent(element) {
     });
   }
 
-  if (element.tagName === 'STRONG') {
+  if (element.tagName === 'STRONG' && element.parentElement) {
     element.parentElement.innerHTML = element.textContent;
   }
 }
@@ -159,16 +183,14 @@ function extractTextFromStrongTagToParent(element) {
 function buildTableHeader(block) {
   const header = block.querySelector('div > div');
   header.classList.add('product-comparison-header');
-
   [...header.children].forEach((headerColumn) => {
     const buttonSection = headerColumn.querySelector('p.button-container');
-
     if (buttonSection) {
       const paragraphBefore = buttonSection.previousElementSibling;
       paragraphBefore?.classList.add('per-year-statement');
       const paragraphAfter = buttonSection.nextElementSibling;
       paragraphAfter?.classList.add('product-comparison-header-subtitle');
-      paragraphAfter?.nextElementSibling.classList.add('product-comparison-header-subtitle');
+      paragraphAfter?.nextElementSibling?.classList.add('product-comparison-header-subtitle');
     }
   });
 }
@@ -266,7 +288,15 @@ export default function decorate(block) {
   }
 
   extractTextFromStrongTagToParent(block);
-  [...block.children[0].children].slice(1).forEach((item, idx) => {
-    renderNanoBlocks(item, undefined, idx);
+  const headerList = [...block.children[0].children].slice(1);
+  const lastRowWithPrice = block.querySelector('.product-comparison-last-row-with-prices');
+  [...headerList, lastRowWithPrice].forEach((item, idx) => {
+    if (item) {
+      renderNanoBlocks(item, undefined, idx, block);
+    }
   });
+
+  matchHeights(block, 'h3');
+  matchHeights(block, '.old-price-container');
+  matchHeights(block, '.product-comparison-price');
 }

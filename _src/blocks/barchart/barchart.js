@@ -10,7 +10,9 @@ export default function decorate(block) {
   ul.querySelectorAll('.barchart-body').forEach((container) => {
     const progressBars = container.querySelectorAll('ul li:nth-child(odd)');
     progressBars.forEach((progressBar) => {
-      const value = (parseFloat(progressBar.nextElementSibling.textContent / 6) * 100).toFixed(2);
+      let valueAsString = progressBar.nextElementSibling.textContent;
+      valueAsString = valueAsString.replace(',', '.');
+      const value = (parseFloat(valueAsString / 6) * 100).toFixed(2);
       progressBar.style.setProperty('--bar-width', `${value}%`);
     });
   });

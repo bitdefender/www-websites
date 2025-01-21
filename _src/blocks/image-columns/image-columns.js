@@ -1,6 +1,9 @@
+import { matchHeights } from '../../scripts/utils/utils.js';
+
 export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
+  block.parentElement.classList.add('default-content-wrapper');
 
   // setup image columns
   [...block.children].forEach((row) => {
@@ -21,4 +24,5 @@ export default function decorate(block) {
       }
     });
   });
+  matchHeights(block, '.image-columns.quotes > div > div');
 }

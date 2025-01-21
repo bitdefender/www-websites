@@ -1,33 +1,147 @@
-/* eslint-disable no-use-before-define */
-export const localisationList = ['zh-hk', 'zh-tw', 'en-us', 'de-de', 'nl-nl', 'fr-fr', 'it-it', 'ro-ro'];
-export function getDefaultLanguage() {
-  // TODO: refactor. It's not working as should for en locales.
-  const currentPathUrl = window.location.pathname;
-  const foundLanguage = localisationList.find((item) => currentPathUrl.indexOf(`/${item}/`) !== -1);
-  let lang = 'site';
+import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
+import Page from '../libs/page.js';
+import { Constants } from '../libs/constants.js';
 
-  if (foundLanguage) {
-    if (foundLanguage.startsWith('zh-') || foundLanguage.startsWith('en-')) {
-      lang = foundLanguage.replace('zh-', '').replace('en-', '') || 'site';
-    } else {
-      [, lang] = foundLanguage.split('-');
-    }
-  }
+const TRACKED_PRODUCTS = [];
+const TRACKED_PRODUCTS_COMPARISON = [];
 
-  return lang;
+export const GLOBAL_V2_LOCALES = ['en-bz', 'en-lv'];
+export const IANA_BY_REGION_MAP = new Map([
+  [3, { locale: 'en-GB', label: 'united kingdom' }],
+  [4, { locale: 'au-AU', label: 'australia' }],
+  [5, { locale: 'de-DE', label: 'germany' }],
+  [6, { locale: 'ro-RO', label: 'romania' }],
+  [7, { locale: 'es-ES', label: 'spain' }],
+  [8, { locale: 'en-US', label: 'com' }],
+  [9, { locale: 'it-IT', label: 'italy' }],
+  [10, { locale: 'en-CA', label: 'canada' }],
+  [12, { locale: 'pt-PT', label: 'portugal' }],
+  [13, { locale: 'br-BR', label: 'brazil' }],
+  [14, { locale: 'fr-FR', label: 'france' }],
+  [15, { locale: 'en-GB', label: 'united kingdom' }],
+  [16, { locale: 'en-US', label: 'rest of the world EU countries' }],
+  [17, { locale: 'de-CH', label: 'germany-switzerland' }],
+  [19, { locale: 'en-ZA', label: 'en south africa' }],
+  [22, { locale: 'nl-NL', label: 'netherlands' }],
+  [24, { locale: 'en-VN', label: 'en vietnam' }],
+  [20, { locale: 'en-MX', label: 'en es mexico' }],
+  [21, { locale: 'en-CO', label: 'en es columbia' }],
+  [25, { locale: 'en-SG', label: 'en singapore' }],
+  [26, { locale: 'en-SE', label: 'en sweden' }],
+  [27, { locale: 'en-DK', label: 'en denmark' }],
+  [28, { locale: 'en-HU', label: 'en hungary' }],
+  [29, { locale: 'en-BG', label: 'en bulgaria' }],
+  [30, { locale: 'en-HR', label: 'en croatia' }],
+  [31, { locale: 'en-NO', label: 'en norway' }],
+  [32, { locale: 'en-MD', label: 'en moldova' }],
+  [33, { locale: 'en-RS', label: 'en serbia' }],
+  [34, { locale: 'en-RU', label: 'en russia' }],
+  [35, { locale: 'en-EG', label: 'en egypt' }],
+  [36, { locale: 'en-SA', label: 'en saudi arabia' }],
+  [37, { locale: 'fr-DZ', label: 'en Algeria' }],
+  [38, { locale: 'en-AE', label: 'en united arab emirates' }],
+  [39, { locale: 'en-PS', label: 'en palestinia' }],
+  [40, { locale: 'en-CN', label: 'en china' }],
+  [41, { locale: 'en-HK', label: 'en hong kong' }],
+  [42, { locale: 'en-CK', label: 'Cook Islands' }],
+  [43, { locale: 'en-KE', label: 'en kenya' }],
+  [44, { locale: 'en-NG', label: 'en nigeria' }],
+  [45, { locale: 'fr-TN', label: 'en Tunisia' }],
+  [46, { locale: 'en-PL', label: 'en poland' }],
+  [47, { locale: 'en-CZ', label: 'en Czech' }],
+  [48, { locale: 'es-VE', label: 'en Venezuela' }],
+  [49, { locale: 'en-TR', label: 'en turkey' }],
+  [50, { locale: 'en-ID', label: 'en Indonesia' }],
+  [51, { locale: 'en-PH', label: 'en Philippines' }],
+  [52, { locale: 'en-TW', label: 'en taiwan' }],
+  [53, { locale: 'en-UA', label: 'en Ukraine' }],
+  [54, { locale: 'es-CL', label: 'en Chile' }],
+  [55, { locale: 'en-MY', label: 'en Malaysia' }],
+  [56, { locale: 'es-AR', label: 'en Argentina' }],
+  [57, { locale: 'es-PE', label: 'en Peru' }],
+  [59, { locale: 'hr-HR', label: 'Croatia' }],
+  [60, { locale: 'ma-MA', label: 'Morocco' }],
+  [61, { locale: 'pk-PK', label: 'Pakistan' }],
+  [62, { locale: 'bo-BO', label: 'Bolivia' }],
+  [63, { locale: 'do-DO', label: 'Dominican Republic' }],
+  [64, { locale: 'kw-KW', label: 'Kuwait' }],
+  [65, { locale: 'jo-JO', label: 'Jordan' }],
+  [66, { locale: 'th-TH', label: 'Thailand' }],
+  [67, { locale: 'en-BD', label: 'en Bangladesh' }],
+  [68, { locale: 'en-LK', label: 'en Sri Lanka' }],
+  [69, { locale: 'en-PY', label: 'en Paraguay' }],
+  [70, { locale: 'en-UY', label: 'en Uruguay' }],
+  [72, { locale: 'en-JP', label: 'en Japan' }],
+]);
+
+const PRICE_LOCALE_MAP = new Map([
+  ['en-us', { force_country: 'en', country_code: 'us' }],
+  ['en-bg', { force_country: 'bg', country_code: 'bg' }],
+  ['en-ca', { force_country: 'ca', country_code: 'ca' }],
+  ['en-cl', { force_country: 'cl', country_code: 'cl' }],
+  ['en-dk', { force_country: 'dk', country_code: 'dk' }],
+  ['en-hu', { force_country: 'hu', country_code: 'hu' }],
+  ['en-id', { force_country: 'id', country_code: 'id' }],
+  ['en-il', { force_country: 'il', country_code: 'il' }],
+  ['en-in', { force_country: 'in', country_code: 'in' }],
+  ['en-kr', { force_country: 'kr', country_code: 'kr' }],
+  ['en-my', { force_country: 'my', country_code: 'my' }],
+  ['en-no', { force_country: 'no', country_code: 'no' }],
+  ['en-ph', { force_country: 'ph', country_code: 'ph' }],
+  ['en-pl', { force_country: 'pl', country_code: 'pl' }],
+  ['en-sa', { force_country: 'sa', country_code: 'sa' }],
+  ['en-th', { force_country: 'th', country_code: 'th' }],
+  ['en-za', { force_country: 'za', country_code: 'za' }],
+  ['en-ae', { force_country: 'ae', country_code: 'ae' }],
+  ['en-sg', { force_country: 'sg', country_code: 'sg' }],
+  ['en-sd', { force_country: 'sd', country_code: 'sd' }],
+  ['en-mt', { force_country: 'mt', country_code: 'mt' }],
+  ['en-lv', { force_country: 'lv', country_code: 'lv' }],
+  ['en-jm', { force_country: 'jm', country_code: 'jm' }],
+  ['en-bz', { force_country: 'bz', country_code: 'bz' }],
+  ['en-gb', { force_country: 'uk', country_code: 'gb' }],
+  ['en-au', { force_country: 'au', country_code: 'au' }],
+  ['en-nz', { force_country: 'nz', country_code: 'nz' }],
+  ['en-cz', { force_country: 'cz', country_code: 'cz' }],
+  ['en-global', { force_country: 'en', country_code: null }],
+  ['es-cl', { force_country: 'cl', country_code: 'cl' }],
+  ['es-co', { force_country: 'co', country_code: 'co' }],
+  ['es-mx', { force_country: 'mx', country_code: 'mx' }],
+  ['es-pe', { force_country: 'pe', country_code: 'pe' }],
+  ['es-bz', { force_country: 'bz', country_code: 'bz' }],
+  ['es-es', { force_country: 'es', country_code: 'es' }],
+  ['es-global', { force_country: 'en', country_code: null }],
+  ['ro-ro', { force_country: 'ro', country_code: 'ro' }],
+  ['it-it', { force_country: 'it', country_code: 'it' }],
+  ['fr-fr', { force_country: 'fr', country_code: 'fr' }],
+  ['fr-be', { force_country: null, country_code: null, isZuora: true }],
+  ['nl-be', { force_country: null, country_code: null, isZuora: true }],
+  ['nl-nl', { force_country: null, country_code: null, isZuora: true }],
+  ['de-de', { force_country: 'de', country_code: 'de' }],
+  ['de-at', { force_country: 'de', country_code: 'at' }],
+  ['de-ch', { force_country: 'ch', country_code: 'ch' }],
+  ['sv-se', { force_country: 'se', country_code: 'se' }],
+  ['pt-br', { force_country: 'br', country_code: 'br' }],
+  ['pt-pt', { force_country: 'pt', country_code: 'pt' }],
+  ['zh-hk', { force_country: 'en', country_code: 'hk' }],
+  ['zh-tw', { force_country: 'en', country_code: 'tw' }],
+]);
+
+/**
+ * @returns {boolean} check if you are on exactly the consumer page (e.g /en-us/consumer/)
+ */
+export function checkIfConsumerPage() {
+  const lastSegmentInPath = window.location.pathname?.split('/')?.filter(Boolean)?.slice(-1)[0];
+  return lastSegmentInPath === 'consumer';
 }
-
-const cacheResponse = new Map();
-const siteName = getDefaultLanguage();
-const FETCH_URL = 'https://www.bitdefender.com/site/Store/ajax';
 
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
   const el = document.createElement(tag);
   if (html) {
     if (html instanceof HTMLElement
-        || html instanceof SVGElement
-        || html instanceof DocumentFragment) {
+      || html instanceof SVGElement
+      || html instanceof DocumentFragment) {
       el.append(html);
     } else if (Array.isArray(html)) {
       el.append(...html);
@@ -43,97 +157,133 @@ export function createTag(tag, attributes, html) {
   return el;
 }
 
-async function findProductVariant(cachedResponse, variant) {
-  const response = await cachedResponse;
-  if (!response.ok) throw new Error(`${response.statusText}`);
-  const json = await response.clone().json();
-
-  // eslint-disable-next-line guard-for-in,no-restricted-syntax
-  for (const i in json.data.product.variations) {
-    // eslint-disable-next-line guard-for-in,no-restricted-syntax
-    for (const j in json.data.product.variations[i]) {
-      const v = json.data.product.variations[i][j];
-      if (v.variation.variation_name === variant) {
-        return v;
-      }
-    }
-  }
-
-  throw new Error('Variant not found');
+function isZuora() {
+  const url = new URL(window.location.href);
+  return url.pathname.includes('/nl-nl/') || url.pathname.includes('/nl-be/');
 }
 
-/**
- * Fetches a product from the Bitdefender store.
- * @param code The product code
- * @param variant The product variant
- * @returns {Promise<*>}
- * hk - 51, tw - 52
- */
-export async function fetchProduct(code = 'av', variant = '1u-1y', pid = null) {
-  const data = new FormData();
-  // extract pid from url
+export function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  return meta || '';
+}
+
+export function getProductLinkCountryPrefix() {
+  const { pathname } = window.location;
+
+  if (pathname.includes('/en-au/')) {
+    return 'https://www.bitdefender.com.au/site/Store/ajax';
+  }
+
+  if (pathname.includes('/en-gb/')) {
+    return 'https://www.bitdefender.com.uk/site/Store/ajax';
+  }
+
+  if (pathname.includes('/ro-ro/')) {
+    return 'https://www.bitdefender.ro/site/Store/ajax';
+  }
+
+  if (pathname.includes('/it-it/')) {
+    return 'https://www.bitdefender.it/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-fr/')) {
+    return 'https://www.bitdefender.fr/site/Store/ajax';
+  }
+
+  if (pathname.includes('/fr-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-be/')) {
+    return 'https://www.bitdefender.be/site/Store/ajax';
+  }
+
+  if (pathname.includes('/nl-nl/')) {
+    return 'https://www.bitdefender.nl/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-de/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/de-ch/')) {
+    return 'https://www.bitdefender.de/site/Store/ajax';
+  }
+
+  if (pathname.includes('/sv-se/')) {
+    return 'https://www.bitdefender.se/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-br/')) {
+    return 'https://www.bitdefender.com.br/site/Store/ajax';
+  }
+
+  if (pathname.includes('/pt-pt/')) {
+    return 'https://www.bitdefender.pt/site/Store/ajax';
+  }
+
+  if (pathname.includes('/es-es/')) {
+    return 'https://www.bitdefender.es/site/Store/ajax';
+  }
+
+  return 'https://www.bitdefender.com/site/Store/ajax';
+}
+
+export function getBuyLinkCountryPrefix() {
+  return 'https://www.bitdefender.com/site/Store/buy';
+}
+
+export function getPriceLocalMapByLocale() {
+  const locale = window.location.pathname.split('/')[1];
+  return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
+}
+
+// eslint-disable-next-line max-len
+export function generateProductBuyLink(product, productCode, month = null, years = null, pid = null) {
+  if (isZuora()) {
+    return product.buy_link;
+  }
+
+  const m = product.variation?.dimension_value || month;
+  const y = product.variation?.years || years;
   const url = new URL(window.location.href);
-  if (!pid) {
-    // eslint-disable-next-line no-param-reassign
-    pid = url.searchParams.get('pid');
+  let buyLinkPid = '';
+
+  if (pid) {
+    buyLinkPid = `pid.${pid}`;
+  } else if (url.searchParams.get('pid')) {
+    buyLinkPid = `pid.${url.searchParams.get('pid')}`;
+  } else if (getMetadata('pid')) {
+    buyLinkPid = `pid.${getMetadata('pid')}`;
   }
 
-  data.append('data', JSON.stringify({
-    ev: 1,
-    product_id: code,
-    config: {
-      extra_params: {
-        // eslint-disable-next-line object-shorthand
-        pid: pid,
-      },
-    },
-  }));
-
-  if (url.hostname.includes('bitdefender.co.uk')) {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '3';
-    data.set('data', JSON.stringify(newData));
+  if (GLOBAL_V2_LOCALES.includes(Page.locale)) {
+    buyLinkPid = 'pid.global_v2';
   }
 
-  if (url.hostname.includes('bitdefender.fr')) {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '14';
-    data.set('data', JSON.stringify(newData));
+  const forceCountry = getPriceLocalMapByLocale().force_country;
+  return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${buyLinkPid}?force_country=${forceCountry}`;
+}
+
+export function setDataOnBuyLinks(element, dataInfo) {
+  const { productId, variation } = dataInfo;
+  if (productId) element.dataset.product = productId.trim();
+
+  // element.dataset.buyPrice = variation.discounted_price || variation.price || 0;
+  if (variation.price) element.dataset.buyPrice = variation.price.trim();
+  if (variation.oldPrice) element.dataset.oldPrice = variation.oldPrice.trim();
+  if (variation.currency_label) element.dataset.currency = variation.currency_label.trim();
+  if (variation.region_id) element.dataset.region = variation.region_id.trim();
+  if (variation.variation_name) element.dataset.variation = variation.variation_name.trim();
+}
+
+export function formatPrice(price, currency) {
+  if (!price) {
+    return null;
   }
-
-  if (siteName === 'uk') {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '3';
-    data.set('data', JSON.stringify(newData));
-  }
-
-  if (siteName === 'fr') {
-    const newData = JSON.parse(data.get('data'));
-    newData.config.force_region = '14';
-    data.set('data', JSON.stringify(newData));
-  }
-
-  if ((siteName === 'hk' || siteName === 'tw')) {
-    // append force_region for hk and tw
-    const newData = JSON.parse(data.get('data'));
-
-    newData.config.force_region = siteName === 'hk' ? '41' : '52';
-
-    data.set('data', JSON.stringify(newData));
-  }
-
-  if (cacheResponse.has(code)) {
-    return findProductVariant(cacheResponse.get(code), variant);
-  }
-
-  // we don't await the response here, because we want to cache it
-  const response = fetch(FETCH_URL, {
-    method: 'POST',
-    body: data,
-  });
-
-  cacheResponse.set(code, response);
-  return findProductVariant(response, variant);
+  // const loc = region ? IANA_BY_REGION_MAP.get(Number(region))?.locale || 'en-US' : locale;
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price);
 }
 
 const nanoBlocks = new Map();
@@ -196,11 +346,41 @@ function parseParams(params) {
   return result;
 }
 
+// this was added as a translation support ( adding new breaklines in content was needed )
+// as a part of a new line metadata
+// values could be something like "value, value2, ,,new text on new line"
+function replaceDoubleCommas(str) {
+  // Convert the string to an array for easy manipulation
+  const arr = str.split('');
+
+  // Loop through the array from the end to the beginning
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    // Check if there are two consecutive commas
+    if (arr[i] === ',' && arr[i - 1] === ',') {
+      // Replace the two consecutive commas with a single comma
+      arr.splice(i, 1);
+    }
+  }
+
+  // Convert the array back to a string
+  return arr.join('');
+}
+
+export function getDatasetFromSection(block) {
+  const parentSelector = block.closest('.section');
+  return parentSelector.dataset;
+}
+
 /**
  * Renders nano blocks
  * @param parent The parent element
  */
-export function renderNanoBlocks(parent = document.body, mv = undefined, index = undefined) {
+export async function renderNanoBlocks(
+  parent = document.body,
+  mv = undefined,
+  index = undefined,
+  block = undefined,
+) {
   const regex = /{([^}]+)}/g;
   findTextNodes(parent).forEach((node) => {
     const text = node.textContent.trim();
@@ -209,13 +389,17 @@ export function renderNanoBlocks(parent = document.body, mv = undefined, index =
       matches.forEach((match) => {
         const [name] = parseParams(match.slice(1, -1));
         const datasetValue = getDatasetFromSection(parent);
+
         const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || '';
-        const newMatch = [match, datasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
+        const formattedDatasetEntryValue = replaceDoubleCommas(datasetEntryValue);
+
+        const newMatch = [match, formattedDatasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
         const [newName, ...params] = parseParams(newMatch);
         const renderer = nanoBlocks.get(newName.toLowerCase());
         if (renderer) {
-          const element = mv ? renderer(mv, ...params) : renderer(...params);
+          // eslint-disable-next-line max-len
+          const element = mv ? renderer(mv, ...params, block, index, parent) : renderer(...params, block, index, parent);
           element.classList.add('nanoblock');
           const oldElement = node.parentNode;
           oldElement.parentNode.replaceChild(element, oldElement);
@@ -285,11 +469,6 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export function getDatasetFromSection(block) {
-  const parentSelector = block.closest('.section');
-  return parentSelector.dataset;
-}
-
 export function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -327,6 +506,11 @@ export function appendAdobeMcLinks(selector) {
     console.error(e);
   }
 }
+
+export const GLOBAL_EVENTS = {
+  ADOBE_MC_LOADED: 'adobe_mc::loaded',
+  PAGE_LOADED: 'page::loaded',
+};
 
 export function adobeMcAppendVisitorId(selector) {
   // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
@@ -409,7 +593,7 @@ export async function decorateIcons(element) {
 }
 
 // General function to match the height of elements based on a selector
-export const matchHeights = (targetNode, selector) => {
+export async function matchHeights(targetNode, selector) {
   const resetHeights = () => {
     const elements = targetNode.querySelectorAll(selector);
     elements.forEach((element) => {
@@ -441,6 +625,12 @@ export const matchHeights = (targetNode, selector) => {
   };
 
   const observer = new MutationObserver(matchHeightsCallback);
+  const resizeObserver = new ResizeObserver(debounce((entries) => {
+    // eslint-disable-next-line no-unused-vars
+    entries.forEach((entry) => {
+      adjustHeights();
+    });
+  }), 100);
 
   if (targetNode) {
     observer.observe(targetNode, { childList: true, subtree: true });
@@ -449,9 +639,211 @@ export const matchHeights = (targetNode, selector) => {
   window.addEventListener('resize', () => {
     adjustHeights();
   });
-};
 
-export const GLOBAL_EVENTS = {
-  ADOBE_MC_LOADED: 'adobe_mc::loaded',
-  PAGE_LOADED: 'page::loaded',
-};
+  const elements = targetNode.querySelectorAll(selector);
+  elements.forEach((element) => {
+    resizeObserver.observe(element);
+  });
+
+  adjustHeights();
+}
+
+export function getPidFromUrl() {
+  const url = new URL(window.location.href);
+  return url.searchParams.get('pid') || getMetadata('pid');
+}
+
+export function trackProduct(product, location = '') {
+  // eslint-disable-next-line max-len
+  if (!product && product.length === 0) return;
+  if (location && location === 'comparison') {
+    // eslint-disable-next-line max-len
+    const isDuplicate = TRACKED_PRODUCTS_COMPARISON.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
+    if (!isDuplicate) TRACKED_PRODUCTS_COMPARISON.push(product);
+  } else {
+    // eslint-disable-next-line max-len
+    const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
+    if (!isDuplicate) TRACKED_PRODUCTS.push(product);
+  }
+}
+
+export function pushTrialDownloadToDataLayer() {
+  const trialPaths = [
+    'fragments/thank-you-for-downloading',
+    'fragments/get-bitdefender',
+    'fragments/trial',
+  ];
+
+  const getTrialID = (currentPage, button) => {
+    if (['thank-you', 'free-antivirus'].includes(currentPage)) {
+      return '8430';
+    }
+
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
+    if (closestStoreElementWithId) {
+      return closestStoreElementWithId.dataset.storeId;
+    }
+
+    // eslint-disable-next-line max-len
+    return getMetadata('breadcrumb-title') || getMetadata('og:title');
+  };
+
+  const url = window.location.href;
+  const currentPage = url.split('/').filter(Boolean).pop();
+  const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
+
+  const pushTrialData = (button = null) => {
+    AdobeDataLayerService.push(new ButtonClickEvent(
+      `${downloadType} downloaded`,
+      getTrialID(currentPage, button),
+    ));
+  };
+
+  const sections = document.querySelectorAll('a.button.modal');
+  if (sections.length) {
+    sections.forEach((button) => {
+      const href = button.getAttribute('href');
+      if (trialPaths.some((trialPath) => href.includes(trialPath))) {
+        button.addEventListener('click', () => { pushTrialData(button); });
+      }
+    });
+  } else if (currentPage === 'thank-you') {
+    pushTrialData();
+  }
+}
+
+export function setUrlParams(urlIn, paramsIn = []) {
+  const isRelativeLink = /^(?!\/\/|[a-z]+:)/i;
+
+  if (!Array.isArray(paramsIn)) {
+    // eslint-disable-next-line no-console
+    console.error(`paramsIn must be an Array but you provided an ${typeof paramsIn}`);
+    return urlIn;
+  }
+
+  const url = isRelativeLink.test(urlIn) ? new URL(urlIn, window.location.origin) : new URL(urlIn);
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const param of paramsIn) {
+    if (!param) {
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    const [key, value] = param.split('=');
+
+    if (value === '') {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, value || '');
+    }
+  }
+
+  return url.href;
+}
+
+export function getDomain() {
+  return window.location.pathname.split('/').filter((item) => item)[0];
+}
+
+export function isView(viewport) {
+  const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
+  return !!(element && getComputedStyle(element).display !== 'none');
+}
+
+/**
+ * Returns the current user operating system based on userAgent
+ * @returns {String}
+ */
+export function getOperatingSystem(userAgent) {
+  const systems = [
+    ['Windows NT 10.0', 'Windows 10'],
+    ['Windows NT 6.2', 'Windows 8'],
+    ['Windows NT 6.1', 'Windows 7'],
+    ['Windows NT 6.0', 'Windows Vista'],
+    ['Windows NT 5.1', 'Windows XP'],
+    ['Windows NT 5.0', 'Windows 2000'],
+    ['X11', 'X11'],
+    ['Linux', 'Linux'],
+    ['Android', 'Android'],
+    ['iPhone', 'iOS'],
+    ['iPod', 'iOS'],
+    ['iPad', 'iOS'],
+    ['Mac', 'MacOS'],
+  ];
+
+  return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
+}
+
+export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSelector = null) {
+  // Get user's operating system
+  const { userAgent } = navigator;
+  const userOS = getOperatingSystem(userAgent);
+
+  // Open the appropriate URL based on the OS
+  let openUrl;
+  switch (userOS) {
+    case 'MacOS':
+      openUrl = urlMacos;
+      break;
+    case 'Windows 10':
+    case 'Windows 8':
+    case 'Windows 7':
+    case 'Windows Vista':
+    case 'Windows XP':
+    case 'Windows 2000':
+      openUrl = urlWindows;
+      break;
+    case 'Linux':
+    case 'Android':
+      openUrl = urlAndroid;
+      break;
+    case 'iOS':
+      openUrl = urlIos;
+      break;
+    default:
+      openUrl = null; // Fallback or 'Unknown' case
+  }
+
+  if (openUrl) {
+    if (anchorSelector) {
+      anchorSelector.href = openUrl;
+    } else {
+      window.open(openUrl, '_self');
+    }
+  }
+}
+
+export function getBrowserName() {
+  const { userAgent } = navigator;
+
+  if (userAgent.includes('Firefox')) {
+    return 'Firefox';
+  } if (userAgent.includes('Edg')) {
+    return 'Edge';
+  } if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) {
+    return 'Chrome';
+  } if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+    return 'Safari';
+  }
+  return 'Unknown';
+}
+
+/**
+ * Returns the value of a query parameter
+ * @returns {String}
+ */
+export function getParamValue(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+export function decorateBlockWithRegionId(element, id) {
+  // we could consider to use `element.setAttribute('s-object-region', id);` in the future
+  if (element) element.id = id;
+}
+
+export function decorateLinkWithLinkTrackingId(element, id) {
+  if (element) element.setAttribute('s-object-id', id);
+}
+
+export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);

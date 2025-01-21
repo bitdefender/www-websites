@@ -1,6 +1,8 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
+import { openUrlForOs } from '../../scripts/utils/utils.js';
+
 let dataLayerProducts = [];
 async function createPricesElement(storeOBJ, conditionText, saveText, product, buylink, bluePillText, underPriceText) {
   const [prodName, prodUsers, prodYears] = product.split('/');
@@ -66,170 +68,6 @@ function createCardElementContainer(elements, mobileImage) {
   return cardElementContainer;
 }
 
-function getOperatingSystem(userAgent) {
-  const systems = [
-    ['Windows NT 10.0', 'Windows 10'],
-    ['Windows NT 6.2', 'Windows 8'],
-    ['Windows NT 6.1', 'Windows 7'],
-    ['Windows NT 6.0', 'Windows Vista'],
-    ['Windows NT 5.1', 'Windows XP'],
-    ['Windows NT 5.0', 'Windows 2000'],
-    ['X11', 'X11'],
-    ['Linux', 'Linux'],
-    ['Android', 'Android'],
-    ['iPhone', 'iOS'],
-    ['iPod', 'iOS'],
-    ['iPad', 'iOS'],
-    ['Mac', 'MacOS'],
-  ];
-
-  return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
-function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, selector) {
-  // Get user's operating system
-  const { userAgent } = navigator;
-  const userOS = getOperatingSystem(userAgent);
-  // Open the appropriate URL based on the OS
-  let openUrl;
-  switch (userOS) {
-    case 'MacOS':
-      openUrl = urlMacos;
-      break;
-    case 'Windows 10':
-    case 'Windows 8':
-    case 'Windows 7':
-    case 'Windows Vista':
-    case 'Windows XP':
-    case 'Windows 2000':
-      openUrl = urlWindows;
-      break;
-    case 'Android':
-      openUrl = urlAndroid;
-      break;
-    case 'iOS':
-      openUrl = urlIos;
-      break;
-    default:
-      openUrl = null; // Fallback or 'Unknown' case
-  }
-  if (openUrl) {
-    selector.href = openUrl;
-  }
-}
-
-function createDropdownElement(paragraph, dropdownTagText, buyLink, dropdownProducts, pricesContainers) {
-  let dropdownItems = paragraph.textContent.slice(1, -1).split(',').map((item) => item.trim());
-  console.log('1');
-  // Remove the first item as it does not need to be worked on
-  dropdownItems.shift();
-
-  // Create a container for the dropdown
-  let dropdownContainer = document.createElement('div');
-  dropdownContainer.classList.add('custom-dropdown-container');
-
-  if (dropdownTagText) {
-    let dropdownTagElement = document.createElement('div');
-    dropdownTagElement.classList.add('custom-dropdown-tag');
-    dropdownTagElement.textContent = dropdownTagText;
-    dropdownContainer.appendChild(dropdownTagElement);
-  }
-
-  // Create the dropdown element
-  let dropdown = document.createElement('div');
-  dropdown.classList.add('custom-dropdown');
-
-  // Create the button element
-  let dropdownButton = document.createElement('button');
-  dropdownButton.classList.add('dropdown-button');
-  // eslint-disable-next-line prefer-destructuring
-  dropdownButton.textContent = dropdownItems[0];
-  dropdown.appendChild(dropdownButton);
-
-  // Create the options element
-  let dropdownOptions = document.createElement('div');
-  dropdownOptions.classList.add('dropdown-options');
-  dropdown.appendChild(dropdownOptions);
-
-  dropdownItems.forEach((item, idx) => {
-    let dropdownItem = document.createElement('div');
-    dropdownItem.classList.add('custom-dropdown-item');
-    dropdownItem.textContent = item;
-    dropdownItem.setAttribute('data-value', dropdownProducts[idx]);
-    dropdownOptions.appendChild(dropdownItem);
-  });
-
-  dropdownContainer.appendChild(dropdown);
-  paragraph.replaceWith(dropdownContainer);
-
-  dropdownButton.addEventListener('click', () => {
-    let option = dropdownOptions.style.display === 'block' ? 'none' : 'block';
-    dropdownOptions.style.display = option;
-    dropdownButton.classList.add('active');
-  });
-
-  const dropdownItemsNodes = dropdownOptions.querySelectorAll('.custom-dropdown-item');
-  dropdownItemsNodes.forEach((item) => {
-    console.log(item);
-    item.addEventListener('click', function () {
-      dropdownButton.textContent = this.textContent;
-      dropdownOptions.style.display = 'none';
-      dropdownButton.classList.remove('active');
-      dropdownItemsNodes.forEach((i) => i.classList.remove('selected'));
-      this.classList.add('selected');
-      let priceBox = pricesContainers.get(item.getAttribute('data-value'));
-      console.log(pricesContainers);
-      console.log(priceBox);
-      buyLink.parentElement.previousElementSibling.replaceWith(priceBox);
-    });
-  });
-
-  // Close the dropdown if clicked outside
-  // document.addEventListener('click', (event) => {
-  //   if (!dropdown.contains(event.target)) {
-  //     dropdownOptions.style.display = 'none';
-  //     dropdownButton.classList.remove('active');
-  //   }
-  // });
-}
-
-async function createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText) {
-  const { fetchProduct } = await import('../../scripts/utils/utils.js');
-  const [prodName, prodUsers, prodYears] = product.split('/');
-  let oldPrice;
-  let newPrice;
-  let discountPercentage;
-  let discountValue;
-  let heroProduct = await fetchProduct(prodName, `${prodUsers}u-${prodYears}y`);
-  console.log(heroProduct);
-
-  discountPercentage = Math.round(
-    (1 - (heroProduct.discount.discounted_price) / heroProduct.price) * 100,
-  );
-
-  oldPrice = heroProduct.price;
-  newPrice = heroProduct.discount.discounted_price;
-  discountValue = heroProduct.discount.discount_value;
-  let currencyLabel = heroProduct.currency_label;
-  const pricesBox = document.createElement('div');
-  pricesBox.classList.add('hero-aem__prices');
-  pricesBox.innerHTML = `
-          ${bluePillText ? `<p class="hero-aem__pill">${bluePillText}</p>` : ''}
-          <div class="hero-aem__price mt-3">
-            <div>
-                <span class="prod-oldprice">${oldPrice}${currencyLabel}</span>
-                <span class="prod-save">${saveText} ${discountValue}${currencyLabel}<span class="save"></span></span>
-            </div>
-            <div class="newprice-container mt-2">
-              <span class="prod-newprice">${newPrice}${currencyLabel}</span>
-              <sup>${conditionText || ''}</sup>
-            </div>
-          </div>
-          <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
-  buyLink.href = `https://www.bitdefender.com/site/Store/buy/${prodName}/${prodUsers}/${prodYears}/`;
-  return pricesBox;
-}
-
 // Function to dispatch 'shadowDomLoaded' event
 function dispatchShadowDomLoadedEvent() {
   const event = new CustomEvent('shadowDomLoaded', {
@@ -241,9 +79,8 @@ function dispatchShadowDomLoadedEvent() {
 
 export default async function decorate(block, options) {
   const {
-    product, conditionText, saveText, MacOS, Windows, Android, IOS, mainProduct,
-    alignContent, height, type, send2datalayer, underPriceText, bluePillText, dropdownTag,
-    dropdownProducts,
+    product, conditionText, saveText, MacOS, Windows, Android, IOS,
+    alignContent, height, type, send2datalayer,
   } = block.closest('.section').dataset;
 
   if (options) {
@@ -300,16 +137,6 @@ export default async function decorate(block, options) {
   if (product && options?.store) {
     createPricesElement(options.store, conditionText, saveText, product, buyLink, bluePillText, underPriceText)
       .then((pricesBox) => {
-        // dataLayer push with all the products
-        if (options && send2datalayer) {
-          window.adobeDataLayer.push({
-            event: 'product loaded',
-            product: {
-              [mainProduct === 'false' ? 'all' : 'info']: dataLayerProducts,
-            },
-          });
-        }
-
         // If buyLink exists, apply styles and insert pricesBox
         if (buyLink) {
           buyLink.classList.add('button', 'primary');

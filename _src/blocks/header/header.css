@@ -155,7 +155,7 @@ header.header-wrapper .divider {
   background-color: var(--color-dark-gray);
 }
 
-header.header-wrapper .login-modal a {
+.login-modal a {
   text-decoration: none;
   color: var(--color-highlight-blue) !important;
   width: 330px;
@@ -652,15 +652,6 @@ header.quiz {
     color: var(--text-dark-color);
   }
 
-  header.header-wrapper {
-    height: 64px;
-    position: fixed;
-    z-index: 999;
-    margin: auto;
-    left: 0;
-    right: 0;
-  }
-
   header.header-wrapper .menu-wrapper {
     display: none;
   }
@@ -1061,6 +1052,8 @@ header.quiz {
   }
 
   header.quiz {
+    height: unset;
+
     .icon {
       width: 200px;
       height: 64px;

@@ -13,36 +13,46 @@ import {
   loadCSS,
   getMetadata, loadScript,
 } from './lib-franklin.js';
+import {
+  AdobeDataLayerService,
+  PageLoadedEvent,
+  PageLoadStartedEvent,
+  resolveNonProductsDataLayer,
+} from './libs/data-layer.js';
+import { StoreResolver } from './libs/store/index.js';
+import Page from './libs/page.js';
 
 import {
   adobeMcAppendVisitorId,
-  createTag, getDefaultLanguage, GLOBAL_EVENTS,
+  createTag,
+  getPageExperimentKey,
+  GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
+import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
-const TRACKED_PRODUCTS = [];
 
 export const SUPPORTED_LANGUAGES = ['en'];
-export const DEFAULT_LANGUAGE = getDefaultLanguage();
-
-export const DEFAULT_COUNTRY = getDefaultLanguage();
-
-export const METADATA_ANAYTICS_TAGS = 'analytics-tags';
 
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
   url: '../plugins/rum-conversion/src/index.js',
 });
 
+window.hlx.plugins.add('experimentation', {
+  condition: () => getMetadata('experiment'),
+  options: {
+    prodHost: 'www.bitdefender.com',
+  },
+  url: '../plugins/experimentation/src/index.js',
+});
+
+window.ADOBE_MC_EVENT_LOADED = false;
+
 function initMobileDetector(viewport) {
   const mobileDetectorDiv = document.createElement('div');
   mobileDetectorDiv.setAttribute(`data-${viewport}-detector`, '');
   document.body.append(mobileDetectorDiv);
-}
-
-export function isView(viewport) {
-  const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
-  return !!(element && getComputedStyle(element).display !== 'none');
 }
 
 /**
@@ -58,121 +68,11 @@ export function createMetadata(name, value) {
 }
 
 export function getLanguageCountryFromPath() {
+  const currentPathUrl = window.location.pathname;
   return {
-    language: DEFAULT_LANGUAGE,
-    country: DEFAULT_COUNTRY,
+    language: currentPathUrl.split('/')[1].split('-')[0],
+    country: currentPathUrl.split('/')[1].split('-')[1],
   };
-}
-
-/**
- * Returns the current user operating system based on userAgent
- * @returns {String}
- */
-export function getOperatingSystem(userAgent) {
-  const systems = [
-    ['Windows NT 10.0', 'Windows 10'],
-    ['Windows NT 6.2', 'Windows 8'],
-    ['Windows NT 6.1', 'Windows 7'],
-    ['Windows NT 6.0', 'Windows Vista'],
-    ['Windows NT 5.1', 'Windows XP'],
-    ['Windows NT 5.0', 'Windows 2000'],
-    ['X11', 'X11'],
-    ['Linux', 'Linux'],
-    ['Android', 'Android'],
-    ['iPhone', 'iOS'],
-    ['iPod', 'iOS'],
-    ['iPad', 'iOS'],
-    ['Mac', 'MacOS'],
-  ];
-
-  return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
-/**
- * Returns the value of a query parameter
- * @returns {String}
- */
-function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
-
-export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos) {
-  // Get user's operating system
-  const { userAgent } = navigator;
-  const userOS = getOperatingSystem(userAgent);
-
-  // Open the appropriate URL based on the OS
-  let openUrl;
-  switch (userOS) {
-    case 'MacOS':
-      openUrl = urlMacos;
-      break;
-    case 'Windows 10':
-    case 'Windows 8':
-    case 'Windows 7':
-    case 'Windows Vista':
-    case 'Windows XP':
-    case 'Windows 2000':
-      openUrl = urlWindows;
-      break;
-    case 'Android':
-      openUrl = urlAndroid;
-      break;
-    case 'iOS':
-      openUrl = urlIos;
-      break;
-    default:
-      openUrl = null; // Fallback or 'Unknown' case
-  }
-
-  if (openUrl) {
-    window.open(openUrl, '_self');
-  }
-}
-
-/**
- * Returns the current user time in the format HH:MM|HH:00-HH:59|dayOfWeek|timezone
- * @returns {String}
- */
-function getCurrentTime() {
-  const date = new Date();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const dayOfWeek = date.getDay();
-  const timezone = date.toTimeString().split(' ')[1];
-  const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  return `${hours}:${minutes}|${hours}:00-${hours}:59|${weekday[dayOfWeek]}|${timezone}`;
-}
-
-/**
- * Returns the current GMT date in the format DD/MM/YYYY
- * @returns {String}
- */
-function getCurrentDate() {
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-}
-
-/**
- * Returns the environment name based on the hostname
- * @returns {String}
- */
-export function getEnvironment(hostname) {
-  if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
-    return 'stage';
-  }
-  if (hostname.includes('www.bitdefender')) {
-    return 'prod';
-  }
-  return 'dev';
-}
-
-export function getDomain() {
-  return window.location.pathname.split('/').filter((item) => item)[0];
 }
 
 export function getLocalizedResourceUrl(resourceName) {
@@ -190,72 +90,6 @@ export function getLocalizedResourceUrl(resourceName) {
   pathnameAsArray = pathnameAsArray.slice(0, basePathIndex + 1); // "/consumer/en";
 
   return `${pathnameAsArray.join('/')}/${resourceName}`;
-}
-
-/**
- * Sets the page language.
- * @param {Object} param The language and country
- */
-function setPageLanguage(param) {
-  document.documentElement.lang = param.language;
-  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
-  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
-}
-
-export function pushToDataLayer(event, payload) {
-  if (!event) {
-    // eslint-disable-next-line no-console
-    console.error('The data layer event is missing');
-    return;
-  }
-  if (!window.adobeDataLayer) {
-    window.adobeDataLayer = [];
-    window.adobeDataLayerInPage = true;
-  }
-  window.adobeDataLayer.push({ event, ...payload });
-}
-
-export function getTags(tags) {
-  return tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : [];
-}
-
-export function trackProduct(product) {
-  // eslint-disable-next-line max-len
-  const isDuplicate = TRACKED_PRODUCTS.find((p) => p.platformProductId === product.platformProductId && p.variantId === product.variantId);
-  const tags = getTags(getMetadata(METADATA_ANAYTICS_TAGS));
-  const isTrackedPage = tags.includes('product') || tags.includes('service');
-  if (isTrackedPage && !isDuplicate) TRACKED_PRODUCTS.push(product);
-}
-
-export function pushProductsToDataLayer() {
-  if (TRACKED_PRODUCTS.length > 0) {
-    pushToDataLayer('product loaded', {
-      product: TRACKED_PRODUCTS
-        .map((p) => ({
-          info: {
-            ID: p.platformProductId,
-            name: getMetadata('breadcrumb-title') || getMetadata('og:title'),
-            devices: p.devices,
-            subscription: p.subscription,
-            version: p.version,
-            basePrice: p.basePrice,
-            discountValue: p.discount,
-            discountRate: p.discountRate,
-            currency: p.currency,
-            priceWithTax: p.actualPrice,
-          },
-        })),
-    });
-  }
-}
-
-export function decorateBlockWithRegionId(element, id) {
-  // we could consider to use `element.setAttribute('s-object-region', id);` in the future
-  if (element) element.id = id;
-}
-
-export function decorateLinkWithLinkTrackingId(element, id) {
-  if (element) element.setAttribute('s-object-id', id);
 }
 
 /**
@@ -330,12 +164,19 @@ export function decorateMain(main) {
  *
  * @param {String} path The path to the modal
  * @param {String} template The template to use for the modal styling
+ * @param {Boolean} stopAutomaticRefresh Wether the modal refreshes after exiting or not
  * @returns {Promise<Element>}
  * @example
  */
-export async function createModal(path, template) {
+export async function createModal(path, template, stopAutomaticRefresh) {
   const modalContainer = document.createElement('div');
   modalContainer.classList.add('modal-container');
+
+  // add the class which makes the modal identifiable in the page
+  if (stopAutomaticRefresh) {
+    const modalClass = path.split('/').pop();
+    modalContainer.classList.add(modalClass);
+  }
 
   const modalContent = document.createElement('div');
   modalContent.classList.add('modal-content');
@@ -359,7 +200,17 @@ export async function createModal(path, template) {
   // add class to modal container for opportunity to add custom modal styling
   if (template) modalContainer.classList.add(template);
 
-  const closeModal = () => modalContainer.remove();
+  const closeModal = () => {
+    // if the modal is still supposed to exist just hide it
+    if (stopAutomaticRefresh) {
+      modalContainer.classList.add('global-display-none');
+      return;
+    }
+
+    // if it's supposed to refresh delete it so that it can be rerendered
+    modalContainer.remove();
+  };
+
   const close = document.createElement('div');
   close.classList.add('modal-close');
   close.addEventListener('click', closeModal);
@@ -371,7 +222,29 @@ export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
     link.addEventListener('click', async (e) => {
       e.preventDefault();
-      document.body.append(await createModal(link.href));
+      const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
+
+      // if we wish for the button to not generate a new modal everytime
+      if (stopAutomaticModalRefresh) {
+        // we use the last part of the link to identify the modals
+        const modalClass = link.href.split('/').pop();
+
+        // check if the modal exists in the page
+        const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+        if (existingModal) {
+          // if it exists just display it
+          existingModal.classList.remove('global-display-none');
+          return;
+        }
+      }
+
+      // generate new modal
+      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
+      document.body.append(modalContainer);
+      await StoreResolver.resolve(modalContainer);
+      modalContainer.querySelectorAll('.await-loader').forEach((element) => {
+        element.classList.remove('await-loader');
+      });
     });
   });
 }
@@ -425,51 +298,34 @@ function buildCtaSections(main) {
     .forEach(buildCta);
 }
 
-function getDomainInfo(hostname) {
-  const domain = hostname.match(/^(?:.*?\.)?([a-zA-Z0-9\\_]{3,}(\.|:)?(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/);
-  return {
-    domain: domain[1],
-    domainPartsCount: domain[1].split('.').length,
+export async function loadTrackers() {
+  const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
+
+  const onAdobeMcLoaded = () => {
+    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
+    window.ADOBE_MC_EVENT_LOADED = true;
   };
-}
 
-function pushPageLoadToDataLayer() {
-  const { hostname } = window.location;
-  if (!hostname) {
-    return;
+  if (isPageNotInDraftsFolder) {
+    const LAUNCH_URL = 'https://assets.adobedtm.com';
+    const ENVIRONMENT = Page.environment;
+
+    // Load Adobe Experience platform data collection (Launch) script
+    // const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();
+
+    const ADOBE_MC_URL_ENV_MAP = new Map([
+      ['prod', '8a93f8486ba4/5492896ad67e/launch-b1f76be4d2ee.min.js'],
+      ['stage', '8a93f8486ba4/5492896ad67e/launch-3e7065dd10db-staging.min.js'],
+      ['dev', '8a93f8486ba4/5492896ad67e/launch-fbd6d02d30e8-development.min.js'],
+    ]);
+
+    const adobeMcScriptUrl = `${LAUNCH_URL}/${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT)}`;
+    await loadScript(adobeMcScriptUrl);
+
+    onAdobeMcLoaded();
+  } else {
+    onAdobeMcLoaded();
   }
-
-  const { domain, domainPartsCount } = getDomainInfo(hostname);
-  const languageCountry = getLanguageCountryFromPath(window.location.pathname);
-  const environment = getEnvironment(hostname, languageCountry.country);
-  const tags = getTags(getMetadata(METADATA_ANAYTICS_TAGS));
-  pushToDataLayer('page load started', {
-    pageInstanceID: environment,
-    page: {
-      info: {
-        name: [languageCountry.country, ...tags].join(':'), // e.g. au:consumer:product:internet security
-        section: languageCountry.country || '',
-        subSection: tags[0] || '',
-        subSubSection: tags[1] || '',
-        subSubSubSection: tags[2] || '',
-        destinationURL: window.location.href,
-        queryString: window.location.search,
-        referringURL: getParamValue('adobe_mc_ref') || getParamValue('ref') || document.referrer || '',
-        serverName: 'hlx.live', // indicator for AEM Success Edge
-        language: navigator.language || navigator.userLanguage || languageCountry.language,
-        sysEnv: getOperatingSystem(window.navigator.userAgent),
-      },
-      attributes: {
-        promotionID: getParamValue('pid') || '',
-        internalPromotionID: getParamValue('icid') || '',
-        trackingID: getParamValue('cid') || '',
-        time: getCurrentTime(),
-        date: getCurrentDate(),
-        domain,
-        domainPeriod: domainPartsCount,
-      },
-    },
-  });
 }
 
 /**
@@ -477,8 +333,21 @@ function pushPageLoadToDataLayer() {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  setPageLanguage(getLanguageCountryFromPath(window.location.pathname));
+  // load trackers early if there is a target experiment on the page
+  if (getPageExperimentKey()) {
+    loadTrackers();
+  }
+
+  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
+  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
+
+  // TODO: if experiments stop working correctly please consider bringing this back:
+  // await window.hlx.plugins.run('loadEager');
+
+  AdobeDataLayerService.push(await new PageLoadStartedEvent());
+  await resolveNonProductsDataLayer();
+
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
@@ -501,39 +370,6 @@ async function loadEager(doc) {
   }
 }
 
-export async function loadTrackers() {
-  const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
-
-  const onAdobeMcLoaded = () => {
-    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
-    window.ADOBE_MC_EVENT_LOADED = true;
-  };
-
-  if (isPageNotInDraftsFolder) {
-    const LANGUAGE_COUNTRY = getLanguageCountryFromPath(window.location.pathname);
-    const LAUNCH_URL = 'https://assets.adobedtm.com';
-    const ENVIRONMENT = getEnvironment(window.location.hostname, LANGUAGE_COUNTRY.country);
-
-    // Load Adobe Experience platform data collection (Launch) script
-    // const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();
-
-    const ADOBE_MC_URL_ENV_MAP = new Map([
-      ['prod', '8a93f8486ba4/5492896ad67e/launch-b1f76be4d2ee.min.js'],
-      ['stage', '8a93f8486ba4/5492896ad67e/launch-3e7065dd10db-staging.min.js'],
-      ['dev', '8a93f8486ba4/5492896ad67e/launch-fbd6d02d30e8-development.min.js'],
-    ]);
-
-    const adobeMcScriptUrl = `${LAUNCH_URL}/${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT)}`;
-    await loadScript(adobeMcScriptUrl);
-
-    onAdobeMcLoaded();
-
-    await loadScript('https://www.googletagmanager.com/gtm.js?id=GTM-PLJJB3');
-  } else {
-    onAdobeMcLoaded();
-  }
-}
-
 /**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
@@ -541,17 +377,33 @@ export async function loadTrackers() {
 async function loadLazy(doc) {
   const main = doc.querySelector('main');
 
-  // eslint-disable-next-line no-unused-vars
-  loadHeader(doc.querySelector('header'));
+  const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
+  const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
+  doc.querySelector('header').style.height = '0px';
+
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+    // eslint-disable-next-line no-unused-vars
+    doc.querySelector('header').style.height = 'initial';
+    loadHeader(doc.querySelector('header'));
+  }
+
+  // only call load Trackers here if there is no experiment on the page
+  if (!getPageExperimentKey()) {
+    loadTrackers();
+  }
   await loadBlocks(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadFooter(doc.querySelector('footer'));
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+    loadFooter(doc.querySelector('footer'));
+  }
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
+  window.hlx.plugins.run('loadLazy');
 
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
@@ -559,11 +411,81 @@ async function loadLazy(doc) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`);
   }
 
-  loadTrackers();
-
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
+}
+
+/**
+ * Event listener for dropdown slider dropdown-box.js component.
+ * This is imported from www-landing-pages repo.
+ * @returns {void}
+* */
+function eventOnDropdownSlider() {
+  document.querySelectorAll('.dropdown-slider').forEach((slider) => {
+    const titles = slider.querySelectorAll('.title');
+    const loadingBars = slider.querySelectorAll('.loading-bar');
+    let activeIndex = 0;
+    let interval;
+
+    function showLoadingBar(index) {
+      const loadingBar = loadingBars[index];
+      loadingBar.style.width = '0';
+      let width = 0;
+      const interval2 = setInterval(() => {
+        width += 1;
+        loadingBar.style.width = `${width}%`;
+        if (width >= 100) {
+          clearInterval(interval2);
+        }
+      }, 30); // Adjust the interval for smoother animation
+    }
+
+    function moveToNextItem() {
+      titles.forEach((title, index) => {
+        if (index === activeIndex) {
+          title.parentNode.classList.add('active');
+          title.closest('.dropdown-slider').setAttribute('style', `min-height: ${title.parentNode.querySelector('.description').offsetHeight + 50}px`);
+          if (loadingBars.length) {
+            showLoadingBar(index);
+          }
+        } else {
+          title.parentNode.classList.remove('active');
+        }
+      });
+
+      activeIndex = (activeIndex + 1) % titles.length; // Move to the next item and handle wrapping
+    }
+
+    function startAutomaticMovement() {
+      interval = setInterval(moveToNextItem, 4000); // Set the interval
+    }
+
+    function stopAutomaticMovement() {
+      clearInterval(interval); // Clear the interval
+    }
+
+    // Set the initial active item
+    moveToNextItem();
+
+    if (loadingBars.length) {
+      // Start automatic movement after the loading is complete
+      setTimeout(() => {
+        startAutomaticMovement();
+      }, 1000);
+
+      // Click event listener on titles
+      titles.forEach((title, index) => {
+        title.addEventListener('click', () => {
+          stopAutomaticMovement();
+          activeIndex = index;
+          showLoadingBar(index);
+          moveToNextItem();
+          startAutomaticMovement();
+        });
+      });
+    }
+  });
 }
 
 /**
@@ -575,18 +497,46 @@ function loadDelayed() {
     window.hlx.plugins.load('delayed');
     window.hlx.plugins.run('loadDelayed');
     // load anything that can be postponed to the latest here
+    eventOnDropdownSlider();
     // eslint-disable-next-line import/no-cycle
     return import('./delayed.js');
   }, 3000);
 }
 
 async function loadPage() {
-  pushPageLoadToDataLayer();
   await window.hlx.plugins.load('eager');
+
+  // specific for webview
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('theme') === 'dark' && window.location.href.includes('canvas')) {
+    document.body.style = 'background-color: #141517';
+  }
+
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
+  await Constants.PRODUCT_ID_MAPPINGS_CALL;
   await loadLazy(document);
+
+  await StoreResolver.resolve();
+  const elements = document.querySelectorAll('.await-loader');
+  document.dispatchEvent(new Event('bd_page_ready'));
+  window.bd_page_ready = true;
+  elements.forEach((element) => {
+    element.classList.remove('await-loader');
+  });
+
+  // loader circle used in mbox-canvas
+  const loaderCircle = document.querySelectorAll('.loader-circle');
+  loaderCircle.forEach((element) => {
+    element.classList.remove('loader-circle');
+  });
+
   adobeMcAppendVisitorId('main');
+
+  pushTrialDownloadToDataLayer();
+  AdobeDataLayerService.pushEventsToDataLayer();
+  AdobeDataLayerService.push(new PageLoadedEvent());
+
   loadDelayed();
 }
 

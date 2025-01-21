@@ -1,149 +1,75 @@
+import { Constants } from '../../scripts/libs/constants.js';
 import {
   createNanoBlock,
   renderNanoBlocks,
-  fetchProduct,
   createTag,
+  matchHeights,
+  checkIfConsumerPage,
 } from '../../scripts/utils/utils.js';
 
-import { trackProduct } from '../../scripts/scripts.js';
-
-/**
- * Utility function to round prices and percentages
- * @param  value value to round
- * @returns rounded value
- */
-function customRound(value) {
-  const numValue = parseFloat(value);
-
-  if (Number.isNaN(numValue)) {
-    return value;
-  }
-
-  // Convert to a fixed number of decimal places then back to a number to deal with precision issues
-  const roundedValue = Number(numValue.toFixed(2));
-
-  // If it's a whole number, return it as an integer
-  return (roundedValue % 1 === 0) ? Math.round(roundedValue) : roundedValue;
-}
-
-/**
- * Convert a product variant returned by the remote service into a model
- * @param productCode product code
- * @param variantId variant identifier
- * @param v variant
- * @returns a model
- */
-function toModel(productCode, variantId, v) {
-  return {
-    productCode,
-    variantId,
-    platformProductId: v.platform_product_id,
-    devices: +v.variation.dimension_value,
-    subscription: v.variation.years * 12,
-    version: v.variation.years ? 'yearly' : 'monthly',
-    basePrice: +v.price,
-    actualPrice: v.discount ? +v.discount.discounted_price : +v.price,
-    monthlyBasePrice: customRound(v.price / 12),
-    discountedPrice: v.discount?.discounted_price,
-    discountedMonthlyPrice: v.discount
-      ? customRound(v.discount.discounted_price / 12)
-      : 0,
-    discount: v.discount
-      ? customRound((v.price - v.discount.discounted_price) * 100) / 100
-      : 0,
-    discountRate: v.discount
-      ? Math.floor(((v.price - v.discount.discounted_price) / v.price) * 100)
-      : 0,
-    currency: v.currency_label,
-    url: `https://www.bitdefender.com/site/Store/buy/${productCode}/${v.variation.dimension_value}/${v.variation.years}/`,
-  };
-}
-
-/**
- * Represents the current state of a product card.
- * The state is exposed by the _model_ attribute.
- * Views can react to state change by subscribing with a listener
- * This class is also repsonsible for fetching the product variants
- * from the remote service and presenting them to the view.
- */
-class ProductCard {
-  constructor(root) {
-    this.root = root;
-    this.listeners = [];
-    this.model = {};
-  }
-
-  notify() {
-    this.listeners.forEach((listener) => listener(this.model));
-  }
-
-  subscribe(listener) {
-    this.listeners.push(listener);
-  }
-
-  /**
-   * Fetch a product variant from the remote service and update the model state
-   * @param productCode
-   * @param variantId
-   */
-  async selectProductVariant(productCode, variantId) {
-    const p = await fetchProduct(productCode, variantId);
-
-    this.model = toModel(productCode, variantId, p);
-
-    this.notify();
-  }
-}
+// all avaiable text variables
+const TEXT_VARIABLES_MAPPING = [
+  {
+    variable: 'percent',
+    storeVariable: '{DISCOUNT_PERCENTAGE}',
+  },
+];
 
 /**
  * Nanoblock representing the plan selectors.
  * If only one plan is declared, the plan selector will not be visible.
- * @param mv The modelview holding the state of the view
  * @param plans The list of plans to display [ labelToDisplay, productCode, variantId, ... ]
  * @param defaultSelection The default selection.
  * @returns Root node of the nanoblock
  */
-function renderPlanSelector(mv, plans, defaultSelection) {
+function renderPlanSelector(plans, defaultSelection) {
   // TODO: Remove unecessary div
   const root = document.createElement('div');
   const ul = document.createElement('ul');
   ul.classList.add('variant-selector');
   root.appendChild(ul);
 
-  mv.subscribe(() => {
-    const { model: { productCode: code, variantId: variant } } = mv;
-
-    ul.querySelector('.active')?.classList.remove('active');
-    const li = ul.querySelector(`[data-product-code="${code}"][data-product-variant="${variant}"]`);
-    li.classList.add('active');
-  });
+  if (plans.length === 3) {
+    ul.style.display = 'none';
+  }
 
   for (let idx = 0; idx < plans.length - 2; idx += 3) {
     const label = plans[idx];
-    const code = plans[idx + 1];
-    const variant = plans[idx + 2];
+    const liStoreParameters = {};
+
+    if (Number(defaultSelection)) {
+      liStoreParameters['data-store-click-set-devices'] = label;
+    } else {
+      const productCode = plans[idx + 1];
+      const variation = plans[idx + 2];
+      liStoreParameters['data-store-click-set-product'] = '';
+      liStoreParameters['data-store-product-id'] = productCode;
+      liStoreParameters['data-store-department'] = 'consumer';
+      liStoreParameters['data-product-type'] = Constants.PRODUCT_ID_MAPPINGS[productCode].isMonthlyProduct ? 'monthly' : 'yearly';
+      liStoreParameters['data-store-product-option'] = variation;
+    }
 
     const li = createTag(
       'li',
-      {
-        'data-product-code': code,
-        'data-product-variant': variant,
-      },
+      liStoreParameters,
       `<span>${label}</span>`,
     );
 
-    if (plans.length === 3) {
-      ul.style.display = 'none';
+    // set the default selection
+    if (defaultSelection === label) {
+      li.classList.add('active');
+      li.checked = true;
     }
 
     li.addEventListener('click', () => {
-      mv.selectProductVariant(code, variant);
+      const previousButtonActive = root.querySelector('.active');
+      if (previousButtonActive) {
+        previousButtonActive.classList.remove('active');
+        previousButtonActive.checked = false;
+      }
+      li.classList.add('active');
+      li.checked = true;
     });
-
-    // activate default selection
-    if (label === defaultSelection) {
-      li.click();
-    }
 
     ul.appendChild(li);
   }
@@ -153,199 +79,212 @@ function renderPlanSelector(mv, plans, defaultSelection) {
 
 /**
  * Nanoblock representing the old product price
- * @param mv The modelview holding the state of the view
  * @param text The text located before the price
  * @param monthly Show the monthly price if equal to 'monthly'
  * @returns Root node of the nanoblock
  */
-function renderOldPrice(mv, text = '', monthly = '') {
-  // TODO simplify CSS
+function renderOldPrice(text = '', monthly = '') {
+  // TODO: simplify CSS
+  const oldPrice = document.createElement('del');
+  if (monthly.toLowerCase() === 'monthly') {
+    oldPrice.setAttribute('data-store-price', 'full-monthly');
+  } else {
+    oldPrice.setAttribute('data-store-price', 'full');
+  }
+
   const root = createTag(
     'div',
     {
-      class: 'price',
+      'data-store-hide': 'no-price=discounted;type=visibility',
+      class: 'price await-loader',
     },
-    `<span class='old-price'>${text} <del>${mv.model.basePrice ?? ''} ${mv.model.currency ?? ''}</del>`,
+    `<span class='old-price'>${text} ${oldPrice.outerHTML}</span>`,
   );
 
-  const oldPriceElt = root.querySelector('span');
-
-  mv.subscribe(() => {
-    if (mv.model.discountedPrice) {
-      oldPriceElt.innerHTML = monthly.toLowerCase() === 'monthly'
-        ? `${text} <del>${mv.model.monthlyBasePrice} ${mv.model.currency}<sup>/mo</sup></del>`
-        : `${text} <del>${mv.model.basePrice} ${mv.model.currency}</del>`;
-      oldPriceElt.style.visibility = 'visible';
-    } else {
-      oldPriceElt.style.visibility = 'hidden';
-    }
-  });
+  // insert text to mark monthly price
+  if (monthly.toLowerCase() === 'monthly') {
+    root.querySelector('.old-price').insertAdjacentHTML('beforeend', '<sup>/mo</sup>');
+  }
 
   return root;
 }
 
 /**
  * Nanoblock representing the new product price
- * @param mv The modelview holding the state of the view
  * @param text The text located before the price
  * @param monthly Show the monthly price if equal to 'monthly'
  * @returns Root node of the nanoblock
  */
-function renderPrice(mv, text = '', monthly = '', monthTranslation = 'mo') {
+function renderPrice(text = '', monthly = '', monthTranslation = 'mo') {
   // TODO simplify CSS
+  const newPrice = document.createElement('strong');
+  if (monthly.toLowerCase() === 'monthly') {
+    newPrice.setAttribute('data-store-price', 'discounted-monthly||full-monthly');
+  } else {
+    newPrice.setAttribute('data-store-price', 'discounted||full');
+  }
+
   const root = createTag(
     'div',
     {
-      class: 'price',
+      class: 'price await-loader',
     },
-    `<strong>${mv.model.basePrice}</strong>`,
+    `<strong class='new-price'>${text} ${newPrice.outerHTML}</strong>`,
   );
 
-  const priceElt = root.querySelector('strong');
-
-  mv.subscribe(() => {
-    if (monthly.toLowerCase() === 'monthly') {
-      if (mv.model.discountedPrice) {
-        priceElt.innerHTML = `${text} ${mv.model.discountedMonthlyPrice} ${mv.model.currency} <sup>/${monthTranslation}</sup>`;
-      } else {
-        priceElt.innerHTML = `${text} ${mv.model.monthlyBasePrice} ${mv.model.currency} <sup>/${monthTranslation}</sup>`;
-      }
-    } else if (mv.model.discountedPrice) {
-      priceElt.innerHTML = `${text} ${mv.model.discountedPrice} ${mv.model.currency}`;
-    } else {
-      priceElt.innerHTML = `${text} ${mv.model.basePrice} ${mv.model.currency}`;
-    }
-
-    trackProduct(mv.model);
-  });
+  // insert text to mark monthly price
+  if (monthly.toLowerCase() === 'monthly') {
+    root.querySelector('.new-price').insertAdjacentHTML('beforeend', `<sup>/${monthTranslation}</sup>`);
+  }
 
   return root;
 }
 
 /**
  * Renders the green section on top of the product card highlighting the potential savings
- * @param mv The modelview holding the state of the view
  * @param text Text to display
  * @param percent Show the saving in percentage if equals to `percent`
  * @returns Root node of the nanoblock
  */
-function renderHighlightSavings(mv, text = 'Save', percent = '') {
+function renderHighlightSavings(text = 'Save', percent = '') {
+  const highlighSaving = document.createElement('span');
+  highlighSaving.setAttribute('data-store-text-variable', '');
+  highlighSaving.textContent = `${text} ${
+    percent.toLowerCase() === 'percent' ? '{DISCOUNT_PERCENTAGE}' : '{DISCOUNT_VALUE}'
+  }`;
+
   const root = createTag(
     'div',
     {
-      class: 'highlight',
+      'data-store-hide': 'no-price=discounted;type=visibility',
+      class: 'highlight await-loader',
       style: 'display=none',
     },
-    '<span></span>',
+    `${highlighSaving.outerHTML}`,
   );
-
-  mv.subscribe(() => {
-    if (mv.model.discountRate) {
-      root.querySelector('span').innerText = (percent.toLowerCase() === 'percent')
-        ? `${text} ${mv.model.discountRate}%`
-        : `${text} ${mv.model.discount} ${mv.model.currency}`;
-      root.style.visibility = 'visible';
-    } else {
-      root.style.visibility = 'hidden';
-    }
-  });
 
   return root;
 }
 
 /**
  * Nanoblock representing a text to highlight in the product card
- * @param mv The modelview holding the state of the view
  * @param text Text to display
  * @returns Root node of the nanoblock
  */
-function renderHighlight(mv, text) {
+function renderHighlight(text) {
   return createTag(
     'div',
     {
       class: 'highlight',
-      style: 'visibility=hidden',
+      style: 'visibility:hidden',
     },
     `<span>${text}</span>`,
   );
 }
 
 /**
+ *
+ * @param {string} text Text of the featured nanoblock
+ * @return {string} Text with variables replaced
+ */
+const replaceVariablesInText = (text) => {
+  let replacedText = text;
+
+  // replace the percent variable with correct percentage of the produc
+  TEXT_VARIABLES_MAPPING.forEach((textVariableMapping) => {
+    replacedText = replacedText.replaceAll(
+      textVariableMapping.variable,
+      textVariableMapping.storeVariable,
+    );
+  });
+
+  return replacedText;
+};
+
+/**
+ *
+ * @param {string} text
+ * @return {boolean} wether the text contains variables or not
+ */
+const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
+  (textVariableMapping) => text.includes(textVariableMapping.variable),
+);
+
+/**
  * Nanoblock representing a text to Featured
- * @param mv The modelview holding the state of the view
  * @param text Text of the featured nanoblock
  * @returns Root node of the nanoblock
  */
-function renderFeatured(mv, text) {
+function renderFeatured(text) {
   const root = document.createElement('div');
+  root.setAttribute('data-store-text-variable', '');
   root.classList.add('featured');
-  root.innerText = text;
+  root.textContent = text;
+
+  if (checkIfTextContainsVariables(text)) {
+    root.classList.add('await-loader');
+    root.textContent = replaceVariablesInText(root.textContent);
+  }
+
   return root;
 }
 
 /**
  * Nanoblock representing a text to Featured and the corresponding savings
- * @param mv The modelview holding the state of the view
  * @param text Text of the featured nanoblock
  * @param percent Show the saving in percentage if equals to `percent`
  * @returns Root node of the nanoblock
  */
-function renderFeaturedSavings(mv, text = 'Save', percent = '') {
+function renderFeaturedSavings(text = 'Save', percent = '') {
+  const featuredSaving = document.createElement('span');
+  featuredSaving.setAttribute('data-store-text-variable', '');
+  featuredSaving.textContent = `${text} ${
+    percent.toLowerCase() === 'percent' ? '{DISCOUNT_PERCENTAGE}' : '{DISCOUNT_VALUE}'
+  }`;
+
   const root = createTag(
     'div',
     {
+      'data-store-hide': 'no-price=discounted;type=visibility',
       class: 'featured',
-      style: 'visibility=hidden',
     },
-    `<span>${text}</span>`,
+    `${featuredSaving.outerHTML}`,
   );
-
-  mv.subscribe(() => {
-    if (mv.model.discountRate) {
-      root.innerText = (percent.toLowerCase() === 'percent')
-        ? `${text} ${mv.model.discountRate}%`
-        : `${text} ${mv.model.discount} ${mv.model.currency}`;
-      root.style.visibility = 'visible';
-    } else {
-      root.style.visibility = 'hidden';
-    }
-  });
+  root.classList.add('await-loader');
 
   return root;
 }
 
 /**
  * Nanoblock representing the lowest product price
- * @param code Product code
- * @param variant Product variant
  * @returns root node of the nanoblock
  */
-function renderLowestPrice(code, variant, monthly = '') {
+function renderLowestPrice(...params) {
+  const filteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
+  const text = filteredParams.length > 1 ? filteredParams[1] : filteredParams[0];
+  const monthly = filteredParams.length > 1 ? filteredParams[0] : '';
   const root = document.createElement('p');
-
-  fetchProduct(code, variant).then((product) => {
-    const m = toModel(code, variant, product);
-    const isMonthly = monthly.toLowerCase() === 'monthly';
-    const price = isMonthly ? customRound(m.actualPrice / 12) : m.actualPrice;
-    root.innerHTML = `Start today for as low as  ${price} ${product.currency_label}${isMonthly ? '/mo' : ''}`;
-  });
-
+  const textArea = document.createElement('span');
+  root.classList.add('await-loader');
+  textArea.setAttribute('data-store-text-variable', '');
+  textArea.textContent = text.replace('0', monthly.toLowerCase() === 'monthly' ? '{SMALLEST_PRICE_PER_MONTH}' : '{SMALLEST_PRICE}');
+  root.appendChild(textArea);
   return root;
 }
 
 /**
  * Nanoblock representing the price conditions below the Price
- * @param mv The modelview holding the state of the view
  * @param text Conditions
  * @returns Root node of the nanoblock
  */
-function renderPriceCondition(mv, text) {
+function renderPriceCondition(text) {
+  const updatedText = text.replace('BilledPrice', '<em data-store-price="discounted||full" class="await-loader"></em>');
   return createTag(
     'div',
     {
-      class: 'price',
+      class: 'price condition',
     },
-    `<em>${text}</em>`,
+    `<em>${updatedText}</em>`,
   );
 }
 
@@ -364,23 +303,49 @@ createNanoBlock('lowestPrice', renderLowestPrice);
  * Main decorate function
  */
 export default function decorate(block) {
-  [...block.children].forEach((row, idxParent) => {
-    [...(row.children)].forEach((col) => {
-      col.classList.add('product-card');
-      block.appendChild(col);
+  const metadata = block.closest('.section').dataset;
+  const plans = [];
 
-      const mv = new ProductCard(col);
-
-      renderNanoBlocks(col, mv, idxParent);
-
-      // listen to ProductCard change and update the buttons pointing to the store url
-      mv.subscribe((card) => {
-        col.querySelectorAll('.button-container a').forEach((link) => {
-          if (link && link.href.startsWith('https://www.bitdefender.com/site/Store/buy')) {
-            link.href = card.url;
-          }
-        });
+  Object.entries(metadata).forEach(([key, value]) => {
+    if (key.includes('plans')) {
+      const allImportantData = value.match(/[^,{}[\]]+/gu).map((importantData) => importantData.trim());
+      plans.push({
+        productCode: allImportantData[1],
+        defaultVariant: `${Number(allImportantData.slice(-1)[0])
+          ? allImportantData.slice(-1)[0] : allImportantData[2].match(/[0-9-]+/g)[0]
+        }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
       });
+    }
+  });
+
+  block.parentElement.parentElement.setAttribute('data-store-context', '');
+  [...block.children].forEach((row, idxParent) => {
+    [...(row.children)].forEach((col, idxCol) => {
+      const plansIndex = idxParent * row.children.length + idxCol;
+
+      // set the store event on the component
+      let storeEvent = 'main-product-loaded';
+      if (checkIfConsumerPage()) {
+        storeEvent = 'product-loaded';
+      }
+
+      col.classList.add('product-card');
+      col.setAttribute('data-store-context', '');
+      if (plans[plansIndex]) {
+        col.setAttribute('data-store-id', plans[plansIndex].productCode);
+        col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
+      }
+      col.setAttribute('data-store-department', 'consumer');
+      col.setAttribute('data-store-event', storeEvent);
+      const cardButtons = col.querySelectorAll('.button-container a');
+      cardButtons?.forEach((button) => {
+        if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
+          button.href = '#';
+          button.setAttribute('data-store-buy-link', '');
+        }
+      });
+      block.appendChild(col);
+      renderNanoBlocks(col, undefined, idxParent);
     });
     row.remove();
   });
@@ -431,4 +396,64 @@ export default function decorate(block) {
       }
     }
   });
+
+  // Height matching and Dynamic texts logic
+  const cards = block.querySelectorAll('.product-card');
+  const featuredCard = block.querySelector('.product-card.featured');
+  cards.forEach((card, cardIndex) => {
+    const hasImage = card.querySelector('img') !== null;
+    if (hasImage && !block.classList.contains('plans') && !block.classList.contains('compact')) {
+      // If the image exists, set max-width to the paragraph next to the image
+      const firstPElement = card.querySelector('p:not(:has(img, .icon))');
+      firstPElement.classList.add('img-adjacent-text');
+    }
+    const planSelector = card.querySelector('.variant-selector');
+    const dynamicPriceTextsKey = `dynamicPriceTexts${cardIndex + 1}`;
+    if (metadata[dynamicPriceTextsKey]) {
+      const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
+      const priceConditionEl = card.querySelector('.price.condition em');
+      planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
+        option.addEventListener('click', () => {
+          if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
+            const textTemplate = dynamicPriceTexts[idx] || '';
+            // in order to preserve the store eventListeners we can't replace the priceElement
+            // every time another option is selected therefore we're using a string template
+            if (textTemplate.includes('{BilledPrice}')) {
+              const [before, after] = textTemplate.split('{BilledPrice}');
+              const nodesToRemove = Array.from(priceConditionEl.childNodes).filter(
+                (node) => node.nodeType === Node.TEXT_NODE,
+              );
+              // Clear only non-<em> text nodes (this element contains store events)
+              nodesToRemove.forEach((node) => priceConditionEl.removeChild(node));
+              // eslint-disable-next-line max-len
+              if (before) priceConditionEl.insertBefore(document.createTextNode(before), priceConditionEl.firstChild);
+              if (after) priceConditionEl.appendChild(document.createTextNode(after));
+            } else {
+              priceConditionEl.textContent = textTemplate;
+            }
+          }
+        });
+      });
+    }
+    if (!card.classList.contains('featured')) {
+      // If there is no featured card, do nothing
+      if (!featuredCard) {
+        return;
+      }
+      let space = card.querySelector('h3');
+      space = space.nextElementSibling;
+      const emptyDiv = document.createElement('div');
+      space.insertAdjacentElement('afterend', emptyDiv);
+      emptyDiv.classList.add('featured', 'nanoblock');
+      emptyDiv.style.visibility = 'hidden';
+    }
+  });
+  matchHeights(block, '.price.nanoblock:not(:last-of-type)');
+  matchHeights(block, '.price.condition');
+  matchHeights(block, 'h3:nth-of-type(2)');
+  matchHeights(block, 'p:nth-of-type(2)');
+  matchHeights(block, 'p:nth-of-type(3)');
+  matchHeights(block, 'h4');
+  matchHeights(block, 'ul:not(.variant-selector)');
+  matchHeights(block, '.featured.nanoblock');
 }
