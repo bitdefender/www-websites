@@ -13,6 +13,11 @@
   margin-bottom: 20px;
 }
 
+.hero-aem-wrapper {
+  max-width: var(--section-desktop-max-width);
+  padding: 0 var(--section-desktop-padding);
+  margin: 0 auto;
+}
 
 .hero-aem-container .hero-aem p:first-of-type a {
   margin: 0;
@@ -95,10 +100,15 @@
 }
 
 .hero-aem-container .hero-aem .prod-save {
-  color: #1C7928;
+  color: white;
+  background-color: #68BA68;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   margin-left: 8px;
+  padding: 3px 7px;
+  border-radius: 16px;
+  display: inline-flex;
+  gap: 4px;
 }
 
 .hero-aem-container .hero-aem .prod-newprice {
@@ -407,7 +417,7 @@
         width: 100%;
         padding: 15px 14px 16px 14px;
         font-size: 16px;
-        background-color: #f7f7f7;
+        background-color: white;
         border: 1px solid #ccc;
         border-radius: 0 5px 5px 5px;
         cursor: pointer;

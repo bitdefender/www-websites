@@ -107,7 +107,7 @@ async function createPricesWebsites(product, buyLink, bluePillText, saveText, un
           <div class="hero-aem__price mt-3">
             <div>
                 <span class="prod-oldprice" data-store-price="full"></span>
-                <span class="prod-save">${saveText}<span class="save" data-store-discount="percentage"></span></span>
+                <span class="prod-save">${saveText}<span class="save" data-store-price="discounted"></span></span>
             </div>
             <div class="newprice-container mt-2">
               <span class="prod-newprice" data-store-price="discounted||full"></span>
