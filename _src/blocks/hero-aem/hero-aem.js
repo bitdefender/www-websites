@@ -3,51 +3,6 @@
 /* eslint-disable max-len */
 import { openUrlForOs } from '../../scripts/utils/utils.js';
 
-let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, product, buylink, bluePillText, underPriceText) {
-  const [prodName, prodUsers, prodYears] = product.split('/');
-  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
-  const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
-  const price = storeOption.getPrice();
-  const discountedPrice = storeOption.getDiscountedPrice();
-  const discount = storeOption.getDiscount('valueWithCurrency');
-  const buyLink = await storeOption.getStoreUrl();
-
-  let productToDataLayer = {
-    ID: storeOption.getAvangateId(),
-    name: storeOption.getName(),
-    devices: storeOption.getDevices(),
-    subscription: storeOption.getSubscription('months'),
-    version: storeOption.getSubscription('months') === 1 ? 'monthly' : 'yearly',
-    basePrice: storeOption.getPrice('value'),
-    discountValue: storeOption.getDiscount('value'),
-    discountRate: storeOption.getDiscount('percentage'),
-    currency: storeOption.getCurrency(),
-    priceWithTax: storeOption.getDiscountedPrice('value') || storeOption.getPrice('value'),
-  };
-  dataLayerProducts.push(productToDataLayer);
-
-  const priceElement = document.createElement('div');
-  priceElement.classList.add('hero-aem__prices');
-  priceElement.innerHTML = `
-  ${bluePillText ? `<p class="hero-aem__pill">${bluePillText}</p>` : ''}
-    <div class="hero-aem__price mt-3">
-      <div>
-          <span class="prod-oldprice">${price}</span>
-          <span class="prod-save">${saveText} ${discount}<span class="save"></span></span>
-      </div>
-      <div class="newprice-container mt-2">
-        <span class="prod-newprice">${discountedPrice}</span>
-        <sup>${conditionText || ''}</sup>
-      </div>
-    </div>
-    <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
-  if (buylink) {
-    buylink.href = buyLink;
-  }
-  return priceElement;
-}
-
 function createCardElementContainer(elements, mobileImage) {
   const cardElementContainer = document.createElement('div');
   cardElementContainer.classList.add('hero-aem__card');
@@ -68,16 +23,7 @@ function createCardElementContainer(elements, mobileImage) {
   return cardElementContainer;
 }
 
-// Function to dispatch 'shadowDomLoaded' event
-function dispatchShadowDomLoadedEvent() {
-  const event = new CustomEvent('shadowDomLoaded', {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
-  });
-  window.dispatchEvent(event);
-}
-
-function createDropdownElement(paragraph, dropdownTagText, buyLink, dropdownProducts, pricesContainers) {
+function createDropdownElement(paragraph, dropdownTagText, product) {
   let dropdownItems = paragraph.textContent.slice(1, -1).split(',').map((item) => item.trim());
   console.log('1');
   // Remove the first item as it does not need to be worked on
@@ -109,12 +55,15 @@ function createDropdownElement(paragraph, dropdownTagText, buyLink, dropdownProd
   let dropdownOptions = document.createElement('div');
   dropdownOptions.classList.add('dropdown-options');
   dropdown.appendChild(dropdownOptions);
-
   dropdownItems.forEach((item, idx) => {
     let dropdownItem = document.createElement('div');
     dropdownItem.classList.add('custom-dropdown-item');
+    const [prodName, prodUsers, prodYears] = product[idx].split('/');
     dropdownItem.textContent = item;
-    dropdownItem.setAttribute('data-value', dropdownProducts[idx]);
+    dropdownItem.setAttribute('data-store-click-set-product', '');
+    dropdownItem.setAttribute('data-store-product-id', `${prodName}`);
+    dropdownItem.setAttribute('data-store-product-option', `${prodUsers}-${prodYears}`);
+    dropdownItem.setAttribute('data-store-product-department', 'consumer');
     dropdownOptions.appendChild(dropdownItem);
   });
 
@@ -136,27 +85,20 @@ function createDropdownElement(paragraph, dropdownTagText, buyLink, dropdownProd
       dropdownButton.classList.remove('active');
       dropdownItemsNodes.forEach((i) => i.classList.remove('selected'));
       this.classList.add('selected');
-      let priceBox = pricesContainers.get(item.getAttribute('data-value'));
-      console.log(pricesContainers);
-      console.log(priceBox);
-      buyLink.parentElement.previousElementSibling.replaceWith(priceBox);
     });
   });
 
   // Close the dropdown if clicked outside
-  // document.addEventListener('click', (event) => {
-  //   if (!dropdown.contains(event.target)) {
-  //     dropdownOptions.style.display = 'none';
-  //     dropdownButton.classList.remove('active');
-  //   }
-  // });
+  document.addEventListener('click', (event) => {
+    if (!dropdown.contains(event.target)) {
+      dropdownOptions.style.display = 'none';
+      dropdownButton.classList.remove('active');
+    }
+  });
 }
 
 async function createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText) {
   const [prodName, prodUsers, prodYears] = product.split('/');
-  let oldPrice;
-  let newPrice;
-  let discountValue;
 
   const pricesBox = document.createElement('div');
   pricesBox.classList.add('hero-aem__prices');
@@ -164,11 +106,11 @@ async function createPricesWebsites(product, buyLink, bluePillText, saveText, un
           ${bluePillText ? `<p class="hero-aem__pill">${bluePillText}</p>` : ''}
           <div class="hero-aem__price mt-3">
             <div>
-                <span class="prod-oldprice" data-store-price="full">${oldPrice}${currencyLabel}</span>
-                <span class="prod-save">${saveText} ${discountValue}${currencyLabel}<span class="save"></span></span>
+                <span class="prod-oldprice" data-store-price="full"></span>
+                <span class="prod-save">${saveText}<span class="save" data-store-discount="percentage"></span></span>
             </div>
             <div class="newprice-container mt-2">
-              <span class="prod-newprice">${newPrice}${currencyLabel}</span>
+              <span class="prod-newprice" data-store-price="discounted||full"></span>
               <sup>${conditionText || ''}</sup>
             </div>
           </div>
@@ -181,6 +123,7 @@ export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, send2datalayer, dropdownProducts, bluePillText, underPriceText,
+    dropdownTag,
   } = block.closest('.section').dataset;
 
   if (options) {
@@ -225,7 +168,12 @@ export default async function decorate(block, options) {
   const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
-
+  const [prodName, prodUsers, prodYears] = product.split('/');
+  cardElementContainer.setAttribute('data-store-context', '');
+  cardElementContainer.setAttribute('data-store-id', prodName);
+  cardElementContainer.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
+  cardElementContainer.setAttribute('data-store-department', 'consumer');
+  cardElementContainer.setAttribute('data-store-event', 'main-product-loaded');
   // Append the container after h1
   block.querySelector('h1').after(cardElementContainer);
 
@@ -234,52 +182,6 @@ export default async function decorate(block, options) {
 
   const buyLink = block.querySelector('a[href*="buylink"]');
 
-  if (product && options?.store) {
-    createPricesElement(options.store, conditionText, saveText, product, buyLink, bluePillText, underPriceText)
-      .then((pricesBox) => {
-        // If buyLink exists, apply styles and insert pricesBox
-        if (buyLink) {
-          buyLink.classList.add('button', 'primary');
-          buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
-          pricesContainers.set(product, pricesBox);
-          dispatchShadowDomLoadedEvent();
-          return;
-        }
-
-        // If buyLink does not exist, apply styles to simpleLink
-        const simpleLink = block.querySelector('.hero-aem__card-text a');
-        if (simpleLink) {
-          simpleLink.classList.add('button', 'primary');
-          simpleLink.parentNode.parentNode.insertBefore(pricesBox, simpleLink.parentNode);
-        }
-
-        pricesContainers.set(product, pricesBox);
-        dispatchShadowDomLoadedEvent();
-      });
-
-    if (product && dropdownProductsArray) {
-      dropdownProductsArray.forEach((dropdownProduct) => {
-        if (dropdownProduct !== product) {
-          createPricesElement(options.store, conditionText, saveText, dropdownProduct, buyLink, bluePillText, underPriceText)
-            .then((priceBox) => {
-              pricesContainers.set(dropdownProduct, priceBox);
-              console.log(pricesContainers);
-            });
-        }
-      });
-    }
-  } else {
-    // If there is no product, just add the button class and dispatch the event
-    const simpleLink = block.querySelector('.hero-aem__card-text a');
-    if (simpleLink) {
-      simpleLink.classList.add('button', 'primary');
-    }
-    window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-      bubbles: true,
-      composed: true, // This allows the event to cross the shadow DOM boundary
-    });
-  }
-
   if (product && !options) {
     let priceBox = await createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText);
     buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
@@ -287,21 +189,10 @@ export default async function decorate(block, options) {
     pricesContainers.set(product, priceBox);
   }
 
-  if (product && !options && dropdownProductsArray) {
-    dropdownProductsArray.forEach((dropdownProduct) => {
-      if (dropdownProduct !== product) {
-        createPricesWebsites(dropdownProduct, buyLink, bluePillText, saveText, underPriceText, conditionText)
-          .then((priceBox) => {
-            pricesContainers.set(dropdownProduct, priceBox);
-          });
-      }
-    });
-  }
-
   let paragraphs = block.querySelectorAll('p');
   paragraphs.forEach((paragraph) => {
     if (paragraph.textContent.toLowerCase().includes('dropdown')) {
-      createDropdownElement(paragraph, dropdownTag, buyLink, dropdownProductsArray, pricesContainers);
+      createDropdownElement(paragraph, dropdownTag, dropdownProductsArray);
     }
   });
 
