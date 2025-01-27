@@ -690,15 +690,14 @@ export class Target {
    * 
    * @param {string[]} mboxes
    * @param {object} parameters
-   * @returns {object}
+   * @returns {Promise<object>}
    */
   static async getOffers(mboxes, parameters) {
-    const notRequestedMboxes = mboxes.filter(mbox => this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
-
+    const notRequestedMboxes = mboxes.filter(mbox => !this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
     if (notRequestedMboxes.length) {
       try {
         const notRequestedOffers = await window.alloy('sendEvent', {
-          decisionScopes: mboxes.map(mbox => mbox.name),
+          decisionScopes: notRequestedMboxes,
           data: Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
         });
 
@@ -709,7 +708,7 @@ export class Target {
         console.warn(e);
       }
     }
-
+    
     return mboxes.reduce((acc, mbox) => {
       acc[mbox] = this.#cachedMboxes.get(`${mbox}_${JSON.stringify(parameters)}`)
       return acc;
