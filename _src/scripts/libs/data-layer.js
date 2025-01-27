@@ -2,7 +2,6 @@ import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
 import Page from "./page.js";
 import { Constants } from "./constants.js";
-import { loadCSS } from "../lib-franklin.js";
 
 /**
  * 
@@ -85,6 +84,21 @@ export class PageLoadStartedEvent {
      * }|null}
      */
     let targetExperimentDetails = null;
+
+    async function loadCSS(href) {
+      return new Promise((resolve, reject) => {
+        if (!document.querySelector(`head > link[href="${href}"]`)) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          link.onload = resolve;
+          link.onerror = reject;
+          document.head.append(link);
+        } else {
+          resolve();
+        }
+      });
+    }
 
     const targetExperimentLocation = this.#getMetadata('target-experiment-location');
     const targetExperimentId = this.#getMetadata('target-experiment');

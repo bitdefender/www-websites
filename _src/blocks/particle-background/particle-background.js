@@ -29,9 +29,9 @@ let loadAll;
 
 async function init(block, aemOptions) {
   // eslint-disable-next-line import/no-unresolved
-  tsParticles = (await import('https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.1.0/+esm')).tsParticles;
+  tsParticles = (await import('https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.7.1/+esm')).tsParticles;
   // eslint-disable-next-line import/no-unresolved
-  loadAll = (await import('https://cdn.jsdelivr.net/npm/@tsparticles/all@3.1.0/+esm')).loadAll;
+  loadAll = (await import('https://cdn.jsdelivr.net/npm/@tsparticles/all@3.7.1/+esm')).loadAll;
   const particleIdSelector = 'ts-particles';
 
   const particleDiv = document.createElement('div');
