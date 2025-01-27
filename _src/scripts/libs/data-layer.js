@@ -636,13 +636,17 @@ export class Target {
 
   /**
    * Mbox describing an offer
-   * @typedef {{content: {offer: string, block:string} | {pid}, type: string|null}} Mbox
+   * @typedef {{
+   *  'initSelector-mbox': {pid: string },
+   *  'buyLinks-mbox': object,
+   *  'geoip-flag-mbox': {geoipFlag: string}
+   * }} Mbox
    */
 
   /**
    * @type {Promise<Mbox>}
    */
-  static #storeOffers = this.getOffers(['initSelector-mbox', 'buyLinks-mbox']);
+  static #storeOffers = this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox']);
 
   /**
    * get the product-buy link mappings from Target (
@@ -660,7 +664,7 @@ export class Target {
    * @returns {Promise<object>}
    */
   static async getBuyLinksMapping() {
-    return (await this.#storeOffers)?.content || {};
+    return (await this.#storeOffers)['buyLinks-mbox'] || {};
   }
 
   /**
@@ -668,7 +672,14 @@ export class Target {
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    return (await this.#storeOffers)?.content?.pid || null;
+    return (await this.#storeOffers)['initSelector-mbox']?.pid || null;
+  }
+
+  /**
+  * @returns {Promise<string|null>}
+  */
+  static async getGeoIpFlag() {
+    return (await this.#storeOffers)['geoip-flag-mbox']?.geoipFlag || null;
   }
 
   /**
@@ -702,7 +713,8 @@ export class Target {
         });
 
         notRequestedMboxes.forEach(mbox => {
-          this.#cachedMboxes.set(`${mbox}_${JSON.stringify(parameters)}`, notRequestedOffers.propositions);
+          const receivedMboxOffer = notRequestedOffers.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
+          this.#cachedMboxes.set(`${mbox}_${JSON.stringify(parameters)}`, receivedMboxOffer);
         });
       } catch (e) {
         console.warn(e);
