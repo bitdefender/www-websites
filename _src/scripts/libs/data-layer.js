@@ -221,6 +221,10 @@ export class PageLoadStartedEvent {
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
     const locale = Page.locale;
+    let pageSectionDataLocale = this.#getMetadata('locale') || Page.locale;
+    if (pageSectionDataLocale === 'hidden') {
+      pageSectionDataLocale = '';
+    }
 
     const pageSectionData = {
       tagName: null, // e.g. au:consumer:product:internet security
@@ -234,7 +238,7 @@ export class PageLoadStartedEvent {
     }
   
     if (tags.length) {
-      pageSectionData.tagName = [locale, ...tags].join(':'); // e.g. au:consumer:product:internet security
+      pageSectionData.tagName = [pageSectionDataLocale, ...tags].filter(Boolean).join(':'); // e.g. au:consumer:product:internet security
       pageSectionData.subSection = tags[0] || '';
       pageSectionData.subSubSection = tags[1] || '';
       pageSectionData.subSubSubSection = tags[2] || '';
