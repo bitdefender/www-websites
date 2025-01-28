@@ -1,4 +1,8 @@
-import { Target } from '../../scripts/libs/data-layer.js';
+import {
+  AdobeDataLayerService,
+  PageLoadStartedEvent,
+  Target,
+} from '../../scripts/libs/data-layer.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { loadBlocks } from '../../scripts/lib-franklin.js';
 
@@ -46,6 +50,11 @@ export default async function decorate(block) {
     parameters,
   }]);
   const page = await fetch(`${offer[mboxName].content.offer}`);
+  const match = offer[mboxName].content.offer.match(/\/([^/]+)\.plain\.html$/);
+  const result = match ? match[1] : null;
+  const newObject = await new PageLoadStartedEvent();
+  newObject.page.info.name = `${newObject.page.info.name}:${result}`;
+  AdobeDataLayerService.push(newObject);
   const offerHtml = await page.text();
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
