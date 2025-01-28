@@ -22,6 +22,10 @@
   border-radius: 20px;
 }
 
+.money-back.icon-centered .icon {
+  justify-self: center;
+}
+
 .creator-money-back .money-back.block {
   background-color: transparent;
 }

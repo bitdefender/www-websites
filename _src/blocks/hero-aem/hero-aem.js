@@ -168,12 +168,14 @@ export default async function decorate(block, options) {
   const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
-  const [prodName, prodUsers, prodYears] = product.split('/');
-  cardElementContainer.setAttribute('data-store-context', '');
-  cardElementContainer.setAttribute('data-store-id', prodName);
-  cardElementContainer.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-  cardElementContainer.setAttribute('data-store-department', 'consumer');
-  cardElementContainer.setAttribute('data-store-event', 'main-product-loaded');
+  if (product) {
+    const [prodName, prodUsers, prodYears] = product.split('/');
+    cardElementContainer.setAttribute('data-store-context', '');
+    cardElementContainer.setAttribute('data-store-id', prodName);
+    cardElementContainer.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
+    cardElementContainer.setAttribute('data-store-department', 'consumer');
+    cardElementContainer.setAttribute('data-store-event', 'main-product-loaded');
+  }
   // Append the container after h1
   block.querySelector('h1').after(cardElementContainer);
 
