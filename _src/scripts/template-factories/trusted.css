@@ -362,7 +362,7 @@ main .section.link-right a {
 .trusted .box-carousel-container.testimonials .carousel-item {
     width: calc(100% / 3 - 70px);
     min-height: 470px;
-    padding: 50px 50px 45px;
+    padding: 50px 35px 45px;
 }
 
 .trusted .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
