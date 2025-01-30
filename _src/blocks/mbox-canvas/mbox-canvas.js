@@ -32,6 +32,14 @@ function createOfferParameters() {
   return parameters;
 }
 
+/**
+ * Updates the PageLoadStartedEvent with dynamic content from the offer
+ * and pushes it to the AdobeDataLayerService.
+ *
+ * @param {Object} offer - The offer object containing dynamic content.
+ * @param {string} mboxName - The name of the mbox to extract content from.
+ * @returns {Promise<void>} - A promise that resolves when the event is updated and pushed.
+ */
 async function updatePageLoadStartedEvent(offer, mboxName) {
   const match = offer[mboxName].content.offer.match(/\/([^/]+)\.plain\.html$/);
   const result = match ? match[1] : null;
