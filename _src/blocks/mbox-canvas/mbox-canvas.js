@@ -32,6 +32,7 @@ function createOfferParameters() {
   return parameters;
 }
 
+
 /**
  * Updates the PageLoadStartedEvent with dynamic content from the offer
  * and pushes it to the AdobeDataLayerService.

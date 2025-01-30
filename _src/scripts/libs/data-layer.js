@@ -85,32 +85,12 @@ export class PageLoadStartedEvent {
      */
     let targetExperimentDetails = null;
 
-    async function loadCSS(href) {
-      return new Promise((resolve, reject) => {
-        if (!document.querySelector(`head > link[href="${href}"]`)) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = href;
-          link.onload = resolve;
-          link.onerror = reject;
-          document.head.append(link);
-        } else {
-          resolve();
-        }
-      });
-    }
-
     const targetExperimentLocation = this.#getMetadata('target-experiment-location');
     const targetExperimentId = this.#getMetadata('target-experiment');
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      const offer = await Target.getOffer(targetExperimentLocation);
-      const { url, template } = offer?.content || {};
-      if (template) {
-        loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
-        document.body.classList.add(template);
-      }
-      targetExperimentDetails = await runTargetExperiment(url, targetExperimentId);
+      const experimentUrl = (await Target.getOffer(targetExperimentLocation))?.content?.url;
+      targetExperimentDetails = await runTargetExperiment(experimentUrl, targetExperimentId);
     }
 
     return targetExperimentDetails;
@@ -197,7 +177,7 @@ export class PageLoadStartedEvent {
     this.page = {
       info: {
         name: pageSectionData.tagName, // e.g. au:consumer:product:internet security
-        section: pageSectionData.section,
+        section: pageSectionData.locale,
         subSection: pageSectionData.subSection,
         subSubSection: pageSectionData.subSubSection,
         subSubSubSection: pageSectionData.subSubSubSection,
@@ -242,11 +222,13 @@ export class PageLoadStartedEvent {
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
     const locale = Page.locale;
     let pageSectionDataLocale = this.#getMetadata('locale') || Page.locale;
+    if (pageSectionDataLocale === 'hidden') {
+      pageSectionDataLocale = '';
+    }
 
     const pageSectionData = {
       tagName: null, // e.g. au:consumer:product:internet security
       locale: locale,
-      section: pageSectionDataLocale,
       subSection: null,
       subSubSection: null,
       subSubSubSection: null,
