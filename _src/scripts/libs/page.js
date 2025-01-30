@@ -71,7 +71,7 @@ export default class Page {
     if (hostname.includes('www.bitdefender')) {
       return 'prod';
     }
-    return 'stage';
+    return 'dev';
   }
 
   /**
