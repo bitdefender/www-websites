@@ -197,7 +197,7 @@ export class PageLoadStartedEvent {
     this.page = {
       info: {
         name: pageSectionData.tagName, // e.g. au:consumer:product:internet security
-        section: pageSectionData.locale,
+        section: pageSectionData.section,
         subSection: pageSectionData.subSection,
         subSubSection: pageSectionData.subSubSection,
         subSubSubSection: pageSectionData.subSubSubSection,
@@ -242,13 +242,11 @@ export class PageLoadStartedEvent {
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
     const locale = Page.locale;
     let pageSectionDataLocale = this.#getMetadata('locale') || Page.locale;
-    if (pageSectionDataLocale === 'hidden') {
-      pageSectionDataLocale = '';
-    }
 
     const pageSectionData = {
       tagName: null, // e.g. au:consumer:product:internet security
       locale: locale,
+      section: pageSectionDataLocale,
       subSection: null,
       subSubSection: null,
       subSubSubSection: null,
