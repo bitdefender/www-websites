@@ -1,5 +1,5 @@
 import { Constants } from "../constants.js";
-import { Target, Visitor } from "../data-layer.js";
+import { Target } from "../data-layer.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
@@ -218,7 +218,7 @@ export class ProductOption {
 			return this.buyLink;
 		}
 
-		return await Visitor.appendVisitorIDsTo(
+		return await Target.appendVisitorIDsTo(
 			setUrlParams(this.buyLink, params)
 		);
 	}

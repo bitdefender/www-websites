@@ -555,112 +555,65 @@ export class AdobeDataLayerService {
   };
 };
 
-export class Visitor {
-  static #instanceID = '0E920C0F53DA9E9B0A490D45@AdobeOrg';
-  static #instance = null;
-  static #staticInit = new Promise(resolve => {
-
-    if (shouldABTestsBeDisabled()) {
-      resolve();
-      return;
-    }
-
-    if (window.Visitor) {
-      Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
-      resolve();
-      return;
-    }
-
-    document.addEventListener('at-library-loaded', () => {
-      if (window.Visitor) {
-        Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
-      }
-      resolve();
-    })
-  });
-
-  /**
-   *
-   * @param {string} url 
-   * @returns {Promise<string>}
-   */
-  static async appendVisitorIDsTo(url) {
-    await this.#staticInit;
-    return !this.#instance || url.includes("adobe_mc") ? url : this.#instance.appendVisitorIDsTo(url);
-  }
-
-  /**
-   *
-   * @returns {Promise<string>}
-   */
-  static async getConsumerId() {
-    await this.#staticInit;
-    return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : "";
-  }
-
-  /**
-   *
-   * @returns {Promise<string>}
-   */
-  static async getMarketingCloudVisitorId() {
-    await this.#staticInit;
-    return this.#instance ? this.#instance.getMarketingCloudVisitorID() : "";
-  }
-};
-
-window._Visitor = Visitor;
-
 export class Target {
   static events = {
-    LIBRARY_LOADED: "at-library-loaded"
+    ALLOY_FINISHED_LOADING: 'alloy-finished-loading'
   }
-
-  /**
-   * @type {Map<string, object>}
-   */
-  static #cachedMboxes = new Map();
 
   /**
    * @type {Object{}}
    */
   static #urlParameters = this.#getUrlParameters();
 
+  /**
+   * @type {Map<string, Promise<object>>}
+   */
+  static #cachedMboxes = new Map();
+
+  static #init = new Promise(resolve => {
+    document.addEventListener('alloy-finished-loading', () => {
+      resolve();
+    });
+  });
+
   static {
-    if (!window.alloy) {
-      // eslint-disable-next-line no-underscore-dangle
-      if (!window.__alloyNS) {
-        // eslint-disable-next-line no-underscore-dangle
-        window.__alloyNS = [];
-      }
+    // if (!window.alloy) {
+    //   if (!window.__alloyNS) {
+    //     window.__alloyNS = [];
+    //   }
 
-      // eslint-disable-next-line no-underscore-dangle
-      window.__alloyNS.push('alloy');
+    //   window.__alloyNS.push('alloy');
 
-      // eslint-disable-next-line no-underscore-dangle, no-inner-declarations
-      function __alloy(...args) {
-        return new Promise((resolve, reject) => {
-          window.alloy.q.push([resolve, reject, args]);
-        });
-      }
-      __alloy.q = [];
+    //   function __alloy(...args) {
+    //     return new Promise((resolve, reject) => {
+    //       window.alloy.q.push([resolve, reject, args]);
+    //     });
+    //   }
+    //   __alloy.q = [];
 
-      window.alloy = __alloy;
-    }
+    //   window.alloy = __alloy;
+    // }
+
+    this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox']);
   };
 
   /**
-   * Mbox describing an offer
-   * @typedef {{
-   *  'initSelector-mbox': {pid: string },
-   *  'buyLinks-mbox': object,
-   *  'geoip-flag-mbox': {geoipFlag: string}
-   * }} Mbox
+   * 
+   * @param {string} url
+   * @return {Promise<string>} 
    */
+  static async appendVisitorIDsTo(url) {
+    if (url.includes('adobe_mc')) {
+      return url;
+    }
 
-  /**
-   * @type {Promise<Mbox>}
-   */
-  static #storeOffers = this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox']);
+    try {
+      return (await window.alloy("appendIdentityToUrl", {url})).url;
+    } catch(e) {
+      console.warn(e);
+      return url;
+    }
+  };
 
   /**
    * get the product-buy link mappings from Target (
@@ -678,7 +631,7 @@ export class Target {
    * @returns {Promise<object>}
    */
   static async getBuyLinksMapping() {
-    return (await this.#storeOffers)['buyLinks-mbox'] || {};
+    return await this.getOffers('buyLinks-mbox') || {};
   }
 
   /**
@@ -686,14 +639,14 @@ export class Target {
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    return (await this.#storeOffers)['initSelector-mbox']?.pid || null;
+    return (await this.getOffers('initSelector-mbox'))?.pid || null;
   }
 
   /**
   * @returns {Promise<string|null>}
   */
   static async getGeoIpFlag() {
-    return (await this.#storeOffers)['geoip-flag-mbox']?.geoipFlag || null;
+    return (await this.getOffers('geoip-flag-mbox'))?.geoipFlag || null;
   }
 
   /**
@@ -713,32 +666,46 @@ export class Target {
 
   /**
    * 
-   * @param {string[]} mboxes
-   * @param {object} parameters
+   * @param {string[] | string} mboxes
+   * @param {object | undefined} parameters
    * @returns {Promise<object>}
    */
   static async getOffers(mboxes, parameters) {
+    await this.#init;
+    if (!Array.isArray(mboxes)) {
+      mboxes = [mboxes];
+    }
+
     const notRequestedMboxes = mboxes.filter(mbox => !this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
     if (notRequestedMboxes.length) {
-      try {
-        const notRequestedOffers = await window.alloy('sendEvent', {
-          decisionScopes: notRequestedMboxes,
-          data: Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
+      const notRequestedOffersCall = window.alloy('sendEvent', {
+        decisionScopes: notRequestedMboxes,
+        data: Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
+      });
+
+      notRequestedMboxes.forEach(mbox => {
+        const receivedMboxOfferCall = new Promise(async (resolve, reject) => {
+          notRequestedOffersCall.then(result => {
+            const mboxResult = result.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
+            resolve(mboxResult);
+          }).catch(e => {
+            reject(e);
+          });
         });
 
-        notRequestedMboxes.forEach(mbox => {
-          const receivedMboxOffer = notRequestedOffers.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
-          this.#cachedMboxes.set(`${mbox}_${JSON.stringify(parameters)}`, receivedMboxOffer);
-        });
-      } catch (e) {
-        console.warn(e);
-      }
+        this.#cachedMboxes.set(`${mbox}_${JSON.stringify(parameters)}`, receivedMboxOfferCall);
+      });
     }
+
+    const mboxesPromises = mboxes.map(mbox => this.#cachedMboxes.get(`${mbox}_${JSON.stringify(parameters)}`));
+    const resolvedMboxes = await Promise.allSettled(mboxesPromises);
     
-    return mboxes.reduce((acc, mbox) => {
-      acc[mbox] = this.#cachedMboxes.get(`${mbox}_${JSON.stringify(parameters)}`)
+    const offersResult = mboxes.reduce((acc, mbox, index) => {
+      acc[mbox] = resolvedMboxes[index].value || null;
       return acc;
     }, {});
+
+    return mboxes.length > 1 ? offersResult : offersResult[mboxes[0]];
   }
 };
 
