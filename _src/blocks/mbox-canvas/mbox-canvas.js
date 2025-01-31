@@ -32,7 +32,6 @@ function createOfferParameters() {
   return parameters;
 }
 
-
 /**
  * Updates the PageLoadStartedEvent with dynamic content from the offer
  * and pushes it to the AdobeDataLayerService.
@@ -68,8 +67,8 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
-  const offer = await Target.getOffers([mboxName], parameters);
-  const page = await fetch(`${offer[mboxName].content.offer}`);
+  const offer = await Target.getOffers(mboxName, parameters);
+  const page = await fetch(`${offer.offer}`);
   updatePageLoadStartedEvent(offer, mboxName);
   const offerHtml = await page.text();
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
