@@ -667,7 +667,8 @@ export class Target {
     if (notRequestedMboxes.length) {
       const notRequestedOffersCall = window.alloyProxy('sendEvent', {
         decisionScopes: notRequestedMboxes,
-        data: Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
+        data: Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters)),
+        renderDecisions: true
       });
 
       notRequestedMboxes.forEach(mbox => {
