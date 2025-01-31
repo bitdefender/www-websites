@@ -275,6 +275,7 @@
     line-height: 18.4px;
     text-align: center;
     padding: 0 1em;
+    transition: all 0.3s ease;
 }
 
 .ab-downloads main .blue-titles.image-columns-container .block p span, .ab-downloads main .section.wide.awards a span {
@@ -282,6 +283,7 @@
 }
 
 .ab-downloads main .blue-titles.image-columns-container .block p a::after {
+    display: none;
     min-width: 23px;
     min-height: 20px;
     background-color: #006DFF;
@@ -291,19 +293,30 @@
     transform: rotate(90deg);
 }
 
+.ab-downloads main .blue-titles.image-columns-container .block p a:hover {
+    background-color: #006DFF;
+    color: white;
+    transition: all 0.3s ease;
+}
+
 .ab-downloads main .blue-titles.image-columns-container > .default-content-wrapper:first-of-type {
     text-align: center;
 }
 
 .ab-downloads main .full-grey-bck.columns-container > div.columns-wrapper {
-    background-color: #F6F6F6;
-    border-radius: 20px;
-    padding: 2em;
+
 }
 
 .ab-downloads main .full-grey-bck.columns-container .block > div {
-    gap: 5em;
-    align-items: flex-start;
+    gap: 1.5em;
+    display: flex;
+    align-items: stretch;
+}
+
+.ab-downloads main .full-grey-bck.columns-container .block > div > div {
+    background-color: #F6F6F6;
+    border-radius: 20px;
+    padding: 2em;
 }
 
 .ab-downloads main .full-grey-bck.columns-container h3 {
@@ -317,6 +330,25 @@
 }
 
 .ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type {
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18.4px;
+    text-align: center;
+    color: white;
+    background-color: #27AE60;
+    min-width: 183px;
+    padding: 4px 20px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type em {
+    font-style: normal;
+}
+
+.ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:nth-of-type(2) {
     font-size: 16px;
     font-weight: 700;
     line-height: 18.4px;
@@ -324,7 +356,7 @@
     margin-bottom: 0;
 }
 
-.ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type u {
+.ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:nth-of-type(2) u {
     color: #006DFF;
     text-decoration: none;
 }
@@ -617,6 +649,15 @@
 
 .ab-downloads .modal-container .block .columns-text-col {
     padding: 1em;
+}
+
+.ab-downloads main .section.blue-titles .block > div > div {
+    background-color: transparent;
+    padding: 1em;
+}
+
+.ab-downloads main .section.blue-titles h5 {
+    color: #006DFF
 }
 
 @media (min-width: 1600px) {
