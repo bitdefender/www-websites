@@ -37,11 +37,10 @@ function createOfferParameters() {
  * and pushes it to the AdobeDataLayerService.
  *
  * @param {Object} offer - The offer object containing dynamic content.
- * @param {string} mboxName - The name of the mbox to extract content from.
  * @returns {Promise<void>} - A promise that resolves when the event is updated and pushed.
  */
-async function updatePageLoadStartedEvent(offer, mboxName) {
-  const match = offer[mboxName].content.offer.match(/\/([^/]+)\.plain\.html$/);
+async function updatePageLoadStartedEvent(offer) {
+  const match = offer.offer.match(/\/([^/]+)\.plain\.html$/);
   const result = match ? match[1] : null;
   const newObject = await new PageLoadStartedEvent();
   newObject.page.info.name = newObject.page.info.name.replace('<dynamic-content>', result);
@@ -69,7 +68,7 @@ export default async function decorate(block) {
   block.classList.add('loader-circle');
   const offer = await Target.getOffers(mboxName, parameters);
   const page = await fetch(`${offer.offer}`);
-  updatePageLoadStartedEvent(offer, mboxName);
+  updatePageLoadStartedEvent(offer);
   const offerHtml = await page.text();
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
