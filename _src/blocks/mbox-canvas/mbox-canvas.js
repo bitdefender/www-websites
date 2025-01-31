@@ -68,10 +68,7 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
-  const offer = await Target.getOffers([{
-    name: mboxName,
-    parameters,
-  }]);
+  const offer = await Target.getOffers([mboxName], parameters);
   const page = await fetch(`${offer[mboxName].content.offer}`);
   updatePageLoadStartedEvent(offer, mboxName);
   const offerHtml = await page.text();

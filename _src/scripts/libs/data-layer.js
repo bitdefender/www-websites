@@ -89,8 +89,13 @@ export class PageLoadStartedEvent {
     const targetExperimentId = this.#getMetadata('target-experiment');
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      const experimentUrl = (await Target.getOffer(targetExperimentLocation))?.content?.url;
-      targetExperimentDetails = await runTargetExperiment(experimentUrl, targetExperimentId);
+      const offer = await Target.getOffers(targetExperimentLocation);
+      const { url, template } = offer || {};
+      if (template) {
+        loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
+        document.body.classList.add(template);
+      }
+      targetExperimentDetails = await runTargetExperiment(url, targetExperimentId);
     }
 
     return targetExperimentDetails;
@@ -539,70 +544,10 @@ export class AdobeDataLayerService {
   };
 };
 
-export class Visitor {
-  static #instanceID = '0E920C0F53DA9E9B0A490D45@AdobeOrg';
-  static #instance = null;
-  static #staticInit = new Promise(resolve => {
-
-    if (shouldABTestsBeDisabled()) {
-      resolve();
-      return;
-    }
-
-    if (window.Visitor) {
-      Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
-      resolve();
-      return;
-    }
-
-    document.addEventListener('at-library-loaded', () => {
-      if (window.Visitor) {
-        Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
-      }
-      resolve();
-    })
-  });
-
-  /**
-   *
-   * @param {string} url 
-   * @returns {Promise<string>}
-   */
-  static async appendVisitorIDsTo(url) {
-    await this.#staticInit;
-    return !this.#instance || url.includes("adobe_mc") ? url : this.#instance.appendVisitorIDsTo(url);
-  }
-
-  /**
-   *
-   * @returns {Promise<string>}
-   */
-  static async getConsumerId() {
-    await this.#staticInit;
-    return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : "";
-  }
-
-  /**
-   *
-   * @returns {Promise<string>}
-   */
-  static async getMarketingCloudVisitorId() {
-    await this.#staticInit;
-    return this.#instance ? this.#instance.getMarketingCloudVisitorID() : "";
-  }
-};
-
-window._Visitor = Visitor;
-
 export class Target {
   static events = {
-    LIBRARY_LOADED: "at-library-loaded"
+    ALLOY_FINISHED_LOADING: 'alloy-finished-loading'
   }
-
-  /**
-   * @type {string[]}
-   */
-  static eventTokens = [];
 
   /**
    * @type {Object{}}
@@ -610,53 +555,42 @@ export class Target {
   static #urlParameters = this.#getUrlParameters();
 
   /**
-   * @param {string[]}
+   * @type {Map<string, Promise<object>>}
    */
-  static setEventTokens(value) {
-    this.eventTokens = value;
-  }
+  static #cachedMboxes = new Map();
 
-  /**
-   * Mbox describing an offer
-   * @typedef {{content: {offer: string, block:string} | {pid}, type: string|null}} Mbox
-   */
+  static {
+    if (!window.alloyProxy) {
+      function __alloy(...args) {
+        return new Promise((resolve, reject) => {
+          window.alloyProxy.q.push([resolve, reject, args]);
+        });
+      }
+      __alloy.q = [];
 
-  /**
-   * @type {Mbox}
-   */
-  static offers = null;
-
-  static #staticInit = new Promise(resolve => {
-
-    /** This is a special case for when adobe.target is disabled using dotest query param */
-    if (shouldABTestsBeDisabled()) {
-      resolve();
-      return;
+      window.alloyProxy = __alloy;
     }
 
-    /** Target is loaded and we wait for it to finish so we can get the offer */
-    if (window.adobe?.target) {
-      resolve();
-      return;
+    this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox']);
+  };
+
+  /**
+   * 
+   * @param {string} url
+   * @return {Promise<string>} 
+   */
+  static async appendVisitorIDsTo(url) {
+    if (url.includes('adobe_mc')) {
+      return url;
     }
 
-    /** Target wasn't loaded we wait for events from it */
-    document.addEventListener(this.events.LIBRARY_LOADED, () => {
-      resolve();
-    }, { once: true });
-  });
-
-  /**
-   * @typedef {{content: {pid: string}}} PidMbox
-   * @type {Promise<PidMbox|null>}
-   */
-   static #campaignMbox = this.getOffer('initSelector-mbox');
-
-  /**
-   * @typedef {{content: object}} BuyLinksMbox
-   * @type {Promise<BuyLinksMbox|null>}
-   */
-  static #buyLinksMbox = this.getOffer('buyLinks-mbox');
+    try {
+      return (await window.alloy("appendIdentityToUrl", {url})).url;
+    } catch(e) {
+      console.warn(e);
+      return url;
+    }
+  };
 
   /**
    * get the product-buy link mappings from Target (
@@ -674,7 +608,7 @@ export class Target {
    * @returns {Promise<object>}
    */
   static async getBuyLinksMapping() {
-    return (await this.#buyLinksMbox)?.content || {};
+    return await this.getOffers('buyLinks-mbox') || {};
   }
 
   /**
@@ -682,24 +616,14 @@ export class Target {
    * @returns {Promise<string|null>}
    */
   static async getCampaign() {
-    return (await this.#campaignMbox)?.content?.pid || null;
+    return (await this.getOffers('initSelector-mbox'))?.pid || null;
   }
 
   /**
-   * Awaits Target to apply load and apply its changes
-   * @returns {Promise<void>}
-   */
-  static async loadAndRun() {
-    await this.#staticInit;
-  }
-
-  /**
-   * @param {string} mboxName
-   * @param {object} parameters 
-   */
-  static async getOffer(mboxName, parameters = {}) {
-    const receivedOffers = await this.getOffers([{name: mboxName, parameters}]);
-    return receivedOffers ? receivedOffers[mboxName] : null;
+  * @returns {Promise<object>}
+  */
+  static async getGeoIpFlag() {
+    return await this.getOffers('geoip-flag-mbox') || {};
   }
 
   /**
@@ -717,39 +641,47 @@ export class Target {
     return parameters;
   }
 
-  static async getOffers(mboxes) {
-    await this.#staticInit;
-    let offers = {};
-
-    try {
-      offers = await window.adobe?.target?.getOffers({
-        consumerId: await Visitor.getConsumerId(),
-        request: {
-          id: {
-            marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
-          },
-          execute: {
-            mboxes: [
-              ...mboxes.map((mbox, index) => {
-                return { index, name: mbox.name, parameters: Object.assign(this.#urlParameters, mbox.parameters) }
-              })
-            ]
-          }
-        }
-      });
-
-      offers = offers?.execute?.mboxes?.reduce((acc, mbox) => {
-        acc[mbox.name] = {};
-        acc[mbox.name].content = mbox?.options?.[0]?.content;
-        acc[mbox.name].type = mbox?.options?.[0]?.type;
-        return acc;
-      }, {});
-
-    } catch (e) {
-      console.warn(e);
+  /**
+   * 
+   * @param {string[] | string} mboxes
+   * @param {object | undefined} parameters
+   * @returns {Promise<object>}
+   */
+  static async getOffers(mboxes, parameters) {
+    if (!Array.isArray(mboxes)) {
+      mboxes = [mboxes];
     }
 
-    return offers;
+    const notRequestedMboxes = mboxes.filter(mbox => !this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
+    if (notRequestedMboxes.length) {
+      const notRequestedOffersCall = window.alloyProxy('sendEvent', {
+        decisionScopes: notRequestedMboxes,
+        data: Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
+      });
+
+      notRequestedMboxes.forEach(mbox => {
+        const receivedMboxOfferCall = new Promise((resolve, reject) => {
+          notRequestedOffersCall.then(result => {
+            const mboxResult = result.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
+            resolve(mboxResult);
+          }).catch(e => {
+            reject(e);
+          });
+        });
+
+        this.#cachedMboxes.set(`${mbox}_${JSON.stringify(parameters)}`, receivedMboxOfferCall);
+      });
+    }
+
+    const mboxesPromises = mboxes.map(mbox => this.#cachedMboxes.get(`${mbox}_${JSON.stringify(parameters)}`));
+    const resolvedMboxes = await Promise.allSettled(mboxesPromises);
+    
+    const offersResult = mboxes.reduce((acc, mbox, index) => {
+      acc[mbox] = resolvedMboxes[index].value || null;
+      return acc;
+    }, {});
+
+    return mboxes.length > 1 ? offersResult : offersResult[mboxes[0]];
   }
 };
 

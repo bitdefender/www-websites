@@ -9,7 +9,7 @@ import {
 import { User } from '../../scripts/libs/user.js';
 import Cookie from '../../scripts/libs/cookie.js';
 import { Constants } from '../../scripts/libs/constants.js';
-import { Visitor } from '../../scripts/libs/data-layer.js';
+import { Target } from '../../scripts/libs/data-layer.js';
 
 /**
  * @param {string} username
@@ -57,7 +57,7 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
   if (!userLoggedInExpirationDate
     || (userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now())) {
     loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
-      loginPopupLink.href = await Visitor.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
+      loginPopupLink.href = await Target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
     });
   }
 };
