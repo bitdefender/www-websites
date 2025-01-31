@@ -1,5 +1,5 @@
 import { Constants } from "../constants.js";
-import { Target, Visitor } from "../data-layer.js";
+import { Target } from "../data-layer.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import Page from "../page.js";
 import { getMetadata } from "../../utils/utils.js";
@@ -218,7 +218,7 @@ export class ProductOption {
 			return this.buyLink;
 		}
 
-		return await Visitor.appendVisitorIDsTo(
+		return await Target.appendVisitorIDsTo(
 			setUrlParams(this.buyLink, params)
 		);
 	}
@@ -701,10 +701,10 @@ class Vlaicu {
 	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
 
 	static #getGeoIpFlag = async () => {
-		const offer = await Target.getOffer('geoip-flag-mbox');
+		const offer = await Target.getGeoIpFlag();
 
-		if (offer && offer.content && typeof offer.content.geoIpPrice !== 'undefined') {
-            return offer.content.geoIpPrice;
+		if (offer && typeof offer.geoIpPrice !== 'undefined') {
+            return offer.geoIpPrice;
 		}
 
 		return null;
