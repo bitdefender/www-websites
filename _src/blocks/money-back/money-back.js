@@ -1,4 +1,4 @@
-import { decorateIcons } from "../../scripts/lib-franklin.js";
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block, options) {
   if (options) {

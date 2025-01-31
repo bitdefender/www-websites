@@ -25,7 +25,6 @@ function createCardElementContainer(elements, mobileImage) {
 
 function createDropdownElement(paragraph, dropdownTagText, product) {
   let dropdownItems = paragraph.textContent.slice(1, -1).split(',').map((item) => item.trim());
-  console.log('1');
   // Remove the first item as it does not need to be worked on
   dropdownItems.shift();
 
@@ -78,7 +77,7 @@ function createDropdownElement(paragraph, dropdownTagText, product) {
 
   const dropdownItemsNodes = dropdownOptions.querySelectorAll('.custom-dropdown-item');
   dropdownItemsNodes.forEach((item) => {
-    console.log(item);
+    // eslint-disable-next-line func-names
     item.addEventListener('click', function () {
       dropdownButton.textContent = this.textContent;
       dropdownOptions.style.display = 'none';
@@ -122,7 +121,7 @@ async function createPricesWebsites(product, buyLink, bluePillText, saveText, un
 export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
-    alignContent, height, type, send2datalayer, dropdownProducts, bluePillText, underPriceText,
+    alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
     dropdownTag,
   } = block.closest('.section').dataset;
 
