@@ -12,14 +12,6 @@
   max-width: 1300px;
 }
 
-.awards-container .block.awards-component {
-  background-color: #edf9ff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 20px;
-}
-
 .awards-container.we-container {
   max-width: 100%;
   padding-left: 20px;
@@ -33,18 +25,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 22px;
-  padding-bottom: 24px;
+  padding: 20px;
   width: 100%;
 }
 
 .awards-container h3 {
   font-size: 32px;
-}
-
-.awards-container h4 {
-  margin-bottom: 18px;
-  font-weight: normal;
 }
 
 .awards-container .block.awards-component > div {
@@ -101,6 +87,43 @@
   margin-bottom: 0;
 }
 
+.awards-container .block.awards-component {
+  background-color: #edf9ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  gap: 16px;
+  
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    gap: 20px;
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      padding: 49px 32px;
+      border-radius: 20px;
+      text-align: left;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
+      width: 100%;
+      max-width: 420px;
+    }
+
+    h3 {
+      color: #006DFF;
+    }
+  }
+
+  h4 {
+    color: #006DFF;
+    font-size: 34px;
+  }
+}
+
 @media (min-width: 580px) {
   .awards-component > div:nth-child(3) div {
     max-width: 768px;
@@ -130,6 +153,12 @@
 
   .awards-container .vsb picture{
     min-width: 100px;
+  }
+
+  .awards-container .block.awards-component {
+    .cards {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 }
 
@@ -224,14 +253,6 @@
     font: normal normal bold 32px/38px Arial, sans-serif;
     max-width: 726px;
     margin-bottom: 0;
-  }
-
-  .awards-component h4 {
-    font-size: 18px;
-    font-weight: normal;
-    line-height: 25px;
-    margin-bottom: 35px;
-    margin-top: 14px;
   }
 
   .awards-container.we-container {

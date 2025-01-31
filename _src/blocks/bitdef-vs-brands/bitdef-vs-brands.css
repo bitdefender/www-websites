@@ -5,6 +5,10 @@
   align-items: center;
 }
 
+.bitdef-vs-brands-wrapper {
+  padding: 0 var(--body-padding);
+}
+
 .bitdef-vs-brands .heading-container {
   text-align: center;
   max-width: 420px;
@@ -14,15 +18,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.bitdef-vs-brands-container.we-container {
-  max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-top: 15px;
-  margin-left: auto;
-  margin-right: auto;
+  gap: 24px;
 }
 
 .bitdef-vs-brands-wrapper h2 {
@@ -44,12 +40,10 @@
   padding: 20px;
   background-color: #f8f8f8;
   border-radius: 16px;
-  max-width: 410px;
-  margin-bottom: 50px;
 }
 
 .bitdef-vs-brands-wrapper table .blue-background p {
-  background-color: #005bd5;
+  background-color: #006DFF;
   color: white;
   padding: 9px;
   margin-top: 4px;
@@ -171,42 +165,28 @@
     gap: 3%;
     justify-content: center;
   }
-
-  .bitdef-vs-brands-wrapper .table-container {
-    width: 340px;
-  }
 }
 
-@media (min-width: 990px) {
+@media (min-width: 992px) {
   .bitdef-vs-brands-wrapper .new-container {
     flex-direction: row;
     gap: 3%;
     justify-content: center;
+
+    > div {
+      width: 50%;
+    }
   }
 
-  .bitdef-vs-brands-wrapper .table-container {
-    max-width: 410px;
+  .bitdef-vs-brands-wrapper {
+    max-width: var(--section-desktop-max-width);
+    padding: 0 var(--section-desktop-padding);
+    margin: 0 auto;
   }
 
-  .bitdef-vs-brands-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .bitdef-vs-brandss-container.we-container {
-    max-width: 1332px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-}
-
-@media (min-width: 1600px) {
-  .bitdef-vs-brandss-container.we-container {
-    max-width: 1332px;
-    padding-left: 20px;
-    padding-right: 20px;
+  .bitdef-vs-brands-container.smaller-container .bitdef-vs-brands-wrapper {
+    max-width: var(--section-desktop-smaller-max-width);
+    padding: 0 var(--section-desktop-padding);
+    margin: 0 auto;
   }
 }

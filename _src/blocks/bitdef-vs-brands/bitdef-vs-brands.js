@@ -1,12 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-export default function decorate(block, options) {
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-    const blockParent = block.closest('.section');
-    blockParent.classList.add('we-container');
-  }
-
+export default function decorate(block) {
   const tables = block.querySelectorAll('.bitdef-vs-brands-wrapper table');
 
   tables.forEach((table) => {
@@ -76,8 +69,4 @@ export default function decorate(block, options) {
   }), threshold);
 
   observer.observe(section);
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
-  });
 }

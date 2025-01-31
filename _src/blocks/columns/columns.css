@@ -575,6 +575,71 @@
     color: white;
 }
 
+.columns-container.blue-h5 h5 {
+  color: #006DFF;
+}
+
+.columns-container.down-arrow-button {
+  p em a {
+    color: #006DFF;
+    border: 4px solid #006DFF;
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: inline-flex;
+    gap: 10px;
+    text-decoration: none;
+    font-weight: 700;
+
+    span {
+      width: 15px;
+      height: 15px;
+    }
+  }
+}
+
+.columns-container.v-4 {
+  .columns-text-col {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.columns-container.single-card-no-image .columns > div {
+  justify-content: left;
+  padding: 48px;
+  
+  >div {
+    flex: 0 0 100%;
+  }
+
+  svg {
+    fill: #0681FF;
+  }
+}
+
+.columns-container.secondary-button-blue  .columns .button.secondary {
+  margin-top: 15px;
+  color: #026DFF;
+  border: 2px solid #026DFF;
+  background-color: transparent;
+  justify-content: center;
+
+  &:hover {
+    color: white;
+    background-color: #026DFF;
+  
+    span.button-text {
+      transform: translate(0, 0);
+    }
+  }
+
+  &::after {
+    content: none;
+  }
+}
+
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     flex-direction: unset;
@@ -639,6 +704,12 @@
     max-width: 1300px;
     padding-left: 50px;
     padding-right: 50px;
+  }
+
+  .columns-container.smaller-container .columns-wrapper {
+    max-width: var(--section-desktop-smaller-max-width);
+    padding: 0 var(--section-desktop-padding);
+    margin: 0 auto;
   }
 
   .columns > div {

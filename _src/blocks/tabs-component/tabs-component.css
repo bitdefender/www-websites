@@ -184,6 +184,15 @@
   align-items: center;
 }
 
+.tabs-component-container .tabs-component ul {
+  list-style: disc;
+  margin-left: 15px;
+
+  li {
+    padding: 0;
+  }
+}
+
 .tabs-component-container {
   align-items: normal !important;
 }
