@@ -570,29 +570,17 @@ export class Target {
    */
   static #cachedMboxes = new Map();
 
-  static #init = new Promise(resolve => {
-    document.addEventListener('alloy-finished-loading', () => {
-      resolve();
-    });
-  });
-
   static {
-    // if (!window.alloy) {
-    //   if (!window.__alloyNS) {
-    //     window.__alloyNS = [];
-    //   }
+    if (!window.alloyProxy) {
+      function __alloy(...args) {
+        return new Promise((resolve, reject) => {
+          window.alloyProxy.q.push([resolve, reject, args]);
+        });
+      }
+      __alloy.q = [];
 
-    //   window.__alloyNS.push('alloy');
-
-    //   function __alloy(...args) {
-    //     return new Promise((resolve, reject) => {
-    //       window.alloy.q.push([resolve, reject, args]);
-    //     });
-    //   }
-    //   __alloy.q = [];
-
-    //   window.alloy = __alloy;
-    // }
+      window.alloyProxy = __alloy;
+    }
 
     this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox']);
   };
@@ -671,20 +659,19 @@ export class Target {
    * @returns {Promise<object>}
    */
   static async getOffers(mboxes, parameters) {
-    await this.#init;
     if (!Array.isArray(mboxes)) {
       mboxes = [mboxes];
     }
 
     const notRequestedMboxes = mboxes.filter(mbox => !this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
     if (notRequestedMboxes.length) {
-      const notRequestedOffersCall = window.alloy('sendEvent', {
+      const notRequestedOffersCall = window.alloyProxy('sendEvent', {
         decisionScopes: notRequestedMboxes,
         data: Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
       });
 
       notRequestedMboxes.forEach(mbox => {
-        const receivedMboxOfferCall = new Promise(async (resolve, reject) => {
+        const receivedMboxOfferCall = new Promise((resolve, reject) => {
           notRequestedOffersCall.then(result => {
             const mboxResult = result.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
             resolve(mboxResult);
