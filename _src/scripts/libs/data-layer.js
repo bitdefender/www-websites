@@ -582,7 +582,7 @@ export class Target {
       window.alloyProxy = __alloy;
     }
 
-    this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox']);
+    this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox', 'taget-global-mbox']);
   };
 
   /**
