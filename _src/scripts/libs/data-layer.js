@@ -104,8 +104,8 @@ export class PageLoadStartedEvent {
     const targetExperimentId = this.#getMetadata('target-experiment');
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      const offer = await Target.getOffers([targetExperimentLocation]);
-      const { url, template } = offer?.content || {};
+      const offer = await Target.getOffers(targetExperimentLocation);
+      const { url, template } = offer || {};
       if (template) {
         loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
         document.body.classList.add(template);
@@ -669,7 +669,7 @@ export class Target {
         decisionScopes: notRequestedMboxes,
         data: {
           "__adobe": {
-            "target": Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters)),
+            "target": Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
           }
         },
         renderDecisions: true
