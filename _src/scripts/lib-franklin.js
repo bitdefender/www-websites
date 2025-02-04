@@ -745,6 +745,12 @@ export function decorateButtons(element) {
           up.classList.add('button-container');
           a.innerHTML = wrapButtonText(a);
         }
+
+        if (up.tagName === 'TD' && up.closest('table.ratings')) {
+          a.className = 'button';
+          up.classList.add('button-container');
+          a.innerHTML = wrapButtonText(a);
+        }
       }
     }
   });

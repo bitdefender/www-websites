@@ -19,14 +19,9 @@
   margin: 0 auto;
 }
 
-.hero-aem-container .hero-aem p:first-of-type a {
-  margin: 0;
-  margin-bottom: 20px;
-}
-
 .hero-aem-container .hero-aem h1 {
   color: #006DFF;
-  font-size: 38px;
+  font-size: 23px;
   font-weight: normal;
   margin-top: 10px;
   line-height: 1.1;
@@ -84,10 +79,6 @@
 
 .hero-aem-container .hero-aem .hero-aem__breadcrumb a:hover {
   text-decoration: underline;
-}
-
-.hero-aem-container .hero-aem p.button-container {
-  text-align: center;
 }
 
 .hero-aem-container .hero-aem p.button-container .button.primary {
@@ -234,11 +225,6 @@
 
 .hero-aem-container .button.free-download:hover::after {
   transform: translateX(5px);
-}
-
-/* this would ideally be the sales tax included text */
-.hero-aem__card-text p:last-child {
-  font-size: 14px;
 }
 
 .hero-aem__card-text p:last-child a {
@@ -491,61 +477,153 @@
   margin-top: 1.5rem;
 }
 
-.hero-aem-container .hero-aem .hero-aem__card-text p:last-child {
-  a {
-    color: #006DFF;
-    margin-left: 0;
-    font-weight: bold;
-    text-decoration: none;
+.hero-aem-container .hero-aem ul {
+
+  padding: 0;
+  margin-right: 5px;
+
+  li {
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom: 8px;
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+  }
+
+  li::before {
+    content: '';
+    height: 17px;
+    width: 17px;
+    margin-right: 10px;
+    background-image: url("https://bitdefender.com/icons/circle-check-sharp-solid.svg");
+    background-repeat: no-repeat;
   }
 }
 
+.hero-aem-container.mobile-grey-background {
+  background-color: #F7F7F7;
+}
 
-@media (max-width: 767px) {
-  .hero-aem-container.hero-vsb {
-    padding-bottom: 0;
-  }
-
-  .hero-aem-container.hero-vsb .hero-aem {
-    padding: 0 15px;
-  }
-
-  .hero-aem-container.hero-vsb .hero-aem__card__desktop {
-    max-height: unset !important;
-  }
-
-  .hero-aem-container.hero-vsb .hero-aem .hero-aem__card-text {
+.hero-aem-container.no-padding-card-mobile {
+  .hero-aem .hero-aem__card-text {
     padding: 0;
-    background-color: transparent;
-    border-radius: 20px;
   }
+}
 
-  .hero-aem-container.hero-vsb .hero-aem p.button-container {
-    text-align: left;
+.hero-aem-container .benefit_list tbody tr {
+  display: flex;
+  flex-flow: column;
+
+  ul {
+    margin: 0; 
   }
+}
 
-  .hero-aem-container.hero-vsb .hero-aem p.button-container .button.primary {
-    margin: 0;
-    max-width: 290px;
-  }
+.hero-aem-container .ratings tbody tr {
 
-  .hero-aem-container.hero-vsb .hero-aem p.button-container .button.primary span {
+  display: flex;
+  flex-wrap: wrap;
+
+  td {
     text-align: center;
-    display: block;
-    width: 100%;
   }
 
-  .hero-aem-container.hero-vsb .hero-aem h1 {
-    color: #006DFF;
-    font-size: 29px;
+  td:first-of-type {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
   }
+
+  td:not(:first-of-type) {
+    margin-top: 12px;
+  }
+
+  td:nth-of-type(2) {
+    position: relative;
+    margin-right: 33px;
+    position: relative;
+
+    &::after {
+      content: '';
+      height: 25px;
+      width: 1px;
+      background-color: #ADADAD;
+      position: absolute;
+      top: 35%;
+      right: -17px;
+    }
+  }
+
+  p:has(strong) {
+    display: flex;
+    font-size: 17px;
+    justify-content: left;
+  }
+  
+  .icon-star {
+    margin: 0;
+    height: 17px;
+    width: 16px;
+  }
+
+  p {
+    font-size: 14px;
+    margin: 8px 0;
+  }
+}
+
+.hero-aem-container .devices-years-text {
+  font-family: Arial;
+  font-size: 16px;
+  line-height: 24px;
+  color: #4F4F4F;
+  margin-top: 8px;
+}
+
+.hero-aem-container .hero-aem__prices+p {
+  margin: 8px 0;
+  font-family: Arial;
+  font-size: 14px;
+  line-height: 16px;
 }
 
 @media (min-width: 768px) {
   .hero-aem-container .hero-aem {
     display: flex;
     flex-wrap: wrap;
+
+    h1 {
+      font-size: 38px;
+    }
   }
+
+  .hero-aem-container.mobile-grey-background {
+    background-color: initial;
+  }
+
+  .hero-aem-container .benefit_list tbody tr {
+    display: flex;
+    flex-flow: row;
+    gap: 10px;
+  }
+
+  .hero-aem-container .ratings tbody tr {
+    flex-wrap: nowrap;
+
+    td:not(:first-of-type) {
+      margin-top: 0px;
+    }
+
+    td:last-of-type {
+      padding-right: 10px;
+    }
+
+    p:has(strong) {
+      justify-content: center;
+    }
+  }
+  
 
   .hero-aem-container .hero-aem .hero-aem__mobile-image {
     display: none;
@@ -565,6 +643,16 @@
     bottom: 0;
     left: 0;
     background: linear-gradient(to left, rgba(247, 247, 247, 0), #F7F7F7);
+  }
+
+  .hero-aem-container.hide-gradient .hero-aem .hero-aem__desktop-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: none;
   }
 
   .hero-aem-container .hero-aem .hero-aem__desktop-image img {
@@ -602,6 +690,10 @@
     padding: 32px 0px 24px 56px;
   }
 
+  .hero-aem-container.smaller-card-padding .hero-aem .hero-aem__card__desktop>div {
+    padding: 32px 0px 24px 25px;
+  }
+
   .hero-aem-container .hero-aem p.button-container {
     text-align: left;
     display: inline-block;
@@ -628,14 +720,6 @@
 
   .hero-aem-container .aem-two-cards h2+p {
     font-size: 18px;
-  }
-
-  .hero-aem-container .hero-aem p:has(a) {
-    display: inline-block;
-  }
-
-  .hero-aem-container .hero-aem p:has(em) {
-    margin-left: 10px;
   }
 }
 

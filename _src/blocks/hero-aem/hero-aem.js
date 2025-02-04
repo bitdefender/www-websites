@@ -1,7 +1,10 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { openUrlForOs } from '../../scripts/utils/utils.js';
+import { decorateButtons } from '../../scripts/lib-franklin.js';
+import {
+  openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
+} from '../../scripts/utils/utils.js';
 
 function createCardElementContainer(elements, mobileImage) {
   const cardElementContainer = document.createElement('div');
@@ -118,12 +121,31 @@ async function createPricesWebsites(product, buyLink, bluePillText, saveText, un
   return pricesBox;
 }
 
+/**
+ * Nanoblock representing the price conditions below the Price
+ * @param text Conditions
+ * @returns Root node of the nanoblock
+ */
+function renderDevicesUsersText(text) {
+  return createTag(
+    'div',
+    {
+      class: 'devices-years-text',
+    },
+    `<span>${text}</span>`,
+  );
+}
+
+createNanoBlock('devices-users-text', renderDevicesUsersText);
+
 export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
     dropdownTag,
   } = block.closest('.section').dataset;
+
+  renderNanoBlocks(block);
 
   if (options) {
     // eslint-disable-next-line no-param-reassign
@@ -185,7 +207,24 @@ export default async function decorate(block, options) {
 
   if (product && !options) {
     let priceBox = await createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText);
-    buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
+    // Select all paragraph elements
+    const paragraphs = document.querySelectorAll('p');
+    let insertPricesParagraph = null;
+
+    // Iterate through the paragraphs
+    paragraphs.forEach((paragraph) => {
+      // Check if the paragraph contains the text <insert-prices>
+      if (paragraph.textContent.includes('<insert-prices>')) {
+        // Perform any additional actions here
+        insertPricesParagraph = paragraph;
+      }
+    });
+
+    if (insertPricesParagraph) {
+      insertPricesParagraph.replaceWith(priceBox);
+    } else {
+      buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
+    }
 
     pricesContainers.set(product, priceBox);
   }
@@ -203,6 +242,24 @@ export default async function decorate(block, options) {
     breadcrumbTable.classList.add('hero-aem__breadcrumb');
     // delete the first row
     breadcrumbTable.deleteRow(0);
+  }
+
+  let tables = block.querySelectorAll('table');
+  // eslint-disable-next-line no-restricted-syntax
+  for (const listTable of tables) {
+    if (listTable && listTable.textContent.includes('benefit_list')) {
+      listTable.classList.add('benefit_list');
+      // delete the first row
+      listTable.deleteRow(0);
+    }
+
+    if (listTable && listTable.textContent.includes('ratings')) {
+      listTable.classList.add('ratings');
+      // delete the first row
+      listTable.deleteRow(0);
+      decorateButtons(listTable);
+      // listTable.querySelector('a').classList.add('button');
+    }
   }
 
   let freeDownloadButton = block.querySelector('a[href*="#free-download"]');
