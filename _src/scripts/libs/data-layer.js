@@ -557,6 +557,7 @@ export class AdobeDataLayerService {
 
 export class Visitor {
   static #instanceID = '0E920C0F53DA9E9B0A490D45@AdobeOrg';
+  static consumerId = this.#getConsumerId();
   static #instance = null;
   static #staticInit = new Promise(resolve => {
 
@@ -593,7 +594,7 @@ export class Visitor {
    *
    * @returns {Promise<string>}
    */
-  static async getConsumerId() {
+  static async #getConsumerId() {
     await this.#staticInit;
     return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : "";
   }
@@ -739,7 +740,7 @@ export class Target {
 
     try {
       offers = await window.adobe?.target?.getOffers({
-        consumerId: await Visitor.getConsumerId(),
+        consumerId: await Visitor.consumerId,
         request: {
           id: {
             marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
