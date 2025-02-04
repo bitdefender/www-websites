@@ -1592,3 +1592,47 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     }
   }
 }
+
+.columns-container {
+  .review-cards {
+    >div{
+      gap: 20px;
+    }
+
+
+    .columns-text-col {
+      padding: 25px;
+      box-shadow: 1px 4px 6px -2px rgba(16, 24, 40, 0.05);
+      box-shadow: 0px 0px 16px -4px rgba(16, 24, 40, 0.06);
+
+      h3 {
+        font-size: 22px;
+        margin-bottom: 0;
+      }
+
+      hr {
+        background-color: #D9D9D9;
+        margin: 1em 0;
+      }
+
+      table {
+        width: 100%;
+        margin-bottom: 14px;
+        tbody {
+          tr {
+            display: flex;
+            justify-content: space-between;
+          }
+        }
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      @media(min-width: 1020px){
+        max-width: 365px;
+      }
+    }
+  }
+}
