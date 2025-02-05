@@ -639,6 +639,27 @@
   }
 }
 
+.columns.qr-code > div {
+
+  div:has(img) {
+    background-color: #F6F6F6;
+    border-radius: 20px;
+    padding: 69px 35px;
+    
+    p {
+      text-align: center;
+    }
+  }
+
+  img {
+    width: 175px;
+  }
+}
+
+.columns-container.hide-mobile {
+  display: none;
+}
+
 
 @media (min-width: 991px) {
   .columns.benefits > div {
@@ -651,6 +672,14 @@
 @media (min-width: 767px) {
   .columns-container.space-between .columns > div {
     align-items: stretch;
+  }
+
+  .columns-container.hide-desktop {
+    display: none;
+  }
+
+  .columns-container.hide-mobile {
+    display: initial;
   }
 
   .columns.awards-fragment > div{
