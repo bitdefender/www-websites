@@ -615,10 +615,6 @@
       margin-top: 0px;
     }
 
-    td:last-of-type {
-      padding-right: 10px;
-    }
-
     p:has(strong) {
       justify-content: center;
     }
@@ -691,7 +687,7 @@
   }
 
   .hero-aem-container.smaller-card-padding .hero-aem .hero-aem__card__desktop>div {
-    padding: 32px 0px 24px 25px;
+    padding: 32px 8px 24px 25px;
   }
 
   .hero-aem-container .hero-aem p.button-container {

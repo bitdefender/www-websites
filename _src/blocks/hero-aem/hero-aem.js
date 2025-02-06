@@ -99,11 +99,9 @@ function createDropdownElement(paragraph, dropdownTagText, product) {
   });
 }
 
-async function createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText) {
-  const [prodName, prodUsers, prodYears] = product.split('/');
-
+async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText) {
   const pricesBox = document.createElement('div');
-  pricesBox.classList.add('hero-aem__prices');
+  pricesBox.classList.add('hero-aem__prices', 'await-loader');
   pricesBox.innerHTML = `
           ${bluePillText ? `<p class="hero-aem__pill">${bluePillText}</p>` : ''}
           <div class="hero-aem__price mt-3">
@@ -117,7 +115,7 @@ async function createPricesWebsites(product, buyLink, bluePillText, saveText, un
             </div>
           </div>
           <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
-  buyLink.href = `https://www.bitdefender.com/site/Store/buy/${prodName}/${prodUsers}/${prodYears}/`;
+  buyLink.setAttribute('data-store-buy-link', '');
   return pricesBox;
 }
 
@@ -206,7 +204,7 @@ export default async function decorate(block, options) {
   const buyLink = block.querySelector('a[href*="buylink"]');
 
   if (product && !options) {
-    let priceBox = await createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText);
+    let priceBox = await createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText);
     // Select all paragraph elements
     const paragraphs = document.querySelectorAll('p');
     let insertPricesParagraph = null;

@@ -78,15 +78,8 @@ function setImageAsBackgroundImage() {
   });
 }
 
-export default function decorate(block, options) {
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-    const blockParent = block.closest('.section');
-    blockParent.classList.add('we-container');
-  }
-
-  const { linksOpenInNewTab, type } = block.closest('.section').dataset;
+export default function decorate(block) {
+  const { linksOpenInNewTab, type, maxElementsInColumn } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
@@ -151,12 +144,6 @@ export default function decorate(block, options) {
     }
   }
 
-  // This allows the event to cross the shadow DOM boundary
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true,
-  });
-
   if (type && type === 'video_left') {
     block.closest('.section').classList.add('video-left');
     const leftCol = block.querySelector('.columns-img-col');
@@ -180,6 +167,16 @@ export default function decorate(block, options) {
       element.classList.add('await-loader');
     }
   });
+
+  // this will define the number of rows inside each card of the subgrid system
+  // by dynamically setting this, i can set howewer much rows i want based on the number of
+  // maximum elements expected in the row
+  if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
+    block.querySelectorAll('.columns-text-col')?.forEach((element) => {
+      element.style['grid-row'] = `span ${maxElementsInColumn}`;
+    });
+  }
+
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
   if (block.closest('.section').classList.contains('multi-blocks')) {

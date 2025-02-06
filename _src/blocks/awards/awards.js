@@ -1,14 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { matchHeights } from '../../scripts/utils/utils.js';
 
-export default function decorate(block, options) {
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-    const blockParent = block.closest('.section');
-    blockParent.classList.add('we-container');
-  }
-
+export default function decorate(block) {
   // count the children of a div
   const countChildren = (parent) => {
     const { children } = parent;
@@ -24,10 +17,5 @@ export default function decorate(block, options) {
         card.classList.add('card');
       });
     }
-  });
-
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
   });
 }

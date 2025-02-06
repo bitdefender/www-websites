@@ -605,6 +605,44 @@
   }
 }
 
+.columns-container.v-5 .columns-wrapper .columns {
+
+  div {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-rows: repeat(4, auto);
+
+    .columns-text-col {
+      display: grid;
+      grid-template-rows: subgrid;
+    }
+
+    div {
+      background-color: #F5F5F7;
+      padding: 16px 0;
+      border-radius: 20px;
+
+      > * {
+        padding: 16px;
+      }
+
+      h4 {
+        font-size: 16px;
+      }
+
+      p {
+        font-size: 12px;
+        margin: 0;
+      }
+
+      .button-container {
+        margin-top: 20px;
+      }
+    }
+  }
+}
+
 .columns-container.single-card-no-image .columns > div {
   justify-content: left;
   padding: 48px;
@@ -725,6 +763,32 @@
   
   .section.ferrari-quote .columns.ferrari-text .columns-text-col{
     font-size: 20px;
+  }
+
+  .columns-container.v-5 .columns-wrapper .columns {
+
+    div {
+      div {
+        padding: 40px 0;
+
+        > * {
+          padding: 0 40px;
+        }
+  
+        h4 {
+          font-size: 24px;
+        }
+  
+        p {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .columns-container.smaller-icons > div .icon {
+    width: 31px;
+    height: 31px;
   }
 }
 
