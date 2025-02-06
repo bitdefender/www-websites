@@ -739,9 +739,23 @@ export function decorateButtons(element) {
           a.title = a.title.slice(1).trim();
           return;
         }
+
+        if (up.childNodes.length === 1 && up.tagName === 'P' && up.innerText.startsWith('->')) {
+          a.className = 'button link-arrow-right';
+          up.classList.add('button-container');
+          a.textContent = a.textContent.slice(2).trim();
+          a.title = a.title.slice(2).trim();
+          return;
+        }
         // Example: <p><a href="example.com">Text</a></p>
         if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
           a.className = 'button'; // default
+          up.classList.add('button-container');
+          a.innerHTML = wrapButtonText(a);
+        }
+
+        if (up.tagName === 'TD' && up.closest('table.ratings')) {
+          a.className = 'button';
           up.classList.add('button-container');
           a.innerHTML = wrapButtonText(a);
         }
