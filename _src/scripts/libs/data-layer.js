@@ -556,10 +556,6 @@ export class AdobeDataLayerService {
 };
 
 export class Target {
-  static events = {
-    ALLOY_FINISHED_LOADING: 'alloy-finished-loading'
-  }
-
   /**
    * @type {Object{}}
    */
@@ -596,7 +592,7 @@ export class Target {
     }
 
     try {
-      return (await window.alloy("appendIdentityToUrl", {url})).url;
+      return (await window.alloyProxy("appendIdentityToUrl", {url})).url;
     } catch(e) {
       console.warn(e);
       return url;
