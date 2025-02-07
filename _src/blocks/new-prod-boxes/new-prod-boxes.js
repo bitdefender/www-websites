@@ -259,10 +259,14 @@ export default async function decorate(block) {
   const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.replaceAll(' ', '').split(',');
   const billedTexts = [];
 
+  if (productsAsList.length >= 5) {
+    block.classList.add('five-cards');
+  }
+
   if (combinedProducts.length) {
     [...block.children].map(async (prod, key) => {
       const mainTable = prod.querySelector('tbody');
-      const [greenTag, title, blueTag, subtitle, radioButtons, perPrice, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2] = [...mainTable.querySelectorAll(':scope > tr')];
+      const [greenTag, title, blueTag, subtitle, radioButtons, perPrice, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2, subtitle2] = [...mainTable.querySelectorAll(':scope > tr')];
       const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
       const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
       const [prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears] = thirdRadioButtonProductsAsList ? thirdRadioButtonProductsAsList[key].split('/') : [];
@@ -323,7 +327,6 @@ export default async function decorate(block) {
       if (checkIfConsumerPage()) {
         storeEvent = 'product-loaded';
       }
-
       const prodBox = document.createElement('div');
       prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}" 
@@ -335,6 +338,7 @@ export default async function decorate(block) {
               <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
               ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
               <hr />
+              ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices await-loader"></div>
               ${secondButton ? secondButton.outerHTML : ''}
@@ -452,6 +456,7 @@ export default async function decorate(block) {
   }
 
   matchHeights(block, '.subtitle');
+  matchHeights(block, '.subtitle-2');
   matchHeights(block, 'h2');
   matchHeights(block, 'h4');
   matchHeights(block, '.plan-switcher');

@@ -362,7 +362,7 @@ async function loadEager(doc) {
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
-    document.body.classList.add('appear');
+    document.body.classList.add('appear', 'franklin');
     if (window.location.href.indexOf('scuderiaferrari') !== -1) {
       document.body.classList.add('sferrari');
     }

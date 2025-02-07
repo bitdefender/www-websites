@@ -688,8 +688,7 @@ export function pushTrialDownloadToDataLayer() {
     return getMetadata('breadcrumb-title') || getMetadata('og:title');
   };
 
-  const url = window.location.href;
-  const currentPage = url.split('/').filter(Boolean).pop();
+  const currentPage = Page.pageName;
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
 
   const pushTrialData = (button = null) => {

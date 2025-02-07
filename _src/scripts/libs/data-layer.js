@@ -550,14 +550,14 @@ export class Visitor {
     }
 
     if (window.Visitor) {
-      Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
+      this.#instance = window.Visitor.getInstance(this.#instanceID);
       resolve();
       return;
     }
 
     document.addEventListener('at-library-loaded', () => {
       if (window.Visitor) {
-        Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
+        this.#instance = window.Visitor.getInstance(this.#instanceID);
       }
       resolve();
     })
@@ -571,15 +571,6 @@ export class Visitor {
   static async appendVisitorIDsTo(url) {
     await this.#staticInit;
     return !this.#instance || url.includes("adobe_mc") ? url : this.#instance.appendVisitorIDsTo(url);
-  }
-
-  /**
-   *
-   * @returns {Promise<string>}
-   */
-  static async getConsumerId() {
-    await this.#staticInit;
-    return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : "";
   }
 
   /**
@@ -659,6 +650,12 @@ export class Target {
   static #buyLinksMbox = this.getOffer('buyLinks-mbox');
 
   /**
+   * @typedef {{content: {geoIpPrice: string}}} GeoIpPriceMbox
+   * @type {Promise<GeoIpPriceMbox|null>}
+   */
+  static #geoIpFlagMbox = this.getOffer('geoip-flag-mbox');
+
+  /**
    * get the product-buy link mappings from Target (
    *  e.g
    *  {
@@ -683,6 +680,14 @@ export class Target {
    */
   static async getCampaign() {
     return (await this.#campaignMbox)?.content?.pid || null;
+  }
+
+  /**
+   * 
+   * @returns {Promise<string|null>}
+   */
+  static async getGeoIpFlagMbox() {
+    return (await this.#geoIpFlagMbox)?.content?.geoIpPrice || null;
   }
 
   /**
@@ -723,7 +728,7 @@ export class Target {
 
     try {
       offers = await window.adobe?.target?.getOffers({
-        consumerId: await Visitor.getConsumerId(),
+        consumerId: window.crypto.randomUUID(),
         request: {
           id: {
             marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
