@@ -1000,6 +1000,7 @@
     .ab-downloads main .blue-btn .default-content-wrapper > p:nth-of-type(2) {
         display: block;
         width: 100%;
+        margin-top: 15px;
     }
     .ab-downloads main .blue-btn .default-content-wrapper > p:nth-of-type(1) {
         display: none;
