@@ -60,27 +60,58 @@
     margin: 0;
 }
 
-.ab-downloads main .hero .hero-content ul li {
+.ab-downloads main .hero_mobile {
+    background-color: #F6F6F6;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.ab-downloads main .hero .hero-content ul, .ab-downloads main .hero_mobile ul {
+    padding-left: 0;
+}
+
+.ab-downloads main .hero .hero-content ul li, .ab-downloads main .hero_mobile ul li {
     font-size: 14px;
     font-weight: 400;
     line-height: 16.1px;
     padding: 0 0 0 25px;
+    position: relative;
 }
 
-.ab-downloads main .hero ul li::before {
+.ab-downloads main .hero ul li::before,  .ab-downloads main .hero_mobile ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    z-index: 1;
     width: 17px;
     height: 17px;
     top: 0;
     background-color: #1C7928;
 }
 
-.ab-downloads main .hero ul li::after {
+.ab-downloads main .hero ul li::after, .ab-downloads main .hero_mobile ul li::after {
+    content: "";
+    position: absolute;
     top: 3px;
     left: 6px;
+    width: 3px;
+    height: 7px;
+    border-bottom: 2px solid var(--white-color);
+    border-right: 2px solid var(--white-color);
+    transform: rotate(45deg);
+    z-index: 2;
 }
 
-.ab-downloads main .hero a.button.modal, .ab-downloads main .hero a.button.central {
+.ab-downloads main .hero a.button.modal, .ab-downloads main .hero a.button.central, .ab-downloads main .hero_mobile a.button.modal {
     height: 45px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #D70000;
     color: white;
     font-size: 16px;
@@ -91,7 +122,7 @@
     padding: 0 1.5em;
 }
 
-.ab-downloads main .hero a.button.modal::after, .ab-downloads main .hero a.button.central::after, .ab-downloads main .section.wide.awards a::after {
+.ab-downloads main .hero a.button.modal::after, .ab-downloads main .hero a.button.central::after, .ab-downloads main .section.wide.awards a::after, .ab-downloads main .hero_mobile a.button.modal::after {
     display: none;
 }
 
@@ -114,6 +145,15 @@
     line-height: 24px;
     color: #161616;
     margin: 0;
+
+}
+
+.ab-downloads main .small-content.columns-container.change4mobile .block > div > div > p:nth-of-type(3) {
+    display: none;
+}
+
+.ab-downloads main .small-content.columns-container.change4mobile .block > div > div > p:nth-of-type(2) {
+    display: block;
 }
 
 .ab-downloads main .small-content.columns-container .block {
@@ -134,6 +174,14 @@
     background-color: #F6F6F6;
     border-radius: 20px;
     padding: 2em 3em;
+}
+
+.ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block h3 br, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
+    display: block;
+}
+
+.ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(2) {
+    display: none;
 }
 
 .ab-downloads main .boxes-type.columns-container .block {
@@ -227,13 +275,22 @@
 }
 
 .ab-downloads main .boxes-type.columns-container > .default-content-wrapper:last-of-type p {
-    text-align: center;
     color: #3D3D3D;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 13.8px;
+    text-align: center;
 }
 
 .ab-downloads main .boxes-type.columns-container > .default-content-wrapper:last-of-type p a {
     text-decoration: none;
-    color: #3D3D3D;
+    color: #006EFF;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 13.8px;
+    text-align: center;
 }
 
 .ab-downloads main .blue-titles.image-columns-container {
@@ -275,6 +332,7 @@
     line-height: 18.4px;
     text-align: center;
     padding: 0 1em;
+    transition: all 0.3s ease;
 }
 
 .ab-downloads main .blue-titles.image-columns-container .block p span, .ab-downloads main .section.wide.awards a span {
@@ -282,6 +340,7 @@
 }
 
 .ab-downloads main .blue-titles.image-columns-container .block p a::after {
+    display: none;
     min-width: 23px;
     min-height: 20px;
     background-color: #006DFF;
@@ -291,19 +350,32 @@
     transform: rotate(90deg);
 }
 
+.ab-downloads main .blue-titles.image-columns-container .block p a:hover {
+    background-color: #006DFF;
+    color: white;
+    transition: all 0.3s ease;
+}
+
 .ab-downloads main .blue-titles.image-columns-container > .default-content-wrapper:first-of-type {
     text-align: center;
 }
 
 .ab-downloads main .full-grey-bck.columns-container > div.columns-wrapper {
-    background-color: #F6F6F6;
-    border-radius: 20px;
-    padding: 2em;
+    margin-bottom: 2em;
+    border-radius: 0;
+    padding: 0;
 }
 
 .ab-downloads main .full-grey-bck.columns-container .block > div {
-    gap: 5em;
-    align-items: flex-start;
+    gap: 1.5em;
+    display: flex;
+    align-items: stretch;
+}
+
+.ab-downloads main .full-grey-bck.columns-container .block > div > div {
+    background-color: #F6F6F6;
+    border-radius: 20px;
+    padding: 2em;
 }
 
 .ab-downloads main .full-grey-bck.columns-container h3 {
@@ -317,6 +389,25 @@
 }
 
 .ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type {
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18.4px;
+    text-align: center;
+    color: white;
+    background-color: #27AE60;
+    min-width: 183px;
+    padding: 4px 20px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type em {
+    font-style: normal;
+}
+
+.ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:nth-of-type(2) {
     font-size: 16px;
     font-weight: 700;
     line-height: 18.4px;
@@ -324,7 +415,7 @@
     margin-bottom: 0;
 }
 
-.ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type u {
+.ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:nth-of-type(2) u {
     color: #006DFF;
     text-decoration: none;
 }
@@ -619,6 +710,26 @@
     padding: 1em;
 }
 
+.ab-downloads main .section.blue-titles .block > div > div {
+    background-color: transparent;
+    padding: 1em;
+}
+
+.ab-downloads main .section.blue-titles h5 {
+    color: #006DFF
+}
+
+.ab-downloads main .hero a.button {
+    min-width: 256px;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18.4px;
+    text-align: center;
+}
+
 @media (min-width: 1600px) {
     main .hero-container .block {
         max-width: var(--section-large-desktop-max-width);
@@ -643,9 +754,66 @@
     }
 }
 
+.ab-downloads main .hero_mobile {
+    display: none;
+}
+
+.ab-downloads main .blue-btn .default-content-wrapper > p {
+    display: none;
+}
+
+.ab-downloads main .blue-btn .default-content-wrapper > p:nth-of-type(1) {
+    display: block;
+}
+
+.ab-downloads main .blue-btn a.button, .ab-downloads main .blue-btn a.button.primary {
+    background-color: transparent;
+    color: #006DFF;
+    border-color: #006DFF;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18.4px;
+    padding: 10px 19px;
+
+}
+
+.ab-downloads main .blue-btn a::after {
+    opacity: 1;
+    background-color: #006DFF;
+    margin-left: 0;
+    transform: rotate(90deg);
+}
+
+.ab-downloads main .blue-btn a::after {
+    opacity: 1;
+    background-color: #006DFF;
+    margin-left: 0;
+    transform: rotate(90deg);
+}
+
 @media(max-width: 767px) {
     .ab-downloads main {
         display: grid;
+    }
+
+    .ab-downloads main .hero_mobile {
+        display: block;
+    }
+
+    .ab-downloads main .hero_mobile h2 {
+        color: #006DFF;
+        font-size: 23px;
+        font-weight: 600;
+        line-height: 29.9px;
+        text-align: left;
+    }
+
+    .ab-downloads main .hero_mobile ul li {
+        font-size: 11px;
+        font-weight: 400;
+        line-height: 14.3px;
+        text-align: left;
     }
 
     .ab-downloads .modal-container .block .columns-img-col {
@@ -679,42 +847,106 @@
         font-size: 17px;
     }
 
-    .ab-downloads main .main .hero-container {
-        order: 1
+    .ab-downloads main .hero-container {
+        order: 1;
     }
-
-    .ab-downloads main .has-dropdown.columns-container {
+    .ab-downloads main .hero_mobile {
         order: 2;
-        padding-top: 0;
+        margin-bottom: 2em;
     }
     .ab-downloads main .small-content.columns-container {
         order: 3;
         padding: 0;
+        margin-top: 0;
+        margin-bottom: 1.5em;
     }
-    .ab-downloads main .blue-title-v1.image-columns-container {
+    .ab-downloads main .small-content.columns-container h2 {
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 22.1px;
+    }
+    .ab-downloads main .blue-titles.small-content.columns-container {
+        margin-bottom: 0;
+    }
+    .ab-downloads main .section.blue-btn {
         order: 4;
-        padding-bottom: 0;
-    }
-    .ab-downloads main .full-grey-bck.columns-container {
-        order: 5;
-        padding: 5px;
     }
     .ab-downloads main .boxes-type.columns-container {
+        order: 5;
+        margin: 0;
+        padding-top: 0;
+    }
+    .ab-downloads main .full-grey-bck.columns-container {
         order: 6;
+        padding: 5px 0;
+    }
+    .ab-downloads main .has-dropdown.columns-container {
+        order: 6;
+        padding-top: 0;
+        display: none;
+    }
+    .ab-downloads main .blue-title-v1.image-columns-container {
+        order: 8;
+        padding-bottom: 0;
     }
     .ab-downloads main .blue-title-v2.image-columns-container {
-        order: 7;
+        order: 9;
         padding-top: 0;
         padding-bottom: 0;
     }
+    .ab-downloads main .what_about {
+        order: 10;
+        display: none;
+    }
+    .ab-downloads main .free_tools {
+        order: 11;
+        text-align: left;
+    }
+    .ab-downloads main .free_tools .default-content-wrapper {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .ab-downloads main .free_tools .default-content-wrapper h2 {
+        font-weight: 700;
+    }
+    .ab-downloads main .free_tools .default-content-wrapper p {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 16.9px;
+        text-align: left;
+    }
+    .ab-downloads main .free_tools .default-content-wrapper a {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .ab-downloads main .section.wide.awards {
-        order: 8;
+        order: 12;
         padding: 0;
     }
     .ab-downloads main .accordion-container {
-        order: 9;
+        order: 13;
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+    .ab-downloads main .accordion-container .default-content-wrapper h2 {
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 22.1px;
+    }
+    .ab-downloads main .accordion.terms-of-use {
+        margin-top: 1em;
     }
 
+    .ab-downloads main .hero a.button {
+        margin: 8px 13px 0 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .ab-downloads main .hero {
         padding: 0;
         min-height: auto;
@@ -751,6 +983,53 @@
         font-size: 11px;
         font-weight: 400;
         line-height: 14.3px;
+    }
+
+    .ab-downloads main .blue-btn .default-content-wrapper {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .ab-downloads main .blue-btn .default-content-wrapper > p {
+        padding: 0;
+        margin: 0;
+    }
+    .ab-downloads main .blue-btn .default-content-wrapper > p:nth-of-type(2) {
+        display: block;
+        width: 100%;
+    }
+    .ab-downloads main .blue-btn .default-content-wrapper > p:nth-of-type(1) {
+        display: none;
+    }
+
+    .ab-downloads main .blue-btn a.button, .ab-downloads main .blue-btn a.button.primary {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ab-downloads main .blue-title-v2.image-columns-container {
+
+    }
+
+    .ab-downloads main .blue-title-v2.image-columns-container h2 {
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 22.1px;
+        text-align: left;
+    }
+
+    .ab-downloads main .blue-title-v2.image-columns-container .default-content-wrapper p {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 16.9px;
+        text-align: left;
+        margin-top: 10px;
+    }
+
+    .ab-downloads main .blue-title-v2.image-columns-container .image-columns-wrapper {
+        padding: 0;
     }
 
     .ab-downloads main .has-dropdown.columns-container h3 {
@@ -795,6 +1074,7 @@
     }
 
     .ab-downloads main .small-content.columns-container .block > div > div {
+        width: 100%;
         border-radius: 8px;
         padding: 1em;
     }
@@ -810,6 +1090,37 @@
         font-size: 11px;
         font-weight: 400;
         line-height: 14.3px;
+    }
+
+    .ab-downloads main .small-content.columns-container.change4mobile .block > div > div > p:nth-of-type(2) {
+        display: none;
+    }
+
+    .ab-downloads main .small-content.columns-container.change4mobile .block > div > div > p:nth-of-type(3) {
+        display: block;
+    }
+
+    .ab-downloads main .trial_period_works.columns-container h2 {
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 22.1px;
+        text-align: left;
+    }
+
+    .ab-downloads main .trial_period_works.columns-container .block > div > div {
+        width: 100%;
+        border-radius: 8px;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .ab-downloads main .trial_period_works.columns-container h5 {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 16.9px;
+        text-align: left;
+        margin: 5px 0;
+        color: #006DFF;
     }
 
     .ab-downloads main .blue-titles.image-columns-container > .default-content-wrapper:first-of-type {
@@ -854,6 +1165,10 @@
         padding-bottom: 0;
     }
 
+    .ab-downloads main .full-grey-bck.columns-container > div.columns-wrapper {
+        border-radius: 0;
+    }
+
     .ab-downloads main .full-grey-bck.columns-container p.button-container a, .ab-downloads main .boxes-type.columns-container .block a {
         width: 100%;
         height: 36px;
@@ -870,15 +1185,33 @@
         line-height: 16.1px;
     }
 
-    .ab-downloads main .full-grey-bck.columns-container h3 {
-        font-size: 17px;
-        font-weight: 500;
-        line-height: 22.1px;
+    .ab-downloads main .full-grey-bck.columns-container .block > div > div {
+        background-color: #F6F6F6;
+        border-radius: 0;
+        padding: 1em;
     }
 
-    .ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type, .ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type u, .ab-downloads main .full-grey-bck.columns-container ul li {
+    .ab-downloads main .full-grey-bck.columns-container h3 {
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 22.1px;
+        text-align: left;
+    }
+
+    .ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type {
+        display: none;
+    }
+
+    .ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:nth-of-type(2) {
         font-size: 12px;
         font-weight: 600;
+        line-height: 15.6px;
+        text-align: left;
+    }
+
+    .ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type u, .ab-downloads main .full-grey-bck.columns-container ul li {
+        font-size: 12px;
+        font-weight: 400;
         line-height: 15.6px;
     }
 
@@ -887,12 +1220,16 @@
     }
 
     .ab-downloads main .full-grey-bck.columns-container .block > div {
-        gap: 2em;
+        gap: 1em;
     }
 
     .ab-downloads main .boxes-type.columns-container .default-content-wrapper {
         padding-top: 0;
         padding-bottom: 0;
+    }
+
+    .ab-downloads main .boxes-type.columns-container > div:nth-of-type(3) {
+        display: none;
     }
 
     .ab-downloads main .boxes-type.columns-container .columns-wrapper {
@@ -901,17 +1238,30 @@
     }
 
     .ab-downloads main .boxes-type.columns-container .block > div > div {
+        width: 100%;
         padding: 1.5em;
+        border-radius: 0;
     }
 
     .ab-downloads main .boxes-type.columns-container .block h3 {
         font-size: 17px;
-        font-weight: 500;
+        font-weight: 700;
         line-height: 22.1px;
+        display: flex;
+        gap: 4px;
     }
 
-    .ab-downloads main .boxes-type.columns-container .block h3 br {
+    .ab-downloads main .boxes-type.columns-container .block > div > div:not(:first-of-type) em::before {
+        transform: rotate(-90deg);
+        margin-left: 0;
+    }
+
+    .ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block h3 br, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
         display: none;
+    }
+
+    .ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(2) {
+        display: block;
     }
 
     .ab-downloads main .boxes-type.columns-container .block p, .ab-downloads main .boxes-type.columns-container .block li {
@@ -966,10 +1316,6 @@
         font-size: 11px;
         font-weight: 400;
         line-height: 14.3px;
-    }
-
-    .ab-downloads main .full-grey-bck.columns-container .block > div > div:first-of-type p.button-container {
-        display: none;
     }
 
     .ab-downloads main .has-dropdown.columns-container .block > div:first-of-type {
