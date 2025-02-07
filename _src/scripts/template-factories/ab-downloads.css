@@ -64,6 +64,7 @@
     background-color: #F6F6F6;
     padding-top: 0;
     padding-bottom: 0;
+    display: none;
 }
 
 .ab-downloads main .hero .hero-content ul, .ab-downloads main .hero_mobile ul {
