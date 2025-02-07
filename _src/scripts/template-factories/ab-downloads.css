@@ -176,7 +176,7 @@
     padding: 2em 3em;
 }
 
-.ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block h3 br, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
+.ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
     display: block;
 }
 
@@ -962,15 +962,18 @@
         line-height: 29.9px;
     }
 
-    .ab-downloads main .hero h1 br {
-        display: none;
-    }
-
     .ab-downloads main h2, .ab-downloads main .default-content-wrapper h2 {
         font-size: 18px;
         font-weight: 500;
         line-height: 22.1px;
         text-align: left;
+    }
+
+    .ab-downloads main .default-content-wrapper > p:nth-of-type(1) a {
+        position: absolute;
+        font-size: 0;
+        width: 163px;
+        height: 45px;
     }
 
     .ab-downloads main .hero h2 {
@@ -1256,7 +1259,7 @@
         margin-left: 0;
     }
 
-    .ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block h3 br, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
+    .ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
         display: none;
     }
 
