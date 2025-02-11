@@ -1,4 +1,8 @@
-import { Target } from '../../scripts/libs/data-layer.js';
+import {
+  AdobeDataLayerService,
+  PageLoadStartedEvent,
+  Target,
+} from '../../scripts/libs/data-layer.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { loadBlocks } from '../../scripts/lib-franklin.js';
 
@@ -28,6 +32,28 @@ function createOfferParameters() {
   return parameters;
 }
 
+/**
+ * Updates the PageLoadStartedEvent with dynamic content from the offer
+ * and pushes it to the AdobeDataLayerService.
+ *
+ * @param {Object} offer - The offer object containing dynamic content.
+ * @param {string} mboxName - The name of the mbox to extract content from.
+ * @returns {Promise<void>} - A promise that resolves when the event is updated and pushed.
+ */
+async function updatePageLoadStartedEvent(offer, mboxName) {
+  const match = offer[mboxName].content.offer.match(/\/([^/]+)\.plain\.html$/);
+  const result = match ? match[1] : null;
+  const newObject = await new PageLoadStartedEvent();
+  newObject.page.info.name = newObject.page.info.name.replace('<dynamic-content>', result);
+
+  Object.entries(newObject.page.info).forEach(([key, value]) => {
+    if (value === '<dynamic-content>') {
+      newObject.page.info[key] = result;
+    }
+  });
+  AdobeDataLayerService.push(newObject);
+}
+
 export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
@@ -45,7 +71,10 @@ export default async function decorate(block) {
     name: mboxName,
     parameters,
   }]);
+  console.log(offer);
   const page = await fetch(`${offer[mboxName].content.offer}`);
+  console.log(page);
+  updatePageLoadStartedEvent(offer, mboxName);
   const offerHtml = await page.text();
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
