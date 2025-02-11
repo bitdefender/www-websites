@@ -65,7 +65,7 @@ export default class Page {
   */
   static #getEnvironment() {
     const { hostname } = window.location;
-    if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
+    if (hostname.includes('hlx.page') || hostname.includes('hlx.live') || hostname.includes('stage')) {
       return 'stage';
     }
     if (hostname.includes('www.bitdefender')) {
@@ -87,6 +87,6 @@ export default class Page {
    * @param {string} key
    */
   static getParamValue(key) {
-    return this.queryParams.get(key);
+    return this.queryParams[key];
   }
 }

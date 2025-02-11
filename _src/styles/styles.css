@@ -265,11 +265,6 @@ hr {
   margin-bottom: 0!important;
 }
 
-.my-4 {
-  margin-top: 24px!important;
-  margin-bottom: 24px!important;
-}
-
 .py-0 {
   padding-top: 0!important;
   padding-bottom: 0!important;
@@ -432,14 +427,6 @@ main .section.images-floated .default-content-wrapper p.button-container {
 /* section metadata */
 main .section.highlight > * { /* apply to all children wrapper */
   background-color: var(--highlight-background-color);
-}
-
-main .section.light-sky-blue-parent { /* apply parent wrapper */
-  background-color: var(--background-color-light-sky-blue);
-}
-
-main .section.rounded-corners { /* apply parent wrapper */
-  border-radius: 20px;
 }
 
 main .section.light-sky-blue > * { /* apply to all children wrapper */
