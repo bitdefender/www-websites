@@ -3,7 +3,7 @@
 /* eslint-disable max-len */
 import {
   matchHeights, formatPrice,
-  checkIfConsumerPage,
+  checkIfNotProductPage,
 } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
@@ -324,7 +324,7 @@ export default async function decorate(block) {
 
       // set the store event on the component
       let storeEvent = 'main-product-loaded';
-      if (checkIfConsumerPage()) {
+      if (checkIfNotProductPage()) {
         storeEvent = 'product-loaded';
       }
       const prodBox = document.createElement('div');

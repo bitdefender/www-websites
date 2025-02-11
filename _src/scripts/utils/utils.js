@@ -130,9 +130,8 @@ const PRICE_LOCALE_MAP = new Map([
 /**
  * @returns {boolean} check if you are on exactly the consumer page (e.g /en-us/consumer/)
  */
-export function checkIfConsumerPage() {
-  const lastSegmentInPath = window.location.pathname?.split('/')?.filter(Boolean)?.slice(-1)[0];
-  return lastSegmentInPath === 'consumer';
+export function checkIfNotProductPage() {
+  return Constants.NONE_PRODUCT_PAGES.includes(Page.name);
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -688,7 +687,7 @@ export function pushTrialDownloadToDataLayer() {
     return getMetadata('breadcrumb-title') || getMetadata('og:title');
   };
 
-  const currentPage = Page.pageName;
+  const currentPage = Page.name;
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
 
   const pushTrialData = (button = null) => {
