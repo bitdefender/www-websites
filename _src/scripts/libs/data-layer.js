@@ -330,7 +330,7 @@ export class UserDetectedEvent {
       this.user.loggedIN = true;
     }
 
-    const pageName = window.location.href.split('/').filter(Boolean).pop().toLowerCase();
+    const pageName = Page.name.toLowerCase();
     let productFinding = 'product pages';
     switch(pageName) {
       case 'consumer':
