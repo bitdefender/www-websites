@@ -66,6 +66,14 @@
   margin-bottom: 20px;
 }
 
+.new-prod-boxes-container.title-left .default-content-wrapper h2 {
+  font-size: 32px;
+  font-weight: var(--font-weight-bolder);
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+}
+
 .new-prod-boxes-container .new-prod-boxes {
   margin: 0 auto;
   display: flex;
@@ -505,7 +513,7 @@
   &:hover {
     color: white;
     background-color: #026DFF;
-  
+
     span.button-text {
       transform: translate(0, 0);
     }
