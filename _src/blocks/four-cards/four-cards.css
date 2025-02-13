@@ -282,6 +282,29 @@
   }
 }
 
+.creators{
+  .header-mobile .four-cards{
+    li{
+      background-color: #fff;
+      padding: 15px;
+
+      h4{
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      p{
+        font-size: 16px;
+        line-height: 1.4;
+      }
+
+      .icon{
+        margin: 0;
+      }
+    }
+  }
+}
+
 @media (max-width: 991px) { /* mobile/tablet */
     .four-cards-wrapper {
         padding: var(--body-padding);
