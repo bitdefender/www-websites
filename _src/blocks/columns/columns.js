@@ -1,4 +1,4 @@
-import { debounce, matchHeights } from '../../scripts/utils/utils.js';
+import { debounce, matchHeights, createTag } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
@@ -86,7 +86,7 @@ export default function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
-  const { linksOpenInNewTab, type } = block.closest('.section').dataset;
+  const { linksOpenInNewTab, type, breadcrumbs } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
@@ -118,6 +118,11 @@ export default function decorate(block, options) {
       }
     });
   });
+
+  if(breadcrumbs && block.classList.contains('creators-banner')){
+    const breadcrumb = createTag('div', { class: 'breadcrumb' });
+    block.querySelector('.columns-left-col')?.prepend(breadcrumb);
+  } 
 
   if (linksOpenInNewTab === 'true') {
     block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
