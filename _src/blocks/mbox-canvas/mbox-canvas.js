@@ -71,9 +71,7 @@ export default async function decorate(block) {
     name: mboxName,
     parameters,
   }]);
-  console.log(offer);
   const page = await fetch(`${offer[mboxName].content.offer}`);
-  console.log(page);
   updatePageLoadStartedEvent(offer, mboxName);
   const offerHtml = await page.text();
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
