@@ -171,14 +171,14 @@ function renderRadioGroup(block) {
   const el = document.createElement('DIV');
   el.classList.add('products-sideview-radio');
   el.innerHTML = `
-    <input type="radio" name="type" id="monthly" 
+    <input type="radio" name="type" id="monthly"
     data-store-click-set-product data-store-product-id="${secondProduct}"
     data-store-product-department="consumer"
     data-product-type="monthly" checked/>
     <label for="monthly">Monthly</label>
-     
-    <input type="radio" name="type" id="yearly" data-store-click-set-product 
-    data-store-product-id="${firstProduct}" 
+
+    <input type="radio" name="type" id="yearly" data-store-click-set-product
+    data-store-product-id="${firstProduct}"
     data-store-product-department="consumer"
     data-product-type="yearly"/>
     <label for="yearly">Yearly</label>
@@ -206,11 +206,27 @@ function updateBenefits(block, selectEl, metadata) {
   const blueTags = getBlueTags(block);
   const selectedOption = [...selectEl.options].find((option) => option.hasAttribute('selected'));
   const neededIndex = [...selectEl.options].indexOf(selectedOption);
-  const updatedBenefits = JSON.parse(metadata[neededIndex]);
+
+  let rawMetadata = metadata[neededIndex];
+  const cleanedArray = rawMetadata
+    .slice(1, -1)
+    .split(',')
+    .map(item => {
+      const cleanedItem = item.trim().replace(/['"]+/g, '');
+      if (cleanedItem.includes('-icon')) {
+        return Number(cleanedItem.split('-icon')[0]) + '-icon';
+      }
+
+      return Number(cleanedItem);
+    });
+
+  const updatedBenefits = cleanedArray;
   let counter = 0;
   blueTags.forEach((tag) => {
-    // eslint-disable-next-line no-plusplus
-    tag.textContent = `x${updatedBenefits[counter++]}`;
+    if (counter < updatedBenefits.length) {
+      let benefitValue = updatedBenefits[counter++];
+      tag.innerHTML = `${typeof benefitValue === 'string' ? benefitValue.replace("-icon", '') : benefitValue}x ${typeof benefitValue === 'string' && benefitValue.includes('-icon') ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>' : ''}`;
+    }
   });
 }
 
