@@ -2,7 +2,6 @@ import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
 import Page from "./page.js";
 import { Constants } from "./constants.js";
-import { getMetadata } from "../utils/utils.js";
 
 /**
  * 
@@ -739,6 +738,17 @@ export class Target {
     return parameters;
   }
 
+  /**
+   * 
+   * @param {string} name -> properties 
+   * @returns {string} metadata
+   */
+  static #getMetadata(name) {
+    const attr = name && name.includes(':') ? 'property' : 'name';
+    const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+    return meta || '';
+  }
+
   static async getOffers(mboxes) {
     await this.#staticInit;
     let offers = {};
@@ -746,7 +756,7 @@ export class Target {
     try {
       offers = await window.adobe?.target?.getOffers({
         //TODO: please delete this when the webSDK implementation is finalised
-        decisioningMethod: getMetadata("server-side-target-calls") === "true" ? "server-side" : "hybrid",
+        decisioningMethod: this.#getMetadata("server-side-target-calls") === "true" ? "server-side" : "hybrid",
         consumerId: window.crypto.randomUUID(),
         request: {
           id: {
