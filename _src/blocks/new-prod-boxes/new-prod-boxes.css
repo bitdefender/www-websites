@@ -390,6 +390,17 @@
   position: relative;
 }
 
+.new-prod-boxes-container .new-prod-boxes.new-green-check .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) {
+  background: url("https://www.bitdefender.com/common/icons/checkmark-solid-circle-white-bg.svg") top 2px left no-repeat transparent;
+  padding-left: 22px;
+  background-size: 13px;
+  position: relative;
+  font-size: 14px;
+  line-height: 17px;
+  margin-bottom: 8px;
+  list-style-type: none;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content {
   position: absolute;
   background-color: white;
