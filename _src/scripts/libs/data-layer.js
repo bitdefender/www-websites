@@ -2,6 +2,7 @@ import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
 import Page from "./page.js";
 import { Constants } from "./constants.js";
+import { getMetadata } from "../utils/utils.js";
 
 /**
  * 
@@ -744,6 +745,8 @@ export class Target {
 
     try {
       offers = await window.adobe?.target?.getOffers({
+        //TODO: please delete this when the webSDK implementation is finalised
+        decisioningMethod: getMetadata("server-side-target-calls") === "true" ? "server-side" : "hybrid",
         consumerId: window.crypto.randomUUID(),
         request: {
           id: {
