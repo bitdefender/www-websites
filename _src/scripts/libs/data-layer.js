@@ -197,7 +197,7 @@ export class PageLoadStartedEvent {
     this.page = {
       info: {
         name: pageSectionData.tagName, // e.g. au:consumer:product:internet security
-        section: pageSectionData.locale,
+        section: pageSectionData.section,
         subSection: pageSectionData.subSection,
         subSubSection: pageSectionData.subSubSection,
         subSubSubSection: pageSectionData.subSubSubSection,
@@ -241,10 +241,14 @@ export class PageLoadStartedEvent {
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
     const locale = Page.locale;
+    // currenty, the language is the default first tag and section parameter, with webview, we want
+    // something else to be the first tag and section
+    let pageSectionDataLocale = this.#getMetadata('locale') || Page.locale;
 
     const pageSectionData = {
       tagName: null, // e.g. au:consumer:product:internet security
       locale: locale,
+      section: pageSectionDataLocale,
       subSection: null,
       subSubSection: null,
       subSubSubSection: null,
@@ -254,7 +258,7 @@ export class PageLoadStartedEvent {
     }
   
     if (tags.length) {
-      pageSectionData.tagName = [locale, ...tags].join(':'); // e.g. au:consumer:product:internet security
+      pageSectionData.tagName = [pageSectionDataLocale, ...tags].filter(Boolean).join(':'); // e.g. au:consumer:product:internet security
       pageSectionData.subSection = tags[0] || '';
       pageSectionData.subSubSection = tags[1] || '';
       pageSectionData.subSubSubSection = tags[2] || '';
