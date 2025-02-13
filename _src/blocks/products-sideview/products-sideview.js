@@ -225,7 +225,7 @@ function updateBenefits(block, selectEl, metadata) {
   blueTags.forEach((tag) => {
     if (counter < updatedBenefits.length) {
       let benefitValue = updatedBenefits[counter++];
-      tag.innerHTML = `${typeof benefitValue === 'string' ? benefitValue.replace("-icon", '') : `x${benefitValue}`} ${typeof benefitValue === 'string' && benefitValue.includes('-icon') ? 'x <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>' : ''}`;
+      tag.innerHTML = `${typeof benefitValue === 'string' ? benefitValue.replace("-icon", '') : benefitValue}x ${typeof benefitValue === 'string' && benefitValue.includes('-icon') ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>' : ''}`;
     }
   });
 }
