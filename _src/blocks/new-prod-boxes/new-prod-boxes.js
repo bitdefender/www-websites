@@ -336,7 +336,7 @@ export default async function decorate(block) {
               ${title.innerText.trim() ? `<h4>${title.innerHTML}</h4>` : ''}
 
               <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
-              ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle.innerText.trim()}</p>` : ''}
+              ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle.innerHTML}</p>` : ''}
               <hr />
               ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
               ${radioButtons ? planSwitcher.outerHTML : ''}
@@ -356,7 +356,6 @@ export default async function decorate(block) {
       block.children[key].outerHTML = prodBox.innerHTML;
       let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice);
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
-
       let addOnPriceBox;
       if (addOn && addOnProducts) {
         addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);

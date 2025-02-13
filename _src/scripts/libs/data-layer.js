@@ -805,7 +805,7 @@ const checkClickEventAfterRedirect = () => {
  * Add entry for free products
  */
 const getFreeProductsEvents = () => {
-  const currentPage = window.location.href.split('/').filter(Boolean).pop();
+  const currentPage = window.location.pathname.split('/').filter(Boolean).pop();
   if (currentPage === 'free-antivirus') {
     // on Free Antivirus page we should add Free Antivirus as the main product
     AdobeDataLayerService.push(new MainProductLoadedEvent({
