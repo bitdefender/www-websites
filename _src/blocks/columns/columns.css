@@ -367,6 +367,7 @@
 
 .creators .columns-container .columns > div {
   justify-content: center;
+  align-items: center;
   margin-bottom: 3em;
 }
 
@@ -673,6 +674,10 @@
   svg {
     fill: #0681FF;
   }
+}
+
+.creators .header-mobile{
+  background: linear-gradient(to bottom, #e4f2ff, white);
 }
 
 .creators .columns-container .columns.creators-banner .breadcrumb {
@@ -1023,10 +1028,6 @@
   .creators .columns-container h5 {
     color: #006DFF;
     font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
-  }
-
-  .creators .header-mobile{
-    background: linear-gradient(to bottom, #e4f2ff, white);
   }
 
   .creators .header-mobile.columns-container h1 {

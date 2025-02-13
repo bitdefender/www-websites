@@ -242,6 +242,15 @@
   margin: 7px 0 20px;
 }
 
+.new-prod-boxes-container .new-prod-boxes.new-green-check .inner_prod_box p:first-of-type{
+  margin-bottom: 0;
+  font-size: 14px;
+}
+.new-prod-boxes-container .new-prod-boxes.new-green-check .inner_prod_box p:last-of-type{
+  margin-top: 0;
+  font-size: 14px;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .buy-btn a.red-buy-button {
   width: 100%;
   text-transform: none;
