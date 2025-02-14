@@ -742,12 +742,25 @@ export class Target {
     return parameters;
   }
 
+  /**
+   * 
+   * @param {string} name -> properties 
+   * @returns {string} metadata
+   */
+  static #getMetadata(name) {
+    const attr = name && name.includes(':') ? 'property' : 'name';
+    const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+    return meta || '';
+  }
+
   static async getOffers(mboxes) {
     await this.#staticInit;
     let offers = {};
 
     try {
       offers = await window.adobe?.target?.getOffers({
+        //TODO: please delete this when the webSDK implementation is finalised
+        decisioningMethod: this.#getMetadata("server-side-target-calls") === "true" ? "server-side" : "hybrid",
         consumerId: window.crypto.randomUUID(),
         request: {
           id: {
