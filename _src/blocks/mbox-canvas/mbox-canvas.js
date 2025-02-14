@@ -72,8 +72,15 @@ export default async function decorate(block) {
     parameters,
   }]);
   const page = await fetch(`${offer[mboxName].content.offer}`);
+  let offerHtml;
+
+  if (page.ok) {
+    offerHtml = await page.text();
+  } else {
+    const defaultOffer = await fetch('/en-us/consumer/webview/webview-table.plain.html');
+    offerHtml = await defaultOffer.text();
+  }
   updatePageLoadStartedEvent(offer, mboxName);
-  const offerHtml = await page.text();
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));
