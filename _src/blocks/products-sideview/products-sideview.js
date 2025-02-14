@@ -207,14 +207,14 @@ function updateBenefits(block, selectEl, metadata) {
   const selectedOption = [...selectEl.options].find((option) => option.hasAttribute('selected'));
   const neededIndex = [...selectEl.options].indexOf(selectedOption);
 
-  let rawMetadata = metadata[neededIndex];
+  const rawMetadata = metadata[neededIndex];
   const cleanedArray = rawMetadata
     .slice(1, -1)
     .split(',')
-    .map(item => {
+    .map((item) => {
       const cleanedItem = item.trim().replace(/['"]+/g, '');
       if (cleanedItem.includes('-icon')) {
-        return Number(cleanedItem.split('-icon')[0]) + '-icon';
+        return `${Number(cleanedItem.split('-icon')[0])}-icon`;
       }
 
       return Number(cleanedItem);
@@ -224,8 +224,8 @@ function updateBenefits(block, selectEl, metadata) {
   let counter = 0;
   blueTags.forEach((tag) => {
     if (counter < updatedBenefits.length) {
-      let benefitValue = updatedBenefits[counter++];
-      tag.innerHTML = `${typeof benefitValue === 'string' ? benefitValue.replace("-icon", '') : benefitValue}x ${typeof benefitValue === 'string' && benefitValue.includes('-icon') ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>' : ''}`;
+      const benefitValue = updatedBenefits[counter + 1];
+      tag.innerHTML = `${typeof benefitValue === 'string' ? benefitValue.replace('-icon', '') : benefitValue}x ${typeof benefitValue === 'string' && benefitValue.includes('-icon') ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>' : ''}`;
     }
   });
 }
