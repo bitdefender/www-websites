@@ -682,7 +682,7 @@
 
 .creators .columns-container .columns.creators-banner .breadcrumb {
   font-weight: var(--font-weight-bold);
-  color: #dedede;
+  color: #000000;
   min-height: unset;
   padding: 12px 0;
   margin-bottom: 12px;
@@ -717,7 +717,7 @@
 .creators .columns-container .columns.creators-banner .breadcrumb a::after {
   content: "/";
   display: inline-block;
-  color:  #dedede;;
+  color: #000000;
   margin: 0 3px;
   font-size: 9pt;
 }

@@ -119,10 +119,10 @@ export default function decorate(block, options) {
     });
   });
 
-  if(breadcrumbs && block.classList.contains('creators-banner')){
+  if (breadcrumbs && block.classList.contains('creators-banner')) {
     const breadcrumb = createTag('div', { class: 'breadcrumb' });
     block.querySelector('.columns-left-col')?.prepend(breadcrumb);
-  } 
+  }
 
   if (linksOpenInNewTab === 'true') {
     block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
