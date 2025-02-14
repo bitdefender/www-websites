@@ -769,7 +769,10 @@ export class Target {
           execute: {
             mboxes: [
               ...mboxes.map((mbox, index) => {
-                return { index, name: mbox.name, parameters: Object.assign(this.#urlParameters, mbox.parameters) }
+                return { index, name: mbox.name,
+                  parameters: Object.assign(this.#urlParameters, mbox.parameters),
+                  profileParameters: Object.assign(this.#urlParameters, mbox.parameters)
+                }
               })
             ]
           }
