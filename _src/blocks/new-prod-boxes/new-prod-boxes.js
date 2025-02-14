@@ -329,7 +329,7 @@ export default async function decorate(block) {
       }
       const prodBox = document.createElement('div');
       prodBox.innerHTML = `
-          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}" 
+          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
           data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
             <div class="inner_prod_box">
               ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
