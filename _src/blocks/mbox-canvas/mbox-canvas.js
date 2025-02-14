@@ -78,7 +78,7 @@ export default async function decorate(block) {
     offerHtml = await page.text();
   } else {
     const urlParams = new URLSearchParams(window.location.search);
-    const language = urlParams.get('lang').toLowerCase() || 'en-us';
+    const language = urlParams.get('lang')?.toLowerCase() || 'en-us';
     let defaultOffer = await fetch(`/${language}/consumer/webview/webview-table.plain.html`);
     if (defaultOffer.ok) {
       offerHtml = await defaultOffer.text();
