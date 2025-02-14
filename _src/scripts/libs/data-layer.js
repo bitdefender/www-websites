@@ -753,6 +753,7 @@ export class Target {
     return meta || '';
   }
 
+  // TODO: separate parameters from profileParameters
   static async getOffers(mboxes) {
     await this.#staticInit;
     let offers = {};
