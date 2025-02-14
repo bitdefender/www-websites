@@ -22,7 +22,7 @@ function createOfferParameters() {
   const language = urlParams.get('lang');
   urlParams.forEach((value) => {
     if (value === feature) {
-      parameters.feature = feature;
+      parameters.feature = feature.replace('_','-');
     }
     if (value === language) {
       parameters.lang = language;
@@ -67,6 +67,7 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
+  // TODO: separate parameters from profileParameters
   const offer = await Target.getOffers([{
     name: mboxName,
     parameters,
