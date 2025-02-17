@@ -192,12 +192,10 @@ async function checkAndReplacePrivacyPolicyLink(block) {
 
     if (privacyPolicyLink) {
       // Check if the page gives a 404
-    const response = await fetch(privacyPolicyLink.href);
-
+      const response = await fetch(privacyPolicyLink.href);
       if (response.status === 404) {
         // Replace the link with the en-us version
         privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
-        console.log('Privacy policy link replaced with en-us version.');
       }
     }
   }
