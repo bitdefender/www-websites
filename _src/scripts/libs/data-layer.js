@@ -624,7 +624,7 @@ export class Target {
   * @returns {Promise<object>}
   */
   static async getGeoIpFlag() {
-    return await this.getOffers('geoip-flag-mbox') || {};
+    return await this.getOffers('geoip-flag-mbox') || null;
   }
 
   /**
