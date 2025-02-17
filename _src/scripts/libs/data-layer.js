@@ -575,12 +575,21 @@ export class Visitor {
       return;
     }
 
-    document.addEventListener('at-library-loaded', () => {
+    document.addEventListener(Constants.LAUNCH_EVENTS.LIBRARY_LOADED, () => {
       if (window.Visitor) {
         this.#instance = window.Visitor.getInstance(this.#instanceID);
       }
       resolve();
     })
+
+    /** As a last resort if the document receives a launchCannotLoad event
+    * or launchCannotLoad window variable is set resolve the promise */
+    if (window.launchCannotLoad) {
+      resolve();
+      return;
+    }
+
+    document.addEventListener(Constants.LAUNCH_EVENTS.LAUNCH_FAILED_TO_LOAD, resolve);
   });
 
   /**
@@ -606,10 +615,6 @@ export class Visitor {
 window._Visitor = Visitor;
 
 export class Target {
-  static events = {
-    LIBRARY_LOADED: "at-library-loaded"
-  }
-
   /**
    * @type {string[]}
    */
@@ -652,12 +657,18 @@ export class Target {
     }
 
     /** Target wasn't loaded we wait for events from it */
-    document.addEventListener(this.events.LIBRARY_LOADED, () => {
+    document.addEventListener(Constants.LAUNCH_EVENTS.LIBRARY_LOADED, () => {
       resolve();
     }, { once: true });
 
-    /** As a last resort for target not loading, wait 3 seconds and unblock the page */
-    setTimeout(resolve, 3000);
+    /** As a last resort if the document receives a launchCannotLoad event
+    * or launchCannotLoad window variable is set resolve the promise */
+    if (window.launchCannotLoad) {
+      resolve();
+      return;
+    }
+
+    document.addEventListener(Constants.LAUNCH_EVENTS.LAUNCH_FAILED_TO_LOAD, resolve);
   });
 
   /**
