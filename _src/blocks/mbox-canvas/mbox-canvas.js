@@ -32,6 +32,15 @@ function createOfferParameters() {
   return parameters;
 }
 
+function createOfferProfileParameters(parameters) {
+  const profileParameters = {};
+  Object.entries(parameters).forEach(([key, value]) => {
+    profileParameters[`profile.${key}`] = value;
+  });
+
+  return profileParameters;
+}
+
 /**
  * Updates the PageLoadStartedEvent with dynamic content from the offer
  * and pushes it to the AdobeDataLayerService.
@@ -67,7 +76,8 @@ export default async function decorate(block) {
   `;
   block.classList.add('loader-circle');
   // TODO: separate parameters from profileParameters
-  const offer = await Target.getOffers(mboxName, parameters);
+  const profileParameters = createOfferProfileParameters(parameters);
+  const offer = await Target.getOffers(mboxName, parameters, profileParameters);
   const page = await fetch(`${offer.offer}`);
   let offerHtml;
 

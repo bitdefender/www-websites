@@ -594,12 +594,6 @@ export class Target {
   };
 
   /**
-   * @typedef {{content: {geoIpPrice: string}}} GeoIpPriceMbox
-   * @type {Promise<GeoIpPriceMbox|null>}
-   */
-  static #geoIpFlagMbox = this.getOffer('geoip-flag-mbox');
-
-  /**
    * get the product-buy link mappings from Target (
    *  e.g
    *  {
