@@ -22,7 +22,7 @@ function createOfferParameters() {
   const language = urlParams.get('lang');
   urlParams.forEach((value) => {
     if (value === feature) {
-      parameters.feature = feature;
+      parameters.feature = feature.replace('_', '-');
     }
     if (value === language) {
       parameters.lang = language;
@@ -66,10 +66,26 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
+  // TODO: separate parameters from profileParameters
   const offer = await Target.getOffers(mboxName, parameters);
   const page = await fetch(`${offer.offer}`);
+  let offerHtml;
+
+  if (page.ok) {
+    offerHtml = await page.text();
+  } else {
+    const urlParams = new URLSearchParams(window.location.search);
+    const language = urlParams.get('lang')?.toLowerCase() || 'en-us';
+    let defaultOffer = await fetch(`/${language}/consumer/webview/webview-table.plain.html`);
+    if (defaultOffer.ok) {
+      offerHtml = await defaultOffer.text();
+    } else {
+      defaultOffer = await fetch('/en-us/consumer/webview/webview-table.plain.html');
+      offerHtml = await defaultOffer.text();
+    }
+  }
+
   updatePageLoadStartedEvent(offer);
-  const offerHtml = await page.text();
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));

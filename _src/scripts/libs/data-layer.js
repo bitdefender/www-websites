@@ -320,7 +320,7 @@ export class UserDetectedEvent {
       this.user.loggedIN = true;
     }
 
-    const pageName = window.location.href.split('/').filter(Boolean).pop().toLowerCase();
+    const pageName = Page.name.toLowerCase();
     let productFinding = 'product pages';
     switch(pageName) {
       case 'consumer':
@@ -594,6 +594,12 @@ export class Target {
   };
 
   /**
+   * @typedef {{content: {geoIpPrice: string}}} GeoIpPriceMbox
+   * @type {Promise<GeoIpPriceMbox|null>}
+   */
+  static #geoIpFlagMbox = this.getOffer('geoip-flag-mbox');
+
+  /**
    * get the product-buy link mappings from Target (
    *  e.g
    *  {
@@ -643,12 +649,23 @@ export class Target {
   }
 
   /**
+  * @param {string} name -> properties 
+  * @returns {string} metadata
+  */
+  static #getMetadata(name) {
+    const attr = name && name.includes(':') ? 'property' : 'name';
+    const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+    return meta || '';
+  }
+
+  /**
    * 
    * @param {string[] | string} mboxes
    * @param {object | undefined} parameters
+   * @param {object | undefined} profileParameters
    * @returns {Promise<object>}
    */
-  static async getOffers(mboxes, parameters) {
+  static async getOffers(mboxes, parameters, profileParameters) {
     if (!Array.isArray(mboxes)) {
       mboxes = [mboxes];
     }
@@ -659,7 +676,10 @@ export class Target {
         decisionScopes: notRequestedMboxes,
         data: {
           "__adobe": {
-            "target": Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters)),
+            "target": Object.assign({}, this.#urlParameters,
+              parameters ? parameters : {},
+              profileParameters ? profileParameters : {}
+            ),
           }
         },
         renderDecisions: true
@@ -722,7 +742,7 @@ const checkClickEventAfterRedirect = () => {
  * Add entry for free products
  */
 const getFreeProductsEvents = () => {
-  const currentPage = window.location.href.split('/').filter(Boolean).pop();
+  const currentPage = Page.name;
   if (currentPage === 'free-antivirus') {
     // on Free Antivirus page we should add Free Antivirus as the main product
     AdobeDataLayerService.push(new MainProductLoadedEvent({

@@ -172,6 +172,13 @@
   line-height: 1.25;
 }
 
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .subtitle-2 {
+  font-size: clamp(10px, 14px, 14px);
+  font-family: Arial, sans-serif;
+  margin-bottom: 0;
+  line-height: 1.25;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .subtitle.fixed_height {
   min-height: 80px;
 }
@@ -352,7 +359,7 @@
   }
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:first-of-type.has_arrow::before {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow::before {
   content: "";
   margin: 0 5px 20px 0;
   background: url("https://bitdefender.com/pages/icons/arrow-left-blue.png") no-repeat center transparent;
@@ -362,7 +369,7 @@
   float: left;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:first-of-type.has_arrow_right .arrow-right {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
   background: url("https://bitdefender.com/icons/arrow-right-solid.svg") no-repeat center transparent;
   width: 20px;
   height: 20px;
@@ -487,16 +494,29 @@
   min-width: 144px;
 }
 
-.new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.secondary {
-  display: inline-block;
-  min-width: 144px;
+.new-prod-boxes-container.secondary-button-blue  .new-prod-boxes .button.secondary {
+  margin-top: 15px;
+  color: #026DFF;
+  border: 2px solid #026DFF;
+  background-color: transparent;
+  width: 100%;
+  justify-content: center;
+
+  &:hover {
+    color: white;
+    background-color: #026DFF;
+  
+    span.button-text {
+      transform: translate(0, 0);
+    }
+  }
+
+  &.no-arrow::after {
+    content: none;
+  }
 }
 
 .new-prod-boxes-container .button.primary.no-arrow::after {
-  content: none;
-}
-
-.new-prod-boxes-container .button.secondary.no-arrow::after {
   content: none;
 }
 
@@ -748,6 +768,10 @@
     padding-bottom: 60px;
     align-items: initial;
     margin-top: 37px;
+
+    &.five-cards {
+      flex-wrap: wrap;
+    }
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box.hasGreenTag {

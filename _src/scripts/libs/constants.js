@@ -82,6 +82,8 @@ export class Constants {
   
 	// TODO: please remove this once digital river starts working correctly
 	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
+
+	static NONE_PRODUCT_PAGES = ["renewal", "consumer"];
   
 	/**
 	 * fetch all the product id mappings for Vlaicu from websites
