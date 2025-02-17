@@ -203,7 +203,7 @@
     }
 }
 
-.webview-table div[role='row']:last-of-type div[role='cell'] {
+.webview-table div[role='row'].price-row div[role='cell'] {
     border-radius: 0 0 4px 4px;
 
     &:first-child {
@@ -317,4 +317,8 @@
 
 .webview-table .no-check::before {
     transform: rotate(-45deg);
+}
+
+.webview-table [data-align="center"] {
+    text-align: center;
 }

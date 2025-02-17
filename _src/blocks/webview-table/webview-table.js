@@ -33,6 +33,9 @@ function addAccesibilityRoles(block) {
     .forEach((div) => {
       if (div.childElementCount > 1 && div.parentElement.getAttribute('role') === 'table') {
         div.setAttribute('role', 'row');
+      } else if (div.childElementCount === 1 && div.innerHTML.indexOf('&lt;privacy-policy-text&gt;') !== -1) {
+        div.setAttribute('role', 'privacy-policy');
+        div.innerHTML = div.innerHTML.replace('&lt;privacy-policy-text&gt;', '');
       } else if (!div.hasAttribute('role')) {
         div.setAttribute('role', 'cell');
       }
@@ -56,6 +59,7 @@ function renderPrices(block, metadata) {
   cells.forEach((cell) => {
     // Only process cells that contain the {PRICEBOX} variable
     if (cell.textContent.includes('{PRICEBOX}')) {
+      cell.parentElement.classList.add('price-row');
       cell.querySelector('p')?.remove();
       const [prodName, prodUsers, prodYears] = productsAsList[index]?.split('/') || [];
 
@@ -126,6 +130,79 @@ function renderPrices(block, metadata) {
   });
 }
 
+// eslint-disable-next-line max-len
+function adjustFontSizeUntilTargetHeight(elementsSelector, targetElement, targetHeight, maxSize = 100, minSize = 10, step = 1, interval = 50) {
+  const elements = document.querySelectorAll(elementsSelector);
+
+  // Invalid selector or target element not found.
+  if (!elements.length || !targetElement) {
+    return;
+  }
+
+  let previousHeight = targetElement.offsetHeight;
+
+  function adjustSize() {
+    const currentHeight = targetElement.offsetHeight;
+
+    if (Math.abs(currentHeight - targetHeight) < 2) {
+      return; // Stop when the target height is reached
+    }
+
+    let fontChanged = false;
+
+    elements.forEach((el) => {
+      const currentSize = parseInt(window.getComputedStyle(el).fontSize, 10);
+
+      if (currentHeight < targetHeight && currentSize < maxSize) {
+        el.style.fontSize = `${currentSize + step}px`; // Increase size
+        fontChanged = true;
+      } else if (currentHeight > targetHeight && currentSize > minSize) {
+        el.style.fontSize = `${currentSize - step}px`; // Decrease size
+        fontChanged = true;
+      }
+    });
+
+    // Continue adjusting only if font size was changed
+    if (fontChanged) {
+      setTimeout(adjustSize, interval); // Slight delay for smooth adjustment
+    }
+  }
+
+  // Use MutationObserver to track height changes efficiently
+  const observer = new MutationObserver(() => {
+    const newHeight = targetElement.offsetHeight;
+    if (newHeight !== previousHeight) {
+      previousHeight = newHeight;
+      adjustSize();
+    }
+  });
+
+  observer.observe(targetElement, { attributes: true, childList: true, subtree: true });
+
+  adjustSize();
+}
+
+async function checkAndReplacePrivacyPolicyLink(block) {
+  // Select the privacy-policy tag
+  const privacyPolicyTag = block.querySelector('[role="privacy-policy"]');
+
+  if (privacyPolicyTag) {
+    // Select the link inside the privacy-policy tag
+    const privacyPolicyLink = privacyPolicyTag.querySelector('a');
+
+    if (privacyPolicyLink) {
+      // Check if the page gives a 404
+    const response = await fetch(privacyPolicyLink.href);
+
+      if (response.status === 404) {
+        // Replace the link with the en-us version
+        privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
+        console.log('Privacy policy link replaced with en-us version.');
+      }
+    }
+  }
+}
+
 export default async function decorate(block) {
   const metadata = block.closest('.section').dataset;
   buildTableHeader(block);
@@ -139,4 +216,10 @@ export default async function decorate(block) {
   if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'light') {
     block.classList.add('light-mode');
   }
+
+  // Check and replace privacy-policy link if it gives a 404
+  await checkAndReplacePrivacyPolicyLink(block);
+
+  const targetElement = document.querySelector('.webview-table');
+  adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
 }
