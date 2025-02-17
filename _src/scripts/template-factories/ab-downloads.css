@@ -947,6 +947,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        display: none;
     }
     .ab-downloads main .hero {
         padding: 0;
