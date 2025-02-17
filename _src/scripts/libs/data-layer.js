@@ -655,6 +655,9 @@ export class Target {
     document.addEventListener(this.events.LIBRARY_LOADED, () => {
       resolve();
     }, { once: true });
+
+    /** As a last resort for target not loading, wait 3 seconds and unblock the page */
+    setTimeout(resolve, 3000);
   });
 
   /**
