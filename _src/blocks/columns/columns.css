@@ -726,10 +726,15 @@
   color: var(--text-color);
 }
 
+.creators .columns-container .columns.creators-banner > div .columns-img-col {
+  margin-bottom: 0;
+}
+
 .creators .columns-container .columns.creators-banner > div > div.columns-left-col td{
   vertical-align: middle;
   display: inline-flex;
   align-items: center;
+  margin-right: 10px;
 }
 
 .creators .columns-container .columns.creators-banner > div > div.columns-left-col td .icon{
@@ -977,12 +982,12 @@
     flex: none;
   }
 
-  .creators .columns-container .columns.creators-banner > div > div.columns-left-col, .creators .columns-container .columns.creators-banner > div > div.columns-right-col{
+  .creators .columns-container .columns.creators-banner > div > div.columns-left-col, .creators .columns-container .columns.creators-banner > div > div.columns-right-col {
     width: 50%;
     text-align: left;
   }
 
-  .creators .columns-container .columns.benefits{
+  .creators .columns-container .columns.benefits {
     text-align: left;
   }
 
@@ -994,7 +999,7 @@
     width: 30%;
   } 
 
-  .creators .columns-container .columns.benefits .icon{
+  .creators .columns-container .columns.benefits .icon {
     height: 38px;
     width: 38px;
   }
@@ -1066,6 +1071,10 @@
     font: normal normal 500 18px/24px Roboto, sans-serif;
   }
 
+  .creators .columns-container .columns .button-container {
+    justify-self: flex-start;
+  }
+
   .columns-container .trust-factors {
     justify-items: center;
     background: #F5F5F7 0% 0% no-repeat padding-box;
@@ -1073,14 +1082,14 @@
     border-radius: 16px;
   }
   
-  .columns-container .columns.trust-factors > div{
+  .columns-container .columns.trust-factors > div {
     width: 80%;
     letter-spacing: 0px;
     color: #000000;
     opacity: 1;
   }
   
-  .columns-container .columns.trust-factors h2{
+  .columns-container .columns.trust-factors h2 {
     text-align: center;
     font: normal normal 300 60px/70px IBM Plex Sans;
     letter-spacing: 0px;
@@ -1088,25 +1097,28 @@
     opacity: 1;
   }
   
-  .columns-container .columns.trust-factors p{
+  .columns-container .columns.trust-factors p {
     font: normal normal normal 24px/34px Arial;
     letter-spacing: 0px;
     color: #000000;
     opacity: 1;
   }
   
-  .columns-container .columns.trust-factors table{
+  .columns-container .columns.trust-factors table {
     width: 100%;
   }
   
-  .columns-container .columns.trust-factors td p{
+  .columns-container .columns.trust-factors td p {
     font-size: 18px;
     margin: 0;
   }
   
-  .columns-container .columns.trust-factors td strong{
+  .columns-container .columns.trust-factors td strong {
     font-size: 32px;
-    
+  }
+
+  .columns-container .columns.trust-factors .button-container {
+    justify-self: center;
   }
 }
 
