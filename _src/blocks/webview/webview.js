@@ -1,3 +1,41 @@
+import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
+
+function getLanguage() {
+  // Try to get the language from the path
+  const langCountry = getLanguageCountryFromPath();
+  if (langCountry && langCountry.language && langCountry.country) {
+    return `${langCountry.language}-${langCountry.country}`;
+  }
+
+  // Try to get the language from the query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const langFromQuery = urlParams.get('lang');
+  if (langFromQuery) {
+    return langFromQuery;
+  }
+
+  // Default to "en-us"
+  return 'en-us';
+}
+
+async function checkAndReplacePrivacyPolicyLink(block) {
+  // Select the privacy-policy tag
+  const privacyPolicyTag = block.querySelector('.privacy-policy-text');
+  if (privacyPolicyTag) {
+    // Select the link inside the privacy-policy tag
+    const privacyPolicyLink = privacyPolicyTag.querySelector('a');
+    const locale = getLanguage();
+    if (privacyPolicyLink) {
+      privacyPolicyLink.href = privacyPolicyLink.href.replace('locale', locale);
+      const response = await fetch(privacyPolicyLink.href);
+      if (response.status === 404) {
+        // Replace the link with the en-us version
+        privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
+      }
+    }
+  }
+}
+
 export default async function decorate(block) {
   const {
     product, saveText,
@@ -36,12 +74,21 @@ export default async function decorate(block) {
 
       child.classList.add('under-price-text');
     }
+
+    if (child.textContent.includes('<privacy-policy-text>')) {
+      // remove the p tag that is wrapping the text {under_price_text}
+      child.querySelector('p')?.remove();
+
+      child.classList.add('privacy-policy-text');
+    }
   });
 
   const url = new URL(window.location.href);
   if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'dark') {
     block.parentElement.classList.add('dark-mode');
   }
+
+  await checkAndReplacePrivacyPolicyLink(block);
 
   // Select the link with the #upgrade href
   const upgradeLink = block.querySelector('a[href*="#upgrade"]');
