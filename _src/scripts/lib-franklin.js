@@ -669,8 +669,8 @@ export function decorateTemplateAndTheme() {
       element.classList.add(toClassName(c.trim()));
     });
   };
-  const dark = Page.getParamValue('theme');
-  if (dark) addClasses(document.body, 'dark-mode');
+  const darkMode = Page.getParamValue('theme');
+  if (darkMode && darkMode === 'dark') addClasses(document.body, 'dark-mode');
   const template = getMetadata('template');
   if (template) addClasses(document.body, template);
   const theme = getMetadata('theme');

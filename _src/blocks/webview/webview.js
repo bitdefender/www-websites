@@ -43,5 +43,12 @@ export default async function decorate(block) {
     block.parentElement.classList.add('dark-mode');
   }
 
-  block.querySelector('a').setAttribute('target', '_blank');
+  // Select the link with the #upgrade href
+  const upgradeLink = block.querySelector('a[href*="#upgrade"]');
+  if (upgradeLink) {
+    // Modify the URL to set the feature parameter to main_ui
+    const upgradeUrl = new URL(window.location.href);
+    upgradeUrl.searchParams.set('feature', 'main_ui');
+    upgradeLink.href = upgradeUrl.toString();
+  }
 }
