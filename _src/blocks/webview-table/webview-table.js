@@ -1,3 +1,4 @@
+import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 function replaceTableTextToProperCheckmars(block) {
@@ -182,6 +183,24 @@ function adjustFontSizeUntilTargetHeight(elementsSelector, targetElement, target
   adjustSize();
 }
 
+function getLanguage() {
+  // Try to get the language from the path
+  const langCountry = getLanguageCountryFromPath();
+  if (langCountry && langCountry.language && langCountry.country) {
+    return `${langCountry.language}-${langCountry.country}`;
+  }
+
+  // Try to get the language from the query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const langFromQuery = urlParams.get('lang');
+  if (langFromQuery) {
+    return langFromQuery;
+  }
+
+  // Default to "en-us"
+  return 'en-us';
+}
+
 async function checkAndReplacePrivacyPolicyLink(block) {
   // Select the privacy-policy tag
   const privacyPolicyTag = block.querySelector('[role="privacy-policy"]');
@@ -189,9 +208,9 @@ async function checkAndReplacePrivacyPolicyLink(block) {
   if (privacyPolicyTag) {
     // Select the link inside the privacy-policy tag
     const privacyPolicyLink = privacyPolicyTag.querySelector('a');
-
+    const locale = getLanguage();
     if (privacyPolicyLink) {
-      // Check if the page gives a 404
+      privacyPolicyLink.href = privacyPolicyLink.href.replace('locale', locale);
       const response = await fetch(privacyPolicyLink.href);
       if (response.status === 404) {
         // Replace the link with the en-us version
