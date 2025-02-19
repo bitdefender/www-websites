@@ -208,7 +208,7 @@ async function checkAndReplacePrivacyPolicyLink(block) {
   if (privacyPolicyTag) {
     // Select the link inside the privacy-policy tag
     const privacyPolicyLink = privacyPolicyTag.querySelector('a');
-    const locale = getLanguage();
+    const locale = getLanguage().toLowerCase();
     if (privacyPolicyLink) {
       privacyPolicyLink.href = privacyPolicyLink.href.replace('locale', locale);
       const response = await fetch(privacyPolicyLink.href);
