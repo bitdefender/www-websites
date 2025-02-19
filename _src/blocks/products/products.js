@@ -4,7 +4,7 @@ import {
   renderNanoBlocks,
   createTag,
   matchHeights,
-  checkIfConsumerPage,
+  checkIfNotProductPage,
 } from '../../scripts/utils/utils.js';
 
 // all avaiable text variables
@@ -325,7 +325,7 @@ export default function decorate(block) {
 
       // set the store event on the component
       let storeEvent = 'main-product-loaded';
-      if (checkIfConsumerPage()) {
+      if (checkIfNotProductPage()) {
         storeEvent = 'product-loaded';
       }
 

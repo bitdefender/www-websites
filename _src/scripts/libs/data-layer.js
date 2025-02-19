@@ -197,7 +197,7 @@ export class PageLoadStartedEvent {
     this.page = {
       info: {
         name: pageSectionData.tagName, // e.g. au:consumer:product:internet security
-        section: pageSectionData.locale,
+        section: pageSectionData.section,
         subSection: pageSectionData.subSection,
         subSubSection: pageSectionData.subSubSection,
         subSubSubSection: pageSectionData.subSubSubSection,
@@ -241,10 +241,14 @@ export class PageLoadStartedEvent {
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
     const locale = Page.locale;
+    // currenty, the language is the default first tag and section parameter, with webview, we want
+    // something else to be the first tag and section
+    let pageSectionDataLocale = this.#getMetadata('locale') || Page.locale;
 
     const pageSectionData = {
       tagName: null, // e.g. au:consumer:product:internet security
       locale: locale,
+      section: pageSectionDataLocale,
       subSection: null,
       subSubSection: null,
       subSubSubSection: null,
@@ -254,7 +258,7 @@ export class PageLoadStartedEvent {
     }
   
     if (tags.length) {
-      pageSectionData.tagName = [locale, ...tags].join(':'); // e.g. au:consumer:product:internet security
+      pageSectionData.tagName = [pageSectionDataLocale, ...tags].filter(Boolean).join(':'); // e.g. au:consumer:product:internet security
       pageSectionData.subSection = tags[0] || '';
       pageSectionData.subSubSection = tags[1] || '';
       pageSectionData.subSubSubSection = tags[2] || '';
@@ -330,7 +334,7 @@ export class UserDetectedEvent {
       this.user.loggedIN = true;
     }
 
-    const pageName = window.location.href.split('/').filter(Boolean).pop().toLowerCase();
+    const pageName = Page.name.toLowerCase();
     let productFinding = 'product pages';
     switch(pageName) {
       case 'consumer':
@@ -566,17 +570,26 @@ export class Visitor {
     }
 
     if (window.Visitor) {
-      Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
+      this.#instance = window.Visitor.getInstance(this.#instanceID);
       resolve();
       return;
     }
 
-    document.addEventListener('at-library-loaded', () => {
+    document.addEventListener(Constants.LAUNCH_EVENTS.LIBRARY_LOADED, () => {
       if (window.Visitor) {
-        Visitor.#instance = window.Visitor.getInstance(this.#instanceID);
+        this.#instance = window.Visitor.getInstance(this.#instanceID);
       }
       resolve();
     })
+
+    /** As a last resort if the document receives a launchCannotLoad event
+    * or launchCannotLoad window variable is set resolve the promise */
+    if (window.launchCannotLoad) {
+      resolve();
+      return;
+    }
+
+    document.addEventListener(Constants.LAUNCH_EVENTS.LAUNCH_FAILED_TO_LOAD, resolve);
   });
 
   /**
@@ -593,15 +606,6 @@ export class Visitor {
    *
    * @returns {Promise<string>}
    */
-  static async getConsumerId() {
-    await this.#staticInit;
-    return this.#instance?._supplementalDataIDCurrent ? this.#instance._supplementalDataIDCurrent : "";
-  }
-
-  /**
-   *
-   * @returns {Promise<string>}
-   */
   static async getMarketingCloudVisitorId() {
     await this.#staticInit;
     return this.#instance ? this.#instance.getMarketingCloudVisitorID() : "";
@@ -611,10 +615,6 @@ export class Visitor {
 window._Visitor = Visitor;
 
 export class Target {
-  static events = {
-    LIBRARY_LOADED: "at-library-loaded"
-  }
-
   /**
    * @type {string[]}
    */
@@ -657,9 +657,18 @@ export class Target {
     }
 
     /** Target wasn't loaded we wait for events from it */
-    document.addEventListener(this.events.LIBRARY_LOADED, () => {
+    document.addEventListener(Constants.LAUNCH_EVENTS.LIBRARY_LOADED, () => {
       resolve();
     }, { once: true });
+
+    /** As a last resort if the document receives a launchCannotLoad event
+    * or launchCannotLoad window variable is set resolve the promise */
+    if (window.launchCannotLoad) {
+      resolve();
+      return;
+    }
+
+    document.addEventListener(Constants.LAUNCH_EVENTS.LAUNCH_FAILED_TO_LOAD, resolve);
   });
 
   /**
@@ -673,6 +682,12 @@ export class Target {
    * @type {Promise<BuyLinksMbox|null>}
    */
   static #buyLinksMbox = this.getOffer('buyLinks-mbox');
+
+  /**
+   * @typedef {{content: {geoIpPrice: string}}} GeoIpPriceMbox
+   * @type {Promise<GeoIpPriceMbox|null>}
+   */
+  static #geoIpFlagMbox = this.getOffer('geoip-flag-mbox');
 
   /**
    * get the product-buy link mappings from Target (
@@ -699,6 +714,14 @@ export class Target {
    */
   static async getCampaign() {
     return (await this.#campaignMbox)?.content?.pid || null;
+  }
+
+  /**
+   * 
+   * @returns {Promise<string|null>}
+   */
+  static async getGeoIpFlagMbox() {
+    return (await this.#geoIpFlagMbox)?.content?.geoIpPrice || null;
   }
 
   /**
@@ -733,13 +756,27 @@ export class Target {
     return parameters;
   }
 
+  /**
+   * 
+   * @param {string} name -> properties 
+   * @returns {string} metadata
+   */
+  static #getMetadata(name) {
+    const attr = name && name.includes(':') ? 'property' : 'name';
+    const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+    return meta || '';
+  }
+
+  // TODO: separate parameters from profileParameters
   static async getOffers(mboxes) {
     await this.#staticInit;
     let offers = {};
 
     try {
       offers = await window.adobe?.target?.getOffers({
-        consumerId: await Visitor.getConsumerId(),
+        //TODO: please delete this when the webSDK implementation is finalised
+        decisioningMethod: this.#getMetadata("server-side-target-calls") === "true" ? "server-side" : "hybrid",
+        consumerId: window.crypto.randomUUID(),
         request: {
           id: {
             marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
@@ -747,7 +784,10 @@ export class Target {
           execute: {
             mboxes: [
               ...mboxes.map((mbox, index) => {
-                return { index, name: mbox.name, parameters: Object.assign(this.#urlParameters, mbox.parameters) }
+                return { index, name: mbox.name,
+                  parameters: Object.assign(this.#urlParameters, mbox.parameters),
+                  profileParameters: Object.assign(this.#urlParameters, mbox.parameters)
+                }
               })
             ]
           }
@@ -800,7 +840,7 @@ const checkClickEventAfterRedirect = () => {
  * Add entry for free products
  */
 const getFreeProductsEvents = () => {
-  const currentPage = window.location.href.split('/').filter(Boolean).pop();
+  const currentPage = Page.name;
   if (currentPage === 'free-antivirus') {
     // on Free Antivirus page we should add Free Antivirus as the main product
     AdobeDataLayerService.push(new MainProductLoadedEvent({
