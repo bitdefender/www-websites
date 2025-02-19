@@ -688,10 +688,11 @@
   margin-bottom: 12px;
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
 }
 
 .creators .columns-container .columns.creators-banner .breadcrumb a {
-  font-size: var(--breadcrumbs-font-size-s);
+  font-size: 12px;
   font-weight: var(--font-weight-bold);
   color: var(--breadcrumb-text-color-dark-hover);
   text-decoration: none;
@@ -1620,6 +1621,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .creators .header-mobile h3 {
     font-size: var(--heading-font-size-l);
     line-height: 1.2;
+  }
+
+  .creators .header-mobile table {
+    justify-self: center;
   }
 
   .creators .columns-container h3, .creators .columns-container h5, .creators .columns-container h2, .creators .columns-container h1 {
