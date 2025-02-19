@@ -606,7 +606,6 @@
 }
 
 .columns-container.v-5 .columns-wrapper .columns {
-
   div {
     display: grid;
     gap: 1rem;
@@ -678,7 +677,6 @@
 }
 
 .columns.qr-code > div {
-
   div:has(img) {
     background-color: #F6F6F6;
     border-radius: 20px;
@@ -695,9 +693,11 @@
 }
 
 .columns-container.hide-mobile {
-  display: none;
+  visibility: hidden;
+  height: 0;
+  padding: 0;
+  margin: 0;
 }
-
 
 @media (min-width: 991px) {
   .columns.benefits > div {
@@ -717,7 +717,10 @@
   }
 
   .columns-container.hide-mobile {
-    display: initial;
+    visibility: initial;
+    height: initial;
+    padding: initial;
+    margin: initial;
   }
 
   .columns.awards-fragment > div{
@@ -766,7 +769,6 @@
   }
 
   .columns-container.v-5 .columns-wrapper .columns {
-
     div {
       div {
         padding: 40px 0;
@@ -1699,8 +1701,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     .columns-text-col {
       padding: 25px;
-      box-shadow: 1px 4px 6px -2px rgba(16, 24, 40, 0.05);
-      box-shadow: 0px 0px 16px -4px rgba(16, 24, 40, 0.06);
+      box-shadow: 1px 4px 6px -2px rgb(16 24 40 / 5%);
+      box-shadow: 0 0 16px -4px rgb(16 24 40 / 6%);
+
       h3 {
         font-size: 22px;
         margin-bottom: 0;
@@ -1717,12 +1720,14 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
       table {
         width: 100%;
+
         tbody {
           tr {
             display: flex;
             justify-content: space-between;
             gap: 20px;
             margin-bottom: 10px;
+
             @media (width >= 992px){
               margin-bottom: 0;
             }
@@ -1755,6 +1760,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
       h2 {
         font-size: 23px;
+
         @media (width >= 767px) {
           font-size: 42px;
           max-width: 70%;
@@ -1764,6 +1770,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   
       h3 {
         font-size: 13px;
+
         @media (width >= 767px) {
           font-size: 22px;
         }
@@ -1772,6 +1779,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       p {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 11px;
+
         @media (width >= 767px) {
           font-size: 16px;
         }
@@ -1795,6 +1803,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   @media (width < 768px) {
     padding-left: 0;
     padding-right: 0;
+
     .columns-wrapper {
       padding: 0;
     }

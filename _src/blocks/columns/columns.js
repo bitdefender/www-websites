@@ -79,7 +79,9 @@ function setImageAsBackgroundImage() {
 }
 
 export default function decorate(block) {
-  const { linksOpenInNewTab, type, maxElementsInColumn } = block.closest('.section').dataset;
+  const {
+    linksOpenInNewTab, type, maxElementsInColumn, products,
+  } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
@@ -111,6 +113,22 @@ export default function decorate(block) {
       }
     });
   });
+
+  // setup buylink, this can be used later as a starting point for prices.
+  const productsAsList = products?.split(',');
+  if (productsAsList) {
+    // eslint-disable-next-line no-unused-vars
+    [...block.children].forEach((row, rowNumber) => {
+      [...row.children].forEach((col, colNumber) => {
+        const [prodName, prodYears, prodUsers] = productsAsList[colNumber].trim().split('/');
+        col.setAttribute('data-store-context', '');
+        col.setAttribute('data-store-id', prodName);
+        col.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
+        col.setAttribute('data-store-department', 'consumer');
+        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
+      });
+    });
+  }
 
   if (linksOpenInNewTab === 'true') {
     block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
