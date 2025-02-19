@@ -24,9 +24,10 @@ async function checkAndReplacePrivacyPolicyLink(block) {
   if (privacyPolicyTag) {
     // Select the link inside the privacy-policy tag
     const privacyPolicyLink = privacyPolicyTag.querySelector('a');
-    const locale = getLanguage();
+    const locale = getLanguage().toLowerCase();
     if (privacyPolicyLink) {
       privacyPolicyLink.href = privacyPolicyLink.href.replace('locale', locale);
+      privacyPolicyLink.setAttribute('target', '_blank');
       const response = await fetch(privacyPolicyLink.href);
       if (response.status === 404) {
         // Replace the link with the en-us version
