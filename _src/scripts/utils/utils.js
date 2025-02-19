@@ -1,4 +1,4 @@
-import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
+import { AdobeDataLayerService, ButtonClickEvent, Visitor } from '../libs/data-layer.js';
 import Page from '../libs/page.js';
 import { Constants } from '../libs/constants.js';
 
@@ -482,22 +482,11 @@ export function debounce(func, wait) {
 
 export function appendAdobeMcLinks(selector) {
   try {
-    const visitor = window.Visitor.getInstance('0E920C0F53DA9E9B0A490D45@AdobeOrg', {
-      trackingServer: 'sstats.bitdefender.com',
-      trackingServerSecure: 'sstats.bitdefender.com',
-      marketingCloudServer: 'sstats.bitdefender.com',
-      marketingCloudServerSecure: 'sstats.bitdefender.com',
-    });
-
     const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
 
     const hrefSelector = '[href*=".bitdefender."]';
-    wrapperSelector.querySelectorAll(hrefSelector).forEach((link) => {
-      const isAdobeMcAlreadyAdded = link.href.includes('adobe_mc');
-      if (isAdobeMcAlreadyAdded) {
-        return;
-      }
-      const destinationURLWithVisitorIDs = visitor.appendVisitorIDsTo(link.href);
+    wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
+      const destinationURLWithVisitorIDs = await Visitor.appendVisitorIDsTo(link.href);
       link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
     });
   } catch (e) {

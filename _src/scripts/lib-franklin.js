@@ -140,7 +140,15 @@ export async function loadScript(src, attrs = null) {
         }
       }
       script.onload = resolve;
-      script.onerror = reject;
+      script.onerror = () => {
+        // check if the launch code failed to load
+        if (src.includes('launch')) {
+          // if it did, notify the target class using the event and variable
+          window.launchCannotLoad = true;
+          document.dispatchEvent(new Event('launchCannotLoad'));
+        }
+        reject();
+      };
       document.head.append(script);
     } else {
       resolve();
@@ -661,8 +669,8 @@ export function decorateTemplateAndTheme() {
       element.classList.add(toClassName(c.trim()));
     });
   };
-  const dark = Page.getParamValue('theme');
-  if (dark) addClasses(document.body, 'dark-mode');
+  const darkMode = Page.getParamValue('theme');
+  if (darkMode && darkMode === 'dark') addClasses(document.body, 'dark-mode');
   const template = getMetadata('template');
   if (template) addClasses(document.body, template);
   const theme = getMetadata('theme');
