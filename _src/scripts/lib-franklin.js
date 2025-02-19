@@ -12,6 +12,7 @@
  */
 
 import Page from './libs/page.js';
+import { UserAgent } from './libs/user-agent/user-agent.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
 export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.hlx.page', '.hlx.live'];
@@ -698,6 +699,15 @@ export function decorateButtons(element) {
       const threeup = a.parentElement.parentElement?.parentElement;
 
       if (!a.querySelector('img')) {
+        if (a.innerText?.includes('[hide-mobile]')) {
+          if (UserAgent.os === 'ios' || UserAgent.os === 'android') {
+            a.remove();
+            return;
+          }
+          const buttonText = a.innerText;
+          a.innerText = buttonText.replace('[hide-mobile]', '');
+        }
+
         // Example: <p><strong><a href="example.com">Text</a></strong></p>
         if (up.childNodes.length === 1 && up.tagName === 'STRONG'
           && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
@@ -707,6 +717,7 @@ export function decorateButtons(element) {
           a.innerHTML = wrapButtonText(a);
           return;
         }
+
         if (up.childNodes.length === 1 && up.tagName === 'EM'
             && twoup.childNodes.length === 1 && twoup.tagName === 'STRONG'
             && threeup?.childNodes.length === 1 && threeup?.tagName === 'P') {
@@ -755,6 +766,7 @@ export function decorateButtons(element) {
           a.title = a.title.slice(2).trim();
           return;
         }
+
         // Example: <p><a href="example.com">Text</a></p>
         if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
           a.className = 'button'; // default
