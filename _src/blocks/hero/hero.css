@@ -354,6 +354,11 @@ main .hero .hero-picture picture img {
   right: 0;
 }
 
+main .hero.scamio .hero-picture picture img {
+  position: absolute;
+  right: -60px;
+}
+
 main .hero a.button {
   margin: 8px 13px 0 0;
 }
