@@ -1,7 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { decorateButtons } from '../../scripts/lib-franklin.js';
 import {
   openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
 } from '../../scripts/utils/utils.js';
@@ -255,6 +254,10 @@ export default async function decorate(block, options) {
       listTable.classList.add('ratings');
       // delete the first row
       listTable.deleteRow(0);
+
+      // Dynamically import the decorateButtons function, bugfix for landing page
+      // eslint-disable-next-line no-await-in-loop
+      const { decorateButtons } = await import('../../scripts/lib-franklin.js');
       decorateButtons(listTable);
       // listTable.querySelector('a').classList.add('button');
     }
