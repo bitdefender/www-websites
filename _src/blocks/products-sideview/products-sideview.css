@@ -48,6 +48,7 @@
 }
 
 .products-sideview .tag-blue {
+    height: 20px;
     background: var(--tab-header-color-blue);
     color: white;
     padding: 0 10px;
@@ -55,7 +56,13 @@
     margin-left: 5px;
     font-size: 14px;
     line-height: 1;
-    font-weight: bolder;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.products-sideview .tag-blue svg {
+    width: 14px;
 }
 
 .products-sideview-radio {

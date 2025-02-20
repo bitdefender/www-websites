@@ -320,7 +320,9 @@ export async function loadTrackers() {
     ]);
 
     const adobeMcScriptUrl = `${LAUNCH_URL}/${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT)}`;
-    await loadScript(adobeMcScriptUrl);
+    try {
+      await loadScript(adobeMcScriptUrl);
+    } catch (e) { /* empty */ }
 
     onAdobeMcLoaded();
   } else {
@@ -362,7 +364,7 @@ async function loadEager(doc) {
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
-    document.body.classList.add('appear');
+    document.body.classList.add('appear', 'franklin');
     if (window.location.href.indexOf('scuderiaferrari') !== -1) {
       document.body.classList.add('sferrari');
     }
@@ -505,6 +507,13 @@ function loadDelayed() {
 
 async function loadPage() {
   await window.hlx.plugins.load('eager');
+
+  // specific for webview
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('theme') === 'dark' && window.location.href.includes('canvas')) {
+    document.body.style = 'background-color: #141517';
+  }
+
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
@@ -518,9 +527,10 @@ async function loadPage() {
     element.classList.remove('await-loader');
   });
 
-  const awaitLoader = document.querySelectorAll('.loader');
-  awaitLoader.forEach((element) => {
-    element.classList.remove('loader');
+  // loader circle used in mbox-canvas
+  const loaderCircle = document.querySelectorAll('.loader-circle');
+  loaderCircle.forEach((element) => {
+    element.classList.remove('loader-circle');
   });
 
   adobeMcAppendVisitorId('main');

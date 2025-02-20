@@ -90,6 +90,7 @@
   /* body width */
   --body-max-width: 1920px;
   --body-padding: 20px;
+  --section-desktop-smaller-max-width: 920px;
   --section-desktop-max-width: 1290px;
   --section-desktop-padding: 20px;
   --section-large-desktop-max-width: 1332px;
@@ -264,6 +265,11 @@ hr {
   margin-bottom: 0!important;
 }
 
+.my-4 {
+  margin-top: 24px!important;
+  margin-bottom: 24px!important;
+}
+
 .py-0 {
   padding-top: 0!important;
   padding-bottom: 0!important;
@@ -426,6 +432,14 @@ main .section.images-floated .default-content-wrapper p.button-container {
 /* section metadata */
 main .section.highlight > * { /* apply to all children wrapper */
   background-color: var(--highlight-background-color);
+}
+
+main .section.light-sky-blue-parent { /* apply parent wrapper */
+  background-color: var(--background-color-light-sky-blue);
+}
+
+main .section.rounded-corners { /* apply parent wrapper */
+  border-radius: 20px;
 }
 
 main .section.light-sky-blue > * { /* apply to all children wrapper */
@@ -617,6 +631,24 @@ body.creators {
 .creators .no-space-bottom .default-content-wrapper h2 {
   padding-bottom: 0;
   margin-bottom: 0;
+}
+
+main .section.blue-heading h2{
+  color: #006eff;
+  font-size: 60px;
+  font-weight: bold;
+}
+
+main .section.blue-heading h3 {
+  color: #006eff;
+}
+
+main .section.blue-heading h4 {
+  color: #006eff;
+}
+
+main .grey-background{
+  background-color: #F6F6F6;
 }
 
 /*.creators a.button {
@@ -1075,7 +1107,7 @@ a.button:hover.secondary {
   color: var(--white-color)
 }
 
-a.button.modal, a.button.central, main .section.link-right a {
+a.button.modal, a.button.link-arrow-right, a.button.central, main .section.link-right a {
   color: var(--link-color);
   font-weight: var(--font-weight-bold);
   background-color: transparent;
@@ -1086,7 +1118,7 @@ a.button.modal, a.button.central, main .section.link-right a {
   text-overflow: ellipsis;
 }
 
-a.button.modal::after, a.button.central::after, main .section.link-right a::after {
+a.button.modal::after, a.button.link-arrow-right::after, a.button.central::after, main .section.link-right a::after {
   background-color: var(--link-color);
   opacity: 1;
   margin: 0;
@@ -1101,13 +1133,13 @@ a.button:has(.icon)::after {
   opacity: 0;
 }
 
-a.button.modal:hover, a.button.central:hover, main .section.link-right a:hover {
+a.button.modal:hover, a.button.link-arrow-right:hover, a.button.central:hover, main .section.link-right a:hover {
   color: var(--link-hover-color);
   text-decoration: none;
   transform: none;
 }
 
-a.button.modal:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
+a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
   transform: translateX(3px);
   background-color: var(--link-hover-color);
 }
@@ -1626,17 +1658,6 @@ main .section.blue a.button.modal::after {
   visibility: hidden;
 }
 
-.loader {
-  width: 48px;
-  height: 48px;
-  border: 5px solid #006EFF;;
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-
 .loader-circle {
   width: 48px !important;
   height: 48px !important;
@@ -1661,11 +1682,6 @@ main .section.blue a.button.modal::after {
   100% {
       transform: rotate(360deg);
   }
-}
-
-.loader * {
-  visibility: hidden;
-  display: none;
 }
 
 @media (min-width: 768px) {

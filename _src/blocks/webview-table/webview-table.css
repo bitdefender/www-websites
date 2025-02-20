@@ -15,7 +15,7 @@
 .webview-table {
     width: 100%;
     height: 512px;
-    padding: 0 25px;
+    padding: 0 18px;
     display: table;
     font-size: 14px;
     background-color: #141517;
@@ -28,7 +28,7 @@
     font-weight: 700;
     font-family: "Segoe UI", Arial, sans-serif;
     color: #F7F7F7;
-    margin: 10px 0 14px;
+    margin: 10px 0 8px;
 }
 
 .webview-comparison-header {
@@ -62,13 +62,17 @@
     }
 
     p:last-of-type{
+        font-size: 14px;
+    }
+
+    p:nth-of-type(2){
         margin-bottom: 4px;
         font-size: 16px;
     }
 }
 
 .webview-comparison-header div[role="columnheader"]:first-child {
-    min-width: 292px;
+    min-width: 306px;
 }
 
 .webview-table div[role='cell'] {
@@ -83,10 +87,11 @@
 }
 
 .webview-table div[role='cell']:first-child {
-    min-width: 292px;
-    max-width: 292px;
+    min-width: 306px;
+    max-width: 306px;
     background: #333;
     color: #fff;
+    line-height: 1.2;
     font-weight: 600;
     border-top: 1px solid black;
     align-items: baseline;
@@ -112,9 +117,10 @@
     border: 2px solid #006EFF;
     background-color: black;
     width: 122px;
-    padding: 6px 16px;
+    padding: 6px 15px;
     border-radius: 4px;
     text-align: center;
+    font-size: 14px;
 
     &::after {
         display: none;
@@ -197,7 +203,7 @@
     }
 }
 
-.webview-table div[role='row']:last-of-type div[role='cell'] {
+.webview-table div[role='row'].price-row div[role='cell'] {
     border-radius: 0 0 4px 4px;
 
     &:first-child {
@@ -311,4 +317,8 @@
 
 .webview-table .no-check::before {
     transform: rotate(-45deg);
+}
+
+.webview-table [data-align="center"] {
+    text-align: center;
 }

@@ -260,6 +260,12 @@ main .hero h1 {
   margin: 0 0 25px;
 }
 
+main .affiliate .hero h1 {
+ color: #006DFF;
+ font-size: 48px;
+}
+
+
 main .hero h2 {
   font-size: 18px;
   color: var(--text-color);
@@ -278,6 +284,10 @@ main .hero h4 {
   padding: 0;
   letter-spacing: normal;
   margin: 0 0 9px;
+}
+
+main .affiliate  .hero h4{
+  font-weight: 300;
 }
 
 main .hero.black-background h1,
@@ -637,6 +647,7 @@ main .hero-container.ferrari-migration .hero .hero-content h1{
   color: #FFF;
   line-height: 1;
 }
+
 main .hero-container.ferrari-migration .hero .hero-content h2{
   color: #FFF;
   font-weight: 300;
@@ -835,6 +846,10 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero.comparison .hero-content>div {
     width: 65%;
     padding: 40px 0 0;
+  }
+
+  main .affiliate .hero .hero-content>div  {
+    width: 50%;
   }
 
   main .hero .hero-content .breadcrumb a {
