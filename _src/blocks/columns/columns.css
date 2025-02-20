@@ -242,6 +242,10 @@
   margin-bottom: -10px;
 }
 
+.percent-table .columns > div {
+  gap: 20px;
+}
+
 .percent-table .columns table tr {
   align-items: center;
   display: flex;
@@ -250,11 +254,13 @@
 
 .percent-table .columns table tr td:first-of-type {
   font-size: var(--heading-font-size-l);
-  padding-right: 1.5em;
+  padding-right: 1em;
+  text-align: right;
+  min-width: 125px;
 }
 
 .percent-table .columns table tr td:last-of-type {
-  width: 220px;
+  max-width: 220px;
 }
 
 .grey-version .columns > div > div h4 {
@@ -536,9 +542,6 @@
   overflow: hidden;
 }
 
-.section.pl-0 .columns-wrapper {
-  padding-left: 0;
-}
 
 .section.pr-0 .columns-wrapper {
   padding-right: 0;
@@ -792,6 +795,10 @@
     width: 31px;
     height: 31px;
   }
+
+  .section.pl-0 .columns-wrapper {
+    padding-left: 0;
+  }
 }
 
 @media (min-width: 992px) { /* desktop */
@@ -869,6 +876,10 @@
 
   .section.subtitle-blue .columns.benefits > div {
     margin-bottom: 0;
+  }
+
+  .percent-table .columns table tr td:first-of-type{
+    width: auto;
   }
 
   /* stylelint-disable-next-line selector-class-pattern */
@@ -1080,6 +1091,11 @@
   border-radius: 10px;
 }
 
+.section.migration.table-align-top tr{
+  flex-direction: column;
+}
+
+
 .columns.carousel {
   width: 100%;
   margin-top: 0;
@@ -1181,6 +1197,9 @@
     order: unset;
     justify-content: center;
     align-items: center;
+  }
+  .section.migration.table-align-top tr{
+    flex-direction: unset;
   }
 }
 
@@ -1443,6 +1462,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .creators .header-mobile.columns-container div {
     text-align: center;
+  }
+
+  .percent-table .columns table{
+    justify-self: center;
   }
 
   .creators .header-mobile h1 {
