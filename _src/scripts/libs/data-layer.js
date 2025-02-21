@@ -775,7 +775,7 @@ export class Target {
     try {
       offers = await window.adobe?.target?.getOffers({
         //TODO: please delete this when the webSDK implementation is finalised
-        decisioningMethod: this.#getMetadata("server-side-target-calls") === "true" ? "server-side" : "hybrid",
+        decisioningMethod: "server-side",
         consumerId: window.crypto.randomUUID(),
         request: {
           id: {
