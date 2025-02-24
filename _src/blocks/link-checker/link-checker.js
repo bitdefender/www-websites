@@ -9,7 +9,7 @@ import {
 } from '../../scripts/utils/bot-prevention.js';
 
 class StatusMessageFactory {
-  static createMessage(status, url) {
+  static createMessage(status, url, statusMessages) {
     let urlObject = url;
     // Ensure the URL has a protocol
     if (!/^https?:\/\//i.test(url)) {
@@ -22,46 +22,44 @@ class StatusMessageFactory {
       urlObject.hostname = `www.${urlObject.hostname}`;
     }
 
-    const messages = {
-      1: { text: 'The link is safe with no signs of harmful activity. You can go ahead and keep staying cautious online.', className: 'result safe', status: 'safe' },
-      2: { text: 'We haven\'t found any suspicious activity with this link. However, to stay safe going forward, make sure to use reliable security software and scan your system regularly.', className: 'result safe', status: 'so_far_so_good_1' },
-      3: { text: `This link looks safe, but the domain '${urlObject.hostname}' has been connected to harmful links in the past. To stay protected, check any other links from this domain using our tool and keep your security software updated.`, className: 'result safe', status: 'so_far_so_good_2' },
-      4: { text: 'This link is dangerous and can compromise your personal information or harm your device. Do not click it, and ensure your security software is up-to-date to stay protected from threats.', className: 'result danger', status: 'malware & phishing' },
-      5: { text: 'This link is known to distribute malware. Accessing it may harm your device, steal your data, or allow unauthorized access. Stay away from the site and ensure your security software is active.', className: 'result danger', status: 'malware' },
-      6: { text: 'This URL is linked to a server used to command and control malware on infected devices. Don’t click the link and make sure your security software is up to date to keep your device safe.', className: 'result danger', status: 'c&c' },
-      7: { text: 'This link is a threat, exposing you to malicious ads and phishing attempts that can steal your information and damage your device. Do not interact with it, and ensure your security software is updated.', className: 'result danger', status: 'malvertising & fraud & phishing' },
-      8: { text: 'This link directs to a fraudulent site intended to trick users and steal sensitive data. Stay away from the site and ensure your security software is active.', className: 'result danger', status: 'fraud' },
-      9: { text: 'This link leads to a phishing site designed to steal personal information like passwords or financial data. Stay away from the site and ensure your security software is active.', className: 'result danger', status: 'phishing' },
-      10: { text: 'This link is connected to harmful ads that could affect your device and expose your personal data, such as your passwords, credit card information, email addresses, or browsing history. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger', status: 'malvertising' },
-      11: { text: 'This link is associated with apps that could slow down your device or compromise your privacy. It’s best to avoid the site and make sure your security settings are active.', className: 'result danger', status: 'pua' },
-      12: { text: 'This link is designed to look like a trusted site using tricky characters. Don’t click the link and make sure your security software is updated to protect your device.', className: 'result danger', status: 'homograph' },
-      13: { text: 'This URL is linked to cryptocurrency mining activities, which may use your device\'s resources without your consent. Avoid visiting the site and ensure your security protections are in place.', className: 'result danger', status: 'miner' },
-      14: { text: 'This URL is linked to crypto mining activity, which could use your device\'s resources if accessed. It’s recommended not to click the link and ensure your security software is up to date.', className: 'result danger', status: 'miner-server' },
-      15: { text: 'This link has been identified in spam emails, which often contain malicious content. Avoid clicking on it, as it may lead to harmful sites or scams. Ensure your security measures are in place.', className: 'result danger', status: 'spam' },
-      16: { text: 'This URL is likely to contain malware, posing a significant threat. It\'s strongly advised to avoid accessing it and ensure your security protections are active and up to date.', className: 'result danger', status: 'malware-hd' },
-      17: { text: 'This link appears suspicious and may not be trustworthy. It’s best to avoid accessing it. Keep your security software active and steer clear of the site.', className: 'result danger', status: 'untrusted' },
-      18: { text: 'This link is unsafe and could harm your device or steal your personal information. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger', status: 'malicious' },
-      other: { text: 'This link is unsafe and could harm your device or steal your personal information. Avoid clicking on it and keep your security software updated to stay safe.', className: 'result danger', status: 'other' },
+    // Manually defined mapping of number keys to status strings
+    const numberToStatusMap = {
+      1: 'safe',
+      2: 'so_far_so_good_1',
+      3: 'so_far_so_good_2',
+      4: 'malware & phishing',
+      5: 'malware',
+      6: 'c&c',
+      7: 'malvertising & fraud & phishing',
+      8: 'fraud',
+      9: 'phishing',
+      10: 'malvertising',
+      11: 'pua',
+      12: 'homograph',
+      13: 'miner',
+      14: 'miner-server',
+      15: 'spam',
+      16: 'malware-hd',
+      17: 'untrusted',
+      18: 'malicious',
+      other: 'other',
     };
-    return messages[status] || { text: `Status: ${status}`, className: 'result warning' };
+    const mappedStatus = numberToStatusMap[status] || numberToStatusMap.other;
+    const isSafe = mappedStatus.includes('safe')
+                 || mappedStatus.includes('so_far_so_good_1')
+                 || mappedStatus.includes('so_far_so_good_2');
+    let msg = statusMessages[mappedStatus.toLowerCase()];
+    msg = msg.replace('<domain-name>', urlObject.hostname);
+    if (msg) {
+      return { text: msg, className: isSafe ? 'result safe' : 'result danger', status: mappedStatus };
+    }
+    return { text: `Status: ${mappedStatus}`, className: 'result warning' };
   }
 }
 
-function changeTexts(block, result) {
-  switch (result.status) {
-    case 'safe':
-      block.querySelector('h1').textContent = "You're safe";
-      break;
-    case 'so_far_so_good_1':
-      block.querySelector('h1').textContent = 'So far, so good';
-      break;
-    case 'so_far_so_good_2':
-      block.querySelector('h1').textContent = 'So far, so good';
-      break;
-    default:
-      block.querySelector('h1').textContent = 'Definitely Don’t Go There';
-      break;
-  }
+function changeTexts(block, result, statusTitles) {
+  const titleText = statusTitles[result.status.toLowerCase()] || statusTitles.default;
+  block.querySelector('h1').textContent = titleText;
 }
 
 const isValidUrl = (urlString) => {
@@ -74,7 +72,7 @@ const isValidUrl = (urlString) => {
   return urlPattern.test(urlString);
 };
 
-async function checkLink(block, input, result) {
+async function checkLink(block, input, result, statusMessages, statusTitles) {
   const url = input.value.trim();
   if (!url || !isValidUrl(url)) {
     result.textContent = 'Please enter a valid URL';
@@ -117,14 +115,14 @@ async function checkLink(block, input, result) {
 
   const data = await response.json();
   const { status } = data;
-  const message = StatusMessageFactory.createMessage(status, url);
+  const message = StatusMessageFactory.createMessage(status, url, statusMessages);
   result.textContent = message.text;
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
   document.getElementById('inputDiv').textContent = url;
 
-  changeTexts(block, message);
+  changeTexts(block, message, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
 
   const newObject = await new PageLoadStartedEvent();
@@ -186,11 +184,69 @@ function copyToClipboard(block, caller, popupText) {
   }
 }
 
+function createStatusMessages(block) {
+  const statusMessages = {};
+
+  const divWithStatusMessages = Array.from(block.querySelectorAll('div')).find((div) => {
+    const firstParagraph = div.querySelector('p');
+    return firstParagraph && firstParagraph.textContent.includes('<status-messages>');
+  });
+
+  const pElements = divWithStatusMessages.querySelectorAll('p');
+  // Skip the first <p> if it contains a header like "<status-messages>"
+  pElements.forEach((p, index) => {
+    if (index === 0) {
+      return;
+    }
+
+    const parts = p.textContent.split(':');
+    if (parts.length >= 2) {
+      const status = parts[0].trim();
+      const message = parts.slice(1).join(':').trim();
+      statusMessages[status.toLowerCase()] = message;
+    }
+  });
+
+  return statusMessages;
+}
+
+function createStatusTitles(block) {
+  const statusTitles = {};
+
+  const divWithstatusTitles = Array.from(block.querySelectorAll('div')).find((div) => {
+    const firstParagraph = div.querySelector('p');
+    return firstParagraph && firstParagraph.textContent.includes('<titles-change>');
+  });
+
+  divWithstatusTitles.classList.add('status-titles');
+  const pElements = divWithstatusTitles.querySelectorAll('p');
+  // Skip the first <p> if it contains a header like "<titles-change>"
+  pElements.forEach((p, index) => {
+    if (index === 0) {
+      return;
+    }
+
+    const parts = p.textContent.split(':');
+    if (parts.length >= 2) {
+      const status = parts[0].trim();
+      const message = parts.slice(1).join(':').trim();
+      statusTitles[status.toLowerCase()] = message;
+    }
+  });
+
+  // remove the div from the dom, as it is already parsed and we don't need it anymore
+  divWithstatusTitles.remove();
+  return statusTitles;
+}
+
 export default function decorate(block) {
   const { clipboardText } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
   privacyPolicyDiv.classList.add('privacy-policy');
+
+  const statusMessages = createStatusMessages(block);
+  const statusTitles = createStatusTitles(block);
 
   const formContainer = document.createElement('div');
   formContainer.classList.add('link-checker-form');
@@ -256,7 +312,7 @@ export default function decorate(block) {
   safeImage.classList.add('safe-image');
   dangerImage.classList.add('danger-image');
 
-  button.addEventListener('click', () => checkLink(block, input, result));
+  button.addEventListener('click', () => checkLink(block, input, result, statusMessages, statusTitles));
   checkAnother.addEventListener('click', () => resetChecker(block));
   shareButton.addEventListener('click', (e) => {
     e.preventDefault();
