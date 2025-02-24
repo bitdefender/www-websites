@@ -351,12 +351,16 @@ async function loadEager(doc) {
   await resolveNonProductsDataLayer();
 
   const templateMetadata = getMetadata('template');
+  const templatejsMetadata = getMetadata('templatejs');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
-    // loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
-    //   type: 'module',
-    // });
+    if (templatejsMetadata) {
+      loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
+        type: 'module',
+      });
+    }
+
   }
   const main = doc.querySelector('main');
   if (main) {

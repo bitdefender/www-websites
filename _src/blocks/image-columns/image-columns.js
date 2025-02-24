@@ -1,13 +1,21 @@
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
+  const parentSection = block.closest('.section');
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
   block.parentElement.classList.add('default-content-wrapper');
 
   // setup image columns
   [...block.children].forEach((row) => {
-    [...row.children].forEach((col) => {
+    [...row.children].forEach((col, idx) => {
+      if (parentSection.classList.contains('columnvideo') && idx === 1) {
+        const colVideo = parentSection.getAttribute('data-video');
+        col.innerHTML = `<video autoplay loop muted>
+          <source src="../../../_src/images/${colVideo}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>`;
+      }
       const pic = col.querySelector('picture');
       if (pic) {
         const picWrapper = pic.closest('div');
