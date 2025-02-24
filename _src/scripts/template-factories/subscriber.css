@@ -1,14 +1,6 @@
 .subscriber * {
     font-family: "IBM Plex Sans", sans-serif;
 }
-
-.subscriber .columns-wrapper, .subscriber .default-content-wrapper {
-    padding-left: 0;
-    padding-right: 0;
-}
-.subscriber #heroColumn .image-columns-wrapper {
-    padding: 0;
-}
 .subscriber #heroColumn h1 {
     font-weight: 500;
     font-size: 18px;
@@ -18,9 +10,8 @@
 
 .subscriber #heroColumn h2 {
     font-weight: 500;
-    font-size: Font Size/font-size-64;
-    line-height: Line Height/line-height-64;
-    letter-spacing: -2%;
+    font-size: 64px;
+    line-height: 64px;
 }
 
 .subscriber #heroColumn h2 u {
@@ -42,7 +33,6 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 25.2px;
-    letter-spacing: -2%;
     text-align: center;
     border: 2px solid black;
     background-color: transparent;
@@ -60,7 +50,6 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 25.2px;
-    letter-spacing: -2%;
     text-align: center;
     border: 2px solid #1A7DFF;
     background-color: #1A7DFF;
@@ -213,9 +202,16 @@
 }
 .subscriber #blueSlider .carousel-arrows-container {
     justify-content: right;
+    margin-top: 2em;
+    margin-right: 2em;
+    display: none;
 }
 .subscriber #blueSlider .carousel-arrows-container button svg path {
     stroke: white;
+}
+.subscriber #blueSlider .default-content-wrapper {
+    flex-direction: column;
+    align-items: self-start;
 }
 .subscriber #blueSlider .default-content-wrapper p {
     margin: 0;
@@ -331,7 +327,7 @@
 .subscriber #multiColumns .columns > div > div h4 {
     font-weight: 500;
     font-size: 18px;
-    line-height: 18px;
+    line-height: 30px;
     margin: 24px 0 8px;
 }
 
@@ -732,7 +728,6 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 25.2px;
-    letter-spacing: -2%;
     text-align: center;
     border: 2px solid black;
     background-color: white;
@@ -749,7 +744,6 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 25.2px;
-    letter-spacing: -2%;
     text-align: center;
     border: 2px solid #1A7DFF;
     background-color: #1A7DFF;
@@ -777,6 +771,19 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2em;
+}
+.subscriber .multivideosslider .default-content-wrapper {
+    justify-content: center;
+}
+.subscriber .multivideosslider .default-content-wrapper h4 {
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 40px;
+    margin: 16px 0;
+}
+.subscriber .multivideosslider .carousel-arrows-container {
+    justify-content: flex-end;
+    margin-right: 20%;
 }
 .subscriber .multi-carousel-container .carousel-navigation {
     display: none;
@@ -873,7 +880,7 @@
     display: block;
 }
 
-.download-popup__container {
+.subscriber .download-popup__container {
     background-color: rgba(0, 0, 0, .5);
     cursor: auto;
     display: none;
@@ -886,10 +893,10 @@
     width: 100vw;
     z-index: 999;
 }
-.download-popup__container.active {
+.subscriber .download-popup__container.active {
     display: block;
 }
-.download-popup__modal {
+.subscriber .download-popup__modal {
     background-color: white;
     width: 800px;
     margin: 4em auto 0;
@@ -899,4 +906,377 @@
     overflow-y: scroll;
     text-align: left;
     border-radius: .75rem;
+}
+
+@media (width >= 1300px) {
+    .subscriber .columns-wrapper, .subscriber .default-content-wrapper {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .subscriber #heroColumn .image-columns-wrapper {
+        padding: 0;
+    }
+}
+
+@media (max-width: 1280px) {
+    .subscriber main .section {
+        padding: 1em 0;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong.subscriber #has4columns .default-content-wrapper p, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #tabSlide .default-content-wrapper p strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
+        font-size: 14px;
+        line-height: 22.4px;
+    }
+    .subscriber #heroColumn h2, .subscriber .columnvideo > div.image-columns-wrapper h3, .subscriber #has4columns .default-content-wrapper h3, .subscriber #blueSlider .default-content-wrapper h3, .subscriber #multiColumns .default-content-wrapper h3, .subscriber #tabSlide .default-content-wrapper h3, .subscriber #blueBox .default-content-wrapper h3, .subscriber #customQuoteCarousel .columns h4, .subscriber .accordion-container .default-content-wrapper h3 {
+        font-weight: 400;
+        font-size: 40px;
+        line-height: 48px;
+    }
+    .subscriber #has4columns .default-content-wrapper {
+        margin: 2em auto;
+    }
+
+    .subscriber #tabSlide {
+        padding: 5em 0 3em;
+    }
+    .subscriber #tabSlide .content > div > div {
+        flex: 0 0 333px;
+    }
+    .subscriber .columns-wrapper, .subscriber .multi-carousel-wrapper, .subscriber .columnvideo {
+        max-width: var(--section-desktop-max-width)!important;
+        padding: 0 var(--section-desktop-padding-vertical)!important;
+    }
+    .subscriber .columnvideo2 {
+        margin-bottom: 4em;
+    }
+    .subscriber .multi-carousel-wrapper {
+        max-width: unset!important;
+        padding: 0!important;
+    }
+    .subscriber .multivideosslider, .subscriber #multiColumns, .subscriber .accordion-container {
+        margin-top: 4em;
+        margin-bottom: 3em;
+    }
+    .subscriber .multivideosslider .carousel-container {
+        padding-left: 23%;
+    }
+    .subscriber .multivideosslider .carousel-item {
+        padding-right: 2em;
+    }
+    .subscriber .multivideosslider .carousel-item iframe {
+        min-width: 635px;
+    }
+    .subscriber .multicontentslider .carousel-container {
+        padding-left: var(--section-desktop-padding-vertical);
+    }
+    .subscriber #blueSlider .carousel-track {
+        display: flex;
+    }
+    .subscriber #blueSlider .carousel-arrows-container {
+        display: flex;
+    }
+    .subscriber #blueSlider .block .carousel-container {
+        padding-left: 4%;
+    }
+    .subscriber #blueSlider .block .carousel-container .carousel-item {
+        flex: 0 0 290px;
+    }
+    .subscriber #customQuoteCarousel .columns p.button-container a {
+        font-size: 16px;
+    }
+    .subscriber #customQuoteCarousel .columns p.button-container {
+        margin-top: 2em;
+    }
+}
+
+@media (max-width: 991px) {
+    .subscriber #heroColumn .image-columns-img-col {
+        order: 2;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper {
+        padding-bottom: 0;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper .block > div {
+        display: block;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper video {
+        width: 90%;
+        position: relative;
+        bottom: -10px;
+        right: -40%;
+    }
+    .subscriber #blueSlider * {
+        text-align: left;
+    }
+    .subscriber #blueSlider .block .carousel-container .carousel-item {
+        flex: 0 0 260px;
+    }
+    .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div {
+        display: block;
+    }
+    .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div > div {
+        height: 110px;
+        width: 50%;
+        float: left;
+        margin-bottom: 32px;
+        border-bottom: unset;
+        border-left: 2px solid #B9C7DA;
+    }
+    .subscriber #has4columns .columns-wrapper .columns p strong {
+        font-size: 43px;
+        line-height: 46px;
+    }
+    .subscriber #blueSlider {
+        padding: 5em 0;
+    }
+    .subscriber #blueSlider .carousel-item p strong {
+        font-weight: 400;
+        height: 45px;
+    }
+    .subscriber #multiColumns .default-content-wrapper {
+        width: 100%;
+    }
+    .subscriber #multiColumns .default-content-wrapper p strong {
+        font-weight: 500;
+    }
+    .subscriber #multiColumns .columns > div {
+        display: block;
+    }
+    .subscriber #multiColumns .columns > div > div {
+        width: 48%;
+        height: 260px;
+        float: left;
+        margin-bottom: 25px;
+        margin-right: 2%;
+    }
+    .subscriber #multiColumns .columns > div > div h4 {
+        margin: 8px 0;
+    }
+    .subscriber #multiColumns .columns > div:nth-of-type(1) > div:nth-of-type(2n) {
+        margin-left: 2%;
+        margin-right: 0;
+    }
+    .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(1), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(3) {
+        margin-left: 2%;
+        margin-right: 0;
+    }
+    .subscriber .multivideosslider .carousel-container {
+        padding-left: 6%;
+    }
+    .subscriber .multivideosslider .carousel-item iframe {
+        width: 250px;
+        height: 365px;
+    }
+    .subscriber .multivideosslider .carousel-item {
+        padding-right: 4em;
+    }
+    .subscriber .multivideosslider .default-content-wrapper {
+        margin-bottom: 0;
+    }
+    .subscriber .multivideosslider .default-content-wrapper h4 {
+        font-weight: 400;
+        font-size: 32px;
+        line-height: 32px;
+    }
+    .subscriber .multivideosslider .carousel-arrows-container {
+        justify-content: flex-end;
+        margin-right: 7%;
+    }
+    .subscriber #tabSlide {
+        padding: 3em 0;
+    }
+    .subscriber #tabSlide .slide > div {
+        flex-direction: row;
+    }
+    .subscriber #tabSlide .content > div {
+        display: block;
+    }
+    .subscriber #tabSlide .content > div > div {
+        width: 46%;
+        float: left;
+        margin: 2%;
+    }
+    .subscriber .multicontentslider .default-content-wrapper, .subscriber .accordion-container {
+        padding: 0 var(--section-desktop-padding-vertical) !important;
+    }
+    .subscriber .accordion-wrapper {
+        padding: 0;
+    }
+    .subscriber #customQuoteCarousel .columns > div {
+        display: block;
+    }
+    .subscriber #customQuoteCarousel .columns p.button-container {
+        margin-top: 3em;
+    }
+    .subscriber #customQuoteCarousel .slides-controls {
+        position: relative;
+        width: fit-content;
+        margin-top: 1em;
+    }
+    .subscriber #customQuoteCarousel .columns-img-col picture {
+        width: 100%;
+    }
+    .subscriber .multicontentslider .carousel-item {
+        width: 555px;
+    }
+    .subscriber .multicontentslider .carousel-item .carousel-content > div {
+        text-align: center;
+    }
+    .subscriber .columnvideo2 > div.image-columns-wrapper video {
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        width: 100%;
+    }
+    .subscriber .download-popup__modal {
+        width: 90%;
+    }
+}
+
+@media (max-width: 636px) {
+    .subscriber #heroColumn h1 {
+        margin: 0;
+    }
+    .subscriber #heroColumn h2 {
+        margin: 16px 0;
+    }
+    .subscriber #heroColumn table {
+        width: 100%;
+    }
+    .subscriber #heroColumn table tr {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+    }
+    .subscriber #heroColumn table tr td, .subscriber #heroColumn table tr td a, .subscriber .columnvideo2 > div.image-columns-wrapper table tr td, .subscriber .columnvideo2 > div.image-columns-wrapper table tr td a {
+        margin-right: 0;
+        height: 49px;
+        width: 100%!important;
+    }
+    .subscriber .columns-wrapper, .subscriber .multi-carousel-wrapper, .subscriber .columnvideo, .subscriber .multicontentslider .default-content-wrapper, .subscriber .accordion-container {
+        max-width: var(--body-max-width)!important;
+        padding: var(--body-padding)!important;
+    }
+    .subscriber #heroColumn h2, .subscriber .columnvideo > div.image-columns-wrapper h3, .subscriber #has4columns .default-content-wrapper h3, .subscriber #blueSlider .default-content-wrapper h3, .subscriber #multiColumns .default-content-wrapper h3, .subscriber #tabSlide .default-content-wrapper h3, .subscriber #blueBox .default-content-wrapper h3, .subscriber #customQuoteCarousel .columns h4, .subscriber .accordion-container .default-content-wrapper h3 {
+        width: 100%;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 38.4px;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper table tr {
+        display: block;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper table tr td {
+        width: 100%;
+        margin: 10px 0;
+        border: 0 none;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper video {
+        width: 100%;
+        position: relative;
+        bottom: -10px;
+        right: -33%;
+    }
+    .subscriber #has4columns .default-content-wrapper {
+        width: 100%;
+    }
+    .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div > div {
+        width: 100%;
+        float: unset;
+    }
+    .subscriber #blueSlider {
+        padding: 2em 0;
+        margin: 2em 0;
+    }
+    .subscriber #blueSlider .block .carousel-container .carousel-item {
+        flex: 0 0 280px;
+    }
+    .subscriber .multi-carousel-wrapper {
+        padding-right: 0!important;
+    }
+    .subscriber .multivideosslider, .subscriber #multiColumns, .subscriber .accordion-container {
+        margin-top: 1em;
+        margin-bottom: 3em;
+    }
+    .subscriber #multiColumns {
+        margin-bottom: 0;
+    }
+    .subscriber #multiColumns .default-content-wrapper {
+        margin-bottom: 0;
+    }
+    .subscriber #multiColumns .columns > div {
+        margin-bottom: 0;
+    }
+    .subscriber #multiColumns .columns > div > div {
+        width: 100%;
+        height: auto;
+        float: unset;
+        margin: 13px 0!important;
+    }
+    .subscriber #multiColumns .columns > div > div:last-of-type {
+        margin-bottom: 0!important;
+    }
+    .subscriber .multivideosslider .carousel-item iframe {
+        width: 24em;
+        height: 204px;
+        min-width: auto;
+    }
+    .subscriber .multivideosslider .carousel-container {
+        padding-left: 0;
+    }
+    .subscriber #tabSlide .slide > div {
+        width: 100%;
+        margin: 0;
+    }
+    .subscriber #tabSlide .content > div > div {
+        width: 100%;
+        float: unset;
+        margin: 1em 0;
+        justify-content: flex-start;
+    }
+    .subscriber #blueBox {
+        padding: 3em 0;
+    }
+    .subscriber #blueBox .default-content-wrapper p {
+        margin: 0!important;
+    }
+    .subscriber #blueBox .default-content-wrapper p:nth-of-type(2) {
+        width: 100%;
+        margin-bottom: 2em!important;
+    }
+    .subscriber #blueBox .default-content-wrapper p:nth-of-type(3) {
+        display: none;
+    }
+    .subscriber #blueBox .default-content-wrapper p:last-of-type {
+        display: block;
+    }
+    .subscriber #customQuoteCarousel {
+        margin-bottom: 2em;
+    }
+    .subscriber .multicontentslider .carousel-item {
+        width: 305px;
+    }
+    .subscriber .multicontentslider .carousel-container {
+        padding-left: 0;
+    }
+    .subscriber .multicontentslider .carousel-item .carousel-content > div {
+        text-align: left;
+        display: block;
+    }
+    .subscriber .multicontentslider .carousel-item .carousel-content > div p:first-of-type {
+        background-color: white;
+        border-radius: 10px;
+        text-align: center;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper video {
+        width: 188%;
+        bottom: 0;
+        right: 0;
+        left: -46%;
+    }
+    .subscriber #tabSlide .slide > div > div strong {
+        height: 46px;
+        width: auto!important;
+        padding: 0 18px;
+    }
 }
