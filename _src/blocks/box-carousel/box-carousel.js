@@ -5,6 +5,16 @@ export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
   let currentSlideIndex = 0;
 
+  const countItems = slides.length;
+  let countClass = `has-${countItems}-items`;
+  if (countItems > 3 && countItems < 7) {
+    countClass = 'has-3-7-items';
+  }
+  if (countItems > 7) {
+    countClass = 'has-more-items';
+  }
+  block.classList.add(countClass);
+
   const isTestimonials = block.closest('.section').classList.contains('testimonials');
 
   const carouselItemStyle = {
