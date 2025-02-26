@@ -25,7 +25,7 @@ function createOfferParameters() {
       parameters.feature = feature.replace('_', '-');
     }
     if (value === language) {
-      parameters.lang = language;
+      parameters.lang = language.toLocaleLowerCase();
     }
   });
 
@@ -97,11 +97,12 @@ export default async function decorate(block) {
 
   updatePageLoadStartedEvent(offer);
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
-  block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
-  await loadBlocks(block.querySelector('.canvas-content'));
 
-  // make all the links from the canvas open in a new browser window
-  block.querySelectorAll('a').forEach((link) => {
+  // Make all the links that contain #buylink in href open in a new browser window
+  decoratedOfferHtml.querySelectorAll('a[href*="#buylink"]').forEach((link) => {
     link.setAttribute('target', '_blank');
   });
+
+  block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
+  await loadBlocks(block.querySelector('.canvas-content'));
 }

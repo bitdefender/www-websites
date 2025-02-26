@@ -320,7 +320,9 @@ export async function loadTrackers() {
     ]);
 
     const adobeMcScriptUrl = `${LAUNCH_URL}/${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT)}`;
-    await loadScript(adobeMcScriptUrl);
+    try {
+      await loadScript(adobeMcScriptUrl);
+    } catch (e) { /* empty */ }
 
     onAdobeMcLoaded();
   } else {

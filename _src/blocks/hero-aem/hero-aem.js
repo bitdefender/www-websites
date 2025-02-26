@@ -1,7 +1,9 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { openUrlForOs } from '../../scripts/utils/utils.js';
+import {
+  openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
+} from '../../scripts/utils/utils.js';
 
 function createCardElementContainer(elements, mobileImage) {
   const cardElementContainer = document.createElement('div');
@@ -96,17 +98,15 @@ function createDropdownElement(paragraph, dropdownTagText, product) {
   });
 }
 
-async function createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText) {
-  const [prodName, prodUsers, prodYears] = product.split('/');
-
+async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText) {
   const pricesBox = document.createElement('div');
-  pricesBox.classList.add('hero-aem__prices');
+  pricesBox.classList.add('hero-aem__prices', 'await-loader');
   pricesBox.innerHTML = `
           ${bluePillText ? `<p class="hero-aem__pill">${bluePillText}</p>` : ''}
           <div class="hero-aem__price mt-3">
             <div>
                 <span class="prod-oldprice" data-store-price="full"></span>
-                <span class="prod-save">${saveText}<span class="save" data-store-price="discounted"></span></span>
+                <span class="prod-save" data-store-text-variable>${saveText} {DISCOUNT_VALUE}</span></span>
             </div>
             <div class="newprice-container mt-2">
               <span class="prod-newprice" data-store-price="discounted||full"></span>
@@ -114,9 +114,26 @@ async function createPricesWebsites(product, buyLink, bluePillText, saveText, un
             </div>
           </div>
           <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
-  buyLink.href = `https://www.bitdefender.com/site/Store/buy/${prodName}/${prodUsers}/${prodYears}/`;
+  buyLink.setAttribute('data-store-buy-link', '');
   return pricesBox;
 }
+
+/**
+ * Nanoblock representing the price conditions below the Price
+ * @param text Conditions
+ * @returns Root node of the nanoblock
+ */
+function renderDevicesUsersText(text) {
+  return createTag(
+    'div',
+    {
+      class: 'devices-years-text',
+    },
+    `<span>${text}</span>`,
+  );
+}
+
+createNanoBlock('devices-users-text', renderDevicesUsersText);
 
 export default async function decorate(block, options) {
   const {
@@ -124,6 +141,8 @@ export default async function decorate(block, options) {
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
     dropdownTag,
   } = block.closest('.section').dataset;
+
+  renderNanoBlocks(block);
 
   if (options) {
     // eslint-disable-next-line no-param-reassign
@@ -184,8 +203,25 @@ export default async function decorate(block, options) {
   const buyLink = block.querySelector('a[href*="buylink"]');
 
   if (product && !options) {
-    let priceBox = await createPricesWebsites(product, buyLink, bluePillText, saveText, underPriceText, conditionText);
-    buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
+    let priceBox = await createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText);
+    // Select all paragraph elements
+    const paragraphs = document.querySelectorAll('p');
+    let insertPricesParagraph = null;
+
+    // Iterate through the paragraphs
+    paragraphs.forEach((paragraph) => {
+      // Check if the paragraph contains the text <insert-prices>
+      if (paragraph.textContent.includes('<insert-prices>')) {
+        // Perform any additional actions here
+        insertPricesParagraph = paragraph;
+      }
+    });
+
+    if (insertPricesParagraph) {
+      insertPricesParagraph.replaceWith(priceBox);
+    } else {
+      buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
+    }
 
     pricesContainers.set(product, priceBox);
   }
@@ -203,6 +239,28 @@ export default async function decorate(block, options) {
     breadcrumbTable.classList.add('hero-aem__breadcrumb');
     // delete the first row
     breadcrumbTable.deleteRow(0);
+  }
+
+  let tables = block.querySelectorAll('table');
+  // eslint-disable-next-line no-restricted-syntax
+  for (const listTable of tables) {
+    if (listTable && listTable.textContent.includes('benefit_list')) {
+      listTable.classList.add('benefit_list');
+      // delete the first row
+      listTable.deleteRow(0);
+    }
+
+    if (listTable && listTable.textContent.includes('ratings')) {
+      listTable.classList.add('ratings');
+      // delete the first row
+      listTable.deleteRow(0);
+
+      // Dynamically import the decorateButtons function, bugfix for landing page
+      // eslint-disable-next-line no-await-in-loop
+      const { decorateButtons } = await import('../../scripts/lib-franklin.js');
+      decorateButtons(listTable);
+      // listTable.querySelector('a').classList.add('button');
+    }
   }
 
   let freeDownloadButton = block.querySelector('a[href*="#free-download"]');
