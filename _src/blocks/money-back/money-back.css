@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .money-back-wrapper {
     text-align: center;
 }
@@ -20,6 +21,10 @@
 .money-back.block {
   background-color: #EDF9FF;
   border-radius: 20px;
+}
+
+.money-back.icon-centered .icon {
+  justify-self: center;
 }
 
 .creator-money-back .money-back.block {

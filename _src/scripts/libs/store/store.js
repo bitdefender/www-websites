@@ -431,6 +431,13 @@ export class Product {
 			buyLink = new URL(Store.targetBuyLinkMappings[this.productAlias][productVariation]);
 		}
 
+		// if there are extra parameters which need to be added to the links, add them
+		if (Store.targetBuyLinkMappings.extraParameters) {
+			Store.targetBuyLinkMappings.extraParameters.forEach(extraParameter => {
+				buyLink.searchParams.set(extraParameter.key, extraParameter.value);
+			});
+		}
+
 		if (window.UC_UI) {
 			buyLink.searchParams.set("ucControllerId", window.UC_UI.getControllerId());
 		}
@@ -693,19 +700,9 @@ class Vlaicu {
 	static #isSohoCornerCase = (productId) =>
 	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
 
-	static #getGeoIpFlag = async () => {
-		const offer = await Target.getOffer('geoip-flag-mbox');
-
-		if (offer && offer.content && typeof offer.content.geoIpPrice !== 'undefined') {
-            return offer.content.geoIpPrice;
-		}
-
-		return null;
-	}
-
 	static async getProductVariations(productId, campaign) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
-		let geoIpFlag = await this.#getGeoIpFlag();
+		let geoIpFlag = await Target.getGeoIpFlagMbox();
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
