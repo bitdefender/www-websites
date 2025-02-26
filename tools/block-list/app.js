@@ -3,7 +3,7 @@ const { JSDOM } = require('jsdom');
 
 // Base URLs
 const hostname = 'https://main--www-websites--bitdefender.aem.page';
-const jsonUrl = 'https://main--www-websites--bitdefender.hlx.page/query-index.json';
+const jsonUrl = 'https://main--www-websites--bitdefender.aem.page/query-index.json';
 
 // Function to get class names from HTML
 const extractClassNames = (html) => {
