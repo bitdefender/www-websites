@@ -65,7 +65,7 @@ export default class Page {
   */
   static #getEnvironment() {
     const { hostname } = window.location;
-    if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
+    if (hostname.includes('aem.page') || hostname.includes('aem.live')) {
       return 'stage';
     }
     if (hostname.includes('www.bitdefender')) {
