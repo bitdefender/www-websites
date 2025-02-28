@@ -1198,6 +1198,7 @@
     justify-content: center;
     align-items: center;
   }
+
   .section.migration.table-align-top tr{
     flex-direction: unset;
   }
