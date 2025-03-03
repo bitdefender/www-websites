@@ -80,7 +80,7 @@ function setImageAsBackgroundImage() {
 
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs
+    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
