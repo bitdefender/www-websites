@@ -262,26 +262,6 @@
   margin-bottom: 16px;
 }
 
-.four-cards-container.dotted-lines {
-  ul {
-    li:not(:first-child) {
-      position: relative;
-
-      &::before {
-        content: "";
-        display: block;
-        width: 1px;
-        height: 24px;
-        border: none;
-        border-left: 2px dotted #006EFF;
-        position: absolute;
-        top: -24px;
-        left: 50%;
-      }
-    }
-  }
-}
-
 .creators{
   .header-mobile .four-cards{
     li{
@@ -300,6 +280,26 @@
 
       .icon{
         margin: 0;
+      }
+    }
+  }
+}
+
+.four-cards-container.dotted-lines {
+  ul {
+    li:not(:first-child) {
+      position: relative;
+
+      &::before {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 24px;
+        border: none;
+        border-left: 2px dotted #006EFF;
+        position: absolute;
+        top: -24px;
+        left: 50%;
       }
     }
   }

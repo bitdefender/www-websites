@@ -937,11 +937,11 @@
   }
   
   .columns-container .columns.trust-factors h2{
-    font: normal normal 300 60px/70px IBM Plex Sans;
+    font: normal normal 300 60px/70px "IBM Plex Sans", sans-serif;
   }
   
   .columns-container .columns.trust-factors p{
-    font: normal normal normal 24px/34px Arial;
+    font: normal normal normal 24px/34px Arial, sans-serif;
   }
 
   .columns-container .columns.trust-factors table tr{
@@ -1198,14 +1198,14 @@
   
   .columns-container .columns.trust-factors h2 {
     text-align: center;
-    font: normal normal 300 60px/70px IBM Plex Sans;
+    font: normal normal 300 60px/70px "IBM Plex Sans", sans-serif;
     letter-spacing: 0px;
     color: #000000;
     opacity: 1;
   }
   
   .columns-container .columns.trust-factors p {
-    font: normal normal normal 24px/34px Arial;
+    font: normal normal normal 24px/34px Arial, sans-serif;
     letter-spacing: 0px;
     color: #000000;
     opacity: 1;
