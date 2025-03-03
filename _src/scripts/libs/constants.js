@@ -1,7 +1,7 @@
 import Page from "./page.js"
 
 export class Constants {
-	static DEV_BASE_URL = ['localhost', 'stage', '.hlx.'].some((domain) => 
+	static DEV_BASE_URL = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
 	  window.location.hostname.includes(domain)) ? 'https://www.bitdefender.com' : '';
   
 	static FINGERPRINT_LOCAL_STORAGE_NAME = 'rhvID';
@@ -12,7 +12,7 @@ export class Constants {
   
 	static ZUROA_LOCALES = ['nl-nl', 'nl-be'];
   
-	static DEV_DOMAINS = ['localhost', 'stage', '.hlx.'];
+	static DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
   
 	  static PRODUCT_ID_MAPPINGS_CALL = this.#getVlaicuProductIdsMapping();
   

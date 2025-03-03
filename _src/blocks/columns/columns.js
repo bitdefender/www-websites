@@ -78,15 +78,10 @@ function setImageAsBackgroundImage() {
   });
 }
 
-export default function decorate(block, options) {
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-    const blockParent = block.closest('.section');
-    blockParent.classList.add('we-container');
-  }
-
-  const { linksOpenInNewTab, type, breadcrumbs } = block.closest('.section').dataset;
+export default function decorate(block) {
+  const {
+    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs
+  } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
@@ -124,6 +119,22 @@ export default function decorate(block, options) {
     block.querySelector('.columns-left-col')?.prepend(breadcrumb);
   }
 
+  // setup buylink, this can be used later as a starting point for prices.
+  const productsAsList = products?.split(',');
+  if (productsAsList) {
+    // eslint-disable-next-line no-unused-vars
+    [...block.children].forEach((row, rowNumber) => {
+      [...row.children].forEach((col, colNumber) => {
+        const [prodName, prodYears, prodUsers] = productsAsList[colNumber].trim().split('/');
+        col.setAttribute('data-store-context', '');
+        col.setAttribute('data-store-id', prodName);
+        col.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
+        col.setAttribute('data-store-department', 'consumer');
+        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
+      });
+    });
+  }
+
   if (linksOpenInNewTab === 'true') {
     block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
       anchorEl.target = '_blank';
@@ -156,12 +167,6 @@ export default function decorate(block, options) {
     }
   }
 
-  // This allows the event to cross the shadow DOM boundary
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true,
-  });
-
   if (type && type === 'video_left') {
     block.closest('.section').classList.add('video-left');
     const leftCol = block.querySelector('.columns-img-col');
@@ -185,6 +190,16 @@ export default function decorate(block, options) {
       element.classList.add('await-loader');
     }
   });
+
+  // this will define the number of rows inside each card of the subgrid system
+  // by dynamically setting this, i can set howewer much rows i want based on the number of
+  // maximum elements expected in the row
+  if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
+    block.querySelectorAll('.columns-text-col')?.forEach((element) => {
+      element.style['grid-row'] = `span ${maxElementsInColumn}`;
+    });
+  }
+
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
   if (block.closest('.section').classList.contains('multi-blocks')) {
