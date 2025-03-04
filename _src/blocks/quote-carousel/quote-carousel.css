@@ -13,6 +13,13 @@ main .quote-carousel .slides-container {
   overflow: hidden;
 }
 
+main .quote-carousel-container .hasMultiImgs .right-col picture {
+  display: none;
+}
+main .quote-carousel-container .hasMultiImgs .right-col picture:first-of-type {
+  display: block;
+}
+
 @media (min-width: 596px) {
   main .quote-carousel .slides-container {
     margin-bottom: 50px;

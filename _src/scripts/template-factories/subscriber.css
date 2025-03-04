@@ -65,6 +65,10 @@
     text-decoration: none;
 }
 
+.subscriber .columnvideo {
+    background: linear-gradient(to bottom, transparent 50%, #F1F5F8 50%);
+}
+
 .subscriber .columnvideo > div.image-columns-wrapper {
     background-color: black;
     border-radius: 16px;
@@ -133,6 +137,10 @@
     bottom: 0;
     right: -14%;
 }
+.subscriber #has4columns {
+    background-color: #F1F5F8;
+    padding-bottom: 4em;
+}
 .subscriber #has4columns .default-content-wrapper {
     width: 636px;
     margin: 64px auto;
@@ -191,7 +199,7 @@
 .subscriber #blueSlider {
     background-color: #003385;
     padding: 7em 0;
-    margin: 4em 0;
+    margin-bottom: 4em;
 }
 .subscriber #blueSlider .block .carousel-container {
     max-width: var(--section-large-desktop-max-width);
@@ -473,10 +481,21 @@
 
 .subscriber #blueBox {
     background-color: #003385;
-    padding: 5em 0;
+    padding: 5em 33em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 .subscriber #blueBox * {
     color: white;
+}
+.subscriber #blueBox > div {
+    width: auto;
+    flex: 0 1 auto;
+}
+.subscriber #blueBox .default-content-wrapper {
+    flex-basis: 100%;
+    padding: 0;
 }
 .subscriber #blueBox .default-content-wrapper p {
     margin: 0;
@@ -505,9 +524,90 @@
     text-decoration: none;
     color: #6BABFF !important;
 }
-.subscriber #blueBox .default-content-wrapper p:last-of-type {
-    display: none;
+.subscriber #blueBox .block {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
+.subscriber #blueBox .block > div {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+.subscriber #blueBox .block > div p {
+    margin-top: 0;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.11px;
+    text-align: center;
+}
+.subscriber #blueBox .block > div > div {
+    background-color: #0045AD;
+    border: 1px solid #338BFF;
+    border-radius: 12px;
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+}
+
+.subscriber #blueBox .block.col-1 div, .subscriber #blueBox .block.col-3 div {
+    width: 192px;
+}
+
+.subscriber #blueBox .block.col-1 div > div:not(:first-of-type), .subscriber #blueBox .block.col-3 div > div:not(:last-of-type) {
+    display: flex;
+    align-items: center;
+    flex: 0 0 84px;
+}
+.subscriber #blueBox .block.col-1 div > div:not(:first-of-type) p:first-of-type, .subscriber #blueBox .block.col-3 div > div:not(:last-of-type) p:first-of-type {
+    flex: 0 0 64px;
+}
+.subscriber #blueBox .block.col-1 div > div:not(:first-of-type) p, .subscriber #blueBox .block.col-3 div > div:not(:last-of-type) p {
+    margin: 0;
+    text-align: left;
+    margin-left: 10px;
+}
+.subscriber #blueBox .block.col-1 div > div:not(:first-of-type) p:last-of-type {
+    margin-right: 10px;
+}
+
+.subscriber #blueBox .block.col-1 > div > div:first-of-type, .subscriber #blueBox .block.col-3 > div > div:last-of-type {
+    flex: 0 0 232px;
+    display: flex;
+    flex-direction: column;
+}
+
+.subscriber #blueBox .block.col-2 div {
+    width: 407px;
+    display: block;
+}
+.subscriber #blueBox .block.col-2 div > div:first-of-type {
+    height: 232px;
+    margin-bottom: 20px;
+}
+.subscriber #blueBox .block.col-2 div > div:first-of-type p:first-of-type {
+    margin-top: 4em;
+}
+.subscriber #blueBox .block.col-2 div:first-of-type p:last-of-type {
+    width: 255px;
+    margin: 0 auto;
+}
+.subscriber #blueBox .block.col-2 div > div:not(:first-of-type) {
+    width: 192px;
+    height: 192px;
+}
+.subscriber #blueBox .block.col-2 div > div:not(:first-of-type) p:last-of-type {
+    width: 110px;
+}
+.subscriber #blueBox .block.col-2 div > div:nth-of-type(2) {
+    float: left;
+}
+.subscriber #blueBox .block.col-2 div > div:nth-of-type(3) {
+    float: right;
+}
+
+
 
 .subscriber #customQuoteCarousel {
     margin-bottom: 6em;
@@ -665,53 +765,9 @@
     font-weight: 500;
     line-height: 28px;
 }
-.subscriber .accordion-container .accordion .accordion-item {
-    box-shadow: unset;
-    border-bottom: 1px solid #B9C7DA;
-    border-radius: 0;
-    padding: 24px;
-    padding-top: 9px;
-    padding-left: 0;
-}
-.subscriber .accordion-container .accordion .accordion-item .accordion-item-header {
-    padding-bottom: 0;
-}
-.subscriber .accordion-container .accordion .accordion-item h4 {
-    padding: 0;
-    margin: 0;
-    color: var(--Greys-Black-0, #000);
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 28px;
-}
-.subscriber .accordion-container .accordion .accordion-item p {
-    color: #525252;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-}
-.subscriber .accordion-container .accordion .accordion-item .accordion-item-header::after {
-    content: '+';
-    border-radius: 100%;
-    border: 2px solid black;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: unset;
-    line-height: 0;
-}
-.subscriber .accordion-container .accordion .accordion-item.expanded .accordion-item-header::after {
-    content: '-';
-}
-.subscriber .accordion-container .accordion .accordion-item:last-of-type {
-    border: 0 none;
-}
 .subscriber .columnvideo2 {
     padding-bottom: 7em;
+    background: transparent;
 }
 .subscriber .columnvideo2 > div.image-columns-wrapper table {
     margin-top: 2em;
@@ -810,6 +866,22 @@
 .subscriber .multi-carousel-container .carousel-arrows-container button:hover svg path, .subscriber .multi-carousel-container .carousel-arrows-container button.inactive svg path {
     opacity: 0.5;
 }
+.subscriber .multivideosslider .carousel-arrows-container button {
+    width: 25%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.subscriber .multivideosslider .carousel-arrows-container button svg {
+    display: none;
+}
+.subscriber .multivideosslider .carousel-arrows-container button.carousel-prev {
+    left: 0;
+}
+.subscriber .multivideosslider .carousel-arrows-container button.carousel-next {
+    right: 0;
+}
 .subscriber .multicontentslider .default-content-wrapper {
     padding-right: 0;
 }
@@ -822,7 +894,7 @@
     text-transform: uppercase;
 }
 .subscriber .multicontentslider .carousel-container {
-    padding-left: 18%;
+    padding-left: 18em;
 }
 .subscriber .multicontentslider .carousel-track {
     gap: 32px;
@@ -859,26 +931,6 @@
     margin-bottom: 8px;
     display: block;
 }
-.subscriber .multilogosslider {
-    padding-bottom: 0;
-}
-.subscriber .multilogosslider .carousel-item {
-    width: 208px;
-    margin: 0;
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.subscriber .multilogosslider .default-content-wrapper {
-    text-align: center;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 25.6px;
-    text-align: center;
-    margin-bottom: 2em;
-    display: block;
-}
 
 .subscriber .download-popup__container {
     background-color: rgba(0, 0, 0, .5);
@@ -906,6 +958,29 @@
     overflow-y: scroll;
     text-align: left;
     border-radius: .75rem;
+}
+
+.subscriber .questions-answers-item .question, .subscriber .questions-answers-item.expanded .question {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 23.4px;
+    color: #0C0D0E;
+}
+.subscriber .questions-answers-item .answer p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 25.6px;
+}
+.subscriber .questions-answers-item.expanded .question::before {
+    filter: invert(25%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(100%) contrast(100%);
+}
+
+.subscriber .carousel-container {
+    padding-left: 28%;
+}
+.subscriber .carousel-item iframe {
+    min-width: 800px;
+    height: 506px;
 }
 
 @media (width >= 1300px) {
