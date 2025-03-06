@@ -1151,6 +1151,9 @@ main .subscriber .section {
     .subscriber #customQuoteCarousel .columns p.button-container {
         margin-top: 2em;
     }
+    .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
+        width: 68vw;
+    }
 }
 
 @media (max-width: 991px) {
@@ -1158,6 +1161,17 @@ main .subscriber .section {
         max-width: var(--section-desktop-max-width);
         padding: 0 var(--section-desktop-padding);
         margin: 0 auto;
+    }
+
+    .subscriber #heroColumn h2 {
+        font-weight: 500;
+        font-size: 56px;
+        line-height: 56px;
+    }
+
+    .subscriber .multicontentvideoslider .default-content-wrapper h4 {
+        font-size: 32px;
+        line-height: 32px;
     }
 
     .subscriber #heroColumn .image-columns-img-col {
@@ -1284,10 +1298,21 @@ main .subscriber .section {
         width: 100%;
     }
     .subscriber .multicontentslider .carousel-item {
-        width: 555px;
+
     }
     .subscriber .multicontentslider .carousel-item .carousel-content > div {
         text-align: center;
+    }
+    .subscriber .multicontentvideoslider .carousel-item .carousel-content > div p:last-of-type {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 27px;
+    }
+    .subscriber .multicontentvideoslider .carousel-item {
+        height: 365px;
+    }
+    .subscriber .multicontentvideoslider .carousel-item .carousel-content > div {
+        text-align: left;
     }
     .subscriber .columnvideo2 > div.image-columns-wrapper video {
         right: 0;

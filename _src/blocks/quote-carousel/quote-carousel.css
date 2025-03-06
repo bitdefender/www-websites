@@ -13,12 +13,11 @@ main .quote-carousel .slides-container {
   overflow: hidden;
 }
 
-main .quote-carousel-container .hasMultiImgs .right-col {
-  height: 654px;
-}
-
 main .quote-carousel-container .hasMultiImgs .right-col picture {
   display: none;
+}
+main .quote-carousel-container .hasMultiImgs .right-col picture img {
+  height: 100%;
 }
 main .quote-carousel-container .hasMultiImgs .right-col picture:first-of-type {
   display: block;
