@@ -679,6 +679,19 @@ export class Target {
         renderDecisions: true
       });
 
+      notRequestedOffersCall.then(result => {
+        window.alloyProxy("sendEvent", {
+          "xdm": {
+            "eventType": "decisioning.propositionDisplay",
+            "_experience": {
+              "decisioning": {
+                "propositions": result.propositions
+              }
+            }
+          }
+        });
+      });
+
       notRequestedMboxes.forEach(mbox => {
         const receivedMboxOfferCall = new Promise((resolve, reject) => {
           notRequestedOffersCall.then(result => {
