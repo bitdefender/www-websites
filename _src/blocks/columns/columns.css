@@ -372,7 +372,8 @@
 }
 
 .creators .columns-container .columns > div {
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 3em;
 }
 
@@ -435,6 +436,63 @@
   justify-content: center;
   padding: 5px 10px;
   font-size: 14px;
+}
+
+.columns-container .trust-factors {
+  justify-items: center;
+  background: #F5F5F7 0% 0% no-repeat padding-box;
+  border-radius: 16px;
+  padding: 20px 0;
+}
+
+.columns-container .columns.trust-factors > div{
+  width: 80%;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.columns-container .columns.trust-factors h2{
+  text-align: center;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.columns-container .columns.trust-factors p{
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.columns-container .columns.trust-factors table{
+  width: 100%;
+}
+
+.columns-container .columns.trust-factors table tr{
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+}
+
+.columns-container .columns.trust-factors td {
+  padding: 25px 15px;
+  border-radius: 16px;
+  border: 1px #fff solid;
+}
+
+.columns-container .columns.trust-factors td p{
+  margin: 0;
+}
+
+.columns-container .columns.trust-factors td img{
+  height: 58px;
+  width: 58px;
+}
+
+.columns-container .columns.trust-factors td .icon{
+  height: 48px;
+  width: 48px;
 }
 
 .columns.bg-image a {
@@ -658,6 +716,80 @@
   }
 }
 
+.creators .header-mobile{
+  background: linear-gradient(to bottom, #e4f2ff, white);
+}
+
+.creators .columns-container .columns.creators-banner .breadcrumb {
+  font-weight: var(--font-weight-bold);
+  color: #000000;
+  min-height: unset;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.creators .columns-container .columns.creators-banner .breadcrumb a {
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  color: var(--breadcrumb-text-color-dark-hover);
+  text-decoration: none;
+  line-height: 1.7;
+  letter-spacing: .96px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 0;
+  text-align: left;
+  min-width: unset;
+}
+
+.creators .columns-container .columns.creators-banner .breadcrumb a:last-child {
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+  display: inline-block;
+}
+
+.creators .columns-container .columns.creators-banner .breadcrumb a::after {
+  content: "/";
+  display: inline-block;
+  color: #000000;
+  margin: 0 3px;
+  font-size: 9pt;
+}
+
+.creators .columns-container .columns.creators-banner .breadcrumb a:hover {
+  color: var(--text-color);
+}
+
+.creators .columns-container .columns.creators-banner > div .columns-img-col {
+  margin-bottom: 0;
+}
+
+.creators .columns-container .columns.creators-banner > div > div.columns-left-col td{
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.creators .columns-container .columns.creators-banner > div > div.columns-left-col td .icon{
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
+.creators .columns-container .columns.creators-banner > div > div.columns-left-col td .icon svg{
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
 .columns-container.secondary-button-blue  .columns .button.secondary {
   margin-top: 15px;
   color: #026DFF;
@@ -799,6 +931,36 @@
   .section.pl-0 .columns-wrapper {
     padding-left: 0;
   }
+
+  .columns-container .trust-factors {
+    padding: 50px;
+  }
+  
+  .columns-container .columns.trust-factors h2{
+    font: normal normal 300 60px/70px "IBM Plex Sans", sans-serif;
+  }
+  
+  .columns-container .columns.trust-factors p{
+    font: normal normal normal 24px/34px Arial, sans-serif;
+  }
+
+  .columns-container .columns.trust-factors table tr{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: column;
+    margin-bottom: 20px;
+    margin-top: 40px;
+  }
+  
+  .columns-container .columns.trust-factors td p{
+    font-size: 18px;
+    margin: 0;
+    line-height: 1.4;
+  }
+  
+  .columns-container .columns.trust-factors td strong{
+    font-size: 32px;
+  }
 }
 
 @media (min-width: 992px) { /* desktop */
@@ -923,8 +1085,51 @@
   }
 
   .creators .columns-container .columns > div > div.columns-left-col, .creators .columns-container .columns > div > div.columns-right-col {
-    width: 45%;
+    width: 50%;
     flex: none;
+  }
+
+  .creators .columns-container .columns.creators-banner > div > div.columns-left-col, .creators .columns-container .columns.creators-banner > div > div.columns-right-col {
+    width: 50%;
+    text-align: left;
+  }
+
+  .creators .columns-container .columns.benefits {
+    text-align: left;
+  }
+
+  .creators .columns-container .columns.benefits p {
+    line-height: 1.4;
+  }
+
+  .creators .columns-container .columns.benefits > div > div.columns-left-col, .creators .columns-container .columns.benefits > div > div.columns-right-col {
+    width: 30%;
+  } 
+
+  .creators .columns-container .columns.benefits .icon {
+    height: 38px;
+    width: 38px;
+  }
+
+  .creators .columns-container .columns.benefits-cards > div > div.columns-left-col, .creators .columns-container .columns.benefits-cards > div > div.columns-right-col {
+    background-color: #F6F6F6;
+    border-radius: 15px;
+    padding: 27px 25px;
+    height: 100%;
+    text-align: left;
+    width: 100%;
+  }
+
+  .creators .columns-container .columns.benefits-cards > div{
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: column;
+    width: 100%;
+  }
+
+  .columns-wrapper:has(.benefits-cards){
+    max-width: 1420px;
   }
 
   .creators .columns-container .columns > div > div.columns-img-col {
@@ -941,14 +1146,14 @@
     font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
   }
 
-  .creators .header-mobile.columns-container h2 {
+  .creators .header-mobile.columns-container .columns.creators-banner h2 {
     color: #006DFF;
     font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
     margin-bottom: 0;
   }
 
   .creators .columns-container h3 {
-    font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+    font: normal normal bold 24px "IBM Plex Sans", sans-serif;
   }
 
   .creators .columns-container p {
@@ -959,7 +1164,7 @@
     font: normal normal normal 18px / 27px Arial, sans-serif;
   }
 
-  .creators .columns-container p.button-container {
+  .creators .columns-container .columns.creators-banner p.button-container {
     text-align: left;
   }
 
@@ -971,6 +1176,56 @@
     border-radius: 40px;
     justify-content: center;
     font: normal normal 500 18px/24px Roboto, sans-serif;
+  }
+
+  .creators .columns-container .columns .button-container {
+    justify-self: flex-start;
+  }
+
+  .columns-container .trust-factors {
+    justify-items: center;
+    background: #F5F5F7 0% 0% no-repeat padding-box;
+    padding: 50px;
+    border-radius: 16px;
+  }
+  
+  .columns-container .columns.trust-factors > div {
+    width: 80%;
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+  }
+  
+  .columns-container .columns.trust-factors h2 {
+    text-align: center;
+    font: normal normal 300 60px/70px "IBM Plex Sans", sans-serif;
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+  }
+  
+  .columns-container .columns.trust-factors p {
+    font: normal normal normal 24px/34px Arial, sans-serif;
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+  }
+  
+  .columns-container .columns.trust-factors table {
+    width: 100%;
+  }
+  
+  .columns-container .columns.trust-factors td p {
+    font-size: 18px;
+    margin: 0;
+  }
+  
+  .columns-container .columns.trust-factors td strong {
+    font-size: 32px;
+  }
+
+  .columns-container .columns.trust-factors .button-container {
+    justify-self: center;
   }
 }
 
@@ -1485,6 +1740,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .creators .header-mobile h3 {
     font-size: var(--heading-font-size-l);
     line-height: 1.2;
+  }
+
+  .creators .header-mobile table {
+    justify-self: center;
   }
 
   .creators .columns-container h3, .creators .columns-container h5, .creators .columns-container h2, .creators .columns-container h1 {
