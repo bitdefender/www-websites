@@ -1,31 +1,3 @@
-const tabSlide = () => {
-  const tabSlide = document.getElementById('tabSlide');
-  const tabs = tabSlide.querySelectorAll('.slide > div > div');
-
-  tabs.forEach((tab, idx) => {
-    tab.addEventListener('click', event => {
-        // Set all tabs to inactive and mark the clicked tab as active
-        tabs.forEach(t => t.className = 'inactive');
-        event.currentTarget.className = 'active';
-
-        const section = event.currentTarget.closest('.section');
-        section.querySelectorAll('div.columns-wrapper').forEach(w => {
-            w.classList.remove('active');
-            w.classList.add('inactive');
-        });
-
-        const targetElement = section.querySelector(`div.show${idx}`);
-        if (targetElement) {
-            const targetWrapper = targetElement.closest('div.columns-wrapper');
-            if (targetWrapper) {
-                targetWrapper.classList.remove('inactive');
-                targetWrapper.classList.add('active');
-            }
-        }
-    });
-  });
-}
-
 // form
 const initializeHubspotModule = () => {
   // Helper to load the HubSpot forms script if it isn't already loaded
@@ -170,6 +142,5 @@ const initializeHubspotModule = () => {
 }
 
 window.addEventListener('load', () => {
-  tabSlide();
   initializeHubspotModule();
 });

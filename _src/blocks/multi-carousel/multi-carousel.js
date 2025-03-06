@@ -5,27 +5,28 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
-  videos = videos || Array.from(block.children).map(child => child.innerHTML); // Fallback to block children if no videos
+  videos = videos || Array.from(block.children).map(child => child.innerHTML);
 
   videos.forEach((item, index) => {
     const carouselItem = document.createElement('div');
     carouselItem.classList.add('carousel-item');
+    if (index === 0) carouselItem.classList.add('active');
 
     if (item.includes('https://www.youtube.com/embed/')) {
+      carouselItem.classList.add('hasIframe');
       // Create an iframe element for embedding YouTube video
+      item = item.replace('<div>', '').replace('</div>', '').replace('<div bis_skin_checked="1">', '');
       const iframeElement = document.createElement('iframe');
       iframeElement.setAttribute('src', item);
       iframeElement.setAttribute('frameborder', '0');
       iframeElement.setAttribute('allow', 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
       iframeElement.setAttribute('allowfullscreen', '');
-
       carouselItem.appendChild(iframeElement);
     } else {
       // For non-video content (text, images, etc.)
       const contentElement = document.createElement('div');
       contentElement.classList.add('carousel-content');
       contentElement.innerHTML = item;
-
       carouselItem.appendChild(contentElement);
     }
 
@@ -70,6 +71,9 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     const dots = document.querySelectorAll('.carousel-dot');
     dots[currentIndex].classList.remove('active');
     dots[index].classList.add('active');
+
+    block.querySelectorAll('.carousel-item').forEach((itm) => itm.classList.remove('active'));
+    block.querySelector(`.carousel-item:nth-of-type(${index + 1})`).classList.add('active');
 
     currentIndex = index;
     carouselTrack.style.transform = `translateX(-${block.querySelector('.carousel-item').offsetWidth * index}px)`;
@@ -147,7 +151,7 @@ export default function decorate(block) {
   const parentSection = block.closest('.section');
   let shouldAutoplay = false;
 
-  if (parentSection.getAttribute('data-autplay') === 'true') {
+  if (parentSection.getAttribute('data-autoplay') === 'true') {
     shouldAutoplay = true;
   }
 
@@ -166,7 +170,7 @@ export default function decorate(block) {
     // Get HTML content from block.children if no videos are found
     const htmlContent = Array.from(block.children).map(child => child.innerHTML);
     // Clear original content
-    block.textContent = '';
+    block.innerHTML = '';
     createCarousel(block, shouldAutoplay, htmlContent);
   }
 }
