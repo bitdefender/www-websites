@@ -665,6 +665,7 @@ export class Target {
     }
 
     const notRequestedMboxes = mboxes.filter(mbox => !this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
+    let requestReference = null;
     if (notRequestedMboxes.length) {
       const notRequestedOffersCall = window.alloyProxy('sendEvent', {
         decisionScopes: notRequestedMboxes,
@@ -678,6 +679,8 @@ export class Target {
         },
         renderDecisions: true
       });
+
+      requestReference = notRequestedOffersCall;
 
       notRequestedMboxes.forEach(mbox => {
         const receivedMboxOfferCall = new Promise((resolve, reject) => {
@@ -695,6 +698,18 @@ export class Target {
 
     const mboxesPromises = mboxes.map(mbox => this.#cachedMboxes.get(`${mbox}_${JSON.stringify(parameters)}`));
     const resolvedMboxes = await Promise.allSettled(mboxesPromises);
+    if (requestReference) {
+      requestReference.then(result => {
+        window.adobeDataLayer.push({
+          event: 'decisioning.propositionDisplay',
+          "_experience": {
+            "decisioning": {
+              "propositions": result.propositions
+            }
+          }
+        });
+      });
+    }
     
     const offersResult = mboxes.reduce((acc, mbox, index) => {
       acc[mbox] = resolvedMboxes[index].value || null;
