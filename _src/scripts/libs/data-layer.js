@@ -573,10 +573,6 @@ export class Target {
     }
 
     this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox', 'taget-global-mbox']);
-
-    window.adobeDataLayer.push({
-      mboxes: ['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox', 'taget-global-mbox']
-    });
   };
 
   /**
@@ -670,47 +666,40 @@ export class Target {
 
     const notRequestedMboxes = mboxes.filter(mbox => !this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
     if (notRequestedMboxes.length) {
-      // const notRequestedOffersCall = window.alloyProxy('sendEvent', {
-      //   decisionScopes: notRequestedMboxes,
-      //   data: {
-      //     "__adobe": {
-      //       "target": Object.assign({}, this.#urlParameters,
-      //         parameters ? parameters : {},
-      //         profileParameters ? profileParameters : {}
-      //       ),
-      //     }
-      //   },
-      //   renderDecisions: true
-      // });
+      const notRequestedOffersCall = window.alloyProxy('sendEvent', {
+        decisionScopes: notRequestedMboxes,
+        data: {
+          "__adobe": {
+            "target": Object.assign({}, this.#urlParameters,
+              parameters ? parameters : {},
+              profileParameters ? profileParameters : {}
+            ),
+          }
+        },
+        renderDecisions: true
+      });
+
+      notRequestedOffersCall.then(result => {
+        window.alloyProxy("sendEvent", {
+          "xdm": {
+            "eventType": "decisioning.propositionDisplay",
+            "_experience": {
+              "decisioning": {
+                "propositions": result.propositions
+              }
+            }
+          }
+        });
+      });
 
       notRequestedMboxes.forEach(mbox => {
         const receivedMboxOfferCall = new Promise((resolve, reject) => {
-
-          if (window.propositions) {
-            const mboxResult = window.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
-            if (mboxResult) {
-              resolve(mboxResult);
-            } else {
-              reject();
-            }
-          } else {
-
-            document.addEventListener('alloy-finished-loading', () => {
-              const mboxResult = window.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
-              if (mboxResult) {
-                resolve(mboxResult);
-              } else {
-                reject();
-              }
-            });
-          }
-
-          // notRequestedOffersCall.then(result => {
-          //   const mboxResult = result.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
-          //   resolve(mboxResult);
-          // }).catch(e => {
-          //   reject(e);
-          // });
+          notRequestedOffersCall.then(result => {
+            const mboxResult = result.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
+            resolve(mboxResult);
+          }).catch(e => {
+            reject(e);
+          });
         });
 
         this.#cachedMboxes.set(`${mbox}_${JSON.stringify(parameters)}`, receivedMboxOfferCall);
@@ -724,10 +713,6 @@ export class Target {
       acc[mbox] = resolvedMboxes[index].value || null;
       return acc;
     }, {});
-
-    if (mboxes[0] === 'webview') {
-      return {};
-    }
 
     return mboxes.length > 1 ? offersResult : offersResult[mboxes[0]];
   }
