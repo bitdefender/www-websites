@@ -333,7 +333,7 @@
   text-decoration: underline;
 }
 
-.products.solutions .product-card .price .old-price{
+.products.solutions:not(:is(.products.compact, .products.plans)) .product-card .price .old-price{
   margin-bottom: 10px;
 }
 
