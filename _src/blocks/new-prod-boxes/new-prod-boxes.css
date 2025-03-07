@@ -470,7 +470,7 @@
   font-weight: bold;
 }
 
-.new-prod-boxes-container .prod-save{
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-save{
   color: #2cb43d;
   background-color: rgb(44 180 61 / 20%);
   border-radius: 8px;
