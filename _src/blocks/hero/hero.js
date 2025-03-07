@@ -88,6 +88,23 @@ createNanoBlock('discount', (code, label = '{label}') => {
   return root;
 });
 
+createNanoBlock('europe', (text) => {
+  const root = document.createElement('div');
+  root.classList.add('europe-badge');
+
+  const europeFlag = document.createElement('div');
+  europeFlag.classList.add('europe-flag');
+  root.appendChild(europeFlag);
+
+  const flagText = document.createElement('span');
+  flagText.classList.add('europe-badge__text');
+  flagText.textContent = text;
+
+  root.appendChild(flagText);
+
+  return root;
+});
+
 async function renderBubble(block) {
   await renderNanoBlocks(block);
   const bubble = block?.querySelector('.discount-bubble');

@@ -677,6 +677,32 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   border-radius: 5px;
 }
 
+main .hero-container .europe-badge {
+  display: inline-flex;
+
+
+  .europe-badge__text {
+    display: inline-block;
+    background-color: #006DFF;
+    color: white;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 8px 8px 8px;
+  }
+
+  .europe-flag {
+    background: url('../../images/EU.jpg') no-repeat;
+    background-size: cover;
+    width: 51px;
+    height: 37px;
+    display: inline-block;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+}
+
 @media(max-width: 989px) {
   main .hero.new2024design {
     background-color: #006FFF;
