@@ -470,6 +470,17 @@
   font-weight: bold;
 }
 
+.new-prod-boxes-container .prod-save{
+  color: #2cb43d;
+  background-color: rgb(44 180 61 / 20%);
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 2px 8px;
+  display: inline-block;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
+
 .new-prod-boxes-container .prod-newprice {
   font-size: 40px;
   font-weight: bold;
