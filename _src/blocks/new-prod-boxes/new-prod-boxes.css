@@ -301,6 +301,10 @@
   margin-bottom: 0.5rem;
 }
 
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li > .icon {
+  display: none;
+}
+
 .new-prod-boxes-container {
   .new-prod-boxes {
     .prod_box {
@@ -468,6 +472,17 @@
 .new-prod-boxes-container .prod-save {
   color: #1C7928;
   font-weight: bold;
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-save{
+  color: #2cb43d;
+  background-color: rgb(44 180 61 / 20%);
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 2px 8px;
+  display: inline-block;
+  margin-bottom: 10px;
+  margin-left: 5px;
 }
 
 .new-prod-boxes-container .prod-newprice {

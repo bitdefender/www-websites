@@ -339,6 +339,10 @@
   color: #666;
 }
 
+.products.solutions:not(:is(.products.compact, .products.plans)) .product-card .price .old-price {
+  margin-bottom: 10px;
+}
+
 .products .product-card .price del {
   color: #616161;
 }
@@ -386,6 +390,21 @@
 
 .product-card .price.nanoblock, .product-card .featured.nanoblock{
   font-family: Arial, sans-serif;
+}
+
+.products.solutions .product-card tr {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.products.solutions .product-card tr .nanoblock {
+  display: flex;
+  align-items: center;
+}
+
+.products.solutions .product-card tr .nanoblock.featured {
+  font-weight: bold;
 }
 
 @media (max-width: 480px) {
