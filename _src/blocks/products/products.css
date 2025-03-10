@@ -395,7 +395,7 @@
 .products.solutions .product-card tr {
   display: inline-flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
 .products.solutions .product-card tr .nanoblock {
