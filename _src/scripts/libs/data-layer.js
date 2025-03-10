@@ -599,7 +599,8 @@ export class Target {
               "selector": "#targetGlobal",
               "actionType": "setHtml"
             }
-          }
+          },
+          "viewName": window.location.href
         })
       }
     });
