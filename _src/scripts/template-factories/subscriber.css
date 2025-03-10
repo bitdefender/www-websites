@@ -864,9 +864,6 @@ main .subscriber .section {
     justify-content: flex-end;
     margin-right: 20%;
 }
-.subscriber .multi-carousel-container .carousel-navigation {
-    display: none;
-}
 .subscriber .multi-carousel-container .carousel-arrows-container {
     gap: 21px;
     display: flex;
@@ -1455,6 +1452,11 @@ main .subscriber .section {
     .subscriber #customQuoteCarousel .right-col {
         height: auto;
         width: 100%;
+    }
+}
+@media (min-width: 6376px) {
+    .subscriber .multi-carousel-container .carousel-navigation {
+        display: block;
     }
 }
 @media (max-width: 636px) {
