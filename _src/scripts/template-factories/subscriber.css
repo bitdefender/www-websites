@@ -864,6 +864,9 @@ main .subscriber .section {
     justify-content: flex-end;
     margin-right: 20%;
 }
+.subscriber .multi-carousel-container .carousel-navigation {
+    display: none;
+}
 .subscriber .multi-carousel-container .carousel-arrows-container {
     gap: 21px;
     display: flex;
@@ -1082,10 +1085,6 @@ main .subscriber .section {
 
 .subscriber .section.multicontentvideoslider .carousel-item {
     overflow: hidden;
-}
-
-.subscriber .multi-carousel-container .carousel-navigation {
-    display: none;
 }
 
 @media (min-width: 1600px) { /* large desktop */
@@ -1458,7 +1457,6 @@ main .subscriber .section {
         width: 100%;
     }
 }
-
 @media (max-width: 636px) {
     .subscriber #heroColumn h1 {
         margin: 0;
