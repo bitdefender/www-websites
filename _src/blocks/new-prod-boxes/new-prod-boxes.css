@@ -301,7 +301,7 @@
   margin-bottom: 0.5rem;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li > .icon:nth-last-child(1){
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li > .icon {
   display: none;
 }
 
