@@ -333,14 +333,14 @@
   text-decoration: underline;
 }
 
-.products.solutions:not(:is(.products.compact, .products.plans)) .product-card .price .old-price{
-  margin-bottom: 10px;
-}
-
 .products.plans .product-card .price .old-price {
   font-weight: normal;
   font-size: var(--body-font-size-xl);
   color: #666;
+}
+
+.products.solutions:not(:is(.products.compact, .products.plans)) .product-card .price .old-price {
+  margin-bottom: 10px;
 }
 
 .products .product-card .price del {
