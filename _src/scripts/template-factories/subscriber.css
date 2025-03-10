@@ -1084,6 +1084,10 @@ main .subscriber .section {
     overflow: hidden;
 }
 
+.subscriber .multi-carousel-container .carousel-navigation {
+    display: none;
+}
+
 @media (min-width: 1600px) { /* large desktop */
     .subscriber .default-content-wrapper {
         max-width: var(--section-large-desktop-max-width);
@@ -1454,11 +1458,7 @@ main .subscriber .section {
         width: 100%;
     }
 }
-@media (min-width: 6376px) {
-    .subscriber .multi-carousel-container .carousel-navigation {
-        display: block;
-    }
-}
+
 @media (max-width: 636px) {
     .subscriber #heroColumn h1 {
         margin: 0;
