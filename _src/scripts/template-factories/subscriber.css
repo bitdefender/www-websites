@@ -1599,6 +1599,7 @@ main .subscriber .section {
     }
     .subscriber .section.multicontentvideoslider .carousel-item {
         width: 94vw;
+        opacity: 1;
     }
     .subscriber .multicontentvideoslider .carousel-item iframe {
         height: 100%;
