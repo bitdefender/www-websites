@@ -167,7 +167,7 @@
     line-height: 27px;
     background-color: white;
     border-radius: 16px;
-    justify-content: space-around;
+    justify-content: left;
     padding: 16px;
 }
 
@@ -201,26 +201,24 @@
     background: url('../../icons/bug.png') 0 0 no-repeat transparent;
 }
 
-/* "With SPP" style */
-.spp-slider .with .card {
-
-}
-
-/* "Without SPP" style */
-.spp-slider .without .card {
-
-}
-
 /* RESPONSIVE HANDLING */
+@media (max-width: 991px) {
+    .spp-slider .card {
+        width: calc(50% - 24px);
+    }
+}
 @media (max-width: 768px) {
     .spp-slider .card {
-        width: calc(50% - 10px); /* 2 per row on smaller screens */
+        width: calc(100% - 10px);
+    }
+    .tabs-slide-container .default-content-wrapper {
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
     .spp-slider .card {
-        width: 100%; /* 1 per row on small devices */
+        width: 100%;
         transform: none;
     }
 }
