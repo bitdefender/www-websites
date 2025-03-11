@@ -90,6 +90,7 @@
   /* body width */
   --body-max-width: 1920px;
   --body-padding: 20px;
+  --section-desktop-smaller-max-width: 920px;
   --section-desktop-max-width: 1290px;
   --section-desktop-padding: 20px;
   --section-large-desktop-max-width: 1332px;
@@ -602,10 +603,6 @@ header, main, footer {
     margin: 0 auto;
 }
 
-body.creators {
-  background: linear-gradient(to bottom, #F6FCFF, white);
-}
-
 .creators * {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -1105,7 +1102,7 @@ a.button:hover.secondary {
   color: var(--white-color)
 }
 
-a.button.modal, a.button.central, main .section.link-right a {
+a.button.modal, a.button.link-arrow-right, a.button.central, main .section.link-right a {
   color: var(--link-color);
   font-weight: var(--font-weight-bold);
   background-color: transparent;
@@ -1116,7 +1113,7 @@ a.button.modal, a.button.central, main .section.link-right a {
   text-overflow: ellipsis;
 }
 
-a.button.modal::after, a.button.central::after, main .section.link-right a::after {
+a.button.modal::after, a.button.link-arrow-right::after, a.button.central::after, main .section.link-right a::after {
   background-color: var(--link-color);
   opacity: 1;
   margin: 0;
@@ -1131,13 +1128,13 @@ a.button:has(.icon)::after {
   opacity: 0;
 }
 
-a.button.modal:hover, a.button.central:hover, main .section.link-right a:hover {
+a.button.modal:hover, a.button.link-arrow-right:hover, a.button.central:hover, main .section.link-right a:hover {
   color: var(--link-hover-color);
   text-decoration: none;
   transform: none;
 }
 
-a.button.modal:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
+a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
   transform: translateX(3px);
   background-color: var(--link-hover-color);
 }
@@ -1591,6 +1588,12 @@ main .section.blue a.button.modal::after {
 
 .centered {
   text-align: center;
+}
+
+.centered.narrow-content .default-content-wrapper p, .centered.narrow-content .default-content-wrapper h2{
+  max-width: 85%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .ferrari-img img{

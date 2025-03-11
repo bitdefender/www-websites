@@ -20,7 +20,7 @@ export default class Page {
   /**
    * @type {string} - 'consumer', 'total-security'
    */
-  static pageName;
+  static name;
 
   /**
    * @type {object} - {theme: 'dark', key: 'value'}
@@ -42,7 +42,7 @@ export default class Page {
 
     this.environment = this.#getEnvironment();
 
-    this.pageName = window.location.pathname.split('/').filter(Boolean).pop();
+    this.name = window.location.pathname.split('/').filter(Boolean).pop();
 
     this.queryParams = this.#getQueryParams();
   }
@@ -65,7 +65,7 @@ export default class Page {
   */
   static #getEnvironment() {
     const { hostname } = window.location;
-    if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
+    if (hostname.includes('aem.page') || hostname.includes('aem.live')) {
       return 'stage';
     }
     if (hostname.includes('www.bitdefender')) {

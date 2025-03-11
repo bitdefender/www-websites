@@ -162,7 +162,8 @@ async function processLocaleSitemap(locale, hreflangMap) {
     const localesArr = getUniqueLocales(localesData);
 
     let hreflangMap = generateHreflangMap(localesArr);
-    hreflangMap = hreflangMap.concat(await addBucketCountriesToHreflangMap());
+    // we will not use locale buckets for now.
+    //hreflangMap = hreflangMap.concat(await addBucketCountriesToHreflangMap());
 
     for (const locale of localesArr) {
       await processLocaleSitemap(locale, hreflangMap);

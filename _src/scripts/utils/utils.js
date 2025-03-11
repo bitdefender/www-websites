@@ -1,4 +1,4 @@
-import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
+import { AdobeDataLayerService, ButtonClickEvent, Visitor } from '../libs/data-layer.js';
 import Page from '../libs/page.js';
 import { Constants } from '../libs/constants.js';
 
@@ -130,9 +130,8 @@ const PRICE_LOCALE_MAP = new Map([
 /**
  * @returns {boolean} check if you are on exactly the consumer page (e.g /en-us/consumer/)
  */
-export function checkIfConsumerPage() {
-  const lastSegmentInPath = window.location.pathname?.split('/')?.filter(Boolean)?.slice(-1)[0];
-  return lastSegmentInPath === 'consumer';
+export function checkIfNotProductPage() {
+  return Constants.NONE_PRODUCT_PAGES.includes(Page.name);
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -483,22 +482,11 @@ export function debounce(func, wait) {
 
 export function appendAdobeMcLinks(selector) {
   try {
-    const visitor = window.Visitor.getInstance('0E920C0F53DA9E9B0A490D45@AdobeOrg', {
-      trackingServer: 'sstats.bitdefender.com',
-      trackingServerSecure: 'sstats.bitdefender.com',
-      marketingCloudServer: 'sstats.bitdefender.com',
-      marketingCloudServerSecure: 'sstats.bitdefender.com',
-    });
-
     const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
 
     const hrefSelector = '[href*=".bitdefender."]';
-    wrapperSelector.querySelectorAll(hrefSelector).forEach((link) => {
-      const isAdobeMcAlreadyAdded = link.href.includes('adobe_mc');
-      if (isAdobeMcAlreadyAdded) {
-        return;
-      }
-      const destinationURLWithVisitorIDs = visitor.appendVisitorIDsTo(link.href);
+    wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
+      const destinationURLWithVisitorIDs = await Visitor.appendVisitorIDsTo(link.href);
       link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
     });
   } catch (e) {
@@ -688,8 +676,7 @@ export function pushTrialDownloadToDataLayer() {
     return getMetadata('breadcrumb-title') || getMetadata('og:title');
   };
 
-  const url = window.location.href;
-  const currentPage = url.split('/').filter(Boolean).pop();
+  const currentPage = Page.name;
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
 
   const pushTrialData = (button = null) => {

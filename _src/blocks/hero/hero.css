@@ -364,6 +364,11 @@ main .hero .hero-picture picture img {
   right: 0;
 }
 
+main .hero.scamio .hero-picture picture img {
+  position: absolute;
+  right: -75px;
+}
+
 main .hero a.button {
   margin: 8px 13px 0 0;
 }
@@ -919,6 +924,12 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
   main .v2 .hero h1 {
     font-size: var(--heading-font-size-xxl1);
+  }
+}
+
+@media (max-width: 1200px){
+  main .hero-container.blue-title .scamio .hero-picture img {
+    display: none;
   }
 }
 
