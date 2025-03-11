@@ -1048,10 +1048,15 @@ main .subscriber .section {
     line-height: 23.4px;
     color: #0C0D0E;
 }
-.subscriber .questions-answers-item .answer p {
+.subscriber .questions-answers-item .answer p, .subscriber .questions-answers-item .answer ul li  {
     font-weight: 400;
     font-size: 16px;
     line-height: 25.6px;
+}
+.subscriber .questions-answers-item .answer ul li {
+    list-style-type: disc;
+    padding: 0;
+    margin: 5px 0 5px 5px;
 }
 .subscriber .questions-answers-item.expanded .question::before {
     filter: invert(25%) sepia(100%) saturate(10000%) hue-rotate(200deg) brightness(100%) contrast(100%);
