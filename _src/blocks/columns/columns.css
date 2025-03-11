@@ -771,6 +771,10 @@
   margin-bottom: 0;
 }
 
+.creators .columns-container .columns.creators-banner > div .columns-img-col img{
+  display: none;
+}
+
 .creators .columns-container .columns.creators-banner > div > div.columns-left-col td{
   vertical-align: middle;
   display: inline-flex;
@@ -1087,6 +1091,10 @@
   .creators .columns-container .columns > div > div.columns-left-col, .creators .columns-container .columns > div > div.columns-right-col {
     width: 50%;
     flex: none;
+  }
+
+  .creators .columns-container .columns.creators-banner > div .columns-img-col img{
+    display: block;
   }
 
   .creators .columns-container .columns.creators-banner > div > div.columns-left-col, .creators .columns-container .columns.creators-banner > div > div.columns-right-col {
