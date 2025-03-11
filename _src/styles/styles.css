@@ -635,53 +635,9 @@ main .section.blue-heading h2{
   font-weight: bold;
 }
 
-main .section.blue-heading h3 {
-  color: #006eff;
-}
-
-main .section.blue-heading h4 {
-  color: #006eff;
-}
-
 main .grey-background{
   background-color: #F6F6F6;
 }
-
-/*.creators a.button {
-  min-width: 230px!important;
-  height: 48px!important;
-  padding: 10px 10px 10px 25px!important;
-  background: #E72325 0% 0% no-repeat padding-box!important;
-  border-radius: 40px!important;
-  justify-content: center!important;
-  font: normal normal 500 18px / 24px Roboto, sans-serif!important;
-  color: white;
-}
-.creators a.button::after {
-  content: '';
-  width: 24px!important;
-  height: 24px!important;
-  background-color: var(--button-link-color)!important;
-  display: inline-block!important;
-  transition: all .2s cubic-bezier(.4,0,.2,1)!important;
-  transform: translateX(0)!important;
-  opacity: 0!important;
-}
-
-
-.creators a.button:hover::after {
-  content: '';
-  width: 24px!important;
-  height: 24px!important;
-  background-color: var(--button-link-color)!important;
-  display: inline-block!important;
-  transition: all .2s cubic-bezier(.4,0,.2,1)!important;
-  transform: translateX(0)!important;
-  opacity: 0!important;
-  margin-left: -10px!important;
-  transform: translateX(5px);
-  opacity: 1;
-}*/
 
 @media (max-width: 991px) {
   .creators main .section.hide-on-mobile {
@@ -786,6 +742,11 @@ main .grey-background{
 
   main .section.width-medium .block, main .section.width-medium .default-content-wrapper {
     width: 940px;
+    margin: 0 auto;
+  }
+
+  main .section.width-medium-percent .block, main .section.width-medium-percent .default-content-wrapper {
+    width: 90%;
     margin: 0 auto;
   }
 
@@ -1064,6 +1025,44 @@ a.button:hover, a.button:focus, input[type="submit"]:hover, input[type="submit"]
 a.button:hover::after, input[type="submit"]:hover::after {
   transform: translateX(5px);
   opacity: 1;
+}
+
+main .section.blue-btn {
+  padding: 0 0 30px;
+}
+
+.blue-btn a.button, .blue-btn a.button.primary {
+  background-color: transparent;
+  color: #006DFF;
+  border-color: #006DFF;
+  font-family: Arial;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 18.4px;
+  padding: 10px 19px;
+}
+
+.blue-btn a::after {
+  opacity: 1;
+  background-color: #006DFF;
+  margin-left: 0;
+  transform: rotate(90deg);
+}
+
+.blue-btn a.button:hover, .blue-btn a.button.primary:hover {
+  background-color: #006DFF;
+  color: white;
+  border-color: #006DFF;
+  transform: unset;
+}
+.blue-btn a.button:hover span.button-text, .blue-btn a.button.primary:hover span.button-text {
+  transform: unset;
+}
+
+.blue-btn a:hover::after {
+  background-color: white;
+  transform: rotate(90deg);
+  margin-left: 0;
 }
 
 a.button span.icon {
