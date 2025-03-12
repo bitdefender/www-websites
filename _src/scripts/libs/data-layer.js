@@ -573,33 +573,6 @@ export class Target {
     }
 
     this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox', 'taget-global-mbox']);
-
-    document.addEventListener('alloy-finished-loading', () => {
-      if (window.propositions.length) {
-        window.alloy('applyPropositions', {
-          "propositions": window.propositions,
-          "metadata": {
-            "initSelector-mbox": {
-              "selector": "#initSelector",
-              "actionType": "setHtml"
-            },
-            "buyLinks-mbox": {
-              "selector": "#buyLinks",
-              "actionType": "setHtml"
-            },
-            "geoip-flag-mbox": {
-              "selector": "#geoIp",
-              "actionType": "setHtml"
-            },
-            "taget-global-mbox": {
-              "selector": "#targetGlobal",
-              "actionType": "setHtml"
-            }
-          },
-          "viewName": window.location.href
-        })
-      }
-    });
   };
 
   /**
@@ -707,14 +680,14 @@ export class Target {
       });
 
       notRequestedOffersCall.then(result => {
-        const metadata = notRequestedMboxes.reduce((acc, value) => {
-          acc[value] = {
-            selector: `#${value}`,
-            actionType: 'setHtml',
-          };
+        // const metadata = notRequestedMboxes.reduce((acc, value) => {
+        //   acc[value] = {
+        //     selector: `#${value}`,
+        //     actionType: 'setHtml',
+        //   };
 
-          return acc;
-        }, {});
+        //   return acc;
+        // }, {});
 
         window.alloyProxy('applyPropositions', {
           "propositions": result.propositions,
