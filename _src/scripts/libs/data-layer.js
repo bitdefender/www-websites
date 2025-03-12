@@ -718,7 +718,6 @@ export class Target {
 
         window.alloyProxy('applyPropositions', {
           "propositions": result.propositions,
-          metadata,
           "viewName": window.location.href
         })
       });
