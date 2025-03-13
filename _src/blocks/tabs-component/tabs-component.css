@@ -197,6 +197,18 @@
   align-items: normal !important;
 }
 
+.tabs-component-container .tabs-component.blue-heading h3 {
+  color: #006eff;
+}
+
+.tabs-component-container .tabs-component.blue-heading .tabs-container button { 
+  color: #006eff
+}
+
+.tabs-component-container .tabs-component.blue-heading .tabs-container button.selected{
+  color: #000;
+}
+
 @media (min-width: 768px) {
   .tabs-component-container .tabs-container {
     flex-wrap: nowrap;
