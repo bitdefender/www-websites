@@ -4,6 +4,13 @@ import Page from "./page.js";
 import { Constants } from "./constants.js";
 
 /**
+ * @typedef {{
+ *  auds: string,
+ *  [key: string]: string
+ * }} CdpData
+ */ 
+
+/**
  * 
  * @returns {boolean} returns wether A/B tests should be disabled or not
  */
@@ -383,6 +390,19 @@ export class ProductsLoadedEvent  {
   }
 };
 
+export class CdpEvent {
+  event = 'cdp data';
+  parameters = {};
+
+  /**
+   * 
+   * @param {CdpData} cdpData
+   */
+  constructor(cdpData) {
+    this.parameters = cdpData;
+  }
+};
+
 export class MainProductLoadedEvent extends ProductsLoadedEvent {
 
   /**
@@ -626,6 +646,11 @@ export class Target {
   static #urlParameters = this.#getUrlParameters();
 
   /**
+   * @type {Promise<CdpData>}
+   */
+  static #cdpData = this.#getCdpData();
+
+  /**
    * @param {string[]}
    */
   static setEventTokens(value) {
@@ -757,15 +782,33 @@ export class Target {
   }
 
   /**
-   * 
-   * @param {string} name -> properties 
-   * @returns {string} metadata
+   * @returns {Promise<CdpData>}
    */
-  static #getMetadata(name) {
-    const attr = name && name.includes(':') ? 'property' : 'name';
-    const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
-    return meta || '';
-  }
+  static async #getCdpData() {
+    try {
+      const cdpDataCall = await fetch(`${Constants.CDP_ENDPOINT}/${await Visitor.getMarketingCloudVisitorId()}`);
+      
+      /** @type {{auds: string[], mdl: {key: string, value: string}[], ub: any[] vid: string}} */
+      const receivedCdpData = await cdpDataCall.json();
+      let cdpData = {
+        auds: receivedCdpData?.auds[0] || ''
+      };
+
+      if (receivedCdpData.mdl) {
+        cdpData = receivedCdpData?.mdl.reduce((acc, mdlValue) => {
+          acc[mdlValue.key] = mdlValue.value;
+          return acc;
+        }, cdpData);
+      }
+      
+      AdobeDataLayerService.push(new CdpEvent(cdpData));
+      return cdpData;
+    } catch(e) {
+      console.warn(e);
+    }
+
+    return {};
+  };
 
   // TODO: separate parameters from profileParameters
   static async getOffers(mboxes) {
@@ -782,14 +825,12 @@ export class Target {
             marketingCloudVisitorId: await Visitor.getMarketingCloudVisitorId()
           },
           execute: {
-            mboxes: [
-              ...mboxes.map((mbox, index) => {
-                return { index, name: mbox.name,
-                  parameters: Object.assign(this.#urlParameters, mbox.parameters),
-                  profileParameters: Object.assign(this.#urlParameters, mbox.parameters)
-                }
-              })
-            ]
+            mboxes: await Promise.all(mboxes.map(async (mbox, index) => {
+              return { index, name: mbox.name,
+                parameters: Object.assign(this.#urlParameters, mbox.parameters, await this.#cdpData),
+                profileParameters: Object.assign(this.#urlParameters, mbox.parameters, await this.#cdpData)
+              }
+            }))
           }
         }
       });

@@ -13,8 +13,10 @@ export class Constants {
 	static ZUROA_LOCALES = ['nl-nl', 'nl-be'];
   
 	static DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
+
+	static CDP_ENDPOINT = 'https://solns-api.syntasa.net/vismdl';
   
-	  static PRODUCT_ID_MAPPINGS_CALL = this.#getVlaicuProductIdsMapping();
+	static PRODUCT_ID_MAPPINGS_CALL = this.#getVlaicuProductIdsMapping();
   
 	  /**
 	  * @typedef {Object} VlaicuDataEntry
