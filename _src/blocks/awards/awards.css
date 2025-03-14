@@ -123,6 +123,14 @@
   }
 }
 
+.awards-container .awards-component div ul {
+  list-style: disc;
+}
+
+.awards-container .awards-component div li {
+  text-align: left;
+}
+
 @media (min-width: 580px) {
   .awards-component > div:nth-child(3) div {
     max-width: 768px;
@@ -175,6 +183,9 @@
     align-items: center;
   }
 
+  .awards-component > div:nth-child(1) img {
+    width: 80px !important;
+  }
 
   .awards-component main .section.wide img {
     height: auto;
