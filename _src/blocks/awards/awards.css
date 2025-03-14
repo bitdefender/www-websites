@@ -65,8 +65,7 @@
 
 
 .awards-component > div:nth-child(3) div img {
-  min-height: 56px;
-  height: auto;
+  height: 56px;
   max-width: 100%;
   width: auto;
   object-fit: contain;
@@ -176,9 +175,6 @@
     align-items: center;
   }
 
-  .awards-component > div:nth-child(1) img {
-    width: 80px !important;
-  }
 
   .awards-component main .section.wide img {
     height: auto;
