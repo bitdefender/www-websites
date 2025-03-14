@@ -65,8 +65,7 @@
 
 
 .awards-component > div:nth-child(3) div img {
-  min-height: 56px;
-  height: auto;
+  height: 56px;
   max-width: 100%;
   width: auto;
   object-fit: contain;
@@ -122,6 +121,14 @@
     color: #006DFF;
     font-size: 34px;
   }
+}
+
+.awards-container .awards-component div ul {
+  list-style: disc;
+}
+
+.awards-container .awards-component div li {
+  text-align: left;
 }
 
 @media (min-width: 580px) {
