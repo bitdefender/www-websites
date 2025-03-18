@@ -79,6 +79,8 @@ export class Constants {
 	
 	static LOGIN_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
 	  ? window.location.origin : 'https://www.bitdefender.com';
+
+	static CDP_URL_ORIGIN = window.location.hostname.includes('www.') ? '' : 'https://www.bitdefender.com';
   
 	static NO_PROMOTION = "ignore";
   
