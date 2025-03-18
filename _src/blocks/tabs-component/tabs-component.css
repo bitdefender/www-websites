@@ -170,6 +170,10 @@
   font-size: 16px;
 }
 
+.tabs-component-container .tabs-container button p {
+  margin: 0;
+}
+
 .tabs-component-container .tabs-container button .icon {
   display: unset;
 }
