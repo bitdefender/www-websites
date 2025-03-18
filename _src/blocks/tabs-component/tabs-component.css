@@ -170,6 +170,18 @@
   font-size: 16px;
 }
 
+.tabs-component-container .tabs-container button p {
+  margin: 0;
+}
+
+.tabs-component-container .tabs-container button .icon {
+  display: unset;
+}
+
+.tabs-component-container .tabs-container button .icon svg {
+  width: 30px;
+  height: 30px;
+}
 .tabs-component-container .tabs-container button picture img {
   width: 50px;
   height: auto;
