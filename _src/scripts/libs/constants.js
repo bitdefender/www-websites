@@ -13,8 +13,6 @@ export class Constants {
 	static ZUROA_LOCALES = ['nl-nl', 'nl-be'];
   
 	static DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
-
-	static CDP_ENDPOINT = 'https://solns-api.syntasa.net/vismdl';
   
 	static PRODUCT_ID_MAPPINGS_CALL = this.#getVlaicuProductIdsMapping();
   
@@ -79,8 +77,6 @@ export class Constants {
 	
 	static LOGIN_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
 	  ? window.location.origin : 'https://www.bitdefender.com';
-
-	static CDP_URL_ORIGIN = window.location.hostname.includes('www.') ? '' : 'https://www.bitdefender.com';
   
 	static NO_PROMOTION = "ignore";
   

@@ -786,7 +786,7 @@ export class Target {
    */
   static async #getCdpData() {
     try {
-      const cdpDataCall = await fetch(`${Constants.CDP_URL_ORIGIN}/cdp/${await Visitor.getMarketingCloudVisitorId()}`);
+      const cdpDataCall = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/cdp/${await Visitor.getMarketingCloudVisitorId()}`);
       
       /** @type {{auds: string[], mdl: {key: string, value: string}[], ub: any[] vid: string}} */
       const receivedCdpData = await cdpDataCall.json();
