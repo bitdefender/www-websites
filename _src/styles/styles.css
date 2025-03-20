@@ -635,6 +635,10 @@ main .section.blue-heading h2{
   font-weight: bold;
 }
 
+main .section.blue-heading h3{
+  color: #006EFF;
+}
+
 main .grey-background{
   background-color: #F6F6F6;
 }

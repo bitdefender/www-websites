@@ -35,6 +35,11 @@
   line-height: 1.1;
 }
 
+.hero-aem-container .hero-aem.veepee h1 {
+  font-size: 26px;
+  font-weight: bold;
+}
+
 .hero-aem-container .hero-aem .hero-aem__mobile-image img {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -88,6 +93,20 @@
 .hero-aem-container .hero-aem .prod-oldprice {
   font-size: 16px;
   text-decoration: line-through;
+}
+
+.hero-aem-container .hero-aem.veepee .tag-dark-blue {
+  font-size: 27px;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-left: 0;
+  padding:5px 20px;
+}
+
+.hero-aem-container .hero-aem.veepee .hero-aem__mobile-image img {
+  border-radius: 0;
+  width: 200px;
+  margin-bottom: 10px;
 }
 
 .hero-aem-container .hero-aem .prod-save {
@@ -624,6 +643,13 @@
   .hero-aem-container .hero-aem .hero-aem__mobile-image {
     display: none;
   }
+
+  .hero-aem-container .hero-aem.veepee .hero-aem__mobile-image {
+    display: block;
+    border-radius: 0;
+  }
+
+ 
 
   .hero-aem-container .hero-aem .hero-aem__desktop-image {
     display: block;

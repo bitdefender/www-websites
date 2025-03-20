@@ -195,10 +195,10 @@ export default async function decorate(block, options) {
     cardElementContainer.setAttribute('data-store-event', 'main-product-loaded');
   }
   // Append the container after h1
-  block.querySelector('h1').after(cardElementContainer);
+  block.querySelector('h1')?.after(cardElementContainer);
 
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
-  desktopImage.classList.add('hero-aem__desktop-image');
+  desktopImage?.classList.add('hero-aem__desktop-image');
 
   const buyLink = block.querySelector('a[href*="buylink"]');
 
