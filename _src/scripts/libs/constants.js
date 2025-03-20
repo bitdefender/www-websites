@@ -14,7 +14,7 @@ export class Constants {
   
 	static DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
   
-	  static PRODUCT_ID_MAPPINGS_CALL = this.#getVlaicuProductIdsMapping();
+	static PRODUCT_ID_MAPPINGS_CALL = this.#getVlaicuProductIdsMapping();
   
 	  /**
 	  * @typedef {Object} VlaicuDataEntry
