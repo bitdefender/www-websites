@@ -693,15 +693,16 @@ class Vlaicu {
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
 	/**
-	 * TODO: please remove this function and all its calls once digital river works correctly
+	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
 	 * @param {string} productId 
-	 * @returns {boolean} -> check if the product is soho and the domain is de-de
+	 * @returns {boolean} -> wether we have a DIP corner case or not
 	 */
-	static #isSohoCornerCase = (productId) =>
-	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
+	static #isDIPCornerCase(productId) {
+		return productId === 'com.bitdefender.dataprivacy';
+	}
 
 	static async getProductVariations(productId, campaign) {
-		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
+		let locale = Page.locale;
 		let geoIpFlag = await Target.getGeoIpFlagMbox();
 		if (geoIpFlag) {
 			locale = await User.locale;
@@ -711,11 +712,11 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : campaign
+			"{campaignId}": this.#isDIPCornerCase(productId) ? 'DIP-promo' : campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION || this.#isSohoCornerCase(productId) ?
+		let productPath = campaign !== Constants.NO_PROMOTION || this.#isDIPCornerCase(productId) ?
 			this.promotionPath :
 			this.defaultPromotionPath;
 
