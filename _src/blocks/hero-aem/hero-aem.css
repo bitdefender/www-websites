@@ -38,6 +38,7 @@
 .hero-aem-container .hero-aem.veepee h3 {
   font-size: 26px;
   font-weight: bold;
+  color: #006DFF;
 }
 
 .hero-aem-container .hero-aem .hero-aem__mobile-image img {
@@ -101,6 +102,7 @@
   border-radius: 10px;
   margin-left: 0;
   padding:5px 20px;
+  background-color: #005eff;
 }
 
 .hero-aem-container .hero-aem.veepee .hero-aem__mobile-image img {
