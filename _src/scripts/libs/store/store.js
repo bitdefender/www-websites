@@ -701,16 +701,8 @@ class Vlaicu {
 		return productId === 'com.bitdefender.dataprivacy';
 	}
 
-	/**
-     * TODO: please remove this function and all its calls once digital river works correctly
-     * @param {string} productId 
-     * @returns {boolean} -> check if the product is soho and the domain is de-de
-     */
-    static #isSohoCornerCase = (productId) =>
-        Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
-
 	static async getProductVariations(productId, campaign) {
-		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
+		let locale = Page.locale;
 		let geoIpFlag = await Target.getGeoIpFlagMbox();
 		if (geoIpFlag) {
 			locale = await User.locale;
@@ -721,12 +713,11 @@ class Vlaicu {
 			"{locale}": locale,
 			"{bundleId}": productId,
 			"{campaignId}": this.#isDIPCornerCase(productId) ? 'DIP-promo'
-				: this.#isSohoCornerCase(productId) ? "SOHO_DE"
 				: campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION || this.#isDIPCornerCase(productId) || this.#isSohoCornerCase(productId) ?
+		let productPath = campaign !== Constants.NO_PROMOTION || this.#isDIPCornerCase(productId) ?
 			this.promotionPath :
 			this.defaultPromotionPath;
 
