@@ -51,4 +51,5 @@ export default async function decorate(block, options) {
   }
 
   matchHeights(block, 'h3');
+  matchHeights(block, 'div[data-valign="middle"] > p:first-of-type');
 }
