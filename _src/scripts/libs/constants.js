@@ -79,9 +79,6 @@ export class Constants {
 	  ? window.location.origin : 'https://www.bitdefender.com';
   
 	static NO_PROMOTION = "ignore";
-  
-	// TODO: please remove this once digital river starts working correctly
-	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
 
 	static NONE_PRODUCT_PAGES = ["renewal", "consumer"];
 
