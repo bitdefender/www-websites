@@ -1,5 +1,8 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import passwordService from '../../scripts/utils/pass_service.js';
+import {
+  createTag,
+} from '../../scripts/utils/utils.js';
 
 /**
  * Finds a div element whose first paragraph contains the specified search text.
@@ -68,6 +71,9 @@ function copyToClipboard(block, caller, popupText) {
 
 export default function decorate(block) {
   const { clipboardText, selectAtLeastOneCheckboxText } = block.closest('.section').dataset;
+
+  const breadcrumb = createTag('div', { class: 'breadcrumb' });
+  block.closest('.section').prepend(breadcrumb);
 
   const passwordGeneratorRow = getDivBasedOnFirstParagraph(block, '<password-generator>');
   passwordGeneratorRow.classList.add('password-generator-grid');

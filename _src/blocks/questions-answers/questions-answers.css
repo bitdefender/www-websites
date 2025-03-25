@@ -178,7 +178,7 @@
         padding-right: 50px;
     }
 
-    .default-content-wrapper {
+    .questions-answers-container .default-content-wrapper {
         max-width: var(--section-desktop-max-width);
         padding: 23px var(--section-desktop-padding);
         border-radius: 0;

@@ -370,6 +370,12 @@
       }
     }
   }
+
+  .four-cards-container .default-content-wrapper {
+    max-width: var(--section-large-desktop-max-width);
+    padding: 23px var(--section-large-desktop-padding);
+    border-radius: 0;
+  }
 }
 
 @media (min-width: 992px) {
