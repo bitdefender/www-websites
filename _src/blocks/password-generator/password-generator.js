@@ -1,17 +1,27 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import passwordService from '../../scripts/utils/pass_service.js';
 
+/**
+ * Finds a div element whose first paragraph contains the specified search text.
+ * When found, removes that paragraph and returns the parent div.
+ *
+ * @param {HTMLElement} block - The container to search within
+ * @param {string} searchText - The text to search for in the first paragraph
+ * @returns {HTMLElement|null} - The div containing the specified text, or null if not found
+ */
 function getDivBasedOnFirstParagraph(block, searchText) {
-  const foundText = Array.from(block.querySelectorAll('div')).find((div) => {
+  const allDivs = Array.from(block.querySelectorAll('div'));
+
+  const targetDiv = allDivs.find((div) => {
     const firstParagraph = div.querySelector('p');
     if (firstParagraph?.textContent.includes(searchText)) {
       firstParagraph.remove();
-      return div;
+      return true;
     }
-    return undefined;
+    return false;
   });
 
-  return foundText;
+  return targetDiv || null;
 }
 
 function updatePasswordStrength(password, strengthElement, strongText, weakText) {
@@ -61,14 +71,16 @@ export default function decorate(block) {
 
   const passwordGeneratorRow = getDivBasedOnFirstParagraph(block, '<password-generator>');
   passwordGeneratorRow.classList.add('password-generator-grid');
-  // eslint-disable-next-line no-unused-vars
   const passwordGeneratorColumns = [...passwordGeneratorRow.children];
+  // eslint-disable-next-line no-unused-vars
   const [columnText, button] = passwordGeneratorColumns;
   const [passwordLengthText, checkboxList, passwordStrengthText] = [...columnText.children];
   columnText.remove();
   // Process the password strength text to extract the strong and weak values
-  const passwordStrengthContent = passwordStrengthText.innerHTML;
-  const strengthMatch = passwordStrengthContent.split('strong-weak-text');
+
+  // expected output is 'Password strength strong-weak-text Strong, Weak
+  // parse the paragraph into my desired outcome
+  const strengthMatch = passwordStrengthText.innerHTML.split('strong-weak-text');
   const [strongText, weakText] = strengthMatch[1].split(',');
 
   passwordStrengthText.innerHTML = `${strengthMatch[0]} <span class='password-result strong'>${strongText}</span>`;
@@ -109,7 +121,7 @@ export default function decorate(block) {
 
   passwordGeneratorRow.prepend(formElement);
   decorateIcons(block);
-  // Get all the input elements
+
   const passwordInput = block.querySelector('.password-generator__input');
   const generateButton = block.querySelector('.password-generator__input-retry');
   const copyButton = block.querySelector("[href='#copy-link']");
@@ -170,7 +182,6 @@ export default function decorate(block) {
     updatePasswordStrength(password, strengthElement, strongText, weakText);
   }
 
-  // Generate a password on button click
   generateButton.addEventListener('click', (e) => {
     e.preventDefault();
     generatePassword();
