@@ -40,11 +40,26 @@
   font: normal normal bold 32px/37px Arial, sans-serif;
 }
 
+.tabs-component-container .tabs-component.blue-heading .title-class{
+  max-width: 80%;
+  margin: auto;
+}
+
 .tabs-component-container .subtitle-class div {
   max-width: 630px;
   text-align: center;
   margin-bottom: 67px;
   font: normal normal normal 18px/26px Arial, sans-serif;
+}
+
+.tabs-component-container .tabs-component.blue-heading .title-class div{
+  max-width: 100%;
+}
+
+.tabs-component-container .tabs-component.blue-heading .subtitle-class div {
+  max-width: 80%;
+  margin: auto;
+  margin-bottom: 27px;
 }
 
 .tabs-component-container .tabs-container {

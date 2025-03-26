@@ -716,6 +716,10 @@
   }
 }
 
+.columns-container .columns.awards-fragment img{
+  border-radius: 0;
+}
+
 .creators .header-mobile{
   background: linear-gradient(to bottom, #e4f2ff, white);
 }
@@ -868,7 +872,6 @@
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap:20px;
   }
-
 
   .columns-container.chat-options .columns > div > div {
     padding: 2em;
