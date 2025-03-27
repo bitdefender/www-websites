@@ -76,13 +76,6 @@
     }
 }
 
-@media (min-width: 1600px) { /* large desktop */
-    .four-cards-wrapper {
-        max-width: var(--section-large-desktop-max-width);
-        padding: 0 var(--section-large-desktop-padding);
-    }
-}
-
 .creators .title-size .default-content-wrapper p {
   font-size: 24px;
 }
@@ -372,8 +365,8 @@
   }
 
   .four-cards-container .default-content-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-    padding: 23px var(--section-large-desktop-padding);
+    max-width: var(--section-desktop-max-width);
+    padding: 23px var(--section-desktop-padding);
     border-radius: 0;
   }
 }

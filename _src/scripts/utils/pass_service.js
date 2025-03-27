@@ -20,6 +20,134 @@ const DEFAULT_SETTINGS = {
     passwordSpecialChars: '!@#$%^&*()_+-=[]{}|;:,.<>?'
   };
 
+  const SecurityReportConstants = {
+    // Length and score constants
+    minPasswordLength: 8,
+    maxPasswordLength: 16,
+    minVariationEnforcePasswordLength: 15,
+    minVariationLength: 3,
+    variationPenalty: 0.15,
+    maxScore: 100,
+    minScore: 0,
+    weakMaxScore: 20,
+    poorMaxScore: 40,
+    goodMaxScore: 80,
+    newPasswordMaxDays: 90,
+  
+    // Variation keys
+    digitsKey: 'digits',
+    lowerKey: 'lower',
+    upperKey: 'upper',
+    nonWordsKey: 'nonWords',
+
+    // Password strength labels
+    passwordStrengthWeak: 'weak',
+    passwordStrengthPoor: 'poor',
+    passwordStrengthGood: 'good',
+    passwordStrengthStrong: 'strong',
+  
+    // Advice constants
+    adviceSetLongerPassword: 'SET_LONGER_PASSWORD',
+    adviceSetLongerOrMoreComplexPassword: 'SET_LONGER_OR_MORE_COMPLEX_PASSWORD',
+    adviceSetLongerPassword10: 'SET_LONGER_PASSWORD_10',
+  };
+  
+  /**
+   * Computes a score for the provided password string.
+   * @param {string} password - The password to evaluate.
+   * @returns {Object} An object containing the score, advice, passwordLength, and variationCount.
+   */
+  function ratePasswordFromPasswordInfo(password) {
+    // If password is empty or undefined, return a minimal score.
+    if (!password) {
+      return {
+        score: SecurityReportConstants.minScore,
+        advice: SecurityReportConstants.adviceSetLongerPassword,
+        passwordLength: 0,
+        variationCount: 0,
+      };
+    }
+  
+    // Evaluate character variations using regular expressions.
+    const variations = {
+      [SecurityReportConstants.digitsKey]: /\d/.test(password),
+      [SecurityReportConstants.lowerKey]: /[a-z]/.test(password),
+      [SecurityReportConstants.upperKey]: /[A-Z]/.test(password),
+      [SecurityReportConstants.nonWordsKey]: /\W/.test(password),
+    };
+  
+    // Count the number of variation conditions that passed.
+    const variationCount = Object.values(variations).filter(Boolean).length;
+  
+    // If the password is too short, return a low score.
+    if (password.length <= SecurityReportConstants.minPasswordLength) {
+      return {
+        score: SecurityReportConstants.minScore,
+        advice: SecurityReportConstants.adviceSetLongerPassword,
+        passwordLength: password.length,
+        variationCount: variationCount,
+        minPasswordLength: SecurityReportConstants.minPasswordLength,
+      };
+    }
+  
+    // If the password is very long, consider it max score.
+    if (password.length >= SecurityReportConstants.maxPasswordLength) {
+      return {
+        score: SecurityReportConstants.maxScore,
+        advice: '',
+        passwordLength: password.length,
+        variationCount: variationCount,
+        maxPasswordLength: SecurityReportConstants.maxPasswordLength,
+      };
+    }
+  
+    // Compute a base score based on the password length.
+    let score = ((password.length - SecurityReportConstants.minPasswordLength) *
+                 SecurityReportConstants.maxScore) /
+                (SecurityReportConstants.maxPasswordLength - SecurityReportConstants.minPasswordLength);
+  
+    // If the password length is relatively short and the variation count is below minimum, apply a penalty.
+    if (
+      password.length <= SecurityReportConstants.minVariationEnforcePasswordLength &&
+      variationCount < SecurityReportConstants.minVariationLength
+    ) {
+      score = score * (1 - (SecurityReportConstants.minVariationLength - variationCount) * SecurityReportConstants.variationPenalty);
+      score = Math.min(score, SecurityReportConstants.maxScore);
+      score = Math.max(score, SecurityReportConstants.minScore);
+      score = Math.round(score * 10) / 10;
+      return {
+        score: score,
+        advice: SecurityReportConstants.adviceSetLongerOrMoreComplexPassword,
+        passwordLength: password.length,
+        variationCount: variationCount,
+      };
+    }
+  
+    // Clamp the score between minScore and maxScore, round to one decimal place.
+    score = Math.min(score, SecurityReportConstants.maxScore);
+    score = Math.max(score, SecurityReportConstants.minScore);
+    score = Math.round(score * 10) / 10;
+    return {
+      score: score,
+      advice: SecurityReportConstants.adviceSetLongerPassword10,
+      passwordLength: password.length,
+      variationCount: variationCount,
+    };
+  }
+
+  function fromRating(rating) {
+    const score = rating.score;
+    if (score == null || score <= SecurityReportConstants.weakMaxScore) {
+      return SecurityReportConstants.passwordStrengthWeak;
+    } else if (score < SecurityReportConstants.poorMaxScore) {
+      return SecurityReportConstants.passwordStrengthPoor;
+    } else if (score < SecurityReportConstants.goodMaxScore) {
+      return SecurityReportConstants.passwordStrengthGood;
+    } else {
+      return SecurityReportConstants.passwordStrengthStrong;
+    }
+  }
+
 /**
  * checks if the given password complies with the minimal complexity
  *
@@ -202,12 +330,21 @@ function generateWithSettings(settings = DEFAULT_SETTINGS) {
     return password;
 }
 
+function updatePasswordStrengthTexts(weakText, poorText, goodText, strongText) {
+    SecurityReportConstants.passwordStrengthWeak = weakText;
+    SecurityReportConstants.passwordStrengthPoor = poorText;
+    SecurityReportConstants.passwordStrengthGood = goodText;
+    SecurityReportConstants.passwordStrengthStrong = strongText;
+}
+
 const datastorePasswordService = {
     generatePassword: generatePassword,
     generate: generate,
     generateWithSettings: generateWithSettings,
-    escapeRegExp: escapeRegExp,
-    isStrongEnough: isStrongEnough,
+    ratePasswordFromPasswordInfo: ratePasswordFromPasswordInfo,
+    fromRating: fromRating,
+    updatePasswordStrengthTexts: updatePasswordStrengthTexts,
+    SecurityReportConstants,
 };
 
 export default datastorePasswordService;

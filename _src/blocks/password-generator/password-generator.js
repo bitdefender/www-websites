@@ -27,22 +27,30 @@ function getDivBasedOnFirstParagraph(block, searchText) {
   return targetDiv || null;
 }
 
-function updatePasswordStrength(password, strengthElement, strongText, weakText) {
+function updatePasswordStrength(password, strengthElement) {
   // Get the strength span elements
-  const strongSpan = strengthElement.querySelector('.password-result');
-
+  const strongSpan = strengthElement.querySelector('#password-result');
   // Check if the password is strong enough using the password service
-  const isStrong = passwordService.isStrongEnough(password);
-
+  const thingIs = passwordService.ratePasswordFromPasswordInfo(password);
+  const rating = passwordService.fromRating(thingIs);
   // Update the strength indicator
-  if (isStrong) {
-    strongSpan.textContent = strongText;
-    strongSpan.classList.remove('weak');
-    strongSpan.classList.add('strong');
-  } else {
-    strongSpan.textContent = weakText;
-    strongSpan.classList.remove('strong');
-    strongSpan.classList.add('weak');
+  strongSpan.className = '';
+  switch (rating) {
+    case passwordService.SecurityReportConstants.passwordStrengthWeak:
+      strongSpan.textContent = passwordService.SecurityReportConstants.passwordStrengthWeak;
+      strongSpan.classList.add('weak');
+      break;
+    case passwordService.SecurityReportConstants.passwordStrengthPoor:
+      strongSpan.textContent = passwordService.SecurityReportConstants.passwordStrengthPoor;
+      strongSpan.classList.add('poor');
+      break;
+    case passwordService.SecurityReportConstants.passwordStrengthGood:
+      strongSpan.textContent = passwordService.SecurityReportConstants.passwordStrengthGood;
+      strongSpan.classList.add('good');
+      break;
+    default:
+      strongSpan.textContent = passwordService.SecurityReportConstants.passwordStrengthStrong;
+      strongSpan.classList.add('strong');
   }
 }
 
@@ -87,9 +95,10 @@ export default function decorate(block) {
   // expected output is 'Password strength strong-weak-text Strong, Weak
   // parse the paragraph into my desired outcome
   const strengthMatch = passwordStrengthText.innerHTML.split('strong-weak-text');
-  const [strongText, weakText] = strengthMatch[1].split(',');
+  const [weakText, poorText, goodText, strongText] = strengthMatch[1].split(',');
+  passwordService.updatePasswordStrengthTexts(weakText, poorText, goodText, strongText);
 
-  passwordStrengthText.innerHTML = `${strengthMatch[0]} <span class='password-result strong'>${strongText}</span>`;
+  passwordStrengthText.innerHTML = `${strengthMatch[0]} <span id='password-result' class='strong'>${strongText}</span>`;
   const formElement = document.createElement('form');
   formElement.classList.add('password-generator__form');
   formElement.innerHTML = `
@@ -185,7 +194,7 @@ export default function decorate(block) {
     passwordInput.value = password;
 
     // Update the password strength indicator
-    updatePasswordStrength(password, strengthElement, strongText, weakText);
+    updatePasswordStrength(password, strengthElement);
   }
 
   generateButton.addEventListener('click', (e) => {
