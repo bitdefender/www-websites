@@ -152,7 +152,13 @@ export default async function decorate(block, options) {
   const failMessage = block.children[3].children[1];
   const formData = parseHTML(formDataHTML.innerHTML);
   const [types, labels] = [formData.insideCurlyBrackets, formData.insideSquareBrackets];
-  const form = await createForm(types, labels, flow, successMessage, failMessage, options.formType);
+  let form = null;
+  if (options) {
+    form = await createForm(types, labels, flow, successMessage, failMessage, options.formType);
+  } else {
+    form = await createForm(types, labels, flow, successMessage, failMessage, 'newsletter');
+  }
+
   if (form) block.append(form);
   block.children[1].innerHTML = '';
   block.children[2].innerHTML = '';
