@@ -1,21 +1,10 @@
 import { matchHeights } from '../../scripts/utils/utils.js';
 
-export default async function decorate(block, options) {
+export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
     margintop,
   } = block.closest('.section').dataset;
-
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-    const blockParent = block.closest('.section');
-    blockParent.classList.add('we-container');
-    const fourCardsWrapper = block.closest('.four-cards-wrapper');
-    if (fourCardsWrapper) {
-      fourCardsWrapper.classList.remove('four-cards-wrapper');
-    }
-  }
 
   if (margintop) {
     const blockParent = block.closest('.section');
@@ -33,14 +22,9 @@ export default async function decorate(block, options) {
   block.textContent = '';
   block.append(ul);
 
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
-  });
-
   // decorate icons only if the component is being called from www-websites
   const isInLandingPages = window.location.href.includes('www-landing-pages') || window.location.href.includes('bitdefender.com/pages');
-  if (!options && !isInLandingPages) {
+  if (!isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
   }
@@ -51,4 +35,5 @@ export default async function decorate(block, options) {
   }
 
   matchHeights(block, 'h3');
+  matchHeights(block, 'div[data-valign="middle"] > p:first-of-type');
 }
