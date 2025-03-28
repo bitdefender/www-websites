@@ -4,7 +4,7 @@ import {
   Target,
 } from '../../scripts/libs/data-layer.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
-import { loadBlocks } from '../../scripts/lib-franklin.js';
+import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
   const newHtml = document.createElement('div');
@@ -41,6 +41,7 @@ function createOfferParameters() {
  * @returns {Promise<void>} - A promise that resolves when the event is updated and pushed.
  */
 async function updatePageLoadStartedEvent(offer, mboxName) {
+  const urlParams = new URLSearchParams(window.location.search);
   const match = offer[mboxName].content.offer.match(/\/([^/]+)\.plain\.html$/);
   const result = match ? match[1] : null;
   const newObject = await new PageLoadStartedEvent();
@@ -51,6 +52,10 @@ async function updatePageLoadStartedEvent(offer, mboxName) {
       newObject.page.info[key] = result;
     }
   });
+  let trackingID = getMetadata('cid');
+  trackingID = trackingID.replace('<language>', urlParams.get('lang'));
+  trackingID = trackingID.replace('<asset name>', urlParams.get('feature'));
+  newObject.page.attributes.trackingID = trackingID;
   AdobeDataLayerService.push(newObject);
 }
 
