@@ -109,7 +109,7 @@ export default function decorate(block) {
     <div class="password-generator__parameters">
         <div class="range-slider-container">
           <p>${passwordLengthText.innerText}</p>
-          <input name="range" type="range" min="1" max="32" value="16" class="slider" id="password-range">
+          <input name="range" type="range" min="4" max="32" value="16" class="slider" id="password-range">
           <label for="range" id="range-label"></label>
         </div>
         <div class="form-checkboxes">
