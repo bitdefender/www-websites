@@ -152,15 +152,6 @@
 
 }
 
-.four-cards-container.we-container {
-  max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-top: 15px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .four-cards-container.rounded.wide-v2 >:first-child {
   border-radius: 20px 20px 0 0;
 }
@@ -214,11 +205,6 @@
 .creator-cards .four-cards ul li div img {
   height: 48px;
   margin-bottom: 0;
-}
-
-/* a/b test styles, should be deleted after */
-.four-cards-container.we-container .default-content-wrapper {
-  text-align: center;
 }
 
 .four-cards-container a {
@@ -372,11 +358,6 @@
 }
 
 @media (min-width: 992px) {
-  .four-cards-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
 
   .four-cards > ul {
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -435,15 +416,6 @@
   .four-cards-container.dotted-lines .four-cards > ul {
     grid-gap: 30px;
   }
-}
-
-@media (min-width: 1200px) {
-  .four-cards-container.we-container {
-    max-width: 1350px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  
 }
 
 @media (max-width: 991px) {
