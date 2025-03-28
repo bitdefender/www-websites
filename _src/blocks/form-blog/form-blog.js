@@ -153,9 +153,9 @@ export default async function decorate(block, options) {
   const formData = parseHTML(formDataHTML.innerHTML);
   const [types, labels] = [formData.insideCurlyBrackets, formData.insideSquareBrackets];
   let form = null;
-  if (options){
-      form = await createForm(types, labels, flow, successMessage, failMessage, options.formType);
-  }  else { 
+  if (options) {
+    form = await createForm(types, labels, flow, successMessage, failMessage, options.formType);
+  } else {
     form = await createForm(types, labels, flow, successMessage, failMessage, 'newsletter');
   }
  
