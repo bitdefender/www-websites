@@ -103,13 +103,13 @@ export default function decorate(block) {
 
   passwordStrengthText.innerHTML = `${strengthMatch[0]} <span id='password-result' class='strong'>${strongText}</span>`;
   const formElement = document.createElement('form');
-  formElement.classList.add('password-generator__form');
+  formElement.classList.add('password-generator--form');
   formElement.innerHTML = `
-    <div class="password-generator__input-container">
-      <input class="password-generator__input" readonly>
-      <input type="submit" class="password-generator__input-retry">
+    <div class="password-generator--input-container">
+      <input class="password-generator--input" readonly>
+      <input type="submit" class="password-generator--input-retry">
     </div>
-    <div class="password-generator__parameters">
+    <div class="password-generator--parameters">
         <div class="range-slider-container">
           <p>${passwordLengthText.innerText}</p>
           <input name="range" type="range" min="4" max="32" value="16" class="slider" id="password-range">
@@ -140,8 +140,8 @@ export default function decorate(block) {
   passwordGeneratorRow.prepend(formElement);
   decorateIcons(block);
 
-  const passwordInput = block.querySelector('.password-generator__input');
-  const generateButton = block.querySelector('.password-generator__input-retry');
+  const passwordInput = block.querySelector('.password-generator--input');
+  const generateButton = block.querySelector('.password-generator--input-retry');
   const copyButton = block.querySelector("[href='#copy-link']");
   copyButton.id = 'copy-link';
   const slider = block.querySelector('#password-range');

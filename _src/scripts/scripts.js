@@ -30,7 +30,7 @@ import {
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['hero', 'password-generator']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
