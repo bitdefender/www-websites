@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .four-cards-container {
   --dark-background-color: #000;
   --black-color: #000;
@@ -358,7 +359,6 @@
 }
 
 @media (min-width: 992px) {
-
   .four-cards > ul {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 14px;
