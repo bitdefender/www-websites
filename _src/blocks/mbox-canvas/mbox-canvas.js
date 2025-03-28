@@ -56,6 +56,8 @@ async function updatePageLoadStartedEvent(offer, mboxName) {
   trackingID = trackingID.replace('<language>', urlParams.get('lang'));
   trackingID = trackingID.replace('<asset name>', urlParams.get('feature'));
   newObject.page.attributes.trackingID = trackingID;
+
+  newObject.page.info.language = urlParams.get('lang') || 'en-us';
   AdobeDataLayerService.push(newObject);
 }
 
