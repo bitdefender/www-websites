@@ -487,6 +487,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         
         .video-container iframe{
             min-height: 715px;
+            max-width: 1280px;
         }
 
         h2{
