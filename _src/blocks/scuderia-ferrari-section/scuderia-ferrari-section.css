@@ -142,6 +142,11 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     h2{
         color: #006EFF;
     }
+
+    p:not(:has(strong)), a{
+        color: #5E5E5E;
+        border-color: #5E5E5E;
+    }
 }
 
 @media (min-width: 767px){
