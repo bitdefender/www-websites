@@ -584,6 +584,10 @@ main .hero.ferrari{
   background-color: #006DFF;
 }
 
+main .hero.ferrari h1{
+  margin-bottom: 50px;
+}
+
 main .hero.ferrari .hero-content{
   display: flex;
   flex-direction: column;
