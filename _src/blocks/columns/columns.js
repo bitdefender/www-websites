@@ -194,9 +194,9 @@ export default function decorate(block) {
   // this will define the number of rows inside each card of the subgrid system
   // by dynamically setting this, i can set howewer much rows i want based on the number of
   // maximum elements expected in the row
-  if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
+  if (block.closest('.section').classList.contains('v-5')) {
     block.querySelectorAll('.columns-text-col')?.forEach((element) => {
-      element.style['grid-row'] = `span ${maxElementsInColumn}`;
+      element.style['grid-row'] = `span ${maxElementsInColumn || 3}`;
     });
   }
 
