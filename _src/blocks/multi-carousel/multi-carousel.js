@@ -1,5 +1,5 @@
-function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined) {
-  const parentSection = block.closest('.section');
+function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined, startsfrom = 0) {
+  const parentSection = block.closest('.section')
   const carouselContainer = document.createElement('div');
   carouselContainer.classList.add('carousel-container');
 
@@ -145,11 +145,19 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
       moveToSlide(nextIndex);
     }, autoplayInterval);
   }
+
+  if (startsfrom !== undefined && startsfrom !== null) {
+    setTimeout(() => {
+      const nextIndex = startsfrom - 1 % videos.length;
+      moveToSlide(nextIndex);
+    }, 500);
+  }
 }
 
 export default function decorate(block) {
   const parentSection = block.closest('.section');
   let shouldAutoplay = false;
+  const startsfrom = parentSection.getAttribute('data-startsfrom') || 0;
 
   if (parentSection.getAttribute('data-autoplay') === 'true') {
     shouldAutoplay = true;
@@ -165,12 +173,12 @@ export default function decorate(block) {
     const titles = Object.keys(parentSection.dataset)
       .filter(key => key.includes('title'))
       .map(key => parentSection.dataset[key]);
-    createCarousel(block, shouldAutoplay, videos, titles);
+    createCarousel(block, shouldAutoplay, videos, titles, startsfrom);
   } else {
     // Get HTML content from block.children if no videos are found
     const htmlContent = Array.from(block.children).map(child => child.innerHTML);
     // Clear original content
     block.innerHTML = '';
-    createCarousel(block, shouldAutoplay, htmlContent);
+    createCarousel(block, shouldAutoplay, htmlContent, undefined, startsfrom);
   }
 }
