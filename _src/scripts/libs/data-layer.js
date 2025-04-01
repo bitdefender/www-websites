@@ -648,7 +648,7 @@ export class Target {
   /**
    * @type {Promise<CdpData>}
    */
-  static #cdpData = this.#getCdpData();
+  static cdpData = this.#getCdpData();
 
   /**
    * @param {string[]}
@@ -786,7 +786,13 @@ export class Target {
    */
   static async #getCdpData() {
     try {
-      const cdpDataCall = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/cdp/${await Visitor.getMarketingCloudVisitorId()}`);
+      let didCdpExist = false;
+      if (!window.cdpDataCall) {
+        window.cdpDataCall = fetch(`${Constants.PUBLIC_URL_ORIGIN}/cdp/${await Visitor.getMarketingCloudVisitorId()}`);
+        didCdpExist = true;
+      }
+
+      const cdpDataCall = await window.cdpDataCall;
       
       /** @type {{auds: string[], mdl: {key: string, value: string}[], ub: any[] vid: string}} */
       const receivedCdpData = await cdpDataCall.json();
@@ -800,8 +806,10 @@ export class Target {
           return acc;
         }, cdpData);
       }
-      
-      AdobeDataLayerService.push(new CdpEvent(cdpData));
+
+      if (didCdpExist) {
+        AdobeDataLayerService.push(new CdpEvent(cdpData));
+      }
       return cdpData;
     } catch(e) {
       console.warn(e);
@@ -827,8 +835,8 @@ export class Target {
           execute: {
             mboxes: await Promise.all(mboxes.map(async (mbox, index) => {
               return { index, name: mbox.name,
-                parameters: Object.assign(this.#urlParameters, mbox.parameters, await this.#cdpData),
-                profileParameters: Object.assign(this.#urlParameters, mbox.parameters, await this.#cdpData)
+                parameters: Object.assign(this.#urlParameters, mbox.parameters, await this.cdpData),
+                profileParameters: Object.assign(this.#urlParameters, mbox.parameters, await this.cdpData)
               }
             }))
           }
