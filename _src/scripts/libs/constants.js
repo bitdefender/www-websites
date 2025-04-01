@@ -10,7 +10,7 @@ export class Constants {
   
 	static LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME = 'bdcslue';
   
-	static ZUROA_LOCALES = ['nl-nl', 'nl-be'];
+	static ZUROA_LOCALES = ['nl-nl', 'nl-be', 'de-de', 'de-at'];
   
 	static DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
   
