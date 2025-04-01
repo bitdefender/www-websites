@@ -9,8 +9,8 @@ export default function decorate(block) {
       <div class="tabs">
         <button class="tab active" data-tab="with">${tab1.textContent}</button>
         <span class="icon">
-          <img class="icon-with" src="${iconTab1.getAttribute('src')}" alt="${tab1.textContent}">
-          <img class="icon-without" src="${iconTab2.getAttribute('src')}" alt="${tab2.textContent}">
+          <img class="icon-with" src="/_src/icons/Lock-Open.svg" alt="${tab1.textContent}">
+          <img class="icon-without" src="/_src/icons/Lock-Close.svg" alt="${tab2.textContent}">
         </span>
         <button class="tab" data-tab="without">${tab2.textContent}</button>
         <div class="tab-slider"></div>
