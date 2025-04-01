@@ -787,8 +787,10 @@ export class Target {
   static async #getCdpData() {
     try {
       let didCdpExist = false;
+      const mcid = await Visitor.getMarketingCloudVisitorId();
+
       if (!window.cdpDataCall) {
-        window.cdpDataCall = fetch(`${Constants.PUBLIC_URL_ORIGIN}/cdp/${await Visitor.getMarketingCloudVisitorId()}`);
+        window.cdpDataCall = fetch(`${Constants.PUBLIC_URL_ORIGIN}/cdp/${mcid}`);
         didCdpExist = true;
       }
 
