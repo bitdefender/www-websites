@@ -136,6 +136,12 @@
   order: 1;
 }
 
+.text-over-image > div {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
 .text-over-image > div > div {
   min-height: 600px;
   height: 100%;
@@ -688,9 +694,13 @@
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     grid-template-rows: repeat(4, auto);
-    grid-auto-flow: column;
 
     .columns-text-col {
+      display: grid;
+      grid-template-rows: subgrid;
+    }
+
+    >div {
       display: grid;
       grid-template-rows: subgrid;
     }
@@ -862,7 +872,8 @@
 
 @media (min-width: 991px) {
   .columns.benefits > div {
-    display: grid;;
+    display: grid;
+    grid-auto-flow: column;
   }
 
   .columns.benefits > div > div:has(img) {
@@ -878,6 +889,7 @@
 
   .columns.features > div{
     display: grid;
+    grid-auto-flow: column;
   }
 
   .columns.features > div > div{
@@ -1954,7 +1966,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   td{
     display: flex;
     gap:15px;
-    align-items: center;
+    align-items: flex-end;
 
     span{
       margin: 0;
@@ -2031,7 +2043,8 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       
       @media (width >= 992px) {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        align-items: center;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       }
     }
 
