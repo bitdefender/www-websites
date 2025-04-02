@@ -1,0 +1,290 @@
+.dex-18076 {
+    main .section {
+        padding-top: 80px !important;
+        &:last-of-type {
+            padding-bottom: 80px !important;
+        }
+    }
+
+    p, li, p, strong, h1, h2, h3, h4, h5, h6, p, blockquote, pre {
+        font-family: Arial, sans-serif !important;
+    }
+
+    h2, h3 {
+        font-weight: 700;
+    }
+
+    .particle-background {
+        margin: 0;
+    }
+
+    .section {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+
+        h2 {
+            text-align: center;
+            font-weight: 700;
+            font-size: 34px;
+            line-height: 100%;
+        }
+
+        .awards-wrapper {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 36px;
+        }
+
+        .columns-text-col {
+            gap: 30px;
+
+            p {
+                margin: 0;
+            }
+
+            h4, h5 {
+                font-weight: 700;
+            }
+
+            h4 {
+                font-size: 24px;
+                line-height: 100%;
+            }
+
+            h5 {
+                font-size: 22px;
+                line-height: 26px;
+            }
+        }
+
+        [aria-label="down-arrow"] {
+            align-items: center;
+            font-style: normal;
+
+            .icon {
+                margin-bottom: 0;
+            }
+        }
+
+        &.v-4 {
+            .columns-img-col {
+                margin-bottom: auto;
+            }
+        }
+
+        &.v-5 {
+            padding-bottom: 31px;
+
+            .default-content-wrapper {
+                h2:first-of-type {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        &.v-6 {
+            h2 {
+                margin-bottom: 48px;
+            }
+
+            .columns {
+                div {
+                    margin-bottom: 40px;
+                    &:last-of-type {
+                        margin-bottom: 0;
+                    }
+                }
+
+                .columns-text-col {
+                    margin-top: 16px;
+                    margin-bottom: 0;
+                    gap: 16px;
+                    display: flex;
+                    flex-direction: column;
+
+                    ul {
+                        list-style: unset;
+                    }
+
+                    p, h5, ul, li {
+                        margin: 0;
+                    }
+
+                    p {
+                        font-size: 16px;
+                        opacity: .5;
+                    }
+
+                    h5 {
+                        color: #006DFF;
+                        font-size: 24px;
+                        line-height: 100%;
+                        font-weight: 700;
+                    }
+
+                    li {
+                        font-size: 16px;
+                        line-height: 24px;
+                        padding-left: 0;
+                    }
+                }
+            }
+        }
+
+        &.dlp-variant {
+            .columns {
+                div {
+                    .columns-text-col {
+                        margin-bottom: 66px;
+                    }
+
+                    &:last-of-type {
+                        .columns-text-col {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .hero-aem-container {
+        .hero-aem__card-text {
+            .button-container {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+
+                a {
+                    width: max-content;
+                }
+            }
+        }
+    }
+
+    .awards-container {
+        .awards-component {
+            h1 {
+                font-size: 40px;
+                line-height: 42px;
+            }
+
+            div:last-of-type {
+                width: 100% !important;
+
+                picture {
+                    img {
+                        height: 120px;
+                    }
+                }
+
+                picture:first-of-type, picture:last-of-type {
+                    img {
+                        height: 62px;
+                    }
+                }
+            }
+        }
+    }
+
+    .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
+        background-color: #0681FF;
+    }
+
+    .columns-container.v-5 .columns-wrapper .columns div {
+        grid-template-columns: repeat(auto-fit, minmax(295px, 1fr));
+        .columns-text-col {
+            gap: 0;
+
+            .icon {
+                margin-bottom: 0;
+                height: 31px;
+            }
+
+            p {
+                &:first-of-type {
+                    padding-bottom: 12px;
+                }
+                &:nth-child(2) {
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    font-size: 16px;
+                    line-height: 100%;
+                }
+                &:last-of-type {
+                    margin-top: 16px;
+                    font-size: 16px;
+                    line-height: 24px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    .dex-18076 {
+        .hero-aem-container {
+            .hero-aem__card-text {
+                .button-container {
+                    flex-direction: row;
+
+                    em {
+                        a {
+                            padding-top: 13px;
+                            padding-bottom: 13px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .new-prod-boxes-container {
+            .default-content-wrapper h2 {
+                margin-bottom: 0;
+            }
+
+            .new-prod-boxes-wrapper {
+                padding-top: 30px;
+                margin-top: 0;
+            }
+        }
+
+        .section {
+            h2 {
+                font-size: 34px;
+                font-weight: 700;
+                margin-bottom: 36px;
+                text-align: center;
+                font-family: Arial, sans-serif;
+            }
+
+            .tabs-component {
+                margin-top: 0;
+            }
+
+            &.v-5 .default-content-wrapper h2:first-of-type {
+                margin-bottom: 0;
+            }
+
+            &.v-6 .columns .columns-text-col {
+                margin-top: 0;
+            }
+        }
+
+        .awards-container {
+            .awards-component {
+                div:last-of-type {
+                    div {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+    }
+}
