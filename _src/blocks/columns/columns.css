@@ -172,7 +172,7 @@
   gap:30px;
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: baseline;
 }
 
 .columns img {
@@ -215,10 +215,6 @@
 .columns.video-presentation .linked-image-container img {
   width: 150px;
   height: 44px;
-}
-
-.columns.awards > div {
-  align-items: baseline;
 }
 
 .columns.awards div img {
