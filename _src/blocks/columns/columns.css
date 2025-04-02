@@ -221,7 +221,7 @@
   align-items: baseline;
 }
 
-.columns.awards > div img {
+.columns.awards div img {
   width: 140px;
   height: 144px;
   justify-self: center;
@@ -1038,7 +1038,6 @@
   }
 
   .columns > div {
-    align-items: center;
     flex-direction: unset;
     gap: 32px;
   }
