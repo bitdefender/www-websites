@@ -175,12 +175,12 @@
     flex: 0 0 80px;
 }
 
-.spp-slider .card picture {
+.spp-slider .card > p:first-of-type {
     position: relative;
     display: block;
 }
 
-.spp-slider .card picture::before {
+.spp-slider .card > p:first-of-type::before {
     content: '';
     background: url('../../icons/checkmark-green-circle.svg') 0 0 no-repeat transparent;
     width: 20px;
@@ -192,12 +192,12 @@
     background-size: 20px !important;
 }
 
-.spp-slider .card picture img {
+.spp-slider .card > p:first-of-type .icon {
     width: 80px;
     height: 80px;
 }
 
-.spp-slider .without .card picture::before {
+.spp-slider .without .card > p:first-of-type::before {
     background: url('../../icons/bug.png') 0 0 no-repeat transparent;
 }
 
