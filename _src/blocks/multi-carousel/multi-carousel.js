@@ -70,10 +70,10 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
   function moveToSlide(index) {
     const dots = document.querySelectorAll('.carousel-dot');
     dots[currentIndex].classList.remove('active');
-    dots[index].classList.add('active');
+    dots[index]?.classList.add('active');
 
     block.querySelectorAll('.carousel-item').forEach((itm) => itm.classList.remove('active'));
-    block.querySelector(`.carousel-item:nth-of-type(${index + 1})`).classList.add('active');
+    block.querySelector(`.carousel-item:nth-of-type(${index + 1})`)?.classList.add('active');
 
     currentIndex = index;
     carouselTrack.style.transform = `translateX(-${block.querySelector('.carousel-item').offsetWidth * index}px)`;

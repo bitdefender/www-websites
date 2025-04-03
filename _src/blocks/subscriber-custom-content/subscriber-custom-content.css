@@ -1,0 +1,491 @@
+.subscriber-custom-content-container {
+    background-color: #003385;
+    padding: 5em 0!important;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-top: 24px;
+
+    @media (max-width: 768px) {
+        padding-right: 20px !important;
+        padding-left: 20px !important;
+    }
+
+    * {box-sizing: unset;}
+
+    svg {
+        display: block;
+     }
+
+        p {
+            margin: 0;
+            line-height: 20px;
+            font-size: 14px;
+            letter-spacing: 0.11px;
+        }
+        
+        .grid {
+            display: flex;
+            gap: 24px;
+            flex-direction: column;
+        }
+        
+        .card {
+            background: #0045AD;
+            border-radius: 12px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            padding: 10px;
+            gap: 12px;
+            overflow: hidden;
+            border: 1px solid #338BFF;
+            justify-content: flex-start;
+            
+            p {
+                width: 100%;
+            }
+        }
+        
+        .lottie-wrapper {
+            width: 100%;
+            position: relative;
+            justify-content: center;
+            height: fit-content;
+            display: flex;
+            align-items: center;
+        }
+        
+        .lottie-container {
+            position: absolute;
+            bottom: 0;
+            z-index: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: block;
+        }
+        
+        .small {
+            .lottie-wrapper {
+                width: fit-content;
+            }
+        }
+        
+        .lottie-container.dns {
+            z-index: 0;
+        }
+        
+        .lottie-container.devices {
+            width: 560px;
+        }
+        
+        .lottie-container.password {
+            width: 208px;
+            transform: translateX(-50%) translatey(-50%);
+            top: 50%;
+            bottom: auto;
+            transition: opacity calc(1s / 3) ease-in-out;
+        }
+        
+        .card.small {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 12px;
+        }
+        
+        .card.small .icon {
+            margin-right: auto;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 0;
+        }
+        
+        .card.small .lottie-wrapper {
+            justify-content: flex-start;
+        }
+        
+        .lottie-container.mask::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 69, 173, 0.9), transparent 50%, rgba(0, 69, 173, 0.9));
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        
+        .lottie-container.home-background.mask::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(rgba(0, 69, 173, 0.9) 40%, transparent 100%);
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .card.small {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10px 12px;
+            gap: 12px;
+        }
+        
+        .card.small .icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            justify-content: center;
+        }
+        
+        .card.small p {
+            margin: 0;
+            flex: 1;
+            text-align: left;
+        }
+        
+        
+        .card:hover .lottie-container.mask::after {
+            opacity: 0;
+        }
+        
+        .lottie-container.home {
+            width: 192px;
+            transform: translateX(-50%) translatey(-50%);
+            top: 50%;
+            z-index: 1;
+            bottom: auto;
+        
+        svg {
+            mask-image: linear-gradient(black 70%, transparent);
+            mask-mode: alpha;
+        }
+    }
+        
+        .lottie-container.home-background {
+            width: 576px;
+            transform: translateX(-50%) translatey(-50%);
+            top: 50%;
+            bottom: auto;
+            
+            svg {
+                mask-image: linear-gradient(black 70%, transparent);
+                mask-mode: alpha;
+            
+                z-index: -1;
+            }
+        }
+        
+        .lottie-container.password-background {
+            width: 208px;
+            transform: translateX(-50%) translatey(-50%);
+            top: 50%;
+            bottom: auto;
+            
+            svg {
+                mask-image: linear-gradient(black 70%, transparent);
+                mask-mode: alpha;
+            
+                z-index: -1;
+            }
+        }
+        
+        .lottie-container.identity {
+            width: 64px;
+            transform: translateX(-50%) translatey(-50%);
+            top: 50%;
+            bottom: auto;
+            
+            svg {
+                mask-image: linear-gradient(black 70%, transparent);
+                mask-mode: alpha;
+            
+                z-index: -1;
+            }
+        }
+        
+        .lottie-container {
+            width: 208px;
+        }
+        
+        img {
+            display: block;
+        }
+        
+        
+        .icon {
+            min-width: 64px;
+            min-height: 64px;
+            width: 64px;
+            position: relative;
+            height: 64px;
+            place-self: center;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0;
+        
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+        
+        .icon {
+            position: relative;
+            overflow: hidden !important;
+            transition: all calc(1s/3) ease;
+        }
+        
+        .icon-effects {
+            box-shadow: inset 0 0 16px rgba(248, 248, 248, 0.08);
+            border: solid 1px #338BFF;
+            background: #0059D6;
+            border-radius: 10px;
+        }
+        
+        
+        .card:hover {
+            border: 1px solid #73a4e6;
+            
+            .lottie-container.password {
+                transition: all calc(1s/3) ease;
+            
+                svg {
+                    mask-image: none;
+                }
+            }
+        }
+        
+        .icon.devices,
+        .icon.home,
+        .icon.identity {
+            opacity: 0;
+        }
+        
+        .flex {
+            gap: 24px;
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .row {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .column {
+            display: flex;
+            gap: 24px;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .column.large {
+            max-width: -webkit-fill-available;
+            flex: 2;
+        }
+        
+        .span-2 {
+            grid-column: span 2;
+        }
+        
+        .span-4 {
+            grid-column: span 4;
+        }
+        
+        .middle {
+            height: 416px;
+        }
+        
+        p {
+            z-index: 0;
+        }
+        
+        
+        .medium {
+            text-align: center;
+            flex: 1;
+            padding: 48px 10px;
+        
+            p {
+                height: 20px;
+            }
+        }
+        
+        .small {
+        flex-direction: row;
+        height: 64px;
+        }
+        
+        .big {
+        padding: 68px 10px;
+        
+        p {
+            height: 20px;
+        }
+        }
+        
+        .tall {
+        padding-top: 68px;
+        }
+        
+        .medium.tall {
+        max-width: 172px;
+        text-align: center;
+        }
+        
+        .card {
+        transition: transform calc(1s/3) ease-out;
+        }
+        
+        .card:hover {
+        transform: scale(1.05) translateZ(0);
+        opacity: 1;
+        background: #044ab3;
+        
+        }
+        
+        @media (max-width: 720px) {
+        
+        
+        main {
+            border-radius: 0;
+            margin-top: 0;
+            padding-top: calc(5em + 24px);
+        }
+        
+        .flex {
+            flex-direction: column;
+        
+        }
+        
+        .grid {
+            flex-direction: row;
+            width: 100%;
+        }
+        
+        .card {
+        
+            p {
+            height: fit-content !important;
+            }
+        
+            width: -webkit-fill-available;
+            max-width: 100% !important;
+            width: -webkit-fill-available;
+            max-width: 100% !important;
+        }
+        
+        .column {
+            flex-direction: column;
+            width: 100% !important;
+            width: -webkit-fill-available !important;
+            max-width: 100% !important;
+        }
+        
+        .card.mobile-full {
+            grid-column: span 2;
+        }
+        
+        .card.mobile-half {
+            grid-column: span 1;
+        }
+        
+        }
+        
+        .box {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        }
+        
+        .box-content {
+        display: block;
+        transition: transform calc(1s / 3) ease-in-out;
+        }
+        
+        .card:hover .box-content {
+        transform: translateX(64px);
+        }
+        
+        .box .icon {
+        background: none;
+        border: 0;
+        opacity: 1;
+        }
+        
+        .box {
+        .lottie-wrapper {
+            transform: translateX(-50%);
+            transform: translateX(-64px);
+            position: absolute;
+        
+        }
+        
+        .lottie-container {
+            position: relative;
+            transform: none;
+            left: 0;
+            top: 0;
+        }
+        }
+        
+        .default-content-wrapper {
+        text-align: center;
+        color: white;
+        
+        p {
+            margin: 0;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 27px;
+            letter-spacing: 0px;
+            width: 100%;
+        }
+        
+        h3 {
+            max-width: 584px;
+            font-weight: 500;
+            font-size: 40px;
+            line-height: 40px;
+            margin: 16px auto;
+            width: 100%;
+        
+            u {
+            text-decoration: none;
+            color: #6BABFF !important;
+            }
+        
+        
+        }
+        
+        p:nth-of-type(2) {
+            max-width: 636px;
+            width: 100%;
+            margin: 0 auto 64px;
+        }
+        }
+}

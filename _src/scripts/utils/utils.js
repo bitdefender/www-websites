@@ -134,6 +134,40 @@ export function checkIfNotProductPage() {
   return Constants.NONE_PRODUCT_PAGES.includes(Page.name);
 }
 
+export function addScript(src, data = {}, loadStrategy = undefined, onLoadCallback = undefined, onErrorCallback = undefined, type = undefined) {
+  const s = document.createElement('script');
+
+  s.setAttribute('src', src);
+
+  if (loadStrategy) {
+    s.setAttribute(loadStrategy, true);
+  }
+
+  if (type) {
+    s.setAttribute('type', type);
+  }
+
+  if (typeof data === 'object' && data !== null) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in data) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (data.hasOwnProperty(key)) {
+        s.dataset[key] = data[key];
+      }
+    }
+  }
+
+  if (onLoadCallback) {
+    s.onload = onLoadCallback;
+  }
+
+  if (onErrorCallback) {
+    s.onerror = onErrorCallback;
+  }
+
+  document.body.appendChild(s);
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
   const el = document.createElement(tag);

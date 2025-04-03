@@ -221,4 +221,16 @@
         width: 100%;
         transform: none;
     }
+    .spp-slider .tabs {
+        width: 100%;
+    }
+    .spp-slider .tab {
+        flex: 0 0 42%;
+    }
+    .spp-slider .tab-slider {
+        width: 42%;
+    }
+    .spp-slider.without-active .tab-slider {
+        transform: translateX(calc(214px));
+    }
 }
