@@ -194,21 +194,27 @@ export default function decorate(block) {
   // this will define the number of rows inside each card of the subgrid system
   // by dynamically setting this, i can set howewer much rows i want based on the number of
   // maximum elements expected in the row
-  if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
-    block.querySelectorAll('.columns-text-col')?.forEach((element) => {
-      element.style['grid-row'] = `span ${maxElementsInColumn}`;
+  if (block.closest('.section').classList.contains('v-5')) {
+    block.querySelectorAll('div > div')?.forEach((element) => {
+      element.style['grid-row'] = `span ${maxElementsInColumn || 3}`;
     });
   }
 
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
+
   if (block.closest('.section').classList.contains('multi-blocks')) {
     matchHeights(block.closest('.section'), '.columns');
     matchHeights(block.closest('.section'), 'table');
-    matchHeights(block.closest('.section'), 'p:nth-last-of-type(2)');
+    matchHeights(block.closest('.section'), '.columns p:nth-last-of-type(2)');
     matchHeights(block.closest('.section'), '.columns > div');
   }
+
   if (block.classList.contains('awards-fragment')) {
     matchHeights(block, 'p:last-of-type');
+  }
+
+  if (block.classList.contains('text-over-image')) {
+    matchHeights(block, 'p:first-of-type');
   }
 }
