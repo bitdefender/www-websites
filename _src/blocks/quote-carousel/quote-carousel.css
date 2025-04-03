@@ -28,9 +28,9 @@ main .quote-carousel-container .hasMultiImgs .right-col picture:first-of-type {
   display: block;
 }
 
-@media (min-width: 596px) {
-  main .quote-carousel .slides-container {
-    margin-bottom: 50px;
+@media (max-width: 992px) {
+  main .quote-carousel-container .hasMultiImgs .left-col, main .quote-carousel-container .hasMultiImgs .right-col {
+    width: 100%;
   }
 }
 
@@ -48,6 +48,10 @@ main .quote-carousel-container .hasMultiImgs .right-col picture:first-of-type {
   main .quote-carousel {
     max-width: 100%;
     margin: 55px 0 0;
+  }
+
+  main .quote-carousel .slides-container {
+    margin-bottom: 50px;
   }
 
   main .quote-carousel .slides-container {
