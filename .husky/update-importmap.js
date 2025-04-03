@@ -59,11 +59,11 @@ async function updateHtmlImportMap(htmlFilePath) {
     };
     for (const [name, { primaryDependency, secondaryDependencies }] of Object.entries(deps)) {
       if (primaryDependency) {
-        importMap.imports[name] = `https://cdn.jsdeliver.net/npm/${name}@${primaryDependency}/+esm`;
+        importMap.imports[name] = `https://cdn.jsdelivr.net/npm/${name}@${primaryDependency}/+esm`;
       }
       for (const version of secondaryDependencies) {
         const packagePath = `/npm/${name}@${version}/+esm`;
-        importMap.imports[packagePath] = `https://cdn.jsdeliver.net/${packagePath}`;
+        importMap.imports[packagePath] = `https://cdn.jsdelivr.net/${packagePath}`;
       }
     }
 
