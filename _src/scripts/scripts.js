@@ -1,3 +1,6 @@
+import Launch from '@repobit/dex-launch';
+import Target from '@repobit/dex-target';
+import page from './page.js';
 import {
   sampleRUM,
   loadHeader,
@@ -11,7 +14,7 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  getMetadata, loadScript,
+  getMetadata,
 } from './lib-franklin.js';
 import {
   AdobeDataLayerService,
@@ -20,7 +23,6 @@ import {
   resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
-import Page from './libs/page.js';
 
 import {
   adobeMcAppendVisitorId,
@@ -307,22 +309,12 @@ export async function loadTrackers() {
   };
 
   if (isPageNotInDraftsFolder) {
-    const LAUNCH_URL = 'https://assets.adobedtm.com';
-    const ENVIRONMENT = Page.environment;
-
-    // Load Adobe Experience platform data collection (Launch) script
-    // const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();
-
-    const ADOBE_MC_URL_ENV_MAP = new Map([
-      ['prod', '8a93f8486ba4/5492896ad67e/launch-b1f76be4d2ee.min.js'],
-      ['stage', '8a93f8486ba4/5492896ad67e/launch-3e7065dd10db-staging.min.js'],
-      ['dev', '8a93f8486ba4/5492896ad67e/launch-fbd6d02d30e8-development.min.js'],
-    ]);
-
-    const adobeMcScriptUrl = `${LAUNCH_URL}/${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT)}`;
-    await loadScript(adobeMcScriptUrl);
-
-    onAdobeMcLoaded();
+    try {
+      await Launch.load(page.environment);
+      onAdobeMcLoaded();
+    } catch {
+      Target.abort();
+    }
   } else {
     onAdobeMcLoaded();
   }
