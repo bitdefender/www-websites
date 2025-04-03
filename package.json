@@ -43,8 +43,7 @@
     "@repobit/dex-store": "^0.2.0",
     "@repobit/dex-target": "^1.6.0",
     "@repobit/dex-utils": "^1.1.0",
-    "@tsparticles/engine": "^3.2.2",
-    "tsparticles": "^3.8.1"
+    "@tsparticles/engine": "^3.2.2"
   },
   "volta": {
     "node": "22.14.0"

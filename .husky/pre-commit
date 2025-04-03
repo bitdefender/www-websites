@@ -1,1 +1,2 @@
 node .husky/update-importmap.js
+node .husky/commit-head.js
