@@ -344,7 +344,7 @@
 }
 
 .products .product-card .price del {
-  color: #616161;
+  color:rgb(0, 0, 0);
 }
 
 .products.compact .product-card .price strong, .products.plans .product-card .price strong {
