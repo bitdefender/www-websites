@@ -1,51 +1,9 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { openUrlForOs } from '../../scripts/utils/utils.js';
-
-let dataLayerProducts = [];
-async function createPricesElement(storeOBJ, conditionText, saveText, prodName, prodUsers, prodYears, buylink, send2datalayer) {
-  const storeProduct = await storeOBJ.getProducts([new ProductInfo(prodName, 'consumer')]);
-  const storeOption = storeProduct[prodName].getOption(prodUsers, prodYears);
-  const price = storeOption.getPrice();
-  const discountedPrice = storeOption.getDiscountedPrice();
-  const discount = storeOption.getDiscount('valueWithCurrency');
-  const buyLink = await storeOption.getStoreUrl();
-
-  let product = {
-    ID: storeOption.getAvangateId(),
-    name: storeOption.getName(),
-    devices: storeOption.getDevices(),
-    subscription: storeOption.getSubscription('months'),
-    version: storeOption.getSubscription('months') === 1 ? 'monthly' : 'yearly',
-    basePrice: storeOption.getPrice('value'),
-    discountValue: storeOption.getDiscount('value'),
-    discountRate: storeOption.getDiscount('percentage'),
-    currency: storeOption.getCurrency(),
-    priceWithTax: storeOption.getDiscountedPrice('value') || storeOption.getPrice('value'),
-  };
-  dataLayerProducts.push(product);
-
-  const priceElement = document.createElement('div');
-  priceElement.classList.add('hero-aem__prices');
-  priceElement.innerHTML = `
-    ${!send2datalayer ? '<p class="hero-aem__pill">Yearly - individual</p>' : ''}
-    <div class="hero-aem__price mt-3">
-      <div>
-          <span class="prod-oldprice">${price}</span>
-          <span class="prod-save">${saveText} ${discount}<span class="save"></span></span>
-      </div>
-      <div class="newprice-container mt-2">
-        <span class="prod-newprice">${discountedPrice}</span>
-        <sup>${conditionText || ''}</sup>
-      </div>
-    </div>
-    <p class="hero-aem__underPriceText">Protection for 5 PCs, Macs, tablets, or smartphones.<br> Windows® | macOS® | Android™ | iOS®</p>`;
-  if (buylink) {
-    buylink.href = buyLink;
-  }
-  return priceElement;
-}
+import {
+  openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
+} from '../../scripts/utils/utils.js';
 
 function createCardElementContainer(elements, mobileImage) {
   const cardElementContainer = document.createElement('div');
@@ -67,20 +25,124 @@ function createCardElementContainer(elements, mobileImage) {
   return cardElementContainer;
 }
 
-// Function to dispatch 'shadowDomLoaded' event
-function dispatchShadowDomLoadedEvent() {
-  const event = new CustomEvent('shadowDomLoaded', {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
+function createDropdownElement(paragraph, dropdownTagText, product) {
+  let dropdownItems = paragraph.textContent.slice(1, -1).split(',').map((item) => item.trim());
+  // Remove the first item as it does not need to be worked on
+  dropdownItems.shift();
+
+  // Create a container for the dropdown
+  let dropdownContainer = document.createElement('div');
+  dropdownContainer.classList.add('custom-dropdown-container');
+
+  if (dropdownTagText) {
+    let dropdownTagElement = document.createElement('div');
+    dropdownTagElement.classList.add('custom-dropdown-tag');
+    dropdownTagElement.textContent = dropdownTagText;
+    dropdownContainer.appendChild(dropdownTagElement);
+  }
+
+  // Create the dropdown element
+  let dropdown = document.createElement('div');
+  dropdown.classList.add('custom-dropdown');
+
+  // Create the button element
+  let dropdownButton = document.createElement('button');
+  dropdownButton.classList.add('dropdown-button');
+  // eslint-disable-next-line prefer-destructuring
+  dropdownButton.textContent = dropdownItems[0];
+  dropdown.appendChild(dropdownButton);
+
+  // Create the options element
+  let dropdownOptions = document.createElement('div');
+  dropdownOptions.classList.add('dropdown-options');
+  dropdown.appendChild(dropdownOptions);
+  dropdownItems.forEach((item, idx) => {
+    let dropdownItem = document.createElement('div');
+    dropdownItem.classList.add('custom-dropdown-item');
+    const [prodName, prodUsers, prodYears] = product[idx].split('/');
+    dropdownItem.textContent = item;
+    dropdownItem.setAttribute('data-store-click-set-product', '');
+    dropdownItem.setAttribute('data-store-product-id', `${prodName}`);
+    dropdownItem.setAttribute('data-store-product-option', `${prodUsers}-${prodYears}`);
+    dropdownItem.setAttribute('data-store-product-department', 'consumer');
+    dropdownOptions.appendChild(dropdownItem);
   });
-  window.dispatchEvent(event);
+
+  dropdownContainer.appendChild(dropdown);
+  paragraph.replaceWith(dropdownContainer);
+
+  dropdownButton.addEventListener('click', () => {
+    let option = dropdownOptions.style.display === 'block' ? 'none' : 'block';
+    dropdownOptions.style.display = option;
+    dropdownButton.classList.add('active');
+  });
+
+  const dropdownItemsNodes = dropdownOptions.querySelectorAll('.custom-dropdown-item');
+  dropdownItemsNodes.forEach((item) => {
+    // eslint-disable-next-line func-names
+    item.addEventListener('click', function () {
+      dropdownButton.textContent = this.textContent;
+      dropdownOptions.style.display = 'none';
+      dropdownButton.classList.remove('active');
+      dropdownItemsNodes.forEach((i) => i.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+
+  // Close the dropdown if clicked outside
+  document.addEventListener('click', (event) => {
+    if (!dropdown.contains(event.target)) {
+      dropdownOptions.style.display = 'none';
+      dropdownButton.classList.remove('active');
+    }
+  });
 }
 
-export default function decorate(block, options) {
+async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText) {
+  const pricesBox = document.createElement('div');
+  pricesBox.classList.add('hero-aem__prices', 'await-loader');
+  pricesBox.innerHTML = `
+          ${bluePillText ? `<p class="hero-aem__pill">${bluePillText}</p>` : ''}
+          <div class="hero-aem__price mt-3">
+            <div>
+                <span class="prod-oldprice" data-store-price="full"></span>
+                <span class="prod-save" data-store-text-variable>${saveText} {DISCOUNT_VALUE}</span></span>
+            </div>
+            <div class="newprice-container mt-2">
+              <span class="prod-newprice" data-store-price="discounted||full"></span>
+              <sup>${conditionText || ''}</sup>
+            </div>
+          </div>
+          <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
+  buyLink.setAttribute('data-store-buy-link', '');
+  return pricesBox;
+}
+
+/**
+ * Nanoblock representing the price conditions below the Price
+ * @param text Conditions
+ * @returns Root node of the nanoblock
+ */
+function renderDevicesUsersText(text) {
+  return createTag(
+    'div',
+    {
+      class: 'devices-years-text',
+    },
+    `<span>${text}</span>`,
+  );
+}
+
+createNanoBlock('devices-users-text', renderDevicesUsersText);
+
+export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
-    alignContent, height, type, send2datalayer,
+    alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
+    dropdownTag,
   } = block.closest('.section').dataset;
+
+  renderNanoBlocks(block);
 
   if (options) {
     // eslint-disable-next-line no-param-reassign
@@ -91,6 +153,12 @@ export default function decorate(block, options) {
   }
 
   let [richText, mainDesktopImage, richTextCard, columnsCard] = block.children;
+
+  let pricesContainers = new Map();
+  let dropdownProductsArray = [];
+  if (dropdownProducts) {
+    dropdownProductsArray = dropdownProducts.split(',').map((item) => item.trim());
+  }
 
   // Configuration for new elements
   richText.classList.add('hero-aem__card__desktop', 'col-md-6');
@@ -118,47 +186,52 @@ export default function decorate(block, options) {
   const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
-
+  if (product) {
+    const [prodName, prodUsers, prodYears] = product.split('/');
+    cardElementContainer.setAttribute('data-store-context', '');
+    cardElementContainer.setAttribute('data-store-id', prodName);
+    cardElementContainer.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
+    cardElementContainer.setAttribute('data-store-department', 'consumer');
+    cardElementContainer.setAttribute('data-store-event', 'main-product-loaded');
+  }
   // Append the container after h1
-  block.querySelector('h1').after(cardElementContainer);
+  block.querySelector('h1')?.after(cardElementContainer);
 
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
-  desktopImage.classList.add('hero-aem__desktop-image');
+  desktopImage?.classList.add('hero-aem__desktop-image');
 
-  if (product && options?.store) {
-    const [prodName, prodUsers, prodYears] = product.split('/');
+  const buyLink = block.querySelector('a[href*="buylink"]');
 
-    const buyLink = block.querySelector('a[href*="buylink"]');
-    createPricesElement(options.store, conditionText, saveText, prodName, prodUsers, prodYears, buyLink, send2datalayer)
-      .then((pricesBox) => {
-        // If buyLink exists, apply styles and insert pricesBox
-        if (buyLink) {
-          buyLink.classList.add('button', 'primary');
-          buyLink.parentNode.parentNode.insertBefore(pricesBox, buyLink.parentNode);
-          dispatchShadowDomLoadedEvent();
-          return;
-        }
+  if (product && !options) {
+    let priceBox = await createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText);
+    // Select all paragraph elements
+    const paragraphs = document.querySelectorAll('p');
+    let insertPricesParagraph = null;
 
-        // If buyLink does not exist, apply styles to simpleLink
-        const simpleLink = block.querySelector('.hero-aem__card-text a');
-        if (simpleLink) {
-          simpleLink.classList.add('button', 'primary');
-          simpleLink.parentNode.parentNode.insertBefore(pricesBox, simpleLink.parentNode);
-        }
-
-        dispatchShadowDomLoadedEvent();
-      });
-  } else {
-    // If there is no product, just add the button class and dispatch the event
-    const simpleLink = block.querySelector('.hero-aem__card-text a');
-    if (simpleLink) {
-      simpleLink.classList.add('button', 'primary');
-    }
-    window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-      bubbles: true,
-      composed: true, // This allows the event to cross the shadow DOM boundary
+    // Iterate through the paragraphs
+    paragraphs.forEach((paragraph) => {
+      // Check if the paragraph contains the text <insert-prices>
+      if (paragraph.textContent.includes('<insert-prices>')) {
+        // Perform any additional actions here
+        insertPricesParagraph = paragraph;
+      }
     });
+
+    if (insertPricesParagraph) {
+      insertPricesParagraph.replaceWith(priceBox);
+    } else {
+      buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
+    }
+
+    pricesContainers.set(product, priceBox);
   }
+
+  let paragraphs = block.querySelectorAll('p');
+  paragraphs.forEach((paragraph) => {
+    if (paragraph.textContent.toLowerCase().includes('dropdown')) {
+      createDropdownElement(paragraph, dropdownTag, dropdownProductsArray);
+    }
+  });
 
   let breadcrumbTable = block.querySelector('table');
 
@@ -166,6 +239,28 @@ export default function decorate(block, options) {
     breadcrumbTable.classList.add('hero-aem__breadcrumb');
     // delete the first row
     breadcrumbTable.deleteRow(0);
+  }
+
+  let tables = block.querySelectorAll('table');
+  // eslint-disable-next-line no-restricted-syntax
+  for (const listTable of tables) {
+    if (listTable && listTable.textContent.includes('benefit_list')) {
+      listTable.classList.add('benefit_list');
+      // delete the first row
+      listTable.deleteRow(0);
+    }
+
+    if (listTable && listTable.textContent.includes('ratings')) {
+      listTable.classList.add('ratings');
+      // delete the first row
+      listTable.deleteRow(0);
+
+      // Dynamically import the decorateButtons function, bugfix for landing page
+      // eslint-disable-next-line no-await-in-loop
+      const { decorateButtons } = await import('../../scripts/lib-franklin.js');
+      decorateButtons(listTable);
+      // listTable.querySelector('a').classList.add('button');
+    }
   }
 
   let freeDownloadButton = block.querySelector('a[href*="#free-download"]');
@@ -201,5 +296,10 @@ export default function decorate(block, options) {
     block.appendChild(cardElement);
     richTextCard.innerHTML = '';
     columnsCardChildren.forEach((col) => col.remove());
+  }
+
+  let termsParagraph = block.querySelector('.hero-aem-container .hero-aem .hero-aem__card-text p:last-child');
+  if (termsParagraph) {
+    termsParagraph.classList.add('hero-aem__terms');
   }
 }

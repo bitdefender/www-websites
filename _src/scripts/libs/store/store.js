@@ -693,26 +693,42 @@ class Vlaicu {
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
 	/**
-	 * TODO: please remove this function and all its calls once digital river works correctly
+	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
 	 * @param {string} productId 
-	 * @returns {boolean} -> check if the product is soho and the domain is de-de
+	 * @returns {boolean} -> wether we have a DIP corner case or not
 	 */
-	static #isSohoCornerCase = (productId) =>
-	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
+	static #isDIPCornerCase(productId) {
+		return productId === 'com.bitdefender.dataprivacy';
+	}
 
 	static #getGeoIpFlag = async () => {
 		const offer = await Target.getGeoIpFlag();
+	}
+	
+	/**
+     * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
+     * @param {string} productId 
+     * @returns {boolean} -> check if the product is soho and the domain is de-de
+     */
+    static #isSohoCornerCase(productId) {
+        return Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho";
+	}
 
-		if (offer && offer.content && typeof offer.content.geoIpPrice !== 'undefined') {
-            return offer.content.geoIpPrice;
-		}
+	/**
+	 * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
+	 * @param {string} receivedBuyLink 
+	 * @return {string} -> buyLink with lang parameter
+	 */
+	static #addLangParameter(receivedBuyLink){
+		const buyLinkUrl = new URL(receivedBuyLink);
+		buyLinkUrl.searchParams.set('LANG', Page.language);
 
-		return null;
+		return buyLinkUrl.href;
 	}
 
 	static async getProductVariations(productId, campaign) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
-		let geoIpFlag = await this.#getGeoIpFlag();
+		let geoIpFlag = await Target.getGeoIpFlagMbox();
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
@@ -721,11 +737,13 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : campaign
+			"{campaignId}": this.#isDIPCornerCase(productId) ? 'DIP-promo'
+				: this.#isSohoCornerCase(productId) ? "SOHO_DE"
+				: campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION || this.#isSohoCornerCase(productId) ?
+		let productPath = campaign !== Constants.NO_PROMOTION || this.#isDIPCornerCase(productId) || this.#isSohoCornerCase(productId) ?
 			this.promotionPath :
 			this.defaultPromotionPath;
 
@@ -812,7 +830,10 @@ class Vlaicu {
 					productInfoResponse.campaign :
 					campaignId,
 				price: productVariation.price,
-				buyLink: productVariation.buyLink,
+				// TODO: please remove this once SOHO works correctly on de-de with zuora
+				buyLink: this.#isSohoCornerCase(Constants.PRODUCT_ID_MAPPINGS[id].bundleId)
+					? this.#addLangParameter(productVariation.buyLink)
+					: productVariation.buyLink,
 				variation: {
 					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,
@@ -951,7 +972,7 @@ export class Store {
 			.filter(product => product.status === "fulfilled" && !!product.value)
 			.map(product => new Product(product.value))
 			.reduce((acc, product) => { acc[product.getId()] = product; return acc; }, {});
-
+		
 		return this.products;
 	}
 

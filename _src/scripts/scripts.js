@@ -354,7 +354,7 @@ async function loadEager(doc) {
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
-    document.body.classList.add('appear');
+    document.body.classList.add('appear', 'franklin');
     if (window.location.href.indexOf('scuderiaferrari') !== -1) {
       document.body.classList.add('sferrari');
     }
@@ -508,7 +508,7 @@ async function loadPage() {
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   await loadLazy(document);
-
+  await Target.cdpData;
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
@@ -527,6 +527,24 @@ async function loadPage() {
 
   pushTrialDownloadToDataLayer();
   AdobeDataLayerService.pushEventsToDataLayer();
+  // eslint-disable-next-line import/no-unresolved
+  const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
+    .then((FingerprintJS) => FingerprintJS.load({
+      region: 'eu',
+    }));
+
+  // Get the visitorId when you need it.
+  await fpPromise
+    .then((fp) => fp.get())
+    .then((result) => {
+      const { visitorId } = result;
+      AdobeDataLayerService.push({
+        event: 'vistorID ready',
+        user: {
+          visitorId,
+        },
+      });
+    });
   AdobeDataLayerService.push(new PageLoadedEvent());
 
   loadDelayed();

@@ -4,6 +4,13 @@ import Page from "./page.js";
 import { Constants } from "./constants.js";
 
 /**
+ * @typedef {{
+ *  auds: string,
+ *  [key: string]: string
+ * }} CdpData
+ */ 
+
+/**
  * 
  * @returns {boolean} returns wether A/B tests should be disabled or not
  */
@@ -197,7 +204,7 @@ export class PageLoadStartedEvent {
     this.page = {
       info: {
         name: pageSectionData.tagName, // e.g. au:consumer:product:internet security
-        section: pageSectionData.locale,
+        section: pageSectionData.section,
         subSection: pageSectionData.subSection,
         subSubSection: pageSectionData.subSubSection,
         subSubSubSection: pageSectionData.subSubSubSection,
@@ -241,10 +248,14 @@ export class PageLoadStartedEvent {
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
     const locale = Page.locale;
+    // currenty, the language is the default first tag and section parameter, with webview, we want
+    // something else to be the first tag and section
+    let pageSectionDataLocale = this.#getMetadata('locale') || Page.locale;
 
     const pageSectionData = {
       tagName: null, // e.g. au:consumer:product:internet security
       locale: locale,
+      section: pageSectionDataLocale,
       subSection: null,
       subSubSection: null,
       subSubSubSection: null,
@@ -254,7 +265,7 @@ export class PageLoadStartedEvent {
     }
   
     if (tags.length) {
-      pageSectionData.tagName = [locale, ...tags].join(':'); // e.g. au:consumer:product:internet security
+      pageSectionData.tagName = [pageSectionDataLocale, ...tags].filter(Boolean).join(':'); // e.g. au:consumer:product:internet security
       pageSectionData.subSection = tags[0] || '';
       pageSectionData.subSubSection = tags[1] || '';
       pageSectionData.subSubSubSection = tags[2] || '';
@@ -330,7 +341,7 @@ export class UserDetectedEvent {
       this.user.loggedIN = true;
     }
 
-    const pageName = window.location.href.split('/').filter(Boolean).pop().toLowerCase();
+    const pageName = Page.name.toLowerCase();
     let productFinding = 'product pages';
     switch(pageName) {
       case 'consumer':
@@ -376,6 +387,19 @@ export class ProductsLoadedEvent  {
     } else {
       this.product[type].push(getOptionInfo(option));
     }
+  }
+};
+
+export class CdpEvent {
+  event = 'cdp data';
+  parameters = {};
+
+  /**
+   * 
+   * @param {CdpData} cdpData
+   */
+  constructor(cdpData) {
+    this.parameters = cdpData;
   }
 };
 
@@ -600,6 +624,12 @@ export class Target {
   };
 
   /**
+   * @typedef {{content: {geoIpPrice: string}}} GeoIpPriceMbox
+   * @type {Promise<GeoIpPriceMbox|null>}
+   */
+  static #geoIpFlagMbox = this.getOffer('geoip-flag-mbox');
+
+  /**
    * get the product-buy link mappings from Target (
    *  e.g
    *  {
@@ -728,7 +758,7 @@ const checkClickEventAfterRedirect = () => {
  * Add entry for free products
  */
 const getFreeProductsEvents = () => {
-  const currentPage = window.location.href.split('/').filter(Boolean).pop();
+  const currentPage = Page.name;
   if (currentPage === 'free-antivirus') {
     // on Free Antivirus page we should add Free Antivirus as the main product
     AdobeDataLayerService.push(new MainProductLoadedEvent({

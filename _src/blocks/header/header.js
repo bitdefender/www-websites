@@ -544,28 +544,14 @@ async function runDefaultHeaderLogic(block) {
         });
       });
 
-      // TODO: please remove this if statement when the mega menu
-      // for these domains gets created in AEM
-      const regex = /\/(zh-hk|zh-tw)\//i;
-      const matches = window.location.href.match(regex);
-      if (matches) {
-        const newScriptFile = document.createElement('script');
-        newScriptFile.src = '/_src/scripts/vendor/mega-menu/mega-menu.js';
-        newScriptFile.defer = true;
-        shadowRoot.appendChild(newScriptFile);
-      } else {
-        // TODO: please keep the below code and move
-        // it outside the if
-
-        // select all the scripts from contet div and
-        const scripts = contentDiv.querySelectorAll('script');
-        scripts.forEach((script) => {
-          const newScript = document.createElement('script');
-          newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
-          newScript.defer = true;
-          contentDiv.appendChild(newScript);
-        });
-      }
+      // select all the scripts from contet div and
+      const scripts = contentDiv.querySelectorAll('script');
+      scripts.forEach((script) => {
+        const newScript = document.createElement('script');
+        newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
+        newScript.defer = true;
+        contentDiv.appendChild(newScript);
+      });
 
       shadowRoot.appendChild(contentDiv);
       const body = document.querySelector('body');
