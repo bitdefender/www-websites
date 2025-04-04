@@ -81,7 +81,7 @@
 
 .product-card .price ~ p {
   font-size:var(--body-font-size-xxs);
-  color: #7e7e7e;
+  color:rgb(0, 0, 0);
 }
 
 .v2 .product-card p:last-of-type {
@@ -216,8 +216,8 @@
 }
 
 .product-card .featured {
-  color: #2cb43d;
-  background-color: rgb(44 180 61 / 20%);
+  color: #0B6A26;
+  background-color: #D1FADC;
   border-radius: 8px;
   font-size: var(--body-font-size-xs);
   font-weight: var(--font-weight-bold);
@@ -344,7 +344,7 @@
 }
 
 .products .product-card .price del {
-  color: #616161;
+  color:rgb(0, 0, 0);
 }
 
 .products.compact .product-card .price strong, .products.plans .product-card .price strong {

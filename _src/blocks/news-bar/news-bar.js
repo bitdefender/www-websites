@@ -16,8 +16,8 @@ export default function decorate(block, options) {
   setTimeout(() => {
     const elementLink = block.querySelector('a');
     block.style.backgroundColor = '#E4F2FF';
-    block.style.color = '#006EFF';
-    if (elementLink && !blockParent.classList.contains('solutions')) elementLink.style.color = '#006EFF';
+    block.style.color = '#0045AD';
+    if (elementLink && !blockParent.classList.contains('solutions')) elementLink.style.color = '#0045AD';
   }, 2000);
 
   if (hideDate) {

@@ -27,15 +27,17 @@ function renderMobileDropDown() {
 }
 
 function renderStickyNavMenuItem(section) {
+  if (!section.id) return null;
+
+  const sectionTitle = section.dataset[STICKY_NAVIGATION_DATASET_KEY];
+  if (!sectionTitle) return null; // Nu creează nimic dacă nu există titlu
+
   const navMenuItem = document.createElement('li');
-  if (section.id) {
-    const sectionTitle = section.dataset[STICKY_NAVIGATION_DATASET_KEY] || '';
-    const navItemLink = document.createElement('a');
-    navItemLink.href = `#${section.id}`;
-    navItemLink.title = sectionTitle;
-    navItemLink.innerText = sectionTitle;
-    navMenuItem.appendChild(navItemLink);
-  }
+  const navItemLink = document.createElement('a');
+  navItemLink.href = `#${section.id}`;
+  navItemLink.title = sectionTitle;
+  navItemLink.innerText = sectionTitle;
+  navMenuItem.appendChild(navItemLink);
 
   /** close the dropdown menu after user selection */
   navMenuItem.addEventListener('click', (e) => {
@@ -48,7 +50,7 @@ function renderStickyNavMenuItem(section) {
 
 function renderStickyNavMenu() {
   const stickyNavMenu = document.createElement('ul');
-  const stickyNavMenuItems = Array.from(document.querySelectorAll('.section[id]')).map(renderStickyNavMenuItem);
+  const stickyNavMenuItems = Array.from(document.querySelectorAll('.section[id]')).map(renderStickyNavMenuItem).filter(Boolean);
   stickyNavMenu.append(...stickyNavMenuItems);
   return stickyNavMenu;
 }
