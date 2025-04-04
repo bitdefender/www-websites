@@ -376,13 +376,14 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 
         div:last-of-type{
             padding: 5%;
+            max-width: 75%;
         }
     }
 
     .scuderia-ferrari-section.quotes-left{
         div:last-of-type{
             max-width: 80%;
-            padding-bottom: 50px;
+            padding-bottom: 0;
         }
     }
 
