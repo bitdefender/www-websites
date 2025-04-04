@@ -518,6 +518,11 @@ async function loadPage() {
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
+  // eslint-disable-next-line import/no-unresolved
+  const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
+    .then((FingerprintJS) => FingerprintJS.load({
+      region: 'eu',
+    }));
   await loadLazy(document);
   await Target.cdpData;
   await StoreResolver.resolve();
@@ -538,11 +543,6 @@ async function loadPage() {
 
   pushTrialDownloadToDataLayer();
   AdobeDataLayerService.pushEventsToDataLayer();
-  // eslint-disable-next-line import/no-unresolved
-  const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
-    .then((FingerprintJS) => FingerprintJS.load({
-      region: 'eu',
-    }));
 
   // Get the visitorId when you need it.
   await fpPromise
