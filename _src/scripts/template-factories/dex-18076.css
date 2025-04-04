@@ -114,7 +114,86 @@
             }
         }
 
+        .inner_prod_box hr {
+            display: none;
+        }
+
+        &.solutions, &.solutions-digital-life {
+
+            .new-prod-boxes {
+                hr {
+                    display: block;
+                }
+
+                .button.primary {
+                    display: block;
+                }
+
+                .button.secondary {
+                    border: 2px solid var(--button-secondary-color);
+                    color: var(--button-secondary-color);
+                    position: relative;
+                    background-color: unset;
+
+                    &:hover {
+                        background-color: var(--button-secondary-color);
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        &.news-bar-container .news-bar {
+            max-width: 100%;
+        }
+
         &.new-prod-boxes-container {
+
+            .inner_prod_box {
+                .subtitle {
+                    margin-top: 10px;
+                    height: 30px;
+                    min-height: 30px;
+
+                    .tag-dark-blue {
+                        background-color: #006DFF;
+                        text-transform: unset;
+                        font-size: 14px;
+                        line-height: 100%;
+                        margin-left: 0;
+                        padding: 7px 12px;
+                        font-weight: 400;
+
+                    }
+                    .tag-light-blue {
+                        background-color: transparent;
+                        color: transparent;
+                        border: none;
+                        box-shadow: none;
+                    }
+                }
+
+                .prod-oldprice {
+                    font-weight: 700;
+                }
+
+                .prod-save {
+                    background-color: #68BA68;
+                    color: white;
+                    text-transform: capitalize;
+                    font-size: 14px;
+                    line-height: 100%;
+                    margin-left: 10px;
+                    padding: 7px 12px;
+                    border-radius: 16px;
+                    font-weight: 700;
+                }
+
+                .newprice-container {
+                    margin-top: 5px;
+                }
+            }
+
             .default-content-wrapper {
                 padding-top: 0;
                 padding-bottom: 0;
@@ -399,11 +478,6 @@
             }
         }
     }
-
-    .products.compact .product-card.featured {
-        border: unset;
-    }
-
 
     .four-cards {
         h2:last-of-type {
