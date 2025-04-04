@@ -11,8 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { UserAgent } from '@repobit/dex-utils';
 import page from './page.js';
-import { UserAgent } from './libs/user-agent/user-agent.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
 export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.aem.page', '.aem.live'];

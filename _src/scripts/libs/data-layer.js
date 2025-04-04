@@ -1,6 +1,5 @@
 import Target from "@repobit/dex-target";
-import { UserAgent } from "./user-agent/index.js";
-import { User } from "./user.js";
+import { User, UserAgent } from "@repobit/dex-utils";
 import page from "../page.js";
 import { Constants } from "./constants.js";
 

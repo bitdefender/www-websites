@@ -1,9 +1,9 @@
 import Target from "@repobit/dex-target";
+import { User } from "@repobit/dex-utils";
 import { Constants } from "../constants.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import page from "../../page.js";
 import { getMetadata } from "../../utils/utils.js";
-import { User } from "../../libs/user.js"
 
 export const loadScript = (baseUrl, url) => {
 	return new Promise(function (resolve) {
