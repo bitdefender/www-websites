@@ -722,7 +722,7 @@ class Vlaicu {
 
 	static async getProductVariations(productId, campaign) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
-		let geoIpFlag = (await Target.configMbox).useGeoIpPricing;
+		let geoIpFlag = (await Target.configMbox)?.useGeoIpPricing;
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
@@ -943,7 +943,7 @@ export class Store {
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
-			this.targetBuyLinkMappings = (await Target.configMbox).products;
+			this.targetBuyLinkMappings = (await Target.configMbox)?.products;
 		}
 
 		// remove duplicates by id
@@ -953,7 +953,7 @@ export class Store {
 			.allSettled(
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
-					product.promotion = (await Target.configMbox).promotion
+					product.promotion = (await Target.configMbox)?.promotion
 						|| this.#getUrlPromotion()
 						|| product.promotion
 						|| getMetadata("pid")
