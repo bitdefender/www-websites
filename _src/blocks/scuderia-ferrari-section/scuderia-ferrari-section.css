@@ -73,9 +73,10 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     text-align: left;
 }
 
-.scuderia-ferrari-section.quotes-left.wide-quote{
-    div:last-of-type{
+.scuderia-ferrari-section.quotes-left.wide-quote {
+    div:last-of-type {
         max-width: 95%;
+        margin-top: 10px;
     }
 }
 

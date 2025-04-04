@@ -8,10 +8,17 @@
         padding-right: 0;
         display: flex;
         justify-content: right;
-        overflow: hidden;
+        overflow: scroll;
         position: relative;
         width: 100%;
         margin: 0 auto;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+        scroll-behavior: smooth;
+        
+        &::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
     }
 
     .carousel-track {
