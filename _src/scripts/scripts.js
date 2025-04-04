@@ -344,9 +344,6 @@ async function loadEager(doc) {
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
-    // loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
-    //   type: 'module',
-    // });
   }
   const main = doc.querySelector('main');
   if (main) {

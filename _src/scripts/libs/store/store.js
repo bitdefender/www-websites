@@ -5,18 +5,6 @@ import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
 import page from "../../page.js";
 import { getMetadata } from "../../utils/utils.js";
 
-export const loadScript = (baseUrl, url) => {
-	return new Promise(function (resolve) {
-		const script = document.createElement("script");
-
-		script.src = `${baseUrl}${url}`;
-		document.head.appendChild(script);
-		script.onload = () => {
-			resolve();
-		};
-	});
-};
-
 export class ProductInfo {
 	/**
 	 *

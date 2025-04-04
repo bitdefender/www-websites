@@ -124,40 +124,6 @@ export async function loadCSS(href) {
 }
 
 /**
- * Loads a non module JS file.
- * @param {string} src URL to the JS file
- * @param {Object} attrs additional optional attributes
- */
-
-export async function loadScript(src, attrs = null) {
-  return new Promise((resolve, reject) => {
-    if (!document.querySelector(`head > script[src="${src}"]`)) {
-      const script = document.createElement('script');
-      script.src = src;
-      if (attrs) {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-        for (const attr in attrs) {
-          script.setAttribute(attr, attrs[attr]);
-        }
-      }
-      script.onload = resolve;
-      script.onerror = () => {
-        // check if the launch code failed to load
-        if (src.includes('launch')) {
-          // if it did, notify the target class using the event and variable
-          window.launchCannotLoad = true;
-          document.dispatchEvent(new Event('launchCannotLoad'));
-        }
-        reject();
-      };
-      document.head.append(script);
-    } else {
-      resolve();
-    }
-  });
-}
-
-/**
  * Retrieves the content of metadata tags.
  * @param {string} name The metadata name (or property)
  * @returns {string} The metadata value(s)
@@ -826,7 +792,6 @@ export const executionContext = {
   decorateIcons,
   loadBlock,
   loadCSS,
-  loadScript,
   sampleRUM,
   toCamelCase,
   toClassName,

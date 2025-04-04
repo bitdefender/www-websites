@@ -1,5 +1,5 @@
 import Target from '@repobit/dex-target';
-import { User } from '@repobit/dex-utils';
+import { User, Cookies } from '@repobit/dex-utils';
 import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
 } from '../../scripts/lib-franklin.js';
@@ -8,7 +8,6 @@ import {
   adobeMcAppendVisitorId, getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
 
-import Cookie from '../../scripts/libs/cookie.js';
 import { Constants } from '../../scripts/libs/constants.js';
 
 /**
@@ -52,7 +51,7 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
       : `${avatar.dataset.loginText}, ${email}`;
   }
 
-  const userLoggedInExpirationDate = Cookie.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
+  const userLoggedInExpirationDate = Cookies.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
 
   if (!userLoggedInExpirationDate
     || (userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now())) {

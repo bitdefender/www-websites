@@ -1,4 +1,5 @@
 import Target from '@repobit/dex-target';
+import { debounce } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
 import page from '../page.js';
 import { Constants } from '../libs/constants.js';
@@ -467,18 +468,6 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   window.index[idxKey] = newIndex;
 
   return newIndex;
-}
-
-export function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
 }
 
 export function appendAdobeMcLinks(selector) {

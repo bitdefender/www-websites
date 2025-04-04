@@ -1,4 +1,5 @@
-import { debounce, matchHeights, createTag } from '../../scripts/utils/utils.js';
+import { debounce } from '@repobit/dex-utils';
+import { matchHeights, createTag } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;

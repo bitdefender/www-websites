@@ -1,4 +1,4 @@
-import Cookie from '../../scripts/libs/cookie.js';
+import { Cookies } from '@repobit/dex-utils';
 import { AdobeDataLayerService, FormEvent } from '../../scripts/libs/data-layer.js';
 
 function onChange(form) {
@@ -56,7 +56,7 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
     formParent.innerHTML = '';
     formParent.appendChild(successMessage);
 
-    Cookie.set('newsLetterIntentShown', '1');
+    Cookies.set('newsLetterIntentShown', '1');
   } else {
     formParent.innerHTML = '';
     formParent.appendChild(failMessage);
