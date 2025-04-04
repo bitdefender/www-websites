@@ -7,6 +7,7 @@
     "lint:js": "eslint .",
     "lint:css": "stylelint _src/blocks/**/*.css --fix",
     "lint": "npm run lint:js && npm run lint:css",
+    "postinstall": "node .husky/update-importmap.js",
     "prepare": "husky"
   },
   "repository": {

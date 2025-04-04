@@ -1,5 +1,6 @@
-import { AdobeDataLayerService, ButtonClickEvent, Target } from '../libs/data-layer.js';
-import Page from '../libs/page.js';
+import Target from '@repobit/dex-target';
+import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
+import page from '../page.js';
 import { Constants } from '../libs/constants.js';
 
 const TRACKED_PRODUCTS = [];
@@ -131,7 +132,7 @@ const PRICE_LOCALE_MAP = new Map([
  * @returns {boolean} check if you are on exactly the consumer page (e.g /en-us/consumer/)
  */
 export function checkIfNotProductPage() {
-  return Constants.NONE_PRODUCT_PAGES.includes(Page.name);
+  return Constants.NONE_PRODUCT_PAGES.includes(page.name);
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -257,7 +258,7 @@ export function generateProductBuyLink(product, productCode, month = null, years
     buyLinkPid = `pid.${getMetadata('pid')}`;
   }
 
-  if (GLOBAL_V2_LOCALES.includes(Page.locale)) {
+  if (GLOBAL_V2_LOCALES.includes(page.locale)) {
     buyLinkPid = 'pid.global_v2';
   }
 
@@ -676,7 +677,7 @@ export function pushTrialDownloadToDataLayer() {
     return getMetadata('breadcrumb-title') || getMetadata('og:title');
   };
 
-  const currentPage = Page.name;
+  const currentPage = page.name;
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
 
   const pushTrialData = (button = null) => {

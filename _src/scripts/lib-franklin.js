@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import Page from './libs/page.js';
+import page from './page.js';
 import { UserAgent } from './libs/user-agent/user-agent.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
@@ -643,7 +643,7 @@ export function decorateTemplateAndTheme() {
       element.classList.add(toClassName(c.trim()));
     });
   };
-  const darkMode = Page.getParamValue('theme');
+  const darkMode = page.getParamValue('theme');
   if (darkMode && darkMode === 'dark') addClasses(document.body, 'dark-mode');
   const template = getMetadata('template');
   if (template) addClasses(document.body, template);

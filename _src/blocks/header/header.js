@@ -1,3 +1,4 @@
+import Target from '@repobit/dex-target';
 import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
 } from '../../scripts/lib-franklin.js';
@@ -9,7 +10,6 @@ import {
 import { User } from '../../scripts/libs/user.js';
 import Cookie from '../../scripts/libs/cookie.js';
 import { Constants } from '../../scripts/libs/constants.js';
-import { Target } from '../../scripts/libs/data-layer.js';
 
 /**
  * @param {string} username

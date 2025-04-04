@@ -1,6 +1,7 @@
+import Target from "@repobit/dex-target";
 import { UserAgent } from "./user-agent/index.js";
 import { User } from "./user.js";
-import Page from "./page.js";
+import page from "../page.js";
 import { Constants } from "./constants.js";
 
 /**
@@ -111,7 +112,7 @@ export class PageLoadStartedEvent {
     const targetExperimentId = this.#getMetadata('target-experiment');
     if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
       const { runTargetExperiment } = await import('../target.js');
-      const offer = await Target.getOffers(targetExperimentLocation);
+      const offer = await Target.getOffers({ mboxNames: targetExperimentLocation });
       const { url, template } = offer || {};
       if (template) {
         loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
@@ -200,7 +201,7 @@ export class PageLoadStartedEvent {
    * @param {object} pageSectionData.experimentDetails
    */
   #trackPageLoadStartedEventStatus(pageSectionData) {
-    this.pageInstanceID = Page.environment;
+    this.pageInstanceID = page.environment;
     this.page = {
       info: {
         name: pageSectionData.tagName, // e.g. au:consumer:product:internet security
@@ -210,7 +211,7 @@ export class PageLoadStartedEvent {
         subSubSubSection: pageSectionData.subSubSubSection,
         destinationURL: window.location.href,
         queryString: window.location.search,
-        referringURL: Page.getParamValue('adobe_mc_ref') || Page.getParamValue('ref') || document.referrer || '',
+        referringURL: page.getParamValue('adobe_mc_ref') || page.getParamValue('ref') || document.referrer || '',
         serverName: 'hlx.live', // indicator for AEM Success Edge
         language: pageSectionData.locale,
         sysEnv: UserAgent.os,
@@ -218,9 +219,9 @@ export class PageLoadStartedEvent {
           { experimentDetails: pageSectionData.experimentDetails }),
       },
       attributes: {
-        promotionID: Page.getParamValue('pid') || '',
-        internalPromotionID: Page.getParamValue('icid') || '',
-        trackingID: Page.getParamValue('cid') || '',
+        promotionID: page.getParamValue('pid') || '',
+        internalPromotionID: page.getParamValue('icid') || '',
+        trackingID: page.getParamValue('cid') || '',
         time: this.#getCurrentTime(),
         date: this.#getCurrentDate(),
         domain: pageSectionData.domain,
@@ -247,10 +248,10 @@ export class PageLoadStartedEvent {
     const { domain, domainPartsCount } = this.#getDomainInfo(hostname);
     const METADATA_ANALYTICS_TAGS = 'analytics-tags';
     const tags = this.#getTags(this.#getMetadata(METADATA_ANALYTICS_TAGS));
-    const locale = Page.locale;
+    const locale = page.locale;
     // currenty, the language is the default first tag and section parameter, with webview, we want
     // something else to be the first tag and section
-    let pageSectionDataLocale = this.#getMetadata('locale') || Page.locale;
+    let pageSectionDataLocale = this.#getMetadata('locale') || page.locale;
 
     const pageSectionData = {
       tagName: null, // e.g. au:consumer:product:internet security
@@ -341,7 +342,7 @@ export class UserDetectedEvent {
       this.user.loggedIN = true;
     }
 
-    const pageName = Page.name.toLowerCase();
+    const pageName = page.name.toLowerCase();
     let productFinding = 'product pages';
     switch(pageName) {
       case 'consumer':
@@ -579,156 +580,6 @@ export class AdobeDataLayerService {
   };
 };
 
-export class Target {
-  /**
-   * @type {Object{}}
-   */
-  static #urlParameters = this.#getUrlParameters();
-
-  /**
-   * @type {Map<string, Promise<object>>}
-   */
-  static #cachedMboxes = new Map();
-
-  static {
-    if (!window.alloyProxy) {
-      function __alloy(...args) {
-        return new Promise((resolve, reject) => {
-          window.alloyProxy.q.push([resolve, reject, args]);
-        });
-      }
-      __alloy.q = [];
-
-      window.alloyProxy = __alloy;
-    }
-
-    this.getOffers(['initSelector-mbox', 'buyLinks-mbox', 'geoip-flag-mbox', 'taget-global-mbox']);
-  };
-
-  /**
-   * 
-   * @param {string} url
-   * @return {Promise<string>} 
-   */
-  static async appendVisitorIDsTo(url) {
-    if (url.includes('adobe_mc')) {
-      return url;
-    }
-
-    try {
-      return (await window.alloyProxy("appendIdentityToUrl", {url})).url;
-    } catch(e) {
-      console.warn(e);
-      return url;
-    }
-  };
-
-  /**
-   * @typedef {{content: {geoIpPrice: string}}} GeoIpPriceMbox
-   * @type {Promise<GeoIpPriceMbox|null>}
-   */
-  static #geoIpFlagMbox = this.getOffer('geoip-flag-mbox');
-
-  /**
-   * get the product-buy link mappings from Target (
-   *  e.g
-   *  {
-   *    "is": {
-   *      "5-1": [buyLink],
-   *      "10-1": [buyLink]
-   *    },
-   *    "tsmd": {
-   *      ...
-   *    }
-   *  }
-   * )
-   * @returns {Promise<object>}
-   */
-  static async getBuyLinksMapping() {
-    return await this.getOffers('buyLinks-mbox') || {};
-  }
-
-  /**
-   * https://bitdefender.atlassian.net/wiki/spaces/WWW/pages/1661993460/Activating+Promotions+Enhancements+Target
-   * @returns {Promise<string|null>}
-   */
-  static async getCampaign() {
-    return (await this.getOffers('initSelector-mbox'))?.pid || null;
-  }
-
-  /**
-  * @returns {Promise<string|null>}
-  */
-  static async getGeoIpFlag() {
-    return (await this.getOffers('geoip-flag-mbox'))?.geoipFlag || null;
-  }
-
-  /**
-   * Function to get all URL parameters and put them in an object
-   * @returns {Object} An object containing all URL parameters
-   */
-  static #getUrlParameters() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const parameters = {};
-
-    urlParams.forEach((value, key) => {
-      parameters[key] = value;
-    });
-
-    return parameters;
-  }
-
-  /**
-   * 
-   * @param {string[] | string} mboxes
-   * @param {object | undefined} parameters
-   * @returns {Promise<object>}
-   */
-  static async getOffers(mboxes, parameters) {
-    if (!Array.isArray(mboxes)) {
-      mboxes = [mboxes];
-    }
-
-    const notRequestedMboxes = mboxes.filter(mbox => !this.#cachedMboxes.has(`${mbox}_${JSON.stringify(parameters)}`));
-    if (notRequestedMboxes.length) {
-      const notRequestedOffersCall = window.alloyProxy('sendEvent', {
-        decisionScopes: notRequestedMboxes,
-        data: {
-          "__adobe": {
-            "target": Object.assign({}, this.#urlParameters, ...mboxes.map(mbox => mbox.parameters))
-          }
-        },
-        renderDecisions: true
-      });
-
-      notRequestedMboxes.forEach(mbox => {
-        const receivedMboxOfferCall = new Promise((resolve, reject) => {
-          notRequestedOffersCall.then(result => {
-            const mboxResult = result.propositions.find(offer => offer.scope === mbox)?.items[0].data?.content;
-            resolve(mboxResult);
-          }).catch(e => {
-            reject(e);
-          });
-        });
-
-        this.#cachedMboxes.set(`${mbox}_${JSON.stringify(parameters)}`, receivedMboxOfferCall);
-      });
-    }
-
-    const mboxesPromises = mboxes.map(mbox => this.#cachedMboxes.get(`${mbox}_${JSON.stringify(parameters)}`));
-    const resolvedMboxes = await Promise.allSettled(mboxesPromises);
-    
-    const offersResult = mboxes.reduce((acc, mbox, index) => {
-      acc[mbox] = resolvedMboxes[index].value || null;
-      return acc;
-    }, {});
-
-    return mboxes.length > 1 ? offersResult : offersResult[mboxes[0]];
-  }
-};
-
-window.Target = Target;
-
 /**
  * Page Error Handling
  */
@@ -758,7 +609,7 @@ const checkClickEventAfterRedirect = () => {
  * Add entry for free products
  */
 const getFreeProductsEvents = () => {
-  const currentPage = Page.name;
+  const currentPage = page.name;
   if (currentPage === 'free-antivirus') {
     // on Free Antivirus page we should add Free Antivirus as the main product
     AdobeDataLayerService.push(new MainProductLoadedEvent({

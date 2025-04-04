@@ -1,7 +1,7 @@
+import Target from '@repobit/dex-target';
 import {
   AdobeDataLayerService,
   PageLoadStartedEvent,
-  Target,
 } from '../../scripts/libs/data-layer.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
@@ -74,7 +74,7 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
-  const offer = await Target.getOffers(mboxName, parameters);
+  const offer = await Target.getOffers({ mboxNames: mboxName, parameters });
   const page = await fetch(`${offer.offer}`);
   let offerHtml;
   await loadBlocks(block.querySelector('.canvas-content'));

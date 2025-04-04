@@ -78,7 +78,7 @@ async function updateHtmlImportMap(htmlFilePath) {
     if (!scriptElement) {
       scriptElement = document.createElement('script');
       scriptElement.type = 'importmap';
-      document.documentElement.appendChild(scriptElement);
+      document.body.appendChild(scriptElement);
     }
 
     // Update the script element's content with the new import map (formatted as JSON)
