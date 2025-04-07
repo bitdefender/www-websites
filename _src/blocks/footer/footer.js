@@ -131,7 +131,7 @@ async function runAemFooterLogic() {
   // fetch footer content
   const aemFooterHostname = window.location.hostname.includes('.aem.')
     || window.location.hostname.includes('localhost')
-    ? 'https://stage.bitdefender.com'
+    ? 'https://www.bitdefender.com'
     : '';
 
   const websiteDomain = getDomain();
@@ -210,15 +210,6 @@ async function runAemFooterLogic() {
  * @param {Element} footer The footer element
  */
 function applyFooterFactorySetup(footerMetadata, block) {
-  // TODO: please remove this if after creating the zh-hk and zh-tw
-  // headers in AEM
-  const regex = /\/(zh-hk|zh-tw)\//i;
-  const matches = window.location.href.match(regex);
-  if (matches) {
-    runDefaultFooterLogic(block);
-    return;
-  }
-
   switch (footerMetadata) {
     case 'landingpage':
       runLandingpageLogic(block);

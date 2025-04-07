@@ -9,7 +9,8 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
 
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
-  const oldPriceText = block.closest('.section').dataset.old_price_text ?? 'Old Price';
+  const oldPriceText = block.closest('.section').dataset.old_price_text ?? '';
+  const saveText = block.closest('.section').dataset.save_text ?? '';
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '-';
@@ -24,7 +25,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   oldPriceElement.innerHTML = `
     <div class="old-price-box">
       <span  data-store-hide="no-price=discounted;type=visibility">${oldPriceText} <del data-store-price="full"></del></span>
-      <span class="savings d-none">Savings <del data-store-discount="percentage"></del></span>
+      <span class="savings d-none" data-store-hide="no-price=discounted;type=visibility"><span data-store-discount="percentage"></span> ${saveText}</span>
     </div>`;
   priceElement.innerHTML = `
     <div class="new-price-box">

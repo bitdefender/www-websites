@@ -1,4 +1,5 @@
-import { debounce, matchHeights } from '../../scripts/utils/utils.js';
+import { debounce } from '@repobit/dex-utils';
+import { matchHeights, createTag } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
@@ -80,7 +81,7 @@ function setImageAsBackgroundImage() {
 
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, maxElementsInColumn, products,
+    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -113,6 +114,11 @@ export default function decorate(block) {
       }
     });
   });
+
+  if (breadcrumbs && block.classList.contains('creators-banner')) {
+    const breadcrumb = createTag('div', { class: 'breadcrumb' });
+    block.querySelector('.columns-left-col')?.prepend(breadcrumb);
+  }
 
   // setup buylink, this can be used later as a starting point for prices.
   const productsAsList = products?.split(',');

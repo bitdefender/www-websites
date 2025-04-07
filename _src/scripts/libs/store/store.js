@@ -1,21 +1,9 @@
+import Target from "@repobit/dex-target";
+import { User } from "@repobit/dex-utils";
 import { Constants } from "../constants.js";
-import { Target } from "../data-layer.js";
 import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
-import Page from "../page.js";
+import page from "../../page.js";
 import { getMetadata } from "../../utils/utils.js";
-import { User } from "../../libs/user.js"
-
-export const loadScript = (baseUrl, url) => {
-	return new Promise(function (resolve) {
-		const script = document.createElement("script");
-
-		script.src = `${baseUrl}${url}`;
-		document.head.appendChild(script);
-		script.onload = () => {
-			resolve();
-		};
-	});
-};
 
 export class ProductInfo {
 	/**
@@ -250,7 +238,7 @@ export class Product {
 		this.name = product.product_name;
 		this.options = product.variations;
 		this.department = product.department;
-		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : '');
+		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => page.locale === domain) ? 'global_v2' : '');
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
@@ -425,15 +413,13 @@ export class Product {
 		buyLink.searchParams.set("REF", this.promotion && this.promotion !== Store.NO_PROMOTION ? `WEBSITES_${this.promotion}` : "N/A");
 		buyLink.searchParams.set("SRC", `${window.location.origin}${window.location.pathname}`);
 
+		const targetBuyLinkMapping = Store.targetBuyLinkMappings?.[this.productAlias]?.[productVariation];
 		// replace the buy links with target links if they exist and return the option
-		if (Store.targetBuyLinkMappings[this.productAlias]
-			&& Store.targetBuyLinkMappings[this.productAlias][productVariation]) {
-			buyLink = new URL(Store.targetBuyLinkMappings[this.productAlias][productVariation]);
-		}
+		if (targetBuyLinkMapping) {
+			buyLink = new URL(targetBuyLinkMapping.buyLink);
 
-		// if there are extra parameters which need to be added to the links, add them
-		if (Store.targetBuyLinkMappings.extraParameters) {
-			Store.targetBuyLinkMappings.extraParameters.forEach(extraParameter => {
+			// if there are extra parameters which need to be added to the links, add them
+			targetBuyLinkMapping?.extraParameters?.forEach(extraParameter => {
 				buyLink.searchParams.set(extraParameter.key, extraParameter.value);
 			});
 		}
@@ -693,29 +679,53 @@ class Vlaicu {
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
 	/**
-	 * TODO: please remove this function and all its calls once digital river works correctly
+	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
 	 * @param {string} productId 
-	 * @returns {boolean} -> check if the product is soho and the domain is de-de
+	 * @returns {boolean} -> wether we have a DIP corner case or not
 	 */
-	static #isSohoCornerCase = (productId) =>
-	 	Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho"
+	static #isDIPCornerCase(productId) {
+		return productId === 'com.bitdefender.dataprivacy';
+	}
+
+	/**
+     * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
+     * @param {string} productId 
+     * @returns {boolean} -> check if the product is soho and the domain is de-de
+     */
+    static #isSohoCornerCase(productId) {
+        return Constants.SOHO_CORNER_CASES_LOCALSE.includes(page.locale) && productId === "com.bitdefender.soho";
+	}
+
+	/**
+	 * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
+	 * @param {string} receivedBuyLink 
+	 * @return {string} -> buyLink with lang parameter
+	 */
+	static #addLangParameter(receivedBuyLink){
+		const buyLinkUrl = new URL(receivedBuyLink);
+		buyLinkUrl.searchParams.set('LANG', page.language);
+
+		return buyLinkUrl.href;
+	}
 
 	static async getProductVariations(productId, campaign) {
-		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
-		let geoIpFlag = await Target.getGeoIpFlag();
+		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
+		let geoIpFlag = (await Target.configMbox)?.useGeoIpPricing;
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
 		const pathVariablesResolverObject = {
-			// TODO: please remove the ternary operators below and only use Page.locale
+			// TODO: please remove the ternary operators below and only use page.locale
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isSohoCornerCase(productId) ? "SOHO_DE" : campaign
+			"{campaignId}": this.#isDIPCornerCase(productId) ? 'DIP-promo'
+				: this.#isSohoCornerCase(productId) ? "SOHO_DE"
+				: campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION || this.#isSohoCornerCase(productId) ?
+		let productPath = campaign !== Constants.NO_PROMOTION || this.#isDIPCornerCase(productId) || this.#isSohoCornerCase(productId) ?
 			this.promotionPath :
 			this.defaultPromotionPath;
 
@@ -802,7 +812,10 @@ class Vlaicu {
 					productInfoResponse.campaign :
 					campaignId,
 				price: productVariation.price,
-				buyLink: productVariation.buyLink,
+				// TODO: please remove this once SOHO works correctly on de-de with zuora
+				buyLink: this.#isSohoCornerCase(Constants.PRODUCT_ID_MAPPINGS[id].bundleId)
+					? this.#addLangParameter(productVariation.buyLink)
+					: productVariation.buyLink,
 				variation: {
 					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,
@@ -866,11 +879,11 @@ class StoreConfig {
 	}
 
 	async #getCampaign() {
-		if (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain)) {
+		if (GLOBAL_V2_LOCALES.find(domain => page.locale === domain)) {
 			return "global_v2";
 		}
 
-		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
+		if (!Constants.ZUROA_LOCALES.includes(page.locale)) {
 			return Constants.NO_PROMOTION;
 		}
 
@@ -892,7 +905,7 @@ export class Store {
 	static business = "business";
 	static products = {};
 	/** country equals the geographic location given by IP */
-	static country = Page.country;
+	static country = page.country;
 	static mappedCountry = this.getCountry();
 	/** Private variables */
 	static baseUrl = Constants.DEV_BASE_URL;
@@ -918,7 +931,7 @@ export class Store {
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
-			this.targetBuyLinkMappings = await Target.getBuyLinksMapping();
+			this.targetBuyLinkMappings = (await Target.configMbox)?.products;
 		}
 
 		// remove duplicates by id
@@ -928,7 +941,7 @@ export class Store {
 			.allSettled(
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
-					product.promotion = await Target.getCampaign()
+					product.promotion = (await Target.configMbox)?.promotion
 						|| this.#getUrlPromotion()
 						|| product.promotion
 						|| getMetadata("pid")
@@ -941,7 +954,7 @@ export class Store {
 			.filter(product => product.status === "fulfilled" && !!product.value)
 			.map(product => new Product(product.value))
 			.reduce((acc, product) => { acc[product.getId()] = product; return acc; }, {});
-
+		
 		return this.products;
 	}
 
@@ -972,7 +985,7 @@ export class Store {
 	 * @returns {Promise<string>} - country as 2 letter ISO code
 	 */
 	static getCountry() {
-		return this.countriesMapping[Page.country] || Page.country
+		return this.countriesMapping[page.country] || page.country
 	}
 
 	/**
