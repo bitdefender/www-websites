@@ -447,21 +447,21 @@
 
 .columns-container .columns.trust-factors > div{
   width: 80%;
-  letter-spacing: 0px;
-  color: #000000;
+  letter-spacing: 0;
+  color: #000;
   opacity: 1;
 }
 
 .columns-container .columns.trust-factors h2{
   text-align: center;
-  letter-spacing: 0px;
-  color: #000000;
+  letter-spacing: 0;
+  color: #000;
   opacity: 1;
 }
 
 .columns-container .columns.trust-factors p{
-  letter-spacing: 0px;
-  color: #000000;
+  letter-spacing: 0;
+  color: #000;
   opacity: 1;
 }
 
@@ -716,13 +716,17 @@
   }
 }
 
+.columns-container .columns.awards-fragment img{
+  border-radius: 0;
+}
+
 .creators .header-mobile{
   background: linear-gradient(to bottom, #e4f2ff, white);
 }
 
 .creators .columns-container .columns.creators-banner .breadcrumb {
   font-weight: var(--font-weight-bold);
-  color: #000000;
+  color: #000;
   min-height: unset;
   padding: 12px 0;
   margin-bottom: 12px;
@@ -758,7 +762,7 @@
 .creators .columns-container .columns.creators-banner .breadcrumb a::after {
   content: "/";
   display: inline-block;
-  color: #000000;
+  color: #000;
   margin: 0 3px;
   font-size: 9pt;
 }
@@ -769,6 +773,10 @@
 
 .creators .columns-container .columns.creators-banner > div .columns-img-col {
   margin-bottom: 0;
+}
+
+.creators .columns-container .columns.creators-banner > div .columns-img-col img{
+  display: none;
 }
 
 .creators .columns-container .columns.creators-banner > div > div.columns-left-col td{
@@ -864,7 +872,6 @@
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap:20px;
   }
-
 
   .columns-container.chat-options .columns > div > div {
     padding: 2em;
@@ -1089,6 +1096,10 @@
     flex: none;
   }
 
+  .creators .columns-container .columns.creators-banner > div .columns-img-col img{
+    display: block;
+  }
+
   .creators .columns-container .columns.creators-banner > div > div.columns-left-col, .creators .columns-container .columns.creators-banner > div > div.columns-right-col {
     width: 50%;
     text-align: left;
@@ -1191,23 +1202,23 @@
   
   .columns-container .columns.trust-factors > div {
     width: 80%;
-    letter-spacing: 0px;
-    color: #000000;
+    letter-spacing: 0;
+    color: #000;
     opacity: 1;
   }
   
   .columns-container .columns.trust-factors h2 {
     text-align: center;
     font: normal normal 300 60px/70px "IBM Plex Sans", sans-serif;
-    letter-spacing: 0px;
-    color: #000000;
+    letter-spacing: 0;
+    color: #000;
     opacity: 1;
   }
   
   .columns-container .columns.trust-factors p {
     font: normal normal normal 24px/34px Arial, sans-serif;
-    letter-spacing: 0px;
-    color: #000000;
+    letter-spacing: 0;
+    color: #000;
     opacity: 1;
   }
   

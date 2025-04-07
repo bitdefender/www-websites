@@ -18,6 +18,7 @@ import {
   PageLoadedEvent,
   PageLoadStartedEvent,
   resolveNonProductsDataLayer,
+  Target,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 import Page from './libs/page.js';
@@ -30,7 +31,7 @@ import {
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['hero', 'password-generator']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -521,8 +522,13 @@ async function loadPage() {
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
+  // eslint-disable-next-line import/no-unresolved
+  const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
+    .then((FingerprintJS) => FingerprintJS.load({
+      region: 'eu',
+    }));
   await loadLazy(document);
-
+  await Target.cdpData;
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
@@ -541,6 +547,19 @@ async function loadPage() {
 
   pushTrialDownloadToDataLayer();
   AdobeDataLayerService.pushEventsToDataLayer();
+
+  // Get the visitorId when you need it.
+  await fpPromise
+    .then((fp) => fp.get())
+    .then((result) => {
+      const { visitorId } = result;
+      AdobeDataLayerService.push({
+        event: 'vistorID ready',
+        user: {
+          visitorId,
+        },
+      });
+    });
   AdobeDataLayerService.push(new PageLoadedEvent());
 
   loadDelayed();

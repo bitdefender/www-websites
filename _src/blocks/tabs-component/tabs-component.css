@@ -40,11 +40,26 @@
   font: normal normal bold 32px/37px Arial, sans-serif;
 }
 
+.tabs-component-container .tabs-component.blue-heading .title-class{
+  max-width: 80%;
+  margin: auto;
+}
+
 .tabs-component-container .subtitle-class div {
   max-width: 630px;
   text-align: center;
   margin-bottom: 67px;
   font: normal normal normal 18px/26px Arial, sans-serif;
+}
+
+.tabs-component-container .tabs-component.blue-heading .title-class div{
+  max-width: 100%;
+}
+
+.tabs-component-container .tabs-component.blue-heading .subtitle-class div {
+  max-width: 80%;
+  margin: auto;
+  margin-bottom: 27px;
 }
 
 .tabs-component-container .tabs-container {
@@ -170,6 +185,19 @@
   font-size: 16px;
 }
 
+.tabs-component-container .tabs-container button p {
+  margin: 0;
+}
+
+.tabs-component-container .tabs-container button .icon {
+  display: unset;
+}
+
+.tabs-component-container .tabs-container button .icon svg {
+  width: 30px;
+  height: 30px;
+}
+
 .tabs-component-container .tabs-container button picture img {
   width: 50px;
   height: auto;
@@ -195,6 +223,18 @@
 
 .tabs-component-container {
   align-items: normal !important;
+}
+
+.tabs-component-container .tabs-component.blue-heading h3 {
+  color: #006eff;
+}
+
+.tabs-component-container .tabs-component.blue-heading .tabs-container button { 
+  color: #006eff
+}
+
+.tabs-component-container .tabs-component.blue-heading .tabs-container button.selected{
+  color: #000;
 }
 
 @media (min-width: 768px) {
