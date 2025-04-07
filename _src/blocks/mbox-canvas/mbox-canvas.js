@@ -1,10 +1,10 @@
+import Target from '@repobit/dex-target';
 import {
   AdobeDataLayerService,
   PageLoadStartedEvent,
-  Target,
 } from '../../scripts/libs/data-layer.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
-import { loadBlocks } from '../../scripts/lib-franklin.js';
+import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
   const newHtml = document.createElement('div');
@@ -49,6 +49,7 @@ function createOfferProfileParameters(parameters) {
  * @returns {Promise<void>} - A promise that resolves when the event is updated and pushed.
  */
 async function updatePageLoadStartedEvent(offer) {
+  const urlParams = new URLSearchParams(window.location.search);
   const match = offer.offer.match(/\/([^/]+)\.plain\.html$/);
   const result = match ? match[1] : null;
   const newObject = await new PageLoadStartedEvent();
@@ -59,6 +60,12 @@ async function updatePageLoadStartedEvent(offer) {
       newObject.page.info[key] = result;
     }
   });
+  let trackingID = getMetadata('cid');
+  trackingID = trackingID.replace('<language>', urlParams.get('lang'));
+  trackingID = trackingID.replace('<asset name>', urlParams.get('feature'));
+  newObject.page.attributes.trackingID = trackingID;
+
+  newObject.page.info.language = urlParams.get('lang') || 'en-us';
   AdobeDataLayerService.push(newObject);
 }
 
@@ -75,11 +82,14 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
-  // TODO: separate parameters from profileParameters
-  const profileParameters = createOfferProfileParameters(parameters);
-  const offer = await Target.getOffers(mboxName, parameters, profileParameters);
+  const offer = await Target.getOffers({
+    mboxNames: mboxName,
+    parameters,
+    profileParameters: createOfferProfileParameters(parameters),
+  });
   const page = await fetch(`${offer.offer}`);
   let offerHtml;
+  await loadBlocks(block.querySelector('.canvas-content'));
 
   if (page.ok) {
     offerHtml = await page.text();
@@ -95,8 +105,8 @@ export default async function decorate(block) {
     }
   }
 
-  updatePageLoadStartedEvent(offer);
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
+  updatePageLoadStartedEvent(offer);
 
   // Make all the links that contain #buylink in href open in a new browser window
   decoratedOfferHtml.querySelectorAll('a[href*="#buylink"]').forEach((link) => {

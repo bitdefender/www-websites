@@ -11,8 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
-import Page from './libs/page.js';
-import { UserAgent } from './libs/user-agent/user-agent.js';
+import { UserAgent } from '@repobit/dex-utils';
+import page from './page.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
 export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.aem.page', '.aem.live'];
@@ -124,40 +124,6 @@ export async function loadCSS(href) {
 }
 
 /**
- * Loads a non module JS file.
- * @param {string} src URL to the JS file
- * @param {Object} attrs additional optional attributes
- */
-
-export async function loadScript(src, attrs = null) {
-  return new Promise((resolve, reject) => {
-    if (!document.querySelector(`head > script[src="${src}"]`)) {
-      const script = document.createElement('script');
-      script.src = src;
-      if (attrs) {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-        for (const attr in attrs) {
-          script.setAttribute(attr, attrs[attr]);
-        }
-      }
-      script.onload = resolve;
-      script.onerror = () => {
-        // check if the launch code failed to load
-        if (src.includes('launch')) {
-          // if it did, notify the target class using the event and variable
-          window.launchCannotLoad = true;
-          document.dispatchEvent(new Event('launchCannotLoad'));
-        }
-        reject();
-      };
-      document.head.append(script);
-    } else {
-      resolve();
-    }
-  });
-}
-
-/**
  * Retrieves the content of metadata tags.
  * @param {string} name The metadata name (or property)
  * @returns {string} The metadata value(s)
@@ -213,15 +179,6 @@ const ICONS_CACHE = {};
  * @param {Element} [element] Element containing icons
  */
 async function internalDecorateIcons(element) {
-  // Prepare the inline sprite
-  let svgSprite = document.getElementById('franklin-svg-sprite');
-  if (!svgSprite) {
-    const div = document.createElement('div');
-    div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" id="franklin-svg-sprite" style="display: none"></svg>';
-    svgSprite = div.firstElementChild;
-    document.body.append(div.firstElementChild);
-  }
-
   // Download all new icons
   const icons = [...element.querySelectorAll('span.icon')];
   await Promise.all(icons.map(async (span) => {
@@ -235,19 +192,9 @@ async function internalDecorateIcons(element) {
           ICONS_CACHE[iconName] = false;
           return;
         }
-        // Styled icons don't play nice with the sprite approach because of shadow dom isolation
+
         const svg = await response.text();
-        if (svg.match(/(<style | class=)/)) {
-          ICONS_CACHE[iconName] = { styled: true, html: svg };
-        } else {
-          ICONS_CACHE[iconName] = {
-            html: svg
-              .replace('<svg', `<symbol id="icons-sprite-${iconName}"`)
-              .replace(/ width=".*?"/, '')
-              .replace(/ height=".*?"/, '')
-              .replace('</svg>', '</symbol>'),
-          };
-        }
+        ICONS_CACHE[iconName] = { html: svg };
       } catch (error) {
         ICONS_CACHE[iconName] = false;
         // eslint-disable-next-line no-console
@@ -255,9 +202,6 @@ async function internalDecorateIcons(element) {
       }
     }
   }));
-
-  const symbols = Object.values(ICONS_CACHE).filter((v) => !v.styled).map((v) => v.html).join('\n');
-  svgSprite.innerHTML += symbols;
 
   icons.forEach((span) => {
     const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
@@ -274,12 +218,7 @@ async function internalDecorateIcons(element) {
       console.error(`Error setting aria-label for icon ${iconName}:`, error);
     }
 
-    // Styled icons need to be inlined as-is, while unstyled ones can leverage the sprite
-    if (ICONS_CACHE[iconName] && ICONS_CACHE[iconName].styled) {
-      parent.innerHTML = ICONS_CACHE[iconName].html;
-    } else {
-      parent.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-${iconName}"/></svg>`;
-    }
+    parent.innerHTML = ICONS_CACHE[iconName].html;
   });
 }
 
@@ -670,7 +609,7 @@ export function decorateTemplateAndTheme() {
       element.classList.add(toClassName(c.trim()));
     });
   };
-  const darkMode = Page.getParamValue('theme');
+  const darkMode = page.getParamValue('theme');
   if (darkMode && darkMode === 'dark') addClasses(document.body, 'dark-mode');
   const template = getMetadata('template');
   if (template) addClasses(document.body, template);
@@ -853,7 +792,6 @@ export const executionContext = {
   decorateIcons,
   loadBlock,
   loadCSS,
-  loadScript,
   sampleRUM,
   toCamelCase,
   toClassName,

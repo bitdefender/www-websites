@@ -1,4 +1,4 @@
-import Page from "./page.js"
+import page from "../page.js";
 
 export class Constants {
 	static DEV_BASE_URL = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
@@ -10,11 +10,11 @@ export class Constants {
   
 	static LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME = 'bdcslue';
   
-	static ZUROA_LOCALES = ['nl-nl', 'nl-be'];
+	static ZUROA_LOCALES = ['nl-nl', 'nl-be', 'de-de', 'de-at'];
   
 	static DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
   
-	  static PRODUCT_ID_MAPPINGS_CALL = this.#getVlaicuProductIdsMapping();
+	static PRODUCT_ID_MAPPINGS_CALL = this.#getVlaicuProductIdsMapping();
   
 	  /**
 	  * @typedef {Object} VlaicuDataEntry
@@ -79,9 +79,6 @@ export class Constants {
 	  ? window.location.origin : 'https://www.bitdefender.com';
   
 	static NO_PROMOTION = "ignore";
-  
-	// TODO: please remove this once digital river starts working correctly
-	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
 
 	static NONE_PRODUCT_PAGES = ["renewal", "consumer"];
 
@@ -89,13 +86,16 @@ export class Constants {
 		LIBRARY_LOADED: "at-library-loaded",
     	LAUNCH_FAILED_TO_LOAD: "launchCannotLoad"
 	}
+
+	// TODO: please remove this once SOHO starts working correctly on zuora and de domains
+	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
   
 	/**
 	 * fetch all the product id mappings for Vlaicu from websites
 	 */
 	static async #getVlaicuProductIdsMapping() {
 		  try {
-			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(Page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
+			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
 			  const response = await fetch(`/common/vlaicuconfig/${nameForVlaicuConfig}.json`);
 			  if (!response.ok) {
 				  console.error(`Failed to fetch data.`);

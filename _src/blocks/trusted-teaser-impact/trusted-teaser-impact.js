@@ -1,5 +1,5 @@
+import { debounce } from '@repobit/dex-utils';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { debounce } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const [titleEl, ...boxes] = [...block.children];
