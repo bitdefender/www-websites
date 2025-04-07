@@ -1111,6 +1111,10 @@ main .subscriber .section {
     padding-left: 2em;
 }
 
+.subscriber .multilogosslider .icon svg {
+    width: 130px;
+}
+
 @media (min-width: 1600px) { /* large desktop */
     .subscriber .default-content-wrapper {
         max-width: var(--section-large-desktop-max-width);
