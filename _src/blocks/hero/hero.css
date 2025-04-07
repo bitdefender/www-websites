@@ -584,6 +584,10 @@ main .hero.ferrari{
   background-color: #006DFF;
 }
 
+main .hero.ferrari h1{
+  margin-bottom: 90px;
+}
+
 main .hero.ferrari .hero-content{
   display: flex;
   flex-direction: column;
@@ -694,7 +698,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
 @media(min-width: 767px) { /* tablet */
   main .hero.ferrari{
-    min-height: 715px;
+    min-height: 768px;
   }
 
   main .hero.ferrari .hero-picture picture img{
