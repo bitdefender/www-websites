@@ -1001,7 +1001,7 @@ main .subscriber .section {
     justify-content: space-between;
     gap: 0;
 }
-.subscriber .multicontentvideoslider .carousel-item .carousel-content svg {
+.subscriber .multicontentvideoslider .carousel-item .carousel-content svg, .subscriber .multicontentvideoslider .carousel-item .carousel-content img {
     width: 140px;
 }
 .subscriber .multicontentvideoslider .carousel-arrows-container button {
