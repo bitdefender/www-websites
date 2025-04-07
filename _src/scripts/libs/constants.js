@@ -10,7 +10,7 @@ export class Constants {
   
 	static LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME = 'bdcslue';
   
-	static ZUROA_LOCALES = ['nl-nl', 'nl-be'];
+	static ZUROA_LOCALES = ['nl-nl', 'nl-be', 'de-de', 'de-at'];
   
 	static DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
   
@@ -86,6 +86,9 @@ export class Constants {
 		LIBRARY_LOADED: "at-library-loaded",
     	LAUNCH_FAILED_TO_LOAD: "launchCannotLoad"
 	}
+
+	// TODO: please remove this once SOHO starts working correctly on zuora and de domains
+	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
   
 	/**
 	 * fetch all the product id mappings for Vlaicu from websites

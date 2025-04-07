@@ -71,9 +71,18 @@ function renderFilters(block) {
     yearsToFilterBy = [];
     const checkboxes = block.querySelectorAll('.accordion-item-content input');
     [...checkboxes].forEach((checkbox) => { checkbox.checked = false; });
-    filteredAwards = awardsData;
-    renderAwards(block, awardsData);
+    filteredAwards = [...awardsData];
+
+    // Clear the existing awards before rendering new ones
+    const awardsResultsContainer = block.querySelector('.awards-results-container');
+    if (awardsResultsContainer) {
+      awardsResultsContainer.innerHTML = '';
+    }
+
+    renderFilters(block);
+    renderAwards(block, filteredAwards);
   });
+
   clearAllLink.innerText = 'Clear All';
   filtersContainer.append(clearAllLink);
 }

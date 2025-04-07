@@ -18,6 +18,7 @@ import {
   PageLoadedEvent,
   PageLoadStartedEvent,
   resolveNonProductsDataLayer,
+  Target,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 import Page from './libs/page.js';
@@ -518,7 +519,7 @@ async function loadPage() {
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   await loadLazy(document);
-
+  await Target.cdpData;
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
