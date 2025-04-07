@@ -32,6 +32,15 @@ function createOfferParameters() {
   return parameters;
 }
 
+function createOfferProfileParameters(parameters) {
+  const profileParameters = {};
+  Object.entries(parameters).forEach(([key, value]) => {
+    profileParameters[`profile.${key}`] = value;
+  });
+
+  return profileParameters;
+}
+
 /**
  * Updates the PageLoadStartedEvent with dynamic content from the offer
  * and pushes it to the AdobeDataLayerService.
@@ -73,7 +82,11 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
-  const offer = await Target.getOffers({ mboxNames: mboxName, parameters });
+  const offer = await Target.getOffers({
+    mboxNames: mboxName,
+    parameters,
+    profileParameters: createOfferProfileParameters(parameters),
+  });
   const page = await fetch(`${offer.offer}`);
   let offerHtml;
   await loadBlocks(block.querySelector('.canvas-content'));
