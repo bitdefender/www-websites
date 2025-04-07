@@ -1001,6 +1001,9 @@ main .subscriber .section {
     justify-content: space-between;
     gap: 0;
 }
+.subscriber .multicontentvideoslider .carousel-item .carousel-content svg {
+    height: 60px;
+}
 .subscriber .multicontentvideoslider .carousel-arrows-container button {
     width: 25%;
     height: 100%;
