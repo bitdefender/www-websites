@@ -1002,7 +1002,7 @@ main .subscriber .section {
     gap: 0;
 }
 .subscriber .multicontentvideoslider .carousel-item .carousel-content svg {
-    height: 60px;
+    width: 140px;
 }
 .subscriber .multicontentvideoslider .carousel-arrows-container button {
     width: 25%;
