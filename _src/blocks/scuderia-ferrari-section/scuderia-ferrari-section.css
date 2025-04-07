@@ -136,10 +136,6 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     h2{
         color: #006EFF;
     }
-
-    p:not(:has(strong)){
-        color: #5E5E5E;
-    }
 }
 
 .scuderia-ferrari-section.quotes-left.wide-quote {
@@ -386,12 +382,6 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         }
     }
 
-    .scuderia-ferrari-section.quotes-left.wide-quote{
-        div:last-of-type{
-            padding-bottom: 5%;
-        }
-    }
-
     .scuderia-ferrari-section.image-right{
         padding: 10%;
 
@@ -428,6 +418,12 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 
         a.button span.button-text{
             margin-left: 14px;
+        }
+    }
+
+    .scuderia-ferrari-section.quotes-left.wide-quote{
+        div:last-of-type{
+            padding-bottom: 5%;
         }
     }
 }
