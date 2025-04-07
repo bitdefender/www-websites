@@ -48,10 +48,6 @@
     right: -3px;
     background: #006EFF;
     opacity: 0.25;
-    visibility: hidden;
-}
-
-.trusted-teaser-impact .box-wrapper .box-item::after {
     visibility: visible;
 }
 
