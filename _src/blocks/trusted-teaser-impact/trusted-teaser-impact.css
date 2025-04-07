@@ -16,6 +16,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
 }
 
 .trusted-teaser-impact .carousel-header .title >:first-child {
@@ -26,6 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    justify-content: center;
 }
 
 .trusted-teaser-impact .box-wrapper .box-item {
@@ -49,9 +51,12 @@
     visibility: hidden;
 }
 
-.trusted-teaser-impact .box-wrapper .box-item:nth-child(1)::after,
-.trusted-teaser-impact .box-wrapper .box-item:nth-child(3)::after {
+.trusted-teaser-impact .box-wrapper .box-item::after {
     visibility: visible;
+}
+
+.trusted-teaser-impact .box-wrapper .box-item:last-of-type::after {
+    visibility: hidden;
 }
 
 .trusted-teaser-impact .box-wrapper .box-item .icon {
@@ -88,7 +93,7 @@
     }
 
     .trusted-teaser-impact .box-wrapper .box-item .title {
-        font-size: 50px;
+        font-size: 40px;
         color: #35383C;
     }
 
