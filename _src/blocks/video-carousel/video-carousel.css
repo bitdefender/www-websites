@@ -103,10 +103,6 @@
             padding-left: 2%;
         }
 
-        .carousel-dot:last-of-type{
-            display: none;
-        }
-
         .carousel-item iframe {
             min-width: 300px;
             height: 220px;
@@ -120,6 +116,10 @@
         .carousel-dot{
             width: 23px;
             height: 23px;
+        }
+        
+        .carousel-dot:last-of-type{
+            display: none;
         }
     }
 
