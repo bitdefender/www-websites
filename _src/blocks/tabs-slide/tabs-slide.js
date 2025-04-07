@@ -18,13 +18,13 @@ export default function decorate(block) {
 
       <div class="slider-container">
         <div class="slider">
-          <div class="content with">
+          <div class="content without">
             ${Array.from(contentTab1.querySelectorAll('td'))
               .map(item => `<div class="card">${item.innerHTML}</div>`)
               .join('')}
           </div>
 
-          <div class="content without">
+          <div class="content with">
             ${Array.from(contentTab2.querySelectorAll('td'))
               .map(item => `<div class="card">${item.innerHTML}</div>`)
               .join('')}
