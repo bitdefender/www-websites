@@ -383,7 +383,12 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     .scuderia-ferrari-section.quotes-left{
         div:last-of-type{
             max-width: 80%;
-            padding-bottom: 0;
+        }
+    }
+
+    .scuderia-ferrari-section.quotes-left.wide-quote{
+        div:last-of-type{
+            padding-bottom: 5%;
         }
     }
 
@@ -431,6 +436,12 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     .scuderia-ferrari-section.quotes-left{
         padding-top: 15%;
         padding-bottom: 5%;
+    }
+
+    .scuderia-ferrari-section.quotes-left.wide-quote{
+        div:last-of-type{
+            padding-bottom: 0;
+        }
     }
 }
 
