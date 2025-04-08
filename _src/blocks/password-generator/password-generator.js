@@ -61,8 +61,8 @@ function createSharePopup(element) {
   return sharePopup;
 }
 
-function copyToClipboard(block, caller, popupText) {
-  const copyText = window.location.href;
+function copyToClipboard(block, caller, popupText, password) {
+  const copyText = password;
 
   // Copy the text inside the text field
   navigator.clipboard.writeText(copyText);
@@ -159,7 +159,7 @@ export default function decorate(block) {
   slider.oninput = function updateRangeLabel() {
     rangeLabel.innerHTML = this.value;
   };
-
+  let password = '';
   function generatePassword() {
     const settings = {
       passwordLength: parseInt(slider.value, 10),
@@ -191,7 +191,7 @@ export default function decorate(block) {
     }
 
     // Generate the password
-    const password = passwordService.generateWithSettings(settings);
+    password = passwordService.generateWithSettings(settings);
 
     // Display the password
     passwordInput.value = password;
@@ -210,7 +210,7 @@ export default function decorate(block) {
 
   copyButton.addEventListener('click', (e) => {
     e.preventDefault();
-    copyToClipboard(block, copyButton, clipboardText);
+    copyToClipboard(block, copyButton, clipboardText, password);
   });
 
   // Update password when settings change
