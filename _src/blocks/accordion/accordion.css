@@ -132,10 +132,6 @@
   outline: none;
 }
 
-.accordion-item-header:focus-visible {
-  outline: none;
-}
-
 .accordion-item:has(.accordion-item-header:focus-visible) {
   border: 2px solid #0073e6;
   background-color: #f0faff;
