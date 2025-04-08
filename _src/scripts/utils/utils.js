@@ -838,7 +838,7 @@ export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMEN
 export function generateLDJsonSchema() {
   const country = getMetadata('jsonld-areaserved')
     .split(';')
-    .map(pair => pair.split(':'))
+    .map((pair) => pair.split(':'))
     .findLast(([key]) => key === Page.locale)?.[1] || null;
 
   const jsonldName = getMetadata('jsonld-name');
