@@ -597,7 +597,7 @@ main .hero.ferrari .hero-content{
 
 main .hero.ferrari .hero-content img{
   position: relative;
-  width: unset;
+  width: fit-content;
 }
 
 main .hero.ferrari .breadcrumb{
