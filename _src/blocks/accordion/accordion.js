@@ -26,7 +26,7 @@ export default function decorate(block) {
 
     const toggleItem = () => {
       const isOpen = item.classList.contains('expanded');
-      items.forEach(i => {
+      items.forEach((i) => {
         i.classList.remove('expanded');
         i.querySelector('.accordion-item-header')?.setAttribute('aria-expanded', 'false');
       });
@@ -34,9 +34,7 @@ export default function decorate(block) {
       if (!isOpen) {
         item.classList.add('expanded');
         header.setAttribute('aria-expanded', 'true');
-        expandItem(item);
       } else {
-        collapseItem(item);
         header.setAttribute('aria-expanded', 'false');
       }
     };

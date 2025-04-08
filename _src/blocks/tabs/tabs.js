@@ -178,7 +178,7 @@ export default function decorate(block) {
     const focusedTab = document.activeElement;
     if (focusedTab.getAttribute('role') !== 'tab') return;
 
-    const currentIndex = tabs.findIndex(t => t.$tab === focusedTab);
+    const currentIndex = tabs.findIndex((t) => t.$tab === focusedTab);
     let newIndex = currentIndex;
 
     switch (e.key) {
@@ -202,4 +202,3 @@ export default function decorate(block) {
     activateTab(newIndex, { toggleDropdown: false });
   });
 }
-  
