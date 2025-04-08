@@ -136,9 +136,9 @@
     }
 
     .tabs .tabs-navigation ul > li.active {
-        background-color: #006eff;
+        background-color: #006DFF;
         color: #fff;
-        border: 2px solid #006eff;
+        border: 2px solid #006DFF;
     }
 }
 
