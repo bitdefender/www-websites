@@ -132,9 +132,23 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     padding: 20px;
     background-color: #F4FAFF;
     color: #000;
-
     h2{
         color: #006EFF;
+        font-size: 20px;
+    }
+
+    h3{
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    p{
+        font-size: 18px;
+    }
+
+    p strong{
+        font-size: 18px;
+        font-weight: 600;
     }
 }
 
