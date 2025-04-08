@@ -1531,6 +1531,7 @@ main .subscriber .section {
         border: 0 none;
         border-left: 1px solid white;
         padding-left: 10px;
+        text-align: left;
     }
     .subscriber .columnvideo2 > div.image-columns-wrapper table tr td {
         border: 0 none;
@@ -1600,9 +1601,6 @@ main .subscriber .section {
     }
     .subscriber #blueBox {
         padding: 3em 0;
-    }
-    .subscriber #blueSlider .carousel-arrows-container {
-        display: none;
     }
     .subscriber .carousel-track {
         overflow-y: scroll !important;

@@ -232,6 +232,14 @@
         width: 42%;
     }
     .spp-slider.without-active .tab-slider {
-        transform: translateX(calc(214px));
+        width: 37%;
+        transform: translateX(calc(254px));
+    }
+}
+
+@media (max-width: 380px) {
+    .spp-slider.without-active .tab-slider {
+        width: 39%;
+        transform: translateX(calc(140%));
     }
 }
