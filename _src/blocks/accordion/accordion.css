@@ -124,6 +124,21 @@
   display: block;
 }
 
+.accordion-item-header:focus {
+  outline: none; 
+}
+
+.accordion-item-header:focus-visible {
+  outline: none;
+}
+
+.accordion-item:has(.accordion-item-header:focus-visible) {
+  border: 2px solid #006DFF;
+  background-color: #f0faff;
+  border-radius: 6px;
+}
+
+
 @media (min-width: 992px) { /* desktop */
   .accordion .accordion-item-header h3 {
     font-size: var(--body-font-size-xl);
