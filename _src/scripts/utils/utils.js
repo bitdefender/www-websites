@@ -667,7 +667,9 @@ export function pushTrialDownloadToDataLayer() {
       return '8430';
     }
 
-    if (button?.dataset?.storeId) return button.dataset.storeId;
+    if (button?.dataset?.storeId) {
+      return button.dataset.storeId;
+    }
     
     const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
     if (closestStoreElementWithId) {
