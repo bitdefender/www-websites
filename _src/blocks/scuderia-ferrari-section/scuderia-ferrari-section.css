@@ -26,6 +26,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 
     p {
         font-size: 24px;
+        margin: 5px 0;
 
         strong {
             font-size: 16px;
