@@ -136,11 +136,13 @@ export default function decorate(block) {
   }
 
   // setup data-store-id on mobal buttons
-  aliases?.split(',').forEach((alias, i) =>
-    [...block.children].forEach(row =>
-      row.children[i]?.querySelector('a.button.modal')?.setAttribute('data-store-id', alias.trim())
-    )
-  );  
+  aliases?.split(',').forEach((alias, i) => {
+    [...block.children].forEach((row) => {
+      row.children[i]
+        ?.querySelector('a.button.modal')
+        ?.setAttribute('data-store-id', alias.trim());
+    });
+  });   
 
   if (linksOpenInNewTab === 'true') {
     block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
