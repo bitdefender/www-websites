@@ -28,9 +28,9 @@ export default async function decorate(block) {
                 ${picture.outerHTML}
             </div>
 
-            ${imageOnTopEl.querySelector('picture')}
+            ${imageOnTopEl?.querySelector('picture') ?? ''}
             <div class="second-img img-container">
-                ${imageOnTopEl.querySelector('picture')?.innerHTML}
+                ${imageOnTopEl?.querySelector('picture')?.innerHTML ?? ''}
             </div>
         </div>
     </div>

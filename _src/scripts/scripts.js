@@ -28,6 +28,7 @@ import {
   createTag,
   getPageExperimentKey,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
+  generateLDJsonSchema,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
@@ -403,6 +404,8 @@ async function loadLazy(doc) {
   if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     loadFooter(doc.querySelector('footer'));
   }
+
+  generateLDJsonSchema();
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
 
