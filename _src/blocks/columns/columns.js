@@ -138,7 +138,7 @@ export default function decorate(block) {
   // setup buylink, this can be used later as a starting point for prices.
   aliases?.split(',').forEach((alias, i) =>
     [...block.children].forEach(row =>
-      row.children[i]?.querySelector('a.button.modal')?.setAttribute('data-alias', alias.trim())
+      row.children[i]?.querySelector('a.button.modal')?.setAttribute('data-store-id', alias.trim())
     )
   );  
 
