@@ -681,7 +681,6 @@ export function pushTrialDownloadToDataLayer() {
 
   
   const pushTrialData = (button = null) => {
-    console.log('button.dataset.storeId ', button.dataset.storeId)
     AdobeDataLayerService.push(new ButtonClickEvent(
       `${downloadType} downloaded`,
       button.dataset.storeId || getTrialID(currentPage, button)

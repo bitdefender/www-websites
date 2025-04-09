@@ -135,7 +135,7 @@ export default function decorate(block) {
     });
   }
 
-  // setup buylink, this can be used later as a starting point for prices.
+  // setup data-store-id on mobal buttons
   aliases?.split(',').forEach((alias, i) =>
     [...block.children].forEach(row =>
       row.children[i]?.querySelector('a.button.modal')?.setAttribute('data-store-id', alias.trim())
