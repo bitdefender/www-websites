@@ -80,7 +80,7 @@ function setImageAsBackgroundImage() {
 
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs,
+    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -134,6 +134,15 @@ export default function decorate(block) {
       });
     });
   }
+
+  // setup data-store-id on mobal buttons
+  aliases?.split(',').forEach((alias, i) => {
+    [...block.children].forEach((row) => {
+      row.children[i]
+        ?.querySelector('a.button.modal')
+        ?.setAttribute('data-store-id', alias.trim());
+    });
+  });
 
   if (linksOpenInNewTab === 'true') {
     block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
