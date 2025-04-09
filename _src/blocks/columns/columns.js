@@ -142,7 +142,7 @@ export default function decorate(block) {
         ?.querySelector('a.button.modal')
         ?.setAttribute('data-store-id', alias.trim());
     });
-  });  
+  });
 
   if (linksOpenInNewTab === 'true') {
     block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
