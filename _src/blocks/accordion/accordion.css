@@ -133,7 +133,7 @@
 }
 
 .accordion-item:has(.accordion-item-header:focus-visible) {
-  border: 2px solid #0073e6;
+  border: 2px solid #006DFF;
   background-color: #f0faff;
   border-radius: 6px;
 }
