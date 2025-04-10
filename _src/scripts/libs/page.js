@@ -38,7 +38,7 @@ export default class Page {
 
     this.country = this.locale.split('-')[1];
 
-    this.langauge = this.locale.split('-')[0];
+    this.language = this.locale.split('-')[0];
 
     this.environment = this.#getEnvironment();
 

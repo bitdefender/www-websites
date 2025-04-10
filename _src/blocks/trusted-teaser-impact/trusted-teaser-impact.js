@@ -1,5 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { debounce } from '../../scripts/utils/utils.js';
+import { debounce, matchHeights } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const [titleEl, ...boxes] = [...block.children];
@@ -35,4 +35,5 @@ export default async function decorate(block) {
   render();
 
   window.addEventListener('resize', debounce(render, 250));
+  matchHeights(block, '.box-item .title');
 }
