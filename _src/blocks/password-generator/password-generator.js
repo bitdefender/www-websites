@@ -1,8 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import passwordService from '../../scripts/utils/pass_service.js';
-import {
-  createTag,
-} from '../../scripts/utils/utils.js';
 
 /**
  * Finds a div element whose first paragraph contains the specified search text.
@@ -77,11 +74,20 @@ function copyToClipboard(block, caller, popupText) {
   }
 }
 
+// Function to adjust font size based on password length and screen width
+function adjustFontSize(input, password) {
+  if (password.length > 25 && window.innerWidth < 991) {
+    input.style.fontSize = 'calc(100% - 4px)';
+  } else {
+    input.style.fontSize = ''; // Reset to default
+  }
+}
+
 export default function decorate(block) {
   const { clipboardText, selectAtLeastOneCheckboxText } = block.closest('.section').dataset;
 
-  const breadcrumb = createTag('div', { class: 'breadcrumb' });
-  block.closest('.section').prepend(breadcrumb);
+  // const breadcrumb = createTag('div', { class: 'breadcrumb' });
+  // block.closest('.section').prepend(breadcrumb);
 
   const privacyPolicyRow = getDivBasedOnFirstParagraph(block, '<privacy-policy>');
   privacyPolicyRow.classList.add('privacy-policy');
@@ -142,8 +148,8 @@ export default function decorate(block) {
 
   const passwordInput = block.querySelector('.password-generator--input');
   const generateButton = block.querySelector('.password-generator--input-retry');
-  const copyButton = block.querySelector("[href='#copy-link']");
-  copyButton.id = 'copy-link';
+  const copyPassword = block.querySelector("[href='#copy-link'], [href='#copy-password']");
+  copyPassword.id = 'copy-password';
   const slider = block.querySelector('#password-range');
   const rangeLabel = block.querySelector('#range-label');
   const uppercaseCheckbox = block.querySelector('#uppercase');
@@ -196,6 +202,9 @@ export default function decorate(block) {
     // Display the password
     passwordInput.value = password;
 
+    // Adjust font size based on password length
+    adjustFontSize(passwordInput, password);
+
     // Update the password strength indicator
     updatePasswordStrength(password, strengthElement);
   }
@@ -208,9 +217,9 @@ export default function decorate(block) {
   // Generate a password on page load
   generatePassword();
 
-  copyButton.addEventListener('click', (e) => {
+  copyPassword.addEventListener('click', (e) => {
     e.preventDefault();
-    copyToClipboard(block, copyButton, clipboardText);
+    copyToClipboard(block, copyPassword, clipboardText, password);
   });
 
   // Update password when settings change
