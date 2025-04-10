@@ -16,7 +16,7 @@ jobs:
             - name: Update PR Description
               uses: nefrob/pr-description@v1.2.0
               with:
-                  content: BRANCH_NAME
+                  content: ${{ env.BRANCH_NAME }}
                   regex: "<branch>"
                   regexFlags: s
                   token: ${{ secrets.GITHUB_TOKEN }}
