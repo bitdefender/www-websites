@@ -1,0 +1,15 @@
+name: Update PR Description
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  update_pr_description:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Replace placeholder with branch name
+        uses: peter-evans/update-pull-request-description@v2
+        with:
+          regex: '<branch>'
+          replacement: '${{ github.head_ref }}'

@@ -4,4 +4,4 @@ Fix #<gh-issue-id>
 
 Test URLs:
 - Before: https://main--www-websites--bitdefender.aem.page/zh-hk/
-- After: https://${GITHUB_HEAD_REF}--www-websites--bitdefender.aem.page/zh-hk/
+- After: https://<branch>--www-websites--bitdefender.aem.page/zh-hk/
