@@ -44,7 +44,7 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
           <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
         ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
-        <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector.innerText}</a>
+        <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector?.innerText}</a>
       </div>`;
   return priceElement;
 }
