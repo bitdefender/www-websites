@@ -1,9 +1,8 @@
 import Target from "@repobit/dex-target";
 import { User } from "@repobit/dex-utils";
 import { Constants } from "../constants.js";
-import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
+import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams, getMetadata, getUrlPromotion } from "../../utils/utils.js";
 import page from "../../page.js";
-import { getMetadata, getUrlPromotion } from "../../utils/utils.js";
 
 export class ProductInfo {
 	/**

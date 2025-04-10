@@ -9,7 +9,7 @@ import {
   getCampaignBasedOnLocale,
   getUrlPromotion,
   getProductFinding,
-} from './utils/utils.js';
+} from '../utils/utils.js';
 
 export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
   getOptionInfo(option) {
