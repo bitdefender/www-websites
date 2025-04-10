@@ -13,6 +13,7 @@ jobs:
             - name: Update PR Description
               uses: nefrob/pr-description@v1.2.0
               with:
-                  content: "Hello there!"
-                  regex: ".*"
+                  content: "test"
+                  regex: "<branch>"
                   regexFlags: s
+                  token: ${{ secrets.GITHUB_TOKEN }}
