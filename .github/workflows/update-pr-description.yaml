@@ -5,11 +5,14 @@ on:
     types: [opened, edited]
 
 jobs:
-  update_pr_description:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Replace placeholder with branch name
-        uses: peter-evans/update-pull-request-description@v2
-        with:
-          regex: '<branch>'
-          replacement: '${{ github.head_ref }}'
+  update-pr-description:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Update PR Description
+              uses: nefrob/pr-description@v1.2.0
+              with:
+                  content: "Hello there!"
+                  regex: ".*"
+                  regexFlags: s
