@@ -1,6 +1,6 @@
 import Target from '@repobit/dex-target';
 import { debounce } from '@repobit/dex-utils';
-import { AdobeDataLayerService, ButtonClickEvent } from '../libs/data-layer.js';
+import { ButtonClickEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
 import page from '../page.js';
 import { Constants } from '../libs/constants.js';
 
@@ -806,13 +806,29 @@ export function getBrowserName() {
 }
 
 /**
- * Returns the value of a query parameter
- * @returns {String}
+ * Returns the promotion/campaign found in the URL
+ * @returns {string|null}
  */
-export function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
+export const getUrlPromotion = () => page.getParamValue('pid')
+  || page.getParamValue('promotionId')
+  || page.getParamValue('campaign')
+  || null;
+
+/**
+ * Returns the promotion/campaign found in the Vlaicu file or 'global_v2' for specific locales
+ * @returns {string|null}
+ */
+export const getCampaignBasedOnLocale = () => {
+  if (GLOBAL_V2_LOCALES.find((domain) => page.locale === domain)) {
+    return 'global_v2';
+  }
+
+  if (!Constants.ZUROA_LOCALES.includes(page.locale)) {
+    return Constants.NO_PROMOTION;
+  }
+
+  return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
+};
 
 export function decorateBlockWithRegionId(element, id) {
   // we could consider to use `element.setAttribute('s-object-region', id);` in the future
@@ -824,3 +840,146 @@ export function decorateLinkWithLinkTrackingId(element, id) {
 }
 
 export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
+
+/**
+ *
+ * @returns {boolean} returns wether A/B tests should be disabled or not
+ */
+export const shouldABTestsBeDisabled = () => {
+  /** This is a special case for when adobe.target is disabled using dotest query param */
+  const windowSearchParams = new URLSearchParams(window.location.search);
+  if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key)
+    === Constants.DISABLE_TARGET_PARAMS.value) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+* get experiment details from Target
+* @returns {Promise<{
+*  experimentId: string;
+*  experimentVariant: string;
+* } | null>}
+  */
+export const getTargetExperimentDetails = async () => {
+  /**
+   * @type {{
+   *  experimentId: string;
+   *  experimentVariant: string;
+   * }|null}
+   */
+  let targetExperimentDetails = null;
+
+  async function loadCSS(href) {
+    return new Promise((resolve, reject) => {
+      if (!document.querySelector(`head > link[href="${href}"]`)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.onload = resolve;
+        link.onerror = reject;
+        document.head.append(link);
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  const targetExperimentLocation = getMetadata('target-experiment-location');
+  const targetExperimentId = getMetadata('target-experiment');
+  if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
+    const { runTargetExperiment } = await import('../target.js');
+    const offer = await Target.getOffers({ mboxNames: targetExperimentLocation });
+    const { url, template } = offer || {};
+    if (template) {
+      loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
+      document.body.classList.add(template);
+    }
+    targetExperimentDetails = await runTargetExperiment(url, targetExperimentId);
+  }
+
+  return targetExperimentDetails;
+};
+
+/**
+ *
+ * @returns {object} - get experiment information
+ */
+export const getExperimentDetails = () => {
+  if (!window.hlx || !window.hlx.experiment) {
+    return null;
+  }
+
+  const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
+  return { experimentId, experimentVariant };
+};
+
+/**
+ * get the name of the page as seen by analytics
+ * @returns {string}
+ */
+export const generatePageLoadStartedName = () => {
+  /**
+   *
+   * @param {string[]} tags
+   * @returns {string[]} get all analytic tags
+   */
+  const getTags = (tags) => (tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : []);
+  const { pathname } = window.location;
+
+  const METADATA_ANALYTICS_TAGS = 'analytics-tags';
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
+  const { locale } = page;
+  // currenty, the language is the default first tag and section parameter, with webview, we want
+  // something else to be the first tag and section
+  const pageSectionDataLocale = getMetadata('locale') || page.locale;
+
+  let tagName;
+  if (tags.length) {
+    tagName = [pageSectionDataLocale, ...tags].filter(Boolean).join(':'); // e.g. au:consumer:product:internet security
+  } else {
+    const allSegments = pathname.split('/').filter((segment) => segment !== '');
+    const lastSegment = allSegments[allSegments.length - 1];
+    const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
+    tagName = `${locale}:product:${subSubSubSection}`;
+    if (lastSegment === 'consumer') {
+      tagName = `${locale}:consumer:solutions`;
+    }
+
+    if (window.errorCode === '404') {
+      tagName = `${locale}:404`;
+    }
+  }
+
+  return tagName;
+};
+
+/**
+ *
+ * @returns {string} get product findings for analytics
+ */
+export const getProductFinding = () => {
+  const pageName = page.name.toLowerCase();
+  let productFinding;
+  switch (pageName) {
+    case 'consumer':
+      productFinding = 'solutions page';
+      break;
+    case 'thank-you':
+      productFinding = 'thank you page';
+      break;
+    case 'toolbox page':
+      productFinding = 'toolbox page';
+      break;
+    case 'downloads':
+      productFinding = 'downloads page';
+      break;
+    default:
+      productFinding = 'product pages';
+      break;
+  }
+
+  return productFinding;
+};

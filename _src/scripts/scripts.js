@@ -1,5 +1,6 @@
 import Launch from '@repobit/dex-launch';
 import Target from '@repobit/dex-target';
+import { PageLoadedEvent, AdobeDataLayerService, VisitorIdEvent } from '@repobit/dex-data-layer';
 import page from './page.js';
 import {
   sampleRUM,
@@ -17,9 +18,6 @@ import {
   getMetadata,
 } from './lib-franklin.js';
 import {
-  AdobeDataLayerService,
-  PageLoadedEvent,
-  PageLoadStartedEvent,
   resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
@@ -28,7 +26,8 @@ import {
   adobeMcAppendVisitorId,
   createTag,
   getPageExperimentKey,
-  GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
+  GLOBAL_EVENTS,
+  pushTrialDownloadToDataLayer,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
@@ -334,12 +333,6 @@ async function loadEager(doc) {
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
 
-  // TODO: if experiments stop working correctly please consider bringing this back:
-  // await window.hlx.plugins.run('loadEager');
-
-  AdobeDataLayerService.push(await new PageLoadStartedEvent());
-  await resolveNonProductsDataLayer();
-
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
@@ -380,6 +373,9 @@ async function loadLazy(doc) {
   if (!getPageExperimentKey()) {
     loadTrackers();
   }
+
+  // push basic events to dataLayer
+  await resolveNonProductsDataLayer();
   await loadBlocks(main);
 
   const { hash } = window.location;
@@ -523,7 +519,6 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
-  AdobeDataLayerService.pushEventsToDataLayer();
   // eslint-disable-next-line import/no-unresolved
   const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
     .then((FingerprintJS) => FingerprintJS.load({
@@ -535,12 +530,7 @@ async function loadPage() {
     .then((fp) => fp.get())
     .then((result) => {
       const { visitorId } = result;
-      AdobeDataLayerService.push({
-        event: 'vistorID ready',
-        user: {
-          visitorId,
-        },
-      });
+      AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
     });
   AdobeDataLayerService.push(new PageLoadedEvent());
 
