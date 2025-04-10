@@ -1,6 +1,6 @@
 import { AdobeDataLayerService } from "@repobit/dex-data-layer";
 import { Store, ProductInfo, ProductOption } from "../store.js";
-import { MainProductLoadedEvent, ProductComparisonEvent, ProductsLoadedEvent } from "../../data-layer.js";
+import { FranklinProductsLoadedEvent } from "../../data-layer.js";
 import { staticAttributesResolvers, staticAttributes } from "./staticAttributes/index.js";
 import { clickAttributeResolvers, clickAttributes } from "./clickAttributes/index.js";
 import { staticGlobalAttributesResolvers } from "./staticGlobalAttributes/index.js";
@@ -306,13 +306,13 @@ export class StoreResolver {
 
 					switch(option.dataset.storeEvent) {
 						case "product-loaded":
-							AdobeDataLayerService.push(new ProductsLoadedEvent(storeOption));
+							AdobeDataLayerService.push(new FranklinProductsLoadedEvent(storeOption, 'all'));
 							break;
 						case "main-product-loaded":
-							AdobeDataLayerService.push(new MainProductLoadedEvent(storeOption));
+							AdobeDataLayerService.push(new FranklinProductsLoadedEvent(storeOption, 'info'));
 							break;
 						case "product-comparison":
-							AdobeDataLayerService.push(new ProductComparisonEvent(storeOption));
+							AdobeDataLayerService.push(new FranklinProductsLoadedEvent(storeOption, 'comparison'));
 							break;
 					}
 				}
