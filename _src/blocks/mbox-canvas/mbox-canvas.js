@@ -1,10 +1,8 @@
 import Target from '@repobit/dex-target';
-import {
-  AdobeDataLayerService,
-  PageLoadStartedEvent,
-} from '../../scripts/libs/data-layer.js';
+import { AdobeDataLayerService, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
+import page from '../../scripts/page.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
   const newHtml = document.createElement('div');
@@ -49,23 +47,24 @@ function createOfferProfileParameters(parameters) {
  * @returns {Promise<void>} - A promise that resolves when the event is updated and pushed.
  */
 async function updatePageLoadStartedEvent(offer) {
-  const urlParams = new URLSearchParams(window.location.search);
   const match = offer.offer.match(/\/([^/]+)\.plain\.html$/);
   const result = match ? match[1] : null;
-  const newObject = await new PageLoadStartedEvent();
-  newObject.page.info.name = newObject.page.info.name.replace('<dynamic-content>', result);
+  let trackingID = getMetadata('cid');
+  trackingID = trackingID.replace('<language>', page.getParamValue('lang'));
+  trackingID = trackingID.replace('<asset name>', page.getParamValue('feature'));
+
+  const newObject = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+    pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<dynamic-content>', result);
+    pageLoadStartedInfo.language = page.getParamValue('lang') || 'en-us';
+    return pageLoadStartedInfo;
+  }, { trackingID });
 
   Object.entries(newObject.page.info).forEach(([key, value]) => {
     if (value === '<dynamic-content>') {
       newObject.page.info[key] = result;
     }
   });
-  let trackingID = getMetadata('cid');
-  trackingID = trackingID.replace('<language>', urlParams.get('lang'));
-  trackingID = trackingID.replace('<asset name>', urlParams.get('feature'));
-  newObject.page.attributes.trackingID = trackingID;
 
-  newObject.page.info.language = urlParams.get('lang') || 'en-us';
   AdobeDataLayerService.push(newObject);
 }
 
@@ -87,12 +86,12 @@ export default async function decorate(block) {
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
   });
-  const page = await fetch(`${offer.offer}`);
+  const pageCall = await fetch(`${offer.offer}`);
   let offerHtml;
   await loadBlocks(block.querySelector('.canvas-content'));
 
-  if (page.ok) {
-    offerHtml = await page.text();
+  if (pageCall.ok) {
+    offerHtml = await pageCall.text();
   } else {
     const urlParams = new URLSearchParams(window.location.search);
     const language = urlParams.get('lang')?.toLowerCase() || 'en-us';

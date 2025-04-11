@@ -1,9 +1,8 @@
 import Target from "@repobit/dex-target";
 import { User } from "@repobit/dex-utils";
 import { Constants } from "../constants.js";
-import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
+import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams, getMetadata, getUrlPromotion } from "../../utils/utils.js";
 import page from "../../page.js";
-import { getMetadata } from "../../utils/utils.js";
 
 export class ProductInfo {
 	/**
@@ -860,12 +859,6 @@ class StoreConfig {
 		this.provider = "vlaicu";
 
 		/**
-		 * default promotion
-		 * @type {Promise<string>}
-		 */
-		this.campaign = this.#getCampaign();
-
-		/**
 		 * @type {string}
 		 */
 		this.vlaicuEndpoint = Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))
@@ -876,18 +869,6 @@ class StoreConfig {
 		 * @type {"GET"}
 		 */
 		this.httpMethod = "GET";
-	}
-
-	async #getCampaign() {
-		if (GLOBAL_V2_LOCALES.find(domain => page.locale === domain)) {
-			return "global_v2";
-		}
-
-		if (!Constants.ZUROA_LOCALES.includes(page.locale)) {
-			return Constants.NO_PROMOTION;
-		}
-
-		return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
 	}
 }
 
@@ -942,10 +923,10 @@ export class Store {
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
 					product.promotion = (await Target.configMbox)?.promotion
-						|| this.#getUrlPromotion()
+						|| getUrlPromotion()
 						|| product.promotion
 						|| getMetadata("pid")
-						|| await this.config.campaign;
+						|| getCampaignBasedOnLocale();
 
 					return await this.#apiCall(
 						product
@@ -986,19 +967,6 @@ export class Store {
 	 */
 	static getCountry() {
 		return this.countriesMapping[page.country] || page.country
-	}
-
-	/**
-	 * Returns the promotion/campaign found in the URL
-	 * @returns {string|null}
-	 */
-	static #getUrlPromotion() {
-		const searchParams = (new URL(window.location)).searchParams;
-
-		if (searchParams.has("pid")) { return searchParams.get("pid"); }
-		if (searchParams.has("promotionId")) { return searchParams.get("promotionId"); }
-		if (searchParams.has("campaign")) { return searchParams.get("campaign"); }
-		return null;
 	}
 
 	static placeSymbol(price, currency) {

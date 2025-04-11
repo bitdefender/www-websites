@@ -138,6 +138,10 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   max-width: 100%;
 }
 
+.image-columns-container .image-columns .image-columns-txt-col{
+  text-align: center;
+}
+
 @media (min-width: 767px){
   .image-columns.quotes > div {
     flex-direction: unset;
@@ -167,7 +171,6 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   font-size: 16px;
   line-height: 1.5;
   margin: 0 0 20px;
-  padding-left: var(--body-padding);
 }
 
 @media (min-width: 1400px) {
@@ -196,6 +199,10 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   .image-columns > div > div {
     flex: 1;
     order: unset;
+  }
+
+  .image-columns-container .image-columns .image-columns-txt-col{
+    text-align: left;
   }
 }
 

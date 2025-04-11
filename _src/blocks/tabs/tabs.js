@@ -10,9 +10,7 @@ import {
 } from '../../scripts/lib-franklin.js';
 
 function isMobileScreenSize() {
-  const isDesktop = window.matchMedia('(min-width: 900px)');
-  const b = !isDesktop.matches;
-  return b;
+  return !window.matchMedia('(min-width: 900px)').matches;
 }
 
 function showMenuItems(content) {
@@ -54,8 +52,8 @@ function createTabsNavigation(block) {
   dropDownMenu.classList.add('dropdown-menu');
   tabsNavigation.appendChild(dropDownMenu);
 
-  // create ul element and add it to block
   const $ul = document.createElement('ul');
+  $ul.setAttribute('role', 'tablist');
   if (!isMobileScreenSize()) {
     $ul.classList.add('expanded');
   }
@@ -79,47 +77,48 @@ export function createTabs(block) {
   const config = readBlockConfig(block);
   block.innerHTML = '';
 
-  const tabsSelector = config['tab-group'] ? `[data-tab-group="${config['tab-group']}"][data-tab]` : '[data-tab]';
+  const tabsSelector = config['tab-group']
+    ? `[data-tab-group="${config['tab-group']}"][data-tab]`
+    : '[data-tab]';
 
-  // create empty array to store tab info
   /** @type TabInfo[] */
   const tabs = [];
   const {
     dropDownMenu, $ul,
   } = createTabsNavigation(block);
 
-  // search referenced sections and move them inside the tab-container
   const $sections = document.querySelectorAll(tabsSelector);
 
-  // move the tab's sections before the tab riders.
   [...$sections].forEach(($tabContent, index) => {
     const title = $tabContent.dataset.tab;
     const name = title.toLowerCase().trim();
 
-    // create tab
     const $li = document.createElement('li');
-    $ul.appendChild($li);
-
     $li.classList.add('tab');
+    $li.setAttribute('role', 'tab');
+    $li.setAttribute('tabindex', index === 0 ? '0' : '-1');
+    $li.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+    $li.setAttribute('id', `tab-${index}`);
     $li.innerText = title;
 
-    // tab content
+    $ul.appendChild($li);
+
     const tabContentDiv = document.createElement('div');
     tabContentDiv.classList.add('tab-item');
-    tabContentDiv.append(...$tabContent.children);
     tabContentDiv.classList.add('hidden');
+    tabContentDiv.setAttribute('role', 'tabpanel');
+    tabContentDiv.setAttribute('aria-labelledby', `tab-${index}`);
+    tabContentDiv.append(...$tabContent.children);
 
     block.appendChild(tabContentDiv);
     $tabContent.remove();
 
-    // if index is 0, then it is the first tab, so it should be active
     if (index === 0) {
       $li.classList.add('active');
       tabContentDiv.classList.remove('hidden');
       dropDownMenu.innerText = title;
     }
 
-    // create tab info object
     tabs.push({
       name,
       $tab: $li,
@@ -137,38 +136,69 @@ export default function decorate(block) {
   const tabs = createTabs(block);
   const dropDownMenu = block.querySelector('.dropdown-menu');
 
-  tabs.forEach((tab) => {
-    const {
-      name, $tab,
-    } = tab;
+  /**
+   * Activează un tab
+   * @param {number} index
+   * @param {{ toggleDropdown?: boolean }} options
+   */
+  function activateTab(index, { toggleDropdown = true } = {}) {
+    tabs.forEach((t, i) => {
+      const isActive = i === index;
 
-    $tab.addEventListener('click', () => {
-      const $activeButton = block.querySelector('li.active');
+      t.$tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      t.$tab.setAttribute('tabindex', isActive ? '0' : '-1');
+      t.$tab.classList.toggle('active', isActive);
+      t.$content.classList.toggle('hidden', !isActive);
+    });
 
-      if (isMobileScreenSize()) {
-        toggleMenu(dropDownMenu);
-      }
+    tabs[index].$tab.focus();
+    dropDownMenu.innerText = tabs[index].$tab.innerText;
 
-      if ($activeButton !== $tab) {
-        $activeButton.classList.remove('active');
-        // remove active class from parent li
-        $activeButton.parentElement.classList.remove('active');
+    if (isMobileScreenSize() && toggleDropdown) {
+      toggleMenu(dropDownMenu);
+    }
+  }
 
-        $activeButton.classList.add('active');
-        // add active class to parent li
-        $tab.classList.add('active');
-        dropDownMenu.innerText = $tab.innerText;
-
-        tabs.forEach((t) => {
-          if (name === t.name) {
-            t.$content.classList.remove('hidden');
-            t.$tab.classList.add('active');
-          } else {
-            t.$content.classList.add('hidden');
-            t.$tab.classList.remove('active');
-          }
-        });
+  tabs.forEach((tab, index) => {
+    tab.$tab.addEventListener('click', () => {
+      if (tab.$tab.getAttribute('aria-selected') !== 'true') {
+        activateTab(index); // toggleDropdown = true (default)
       }
     });
+
+    tab.$tab.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activateTab(index); // suport și pentru Enter / Space
+      }
+    });
+  });
+
+  block.addEventListener('keydown', (e) => {
+    const focusedTab = document.activeElement;
+    if (focusedTab.getAttribute('role') !== 'tab') return;
+
+    const currentIndex = tabs.findIndex((t) => t.$tab === focusedTab);
+    let newIndex = currentIndex;
+
+    switch (e.key) {
+      case 'ArrowRight':
+        newIndex = (currentIndex + 1) % tabs.length;
+        break;
+      case 'ArrowLeft':
+        newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        break;
+      case 'Home':
+        newIndex = 0;
+        break;
+      case 'End':
+        newIndex = tabs.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    e.preventDefault();
+    activateTab(newIndex, { toggleDropdown: false });
   });
 }

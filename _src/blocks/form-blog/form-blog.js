@@ -1,5 +1,5 @@
 import { Cookies } from '@repobit/dex-utils';
-import { AdobeDataLayerService, FormEvent } from '../../scripts/libs/data-layer.js';
+import { FormEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
 
 function onChange(form) {
   // Targeting the anchor inside .button-container

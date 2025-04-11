@@ -42,8 +42,8 @@
   --background-blue: #005ed9;
   --dark-blue-tag: #005eff;
   --light-blue-tag: #13b0a7;
-  --green-tag: #218728;
-  --green-tag2: #2cb43d;
+  --green-tag: #0E8532;
+  --green-tag2: #0E8532;
   --dark-shadow: #0000001a;
   --background-checkmark: #61AF53;
 
@@ -348,7 +348,7 @@ main img {
 .top_blue {
   text-align: center;
   background-color: rgb(228, 242, 255);
-  color: rgb(0, 110, 255);
+  color: rgb(0, 69, 173);
   padding: 6px 0!important;
 }
 
@@ -495,6 +495,16 @@ main .section.wide > :only-child {
 main .section.wide .default-content-wrapper {
   text-align: center;
   padding-bottom: 15px;
+}
+
+main .section.wide-v2 > :first-child {
+  border-radius: 8px 8px 0 0;
+  padding-top: 56px;
+}
+
+main .section.wide-v2 > :last-child {
+  border-radius: 0 0 8px 8px;
+  padding-bottom: 56px;
 }
 
 main .section.no-padding-top-bottom .default-content-wrapper {
