@@ -16,7 +16,9 @@
     display: flex;
     cursor: pointer;
     border-radius: 8px;
-    background: #EFF6FF;
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow: hidden;
 }
 
 .trusted-main-carousel-container .navigation-wrapper .second-nav {
@@ -29,6 +31,7 @@
     font-size: 9px;
     flex-shrink: 0;
     padding: 15px;
+    background: #EFF6FF;
 }
 
 .trusted-main-carousel-container .default-content-wrapper {
@@ -72,13 +75,11 @@
 
 .trusted-main-carousel-container .content-wrapper .slide>:first-child p.button-container {
     display: flex;
-    justify-content: center;
 }
 
 .trusted-main-carousel-container .content-wrapper .slide>:last-child {
     width: calc(100% + 2em);
     margin-left: -1em;
-    height: 200px;
     top: -15px;
     z-index: -1;
 }
@@ -105,6 +106,10 @@
 @media (min-width: 768px) {
     .trusted-main-carousel-container .navigation-wrapper .nav-item {
         font-size: 100%;
+    }
+
+    .trusted-main-carousel-container .navigation-wrapper .first-nav {
+        justify-content: flex-start;
     }
 
     .trusted-main-carousel-container .navigation-wrapper .second-nav {
@@ -140,10 +145,6 @@
 
     .trusted-main-carousel-container .content-wrapper .slide>:first-child p.button-container {
         position: unset;
-    }
-
-    .trusted-main-carousel-container .content-wrapper .slide>:last-child {
-        height: 400px;
     }
 }
 

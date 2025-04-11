@@ -1,9 +1,9 @@
 import {
-  AdobeDataLayerService,
-  PageLoadedEvent,
-  PageLoadStartedEvent,
+  WindowLoadStartedEvent,
+  WindowLoadedEvent,
   UserDetectedEvent,
-} from '../../scripts/libs/data-layer.js';
+  AdobeDataLayerService,
+} from '@repobit/dex-data-layer';
 import {
   BotPrevention,
 } from '../../scripts/utils/bot-prevention.js';
@@ -125,11 +125,12 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   changeTexts(block, message, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
 
-  const newObject = await new PageLoadStartedEvent();
-  newObject.page.info.name = `${newObject.page.info.name}:${message.status}`;
-  AdobeDataLayerService.push(newObject);
-  AdobeDataLayerService.push(await new UserDetectedEvent());
-  AdobeDataLayerService.push(new PageLoadedEvent());
+  AdobeDataLayerService.push(new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+    pageLoadStartedInfo.name += `:${message.status}`;
+    return pageLoadStartedInfo;
+  }));
+  AdobeDataLayerService.push(new UserDetectedEvent());
+  AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
 async function resetChecker(block) {
@@ -152,10 +153,9 @@ async function resetChecker(block) {
   result.className = 'result';
   h1.textContent = 'Is This Link Really Safe?';
 
-  const newObject = await new PageLoadStartedEvent();
-  AdobeDataLayerService.push(newObject);
-  AdobeDataLayerService.push(await new UserDetectedEvent());
-  AdobeDataLayerService.push(new PageLoadedEvent());
+  AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
+  AdobeDataLayerService.push(new UserDetectedEvent());
+  AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
 function createSharePopup(element) {
