@@ -360,12 +360,8 @@ main .section.link-right a {
 }
 
 .trusted .box-carousel-container.testimonials .carousel-item {
-    width: calc(100% / 4.3);
+    
     padding: 2em;
-}
-
-.trusted .box-carousel-container.testimonials .has-3-7-items .carousel-item {
-    width: calc(100% / 3 - 70px);
 }
 
 .trusted .box-carousel-container.testimonials .carousel-item .subtitle-secondary {

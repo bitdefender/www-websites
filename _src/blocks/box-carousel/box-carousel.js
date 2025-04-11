@@ -117,7 +117,7 @@ export default async function decorate(block) {
 
     block.innerHTML = `
     <div class="carousel-header">
-      <div class="title">${titleEl.children[0].innerHTML}</div>
+      <div class="title">${titleEl?.children[0]?.innerHTML}</div>
       <div class="arrows d-flex">${renderArrows()}</div>
     </div>
 
@@ -127,25 +127,25 @@ export default async function decorate(block) {
             <div class="carousel-item">
                 ${isTestimonials ? `
                   <div class="img-container">
-                    ${slide.children[0].children[0].innerHTML}
+                    ${slide.children[0]?.children[0]?.innerHTML}
                   </div>
-                ` : slide.children[0].children[0].innerHTML}
+                ` : slide.children[0]?.children[0]?.innerHTML}
 
                 <p class="title">
-                    ${slide.children[0].children[1].textContent}
+                    ${slide.children[0]?.children[1]?.textContent}
                 </p>
 
                 ${isTestimonials ? `
                   <div class="subtitle-secondary">
-                    ${slide.children[0].children[2].innerHTML}
+                    ${slide.children[0]?.children[2]?.innerHTML}
                   </div>
 
                   <div class="subtitle">
-                    ${slide.children[0].children[3].innerHTML}
+                    ${slide.children[0]?.children[3]?.innerHTML}
                   </div>
                 ` : `
                    <div class="subtitle">
-                      ${slide.children[0].children[2].innerHTML}
+                      ${slide.children[0]?.children[2]?.innerHTML}
                    </div>
                 `}
             </div>

@@ -152,7 +152,7 @@
   flex-direction: row;
   justify-content: flex-start;
   gap: 22px;
-  height: 15px;
+  height: 20px;
   top: 0;
 }
 
@@ -1389,8 +1389,8 @@
 
 .columns.carousel button {
   align-items: flex-start;
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
   border-radius: 100%;
   margin: 10px;
   padding: 0;
