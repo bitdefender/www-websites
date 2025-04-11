@@ -28,10 +28,11 @@ import {
   getPageExperimentKey,
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
+  generateLDJsonSchema,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['hero']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['hero', 'password-generator']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -386,6 +387,8 @@ async function loadLazy(doc) {
     loadFooter(doc.querySelector('footer'));
   }
 
+  generateLDJsonSchema();
+
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
 
   window.hlx.plugins.run('loadLazy');
@@ -393,7 +396,8 @@ async function loadLazy(doc) {
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
-    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`);
+    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
+      .catch(() => {});
   }
 
   sampleRUM('lazy');
@@ -500,6 +504,7 @@ async function loadPage() {
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
+  // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
 
   await StoreResolver.resolve();

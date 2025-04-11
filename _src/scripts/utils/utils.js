@@ -657,6 +657,8 @@ export function pushTrialDownloadToDataLayer() {
       return '8430';
     }
 
+    if (button?.dataset?.storeId) return button.dataset.storeId;
+
     const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
     if (closestStoreElementWithId) {
       return closestStoreElementWithId.dataset.storeId;
@@ -983,3 +985,38 @@ export const getProductFinding = () => {
 
   return productFinding;
 };
+
+export function generateLDJsonSchema() {
+  const country = getMetadata('jsonld-areaserved')
+    .split(';')
+    .map((pair) => pair.split(':'))
+    .findLast(([key]) => key === page.locale)?.[1] || null;
+
+  const jsonldName = getMetadata('jsonld-name');
+
+  if (!country || !jsonldName) {
+    return;
+  }
+
+  const ldJson = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: jsonldName,
+    url: `${window.location.origin}${window.location.pathname}`,
+    inLanguage: page.locale,
+    areaServed: {
+      '@type': 'Country',
+      name: country,
+    },
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'Bitdefender',
+      url: `${window.location.origin}/${page.locale}/`,
+    },
+  };
+
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(ldJson, null, 2); // Pretty print
+  document.head.appendChild(script);
+}

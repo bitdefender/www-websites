@@ -197,6 +197,7 @@
   width: 30px;
   height: 30px;
 }
+
 .tabs-component-container .tabs-container button picture img {
   width: 50px;
   height: auto;
@@ -225,11 +226,11 @@
 }
 
 .tabs-component-container .tabs-component.blue-heading h3 {
-  color: #006eff;
+  color: #006dff;
 }
 
 .tabs-component-container .tabs-component.blue-heading .tabs-container button { 
-  color: #006eff
+  color: #006dff
 }
 
 .tabs-component-container .tabs-component.blue-heading .tabs-container button.selected{
