@@ -995,7 +995,7 @@
             padding-right: 40px;
         }
 
-        .dex-carousel-cards-family .columns-wrapper .columns div .columns-text-col:last-of-type {
+        .dex-carousel-cards-security .columns-wrapper .columns div .columns-text-col:last-of-type {
             max-width: 452px;
         }
 
@@ -1206,10 +1206,16 @@
         .dex-carousel-cards-security .columns-wrapper .columns {
             padding-left: 0;
             padding-right: 0;
+            width: 100%;
 
             > div {
-                padding-left: 214px !important;
-                padding-right: 214px !important;
+                margin: auto;
+                padding: 37px 0;
+                max-width: 772px;
+
+                .columns-text-col:first-of-type {
+                    max-width: 320px;
+                }
             }
         }
     }
@@ -1224,12 +1230,6 @@
             padding: 0;
 
             --section-desktop-max-width: 1200px;
-        }
-
-        .dex-carousel-cards {
-            .columns-wrapper .columns div {
-                padding: 37px 104px;
-            }
         }
     }
 }
