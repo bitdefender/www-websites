@@ -539,6 +539,18 @@
                 }
             }
 
+            div > div > p:first-of-type {
+                height: auto;
+                margin-bottom: 0;
+
+                .icon {
+                    max-width: unset;
+                    width: 30px;
+                    height: 30px;
+
+                }
+            }
+
             div > div:first-of-type {
                 li:nth-of-type(4) {
                     a {
@@ -678,6 +690,11 @@
             }
         }
 
+        .features-wrapper {
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+
         .full-width-mobile {
             .columns.blue-banner {
                 padding: 44px;
@@ -722,7 +739,6 @@
                 }
             }
         }
-
 
         .awards-container {
             max-width: 1200px;
@@ -1160,6 +1176,11 @@
                     gap: 64px;
                 }
 
+                div > div > p:first-of-type .icon {
+                    width: 34px;
+                    height: 34px;
+                }
+
                 > div > div {
                     width: calc(33% - 40px);
 
@@ -1234,6 +1255,17 @@
     }
 }
 
+@media (min-width: 1600px) {
+    .dex-18477 {
+
+        .features-wrapper {
+            margin-top: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+    }
+}
 
 @media (max-width: 767px) {
     .dex-18477 {
