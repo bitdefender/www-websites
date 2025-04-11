@@ -9,6 +9,7 @@ import {
   getCampaignBasedOnLocale,
   getUrlPromotion,
   getProductFinding,
+  getMetadata,
 } from '../utils/utils.js';
 
 export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
