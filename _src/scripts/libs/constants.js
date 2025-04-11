@@ -78,7 +78,7 @@ export class Constants {
 	static LOGIN_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
 	  ? window.location.origin : 'https://www.bitdefender.com';
   
-	static NO_PROMOTION = "ignore";
+	static NO_PROMOTION = "";
 
 	static NONE_PRODUCT_PAGES = ["renewal", "consumer"];
 
