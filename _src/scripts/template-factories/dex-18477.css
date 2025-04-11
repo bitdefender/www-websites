@@ -539,6 +539,60 @@
                 }
             }
 
+            div > div:first-of-type {
+                li:nth-of-type(4) {
+                    a {
+                        display: flex;
+                        align-items: center;
+                        &::before {
+                            margin-left: 20px;
+                            display: inline-block;
+                            order: 3;
+                            right: 0;
+                            content: "NEW";
+                            width: fit-content;
+                            height: 100%;
+                            background-color: #2CB43D;
+                            color: white;
+                            font-size: 12px;
+                            font-weight: 500;
+                            text-transform: uppercase;
+                            border-radius: 40px;
+                            padding: 4px 7px;
+                            z-index: 1;
+                        }
+                    }
+                }
+            }
+
+            div > div:not(:nth-of-type(2)) {
+
+                li:first-of-type {
+                    a {
+                        display: flex;
+                        align-items: center;
+                        &::before {
+                            margin-left: 20px;
+                            display: inline-block;
+                            order: 3;
+                            right: 0;
+                            content: "IMPROVED";
+                            width: fit-content;
+                            height: 100%;
+                            background-color: #2CB43D;
+                            color: white;
+                            font-size: 12px;
+                            font-weight: 500;
+                            text-transform: uppercase;
+                            border-radius: 40px;
+                            padding: 4px 7px;
+                            z-index: 1;
+                        }
+                    }
+                }
+
+            }
+
             div > div::after {
                 display: none;
             }
