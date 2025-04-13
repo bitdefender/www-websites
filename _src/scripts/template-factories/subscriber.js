@@ -135,9 +135,7 @@ const initializeHubspotModule = () => {
   document.querySelectorAll(
     ".subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type"
   ).forEach(trigger => {
-    alert('here');
     trigger.addEventListener("click", e => {
-      alert('click');
       popupContainer.style.display = "block"
     });
   });
@@ -145,9 +143,4 @@ const initializeHubspotModule = () => {
   popupContainer?.addEventListener("click", e => popupContainer.style.display = "none");
 }
 
-window.addEventListener('load', () => {
-  
-  initializeHubspotModule();
-});
-alert('sdafadsfads')
 initializeHubspotModule();
