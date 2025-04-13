@@ -135,7 +135,11 @@ const initializeHubspotModule = () => {
   document.querySelectorAll(
     ".subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type"
   ).forEach(trigger => {
-    trigger.addEventListener("click", e => popupContainer.style.display = "block");
+    alert('here');
+    trigger.addEventListener("click", e => {
+      alert('click');
+      popupContainer.style.display = "block"
+    });
   });
 
   popupContainer?.addEventListener("click", e => popupContainer.style.display = "none");
