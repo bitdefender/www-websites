@@ -11,7 +11,7 @@ export default function decorate(block) {
     [...row.children].forEach((col, idx) => {
       if (parentSection.classList.contains('columnvideo') && idx === 1) {
         const colVideo = parentSection.getAttribute('data-video');
-        col.innerHTML = `<video autoplay loop muted>
+        col.innerHTML = `<video autoplay loop muted playsinline>
           <source src="../../../_src/images/${colVideo}" type="video/mp4">
           Your browser does not support the video tag.
         </video>`;
