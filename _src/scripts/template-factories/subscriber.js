@@ -145,7 +145,7 @@ const initializeHubspotModule = () => {
   popupContainer?.addEventListener("click", e => popupContainer.style.display = "none");
 }
 
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   alert('sdafadsfads')
   initializeHubspotModule();
 });
