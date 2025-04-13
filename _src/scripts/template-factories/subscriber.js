@@ -146,5 +146,6 @@ const initializeHubspotModule = () => {
 }
 
 window.addEventListener('load', () => {
+  alert('sdafadsfads')
   initializeHubspotModule();
 });
