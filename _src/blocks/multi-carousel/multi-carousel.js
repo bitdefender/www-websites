@@ -1,149 +1,178 @@
 function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined, startsfrom = 0) {
-  const parentSection = block.closest('.section');
   const carouselContainer = document.createElement('div');
   carouselContainer.classList.add('carousel-container');
 
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
-  videos = videos || Array.from(block.children).map(child => child.innerHTML);
 
-  videos.forEach((item, index) => {
-    const carouselItem = document.createElement('div');
-    carouselItem.classList.add('carousel-item');
-    if (index === 0) carouselItem.classList.add('active');
+  const contentItems = videos || Array.from(block.children).map(child => child.innerHTML);
+  const totalSlides = contentItems.length;
+  let currentIndex = 0;
+  let prevArrow, nextArrow, autoplayTimer;
+
+  // Build slides
+  contentItems.forEach((item, index) => {
+    const slide = document.createElement('div');
+    slide.classList.add('carousel-item');
+    if (index === 0) slide.classList.add('active');
 
     if (item.includes('https://www.youtube.com/embed/')) {
-      carouselItem.classList.add('hasIframe');
-      item = item.replace('<div>', '').replace('</div>', '').replace('<div bis_skin_checked="1">', '');
-      const iframeElement = document.createElement('iframe');
-      iframeElement.setAttribute('src', item);
-      iframeElement.setAttribute('frameborder', '0');
-      iframeElement.setAttribute('allow', 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-      iframeElement.setAttribute('allowfullscreen', '');
-      carouselItem.appendChild(iframeElement);
+      slide.classList.add('hasIframe');
+      const iframe = document.createElement('iframe');
+      iframe.src = item.replace(/<\/?div[^>]*>/g, '');
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('allow', 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      slide.appendChild(iframe);
     } else {
-      const contentElement = document.createElement('div');
-      contentElement.classList.add('carousel-content');
-      contentElement.innerHTML = item;
-      carouselItem.appendChild(contentElement);
+      const content = document.createElement('div');
+      content.classList.add('carousel-content');
+      content.innerHTML = item;
+      slide.appendChild(content);
     }
 
     if (titles && titles[index]) {
-      const itemTitle = document.createElement('div');
-      itemTitle.classList.add('carousel-item-title');
-      itemTitle.textContent = titles[index];
-      carouselItem.appendChild(itemTitle);
+      const title = document.createElement('div');
+      title.classList.add('carousel-item-title');
+      title.textContent = titles[index];
+      slide.appendChild(title);
     }
 
-    carouselTrack.appendChild(carouselItem);
+    carouselTrack.appendChild(slide);
   });
 
   carouselContainer.appendChild(carouselTrack);
-  carouselTrack.style.transform = 'translateX(0px)';
+  block.innerHTML = '';
   block.appendChild(carouselContainer);
 
-  let currentIndex = 0;
-  let prevArrow, nextArrow;
+  const slides = Array.from(carouselTrack.children);
 
-  const carouselNav = document.createElement('div');
-  carouselNav.classList.add('carousel-navigation');
+  // Navigation dots
+  const nav = document.createElement('div');
+  nav.classList.add('carousel-navigation');
 
-  videos.forEach((_, index) => {
+  const dots = contentItems.map((_, index) => {
     const dot = document.createElement('div');
     dot.classList.add('carousel-dot');
     if (index === 0) dot.classList.add('active');
     dot.addEventListener('click', () => moveToSlide(index));
-    carouselNav.appendChild(dot);
+    nav.appendChild(dot);
+    return dot;
   });
 
-  block.appendChild(carouselNav);
+  block.appendChild(nav);
 
-  if (videos.length > 1) {
-    createArrows(block, carouselTrack);
-  }
-
-  function moveToSlide(index) {
-    const dots = block.querySelectorAll('.carousel-dot');
-    const items = block.querySelectorAll('.carousel-item');
-
-    dots[currentIndex]?.classList.remove('active');
-    dots[index]?.classList.add('active');
-
-    items.forEach((itm) => itm.classList.remove('active'));
-    items[index]?.classList.add('active');
-
-    currentIndex = index;
-    const itemWidth = items[0]?.offsetWidth || 0;
-    carouselTrack.style.transform = `translateX(-${itemWidth * index}px)`;
-
-    updateArrows();
-  }
-
-  function createArrows(block, carouselTrack) {
-    const arrowsContainer = document.createElement('div');
-    arrowsContainer.classList.add('carousel-arrows-container');
+  // Arrows
+  if (totalSlides > 1) {
+    const arrowContainer = document.createElement('div');
+    arrowContainer.classList.add('carousel-arrows-container');
 
     prevArrow = document.createElement('button');
     prevArrow.classList.add('carousel-prev');
-    prevArrow.innerHTML = `
-      <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.6666 5.18083L1.66663 5.18083M1.66663 5.18083L5.66663 9.15983M1.66663 5.18083L5.66663 1.16016" stroke="black" stroke-width="2.13333"/>
-      </svg>`;
-    prevArrow.addEventListener('click', () => {
-      if (currentIndex > 0) moveToSlide(currentIndex - 1);
-    });
+    prevArrow.innerHTML = `←`;
+    prevArrow.addEventListener('click', () => moveToSlide(currentIndex - 1));
 
     nextArrow = document.createElement('button');
     nextArrow.classList.add('carousel-next');
-    nextArrow.innerHTML = `
-      <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 5.13916H16M16 5.13916L12 1.16016M16 5.13916L12 9.15983" stroke="black" stroke-width="2.13333"/>
-      </svg>`;
-    nextArrow.addEventListener('click', () => {
-      if (currentIndex < videos.length - 1) moveToSlide(currentIndex + 1);
+    nextArrow.innerHTML = `→`;
+    nextArrow.addEventListener('click', () => moveToSlide(currentIndex + 1));
+
+    arrowContainer.appendChild(prevArrow);
+    arrowContainer.appendChild(nextArrow);
+
+    if (block.dataset.arrows === 'bottom') {
+      block.appendChild(arrowContainer);
+    } else {
+      block.querySelector('.default-content-wrapper')?.appendChild(arrowContainer);
+    }
+  }
+
+  function moveToSlide(index) {
+    if (index < 0 || index >= totalSlides) return;
+
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
     });
 
-    arrowsContainer.appendChild(prevArrow);
-    arrowsContainer.appendChild(nextArrow);
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
 
-    if (parentSection?.dataset['arrows'] === 'bottom') {
-      block.appendChild(arrowsContainer);
-    } else {
-      parentSection?.querySelector('.default-content-wrapper')?.appendChild(arrowsContainer);
-    }
+    const slideWidth = slides[0]?.offsetWidth || 0;
+    carouselTrack.style.transform = `translateX(-${slideWidth * index}px)`;
 
+    currentIndex = index;
     updateArrows();
   }
 
   function updateArrows() {
-    if (prevArrow) {
-      prevArrow.classList.toggle('inactive', currentIndex === 0);
-    }
-    if (nextArrow) {
-      nextArrow.classList.toggle('inactive', currentIndex === videos.length - 1);
-    }
+    if (!prevArrow || !nextArrow) return;
+    prevArrow.classList.toggle('inactive', currentIndex === 0);
+    nextArrow.classList.toggle('inactive', currentIndex === totalSlides - 1);
   }
 
-  if (shouldAutoplay) {
-    const autoplayInterval = 3000;
-    setInterval(() => {
-      const nextIndex = (currentIndex + 1) % videos.length;
-      moveToSlide(nextIndex);
-    }, autoplayInterval);
+  function startAutoplay() {
+    if (!shouldAutoplay || totalSlides <= 1) return;
+    autoplayTimer = setInterval(() => {
+      const next = (currentIndex + 1) % totalSlides;
+      moveToSlide(next);
+    }, 3000);
   }
 
-  if (startsfrom && startsfrom > 0) {
-    setTimeout(() => {
-      const nextIndex = Math.min(startsfrom - 1, videos.length - 1);
-      moveToSlide(nextIndex);
-    }, 500);
+  function stopAutoplay() {
+    if (autoplayTimer) clearInterval(autoplayTimer);
+  }
+
+  // Touch swipe support
+  let startX = 0;
+  let isSwiping = false;
+
+  carouselTrack.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isSwiping = true;
+  });
+
+  carouselTrack.addEventListener('touchmove', (e) => {
+    if (!isSwiping) return;
+    const diffX = e.touches[0].clientX - startX;
+    if (Math.abs(diffX) > 50) {
+      if (diffX > 0) {
+        moveToSlide(currentIndex - 1);
+      } else {
+        moveToSlide(currentIndex + 1);
+      }
+      isSwiping = false;
+    }
+  });
+
+  carouselTrack.addEventListener('touchend', () => {
+    isSwiping = false;
+  });
+
+  // Wait for layout readiness using ResizeObserver
+  const firstSlide = slides[0];
+  const initialIndex = Math.max(0, Math.min(parseInt(startsfrom || 0, 10) - 1, totalSlides - 1));
+
+  if (firstSlide) {
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0].contentRect.width;
+      if (width > 0) {
+        observer.disconnect();
+        moveToSlide(initialIndex);
+        startAutoplay();
+      }
+    });
+    observer.observe(firstSlide);
+  } else {
+    moveToSlide(0);
+    startAutoplay();
   }
 }
 
 export default function decorate(block) {
   const parentSection = block.closest('.section');
   let shouldAutoplay = false;
-  const startsfrom = parentSection.getAttribute('data-startsfrom') || 0;
+  const startsfrom = parseInt(parentSection.getAttribute('data-startsfrom') || 0, 10);
 
   if (parentSection.getAttribute('data-autoplay') === 'true') {
     shouldAutoplay = true;
@@ -155,15 +184,14 @@ export default function decorate(block) {
   );
 
   if (videos.length > 0) {
-    // If there are videos, create a carousel with the video content and associated titles
     const titles = Object.keys(parentSection.dataset)
       .filter(key => key.includes('title'))
       .map(key => parentSection.dataset[key]);
+
+    block.innerHTML = '';
     createCarousel(block, shouldAutoplay, videos, titles, startsfrom);
   } else {
-    // Get HTML content from block.children if no videos are found
     const htmlContent = Array.from(block.children).map(child => child.innerHTML);
-    // Clear original content
     block.innerHTML = '';
     createCarousel(block, shouldAutoplay, htmlContent, undefined, startsfrom);
   }
