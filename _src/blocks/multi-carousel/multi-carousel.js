@@ -1,5 +1,5 @@
 function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined, startsfrom = 0) {
-  const parentSection = block.closest('.section')
+  const parentSection = block.closest('.section');
   const carouselContainer = document.createElement('div');
   carouselContainer.classList.add('carousel-container');
 
@@ -14,7 +14,6 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
     if (item.includes('https://www.youtube.com/embed/')) {
       carouselItem.classList.add('hasIframe');
-      // Create an iframe element for embedding YouTube video
       item = item.replace('<div>', '').replace('</div>', '').replace('<div bis_skin_checked="1">', '');
       const iframeElement = document.createElement('iframe');
       iframeElement.setAttribute('src', item);
@@ -23,14 +22,12 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
       iframeElement.setAttribute('allowfullscreen', '');
       carouselItem.appendChild(iframeElement);
     } else {
-      // For non-video content (text, images, etc.)
       const contentElement = document.createElement('div');
       contentElement.classList.add('carousel-content');
       contentElement.innerHTML = item;
       carouselItem.appendChild(contentElement);
     }
 
-    // Add title if provided
     if (titles && titles[index]) {
       const itemTitle = document.createElement('div');
       itemTitle.classList.add('carousel-item-title');
@@ -42,13 +39,12 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
   });
 
   carouselContainer.appendChild(carouselTrack);
+  carouselTrack.style.transform = 'translateX(0px)';
   block.appendChild(carouselContainer);
 
-  // Declare currentIndex and arrow variables before usage in any function
   let currentIndex = 0;
   let prevArrow, nextArrow;
 
-  // Create carousel navigation dots
   const carouselNav = document.createElement('div');
   carouselNav.classList.add('carousel-navigation');
 
@@ -62,21 +58,24 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
   block.appendChild(carouselNav);
 
-  // Create arrows only if there is more than one slide
   if (videos.length > 1) {
     createArrows(block, carouselTrack);
   }
 
   function moveToSlide(index) {
-    const dots = document.querySelectorAll('.carousel-dot');
-    dots[currentIndex].classList.remove('active');
+    const dots = block.querySelectorAll('.carousel-dot');
+    const items = block.querySelectorAll('.carousel-item');
+
+    dots[currentIndex]?.classList.remove('active');
     dots[index]?.classList.add('active');
 
-    block.querySelectorAll('.carousel-item').forEach((itm) => itm.classList.remove('active'));
-    block.querySelector(`.carousel-item:nth-of-type(${index + 1})`)?.classList.add('active');
+    items.forEach((itm) => itm.classList.remove('active'));
+    items[index]?.classList.add('active');
 
     currentIndex = index;
-    carouselTrack.style.transform = `translateX(-${block.querySelector('.carousel-item').offsetWidth * index}px)`;
+    const itemWidth = items[0]?.offsetWidth || 0;
+    carouselTrack.style.transform = `translateX(-${itemWidth * index}px)`;
+
     updateArrows();
   }
 
@@ -86,58 +85,45 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
     prevArrow = document.createElement('button');
     prevArrow.classList.add('carousel-prev');
-    prevArrow.innerHTML = `<svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M17.6666 5.18083L1.66663 5.18083M1.66663 5.18083L5.66663 9.15983M1.66663 5.18083L5.66663 1.16016" stroke="black" stroke-width="2.13333"/>
-    </svg>`;
+    prevArrow.innerHTML = `
+      <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.6666 5.18083L1.66663 5.18083M1.66663 5.18083L5.66663 9.15983M1.66663 5.18083L5.66663 1.16016" stroke="black" stroke-width="2.13333"/>
+      </svg>`;
     prevArrow.addEventListener('click', () => {
-      if (currentIndex > 0) {
-        moveToSlide(currentIndex - 1);
-      }
+      if (currentIndex > 0) moveToSlide(currentIndex - 1);
     });
 
     nextArrow = document.createElement('button');
     nextArrow.classList.add('carousel-next');
-    nextArrow.innerHTML = `<svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 5.13916H16M16 5.13916L12 1.16016M16 5.13916L12 9.15983" stroke="black" stroke-width="2.13333"/>
-    </svg>`;
+    nextArrow.innerHTML = `
+      <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 5.13916H16M16 5.13916L12 1.16016M16 5.13916L12 9.15983" stroke="black" stroke-width="2.13333"/>
+      </svg>`;
     nextArrow.addEventListener('click', () => {
-      if (currentIndex < videos.length - 1) {
-        moveToSlide(currentIndex + 1);
-      }
+      if (currentIndex < videos.length - 1) moveToSlide(currentIndex + 1);
     });
 
     arrowsContainer.appendChild(prevArrow);
     arrowsContainer.appendChild(nextArrow);
 
-    // Append arrows to a wrapper container if it exists
-    if (parentSection.dataset['arrows'] && parentSection.dataset['arrows'] === 'bottom') {
+    if (parentSection?.dataset['arrows'] === 'bottom') {
       block.appendChild(arrowsContainer);
     } else {
-      parentSection.querySelector('.default-content-wrapper')?.appendChild(arrowsContainer);
+      parentSection?.querySelector('.default-content-wrapper')?.appendChild(arrowsContainer);
     }
 
     updateArrows();
   }
 
-  // Update arrow state: add inactive class if on first or last slide
   function updateArrows() {
     if (prevArrow) {
-      if (currentIndex === 0) {
-        prevArrow.classList.add('inactive');
-      } else {
-        prevArrow.classList.remove('inactive');
-      }
+      prevArrow.classList.toggle('inactive', currentIndex === 0);
     }
     if (nextArrow) {
-      if (currentIndex === videos.length - 1) {
-        nextArrow.classList.add('inactive');
-      } else {
-        nextArrow.classList.remove('inactive');
-      }
+      nextArrow.classList.toggle('inactive', currentIndex === videos.length - 1);
     }
   }
 
-  // Autoplay carousel if enabled
   if (shouldAutoplay) {
     const autoplayInterval = 3000;
     setInterval(() => {
@@ -146,9 +132,9 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     }, autoplayInterval);
   }
 
-  if (startsfrom !== undefined && startsfrom !== null) {
+  if (startsfrom && startsfrom > 0) {
     setTimeout(() => {
-      const nextIndex = startsfrom - 1 % videos.length;
+      const nextIndex = Math.min(startsfrom - 1, videos.length - 1);
       moveToSlide(nextIndex);
     }, 500);
   }

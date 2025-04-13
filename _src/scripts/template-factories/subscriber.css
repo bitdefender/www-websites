@@ -727,7 +727,7 @@ main .subscriber .section {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0;
+    gap: 5px;
     padding: 5px 16px;
     border-radius: 35px;
 }
@@ -1410,6 +1410,13 @@ main .subscriber .section {
     .subscriber .multicontentslider .carousel-item .carousel-content > div {
         text-align: center;
         display: flex !important;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .subscriber .multicontentslider .carousel-item .carousel-content > div p .icon {
+        display: block;
+        width: 100%;
+        height: auto;
     }
     .subscriber .multicontentslider .carousel-item .carousel-content > div p:first-of-type {
         margin-bottom: 0;
