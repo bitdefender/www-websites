@@ -20,7 +20,6 @@
         }
 
         .columns {
-
             > div {
                 display: flex;
                 flex-direction: row;
@@ -31,7 +30,7 @@
 
                 > div {
                     flex: 0 0 calc(100vw - 74px);
-                    box-shadow: 2px 2px 5px 0.4px rgba(0, 0, 0, 0.1);
+                    box-shadow: 2px 2px 5px 0.4px rgb(0 0 0 / 10%);
                     margin: 4px;
                     padding: 16px;
                     border-radius: 10px;
@@ -263,6 +262,7 @@
                                 text-overflow: ellipsis;
                                 border-radius: 8px;
                                 height: fit-content;
+                                pointer-events: none;
 
                                 &::after {
                                     content: '';
@@ -366,6 +366,13 @@
             p {
                 color: #454534;
                 font-size: 12px;
+            }
+
+            .columns-text-col {
+                a {
+                    color: #006DFF;
+                    text-decoration: underline;
+                }
             }
 
             .columns-text-col:last-of-type {
@@ -551,60 +558,6 @@
                 }
             }
 
-            div > div:first-of-type {
-                li:nth-of-type(4) {
-                    a {
-                        display: flex;
-                        align-items: center;
-                        &::before {
-                            margin-left: 20px;
-                            display: inline-block;
-                            order: 3;
-                            right: 0;
-                            content: "NEW";
-                            width: fit-content;
-                            height: 100%;
-                            background-color: #2CB43D;
-                            color: white;
-                            font-size: 12px;
-                            font-weight: 500;
-                            text-transform: uppercase;
-                            border-radius: 40px;
-                            padding: 4px 7px;
-                            z-index: 1;
-                        }
-                    }
-                }
-            }
-
-            div > div:not(:nth-of-type(2)) {
-
-                li:first-of-type {
-                    a {
-                        display: flex;
-                        align-items: center;
-                        &::before {
-                            margin-left: 20px;
-                            display: inline-block;
-                            order: 3;
-                            right: 0;
-                            content: "IMPROVED";
-                            width: fit-content;
-                            height: 100%;
-                            background-color: #2CB43D;
-                            color: white;
-                            font-size: 12px;
-                            font-weight: 500;
-                            text-transform: uppercase;
-                            border-radius: 40px;
-                            padding: 4px 7px;
-                            z-index: 1;
-                        }
-                    }
-                }
-
-            }
-
             div > div::after {
                 display: none;
             }
@@ -643,7 +596,6 @@
 
         .dex-cards-review {
             .columns {
-
                 > div {
                     > div {
                         flex: 0 0 calc(100vw - 503px);
@@ -685,6 +637,12 @@
                 .features-tabs {
                     li > a {
                         font-size: 14px;
+                        font-weight: 700;
+                    }
+
+                    .tag {
+                        margin-left: 14px;
+                        background-color: #2CB43D;
                     }
                 }
             }
@@ -814,7 +772,7 @@
                     margin-right: auto;
                 }
 
-                > div:not(:nth-of-type(1)):not(:nth-of-type(2)) {
+                > div:not(:nth-of-type(1), :nth-of-type(2)) {
                     align-items: flex-start;
                     margin-bottom: 44px;
                 }
@@ -940,6 +898,7 @@
 
                             h5 {
                                 height: 28px;
+                                align-items: center;
                             }
 
                             ul {
@@ -1054,7 +1013,6 @@
             scrollbar-width: none !important;
 
             .columns {
-
                 > div {
                     align-items: flex-start;
                     overflow: visible;
@@ -1078,7 +1036,6 @@
                         }
 
                         table {
-
                             td:first-of-type {
                                 img {
                                     width: 24px;
@@ -1192,6 +1149,7 @@
                         }
                     }
 
+
                     &:nth-child(even) {
                         &::before {
                             position: absolute;
@@ -1257,7 +1215,6 @@
 
 @media (min-width: 1600px) {
     .dex-18477 {
-
         .features-wrapper {
             margin-top: 0;
             padding-left: 0;
