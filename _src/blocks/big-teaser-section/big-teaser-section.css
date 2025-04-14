@@ -94,7 +94,7 @@
 
     .big-teaser-section-container .default-content-wrapper {
         flex-direction: row;
-        align-items: unset;
+        align-items: center;
     }
 
     .big-teaser-section-container .default-content-wrapper > * {

@@ -400,7 +400,7 @@ main .hero a.button span.button-text {
 }
 
 main .hero .discount-bubble {
-  background: #16A34A;
+  background: #0E8532;
   border-radius: 50%;
   width: 72px;
   height: 72px;
@@ -584,6 +584,10 @@ main .hero.ferrari{
   background-color: #006DFF;
 }
 
+main .hero.ferrari h1{
+  margin-bottom: 90px;
+}
+
 main .hero.ferrari .hero-content{
   display: flex;
   flex-direction: column;
@@ -593,6 +597,7 @@ main .hero.ferrari .hero-content{
 
 main .hero.ferrari .hero-content img{
   position: relative;
+  width: fit-content;
 }
 
 main .hero.ferrari .breadcrumb{
@@ -694,7 +699,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
 @media(min-width: 767px) { /* tablet */
   main .hero.ferrari{
-    min-height: 715px;
+    min-height: 768px;
   }
 
   main .hero.ferrari .hero-picture picture img{

@@ -28,6 +28,7 @@ import {
   createTag,
   getPageExperimentKey,
   GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
+  generateLDJsonSchema,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
@@ -404,6 +405,8 @@ async function loadLazy(doc) {
     loadFooter(doc.querySelector('footer'));
   }
 
+  generateLDJsonSchema();
+
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
 
   window.hlx.plugins.run('loadLazy');
@@ -411,7 +414,8 @@ async function loadLazy(doc) {
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
-    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`);
+    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
+      .catch(() => {});
   }
 
   sampleRUM('lazy');

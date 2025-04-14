@@ -34,8 +34,8 @@
 }
 
 .box-carousel-container .carousel {
-    display: flex;
-    align-items: stretch;
+    display: grid;
+    grid-auto-flow: column;
     transition: transform 150ms cubic-bezier(0.165, 0.84, 0.44, 1) 0s;
 }
 
@@ -48,8 +48,9 @@
 }
 
 .box-carousel-container .carousel-item {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
     width: 220px;
     height: 100%;
     margin: 10px;
@@ -65,8 +66,6 @@
 
 .box-carousel-container.testimonials .carousel-item {
     width: 300px;
-    display: flex;
-    flex-direction: column;
     border: solid 1px #ddd;
     background: white;
     position: relative;
@@ -148,7 +147,6 @@
 }
 
 .box-carousel-container.testimonials .img-container {
-    height: 60px;
     width: 100%;
 }
 
@@ -169,9 +167,6 @@
         width: 60%;
     }
 
-    .box-carousel-container.testimonials .carousel-item {
-        width: calc((100% - 25px) / 2);
-    }
 
     .box-carousel-container .carousel-item .subtitle {
         font: normal normal normal 18px/23px "IBM Plex Sans", sans-serif;
@@ -187,9 +182,6 @@
         overflow: hidden;
     }
 
-    .box-carousel-container.testimonials .carousel-item {
-        width: calc((100% - 25px) / 3);
-    }
 
     .box-carousel-container .carousel-item .title {
         font-size: 19px;
@@ -209,16 +201,6 @@
         color: white;
         background: #006dff;
         box-shadow: 0 3px 40px #006EFFF2;
-    }
-
-    .box-carousel-container .carousel-item:hover svg path {
-        fill: white !important;
-    }
-}
-
-@media (min-width: 1600px) {
-    .box-carousel-container.testimonials .carousel-item {
-        width: calc(100% / 3);
     }
 }
 
