@@ -58,10 +58,6 @@
         align-items: center;
     }
 
-    .big-teaser-section.reverted .wrapper {
-        flex-direction: row-reverse;
-    }
-
     .big-teaser-section-container .rte {
         position: relative;
         z-index: 1;
@@ -115,5 +111,9 @@
         flex-direction: column;
         justify-content: center;
         margin-top: unset;
+    }
+
+    .big-teaser-section.reverted .wrapper {
+        flex-direction: row-reverse;
     }
 }
