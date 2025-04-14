@@ -42,6 +42,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
   });
 
   carouselContainer.appendChild(carouselTrack);
+  carouselTrack.style.transform = 'translateX(0px)';
   block.appendChild(carouselContainer);
 
   // Declare currentIndex and arrow variables before usage in any function
@@ -68,17 +69,23 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
   }
 
   function moveToSlide(index) {
-    const dots = document.querySelectorAll('.carousel-dot');
-    dots[currentIndex].classList.remove('active');
+    const dots = block.querySelectorAll('.carousel-dot');
+    dots.forEach((dot) => dot.classList.remove('active'));
     dots[index]?.classList.add('active');
-
-    block.querySelectorAll('.carousel-item').forEach((itm) => itm.classList.remove('active'));
-    block.querySelector(`.carousel-item:nth-of-type(${index + 1})`)?.classList.add('active');
-
+  
+    const items = block.querySelectorAll('.carousel-item');
+    items.forEach((itm) => itm.classList.remove('active'));
+    items[index]?.classList.add('active');
+  
+    // Wait for layout to be ready
+    requestAnimationFrame(() => {
+      const itemWidth = items[0]?.offsetWidth || 0;
+      carouselTrack.style.transform = `translateX(-${itemWidth * index}px)`;
+    });
+  
     currentIndex = index;
-    carouselTrack.style.transform = `translateX(-${block.querySelector('.carousel-item').offsetWidth * index}px)`;
     updateArrows();
-  }
+  }  
 
   function createArrows(block, carouselTrack) {
     const arrowsContainer = document.createElement('div');
@@ -146,12 +153,15 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     }, autoplayInterval);
   }
 
-  if (startsfrom !== undefined && startsfrom !== null) {
+  if (startsfrom !== undefined && startsfrom !== null && startsfrom > 1) {
     setTimeout(() => {
-      const nextIndex = startsfrom - 1 % videos.length;
-      moveToSlide(nextIndex);
+      requestAnimationFrame(() => {
+        const nextIndex = (startsfrom - 1 + videos.length) % videos.length;
+        moveToSlide(nextIndex);
+      });
     }, 500);
   }
+  
 }
 
 export default function decorate(block) {
