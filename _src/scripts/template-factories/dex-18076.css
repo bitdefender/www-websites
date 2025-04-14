@@ -3,6 +3,31 @@
         font-family: Arial, sans-serif;
     }
 
+    .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul {
+        li:first-of-type {
+            display: flex;
+            gap: 10px;
+
+            .icon {
+                display: inline-block;
+            }
+
+            .icon, .icon svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+
+    .dex-individual-product-boxes {
+        .default-content-wrapper {
+
+            h2 {
+                max-width: unset;
+            }
+        }
+    }
+
     main {
         .section {
             margin-top: 0;
