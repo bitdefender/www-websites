@@ -4,7 +4,7 @@
     --yes-check-color: #78b13f;
     --no-check-color: #fb0000;
     --column-header-highlight-color: #de2985;
-    --product-comparison-text-color: #5d5c5c;
+    --product-comparison-text-color:rgb(0, 0, 0);
     --expandable-row-background-color: #0040F0;
     --expandable-row-text-color: #fff;
     --product-table-badge-color: #2cb43d;
@@ -31,7 +31,7 @@ div[role="cell"] p {
 }
 
 .product-comparison-price p:last-of-type {
-    color: #7e7e7e;
+    color:rgb(0, 0, 0);
     font-size: var(--body-font-size-xs);
     font-weight: var(--font-weight-regular);
     line-height: var(--body-font-size-xs);
@@ -537,7 +537,7 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 }
 
 .section.product-comparison-table-container .old-price-box span {
-    color: #7e7e7e;
+    color:rgb(0, 0, 0);
     font-size: var(--body-font-size-m);
     font-weight: var(--font-weight-regular);
     line-height: 1.2;
