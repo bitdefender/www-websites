@@ -239,11 +239,29 @@
 
             .new-prod-boxes-wrapper + .default-content-wrapper p {
                 text-align: center;
-                font-size: 16px;
-                line-height: 100%;
-                font-weight: 700;
-                color: #3D3D3D;
                 margin: 0;
+
+                a {
+                    padding: 0;
+                    background-color: unset;
+                    border: unset;
+                    text-decoration: none;
+
+                    &::after {
+                        display: none;
+                    }
+
+                    &:hover span {
+                        transform: none;
+                    }
+
+                    span {
+                        font-size: 16px;
+                        line-height: 100%;
+                        font-weight: 700;
+                        color: #3D3D3D;
+                    }
+                }
             }
         }
 
@@ -348,6 +366,7 @@
         }
 
         &.particle-background-container {
+            padding-bottom: 0;
             .particle-background {
                 margin: 0;
             }
