@@ -373,7 +373,7 @@
   left: 0;
   gap: 0;
   transition: transform 0.3s ease-in-out;
-  min-height: 200px;
+  min-height: fit-content;
   align-items: baseline;
 }
 
