@@ -6,7 +6,7 @@ function getItemsToShow() {
 }
 
 function countSlides(carouselContent) {
-  return Math.ceil(carouselContent.children.length / getItemsToShow());
+  return Math.ceil(carouselContent.children.length - getItemsToShow());
 }
 
 function showSlides(carousel, slideNumber) {
@@ -209,8 +209,6 @@ export default function decorate(block) {
     });
   }
 
-  matchHeights(block, 'h3');
-  matchHeights(block, 'h4');
   if (block.closest('.section').classList.contains('multi-blocks')) {
     matchHeights(block.closest('.section'), '.columns');
     matchHeights(block.closest('.section'), 'table');

@@ -373,7 +373,8 @@
   left: 0;
   gap: 0;
   transition: transform 0.3s ease-in-out;
-  height: 200px;
+  min-height: 200px;
+  align-items: baseline;
 }
 
 .creators .columns-container .columns > div {
