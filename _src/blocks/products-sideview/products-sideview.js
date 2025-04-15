@@ -262,7 +262,7 @@ function renderSelector(block, ...options) {
   selectEl.addEventListener('change', (e) => {
     [...selectEl.options].forEach((option) => option.removeAttribute('selected'));
     [...selectEl.options].find((option) => option.value === e.target.value)?.setAttribute('selected', '');
-    updateBenefits(block, selectEl, metadata.benefits.split(',,'));  
+    updateBenefits(block, selectEl, metadata.benefits.split(',,'));
   });
 
   updateBenefits(block, selectEl, metadata.benefits.split(',,'));
