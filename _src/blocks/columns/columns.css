@@ -99,6 +99,11 @@
   font-size: var(--heading-font-size-m);
   font-weight: var(--font-weight-bold);
   line-height: 1.25;
+  margin: 0;
+}
+ 
+.columns .benefits h4 {
+  margin: 0;
 }
 
 .section.subtitle-blue h3 {
