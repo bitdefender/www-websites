@@ -6,7 +6,7 @@ function getItemsToShow() {
 }
 
 function countSlides(carouselContent) {
-  return Math.ceil(carouselContent.children.length - getItemsToShow());
+  return Math.ceil(carouselContent.children.length - getItemsToShow() + 1);
 }
 
 function showSlides(carousel, slideNumber) {
