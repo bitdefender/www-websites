@@ -916,7 +916,7 @@
     width: 100%;
     display: grid;
     grid-template-rows: subgrid;
-    grid-row: span 3;
+    grid-row: span 4;
     align-items: baseline;
     gap: 0;
   }
