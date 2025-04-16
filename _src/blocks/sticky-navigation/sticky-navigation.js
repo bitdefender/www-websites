@@ -1,4 +1,5 @@
 import { STICKY_NAVIGATION_DATASET_KEY } from '../../scripts/lib-franklin.js';
+import Page from '../../scripts/libs/page.js';
 
 function scrollToAnchorWithOffset(anchorId) {
   const anchorElement = document.getElementById(anchorId);
@@ -76,8 +77,18 @@ function renderStickyNavigation(block) {
   mobileDropDown.innerText = stickyNavMenu.querySelector('li').innerText;
 
   const stickyNavButton = block.querySelector('.button-container');
-  if (stickyNavButton) menuWithButton.appendChild(stickyNavButton);
-
+  if (stickyNavButton) {
+    stickyNavButton.addEventListener('click', (e) => {
+      window.adobeDataLayer.push(
+        {
+          event: 'click',
+          asset: `sticky-buy-${Page.name}`,
+        },
+      );
+      e.preventDefault();
+    });
+    menuWithButton.appendChild(stickyNavButton);
+  }
   block.replaceChildren(mobileDropDown);
   block.appendChild(menuWithButton);
   return block;
