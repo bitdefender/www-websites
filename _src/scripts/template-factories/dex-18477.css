@@ -542,7 +542,7 @@
                     color: #006DFF;
                     font-size: 11px;
                     line-height: 100%;
-
+                    font-weight: 700;
 
                     &::after {
                         left: 8px;
@@ -643,7 +643,6 @@
                 .features-tabs {
                     li > a {
                         font-size: 14px;
-                        font-weight: 700;
                     }
                 }
             }
