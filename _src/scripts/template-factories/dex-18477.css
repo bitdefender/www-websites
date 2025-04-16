@@ -531,12 +531,18 @@
             .features-tabs {
                 li {
                     line-height: 100%;
+
+                    .tag {
+                        margin-left: 14px;
+                        background-color: #2CB43D;
+                    }
                 }
 
                 li > a {
                     color: #006DFF;
                     font-size: 11px;
                     line-height: 100%;
+
 
                     &::after {
                         left: 8px;
@@ -638,11 +644,6 @@
                     li > a {
                         font-size: 14px;
                         font-weight: 700;
-                    }
-
-                    .tag {
-                        margin-left: 14px;
-                        background-color: #2CB43D;
                     }
                 }
             }
