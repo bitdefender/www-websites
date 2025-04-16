@@ -236,18 +236,22 @@ function renderSelector(block, ...options) {
     .filter((option) => option && !Number.isNaN(Number(option)))
     .map((opt) => Number(opt));
   const defaultSelection = Number(state.blockDataset.defaultselection) || selectorOptions[1];
+
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
-  el.innerHTML = `
-    <select data-store-devices-text-plural="members"
-    data-store-devices-text-singular="member"
-    data-store-click-set-devices
-    data-store-devices>
+  const selectId = `members-select-${Math.random().toString(36).substr(2, 9)}`;
 
+  el.innerHTML = `
+    <label for="${selectId}">Choose number of members</label>
+    <select id="${selectId}"
+      data-store-devices-text-plural="members"
+      data-store-devices-text-singular="member"
+      data-store-click-set-devices
+      data-store-devices>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `
-          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}></option>
-        `).join('/n')}
+          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt}</option>
+        `).join('')}
     </select>
   `;
 
