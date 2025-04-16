@@ -28,6 +28,16 @@
         }
     }
 
+    .hero-aem-container {
+        overflow: visible;
+    }
+
+    .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
+        top: 0 ;
+        background-size: initial;
+        transform: rotate(180deg);
+    }
+
     main {
         .section {
             margin-top: 0;
