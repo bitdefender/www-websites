@@ -1205,7 +1205,7 @@ main .subscriber .section {
         display: flex;
     }
     .subscriber #blueSlider .carousel-arrows-container {
-        display: flex;
+        display: none;
     }
     .subscriber #blueSlider .block .carousel-container {
         padding-left: var(--section-desktop-padding);
@@ -1229,6 +1229,16 @@ main .subscriber .section {
         max-width: var(--section-desktop-max-width);
         padding: 0 var(--section-desktop-padding);
         margin: 0 auto;
+    }
+
+    .subscriber #heroColumn table {
+        width: 100%;
+    }
+
+    .subscriber #heroColumn table tr {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .subscriber .multicontentslider .carousel-container {
@@ -1412,6 +1422,7 @@ main .subscriber .section {
         display: flex !important;
         flex-direction: column;
         align-items: flex-start;
+        text-align: left;
     }
     .subscriber .multicontentslider .carousel-item .carousel-content > div p .icon {
         display: block;
@@ -1450,6 +1461,12 @@ main .subscriber .section {
     .subscriber .multi-carousel-container .carousel-arrows-container {
         display: none;
     }
+    .subscriber .multi-carousel-container.showarrows .carousel-arrows-container {
+        display: block;
+    }
+    .subscriber .multi-carousel-container .carousel-item {
+        flex: 0 0 66.66%;
+      }
     .subscriber #heroColumn h2, .subscriber .columnvideo > div.image-columns-wrapper h3, .subscriber #blueSlider .default-content-wrapper h3, .subscriber #multiColumns .default-content-wrapper h3, .subscriber #tabSlide .default-content-wrapper h3, .subscriber #blueBox .default-content-wrapper h3, .subscriber #customQuoteCarousel .columns h4, .subscriber .accordion-container .default-content-wrapper h3, .subscriber-custom-content-container .default-content-wrapper h3 {
         font-weight: 500 !important;
         font-size: 32px !important;

@@ -39,6 +39,14 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     }
 
     carouselTrack.appendChild(carouselItem);
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        moveToSlide(0);
+      }, 200);
+    });
   });
 
   carouselContainer.appendChild(carouselTrack);
@@ -84,7 +92,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     });
   
     currentIndex = index;
-    updateArrows();
+    updateArrows(); 
   }  
 
   function createArrows(block, carouselTrack) {
@@ -131,18 +139,23 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     if (prevArrow) {
       if (currentIndex === 0) {
         prevArrow.classList.add('inactive');
+        prevArrow.classList.remove('active');
       } else {
         prevArrow.classList.remove('inactive');
+        prevArrow.classList.add('active');
       }
     }
+  
     if (nextArrow) {
       if (currentIndex === videos.length - 1) {
         nextArrow.classList.add('inactive');
+        nextArrow.classList.remove('active');
       } else {
         nextArrow.classList.remove('inactive');
+        nextArrow.classList.add('active');
       }
     }
-  }
+  }  
 
   // Autoplay carousel if enabled
   if (shouldAutoplay) {
