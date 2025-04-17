@@ -316,6 +316,7 @@ export async function loadTrackers() {
       Target.abort();
     }
   } else {
+    Target.abort();
     onAdobeMcLoaded();
   }
 }
