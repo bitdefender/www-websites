@@ -81,7 +81,7 @@ function renderStickyNavigation(block) {
       window.adobeDataLayer.push(
         {
           event: 'click',
-          asset: `sticky-buy`,
+          asset: 'sticky-buy',
         },
       );
     });
