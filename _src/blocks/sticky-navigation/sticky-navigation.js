@@ -1,5 +1,4 @@
 import { STICKY_NAVIGATION_DATASET_KEY } from '../../scripts/lib-franklin.js';
-import Page from '../../scripts/libs/page.js';
 
 function scrollToAnchorWithOffset(anchorId) {
   const anchorElement = document.getElementById(anchorId);
@@ -82,7 +81,7 @@ function renderStickyNavigation(block) {
       window.adobeDataLayer.push(
         {
           event: 'click',
-          asset: `sticky-buy-${Page.name}`,
+          asset: `sticky-buy`,
         },
       );
     });
