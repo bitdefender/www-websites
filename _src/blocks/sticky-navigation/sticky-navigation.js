@@ -78,14 +78,13 @@ function renderStickyNavigation(block) {
 
   const stickyNavButton = block.querySelector('.button-container');
   if (stickyNavButton) {
-    stickyNavButton.addEventListener('click', (e) => {
+    stickyNavButton.addEventListener('click', () => {
       window.adobeDataLayer.push(
         {
           event: 'click',
           asset: `sticky-buy-${Page.name}`,
         },
       );
-      e.preventDefault();
     });
     menuWithButton.appendChild(stickyNavButton);
   }
