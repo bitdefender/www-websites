@@ -2,22 +2,7 @@
 /* eslint-disable camelcase */
 // import * as all from '../../scripts/vendor/tsparticles/tsparticles.bundle.min.js';
 // eslint-disable-next-line no-unused-vars
-// import {
-//   loadScript,
-// } from '../../scripts/lib-franklin.js';
-
-// eslint-disable-next-line no-unused-vars
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
+import { debounce } from '@repobit/dex-utils';
 
 function isView(viewport) {
   const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
@@ -53,21 +38,6 @@ async function init(block, aemOptions) {
     await loadAll(tsParticles);
 
     await tsParticles.load({ id: particleIdSelector, options });
-    // await loadScript('../../../_src/scripts/vendor/tsparticles/tsparticles.bundle.min.js');
-    // await window.tsParticles.load({ id: particleIdSelector, options });
-    // let script = document.createElement('script');
-    // script.src = 'https://cdn.jsdelivr.net/npm/tsparticles@3.3.0/tsparticles.bundle.min.js';
-    // script.src = 'https://dlp-fixes--www-websites--bitdefender.aem.page/_src/scripts/vendor/tsparticles/tsparticles.bundle.min.js';
-    // script.src = '../../../_src/scripts/vendor/tsparticles/tsparticles.bundle.min.js';
-    // block.appendChild(script);
-    // script.onload = () => {
-    //   console.log('tsParticles loaded');
-    //   // console.log('tsParticles', tsParticles);
-    //   (async () => {
-    //     // await loadFull(tsParticles);
-    //     await window.tsParticles.load({ id: particleIdSelector, options });
-    //   })();
-    // };
   }
   const options = {
     particles: {

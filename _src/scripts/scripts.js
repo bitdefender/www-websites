@@ -1,3 +1,7 @@
+import Launch from '@repobit/dex-launch';
+import Target from '@repobit/dex-target';
+import { PageLoadedEvent, AdobeDataLayerService, VisitorIdEvent } from '@repobit/dex-data-layer';
+import page from './page.js';
 import {
   sampleRUM,
   loadHeader,
@@ -11,23 +15,19 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  getMetadata, loadScript,
+  getMetadata,
 } from './lib-franklin.js';
 import {
-  AdobeDataLayerService,
-  PageLoadedEvent,
-  PageLoadStartedEvent,
   resolveNonProductsDataLayer,
-  Target,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
-import Page from './libs/page.js';
 
 import {
   adobeMcAppendVisitorId,
   createTag,
   getPageExperimentKey,
-  GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
+  GLOBAL_EVENTS,
+  pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
@@ -309,25 +309,14 @@ export async function loadTrackers() {
   };
 
   if (isPageNotInDraftsFolder) {
-    const LAUNCH_URL = 'https://assets.adobedtm.com';
-    const ENVIRONMENT = Page.environment;
-
-    // Load Adobe Experience platform data collection (Launch) script
-    // const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();
-
-    const ADOBE_MC_URL_ENV_MAP = new Map([
-      ['prod', '8a93f8486ba4/5492896ad67e/launch-b1f76be4d2ee.min.js'],
-      ['stage', '8a93f8486ba4/5492896ad67e/launch-3e7065dd10db-staging.min.js'],
-      ['dev', '8a93f8486ba4/5492896ad67e/launch-fbd6d02d30e8-development.min.js'],
-    ]);
-
-    const adobeMcScriptUrl = `${LAUNCH_URL}/${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT)}`;
     try {
-      await loadScript(adobeMcScriptUrl);
-    } catch (e) { /* empty */ }
-
-    onAdobeMcLoaded();
+      await Launch.load(page.environment);
+      onAdobeMcLoaded();
+    } catch {
+      Target.abort();
+    }
   } else {
+    Target.abort();
     onAdobeMcLoaded();
   }
 }
@@ -346,19 +335,10 @@ async function loadEager(doc) {
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
 
-  // TODO: if experiments stop working correctly please consider bringing this back:
-  // await window.hlx.plugins.run('loadEager');
-
-  AdobeDataLayerService.push(await new PageLoadStartedEvent());
-  await resolveNonProductsDataLayer();
-
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
-    // loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
-    //   type: 'module',
-    // });
   }
   const main = doc.querySelector('main');
   if (main) {
@@ -395,6 +375,9 @@ async function loadLazy(doc) {
   if (!getPageExperimentKey()) {
     loadTrackers();
   }
+
+  // push basic events to dataLayer
+  resolveNonProductsDataLayer();
   await loadBlocks(main);
 
   const { hash } = window.location;
@@ -523,12 +506,8 @@ async function loadPage() {
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
-  const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
-    .then((FingerprintJS) => FingerprintJS.load({
-      region: 'eu',
-    }));
   await loadLazy(document);
-  await Target.cdpData;
+
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
@@ -546,19 +525,18 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
-  AdobeDataLayerService.pushEventsToDataLayer();
+  // eslint-disable-next-line import/no-unresolved
+  const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
+    .then((FingerprintJS) => FingerprintJS.load({
+      region: 'eu',
+    }));
 
   // Get the visitorId when you need it.
   await fpPromise
     .then((fp) => fp.get())
     .then((result) => {
       const { visitorId } = result;
-      AdobeDataLayerService.push({
-        event: 'vistorID ready',
-        user: {
-          visitorId,
-        },
-      });
+      AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
     });
   AdobeDataLayerService.push(new PageLoadedEvent());
 

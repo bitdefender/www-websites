@@ -1,3 +1,5 @@
+import Target from '@repobit/dex-target';
+import { User, Cookies } from '@repobit/dex-utils';
 import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
 } from '../../scripts/lib-franklin.js';
@@ -6,10 +8,7 @@ import {
   adobeMcAppendVisitorId, getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
 
-import { User } from '../../scripts/libs/user.js';
-import Cookie from '../../scripts/libs/cookie.js';
 import { Constants } from '../../scripts/libs/constants.js';
-import { Visitor } from '../../scripts/libs/data-layer.js';
 
 /**
  * @param {string} username
@@ -52,12 +51,12 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
       : `${avatar.dataset.loginText}, ${email}`;
   }
 
-  const userLoggedInExpirationDate = Cookie.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
+  const userLoggedInExpirationDate = Cookies.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
 
   if (!userLoggedInExpirationDate
     || (userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now())) {
     loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
-      loginPopupLink.href = await Visitor.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
+      loginPopupLink.href = await Target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
     });
   }
 };
@@ -70,19 +69,10 @@ const loginFunctionality = async (root = document) => {
   try {
     // change login container to display that the user is logged in
     // if the previous call was successfull
-    const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
-    const loginAttempt = sessionStorage.getItem('login-attempt');
-    const userData = await User.getUserInfo();
-
-    if (!loginAttempt && !userData) {
-      const userLoggedInExpirationDate = Cookie.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
-      if (userLoggedInExpirationDate > Date.now()) {
-        sessionStorage.setItem('login-attempt', true);
-        const loginEndpointUrl = new URL(`${Constants.LOGIN_URL_ORIGIN}${megaMenuLoginContainer.dataset.loginEndpoint}`);
-        loginEndpointUrl.searchParams.set('origin', `${window.location.pathname}${window.location.search}`);
-        window.location.href = loginEndpointUrl.href;
-      }
-    } else if (userData) {
+    await User.login();
+    const userData = await User.info;
+    if (userData) {
+      const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
       updateMegaMenu(userData.firstname, userData.email, megaMenuLoginContainer);
     }
   } catch (error) {

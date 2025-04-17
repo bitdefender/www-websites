@@ -1,18 +1,4 @@
-/**  Throttle  */
-const throttle = (cb, delay = 250) => {
-  let shouldWait = false;
-
-  return (...args) => {
-    if (shouldWait) {
-      return;
-    }
-    shouldWait = true;
-    setTimeout(() => {
-      cb(...args);
-      shouldWait = false;
-    }, delay);
-  };
-};
+import { throttle } from "@repobit/dex-utils";
 
 const isHoverableDevice = window.matchMedia(
   '(hover: hover) and (pointer: fine)'

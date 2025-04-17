@@ -1,3 +1,5 @@
+import { debounce } from '@repobit/dex-utils';
+
 async function fetchData(url) {
   const resp = await fetch(url);
   const json = await resp.json();
@@ -111,33 +113,6 @@ const wrapInputInsideDiv = (input, newDivParent) => {
     input.after(newDivParent);
     newDivParent.append(input);
   }
-};
-
-// Debounce function to improve performance of input calls
-/**
- *
- * @param {Function} func
- * @param {Number} wait
- * @param {Boolean} immediate
- */
-const debounce = (func, wait, immediate) => {
-  let timeout;
-
-  return (...args) => {
-    const later = () => {
-      timeout = null;
-      if (!immediate) {
-        func(args);
-      }
-    };
-
-    const callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) {
-      func(args);
-    }
-  };
 };
 
 /**

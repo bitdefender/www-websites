@@ -1,4 +1,5 @@
-import { debounce, isView } from '../../scripts/utils/utils.js';
+import { debounce } from '@repobit/dex-utils';
+import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const slides = [...block.children];

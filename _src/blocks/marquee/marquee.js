@@ -1,4 +1,5 @@
-import { debounce, getDatasetFromSection, isView } from '../../scripts/utils/utils.js';
+import { debounce } from '@repobit/dex-utils';
+import { getDatasetFromSection, isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const defaultBackgroundColor = '#004299';
