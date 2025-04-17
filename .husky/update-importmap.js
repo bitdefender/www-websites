@@ -69,16 +69,21 @@ async function updateHtmlImportMap(htmlFilePath) {
 
     // Read the HTML file
     const htmlContent = readFileSync(htmlFilePath, 'utf-8');
+    const parser = new window.DOMParser();
+    let newDocument = parser.parseFromString(htmlContent, 'text/html');
+    const isCompleteHTMLFile = Boolean(newDocument.head.innerHTML);
 
-    // Use Happy DOM to parse the HTML
-    document.body.innerHTML = htmlContent;
+    if (!isCompleteHTMLFile) {
+      newDocument = document;
+      newDocument.head.innerHTML = htmlContent;
+    }
 
     // Find the <script> element with type="importsmap"
-    let scriptElement = document.querySelector('script[type="importmap"]');
+    let scriptElement = newDocument.querySelector('script[type="importmap"]');
     if (!scriptElement) {
-      scriptElement = document.createElement('script');
+      scriptElement = newDocument.createElement('script');
       scriptElement.type = 'importmap';
-      document.body.prepend(scriptElement);
+      newDocument.head.prepend(scriptElement);
     }
 
     // Update the script element's content with the new import map (formatted as JSON)
@@ -87,7 +92,8 @@ async function updateHtmlImportMap(htmlFilePath) {
     // Serialize the updated HTML and write it back to the file
     const serializer = new XMLSerializer();
     let content = '';
-    document.body.childNodes.forEach((child) => {
+    const childNodes = isCompleteHTMLFile ? newDocument.childNodes : newDocument.head.childNodes;
+    childNodes.forEach((child) => {
       content += serializer.serializeToString(child).replace(/\s+xmlns="[^"]*"/, '');
     });
 
@@ -99,5 +105,5 @@ async function updateHtmlImportMap(htmlFilePath) {
 }
 
 // Usage: Pass the HTML file path as the first argument, or it defaults to 'index.html'
-const htmlFilePath = 'head.html';
-updateHtmlImportMap(htmlFilePath);
+updateHtmlImportMap('head.html');
+updateHtmlImportMap('404.html');
