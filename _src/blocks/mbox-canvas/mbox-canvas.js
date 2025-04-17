@@ -22,7 +22,7 @@ function createOfferParameters() {
   const language = urlParams.get('lang');
   urlParams.forEach((value) => {
     if (value === feature) {
-      parameters.feature = feature.replace('_', '-');
+      parameters.feature = feature.replaceAll('_', '-');
     }
     if (value === language) {
       parameters.lang = language.toLocaleLowerCase();
