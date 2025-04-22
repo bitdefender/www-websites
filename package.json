@@ -42,7 +42,7 @@
     "@repobit/dex-data-layer": "^1.5.2",
     "@repobit/dex-launch": "^1.4.1",
     "@repobit/dex-store": "^0.2.1",
-    "@repobit/dex-target": "^1.8.13",
+    "@repobit/dex-target": "^1.8.14",
     "@repobit/dex-utils": "^1.2.1",
     "@tsparticles/engine": "^3.8.1"
   },

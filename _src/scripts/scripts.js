@@ -316,6 +316,7 @@ export async function loadTrackers() {
       Target.abort();
     }
   } else {
+    Target.abort();
     onAdobeMcLoaded();
   }
 }
@@ -376,7 +377,7 @@ async function loadLazy(doc) {
   }
 
   // push basic events to dataLayer
-  await resolveNonProductsDataLayer();
+  resolveNonProductsDataLayer();
   await loadBlocks(main);
 
   const { hash } = window.location;
