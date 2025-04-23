@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, max-len */
 export default function decorate(block) {
   const parentSection = block.closest('.section');
   const {
