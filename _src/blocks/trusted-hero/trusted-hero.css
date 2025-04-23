@@ -1,5 +1,4 @@
 .trusted-hero-container.section {
-    padding: 0;
     background: #EFF6FF;
     color: black;
 }
@@ -19,7 +18,7 @@
 }
 
 .trusted-hero-container .video-wrapper {
-    height: 200px;
+    min-height: 200px;
     position: relative;
 }
 
@@ -87,6 +86,11 @@
     /*    margin-right: 15px; */
 
     /* } */
+
+    .trusted-hero-container .video-wrapper {
+        min-height: 300px;
+    }
+
     .trusted-hero-container h1,
     .trusted-hero-container h2 {
         font: normal normal 500 29px / 33px var(--font-ibm);
@@ -102,7 +106,7 @@
     .trusted-hero-container {
         background: #EFF6FF;
         color: black;
-        height: 670px;
+        padding: 20px 0;
     }
 
     .trusted-hero-container h1 {
@@ -131,7 +135,6 @@
     .trusted-hero-container .default-content-wrapper {
         padding-top: 0 !important;
         order: unset;
-        position: absolute;
         left: 0;
         right: 0;
         height: 100%;

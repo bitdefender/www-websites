@@ -76,8 +76,17 @@ function renderStickyNavigation(block) {
   mobileDropDown.innerText = stickyNavMenu.querySelector('li').innerText;
 
   const stickyNavButton = block.querySelector('.button-container');
-  if (stickyNavButton) menuWithButton.appendChild(stickyNavButton);
-
+  if (stickyNavButton) {
+    stickyNavButton.addEventListener('click', () => {
+      window.adobeDataLayer.push(
+        {
+          event: 'click',
+          asset: 'sticky-buy',
+        },
+      );
+    });
+    menuWithButton.appendChild(stickyNavButton);
+  }
   block.replaceChildren(mobileDropDown);
   block.appendChild(menuWithButton);
   return block;
