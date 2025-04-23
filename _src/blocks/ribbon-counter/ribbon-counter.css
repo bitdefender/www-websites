@@ -24,12 +24,3 @@ main .ribbon-counter-container {
   color: inherit;
   text-decoration: underline;
 }
-
-.ribbon-counter-container #flipdown {
-
-}
-
-.flipdown .rotor {
-  width: 4px;
-  height: 80px;
-}
