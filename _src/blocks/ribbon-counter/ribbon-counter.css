@@ -1,0 +1,35 @@
+main .ribbon-counter-container {
+  color: white;
+  text-align: center;
+  background-position: 0 -18px;
+  background-repeat: repeat;
+  background-blend-mode: unset;
+  background-color: black;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.ribbon-counter-container * {
+  font-family: Arial, sans-serif!important;
+  font-size: var(--body-font-size-xs);
+}
+
+.ribbon-counter-container p {
+  text-align: center;
+  margin: 5px 0;
+  color: black;
+}
+
+.ribbon-counter-container a:any-link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ribbon-counter-container #flipdown {
+
+}
+
+.flipdown .rotor {
+  width: 4px;
+  height: 80px;
+}
