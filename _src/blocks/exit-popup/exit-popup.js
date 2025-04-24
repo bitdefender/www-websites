@@ -1,3 +1,4 @@
+import Target from '@repobit/dex-target';
 import { ProductInfo, Store } from '../../scripts/libs/store/store.js';
 // eslint-disable-next-line no-unused-vars
 export default async function decorate(block) {
@@ -7,7 +8,8 @@ export default async function decorate(block) {
   if (product) {
     const [alias, devices, years] = product.split(',');
     // eslint-disable-next-line no-undef
-    const products = await Store.getProducts([new ProductInfo(alias, 'consumer', custompid)]);
+    const exitPopupPid = await Target.getOffers({ mboxNames: 'exitPopupPid-mbox' });
+    const products = await Store.getProducts([new ProductInfo(alias, 'consumer', exitPopupPid || custompid)]);
     const productItem = products[alias];
     const productCurrency = productItem.currency;
     const productRegionId = productItem.regionId;
