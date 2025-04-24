@@ -90,14 +90,14 @@ function createDropdownElement(paragraph, dropdownTagText, product) {
 
       if (dex) {
         const dropdownTag = dex.querySelector('.custom-dropdown-tag');
-        const dropdown = dex.querySelector('.custom-dropdown');
+        const customDropdown = dex.querySelector('.custom-dropdown');
 
-        if (index != '0') {
+        if (index !== 0) {
           dropdownTag.style.display = 'none';
-          dropdown.style.marginTop = '24px';
+          customDropdown.style.marginTop = '24px';
         } else {
           dropdownTag.style.display = 'inline-block';
-          dropdown.style.marginTop = '0';
+          customDropdown.style.marginTop = '0';
         }
       }
     });
