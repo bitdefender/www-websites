@@ -329,6 +329,7 @@ async function loadEager(doc) {
   // load trackers early if there is a target experiment on the page
   if (getPageExperimentKey()) {
     loadTrackers();
+    await resolveNonProductsDataLayer();
   }
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
@@ -374,10 +375,10 @@ async function loadLazy(doc) {
   // only call load Trackers here if there is no experiment on the page
   if (!getPageExperimentKey()) {
     loadTrackers();
+    await resolveNonProductsDataLayer();
   }
 
   // push basic events to dataLayer
-  resolveNonProductsDataLayer();
   await loadBlocks(main);
 
   const { hash } = window.location;
