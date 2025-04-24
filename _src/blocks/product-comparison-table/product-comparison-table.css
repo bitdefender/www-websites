@@ -59,7 +59,6 @@ div[role="cell"] p {
 }
 
 .product-comparison-table {
-    display: table;
     padding-top: 0.625rem;
     padding-bottom: 0.625rem;
 }
@@ -134,7 +133,6 @@ div[role="cell"] .button-container , .product-comparison-header div[role="column
     color: #3c3c3c;
     text-align: center;
     font-size: var(--body-font-size-s);
-    flex-grow: 1;
 }
 
 .product-comparison-header div[role="cell"] p:first-of-type {
@@ -390,7 +388,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
     .product-comparison-header div[role="columnheader"] h3 {
         font-size: var(--heading-font-size-m);
-        min-height: unset !important;
     }
 
     .product-comparison-header-subtitle {

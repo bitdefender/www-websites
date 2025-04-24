@@ -300,4 +300,5 @@ export default function decorate(block) {
   matchHeights(block, 'h3');
   matchHeights(block, '.old-price-container');
   matchHeights(block, '.product-comparison-price');
+  matchHeights(block, '.button-container');
 }
