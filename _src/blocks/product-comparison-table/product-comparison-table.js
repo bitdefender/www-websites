@@ -301,7 +301,7 @@ export default function decorate(block) {
   matchHeights(block, 'h3');
   matchHeights(block, '.old-price-container');
   matchHeights(block, '.product-comparison-price');
-  matchHeights(block, 'div[role="columnheader"] p:first-of-type');
+
   matchHeights(block, '.price-applied-on-time');
   matchHeights(block, '.button-container');
 }

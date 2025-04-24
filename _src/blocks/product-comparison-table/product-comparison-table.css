@@ -138,6 +138,7 @@ div[role="cell"] .button-container , .product-comparison-header div[role="column
     color: #3c3c3c;
     text-align: center;
     font-size: var(--body-font-size-s);
+    flex-grow: 1;
 }
 
 .product-comparison-header div[role="cell"] p:first-of-type {
