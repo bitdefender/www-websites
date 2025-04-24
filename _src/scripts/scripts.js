@@ -29,6 +29,7 @@ import {
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
+  addScript
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
@@ -341,7 +342,7 @@ async function loadEager(doc) {
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
     if (templatejsMetadata) {
-      loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
+      addScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
         type: 'module',
       });
     }

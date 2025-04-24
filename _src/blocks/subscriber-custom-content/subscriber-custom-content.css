@@ -10,6 +10,7 @@
     align-items: center;
     overflow: hidden;
     margin-top: 24px;
+    margin-top: 0!important;
 
     @media (max-width: 768px) {
         padding-right: 20px !important;

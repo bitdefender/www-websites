@@ -17,6 +17,10 @@ main .subscriber .section {
     text-transform: uppercase;
 }
 
+.subscriber .multicontentslider .default-content-wrapper h4 {
+    margin-bottom: 0;
+}
+
 .subscriber #heroColumn h2 {
     font-weight: 500;
     font-size: 64px;
@@ -33,6 +37,10 @@ main .subscriber .section {
     font-size: 20px;
     line-height: 28px;
     letter-spacing: 0px;
+}
+
+.subscriber .image-columns-txt-col p {
+    margin-bottom: 32px!important;
 }
 
 .subscriber #heroColumn table tr td a {
@@ -90,7 +98,7 @@ main .subscriber .section {
 .subscriber .columnvideo > div.image-columns-wrapper {
     background-color: black;
     border-radius: 16px;
-    padding: 48px 36px;
+    padding: 48px 36px 48px 86px;
     overflow: hidden;
 }
 
@@ -207,6 +215,7 @@ main .subscriber .section {
     font-size: 48px;
     line-height: 48px;
     margin-bottom: 8px;
+    color: black;
 }
 
 .subscriber #blueSlider {
@@ -288,6 +297,10 @@ main .subscriber .section {
 }
 .subscriber #blueSlider .carousel-item p:last-of-type img {
     padding-top: 4em;
+}
+
+.subscriber #multiColumns.nobackground {
+    padding-top: 120px;
 }
 
 .subscriber #multiColumns .default-content-wrapper {
@@ -728,7 +741,7 @@ main .subscriber .section {
     justify-content: center;
     align-items: center;
     gap: 5px;
-    padding: 5px 16px;
+    padding: 6px 16px;
     border-radius: 35px;
 }
 .subscriber #customQuoteCarousel .slides-controls ul li {
@@ -867,7 +880,7 @@ main .subscriber .section {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 2em;
+    margin-bottom: 64px;
 }
 .subscriber .multivideosslider .default-content-wrapper {
     justify-content: center;
@@ -934,7 +947,7 @@ main .subscriber .section {
     background-color: #F1F5F8;
     border-radius: 12px;
     margin: 0;
-    padding: 32px;
+    padding: 16px;
 }
 .subscriber .multicontentslider .carousel-item.hasIframe {
     padding: 0;

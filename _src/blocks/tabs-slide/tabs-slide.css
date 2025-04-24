@@ -87,12 +87,12 @@
 
 .spp-slider.without-active .tab-slider {
     transform: translateX(calc(260px));
-    background-color: red;
+    background-color: #007bff;
 }
 
 .spp-slider.with-active .tab-slider {
     transform: translateX(0);
-    background-color: #007bff;
+    background-color: red;
 }
 
 .spp-slider .slider-container {
