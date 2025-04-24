@@ -118,8 +118,13 @@ div[role="cell"] p {
     border-top: 1px solid var(--horizontal-separator-color);
 }
 
+.product-comparison-header  div[role="columnheader"] .product-comparison-price p.price-applied-on-time{
+    padding-bottom: 16px;
+}
+
 div[role="cell"] .button-container , .product-comparison-header div[role="columnheader"] .button-container{
     margin-bottom: 0.3125rem;
+    align-content: center;
 }
 
 .section.product-comparison-table-container.migration p {

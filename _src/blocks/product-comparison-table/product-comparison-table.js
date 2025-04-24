@@ -12,15 +12,16 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   const oldPriceText = block.closest('.section').dataset.old_price_text ?? '';
   const newPriceLabel = block.closest('.section').dataset.new_price_label ?? '';
   const saveText = block.closest('.section').dataset.save_text ?? '';
-  const oldPriceElement = document.createElement('p');
+  const oldPriceElement = document.createElement('div');
   priceRoot.appendChild(oldPriceElement);
-  oldPriceElement.innerText = '-';
+  oldPriceElement.innerText = '';
   oldPriceElement.classList.add('old-price-container');
   const priceElement = document.createElement('strong');
   priceRoot.appendChild(priceElement);
   priceElement.innerText = '-';
   priceElement.classList.add('current-price-container');
   const priceAppliedOnTime = document.createElement('p');
+  priceAppliedOnTime.classList.add('price-applied-on-time');
   priceRoot.appendChild(priceAppliedOnTime);
   // create a mock buyzone for free products
   if (code.includes('free')) {
@@ -32,7 +33,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
       <span class="await-loader total-text">${label} </span>
       <sup class="per-price"> </sup>
     </div>`;
-    priceAppliedOnTime.innerHTML = '<p><p>';
+    priceAppliedOnTime.innerHTML = '';
     return priceRoot;
   }
 
@@ -300,5 +301,7 @@ export default function decorate(block) {
   matchHeights(block, 'h3');
   matchHeights(block, '.old-price-container');
   matchHeights(block, '.product-comparison-price');
+  matchHeights(block, 'div[role="columnheader"] p:first-of-type');
+  matchHeights(block, '.price-applied-on-time');
   matchHeights(block, '.button-container');
 }
