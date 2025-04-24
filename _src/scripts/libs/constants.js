@@ -1,4 +1,4 @@
-import Page from "./page.js"
+import page from "../page.js";
 
 export class Constants {
 	static DEV_BASE_URL = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
@@ -78,7 +78,7 @@ export class Constants {
 	static LOGIN_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
 	  ? window.location.origin : 'https://www.bitdefender.com';
   
-	static NO_PROMOTION = "ignore";
+	static NO_PROMOTION = "";
 
 	static NONE_PRODUCT_PAGES = ["renewal", "consumer"];
 
@@ -95,7 +95,7 @@ export class Constants {
 	 */
 	static async #getVlaicuProductIdsMapping() {
 		  try {
-			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(Page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
+			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
 			  const response = await fetch(`/common/vlaicuconfig/${nameForVlaicuConfig}.json`);
 			  if (!response.ok) {
 				  console.error(`Failed to fetch data.`);

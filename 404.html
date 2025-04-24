@@ -1,15 +1,26 @@
-<!DOCTYPE html>
-<html>
-
-<head>
+<!DOCTYPE html><html><head><script type="importmap">{
+  "imports": {
+    "@repobit/dex-data-layer": "https://cdn.jsdelivr.net/npm/@repobit/dex-data-layer@1.5.2/+esm",
+    "/npm/@repobit/dex-data-layer@1.5.2/+esm": "https://cdn.jsdelivr.net//npm/@repobit/dex-data-layer@1.5.2/+esm",
+    "@repobit/dex-store": "https://cdn.jsdelivr.net/npm/@repobit/dex-store@0.2.1/+esm",
+    "/npm/@repobit/dex-store@0.2.1/+esm": "https://cdn.jsdelivr.net//npm/@repobit/dex-store@0.2.1/+esm",
+    "@repobit/dex-utils": "https://cdn.jsdelivr.net/npm/@repobit/dex-utils@1.2.1/+esm",
+    "/npm/@repobit/dex-utils@1.2.1/+esm": "https://cdn.jsdelivr.net//npm/@repobit/dex-utils@1.2.1/+esm",
+    "/npm/deepmerge@4.3.1/+esm": "https://cdn.jsdelivr.net//npm/deepmerge@4.3.1/+esm",
+    "@repobit/dex-launch": "https://cdn.jsdelivr.net/npm/@repobit/dex-launch@1.4.1/+esm",
+    "@repobit/dex-target": "https://cdn.jsdelivr.net/npm/@repobit/dex-target@1.8.14/+esm",
+    "/npm/js-cookie@3.0.5/+esm": "https://cdn.jsdelivr.net//npm/js-cookie@3.0.5/+esm",
+    "@tsparticles/engine": "https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.8.1/+esm"
+  }
+}</script>
   <title>Page not found</title>
   <script type="text/javascript">
     window.isErrorPage = true;
     window.errorCode = '404';
   </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Page not found">
-  <script src="/_src/scripts/scripts.js" type="module" crossorigin="use-credentials"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Page not found" />
+  <script src="/_src/scripts/scripts.js" type="module"></script>
   <script type="module">
     import { decorateButtons, sampleRUM } from '/_src/scripts/lib-franklin.js';
     import { getDomain } from '/_src/scripts/scripts.js';
@@ -27,7 +38,7 @@
       sampleRUM('404', { source: document.referrer, target: window.location.href });
     });
   </script>
-  <link rel="stylesheet" href="/_src/styles/styles.css">
+  <link rel="stylesheet" href="/_src/styles/styles.css" />
   <style>
 
     :root {
@@ -135,14 +146,14 @@ main .link-section {
 }
 
   </style>
-  <link rel="stylesheet" href="/_src/styles/lazy-styles.css">
+  <link rel="stylesheet" href="/_src/styles/lazy-styles.css" />
 </head>
 
 <body>
   <header></header>
   <main class="error">
     <div class="section">
-      <svg viewBox="1 0 38 18" class="error-number">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="1 0 38 18" class="error-number">
         <text x="0" y="17">404</text>
       </svg>
       <h2 class="error-message">Page Not Found</h2>
@@ -152,6 +163,7 @@ main .link-section {
     </div>
   </main>
   <footer></footer>
-</body>
 
-</html>
+
+
+</body></html>
