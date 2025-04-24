@@ -68,6 +68,11 @@
         padding: 20px;
         padding-right: 40px;
         text-align: center;
+        opacity: 60%;
+    }
+
+    .carousel-item:hover {
+        opacity: 100%;
     }
 
     .carousel-item iframe {
