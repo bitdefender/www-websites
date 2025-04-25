@@ -8,8 +8,8 @@ export default async function decorate(block) {
   if (product) {
     const [alias, devices, years] = product.split(',');
     // eslint-disable-next-line no-undef
-    const exitPopupPid = await Target.getOffers({ mboxNames: 'exitPopupPid-mbox' });
-    const products = await Store.getProducts([new ProductInfo(alias, 'consumer', exitPopupPid || custompid)]);
+    const exitPopupPromotion = (await Target.getOffers({ mboxNames: 'exitPopupPid-mbox' }))?.promotion;
+    const products = await Store.getProducts([new ProductInfo(alias, 'consumer', exitPopupPromotion || custompid, true)]);
     const productItem = products[alias];
     const productCurrency = productItem.currency;
     const productRegionId = productItem.regionId;
