@@ -10,11 +10,13 @@ export class ProductInfo {
 	 * @param {string} id
 	 * @param {string} department
 	 * @param {string} promotion
+	 * @param {boolean} forcePromotion
 	 */
-	constructor(id, department, promotion = null) {
+	constructor(id, department, promotion = null, forcePromotion = false) {
 		this.id = id;
 		this.department = department;
 		this.promotion = promotion;
+		this.forcePromotion = forcePromotion;
 	}
 }
 
@@ -922,11 +924,13 @@ export class Store {
 			.allSettled(
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
-					product.promotion = (await Target.configMbox)?.promotion
-						|| getUrlPromotion()
-						|| product.promotion
-						|| getMetadata("pid")
-						|| getCampaignBasedOnLocale();
+					if (!product.forcePromotion) {
+						product.promotion = (await Target.configMbox)?.promotion
+							|| getUrlPromotion()
+							|| product.promotion
+							|| getMetadata("pid")
+							|| getCampaignBasedOnLocale();
+					}
 
 					return await this.#apiCall(
 						product
