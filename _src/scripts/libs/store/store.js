@@ -1,21 +1,8 @@
+import Target from "@repobit/dex-target";
+import { User } from "@repobit/dex-utils";
 import { Constants } from "../constants.js";
-import { Target, Visitor } from "../data-layer.js";
-import { GLOBAL_V2_LOCALES, setUrlParams } from "../../utils/utils.js";
-import Page from "../page.js";
-import { getMetadata } from "../../utils/utils.js";
-import { User } from "../../libs/user.js"
-
-export const loadScript = (baseUrl, url) => {
-	return new Promise(function (resolve) {
-		const script = document.createElement("script");
-
-		script.src = `${baseUrl}${url}`;
-		document.head.appendChild(script);
-		script.onload = () => {
-			resolve();
-		};
-	});
-};
+import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams, getMetadata, getUrlPromotion } from "../../utils/utils.js";
+import page from "../../page.js";
 
 export class ProductInfo {
 	/**
@@ -23,11 +10,13 @@ export class ProductInfo {
 	 * @param {string} id
 	 * @param {string} department
 	 * @param {string} promotion
+	 * @param {boolean} forcePromotion
 	 */
-	constructor(id, department, promotion = null) {
+	constructor(id, department, promotion = null, forcePromotion = false) {
 		this.id = id;
 		this.department = department;
 		this.promotion = promotion;
+		this.forcePromotion = forcePromotion;
 	}
 }
 
@@ -218,7 +207,7 @@ export class ProductOption {
 			return this.buyLink;
 		}
 
-		return await Visitor.appendVisitorIDsTo(
+		return await Target.appendVisitorIDsTo(
 			setUrlParams(this.buyLink, params)
 		);
 	}
@@ -250,7 +239,7 @@ export class Product {
 		this.name = product.product_name;
 		this.options = product.variations;
 		this.department = product.department;
-		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain) ? 'global_v2' : '');
+		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => page.locale === domain) ? 'global_v2' : '');
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
@@ -425,15 +414,13 @@ export class Product {
 		buyLink.searchParams.set("REF", this.promotion && this.promotion !== Store.NO_PROMOTION ? `WEBSITES_${this.promotion}` : "N/A");
 		buyLink.searchParams.set("SRC", `${window.location.origin}${window.location.pathname}`);
 
+		const targetBuyLinkMapping = Store.targetBuyLinkMappings?.[this.productAlias]?.[productVariation];
 		// replace the buy links with target links if they exist and return the option
-		if (Store.targetBuyLinkMappings[this.productAlias]
-			&& Store.targetBuyLinkMappings[this.productAlias][productVariation]) {
-			buyLink = new URL(Store.targetBuyLinkMappings[this.productAlias][productVariation]);
-		}
+		if (targetBuyLinkMapping) {
+			buyLink = new URL(targetBuyLinkMapping.buyLink);
 
-		// if there are extra parameters which need to be added to the links, add them
-		if (Store.targetBuyLinkMappings.extraParameters) {
-			Store.targetBuyLinkMappings.extraParameters.forEach(extraParameter => {
+			// if there are extra parameters which need to be added to the links, add them
+			targetBuyLinkMapping?.extraParameters?.forEach(extraParameter => {
 				buyLink.searchParams.set(extraParameter.key, extraParameter.value);
 			});
 		}
@@ -707,7 +694,7 @@ class Vlaicu {
      * @returns {boolean} -> check if the product is soho and the domain is de-de
      */
     static #isSohoCornerCase(productId) {
-        return Constants.SOHO_CORNER_CASES_LOCALSE.includes(Page.locale) && productId === "com.bitdefender.soho";
+        return Constants.SOHO_CORNER_CASES_LOCALSE.includes(page.locale) && productId === "com.bitdefender.soho";
 	}
 
 	/**
@@ -717,19 +704,19 @@ class Vlaicu {
 	 */
 	static #addLangParameter(receivedBuyLink){
 		const buyLinkUrl = new URL(receivedBuyLink);
-		buyLinkUrl.searchParams.set('LANG', Page.language);
+		buyLinkUrl.searchParams.set('LANG', page.language);
 
 		return buyLinkUrl.href;
 	}
 
 	static async getProductVariations(productId, campaign) {
-		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : Page.locale;
-		let geoIpFlag = await Target.getGeoIpFlagMbox();
+		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
+		let geoIpFlag = (await Target.configMbox)?.useGeoIpPricing;
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
 		const pathVariablesResolverObject = {
-			// TODO: please remove the ternary operators below and only use Page.locale
+			// TODO: please remove the ternary operators below and only use page.locale
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
@@ -874,12 +861,6 @@ class StoreConfig {
 		this.provider = "vlaicu";
 
 		/**
-		 * default promotion
-		 * @type {Promise<string>}
-		 */
-		this.campaign = this.#getCampaign();
-
-		/**
 		 * @type {string}
 		 */
 		this.vlaicuEndpoint = Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))
@@ -890,18 +871,6 @@ class StoreConfig {
 		 * @type {"GET"}
 		 */
 		this.httpMethod = "GET";
-	}
-
-	async #getCampaign() {
-		if (GLOBAL_V2_LOCALES.find(domain => Page.locale === domain)) {
-			return "global_v2";
-		}
-
-		if (!Constants.ZUROA_LOCALES.includes(Page.locale)) {
-			return Constants.NO_PROMOTION;
-		}
-
-		return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
 	}
 }
 
@@ -919,7 +888,7 @@ export class Store {
 	static business = "business";
 	static products = {};
 	/** country equals the geographic location given by IP */
-	static country = Page.country;
+	static country = page.country;
 	static mappedCountry = this.getCountry();
 	/** Private variables */
 	static baseUrl = Constants.DEV_BASE_URL;
@@ -945,7 +914,7 @@ export class Store {
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
-			this.targetBuyLinkMappings = await Target.getBuyLinksMapping();
+			this.targetBuyLinkMappings = (await Target.configMbox)?.products;
 		}
 
 		// remove duplicates by id
@@ -955,11 +924,13 @@ export class Store {
 			.allSettled(
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
-					product.promotion = await Target.getCampaign()
-						|| this.#getUrlPromotion()
-						|| product.promotion
-						|| getMetadata("pid")
-						|| await this.config.campaign;
+					if (!product.forcePromotion) {
+						product.promotion = (await Target.configMbox)?.promotion
+							|| getUrlPromotion()
+							|| product.promotion
+							|| getMetadata("pid")
+							|| getCampaignBasedOnLocale();
+					}
 
 					return await this.#apiCall(
 						product
@@ -999,20 +970,7 @@ export class Store {
 	 * @returns {Promise<string>} - country as 2 letter ISO code
 	 */
 	static getCountry() {
-		return this.countriesMapping[Page.country] || Page.country
-	}
-
-	/**
-	 * Returns the promotion/campaign found in the URL
-	 * @returns {string|null}
-	 */
-	static #getUrlPromotion() {
-		const searchParams = (new URL(window.location)).searchParams;
-
-		if (searchParams.has("pid")) { return searchParams.get("pid"); }
-		if (searchParams.has("promotionId")) { return searchParams.get("promotionId"); }
-		if (searchParams.has("campaign")) { return searchParams.get("campaign"); }
-		return null;
+		return this.countriesMapping[page.country] || page.country
 	}
 
 	static placeSymbol(price, currency) {

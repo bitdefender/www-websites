@@ -23,9 +23,11 @@ const checkedNotValidUrls = new Set();
 
 async function fetchJson(url) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      redirect: "error"
+    });
 
-    if (!response.ok) {
+    if (!response.status === 200) {
       throw new Error(`HTTP error! status: ${response.status} for URL: ${url}`);
     }
 
@@ -64,11 +66,13 @@ async function checkUrlExists(url) {
     await new Promise(resolve => setTimeout(resolve, delay));
     const response = await fetch(url, {
       method: 'GET',
+      redirect: "error",
       headers: {
         'X-Client-Id': process.env.X_CLIENT_ID,
       }
     });
-    if (response.ok) {
+
+    if (response.status === 200) {
       checkedValidUrls.add(url);
       return true;
     } else {
@@ -166,6 +170,9 @@ async function processLocaleSitemap(locale, hreflangMap) {
     //hreflangMap = hreflangMap.concat(await addBucketCountriesToHreflangMap());
 
     for (const locale of localesArr) {
+      if (locale === 'es-bz') {
+        continue;
+      }
       await processLocaleSitemap(locale, hreflangMap);
     }
   } catch (error) {

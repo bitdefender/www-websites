@@ -1,5 +1,5 @@
-import Cookie from '../../scripts/libs/cookie.js';
-import { AdobeDataLayerService, FormEvent } from '../../scripts/libs/data-layer.js';
+import { Cookies } from '@repobit/dex-utils';
+import { FormEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
 
 function onChange(form) {
   // Targeting the anchor inside .button-container
@@ -56,7 +56,7 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
     formParent.innerHTML = '';
     formParent.appendChild(successMessage);
 
-    Cookie.set('newsLetterIntentShown', '1');
+    Cookies.set('newsLetterIntentShown', '1');
   } else {
     formParent.innerHTML = '';
     formParent.appendChild(failMessage);

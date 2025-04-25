@@ -11,8 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
-import Page from './libs/page.js';
-import { UserAgent } from './libs/user-agent/user-agent.js';
+import { UserAgent } from '@repobit/dex-utils';
+import page from './page.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
 export const ALL_FRANKLIN_DEV_SUBDOMAINS = ['localhost', '.aem.page', '.aem.live'];
@@ -117,40 +117,6 @@ export async function loadCSS(href) {
       link.onload = resolve;
       link.onerror = reject;
       document.head.append(link);
-    } else {
-      resolve();
-    }
-  });
-}
-
-/**
- * Loads a non module JS file.
- * @param {string} src URL to the JS file
- * @param {Object} attrs additional optional attributes
- */
-
-export async function loadScript(src, attrs = null) {
-  return new Promise((resolve, reject) => {
-    if (!document.querySelector(`head > script[src="${src}"]`)) {
-      const script = document.createElement('script');
-      script.src = src;
-      if (attrs) {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-        for (const attr in attrs) {
-          script.setAttribute(attr, attrs[attr]);
-        }
-      }
-      script.onload = resolve;
-      script.onerror = () => {
-        // check if the launch code failed to load
-        if (src.includes('launch')) {
-          // if it did, notify the target class using the event and variable
-          window.launchCannotLoad = true;
-          document.dispatchEvent(new Event('launchCannotLoad'));
-        }
-        reject();
-      };
-      document.head.append(script);
     } else {
       resolve();
     }
@@ -643,7 +609,7 @@ export function decorateTemplateAndTheme() {
       element.classList.add(toClassName(c.trim()));
     });
   };
-  const darkMode = Page.getParamValue('theme');
+  const darkMode = page.getParamValue('theme');
   if (darkMode && darkMode === 'dark') addClasses(document.body, 'dark-mode');
   const template = getMetadata('template');
   if (template) addClasses(document.body, template);
@@ -826,7 +792,6 @@ export const executionContext = {
   decorateIcons,
   loadBlock,
   loadCSS,
-  loadScript,
   sampleRUM,
   toCamelCase,
   toClassName,

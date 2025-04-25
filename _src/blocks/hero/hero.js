@@ -1,13 +1,12 @@
 /* eslint-disable max-len */
 // Description: Hero block
+import { UserAgent } from '@repobit/dex-utils';
 import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
   getBrowserName,
 } from '../../scripts/utils/utils.js';
-
-import { UserAgent } from '../../scripts/libs/user-agent/user-agent.js';
 
 function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, block) {
   const button = block.querySelector('a.button');
