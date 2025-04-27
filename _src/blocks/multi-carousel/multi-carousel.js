@@ -1,11 +1,19 @@
 function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined, startsfrom = 0) {
-  const parentSection = block.closest('.section')
+  const parentSection = block.closest('.section');
   const carouselContainer = document.createElement('div');
   carouselContainer.classList.add('carousel-container');
 
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
   videos = videos || Array.from(block.children).map(child => child.innerHTML);
+
+  let currentIndex = 0;
+  let prevArrow, nextArrow;
+
+  let startX = 0;
+  let currentTranslate = 0;
+  let prevTranslate = 0;
+  let isDragging = false;
 
   videos.forEach((item, index) => {
     const carouselItem = document.createElement('div');
@@ -14,7 +22,6 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
     if (item.includes('https://www.youtube.com/embed/')) {
       carouselItem.classList.add('hasIframe');
-      // Create an iframe element for embedding YouTube video
       item = item.replace('<div>', '').replace('</div>', '').replace('<div bis_skin_checked="1">', '');
       const iframeElement = document.createElement('iframe');
       iframeElement.setAttribute('src', item);
@@ -23,14 +30,12 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
       iframeElement.setAttribute('allowfullscreen', '');
       carouselItem.appendChild(iframeElement);
     } else {
-      // For non-video content (text, images, etc.)
       const contentElement = document.createElement('div');
       contentElement.classList.add('carousel-content');
       contentElement.innerHTML = item;
       carouselItem.appendChild(contentElement);
     }
 
-    // Add title if provided
     if (titles && titles[index]) {
       const itemTitle = document.createElement('div');
       itemTitle.classList.add('carousel-item-title');
@@ -44,7 +49,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        moveToSlide(0);
+        moveToSlide(currentIndex);
       }, 200);
     });
   });
@@ -53,11 +58,6 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
   carouselTrack.style.transform = 'translateX(0px)';
   block.appendChild(carouselContainer);
 
-  // Declare currentIndex and arrow variables before usage in any function
-  let currentIndex = 0;
-  let prevArrow, nextArrow;
-
-  // Create carousel navigation dots
   const carouselNav = document.createElement('div');
   carouselNav.classList.add('carousel-navigation');
 
@@ -71,28 +71,32 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
   block.appendChild(carouselNav);
 
-  // Create arrows only if there is more than one slide
   if (videos.length > 1) {
     createArrows(block, carouselTrack);
   }
 
   function moveToSlide(index) {
+    index = Math.floor(index);
     const dots = block.querySelectorAll('.carousel-dot');
     dots.forEach((dot) => dot.classList.remove('active'));
     dots[index]?.classList.add('active');
   
-    const items = block.querySelectorAll('.carousel-item');
-    items.forEach((itm) => itm.classList.remove('active'));
-    items[index]?.classList.add('active');
-  
-    // Wait for layout to be ready
     requestAnimationFrame(() => {
+      const items = block.querySelectorAll('.carousel-item');
       const itemWidth = items[0]?.offsetWidth || 0;
+  
       carouselTrack.style.transform = `translateX(-${itemWidth * index}px)`;
+      
+      // Update active item
+      items.forEach((itm) => itm.classList.remove('active'));
+      items[index]?.classList.add('active');
+  
+      prevTranslate = -itemWidth * index;
+      currentTranslate = prevTranslate;
     });
   
     currentIndex = index;
-    updateArrows(); 
+    updateArrows();
   }  
 
   function createArrows(block, carouselTrack) {
@@ -124,7 +128,6 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     arrowsContainer.appendChild(prevArrow);
     arrowsContainer.appendChild(nextArrow);
 
-    // Append arrows to a wrapper container if it exists
     if (parentSection.dataset['arrows'] && parentSection.dataset['arrows'] === 'bottom') {
       block.appendChild(arrowsContainer);
     } else {
@@ -134,7 +137,6 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     updateArrows();
   }
 
-  // Update arrow state: add inactive class if on first or last slide
   function updateArrows() {
     if (prevArrow) {
       if (currentIndex === 0) {
@@ -145,7 +147,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
         prevArrow.classList.add('active');
       }
     }
-  
+
     if (nextArrow) {
       if (currentIndex === videos.length - 1) {
         nextArrow.classList.add('inactive');
@@ -155,9 +157,50 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
         nextArrow.classList.add('active');
       }
     }
-  }  
+  }
 
-  // Autoplay carousel if enabled
+  // Drag events
+  carouselTrack.addEventListener('mousedown', startDrag);
+  carouselTrack.addEventListener('touchstart', startDrag, { passive: true });
+  carouselTrack.addEventListener('mousemove', dragMove);
+  carouselTrack.addEventListener('touchmove', dragMove, { passive: false });
+  carouselTrack.addEventListener('mouseup', endDrag);
+  carouselTrack.addEventListener('touchend', endDrag);
+  carouselTrack.addEventListener('mouseleave', endDrag);
+
+  function getPositionX(event) {
+    return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+  }
+
+  function startDrag(event) {
+    isDragging = true;
+    startX = getPositionX(event);
+    carouselTrack.classList.add('dragging');
+  }
+
+  function dragMove(event) {
+    if (!isDragging) return;
+    const currentX = getPositionX(event);
+    const deltaX = currentX - startX;
+    currentTranslate = prevTranslate + deltaX;
+    carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    carouselTrack.classList.remove('dragging');
+
+    const movedBy = currentTranslate - prevTranslate;
+    if (movedBy < -100 && currentIndex < videos.length - 1) {
+      moveToSlide(currentIndex + 1);
+    } else if (movedBy > 100 && currentIndex > 0) {
+      moveToSlide(currentIndex - 1);
+    } else {
+      moveToSlide(currentIndex);
+    }
+  }
+
   if (shouldAutoplay) {
     const autoplayInterval = 3000;
     setInterval(() => {
@@ -174,7 +217,6 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
       });
     }, 500);
   }
-  
 }
 
 export default function decorate(block) {

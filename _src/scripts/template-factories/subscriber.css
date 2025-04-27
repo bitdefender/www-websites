@@ -876,6 +876,9 @@ main .subscriber .section {
     background-color: transparent;
     padding-top: 0;
 }
+.subscriber .multi-carousel-container.multicontentvideoslider {
+    padding-bottom: 120px;
+}
 .subscriber .multi-carousel-container .default-content-wrapper {
     display: flex;
     align-items: center;
@@ -996,12 +999,12 @@ main .subscriber .section {
 .subscriber .multicontentvideoslider .carousel-item {
     opacity: 0.6;
 }
-.subscriber .multicontentvideoslider .carousel-item.active {
+.subscriber .multicontentvideoslider .carousel-item.active, .subscriber .multicontentvideoslider .carousel-item:hover {
     opacity: 1;
 }
 .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
     border-radius: 16px;
-    width: 900px;
+    width: 850px;
     height: 506px;
 }
 .subscriber .multicontentvideoslider .carousel-item .carousel-content {
@@ -1017,7 +1020,11 @@ main .subscriber .section {
 .subscriber .multicontentvideoslider .carousel-item .carousel-content svg, .subscriber .multicontentvideoslider .carousel-item .carousel-content img {
     width: 140px;
 }
-.subscriber .multicontentvideoslider .carousel-arrows-container button {
+.subscriber .multicontentvideoslider .carousel-arrows-container {
+    justify-content: center;
+    margin-top: 2em;
+}
+/*.subscriber .multicontentvideoslider .carousel-arrows-container button {
     width: 25%;
     height: 100%;
     top: 0;
@@ -1028,7 +1035,7 @@ main .subscriber .section {
 }
 .subscriber .multicontentvideoslider .carousel-arrows-container button.carousel-next {
     right: 0;
-}
+}*/
 .subscriber .multicontentvideoslider .carousel-item .carousel-content > div p:last-of-type {
     font-weight: 400;
     font-size: 20px;
@@ -1121,6 +1128,10 @@ main .subscriber .section {
 
 .subscriber .section.multicontentvideoslider .carousel-item {
     overflow: hidden;
+}
+
+.subscriber .section.multicontentvideoslider .carousel-container {
+    padding-left: 30em;
 }
 
 .subscriber .multicontentslider .carousel-container {
@@ -1276,10 +1287,22 @@ main .subscriber .section {
         margin-left: 2em !important;
     }
 
+    .subscriber #heroColumn *, .affiliate .image-columns > div > .image-columns-txt-col *{
+        text-align: left;
+    }
+
+    .subscriber #heroColumn > div {
+        row-gap: 64px;
+    }
+
     .subscriber #heroColumn h2 {
         font-weight: 500;
         font-size: 56px;
         line-height: 56px;
+    }
+
+    .carousel-with-preview-container .block {
+        padding: 0!important;
     }
 
     .subscriber .multicontentvideoslider .default-content-wrapper h4 {
@@ -1316,7 +1339,7 @@ main .subscriber .section {
         font-weight: 500;
     }
     .subscriber #has4columns {
-        padding-bottom: 1em;
+        padding-bottom: 64px;
     }
     .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div {
         display: block;
