@@ -1699,11 +1699,15 @@ main .subscriber .section {
     .subscriber #blueBox {
         padding: 3em 0;
     }
-    .subscriber .carousel-track {
-        /*overflow-y: scroll !important;
-        transition: unset !important;*/
+    .subscriber div:not(.multicontentslider) .carousel-track {
+        overflow-y: scroll !important;
+        transition: unset !important;
         scroll-snap-type: y mandatory !important;
         -webkit-overflow-scrolling: touch !important;
+    }
+    .subscriber div.multicontentslider .carousel-track {
+        overflow-y: unset !important;
+        transition: transform 0.5s ease !important;
     }
     .subscriber #blueBox .default-content-wrapper p {
         margin: 0!important;
@@ -1729,7 +1733,6 @@ main .subscriber .section {
     }
     .subscriber .section.multicontentvideoslider .carousel-item {
         width: 81vw;
-        height: 300px;
         opacity: 1;
     }
     .subscriber .multicontentvideoslider .carousel-item iframe {
