@@ -10,6 +10,42 @@
         font-family: "IBM Plex Sans", sans-serif !important;
     }
 
+    .hero-aem-container {
+        padding-bottom: 0;
+
+        .hero-aem__terms {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 100%;
+        }
+
+        .hero-aem__breadcrumb, .hero-aem__card > p {
+            display: none;
+        }
+
+        .hero-aem-wrapper {
+            max-width: 1200px;
+            background-color: #F8F8F8;
+            padding-top: 24px;
+            padding-bottom: 24px;
+        }
+
+        .hero-aem__card__desktop div > h1 {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        .hero-aem__card > .hero-aem__card-text {
+            padding: 0;
+        }
+
+        .hero-aem__terms {
+            display: flex;
+            gap: 13px;
+            margin: 0;
+        }
+    }
+
     .dex-cards-review {
         td img {
             max-width: 24px;
@@ -172,13 +208,13 @@
                         h4 + p {
                             line-height: 100%;
                             color: #3d3d3d;
-                            height: 42px;
+                            min-height: 44px;
                         }
 
                         ul {
                             padding-left: 0;
                             margin-bottom: 0;
-                            height: 88px;
+                            min-height: 88px;
 
                             li {
                                 margin: 12px 0;
@@ -218,6 +254,7 @@
                         }
 
                         &:first-of-type table:first-of-type {
+                            height: 100%;
                             width: 100%;
                             border-collapse: separate;
                             border-spacing: 0;
@@ -243,6 +280,7 @@
                             }
 
                             a {
+                                margin-top: 10px;
                                 font-family: var(--body-font-family);
                                 font-size: var(--body-font-size-s);
                                 font-style: normal;
@@ -280,21 +318,26 @@
                             }
                         }
                     }
+                    &:not(:first-of-type) {
+                        h5 {
+                            min-height: 36px;
+                        }
+                    }
                 }
             }
         }
     }
 
-    .dex-carousel-cards-family .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-        height: 120px;
+    .dex-carousel-cards-family {
+        .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
+            ul {
+                min-height: 130px;
+            }
+        }
     }
 
     .dex-carousel-cards-family .columns-wrapper .columns div .columns-text-col:first-of-type table:last-of-type {
         margin: 0 auto;
-    }
-
-    .dex-carousel-cards-security .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-        height: 170px;
     }
 
     .dex-benefits-section {
@@ -588,6 +631,31 @@
             }
         }
 
+        .hero-aem-container {
+
+            .hero-aem {
+                max-width: 1200px;
+            }
+
+            .hero-aem__breadcrumb {
+                display: block;
+            }
+
+            .hero-aem__terms {
+                font-size: 24px;
+            }
+
+            .hero-aem-wrapper {
+                background-color: unset;
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+
+            .hero-aem .hero-aem__card__desktop > div {
+                padding-left: 30px;
+            }
+        }
+
         .bitdef-vs-brands-container {
             margin-top: 32px;
         }
@@ -758,7 +826,7 @@
 
             p {
                 font-size: 16px;
-                line-height: 24px;
+                line-height: 1.35;
             }
 
             .columns {
@@ -880,7 +948,6 @@
                         }
 
                         p:first-of-type {
-                            min-height: 70px;
                             padding-bottom: 24px;
                             margin-bottom: 34px;
                             border-bottom: 1px solid #D9D9D9;
@@ -892,21 +959,14 @@
                             box-shadow: none;
                             border-color: #1EA0FF;
 
-                            p, h5 {
-                                font-size: 14px;
-                            }
-
                             h5 {
                                 height: 28px;
                                 align-items: center;
                             }
 
-                            ul {
-                                height: 120px;
-                            }
-
-                            li {
-                                font-size: 14px;
+                            li, p, h5 {
+                                font-size: 16px;
+                                line-height: 1.35;
                             }
                         }
 
@@ -935,7 +995,12 @@
                         }
 
                         &:not(:first-of-type) {
-                            padding: 30px;
+                            padding: 20px;
+                        }
+
+                        h4 + p, ul li {
+                            font-size: 16px !important;
+                            line-height: 1.35 !important;
                         }
 
 
@@ -944,7 +1009,7 @@
 
                             table:first-of-type {
                                 td {
-                                    padding: 30px;
+                                    padding: 20px;
                                     border-color: #888;
                                     box-shadow: 0 10px 10px -5px rgb(0 0 0 / 20%);
                                     border-right: none;
@@ -974,12 +1039,22 @@
             max-width: 452px;
         }
 
-        .dex-carousel-cards-family .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-            height: 170px;
-        }
+        .dex-carousel-cards {
+            &:not(.dex-carousel-cards-security) {
+                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
+                    min-height: 155px;
+                }
 
-        .dex-carousel-cards-security .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-            height: 230px;
+                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
+                    min-height: 160px;
+                }
+            }
+
+            &.dex-carousel-cards-family {
+                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
+                    min-height: 240px;
+                }
+            }
         }
 
         .dex-carousel-cards-security .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
@@ -1065,6 +1140,7 @@
 
                 p {
                     font-size: 16px;
+                    line-height: 1.35;
                 }
 
                 h5 {
@@ -1181,6 +1257,15 @@
             }
         }
 
+        .hero-aem-container {
+
+            .hero-aem-wrapper {
+                background-color: unset;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
 
         .dex-carousel-cards-security .columns-wrapper .columns {
             padding-left: 0;
@@ -1197,6 +1282,28 @@
                 }
             }
         }
+
+        .dex-carousel-cards {
+
+            .columns-wrapper .columns div .columns-text-col:first-of-type table:first-of-type td,
+            .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
+                padding: 42px;
+            }
+
+            &.dex-carousel-cards-individual {
+                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
+                    min-height: 100px;
+                }
+            }
+
+            &.dex-carousel-cards-family {
+                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
+                    min-height: 240px;
+                }
+            }
+
+        }
+
     }
 }
 
@@ -1210,6 +1317,14 @@
 
             --section-desktop-max-width: 1200px;
         }
+
+        .dex-carousel-cards-individual,
+        .dex-carousel-cards-family {
+            .columns-wrapper > .columns > div {
+                padding: 37px 104px;
+            }
+        }
+
     }
 }
 
@@ -1231,4 +1346,3 @@
         }
     }
 }
-
