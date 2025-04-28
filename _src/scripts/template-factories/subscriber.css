@@ -1733,6 +1733,7 @@ main .subscriber .section {
     }
     .subscriber .section.multicontentvideoslider .carousel-item {
         width: 81vw;
+        height: auto;
         opacity: 1;
     }
     .subscriber .multicontentvideoslider .carousel-item iframe {
