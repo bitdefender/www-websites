@@ -204,16 +204,29 @@
 
 /* RESPONSIVE HANDLING */
 @media (max-width: 991px) {
-    .spp-slider .card {
-        width: calc(50% - 24px);
+    .spp-slider {
+        margin: 0 auto;
     }
-}
-@media (max-width: 768px) {
     .spp-slider .card {
         width: calc(100% - 10px);
     }
     .tabs-slide-container .default-content-wrapper {
         width: 100%;
+    }
+
+    .spp-slider .content {
+        padding: 0 20px;
+    }
+
+    .subscriber main .section.tabs-slide-container {
+        padding: 96px 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .tabs-slide-container .default-content-wrapper h3 {
+        font-size: 32px;
+        line-height: 37px;
     }
 }
 

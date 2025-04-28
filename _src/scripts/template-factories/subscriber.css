@@ -1325,6 +1325,12 @@ main .subscriber .section {
         bottom: -10px;
         right: -40%;
     }
+    .subscriber #blueSlider .block .carousel-container {
+        padding-left: 0;
+    }
+    .subscriber .image-columns > div {
+        row-gap: 64px;
+    }
     .subscriber #blueSlider * {
         text-align: left;
     }
@@ -1481,16 +1487,34 @@ main .subscriber .section {
     }
     .subscriber .columnvideo2 > div.image-columns-wrapper video {
         right: 0;
-        left: 0;
+        left: -2em;
+        top: 3em;
         margin: 0 auto;
         width: 100%;
     }
     .subscriber .download-popup__modal {
         width: 90%;
     }
+    .subscriber #multiColumns.nobackground {
+        padding: 96px 0;
+    }
+    .subscriber #customQuoteCarousel {
+        margin-bottom: 96px;
+        padding: 0;
+    }
+    .subscriber #customQuoteCarousel .columns-wrapper {
+        padding-top: 0!important;
+        padding-bottom: 0!important;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper {
+        height: 729px;
+    }
 }
 
 @media (max-width: 767px) {
+    .subscriber #heroColumn table tr td:nth-of-type(1) {
+        margin-right: 0;
+    }
     .subscriber #blueBox .default-content-wrapper h3 {
         width: 100%;
     }
@@ -1507,6 +1531,10 @@ main .subscriber .section {
         font-weight: 500 !important;
         font-size: 32px !important;
         line-height: 38.4px !important;
+    }
+    .subscriber #blueSlider .default-content-wrapper h3 {
+        font-size: 40px !important;
+        line-height: 42px !important;
     }
     .subscriber #blueBox .block {
         display: block;
@@ -1540,6 +1568,9 @@ main .subscriber .section {
     }
     .subscriber #blueBox .block > div:nth-of-type(3) > div:last-of-type img {
         width: 200px;
+    }
+    .subscriber .columnvideo > div.image-columns-wrapper {
+        padding: 45px 30px;
     }
     .subscriber #customQuoteCarousel .right-col {
         height: auto;

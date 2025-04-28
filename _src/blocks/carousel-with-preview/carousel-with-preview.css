@@ -196,6 +196,9 @@
 }
 
 @media (max-width: 767px) {
+    .carousel-with-preview-container {
+        padding: 0 16px !important;
+    }
     .carousel-with-preview-container .default-content-wrapper {
         width: auto;
     }
