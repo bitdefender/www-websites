@@ -10,11 +10,6 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
   let currentIndex = 0;
   let prevArrow, nextArrow;
 
-  let startX = 0;
-  let currentTranslate = 0;
-  let prevTranslate = 0;
-  let isDragging = false;
-
   videos.forEach((item, index) => {
     const carouselItem = document.createElement('div');
     carouselItem.classList.add('carousel-item');
@@ -44,14 +39,6 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     }
 
     carouselTrack.appendChild(carouselItem);
-
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        moveToSlide(currentIndex);
-      }, 200);
-    });
   });
 
   carouselContainer.appendChild(carouselTrack);
@@ -80,24 +67,20 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     const dots = block.querySelectorAll('.carousel-dot');
     dots.forEach((dot) => dot.classList.remove('active'));
     dots[index]?.classList.add('active');
-  
+
     requestAnimationFrame(() => {
       const items = block.querySelectorAll('.carousel-item');
       const itemWidth = items[0]?.offsetWidth || 0;
-  
+
       carouselTrack.style.transform = `translateX(-${itemWidth * index}px)`;
-      
-      // Update active item
+
       items.forEach((itm) => itm.classList.remove('active'));
       items[index]?.classList.add('active');
-  
-      prevTranslate = -itemWidth * index;
-      currentTranslate = prevTranslate;
     });
-  
+
     currentIndex = index;
     updateArrows();
-  }  
+  }
 
   function createArrows(block, carouselTrack) {
     const arrowsContainer = document.createElement('div');
@@ -139,65 +122,13 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
   function updateArrows() {
     if (prevArrow) {
-      if (currentIndex === 0) {
-        prevArrow.classList.add('inactive');
-        prevArrow.classList.remove('active');
-      } else {
-        prevArrow.classList.remove('inactive');
-        prevArrow.classList.add('active');
-      }
+      prevArrow.classList.toggle('inactive', currentIndex === 0);
+      prevArrow.classList.toggle('active', currentIndex > 0);
     }
 
     if (nextArrow) {
-      if (currentIndex === videos.length - 1) {
-        nextArrow.classList.add('inactive');
-        nextArrow.classList.remove('active');
-      } else {
-        nextArrow.classList.remove('inactive');
-        nextArrow.classList.add('active');
-      }
-    }
-  }
-
-  // Drag events
-  carouselTrack.addEventListener('mousedown', startDrag);
-  carouselTrack.addEventListener('touchstart', startDrag, { passive: true });
-  carouselTrack.addEventListener('mousemove', dragMove);
-  carouselTrack.addEventListener('touchmove', dragMove, { passive: false });
-  carouselTrack.addEventListener('mouseup', endDrag);
-  carouselTrack.addEventListener('touchend', endDrag);
-  carouselTrack.addEventListener('mouseleave', endDrag);
-
-  function getPositionX(event) {
-    return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
-  }
-
-  function startDrag(event) {
-    isDragging = true;
-    startX = getPositionX(event);
-    carouselTrack.classList.add('dragging');
-  }
-
-  function dragMove(event) {
-    if (!isDragging) return;
-    const currentX = getPositionX(event);
-    const deltaX = currentX - startX;
-    currentTranslate = prevTranslate + deltaX;
-    carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
-  }
-
-  function endDrag() {
-    if (!isDragging) return;
-    isDragging = false;
-    carouselTrack.classList.remove('dragging');
-
-    const movedBy = currentTranslate - prevTranslate;
-    if (movedBy < -100 && currentIndex < videos.length - 1) {
-      moveToSlide(currentIndex + 1);
-    } else if (movedBy > 100 && currentIndex > 0) {
-      moveToSlide(currentIndex - 1);
-    } else {
-      moveToSlide(currentIndex);
+      nextArrow.classList.toggle('inactive', currentIndex === videos.length - 1);
+      nextArrow.classList.toggle('active', currentIndex < videos.length - 1);
     }
   }
 

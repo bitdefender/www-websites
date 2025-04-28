@@ -1526,7 +1526,10 @@ main .subscriber .section {
     }
     .subscriber .multi-carousel-container .carousel-item {
         flex: 0 0 66.66%;
-      }
+    }
+    .subscriber #has4columns {
+        padding-bottom: 0;
+    }
     .subscriber #heroColumn h2, .subscriber .columnvideo > div.image-columns-wrapper h3, .subscriber #blueSlider .default-content-wrapper h3, .subscriber #multiColumns .default-content-wrapper h3, .subscriber #tabSlide .default-content-wrapper h3, .subscriber #blueBox .default-content-wrapper h3, .subscriber #customQuoteCarousel .columns h4, .subscriber .accordion-container .default-content-wrapper h3, .subscriber-custom-content-container .default-content-wrapper h3 {
         font-weight: 500 !important;
         font-size: 32px !important;
@@ -1578,6 +1581,9 @@ main .subscriber .section {
     }
     .subscriber #has4columns .default-content-wrapper h3 {
         width: 100%;
+    }
+    .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
+        width: 68vw;
     }
 }
 @media (max-width: 636px) {
@@ -1694,10 +1700,10 @@ main .subscriber .section {
         padding: 3em 0;
     }
     .subscriber .carousel-track {
-        overflow-y: scroll !important;
+        /*overflow-y: scroll !important;
+        transition: unset !important;*/
         scroll-snap-type: y mandatory !important;
         -webkit-overflow-scrolling: touch !important;
-        transition: unset !important;
     }
     .subscriber #blueBox .default-content-wrapper p {
         margin: 0!important;
@@ -1718,8 +1724,12 @@ main .subscriber .section {
     .subscriber .section.multicontentvideoslider {
         margin-bottom: 3em;
     }
+    .subscriber .section.multicontentvideoslider .carousel-container {
+        padding-left: 0;
+    }
     .subscriber .section.multicontentvideoslider .carousel-item {
-        width: 94vw;
+        width: 81vw;
+        height: 300px;
         opacity: 1;
     }
     .subscriber .multicontentvideoslider .carousel-item iframe {
