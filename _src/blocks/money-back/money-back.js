@@ -1,4 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { matchHeights } from '../../scripts/utils/utils.js';
 
 export default function decorate(block, options) {
   if (options) {
@@ -24,4 +25,7 @@ export default function decorate(block, options) {
   });
 
   decorateIcons(block);
+  matchHeights(block, 'h4');
+  matchHeights(block, 'p:first-of-type');
+  matchHeights(block, 'p:nth-of-type(2)');
 }
