@@ -174,13 +174,13 @@ function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
     <input type="radio" name="type" id="monthly"
     data-store-click-set-product data-store-product-id="${secondProduct}"
     data-store-product-department="consumer"
-    data-product-type="monthly" ${defaultSelection.split('-')[0] === secondProduct ? 'checked' : ''}/>
+    data-product-type="monthly" ${defaultSelection.split('-')[1] === secondProduct ? 'checked' : ''}/>
     <label for="monthly">${monthlyLabel ?? 'Monthly'}</label>
 
     <input type="radio" name="type" id="yearly" data-store-click-set-product
     data-store-product-id="${firstProduct}"
     data-store-product-department="consumer"
-    data-product-type="yearly" ${defaultSelection.split('-')[0] === firstProduct ? 'checked' : ''}/>
+    data-product-type="yearly" ${defaultSelection.split('-')[1] === firstProduct ? 'checked' : ''}/>
     <label for="yearly">${yearlyLabel ?? 'Yearly'}</label>
   `;
   return el;
