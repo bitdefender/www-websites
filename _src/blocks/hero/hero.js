@@ -183,10 +183,10 @@ export default function decorate(block) {
     }
 
     if (textcolor) {
-      block.querySelectorAll(".hero-content > div, .hero-content > div *").forEach(el => {
+      block.querySelectorAll('.hero-content > div, .hero-content > div *').forEach((el) => {
         el.style.color = textcolor;
       });
-    }  
+    }
 
     // set the modal buttons in the hero banner to not refresh the modal on click
     if (stopAutomaticModalRefresh === 'true') {
