@@ -174,13 +174,13 @@ function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
     <input type="radio" name="type" id="monthly"
     data-store-click-set-product data-store-product-id="${secondProduct}"
     data-store-product-department="consumer"
-    data-product-type="monthly" ${defaultSelection.split('-')[1] === secondProduct ? 'checked' : ''}/>
+    data-product-type="monthly" ${defaultSelection.split('-')[0] === secondProduct ? 'checked' : ''}/>
     <label for="monthly">${monthlyLabel ?? 'Monthly'}</label>
 
     <input type="radio" name="type" id="yearly" data-store-click-set-product
     data-store-product-id="${firstProduct}"
     data-store-product-department="consumer"
-    data-product-type="yearly" ${defaultSelection.split('-')[1] === firstProduct ? 'checked' : ''}/>
+    data-product-type="yearly" ${defaultSelection.split('-')[0] === firstProduct ? 'checked' : ''}/>
     <label for="yearly">${yearlyLabel ?? 'Yearly'}</label>
   `;
   return el;
@@ -235,7 +235,7 @@ function renderSelector(block, ...options) {
   const selectorOptions = options
     .filter((option) => option && !Number.isNaN(Number(option)))
     .map((opt) => Number(opt));
-  const defaultSelection = Number(state.blockDataset.defaultSelection?.split('-')[0]) || selectorOptions[1];
+  const defaultSelection = Number(state.blockDataset.defaultSelection?.split('-')[1]) || selectorOptions[1];
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
