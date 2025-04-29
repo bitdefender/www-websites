@@ -244,12 +244,9 @@ function renderSelector(block, ...options) {
   el.innerHTML = `
     <label for="${selectId}">Choose number of members</label>
     <select id="${selectId}"
-      data-store-devices-text-plural="members"
-      data-store-devices-text-singular="member"
-      data-store-click-set-devices
-      data-store-devices>
+      data-store-click-set-devices>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `
-          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt}</option>
+          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt === 1 ? `${opt} member` : `${opt} members`} </option>
         `).join('')}
     </select>
   `;
