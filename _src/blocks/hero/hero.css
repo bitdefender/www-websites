@@ -936,6 +936,14 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero-container.blue-title .scamio .hero-picture img {
     display: none;
   }
+  main .smaller-img-tablet .hero .hero-picture {
+    position: absolute;
+    top: 5em;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    height: 70%;
+  }
 }
 
 @media (min-width: 1600px) {
