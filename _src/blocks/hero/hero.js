@@ -160,7 +160,6 @@ export default function decorate(block) {
   }
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
-  console.log('backgroundcolor ', backgroundcolor)
 
   if (backgroundcolor) {
     parentSection.style.backgroundColor = backgroundcolor;
