@@ -762,7 +762,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   }
 
   main .hero .hero-content .breadcrumb a::after {
-    margin: 0 9px;
+    margin: 0 10px;
   }
 
   main .hero-container.blue-title .hero-content>div {
@@ -935,6 +935,14 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 @media (max-width: 1200px){
   main .hero-container.blue-title .scamio .hero-picture img {
     display: none;
+  }
+  main .smaller-img-tablet .hero .hero-picture {
+    position: absolute;
+    top: 5em;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    height: 70%;
   }
 }
 
