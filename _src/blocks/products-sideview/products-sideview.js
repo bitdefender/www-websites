@@ -140,7 +140,7 @@ function updateBuyLink(block) {
 }
 
 function renderPrice(block, _firstProduct, secondProduct) {
-  const variant = '5-1';
+  const variant = state.blockDataset.defaultSelection ?? '5-1';
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
 
@@ -203,10 +203,10 @@ function getBlueTags(block) {
 }
 
 function updateBenefits(block, selectEl, metadata) {
+  if (!metadata) return;
   const blueTags = getBlueTags(block);
   const selectedOption = [...selectEl.options].find((option) => option.hasAttribute('selected'));
   const neededIndex = [...selectEl.options].indexOf(selectedOption);
-
   const rawMetadata = metadata[neededIndex];
   const cleanedArray = rawMetadata
     .slice(1, -1)
@@ -235,8 +235,7 @@ function renderSelector(block, ...options) {
   const selectorOptions = options
     .filter((option) => option && !Number.isNaN(Number(option)))
     .map((opt) => Number(opt));
-  const defaultSelection = Number(state.blockDataset.defaultselection) || selectorOptions[1];
-
+  const defaultSelection = Number(state.blockDataset.defaultSelection?.split('-')[0]) || selectorOptions[1];
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
@@ -265,7 +264,7 @@ function renderSelector(block, ...options) {
     updateBenefits(block, selectEl, metadata.benefits.split(',,'));
   });
 
-  updateBenefits(block, selectEl, metadata.benefits.split(',,'));
+  updateBenefits(block, selectEl, metadata.benefits?.split(',,'));
 
   return el;
 }
