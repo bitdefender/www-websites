@@ -165,23 +165,23 @@ function renderPrice(block, _firstProduct, secondProduct) {
   return priceElement;
 }
 
-function renderRadioGroup(block) {
-  const metadata = block.parentElement.parentElement.dataset;
-  const [firstProduct, secondProduct] = metadata.price.split(',');
+function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
+  const { defaultSelection } = state.blockDataset;
+  const [firstProduct, secondProduct] = state.blockDataset.price.split(',');
   const el = document.createElement('DIV');
   el.classList.add('products-sideview-radio');
   el.innerHTML = `
     <input type="radio" name="type" id="monthly"
     data-store-click-set-product data-store-product-id="${secondProduct}"
     data-store-product-department="consumer"
-    data-product-type="monthly" checked/>
-    <label for="monthly">Monthly</label>
+    data-product-type="monthly" ${defaultSelection.split('-')[0] === secondProduct ? 'checked' : ''}/>
+    <label for="monthly">${monthlyLabel ?? 'Monthly'}</label>
 
     <input type="radio" name="type" id="yearly" data-store-click-set-product
     data-store-product-id="${firstProduct}"
     data-store-product-department="consumer"
-    data-product-type="yearly"/>
-    <label for="yearly">Yearly</label>
+    data-product-type="yearly" ${defaultSelection.split('-')[0] === firstProduct ? 'checked' : ''}/>
+    <label for="yearly">${yearlyLabel ?? 'Yearly'}</label>
   `;
   return el;
 }
