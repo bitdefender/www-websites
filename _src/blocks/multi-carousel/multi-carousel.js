@@ -105,9 +105,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
     prevArrow = document.createElement('button');
     prevArrow.classList.add('carousel-prev');
-    prevArrow.innerHTML = `<svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M17.6666 5.18083L1.66663 5.18083M1.66663 5.18083L5.66663 9.15983M1.66663 5.18083L5.66663 1.16016" stroke="black" stroke-width="2.13333"/>
-    </svg>`;
+    prevArrow.innerHTML = '<img src="/_src/icons/subscriber-icons/left-arrow-black.svg" alt="Bitdefender" />';
     prevArrow.addEventListener('click', () => {
       if (currentIndex > 0) {
         moveToSlide(currentIndex - 1);
@@ -116,9 +114,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
     nextArrow = document.createElement('button');
     nextArrow.classList.add('carousel-next');
-    nextArrow.innerHTML = `<svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 5.13916H16M16 5.13916L12 1.16016M16 5.13916L12 9.15983" stroke="black" stroke-width="2.13333"/>
-    </svg>`;
+    nextArrow.innerHTML = '<img src="/_src/icons/subscriber-icons/right-arrow-black.svg" alt="Bitdefender" />';
     nextArrow.addEventListener('click', () => {
       if (currentIndex < videos.length - 1) {
         moveToSlide(currentIndex + 1);

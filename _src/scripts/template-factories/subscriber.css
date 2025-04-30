@@ -22,7 +22,7 @@ main .subscriber .section {
 }
 
 .subscriber #heroColumn h2 {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 64px;
     line-height: 64px;
 }
@@ -125,7 +125,7 @@ main .subscriber .section {
 }
 
 .subscriber .columnvideo > div.image-columns-wrapper h3 {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 40px;
     line-height: 47px;
     margin: 16px 0;
@@ -151,10 +151,9 @@ main .subscriber .section {
     display: inline-block;
 }
 .subscriber .columnvideo > div.image-columns-wrapper video {
-    width: 61%;
-    position: absolute;
-    bottom: 0;
-    right: -14%;
+    width: 32em;
+    margin-bottom: -9em;
+    margin-right: 0;
 }
 .subscriber #has4columns {
     background-color: #F1F5F8;
@@ -175,7 +174,7 @@ main .subscriber .section {
 .subscriber #has4columns .default-content-wrapper h3 {
     width: 500px;
     margin: 16px auto;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 40px;
     line-height: 40px;
 }
@@ -254,7 +253,7 @@ main .subscriber .section {
 }
 
 .subscriber #blueSlider .default-content-wrapper h3 {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 40px;
     line-height: 40px;
     margin: 16px 0;
@@ -320,7 +319,7 @@ main .subscriber .section {
     color: black;
 }
 .subscriber #multiColumns .default-content-wrapper h3 {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 40px;
     line-height: 40px;
     margin: 16px 0;
@@ -703,7 +702,7 @@ main .subscriber .section {
 }
 .subscriber #customQuoteCarousel .columns h4 {
     min-height: auto !important;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 40px;
     line-height: 45px;
     margin: 16px 0;
@@ -749,7 +748,7 @@ main .subscriber .section {
     padding: 0;
 }
 .subscriber #customQuoteCarousel .slides-controls ul li button {
-    height: 36px;
+    height: 29px;
     width: 36px;
     padding: 6px 0;
     font-size: 14px;
@@ -909,7 +908,7 @@ main .subscriber .section {
     display: none;
 }
 .subscriber .multi-carousel-container .carousel-arrows-container button {
-    width: 32px;
+    width: 18px;
     height: 32px;
     background: transparent;
     border: 0 none;
@@ -920,7 +919,7 @@ main .subscriber .section {
 .subscriber .multi-carousel-container .carousel-arrows-container button.inactive {
     cursor: default;
 }
-.subscriber .multi-carousel-container .carousel-arrows-container button:hover svg path, .subscriber .multi-carousel-container .carousel-arrows-container button.inactive svg path {
+.subscriber .multi-carousel-container .carousel-arrows-container button:hover img, .subscriber .multi-carousel-container .carousel-arrows-container button.inactive img {
     opacity: 0.5;
 }
 .subscriber .multivideosslider .carousel-arrows-container button {
@@ -977,7 +976,7 @@ main .subscriber .section {
 .subscriber .multicontentslider .carousel-item .carousel-content > div p:last-of-type strong {
     font-size: 22px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 30.8px;
     letter-spacing: -0.22px;
     margin-bottom: 8px;
@@ -988,7 +987,7 @@ main .subscriber .section {
     padding-left: 25%;
 }
 .subscriber .multicontentvideoslider .default-content-wrapper h4 {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 40px;
     line-height: 47px;
     margin: 16px 0;
@@ -1142,6 +1141,10 @@ main .subscriber .section {
     width: 130px;
 }
 
+.subscriber .questions-answers-container h3 {
+    font-weight: 600;
+}
+
 @media (min-width: 1600px) { /* large desktop */
     .subscriber .default-content-wrapper {
         max-width: var(--section-large-desktop-max-width);
@@ -1160,9 +1163,13 @@ main .subscriber .section {
 }
 
 @media (max-width: 1299px) {
+    .subscriber main .section#heroColumn {
+        padding: 60px 0;
+    }
     .subscriber .multicontentslider .default-content-wrapper {
         padding-left: var(--section-desktop-padding-vertical);
         padding-right: var(--section-desktop-padding-vertical);
+        margin-bottom: 0;
     }
     .subscriber .questions-answers-container .default-content-wrapper {
         margin: 4em auto 2em !important;
@@ -1220,7 +1227,8 @@ main .subscriber .section {
         padding-left: 14%;
     }
     .subscriber .multicontentvideoslider .carousel-arrows-container button {
-        width: 14%;
+        width: 18px;
+        margin-right: 15px;
     }
     .subscriber #blueSlider {
         padding: 80px 0;
@@ -1262,7 +1270,7 @@ main .subscriber .section {
     .subscriber #heroColumn table tr {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: left;
     }
 
     .subscriber .multicontentslider .carousel-container {
@@ -1462,8 +1470,8 @@ main .subscriber .section {
     .subscriber .multicontentslider .carousel-item .carousel-content > div {
         text-align: center;
         display: flex !important;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
         text-align: left;
     }
     .subscriber .multicontentslider .carousel-item .carousel-content > div p .icon {
@@ -1512,6 +1520,15 @@ main .subscriber .section {
 }
 
 @media (max-width: 767px) {
+    .subscriber .multicontentslider .carousel-item {
+        width: 32em;
+    }
+    .subscriber #multiColumns.nobackground {
+        padding: 4em 0;
+    }
+    .subscriber #multiColumns .columns > div > div h4 {
+        line-height: 23px;
+    }
     .subscriber #heroColumn table tr td:nth-of-type(1) {
         margin-right: 0;
     }
@@ -1519,7 +1536,7 @@ main .subscriber .section {
         width: 100%;
     }
     .subscriber .multi-carousel-container .carousel-arrows-container {
-        display: none;
+        /*display: none;*/
     }
     .subscriber .multi-carousel-container.showarrows .carousel-arrows-container {
         display: block;
@@ -1620,11 +1637,13 @@ main .subscriber .section {
         width: 100%;
     }
     .subscriber .columnvideo > div.image-columns-wrapper table tr {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
     .subscriber .columnvideo > div.image-columns-wrapper table tr td {
         width: 100%;
-        margin: 10px 0;
+        margin: 0;
         border: 0 none;
         border-left: 1px solid white;
         padding-left: 10px;
@@ -1726,7 +1745,8 @@ main .subscriber .section {
         margin-bottom: 2em;
     }
     .subscriber .section.multicontentvideoslider {
-        margin-bottom: 3em;
+        margin-bottom: 3em!important;
+        padding-bottom: 0!important;
     }
     .subscriber .section.multicontentvideoslider .carousel-container {
         padding-left: 0;
@@ -1740,9 +1760,6 @@ main .subscriber .section {
         height: 100%;
         width: 100%;
         min-width: unset;
-    }
-    .subscriber .multicontentslider .carousel-item {
-        width: 112vw;
     }
     .subscriber .multicontentslider .carousel-item .carousel-content > div {
         text-align: left;

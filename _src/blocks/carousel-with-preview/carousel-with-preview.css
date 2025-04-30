@@ -44,6 +44,7 @@
     position: relative;
     align-items: center;
     overflow: hidden;
+    margin: 0 20px;
 }
 
 .carousel-with-preview-container .carousel {
@@ -66,6 +67,17 @@
     border: 1px solid #E0E0E0;
     transition: background-color 0.3s ease, transform 0.3s ease;
     transition: border 0.3s ease, transform 0.3s ease;
+}
+
+.carousel-with-preview-container .carousel-item .thumb-wrapper {
+    height: 160px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.carousel-with-preview-container .carousel-item .thumb-wrapper img {
+    height: auto;
+    margin-top: -1.5em;
 }
 
 .carousel-with-preview-container .carousel-item:hover {
@@ -145,7 +157,7 @@
 .carousel-with-preview-container .default-content-wrapper h3 {
     width: 500px;
     margin: 16px auto;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 40px;
     line-height: 40px;
 }
@@ -186,6 +198,10 @@
         max-width: var(--section-desktop-max-width);
         padding: 0 var(--section-desktop-padding);
         margin: 0 auto;
+    }
+
+    .carousel-with-preview-container .carousel-wrapper {
+        margin: 0;
     }
 }
 

@@ -17,7 +17,7 @@
 }
 
 .tabs-slide-container .default-content-wrapper h3 {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 40px;
     line-height: 40px;
     text-align: center;
@@ -239,20 +239,13 @@
         width: 100%;
     }
     .spp-slider .tab {
-        flex: 0 0 42%;
+        flex: 0 0 150px;
     }
     .spp-slider .tab-slider {
-        width: 42%;
+        width: 150px;
     }
     .spp-slider.without-active .tab-slider {
-        width: 37%;
-        transform: translateX(calc(254px));
-    }
-}
-
-@media (max-width: 380px) {
-    .spp-slider.without-active .tab-slider {
-        width: 39%;
-        transform: translateX(calc(140%));
+        width: 150px;
+        transform: translateX(calc(200px));
     }
 }
