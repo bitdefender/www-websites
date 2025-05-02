@@ -1797,6 +1797,12 @@ main .subscriber .section {
     .subscriber .multicontentslider .carousel-item .carousel-content > div p:first-of-type {
         flex: 1;
     }
+    .subscriber .multicontentvideoslider .carousel-arrows-container {
+        display: flex !important;
+    }
+    .subscriber .multi-carousel-container .carousel-arrows-container button:hover img, .subscriber .multi-carousel-container .carousel-arrows-container button.inactive img {
+        opacity: 1;
+    }
     .subscriber .multicontentvideoslider .carousel-item iframe {
         height: auto;
         width: 100%;
