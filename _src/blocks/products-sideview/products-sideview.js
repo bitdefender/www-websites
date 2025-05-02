@@ -140,7 +140,7 @@ function updateBuyLink(block) {
 }
 
 function renderPrice(block, _firstProduct, secondProduct) {
-  const variant = '5-1';
+  const variant = state.blockDataset.defaultSelection ?? '5-1';
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
 
@@ -165,23 +165,23 @@ function renderPrice(block, _firstProduct, secondProduct) {
   return priceElement;
 }
 
-function renderRadioGroup(block) {
-  const metadata = block.parentElement.parentElement.dataset;
-  const [firstProduct, secondProduct] = metadata.price.split(',');
+function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
+  const { defaultSelection } = state.blockDataset;
+  const [firstProduct, secondProduct] = state.blockDataset.price.split(',');
   const el = document.createElement('DIV');
   el.classList.add('products-sideview-radio');
   el.innerHTML = `
     <input type="radio" name="type" id="monthly"
     data-store-click-set-product data-store-product-id="${secondProduct}"
     data-store-product-department="consumer"
-    data-product-type="monthly" checked/>
-    <label for="monthly">Monthly</label>
+    data-product-type="monthly" ${defaultSelection.split('-')[0] === secondProduct ? 'checked' : ''}/>
+    <label for="monthly">${monthlyLabel ?? 'Monthly'}</label>
 
     <input type="radio" name="type" id="yearly" data-store-click-set-product
     data-store-product-id="${firstProduct}"
     data-store-product-department="consumer"
-    data-product-type="yearly"/>
-    <label for="yearly">Yearly</label>
+    data-product-type="yearly" ${defaultSelection.split('-')[0] === firstProduct ? 'checked' : ''}/>
+    <label for="yearly">${yearlyLabel ?? 'Yearly'}</label>
   `;
   return el;
 }
@@ -203,10 +203,10 @@ function getBlueTags(block) {
 }
 
 function updateBenefits(block, selectEl, metadata) {
+  if (!metadata) return;
   const blueTags = getBlueTags(block);
   const selectedOption = [...selectEl.options].find((option) => option.hasAttribute('selected'));
   const neededIndex = [...selectEl.options].indexOf(selectedOption);
-
   const rawMetadata = metadata[neededIndex];
   const cleanedArray = rawMetadata
     .slice(1, -1)
@@ -235,8 +235,7 @@ function renderSelector(block, ...options) {
   const selectorOptions = options
     .filter((option) => option && !Number.isNaN(Number(option)))
     .map((opt) => Number(opt));
-  const defaultSelection = Number(state.blockDataset.defaultselection) || selectorOptions[1];
-
+  const defaultSelection = Number(state.blockDataset.defaultSelection?.split('-')[1]) || selectorOptions[1];
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
@@ -245,12 +244,9 @@ function renderSelector(block, ...options) {
   el.innerHTML = `
     <label for="${selectId}">Choose number of members</label>
     <select id="${selectId}"
-      data-store-devices-text-plural="members"
-      data-store-devices-text-singular="member"
-      data-store-click-set-devices
-      data-store-devices>
+      data-store-click-set-devices>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `
-          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt}</option>
+          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt === 1 ? `${opt} member` : `${opt} members`} </option>
         `).join('')}
     </select>
   `;
@@ -265,7 +261,7 @@ function renderSelector(block, ...options) {
     updateBenefits(block, selectEl, metadata.benefits.split(',,'));
   });
 
-  updateBenefits(block, selectEl, metadata.benefits.split(',,'));
+  updateBenefits(block, selectEl, metadata.benefits?.split(',,'));
 
   return el;
 }
