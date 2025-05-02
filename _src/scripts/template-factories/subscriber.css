@@ -953,6 +953,9 @@ main .subscriber .section {
 }
 .subscriber .multicontentslider .carousel-item.hasIframe {
     padding: 0;
+    background-color: black;
+    display: flex;
+    align-items: center;
 }
 .subscriber .multicontentslider .carousel-item p {
     margin: 0;
@@ -1003,7 +1006,7 @@ main .subscriber .section {
 }
 .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
     border-radius: 16px;
-    width: 850px;
+    width: 43vw;
     height: 506px;
 }
 .subscriber .multicontentvideoslider .carousel-item .carousel-content {
@@ -1145,10 +1148,27 @@ main .subscriber .section {
     font-weight: 600;
 }
 
+@media (max-width: 1650px) { 
+    .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
+        width: 40vw;
+        height: auto;
+    }
+}
+
 @media (min-width: 1600px) { /* large desktop */
     .subscriber .default-content-wrapper {
         max-width: var(--section-large-desktop-max-width);
         padding: 0 var(--section-large-desktop-padding);
+    }
+}
+
+@media (max-width: 1350px) { 
+    .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
+        width: 36vw;
+    }
+    .subscriber .multicontentvideoslider .carousel-item iframe {
+        min-width: auto;
+        border-radius: 0;
     }
 }
 
@@ -1252,7 +1272,7 @@ main .subscriber .section {
         margin-top: 2em;
     }
     .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
-        width: 68vw;
+        width: 49vw;
     }
 }
 
@@ -1482,16 +1502,34 @@ main .subscriber .section {
     .subscriber .multicontentslider .carousel-item .carousel-content > div p:first-of-type {
         margin-bottom: 0;
     }
+    .subscriber .section.multicontentvideoslider .carousel-container {
+        padding-left: 0;
+    }
+    .subscriber .multicontentslider .carousel-track {
+        gap: 0;
+    }
+    .subscriber .section.multicontentvideoslider {
+        padding-bottom: 0;
+    }
+    .subscriber .multicontentvideoslider .carousel-item {
+        height: 365px;
+        width: 82vw;
+        margin: 0px 2vw;
+        opacity: 1;
+    }
     .subscriber .multicontentvideoslider .carousel-item .carousel-content > div p:last-of-type {
         font-weight: 400;
         font-size: 18px;
         line-height: 27px;
     }
-    .subscriber .multicontentvideoslider .carousel-item {
-        height: 365px;
+    .subscriber .multicontentslider .carousel-item iframe {
+        width: 94%;
+        margin: 0 auto;
     }
     .subscriber .multicontentvideoslider .carousel-item .carousel-content > div {
         text-align: left;
+        flex-direction: column;
+        align-items: flex-start;
     }
     .subscriber .columnvideo2 > div.image-columns-wrapper video {
         right: 0;
@@ -1766,7 +1804,6 @@ main .subscriber .section {
         display: block;
     }
     .subscriber .multicontentslider .carousel-item .carousel-content > div p:first-of-type {
-        background-color: white;
         border-radius: 10px;
         text-align: left;
         width: fit-content;
