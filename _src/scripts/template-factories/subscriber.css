@@ -1559,7 +1559,8 @@ main .subscriber .section {
 
 @media (max-width: 767px) {
     .subscriber .multicontentslider .carousel-item {
-        width: 32em;
+        width: 90vw;
+        margin-right: 10px;
     }
     .subscriber #multiColumns.nobackground {
         padding: 4em 0;
@@ -1639,6 +1640,13 @@ main .subscriber .section {
     }
     .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
         width: 68vw;
+    }
+    .subscriber .multicontentvideoslider .carousel-arrows-container button {
+        width: 18px;
+        margin-right: 0;
+    }
+    .subscriber #carouselLogosText .carousel-item .carousel-content > div {
+        gap: 0;
     }
 }
 @media (max-width: 636px) {
