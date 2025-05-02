@@ -1791,8 +1791,11 @@ main .subscriber .section {
     }
     .subscriber .section.multicontentvideoslider .carousel-item {
         width: 81vw;
-        height: auto;
+        height: 460px;
         opacity: 1;
+    }
+    .subscriber .multicontentslider .carousel-item .carousel-content > div p:first-of-type {
+        flex: 1;
     }
     .subscriber .multicontentvideoslider .carousel-item iframe {
         height: auto;
