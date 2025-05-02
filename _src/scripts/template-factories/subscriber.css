@@ -1795,7 +1795,7 @@ main .subscriber .section {
         opacity: 1;
     }
     .subscriber .multicontentvideoslider .carousel-item iframe {
-        height: 100%;
+        height: auto;
         width: 100%;
         min-width: unset;
     }
