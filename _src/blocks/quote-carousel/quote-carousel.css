@@ -247,4 +247,8 @@ main .quote-carousel-container .hasMultiImgs .right-col picture:first-of-type {
     height: auto;
     margin-bottom: -1em;
   }
+
+  #customQuoteCarousel .slides-container .slides-dots li {
+    border-radius: 8px;
+  }
 }

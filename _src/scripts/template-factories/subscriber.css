@@ -151,8 +151,8 @@ main .subscriber .section {
     display: inline-block;
 }
 .subscriber .columnvideo > div.image-columns-wrapper video {
-    width: 32em;
-    margin-bottom: -9em;
+    width: 41em;
+    margin-bottom: -3em;
     margin-right: 0;
 }
 .subscriber #has4columns {
@@ -883,6 +883,9 @@ main .subscriber .section {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 64px;
+}
+.subscriber #carouselLogosText .default-content-wrapper {
+    margin-bottom: 32px;
 }
 .subscriber .multivideosslider .default-content-wrapper {
     justify-content: center;
@@ -1812,7 +1815,7 @@ main .subscriber .section {
         opacity: 1;
     }
     .subscriber .multicontentvideoslider .carousel-item iframe {
-        height: auto;
+        height: 22em;
         width: 100%;
         min-width: unset;
     }
@@ -1827,6 +1830,13 @@ main .subscriber .section {
         height: auto;
         display: block;
         margin-bottom: 0;
+    }
+    .subscriber #carouselLogosText .carousel-item .carousel-content > div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .subscriber #carouselLogosText .carousel-item .carousel-content > div p:first-of-type {
+        flex: 0 0 115px;
     }
     .subscriber #tabSlide .slide > div > div strong {
         height: 46px;

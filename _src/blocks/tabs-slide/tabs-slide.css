@@ -236,16 +236,17 @@
         transform: none;
     }
     .spp-slider .tabs {
-        width: 100%;
+        width: 300px;
     }
     .spp-slider .tab {
         flex: 0 0 150px;
     }
-    .spp-slider .tab-slider {
-        width: 150px;
+    .spp-slider.with-active .tab-slider {
+        width: 110px;
+        transform: translateX(20px);
     }
     .spp-slider.without-active .tab-slider {
-        width: 150px;
-        transform: translateX(calc(200px));
+        width: 110px;
+        transform: translateX(calc(170px));
     }
 }
