@@ -24,10 +24,16 @@
   padding-top: 40px;
 }
 
-.creators-block.block>div:first-of-type img {
+.creators-block.block>div:first-of-type img, .creators-block.block>div:first-of-type svg {
   position: absolute;
   right: 0;
   top: 40px;
+  height: 64px;
+  width: 80px;
+}
+
+.creators-block.block>div h1 {
+  color: #fff ;
 }
 
 .creators-block.block>div h3 {
@@ -72,12 +78,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   grid-gap: 30px;
+  justify-content: center;
+  padding-bottom: 40px;
 }
 
 .creators-block.block>div:nth-child(2) .creator-box {
   display: flex;
   position: relative;
-  width: 220px;
+  min-width: 220px;
   height: 310px;
   padding: 16px 23px;
   border-radius: 20px;
@@ -171,7 +179,8 @@
 
   .creators-block.block>div:first-of-type img {
     position: relative;
-    width: 60px;
+    width: 80px;
+    height: 64px;
     top: 0;
   }
 }
