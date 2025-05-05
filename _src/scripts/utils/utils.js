@@ -476,8 +476,7 @@ export function appendAdobeMcLinks(selector) {
 
     const hrefSelector = '[href*=".bitdefender."]';
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      // DEX-21044 - Remove Adobe Parameters from Menu
-      if (link.href.includes('en-us/consumer/security-for-creators') || link.href.includes('en-us/cyberpedia')) return;
+      console.log('link ', link)
       const destinationURLWithVisitorIDs = await Target.appendVisitorIDsTo(link.href);
       link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
     });
