@@ -1,4 +1,5 @@
 import Target from "@repobit/dex-target";
+import { Constants } from "@repobit/dex-utils";
 import { User } from "@repobit/dex-utils";
 import page from "../page.js";
 import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
@@ -71,7 +72,7 @@ const getFreeProductsEvents = () => {
  * Resolve the data layer
  */
 export const resolveNonProductsDataLayer = async () => {
-  AdobeDataLayerService.push(new PageLoadStartedEvent(
+  const pageLoadStartedEvent = new PageLoadStartedEvent(
     page,
     {
       name: generatePageLoadStartedName(),
@@ -88,7 +89,9 @@ export const resolveNonProductsDataLayer = async () => {
       internalPromotionID: page.getParamValue('icid') || '',
       trackingID: page.getParamValue('cid') || '',
     },
-  ));
+  );
+
+  AdobeDataLayerService.push(pageLoadStartedEvent);
   pageErrorHandling();
   AdobeDataLayerService.push(new UserDetectedEvent(
     page,
@@ -99,4 +102,20 @@ export const resolveNonProductsDataLayer = async () => {
   ));
   checkClickEventAfterRedirect();
   getFreeProductsEvents();
+
+  // send cdp data
+  try {
+    await fetch(
+      `${Constants.PUBLIC_URL_ORIGIN}/cdp/`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          mcvisid: (await Target.visitorInfo)?.identity?.ECID || '',
+          ...pageLoadStartedEvent.page
+        })
+      }
+    );
+  } catch (e) {
+    console.warn(e);
+  }
 }
