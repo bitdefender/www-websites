@@ -246,3 +246,20 @@
         line-height: 24px;
     }
 }
+
+@media (max-width: 350px) {
+    .carousel-with-preview-container .default-content-wrapper h3 {
+        font-size: 28px !important;
+        line-height: 35px !important;
+    }
+
+    .carousel-with-preview-container .default-content-wrapper p strong {
+        font-size: 14px;
+        line-height: 21px;
+    }
+
+    .carousel-with-preview-container .default-content-wrapper p {
+        font-size: 17px;
+        line-height: 22px;
+    }
+}
