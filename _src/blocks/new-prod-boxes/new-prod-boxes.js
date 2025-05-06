@@ -328,7 +328,7 @@ export default async function decorate(block) {
         storeEvent = 'product-loaded';
       }
       const prodBox = document.createElement('div');
-      
+
       let titleHTML = '';
       const hasAnchor = title.querySelector('a');
       const hasBr = title.innerHTML.includes('<br');
