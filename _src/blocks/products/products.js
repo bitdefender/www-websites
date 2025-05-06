@@ -167,22 +167,6 @@ function renderHighlightSavings(text = 'Save', percent = '') {
 }
 
 /**
- * Nanoblock representing a text to highlight in the product card
- * @param text Text to display
- * @returns Root node of the nanoblock
- */
-function renderHighlight(text) {
-  return createTag(
-    'div',
-    {
-      class: 'highlight',
-      style: 'visibility:hidden',
-    },
-    `<span>${text}</span>`,
-  );
-}
-
-/**
  *
  * @param {string} text Text of the featured nanoblock
  * @return {string} Text with variables replaced
@@ -200,6 +184,24 @@ const replaceVariablesInText = (text) => {
 
   return replacedText;
 };
+
+/**
+ * Nanoblock representing a text to highlight in the product card
+ * @param text Text to display
+ * @returns Root node of the nanoblock
+ */
+function renderHighlight(text) {
+  const updatedText = replaceVariablesInText(text);
+  return createTag(
+    'div',
+    {
+      class: 'highlight',
+      'data-store-text-variable': '',
+      'data-store-hide': 'no-price=discounted',
+    },
+    `<span>${updatedText}</span>`,
+  );
+}
 
 /**
  *
