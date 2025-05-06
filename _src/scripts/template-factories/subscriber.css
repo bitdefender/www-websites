@@ -1719,7 +1719,7 @@ main .subscriber .section {
         margin: 2em 0;
     }
     .subscriber #blueSlider .block .carousel-container .carousel-item {
-        flex: 0 0 318px;
+        flex: 0 0 93%;
     }
     .subscriber .multi-carousel-wrapper {
         padding-right: 0!important;
