@@ -1,0 +1,510 @@
+const correctAnswersText = new Map();
+const wrongAnswersText = new Map();
+const showAfterAnswerText = new Map();
+const userAnswers = new Map();
+const clickAttempts = new Map();
+
+function decorateStartPage(startBlock) {
+  startBlock.classList.add('start-page');
+
+  const legalDiv = document.createElement('div');
+  legalDiv.classList.add('legal-links');
+
+  let ul = startBlock.querySelector('ul');
+  const listItems = ul.querySelectorAll('li');
+
+  listItems.forEach((listItem) => {
+    const paragraph = document.createElement('p');
+    paragraph.innerHTML = listItem.innerHTML;
+    legalDiv.appendChild(paragraph);
+  });
+
+  ul = ul.replaceWith(legalDiv);
+}
+
+/**
+ * Extracts the first word inside angle brackets and the text after it
+ * Example: "<correct-text Correct!>" returns { type: "correct-text", content: "Correct!" }
+ * @param {string} text - The text to parse
+ * @return {object|null} An object with type and content properties or null if no match
+ */
+function extractSpecialText(text) {
+  // Regular expression to match content inside angle brackets and the text that follows
+  const regex = /<([a-zA-Z-]+)\s+([^>]+)>/;
+  const match = text.match(regex);
+
+  if (match && match.length >= 3) {
+    return {
+      type: match[1],
+      content: match[2],
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Processes and styles text with special markup
+ * Handles patterns like "<black Not Correct!>" or "Not Correct! <black Here's what you missed:>"
+ * Also handles HTML-encoded angle brackets (&lt; and &gt;)
+ * @param {string} html - The HTML content to process
+ * @return {string} The processed HTML with styled spans
+ */
+function processStyledText(html) {
+  if (!html) return html;
+  
+  // Handle both regular and HTML-encoded angle brackets
+  let processedHtml = html;
+  
+  // Replace HTML-encoded brackets if present
+  if (processedHtml.includes('&lt;')) {
+    processedHtml = processedHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  }
+  
+  // Regular expression to match <word text> pattern anywhere in the string
+  // Using a more flexible regex that can find the pattern anywhere in the text
+  const regex = /<([a-zA-Z-]+)\s+([^>]+)>/g;
+  
+  // Process all matching patterns in the text
+  return processedHtml.replace(regex, (match, className, content) => {
+    return `<span class="${className}">${content}</span>`;
+  });
+}
+
+/**
+ * Processes paragraphs with special markup in questions
+ * @param {HTMLElement} question - The question element to process
+ * @param {number} index - The question index
+ */
+function processSpecialParagraphs(question, index) {
+  const paragraphs = question.querySelectorAll('p');
+
+  paragraphs.forEach((paragraph) => {
+    const text = paragraph.innerText;
+    const extractedData = extractSpecialText(text);
+
+    if (extractedData) {
+      function stripOuterBrackets(str) {
+        console.log(str.replace(/^&lt;(.+)&gt;$/, '$1'));
+        return str.replace(/^&lt;(.+)&gt;$/, '$1');
+      }
+
+      paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
+      paragraph.innerHTML = paragraph.innerHTML.replace(extractedData.type, '');
+
+      paragraph.dataset.type = extractedData.type;
+      paragraph.classList.add(extractedData.type);
+      paragraph.dataset.content = extractedData.content;
+      switch (paragraph.dataset.type) {
+        case 'correct-text':
+          correctAnswersText.set(index, paragraph);
+          paragraph.remove();
+          break;
+        case 'wrong-text':
+          wrongAnswersText.set(index, paragraph);
+          paragraph.remove();
+          break;
+        case 'show-after-answer-text':
+          showAfterAnswerText.set(index, paragraph);
+          paragraph.remove();
+          break;
+        case 'tries':
+          paragraph.classList.add('tries');
+        default:
+          break;
+      }
+    }
+  });
+}
+
+/**
+ * Processes answer list in questions
+ * @param {HTMLElement} question - The question element to process
+ * @param {number} questionIndex - The question index
+ */
+function decorateAnswersList(question, questionIndex) {
+  const answersList = question.querySelector('ul');
+  if (question.querySelector('h6')) {
+    return;
+  }
+
+  if (!answersList) return;
+
+  // Create a div to wrap all content before the ul
+  const contentDiv = document.createElement('div');
+  contentDiv.classList.add('question-content');
+
+  // Get all elements in the question
+  const children = Array.from(question.children[0].children);
+  // Find the index of the ul element
+  const ulIndex = children.indexOf(answersList);
+
+  // Add all elements before the ul to the contentDiv
+  for (let i = 0; i < ulIndex; i += 1) {
+    if (i === 0) {
+      children[i].classList.add('question-number');
+    }
+    contentDiv.appendChild(children[i]);
+  }
+
+  // Insert the contentDiv at the beginning of the question
+  question.children[0].prepend(contentDiv);
+
+  // Add class to the answers list
+  answersList.classList.add('answers-list');
+
+  let correctItemIndex = -1;
+
+  // Process each list item as an answer option
+  const listItems = answersList.querySelectorAll('li');
+  listItems.forEach((listItem, index) => {
+    listItem.classList.add('answer-option');
+
+    const emElement = listItem.querySelector('em');
+    if (emElement) {
+      correctItemIndex = index;
+      // Replace the <em> wrapper with its content - we don't want it to be visibly different
+      const content = emElement.innerHTML;
+      emElement.outerHTML = content;
+      listItem.dataset.correct = 'true';
+    }
+
+    listItem.addEventListener('click', () => {
+      // Prevent multiple selections
+      if (userAnswers.has(questionIndex)) return;
+
+      // Store the user's answer
+      const isCorrect = index === correctItemIndex;
+      userAnswers.set(questionIndex, isCorrect);
+
+      // Apply selected styling
+      listItems.forEach((item) => item.classList.remove('selected'));
+      listItem.classList.add('selected');
+
+      const questionHeader = question.querySelector('h2');
+      if (isCorrect) {
+        listItem.classList.add('correct-answer');
+        contentDiv.innerHTML = correctAnswersText.get(questionIndex).innerHTML;
+        contentDiv.classList.add('correct-answer');
+        question.classList.add('correct-answer');
+      } else {
+        listItem.classList.add('wrong-answer');
+        contentDiv.innerHTML = wrongAnswersText.get(questionIndex).innerHTML;
+        contentDiv.classList.add('wrong-answer');
+        question.classList.add('wrong-answer');
+      }
+      
+      const nextButton = question.querySelector('a[href="#continue"]');
+      
+      // Show the next button if it exists
+      if (nextButton) {
+        nextButton.style.display = '';
+      }
+      
+      answersList.append(showAfterAnswerText.get(questionIndex));
+    });
+  });
+}
+
+function showQuestion(index) {
+  // Hide all questions
+  const allQuestions = document.querySelectorAll('.scam-masters .question');
+  const startPage = document.querySelector('.scam-masters .start-page');
+
+  // Hide start page
+  if (startPage) {
+    startPage.style.display = 'none';
+  }
+
+  // Hide all questions
+  allQuestions.forEach((q) => {
+    q.style.display = 'none';
+  });
+
+  // Show the selected question
+  const questionToShow = document.querySelector(`.scam-masters .question-${index}`);
+  if (questionToShow) {
+    questionToShow.style.display = '';
+  }
+}
+
+function decorateClickableQuestionList(question, index) {
+  const list = question.querySelector('ul');
+  if (!list) {
+    return;
+  }
+
+  // Create a div to wrap all content before the ul
+  const contentDiv = document.createElement('div');
+  contentDiv.classList.add('question-content');
+
+  // Get all elements in the question
+  const children = Array.from(question.children[0].children);
+  // Find the index of the ul element
+  const ulIndex = children.indexOf(list);
+
+  // Add all elements before the ul to the contentDiv
+  for (let i = 0; i < ulIndex; i += 1) {
+    if (i === 0) {
+      children[i].classList.add('question-number');
+    }
+    contentDiv.appendChild(children[i]);
+  }
+
+  // Insert the contentDiv at the beginning of the question
+  question.children[0].prepend(contentDiv);
+
+  // Add class to the answers list
+  list.classList.add('answers-list');
+}
+
+function showWrong(question, questionIndex) {
+  question.classList.add('wrong-answer');
+  let questionContent = question.querySelector('.question-content');
+  questionContent.classList.add('wrong-answer');
+  let answerList = question.querySelector('.answers-list');
+  let notAScamButton = question.querySelector('a[href="#not-a-scam"]');
+  let continueButton = question.querySelector('a[href="#continue"]');
+  let triesCounter = question.querySelector('.tries');
+
+  // Get the wrong answer text and process any styled text within it
+  let wrongText = wrongAnswersText.get(questionIndex).innerHTML;
+  wrongText = processStyledText(wrongText);
+  console.log(wrongText);
+  // Update the question content with the processed text
+  questionContent.innerHTML = wrongText;
+  
+  answerList.style.display = 'block';
+  if (notAScamButton) {
+    notAScamButton.style.display = 'none';
+  }
+
+  if (continueButton) {
+    continueButton.style.display = '';
+  }
+
+  if (triesCounter) {
+    triesCounter.style.display = 'none';
+  }
+
+  answerList.append(showAfterAnswerText.get(questionIndex));
+}
+
+function decorateClickQuestions(question, index) {
+  if (!question.querySelector('h6')) {
+    return;
+  }
+
+  question.classList.add('clickable-question');
+
+  let scamTag = question.querySelector('h6');
+  scamTag.classList.add('question-scam-tag');
+
+  decorateClickableQuestionList(question, index);
+  
+  let notAScamButton = question.querySelector('a[href="#not-a-scam"]');
+  if (notAScamButton) {
+    notAScamButton.classList.add('secondary');
+    notAScamButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      showWrong(question, index);
+    });
+  }
+  // Find the image that contains the clickable elements
+  const imageContainer = question.querySelector('picture');
+  if (!imageContainer) return;
+  
+  // Initialize click attempts for this question
+  clickAttempts.set(index, 0);
+  
+  // Get existing tries counter
+  const triesCounter = question.querySelector('.tries');
+  
+  // Create a wrapper to position the clickable areas over the image
+  const imageWrapper = document.createElement('div');
+  imageWrapper.classList.add('image-wrapper');
+  
+  // Create a clickable background layer that covers the entire image
+  const clickableBackground = document.createElement('div');
+  clickableBackground.classList.add('clickable-background');
+  
+  // Create a container for the clickable spots that sits on top
+  const clickableContainer = document.createElement('div');
+  clickableContainer.classList.add('clickable-container');
+  
+  // Add the image to the wrapper
+  imageWrapper.appendChild(imageContainer.cloneNode(true));
+  
+  // Hardcoded spots - can be customized for each question
+  // Format: [x, y, width, height]
+  const spotsList = [
+    [10, 20, 15, 15],  // Spot 1
+    [45, 60, 20, 10],  // Spot 2
+    [70, 35, 15, 15]   // Spot 3
+  ];
+  
+  const clickableSpots = [];
+  let spotsFound = 0;
+  const totalSpots = spotsList.length;
+  
+  // Function to track wrong attempts and update the counter
+  const trackWrongAttempt = () => {
+    // Prevent clicks if question already answered
+    if (userAnswers.has(index)) return;
+    
+    // Increment attempt counter
+    const attempts = clickAttempts.get(index) + 1;
+    clickAttempts.set(index, attempts);
+    
+    // Check if attempts exhausted (count from the original 3 tries)
+    if (attempts >= 3) {
+      // Mark as wrong answer
+      userAnswers.set(index, false);
+      
+      // Display failure message
+      const contentDiv = question.querySelector('.question-content');
+      contentDiv.innerHTML = wrongAnswersText.get(index).innerHTML;
+      contentDiv.classList.add('wrong-answer');
+      question.classList.add('wrong-answer');
+      
+      // Show continuation button
+      const nextButton = question.querySelector('a[href="#continue"]');
+      if (nextButton) {
+        nextButton.style.display = '';
+      }
+      
+      // Show the after-answer text if any
+      if (showAfterAnswerText.has(index)) {
+        const afterAnswerTextDiv = document.createElement('div');
+        afterAnswerTextDiv.classList.add('after-answer-text');
+        afterAnswerTextDiv.innerHTML = showAfterAnswerText.get(index).innerHTML;
+        question.appendChild(afterAnswerTextDiv);
+      }
+    }
+  };
+  
+  // Add click event to the background layer
+  clickableBackground.addEventListener('click', (e) => {
+    // Prevent the event from bubbling to spots if they overlap
+    e.stopPropagation();
+    
+    // Only count clicks inside the picture if not already answered
+    if (!userAnswers.has(index)) {
+      trackWrongAttempt();
+    }
+  });
+  
+  // Create spots from hardcoded values
+  spotsList.forEach((spotData, spotIndex) => {
+    const [x, y, width, height] = spotData;
+    
+    // Create clickable spot
+    const clickableSpot = document.createElement('div');
+    clickableSpot.classList.add('clickable-spot');
+    clickableSpot.style.left = `${x}%`;
+    clickableSpot.style.top = `${y}%`;
+    clickableSpot.style.width = `${width}%`;
+    clickableSpot.style.height = `${height}%`;
+    
+    // Add data attributes
+    clickableSpot.dataset.spotIndex = spotIndex;
+    
+    // Add click event
+    clickableSpot.addEventListener('click', (e) => {
+      // Prevent the event from reaching the background
+      e.stopPropagation();
+      
+      // Prevent clicks if question already answered or spot already found
+      if (userAnswers.has(index) || clickableSpot.classList.contains('found-spot')) return;
+      
+      // Mark the spot as found
+      clickableSpot.classList.add('found-spot');
+      spotsFound++;
+      
+      // Check if all spots have been found
+      if (spotsFound >= totalSpots) {
+        // Mark as correct answer
+        userAnswers.set(index, true);
+        
+        // Display success message
+        const contentDiv = question.querySelector('.question-content');
+        contentDiv.innerHTML = correctAnswersText.get(index).innerHTML;
+        contentDiv.classList.add('correct-answer');
+        question.classList.add('correct-answer');
+        
+        // Show continuation button
+        const nextButton = question.querySelector('a[href="#continue"]');
+        if (nextButton) {
+          nextButton.style.display = '';
+        }
+        
+        // Show the after-answer text if any
+        if (showAfterAnswerText.has(index)) {
+          const afterAnswerTextDiv = document.createElement('div');
+          afterAnswerTextDiv.classList.add('after-answer-text');
+          afterAnswerTextDiv.innerHTML = showAfterAnswerText.get(index).innerHTML;
+          question.appendChild(afterAnswerTextDiv);
+        }
+      }
+    });
+    
+    clickableContainer.appendChild(clickableSpot);
+    clickableSpots.push(clickableSpot);
+  });
+  
+  // Add background and spots container to the wrapper
+  imageWrapper.appendChild(clickableBackground);
+  imageWrapper.appendChild(clickableContainer);
+  
+  // Replace the original image with our interactive version
+  imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
+}
+
+function decorateQuestions(questions) {
+  questions.forEach((question, index) => {
+    question.classList.add('question');
+    question.classList.add(`question-${index + 1}`);
+    question.dataset.questionIndex = index + 1;
+
+    processSpecialParagraphs(question, index);
+    decorateAnswersList(question, index);
+    decorateClickQuestions(question, index);
+
+    // Hide all questions initially except the first one
+    question.style.display = 'none';
+
+    if (index < questions.length) {
+      const nextButton = question.querySelector('a[href="#continue"]');
+      if (nextButton) {
+        nextButton.style.display = 'none';
+        nextButton.addEventListener('click', () => showQuestion(index + 2));
+      }
+    }
+  });
+}
+
+function setupStartButton(block) {
+  const startButton = block.querySelector('a[href="#start-quiz"]');
+  if (startButton) {
+    startButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      showQuestion(1);
+    });
+  }
+}
+
+export default function decorate(block) {
+  const [startBlock, ...questions] = block.children;
+  decorateStartPage(startBlock);
+  decorateQuestions(questions);
+  setupStartButton(block);
+
+  const questionsContainer = document.createElement('div');
+  questionsContainer.classList.add('questions-container');
+
+  questions.forEach((question) => {
+    questionsContainer.appendChild(question);
+  });
+
+  block.appendChild(questionsContainer);
+}
