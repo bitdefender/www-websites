@@ -328,14 +328,26 @@ export default async function decorate(block) {
         storeEvent = 'product-loaded';
       }
       const prodBox = document.createElement('div');
-      const titleText = title.textContent.replace(/(Bitdefender)(?!\s*<br>)/i, '$1<br>');
-      const titleAnchor = title.querySelector('a')?.getAttribute('href');
+      
+      let titleHTML = '';
+      const hasAnchor = title.querySelector('a');
+      const hasBr = title.innerHTML.includes('<br');
+      if (title.textContent.trim()) {
+        if (hasAnchor && hasBr) {
+          const anchorHref = hasAnchor.getAttribute('href');
+          const refactorTitle = title.textContent.replace(/(Bitdefender)(?!\s*<br>)/i, '$1<br>');
+          titleHTML = `<h4><a href="${anchorHref}" title="${title.textContent}">${refactorTitle}</a></h4>`;
+        } else {
+          titleHTML = `<h4>${title.innerHTML}</h4>`;
+        }
+      }
+
       prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
           data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
             <div class="inner_prod_box">
               ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
-              ${title.innerText.trim() ? `<h4>${titleAnchor ? `<a href="${titleAnchor}" title="${title.textContent}">${titleText}</a>` : titleText}</h4>` : ''}
+              ${titleHTML}
 
               <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
               ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle.innerHTML}</p>` : ''}
