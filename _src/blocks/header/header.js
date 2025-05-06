@@ -493,9 +493,9 @@ async function runDefaultHeaderLogic(block) {
       }
       const aemHeaderHtml = await aemHeaderFetch.text();
       const nav = document.createElement('div');
-      const shadowRoot = nav.attachShadow({ mode: 'open' });
 
       const contentDiv = document.createElement('div');
+      nav.appendChild(contentDiv);
       contentDiv.style.display = 'none';
 
       contentDiv.innerHTML = aemHeaderHtml;
@@ -524,26 +524,35 @@ async function runDefaultHeaderLogic(block) {
       });
 
       // a list of all the components to be received from aem components
-      const aemComponents = ['languageBanner', 'megaMenu'];
+      // const aemComponents = ['languageBanner', 'megaMenu'];
 
       // add logic so that every time an AEM function is fully loaded
       // it is directly run using the shadow dom as parameter
-      aemComponents.forEach((aemComponentName) => {
-        window.addEventListener(aemComponentName, () => {
-          window[aemComponentName](shadowRoot);
-        });
-      });
+      // aemComponents.forEach((aemComponentName) => {
+      //   window.addEventListener(aemComponentName, () => {
+      //     console.log(aemComponentName);
+      //     window[aemComponentName](contentDiv);
+      //   });
+      // });
 
       // select all the scripts from contet div and
-      const scripts = contentDiv.querySelectorAll('script');
-      scripts.forEach((script) => {
-        const newScript = document.createElement('script');
-        newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
-        newScript.defer = true;
-        contentDiv.appendChild(newScript);
+      const scriptsWithoutRuntime = [...contentDiv.querySelectorAll('script')].filter((script) => !script.src.includes('runtime'));
+      const runtimeScript = [...contentDiv.querySelectorAll('script')].find((script) => script.src.includes('runtime'));
+
+      const newRuntimeScript = document.createElement('script');
+      newRuntimeScript.src = `${Constants.PUBLIC_URL_ORIGIN}${runtimeScript.getAttribute('src')}`;
+      newRuntimeScript.defer = true;
+      contentDiv.appendChild(newRuntimeScript);
+
+      scriptsWithoutRuntime.forEach((script) => {
+        if (!script.src.includes('runtime')) {
+          const newScript = document.createElement('script');
+          newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
+          newScript.defer = true;
+          contentDiv.appendChild(newScript);
+        }
       });
 
-      shadowRoot.appendChild(contentDiv);
       const body = document.querySelector('body');
       body.style.maxWidth = 'initial';
 
@@ -558,8 +567,8 @@ async function runDefaultHeaderLogic(block) {
       contentDiv.style.display = 'block';
       nav.classList.add('header-with-language-banner');
 
-      adobeMcAppendVisitorId(shadowRoot);
-      loginFunctionality(shadowRoot);
+      adobeMcAppendVisitorId(contentDiv);
+      loginFunctionality(contentDiv);
       return;
     }
 
