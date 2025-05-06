@@ -450,7 +450,7 @@ export default async function decorate(block) {
     const prodCard = block.querySelector('.prod_box');
     const featureLists = prodCard?.querySelectorAll('ul');
     featureLists?.forEach((list, idx) => {
-      matchHeights(block, `> ul:nth-of-type(${idx + 1})`);
+      matchHeights(block, `div > ul:nth-of-type(${idx + 1})`);
     });
   }
 
