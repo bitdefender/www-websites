@@ -331,9 +331,8 @@ export default async function decorate(block) {
 
       let titleHTML = '';
       const hasAnchor = title.querySelector('a');
-      const hasBr = title.innerHTML.includes('<br');
       if (title.textContent.trim()) {
-        if (hasAnchor && hasBr) {
+        if (hasAnchor) {
           const anchorHref = hasAnchor.getAttribute('href');
           const refactorTitle = title.textContent.replace(/(Bitdefender)(?!\s*<br>)/i, '$1<br>');
           titleHTML = `<h4><a href="${anchorHref}" title="${title.textContent}">${refactorTitle}</a></h4>`;
