@@ -1556,7 +1556,7 @@ main .subscriber .section {
         padding-bottom: 0!important;
     }
     .subscriber .columnvideo > div.image-columns-wrapper {
-        height: 729px;
+        height: auto;
     }
 }
 
