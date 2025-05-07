@@ -191,3 +191,10 @@
     height: 120vw;
   }
 }
+
+@media (min-width: 992px) {
+  .creators-block.block > div > div > a {
+    max-width: 220px;
+    justify-self: center;
+  }
+}
