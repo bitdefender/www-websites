@@ -193,7 +193,7 @@
 }
 
 @media (min-width: 992px) {
-  .creators-block.block > div > div > a {
+  .creators-block.block > div > div > a:has(.creator-box) {
     max-width: 220px;
     justify-self: center;
   }
