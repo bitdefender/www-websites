@@ -1487,6 +1487,9 @@ main .subscriber .section {
     .subscriber #customQuoteCarousel .columns-img-col picture {
         width: 100%;
     }
+    .subscriber #carouselLogosText .carousel-item {
+        margin-right: 1em;
+    }
     .subscriber .multicontentslider .carousel-item {
         padding: 1em;
     }
@@ -1647,9 +1650,6 @@ main .subscriber .section {
     .subscriber .multicontentvideoslider .carousel-arrows-container button {
         width: 18px;
         margin-right: 0;
-    }
-    .subscriber #carouselLogosText .carousel-item .carousel-content > div {
-        gap: 0;
     }
 }
 @media (max-width: 636px) {
@@ -1813,6 +1813,9 @@ main .subscriber .section {
         width: 100%;
         min-width: unset;
     }
+    .subscriber #carouselLogosText .carousel-item {
+        width: 139vw;
+    }
     .subscriber .multicontentslider .carousel-item .carousel-content > div {
         text-align: left;
         display: block;
@@ -1824,10 +1827,6 @@ main .subscriber .section {
         height: auto;
         display: block;
         margin-bottom: 0;
-    }
-    .subscriber #carouselLogosText .carousel-item .carousel-content > div {
-        flex-direction: column;
-        align-items: flex-start;
     }
     .subscriber #carouselLogosText .carousel-item .carousel-content > div p:first-of-type {
         flex: 0 0 115px;
