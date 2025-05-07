@@ -10,7 +10,6 @@ export default function decorate(block) {
   block.querySelectorAll('table').forEach((table) => {
     const newDiv = document.createElement('div');
     newDiv.classList.add('creator-box');
-    console.log(table)
     const linkToCreator = table.querySelector('tr:nth-child(4) td');
     const creatorLink = linkToCreator ? linkToCreator.textContent.trim() : '';
 
