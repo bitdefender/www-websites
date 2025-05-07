@@ -1,3 +1,5 @@
+import { decorateIcons } from "../../scripts/lib-franklin.js";
+
 const correctAnswersText = new Map();
 const wrongAnswersText = new Map();
 const showAfterAnswerText = new Map();
@@ -71,6 +73,10 @@ function processStyledText(html) {
   });
 }
 
+function stripOuterBrackets(str) {
+  return str.replace(/^&lt;(.+)&gt;$/, '$1');
+}
+
 /**
  * Processes paragraphs with special markup in questions
  * @param {HTMLElement} question - The question element to process
@@ -84,11 +90,6 @@ function processSpecialParagraphs(question, index) {
     const extractedData = extractSpecialText(text);
 
     if (extractedData) {
-      function stripOuterBrackets(str) {
-        console.log(str.replace(/^&lt;(.+)&gt;$/, '$1'));
-        return str.replace(/^&lt;(.+)&gt;$/, '$1');
-      }
-
       paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
       paragraph.innerHTML = paragraph.innerHTML.replace(extractedData.type, '');
 
@@ -258,6 +259,21 @@ function decorateClickableQuestionList(question, index) {
   list.classList.add('answers-list');
 }
 
+function getCoordinates(question, questionIndex) {
+  const paragraphs = Array.from(question.querySelectorAll('p'));
+  const coordinateParagraphs = paragraphs.filter((p) => p.innerHTML.includes('coordinate'));
+
+  let coordinates = [];
+  coordinateParagraphs.forEach((paragraph) => {
+    paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
+    let coordinate = paragraph.innerHTML.split(',').slice(1);
+    coordinates.push(coordinate);
+    paragraph.remove();
+  });
+
+  return coordinates;
+} 
+
 function showWrong(question, questionIndex) {
   question.classList.add('wrong-answer');
   let questionContent = question.querySelector('.question-content');
@@ -266,11 +282,14 @@ function showWrong(question, questionIndex) {
   let notAScamButton = question.querySelector('a[href="#not-a-scam"]');
   let continueButton = question.querySelector('a[href="#continue"]');
   let triesCounter = question.querySelector('.tries');
+  let questionScamTag = question.querySelector('.question-scam-tag');
+  
+  let clickableContainer = question.querySelector('.clickable-container');
+  clickableContainer.style.display = 'none';
 
   // Get the wrong answer text and process any styled text within it
   let wrongText = wrongAnswersText.get(questionIndex).innerHTML;
   wrongText = processStyledText(wrongText);
-  console.log(wrongText);
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
   
@@ -285,6 +304,46 @@ function showWrong(question, questionIndex) {
 
   if (triesCounter) {
     triesCounter.style.display = 'none';
+  }
+
+  if (questionScamTag) {
+    questionScamTag.style.display = 'flex';
+  }
+
+  answerList.append(showAfterAnswerText.get(questionIndex));
+}
+
+function showCorrect(question, questionIndex) {
+  question.classList.add('correct-answer');
+  let questionContent = question.querySelector('.question-content');
+  questionContent.classList.add('correct-answer');
+  let answerList = question.querySelector('.answers-list');
+  let notAScamButton = question.querySelector('a[href="#not-a-scam"]');
+  let continueButton = question.querySelector('a[href="#continue"]');
+  let triesCounter = question.querySelector('.tries');
+  let questionScamTag = question.querySelector('.question-scam-tag');
+
+  // Get the wrong answer text and process any styled text within it
+  let wrongText = correctAnswersText.get(questionIndex).innerHTML;
+  wrongText = processStyledText(wrongText);
+  // Update the question content with the processed text
+  questionContent.innerHTML = wrongText;
+  
+  answerList.style.display = 'block';
+  if (notAScamButton) {
+    notAScamButton.style.display = 'none';
+  }
+
+  if (continueButton) {
+    continueButton.style.display = '';
+  }
+
+  if (triesCounter) {
+    triesCounter.style.display = 'none';
+  }
+
+  if (questionScamTag) {
+    questionScamTag.style.display = 'flex';
   }
 
   answerList.append(showAfterAnswerText.get(questionIndex));
@@ -337,11 +396,7 @@ function decorateClickQuestions(question, index) {
   
   // Hardcoded spots - can be customized for each question
   // Format: [x, y, width, height]
-  const spotsList = [
-    [10, 20, 15, 15],  // Spot 1
-    [45, 60, 20, 10],  // Spot 2
-    [70, 35, 15, 15]   // Spot 3
-  ];
+  let spotsList = getCoordinates(question, index);
   
   const clickableSpots = [];
   let spotsFound = 0;
@@ -355,36 +410,22 @@ function decorateClickQuestions(question, index) {
     // Increment attempt counter
     const attempts = clickAttempts.get(index) + 1;
     clickAttempts.set(index, attempts);
+
+    // update tries counter
+    let triesNumberMatch = triesCounter.innerHTML.match(/\d+/);
+    let triesCounterNumber = triesNumberMatch ? triesNumberMatch[0] : null;
+    triesCounter.innerHTML = triesCounter.innerHTML.replace(triesCounterNumber, triesCounterNumber - 1);
     
     // Check if attempts exhausted (count from the original 3 tries)
     if (attempts >= 3) {
       // Mark as wrong answer
       userAnswers.set(index, false);
-      
-      // Display failure message
-      const contentDiv = question.querySelector('.question-content');
-      contentDiv.innerHTML = wrongAnswersText.get(index).innerHTML;
-      contentDiv.classList.add('wrong-answer');
-      question.classList.add('wrong-answer');
-      
-      // Show continuation button
-      const nextButton = question.querySelector('a[href="#continue"]');
-      if (nextButton) {
-        nextButton.style.display = '';
-      }
-      
-      // Show the after-answer text if any
-      if (showAfterAnswerText.has(index)) {
-        const afterAnswerTextDiv = document.createElement('div');
-        afterAnswerTextDiv.classList.add('after-answer-text');
-        afterAnswerTextDiv.innerHTML = showAfterAnswerText.get(index).innerHTML;
-        question.appendChild(afterAnswerTextDiv);
-      }
+      showWrong(question, index);
     }
   };
   
   // Add click event to the background layer
-  clickableBackground.addEventListener('click', (e) => {
+  clickableContainer.addEventListener('click', (e) => {
     // Prevent the event from bubbling to spots if they overlap
     e.stopPropagation();
     
@@ -426,25 +467,7 @@ function decorateClickQuestions(question, index) {
         // Mark as correct answer
         userAnswers.set(index, true);
         
-        // Display success message
-        const contentDiv = question.querySelector('.question-content');
-        contentDiv.innerHTML = correctAnswersText.get(index).innerHTML;
-        contentDiv.classList.add('correct-answer');
-        question.classList.add('correct-answer');
-        
-        // Show continuation button
-        const nextButton = question.querySelector('a[href="#continue"]');
-        if (nextButton) {
-          nextButton.style.display = '';
-        }
-        
-        // Show the after-answer text if any
-        if (showAfterAnswerText.has(index)) {
-          const afterAnswerTextDiv = document.createElement('div');
-          afterAnswerTextDiv.classList.add('after-answer-text');
-          afterAnswerTextDiv.innerHTML = showAfterAnswerText.get(index).innerHTML;
-          question.appendChild(afterAnswerTextDiv);
-        }
+        showCorrect(question, index);
       }
     });
     
@@ -453,7 +476,7 @@ function decorateClickQuestions(question, index) {
   });
   
   // Add background and spots container to the wrapper
-  imageWrapper.appendChild(clickableBackground);
+  // imageWrapper.appendChild(clickableBackground);
   imageWrapper.appendChild(clickableContainer);
   
   // Replace the original image with our interactive version
@@ -507,4 +530,5 @@ export default function decorate(block) {
   });
 
   block.appendChild(questionsContainer);
+  decorateIcons(block);
 }

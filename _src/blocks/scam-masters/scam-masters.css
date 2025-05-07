@@ -10,6 +10,7 @@
     --color-bd-blue: #006EFF;
     --color-correct: #4CAF50;
     --color-wrong: #E72325;
+    --color-background-wrong: #CC0707;
     font-family: Arial, regular;
 
     .text-black {
@@ -24,7 +25,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         border-radius: 20px;
-        
+
         >div:first-child {
             padding: 66px 66px 18px 66px;
             background-color: white;
@@ -49,8 +50,10 @@
             .legal-links {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+
                 p {
                     margin: 0;
+
                     a {
                         color: black;
                         font-size: 12px;
@@ -60,7 +63,7 @@
                         grid-column: 1 / -1;
                     }
                 }
-                
+
             }
         }
 
@@ -70,11 +73,7 @@
             border-bottom-right-radius: 20px;
         }
     }
-    
-    .questions-container {
-        
-    }
-    
+
     .question {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -100,13 +99,22 @@
                     border-radius: 8px;
                 }
             }
-            
+
+            .tries {
+                color: var(--color-bd-blue);
+                text-align: center;
+            }
+
         }
 
         >div:last-child {
             background-color: var(--color-light-blue);
             border-top-right-radius: 20px;
             border-bottom-right-radius: 20px;
+            display: flex;
+            align-items: end;
+
+
         }
 
         .question-content {
@@ -126,16 +134,54 @@
             font: normal normal normal 50px/65px IBM Plex Sans;
             text-align: center;
             color: var(--color-bd-blue);
+
+            &::before {
+                content: "";
+                background-image: url("/common/icons/blue-checkmark.svg");
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: contain;
+                display: block;
+                width: 50px;
+                height: 50px;
+                background-size: contain;
+                margin: auto;
+                margin-bottom: 8px;
+            }
         }
 
         .question-content.wrong-answer {
             font: normal normal normal 50px/65px IBM Plex Sans;
             text-align: center;
             color: var(--color-wrong);
+
+            &::before {
+                content: url("/common/icons/not-correct.svg");
+                display: block;
+                width: 50px;
+                height: 50px;
+                margin: auto;
+                margin-bottom: 8px;
+            }
         }
 
         .show-after-answer-text {
-            text-align: center; 
+            text-align: center;
+        }
+
+        &:not(.clickable-question) {
+            >div:last-child {
+                display: flex;
+                align-items: end;
+
+                picture {
+                    width: fit-content;
+                    margin: 0 auto;
+                    max-width: 58%;
+                    display: flex;
+                    align-items: end;
+                }
+            }
         }
 
         &.clickable-question {
@@ -147,7 +193,7 @@
                 margin: 20px 0 30px;
 
                 li::before {
-                    content: url("/_src/icons/checkmark-light-green-circle.svg");
+                    content: url("/common/icons/circlecheck.svg");
                     display: inline-block;
                     width: 18px;
                     height: 18px;
@@ -155,6 +201,12 @@
                     top: 4px;
                     margin-right: 9px;
                     flex-shrink: 0;
+                }
+            }
+
+            &.wrong-answer {
+                li::before {
+                    content: url("/common/icons/circleexclamationmark.svg");
                 }
             }
 
@@ -167,105 +219,88 @@
                     background-color: var(--color-wrong);
                     color: white;
                     padding: 10px 20px;
-                    border-radius: 20px;
+                    border-radius: 20px 20px 0 0;
                     font-size: 40px;
-                    margin-bottom: 20px;
+                    align-items: center;
                     position: absolute;
                     top: 30px;
                     right: 0;
                     border-radius: 20px 0px 0px 20px;
+                    z-index: 10;
+                    display: none;
+
+                    .icon {
+                        margin: 0;
+                        margin-right: 5px;
+                    }
                 }
 
                 p:has(picture) {
                     width: fit-content;
                     margin: 0 auto;
+                    max-width: 60%;
+                    display: flex;
+                    align-items: end;
                 }
 
-                
+
                 /* Image wrapper and clickable area styles */
                 .image-wrapper {
                     position: relative;
                     margin: 0 auto;
-                    max-width: 100%;
                     width: fit-content;
-                    display: inline-block; /* Ensures wrapper is sized to the image */
+                    display: inline-block;
+                    /* Ensures wrapper is sized to the image */
                 }
-                
-                /* Background layer that covers entire image */
-                .clickable-background {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: 4; /* Below the spots layer */
-                    cursor: pointer;
-                }
-                
+
                 .clickable-container {
                     position: absolute;
                     top: 0;
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    z-index: 5; /* Above the background layer */
+                    z-index: 5;
+                    /* Above the background layer */
                 }
-                
+
                 .clickable-spot {
                     position: absolute;
-                    cursor: pointer;
                     border: 2px solid transparent;
                     border-radius: 4px;
                     transition: all 0.2s ease;
-                    
-                    &:hover {
-                        background-color: rgba(255, 255, 255, 0.2);
-                        border-color: rgba(255, 255, 255, 0.5);
-                    }
-                    
+
                     &.found-spot {
-                        background-color: rgba(76, 175, 80, 0.3);
-                        border: 2px solid var(--color-correct);
-                        cursor: default;
-                        
-                        &::after {
-                            content: '✓';
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
-                            color: var(--color-correct);
-                            font-size: 24px;
-                            font-weight: bold;
-                        }
+                        background-color: rgba(230, 247, 255, 0.3);
+                        border: 2px solid var(--color-light-blue);
                     }
                 }
             }
         }
-        
+
         h2 {
             color: var(--color-bd-blue);
             margin-bottom: 30px;
+            font-weight: 400;
         }
-        
+
         &.correct-answer h2 {
             color: var(--color-correct);
         }
-        
+
         &.wrong-answer {
             >div:last-child {
-                background-color: var(--color-wrong);
+                background-color: var(--color-background-wrong);
                 border-top-right-radius: 20px;
                 border-bottom-right-radius: 20px;
             }
         }
-        
+
         .answers-list {
             list-style: none;
             padding: 0;
             margin: 20px 0 30px;
         }
-        
+
         .answer-option {
             background-color: white;
             padding: 15px 20px;
@@ -276,28 +311,181 @@
             border: 2px solid #707070;
             position: relative;
             font-size: 18px;
-            
+
             &:hover {
                 background-color: #f0f0f0;
             }
-            
+
             &.selected {
                 background-color: white;
                 border-color: var(--color-bd-blue);
             }
-            
+
             &.correct-answer {
                 border-color: var(--color-bd-blue);
                 color: var(--color-bd-blue);
             }
-            
+
             &.selected.correct-answer {
                 color: var(--color-bd-blue);
             }
-            
+
             &.selected:not(.correct-answer) {
                 border-color: var(--color-wrong);
                 color: var(--color-wrong);
+            }
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    .scam-masters {
+        .question {
+            >div:first-child {
+                padding: 30px 20px;
+            }
+
+            &:not(.clickable-question) {
+                >div:last-child {
+    
+                    picture {
+                        max-width: 100%;
+                    }
+                }
+            }
+
+            &.clickable-question {
+                >div:last-child {
+                    .question-scam-tag {
+                        font-size: 30px;
+                        z-index: 10;
+                    }
+
+                    .icon {
+                        width: 30px;
+                        height: 30px;
+                    }
+                }
+            }
+
+            .question-content.correct-answer {
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .question-content.wrong-answer {
+                font-size: 24px;
+                line-height: 1;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .scam-masters-container {
+        padding: 15px !important;
+    }
+
+    .scam-masters {
+        .start-page {
+            grid-template-columns: 1fr;
+
+            >div:first-child {
+                padding: 20px;
+
+                h1 {
+                    font-size: 24px;
+                    line-height: 1;
+                }
+
+                p {
+                    font-size: 16px;
+                }
+
+                .legal-links {
+                    grid-template-columns: 1fr 1fr;
+
+                    p {
+                        &:last-of-type {
+                            grid-column: 1 / -1;
+                        }
+                    }
+                }
+            }
+        }
+
+        .question {
+            grid-template-columns: 1fr;
+
+            >div:first-child {
+                order: 1;
+                padding: 18px;
+                border-radius: 0 0 20px 20px;
+
+                .button-container {
+                    margin: 0 auto;
+
+                    .button {
+                        padding: 10px 20px;
+                        font-size: 16px;
+                    }
+                }
+            }
+
+            >div:last-child {
+                border-radius: 20px 20px 0 0;
+                min-height: 345px;
+            }
+
+            .question-content.correct-answer {
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .question-content.wrong-answer {
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .show-after-answer-text {
+                font-size: 12px;
+            }
+
+            &:not(.clickable-question) {
+                >div:last-child {
+    
+                    picture {
+                        max-width: 60%;
+                    }
+                }
+            }
+
+            &.clickable-question {
+                >div:last-child {
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    border-radius: 20px 20px 0 0;
+
+                    p:has(.image-wrapper) {
+                        max-width: 60%;
+                        width: fit-content;
+                    }
+
+                    .question-scam-tag {
+                        font-size: 24px;
+                        z-index: 10;
+
+                        .icon {
+                            width: 25px;
+                            height: 25px;
+                        }
+                    }
+                }
+
+                .answers-list li {
+                    font-size: 14px;
+                }
             }
         }
     }
