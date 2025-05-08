@@ -29,6 +29,7 @@ import {
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
+  addScript
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
@@ -337,9 +338,16 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
 
   const templateMetadata = getMetadata('template');
+  const templatejsMetadata = getMetadata('templatejs');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
+    if (templatejsMetadata) {
+      addScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
+        type: 'module',
+      });
+    }
+
   }
   const main = doc.querySelector('main');
   if (main) {
