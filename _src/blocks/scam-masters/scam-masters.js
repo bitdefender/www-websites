@@ -1,4 +1,4 @@
-import { decorateIcons } from "../../scripts/lib-franklin.js";
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 const correctAnswersText = new Map();
 const wrongAnswersText = new Map();
@@ -54,23 +54,21 @@ function extractSpecialText(text) {
  */
 function processStyledText(html) {
   if (!html) return html;
-  
+
   // Handle both regular and HTML-encoded angle brackets
   let processedHtml = html;
-  
+
   // Replace HTML-encoded brackets if present
   if (processedHtml.includes('&lt;')) {
     processedHtml = processedHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
   }
-  
+
   // Regular expression to match <word text> pattern anywhere in the string
   // Using a more flexible regex that can find the pattern anywhere in the text
   const regex = /<([a-zA-Z-]+)\s+([^>]+)>/g;
-  
+
   // Process all matching patterns in the text
-  return processedHtml.replace(regex, (match, className, content) => {
-    return `<span class="${className}">${content}</span>`;
-  });
+  return processedHtml.replace(regex, (match, className, content) => `<span class="${className}">${content}</span>`);
 }
 
 function stripOuterBrackets(str) {
@@ -194,14 +192,14 @@ function decorateAnswersList(question, questionIndex) {
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
       }
-      
+
       const nextButton = question.querySelector('a[href="#continue"]');
-      
+
       // Show the next button if it exists
       if (nextButton) {
         nextButton.style.display = '';
       }
-      
+
       answersList.append(showAfterAnswerText.get(questionIndex));
     });
   });
@@ -263,28 +261,28 @@ function getCoordinates(question, questionIndex) {
   const paragraphs = Array.from(question.querySelectorAll('p'));
   const coordinateParagraphs = paragraphs.filter((p) => p.innerHTML.includes('coordinate'));
 
-  let coordinates = [];
+  const coordinates = [];
   coordinateParagraphs.forEach((paragraph) => {
     paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
-    let coordinate = paragraph.innerHTML.split(',').slice(1);
+    const coordinate = paragraph.innerHTML.split(',').slice(1);
     coordinates.push(coordinate);
     paragraph.remove();
   });
 
   return coordinates;
-} 
+}
 
 function showWrong(question, questionIndex) {
   question.classList.add('wrong-answer');
-  let questionContent = question.querySelector('.question-content');
+  const questionContent = question.querySelector('.question-content');
   questionContent.classList.add('wrong-answer');
-  let answerList = question.querySelector('.answers-list');
-  let notAScamButton = question.querySelector('a[href="#not-a-scam"]');
-  let continueButton = question.querySelector('a[href="#continue"]');
-  let triesCounter = question.querySelector('.tries');
-  let questionScamTag = question.querySelector('.question-scam-tag');
-  
-  let clickableContainer = question.querySelector('.clickable-container');
+  const answerList = question.querySelector('.answers-list');
+  const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
+  const continueButton = question.querySelector('a[href="#continue"]');
+  const triesCounter = question.querySelector('.tries');
+  const questionScamTag = question.querySelector('.question-scam-tag');
+
+  const clickableContainer = question.querySelector('.clickable-container');
   clickableContainer.style.display = 'none';
 
   // Get the wrong answer text and process any styled text within it
@@ -292,7 +290,7 @@ function showWrong(question, questionIndex) {
   wrongText = processStyledText(wrongText);
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
-  
+
   answerList.style.display = 'block';
   if (notAScamButton) {
     notAScamButton.style.display = 'none';
@@ -315,20 +313,20 @@ function showWrong(question, questionIndex) {
 
 function showCorrect(question, questionIndex) {
   question.classList.add('correct-answer');
-  let questionContent = question.querySelector('.question-content');
+  const questionContent = question.querySelector('.question-content');
   questionContent.classList.add('correct-answer');
-  let answerList = question.querySelector('.answers-list');
-  let notAScamButton = question.querySelector('a[href="#not-a-scam"]');
-  let continueButton = question.querySelector('a[href="#continue"]');
-  let triesCounter = question.querySelector('.tries');
-  let questionScamTag = question.querySelector('.question-scam-tag');
+  const answerList = question.querySelector('.answers-list');
+  const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
+  const continueButton = question.querySelector('a[href="#continue"]');
+  const triesCounter = question.querySelector('.tries');
+  const questionScamTag = question.querySelector('.question-scam-tag');
 
   // Get the wrong answer text and process any styled text within it
   let wrongText = correctAnswersText.get(questionIndex).innerHTML;
   wrongText = processStyledText(wrongText);
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
-  
+
   answerList.style.display = 'block';
   if (notAScamButton) {
     notAScamButton.style.display = 'none';
@@ -356,12 +354,12 @@ function decorateClickQuestions(question, index) {
 
   question.classList.add('clickable-question');
 
-  let scamTag = question.querySelector('h6');
+  const scamTag = question.querySelector('h6');
   scamTag.classList.add('question-scam-tag');
 
   decorateClickableQuestionList(question, index);
-  
-  let notAScamButton = question.querySelector('a[href="#not-a-scam"]');
+
+  const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
   if (notAScamButton) {
     notAScamButton.classList.add('secondary');
     notAScamButton.addEventListener('click', (e) => {
@@ -372,50 +370,50 @@ function decorateClickQuestions(question, index) {
   // Find the image that contains the clickable elements
   const imageContainer = question.querySelector('picture');
   if (!imageContainer) return;
-  
+
   // Initialize click attempts for this question
   clickAttempts.set(index, 0);
-  
+
   // Get existing tries counter
   const triesCounter = question.querySelector('.tries');
-  
+
   // Create a wrapper to position the clickable areas over the image
   const imageWrapper = document.createElement('div');
   imageWrapper.classList.add('image-wrapper');
-  
+
   // Create a clickable background layer that covers the entire image
   const clickableBackground = document.createElement('div');
   clickableBackground.classList.add('clickable-background');
-  
+
   // Create a container for the clickable spots that sits on top
   const clickableContainer = document.createElement('div');
   clickableContainer.classList.add('clickable-container');
-  
+
   // Add the image to the wrapper
   imageWrapper.appendChild(imageContainer.cloneNode(true));
-  
+
   // Hardcoded spots - can be customized for each question
   // Format: [x, y, width, height]
-  let spotsList = getCoordinates(question, index);
-  
+  const spotsList = getCoordinates(question, index);
+
   const clickableSpots = [];
   let spotsFound = 0;
   const totalSpots = spotsList.length;
-  
+
   // Function to track wrong attempts and update the counter
   const trackWrongAttempt = () => {
     // Prevent clicks if question already answered
     if (userAnswers.has(index)) return;
-    
+
     // Increment attempt counter
     const attempts = clickAttempts.get(index) + 1;
     clickAttempts.set(index, attempts);
 
     // update tries counter
-    let triesNumberMatch = triesCounter.innerHTML.match(/\d+/);
-    let triesCounterNumber = triesNumberMatch ? triesNumberMatch[0] : null;
+    const triesNumberMatch = triesCounter.innerHTML.match(/\d+/);
+    const triesCounterNumber = triesNumberMatch ? triesNumberMatch[0] : null;
     triesCounter.innerHTML = triesCounter.innerHTML.replace(triesCounterNumber, triesCounterNumber - 1);
-    
+
     // Check if attempts exhausted (count from the original 3 tries)
     if (attempts >= 3) {
       // Mark as wrong answer
@@ -423,22 +421,22 @@ function decorateClickQuestions(question, index) {
       showWrong(question, index);
     }
   };
-  
+
   // Add click event to the background layer
   clickableContainer.addEventListener('click', (e) => {
     // Prevent the event from bubbling to spots if they overlap
     e.stopPropagation();
-    
+
     // Only count clicks inside the picture if not already answered
     if (!userAnswers.has(index)) {
       trackWrongAttempt();
     }
   });
-  
+
   // Create spots from hardcoded values
   spotsList.forEach((spotData, spotIndex) => {
     const [x, y, width, height] = spotData;
-    
+
     // Create clickable spot
     const clickableSpot = document.createElement('div');
     clickableSpot.classList.add('clickable-spot');
@@ -446,39 +444,39 @@ function decorateClickQuestions(question, index) {
     clickableSpot.style.top = `${y}%`;
     clickableSpot.style.width = `${width}%`;
     clickableSpot.style.height = `${height}%`;
-    
+
     // Add data attributes
     clickableSpot.dataset.spotIndex = spotIndex;
-    
+
     // Add click event
     clickableSpot.addEventListener('click', (e) => {
       // Prevent the event from reaching the background
       e.stopPropagation();
-      
+
       // Prevent clicks if question already answered or spot already found
       if (userAnswers.has(index) || clickableSpot.classList.contains('found-spot')) return;
-      
+
       // Mark the spot as found
       clickableSpot.classList.add('found-spot');
       spotsFound++;
-      
+
       // Check if all spots have been found
       if (spotsFound >= totalSpots) {
         // Mark as correct answer
         userAnswers.set(index, true);
-        
+
         showCorrect(question, index);
       }
     });
-    
+
     clickableContainer.appendChild(clickableSpot);
     clickableSpots.push(clickableSpot);
   });
-  
+
   // Add background and spots container to the wrapper
   // imageWrapper.appendChild(clickableBackground);
   imageWrapper.appendChild(clickableContainer);
-  
+
   // Replace the original image with our interactive version
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
