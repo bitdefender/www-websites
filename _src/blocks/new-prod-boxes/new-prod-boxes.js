@@ -224,18 +224,12 @@ export default async function decorate(block) {
     // Get the checkbox inside the switchBox
     let switchCheckbox = switchBox.querySelector('#switchCheckbox');
     // Add an event listener to the checkbox
-    const dex = document.querySelector('.dex-18076');
-
     switchCheckbox.addEventListener('change', () => {
       if (switchCheckbox.checked) {
         let familyBoxes = block.querySelectorAll('.family-box');
         familyBoxes.forEach((box) => {
           box.style.display = 'block';
         });
-
-        if (dex) {
-          dex.querySelector('.four-cards-container').style.display = 'block';
-        }
 
         let individualBoxes = block.querySelectorAll('.individual-box');
         individualBoxes.forEach((box) => {
@@ -246,10 +240,6 @@ export default async function decorate(block) {
         familyBoxes.forEach((box) => {
           box.style.display = 'none';
         });
-
-        if (dex) {
-          dex.querySelector('.four-cards-container').style.display = 'none';
-        }
 
         let individualBoxes = block.querySelectorAll('.individual-box');
         individualBoxes.forEach((box) => {
