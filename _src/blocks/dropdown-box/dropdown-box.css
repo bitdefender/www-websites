@@ -368,10 +368,10 @@
 .dropdown-box-container.dropdown-slider .slider-box .description {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 10em;
     padding-left: 5%;
     display: none;
-    background-color: white;
+    background-color: transparent;
     z-index: 2;
 }
 
@@ -480,6 +480,10 @@
 @media (width <=991px) {
     .dropdown-box-container .default-content-wrapper h5 {
         font-size: 33px;
+    }
+
+    .dropdown-box-container.dropdown-slider .slider-box .description {
+        top: 11em;
     }
 }
 
