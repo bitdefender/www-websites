@@ -375,6 +375,10 @@
     z-index: 2;
 }
 
+.dropdown-box-container.dropdown-slider .slider-box .description p {
+    margin-top: 0;
+}
+
 .dropdown-box-container.dropdown-slider .slider-box .active .title::after {
     border-color: #006eff;
     transform: rotate(225deg);
