@@ -314,7 +314,7 @@
 }
 
 .dropdown-box-container.dropdown-slider .slider-box .title {
-    padding: 1em;
+    padding: 1em 2em 1em 1em;
     cursor: pointer;
     box-shadow: 0 3px 8px 0 #E5E5E5;
     position: relative;
@@ -368,6 +368,7 @@
 .dropdown-box-container.dropdown-slider .slider-box .description {
     position: absolute;
     right: 0;
+    top: 0;
     padding-left: 5%;
     display: none;
     background-color: white;
@@ -417,16 +418,14 @@
     }
 
     @media (min-width: 768px) {
-        .col-md-7 {
-            flex: 0 0 auto;
-            width: 58.3333%;
-        }
-    }
-
-    @media (min-width: 768px) {
         .col-md-5 {
             flex: 0 0 auto;
             width: 41.6667%;
+        }
+
+        .col-md-7 {
+            flex: 0 0 auto;
+            width: 58.3333%;
         }
     }
 
