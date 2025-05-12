@@ -103,5 +103,5 @@ export const resolveNonProductsDataLayer = async () => {
   getFreeProductsEvents();
 
   // send cdp data
-  Target.sendCdpData(pageLoadStartedEvent);
+  Target?.sendCdpData(pageLoadStartedEvent);
 }
