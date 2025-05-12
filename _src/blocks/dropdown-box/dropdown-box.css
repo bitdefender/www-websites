@@ -368,12 +368,15 @@
 .dropdown-box-container.dropdown-slider .slider-box .description {
     position: absolute;
     right: 0;
-    top: 10em;
     padding-left: 5%;
     display: none;
     background-color: transparent;
     z-index: 2;
 }
+
+.dropdown-box-container.dropdown-slider.has-load-bar .slider-box .description {
+    top: 0;
+} 
 
 .dropdown-box-container.dropdown-slider .slider-box .description p {
     margin-top: 0;
