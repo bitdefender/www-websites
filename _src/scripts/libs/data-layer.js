@@ -91,6 +91,9 @@ export const resolveNonProductsDataLayer = async () => {
   );
 
   AdobeDataLayerService.push(pageLoadStartedEvent);
+  // send cdp data
+  await Target?.sendCdpData(pageLoadStartedEvent);
+  
   pageErrorHandling();
   AdobeDataLayerService.push(new UserDetectedEvent(
     page,
@@ -101,7 +104,4 @@ export const resolveNonProductsDataLayer = async () => {
   ));
   checkClickEventAfterRedirect();
   getFreeProductsEvents();
-
-  // send cdp data
-  Target?.sendCdpData(pageLoadStartedEvent);
 }
