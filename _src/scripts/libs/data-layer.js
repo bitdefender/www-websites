@@ -1,5 +1,4 @@
 import Target from "@repobit/dex-target";
-import { Constants } from "@repobit/dex-utils";
 import { User } from "@repobit/dex-utils";
 import page from "../page.js";
 import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
@@ -104,18 +103,5 @@ export const resolveNonProductsDataLayer = async () => {
   getFreeProductsEvents();
 
   // send cdp data
-  try {
-    await fetch(
-      `${Constants.PUBLIC_URL_ORIGIN}/cdp/`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          mcvisid: (await Target.visitorInfo)?.identity?.ECID || '',
-          ...pageLoadStartedEvent.page
-        })
-      }
-    );
-  } catch (e) {
-    console.warn(e);
-  }
+  Target.sendCdpData(pageLoadStartedEvent);
 }
