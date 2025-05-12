@@ -484,10 +484,6 @@
     .dropdown-box-container .default-content-wrapper h5 {
         font-size: 33px;
     }
-
-    .dropdown-box-container.dropdown-slider .slider-box .description {
-        top: 11em;
-    }
 }
 
 /* for mobile */
