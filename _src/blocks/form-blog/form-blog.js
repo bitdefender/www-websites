@@ -42,7 +42,7 @@ async function solvePoW(challenge, difficulty) {
 async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage, formType = 'newsletter') {
   e.preventDefault();
   // Get challenge from server
-  const challengeRes = await fetch('server.php?action=challenge');
+  const challengeRes = await fetch('https://www.bitdefender.com/site/Store/challenge');
   const { challenge, difficulty } = await challengeRes.json();
 
   // Solve challenge
