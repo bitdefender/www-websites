@@ -68,33 +68,43 @@ const getFreeProductsEvents = () => {
 }
 
 /**
- * Resolve the data layer
+ * push the pageLoadStartedEvent
+ * and send data to CDP
  */
-export const resolveNonProductsDataLayer = async () => {
+const resolvePageLoadStartedEvent = async () => {
+  // create initial pageLoadStartedEvent with page data
   const pageLoadStartedEvent = new PageLoadStartedEvent(
     page,
     {
       name: generatePageLoadStartedName(),
       geoRegion: await User.country,
-      experimentDetails: (await getTargetExperimentDetails()) ?? getExperimentDetails(),
       serverName: 'hlx.live', // indicator for AEM Success Edge
     },
     {
-      promotionID: (await Target.configMbox)?.promotion
-                  || getUrlPromotion()
-                  || getMetadata('pid')
-                  || getCampaignBasedOnLocale()
-                  || '',
       internalPromotionID: page.getParamValue('icid') || '',
       trackingID: page.getParamValue('cid') || '',
     },
   );
 
-  AdobeDataLayerService.push(pageLoadStartedEvent);
-  // send cdp data
+  // send data to CDP
   await Target?.sendCdpData(pageLoadStartedEvent);
-  
-  pageErrorHandling();
+
+  // add the remaining data dependent on Target to the page element
+  pageLoadStartedEvent.page.attributes.promotionID = (await Target.configMbox)?.promotion
+    || getUrlPromotion()
+    || getMetadata('pid')
+    || getCampaignBasedOnLocale()
+    || '';
+  pageLoadStartedEvent.page.info.experimentDetails = (await getTargetExperimentDetails()) ?? getExperimentDetails();
+
+  // push the pageLoadStartedEvent to the Adobe Data Layer
+  AdobeDataLayerService.push(pageLoadStartedEvent);
+};
+
+/**
+ * push the userDetectedEvent to the Data Layer
+ */
+const resolveUserDetectedEvent = async () => {
   AdobeDataLayerService.push(new UserDetectedEvent(
     page,
     {
@@ -102,6 +112,15 @@ export const resolveNonProductsDataLayer = async () => {
       productFinding: getProductFinding()
     }
   ));
+};
+
+/**
+ * Resolve the data layer
+ */
+export const resolveNonProductsDataLayer = async () => {
+  await resolvePageLoadStartedEvent();
+  pageErrorHandling();
+  await resolveUserDetectedEvent();
   checkClickEventAfterRedirect();
   getFreeProductsEvents();
 }
