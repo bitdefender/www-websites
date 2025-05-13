@@ -117,7 +117,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   const data = await response.json();
   const { status } = data;
   const message = StatusMessageFactory.createMessage(status, url, statusMessages);
-  result.textContent = message.text;
+  result.innerHTML = message.text;
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
@@ -200,7 +200,7 @@ function createStatusMessages(block) {
       return;
     }
 
-    const parts = p.textContent.split(':');
+    const parts = p.innerHTML.split(':');
     if (parts.length >= 2) {
       const status = parts[0].trim();
       const message = parts.slice(1).join(':').trim();
