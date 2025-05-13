@@ -60,7 +60,7 @@ main .section.link-checker-container {
             margin-bottom: 16px;
         }
 
-        .link-checker p:not(:has(img)) {
+        .link-checker div:first-child p:not(:has(img)) {
             display: none;
         }
 
