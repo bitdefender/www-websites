@@ -7,6 +7,7 @@ import {
 import {
   BotPrevention,
 } from '../../scripts/utils/bot-prevention.js';
+import { decorateButtons } from '../../scripts/lib-franklin.js';
 
 class StatusMessageFactory {
   static createMessage(status, url, statusMessages) {
@@ -239,6 +240,65 @@ function createStatusTitles(block) {
   return statusTitles;
 }
 
+function createButtonsContainer(block, formContainer, clipboardText) {
+  const divWithButtons = Array.from(block.querySelectorAll('div')).find((div) => {
+    const firstParagraph = div.querySelector('p');
+    return firstParagraph && firstParagraph.textContent.includes('<buttons>');
+  });
+
+  if (divWithButtons) {
+    divWithButtons.classList.add('buttons-container');
+    const pElements = divWithButtons.querySelectorAll('p');
+    divWithButtons.querySelector('div').remove();
+    // Skip the first <p> if it contains a header like "<titles-change>"
+    pElements.forEach((p, index) => {
+      if (index === 0) {
+        p.remove();
+        return;
+      }
+
+      if (index === 1) {
+        p.querySelector('a').classList.add('share-button');
+      }
+
+      if (index === 2) {
+        p.querySelector('a').classList.add('check-another-button');
+      }
+      divWithButtons.appendChild(p);
+      const link = p.querySelector('a');
+      if (link.href.includes('#check-another')) {
+        link.addEventListener('click', () => resetChecker(block));
+      }
+    });
+
+    return;
+  }
+
+  // this remains here for compatibility purposes
+  const buttonsContainer = document.createElement('div');
+  buttonsContainer.classList.add('buttons-container');
+
+  const shareButton = document.createElement('button');
+  shareButton.innerHTML = '<span>Share Link Checker</span>';
+  shareButton.classList.add('share-button');
+
+  const checkAnother = document.createElement('button');
+  checkAnother.innerHTML = '<span>Check Another Link</span>';
+  checkAnother.classList.add('check-another-button');
+
+  buttonsContainer.appendChild(shareButton);
+  buttonsContainer.appendChild(checkAnother);
+  formContainer.appendChild(buttonsContainer);
+
+  checkAnother.addEventListener('click', () => resetChecker(block));
+  if (clipboardText) {
+    shareButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      copyToClipboard(block, shareButton, clipboardText);
+    });
+  }
+}
+
 export default function decorate(block) {
   const { clipboardText } = block.closest('.section').dataset;
 
@@ -292,33 +352,14 @@ export default function decorate(block) {
   result.className = 'result';
   formContainer.appendChild(result);
 
-  const buttonsContainer = document.createElement('div');
-  buttonsContainer.classList.add('buttons-container');
-
-  const shareButton = document.createElement('button');
-  shareButton.innerHTML = '<span>Share Link Checker</span>';
-  shareButton.classList.add('share-button');
-
-  const checkAnother = document.createElement('button');
-  checkAnother.innerHTML = '<span>Check Another Link</span>';
-  checkAnother.classList.add('check-another-button');
-
-  buttonsContainer.appendChild(shareButton);
-  buttonsContainer.appendChild(checkAnother);
-
-  formContainer.appendChild(buttonsContainer);
   block.querySelectorAll(':scope > div')[1].replaceWith(formContainer);
   const [safeImage, dangerImage] = block.querySelectorAll('picture');
   safeImage.classList.add('safe-image');
   dangerImage.classList.add('danger-image');
 
   button.addEventListener('click', () => checkLink(block, input, result, statusMessages, statusTitles));
-  checkAnother.addEventListener('click', () => resetChecker(block));
-  shareButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    copyToClipboard(block, shareButton, clipboardText);
-  });
 
+  createButtonsContainer(block, formContainer, clipboardText);
   // if the text is cleared, do not display any error
   input.addEventListener('input', () => {
     const url = input.value.trim();
