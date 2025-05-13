@@ -548,6 +548,7 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
             &:first-of-type{
                 flex-grow: 0;
+                text-align: left;
             }
         }
 
@@ -624,7 +625,9 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
     .product-comparison-price {
         gap: 5px;
-
+        margin: 0;
+        margin-top: 10px;
+        
         p {
             color: #161616;
         }
@@ -808,13 +811,16 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
         padding: 24px;
     }
 
-    .product-comparison-price {
-        .old-price-box {
+    &.product-comparison-price {
+        &.old-price-box {
             flex-direction: unset;
 
-            span {
+            &span {
                 font-size: 16px;
                 align-self: center;
+                del {
+                    text-align: left;
+                }
             }
         }
 
@@ -835,11 +841,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
         width: 33%;
     }
 
-    tr:last-of-type {
-        td, p {
-            font-size: 16px;
-        }
-    }
 }
 
 @media (max-width: 992px) {
@@ -888,12 +889,29 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
                 grid-auto-flow: dense;
                 gap: 0;
                 grid-template-rows: repeat(1, minmax(40px, auto));
+
+                .old-price-container .old-price-box {
+                    display: flex;
+                    flex-flow: column-reverse;
+                }
+
+                .new-price-box {
+                    .total-text {
+                        font-size: 23px !important;
+                    }
+        
+                    sup {
+                        top: 10px;
+                        margin-left: 10px;
+                        font-size: 12px !important;
+                    }
+                }
             }
             
         }
 
         div [role="row"] div[role="cell"]:first-of-type {
-            min-width: 100%;
+            min-width: 100% !important;
         }
     }
 }

@@ -433,6 +433,10 @@ main .section.rounded-corners { /* apply parent wrapper */
   border-radius: 20px;
 }
 
+main .section.light-gray .default-content-wrapper {
+  background-color: #F6F6F6;
+}
+
 main .section.light-gray-wide {
   background-color: #F6F6F6;
 }

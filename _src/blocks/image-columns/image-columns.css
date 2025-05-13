@@ -148,24 +148,31 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 
 .avfree .image-columns{
   > div {
-      align-items: start;
+    align-items: start;
 
-      > .image-columns-txt-col {
-          text-align: left;
+    > .image-columns-txt-col {
+      text-align: left;
 
-          p {
-              padding-left: 0;
-              font-size: 16px;
-              margin-bottom: 24px;
-              margin-left: 0;
-          }  
+      p {
+       padding-left: 0;
+       font-size: 16px;
+       margin-bottom: 24px;
+        margin-left: 0;
+      }  
 
-          h3 {
-              font-size: 18px;
-              margin-bottom: 6px;
-          }
+      h3 {
+        font-size: 18px;
+        margin-bottom: 6px;
       }
-      
+    }
+    
+    >.image-columns-img-col img {
+      display: none;
+
+      @media (min-width: 992px) {
+        display: block;
+      }
+    }
   }
 }
 
