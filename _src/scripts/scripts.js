@@ -1,6 +1,6 @@
 import Launch from '@repobit/dex-launch';
+import Target from '@repobit/dex-target';
 import { PageLoadedEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
-import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
   sampleRUM,
@@ -23,6 +23,7 @@ import {
 import { StoreResolver } from './libs/store/index.js';
 
 import {
+  adobeMcAppendVisitorId,
   createTag,
   getPageExperimentKey,
   GLOBAL_EVENTS,
@@ -312,10 +313,10 @@ export async function loadTrackers() {
       await Launch.load(page.environment);
       onAdobeMcLoaded();
     } catch {
-      target.abort();
+      Target.abort();
     }
   } else {
-    target.abort();
+    Target.abort();
     onAdobeMcLoaded();
   }
 }
