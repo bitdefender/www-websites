@@ -1,9 +1,8 @@
-import Target from "@repobit/dex-target";
+import { target } from "../target.js";
 import { User } from "@repobit/dex-utils";
 import page from "../page.js";
 import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
 import {
-  getTargetExperimentDetails,
   getExperimentDetails,
   generatePageLoadStartedName,
   getCampaignBasedOnLocale,
@@ -11,6 +10,7 @@ import {
   getProductFinding,
   getMetadata,
 } from '../utils/utils.js';
+import { getTargetExperimentDetails } from "../target.js";
 
 export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
   getOptionInfo(option) {
@@ -68,28 +68,35 @@ const getFreeProductsEvents = () => {
 }
 
 /**
- * Resolve the data layer
+ * push the pageLoadStartedEvent
+ * and send data to CDP
  */
-export const resolveNonProductsDataLayer = async () => {
+const resolvePageLoadStartedEvent = async () => {
+  // push the pageLoadStartedEvent to the Adobe Data Layer
   AdobeDataLayerService.push(new PageLoadStartedEvent(
     page,
     {
       name: generatePageLoadStartedName(),
-      geoRegion: await User.country,
       experimentDetails: (await getTargetExperimentDetails()) ?? getExperimentDetails(),
+      geoRegion: await User.country,
       serverName: 'hlx.live', // indicator for AEM Success Edge
     },
     {
-      promotionID: (await Target.configMbox)?.promotion
-                  || getUrlPromotion()
-                  || getMetadata('pid')
-                  || getCampaignBasedOnLocale()
-                  || '',
+      promotionID: (await target.configMbox)?.promotion
+        || getUrlPromotion()
+        || getMetadata('pid')
+        || getCampaignBasedOnLocale()
+        || '',
       internalPromotionID: page.getParamValue('icid') || '',
       trackingID: page.getParamValue('cid') || '',
     },
   ));
-  pageErrorHandling();
+};
+
+/**
+ * push the userDetectedEvent to the Data Layer
+ */
+const resolveUserDetectedEvent = async () => {
   AdobeDataLayerService.push(new UserDetectedEvent(
     page,
     {
@@ -97,6 +104,15 @@ export const resolveNonProductsDataLayer = async () => {
       productFinding: getProductFinding()
     }
   ));
+};
+
+/**
+ * Resolve the data layer
+ */
+export const resolveNonProductsDataLayer = async () => {
+  await resolvePageLoadStartedEvent();
+  pageErrorHandling();
+  await resolveUserDetectedEvent();
   checkClickEventAfterRedirect();
   getFreeProductsEvents();
 }
