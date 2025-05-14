@@ -1,9 +1,8 @@
-import Target from "@repobit/dex-target";
+import { target } from "../target.js";
 import { User } from "@repobit/dex-utils";
 import page from "../page.js";
 import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
 import {
-  getTargetExperimentDetails,
   getExperimentDetails,
   generatePageLoadStartedName,
   getCampaignBasedOnLocale,
@@ -11,6 +10,7 @@ import {
   getProductFinding,
   getMetadata,
 } from '../utils/utils.js';
+import { getTargetExperimentDetails } from "../target.js";
 
 export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
   getOptionInfo(option) {
@@ -72,33 +72,25 @@ const getFreeProductsEvents = () => {
  * and send data to CDP
  */
 const resolvePageLoadStartedEvent = async () => {
-  // create initial pageLoadStartedEvent with page data
-  const pageLoadStartedEvent = new PageLoadStartedEvent(
+  // push the pageLoadStartedEvent to the Adobe Data Layer
+  AdobeDataLayerService.push(new PageLoadStartedEvent(
     page,
     {
       name: generatePageLoadStartedName(),
+      experimentDetails: (await getTargetExperimentDetails()) ?? getExperimentDetails(),
       geoRegion: await User.country,
       serverName: 'hlx.live', // indicator for AEM Success Edge
     },
     {
+      promotionID: (await target.configMbox)?.promotion
+        || getUrlPromotion()
+        || getMetadata('pid')
+        || getCampaignBasedOnLocale()
+        || '',
       internalPromotionID: page.getParamValue('icid') || '',
       trackingID: page.getParamValue('cid') || '',
     },
-  );
-
-  // send data to CDP
-  await Target?.sendCdpData(pageLoadStartedEvent);
-
-  // add the remaining data dependent on Target to the page element
-  pageLoadStartedEvent.page.attributes.promotionID = (await Target.configMbox)?.promotion
-    || getUrlPromotion()
-    || getMetadata('pid')
-    || getCampaignBasedOnLocale()
-    || '';
-  pageLoadStartedEvent.page.info.experimentDetails = (await getTargetExperimentDetails()) ?? getExperimentDetails();
-
-  // push the pageLoadStartedEvent to the Adobe Data Layer
-  AdobeDataLayerService.push(pageLoadStartedEvent);
+  ));
 };
 
 /**
