@@ -1,3 +1,4 @@
+import Target from '@repobit/dex-target';
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { ButtonClickEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
 import page from '../page.js';
@@ -469,10 +470,37 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
+export function appendAdobeMcLinks(selector) {
+  try {
+    const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
+
+    const hrefSelector = '[href*=".bitdefender."]';
+    wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
+      const destinationURLWithVisitorIDs = await Target.appendVisitorIDsTo(link.href);
+      link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+    });
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
+}
+
 export const GLOBAL_EVENTS = {
   ADOBE_MC_LOADED: 'adobe_mc::loaded',
   PAGE_LOADED: 'page::loaded',
 };
+
+export function adobeMcAppendVisitorId(selector) {
+  // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
+
+  if (window.ADOBE_MC_EVENT_LOADED) {
+    appendAdobeMcLinks(selector);
+  } else {
+    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
+      appendAdobeMcLinks(selector);
+    });
+  }
+}
 
 const ICONS_CACHE = {};
 export async function decorateIcons(element) {
@@ -795,6 +823,53 @@ export const shouldABTestsBeDisabled = () => {
   }
 
   return false;
+};
+
+/**
+* get experiment details from Target
+* @returns {Promise<{
+*  experimentId: string;
+*  experimentVariant: string;
+* } | null>}
+  */
+export const getTargetExperimentDetails = async () => {
+  /**
+   * @type {{
+   *  experimentId: string;
+   *  experimentVariant: string;
+   * }|null}
+   */
+  let targetExperimentDetails = null;
+
+  async function loadCSS(href) {
+    return new Promise((resolve, reject) => {
+      if (!document.querySelector(`head > link[href="${href}"]`)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.onload = resolve;
+        link.onerror = reject;
+        document.head.append(link);
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  const targetExperimentLocation = getMetadata('target-experiment-location');
+  const targetExperimentId = getMetadata('target-experiment');
+  if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
+    const { runTargetExperiment } = await import('../target.js');
+    const offer = await Target.getOffers({ mboxNames: targetExperimentLocation });
+    const { url, template } = offer || {};
+    if (template) {
+      loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
+      document.body.classList.add(template);
+    }
+    targetExperimentDetails = await runTargetExperiment(url, targetExperimentId);
+  }
+
+  return targetExperimentDetails;
 };
 
 /**
