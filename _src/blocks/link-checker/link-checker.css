@@ -60,7 +60,7 @@ main .section.link-checker-container {
             margin-bottom: 16px;
         }
 
-        .link-checker p:not(:has(img)) {
+        .link-checker div:first-child p:not(:has(img)) {
             display: none;
         }
 
@@ -116,7 +116,7 @@ main .section.link-checker-container {
             display: inline-block;
         }
 
-        .link-checker p:not(:has(img)) {
+        .link-checker div:first-child p:not(:has(img)) {
             display: none;
         }
 
@@ -235,6 +235,10 @@ main .section.link-checker-container {
             display: none;
             gap: 40px;
             margin-bottom: 20px;
+
+            .button-container {
+                margin: 0;
+            }
         }
 
         button.check-url {
@@ -252,7 +256,7 @@ main .section.link-checker-container {
             background-color: #0056b3;
         }
 
-        button.share-button, button.check-another-button {
+        .share-button, button.check-another-button, .check-another-button {
             position: relative;
             cursor: pointer;
             color: #007BFF;
@@ -269,21 +273,33 @@ main .section.link-checker-container {
             &:hover {
                 background-color: #dbf0f9;
                 border-radius: 8px;
+
+                span.button-text {
+                    transform: none;
+                }
             }
         }
 
-        button.share-button::before {
+        .share-button::before {
             content: url("../../icons/share.svg");
             height: 20px;
             width: 20px;
             display: inline-block;
         }
 
-        button.check-another-button::before {
+        button.check-another-button::before, .check-another-button::before {
             content: url("../../icons/check.svg");
             height: 20px;
             width: 20px;
             display: inline-block;
+        }
+
+        button.check-another-button::after, .check-another-button::after,
+        .share-button::after {
+            content: "";
+            width: 0;
+            height: 0;
+            display: none;
         }
 
         .share-popup {
@@ -405,6 +421,10 @@ main .section.link-checker-container {
                 flex-flow: row;
                 margin-top: 50px;
                 justify-content: center;
+
+                .button-container{
+                    margin: 0;
+                }
             }
 
             button.check-url {
