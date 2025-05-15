@@ -1,39 +1,21 @@
-import Launch from '@repobit/dex-launch';
-import { PageLoadedEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
-import { target, adobeMcAppendVisitorId } from './target.js';
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["scripts/delayed.js","scripts/lib-franklin.js","node_modules/@repobit/dex-utils/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/cookies.js","node_modules/js-cookie/dist/js.cookie.js","node_modules/@repobit/dex-utils/dist/src/user.js","node_modules/@repobit/dex-constants/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/cssua.js","scripts/page.js","node_modules/@repobit/dex-utils/dist/src/page.js","scripts/breadcrumbs.js","scripts/utils/utils.js","node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js","node_modules/@repobit/dex-data-layer/dist/src/events/page-loaded-event/index.js","node_modules/@repobit/dex-data-layer/dist/src/events/product-loaded-event/index.js","_virtual/cjs.js","_virtual/_commonjsHelpers.js","node_modules/deepmerge/dist/cjs.js","node_modules/@repobit/dex-data-layer/dist/src/events/button-click-event/index.js","scripts/libs/constants.js","node_modules/@repobit/dex-utils/dist/src/utils.js"])))=>i.map(i=>d[i]);
+import { __vitePreload } from '../_virtual/preload-helper.js';
+import Launch from '../node_modules/@repobit/dex-launch/dist/src/index.js';
+import { AdobeDataLayerService } from '../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js';
+import '../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { PageLoadedEvent } from '../node_modules/@repobit/dex-data-layer/dist/src/events/page-loaded-event/index.js';
+import { adobeMcAppendVisitorId, target } from './target.js';
 import page from './page.js';
-import {
-  sampleRUM,
-  loadHeader,
-  loadFooter,
-  decorateButtons,
-  decorateIcons,
-  decorateTags,
-  decorateSections,
-  decorateBlocks,
-  decorateTemplateAndTheme,
-  waitForLCP,
-  loadBlocks,
-  loadCSS,
-  getMetadata,
-} from './lib-franklin.js';
-import {
-  resolveNonProductsDataLayer,
-} from './libs/data-layer.js';
-import { StoreResolver } from './libs/store/index.js';
-
-import {
-  createTag,
-  getPageExperimentKey,
-  GLOBAL_EVENTS,
-  pushTrialDownloadToDataLayer,
-  generateLDJsonSchema,
-} from './utils/utils.js';
+import { getMetadata, decorateTemplateAndTheme, loadCSS, waitForLCP, loadHeader, loadBlocks, loadFooter, sampleRUM, decorateButtons, decorateIcons, decorateTags, decorateSections, decorateBlocks } from './lib-franklin.js';
+import { resolveNonProductsDataLayer } from './libs/data-layer.js';
+import { StoreResolver } from './libs/store/resolver/resolver.js';
+import './libs/store/store.js';
+import { pushTrialDownloadToDataLayer, getPageExperimentKey, generateLDJsonSchema, GLOBAL_EVENTS, createTag } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['hero', 'password-generator']; // add your LCP blocks to the list
 
-export const SUPPORTED_LANGUAGES = ['en'];
+const SUPPORTED_LANGUAGES = ['en'];
 
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
@@ -61,14 +43,14 @@ function initMobileDetector(viewport) {
  * @param {String} name The name of the meta tag
  * @param {String} value The value of the meta tag
  */
-export function createMetadata(name, value) {
+function createMetadata(name, value) {
   const meta = document.createElement('meta');
   meta.setAttribute('name', name);
   meta.setAttribute('content', value);
   document.head.append(meta);
 }
 
-export function getLanguageCountryFromPath() {
+function getLanguageCountryFromPath() {
   const currentPathUrl = window.location.pathname;
   return {
     language: currentPathUrl.split('/')[1].split('-')[0],
@@ -76,7 +58,7 @@ export function getLanguageCountryFromPath() {
   };
 }
 
-export function getLocalizedResourceUrl(resourceName) {
+function getLocalizedResourceUrl(resourceName) {
   const { pathname } = window.location;
   const lastCharFromUrl = pathname.charAt(pathname.length - 1);
   const lpIsInFolder = lastCharFromUrl === '/';
@@ -97,7 +79,7 @@ export function getLocalizedResourceUrl(resourceName) {
  * Decorates picture elements with a link to a video.
  * @param {Element} main The main element
  */
-export default function decorateLinkedPictures(main) {
+function decorateLinkedPictures(main) {
   main.querySelectorAll('picture').forEach((picture) => {
     // this condition checks if the picture is part of some content block ( rte )
     // and not a direct element in some DIV block
@@ -151,7 +133,7 @@ export default function decorateLinkedPictures(main) {
  * @param {Element} main The main element
  */
 // eslint-disable-next-line import/prefer-default-export
-export function decorateMain(main) {
+function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
@@ -169,7 +151,7 @@ export function decorateMain(main) {
  * @returns {Promise<Element>}
  * @example
  */
-export async function createModal(path, template, stopAutomaticRefresh) {
+async function createModal(path, template, stopAutomaticRefresh) {
   const modalContainer = document.createElement('div');
   modalContainer.classList.add('modal-container');
 
@@ -219,7 +201,7 @@ export async function createModal(path, template, stopAutomaticRefresh) {
   return modalContainer;
 }
 
-export async function detectModalButtons(main) {
+async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
     link.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -299,7 +281,7 @@ function buildCtaSections(main) {
     .forEach(buildCta);
 }
 
-export async function loadTrackers() {
+async function loadTrackers() {
   const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
 
   const onAdobeMcLoaded = () => {
@@ -489,7 +471,7 @@ function loadDelayed() {
     // load anything that can be postponed to the latest here
     eventOnDropdownSlider();
     // eslint-disable-next-line import/no-cycle
-    return import('./delayed.js');
+    return __vitePreload(() => import('./delayed.js'),true              ?__vite__mapDeps([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]):void 0);
   }, 3000);
 }
 
@@ -548,3 +530,6 @@ initMobileDetector('tablet');
 initMobileDetector('desktop');
 
 loadPage();
+
+export { SUPPORTED_LANGUAGES, createMetadata, createModal, decorateMain, decorateLinkedPictures as default, detectModalButtons, getLanguageCountryFromPath, getLocalizedResourceUrl, loadTrackers };
+//# sourceMappingURL=scripts.js.map

@@ -2,7 +2,7 @@
  * @param {HTMLElement} element 
  * @param {import("../resolver").Context} context 
  */
-export const resolve = async (element, { product, option }) => {
+const resolve = async (element, { product, option }) => {
     if (element.dataset.storeBuyLink === undefined || !option) { return; }
 
     const attributes = element.dataset.storeBuyLink === '' || element.dataset.storeBuyLink === 'empty'
@@ -21,4 +21,7 @@ export const resolve = async (element, { product, option }) => {
     button.setAttribute("data-old-price", option.getPrice("value"));
     button.setAttribute("data-currency", option.getSymbol());
     button.setAttribute("data-variation", `${option.getDevices()}u-${option.getSubscription("years")}y`);
-}
+};
+
+export { resolve };
+//# sourceMappingURL=buyLink.js.map

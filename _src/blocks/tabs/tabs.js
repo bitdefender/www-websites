@@ -1,3 +1,5 @@
+import { readBlockConfig } from '../../scripts/lib-franklin.js';
+
 /**
  * @typedef TabInfo
  * @property {string} name
@@ -5,9 +7,6 @@
  * @property {HTMLElement} $content
  */
 
-import {
-  readBlockConfig,
-} from '../../scripts/lib-franklin.js';
 
 function isMobileScreenSize() {
   return !window.matchMedia('(min-width: 900px)').matches;
@@ -73,7 +72,7 @@ function createTabsNavigation(block) {
  * @param {HTMLElement} block
  * @return {TabInfo[]}
  */
-export function createTabs(block) {
+function createTabs(block) {
   const config = readBlockConfig(block);
   block.innerHTML = '';
 
@@ -132,7 +131,7 @@ export function createTabs(block) {
 /**
  * @param {HTMLElement} block
  */
-export default function decorate(block) {
+function decorate(block) {
   const tabs = createTabs(block);
   const dropDownMenu = block.querySelector('.dropdown-menu');
 
@@ -202,3 +201,6 @@ export default function decorate(block) {
     activateTab(newIndex, { toggleDropdown: false });
   });
 }
+
+export { createTabs, decorate as default };
+//# sourceMappingURL=tabs.js.map

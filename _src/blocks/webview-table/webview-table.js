@@ -221,7 +221,7 @@ async function checkAndReplacePrivacyPolicyLink(block) {
   }
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   const metadata = block.closest('.section').dataset;
   buildTableHeader(block);
   addAccesibilityRoles(block);
@@ -241,3 +241,6 @@ export default async function decorate(block) {
   const targetElement = document.querySelector('.webview-table');
   adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
 }
+
+export { decorate as default };
+//# sourceMappingURL=webview-table.js.map

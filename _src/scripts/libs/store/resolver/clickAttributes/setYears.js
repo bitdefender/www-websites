@@ -2,7 +2,7 @@
  * @param {HTMLElement} button 
  * @param {import("../resolver").Context} context 
  */
-export const resolve = (button, context) => {
+const resolve = (button, context) => {
     if (button.dataset.storeClickSetYears === undefined) { return; }
 
     if (button.nodeName === "SELECT") {
@@ -15,4 +15,7 @@ export const resolve = (button, context) => {
     button.addEventListener("click", () => {
         context.years = button.dataset.storeClickSetYears;
     });
-}
+};
+
+export { resolve };
+//# sourceMappingURL=setYears.js.map

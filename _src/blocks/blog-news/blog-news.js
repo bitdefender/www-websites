@@ -40,7 +40,7 @@ async function renderBlogGrid(block, endpoint, articlesNumber) {
   }
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const { endpoint, articlesNumber } = block.closest('.section').dataset;
   const blogGrid = document.createElement('div');
   block.appendChild(blogGrid);
@@ -48,3 +48,6 @@ export default function decorate(block) {
   renderBlogGrid(block, endpoint, articlesNumber);
   matchHeights(block, 'p');
 }
+
+export { decorate as default };
+//# sourceMappingURL=blog-news.js.map

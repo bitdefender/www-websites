@@ -1,7 +1,7 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const cols = [...block.children[1].children];
   const middleSvgIcon = block.children[0].querySelector('span');
 
@@ -34,3 +34,6 @@ export default async function decorate(block) {
   decorateIcons(block);
   matchHeights(block, '.box');
 }
+
+export { decorate as default };
+//# sourceMappingURL=dual-teaser.js.map

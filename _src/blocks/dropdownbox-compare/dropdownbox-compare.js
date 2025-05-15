@@ -1,4 +1,4 @@
-export default function decorate(block) {
+function decorate(block) {
   // search for [] to replace with span greeenTag class
   const getFirstDivs = block.querySelectorAll('.dropdownbox-compare-container .block > div > div:nth-child(1)');
   getFirstDivs.forEach((item) => {
@@ -15,3 +15,6 @@ export default function decorate(block) {
     });
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=dropdownbox-compare.js.map

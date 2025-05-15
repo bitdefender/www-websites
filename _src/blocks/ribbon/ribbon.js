@@ -1,4 +1,4 @@
-export default function decorate(block) {
+function decorate(block) {
   const [, backgroundEl] = block.children;
 
   if (backgroundEl) {
@@ -12,3 +12,6 @@ export default function decorate(block) {
     }
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=ribbon.js.map

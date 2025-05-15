@@ -1,6 +1,6 @@
 function embedYoutube(url, autoplay) {
   const usp = new URLSearchParams(url.search);
-  const suffix = autoplay ? '&muted=1&autoplay=0&enablejsapi=1' : '';
+  const suffix = '&muted=1&autoplay=0&enablejsapi=1' ;
   let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : '';
   const embed = url.pathname;
   if (url.origin.includes('youtu.be')) {
@@ -155,7 +155,7 @@ function decorateButtons(element) {
   });
 }
 
-export default async function decorate(block, options) {
+async function decorate(block, options) {
   const {
     // eslint-disable-next-line no-unused-vars
     videoUrl,
@@ -168,7 +168,7 @@ export default async function decorate(block, options) {
     decorateButtons(block);
 
     const wrapper = block.querySelector('.video-placeholder');
-    block.appendChild(embedYoutube(new URL(videoUrl), true));
+    block.appendChild(embedYoutube(new URL(videoUrl)));
     const modalContainer = block.querySelector('dialog');
     wrapper.addEventListener('click', () => {
       modalContainer.showModal();
@@ -184,3 +184,6 @@ export default async function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=bitdefender-central.js.map

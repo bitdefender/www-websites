@@ -1,4 +1,4 @@
-export default function decorate(block) {
+function decorate(block) {
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
     const li = document.createElement('li');
@@ -20,3 +20,6 @@ export default function decorate(block) {
   Array.from(block.children).forEach((child) => child.remove());
   block.appendChild(ul);
 }
+
+export { decorate as default };
+//# sourceMappingURL=barchart.js.map

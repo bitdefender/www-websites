@@ -1,7 +1,7 @@
 import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
 import { getDatasetFromSection } from '../../scripts/utils/utils.js';
 
-export default function decorate(block) {
+function decorate(block) {
   const innerWrapper = block.children[0];
   innerWrapper.classList = 'inner-wrapper';
 
@@ -24,3 +24,6 @@ export default function decorate(block) {
 
   block.prepend(defaultWrapper);
 }
+
+export { decorate as default };
+//# sourceMappingURL=box-image-round-card.js.map

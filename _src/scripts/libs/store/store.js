@@ -1,10 +1,11 @@
-import { target } from "../../target.js";
-import { User } from "@repobit/dex-utils";
-import { Constants } from "../constants.js";
-import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams, getMetadata, getUrlPromotion } from "../../utils/utils.js";
-import page from "../../page.js";
+import { target } from '../../target.js';
+import '../../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { Constants } from '../constants.js';
+import { getUrlPromotion, getMetadata, getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams } from '../../utils/utils.js';
+import page from '../../page.js';
+import User from '../../../node_modules/@repobit/dex-utils/dist/src/user.js';
 
-export class ProductInfo {
+class ProductInfo {
 	/**
 	 *
 	 * @param {string} id
@@ -20,7 +21,7 @@ export class ProductInfo {
 	}
 }
 
-export class ProductOption {
+class ProductOption {
 	/**
 	 *
 	 * @param {{
@@ -145,8 +146,6 @@ export class ProductOption {
 				return this.subscription === 1
 					? Store.placeSymbol(this.price, this.currency)
 					: Store.placeSymbol(Number(Number(this.price / this.subscription).toFixed(2)), this.currency);
-			default:
-				break;
 		}
 	}
 
@@ -167,8 +166,6 @@ export class ProductOption {
 				return this.subscription === 1
 					? Store.placeSymbol(this.priceDiscounted, this.currency)
 					: Store.placeSymbol(Number(Number(this.priceDiscounted / this.subscription).toFixed(2)), this.currency);
-			default:
-				break;
 		}
 	}
 
@@ -231,7 +228,7 @@ export class ProductOption {
 	}
 }
 
-export class Product {
+class Product {
 	constructor(product) {
 		this.id = product.id;
 		this.productId = product.product_id;
@@ -262,11 +259,11 @@ export class Product {
 		if (Store.config.provider === 'vlaicu'
 			&& Object.keys(Constants.WRONG_DEVICES_PRODUCT_IDS).includes(product.product_alias)) {
 			const contentDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].contentDevices;
-			const providerDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].providerDevices
+			const providerDevices = Constants.WRONG_DEVICES_PRODUCT_IDS[product.product_alias].providerDevices;
 
 			this.options[contentDevices] = this.options[providerDevices];
 			if (!this.yearDevicesMapping[contentDevices]) {
-				this.yearDevicesMapping[contentDevices] = [providerDevices]
+				this.yearDevicesMapping[contentDevices] = [providerDevices];
 			} else {
 				this.yearDevicesMapping[contentDevices].push(providerDevices);
 			}	
@@ -482,8 +479,6 @@ export class Product {
 				return subscription === 1
 					? Store.placeSymbol(price, this.currency)
 					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency);
-			default:
-				break;
 		}
 	}
 
@@ -521,8 +516,6 @@ export class Product {
 				return subscription === 1
 					? Store.placeSymbol(price, this.currency)
 					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency);
-			default:
-				break;
 		}
 	}
 
@@ -601,8 +594,6 @@ export class Product {
 				return subscription === 1
 					? Store.placeSymbol(price, this.currency)
 					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency);
-			default:
-				break;
 		}
 	}
 
@@ -794,7 +785,7 @@ class Vlaicu {
 			product_name: productInfo.productName,
 			promotion: isReceivedPromotionValid ? productInfoResponse.campaign : campaignId, 
 			variations: {}
-		}
+		};
 
 		payload.forEach(productVariation => {
 
@@ -834,13 +825,13 @@ class Vlaicu {
 					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,
 				}
-			}
+			};
 
 			if (productVariation.discountAmount > 0) {
 				devicesObj['discount'] = {
 					discounted_price: productVariation.discountedPrice,
 					discount_value: productVariation.discountAmount,
-				}
+				};
 			}
 
 			window.StoreProducts.product[id].variations[devices_no] = window.StoreProducts.product[id].variations[devices_no]
@@ -887,7 +878,7 @@ class StoreConfig {
 	}
 }
 
-export class Store {
+class Store {
 	static countriesMapping = {
 		gb: "uk",
 		ch: "de",
@@ -999,3 +990,6 @@ window.Store = Store;
 window.Product = Product;
 window.ProductOption = ProductOption;
 window.ProductInfo = ProductInfo;
+
+export { Product, ProductInfo, ProductOption, Store };
+//# sourceMappingURL=store.js.map

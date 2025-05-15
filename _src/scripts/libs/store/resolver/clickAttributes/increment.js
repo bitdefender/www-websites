@@ -2,7 +2,7 @@
  * @param {HTMLElement} button 
  * @param {import("../resolver").Context} context 
  */
-export const resolve = (button, context) => {
+const resolve = (button, context) => {
     if (!button.dataset.storeClickIncrement) { return; }
 
     button.addEventListener("click", () => {
@@ -15,4 +15,7 @@ export const resolve = (button, context) => {
             context.years += 1;
         }
     });
-}
+};
+
+export { resolve };
+//# sourceMappingURL=increment.js.map

@@ -1,6 +1,6 @@
 import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const [rte, pictureEl] = [...block.children[0].children];
 
   if (window.location.href.indexOf('scuderiaferrari') !== -1) {
@@ -22,3 +22,6 @@ export default async function decorate(block) {
 
   adobeMcAppendVisitorId('header');
 }
+
+export { decorate as default };
+//# sourceMappingURL=spurs-hero.js.map

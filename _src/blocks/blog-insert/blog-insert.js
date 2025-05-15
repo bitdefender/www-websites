@@ -1,4 +1,4 @@
-export default function decorate(block) {
+function decorate(block) {
   const urlDiv = block.querySelector('div > div:nth-child(2) > div');
   const url = urlDiv.textContent.trim();
 
@@ -16,3 +16,6 @@ export default function decorate(block) {
   block.textContent = '';
   block.append(anchorElement);
 }
+
+export { decorate as default };
+//# sourceMappingURL=blog-insert.js.map

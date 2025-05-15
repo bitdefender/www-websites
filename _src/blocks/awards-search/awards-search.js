@@ -205,9 +205,12 @@ function moveAccordionUnderFilterSection(block) {
   awardSearchFilterSection.append(accordion);
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   moveAccordionUnderFilterSection(block);
   createAwardsResultContainer(block);
   fetchAwardsData(block);
   removeAwardsLinkFromDom(block);
 }
+
+export { decorate as default };
+//# sourceMappingURL=awards-search.js.map

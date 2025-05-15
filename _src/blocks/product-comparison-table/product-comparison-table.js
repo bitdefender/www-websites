@@ -276,7 +276,7 @@ function addProductPriceBelowSelectedColumn(block) {
   });
 }
 
-export default function decorate(block) {
+function decorate(block) {
   addAccesibilityRoles(block);
   replaceTableTextToProperCheckmars(block);
   setExpandableRows(block);
@@ -301,3 +301,6 @@ export default function decorate(block) {
   matchHeights(block, '.old-price-container');
   matchHeights(block, '.product-comparison-price');
 }
+
+export { decorate as default };
+//# sourceMappingURL=product-comparison-table.js.map

@@ -1,7 +1,9 @@
-import { AdobeDataLayerService, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
+import { AdobeDataLayerService } from '../../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { WindowLoadStartedEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/window-load-started-event/index.js';
 import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
-import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
+import { loadBlocks, getMetadata } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
@@ -68,7 +70,7 @@ async function updatePageLoadStartedEvent(offer) {
   AdobeDataLayerService.push(newObject);
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
     mboxName,
@@ -105,7 +107,7 @@ export default async function decorate(block) {
   }
 
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
-  updatePageLoadStartedEvent(offer, mboxName);
+  updatePageLoadStartedEvent(offer);
 
   // Make all the links that contain #buylink in href open in a new browser window
   decoratedOfferHtml.querySelectorAll('a[href*="#buylink"]').forEach((link) => {
@@ -115,3 +117,6 @@ export default async function decorate(block) {
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));
 }
+
+export { decorate as default };
+//# sourceMappingURL=mbox-canvas.js.map

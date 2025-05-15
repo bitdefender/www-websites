@@ -2,7 +2,7 @@
  * @param {HTMLElement} element 
  * @param {import("../resolver").Context} context 
  */
-export const resolve = (element, context) => {
+const resolve = (element, context) => {
     if (element.dataset.storeAddClass === undefined) { return; }
 
     const constraintsList = element.dataset.storeAddClass.split(';');
@@ -42,4 +42,7 @@ export const resolve = (element, context) => {
             element.classList.remove(...classes);
         }
     }
-}
+};
+
+export { resolve };
+//# sourceMappingURL=addClass.js.map

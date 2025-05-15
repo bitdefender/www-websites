@@ -1,13 +1,16 @@
-import { debounce, UserAgent } from '@repobit/dex-utils';
-import { ButtonClickEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { AdobeDataLayerService } from '../../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js';
+import { ButtonClickEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/button-click-event/index.js';
 import page from '../page.js';
 import { Constants } from '../libs/constants.js';
+import UserAgent from '../../node_modules/@repobit/dex-utils/dist/src/user-agent/index.js';
+import { debounce } from '../../node_modules/@repobit/dex-utils/dist/src/utils.js';
 
 const TRACKED_PRODUCTS = [];
 const TRACKED_PRODUCTS_COMPARISON = [];
 
-export const GLOBAL_V2_LOCALES = ['en-bz', 'en-lv'];
-export const IANA_BY_REGION_MAP = new Map([
+const GLOBAL_V2_LOCALES = ['en-bz', 'en-lv'];
+const IANA_BY_REGION_MAP = new Map([
   [3, { locale: 'en-GB', label: 'united kingdom' }],
   [4, { locale: 'au-AU', label: 'australia' }],
   [5, { locale: 'de-DE', label: 'germany' }],
@@ -131,12 +134,12 @@ const PRICE_LOCALE_MAP = new Map([
 /**
  * @returns {boolean} check if you are on exactly the consumer page (e.g /en-us/consumer/)
  */
-export function checkIfNotProductPage() {
+function checkIfNotProductPage() {
   return Constants.NONE_PRODUCT_PAGES.includes(page.name);
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function createTag(tag, attributes, html) {
+function createTag(tag, attributes, html) {
   const el = document.createElement(tag);
   if (html) {
     if (html instanceof HTMLElement
@@ -162,13 +165,13 @@ function isZuora() {
   return url.pathname.includes('/nl-nl/') || url.pathname.includes('/nl-be/');
 }
 
-export function getMetadata(name) {
+function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
   return meta || '';
 }
 
-export function getProductLinkCountryPrefix() {
+function getProductLinkCountryPrefix() {
   const { pathname } = window.location;
 
   if (pathname.includes('/en-au/')) {
@@ -230,17 +233,17 @@ export function getProductLinkCountryPrefix() {
   return 'https://www.bitdefender.com/site/Store/ajax';
 }
 
-export function getBuyLinkCountryPrefix() {
+function getBuyLinkCountryPrefix() {
   return 'https://www.bitdefender.com/site/Store/buy';
 }
 
-export function getPriceLocalMapByLocale() {
+function getPriceLocalMapByLocale() {
   const locale = window.location.pathname.split('/')[1];
   return PRICE_LOCALE_MAP.get(locale) || PRICE_LOCALE_MAP.get('en-us');
 }
 
 // eslint-disable-next-line max-len
-export function generateProductBuyLink(product, productCode, month = null, years = null, pid = null) {
+function generateProductBuyLink(product, productCode, month = null, years = null, pid = null) {
   if (isZuora()) {
     return product.buy_link;
   }
@@ -266,7 +269,7 @@ export function generateProductBuyLink(product, productCode, month = null, years
   return `${getBuyLinkCountryPrefix()}/${productCode}/${m}/${y}/${buyLinkPid}?force_country=${forceCountry}`;
 }
 
-export function setDataOnBuyLinks(element, dataInfo) {
+function setDataOnBuyLinks(element, dataInfo) {
   const { productId, variation } = dataInfo;
   if (productId) element.dataset.product = productId.trim();
 
@@ -278,7 +281,7 @@ export function setDataOnBuyLinks(element, dataInfo) {
   if (variation.variation_name) element.dataset.variation = variation.variation_name.trim();
 }
 
-export function formatPrice(price, currency) {
+function formatPrice(price, currency) {
   if (!price) {
     return null;
   }
@@ -303,7 +306,7 @@ function findTextNodes(parent) {
  * @param name The name of the block
  * @param renderer The renderer function
  */
-export function createNanoBlock(name, renderer) {
+function createNanoBlock(name, renderer) {
   nanoBlocks.set(name.toLowerCase(), renderer);
 }
 
@@ -366,7 +369,7 @@ function replaceDoubleCommas(str) {
   return arr.join('');
 }
 
-export function getDatasetFromSection(block) {
+function getDatasetFromSection(block) {
   const parentSelector = block.closest('.section');
   return parentSelector.dataset;
 }
@@ -375,7 +378,7 @@ export function getDatasetFromSection(block) {
  * Renders nano blocks
  * @param parent The parent element
  */
-export async function renderNanoBlocks(
+async function renderNanoBlocks(
   parent = document.body,
   mv = undefined,
   index = undefined,
@@ -419,7 +422,7 @@ export async function renderNanoBlocks(
  * @see fetchIndex
  * @param {Object} data - the data returned from the fetchIndex function.
  */
-export function fixExcelFilterZeroes(data) {
+function fixExcelFilterZeroes(data) {
   data.forEach((line) => {
     Object.keys(line).forEach((k) => {
       line[k] = line[k] === '0' ? '' : line[k];
@@ -427,7 +430,7 @@ export function fixExcelFilterZeroes(data) {
   });
 }
 
-export async function fetchIndex(indexFile, sheet, pageSize = 500) {
+async function fetchIndex(indexFile, sheet, pageSize = 500) {
   const idxKey = indexFile.concat(sheet || '');
 
   const handleIndex = async (offset) => {
@@ -469,13 +472,13 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export const GLOBAL_EVENTS = {
+const GLOBAL_EVENTS = {
   ADOBE_MC_LOADED: 'adobe_mc::loaded',
   PAGE_LOADED: 'page::loaded',
 };
 
 const ICONS_CACHE = {};
-export async function decorateIcons(element) {
+async function decorateIcons(element) {
   // Prepare the inline sprite
   let svgSprite = document.getElementById('franklin-svg-sprite');
   if (!svgSprite) {
@@ -543,7 +546,7 @@ export async function decorateIcons(element) {
 }
 
 // General function to match the height of elements based on a selector
-export async function matchHeights(targetNode, selector) {
+async function matchHeights(targetNode, selector) {
   const resetHeights = () => {
     const elements = targetNode.querySelectorAll(selector);
     elements.forEach((element) => {
@@ -598,12 +601,12 @@ export async function matchHeights(targetNode, selector) {
   adjustHeights();
 }
 
-export function getPidFromUrl() {
+function getPidFromUrl() {
   const url = new URL(window.location.href);
   return url.searchParams.get('pid') || getMetadata('pid');
 }
 
-export function trackProduct(product, location = '') {
+function trackProduct(product, location = '') {
   // eslint-disable-next-line max-len
   if (!product && product.length === 0) return;
   if (location && location === 'comparison') {
@@ -617,7 +620,7 @@ export function trackProduct(product, location = '') {
   }
 }
 
-export function pushTrialDownloadToDataLayer() {
+function pushTrialDownloadToDataLayer() {
   const trialPaths = [
     'fragments/thank-you-for-downloading',
     'fragments/get-bitdefender',
@@ -663,7 +666,7 @@ export function pushTrialDownloadToDataLayer() {
   }
 }
 
-export function setUrlParams(urlIn, paramsIn = []) {
+function setUrlParams(urlIn, paramsIn = []) {
   const isRelativeLink = /^(?!\/\/|[a-z]+:)/i;
 
   if (!Array.isArray(paramsIn)) {
@@ -692,16 +695,16 @@ export function setUrlParams(urlIn, paramsIn = []) {
   return url.href;
 }
 
-export function getDomain() {
+function getDomain() {
   return window.location.pathname.split('/').filter((item) => item)[0];
 }
 
-export function isView(viewport) {
+function isView(viewport) {
   const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
   return !!(element && getComputedStyle(element).display !== 'none');
 }
 
-export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSelector = null) {
+function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSelector = null) {
   // Open the appropriate URL based on the OS
   let openUrl;
   switch (UserAgent.os) {
@@ -731,7 +734,7 @@ export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSel
   }
 }
 
-export function getBrowserName() {
+function getBrowserName() {
   const { userAgent } = navigator;
 
   if (userAgent.includes('Firefox')) {
@@ -750,7 +753,7 @@ export function getBrowserName() {
  * Returns the promotion/campaign found in the URL
  * @returns {string|null}
  */
-export const getUrlPromotion = () => page.getParamValue('pid')
+const getUrlPromotion = () => page.getParamValue('pid')
   || page.getParamValue('promotionId')
   || page.getParamValue('campaign')
   || null;
@@ -759,7 +762,7 @@ export const getUrlPromotion = () => page.getParamValue('pid')
  * Returns the promotion/campaign found in the Vlaicu file or 'global_v2' for specific locales
  * @returns {string|null}
  */
-export const getCampaignBasedOnLocale = () => {
+const getCampaignBasedOnLocale = () => {
   if (GLOBAL_V2_LOCALES.find((domain) => page.locale === domain)) {
     return 'global_v2';
   }
@@ -771,22 +774,22 @@ export const getCampaignBasedOnLocale = () => {
   return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
 };
 
-export function decorateBlockWithRegionId(element, id) {
+function decorateBlockWithRegionId(element, id) {
   // we could consider to use `element.setAttribute('s-object-region', id);` in the future
   if (element) element.id = id;
 }
 
-export function decorateLinkWithLinkTrackingId(element, id) {
+function decorateLinkWithLinkTrackingId(element, id) {
   if (element) element.setAttribute('s-object-id', id);
 }
 
-export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
+const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
 
 /**
  *
  * @returns {boolean} returns wether A/B tests should be disabled or not
  */
-export const shouldABTestsBeDisabled = () => {
+const shouldABTestsBeDisabled = () => {
   /** This is a special case for when adobe.target is disabled using dotest query param */
   const windowSearchParams = new URLSearchParams(window.location.search);
   if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key)
@@ -801,7 +804,7 @@ export const shouldABTestsBeDisabled = () => {
  *
  * @returns {object} - get experiment information
  */
-export const getExperimentDetails = () => {
+const getExperimentDetails = () => {
   if (!window.hlx || !window.hlx.experiment) {
     return null;
   }
@@ -814,7 +817,7 @@ export const getExperimentDetails = () => {
  * get the name of the page as seen by analytics
  * @returns {string}
  */
-export const generatePageLoadStartedName = () => {
+const generatePageLoadStartedName = () => {
   /**
    *
    * @param {string[]} tags
@@ -854,7 +857,7 @@ export const generatePageLoadStartedName = () => {
  *
  * @returns {string} get product findings for analytics
  */
-export const getProductFinding = () => {
+const getProductFinding = () => {
   const pageName = page.name.toLowerCase();
   let productFinding;
   switch (pageName) {
@@ -878,7 +881,7 @@ export const getProductFinding = () => {
   return productFinding;
 };
 
-export function generateLDJsonSchema() {
+function generateLDJsonSchema() {
   const country = getMetadata('jsonld-areaserved')
     .split(';')
     .map((pair) => pair.split(':'))
@@ -912,3 +915,6 @@ export function generateLDJsonSchema() {
   script.textContent = JSON.stringify(ldJson, null, 2); // Pretty print
   document.head.appendChild(script);
 }
+
+export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, checkIfNotProductPage, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, fetchIndex, fixExcelFilterZeroes, formatPrice, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getBrowserName, getBuyLinkCountryPrefix, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getUrlPromotion, isView, matchHeights, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, trackProduct };
+//# sourceMappingURL=utils.js.map

@@ -8,9 +8,6 @@ const loadScript = (url, callback, type) => {
   const head = document.querySelector('head');
   const script = document.createElement('script');
   script.src = url;
-  if (type) {
-    script.setAttribute('type', type);
-  }
   script.onload = callback;
   head.append(script);
   return script;
@@ -87,7 +84,7 @@ const loadEmbed = (block, link, autoplay) => {
   block.classList.add('embed-is-loaded');
 };
 
-export default function decorate(block) {
+function decorate(block) {
   const placeholder = block.querySelector('picture');
   const link = block.querySelector('a').href;
   block.textContent = '';
@@ -111,3 +108,6 @@ export default function decorate(block) {
     observer.observe(block);
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=embed.js.map

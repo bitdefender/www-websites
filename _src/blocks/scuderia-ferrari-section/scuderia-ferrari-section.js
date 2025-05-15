@@ -15,7 +15,10 @@ function replacePlaceholderWithVideo(videoUrl) {
   placeholderDiv.replaceWith(videoContainer);
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const { video } = block.closest('.section').dataset;
   replacePlaceholderWithVideo(video);
 }
+
+export { decorate as default };
+//# sourceMappingURL=scuderia-ferrari-section.js.map

@@ -1,15 +1,6 @@
-import {
-  createNanoBlock,
-  getDatasetFromSection,
-  renderNanoBlocks,
-} from '../../scripts/utils/utils.js';
+import { createNanoBlock, getDatasetFromSection, renderNanoBlocks } from '../../scripts/utils/utils.js';
 
 const state = {
-  firstProduct: null,
-  secondProduct: null,
-  currentProduct: null,
-  mode: 'm', // "m" or "y",
-  membersIndex: 0,
   blockDataset: null,
 };
 
@@ -275,7 +266,7 @@ function initMembersMap() {
   selectMembers.forEach((member, index) => MEMBERS_MAP.set(index, Number(member)));
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const blockDataset = getDatasetFromSection(block);
   state.blockDataset = blockDataset;
 
@@ -293,3 +284,6 @@ export default function decorate(block) {
   const col = block.children[0].children[1];
   col.appendChild(extractFeatures(col));
 }
+
+export { decorate as default };
+//# sourceMappingURL=products-sideview.js.map

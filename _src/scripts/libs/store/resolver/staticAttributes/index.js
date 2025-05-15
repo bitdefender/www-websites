@@ -1,24 +1,24 @@
-import { resolve as buyLink } from "./buyLink.js";
-import { resolve as devices } from "./devices.js";
-import { resolve as discount} from "./discount.js";
-import { resolve as hide } from "./hide.js";
-import { resolve as price} from "./price.js";
-import { resolve as subscription} from "./subscription.js";
-import { resolve as textVariable} from "./textVariable.js";
-import { resolve as addClass} from "./addClass.js";
+import { resolve as resolve$1 } from './buyLink.js';
+import { resolve as resolve$2 } from './devices.js';
+import { resolve as resolve$3 } from './discount.js';
+import { resolve } from './hide.js';
+import { resolve as resolve$4 } from './price.js';
+import { resolve as resolve$5 } from './subscription.js';
+import { resolve as resolve$6 } from './textVariable.js';
+import { resolve as resolve$7 } from './addClass.js';
 
-export const staticAttributesResolvers = [
-    hide,
-    buyLink,
-    devices,
-    discount,
-    price,
-    subscription,
-    textVariable,
-    addClass
+const staticAttributesResolvers = [
+    resolve,
+    resolve$1,
+    resolve$2,
+    resolve$3,
+    resolve$4,
+    resolve$5,
+    resolve$6,
+    resolve$7
 ];
 
-export const staticAttributes = {
+const staticAttributes = {
     storePrice: "[data-store-price]",
     storeDiscount: "[data-store-discount]",
     storeHide: "[data-store-hide]",
@@ -29,3 +29,5 @@ export const staticAttributes = {
     storeAddClass: "[data-store-add-class]"
 };
 
+export { staticAttributes, staticAttributesResolvers };
+//# sourceMappingURL=index.js.map

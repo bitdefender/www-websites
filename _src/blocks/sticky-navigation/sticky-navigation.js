@@ -151,9 +151,12 @@ function onScroll(stickyNav) {
   updateStickyNavActiveMenuItem(stickyNav);
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const stickyNav = renderStickyNavigation(block);
 
   // listen to scroll event to stick the nav on the top and update the current visible section
   document.addEventListener('scroll', () => onScroll(stickyNav));
 }
+
+export { decorate as default };
+//# sourceMappingURL=sticky-navigation.js.map

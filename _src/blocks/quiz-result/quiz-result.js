@@ -1,6 +1,6 @@
 import { getDatasetFromSection } from '../../scripts/utils/utils.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const dataset = getDatasetFromSection(block);
 
   const { socialTitlePost } = dataset;
@@ -31,3 +31,6 @@ export default async function decorate(block) {
     }
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=quiz-result.js.map

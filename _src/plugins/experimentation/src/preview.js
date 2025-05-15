@@ -87,22 +87,6 @@ function createPopupButton(label, header, items) {
   return button;
 }
 
-// eslint-disable-next-line no-unused-vars
-function createToggleButton(label) {
-  const button = document.createElement('div');
-  button.className = 'hlx-badge';
-  button.role = 'button';
-  button.setAttribute('aria-pressed', false);
-  button.setAttribute('tabindex', 0);
-  const text = document.createElement('span');
-  text.innerHTML = label;
-  button.append(text);
-  button.addEventListener('click', () => {
-    button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') === 'false');
-  });
-  return button;
-}
-
 function getOverlay() {
   let overlay = document.querySelector('.hlx-preview-overlay');
   if (!overlay) {
@@ -483,7 +467,7 @@ async function decorateAudiencesPill(overlay, options, context) {
  * Decorates Preview mode badges and overlays
  * @return {Object} returns a badge or empty string
  */
-export default async function decoratePreviewMode(document, options, context) {
+async function decoratePreviewMode(document, options, context) {
   try {
     context.loadCSS(`${options.basePath || window.hlx.codeBasePath}/plugins/experimentation/src/preview.css`);
     const overlay = getOverlay(options);
@@ -495,3 +479,6 @@ export default async function decoratePreviewMode(document, options, context) {
     console.log(e);
   }
 }
+
+export { decoratePreviewMode as default };
+//# sourceMappingURL=preview.js.map

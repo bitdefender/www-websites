@@ -1,6 +1,6 @@
 import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const [rte, pictureEl] = [...block.children[0].children];
 
   block.innerHTML = `
@@ -13,3 +13,6 @@ export default async function decorate(block) {
 
   adobeMcAppendVisitorId('header');
 }
+
+export { decorate as default };
+//# sourceMappingURL=quiz-hero.js.map

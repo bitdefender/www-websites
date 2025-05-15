@@ -1,5 +1,5 @@
-import { GlobalContext } from "../resolver.js";
-import { Constants } from "../../../constants.js";
+import { GlobalContext } from '../resolver.js';
+import { Constants } from '../../../constants.js';
 
 /**
  * @param {string} hideCondition
@@ -23,9 +23,9 @@ const checkHidingCondition = (hideCondition) => {
 
 /**
  *  @param {"min"|"max"} value
- *  @param {import("../..").ProductOption[]} options
+ *  @param {import("../../index.js").ProductOption[]} options
  *  @param {function} fn
- *  @returns {import("../..").ProductOption}
+ *  @returns {import("../../index.js").ProductOption}
  */
 const getMinOrMax = (value, options, fn) => {
     let minOrMax = value === "max" ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
@@ -41,7 +41,7 @@ const getMinOrMax = (value, options, fn) => {
     }
 
     return productValue;
-}
+};
 
 /**
  *
@@ -53,7 +53,7 @@ const getMinOrMax = (value, options, fn) => {
 const replaceVariable = (text, variableParameters, textVariable) => {
 
     /**
-     * @type {import("../..").ProductOption[]}
+     * @type {import("../../index.js").ProductOption[]}
      */
     const options = GlobalContext.variations;
     let stopVariableSearch = false;
@@ -102,7 +102,7 @@ const replaceVariable = (text, variableParameters, textVariable) => {
                 stopVariableSearch = true;
                 break;
             case "GLOBAL_SMALLEST_DISCOUNT_PERCENTAGE":
-                option = getMinOrMax("min", options, option => option.getDiscount("percentage"))
+                option = getMinOrMax("min", options, option => option.getDiscount("percentage"));
                 if (!option) {
                     break;
                 }
@@ -120,7 +120,7 @@ const replaceVariable = (text, variableParameters, textVariable) => {
                 stopVariableSearch = true;
                 break;
             case "GLOBAL_SMALLEST_DISCOUNT_VALUE":
-                option = getMinOrMax("min", options, option => option.getDiscount("value"))
+                option = getMinOrMax("min", options, option => option.getDiscount("value"));
                 if (!option) {
                     break;
                 }
@@ -138,7 +138,7 @@ const replaceVariable = (text, variableParameters, textVariable) => {
                 stopVariableSearch = true;
                 break;
             case "GLOBAL_SMALLEST_PRICE_PER_MONTH":
-                option = getMinOrMax("min", options, option => option.getPrice("monthly"))
+                option = getMinOrMax("min", options, option => option.getPrice("monthly"));
                 if (!option) {
                     break;
                 }
@@ -156,7 +156,7 @@ const replaceVariable = (text, variableParameters, textVariable) => {
                 stopVariableSearch = true;
                 break;
             case "GLOBAL_SMALLEST_PRICE_DISCOUNTED_PER_MONTH":
-                option = getMinOrMax("min", options, option => option.getDiscountedPrice("monthly"))
+                option = getMinOrMax("min", options, option => option.getDiscountedPrice("monthly"));
                 if (!option) {
                     break;
                 }
@@ -172,8 +172,6 @@ const replaceVariable = (text, variableParameters, textVariable) => {
 
                 text = text.replaceAll(textVariable, option.getDiscountedPrice("monthlyWithCurrency"));
                 stopVariableSearch = true;
-                break;
-            default:
                 break;
         }
 
@@ -230,7 +228,7 @@ const recursiveDataLayerParse = (parent) => {
 /**
  * @param {HTMLElement} element
  */
-export const resolve = (element) => {
+const resolve = (element) => {
 
     const children = [...element.childNodes];
     for (const child of children) {
@@ -250,4 +248,7 @@ export const resolve = (element) => {
 
         children.push(...child.childNodes);
     }
-}
+};
+
+export { resolve };
+//# sourceMappingURL=globalTextVariable.js.map

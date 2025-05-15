@@ -1,0 +1,118 @@
+.quiz-hero-container.section {
+    padding: 0;
+}
+
+.quiz-hero-container .quiz-hero-wrapper .block {
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz-hero-container h1 {
+    font: normal normal normal 32px/40px "IBM Plex Sans", sans-serif;
+}
+
+.quiz-hero-container h2,
+.quiz-hero-container h3,
+.quiz-hero-container h4 {
+    font: normal normal normal 20px/23px Arial, sans-serif;
+}
+
+.quiz-hero-container p,
+.quiz-hero-container div {
+    font: normal normal normal 14px/18px Arial, sans-serif;
+}
+
+.quiz-hero-container .rte-wrapper {
+    position: relative;
+    z-index: 4;
+    background-color: #006EFF;
+}
+
+.quiz-hero-container .img-container {
+    width: 100%;
+    min-height: 250px;
+    height: 60vw;
+    position: relative;
+}
+
+.quiz-hero-container .default-content-wrapper {
+    padding-top: 20px !important;
+    z-index: 4;
+    background-color: #006EFF;
+    color: white;
+}
+
+.quiz-hero-container a.button:any-link {
+    border: solid white 2px !important;
+    background-color: white;
+    color: #006EFF;
+    margin-top: 15px;
+}
+
+@media (min-width: 768px) {
+    .quiz-hero-container .img-container {
+        height: 470px;
+    }
+}
+
+@media (min-width: 992px) {
+    .quiz-hero-container.section {
+        margin-top: 40px;
+    }
+
+    .quiz-hero-container h1 {
+        font: normal normal normal 60px/66px "IBM Plex Sans", sans-serif;
+    }
+
+    .quiz-hero-container h2,
+    .quiz-hero-container h3,
+    .quiz-hero-container h4 {
+        font: normal normal normal 32px/37px Arial, sans-serif;
+    }
+
+    .quiz-hero-container p,
+    .quiz-hero-container div {
+        font: normal normal normal 18px/25px Arial, sans-serif;
+    }
+
+    .quiz-hero-container {
+        height: 670px;
+    }
+
+    .quiz-hero-container .quiz-hero-wrapper {
+        height: 100%;
+    }
+
+    .quiz-hero-container .quiz-hero-wrapper .block {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .quiz-hero-container .rte-wrapper {
+        width: 100%;
+    }
+
+    .quiz-hero-container .img-container {
+        width: 100%;
+        height: 100%;
+    }
+
+    .quiz-hero-container .default-content-wrapper {
+        padding-top: 0 !important;
+        order: unset;
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        background-color: unset;
+    }
+
+    .quiz-hero-container .default-content-wrapper > div {
+        width: 50%;
+        padding-right: 30px;
+    }
+}
+

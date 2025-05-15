@@ -1,16 +1,12 @@
+import { getLanguageCountryFromPath, decorateMain } from '../../scripts/scripts.js';
+import { loadBlocks } from '../../scripts/lib-franklin.js';
+
 /*
  * Fragment Block
  * Include content from one Helix page in another.
  * https://www.hlx.live/developer/block-collection/fragment
  */
 
-import {
-  decorateMain, getLanguageCountryFromPath,
-} from '../../scripts/scripts.js';
-
-import {
-  loadBlocks,
-} from '../../scripts/lib-franklin.js';
 
 /**
      * Loads a fragment.
@@ -39,7 +35,7 @@ async function loadFragment(path) {
   return null;
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   const link = block.querySelector('a');
   const path = link ? link.getAttribute('href') : block.textContent.trim();
   const fragment = await loadFragment(path);
@@ -51,3 +47,6 @@ export default async function decorate(block) {
     }
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=fragment.js.map

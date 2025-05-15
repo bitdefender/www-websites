@@ -27,7 +27,7 @@ function handleAccordionItemClick(item, items) {
   }
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const items = Array.from(block.querySelectorAll(':scope > div'));
   items.forEach((item) => {
     item.classList.add('questions-answers-item');
@@ -58,3 +58,6 @@ export default function decorate(block) {
     items[0].classList.add('expanded');
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=questions-answers.js.map

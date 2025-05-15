@@ -1,4 +1,4 @@
-export default function decorate(block, options) {
+function decorate(block, options) {
   const {
     solutions, hideDate,
   } = block.closest('.section').dataset;
@@ -35,3 +35,6 @@ export default function decorate(block, options) {
     });
   }, 700);
 }
+
+export { decorate as default };
+//# sourceMappingURL=news-bar.js.map

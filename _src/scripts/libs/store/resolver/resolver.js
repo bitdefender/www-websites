@@ -1,13 +1,14 @@
-import { AdobeDataLayerService } from "@repobit/dex-data-layer";
-import { Store, ProductInfo, ProductOption } from "../store.js";
-import { FranklinProductsLoadedEvent } from "../../data-layer.js";
-import { staticAttributesResolvers, staticAttributes } from "./staticAttributes/index.js";
-import { clickAttributeResolvers, clickAttributes } from "./clickAttributes/index.js";
-import { staticGlobalAttributesResolvers } from "./staticGlobalAttributes/index.js";
+import { AdobeDataLayerService } from '../../../../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js';
+import '../../../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { ProductInfo, Store, ProductOption } from '../store.js';
+import { FranklinProductsLoadedEvent } from '../../data-layer.js';
+import { staticAttributes, staticAttributesResolvers } from './staticAttributes/index.js';
+import { clickAttributes, clickAttributeResolvers } from './clickAttributes/index.js';
+import { staticGlobalAttributesResolvers } from './staticGlobalAttributes/index.js';
 
-export class GlobalContext {
+class GlobalContext {
 	/**
-	 * @type {import("..").ProductOption[]}
+	 * @type {import("../index.js").ProductOption[]}
 	 */
 	static variations = [];
 
@@ -16,14 +17,14 @@ export class GlobalContext {
 	}
 }
 
-export class Context {
+class Context {
 	constructor(product, devices, years, staticAttributes, clickAttributes, contexts, contextProducts, products, devicePropertiesMapping) {
 		/**
-		 * @type {import("..").Product}
+		 * @type {import("../index.js").Product}
 		 */
 		this.products = products;
 		/**
-		 * @type {import("..").Product}
+		 * @type {import("../index.js").Product}
 		*/
 		this._product = product;
 		/**
@@ -39,17 +40,17 @@ export class Context {
 		 */
 		this.contexts = contexts;
 		/**
-		 * @type {import("..").Product[]}
+		 * @type {import("../index.js").Product[]}
 		*/
 		this.contextProducts = contextProducts;
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		this.bundle = null;
 		this._devices = devices;
 		this._years = years;
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		this._option = product.getOption(devices, years);
 
@@ -89,7 +90,7 @@ export class Context {
 	 */
 	set years(value) {
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(this._devices, Number(value)) ||
 			this.product.getOption(this.product.getSubscriptions("years", Number(value))[0], Number(value));
@@ -111,7 +112,7 @@ export class Context {
 	 */
 	set devices(value) {
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(Number(value), this._years) ||
 			this.product.getOption(Number(value), this.product.getSubscriptions("years", Number(value))[0]);
@@ -123,7 +124,7 @@ export class Context {
 	}
 
 	/**
-	 * @type {import("..").ProductOption}
+	 * @type {import("../index.js").ProductOption}
 	 */
 	get option() {
 		if (this.bundle) {
@@ -141,7 +142,7 @@ export class Context {
 	set option(value) {
 		const [devices, years] = parseKey(value);
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(devices, years);
 		if (!option) { return; }
@@ -153,7 +154,7 @@ export class Context {
 	}
 
 	/**
-	 * @type {import("..").Product}
+	 * @type {import("../index.js").Product}
 	*/
 	get product() {
 		return this._product;
@@ -194,35 +195,34 @@ export class Context {
  * @param {HTMLElement} element
  * @param {number|string} value
  */
-export const writeValue = (element, value) => {
+const writeValue = (element, value) => {
 	switch (element.nodeName) {
 		case "INPUT":
-			element.value = value
+			element.value = value;
 			break;
 		default:
-			element.innerHTML = value
+			element.innerHTML = value;
 			break;
 	}
-}
+};
 
 /**
  *
  * @param {string} key
  * @returns {number[]}
  */
-export const parseKey = (key) => {
+const parseKey = (key) => {
 	const keys = key.split('-');
-	if (keys.length < 2) { return [1, 1] };
-
+	if (keys.length < 2) { return [1, 1] }
 	let index = keys.length > 2 ? 1 : 0;
 	const nrDevices = keys[index++].replace(/\D/g, "");
 	const [nrYears] = keys[index].split(/[ym]/);
 	return [Number(nrDevices), Number(nrYears)];
-}
+};
 
 window.parseKey = parseKey;
 
-export class StoreResolver {
+class StoreResolver {
 	static contextAttributes = {
 		storeId: "[data-store-id]",
 		storeDepartment: "[data-store-department]",
@@ -256,7 +256,7 @@ export class StoreResolver {
 					element.dataset.storePromotion,
 				)
 			} catch (error) {
-				console.error(error.message)
+				console.error(error.message);
 				return null;
 			}
 		}).filter(element => !!element);
@@ -270,7 +270,7 @@ export class StoreResolver {
 			const globalClickAttributes = context.dataset.storeId ? [] : this.getAllAttributes(context, this.clickAttributes);
 
 			const pageContexts = [];
-			const contextProducts = [...products, ...this.getAdditionalProducts(context)].map(product =>storeProducts[product.dataset.storeId])
+			const contextProducts = [...products, ...this.getAdditionalProducts(context)].map(product =>storeProducts[product.dataset.storeId]);
 			for (const product of products) {
 				const storeProduct = storeProducts[product.dataset.storeId];
 				const productDataMapping = JSON.parse(product.dataset?.storeDevicePropertiesMapping || '{}');
@@ -368,12 +368,12 @@ export class StoreResolver {
 
 	/**
 	 * @param {Context} context
-	 * @return {import("..").ProductOption}
+	 * @return {import("../index.js").ProductOption}
 	 */
 	static getAllVariationsFromContext(context) {
 		/**
 		 * @param {HTMLElement} attribute
-		 * @returns {import("..").ProductOption[]}
+		 * @returns {import("../index.js").ProductOption[]}
 		 */
 		const parseNodeName = (attribute) => {
 			const options = [];
@@ -405,7 +405,7 @@ export class StoreResolver {
 							options.push(context
 								.products[option.dataset.storeProductId]
 								?.getOption(devices, years)
-							)
+							);
 						});
 					}
 					break;
@@ -425,26 +425,26 @@ export class StoreResolver {
 						options.push(context
 							.products[attribute.dataset.storeProductId]
 							?.getOption(devices, years)
-						)
+						);
 					}
 					if (attribute.dataset.storeClickToggleBundle !== undefined) {
 						const [devices, years] = parseKey(attribute.dataset.storeBundleOption);
 						options.push(context
 							.products[attribute.dataset.storeBundleId]
 							?.getOption(devices, years)
-						)
+						);
 					}
 					break;
 			}
 
 			return options.filter(option => Boolean(option));
-		}
+		};
 
 		/**
-		 * @param {import("..").ProductOption} baseOption
-		 * @param {import("..").ProductOption} varyToOption
+		 * @param {import("../index.js").ProductOption} baseOption
+		 * @param {import("../index.js").ProductOption} varyToOption
 		 * @param {"devices"|"subscription"|"all"|"bundle"} modfier
-		 * @returns {import("..").ProductOption|null}
+		 * @returns {import("../index.js").ProductOption|null}
 		 */
 		const vary = (baseOption, varyToOption, modfier) => {
 			let devices;
@@ -476,7 +476,7 @@ export class StoreResolver {
 				subscription,
 				modfier === "bundle" ? varyToOption : null
 			);
-		}
+		};
 
 		const setDevices = context.clickAttributes
 			.filter(attribute => attribute.dataset.storeClickSetDevices !== undefined)
@@ -509,7 +509,7 @@ export class StoreResolver {
 			.filter(attribute => attribute.nodeName === "SELECT"
 				&& (attribute.dataset.storeClickSetYears !== undefined || attribute.dataset.storeClickSetDevices !== undefined)
 			)
-			.sort((a,) => a.dataset.storeClickSetDevices !== undefined ? -1 : 1)
+			.sort((a,) => a.dataset.storeClickSetDevices !== undefined ? -1 : 1);
 
 		const generateDynamicVariationsAfterProductSelect = (baseOption) => {
 			const product = context.products[baseOption.getId()];
@@ -529,7 +529,7 @@ export class StoreResolver {
 					.getDevices(baseOption.getSubscription("years"))
 					.map(devices => product.getOption(devices, baseOption.getSubscription("years")))
 			}
-		}
+		};
 
 		const productVariations = setProduct
 			.filter(product => product.getId() !== context.product.getId())
@@ -567,8 +567,7 @@ export class StoreResolver {
 		const products = [];
 
 		for (const child of children) {
-			if (child.dataset.storeContext) { continue };
-
+			if (child.dataset.storeContext) { continue }
 			if (child.dataset.storeId && child.dataset.storeDepartment) {
 				products.push(child);
 				continue;
@@ -596,8 +595,7 @@ export class StoreResolver {
 		const options = [];
 
 		for (const child of children) {
-			if (child.dataset.storeId) { continue };
-
+			if (child.dataset.storeId) { continue }
 			if (child.dataset.storeOption) {
 				options.push(child);
 				continue;
@@ -625,11 +623,10 @@ export class StoreResolver {
 		const attributesInOption = [];
 
 		for (const child of children) {
-			if (child.dataset.storeId || child.dataset.storeOption || child.dataset.storeContext) { continue };
-
+			if (child.dataset.storeId || child.dataset.storeOption || child.dataset.storeContext) { continue }
 			for (const attribute of Object.keys(child.dataset)) {
 				if (Object.keys(attributes).includes(attribute)) {
-					attributesInOption.push(child)
+					attributesInOption.push(child);
 					break;
 				}
 			}
@@ -639,7 +636,7 @@ export class StoreResolver {
 
 		for (const attribute of Object.keys(product.dataset)) {
 			if (Object.keys(attributes).includes(attribute)) {
-				attributesInOption.push(product)
+				attributesInOption.push(product);
 				break;
 			}
 		}
@@ -663,3 +660,6 @@ export class StoreResolver {
 }
 
 window.StoreResolverWebsites = StoreResolver;
+
+export { Context, GlobalContext, StoreResolver, parseKey, writeValue };
+//# sourceMappingURL=resolver.js.map

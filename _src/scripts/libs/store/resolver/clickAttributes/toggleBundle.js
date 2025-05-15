@@ -2,7 +2,7 @@
  * @param {HTMLElement} button 
  * @param {import("../resolver").Context} context 
  */
-export const resolve = (button, context) => {
+const resolve = (button, context) => {
     if (button.dataset.storeClickToggleBundle === undefined) { return; }
 
     button.addEventListener("click", () => {
@@ -12,4 +12,7 @@ export const resolve = (button, context) => {
             context.setBundle(button.dataset.storeBundleId, button.dataset.storeBundleOption);
         }
     });
-}
+};
+
+export { resolve };
+//# sourceMappingURL=toggleBundle.js.map

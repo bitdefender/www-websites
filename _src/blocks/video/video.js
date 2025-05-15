@@ -75,7 +75,7 @@ function positionVideoContainer(block, desktopAlign) {
   block.classList.add(DESKTOP_ALIGN_ENUM[desktopAlign] || DESKTOP_ALIGN_ENUM.LEFT);
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   block.classList.add('default-content-wrapper');
   block.closest('.section').style.padding = '0';
   const { desktopAlign } = block.closest('.section').dataset; // left / middle / right
@@ -106,3 +106,6 @@ export default async function decorate(block) {
     observer.observe(block);
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=video.js.map

@@ -1,6 +1,6 @@
 import { getDatasetFromSection } from '../../scripts/utils/utils.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const [richTextEl, imageOnTopEl] = [...block.children];
 
   const blockDataset = getDatasetFromSection(block);
@@ -36,3 +36,6 @@ export default async function decorate(block) {
     </div>
   `;
 }
+
+export { decorate as default };
+//# sourceMappingURL=big-teaser-section.js.map

@@ -1,11 +1,5 @@
 import { Constants } from '../../scripts/libs/constants.js';
-import {
-  createNanoBlock,
-  renderNanoBlocks,
-  createTag,
-  matchHeights,
-  checkIfNotProductPage,
-} from '../../scripts/utils/utils.js';
+import { createNanoBlock, createTag, checkIfNotProductPage, renderNanoBlocks, matchHeights } from '../../scripts/utils/utils.js';
 
 // all avaiable text variables
 const TEXT_VARIABLES_MAPPING = [
@@ -304,7 +298,7 @@ createNanoBlock('lowestPrice', renderLowestPrice);
 /**
  * Main decorate function
  */
-export default function decorate(block) {
+function decorate(block) {
   const metadata = block.closest('.section').dataset;
   const plans = [];
 
@@ -459,3 +453,6 @@ export default function decorate(block) {
   matchHeights(block, 'ul:not(.variant-selector)');
   matchHeights(block, '.featured.nanoblock');
 }
+
+export { decorate as default };
+//# sourceMappingURL=products.js.map

@@ -50,7 +50,7 @@ function createQuote(item) {
     </div>`,
   );
 }
-export default async function decorate(block) {
+async function decorate(block) {
   const quoteWrap = createTag('div', { class: 'quote-wrap' });
   [...block.children].forEach((item) => {
     const quote = createQuote(item);
@@ -62,3 +62,6 @@ export default async function decorate(block) {
 
   decorateIcons(block);
 }
+
+export { decorate as default };
+//# sourceMappingURL=quote.js.map

@@ -1,10 +1,10 @@
-import { writeValue } from "../resolver.js";
+import { writeValue } from '../resolver.js';
 
 /**
  * @param {HTMLElement} element 
- * @param {import("../resolver").Context} context 
+ * @param {import("../resolver.js").Context} context 
  */
-export const resolve = (element, { product, option, years }) => {
+const resolve = (element, { product, option, years }) => {
     if (element.dataset.storeDevices === undefined || !option) { return; }
 
     if (element.nodeName === "SELECT") {
@@ -17,7 +17,7 @@ export const resolve = (element, { product, option, years }) => {
                 device,
                 device === option.getDevices(),
                 device === option.getDevices()
-            )
+            );
             element.add(selectOption);
         }
         return;
@@ -26,4 +26,7 @@ export const resolve = (element, { product, option, years }) => {
     if (option.getDevices()) {
         writeValue(element, option.getDevices());
     }
-}
+};
+
+export { resolve };
+//# sourceMappingURL=devices.js.map

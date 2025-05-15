@@ -6,7 +6,7 @@
   Parameters:
   - (closed) : for tab to be closed by default
 */
-export default function decorate(block) {
+function decorate(block) {
   const parentSelector = block.closest('.section');
   const { type, topBackgroundColor, topTextColor } = parentSelector.dataset;
 
@@ -80,3 +80,6 @@ export default function decorate(block) {
     block.closest('.dropdown-box-container').appendChild(sliderBox);
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=dropdown-box.js.map

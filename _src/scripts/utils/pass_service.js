@@ -347,4 +347,5 @@ const datastorePasswordService = {
     SecurityReportConstants,
 };
 
-export default datastorePasswordService;
+export { datastorePasswordService as default };
+//# sourceMappingURL=pass_service.js.map

@@ -116,7 +116,7 @@ function extractFeatures(col) {
   return ul;
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`features-${cols.length}-cols`);
 
@@ -146,3 +146,6 @@ export default function decorate(block) {
   }
   matchHeights(block, '.feature-text');
 }
+
+export { decorate as default };
+//# sourceMappingURL=features.js.map

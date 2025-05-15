@@ -1,4 +1,4 @@
-import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
+import { getMetadata, decorateIcons, loadBlocks } from '../../scripts/lib-franklin.js';
 import { getDomain } from '../../scripts/utils/utils.js';
 import { decorateMain } from '../../scripts/scripts.js';
 import { adobeMcAppendVisitorId } from '../../scripts/target.js';
@@ -221,7 +221,7 @@ function applyFooterFactorySetup(footerMetadata, block) {
     case 'hidden':
       break;
     default:
-      runAemFooterLogic(block);
+      runAemFooterLogic();
       break;
   }
 }
@@ -230,7 +230,7 @@ function applyFooterFactorySetup(footerMetadata, block) {
  * loads and decorates the footer
  * @param {Element} block The footer block element
  */
-export default async function decorate(block) {
+async function decorate(block) {
   const footerMetadata = getMetadata('footer-type');
   block.parentNode.classList.add(footerMetadata || 'default');
 
@@ -238,3 +238,6 @@ export default async function decorate(block) {
 
   applyFooterFactorySetup(footerMetadata, block);
 }
+
+export { decorate as default };
+//# sourceMappingURL=footer.js.map

@@ -58,7 +58,7 @@ sampleRUM.drain('convert', (cevent, cvalueThunk, element, listenTo = []) => {
   function registerConversionListener(elements) {
     // if elements is an array or nodelist, register a conversion event for each element
     if (Array.isArray(elements) || elements instanceof NodeList) {
-      elements.forEach((e) => registerConversionListener(e, listenTo, cevent, cvalueThunk));
+      elements.forEach((e) => registerConversionListener(e));
     } else {
       listenTo.forEach((eventName) => element.addEventListener(
         eventName,
@@ -68,9 +68,9 @@ sampleRUM.drain('convert', (cevent, cvalueThunk, element, listenTo = []) => {
   }
 
   if (element && listenTo.length) {
-    registerConversionListener(element, listenTo, cevent, cvalueThunk);
+    registerConversionListener(element);
   } else {
-    trackConversion(element, cevent, cvalueThunk);
+    trackConversion(element);
   }
 });
 
@@ -115,7 +115,7 @@ function findConversionValue(parent, fieldName) {
  * the id of the HTML form element will be used as conversion name
  */
 // eslint-disable-next-line import/prefer-default-export
-export async function initConversionTracking(parent = document, defaultFormConversionName = '') {
+async function initConversionTracking(parent = document, defaultFormConversionName = '') {
   const conversionElements = {
     form: () => {
       // Track all forms
@@ -174,3 +174,6 @@ export async function initConversionTracking(parent = document, defaultFormConve
     .filter((ce) => declaredConversionElements.includes(ce))
     .forEach((cefn) => conversionElements[cefn]());
 }
+
+export { initConversionTracking };
+//# sourceMappingURL=index.js.map

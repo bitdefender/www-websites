@@ -1,0 +1,206 @@
+/* stylelint-disable no-descending-specificity */
+.box-carousel-container {
+    background: white;
+}
+
+.box-carousel-container .carousel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space;
+}
+
+.box-carousel-container .carousel-header .title {
+    color: black;
+}
+
+.box-carousel-container .carousel-header .title p {
+    margin: 0 0 16px;
+}
+
+.box-carousel-container .carousel-header .left-arrow.disabled,
+.box-carousel-container .carousel-header .right-arrow.disabled {
+    opacity: 0.3;
+}
+
+.box-carousel-container .carousel-header .left-arrow,
+.box-carousel-container .carousel-header .right-arrow {
+    color: black;
+}
+
+.box-carousel-container .carousel-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+}
+
+.box-carousel-container .carousel {
+    display: grid;
+    grid-auto-flow: column;
+    transition: transform 150ms cubic-bezier(0.165, 0.84, 0.44, 1) 0s;
+}
+
+.box-carousel-container .block.scrollable .carousel {
+    overflow: auto;
+}
+
+.box-carousel-container .block.scrollable .carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.box-carousel-container .carousel-item {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
+    width: 220px;
+    height: 100%;
+    margin: 10px;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 15px;
+    color: black;
+    font-size: 1em;
+    background: #eaf2ff;
+    flex-shrink: 0;
+    border: solid 1px black;
+}
+
+.box-carousel-container.testimonials .carousel-item {
+    width: 300px;
+    border: solid 1px #ddd;
+    background: white;
+    position: relative;
+}
+
+.box-carousel-container .carousel-item:first-child {
+    margin-left: 0;
+}
+
+.box-carousel-container .carousel-item .title {
+    letter-spacing: 0;
+    overflow: hidden;
+    margin: 12px 0;
+}
+
+.box-carousel-container.testimonials .carousel-item .title {
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+}
+
+.box-carousel-container .carousel-item .subtitle {
+    font: normal normal normal 12px/15px "IBM Plex Sans", sans-serif;
+    letter-spacing: 0;
+    overflow: hidden;
+    margin-top: auto;
+    color: #242424;
+}
+
+.box-carousel-container.testimonials .carousel-item .subtitle-secondary {
+    font: normal normal bold 14px/21px "IBM Plex Sans", sans-serif;
+    margin-top: auto;
+    position: relative;
+}
+
+.box-carousel-container.testimonials .carousel-item .subtitle-secondary::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 40px;
+    height: 1px;
+    background: black;
+    top: -5px;
+}
+
+.box-carousel-container.testimonials .carousel-item .subtitle {
+    margin-top: unset;
+    color: #242424;
+}
+
+.box-carousel-container .left-arrow svg {
+    transform: rotate(180deg);
+}
+
+.box-carousel-container .arrow {
+    width: 100px;
+}
+
+.box-carousel-container .arrow svg {
+    width: 100%;
+    height: 50px;
+}
+
+.box-carousel-container .arrow svg path {
+    fill: white;
+}
+
+.box-carousel-container .arrow.disabled svg path {
+    fill: #a5a5a5;
+}
+
+.box-carousel-container .carousel-item .icon {
+    width: 35px;
+    height: 35px;
+    margin: 0;
+}
+
+.box-carousel-container svg path {
+    fill: black !important;
+}
+
+.box-carousel-container.testimonials .img-container {
+    width: 100%;
+}
+
+.box-carousel-container.testimonials .img-container img {
+    object-fit: contain;
+    filter: grayscale(100%);
+    width: unset;
+}
+
+
+@media screen and (min-width: 768px) {
+    .box-carousel-container .carousel-header {
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .box-carousel-container.testimonials .img-container {
+        width: 60%;
+    }
+
+
+    .box-carousel-container .carousel-item .subtitle {
+        font: normal normal normal 18px/23px "IBM Plex Sans", sans-serif;
+    }
+
+    .box-carousel-container.testimonials .carousel-item .subtitle {
+        font: normal normal normal 12px/15px "IBM Plex Sans", sans-serif;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .box-carousel-container .default-content-wrapper {
+        overflow: hidden;
+    }
+
+
+    .box-carousel-container .carousel-item .title {
+        font-size: 19px;
+        color: #242424;
+        font-weight: 500;
+    }
+
+    .box-carousel-container.testimonials .carousel-item .subtitle {
+        font-size: 17px;
+    }
+
+    .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
+        font-size: 18px;
+    }
+
+    .box-carousel-container:not(.testimonials) .carousel-item:hover {
+        color: white;
+        background: #006dff;
+        box-shadow: 0 3px 40px #006EFFF2;
+    }
+}
+

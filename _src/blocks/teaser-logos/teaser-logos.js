@@ -1,4 +1,4 @@
-export default async function decorate(block) {
+async function decorate(block) {
   const boxes = [...block.children[0].children];
 
   block.innerHTML = `
@@ -9,3 +9,6 @@ export default async function decorate(block) {
     </div>
   `;
 }
+
+export { decorate as default };
+//# sourceMappingURL=teaser-logos.js.map

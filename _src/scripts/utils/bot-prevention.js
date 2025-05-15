@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-export class BotPrevention {
+class BotPrevention {
   static MAX_EXECUTION_TIME = 2 * 60 * 1000;
 
   static EXECUTION_TIME_LIMIT = 0.5 * 1000;
@@ -113,3 +113,6 @@ export class BotPrevention {
     return hashHex;
   }
 }
+
+export { BotPrevention };
+//# sourceMappingURL=bot-prevention.js.map

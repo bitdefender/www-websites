@@ -1,4 +1,4 @@
-export default function decorate(block) {
+function decorate(block) {
   const parentBlockStyle = block.closest('.section > div').style;
   const {
     // eslint-disable-next-line no-unused-vars
@@ -54,3 +54,6 @@ export default function decorate(block) {
     }
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=creators-block.js.map

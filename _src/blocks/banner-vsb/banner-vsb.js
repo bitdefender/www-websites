@@ -1,6 +1,6 @@
 import { decorateButtons } from '../../scripts/lib-franklin.js';
 
-export default async function decorate(block, options) {
+async function decorate(block, options) {
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
@@ -72,3 +72,6 @@ export default async function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=banner-vsb.js.map

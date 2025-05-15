@@ -1,10 +1,4 @@
-import {
-  createTag,
-  fetchIndex,
-  fixExcelFilterZeroes,
-  getDomain,
-  decorateBlockWithRegionId,
-} from './utils/utils.js';
+import { decorateBlockWithRegionId, getDomain, fetchIndex, fixExcelFilterZeroes, createTag } from './utils/utils.js';
 
 function prependSlash(path) {
   return path.startsWith('/') ? path : `/${path}`;
@@ -62,14 +56,14 @@ async function createBreadcrumbs(container) {
     ...pathSplit.slice(1, -1).map((part, index) => {
       const url = urlForIndex(index);
       return {
-        name: getName(pageIndex, `/${domain}${url}`, part, false, domain),
+        name: getName(pageIndex, `/${domain}${url}`, part, false),
         url_path: `/${domain}${url}`,
       };
     }),
     {
       // get the breadcrumb title from the metadata; if the metadata does not contain it,
       // the last part of the path is used as the breadcrumb title
-      name: getName(pageIndex, pathname, pathSplit[pathSplit.length - 1], true, domain),
+      name: getName(pageIndex, pathname, pathSplit[pathSplit.length - 1], true),
     },
   ];
 
@@ -81,7 +75,7 @@ async function createBreadcrumbs(container) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export async function loadBreadcrumbs() {
+async function loadBreadcrumbs() {
   const breadcrumb = document.querySelector('.breadcrumb');
   decorateBlockWithRegionId(breadcrumb, 'Hero|Breadcrumb');
 
@@ -90,3 +84,6 @@ export async function loadBreadcrumbs() {
     await createBreadcrumbs(breadcrumb);
   }
 }
+
+export { loadBreadcrumbs };
+//# sourceMappingURL=breadcrumbs.js.map

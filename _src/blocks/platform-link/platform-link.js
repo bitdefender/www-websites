@@ -1,6 +1,6 @@
 import { getDatasetFromSection, openUrlForOs } from '../../scripts/utils/utils.js';
 
-export default function decorate(block) {
+function decorate(block) {
   block.classList.add('default-content-wrapper');
   const blockDataset = getDatasetFromSection(block);
 
@@ -13,3 +13,6 @@ export default function decorate(block) {
     openUrlForOs(linkmacos, linkwindows, linkandroid, linkios, freeDownloadButton);
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=platform-link.js.map

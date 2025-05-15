@@ -1,4 +1,4 @@
-export default function decorate(block) {
+function decorate(block) {
   const innerWrapper = block.children[0];
   innerWrapper.classList = 'inner-wrapper';
 
@@ -13,3 +13,6 @@ export default function decorate(block) {
   defaultWrapper.append(innerWrapper);
   block.prepend(defaultWrapper);
 }
+
+export { decorate as default };
+//# sourceMappingURL=round-card.js.map

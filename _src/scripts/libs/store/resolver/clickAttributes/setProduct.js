@@ -2,7 +2,7 @@
  * @param {HTMLElement} button 
  * @param {import("../resolver").Context} context 
  */
-export const resolve = (button, context) => {
+const resolve = (button, context) => {
     if (button.dataset.storeClickSetProduct === undefined) { return; }
     
     if (button.nodeName === "SELECT" && button.dataset.storeClickSetProduct === '') {
@@ -34,4 +34,7 @@ export const resolve = (button, context) => {
         context.product = button.dataset.storeProductId;
         context.option = button.dataset.storeProductOption || context.option.getVariation();
     });
-}
+};
+
+export { resolve };
+//# sourceMappingURL=setProduct.js.map

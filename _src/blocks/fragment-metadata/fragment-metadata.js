@@ -1,7 +1,7 @@
 import { readBlockConfig } from '../../scripts/lib-franklin.js';
 import { openUrlForOs } from '../../scripts/utils/utils.js';
 
-export default function decorate(block) {
+function decorate(block) {
   const {
     template,
     'open-url-macos': urlMacos,
@@ -33,3 +33,6 @@ export default function decorate(block) {
     }
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=fragment-metadata.js.map

@@ -37,7 +37,7 @@ async function checkAndReplacePrivacyPolicyLink(block) {
   }
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   const {
     product, saveText,
   } = block.closest('.section').dataset;
@@ -100,3 +100,6 @@ export default async function decorate(block) {
     upgradeLink.href = upgradeUrl.toString();
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=webview.js.map

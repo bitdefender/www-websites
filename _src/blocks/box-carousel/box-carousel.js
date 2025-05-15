@@ -1,8 +1,9 @@
-import { debounce } from '@repobit/dex-utils';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { isView } from '../../scripts/utils/utils.js';
+import { debounce } from '../../node_modules/@repobit/dex-utils/dist/src/utils.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
   let currentSlideIndex = 0;
 
@@ -32,7 +33,7 @@ export default async function decorate(block) {
 
   function scrollCarousel(offset, carousel) {
     const carouselItem = block.querySelector('.carousel-item');
-    carousel.style.transform = `translateX(${-1 * offset * (carouselItem.offsetWidth + carouselItemStyle.margin)}px)`;
+    carousel.style.transform = `translateX(${ -1 * offset * (carouselItem.offsetWidth + carouselItemStyle.margin)}px)`;
   }
 
   function getCarousel() {
@@ -63,7 +64,7 @@ export default async function decorate(block) {
     }
     currentSlideIndex -= 1;
     scrollCarousel(currentSlideIndex, getCarousel());
-    updateDisabledArrow(currentSlideIndex);
+    updateDisabledArrow();
   }
 
   function rightArrowHandler(e) {
@@ -73,7 +74,7 @@ export default async function decorate(block) {
     }
     currentSlideIndex += 1;
     scrollCarousel(currentSlideIndex, getCarousel());
-    updateDisabledArrow(currentSlideIndex);
+    updateDisabledArrow();
   }
 
   function renderArrows() {
@@ -173,3 +174,6 @@ export default async function decorate(block) {
 
   window.addEventListener('resize', debounce(render, 250));
 }
+
+export { decorate as default };
+//# sourceMappingURL=box-carousel.js.map

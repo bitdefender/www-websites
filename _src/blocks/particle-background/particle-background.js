@@ -1,22 +1,14 @@
-/* eslint-disable prefer-const */
-/* eslint-disable camelcase */
-// import * as all from '../../scripts/vendor/tsparticles/tsparticles.bundle.min.js';
-// eslint-disable-next-line no-unused-vars
-import { debounce } from '@repobit/dex-utils';
-
-function isView(viewport) {
-  const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
-  return !!(element && getComputedStyle(element).display !== 'none');
-}
+import { __vitePreload } from '../../_virtual/preload-helper.js';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
 
 let tsParticles;
 let loadAll;
 
 async function init(block, aemOptions) {
   // eslint-disable-next-line import/no-unresolved
-  tsParticles = (await import('https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.7.1/+esm')).tsParticles;
+  tsParticles = (await __vitePreload(async () => { const {tsParticles} = await import('https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.7.1/+esm');return { tsParticles }},true              ?[]:void 0)).tsParticles;
   // eslint-disable-next-line import/no-unresolved
-  loadAll = (await import('https://cdn.jsdelivr.net/npm/@tsparticles/all@3.7.1/+esm')).loadAll;
+  loadAll = (await __vitePreload(async () => { const {loadAll} = await import('https://cdn.jsdelivr.net/npm/@tsparticles/all@3.7.1/+esm');return { loadAll }},true              ?[]:void 0)).loadAll;
   const particleIdSelector = 'ts-particles';
 
   const particleDiv = document.createElement('div');
@@ -80,29 +72,7 @@ async function init(block, aemOptions) {
   await loadParticles(options);
 }
 
-// eslint-disable-next-line no-unused-vars
-async function checkForMobile() {
-  const isMobileView = isView('mobile');
-  if (isMobileView && (!tsParticles && !loadAll)) {
-    return;
-  }
-
-  if (isMobileView && tsParticles) {
-    const particles = tsParticles.domItem(0);
-    particles.pause();
-    return;
-  }
-
-  if (!isMobileView && (!tsParticles && !loadAll)) {
-    await init();
-    return;
-  }
-
-  const particles = tsParticles.domItem(0);
-  particles.play();
-}
-
-export default async function decorate(block, options) {
+async function decorate(block, options) {
   await init(block, options);
 
   // uncomment this line if you want the bubbles to stop moving on mobile
@@ -113,3 +83,6 @@ export default async function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=particle-background.js.map

@@ -112,7 +112,7 @@ function createDotsControls(slides) {
   return dots;
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   const slides = createTag('div', { class: 'slides' });
   let slideIndex = 1;
   [...block.children].forEach((item) => {
@@ -124,7 +124,7 @@ export default async function decorate(block) {
   });
 
   slides.children[0].classList.add('active');
-  const dotsControls = createDotsControls(slides, block);
+  const dotsControls = createDotsControls(slides);
 
   /* Add carousel action button if it exists */
   const controlsElements = [dotsControls];
@@ -141,3 +141,6 @@ export default async function decorate(block) {
   addDotsListeners(dotsControls, slides);
   decorateIcons(block);
 }
+
+export { decorate as default };
+//# sourceMappingURL=quote-carousel.js.map

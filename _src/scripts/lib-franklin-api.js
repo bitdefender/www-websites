@@ -1,7 +1,5 @@
-/**
- * @param {HTMLDivElement} shadoRoot
- * @param {string} origin - prepends the origin to the relative links
- */
+import { __vitePreload } from '../_virtual/preload-helper.js';
+
 const updateLinkSources = (shadoRoot, origin) => {
   shadoRoot
     .querySelectorAll('source')
@@ -91,7 +89,7 @@ async function decorateIcons(element) {
  * @param {string} name The unsanitized string
  * @returns {string} The camelCased name
  */
-export function toCamelCase(name) {
+function toCamelCase(name) {
   return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 }
 
@@ -100,7 +98,7 @@ export function toCamelCase(name) {
  * @param {string} name The unsanitized string
  * @returns {string} The class name
  */
-export function toClassName(name) {
+function toClassName(name) {
   return typeof name === 'string'
     ? name.toLowerCase()
       .replace(/[^\w\u4e00-\u9fa5]/g, '-') // Include Chinese characters in the regular expression
@@ -114,7 +112,7 @@ export function toClassName(name) {
  * @param {Element} block The block element
  * @returns {object} The block config
  */
-export function readBlockConfig(block) {
+function readBlockConfig(block) {
   const config = {};
   block.querySelectorAll(':scope > div').forEach((row) => {
     if (row.children) {
@@ -152,7 +150,7 @@ export function readBlockConfig(block) {
   return config;
 }
 
-export function decorateSections(main) {
+function decorateSections(main) {
   main.querySelectorAll(':scope > div').forEach((section) => {
     const wrappers = [];
     let defaultContent = false;
@@ -198,7 +196,7 @@ function decorateBlock(block) {
   }
 }
 
-export async function loadComponent(offer, block, options, selector)  {
+async function loadComponent(offer, block, options, selector)  {
   const offerURL = new URL(offer);
   const origin = offerURL.origin;
   const offerFolder = offerURL.pathname.split("/").slice(0,-1).join("/");
@@ -209,8 +207,8 @@ export async function loadComponent(offer, block, options, selector)  {
 
   const [html, js] = await Promise.all([
     fetch(offer).then(r => r.text()),
-    import(`${origin}/_src/blocks/${block}/${block}.js`)
-  ])
+    __vitePreload(() => import(`${origin}/_src/blocks/${block}/${block}.js`),true              ?[]:void 0)
+  ]);
   // If the block is a particle background,
   // a new div is created and appended to the body so the external library can work
   if (block === "particle-background") {
@@ -228,7 +226,7 @@ export async function loadComponent(offer, block, options, selector)  {
     // in order to have a structure as close as possible as in franklin
     // when we import in aem, we also decorate the sections and the block
     // the functions are taken from lib-franklin.js
-    let franklinHTMLStructure = document.createElement('div')
+    let franklinHTMLStructure = document.createElement('div');
     franklinHTMLStructure.innerHTML = html;
     decorateSections(franklinHTMLStructure);
     decorateBlock(franklinHTMLStructure.querySelector(`.${block}`));
@@ -262,3 +260,6 @@ export async function loadComponent(offer, block, options, selector)  {
 
   return container;
 }
+
+export { decorateSections, loadComponent, readBlockConfig, toCamelCase, toClassName };
+//# sourceMappingURL=lib-franklin-api.js.map

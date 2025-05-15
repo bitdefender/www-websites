@@ -11,7 +11,6 @@
  */
 
 (function () {
-  'use strict';
 
   if (document.documentMode && document.documentMode < 11) {
     console.warn('The Adobe Experience Cloud Web SDK does not support IE 10 and below.');
@@ -425,7 +424,7 @@
   function _objectSpread2(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = null != arguments[i] ? arguments[i] : {};
-      i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+      i % 2 ? ownKeys(Object(source), true).forEach(function (key) {
         _defineProperty(target, key, source[key]);
       }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
         Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
@@ -1949,7 +1948,7 @@
   var memoize = (function (fn, keyResolver) {
     var map = new Map();
     return function () {
-      var key = keyResolver ? keyResolver.apply(void 0, arguments) : arguments.length <= 0 ? undefined : arguments[0];
+      var key = arguments.length <= 0 ? undefined : arguments[0];
 
       if (map.has(key)) {
         return map.get(key);
@@ -3409,7 +3408,6 @@
 
 
   var createComponentRegistry = (function () {
-    var componentsByNamespace = {};
     var commandsByName = {};
     var lifecycleCallbacksByName = {};
 
@@ -3443,7 +3441,6 @@
             lifecycle = component.lifecycle;
         registerComponentCommands(namespace, commands);
         registerLifecycleCallbacks(namespace, lifecycle);
-        componentsByNamespace[namespace] = component;
       },
       getCommand: function getCommand(commandName) {
         return commandsByName[commandName];
@@ -6134,9 +6131,7 @@
       dateProvider: function dateProvider() {
         return new Date();
       },
-      orgId: orgId,
-      globalConfigOverrides: globalConfigOverrides
-    });
+      orgId: orgId});
     return createComponent$4({
       addEcidQueryToPayload: addEcidQueryToPayload,
       addQueryStringIdentityToPayload: addQueryStringIdentityToPayload,
@@ -6147,16 +6142,14 @@
       getIdentity: getIdentity,
       consent: consent,
       appendIdentityToUrl: appendIdentityToUrl,
-      logger: logger,
-      config: config
-    });
+      logger: logger});
   };
 
   createIdentity.namespace = "Identity";
   createIdentity.configValidators = configValidators;
 
   var createResultLogMessage = function createResultLogMessage(urlDestination, success) {
-    return "URL destination " + (success ? "succeeded" : "failed") + ": " + urlDestination.spec.url;
+    return "URL destination " + ("succeeded" ) + ": " + urlDestination.spec.url;
   };
 
   var injectProcessDestinations = (function (_ref) {
@@ -6192,7 +6185,7 @@
       });
       return Promise.all(urlDestinations.map(function (urlDestination) {
         return fireReferrerHideableImage(urlDestination.spec).then(function () {
-          logger.info(createResultLogMessage(urlDestination, true));
+          logger.info(createResultLogMessage(urlDestination));
         }).catch(function () {// We intentionally do not throw an error if destinations fail. We
           // consider it a non-critical failure and therefore do not want it to
           // reject the promise handed back to the customer.
@@ -9138,7 +9131,6 @@
         return getPropositions({
           viewCache: viewCache,
           viewName: viewName,
-          executeDecisions: executeDecisions,
           pageWideScopeDecisions: propositions
         });
       }).then(function (propositions) {
@@ -11656,3 +11648,4 @@
   core();
 
 })();
+//# sourceMappingURL=alloy.js.map

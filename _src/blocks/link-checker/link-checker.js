@@ -1,12 +1,9 @@
-import {
-  WindowLoadStartedEvent,
-  WindowLoadedEvent,
-  UserDetectedEvent,
-  AdobeDataLayerService,
-} from '@repobit/dex-data-layer';
-import {
-  BotPrevention,
-} from '../../scripts/utils/bot-prevention.js';
+import { AdobeDataLayerService } from '../../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { UserDetectedEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/user-detected-event/index.js';
+import { WindowLoadStartedEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/window-load-started-event/index.js';
+import { WindowLoadedEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/window-loaded-event/index.js';
+import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
 
 class StatusMessageFactory {
   static createMessage(status, url, statusMessages) {
@@ -239,7 +236,7 @@ function createStatusTitles(block) {
   return statusTitles;
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const { clipboardText } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
@@ -333,3 +330,6 @@ export default function decorate(block) {
     result.className = '';
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=link-checker.js.map

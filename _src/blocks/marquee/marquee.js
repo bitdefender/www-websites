@@ -1,7 +1,8 @@
-import { debounce } from '@repobit/dex-utils';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
 import { getDatasetFromSection, isView } from '../../scripts/utils/utils.js';
+import { debounce } from '../../node_modules/@repobit/dex-utils/dist/src/utils.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const defaultBackgroundColor = '#004299';
   const SLIDE_SIZE_ENUM = {
     MOBILE: 85 + 20 * 2,
@@ -81,3 +82,6 @@ export default async function decorate(block) {
 
   window.addEventListener('resize', debounce(render, 250));
 }
+
+export { decorate as default };
+//# sourceMappingURL=marquee.js.map

@@ -1,12 +1,9 @@
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { createNanoBlock, createTag, getBrowserName, renderNanoBlocks } from '../../scripts/utils/utils.js';
+import UserAgent from '../../node_modules/@repobit/dex-utils/dist/src/user-agent/index.js';
+
 /* eslint-disable max-len */
 // Description: Hero block
-import { UserAgent } from '@repobit/dex-utils';
-import {
-  createTag,
-  createNanoBlock,
-  renderNanoBlocks,
-  getBrowserName,
-} from '../../scripts/utils/utils.js';
 
 function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, block) {
   const button = block.querySelector('a.button');
@@ -27,8 +24,6 @@ function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, b
         anchor.textContent = osLinkMapping[iosTemplate.split(',')[index].trim()].text;
         anchor.href = osLinkMapping[iosTemplate.split(',')[index].trim()].link;
       });
-      break;
-    default:
       break;
   }
 }
@@ -112,7 +107,7 @@ async function renderBubble(block) {
  * decorates hero block
  * @param {Element} block The hero block element
  */
-export default function decorate(block) {
+function decorate(block) {
   const parentSection = block.closest('.section');
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
@@ -224,3 +219,6 @@ export default function decorate(block) {
     block.querySelector('a').href = firefoxUrl;
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=hero.js.map

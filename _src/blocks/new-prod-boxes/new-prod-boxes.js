@@ -1,11 +1,8 @@
-/* eslint-disable prefer-const */
-/* eslint-disable no-undef */
-/* eslint-disable max-len */
-import {
-  matchHeights, formatPrice,
-  checkIfNotProductPage,
-} from '../../scripts/utils/utils.js';
-import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["scripts/lib-franklin.js","node_modules/@repobit/dex-utils/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/cookies.js","node_modules/js-cookie/dist/js.cookie.js","node_modules/@repobit/dex-utils/dist/src/user.js","node_modules/@repobit/dex-constants/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/cssua.js","scripts/page.js","node_modules/@repobit/dex-utils/dist/src/page.js"])))=>i.map(i=>d[i]);
+import { __vitePreload } from '../../_virtual/preload-helper.js';
+import { checkIfNotProductPage, formatPrice, matchHeights } from '../../scripts/utils/utils.js';
+import '../../scripts/libs/store/resolver/resolver.js';
+import { Store, ProductInfo } from '../../scripts/libs/store/store.js';
 
 function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
   let priceAttribute = 'discounted||full';
@@ -179,7 +176,7 @@ function checkAddOn(featuresSet) {
   return addOn;
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, pid, mainProduct,
@@ -455,7 +452,7 @@ export default async function decorate(block) {
   // decorate icons if the component is being called from www-websites
   const isInLandingPages = window.location.href.includes('www-landing-pages') || window.location.href.includes('bitdefender.com/pages');
   if (!isInLandingPages) {
-    const { decorateIcons } = await import('../../scripts/lib-franklin.js');
+    const { decorateIcons } = await __vitePreload(async () => { const { decorateIcons } = await import('../../scripts/lib-franklin.js');return { decorateIcons }},true              ?__vite__mapDeps([0,1,2,3,4,5,6,7,8,9]):void 0);
     decorateIcons(block.closest('.section'));
   }
 
@@ -474,3 +471,6 @@ export default async function decorate(block) {
   matchHeights(block, '.plan-switcher');
   matchHeights(block, '.blueTagsWrapper');
 }
+
+export { decorate as default };
+//# sourceMappingURL=new-prod-boxes.js.map

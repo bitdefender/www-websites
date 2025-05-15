@@ -1,10 +1,3 @@
-import { StoreResolver } from "./resolver/resolver.js";
-import { Store, Product, ProductInfo, ProductOption } from "./store.js";
-
-export {
-	StoreResolver,
-	Store,
-	Product,
-	ProductInfo,
-	ProductOption,
-};
+export { StoreResolver } from './resolver/resolver.js';
+export { Product, ProductInfo, ProductOption, Store } from './store.js';
+//# sourceMappingURL=index.js.map

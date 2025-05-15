@@ -1,5 +1,5 @@
 /* eslint-disable camelcase, max-len */
-export default function decorate(block) {
+function decorate(block) {
   const parentSection = block.closest('.section');
   const {
     background_color, text_color, counter_ends_on, counter_headings, padding_top, padding_bottom, margin_top, margin_bottom,
@@ -58,3 +58,6 @@ export default function decorate(block) {
     updateCountdown();
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=ribbon-counter.js.map

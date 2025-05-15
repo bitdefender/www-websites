@@ -1,10 +1,8 @@
-export default async function decorate(block) {
+async function decorate(block) {
   const [rte, videoUrl] = [...block.children];
-
-  const autoplay = false;
   const url = new URL(videoUrl.textContent.trim());
   const usp = new URLSearchParams(url.search);
-  const suffix = autoplay ? '&muted=1&autoplay=1' : '';
+  const suffix = '';
   let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : '';
   const embed = url.pathname;
 
@@ -32,3 +30,6 @@ export default async function decorate(block) {
     anchorEl.rel = 'noopener noreferrer';
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=trusted-hero.js.map

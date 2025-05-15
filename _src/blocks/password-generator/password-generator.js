@@ -1,5 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import passwordService from '../../scripts/utils/pass_service.js';
+import datastorePasswordService from '../../scripts/utils/pass_service.js';
 
 /**
  * Finds a div element whose first paragraph contains the specified search text.
@@ -28,25 +28,25 @@ function updatePasswordStrength(password, strengthElement) {
   // Get the strength span elements
   const strongSpan = strengthElement.querySelector('#password-result');
   // Check if the password is strong enough using the password service
-  const thingIs = passwordService.ratePasswordFromPasswordInfo(password);
-  const rating = passwordService.fromRating(thingIs);
+  const thingIs = datastorePasswordService.ratePasswordFromPasswordInfo(password);
+  const rating = datastorePasswordService.fromRating(thingIs);
   // Update the strength indicator
   strongSpan.className = '';
   switch (rating) {
-    case passwordService.SecurityReportConstants.passwordStrengthWeak:
-      strongSpan.textContent = passwordService.SecurityReportConstants.passwordStrengthWeak;
+    case datastorePasswordService.SecurityReportConstants.passwordStrengthWeak:
+      strongSpan.textContent = datastorePasswordService.SecurityReportConstants.passwordStrengthWeak;
       strongSpan.classList.add('weak');
       break;
-    case passwordService.SecurityReportConstants.passwordStrengthPoor:
-      strongSpan.textContent = passwordService.SecurityReportConstants.passwordStrengthPoor;
+    case datastorePasswordService.SecurityReportConstants.passwordStrengthPoor:
+      strongSpan.textContent = datastorePasswordService.SecurityReportConstants.passwordStrengthPoor;
       strongSpan.classList.add('poor');
       break;
-    case passwordService.SecurityReportConstants.passwordStrengthGood:
-      strongSpan.textContent = passwordService.SecurityReportConstants.passwordStrengthGood;
+    case datastorePasswordService.SecurityReportConstants.passwordStrengthGood:
+      strongSpan.textContent = datastorePasswordService.SecurityReportConstants.passwordStrengthGood;
       strongSpan.classList.add('good');
       break;
     default:
-      strongSpan.textContent = passwordService.SecurityReportConstants.passwordStrengthStrong;
+      strongSpan.textContent = datastorePasswordService.SecurityReportConstants.passwordStrengthStrong;
       strongSpan.classList.add('strong');
   }
 }
@@ -83,7 +83,7 @@ function adjustFontSize(input, password) {
   }
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const { clipboardText, selectAtLeastOneCheckboxText } = block.closest('.section').dataset;
 
   // const breadcrumb = createTag('div', { class: 'breadcrumb' });
@@ -105,7 +105,7 @@ export default function decorate(block) {
   // parse the paragraph into my desired outcome
   const strengthMatch = passwordStrengthText.innerHTML.split('strong-weak-text');
   const [weakText, poorText, goodText, strongText] = strengthMatch[1].split(',');
-  passwordService.updatePasswordStrengthTexts(weakText, poorText, goodText, strongText);
+  datastorePasswordService.updatePasswordStrengthTexts(weakText, poorText, goodText, strongText);
 
   passwordStrengthText.innerHTML = `${strengthMatch[0]} <span id='password-result' class='strong'>${strongText}</span>`;
   const formElement = document.createElement('form');
@@ -197,7 +197,7 @@ export default function decorate(block) {
     }
 
     // Generate the password
-    password = passwordService.generateWithSettings(settings);
+    password = datastorePasswordService.generateWithSettings(settings);
 
     // Display the password
     passwordInput.value = password;
@@ -227,3 +227,6 @@ export default function decorate(block) {
     (element) => element.addEventListener('change', generatePassword),
   );
 }
+
+export { decorate as default };
+//# sourceMappingURL=password-generator.js.map

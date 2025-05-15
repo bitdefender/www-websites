@@ -1,7 +1,8 @@
-// eslint-disable-next-line no-unused-vars
 import { matchHeights } from '../../scripts/utils/utils.js';
 
-export default function decorate(block) {
+// eslint-disable-next-line no-unused-vars
+
+function decorate(block) {
   // count the children of a div
   const countChildren = (parent) => {
     const { children } = parent;
@@ -19,3 +20,6 @@ export default function decorate(block) {
     }
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=awards.js.map

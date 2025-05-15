@@ -1,10 +1,10 @@
-import { debounce } from '@repobit/dex-utils';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
 import { isView } from '../../scripts/utils/utils.js';
+import { debounce } from '../../node_modules/@repobit/dex-utils/dist/src/utils.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const slides = [...block.children];
   const AUTOMATIC_SLIDING = {
-    enabled: true,
     viewport: 'desktop',
     slideDelay: 3 * 1000,
   };
@@ -100,7 +100,6 @@ export default async function decorate(block) {
   }
 
   function beginAutomaticSliding() {
-    if (!AUTOMATIC_SLIDING.enabled) return;
 
     endAutomaticSliding();
 
@@ -166,3 +165,6 @@ export default async function decorate(block) {
   beginAutomaticSliding();
   window.addEventListener('resize', debounce(beginAutomaticSliding, 250));
 }
+
+export { decorate as default };
+//# sourceMappingURL=trusted-main-carousel.js.map

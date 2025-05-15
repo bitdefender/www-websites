@@ -1,6 +1,6 @@
 import { getDatasetFromSection } from '../../scripts/utils/utils.js';
 
-export default async function decorate(block) {
+async function decorate(block) {
   const dataset = getDatasetFromSection(block);
 
   const {
@@ -8,7 +8,6 @@ export default async function decorate(block) {
   } = dataset;
 
   const state = {
-    score: 0,
     currentStep: 0,
   };
 
@@ -144,3 +143,6 @@ export default async function decorate(block) {
     form.querySelectorAll('.step-previous').forEach((previousEl) => previousEl.addEventListener('click', moveToPreviousStep));
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=quiz-stepper.js.map

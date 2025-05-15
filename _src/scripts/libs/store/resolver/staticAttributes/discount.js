@@ -1,10 +1,10 @@
-import { writeValue } from "../resolver.js";
+import { writeValue } from '../resolver.js';
 
 /**
  * @param {HTMLElement} element 
- * @param {import("../resolver").Context} context 
+ * @param {import("../resolver.js").Context} context 
  */
-export const resolve = (element, { option }) => {
+const resolve = (element, { option }) => {
     if (!element.dataset.storeDiscount || !option) { return; }
 
     switch (element.dataset.storeDiscount) {
@@ -19,4 +19,7 @@ export const resolve = (element, { option }) => {
             }
             break;
     }
-}
+};
+
+export { resolve };
+//# sourceMappingURL=discount.js.map

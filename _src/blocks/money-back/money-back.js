@@ -1,7 +1,7 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
-export default function decorate(block, options) {
+function decorate(block, options) {
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
@@ -29,3 +29,6 @@ export default function decorate(block, options) {
   matchHeights(block, 'p:first-of-type');
   matchHeights(block, 'p:nth-of-type(2)');
 }
+
+export { decorate as default };
+//# sourceMappingURL=money-back.js.map

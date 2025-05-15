@@ -1,4 +1,5 @@
-import { throttle } from "@repobit/dex-utils";
+import '../../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { throttle } from '../../../node_modules/@repobit/dex-utils/dist/src/utils.js';
 
 const isHoverableDevice = window.matchMedia(
   '(hover: hover) and (pointer: fine)'
@@ -6,18 +7,15 @@ const isHoverableDevice = window.matchMedia(
 
 const Config = {
   selectors: {
-    container: '.mega-menu__container',
     viewAllButtons: '.navigation__view-all',
     popupContainer: '.mega-menu__popup-container',
     popupLink: '.mega-menu__popup-container .mega-menu__right-link',
-    popupActive: '.popup-active',
     menuLink: '.mega-menu__l2-link',
     menuItem: '.mega-menu__l2-item',
     mobileBack: '.mega-menu__back-button',
     mobileBackL2: '.mega-menu__back-button-l2',
     mobileTrigger: '.mega-menu__button',
     l2active: '.mega-menu__l2-item.active',
-    l2item: '.mega-menu__l2-item',
     viewAll: '.navigation--view-all',
     navLinks: '.navigation__links',
     menuItemFirst: '.mega-menu__item',
@@ -28,10 +26,7 @@ const Config = {
     qucikLinksMobileContainer: '.mega-menu__quick-links-mobile',
     thirdLevelContent: '.mega-menu__third-level-content',
     categoryLinks: '.mega-menu__category-links',
-    navigationHeader: '.navigation__heading',
     menuLinkRoot: '.mega-menu__link',
-    navigation: '.navigation',
-    menuLinkText: '.mega-menu__l2-link-text',
     firstLevel: '.mega-menu__first-level',
     navigationItems: '.navigation__list .navigation__item',
     menuList: '.mega-menu__list'
@@ -41,16 +36,11 @@ const Config = {
     menuOpened: 'mega-menu--active',
     viewAll: 'navigation--view-all',
     itemOpened: 'mega-menu--item-opened',
-    navigationHeader: 'navigation__heading',
-    navHeaderLink: 'navigation__header-link',
-    navHeaderText: 'navigation__header-text',
     menuItemFirst: 'mega-menu__item',
     menuLinkText: 'mega-menu__l2-link-text',
-    navigation: 'navigation',
-    megamenuNoL3: 'mega-menu__no-l3',
     firstLevelItemText: 'mega-menu__link-text'
   }
-}
+};
 
 const isMobile = () => {return window.innerWidth < 1200};
 
@@ -62,7 +52,7 @@ function initMegaMenu (container) {
     const firstLevelHeight = firstLevelEl.getBoundingClientRect().height + 1; // add 1px border bottom
 
     container.style.setProperty('--right-links-offset', `${firstLevelHeight}px` );
-  }
+  };
 
   const closeViewAllLinks = () => {
     const viewAllLinks = container.querySelectorAll(Config.selectors.viewAll);
@@ -70,7 +60,7 @@ function initMegaMenu (container) {
     Array.from(viewAllLinks).forEach((el) => {
       el.classList.remove(Config.classes.viewAll);
     });
-  }
+  };
 
   const closeOpenedItems = () => {
     const activeElement = container.querySelector(Config.selectors.l2active);
@@ -79,16 +69,16 @@ function initMegaMenu (container) {
       activeElement.classList.remove('active');
       return activeElement;
     }
-  }
+  };
 
   const closePopUps = (currentTarget) => {
     container.querySelectorAll(Config.selectors.popupContainer)
       .forEach(popUpMenu => {
         if (popUpMenu !== currentTarget) {
-          popUpMenu.classList.remove('popup-active')
+          popUpMenu.classList.remove('popup-active');
         }
       });
-  }
+  };
 
   const toggleMobileMenu = () => {
     if (!container.classList.contains(Config.classes.menuOpened)) {
@@ -101,7 +91,7 @@ function initMegaMenu (container) {
           window.removeEventListener('resize', this.windowResizeEvent);
           prevWidth = curentWidth;
         }
-      }))
+      }));
     } else {
       window.removeEventListener('resize', this.windowResizeEvent);
     }
@@ -109,7 +99,7 @@ function initMegaMenu (container) {
     container.classList.toggle(Config.classes.menuOpened);
     closeOpenedItems();
     closeViewAllLinks();
-  }
+  };
 
 
   const viewAllHandler = (viewAllButtons) => {
@@ -120,7 +110,7 @@ function initMegaMenu (container) {
         subMenuTarget.classList.add(Config.classes.viewAll);
       });
     });
-  }
+  };
 
   const addQuickLinksToMobile = () => {
     const thirdLevelContainers = container.querySelectorAll(Config.selectors.thirdLevelContent);
@@ -140,7 +130,7 @@ function initMegaMenu (container) {
         quickLinksMobileContainer.appendChild(categoryLinks.cloneNode(true));
       }
     });
-  }
+  };
 
   const getMenuItem = (el) => {
     const target = el.closest(Config.selectors.menuItem);
@@ -149,24 +139,24 @@ function initMegaMenu (container) {
     } else {
       return el;
     }
-  }
+  };
 
   const closeMenu = (el) => {
     el.classList.remove('active');
     this.isClosed = true;
-  }
+  };
 
   const openMenu = (el) => {
     el.classList.add('active');
     this.isClosed = false;
-  }
+  };
 
   this.isClosed = true;
 
   const addEvents = () => {
     // Menu Trigger Mobile Bind
     const hambugerButton = container.querySelector(Config.selectors.mobileTrigger);
-    hambugerButton.addEventListener('click', ()=>{ toggleMobileMenu() })
+    hambugerButton.addEventListener('click', ()=>{ toggleMobileMenu(); });
 
     // L2 Navigation Bind
     const menuElements = container.querySelectorAll(Config.selectors.menuLink);
@@ -255,7 +245,7 @@ function initMegaMenu (container) {
           if (target.classList.contains(Config.classes.menuItemFirst)) {
             menuItem = target;
           } else {
-            menuItem = target.closest(Config.selectors.menuItemFirst)
+            menuItem = target.closest(Config.selectors.menuItemFirst);
           }
 
           const menuLink = menuItem.querySelector(Config.selectors.menuLinkRoot);
@@ -313,12 +303,12 @@ function initMegaMenu (container) {
       closePopUps();
       closeOpenedItems();
     });
-  }
+  };
 
   const addAnalytics = () => {
 
     // Set correct 'id' attribute structure at Navigation subcomponents
-    const navigationComponents = megamenuEl.querySelectorAll(".navigation__links")
+    const navigationComponents = megamenuEl.querySelectorAll(".navigation__links");
 
     Array.from(navigationComponents).forEach((el) => {
       const headingId = el.getAttribute("id");
@@ -332,7 +322,7 @@ function initMegaMenu (container) {
       }
     });
 
-  }
+  };
 
   const adjustPopupStructure = () => {
     // Modifies the structure for links inside a Popup Container > the <li/> and <a/> tags are siblings
@@ -381,3 +371,4 @@ const megamenuEl = shadowRoot.querySelector('.mega-menu__container');
 if (megamenuEl) {
   new initMegaMenu(megamenuEl);
 }
+//# sourceMappingURL=mega-menu.js.map

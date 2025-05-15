@@ -1,17 +1,15 @@
-/* eslint-disable max-classes-per-file */
-import Target from '@repobit/dex-target';
-import { PageLoadStartedEvent } from '@repobit/dex-data-layer';
-import { User } from '@repobit/dex-utils';
+import Target from '../node_modules/@repobit/dex-target/dist/src/index.js';
+import '../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js';
+import { PageLoadStartedEvent } from '../node_modules/@repobit/dex-data-layer/dist/src/events/page-load-started-event/index.js';
+import '../node_modules/@repobit/dex-utils/dist/src/index.js';
 import { sampleRUM } from './lib-franklin.js';
 import page from './page.js';
-import {
-  getMetadata,
-  shouldABTestsBeDisabled,
-  generatePageLoadStartedName,
-  GLOBAL_EVENTS,
-} from './utils/utils.js';
+import { generatePageLoadStartedName, GLOBAL_EVENTS, getMetadata, shouldABTestsBeDisabled } from './utils/utils.js';
+import User from '../node_modules/@repobit/dex-utils/dist/src/user.js';
 
-export const target = new Target({
+/* eslint-disable max-classes-per-file */
+
+const target = new Target({
   pageLoadStartedEvent: new PageLoadStartedEvent(
     page,
     {
@@ -63,7 +61,7 @@ async function navigateToChallengerPage(url) {
 * }|null>}
 */
 // eslint-disable-next-line import/prefer-default-export
-export async function runTargetExperiment(experimentUrl, experimentId) {
+async function runTargetExperiment(experimentUrl, experimentId) {
   if (!experimentUrl) {
     return null;
   }
@@ -85,7 +83,7 @@ export async function runTargetExperiment(experimentUrl, experimentId) {
   }
 }
 
-export function appendAdobeMcLinks(selector) {
+function appendAdobeMcLinks(selector) {
   try {
     const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
 
@@ -107,7 +105,7 @@ export function appendAdobeMcLinks(selector) {
 *  experimentVariant: string;
 * } | null>}
   */
-export const getTargetExperimentDetails = async () => {
+const getTargetExperimentDetails = async () => {
   /**
    * @type {{
    *  experimentId: string;
@@ -146,7 +144,7 @@ export const getTargetExperimentDetails = async () => {
   return targetExperimentDetails;
 };
 
-export function adobeMcAppendVisitorId(selector) {
+function adobeMcAppendVisitorId(selector) {
   // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
 
   if (window.ADOBE_MC_EVENT_LOADED) {
@@ -157,3 +155,6 @@ export function adobeMcAppendVisitorId(selector) {
     });
   }
 }
+
+export { adobeMcAppendVisitorId, appendAdobeMcLinks, getTargetExperimentDetails, runTargetExperiment, target };
+//# sourceMappingURL=target.js.map

@@ -7,7 +7,7 @@ function dispatchShadowDomLoadedEvent() {
   window.dispatchEvent(event);
 }
 
-export default function decorate(block, options) {
+function decorate(block, options) {
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
@@ -41,3 +41,6 @@ export default function decorate(block, options) {
 
   dispatchShadowDomLoadedEvent();
 }
+
+export { decorate as default };
+//# sourceMappingURL=thank-you.js.map

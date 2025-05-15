@@ -1,7 +1,8 @@
 import { target } from '../../scripts/target.js';
-import { ProductInfo, Store } from '../../scripts/libs/store/store.js';
+import { Store, ProductInfo } from '../../scripts/libs/store/store.js';
+
 // eslint-disable-next-line no-unused-vars
-export default async function decorate(block) {
+async function decorate(block) {
   const parentSelector = block.closest('.section');
   const { product, custompid } = parentSelector.dataset;
 
@@ -87,3 +88,6 @@ export default async function decorate(block) {
   if (exitEl) exitEl.addEventListener('click', closePopup);
   parentSelector.addEventListener('click', closePopup);
 }
+
+export { decorate as default };
+//# sourceMappingURL=exit-popup.js.map

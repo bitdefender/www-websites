@@ -1,17 +1,8 @@
-/*
- * Copyright 2022 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+import { __vitePreload } from '../../../_virtual/preload-helper.js';
+
 const MAX_SAMPLING_RATE = 10; // At a maximum we sample 1 in 10 requests
 
-export const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS = {
   // Generic properties
   rumSamplingRate: MAX_SAMPLING_RATE, // 1 in 10 requests
 
@@ -45,7 +36,7 @@ function isBot() {
  * @param {object} options the plugin options
  * @returns Returns the names of the resolved audiences, or `null` if no audience is configured
  */
-export async function getResolvedAudiences(applicableAudiences, options, context) {
+async function getResolvedAudiences(applicableAudiences, options, context) {
   if (!applicableAudiences.length || !Object.keys(options.audiences).length) {
     return null;
   }
@@ -174,7 +165,7 @@ function parseExperimentConfig(json, context) {
  * @param {object} config the config to check
  * @returns `true` if it is valid, `false` otherwise
  */
-export function isValidExperimentationConfig(config) {
+function isValidExperimentationConfig(config) {
   if (!config.variantNames
     || !config.variantNames.length
     || !config.variants
@@ -386,14 +377,14 @@ async function getConfig(experiment, instantExperiment, pluginOptions, context) 
     experimentConfig.selectedVariant = forcedVariant;
   } else {
     // eslint-disable-next-line import/extensions
-    const { ued } = await import('./ued.js');
+    const { ued } = await __vitePreload(async () => { const { ued } = await import('./ued.js');return { ued }},true              ?[]:void 0);
     const decision = ued.evaluateDecisionPolicy(getDecisionPolicy(experimentConfig), {});
     experimentConfig.selectedVariant = decision.items[0].id;
   }
   return experimentConfig;
 }
 
-export async function runExperiment(document, options, context) {
+async function runExperiment(document, options, context) {
   if (isBot()) {
     return false;
   }
@@ -466,7 +457,7 @@ export async function runExperiment(document, options, context) {
   return result;
 }
 
-export async function runCampaign(document, options, context) {
+async function runCampaign(document, options, context) {
   if (isBot()) {
     return false;
   }
@@ -523,7 +514,7 @@ export async function runCampaign(document, options, context) {
   }
 }
 
-export async function serveAudience(document, options, context) {
+async function serveAudience(document, options, context) {
   if (isBot()) {
     return false;
   }
@@ -660,7 +651,7 @@ function adjustedRumSamplingRate(checkpoint, options, context) {
   };
 }
 
-export async function loadEager(document, options, context) {
+async function loadEager(document, options, context) {
   context.sampleRUM.always.on('audiences', adjustedRumSamplingRate('audiences', options, context));
   context.sampleRUM.always.on('campaign', adjustedRumSamplingRate('campaign', options, context));
   context.sampleRUM.always.on('experiment', adjustedRumSamplingRate('experiment', options, context));
@@ -673,7 +664,7 @@ export async function loadEager(document, options, context) {
   }
 }
 
-export async function loadLazy(document, options, context) {
+async function loadLazy(document, options, context) {
   const pluginOptions = {
     ...DEFAULT_OPTIONS,
     ...(options || {}),
@@ -686,7 +677,10 @@ export async function loadLazy(document, options, context) {
         && options.prodHost !== window.location.hostname
         && options.prodHost !== window.location.origin)) {
     // eslint-disable-next-line import/no-cycle
-    const preview = await import('./preview.js');
+    const preview = await __vitePreload(() => import('./preview.js'),true              ?[]:void 0);
     preview.default(document, pluginOptions, { ...context, getResolvedAudiences });
   }
 }
+
+export { DEFAULT_OPTIONS, getResolvedAudiences, isValidExperimentationConfig, loadEager, loadLazy, runCampaign, runExperiment, serveAudience };
+//# sourceMappingURL=index.js.map

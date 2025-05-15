@@ -27,7 +27,7 @@ function handleAccordionItemClick(item, items) {
   }
 }
 
-export default function decorate(block, options) {
+function decorate(block, options) {
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
@@ -70,3 +70,6 @@ export default function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=system-requirements.js.map

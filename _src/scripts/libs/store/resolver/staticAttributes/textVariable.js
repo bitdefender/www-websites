@@ -147,8 +147,6 @@ const replaceVariable = (text, context, variableParameters, textVariable) => {
                 text = text.replaceAll(textVariable, context.product.getMinMaxDeviceNumbers()[1]);
                 stopVariableSearch = true;
                 break;
-            default:
-                break;
         }
 
         if (context.devicePropertiesVariables.includes(variableParameter)) {
@@ -214,7 +212,7 @@ const recursiveDataLayerParse = (parent, context) => {
  * @param {HTMLElement} element
  * @param {import("../resolver").Context} context
  */
-export const resolve = (element, context) => {
+const resolve = (element, context) => {
     if (element.dataset.storeTextVariable === undefined || !context.option) { return; }
 
     const children = [...element.childNodes];
@@ -238,4 +236,7 @@ export const resolve = (element, context) => {
 
         children.push(...child.childNodes);
     }
-}
+};
+
+export { resolve };
+//# sourceMappingURL=textVariable.js.map

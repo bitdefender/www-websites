@@ -58,7 +58,7 @@ function createCarousel(block, videos, titles) {
   }
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const videos = Object.values(block.closest('.section').dataset).filter((value) => value.includes('https://www.youtube.com/embed/'));
   const titles = Object.keys(block.closest('.section').dataset)
     .filter((key) => key.includes('title'))
@@ -67,3 +67,6 @@ export default function decorate(block) {
     createCarousel(block, videos, titles);
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=video-carousel.js.map

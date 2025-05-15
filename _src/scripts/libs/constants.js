@@ -1,6 +1,6 @@
-import page from "../page.js";
+import page from '../page.js';
 
-export class Constants {
+class Constants {
 	static DEV_BASE_URL = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
 	  window.location.hostname.includes(domain)) ? 'https://www.bitdefender.com' : '';
   
@@ -131,3 +131,6 @@ export class Constants {
 		  }
 	};
   }
+
+export { Constants };
+//# sourceMappingURL=constants.js.map

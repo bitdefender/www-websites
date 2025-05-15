@@ -1,4 +1,5 @@
-import { Page } from '@repobit/dex-utils';
+import '../node_modules/@repobit/dex-utils/dist/src/index.js';
+import Page from '../node_modules/@repobit/dex-utils/dist/src/page.js';
 
 /**
  * @returns {`${string}-${string}`} page locale
@@ -34,4 +35,7 @@ const getEnvironment = () => {
  */
 const getPageName = () => window.location.pathname.split('/').filter(Boolean).pop();
 
-export default new Page(getPageLocale(), getPageName(), getEnvironment());
+const page = new Page(getPageLocale(), getPageName(), getEnvironment());
+
+export { page as default };
+//# sourceMappingURL=page.js.map

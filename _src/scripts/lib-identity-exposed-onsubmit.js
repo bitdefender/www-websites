@@ -11,7 +11,7 @@ async function fetchData(url, body) {
   return json.result || json;
 }
 
-export default async function onSubmit(e) {
+async function onSubmit(e) {
   try {
     const campaign = e.target.querySelector('input[name="campaign"]')?.value;
     const email = e.target.querySelector('input[type=email]')?.value;
@@ -103,3 +103,6 @@ export default async function onSubmit(e) {
     document.querySelectorAll('.scan-loading, .scan-results').forEach((el) => el.classList.remove('show'));
   }
 }
+
+export { onSubmit as default };
+//# sourceMappingURL=lib-identity-exposed-onsubmit.js.map

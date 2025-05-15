@@ -1,4 +1,5 @@
-import { debounce } from '@repobit/dex-utils';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { debounce } from '../../node_modules/@repobit/dex-utils/dist/src/utils.js';
 
 async function fetchData(url) {
   const resp = await fetch(url);
@@ -36,8 +37,6 @@ const checkInputValue = (inputElement) => {
         return false;
       }
 
-      break;
-    default:
       break;
   }
 
@@ -136,7 +135,7 @@ const addInputValidation = (input, form) => {
  * @param {string} formURL url to form html
  * @returns {Promise<HTMLFormElement>} returns the form
  */
-export async function createForm(formURL) {
+async function createForm(formURL) {
   const { pathname, search } = new URL(formURL);
   const data = await fetchData(`${pathname}${search}`);
   const form = document.createElement('form');
@@ -203,7 +202,10 @@ export async function createForm(formURL) {
   return form;
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   const form = await createForm(block.textContent.trim());
   if (form) block.append(form);
 }
+
+export { createForm, decorate as default };
+//# sourceMappingURL=form.js.map

@@ -1,5 +1,7 @@
-import { Cookies } from '@repobit/dex-utils';
-import { FormEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { AdobeDataLayerService } from '../../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js';
+import { FormEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/form-event/index.js';
+import Cookies from '../../node_modules/@repobit/dex-utils/dist/src/cookies.js';
 
 function onChange(form) {
   // Targeting the anchor inside .button-container
@@ -187,7 +189,7 @@ async function createForm(types, labels, flow, successMessage, failMessage, form
   return form;
 }
 
-export default async function decorate(block, options) {
+async function decorate(block, options) {
   const {
     template, flow, captchaKey,
   } = block.closest('.section').dataset;
@@ -212,11 +214,9 @@ export default async function decorate(block, options) {
       flow,
       successMessage,
       failMessage,
-      options.formType,
-      captchaKey,
-    );
+      options.formType);
   } else {
-    form = await createForm(types, labels, flow, successMessage, failMessage, 'newsletter', captchaKey);
+    form = await createForm(types, labels, flow, successMessage, failMessage, 'newsletter');
   }
 
   if (form) block.append(form);
@@ -232,3 +232,6 @@ export default async function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=form-blog.js.map

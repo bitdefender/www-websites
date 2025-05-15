@@ -1,4 +1,4 @@
-export default function decorate(block) {
+function decorate(block) {
   const items = Array.from(block.querySelectorAll(':scope > div'));
 
   items.forEach((item, index) => {
@@ -62,3 +62,6 @@ export default function decorate(block) {
     if (header) header.setAttribute('aria-expanded', 'true');
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=accordion.js.map

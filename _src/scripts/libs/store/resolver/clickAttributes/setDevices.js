@@ -2,7 +2,7 @@
  * @param {HTMLElement} button 
  * @param {import("../resolver").Context} context 
  */
-export const resolve = (button, context) => {
+const resolve = (button, context) => {
     if (button.dataset.storeClickSetDevices === undefined) { return; }
 
     if (button.nodeName === "INPUT") {
@@ -28,4 +28,7 @@ export const resolve = (button, context) => {
     button.addEventListener("click", () => {
         context.devices = button.dataset.storeClickSetDevices;
     });
-}
+};
+
+export { resolve };
+//# sourceMappingURL=setDevices.js.map

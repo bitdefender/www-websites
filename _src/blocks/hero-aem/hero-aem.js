@@ -1,9 +1,6 @@
-/* eslint-disable prefer-const */
-/* eslint-disable no-undef */
-/* eslint-disable max-len */
-import {
-  openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
-} from '../../scripts/utils/utils.js';
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["scripts/lib-franklin.js","node_modules/@repobit/dex-utils/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/cookies.js","node_modules/js-cookie/dist/js.cookie.js","node_modules/@repobit/dex-utils/dist/src/user.js","node_modules/@repobit/dex-constants/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/cssua.js","scripts/page.js","node_modules/@repobit/dex-utils/dist/src/page.js"])))=>i.map(i=>d[i]);
+import { __vitePreload } from '../../_virtual/preload-helper.js';
+import { createNanoBlock, createTag, renderNanoBlocks, openUrlForOs } from '../../scripts/utils/utils.js';
 
 function createCardElementContainer(elements, mobileImage) {
   const cardElementContainer = document.createElement('div');
@@ -149,7 +146,7 @@ function renderDevicesUsersText(text) {
 
 createNanoBlock('devices-users-text', renderDevicesUsersText);
 
-export default async function decorate(block, options) {
+async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
@@ -271,7 +268,7 @@ export default async function decorate(block, options) {
 
       // Dynamically import the decorateButtons function, bugfix for landing page
       // eslint-disable-next-line no-await-in-loop
-      const { decorateButtons } = await import('../../scripts/lib-franklin.js');
+      const { decorateButtons } = await __vitePreload(async () => { const { decorateButtons } = await import('../../scripts/lib-franklin.js');return { decorateButtons }},true              ?__vite__mapDeps([0,1,2,3,4,5,6,7,8,9]):void 0);
       decorateButtons(listTable);
       // listTable.querySelector('a').classList.add('button');
     }
@@ -317,3 +314,6 @@ export default async function decorate(block, options) {
     termsParagraph.classList.add('hero-aem__terms');
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=hero-aem.js.map

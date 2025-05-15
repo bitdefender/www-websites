@@ -27,11 +27,9 @@ function applyHeaderFactorySetup(headerMetadata, header, link) {
     case 'white':
       runWhitePageHeaderLogic(header, link);
       break;
-    default:
-      break;
   }
 }
-export default async function decorate(block, options) {
+async function decorate(block, options) {
   const {
     header, link,
   } = block.closest('.section').dataset;
@@ -47,3 +45,6 @@ export default async function decorate(block, options) {
 
   applyHeaderFactorySetup(header, block, link);
 }
+
+export { decorate as default };
+//# sourceMappingURL=header-aem.js.map

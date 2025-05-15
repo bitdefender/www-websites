@@ -1,14 +1,10 @@
-import { User, Cookies } from '@repobit/dex-utils';
-import {
-  getMetadata, decorateIcons, decorateButtons, decorateTags,
-} from '../../scripts/lib-franklin.js';
-
-import {
-  getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
-} from '../../scripts/utils/utils.js';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { getMetadata, decorateButtons, decorateIcons, decorateTags } from '../../scripts/lib-franklin.js';
+import { getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId } from '../../scripts/utils/utils.js';
 import { adobeMcAppendVisitorId, target } from '../../scripts/target.js';
-
 import { Constants } from '../../scripts/libs/constants.js';
+import User from '../../node_modules/@repobit/dex-utils/dist/src/user.js';
+import Cookies from '../../node_modules/@repobit/dex-utils/dist/src/cookies.js';
 
 /**
  * @param {string} username
@@ -93,7 +89,7 @@ function makeImagePathsAbsolute(contentDiv, baseUrl) {
 
     // Update the `srcset` attribute with absolute URLs
     if (imgElement.srcset) {
-      imgElement.srcset = makeSrcsetAbsolute(imgElement.srcset, baseUrl);
+      imgElement.srcset = makeSrcsetAbsolute(imgElement.srcset);
     }
   });
 }
@@ -681,8 +677,11 @@ function applyHeaderFactorySetup(headerMetadata, header) {
   }
 }
 
-export default async function decorate(block) {
+async function decorate(block) {
   const headerMetadata = getMetadata('header-type');
   block.parentNode.classList.add(headerMetadata || 'default');
   applyHeaderFactorySetup(headerMetadata, block);
 }
+
+export { decorate as default };
+//# sourceMappingURL=header.js.map

@@ -1,11 +1,11 @@
-import { Store } from "../../store.js";
-import { writeValue } from "../resolver.js";
+import { Store } from '../../store.js';
+import { writeValue } from '../resolver.js';
 
 /**
  * @param {HTMLElement} element 
- * @param {import("../resolver").Context} context 
+ * @param {import("../resolver.js").Context} context 
  */
-export const resolve = (element, context) => {
+const resolve = (element, context) => {
     const option = context.option;
 
     if (!element.dataset.storePrice || !option) { return; }
@@ -54,4 +54,7 @@ export const resolve = (element, context) => {
                 return;
         }
     }
-}
+};
+
+export { resolve };
+//# sourceMappingURL=price.js.map

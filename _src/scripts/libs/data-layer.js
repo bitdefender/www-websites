@@ -1,18 +1,16 @@
-import { target } from "../target.js";
-import { User } from "@repobit/dex-utils";
-import page from "../page.js";
-import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
-import {
-  getExperimentDetails,
-  generatePageLoadStartedName,
-  getCampaignBasedOnLocale,
-  getUrlPromotion,
-  getProductFinding,
-  getMetadata,
-} from '../utils/utils.js';
-import { getTargetExperimentDetails } from "../target.js";
+import { getTargetExperimentDetails, target } from '../target.js';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import page from '../page.js';
+import { AdobeDataLayerService } from '../../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js';
+import { ButtonClickEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/button-click-event/index.js';
+import { PageErrorEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/page-error-event/index.js';
+import { PageLoadStartedEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/page-load-started-event/index.js';
+import { ProductLoadedEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/product-loaded-event/index.js';
+import { UserDetectedEvent } from '../../node_modules/@repobit/dex-data-layer/dist/src/events/user-detected-event/index.js';
+import { getExperimentDetails, generatePageLoadStartedName, getUrlPromotion, getMetadata, getCampaignBasedOnLocale, getProductFinding } from '../utils/utils.js';
+import User from '../../node_modules/@repobit/dex-utils/dist/src/user.js';
 
-export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
+class FranklinProductsLoadedEvent extends ProductLoadedEvent{
   getOptionInfo(option) {
     return {
       ID: option.getAvangateId(),
@@ -27,8 +25,7 @@ export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
       priceWithTax: option.getDiscountedPrice("value") || option.getPrice("value"),
     };
   }
-};
-
+}
 /**
  * Page Error Handling
  */
@@ -37,7 +34,7 @@ const pageErrorHandling = () => {
   if(isErrorPage) {
     AdobeDataLayerService.push(new PageErrorEvent());
   }
-}
+};
 
 /**
  * Add click events to the data layer after page redirect
@@ -52,7 +49,7 @@ const checkClickEventAfterRedirect = () => {
 
     localStorage.removeItem("clickEvent");
   }
-}
+};
 
 /**
  * Add entry for free products
@@ -65,7 +62,7 @@ const getFreeProductsEvents = () => {
       ID: '8430',
     }, 'info'));
   }
-}
+};
 
 /**
  * push the pageLoadStartedEvent
@@ -109,10 +106,13 @@ const resolveUserDetectedEvent = async () => {
 /**
  * Resolve the data layer
  */
-export const resolveNonProductsDataLayer = async () => {
+const resolveNonProductsDataLayer = async () => {
   await resolvePageLoadStartedEvent();
   pageErrorHandling();
   await resolveUserDetectedEvent();
   checkClickEventAfterRedirect();
   getFreeProductsEvents();
-}
+};
+
+export { FranklinProductsLoadedEvent, resolveNonProductsDataLayer };
+//# sourceMappingURL=data-layer.js.map

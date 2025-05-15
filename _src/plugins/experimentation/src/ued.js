@@ -189,4 +189,7 @@ function evaluateDecisionPolicy(decisionPolicy, context) {
   };
 }
 
-export const ued = { evaluateDecisionPolicy };
+const ued = { evaluateDecisionPolicy };
+
+export { ued };
+//# sourceMappingURL=ued.js.map

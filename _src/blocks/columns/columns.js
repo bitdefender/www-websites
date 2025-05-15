@@ -1,5 +1,6 @@
-import { debounce } from '@repobit/dex-utils';
-import { matchHeights, createTag } from '../../scripts/utils/utils.js';
+import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
+import { createTag, matchHeights } from '../../scripts/utils/utils.js';
+import { debounce } from '../../node_modules/@repobit/dex-utils/dist/src/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
@@ -79,7 +80,7 @@ function setImageAsBackgroundImage() {
   });
 }
 
-export default function decorate(block) {
+function decorate(block) {
   const {
     linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
   } = block.closest('.section').dataset;
@@ -222,3 +223,6 @@ export default function decorate(block) {
     matchHeights(block, 'p:last-of-type');
   }
 }
+
+export { decorate as default };
+//# sourceMappingURL=columns.js.map

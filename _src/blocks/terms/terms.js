@@ -1,4 +1,4 @@
-export default async function decorate(block, options) {
+async function decorate(block, options) {
   block.closest('.section').id = 'tos';
 
   if (options) {
@@ -13,3 +13,6 @@ export default async function decorate(block, options) {
     composed: true, // This allows the event to cross the shadow DOM boundary
   });
 }
+
+export { decorate as default };
+//# sourceMappingURL=terms.js.map

@@ -1,6 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
 
-export default function decorate(block) {
+function decorate(block) {
   /* change to ul, li */
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
@@ -16,3 +16,6 @@ export default function decorate(block) {
   block.textContent = '';
   block.append(ul);
 }
+
+export { decorate as default };
+//# sourceMappingURL=cards.js.map

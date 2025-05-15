@@ -1,11 +1,8 @@
-// eslint-disable-next-line import/no-cycle
-import {
-  sampleRUM,
-  getMetadata,
-} from './lib-franklin.js';
-
+import { sampleRUM, getMetadata } from './lib-franklin.js';
 import { loadBreadcrumbs } from './breadcrumbs.js';
 import { openUrlForOs } from './utils/utils.js';
+
+// eslint-disable-next-line import/no-cycle
 
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
@@ -22,3 +19,4 @@ const urlIos = getMetadata('open-url-ios');
 if (urlMacos || urlWindows || urlAndroid || urlIos) {
   openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos);
 }
+//# sourceMappingURL=delayed.js.map
