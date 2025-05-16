@@ -522,7 +522,6 @@ async function loadPage() {
   loaderCircle.forEach((element) => {
     element.classList.remove('loader-circle');
   });
-  document.querySelector('body').classList.remove('dex-19400');
 
   adobeMcAppendVisitorId('main');
 
