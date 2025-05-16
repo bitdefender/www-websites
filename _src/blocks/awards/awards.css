@@ -123,6 +123,41 @@
   }
 }
 
+.awards-container.new-design .block.awards-component {
+
+  h3 {
+    margin-bottom: 12px;
+  }
+
+  h4 {
+    margin-bottom: 24px;
+    color: #000;
+  }
+
+  >div {
+    justify-content: center;
+    text-align: -webkit-center;
+    gap: 20px;
+  }
+
+  > div:nth-child(2) {
+      min-width: 100%;
+
+      >div {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        width: 95%;
+        margin-top: 24px;
+        gap: 20px;
+      }
+
+      img {
+        height: 62px;
+      }
+  }
+}
+
 .awards-container .awards-component div ul {
   list-style: disc;
 }
@@ -151,6 +186,17 @@
   .awards-container h3 {
     line-height: 38px;
   }
+
+  .awards-container.new-design .block.awards-component {
+
+    h3 {
+        font-size: 40px;
+    }
+
+    h4 {
+        font-size: 22px;
+    }
+}
 }
 
 @media (min-width: 768px) {

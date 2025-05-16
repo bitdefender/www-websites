@@ -156,9 +156,9 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    grid-gap: 24px;
+    display: flex;
+    flex-flow: column;
+    gap: 2px;
 }
 
 .system-requirements-item .requirement > ul > li {
@@ -166,6 +166,7 @@
     list-style: none;
     display: inline-block;
     padding-left: 0;
+    margin: 0;
 }
 
 .system-requirements-item .requirement > ul > li > br {
@@ -218,6 +219,15 @@
     padding-left: 20px;
     padding-right: 20px;
     margin: 0 auto;
+}
+
+
+.system-requirements .info-button-container{
+    align-self: baseline;
+}
+
+.system-requirements-item .requirement > ul li:has(strong) {
+    margin-top: 7px;
 }
 
 @media (min-width: 992px) { /* desktop */

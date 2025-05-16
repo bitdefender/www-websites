@@ -842,11 +842,49 @@
   margin: 0;
 }
 
+.columns-container.avfree .columns.benefits > div {
+  justify-items: center;
+
+  >div {
+    width: 100%;
+    text-align: left;
+  }
+
+  svg {
+    width: 31px;
+    height: 31px;
+  }
+
+  span {
+    margin: 0;
+    height: 31px;
+  }
+
+  p:first-of-type {
+    margin-bottom: 0;
+  }
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     flex-direction: unset;
     gap: 32px;
     align-items: stretch;
+  }
+
+  .columns-container.avfree .columns.benefits {
+    text-align: center;
+    padding-top: 24px;
+  
+    >div {
+      flex-direction: row;
+    }
+  
+    > div > div {
+      flex-flow: column;
+      align-items: center;
+      text-align: center;
+    }
   }
 }
 
