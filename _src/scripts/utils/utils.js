@@ -1,5 +1,5 @@
 import Target from '@repobit/dex-target';
-import { debounce } from '@repobit/dex-utils';
+import { debounce, UserAgent } from '@repobit/dex-utils';
 import { ButtonClickEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
 import page from '../page.js';
 import { Constants } from '../libs/constants.js';
@@ -476,8 +476,10 @@ export function appendAdobeMcLinks(selector) {
 
     const hrefSelector = '[href*=".bitdefender."]';
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      const destinationURLWithVisitorIDs = await Target.appendVisitorIDsTo(link.href);
-      link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+      if (link.hostname !== window.location.hostname && link.hostname.includes('.bitdefender.')) {
+        const destinationURLWithVisitorIDs = await Target.appendVisitorIDsTo(link.href);
+        link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+      }
     });
   } catch (e) {
     // eslint-disable-next-line no-console
@@ -729,54 +731,21 @@ export function isView(viewport) {
   return !!(element && getComputedStyle(element).display !== 'none');
 }
 
-/**
- * Returns the current user operating system based on userAgent
- * @returns {String}
- */
-export function getOperatingSystem(userAgent) {
-  const systems = [
-    ['Windows NT 10.0', 'Windows 10'],
-    ['Windows NT 6.2', 'Windows 8'],
-    ['Windows NT 6.1', 'Windows 7'],
-    ['Windows NT 6.0', 'Windows Vista'],
-    ['Windows NT 5.1', 'Windows XP'],
-    ['Windows NT 5.0', 'Windows 2000'],
-    ['X11', 'X11'],
-    ['Linux', 'Linux'],
-    ['Android', 'Android'],
-    ['iPhone', 'iOS'],
-    ['iPod', 'iOS'],
-    ['iPad', 'iOS'],
-    ['Mac', 'MacOS'],
-  ];
-
-  return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
 export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSelector = null) {
-  // Get user's operating system
-  const { userAgent } = navigator;
-  const userOS = getOperatingSystem(userAgent);
-
   // Open the appropriate URL based on the OS
   let openUrl;
-  switch (userOS) {
-    case 'MacOS':
+  switch (UserAgent.os) {
+    case 'Mac/iOS':
       openUrl = urlMacos;
       break;
-    case 'Windows 10':
-    case 'Windows 8':
-    case 'Windows 7':
-    case 'Windows Vista':
-    case 'Windows XP':
-    case 'Windows 2000':
+    case 'Windows':
       openUrl = urlWindows;
       break;
     case 'Linux':
-    case 'Android':
+    case 'android':
       openUrl = urlAndroid;
       break;
-    case 'iOS':
+    case 'ios':
       openUrl = urlIos;
       break;
     default:
