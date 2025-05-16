@@ -476,8 +476,10 @@ export function appendAdobeMcLinks(selector) {
 
     const hrefSelector = '[href*=".bitdefender."]';
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      const destinationURLWithVisitorIDs = await Target.appendVisitorIDsTo(link.href);
-      link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+      if (link.hostname !== window.location.hostname && link.hostname.includes('.bitdefender.')) {
+        const destinationURLWithVisitorIDs = await Target.appendVisitorIDsTo(link.href);
+        link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+      }
     });
   } catch (e) {
     // eslint-disable-next-line no-console
