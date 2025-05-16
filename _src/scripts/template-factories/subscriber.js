@@ -1,3 +1,5 @@
+import { FormEvent, PageLoadedEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
+
 // form
 const initializeHubspotModule = () => {
   // Helper to load the HubSpot forms script if it isn't already loaded
@@ -70,8 +72,10 @@ const initializeHubspotModule = () => {
 
   // Helper to initialize popup events if applicable
   const initialiseHubspotFormPopupEvents = (hubspotForm, mainPopupButton) => {
+    console.log('mainPopupButton ', mainPopupButton)
     if (!mainPopupButton) return;
     mainPopupButton.addEventListener('click', async () => {
+      alert('click')
       const newPageLoadStartedEvent = await new PageLoadStartedEvent();
       newPageLoadStartedEvent.page.info.name += ':book consultation';
       newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
@@ -120,7 +124,7 @@ const initializeHubspotModule = () => {
 
       if (portalId && formId) {
         const downloadPopup = hubspotForm.closest('section.download-popup');
-        const mainPopupButton = downloadPopup?.parentElement?.querySelector('button.download-main-button');
+        const mainPopupButton = downloadPopup?.querySelector('input.hs-button');
         const formContainer = hubspotForm.querySelector('.form-for-hubspot');
         formContainer.classList.add(`hubspot-form-${index}`);
 
@@ -136,7 +140,13 @@ const initializeHubspotModule = () => {
     ".subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type"
   ).forEach(trigger => {
     trigger.addEventListener("click", e => {
-      popupContainer.style.display = "block"
+      popupContainer.style.display = "block";
+      console.log('sdafas')
+      AdobeDataLayerService.push(newPageLoadStartedEvent);
+      AdobeDataLayerService.push(
+        new FormEvent('form viewed', getFormEventData(hubspotForm))
+      );
+      AdobeDataLayerService.push(new PageLoadedEvent());
     });
   });
 

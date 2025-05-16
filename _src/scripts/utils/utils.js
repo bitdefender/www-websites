@@ -930,6 +930,7 @@ export const getTargetExperimentDetails = async () => {
     const offer = await Target.getOffers({ mboxNames: targetExperimentLocation });
     const { url, template } = offer || {};
     if (template) {
+      comsole.log('template ', template)
       loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
       document.body.classList.add(template);
     }
