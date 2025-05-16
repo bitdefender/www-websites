@@ -141,7 +141,7 @@
                     column-gap: 16px;
 
                     .columns-text-col {
-                        flex: 0 0 calc(100vw - 74px);
+                        flex: 0 0 calc(100vw - 130px);
 
                         &:not(:first-of-type) {
                             white-space: normal;
@@ -904,7 +904,11 @@
             }
         }
 
-        .dex-info-section, .dex-discover-section,
+        .dex-info-section {
+            margin-top: 40px;
+        }
+
+        .dex-discover-section,
         .bitdef-vs-brands-container, .features-container, .awards-container,
         .full-width-mobile {
             margin-top: 80px;
@@ -948,8 +952,10 @@
                         }
 
                         p:first-of-type {
-                            padding-bottom: 24px;
-                            margin-bottom: 34px;
+                            padding-bottom: 16px;
+                            margin-top: 12px;
+                            margin-bottom: 24px;
+                            font-size: 14px;
                             border-bottom: 1px solid #D9D9D9;
                         }
 
@@ -961,12 +967,12 @@
 
                             h5 {
                                 height: 28px;
-                                align-items: center;
                             }
 
-                            li, p, h5 {
+                            li, h5 {
                                 font-size: 16px;
                                 line-height: 1.35;
+                                margin: 8px 0;
                             }
                         }
 
@@ -998,14 +1004,18 @@
                             padding: 20px;
                         }
 
-                        h4 + p, ul li {
-                            font-size: 16px !important;
-                            line-height: 1.35 !important;
+                        ul li {
+                            font-size: 16px;
+                            line-height: 1.35;
                         }
 
 
                         &:first-of-type {
                             flex-direction: column-reverse;
+
+                            h4 {
+                                min-height: 54px !important;
+                            }
 
                             table:first-of-type {
                                 td {
@@ -1042,17 +1052,21 @@
         .dex-carousel-cards {
             &:not(.dex-carousel-cards-security) {
                 .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
-                    min-height: 155px;
+                    min-height: 73px;
                 }
 
                 .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-                    min-height: 160px;
+                    min-height: 132px;
                 }
             }
 
             &.dex-carousel-cards-family {
                 .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-                    min-height: 240px;
+                    min-height: 185px;
+                }
+
+                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
+                    min-height: 88px;
                 }
             }
         }
@@ -1084,8 +1098,6 @@
         }
 
         .dex-cards-review {
-            overflow-x: scroll;
-            scrollbar-width: none !important;
 
             .columns {
                 > div {
@@ -1093,15 +1105,12 @@
                     overflow: visible;
 
                     > div {
-                        flex: unset;
-                        min-width: 365px;
-                        padding: 25px;
+                        flex: 1;
 
                         p:first-of-type {
                             font-size: 22px;
                             line-height: 26px;
                             padding-bottom: 14px;
-                            margin-bottom: 14px;
                         }
 
                         p:not(:first-of-type) {
@@ -1263,6 +1272,11 @@
                 background-color: unset;
                 padding-left: 0;
                 padding-right: 0;
+                padding-bottom: 0;
+            }
+
+            .hero-aem .hero-aem__desktop-image {
+                max-height: 240px;
             }
         }
 
@@ -1287,18 +1301,12 @@
 
             .columns-wrapper .columns div .columns-text-col:first-of-type table:first-of-type td,
             .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
-                padding: 42px;
+                padding: 24px 32px;
             }
 
             &.dex-carousel-cards-individual {
                 .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
-                    min-height: 100px;
-                }
-            }
-
-            &.dex-carousel-cards-family {
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-                    min-height: 240px;
+                    min-height: 60px;
                 }
             }
 
