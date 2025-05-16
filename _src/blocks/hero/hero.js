@@ -87,6 +87,7 @@ async function renderBubble(block) {
  * @param {Element} block The hero block element
  */
 export default function decorate(block) {
+  const parentSection = block.closest('.section');
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
@@ -94,12 +95,19 @@ export default function decorate(block) {
     percentProduct,
     firefoxUrl,
     buttonImage,
-  } = block.closest('.section').dataset;
+    backgroundcolor,
+    textcolor,
+  } = parentSection.dataset;
 
   buildHeroBlock(block);
   renderBubble(block);
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
+
+  if (backgroundcolor) {
+    parentSection.style.backgroundColor = backgroundcolor;
+    block.style.backgroundColor = backgroundcolor;
+  }
 
   // get div class hero-content
   const elementHeroContent = block.querySelector('.hero div.hero-content div');
@@ -115,6 +123,12 @@ export default function decorate(block) {
       const signatureElement = createTag('div', { class: 'signature' });
       signatureElement.textContent = signature;
       document.querySelector('div.hero div div:first-child').prepend(signatureElement);
+    }
+
+    if (textcolor) {
+      block.querySelectorAll('.hero-content > div, .hero-content > div *').forEach((el) => {
+        el.style.color = textcolor;
+      });
     }
 
     // set the modal buttons in the hero banner to not refresh the modal on click

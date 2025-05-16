@@ -10,11 +10,13 @@ export class ProductInfo {
 	 * @param {string} id
 	 * @param {string} department
 	 * @param {string} promotion
+	 * @param {boolean} forcePromotion
 	 */
-	constructor(id, department, promotion = null) {
+	constructor(id, department, promotion = null, forcePromotion = false) {
 		this.id = id;
 		this.department = department;
 		this.promotion = promotion;
+		this.forcePromotion = forcePromotion;
 	}
 }
 
@@ -679,20 +681,33 @@ class Vlaicu {
 
 	/**
 	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
-	 * @param {string} productId 
-	 * @returns {boolean} -> wether we have a DIP corner case or not
+	 * @param {string} productId
+	 * @param {string} campaign
+	 * @returns {string} the DIP promotion
 	 */
 	static #isDIPCornerCase(productId) {
-		return productId === 'com.bitdefender.dataprivacy';
+		if (productId === 'com.bitdefender.dataprivacy' && page.locale === 'ro-ro') {
+			return 'DIP-RO';
+		}
+
+		if (productId === 'com.bitdefender.dataprivacy' && page.locale !== 'ro-ro') {
+			return 'DIP-promo';
+		}
+
+		return '';
 	}
 
 	/**
      * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
      * @param {string} productId 
-     * @returns {boolean} -> check if the product is soho and the domain is de-de
+     * @returns {string} the SOHO promotion
      */
     static #isSohoCornerCase(productId) {
-        return Constants.SOHO_CORNER_CASES_LOCALSE.includes(page.locale) && productId === "com.bitdefender.soho";
+        if (Constants.SOHO_CORNER_CASES_LOCALSE.includes(page.locale) && productId === "com.bitdefender.soho") {
+			return 'SOHO_DE';
+		}
+
+		return '';
 	}
 
 	/**
@@ -718,9 +733,9 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isDIPCornerCase(productId) ? 'DIP-promo'
-				: this.#isSohoCornerCase(productId) ? "SOHO_DE"
-				: campaign
+			"{campaignId}": this.#isDIPCornerCase(productId)
+				|| this.#isSohoCornerCase(productId)
+				|| campaign
 		};
 
 		// get the correct path to get the prices
@@ -922,11 +937,13 @@ export class Store {
 			.allSettled(
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
-					product.promotion = (await Target.configMbox)?.promotion
-						|| getUrlPromotion()
-						|| product.promotion
-						|| getMetadata("pid")
-						|| getCampaignBasedOnLocale();
+					if (!product.forcePromotion) {
+						product.promotion = (await Target.configMbox)?.promotion
+							|| getUrlPromotion()
+							|| product.promotion
+							|| getMetadata("pid")
+							|| getCampaignBasedOnLocale();
+					}
 
 					return await this.#apiCall(
 						product

@@ -1164,7 +1164,7 @@ main .section[data-backgroundcolor='black'] {
   background-color: black;
 }
 
-main .section[data-textcolor='white'] * {
+main .section[data-textcolor='white'] *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a::after {
   color: white;
 }
 
