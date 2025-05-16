@@ -473,10 +473,9 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
 export function appendAdobeMcLinks(selector) {
   try {
     const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
-
     const hrefSelector = '[href*=".bitdefender."]';
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      if (link.hostname !== window.location.hostname && link.hostname.includes('.bitdefender.')) {
+      if (link.hostname !== window.location.hostname && link.hostname.includes('.bitdefender.') && link.getAttribute('data-disable-adobe-mc') === null) {
         const destinationURLWithVisitorIDs = await Target.appendVisitorIDsTo(link.href);
         link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
       }
