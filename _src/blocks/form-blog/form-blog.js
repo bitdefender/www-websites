@@ -21,8 +21,34 @@ async function hashEmail(email) {
   return hashHex;
 }
 
+async function solvePoW(challenge, difficulty) {
+  const targetPrefix = '0'.repeat(difficulty);
+  let nonce = 0;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const input = challenge + nonce;
+    // eslint-disable-next-line no-await-in-loop
+    const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+    if (hashHex.startsWith(targetPrefix)) {
+      return { nonce, hash: hashHex };
+    }
+    // eslint-disable-next-line no-plusplus
+    nonce++;
+  }
+}
+
 async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage, formType = 'newsletter') {
   e.preventDefault();
+  // Get challenge from server
+  const challengeRes = await fetch('https://www.bitdefender.com/site/Store/challenge');
+  const { challenge, difficulty } = await challengeRes.json();
+
+  // Solve challenge
+  const { nonce } = await solvePoW(challenge, difficulty);
+
+  // Send the data with the challenge solved
   const formData = new FormData(form);
   const email = formData.get('email');
   const name = formData.get('name');
@@ -36,6 +62,9 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
     first_name: firstName,
     last_name: lastName,
     update,
+    nonce,
+    challenge,
+    difficulty,
   };
 
   const response = await fetch('https://www.bitdefender.com/site/Store/offerSubscribe', {
@@ -131,13 +160,36 @@ async function createForm(types, labels, flow, successMessage, failMessage, form
     }
   }
 
+  // if (captchaKey) {
+  //   // create function to render the captcha
+  //   window.onRecaptchaLoadCallback = () => {
+  //     window.clientId = window.grecaptcha.render('inline-badge', {
+  //       sitekey: captchaKey,
+  //       badge: 'inline',
+  //       size: 'invisible',
+  //     });
+  //   };
+
+  //   // add capthca script
+  //   const captchaScript = document.createElement('script');
+  //   captchaScript.classList.add('grecaptcha-v3');
+  //   captchaScript.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoadCallback';
+  //   captchaScript.defer = true;
+  //   form.appendChild(captchaScript);
+
+  //   // add captcha container
+  //   const captchaContainer = document.createElement('div');
+  //   captchaContainer.id = 'inline-badge';
+  //   form.appendChild(captchaContainer);
+  // }
+
   form.addEventListener('submit', (e) => handleSubmitNewsletter(e, form, flow, successMessage, failMessage, formType));
   return form;
 }
 
 export default async function decorate(block, options) {
   const {
-    template, flow,
+    template, flow, captchaKey,
   } = block.closest('.section').dataset;
 
   if (options) {
@@ -154,9 +206,17 @@ export default async function decorate(block, options) {
   const [types, labels] = [formData.insideCurlyBrackets, formData.insideSquareBrackets];
   let form = null;
   if (options) {
-    form = await createForm(types, labels, flow, successMessage, failMessage, options.formType);
+    form = await createForm(
+      types,
+      labels,
+      flow,
+      successMessage,
+      failMessage,
+      options.formType,
+      captchaKey,
+    );
   } else {
-    form = await createForm(types, labels, flow, successMessage, failMessage, 'newsletter');
+    form = await createForm(types, labels, flow, successMessage, failMessage, 'newsletter', captchaKey);
   }
 
   if (form) block.append(form);
