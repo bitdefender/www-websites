@@ -24,7 +24,7 @@ export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
       discountValue: option.getDiscount("value"),
       discountRate: option.getDiscount("percentage"),
       currency: option.getCurrency(),
-      priceWithTax: option.getDiscountedPrice("value") || option.getPrice("value"),
+      grossPrice: option.getDiscountedPrice("value") || option.getPrice("value"),
     };
   }
 };
