@@ -6,6 +6,7 @@ node_modules/*
 
 helix-importer-ui
 .DS_Store
+.DS_Store.
 
 .vscode/*
 tools/sitemap/node_modules/*
