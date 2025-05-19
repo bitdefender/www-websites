@@ -1,2 +1,102 @@
-import{getTargetExperimentDetails as i,target as o}from"../target.js";import"../../node_modules/@repobit/dex-utils/dist/src/index.js";import r from"../page.js";import{AdobeDataLayerService as a}from"../../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js";import{ButtonClickEvent as c}from"../../node_modules/@repobit/dex-data-layer/dist/src/events/button-click-event/index.js";import{PageErrorEvent as s}from"../../node_modules/@repobit/dex-data-layer/dist/src/events/page-error-event/index.js";import{PageLoadStartedEvent as g}from"../../node_modules/@repobit/dex-data-layer/dist/src/events/page-load-started-event/index.js";import{ProductLoadedEvent as m}from"../../node_modules/@repobit/dex-data-layer/dist/src/events/product-loaded-event/index.js";import{UserDetectedEvent as d}from"../../node_modules/@repobit/dex-data-layer/dist/src/events/user-detected-event/index.js";import{getExperimentDetails as l,generatePageLoadStartedName as u,getUrlPromotion as v,getMetadata as p,getCampaignBasedOnLocale as E,getProductFinding as P}from"../utils/utils.js";import n from"../../node_modules/@repobit/dex-utils/dist/src/user.js";class f extends m{getOptionInfo(e){return{ID:e.getAvangateId(),name:e.getName(),devices:e.getId()==="psm"?10:e.getDevices(),subscription:e.getSubscription("months"),version:e.getSubscription("months")===1?"monthly":"yearly",basePrice:e.getPrice("value"),discountValue:e.getDiscount("value"),discountRate:e.getDiscount("percentage"),currency:e.getCurrency(),priceWithTax:e.getDiscountedPrice("value")||e.getPrice("value")}}}const D=()=>{window.errorCode==="404"&&a.push(new s)},w=()=>{if(localStorage.getItem("clickEvent")!==null){const t=JSON.parse(localStorage.getItem("clickEvent"));t?.clickEvent&&a.push(new c(t.clickEvent,t.productId)),localStorage.removeItem("clickEvent")}},I=()=>{r.name==="free-antivirus"&&a.push(new f({ID:"8430"},"info"))},h=async()=>{a.push(new g(r,{name:u(),experimentDetails:await i()??l(),geoRegion:await n.country,serverName:"hlx.live"},{promotionID:(await o.configMbox)?.promotion||v()||p("pid")||E()||"",internalPromotionID:r.getParamValue("icid")||"",trackingID:r.getParamValue("cid")||""}))},k=async()=>{a.push(new d(r,{ID:await n.fingerprint,productFinding:P()}))},R=async()=>{await h(),D(),await k(),w(),I()};export{f as FranklinProductsLoadedEvent,R as resolveNonProductsDataLayer};
-//# sourceMappingURL=data-layer.js.map
+import Target from "@repobit/dex-target";
+import { User } from "@repobit/dex-utils";
+import page from "../page.js";
+import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
+import {
+  getTargetExperimentDetails,
+  getExperimentDetails,
+  generatePageLoadStartedName,
+  getCampaignBasedOnLocale,
+  getUrlPromotion,
+  getProductFinding,
+  getMetadata,
+} from '../utils/utils.js';
+
+export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
+  getOptionInfo(option) {
+    return {
+      ID: option.getAvangateId(),
+      name: option.getName(),
+      devices: option.getId() === 'psm' ? 10 : option.getDevices(), //DEPRECATED content - please remove after Vlaicu implementation
+      subscription: option.getSubscription("months"),
+      version: option.getSubscription("months") === 1 ? "monthly" : "yearly",
+      basePrice: option.getPrice("value"),
+      discountValue: option.getDiscount("value"),
+      discountRate: option.getDiscount("percentage"),
+      currency: option.getCurrency(),
+      priceWithTax: option.getDiscountedPrice("value") || option.getPrice("value"),
+    };
+  }
+};
+
+/**
+ * Page Error Handling
+ */
+const pageErrorHandling = () => {
+  const isErrorPage = window.errorCode === '404';
+  if(isErrorPage) {
+    AdobeDataLayerService.push(new PageErrorEvent());
+  }
+}
+
+/**
+ * Add click events to the data layer after page redirect
+ */
+const checkClickEventAfterRedirect = () => {
+  if(localStorage.getItem("clickEvent") !== null) {
+    const clickEvent = JSON.parse(localStorage.getItem("clickEvent"));
+
+    if(clickEvent?.clickEvent) {
+      AdobeDataLayerService.push(new ButtonClickEvent(clickEvent.clickEvent, clickEvent.productId));
+    }
+
+    localStorage.removeItem("clickEvent");
+  }
+}
+
+/**
+ * Add entry for free products
+ */
+const getFreeProductsEvents = () => {
+  const currentPage = page.name;
+  if (currentPage === 'free-antivirus') {
+    // on Free Antivirus page we should add Free Antivirus as the main product
+    AdobeDataLayerService.push(new FranklinProductsLoadedEvent({
+      ID: '8430',
+    }, 'info'));
+  }
+}
+
+/**
+ * Resolve the data layer
+ */
+export const resolveNonProductsDataLayer = async () => {
+  AdobeDataLayerService.push(new PageLoadStartedEvent(
+    page,
+    {
+      name: generatePageLoadStartedName(),
+      geoRegion: await User.country,
+      experimentDetails: (await getTargetExperimentDetails()) ?? getExperimentDetails(),
+      serverName: 'hlx.live', // indicator for AEM Success Edge
+    },
+    {
+      promotionID: (await Target.configMbox)?.promotion
+                  || getUrlPromotion()
+                  || getMetadata('pid')
+                  || getCampaignBasedOnLocale()
+                  || '',
+      internalPromotionID: page.getParamValue('icid') || '',
+      trackingID: page.getParamValue('cid') || '',
+    },
+  ));
+  pageErrorHandling();
+  AdobeDataLayerService.push(new UserDetectedEvent(
+    page,
+    {
+      ID: await User.fingerprint,
+      productFinding: getProductFinding()
+    }
+  ));
+  checkClickEventAfterRedirect();
+  getFreeProductsEvents();
+}

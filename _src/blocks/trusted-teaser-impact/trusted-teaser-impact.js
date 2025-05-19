@@ -1,22 +1,40 @@
-import"../../node_modules/@repobit/dex-utils/dist/src/index.js";import{decorateIcons as d}from"../../scripts/lib-franklin.js";import{matchHeights as s}from"../../scripts/utils/utils.js";import{debounce as c}from"../../node_modules/@repobit/dex-utils/dist/src/utils.js";async function h(e){const[n,...r]=[...e.children];function t(){e.classList.add("default-content-wrapper"),e.innerHTML=`
+import { debounce } from '@repobit/dex-utils';
+import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { matchHeights } from '../../scripts/utils/utils.js';
+
+export default async function decorate(block) {
+  const [titleEl, ...boxes] = [...block.children];
+
+  function render() {
+    block.classList.add('default-content-wrapper');
+
+    block.innerHTML = `
     <div class="carousel-header">
-      <div class="title">${n.children[0].innerHTML}</div>
+      <div class="title">${titleEl.children[0].innerHTML}</div>
     </div>
     
     <div class="box-wrapper">
-        ${r.map(i=>`
+        ${boxes.map((box) => `
             <div class="box-item">
-                ${i.children[0].children[0].innerHTML}
+                ${box.children[0].children[0].innerHTML}
             
                 <div class="title">
-                    ${i.children[0].children[1].textContent}
+                    ${box.children[0].children[1].textContent}
                 </div>
                 
                 <p class="subtitle">
-                    ${i.children[0].children[2].innerHTML}
+                    ${box.children[0].children[2].innerHTML}
                  </p>
             </div>
-          `).join("")}
+          `).join('')}
     </div>
-  `,d(e)}t(),window.addEventListener("resize",c(t,250)),s(e,".box-item .title")}export{h as default};
-//# sourceMappingURL=trusted-teaser-impact.js.map
+  `;
+
+    decorateIcons(block);
+  }
+
+  render();
+
+  window.addEventListener('resize', debounce(render, 250));
+  matchHeights(block, '.box-item .title');
+}

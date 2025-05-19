@@ -1,2 +1,186 @@
-function m(n,a){const e=new URLSearchParams(n.search),t="&muted=1&autoplay=0&enablejsapi=1";let o=e.get("v")?encodeURIComponent(e.get("v")):"";const s=n.pathname;n.origin.includes("youtu.be")&&([,o]=n.pathname.split("/"));const l=document.createElement("dialog");l.classList.add("modal-container");const c=document.createElement("div");c.classList.add("modal-content"),l.appendChild(c);const d=()=>l.close(),r=document.createElement("div");r.classList.add("modal-close"),c.append(r);const i=document.createElement("iframe");return i.width=783,i.height=440,i.src=`https://www.youtube.com${o?`/embed/${o}?rel=0&v=${o}${t}`:s}`,i.title="YouTube video player",i.frameborder=0,i.allow="autoplay; fullscreen; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture",i.allowFullscreen=!0,i.loading="lazy",c.appendChild(i),r.addEventListener("click",()=>{i.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}',"*"),d()}),l}function u(n){n.querySelectorAll("picture").forEach(a=>{if(a.closest("div.block")&&a.parentElement.tagName!=="DIV"){const e=a.parentNode.nextElementSibling;if(e){const t=e.querySelector("a"),o=t?.textContent;if(t&&o.startsWith("https://")&&o.includes("fragments")){t.innerHTML="",t.className="video-placeholder",t.appendChild(a);const s=document.createElement("span");s.className="video-placeholder-play",t.appendChild(s),t.addEventListener("click",async c=>{c.preventDefault()});const l=t.parentElement;l.childNodes.length===1&&(l.tagName==="P"||l.tagName==="DIV")&&l.classList.add("modal-video-container");return}if(t&&o.startsWith("https://")){t.innerHTML="",t.className="linked-image";const s=a.parentNode;t.append(a),s.children.length===0&&s.parentNode.removeChild(s);const l=t.parentElement;l.childNodes.length===1&&(l.tagName==="P"||l.tagName==="DIV")&&l.classList.add("linked-image-container")}}}})}function p(n){const a=e=>e.innerHTML.startsWith("<")?`${e.querySelector("span.icon")?.outerHTML||""}<span class="button-text">${e.textContent}</span>`:`<span class="button-text">${e.textContent}</span>${e.querySelector("span.icon")?.outerHTML||""}`;n.querySelectorAll("a").forEach(e=>{if(!(e.closest(".nav-brand")||e.closest(".nav-sections"))&&(e.title=e.title||e.textContent,e.href!==e.textContent)){const t=e.parentElement,o=e.parentElement.parentElement,s=e.parentElement.parentElement?.parentElement;if(!e.querySelector("img")){if(t.childNodes.length===1&&t.tagName==="STRONG"&&o.childNodes.length===1&&o.tagName==="P"){e.className="button primary",o.classList.add("button-container"),t.replaceWith(e),e.innerHTML=a(e);return}if(t.childNodes.length===1&&t.tagName==="EM"&&o.childNodes.length===1&&o.tagName==="STRONG"&&s?.childNodes.length===1&&s?.tagName==="P"){e.className="button secondary",s.classList.add("button-container"),t.replaceWith(e),e.innerHTML=a(e);return}if(t.childNodes.length===1&&t.tagName==="P"&&e.href.includes("/fragments/")){e.className="button modal",t.classList.add("button-container");return}if(t.childNodes.length===3&&t.tagName==="P"&&e.nextElementSibling?.tagName==="EM"){e.className="button",t.classList.add("button-container"),e.innerHTML=a(e),e.dataset.modal=e.nextSibling.textContent.trim().slice(1,-1),e.nextSibling.remove();return}if(t.childNodes.length===1&&t.tagName==="P"&&t.innerText.startsWith("?")){e.className="info-button modal",t.classList.add("info-button-container"),e.textContent=e.textContent.slice(1).trim(),e.title=e.title.slice(1).trim();return}t.childNodes.length===1&&(t.tagName==="P"||t.tagName==="DIV")&&(e.className="button",t.classList.add("button-container"),e.innerHTML=a(e))}}})}async function h(n,a){const{videoUrl:e}=n.closest(".section").dataset;if(a){n=n.querySelector(".block"),u(n),p(n);const o=n.querySelector(".video-placeholder");n.appendChild(m(new URL(e)));const s=n.querySelector("dialog");o.addEventListener("click",()=>{s.showModal()})}const t=n.querySelector("a.button");t&&t.classList.add("blue"),window.dispatchEvent(new CustomEvent("shadowDomLoaded"),{bubbles:!0,composed:!0})}export{h as default};
-//# sourceMappingURL=bitdefender-central.js.map
+function embedYoutube(url, autoplay) {
+  const usp = new URLSearchParams(url.search);
+  const suffix = autoplay ? '&muted=1&autoplay=0&enablejsapi=1' : '';
+  let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : '';
+  const embed = url.pathname;
+  if (url.origin.includes('youtu.be')) {
+    [, vid] = url.pathname.split('/');
+  }
+  const modalContainer = document.createElement('dialog');
+  modalContainer.classList.add('modal-container');
+
+  const modalContent = document.createElement('div');
+  modalContent.classList.add('modal-content');
+  modalContainer.appendChild(modalContent);
+
+  const closeModal = () => modalContainer.close();
+  const close = document.createElement('div');
+  close.classList.add('modal-close');
+  modalContent.append(close);
+
+  const iframe = document.createElement('iframe');
+  iframe.width = 783;
+  iframe.height = 440;
+  iframe.src = `https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}`;
+  iframe.title = 'YouTube video player';
+  iframe.frameborder = 0;
+  iframe.allow = 'autoplay; fullscreen; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+  iframe.allowFullscreen = true;
+  iframe.loading = 'lazy';
+  modalContent.appendChild(iframe);
+  close.addEventListener('click', () => {
+    iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+    closeModal();
+  });
+  return modalContainer;
+  // `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+  //     <iframe src="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"
+  // eslint-disable-next-line max-len
+  //     allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; picture-in-picture" allowfullscreen="" scrolling="no" title="Content from Youtube" loading="lazy"></iframe>
+  //   </div>`;
+}
+
+function decorateLinkedPictures(main) {
+  main.querySelectorAll('picture').forEach((picture) => {
+    // this condition checks if the picture is part of some content block ( rte )
+    // and not a direct element in some DIV block
+    // that could have different behaviour for some blocks (ex: columns )
+    if (picture.closest('div.block') && picture.parentElement.tagName !== 'DIV') {
+      const next = picture.parentNode.nextElementSibling;
+      if (next) {
+        const a = next.querySelector('a');
+        const link = a?.textContent;
+        /* Modal video */
+        if (a && link.startsWith('https://') && link.includes('fragments')) {
+          a.innerHTML = '';
+          a.className = 'video-placeholder';
+          a.appendChild(picture);
+          const overlayPlayButton = document.createElement('span');
+          overlayPlayButton.className = 'video-placeholder-play';
+          a.appendChild(overlayPlayButton);
+          a.addEventListener('click', async (event) => {
+            event.preventDefault();
+            // eslint-disable-next-line no-use-before-define
+          });
+          const up = a.parentElement;
+          if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+            up.classList.add('modal-video-container');
+          }
+          return;
+        }
+        // Basic linked image
+        if (a && link.startsWith('https://')) {
+          a.innerHTML = '';
+          a.className = 'linked-image';
+          const pictureParent = picture.parentNode;
+          a.append(picture);
+          if (pictureParent.children.length === 0) {
+            pictureParent.parentNode.removeChild(pictureParent);
+          }
+          const up = a.parentElement;
+          if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+            up.classList.add('linked-image-container');
+          }
+        }
+      }
+    }
+  });
+}
+
+function decorateButtons(element) {
+  const wrapButtonText = (a) => ((a.innerHTML.startsWith('<'))
+    ? `${a.querySelector('span.icon')?.outerHTML || ''}<span class="button-text">${a.textContent}</span>`
+    : `<span class="button-text">${a.textContent}</span>${a.querySelector('span.icon')?.outerHTML || ''}`
+  );
+  element.querySelectorAll('a').forEach((a) => {
+    if (a.closest('.nav-brand') || a.closest('.nav-sections')) {
+      return;
+    }
+    a.title = a.title || a.textContent;
+    if (a.href !== a.textContent) {
+      const up = a.parentElement;
+      const twoup = a.parentElement.parentElement;
+      const threeup = a.parentElement.parentElement?.parentElement;
+
+      if (!a.querySelector('img')) {
+        // Example: <p><strong><a href="example.com">Text</a></strong></p>
+        if (up.childNodes.length === 1 && up.tagName === 'STRONG'
+          && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
+          a.className = 'button primary';
+          twoup.classList.add('button-container');
+          up.replaceWith(a);
+          a.innerHTML = wrapButtonText(a);
+          return;
+        }
+        if (up.childNodes.length === 1 && up.tagName === 'EM'
+            && twoup.childNodes.length === 1 && twoup.tagName === 'STRONG'
+            && threeup?.childNodes.length === 1 && threeup?.tagName === 'P') {
+          a.className = 'button secondary';
+          threeup.classList.add('button-container');
+          up.replaceWith(a);
+          a.innerHTML = wrapButtonText(a);
+          return;
+        }
+        // Example: <p><a href="example.com">Text</a> (example.com)</p>
+        if (up.childNodes.length === 1 && up.tagName === 'P' && a.href.includes('/fragments/')) {
+          a.className = 'button modal';
+          up.classList.add('button-container');
+          return;
+        }
+        // Example: <p><a href="example.com">Text</a> <em>50% Discount</em></p>
+        if (up.childNodes.length === 3 && up.tagName === 'P' && a.nextElementSibling?.tagName === 'EM') {
+          a.className = 'button';
+          up.classList.add('button-container');
+          a.innerHTML = wrapButtonText(a);
+          a.dataset.modal = a.nextSibling.textContent.trim().slice(1, -1);
+          a.nextSibling.remove();
+          return;
+        }
+        // Example: <p><a href="example.com">? Text</a></p>
+        if (up.childNodes.length === 1 && up.tagName === 'P' && up.innerText.startsWith('?')) {
+          a.className = 'info-button modal';
+          up.classList.add('info-button-container');
+          a.textContent = a.textContent.slice(1).trim();
+          a.title = a.title.slice(1).trim();
+          return;
+        }
+        // Example: <p><a href="example.com">Text</a></p>
+        if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+          a.className = 'button'; // default
+          up.classList.add('button-container');
+          a.innerHTML = wrapButtonText(a);
+        }
+      }
+    }
+  });
+}
+
+export default async function decorate(block, options) {
+  const {
+    // eslint-disable-next-line no-unused-vars
+    videoUrl,
+  } = block.closest('.section').dataset;
+
+  if (options) {
+    // eslint-disable-next-line no-param-reassign
+    block = block.querySelector('.block');
+    decorateLinkedPictures(block);
+    decorateButtons(block);
+
+    const wrapper = block.querySelector('.video-placeholder');
+    block.appendChild(embedYoutube(new URL(videoUrl), true));
+    const modalContainer = block.querySelector('dialog');
+    wrapper.addEventListener('click', () => {
+      modalContainer.showModal();
+    });
+  }
+  const firstButton = block.querySelector('a.button');
+  if (firstButton) {
+    firstButton.classList.add('blue');
+  }
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
+}

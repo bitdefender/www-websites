@@ -1,7 +1,27 @@
-import"../../node_modules/@repobit/dex-utils/dist/src/index.js";import{isView as p}from"../../scripts/utils/utils.js";import{debounce as I}from"../../node_modules/@repobit/dex-utils/dist/src/utils.js";async function y(r){const d=[...r.children],i={viewport:"desktop",slideDelay:3*1e3},s={currentStep:0,carouselIsFocused:!1,currentInterval:null},u=d.map(e=>e.children[0].firstElementChild.textContent);r.classList.add("default-content-wrapper"),r.innerHTML=`
+import { debounce } from '@repobit/dex-utils';
+import { isView } from '../../scripts/utils/utils.js';
+
+export default async function decorate(block) {
+  const slides = [...block.children];
+  const AUTOMATIC_SLIDING = {
+    enabled: true,
+    viewport: 'desktop',
+    slideDelay: 3 * 1000,
+  };
+
+  const state = {
+    currentStep: 0,
+    carouselIsFocused: false,
+    currentInterval: null,
+  };
+
+  const navItemsNames = slides.map((slideEl) => slideEl.children[0].firstElementChild.textContent);
+
+  block.classList.add('default-content-wrapper');
+  block.innerHTML = `
     <div class="navigation-wrapper">
         <div class="first-nav">
-          ${u.map((e,t)=>`<div class="nav-item ${t===0?"active":""}">${e}</div>`).join("")}
+          ${navItemsNames.map((navItemName, index) => `<div class="nav-item ${index === 0 ? 'active' : ''}">${navItemName}</div>`).join('')}
         </div>
         
         <div class="second-nav">
@@ -33,11 +53,116 @@ import"../../node_modules/@repobit/dex-utils/dist/src/index.js";import{isView as
     </div>
     
     <div class="content-wrapper">
-        ${d.map((e,t)=>`
-        <div class="slide ${t===0?"active":""}">
-            ${e.innerHTML}
+        ${slides.map((slide, index) => `
+        <div class="slide ${index === 0 ? 'active' : ''}">
+            ${slide.innerHTML}
         </div>
-        `).join("")}
+        `).join('')}
     </div>
-  `;const f=r.querySelector(".content-wrapper"),n=r.querySelectorAll(".nav-item"),v=r.querySelectorAll(".slide"),m=r.querySelector(".left-arrow"),w=r.querySelector(".right-arrow");function S(e){n.forEach(t=>t.classList.remove("active")),n[e].classList.add("active")}function g(e){v.forEach(t=>t.classList.remove("active")),v[e].classList.add("active")}function L(e){r.classList.add("scrolling");const t=-100*e,o=50*e;f.style.transform=`translateX(calc(${t}% - ${o}px ))`,setTimeout(()=>{r.classList.remove("scrolling")},200)}function a(e){s.currentStep=e,S(e),g(e),L(e)}function c(e){clearInterval(e||s.currentInterval)}function l(){if(c(),s.carouselIsFocused||!p(i.viewport))return;const e=setInterval(()=>{const o=s.currentStep===n.length-1?0:s.currentStep+1;a(o),(!p(i.viewport)||s.carouselIsFocused)&&c(e)},i.slideDelay);s.currentInterval=e}function h(){r.addEventListener("mouseenter",()=>{s.carouselIsFocused=!0,c()}),r.addEventListener("mouseleave",()=>{s.carouselIsFocused=!1,l()}),n.forEach((e,t)=>{e.addEventListener("click",()=>{a(t)})}),m.addEventListener("click",e=>{e.preventDefault(),s.currentStep!==0&&a(s.currentStep-1)}),w.addEventListener("click",e=>{e.preventDefault(),s.currentStep!==n.length-1&&a(s.currentStep+1)})}h(),l(),window.addEventListener("resize",I(l,250))}export{y as default};
-//# sourceMappingURL=trusted-main-carousel.js.map
+  `;
+
+  const contentWrapper = block.querySelector('.content-wrapper');
+
+  const navItems = block.querySelectorAll('.nav-item');
+  const slideItems = block.querySelectorAll('.slide');
+  const leftArrow = block.querySelector('.left-arrow');
+  const rightArrow = block.querySelector('.right-arrow');
+  function selectNavItem(itemPosition) {
+    navItems.forEach((item) => item.classList.remove('active'));
+    navItems[itemPosition].classList.add('active');
+  }
+
+  function selectSlideItem(itemPosition) {
+    slideItems.forEach((item) => item.classList.remove('active'));
+    slideItems[itemPosition].classList.add('active');
+  }
+
+  function slideToSection(itemPosition) {
+    block.classList.add('scrolling');
+
+    const transformValue = -100 * (itemPosition);
+    const offset = 50 * itemPosition;
+    contentWrapper.style.transform = `translateX(calc(${transformValue}% - ${offset}px ))`;
+    setTimeout(() => {
+      block.classList.remove('scrolling');
+    }, 200);
+  }
+
+  function selectStep(itemPosition) {
+    state.currentStep = itemPosition;
+    selectNavItem(itemPosition);
+    selectSlideItem(itemPosition);
+    slideToSection(itemPosition);
+  }
+
+  function endAutomaticSliding(interval) {
+    clearInterval(interval || state.currentInterval);
+  }
+
+  function beginAutomaticSliding() {
+    if (!AUTOMATIC_SLIDING.enabled) return;
+
+    endAutomaticSliding();
+
+    if (state.carouselIsFocused || !isView(AUTOMATIC_SLIDING.viewport)) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      const isLastStep = state.currentStep === navItems.length - 1;
+      const nextStepToSelect = isLastStep ? 0 : (state.currentStep + 1);
+      selectStep(nextStepToSelect);
+
+      if (!isView(AUTOMATIC_SLIDING.viewport) || state.carouselIsFocused) {
+        endAutomaticSliding(interval);
+      }
+    }, AUTOMATIC_SLIDING.slideDelay);
+
+    state.currentInterval = interval;
+  }
+
+  function addEventListeners() {
+    block.addEventListener('mouseenter', () => {
+      state.carouselIsFocused = true;
+      endAutomaticSliding();
+    });
+
+    block.addEventListener('mouseleave', () => {
+      state.carouselIsFocused = false;
+      beginAutomaticSliding();
+    });
+
+    navItems.forEach((navEl, itemPosition) => {
+      navEl.addEventListener('click', () => {
+        selectStep(itemPosition);
+      });
+    });
+
+    leftArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const isFirstStep = state.currentStep === 0;
+      if (isFirstStep) {
+        return;
+      }
+
+      selectStep(state.currentStep - 1);
+    });
+
+    rightArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const isLastStep = state.currentStep === navItems.length - 1;
+      if (isLastStep) {
+        return;
+      }
+
+      selectStep(state.currentStep + 1);
+    });
+  }
+
+  addEventListeners();
+
+  beginAutomaticSliding();
+  window.addEventListener('resize', debounce(beginAutomaticSliding, 250));
+}

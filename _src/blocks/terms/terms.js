@@ -1,2 +1,15 @@
-async function o(e,t){e.closest(".section").id="tos",t&&(e=e.querySelector(".block"),e.closest(".terms-wrapper").classList.add("we-container")),window.dispatchEvent(new CustomEvent("shadowDomLoaded"),{bubbles:!0,composed:!0})}export{o as default};
-//# sourceMappingURL=terms.js.map
+export default async function decorate(block, options) {
+  block.closest('.section').id = 'tos';
+
+  if (options) {
+    // eslint-disable-next-line no-param-reassign
+    block = block.querySelector('.block');
+    const blockParent = block.closest('.terms-wrapper');
+    blockParent.classList.add('we-container');
+  }
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
+}
