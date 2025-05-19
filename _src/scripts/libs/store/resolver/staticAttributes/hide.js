@@ -1,2 +1,140 @@
-import{parseKey as g}from"../resolver.js";const l=(i,{product:b,option:r})=>{if(!i.dataset.storeHide)return;const[d,f]=i.dataset.storeHide.split(";"),[u,a]=d?d.split("="):[],[,k]=f?f.split("="):[],s=c=>{switch(k){case"visibility":c.classList.add("global-visibility-hidden");break;case"opacity":c.classList.add("global-opacity-zero");break;default:c.classList.add("global-display-none");break}},e=c=>{c.classList.remove("global-visibility-hidden","global-opacity-zero","global-display-none")};switch(u){case"price":if(!r)break;if(a==="full"&&r.getPrice("value")){s(i);break}if(a==="discounted"&&r.getDiscountedPrice("value")){s(i);break}if(a===void 0&&r.getDiscountedPrice("value")&&r.getPrice("value")){s(i);break}e(i);break;case"no-price":if(!r)break;if(a==="full"&&!r.getPrice("value")){s(i);break}if(a==="discounted"&&!r.getDiscountedPrice("value")){s(i);break}if(a===void 0&&!r.getDiscountedPrice("value")&&!r.getPrice("value")){s(i);break}e(i);break;case"no-option":if(a===void 0&&!r){s(i);break}if(!b.getOption(...g(a))){s(i);break}e(i);break;case"if-true":a==="true"&&s(i);break;case"if-false":a==="false"&&s(i);break;case"if-product":a===b.getId()?s(i):e(i);break;case"if-not-product":a!==b.getId()?s(i):e(i);break;case"if-devices":Number(a)===r.getDevices()?s(i):e(i);break;case"if-not-devices":Number(a)!==r.getDevices()?s(i):e(i);break;case"if-years":Number(a)===r.getSubscription("years")?s(i):e(i);break;case"if-not-years":Number(a)!==r.getSubscription("years")?s(i):e(i);break}};export{l as resolve};
-//# sourceMappingURL=hide.js.map
+import { parseKey } from "../resolver.js";
+
+/**
+ * @param {HTMLElement} element 
+ * @param {import("../resolver").Context} context 
+ */
+export const resolve = (element, { product, option }) => {
+    if (!element.dataset.storeHide) { return; }
+
+    const [condition, type] = element.dataset.storeHide.split(";");
+    const [key, value] = condition ? condition.split("=") : [];
+    const [, hideType] = type ? type.split("=") : [];
+
+    /**
+     * Default hide is display none
+     * @param {HTMLElement} element 
+     */
+    const hide = (element) => {
+        switch (hideType) {
+            case "visibility":
+                element.classList.add('global-visibility-hidden');
+                break;
+            case "opacity":
+                element.classList.add('global-opacity-zero');
+                break;
+            default:
+                element.classList.add('global-display-none');
+                break;
+        }
+    };
+
+    /**
+     * Default show is display unset
+     * @param {HTMLElement} element 
+     */
+    const show = (element) => {
+        element.classList.remove('global-visibility-hidden', 'global-opacity-zero', 'global-display-none');
+    };
+
+    switch (key) {
+        case "price":
+            if (!option) { break; }
+            if (value === "full" && option.getPrice("value")) {
+                hide(element);
+                break;
+            }
+            if (value === "discounted" && option.getDiscountedPrice("value")) {
+                hide(element);
+                break;
+            }
+            if (value === undefined && option.getDiscountedPrice("value") && option.getPrice("value")) {
+                hide(element);
+                break;
+            }
+
+            show(element);
+            break;
+        case "no-price":
+            if (!option) { break; }
+            if (value === "full" && !option.getPrice("value")) {
+                hide(element);
+                break;
+            }
+            if (value === "discounted" && !option.getDiscountedPrice("value")) {
+                hide(element);
+                break;
+            }
+            if (value === undefined && !option.getDiscountedPrice("value") && !option.getPrice("value")) {
+                hide(element);
+                break;
+            }
+
+            show(element);
+            break;
+        case "no-option":
+            if (value === undefined && !option) {
+                hide(element);
+                break;
+            }
+            if (!product.getOption(...parseKey(value))) {
+                hide(element);
+                break;
+            }
+
+            show(element);
+            break;
+        case "if-true":
+            if (value === "true") {
+                hide(element);
+            }
+            break;
+        case "if-false":
+            if (value === "false") {
+                hide(element);
+            }
+            break;
+        case "if-product":
+            if (value === product.getId()) {
+                hide(element);
+            } else {
+                show(element);
+            }
+            break;
+        case "if-not-product":
+            if (value !== product.getId()) {
+                hide(element);
+            } else {
+                show(element);
+            }
+            break;
+        case "if-devices":
+            if (Number(value) === option.getDevices()) {
+                hide(element);
+            } else {
+                show(element);
+            }
+            break;
+        case "if-not-devices":
+            if (Number(value) !== option.getDevices()) {
+                hide(element);
+            } else {
+                show(element);
+            }
+            break;
+        case "if-years":
+            if (Number(value) === option.getSubscription("years")) {
+                hide(element);
+            } else {
+                show(element);
+            }
+            break;
+        case "if-not-years":
+            if (Number(value) !== option.getSubscription("years")) {
+                hide(element);
+            } else {
+                show(element);
+            }
+            break;
+    }
+}

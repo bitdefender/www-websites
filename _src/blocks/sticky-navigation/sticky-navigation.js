@@ -1,2 +1,159 @@
-import{STICKY_NAVIGATION_DATASET_KEY as l}from"../../scripts/lib-franklin.js";function s(e){const t=document.getElementById(e);if(t){const n=t.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top:n,behavior:"smooth"})}}function a(){const e=document.createElement("div");return e.className="mobile-dropdown",e.addEventListener("click",t=>{t.preventDefault(),e.classList.toggle("opened")}),e}function d(e){if(!e.id)return null;const t=e.dataset[l];if(!t)return null;const n=document.createElement("li"),i=document.createElement("a");return i.href=`#${e.id}`,i.title=t,i.innerText=t,n.appendChild(i),n.addEventListener("click",o=>{o.preventDefault(),s(e.id)}),n}function u(){const e=document.createElement("ul"),t=Array.from(document.querySelectorAll(".section[id]")).map(d).filter(Boolean);return e.append(...t),e}function m(e){const t=document.createElement("div");t.classList.add("menu-with-button");const n=a(),i=u();t.appendChild(i),i.addEventListener("click",c=>{c.target.closest("ul").querySelectorAll("li").forEach(r=>{r.classList.remove("opened")}),c.target.closest("li").classList.toggle("opened"),n.classList.toggle("opened")}),n.innerText=i.querySelector("li").innerText;const o=e.querySelector(".button-container");return o&&(o.addEventListener("click",()=>{window.adobeDataLayer.push({event:"click",asset:"sticky-buy"})}),t.appendChild(o)),e.replaceChildren(n),e.appendChild(t),e}function f(e){const t=document.querySelector(".sticky-navigation-container")?.offsetTop;t&&(window.scrollY>=t?e.classList.add("fixed-nav"):e.classList.remove("fixed-nav"))}function p(e){return Array.from(e).reduce((t,n)=>{const i=n.getBoundingClientRect().top,o=n.getBoundingClientRect().bottom;return i<115&&o>0?n:t},null)}function v(e){const t=document.querySelectorAll(".section[id]"),n=e.querySelector(".mobile-dropdown"),i=p(t),o=e.querySelector("li.active");if(i){const c=e.querySelector(`li a[href="#${i.id}"]`);if(c){const r=c.parentElement;r.classList.add("active"),n.innerText=r.innerText,o&&!o.isSameNode(r)&&o.classList.remove("active")}else o&&o.classList.remove("active")}else o&&o.classList.remove("active")}function y(e){f(e),v(e)}function L(e){const t=m(e);document.addEventListener("scroll",()=>y(t))}export{L as default};
-//# sourceMappingURL=sticky-navigation.js.map
+import { STICKY_NAVIGATION_DATASET_KEY } from '../../scripts/lib-franklin.js';
+
+function scrollToAnchorWithOffset(anchorId) {
+  const anchorElement = document.getElementById(anchorId);
+
+  if (anchorElement) {
+    const offsetPosition = anchorElement.getBoundingClientRect().top + window.scrollY - 80;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth',
+    });
+  }
+}
+
+function renderMobileDropDown() {
+  const mobileDropDown = document.createElement('div');
+  mobileDropDown.className = 'mobile-dropdown';
+
+  /* listen to click event to open or close the dropdown menu on mobile */
+  mobileDropDown.addEventListener('click', (e) => {
+    e.preventDefault();
+    mobileDropDown.classList.toggle('opened');
+  });
+
+  return mobileDropDown;
+}
+
+function renderStickyNavMenuItem(section) {
+  if (!section.id) return null;
+
+  const sectionTitle = section.dataset[STICKY_NAVIGATION_DATASET_KEY];
+  if (!sectionTitle) return null; // Nu creează nimic dacă nu există titlu
+
+  const navMenuItem = document.createElement('li');
+  const navItemLink = document.createElement('a');
+  navItemLink.href = `#${section.id}`;
+  navItemLink.title = sectionTitle;
+  navItemLink.innerText = sectionTitle;
+  navMenuItem.appendChild(navItemLink);
+
+  /** close the dropdown menu after user selection */
+  navMenuItem.addEventListener('click', (e) => {
+    e.preventDefault();
+    scrollToAnchorWithOffset(section.id);
+  });
+
+  return navMenuItem;
+}
+
+function renderStickyNavMenu() {
+  const stickyNavMenu = document.createElement('ul');
+  const stickyNavMenuItems = Array.from(document.querySelectorAll('.section[id]')).map(renderStickyNavMenuItem).filter(Boolean);
+  stickyNavMenu.append(...stickyNavMenuItems);
+  return stickyNavMenu;
+}
+
+function renderStickyNavigation(block) {
+  const menuWithButton = document.createElement('div');
+  menuWithButton.classList.add('menu-with-button');
+
+  const mobileDropDown = renderMobileDropDown();
+
+  const stickyNavMenu = renderStickyNavMenu();
+  menuWithButton.appendChild(stickyNavMenu);
+
+  /** close the dropdown menu after user selection */
+  stickyNavMenu.addEventListener('click', (event) => {
+    event.target.closest('ul').querySelectorAll('li').forEach((item) => {
+      item.classList.remove('opened');
+    });
+    event.target.closest('li').classList.toggle('opened');
+    mobileDropDown.classList.toggle('opened');
+  });
+
+  mobileDropDown.innerText = stickyNavMenu.querySelector('li').innerText;
+
+  const stickyNavButton = block.querySelector('.button-container');
+  if (stickyNavButton) {
+    stickyNavButton.addEventListener('click', () => {
+      window.adobeDataLayer.push(
+        {
+          event: 'click',
+          asset: 'sticky-buy',
+        },
+      );
+    });
+    menuWithButton.appendChild(stickyNavButton);
+  }
+  block.replaceChildren(mobileDropDown);
+  block.appendChild(menuWithButton);
+  return block;
+}
+
+function stickNavigationOnTop(stickyNav) {
+  const wrapperTop = document.querySelector('.sticky-navigation-container')?.offsetTop;
+  if (wrapperTop) {
+    if (window.scrollY >= wrapperTop) {
+      stickyNav.classList.add('fixed-nav');
+    } else {
+      stickyNav.classList.remove('fixed-nav');
+    }
+  }
+}
+
+function findVisibleSection(sections) {
+  return Array.from(sections).reduce((visSection, curSection) => {
+    const curTop = curSection.getBoundingClientRect().top;
+    const curBottom = curSection.getBoundingClientRect().bottom;
+    // return current heading if at max 115px (magic number) from the top of the screen
+    if (curTop < 115 && curBottom > 0) {
+      return curSection;
+    }
+    return visSection;
+  }, null);
+}
+
+function updateStickyNavActiveMenuItem(stickyNav) {
+  // list all sections referenced in the sticky navigation
+  const sections = document.querySelectorAll('.section[id]');
+
+  const mobileDropDown = stickyNav.querySelector('.mobile-dropdown');
+
+  // identify the visible section based on scroll position
+  const visibleSection = findVisibleSection(sections);
+
+  const previousActiveMenuEntry = stickyNav.querySelector('li.active');
+
+  if (visibleSection) {
+    const visibleActiveMenuEntryLink = stickyNav.querySelector(`li a[href="#${visibleSection.id}"]`);
+
+    // the section is present in the sticky menu
+    if (visibleActiveMenuEntryLink) {
+      const visibleActiveMenuEntry = visibleActiveMenuEntryLink.parentElement;
+      visibleActiveMenuEntry.classList.add('active');
+      mobileDropDown.innerText = visibleActiveMenuEntry.innerText;
+
+      if (previousActiveMenuEntry && !previousActiveMenuEntry.isSameNode(visibleActiveMenuEntry)) {
+        previousActiveMenuEntry.classList.remove('active');
+      }
+    } else if (previousActiveMenuEntry) {
+      previousActiveMenuEntry.classList.remove('active');
+    }
+  } else if (previousActiveMenuEntry) {
+    previousActiveMenuEntry.classList.remove('active');
+  }
+}
+
+function onScroll(stickyNav) {
+  stickNavigationOnTop(stickyNav);
+  updateStickyNavActiveMenuItem(stickyNav);
+}
+
+export default function decorate(block) {
+  const stickyNav = renderStickyNavigation(block);
+
+  // listen to scroll event to stick the nav on the top and update the current visible section
+  document.addEventListener('scroll', () => onScroll(stickyNav));
+}

@@ -1,2 +1,11 @@
-const i=(e,t)=>{e.dataset.storeClickSetOption&&e.addEventListener("click",()=>{t.option=e.dataset.storeClickSetOption})};export{i as resolve};
-//# sourceMappingURL=setOption.js.map
+/**
+ * @param {HTMLElement} button 
+ * @param {import("../resolver").Context} context 
+ */
+export const resolve = (button, context) => {
+    if (!button.dataset.storeClickSetOption) { return; }
+
+    button.addEventListener("click", () => {
+        context.option = button.dataset.storeClickSetOption;
+    });
+}

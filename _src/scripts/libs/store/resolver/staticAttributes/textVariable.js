@@ -1,2 +1,241 @@
-const b=(e,{option:r})=>{if(!e)return!1;switch(e){case"no-price":return!r.getPrice();case"no-price-discounted":return!r.getDiscountedPrice();default:return!0}},g=(e,r,a,i)=>{let c=!1;for(const n of a){switch(n){case"DEVICES":e=e.replaceAll(i,r.option.getDevices()),c=!0;break;case"YEARS":e=e.replaceAll(i,r.option.getSubscription("years")),c=!0;break;case"PRICE_FULL":if(!r.option.getPrice("valueWithCurrency"))break;e=e.replaceAll(i,r.option.getPrice("valueWithCurrency")),c=!0;break;case"PRICE_DISCOUNTED":if(!r.option.getDiscountedPrice("valueWithCurrency"))break;e=e.replaceAll(i,r.option.getDiscountedPrice("valueWithCurrency")),c=!0;break;case"PRICE_FULL_MONTHLY":if(!r.option.getPrice("monthlyWithCurrency"))break;e=e.replaceAll(i,r.option.getPrice("monthlyWithCurrency")),c=!0;break;case"PRICE_DISCOUNTED_MONTHLY":if(!r.option.getDiscountedPrice("monthlyWithCurrency"))break;e=e.replaceAll(i,r.option.getDiscountedPrice("monthlyWithCurrency")),c=!0;break;case"DISCOUNT_PERCENTAGE":if(!r.option.getDiscount("percentageWithProcent"))break;e=e.replaceAll(i,r.option.getDiscount("percentageWithProcent")),c=!0;break;case"DISCOUNT_VALUE":if(!r.option.getDiscount("valueWithCurrency"))break;e=e.replaceAll(i,r.option.getDiscount("valueWithCurrency")),c=!0;break;case"SMALLEST_PRICE":{let o=Number.MAX_SAFE_INTEGER,s="";if(r.contexts.length===0)break;for(const{product:d}of r.contexts){const t=d.getSmallestPrice("value");t&&t<o&&(o=t,s=d.getCurrency())}if(o===Number.MAX_SAFE_INTEGER)break;e=e.replaceAll(i,Store.placeSymbol(o,s)),c=!0;break}case"SMALLEST_PRICE_PER_MONTH":let l=Number.MAX_SAFE_INTEGER,p="";if(r.contextProducts.length===0)break;for(const o of r.contextProducts){const s=o.getSmallestPrice("monthly");s&&s<l&&(l=s,p=o.getCurrency())}if(l===Number.MAX_SAFE_INTEGER)break;e=e.replaceAll(i,Store.placeSymbol(l,p)),c=!0;break;case"SERVER_NUMBER":case"MAIL_BOX_NUMBER":const u=a.find(o=>o.includes("DISCOUNT="))?.split("=")[1];if(!u&&!Number(u))break;e=e.replaceAll(i,Math.ceil(r.option.getDevices()*Number(u)/100)),c=!0;break;case"MINIMUM_DEVICES_NUMBER":e=e.replaceAll(i,r.product.getMinMaxDeviceNumbers()[0]),c=!0;break;case"MAXIMUM_DEVICES_NUMBER":e=e.replaceAll(i,r.product.getMinMaxDeviceNumbers()[1]),c=!0;break}if(r.devicePropertiesVariables.includes(n)&&r.option.deviceMapping&&(e=e.replaceAll(i,r.option.deviceMapping[n])),c)break}return e},f=(e,r)=>{const a=[...new Set(e.match(/{.*?}/ig))];for(const i of a){const c=i.split(/{|}|\|\||;/).filter(Boolean),n=c.find(l=>l.includes("hide="))?.split("=")[1];if(b(n,r)){e=e.replaceAll(i,"");continue}e=g(e,r,c,i)}return e},E=(e,r)=>{for(const a of Object.keys(e))typeof e[a]=="string"&&(e[a]=f(e[a],r)),typeof e[a]=="object"&&E(e[a],r)},y=(e,r)=>{if(e.dataset.storeTextVariable===void 0||!r.option)return;const a=[...e.childNodes];for(const i of a){if(i.dataset&&i.dataset.cmpDataLayer&&!i.dataset.parsedDataLayer){const c=JSON.parse(i.dataset.cmpDataLayer);E(c,r),i.setAttribute("data-cmp-data-layer",JSON.stringify(c)),i.setAttribute("data-parsed-data-layer",!0)}i.nodeType===Node.TEXT_NODE&&(i.initialContent||(i.initialContent=i.textContent),i.textContent=f(i.initialContent,r)),a.push(...i.childNodes)}};export{y as resolve};
-//# sourceMappingURL=textVariable.js.map
+/**
+ * @param {string} hideCondition
+ * @param {import("../resolver").Context} context
+ * @returns {boolean} if the hiding condition is true, the text will be hidden otherwise it will still be displayed
+ */
+const checkHidingCondition = (hideCondition, {option}) => {
+
+    if (!hideCondition) {
+        return false;
+    }
+
+    switch (hideCondition) {
+        case ('no-price'):
+            return !Boolean(option.getPrice());
+        case ('no-price-discounted'):
+            return !Boolean(option.getDiscountedPrice());
+        default:
+            return true;
+    }
+};
+
+/**
+ *
+ * @param {string} text
+ * @param {import("../resolver").Context} context
+ * @param {string[]} variableParameters
+ * @param {string} textVariable
+ * @returns {string} returns the initial text with the replaced variable or the actual initial text when the variable cannot be replaced
+ */
+const replaceVariable = (text, context, variableParameters, textVariable) => {
+
+    let stopVariableSearch = false;
+
+    for (const variableParameter of variableParameters) {
+        switch (variableParameter) {
+            case "DEVICES":
+                text = text.replaceAll(textVariable, context.option.getDevices());
+                stopVariableSearch = true;
+                break;
+            case "YEARS":
+                text = text.replaceAll(textVariable, context.option.getSubscription("years"));
+                stopVariableSearch = true;
+                break;
+            case "PRICE_FULL":
+                if (!context.option.getPrice("valueWithCurrency")) {
+                    break;
+                }
+
+                text = text.replaceAll(textVariable, context.option.getPrice("valueWithCurrency"));
+                stopVariableSearch = true;
+                break;
+            case "PRICE_DISCOUNTED":
+                if (!context.option.getDiscountedPrice("valueWithCurrency")) {
+                    break;
+                }
+
+                text = text.replaceAll(textVariable, context.option.getDiscountedPrice("valueWithCurrency"));
+                stopVariableSearch = true;
+                break;
+            case "PRICE_FULL_MONTHLY":
+                if (!context.option.getPrice("monthlyWithCurrency")) {
+                    break;
+                }
+
+                text = text.replaceAll(textVariable, context.option.getPrice("monthlyWithCurrency"));
+                stopVariableSearch = true;
+                break;
+            case "PRICE_DISCOUNTED_MONTHLY":
+                if (!context.option.getDiscountedPrice("monthlyWithCurrency")) {
+                    break;
+                }
+
+                text = text.replaceAll(textVariable, context.option.getDiscountedPrice("monthlyWithCurrency"));
+                stopVariableSearch = true;
+                break;
+            case "DISCOUNT_PERCENTAGE":
+                if (!context.option.getDiscount("percentageWithProcent")) {
+                    break;
+                }
+
+                text = text.replaceAll(textVariable, context.option.getDiscount("percentageWithProcent"));
+                stopVariableSearch = true;
+                break;
+            case "DISCOUNT_VALUE":
+                if (!context.option.getDiscount("valueWithCurrency")) {
+                    break;
+                }
+
+                text = text.replaceAll(textVariable, context.option.getDiscount("valueWithCurrency"));
+                stopVariableSearch = true;
+                break;
+            case "SMALLEST_PRICE":
+                {
+                    let smallestPrice = Number.MAX_SAFE_INTEGER;
+                    let currency = "";
+
+                    if (context.contexts.length === 0) { break; }
+
+                    for (const { product } of context.contexts) {
+                        const productSmallestPrice = product.getSmallestPrice("value");
+                        if (productSmallestPrice && productSmallestPrice < smallestPrice) {
+                            smallestPrice = productSmallestPrice;
+                            currency = product.getCurrency();
+                        }
+                    }
+
+                    if (smallestPrice === Number.MAX_SAFE_INTEGER) { break; }
+
+                    text = text.replaceAll(textVariable, Store.placeSymbol(smallestPrice, currency));
+                    stopVariableSearch = true;
+                    break;
+                }
+            case "SMALLEST_PRICE_PER_MONTH":
+                let smallestPrice = Number.MAX_SAFE_INTEGER;
+                let currency = "";
+                if (context.contextProducts.length === 0) {
+                    break;
+                }
+                
+                for (const contextProduct of context.contextProducts) {
+                    const productSmallestPrice = contextProduct.getSmallestPrice("monthly");
+                    if (productSmallestPrice && productSmallestPrice < smallestPrice) {
+                        smallestPrice = productSmallestPrice;
+                        currency = contextProduct.getCurrency();
+                    }
+                }
+                if (smallestPrice === Number.MAX_SAFE_INTEGER) { break; }
+
+                text = text.replaceAll(textVariable, Store.placeSymbol(smallestPrice, currency));
+                stopVariableSearch = true;
+                break;
+            case "SERVER_NUMBER":
+            case "MAIL_BOX_NUMBER":
+                const discount = variableParameters.find(variableParameter => variableParameter.includes("DISCOUNT="))?.split("=")[1];
+                if (!discount && !Number(discount)) {
+                    break;
+                }
+
+                text = text.replaceAll(textVariable, Math.ceil(context.option.getDevices() * Number(discount) / 100));
+                stopVariableSearch = true;
+                break;
+            case "MINIMUM_DEVICES_NUMBER":
+                text = text.replaceAll(textVariable, context.product.getMinMaxDeviceNumbers()[0]);
+                stopVariableSearch = true;
+                break;
+            case "MAXIMUM_DEVICES_NUMBER":
+                text = text.replaceAll(textVariable, context.product.getMinMaxDeviceNumbers()[1]);
+                stopVariableSearch = true;
+                break;
+            default:
+                break;
+        }
+
+        if (context.devicePropertiesVariables.includes(variableParameter)) {
+            const deviceMapping = context.option.deviceMapping;
+            if (deviceMapping) {
+                text = text.replaceAll(textVariable, context.option.deviceMapping[variableParameter]);
+            }
+        }
+
+        if (stopVariableSearch) {
+            break;
+        }
+    }
+
+    return text;
+};
+
+/**
+ *
+ * @param {string} text
+ * @param {import("../resolver").Context} context
+ * @returns {string} return the initial text with all variables inside of it resolved. If some cannot be resoled, they will retain their variable form
+ */
+const replaceTextVariables = (text, context) => {
+    //get all the textVariables defined using brackets
+    const allTextVariables = [...new Set(text.match(/{.*?}/ig))];
+    for (const textVariable of allTextVariables) {
+        const variableParameters = textVariable.split(/{|}|\|\||;/).filter(Boolean);
+
+        // get the hidingCondition and test it. If it is true remove the variable from the text
+        const hideCondition = variableParameters.find(variableParameter => variableParameter.includes("hide="))?.split("=")[1];
+        if (checkHidingCondition(hideCondition, context)) {
+            text = text.replaceAll(textVariable, "");
+            continue;
+        }
+
+        // replace the variable inside the text
+        text = replaceVariable(text, context, variableParameters, textVariable);
+    }
+
+    return text;
+};
+
+/**
+ *
+ * @param {object} parent
+ * @param {import("../resolver").Context} context
+ * parse the data-cmp-data-layer object and for each string resolve every variable. This is for the data layer component
+ */
+const recursiveDataLayerParse = (parent, context) => {
+    for (const key of Object.keys(parent)) {
+        if (typeof parent[key] === 'string') {
+            parent[key] = replaceTextVariables(parent[key], context);
+        }
+
+        if (typeof parent[key] === 'object') {
+            recursiveDataLayerParse(parent[key], context);
+        }
+    }
+};
+
+/**
+ * @param {HTMLElement} element
+ * @param {import("../resolver").Context} context
+ */
+export const resolve = (element, context) => {
+    if (element.dataset.storeTextVariable === undefined || !context.option) { return; }
+
+    const children = [...element.childNodes];
+    for (const child of children) {
+
+        //resolve all text variables in the data layer attribute
+        if (child.dataset && child.dataset.cmpDataLayer && !child.dataset.parsedDataLayer) {
+            const dataLayerObject = JSON.parse(child.dataset.cmpDataLayer);
+            recursiveDataLayerParse(dataLayerObject, context);
+            child.setAttribute("data-cmp-data-layer", JSON.stringify(dataLayerObject));
+            child.setAttribute("data-parsed-data-layer", true);
+        }
+
+        // resolve all text variables in text nodes
+        if (child.nodeType === Node.TEXT_NODE) {
+            if (!child.initialContent) {
+                child.initialContent = child.textContent;
+            }
+            child.textContent = replaceTextVariables(child.initialContent, context);
+        }
+
+        children.push(...child.childNodes);
+    }
+}

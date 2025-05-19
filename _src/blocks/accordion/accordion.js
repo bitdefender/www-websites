@@ -1,2 +1,64 @@
-function o(i){const d=Array.from(i.querySelectorAll(":scope > div"));if(d.forEach((t,s)=>{t.classList.add("accordion-item");const[e,a]=t.children;if(e.classList.add("accordion-item-header"),e.setAttribute("tabindex","0"),e.setAttribute("role","button"),e.setAttribute("aria-expanded","false"),e.setAttribute("aria-controls",`accordion-content-${s}`),a.setAttribute("id",`accordion-content-${s}`),a&&(a.classList.add("accordion-item-content"),!a.querySelector("p"))){const r=document.createElement("p");r.innerHTML=a.innerHTML,a.innerHTML="",a.appendChild(r)}const c=()=>{const n=t.classList.contains("expanded");d.forEach(r=>{r.classList.remove("expanded"),r.querySelector(".accordion-item-header")?.setAttribute("aria-expanded","false")}),n?e.setAttribute("aria-expanded","false"):(t.classList.add("expanded"),e.setAttribute("aria-expanded","true"))};[...i.classList].includes("action-only-on-header")?e.addEventListener("click",c):t.addEventListener("click",c),e.addEventListener("keydown",n=>{(n.key==="Enter"||n.key===" ")&&(n.preventDefault(),c())})}),i.classList.contains("first-open")){const t=d[0];t.classList.add("expanded");const s=t.querySelector(".accordion-item-header");s&&s.setAttribute("aria-expanded","true")}}export{o as default};
-//# sourceMappingURL=accordion.js.map
+export default function decorate(block) {
+  const items = Array.from(block.querySelectorAll(':scope > div'));
+
+  items.forEach((item, index) => {
+    item.classList.add('accordion-item');
+    const [header, content] = item.children;
+    header.classList.add('accordion-item-header');
+
+    // A11Y: focusabil, activabil, semantic
+    header.setAttribute('tabindex', '0');
+    header.setAttribute('role', 'button');
+    header.setAttribute('aria-expanded', 'false');
+    header.setAttribute('aria-controls', `accordion-content-${index}`);
+    content.setAttribute('id', `accordion-content-${index}`);
+
+    if (content) {
+      content.classList.add('accordion-item-content');
+      const p = content.querySelector('p');
+      if (!p) {
+        const newP = document.createElement('p');
+        newP.innerHTML = content.innerHTML;
+        content.innerHTML = '';
+        content.appendChild(newP);
+      }
+    }
+
+    const toggleItem = () => {
+      const isOpen = item.classList.contains('expanded');
+      items.forEach((i) => {
+        i.classList.remove('expanded');
+        i.querySelector('.accordion-item-header')?.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        item.classList.add('expanded');
+        header.setAttribute('aria-expanded', 'true');
+      } else {
+        header.setAttribute('aria-expanded', 'false');
+      }
+    };
+
+    if ([...block.classList].includes('action-only-on-header')) {
+      header.addEventListener('click', toggleItem);
+    } else {
+      item.addEventListener('click', toggleItem);
+    }
+
+    // A11Y: tastatură
+    header.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleItem();
+      }
+    });
+  });
+
+  // Prima deschisă
+  if (block.classList.contains('first-open')) {
+    const firstItem = items[0];
+    firstItem.classList.add('expanded');
+    const header = firstItem.querySelector('.accordion-item-header');
+    if (header) header.setAttribute('aria-expanded', 'true');
+  }
+}

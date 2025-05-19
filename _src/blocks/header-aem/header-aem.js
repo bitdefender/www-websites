@@ -1,2 +1,49 @@
-async function n(e,a){if(e.classList.add("white","py-3","default-content-wrapper"),a){const t=document.createElement("a");t.href=a,t.classList.add("logo-link");const s=e.querySelector("picture");t.appendChild(s),e.appendChild(t)}window.dispatchEvent(new CustomEvent("shadowDomLoaded"),{bubbles:!0,composed:!0})}function d(e,a,t){switch(e){case"white":n(a,t);break}}async function c(e,a){const{header:t,link:s}=e.closest(".section").dataset;a&&(e=e.querySelector(".block"),e.closest(".header-aem-wrapper").classList.add("we-container")),e.parentNode.classList.add(t||"default"),d(t,e,s)}export{c as default};
-//# sourceMappingURL=header-aem.js.map
+async function runWhitePageHeaderLogic(block, link) {
+  block.classList.add('white', 'py-3', 'default-content-wrapper');
+
+  if (link) {
+    // create a link and inside it put the logo
+    const logoLink = document.createElement('a');
+    logoLink.href = link;
+    logoLink.classList.add('logo-link');
+    const image = block.querySelector('picture');
+    logoLink.appendChild(image);
+    block.appendChild(logoLink);
+  }
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
+}
+
+/**
+ * applies header factory based on header variation
+ * @param {String} headerMetadata The header variation: landingpage' or none
+ * @param {Element} header The header element
+ */
+function applyHeaderFactorySetup(headerMetadata, header, link) {
+  switch (headerMetadata) {
+    case 'white':
+      runWhitePageHeaderLogic(header, link);
+      break;
+    default:
+      break;
+  }
+}
+export default async function decorate(block, options) {
+  const {
+    header, link,
+  } = block.closest('.section').dataset;
+
+  if (options) {
+    // eslint-disable-next-line no-param-reassign
+    block = block.querySelector('.block');
+    const blockParent = block.closest('.header-aem-wrapper');
+    blockParent.classList.add('we-container');
+  }
+
+  block.parentNode.classList.add(header || 'default');
+
+  applyHeaderFactorySetup(header, block, link);
+}

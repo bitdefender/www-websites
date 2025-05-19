@@ -1,3 +1,551 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["scripts/delayed.js","scripts/lib-franklin.js","node_modules/@repobit/dex-utils/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/cookies.js","node_modules/js-cookie/dist/js.cookie.js","node_modules/@repobit/dex-utils/dist/src/user.js","node_modules/@repobit/dex-constants/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/cssua.js","scripts/page.js","node_modules/@repobit/dex-utils/dist/src/page.js","node_modules/@sentry/browser/build/npm/esm/sdk.js","node_modules/@sentry/browser/build/npm/esm/client.js","node_modules/@sentry/browser/build/npm/esm/eventbuilder.js","node_modules/@sentry/core/build/esm/utils-hoist/is.js","node_modules/@sentry/core/build/esm/utils-hoist/misc.js","node_modules/@sentry/core/build/esm/utils-hoist/object.js","node_modules/@sentry/core/build/esm/debug-build.js","node_modules/@sentry/core/build/esm/utils-hoist/browser.js","node_modules/@sentry/core/build/esm/utils-hoist/worldwide.js","node_modules/@sentry/core/build/esm/utils-hoist/logger.js","node_modules/@sentry/core/build/esm/carrier.js","node_modules/@sentry/core/build/esm/utils-hoist/version.js","node_modules/@sentry/core/build/esm/utils-hoist/string.js","node_modules/@sentry/core/build/esm/currentScopes.js","node_modules/@sentry/core/build/esm/asyncContext/index.js","node_modules/@sentry/core/build/esm/asyncContext/stackStrategy.js","node_modules/@sentry/core/build/esm/defaultScopes.js","node_modules/@sentry/core/build/esm/scope.js","node_modules/@sentry/core/build/esm/session.js","node_modules/@sentry/core/build/esm/utils-hoist/time.js","node_modules/@sentry/core/build/esm/utils/merge.js","node_modules/@sentry/core/build/esm/utils/spanOnScope.js","node_modules/@sentry/core/build/esm/utils-hoist/propagationContext.js","node_modules/@sentry/core/build/esm/utils-hoist/normalize.js","node_modules/@sentry/core/build/esm/utils-hoist/stacktrace.js","node_modules/@sentry/core/build/esm/utils-hoist/syncpromise.js","node_modules/@sentry/browser/build/npm/esm/helpers.js","node_modules/@sentry/core/build/esm/exports.js","node_modules/@sentry/core/build/esm/utils/prepareEvent.js","node_modules/@sentry/core/build/esm/constants.js","node_modules/@sentry/core/build/esm/eventProcessors.js","node_modules/@sentry/core/build/esm/utils-hoist/debug-ids.js","node_modules/@sentry/core/build/esm/utils/applyScopeDataToEvent.js","node_modules/@sentry/core/build/esm/tracing/dynamicSamplingContext.js","node_modules/@sentry/core/build/esm/semanticAttributes.js","node_modules/@sentry/core/build/esm/utils/hasSpansEnabled.js","node_modules/@sentry/core/build/esm/utils/spanUtils.js","node_modules/@sentry/core/build/esm/tracing/spanstatus.js","node_modules/@sentry/core/build/esm/tracing/utils.js","node_modules/@sentry/core/build/esm/utils-hoist/tracing.js","node_modules/@sentry/core/build/esm/utils/parseSampleRate.js","node_modules/@sentry/core/build/esm/utils-hoist/baggage.js","node_modules/@sentry/core/build/esm/client.js","node_modules/@sentry/core/build/esm/api.js","node_modules/@sentry/core/build/esm/envelope.js","node_modules/@sentry/core/build/esm/utils-hoist/dsn.js","node_modules/@sentry/core/build/esm/utils-hoist/envelope.js","node_modules/@sentry/core/build/esm/integration.js","node_modules/@sentry/core/build/esm/utils/eventUtils.js","node_modules/@sentry/core/build/esm/utils/transactionEvent.js","node_modules/@sentry/core/build/esm/utils-hoist/clientreport.js","node_modules/@sentry/core/build/esm/utils/sdkMetadata.js","node_modules/@sentry/core/build/esm/logs/exports.js","node_modules/@sentry/core/build/esm/logs/envelope.js","node_modules/@sentry/core/build/esm/utils/ipAddress.js","node_modules/@sentry/core/build/esm/utils-hoist/env.js","node_modules/@sentry/browser/build/npm/esm/debug-build.js","node_modules/@sentry/browser/build/npm/esm/integrations/breadcrumbs.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/console.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/handlers.js","node_modules/@sentry-internal/browser-utils/build/esm/instrument/dom.js","node_modules/@sentry-internal/browser-utils/build/esm/types.js","node_modules/@sentry-internal/browser-utils/build/esm/instrument/xhr.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/fetch.js","node_modules/@sentry/core/build/esm/utils-hoist/supports.js","node_modules/@sentry-internal/browser-utils/build/esm/instrument/history.js","node_modules/@sentry/core/build/esm/utils-hoist/breadcrumb-log-level.js","node_modules/@sentry/core/build/esm/breadcrumbs.js","node_modules/@sentry/core/build/esm/utils-hoist/severity.js","node_modules/@sentry/core/build/esm/utils-hoist/url.js","node_modules/@sentry/browser/build/npm/esm/integrations/browserapierrors.js","node_modules/@sentry/browser/build/npm/esm/integrations/browsersession.js","node_modules/@sentry/browser/build/npm/esm/integrations/globalhandlers.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/globalError.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/globalUnhandledRejection.js","node_modules/@sentry/browser/build/npm/esm/integrations/httpcontext.js","node_modules/@sentry/browser/build/npm/esm/integrations/linkederrors.js","node_modules/@sentry/core/build/esm/utils-hoist/aggregate-errors.js","node_modules/@sentry/browser/build/npm/esm/stack-parsers.js","node_modules/@sentry/browser/build/npm/esm/transports/fetch.js","node_modules/@sentry-internal/browser-utils/build/esm/getNativeImplementation.js","node_modules/@sentry-internal/browser-utils/build/esm/debug-build.js","node_modules/@sentry/core/build/esm/transports/base.js","node_modules/@sentry/core/build/esm/utils-hoist/promisebuffer.js","node_modules/@sentry/core/build/esm/utils-hoist/ratelimit.js","node_modules/@sentry/core/build/esm/sdk.js","node_modules/@sentry/core/build/esm/integrations/eventFilters.js","node_modules/@sentry/core/build/esm/integrations/functiontostring.js","node_modules/@sentry/core/build/esm/integrations/dedupe.js","node_modules/@sentry/browser/build/npm/esm/tracing/browserTracingIntegration.js","node_modules/@sentry/browser/build/npm/esm/tracing/backgroundtab.js","node_modules/@sentry/browser/build/npm/esm/tracing/linkedTraces.js","node_modules/@sentry/browser/build/npm/esm/tracing/request.js","node_modules/@sentry/core/build/esm/fetch.js","node_modules/@sentry/core/build/esm/tracing/sentryNonRecordingSpan.js","node_modules/@sentry/core/build/esm/tracing/trace.js","node_modules/@sentry/core/build/esm/tracing/logSpans.js","node_modules/@sentry/core/build/esm/tracing/sampling.js","node_modules/@sentry/core/build/esm/tracing/sentrySpan.js","node_modules/@sentry/core/build/esm/tracing/measurement.js","node_modules/@sentry/core/build/esm/utils/traceData.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/instrument.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/getCLS.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/bindReporter.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/initMetric.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/generateUniqueID.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/getActivationStart.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/getNavigationEntry.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/observe.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/onHidden.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/runOnce.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/onFCP.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/getVisibilityWatcher.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/whenActivated.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/getFID.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/getINP.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/interactions.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/polyfills/interactionCountPolyfill.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/whenIdle.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/getLCP.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/onTTFB.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/utils.js","node_modules/@sentry/core/build/esm/tracing/errors.js","node_modules/@sentry/core/build/esm/tracing/idleSpan.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/browserMetrics.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/cls.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/inp.js","node_modules/@sentry-internal/replay/build/npm/esm/index.js","node_modules/@sentry/core/build/esm/utils-hoist/isBrowser.js","node_modules/@sentry/core/build/esm/utils-hoist/node.js","node_modules/@sentry-internal/browser-utils/build/esm/networkUtils.js","node_modules/@sentry/core/build/esm/utils/isSentryRequestUrl.js","scripts/breadcrumbs.js","scripts/utils/utils.js","node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js","node_modules/@repobit/dex-data-layer/dist/src/events/page-loaded-event/index.js","node_modules/@repobit/dex-data-layer/dist/src/events/product-loaded-event/index.js","_virtual/cjs.js","_virtual/_commonjsHelpers.js","node_modules/deepmerge/dist/cjs.js","node_modules/@repobit/dex-data-layer/dist/src/events/button-click-event/index.js","scripts/libs/constants.js","node_modules/@repobit/dex-utils/dist/src/utils.js"])))=>i.map(i=>d[i]);
-import{__vitePreload as x}from"../_virtual/preload-helper.js";import P from"../node_modules/@repobit/dex-launch/dist/src/index.js";import{AdobeDataLayerService as N}from"../node_modules/@repobit/dex-data-layer/dist/src/adobe-data-layer-service/index.js";import"../node_modules/@repobit/dex-utils/dist/src/index.js";import{PageLoadedEvent as _}from"../node_modules/@repobit/dex-data-layer/dist/src/events/page-loaded-event/index.js";import{adobeMcAppendVisitorId as I,target as w}from"./target.js";import M from"./page.js";import{getMetadata as m,decorateTemplateAndTheme as T,loadCSS as h,waitForLCP as B,loadHeader as $,loadBlocks as g,loadFooter as O,sampleRUM as p,decorateButtons as k,decorateIcons as F,decorateTags as U,decorateSections as V,decorateBlocks as z}from"./lib-franklin.js";import{resolveNonProductsDataLayer as L}from"./libs/data-layer.js";import{StoreResolver as E}from"./libs/store/resolver/resolver.js";import"./libs/store/store.js";import{pushTrialDownloadToDataLayer as R,getPageExperimentKey as S,generateLDJsonSchema as H,GLOBAL_EVENTS as W,createTag as j}from"./utils/utils.js";import{Constants as G}from"./libs/constants.js";const K=["hero","password-generator"],ge=["en"];window.hlx.plugins.add("rum-conversion",{load:"lazy",url:"../plugins/rum-conversion/src/index.js"});window.hlx.plugins.add("experimentation",{condition:()=>m("experiment"),options:{prodHost:"www.bitdefender.com"},url:"../plugins/experimentation/src/index.js"});window.ADOBE_MC_EVENT_LOADED=!1;function f(e){const o=document.createElement("div");o.setAttribute(`data-${e}-detector`,""),document.body.append(o)}function v(e,o){const a=document.createElement("meta");a.setAttribute("name",e),a.setAttribute("content",o),document.head.append(a)}function Le(){const e=window.location.pathname;return{language:e.split("/")[1].split("-")[0],country:e.split("/")[1].split("-")[1]}}function y(e){const{pathname:o}=window.location,t=o.charAt(o.length-1)==="/";let n=o.split("/");if(t)return`${n.join("/")}${e}`;const l=o.startsWith("/pages/")?3:2;return n=n.slice(0,l+1),`${n.join("/")}/${e}`}function J(e){e.querySelectorAll("picture").forEach(o=>{if(!o.closest("div.block")&&o.parentElement.tagName!=="DIV"){const a=o.parentNode.nextElementSibling;if(a){const t=a.querySelector("a"),n=t?.textContent;if(t&&n.startsWith("https://")&&n.includes("fragments")){t.innerHTML="",t.className="video-placeholder",t.appendChild(o);const l=document.createElement("span");l.className="video-placeholder-play",t.appendChild(l),t.addEventListener("click",async d=>{d.preventDefault();const s=await b(n,"video-modal");document.body.append(s)});const r=t.parentElement;r.childNodes.length===1&&(r.tagName==="P"||r.tagName==="DIV")&&r.classList.add("modal-video-container");return}if(t&&n.startsWith("https://")){t.innerHTML="",t.className="linked-image";const l=o.parentNode;t.append(o),l.children.length===0&&l.parentNode.removeChild(l);const r=t.parentElement;r.childNodes.length===1&&(r.tagName==="P"||r.tagName==="DIV")&&r.classList.add("linked-image-container")}}}})}function A(e){k(e),F(e),U(e),J(e),V(e),z(e)}async function b(e,o,a){const t=document.createElement("div");if(t.classList.add("modal-container"),a){const i=e.split("/").pop();t.classList.add(i)}const n=document.createElement("div");n.classList.add("modal-content");const l=await fetch(`${e}.plain.html`);if(!l.ok)return console.error(`modal url cannot be loaded: ${e}`),t;const r=await l.text();n.innerHTML=r,A(n),await g(n),t.append(n),o&&t.classList.add(o);const d=()=>{if(a){t.classList.add("global-display-none");return}t.remove()},s=document.createElement("div");return s.classList.add("modal-close"),s.addEventListener("click",d),n.append(s),t}async function Q(e){e.querySelectorAll("a.button.modal").forEach(o=>{o.addEventListener("click",async a=>{a.preventDefault();const t=o.dataset.stopAutomaticModalRefresh==="true";if(t){const l=o.href.split("/").pop(),r=document.querySelector(`div.modal-container.${l}`);if(r){r.classList.remove("global-display-none");return}}const n=await b(o.href,void 0,t);document.body.append(n),await E.resolve(n),n.querySelectorAll(".await-loader").forEach(l=>{l.classList.remove("await-loader")})})})}function C(e){if(e.querySelectorAll(".columns div div").length===2){const o=e.querySelector(".columns div div:last-child");o.classList.add("right-col"),e.querySelector(".columns div div:last-child").classList.add("right-col");const a=e.querySelector(".columns div div:first-child");a.classList.add("left-col"),e.querySelectorAll(".right-column").forEach(t=>o.append(t)),e.querySelectorAll(".left-column").forEach(t=>a.append(t))}}function X(e){if(e.querySelectorAll(".hero div div").length===2){const o=e.querySelector(".hero div div:last-child");o.classList.add("right-col"),e.querySelector(".hero div div:last-child").classList.add("right-col");const a=e.querySelector(".hero div div:first-child");a.classList.add("left-col"),e.querySelectorAll(".right-column").forEach(t=>o.append(t)),e.querySelectorAll(".left-column").forEach(t=>a.append(t))}}function Y(e){e.querySelectorAll("div.section.two-columns").forEach(o=>{X(o),C(o)})}function Z(e){C(e);const o=j("div",{class:"full-width"},"");[...e.children].forEach(a=>o.append(a)),e.append(o)}function ee(e){e.querySelectorAll("div.section.cta, div.section.footer-cta").forEach(Z)}async function q(){const e=window.location.pathname.indexOf("/drafts/")===-1,o=()=>{document.dispatchEvent(new Event(W.ADOBE_MC_LOADED)),window.ADOBE_MC_EVENT_LOADED=!0};if(e)try{await P.load(M.environment),o()}catch{w.abort()}else w.abort(),o()}async function te(e){S()&&(q(),await L()),v("nav",`${y("nav")}`),v("footer",`${y("footer")}`),T();const o=m("template");m("template")!==""&&h(`${window.hlx.codeBasePath}/scripts/template-factories/${o}.css`);const t=e.querySelector("main");t&&(A(t),ee(t),Y(t),Q(t),document.body.classList.add("appear","franklin"),window.location.href.indexOf("scuderiaferrari")!==-1&&document.body.classList.add("sferrari"),await B(K))}async function oe(e){const o=e.querySelector("main"),a=window.location.pathname.indexOf("/fragments/")===-1,t=window.location.pathname.indexOf("/webview/")===-1;e.querySelector("header").style.height="0px",a&&t&&(e.querySelector("header").style.height="initial",$(e.querySelector("header"))),S()||(q(),await L()),await g(o);const{hash:n}=window.location,l=n?e.getElementById(n.substring(1)):!1;n&&l&&l.scrollIntoView(),a&&t&&O(e.querySelector("footer")),H(),h(`${window.hlx.codeBasePath}/styles/lazy-styles.css`),window.hlx.plugins.run("loadLazy");const r=m("template");m("template")!==""&&h(`${window.hlx.codeBasePath}/scripts/template-factories/${r}-lazy.css`).catch(()=>{}),p("lazy"),p.observe(o.querySelectorAll("div[data-block-name]")),p.observe(o.querySelectorAll("picture > img"))}function ae(){document.querySelectorAll(".dropdown-slider").forEach(e=>{const o=e.querySelectorAll(".title"),a=e.querySelectorAll(".loading-bar");let t=0,n;function l(i){const c=a[i];c.style.width="0";let u=0;const D=setInterval(()=>{u+=1,c.style.width=`${u}%`,u>=100&&clearInterval(D)},30)}function r(){o.forEach((i,c)=>{c===t?(i.parentNode.classList.add("active"),i.closest(".dropdown-slider").setAttribute("style",`min-height: ${i.parentNode.querySelector(".description").offsetHeight+50}px`),a.length&&l(c)):i.parentNode.classList.remove("active")}),t=(t+1)%o.length}function d(){n=setInterval(r,4e3)}function s(){clearInterval(n)}r(),a.length&&(setTimeout(()=>{d()},1e3),o.forEach((i,c)=>{i.addEventListener("click",()=>{s(),t=c,l(c),r(),d()})}))})}function ne(){window.setTimeout(()=>(window.hlx.plugins.load("delayed"),window.hlx.plugins.run("loadDelayed"),ae(),x(()=>import("./delayed.js"),__vite__mapDeps([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153]))),3e3)}async function le(){await window.hlx.plugins.load("eager"),new URLSearchParams(window.location.search).get("theme")==="dark"&&window.location.href.includes("canvas")&&(document.body.style="background-color: #141517"),await te(document),await window.hlx.plugins.load("lazy"),await G.PRODUCT_ID_MAPPINGS_CALL,await oe(document),await E.resolve();const o=document.querySelectorAll(".await-loader");document.dispatchEvent(new Event("bd_page_ready")),window.bd_page_ready=!0,o.forEach(t=>{t.classList.remove("await-loader")}),document.querySelectorAll(".loader-circle").forEach(t=>{t.classList.remove("loader-circle")}),I("main"),R(),N.push(new _),ne()}f("mobile");f("tablet");f("desktop");le();export{ge as SUPPORTED_LANGUAGES,v as createMetadata,b as createModal,A as decorateMain,J as default,Q as detectModalButtons,Le as getLanguageCountryFromPath,y as getLocalizedResourceUrl,q as loadTrackers};
-//# sourceMappingURL=scripts.js.map
+import Launch from '@repobit/dex-launch';
+import Target from '@repobit/dex-target';
+import { PageLoadedEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
+import page from './page.js';
+import {
+  sampleRUM,
+  loadHeader,
+  loadFooter,
+  decorateButtons,
+  decorateIcons,
+  decorateTags,
+  decorateSections,
+  decorateBlocks,
+  decorateTemplateAndTheme,
+  waitForLCP,
+  loadBlocks,
+  loadCSS,
+  getMetadata,
+} from './lib-franklin.js';
+import {
+  resolveNonProductsDataLayer,
+} from './libs/data-layer.js';
+import { StoreResolver } from './libs/store/index.js';
+
+import {
+  adobeMcAppendVisitorId,
+  createTag,
+  getPageExperimentKey,
+  GLOBAL_EVENTS,
+  pushTrialDownloadToDataLayer,
+  generateLDJsonSchema,
+} from './utils/utils.js';
+import { Constants } from './libs/constants.js';
+
+const LCP_BLOCKS = ['hero', 'password-generator']; // add your LCP blocks to the list
+
+export const SUPPORTED_LANGUAGES = ['en'];
+
+window.hlx.plugins.add('rum-conversion', {
+  load: 'lazy',
+  url: '../plugins/rum-conversion/src/index.js',
+});
+
+window.hlx.plugins.add('experimentation', {
+  condition: () => getMetadata('experiment'),
+  options: {
+    prodHost: 'www.bitdefender.com',
+  },
+  url: '../plugins/experimentation/src/index.js',
+});
+
+window.ADOBE_MC_EVENT_LOADED = false;
+
+function initMobileDetector(viewport) {
+  const mobileDetectorDiv = document.createElement('div');
+  mobileDetectorDiv.setAttribute(`data-${viewport}-detector`, '');
+  document.body.append(mobileDetectorDiv);
+}
+
+/**
+ * Creates a meta tag with the given name and value and appends it to the head.
+ * @param {String} name The name of the meta tag
+ * @param {String} value The value of the meta tag
+ */
+export function createMetadata(name, value) {
+  const meta = document.createElement('meta');
+  meta.setAttribute('name', name);
+  meta.setAttribute('content', value);
+  document.head.append(meta);
+}
+
+export function getLanguageCountryFromPath() {
+  const currentPathUrl = window.location.pathname;
+  return {
+    language: currentPathUrl.split('/')[1].split('-')[0],
+    country: currentPathUrl.split('/')[1].split('-')[1],
+  };
+}
+
+export function getLocalizedResourceUrl(resourceName) {
+  const { pathname } = window.location;
+  const lastCharFromUrl = pathname.charAt(pathname.length - 1);
+  const lpIsInFolder = lastCharFromUrl === '/';
+
+  let pathnameAsArray = pathname.split('/');
+
+  if (lpIsInFolder) {
+    return `${pathnameAsArray.join('/')}${resourceName}`;
+  }
+
+  const basePathIndex = pathname.startsWith('/pages/') ? 3 : 2;
+  pathnameAsArray = pathnameAsArray.slice(0, basePathIndex + 1); // "/consumer/en";
+
+  return `${pathnameAsArray.join('/')}/${resourceName}`;
+}
+
+/**
+ * Decorates picture elements with a link to a video.
+ * @param {Element} main The main element
+ */
+export default function decorateLinkedPictures(main) {
+  main.querySelectorAll('picture').forEach((picture) => {
+    // this condition checks if the picture is part of some content block ( rte )
+    // and not a direct element in some DIV block
+    // that could have different behaviour for some blocks (ex: columns )
+    if (!picture.closest('div.block') && picture.parentElement.tagName !== 'DIV') {
+      const next = picture.parentNode.nextElementSibling;
+      if (next) {
+        const a = next.querySelector('a');
+        const link = a?.textContent;
+        /* Modal video */
+        if (a && link.startsWith('https://') && link.includes('fragments')) {
+          a.innerHTML = '';
+          a.className = 'video-placeholder';
+          a.appendChild(picture);
+          const overlayPlayButton = document.createElement('span');
+          overlayPlayButton.className = 'video-placeholder-play';
+          a.appendChild(overlayPlayButton);
+          a.addEventListener('click', async (event) => {
+            event.preventDefault();
+            // eslint-disable-next-line no-use-before-define
+            const modalContainer = await createModal(link, 'video-modal');
+            document.body.append(modalContainer);
+          });
+          const up = a.parentElement;
+          if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+            up.classList.add('modal-video-container');
+          }
+          return;
+        }
+        // Basic linked image
+        if (a && link.startsWith('https://')) {
+          a.innerHTML = '';
+          a.className = 'linked-image';
+          const pictureParent = picture.parentNode;
+          a.append(picture);
+          if (pictureParent.children.length === 0) {
+            pictureParent.parentNode.removeChild(pictureParent);
+          }
+          const up = a.parentElement;
+          if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+            up.classList.add('linked-image-container');
+          }
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Decorates the main element.
+ * @param {Element} main The main element
+ */
+// eslint-disable-next-line import/prefer-default-export
+export function decorateMain(main) {
+  // hopefully forward compatible button decoration
+  decorateButtons(main);
+  decorateIcons(main);
+  decorateTags(main);
+  decorateLinkedPictures(main);
+  decorateSections(main);
+  decorateBlocks(main);
+}
+
+/**
+ *
+ * @param {String} path The path to the modal
+ * @param {String} template The template to use for the modal styling
+ * @param {Boolean} stopAutomaticRefresh Wether the modal refreshes after exiting or not
+ * @returns {Promise<Element>}
+ * @example
+ */
+export async function createModal(path, template, stopAutomaticRefresh) {
+  const modalContainer = document.createElement('div');
+  modalContainer.classList.add('modal-container');
+
+  // add the class which makes the modal identifiable in the page
+  if (stopAutomaticRefresh) {
+    const modalClass = path.split('/').pop();
+    modalContainer.classList.add(modalClass);
+  }
+
+  const modalContent = document.createElement('div');
+  modalContent.classList.add('modal-content');
+
+  // fetch modal content
+  const resp = await fetch(`${path}.plain.html`);
+
+  if (!resp.ok) {
+    // eslint-disable-next-line no-console
+    console.error(`modal url cannot be loaded: ${path}`);
+    return modalContainer;
+  }
+
+  const html = await resp.text();
+  modalContent.innerHTML = html;
+
+  decorateMain(modalContent);
+  await loadBlocks(modalContent);
+  modalContainer.append(modalContent);
+
+  // add class to modal container for opportunity to add custom modal styling
+  if (template) modalContainer.classList.add(template);
+
+  const closeModal = () => {
+    // if the modal is still supposed to exist just hide it
+    if (stopAutomaticRefresh) {
+      modalContainer.classList.add('global-display-none');
+      return;
+    }
+
+    // if it's supposed to refresh delete it so that it can be rerendered
+    modalContainer.remove();
+  };
+
+  const close = document.createElement('div');
+  close.classList.add('modal-close');
+  close.addEventListener('click', closeModal);
+  modalContent.append(close);
+  return modalContainer;
+}
+
+export async function detectModalButtons(main) {
+  main.querySelectorAll('a.button.modal').forEach((link) => {
+    link.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
+
+      // if we wish for the button to not generate a new modal everytime
+      if (stopAutomaticModalRefresh) {
+        // we use the last part of the link to identify the modals
+        const modalClass = link.href.split('/').pop();
+
+        // check if the modal exists in the page
+        const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+        if (existingModal) {
+          // if it exists just display it
+          existingModal.classList.remove('global-display-none');
+          return;
+        }
+      }
+
+      // generate new modal
+      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
+      document.body.append(modalContainer);
+      await StoreResolver.resolve(modalContainer);
+      modalContainer.querySelectorAll('.await-loader').forEach((element) => {
+        element.classList.remove('await-loader');
+      });
+    });
+  });
+}
+
+function populateColumns(section) {
+  if (section.querySelectorAll('.columns div div').length === 2) {
+    const rightColContainer = section.querySelector('.columns div div:last-child');
+    rightColContainer.classList.add('right-col');
+    section.querySelector('.columns div div:last-child').classList.add('right-col');
+    const leftColContainer = section.querySelector('.columns div div:first-child');
+    leftColContainer.classList.add('left-col');
+
+    section.querySelectorAll('.right-column').forEach((el) => rightColContainer.append(el));
+    section.querySelectorAll('.left-column').forEach((el) => leftColContainer.append(el));
+  }
+}
+
+function populateHero(section) {
+  if (section.querySelectorAll('.hero div div').length === 2) {
+    const rightColContainer = section.querySelector('.hero div div:last-child');
+    rightColContainer.classList.add('right-col');
+    section.querySelector('.hero div div:last-child').classList.add('right-col');
+    const leftColContainer = section.querySelector('.hero div div:first-child');
+    leftColContainer.classList.add('left-col');
+
+    section.querySelectorAll('.right-column').forEach((el) => rightColContainer.append(el));
+    section.querySelectorAll('.left-column').forEach((el) => leftColContainer.append(el));
+  }
+}
+
+function buildTwoColumnsSection(main) {
+  main.querySelectorAll('div.section.two-columns').forEach((section) => {
+    populateHero(section);
+    populateColumns(section);
+  });
+}
+
+function buildCta(section) {
+  populateColumns(section);
+  const fullWidthContainer = createTag(
+    'div',
+    { class: 'full-width' },
+    '',
+  );
+  [...section.children].forEach((el) => fullWidthContainer.append(el));
+  section.append(fullWidthContainer);
+}
+
+function buildCtaSections(main) {
+  main.querySelectorAll('div.section.cta, div.section.footer-cta')
+    .forEach(buildCta);
+}
+
+export async function loadTrackers() {
+  const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
+
+  const onAdobeMcLoaded = () => {
+    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
+    window.ADOBE_MC_EVENT_LOADED = true;
+  };
+
+  if (isPageNotInDraftsFolder) {
+    try {
+      await Launch.load(page.environment);
+      onAdobeMcLoaded();
+    } catch {
+      Target.abort();
+    }
+  } else {
+    Target.abort();
+    onAdobeMcLoaded();
+  }
+}
+
+/**
+ * Loads everything needed to get to LCP.
+ * @param {Element} doc The container element
+ */
+async function loadEager(doc) {
+  // load trackers early if there is a target experiment on the page
+  if (getPageExperimentKey()) {
+    loadTrackers();
+    await resolveNonProductsDataLayer();
+  }
+
+  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
+  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
+  decorateTemplateAndTheme();
+
+  const templateMetadata = getMetadata('template');
+  const hasTemplate = getMetadata('template') !== '';
+  if (hasTemplate) {
+    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
+  }
+  const main = doc.querySelector('main');
+  if (main) {
+    decorateMain(main);
+    buildCtaSections(main);
+    buildTwoColumnsSection(main);
+    detectModalButtons(main);
+    document.body.classList.add('appear', 'franklin');
+    if (window.location.href.indexOf('scuderiaferrari') !== -1) {
+      document.body.classList.add('sferrari');
+    }
+    await waitForLCP(LCP_BLOCKS);
+  }
+}
+
+/**
+ * Loads everything that doesn't need to be delayed.
+ * @param {Element} doc The container element
+ */
+async function loadLazy(doc) {
+  const main = doc.querySelector('main');
+
+  const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
+  const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
+  doc.querySelector('header').style.height = '0px';
+
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+    // eslint-disable-next-line no-unused-vars
+    doc.querySelector('header').style.height = 'initial';
+    loadHeader(doc.querySelector('header'));
+  }
+
+  // only call load Trackers here if there is no experiment on the page
+  if (!getPageExperimentKey()) {
+    loadTrackers();
+    await resolveNonProductsDataLayer();
+  }
+
+  // push basic events to dataLayer
+  await loadBlocks(main);
+
+  const { hash } = window.location;
+  const element = hash ? doc.getElementById(hash.substring(1)) : false;
+  if (hash && element) element.scrollIntoView();
+
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+    loadFooter(doc.querySelector('footer'));
+  }
+
+  generateLDJsonSchema();
+
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
+  window.hlx.plugins.run('loadLazy');
+
+  const templateMetadata = getMetadata('template');
+  const hasTemplate = getMetadata('template') !== '';
+  if (hasTemplate) {
+    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
+      .catch(() => {});
+  }
+
+  sampleRUM('lazy');
+  sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
+  sampleRUM.observe(main.querySelectorAll('picture > img'));
+}
+
+/**
+ * Event listener for dropdown slider dropdown-box.js component.
+ * This is imported from www-landing-pages repo.
+ * @returns {void}
+* */
+function eventOnDropdownSlider() {
+  document.querySelectorAll('.dropdown-slider').forEach((slider) => {
+    const titles = slider.querySelectorAll('.title');
+    const loadingBars = slider.querySelectorAll('.loading-bar');
+    let activeIndex = 0;
+    let interval;
+
+    function showLoadingBar(index) {
+      const loadingBar = loadingBars[index];
+      loadingBar.style.width = '0';
+      let width = 0;
+      const interval2 = setInterval(() => {
+        width += 1;
+        loadingBar.style.width = `${width}%`;
+        if (width >= 100) {
+          clearInterval(interval2);
+        }
+      }, 30); // Adjust the interval for smoother animation
+    }
+
+    function moveToNextItem() {
+      titles.forEach((title, index) => {
+        if (index === activeIndex) {
+          title.parentNode.classList.add('active');
+          title.closest('.dropdown-slider').setAttribute('style', `min-height: ${title.parentNode.querySelector('.description').offsetHeight + 50}px`);
+          if (loadingBars.length) {
+            showLoadingBar(index);
+          }
+        } else {
+          title.parentNode.classList.remove('active');
+        }
+      });
+
+      activeIndex = (activeIndex + 1) % titles.length; // Move to the next item and handle wrapping
+    }
+
+    function startAutomaticMovement() {
+      interval = setInterval(moveToNextItem, 4000); // Set the interval
+    }
+
+    function stopAutomaticMovement() {
+      clearInterval(interval); // Clear the interval
+    }
+
+    // Set the initial active item
+    moveToNextItem();
+
+    if (loadingBars.length) {
+      // Start automatic movement after the loading is complete
+      setTimeout(() => {
+        startAutomaticMovement();
+      }, 1000);
+
+      // Click event listener on titles
+      titles.forEach((title, index) => {
+        title.addEventListener('click', () => {
+          stopAutomaticMovement();
+          activeIndex = index;
+          showLoadingBar(index);
+          moveToNextItem();
+          startAutomaticMovement();
+        });
+      });
+    }
+  });
+}
+
+/**
+ * Loads everything that happens a lot later,
+ * without impacting the user experience.
+ */
+function loadDelayed() {
+  window.setTimeout(() => {
+    window.hlx.plugins.load('delayed');
+    window.hlx.plugins.run('loadDelayed');
+    // load anything that can be postponed to the latest here
+    eventOnDropdownSlider();
+    // eslint-disable-next-line import/no-cycle
+    return import('./delayed.js');
+  }, 3000);
+}
+
+async function loadPage() {
+  await window.hlx.plugins.load('eager');
+
+  // specific for webview
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('theme') === 'dark' && window.location.href.includes('canvas')) {
+    document.body.style = 'background-color: #141517';
+  }
+
+  await loadEager(document);
+  await window.hlx.plugins.load('lazy');
+  await Constants.PRODUCT_ID_MAPPINGS_CALL;
+  // eslint-disable-next-line import/no-unresolved
+  await loadLazy(document);
+
+  await StoreResolver.resolve();
+  const elements = document.querySelectorAll('.await-loader');
+  document.dispatchEvent(new Event('bd_page_ready'));
+  window.bd_page_ready = true;
+  elements.forEach((element) => {
+    element.classList.remove('await-loader');
+  });
+
+  // loader circle used in mbox-canvas
+  const loaderCircle = document.querySelectorAll('.loader-circle');
+  loaderCircle.forEach((element) => {
+    element.classList.remove('loader-circle');
+  });
+
+  adobeMcAppendVisitorId('main');
+
+  pushTrialDownloadToDataLayer();
+  // eslint-disable-next-line import/no-unresolved
+  // const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
+  //   .then((FingerprintJS) => FingerprintJS.load({
+  //     region: 'eu',
+  //   }));
+
+  // Get the visitorId when you need it.
+  // await fpPromise
+  //   .then((fp) => fp.get())
+  //   .then((result) => {
+  //     const { visitorId } = result;
+  //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
+  //   });
+  AdobeDataLayerService.push(new PageLoadedEvent());
+
+  loadDelayed();
+}
+
+initMobileDetector('mobile');
+initMobileDetector('tablet');
+initMobileDetector('desktop');
+
+loadPage();

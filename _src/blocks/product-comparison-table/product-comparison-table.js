@@ -1,16 +1,303 @@
-import{createNanoBlock as x,renderNanoBlocks as E,matchHeights as u}from"../../scripts/utils/utils.js";x("priceComparison",(e,t,n,r,i,a)=>{a.setAttribute("data-store-id",e),a.setAttribute("data-store-option",t),a.setAttribute("data-store-department","consumer"),a.setAttribute("data-store-event","product-comparison"),a.setAttribute("data-store-context","");const s=document.createElement("div");s.classList.add("product-comparison-price");const d=r.closest(".section").dataset.old_price_text??"",f=r.closest(".section").dataset.new_price_label??"",m=r.closest(".section").dataset.save_text??"",o=document.createElement("p");s.appendChild(o),o.innerText="-",o.classList.add("old-price-container");const c=document.createElement("strong");s.appendChild(c),c.innerText="-",c.classList.add("current-price-container");const p=document.createElement("p");if(s.appendChild(p),e.includes("free"))return o.innerHTML=`
+import { createNanoBlock, renderNanoBlocks, matchHeights } from '../../scripts/utils/utils.js';
+
+createNanoBlock('priceComparison', (code, variant, label, block, productIndex, columnEl) => {
+  columnEl.setAttribute('data-store-id', code);
+  columnEl.setAttribute('data-store-option', variant);
+  columnEl.setAttribute('data-store-department', 'consumer');
+  columnEl.setAttribute('data-store-event', 'product-comparison');
+  columnEl.setAttribute('data-store-context', '');
+
+  const priceRoot = document.createElement('div');
+  priceRoot.classList.add('product-comparison-price');
+  const oldPriceText = block.closest('.section').dataset.old_price_text ?? '';
+  const newPriceLabel = block.closest('.section').dataset.new_price_label ?? '';
+  const saveText = block.closest('.section').dataset.save_text ?? '';
+  const oldPriceElement = document.createElement('p');
+  priceRoot.appendChild(oldPriceElement);
+  oldPriceElement.innerText = '-';
+  oldPriceElement.classList.add('old-price-container');
+  const priceElement = document.createElement('strong');
+  priceRoot.appendChild(priceElement);
+  priceElement.innerText = '-';
+  priceElement.classList.add('current-price-container');
+  const priceAppliedOnTime = document.createElement('p');
+  priceRoot.appendChild(priceAppliedOnTime);
+  // create a mock buyzone for free products
+  if (code.includes('free')) {
+    oldPriceElement.innerHTML = `
      <div class="old-price-box">
       </div>
-    `,c.innerHTML=`<div class="new-price-box">
-      <span class="await-loader total-text">${n} </span>
+    `;
+    priceElement.innerHTML = `<div class="new-price-box">
+      <span class="await-loader total-text">${label} </span>
       <sup class="per-price"> </sup>
-    </div>`,p.innerHTML="<p><p>",s;o.innerHTML=`
+    </div>`;
+    priceAppliedOnTime.innerHTML = '<p><p>';
+    return priceRoot;
+  }
+
+  oldPriceElement.innerHTML = `
     <div class="old-price-box">
-      <span  data-store-hide="no-price=discounted;type=visibility">${d} <del data-store-price="full"></del></span>
-      <span class="savings d-none" data-store-hide="no-price=discounted;type=visibility"><span data-store-discount="percentage"></span> ${m}</span>
-    </div>`,c.innerHTML=`
+      <span  data-store-hide="no-price=discounted;type=visibility">${oldPriceText} <del data-store-price="full"></del></span>
+      <span class="savings d-none" data-store-hide="no-price=discounted;type=visibility"><span data-store-discount="percentage"></span> ${saveText}</span>
+    </div>`;
+  priceElement.innerHTML = `
     <div class="new-price-box">
       <span class="await-loader total-text" data-store-price="discounted||full"> </span>
-      <sup class="per-price"> ${f} </sup>
-    </div>`,p.innerHTML=n;const l=a.querySelector(".button-container a");return(l.href.includes("/buy/")||l.href.includes("#buylink"))&&(l.href="#",l.setAttribute("data-store-buy-link","")),s});function L(e,t,n){n.currentTarget.classList.toggle("expanded"),n.currentTarget.nextElementSibling.classList.toggle("expanded"),n.currentTarget.nextElementSibling.classList.toggle("collapsed"),[...e].forEach((r,i)=>{r.classList.contains("expanded")&&i!==t&&(r.classList.remove("expanded"),r.classList.add("collpased"),r.nextElementSibling.classList.remove("expanded"),r.nextElementSibling.classList.add("collapsed"))})}function b(e,t){if(!t||t.length===0)return;let n=0;e.forEach((r,i)=>{const a=t.indexOf(i);if(a!==-1||i===0){n=t[a];return}r.setAttribute("expandable-row-index",n)}),t.forEach(r=>{const i=[...e].filter(s=>s.getAttribute("expandable-row-index")===`${r}`),a=document.createElement("div");a.classList.add("hidden-rows-wrapper"),a.setAttribute("role","rowgroup"),a.append(...i),e[r].after(a)})}function g(e){e.forEach((t,n)=>{t.classList.contains("expandable-row")&&t.nextElementSibling!==null&&t.nextElementSibling.childElementCount>0&&!t.nextElementSibling.classList.contains("expandable-row")&&(t.classList.add("expandable-arrow"),t.nextElementSibling.classList.add("collapsed"),t.addEventListener("click",L.bind(null,e,n)))})}function y(e){const t=[];e.forEach((n,r)=>{n.querySelectorAll("h4").length===0||n.classList.contains("product-comparison-header")||(n.classList.add("expandable-row"),t.push(r))}),b(e,t),g(e)}function v(e){const t=e.querySelectorAll('div[role="row"]');y(t)}function A(e){e.setAttribute("role","table"),e.querySelectorAll("div").forEach(n=>{n.childElementCount>1&&n.parentElement.getAttribute("role")==="table"?n.setAttribute("role","row"):n.hasAttribute("role")||n.setAttribute("role","cell")}),[...e.querySelector("div > div").children].forEach(n=>{n.setAttribute("role","columnheader")})}function S(e){e.querySelectorAll("div").forEach(async t=>{if(t.textContent.match(/^yes/i)){t.textContent="";const n=document.createElement("div");n.classList.add("yes-check"),t.appendChild(n)}else if(t.textContent.match(/^no/i)){t.textContent="";const n=document.createElement("div");n.classList.add("no-check"),t.appendChild(n)}})}function h(e){e.children.length>0&&[...e.children].forEach(t=>{h(t)}),e.tagName==="STRONG"&&e.parentElement&&(e.parentElement.innerHTML=e.textContent)}function w(e){const t=e.querySelector("div > div");t.classList.add("product-comparison-header"),[...t.children].forEach(n=>{const r=n.querySelector("p.button-container");if(r){r.previousElementSibling?.classList.add("per-year-statement");const a=r.nextElementSibling;a?.classList.add("product-comparison-header-subtitle"),a?.nextElementSibling?.classList.add("product-comparison-header-subtitle")}})}function T(e){e.forEach(t=>{t.querySelectorAll(".button-container").forEach(n=>n.classList.add("red"))})}function C(e){const t=e.querySelectorAll('div[role="columnheader"]');[...t].filter(r=>[...r.children].length>1).length>2?e.classList.add("with-fixed-width"):[...t].forEach((r,i)=>{i!==0&&r.classList.add("column-fixed-width")})}function H(e){const t=e.querySelectorAll('div[role="columnheader"]'),n=[...t].findIndex(i=>i.innerHTML.includes("<strong>"));if(n<=0){T(t);return}[...e.querySelectorAll('div[role="row"]')].forEach(i=>i.children[n].classList.add("active"))}function q(e){const n=[...e.querySelectorAll('div[role="columnheader"]')].findIndex(i=>i.innerHTML.includes("<em>"));if(n<=0)return;[...e.querySelectorAll('div[role="row"]')].forEach(i=>i.children[n].classList.add("display-price-below"))}function R(e){e.removeAttribute("role"),[...e.children].forEach(t=>{(t.tagName==="H3"||t.innerText.match(/devices/i))&&t.remove()})}function P(e){const t=e.querySelector('div[role="row"]:last-of-type'),n=t.cloneNode(!0);n.classList.add("product-comparison-last-row-with-prices"),t.after(n),[...n.children].forEach((r,i)=>{if(r.innerHTML="",r.classList.contains("display-price-below")){const a=e.querySelector('div[role="row"]');if(a){const d=a.children[i].cloneNode(!0);R(d),r.appendChild(d)}}})}function B(e){A(e),S(e),v(e),C(e),H(e),q(e),w(e),e.querySelector('div[role="columnheader"] em')&&P(e),h(e);const t=[...e.children[0].children].slice(1),n=e.querySelector(".product-comparison-last-row-with-prices");[...t,n].forEach((r,i)=>{r&&E(r,void 0,i,e)}),u(e,"h3"),u(e,".old-price-container"),u(e,".product-comparison-price")}export{B as default};
-//# sourceMappingURL=product-comparison-table.js.map
+      <sup class="per-price"> ${newPriceLabel} </sup>
+    </div>`;
+  priceAppliedOnTime.innerHTML = label;
+
+  // update buy link
+  const buyLink = columnEl.querySelector('.button-container a');
+  if (buyLink.href.includes('/buy/') || buyLink.href.includes('#buylink')) {
+    buyLink.href = '#';
+    buyLink.setAttribute('data-store-buy-link', '');
+  }
+
+  return priceRoot;
+});
+
+function handleExpanableRowClick(rows, expandableRowIndex, evt) {
+  evt.currentTarget.classList.toggle('expanded');
+  evt.currentTarget.nextElementSibling.classList.toggle('expanded');
+  evt.currentTarget.nextElementSibling.classList.toggle('collapsed');
+
+  [...rows].forEach((row, index) => {
+    if (row.classList.contains('expanded') && index !== expandableRowIndex) {
+      row.classList.remove('expanded');
+      row.classList.add('collpased');
+      row.nextElementSibling.classList.remove('expanded');
+      row.nextElementSibling.classList.add('collapsed');
+    }
+  });
+}
+
+function markHiddenRowsUnderExpandableRows(rows, expandableRowsIndexes) {
+  if (!expandableRowsIndexes || expandableRowsIndexes.length === 0) {
+    return;
+  }
+  let lastExpandableRow = 0;
+
+  rows.forEach((row, rowIndex) => {
+    const index = expandableRowsIndexes.indexOf(rowIndex);
+    if (index !== -1 || rowIndex === 0) {
+      lastExpandableRow = expandableRowsIndexes[index];
+      return;
+    }
+
+    row.setAttribute('expandable-row-index', lastExpandableRow);
+  });
+
+  expandableRowsIndexes.forEach((expandableRowIndex) => {
+    const groupOfHiddenRows = [...rows].filter((row) => row.getAttribute('expandable-row-index') === `${expandableRowIndex}`);
+    const hiddenRowsWrapper = document.createElement('div');
+    hiddenRowsWrapper.classList.add('hidden-rows-wrapper');
+    hiddenRowsWrapper.setAttribute('role', 'rowgroup');
+    hiddenRowsWrapper.append(...groupOfHiddenRows);
+    rows[expandableRowIndex].after(hiddenRowsWrapper);
+  });
+}
+
+function addArrowAndEventToExpandableRows(rows) {
+  rows.forEach((row, index) => {
+    if (row.classList.contains('expandable-row')
+      && row.nextElementSibling !== null
+      && row.nextElementSibling.childElementCount > 0
+      && !row.nextElementSibling.classList.contains('expandable-row')) {
+      row.classList.add('expandable-arrow');
+      row.nextElementSibling.classList.add('collapsed');
+      row.addEventListener('click', handleExpanableRowClick.bind(null, rows, index));
+    }
+  });
+}
+
+function addClassesForExpandableRows(rows) {
+  const expandableRowsIndexes = [];
+
+  rows.forEach((row, index) => {
+    const expandableRowMarker = row.querySelectorAll('h4');
+    if (expandableRowMarker.length === 0 || row.classList.contains('product-comparison-header')) {
+      return;
+    }
+
+    row.classList.add('expandable-row');
+    expandableRowsIndexes.push(index);
+  });
+
+  markHiddenRowsUnderExpandableRows(rows, expandableRowsIndexes);
+  addArrowAndEventToExpandableRows(rows);
+}
+
+function setExpandableRows(block) {
+  const rows = block.querySelectorAll('div[role="row"]');
+  addClassesForExpandableRows(rows);
+}
+
+function addAccesibilityRoles(block) {
+  block.setAttribute('role', 'table');
+
+  block.querySelectorAll('div')
+    .forEach((div) => {
+      if (div.childElementCount > 1 && div.parentElement.getAttribute('role') === 'table') {
+        div.setAttribute('role', 'row');
+      } else if (!div.hasAttribute('role')) {
+        div.setAttribute('role', 'cell');
+      }
+    });
+
+  const header = block.querySelector('div > div');
+  [...header.children].forEach((headerColumns) => {
+    headerColumns.setAttribute('role', 'columnheader');
+  });
+}
+
+function replaceTableTextToProperCheckmars(block) {
+  block.querySelectorAll('div')
+    .forEach(async (div) => {
+      if (div.textContent.match(/^yes/i)) {
+        div.textContent = '';
+        const icon = document.createElement('div');
+        icon.classList.add('yes-check');
+        div.appendChild(icon);
+      } else if (div.textContent.match(/^no/i)) {
+        div.textContent = '';
+        const icon = document.createElement('div');
+        icon.classList.add('no-check');
+        div.appendChild(icon);
+      }
+    });
+}
+
+function extractTextFromStrongTagToParent(element) {
+  if (element.children.length > 0) {
+    [...element.children].forEach((children) => {
+      extractTextFromStrongTagToParent(children);
+    });
+  }
+
+  if (element.tagName === 'STRONG' && element.parentElement) {
+    element.parentElement.innerHTML = element.textContent;
+  }
+}
+
+function buildTableHeader(block) {
+  const header = block.querySelector('div > div');
+  header.classList.add('product-comparison-header');
+  [...header.children].forEach((headerColumn) => {
+    const buttonSection = headerColumn.querySelector('p.button-container');
+    if (buttonSection) {
+      const paragraphBefore = buttonSection.previousElementSibling;
+      paragraphBefore?.classList.add('per-year-statement');
+      const paragraphAfter = buttonSection.nextElementSibling;
+      paragraphAfter?.classList.add('product-comparison-header-subtitle');
+      paragraphAfter?.nextElementSibling?.classList.add('product-comparison-header-subtitle');
+    }
+  });
+}
+
+function setBuyButtonsToPrimary(columnHeaders) {
+  columnHeaders.forEach((columnHeader) => {
+    columnHeader.querySelectorAll('.button-container')
+      .forEach((button) => button.classList.add('red'));
+  });
+}
+
+function setColumnsStyle(block) {
+  const columnHeaders = block.querySelectorAll('div[role="columnheader"]');
+  const numberOfProductHeaders = [...columnHeaders]
+    .filter((columnHeader) => [...columnHeader.children].length > 1).length;
+
+  if (numberOfProductHeaders > 2) {
+    block.classList.add('with-fixed-width');
+  } else {
+    [...columnHeaders].forEach((columnHeader, index) => {
+      if (index === 0) return;
+      columnHeader.classList.add('column-fixed-width');
+    });
+  }
+}
+
+function setActiveColumn(block) {
+  const columnHeaders = block.querySelectorAll('div[role="columnheader"]');
+
+  const tableActiveColumn = [...columnHeaders]
+    .findIndex((header) => header.innerHTML.includes('<strong>'));
+
+  if (tableActiveColumn <= 0) {
+    setBuyButtonsToPrimary(columnHeaders);
+    return;
+  }
+
+  const rows = block.querySelectorAll('div[role="row"]');
+  [...rows].forEach((row) => row.children[tableActiveColumn].classList.add('active'));
+}
+
+function setColumnWithPriceDisplayedAlsoBelow(block) {
+  const columnHeaders = block.querySelectorAll('div[role="columnheader"]');
+  const columnWithPriceBelow = [...columnHeaders]
+    .findIndex((header) => header.innerHTML.includes('<em>'));
+
+  if (columnWithPriceBelow <= 0) {
+    return;
+  }
+
+  const rows = block.querySelectorAll('div[role="row"]');
+  [...rows].forEach((row) => row.children[columnWithPriceBelow].classList.add('display-price-below'));
+}
+
+function removeNotNeededRoles(element) {
+  element.removeAttribute('role');
+
+  [...element.children].forEach((children) => {
+    if (children.tagName === 'H3' || children.innerText.match(/devices/i)) {
+      children.remove();
+    }
+  });
+}
+
+function addProductPriceBelowSelectedColumn(block) {
+  const lastRow = block.querySelector('div[role="row"]:last-of-type');
+  const copiedRow = lastRow.cloneNode(true);
+
+  copiedRow.classList.add('product-comparison-last-row-with-prices');
+  lastRow.after(copiedRow);
+  [...copiedRow.children].forEach((cell, index) => {
+    cell.innerHTML = '';
+    if (cell.classList.contains('display-price-below')) {
+      const headerRow = block.querySelector('div[role="row"]');
+      if (headerRow) {
+        const headerCellToCopy = headerRow.children[index];
+        const copiedCell = headerCellToCopy.cloneNode(true);
+        removeNotNeededRoles(copiedCell);
+        cell.appendChild(copiedCell);
+      }
+    }
+  });
+}
+
+export default function decorate(block) {
+  addAccesibilityRoles(block);
+  replaceTableTextToProperCheckmars(block);
+  setExpandableRows(block);
+  setColumnsStyle(block);
+  setActiveColumn(block);
+  setColumnWithPriceDisplayedAlsoBelow(block);
+  buildTableHeader(block);
+  if (block.querySelector('div[role="columnheader"] em')) {
+    addProductPriceBelowSelectedColumn(block);
+  }
+
+  extractTextFromStrongTagToParent(block);
+  const headerList = [...block.children[0].children].slice(1);
+  const lastRowWithPrice = block.querySelector('.product-comparison-last-row-with-prices');
+  [...headerList, lastRowWithPrice].forEach((item, idx) => {
+    if (item) {
+      renderNanoBlocks(item, undefined, idx, block);
+    }
+  });
+
+  matchHeights(block, 'h3');
+  matchHeights(block, '.old-price-container');
+  matchHeights(block, '.product-comparison-price');
+}

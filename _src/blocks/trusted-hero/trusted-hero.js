@@ -1,9 +1,23 @@
-async function s(r){const[a,i]=[...r.children],e=new URL(i.textContent.trim()),n=new URLSearchParams(e.search),c="";let t=n.get("v")?encodeURIComponent(n.get("v")):"";const l=e.pathname;e.origin.includes("youtu.be")&&([,t]=e.pathname.split("/")),r.innerHTML=`
+export default async function decorate(block) {
+  const [rte, videoUrl] = [...block.children];
+
+  const autoplay = false;
+  const url = new URL(videoUrl.textContent.trim());
+  const usp = new URLSearchParams(url.search);
+  const suffix = autoplay ? '&muted=1&autoplay=1' : '';
+  let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : '';
+  const embed = url.pathname;
+
+  if (url.origin.includes('youtu.be')) {
+    [, vid] = url.pathname.split('/');
+  }
+
+  block.innerHTML = `
     <div class="default-content-wrapper">
-        <div class="rte-wrapper">${a.innerHTML}</div>
+        <div class="rte-wrapper">${rte.innerHTML}</div>
         <div class="video-wrapper">
             <iframe 
-              src="https://www.youtube.com${t?`/embed/${t}?rel=0&v=${t}${c}`:l}"
+              src="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; picture-in-picture"
               allowfullscreen="" 
               scrolling="no"
@@ -11,5 +25,10 @@ async function s(r){const[a,i]=[...r.children],e=new URL(i.textContent.trim()),n
               loading="lazy"></iframe>
         </div>
     </div>
-  `,r.querySelectorAll(".button-container > a").forEach(o=>{o.target="_blank",o.rel="noopener noreferrer"})}export{s as default};
-//# sourceMappingURL=trusted-hero.js.map
+  `;
+
+  block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
+    anchorEl.target = '_blank';
+    anchorEl.rel = 'noopener noreferrer';
+  });
+}
