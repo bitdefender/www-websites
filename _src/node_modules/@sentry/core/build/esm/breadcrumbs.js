@@ -1,0 +1,2 @@
+import{getClient as a,getIsolationScope as d}from"./currentScopes.js";import{consoleSandbox as s}from"./utils-hoist/logger.js";import{dateTimestampInSeconds as u}from"./utils-hoist/time.js";const f=100;function S(c,t){const e=a(),i=d();if(!e)return;const{beforeBreadcrumb:o=null,maxBreadcrumbs:m=f}=e.getOptions();if(m<=0)return;const n={timestamp:u(),...c},r=o?s(()=>o(n,t)):n;r!==null&&(e.emit&&e.emit("beforeAddBreadcrumb",r,t),i.addBreadcrumb(r,m))}export{S as addBreadcrumb};
+//# sourceMappingURL=breadcrumbs.js.map

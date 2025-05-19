@@ -1,15 +1,2 @@
-/**
- * @param {HTMLElement} button 
- * @param {import("../resolver").Context} context 
- */
-export const resolve = (button, context) => {
-    if (!button.dataset.storeClickClassToggle) { return; }
-
-    button.addEventListener("click", () => {
-        context.clickAttributes.forEach(clickAttribute =>
-            clickAttribute.dataset.storeClickClassToggle
-            && clickAttribute.classList.remove(button.dataset.storeClickClassToggle)
-        )
-        button.classList.add(button.dataset.storeClickClassToggle);
-    });
-}
+const l=(s,a)=>{s.dataset.storeClickClassToggle&&s.addEventListener("click",()=>{a.clickAttributes.forEach(e=>e.dataset.storeClickClassToggle&&e.classList.remove(s.dataset.storeClickClassToggle)),s.classList.add(s.dataset.storeClickClassToggle)})};export{l as resolve};
+//# sourceMappingURL=classToggle.js.map

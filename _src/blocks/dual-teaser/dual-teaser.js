@@ -1,36 +1,19 @@
-import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { matchHeights } from '../../scripts/utils/utils.js';
-
-export default async function decorate(block) {
-  const cols = [...block.children[1].children];
-  const middleSvgIcon = block.children[0].querySelector('span');
-
-  block.innerHTML = `
+import{decorateIcons as l}from"../../scripts/lib-franklin.js";import{matchHeights as u}from"../../scripts/utils/utils.js";async function h(t){const r=[...t.children[1].children],n=t.children[0].querySelector("span");t.innerHTML=`
     <div class="default-content-wrapper">
-        ${cols.map((col, idx) => {
-    const pictureEl = col.querySelector('picture');
-    const richTextEls = col ? [...col.children] : '';
-    richTextEls.shift();
-    const [titleEl, subtitleEl, buttonEl] = richTextEls;
-
-    return `
+        ${r.map((e,c)=>{const o=e.querySelector("picture"),i=e?[...e.children]:"";i.shift();const[s,d,a]=i;return`
         <div class="col-container">
             <div class="card">
                 <div class="img-container">
-                    ${pictureEl?.outerHTML ?? ''}
+                    ${o?.outerHTML??""}
                 </div>
                 <div class="box">
-                    ${titleEl?.outerHTML}
-                    <div>${subtitleEl?.innerHTML ?? ''}</div>
-                    ${buttonEl?.outerHTML ?? ''}
+                    ${s?.outerHTML}
+                    <div>${d?.innerHTML??""}</div>
+                    ${a?.outerHTML??""}
                 </div>
             </div>
-            ${idx === 1 ? middleSvgIcon?.outerHTML : ''}
+            ${c===1?n?.outerHTML:""}
         </div>
-    `;
-  }).join('')}   
-  `;
-
-  decorateIcons(block);
-  matchHeights(block, '.box');
-}
+    `}).join("")}   
+  `,l(t),u(t,".box")}export{h as default};
+//# sourceMappingURL=dual-teaser.js.map

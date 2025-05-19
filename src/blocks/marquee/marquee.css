@@ -1,0 +1,69 @@
+/* stylelint-disable custom-property-pattern */
+.marquee-container.section {
+  padding: 0;
+  position: relative;
+  overflow: unset;
+  max-width: 100%;
+}
+
+.marquee-container .marquee.block {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.marquee-container .title {
+  font: normal normal 600 12px/15px "IBM Plex Sans", sans-serif;
+  letter-spacing: 0;
+}
+
+.marquee-container .marquee-content {
+  display: flex;
+  animation: scrolling 10s linear infinite;
+
+  --translateX: 100%;
+
+  height: 100%;
+}
+
+.marquee-container .marquee-item {
+  flex: 0 0 85px;
+  margin: 0 20px;
+}
+
+.marquee-container .marquee-item img {
+  display: block;
+  width: 100%;
+  object-fit: contain;
+}
+
+.marquee-container .outer-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+@keyframes scrolling {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(var(--translateX) * -1)); }
+}
+
+@media (min-width: 990px) {
+  .marquee-container .marquee.block {
+    height: 120px;
+  }
+
+  .marquee-container .title {
+    font: normal normal 600 18px/23px "IBM Plex Sans", sans-serif;
+    position: absolute;
+    top: -45px;
+    z-index: 1;
+  }
+}
+
+@media (min-width: 1600px) {
+  .marquee-container .title {
+    margin-left: -25px
+  }
+}
