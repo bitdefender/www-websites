@@ -8,8 +8,6 @@ export default function decorate(block) {
     return children.length;
   };
 
-  console.log('a');
-
   [...block.children].forEach((child) => {
     if (countChildren(child) === 2) {
       child.classList.add('cards');
