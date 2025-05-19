@@ -1,0 +1,2 @@
+import{GLOBAL_OBJ as c}from"./worldwide.js";let t,f,n;function p(g){const r=c._sentryDebugIds;if(!r)return{};const s=Object.keys(r);return n&&s.length===f||(f=s.length,n=s.reduce((l,e)=>{t||(t={});const u=t[e];if(u)l[u[0]]=u[1];else{const i=g(e);for(let o=i.length-1;o>=0;o--){const d=i[o]?.filename,a=r[e];if(d&&a){l[d]=a,t[e]=[d,a];break}}}return l},{})),n}export{p as getFilenameToDebugIdMap};
+//# sourceMappingURL=debug-ids.js.map

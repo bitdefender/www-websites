@@ -1,27 +1,2 @@
-/**
- * @param {HTMLElement} element 
- * @param {import("../resolver").Context} context 
- */
-const resolve = async (element, { product, option }) => {
-    if (element.dataset.storeBuyLink === undefined || !option) { return; }
-
-    const attributes = element.dataset.storeBuyLink === '' || element.dataset.storeBuyLink === 'empty'
-        ? []
-        : element.dataset.storeBuyLink.split(",");
-
-    const button = element.nodeName === "A"
-        ? element
-        : element.querySelector("a");
-
-    if (!button) { return; }
-
-    button.href = await option.getStoreUrl(attributes);
-    button.setAttribute("data-product", option.getId());
-    button.setAttribute("data-buy-price", option.getDiscountedPrice("value") || option.getPrice("value"));
-    button.setAttribute("data-old-price", option.getPrice("value"));
-    button.setAttribute("data-currency", option.getSymbol());
-    button.setAttribute("data-variation", `${option.getDevices()}u-${option.getSubscription("years")}y`);
-};
-
-export { resolve };
+const s=async(e,{product:u,option:t})=>{if(e.dataset.storeBuyLink===void 0||!t)return;const a=e.dataset.storeBuyLink===""||e.dataset.storeBuyLink==="empty"?[]:e.dataset.storeBuyLink.split(","),r=e.nodeName==="A"?e:e.querySelector("a");r&&(r.href=await t.getStoreUrl(a),r.setAttribute("data-product",t.getId()),r.setAttribute("data-buy-price",t.getDiscountedPrice("value")||t.getPrice("value")),r.setAttribute("data-old-price",t.getPrice("value")),r.setAttribute("data-currency",t.getSymbol()),r.setAttribute("data-variation",`${t.getDevices()}u-${t.getSubscription("years")}y`))};export{s as resolve};
 //# sourceMappingURL=buyLink.js.map

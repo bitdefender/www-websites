@@ -1,0 +1,2 @@
+import{GLOBAL_OBJ as t}from"../worldwide.js";import{addHandler as d,maybeInstrument as u,triggerHandlers as i}from"./handlers.js";let e=null;function p(n){const r="error";d(r,n),u(r,m)}function m(){e=t.onerror,t.onerror=function(n,r,o,a,l){return i("error",{column:a,error:l,line:o,msg:n,url:r}),e?e.apply(this,arguments):!1},t.onerror.__SENTRY_INSTRUMENTED__=!0}export{p as addGlobalErrorInstrumentationHandler};
+//# sourceMappingURL=globalError.js.map

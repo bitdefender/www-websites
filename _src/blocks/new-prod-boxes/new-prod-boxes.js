@@ -1,476 +1,52 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["scripts/lib-franklin.js","node_modules/@repobit/dex-utils/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/cookies.js","node_modules/js-cookie/dist/js.cookie.js","node_modules/@repobit/dex-utils/dist/src/user.js","node_modules/@repobit/dex-constants/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/cssua.js","scripts/page.js","node_modules/@repobit/dex-utils/dist/src/page.js"])))=>i.map(i=>d[i]);
-import { __vitePreload } from '../../_virtual/preload-helper.js';
-import { checkIfNotProductPage, formatPrice, matchHeights } from '../../scripts/utils/utils.js';
-import '../../scripts/libs/store/resolver/resolver.js';
-import { Store, ProductInfo } from '../../scripts/libs/store/store.js';
-
-function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
-  let priceAttribute = 'discounted||full';
-
-  if (type === 'monthly') {
-    priceAttribute = hideDecimals === 'true' ? 'discounted-monthly-no-decimal||full-monthly' : 'discounted-monthly||full-monthly';
-    if (prodName.endsWith('m')) {
-      priceAttribute = hideDecimals === 'true' ? 'discounted-no-decimal||full' : 'discounted||full';
-    }
-  }
-
-  return priceAttribute;
-}
-
-async function updateProductPrice(prodName, saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
-  let priceElement = document.createElement('div');
-  let newPrice = document.createElement('span');
-
-  let priceAttribute = setDiscountedPriceAttribute(type, hideDecimals, prodName);
-  newPrice.setAttribute('data-store-price', priceAttribute);
-
-  let oldPrice = 'data-store-price="full"';
-  let billedPrice = 'data-store-price="discounted||full"';
-  if (hideDecimals === 'true') {
-    oldPrice = 'data-store-price="full-no-decimal"';
-    billedPrice = 'data-store-price="discounted-no-decimal||full-no-decimal"';
-  }
-
-  priceElement.innerHTML = `
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["scripts/lib-franklin.js","node_modules/@repobit/dex-utils/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/cookies.js","node_modules/js-cookie/dist/js.cookie.js","node_modules/@repobit/dex-utils/dist/src/user.js","node_modules/@repobit/dex-constants/dist/src/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/index.js","node_modules/@repobit/dex-utils/dist/src/user-agent/cssua.js","scripts/page.js","node_modules/@repobit/dex-utils/dist/src/page.js","node_modules/@sentry/browser/build/npm/esm/sdk.js","node_modules/@sentry/browser/build/npm/esm/client.js","node_modules/@sentry/browser/build/npm/esm/eventbuilder.js","node_modules/@sentry/core/build/esm/utils-hoist/is.js","node_modules/@sentry/core/build/esm/utils-hoist/misc.js","node_modules/@sentry/core/build/esm/utils-hoist/object.js","node_modules/@sentry/core/build/esm/debug-build.js","node_modules/@sentry/core/build/esm/utils-hoist/browser.js","node_modules/@sentry/core/build/esm/utils-hoist/worldwide.js","node_modules/@sentry/core/build/esm/utils-hoist/logger.js","node_modules/@sentry/core/build/esm/carrier.js","node_modules/@sentry/core/build/esm/utils-hoist/version.js","node_modules/@sentry/core/build/esm/utils-hoist/string.js","node_modules/@sentry/core/build/esm/currentScopes.js","node_modules/@sentry/core/build/esm/asyncContext/index.js","node_modules/@sentry/core/build/esm/asyncContext/stackStrategy.js","node_modules/@sentry/core/build/esm/defaultScopes.js","node_modules/@sentry/core/build/esm/scope.js","node_modules/@sentry/core/build/esm/session.js","node_modules/@sentry/core/build/esm/utils-hoist/time.js","node_modules/@sentry/core/build/esm/utils/merge.js","node_modules/@sentry/core/build/esm/utils/spanOnScope.js","node_modules/@sentry/core/build/esm/utils-hoist/propagationContext.js","node_modules/@sentry/core/build/esm/utils-hoist/normalize.js","node_modules/@sentry/core/build/esm/utils-hoist/stacktrace.js","node_modules/@sentry/core/build/esm/utils-hoist/syncpromise.js","node_modules/@sentry/browser/build/npm/esm/helpers.js","node_modules/@sentry/core/build/esm/exports.js","node_modules/@sentry/core/build/esm/utils/prepareEvent.js","node_modules/@sentry/core/build/esm/constants.js","node_modules/@sentry/core/build/esm/eventProcessors.js","node_modules/@sentry/core/build/esm/utils-hoist/debug-ids.js","node_modules/@sentry/core/build/esm/utils/applyScopeDataToEvent.js","node_modules/@sentry/core/build/esm/tracing/dynamicSamplingContext.js","node_modules/@sentry/core/build/esm/semanticAttributes.js","node_modules/@sentry/core/build/esm/utils/hasSpansEnabled.js","node_modules/@sentry/core/build/esm/utils/spanUtils.js","node_modules/@sentry/core/build/esm/tracing/spanstatus.js","node_modules/@sentry/core/build/esm/tracing/utils.js","node_modules/@sentry/core/build/esm/utils-hoist/tracing.js","node_modules/@sentry/core/build/esm/utils/parseSampleRate.js","node_modules/@sentry/core/build/esm/utils-hoist/baggage.js","node_modules/@sentry/core/build/esm/client.js","node_modules/@sentry/core/build/esm/api.js","node_modules/@sentry/core/build/esm/envelope.js","node_modules/@sentry/core/build/esm/utils-hoist/dsn.js","node_modules/@sentry/core/build/esm/utils-hoist/envelope.js","node_modules/@sentry/core/build/esm/integration.js","node_modules/@sentry/core/build/esm/utils/eventUtils.js","node_modules/@sentry/core/build/esm/utils/transactionEvent.js","node_modules/@sentry/core/build/esm/utils-hoist/clientreport.js","node_modules/@sentry/core/build/esm/utils/sdkMetadata.js","node_modules/@sentry/core/build/esm/logs/exports.js","node_modules/@sentry/core/build/esm/logs/envelope.js","node_modules/@sentry/core/build/esm/utils/ipAddress.js","node_modules/@sentry/core/build/esm/utils-hoist/env.js","node_modules/@sentry/browser/build/npm/esm/debug-build.js","node_modules/@sentry/browser/build/npm/esm/integrations/breadcrumbs.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/console.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/handlers.js","node_modules/@sentry-internal/browser-utils/build/esm/instrument/dom.js","node_modules/@sentry-internal/browser-utils/build/esm/types.js","node_modules/@sentry-internal/browser-utils/build/esm/instrument/xhr.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/fetch.js","node_modules/@sentry/core/build/esm/utils-hoist/supports.js","node_modules/@sentry-internal/browser-utils/build/esm/instrument/history.js","node_modules/@sentry/core/build/esm/utils-hoist/breadcrumb-log-level.js","node_modules/@sentry/core/build/esm/breadcrumbs.js","node_modules/@sentry/core/build/esm/utils-hoist/severity.js","node_modules/@sentry/core/build/esm/utils-hoist/url.js","node_modules/@sentry/browser/build/npm/esm/integrations/browserapierrors.js","node_modules/@sentry/browser/build/npm/esm/integrations/browsersession.js","node_modules/@sentry/browser/build/npm/esm/integrations/globalhandlers.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/globalError.js","node_modules/@sentry/core/build/esm/utils-hoist/instrument/globalUnhandledRejection.js","node_modules/@sentry/browser/build/npm/esm/integrations/httpcontext.js","node_modules/@sentry/browser/build/npm/esm/integrations/linkederrors.js","node_modules/@sentry/core/build/esm/utils-hoist/aggregate-errors.js","node_modules/@sentry/browser/build/npm/esm/stack-parsers.js","node_modules/@sentry/browser/build/npm/esm/transports/fetch.js","node_modules/@sentry-internal/browser-utils/build/esm/getNativeImplementation.js","node_modules/@sentry-internal/browser-utils/build/esm/debug-build.js","node_modules/@sentry/core/build/esm/transports/base.js","node_modules/@sentry/core/build/esm/utils-hoist/promisebuffer.js","node_modules/@sentry/core/build/esm/utils-hoist/ratelimit.js","node_modules/@sentry/core/build/esm/sdk.js","node_modules/@sentry/core/build/esm/integrations/eventFilters.js","node_modules/@sentry/core/build/esm/integrations/functiontostring.js","node_modules/@sentry/core/build/esm/integrations/dedupe.js","node_modules/@sentry/browser/build/npm/esm/tracing/browserTracingIntegration.js","node_modules/@sentry/browser/build/npm/esm/tracing/backgroundtab.js","node_modules/@sentry/browser/build/npm/esm/tracing/linkedTraces.js","node_modules/@sentry/browser/build/npm/esm/tracing/request.js","node_modules/@sentry/core/build/esm/fetch.js","node_modules/@sentry/core/build/esm/tracing/sentryNonRecordingSpan.js","node_modules/@sentry/core/build/esm/tracing/trace.js","node_modules/@sentry/core/build/esm/tracing/logSpans.js","node_modules/@sentry/core/build/esm/tracing/sampling.js","node_modules/@sentry/core/build/esm/tracing/sentrySpan.js","node_modules/@sentry/core/build/esm/tracing/measurement.js","node_modules/@sentry/core/build/esm/utils/traceData.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/instrument.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/getCLS.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/bindReporter.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/initMetric.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/generateUniqueID.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/getActivationStart.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/getNavigationEntry.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/observe.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/onHidden.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/runOnce.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/onFCP.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/getVisibilityWatcher.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/whenActivated.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/getFID.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/getINP.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/interactions.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/polyfills/interactionCountPolyfill.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/lib/whenIdle.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/getLCP.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/web-vitals/onTTFB.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/utils.js","node_modules/@sentry/core/build/esm/tracing/errors.js","node_modules/@sentry/core/build/esm/tracing/idleSpan.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/browserMetrics.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/cls.js","node_modules/@sentry-internal/browser-utils/build/esm/metrics/inp.js","node_modules/@sentry-internal/replay/build/npm/esm/index.js","node_modules/@sentry/core/build/esm/utils-hoist/isBrowser.js","node_modules/@sentry/core/build/esm/utils-hoist/node.js","node_modules/@sentry-internal/browser-utils/build/esm/networkUtils.js","node_modules/@sentry/core/build/esm/utils/isSentryRequestUrl.js"])))=>i.map(i=>d[i]);
+import{__vitePreload as Ue}from"../../_virtual/preload-helper.js";import{checkIfNotProductPage as Ye,formatPrice as Le,matchHeights as v}from"../../scripts/utils/utils.js";import"../../scripts/libs/store/resolver/resolver.js";import{Store as je,ProductInfo as xe}from"../../scripts/libs/store/store.js";function Ie(t,l,u){let s="discounted||full";return t==="monthly"&&(s=l==="true"?"discounted-monthly-no-decimal||full-monthly":"discounted-monthly||full-monthly",u.endsWith("m")&&(s=l==="true"?"discounted-no-decimal||full":"discounted||full")),s}async function Te(t,l,u=null,s=null,x=null,i=null,e=""){let h=document.createElement("div"),o=document.createElement("span"),f=Ie(x,i,t);o.setAttribute("data-store-price",f);let c='data-store-price="full"',p='data-store-price="discounted||full"';return i==="true"&&(c='data-store-price="full-no-decimal"',p='data-store-price="discounted-no-decimal||full-no-decimal"'),h.innerHTML=`
       <div class="hero-aem__price mt-3">
         <div>
-          <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
-          <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
+          <span class="prod-oldprice" ${c} data-store-hide="no-price=discounted"></span>
+          <span class="prod-save" data-store-hide="no-price=discounted">${l} <span data-store-discount="percentage"></span> </span>
         </div>
         <div class="newprice-container mt-2">
-          <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
+          <span class="prod-newprice"> ${o.outerHTML}  ${e&&`<sup class="per-m">${e.textContent.replace("0","")}</sup>`}</span>
         </div>
-        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
-        <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector?.innerText}</a>
-      </div>`;
-  return priceElement;
-}
-
-function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = 'default') {
-  const planSwitcher = document.createElement('div');
-  planSwitcher.classList.add('plan-switcher');
-  planSwitcher.classList.toggle('addon', variant === 'addon');
-
-  let radioArray = ['yearly', 'monthly', '3-rd-button'];
-  if (variant === 'addon') {
-    radioArray = ['add-on-yearly', 'add-on-monthly'];
-  }
-
-  Array.from(radioButtons.children).forEach((radio, idx) => {
-    let radioText = radio.textContent;
-    let plan = radioArray[idx];
-    let productName = prodsNames[idx];
-    let prodUser = prodsUsers[idx];
-    let prodYear = prodsYears[idx];
-    let checked = idx === 0 ? 'checked' : '';
-    let defaultCheck = radio.textContent.match(/\[checked\]/g);
-    if (defaultCheck) {
-      radioText = radioText.replace('[checked]', '');
-      checked = 'checked';
-    }
-
-    if (productName) {
-      planSwitcher.innerHTML += `
-        <input data-store-click-set-product data-store-product-id="${productName}" data-store-product-option="${prodUser}-${prodYear}" data-store-product-department="consumer" type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
-        <label for="${plan}-${productName.trim()}" class="radio-label">${radioText}</label><br>
-      `;
-    }
-  });
-
-  return planSwitcher;
-}
-
-function createFeatureList(featuresSet) {
-  return Array.from(featuresSet).map((table) => {
-    const trList = Array.from(table.querySelectorAll('tr'));
-    const liString = trList.map((tr) => {
-      const tdList = Array.from(tr.querySelectorAll('td'));
-      let firstTdContent = tdList.length > 0 && tdList[0].textContent.trim() !== '' ? `${tdList[0].innerHTML}` : '';
-      const secondTdContent = tdList.length > 1 && tdList[1].textContent.trim() !== '' ? `<span class="white-pill-content">${tdList[1].innerHTML}</span>` : '';
-      let liClass = '';
-
-      if (firstTdContent === '') {
-        liClass += 'd-none';
-      }
-
-      if (firstTdContent.indexOf('?pill') !== -1) {
-        let pillText = firstTdContent.match(/\?pill (\w+)/);
-        let iconElement = firstTdContent.match(/<span class="[^"]*">(.*?)<\/span>/);
-        if (pillText) {
-          let icon = tdList[0].querySelector('span');
-          const pillElement = document.createElement('span');
-          pillElement.classList.add('blue-pill');
-          pillElement.innerHTML = `${pillText[1]}${iconElement ? iconElement[0] : ''}`;
-          firstTdContent = firstTdContent.replace(pillText[0], `${pillElement.outerHTML}`);
-          if (icon) {
-            let count = 0;
-            firstTdContent = firstTdContent.replace(new RegExp(icon.outerHTML, 'g'), (match) => {
-              count += 1;
-              return (count === 2) ? '' : match;
-            });
-          }
-        }
-      }
-
-      if (firstTdContent.indexOf('&lt;pill') !== -1 || firstTdContent.indexOf('&lt;') !== -1) {
-        liClass += ' has_arrow';
-        firstTdContent = firstTdContent.replace('&lt;-', '');
-      }
-
-      if (firstTdContent.indexOf('-&gt;') !== -1 || firstTdContent.indexOf('&gt;') !== -1) {
-        liClass += ' has_arrow_right';
-        firstTdContent = firstTdContent.replace('-&gt;', '<span class="arrow-right"></span>');
-      }
-
-      if (firstTdContent.indexOf('[checkmark]') !== -1) {
-        firstTdContent = firstTdContent.replace('[checkmark]', '<span class="checkmark"></span>');
-      }
-
-      if (firstTdContent.indexOf('[add-on]') !== -1) {
-        firstTdContent = firstTdContent.replace('[add-on]', '');
-      }
-
-      if (firstTdContent.indexOf('&lt;&lt;add-on-newprice&gt;&gt;') !== -1) {
-        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-newprice&gt;&gt;', '<span class="add-on-newprice"></span>');
-      }
-      if (firstTdContent.indexOf('&lt;&lt;add-on-oldprice&gt;&gt;') !== -1) {
-        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-oldprice&gt;&gt;', '<span class="add-on-oldprice"></span>');
-      }
-
-      if (firstTdContent.indexOf('&lt;&lt;add-on-percent-save&gt;&gt;') !== -1) {
-        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-percent-save&gt;&gt;', '<span class="add-on-percent-save"></span>');
-      }
-
-      if (firstTdContent.indexOf('[[') !== -1) {
-        firstTdContent = firstTdContent.replace('[[', '(');
-      }
-
-      if (firstTdContent.indexOf(']]') !== -1) {
-        firstTdContent = firstTdContent.replace(']]', ')');
-      }
-
-      const liContent = `<li class="${liClass}">${firstTdContent}${secondTdContent}</li>`;
-      return liContent;
-    }).join(' ');
-
-    return `<ul>${liString}</ul>`;
-  });
-}
-
-// Function to check if content contains [add-on] text
-function checkAddOn(featuresSet) {
-  let addOn = false;
-  // eslint-disable-next-line array-callback-return
-  Array.from(featuresSet).map((table) => {
-    const trList = Array.from(table.querySelectorAll('tr'));
-    // eslint-disable-next-line array-callback-return
-    trList.map((tr) => {
-      const tdList = Array.from(tr.querySelectorAll('td'));
-      let firstTdContent = tdList.length > 0 && tdList[0].textContent.trim() !== '' ? `${tdList[0].innerHTML}` : '';
-      if (firstTdContent.indexOf('[add-on]') !== -1) {
-        addOn = true;
-      }
-    });
-  });
-
-  return addOn;
-}
-
-async function decorate(block) {
-  const {
-    // eslint-disable-next-line no-unused-vars
-    products, familyProducts, monthlyProducts, pid, mainProduct,
-    addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
-  } = block.closest('.section').dataset;
-
-  const blockParent = block.closest('.section');
-  blockParent.classList.add('we-container');
-
-  let defaultContentWrapperElements = block.closest('.section').querySelector('.default-content-wrapper')?.children;
-  let individualSwitchText;
-  let familySwitchText;
-  if (defaultContentWrapperElements) {
-    [...defaultContentWrapperElements].forEach((element) => {
-      if (element.innerHTML.includes('&lt;slider-1 ')) {
-        element.innerHTML = element.innerHTML.replace('&lt;slider-1 ', '');
-        individualSwitchText = element.innerHTML;
-        element.remove();
-      }
-      if (element.innerHTML.includes('&lt;slider-2 ')) {
-        element.innerHTML = element.innerHTML.replace('&lt;slider-2 ', '');
-        familySwitchText = element.innerHTML;
-        element.remove();
-      }
-    });
-  }
-
-  let switchBox = document.createElement('div');
-  if (individualSwitchText && familySwitchText) {
-    switchBox.classList.add('switchBox');
-    switchBox.innerHTML = `
+        ${s?`<div class="billed">${s.innerHTML.replace("0",`<span class="newprice-2" ${p}></span>`)}</div>`:""}
+        <a data-store-buy-link href="#" class="button primary no-arrow">${u?.innerText}</a>
+      </div>`,h}function $e(t,l,u,s,x,i="default"){const e=document.createElement("div");e.classList.add("plan-switcher"),e.classList.toggle("addon",i==="addon");let h=["yearly","monthly","3-rd-button"];return i==="addon"&&(h=["add-on-yearly","add-on-monthly"]),Array.from(t.children).forEach((o,f)=>{let c=o.textContent,p=h[f],m=u[f],T=s[f],g=x[f],L=f===0?"checked":"";o.textContent.match(/\[checked\]/g)&&(c=c.replace("[checked]",""),L="checked"),m&&(e.innerHTML+=`
+        <input data-store-click-set-product data-store-product-id="${m}" data-store-product-option="${T}-${g}" data-store-product-department="consumer" type="radio" id="${p}-${m.trim()}" name="${l}-${i}" value="${l}-${p}-${m.trim()}" ${L}>
+        <label for="${p}-${m.trim()}" class="radio-label">${c}</label><br>
+      `)}),e}function Re(t){return Array.from(t).map(l=>`<ul>${Array.from(l.querySelectorAll("tr")).map(x=>{const i=Array.from(x.querySelectorAll("td"));let e=i.length>0&&i[0].textContent.trim()!==""?`${i[0].innerHTML}`:"";const h=i.length>1&&i[1].textContent.trim()!==""?`<span class="white-pill-content">${i[1].innerHTML}</span>`:"";let o="";if(e===""&&(o+="d-none"),e.indexOf("?pill")!==-1){let c=e.match(/\?pill (\w+)/),p=e.match(/<span class="[^"]*">(.*?)<\/span>/);if(c){let m=i[0].querySelector("span");const T=document.createElement("span");if(T.classList.add("blue-pill"),T.innerHTML=`${c[1]}${p?p[0]:""}`,e=e.replace(c[0],`${T.outerHTML}`),m){let g=0;e=e.replace(new RegExp(m.outerHTML,"g"),L=>(g+=1,g===2?"":L))}}}return(e.indexOf("&lt;pill")!==-1||e.indexOf("&lt;")!==-1)&&(o+=" has_arrow",e=e.replace("&lt;-","")),(e.indexOf("-&gt;")!==-1||e.indexOf("&gt;")!==-1)&&(o+=" has_arrow_right",e=e.replace("-&gt;",'<span class="arrow-right"></span>')),e.indexOf("[checkmark]")!==-1&&(e=e.replace("[checkmark]",'<span class="checkmark"></span>')),e.indexOf("[add-on]")!==-1&&(e=e.replace("[add-on]","")),e.indexOf("&lt;&lt;add-on-newprice&gt;&gt;")!==-1&&(e=e.replace("&lt;&lt;add-on-newprice&gt;&gt;",'<span class="add-on-newprice"></span>')),e.indexOf("&lt;&lt;add-on-oldprice&gt;&gt;")!==-1&&(e=e.replace("&lt;&lt;add-on-oldprice&gt;&gt;",'<span class="add-on-oldprice"></span>')),e.indexOf("&lt;&lt;add-on-percent-save&gt;&gt;")!==-1&&(e=e.replace("&lt;&lt;add-on-percent-save&gt;&gt;",'<span class="add-on-percent-save"></span>')),e.indexOf("[[")!==-1&&(e=e.replace("[[","(")),e.indexOf("]]")!==-1&&(e=e.replace("]]",")")),`<li class="${o}">${e}${h}</li>`}).join(" ")}</ul>`)}function We(t){let l=!1;return Array.from(t).map(u=>{Array.from(u.querySelectorAll("tr")).map(x=>{const i=Array.from(x.querySelectorAll("td"));(i.length>0&&i[0].textContent.trim()!==""?`${i[0].innerHTML}`:"").indexOf("[add-on]")!==-1&&(l=!0)})}),l}async function ze(t){const{products:l,familyProducts:u,monthlyProducts:s,pid:x,mainProduct:i,addOnProducts:e,addOnMonthlyProducts:h,type:o,hideDecimals:f,thirdRadioButtonProducts:c,saveText:p,addonProductName:m}=t.closest(".section").dataset,T=t.closest(".section");T.classList.add("we-container");let g=t.closest(".section").querySelector(".default-content-wrapper")?.children,L,M;g&&[...g].forEach(n=>{n.innerHTML.includes("&lt;slider-1 ")&&(n.innerHTML=n.innerHTML.replace("&lt;slider-1 ",""),L=n.innerHTML,n.remove()),n.innerHTML.includes("&lt;slider-2 ")&&(n.innerHTML=n.innerHTML.replace("&lt;slider-2 ",""),M=n.innerHTML,n.remove())});let B=document.createElement("div");if(L&&M){B.classList.add("switchBox"),B.innerHTML=`
       <label class="switch">
         <input type="checkbox" id="switchCheckbox">
         <span class="slider round">
 
         </span>
-        <span class="label right">${individualSwitchText}</span>
-        <span class="label left">${familySwitchText}</span>
+        <span class="label right">${L}</span>
+        <span class="label left">${M}</span>
       </label>
-    `;
-
-    // Get the checkbox inside the switchBox
-    let switchCheckbox = switchBox.querySelector('#switchCheckbox');
-    // Add an event listener to the checkbox
-    switchCheckbox.addEventListener('change', () => {
-      if (switchCheckbox.checked) {
-        let familyBoxes = block.querySelectorAll('.family-box');
-        familyBoxes.forEach((box) => {
-          box.style.display = 'block';
-        });
-
-        let individualBoxes = block.querySelectorAll('.individual-box');
-        individualBoxes.forEach((box) => {
-          box.style.display = 'none';
-        });
-      } else {
-        let familyBoxes = block.querySelectorAll('.family-box');
-        familyBoxes.forEach((box) => {
-          box.style.display = 'none';
-        });
-
-        let individualBoxes = block.querySelectorAll('.individual-box');
-        individualBoxes.forEach((box) => {
-          box.style.display = 'block';
-        });
-      }
-    });
-  }
-
-  const productsAsList = products && products.replaceAll(' ', '').split(',');
-  const familyProductsAsList = familyProducts && familyProducts.replaceAll(' ', '').split(',');
-  const combinedProducts = productsAsList.concat(familyProductsAsList);
-  const monthlyPricesAsList = monthlyProducts && monthlyProducts.replaceAll(' ', '').split(',');
-  const thirdRadioButtonProductsAsList = thirdRadioButtonProducts && thirdRadioButtonProducts.replaceAll(' ', '').split(',');
-  const addOnProductsAsList = addOnProducts && addOnProducts.replaceAll(' ', '').split(',');
-  const addOnProductsInitial = addOnProductsAsList && addOnProductsAsList.slice(0, productsAsList.length);
-  const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.replaceAll(' ', '').split(',');
-  const billedTexts = [];
-
-  if (productsAsList.length >= 5) {
-    block.classList.add('five-cards');
-  }
-
-  if (combinedProducts.length) {
-    [...block.children].map(async (prod, key) => {
-      const mainTable = prod.querySelector('tbody');
-      const [greenTag, title, blueTag, subtitle, radioButtons, perPrice, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2, subtitle2] = [...mainTable.querySelectorAll(':scope > tr')];
-      const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
-      const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
-      const [prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears] = thirdRadioButtonProductsAsList ? thirdRadioButtonProductsAsList[key].split('/') : [];
-      const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList ? addOnProductsAsList[key].split('/') : [];
-      const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList ? addOnMonthlyProductsAsList[key].split('/') : [];
-      const featuresSet = benefitsLists.querySelectorAll('table');
-      const featureList = createFeatureList(featuresSet);
-      billedTexts.push(billed);
-      let addOn = checkAddOn(featuresSet);
-      let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
-      if (buyLinkSelector) {
-        buyLinkSelector.classList.add('button', 'primary');
-      } else {
-        buyLinkSelector = buyLink.querySelector('a');
-      }
-
-      let planSwitcher = document.createElement('div');
-      if (radioButtons && monthlyProducts) {
-        let prodsNames = [prodName, prodMonthlyName, prodThirdRadioButtonName];
-        let prodsUsers = [prodUsers, prodMonthlyUsers, prodThirdRadioButtonUsers];
-        let prodsYears = [prodYears, prodMonthlyYears, prodThirdRadioButtonYears];
-        planSwitcher = createPlanSwitcher(radioButtons, key, prodsNames, prodsUsers, prodsYears);
-      }
-      let planSwitcher2 = document.createElement('div');
-      if (addOn && addOnProducts && addOnMonthlyProducts) {
-        let prodsNames = [addOnProdName, addOnProdMonthlyName];
-        let prodsUsers = [addOnProdUsers, addOnProdMonthlyUsers];
-        let prodsYears = [addOnProdYears, addOnProdMonthlyYears];
-        planSwitcher2 = createPlanSwitcher(radioButtons, key, prodsNames, prodsUsers, prodsYears, 'addon');
-      }
-
-      let newBlueTag = document.createElement('div');
-      if (blueTag) {
-        let blueTagChildren = blueTag.children;
-        blueTagChildren = Array.from(blueTagChildren);
-        blueTagChildren.forEach((child) => {
-          // create a different blueTag element
-          newBlueTag.innerHTML += `<div class="blueTag">${child.innerHTML}</div>`;
-        });
-      }
-
-      let secondButton = buyLink?.querySelectorAll('a')[1];
-      if (secondButton) {
-        secondButton.classList.add('button', 'secondary', 'no-arrow');
-      }
-
-      // default billedText will be the first one
-      let billedText = billed?.children[0];
-      // default billed text changes if we have the [checked] flag in the planSwitcher
-      Array.from(radioButtons?.children)?.forEach((radio, idx) => {
-        if (radio.textContent.match(/\[checked\]/g)) {
-          billedText = billed.children[idx];
-        }
-      });
-
-      // set the store event on the component
-      let storeEvent = 'main-product-loaded';
-      if (checkIfNotProductPage()) {
-        storeEvent = 'product-loaded';
-      }
-      const prodBox = document.createElement('div');
-
-      let titleHTML = '';
-      const hasAnchor = title.querySelector('a');
-      if (title.textContent.trim()) {
-        if (hasAnchor) {
-          const anchorHref = hasAnchor.getAttribute('href');
-          const refactorTitle = title.textContent.replace(/(Bitdefender)(?!\s*<br>)/i, '$1<br>');
-          titleHTML = `<h4><a href="${anchorHref}" title="${title.textContent}">${refactorTitle}</a></h4>`;
-        } else {
-          titleHTML = `<h4>${title.innerHTML}</h4>`;
-        }
-      }
-
-      prodBox.innerHTML = `
-          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
-          data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
+    `;let n=B.querySelector("#switchCheckbox");n.addEventListener("change",()=>{n.checked?(t.querySelectorAll(".family-box").forEach(d=>{d.style.display="block"}),t.querySelectorAll(".individual-box").forEach(d=>{d.style.display="none"})):(t.querySelectorAll(".family-box").forEach(d=>{d.style.display="none"}),t.querySelectorAll(".individual-box").forEach(d=>{d.style.display="block"}))})}const b=l&&l.replaceAll(" ","").split(","),ge=u&&u.replaceAll(" ","").split(","),Q=b.concat(ge),X=s&&s.replaceAll(" ","").split(","),Z=c&&c.replaceAll(" ","").split(","),N=e&&e.replaceAll(" ","").split(","),ee=N&&N.slice(0,b.length),te=h&&h.replaceAll(" ","").split(","),re=[];if(b.length>=5&&t.classList.add("five-cards"),Q.length&&[...t.children].map(async(n,r)=>{const w=n.querySelector("tbody"),[d,$,ne,j,q,ie,I,R,le,de,ae,ve,W]=[...w.querySelectorAll(":scope > tr")],[S,D,k]=Q[r].split("/"),[we,Se,Ae]=X?X[r].split("/"):[],[Pe,Me,be]=Z?Z[r].split("/"):[],[A,H,O]=N?N[r].split("/"):[],[qe,He,Oe]=te?te[r].split("/"):[],se=de.querySelectorAll("table"),Ce=Re(se);re.push(I);let oe=We(se),F=n.querySelector('a[href*="#buylink"]');F?F.classList.add("button","primary"):F=R.querySelector("a");let ce=document.createElement("div");q&&s&&(ce=$e(q,r,[S,we,Pe],[D,Se,Me],[k,Ae,be]));let G=document.createElement("div");oe&&e&&h&&(G=$e(q,r,[A,qe],[H,He],[O,Oe],"addon"));let V=document.createElement("div");if(ne){let a=ne.children;a=Array.from(a),a.forEach(y=>{V.innerHTML+=`<div class="blueTag">${y.innerHTML}</div>`})}let U=R?.querySelectorAll("a")[1];U&&U.classList.add("button","secondary","no-arrow");let pe=I?.children[0];Array.from(q?.children)?.forEach((a,y)=>{a.textContent.match(/\[checked\]/g)&&(pe=I.children[y])});let z="main-product-loaded";Ye()&&(z="product-loaded");const ue=document.createElement("div");let J="";const he=$.querySelector("a");if($.textContent.trim())if(he){const a=he.getAttribute("href"),y=$.textContent.replace(/(Bitdefender)(?!\s*<br>)/i,"$1<br>");J=`<h4><a href="${a}" title="${$.textContent}">${y}</a></h4>`}else J=`<h4>${$.innerHTML}</h4>`;ue.innerHTML=`
+          <div class="prod_box${d.innerText.trim()&&" hasGreenTag"} ${r<b.length?"individual-box":"family-box"}"
+          data-store-context data-store-id="${S}" data-store-option="${D}-${k}" data-store-department="consumer" ${b.some(a=>a.includes(S))?`data-store-event="${z}"`:""}>
             <div class="inner_prod_box">
-              ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
-              ${titleHTML}
+              ${d.innerText.trim()?`<div class="greenTag2">${d.innerText.trim()}</div>`:""}
+              ${J}
 
-              <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
-              ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle.innerHTML}</p>` : ''}
+              <div class="blueTagsWrapper">${V.innerText.trim()?`${V.innerHTML.trim()}`:""}</div>
+              ${j.innerText.trim()?`<p class="subtitle${j.innerText.trim().split(/\s+/).length>8?" fixed_height":""}">${j.innerHTML}</p>`:""}
               <hr />
-              ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
-              ${radioButtons ? planSwitcher.outerHTML : ''}
+              ${W?.innerText.trim()?`<p class="subtitle-2${W.innerText.trim().split(/\s+/).length>8?" fixed_height":""}">${W.innerText.trim()}</p>`:""}
+              ${q?ce.outerHTML:""}
               <div class="hero-aem__prices await-loader"></div>
-              ${secondButton ? secondButton.outerHTML : ''}
-              ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
+              ${U?U.outerHTML:""}
+              ${le.innerText.trim()?`<div class="undeBuyLink">${le.innerText.trim()}</div>`:""}
               <hr />
-              ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
+              ${de.innerText.trim()?`<div class="benefitsLists">${Ce}</div>`:""}
               <div class="add-on-product" style="display: none;">
-                ${billed2 ? '<hr>' : ''}
-                ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
-                ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
+                ${ae?"<hr>":""}
+                ${G.outerHTML?G.outerHTML:""}
+                ${m?`<h4>${m}</h4>`:""}
                 <div class="hero-aem__prices__addon"></div>
               </div>
             </div>
-          </div>`;
-      block.children[key].outerHTML = prodBox.innerHTML;
-      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice);
-      block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
-      let addOnPriceBox;
-      if (addOn && addOnProducts) {
-        addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-        block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
-      }
-
-      let checkmark = block.children[key].querySelector('.checkmark');
-      if (checkmark) {
-        let checkmarkList = checkmark.closest('ul');
-        checkmarkList.classList.add('checkmark-list');
-
-        let li = checkmark.closest('li');
-        li.removeChild(checkmark);
-
-        let checkBox = document.createElement('input');
-        checkBox.setAttribute('type', 'checkbox');
-        checkBox.classList.add('checkmark');
-
-        // rewrite the list element so flexbox can work
-        let newLi = document.createElement('li');
-        newLi.innerHTML = `
-          ${checkBox.outerHTML}
-          <div>${li.innerHTML}</div>`;
-        li.replaceWith(newLi);
-
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-context', '');
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-id', addOnProdName);
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-department', 'consumer');
-        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(addOnProdName))) {
-          block.children[key].querySelector('.add-on-product').setAttribute('data-store-event', storeEvent);
-        }
-
-        let productObject = await Store.getProducts([new ProductInfo(prodName), new ProductInfo(addOnProdName)]);
-        let product = productObject[prodName];
-        let addOnProduct = productObject[addOnProdName];
-        if (addOnProduct) {
-          let addOnCost = addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscountedPrice('value') - product.getOption(prodUsers, prodYears).getDiscountedPrice('value');
-          addOnCost = formatPrice(addOnCost, product.getCurrency());
-
-          let addOnNewPrice = newLi.querySelector('.add-on-newprice');
-          addOnNewPrice.textContent = addOnCost;
-          let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
-          addOnOldPrice.textContent = formatPrice(addOnProduct.getOption(addOnProdUsers, addOnProdYears).getPrice('value'), addOnProduct.getCurrency());
-          let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-          addOnPercentSave.textContent = `${addOnPriceBox.querySelector('.prod-save').textContent} ${addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscount('percentageWithProcent')}`;
-
-          let checkBoxSelector = newLi.querySelector('.checkmark');
-          checkBoxSelector.addEventListener('change', () => {
-            if (checkBoxSelector.checked) {
-              checkmarkList.classList.add('checked');
-              block.children[key].querySelector('.add-on-product').style.display = 'block';
-            } else {
-              checkmarkList.classList.remove('checked');
-              block.children[key].querySelector('.add-on-product').style.display = 'none';
-            }
-          });
-        }
-      }
-    });
-  }
-
-  if (individualSwitchText && familySwitchText) {
-    block.parentNode.insertBefore(switchBox, block);
-  }
-
-  // handling of the billedText below the price
-  [...block.children].forEach((box, key) => {
-    box.querySelectorAll('.plan-switcher input').forEach((radio, idx) => {
-      radio.addEventListener('change', () => {
-        let billedText = billedTexts[key].children[idx]?.innerHTML;
-        if (billedText) {
-          box.querySelector('.billed').innerHTML = billedText;
-        }
-      });
-    });
-  });
-
-  window.hj = window.hj || function initHotjar(...args) {
-    (hj.q = hj.q || []).push(...args);
-  };
-  hj('event', 'new-prod-boxes');
-
-  // decorate icons if the component is being called from www-websites
-  const isInLandingPages = window.location.href.includes('www-landing-pages') || window.location.href.includes('bitdefender.com/pages');
-  if (!isInLandingPages) {
-    const { decorateIcons } = await __vitePreload(async () => { const { decorateIcons } = await import('../../scripts/lib-franklin.js');return { decorateIcons }},true              ?__vite__mapDeps([0,1,2,3,4,5,6,7,8,9]):void 0);
-    decorateIcons(block.closest('.section'));
-  }
-
-  if (blockParent.classList.contains('same-height-lists')) {
-    const prodCard = block.querySelector('.prod_box');
-    const featureLists = prodCard?.querySelectorAll('ul');
-    featureLists?.forEach((list, idx) => {
-      matchHeights(block, `div > ul:nth-of-type(${idx + 1})`);
-    });
-  }
-
-  matchHeights(block, '.subtitle');
-  matchHeights(block, '.subtitle-2');
-  matchHeights(block, 'h2');
-  matchHeights(block, 'h4');
-  matchHeights(block, '.plan-switcher');
-  matchHeights(block, '.blueTagsWrapper');
-}
-
-export { decorate as default };
+          </div>`,t.children[r].outerHTML=ue.innerHTML;let Ee=await Te(S,p,R.querySelector("a"),pe,o,f,ie);t.children[r].querySelector(".hero-aem__prices").appendChild(Ee);let K;oe&&e&&(K=await Te(A,p,ve.querySelector("a"),ae,o,f,ie),t.children[r].querySelector(".hero-aem__prices__addon").appendChild(K));let Y=t.children[r].querySelector(".checkmark");if(Y){let a=Y.closest("ul");a.classList.add("checkmark-list");let y=Y.closest("li");y.removeChild(Y);let C=document.createElement("input");C.setAttribute("type","checkbox"),C.classList.add("checkmark");let P=document.createElement("li");P.innerHTML=`
+          ${C.outerHTML}
+          <div>${y.innerHTML}</div>`,y.replaceWith(P),t.children[r].querySelector(".add-on-product").setAttribute("data-store-context",""),t.children[r].querySelector(".add-on-product").setAttribute("data-store-id",A),t.children[r].querySelector(".add-on-product").setAttribute("data-store-option",`${H}-${O}`),t.children[r].querySelector(".add-on-product").setAttribute("data-store-department","consumer"),ee&&ee.some(_=>_.includes(A))&&t.children[r].querySelector(".add-on-product").setAttribute("data-store-event",z);let fe=await je.getProducts([new xe(S),new xe(A)]),me=fe[S],E=fe[A];if(E){let _=E.getOption(H,O).getDiscountedPrice("value")-me.getOption(D,k).getDiscountedPrice("value");_=Le(_,me.getCurrency());let _e=P.querySelector(".add-on-newprice");_e.textContent=_;let Be=P.querySelector(".add-on-oldprice");Be.textContent=Le(E.getOption(H,O).getPrice("value"),E.getCurrency());let Ne=P.querySelector(".add-on-percent-save");Ne.textContent=`${K.querySelector(".prod-save").textContent} ${E.getOption(H,O).getDiscount("percentageWithProcent")}`;let ye=P.querySelector(".checkmark");ye.addEventListener("change",()=>{ye.checked?(a.classList.add("checked"),t.children[r].querySelector(".add-on-product").style.display="block"):(a.classList.remove("checked"),t.children[r].querySelector(".add-on-product").style.display="none")})}}}),L&&M&&t.parentNode.insertBefore(B,t),[...t.children].forEach((n,r)=>{n.querySelectorAll(".plan-switcher input").forEach((w,d)=>{w.addEventListener("change",()=>{let $=re[r].children[d]?.innerHTML;$&&(n.querySelector(".billed").innerHTML=$)})})}),window.hj=window.hj||function(...r){(hj.q=hj.q||[]).push(...r)},hj("event","new-prod-boxes"),!(window.location.href.includes("www-landing-pages")||window.location.href.includes("bitdefender.com/pages"))){const{decorateIcons:n}=await Ue(async()=>{const{decorateIcons:r}=await import("../../scripts/lib-franklin.js");return{decorateIcons:r}},__vite__mapDeps([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141]));n(t.closest(".section"))}T.classList.contains("same-height-lists")&&t.querySelector(".prod_box")?.querySelectorAll("ul")?.forEach((w,d)=>{v(t,`div > ul:nth-of-type(${d+1})`)}),v(t,".subtitle"),v(t,".subtitle-2"),v(t,"h2"),v(t,"h4"),v(t,".plan-switcher"),v(t,".blueTagsWrapper")}export{ze as default};
 //# sourceMappingURL=new-prod-boxes.js.map

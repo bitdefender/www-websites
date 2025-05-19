@@ -1,21 +1,2 @@
-/**
- * @param {HTMLElement} button 
- * @param {import("../resolver").Context} context 
- */
-const resolve = (button, context) => {
-    if (!button.dataset.storeClickIncrement) { return; }
-
-    button.addEventListener("click", () => {
-        if (button.dataset.storeClickIncrement === "devices"
-            && context.devices < (Number(button.dataset.storeMax) || Number.MAX_SAFE_INTEGER)) {
-            context.devices += 1;
-        }
-        if (button.dataset.storeClickIncrement === "years"
-            && context.years < (Number(button.dataset.storeMax) || Number.MAX_SAFE_INTEGER)) {
-            context.years += 1;
-        }
-    });
-};
-
-export { resolve };
+const s=(e,r)=>{e.dataset.storeClickIncrement&&e.addEventListener("click",()=>{e.dataset.storeClickIncrement==="devices"&&r.devices<(Number(e.dataset.storeMax)||Number.MAX_SAFE_INTEGER)&&(r.devices+=1),e.dataset.storeClickIncrement==="years"&&r.years<(Number(e.dataset.storeMax)||Number.MAX_SAFE_INTEGER)&&(r.years+=1)})};export{s as resolve};
 //# sourceMappingURL=increment.js.map

@@ -1,8 +1,2 @@
-import { getDefaultExportFromCjs } from './_commonjsHelpers.js';
-import { __require as requireCjs } from '../node_modules/deepmerge/dist/cjs.js';
-
-var cjsExports = requireCjs();
-const merge = /*@__PURE__*/getDefaultExportFromCjs(cjsExports);
-
-export { merge as default };
+import{getDefaultExportFromCjs as r}from"./_commonjsHelpers.js";import{__require as e}from"../node_modules/deepmerge/dist/cjs.js";var o=e();const m=r(o);export{m as default};
 //# sourceMappingURL=cjs.js.map

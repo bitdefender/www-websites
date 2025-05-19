@@ -1,21 +1,2 @@
-/**
- * @param {HTMLElement} button 
- * @param {import("../resolver").Context} context 
- */
-const resolve = (button, context) => {
-    if (button.dataset.storeClickSetYears === undefined) { return; }
-
-    if (button.nodeName === "SELECT") {
-        button.addEventListener("change", (e) => {
-            context.years = e.target.value;
-        });
-        return;
-    }
-
-    button.addEventListener("click", () => {
-        context.years = button.dataset.storeClickSetYears;
-    });
-};
-
-export { resolve };
+const s=(e,r)=>{if(e.dataset.storeClickSetYears!==void 0){if(e.nodeName==="SELECT"){e.addEventListener("change",a=>{r.years=a.target.value});return}e.addEventListener("click",()=>{r.years=e.dataset.storeClickSetYears})}};export{s as resolve};
 //# sourceMappingURL=setYears.js.map

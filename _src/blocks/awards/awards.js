@@ -1,25 +1,2 @@
-import { matchHeights } from '../../scripts/utils/utils.js';
-
-// eslint-disable-next-line no-unused-vars
-
-function decorate(block) {
-  // count the children of a div
-  const countChildren = (parent) => {
-    const { children } = parent;
-    return children.length;
-  };
-
-  [...block.children].forEach((child) => {
-    if (countChildren(child) === 2) {
-      child.classList.add('cards');
-      matchHeights(child, 'p');
-      matchHeights(child, 'h3');
-      [...child.children].forEach((card) => {
-        card.classList.add('card');
-      });
-    }
-  });
-}
-
-export { decorate as default };
+import{matchHeights as a}from"../../scripts/utils/utils.js";function s(c){const e=r=>{const{children:t}=r;return t.length};[...c.children].forEach(r=>{e(r)===2&&(r.classList.add("cards"),a(r,"p"),a(r,"h3"),[...r.children].forEach(t=>{t.classList.add("card")}))})}export{s as default};
 //# sourceMappingURL=awards.js.map

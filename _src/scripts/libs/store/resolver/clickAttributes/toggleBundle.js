@@ -1,18 +1,2 @@
-/**
- * @param {HTMLElement} button 
- * @param {import("../resolver").Context} context 
- */
-const resolve = (button, context) => {
-    if (button.dataset.storeClickToggleBundle === undefined) { return; }
-
-    button.addEventListener("click", () => {
-        if (context.bundle) {
-            context.setBundle(null, null);
-        } else {
-            context.setBundle(button.dataset.storeBundleId, button.dataset.storeBundleOption);
-        }
-    });
-};
-
-export { resolve };
+const d=(e,l)=>{e.dataset.storeClickToggleBundle!==void 0&&e.addEventListener("click",()=>{l.bundle?l.setBundle(null,null):l.setBundle(e.dataset.storeBundleId,e.dataset.storeBundleOption)})};export{d as resolve};
 //# sourceMappingURL=toggleBundle.js.map

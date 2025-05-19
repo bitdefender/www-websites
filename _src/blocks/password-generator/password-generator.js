@@ -1,232 +1,33 @@
-import { decorateIcons } from '../../scripts/lib-franklin.js';
-import datastorePasswordService from '../../scripts/utils/pass_service.js';
-
-/**
- * Finds a div element whose first paragraph contains the specified search text.
- * When found, removes that paragraph and returns the parent div.
- *
- * @param {HTMLElement} block - The container to search within
- * @param {string} searchText - The text to search for in the first paragraph
- * @returns {HTMLElement|null} - The div containing the specified text, or null if not found
- */
-function getDivBasedOnFirstParagraph(block, searchText) {
-  const allDivs = Array.from(block.querySelectorAll('div'));
-
-  const targetDiv = allDivs.find((div) => {
-    const firstParagraph = div.querySelector('p');
-    if (firstParagraph?.textContent.includes(searchText)) {
-      firstParagraph.remove();
-      return true;
-    }
-    return false;
-  });
-
-  return targetDiv || null;
-}
-
-function updatePasswordStrength(password, strengthElement) {
-  // Get the strength span elements
-  const strongSpan = strengthElement.querySelector('#password-result');
-  // Check if the password is strong enough using the password service
-  const thingIs = datastorePasswordService.ratePasswordFromPasswordInfo(password);
-  const rating = datastorePasswordService.fromRating(thingIs);
-  // Update the strength indicator
-  strongSpan.className = '';
-  switch (rating) {
-    case datastorePasswordService.SecurityReportConstants.passwordStrengthWeak:
-      strongSpan.textContent = datastorePasswordService.SecurityReportConstants.passwordStrengthWeak;
-      strongSpan.classList.add('weak');
-      break;
-    case datastorePasswordService.SecurityReportConstants.passwordStrengthPoor:
-      strongSpan.textContent = datastorePasswordService.SecurityReportConstants.passwordStrengthPoor;
-      strongSpan.classList.add('poor');
-      break;
-    case datastorePasswordService.SecurityReportConstants.passwordStrengthGood:
-      strongSpan.textContent = datastorePasswordService.SecurityReportConstants.passwordStrengthGood;
-      strongSpan.classList.add('good');
-      break;
-    default:
-      strongSpan.textContent = datastorePasswordService.SecurityReportConstants.passwordStrengthStrong;
-      strongSpan.classList.add('strong');
-  }
-}
-
-function createSharePopup(element) {
-  const sharePopup = document.createElement('div');
-  sharePopup.classList.add('share-popup');
-  element.insertAdjacentElement('beforeend', sharePopup);
-  return sharePopup;
-}
-
-function copyToClipboard(block, caller, popupText, password) {
-  const copyText = password;
-
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText);
-  const buttonsContainer = block.querySelector('.button-container');
-  if (buttonsContainer) {
-    const sharePopup = block.querySelector('.share-popup') || createSharePopup(caller);
-    sharePopup.textContent = `${popupText}`;
-    sharePopup.style = 'opacity: 1';
-    setTimeout(() => {
-      sharePopup.style = 'opacity:0;';
-    }, 2000);
-  }
-}
-
-// Function to adjust font size based on password length and screen width
-function adjustFontSize(input, password) {
-  if (password.length > 25 && window.innerWidth < 991) {
-    input.style.fontSize = 'calc(100% - 4px)';
-  } else {
-    input.style.fontSize = ''; // Reset to default
-  }
-}
-
-function decorate(block) {
-  const { clipboardText, selectAtLeastOneCheckboxText } = block.closest('.section').dataset;
-
-  // const breadcrumb = createTag('div', { class: 'breadcrumb' });
-  // block.closest('.section').prepend(breadcrumb);
-
-  const privacyPolicyRow = getDivBasedOnFirstParagraph(block, '<privacy-policy>');
-  privacyPolicyRow.classList.add('privacy-policy');
-
-  const passwordGeneratorRow = getDivBasedOnFirstParagraph(block, '<password-generator>');
-  passwordGeneratorRow.classList.add('password-generator-grid');
-  const passwordGeneratorColumns = [...passwordGeneratorRow.children];
-  // eslint-disable-next-line no-unused-vars
-  const [columnText, button] = passwordGeneratorColumns;
-  const [passwordLengthText, checkboxList, passwordStrengthText] = [...columnText.children];
-  columnText.remove();
-  // Process the password strength text to extract the strong and weak values
-
-  // expected output is 'Password strength strong-weak-text Strong, Weak
-  // parse the paragraph into my desired outcome
-  const strengthMatch = passwordStrengthText.innerHTML.split('strong-weak-text');
-  const [weakText, poorText, goodText, strongText] = strengthMatch[1].split(',');
-  datastorePasswordService.updatePasswordStrengthTexts(weakText, poorText, goodText, strongText);
-
-  passwordStrengthText.innerHTML = `${strengthMatch[0]} <span id='password-result' class='strong'>${strongText}</span>`;
-  const formElement = document.createElement('form');
-  formElement.classList.add('password-generator--form');
-  formElement.innerHTML = `
+import{decorateIcons as D}from"../../scripts/lib-franklin.js";import n from"../../scripts/utils/pass_service.js";function T(e,r){return Array.from(e.querySelectorAll("div")).find(a=>{const i=a.querySelector("p");return i?.textContent.includes(r)?(i.remove(),!0):!1})||null}function M(e,r){const t=r.querySelector("#password-result"),c=n.ratePasswordFromPasswordInfo(e),a=n.fromRating(c);switch(t.className="",a){case n.SecurityReportConstants.passwordStrengthWeak:t.textContent=n.SecurityReportConstants.passwordStrengthWeak,t.classList.add("weak");break;case n.SecurityReportConstants.passwordStrengthPoor:t.textContent=n.SecurityReportConstants.passwordStrengthPoor,t.classList.add("poor");break;case n.SecurityReportConstants.passwordStrengthGood:t.textContent=n.SecurityReportConstants.passwordStrengthGood,t.classList.add("good");break;default:t.textContent=n.SecurityReportConstants.passwordStrengthStrong,t.classList.add("strong")}}function H(e){const r=document.createElement("div");return r.classList.add("share-popup"),e.insertAdjacentElement("beforeend",r),r}function I(e,r,t,c){const a=c;if(navigator.clipboard.writeText(a),e.querySelector(".button-container")){const o=e.querySelector(".share-popup")||H(r);o.textContent=`${t}`,o.style="opacity: 1",setTimeout(()=>{o.style="opacity:0;"},2e3)}}function A(e,r){r.length>25&&window.innerWidth<991?e.style.fontSize="calc(100% - 4px)":e.style.fontSize=""}function z(e){const{clipboardText:r,selectAtLeastOneCheckboxText:t}=e.closest(".section").dataset;T(e,"<privacy-policy>").classList.add("privacy-policy");const a=T(e,"<password-generator>");a.classList.add("password-generator-grid");const i=[...a.children],[o,G]=i,[q,p,g]=[...o.children];o.remove();const m=g.innerHTML.split("strong-weak-text"),[P,k,R,S]=m[1].split(",");n.updatePasswordStrengthTexts(P,k,R,S),g.innerHTML=`${m[0]} <span id='password-result' class='strong'>${S}</span>`;const h=document.createElement("form");h.classList.add("password-generator--form"),h.innerHTML=`
     <div class="password-generator--input-container">
       <input class="password-generator--input" readonly>
       <input type="submit" class="password-generator--input-retry">
     </div>
     <div class="password-generator--parameters">
         <div class="range-slider-container">
-          <p>${passwordLengthText.innerText}</p>
+          <p>${q.innerText}</p>
           <input name="range" type="range" min="4" max="32" value="16" class="slider" id="password-range">
           <label for="range" id="range-label"></label>
         </div>
         <div class="form-checkboxes">
           <div>
             <input type="checkbox" id="uppercase" name="uppercase" checked />  
-            <label for="uppercase">${checkboxList.children[0].textContent}</label>
+            <label for="uppercase">${p.children[0].textContent}</label>
           </div>
           <div>
             <input type="checkbox" id="lowercase" name="lowercase" checked />  
-            <label for="lowercase">${checkboxList.children[1].textContent}</label>
+            <label for="lowercase">${p.children[1].textContent}</label>
           </div>
           <div>
             <input type="checkbox" id="numbers" name="numbers" checked />  
-            <label for="numbers">${checkboxList.children[2].textContent}</label>
+            <label for="numbers">${p.children[2].textContent}</label>
           </div>
           <div>
             <input type="checkbox" id="special" name="special" checked />  
-            <label for="special">${checkboxList.children[3].textContent}</label>
+            <label for="special">${p.children[3].textContent}</label>
           </div>
         </div>
-        <p class="password-strength">${passwordStrengthText.innerHTML}<p>
+        <p class="password-strength">${g.innerHTML}<p>
     </div>
-  `;
-
-  passwordGeneratorRow.prepend(formElement);
-  decorateIcons(block);
-
-  const passwordInput = block.querySelector('.password-generator--input');
-  const generateButton = block.querySelector('.password-generator--input-retry');
-  const copyPassword = block.querySelector("[href='#copy-link'], [href='#copy-password']");
-  copyPassword.id = 'copy-password';
-  const slider = block.querySelector('#password-range');
-  const rangeLabel = block.querySelector('#range-label');
-  const uppercaseCheckbox = block.querySelector('#uppercase');
-  const lowercaseCheckbox = block.querySelector('#lowercase');
-  const numbersCheckbox = block.querySelector('#numbers');
-  const specialCheckbox = block.querySelector('#special');
-  const strengthElement = block.querySelector('.password-strength');
-
-  // Display the default slider value
-  rangeLabel.innerHTML = slider.value;
-
-  // Update the current slider value (each time you drag the slider handle)
-  slider.oninput = function updateRangeLabel() {
-    rangeLabel.innerHTML = this.value;
-  };
-  let password = '';
-  function generatePassword() {
-    const settings = {
-      passwordLength: parseInt(slider.value, 10),
-      includeLettersUppercase: uppercaseCheckbox.checked,
-      includeLettersLowercase: lowercaseCheckbox.checked,
-      includeNumbers: numbersCheckbox.checked,
-      includeSpecialChars: specialCheckbox.checked,
-      passwordLettersUppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-      passwordLettersLowercase: 'abcdefghijklmnopqrstuvwxyz',
-      passwordNumbers: '0123456789',
-      passwordSpecialChars: '!@#$%^&*()_+-=[]{}|;:,.<>?',
-    };
-
-    // Ensure at least one character type is selected
-    if (!settings.includeLettersUppercase
-        && !settings.includeLettersLowercase
-        && !settings.includeNumbers
-        && !settings.includeSpecialChars) {
-      if (!block.querySelector('.danger-selection')) {
-        const notification = document.createElement('p');
-        notification.textContent = selectAtLeastOneCheckboxText;
-        notification.classList.add('danger-selection');
-        block.prepend(notification);
-        setTimeout(() => {
-          notification.remove();
-        }, 2000);
-      }
-      return;
-    }
-
-    // Generate the password
-    password = datastorePasswordService.generateWithSettings(settings);
-
-    // Display the password
-    passwordInput.value = password;
-
-    // Adjust font size based on password length
-    adjustFontSize(passwordInput, password);
-
-    // Update the password strength indicator
-    updatePasswordStrength(password, strengthElement);
-  }
-
-  generateButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    generatePassword();
-  });
-
-  // Generate a password on page load
-  generatePassword();
-
-  copyPassword.addEventListener('click', (e) => {
-    e.preventDefault();
-    copyToClipboard(block, copyPassword, clipboardText, password);
-  });
-
-  // Update password when settings change
-  [slider, uppercaseCheckbox, lowercaseCheckbox, numbersCheckbox, specialCheckbox].forEach(
-    (element) => element.addEventListener('change', generatePassword),
-  );
-}
-
-export { decorate as default };
+  `,a.prepend(h),D(e);const v=e.querySelector(".password-generator--input"),E=e.querySelector(".password-generator--input-retry"),w=e.querySelector("[href='#copy-link'], [href='#copy-password']");w.id="copy-password";const l=e.querySelector("#password-range"),f=e.querySelector("#range-label"),x=e.querySelector("#uppercase"),L=e.querySelector("#lowercase"),C=e.querySelector("#numbers"),b=e.querySelector("#special"),$=e.querySelector(".password-strength");f.innerHTML=l.value,l.oninput=function(){f.innerHTML=this.value};let d="";function y(){const s={passwordLength:parseInt(l.value,10),includeLettersUppercase:x.checked,includeLettersLowercase:L.checked,includeNumbers:C.checked,includeSpecialChars:b.checked,passwordLettersUppercase:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",passwordLettersLowercase:"abcdefghijklmnopqrstuvwxyz",passwordNumbers:"0123456789",passwordSpecialChars:"!@#$%^&*()_+-=[]{}|;:,.<>?"};if(!s.includeLettersUppercase&&!s.includeLettersLowercase&&!s.includeNumbers&&!s.includeSpecialChars){if(!e.querySelector(".danger-selection")){const u=document.createElement("p");u.textContent=t,u.classList.add("danger-selection"),e.prepend(u),setTimeout(()=>{u.remove()},2e3)}return}d=n.generateWithSettings(s),v.value=d,A(v,d),M(d,$)}E.addEventListener("click",s=>{s.preventDefault(),y()}),y(),w.addEventListener("click",s=>{s.preventDefault(),I(e,w,r,d)}),[l,x,L,C,b].forEach(s=>s.addEventListener("change",y))}export{z as default};
 //# sourceMappingURL=password-generator.js.map

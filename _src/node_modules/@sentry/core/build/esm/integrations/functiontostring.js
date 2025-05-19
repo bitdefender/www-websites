@@ -1,0 +1,2 @@
+import{getClient as e}from"../currentScopes.js";import{defineIntegration as c}from"../integration.js";import{getOriginalFunction as u}from"../utils-hoist/object.js";let o;const g="FunctionToString",i=new WeakMap,p=()=>({name:g,setupOnce(){o=Function.prototype.toString;try{Function.prototype.toString=function(...t){const n=u(this),r=i.has(e())&&n!==void 0?n:this;return o.apply(r,t)}}catch{}},setup(t){i.set(t,!0)}}),S=c(p);export{S as functionToStringIntegration};
+//# sourceMappingURL=functiontostring.js.map

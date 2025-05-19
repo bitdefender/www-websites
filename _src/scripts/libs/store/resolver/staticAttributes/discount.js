@@ -1,25 +1,2 @@
-import { writeValue } from '../resolver.js';
-
-/**
- * @param {HTMLElement} element 
- * @param {import("../resolver.js").Context} context 
- */
-const resolve = (element, { option }) => {
-    if (!element.dataset.storeDiscount || !option) { return; }
-
-    switch (element.dataset.storeDiscount) {
-        case "value":
-            if (option.getDiscount("valueWithCurrency")) {
-                writeValue(element, option.getDiscount("valueWithCurrency"));
-            }
-            break;
-        case "percentage":
-            if (option.getDiscount("percentageWithProcent")) {
-                writeValue(element, option.getDiscount("percentageWithProcent"));
-            }
-            break;
-    }
-};
-
-export { resolve };
+import{writeValue as r}from"../resolver.js";const a=(t,{option:e})=>{if(!(!t.dataset.storeDiscount||!e))switch(t.dataset.storeDiscount){case"value":e.getDiscount("valueWithCurrency")&&r(t,e.getDiscount("valueWithCurrency"));break;case"percentage":e.getDiscount("percentageWithProcent")&&r(t,e.getDiscount("percentageWithProcent"));break}};export{a as resolve};
 //# sourceMappingURL=discount.js.map

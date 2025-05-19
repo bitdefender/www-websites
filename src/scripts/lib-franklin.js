@@ -12,6 +12,7 @@
  */
 
 import { UserAgent } from '@repobit/dex-utils';
+import * as Sentry from '@sentry/browser';
 import page from './page.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
@@ -906,27 +907,20 @@ export function setup() {
 }
 
 function initialiseSentry() {
-  window.sentryOnLoad = () => {
-    window.Sentry.init({
-      // Alternatively, use `process.env.npm_package_version` for a dynamic release version
-      // if your build tool supports it.
-      release: 'www-websites@1.0.0',
-      // Set tracesSampleRate to 1.0 to capture 100%
-      // of transactions for tracing.
-      // We recommend adjusting this value in production
-      // Learn more at
-      // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
-      tracesSampleRate: 0.05,
-      // Capture Replay for 10% of all sessions,
-      // plus for 100% of sessions with an error
-      // Learn more at
-      // https://docs.sentry.io/platforms/javascript/session-replay/configuration/#general-integration-configuration
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
+  Sentry.init({
+    dsn: 'https://453d79512df247d7983074696546ca60@o4504802466004992.ingest.us.sentry.io/4505244512288768',
+    sendDefaultPii: false,
+    release: 'www-websites@1.0.0',
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration(),
+    ],
+    tracesSampleRate: 0.05,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
 
-      allowUrls: ['www.bitdefender.com'],
-    });
-  };
+    allowUrls: ['www.bitdefender.com'],
+  });
 }
 
 /**

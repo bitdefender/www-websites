@@ -4,7 +4,22 @@ import { resolve } from 'path'
 import fg from 'fast-glob'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
+function watchStatics() {
+  return {
+    name: 'watch-statics',
+    buildStart() {
+      // scan for all CSS & images under src/
+      const files = fg.sync('src/**/*.css');
+      for (const file of files) {
+        // tell Rollup to watch this file
+        this.addWatchFile(resolve(process.cwd(), file));
+      }
+    },
+  };
+}
+
 export default defineConfig({
+  base: '_src',
   plugins: [
     viteStaticCopy({
       structured: true,
@@ -20,11 +35,11 @@ export default defineConfig({
           return `${backwardsPath}${onwardsPath}/${fileName}.${extension}`;
         }},
       ]
-    })
+    }),
   ],
   build: {
     outDir: '_src',
-    minify: false,
+    minify: true,
     // tell Vite's Rollup runner about multiple inputs:
     rollupOptions: {
       preserveEntrySignatures: 'strict', // or false, or 'exports-only'
@@ -35,6 +50,9 @@ export default defineConfig({
         map[name] = resolve(__dirname, file)
         return map
       }, {}),
+      plugins: [
+        watchStatics(),
+      ],
       output: {
         // mirror each file under dist…, and rewrite imports
         preserveModules: true,
@@ -44,37 +62,11 @@ export default defineConfig({
         entryFileNames: '[name].js',
         chunkFileNames: 'chunks/[name]-[hash].js',
         assetFileNames: '[name][extname]'
-      }
+      },
     },
 
     // you can also tweak target, sourcemap, cssCodeSplit, etc. here
     target: 'esnext',
     sourcemap: true,
-  },
-  server: {
-    host: 'localhost',
-    port: 3001,
-    proxy: {
-      // proxy *everything else* back to your AEM up instance on 3000
-      '/': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false,
-        bypass: (req) => {
-          // if the request is for Vite's HMR client or static bundles…
-          if (!req || !req.url) return;
-          if (
-            req.url.startsWith('/@vite/')   ||
-            req.url.endsWith('.js')         ||
-            req.url.endsWith('.css')        ||
-            req.url.endsWith('.map')
-          ) {
-            // return the original URL: Vite will serve it itself
-            return req.url
-          }
-        }
-        // you might need to tweak `bypass` to serve e.g. /dist/* from Vite
-      }
-    }
   },
 })

@@ -1,88 +1,4 @@
-import '../../node_modules/@repobit/dex-utils/dist/src/index.js';
-import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { isView } from '../../scripts/utils/utils.js';
-import { debounce } from '../../node_modules/@repobit/dex-utils/dist/src/utils.js';
-
-async function decorate(block) {
-  const [titleEl, ...slides] = [...block.children];
-  let currentSlideIndex = 0;
-
-  const countItems = slides.length;
-  let countClass = `has-${countItems}-items`;
-  if (countItems > 3 && countItems < 7) {
-    countClass = 'has-3-7-items';
-  }
-  if (countItems > 7) {
-    countClass = 'has-more-items';
-  }
-  block.classList.add(countClass);
-
-  const isTestimonials = block.closest('.section').classList.contains('testimonials');
-
-  const carouselItemStyle = {
-    margin: 20,
-  };
-
-  function isFirstIndex() {
-    return currentSlideIndex === 0;
-  }
-
-  function isLastIndex() {
-    return currentSlideIndex === slides.length - 3;
-  }
-
-  function scrollCarousel(offset, carousel) {
-    const carouselItem = block.querySelector('.carousel-item');
-    carousel.style.transform = `translateX(${ -1 * offset * (carouselItem.offsetWidth + carouselItemStyle.margin)}px)`;
-  }
-
-  function getCarousel() {
-    return block.querySelector('.carousel');
-  }
-
-  function updateDisabledArrow() {
-    const leftArrowEl = block.querySelector('.left-arrow');
-    const rightArrowEl = block.querySelector('.right-arrow');
-
-    leftArrowEl.classList.remove('disabled');
-    rightArrowEl.classList.remove('disabled');
-
-    if (isLastIndex()) {
-      block.querySelector('.right-arrow').classList.add('disabled');
-      return;
-    }
-
-    if (isFirstIndex()) {
-      block.querySelector('.left-arrow').classList.add('disabled');
-    }
-  }
-
-  function leftArrowHandler(e) {
-    e.preventDefault();
-    if (isFirstIndex()) {
-      return;
-    }
-    currentSlideIndex -= 1;
-    scrollCarousel(currentSlideIndex, getCarousel());
-    updateDisabledArrow();
-  }
-
-  function rightArrowHandler(e) {
-    e.preventDefault();
-    if (isLastIndex()) {
-      return;
-    }
-    currentSlideIndex += 1;
-    scrollCarousel(currentSlideIndex, getCarousel());
-    updateDisabledArrow();
-  }
-
-  function renderArrows() {
-    block.classList.remove('scrollable');
-
-    if (isView('desktop')) {
-      const cardsNotFullyVisible = window.innerWidth > 767;
-      return cardsNotFullyVisible ? `
+import"../../node_modules/@repobit/dex-utils/dist/src/index.js";import{decorateIcons as y}from"../../scripts/lib-franklin.js";import{isView as x}from"../../scripts/utils/utils.js";import{debounce as M}from"../../node_modules/@repobit/dex-utils/dist/src/utils.js";async function H(e){const[g,...l]=[...e.children];let i=0;const n=l.length;let a=`has-${n}-items`;n>3&&n<7&&(a="has-3-7-items"),n>7&&(a="has-more-items"),e.classList.add(a);const c=e.closest(".section").classList.contains("testimonials"),p={margin:20};function o(){return i===0}function d(){return i===l.length-3}function u(r,s){const t=e.querySelector(".carousel-item");s.style.transform=`translateX(${-1*r*(t.offsetWidth+p.margin)}px)`}function v(){return e.querySelector(".carousel")}function f(){const r=e.querySelector(".left-arrow"),s=e.querySelector(".right-arrow");if(r.classList.remove("disabled"),s.classList.remove("disabled"),d()){e.querySelector(".right-arrow").classList.add("disabled");return}o()&&e.querySelector(".left-arrow").classList.add("disabled")}function h(r){r.preventDefault(),!o()&&(i-=1,u(i,v()),f())}function w(r){r.preventDefault(),!d()&&(i+=1,u(i,v()),f())}function L(){return e.classList.remove("scrollable"),x("desktop")?window.innerWidth>767?`
       <a href class="arrow disabled left-arrow">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -107,73 +23,42 @@ async function decorate(block) {
           </g>
         </svg>
       </a>
-    ` : '';
-    }
-
-    block.classList.add('scrollable');
-    return '';
-  }
-
-  function render() {
-    block.classList.add('default-content-wrapper');
-
-    block.innerHTML = `
+    `:"":(e.classList.add("scrollable"),"")}function m(){e.classList.add("default-content-wrapper"),e.innerHTML=`
     <div class="carousel-header">
-      <div class="title">${titleEl?.children[0]?.innerHTML}</div>
-      <div class="arrows d-flex">${renderArrows()}</div>
+      <div class="title">${g?.children[0]?.innerHTML}</div>
+      <div class="arrows d-flex">${L()}</div>
     </div>
 
     <div class="carousel-container">
         <div class="carousel">
-          ${slides.map((slide) => `
+          ${l.map(t=>`
             <div class="carousel-item">
-                ${isTestimonials ? `
+                ${c?`
                   <div class="img-container">
-                    ${slide.children[0]?.children[0]?.innerHTML}
+                    ${t.children[0]?.children[0]?.innerHTML}
                   </div>
-                ` : slide.children[0]?.children[0]?.innerHTML}
+                `:t.children[0]?.children[0]?.innerHTML}
 
                 <p class="title">
-                    ${slide.children[0]?.children[1]?.textContent}
+                    ${t.children[0]?.children[1]?.textContent}
                 </p>
 
-                ${isTestimonials ? `
+                ${c?`
                   <div class="subtitle-secondary">
-                    ${slide.children[0]?.children[2]?.innerHTML}
+                    ${t.children[0]?.children[2]?.innerHTML}
                   </div>
 
                   <div class="subtitle">
-                    ${slide.children[0]?.children[3]?.innerHTML}
+                    ${t.children[0]?.children[3]?.innerHTML}
                   </div>
-                ` : `
+                `:`
                    <div class="subtitle">
-                      ${slide.children[0]?.children[2]?.innerHTML}
+                      ${t.children[0]?.children[2]?.innerHTML}
                    </div>
                 `}
             </div>
-          `).join('')}
+          `).join("")}
         </div>
     </div>
-  `;
-
-    decorateIcons(block);
-
-    const leftArrowEl = block.querySelector('.left-arrow');
-    const rightArrowEl = block.querySelector('.right-arrow');
-
-    if (leftArrowEl && rightArrowEl) {
-      leftArrowEl.removeEventListener('click', leftArrowHandler);
-      rightArrowEl.removeEventListener('click', rightArrowHandler);
-
-      leftArrowEl.addEventListener('click', leftArrowHandler);
-      rightArrowEl.addEventListener('click', rightArrowHandler);
-    }
-  }
-
-  render();
-
-  window.addEventListener('resize', debounce(render, 250));
-}
-
-export { decorate as default };
+  `,y(e);const r=e.querySelector(".left-arrow"),s=e.querySelector(".right-arrow");r&&s&&(r.removeEventListener("click",h),s.removeEventListener("click",w),r.addEventListener("click",h),s.addEventListener("click",w))}m(),window.addEventListener("resize",M(m,250))}export{H as default};
 //# sourceMappingURL=box-carousel.js.map

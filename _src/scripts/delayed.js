@@ -1,22 +1,2 @@
-import { sampleRUM, getMetadata } from './lib-franklin.js';
-import { loadBreadcrumbs } from './breadcrumbs.js';
-import { openUrlForOs } from './utils/utils.js';
-
-// eslint-disable-next-line import/no-cycle
-
-// Core Web Vitals RUM collection
-sampleRUM('cwv');
-
-// Load breadcrumbs
-loadBreadcrumbs();
-
-// Get the open URL for the user's OS
-const urlMacos = getMetadata('open-url-macos');
-const urlWindows = getMetadata('open-url-windows');
-const urlAndroid = getMetadata('open-url-android');
-const urlIos = getMetadata('open-url-ios');
-
-if (urlMacos || urlWindows || urlAndroid || urlIos) {
-  openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos);
-}
+import{sampleRUM as t,getMetadata as o}from"./lib-franklin.js";import{loadBreadcrumbs as a}from"./breadcrumbs.js";import{openUrlForOs as d}from"./utils/utils.js";t("cwv");a();const r=o("open-url-macos"),n=o("open-url-windows"),s=o("open-url-android"),l=o("open-url-ios");(r||n||s||l)&&d(r,n,s,l);
 //# sourceMappingURL=delayed.js.map

@@ -1,24 +1,2 @@
-function replacePlaceholderWithVideo(videoUrl) {
-  const placeholderDiv = [...document.querySelectorAll('div')].find((div) => div.textContent.trim() === '{video}');
-  if (!placeholderDiv) {
-    return;
-  }
-  const videoContainer = document.createElement('div');
-  videoContainer.className = 'video-container';
-
-  const iframeElement = document.createElement('iframe');
-  iframeElement.setAttribute('src', videoUrl);
-  iframeElement.setAttribute('frameborder', '0');
-  iframeElement.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-  iframeElement.setAttribute('allowfullscreen', '');
-  videoContainer.appendChild(iframeElement);
-  placeholderDiv.replaceWith(videoContainer);
-}
-
-function decorate(block) {
-  const { video } = block.closest('.section').dataset;
-  replacePlaceholderWithVideo(video);
-}
-
-export { decorate as default };
+function c(r){const t=[...document.querySelectorAll("div")].find(i=>i.textContent.trim()==="{video}");if(!t)return;const o=document.createElement("div");o.className="video-container";const e=document.createElement("iframe");e.setAttribute("src",r),e.setAttribute("frameborder","0"),e.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"),e.setAttribute("allowfullscreen",""),o.appendChild(e),t.replaceWith(o)}function n(r){const{video:t}=r.closest(".section").dataset;c(t)}export{n as default};
 //# sourceMappingURL=scuderia-ferrari-section.js.map

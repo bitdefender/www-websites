@@ -1,77 +1,11 @@
-import { decorateButtons } from '../../scripts/lib-franklin.js';
-
-async function decorate(block, options) {
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-    const blockParent = block.closest('.section');
-    blockParent.classList.add('we-container');
-  }
-
-  const [rte, videoUrlEl] = [...block.children];
-
-  const videoUrl = videoUrlEl.textContent.trim();
-  const videoFormat = videoUrl.split('.').pop();
-
-  // const blockDataset = getDatasetFromSection(block);
-  const { videoPlayerSettings, videoPlayerPoster } = block.closest('.section').dataset;
-
-  function appendPreloadedVideo() {
-    const linkVideoEl = document.createElement('link');
-    const linkVideoPosterEl = document.createElement('link');
-    linkVideoEl.rel = 'preload';
-    linkVideoEl.as = 'video';
-    linkVideoEl.href = videoUrl;
-    linkVideoEl.type = `video/${videoFormat}`;
-
-    linkVideoPosterEl.rel = 'preload';
-    linkVideoPosterEl.as = 'image';
-    linkVideoPosterEl.href = videoPlayerPoster;
-
-    document.head.prepend(linkVideoPosterEl);
-    document.head.prepend(linkVideoEl);
-  }
-
-  appendPreloadedVideo();
-
-  const formattedVideoSettings = videoPlayerSettings
-    .split(',')
-    .map((item) => {
-      let newStr = item;
-      if (newStr.includes('=')) {
-        newStr = item.replace('=', '="');
-        newStr = `${newStr}"`;
-
-        return newStr;
-      }
-
-      return newStr.trim();
-    })
-    .join(' ');
-
-  block.innerHTML = `
+import{decorateButtons as u}from"../../scripts/lib-franklin.js";async function m(o,i){i&&(o=o.querySelector(".block"),o.closest(".section").classList.add("we-container"));const[s,a]=[...o.children],r=a.textContent.trim(),n=r.split(".").pop(),{videoPlayerSettings:c,videoPlayerPoster:d}=o.closest(".section").dataset;function l(){const e=document.createElement("link"),t=document.createElement("link");e.rel="preload",e.as="video",e.href=r,e.type=`video/${n}`,t.rel="preload",t.as="image",t.href=d,document.head.prepend(t),document.head.prepend(e)}l();const p=c.split(",").map(e=>{let t=e;return t.includes("=")?(t=e.replace("=",'="'),t=`${t}"`,t):t.trim()}).join(" ");o.innerHTML=`
     <div class="video-wrapper">
-        <video ${formattedVideoSettings} poster="${videoPlayerPoster}">
-          <source src="${videoUrl}" type="video/${videoFormat}">
+        <video ${p} poster="${d}">
+          <source src="${r}" type="video/${n}">
         </video>
     </div>
     <div class="default-content-wrapper">
-        ${rte.innerHTML}
+        ${s.innerHTML}
     </div>
-  `;
-
-  block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
-    anchorEl.target = '_blank';
-    anchorEl.rel = 'noopener noreferrer';
-  });
-
-  decorateButtons(block);
-
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
-  });
-}
-
-export { decorate as default };
+  `,o.querySelectorAll(".button-container > a").forEach(e=>{e.target="_blank",e.rel="noopener noreferrer"}),u(o),window.dispatchEvent(new CustomEvent("shadowDomLoaded"),{bubbles:!0,composed:!0})}export{m as default};
 //# sourceMappingURL=banner-vsb.js.map

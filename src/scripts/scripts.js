@@ -93,8 +93,6 @@ export function getLocalizedResourceUrl(resourceName) {
   return `${pathnameAsArray.join('/')}/${resourceName}`;
 }
 
-console.log('ceva');
-
 /**
  * Decorates picture elements with a link to a video.
  * @param {Element} main The main element

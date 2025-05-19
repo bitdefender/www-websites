@@ -1,67 +1,9 @@
-import { createTag } from '../../scripts/utils/utils.js';
-import { decorateIcons } from '../../scripts/lib-franklin.js';
-
-function createQuote(item) {
-  const paragraphs = Array.from(item.querySelectorAll('p'));
-  const quote = paragraphs.find((paragraph) => {
-    const strongOrEm = paragraph.querySelector('strong, em');
-    return !strongOrEm && paragraph.textContent.trim() !== '';
-  });
-
-  const author = item.querySelector('p > strong');
-  const stars = item.querySelector('p > em');
-  if (!quote) {
-    return null;
-  }
-
-  // Get the text content of the paragraph
-  const paragraphText = stars.textContent;
-
-  // Initialize a variable to count the asterisks
-  let asteriskCount = 0;
-
-  // Loop through the text and count asterisks
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < paragraphText.length; i++) {
-    if (paragraphText[i] === '*') {
-      asteriskCount += 1;
-    }
-  }
-  const starsContainer = createTag('div', { class: 'quote-stars-container' });
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < asteriskCount; i++) {
-    const star = createTag('span', { class: 'star' });
-    starsContainer.append(star);
-  }
-
-  return createTag(
-    'div',
-    {
-      class: 'quote-container',
-
-    },
-    `<div class="quote-img">
+import{createTag as s}from"../../scripts/utils/utils.js";import{decorateIcons as u}from"../../scripts/lib-franklin.js";function d(r){const e=Array.from(r.querySelectorAll("p")).find(t=>!t.querySelector("strong, em")&&t.textContent.trim()!==""),n=r.querySelector("p > strong"),l=r.querySelector("p > em");if(!e)return null;const a=l.textContent;let c=0;for(let t=0;t<a.length;t++)a[t]==="*"&&(c+=1);const i=s("div",{class:"quote-stars-container"});for(let t=0;t<c;t++){const p=s("span",{class:"star"});i.append(p)}return s("div",{class:"quote-container"},`<div class="quote-img">
         <span class="icon icon-dark-blue-quote"/>
     </div>
     <div class="quote-content">
-        <p class="stars">${starsContainer?.innerHTML}</p>
-        <p class="description">${quote?.innerHTML}</p>
-        <p class="author">${author?.innerHTML}</p>
-    </div>`,
-  );
-}
-async function decorate(block) {
-  const quoteWrap = createTag('div', { class: 'quote-wrap' });
-  [...block.children].forEach((item) => {
-    const quote = createQuote(item);
-    if (quote) {
-      quoteWrap.append(quote);
-    }
-  });
-  block.replaceChildren(quoteWrap);
-
-  decorateIcons(block);
-}
-
-export { decorate as default };
+        <p class="stars">${i?.innerHTML}</p>
+        <p class="description">${e?.innerHTML}</p>
+        <p class="author">${n?.innerHTML}</p>
+    </div>`)}async function g(r){const o=s("div",{class:"quote-wrap"});[...r.children].forEach(e=>{const n=d(e);n&&o.append(n)}),r.replaceChildren(o),u(r)}export{g as default};
 //# sourceMappingURL=quote.js.map

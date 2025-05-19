@@ -1,13 +1,2 @@
-import { resolve } from './globalTextVariable.js';
-
-/**
- * Global Attributes are computed based on the products from the page
- * They work on the whole "body" element and are parsed once
- */
-
-const staticGlobalAttributesResolvers = [
-    resolve
-];
-
-export { staticGlobalAttributesResolvers };
+import{resolve as t}from"./globalTextVariable.js";const e=[t];export{e as staticGlobalAttributesResolvers};
 //# sourceMappingURL=index.js.map

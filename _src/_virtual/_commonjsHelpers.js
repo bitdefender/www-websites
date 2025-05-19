@@ -1,6 +1,2 @@
-function getDefaultExportFromCjs (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
-export { getDefaultExportFromCjs };
+function e(t){return t&&t.__esModule&&Object.prototype.hasOwnProperty.call(t,"default")?t.default:t}export{e as getDefaultExportFromCjs};
 //# sourceMappingURL=_commonjsHelpers.js.map
