@@ -5,6 +5,7 @@ node_modules/*
 .idea/*
 
 helix-importer-ui
+.DS_Store.
 .DS_Store
 
 .vscode/*
