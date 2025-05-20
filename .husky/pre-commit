@@ -1,2 +1,2 @@
-npm run build
-git add _src
+node .husky/update-importmap.js
+node .husky/commit-head.js

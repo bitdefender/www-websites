@@ -1,2 +1,15 @@
-function a(r){const e=r.children[0];e.classList="inner-wrapper";const t=e.children[0].lastElementChild.firstElementChild.cloneNode();t.classList="",e.prepend(t);const n=document.createElement("div");n.classList="default-content-wrapper",n.append(e),r.prepend(n)}export{a as default};
-//# sourceMappingURL=round-card.js.map
+export default function decorate(block) {
+  const innerWrapper = block.children[0];
+  innerWrapper.classList = 'inner-wrapper';
+
+  const originalAnchorEl = innerWrapper.children[0].lastElementChild.firstElementChild;
+  const newAnchorEl = originalAnchorEl.cloneNode();
+  newAnchorEl.classList = '';
+  innerWrapper.prepend(newAnchorEl);
+
+  const defaultWrapper = document.createElement('div');
+  defaultWrapper.classList = 'default-content-wrapper';
+
+  defaultWrapper.append(innerWrapper);
+  block.prepend(defaultWrapper);
+}

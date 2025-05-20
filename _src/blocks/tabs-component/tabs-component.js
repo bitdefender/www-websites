@@ -1,2 +1,83 @@
-function b(t,r){r&&(t=t.querySelector(".block"),t.closest(".section").classList.add("we-container")),t.closest(".section").dataset;const[d,l,u,...n]=t.children;d.classList.add("title-class"),l.classList.add("subtitle-class"),u.classList.add("tabs-container");const i=t.querySelector(".tabs-container");i?i.querySelectorAll("div").forEach((c,a)=>{const e=document.createElement("button");a===0&&e.classList.add("selected"),e.innerHTML=c.innerHTML,e.addEventListener("click",()=>{t.querySelectorAll(".tabs-container button").forEach(o=>o.classList.remove("selected")),e.classList.add("selected"),t.querySelectorAll(".card-container").forEach(o=>o.classList.add("hide")),n[a].classList.remove("hide")}),c.parentNode.replaceChild(e,c)}):console.error("Container not found"),n.forEach((s,c)=>{s.classList.add("card-container"),c===0&&s.classList.add("show"),c!==0&&s.classList.add("hide");const a=s.querySelector("div:nth-child(1)"),e=s.querySelector("div:nth-child(2)");a.classList.add("left"),e.classList.add("right")}),window.dispatchEvent(new CustomEvent("shadowDomLoaded"),{bubbles:!0,composed:!0})}export{b as default};
-//# sourceMappingURL=tabs-component.js.map
+export default function decorate(block, options) {
+  if (options) {
+    // eslint-disable-next-line no-param-reassign
+    block = block.querySelector('.block');
+    const blockParent = block.closest('.section');
+    blockParent.classList.add('we-container');
+  }
+
+  const parentSelector = block.closest('.section');
+  // eslint-disable-next-line no-unused-vars
+  const metaData = parentSelector.dataset;
+  const [title, subtitle, tabsTitle, ...sections] = block.children;
+
+  title.classList.add('title-class');
+  subtitle.classList.add('subtitle-class');
+  // Add class 'tabs-container' to the first div
+  tabsTitle.classList.add('tabs-container');
+
+  // Get the container for the buttons
+  const container = block.querySelector('.tabs-container');
+
+  // Check if the container exists
+  if (container) {
+    const divs = container.querySelectorAll('div');
+
+    // Loop through each div to create buttons
+    divs.forEach((div, index) => {
+      const button = document.createElement('button');
+      if (index === 0) button.classList.add('selected');
+      button.innerHTML = div.innerHTML; // Use innerHTML instead of textContent
+      button.addEventListener('click', () => {
+        // Remove 'selected' class from all buttons
+        const buttons = block.querySelectorAll('.tabs-container button');
+        buttons.forEach((btn) => btn.classList.remove('selected'));
+
+        // Add 'selected' class to the clicked button
+        button.classList.add('selected');
+
+        // Hide all card-container elements
+        const cardContainers = block.querySelectorAll('.card-container');
+        cardContainers.forEach((card) => card.classList.add('hide'));
+
+        // Show the corresponding card-container element based on the index
+        sections[index].classList.remove('hide');
+      });
+
+      div.parentNode.replaceChild(button, div);
+    });
+  } else {
+    // eslint-disable-next-line no-console
+    console.error('Container not found');
+  }
+
+  // click on the next element every 5 seconds
+  // setInterval(() => {
+  //   const buttons = block.querySelectorAll('.tabs-container button');
+  //   const selectedButton = block.querySelector('.tabs-container button.selected');
+  //   const buttonIndex = Array.from(buttons).indexOf(selectedButton);
+  //   const nextIndex = (buttonIndex + 1) % buttons.length;
+  //   buttons[nextIndex].click();
+  // }, 6000);
+
+  // Add classes to each card-container and hide all but the first one
+  sections.forEach((element, index) => {
+    element.classList.add('card-container');
+    if (index === 0) {
+      element.classList.add('show');
+    }
+    if (index !== 0) {
+      element.classList.add('hide');
+    }
+
+    // Add classes to children divs
+    const photoDiv = element.querySelector('div:nth-child(1)');
+    const textDiv = element.querySelector('div:nth-child(2)');
+    photoDiv.classList.add('left');
+    textDiv.classList.add('right');
+  });
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
+}

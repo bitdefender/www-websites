@@ -1,2 +1,53 @@
-import{getLanguageCountryFromPath as o,decorateMain as c}from"../../scripts/scripts.js";import{loadBlocks as s}from"../../scripts/lib-franklin.js";async function i(t){const{country:a,language:r}=o();if(t&&t.startsWith("/")){try{t=t.replace(/lang/g,`${r}-${a}`)}catch(e){console.log(e)}const n=await fetch(`${t}.plain.html`);if(n.ok){const e=document.createElement("main");return e.innerHTML=await n.text(),c(e),await s(e),e}}return null}async function f(t){const a=t.querySelector("a"),r=a?a.getAttribute("href"):t.textContent.trim(),n=await i(r);if(n){const e=n.querySelector(":scope .section");e&&(t.closest(".section").classList.add(...e.classList),t.closest(".fragment-wrapper").replaceWith(...e.childNodes))}}export{f as default};
-//# sourceMappingURL=fragment.js.map
+/*
+ * Fragment Block
+ * Include content from one Helix page in another.
+ * https://www.hlx.live/developer/block-collection/fragment
+ */
+
+import {
+  decorateMain, getLanguageCountryFromPath,
+} from '../../scripts/scripts.js';
+
+import {
+  loadBlocks,
+} from '../../scripts/lib-franklin.js';
+
+/**
+     * Loads a fragment.
+     * @param {string} path The path to the fragment
+     * @returns {HTMLElement} The root element of the fragment
+     */
+async function loadFragment(path) {
+  const { country, language } = getLanguageCountryFromPath();
+  if (path && path.startsWith('/')) {
+    try {
+      // eslint-disable-next-line no-param-reassign
+      path = path.replace(/lang/g, `${language}-${country}`);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
+    const resp = await fetch(`${path}.plain.html`);
+    if (resp.ok) {
+      const main = document.createElement('main');
+      main.innerHTML = await resp.text();
+      decorateMain(main);
+      await loadBlocks(main);
+      return main;
+    }
+  }
+  return null;
+}
+
+export default async function decorate(block) {
+  const link = block.querySelector('a');
+  const path = link ? link.getAttribute('href') : block.textContent.trim();
+  const fragment = await loadFragment(path);
+  if (fragment) {
+    const fragmentSection = fragment.querySelector(':scope .section');
+    if (fragmentSection) {
+      block.closest('.section').classList.add(...fragmentSection.classList);
+      block.closest('.fragment-wrapper').replaceWith(...fragmentSection.childNodes);
+    }
+  }
+}

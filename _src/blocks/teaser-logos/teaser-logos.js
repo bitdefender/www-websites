@@ -1,8 +1,11 @@
-async function a(e){const i=[...e.children[0].children];e.innerHTML=`
+export default async function decorate(block) {
+  const boxes = [...block.children[0].children];
+
+  block.innerHTML = `
     <div class="default-content-wrapper">
-        ${i.map(n=>`
-          <div class="col"><div class="img-wrapper">${n.innerHTML}</div></div>
-        `).join("")}
+        ${boxes.map((box) => `
+          <div class="col"><div class="img-wrapper">${box.innerHTML}</div></div>
+        `).join('')}
     </div>
-  `}export{a as default};
-//# sourceMappingURL=teaser-logos.js.map
+  `;
+}

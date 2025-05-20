@@ -1,35 +1,146 @@
-import{getDatasetFromSection as x}from"../../scripts/utils/utils.js";async function T(n){const c=x(n),{questionLabel:v,nextButtonLabel:m,previousButtonLabel:S,seeResultsLabel:$,selectErrorLabel:h}=c,o={currentStep:0};n.classList.add("default-content-wrapper"),n.closest(".section").id="quiz-form";const l=[...n.children];function y(e,r){const t=e.children[0].children[0].textContent,a=[...e.children[0].children[1].children],d=e.children[1].children[0],s=r===0,i=r===l.length-1,u=`question-${r}`;return`
+import { getDatasetFromSection } from '../../scripts/utils/utils.js';
+
+export default async function decorate(block) {
+  const dataset = getDatasetFromSection(block);
+
+  const {
+    questionLabel, nextButtonLabel, previousButtonLabel, seeResultsLabel, selectErrorLabel,
+  } = dataset;
+
+  const state = {
+    score: 0,
+    currentStep: 0,
+  };
+
+  block.classList.add('default-content-wrapper');
+  block.closest('.section').id = 'quiz-form';
+
+  const steps = [...block.children];
+
+  function renderStep(step, index) {
+    const stepTitle = step.children[0].children[0].textContent;
+    const stepOptions = [...step.children[0].children[1].children];
+    const stepImage = step.children[1].children[0];
+    const isFirstStep = index === 0;
+    const isLastStep = index === steps.length - 1;
+
+    const fieldId = `question-${index}`;
+
+    return `
       <div class="form-wrapper">
         <form class="step">
            <div class="step-header">
-             <div class="step-index">${v} ${r+1}/${l.length}:</div>
-             ${s?"":`<a class="step-previous">${S}</a>`}
+             <div class="step-index">${questionLabel} ${index + 1}/${steps.length}:</div>
+             ${!isFirstStep ? `<a class="step-previous">${previousButtonLabel}</a>` : ''}
            </div>
         
            
            <fieldset>
-             <legend>${t}</legend>
+             <legend>${stepTitle}</legend>
              
              
-                ${a.map((p,E)=>{const b=p.querySelector("u")?1:0,f=`${u}-${E}`;return`
+                ${stepOptions.map((option, idx) => {
+    const value = option.querySelector('u') ? 1 : 0;
+    const forLabel = `${fieldId}-${idx}`;
+
+    return `
                 <div class="step-radio-wrapper">
-                  <input type="radio" id="${f}" name="${u}" value="${b}" required aria-required="true"/>
-                  <label for="${f}">${p.textContent}</label>
+                  <input type="radio" id="${forLabel}" name="${fieldId}" value="${value}" required aria-required="true"/>
+                  <label for="${forLabel}">${option.textContent}</label>
                 </div>  
-                `}).join("")}
-                <div class="error-message">${h}</div>
+                `;
+  }).join('')}
+                <div class="error-message">${selectErrorLabel}</div>
            </fieldset>
     
            <p class="button-container submit">
-            <a class="button modal" href="">${i?$:m}</a>
+            <a class="button modal" href="">${!isLastStep ? nextButtonLabel : seeResultsLabel}</a>
            </p>
          
             <div class="img-container">
-                ${d.outerHTML}
+                ${stepImage.outerHTML}
             </div>    
         </form>
       </div>
-    `}function L(){o.currentStep+=1;const e=n.querySelector(".slide-wrapper"),t=`translateX(calc(-100% * ${o.currentStep} - (60px *  ${o.currentStep})))`;e.style.transform=t}function g(){o.currentStep-=1;const e=n.querySelector(".slide-wrapper"),t=`translateX(calc(-100% * ${o.currentStep} - (60px *  ${o.currentStep})))`;e.style.transform=t}function q(){n.style.transform=null;const e=[...n.querySelectorAll('input[type="radio"]:checked')].map(s=>s.value).reduce((s,i)=>s+=Number(i),0),t=Object.keys(c).filter(s=>s.includes("result_")).map(s=>({template:s.split("result_")[1].split("_").join("-"),interval:[...c[s].split("-")]})).find(({interval:[s,i]})=>Number(s)<=e&&e<=Number(i)),{origin:a,pathname:d}=window.location;window.location.replace(`${a}${d}${t.template}`)}function w(e){e.preventDefault();const r=e.target.closest("form"),t=r.querySelector('input[type="radio"]:checked'),a=o.currentStep===l.length-1;if(!t){r.querySelector("fieldset").classList.add("invalid");return}if(!a){L();return}q()}n.innerHTML=`
-    <div class="slide-wrapper">${l.map((e,r)=>y(e,r)).join("")}</div>
-  `,n.querySelectorAll("form").forEach(e=>{e.querySelectorAll('input[type="radio"]').forEach(t=>{t.addEventListener("change",a=>{a.target.checked&&e.querySelector("fieldset").classList.remove("invalid")})}),e.querySelectorAll(".button-container.submit").forEach(t=>t.addEventListener("click",w)),e.querySelectorAll(".step-previous").forEach(t=>t.addEventListener("click",g))})}export{T as default};
-//# sourceMappingURL=quiz-stepper.js.map
+    `;
+  }
+
+  function moveToNextStep() {
+    state.currentStep += 1;
+    const slideWrapper = block.querySelector('.slide-wrapper');
+    const offset = 60;
+
+    const transformValue = `translateX(calc(-100% * ${state.currentStep} - (${offset}px *  ${state.currentStep})))`;
+    slideWrapper.style.transform = transformValue;
+  }
+
+  function moveToPreviousStep() {
+    state.currentStep -= 1;
+    const slideWrapper = block.querySelector('.slide-wrapper');
+    const offset = 60;
+
+    const transformValue = `translateX(calc(-100% * ${state.currentStep} - (${offset}px *  ${state.currentStep})))`;
+    slideWrapper.style.transform = transformValue;
+  }
+
+  function renderResults() {
+    block.style.transform = null;
+
+    // get score
+    /* eslint-disable-next-line */
+    const score = [...block.querySelectorAll('input[type="radio"]:checked')].map((inputEl) => inputEl.value).reduce((sc, value) => sc += Number(value), 0);
+
+    const legendScore = Object.keys(dataset)
+      .filter((item) => item.includes('result_'))
+      .map((item) => ({
+        template: item.split('result_')[1].split('_').join('-'),
+        interval: [...dataset[item].split('-')],
+      }));
+
+    /* eslint-disable max-len */
+    const foundLegend = legendScore.find(({ interval: [min, max] }) => Number(min) <= score && score <= Number(max));
+
+    const { origin, pathname } = window.location;
+    // redirect
+    window.location.replace(`${origin}${pathname}${foundLegend.template}`);
+  }
+
+  function validateForm(e) {
+    e.preventDefault();
+
+    const formEl = e.target.closest('form');
+    const selectedOption = formEl.querySelector('input[type="radio"]:checked');
+    const isLastStep = state.currentStep === steps.length - 1;
+
+    if (!selectedOption) {
+      formEl.querySelector('fieldset').classList.add('invalid');
+      return;
+    }
+
+    if (!isLastStep) {
+      moveToNextStep();
+      return;
+    }
+
+    renderResults();
+  }
+
+  block.innerHTML = `
+    <div class="slide-wrapper">${steps.map((step, index) => renderStep(step, index)).join('')}</div>
+  `;
+
+  block.querySelectorAll('form').forEach((form) => {
+    const radios = form.querySelectorAll('input[type="radio"]');
+
+    radios.forEach((radio) => {
+      radio.addEventListener('change', (event) => {
+        if (event.target.checked) {
+          form.querySelector('fieldset').classList.remove('invalid');
+        }
+      });
+    });
+
+    form.querySelectorAll('.button-container.submit').forEach((buttonEl) => buttonEl.addEventListener('click', validateForm));
+    form.querySelectorAll('.step-previous').forEach((previousEl) => previousEl.addEventListener('click', moveToPreviousStep));
+  });
+}

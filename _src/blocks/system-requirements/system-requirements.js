@@ -1,2 +1,72 @@
-function o(e){const[,t]=e.children;t.style.height=`${t.scrollHeight}px`;const n=()=>{t.removeEventListener("transitionend",n),t.style.height="auto"};t.addEventListener("transitionend",n),e.classList.add("expanded")}function d(e){const[,t]=e.children;t.style.height=`${t.scrollHeight}px`,requestAnimationFrame(()=>{e.classList.remove("expanded"),t.style.height=0})}function c(e,t){e.classList.contains("expanded")?d(e):(t.filter(n=>n.classList.contains("expanded")).forEach(n=>d(n)),o(e))}function l(e,t){t&&(e=e.querySelector(".block"));const n=Array.from(e.querySelectorAll(":scope > div"));n.forEach(s=>{s.classList.add("system-requirements-item");const[i,a]=s.children;i.classList.add("system"),a&&a.classList.add("requirement"),[...e.classList].includes("action-only-on-header")?i.addEventListener("click",c.bind(null,i.parentElement,n)):s.addEventListener("click",c.bind(null,s,n))}),e.classList.contains("first-open")&&n[0].classList.add("expanded"),window.dispatchEvent(new CustomEvent("shadowDomLoaded"),{bubbles:!0,composed:!0})}export{l as default};
-//# sourceMappingURL=system-requirements.js.map
+function expandItem(item) {
+  const [, content] = item.children;
+  content.style.height = `${content.scrollHeight}px`;
+  const transitionEndCallback = () => {
+    content.removeEventListener('transitionend', transitionEndCallback);
+    content.style.height = 'auto';
+  };
+  content.addEventListener('transitionend', transitionEndCallback);
+  item.classList.add('expanded');
+}
+
+function collapseItem(item) {
+  const [, content] = item.children;
+  content.style.height = `${content.scrollHeight}px`;
+  requestAnimationFrame(() => {
+    item.classList.remove('expanded');
+    content.style.height = 0;
+  });
+}
+
+function handleAccordionItemClick(item, items) {
+  if (!item.classList.contains('expanded')) {
+    items.filter((i) => i.classList.contains('expanded')).forEach((i) => collapseItem(i));
+    expandItem(item);
+  } else {
+    collapseItem(item);
+  }
+}
+
+export default function decorate(block, options) {
+  if (options) {
+    // eslint-disable-next-line no-param-reassign
+    block = block.querySelector('.block');
+    // const blockParent = block.closest('.section');
+    // blockParent.classList.add('we-container');
+  }
+
+  const items = Array.from(block.querySelectorAll(':scope > div'));
+  items.forEach((item) => {
+    item.classList.add('system-requirements-item');
+    const [header, content] = item.children;
+    header.classList.add('system');
+
+    if (content) {
+      content.classList.add('requirement');
+      // check if .accordion-item-content has a <p>
+      // const p = content.querySelector('ul li p');
+      // // if it doesn't, add a <p> and move the content inside
+      // if (!p) {
+      //   const newP = document.createElement('p');
+      //   newP.innerHTML = content.querySelector('ul li').innerHTML;
+      //   content.querySelector('ul li').innerHTML = '';
+      //   content.querySelector('ul li').appendChild(newP);
+      // }
+    }
+
+    if ([...block.classList].includes('action-only-on-header')) {
+      header.addEventListener('click', handleAccordionItemClick.bind(null, header.parentElement, items));
+    } else {
+      item.addEventListener('click', handleAccordionItemClick.bind(null, item, items));
+    }
+  });
+
+  if (block.classList.contains('first-open')) {
+    items[0].classList.add('expanded');
+  }
+
+  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
+    bubbles: true,
+    composed: true, // This allows the event to cross the shadow DOM boundary
+  });
+}

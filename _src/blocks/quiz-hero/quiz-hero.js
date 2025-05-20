@@ -1,8 +1,15 @@
-import{adobeMcAppendVisitorId as t}from"../../scripts/target.js";async function n(e){const[r,i]=[...e.children[0].children];e.innerHTML=`
+import { adobeMcAppendVisitorId } from '../../scripts/utils/utils.js';
+
+export default async function decorate(block) {
+  const [rte, pictureEl] = [...block.children[0].children];
+
+  block.innerHTML = `
     <div class="rte-wrapper"></div>
-    <div class="img-container">${i.querySelector("picture").innerHTML}</div>
+    <div class="img-container">${pictureEl.querySelector('picture').innerHTML}</div>
     <div class="default-content-wrapper">
-        ${r.outerHTML}
+        ${rte.outerHTML}
     </div>
-  `,t("header")}export{n as default};
-//# sourceMappingURL=quiz-hero.js.map
+  `;
+
+  adobeMcAppendVisitorId('header');
+}
