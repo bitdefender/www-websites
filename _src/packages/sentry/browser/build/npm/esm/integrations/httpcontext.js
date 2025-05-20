@@ -1,0 +1,2 @@
+import{WINDOW as e,getHttpRequestData as n}from"../helpers.js";import{defineIntegration as a}from"../../../../../core/build/esm/integration.js";const p=a(()=>({name:"HttpContext",preprocessEvent(t){if(!e.navigator&&!e.location&&!e.document)return;const r=n(),o={...r.headers,...t.request?.headers};t.request={...r,...t.request,headers:o}}}));export{p as httpContextIntegration};
+//# sourceMappingURL=httpcontext.js.map

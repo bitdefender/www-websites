@@ -1,0 +1,2 @@
+const r="7";function n(t){const o=t.protocol?`${t.protocol}:`:"",e=t.port?`:${t.port}`:"";return`${o}//${t.host}${e}${t.path?`/${t.path}`:""}/api/`}function p(t){return`${n(t)}${t.projectId}/envelope/`}function c(t,o){const e={sentry_version:r};return t.publicKey&&(e.sentry_key=t.publicKey),o&&(e.sentry_client=`${o.name}/${o.version}`),new URLSearchParams(e).toString()}function i(t,o,e){return o||`${p(t)}?${c(t,e)}`}export{i as getEnvelopeEndpointWithUrlEncodedAuth};
+//# sourceMappingURL=api.js.map

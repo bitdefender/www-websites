@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sources":["../../../../../../../../node_modules/@repobit/dex-data-layer/dist/src/events/page-error-event/index.js"],"sourcesContent":["export class PageErrorEvent {\n    event = 'page error';\n}\n//# sourceMappingURL=index.js.map"],"names":["PageErrorEvent"],"mappings":"AAAO,MAAMA,CAAe,CACxB,MAAQ,YACZ","x_google_ignoreList":[0]}

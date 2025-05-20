@@ -1,0 +1,768 @@
+footer.landingpage {
+  background: #006EFF;
+  color: white;
+  font-weight: 400;
+
+a:any-link {
+  color: white;
+  text-decoration: none;
+}
+
+img {
+  width: 300px;
+  height: auto;
+  margin-bottom: 10px;
+}
+}
+
+footer.default {
+  padding: 2.5rem 0 1.5rem;
+  background-color: #000;
+  font-size: var(--body-font-size-s);
+}
+
+footer.default .footer a {
+  color: #fff;
+  cursor: pointer;
+  outline: 0;
+  font-family: var(--body-font-family),sans-serif;
+}
+
+footer.default .footer ul {
+  list-style: none;
+  padding: 0 1.25rem;
+  margin: 0;
+  font-family: var(--body-font-family), sans-serif;
+}
+
+footer.default .footer ul li {
+  font-size: var(--body-font-size-s);
+  line-height: 1.63;
+  font-family: var(--body-font-family),sans-serif;
+  margin: 0 0 0.4375rem;
+  padding-left: 0;
+}
+
+footer.default .footer ul li a {
+  font: normal normal var(--font-weight-boldest) 10px/30px var(--body-font-family);
+}
+
+footer.default .footer p {
+  margin: 0;
+  padding: 0 1.25rem;
+}
+
+footer.default .footer .deactivated a {
+  color: #999 !important;
+  cursor: auto;
+  pointer-events: none;
+}
+
+footer.default .footer a:hover {
+  text-decoration: underline;
+}
+
+footer.default .footer .deactivated::before {
+  content: "•";
+  color: #999;
+  font-weight: var(--font-weight-boldest);
+  display: inline-block;
+  width: 1rem;
+  position: absolute;
+  z-index: 1;
+  left: -1rem;
+  top: 0.125rem;
+}
+
+footer.default .footer > div {
+  display: grid;
+  margin: 0 auto;
+  max-width: 81.25rem;
+}
+
+footer.default .footer > div div {
+  margin: 0;
+  padding: 0;
+  border-bottom: 0.0625rem solid #9098a3;
+}
+
+footer.default .footer > div p {
+  text-align: left;
+  font: normal normal var(--font-weight-boldest) 13px/24px var(--body-font-family);
+  letter-spacing: 0;
+  color: #9098a3;
+  opacity: 1;
+  position: relative;
+  margin: 0;
+  transition: transform .5s ease-in-out;
+  cursor: pointer;
+  padding: 0.625rem 1.25rem;
+}
+
+footer.default .footer > div > :nth-child(1) > p {
+  width: 100%;
+  margin-bottom: 1.875rem;
+  display: flex;
+  overflow: hidden;
+  border: none;
+}
+
+footer.default .footer > div > :nth-child(1) > p a {
+  height: 100%;
+}
+
+footer.default .footer > div > :nth-child(1) > p picture {
+  width: 11.875rem;
+  height: 1.9375rem;
+  overflow: hidden;
+  display: flex;
+}
+
+footer.default .footer > div > :nth-child(1) > p a img {
+  height: 1.5rem;
+  width: auto;
+  object-fit: contain;
+}
+
+footer.default .footer > div > :nth-child(1) > ul {
+  margin: 0;
+  display: block;
+  column-count: 2;
+  list-style-type: none;
+  padding-bottom: 1.875rem;
+}
+
+footer.default .footer > div > :nth-child(1) > ul li {
+  padding: 0;
+  margin: 0 0 0.4375rem;
+}
+
+footer.default .footer > div > :nth-child(1) > ul li a {
+  text-align: left;
+  letter-spacing: .78pt;
+  text-transform: uppercase;
+  font: normal normal var(--font-weight-boldest) 11px/30px var(--body-font-family);
+}
+
+footer.default .footer > div > :nth-child(2) {
+  order: 4;
+  margin-top: 0.6875rem;
+  margin-bottom: 1.5rem;
+  border: none;
+}
+
+footer.default .footer > div > :nth-child(3) {
+  order: 2;
+  padding-bottom: 0.625rem;
+}
+
+footer.default .footer > div > :nth-child(4) {
+  order: 3;
+  padding-bottom: 0.625rem;
+}
+
+footer.default .footer > div > :nth-child(5) {
+  order: 5;
+  padding: 0;
+  border-bottom-width: 1px;
+  border-style: solid;
+  border-color: rgb(144 152 163);
+  margin-bottom: 1.5rem;
+}
+
+footer.default .footer > div > :nth-child(6) {
+  order: 6;
+  border: none;
+}
+
+footer.default .footer > div > :nth-child(3) > p::before,
+footer.default .footer > div > :nth-child(4) > p::before {
+  transform: rotate(45deg);
+  border-color: #fff;
+  border-style: solid;
+  border-width: 0 0.1875rem 0.1875rem 0;
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  display: inline-block;
+  position: absolute;
+  right: 1.25rem;
+  top: 0.75rem;
+  left: auto;
+  transition: transform .5s ease-in-out;
+}
+
+footer.default .footer > div > :nth-child(3) > ul,
+footer.default .footer > div > :nth-child(4) > ul {
+  width: 100%;
+  max-height: 125rem;
+  margin-bottom: 0.625rem;
+  transition: transform .5s ease-in-out;
+}
+
+footer.default .footer > div > :nth-child(3) > ul li,
+footer.default .footer > div > :nth-child(4) > ul li {
+  margin: 0 0 0.625rem;
+  padding-left: 0;
+}
+
+footer.default .footer > div > :nth-child(3) > ul li > a,
+footer.default .footer > div > :nth-child(4) > ul li > a {
+  font: normal normal var(--font-weight-bold) 10px/30px var(--body-font-family);
+  letter-spacing: 0;
+  opacity: 1;
+}
+
+footer.default .footer > div > :nth-child(2) > ul {
+  column-count: 2;
+  padding: 0 1.25rem 0.375rem;
+  margin-top: 0.6875rem;
+}
+
+footer.default .footer > div > :nth-child(3) > p + ul,
+footer.default .footer > div > :nth-child(4) > p + ul {
+  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out;
+}
+
+footer.default .footer > div > :nth-child(3) > p + ul.visible,
+footer.default .footer > div > :nth-child(4) > p + ul.visible {
+  display: block;
+}
+
+footer.default .footer > div > :nth-child(3) > p + ul.open,
+footer.default .footer > div > :nth-child(4) > p + ul.open {
+  max-height: 400px;
+}
+
+footer.default .footer > div > :nth-child(3) > p,
+footer.default .footer > div > :nth-child(4) > p {
+  padding-bottom: 0;
+}
+
+footer.default .footer > div > :nth-child(3) > p.active,
+footer.default .footer > div > :nth-child(4) > p.active {
+  padding-bottom: 0.625rem;
+}
+
+footer.default .footer > div > :nth-child(4) > p + ul {
+  display: none;
+}
+
+footer.default .footer > div > :nth-child(3) > p.active + ul,
+footer.default .footer > div > :nth-child(4) > p.active + ul {
+  display: inline-block;
+}
+
+footer.default .footer > div > :nth-child(4) > p.active + ul {
+  column-count: 2;
+}
+
+footer.default .footer > div > :nth-child(3) > p.active::before,
+footer.default .footer > div > :nth-child(4) > p.active::before {
+  transform: rotate(225deg);
+  top: 1.0625rem;
+}
+
+footer.default .footer > div > :nth-child(2) > p {
+  padding: 0 1.25rem;
+  margin-bottom: 1rem;
+}
+
+footer.default .footer > div > :nth-child(5) > p {
+  font-size: var(--body-font-size-m);
+  padding: 0 1.375rem 1.5rem;
+  color: rgb(255 255 255);
+  letter-spacing: 0;
+  line-height: 1.5rem;
+  font-weight: var(--font-weight-boldest);
+  font-family: "IBM Plex Sans" ,sans-serif;
+}
+
+footer.default .footer > div > :nth-child(6) > p {
+  font: normal normal normal 10px/13px var(--body-font-family);
+  width: 100%;
+  max-width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1.625rem;
+  position: relative;
+  text-align: left!important;
+  letter-spacing: 0;
+  color: #9098a3;
+  opacity: 1;
+  line-height: 1.14!important;
+  padding: 0 1.25rem;
+}
+
+footer.default .footer > div > :nth-child(6) > ul li {
+  display: block;
+  margin-bottom: 0.625rem;
+  font: normal normal var(--font-weight-regular) 10px/30px var(--body-font-family);
+  width: 100%;
+  line-height: 1;
+  font-size: var(--body-font-size-xxs);
+}
+
+footer.default .footer > div > :nth-child(6) > ul li > a {
+  display: inline-block;
+  font: normal normal var(--font-weight-bold) 10px/30px var(--body-font-family);
+}
+
+@media(min-width: 480px) {
+  footer.default .footer > div > :nth-child(6) > ul li > a {
+    font: normal normal var(--font-weight-bold) 11px/30px var(--body-font-family);
+  }
+
+  footer.default .footer > div > :nth-child(6) > p {
+    font: normal normal normal 11px/13px var(--body-font-family);
+  }
+}
+
+@media(min-width: 767px) { /* tablet */
+  footer.default {
+    padding: 3.625rem 0 2.6875rem;
+  }
+
+  footer.default .footer > div > :nth-child(1) > ul li > a {
+    font: normal normal var(--font-weight-boldest) 9pt/30px var(--body-font-family);
+  }
+
+  footer.default .footer > div > :nth-child(6) > ul li > a {
+    font: normal normal var(--font-weight-bold) 9pt/30px var(--body-font-family);
+  }
+
+  footer.default .footer > div > :nth-child(6) > p {
+    font: normal normal normal 9pt/13px var(--body-font-family);
+  }
+
+  footer.landingpage img {
+    width: 400px;
+  }
+}
+
+@media(min-width: 990px) { /* desktop */
+  footer.default .footer .deactivated {
+    position: relative;
+  }
+
+  footer.default .footer > div {
+    grid-template-columns: [first-col] 25% [second-col] 75%;
+  }
+
+  footer.default .footer > div div {
+    border: none;
+  }
+
+  footer.default .footer > div p {
+    pointer-events: none;
+  }
+
+  footer.default .footer > div > :nth-child(1) {
+    order: 1;
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    padding: 0 3.125rem;
+    margin-bottom: 4.0625rem;
+    grid-column: first-col / span 2;
+  }
+
+  footer.default .footer > div > :nth-child(1) > p {
+    max-width: 25%;
+    padding: 0;
+    pointer-events: visible;
+  }
+
+  footer.default .footer > div > :nth-child(1) > p a img {
+    height: 1.75rem;
+  }
+
+  footer.default .footer > div > :nth-child(1) > ul {
+    width: 66%;
+    margin-left: 9%;
+    display: inline-block;
+    vertical-align: top;
+    border-bottom: none;
+    column-count: 1;
+    list-style-type: none;
+    padding: 0;
+  }
+
+    footer.default .footer > div > :nth-child(1) > ul li > a {
+    font: normal normal var(--font-weight-boldest) 13px/30px var(--body-font-family);
+  }
+
+    footer.default .footer > div > :nth-child(2) {
+    order: 2;
+    margin-top: 0;
+    grid-column: first-col / span 1;
+    padding-left: 3.125rem;
+    margin-bottom: 0;
+  }
+
+    footer.default .footer > div > :nth-child(2) > p,
+    footer.default .footer > div > :nth-child(3) > p,
+    footer.default .footer > div > :nth-child(4) > p {
+    padding: 0;
+    font: normal normal var(--font-weight-boldest) 13px/24px var(--body-font-family);
+    letter-spacing: 0;
+    color: #9098a3;
+    opacity: 1;
+    border-bottom: 1px solid #3a4350;
+    padding-bottom: 0.9375rem;
+    text-transform: none;
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+    footer.default .footer > div > :nth-child(3) ul,
+    footer.default .footer > div > :nth-child(4) ul  {
+    display: block !important;
+    margin-bottom: 0;
+  }
+
+    footer.default .footer > div > :nth-child(3) > ul {
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 0.9375rem;
+    list-style: none;
+  }
+
+    footer.default .footer > div > :nth-child(3) > p {
+    width: 95%;
+  }
+
+    footer.default .footer > div > :nth-child(2) > ul {
+    padding: 0;
+    column-count: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 0.9375rem;
+    list-style: none;
+  }
+
+    footer.default .footer > div > :nth-child(3) ul {
+    column-count: 2;
+  }
+
+    footer.default .footer > div > :nth-child(2) > ul li,
+    footer.default .footer > div > :nth-child(4) > ul li {
+    margin-bottom: 0.5rem;
+    width: 100%;
+    padding: 0;
+  }
+
+    footer.default .footer > div > :nth-child(2) > ul li > a,
+    footer.default .footer > div > :nth-child(3) > ul li > a,
+    footer.default .footer > div > :nth-child(4) > ul li > a {
+    font: normal normal var(--font-weight-bold) 13px/30px var(--body-font-family);
+    display: inline-block;
+    position: relative;
+  }
+
+    footer.default .footer > div > :nth-child(3) {
+    order: 3;
+    grid-column: second-col / span 1;
+    margin-left: 14%;
+    padding-bottom: 0;
+  }
+
+    footer.default .footer > div > :nth-child(3) > p::before,
+    footer.default .footer > div > :nth-child(4) > p::before {
+    display: none;
+  }
+
+    footer.default .footer > div > :nth-child(4) ul {
+    column-count: 3;
+    padding: 0;
+    margin-top: 0.9375rem;
+  }
+
+    footer.default .footer > div > :nth-child(4) {
+    order: 4;
+    grid-column: first-col / span 2;
+    margin-top: 4.0625rem;
+    padding: 0 3.125rem;
+  }
+
+    footer.default .footer > div > :nth-child(5) {
+    order: 5;
+    grid-column: first-col / span 2;
+    margin-top: 2.5rem;
+    border: none;
+    padding: 0 3.125rem;
+    margin-bottom: 0;
+    padding-bottom: 1rem;
+  }
+
+    footer.default .footer > div > :nth-child(5) > p {
+    padding: 0;
+  }
+
+    footer.default .footer > div > :nth-child(6) {
+    order: 6;
+    grid-column: first-col / span 2;
+    padding: 0 3.125rem;
+  }
+
+    footer.default .footer > div > :nth-child(6) > ul {
+    border-top: 1px solid #3a4350;
+    padding: 1rem 0 0;
+    display: flex;
+  }
+
+    footer.default .footer > div > :nth-child(6) > ul li {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    font-size: var(--body-font-size-xxs);
+    font-weight: var(--font-weight-regular);
+    line-height: 1.14;
+    width: auto;
+  }
+
+    footer.default .footer > div > :nth-child(6) > ul li > a {
+    font: normal normal normal 13px/18px var(--body-font-family);
+    margin-right: 0.625rem;
+    padding-right: 1.25rem;
+    position: relative;
+  }
+
+    footer.default .footer > div > :nth-child(6) > ul li > a::after {
+    content: "";
+    position: absolute;
+    top: 0.125rem;
+    right: 0.1875rem;
+    width: 0.125rem;
+    height: 1rem;
+    background-color: #fff;
+  }
+
+    footer.default .footer > div > :nth-child(6) > p {
+    padding: 0;
+    font: normal normal normal 13px/18px var(--body-font-family);
+    margin-top: 0.875rem;
+    margin-bottom: 0;
+  }
+
+    footer.default .footer > div > :nth-child(3) > p + ul,
+    footer.default .footer > div > :nth-child(4) > p + ul {
+    overflow: visible;
+    max-height: 400px;
+  }
+
+    footer.default .footer > div > :nth-child(4) > p.active + ul {
+    column-count: 3;
+  }
+}
+
+#footer-ferrari {
+  background-color: #000;
+}
+
+#footer-ferrari .section:nth-of-type(1) p {
+  width: 40%;
+}
+
+#footer-ferrari ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#footer-ferrari .section:nth-of-type(1) ul {
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+#footer-ferrari .section:nth-of-type(2) ul:nth-of-type(1) li:not(:first-of-type) {
+  float: left;
+}
+
+#footer-ferrari .section:nth-of-type(2) ul:nth-of-type(1) li:not(:first-of-type) img {
+  width: 40px;
+  margin-right: 12px;
+}
+
+#footer-ferrari .section:nth-of-type(2) ul:nth-of-type(2) li:first-of-type {
+  width: 100%;
+}
+
+#footer-ferrari .section:nth-of-type(3) strong,
+#footer-ferrari .section:nth-of-type(2) ul:nth-of-type(1) strong {
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 22px;
+  line-height: 27px;
+}
+
+#footer-ferrari .section:nth-of-type(2) ul:nth-of-type(2) li:first-of-type strong {
+  width: 100%;
+  display: block;
+  font-size: 14px;
+  line-height: 1.71;
+  letter-spacing: 1.12px;
+  color: #fff;
+  padding-bottom: 13px;
+  border-bottom: 2px solid white;
+  margin-bottom: 25px;
+}
+
+#footer-ferrari .section:nth-of-type(4) ul li a {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.14;
+  color: #fff;
+  position: relative;
+  margin-right: 10px;
+  padding-right: 20px;
+  margin-bottom: 10px;
+  border-right: 0 none;
+  display: inline-block;
+}
+
+#footer-ferrari .section:nth-of-type(4) ul li:last-of-type a {
+  border-right: 0 none;
+}
+
+#footer-ferrari .section:nth-of-type(2) ul:nth-of-type(2) li:not(:first-of-type) a {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+#footer-ferrari .section:nth-of-type(3) p {
+  border-bottom: 0 none;
+  margin-top: 1em;
+  padding-top: 10px;
+  font-size: 22px;
+  line-height: 27px;
+}
+
+#footer-ferrari .section:nth-of-type(4) p {
+  text-align: right;
+  line-height: 17px;
+}
+
+#footer-ferrari .section:nth-of-type(4) ul p {
+  font-size: 14px;
+  line-height: 1.14;
+}
+
+#footer-ferrari .section:nth-of-type(1) {
+  display: none;
+}
+
+#footer-ferrari .section:nth-of-type(4) ul {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+}
+
+#footer-ferrari .section:nth-of-type(2) ul:nth-of-type(1) {
+  width: 100%;
+  margin-top: 0;
+}
+
+#footer-ferrari .section:nth-of-type(4) {
+  padding-top: 0;
+}
+
+#footer-ferrari .section:nth-of-type(4) div {
+  display: flex;
+  align-items: self-end;
+}
+
+#footer-ferrari .section:nth-of-type(2) ul:nth-of-type(2) {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  footer.landingpage {
+    padding: 50px 0;
+
+    .default-content-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    p strong {
+      font-size: 32px;
+      font-weight: bold;
+      color: white;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  #footer-ferrari .section:nth-of-type(1) {
+    display: block;
+  }
+
+  #footer-ferrari .section:nth-of-type(4) ul {
+    display: flex;
+    flex-direction: row;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+
+  #footer-ferrari .section:nth-of-type(2) ul:nth-of-type(1) {
+    width: 40%;
+  }
+
+  #footer-ferrari .section:nth-of-type(2) ul:nth-of-type(2) {
+    display: block;
+    width: 60%;
+  }
+
+  #footer-ferrari .section:nth-of-type(3) p {
+    width: 100%;
+    border-bottom: 2px solid white;
+    margin-top: 100px;
+    padding-top: 10px;
+    line-height: 2;
+  }
+
+  #footer-ferrari .section:nth-of-type(3) strong {
+    font-size: 31px;
+  }
+
+  #footer-ferrari .section:nth-of-type(2) ul:nth-of-type(1) strong {
+    width: 120px;
+    display: block;
+    margin-bottom: 28px;
+    color: #fff;
+    font-size: 40px;
+    line-height: 45px;
+  }
+
+  #footer-ferrari ul li {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  #footer-ferrari .section:nth-of-type(2) ul:nth-of-type(2) li:not(:first-of-type) {
+    width: 50%;
+    float: left;
+    margin-top: 0;
+    margin-bottom: 25px;
+  }
+}
+
+@media(min-width: 1600px) { /* large desktop */
+    footer.default .footer > div {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    max-width: 83.25rem;
+    position: relative;
+  }
+}

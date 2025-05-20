@@ -1,17 +1,2 @@
-export default function decorate(block) {
-  // search for [] to replace with span greeenTag class
-  const getFirstDivs = block.querySelectorAll('.dropdownbox-compare-container .block > div > div:nth-child(1)');
-  getFirstDivs.forEach((item) => {
-    item.innerHTML = item.innerHTML.replace('[', '<span class="green-tag">');
-    item.innerHTML = item.innerHTML.replace(']', '</span>');
-  });
-
-  // make slideUp slideDown functionality
-  const getFirstTabs = block.querySelectorAll('.dropdownbox-compare-container .block > div:first-child');
-  getFirstTabs.forEach((tab) => {
-    tab.parentNode.classList.remove('closed');
-    tab.addEventListener('click', () => {
-      tab.parentNode.classList.toggle('closed');
-    });
-  });
-}
+function s(r){r.querySelectorAll(".dropdownbox-compare-container .block > div > div:nth-child(1)").forEach(e=>{e.innerHTML=e.innerHTML.replace("[",'<span class="green-tag">'),e.innerHTML=e.innerHTML.replace("]","</span>")}),r.querySelectorAll(".dropdownbox-compare-container .block > div:first-child").forEach(e=>{e.parentNode.classList.remove("closed"),e.addEventListener("click",()=>{e.parentNode.classList.toggle("closed")})})}export{s as default};
+//# sourceMappingURL=dropdownbox-compare.js.map
