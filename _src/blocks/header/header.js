@@ -5,8 +5,9 @@ import {
 } from '../../scripts/lib-franklin.js';
 
 import {
-  adobeMcAppendVisitorId, getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
+  getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
+import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 
 import { Constants } from '../../scripts/libs/constants.js';
 
