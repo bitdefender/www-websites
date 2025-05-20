@@ -33,7 +33,8 @@ export default defineConfig({
             filePaths.pop();
             filePaths.shift();
             const onwardsPath = filePaths.join('/');
-            return `${backwardsPath}${onwardsPath}/${fileName}.${extension}`;
+            
+            return extension ? `${backwardsPath}${onwardsPath}/${fileName}.${extension}` : `${backwardsPath}${onwardsPath}/${fileName}`;
           }
         },
       ]
