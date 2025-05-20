@@ -1,6 +1,6 @@
 import Launch from '@repobit/dex-launch';
 import Target from '@repobit/dex-target';
-import { PageLoadStartedEvent, AdobeDataLayerService, FormEvent, PageLoadedEvent } from '@repobit/dex-data-layer';
+import { AdobeDataLayerService, FormEvent, PageLoadedEvent, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
 import page from './page.js';
 import {
   sampleRUM,
@@ -333,7 +333,7 @@ const initializeHubspotModule = () => {
 
   const updateDataLayerAndRedirect = async (hubspotForm, mainPopupButton) => {
     if (mainPopupButton) {
-      const newPageLoadStartedEvent = await new PageLoadStartedEvent();
+      const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
       newPageLoadStartedEvent.page.info.name += ':consultation booked';
       newPageLoadStartedEvent.page.info.subSubSubSection = 'consultation booked';
       AdobeDataLayerService.push(newPageLoadStartedEvent);
@@ -368,7 +368,7 @@ const initializeHubspotModule = () => {
   const initialiseHubspotFormPopupEvents = (hubspotForm, mainPopupButton) => {
     if (!mainPopupButton) return;
     mainPopupButton.addEventListener('click', async () => {
-      const newPageLoadStartedEvent = await new PageLoadStartedEvent();
+      const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
       newPageLoadStartedEvent.page.info.name += ':book consultation';
       newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
       AdobeDataLayerService.push(newPageLoadStartedEvent);
@@ -429,7 +429,7 @@ const initializeHubspotModule = () => {
     ).forEach(trigger => {
       trigger.addEventListener("click", async () => {
         popupContainer.style.display = "block";
-        const newPageLoadStartedEvent = await new PageLoadStartedEvent();
+        const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
         AdobeDataLayerService.push(newPageLoadStartedEvent);
 
         if (firstForm) {
