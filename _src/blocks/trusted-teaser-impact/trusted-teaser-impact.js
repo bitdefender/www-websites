@@ -1,4 +1,4 @@
-import"../../node_modules/@repobit/dex-utils/dist/src/index.js";import{decorateIcons as d}from"../../scripts/lib-franklin.js";import{matchHeights as s}from"../../scripts/utils/utils.js";import{debounce as c}from"../../node_modules/@repobit/dex-utils/dist/src/utils.js";async function h(e){const[n,...r]=[...e.children];function t(){e.classList.add("default-content-wrapper"),e.innerHTML=`
+import"../../packages/repobit/dex-utils/dist/src/index.js";import{decorateIcons as d}from"../../scripts/lib-franklin.js";import{matchHeights as s}from"../../scripts/utils/utils.js";import{debounce as c}from"../../packages/repobit/dex-utils/dist/src/utils.js";async function h(e){const[n,...r]=[...e.children];function t(){e.classList.add("default-content-wrapper"),e.innerHTML=`
     <div class="carousel-header">
       <div class="title">${n.children[0].innerHTML}</div>
     </div>

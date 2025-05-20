@@ -1,6 +1,6 @@
 // vite.config.js
 import { defineConfig } from 'vite'
-import { resolve } from 'path'
+import path, { resolve } from 'path'
 import fg from 'fast-glob'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
@@ -19,21 +19,23 @@ function watchStatics() {
 }
 
 export default defineConfig({
-  base: '_src',
+  base: '/_src',
   plugins: [
     viteStaticCopy({
       structured: true,
       targets: [
         // copy every .css under src/, preserving subfolders
-        { src: ['src/**/*.*', '!src/**/*.js'], dest: './', rename: (fileName, extension, filePath) => {
-          // e.g. "src/pages/about/style.css" → "pages/about/style.css"
-          const filePaths = filePath.substring(filePath.indexOf('src'), filePath.length).split('/');
-          const backwardsPath = '../'.repeat(filePaths.length - 1);
-          filePaths.pop();
-          filePaths.shift();
-          const onwardsPath = filePaths.join('/');
-          return `${backwardsPath}${onwardsPath}/${fileName}.${extension}`;
-        }},
+        {
+          src: ['src/**/*.*', '!src/**/*.js'], dest: './', rename: (fileName, extension, filePath) => {
+            // e.g. "src/pages/about/style.css" → "pages/about/style.css"
+            const filePaths = filePath.substring(filePath.indexOf('src'), filePath.length).split('/');
+            const backwardsPath = '../'.repeat(filePaths.length - 1);
+            filePaths.pop();
+            filePaths.shift();
+            const onwardsPath = filePaths.join('/');
+            return `${backwardsPath}${onwardsPath}/${fileName}.${extension}`;
+          }
+        },
       ]
     }),
   ],
@@ -45,8 +47,8 @@ export default defineConfig({
       preserveEntrySignatures: 'strict', // or false, or 'exports-only'
       input: fg.sync('src/**/*.js').reduce((map, file) => {
         const name = file
-        .replace(/^src\//, '')
-        .replace(/\.js$/, '')
+          .replace(/^src\//, '')
+          .replace(/\.js$/, '')
         map[name] = resolve(__dirname, file)
         return map
       }, {}),
@@ -59,14 +61,62 @@ export default defineConfig({
         preserveModulesRoot: 'src',
 
         // control filenames for entry chunks & shared chunks:
-        entryFileNames: '[name].js',
-        chunkFileNames: 'chunks/[name]-[hash].js',
-        assetFileNames: '[name][extname]'
+        entryFileNames: info => {
+          const id = info.facadeModuleId || ''
+
+          // 1) Skip Rollup virtual modules (they start with '\0')
+          if (id[0] === '\0') {
+            return `${info.name}.js`
+          }
+
+          if (id.includes('/node_modules/')) {
+            // compute path inside node_modules
+            const rel = path.relative(
+              path.resolve(__dirname, 'node_modules'),
+              id.replace(/\.(js|ts)x?$/, '')
+            )
+            // drop scope @ if you also want that:
+            const clean = rel.replace(/@/g, '')
+            return `packages/${clean}.js`
+          }
+          // otherwise just mirror your src structure
+          const relSrc = path.relative(
+            path.resolve(__dirname, 'src'),
+            id.replace(/\.(js|ts)x?$/, '')
+          )
+
+          // If path.relative gave us a "../…" (i.e. outside src), _don’t_ use it
+          if (relSrc.startsWith('..')) {
+            return `${info.name}.js`
+          }
+
+          return `${relSrc}.js`
+        },
+        chunkFileNames: chunkInfo => {
+          // you can apply the same logic to any non-entry chunks
+          return chunkInfo.name.includes('node_modules')
+            ? `packages/${chunkInfo.name.replace(/@/g, '')}.[hash].js`
+            : `[name].[hash].js`
+        },
+        assetFileNames: assetInfo => {
+          // if you ever emit e.g. JSON from node_modules
+          if (assetInfo.name && assetInfo.name.includes('node_modules')) {
+            return `packages/${assetInfo.name.replace(/@/g, '')}`
+          }
+          return `[name][extname]`
+        }
       },
     },
-
     // you can also tweak target, sourcemap, cssCodeSplit, etc. here
     target: 'esnext',
     sourcemap: true,
   },
+  resolve: {
+    // if you import @scope/pkg in your code and want it to resolve
+    // to node_modules/pkg, you can drop the @ at dev time too:
+    alias: [{
+      find: /^ @(.+) $/,
+      replacement: path.resolve(__dirname, 'node_modules/$1')
+    }]
+  }
 })
