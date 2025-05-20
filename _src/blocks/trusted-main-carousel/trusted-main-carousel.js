@@ -1,4 +1,4 @@
-import"../../vendor/repobit/dex-utils/dist/src/index.js";import{isView as p}from"../../scripts/utils/utils.js";import{debounce as I}from"../../vendor/repobit/dex-utils/dist/src/utils.js";async function y(r){const d=[...r.children],i={viewport:"desktop",slideDelay:3*1e3},s={currentStep:0,carouselIsFocused:!1,currentInterval:null},u=d.map(e=>e.children[0].firstElementChild.textContent);r.classList.add("default-content-wrapper"),r.innerHTML=`
+import"../../packages/repobit/dex-utils/dist/src/index.js";import{isView as p}from"../../scripts/utils/utils.js";import{debounce as I}from"../../packages/repobit/dex-utils/dist/src/utils.js";async function y(r){const d=[...r.children],i={viewport:"desktop",slideDelay:3*1e3},s={currentStep:0,carouselIsFocused:!1,currentInterval:null},u=d.map(e=>e.children[0].firstElementChild.textContent);r.classList.add("default-content-wrapper"),r.innerHTML=`
     <div class="navigation-wrapper">
         <div class="first-nav">
           ${u.map((e,t)=>`<div class="nav-item ${t===0?"active":""}">${e}</div>`).join("")}
