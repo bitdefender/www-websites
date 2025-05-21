@@ -48,7 +48,17 @@ class StatusMessageFactory {
     const isSafe = mappedStatus.includes('safe')
                  || mappedStatus.includes('so_far_so_good_1')
                  || mappedStatus.includes('so_far_so_good_2');
-    let msg = statusMessages[mappedStatus.toLowerCase()];
+    let msg;
+    if (statusMessages[mappedStatus.toLowerCase()]) {
+      msg = statusMessages[mappedStatus.toLowerCase()];
+    }
+    if (!statusMessages[mappedStatus.toLowerCase()] && isSafe) {
+      msg = statusMessages['default-good'];
+    }
+    if (!statusMessages[mappedStatus.toLowerCase()] && !isSafe) {
+      msg = statusMessages.default;
+    }
+
     msg = msg.replace('<domain-name>', urlObject.hostname);
     if (msg) {
       return { text: msg, className: isSafe ? 'result safe' : 'result danger', status: mappedStatus };
