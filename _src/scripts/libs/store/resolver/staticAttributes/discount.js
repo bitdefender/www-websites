@@ -2,7 +2,7 @@ import { writeValue } from "../resolver.js";
 
 /**
  * @param {HTMLElement} element 
- * @param {import("../resolver").Context} context 
+ * @param {import("../resolver.js").Context} context 
  */
 export const resolve = (element, { option }) => {
     if (!element.dataset.storeDiscount || !option) { return; }

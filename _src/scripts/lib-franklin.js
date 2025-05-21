@@ -12,6 +12,7 @@
  */
 
 import { UserAgent } from '@repobit/dex-utils';
+import * as Sentry from '@sentry/browser';
 import page from './page.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
@@ -905,10 +906,28 @@ export function setup() {
   }
 }
 
+function initialiseSentry() {
+  Sentry.init({
+    dsn: 'https://453d79512df247d7983074696546ca60@o4504802466004992.ingest.us.sentry.io/4505244512288768',
+    sendDefaultPii: false,
+    release: 'www-websites@1.0.0',
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration(),
+    ],
+    tracesSampleRate: 0.05,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+
+    allowUrls: ['www.bitdefender.com'],
+  });
+}
+
 /**
  * Auto initializiation.
  */
 function init() {
+  initialiseSentry();
   setup();
   sampleRUM('top');
 

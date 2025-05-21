@@ -1,4 +1,4 @@
-import { adobeMcAppendVisitorId } from '../../scripts/utils/utils.js';
+import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 
 export default async function decorate(block) {
   const [rte, pictureEl] = [...block.children[0].children];
