@@ -16,7 +16,7 @@
         .hero-aem__terms {
             font-size: 14px;
             font-weight: 700;
-            line-height: 100%;
+            line-height: 1.35;
         }
 
         .hero-aem__breadcrumb, .hero-aem__card > p {
@@ -111,7 +111,7 @@
 
         h2 {
             font-size: 17px;
-            line-height: 100%;
+            line-height: 1.35;
             text-align: left;
         }
 
@@ -121,7 +121,7 @@
             }
 
             td, p {
-                font-size: 11px;
+                font-size: 14px;
             }
         }
     }
@@ -183,13 +183,13 @@
                         }
 
                         h4 + p, ul li {
-                            font-size: 11px;
+                            font-size: 14px;
                             font-weight: 400;
                             margin-bottom: 16px;
                         }
 
                         h5 {
-                            font-size: 12px;
+                            font-size: 14px;
                             font-weight: 600;
                             display: flex;
                             gap: 10px;
@@ -206,7 +206,7 @@
                         }
 
                         h4 + p {
-                            line-height: 100%;
+                            line-height: 1.35;
                             color: #3d3d3d;
                             min-height: 44px;
                         }
@@ -218,7 +218,7 @@
 
                             li {
                                 margin: 12px 0;
-                                line-height: 100%;
+                                line-height: 1.35;
                                 position: relative;
 
                                 strong {
@@ -229,8 +229,8 @@
                                     content: "";
                                     position: absolute;
                                     left: 0;
-                                    top: 0;
-                                    width: 11px;
+                                    top: 2px;
+                                    width: 12px;
                                     height: 12px;
                                     background-color: var(--background-badge);
                                     border-radius: 50%;
@@ -240,8 +240,8 @@
                                 &::after {
                                     content: "";
                                     position: absolute;
-                                    left: 4px;
-                                    top: 3px;
+                                    left: 5px;
+                                    top: 5px;
                                     width: 2px;
                                     height: 3px;
                                     border-bottom: 1.5px solid var(--white-color);
@@ -254,7 +254,6 @@
                         }
 
                         &:first-of-type table:first-of-type {
-                            height: 100%;
                             width: 100%;
                             border-collapse: separate;
                             border-spacing: 0;
@@ -273,10 +272,10 @@
                         &:first-of-type {
                             display: flex;
                             flex-direction: column;
-                            justify-content: space-between;
 
                             table:last-of-type {
                                 margin: auto;
+                                margin-top: 0;
                             }
 
                             a {
@@ -354,14 +353,14 @@
         }
 
         p {
-            font-size: 12px;
+            font-size: 14px;
             color: #454545;
         }
 
         h4 {
             color: #006DFF;
             font-size: 13px;
-            line-height: 100%;
+            line-height: 1.35;
         }
 
         .button-text {
@@ -390,7 +389,7 @@
         .columns-wrapper {
             h2, h5, p {
                 font-family: "IBM Plex Sans", sans-serif;
-                line-height: 100%;
+                line-height: 1.35;
             }
 
             h2 {
@@ -408,7 +407,7 @@
 
             p {
                 color: #454534;
-                font-size: 12px;
+                font-size: 14px;
             }
 
             .columns-text-col {
@@ -444,7 +443,7 @@
             h2 {
                 font-size: 17px;
                 font-weight: 700;
-                line-height: 100%;
+                line-height: 1.35;
                 margin-bottom: 20px;
             }
         }
@@ -463,12 +462,13 @@
 
             h3 {
                 font-size: 23px;
-                line-height: 100%;
+                line-height: 1.35;
                 margin-bottom: 12px;
             }
 
             p {
-                font-size: 12px;
+                font-size: 14px;
+                line-height: 1.35;
                 font-weight: 400;
 
                 &:first-of-type {
@@ -539,7 +539,7 @@
         p {
             margin-top: 0;
             margin-bottom: 16px;
-            font-size: 11px;
+            font-size: 14px;
 
             &:last-of-type {
                 margin-bottom: 0;
@@ -567,13 +567,13 @@
             }
 
             .feature-text {
-                font-size: 11px;
+                font-size: 14px;
                 color: #454545;
             }
 
             .features-tabs {
                 li {
-                    line-height: 100%;
+                    line-height: 1.35;
 
                     .tag {
                         margin-left: 14px;
@@ -583,8 +583,8 @@
 
                 li > a {
                     color: #006DFF;
-                    font-size: 11px;
-                    line-height: 100%;
+                    font-size: 14px;
+                    line-height: 1.35;
                     font-weight: 700;
 
                     &::after {
@@ -730,7 +730,7 @@
 
                     h2 {
                         font-size: 25px;
-                        line-height: 100%;
+                        line-height: 1.35;
 
                         &:last-of-type {
                             margin-bottom: 20px;
@@ -968,7 +968,6 @@
 
                             h5 {
                                 font-size: 16px;
-                                height: 28px;
                             }
 
                             li, h5 {
@@ -983,7 +982,7 @@
 
                         h4 {
                             font-size: 24px;
-                            line-height: 100%;
+                            line-height: 1.35;
                             font-weight: 700;
                             margin-bottom: 13px;
                         }
@@ -994,7 +993,7 @@
 
                         tbody p, h5 {
                             font-size: 14px;
-                            line-height: 100%;
+                            line-height: 1.35;
                         }
 
                         li {
@@ -1168,7 +1167,7 @@
         .bitdef-vs-brands-wrapper {
             h2 {
                 font-size: 34px;
-                line-height: 100%;
+                line-height: 1.35;
                 text-align: center;
                 margin-bottom: 48px;
             }
@@ -1187,7 +1186,7 @@
                 }
 
                 td p {
-                    font-size: 12px;
+                    font-size: 14px;
                 }
             }
         }
@@ -1282,6 +1281,10 @@
 
             .hero-aem .hero-aem__desktop-image {
                 max-height: 240px;
+            }
+
+            .hero-aem h1 {
+                font-size: 36px;
             }
         }
 
