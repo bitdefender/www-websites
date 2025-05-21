@@ -121,7 +121,7 @@
             }
 
             td, p {
-                font-size: 14px;
+                font-size: 12px;
             }
         }
     }
@@ -539,7 +539,7 @@
         p {
             margin-top: 0;
             margin-bottom: 16px;
-            font-size: 14px;
+            font-size: 14px !important;
 
             &:last-of-type {
                 margin-bottom: 0;
