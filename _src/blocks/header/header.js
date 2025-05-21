@@ -1,5 +1,5 @@
-import Target from '@repobit/dex-target';
 import { User, Cookies } from '@repobit/dex-utils';
+import { target, adobeMcAppendVisitorId } from '../../scripts/target.js';
 import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
 } from '../../scripts/lib-franklin.js';
@@ -7,7 +7,6 @@ import {
 import {
   getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
-import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 
 import { Constants } from '../../scripts/libs/constants.js';
 
@@ -57,7 +56,7 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
   if (!userLoggedInExpirationDate
     || (userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now())) {
     loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
-      loginPopupLink.href = await Target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
+      loginPopupLink.href = await target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
     });
   }
 };
