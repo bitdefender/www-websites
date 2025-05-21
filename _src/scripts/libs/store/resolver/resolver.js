@@ -7,7 +7,7 @@ import { staticGlobalAttributesResolvers } from "./staticGlobalAttributes/index.
 
 export class GlobalContext {
 	/**
-	 * @type {import("..").ProductOption[]}
+	 * @type {import("../index.js").ProductOption[]}
 	 */
 	static variations = [];
 
@@ -19,11 +19,11 @@ export class GlobalContext {
 export class Context {
 	constructor(product, devices, years, staticAttributes, clickAttributes, contexts, contextProducts, products, devicePropertiesMapping) {
 		/**
-		 * @type {import("..").Product}
+		 * @type {import("../index.js").Product}
 		 */
 		this.products = products;
 		/**
-		 * @type {import("..").Product}
+		 * @type {import("../index.js").Product}
 		*/
 		this._product = product;
 		/**
@@ -39,17 +39,17 @@ export class Context {
 		 */
 		this.contexts = contexts;
 		/**
-		 * @type {import("..").Product[]}
+		 * @type {import("../index.js").Product[]}
 		*/
 		this.contextProducts = contextProducts;
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		this.bundle = null;
 		this._devices = devices;
 		this._years = years;
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		this._option = product.getOption(devices, years);
 
@@ -89,7 +89,7 @@ export class Context {
 	 */
 	set years(value) {
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(this._devices, Number(value)) ||
 			this.product.getOption(this.product.getSubscriptions("years", Number(value))[0], Number(value));
@@ -111,7 +111,7 @@ export class Context {
 	 */
 	set devices(value) {
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(Number(value), this._years) ||
 			this.product.getOption(Number(value), this.product.getSubscriptions("years", Number(value))[0]);
@@ -123,7 +123,7 @@ export class Context {
 	}
 
 	/**
-	 * @type {import("..").ProductOption}
+	 * @type {import("../index.js").ProductOption}
 	 */
 	get option() {
 		if (this.bundle) {
@@ -141,7 +141,7 @@ export class Context {
 	set option(value) {
 		const [devices, years] = parseKey(value);
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(devices, years);
 		if (!option) { return; }
@@ -153,7 +153,7 @@ export class Context {
 	}
 
 	/**
-	 * @type {import("..").Product}
+	 * @type {import("../index.js").Product}
 	*/
 	get product() {
 		return this._product;
@@ -368,12 +368,12 @@ export class StoreResolver {
 
 	/**
 	 * @param {Context} context
-	 * @return {import("..").ProductOption}
+	 * @return {import("../index.js").ProductOption}
 	 */
 	static getAllVariationsFromContext(context) {
 		/**
 		 * @param {HTMLElement} attribute
-		 * @returns {import("..").ProductOption[]}
+		 * @returns {import("../index.js").ProductOption[]}
 		 */
 		const parseNodeName = (attribute) => {
 			const options = [];
@@ -441,10 +441,10 @@ export class StoreResolver {
 		}
 
 		/**
-		 * @param {import("..").ProductOption} baseOption
-		 * @param {import("..").ProductOption} varyToOption
+		 * @param {import("../index.js").ProductOption} baseOption
+		 * @param {import("../index.js").ProductOption} varyToOption
 		 * @param {"devices"|"subscription"|"all"|"bundle"} modfier
-		 * @returns {import("..").ProductOption|null}
+		 * @returns {import("../index.js").ProductOption|null}
 		 */
 		const vary = (baseOption, varyToOption, modfier) => {
 			let devices;
