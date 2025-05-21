@@ -1,0 +1,2 @@
+class r{event="user detected";user;constructor(t,e){if(t&&e){const s=t.getParamValue("ems-uid")||t.getParamValue("sc_uid")||void 0;this.user={loggedIN:!!e.ID},e.ID&&(this.user.ID=e.ID),s&&(this.user.emarsysID=s),e.productFinding&&(this.user.productFinding=e.productFinding)}else{const s=window.adobeDataLayer.find(i=>i.event==="user detected");s?this.user={...s.user}:this.user={loggedIN:!1}}}}export{r as UserDetectedEvent};
+//# sourceMappingURL=index.js.map

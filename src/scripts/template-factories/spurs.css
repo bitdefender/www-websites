@@ -1,0 +1,218 @@
+.spurs header,
+.spurs main,
+.spurs footer {
+    max-width: unset;
+    margin: unset;
+}
+
+.spurs.sferrari .red_logo_svg p {
+    color: transparent;
+    background: url('../../icons/b-logo-red.svg') no-repeat center transparent;
+    font-size: 120px;
+    margin: 0 auto 0.5em;
+}
+
+.spurs * {
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+.spurs .official-partner .default-content-wrapper > p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.spurs .section-two h2,
+.spurs .section-two h3,
+.spurs .section-two h4 {
+    color: #006dff;
+    font-weight: 500;
+    line-height: 27px;
+    font-size: 23px;
+}
+
+.spurs .section-two .default-content-wrapper > div,
+.spurs .section-two .default-content-wrapper > p {
+    font-size: 17px;
+    line-height: 24px;
+}
+
+.spurs .section-testimonials .default-content-wrapper > p {
+    height: 350px;
+    margin: 0;
+}
+
+.spurs .section-testimonials p:first-child {
+    padding: 1em;
+    background-color: #006dff;
+    font-weight: 500;
+    color: white;
+    font-size: 14px;
+    line-height: 1.33;
+}
+
+.spurs .section-testimonials p:first-child strong {
+    margin-top: 15px;
+    display: block;
+}
+
+.spurs .section-testimonials p:last-child img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.spurs .section-testimonials-text {
+    color: #006dff;
+}
+
+.spurs .section-testimonials-text p:first-child {
+    font-size: 24px;
+    line-height: 1.33;
+    font-weight: 300;
+}
+
+.spurs .section-testimonials-text p em {
+    font-style: normal;
+}
+
+.spurs .section[data-align="center"] .default-content-wrapper > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.spurs.sferrari .section-two .default-content-wrapper:not(:first-of-type) {
+    display: none;
+}
+
+@media (max-width: 992px) {
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p {
+        height: auto;
+    }
+
+    .spurs.sferrari .section-two h2, .spurs .section-two h3, .spurs .section-two h4 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        font-weight: 300;
+    }
+
+    .spurs.sferrari .section-testimonials {
+        margin-top: -2em;
+    }
+
+    .spurs.sferrari .section-two .default-content-wrapper > div, .spurs .section-two .default-content-wrapper > p {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p:first-of-type {
+        margin-bottom: 2em;
+    }
+
+    .spurs.sferrari .section-testimonials p:first-child strong {
+        margin-top: 4em;
+    }
+}
+
+@media (min-width: 768px) {
+    .spurs .section-testimonials .default-content-wrapper {
+        display: flex;
+        column-gap: 30px;
+    }
+
+    .spurs .section-testimonials .default-content-wrapper > p {
+        height: 600px;
+    }
+
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p:first-child {
+        font-size: 28px;
+    }
+
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p:first-child strong {
+        font-size: 20px;
+        font-weight: 600;
+        margin-top: 10em;
+    }
+    .spurs.sferrari .section-testimonials .default-content-wrapper > p:first-child em {
+        font-size: 20px;
+        font-style: normal;
+    }
+
+    .spurs .section-testimonials .default-content-wrapper > p:first-child {
+        font-size: 25px;
+        line-height: 1.33;
+        font-weight: 300;
+    }
+
+    .spurs .section-testimonials .default-content-wrapper > * {
+        width: 50%;
+    }
+
+    .spurs .section-testimonials.section-testimonials-inverted  .default-content-wrapper > p:first-child {
+        order: 1;
+    }
+
+    .spurs .section-testimonials-text p:first-child {
+        font-size: 34px;
+    }
+
+    .spurs .section-testimonials-text p strong {
+        font-size: 20px;
+    }
+
+    .spurs .section-testimonials-text p em {
+        font-style: normal;
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 992px) {
+    .spurs .section-two .default-content-wrapper {
+        gap: 20px;
+    }
+
+    .spurs.sferrari .section-two h2,
+    .spurs.sferrari .section-two h3,
+    .spurs.sferrari .section-two h4 {
+        font-size: 60px;
+    }
+
+    .spurs .section-two h2,
+    .spurs .section-two h3,
+    .spurs .section-two h4 {
+        font-size: 45px;
+        line-height: 1.1;
+        font-weight: 300;
+    }
+
+    .spurs .section-two .default-content-wrapper {
+        display: flex;
+    }
+
+    .spurs .section-two .default-content-wrapper > * {
+        width: 50%;
+    }
+
+    .spurs.sferrari .section-two .default-content-wrapper > div,
+    .spurs.sferrari .section-two .default-content-wrapper > p {
+        font-size: 28px;
+        line-height: 1.33;
+        font-weight: 300;
+    }
+
+    .spurs .section-two .default-content-wrapper > div,
+    .spurs .section-two .default-content-wrapper > p {
+        margin-top: 0;
+        font-size: 20px;
+        line-height: 1.33;
+        font-weight: 300;
+    }
+
+    .spurs .section-testimonials-text p:first-child {
+        font-size: 40px;
+        font-weight: 400;
+    }
+}

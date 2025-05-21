@@ -1,0 +1,2 @@
+import{WINDOW as i}from"../../../types.js";import{generateUniqueID as o}from"./generateUniqueID.js";import{getActivationStart as a}from"./getActivationStart.js";import{getNavigationEntry as p}from"./getNavigationEntry.js";const c=(n,r)=>{const t=p();let e="navigate";return t&&(i.document?.prerendering||a()>0?e="prerender":i.document?.wasDiscarded?e="restore":t.type&&(e=t.type.replace(/_/g,"-"))),{name:n,value:typeof r>"u"?-1:r,rating:"good",delta:0,entries:[],id:o(),navigationType:e}};export{c as initMetric};
+//# sourceMappingURL=initMetric.js.map

@@ -1,50 +1,8 @@
-import { matchHeights } from '../../scripts/utils/utils.js';
-
-async function renderBlogGrid(block, endpoint, articlesNumber) {
-  const blogGrid = block.querySelector('.blog-grid');
-  try {
-    const response = await fetch(endpoint);
-    const rssText = await response.text();
-
-    const data = new window.DOMParser().parseFromString(rssText, 'text/xml');
-    const items = data.querySelectorAll('item');
-    let currentCount = 0;
-    items.forEach((item) => {
-      // eslint-disable-next-line no-plusplus
-      currentCount++;
-      if (currentCount > articlesNumber) return;
-      const link = item.querySelector('link').textContent;
-
-      const title = item.querySelector('title').textContent;
-      const media = item.querySelector('content');
-      const image = media.getAttribute('url');
-
-      // Create a blog card
-      const blogCard = document.createElement('a');
-      blogCard.setAttribute('href', link);
-      blogCard.classList.add('blog-card');
-
-      blogCard.innerHTML = `
-          <img src="${image}" alt="${title}">
+import{matchHeights as m}from"../../scripts/utils/utils.js";async function p(t,n,o){const e=t.querySelector(".blog-grid");try{const l=await(await fetch(n)).text(),u=new window.DOMParser().parseFromString(l,"text/xml").querySelectorAll("item");let a=0;u.forEach(c=>{if(a++,a>o)return;const i=c.querySelector("link").textContent,d=c.querySelector("title").textContent,g=c.querySelector("content").getAttribute("url"),r=document.createElement("a");r.setAttribute("href",i),r.classList.add("blog-card"),r.innerHTML=`
+          <img src="${g}" alt="${d}">
           <div class="blog-card-content">
-              <p>${title}</p>
-              <a href="${link}">Find out more</a>
+              <p>${d}</p>
+              <a href="${i}">Find out more</a>
           </div>
-      `;
-
-      blogGrid.appendChild(blogCard);
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-  }
-}
-
-export default function decorate(block) {
-  const { endpoint, articlesNumber } = block.closest('.section').dataset;
-  const blogGrid = document.createElement('div');
-  block.appendChild(blogGrid);
-  blogGrid.classList.add('blog-grid');
-  renderBlogGrid(block, endpoint, articlesNumber);
-  matchHeights(block, 'p');
-}
+      `,e.appendChild(r)})}catch(s){console.error(s)}}function x(t){const{endpoint:n,articlesNumber:o}=t.closest(".section").dataset,e=document.createElement("div");t.appendChild(e),e.classList.add("blog-grid"),p(t,n,o),m(t,"p")}export{x as default};
+//# sourceMappingURL=blog-news.js.map

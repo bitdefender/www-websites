@@ -1,0 +1,2 @@
+import{GLOBAL_OBJ as o}from"../utils-hoist/worldwide.js";import{createLogEnvelope as r}from"./envelope.js";o._sentryClientToLogBufferMap=new WeakMap;function L(e,g){const t=s(e)??[];if(t.length===0)return;const n=e.getOptions(),f=r(t,n._metadata,n.tunnel,e.getDsn());o._sentryClientToLogBufferMap?.set(e,[]),e.emit("flushLogs"),e.sendEnvelope(f)}function s(e){return o._sentryClientToLogBufferMap?.get(e)}export{L as _INTERNAL_flushLogsBuffer,s as _INTERNAL_getLogBuffer};
+//# sourceMappingURL=exports.js.map

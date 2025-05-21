@@ -1,0 +1,2 @@
+import{DEBUG_BUILD as u}from"./debug-build.js";import{isThenable as s}from"./utils-hoist/is.js";import{logger as c}from"./utils-hoist/logger.js";import{SyncPromise as d}from"./utils-hoist/syncpromise.js";function m(t,r,e,l=0){return new d((i,f)=>{const o=t[l];if(r===null||typeof o!="function")i(r);else{const n=o({...r},e);u&&o.id&&n===null&&c.log(`Event processor "${o.id}" dropped event`),s(n)?n.then(p=>m(t,p,e,l+1).then(i)).then(null,f):m(t,n,e,l+1).then(i).then(null,f)}})}export{m as notifyEventProcessors};
+//# sourceMappingURL=eventProcessors.js.map

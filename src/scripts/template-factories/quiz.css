@@ -1,0 +1,28 @@
+.quiz {
+    header.landingpage {
+        background: black;
+        height: 64px;
+
+        .block {
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        &.header-wrapper::after {
+            content: unset;
+         }
+
+        .icon {
+            height: unset;
+            width: unset;
+            display: block;
+        }
+    }
+
+    .tag-light-blue {
+        background: #006EFF 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        padding: 5px 15px;
+    }
+}

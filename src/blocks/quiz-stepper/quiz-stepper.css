@@ -1,0 +1,196 @@
+.quiz-stepper-container {
+    .block {
+        overflow: hidden;
+        padding-bottom: 200px;
+    }
+
+    .slide-wrapper {
+        display: flex;
+        width: 100%;
+        transition: transform .250s ease-in-out;
+        padding: 5px 0;
+    }
+
+    .form-wrapper {
+        width: 100%;
+        flex-shrink: 0;
+        margin-right: 60px;
+    }
+
+    .step {
+        box-shadow: 0 3px 6px #00000029;
+        border-radius: 16px;
+        padding: 25px 30px calc(235px / 2 + 30px);
+        position: relative;
+        width: 100%;
+        flex-shrink: 0;
+
+        fieldset {
+            legend {
+                text-align: left;
+                font: normal normal bold 18px/22px Arial, sans-serif;
+                color: #000;
+                margin-bottom: 20px;
+            }
+
+            .error-message {
+                visibility: hidden;
+                color: red;
+                font-weight: 500;
+            }
+
+            &.invalid {
+                .error-message {
+                    visibility: visible;
+                }
+             }
+        }
+
+        .img-container {
+            height: 235px;
+            border-radius: 30px;
+            overflow: hidden;
+            position: absolute;
+            bottom: calc(-235px / 2);
+            left: 25px;
+            right: 25px;
+        }
+    }
+
+    .step-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .step-index {
+        padding: 3px 10px;
+        background: #E4F2FF 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+    }
+
+    .step-previous {
+        font: normal normal normal 12px/14px Arial, sans-serif;
+        color: #7E7E7E;
+        margin-left: auto;
+        position: relative;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &::before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: url('/_src/icons/arrow-right.svg') no-repeat;
+            opacity: 0.5;
+            transform: rotate(-180deg);
+         }
+    }
+
+    .step-radio-wrapper {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 13px;
+        cursor: pointer;
+
+        input[type="radio"] {
+            display: block;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            font: inherit;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        label {
+            font: normal normal normal 16px/18px Arial, sans-serif;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        &.selected {
+            label {
+                font-weight: 600;
+            }
+         }
+    }
+
+    .button-container.submit {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+
+        .button {
+            background-color: #006EFF;
+            color: white;
+            border-radius: 5px;
+            padding: 16px;
+            width: 100%;
+            justify-content: center;
+
+            &::after {
+                background-color: white;
+             }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .quiz-stepper-container {
+        .step {
+            height: 630px;
+
+            .img-container {
+                height: 400px;
+                bottom: calc(-400px / 2);
+            }
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    .quiz-stepper-container {
+        .block {
+            padding-bottom: 0;
+        }
+
+        .step {
+            height: unset;
+            width: calc(100% - 250px);
+            padding: 40px 40% 40px 40px;
+
+            .img-container {
+                width: 500px;
+                height: 385px;
+                bottom: unset;
+                left: unset;
+                top: calc(50% - 385px / 2);
+                right: -250px;
+            }
+
+            fieldset {
+                legend {
+                    font: normal normal bold 22px/27px Arial, sans-serif;
+                    margin-bottom: 30px;
+                }
+
+                label {
+                    font: normal normal normal 18px/21px Arial, sans-serif;
+                }
+            }
+        }
+
+        .button-container.submit {
+            justify-content: flex-start;
+            margin-top: 30px;
+
+            .button {
+                width: 60%;
+            }
+        }
+    }
+}

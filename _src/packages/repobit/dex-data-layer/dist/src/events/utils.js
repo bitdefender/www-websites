@@ -1,0 +1,2 @@
+function r(){const t=new Date,e=t.getHours(),n=t.getMinutes(),a=t.getDay(),o=t.toTimeString().split(" ")[1];return`${e}:${n}|${e}:00-${e}:59|${["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][a]}|${o}`}function u(){const t=new Date,e=t.getDate(),n=t.getMonth()+1,a=t.getFullYear();return`${e}/${n}/${a}`}export{u as getCurrentDate,r as getCurrentTime};
+//# sourceMappingURL=utils.js.map

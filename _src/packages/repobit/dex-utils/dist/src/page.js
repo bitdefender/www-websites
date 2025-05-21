@@ -1,0 +1,2 @@
+class s{country;language;locale;name;queryParams;environment;constructor(a,e,t){this.locale=a,this.name=e,this.environment=t,this.country=this.locale.split("-")[1],this.language=this.locale.split("-")[0],this.queryParams=this.getQueryParams()}getQueryParams(){return new URLSearchParams(window.location.search)}getParamValue(a){return this.queryParams.get(a)}}export{s as default};
+//# sourceMappingURL=page.js.map

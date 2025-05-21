@@ -1,0 +1,923 @@
+:root {
+    --white: #fff;
+    --blue: #006dff;
+    --teal: #20E7FF;
+    --red: #ff2800;
+    --black: #000;
+    --dark: #010f10;
+    --dark2: #0c0f14;
+    --darker: #06080a;
+    --font-ibm: "IBM Plex Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* tipography */
+.trusted {
+    color: var(--white);
+    font-family: var(--font-ibm);
+    position: relative;
+    background: black;
+}
+
+.trusted p {
+    line-height: 1.3!important;
+}
+
+.trusted header .mega-menu__content {
+    padding: var(--body-padding)!important;
+}
+
+.trusted a.button span.button-text {
+    font-weight: 500;
+}
+
+.trusted div[data-align="right"] {
+    text-align: right;
+}
+
+.trusted div[data-align="left"] {
+    text-align: left;
+}
+
+.trusted div[data-align="center"] {
+    text-align: center;
+}
+
+.trusted h1, .trusted main .hero h1 {
+    font: normal normal bold 48px/42px var(--font-ibm);
+    color: #252525;
+    text-align: left;
+}
+
+.trusted h2 {
+    font: normal normal bold 20px/24px "IBM Plex Sans", sans-serif;
+    color: #252525;
+    text-align: left;
+}
+
+.trusted h3 {
+    font: normal normal normal 20px/27px var(--font-ibm);
+    text-align: left;
+}
+
+.trusted h4 {
+    font: normal normal normal 18px/20px var(--font-ibm);
+    text-align: left;
+}
+
+.trusted p, .trusted main .hero p {
+    font: normal normal normal 14px/18px var(--font-ibm);
+    text-align: left;
+}
+
+.trusted p strong {
+    font-weight: 600;
+}
+
+.trusted u {
+    text-decoration: none;
+    font: normal normal 600 14px/18px IBM Plex Sans;
+    letter-spacing: 0px;
+    color: #006EFF;
+}
+
+.trusted .d-flex {
+    flex-direction: column;
+}
+
+.trusted .justify-between {
+    justify-content: space-between;
+}
+
+.trusted .align-top {
+    align-items: top;
+}
+
+.trusted .align-center {
+    align-items: center;
+}
+
+.trusted .align-end {
+    align-items: end;
+}
+
+.trusted .d-flex div {
+    flex: 1;
+}
+
+.trusted .blue_bck {
+    background-color: var(--blue);
+}
+
+.trusted .red_bck {
+    background-color: var(--red);
+}
+
+.trusted .black_bck {
+    background-color: var(--black);
+}
+
+.trusted .dark_bck {
+    background-color: var(--dark);
+}
+
+.trusted .dark2_bck {
+    background-color: var(--dark2);
+}
+
+.trusted .darker_bck {
+    background-color: var(--darker);
+}
+
+.trusted .only-desktop {
+    display: none;
+}
+
+.trusted .only-mobile {
+    display: block;
+}
+
+.trusted a.button.primary span, .trusted button.primary span {
+    margin: 0 auto;
+}
+
+.trusted main a.button:any-link:not(.modal):not(.primary) {
+    background-color: var(--blue);
+    border: 1px solid var(--blue);
+}
+
+/* long button css todo: maybe we shouldn't have this long text button from the start from UX perspective */
+.trusted a.button.modal,
+main .section.link-right a {
+    white-space: unset;
+    text-align: unset;
+}
+
+.trusted .video_up {
+    display: none;
+    z-index: 999;
+    position: relative;
+    margin-top: -19.5em;
+    background: linear-gradient(to bottom, transparent 31%, #EFF6FF 31%);
+}
+
+.trusted .section.apartnership_box {
+    background: #EFF6FF;
+    color: black;
+}
+
+.trusted .section.apartnership_box.v2 {
+    background: white;
+}
+
+.trusted .section.apartnership_box.v2 img {
+    max-height: 70px;
+    margin-bottom: 2em;
+}
+
+.trusted .section.apartnership_box p.button-container {
+    margin-top: 30px;
+}
+
+
+.trusted .apartnership_box .default-content-wrapper > * {
+    text-align: center;
+}
+
+.trusted .apartnership_box .d-flex > div:nth-of-type(2) {
+    flex: 0;
+    margin-left: 0;
+}
+
+.trusted .has_quotes .d-flex > div:nth-of-type(2) {
+    margin-left: 0;
+}
+
+.trusted .has_quotes p {
+    margin: 0;
+}
+
+.trusted .has_quotes em {
+    font-style: normal;
+}
+
+.trusted .has_quotes blockquote p::before, .trusted .has_quotes blockquote p::after {
+    display: none;
+}
+
+.trusted .has_quotes blockquote {
+    margin: 0;
+    text-indent: 0;
+}
+
+.trusted .has_quotes blockquote em {
+    font-style: italic;
+}
+
+.trusted .has_quotes blockquote::before, .trusted .has_quotes blockquote::after {
+    content: "";
+    height: 28px;
+    width: 100%;
+    display: block;
+}
+
+.trusted .has_quotes blockquote::before {
+    margin-bottom: 1em;
+    background: url('../../icons/quot.png') no-repeat 0 0 transparent;
+    background-size: auto 100%;
+}
+
+/* mouse-scroll */
+.trusted #mouse-scroll {
+    display: none;
+}
+
+.trusted #mouse-scroll {
+    position: fixed;
+    margin: auto;
+    left: 10%;
+    top: 17em;
+    -webkit-transform: translateX(-20%);
+    z-index: 9999;
+}
+
+.trusted #mouse-scroll span {
+    display: block;
+    width: 13px;
+    height: 15px;
+    background: url('../../icons/arow_down.png') 0 0 no-repeat transparent;
+    margin: 3px auto;
+}
+
+.trusted #mouse-scroll .mouse {
+    height: 60px;
+    width: 38px;
+    border-radius: 30px;
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none;
+    border: 2px solid var(--white);
+    top: 170px;
+    margin-bottom: 9px;
+}
+
+.trusted #mouse-scroll .down-arrow-1 {
+    margin-top: 6px;
+}
+
+.trusted #mouse-scroll .down-arrow-1, .trusted #mouse-scroll .down-arrow-2, .trusted #mouse-scroll .down-arrow-3 {
+    -webkit-animation: mouse-scroll 1s infinite;
+    -moz-animation: mouse-scroll 1s infinite;
+}
+
+.trusted #mouse-croll .down-arrow-1 {
+    -webkit-animation-delay: .1s;
+    -moz-animation-delay: .1s;
+    -webkit-animation-direction: alternate;
+}
+
+.trusted #mouse-scroll .down-arrow-2 {
+    -webkit-animation-delay: .2s;
+    -moz-animation-delay: .2s;
+    -webkit-animation-direction: alternate;
+}
+
+.trusted #mouse-scroll .down-arrow-3 {
+    -webkit-animation-delay: .3s;
+    -moz-animation-dekay: .3s;
+    -webkit-animation-direction: alternate;
+}
+
+.trusted #mouse-scroll .mouse-in {
+    height: 10px;
+    width: 6px;
+    display: block;
+    border-radius: 5px;
+    margin: 5px auto;
+    background: transparent;
+    border: 1px solid var(--white);
+}
+
+.trusted #mouse-scroll .mouse-in {
+    -webkit-animation: animated-mouse 1.2s ease infinite;
+    -moz-animation: mouse-animated 1.2s ease infinite;
+}
+
+.trusted canvas {
+    display: block;
+    vertical-align: bottom;
+}
+
+/* ---- nav ---- */
+.trusted header .icon, .trusted .logo-container p, .trusted main .hero .hero-content .breadcrumb a, .trusted main .hero .hero-content .breadcrumb a::after {
+    color: var(--white);
+}
+
+.trusted main .hero .hero-content .breadcrumb a:last-of-type:after {
+    display: none;
+}
+
+.trusted .other-options > div > h2 {
+    color: var(--black);
+}
+
+/* ---- hero banner ---- */
+.trusted main .hero::after {
+    display: none;
+}
+
+.trusted main .hero h1, .trusted main .hero h2, .trusted main .hero p {
+    color: var(--white);
+}
+
+.trusted main .hero em {
+    font-size: 15px;
+    line-height: 15px;
+    font-style: unset;
+    display: block;
+}
+
+.trusted main .hero .hero-picture {
+    height: 100%;
+}
+
+.trusted main .hero .hero-content {
+    padding: 1em var(--body-padding);
+}
+
+.trusted .default-header {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.trusted .default-header p {
+    margin: 0;
+}
+
+.trusted .box-carousel-container .default-content-wrapper {
+    padding: 50px;
+}
+
+.trusted .box-carousel-container.testimonials .carousel-item {
+    
+    padding: 2em;
+}
+
+.trusted .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
+    margin-bottom: 10px;
+}
+
+.trusted .box-carousel-container.testimonials .carousel-item .subtitle-secondary::before {
+    display: none;
+}
+
+.trusted .box-carousel-container.testimonials .carousel-item .subtitle {
+    color: #6b6b6b;
+    min-height: 35px;
+}
+
+/* ---- particles.js container ---- */
+.trusted #particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: var(--blue);
+}
+
+/* awards band */
+.trusted .section.static-awards {
+    /*todo remove block */
+    /*display: none;*/
+    background: white;
+    padding: 0;
+}
+
+.trusted .section.static-awards .default-content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 33px;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+}
+
+/* link */
+.trusted .section.static-awards .default-content-wrapper > *:not(:first-child) {
+    margin: 0;
+    width: calc((100% - 120px) / 4);
+}
+
+.trusted .section.static-awards .default-content-wrapper > *:first-child,
+.trusted .section.static-awards .default-content-wrapper > *:first-child > a {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-indent: -9999px;
+    z-index: 999;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.trusted .section.static-awards .default-content-wrapper > * img {
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    object-fit: scale-down;
+    object-position: inherit;
+    filter: grayscale(100%);
+}
+/* end awards band */
+
+/* override columns bg */
+.trusted .section.columns-container.trusted-bg-1 {
+    background: #EFF6FF 0% 0% no-repeat padding-box;
+    color: black;
+}
+
+/*.trusted .section.columns-container.trusted-bg-1 h2,*/
+/*.trusted .section.columns-container.trusted-bg-1 h3,*/
+/*.trusted .section.columns-container.trusted-bg-1 h4 {*/
+/*    font: normal normal 600 20px/24px IBM Plex Sans;*/
+/*}*/
+
+.trusted .section.columns-container.trusted-bg-1 p,
+.trusted .section.columns-container.trusted-bg-1 div {
+    font: normal normal normal 14px/21px IBM Plex Sans;
+}
+/* end override columns */
+
+/* columns with logos */
+.trusted .section.columns-container.bg-white  {
+    background: white;
+    color: black;
+}
+
+.trusted .section.columns-container .columns-img-col {
+    display: none;
+}
+
+.trusted .section.columns-container .columns > div > div:not(.columns-img-col) {
+    display: flex;
+    flex-direction: column;
+}
+
+.trusted .section.columns-container .columns > div > div:not(.columns-img-col) img {
+    width: 160px;
+}
+
+/*.trusted .section.columns-container h2,*/
+/*.trusted .section.columns-container h3,*/
+/*.trusted .section.columns-container h4 {*/
+/*    font: normal normal 600 20px/24px IBM Plex Sans;*/
+/*}*/
+
+.trusted .section.columns-container p,
+.trusted .section.columns-container div {
+    font: normal normal normal 14px/21px IBM Plex Sans;
+}
+/* end columns with logos */
+
+/* particle band section */
+.trusted .section.particle-band {
+    display: none;
+}
+/* end particle band section */
+
+.trusted .section.small-text p {
+    line-height: 1.4;
+    color: #777777;
+}
+
+.trusted .columns-container a:not(.button):any-link {
+    color: white;
+    text-decoration: underline;
+}
+
+.trusted .columns-container.bg-white a:not(.button):any-link,
+.trusted .columns-container.trusted-bg-1 a:not(.button):any-link{
+    color: black;
+    text-decoration: underline;
+}
+
+.trusted .columns-container a.button:any-link:not(.modal):not(.primary) {
+    border: solid white 2px;
+    width: 100%;
+    justify-content: center;
+}
+
+.trusted .columns-container.bg-white a.button:any-link:not(.modal):not(.primary) {
+    border: solid black 2px;
+    background: white;
+    color: black;
+    width: 100%;
+    justify-content: center;
+}
+
+.trusted .columns-container.bg-white a.button:any-link:not(.modal):not(.primary)::after {
+    background: black;
+}
+
+.trusted p.button-container a {
+    font-weight: 500;
+    border-width: 1px;
+}
+
+.trusted p.button-container a:hover {
+    background-color: var(--blue) !important;
+    border: 1px solid var(--blue) !important;
+    color: white !important;
+}
+
+.trusted header,
+.trusted main,
+.trusted footer {
+    max-width: unset;
+    margin: unset;
+}
+
+.trusted .section.dealsbluebanner {
+    background-color: white;
+}
+
+.trusted .section.dealsbluebanner * {
+    color: black;
+}
+
+.trusted .section.dealsbluebanner a {
+    background-color: transparent !important;
+    border: solid black 1px !important;
+}
+
+.trusted .section.dealsbluebanner a:hover span {
+    color: white!important;
+}
+
+.trusted .section.dealsbluebanner .block  {
+    background-color: rgb(239, 246, 255) !important;
+    border-radius: 15px;
+    margin-top: 3em;
+    padding: 0 0 0 3em;
+    overflow: hidden;
+}
+
+.trusted .section.dealsbluebanner .columns-img-col {
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0;
+    height: 389px;
+}
+
+.trusted .section.dealsbluebanner .columns-img-col::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 31%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(239, 246, 255, 1), rgba(239, 246, 255, 0));
+    pointer-events: none;
+  }
+
+.trusted .section.dealsbluebanner .columns-img-col img {
+    height: 100%;
+    width: auto;
+    max-width: unset;
+    margin-left: -12em;
+}
+
+.trusted footer {
+    width: 100%;
+    overflow: hidden;
+}
+
+@-webkit-keyframes animated-mouse {
+    0% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        -webkit-transform: translateY(6px);
+        -ms-transform: translateY(6px);
+        transform: translateY(6px);
+    }
+}
+
+@-webkit-keyframes mouse-scroll {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes mouse-scroll {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@media (min-width: 1600px) {
+    .trusted main .hero .hero-picture picture img {
+        display: block;
+        padding-left: 10%;
+    }
+
+    .trusted header .mega-menu__content {
+        padding: 0 var(--section-large-desktop-padding)!important;
+    }
+}
+
+@media (min-width: 1300px) {
+    .trusted main .hero .hero-picture picture img {
+        padding-left: 20%;
+    }
+}
+
+@media (min-width: 768px) {
+    .trusted h1, .trusted main .hero h1 {
+        font: normal normal bold 96px/82px var(--font-ibm);
+    }
+
+    .trusted h2 {
+        font: normal normal bold 41px/48px var(--font-ibm);
+    }
+
+    .trusted .v2 h2 {
+        font: normal normal bold 39px/45px var(--font-ibm);
+    }
+
+    .trusted h3 {
+        font: normal normal normal 40px/45px var(--font-ibm);
+    }
+
+    .trusted h4 {
+        font: normal normal normal 35px/38px var(--font-ibm);
+    }
+
+    .trusted p {
+        font: normal normal normal 18px/32px var(--font-ibm);
+    }
+
+    .trusted main .hero .hero-content .breadcrumb {
+        margin-top: 6em;
+    }
+
+    .trusted .logo-container {
+        padding-left: 1em !important;
+    }
+
+    .trusted .d-flex {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .trusted .only-desktop {
+        display: block;
+    }
+
+    .trusted .only-mobile {
+        display: none;
+    }
+
+    .trusted u {
+        font: normal normal normal 24px/24px var(--font-ibm);
+    }
+
+    .trusted #mouse-scroll {
+        display: block;
+    }
+
+    .trusted a.button.primary, .trusted button.primary {
+        min-width: 190px!important;
+    }
+
+    .trusted .apartnership_box .d-flex > div:nth-of-type(2) {
+        margin-left: 14em;
+    }
+
+    .trusted .has_quotes .d-flex > div:nth-of-type(2) {
+        margin-left: 6em;
+    }
+
+    .trusted .has_quotes blockquote::before, .trusted .has_quotes blockquote::after {
+        height: 50px;
+    }
+
+    .trusted main .hero .hero-content {
+        min-height: auto;
+    }
+
+    .trusted main .hero .hero-content > div {
+        width: 45%;
+    }
+
+    .trusted main .hero em {
+        position: absolute;
+        bottom: 10px;
+        font: normal normal 600 18px/23px var(--font-ibm);
+    }
+
+    .trusted .has_quotes blockquote {
+        width: 410px;
+    }
+
+    .trusted .video_up {
+        display: none;
+        margin-top: -240px;
+    }
+
+    .trusted .columns-container a.button:any-link:not(.modal):not(.primary),
+    .trusted .columns-container.bg-white a.button:any-link:not(.modal):not(.primary) {
+        width: unset;
+        justify-content: unset;
+    }
+
+    .trusted .section.static-awards .default-content-wrapper > *:not(:first-child) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .trusted .section.static-awards .default-content-wrapper > * picture {
+        width: 60%;
+    }
+}
+
+@media (min-width: 992px) {
+    .trusted header .mega-menu__content {
+        padding: 0 var(--section-desktop-padding)!important;
+    }
+
+    /* awards band */
+    .trusted .section.static-awards .default-content-wrapper {
+        flex-wrap: unset;
+        padding: 0 7em;
+    }
+    .trusted .section.static-awards .default-content-wrapper > * {
+        width: calc(100% - 66px);
+        height: calc(100% - 30px);
+    }
+    /* end awards band */
+
+    /* columns bg-1 override */
+    .trusted .section.columns-container.trusted-bg-1 {
+        min-height: 500px;
+    }
+
+    .trusted .section.columns-container.trusted-bg-1 p,
+    .trusted .section.columns-container.trusted-bg-1 div{
+        font: normal normal normal 18px/27px IBM Plex Sans;
+    }
+
+    .trusted .section.columns-container.trusted-bg-1 .columns > div  {
+        align-items: flex-start;
+    }
+
+    .trusted .section.columns-container.trusted-bg-1 .columns > div > div:nth-child(2) {
+        padding: 46px 0 30px;
+    }
+    /* end columns bg-1 override */
+
+    /* columns with logos */
+    .trusted .section.columns-container {
+        padding: 0;
+    }
+    .trusted .section.columns-container .columns-img-col {
+        display: block;
+    }
+
+    .trusted .section.columns-container .columns > div > div:not(.columns-img-col) p:last-child {
+        order: initial;
+    }
+
+    .trusted .section.columns-container p,
+    .trusted .section.columns-container div {
+        font: normal normal normal 18px/27px IBM Plex Sans;
+    }
+    /* end columns with logos */
+
+    .trusted .section.apartnership_box .default-content-wrapper {
+        width: 50%;
+    }
+
+    .trusted .section.apartnership_box .default-content-wrapper > * {
+        text-align: center;
+    }
+
+    /* particle band section */
+    .trusted .section.particle-band {
+        display: block;
+        padding: 0;
+        background: url("/_src/icons/particle-band.svg") no-repeat #EFF6FF;
+        height: 50px;
+    }
+
+    .trusted .section.particle-band .default-content-wrapper {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .trusted .section.particle-band .default-content-wrapper p {
+        margin: 0
+    }
+    /* end particle band section */
+
+    .trusted .section.small-text p {
+        font: normal normal var(--font-weight-bold) 13px/1 IBM Plex Sans;
+    }
+
+    .trusted main .hero .hero-picture picture img {
+        display: block;
+        padding-left: 0;
+    }
+
+    .trusted .section.static-awards .default-content-wrapper > *:not(:first-child) {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .trusted .section.static-awards .default-content-wrapper > * picture {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .trusted .default-content-wrapper {
+        padding: 1em;
+    }
+
+    .trusted main .hero em {
+        display: none;
+    }
+
+    .trusted main .hero .hero-content .breadcrumb {
+        padding: 14px 0;
+        margin-bottom: 0;
+    }
+
+    .trusted .box-carousel-container .default-content-wrapper {
+        padding: 0 1em;
+    }
+}
+
+@media (max-width: 992px) {
+    .trusted .section.dealsbluebanner .block {
+        padding: 0;
+        margin-top: 0;
+    }
+
+    .trusted .section.dealsbluebanner h2 {
+        margin-bottom: 0;
+    }
+
+    .trusted .section.dealsbluebanner a {
+        width: auto!important;
+    }
+
+    .trusted .section.dealsbluebanner .columns-text-col {
+        padding: 1em;
+        order: 2;
+    }
+
+    .trusted .section.dealsbluebanner .columns-img-col {
+        display: block!important;
+        order: 1;
+        height: auto;
+    }
+
+    .trusted .section.dealsbluebanner .columns-img-col img {
+        height: auto;
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+    }
+
+    .trusted .section.dealsbluebanner .columns-img-col::before {
+        display: none;
+    }
+
+    .trusted .box-carousel-container.testimonials .carousel-item {
+        width: 300px;
+        padding: 1em;
+        margin: 0 1em;
+    }
+}

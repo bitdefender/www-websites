@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sources":["../../../../../../../../node_modules/@repobit/dex-data-layer/dist/src/events/page-loaded-event/index.js"],"sourcesContent":["export class PageLoadedEvent {\n    event = 'page loaded';\n}\n//# sourceMappingURL=index.js.map"],"names":["PageLoadedEvent"],"mappings":"AAAO,MAAMA,CAAgB,CACzB,MAAQ,aACZ","x_google_ignoreList":[0]}

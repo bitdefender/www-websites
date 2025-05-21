@@ -1,0 +1,2 @@
+import{getCurrentDate as s,getCurrentTime as d}from"../utils.js";class g{event="page load started";pageInstanceID;page;constructor(t,n={}){const a=window.adobeDataLayer.find(o=>o.event==="page load started");this.pageInstanceID=a.pageInstanceID;const e=a.page,i=t instanceof Function?t({...e.info}):{...e.info,...t};this.page={info:i,attributes:{...e.attributes,...n,time:d(),date:s()}}}}export{g as WindowLoadStartedEvent};
+//# sourceMappingURL=index.js.map

@@ -1,0 +1,2 @@
+import{observe as a}from"../observe.js";let i=0,e=1/0,t=0;const c=r=>{r.forEach(n=>{n.interactionId&&(e=Math.min(e,n.interactionId),t=Math.max(t,n.interactionId),i=t?(t-e)/7+1:0)})};let o;const f=()=>o?i:performance.interactionCount||0,m=()=>{"interactionCount"in performance||o||(o=a("event",c,{type:"event",buffered:!0,durationThreshold:0}))};export{f as getInteractionCount,m as initInteractionCountPolyfill};
+//# sourceMappingURL=interactionCountPolyfill.js.map

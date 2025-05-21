@@ -1,0 +1,217 @@
+.form-blog {
+    --input-border: #d6d6d6;
+  }
+  
+  .form-blog-wrapper {
+    width: 100%;
+    margin: 0 auto;
+    max-width: var(--body-max-width);
+    padding: 0 var(--body-padding);
+    position: relative;
+  }
+  
+  .form-blog > div:first-child {
+    display: none;
+  }
+  
+  .form-blog input[type="email"] {
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    font-size: var(--body-font-size-s);
+    line-height: 50px;
+    padding: 0 15px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .form-blog input[type="text"] {
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    font-size: var(--body-font-size-s);
+    line-height: 50px;
+    padding: 0 15px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .checkbox {
+    display: flex;
+    align-items: flex-start;
+    color: var(--checkbox-label);
+    font-size: var(--body-font-size-xs);
+    margin: 15px 0;
+  }
+  
+  .checkbox input[type="checkbox"] {
+    margin: 5px 10px;
+    width: 25px;
+    height: auto;
+    zoom: 1.25;
+
+    @media (min-width: 768px) {
+      zoom: 1;
+    }
+  }
+  
+  input[type="submit"] {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  input[type="submit"]:disabled {
+    opacity: 0.5;
+    cursor: unset;
+  }
+  
+  input[type="submit"]:disabled::after {
+    display: none;
+  }
+  
+  input[type="submit"].disabled:hover .button-text {
+    transform: none;
+  } 
+    
+  .form-blog-container > .default-content-wrapper:nth-child(3) {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .form-blog-container > .default-content-wrapper:nth-child(3) > p strong {
+    color: var( --checkbox-label);
+    font-size: var(--body-font-size-xxs);
+    font-weight: var(--font-weight-bold);
+  }
+  
+  
+  .form-blog-container input[type="submit"] {
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size-s);
+    font-style: normal;
+    font-weight: var(--font-weight-bold);
+    -webkit-font-smoothing: antialiased;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    text-decoration: none;
+    padding: 10px 26px 8px 28px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--button-link-color);
+    background-color: var(--button-background-color);
+    border: 2px solid var(--button-background-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 8px;
+    height: fit-content;
+  }
+  
+  .form-blog-container {
+    --dark-background-color: #000;
+    --black-color: #000;
+    --white-color: #fff;
+    --background-color: #fff;
+    --link-color: #005ed9;
+    --link-hover-color: #00439c;
+    --button-link-color: #fff;
+    --button-background-color: #eb0000;
+    --button-hover-background-color: #d80000;
+    --button-primary-background-color: #000;
+    --button-primary-hover-background-color: #000;
+    --button-secondary-color: #000;
+    --button-secondary-hover-background-color: #000;
+    --overlay-background-color: #eee;
+    --highlight-background-color: #ccc;
+    --text-color: #000;
+    --text-error-color: #f00;
+    --color-highlight-blue: #006dff;
+    --color-dark-gray: #616161;
+    --checkbox-label: #3c3c3c;
+    --highlight-light-blue: #f3f7fe;
+    --text-dark-color: #fff;
+    --horizontal-separator-color: #dedede;
+    --modal-background-color: rgb(0 0 0 / 50%);
+    --background-color-light-sky-blue: #e4f2ff;
+    --icon-color: #205fff;
+    --background-light-blue: #d9eeff;
+    --background-blue: #005ed9;
+    --dark-blue-tag: #005eff;
+    --light-blue-tag: #13b0a7;
+    --green-tag: #218728;
+    --dark-shadow: #0000001a;
+    --background-checkmark: #61AF53;
+    --body-font-family: "Roboto", "roboto-normal-400-fallback", helvetica, ubuntu, roboto, noto, sans-serif;
+    --heading-font-family: var(--body-font-family);
+    --fixed-font-family: var(--body-font-family);
+    --font-weight-thin: 300;
+    --font-weight-regular: 400;
+    --font-weight-bold: 500;
+    --font-weight-bolder: 600;
+    --font-weight-boldest: 700;
+    --font-weight-heavy: 900;
+    --body-font-size-l: 22px;
+    --body-font-size-m: 18px;
+    --body-font-size-s: 16px;
+    --body-font-size-xs: 14px;
+    --body-font-size-xxs: 12px;
+    --body-font-size-xxxs: 10px;
+    --heading-font-size-xxxl: 60px;
+    --heading-font-size-xxl: 48px;
+    --heading-font-size-xl: 40px;
+    --heading-font-size-l: 32px;
+    --heading-font-size-m: 24px;
+    --heading-font-size-s: 20px;
+    --heading-font-size-xs: 18px;
+    --heading-font-size-xxs: 16px;
+    --nav-height: 63px;
+    --nav-height-desktop: 40px;
+    --body-max-width: 1920px;
+    --body-padding: 20px;
+    --section-desktop-max-width: 1300px;
+    --section-desktop-padding: 20px;
+    --section-large-desktop-max-width: 1332px;
+    --section-large-desktop-padding: 50px;
+    --section-desktop-padding-vertical: 48px;
+    --section-mobile-padding-vertical: 32px;
+  }
+  
+/* stylelint-disable-next-line no-duplicate-selectors */
+.form-blog-container{
+  .form-blog-wrapper {
+    box-sizing: border-box;
+
+    .form-blog.blog-template {
+      box-shadow: 0 5px 15px 5px rgb(0 0 0 / 10%);
+      max-width: 390px;
+      padding: 15px;
+      box-sizing: border-box;
+  
+      input[type="email"] {
+        box-sizing: border-box;;
+      }
+      
+      input[type="text"] {
+        box-sizing: border-box;;
+      }
+
+      > div:first-child {
+        display: block;
+
+        h2 {
+          font-size: 22px;
+          font-weight: bold;
+        }
+        
+        p {
+          font-size: 16px;
+        }
+
+        p.button-container {
+          display: none;
+        }
+      }
+    }  
+  }
+}
