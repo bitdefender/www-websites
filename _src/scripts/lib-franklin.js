@@ -12,7 +12,6 @@
  */
 
 import { UserAgent } from '@repobit/dex-utils';
-import * as Sentry from '@sentry/browser';
 import page from './page.js';
 
 const STICKY_NAVIGATION_SECTION_METADATA_KEY = 'sticky-navigation-item';
@@ -907,8 +906,8 @@ export function setup() {
 }
 
 function initialiseSentry() {
-  window.sentryOnLoad = function () {
-    Sentry.init({
+  window.sentryOnLoad = () => {
+    window.Sentry.init({
       release: 'www-websites@1.0.0',
       tracesSampleRate: 0.05,
       replaysSessionSampleRate: 0.1,
