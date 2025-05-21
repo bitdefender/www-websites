@@ -1,5 +1,5 @@
 // vite.config.js
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import path, { resolve } from 'path'
 import fg from 'fast-glob'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
@@ -13,6 +13,24 @@ function watchStatics() {
       for (const file of files) {
         // tell Rollup to watch this file
         this.addWatchFile(resolve(process.cwd(), file));
+      }
+    },
+  };
+}
+
+function enforceLF(): Plugin {
+  return {
+    name: 'enforce-lf',
+    generateBundle(_, bundle) {
+      for (const [, file] of Object.entries(bundle)) {
+        // asset chunks (CSS, JSON, etc.)
+        if (file.type === 'asset' && typeof file.source === 'string') {
+          file.source = file.source.replace(/\r\n/g, '\n');
+        }
+        // JS chunks
+        if (file.type === 'chunk') {
+          file.code = file.code.replace(/\r\n/g, '\n');
+        }
       }
     },
   };
@@ -39,6 +57,7 @@ export default defineConfig({
         },
       ]
     }),
+    enforceLF()
   ],
   build: {
     outDir: '_src',
