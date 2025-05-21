@@ -478,6 +478,19 @@ function eventOnDropdownSlider() {
   });
 }
 
+function initialiseSentry() {
+  window.sentryOnLoad = () => {
+    window.Sentry.init({
+      release: 'www-websites@1.0.0',
+      tracesSampleRate: 0.05,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+
+      allowUrls: ['www.bitdefender.com'],
+    });
+  };
+}
+
 /**
  * Loads everything that happens a lot later,
  * without impacting the user experience.
@@ -503,6 +516,7 @@ async function loadPage() {
   }
 
   await loadEager(document);
+  initialiseSentry();
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
