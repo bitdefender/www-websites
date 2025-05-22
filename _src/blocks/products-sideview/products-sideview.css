@@ -24,10 +24,6 @@
     padding: 30px;
 }
 
-.products-sideview.no-blue-tags .tag-blue {
-    display: none;
-}
-
 .products-sideview .prod-oldprice {
     text-decoration: line-through;
 }
@@ -63,6 +59,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+.products-sideview.no-blue-tags .tag-blue {
+    display: none;
 }
 
 .products-sideview .tag-blue svg {
