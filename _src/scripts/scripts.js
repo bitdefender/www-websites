@@ -482,20 +482,20 @@ function initialiseSentry() {
   window.sentryOnLoad = () => {
     window.Sentry.init({
       release: 'www-websites@1.0.0',
-      tracesSampleRate: 0.05,
+      tracesSampleRate: 1.0,
       replaysSessionSampleRate: 0.1,
       replaysOnErrorSampleRate: 1.0,
 
       allowUrls: ['www.bitdefender.com'],
     });
   };
-}
 
-function addSentryScript() {
-  const sentryScript = document.createElement('script');
-  sentryScript.src = 'https://js.sentry-cdn.com/453d79512df247d7983074696546ca60.min.js';
-  sentryScript.setAttribute('crossorigin', 'anonymous');
-  document.head.appendChild(sentryScript);
+  if (Math.random() < 0.01) {
+    const sentryScript = document.createElement('script');
+    sentryScript.src = 'https://js.sentry-cdn.com/453d79512df247d7983074696546ca60.min.js';
+    sentryScript.setAttribute('crossorigin', 'anonymous');
+    document.head.appendChild(sentryScript);
+  }
 }
 
 /**
@@ -528,7 +528,6 @@ async function loadPage() {
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
-  addSentryScript();
 
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
