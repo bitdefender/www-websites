@@ -905,24 +905,10 @@ export function setup() {
   }
 }
 
-function initialiseSentry() {
-  window.sentryOnLoad = () => {
-    window.Sentry.init({
-      release: 'www-websites@1.0.0',
-      tracesSampleRate: 0.05,
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
-
-      allowUrls: ['www.bitdefender.com'],
-    });
-  };
-}
-
 /**
  * Auto initializiation.
  */
 function init() {
-  initialiseSentry();
   setup();
   sampleRUM('top');
 
