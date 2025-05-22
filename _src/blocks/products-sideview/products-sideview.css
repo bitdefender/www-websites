@@ -24,6 +24,10 @@
     padding: 30px;
 }
 
+.products-sideview.no-blue-tags .tag-blue {
+    display: none;
+}
+
 .products-sideview .prod-oldprice {
     text-decoration: line-through;
 }
