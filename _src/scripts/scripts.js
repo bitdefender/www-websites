@@ -491,6 +491,13 @@ function initialiseSentry() {
   };
 }
 
+function addSentryScript() {
+  const sentryScript = document.createElement('script');
+  sentryScript.src = 'https://js.sentry-cdn.com/453d79512df247d7983074696546ca60.min.js';
+  sentryScript.setAttribute('crossorigin', 'anonymous');
+  document.head.appendChild(sentryScript);
+}
+
 /**
  * Loads everything that happens a lot later,
  * without impacting the user experience.
@@ -507,6 +514,7 @@ function loadDelayed() {
 }
 
 async function loadPage() {
+  initialiseSentry();
   await window.hlx.plugins.load('eager');
 
   // specific for webview
@@ -516,7 +524,7 @@ async function loadPage() {
   }
 
   await loadEager(document);
-  initialiseSentry();
+  addSentryScript();
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
