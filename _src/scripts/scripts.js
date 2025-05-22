@@ -524,11 +524,11 @@ async function loadPage() {
   }
 
   await loadEager(document);
-  addSentryScript();
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
+  addSentryScript();
 
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
