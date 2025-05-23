@@ -523,7 +523,8 @@
         }
     }
 
-    .full-width-mobile {
+    .full-width-mobile.columns-container {
+
         h2 {
             font-weight: 600;
 
@@ -536,15 +537,17 @@
             }
         }
 
-        p {
+        .columns.blue-banner .columns-title-col p {
             margin-top: 0;
             margin-bottom: 16px;
-            font-size: 14px !important;
+            font-size: 14px;
+            text-wrap: pretty;
+            font-weight: 400;
 
-            &:last-of-type {
-                margin-bottom: 0;
+            & + p {
+                font-size: 16px;
                 font-weight: 600;
-                font-size: 13px;
+                margin-bottom: 0;
             }
         }
     }
@@ -1203,12 +1206,9 @@
                         line-height: 42px;
                     }
 
-                    p:last-of-type {
-                        font-size: 22px;
-                        line-height: 26px;
-                        font-weight: 400;
+                    p + p {
+                        font-size: 22px !important;
                     }
-
                 }
             }
         }
