@@ -1,4 +1,4 @@
-import Target from "@repobit/dex-target";
+import { target } from "../../target.js";
 import { User } from "@repobit/dex-utils";
 import { Constants } from "../constants.js";
 import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams, getMetadata, getUrlPromotion } from "../../utils/utils.js";
@@ -207,7 +207,7 @@ export class ProductOption {
 			return this.buyLink;
 		}
 
-		return await Target.appendVisitorIDsTo(
+		return await target.appendVisitorIDsTo(
 			setUrlParams(this.buyLink, params)
 		);
 	}
@@ -724,7 +724,7 @@ class Vlaicu {
 
 	static async getProductVariations(productId, campaign) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
-		let geoIpFlag = (await Target.configMbox)?.useGeoIpPricing;
+		let geoIpFlag = (await target.configMbox)?.useGeoIpPricing;
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
@@ -927,7 +927,7 @@ export class Store {
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
-			this.targetBuyLinkMappings = (await Target.configMbox)?.products;
+			this.targetBuyLinkMappings = (await target.configMbox)?.products;
 		}
 
 		// remove duplicates by id
@@ -938,7 +938,7 @@ export class Store {
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
 					if (!product.forcePromotion) {
-						product.promotion = (await Target.configMbox)?.promotion
+						product.promotion = (await target.configMbox)?.promotion
 							|| getUrlPromotion()
 							|| product.promotion
 							|| getMetadata("pid")

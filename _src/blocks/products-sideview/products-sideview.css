@@ -61,6 +61,10 @@
     justify-content: center;
 }
 
+.products-sideview.no-blue-tags .tag-blue {
+    display: none;
+}
+
 .products-sideview .tag-blue svg {
     width: 14px;
 }
