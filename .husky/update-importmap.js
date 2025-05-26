@@ -36,20 +36,9 @@ function execNpmLs() {
 }
 
 // Recursively collect unique dependencies from the npm ls JSON
-function collectDependencies(deps, result = {}, depth = 0) {
-  if (!deps) return result;
+function collectDependencies(deps, result = {}) {
   Object.entries(deps).forEach(([name, info]) => {
-    // Add or update the dependency info (here, we're simply storing the version)
-    if (!result[name]) result[name] = { primaryDependency: '', secondaryDependencies: [] };
-    if (depth === 0) {
-      result[name].primaryDependency = info.version;
-    } else {
-      result[name].secondaryDependencies.push(info.version);
-    }
-    // If this dependency has its own dependencies, process them recursively
-    if (info.dependencies) {
-      collectDependencies(info.dependencies, result, depth + 1);
-    }
+    result[name] = info.version;
   });
   return result;
 }
@@ -67,14 +56,8 @@ async function updateHtmlImportMap(htmlFilePath) {
     const importMap = {
       imports: {},
     };
-    for (const [name, { primaryDependency, secondaryDependencies }] of Object.entries(deps)) {
-      if (primaryDependency) {
-        importMap.imports[name] = `https://cdn.jsdelivr.net/npm/${name}@${primaryDependency}/+esm`;
-      }
-      for (const version of secondaryDependencies) {
-        const packagePath = `/npm/${name}@${version}/+esm`;
-        importMap.imports[packagePath] = `https://cdn.jsdelivr.net/${packagePath}`;
-      }
+    for (const [name, version] of Object.entries(deps)) {
+      importMap.imports[name] = `https://esm.sh/${name}@${version}`;
     }
 
     // Read the HTML file
