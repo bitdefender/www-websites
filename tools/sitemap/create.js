@@ -24,7 +24,10 @@ const checkedNotValidUrls = new Set();
 async function fetchJson(url) {
   try {
     const response = await fetch(url, {
-      redirect: "error"
+      redirect: "error",
+      headers: {
+        'X-Client-Id': process.env.X_CLIENT_ID,
+      }
     });
 
     if (!response.status === 200) {
@@ -108,7 +111,9 @@ async function processLocaleSitemap(locale, hreflangMap) {
 
   if (!queryData) return;
 
-  const validData = queryData.data.filter(entry => entry.path !== "0");
+  const validData = queryData.data.filter(entry => 
+    entry.path !== "0" && !entry.robots.includes("noidex")
+  );
   const filteredHreflangMap = hreflangMap.filter(([lang]) => lang !== locale);
   const sitemapPath = path.join(process.cwd(), '../../_src/sitemap/csg/sitemap_' + locale + '.xml');
 

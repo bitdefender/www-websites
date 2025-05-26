@@ -1,4 +1,4 @@
-import { debounce } from '@repobit/dex-utils';
+import { debounce, UserAgent } from '@repobit/dex-utils';
 import { matchHeights, createTag } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -79,9 +79,24 @@ function setImageAsBackgroundImage() {
   });
 }
 
+function setDynamicLink(dynamicLink, dynamicLinks) {
+  switch (UserAgent.os) {
+    case 'android':
+      dynamicLink.href = dynamicLinks.androidLink;
+      break;
+    case 'ios':
+      dynamicLink.href = dynamicLinks.iosLink;
+      break;
+    default:
+      dynamicLink.href = dynamicLinks.defaultLink;
+      break;
+  }
+}
+
 export default function decorate(block) {
   const {
     linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
+    defaultLink, iosLink, androidLink,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -200,6 +215,12 @@ export default function decorate(block) {
       element.classList.add('await-loader');
     }
   });
+
+  const dynamicLink = block.closest('.section').querySelector('a[href*="#os-dynamic-link"]');
+  if (dynamicLink) {
+    const dynamicLinks = { defaultLink, iosLink, androidLink };
+    setDynamicLink(dynamicLink, dynamicLinks);
+  }
 
   // this will define the number of rows inside each card of the subgrid system
   // by dynamically setting this, i can set howewer much rows i want based on the number of

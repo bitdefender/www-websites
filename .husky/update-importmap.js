@@ -4,7 +4,17 @@ const { exec } = require('child_process');
 const { readFileSync, writeFileSync } = require('fs');
 const { XMLSerializer, Window } = require('happy-dom');
 
-const window = new Window();
+const window = new Window({
+  settings: {
+    // Prevent any <script>…</script> from running:
+    disableJavaScriptEvaluation: true,
+    // Prevent external .js files from even being fetched:
+    disableJavaScriptFileLoading: true,
+    // (Optional) if you'd rather get a "load" event instead of an error
+    // when loading is disabled, you can also set:
+    // handleDisabledFileLoadingAsSuccess: true,
+  }
+});
 const { document } = window;
 
 // Function to run the npm ls command and return parsed JSON

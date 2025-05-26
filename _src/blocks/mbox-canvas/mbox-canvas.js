@@ -1,5 +1,5 @@
-import Target from '@repobit/dex-target';
 import { AdobeDataLayerService, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
+import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
@@ -81,7 +81,7 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
-  const offer = await Target.getOffers({
+  const offer = await target.getOffers({
     mboxNames: mboxName,
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
