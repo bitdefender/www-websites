@@ -6,3 +6,4 @@ _src/plugins
 _src/scripts/libs/**
 _src/scripts/utils/bot-prevention.js
 tools
+src

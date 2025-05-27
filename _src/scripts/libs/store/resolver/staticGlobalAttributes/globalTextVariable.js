@@ -23,9 +23,9 @@ const checkHidingCondition = (hideCondition) => {
 
 /**
  *  @param {"min"|"max"} value
- *  @param {import("../..").ProductOption[]} options
+ *  @param {import("../../index.js").ProductOption[]} options
  *  @param {function} fn
- *  @returns {import("../..").ProductOption}
+ *  @returns {import("../../index.js").ProductOption}
  */
 const getMinOrMax = (value, options, fn) => {
     let minOrMax = value === "max" ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
@@ -53,7 +53,7 @@ const getMinOrMax = (value, options, fn) => {
 const replaceVariable = (text, variableParameters, textVariable) => {
 
     /**
-     * @type {import("../..").ProductOption[]}
+     * @type {import("../../index.js").ProductOption[]}
      */
     const options = GlobalContext.variations;
     let stopVariableSearch = false;

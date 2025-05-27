@@ -186,47 +186,66 @@ function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
   return el;
 }
 
-function getBlueTags(block) {
-  let blueTags = block.querySelectorAll('.tag-blue');
-  if (!blueTags.length) {
-    const benefitsList = block.querySelector('ul');
-    benefitsList?.classList.add('benefits-list');
-    const benefitsListElements = benefitsList?.querySelectorAll('li');
-    benefitsListElements?.forEach((element) => {
-      const blueTag = document.createElement('span');
+function getBlueTagsAndListItems(block) {
+  const benefitsList = block.querySelector('ul');
+  if (!benefitsList) return { blueTags: [], listItems: [] };
+
+  benefitsList.classList.add('benefits-list');
+  const listItems = [...benefitsList.querySelectorAll('li')];
+
+  listItems.forEach((li) => {
+    let blueTag = li.querySelector('.tag-blue');
+    if (!blueTag) {
+      blueTag = document.createElement('span');
       blueTag.classList.add('tag-blue');
-      element.insertAdjacentElement('beforeend', blueTag);
-    });
-    blueTags = block.querySelectorAll('.tag-blue');
-  }
-  return blueTags;
+      li.insertAdjacentElement('beforeend', blueTag);
+    }
+    li.innerHTML = li.innerHTML.replace('{benefits}', '<span class="benefits-placeholder"></span>');
+  });
+
+  const blueTags = [...benefitsList.querySelectorAll('.tag-blue')];
+  return { blueTags, listItems };
 }
 
 function updateBenefits(block, selectEl, metadata) {
   if (!metadata) return;
-  const blueTags = getBlueTags(block);
+
+  // eslint-disable-next-line no-unused-vars
+  const { blueTags, listItems } = getBlueTagsAndListItems(block);
+
   const selectedOption = [...selectEl.options].find((option) => option.hasAttribute('selected'));
   const neededIndex = [...selectEl.options].indexOf(selectedOption);
   const rawMetadata = metadata[neededIndex];
+
   const cleanedArray = rawMetadata
     .slice(1, -1)
     .split(',')
     .map((item) => {
       const cleanedItem = item.trim().replace(/['"]+/g, '');
-      if (cleanedItem.includes('-icon')) {
-        return `${Number(cleanedItem.split('-icon')[0])}-icon`;
-      }
-
-      return Number(cleanedItem);
+      return cleanedItem.includes('-icon')
+        ? `${Number(cleanedItem.split('-icon')[0])}-icon`
+        : Number(cleanedItem);
     });
 
-  const updatedBenefits = cleanedArray;
-  let counter = 0;
-  blueTags.forEach((tag) => {
-    if (counter < updatedBenefits.length) {
-      /* eslint-disable-next-line no-plusplus */
-      const benefitValue = updatedBenefits[counter++];
-      tag.innerHTML = `${typeof benefitValue === 'string' ? benefitValue.replace('-icon', '') : benefitValue}x ${typeof benefitValue === 'string' && benefitValue.includes('-icon') ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>' : ''}`;
+  listItems.forEach((li, i) => {
+    if (i < cleanedArray.length) {
+      const value = cleanedArray[i];
+      const displayValue = typeof value === 'string' ? value.replace('-icon', '') : value;
+      const iconSVG = (typeof value === 'string' && value.includes('-icon'))
+        ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>'
+        : '';
+
+      // Update the tag-blue span
+      const tag = li.querySelector('.tag-blue');
+      if (tag) {
+        tag.innerHTML = `${displayValue}x ${iconSVG}`;
+      }
+
+      // Update the benefits-placeholder span
+      const placeholder = li.querySelector('.benefits-placeholder');
+      if (placeholder) {
+        placeholder.textContent = `${displayValue}`;
+      }
     }
   });
 }
