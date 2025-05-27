@@ -208,13 +208,11 @@
                         h4 + p {
                             line-height: 1.35;
                             color: #3d3d3d;
-                            min-height: 44px;
                         }
 
                         ul {
                             padding-left: 0;
                             margin-bottom: 0;
-                            min-height: 88px;
 
                             li {
                                 margin: 12px 0;
@@ -317,20 +315,8 @@
                             }
                         }
                     }
-                    &:not(:first-of-type) {
-                        h5 {
-                            min-height: 36px;
-                        }
-                    }
-                }
-            }
-        }
-    }
 
-    .dex-carousel-cards-family {
-        .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
-            ul {
-                min-height: 130px;
+                }
             }
         }
     }
@@ -620,10 +606,186 @@
         }
     }
 
+    .dex-carousel-cards-individual {
+        .columns-text-col:not(:first-of-type) {
+            h4 {
+                min-height: 54px;
+            }
+
+            h5 {
+                min-height: 63px;
+            }
+
+            p:first-of-type {
+                min-height: 114px;
+            }
+
+            ul {
+                min-height: 140px;
+            }
+        }
+    }
+
+    .dex-carousel-cards-family {
+        .columns-text-col:not(:first-of-type) {
+            h4 {
+                min-height: 54px;
+            }
+
+            h5 {
+                min-height: 42px;
+            }
+
+            p:first-of-type {
+                min-height: 133px;
+            }
+
+            ul {
+                min-height: 220px;
+            }
+        }
+    }
+
+}
+
+@media (min-width: 373px) {
+
+    .dex-18477 {
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+                h4 {
+                    min-height: 36px;
+                }
+
+                h5 {
+                    min-height: 42px;
+                }
+
+                p:first-of-type {
+                    min-height: 76px;
+                }
+
+                ul {
+                    min-height: 140px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+                h4 {
+                    min-height: 36px;
+                }
+
+                h5 {
+                    min-height: 42px;
+                }
+
+                p:first-of-type {
+                    min-height: 114px;
+                }
+
+                ul {
+                    min-height: 180px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 420px) {
+
+    .dex-18477 {
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+                h5 {
+                    min-height: 42px;
+                }
+
+                p:first-of-type {
+                    min-height: 58px;
+                }
+
+                ul {
+                    min-height: 120px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+                h5 {
+                    min-height: 21px;
+                }
+
+                p:first-of-type {
+                    min-height: 76px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 576px) {
+    .dex-18477 {
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+                h4 {
+                    min-height: 36px;
+                }
+
+                h5 {
+                    min-height: 22px;
+                }
+
+                p:first-of-type {
+                    min-height: 38px;
+                }
+
+                ul {
+                    min-height: 112px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+
+                h5 {
+                    min-height: 22px;
+                }
+
+                p:first-of-type {
+                    min-height: 58px;
+                }
+
+                ul {
+                    min-height: 162px;
+                }
+            }
+        }
+    }
 }
 
 @media (min-width: 768px) {
     .dex-18477 {
+
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+                p:first-of-type {
+                    min-height: 70px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+                p:first-of-type {
+                    min-height: 76px;
+                }
+            }
+        }
+
         .dex-carousel-cards {
             .columns-wrapper .columns {
                 div {
@@ -757,6 +919,51 @@
 
 @media (min-width: 992px) {
     .dex-18477 {
+
+        .dex-carousel-cards-individual {
+
+            .columns-text-col:first-of-type h4 {
+                min-height: 54px !important;
+            }
+
+            .columns-text-col:not(:first-of-type) {
+
+                p:first-of-type {
+                    min-height: 90px;
+                }
+
+                ul {
+                    min-height: 120px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+
+            .columns-text-col:first-of-type h4 {
+                min-height: 54px !important;
+            }
+
+            .columns-text-col:not(:first-of-type) {
+
+                h4 {
+                    min-height: 98px !important;
+                }
+
+                p:first-of-type {
+                    min-height: 108px;
+                }
+
+                h5 {
+                    min-height: 44px;
+                }
+
+                ul {
+                    min-height: 165px;
+                }
+            }
+        }
+
         .dex-review-section-heading {
             margin-top: 80px;
 
@@ -1020,10 +1227,6 @@
                         &:first-of-type {
                             flex-direction: column-reverse;
 
-                            h4 {
-                                min-height: 54px !important;
-                            }
-
                             table:first-of-type {
                                 td {
                                     padding: 20px;
@@ -1056,27 +1259,6 @@
             max-width: 452px;
         }
 
-        .dex-carousel-cards {
-            &:not(.dex-carousel-cards-security) {
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
-                    min-height: 73px;
-                }
-
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-                    min-height: 132px;
-                }
-            }
-
-            &.dex-carousel-cards-family {
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-                    min-height: 185px;
-                }
-
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
-                    min-height: 93px;
-                }
-            }
-        }
 
         .dex-carousel-cards-security .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
             border-right: 2px solid #1EA0FF;
@@ -1263,6 +1445,33 @@
 
 @media (min-width: 1200px) {
     .dex-18477 {
+
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+
+                p:first-of-type {
+                    min-height: 72px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+
+                h5 {
+                    min-height: 44px;
+                }
+
+                p:first-of-type {
+                    min-height: 90px;
+                }
+
+                ul {
+                    min-height: 165px;
+                }
+            }
+        }
+
         .awards-container {
             .awards-wrapper {
                 padding-left: 0;
@@ -1310,12 +1519,6 @@
             .columns-wrapper .columns div .columns-text-col:first-of-type table:first-of-type td,
             .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
                 padding: 24px 32px;
-            }
-
-            &.dex-carousel-cards-individual {
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
-                    min-height: 60px;
-                }
             }
 
         }
