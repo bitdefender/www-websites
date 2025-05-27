@@ -392,6 +392,12 @@
   display: inline-flex;
 }
 
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li p, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) ul li {
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: normal;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) {
   font-size: 14px;
   line-height: 17px;
@@ -401,6 +407,7 @@
   padding-left: 22px;
   background-size: 13px;
   position: relative;
+  cursor: pointer;
 }
 
 .new-prod-boxes-container .new-prod-boxes.new-green-check .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) {
@@ -415,20 +422,24 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content {
-  position: absolute;
-  background-color: white;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 28px;
-  left: 0;
-  bottom: 0;
-  z-index: 1;
-  font-size: 12px;
-  box-shadow: 4px 4px 7px -8px #000;
   display: none;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content::before {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) ul {
+    position: absolute;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 28px;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    font-size: 12px;
+    box-shadow: 4px 4px 7px -8px #000;
+    display: none;
+}
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content::before, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) ul::before {
   content: "";
   position: absolute;
   left: 17px;
@@ -438,7 +449,7 @@
   border-color: white transparent transparent;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type):hover .white-pill-content{
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type):hover .white-pill-content, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type):hover ul {
   display: block;
 }
 

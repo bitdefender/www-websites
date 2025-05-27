@@ -10,7 +10,6 @@ export default function decorate(block) {
   block.querySelectorAll('table').forEach((table) => {
     const newDiv = document.createElement('div');
     newDiv.classList.add('creator-box');
-
     const linkToCreator = table.querySelector('tr:nth-child(4) td');
     const creatorLink = linkToCreator ? linkToCreator.textContent.trim() : '';
 
@@ -51,7 +50,7 @@ export default function decorate(block) {
       anchor.appendChild(newDiv);
       table.parentNode.replaceChild(anchor, table);
     } else {
-      table.parentNode.replaceChild(newDiv, table);
+      table.parentNode.removeChild(table);
     }
   });
 }

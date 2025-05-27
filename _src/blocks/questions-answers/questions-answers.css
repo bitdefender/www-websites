@@ -71,6 +71,7 @@
     justify-content: space-between;
     align-items: center;
     padding-right: 25px;
+    text-align: left;
 }
 
 .qa-creators .questions-answers-item .question h4 {
@@ -118,6 +119,7 @@
     height: 0;
     overflow: hidden;
     transition: all 0.3s ease-in-out;
+    text-align: left;
 }
 
 .questions-answers-item .answer p {

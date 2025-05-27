@@ -27,10 +27,10 @@ class StatusMessageFactory {
       1: 'safe',
       2: 'so_far_so_good_1',
       3: 'so_far_so_good_2',
-      4: 'malware & phishing',
+      4: 'malware &amp; phishing',
       5: 'malware',
-      6: 'c&c',
-      7: 'malvertising & fraud & phishing',
+      6: 'c&amp;c',
+      7: 'malvertising &amp; fraud &amp; phishing',
       8: 'fraud',
       9: 'phishing',
       10: 'malvertising',
@@ -48,7 +48,17 @@ class StatusMessageFactory {
     const isSafe = mappedStatus.includes('safe')
                  || mappedStatus.includes('so_far_so_good_1')
                  || mappedStatus.includes('so_far_so_good_2');
-    let msg = statusMessages[mappedStatus.toLowerCase()];
+    let msg;
+    if (statusMessages[mappedStatus.toLowerCase()]) {
+      msg = statusMessages[mappedStatus.toLowerCase()];
+    }
+    if (!statusMessages[mappedStatus.toLowerCase()] && isSafe) {
+      msg = statusMessages['default-good'];
+    }
+    if (!statusMessages[mappedStatus.toLowerCase()] && !isSafe) {
+      msg = statusMessages.default;
+    }
+
     msg = msg.replace('<domain-name>', urlObject.hostname);
     if (msg) {
       return { text: msg, className: isSafe ? 'result safe' : 'result danger', status: mappedStatus };
@@ -116,7 +126,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   const data = await response.json();
   const { status } = data;
   const message = StatusMessageFactory.createMessage(status, url, statusMessages);
-  result.textContent = message.text;
+  result.innerHTML = message.text;
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
@@ -199,7 +209,7 @@ function createStatusMessages(block) {
       return;
     }
 
-    const parts = p.textContent.split(':');
+    const parts = p.innerHTML.split(':');
     if (parts.length >= 2) {
       const status = parts[0].trim();
       const message = parts.slice(1).join(':').trim();
@@ -237,6 +247,65 @@ function createStatusTitles(block) {
   // remove the div from the dom, as it is already parsed and we don't need it anymore
   divWithstatusTitles.remove();
   return statusTitles;
+}
+
+function createButtonsContainer(block, formContainer, clipboardText) {
+  const divWithButtons = Array.from(block.querySelectorAll('div')).find((div) => {
+    const firstParagraph = div.querySelector('p');
+    return firstParagraph && firstParagraph.textContent.includes('<buttons>');
+  });
+
+  if (divWithButtons) {
+    divWithButtons.classList.add('buttons-container');
+    const pElements = divWithButtons.querySelectorAll('p');
+    divWithButtons.querySelector('div').remove();
+    // Skip the first <p> if it contains a header like "<titles-change>"
+    pElements.forEach((p, index) => {
+      if (index === 0) {
+        p.remove();
+        return;
+      }
+
+      if (index === 1) {
+        p.querySelector('a').classList.add('share-button');
+      }
+
+      if (index === 2) {
+        p.querySelector('a').classList.add('check-another-button');
+      }
+      divWithButtons.appendChild(p);
+      const link = p.querySelector('a');
+      if (link.href.includes('#check-another')) {
+        link.addEventListener('click', () => resetChecker(block));
+      }
+    });
+
+    return;
+  }
+
+  // this remains here for compatibility purposes
+  const buttonsContainer = document.createElement('div');
+  buttonsContainer.classList.add('buttons-container');
+
+  const shareButton = document.createElement('button');
+  shareButton.innerHTML = '<span>Share Link Checker</span>';
+  shareButton.classList.add('share-button');
+
+  const checkAnother = document.createElement('button');
+  checkAnother.innerHTML = '<span>Check Another Link</span>';
+  checkAnother.classList.add('check-another-button');
+
+  buttonsContainer.appendChild(shareButton);
+  buttonsContainer.appendChild(checkAnother);
+  formContainer.appendChild(buttonsContainer);
+
+  checkAnother.addEventListener('click', () => resetChecker(block));
+  if (clipboardText) {
+    shareButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      copyToClipboard(block, shareButton, clipboardText);
+    });
+  }
 }
 
 export default function decorate(block) {
@@ -292,33 +361,14 @@ export default function decorate(block) {
   result.className = 'result';
   formContainer.appendChild(result);
 
-  const buttonsContainer = document.createElement('div');
-  buttonsContainer.classList.add('buttons-container');
-
-  const shareButton = document.createElement('button');
-  shareButton.innerHTML = '<span>Share Link Checker</span>';
-  shareButton.classList.add('share-button');
-
-  const checkAnother = document.createElement('button');
-  checkAnother.innerHTML = '<span>Check Another Link</span>';
-  checkAnother.classList.add('check-another-button');
-
-  buttonsContainer.appendChild(shareButton);
-  buttonsContainer.appendChild(checkAnother);
-
-  formContainer.appendChild(buttonsContainer);
   block.querySelectorAll(':scope > div')[1].replaceWith(formContainer);
   const [safeImage, dangerImage] = block.querySelectorAll('picture');
   safeImage.classList.add('safe-image');
   dangerImage.classList.add('danger-image');
 
   button.addEventListener('click', () => checkLink(block, input, result, statusMessages, statusTitles));
-  checkAnother.addEventListener('click', () => resetChecker(block));
-  shareButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    copyToClipboard(block, shareButton, clipboardText);
-  });
 
+  createButtonsContainer(block, formContainer, clipboardText);
   // if the text is cleared, do not display any error
   input.addEventListener('input', () => {
     const url = input.value.trim();
