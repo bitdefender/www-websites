@@ -5,6 +5,8 @@ const wrongAnswersText = new Map();
 const showAfterAnswerText = new Map();
 const userAnswers = new Map();
 const clickAttempts = new Map();
+const shareTexts = new Map();
+let score = 0;
 
 function decorateStartPage(startBlock) {
   startBlock.classList.add('start-page');
@@ -93,7 +95,6 @@ function processSpecialParagraphs(question, index) {
 
       paragraph.dataset.type = extractedData.type;
       paragraph.classList.add(extractedData.type);
-      paragraph.dataset.content = extractedData.content;
       switch (paragraph.dataset.type) {
         case 'correct-text':
           correctAnswersText.set(index, paragraph);
@@ -109,6 +110,16 @@ function processSpecialParagraphs(question, index) {
           break;
         case 'tries':
           paragraph.classList.add('tries');
+          break;
+        case 'share-icons':
+          paragraph.classList.add('share-icons');
+          paragraph.innerHTML = paragraph.innerHTML.replace('&lt; ', '').replace('< ', '');
+          paragraph.innerHTML = paragraph.innerHTML.replace('&gt;', '').replace('>', '');
+          break;
+        case 'share-text':
+          shareTexts.set(index, paragraph);
+          paragraph.remove();
+          break;
         default:
           break;
       }
@@ -184,6 +195,7 @@ function decorateAnswersList(question, questionIndex) {
       if (isCorrect) {
         listItem.classList.add('correct-answer');
         contentDiv.innerHTML = correctAnswersText.get(questionIndex).innerHTML;
+        score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
       } else {
@@ -481,7 +493,59 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
-function decorateQuestions(questions) {
+function showResult(question, results) {
+  const setupShareLinks = (result, shareText) => {
+    const shareIcons = result.querySelector('.share-icons');
+    if (!shareIcons) return;
+    const url = new URL(window.location.href);
+    url.hash = '';
+    const cleanUrl = url.toString();
+    const shareUrl = encodeURIComponent(cleanUrl);
+    const shareLinkedIn = shareIcons.querySelector('a[href*="#share-li"]');
+    if (shareLinkedIn) {
+      shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}&text=${encodeURIComponent(shareText.innerText)}`;
+      shareLinkedIn.target = '_blank';
+    }
+    const shareFacebook = shareIcons.querySelector('a[href*="#share-fb"]');
+    if (shareFacebook) {
+      shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+      shareFacebook.target = '_blank';
+    }
+    const shareTwitter = shareIcons.querySelector('a[href*="#share-twitter"]');
+    if (shareTwitter) {
+      shareTwitter.href = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText.innerHTML)}`;
+      shareTwitter.target = '_blank';
+    }
+  };
+
+  question.style.display = 'none';
+  const scoreRanges = [
+    {
+      min: 0, max: 2, resultIndex: 0, shareText: shareTexts.get(0),
+    },
+    {
+      min: 3, max: 4, resultIndex: 1, shareText: shareTexts.get(1),
+    },
+    {
+      min: 5, max: 6, resultIndex: 2, shareText: shareTexts.get(2),
+    },
+    {
+      min: 7, max: 8, resultIndex: 3, shareText: shareTexts.get(3),
+    },
+    {
+      min: 9, max: 10, resultIndex: 4, shareText: shareTexts.get(4),
+    },
+  ];
+
+  const foundRange = scoreRanges.find((range) => score >= range.min && score <= range.max);
+
+  if (foundRange && results[foundRange.resultIndex]) {
+    results[foundRange.resultIndex].style.display = '';
+    setupShareLinks(results[foundRange.resultIndex], foundRange.shareText);
+  }
+}
+
+function decorateQuestions(questions, results) {
   questions.forEach((question, index) => {
     question.classList.add('question');
     question.classList.add(`question-${index + 1}`);
@@ -496,11 +560,30 @@ function decorateQuestions(questions) {
 
     if (index < questions.length) {
       const nextButton = question.querySelector('a[href="#continue"]');
-      if (nextButton) {
+      if (nextButton && index < questions.length - 1) {
         nextButton.style.display = 'none';
         nextButton.addEventListener('click', () => showQuestion(index + 2));
+      } else if (nextButton && index === questions.length - 1) {
+        nextButton.style.display = 'none';
+        nextButton.addEventListener('click', () => showResult(question, results));
       }
     }
+  });
+}
+
+function decorateResults(results) {
+  results.forEach((result, index) => {
+    result.classList.add('result');
+    result.classList.add(`result-${index + 1}`);
+    result.dataset.resultIndex = index + 1;
+
+    // first paragraph is expected to be the result number
+    result.querySelector('p').classList.add('result-number');
+
+    const h2 = result.querySelector('h2');
+    h2.innerHTML = processStyledText(h2.innerHTML);
+    processSpecialParagraphs(result, index);
+    result.style.display = 'none';
   });
 }
 
@@ -514,16 +597,43 @@ function setupStartButton(block) {
   }
 }
 
+/**
+ * Finds a div element whose first paragraph contains the specified search text.
+ * When found, removes that paragraph and returns the parent div.
+ *
+ * @param {HTMLElement} block - The container to search within
+ * @param {string} searchText - The text to search for in the first paragraph
+ * @returns {HTMLElement|null} - The div containing the specified text, or null if not found
+ */
+function getDivsBasedOnFirstParagraph(block, searchText) {
+  const allDivs = Array.from(block.querySelectorAll('div'));
+
+  const targetDivs = allDivs.filter((div) => {
+    const firstParagraph = div.querySelector('p');
+    if (firstParagraph?.textContent.includes(searchText)) {
+      firstParagraph.remove();
+      return true;
+    }
+    return false;
+  });
+
+  return targetDivs.length > 0 ? targetDivs : null;
+}
+
 export default function decorate(block) {
-  const [startBlock, ...questions] = block.children;
+  const [startBlock, ...questionsAndResults] = block.children;
   decorateStartPage(startBlock);
-  decorateQuestions(questions);
+
+  const questions = getDivsBasedOnFirstParagraph(block, '<question>');
+  const results = getDivsBasedOnFirstParagraph(block, '<answer>');
+  decorateQuestions(questions, results);
+  decorateResults(results);
   setupStartButton(block);
 
   const questionsContainer = document.createElement('div');
   questionsContainer.classList.add('questions-container');
 
-  questions.forEach((question) => {
+  questionsAndResults.forEach((question) => {
     questionsContainer.appendChild(question);
   });
 

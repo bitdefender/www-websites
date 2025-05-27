@@ -8,6 +8,7 @@
 .scam-masters {
     --color-light-blue: #E6F7FF;
     --color-bd-blue: #006EFF;
+    --filter-bd-blue: brightness(0) saturate(100%) invert(30%) sepia(53%) saturate(5155%) hue-rotate(206deg) brightness(101%) contrast(106%);
     --color-correct: #4CAF50;
     --color-wrong: #E72325;
     --color-background-wrong: #CC0707;
@@ -27,6 +28,9 @@
         border-radius: 20px;
 
         >div:first-child {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
             padding: 66px 66px 18px 66px;
             background-color: white;
             border-top-left-radius: 20px;
@@ -68,13 +72,14 @@
         }
 
         >div:last-child {
-            background-color: var(--color-light-blue);
+            background-color: var(--color-bd-blue);
+            border: 1px solid white;
             border-top-right-radius: 20px;
             border-bottom-right-radius: 20px;
         }
     }
 
-    .question {
+    .question,.result {
         display: grid;
         grid-template-columns: 1fr 1fr;
 
@@ -336,11 +341,80 @@
             }
         }
     }
+
+    .result {
+
+        & > div:first-child {
+
+            text-align: center;
+
+            h2 {
+                font-weight: bold;
+                text-align: center;
+                margin-top: 30px;
+            }
+
+            .button-container {
+                text-align: center;
+                margin-top: 35px;
+                margin-bottom: 30px;
+
+                .button {
+                    background-color: white;
+                    color: var(--color-bd-blue);
+                    border: 2px solid var(--color-bd-blue);
+                    max-width: 300px;
+                    width: 100%;
+                    justify-content: center;
+                    padding: 16px 32px;
+                    font: normal normal bold 20px/23px Arial;
+                    border-radius: 8px;
+
+                    &::after {
+                        content: none;
+                    }
+                }
+            }
+
+            .share-icons {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 30px;
+
+                .icon {
+                    width: 21px;
+                    height: auto;
+                    filter: var(--filter-bd-blue);
+                    margin: 0;
+                }
+            }
+
+            .result-number {
+                font-size: 22px;
+                background-color: var(--color-light-blue);
+                padding: 5px 30px;
+                border-radius: 20px;
+                width: fit-content;
+                margin: 0 auto;
+            }
+        }
+        >div:last-child {
+            background-color: var(--color-bd-blue);
+            border: 1px solid white;
+
+            &:not(.clickable-question) {
+                picture {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
 }
 
 @media (max-width: 1200px) {
     .scam-masters {
-        .question {
+        .question,.result {
             >div:first-child {
                 padding: 30px 20px;
             }
@@ -414,7 +488,7 @@
             }
         }
 
-        .question {
+        .question,.result {
             grid-template-columns: 1fr;
 
             >div:first-child {
@@ -486,6 +560,12 @@
                 .answers-list li {
                     font-size: 14px;
                 }
+            }
+        }
+
+        .result {
+            >div:last-child {
+                min-height: auto;
             }
         }
     }
