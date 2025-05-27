@@ -58,7 +58,7 @@ async function updatePageLoadStartedEvent(offer) {
 
   let trackingID = getMetadata('cid');
   trackingID = trackingID.replace('<language>', page.getParamValue('lang'));
-  trackingID = trackingID.replace('<asset name>', page.getParamValue('feature'));
+  trackingID = trackingID.replace('<asset name>', result);
 
   const newObject = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
     pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<dynamic-content>', result);
