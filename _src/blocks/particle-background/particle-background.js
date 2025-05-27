@@ -1,22 +1,12 @@
-/* eslint-disable prefer-const */
-/* eslint-disable camelcase */
-// import * as all from '../../scripts/vendor/tsparticles/tsparticles.bundle.min.js';
-// eslint-disable-next-line no-unused-vars
-import { debounce } from '@repobit/dex-utils';
+import { loadAll } from '@tsparticles/all';
+import { tsParticles } from '@tsparticles/engine';
 
 function isView(viewport) {
   const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
   return !!(element && getComputedStyle(element).display !== 'none');
 }
 
-let tsParticles;
-let loadAll;
-
 async function init(block, aemOptions) {
-  // eslint-disable-next-line import/no-unresolved
-  tsParticles = (await import('https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.7.1/+esm')).tsParticles;
-  // eslint-disable-next-line import/no-unresolved
-  loadAll = (await import('https://cdn.jsdelivr.net/npm/@tsparticles/all@3.7.1/+esm')).loadAll;
   const particleIdSelector = 'ts-particles';
 
   const particleDiv = document.createElement('div');

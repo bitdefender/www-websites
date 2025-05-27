@@ -1,5 +1,4 @@
-import Target from '@repobit/dex-target';
-import { debounce } from '@repobit/dex-utils';
+import { debounce, UserAgent } from '@repobit/dex-utils';
 import { ButtonClickEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
 import page from '../page.js';
 import { Constants } from '../libs/constants.js';
@@ -470,37 +469,10 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export function appendAdobeMcLinks(selector) {
-  try {
-    const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
-
-    const hrefSelector = '[href*=".bitdefender."]';
-    wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      const destinationURLWithVisitorIDs = await Target.appendVisitorIDsTo(link.href);
-      link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
-    });
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-  }
-}
-
 export const GLOBAL_EVENTS = {
   ADOBE_MC_LOADED: 'adobe_mc::loaded',
   PAGE_LOADED: 'page::loaded',
 };
-
-export function adobeMcAppendVisitorId(selector) {
-  // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
-
-  if (window.ADOBE_MC_EVENT_LOADED) {
-    appendAdobeMcLinks(selector);
-  } else {
-    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
-      appendAdobeMcLinks(selector);
-    });
-  }
-}
 
 const ICONS_CACHE = {};
 export async function decorateIcons(element) {
@@ -729,54 +701,21 @@ export function isView(viewport) {
   return !!(element && getComputedStyle(element).display !== 'none');
 }
 
-/**
- * Returns the current user operating system based on userAgent
- * @returns {String}
- */
-export function getOperatingSystem(userAgent) {
-  const systems = [
-    ['Windows NT 10.0', 'Windows 10'],
-    ['Windows NT 6.2', 'Windows 8'],
-    ['Windows NT 6.1', 'Windows 7'],
-    ['Windows NT 6.0', 'Windows Vista'],
-    ['Windows NT 5.1', 'Windows XP'],
-    ['Windows NT 5.0', 'Windows 2000'],
-    ['X11', 'X11'],
-    ['Linux', 'Linux'],
-    ['Android', 'Android'],
-    ['iPhone', 'iOS'],
-    ['iPod', 'iOS'],
-    ['iPad', 'iOS'],
-    ['Mac', 'MacOS'],
-  ];
-
-  return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
 export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSelector = null) {
-  // Get user's operating system
-  const { userAgent } = navigator;
-  const userOS = getOperatingSystem(userAgent);
-
   // Open the appropriate URL based on the OS
   let openUrl;
-  switch (userOS) {
-    case 'MacOS':
+  switch (UserAgent.os) {
+    case 'Mac/iOS':
       openUrl = urlMacos;
       break;
-    case 'Windows 10':
-    case 'Windows 8':
-    case 'Windows 7':
-    case 'Windows Vista':
-    case 'Windows XP':
-    case 'Windows 2000':
+    case 'Windows':
       openUrl = urlWindows;
       break;
     case 'Linux':
-    case 'Android':
+    case 'android':
       openUrl = urlAndroid;
       break;
-    case 'iOS':
+    case 'ios':
       openUrl = urlIos;
       break;
     default:
@@ -856,53 +795,6 @@ export const shouldABTestsBeDisabled = () => {
   }
 
   return false;
-};
-
-/**
-* get experiment details from Target
-* @returns {Promise<{
-*  experimentId: string;
-*  experimentVariant: string;
-* } | null>}
-  */
-export const getTargetExperimentDetails = async () => {
-  /**
-   * @type {{
-   *  experimentId: string;
-   *  experimentVariant: string;
-   * }|null}
-   */
-  let targetExperimentDetails = null;
-
-  async function loadCSS(href) {
-    return new Promise((resolve, reject) => {
-      if (!document.querySelector(`head > link[href="${href}"]`)) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = href;
-        link.onload = resolve;
-        link.onerror = reject;
-        document.head.append(link);
-      } else {
-        resolve();
-      }
-    });
-  }
-
-  const targetExperimentLocation = getMetadata('target-experiment-location');
-  const targetExperimentId = getMetadata('target-experiment');
-  if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
-    const { runTargetExperiment } = await import('../target.js');
-    const offer = await Target.getOffers({ mboxNames: targetExperimentLocation });
-    const { url, template } = offer || {};
-    if (template) {
-      loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
-      document.body.classList.add(template);
-    }
-    targetExperimentDetails = await runTargetExperiment(url, targetExperimentId);
-  }
-
-  return targetExperimentDetails;
 };
 
 /**
