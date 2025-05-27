@@ -274,9 +274,12 @@
 
 .products.personalisation-fragment tr {
   display: flex;
-  flex-flow: column;
   width: 100%;
   align-items: baseline;
+}
+
+.products.personalisation-fragment tr:has(a) {
+  flex-flow: column;
 }
 
 .products.personalisation-fragment td{
@@ -291,6 +294,7 @@
   background-color: #eb0000;
   color: #fff;
   border: transparent;
+  width: 100%;
 }
 
 .products.personalisation-fragment  table a {
@@ -302,6 +306,7 @@
   display: inline-flex;
   text-align: center;
   justify-content: center;
+  width: 100%;
   &:hover {
     text-decoration: none;
   }
@@ -514,6 +519,10 @@
   }
 
   .products.personalisation-fragment tr {
+    flex-flow: row;
+  }
+
+  .products.personalisation-fragment tr:has(a) {
     flex-flow: row;
   }
 
