@@ -1,5 +1,5 @@
 import Launch from '@repobit/dex-launch';
-import { PageLoadedEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
+import { PageLoadedEvent, AdobeDataLayerService, FormEvent, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -315,10 +315,10 @@ const initializeHubspotModule = () => {
   };
 
   const getFormEventData = (hubspotForm) => {
-    const portalId = hubspotForm.querySelector('.portal-id')?.value;
-    const dl_formTitle = hubspotForm.querySelector('.dl-form-title')?.value;
-    const dl_formID = hubspotForm.querySelector('.dl-form-ID')?.value;
-    const dl_formProduct = hubspotForm.querySelector('.dl-form-product')?.value === 'true' && portalId;
+    const portalId = hubspotForm.querySelector('.portal-id')?.getAttribute('value');
+    const dl_formTitle = hubspotForm.querySelector('.dl-form-title')?.getAttribute('data-value');
+    const dl_formID = hubspotForm.querySelector('.dl-form-ID')?.getAttribute('value');
+    const dl_formProduct = hubspotForm.querySelector('.dl-form-product')?.getAttribute('value') === 'true' && portalId;
 
     return Object.fromEntries(
       [
@@ -328,7 +328,7 @@ const initializeHubspotModule = () => {
       ].filter(([, value]) => value)
     );
   };
-
+  
   const updateDataLayerAndRedirect = async (hubspotForm, mainPopupButton) => {
     if (mainPopupButton) {
       const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
@@ -387,9 +387,9 @@ const initializeHubspotModule = () => {
                 <input type="hidden" class="portal-id" value="341979">
                 <input type="hidden" class="form-id" value="addb61d4-4858-4349-a3ec-cddc790c4a2c">
                 <input type="hidden" class="sfdc-campaign-id" value="7016M0000027VMQQA2">
-                <input type="hidden" class="redirect-url">
-                <input type="hidden" class="dl-form-title">
-                <input type="hidden" class="dl-form-ID">
+                <input type="hidden" class="redirect-url" value="">
+                <input type="hidden" class="dl-form-title" data-value="book consultation">
+                <input type="hidden" class="dl-form-ID" value="">
                 <input type="hidden" class="dl-form-product" value="false">
                 <div class="form-for-hubspot hubspot-form-0" data-hs-forms-root="true"></div>
               </section>
@@ -422,9 +422,7 @@ const initializeHubspotModule = () => {
     const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
     const popupContainer = hubspotContainer.querySelector(".download-popup__container");
 
-    document.querySelectorAll(
-      ".subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type"
-    ).forEach(trigger => {
+    document.querySelectorAll(".subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type").forEach(trigger => {
       trigger.addEventListener("click", async () => {
         popupContainer.style.display = "block";
         const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
@@ -487,6 +485,7 @@ async function loadEager(doc) {
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
   }
+  if (templateMetadata === 'subscriber') initializeHubspotModule();
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -547,8 +546,6 @@ async function loadLazy(doc) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
       .catch(() => {});
   }
-
-  if (templateMetadata === 'subscriber') initializeHubspotModule();
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
