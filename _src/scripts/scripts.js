@@ -361,6 +361,7 @@ const initializeHubspotModule = () => {
   };
 
   const initialiseHubspotFormPopupEvents = (hubspotForm, mainPopupButton) => {
+    console.log('mainPopupButton ', mainPopupButton)
     if (!mainPopupButton) return;
     mainPopupButton.addEventListener('click', async () => {
       const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
