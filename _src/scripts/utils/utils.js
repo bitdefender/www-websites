@@ -870,8 +870,9 @@ export const generatePageLoadStartedName = () => {
   } else {
     const allSegments = pathname.split('/').filter((segment) => segment !== '');
     const lastSegment = allSegments[allSegments.length - 1];
-    const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
-    tagName = `${locale}:product:${subSubSubSection}`;
+    const subSubSubSection = allSegments[allSegments.length - 1] = allSegments[allSegments.length - 1].replace(/-/g, ' ');
+    let nameSection = lastSegment === 'subscriber-protection-platform' ? 'partners' : 'product';
+    tagName = `${locale}:${nameSection}:${subSubSubSection}`;
     if (lastSegment === 'consumer') {
       tagName = `${locale}:consumer:solutions`;
     }

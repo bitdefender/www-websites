@@ -338,6 +338,9 @@ const initializeHubspotModule = () => {
     }
 
     AdobeDataLayerService.push(new FormEvent('form completed', getFormEventData(hubspotForm)));
+    const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
+    newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form submited';
+    newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
 
     if (mainPopupButton) {
       AdobeDataLayerService.push(new PageLoadedEvent());
@@ -349,7 +352,7 @@ const initializeHubspotModule = () => {
     }
   };
 
-  const initHubspotForm = (portalId, formId, hubspotForm, mainPopupButton, index) => {
+  const initHubspotForm = async (portalId, formId, hubspotForm, mainPopupButton, index) => {
     const sfdcCampaignId = hubspotForm.querySelector('.sfdc-campaign-id')?.value;
     const region = hubspotForm.querySelector('.region')?.value;
 
@@ -430,6 +433,9 @@ const initializeHubspotModule = () => {
 
         if (firstForm) {
           AdobeDataLayerService.push(new FormEvent('form viewed', getFormEventData(firstForm)));
+          newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
+          newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
+          AdobeDataLayerService.push(newPageLoadStartedEvent);
         }
 
         AdobeDataLayerService.push(new PageLoadedEvent());
