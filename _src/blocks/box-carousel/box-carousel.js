@@ -26,13 +26,21 @@ export default async function decorate(block) {
     return currentSlideIndex === 0;
   }
 
-  function isLastIndex() {
-    return currentSlideIndex === slides.length - 3;
+  function isLastIndex(carousel) {
+    const carouselItem = block.querySelector('.carousel-item');
+    // eslint-disable-next-line max-len
+    const visibleCount = Math.floor(carousel.offsetWidth / (carouselItem.offsetWidth + carouselItemStyle.margin));
+    return currentSlideIndex >= (slides.length - visibleCount);
   }
 
   function scrollCarousel(offset, carousel) {
     const carouselItem = block.querySelector('.carousel-item');
     carousel.style.transform = `translateX(${-1 * offset * (carouselItem.offsetWidth + carouselItemStyle.margin)}px)`;
+    // Update nav dots
+    const navDots = block.querySelectorAll('.navigation-item');
+    navDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === offset);
+    });
   }
 
   function getCarousel() {
@@ -42,25 +50,18 @@ export default async function decorate(block) {
   function updateDisabledArrow() {
     const leftArrowEl = block.querySelector('.left-arrow');
     const rightArrowEl = block.querySelector('.right-arrow');
+    const carousel = getCarousel();
 
-    leftArrowEl.classList.remove('disabled');
-    rightArrowEl.classList.remove('disabled');
+    leftArrowEl?.classList.remove('disabled');
+    rightArrowEl?.classList.remove('disabled');
 
-    if (isLastIndex()) {
-      block.querySelector('.right-arrow').classList.add('disabled');
-      return;
-    }
-
-    if (isFirstIndex()) {
-      block.querySelector('.left-arrow').classList.add('disabled');
-    }
+    if (isFirstIndex()) leftArrowEl?.classList.add('disabled');
+    if (isLastIndex(carousel)) rightArrowEl?.classList.add('disabled');
   }
 
   function leftArrowHandler(e) {
     e.preventDefault();
-    if (isFirstIndex()) {
-      return;
-    }
+    if (isFirstIndex()) return;
     currentSlideIndex -= 1;
     scrollCarousel(currentSlideIndex, getCarousel());
     updateDisabledArrow(currentSlideIndex);
@@ -68,11 +69,10 @@ export default async function decorate(block) {
 
   function rightArrowHandler(e) {
     e.preventDefault();
-    if (isLastIndex()) {
-      return;
-    }
+    const carousel = getCarousel();
+    if (isLastIndex(carousel)) return;
     currentSlideIndex += 1;
-    scrollCarousel(currentSlideIndex, getCarousel());
+    scrollCarousel(currentSlideIndex, carousel);
     updateDisabledArrow(currentSlideIndex);
   }
 
@@ -117,43 +117,46 @@ export default async function decorate(block) {
     block.classList.add('default-content-wrapper');
 
     block.innerHTML = `
-    <div class="carousel-header">
-      <div class="title">${titleEl?.children[0]?.innerHTML}</div>
-      <div class="arrows d-flex">${renderArrows()}</div>
-    </div>
+      <div class="carousel-header">
+        <div class="title">${titleEl?.children[0]?.innerHTML ?? ''}</div>
+        <div class="arrows d-flex">${renderArrows()}</div>
+      </div>
 
-    <div class="carousel-container">
+      <div class="carousel-container">
         <div class="carousel">
           ${slides.map((slide) => `
             <div class="carousel-item">
-                ${isTestimonials ? `
-                  <div class="img-container">
-                    ${slide.children[0]?.children[0]?.innerHTML}
-                  </div>
-                ` : slide.children[0]?.children[0]?.innerHTML}
+              ${isTestimonials ? `
+                <div class="img-container">
+                  ${slide.children[0]?.children[0]?.innerHTML}
+                </div>
+              ` : slide.children[0]?.children[0]?.innerHTML}
 
-                <p class="title">
-                    ${slide.children[0]?.children[1]?.textContent}
-                </p>
+              <p class="title">
+                ${slide.children[0]?.children[1]?.textContent}
+              </p>
 
-                ${isTestimonials ? `
-                  <div class="subtitle-secondary">
-                    ${slide.children[0]?.children[2]?.innerHTML}
-                  </div>
-
-                  <div class="subtitle">
-                    ${slide.children[0]?.children[3]?.innerHTML}
-                  </div>
-                ` : `
-                   <div class="subtitle">
-                      ${slide.children[0]?.children[2]?.innerHTML}
-                   </div>
-                `}
+              ${isTestimonials ? `
+                <div class="subtitle-secondary">
+                  ${slide.children[0]?.children[2]?.innerHTML}
+                </div>
+                <div class="subtitle">
+                  ${slide.children[0]?.children[3]?.innerHTML}
+                </div>
+              ` : `
+                <div class="subtitle">
+                  ${slide.children[0]?.children[2]?.innerHTML}
+                </div>
+              `}
             </div>
           `).join('')}
         </div>
-    </div>
-  `;
+
+        <div class="carousel-nav">
+          ${slides.map((_, i) => `<div class="navigation-item ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`).join('')}
+        </div>
+      </div>
+    `;
 
     decorateIcons(block);
 
@@ -167,6 +170,20 @@ export default async function decorate(block) {
       leftArrowEl.addEventListener('click', leftArrowHandler);
       rightArrowEl.addEventListener('click', rightArrowHandler);
     }
+
+    // Add dot click handlers
+    const navDots = block.querySelectorAll('.navigation-item');
+    navDots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const newIndex = Number(dot.dataset.index);
+        currentSlideIndex = newIndex;
+        scrollCarousel(currentSlideIndex, getCarousel());
+        updateDisabledArrow();
+      });
+    });
+
+    scrollCarousel(currentSlideIndex, getCarousel());
+    updateDisabledArrow();
   }
 
   render();
