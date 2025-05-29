@@ -76,9 +76,9 @@ const resolvePageLoadStartedEvent = async () => {
   AdobeDataLayerService.push(new PageLoadStartedEvent(
     page,
     {
-      name: generatePageLoadStartedName(),
       experimentDetails: (await getTargetExperimentDetails()) ?? getExperimentDetails(),
       geoRegion: await User.country,
+      name: generatePageLoadStartedName(),
       serverName: 'hlx.live', // indicator for AEM Success Edge
     },
     {
