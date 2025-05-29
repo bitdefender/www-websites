@@ -330,7 +330,9 @@ const initializeHubspotModule = () => {
   };
   
   const updateDataLayerAndRedirect = async (hubspotForm, mainPopupButton) => {
+    console.log('updateDataLayerAndRedirect 1')
     if (mainPopupButton) {
+      console.log('updateDataLayerAndRedirect 2')
       const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
       newPageLoadStartedEvent.page.info.name += ':consultation booked';
       newPageLoadStartedEvent.page.info.subSubSubSection = 'consultation booked';
@@ -342,9 +344,9 @@ const initializeHubspotModule = () => {
     newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form submited';
     newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
 
-    if (mainPopupButton) {
+    /*if (mainPopupButton) {
       AdobeDataLayerService.push(new PageLoadedEvent());
-    }
+    }*/
 
     const thankYouUrl = hubspotForm.querySelector('.redirect-url')?.value;
     if (thankYouUrl) {
