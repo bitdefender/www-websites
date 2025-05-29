@@ -1,5 +1,5 @@
 import Launch from '@repobit/dex-launch';
-import { PageLoadedEvent, AdobeDataLayerService, FormEvent, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
+import { PageLoadedEvent, AdobeDataLayerService, FormEvent, WindowLoadStartedEvent, WindowLoadedEvent } from '@repobit/dex-data-layer';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -433,7 +433,7 @@ const initializeHubspotModule = () => {
           AdobeDataLayerService.push(newPageLoadStartedEvent);
         }
 
-        AdobeDataLayerService.push(new PageLoadedEvent());
+        AdobeDataLayerService.push(new WindowLoadedEvent());
       });
     });
 
