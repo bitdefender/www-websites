@@ -339,11 +339,6 @@ const initializeHubspotModule = () => {
       AdobeDataLayerService.push(newPageLoadStartedEvent);
     }
 
-    AdobeDataLayerService.push(new FormEvent('form completed', getFormEventData(hubspotForm)));
-    const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
-    newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form submited';
-    newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
-
     /*if (mainPopupButton) {
       AdobeDataLayerService.push(new PageLoadedEvent());
     }*/
