@@ -329,16 +329,13 @@ const initializeHubspotModule = () => {
     );
   };
   
-  const updateDataLayerAndRedirect = async (hubspotForm, mainPopupButton) => {
-    console.log('updateDataLayerAndRedirect 1')
-    if (mainPopupButton) {
-      console.log('updateDataLayerAndRedirect 2')
-      AdobeDataLayerService.push(new FormEvent('form completed', getFormEventData(hubspotForm)));
-      const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
-      newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form submited';
-      newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
-      AdobeDataLayerService.push(newPageLoadStartedEvent);
-    }
+  const updateDataLayerAndRedirect = (hubspotForm) => {
+    const newPageLoadStartedEvent = new WindowLoadStartedEvent();
+    newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form submited';
+    newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
+    AdobeDataLayerService.push(newPageLoadStartedEvent);
+    AdobeDataLayerService.push(new FormEvent('form completed', getFormEventData(hubspotForm)));
+    AdobeDataLayerService.push(new WindowLoadedEvent());
 
     const thankYouUrl = hubspotForm.querySelector('.redirect-url')?.value;
     if (thankYouUrl) {
@@ -346,7 +343,7 @@ const initializeHubspotModule = () => {
     }
   };
 
-  const initHubspotForm = async (portalId, formId, hubspotForm, mainPopupButton, index) => {
+  const initHubspotForm = async (portalId, formId, hubspotForm) => {
     const sfdcCampaignId = hubspotForm.querySelector('.sfdc-campaign-id')?.value;
     const region = hubspotForm.querySelector('.region')?.value;
 
@@ -355,21 +352,8 @@ const initializeHubspotModule = () => {
       portalId,
       formId,
       sfdcCampaignId,
-      target: `.hubspot-form-${index}`,
-      onFormSubmit: () => updateDataLayerAndRedirect(hubspotForm, mainPopupButton)
-    });
-  };
-
-  const initialiseHubspotFormPopupEvents = (hubspotForm, mainPopupButton) => {
-    console.log('mainPopupButton ', mainPopupButton)
-    if (!mainPopupButton) return;
-    mainPopupButton.addEventListener('click', async () => {
-      const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
-      newPageLoadStartedEvent.page.info.name += ':book consultation';
-      newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
-      AdobeDataLayerService.push(newPageLoadStartedEvent);
-      AdobeDataLayerService.push(new FormEvent('form viewed', getFormEventData(hubspotForm)));
-      AdobeDataLayerService.push(new PageLoadedEvent());
+      target: `.hubspot-form`,
+      onFormSubmit: () => updateDataLayerAndRedirect(hubspotForm)
     });
   };
 
@@ -400,39 +384,29 @@ const initializeHubspotModule = () => {
   document.body.appendChild(hubspotContainer);
 
   loadHubspotScript(() => {
-    const hubspotForms = hubspotContainer.querySelectorAll('.hubspot-form-container');
-    hubspotForms.forEach((hubspotForm, index) => {
-      const portalId = hubspotForm.querySelector('.portal-id')?.value;
-      const formId = hubspotForm.querySelector('.form-id')?.value;
+    const hubspotForm = hubspotContainer.querySelector('.hubspot-form-container');
+    const portalId = hubspotForm.querySelector('.portal-id')?.value;
+    const formId = hubspotForm.querySelector('.form-id')?.value;
 
-      if (portalId && formId) {
-        const downloadPopup = hubspotForm.closest('section.download-popup');
-        const mainPopupButton = downloadPopup?.querySelector('input.hs-button');
-        const formContainer = hubspotForm.querySelector('.form-for-hubspot');
-        formContainer?.classList.add(`hubspot-form-${index}`);
+    if (portalId && formId) {
+      const formContainer = hubspotForm.querySelector('.form-for-hubspot');
+      // formContainer?.classList.add(`hubspot-form-${formId}`);
 
-        initHubspotForm(portalId, formId, hubspotForm, mainPopupButton, index);
-        initialiseHubspotFormPopupEvents(hubspotForm, mainPopupButton);
-      }
-    });
+      initHubspotForm(portalId, formId, hubspotForm);
+    }
 
     // Click-to-open logic
     const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
     const popupContainer = hubspotContainer.querySelector(".download-popup__container");
 
     document.querySelectorAll(".subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type").forEach(trigger => {
-      trigger.addEventListener("click", async () => {
+      trigger.addEventListener("click", () => {
         popupContainer.style.display = "block";
-        const newPageLoadStartedEvent = await new WindowLoadStartedEvent();
+        const newPageLoadStartedEvent = new WindowLoadStartedEvent();
+        newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
+        newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
         AdobeDataLayerService.push(newPageLoadStartedEvent);
-
-        if (firstForm) {
-          AdobeDataLayerService.push(new FormEvent('form viewed', getFormEventData(firstForm)));
-          newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
-          newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
-          AdobeDataLayerService.push(newPageLoadStartedEvent);
-        }
-
+        AdobeDataLayerService.push(new FormEvent('form viewed', getFormEventData(firstForm)));
         AdobeDataLayerService.push(new WindowLoadedEvent());
       });
     });
