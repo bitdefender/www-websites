@@ -406,7 +406,6 @@ main .section.link-right a {
 /* link */
 .trusted .section.static-awards .default-content-wrapper > *:not(:first-child) {
     margin: 0;
-    width: calc((100% - 120px) / 4);
 }
 
 .trusted .section.static-awards .default-content-wrapper > *:first-child,
