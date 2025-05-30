@@ -1,4 +1,4 @@
-import Target from '@repobit/dex-target';
+import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { decorateIcons, loadBlocks } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
@@ -21,7 +21,7 @@ export default async function decorate(block) {
   `;
   block.classList.add('await-loader');
 
-  const offer = await Target.getOffers({
+  const offer = await target.getOffers({
     mboxNames: mboxName,
   });
   if (offer?.offer) {
