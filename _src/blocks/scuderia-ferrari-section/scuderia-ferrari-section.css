@@ -375,6 +375,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 
         p:nth-of-type(4) {
             font-size: 26px;
+            margin-bottom: 52px;
         }
 
         p:nth-last-of-type(2) {
