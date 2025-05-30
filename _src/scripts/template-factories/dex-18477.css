@@ -621,7 +621,7 @@
             }
 
             ul {
-                min-height: 140px;
+                min-height: 212px;
             }
         }
     }
@@ -666,7 +666,7 @@
                 }
 
                 ul {
-                    min-height: 140px;
+                    min-height: 212px;
                 }
             }
         }
@@ -686,7 +686,7 @@
                 }
 
                 ul {
-                    min-height: 180px;
+                    min-height: 212px;
                 }
             }
         }
@@ -707,7 +707,7 @@
                 }
 
                 ul {
-                    min-height: 120px;
+                    min-height: 190px;
                 }
             }
         }
@@ -743,7 +743,7 @@
                 }
 
                 ul {
-                    min-height: 112px;
+                    min-height: 174px;
                 }
             }
         }
@@ -760,7 +760,7 @@
                 }
 
                 ul {
-                    min-height: 162px;
+                    min-height: 174px;
                 }
             }
         }
@@ -933,7 +933,7 @@
                 }
 
                 ul {
-                    min-height: 120px;
+                    min-height: 173px;
                 }
             }
         }
@@ -956,7 +956,7 @@
                 }
 
                 ul {
-                    min-height: 165px;
+                    min-height: 173px;
                 }
             }
         }
@@ -1470,6 +1470,10 @@
 
                 p:first-of-type {
                     min-height: 72px;
+                }
+
+                ul {
+                    min-height: 154px;
                 }
             }
         }
