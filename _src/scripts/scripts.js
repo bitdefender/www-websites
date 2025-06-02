@@ -1,6 +1,6 @@
 import Launch from '@repobit/dex-launch';
-import Target from '@repobit/dex-target';
 import { PageLoadedEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
+import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
   sampleRUM,
@@ -23,7 +23,6 @@ import {
 import { StoreResolver } from './libs/store/index.js';
 
 import {
-  adobeMcAppendVisitorId,
   createTag,
   getPageExperimentKey,
   GLOBAL_EVENTS,
@@ -313,10 +312,10 @@ export async function loadTrackers() {
       await Launch.load(page.environment);
       onAdobeMcLoaded();
     } catch {
-      Target.abort();
+      target.abort();
     }
   } else {
-    Target.abort();
+    target.abort();
     onAdobeMcLoaded();
   }
 }
@@ -479,6 +478,26 @@ function eventOnDropdownSlider() {
   });
 }
 
+function initialiseSentry() {
+  window.sentryOnLoad = () => {
+    window.Sentry.init({
+      release: 'www-websites@1.0.0',
+      tracesSampleRate: 1.0,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+
+      allowUrls: ['www.bitdefender.com'],
+    });
+  };
+
+  if (Math.random() < 0.01) {
+    const sentryScript = document.createElement('script');
+    sentryScript.src = 'https://js.sentry-cdn.com/453d79512df247d7983074696546ca60.min.js';
+    sentryScript.setAttribute('crossorigin', 'anonymous');
+    document.head.appendChild(sentryScript);
+  }
+}
+
 /**
  * Loads everything that happens a lot later,
  * without impacting the user experience.
@@ -495,6 +514,7 @@ function loadDelayed() {
 }
 
 async function loadPage() {
+  initialiseSentry();
   await window.hlx.plugins.load('eager');
 
   // specific for webview

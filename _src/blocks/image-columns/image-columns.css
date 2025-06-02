@@ -142,6 +142,37 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   text-align: center;
 }
 
+.avfree .image-columns{
+  > div {
+    align-items: start;
+
+    > .image-columns-txt-col {
+      text-align: left;
+
+      p {
+       padding-left: 0;
+       font-size: 16px;
+       margin-bottom: 24px;
+        margin-left: 0;
+      }  
+
+      h3 {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+    }
+    
+    >.image-columns-img-col img {
+      display: none;
+
+      @media (min-width: 992px) {
+        display: block;
+      }
+    }
+  }
+}
+
+
 @media (min-width: 767px){
   .image-columns.quotes > div {
     flex-direction: unset;
@@ -204,6 +235,23 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   .image-columns-container .image-columns .image-columns-txt-col{
     text-align: left;
   }
+
+  .avfree .image-columns {
+    > div{
+        > .image-columns-txt-col {
+
+            h3 {
+                font-size: 22px;
+                margin-bottom: 6px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+        }
+        
+    }
+}
 }
 
 @media (min-width: 1600px) { /* large desktop */

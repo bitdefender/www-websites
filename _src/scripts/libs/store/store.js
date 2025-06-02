@@ -1,4 +1,4 @@
-import Target from "@repobit/dex-target";
+import { target } from "../../target.js";
 import { User } from "@repobit/dex-utils";
 import { Constants } from "../constants.js";
 import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams, getMetadata, getUrlPromotion } from "../../utils/utils.js";
@@ -38,6 +38,10 @@ export class ProductOption {
 	 *	devices: number,
 	 *	subscription: number,
 	 *	avangateId: string,
+	 * 	productId: string,
+	 *  productAlias: string,
+	 * 	promotion: string
+	 *  campaignType: string
 	 * }} option
 	 */
 	constructor(option) {
@@ -55,6 +59,8 @@ export class ProductOption {
 		this.department = option.department;
 		this.name = option.name;
 		this.avangateId = option.avangateId;
+		this.promotion = option.promotion;
+		this.campaignType = option.campaignType;
 	}
 
 	/**
@@ -79,6 +85,22 @@ export class ProductOption {
 	 */
 	getProductAlias() {
 		return this.productAlias;
+	}
+
+	/**
+	 * Returns product promotion
+	 * @returns {string}
+	 */
+	getPromotion() {
+		return this.promotion;
+	}
+
+	/**
+	 * Returns campaign type
+	 * @returns {string}
+	 */
+	getCampaignType() {
+		return this.campaignType;
 	}
 
 	/**
@@ -207,7 +229,7 @@ export class ProductOption {
 			return this.buyLink;
 		}
 
-		return await Target.appendVisitorIDsTo(
+		return await target.appendVisitorIDsTo(
 			setUrlParams(this.buyLink, params)
 		);
 	}
@@ -240,6 +262,7 @@ export class Product {
 		this.options = product.variations;
 		this.department = product.department;
 		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => page.locale === domain) ? 'global_v2' : '');
+		this.campaignType = product.campaignType;
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
@@ -386,7 +409,9 @@ export class Product {
 			department: this.department,
 			devices,
 			subscription: Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : years * 12,
-			avangateId: this.avangateId
+			avangateId: this.avangateId,
+			promotion: this.promotion,
+			campaignType: this.campaignType
 		});
 
 		if (bundle) {
@@ -681,8 +706,20 @@ class Vlaicu {
 
 	/**
 	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
-	 * @param {string} productId
 	 * @param {string} campaign
+	 * @returns {string} MSRP only campaign
+	 */
+	static #isMSRPOnlyCamapgin(campaign) {
+		if (campaign === 'none') {
+			return campaign;
+		}
+
+		return '';
+	}
+
+	/**
+	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
+	 * @param {string} productId
 	 * @returns {string} the DIP promotion
 	 */
 	static #isDIPCornerCase(productId) {
@@ -724,7 +761,7 @@ class Vlaicu {
 
 	static async getProductVariations(productId, campaign) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
-		let geoIpFlag = (await Target.configMbox)?.useGeoIpPricing;
+		let geoIpFlag = (await target.configMbox)?.useGeoIpPricing;
 		if (geoIpFlag) {
 			locale = await User.locale;
 		}
@@ -733,7 +770,8 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isDIPCornerCase(productId)
+			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign)
+				|| this.#isDIPCornerCase(productId)
 				|| this.#isSohoCornerCase(productId)
 				|| campaign
 		};
@@ -779,9 +817,6 @@ class Vlaicu {
 		if (!productInfo) {
 			return null;
 		}
-		const isReceivedPromotionValid = productInfoResponse.campaign &&
-			productInfoResponse.campaignType &&
-			productInfoResponse.campaignType === "def";
 
 		let payload = productInfo?.options;
 		if (!payload || !payload.length) {
@@ -792,7 +827,8 @@ class Vlaicu {
 			product_alias: id,
 			product_id: Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
 			product_name: productInfo.productName,
-			promotion: isReceivedPromotionValid ? productInfoResponse.campaign : campaignId, 
+			promotion: productInfoResponse.campaign || campaignId || '',
+			campaignType: productInfoResponse.campaignType,
 			variations: {}
 		}
 
@@ -822,9 +858,8 @@ class Vlaicu {
 				currency_iso: productVariation.currency,
 				product_id: Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
 				platform_product_id: productInfoResponse.platformProductId || Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
-				promotion: isReceivedPromotionValid ?
-					productInfoResponse.campaign :
-					campaignId,
+				promotion: productInfoResponse.campaign || campaignId || '',
+				campaignType: productInfoResponse.campaignType,
 				price: productVariation.price,
 				// TODO: please remove this once SOHO works correctly on de-de with zuora
 				buyLink: this.#isSohoCornerCase(Constants.PRODUCT_ID_MAPPINGS[id].bundleId)
@@ -927,7 +962,7 @@ export class Store {
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
-			this.targetBuyLinkMappings = (await Target.configMbox)?.products;
+			this.targetBuyLinkMappings = (await target.configMbox)?.products;
 		}
 
 		// remove duplicates by id
@@ -938,7 +973,7 @@ export class Store {
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
 					if (!product.forcePromotion) {
-						product.promotion = (await Target.configMbox)?.promotion
+						product.promotion = (await target.configMbox)?.promotion
 							|| getUrlPromotion()
 							|| product.promotion
 							|| getMetadata("pid")
