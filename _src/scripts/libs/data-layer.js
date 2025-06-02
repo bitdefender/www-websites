@@ -25,6 +25,9 @@ export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
       discountRate: option.getDiscount("percentage"),
       currency: option.getCurrency(),
       grossPrice: option.getDiscountedPrice("value") || option.getPrice("value"),
+      discountCoupon: option.getCampaignType()
+        ? `${option.getCampaignType()}|${option.getPromotion()}`
+        : (option.getPromotion() || '')
     };
   }
 };
@@ -82,11 +85,6 @@ const resolvePageLoadStartedEvent = async () => {
       serverName: 'hlx.live', // indicator for AEM Success Edge
     },
     {
-      promotionID: (await target.configMbox)?.promotion
-        || getUrlPromotion()
-        || getMetadata('pid')
-        || getCampaignBasedOnLocale()
-        || '',
       internalPromotionID: page.getParamValue('icid') || '',
       trackingID: page.getParamValue('cid') || '',
     },
