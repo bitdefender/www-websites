@@ -10,7 +10,6 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   const oldPriceText = block.closest('.section').dataset.old_price_text ?? '';
-  const newPriceLabel = block.closest('.section').dataset.new_price_label ?? '';
   const saveText = block.closest('.section').dataset.save_text ?? '';
   const oldPriceElement = document.createElement('p');
   priceRoot.appendChild(oldPriceElement);
@@ -22,19 +21,6 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   priceElement.classList.add('current-price-container');
   const priceAppliedOnTime = document.createElement('p');
   priceRoot.appendChild(priceAppliedOnTime);
-  // create a mock buyzone for free products
-  if (code.includes('free')) {
-    oldPriceElement.innerHTML = `
-     <div class="old-price-box">
-      </div>
-    `;
-    priceElement.innerHTML = `<div class="new-price-box">
-      <span class="await-loader total-text">${label} </span>
-      <sup class="per-price"> </sup>
-    </div>`;
-    priceAppliedOnTime.innerHTML = '<p><p>';
-    return priceRoot;
-  }
 
   oldPriceElement.innerHTML = `
     <div class="old-price-box">
@@ -43,8 +29,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
     </div>`;
   priceElement.innerHTML = `
     <div class="new-price-box">
-      <span class="await-loader total-text" data-store-price="discounted||full"> </span>
-      <sup class="per-price"> ${newPriceLabel} </sup>
+      <span class="await-loader total-text" data-store-price="discounted||full"></span>
     </div>`;
   priceAppliedOnTime.innerHTML = label;
 
@@ -191,7 +176,7 @@ function buildTableHeader(block) {
       paragraphBefore?.classList.add('per-year-statement');
       const paragraphAfter = buttonSection.nextElementSibling;
       paragraphAfter?.classList.add('product-comparison-header-subtitle');
-      paragraphAfter?.nextElementSibling?.classList.add('product-comparison-header-subtitle');
+      paragraphAfter?.nextElementSibling.classList.add('product-comparison-header-subtitle');
     }
   });
 }
@@ -299,5 +284,4 @@ export default function decorate(block) {
 
   matchHeights(block, 'h3');
   matchHeights(block, '.old-price-container');
-  matchHeights(block, '.product-comparison-price');
 }

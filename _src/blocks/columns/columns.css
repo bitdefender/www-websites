@@ -300,7 +300,6 @@
   color:#006DFF;
   font-weight: 300;
 }
-
 .columns.ferrari-text .columns-text-col{
   font-weight: 300;
 }
@@ -939,7 +938,6 @@
   .columns.ferrari-text h2{
     font-size: 45px;
   }
-
   .columns.ferrari-text .columns-text-col{
     font-size: 30px;
   }
@@ -1933,14 +1931,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .button-container a{
     width: 100%;
     justify-content: center;
-  }
-
-  &.grey-button{
-    .button-container a{
-      background-color: #0000;
-      border-color: #000;
-      color: #000
-    }
   }
 
   table{
