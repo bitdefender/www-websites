@@ -9,6 +9,7 @@ const shareTexts = new Map();
 let score = 0;
 
 function decorateStartPage(startBlock) {
+  if (!startBlock) return;
   startBlock.classList.add('start-page');
 
   const legalDiv = document.createElement('div');
@@ -621,6 +622,19 @@ function getDivsBasedOnFirstParagraph(block, searchText) {
 }
 
 export default function decorate(block) {
+  const {
+    resultPage,
+  } = block.closest('.section').dataset;
+
+  if (resultPage) {
+    const results = getDivsBasedOnFirstParagraph(block, '<answer>');
+    decorateResults(results);
+    results.forEach((result) => {
+      result.style.display = '';
+    });
+    return;
+  }
+
   const [startBlock, ...questionsAndResults] = block.children;
   decorateStartPage(startBlock);
 
