@@ -502,9 +502,10 @@ function showResult(question, results) {
     url.hash = '';
     const cleanUrl = url.toString();
     const shareUrl = encodeURIComponent(cleanUrl);
+    const shareTextAndUrl = `${encodeURIComponent(shareText.innerText)} ${cleanUrl}`;
     const shareLinkedIn = shareIcons.querySelector('a[href*="#share-li"]');
     if (shareLinkedIn) {
-      shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}&text=${encodeURIComponent(shareText.innerText)}`;
+      shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?text=${encodeURIComponent(shareTextAndUrl.innerText)}`;
       shareLinkedIn.target = '_blank';
     }
     const shareFacebook = shareIcons.querySelector('a[href*="#share-fb"]');
