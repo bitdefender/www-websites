@@ -515,7 +515,7 @@ function showResult(question, results) {
     }
     const shareTwitter = shareIcons.querySelector('a[href*="#share-twitter"]');
     if (shareTwitter) {
-      shareTwitter.href = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText.innerHTML)}`;
+      shareTwitter.href = `https://x.com/intent/tweet?text=${shareTextAndUrl}`;
       shareTwitter.target = '_blank';
     }
   };
