@@ -3,9 +3,34 @@
 /* eslint-disable max-len */
 import {
   matchHeights, formatPrice,
-  checkIfNotProductPage,
+  checkIfNotProductPage, createNanoBlock, createTag, renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
+
+/**
+ * Nanoblock representing a text to Featured and the corresponding savings
+ * @param text Text of the featured nanoblock
+ * @param percent Show the saving in percentage if equals to `percent`
+ * @returns Root node of the nanoblock
+ */
+function renderFeaturedSavings(text = 'Save', percent = '') {
+  const featuredSaving = document.createElement('span');
+  featuredSaving.setAttribute('data-store-text-variable', '');
+  featuredSaving.textContent = `${text} ${
+    percent.toLowerCase() === 'percent' ? '{DISCOUNT_PERCENTAGE}' : '{DISCOUNT_VALUE}'
+  }`;
+  const root = createTag(
+    'div',
+    {
+      'data-store-hide': 'no-price=discounted;type=visibility',
+      class: 'featured',
+    },
+    `${featuredSaving.outerHTML}`,
+  );
+  root.classList.add('await-loader');
+
+  return root;
+}
 
 function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
   let priceAttribute = 'discounted||full';
@@ -178,6 +203,8 @@ function checkAddOn(featuresSet) {
 
   return addOn;
 }
+
+createNanoBlock('featuredSavings', renderFeaturedSavings);
 
 export default async function decorate(block) {
   const {
@@ -428,6 +455,7 @@ export default async function decorate(block) {
           });
         }
       }
+      renderNanoBlocks(block, undefined, key);
     });
   }
 
