@@ -1,9 +1,9 @@
 import Launch from '@repobit/dex-launch';
-import { 
-  PageLoadedEvent, 
-  AdobeDataLayerService, 
-  FormEvent, 
-  WindowLoadStartedEvent, 
+import {
+  PageLoadedEvent,
+  AdobeDataLayerService,
+  FormEvent,
+  WindowLoadStartedEvent,
   WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
 import { target, adobeMcAppendVisitorId } from './target.js';
