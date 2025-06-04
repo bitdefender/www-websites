@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-function createCarousel(block, shouldAutoplay = false, videosList = undefined, titles = undefined, startsfrom = 0) {
+function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined, startsfrom = 0) {
   const parentSection = block.closest('.section');
   const carouselContainer = document.createElement('div');
   carouselContainer.classList.add('carousel-container');
@@ -7,10 +7,10 @@ function createCarousel(block, shouldAutoplay = false, videosList = undefined, t
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
   // eslint-disable-next-line no-param-reassign
-  videos = videosList || Array.from(block.children).map((child) => child.innerHTML);
+  videos = videos || Array.from(block.children).map((child) => child.innerHTML);
 
   let currentIndex = 0;
-  /* eslint-disable one-var */
+  /* eslint-disable-next-line one-var-declaration-per-line */
   let prevArrow, nextArrow;
 
   let startX = 0;
@@ -25,7 +25,7 @@ function createCarousel(block, shouldAutoplay = false, videosList = undefined, t
 
     if (item.includes('https://www.youtube.com/embed/')) {
       carouselItem.classList.add('hasIframe');
-      itemReplaced = item.replace('<div>', '').replace('</div>', '').replace('<div bis_skin_checked="1">', '');
+      const itemReplaced = item.replace('<div>', '').replace('</div>', '').replace('<div bis_skin_checked="1">', '');
       const iframeElement = document.createElement('iframe');
       iframeElement.setAttribute('src', itemReplaced);
       iframeElement.setAttribute('frameborder', '0');
