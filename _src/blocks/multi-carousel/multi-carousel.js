@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined, startsfrom = 0) {
   const parentSection = block.closest('.section');
   const carouselContainer = document.createElement('div');
