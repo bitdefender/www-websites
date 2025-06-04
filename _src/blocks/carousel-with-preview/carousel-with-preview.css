@@ -15,6 +15,7 @@
 }
 
 .carousel-with-preview-container .featured-title {
+    width: 767px;
     font-size: 1.25rem;
     font-weight: bold;
     margin: 2em auto;
@@ -30,7 +31,7 @@
     color: #525252;
 }
 
-.carousel-with-preview-container .featured-title strong {
+.carousel-with-preview-container .featured-title > strong {
     font-weight: 600;
     font-size: 24px;
     line-height: 27px;
@@ -108,7 +109,7 @@
     vertical-align: middle;
 }
 
-.carousel-with-preview-container .caption strong {
+.carousel-with-preview-container .caption > strong {
     font-weight: 600;
     font-size: 16px;
     line-height: 20px;
@@ -225,8 +226,11 @@
         font-size: 32px !important;
         line-height: 38.4px !important;
     }
-    .carousel-with-preview-container .caption strong {
+    .carousel-with-preview-container .caption > strong {
         font-size: 14px;
+    }
+    .carousel-with-preview-container .featured-title {
+        width: 100%;
     }
 }
 
@@ -240,7 +244,7 @@
     .carousel-with-preview-container .thumb-wrapper img {
         height: 120px;
     }
-    .carousel-with-preview-container .featured-title strong {
+    .carousel-with-preview-container .featured-title > strong {
         font-weight: 600;
         font-size: 20px;
         line-height: 24px;
