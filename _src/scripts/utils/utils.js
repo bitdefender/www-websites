@@ -135,6 +135,7 @@ export function checkIfNotProductPage() {
   return Constants.NONE_PRODUCT_PAGES.includes(page.name);
 }
 
+/* eslint-disable max-len */
 export function addScript(src, data = {}, loadStrategy = undefined, onLoadCallback = undefined, onErrorCallback = undefined, type = undefined) {
   const s = document.createElement('script');
 
@@ -871,7 +872,7 @@ export const generatePageLoadStartedName = () => {
     const allSegments = pathname.split('/').filter((segment) => segment !== '');
     const lastSegment = allSegments[allSegments.length - 1];
     const subSubSubSection = allSegments[allSegments.length - 1] = allSegments[allSegments.length - 1].replace(/-/g, ' ');
-    let nameSection = lastSegment === 'subscriber-protection-platform' ? 'partners' : 'product';
+    const nameSection = lastSegment === 'subscriber-protection-platform' ? 'partners' : 'product';
     tagName = `${locale}:${nameSection}:${subSubSubSection}`;
     if (lastSegment === 'consumer') {
       tagName = `${locale}:consumer:solutions`;

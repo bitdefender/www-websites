@@ -102,7 +102,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
     updateArrows();
   }  
 
-  function createArrows(block, carouselTrack) {
+  function createArrows(block) {
     const arrowsContainer = document.createElement('div');
     arrowsContainer.classList.add('carousel-arrows-container');
 
