@@ -1,14 +1,16 @@
 /* eslint-disable max-len */
-function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined, startsfrom = 0) {
+function createCarousel(block, shouldAutoplay = false, videosList = undefined, titles = undefined, startsfrom = 0) {
   const parentSection = block.closest('.section');
   const carouselContainer = document.createElement('div');
   carouselContainer.classList.add('carousel-container');
 
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
-  videos = videos || Array.from(block.children).map(child => child.innerHTML);
+  // eslint-disable-next-line no-param-reassign
+  videos = videosList || Array.from(block.children).map((child) => child.innerHTML);
 
   let currentIndex = 0;
+  /* eslint-disable one-var */
   let prevArrow, nextArrow;
 
   let startX = 0;
@@ -23,9 +25,9 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
     if (item.includes('https://www.youtube.com/embed/')) {
       carouselItem.classList.add('hasIframe');
-      item = item.replace('<div>', '').replace('</div>', '').replace('<div bis_skin_checked="1">', '');
+      itemReplaced = item.replace('<div>', '').replace('</div>', '').replace('<div bis_skin_checked="1">', '');
       const iframeElement = document.createElement('iframe');
-      iframeElement.setAttribute('src', item);
+      iframeElement.setAttribute('src', itemReplaced);
       iframeElement.setAttribute('frameborder', '0');
       iframeElement.setAttribute('allow', 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
       iframeElement.setAttribute('allowfullscreen', '');

@@ -28,11 +28,11 @@ function createSlide(item, index, parentSection) {
       'aria-describedby': `${CONTROL_PREFIX}${index}`,
       tabindex: '-1',
     },
-    `${isCustom ?
-      `<div class="quote-content">
+    `${isCustom
+      ? `<div class="quote-content">
         ${item.innerHTML}
-      </div>` :
-      `<div class="quote">
+      </div>`
+      : `<div class="quote">
         <span class="icon icon-dark-blue-quote"></span>
       </div>
       <div class="quote-content">
@@ -40,7 +40,7 @@ function createSlide(item, index, parentSection) {
         <h5>${author?.textContent}</h5>
         <p>${description?.innerHTML}</p>
       </div>`
-    }`
+    }`,
   );
 }
 
@@ -87,7 +87,7 @@ function updateSlideState(nextIndex, block) {
   if (allPictures) {
     allPictures.forEach((picture) => {
       picture.style.display = 'none';
-    })
+    });
     block.closest('.columns').querySelector(`.right-col picture:nth-of-type(${nextIndex + 1})`).style.display = 'block';
   }
 }
