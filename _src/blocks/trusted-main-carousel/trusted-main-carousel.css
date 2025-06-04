@@ -198,6 +198,7 @@
 @media (min-width: 992px) {
     .trusted-main-carousel-container .content-wrapper .slide {
         display: flex;
+        justify-content: space-between;
         gap: 50px;
         margin-top: 30px;
     }
@@ -237,7 +238,26 @@
     }
 
     .trusted-main-carousel-container.blue-background .content-wrapper .slide > div {
-        width: calc(53% - 50px);
+        width: calc(40%);
         flex-shrink: 0;
     }
+}
+
+@media (max-width: 767px) {
+  .trusted-main-carousel-container .content-wrapper {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem;
+  }
+
+  .trusted-main-carousel-container .content-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .trusted-main-carousel-container .content-wrapper .slide {
+    min-width: 100%;
+    scroll-snap-align: start;
+  }
 }

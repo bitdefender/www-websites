@@ -2,8 +2,15 @@ function getVideoElement(source, autoplay) {
   const video = document.createElement('video');
   video.classList.add('bck-video');
   video.setAttribute('controls', '');
-  if (autoplay) video.setAttribute('autoplay', '');
+  video.setAttribute('loop', '');
   video.dataset.loading = 'true';
+
+  if (autoplay) {
+    video.setAttribute('autoplay', '');
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.muted = true; // programmatic mute for autoplay to work reliably
+  }
 
   video.addEventListener('loadedmetadata', () => {
     delete video.dataset.loading;
@@ -37,8 +44,8 @@ export default async function decorate(block) {
 
   block.innerHTML = `
     <div class="default-content-wrapper">
-      <div class="rte-wrapper">${rte.innerHTML}</div>
-      <div class="video-wrapper">
+      <div class="rte-wrapper">${rte.innerHTML}</div> 
+      ${!block.classList.contains('video-background') ? `<div class="video-wrapper">
         ${isYouTube ? `
           <iframe 
             src="${baseEmbedUrl}"
@@ -50,59 +57,79 @@ export default async function decorate(block) {
         ` : `
           ${getVideoElement(baseEmbedUrl, false).outerHTML}
         `}
-      </div>
+      </div>` : ''}
     </div>
-    <button class="play-btn">
-      <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    ${videoBtnText ? `<button class="play-btn">
+      <svg width="114" height="114" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <circle cx="50" cy="50" r="50" fill="#FF0000"/>
         <polygon points="40,30 70,50 40,70" fill="white"/>
       </svg>
       ${videoBtnText}
-    </button>
-    ${block.classList.contains('video-background') ? `
-      <div class="video-background">
-        <div class="iframe-container"></div>
-      </div>
-    ` : ''}
+    </button>` : ''}  
+    ${block.classList.contains('video-background') ? `<div class="video-wrapper">
+        ${isYouTube ? `
+          <iframe 
+            src="${baseEmbedUrl}"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
+            allowfullscreen 
+            scrolling="no"
+            title="Content from Youtube"
+            loading="lazy"></iframe>
+        ` : `
+          ${getVideoElement(baseEmbedUrl, true).outerHTML}
+        `}
+      </div>` : ''} 
   `;
 
-  // Make links open in new tab safely
   block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
     anchorEl.target = '_blank';
     anchorEl.rel = 'noopener noreferrer';
   });
 
-  // Add event listener to play button
-  if (block.classList.contains('video-background')) {
-    const playBtn = block.querySelector('.play-btn');
-    const iframeContainer = block.querySelector('.iframe-container');
+  const playBtn = block.querySelector('.play-btn');
 
-    playBtn?.addEventListener('click', () => {
-      if (isYouTube) {
-        const autoplayUrl = `${baseEmbedUrl}&autoplay=1&mute=1`;
-        iframeContainer.innerHTML = `
-          <iframe
-            src="${autoplayUrl}"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
-            allowfullscreen
-            scrolling="no"
-            title="Autoplay Video"
-            loading="lazy"></iframe>
-        `;
-      } else {
-        const videoEl = getVideoElement(baseEmbedUrl, true);
-        iframeContainer.innerHTML = '';
-        iframeContainer.appendChild(videoEl);
-        videoEl.addEventListener('ended', () => {
-          iframeContainer.innerHTML = '';
-          playBtn.style.display = 'flex';
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      let modal = block.querySelector('dialog.video-modal');
+
+      if (!modal) {
+        modal = document.createElement('dialog');
+        modal.classList.add('video-modal');
+
+        modal.innerHTML = `
+        <div class="video-modal-content">
+          <button class="video-modal-close" aria-label="Close video modal">&times;</button>
+          <div class="video-modal-inner"></div>
+        </div>
+      `;
+
+        block.appendChild(modal);
+
+        modal.querySelector('.video-modal-close').addEventListener('click', () => {
+          modal.close();
+        });
+
+        modal.addEventListener('click', (e) => {
+          const content = modal.querySelector('.video-modal-content');
+          if (!content.contains(e.target)) modal.close();
+        });
+
+        modal.addEventListener('close', () => {
+          modal.remove();
         });
       }
 
-      playBtn.style.display = 'none';
+      const modalInner = modal.querySelector('.video-modal-inner');
+      modalInner.innerHTML = isYouTube
+        ? `<iframe src="${baseEmbedUrl}&autoplay=1"
+                allow="autoplay; fullscreen"
+                allowfullscreen
+                loading="lazy"
+                title="Video Modal"></iframe>`
+        : getVideoElement(baseEmbedUrl, true).outerHTML;
+
+      if (!modal.open) modal.showModal();
     });
-  } else {
-    block.querySelector('.play-btn').remove();
   }
 
   const signature = block.querySelector('h5 strong');
