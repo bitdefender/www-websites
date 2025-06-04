@@ -96,20 +96,6 @@
             transition: opacity calc(1s / 3) ease-in-out;
         }
         
-        .card.small {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding-left: 12px;
-        }
-        
-        .card.small .icon {
-            margin-right: auto;
-            justify-content: flex-start;
-            align-items: center;
-            margin: 0;
-        }
-        
         .card.small .lottie-wrapper {
             justify-content: flex-start;
         }

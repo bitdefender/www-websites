@@ -1307,7 +1307,7 @@ main .subscriber .section {
     .subscriber #customQuoteCarousel .columns, .subscriber #customQuoteCarousel .columns > div {
         height: 100%;
     }
-    .subscriber #customQuoteCarousel .quote-carousel, .subscriber .quote-carousel-container .hasMultiImgs .left-col, main .quote-carousel-container .hasMultiImgs .right-col, .subscriber .quote-carousel-container .hasMultiImgs .right-col picture {
+    .subscriber #customQuoteCarousel .quote-carousel, .subscriber .quote-carousel-container .has-multi-imgs .left-col, main .quote-carousel-container .has-multi-imgs .right-col, .subscriber .quote-carousel-container .has-multi-imgs .right-col picture {
         width: 100%;
     }
     .subscriber #customQuoteCarousel .columns .block .slide {

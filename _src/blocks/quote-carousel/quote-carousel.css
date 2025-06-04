@@ -13,23 +13,23 @@ main .quote-carousel .slides-container {
   overflow: hidden;
 }
 
-main .quote-carousel-container .hasMultiImgs .left-col, main .quote-carousel-container .hasMultiImgs .right-col {
+main .quote-carousel-container .has-multi-imgs .left-col, main .quote-carousel-container .has-multi-imgs .right-col {
   width: 50%;
   flex: 0 0 50%;
 }
 
-main .quote-carousel-container .hasMultiImgs .right-col picture {
+main .quote-carousel-container .has-multi-imgs .right-col picture {
   display: none;
 }
-main .quote-carousel-container .hasMultiImgs .right-col picture img {
+main .quote-carousel-container .has-multi-imgs .right-col picture img {
   height: 655px;
 }
-main .quote-carousel-container .hasMultiImgs .right-col picture:first-of-type {
+main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type {
   display: block;
 }
 
 @media (max-width: 992px) {
-  main .quote-carousel-container .hasMultiImgs .left-col, main .quote-carousel-container .hasMultiImgs .right-col {
+  main .quote-carousel-container .has-multi-imgs .left-col, main .quote-carousel-container .has-multi-imgs .right-col {
     width: 100%;
   }
 }
@@ -48,10 +48,6 @@ main .quote-carousel-container .hasMultiImgs .right-col picture:first-of-type {
   main .quote-carousel {
     max-width: 100%;
     margin: 55px 0 0;
-  }
-
-  main .quote-carousel .slides-container {
-    margin-bottom: 50px;
   }
 
   main .quote-carousel .slides-container {
@@ -236,18 +232,19 @@ main .quote-carousel-container .hasMultiImgs .right-col picture:first-of-type {
   main .quote-carousel {
     margin-top: 0;
   }
-  main .quote-carousel-container .hasMultiImgs .right-col picture img {
+  main .quote-carousel-container .has-multi-imgs .right-col picture img {
     width: 100%;
     height: auto;
   }
 }
 @media (max-width: 767px) {
-  main .quote-carousel-container .hasMultiImgs .right-col picture img {
+  main .quote-carousel-container .has-multi-imgs .right-col picture img {
     width: 100%;
     height: auto;
     margin-bottom: -1em;
   }
 
+  /* stylelint-disable-next-line selector-id-pattern */
   #customQuoteCarousel .slides-container .slides-dots li {
     border-radius: 8px;
   }
