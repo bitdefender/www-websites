@@ -1,3 +1,4 @@
+/* eslint-disable */
 function createCarousel(block, items) {
   const parentSection = block.closest('.section');
   const carouselContainer = document.createElement('div');

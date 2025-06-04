@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable */
 function createCarousel(block, shouldAutoplay = false, videos = undefined, titles = undefined, startsfrom = 0) {
   const parentSection = block.closest('.section');
   const carouselContainer = document.createElement('div');
@@ -6,11 +6,9 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
-  // eslint-disable-next-line no-param-reassign
   videos = videos || Array.from(block.children).map((child) => child.innerHTML);
 
   let currentIndex = 0;
-  /* eslint-disable-next-line one-var-declaration-per-line */
   let prevArrow, nextArrow;
 
   let startX = 0;

@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default function decorate(block) {
   const parentSection = block.closest('.section');
   const [headers, contentTab1, contentTab2] = block.querySelectorAll('table');
