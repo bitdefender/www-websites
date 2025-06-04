@@ -32,15 +32,6 @@
     display: none;
 }
 
-.wheel-carousel .carousel-item {
-    width: 208px;
-    margin: 0;
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .wheel-carousel {
     .carousel-container {
         padding-left: 20px;
@@ -65,9 +56,13 @@
     }
 
     .carousel-item {
+        width: 208px;
+        margin: 0;
         padding: 20px;
         padding-right: 40px;
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         opacity: 60%;
         transition: opacity 0.3s ease, transform 0.3s ease;
     }

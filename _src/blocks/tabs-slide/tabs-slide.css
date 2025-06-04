@@ -174,9 +174,6 @@
 
 .spp-slider .card > p:first-of-type {
     flex: 0 0 80px;
-}
-
-.spp-slider .card > p:first-of-type {
     position: relative;
     display: block;
 }
