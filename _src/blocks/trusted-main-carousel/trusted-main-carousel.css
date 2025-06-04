@@ -230,10 +230,12 @@
 
     .trusted-main-carousel-container .content-wrapper .slide>:last-child img {
         object-fit: contain;
+        position: absolute;
+        align-self: anchor-center;
     }
 
     .trusted-main-carousel-container .content-wrapper .slide>div {
-        width: calc(40% - 50px);
+        width: calc(50% - 50px);
         flex-shrink: 0;
     }
 
