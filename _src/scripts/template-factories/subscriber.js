@@ -72,7 +72,6 @@ const initializeHubspotModule = () => {
 
   // Helper to initialize popup events if applicable
   const initialiseHubspotFormPopupEvents = (hubspotForm, mainPopupButton) => {
-    console.log('mainPopupButton ', mainPopupButton)
     if (!mainPopupButton) return;
     mainPopupButton.addEventListener('click', async () => {
       alert('click')
@@ -141,7 +140,6 @@ const initializeHubspotModule = () => {
   ).forEach(trigger => {
     trigger.addEventListener("click", e => {
       popupContainer.style.display = "block";
-      console.log('sdafas')
       AdobeDataLayerService.push(newPageLoadStartedEvent);
       AdobeDataLayerService.push(
         new FormEvent('form viewed', getFormEventData(hubspotForm))
