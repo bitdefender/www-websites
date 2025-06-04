@@ -867,6 +867,7 @@ export const generatePageLoadStartedName = () => {
 
   let tagName;
   if (tags.length) {
+    // eslint-disable-next-line no-multi-assign
     tagName = [pageSectionDataLocale, ...tags].filter(Boolean).join(':'); // e.g. au:consumer:product:internet security
   } else {
     const allSegments = pathname.split('/').filter((segment) => segment !== '');
