@@ -513,7 +513,17 @@ function loadDelayed() {
   }, 3000);
 }
 
+function setBFCacheListener() {
+  window.addEventListener('pageshow', (event) => {
+    // Send another page loaded if the page is restored from bfcache.
+    if (event.persisted) {
+      AdobeDataLayerService.push(new PageLoadedEvent());
+    }
+  });
+}
+
 async function loadPage() {
+  setBFCacheListener();
   initialiseSentry();
   await window.hlx.plugins.load('eager');
 
