@@ -1,5 +1,11 @@
 import Launch from '@repobit/dex-launch';
-import { PageLoadedEvent, AdobeDataLayerService, FormEvent, WindowLoadStartedEvent, WindowLoadedEvent } from '@repobit/dex-data-layer';
+import { 
+  PageLoadedEvent, 
+  AdobeDataLayerService, 
+  FormEvent, 
+  WindowLoadStartedEvent, 
+  WindowLoadedEvent,
+} from '@repobit/dex-data-layer';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -302,33 +308,33 @@ function buildCtaSections(main) {
 // initializeHubspotModule
 const initializeHubspotModule = () => {
   const loadHubspotScript = (callback) => {
-    if (typeof hbspt !== "undefined") {
+    if (typeof hbspt !== 'undefined') {
       callback();
       return;
     }
     const script = document.createElement('script');
-    script.charset = "utf-8";
-    script.type = "text/javascript";
-    script.src = "//js.hsforms.net/forms/embed/v2.js";
+    script.charset = 'utf-8';
+    script.type = 'text/javascript';
+    script.src = '//js.hsforms.net/forms/embed/v2.js';
     script.onload = callback;
     document.head.appendChild(script);
   };
 
   const getFormEventData = (hubspotForm) => {
     const portalId = hubspotForm.querySelector('.portal-id')?.getAttribute('value');
-    const dl_formTitle = hubspotForm.querySelector('.dl-form-title')?.getAttribute('data-value');
-    const dl_formID = hubspotForm.querySelector('.dl-form-ID')?.getAttribute('value');
-    const dl_formProduct = hubspotForm.querySelector('.dl-form-product')?.getAttribute('value') === 'true' && portalId;
+    const dlFormTitle = hubspotForm.querySelector('.dl-form-title')?.getAttribute('data-value');
+    const dlFormID = hubspotForm.querySelector('.dl-form-ID')?.getAttribute('value');
+    const dlFormProduct = hubspotForm.querySelector('.dl-form-product')?.getAttribute('value') === 'true' && portalId;
 
     return Object.fromEntries(
       [
-        ['form', dl_formTitle],
-        ['formProduct', dl_formProduct],
-        ['formID', dl_formID]
-      ].filter(([, value]) => value)
+        ['form', dlFormTitle],
+        ['formProduct', dlFormProduct],
+        ['formID', dlFormID],
+      ].filter(([, value]) => value),
     );
   };
-  
+
   const updateDataLayerAndRedirect = (hubspotForm) => {
     const newPageLoadStartedEvent = new WindowLoadStartedEvent();
     newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form submited';
@@ -346,14 +352,14 @@ const initializeHubspotModule = () => {
   const initHubspotForm = async (portalId, formId, hubspotForm) => {
     const sfdcCampaignId = hubspotForm.querySelector('.sfdc-campaign-id')?.value;
     const region = hubspotForm.querySelector('.region')?.value;
-
+    /* global hbspt */
     hbspt.forms.create({
       region,
       portalId,
       formId,
       sfdcCampaignId,
-      target: `.hubspot-form`,
-      onFormSubmit: () => updateDataLayerAndRedirect(hubspotForm)
+      target: '.hubspot-form',
+      onFormSubmit: () => updateDataLayerAndRedirect(hubspotForm),
     });
   };
 
@@ -389,19 +395,16 @@ const initializeHubspotModule = () => {
     const formId = hubspotForm.querySelector('.form-id')?.value;
 
     if (portalId && formId) {
-      const formContainer = hubspotForm.querySelector('.form-for-hubspot');
-      // formContainer?.classList.add(`hubspot-form-${formId}`);
-
       initHubspotForm(portalId, formId, hubspotForm);
     }
 
     // Click-to-open logic
     const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
-    const popupContainer = hubspotContainer.querySelector(".download-popup__container");
+    const popupContainer = hubspotContainer.querySelector('.download-popup__container');
 
-    document.querySelectorAll(".subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type").forEach(trigger => {
-      trigger.addEventListener("click", () => {
-        popupContainer.style.display = "block";
+    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        popupContainer.style.display = 'block';
         const newPageLoadStartedEvent = new WindowLoadStartedEvent();
         newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
         newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
@@ -412,8 +415,8 @@ const initializeHubspotModule = () => {
     });
 
     if (popupContainer) {
-      popupContainer.addEventListener("click", () => {
-        popupContainer.style.display = "none";
+      popupContainer.addEventListener('click', () => {
+        popupContainer.style.display = 'none';
       });
     }
   });
