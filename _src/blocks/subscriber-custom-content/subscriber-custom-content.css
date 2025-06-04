@@ -65,15 +65,6 @@
             align-items: center;
         }
         
-        .lottie-container {
-            position: absolute;
-            bottom: 0;
-            z-index: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            display: block;
-        }
-        
         .small {
             .lottie-wrapper {
                 width: fit-content;
@@ -211,6 +202,12 @@
         
         .lottie-container {
             width: 208px;
+            position: absolute;
+            bottom: 0;
+            z-index: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: block;
         }
         
         img {
