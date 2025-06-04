@@ -867,11 +867,11 @@ export const generatePageLoadStartedName = () => {
 
   let tagName;
   if (tags.length) {
-    // eslint-disable-next-line no-multi-assign
     tagName = [pageSectionDataLocale, ...tags].filter(Boolean).join(':'); // e.g. au:consumer:product:internet security
   } else {
     const allSegments = pathname.split('/').filter((segment) => segment !== '');
     const lastSegment = allSegments[allSegments.length - 1];
+    // eslint-disable-next-line no-multi-assign
     const subSubSubSection = allSegments[allSegments.length - 1] = allSegments[allSegments.length - 1].replace(/-/g, ' ');
     const nameSection = lastSegment === 'subscriber-protection-platform' ? 'partners' : 'product';
     tagName = `${locale}:${nameSection}:${subSubSubSection}`;
