@@ -60,9 +60,9 @@ export default async function decorate(block) {
       </div>` : ''}
     </div>
     ${videoBtnText ? `<button class="play-btn">
-      <svg width="114" height="114" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="50" fill="#FF0000"/>
-        <polygon points="40,30 70,50 40,70" fill="white"/>
+      <svg xmlns="http://www.w3.org/2000/svg" width="114" height="114" viewBox="0 0 114 114" fill="none">
+        <circle cx="57" cy="57" r="57" fill="#FF0004"/>
+        <path d="M81.25 53.1025C84.1563 54.7805 84.2472 58.8973 81.5225 60.7275L81.25 60.8975L48.25 79.9492C45.2501 81.6812 41.5001 79.5167 41.5 76.0527L41.5 37.9473C41.5001 34.5915 45.0194 32.4549 47.9668 33.8994L48.25 34.0508L81.25 53.1025Z" fill="white" stroke="white"/>
       </svg>
       ${videoBtnText}
     </button>` : ''}  

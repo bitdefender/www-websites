@@ -419,6 +419,9 @@ main .section.link-right a {
     z-index: 999;
     overflow: hidden;
     white-space: nowrap;
+    height: 100%;
+    background-color: transparent !important;
+    border: none !important;
 }
 
 .trusted .section.static-awards .default-content-wrapper > * img {
