@@ -494,15 +494,15 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
-function showResult(question, results, resultPath) {
-  const setupShareLinks = (result, shareText) => {
+function showResult(question, results) {
+  const setupShareLinks = (result, shareText, resultPath) => {
     const shareIcons = result.querySelector('.share-icons');
     if (!shareIcons) return;
     const resultUrl = new URL(window.location.href);
     resultUrl.hash = '';
     const cleanUrl = resultUrl.toString();
     const shareUrl = encodeURIComponent(cleanUrl);
-    const shareTextAndUrl = `${shareText.innerText} ${cleanUrl}${resultPath}`;
+    const shareTextAndUrl = encodeURIComponent(`${shareText.innerHTML.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
     const shareLinkedIn = shareIcons.querySelector('a[href*="#share-li"]');
     if (shareLinkedIn) {
       shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?text=${shareTextAndUrl}`;
@@ -523,19 +523,19 @@ function showResult(question, results, resultPath) {
   question.style.display = 'none';
   const scoreRanges = [
     {
-      min: 0, max: 2, resultIndex: 0, shareText: shareTexts.get(0), resultUrl: '/result-1',
+      min: 0, max: 2, resultIndex: 0, shareText: shareTexts.get(0), resultUrl: 'result-1',
     },
     {
-      min: 3, max: 4, resultIndex: 1, shareText: shareTexts.get(1), resultUrl: '/result-2',
+      min: 3, max: 4, resultIndex: 1, shareText: shareTexts.get(1), resultUrl: 'result-2',
     },
     {
-      min: 5, max: 6, resultIndex: 2, shareText: shareTexts.get(2), resultUrl: '/result-3',
+      min: 5, max: 6, resultIndex: 2, shareText: shareTexts.get(2), resultUrl: 'result-3',
     },
     {
-      min: 7, max: 8, resultIndex: 3, shareText: shareTexts.get(3), resultUrl: '/result-4',
+      min: 7, max: 8, resultIndex: 3, shareText: shareTexts.get(3), resultUrl: 'result-4',
     },
     {
-      min: 9, max: 10, resultIndex: 4, shareText: shareTexts.get(4), resultUrl: '/result-5',
+      min: 9, max: 10, resultIndex: 4, shareText: shareTexts.get(4), resultUrl: 'result-5',
     },
   ];
 
