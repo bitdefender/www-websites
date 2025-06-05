@@ -196,6 +196,10 @@
 }
 
 @media (min-width: 992px) {
+    .trusted-main-carousel-container .default-content-wrapper {
+        padding-top: 80px;
+    }
+
     .trusted-main-carousel-container .content-wrapper .slide {
         display: flex;
         justify-content: space-between;

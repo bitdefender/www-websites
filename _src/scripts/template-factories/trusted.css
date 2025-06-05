@@ -526,6 +526,7 @@ main .section.link-right a {
 .trusted p.button-container a {
     font-weight: 500;
     border-width: 1px;
+    padding: 15px 8px 15px 20px;
 }
 
 .trusted p.button-container a:hover {
@@ -597,7 +598,7 @@ main .section.link-right a {
     overflow: hidden;
 }
 
-@-webkit-keyframes animated-mouse {
+@keyframes animated-mouse {
     0% {
         opacity: 1;
         -webkit-transform: translateY(0);
@@ -659,7 +660,7 @@ main .section.link-right a {
     }
 
     .trusted h2 {
-        font: normal normal bold 41px/48px var(--font-ibm);
+        font: normal normal 600 54px/60px var(--font-ibm) !important;
     }
 
     .trusted .v2 h2 {
@@ -675,7 +676,7 @@ main .section.link-right a {
     }
 
     .trusted p {
-        font: normal normal normal 18px/32px var(--font-ibm);
+        font: normal normal normal 26px/32px var(--font-ibm);
     }
 
     .trusted main .hero .hero-content .breadcrumb {
@@ -707,9 +708,6 @@ main .section.link-right a {
         display: block;
     }
 
-    .trusted a.button.primary, .trusted button.primary {
-        min-width: 190px!important;
-    }
 
     .trusted .apartnership_box .d-flex > div:nth-of-type(2) {
         margin-left: 14em;
@@ -800,7 +798,7 @@ main .section.link-right a {
 
     /* columns with logos */
     .trusted .section.columns-container {
-        padding: 0;
+        padding-bottom: 0;
     }
     .trusted .section.columns-container .columns-img-col {
         display: block;
@@ -810,15 +808,15 @@ main .section.link-right a {
         order: initial;
     }
 
+    .trusted p.button-container a {
+         font: normal normal normal 23px var(--font-ibm);
+    }
+
     .trusted .section.columns-container p,
     .trusted .section.columns-container div {
-        font: normal normal normal 18px/27px IBM Plex Sans;
+        font: normal normal normal 26px/32px IBM Plex Sans;
     }
     /* end columns with logos */
-
-    .trusted .section.apartnership_box .default-content-wrapper {
-        width: 50%;
-    }
 
     .trusted .section.apartnership_box .default-content-wrapper > * {
         text-align: center;

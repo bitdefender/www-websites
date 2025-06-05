@@ -64,18 +64,37 @@
     align-items: center;
 }
 
+.trusted-hero.video-background .play-btn:hover {
+    zoom: 1.1;
+    filter: brightness(85%);
+}
+
 .trusted-hero-container .video-modal {
   position: fixed;
   top: 0; 
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: transparent;
+  background: transparent; /* make modal background transparent */
   border: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  display: flex;
+  padding: 0;
+  margin: 0;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+
+.trusted-hero-container .video-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: -1;
 }
 
 .trusted-hero-container .video-modal-content {
@@ -85,18 +104,21 @@
   max-width: 90%;
   max-height: 80%;
   overflow: hidden;
+  z-index: 1;
 }
+
 .trusted-hero-container .video-modal-content iframe,
 .trusted-hero-container .video-modal-content video {
   width: 100%;
   height: 100%;
 }
+
 .video-modal-close {
   position: absolute;
   top: 0.5em;
   right: 1em;
   font-size: 2rem;
-  color: #000;
+  color: #fff;
   cursor: pointer;
   pointer-events: all;
   z-index: 999;
@@ -113,10 +135,20 @@
     display: flex;
     align-items: center;
     gap: 10px;
+
+    &:first-of-type {
+        margin-top: 8px;
+    }
 }
 
 .trusted-hero.video-background table td h5{
     margin-bottom: 12px;
+    font: normal normal normal 24px/28px IBM Plex Sans;
+}
+
+.trusted-hero.video-background table td .icon{
+    width: 65px;
+    height: 65px;
 }
 
 
@@ -280,7 +312,7 @@
 
     .trusted-hero.video-background .play-btn {
         position: absolute;
-        right: 23%;
+        right: 22.5%;
         top: 33%;
         background: transparent;
         font-size: 19px;
