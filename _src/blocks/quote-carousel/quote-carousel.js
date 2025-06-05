@@ -4,7 +4,8 @@ import { decorateIcons } from '../../scripts/lib-franklin.js';
 const SLIDE_PREFIX = 'carousel-slide-';
 const CONTROL_PREFIX = 'carousel-control-';
 
-function createSlide(item, index) {
+function createSlide(item, index, parentSection) {
+  const isCustom = parentSection.id === 'customQuoteCarousel' || null;
   const paragraphs = Array.from(item.querySelectorAll('p'));
   const quote = paragraphs.find((paragraph) => {
     const strongOrEm = paragraph.querySelector('strong, em');
@@ -27,14 +28,19 @@ function createSlide(item, index) {
       'aria-describedby': `${CONTROL_PREFIX}${index}`,
       tabindex: '-1',
     },
-    `<div class="quote">
-        <span class="icon icon-dark-blue-quote"/>
-    </div>
-    <div class="quote-content">
+    `${isCustom
+      ? `<div class="quote-content">
+        ${item.innerHTML}
+      </div>`
+      : `<div class="quote">
+        <span class="icon icon-dark-blue-quote"></span>
+      </div>
+      <div class="quote-content">
         <h4>${quote?.innerHTML}</h4>
         <h5>${author?.textContent}</h5>
         <p>${description?.innerHTML}</p>
-    </div>`,
+      </div>`
+    }`,
   );
 }
 
@@ -77,6 +83,13 @@ function updateSlideState(nextIndex, block) {
     }
   });
   updateControlsState(block, nextIndex);
+  const allPictures = block.closest('.columns').querySelectorAll('.right-col picture');
+  if (allPictures) {
+    allPictures.forEach((picture) => {
+      picture.style.display = 'none';
+    });
+    block.closest('.columns').querySelector(`.right-col picture:nth-of-type(${nextIndex + 1})`).style.display = 'block';
+  }
 }
 
 function addDotsListeners(dotsControls, slides) {
@@ -113,15 +126,21 @@ function createDotsControls(slides) {
 }
 
 export default async function decorate(block) {
+  const parentSection = block.closest('.section');
   const slides = createTag('div', { class: 'slides' });
   let slideIndex = 1;
   [...block.children].forEach((item) => {
-    const slide = createSlide(item, slideIndex);
+    const slide = createSlide(item, slideIndex, parentSection);
     if (slide) {
       slideIndex += 1;
       slides.append(slide);
     }
   });
+
+  const allPictures = block.closest('.columns').querySelectorAll('.right-col picture');
+  if (allPictures && !block.closest('.columns').classList.contains('hasMultiImgs')) {
+    block.closest('.columns').classList.add('has-multi-imgs');
+  }
 
   slides.children[0].classList.add('active');
   const dotsControls = createDotsControls(slides, block);
