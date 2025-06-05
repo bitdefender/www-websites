@@ -245,6 +245,6 @@
     }
     .spp-slider.without-active .tab-slider {
         width: 110px;
-        transform: translateX(calc(170px));
+        transform: translateX(calc(195px));
     }
 }
