@@ -29,7 +29,7 @@
 }
 
 .trusted a.button span.button-text {
-    font-weight: 500;
+    font-weight: 300;
 }
 
 .trusted div[data-align="right"] {
@@ -46,7 +46,7 @@
 
 .trusted h1, .trusted main .hero h1 {
     font: normal normal bold 48px/42px var(--font-ibm);
-    color: #252525;
+    color: #000;
     text-align: left;
 }
 
@@ -183,6 +183,10 @@ main .section.link-right a {
 
 .trusted .apartnership_box .default-content-wrapper > * {
     text-align: center;
+}
+
+.trusted .apartnership_box .default-content-wrapper p {
+    color: #5E5E5E;
 }
 
 .trusted .apartnership_box .d-flex > div:nth-of-type(2) {
@@ -479,7 +483,7 @@ main .section.link-right a {
 
 .trusted .section.columns-container p,
 .trusted .section.columns-container div {
-    font: normal normal normal 14px/21px IBM Plex Sans;
+    font: normal normal 300 14px/21px IBM Plex Sans;
 }
 /* end columns with logos */
 
@@ -660,7 +664,7 @@ main .section.link-right a {
     }
 
     .trusted h2 {
-        font: normal normal 600 54px/60px var(--font-ibm) !important;
+        font: normal normal 500 54px/60px var(--font-ibm) !important;
     }
 
     .trusted .v2 h2 {
@@ -814,7 +818,7 @@ main .section.link-right a {
 
     .trusted .section.columns-container p,
     .trusted .section.columns-container div {
-        font: normal normal normal 26px/32px IBM Plex Sans;
+        font: normal normal 300 26px/32px IBM Plex Sans;
     }
     /* end columns with logos */
 

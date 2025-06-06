@@ -21,7 +21,7 @@ export default async function decorate(block) {
   block.innerHTML = `
     <div class="navigation-wrapper">
         <div class="first-nav">
-          ${navItemsNames.map((navItemName, index) => `<div class="nav-item ${index === 0 ? 'active' : ''}">${navItemName}</div>`).join('')}
+          ${navItemsNames.map((navItemName, index) => `<div class="nav-item ${index === 0 ? 'active' : ''}"><span class=text>${navItemName}</span> <span class="pill"></span></div>`).join('')}
         </div>
         
         <div class="second-nav">

@@ -18,6 +18,10 @@
     text-align: center;
 }
 
+.trusted-teaser-impact .carousel-header .title h2 {
+    font: normal normal 700 48px / 50px IBM Plex Sans !important;
+}
+
 .trusted-teaser-impact .carousel-header .title >:first-child {
     margin: 0;
 }
@@ -35,19 +39,6 @@
     color: black;
     position: relative;
     padding-right: 10px;
-}
-
-.trusted-teaser-impact .box-wrapper .box-item::after {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 80%;
-    position: absolute;
-    top: 10%;
-    right: -3px;
-    background: #006EFF;
-    opacity: 0.25;
-    visibility: visible;
 }
 
 .trusted-teaser-impact .box-wrapper .box-item:last-of-type::after {

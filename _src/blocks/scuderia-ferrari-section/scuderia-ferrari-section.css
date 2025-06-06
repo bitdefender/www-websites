@@ -403,6 +403,10 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 
     .scuderia-ferrari-section.quotes-left.trusted{
+        h2{
+            font-size: 128px !important;
+        }
+
         h3{
             font-size: 40px;
             line-height: 1.3;
