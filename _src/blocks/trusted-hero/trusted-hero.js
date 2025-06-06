@@ -27,7 +27,7 @@ function getVideoElement(source, autoplay) {
 
 export default async function decorate(block) {
   const { videoBtnText } = block.closest('.section').dataset;
-  const [rte, videoUrl] = [...block.children];
+  const [rte, videoUrl, modalLink] = [...block.children];
   const url = new URL(videoUrl.textContent.trim());
   const usp = new URLSearchParams(url.search);
   let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : '';
@@ -71,7 +71,7 @@ export default async function decorate(block) {
           <iframe 
             src="${baseEmbedUrl}"
             allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
-            allowfullscreen 
+            allowfullscreen
             scrolling="no"
             title="Content from Youtube"
             loading="lazy"></iframe>
@@ -97,11 +97,11 @@ export default async function decorate(block) {
         modal.classList.add('video-modal');
 
         modal.innerHTML = `
-        <div class="video-modal-content">
-          <button class="video-modal-close" aria-label="Close video modal">&times;</button>
-          <div class="video-modal-inner"></div>
-        </div>
-      `;
+          <div class="video-modal-content">
+            <button class="video-modal-close" aria-label="Close video modal">&times;</button>
+            <div class="video-modal-inner" style="height:100%"></div>
+          </div>
+        `;
 
         block.appendChild(modal);
 
@@ -120,14 +120,15 @@ export default async function decorate(block) {
       }
 
       const modalInner = modal.querySelector('.video-modal-inner');
-      modalInner.innerHTML = isYouTube
-        ? `<iframe src="${baseEmbedUrl}&autoplay=1"
-                allow="autoplay; fullscreen"
-                allowfullscreen
-                loading="lazy"
-                title="Video Modal"></iframe>`
-        : getVideoElement(baseEmbedUrl, true).outerHTML;
-
+      const embedUrl = new URL(modalLink.innerText.trim());
+      embedUrl.searchParams.set('autoplay', '1');
+      modalInner.innerHTML = `<iframe 
+        src="${embedUrl.toString()}"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
+        allowfullscreen 
+        scrolling="no"
+        title="Content from Youtube"
+        loading="lazy"></iframe>`;
       if (!modal.open) modal.showModal();
     });
   }
