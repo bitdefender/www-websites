@@ -25,6 +25,8 @@ main .subscriber .section {
     font-weight: 600;
     font-size: 64px;
     line-height: 64px;
+    font-size: 40px;
+    line-height: 48px;
 }
 
 .subscriber #heroColumn h2 u {
@@ -1141,6 +1143,11 @@ main .subscriber .section {
 
 .subscriber .multicontentslider .carousel-container {
     padding-left: 2em;
+}
+
+.subscriber .multicontentslider#carouselLogosText .carousel-container {
+    padding-left: 0;
+    overflow: visible;
 }
 
 .subscriber .multilogosslider .icon svg {
