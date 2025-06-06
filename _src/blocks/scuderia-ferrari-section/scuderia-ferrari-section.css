@@ -178,6 +178,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     h3 {
         line-height: 1.3;
         position: relative;
+        font-weight: 600;
     }
 
     p img {

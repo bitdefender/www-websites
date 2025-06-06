@@ -62,7 +62,7 @@
 }
 
 .trusted h4 {
-    font: normal normal normal 18px/20px var(--font-ibm);
+    font: normal normal 500 18px/20px var(--font-ibm);
     text-align: left;
 }
 
@@ -676,7 +676,9 @@ main .section.link-right a {
     }
 
     .trusted h4 {
-        font: normal normal normal 35px/38px var(--font-ibm);
+        font: normal normal 500 32px/38px var(--font-ibm);
+        margin-top: 16px;
+        margin-bottom: 16px;
     }
 
     .trusted p {
@@ -856,7 +858,7 @@ main .section.link-right a {
 
     .trusted .section.static-awards .default-content-wrapper > *:not(:first-child) {
         width: 100%;
-        padding: 20px;
+        padding-bottom: 40px;
     }
 
     .trusted .section.static-awards .default-content-wrapper > * picture {
