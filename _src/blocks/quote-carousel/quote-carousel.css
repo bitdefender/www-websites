@@ -22,7 +22,7 @@ main .quote-carousel-container .has-multi-imgs .right-col picture {
   display: none;
 }
 main .quote-carousel-container .has-multi-imgs .right-col picture img {
-  height: 655px;
+  height: auto;
 }
 main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type {
   display: block;
