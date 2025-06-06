@@ -622,9 +622,35 @@ function getDivsBasedOnFirstParagraph(block, searchText) {
   return targetDivs.length > 0 ? targetDivs : null;
 }
 
+function createSharePopup(element) {
+  element.style.maxWidth = `${element.offsetWidth}px`;
+  element.style.maxHeight = `${element.offsetHeight}px`;
+  const sharePopup = document.createElement('div');
+  sharePopup.classList.add('share-popup');
+  element.insertAdjacentElement('beforeend', sharePopup);
+  return sharePopup;
+}
+
+function copyToClipboard(block, caller, popupText) {
+  let copyText = new URL(window.location.href);
+  copyText.hash = '';
+  copyText = copyText.toString();
+
+  navigator.clipboard.writeText(copyText);
+
+  const popup = block.querySelector('.share-popup') || createSharePopup(block);
+  popup.textContent = popupText;
+  const translateXValue = Math.abs((popup.offsetWidth - caller.offsetWidth) / 2);
+  popup.style = `transform:translateX(-${translateXValue}px); opacity: 1`;
+  setTimeout(() => {
+    popup.style = `transform:translateX(-${translateXValue}px); opacity:0;`;
+  }, 2500);
+  caller.appendChild(popup);
+}
+
 export default function decorate(block) {
   const {
-    resultPage,
+    resultPage, clipboardText,
   } = block.closest('.section').dataset;
 
   if (resultPage) {
@@ -653,5 +679,17 @@ export default function decorate(block) {
   });
 
   block.appendChild(questionsContainer);
+
+  if (clipboardText) {
+    const shareButtons = block.querySelectorAll('a[href="#copy-to-clipboard"]');
+    shareButtons.forEach((shareButton) => {
+      shareButton.style.position = 'relative';
+      shareButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        copyToClipboard(block, shareButton, clipboardText);
+      });
+    });
+  }
+
   decorateIcons(block);
 }
