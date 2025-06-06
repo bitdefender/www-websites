@@ -78,6 +78,14 @@
     transition: transform 0.25s ease-out;
     scroll-snap-type: none;
     overflow-x: scroll;
+
+    /* Hide scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.trusted-main-carousel-container .content-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
 }
 
 .trusted-main-carousel-container .content-wrapper .slide {

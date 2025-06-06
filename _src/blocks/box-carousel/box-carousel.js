@@ -4,108 +4,51 @@ import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
-  let currentSlideIndex = 0;
-
-  const countItems = slides.length;
-  let countClass = `has-${countItems}-items`;
-  if (countItems > 3 && countItems < 7) {
-    countClass = 'has-3-7-items';
-  }
-  if (countItems > 7) {
-    countClass = 'has-more-items';
-  }
-  block.classList.add(countClass);
-
   const isTestimonials = block.closest('.section').classList.contains('testimonials');
+  let currentIndex = 0;
 
-  const carouselItemStyle = {
-    margin: 20,
-  };
+  const itemMargin = 20;
 
-  function isFirstIndex() {
-    return currentSlideIndex === 0;
-  }
-
-  function isLastIndex(carousel) {
-    const carouselItem = block.querySelector('.carousel-item');
-    // eslint-disable-next-line max-len
-    const visibleCount = Math.floor(carousel.offsetWidth / (carouselItem.offsetWidth + carouselItemStyle.margin));
-    return currentSlideIndex >= (slides.length - visibleCount);
-  }
-
-  function isElementInViewport(el) {
-    const rect = el.getBoundingClientRect();
-    return (
-      rect.top >= 0
-    && rect.left >= 0
-    && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
-    && rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  }
-
-  function scrollCarousel(offset, carousel) {
-    const carouselItems = block.querySelectorAll('.carousel-item');
-    const carouselItem = carouselItems[offset];
-
-    if (!carouselItem) return;
-
-    if (isElementInViewport(block)) {
-      carouselItem.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'start',
-        block: 'nearest',
-      });
-    } else {
-    // fallback: shift carousel using transform (optional)
-      carousel.style.transform = `translateX(${-1 * offset * (carouselItem.offsetWidth + carouselItemStyle.margin)}px)`;
-    }
-
-    // Update nav dots
-    const navDots = block.querySelectorAll('.navigation-item');
-    navDots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === offset);
-    });
+  function calculateVisibleCount(carousel, item) {
+    if (!item) return 1;
+    const totalWidth = carousel.offsetWidth;
+    const itemFullWidth = item.offsetWidth + itemMargin;
+    return Math.floor(totalWidth / itemFullWidth);
   }
 
   function getCarousel() {
     return block.querySelector('.carousel');
   }
 
-  function updateDisabledArrow() {
-    const leftArrowEl = block.querySelector('.left-arrow');
-    const rightArrowEl = block.querySelector('.right-arrow');
+  function scrollToIndex(index) {
     const carousel = getCarousel();
+    const item = carousel.querySelector('.carousel-item');
+    if (!item) return;
 
-    leftArrowEl?.classList.remove('disabled');
-    rightArrowEl?.classList.remove('disabled');
+    const itemFullWidth = item.offsetWidth + itemMargin;
+    carousel.scrollTo({
+      left: index * itemFullWidth,
+      behavior: 'smooth',
+    });
 
-    if (isFirstIndex()) leftArrowEl?.classList.add('disabled');
-    if (isLastIndex(carousel)) rightArrowEl?.classList.add('disabled');
-  }
+    // Update nav dots
+    const navDots = block.querySelectorAll('.navigation-item');
+    navDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
 
-  function leftArrowHandler(e) {
-    e.preventDefault();
-    if (isFirstIndex()) return;
-    currentSlideIndex -= 1;
-    scrollCarousel(currentSlideIndex, getCarousel());
-    updateDisabledArrow(currentSlideIndex);
-  }
+    // Update arrow disabled state
+    const visibleCount = calculateVisibleCount(carousel, item);
+    const leftArrow = block.querySelector('.left-arrow');
+    const rightArrow = block.querySelector('.right-arrow');
 
-  function rightArrowHandler(e) {
-    e.preventDefault();
-    const carousel = getCarousel();
-    if (isLastIndex(carousel)) return;
-    currentSlideIndex += 1;
-    scrollCarousel(currentSlideIndex, carousel);
-    updateDisabledArrow(currentSlideIndex);
+    leftArrow?.classList.toggle('disabled', index <= 0);
+    rightArrow?.classList.toggle('disabled', index >= slides.length - visibleCount);
   }
 
   function renderArrows() {
-    block.classList.remove('scrollable');
-
     if (isView('desktop')) {
-      const cardsNotFullyVisible = window.innerWidth > 767;
-      return cardsNotFullyVisible ? `
+      return `
       <a href class="arrow disabled left-arrow">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -130,16 +73,14 @@ export default async function decorate(block) {
           </g>
         </svg>
       </a>
-    ` : '';
+    `;
     }
-
     block.classList.add('scrollable');
     return '';
   }
 
   function render() {
     block.classList.add('default-content-wrapper');
-
     block.innerHTML = `
       <div class="carousel-header">
         <div class="title">${titleEl?.children[0]?.innerHTML ?? ''}</div>
@@ -184,33 +125,41 @@ export default async function decorate(block) {
 
     decorateIcons(block);
 
-    const leftArrowEl = block.querySelector('.left-arrow');
-    const rightArrowEl = block.querySelector('.right-arrow');
+    const carousel = getCarousel();
+    const firstItem = carousel.querySelector('.carousel-item');
 
-    if (leftArrowEl && rightArrowEl) {
-      leftArrowEl.removeEventListener('click', leftArrowHandler);
-      rightArrowEl.removeEventListener('click', rightArrowHandler);
+    // ARROWS
+    const leftArrow = block.querySelector('.left-arrow');
+    const rightArrow = block.querySelector('.right-arrow');
 
-      leftArrowEl.addEventListener('click', leftArrowHandler);
-      rightArrowEl.addEventListener('click', rightArrowHandler);
-    }
+    leftArrow?.addEventListener('click', (e) => {
+      e.preventDefault();
+      currentIndex = Math.max(0, currentIndex - 1);
+      scrollToIndex(currentIndex);
+    });
 
-    // Add dot click handlers
+    rightArrow?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const visibleCount = calculateVisibleCount(carousel, firstItem);
+      currentIndex = Math.min(slides.length - visibleCount, currentIndex + 1);
+      scrollToIndex(currentIndex);
+    });
+
+    // DOTS
     const navDots = block.querySelectorAll('.navigation-item');
     navDots.forEach((dot) => {
       dot.addEventListener('click', () => {
-        const newIndex = Number(dot.dataset.index);
-        currentSlideIndex = newIndex;
-        scrollCarousel(currentSlideIndex, getCarousel());
-        updateDisabledArrow();
+        currentIndex = Number(dot.dataset.index);
+        scrollToIndex(currentIndex);
       });
     });
 
-    scrollCarousel(currentSlideIndex, getCarousel());
-    updateDisabledArrow();
+    scrollToIndex(currentIndex);
   }
 
   render();
-
-  window.addEventListener('resize', debounce(render, 250));
+  window.addEventListener('resize', debounce(() => {
+    render();
+    scrollToIndex(currentIndex);
+  }, 250));
 }
