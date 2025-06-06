@@ -6,7 +6,7 @@ export default async function decorate(block) {
   const AUTOMATIC_SLIDING = {
     enabled: true,
     viewport: 'desktop',
-    slideDelay: 3 * 1000,
+    slideDelay: 3000,
   };
 
   const state = {
@@ -51,9 +51,8 @@ export default async function decorate(block) {
           </a>
         </div>
     </div>
-    
     <div class="content-wrapper">
-        ${slides.map((slide, index) => `
+      ${slides.map((slide, index) => `
         <div class="slide ${index === 0 ? 'active' : ''}">
             ${slide.innerHTML}
         </div>
@@ -61,38 +60,21 @@ export default async function decorate(block) {
     </div>
   `;
 
-  const contentWrapper = block.querySelector('.content-wrapper');
-
   const navItems = block.querySelectorAll('.nav-item');
   const slideItems = block.querySelectorAll('.slide');
+  const contentWrapper = block.querySelector('.content-wrapper');
   const leftArrow = block.querySelector('.left-arrow');
   const rightArrow = block.querySelector('.right-arrow');
-  function selectNavItem(itemPosition) {
-    navItems.forEach((item) => item.classList.remove('active'));
-    navItems[itemPosition].classList.add('active');
-  }
 
-  function selectSlideItem(itemPosition) {
-    slideItems.forEach((item) => item.classList.remove('active'));
-    slideItems[itemPosition].classList.add('active');
-  }
+  function selectStep(index) {
+    state.currentStep = index;
 
-  function slideToSection(itemPosition) {
-    block.classList.add('scrolling');
+    navItems.forEach((item, i) => item.classList.toggle('active', i === index));
+    slideItems.forEach((slide, i) => slide.classList.toggle('active', i === index));
 
-    const transformValue = -100 * (itemPosition);
-    const offset = 50 * itemPosition;
-    contentWrapper.style.transform = `translateX(calc(${transformValue}% - ${offset}px ))`;
-    setTimeout(() => {
-      block.classList.remove('scrolling');
-    }, 200);
-  }
-
-  function selectStep(itemPosition) {
-    state.currentStep = itemPosition;
-    selectNavItem(itemPosition);
-    selectSlideItem(itemPosition);
-    slideToSection(itemPosition);
+    // Direct horizontal scroll, not using scrollIntoView to avoid vertical shift
+    const scrollX = slideItems[index].offsetLeft;
+    contentWrapper.scrollTo({ left: scrollX, behavior: 'smooth' });
   }
 
   function endAutomaticSliding(interval) {
@@ -104,14 +86,11 @@ export default async function decorate(block) {
 
     endAutomaticSliding();
 
-    if (state.carouselIsFocused || !isView(AUTOMATIC_SLIDING.viewport)) {
-      return;
-    }
+    if (state.carouselIsFocused || !isView(AUTOMATIC_SLIDING.viewport)) return;
 
     const interval = setInterval(() => {
-      const isLastStep = state.currentStep === navItems.length - 1;
-      const nextStepToSelect = isLastStep ? 0 : (state.currentStep + 1);
-      selectStep(nextStepToSelect);
+      const nextIndex = (state.currentStep + 1) % slideItems.length;
+      selectStep(nextIndex);
 
       if (!isView(AUTOMATIC_SLIDING.viewport) || state.carouselIsFocused) {
         endAutomaticSliding(interval);
@@ -132,37 +111,39 @@ export default async function decorate(block) {
       beginAutomaticSliding();
     });
 
-    navItems.forEach((navEl, itemPosition) => {
-      navEl.addEventListener('click', () => {
-        selectStep(itemPosition);
-      });
+    navItems.forEach((item, index) => {
+      item.addEventListener('click', () => selectStep(index));
     });
 
     leftArrow.addEventListener('click', (e) => {
       e.preventDefault();
-
-      const isFirstStep = state.currentStep === 0;
-      if (isFirstStep) {
-        return;
-      }
-
-      selectStep(state.currentStep - 1);
+      if (state.currentStep > 0) selectStep(state.currentStep - 1);
     });
 
     rightArrow.addEventListener('click', (e) => {
       e.preventDefault();
-
-      const isLastStep = state.currentStep === navItems.length - 1;
-      if (isLastStep) {
-        return;
-      }
-
-      selectStep(state.currentStep + 1);
+      if (state.currentStep < slideItems.length - 1) selectStep(state.currentStep + 1);
     });
+
+    contentWrapper.addEventListener('scroll', debounce(() => {
+      let closestIndex = 0;
+      let minDistance = Infinity;
+
+      slideItems.forEach((slide, i) => {
+        const dist = Math.abs(slide.getBoundingClientRect().left);
+        if (dist < minDistance) {
+          closestIndex = i;
+          minDistance = dist;
+        }
+      });
+
+      if (closestIndex !== state.currentStep) {
+        selectStep(closestIndex);
+      }
+    }, 100));
   }
 
   addEventListeners();
-
   beginAutomaticSliding();
   window.addEventListener('resize', debounce(beginAutomaticSliding, 250));
 }

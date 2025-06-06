@@ -33,9 +33,33 @@ export default async function decorate(block) {
     return currentSlideIndex >= (slides.length - visibleCount);
   }
 
+  function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0
+    && rect.left >= 0
+    && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+    && rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
   function scrollCarousel(offset, carousel) {
-    const carouselItem = block.querySelector('.carousel-item');
-    carousel.style.transform = `translateX(${-1 * offset * (carouselItem.offsetWidth + carouselItemStyle.margin)}px)`;
+    const carouselItems = block.querySelectorAll('.carousel-item');
+    const carouselItem = carouselItems[offset];
+
+    if (!carouselItem) return;
+
+    if (isElementInViewport(block)) {
+      carouselItem.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'start',
+        block: 'nearest',
+      });
+    } else {
+    // fallback: shift carousel using transform (optional)
+      carousel.style.transform = `translateX(${-1 * offset * (carouselItem.offsetWidth + carouselItemStyle.margin)}px)`;
+    }
+
     // Update nav dots
     const navDots = block.querySelectorAll('.navigation-item');
     navDots.forEach((dot, i) => {

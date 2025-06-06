@@ -76,10 +76,8 @@
     display: flex;
     transform: translateX(0);
     transition: transform 0.25s ease-out;
-}
-
-.trusted-main-carousel-container .block.scrolling .content-wrapper {
-    overflow: unset;
+    scroll-snap-type: none;
+    overflow-x: scroll;
 }
 
 .trusted-main-carousel-container .content-wrapper .slide {
