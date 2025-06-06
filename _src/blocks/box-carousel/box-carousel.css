@@ -41,7 +41,6 @@
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
-    gap: 20px;
 }
 
 .box-carousel-container .block.scrollable .carousel {
