@@ -188,6 +188,7 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
   display: flex;
   list-style: none;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .slides-container .slides-dots li {
