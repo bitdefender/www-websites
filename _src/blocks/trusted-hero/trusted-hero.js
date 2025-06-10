@@ -141,4 +141,20 @@ export default async function decorate(block) {
   const signature = block.querySelector('h5 strong');
 
   if (window.innerWidth > 992) signature.innerHTML = signature.innerHTML.replace('.', '.<br>');
+
+  const video = block.querySelector('video');
+
+  if (video) {
+    const playPromise = video.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {})
+        .catch((error) => {
+          console.warn('Error trying to play the video:', error);
+          video.muted = true;
+          video.play().catch(console.error);
+        });
+    }
+  }
 }
