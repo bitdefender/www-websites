@@ -239,6 +239,10 @@
     width: unset;
 }
 
+.box-carousel-container ul {
+    padding-left: 0;
+    display: flex;
+}
 
 @media screen and (min-width: 768px) {
     .box-carousel-container .carousel-header {

@@ -39,6 +39,7 @@
     "stylelint-config-standard": "30.0.1"
   },
   "dependencies": {
+    "@glidejs/glide": "^3.7.1",
     "@repobit/dex-data-layer": "^1.6.2",
     "@repobit/dex-launch": "^2.0.1",
     "@repobit/dex-target": "^2.2.1",

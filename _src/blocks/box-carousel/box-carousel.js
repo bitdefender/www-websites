@@ -1,54 +1,37 @@
+import Glide from '@glidejs/glide';
 import { debounce } from '@repobit/dex-utils';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
-  const isTestimonials = block.closest('.section').classList.contains('testimonials');
-  let currentIndex = 0;
+  const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
 
-  const itemMargin = 20;
+  const slidesHTML = slides.map((slide) => `
+    <li class="carousel-item glide__slide">
+      ${isTestimonials ? `
+        <div class="img-container">
+          ${slide.children[0]?.children[0]?.innerHTML}
+        </div>
+      ` : slide.children[0]?.children[0]?.innerHTML}
 
-  function calculateVisibleCount(carousel, item) {
-    if (!item) return 1;
-    const totalWidth = carousel.offsetWidth;
-    const itemFullWidth = item.offsetWidth + itemMargin;
-    return Math.floor(totalWidth / itemFullWidth);
-  }
+      <p class="title">${slide.children[0]?.children[1]?.textContent}</p>
 
-  function getCarousel() {
-    return block.querySelector('.carousel');
-  }
+      ${isTestimonials ? `
+        <div class="subtitle-secondary">${slide.children[0]?.children[2]?.innerHTML}</div>
+        <div class="subtitle">${slide.children[0]?.children[3]?.innerHTML}</div>
+      ` : `
+        <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML}</div>
+      `}
+    </li>
+  `).join('');
 
-  function scrollToIndex(index) {
-    const carousel = getCarousel();
-    const item = carousel.querySelector('.carousel-item');
-    if (!item) return;
+  // Only one carousel-nav block: your original one with div.navigation-item
+  const navDotsHTML = slides.map((_, i) => `
+    <div class="navigation-item ${i === 0 ? 'active' : ''}" data-index="${i}"></div>
+  `).join('');
 
-    const itemFullWidth = item.offsetWidth + itemMargin;
-    carousel.scrollTo({
-      left: index * itemFullWidth,
-      behavior: 'smooth',
-    });
-
-    // Update nav dots
-    const navDots = block.querySelectorAll('.navigation-item');
-    navDots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === index);
-    });
-
-    // Update arrow disabled state
-    const visibleCount = calculateVisibleCount(carousel, item);
-    const leftArrow = block.querySelector('.left-arrow');
-    const rightArrow = block.querySelector('.right-arrow');
-
-    leftArrow?.classList.toggle('disabled', index <= 0);
-    rightArrow?.classList.toggle('disabled', index >= slides.length - visibleCount);
-  }
-
-  function renderArrows() {
-    if (isView('desktop')) {
-      return `
+  const arrowsHTML = isView('desktop') ? `
       <a href class="arrow disabled left-arrow">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -73,93 +56,79 @@ export default async function decorate(block) {
           </g>
         </svg>
       </a>
-    `;
-    }
-    block.classList.add('scrollable');
-    return '';
-  }
+  ` : '';
 
-  function render() {
-    block.classList.add('default-content-wrapper');
-    block.innerHTML = `
-      <div class="carousel-header">
-        <div class="title">${titleEl?.children[0]?.innerHTML ?? ''}</div>
-        <div class="arrows d-flex">${renderArrows()}</div>
+  block.classList.add('default-content-wrapper');
+  block.innerHTML = `
+    <div class="carousel-header">
+      <div class="title">${titleEl?.children[0]?.innerHTML ?? ''}</div>
+      <div class="arrows d-flex">${arrowsHTML}</div>
+    </div>
+
+    <div class="carousel-container glide">
+      <div class="carousel glide__track" data-glide-el="track">
+        <ul class="glide__slides">
+          ${slidesHTML}
+        </ul>
       </div>
 
-      <div class="carousel-container">
-        <div class="carousel">
-          ${slides.map((slide) => `
-            <div class="carousel-item">
-              ${isTestimonials ? `
-                <div class="img-container">
-                  ${slide.children[0]?.children[0]?.innerHTML}
-                </div>
-              ` : slide.children[0]?.children[0]?.innerHTML}
-
-              <p class="title">
-                ${slide.children[0]?.children[1]?.textContent}
-              </p>
-
-              ${isTestimonials ? `
-                <div class="subtitle-secondary">
-                  ${slide.children[0]?.children[2]?.innerHTML}
-                </div>
-                <div class="subtitle">
-                  ${slide.children[0]?.children[3]?.innerHTML}
-                </div>
-              ` : `
-                <div class="subtitle">
-                  ${slide.children[0]?.children[2]?.innerHTML}
-                </div>
-              `}
-            </div>
-          `).join('')}
-        </div>
-
-        <div class="carousel-nav">
-          ${slides.map((_, i) => `<div class="navigation-item ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`).join('')}
-        </div>
+      <div class="carousel-nav">
+        ${navDotsHTML}
       </div>
-    `;
+    </div>
+  `;
 
-    decorateIcons(block);
+  decorateIcons(block);
 
-    const carousel = getCarousel();
-    const firstItem = carousel.querySelector('.carousel-item');
+  const glide = new Glide(block.querySelector('.glide'), {
+    type: 'carousel',
+    perView: 1,
+    gap: 20,
+  });
 
-    // ARROWS
-    const leftArrow = block.querySelector('.left-arrow');
-    const rightArrow = block.querySelector('.right-arrow');
+  glide.mount();
 
-    leftArrow?.addEventListener('click', (e) => {
-      e.preventDefault();
-      currentIndex = Math.max(0, currentIndex - 1);
-      scrollToIndex(currentIndex);
-    });
-
-    rightArrow?.addEventListener('click', (e) => {
-      e.preventDefault();
-      const visibleCount = calculateVisibleCount(carousel, firstItem);
-      currentIndex = Math.min(slides.length - visibleCount, currentIndex + 1);
-      scrollToIndex(currentIndex);
-    });
-
-    // DOTS
+  // Sync .active on your navigation dots
+  function updateNav() {
     const navDots = block.querySelectorAll('.navigation-item');
-    navDots.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        currentIndex = Number(dot.dataset.index);
-        scrollToIndex(currentIndex);
-      });
+    navDots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === glide.index);
     });
-
-    scrollToIndex(currentIndex);
   }
 
-  render();
+  updateNav();
+
+  glide.on('run', updateNav);
+
+  // Add click handlers for your nav dots to control glide
+  const navDots = block.querySelectorAll('.navigation-item');
+  navDots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const idx = Number(dot.dataset.index);
+      glide.go(`=${idx}`);
+    });
+  });
+
+  // Arrow click handlers to update glide
+  const leftArrow = block.querySelector('.left-arrow');
+  const rightArrow = block.querySelector('.right-arrow');
+
+  if (leftArrow) {
+    leftArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      glide.go('<');
+    });
+  }
+  if (rightArrow) {
+    rightArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      glide.go('>');
+    });
+  }
+
   window.addEventListener('resize', debounce(() => {
-    render();
-    scrollToIndex(currentIndex);
+    glide.update();
   }, 250));
+
+  window.dispatchEvent(new Event('resize'));
 }
