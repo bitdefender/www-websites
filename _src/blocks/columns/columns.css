@@ -641,7 +641,7 @@
 }
 
 .columns-container.trusted-section .columns {
-  padding:100px 0;
+  padding:0;
 }
 
 .columns-container.trusted-section .columns h2{
@@ -894,6 +894,10 @@
     flex-direction: unset;
     gap: 32px;
     align-items: stretch;
+  }
+
+  .columns-container.trusted-section .columns {
+    padding: 100px 0;
   }
 
   .columns-container.avfree .columns.benefits {

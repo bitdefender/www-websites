@@ -40,7 +40,7 @@
 .trusted-main-carousel-container .navigation-wrapper .nav-item {
     color: black;
     font-weight: 300;
-    font-size: 12px;
+    font-size: 18px;
     flex-shrink: 0;
     padding: 15px;
     background: #EFF6FF;
@@ -166,7 +166,7 @@
 }
 
 .trusted-main-carousel-container .content-wrapper .slide>:first-child img {
-    width: 160px;
+    width: 100px;
 }
 
 .trusted-main-carousel-container .content-wrapper ul {
@@ -258,6 +258,10 @@
 
     .trusted-main-carousel-container .content-wrapper .slide>:first-child>*:not(h2) {
         margin: 40px 0;
+    }
+
+    .trusted-main-carousel-container .content-wrapper .slide>:first-child img {
+        width: 160px;
     }
 
     .trusted-main-carousel-container .content-wrapper .slide>:last-child img {

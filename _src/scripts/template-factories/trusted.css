@@ -45,13 +45,13 @@
 }
 
 .trusted h1, .trusted main .hero h1 {
-    font: normal normal bold 48px/42px var(--font-ibm);
+    font: normal normal 500 48px/42px var(--font-ibm);
     color: #000;
     text-align: left;
 }
 
 .trusted h2 {
-    font: normal normal bold 20px/24px "IBM Plex Sans", sans-serif;
+    font: normal normal 500 34px/38px "IBM Plex Sans", sans-serif;
     color: #252525;
     text-align: left;
 }
@@ -67,7 +67,7 @@
 }
 
 .trusted p, .trusted main .hero p {
-    font: normal normal normal 14px/18px var(--font-ibm);
+    font: normal normal normal 17px/20px var(--font-ibm);
     text-align: left;
 }
 
@@ -177,11 +177,6 @@ main .section.link-right a {
 
 .trusted .section.apartnership_box p.button-container {
     margin-top: 30px;
-}
-
-
-.trusted .apartnership_box .default-content-wrapper > * {
-    text-align: center;
 }
 
 .trusted .apartnership_box .default-content-wrapper p {
@@ -362,11 +357,6 @@ main .section.link-right a {
     padding: 50px;
 }
 
-.trusted .box-carousel-container.testimonials .carousel-item {
-    
-    padding: 2em;
-}
-
 .trusted .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
     margin-bottom: 10px;
 }
@@ -461,8 +451,8 @@ main .section.link-right a {
     color: black;
 }
 
-.trusted .section.columns-container .columns-img-col {
-    display: none;
+.trusted .section.columns-container .columns-img-col img{
+    object-fit: none;
 }
 
 .trusted .section.columns-container .columns > div > div:not(.columns-img-col) {
@@ -482,7 +472,7 @@ main .section.link-right a {
 
 .trusted .section.columns-container p,
 .trusted .section.columns-container div {
-    font: normal normal 300 14px/21px IBM Plex Sans;
+    font: normal normal 300 17px/24px IBM Plex Sans;
 }
 /* end columns with logos */
 
@@ -713,6 +703,9 @@ main .section.link-right a {
         display: block;
     }
 
+    .trusted .apartnership_box .default-content-wrapper > * {
+        text-align: center;
+    }
 
     .trusted .apartnership_box .d-flex > div:nth-of-type(2) {
         margin-left: 14em;
@@ -918,11 +911,5 @@ main .section.link-right a {
 
     .trusted .section.dealsbluebanner .columns-img-col::before {
         display: none;
-    }
-
-    .trusted .box-carousel-container.testimonials .carousel-item {
-        width: 300px;
-        padding: 1em;
-        margin: 0 1em;
     }
 }

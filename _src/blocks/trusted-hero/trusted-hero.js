@@ -37,6 +37,10 @@ export default async function decorate(block) {
     [, vid] = url.pathname.split('/');
   }
 
+  const rteTable = rte.querySelector('table');
+  rte.querySelector('table').remove();
+  rte.insertAdjacentElement('beforeend', rteTable);
+
   const isYouTube = videoUrl.textContent.includes('youtube') || url.host.includes('youtu.be');
   const baseEmbedUrl = isYouTube
     ? `https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}` : embed}`
@@ -45,6 +49,7 @@ export default async function decorate(block) {
   block.innerHTML = `
     <div class="default-content-wrapper">
       <div class="rte-wrapper">${rte.innerHTML}</div> 
+     
       ${!block.classList.contains('video-background') ? `<div class="video-wrapper">
         ${isYouTube ? `
           <iframe 
@@ -134,5 +139,6 @@ export default async function decorate(block) {
   }
 
   const signature = block.querySelector('h5 strong');
-  signature.innerHTML = signature.innerHTML.replace('.', '.<br>');
+
+  if (window.innerWidth > 992) signature.innerHTML = signature.innerHTML.replace('.', '.<br>');
 }

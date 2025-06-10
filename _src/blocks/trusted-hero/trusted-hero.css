@@ -10,7 +10,7 @@
 
 .trusted-hero-container h1,
 .trusted-hero-container h2 {
-    font: normal normal normal 28px/32px var(--font-ibm);
+    font: normal normal normal 34px/38px var(--font-ibm);
 }
 
 .trusted-hero-container h1 {
@@ -62,6 +62,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.trusted-hero.video-background .play-btn svg {
+    height: 95px;
+    width: 95px;
+    margin-bottom: 12px;
 }
 
 .trusted-hero.video-background .play-btn:hover {
@@ -127,17 +133,22 @@
 
 .trusted-hero.video-background table tr{
     display: flex;
-    justify-content: space-between;
+    flex-flow: column-reverse;
+    align-items: center;
+    position: relative;
+    left: -20px;
 }
 
 .trusted-hero.video-background table td {
     display: flex;
     align-items: center;
     gap: 10px;
+}
 
-    &:first-of-type {
-        margin-top: 8px;
-    }
+.trusted-hero.video-background table tr img {
+    max-width: 110%;
+    position: relative;
+    left: -10px;
 }
 
 .trusted-hero.video-background table td h5{
@@ -146,8 +157,8 @@
 }
 
 .trusted-hero.video-background table td .icon{
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
 }
 
 
@@ -155,7 +166,6 @@
     position: relative;
     padding-top: 20px !important;
     z-index: 4;
-    order: -1;
     padding-bottom: 140px;
 }
 
@@ -168,7 +178,7 @@
 
 .trusted-hero-container p.button-container:nth-last-child(2) {
     position: absolute;
-    bottom: 60px;
+    bottom: 70px;
     left: 1em;
     right: 1em;
 }
@@ -255,7 +265,6 @@
 
     .trusted-hero-container .default-content-wrapper {
         padding-top: 0 !important;
-        order: unset;
         left: 0;
         right: 0;
         height: 100%;
@@ -295,6 +304,23 @@
     .trusted-hero.video-background table td img {
         height: 160px;
     }
+
+    .trusted-hero.video-background table tr{
+        flex-direction: row;
+        justify-content: space-between;
+        left: 0;
+    }
+
+    .trusted-hero.video-background table td .icon{
+        width: 60px;
+        height: 60px;
+    }
+
+    .trusted-hero.video-background .play-btn svg {
+        height: 114px;
+        width: 114px;
+        margin-bottom:0;
+    }   
 
     .trusted-hero.video-background h2{
         font-size: 54px;

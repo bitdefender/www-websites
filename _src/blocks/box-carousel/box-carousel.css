@@ -114,7 +114,6 @@
 
 .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
     font: normal normal bold 14px/21px "IBM Plex Sans", sans-serif;
-    margin-top: auto;
     position: relative;
 }
 
@@ -137,7 +136,7 @@
     background-color: #F4FAFF;
     border-radius: 10px;
     overflow: hidden;
-    padding: 40px 20px;
+    padding: 0;
     flex-direction: column;
 }
 
@@ -157,11 +156,12 @@
 }
 
 .box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item img {
-    height: 73px;
+    height: 53px;
+    max-width: 200px;
 }
 
 .box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item .title {
-    font-size: 26px;
+    font-size: 17px;
     font-weight: 600;
     width: 80%;
     text-align: center;
@@ -254,6 +254,14 @@
         width: 60%;
     }
 
+    .box-carousel-container.testimonials .trusted-carousel .carousel-container {
+        padding: 40px 20px;
+    }
+
+    .box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item img {
+        height: 73px;
+        max-width: unset;
+    }
 
     .box-carousel-container .carousel-item .subtitle {
         font: normal normal normal 18px/23px "IBM Plex Sans", sans-serif;
@@ -270,10 +278,11 @@
     }
 
 
-    .box-carousel-container .carousel-item .title {
-        font-size: 19px;
+    .box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item .title {
+        font-size: 26px;
         color: #242424;
-        font-weight: 500;
+        margin-top: 12px;
+        margin-bottom: 42px;
     }
 
     .box-carousel-container.testimonials .carousel-item .subtitle {
