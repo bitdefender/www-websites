@@ -192,7 +192,6 @@ function decorateAnswersList(question, questionIndex) {
       listItems.forEach((item) => item.classList.remove('selected'));
       listItem.classList.add('selected');
 
-      const questionHeader = question.querySelector('h2');
       if (isCorrect) {
         listItem.classList.add('correct-answer');
         contentDiv.innerHTML = correctAnswersText.get(questionIndex).innerHTML;
@@ -240,7 +239,7 @@ function showQuestion(index) {
   }
 }
 
-function decorateClickableQuestionList(question, index) {
+function decorateClickableQuestionList(question) {
   const list = question.querySelector('ul');
   if (!list) {
     return;
@@ -270,7 +269,7 @@ function decorateClickableQuestionList(question, index) {
   list.classList.add('answers-list');
 }
 
-function getCoordinates(question, questionIndex) {
+function getCoordinates(question) {
   const paragraphs = Array.from(question.querySelectorAll('p'));
   const coordinateParagraphs = paragraphs.filter((p) => p.innerHTML.includes('coordinate'));
 
@@ -425,6 +424,7 @@ function decorateClickQuestions(question, index) {
     // update tries counter
     const triesNumberMatch = triesCounter.innerHTML.match(/\d+/);
     const triesCounterNumber = triesNumberMatch ? triesNumberMatch[0] : null;
+    // eslint-disable-next-line max-len
     triesCounter.innerHTML = triesCounter.innerHTML.replace(triesCounterNumber, triesCounterNumber - 1);
 
     // Check if attempts exhausted (count from the original 3 tries)
@@ -471,7 +471,7 @@ function decorateClickQuestions(question, index) {
 
       // Mark the spot as found
       clickableSpot.classList.add('found-spot');
-      spotsFound++;
+      spotsFound += 1;
 
       // Check if all spots have been found
       if (spotsFound >= totalSpots) {
