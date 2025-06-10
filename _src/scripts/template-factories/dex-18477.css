@@ -208,13 +208,11 @@
                         h4 + p {
                             line-height: 1.35;
                             color: #3d3d3d;
-                            min-height: 44px;
                         }
 
                         ul {
                             padding-left: 0;
                             margin-bottom: 0;
-                            min-height: 88px;
 
                             li {
                                 margin: 12px 0;
@@ -317,20 +315,8 @@
                             }
                         }
                     }
-                    &:not(:first-of-type) {
-                        h5 {
-                            min-height: 36px;
-                        }
-                    }
-                }
-            }
-        }
-    }
 
-    .dex-carousel-cards-family {
-        .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
-            ul {
-                min-height: 130px;
+                }
             }
         }
     }
@@ -523,7 +509,8 @@
         }
     }
 
-    .full-width-mobile {
+    .full-width-mobile.columns-container {
+
         h2 {
             font-weight: 600;
 
@@ -536,15 +523,17 @@
             }
         }
 
-        p {
+        .columns.blue-banner .columns-title-col p {
             margin-top: 0;
             margin-bottom: 16px;
-            font-size: 14px !important;
+            font-size: 14px;
+            text-wrap: pretty;
+            font-weight: 400;
 
-            &:last-of-type {
-                margin-bottom: 0;
+            & + p {
+                font-size: 16px;
                 font-weight: 600;
-                font-size: 13px;
+                margin-bottom: 0;
             }
         }
     }
@@ -617,10 +606,186 @@
         }
     }
 
+    .dex-carousel-cards-individual {
+        .columns-text-col:not(:first-of-type) {
+            h4 {
+                min-height: 54px;
+            }
+
+            h5 {
+                min-height: 63px;
+            }
+
+            p:first-of-type {
+                min-height: 114px;
+            }
+
+            ul {
+                min-height: 212px;
+            }
+        }
+    }
+
+    .dex-carousel-cards-family {
+        .columns-text-col:not(:first-of-type) {
+            h4 {
+                min-height: 54px;
+            }
+
+            h5 {
+                min-height: 42px;
+            }
+
+            p:first-of-type {
+                min-height: 133px;
+            }
+
+            ul {
+                min-height: 220px;
+            }
+        }
+    }
+
+}
+
+@media (min-width: 373px) {
+
+    .dex-18477 {
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+                h4 {
+                    min-height: 36px;
+                }
+
+                h5 {
+                    min-height: 42px;
+                }
+
+                p:first-of-type {
+                    min-height: 76px;
+                }
+
+                ul {
+                    min-height: 212px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+                h4 {
+                    min-height: 36px;
+                }
+
+                h5 {
+                    min-height: 42px;
+                }
+
+                p:first-of-type {
+                    min-height: 114px;
+                }
+
+                ul {
+                    min-height: 212px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 420px) {
+
+    .dex-18477 {
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+                h5 {
+                    min-height: 42px;
+                }
+
+                p:first-of-type {
+                    min-height: 58px;
+                }
+
+                ul {
+                    min-height: 190px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+                h5 {
+                    min-height: 21px;
+                }
+
+                p:first-of-type {
+                    min-height: 76px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 576px) {
+    .dex-18477 {
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+                h4 {
+                    min-height: 36px;
+                }
+
+                h5 {
+                    min-height: 22px;
+                }
+
+                p:first-of-type {
+                    min-height: 38px;
+                }
+
+                ul {
+                    min-height: 174px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+
+                h5 {
+                    min-height: 22px;
+                }
+
+                p:first-of-type {
+                    min-height: 58px;
+                }
+
+                ul {
+                    min-height: 174px;
+                }
+            }
+        }
+    }
 }
 
 @media (min-width: 768px) {
     .dex-18477 {
+
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+                p:first-of-type {
+                    min-height: 70px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+                p:first-of-type {
+                    min-height: 76px;
+                }
+            }
+        }
+
         .dex-carousel-cards {
             .columns-wrapper .columns {
                 div {
@@ -754,6 +919,48 @@
 
 @media (min-width: 992px) {
     .dex-18477 {
+
+        .dex-carousel-cards-individual {
+
+            .columns-text-col:not(:first-of-type) {
+
+                h4 {
+                    font-size: 20px;
+                }
+
+                p:first-of-type {
+                    min-height: 90px;
+                }
+
+                ul {
+                    min-height: 173px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+
+            .columns-text-col:not(:first-of-type) {
+
+                h4 {
+                    min-height: 48px !important;
+                    font-size: 20px;
+                }
+
+                p:first-of-type {
+                    min-height: 108px;
+                }
+
+                h5 {
+                    min-height: 44px;
+                }
+
+                ul {
+                    min-height: 173px;
+                }
+            }
+        }
+
         .dex-review-section-heading {
             margin-top: 80px;
 
@@ -940,9 +1147,18 @@
                             border-top-right-radius: 0;
                             border-bottom-right-radius: 0;
                             border-right: none;
-                            box-shadow: 0 0 10px rgb(0 0 0 / 20%) !important;
-                            clip-path: inset(0 -15px 0 0);
+                            position: relative;
 
+                            &::after {
+                                content: "";
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                width: 3px;
+                                height: 100%;
+                                box-shadow: 0 0 10px rgb(0 0 0 / 20%) !important;
+                                clip-path: inset(0 -15px 0 0);
+                            }
                         }
 
                         &:nth-child(3) {
@@ -981,8 +1197,8 @@
                         }
 
                         h4 {
-                            font-size: 24px;
-                            line-height: 1.35;
+                            font-size: 20px;
+                            line-height: 1.2;
                             font-weight: 700;
                             margin-bottom: 13px;
                         }
@@ -1017,10 +1233,6 @@
                         &:first-of-type {
                             flex-direction: column-reverse;
 
-                            h4 {
-                                min-height: 54px !important;
-                            }
-
                             table:first-of-type {
                                 td {
                                     padding: 20px;
@@ -1044,6 +1256,17 @@
             }
         }
 
+        .dex-carousel-cards-security {
+
+            .columns-wrapper .columns div .columns-text-col {
+
+                h4 {
+                    font-size: 24px;
+                    line-height: 1.35;
+                }
+            }
+        }
+
         .dex-carousel-cards-security .columns-wrapper .columns {
             padding-left: 40px;
             padding-right: 40px;
@@ -1053,33 +1276,14 @@
             max-width: 452px;
         }
 
-        .dex-carousel-cards {
-            &:not(.dex-carousel-cards-security) {
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
-                    min-height: 73px;
-                }
-
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-                    min-height: 132px;
-                }
-            }
-
-            &.dex-carousel-cards-family {
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) ul {
-                    min-height: 185px;
-                }
-
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
-                    min-height: 93px;
-                }
-            }
-        }
 
         .dex-carousel-cards-security .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
             border-right: 2px solid #1EA0FF;
             border-top-right-radius: 6px;
             border-bottom-right-radius: 6px;
-            box-shadow: unset !important;
+            &::after {
+                box-shadow: unset !important;
+            }
         }
 
         .dex-carousel-cards {
@@ -1203,12 +1407,9 @@
                         line-height: 42px;
                     }
 
-                    p:last-of-type {
-                        font-size: 22px;
-                        line-height: 26px;
-                        font-weight: 400;
+                    p + p {
+                        font-size: 22px !important;
                     }
-
                 }
             }
         }
@@ -1263,6 +1464,37 @@
 
 @media (min-width: 1200px) {
     .dex-18477 {
+
+        .dex-carousel-cards-individual {
+            .columns-text-col:not(:first-of-type) {
+
+                p:first-of-type {
+                    min-height: 72px;
+                }
+
+                ul {
+                    min-height: 154px;
+                }
+            }
+        }
+
+        .dex-carousel-cards-family {
+            .columns-text-col:not(:first-of-type) {
+
+                h5 {
+                    min-height: 44px;
+                }
+
+                p:first-of-type {
+                    min-height: 90px;
+                }
+
+                ul {
+                    min-height: 165px;
+                }
+            }
+        }
+
         .awards-container {
             .awards-wrapper {
                 padding-left: 0;
@@ -1310,12 +1542,6 @@
             .columns-wrapper .columns div .columns-text-col:first-of-type table:first-of-type td,
             .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
                 padding: 24px 32px;
-            }
-
-            &.dex-carousel-cards-individual {
-                .columns-wrapper .columns div .columns-text-col:not(:first-of-type) p:first-of-type {
-                    min-height: 60px;
-                }
             }
 
         }
