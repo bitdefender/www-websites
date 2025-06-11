@@ -57,12 +57,6 @@
   display: none;
 }
 
-/* Hide scrollbar for Firefox */
-.box-carousel-container .carousel {
-  scrollbar-width: none;       /* Firefox */
-  -ms-overflow-style: none;    /* IE 10+ */
-}
-
 .box-carousel-container .block.scrollable .carousel::-webkit-scrollbar {
     display: none;
 }
