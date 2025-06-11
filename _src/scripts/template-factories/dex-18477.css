@@ -621,7 +621,7 @@
             }
 
             ul {
-                min-height: 140px;
+                min-height: 212px;
             }
         }
     }
@@ -666,7 +666,7 @@
                 }
 
                 ul {
-                    min-height: 140px;
+                    min-height: 212px;
                 }
             }
         }
@@ -686,7 +686,7 @@
                 }
 
                 ul {
-                    min-height: 180px;
+                    min-height: 212px;
                 }
             }
         }
@@ -707,7 +707,7 @@
                 }
 
                 ul {
-                    min-height: 120px;
+                    min-height: 190px;
                 }
             }
         }
@@ -743,7 +743,7 @@
                 }
 
                 ul {
-                    min-height: 112px;
+                    min-height: 174px;
                 }
             }
         }
@@ -760,7 +760,7 @@
                 }
 
                 ul {
-                    min-height: 162px;
+                    min-height: 174px;
                 }
             }
         }
@@ -922,32 +922,29 @@
 
         .dex-carousel-cards-individual {
 
-            .columns-text-col:first-of-type h4 {
-                min-height: 54px !important;
-            }
-
             .columns-text-col:not(:first-of-type) {
+
+                h4 {
+                    font-size: 20px;
+                }
 
                 p:first-of-type {
                     min-height: 90px;
                 }
 
                 ul {
-                    min-height: 120px;
+                    min-height: 173px;
                 }
             }
         }
 
         .dex-carousel-cards-family {
 
-            .columns-text-col:first-of-type h4 {
-                min-height: 54px !important;
-            }
-
             .columns-text-col:not(:first-of-type) {
 
                 h4 {
-                    min-height: 98px !important;
+                    min-height: 48px !important;
+                    font-size: 20px;
                 }
 
                 p:first-of-type {
@@ -959,7 +956,7 @@
                 }
 
                 ul {
-                    min-height: 165px;
+                    min-height: 173px;
                 }
             }
         }
@@ -1150,9 +1147,18 @@
                             border-top-right-radius: 0;
                             border-bottom-right-radius: 0;
                             border-right: none;
-                            box-shadow: 0 0 10px rgb(0 0 0 / 20%) !important;
-                            clip-path: inset(0 -15px 0 0);
+                            position: relative;
 
+                            &::after {
+                                content: "";
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                width: 3px;
+                                height: 100%;
+                                box-shadow: 0 0 10px rgb(0 0 0 / 20%) !important;
+                                clip-path: inset(0 -15px 0 0);
+                            }
                         }
 
                         &:nth-child(3) {
@@ -1191,8 +1197,8 @@
                         }
 
                         h4 {
-                            font-size: 24px;
-                            line-height: 1.35;
+                            font-size: 20px;
+                            line-height: 1.2;
                             font-weight: 700;
                             margin-bottom: 13px;
                         }
@@ -1250,6 +1256,17 @@
             }
         }
 
+        .dex-carousel-cards-security {
+
+            .columns-wrapper .columns div .columns-text-col {
+
+                h4 {
+                    font-size: 24px;
+                    line-height: 1.35;
+                }
+            }
+        }
+
         .dex-carousel-cards-security .columns-wrapper .columns {
             padding-left: 40px;
             padding-right: 40px;
@@ -1264,7 +1281,9 @@
             border-right: 2px solid #1EA0FF;
             border-top-right-radius: 6px;
             border-bottom-right-radius: 6px;
-            box-shadow: unset !important;
+            &::after {
+                box-shadow: unset !important;
+            }
         }
 
         .dex-carousel-cards {
@@ -1451,6 +1470,10 @@
 
                 p:first-of-type {
                     min-height: 72px;
+                }
+
+                ul {
+                    min-height: 154px;
                 }
             }
         }
