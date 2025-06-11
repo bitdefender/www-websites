@@ -1,3 +1,4 @@
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { Constants } from '../../scripts/libs/constants.js';
 import {
   createNanoBlock,
@@ -203,6 +204,22 @@ function renderHighlight(text) {
   );
 }
 
+function renderBluePill(icon, text) {
+  const root = createTag(
+    'div',
+    {
+      class: 'blue-pill-container',
+    },
+
+    `<div class= "blue-pill">
+      <span class = "icon icon-${icon?.toLowerCase() || ''}"></span>
+      <span class = "blue-pill-text">${text ?? ''}</span>
+     </div>`,
+  );
+
+  return root;
+}
+
 /**
  *
  * @param {string} text
@@ -300,7 +317,7 @@ createNanoBlock('featuredSavings', renderFeaturedSavings);
 createNanoBlock('highlightSavings', renderHighlightSavings);
 createNanoBlock('highlight', renderHighlight);
 createNanoBlock('lowestPrice', renderLowestPrice);
-
+createNanoBlock('bluePill', renderBluePill);
 /**
  * Main decorate function
  */
@@ -450,6 +467,8 @@ export default function decorate(block) {
       emptyDiv.style.visibility = 'hidden';
     }
   });
+
+  decorateIcons(block);
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
   matchHeights(block, '.price.condition');
   matchHeights(block, 'h3:nth-of-type(2)');
@@ -458,4 +477,5 @@ export default function decorate(block) {
   matchHeights(block, 'h4');
   matchHeights(block, 'ul:not(.variant-selector)');
   matchHeights(block, '.featured.nanoblock');
+  matchHeights(block, '.blue-pill');
 }
