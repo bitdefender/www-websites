@@ -1,7 +1,7 @@
 function getVideoElement(source, autoplay) {
   const video = document.createElement('video');
   video.classList.add('bck-video');
-  video.setAttribute('controls', '');
+  video.setAttribute('disableremoteplayback', '');
   video.setAttribute('loop', '');
   video.dataset.loading = 'true';
 
