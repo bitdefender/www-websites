@@ -19,7 +19,7 @@
 }
 
 .trusted-teaser-impact .carousel-header .title h2 {
-    font: normal normal 700 34px / 38px IBM Plex Sans !important;
+    font: normal normal 700 34px / 38px "IBM Plex Sans", sans-serif !important;
 }
 
 .trusted-teaser-impact .carousel-header .title >:first-child {
@@ -39,16 +39,11 @@
     color: black;
     position: relative;
     padding-right: 10px;
+    width: 100%;
 }
 
 .trusted-teaser-impact .box-wrapper .box-item:last-of-type::after {
     visibility: hidden;
-}
-
-.trusted-teaser-impact .box-wrapper .box-item .icon {
-    width: 35px;
-    height: 35px;
-    margin: 0;
 }
 
 .trusted-teaser-impact .box-wrapper .box-item .icon .cls-1 {
@@ -79,13 +74,8 @@
         flex-direction: row;
     }
 
-    .trusted-teaser-impact .box-wrapper .box-item:nth-child(2),
-    .trusted-teaser-impact .box-wrapper .box-item:nth-child(4) {
-        padding-left: 20px;
-    }
-
     .trusted-teaser-impact .carousel-header .title h2 {
-        font: normal normal 700 48px / 50px IBM Plex Sans !important;
+        font: normal normal 700 48px / 50px "IBM Plex Sans", sans-serif !important;
     }
 
     .trusted-teaser-impact .carousel-header .title {

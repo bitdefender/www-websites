@@ -30,11 +30,6 @@
     color: #fff !important;
 }
 
-.trusted-hero.video-background .button-container a {
-    border-color: #fff !important;
-    color: #fff;
-}
-
 .trusted-hero.video-background .video-wrapper {
     position: absolute;
     width: 100%;
@@ -153,7 +148,7 @@
 
 .trusted-hero.video-background table td h5{
     margin-bottom: 12px;
-    font: normal normal normal 24px/28px IBM Plex Sans;
+    font: normal normal normal 24px/28px "IBM Plex Sans", sans-serif;
 }
 
 .trusted-hero.video-background table td .icon{
@@ -190,6 +185,11 @@
     width: 100%;
     justify-content: center;
     font-weight: 500 !important;
+}
+
+.trusted-hero.video-background .button-container a {
+    border-color: #fff !important;
+    color: #fff;
 }
 
 .trusted-hero-container p.button-container:nth-last-child(2) a {

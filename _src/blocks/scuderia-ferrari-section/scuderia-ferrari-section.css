@@ -153,11 +153,11 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 }
 
 .scuderia-ferrari-section.quotes-left.trusted {
+    padding: 5%;
 
     img {
         width: 70%;
         left: unset;
-    
     }
 
     p{
@@ -185,7 +185,6 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 
     p img {
-        width: auto;
         position: relative;
         left: -10%;
         margin-bottom: 24px;
@@ -455,6 +454,10 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         p:nth-last-of-type(2) {
             font-size: 26px;
             margin-bottom: 20px
+        }
+
+        p img {
+            width: auto;
         }
 
         .button-text {
