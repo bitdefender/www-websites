@@ -742,6 +742,10 @@ main .section.link-right a {
         margin-top: -240px;
     }
 
+    .trusted .section.columns-container .columns-img-col img{
+        object-fit: cover;
+    }
+
     .trusted .columns-container a.button:any-link:not(.modal):not(.primary),
     .trusted .columns-container.bg-white a.button:any-link:not(.modal):not(.primary) {
         width: unset;
