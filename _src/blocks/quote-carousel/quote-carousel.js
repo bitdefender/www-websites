@@ -137,8 +137,8 @@ export default async function decorate(block) {
     }
   });
 
-  const allPictures = block.closest('.columns').querySelectorAll('.right-col picture');
-  if (allPictures && !block.closest('.columns').classList.contains('hasMultiImgs')) {
+  const allPictures = block.closest('.columns')?.querySelectorAll('.right-col picture');
+  if (allPictures && !block.closest('.columns')?.classList.contains('hasMultiImgs')) {
     block.closest('.columns').classList.add('has-multi-imgs');
   }
 
