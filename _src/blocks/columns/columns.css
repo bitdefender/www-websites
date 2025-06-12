@@ -654,6 +654,10 @@
   background: transparent !important;
 }
 
+.columns-container.trusted-section .columns .button-container a:hover {
+  background:  #006dff !important;
+}
+
 .columns-container.trusted-section img {
   position: absolute;
   object-fit: cover;
