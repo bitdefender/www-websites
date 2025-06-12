@@ -10,7 +10,7 @@
     content: '';
     display: block;
     width: 100%;
-    min-height: 200px;
+    min-height: 140px;
     background: #EFF6FF;
     position: relative;
     top: -1px;
@@ -87,6 +87,10 @@
 }
 
 @media (min-width: 768px) {
+    .dual-teaser-container.section::before {
+        min-height: 280px;
+    } 
+    
     .dual-teaser-container .default-content-wrapper {
         width: 100%;
         display: flex;

@@ -1,27 +1,20 @@
+import Glide from '@glidejs/glide';
 import { debounce } from '@repobit/dex-utils';
 import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const slides = [...block.children];
-  const AUTOMATIC_SLIDING = {
-    enabled: true,
-    viewport: 'desktop',
-    slideDelay: 3 * 1000,
-  };
-
-  const state = {
-    currentStep: 0,
-    carouselIsFocused: false,
-    currentInterval: null,
-  };
-
   const navItemsNames = slides.map((slideEl) => slideEl.children[0].firstElementChild.textContent);
 
   block.classList.add('default-content-wrapper');
   block.innerHTML = `
-    <div class="navigation-wrapper">
+    <div class="carousel-container glide">
+      <div class="navigation-wrapper">
         <div class="first-nav">
-          ${navItemsNames.map((navItemName, index) => `<div class="nav-item ${index === 0 ? 'active' : ''}">${navItemName}</div>`).join('')}
+          ${navItemsNames.map((text, index) => `
+            <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
+              <span class="text">${text}</span><span class="pill"></span>
+            </div>`).join('')}
         </div>
         
         <div class="second-nav">
@@ -50,119 +43,56 @@ export default async function decorate(block) {
             </svg>
           </a>
         </div>
-    </div>
-    
-    <div class="content-wrapper">
-        ${slides.map((slide, index) => `
-        <div class="slide ${index === 0 ? 'active' : ''}">
-            ${slide.innerHTML}
-        </div>
-        `).join('')}
+      </div>
+
+      <div class="glide__track content-wrapper" data-glide-el="track">
+        <ul class="glide__slides">
+          ${slides.map((slide) => `<li class="glide__slide slide">${slide.innerHTML}</li>`).join('')}
+        </ul>
+      </div>
     </div>
   `;
 
-  const contentWrapper = block.querySelector('.content-wrapper');
-
   const navItems = block.querySelectorAll('.nav-item');
-  const slideItems = block.querySelectorAll('.slide');
-  const leftArrow = block.querySelector('.left-arrow');
-  const rightArrow = block.querySelector('.right-arrow');
-  function selectNavItem(itemPosition) {
-    navItems.forEach((item) => item.classList.remove('active'));
-    navItems[itemPosition].classList.add('active');
-  }
+  const glideEl = block.querySelector('.glide');
 
-  function selectSlideItem(itemPosition) {
-    slideItems.forEach((item) => item.classList.remove('active'));
-    slideItems[itemPosition].classList.add('active');
-  }
+  // Initialize Glide config
+  const glide = new Glide(glideEl, {
+    type: 'slider',
+    startAt: 0,
+    perView: 1,
+  });
 
-  function slideToSection(itemPosition) {
-    block.classList.add('scrolling');
+  glide.on('run.after', () => {
+    const { index } = glide;
+    navItems.forEach((item, i) => item.classList.toggle('active', i === index));
+  });
 
-    const transformValue = -100 * (itemPosition);
-    const offset = 50 * itemPosition;
-    contentWrapper.style.transform = `translateX(calc(${transformValue}% - ${offset}px ))`;
-    setTimeout(() => {
-      block.classList.remove('scrolling');
-    }, 200);
-  }
+  navItems.forEach((item, index) => {
+    item.addEventListener('click', () => glide.go(`=${index}`));
+  });
 
-  function selectStep(itemPosition) {
-    state.currentStep = itemPosition;
-    selectNavItem(itemPosition);
-    selectSlideItem(itemPosition);
-    slideToSection(itemPosition);
-  }
+  glide.mount();
 
-  function endAutomaticSliding(interval) {
-    clearInterval(interval || state.currentInterval);
-  }
+  // Reinitialize autoplay on resize (desktop only)
+  const updateAutoplay = debounce(() => {
+    const isDesktop = isView('desktop');
+    const newAutoplay = isDesktop ? 3000 : false;
 
-  function beginAutomaticSliding() {
-    if (!AUTOMATIC_SLIDING.enabled) return;
+    glide.update({ autoplay: newAutoplay });
 
-    endAutomaticSliding();
-
-    if (state.carouselIsFocused || !isView(AUTOMATIC_SLIDING.viewport)) {
-      return;
+    if (newAutoplay && glide.playing === false) {
+      glide.play(newAutoplay);
     }
+  }, 300);
 
-    const interval = setInterval(() => {
-      const isLastStep = state.currentStep === navItems.length - 1;
-      const nextStepToSelect = isLastStep ? 0 : (state.currentStep + 1);
-      selectStep(nextStepToSelect);
+  window.addEventListener('resize', updateAutoplay);
 
-      if (!isView(AUTOMATIC_SLIDING.viewport) || state.carouselIsFocused) {
-        endAutomaticSliding(interval);
-      }
-    }, AUTOMATIC_SLIDING.slideDelay);
+  // Pause/resume autoplay on hover (custom logic if needed)
+  glideEl.addEventListener('mouseenter', () => glide.pause());
+  glideEl.addEventListener('mouseleave', () => {
+    if (isView('desktop')) glide.play(3000);
+  });
 
-    state.currentInterval = interval;
-  }
-
-  function addEventListeners() {
-    block.addEventListener('mouseenter', () => {
-      state.carouselIsFocused = true;
-      endAutomaticSliding();
-    });
-
-    block.addEventListener('mouseleave', () => {
-      state.carouselIsFocused = false;
-      beginAutomaticSliding();
-    });
-
-    navItems.forEach((navEl, itemPosition) => {
-      navEl.addEventListener('click', () => {
-        selectStep(itemPosition);
-      });
-    });
-
-    leftArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const isFirstStep = state.currentStep === 0;
-      if (isFirstStep) {
-        return;
-      }
-
-      selectStep(state.currentStep - 1);
-    });
-
-    rightArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const isLastStep = state.currentStep === navItems.length - 1;
-      if (isLastStep) {
-        return;
-      }
-
-      selectStep(state.currentStep + 1);
-    });
-  }
-
-  addEventListeners();
-
-  beginAutomaticSliding();
-  window.addEventListener('resize', debounce(beginAutomaticSliding, 250));
+  window.dispatchEvent(new Event('resize'));
 }
