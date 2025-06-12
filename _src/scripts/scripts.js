@@ -422,7 +422,12 @@ const initializeHubspotModule = () => {
   });
 };
 
-const applyCustomCode = async () => {
+/**
+ * since target global mbox cannot use syntasa parameters
+ * a new mbox which can insert code into the pagehas been created
+ * and it runs as soon as launch is loaded
+*/
+const applyTargetCustomCode = async () => {
   const code = await target.getOffers({ mboxNames: 'custom-code' });
   if (!code) {
     return;
@@ -458,7 +463,7 @@ export async function loadTrackers() {
     onAdobeMcLoaded();
   }
 
-  await applyCustomCode();
+  await applyTargetCustomCode();
 }
 
 /**
