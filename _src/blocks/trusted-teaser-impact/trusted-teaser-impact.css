@@ -89,8 +89,11 @@
 }
 
 @media (min-width: 992px) {
-    .trusted-teaser-impact .box-wrapper .box-item {
-        width: calc(25% - 15px);
+    .trusted-teaser-impact .box-wrapper {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns: repeat(4, 1fr);
+        justify-content: center;
     }
 
     .trusted-teaser-impact .box-wrapper .box-item .title {

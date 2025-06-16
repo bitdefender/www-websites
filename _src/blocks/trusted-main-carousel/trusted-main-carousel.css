@@ -46,14 +46,14 @@
     background: #EFF6FF;
 }
 
-.trusted-main-carousel-container .navigation-wrapper .nav-item:first-of-type {
-    padding-left: 0;
-}
-
 .trusted-main-carousel-container.blue-background .navigation-wrapper .nav-item {
     background-color: transparent;
     color: var(--gray);
     border-radius: 0 !important;
+}
+
+.trusted-main-carousel-container.blue-background .navigation-wrapper .nav-item:first-of-type {
+    padding-left: 0;
 }
 
 .trusted-main-carousel-container .default-content-wrapper {

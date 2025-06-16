@@ -107,8 +107,8 @@
   z-index: 1;
 }
 
-.trusted-hero-container .video-modal-content iframe,
-.trusted-hero-container .video-modal-content video {
+.trusted-hero-container .video-wrapper iframe,
+.trusted-hero-container .video-wrapper video {
   min-width: 100%;
   min-height: 100%;
 }

@@ -55,6 +55,8 @@ export default async function decorate(block) {
 
   const navItems = block.querySelectorAll('.nav-item');
   const glideEl = block.querySelector('.glide');
+  const leftArrow = block.querySelector('.left-arrow');
+  const rightArrow = block.querySelector('.right-arrow');
 
   // Initialize Glide config
   const glide = new Glide(glideEl, {
@@ -72,6 +74,20 @@ export default async function decorate(block) {
     item.addEventListener('click', () => glide.go(`=${index}`));
   });
 
+  if (leftArrow) {
+    leftArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      glide.go('<');
+    });
+  }
+
+  if (rightArrow) {
+    rightArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      glide.go('>');
+    });
+  }
+
   glide.mount();
 
   // Reinitialize autoplay on resize (desktop only)
@@ -88,7 +104,7 @@ export default async function decorate(block) {
 
   window.addEventListener('resize', updateAutoplay);
 
-  // Pause/resume autoplay on hover (custom logic if needed)
+  // Pause/resume on hover
   glideEl.addEventListener('mouseenter', () => glide.pause());
   glideEl.addEventListener('mouseleave', () => {
     if (isView('desktop')) glide.play(3000);
