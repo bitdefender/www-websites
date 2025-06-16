@@ -6,7 +6,7 @@ import { isView } from '../../scripts/utils/utils.js';
 export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
   const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
-
+  const isTrusted = block.classList.contains('trusted-carousel');
   const slidesHTML = slides.map((slide) => `
     <li class="carousel-item glide__slide">
       ${isTestimonials ? `
@@ -82,13 +82,18 @@ export default async function decorate(block) {
 
   const glide = new Glide(block.querySelector('.glide'), {
     type: 'carousel',
-    perView: 1,
     gap: 20,
+    perView: isTrusted ? 1 : 4,
+    breakpoints: isTrusted
+      ? {}
+      : {
+        991: { perView: 2 },
+        767: { perView: 1 },
+      },
   });
 
   glide.mount();
 
-  // Sync .active on your navigation dots
   function updateNav() {
     const navDots = block.querySelectorAll('.navigation-item');
     navDots.forEach((dot, idx) => {
@@ -96,9 +101,37 @@ export default async function decorate(block) {
     });
   }
 
-  updateNav();
+  // Arrow click handlers to update glide
+  const leftArrow = block.querySelector('.left-arrow');
+  const rightArrow = block.querySelector('.right-arrow');
 
-  glide.on('run', updateNav);
+  function updateArrows() {
+    if (!leftArrow || !rightArrow) return;
+
+    const currentIndex = glide.index;
+    const perView = glide.settings.perView || 1;
+    const totalSlides = slides.length;
+
+    if (currentIndex === 0) {
+      leftArrow.classList.add('disabled');
+    } else {
+      leftArrow.classList.remove('disabled');
+    }
+
+    if (currentIndex >= totalSlides - perView) {
+      rightArrow.classList.add('disabled');
+    } else {
+      rightArrow.classList.remove('disabled');
+    }
+  }
+
+  updateNav();
+  updateArrows();
+
+  glide.on('run', () => {
+    updateNav();
+    updateArrows();
+  });
 
   // Add click handlers for your nav dots to control glide
   const navDots = block.querySelectorAll('.navigation-item');
@@ -108,10 +141,6 @@ export default async function decorate(block) {
       glide.go(`=${idx}`);
     });
   });
-
-  // Arrow click handlers to update glide
-  const leftArrow = block.querySelector('.left-arrow');
-  const rightArrow = block.querySelector('.right-arrow');
 
   if (leftArrow) {
     leftArrow.addEventListener('click', (e) => {

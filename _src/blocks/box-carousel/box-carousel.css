@@ -79,11 +79,14 @@
     border: solid 1px black;
 }
 
-.box-carousel-container.testimonials .carousel-item {
-    width: 300px;
+.box-carousel-container.testimonials .box-carousel:not(.trusted-carousel) .carousel-item {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
     border: solid 1px #ddd;
     background: white;
     position: relative;
+    min-height: fit-content;
 }
 
 .box-carousel-container .carousel-item:first-child {
@@ -238,7 +241,8 @@
 
 .box-carousel-container ul {
     padding-left: 0;
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
 }
 
 @media screen and (min-width: 768px) {
