@@ -478,10 +478,12 @@
 
     .scam-masters {
         .start-page {
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column-reverse;
 
             >div:first-child {
                 padding: 20px;
+                border-radius: 0 0 20px 20px;
 
                 h1 {
                     font-size: 24px;
@@ -501,6 +503,10 @@
                         }
                     }
                 }
+            }
+
+            >div:last-child {
+                border-radius: 20px 20px 0 0;
             }
         }
 
