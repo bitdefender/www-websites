@@ -38,8 +38,10 @@ export default async function decorate(block) {
   }
 
   const rteTable = rte.querySelector('table');
-  rte.querySelector('table').remove();
-  rte.insertAdjacentElement('beforeend', rteTable);
+  if (rteTable) {
+    rte.querySelector('table').remove();
+    rte.insertAdjacentElement('beforeend', rteTable);
+  }
 
   const isYouTube = videoUrl.textContent.includes('youtube') || url.host.includes('youtu.be');
   const baseEmbedUrl = isYouTube
@@ -140,5 +142,7 @@ export default async function decorate(block) {
 
   const signature = block.querySelector('h5 strong');
 
-  if (window.innerWidth > 992) signature.innerHTML = signature.innerHTML.replace('.', '.<br>');
+  if (signature) {
+    if (window.innerWidth > 992) signature.innerHTML = signature.innerHTML.replace('.', '.<br>');
+  }
 }

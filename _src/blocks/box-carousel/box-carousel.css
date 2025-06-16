@@ -32,6 +32,7 @@
     position: relative;
     display: flex;
     overflow: hidden;
+    flex-direction: column;
 }
 
 .box-carousel-container .carousel {
@@ -62,9 +63,9 @@
 }
 
 .box-carousel-container .carousel-item {
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 4;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
     width: 220px;
     height: 100%;
     margin: 10px;
