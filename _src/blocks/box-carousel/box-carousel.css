@@ -20,6 +20,7 @@
 .box-carousel-container .carousel-header .left-arrow.disabled,
 .box-carousel-container .carousel-header .right-arrow.disabled {
     opacity: 0.3;
+    pointer-events: none;
 }
 
 .box-carousel-container .carousel-header .left-arrow,

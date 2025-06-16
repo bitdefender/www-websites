@@ -46,7 +46,7 @@
     background: #EFF6FF;
 }
 
-.trusted-main-carousel-container .navigation-wrapper .nav-item:first-of-type {
+.trusted-main-carousel-container.blue-background .navigation-wrapper .nav-item:first-of-type {
     padding-left: 0;
 }
 
