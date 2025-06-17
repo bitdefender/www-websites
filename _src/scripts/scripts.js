@@ -422,6 +422,27 @@ const initializeHubspotModule = () => {
   });
 };
 
+/**
+ * since target global mbox cannot use syntasa parameters
+ * a new mbox which can insert code into the pagehas been created
+ * and it runs as soon as launch is loaded
+*/
+const applyTargetCustomCode = async () => {
+  const code = await target.getOffers({ mboxNames: 'custom-code' });
+  if (!code) {
+    return;
+  }
+
+  const codeDiv = document.createElement('div');
+  codeDiv.insertAdjacentHTML('beforeend', code);
+  const allScriptsAndStyles = codeDiv.querySelectorAll('script, style');
+  allScriptsAndStyles.forEach((element) => {
+    const newElement = document.createElement(element.tagName);
+    newElement.innerHTML = element.innerHTML;
+    document.head.appendChild(newElement);
+  });
+};
+
 export async function loadTrackers() {
   const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
 
@@ -441,6 +462,8 @@ export async function loadTrackers() {
     target.abort();
     onAdobeMcLoaded();
   }
+
+  await applyTargetCustomCode();
 }
 
 /**
