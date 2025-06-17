@@ -1587,6 +1587,19 @@ main .subscriber .section {
     .subscriber #blueBox .default-content-wrapper h3 {
         width: 100%;
     }
+    .subscriber #carouselLogosText {
+        position: relative;
+    }
+    .subscriber #carouselLogosText .default-content-wrapper {
+        position: static;
+    }
+    .subscriber #carouselLogosText .carousel-arrows-container {
+        position: absolute;
+        bottom: 2em;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
     .subscriber .multi-carousel-container .carousel-arrows-container {
         /*display: none;*/
     }
