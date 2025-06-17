@@ -1,6 +1,5 @@
 .trusted-teaser-impact-container {
     background: white;
-    padding-top: 0 !important;
 }
 
 .trusted-teaser-impact-container .carousel-header {
@@ -8,6 +7,7 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
+    
 }
 
 .trusted-teaser-impact .carousel-header .title {
@@ -15,8 +15,11 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     text-align: center;
+}
+
+.trusted-teaser-impact .carousel-header .title h2 {
+    font: normal normal 700 34px / 38px "IBM Plex Sans", sans-serif !important;
 }
 
 .trusted-teaser-impact .carousel-header .title >:first-child {
@@ -25,40 +28,22 @@
 
 .trusted-teaser-impact .box-wrapper {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
 }
 
 .trusted-teaser-impact .box-wrapper .box-item {
-    width: calc(50% - 10px);
     flex-shrink: 0;
     color: black;
     position: relative;
     padding-right: 10px;
-}
-
-.trusted-teaser-impact .box-wrapper .box-item::after {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 80%;
-    position: absolute;
-    top: 10%;
-    right: -3px;
-    background: #006EFF;
-    opacity: 0.25;
-    visibility: visible;
+    width: 100%;
 }
 
 .trusted-teaser-impact .box-wrapper .box-item:last-of-type::after {
     visibility: hidden;
-}
-
-.trusted-teaser-impact .box-wrapper .box-item .icon {
-    width: 35px;
-    height: 35px;
-    margin: 0;
 }
 
 .trusted-teaser-impact .box-wrapper .box-item .icon .cls-1 {
@@ -70,22 +55,45 @@
     font-weight: bold;
 }
 
+ .trusted-teaser-impact .box-wrapper .box-item .icon {
+    width: 70px;
+    height: 70px;
+ }
+
+.trusted-teaser-impact .box-item .subtitle {
+    margin-top: 0;
+}
+
 @media (min-width: 768px) {
     .trusted-teaser-impact .box-wrapper .box-item .icon {
         width: 50px;
         height: 50px;
     }
 
-    .trusted-teaser-impact .box-wrapper .box-item:nth-child(2),
-    .trusted-teaser-impact .box-wrapper .box-item:nth-child(4) {
-        padding-left: 20px;
+    .trusted-teaser-impact .box-wrapper {
+        flex-direction: row;
+    }
+
+    .trusted-teaser-impact .carousel-header .title h2 {
+        font: normal normal 700 48px / 50px "IBM Plex Sans", sans-serif !important;
+    }
+
+    .trusted-teaser-impact .carousel-header .title {
+        align-items: center;
+    }
+
+    .trusted-teaser-impact .box-item .subtitle {
+        margin-top: 12px;
     }
 
 }
 
 @media (min-width: 992px) {
-    .trusted-teaser-impact .box-wrapper .box-item {
-        width: calc(25% - 15px);
+    .trusted-teaser-impact .box-wrapper {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns: repeat(4, 1fr);
+        justify-content: center;
     }
 
     .trusted-teaser-impact .box-wrapper .box-item .title {

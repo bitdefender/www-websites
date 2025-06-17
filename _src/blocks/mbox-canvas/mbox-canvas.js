@@ -47,11 +47,18 @@ function createOfferProfileParameters(parameters) {
  * @returns {Promise<void>} - A promise that resolves when the event is updated and pushed.
  */
 async function updatePageLoadStartedEvent(offer) {
-  const match = offer.offer.match(/\/([^/]+)\.plain\.html$/);
-  const result = match ? match[1] : null;
+  let result = null;
+  const cleanOffer = offer.offer || offer;
+  const match = cleanOffer.match(/\/([^/]+)\.plain\.html$/);
+  result = match ? match[1] : null;
+
+  if (!result) {
+    return;
+  }
+
   let trackingID = getMetadata('cid');
   trackingID = trackingID.replace('<language>', page.getParamValue('lang'));
-  trackingID = trackingID.replace('<asset name>', page.getParamValue('feature'));
+  trackingID = trackingID.replace('<asset name>', result);
 
   const newObject = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
     pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<dynamic-content>', result);
@@ -92,20 +99,22 @@ export default async function decorate(block) {
 
   if (pageCall.ok) {
     offerHtml = await pageCall.text();
+    updatePageLoadStartedEvent(offer);
   } else {
     const urlParams = new URLSearchParams(window.location.search);
     const language = urlParams.get('lang')?.toLowerCase() || 'en-us';
     let defaultOffer = await fetch(`/${language}/consumer/webview/webview-table.plain.html`);
     if (defaultOffer.ok) {
       offerHtml = await defaultOffer.text();
+      updatePageLoadStartedEvent(`/${language}/consumer/webview/webview-table.plain.html`);
     } else {
       defaultOffer = await fetch('/en-us/consumer/webview/webview-table.plain.html');
       offerHtml = await defaultOffer.text();
+      updatePageLoadStartedEvent('/en-us/consumer/webview/webview-table.plain.html');
     }
   }
 
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
-  updatePageLoadStartedEvent(offer, mboxName);
 
   // Make all the links that contain #buylink in href open in a new browser window
   decoratedOfferHtml.querySelectorAll('a[href*="#buylink"]').forEach((link) => {

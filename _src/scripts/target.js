@@ -135,10 +135,20 @@ export const getTargetExperimentDetails = async () => {
   const targetExperimentId = getMetadata('target-experiment');
   if (targetExperimentLocation && targetExperimentId && !shouldABTestsBeDisabled()) {
     const offer = await target.getOffers({ mboxNames: targetExperimentLocation });
-    const { url, template } = offer || {};
+    const { url, template, metadata } = offer || {};
     if (template) {
       loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${template}.css`);
       document.body.classList.add(template);
+    }
+
+    // Update meta tags from the page if an experiment is encountered
+    if (metadata) {
+      Object.entries(metadata).forEach(([name, value]) => {
+        const headMetaElement = document.head.querySelector(`meta[name="${name}"]`);
+        if (headMetaElement) {
+          headMetaElement.content = value;
+        }
+      });
     }
     targetExperimentDetails = await runTargetExperiment(url, targetExperimentId);
   }
