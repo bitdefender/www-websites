@@ -501,7 +501,7 @@ function showResult(question, results) {
     const resultUrl = new URL(window.location.href);
     resultUrl.hash = '';
     const cleanUrl = resultUrl.toString();
-    const shareUrl = encodeURIComponent(cleanUrl);
+    const shareUrl = encodeURIComponent(`${cleanUrl}${resultPath}`);
     const shareTextAndUrl = encodeURIComponent(`${shareText.innerHTML.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
     const shareLinkedIn = shareIcons.querySelector('a[href*="#share-li"]');
     if (shareLinkedIn) {
@@ -631,11 +631,10 @@ function createSharePopup(element) {
   return sharePopup;
 }
 
-function copyToClipboard(block, caller, popupText) {
-  let copyText = new URL(window.location.href);
+function copyToClipboard(block, caller, popupText, resultPath) {
+  let copyText = new URL(`${window.location.origin}${window.location.pathname}${resultPath}`);
   copyText.hash = '';
   copyText = copyText.toString();
-
   navigator.clipboard.writeText(copyText);
 
   const popup = block.querySelector('.share-popup') || createSharePopup(block);
@@ -679,17 +678,15 @@ export default function decorate(block) {
   });
 
   block.appendChild(questionsContainer);
-
   if (clipboardText) {
     const shareButtons = block.querySelectorAll('a[href="#copy-to-clipboard"]');
-    shareButtons.forEach((shareButton) => {
+    shareButtons.forEach((shareButton, idx) => {
       shareButton.style.position = 'relative';
       shareButton.addEventListener('click', (e) => {
         e.preventDefault();
-        copyToClipboard(block, shareButton, clipboardText);
+        copyToClipboard(block, shareButton, clipboardText, `result-${idx + 1}`);
       });
     });
   }
-
   decorateIcons(block);
 }
