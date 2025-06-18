@@ -91,6 +91,7 @@ function processSpecialParagraphs(question, index) {
     const extractedData = extractSpecialText(text);
 
     if (extractedData) {
+      console.log('extractedData ', extractedData)
       paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
       paragraph.innerHTML = paragraph.innerHTML.replace(extractedData.type, '');
 
