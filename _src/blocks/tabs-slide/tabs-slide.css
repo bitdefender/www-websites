@@ -217,7 +217,7 @@
     }
 
     .subscriber main .section.tabs-slide-container {
-        padding: 96px 0;
+        padding: 80px 0;
     }
 }
 
@@ -234,17 +234,18 @@
         transform: none;
     }
     .spp-slider .tabs {
-        width: 300px;
+        width: 90%;
+        margin: 1em 20px;
     }
     .spp-slider .tab {
         flex: 0 0 150px;
     }
     .spp-slider.with-active .tab-slider {
-        width: 110px;
-        transform: translateX(20px);
+        width: 39%;
+        transform: translateX(-4px);
     }
     .spp-slider.without-active .tab-slider {
-        width: 110px;
-        transform: translateX(calc(195px));
+        width: 39%;
+        transform: translateX(calc(143%));
     }
 }

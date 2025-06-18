@@ -16,9 +16,13 @@
 
 .carousel-with-preview-container .featured-title {
     width: 767px;
-    font-size: 1.25rem;
-    font-weight: bold;
     margin: 2em auto;
+}
+
+.carousel-with-preview-container .featured-title * {
+    font-size: 24px;
+    font-weight: 500;
+    color: black;
 }
 
 .carousel-with-preview-container .featured-title p {
@@ -71,7 +75,7 @@
 }
 
 .carousel-with-preview-container .carousel-item .thumb-wrapper {
-    height: 160px;
+    height: 155px;
     border-radius: 6px;
     overflow: hidden;
 }
@@ -84,10 +88,10 @@
 
 .carousel-with-preview-container .carousel-item .thumb-wrapper img {
     height: auto;
-    margin-top: -1.5em;
+    margin-top: -27px;
 }
 
-.carousel-with-preview-container .carousel-item:hover {
+.carousel-with-preview-container .carousel-item:hover, .carousel-with-preview-container .carousel-item.active {
     background-color: #F1F5F8;
     border: 1px solid #006DFF;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -242,8 +246,15 @@
     .carousel-with-preview-container .featured-video iframe {
         height: 250px;
     }
-    .carousel-with-preview-container .thumb-wrapper img {
-        height: 120px;
+    .carousel-with-preview-container .carousel-item .thumb-wrapper {
+        height: 104px;
+    }
+    .carousel-with-preview-container .carousel-item .thumb-wrapper img {
+        height: auto;
+        margin-top: -19px;
+    }
+    .carousel-with-preview-container .caption {
+        margin-top: 16px;
     }
     .carousel-with-preview-container .featured-title > strong {
         font-weight: 600;
