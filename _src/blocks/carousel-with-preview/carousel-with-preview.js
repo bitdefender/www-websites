@@ -109,6 +109,8 @@ export default function decorate(block) {
   }
 
   // Build carousel items
+  const createdItems = [];
+
   items.forEach((item, i) => {
     const [titleEl, videoEl] = item.children;
     const fullTitle = titleEl?.innerHTML.trim();
@@ -118,6 +120,8 @@ export default function decorate(block) {
 
     const itemDiv = document.createElement('div');
     itemDiv.className = 'carousel-item';
+
+    if (i === 0) itemDiv.classList.add('active');
 
     const thumbWrapper = document.createElement('div');
     thumbWrapper.className = 'thumb-wrapper';
@@ -135,10 +139,13 @@ export default function decorate(block) {
     itemDiv.appendChild(caption);
 
     itemDiv.addEventListener('click', () => {
+      createdItems.forEach((el) => el.classList.remove('active'));
+      itemDiv.classList.add('active');
       setFeatured(videoUrl, fullTitle);
     });
 
     carousel.appendChild(itemDiv);
+    createdItems.push(itemDiv); // Track dynamically created items
   });
 
   // Arrows + Navigation

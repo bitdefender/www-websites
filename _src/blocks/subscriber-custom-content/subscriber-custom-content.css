@@ -1,7 +1,7 @@
 /* stylelint-disable */
 .subscriber-custom-content-container {
     background-color: #003385;
-    padding: 5em 0!important;
+    padding: 80px 0!important;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
