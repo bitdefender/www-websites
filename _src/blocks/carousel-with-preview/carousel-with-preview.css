@@ -21,8 +21,11 @@
 
 .carousel-with-preview-container .featured-title * {
     font-size: 24px;
-    font-weight: 500;
+    line-height: 26px;
+    font-weight: 600;
     color: black;
+    margin-bottom: 6px;
+    display: block;
 }
 
 .carousel-with-preview-container .featured-title p {

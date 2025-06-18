@@ -1058,7 +1058,7 @@ main .subscriber .section {
     color: #0A0A0A;
 }
 .subscriber .multicontentvideoslider .carousel-item .carousel-content > div p:last-of-type strong {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 18px;
     line-height: 27px;
     letter-spacing: 0px;
@@ -1761,6 +1761,7 @@ main .subscriber .section {
     }
     .subscriber #has4columns .columns-wrapper .columns.with-box-shadow {
         padding: 0;
+        margin-top: 2em;
     }
     .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div > div {
         width: 100%;
@@ -1774,7 +1775,7 @@ main .subscriber .section {
         margin: 2em 0;
     }
     .subscriber #blueSlider .block .carousel-container .carousel-item {
-        flex: 0 0 85%;
+        flex: 0 0 295px;
     }
     .subscriber .multi-carousel-wrapper {
         padding-right: 0!important;
@@ -1869,7 +1870,10 @@ main .subscriber .section {
         min-width: unset;
     }
     .subscriber #carouselLogosText .carousel-item {
-        width: 139vw;
+        width: 85vw;
+    }
+    .subscriber #carouselLogosText .carousel-item:last-of-type {
+        margin-right: 0;
     }
     .subscriber .multicontentslider .carousel-item .carousel-content > div {
         text-align: left;
