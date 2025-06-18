@@ -29,7 +29,7 @@
 }
 
 .trusted a.button span.button-text {
-    font-weight: 500;
+    font-weight: 300;
 }
 
 .trusted div[data-align="right"] {
@@ -45,13 +45,13 @@
 }
 
 .trusted h1, .trusted main .hero h1 {
-    font: normal normal bold 48px/42px var(--font-ibm);
-    color: #252525;
+    font: normal normal 500 48px/42px var(--font-ibm);
+    color: #000;
     text-align: left;
 }
 
 .trusted h2 {
-    font: normal normal bold 20px/24px "IBM Plex Sans", sans-serif;
+    font: normal normal 500 34px/38px "IBM Plex Sans", sans-serif;
     color: #252525;
     text-align: left;
 }
@@ -62,12 +62,12 @@
 }
 
 .trusted h4 {
-    font: normal normal normal 18px/20px var(--font-ibm);
+    font: normal normal 500 18px/20px var(--font-ibm);
     text-align: left;
 }
 
 .trusted p, .trusted main .hero p {
-    font: normal normal normal 14px/18px var(--font-ibm);
+    font: normal normal normal 17px/20px var(--font-ibm);
     text-align: left;
 }
 
@@ -172,17 +172,15 @@ main .section.link-right a {
 }
 
 .trusted .section.apartnership_box.v2 img {
-    max-height: 70px;
-    margin-bottom: 2em;
+    max-height: 101px;
 }
 
 .trusted .section.apartnership_box p.button-container {
     margin-top: 30px;
 }
 
-
-.trusted .apartnership_box .default-content-wrapper > * {
-    text-align: center;
+.trusted .apartnership_box .default-content-wrapper p {
+    color: #5E5E5E;
 }
 
 .trusted .apartnership_box .d-flex > div:nth-of-type(2) {
@@ -359,11 +357,6 @@ main .section.link-right a {
     padding: 50px;
 }
 
-.trusted .box-carousel-container.testimonials .carousel-item {
-    
-    padding: 2em;
-}
-
 .trusted .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
     margin-bottom: 10px;
 }
@@ -406,7 +399,6 @@ main .section.link-right a {
 /* link */
 .trusted .section.static-awards .default-content-wrapper > *:not(:first-child) {
     margin: 0;
-    width: calc((100% - 120px) / 4);
 }
 
 .trusted .section.static-awards .default-content-wrapper > *:first-child,
@@ -420,6 +412,9 @@ main .section.link-right a {
     z-index: 999;
     overflow: hidden;
     white-space: nowrap;
+    height: 100%;
+    background-color: transparent !important;
+    border: none !important;
 }
 
 .trusted .section.static-awards .default-content-wrapper > * img {
@@ -456,8 +451,8 @@ main .section.link-right a {
     color: black;
 }
 
-.trusted .section.columns-container .columns-img-col {
-    display: none;
+.trusted .section.columns-container .columns-img-col img{
+    object-fit: none;
 }
 
 .trusted .section.columns-container .columns > div > div:not(.columns-img-col) {
@@ -477,7 +472,7 @@ main .section.link-right a {
 
 .trusted .section.columns-container p,
 .trusted .section.columns-container div {
-    font: normal normal normal 14px/21px IBM Plex Sans;
+    font: normal normal 300 17px/24px IBM Plex Sans;
 }
 /* end columns with logos */
 
@@ -524,6 +519,7 @@ main .section.link-right a {
 .trusted p.button-container a {
     font-weight: 500;
     border-width: 1px;
+    padding: 15px 8px 15px 20px;
 }
 
 .trusted p.button-container a:hover {
@@ -569,7 +565,7 @@ main .section.link-right a {
     position: relative;
     display: inline-block;
     margin-bottom: 0;
-    height: 389px;
+    height: 750px;
 }
 
 .trusted .section.dealsbluebanner .columns-img-col::before {
@@ -587,7 +583,7 @@ main .section.link-right a {
     height: 100%;
     width: auto;
     max-width: unset;
-    margin-left: -12em;
+    margin-left: -22em;
 }
 
 .trusted footer {
@@ -595,7 +591,7 @@ main .section.link-right a {
     overflow: hidden;
 }
 
-@-webkit-keyframes animated-mouse {
+@keyframes animated-mouse {
     0% {
         opacity: 1;
         -webkit-transform: translateY(0);
@@ -657,7 +653,7 @@ main .section.link-right a {
     }
 
     .trusted h2 {
-        font: normal normal bold 41px/48px var(--font-ibm);
+        font: normal normal 500 54px/60px var(--font-ibm) !important;
     }
 
     .trusted .v2 h2 {
@@ -669,11 +665,13 @@ main .section.link-right a {
     }
 
     .trusted h4 {
-        font: normal normal normal 35px/38px var(--font-ibm);
+        font: normal normal 500 32px/38px var(--font-ibm);
+        margin-top: 16px;
+        margin-bottom: 16px;
     }
 
     .trusted p {
-        font: normal normal normal 18px/32px var(--font-ibm);
+        font: normal normal normal 26px/32px var(--font-ibm);
     }
 
     .trusted main .hero .hero-content .breadcrumb {
@@ -705,8 +703,8 @@ main .section.link-right a {
         display: block;
     }
 
-    .trusted a.button.primary, .trusted button.primary {
-        min-width: 190px!important;
+    .trusted .apartnership_box .default-content-wrapper > * {
+        text-align: center;
     }
 
     .trusted .apartnership_box .d-flex > div:nth-of-type(2) {
@@ -742,6 +740,10 @@ main .section.link-right a {
     .trusted .video_up {
         display: none;
         margin-top: -240px;
+    }
+
+    .trusted .section.columns-container .columns-img-col img{
+        object-fit: cover;
     }
 
     .trusted .columns-container a.button:any-link:not(.modal):not(.primary),
@@ -798,7 +800,7 @@ main .section.link-right a {
 
     /* columns with logos */
     .trusted .section.columns-container {
-        padding: 0;
+        padding-bottom: 0;
     }
     .trusted .section.columns-container .columns-img-col {
         display: block;
@@ -808,15 +810,15 @@ main .section.link-right a {
         order: initial;
     }
 
+    .trusted p.button-container a {
+         font: normal normal normal 23px var(--font-ibm);
+    }
+
     .trusted .section.columns-container p,
     .trusted .section.columns-container div {
-        font: normal normal normal 18px/27px IBM Plex Sans;
+        font: normal normal 300 26px/32px IBM Plex Sans;
     }
     /* end columns with logos */
-
-    .trusted .section.apartnership_box .default-content-wrapper {
-        width: 50%;
-    }
 
     .trusted .section.apartnership_box .default-content-wrapper > * {
         text-align: center;
@@ -852,7 +854,7 @@ main .section.link-right a {
 
     .trusted .section.static-awards .default-content-wrapper > *:not(:first-child) {
         width: 100%;
-        padding: 20px;
+        padding-bottom: 40px;
     }
 
     .trusted .section.static-awards .default-content-wrapper > * picture {
@@ -913,11 +915,5 @@ main .section.link-right a {
 
     .trusted .section.dealsbluebanner .columns-img-col::before {
         display: none;
-    }
-
-    .trusted .box-carousel-container.testimonials .carousel-item {
-        width: 300px;
-        padding: 1em;
-        margin: 0 1em;
     }
 }
