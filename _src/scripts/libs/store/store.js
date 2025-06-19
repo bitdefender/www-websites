@@ -42,6 +42,7 @@ export class ProductOption {
 	 *  productAlias: string,
 	 * 	promotion: string
 	 *  campaignType: string
+	 *  currencyLocale: string
 	 * }} option
 	 */
 	constructor(option) {
@@ -61,6 +62,7 @@ export class ProductOption {
 		this.avangateId = option.avangateId;
 		this.promotion = option.promotion;
 		this.campaignType = option.campaignType;
+		this.currencyLocale = option.currencyLocale;
 	}
 
 	/**
@@ -129,6 +131,14 @@ export class ProductOption {
 
 	/**
 	 *
+	 * @returns {string} - en-US, en-CA, ...
+	 */
+	getCurrencyLocale() {
+		return this.currencyLocale;
+	}
+
+	/**
+	 *
 	 * @returns {string} - $ | € ...
 	 */
 	getSymbol() {
@@ -160,13 +170,13 @@ export class ProductOption {
 			case "value":
 				return this.price;
 			case "valueWithCurrency":
-				return Store.placeSymbol(this.price, this.currency);
+				return Store.placeSymbol(this.price, this.currency, this.currencyLocale);
 			case "monthly":
 				return this.subscription === 1 ? this.price : Number(Number(this.price / this.subscription).toFixed(2));
 			case "monthlyWithCurrency":
 				return this.subscription === 1
-					? Store.placeSymbol(this.price, this.currency)
-					: Store.placeSymbol(Number(Number(this.price / this.subscription).toFixed(2)), this.currency);
+					? Store.placeSymbol(this.price, this.currency, this.currencyLocale)
+					: Store.placeSymbol(Number(Number(this.price / this.subscription).toFixed(2)), this.currency, this.currencyLocale);
 			default:
 				break;
 		}
@@ -182,13 +192,13 @@ export class ProductOption {
 			case "value":
 				return this.priceDiscounted;
 			case "valueWithCurrency":
-				return Store.placeSymbol(this.priceDiscounted, this.currency);
+				return Store.placeSymbol(this.priceDiscounted, this.currency, this.currencyLocale);
 			case "monthly":
 				return this.subscription === 1 ? this.priceDiscounted : Number(Number(this.priceDiscounted / this.subscription).toFixed(2));
 			case "monthlyWithCurrency":
 				return this.subscription === 1
-					? Store.placeSymbol(this.priceDiscounted, this.currency)
-					: Store.placeSymbol(Number(Number(this.priceDiscounted / this.subscription).toFixed(2)), this.currency);
+					? Store.placeSymbol(this.priceDiscounted, this.currency, this.currencyLocale)
+					: Store.placeSymbol(Number(Number(this.priceDiscounted / this.subscription).toFixed(2)), this.currency, this.currencyLocale);
 			default:
 				break;
 		}
@@ -206,7 +216,7 @@ export class ProductOption {
 			case 'value':
 				return value;
 			case 'valueWithCurrency':
-				return Store.placeSymbol(value, this.currency);
+				return Store.placeSymbol(value, this.currency, this.currencyLocale);
 			case "percentage":
 				return percentage;
 			case "percentageWithProcent":
@@ -263,6 +273,7 @@ export class Product {
 		this.department = product.department;
 		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => page.locale === domain) ? 'global_v2' : '');
 		this.campaignType = product.campaignType;
+		this.currencyLocale = product.currencyLocale;
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
@@ -346,6 +357,14 @@ export class Product {
 
 	/**
 	 *
+	 * @returns {string} - en-US, en-CA, ...
+	 */
+	getCurrencyLocale() {
+		return this.currencyLocale;
+	}
+
+	/**
+	 *
 	 * @returns {string} - consumer | business
 	 */
 	getDepartment() {
@@ -411,7 +430,8 @@ export class Product {
 			subscription: Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : years * 12,
 			avangateId: this.avangateId,
 			promotion: this.promotion,
-			campaignType: this.campaignType
+			campaignType: this.campaignType,
+			currencyLocale: this.currencyLocale
 		});
 
 		if (bundle) {
@@ -500,13 +520,13 @@ export class Product {
 			case "value":
 				return price;
 			case "valueWithCurrency":
-				return Store.placeSymbol(price, this.currency);
+				return Store.placeSymbol(price, this.currency, this.currencyLocale);
 			case "monthly":
 				return subscription === 1 ? price : Number(Number(price / subscription).toFixed(2));
 			case "monthlyWithCurrency":
 				return subscription === 1
-					? Store.placeSymbol(price, this.currency)
-					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency);
+					? Store.placeSymbol(price, this.currency, this.currencyLocale)
+					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency, this.currencyLocale);
 			default:
 				break;
 		}
@@ -539,13 +559,13 @@ export class Product {
 			case "value":
 				return price;
 			case "valueWithCurrency":
-				return Store.placeSymbol(price, this.currency);
+				return Store.placeSymbol(price, this.currency, this.currencyLocale);
 			case "monthly":
 				return subscription === 1 ? price : Number(Number(price / subscription).toFixed(2));
 			case "monthlyWithCurrency":
 				return subscription === 1
-					? Store.placeSymbol(price, this.currency)
-					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency);
+					? Store.placeSymbol(price, this.currency, this.currencyLocale)
+					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency, this.currencyLocale);
 			default:
 				break;
 		}
@@ -582,7 +602,7 @@ export class Product {
 			case 'value':
 				return discountValue;
 			case 'valueWithCurrency':
-				return Store.placeSymbol(discountValue, this.currency);
+				return Store.placeSymbol(discountValue, this.currency, this.currencyLocale);
 			case "percentage":
 				return discountPercentage;
 			case "percentageWithProcent":
@@ -619,13 +639,13 @@ export class Product {
 			case "value":
 				return price;
 			case "valueWithCurrency":
-				return Store.placeSymbol(price, this.currency);
+				return Store.placeSymbol(price, this.currency, this.currencyLocale);
 			case "monthly":
 				return subscription === 1 ? price : Number(Number(price / subscription).toFixed(2));
 			case "monthlyWithCurrency":
 				return subscription === 1
-					? Store.placeSymbol(price, this.currency)
-					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency);
+					? Store.placeSymbol(price, this.currency, this.currencyLocale)
+					: Store.placeSymbol(Number(Number(price / subscription).toFixed(2)), this.currency, this.currencyLocale);
 			default:
 				break;
 		}
@@ -827,6 +847,7 @@ class Vlaicu {
 			product_alias: id,
 			product_id: Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
 			product_name: productInfo.productName,
+			currencyLocale: productInfoResponse.currencyLocale || 'en-US',
 			promotion: productInfoResponse.campaign || campaignId || '',
 			campaignType: productInfoResponse.campaignType,
 			variations: {}
@@ -912,7 +933,7 @@ class StoreConfig {
 		 * @type {string}
 		 */
 		this.vlaicuEndpoint = Constants.DEV_DOMAINS.some(domain => window.location.hostname.includes(domain))
-			? "https://www.bitdefender.com"
+			? "https://pricing.service-delivery.nmbapp.net"
 			: window.location.origin;
 
 		/**
@@ -1021,10 +1042,10 @@ export class Store {
 		return this.countriesMapping[page.country] || page.country
 	}
 
-	static placeSymbol(price, currency) {
+	static placeSymbol(price, currency, currencyLocale) {
 		if (!price) { return ""; }
 
-		return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(
+		return new Intl.NumberFormat(currencyLocale, { style: 'currency', currency }).format(
 			price,
 		);
 	}

@@ -92,7 +92,8 @@ const replaceVariable = (text, context, variableParameters, textVariable) => {
             case "SMALLEST_PRICE":
                 {
                     let smallestPrice = Number.MAX_SAFE_INTEGER;
-                    let currency = "";
+                    let currency = '';
+                    let currencyLocale = '';
 
                     if (context.contexts.length === 0) { break; }
 
@@ -101,18 +102,21 @@ const replaceVariable = (text, context, variableParameters, textVariable) => {
                         if (productSmallestPrice && productSmallestPrice < smallestPrice) {
                             smallestPrice = productSmallestPrice;
                             currency = product.getCurrency();
+                            currencyLocale = product.getCurrencyLocale();
                         }
                     }
 
                     if (smallestPrice === Number.MAX_SAFE_INTEGER) { break; }
 
-                    text = text.replaceAll(textVariable, Store.placeSymbol(smallestPrice, currency));
+                    text = text.replaceAll(textVariable, Store.placeSymbol(smallestPrice, currency, currencyLocale || 'en-US'));
                     stopVariableSearch = true;
                     break;
                 }
             case "SMALLEST_PRICE_PER_MONTH":
                 let smallestPrice = Number.MAX_SAFE_INTEGER;
-                let currency = "";
+                let currency = '';
+                let currencyLocale = '';
+
                 if (context.contextProducts.length === 0) {
                     break;
                 }
@@ -122,11 +126,12 @@ const replaceVariable = (text, context, variableParameters, textVariable) => {
                     if (productSmallestPrice && productSmallestPrice < smallestPrice) {
                         smallestPrice = productSmallestPrice;
                         currency = contextProduct.getCurrency();
+                        currencyLocale = contextProduct.getCurrencyLocale();
                     }
                 }
                 if (smallestPrice === Number.MAX_SAFE_INTEGER) { break; }
 
-                text = text.replaceAll(textVariable, Store.placeSymbol(smallestPrice, currency));
+                text = text.replaceAll(textVariable, Store.placeSymbol(smallestPrice, currency, currencyLocale || 'en-US'));
                 stopVariableSearch = true;
                 break;
             case "SERVER_NUMBER":

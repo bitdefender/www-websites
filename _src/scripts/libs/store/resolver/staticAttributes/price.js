@@ -50,7 +50,7 @@ export const resolve = (element, context) => {
                 if (smallestPrice === Number.MAX_SAFE_INTEGER) {
                     smallestPrice = "";
                 }
-                writeValue(element, `${Store.placeSymbol(smallestPrice, option.getCurrency())}`);
+                writeValue(element, `${Store.placeSymbol(smallestPrice, option.getCurrency(), option.getCurrencyLocale())}`);
                 return;
         }
     }
