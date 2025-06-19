@@ -1,5 +1,5 @@
 import { target } from "../../target.js";
-import { User } from "@repobit/dex-utils";
+import user from "../../user.js";
 import { Constants } from "../constants.js";
 import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams, getMetadata, getUrlPromotion } from "../../utils/utils.js";
 import page from "../../page.js";
@@ -763,7 +763,7 @@ class Vlaicu {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
 		let geoIpFlag = (await target.configMbox)?.useGeoIpPricing;
 		if (geoIpFlag) {
-			locale = await User.locale;
+			locale = await user.locale;
 		}
 		const pathVariablesResolverObject = {
 			// TODO: please remove the ternary operators below and only use page.locale
