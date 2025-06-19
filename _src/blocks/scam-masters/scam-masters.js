@@ -200,7 +200,7 @@ function decorateAnswersList(question, questionIndex) {
         question.classList.add('correct-answer');
       } else {
         listItem.classList.add('wrong-answer');
-        contentDiv.innerHTML = wrongAnswersText.get(questionIndex).innerHTML;
+        contentDiv.innerHTML = wrongAnswersText.get(questionIndex)?.innerHTML;
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
       }
