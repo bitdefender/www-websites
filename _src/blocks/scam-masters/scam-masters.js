@@ -84,6 +84,78 @@ function stripOuterBrackets(str) {
  * @param {number} index - The question index
  */
 function processSpecialParagraphs(question, index) {
+  const paragraphs = question.querySelectorAll('table');
+
+  paragraphs.forEach((paragraph) => {
+    const text = paragraph.innerText;
+    
+    if (text.includes('correct-text')) {
+      const message = text.split('correct-text')[1];
+      correctAnswersText.set(index, message);
+      paragraph.remove();
+    } else if (text.includes('wrong-text')) {
+      const message = text.split('wrong-text')[1];
+      wrongAnswersText.set(index, message);
+      paragraph.remove();
+    } else if (text.includes('show-after-answer-text')) {
+      const message = text.split('show-after-answer-text')[1];
+      showAfterAnswerText.set(index, message);
+      paragraph.remove();
+    } else if (text.includes('tries')) {
+      paragraph.classList.add('tries');
+    } else if (text.includes('share-icons')) {
+      paragraph.classList.add('share-icons');
+      paragraph.innerHTML = paragraph.innerHTML.replace('&lt; ', '').replace('< ', '');
+      paragraph.innerHTML = paragraph.innerHTML.replace('&gt;', '').replace('>', '');
+    } else if (text.includes('share-text')) {
+      const message = text.split('share-text')[1];
+      shareTexts.set(index, message);
+      paragraph.remove();
+    }
+
+
+
+    const extractedData = extractSpecialText(text);
+    const extractedData2 = null;
+    if (extractedData2) {
+      console.log('extractedData ', extractedData)
+      paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
+      paragraph.innerHTML = paragraph.innerHTML.replace(extractedData.type, '');
+
+      paragraph.dataset.type = extractedData.type;
+      paragraph.classList.add(extractedData.type);
+      switch (paragraph.dataset.type) {
+        case 'correct-text':
+          correctAnswersText.set(index, paragraph);
+          paragraph.remove();
+          break;
+        case 'wrong-text':
+          wrongAnswersText.set(index, paragraph);
+          paragraph.remove();
+          break;
+        case 'show-after-answer-text':
+          showAfterAnswerText.set(index, paragraph);
+          paragraph.remove();
+          break;
+        case 'tries':
+          paragraph.classList.add('tries');
+          break;
+        case 'share-icons':
+          paragraph.classList.add('share-icons');
+          paragraph.innerHTML = paragraph.innerHTML.replace('&lt; ', '').replace('< ', '');
+          paragraph.innerHTML = paragraph.innerHTML.replace('&gt;', '').replace('>', '');
+          break;
+        case 'share-text':
+          shareTexts.set(index, paragraph);
+          paragraph.remove();
+          break;
+        default:
+          break;
+      }
+    }
+  });
+}
+function processSpecialParagraphs2(question, index) {
   const paragraphs = question.querySelectorAll('p');
 
   paragraphs.forEach((paragraph) => {
@@ -201,7 +273,7 @@ function decorateAnswersList(question, questionIndex) {
         question.classList.add('correct-answer');
       } else {
         listItem.classList.add('wrong-answer');
-        contentDiv.innerHTML = wrongAnswersText.get(questionIndex).innerHTML;
+        contentDiv.innerHTML = wrongAnswersText.get(questionIndex)?.innerHTML;
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
       }
