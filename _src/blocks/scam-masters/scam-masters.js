@@ -8,6 +8,14 @@ const clickAttempts = new Map();
 const shareTexts = new Map();
 let score = 0;
 
+function createAfterAnswerParagraph(message) {
+  const p = document.createElement('p');
+  p.setAttribute('data-type', 'show-after-answer-text');
+  p.classList.add('show-after-answer-text');
+  p.innerHTML = `<strong>${processStyledText(message)}</strong>`;
+  return p;
+}
+
 function decorateStartPage(startBlock) {
   if (!startBlock) return;
   startBlock.classList.add('start-page');
@@ -28,27 +36,6 @@ function decorateStartPage(startBlock) {
 }
 
 /**
- * Extracts the first word inside angle brackets and the text after it
- * Example: "<correct-text Correct!>" returns { type: "correct-text", content: "Correct!" }
- * @param {string} text - The text to parse
- * @return {object|null} An object with type and content properties or null if no match
- */
-function extractSpecialText(text) {
-  // Regular expression to match content inside angle brackets and the text that follows
-  const regex = /<([a-zA-Z-]+)\s+([^>]+)>/;
-  const match = text.match(regex);
-
-  if (match && match.length >= 3) {
-    return {
-      type: match[1],
-      content: match[2],
-    };
-  }
-
-  return null;
-}
-
-/**
  * Processes and styles text with special markup
  * Handles patterns like "<black Not Correct!>" or "Not Correct! <black Here's what you missed:>"
  * Also handles HTML-encoded angle brackets (&lt; and &gt;)
@@ -58,20 +45,15 @@ function extractSpecialText(text) {
 function processStyledText(html) {
   if (!html) return html;
 
-  // Handle both regular and HTML-encoded angle brackets
-  let processedHtml = html;
+  // Step 1: Decode HTML entities
+  let processedHtml = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
-  // Replace HTML-encoded brackets if present
-  if (processedHtml.includes('&lt;')) {
-    processedHtml = processedHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  }
+  // Step 2: Convert <className content> patterns
+  processedHtml = processedHtml.replace(/<([a-zA-Z-]+)\s+([^>]+)>/g, (_, cls, content) => {
+    return `<span class="${cls}">${content}</span>`;
+  });
 
-  // Regular expression to match <word text> pattern anywhere in the string
-  // Using a more flexible regex that can find the pattern anywhere in the text
-  const regex = /<([a-zA-Z-]+)\s+([^>]+)>/g;
-
-  // Process all matching patterns in the text
-  return processedHtml.replace(regex, (match, className, content) => `<span class="${className}">${content}</span>`);
+  return processedHtml;
 }
 
 function stripOuterBrackets(str) {
@@ -84,47 +66,55 @@ function stripOuterBrackets(str) {
  * @param {number} index - The question index
  */
 function processSpecialParagraphs(question, index) {
-  const paragraphs = question.querySelectorAll('p');
+  const tables = question.querySelectorAll('table');
 
-  paragraphs.forEach((paragraph) => {
-    const text = paragraph.innerText;
-    const extractedData = extractSpecialText(text);
+  tables.forEach((table) => {
+    const rows = table.querySelectorAll('tr');
 
-    if (extractedData) {
-      paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
-      paragraph.innerHTML = paragraph.innerHTML.replace(extractedData.type, '');
+    rows.forEach((row) => {
+      const cellText = row.innerText.trim();
 
-      paragraph.dataset.type = extractedData.type;
-      paragraph.classList.add(extractedData.type);
-      switch (paragraph.dataset.type) {
-        case 'correct-text':
-          correctAnswersText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'wrong-text':
-          wrongAnswersText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'show-after-answer-text':
-          showAfterAnswerText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'tries':
-          paragraph.classList.add('tries');
-          break;
-        case 'share-icons':
-          paragraph.classList.add('share-icons');
-          paragraph.innerHTML = paragraph.innerHTML.replace('&lt; ', '').replace('< ', '');
-          paragraph.innerHTML = paragraph.innerHTML.replace('&gt;', '').replace('>', '');
-          break;
-        case 'share-text':
-          shareTexts.set(index, paragraph);
-          paragraph.remove();
-          break;
-        default:
-          break;
+      if (cellText.startsWith('correct-text:')) {
+        const message = cellText.split('correct-text:')[1].trim();
+        correctAnswersText.set(index, message);
       }
-    }
+
+      if (cellText.startsWith('wrong-text:')) {
+        const message = cellText.split('wrong-text:')[1].trim();
+        wrongAnswersText.set(index, message);
+      }
+
+      if (cellText.startsWith('show-after-answer-text:')) {
+        const message = cellText.split('show-after-answer-text:')[1].trim();
+        showAfterAnswerText.set(index, message);
+      }
+
+      if (cellText.startsWith('share-text:')) {
+        let message = cellText.split('share-text:')[1].trim();
+        message = decodeURIComponent(message);
+        message = message.replace(/ {2,}/g, '');
+        shareTexts.set(index, message);
+      }
+
+      if (cellText.startsWith('tries:')) {
+        const triesRaw = cellText.split('tries:')[1].trim();
+        const triesCount = parseInt(triesRaw, 10) || 3;
+
+        if (!question.querySelector('p.tries')) {
+          const triesParagraph = document.createElement('p');
+          triesParagraph.classList.add('tries');
+          triesParagraph.innerHTML = `Only <span>${triesCount}</span> tries left.`;
+
+          const scamButton = question.querySelector('a[href="#not-a-scam"]');
+          if (scamButton && scamButton.parentNode) {
+            scamButton.parentNode.insertBefore(triesParagraph, scamButton);
+          }
+        }
+      }
+    });
+
+    // Eliminăm tabelul din DOM după procesare
+    table.remove();
   });
 }
 
@@ -194,13 +184,13 @@ function decorateAnswersList(question, questionIndex) {
 
       if (isCorrect) {
         listItem.classList.add('correct-answer');
-        contentDiv.innerHTML = correctAnswersText.get(questionIndex).innerHTML;
+        contentDiv.innerHTML = processStyledText(correctAnswersText.get(questionIndex));
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
       } else {
         listItem.classList.add('wrong-answer');
-        contentDiv.innerHTML = wrongAnswersText.get(questionIndex).innerHTML;
+        contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
       }
@@ -212,7 +202,7 @@ function decorateAnswersList(question, questionIndex) {
         nextButton.style.display = '';
       }
 
-      answersList.append(showAfterAnswerText.get(questionIndex));
+      answersList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
     });
   });
 }
@@ -298,7 +288,7 @@ function showWrong(question, questionIndex) {
   clickableContainer.style.display = 'none';
 
   // Get the wrong answer text and process any styled text within it
-  let wrongText = wrongAnswersText.get(questionIndex).innerHTML;
+  let wrongText = wrongAnswersText.get(questionIndex);
   wrongText = processStyledText(wrongText);
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
@@ -320,7 +310,10 @@ function showWrong(question, questionIndex) {
     questionScamTag.style.display = 'flex';
   }
 
-  answerList.append(showAfterAnswerText.get(questionIndex));
+  const explanation = document.createElement('div');
+  explanation.classList.add('explanation');
+  explanation.innerHTML = processStyledText(showAfterAnswerText.get(questionIndex));
+  answerList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
 }
 
 function showCorrect(question, questionIndex) {
@@ -334,7 +327,7 @@ function showCorrect(question, questionIndex) {
   const questionScamTag = question.querySelector('.question-scam-tag');
 
   // Get the wrong answer text and process any styled text within it
-  let wrongText = correctAnswersText.get(questionIndex).innerHTML;
+  let wrongText = correctAnswersText.get(questionIndex);
   wrongText = processStyledText(wrongText);
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
@@ -356,7 +349,7 @@ function showCorrect(question, questionIndex) {
     questionScamTag.style.display = 'flex';
   }
 
-  answerList.append(showAfterAnswerText.get(questionIndex));
+  answerList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
 }
 
 function decorateClickQuestions(question, index) {
@@ -422,10 +415,13 @@ function decorateClickQuestions(question, index) {
     clickAttempts.set(index, attempts);
 
     // update tries counter
-    const triesNumberMatch = triesCounter.innerHTML.match(/\d+/);
-    const triesCounterNumber = triesNumberMatch ? triesNumberMatch[0] : null;
-    // eslint-disable-next-line max-len
-    triesCounter.innerHTML = triesCounter.innerHTML.replace(triesCounterNumber, triesCounterNumber - 1);
+    const triesSpan = triesCounter.querySelector('span');
+    if (triesSpan) {
+      let current = parseInt(triesSpan.textContent, 10);
+      if (!isNaN(current) && current > 0) {
+        triesSpan.textContent = current - 1;
+      }
+    }
 
     // Check if attempts exhausted (count from the original 3 tries)
     if (attempts >= 3) {
@@ -496,27 +492,44 @@ function decorateClickQuestions(question, index) {
 
 function showResult(question, results) {
   const setupShareLinks = (result, shareText, resultPath) => {
+    const shareParagraph = result.querySelector('div > p:last-of-type');
+    shareParagraph.classList.add('share-icons');
+    shareParagraph.setAttribute('data-type', 'share-icons')
     const shareIcons = result.querySelector('.share-icons');
     if (!shareIcons) return;
+
     const resultUrl = new URL(window.location.href);
     resultUrl.hash = '';
     const cleanUrl = resultUrl.toString();
     const shareUrl = encodeURIComponent(`${cleanUrl}${resultPath}`);
-    const shareTextAndUrl = encodeURIComponent(`${shareText.innerHTML.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
-    const shareLinkedIn = shareIcons.querySelector('a[href*="#share-li"]');
-    if (shareLinkedIn) {
-      shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?text=${shareTextAndUrl}`;
-      shareLinkedIn.target = '_blank';
-    }
-    const shareFacebook = shareIcons.querySelector('a[href*="#share-fb"]');
-    if (shareFacebook) {
-      shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
-      shareFacebook.target = '_blank';
-    }
-    const shareTwitter = shareIcons.querySelector('a[href*="#share-twitter"]');
-    if (shareTwitter) {
-      shareTwitter.href = `https://x.com/intent/tweet?text=${shareTextAndUrl}`;
-      shareTwitter.target = '_blank';
+    const shareTextAndUrl = encodeURIComponent(`${shareText?.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
+    
+    const linksConfig = {
+      facebook: {
+        href: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
+        target: '_blank',
+      },
+      x: {
+        href: `https://x.com/intent/tweet?text=${shareTextAndUrl}`,
+        target: '_blank',
+      },
+      linkedin: {
+        href: `https://www.linkedin.com/sharing/share-offsite/?text=${shareTextAndUrl}`,
+        target: '_blank',
+      },
+      'chain-link': {
+        href: '#copy-to-clipboard',
+        target: '_self',
+      }
+    };
+
+    for (const [label, { href, target }] of Object.entries(linksConfig)) {
+      const link = shareIcons.querySelector(`a[aria-label="${label}"]`);
+      if (link) {
+        link.setAttribute('aria-label', label);
+        link.setAttribute('target', target);
+        link.href = href;
+      }
     }
   };
 
@@ -653,7 +666,7 @@ export default function decorate(block) {
   } = block.closest('.section').dataset;
 
   if (resultPage) {
-    const results = getDivsBasedOnFirstParagraph(block, '<answer>');
+    const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
     decorateResults(results);
     results.forEach((result) => {
       result.style.display = '';
@@ -664,8 +677,8 @@ export default function decorate(block) {
   const [startBlock, ...questionsAndResults] = block.children;
   decorateStartPage(startBlock);
 
-  const questions = getDivsBasedOnFirstParagraph(block, '<question>');
-  const results = getDivsBasedOnFirstParagraph(block, '<answer>');
+  const questions = getDivsBasedOnFirstParagraph(block, 'question-box');
+  const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
   decorateQuestions(questions, results);
   decorateResults(results);
   setupStartButton(block);
