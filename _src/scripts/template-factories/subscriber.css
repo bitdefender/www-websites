@@ -1034,6 +1034,9 @@ main .subscriber .section {
 .subscriber .multicontentvideoslider .carousel-item .carousel-content svg, .subscriber .multicontentvideoslider .carousel-item .carousel-content img {
     width: auto;
 }
+.subscriber .multicontentvideoslider .carousel-item .carousel-content .icon.icon-netgear {
+    height: 22px;
+}
 .subscriber .multicontentvideoslider .carousel-arrows-container {
     justify-content: center;
     margin-top: 2em;
