@@ -8,6 +8,14 @@ const clickAttempts = new Map();
 const shareTexts = new Map();
 let score = 0;
 
+function createAfterAnswerParagraph(message) {
+  const p = document.createElement('p');
+  p.setAttribute('data-type', 'show-after-answer-text');
+  p.classList.add('show-after-answer-text');
+  p.innerHTML = `<strong>${processStyledText(message)}</strong>`;
+  return p;
+}
+
 function decorateStartPage(startBlock) {
   if (!startBlock) return;
   startBlock.classList.add('start-page');
@@ -34,6 +42,7 @@ function decorateStartPage(startBlock) {
  * @return {object|null} An object with type and content properties or null if no match
  */
 function extractSpecialText(text) {
+  console.log('text ', text)
   // Regular expression to match content inside angle brackets and the text that follows
   const regex = /<([a-zA-Z-]+)\s+([^>]+)>/;
   const match = text.match(regex);
@@ -58,20 +67,20 @@ function extractSpecialText(text) {
 function processStyledText(html) {
   if (!html) return html;
 
-  // Handle both regular and HTML-encoded angle brackets
-  let processedHtml = html;
+  // Step 1: Decode HTML entities
+  let processedHtml = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
-  // Replace HTML-encoded brackets if present
-  if (processedHtml.includes('&lt;')) {
-    processedHtml = processedHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  }
+  // Step 2: Convert <className content> patterns
+  processedHtml = processedHtml.replace(/<([a-zA-Z-]+)\s+([^>]+)>/g, (_, cls, content) => {
+    return `<span class="${cls}">${content}</span>`;
+  });
 
-  // Regular expression to match <word text> pattern anywhere in the string
-  // Using a more flexible regex that can find the pattern anywhere in the text
-  const regex = /<([a-zA-Z-]+)\s+([^>]+)>/g;
+  // Step 3: Convert `className-` followed by a sentence into <span>
+  processedHtml = processedHtml.replace(/([a-zA-Z-]+)-(.+)/, (_, cls, content) => {
+    return `<span class="${cls}">${content.trim()}</span>`;
+  });
 
-  // Process all matching patterns in the text
-  return processedHtml.replace(regex, (match, className, content) => `<span class="${className}">${content}</span>`);
+  return processedHtml;
 }
 
 function stripOuterBrackets(str) {
@@ -84,120 +93,58 @@ function stripOuterBrackets(str) {
  * @param {number} index - The question index
  */
 function processSpecialParagraphs(question, index) {
-  const paragraphs = question.querySelectorAll('table');
+  const tables = question.querySelectorAll('table');
 
-  paragraphs.forEach((paragraph) => {
-    const text = paragraph.innerText;
-    
-    if (text.includes('correct-text')) {
-      const message = text.split('correct-text')[1];
-      correctAnswersText.set(index, message);
-      paragraph.remove();
-    } else if (text.includes('wrong-text')) {
-      const message = text.split('wrong-text')[1];
-      wrongAnswersText.set(index, message);
-      paragraph.remove();
-    } else if (text.includes('show-after-answer-text')) {
-      const message = text.split('show-after-answer-text')[1];
-      showAfterAnswerText.set(index, message);
-      paragraph.remove();
-    } else if (text.includes('tries')) {
-      paragraph.classList.add('tries');
-    } else if (text.includes('share-icons')) {
-      paragraph.classList.add('share-icons');
-      paragraph.innerHTML = paragraph.innerHTML.replace('&lt; ', '').replace('< ', '');
-      paragraph.innerHTML = paragraph.innerHTML.replace('&gt;', '').replace('>', '');
-    } else if (text.includes('share-text')) {
-      const message = text.split('share-text')[1];
-      shareTexts.set(index, message);
-      paragraph.remove();
-    }
+  tables.forEach((table) => {
+    const rows = table.querySelectorAll('tr');
 
+    rows.forEach((row) => {
+      const cellText = row.innerText.trim();
 
-
-    const extractedData = extractSpecialText(text);
-    const extractedData2 = null;
-    if (extractedData2) {
-      console.log('extractedData ', extractedData)
-      paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
-      paragraph.innerHTML = paragraph.innerHTML.replace(extractedData.type, '');
-
-      paragraph.dataset.type = extractedData.type;
-      paragraph.classList.add(extractedData.type);
-      switch (paragraph.dataset.type) {
-        case 'correct-text':
-          correctAnswersText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'wrong-text':
-          wrongAnswersText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'show-after-answer-text':
-          showAfterAnswerText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'tries':
-          paragraph.classList.add('tries');
-          break;
-        case 'share-icons':
-          paragraph.classList.add('share-icons');
-          paragraph.innerHTML = paragraph.innerHTML.replace('&lt; ', '').replace('< ', '');
-          paragraph.innerHTML = paragraph.innerHTML.replace('&gt;', '').replace('>', '');
-          break;
-        case 'share-text':
-          shareTexts.set(index, paragraph);
-          paragraph.remove();
-          break;
-        default:
-          break;
+      if (cellText.startsWith('correct-text:')) {
+        const message = cellText.split('correct-text:')[1].trim();
+        correctAnswersText.set(index, message);
       }
-    }
-  });
-}
-function processSpecialParagraphs2(question, index) {
-  const paragraphs = question.querySelectorAll('p');
 
-  paragraphs.forEach((paragraph) => {
-    const text = paragraph.innerText;
-    const extractedData = extractSpecialText(text);
-
-    if (extractedData) {
-      console.log('extractedData ', extractedData)
-      paragraph.innerHTML = stripOuterBrackets(paragraph.innerHTML);
-      paragraph.innerHTML = paragraph.innerHTML.replace(extractedData.type, '');
-
-      paragraph.dataset.type = extractedData.type;
-      paragraph.classList.add(extractedData.type);
-      switch (paragraph.dataset.type) {
-        case 'correct-text':
-          correctAnswersText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'wrong-text':
-          wrongAnswersText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'show-after-answer-text':
-          showAfterAnswerText.set(index, paragraph);
-          paragraph.remove();
-          break;
-        case 'tries':
-          paragraph.classList.add('tries');
-          break;
-        case 'share-icons':
-          paragraph.classList.add('share-icons');
-          paragraph.innerHTML = paragraph.innerHTML.replace('&lt; ', '').replace('< ', '');
-          paragraph.innerHTML = paragraph.innerHTML.replace('&gt;', '').replace('>', '');
-          break;
-        case 'share-text':
-          shareTexts.set(index, paragraph);
-          paragraph.remove();
-          break;
-        default:
-          break;
+      if (cellText.startsWith('wrong-text:')) {
+        const message = cellText.split('wrong-text:')[1].trim();
+        wrongAnswersText.set(index, message);
       }
-    }
+
+      if (cellText.startsWith('show-after-answer-text:')) {
+        const message = cellText.split('show-after-answer-text:')[1].trim();
+        showAfterAnswerText.set(index, message);
+      }
+
+      if (cellText.startsWith('share-text:')) {
+        const message = cellText.split('share-text:')[1].trim();
+        shareTexts.set(index, message);
+      }
+
+      if (cellText.startsWith('tries:')) {
+        const triesRaw = cellText.split('tries:')[1].trim();
+        const triesCount = parseInt(triesRaw, 10) || 3;
+
+        if (!question.querySelector('p.tries')) {
+          const triesParagraph = document.createElement('p');
+          triesParagraph.classList.add('tries');
+          triesParagraph.innerHTML = `Only <span>${triesCount}</span> tries left.`;
+
+          const scamButton = question.querySelector('a[href="#not-a-scam"]');
+          if (scamButton && scamButton.parentNode) {
+            scamButton.parentNode.insertBefore(triesParagraph, scamButton);
+          }
+        }
+      }
+
+      if (cellText.startsWith('share-icons:')) {
+        const iconList = cellText.split('share-icons:')[1].trim();
+        shareTexts.set(index, iconList);
+      }
+    });
+
+    // Eliminăm tabelul din DOM după procesare
+    table.remove();
   });
 }
 
@@ -267,13 +214,13 @@ function decorateAnswersList(question, questionIndex) {
 
       if (isCorrect) {
         listItem.classList.add('correct-answer');
-        contentDiv.innerHTML = correctAnswersText.get(questionIndex).innerHTML;
+        contentDiv.innerHTML = processStyledText(correctAnswersText.get(questionIndex));
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
       } else {
         listItem.classList.add('wrong-answer');
-        contentDiv.innerHTML = wrongAnswersText.get(questionIndex)?.innerHTML;
+        contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
       }
@@ -285,7 +232,7 @@ function decorateAnswersList(question, questionIndex) {
         nextButton.style.display = '';
       }
 
-      answersList.append(showAfterAnswerText.get(questionIndex));
+      answersList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
     });
   });
 }
@@ -371,7 +318,7 @@ function showWrong(question, questionIndex) {
   clickableContainer.style.display = 'none';
 
   // Get the wrong answer text and process any styled text within it
-  let wrongText = wrongAnswersText.get(questionIndex).innerHTML;
+  let wrongText = wrongAnswersText.get(questionIndex);
   wrongText = processStyledText(wrongText);
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
@@ -393,7 +340,10 @@ function showWrong(question, questionIndex) {
     questionScamTag.style.display = 'flex';
   }
 
-  answerList.append(showAfterAnswerText.get(questionIndex));
+  const explanation = document.createElement('div');
+  explanation.classList.add('explanation');
+  explanation.innerHTML = processStyledText(showAfterAnswerText.get(questionIndex));
+  answerList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
 }
 
 function showCorrect(question, questionIndex) {
@@ -407,7 +357,7 @@ function showCorrect(question, questionIndex) {
   const questionScamTag = question.querySelector('.question-scam-tag');
 
   // Get the wrong answer text and process any styled text within it
-  let wrongText = correctAnswersText.get(questionIndex).innerHTML;
+  let wrongText = correctAnswersText.get(questionIndex);
   wrongText = processStyledText(wrongText);
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
@@ -429,7 +379,7 @@ function showCorrect(question, questionIndex) {
     questionScamTag.style.display = 'flex';
   }
 
-  answerList.append(showAfterAnswerText.get(questionIndex));
+  answerList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
 }
 
 function decorateClickQuestions(question, index) {
@@ -495,10 +445,13 @@ function decorateClickQuestions(question, index) {
     clickAttempts.set(index, attempts);
 
     // update tries counter
-    const triesNumberMatch = triesCounter.innerHTML.match(/\d+/);
-    const triesCounterNumber = triesNumberMatch ? triesNumberMatch[0] : null;
-    // eslint-disable-next-line max-len
-    triesCounter.innerHTML = triesCounter.innerHTML.replace(triesCounterNumber, triesCounterNumber - 1);
+    const triesSpan = triesCounter.querySelector('span');
+    if (triesSpan) {
+      let current = parseInt(triesSpan.textContent, 10);
+      if (!isNaN(current) && current > 0) {
+        triesSpan.textContent = current - 1;
+      }
+    }
 
     // Check if attempts exhausted (count from the original 3 tries)
     if (attempts >= 3) {
@@ -571,26 +524,49 @@ function showResult(question, results) {
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareIcons = result.querySelector('.share-icons');
     if (!shareIcons) return;
+
+    // Clear any existing icons
+    shareIcons.innerHTML = '';
+
     const resultUrl = new URL(window.location.href);
     resultUrl.hash = '';
     const cleanUrl = resultUrl.toString();
     const shareUrl = encodeURIComponent(`${cleanUrl}${resultPath}`);
-    const shareTextAndUrl = encodeURIComponent(`${shareText.innerHTML.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
-    const shareLinkedIn = shareIcons.querySelector('a[href*="#share-li"]');
-    if (shareLinkedIn) {
-      shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?text=${shareTextAndUrl}`;
-      shareLinkedIn.target = '_blank';
-    }
-    const shareFacebook = shareIcons.querySelector('a[href*="#share-fb"]');
-    if (shareFacebook) {
-      shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
-      shareFacebook.target = '_blank';
-    }
-    const shareTwitter = shareIcons.querySelector('a[href*="#share-twitter"]');
-    if (shareTwitter) {
-      shareTwitter.href = `https://x.com/intent/tweet?text=${shareTextAndUrl}`;
-      shareTwitter.target = '_blank';
-    }
+    const shareTextAndUrl = encodeURIComponent(`${shareText?.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
+
+    const iconList = shareTexts.get(results.indexOf(result));
+    if (!iconList) return;
+
+    const icons = iconList.split(':').map(i => i.trim()).filter(i => i !== '');
+
+    icons.forEach((icon) => {
+      const a = document.createElement('a');
+      a.setAttribute('aria-label', icon);
+      a.setAttribute('target', '_blank');
+
+      const span = document.createElement('span');
+      span.classList.add('icon', `icon-${icon}`);
+
+      switch (icon) {
+        case 'facebook':
+          a.href = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+          break;
+        case 'x':
+          a.href = `https://x.com/intent/tweet?text=${shareTextAndUrl}`;
+          break;
+        case 'linkedin':
+          a.href = `https://www.linkedin.com/sharing/share-offsite/?text=${shareTextAndUrl}`;
+          break;
+        case 'chain-link':
+          a.href = '#copy-to-clipboard';
+          break;
+        default:
+          return; // ignore unknown icon
+      }
+
+      a.appendChild(span);
+      shareIcons.appendChild(a);
+    });
   };
 
   question.style.display = 'none';
