@@ -36,28 +36,6 @@ function decorateStartPage(startBlock) {
 }
 
 /**
- * Extracts the first word inside angle brackets and the text after it
- * Example: "<correct-text Correct!>" returns { type: "correct-text", content: "Correct!" }
- * @param {string} text - The text to parse
- * @return {object|null} An object with type and content properties or null if no match
- */
-function extractSpecialText(text) {
-  console.log('text ', text)
-  // Regular expression to match content inside angle brackets and the text that follows
-  const regex = /<([a-zA-Z-]+)\s+([^>]+)>/;
-  const match = text.match(regex);
-
-  if (match && match.length >= 3) {
-    return {
-      type: match[1],
-      content: match[2],
-    };
-  }
-
-  return null;
-}
-
-/**
  * Processes and styles text with special markup
  * Handles patterns like "<black Not Correct!>" or "Not Correct! <black Here's what you missed:>"
  * Also handles HTML-encoded angle brackets (&lt; and &gt;)
