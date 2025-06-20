@@ -75,11 +75,6 @@ function processStyledText(html) {
     return `<span class="${cls}">${content}</span>`;
   });
 
-  // Step 3: Convert `className-` followed by a sentence into <span>
-  processedHtml = processedHtml.replace(/([a-zA-Z-]+)-(.+)/, (_, cls, content) => {
-    return `<span class="${cls}">${content.trim()}</span>`;
-  });
-
   return processedHtml;
 }
 
@@ -139,6 +134,7 @@ function processSpecialParagraphs(question, index) {
 
       if (cellText.startsWith('share-icons:')) {
         const iconList = cellText.split('share-icons:')[1].trim();
+        console.log(cellText.split('share-icons:'));
         shareTexts.set(index, iconList);
       }
     });
@@ -702,7 +698,7 @@ export default function decorate(block) {
   } = block.closest('.section').dataset;
 
   if (resultPage) {
-    const results = getDivsBasedOnFirstParagraph(block, '<answer>');
+    const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
     decorateResults(results);
     results.forEach((result) => {
       result.style.display = '';
@@ -713,8 +709,8 @@ export default function decorate(block) {
   const [startBlock, ...questionsAndResults] = block.children;
   decorateStartPage(startBlock);
 
-  const questions = getDivsBasedOnFirstParagraph(block, '<question>');
-  const results = getDivsBasedOnFirstParagraph(block, '<answer>');
+  const questions = getDivsBasedOnFirstParagraph(block, 'question-box');
+  const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
   decorateQuestions(questions, results);
   decorateResults(results);
   setupStartButton(block);
