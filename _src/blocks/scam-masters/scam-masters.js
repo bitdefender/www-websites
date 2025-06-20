@@ -112,7 +112,9 @@ function processSpecialParagraphs(question, index) {
       }
 
       if (cellText.startsWith('share-text:')) {
-        const message = cellText.split('share-text:')[1].trim();
+        let message = cellText.split('share-text:')[1].trim();
+        message = decodeURIComponent(message);
+        message = message.replace(/ {2,}/g, '');
         shareTexts.set(index, message);
       }
 
@@ -130,12 +132,6 @@ function processSpecialParagraphs(question, index) {
             scamButton.parentNode.insertBefore(triesParagraph, scamButton);
           }
         }
-      }
-
-      if (cellText.startsWith('share-icons:')) {
-        const iconList = cellText.split('share-icons:')[1].trim();
-        console.log(cellText.split('share-icons:'));
-        shareTexts.set(index, iconList);
       }
     });
 
@@ -518,51 +514,45 @@ function decorateClickQuestions(question, index) {
 
 function showResult(question, results) {
   const setupShareLinks = (result, shareText, resultPath) => {
+    const shareParagraph = result.querySelector('div > p:last-of-type');
+    shareParagraph.classList.add('share-icons');
+    shareParagraph.setAttribute('data-type', 'share-icons')
     const shareIcons = result.querySelector('.share-icons');
     if (!shareIcons) return;
-
-    // Clear any existing icons
-    shareIcons.innerHTML = '';
 
     const resultUrl = new URL(window.location.href);
     resultUrl.hash = '';
     const cleanUrl = resultUrl.toString();
     const shareUrl = encodeURIComponent(`${cleanUrl}${resultPath}`);
     const shareTextAndUrl = encodeURIComponent(`${shareText?.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
-
-    const iconList = shareTexts.get(results.indexOf(result));
-    if (!iconList) return;
-
-    const icons = iconList.split(':').map(i => i.trim()).filter(i => i !== '');
-
-    icons.forEach((icon) => {
-      const a = document.createElement('a');
-      a.setAttribute('aria-label', icon);
-      a.setAttribute('target', '_blank');
-
-      const span = document.createElement('span');
-      span.classList.add('icon', `icon-${icon}`);
-
-      switch (icon) {
-        case 'facebook':
-          a.href = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
-          break;
-        case 'x':
-          a.href = `https://x.com/intent/tweet?text=${shareTextAndUrl}`;
-          break;
-        case 'linkedin':
-          a.href = `https://www.linkedin.com/sharing/share-offsite/?text=${shareTextAndUrl}`;
-          break;
-        case 'chain-link':
-          a.href = '#copy-to-clipboard';
-          break;
-        default:
-          return; // ignore unknown icon
+    
+    const linksConfig = {
+      facebook: {
+        href: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
+        target: '_blank',
+      },
+      x: {
+        href: `https://x.com/intent/tweet?text=${shareTextAndUrl}`,
+        target: '_blank',
+      },
+      linkedin: {
+        href: `https://www.linkedin.com/sharing/share-offsite/?text=${shareTextAndUrl}`,
+        target: '_blank',
+      },
+      'chain-link': {
+        href: '#copy-to-clipboard',
+        target: '_self',
       }
+    };
 
-      a.appendChild(span);
-      shareIcons.appendChild(a);
-    });
+    for (const [label, { href, target }] of Object.entries(linksConfig)) {
+      const link = shareIcons.querySelector(`a[aria-label="${label}"]`);
+      if (link) {
+        link.setAttribute('aria-label', label);
+        link.setAttribute('target', target);
+        link.href = href;
+      }
+    }
   };
 
   question.style.display = 'none';

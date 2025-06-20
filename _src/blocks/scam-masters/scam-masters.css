@@ -288,6 +288,11 @@
             color: var(--color-bd-blue);
             margin-bottom: 30px;
             font-weight: 400;
+
+            u {
+                color: var(--color-wrong);
+                text-decoration: none;
+            }
         }
 
         &.correct-answer h2 {
