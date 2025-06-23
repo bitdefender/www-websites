@@ -29,6 +29,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         border-radius: 20px;
+        min-height: 900px;
 
         >div:first-child {
             display: flex;
@@ -85,7 +86,7 @@
     .question,.result {
         display: grid;
         grid-template-columns: 1fr 1fr;
-
+        min-height: 900px;
         >div:first-child {
             padding: 66px 66px 18px;
             border-top-left-radius: 20px;
@@ -127,7 +128,8 @@
 
         .question-content {
             text-align: center;
-
+            display: grid;
+            gap: 20px;
             .question-number {
                 font-size: 22px;
                 background-color: var(--color-light-blue);
@@ -318,7 +320,7 @@
             border: 2px solid #707070;
             position: relative;
             font-size: 18px;
-
+            text-align: center;
             &:hover {
                 background-color: #f0f0f0;
             }
@@ -456,6 +458,10 @@
                         height: 30px;
                     }
                 }
+            }
+
+            .question-content {
+                gap: 0;
             }
 
             .question-content.correct-answer {
