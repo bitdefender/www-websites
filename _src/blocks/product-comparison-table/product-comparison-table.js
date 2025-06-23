@@ -154,13 +154,16 @@ function addAccesibilityRoles(block) {
 
 function replaceTableTextToProperCheckmars(block) {
   block.querySelectorAll('div')
-    .forEach(async (div) => {
-      if (div.textContent.match(/^yes/i)) {
+    .forEach(async (div, idx) => {
+      if (div.getAttribute('role') === 'row') return;
+
+      const textCheck = div.textContent.trim().toLowerCase();
+      if (textCheck === 'yes') {
         div.textContent = '';
         const icon = document.createElement('div');
         icon.classList.add('yes-check');
         div.appendChild(icon);
-      } else if (div.textContent.match(/^no/i)) {
+      } else if (textCheck === 'no') {
         div.textContent = '';
         const icon = document.createElement('div');
         icon.classList.add('no-check');
