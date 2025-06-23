@@ -154,7 +154,7 @@ function addAccesibilityRoles(block) {
 
 function replaceTableTextToProperCheckmars(block) {
   block.querySelectorAll('div')
-    .forEach(async (div, idx) => {
+    .forEach(async (div) => {
       if (div.getAttribute('role') === 'row') return;
 
       const textCheck = div.textContent.trim().toLowerCase();
