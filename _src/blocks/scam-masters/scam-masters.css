@@ -1,10 +1,39 @@
 /* stylelint-disable no-descending-specificity */
+:root {
+  --color-bd-blue: #006EFF;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bd-blue: #006EFF;
+  }
+}
+
 .scam-masters-container {
     --color-light-blue: #E6F7FF;
     --color-bd-blue: #006EFF;
 
     background-color: var(--color-bd-blue);
     padding: 60px !important;
+}
+
+.scam-masters {
+    .question-3, .question-8 {
+        > div:first-child .button-container:nth-of-type(2) {
+            .button {
+                display: inline-block!important;
+            }
+        }
+    }
+}  
+
+.answered-correctly {
+  border: 2px solid green;
+  background-color: #e6ffe6;
+}
+
+.answered-incorrectly {
+  border: 2px solid red;
+  background-color: #ffe6e6;
 }
 
 .scam-masters {
@@ -143,6 +172,11 @@
             text-align: center;
             color: var(--color-bd-blue);
 
+            u {
+                color: red;
+                text-decoration: none;
+            }
+
             &::before {
                 content: "";
                 background-image: url("/common/icons/blue-checkmark.svg");
@@ -157,10 +191,15 @@
             }
         }
 
-        .question-content.wrong-answer {
-            font: normal normal normal 50px/65px "IBM Plex Sans", sans-serif;
+        .question-content.wrong-answer, .question-content.partially-wrong-answer {
+            font: normal normal normal 50px/55px "IBM Plex Sans", sans-serif;
             text-align: center;
             color: var(--color-wrong);
+
+            em {
+                color: black;
+                font-style: normal;
+            }
 
             &::before {
                 content: url("/common/icons/not-correct.svg");
@@ -169,6 +208,10 @@
                 height: 50px;
                 margin: auto;
                 margin-bottom: 8px;
+            }
+
+            .tries {
+                display: none;
             }
         }
 
@@ -210,7 +253,7 @@
                 }
             }
 
-            &.wrong-answer {
+            &.wrong-answer, &.partially-wrong-answer {
                 li::before {
                     content: url("/common/icons/circleexclamationmark.svg");
                 }
@@ -277,7 +320,7 @@
                     transition: all 0.2s ease;
 
                     &.found-spot {
-                        background-color: rgb(230 247 255 / 30%);
+                        background-color: rgb(230 247 255 / 50%);
                         border: 2px solid var(--color-light-blue);
                     }
                 }
@@ -437,8 +480,22 @@
 @media (max-width: 1200px) {
     .scam-masters {
         .question,.result {
+            >div:nth-of-type(2) img {
+                max-width: 75%;
+                margin: 0 auto;
+            }
+
             >div:first-child {
-                padding: 30px 20px;
+                padding: 2em;
+
+                h1 {
+                    font-size: 40px;
+                    line-height: 44px;
+                }
+
+                h2 {
+                    font-size: var(--heading-font-size-l);
+                }
             }
 
             &:not(.clickable-question) {
@@ -476,12 +533,56 @@
     }
 }
 
+@media (max-width: 992px) {
+    .scam-masters-container {
+        padding: 15px !important;
+    }
+
+    .scam-masters {
+        .start-page {
+            >div:first-child {
+                padding: 2em;
+
+                h1 {
+                    font-size: 40px;
+                    line-height: 44px;
+                }
+
+                p {
+                    font-size: 18px;
+
+                    &.button-container {
+                        margin-top: 0;
+                    }
+                }
+
+                .legal-links {
+                    grid-template-columns: 3fr 3fr 2fr 3fr 2fr;
+
+                    p a {
+                        font-size: 12px;
+                        line-height: 15px;
+                        display: block;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media (max-width: 768px) {
     .scam-masters-container {
         padding: 15px !important;
     }
 
     .scam-masters {
+        .question,.result {
+            >div:nth-of-type(2) img {
+                max-width: 97%;
+            }
+        }
+
         .start-page {
             display: flex;
             flex-direction: column-reverse;
@@ -493,6 +594,7 @@
                 h1 {
                     font-size: 24px;
                     line-height: 1;
+                    margin-bottom: 10px;
                 }
 
                 p {
@@ -555,7 +657,7 @@
             &:not(.clickable-question) {
                 >div:last-child {
                     picture {
-                        max-width: 60%;
+                        max-width: 100%;
                     }
                 }
             }

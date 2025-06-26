@@ -1,6 +1,7 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 const correctAnswersText = new Map();
+const partiallyWrongAnswersText = new Map();
 const wrongAnswersText = new Map();
 const showAfterAnswerText = new Map();
 const userAnswers = new Map();
@@ -75,12 +76,20 @@ function processSpecialParagraphs(question, index) {
       const cellText = row.innerText.trim();
 
       if (cellText.startsWith('correct-text:')) {
-        const message = cellText.split('correct-text:')[1].trim();
+        const cellTextHTML = row.innerHTML.trim();
+        const message = cellTextHTML.split('correct-text:')[1].trim();
         correctAnswersText.set(index, message);
       }
 
+      if (cellText.startsWith('partially-wrong-text:')) {
+        const cellTextHTML = row.innerHTML.trim();
+        const message = cellTextHTML.split('partially-wrong-text:')[1].trim();
+        partiallyWrongAnswersText.set(index, message);
+      }
+
       if (cellText.startsWith('wrong-text:')) {
-        const message = cellText.split('wrong-text:')[1].trim();
+        const cellTextHTML = row.innerHTML.trim();
+        const message = cellTextHTML.split('wrong-text:')[1].trim();
         wrongAnswersText.set(index, message);
       }
 
@@ -184,12 +193,14 @@ function decorateAnswersList(question, questionIndex) {
 
       if (isCorrect) {
         listItem.classList.add('correct-answer');
+        console.log('correctAnswersText.get(questionIndex) ', correctAnswersText.get(questionIndex))
         contentDiv.innerHTML = processStyledText(correctAnswersText.get(questionIndex));
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
       } else {
         listItem.classList.add('wrong-answer');
+        console.log('wrongAnswersText.get(questionIndex) ', wrongAnswersText.get(questionIndex))
         contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
@@ -407,7 +418,6 @@ function decorateClickQuestions(question, index) {
 
   // Function to track wrong attempts and update the counter
   const trackWrongAttempt = () => {
-    // Prevent clicks if question already answered
     if (userAnswers.has(index)) return;
 
     // Increment attempt counter
@@ -423,11 +433,35 @@ function decorateClickQuestions(question, index) {
       }
     }
 
-    // Check if attempts exhausted (count from the original 3 tries)
-    if (attempts >= 3) {
-      // Mark as wrong answer
-      userAnswers.set(index, false);
-      showWrong(question, index);
+    // On third and final attempt: decide the outcome
+    if (attempts === 3) {
+      if (triesCounter) {
+        triesCounter.style.display = 'none';
+      }
+
+      if (spotsFound === totalSpots) {
+        userAnswers.set(index, true);
+        showCorrect(question, index);
+      } else if (spotsFound > 0) {
+        userAnswers.set(index, 'partial');
+
+        // Temporarily override the wrong message
+        const originalWrongText = wrongAnswersText.get(index);
+        const partialText = partiallyWrongAnswersText.get(index);
+        if (partialText) {
+          wrongAnswersText.set(index, partialText);
+        }
+
+        showWrong(question, index);
+
+        // Restore the original wrong text for safety
+        if (partialText) {
+          wrongAnswersText.set(index, originalWrongText);
+        }
+      } else {
+        userAnswers.set(index, false);
+        showWrong(question, index);
+      }
     }
   };
 
@@ -459,24 +493,56 @@ function decorateClickQuestions(question, index) {
 
     // Add click event
     clickableSpot.addEventListener('click', (e) => {
-      // Prevent the event from reaching the background
       e.stopPropagation();
 
-      // Prevent clicks if question already answered or spot already found
       if (userAnswers.has(index) || clickableSpot.classList.contains('found-spot')) return;
 
       // Mark the spot as found
       clickableSpot.classList.add('found-spot');
       spotsFound += 1;
 
-      // Check if all spots have been found
-      if (spotsFound >= totalSpots) {
-        // Mark as correct answer
-        userAnswers.set(index, true);
+      // Increment attempt counter
+      const attempts = clickAttempts.get(index) + 1;
+      clickAttempts.set(index, attempts);
 
-        showCorrect(question, index);
+      const triesSpan = triesCounter.querySelector('span');
+      if (triesSpan) {
+        let current = parseInt(triesSpan.textContent, 10);
+        if (!isNaN(current) && current > 0) {
+          triesSpan.textContent = current - 1;
+        }
       }
+
+      // If third attempt, evaluate and show result
+      if (attempts === 3) {
+        if (spotsFound === totalSpots) {
+          userAnswers.set(index, true);
+          showCorrect(question, index);
+        } else if (spotsFound > 0) {
+          userAnswers.set(index, 'partial');
+
+          // Temporarily override the wrong message
+          const originalWrongText = wrongAnswersText.get(index);
+          const partialText = partiallyWrongAnswersText.get(index);
+          if (partialText) {
+            wrongAnswersText.set(index, partialText);
+          }
+
+          showWrong(question, index);
+
+          // Restore the original wrong text for safety
+          if (partialText) {
+            wrongAnswersText.set(index, originalWrongText);
+          }
+        } else {
+          userAnswers.set(index, false);
+          showWrong(question, index);
+        }
+      }
+
+      clickAttempts.set(index, attempts);
     });
+
 
     clickableContainer.appendChild(clickableSpot);
     clickableSpots.push(clickableSpot);
