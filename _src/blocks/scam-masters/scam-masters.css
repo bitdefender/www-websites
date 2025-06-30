@@ -159,6 +159,10 @@
         .question-content {
             text-align: center;
 
+            p:last-of-type {
+                font-size: 19px;
+            }
+
             .question-number {
                 font-size: 22px;
                 background-color: var(--color-light-blue);
@@ -593,7 +597,20 @@
     }
 
     .scam-masters {
-        .question,.result {
+        .result {
+            >div:nth-of-type(2) img {
+                max-width: 50%;
+            }
+
+            >div:first-child { 
+                .share-icons {
+                    flex-direction: column;
+                }
+            }
+            
+        }
+
+        .question {
             >div:nth-of-type(2) img {
                 max-width: 97%;
             }
