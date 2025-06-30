@@ -111,6 +111,9 @@ function processSpecialParagraphs(question, index) {
       if (cellText.startsWith('tries:')) {
         const triesRaw = cellText.split('tries:')[1].trim();
         const triesCount = parseInt(triesRaw, 10) || 3;
+        if (triesCount === 2) {
+          console.log('triesCount', triesCount)
+        }
 
         if (!question.querySelector('p.tries')) {
           const triesParagraph = document.createElement('p');

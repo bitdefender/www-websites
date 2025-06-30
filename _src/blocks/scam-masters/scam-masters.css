@@ -16,16 +16,6 @@
     padding: 60px !important;
 }
 
-.scam-masters {
-    .question-3, .question-8 {
-        > div:first-child .button-container:nth-of-type(2) {
-            .button {
-                display: inline-block!important;
-            }
-        }
-    }
-}  
-
 .answered-correctly {
   border: 2px solid green;
   background-color: #e6ffe6;
@@ -142,6 +132,7 @@
             .tries {
                 color: var(--color-bd-blue);
                 text-align: center;
+                font-weight: bold;
             }
 
         }
@@ -327,7 +318,7 @@
 
                     &.found-spot {
                         background-color: rgb(230 247 255 / 50%);
-                        border: 2px solid var(--color-light-blue);
+                        border: 2px solid var(--color-bd-blue)
                     }
                 }
             }
