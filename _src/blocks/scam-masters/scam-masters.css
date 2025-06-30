@@ -658,7 +658,7 @@
                 border-radius: 20px 20px 0 0;
 
                 .button-container {
-                    margin: 0 auto;
+                    margin: 0 auto 10px;
 
                     .button {
                         padding: 10px 20px;
@@ -699,7 +699,7 @@
                     position: relative;
                     display: flex;
                     justify-content: center;
-                    border-radius: 20px 20px 0 0;
+                    border-radius: 0 0 20px 20px;
 
                     p:has(.image-wrapper) {
                         max-width: 60%;
