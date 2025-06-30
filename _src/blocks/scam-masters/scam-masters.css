@@ -649,11 +649,13 @@
 
         .question,.result {
             grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column-reverse;
 
             >div:first-child {
                 order: 1;
                 padding: 18px;
-                border-radius: 0 0 20px 20px;
+                border-radius: 20px 20px 0 0;
 
                 .button-container {
                     margin: 0 auto;
@@ -666,7 +668,7 @@
             }
 
             >div:last-child {
-                border-radius: 20px 20px 0 0;
+                border-radius: 0 0 20px 20px;
                 min-height: 345px;
             }
 
