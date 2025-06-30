@@ -457,7 +457,6 @@ export default async function decorate(block) {
     });
   }
 
-
   if (individualSwitchText && familySwitchText) {
     block.parentNode.insertBefore(switchBox, block);
   }
