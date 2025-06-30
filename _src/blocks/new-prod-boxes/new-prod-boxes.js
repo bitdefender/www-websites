@@ -431,6 +431,33 @@ export default async function decorate(block) {
     });
   }
 
+  if (blockParent.classList.contains('show-more-show-less')) {
+    const SHOW_TEXT = 'Show more features';
+    const HIDE_TEXT = 'Hide features';
+
+    block.querySelectorAll('.benefitsLists').forEach((benefits) => {
+      const btnWrapper = document.createElement('div');
+      btnWrapper.className = 'show-more-btn-wrapper';
+
+      const btn = document.createElement('button');
+      btn.className = 'show-more-btn';
+      btn.type = 'button';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.textContent = SHOW_TEXT;
+
+      btn.addEventListener('click', () => {
+        const expanded = benefits.classList.toggle('expanded');
+        btn.textContent = expanded ? HIDE_TEXT : SHOW_TEXT;
+        btn.className = expanded ? 'show-less-btn' : 'show-more-btn';
+        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      });
+
+      btnWrapper.appendChild(btn);
+      benefits.insertAdjacentElement('beforebegin', btnWrapper);
+    });
+  }
+
+
   if (individualSwitchText && familySwitchText) {
     block.parentNode.insertBefore(switchBox, block);
   }
