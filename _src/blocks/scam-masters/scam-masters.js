@@ -434,9 +434,9 @@ function decorateClickQuestions(question, index) {
     const triesSpan = triesCounter.querySelector('span');
     if (triesSpan) {
       let current = parseInt(triesSpan.textContent, 10);
-      if (!isNaN(current) && current > 0) {
-        triesSpan.textContent = current - 1;
-      }
+      if (current == 2)  triesCounter.classList.add('red');
+
+      if (!isNaN(current) && current > 0) triesSpan.textContent = current - 1;
     }
 
     // On third and final attempt: decide the outcome
@@ -566,7 +566,7 @@ function showResult(question, results) {
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
     shareParagraph.classList.add('share-icons');
-    shareParagraph.setAttribute('data-type', 'share-icons')
+    shareParagraph.setAttribute('data-type', 'share-icons');
     const shareIcons = result.querySelector('.share-icons');
     if (!shareIcons) return;
 

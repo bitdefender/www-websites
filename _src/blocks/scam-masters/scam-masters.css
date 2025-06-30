@@ -133,6 +133,11 @@
                 color: var(--color-bd-blue);
                 text-align: center;
                 font-weight: bold;
+                font-size: 19px;
+
+                &.red {
+                    color: var(--color-wrong);
+                }
             }
 
         }
@@ -432,6 +437,10 @@
                     height: auto;
                     filter: var(--filter-bd-blue);
                     margin: 0;
+
+                    &.icon-chain-link {
+                        width: 24px;
+                    }
                 }
             }
 
