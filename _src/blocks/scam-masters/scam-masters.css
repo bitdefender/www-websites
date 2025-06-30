@@ -62,7 +62,7 @@
         >div:first-child {
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            justify-content: center;
             padding: 66px 66px 18px;
             background-color: white;
             border-top-left-radius: 20px;
