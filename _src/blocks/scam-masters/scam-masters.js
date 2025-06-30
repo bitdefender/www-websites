@@ -25,15 +25,18 @@ function decorateStartPage(startBlock) {
   legalDiv.classList.add('legal-links');
 
   let ul = startBlock.querySelector('ul');
-  const listItems = ul.querySelectorAll('li');
+  if (ul) {
+    const listItems = ul.querySelectorAll('li');
 
-  listItems.forEach((listItem) => {
-    const paragraph = document.createElement('p');
-    paragraph.innerHTML = listItem.innerHTML;
-    legalDiv.appendChild(paragraph);
-  });
+    listItems?.forEach((listItem) => {
+      const paragraph = document.createElement('p');
+      paragraph.innerHTML = listItem.innerHTML;
+      legalDiv.appendChild(paragraph);
+    });
 
-  ul = ul.replaceWith(legalDiv);
+    ul = ul.replaceWith(legalDiv);
+  }
+  
 }
 
 /**
