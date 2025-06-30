@@ -432,7 +432,10 @@ export default async function decorate(block) {
   }
 
   if (blockParent.classList.contains('show-more-show-less')) {
-    block.querySelectorAll('.benefitsLists').forEach((benefits) => {
+    const benefitsLists = block.querySelectorAll('.benefitsLists');
+    const btnWrappers = [];
+
+    benefitsLists.forEach((benefits) => {
       const btnWrapper = document.createElement('div');
       btnWrapper.className = 'show-more-btn-wrapper';
 
@@ -442,15 +445,23 @@ export default async function decorate(block) {
       btn.setAttribute('aria-expanded', 'false');
       btn.textContent = blockParent.getAttribute('data-show-more');
 
-      btn.addEventListener('click', () => {
-        const expanded = benefits.classList.toggle('expanded');
-        btn.textContent = expanded ? blockParent.getAttribute('data-show-less') : blockParent.getAttribute('data-show-more');
-        btn.className = expanded ? 'show-less-btn' : 'show-more-btn';
-        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-      });
-
       btnWrapper.appendChild(btn);
       benefits.insertAdjacentElement('beforebegin', btnWrapper);
+      btnWrappers.push(btn);
+    });
+
+    btnWrappers.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const shouldExpand = ![...benefitsLists][0].classList.contains('expanded');
+        benefitsLists.forEach((benefits) => {
+          benefits.classList.toggle('expanded', shouldExpand);
+        });
+        btnWrappers.forEach((btnWrapper) => {
+          btnWrapper.textContent = shouldExpand ? blockParent.getAttribute('data-show-less') : blockParent.getAttribute('data-show-more');
+          btnWrapper.className = shouldExpand ? 'show-less-btn' : 'show-more-btn';
+          btnWrapper.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
+        });
+      });
     });
   }
 
