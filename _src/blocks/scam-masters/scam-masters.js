@@ -9,42 +9,36 @@ const clickAttempts = new Map();
 const shareTexts = new Map();
 let score = 0;
 
-/**
- * Adds a new result entry to the existing quizdata.json file.
- * @param {object} newResult - The new result object to add.
- */
-async function addResultToQuiz(newResult) {
-  const url = 'https://main--www-websites--bitdefender.aem.page/en-us/quiz/scam-masters/quizdata.json';
+function formatQuizResult(resultArray, totalQuestions = 10) {
+  const resultMap = new Map(resultArray.map(item => [item.key, item.value]));
+  const resultLines = [];
+
+  for (let i = 0; i < totalQuestions; i++) {
+    const isCorrect = resultMap.get(i) === true;
+    resultLines.push(`Q${i + 1}: ${isCorrect ? 'correct' : 'incorrect'}`);
+  }
+
+  return resultLines.join(', ');
+}
+
+async function saveResults(resultArray) {
+  const endpoint = 'https://script.google.com/macros/s/AKfycbxqADa1Mi_VK6r6mrdGcjMxNgcb_QMmPIiC7cIdRR86g3ryCmtSXymouuOjCV0NeQcZHA/exec';
 
   try {
-    // Step 1: Fetch existing quiz data
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Failed to fetch JSON: ${response.status}`);
-    const data = await response.json();
-
-    // Step 2: Append new result
-    data.results = data.results || [];
-    data.results.push(newResult);
-
-    // Step 3: Send updated data back to server
-    const updateResponse = await fetch(url, {
-      method: 'GET', // or 'POST' depending on what the server accepts
+    await fetch(endpoint, {
+      method: 'POST',
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json'
       },
-      // body: JSON.stringify(data, null, 2)
+      body: JSON.stringify({ result: resultArray })
     });
 
-    console.log('updateResponse ', updateResponse)
-
-    if (!updateResponse.ok) throw new Error(`Failed to update JSON: ${updateResponse.status}`);
-    console.log('New result added successfully!');
-  } catch (error) {
-    console.error('Error updating quiz results:', error);
+    console.log('Data saved');
+  } catch (err) {
+    console.error('Err:', err);
   }
 }
-
-
 
 function createAfterAnswerParagraph(message) {
   const p = document.createElement('p');
@@ -595,6 +589,11 @@ function decorateClickQuestions(question, index) {
 }
 
 function showResult(question, results) {
+  // save results
+  saveResults(formatQuizResult(
+    Array.from(userAnswers, ([key, value]) => ({ key, value }))
+  ));
+
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
     shareParagraph.classList.add('share-icons');
