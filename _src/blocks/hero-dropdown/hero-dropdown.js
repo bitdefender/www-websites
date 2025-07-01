@@ -10,7 +10,8 @@ function buildHeroDropdownBlock(element) {
   const h1 = element.querySelector('h1');
   const picture = element.querySelector('picture');
   const pictureParent = picture ? picture.parentNode : false;
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
+
+  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) { // eslint-disable-line no-bitwise
     const section = document.querySelector('div.hero-dropdown');
     const subSection = document.querySelector('div.hero-dropdown div');
     subSection.classList.add('hero-dropdown-content');
@@ -39,6 +40,7 @@ createNanoBlock('dropdown', (...args) => {
   root.classList.add('dropdown-products');
 
   const buyButtonText = block?.dataset.buybuttontext || 'Buy Now';
+  const discounttext = block?.dataset.discounttext || 'OFF';
   const secondButtonText = block?.dataset.secondbuttontext;
   const secondButtonLink = block?.dataset.secondbuttonlink;
   const labelText = block?.dataset.label;
@@ -61,7 +63,7 @@ createNanoBlock('dropdown', (...args) => {
   const selectedOption = document.createElement('div');
   selectedOption.classList.add('selected-option');
   selectedOption.innerHTML = `
-    <span class="selected-label">${productNames[0] || 'Select'}</span>
+    <span class="selected-label">${(productNames[0]?.split('|')[0] || 'Select').trim()}</span>
     <span class="dropdown-arrow"></span>
   `;
 
@@ -71,7 +73,7 @@ createNanoBlock('dropdown', (...args) => {
   products.forEach((prod, index) => {
     const [product, unit, year] = prod.split('/');
     const code = `${product}/${unit}/${year}`;
-    const friendlyName = productNames[index] || product;
+    const [friendlyName, detailsText] = (productNames[index] || product).split('|').map((p) => p.trim());
 
     const option = document.createElement('div');
     option.classList.add('custom-dropdown-item');
@@ -91,12 +93,13 @@ createNanoBlock('dropdown', (...args) => {
     newElement.dataset.code = code;
 
     newElement.innerHTML = `
+      <p class="product-details">${detailsText || ''}</p>
       <div class="discount">
         <div data-store-hide="no-price=discounted;type=visibility" class="price">
           <span class="old-price"><del data-store-price="full">$69.99</del></span>
         </div>
         <div data-store-hide="no-price=discounted;type=visibility" class="featured">
-          <span data-store-text-variable="">Save 57%</span>
+          <span class="prod-save" data-store-hide="no-price=discounted"><span data-store-discount="percentage"></span> ${discounttext}</span>
         </div>
       </div>
       <div class="price">
@@ -128,9 +131,10 @@ createNanoBlock('dropdown', (...args) => {
   root.insertBefore(dropdownWrapper, root.firstChild);
 
   selectedOption.addEventListener('click', () => {
+    const isOpen = optionsList.classList.contains('open');
     optionsList.classList.toggle('open');
-    selectedOption.classList.toggle('open');
-    customDropdown.classList.toggle('open');
+    selectedOption.classList.toggle('open', !isOpen);
+    customDropdown.classList.toggle('open', !isOpen);
   });
 
   optionsList.querySelectorAll('.custom-dropdown-item').forEach((item) => {
@@ -141,7 +145,7 @@ createNanoBlock('dropdown', (...args) => {
       optionsList.classList.remove('open');
       selectedOption.classList.remove('open');
       customDropdown.classList.remove('open');
-      
+
       optionsList.querySelectorAll('.custom-dropdown-item').forEach((el) => {
         el.classList.remove('active');
       });
@@ -170,6 +174,7 @@ export default function decorate(block) {
     secondbuttonlink,
     label,
     productnames,
+    discounttext,
   } = parentSection.dataset;
 
   if (backgroundcolor) {
@@ -198,6 +203,10 @@ export default function decorate(block) {
 
   if (productnames) {
     block.dataset.productnames = productnames;
+  }
+
+  if (discounttext) {
+    block.dataset.discounttext = discounttext;
   }
 
   buildHeroDropdownBlock(block);

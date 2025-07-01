@@ -64,6 +64,10 @@ main .hero-dropdown .hero-dropdown-content .signature {
   main .hero-dropdown .hero-dropdown-content .signature {
     margin-bottom: 12px;
   }
+
+  main .hero-dropdown .hero-dropdown-content {
+    padding: 17px var(--body-padding) 56px;
+  }
 }
 
 main .hero-dropdown .hero-dropdown-content .breadcrumb a {
@@ -189,7 +193,6 @@ main .hero-dropdown-container .featured {
     padding: 2px 8px;
     display: inline-block;
     align-self: self-start;
-    margin-bottom: 10px;
 }
 
 main .hero-dropdown-container .buttons {
@@ -197,7 +200,7 @@ main .hero-dropdown-container .buttons {
 }  
 
 main .hero-dropdown-container .buttons .secondary-button{
-  background-color: white;
+  background-color: #ffffff00;
   color: #006DFF;
   border: 2px solid #006DFF;
 } 
@@ -206,10 +209,17 @@ main .hero-dropdown-container .buttons .secondary-button{
 main .hero-dropdown-container .discount {
     display: inline-flex;
     gap: 10px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+main .hero-dropdown-container .product-details{
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
 main .hero-dropdown-container .new-price {
-  font-size: var(--heading-font-size-l);
+  font-size: 40px;
     font-weight: var(--font-weight-bolder);
 
 }
@@ -261,7 +271,7 @@ main .hero-dropdown .hero-dropdown-picture {
 main .hero-dropdown .hero-dropdown-content {
   display: flex;
   flex-direction: column;
-  padding: 17px var(--body-padding) 56px;
+  padding: 17px var(--body-padding) 0px;
   margin: 0 auto;
   position: relative;
 }
@@ -305,13 +315,6 @@ main .hero-dropdown .hero-dropdown-content .right-col {
   display: flex;
   justify-content: center;
   flex-direction: column;
-}
-
-main .hero-dropdown.black-background .hero-dropdown-content {
-  padding: 17px var(--body-padding) 56px;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(90deg, #000 0%, #000 15%, #fff0 100%);
 }
 
 main .hero-dropdown.comparison .hero-dropdown-content {
@@ -437,6 +440,7 @@ main .hero-dropdown.scamio .hero-dropdown-picture picture img {
 
 main .hero-dropdown a.button {
   margin: 8px 13px 0 0;
+  min-width: 206px;
 }
 
 main .hero-dropdown a.button.modal,
@@ -761,7 +765,7 @@ main .hero-dropdown .custom-dropdown {
   border-radius: 0 10px 10px 10px;
   cursor: pointer;
   z-index: 10;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 main .hero-dropdown .selected-label {
