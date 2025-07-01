@@ -447,7 +447,6 @@ main .hero-dropdown a.button.central {
 
 @media (min-width: 1400px) {
   main .hero-dropdown a.button {
-    min-width: 360px;
     justify-content: center;
     align-items: center;
   }
