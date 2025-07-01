@@ -45,6 +45,7 @@ async function addResultToQuiz(newResult) {
 }
 
 
+
 function createAfterAnswerParagraph(message) {
   const p = document.createElement('p');
   p.setAttribute('data-type', 'show-after-answer-text');
