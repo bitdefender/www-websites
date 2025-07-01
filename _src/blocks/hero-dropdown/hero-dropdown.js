@@ -11,6 +11,7 @@ function buildHeroDropdownBlock(element) {
   const picture = element.querySelector('picture');
   const pictureParent = picture ? picture.parentNode : false;
 
+  // Bitwise check to ensure h1 is before picture in DOM
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) { // eslint-disable-line no-bitwise
     const section = document.querySelector('div.hero-dropdown');
     const subSection = document.querySelector('div.hero-dropdown div');
@@ -32,6 +33,55 @@ function buildHeroDropdownBlock(element) {
   }
 }
 
+function createDropdownItem(code, friendlyName, isActive) {
+  const item = document.createElement('div');
+  item.classList.add('custom-dropdown-item');
+  if (isActive) item.classList.add('active');
+  item.setAttribute('data-value', code);
+  item.textContent = friendlyName;
+  return item;
+}
+
+function createPriceBox({ code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText }) {
+  const box = document.createElement('div');
+  box.classList.add('price_box');
+  box.setAttribute('data-store-context', '');
+  box.setAttribute('data-store-id', product);
+  box.setAttribute('data-store-option', `${unit}-${year}`);
+  box.setAttribute('data-store-department', 'consumer');
+  box.setAttribute('data-store-event', 'product-loaded');
+  box.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
+  box.dataset.code = code;
+
+  box.innerHTML = `
+    <p class="product-details">${detailsText || ''}</p>
+    <div class="discount">
+      <div data-store-hide="no-price=discounted;type=visibility" class="price">
+        <span class="old-price"><del data-store-price="full">$69.99</del></span>
+      </div>
+      <div data-store-hide="no-price=discounted;type=visibility" class="featured">
+        <span class="prod-save" data-store-hide="no-price=discounted"><span data-store-discount="percentage"></span> ${discounttext}</span>
+      </div>
+    </div>
+    <div class="price">
+      <strong class="new-price">
+        <strong data-store-price="discounted||full">$29.99</strong>
+      </strong>
+    </div>
+    <div class="buttons">
+      <a href="#" data-store-buy-link class="button primary-button">
+        <span class="button-text">${buyButtonText}</span>
+      </a>
+      ${secondButtonText && secondButtonLink ? `
+        <a href="${secondButtonLink}" class="button secondary-button">
+          <span class="button-text">${secondButtonText}</span>
+        </a>` : ''}
+    </div>
+  `;
+
+  return box;
+}
+
 createNanoBlock('dropdown', (...args) => {
   const block = args.find((arg) => arg instanceof HTMLElement);
   const raw = args.filter((arg) => typeof arg === 'string').join(',');
@@ -39,15 +89,19 @@ createNanoBlock('dropdown', (...args) => {
   const root = document.createElement('div');
   root.classList.add('dropdown-products');
 
-  const buyButtonText = block?.dataset.buybuttontext || 'Buy Now';
-  const discounttext = block?.dataset.discounttext || 'OFF';
-  const secondButtonText = block?.dataset.secondbuttontext;
-  const secondButtonLink = block?.dataset.secondbuttonlink;
-  const labelText = block?.dataset.label;
-  const productNames = (block?.dataset.productnames || '').split(',').map((n) => n.trim());
+  const {
+    buybuttontext = 'Buy Now',
+    discounttext = 'OFF',
+    secondbuttontext,
+    secondbuttonlink,
+    label: labelText,
+    productnames = '',
+  } = block?.dataset || {};
+
+  const productNames = productnames.split(',').map((n) => n.trim());
 
   const dropdownWrapper = document.createElement('div');
-  dropdownWrapper.classList.add('prodSel');
+  dropdownWrapper.classList.add('dropdown__selector');
 
   if (labelText) {
     const labelEl = document.createElement('label');
@@ -75,54 +129,12 @@ createNanoBlock('dropdown', (...args) => {
     const code = `${product}/${unit}/${year}`;
     const [friendlyName, detailsText] = (productNames[index] || product).split('|').map((p) => p.trim());
 
-    const option = document.createElement('div');
-    option.classList.add('custom-dropdown-item');
-    option.setAttribute('data-value', code);
-    option.textContent = friendlyName;
-    if (index === 0) option.classList.add('active');
+    const option = createDropdownItem(code, friendlyName, index === 0);
     optionsList.appendChild(option);
 
-    const newElement = document.createElement('div');
-    newElement.classList.add('price_box');
-    newElement.setAttribute('data-store-context', '');
-    newElement.setAttribute('data-store-id', product);
-    newElement.setAttribute('data-store-option', `${unit}-${year}`);
-    newElement.setAttribute('data-store-department', 'consumer');
-    newElement.setAttribute('data-store-event', 'product-loaded');
-    newElement.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
-    newElement.dataset.code = code;
-
-    newElement.innerHTML = `
-      <p class="product-details">${detailsText || ''}</p>
-      <div class="discount">
-        <div data-store-hide="no-price=discounted;type=visibility" class="price">
-          <span class="old-price"><del data-store-price="full">$69.99</del></span>
-        </div>
-        <div data-store-hide="no-price=discounted;type=visibility" class="featured">
-          <span class="prod-save" data-store-hide="no-price=discounted"><span data-store-discount="percentage"></span> ${discounttext}</span>
-        </div>
-      </div>
-      <div class="price">
-        <strong class="new-price">
-          <strong data-store-price="discounted||full">$29.99</strong>
-        </strong>
-      </div>
-      <div class="buttons">
-        <a href="#" data-store-buy-link class="button primary-button">
-          <span class="button-text">${buyButtonText}</span>
-        </a>
-        ${secondButtonText && secondButtonLink ? `
-          <a href="${secondButtonLink}" class="button secondary-button">
-            <span class="button-text">${secondButtonText}</span>
-          </a>` : ''}
-      </div>
-    `;
-
-    if (index !== 0) {
-      newElement.style.display = 'none';
-    }
-
-    root.appendChild(newElement);
+    const priceBox = createPriceBox({ code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText });
+    if (index !== 0) priceBox.style.display = 'none';
+    root.appendChild(priceBox);
   });
 
   customDropdown.appendChild(selectedOption);
@@ -146,9 +158,7 @@ createNanoBlock('dropdown', (...args) => {
       selectedOption.classList.remove('open');
       customDropdown.classList.remove('open');
 
-      optionsList.querySelectorAll('.custom-dropdown-item').forEach((el) => {
-        el.classList.remove('active');
-      });
+      optionsList.querySelectorAll('.custom-dropdown-item').forEach((el) => el.classList.remove('active'));
       item.classList.add('active');
 
       root.querySelectorAll('.price_box').forEach((box) => {
@@ -177,37 +187,17 @@ export default function decorate(block) {
     discounttext,
   } = parentSection.dataset;
 
-  if (backgroundcolor) {
-    parentSection.style.backgroundColor = backgroundcolor;
-  }
+  if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
+  if (innerbackgroundcolor) block.style.backgroundColor = innerbackgroundcolor;
 
-  if (innerbackgroundcolor) {
-    block.style.backgroundColor = innerbackgroundcolor;
-  }
-
-  if (buybuttontext) {
-    block.dataset.buybuttontext = buybuttontext;
-  }
-
-  if (secondbuttontext) {
-    block.dataset.secondbuttontext = secondbuttontext;
-  }
-
-  if (secondbuttonlink) {
-    block.dataset.secondbuttonlink = secondbuttonlink;
-  }
-
-  if (label) {
-    block.dataset.label = label;
-  }
-
-  if (productnames) {
-    block.dataset.productnames = productnames;
-  }
-
-  if (discounttext) {
-    block.dataset.discounttext = discounttext;
-  }
+  Object.assign(block.dataset, {
+    ...(buybuttontext && { buybuttontext }),
+    ...(secondbuttontext && { secondbuttontext }),
+    ...(secondbuttonlink && { secondbuttonlink }),
+    ...(label && { label }),
+    ...(productnames && { productnames }),
+    ...(discounttext && { discounttext }),
+  });
 
   buildHeroDropdownBlock(block);
   renderDropdown(block);

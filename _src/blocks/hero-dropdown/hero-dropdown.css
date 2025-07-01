@@ -234,12 +234,12 @@ main .hero-dropdown-container .product-selector {
     width: 75%;
 }
 
-main .hero-dropdown-container .prodSel{
+main .hero-dropdown-container .dropdown__selector{
     display: flex;
     flex-direction: column;
 }
 
-main .hero-dropdown-container .prodSel label{
+main .hero-dropdown-container .dropdown__selector label{
   font-size: 14px;
     padding: 1px 20px;
     position: relative;
@@ -327,13 +327,9 @@ main .hero-dropdown.comparison .hero-dropdown-content {
 main .hero-dropdown h1 {
   font-size: 2.125rem;
   margin: 0 0 25px;
+  color: #006DFF;
+  font-size: 48px;
 }
-
-main .hero-dropdown h1 {
- color: #006DFF;
- font-size: 48px;
-}
-
 
 main .hero-dropdown h2 {
   font-size: 18px;
