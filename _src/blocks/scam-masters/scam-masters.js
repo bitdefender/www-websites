@@ -1,4 +1,4 @@
-import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { getMetadata, decorateIcons } from '../../scripts/lib-franklin.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
@@ -8,6 +8,42 @@ const userAnswers = new Map();
 const clickAttempts = new Map();
 const shareTexts = new Map();
 let score = 0;
+
+/**
+ * Adds a new result entry to the existing quizdata.json file.
+ * @param {object} newResult - The new result object to add.
+ */
+async function addResultToQuiz(newResult) {
+  const url = 'https://main--www-websites--bitdefender.aem.page/en-us/quiz/scam-masters/quizdata.json';
+
+  try {
+    // Step 1: Fetch existing quiz data
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to fetch JSON: ${response.status}`);
+    const data = await response.json();
+
+    // Step 2: Append new result
+    data.results = data.results || [];
+    data.results.push(newResult);
+
+    // Step 3: Send updated data back to server
+    const updateResponse = await fetch(url, {
+      method: 'GET', // or 'POST' depending on what the server accepts
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      // body: JSON.stringify(data, null, 2)
+    });
+
+    console.log('updateResponse ', updateResponse)
+
+    if (!updateResponse.ok) throw new Error(`Failed to update JSON: ${updateResponse.status}`);
+    console.log('New result added successfully!');
+  } catch (error) {
+    console.error('Error updating quiz results:', error);
+  }
+}
+
 
 function createAfterAnswerParagraph(message) {
   const p = document.createElement('p');
@@ -111,9 +147,6 @@ function processSpecialParagraphs(question, index) {
       if (cellText.startsWith('tries:')) {
         const triesRaw = cellText.split('tries:')[1].trim();
         const triesCount = parseInt(triesRaw, 10) || 3;
-        if (triesCount === 2) {
-          console.log('triesCount', triesCount)
-        }
 
         if (!question.querySelector('p.tries')) {
           const triesParagraph = document.createElement('p');
@@ -199,14 +232,12 @@ function decorateAnswersList(question, questionIndex) {
 
       if (isCorrect) {
         listItem.classList.add('correct-answer');
-        console.log('correctAnswersText.get(questionIndex) ', correctAnswersText.get(questionIndex))
         contentDiv.innerHTML = processStyledText(correctAnswersText.get(questionIndex));
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
       } else {
         listItem.classList.add('wrong-answer');
-        console.log('wrongAnswersText.get(questionIndex) ', wrongAnswersText.get(questionIndex))
         contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
@@ -623,6 +654,8 @@ function showResult(question, results) {
       min: 9, max: 10, resultIndex: 4, shareText: shareTexts.get(4), resultUrl: 'result-5',
     },
   ];
+
+  console.log('results ', results, score)
 
   const foundRange = scoreRanges.find((range) => score >= range.min && score <= range.max);
 
