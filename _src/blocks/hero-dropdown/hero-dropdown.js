@@ -6,44 +6,34 @@ import {
   renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
 
-
-/**
- * Builds hero block and prepends to main in a new section.
- * @param {Element} element The container element
- */
 function buildHeroDropdownBlock(element) {
   const h1 = element.querySelector('h1');
   const picture = element.querySelector('picture');
-  console.log(picture)
   const pictureParent = picture ? picture.parentNode : false;
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-     const section = document.querySelector('div.hero-dropdown');
-     const subSection = document.querySelector('div.hero-dropdown div');
-     subSection.classList.add('hero-dropdown-content');
- 
-     const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
- 
-     if (!isHomePage) {
-       const breadcrumb = createTag('div', { class: 'breadcrumb' });
-       document.querySelector('div.hero-dropdown div div:first-child').prepend(breadcrumb);
-     }
- 
-     const pictureEl = document.createElement('div');
-     pictureEl.classList.add('hero-dropdown-picture');
-     pictureEl.append(picture);
-     section.prepend(pictureEl);
- 
-     pictureParent.remove();
-   }
-  
+    const section = document.querySelector('div.hero-dropdown');
+    const subSection = document.querySelector('div.hero-dropdown div');
+    subSection.classList.add('hero-dropdown-content');
+
+    const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
+
+    if (!isHomePage) {
+      const breadcrumb = createTag('div', { class: 'breadcrumb' });
+      document.querySelector('div.hero-dropdown div div:first-child').prepend(breadcrumb);
+    }
+
+    const pictureEl = document.createElement('div');
+    pictureEl.classList.add('hero-dropdown-picture');
+    pictureEl.append(picture);
+    section.prepend(pictureEl);
+
+    pictureParent.remove();
+  }
 }
 
 createNanoBlock('dropdown', (...args) => {
   const block = args.find((arg) => arg instanceof HTMLElement);
-  const raw = args
-    .filter((arg) => typeof arg === 'string')
-    .join(',');
-
+  const raw = args.filter((arg) => typeof arg === 'string').join(',');
   const products = raw.split(',').map((p) => p.trim());
   const root = document.createElement('div');
   root.classList.add('dropdown-products');
@@ -51,17 +41,12 @@ createNanoBlock('dropdown', (...args) => {
   const buyButtonText = block?.dataset.buybuttontext || 'Buy Now';
   const secondButtonText = block?.dataset.secondbuttontext;
   const secondButtonLink = block?.dataset.secondbuttonlink;
-  
   const labelText = block?.dataset.label;
-  const productNames = (block?.dataset.productnames || '')
-    .split(',')
-    .map((n) => n.trim());
+  const productNames = (block?.dataset.productnames || '').split(',').map((n) => n.trim());
 
-  // Creează containerul dropdownului (div#prodSel)
   const dropdownWrapper = document.createElement('div');
   dropdownWrapper.classList.add('prodSel');
 
-  // Etichetă pentru dropdown, dacă există
   if (labelText) {
     const labelEl = document.createElement('label');
     labelEl.setAttribute('for', 'productSelector');
@@ -70,25 +55,31 @@ createNanoBlock('dropdown', (...args) => {
     dropdownWrapper.appendChild(labelEl);
   }
 
-  // Dropdown <select>
-  const select = document.createElement('select');
+  const customDropdown = document.createElement('div');
+  customDropdown.classList.add('custom-dropdown');
 
-  select.classList.add('product-selector');
-  dropdownWrapper.appendChild(select);
-  root.appendChild(dropdownWrapper);
+  const selectedOption = document.createElement('div');
+  selectedOption.classList.add('selected-option');
+  selectedOption.innerHTML = `
+    <span class="selected-label">${productNames[0] || 'Select'}</span>
+    <span class="dropdown-arrow"></span>
+  `;
+
+  const optionsList = document.createElement('div');
+  optionsList.classList.add('options-list');
 
   products.forEach((prod, index) => {
     const [product, unit, year] = prod.split('/');
     const code = `${product}/${unit}/${year}`;
     const friendlyName = productNames[index] || product;
 
-    // <option>
-    const option = document.createElement('option');
-    option.value = code;
+    const option = document.createElement('div');
+    option.classList.add('custom-dropdown-item');
+    option.setAttribute('data-value', code);
     option.textContent = friendlyName;
-    select.appendChild(option);
+    if (index === 0) option.classList.add('active');
+    optionsList.appendChild(option);
 
-    // .price_box
     const newElement = document.createElement('div');
     newElement.classList.add('price_box');
     newElement.setAttribute('data-store-context', '');
@@ -115,11 +106,11 @@ createNanoBlock('dropdown', (...args) => {
       </div>
       <div class="buttons">
         <a href="#" data-store-buy-link class="button primary-button">
-          <span>${buyButtonText}</span>
+          <span class="button-text">${buyButtonText}</span>
         </a>
         ${secondButtonText && secondButtonLink ? `
           <a href="${secondButtonLink}" class="button secondary-button">
-            <span>${secondButtonText}</span>
+            <span class="button-text">${secondButtonText}</span>
           </a>` : ''}
       </div>
     `;
@@ -131,11 +122,34 @@ createNanoBlock('dropdown', (...args) => {
     root.appendChild(newElement);
   });
 
-  // Când utilizatorul schimbă selecția
-  select.addEventListener('change', (e) => {
-    const selected = e.target.value;
-    root.querySelectorAll('.price_box').forEach((box) => {
-      box.style.display = box.dataset.code === selected ? 'block' : 'none';
+  customDropdown.appendChild(selectedOption);
+  customDropdown.appendChild(optionsList);
+  dropdownWrapper.appendChild(customDropdown);
+  root.insertBefore(dropdownWrapper, root.firstChild);
+
+  selectedOption.addEventListener('click', () => {
+    optionsList.classList.toggle('open');
+    selectedOption.classList.toggle('open');
+    customDropdown.classList.toggle('open');
+  });
+
+  optionsList.querySelectorAll('.custom-dropdown-item').forEach((item) => {
+    item.addEventListener('click', () => {
+      const selected = item.getAttribute('data-value');
+      const label = item.textContent;
+      selectedOption.querySelector('.selected-label').textContent = label;
+      optionsList.classList.remove('open');
+      selectedOption.classList.remove('open');
+      customDropdown.classList.remove('open');
+      
+      optionsList.querySelectorAll('.custom-dropdown-item').forEach((el) => {
+        el.classList.remove('active');
+      });
+      item.classList.add('active');
+
+      root.querySelectorAll('.price_box').forEach((box) => {
+        box.style.display = box.dataset.code === selected ? 'block' : 'none';
+      });
     });
   });
 
@@ -148,30 +162,30 @@ async function renderDropdown(block) {
 
 export default function decorate(block) {
   const parentSection = block.closest('.section');
-    const {
-    signature,
+  const {
     backgroundcolor,
+    innerbackgroundcolor,
     buybuttontext,
-    secondbuttontext, 
-    secondbuttonlink, 
+    secondbuttontext,
+    secondbuttonlink,
     label,
-    productnames
+    productnames,
   } = parentSection.dataset;
-  console.log("textul: " + productnames)
-  const MetaData= parentSection.dataset;
-  console.log(MetaData)
 
   if (backgroundcolor) {
-  parentSection.style.backgroundColor = backgroundcolor;
-  block.style.backgroundColor = backgroundcolor;
+    parentSection.style.backgroundColor = backgroundcolor;
+  }
+
+  if (innerbackgroundcolor) {
+    block.style.backgroundColor = innerbackgroundcolor;
   }
 
   if (buybuttontext) {
-  block.dataset.buybuttontext = buybuttontext;
+    block.dataset.buybuttontext = buybuttontext;
   }
 
   if (secondbuttontext) {
-  block.dataset.secondbuttontext = secondbuttontext;
+    block.dataset.secondbuttontext = secondbuttontext;
   }
 
   if (secondbuttonlink) {
@@ -182,10 +196,9 @@ export default function decorate(block) {
     block.dataset.label = label;
   }
 
-  if (parentSection.dataset.productnames) {
-  block.dataset.productnames = parentSection.dataset.productnames;
+  if (productnames) {
+    block.dataset.productnames = productnames;
   }
-  
 
   buildHeroDropdownBlock(block);
   renderDropdown(block);

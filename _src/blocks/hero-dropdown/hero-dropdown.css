@@ -28,6 +28,8 @@ main .hero-dropdown {
   position: relative;
   padding: 1em 0 2em;
   min-height: 300px;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 main .section.bfoffer .hero-dropdown {
@@ -112,6 +114,7 @@ main .hero-dropdown-container>div {
 main .hero-dropdown-container {
   padding: 0;
   margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 main .hero-dropdown-container.blue-title .hero-dropdown-content>div {
@@ -143,6 +146,8 @@ main .hero-dropdown .hero-dropdown-content>div {
 
 main .hero-dropdown-container .hero-dropdown-wrapper {
   padding: 0;
+  max-width: 1300px;
+  margin: auto;
 }
 
 main .hero-dropdown.new2024design::after {
@@ -195,7 +200,8 @@ main .hero-dropdown-container .buttons .secondary-button{
   background-color: white;
   color: #006DFF;
   border: 2px solid #006DFF;
-}  
+} 
+
 
 main .hero-dropdown-container .discount {
     display: inline-flex;
@@ -748,6 +754,88 @@ main .hero-dropdown-container.ferrari-migration .hero-dropdown .hero-dropdown-co
   border-radius: 5px;
 }
 
+main .hero-dropdown .custom-dropdown {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 0 10px 10px 10px;
+  cursor: pointer;
+  z-index: 10;
+  margin-bottom: 24px;
+}
+
+main .hero-dropdown .selected-label {
+  color: #006DFF;
+  font-weight: 700;
+  border-radius: 10px 10px 0 0;
+}
+
+main .hero-dropdown .selected-option {
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+main .hero-dropdown .options-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 0;
+  overflow: hidden;
+  background: #fff;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: max-height 0.3s ease;
+}
+
+main .hero-dropdown .options-list.open {
+  max-height: 300px;
+}
+
+main .hero-dropdown .custom-dropdown-item {
+  padding: 12px 16px;
+}
+
+main .hero-dropdown .custom-dropdown-item:hover {
+  background-color: #F1F5F9;
+}
+
+main .hero-dropdown .custom-dropdown-item.active {
+  display: none;
+}
+
+main .hero-dropdown .dropdown-arrow {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23333' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  color: #667085;
+  transition: transform 0.3s ease;
+}
+
+main .hero-dropdown .custom-dropdown.open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+main .hero-dropdown .selected-option.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.hero-dropdown .buttons a.button.secondary-button::after, input[type="submit"]::after, main .section.link-right a::after {
+  background-color: #006DFF;
+}
+
+
 @media(max-width: 989px) {
   main .hero-dropdown.new2024design {
     background-color: #006FFF;
@@ -846,7 +934,7 @@ main .hero-dropdown-container.ferrari-migration .hero-dropdown .hero-dropdown-co
     width: 630px;
   }
 
-  main .hero-dropdown-container .buttons a{
+  main .hero-dropdown-container .buttons{
     display: inline;
   }  
 }
