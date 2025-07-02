@@ -237,7 +237,7 @@
                 picture {
                     width: fit-content;
                     margin: 0 auto;
-                    max-width: 58%;
+                    max-width: 80%;
                     display: flex;
                     align-items: end;
                 }
@@ -296,7 +296,7 @@
                 p:has(picture) {
                     width: fit-content;
                     margin: 0 auto;
-                    max-width: 60%;
+                    max-width: 80%;
                     display: flex;
                     align-items: end;
                 }
@@ -629,6 +629,7 @@
             flex-direction: column;
 
             >div:first-child {
+                height: auto;
                 padding: 20px;
                 border-radius: 20px 20px 0 0;
 
@@ -654,6 +655,7 @@
             }
 
             >div:last-child {
+                height: auto;
                 border-radius: 0 0 20px 20px;
                 display: flex;
                 align-items: center;
@@ -676,6 +678,10 @@
             grid-template-columns: 1fr;
             display: flex;
             flex-direction: column-reverse;
+
+            >div {
+                height: auto;
+            }
 
             >div:first-child {
                 order: 1;
