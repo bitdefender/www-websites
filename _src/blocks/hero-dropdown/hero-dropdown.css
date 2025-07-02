@@ -239,7 +239,7 @@ main .hero-dropdown-container .dropdown__selector{
     flex-direction: column;
 }
 
-main .hero-dropdown-container .dropdown__selector label{
+main .hero-dropdown-container .dropdown-products__selector label{
   font-size: 14px;
     padding: 1px 20px;
     position: relative;
