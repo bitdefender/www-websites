@@ -13,15 +13,15 @@ function buildHeroDropdownBlock(element) {
 
   // Bitwise check to ensure h1 is before picture in DOM
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) { // eslint-disable-line no-bitwise
-    const section = document.querySelector('div.hero-dropdown');
-    const subSection = document.querySelector('div.hero-dropdown div');
+    const section = element.closest('div.hero-dropdown');
+    const subSection = section.querySelector('div');
     subSection.classList.add('hero-dropdown-content');
 
     const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
     if (!isHomePage) {
       const breadcrumb = createTag('div', { class: 'breadcrumb' });
-      document.querySelector('div.hero-dropdown div div:first-child').prepend(breadcrumb);
+      subSection.querySelector('div:first-child').prepend(breadcrumb);
     }
 
     const pictureEl = document.createElement('div');
@@ -44,7 +44,7 @@ function createDropdownItem(code, friendlyName, isActive) {
 
 function createPriceBox({ code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText }) {
   const box = document.createElement('div');
-  box.classList.add('price_box');
+  box.classList.add('dropdown-products__price-box');
   box.setAttribute('data-store-context', '');
   box.setAttribute('data-store-id', product);
   box.setAttribute('data-store-option', `${unit}-${year}`);
@@ -101,11 +101,12 @@ createNanoBlock('dropdown', (...args) => {
   const productNames = productnames.split(',').map((n) => n.trim());
 
   const dropdownWrapper = document.createElement('div');
-  dropdownWrapper.classList.add('dropdown__selector');
+  dropdownWrapper.classList.add('dropdown-products__selector');
 
   if (labelText) {
+    const uniqueId = `productSelector-${Math.floor(Math.random() * 10000)}`;
     const labelEl = document.createElement('label');
-    labelEl.setAttribute('for', 'productSelector');
+    labelEl.setAttribute('for', uniqueId);
     labelEl.classList.add('bestValue');
     labelEl.textContent = labelText;
     dropdownWrapper.appendChild(labelEl);
@@ -149,7 +150,7 @@ createNanoBlock('dropdown', (...args) => {
     customDropdown.classList.toggle('open', !isOpen);
   });
 
-  optionsList.querySelectorAll('.custom-dropdown-item').forEach((item) => {
+  [...optionsList.querySelectorAll('.custom-dropdown-item')].forEach((item) => {
     item.addEventListener('click', () => {
       const selected = item.getAttribute('data-value');
       const label = item.textContent;
@@ -158,10 +159,10 @@ createNanoBlock('dropdown', (...args) => {
       selectedOption.classList.remove('open');
       customDropdown.classList.remove('open');
 
-      optionsList.querySelectorAll('.custom-dropdown-item').forEach((el) => el.classList.remove('active'));
+      [...optionsList.querySelectorAll('.custom-dropdown-item')].forEach((el) => el.classList.remove('active'));
       item.classList.add('active');
 
-      root.querySelectorAll('.price_box').forEach((box) => {
+      [...root.querySelectorAll('.dropdown-products__price-box')].forEach((box) => {
         box.style.display = box.dataset.code === selected ? 'block' : 'none';
       });
     });
