@@ -86,8 +86,7 @@ function processStyledText(html) {
   let processedHtml = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
   // Step 2: Convert <className content> patterns
-  processedHtml = processedHtml.replace(/<([a-zA-Z-]+)\s+([^>]+)>/g, (_, cls, content) => `<span class="${cls}">${content}</span>`;
-);
+  processedHtml = processedHtml.replace(/<([a-zA-Z-]+)\s+([^>]+)>/g, (_, cls, content) => `<span class="${cls}">${content}</span>`);
 
   return processedHtml;
 }
