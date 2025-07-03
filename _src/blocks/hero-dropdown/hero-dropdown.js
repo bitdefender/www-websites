@@ -7,30 +7,29 @@ import {
 } from '../../scripts/utils/utils.js';
 
 function buildHeroDropdownBlock(element) {
-  const h1 = element.querySelector('h1');
   const picture = element.querySelector('picture');
-  const pictureParent = picture ? picture.parentNode : false;
+  const pictureParent = picture?.parentNode;
 
-  // Bitwise check to ensure h1 is before picture in DOM
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) { // eslint-disable-line no-bitwise
-    const section = element.closest('div.hero-dropdown');
-    const subSection = section.querySelector('div');
-    subSection.classList.add('hero-dropdown-content');
+  if (!picture) return;
 
-    const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
+  const section = element.closest('div.hero-dropdown');
+  const subSection = section.querySelector('div');
+  subSection.classList.add('hero-dropdown-content');
 
-    if (!isHomePage) {
-      const breadcrumb = createTag('div', { class: 'breadcrumb' });
-      subSection.querySelector('div:first-child').prepend(breadcrumb);
-    }
+  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
-    const pictureEl = document.createElement('div');
-    pictureEl.classList.add('hero-dropdown-picture');
-    pictureEl.append(picture);
-    section.prepend(pictureEl);
-
-    pictureParent.remove();
+  if (!isHomePage) {
+    const breadcrumb = createTag('div', { class: 'breadcrumb' });
+    const contentWrapper = subSection.querySelector('div:first-child');
+    if (contentWrapper) contentWrapper.prepend(breadcrumb);
   }
+
+  const pictureEl = document.createElement('div');
+  pictureEl.classList.add('hero-dropdown-picture');
+  pictureEl.append(picture);
+  section.prepend(pictureEl);
+
+  if (pictureParent) pictureParent.remove();
 }
 
 function createDropdownItem(code, friendlyName, isActive) {
@@ -104,9 +103,7 @@ createNanoBlock('dropdown', (...args) => {
   dropdownWrapper.classList.add('dropdown-products__selector');
 
   if (labelText) {
-    const uniqueId = `productSelector-${Math.floor(Math.random() * 10000)}`;
     const labelEl = document.createElement('label');
-    labelEl.setAttribute('for', uniqueId);
     labelEl.classList.add('bestValue');
     labelEl.textContent = labelText;
     dropdownWrapper.appendChild(labelEl);
@@ -186,10 +183,42 @@ export default function decorate(block) {
     label,
     productnames,
     discounttext,
+    corners,
+    contentsize,
+    textcolor,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
   if (innerbackgroundcolor) block.style.backgroundColor = innerbackgroundcolor;
+
+  block.style.borderRadius = corners === 'round' ? '16px' : '0';
+
+  if (contentsize) {
+    const content = block.querySelector('.hero-dropdown-content > div');
+    if (content) {
+      switch (contentsize) {
+        case 'half':
+          content.style.width = '50%';
+          break;
+        case 'larger':
+          content.style.width = '75%';
+          break;
+        case 'full':
+          content.style.width = '100%';
+          break;
+        default:
+          content.style.width = '60%';
+          break;
+      }
+    }
+  }
+
+  if (textcolor) {
+    console.log(textcolor)
+    block.querySelectorAll('p').forEach((p) => {
+      p.style.color = textcolor;
+    });
+  }
 
   Object.assign(block.dataset, {
     ...(buybuttontext && { buybuttontext }),
