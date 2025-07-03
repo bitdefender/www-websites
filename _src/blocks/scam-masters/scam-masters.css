@@ -615,6 +615,10 @@
                     flex-direction: column;
                 }
             }
+
+            >div:last-child {
+                min-height: auto;
+            }
             
         }
 
@@ -751,12 +755,6 @@
                 .answers-list li {
                     font-size: 14px;
                 }
-            }
-        }
-
-        .result {
-            >div:last-child {
-                min-height: auto;
             }
         }
     }
