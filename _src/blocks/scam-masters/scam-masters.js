@@ -37,9 +37,9 @@ async function saveResults(resultArray) {
       body: JSON.stringify({ result: resultArray }),
     });
 
-    console.log('Data saved');
+    // console.log('Data saved');
   } catch (err) {
-    console.error('Err:', err);
+    // console.error('Err:', err);
   }
 }
 
