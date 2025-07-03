@@ -70,7 +70,6 @@ function decorateStartPage(startBlock) {
 
     ul = ul.replaceWith(legalDiv);
   }
-  
 }
 
 /**
@@ -87,9 +86,8 @@ function processStyledText(html) {
   let processedHtml = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
   // Step 2: Convert <className content> patterns
-  processedHtml = processedHtml.replace(/<([a-zA-Z-]+)\s+([^>]+)>/g, (_, cls, content) => {
-    return `<span class="${cls}">${content}</span>`;
-  });
+  processedHtml = processedHtml.replace(/<([a-zA-Z-]+)\s+([^>]+)>/g, (_, cls, content) => `<span class="${cls}">${content}</span>`;
+);
 
   return processedHtml;
 }
@@ -463,9 +461,9 @@ function decorateClickQuestions(question, index) {
     const triesSpan = triesCounter.querySelector('span');
     if (triesSpan) {
       let current = parseInt(triesSpan.textContent, 10);
-      if (current == 2)  triesCounter.classList.add('red');
+      if (Number(current) === 2) triesCounter.classList.add('red');
 
-      if (!isNaN(current) && current > 0) triesSpan.textContent = current - 1;
+      if (!Number.isNaN(current) && current > 0) triesSpan.textContent = current - 1;
     }
 
     // On third and final attempt: decide the outcome
@@ -542,8 +540,8 @@ function decorateClickQuestions(question, index) {
 
       const triesSpan = triesCounter.querySelector('span');
       if (triesSpan) {
-        let current = parseInt(triesSpan.textContent, 10);
-        if (!isNaN(current) && current > 0) {
+        const current = parseInt(triesSpan.textContent, 10);
+        if (!Number.isNaN(current) && current > 0) {
           triesSpan.textContent = current - 1;
         }
       }
@@ -578,7 +576,6 @@ function decorateClickQuestions(question, index) {
       clickAttempts.set(index, attempts);
     });
 
-
     clickableContainer.appendChild(clickableSpot);
     clickableSpots.push(clickableSpot);
   });
@@ -593,9 +590,9 @@ function decorateClickQuestions(question, index) {
 
 function showResult(question, results) {
   // save results
-  /*saveResults(formatQuizResult(
+  /* saveResults(formatQuizResult(
     Array.from(userAnswers, ([key, value]) => ({ key, value }))
-  ));*/
+  )); */
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
@@ -609,7 +606,7 @@ function showResult(question, results) {
     const cleanUrl = resultUrl.toString();
     const shareUrl = encodeURIComponent(`${cleanUrl}${resultPath}`);
     const shareTextAndUrl = encodeURIComponent(`${shareText?.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
-    
+
     const linksConfig = {
       facebook: {
         href: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
@@ -626,17 +623,17 @@ function showResult(question, results) {
       'chain-link': {
         href: '#copy-to-clipboard',
         target: '_self',
-      }
+      },
     };
 
-    for (const [label, { href, target }] of Object.entries(linksConfig)) {
+    Object.entries(linksConfig).forEach(([label, { href, target }]) => {
       const link = shareIcons.querySelector(`a[aria-label="${label}"]`);
       if (link) {
         link.setAttribute('aria-label', label);
         link.setAttribute('target', target);
         link.href = href;
       }
-    }
+    });
   };
 
   question.style.display = 'none';
@@ -657,8 +654,6 @@ function showResult(question, results) {
       min: 9, max: 10, resultIndex: 4, shareText: shareTexts.get(4), resultUrl: 'result-5',
     },
   ];
-
-  console.log('results ', results, score)
 
   const foundRange = scoreRanges.find((range) => score >= range.min && score <= range.max);
 
