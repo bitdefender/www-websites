@@ -590,9 +590,9 @@ function decorateClickQuestions(question, index) {
 
 function showResult(question, results) {
   // save results
-  saveResults(formatQuizResult(
+  /*saveResults(formatQuizResult(
     Array.from(userAnswers, ([key, value]) => ({ key, value }))
-  ));
+  ));*/
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
