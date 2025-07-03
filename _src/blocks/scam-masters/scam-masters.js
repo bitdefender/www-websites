@@ -43,14 +43,6 @@ async function saveResults(resultArray) {
   }
 }
 
-function createAfterAnswerParagraph(message) {
-  const p = document.createElement('p');
-  p.setAttribute('data-type', 'show-after-answer-text');
-  p.classList.add('show-after-answer-text');
-  p.innerHTML = `<strong>${processStyledText(message)}</strong>`;
-  return p;
-}
-
 function decorateStartPage(startBlock) {
   if (!startBlock) return;
   startBlock.classList.add('start-page');
@@ -89,6 +81,14 @@ function processStyledText(html) {
   processedHtml = processedHtml.replace(/<([a-zA-Z-]+)\s+([^>]+)>/g, (_, cls, content) => `<span class="${cls}">${content}</span>`);
 
   return processedHtml;
+}
+
+function createAfterAnswerParagraph(message) {
+  const p = document.createElement('p');
+  p.setAttribute('data-type', 'show-after-answer-text');
+  p.classList.add('show-after-answer-text');
+  p.innerHTML = `<strong>${processStyledText(message)}</strong>`;
+  return p;
 }
 
 function stripOuterBrackets(str) {
@@ -459,7 +459,7 @@ function decorateClickQuestions(question, index) {
     // update tries counter
     const triesSpan = triesCounter.querySelector('span');
     if (triesSpan) {
-      let current = parseInt(triesSpan.textContent, 10);
+      const current = parseInt(triesSpan.textContent, 10);
       if (Number(current) === 2) triesCounter.classList.add('red');
 
       if (!Number.isNaN(current) && current > 0) triesSpan.textContent = current - 1;
