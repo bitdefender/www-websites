@@ -1,4 +1,4 @@
-import { getMetadata, decorateIcons } from '../../scripts/lib-franklin.js';
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
@@ -9,10 +9,12 @@ const clickAttempts = new Map();
 const shareTexts = new Map();
 let score = 0;
 
+// eslint-disable-next-line no-unused-vars
 function formatQuizResult(resultArray, totalQuestions = 10) {
-  const resultMap = new Map(resultArray.map(item => [item.key, item.value]));
+  const resultMap = new Map(resultArray.map((item) => [item.key, item.value]));
   const resultLines = [];
 
+  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < totalQuestions; i++) {
     const isCorrect = resultMap.get(i) === true;
     resultLines.push(`Q${i + 1}: ${isCorrect ? 'correct' : 'incorrect'}`);
@@ -21,6 +23,7 @@ function formatQuizResult(resultArray, totalQuestions = 10) {
   return resultLines.join(', ');
 }
 
+// eslint-disable-next-line no-unused-vars
 async function saveResults(resultArray) {
   const endpoint = 'https://script.google.com/macros/s/AKfycbxqADa1Mi_VK6r6mrdGcjMxNgcb_QMmPIiC7cIdRR86g3ryCmtSXymouuOjCV0NeQcZHA/exec';
 
@@ -29,9 +32,9 @@ async function saveResults(resultArray) {
       method: 'POST',
       mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ result: resultArray })
+      body: JSON.stringify({ result: resultArray }),
     });
 
     console.log('Data saved');
