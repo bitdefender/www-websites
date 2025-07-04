@@ -922,7 +922,6 @@
                             color: var(--color-highlight-blue);
 
                             &::after {
-                                padding-top: 2px;
                                 background: none;
                                 font: normal normal normal 24px / 11px var(--body-font-family);
                                 content: url("/_src/icons/plus-sharp-regular.svg");
