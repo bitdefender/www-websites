@@ -193,7 +193,24 @@ export default function decorate(block) {
 
   block.style.borderRadius = corners === 'round' ? '16px' : '0';
 
-  if (contentsize) {
+  if (textcolor) {
+    block.querySelectorAll('p').forEach((p) => {
+      p.style.color = textcolor;
+    });
+  }
+
+  Object.assign(block.dataset, {
+    ...(buybuttontext && { buybuttontext }),
+    ...(secondbuttontext && { secondbuttontext }),
+    ...(secondbuttonlink && { secondbuttonlink }),
+    ...(label && { label }),
+    ...(productnames && { productnames }),
+    ...(discounttext && { discounttext }),
+  });
+
+  buildHeroDropdownBlock(block);
+
+    if (contentsize) {
     const content = block.querySelector('.hero-dropdown-content > div');
     if (content) {
       switch (contentsize) {
@@ -213,22 +230,5 @@ export default function decorate(block) {
     }
   }
 
-  if (textcolor) {
-    console.log(textcolor)
-    block.querySelectorAll('p').forEach((p) => {
-      p.style.color = textcolor;
-    });
-  }
-
-  Object.assign(block.dataset, {
-    ...(buybuttontext && { buybuttontext }),
-    ...(secondbuttontext && { secondbuttontext }),
-    ...(secondbuttonlink && { secondbuttonlink }),
-    ...(label && { label }),
-    ...(productnames && { productnames }),
-    ...(discounttext && { discounttext }),
-  });
-
-  buildHeroDropdownBlock(block);
   renderDropdown(block);
 }
