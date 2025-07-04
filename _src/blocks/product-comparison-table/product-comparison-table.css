@@ -197,6 +197,11 @@ div[role="cell"] p.button-container a,
     color: var(--button-link-color);
 }
 
+.product-comparison-table.green-tag .product-comparison-header div[role="columnheader"] p.button-container a:hover {
+    background-color: var(--button-hover-background-color);
+    color: white;
+}
+
 div[role="cell"] p.button-container a.button:hover::after {
     background-color: var(--button-link-color);
 }
