@@ -186,11 +186,6 @@ div[role="cell"] p.button-container a,
     color: white;
 }
 
-.product-comparison-table.green-tag .product-comparison-header div[role="columnheader"] p.button-container a:hover {
-    background-color: var(--button-hover-background-color);
-    color: white;
-}
-
 .product-comparison-header div[role="columnheader"] p.button-container a:hover::after {
     background-color: white !important;
 }
@@ -200,6 +195,11 @@ div[role="cell"] p.button-container a,
     background-color: var(--button-background-color);
     border: 2px solid var(--button-background-color);
     color: var(--button-link-color);
+}
+
+.product-comparison-table.green-tag .product-comparison-header div[role="columnheader"] p.button-container a:hover {
+    background-color: var(--button-hover-background-color);
+    color: white;
 }
 
 div[role="cell"] p.button-container a.button:hover::after {
