@@ -41,7 +41,9 @@ function createDropdownItem(code, friendlyName, isActive) {
   return item;
 }
 
-function createPriceBox({ code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText }) {
+function createPriceBox({
+  code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText,
+}) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box');
   box.setAttribute('data-store-context', '');
@@ -130,7 +132,9 @@ createNanoBlock('dropdown', (...args) => {
     const option = createDropdownItem(code, friendlyName, index === 0);
     optionsList.appendChild(option);
 
-    const priceBox = createPriceBox({ code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText });
+    const priceBox = createPriceBox({
+      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText,
+    });
     if (index !== 0) priceBox.style.display = 'none';
     root.appendChild(priceBox);
   });
@@ -210,7 +214,7 @@ export default function decorate(block) {
 
   buildHeroDropdownBlock(block);
 
-    if (contentsize) {
+  if (contentsize) {
     const content = block.querySelector('.hero-dropdown-content > div');
     if (content) {
       switch (contentsize) {
