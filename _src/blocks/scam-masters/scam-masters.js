@@ -168,6 +168,8 @@ function processSpecialParagraphs(question, index) {
  */
 function decorateAnswersList(question, questionIndex) {
   const answersList = question.querySelector('ul');
+
+  // this is a clickable question or a question where we want a list after you answer
   if (question.querySelector('h6')) {
     return;
   }
@@ -662,6 +664,62 @@ function showResult(question, results) {
   }
 }
 
+function decorateScamButtons(question, index) {
+  // Create flex container for scam/no-scam buttons
+  const scamLink = question.querySelector('a[href="#scam"]');
+  const noScamLink = question.querySelector('a[href="#no-scam"]');
+
+  if (scamLink && noScamLink) {
+    const scamParent = scamLink.parentElement;
+    const noScamParent = noScamLink.parentElement;
+
+    // Ensure both parents exist and have the same parent
+    if (scamParent && noScamParent && scamParent.parentElement === noScamParent.parentElement) {
+      // Create a flex container
+      const buttonContainer = document.createElement('div');
+      buttonContainer.classList.add('scam-buttons-container');
+
+      // Get the common parent and remember the position of the first button
+      const commonParent = scamParent.parentElement;
+      const referenceElement = scamParent;
+
+      // Insert the container exactly where the first button was
+      commonParent.insertBefore(buttonContainer, referenceElement);
+
+      // Move both button parents into the container
+      buttonContainer.appendChild(scamParent);
+      buttonContainer.appendChild(noScamParent);
+    }
+
+    // Helper function to setup button behavior
+    const setupButton = (button) => {
+      if (button.textContent.startsWith('correct: ')) {
+        button.classList.add('correct');
+        button.textContent = button.textContent.replace('correct: ', '');
+      }
+
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (userAnswers.has(index)) return;
+
+        const isCorrect = button.classList.contains('correct');
+        userAnswers.set(index, isCorrect);
+
+        if (isCorrect) {
+          score += 1;
+          showCorrect(question, index);
+        } else {
+          showWrong(question, index);
+        }
+      });
+    };
+
+    // Setup both buttons
+    setupButton(scamLink);
+    setupButton(noScamLink);
+  }
+}
+
 function decorateQuestions(questions, results) {
   questions.forEach((question, index) => {
     question.classList.add('question');
@@ -671,8 +729,9 @@ function decorateQuestions(questions, results) {
     processSpecialParagraphs(question, index);
     decorateAnswersList(question, index);
     decorateClickQuestions(question, index);
+    decorateScamButtons(question, index);
 
-    // Hide all questions initially except the first one
+    // Hide all questions initially
     question.style.display = 'none';
 
     if (index < questions.length) {
