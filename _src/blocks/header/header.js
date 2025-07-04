@@ -236,7 +236,7 @@ function renderDesktopHeader(block, nav) {
   if (navSections) {
     decorateBlockWithRegionId(navSections, 'Main Menu|General Links');
     const loginLink = document.querySelector('.nav-sections p:last-child');
-    loginLink.addEventListener('click', (e) => {
+    loginLink?.addEventListener('click', (e) => {
       e.preventDefault();
       handleLoginClick();
     });
