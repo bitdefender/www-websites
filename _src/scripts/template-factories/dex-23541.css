@@ -436,7 +436,8 @@
             }
 
             .columns-wrapper {
-                max-width: 1390px;
+                max-width: 1290px;
+                padding: 0 20px;
 
                 .tag-green {
                     background-color: #026DFF;
@@ -465,7 +466,7 @@
                         display: inline-block;
 
                         &:nth-of-type(2) {
-                            width: calc(100% - 55px);
+                            width: calc(100% - 44px);
                         }
 
                         &:nth-of-type(3) {
@@ -477,7 +478,7 @@
                     }
 
                     strong {
-                        font-size: var(--heading-font-size-xs);
+                        font-size: var(--heading-font-size-xxs);
                         line-height: 27px;
                         vertical-align: middle;
                     }
@@ -1169,6 +1170,16 @@
             &::after {
                 content: url("/_src/icons/minus-sharp-regular.svg");
                 filter: invert(21%) sepia(100%) saturate(3034%) hue-rotate(210deg) brightness(99%) contrast(102%);
+            }
+        }
+    }
+}
+
+@media (min-width: 1400px) {
+    .dex-23541 {
+        .dex-copilot-benefits {
+            .columns-wrapper {
+                padding: 0
             }
         }
     }
