@@ -69,7 +69,10 @@ class StatusMessageFactory {
 
 function changeTexts(block, result, statusTitles) {
   const titleText = statusTitles[result.status.toLowerCase()] || statusTitles.default;
-  block.querySelector('h1').textContent = titleText;
+  const h1 = block.querySelector('h1');
+  if (h1) {
+    h1.textContent = titleText;
+  }
 }
 
 const isValidUrl = (urlString) => {
@@ -143,7 +146,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
-async function resetChecker(block, titleText = 'Is This Link Really Safe?') {
+async function resetChecker(block, titleText = '') {
   const classesToRemove = ['danger', 'safe'];
   const section = block.closest('.section');
 
@@ -161,7 +164,9 @@ async function resetChecker(block, titleText = 'Is This Link Really Safe?') {
   input.removeAttribute('disabled');
   input.value = '';
   result.className = 'result';
-  h1.textContent = titleText;
+  if (h1) {
+    h1.textContent = titleText;
+  }
 
   AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
   AdobeDataLayerService.push(new UserDetectedEvent());
