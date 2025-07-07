@@ -149,7 +149,7 @@
                     bottom: 20px;
                     right: 20px;
                     color: white;
-                    font-weight: var(--font-weight-bolder);
+                    font-weight: var(--font-weight-boldest);
                     font-size: var(--heading-font-size-l);
                     font-family: "IBM Plex Sans", sans-serif;
                 }
@@ -202,7 +202,7 @@
             color: black !important;
             font-size: var(--heading-font-size-l);
             line-height: 42px;
-            font-weight: var(--font-weight-bolder);
+            font-weight: var(--font-weight-boldest);
             background-color: #f0f7ff !important;
             border-radius: 0;
             position: relative;
@@ -257,8 +257,16 @@
                 }
 
                 .button-container {
+                    height: 44px;
+
                     a {
+                        height: 44px;
                         padding: 12px 18px 12px 27px;
+
+                        span {
+                            font-size: var(--body-font-size-l);
+                            line-height: 20px;
+                        }
                     }
                 }
             }
@@ -551,6 +559,10 @@
             .tabs-component {
                 margin-top: 0;
 
+                div, button, p, span, h1, h2, h3 {
+                    font-family: var(--body-font-family);
+                }
+
                 .title-class, .subtitle-class {
                     max-width: 630px;
                     margin-bottom: 32px;
@@ -629,6 +641,7 @@
                 padding-top: 32px;
                 padding-bottom: 64px;
                 gap: 0;
+                background-color: #F0F7FF;
 
                 h3 {
                     font-size: var(--heading-font-size-l);
@@ -673,6 +686,10 @@
 
         .bitdef-vs-brands-container {
             margin-bottom: 65px;
+
+            div, button, p, span, h1, h2, h3, tr,  td {
+                font-family: var(--body-font-family) !important;
+            }
 
             table .row-3 .same-line.animate-row1 {
                 animation: increase-width-row1-full-width 1s forwards !important;
@@ -965,6 +982,10 @@
 
         .questions-answers-container {
             margin-bottom: 50px;
+
+            .questions-answers-item {
+                background-color: #F0F7FF;
+            }
 
             .questions-answers-item .question {
                 line-height: 23px;
