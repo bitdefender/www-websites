@@ -434,6 +434,7 @@ export default async function decorate(block) {
   if (blockParent.classList.contains('show-more-show-less')) {
     const benefitsLists = block.querySelectorAll('.benefitsLists');
     const btnWrappers = [];
+    let anchorButtons = document.querySelectorAll('.tabs-component .button');
 
     benefitsLists.forEach((benefits) => {
       const btnWrapper = document.createElement('div');
@@ -460,6 +461,20 @@ export default async function decorate(block) {
           btnWrapper.textContent = shouldExpand ? blockParent.getAttribute('data-show-less') : blockParent.getAttribute('data-show-more');
           btnWrapper.className = shouldExpand ? 'show-less-btn' : 'show-more-btn';
           btnWrapper.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
+        });
+      });
+    });
+
+    anchorButtons.forEach((anchorButton) => {
+      anchorButton.addEventListener('click', () => {
+        document.getElementById('switchCheckbox').checked = true;
+        let familyBoxes = block.querySelectorAll('.family-box');
+        familyBoxes.forEach((box) => {
+          box.style.display = 'block';
+        });
+        let individualBoxes = block.querySelectorAll('.individual-box');
+        individualBoxes.forEach((box) => {
+          box.style.display = 'none';
         });
       });
     });
