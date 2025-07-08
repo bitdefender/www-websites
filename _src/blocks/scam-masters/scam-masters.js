@@ -4,6 +4,7 @@ const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
 const wrongAnswersText = new Map();
 const showAfterAnswerText = new Map();
+const showBeforeListText = new Map();
 const userAnswers = new Map();
 const clickAttempts = new Map();
 const shareTexts = new Map();
@@ -62,6 +63,29 @@ function decorateStartPage(startBlock) {
 
     ul = ul.replaceWith(legalDiv);
   }
+
+  const isAcqVariant = startBlock.closest('.acq-quiz');
+  if (isAcqVariant) {
+    const secondDiv = startBlock.querySelector('div:nth-of-type(2)');
+    if (secondDiv) {
+      const paragraphs = secondDiv.querySelectorAll('p');
+      const contentDiv = document.createElement('div');
+      contentDiv.classList.add('start-content');
+      // for every 2 paragraphs, wrap them in a div, but not the paragraph that contains a picture
+      paragraphs.forEach((paragraph, index) => {
+        if (!paragraph.querySelector('picture')) {
+          if (index % 2 === 0) {
+            const wrapper = document.createElement('div');
+            wrapper.appendChild(paragraph);
+            contentDiv.appendChild(wrapper);
+          } else {
+            contentDiv.lastChild.appendChild(paragraph);
+          }
+        }
+      });
+      secondDiv.prepend(contentDiv);
+    }
+  }
 }
 
 /**
@@ -83,10 +107,11 @@ function processStyledText(html) {
   return processedHtml;
 }
 
-function createAfterAnswerParagraph(message) {
+function createNewParagraph(message, className) {
+  if (!message) return '';
   const p = document.createElement('p');
-  p.setAttribute('data-type', 'show-after-answer-text');
-  p.classList.add('show-after-answer-text');
+  p.setAttribute('data-type', className);
+  p.classList.add(className);
   p.innerHTML = `<strong>${processStyledText(message)}</strong>`;
   return p;
 }
@@ -132,6 +157,11 @@ function processSpecialParagraphs(question, index) {
         showAfterAnswerText.set(index, message);
       }
 
+      if (cellText.startsWith('show-before-list-text:')) {
+        const message = cellText.split('show-before-list-text:')[1].trim();
+        showBeforeListText.set(index, message);
+      }
+
       if (cellText.startsWith('share-text:')) {
         let message = cellText.split('share-text:')[1].trim();
         message = decodeURIComponent(message);
@@ -168,6 +198,8 @@ function processSpecialParagraphs(question, index) {
  */
 function decorateAnswersList(question, questionIndex) {
   const answersList = question.querySelector('ul');
+  const secondaryAnswersList = question.querySelector('ul:nth-of-type(2)');
+  secondaryAnswersList?.classList.add('secondary-answers-list');
 
   // this is a clickable question or a question where we want a list after you answer
   if (question.querySelector('h6')) {
@@ -247,7 +279,7 @@ function decorateAnswersList(question, questionIndex) {
         nextButton.style.display = '';
       }
 
-      answersList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
+      answersList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
     });
   });
 }
@@ -324,6 +356,7 @@ function showWrong(question, questionIndex) {
   const questionContent = question.querySelector('.question-content');
   questionContent.classList.add('wrong-answer');
   const answerList = question.querySelector('.answers-list');
+  const secondaryAnswersList = question.querySelector('.secondary-answers-list');
   const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
   const continueButton = question.querySelector('a[href="#continue"]');
   const triesCounter = question.querySelector('.tries');
@@ -338,7 +371,12 @@ function showWrong(question, questionIndex) {
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
 
-  answerList.style.display = 'block';
+  if (secondaryAnswersList) {
+    secondaryAnswersList.style.display = 'block';
+  } else {
+    answerList.style.display = 'block';
+  }
+
   if (notAScamButton) {
     notAScamButton.style.display = 'none';
   }
@@ -358,7 +396,13 @@ function showWrong(question, questionIndex) {
   const explanation = document.createElement('div');
   explanation.classList.add('explanation');
   explanation.innerHTML = processStyledText(showAfterAnswerText.get(questionIndex));
-  answerList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
+  if (secondaryAnswersList) {
+    secondaryAnswersList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
+    secondaryAnswersList.prepend(createNewParagraph(showBeforeListText.get(questionIndex), 'show-before-list-text'));
+  } else {
+    answerList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
+    answerList.prepend(createNewParagraph(showBeforeListText.get(questionIndex), 'show-before-list-text'));
+  }
 }
 
 function showCorrect(question, questionIndex) {
@@ -394,7 +438,7 @@ function showCorrect(question, questionIndex) {
     questionScamTag.style.display = 'flex';
   }
 
-  answerList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
+  answerList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
 }
 
 function decorateClickQuestions(question, index) {
