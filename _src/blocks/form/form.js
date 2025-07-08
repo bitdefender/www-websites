@@ -204,6 +204,46 @@ export async function createForm(formURL) {
 }
 
 export default async function decorate(block) {
-  const form = await createForm(block.textContent.trim());
-  if (form) block.append(form);
+  // Define the callback function BEFORE loading the script
+  window.onloadTurnstileCallback = function onloadTurnstileCallback() {
+    window.turnstile.render('#example-container', {
+      sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
+      async callback(token) {
+        // eslint-disable-next-line no-console
+        console.log(`Challenge Success ${token}`);
+        const body = {
+          file: '/sites/common/abc.xlsx',
+          table: 'Table1',
+          row: {
+            Column1: 'test - nou matei 5',
+            Column2: 'test2 - nou matei 5',
+            Column3: 'test - nou matei 5',
+            Column4: 'test2 - nou matei 5',
+          },
+          token,
+        };
+        const response = await fetch('https://stage.bitdefender.com/form', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ body }),
+        });
+        const data = await response.json();
+        // eslint-disable-next-line no-console
+        console.log('Response from form submission:', data);
+      },
+    });
+  };
+
+  // Create the container div for Turnstile
+  const turnstileContainer = document.createElement('div');
+  turnstileContainer.id = 'example-container';
+  block.appendChild(turnstileContainer);
+
+  // Load the Turnstile script with the onload callback
+  const script = document.createElement('script');
+  script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+  script.defer = true;
+  document.head.appendChild(script);
 }
