@@ -84,6 +84,10 @@
   color:rgb(0 0 0);
 }
 
+.products.personalisation-fragment p:has(strong) {
+  margin-bottom: 5px;
+}
+
 .v2 .product-card p:last-of-type {
   line-height: 16px;
 }
@@ -274,12 +278,6 @@
   filter: invert(78%) sepia(11%) saturate(298%) hue-rotate(183deg) brightness(83%) contrast(87%);
 }
 
-.products.personalisation-fragment .product-card .icon {
-  height: 44px;
-  width: 44px;
-  filter: none;
-  margin-bottom: 10px;
-}
 
 .products.personalisation-fragment table {
   margin-top: 20px;
@@ -299,9 +297,18 @@
   width: 100%;
 }
 
+.products.personalisation-fragment .icon {
+  height: 44px;
+  width: 44px;
+  filter: none;
+  margin-bottom: 10px;
+}
+
 .products.personalisation-fragment table:last-of-type{
   margin-bottom: 10px;
 }
+
+
 
 
 .product-card li a {
@@ -310,7 +317,6 @@
 }
 
 .products.personalisation-fragment  table a {
-  border: #000 solid 1px;
   color: #000;
   font-weight: 500;
   padding: 8px 28px;
@@ -319,6 +325,7 @@
   text-align: center;
   justify-content: center;
   width: 100%;
+  border: #000 solid 2px;
 
   &:hover {
     text-decoration: none;
@@ -327,9 +334,14 @@
 
 .products.personalisation-fragment table td:first-of-type a {
   background-color: #eb0000;
+  border: solid 2px  #eb0000;
   color: #fff;
-  border: transparent;
   width: 100%;
+
+   &:hover {
+    text-decoration: none;
+    filter: brightness(0.85) !important;
+  }
 }
 
 .product-card ul {
@@ -746,6 +758,19 @@
   content: none;
 }
 
+.products-container .blue-pill .icon {
+  position: relative;
+  top: 1.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0;
+  width: 14px;
+  height: 14px;
+  fill: #fff;
+}
+
 .products.compare .product-card .icon {
   width: 22px;
   height: 22px;
@@ -777,6 +802,22 @@
 
 .products.compare .product-card.featured .button-text {
   font-size: var(--body-font-size-m);
+}
+
+.products-container .blue-pill {
+  background-color: #026DFF;
+  padding:5px 10px;
+  border-radius: 20px;
+  color: white;
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0;
+  font-weight: bold;
+  display: inline-flex;
+  justify-content: center;
+  width: auto;
+  gap: 5px;
+  margin-bottom: 10px;
 }
 
 @media (width >= 992px) {

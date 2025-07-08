@@ -18,6 +18,11 @@ function getDivBasedOnFirstParagraph(block, searchText) {
       firstParagraph.remove();
       return true;
     }
+
+    if (div.textContent.includes(searchText)) {
+      div.remove();
+      return true;
+    }
     return false;
   });
 
@@ -90,7 +95,7 @@ export default function decorate(block) {
   // block.closest('.section').prepend(breadcrumb);
 
   const privacyPolicyRow = getDivBasedOnFirstParagraph(block, '<privacy-policy>');
-  privacyPolicyRow.classList.add('privacy-policy');
+  privacyPolicyRow?.classList.add('privacy-policy');
 
   const passwordGeneratorRow = getDivBasedOnFirstParagraph(block, '<password-generator>');
   passwordGeneratorRow.classList.add('password-generator-grid');
@@ -123,23 +128,23 @@ export default function decorate(block) {
         </div>
         <div class="form-checkboxes">
           <div>
-            <input type="checkbox" id="uppercase" name="uppercase" checked />  
-            <label for="uppercase">${checkboxList.children[0].textContent}</label>
+            ${checkboxList.children[0]?.textContent ? `<input type="checkbox" id="uppercase" name="uppercase" checked />  
+            <label for="uppercase">${checkboxList.children[0].textContent}</label>` : ''}
           </div>
           <div>
-            <input type="checkbox" id="lowercase" name="lowercase" checked />  
-            <label for="lowercase">${checkboxList.children[1].textContent}</label>
+            ${checkboxList.children[1]?.textContent ? `<input type="checkbox" id="lowercase" name="lowercase" checked />  
+            <label for="lowercase">${checkboxList.children[1].textContent}</label>` : ''}
           </div>
           <div>
-            <input type="checkbox" id="numbers" name="numbers" checked />  
-            <label for="numbers">${checkboxList.children[2].textContent}</label>
+            ${checkboxList.children[2]?.textContent ? `<input type="checkbox" id="numbers" name="numbers" checked />  
+            <label for="numbers">${checkboxList.children[2].textContent}</label>` : ''}
           </div>
           <div>
-            <input type="checkbox" id="special" name="special" checked />  
-            <label for="special">${checkboxList.children[3].textContent}</label>
+            ${checkboxList.children[3]?.textContent ? ` <input type="checkbox" id="special" name="special" checked />  
+            <label for="special">${checkboxList.children[3].textContent}</label> ` : ''}
           </div>
         </div>
-        <p class="password-strength">${passwordStrengthText.innerHTML}<p>
+        <p class="password-strength">${passwordStrengthText?.innerHTML}<p>
     </div>
   `;
 

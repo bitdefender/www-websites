@@ -572,6 +572,10 @@
   content: none;
 }
 
+.new-prod-boxes-container .button.secondary.no-arrow::after {
+  content: none;
+}
+
 .new-prod-boxes-container .button.primary:hover {
   color: white;
   background-color: #B10304;

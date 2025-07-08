@@ -135,6 +135,41 @@ export function checkIfNotProductPage() {
   return Constants.NONE_PRODUCT_PAGES.includes(page.name);
 }
 
+/* eslint-disable max-len */
+export function addScript(src, data = {}, loadStrategy = undefined, onLoadCallback = undefined, onErrorCallback = undefined, type = undefined) {
+  const s = document.createElement('script');
+
+  s.setAttribute('src', src);
+
+  if (loadStrategy) {
+    s.setAttribute(loadStrategy, true);
+  }
+
+  if (type) {
+    s.setAttribute('type', type);
+  }
+
+  if (typeof data === 'object' && data !== null) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in data) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (data.hasOwnProperty(key)) {
+        s.dataset[key] = data[key];
+      }
+    }
+  }
+
+  if (onLoadCallback) {
+    s.onload = onLoadCallback;
+  }
+
+  if (onErrorCallback) {
+    s.onerror = onErrorCallback;
+  }
+
+  document.body.appendChild(s);
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export function createTag(tag, attributes, html) {
   const el = document.createElement(tag);
@@ -836,8 +871,10 @@ export const generatePageLoadStartedName = () => {
   } else {
     const allSegments = pathname.split('/').filter((segment) => segment !== '');
     const lastSegment = allSegments[allSegments.length - 1];
-    const subSubSubSection = allSegments[allSegments.length - 1].replace('-', ' ');
-    tagName = `${locale}:product:${subSubSubSection}`;
+    // eslint-disable-next-line no-multi-assign
+    const subSubSubSection = allSegments[allSegments.length - 1] = allSegments[allSegments.length - 1].replace(/-/g, ' ');
+    const nameSection = lastSegment === 'subscriber-protection-platform' ? 'partners' : 'product';
+    tagName = `${locale}:${nameSection}:${subSubSubSection}`;
     if (lastSegment === 'consumer') {
       tagName = `${locale}:consumer:solutions`;
     }

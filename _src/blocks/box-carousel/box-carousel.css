@@ -20,6 +20,7 @@
 .box-carousel-container .carousel-header .left-arrow.disabled,
 .box-carousel-container .carousel-header .right-arrow.disabled {
     opacity: 0.3;
+    pointer-events: none;
 }
 
 .box-carousel-container .carousel-header .left-arrow,
@@ -31,16 +32,31 @@
     width: 100%;
     position: relative;
     display: flex;
+    overflow: hidden;
+    flex-direction: column;
 }
 
 .box-carousel-container .carousel {
-    display: grid;
-    grid-auto-flow: column;
-    transition: transform 150ms cubic-bezier(0.165, 0.84, 0.44, 1) 0s;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;       /* Firefox */
+    -ms-overflow-style: none;
 }
 
 .box-carousel-container .block.scrollable .carousel {
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.box-carousel-container .carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .box-carousel-container .block.scrollable .carousel::-webkit-scrollbar {
@@ -48,9 +64,9 @@
 }
 
 .box-carousel-container .carousel-item {
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 4;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
     width: 220px;
     height: 100%;
     margin: 10px;
@@ -64,11 +80,14 @@
     border: solid 1px black;
 }
 
-.box-carousel-container.testimonials .carousel-item {
-    width: 300px;
+.box-carousel-container.testimonials .box-carousel:not(.trusted-carousel) .carousel-item {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
     border: solid 1px #ddd;
     background: white;
     position: relative;
+    min-height: fit-content;
 }
 
 .box-carousel-container .carousel-item:first-child {
@@ -96,7 +115,6 @@
 
 .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
     font: normal normal bold 14px/21px "IBM Plex Sans", sans-serif;
-    margin-top: auto;
     position: relative;
 }
 
@@ -113,6 +131,72 @@
 .box-carousel-container.testimonials .carousel-item .subtitle {
     margin-top: unset;
     color: #242424;
+}
+
+.box-carousel-container.testimonials .trusted-carousel .carousel-container {
+    background-color: #F4FAFF;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 0;
+    flex-direction: column;
+}
+
+.box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel {
+    display: flex;
+    width: 100%;
+}
+
+.box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: transparent;
+    border: none;
+    align-items: center;
+    text-align: center !important;
+}
+
+.box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item img {
+    height: 53px;
+    max-width: 200px;
+}
+
+.box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item .title {
+    font-size: 17px;
+    font-weight: 600;
+    width: 80%;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.box-carousel-container.testimonials .carousel-container .carousel-nav {
+    flex-direction: row;
+    display: none;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.box-carousel-container.testimonials .carousel-container .carousel-nav .navigation-item{
+    height: 9px;
+    width: 9px;
+    border-radius: 50%;
+    background-color:#C1DAFF;
+}
+
+.box-carousel-container.testimonials .carousel-container .carousel-nav .navigation-item.active{
+    height: 13px;
+    width: 13px;
+    border-radius: 50%;
+    background-color: #006DFF;
+}
+
+.box-carousel-container.testimonials .trusted-carousel .img-container img{
+    filter: none;
+}
+
+.box-carousel-container.testimonials .trusted-carousel .arrows {
+    display: none;
 }
 
 .box-carousel-container .left-arrow svg {
@@ -156,6 +240,11 @@
     width: unset;
 }
 
+.box-carousel-container ul {
+    padding-left: 0;
+    display: grid;
+    grid-auto-flow: column;
+}
 
 @media screen and (min-width: 768px) {
     .box-carousel-container .carousel-header {
@@ -167,6 +256,14 @@
         width: 60%;
     }
 
+    .box-carousel-container.testimonials .trusted-carousel .carousel-container {
+        padding: 40px 20px;
+    }
+
+    .box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item img {
+        height: 73px;
+        max-width: unset;
+    }
 
     .box-carousel-container .carousel-item .subtitle {
         font: normal normal normal 18px/23px "IBM Plex Sans", sans-serif;
@@ -183,10 +280,11 @@
     }
 
 
-    .box-carousel-container .carousel-item .title {
-        font-size: 19px;
+    .box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-item .title {
+        font-size: 26px;
         color: #242424;
-        font-weight: 500;
+        margin-top: 12px;
+        margin-bottom: 42px;
     }
 
     .box-carousel-container.testimonials .carousel-item .subtitle {
@@ -195,6 +293,10 @@
 
     .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
         font-size: 18px;
+    }
+
+    .box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-nav {
+        display: flex;
     }
 
     .box-carousel-container:not(.testimonials) .carousel-item:hover {

@@ -13,9 +13,24 @@ main .quote-carousel .slides-container {
   overflow: hidden;
 }
 
-@media (min-width: 596px) {
-  main .quote-carousel .slides-container {
-    margin-bottom: 50px;
+main .quote-carousel-container .has-multi-imgs .left-col, main .quote-carousel-container .has-multi-imgs .right-col {
+  width: 50%;
+  flex: 0 0 50%;
+}
+
+main .quote-carousel-container .has-multi-imgs .right-col picture {
+  display: none;
+}
+main .quote-carousel-container .has-multi-imgs .right-col picture img {
+  height: auto;
+}
+main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type {
+  display: block;
+}
+
+@media (max-width: 992px) {
+  main .quote-carousel-container .has-multi-imgs .left-col, main .quote-carousel-container .has-multi-imgs .right-col {
+    width: 100%;
   }
 }
 
@@ -173,12 +188,13 @@ main .quote-carousel .slides-container {
   display: flex;
   list-style: none;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .slides-container .slides-dots li {
   display: inline-block;
   border: 0;
-  border-radius: 50%;
+  border-radius: 10%;
   padding: 0 5px;
   margin: 0;
   font-size: 0;
@@ -216,5 +232,21 @@ main .quote-carousel .slides-container {
 @media (max-width: 992px) {
   main .quote-carousel {
     margin-top: 0;
+  }
+  main .quote-carousel-container .has-multi-imgs .right-col picture img {
+    width: 100%;
+    height: auto;
+  }
+}
+@media (max-width: 767px) {
+  main .quote-carousel-container .has-multi-imgs .right-col picture img {
+    width: 100%;
+    height: auto;
+    margin-bottom: -1em;
+  }
+
+  /* stylelint-disable-next-line selector-id-pattern */
+  #customQuoteCarousel .slides-container .slides-dots li {
+    border-radius: 8px;
   }
 }

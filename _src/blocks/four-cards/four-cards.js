@@ -35,5 +35,7 @@ export default async function decorate(block) {
   }
 
   matchHeights(block, 'h3');
+  matchHeights(block, 'h4');
   matchHeights(block, 'div[data-valign="middle"] > p:first-of-type:not(:has(.icon))');
+  matchHeights(block, 'div[data-valign="middle"] > p:nth-of-type(2):not(:has(.icon))');
 }

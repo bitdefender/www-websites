@@ -639,6 +639,34 @@
   color: #006DFF;
 }
 
+.columns-container.trusted-section .columns {
+  padding:0;
+}
+
+.columns-container.trusted-section .columns h2{
+  color: #fff;
+}
+
+.columns-container.trusted-section .columns .button-container a{
+  color: #fff;
+  border-color: #fff;
+  background: transparent !important;
+}
+
+.columns-container.trusted-section .columns .button-container a:hover {
+  background:  #006dff !important;
+}
+
+.columns-container.trusted-section img {
+  position: absolute;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  z-index: -1;
+}
+
 .columns-container.down-arrow-button {
   p em a {
     color: #006DFF;
@@ -869,6 +897,10 @@
     flex-direction: unset;
     gap: 32px;
     align-items: stretch;
+  }
+
+  .columns-container.trusted-section .columns {
+    padding: 100px 0;
   }
 
   .columns-container.avfree .columns.benefits {

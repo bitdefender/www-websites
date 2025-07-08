@@ -38,6 +38,9 @@
     height: 100%;
 }
 
+.big-teaser-section-container p {
+    color: #5E5E5E;
+}
 
 @media screen and (min-width: 768px) {
     .big-teaser-section-container.pb-0 {
@@ -103,7 +106,7 @@
     }
 
     .big-teaser-section-container .imgs-wrapper {
-        height: 550px;
+        height: 816px;
     }
 
     .big-teaser-section-container .rte {
