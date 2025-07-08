@@ -212,7 +212,7 @@ export default async function decorate(block) {
         try {
           // eslint-disable-next-line no-console
           console.log(`Challenge Success ${token}`);
-          const body = {
+          const requestData = {
             file: '/sites/common/abc.xlsx',
             table: 'Table1',
             row: {
@@ -223,17 +223,27 @@ export default async function decorate(block) {
             },
             token,
           };
+
+          // eslint-disable-next-line no-console
+          console.log('Sending request data:', requestData);
+
           const response = await fetch('https://stage.bitdefender.com/form', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ body }),
+            body: JSON.stringify(requestData),
           });
 
           // Check if response is ok and content type is JSON
           if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // Log the full response for debugging
+            const errorText = await response.text();
+            // eslint-disable-next-line no-console
+            console.error(`HTTP ${response.status} Error:`, errorText);
+            // eslint-disable-next-line no-console
+            console.error('Response headers:', [...response.headers.entries()]);
+            throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
           }
 
           const contentType = response.headers.get('content-type');
