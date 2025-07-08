@@ -16,7 +16,7 @@ export default function decorate(block) {
     const name = fieldName.toLowerCase().replace(/\s+/g, '');
     const isMandatory = fieldMandatory.trim() === '*';
 
-    const isStandalone = ['title', 'success_message', 'recaptcha', 'normaltext', 'textarea', 'submit', 'checkbox'].includes(fieldType);
+    const isStandalone = ['title', 'success_message', 'recaptcha', 'normal_text', 'textarea', 'submit', 'checkbox'].includes(fieldType);
 
     const inputBox = document.createElement('div');
     inputBox.className = 'inputBox';
@@ -42,7 +42,7 @@ export default function decorate(block) {
         });
       };
     } else if (fieldType === 'normal_text') {
-      inputBox.classList.add('normalText');
+      inputBox.classList.add('normal_text');
       inputBox.innerHTML = fieldNameEl?.innerHTML;
     } else if (fieldType === 'textarea') {
       inputBox.classList.add('inputTextarea');
@@ -61,9 +61,56 @@ export default function decorate(block) {
       inputBox.innerHTML = `
         <label class="input-checkbox">
           <input type="checkbox" id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''}>
-          ${fieldName}
+          ${fieldNameEl?.innerHTML}
         </label>
         <em class="input-err">${fieldValidation}</em>
+      `;
+    } else if (fieldType === 'checkboxes') {
+      inputBox.classList.add('checkboxes');
+      const labelNameEl = fieldNameEl?.querySelector('p');
+      const labelChecksEl = fieldNameEl?.querySelector('ul');
+      const checkItems = labelChecksEl ? Array.from(labelChecksEl.querySelectorAll('li')) : [];
+
+      let checkboxesHTML = '';
+      checkItems.forEach((item, index) => {
+        const checkboxId = `input-${name}-${index}`;
+        checkboxesHTML += `
+          <label class="input-checkbox">
+            <input type="checkbox" id="${checkboxId}" name="${name}" ${isMandatory ? 'required' : ''}>
+            ${item.innerHTML}
+          </label>
+        `;
+      });
+
+      inputBox.innerHTML = `
+        <p class="fake_label">${labelNameEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
+        <div class="all-checks">
+          ${checkboxesHTML}
+        </div>
+        <em class="input-err">${fieldValidation}</em>
+      `;
+    } else if (fieldType === 'select') {
+      inputBox.classList.add('selectors');
+      const labelNameEl = fieldNameEl?.querySelector('p');
+      const selectOptionsEl = fieldNameEl?.querySelector('ul');
+      const options = selectOptionsEl ? Array.from(selectOptionsEl.querySelectorAll('li')) : [];
+
+      const selectId = `select-${name}`;
+      let optionsHTML = options.map((item) => {
+        return `<option value="${item.textContent.trim()}">${item.innerHTML}</option>`;
+      }).join('');
+
+      inputBox.innerHTML = `
+        <p class="fake_label">${labelNameEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
+        <select id="${selectId}" name="${name}" ${isMandatory ? 'required' : ''}>
+          ${optionsHTML}
+        </select>
+        <em class="input-err">${fieldValidation}</em>
+      `;
+    } else if (fieldType === 'fake_input') {
+      inputBox.classList.add('fake_input');
+      inputBox.innerHTML = `
+        <label for="input-fake"></label>
       `;
     } else {
       inputBox.innerHTML = `
@@ -109,47 +156,86 @@ export default function decorate(block) {
     e.preventDefault();
 
     let isValid = true;
-    const inputs = formBox.querySelectorAll('input, textarea');
+    const inputs = formBox.querySelectorAll('input, textarea, select');
 
     inputs.forEach((input) => {
-      const errorEl = input.closest('.inputBox')?.querySelector('.input-err');
+      const inputBox = input.closest('.inputBox') || input.closest('.checkboxes') || input.closest('.selectors');
+      const errorEl = inputBox?.querySelector('.input-err');
       if (!errorEl) return;
 
-      let message = '';
-      if (input.hasAttribute('required') && !input.value.trim()) {
-        message = 'This field is required.';
+      let showError = false;
+
+      if (input.type === 'checkbox' && input.required && !input.checked) {
+        console.log('1', input)
+        showError = true;
+      } else if (input.tagName === 'SELECT' && input.required && (!input.value || input.value.trim() === '')) {
+        showError = true;
+        console.log('2')
+      } else if (input.tagName === 'TEXTAREA' && input.required && !input.value.trim()) {
+        showError = true;
+        console.log('3')
+      } else if (input.hasAttribute('required') && !input.value.trim()) {
+        showError = true;
+        console.log('4')
       } else if (input.type === 'email') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (input.value && !emailRegex.test(input.value)) {
-          message = 'Invalid email format.';
+          showError = true;
+          console.log('5')
         }
-      } else if (input.type === 'number') {
-        if (input.value && isNaN(input.value)) {
-          message = 'Must be a number.';
-        }
+      } else if (input.type === 'number' && input.value && isNaN(input.value)) {
+        showError = true;
+        console.log('6')
       }
 
-      if (message) {
-        errorEl.textContent = message;
+      if (showError) {
         errorEl.style.display = 'block';
         isValid = false;
+        console.log('isValid 1')
       } else {
-        errorEl.textContent = '';
         errorEl.style.display = 'none';
       }
     });
 
+    // Checkbox groups (checkboxes)
+    const checkboxGroups = formBox.querySelectorAll('.checkboxes');
+    checkboxGroups.forEach((group) => {
+      const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+      const errorEl = group.querySelector('.input-err');
+      const isRequired = Array.from(checkboxes).some(cb => cb.required);
+
+      if (isRequired) {
+        const isChecked = Array.from(checkboxes).some(cb => cb.checked);
+        if (!isChecked) {
+          errorEl.style.display = 'block';
+          isValid = false;
+          console.log('isValid 2')
+        } else {
+          errorEl.style.display = 'none';
+        }
+      }
+    });
+
     if (isValid) {
-      console.log('✅ Form is valid. Now send with fetch() or show confirmation.');
-      // const formData = new FormData(formBox);
-      // const response = await fetch('/submit-endpoint', {
-      //   method: 'POST',
-      //   body: formData,
-      // });
-      // const result = await response.json();
-      // console.log(result);
+      const formData = new FormData(formBox);
+      console.log('formData ', formData)
+
+      try {
+        console.log('✅ Email trimis cu succes!');
+        formBox.reset();
+
+        // Afișează mesajul de succes, dacă există un bloc de tip success_message
+        const successMsg = formBox.querySelector('#successMessage');
+        if (successMsg) {
+          successMsg.style.display = 'block';
+          successMsg.scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch (err) {
+        console.error('❌ Eroare rețea la trimitere', err);
+      }
     }
   });
+
 
   block.innerHTML = '';
   block.appendChild(formBox);
