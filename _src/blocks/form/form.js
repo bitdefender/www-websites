@@ -209,29 +209,48 @@ export default async function decorate(block) {
     window.turnstile.render('#example-container', {
       sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
       async callback(token) {
-        // eslint-disable-next-line no-console
-        console.log(`Challenge Success ${token}`);
-        const body = {
-          file: '/sites/common/abc.xlsx',
-          table: 'Table1',
-          row: {
-            Column1: 'test - nou matei 5',
-            Column2: 'test2 - nou matei 5',
-            Column3: 'test - nou matei 5',
-            Column4: 'test2 - nou matei 5',
-          },
-          token,
-        };
-        const response = await fetch('https://stage.bitdefender.com/form', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ body }),
-        });
-        const data = await response.json();
-        // eslint-disable-next-line no-console
-        console.log('Response from form submission:', data);
+        try {
+          // eslint-disable-next-line no-console
+          console.log(`Challenge Success ${token}`);
+          const body = {
+            file: '/sites/common/abc.xlsx',
+            table: 'Table1',
+            row: {
+              Column1: 'test - nou matei 5',
+              Column2: 'test2 - nou matei 5',
+              Column3: 'test - nou matei 5',
+              Column4: 'test2 - nou matei 5',
+            },
+            token,
+          };
+          const response = await fetch('https://stage.bitdefender.com/form', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ body }),
+          });
+
+          // Check if response is ok and content type is JSON
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            // eslint-disable-next-line no-console
+            console.error('Response is not JSON:', text);
+            throw new Error(`Expected JSON response, got: ${contentType}`);
+          }
+
+          const data = await response.json();
+          // eslint-disable-next-line no-console
+          console.log('Response from form submission:', data);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('Error in form submission:', error);
+        }
       },
     });
   };
