@@ -1112,7 +1112,7 @@
             }
 
             .system-requirements-wrapper + .default-content-wrapper > h3 {
-                margin-top: var(--size-64);
+                padding-top: var(--size-64);
                 position: relative;
 
                 &::after {
@@ -1122,7 +1122,7 @@
                     height: var(--size-2);
                     background-color: var(--border-darker-color);
                     left: var(--size-0);
-                    top: -32px;
+                    top: var(--size-32);
                 }
             }
 
@@ -1142,11 +1142,15 @@
                 }
             }
 
-            .button-container a {
-                background-color: unset;
+            .button-container {
+                margin-bottom: var(--size-0);
 
-                &::after {
-                    display: none;
+                a {
+                    background-color: unset;
+
+                    &::after {
+                        display: none;
+                    }
                 }
             }
 
