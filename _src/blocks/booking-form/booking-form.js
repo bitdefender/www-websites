@@ -1,4 +1,4 @@
-export default function decorate(block) {
+function createForm(block) {
   const allFields = [...block.children];
   const formBox = document.createElement('form');
   formBox.setAttribute('novalidate', 'novalidate');
@@ -15,130 +15,127 @@ export default function decorate(block) {
     const fieldMandatory = fieldMandatoryEl?.innerText || '';
     const name = fieldName.toLowerCase().replace(/\s+/g, '');
     const isMandatory = fieldMandatory.trim() === '*';
-
     const isStandalone = ['title', 'success_message', 'recaptcha', 'normal_text', 'textarea', 'submit', 'checkbox'].includes(fieldType);
 
     const inputBox = document.createElement('div');
     inputBox.className = 'inputBox';
 
-    if (fieldType === 'title') {
-      inputBox.id = 'titleBox';
-      inputBox.innerHTML = fieldNameEl?.innerHTML;
-    } else if (fieldType === 'success_message') {
-      inputBox.id = 'successMessage';
-      inputBox.innerHTML = fieldNameEl?.innerHTML;
-    } else if (fieldType === 'recaptcha') {
-      inputBox.id = 'captchaBox';
-      const recaptchaScript = document.createElement('script');
-      recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoadCallback';
-      recaptchaScript.defer = true;
-      document.body.appendChild(recaptchaScript);
-
-      window.onRecaptchaLoadCallback = () => {
-        window.clientId = grecaptcha.render('captchaBox', {
-          sitekey: '6LcEH5onAAAAAH4800Uc6IYdUvmqPLHFGi_nOGeR',
-          badge: 'inline',
-          size: 'invisible',
-        });
-      };
-    } else if (fieldType === 'normal_text') {
-      inputBox.classList.add('normal_text');
-      inputBox.innerHTML = fieldNameEl?.innerHTML;
-    } else if (fieldType === 'textarea') {
-      inputBox.classList.add('inputTextarea');
-      inputBox.innerHTML = `
-        <label for="input-${name}">
-          ${fieldName}${isMandatory ? '<span>*</span>' : ''}
-        </label>
-        <textarea id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''}></textarea>
-        <em class="input-err">${fieldValidation}</em>
-      `;
-    } else if (fieldType === 'button') {
-      inputBox.innerHTML = `
-        <input type="submit" id="input-submit" name="${name}" class="submit-btn" value="${fieldName}">
-      `;
-    } else if (fieldType === 'checkbox') {
-      inputBox.innerHTML = `
-        <label class="input-checkbox">
-          <input type="checkbox" id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''}>
-          ${fieldNameEl?.innerHTML}
-        </label>
-        <em class="input-err">${fieldValidation}</em>
-      `;
-    } else if (fieldType === 'checkboxes') {
-      inputBox.classList.add('checkboxes');
-      const labelNameEl = fieldNameEl?.querySelector('p');
-      const labelChecksEl = fieldNameEl?.querySelector('ul');
-      const checkItems = labelChecksEl ? Array.from(labelChecksEl.querySelectorAll('li')) : [];
-
-      let checkboxesHTML = '';
-      checkItems.forEach((item, index) => {
-        const checkboxId = `input-${name}-${index}`;
-        checkboxesHTML += `
-          <label class="input-checkbox">
-            <input type="checkbox" id="${checkboxId}" name="${name}" ${isMandatory ? 'required' : ''}>
-            ${item.innerHTML}
+    switch (fieldType) {
+      case 'title':
+        inputBox.id = 'titleBox';
+        inputBox.innerHTML = fieldNameEl?.innerHTML;
+        break;
+      case 'success_message':
+        inputBox.id = 'successMessage';
+        inputBox.innerHTML = fieldNameEl?.innerHTML;
+        break;
+      case 'recaptcha':
+        inputBox.id = 'captchaBox';
+        const recaptchaScript = document.createElement('script');
+        recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoadCallback';
+        recaptchaScript.defer = true;
+        document.body.appendChild(recaptchaScript);
+        window.onRecaptchaLoadCallback = () => {
+          window.clientId = grecaptcha.render('captchaBox', {
+            sitekey: '6LcEH5onAAAAAH4800Uc6IYdUvmqPLHFGi_nOGeR',
+            badge: 'inline',
+            size: 'invisible',
+          });
+        };
+        break;
+      case 'normal_text':
+        inputBox.classList.add('normal_text');
+        inputBox.innerHTML = fieldNameEl?.innerHTML;
+        break;
+      case 'textarea':
+        inputBox.classList.add('inputTextarea');
+        inputBox.innerHTML = `
+          <label for="input-${name}">
+            ${fieldName}${isMandatory ? '<span>*</span>' : ''}
           </label>
+          <textarea id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''}></textarea>
+          <em class="input-err">${fieldValidation}</em>
         `;
-      });
+        break;
+      case 'button':
+        inputBox.innerHTML = `
+          <input type="submit" id="input-submit" name="${name}" class="submit-btn" value="${fieldName}">
+        `;
+        break;
+      case 'checkbox':
+        inputBox.innerHTML = `
+          <label class="input-checkbox">
+            <input type="checkbox" id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''}>
+            ${fieldNameEl?.innerHTML}
+          </label>
+          <em class="input-err">${fieldValidation}</em>
+        `;
+        break;
+      case 'checkboxes':
+        inputBox.classList.add('checkboxes');
+        const labelNameEl = fieldNameEl?.querySelector('p');
+        const labelChecksEl = fieldNameEl?.querySelector('ul');
+        const checkItems = labelChecksEl ? Array.from(labelChecksEl.querySelectorAll('li')) : [];
 
-      inputBox.innerHTML = `
-        <p class="fake_label">${labelNameEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
-        <div class="all-checks">
-          ${checkboxesHTML}
-        </div>
-        <em class="input-err">${fieldValidation}</em>
-      `;
-    } else if (fieldType === 'select') {
-      inputBox.classList.add('selectors');
-      const labelNameEl = fieldNameEl?.querySelector('p');
-      const selectOptionsEl = fieldNameEl?.querySelector('ul');
-      const options = selectOptionsEl ? Array.from(selectOptionsEl.querySelectorAll('li')) : [];
+        let checkboxesHTML = '';
+        checkItems.forEach((item, i) => {
+          checkboxesHTML += `
+            <label class="input-checkbox">
+              <input type="checkbox" id="input-${name}-${i}" name="${name}" ${isMandatory ? 'required' : ''}>
+              ${item.innerHTML}
+            </label>
+          `;
+        });
 
-      const selectId = `select-${name}`;
-      let optionsHTML = options.map((item) => {
-        return `<option value="${item.textContent.trim()}">${item.innerHTML}</option>`;
-      }).join('');
+        inputBox.innerHTML = `
+          <p class="fake_label">${labelNameEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
+          <div class="all-checks">${checkboxesHTML}</div>
+          <em class="input-err">${fieldValidation}</em>
+        `;
+        break;
+      case 'select':
+        inputBox.classList.add('selectors');
+        const labelEl = fieldNameEl?.querySelector('p');
+        const selectList = fieldNameEl?.querySelector('ul');
+        const options = selectList ? Array.from(selectList.querySelectorAll('li')) : [];
 
-      inputBox.innerHTML = `
-        <p class="fake_label">${labelNameEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
-        <select id="${selectId}" name="${name}" ${isMandatory ? 'required' : ''}>
-          ${optionsHTML}
-        </select>
-        <em class="input-err">${fieldValidation}</em>
-      `;
-    } else if (fieldType === 'fake_input') {
-      inputBox.classList.add('fake_input');
-      inputBox.innerHTML = `
-        <label for="input-fake"></label>
-      `;
-    } else {
-      inputBox.innerHTML = `
-        <label for="input-${name}" placeholder="${fieldValidation}">
-          ${fieldName}${isMandatory ? '<span>*</span>' : ''}
-        </label>
-        <input id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''} type="${fieldType}" value="">
-        <em class="input-err">${fieldValidation}</em>
-      `;
+        inputBox.innerHTML = `
+          <p class="fake_label">${labelEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
+          <select id="select-${name}" name="${name}" ${isMandatory ? 'required' : ''}>
+            ${options.map(item => `<option value="${item.textContent.trim()}">${item.innerHTML}</option>`).join('')}
+          </select>
+          <em class="input-err">${fieldValidation}</em>
+        `;
+        break;
+      case 'fake_input':
+        inputBox.classList.add('fake_input');
+        inputBox.innerHTML = `<label for="input-fake"></label>`;
+        break;
+      default:
+        inputBox.innerHTML = `
+          <label for="input-${name}" placeholder="${fieldValidation}">
+            ${fieldName}${isMandatory ? '<span>*</span>' : ''}
+          </label>
+          <input id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''} type="${fieldType}" value="">
+          <em class="input-err">${fieldValidation}</em>
+        `;
     }
 
+    const row = document.createElement('div');
+    row.className = 'inputRow';
+    if (fieldType !== 'title' && fieldType !== 'success_message') row.classList.add('inputRow2');
+
     if (isStandalone) {
-      const standaloneRow = document.createElement('div');
-      standaloneRow.className = 'inputRow';
-      if (fieldType !== 'title' || fieldType !== 'success_message') standaloneRow.classList.add('inputRow2');
-      standaloneRow.appendChild(inputBox);
-      formBox.appendChild(standaloneRow);
+      row.appendChild(inputBox);
+      formBox.appendChild(row);
       pendingPair = null;
     } else {
       if (!pendingPair) {
         pendingPair = inputBox;
       } else {
-        const pairRow = document.createElement('div');
-        pairRow.className = 'inputRow';
-        if (fieldType !== 'title' || fieldType !== 'success_message') pairRow.classList.add('inputRow2');
-        pairRow.appendChild(pendingPair);
-        pairRow.appendChild(inputBox);
-        formBox.appendChild(pairRow);
+        row.appendChild(pendingPair);
+        row.appendChild(inputBox);
+        formBox.appendChild(row);
         pendingPair = null;
       }
     }
@@ -151,7 +148,10 @@ export default function decorate(block) {
     formBox.appendChild(finalRow);
   }
 
-  // Validation logic
+  return formBox;
+}
+
+function handleSubmit(formBox) {
   formBox.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -159,84 +159,130 @@ export default function decorate(block) {
     const inputs = formBox.querySelectorAll('input, textarea, select');
 
     inputs.forEach((input) => {
-      const inputBox = input.closest('.inputBox') || input.closest('.checkboxes') || input.closest('.selectors');
-      const errorEl = inputBox?.querySelector('.input-err');
+      const container = input.closest('.inputBox') || input.closest('.checkboxes') || input.closest('.selectors');
+      const errorEl = container?.querySelector('.input-err');
       if (!errorEl) return;
 
       let showError = false;
+      const value = input.value?.trim();
 
-      if (input.type === 'checkbox' && input.required && !input.checked) {
-        console.log('1', input)
-        showError = true;
-      } else if (input.tagName === 'SELECT' && input.required && (!input.value || input.value.trim() === '')) {
-        showError = true;
-        console.log('2')
-      } else if (input.tagName === 'TEXTAREA' && input.required && !input.value.trim()) {
-        showError = true;
-        console.log('3')
-      } else if (input.hasAttribute('required') && !input.value.trim()) {
-        showError = true;
-        console.log('4')
-      } else if (input.type === 'email') {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (input.value && !emailRegex.test(input.value)) {
-          showError = true;
-          console.log('5')
-        }
-      } else if (input.type === 'number' && input.value && isNaN(input.value)) {
-        showError = true;
-        console.log('6')
-      }
+      if (!input.closest('.checkboxes') && input.type === 'checkbox' && input.required && !input.checked) showError = true;
+      else if (input.tagName === 'SELECT' && input.required && !value) showError = true;
+      else if (input.tagName === 'TEXTAREA' && input.required && !value) showError = true;
+      else if (input.hasAttribute('required') && !value) showError = true;
+      else if (input.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) showError = true;
+      else if (input.type === 'number' && value && isNaN(value)) showError = true;
 
-      if (showError) {
+      errorEl.style.display = showError ? 'block' : 'none';
+      if (showError) isValid = false;
+    });
+
+    formBox.querySelectorAll('.checkboxes').forEach(group => {
+      const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+      const errorEl = group.querySelector('.input-err');
+      const isRequired = Array.from(checkboxes).some(cb => cb.required);
+      const isChecked = Array.from(checkboxes).some(cb => cb.checked);
+
+      if (isRequired && !isChecked) {
         errorEl.style.display = 'block';
         isValid = false;
-        console.log('isValid 1')
       } else {
         errorEl.style.display = 'none';
       }
     });
 
-    // Checkbox groups (checkboxes)
-    const checkboxGroups = formBox.querySelectorAll('.checkboxes');
-    checkboxGroups.forEach((group) => {
-      const checkboxes = group.querySelectorAll('input[type="checkbox"]');
-      const errorEl = group.querySelector('.input-err');
-      const isRequired = Array.from(checkboxes).some(cb => cb.required);
+    if (!isValid) return;
 
-      if (isRequired) {
-        const isChecked = Array.from(checkboxes).some(cb => cb.checked);
-        if (!isChecked) {
-          errorEl.style.display = 'block';
-          isValid = false;
-          console.log('isValid 2')
-        } else {
-          errorEl.style.display = 'none';
+    const locale = window.location.pathname.split('/')[1];
+    const date = new Date().toISOString().split('T')[0];
+
+    const getValue = (name) => {
+      const el = formBox.querySelector(`[name="${name}"]`);
+      return el?.value?.trim() || '';
+    };
+
+    // Create Turnstile container if missing
+    let turnstileBox = formBox.querySelector('#TurnstileBox');
+    if (!turnstileBox) {
+      turnstileBox = document.createElement('div');
+      turnstileBox.id = 'TurnstileBox';
+      formBox.appendChild(turnstileBox);
+    }
+
+    window.onloadTurnstileCallback = function onloadTurnstileCallback() {
+      if (window.turnstileWidgetId !== undefined) {
+        try {
+          window.turnstile.reset(window.turnstileWidgetId);
+          return;
+        } catch (e) {
+          console.warn('Turnstile already rendered and cannot reset.');
+          return;
         }
       }
-    });
 
-    if (isValid) {
-      const formData = new FormData(formBox);
-      console.log('formData ', formData)
+      window.turnstile.render('#TurnstileBox', {
+        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
+        async callback(token) {
+          try {
+            const requestData = {
+              file: '/sites/creators-form-data.xlsx',
+              table: 'Table1',
+              row: {
+                DATE: date,
+                LOCALE: locale,
+                FULL_NAME: getValue('fullname'),
+                EMAIL: getValue('email'),
+                TEAM_MEMBERS: getValue('teammembers'),
+                FOLLOWERS: getValue('followers'),
+                PLATFORMS: getValue('platforms'),
+                COMMENTS: getValue('comments'),
+                token,
+              },
+            };
 
-      try {
-        console.log('✅ Email trimis cu succes!');
-        formBox.reset();
+            const response = await fetch('https://stage.bitdefender.com/form', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(requestData),
+            });
 
-        // Afișează mesajul de succes, dacă există un bloc de tip success_message
-        const successMsg = formBox.querySelector('#successMessage');
-        if (successMsg) {
-          successMsg.style.display = 'block';
-          successMsg.scrollIntoView({ behavior: 'smooth' });
-        }
-      } catch (err) {
-        console.error('❌ Eroare rețea la trimitere', err);
-      }
+            if (!response.ok) throw new Error(await response.text());
+
+            const contentType = response.headers.get('content-type');
+            if (!contentType?.includes('application/json')) throw new Error(await response.text());
+
+            const data = await response.json();
+            console.log('Form submitted:', data);
+
+            formBox.reset();
+            const successMsg = formBox.querySelector('#successMessage');
+            if (successMsg) {
+              successMsg.style.display = 'block';
+              successMsg.scrollIntoView({ behavior: 'smooth' });
+            }
+          } catch (error) {
+            console.error('Submission error:', error);
+          }
+        },
+      });
+    };
+
+    // Load Turnstile script
+    if (!document.querySelector('script[src*="challenges.cloudflare.com"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+      script.defer = true;
+      script.async = true;
+      document.body.appendChild(script);
+    } else {
+      window.onloadTurnstileCallback();
     }
   });
+}
 
-
+export default function decorate(block) {
+  const formBox = createForm(block);
   block.innerHTML = '';
   block.appendChild(formBox);
+  handleSubmit(formBox);
 }
