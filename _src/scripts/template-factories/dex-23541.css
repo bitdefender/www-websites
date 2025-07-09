@@ -167,6 +167,14 @@
                         text-decoration: underline;
                     }
 
+                    .button-container + p {
+                        font-size: var(--body-font-size-m);;
+
+                        + p {
+                            font-size: var(--body-font-size-m);
+                        }
+                    }
+
                     .button-container {
                         margin-bottom: var(--size-16) !important;
                     }
@@ -313,7 +321,7 @@
             padding-right: 5px;
             padding-bottom: var(--size-0);
             margin-bottom: 46px;
-            max-width: 1320px;
+            max-width: var(--section-large-desktop-max-width);
 
             .default-content-wrapper {
                 padding-bottom: var(--size-32);
@@ -942,7 +950,7 @@
                     margin-top: var(--size-0);
 
                     .features-wrapper {
-                        max-width: 1422px;
+                        max-width: 1386px;
                     }
 
                     .features img {
@@ -1104,7 +1112,7 @@
             }
 
             .system-requirements-wrapper + .default-content-wrapper > h3 {
-                margin-top: var(--size-64);
+                padding-top: var(--size-64);
                 position: relative;
 
                 &::after {
@@ -1114,7 +1122,7 @@
                     height: var(--size-2);
                     background-color: var(--border-darker-color);
                     left: var(--size-0);
-                    top: -32px;
+                    top: var(--size-32);
                 }
             }
 
@@ -1134,11 +1142,15 @@
                 }
             }
 
-            .button-container a {
-                background-color: unset;
+            .button-container {
+                margin-bottom: var(--size-0);
 
-                &::after {
-                    display: none;
+                a {
+                    background-color: unset;
+
+                    &::after {
+                        display: none;
+                    }
                 }
             }
 
@@ -1245,12 +1257,32 @@
     }
 }
 
+@media (min-width: 1295px) {
+    .hero-aem__desktop-image {
+        img {
+            max-height: 512px !important;
+        }
+    }
+}
+
 @media (min-width: 1400px) {
     .dex-23541 {
         .dex-copilot-benefits {
             .columns-wrapper {
                 padding: var(--size-0);
             }
+        }
+    }
+}
+
+@media (min-width: 1600px) {
+
+    .dex-23541 .section.tabs-container .tabs-wrapper .tab-item .features-wrapper {
+            max-width: var(--section-large-desktop-max-width);
+            padding: var(--size-0);
+
+            .features {
+                padding: var(--size-0);
         }
     }
 }
