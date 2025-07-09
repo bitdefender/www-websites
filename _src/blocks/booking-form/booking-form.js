@@ -29,7 +29,7 @@ function createForm(block) {
         inputBox.id = 'successMessage';
         inputBox.innerHTML = fieldNameEl?.innerHTML;
         break;
-      case 'recaptcha':
+      case 'recaptcha' : {
         inputBox.id = 'captchaBox';
         const recaptchaScript = document.createElement('script');
         recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoadCallback';
@@ -43,6 +43,7 @@ function createForm(block) {
           });
         };
         break;
+      } 
       case 'normal_text':
         inputBox.classList.add('normal_text');
         inputBox.innerHTML = fieldNameEl?.innerHTML;
