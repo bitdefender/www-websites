@@ -22,7 +22,7 @@ function createForm(block) {
 
     switch (fieldType) {
       case 'title': {
-        inputBox.id = 'titleBox';
+        inputBox.id = 'title-box';
         inputBox.innerHTML = fieldNameEl?.innerHTML;
         break;
       }
@@ -312,11 +312,11 @@ export default function decorate(block) {
   handleSubmit(formBox);
 
   const closeBtn = document.querySelector('span');
-  closeBtn.className = 'modal__close-btn';
+  closeBtn.className = 'modal-close-btn';
   closeBtn.innerText = '×';
   block.appendChild(closeBtn);
 
-  block.querySelector('.modal__close-btn').addEventListener('click', () => {
-    block.closest('.modal__close-btn').style.display = 'none';
+  block.querySelector('.modal-close-btn').addEventListener('click', () => {
+    block.closest('.modal-close-btn').style.display = 'none';
   });
 }

@@ -121,14 +121,11 @@
 
 .section.subtitle-blue h3 {
   font-size: 1.25rem;
-
   --tw-text-opacity: 1;
-
   color: #006DFF;
 }
 
 .creators .columns-container h3 {
-  font-weight: bold;
   margin-bottom: 0;
   font: normal normal bold 19px / 28px Arial, sans-serif!important;
 }
