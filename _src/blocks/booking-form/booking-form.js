@@ -29,7 +29,7 @@ function createForm(block) {
         inputBox.id = 'successMessage';
         inputBox.innerHTML = fieldNameEl?.innerHTML;
         break;
-      case 'recaptcha' : {
+      case 'recaptcha': {
         inputBox.id = 'captchaBox';
         const recaptchaScript = document.createElement('script');
         recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoadCallback';
@@ -286,4 +286,13 @@ export default function decorate(block) {
   block.innerHTML = '';
   block.appendChild(formBox);
   handleSubmit(formBox);
+  
+  const closeBtn = document.querySelector('span');
+  closeBtn.className = 'closeBtn';
+  closeBtn.innerText = '×';
+  block.appendChild(closeBtn);
+
+  block.querySelector('.closeBtn').addEventListener('click', (e) => {
+    block.closest('.section').style.display = 'none';
+  });
 }
