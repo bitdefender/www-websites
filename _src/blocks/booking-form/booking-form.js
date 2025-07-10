@@ -18,7 +18,7 @@ function createForm(block) {
     const isStandalone = ['title', 'success_message', 'recaptcha', 'normal_text', 'textarea', 'submit', 'checkbox'].includes(fieldType);
 
     const inputBox = document.createElement('div');
-    inputBox.className = 'inputBox';
+    inputBox.className = 'input-box';
 
     switch (fieldType) {
       case 'title': {
@@ -28,7 +28,7 @@ function createForm(block) {
       }
 
       case 'success_message': {
-        inputBox.id = 'successMessage';
+        inputBox.id = 'success-message';
         inputBox.innerHTML = fieldNameEl?.innerHTML;
         break;
       }
@@ -58,7 +58,7 @@ function createForm(block) {
       }
 
       case 'textarea': {
-        inputBox.classList.add('inputTextarea');
+        inputBox.classList.add('input-textarea');
         inputBox.innerHTML = `
           <label for="input-${name}">
             ${fieldName}${isMandatory ? '<span>*</span>' : ''}
@@ -104,7 +104,7 @@ function createForm(block) {
         });
 
         inputBox.innerHTML = `
-          <p class="fake_label">${labelNameEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
+          <p class="fake-label">${labelNameEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
           <div class="all-checks">${checkboxesHTML}</div>
           <em class="input-err">${fieldValidation}</em>
         `;
@@ -118,7 +118,7 @@ function createForm(block) {
         const options = selectList ? Array.from(selectList.querySelectorAll('li')) : [];
 
         inputBox.innerHTML = `
-          <p class="fake_label">${labelEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
+          <p class="fake-label">${labelEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
           <select id="select-${name}" name="${name}" ${isMandatory ? 'required' : ''}>
             ${options.map((item) => `<option value="${item.textContent.trim()}">${item.innerHTML}</option>`).join('')}
           </select>
@@ -146,8 +146,8 @@ function createForm(block) {
     }
 
     const row = document.createElement('div');
-    row.className = 'inputRow';
-    if (fieldType !== 'title' && fieldType !== 'success_message') row.classList.add('inputRow2');
+    row.className = 'input-row';
+    if (fieldType !== 'title' && fieldType !== 'success_message') row.classList.add('input-row2');
 
     if (isStandalone) {
       row.appendChild(inputBox);
@@ -168,7 +168,7 @@ function createForm(block) {
 
   if (pendingPair) {
     const finalRow = document.createElement('div');
-    finalRow.className = 'inputRow inputRow2';
+    finalRow.className = 'input-row input-row2';
     finalRow.appendChild(pendingPair);
     formBox.appendChild(finalRow);
   }
@@ -184,7 +184,7 @@ function handleSubmit(formBox) {
     const inputs = formBox.querySelectorAll('input, textarea, select');
 
     inputs.forEach((input) => {
-      const container = input.closest('.inputBox') || input.closest('.checkboxes') || input.closest('.selectors');
+      const container = input.closest('.input-box') || input.closest('.checkboxes') || input.closest('.selectors');
       const errorEl = container?.querySelector('.input-err');
       if (!errorEl) return;
 
@@ -277,16 +277,16 @@ function handleSubmit(formBox) {
             if (!contentType?.includes('application/json')) throw new Error(await response.text());
 
             const data = await response.json();
-            console.log('Form submitted:', data);
+            console.log('Form submitted:', data); // eslint-disable-line no-console
 
             formBox.reset();
-            const successMsg = formBox.querySelector('#successMessage');
+            const successMsg = formBox.querySelector('#success-message');
             if (successMsg) {
               successMsg.style.display = 'block';
               successMsg.scrollIntoView({ behavior: 'smooth' });
             }
           } catch (error) {
-            console.error('Submission error:', error);
+            console.error('Submission error:', error); // eslint-disable-line no-console
           }
         },
       });
@@ -312,11 +312,11 @@ export default function decorate(block) {
   handleSubmit(formBox);
 
   const closeBtn = document.querySelector('span');
-  closeBtn.className = 'closeBtn';
+  closeBtn.className = 'modal__close-btn';
   closeBtn.innerText = '×';
   block.appendChild(closeBtn);
 
-  block.querySelector('.closeBtn').addEventListener('click', () => {
-    block.closest('.section').style.display = 'none';
+  block.querySelector('.modal__close-btn').addEventListener('click', () => {
+    block.closest('.modal__close-btn').style.display = 'none';
   });
 }

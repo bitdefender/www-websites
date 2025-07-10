@@ -26,7 +26,7 @@
   position: relative;
 }
 
-.booking-form-container .booking-form-wrapper span.closeBtn {
+.booking-form-container .booking-form-wrapper span.modal__close-btn {
   content: 'x';
   position: absolute;
   top: 10px;
@@ -53,30 +53,30 @@
   font-size: 16px;
 }
 
-.booking-form-container #successMessage {
+.booking-form-container #success-message {
   text-align: center;
   color: rgb(15, 151, 15);
   display: none;
 }
 
-.booking-form-container .inputRow {
+.booking-form-container .input-row {
   display: flex;
   align-items: flex-end;
   gap: 2em;
   margin-bottom: 1em;
 }
 
-.booking-form-container .inputRow .inputBox {
+.booking-form-container .input-row .input-box {
   flex: 1;
 }
 
-.booking-form-container .inputRow em.input-err {
+.booking-form-container .input-row em.input-err {
   color: red;
   font-size: 13px;
   display: none;
 }
 
-.booking-form-container .inputRow label, .booking-form-container .inputRow p.fake_label {
+.booking-form-container .input-row label, .booking-form-container .input-row p.fake-label {
   color: #33475b;
   line-height: 18px;
   font-size: 15px;
@@ -85,34 +85,31 @@
   margin-bottom: 7px;
 }
 
-.booking-form-container .inputRow label span, .booking-form-container .inputRow p.fake_label span {
+.booking-form-container .input-row label span, .booking-form-container .input-row p.fake-label span {
   color: red;
   font-size: 13px;
   padding-left: 2px;
 }
 
-.booking-form-container .inputRow .checkboxes label.input-checkbox {
-  display: flex;
-  text-align: center;
-}
-
-.booking-form-container .inputRow .checkboxes .all-checks {
+.booking-form-container .input-row .checkboxes .all-checks {
   display: flex;
   text-align: center;
   justify-content: flex-start;
   gap: 18px;
 }
 
-.booking-form-container .inputRow .checkboxes label.input-checkbox {
+.booking-form-container .input-row .checkboxes label.input-checkbox {
+  display: flex;
+  text-align: center;
   gap: 5px;
 }
 
-.booking-form-container .inputRow label.input-checkbox {
+.booking-form-container .input-row label.input-checkbox {
   gap: 1em;
   line-height: 20px;
 }
 
-.booking-form-container .inputRow label.input-checkbox input[type="checkbox"] {
+.booking-form-container .input-row label.input-checkbox input[type="checkbox"] {
   width: 16px;
   height: 16px;
   min-height: 22px;
@@ -120,7 +117,7 @@
   margin-right: 7px;
 }
 
-.booking-form-container .inputRow input[type="submit"] {
+.booking-form-container .input-row input[type="submit"] {
   float: left;
   margin-right: 8px;
   background: #ff7a59;
@@ -132,16 +129,12 @@
   font-weight: 500;
 }
 
-.booking-form-container .inputRow input {
+.booking-form-container .input-row input {
   box-sizing: border-box;
   min-height: 35px;
 }
 
-.booking-form-container .inputRow .inputBox.normalText {
-  font-size: 15px;
-}
-
-.booking-form-container .inputRow input, .booking-form-container .inputRow textarea, .booking-form-container .inputRow select {
+.booking-form-container .input-row input, .booking-form-container .input-row textarea, .booking-form-container .input-row select {
   width: 100%;
   border-radius: 10px;
   padding: 10px;
@@ -154,11 +147,11 @@
   margin: 0;
 }
 
-.booking-form-container .inputRow .inputBox.inputTextarea {
+.booking-form-container .input-row .input-box.input-textarea {
   width: 100%;
 }
 
-.booking-form-container .inputRow textarea {
+.booking-form-container .input-row textarea {
   display: block;
   width: 100%;
   min-height: 100px;
@@ -170,11 +163,11 @@
     height: 100vh;
   }
 
-  .booking-form-container .inputRow {
+  .booking-form-container .input-row {
     display: block;
   }
 
-  .booking-form-container .inputRow .inputBox {
+  .booking-form-container .input-row .input-box {
     margin-bottom: 1em;
   }
 }
