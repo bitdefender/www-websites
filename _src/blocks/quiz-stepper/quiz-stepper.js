@@ -104,6 +104,10 @@ export default async function decorate(block) {
 
     const { origin, pathname } = window.location;
     // redirect
+    if (window.location.href.includes('acq')) {
+      window.location.replace(`${origin}${pathname}${dataset.score}`);
+      return;
+    }
     window.location.replace(`${origin}${pathname}${foundLegend.template}`);
   }
 

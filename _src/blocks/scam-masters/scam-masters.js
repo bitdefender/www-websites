@@ -45,7 +45,7 @@ async function saveResults(resultArray) {
   }
 }
 
-function decorateStartPage(startBlock) {
+function decorateStartPage(startBlock, isAcqVariant) {
   if (!startBlock) return;
   startBlock.classList.add('start-page');
 
@@ -65,7 +65,6 @@ function decorateStartPage(startBlock) {
     ul = ul.replaceWith(legalDiv);
   }
 
-  const isAcqVariant = startBlock.closest('.acq-quiz');
   if (isAcqVariant) {
     const secondDiv = startBlock.querySelector('div:nth-of-type(2)');
     if (secondDiv) {
@@ -650,7 +649,7 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
-function showResult(question, results) {
+function showResult(question, results, isAcqVariant) {
   // save results
   /* saveResults(formatQuizResult(
     Array.from(userAnswers, ([key, value]) => ({ key, value }))
@@ -717,7 +716,29 @@ function showResult(question, results) {
     },
   ];
 
+  const scoreRangesAcq = [
+    {
+      min: 0, max: 2, resultIndex: 0, shareText: shareTexts.get(0), resultUrl: 'result-1',
+    },
+    {
+      min: 3, max: 3, resultIndex: 1, shareText: shareTexts.get(1), resultUrl: 'result-2',
+    },
+    {
+      min: 4, max: 4, resultIndex: 2, shareText: shareTexts.get(2), resultUrl: 'result-3',
+    },
+    {
+      min: 5, max: 5, resultIndex: 3, shareText: shareTexts.get(3), resultUrl: 'result-4',
+    },
+  ];
+
   const foundRange = scoreRanges.find((range) => score >= range.min && score <= range.max);
+  const ACQfoundRange = scoreRangesAcq.find((range) => score >= range.min && score <= range.max);
+
+  if (isAcqVariant) {
+    const finalQuiz = document.querySelector('.quiz-stepper-container');
+    finalQuiz.setAttribute('data-score', ACQfoundRange.resultUrl);
+    return;
+  }
 
   if (foundRange && results[foundRange.resultIndex]) {
     results[foundRange.resultIndex].style.display = '';
@@ -781,7 +802,7 @@ function decorateScamButtons(question, index) {
   }
 }
 
-function decorateQuestions(questions, results) {
+function decorateQuestions(questions, results, isAcqVariant) {
   questions.forEach((question, index) => {
     question.classList.add('question');
     question.classList.add(`question-${index + 1}`);
@@ -802,7 +823,7 @@ function decorateQuestions(questions, results) {
         nextButton.addEventListener('click', () => showQuestion(index + 2));
       } else if (nextButton && index === questions.length - 1) {
         nextButton.style.display = 'none';
-        nextButton.addEventListener('click', () => showResult(question, results));
+        nextButton.addEventListener('click', () => showResult(question, results, isAcqVariant));
       }
 
       const anotherQuiz = question.querySelector('a[href="#quiz-2"]');
@@ -811,6 +832,7 @@ function decorateQuestions(questions, results) {
         anotherQuiz.addEventListener('click', (e) => {
           e.preventDefault();
           question.closest('.section').classList.add('fade-out');
+          showResult(question, results, isAcqVariant);
           document.querySelector('.quiz-stepper-container').classList.add('fade-in');
         });
       }
@@ -907,11 +929,12 @@ export default function decorate(block) {
   }
 
   const [startBlock, ...questionsAndResults] = block.children;
-  decorateStartPage(startBlock);
+  const isAcqVariant = startBlock.closest('.acq-quiz');
+  decorateStartPage(startBlock, isAcqVariant);
 
   const questions = getDivsBasedOnFirstParagraph(block, 'question-box');
   const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
-  decorateQuestions(questions, results);
+  decorateQuestions(questions, results, isAcqVariant);
   decorateResults(results);
   setupStartButton(block);
 
