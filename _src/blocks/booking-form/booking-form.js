@@ -311,12 +311,13 @@ export default function decorate(block) {
   block.appendChild(formBox);
   handleSubmit(formBox);
 
-  const closeBtn = document.querySelector('span');
+  const closeBtn = document.createElement('span');
   closeBtn.className = 'modal-close-btn';
   closeBtn.innerText = '×';
+
   block.appendChild(closeBtn);
 
-  block.querySelector('.modal-close-btn').addEventListener('click', () => {
-    block.closest('.modal-close-btn').style.display = 'none';
+  closeBtn.addEventListener('click', () => {
+    block.closest('.section').style.display = 'none';
   });
 }

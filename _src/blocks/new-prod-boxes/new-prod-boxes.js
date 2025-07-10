@@ -363,7 +363,6 @@ export default async function decorate(block) {
               ${secondButton ? secondButton.outerHTML : ''}
               ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
               <hr />
-              ${demoBtn}
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
               <div class="add-on-product" style="display: none;">
                 ${billed2 ? '<hr>' : ''}

@@ -857,6 +857,23 @@
   border-color: #3197EE;
 }
 
+@media (max-width: 768px) {
+  .demo-box .hero-aem__prices {
+    display: none;
+  }
+
+  .creators .new-prod-boxes-container .new-prod-boxes .prod_box.demo-box .inner_prod_box .undeBuyLink {
+    min-height: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .creators .new-prod-boxes-container .new-prod-boxes .prod_box.demo-box .inner_prod_box .undeBuyLink span.demoBtn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
 @media (min-width: 768px) {
   .creators .new-prod-boxes-container .new-prod-boxes {
     padding-bottom: 10px;
