@@ -1,4 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { matchHeights } from '../../scripts/utils/utils.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
@@ -273,10 +274,16 @@ function decorateAnswersList(question, questionIndex) {
       }
 
       const nextButton = question.querySelector('a[href="#continue"]');
+      const anotherQuiz = question.querySelector('a[href="#quiz-2"]');
 
       // Show the next button if it exists
       if (nextButton) {
         nextButton.style.display = '';
+      }
+
+      // Show the another quiz button if it exists
+      if (anotherQuiz) {
+        anotherQuiz.style.display = '';
       }
 
       answersList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
@@ -359,6 +366,7 @@ function showWrong(question, questionIndex) {
   const secondaryAnswersList = question.querySelector('.secondary-answers-list');
   const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
   const continueButton = question.querySelector('a[href="#continue"]');
+  const anotherQuizButton = question.querySelector('a[href="#quiz-2"]');
   const triesCounter = question.querySelector('.tries');
   const questionScamTag = question.querySelector('.question-scam-tag');
 
@@ -383,6 +391,10 @@ function showWrong(question, questionIndex) {
 
   if (continueButton) {
     continueButton.style.display = '';
+  }
+
+  if (anotherQuizButton) {
+    anotherQuizButton.style.display = '';
   }
 
   if (triesCounter) {
@@ -412,6 +424,7 @@ function showCorrect(question, questionIndex) {
   const answerList = question.querySelector('.answers-list');
   const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
   const continueButton = question.querySelector('a[href="#continue"]');
+  const anotherQuizButton = question.querySelector('a[href="#quiz-2"]');
   const triesCounter = question.querySelector('.tries');
   const questionScamTag = question.querySelector('.question-scam-tag');
 
@@ -428,6 +441,10 @@ function showCorrect(question, questionIndex) {
 
   if (continueButton) {
     continueButton.style.display = '';
+  }
+
+  if (anotherQuizButton) {
+    anotherQuizButton.style.display = '';
   }
 
   if (triesCounter) {
@@ -787,6 +804,16 @@ function decorateQuestions(questions, results) {
         nextButton.style.display = 'none';
         nextButton.addEventListener('click', () => showResult(question, results));
       }
+
+      const anotherQuiz = question.querySelector('a[href="#quiz-2"]');
+      if (anotherQuiz) {
+        anotherQuiz.style.display = 'none';
+        anotherQuiz.addEventListener('click', (e) => {
+          e.preventDefault();
+          question.closest('.section').classList.add('fade-out');
+          document.querySelector('.quiz-stepper-container').classList.add('fade-in');
+        });
+      }
     }
   });
 }
@@ -906,5 +933,7 @@ export default function decorate(block) {
       });
     });
   }
+
+  matchHeights(block, '.scam-buttons-container a');
   decorateIcons(block);
 }

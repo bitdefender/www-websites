@@ -18,6 +18,11 @@
 
     &.acq-quiz {
         background-color: white;
+        transition: opacity 0.25s, height 0.25s, display 0.25s allow-discrete;
+
+        @media (max-width: 992px) {
+            padding: 0 !important;
+        }
     }
 }
 
@@ -540,6 +545,7 @@
                     display: flex;
                     flex-direction: column;
                     gap: 81px;
+                    margin-left: 20px;
 
                     p {
                         font-weight: 700;
@@ -554,7 +560,7 @@
                     }
 
                     div:nth-child(1) {
-                        padding-left: 52px;
+                        padding-left: 39px;
                         background: url("/common/icons/acq-icon-1.svg") top 0px left no-repeat transparent;
                         background-size: 26px;
 
@@ -564,7 +570,7 @@
                     }
 
                     div:nth-child(2) {
-                        padding-left: 52px;
+                        padding-left: 39px;
                         background: url("/common/icons/acq-icon-2.svg") top 0px left no-repeat transparent;
                         background-size: 26px;
 
@@ -648,7 +654,7 @@
                 }
 
                 >p:nth-of-type(2) {
-                    font-size: 20px;
+                    font-size: 24px;
                 }
 
                 >p:last-of-type {
@@ -680,7 +686,7 @@
                     text-align: left;
 
                     a {
-                        &[href="#continue"] {
+                        &[href="#continue"], &[href="#quiz-2"] {
                             background-color: black;
                             color: white;
                             border-color: black;
@@ -812,6 +818,16 @@
                     line-height: 1;
                 }
             }
+
+            &.acq-quiz {
+                .start-page {
+                    >div:last-child {
+                        .start-content {
+                            display: none; 
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -846,6 +862,25 @@
                             line-height: 15px;
                             display: block;
                             margin-bottom: 10px;
+                        }
+                    }
+                }
+            }
+
+            &.acq-quiz {
+                .start-page {
+                    >div:first-child {
+                        padding: 20px;
+                        border-radius: 0;
+                        text-align: center;
+                    }
+
+                    >div:last-child {
+                        background-color: var(--color-bd-blue);
+                        border: none;
+                        border-radius: 0;
+                        .start-content {
+                            display: none; 
                         }
                     }
                 }

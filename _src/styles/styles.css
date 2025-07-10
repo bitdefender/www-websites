@@ -843,6 +843,24 @@ main .section.migration h2 {
   display: none;
 }
 
+.fade-out {
+  opacity: 0;
+  display: none;
+  height: 0;
+}
+
+.fade-in {
+  opacity: 1;
+  display: block;
+}
+
+@starting-style {
+  .fade-in {
+    opacity: 0;
+    height: 0;
+  }
+}
+
 main .section.py-1 {
   padding: 0;
 }
