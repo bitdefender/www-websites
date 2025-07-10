@@ -1,0 +1,196 @@
+main .banner-with-card-container {
+   padding: var(--body-padding);
+   background-color: #F8F8F8;
+   
+    .banner-with-card {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .banner-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            h1 {
+                font-size: 30px;
+                color: #006DFF;
+                margin: 0;
+            }
+
+            h4 {
+                font-size: 19px;
+                margin: 0;
+            }
+
+            p {
+                margin: 0;
+                font-size: 19px;
+
+                &:first-of-type {
+                    font-size: 16px;
+                    color: #006DFF;
+                    font-weight: 700;
+                }
+            }
+        }
+    
+
+        .card-container {
+            .product-card {
+                h2 {
+                    font-size: 25px;
+                    margin-bottom: 12px;
+                }
+        
+                p {
+                    font-size: 14px;
+                    margin-top: 12px;
+                    margin-bottom: 12px;
+                }
+
+                hr {
+                    margin-bottom: 1em;
+                    margin-top: 1em;
+                }
+
+                .button-container a {
+                    width: 100%;
+                    font-size: 16px;
+                    justify-content: center;
+                    border-radius: 13px;
+                    background-color: #eb0000;
+                    color: #fff;
+                    padding: 10px 20px;
+
+                    &:hover {
+                        background-color: #d80000;
+                    }
+
+                    &::after {
+                        display: none;
+                    }
+                }
+
+                ul {
+                    padding-left: 0;
+
+                    li {
+                        font-size: 14px;
+                        line-height: 100%;
+                        margin-bottom: 12px;
+                        list-style-type: none;
+                        background: url("https://bitdefender.com/common/icons/blue-checkmark.svg") center left no-repeat transparent;
+                        background-size: 13px;
+                        position: relative;
+                    }
+                }
+            }
+
+            .button-container:last-of-type {
+                a {
+                    background: none;
+                    color: #3D3D3D;
+                    border: none;
+                    padding: 0 10px;
+                    font-size: 16px;
+
+                    &::after {
+                        display: inline-block;
+                        background-color: #3D3D3D;
+                    }
+                }
+            }
+        }
+
+        .blue-pill {
+            display: none !important;
+            background-color: #026DFF;
+            padding:5px 10px;
+            border-radius: 20px;
+            color: white;
+            font-style: normal;
+            font-size: 12px;
+            letter-spacing: 0;
+            font-weight: bold;
+            display: inline-flex;
+            justify-content: center;
+            width: auto;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+    }
+
+    @media (width > 992px) {
+        background-color: transparent;
+        padding: 0 0 60px 0;
+        
+        .banner-with-card {
+            display: grid;
+            grid-auto-flow: column;
+            grid-template-columns: repeat(2, 1fr);
+            align-items: center;
+            border-radius: 10px;
+            max-width: 91.667%;
+            margin: auto;
+            min-height: 800px;
+            gap: 0;
+
+            .banner-content {
+                height: 100%;
+                padding: 0 10% 5% 15%;
+                background-color: #006EFF;
+                border-radius: 10px  0 0 10px;
+                justify-content: center;
+                gap: 20px;
+                
+                h1 {
+                    color: #fff;
+                    font-size: 59px;
+                    font-weight: 500;
+                }
+
+                h4 {
+                    color: #fff;
+                    font-size: 24px;
+                }
+
+                p {
+                    color: #FFF2F2;
+                    font-size: 22px;
+                    &:first-of-type {
+                        color: #FFF2F2;
+                        font-size: 22px;
+                        font-weight: 400;
+                    }
+                }
+            }
+
+            .card-container {
+                justify-items: center;
+                align-content: center;
+                padding: 30px;
+                background-color: #F8F8F8;
+                height: 100%;
+                border-radius: 0 10px 10px 0;
+
+                .product-card {
+                    background-color: #F6F6F6;
+                    padding: 25px;
+                    border-radius: 10px;
+                    box-shadow: 0px 7px 12px 0px #0000001A;
+                    max-width: 410px;
+
+                    h2 {
+                        font-size: 34px;
+                    }
+                }
+            }
+
+            .blue-pill {
+                display: inline-flex !important;
+                margin: 0;
+            }
+        }       
+    }
+}

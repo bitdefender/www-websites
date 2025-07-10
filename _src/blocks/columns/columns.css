@@ -438,6 +438,27 @@
   font-size: 14px;
 }
 
+.columns-container.blue-title .button-container a {
+  background-color: #eb0000;
+  padding: 15px 20px;
+  color: #fff;
+  width: 100%;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.columns-container.blue-title .button-container a:hover {
+  background-color:#d80000;
+}
+
+.columns-container.blue-title .button-container a::after {
+  display: none;
+}
+
+.columns-container.blue-title .columns > div {
+  align-items: baseline;
+}
+
 .columns-container .trust-factors {
   justify-items: center;
   background: #F5F5F7 0% 0% no-repeat padding-box;
