@@ -21,21 +21,27 @@ function createForm(block) {
     inputBox.className = 'inputBox';
 
     switch (fieldType) {
-      case 'title':
+      case 'title': {
         inputBox.id = 'titleBox';
         inputBox.innerHTML = fieldNameEl?.innerHTML;
         break;
-      case 'success_message':
+      }
+
+      case 'success_message': {
         inputBox.id = 'successMessage';
         inputBox.innerHTML = fieldNameEl?.innerHTML;
         break;
+      }
+
       case 'recaptcha': {
         inputBox.id = 'captchaBox';
         const recaptchaScript = document.createElement('script');
         recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoadCallback';
         recaptchaScript.defer = true;
         document.body.appendChild(recaptchaScript);
+
         window.onRecaptchaLoadCallback = () => {
+          /* global grecaptcha */
           window.clientId = grecaptcha.render('captchaBox', {
             sitekey: '6LcEH5onAAAAAH4800Uc6IYdUvmqPLHFGi_nOGeR',
             badge: 'inline',
@@ -43,12 +49,15 @@ function createForm(block) {
           });
         };
         break;
-      } 
-      case 'normal_text':
+      }
+
+      case 'normal_text': {
         inputBox.classList.add('normal_text');
         inputBox.innerHTML = fieldNameEl?.innerHTML;
         break;
-      case 'textarea':
+      }
+
+      case 'textarea': {
         inputBox.classList.add('inputTextarea');
         inputBox.innerHTML = `
           <label for="input-${name}">
@@ -58,12 +67,16 @@ function createForm(block) {
           <em class="input-err">${fieldValidation}</em>
         `;
         break;
-      case 'button':
+      }
+
+      case 'button': {
         inputBox.innerHTML = `
           <input type="submit" id="input-submit" name="${name}" class="submit-btn" value="${fieldName}">
         `;
         break;
-      case 'checkbox':
+      }
+
+      case 'checkbox': {
         inputBox.innerHTML = `
           <label class="input-checkbox">
             <input type="checkbox" id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''}>
@@ -72,7 +85,9 @@ function createForm(block) {
           <em class="input-err">${fieldValidation}</em>
         `;
         break;
-      case 'checkboxes':
+      }
+
+      case 'checkboxes': {
         inputBox.classList.add('checkboxes');
         const labelNameEl = fieldNameEl?.querySelector('p');
         const labelChecksEl = fieldNameEl?.querySelector('ul');
@@ -94,7 +109,9 @@ function createForm(block) {
           <em class="input-err">${fieldValidation}</em>
         `;
         break;
-      case 'select':
+      }
+
+      case 'select': {
         inputBox.classList.add('selectors');
         const labelEl = fieldNameEl?.querySelector('p');
         const selectList = fieldNameEl?.querySelector('ul');
@@ -103,16 +120,20 @@ function createForm(block) {
         inputBox.innerHTML = `
           <p class="fake_label">${labelEl?.innerText || ''}${isMandatory ? '<span>*</span>' : ''}</p>
           <select id="select-${name}" name="${name}" ${isMandatory ? 'required' : ''}>
-            ${options.map(item => `<option value="${item.textContent.trim()}">${item.innerHTML}</option>`).join('')}
+            ${options.map((item) => `<option value="${item.textContent.trim()}">${item.innerHTML}</option>`).join('')}
           </select>
           <em class="input-err">${fieldValidation}</em>
         `;
         break;
-      case 'fake_input':
+      }
+
+      case 'fake_input': {
         inputBox.classList.add('fake_input');
-        inputBox.innerHTML = `<label for="input-fake"></label>`;
+        inputBox.innerHTML = '<label for="input-fake"></label>';
         break;
-      default:
+      }
+
+      default: {
         inputBox.innerHTML = `
           <label for="input-${name}" placeholder="${fieldValidation}">
             ${fieldName}${isMandatory ? '<span>*</span>' : ''}
@@ -120,6 +141,8 @@ function createForm(block) {
           <input id="input-${name}" name="${name}" ${isMandatory ? 'required' : ''} type="${fieldType}" value="">
           <em class="input-err">${fieldValidation}</em>
         `;
+        break;
+      }
     }
 
     const row = document.createElement('div');
@@ -130,15 +153,16 @@ function createForm(block) {
       row.appendChild(inputBox);
       formBox.appendChild(row);
       pendingPair = null;
+      return;
+    }
+
+    if (!pendingPair) {
+      pendingPair = inputBox;
     } else {
-      if (!pendingPair) {
-        pendingPair = inputBox;
-      } else {
-        row.appendChild(pendingPair);
-        row.appendChild(inputBox);
-        formBox.appendChild(row);
-        pendingPair = null;
-      }
+      row.appendChild(pendingPair);
+      row.appendChild(inputBox);
+      formBox.appendChild(row);
+      pendingPair = null;
     }
   });
 
@@ -172,17 +196,17 @@ function handleSubmit(formBox) {
       else if (input.tagName === 'TEXTAREA' && input.required && !value) showError = true;
       else if (input.hasAttribute('required') && !value) showError = true;
       else if (input.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) showError = true;
-      else if (input.type === 'number' && value && isNaN(value)) showError = true;
+      else if (input.type === 'number' && value && Number.isNaN(value)) showError = true;
 
       errorEl.style.display = showError ? 'block' : 'none';
       if (showError) isValid = false;
     });
 
-    formBox.querySelectorAll('.checkboxes').forEach(group => {
+    formBox.querySelectorAll('.checkboxes').forEach((group) => {
       const checkboxes = group.querySelectorAll('input[type="checkbox"]');
       const errorEl = group.querySelector('.input-err');
-      const isRequired = Array.from(checkboxes).some(cb => cb.required);
-      const isChecked = Array.from(checkboxes).some(cb => cb.checked);
+      const isRequired = Array.from(checkboxes).some((cb) => cb.required);
+      const isChecked = Array.from(checkboxes).some((cb) => cb.checked);
 
       if (isRequired && !isChecked) {
         errorEl.style.display = 'block';
@@ -215,8 +239,8 @@ function handleSubmit(formBox) {
         try {
           window.turnstile.reset(window.turnstileWidgetId);
           return;
-        } catch (e) {
-          console.warn('Turnstile already rendered and cannot reset.');
+        } catch (err) {
+          console.warn('Turnstile already rendered and cannot reset.'); // eslint-disable-line no-console
           return;
         }
       }
@@ -286,13 +310,13 @@ export default function decorate(block) {
   block.innerHTML = '';
   block.appendChild(formBox);
   handleSubmit(formBox);
-  
+
   const closeBtn = document.querySelector('span');
   closeBtn.className = 'closeBtn';
   closeBtn.innerText = '×';
   block.appendChild(closeBtn);
 
-  block.querySelector('.closeBtn').addEventListener('click', (e) => {
+  block.querySelector('.closeBtn').addEventListener('click', () => {
     block.closest('.section').style.display = 'none';
   });
 }

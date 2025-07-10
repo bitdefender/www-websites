@@ -341,7 +341,7 @@ export default async function decorate(block) {
         }
       }
 
-      const [alias, selector, btnText ] = undeBuyLink?.innerText.trim().split('|');
+      const [alias, selector, btnText] = (undeBuyLink?.innerText || '').trim().split('|');
       let demoBtn = '';
       if (alias.trim() === 'popup') {
         demoBtn = `<span class="demoBtn" data-show="${selector}" onclick="document.querySelector('.${selector.replace(/\s+/g, '')}').style.display = 'block'">${btnText}</span>`;
