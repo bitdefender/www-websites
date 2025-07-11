@@ -949,3 +949,82 @@ export function generateLDJsonSchema() {
   script.textContent = JSON.stringify(ldJson, null, 2); // Pretty print
   document.head.appendChild(script);
 }
+
+// submitWithTurnstile.js
+export async function submitWithTurnstile({container, data, successCallback = null, errorCallback = null}) {
+  const SITEKEY = '0x4AAAAAABkTzSd63P7J-Tl_';
+  const ENDPOINT = 'https://stage.bitdefender.com/form';
+  const FILE = '/sites/creators-form-data.xlsx';
+  const TABLE = 'Table1';
+  let widgetId = null;
+
+  function loadTurnstileScript() {
+    return new Promise((resolve, reject) => {
+      if (window.turnstile) return resolve();
+
+      window.onloadTurnstileCallback = () => {
+        if (!window.turnstile) return reject('Turnstile failed to load.');
+        resolve();
+      };
+
+      if (!document.querySelector('script[src*="challenges.cloudflare.com"]')) {
+        const script = document.createElement('script');
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+        script.defer = true;
+        script.async = true;
+        document.body.appendChild(script);
+      } else {
+        if (window.turnstile) resolve();
+        else window.onloadTurnstileCallback = () => resolve();
+      }
+    });
+  }
+
+  async function init() {
+    try {
+      await loadTurnstileScript();
+
+      widgetId = window.turnstile.render(container, {
+        sitekey: SITEKEY,
+      });
+
+      const token = await new Promise((resolveToken) => {
+        const interval = setInterval(() => {
+          const response = window.turnstile.getResponse(widgetId);
+          if (response) {
+            clearInterval(interval);
+            resolveToken(response);
+          }
+        }, 200);
+      });
+
+      const requestData = {
+        file: FILE,
+        table: TABLE,
+        row: {
+          ...data,
+          token,
+        },
+      };
+
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+
+      const contentType = res.headers.get('content-type');
+      if (!contentType?.includes('application/json')) throw new Error(await res.text());
+
+      if (typeof successCallback === 'function') successCallback();
+      window.turnstile.reset(widgetId);
+    } catch (err) {
+      console.error('Turnstile submit error:', err);
+      if (typeof errorCallback === 'function') errorCallback(err);
+    }
+  }
+
+  await init();
+}

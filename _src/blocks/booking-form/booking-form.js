@@ -1,3 +1,5 @@
+import { submitWithTurnstile } from "../../scripts/utils/utils.js";
+
 function createForm(block) {
   const allFields = [...block.children];
   const formBox = document.createElement('form');
@@ -188,149 +190,116 @@ function createForm(block) {
 }
 
 function handleSubmit(formBox) {
-  const locale = window.location.pathname.split('/')[1];
-  let widgetId = null;
+  const locale = window.location.pathname.split('/')[1] || 'en';
 
-  // container Turnstile
-  let turnstileBox = formBox.querySelector('#TurnstileBox');
-  if (!turnstileBox) {
-    turnstileBox = document.createElement('div');
-    turnstileBox.id = 'TurnstileBox';
-    turnstileBox.dataset.sitekey = '0x4AAAAAABkTzSd63P7J-Tl_';
-    formBox.appendChild(turnstileBox);
-  }
-
-  // get values
   const getValue = (name) => {
     const el = formBox.querySelector(`[name="${name}"]`);
     return el?.value?.trim() || '';
   };
 
-  // validation
   const validateFields = () => {
     let isValid = true;
     const inputs = formBox.querySelectorAll('input, textarea, select');
 
     inputs.forEach((input) => {
-      const container = input.closest('.input-box') || input.closest('.checkboxes') || input.closest('.selectors');
+      const container =
+        input.closest('.input-box') ||
+        input.closest('.checkboxes') ||
+        input.closest('.selectors');
+
       const errorEl = container?.querySelector('.input-err');
       if (!errorEl) return;
 
       let showError = false;
       const value = input.value?.trim();
 
-      if (!input.closest('.checkboxes') && input.type === 'checkbox' && input.required && !input.checked) showError = true;
-      else if (input.tagName === 'SELECT' && input.required && !value) showError = true;
-      else if (input.tagName === 'TEXTAREA' && input.required && !value) showError = true;
-      else if (input.hasAttribute('required') && !value) showError = true;
-      else if (input.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) showError = true;
-      else if (input.type === 'number' && value && Number.isNaN(value)) showError = true;
+      if (
+        !input.closest('.checkboxes') &&
+        input.type === 'checkbox' &&
+        input.required &&
+        !input.checked
+      ) {
+        showError = true;
+      } else if (input.tagName === 'SELECT' && input.required && !value) {
+        showError = true;
+      } else if (input.tagName === 'TEXTAREA' && input.required && !value) {
+        showError = true;
+      } else if (input.hasAttribute('required') && !value) {
+        showError = true;
+      } else if (
+        input.type === 'email' &&
+        value &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+      ) {
+        showError = true;
+      } else if (input.type === 'number' && value && isNaN(Number(value))) {
+        showError = true;
+      }
 
       errorEl.style.display = showError ? 'block' : 'none';
       if (showError) isValid = false;
     });
 
+    // Checkbox group validation
     formBox.querySelectorAll('.checkboxes').forEach((group) => {
       const checkboxes = group.querySelectorAll('input[type="checkbox"]');
       const errorEl = group.querySelector('.input-err');
+
       const isRequired = Array.from(checkboxes).some((cb) => cb.required);
       const isChecked = Array.from(checkboxes).some((cb) => cb.checked);
 
-      if (isRequired && !isChecked) {
-        errorEl.style.display = 'block';
-        isValid = false;
-      } else {
-        errorEl.style.display = 'none';
+      if (errorEl) {
+        if (isRequired && !isChecked) {
+          errorEl.style.display = 'block';
+          isValid = false;
+        } else {
+          errorEl.style.display = 'none';
+        }
       }
     });
 
     return isValid;
   };
 
-  // send
-  const submitForm = async (token) => {
-    const date = new Date().toISOString().split('T')[0];
-
-    const requestData = {
-      file: '/sites/creators-form-data.xlsx',
-      table: 'Table1',
-      row: {
-        DATE: date,
-        LOCALE: locale,
-        FULL_NAME: getValue('fullname'),
-        EMAIL: getValue('email'),
-        TEAM_MEMBERS: getValue('teammembers'),
-        FOLLOWERS: getValue('followers'),
-        PLATFORMS: getValue('platforms'),
-        COMMENTS: getValue('comments'),
-        token,
-      },
-    };
-
-    try {
-      const response = await fetch('https://stage.bitdefender.com/form', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData),
-      });
-
-      if (!response.ok) throw new Error(await response.text());
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType?.includes('application/json')) throw new Error(await response.text());
-
-      // const data = await response.json();
-      formBox.reset();
-      window.turnstile.reset(widgetId);
-
-      const successMsg = formBox.querySelector('#success-message');
-      if (successMsg) {
-        successMsg.style.display = 'block';
-        successMsg.scrollIntoView({ behavior: 'smooth' });
-      }
-    } catch (err) {
-      console.error('Error saving data.', err);
-    }
-  };
-
-  // On submit
   formBox.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const isValid = validateFields();
-    if (!isValid) return;
 
-    // get token
-    const token = window.turnstile?.getResponse(widgetId);
-    if (!token) {
-      console.log('no token found');
-      return;
-    }
+    if (!validateFields()) return;
 
-    await submitForm(token);
-  });
+    const date = new Date().toISOString().split('T')[0];
+    const data = {
+      DATE: date,
+      LOCALE: locale,
+      FULL_NAME: getValue('fullname'),
+      EMAIL: getValue('email'),
+      TEAM_MEMBERS: getValue('teammembers'),
+      FOLLOWERS: getValue('followers'),
+      PLATFORMS: getValue('platforms'),
+      COMMENTS: getValue('comments'),
+    };
 
-  // init once
-  window.onloadTurnstileCallback = function () {
-    if (!window.turnstile) {
-      console.log('Turnstile did not load.');
-      return;
-    }
+    const turnstileBox =
+      formBox.querySelector('#TurnstileBox') ||
+      (() => {
+        const box = document.createElement('div');
+        box.id = 'TurnstileBox';
+        formBox.appendChild(box);
+        return box;
+      })();
 
-    widgetId = window.turnstile.render('#TurnstileBox', {
-      sitekey: turnstileBox.dataset.sitekey,
+    await submitWithTurnstile({
+      container: turnstileBox,
+      data,
+      successCallback: () => {
+        formBox.reset();
+        const successMsg = formBox.querySelector('#success-message');
+        if (successMsg) {
+          successMsg.style.display = 'block';
+          successMsg.scrollIntoView({ behavior: 'smooth' });
+        }
+      },
     });
-  };
-
-  // add script only once
-  if (!document.querySelector('script[src*="challenges.cloudflare.com"]')) {
-    const script = document.createElement('script');
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
-    script.defer = true;
-    script.async = true;
-    document.body.appendChild(script);
-  } else {
-    window.onloadTurnstileCallback();
-  }
+  });
 }
 
 export default function decorate(block) {
