@@ -952,7 +952,7 @@ export function generateLDJsonSchema() {
 
 // submitWithTurnstile.js
 export async function submitWithTurnstile({
-  container, data, successCallback = null, errorCallback = null
+  container, data, successCallback = null, errorCallback = null,
 }) {
   const SITEKEY = '0x4AAAAAABkTzSd63P7J-Tl_';
   const ENDPOINT = 'https://stage.bitdefender.com/form';
@@ -968,7 +968,11 @@ export async function submitWithTurnstile({
       }
 
       window.onloadTurnstileCallback = () => {
-        if (!window.turnstile) return reject(new Error('Turnstile failed to load.'));
+        if (!window.turnstile) {
+          reject(new Error('Turnstile failed to load.'));
+          return;
+        }
+
         resolve();
       };
 
