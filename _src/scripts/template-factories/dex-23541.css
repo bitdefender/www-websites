@@ -3,6 +3,8 @@
     --border-color: #e1e3e5;
     --border-darker-color: #b1b1b1;
     --background-light-blue-color: #f0f7ff;
+    --tab-header-color-blue: #006dff;
+    --background-blue: #006dff;
 
 
     /* Font family */
@@ -295,23 +297,20 @@
                 border-top: var(--size-1) solid var(--sticky-nav-border-color);
             }
 
-            .sticky-navigation ul li.opened {
-                border-bottom: var(--size-4) solid var(--color-highlight-blue);
-            }
-
             .menu-with-button {
                 max-width: var(--section-desktop-max-width);
                 padding: var(--size-0) var(--size-20);
 
                 li {
                     margin-right: var(--size-40);
+                    border-bottom: unset;
                 }
 
                 li a {
                     font-size: var(--body-font-size-l);
                     line-height: var(--size-20);
                     font-weight: var(--font-weight-bolder);
-                    padding: var(--size-22) var(--size-0) var(--size-14);
+                    padding: var(--size-22) var(--size-0) var(--size-18);
                 }
 
                 .button-container {
