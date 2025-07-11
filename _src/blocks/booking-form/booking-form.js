@@ -4,6 +4,17 @@ function createForm(block) {
   formBox.setAttribute('novalidate', 'novalidate');
   let pendingPair = null;
 
+  // close btn
+  const closeBtn = document.createElement('span');
+  closeBtn.className = 'modal-close-btn';
+  closeBtn.innerText = '×';
+  formBox.appendChild(closeBtn);
+
+  closeBtn.addEventListener('click', () => {
+    formBox.closest('.section').style.display = 'none';
+  });
+
+  // create fields
   allFields.forEach((field, index) => {
     if (index === 0) return;
 
@@ -177,9 +188,26 @@ function createForm(block) {
 }
 
 function handleSubmit(formBox) {
-  formBox.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  const locale = window.location.pathname.split('/')[1];
+  let widgetId = null;
 
+  // container Turnstile
+  let turnstileBox = formBox.querySelector('#TurnstileBox');
+  if (!turnstileBox) {
+    turnstileBox = document.createElement('div');
+    turnstileBox.id = 'TurnstileBox';
+    turnstileBox.dataset.sitekey = '0x4AAAAAABkTzSd63P7J-Tl_';
+    formBox.appendChild(turnstileBox);
+  }
+
+  // get values
+  const getValue = (name) => {
+    const el = formBox.querySelector(`[name="${name}"]`);
+    return el?.value?.trim() || '';
+  };
+
+  // validation
+  const validateFields = () => {
     let isValid = true;
     const inputs = formBox.querySelectorAll('input, textarea, select');
 
@@ -216,93 +244,93 @@ function handleSubmit(formBox) {
       }
     });
 
-    if (!isValid) return;
+    return isValid;
+  };
 
-    const locale = window.location.pathname.split('/')[1];
+  // send
+  const submitForm = async (token) => {
     const date = new Date().toISOString().split('T')[0];
 
-    const getValue = (name) => {
-      const el = formBox.querySelector(`[name="${name}"]`);
-      return el?.value?.trim() || '';
+    const requestData = {
+      file: '/sites/creators-form-data.xlsx',
+      table: 'Table1',
+      row: {
+        DATE: date,
+        LOCALE: locale,
+        FULL_NAME: getValue('fullname'),
+        EMAIL: getValue('email'),
+        TEAM_MEMBERS: getValue('teammembers'),
+        FOLLOWERS: getValue('followers'),
+        PLATFORMS: getValue('platforms'),
+        COMMENTS: getValue('comments'),
+        token,
+      },
     };
 
-    // Create Turnstile container if missing
-    let turnstileBox = formBox.querySelector('#TurnstileBox');
-    if (!turnstileBox) {
-      turnstileBox = document.createElement('div');
-      turnstileBox.id = 'TurnstileBox';
-      formBox.appendChild(turnstileBox);
-    }
-
-    window.onloadTurnstileCallback = function onloadTurnstileCallback() {
-      if (window.turnstileWidgetId !== undefined) {
-        try {
-          window.turnstile.reset(window.turnstileWidgetId);
-          return;
-        } catch (err) {
-          console.warn('Turnstile already rendered and cannot reset.'); // eslint-disable-line no-console
-          return;
-        }
-      }
-
-      window.turnstile.render('#TurnstileBox', {
-        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
-        async callback(token) {
-          try {
-            const requestData = {
-              file: '/sites/creators-form-data.xlsx',
-              table: 'Table1',
-              row: {
-                DATE: date,
-                LOCALE: locale,
-                FULL_NAME: getValue('fullname'),
-                EMAIL: getValue('email'),
-                TEAM_MEMBERS: getValue('teammembers'),
-                FOLLOWERS: getValue('followers'),
-                PLATFORMS: getValue('platforms'),
-                COMMENTS: getValue('comments'),
-                token,
-              },
-            };
-
-            const response = await fetch('https://stage.bitdefender.com/form', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(requestData),
-            });
-
-            if (!response.ok) throw new Error(await response.text());
-
-            const contentType = response.headers.get('content-type');
-            if (!contentType?.includes('application/json')) throw new Error(await response.text());
-
-            const data = await response.json();
-            console.log('Form submitted:', data); // eslint-disable-line no-console
-
-            formBox.reset();
-            const successMsg = formBox.querySelector('#success-message');
-            if (successMsg) {
-              successMsg.style.display = 'block';
-              successMsg.scrollIntoView({ behavior: 'smooth' });
-            }
-          } catch (error) {
-            console.error('Submission error:', error); // eslint-disable-line no-console
-          }
-        },
+    try {
+      const response = await fetch('https://stage.bitdefender.com/form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData),
       });
-    };
 
-    // Load Turnstile script
-    if (!document.querySelector('script[src*="challenges.cloudflare.com"]')) {
-      const script = document.createElement('script');
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
-      script.defer = true;
-      script.async = true;
-      document.body.appendChild(script);
-    } else {
-      window.onloadTurnstileCallback();
+      if (!response.ok) throw new Error(await response.text());
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType?.includes('application/json')) throw new Error(await response.text());
+
+      const data = await response.json();
+      formBox.reset();
+      window.turnstile.reset(widgetId);
+
+      const successMsg = formBox.querySelector('#success-message');
+      if (successMsg) {
+        successMsg.style.display = 'block';
+        successMsg.scrollIntoView({ behavior: 'smooth' });
+      }
+    } catch (err) {
+      console.error('Error saving data.', err);
     }
+  };
+
+  // On submit
+  formBox.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const isValid = validateFields();
+    if (!isValid) return;
+
+    // get token
+    const token = window.turnstile?.getResponse(widgetId);
+    if (!token) {
+      console.log('no token found');
+      return;
+    }
+
+    await submitForm(token);
   });
+
+  // init once
+  window.onloadTurnstileCallback = function () {
+    if (!window.turnstile) {
+      console.log('Turnstile did not load.');
+      return;
+    }
+
+    widgetId = window.turnstile.render('#TurnstileBox', {
+      sitekey: turnstileBox.dataset.sitekey,
+    });
+  };
+
+  // add script only once
+  if (!document.querySelector('script[src*="challenges.cloudflare.com"]')) {
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+    script.defer = true;
+    script.async = true;
+    document.body.appendChild(script);
+  } else {
+    window.onloadTurnstileCallback();
+  }
 }
 
 export default function decorate(block) {
@@ -310,14 +338,4 @@ export default function decorate(block) {
   block.innerHTML = '';
   block.appendChild(formBox);
   handleSubmit(formBox);
-
-  const closeBtn = document.createElement('span');
-  closeBtn.className = 'modal-close-btn';
-  closeBtn.innerText = '×';
-
-  block.appendChild(closeBtn);
-
-  closeBtn.addEventListener('click', () => {
-    block.closest('.section').style.display = 'none';
-  });
 }
