@@ -975,9 +975,14 @@ export async function submitWithTurnstile({
         script.defer = true;
         script.async = true;
         document.body.appendChild(script);
-      } else {
-        if (window.turnstile) resolve();
-        else window.onloadTurnstileCallback = () => resolve();
+      }
+      
+      if (document.querySelector('script[src*="challenges.cloudflare.com"]')) {
+        if (window.turnstile) {
+          resolve();
+        } else {
+          window.onloadTurnstileCallback = () => resolve();
+        }
       }
     });
   }
