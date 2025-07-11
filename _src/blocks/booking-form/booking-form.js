@@ -210,7 +210,7 @@ function handleSubmit(formBox) {
       let showError = false;
       const value = input.value?.trim();
 
-      if (!input.closest('.checkboxes') && input.type === 'checkbox' &&  input.required && !input.checked ) {
+      if (!input.closest('.checkboxes') && input.type === 'checkbox' && input.required && !input.checked) {
         showError = true;
       } else if (input.tagName === 'SELECT' && input.required && !value) {
         showError = true;
@@ -218,11 +218,7 @@ function handleSubmit(formBox) {
         showError = true;
       } else if (input.hasAttribute('required') && !value) {
         showError = true;
-      } else if (
-        input.type === 'email' &&
-        value &&
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-      ) {
+      } else if (input.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
         showError = true;
       } else if (input.type === 'number' && value && Number.isNaN(Number(value))) {
         showError = true;
@@ -270,14 +266,12 @@ function handleSubmit(formBox) {
       COMMENTS: getValue('comments'),
     };
 
-    const turnstileBox =
-      formBox.querySelector('#TurnstileBox') ||
-      (() => {
-        const box = document.createElement('div');
-        box.id = 'TurnstileBox';
-        formBox.appendChild(box);
-        return box;
-      })();
+    const turnstileBox = formBox.querySelector('#TurnstileBox') || (() => {
+      const box = document.createElement('div');
+      box.id = 'TurnstileBox';
+      formBox.appendChild(box);
+      return box;
+    })();
 
     await submitWithTurnstile({
       container: turnstileBox,

@@ -962,10 +962,13 @@ export async function submitWithTurnstile({
 
   function loadTurnstileScript() {
     return new Promise((resolve, reject) => {
-      if (window.turnstile) return resolve();
+      if (window.turnstile) {
+        resolve();
+        return;
+      }
 
       window.onloadTurnstileCallback = () => {
-        if (!window.turnstile) return reject('Turnstile failed to load.');
+        if (!window.turnstile) return reject(new Error('Turnstile failed to load.'));
         resolve();
       };
 
@@ -976,7 +979,7 @@ export async function submitWithTurnstile({
         script.async = true;
         document.body.appendChild(script);
       }
-      
+
       if (document.querySelector('script[src*="challenges.cloudflare.com"]')) {
         if (window.turnstile) {
           resolve();
