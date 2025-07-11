@@ -951,7 +951,9 @@ export function generateLDJsonSchema() {
 }
 
 // submitWithTurnstile.js
-export async function submitWithTurnstile({container, data, successCallback = null, errorCallback = null}) {
+export async function submitWithTurnstile({
+  container, data, successCallback = null, errorCallback = null
+}) {
   const SITEKEY = '0x4AAAAAABkTzSd63P7J-Tl_';
   const ENDPOINT = 'https://stage.bitdefender.com/form';
   const FILE = '/sites/creators-form-data.xlsx';

@@ -1,4 +1,4 @@
-import { submitWithTurnstile } from "../../scripts/utils/utils.js";
+import { submitWithTurnstile } from '../../scripts/utils/utils.js';
 
 function createForm(block) {
   const allFields = [...block.children];
@@ -202,10 +202,7 @@ function handleSubmit(formBox) {
     const inputs = formBox.querySelectorAll('input, textarea, select');
 
     inputs.forEach((input) => {
-      const container =
-        input.closest('.input-box') ||
-        input.closest('.checkboxes') ||
-        input.closest('.selectors');
+      const container = input.closest('.input-box') || input.closest('.checkboxes') || input.closest('.selectors');
 
       const errorEl = container?.querySelector('.input-err');
       if (!errorEl) return;
@@ -213,12 +210,7 @@ function handleSubmit(formBox) {
       let showError = false;
       const value = input.value?.trim();
 
-      if (
-        !input.closest('.checkboxes') &&
-        input.type === 'checkbox' &&
-        input.required &&
-        !input.checked
-      ) {
+      if (!input.closest('.checkboxes') && input.type === 'checkbox' &&  input.required && !input.checked ) {
         showError = true;
       } else if (input.tagName === 'SELECT' && input.required && !value) {
         showError = true;
@@ -232,7 +224,7 @@ function handleSubmit(formBox) {
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
       ) {
         showError = true;
-      } else if (input.type === 'number' && value && isNaN(Number(value))) {
+      } else if (input.type === 'number' && value && Number.isNaN(Number(value))) {
         showError = true;
       }
 
