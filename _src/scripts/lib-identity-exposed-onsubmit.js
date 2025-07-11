@@ -66,6 +66,7 @@ export default async function onSubmit(e) {
     const emarsysRequest = await fetchData(`${domain}/site/Store/offerSubscribe`, {
       email,
       flow: campaign,
+      isDipForm: true,
     });
 
     document.querySelector('.scan-loading h3:nth-child(3)').classList.remove('show');
