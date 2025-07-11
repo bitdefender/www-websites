@@ -266,6 +266,8 @@ function handleSubmit(formBox) {
       COMMENTS: getValue('comments'),
     };
 
+    const file = '/sites/creators-form-data.xlsx';
+
     const turnstileBox = formBox.querySelector('#TurnstileBox') || (() => {
       const box = document.createElement('div');
       box.id = 'TurnstileBox';
@@ -276,6 +278,7 @@ function handleSubmit(formBox) {
     await submitWithTurnstile({
       container: turnstileBox,
       data,
+      file,
       successCallback: () => {
         formBox.reset();
         const successMsg = formBox.querySelector('#success-message');
