@@ -176,6 +176,16 @@ function createForm(block) {
   return formBox;
 }
 
+function sanitizeDataMap(dataMap) {
+  const riskyPattern = /^\d{1,2}[-/]\d{1,2}$/;
+  return Object.fromEntries(
+    [...dataMap.entries()].map(([k, v]) => [
+      k,
+      typeof v === 'string' && riskyPattern.test(v) ? `'${v}` : v,
+    ])
+  );
+}
+
 function handleSubmit(formBox, widgetId) {
   const locale = window.location.pathname.split('/')[1] || 'en';
   const validateFields = () => {
@@ -264,20 +274,21 @@ function handleSubmit(formBox, widgetId) {
     });
 
     // convert Map to ordered object:
-    const orderedData = Object.fromEntries(data);
+    const orderedData = sanitizeDataMap(data);
     const fileName = formBox.closest('.section').getAttribute('data-savedata');
-    const file = `/sites/${fileName}.xlsx`;
-    
+
     await submitWithTurnstile({
       widgetId,
       data: orderedData,
-      fileSource: file,
+      fileName,
       successCallback: () => {
         formBox.reset();
         const successMsg = formBox.querySelector('#success-message');
         if (successMsg) {
-          successMsg.style.display = 'block';
+          // successMsg.style.display = 'block';
+          formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
           successMsg.scrollIntoView({ behavior: 'smooth' });
+          formBox.classList.add('form_submitted');
         }
       },
     });

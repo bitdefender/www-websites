@@ -59,6 +59,15 @@
   display: none;
 }
 
+.booking-form-container form.form_submitted .input-row2 {
+  display: none;
+}
+
+.booking-form-container form.form_submitted h2 {
+  color: rgb(15, 151, 15);
+}
+
+
 .booking-form-container .input-row {
   display: flex;
   align-items: flex-end;
