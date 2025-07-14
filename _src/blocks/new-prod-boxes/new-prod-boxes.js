@@ -341,11 +341,17 @@ export default async function decorate(block) {
         }
       }
 
+      const [alias, selector, btnText] = (undeBuyLink?.innerText || '').trim().split('|');
+      let demoBtn = '';
+      if (alias.trim() === 'popup') {
+        demoBtn = `<span class="demoBtn" data-show="${selector}" onclick="document.querySelector('.${selector.replace(/\s+/g, '')}').style.display = 'block'">${btnText}</span>`;
+      }
+
       prodBox.innerHTML = `
-          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
+          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'}${greenTag.innerText.trim() === 'demo-box' ? ' demo-box' : ''} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
           data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
             <div class="inner_prod_box">
-              ${greenTag.innerText.trim() ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
+              ${greenTag.innerText.trim() && greenTag.innerText.trim() !== 'demo-box' ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
               ${titleHTML}
 
               <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
@@ -355,7 +361,7 @@ export default async function decorate(block) {
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices await-loader"></div>
               ${secondButton ? secondButton.outerHTML : ''}
-              ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${undeBuyLink.innerText.trim()}</div>` : ''}
+              ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
               <div class="add-on-product" style="display: none;">
@@ -434,6 +440,7 @@ export default async function decorate(block) {
   if (blockParent.classList.contains('show-more-show-less')) {
     const benefitsLists = block.querySelectorAll('.benefitsLists');
     const btnWrappers = [];
+    let anchorButtons = document.querySelectorAll('.tabs-component .button');
 
     benefitsLists.forEach((benefits) => {
       const btnWrapper = document.createElement('div');
@@ -460,6 +467,20 @@ export default async function decorate(block) {
           btnWrapper.textContent = shouldExpand ? blockParent.getAttribute('data-show-less') : blockParent.getAttribute('data-show-more');
           btnWrapper.className = shouldExpand ? 'show-less-btn' : 'show-more-btn';
           btnWrapper.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
+        });
+      });
+    });
+
+    anchorButtons.forEach((anchorButton) => {
+      anchorButton.addEventListener('click', () => {
+        document.getElementById('switchCheckbox').checked = true;
+        let familyBoxes = block.querySelectorAll('.family-box');
+        familyBoxes.forEach((box) => {
+          box.style.display = 'block';
+        });
+        let individualBoxes = block.querySelectorAll('.individual-box');
+        individualBoxes.forEach((box) => {
+          box.style.display = 'none';
         });
       });
     });

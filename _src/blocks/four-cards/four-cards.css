@@ -409,6 +409,10 @@
     padding: 23px var(--section-desktop-padding);
     border-radius: 0;
   }
+
+  .four-cards-container.centered2 .default-content-wrapper {
+    text-align: center;
+  }
 }
 
 @media (min-width: 992px) {
