@@ -28,10 +28,10 @@ function createForm(block) {
     const fieldMandatory = fieldMandatoryEl?.innerText || '';
     const name = fieldNameVal?.innerText.toLowerCase().replace(/\s+/g, '') || '';
     const isMandatory = fieldMandatory.trim() === '*';
-    const isStandalone = ['title', 'success_message', 'recaptcha', 'normal_text', 'textarea', 'submit', 'checkbox'].includes(fieldType);
+    const isStandalone = ['title', 'success_message', 'normal_text', 'textarea', 'submit', 'checkbox'].includes(fieldType);
 
     const inputBox = document.createElement('div');
-    if (!['title', 'success_message', 'recaptcha', 'submit'].includes(fieldType)) inputBox.className = 'input-box';
+    if (!['title', 'success_message', 'submit'].includes(fieldType)) inputBox.className = 'input-box';
 
     switch (fieldType) {
       case 'title': {
@@ -43,24 +43,6 @@ function createForm(block) {
       case 'success_message': {
         inputBox.id = 'success-message';
         inputBox.innerHTML = fieldNameEl?.innerHTML;
-        break;
-      }
-
-      case 'recaptcha': {
-        inputBox.id = 'captchaBox';
-        const recaptchaScript = document.createElement('script');
-        recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoadCallback';
-        recaptchaScript.defer = true;
-        document.body.appendChild(recaptchaScript);
-
-        window.onRecaptchaLoadCallback = () => {
-          /* global grecaptcha */
-          window.clientId = grecaptcha.render('captchaBox', {
-            sitekey: '6LcEH5onAAAAAH4800Uc6IYdUvmqPLHFGi_nOGeR',
-            badge: 'inline',
-            size: 'invisible',
-          });
-        };
         break;
       }
 
