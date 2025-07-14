@@ -307,5 +307,5 @@ export default function decorate(block) {
 
   matchHeights(block, '.price-applied-on-time');
   matchHeights(block, '.button-container');
-  matchHeights(block, 'div[role="columnheader"] p:first-of-type');
+  matchHeights(block, 'div[role="columnheader"] p:first-of-type:not(:has(.tag))');
 }

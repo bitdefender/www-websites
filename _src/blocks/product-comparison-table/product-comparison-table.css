@@ -159,6 +159,10 @@ div[role="cell"] .button-container,
     font-size: var(--body-font-size-s);
 }
 
+.product-comparison-header div[role="columnheader"]:not(:has(table)) p:first-of-type {
+    flex-grow: 1;
+}
+
 .product-comparison-header div[role="cell"] p:first-of-type {
     font-weight: var(--font-weight-bold);
     padding: 0;
