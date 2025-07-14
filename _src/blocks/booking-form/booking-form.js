@@ -288,7 +288,7 @@ function handleSubmit(formBox, widgetId) {
         if (successMsg) {
           // successMsg.style.display = 'block';
           formBox.classList.remove('loading');
-          formBox.classList.add('form_submitted');
+          formBox.classList.add('form-submitted');
           formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
           successMsg.scrollIntoView({ behavior: 'smooth' });
         }

@@ -88,11 +88,11 @@
   }
 }
 
-.booking-form-container form.form_submitted .input-row2 {
+.booking-form-container form.form-submitted .input-row2 {
   display: none;
 }
 
-.booking-form-container form.form_submitted h4 {
+.booking-form-container form.form-submitted h4 {
   color: #0f970f;
 }
 
