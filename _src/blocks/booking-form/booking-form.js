@@ -235,7 +235,7 @@ function handleSubmit(formBox, widgetId) {
 
     if (!validateFields()) return;
 
-    const date = new Date().toISOString().split('T')[0];
+    const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const data = new Map();
 
     // set date and locale
