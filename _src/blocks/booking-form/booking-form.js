@@ -1,4 +1,4 @@
-import { submitWithTurnstile } from '../../scripts/utils/utils.js';
+import { renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 
 function createForm(block) {
   const allFields = [...block.children];
@@ -28,10 +28,10 @@ function createForm(block) {
     const fieldMandatory = fieldMandatoryEl?.innerText || '';
     const name = fieldNameVal?.innerText.toLowerCase().replace(/\s+/g, '') || '';
     const isMandatory = fieldMandatory.trim() === '*';
-    const isStandalone = ['title', 'success_message', 'recaptcha', 'normal_text', 'textarea', 'submit', 'checkbox'].includes(fieldType);
+    const isStandalone = ['title', 'success_message', 'normal_text', 'textarea', 'submit', 'checkbox'].includes(fieldType);
 
     const inputBox = document.createElement('div');
-    if (!['title', 'success_message', 'recaptcha', 'submit'].includes(fieldType)) inputBox.className = 'input-box';
+    if (!['title', 'success_message', 'submit'].includes(fieldType)) inputBox.className = 'input-box';
 
     switch (fieldType) {
       case 'title': {
@@ -43,24 +43,6 @@ function createForm(block) {
       case 'success_message': {
         inputBox.id = 'success-message';
         inputBox.innerHTML = fieldNameEl?.innerHTML;
-        break;
-      }
-
-      case 'recaptcha': {
-        inputBox.id = 'captchaBox';
-        const recaptchaScript = document.createElement('script');
-        recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoadCallback';
-        recaptchaScript.defer = true;
-        document.body.appendChild(recaptchaScript);
-
-        window.onRecaptchaLoadCallback = () => {
-          /* global grecaptcha */
-          window.clientId = grecaptcha.render('captchaBox', {
-            sitekey: '6LcEH5onAAAAAH4800Uc6IYdUvmqPLHFGi_nOGeR',
-            badge: 'inline',
-            size: 'invisible',
-          });
-        };
         break;
       }
 
@@ -83,7 +65,12 @@ function createForm(block) {
       }
 
       case 'button': {
-        inputBox.innerHTML = `
+        const turnstileDiv = document.createElement('div');
+        turnstileDiv.id = 'turnstile-container';
+        turnstileDiv.className = 'turnstile-box';
+        inputBox.appendChild(turnstileDiv);
+
+        inputBox.innerHTML += `
           <input type="submit" id="input-submit" name="${name}" class="submit-btn" value="${fieldName}">
         `;
         break;
@@ -189,7 +176,17 @@ function createForm(block) {
   return formBox;
 }
 
-function handleSubmit(formBox) {
+function sanitizeDataMap(dataMap) {
+  const riskyPattern = /^\d{1,2}[-/]\d{1,2}$/;
+  return Object.fromEntries(
+    [...dataMap.entries()].map(([k, v]) => [
+      k,
+      typeof v === 'string' && riskyPattern.test(v) ? `'${v}` : v,
+    ]),
+  );
+}
+
+function handleSubmit(formBox, widgetId) {
   const locale = window.location.pathname.split('/')[1] || 'en';
   const validateFields = () => {
     let isValid = true;
@@ -244,11 +241,12 @@ function handleSubmit(formBox) {
   };
 
   formBox.addEventListener('submit', async (e) => {
+    formBox.classList.add('loading');
     e.preventDefault();
 
     if (!validateFields()) return;
 
-    const date = new Date().toISOString().split('T')[0];
+    const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const data = new Map();
 
     // set date and locale
@@ -277,26 +275,21 @@ function handleSubmit(formBox) {
     });
 
     // convert Map to ordered object:
-    const orderedData = Object.fromEntries(data);
+    const orderedData = sanitizeDataMap(data);
     const fileName = formBox.closest('.section').getAttribute('data-savedata');
-    const file = `/sites/${fileName}.xlsx`;
-
-    const turnstileBox = formBox.querySelector('#TurnstileBox') || (() => {
-      const box = document.createElement('div');
-      box.id = 'TurnstileBox';
-      formBox.appendChild(box);
-      return box;
-    })();
 
     await submitWithTurnstile({
-      container: turnstileBox,
+      widgetId,
       data: orderedData,
-      file,
+      fileName,
       successCallback: () => {
         formBox.reset();
         const successMsg = formBox.querySelector('#success-message');
         if (successMsg) {
-          successMsg.style.display = 'block';
+          // successMsg.style.display = 'block';
+          formBox.classList.remove('loading');
+          formBox.classList.add('form-submitted');
+          formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
           successMsg.scrollIntoView({ behavior: 'smooth' });
         }
       },
@@ -308,5 +301,10 @@ export default function decorate(block) {
   const formBox = createForm(block);
   block.innerHTML = '';
   block.appendChild(formBox);
-  handleSubmit(formBox);
+
+  renderTurnstile('turnstile-container')
+    .then((widgetId) => {
+      handleSubmit(formBox, widgetId);
+    })
+    .catch(console.error);
 }
