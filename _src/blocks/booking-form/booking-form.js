@@ -21,17 +21,17 @@ function createForm(block) {
     if (index === 0) return;
 
     const divs = field.querySelectorAll('div');
-    const [fieldNameEl, fieldTypeEl, fieldValidationEl, fieldMandatoryEl] = divs;
+    const [fieldNameEl, fieldTypeEl, fieldValidationEl, fieldMandatoryEl, fieldNameVal] = divs;
     const fieldName = fieldNameEl?.innerText || '';
     const fieldType = fieldTypeEl?.innerText.toLowerCase() || 'text';
     const fieldValidation = fieldValidationEl?.innerText || '';
     const fieldMandatory = fieldMandatoryEl?.innerText || '';
-    const name = fieldName.toLowerCase().replace(/\s+/g, '');
+    const name = fieldNameVal?.innerText.toLowerCase().replace(/\s+/g, '') || '';
     const isMandatory = fieldMandatory.trim() === '*';
     const isStandalone = ['title', 'success_message', 'recaptcha', 'normal_text', 'textarea', 'submit', 'checkbox'].includes(fieldType);
 
     const inputBox = document.createElement('div');
-    inputBox.className = 'input-box';
+    if (!['title', 'success_message', 'recaptcha', 'submit'].includes(fieldType)) inputBox.className = 'input-box';
 
     switch (fieldType) {
       case 'title': {
@@ -110,7 +110,7 @@ function createForm(block) {
         checkItems.forEach((item, i) => {
           checkboxesHTML += `
             <label class="input-checkbox">
-              <input type="checkbox" id="input-${name}-${i}" name="${name}" ${isMandatory ? 'required' : ''}>
+              <input type="checkbox" id="input-${name}-${i}" name="${name}" value="${item.innerHTML}" ${isMandatory ? 'required' : ''}>
               ${item.innerHTML}
             </label>
           `;
@@ -191,12 +191,6 @@ function createForm(block) {
 
 function handleSubmit(formBox) {
   const locale = window.location.pathname.split('/')[1] || 'en';
-
-  const getValue = (name) => {
-    const el = formBox.querySelector(`[name="${name}"]`);
-    return el?.value?.trim() || '';
-  };
-
   const validateFields = () => {
     let isValid = true;
     const inputs = formBox.querySelectorAll('input, textarea, select');
@@ -255,16 +249,35 @@ function handleSubmit(formBox) {
     if (!validateFields()) return;
 
     const date = new Date().toISOString().split('T')[0];
-    const data = {
-      DATE: date,
-      LOCALE: locale,
-      FULL_NAME: getValue('fullname'),
-      EMAIL: getValue('email'),
-      TEAM_MEMBERS: getValue('teammembers'),
-      FOLLOWERS: getValue('followers'),
-      PLATFORMS: getValue('platforms'),
-      COMMENTS: getValue('comments'),
-    };
+    const data = new Map();
+
+    // set date and locale
+    data.set('DATE', date);
+    data.set('LOCALE', locale);
+
+    formBox.querySelectorAll('.input-box').forEach((box) => {
+      const field = box.querySelector('input[name], select[name], textarea[name]');
+      if (!field || !field.name || data.has(field.name.toUpperCase())) return;
+
+      const name = field.name;
+      const key = name.toUpperCase().replace(/-/g, '_');
+
+      if (field.type === 'checkbox') {
+        const group = formBox.querySelectorAll(`input[type="checkbox"][name="${name}"]`);
+        const values = Array.from(group)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value.trim());
+        data.set(key, values.length ? values.join(', ') : 'No');
+      } else if (field.type === 'radio') {
+        const selected = formBox.querySelector(`input[type="radio"][name="${name}"]:checked`);
+        data.set(key, selected ? selected.value.trim() : '');
+      } else {
+        data.set(key, field.value?.trim() || '');
+      }
+    });
+
+    // convert Map to ordered object:
+    const orderedData = Object.fromEntries(data);
 
     const file = '/sites/creators-form-data.xlsx';
 
@@ -277,7 +290,7 @@ function handleSubmit(formBox) {
 
     await submitWithTurnstile({
       container: turnstileBox,
-      data,
+      data: orderedData,
       file,
       successCallback: () => {
         formBox.reset();
