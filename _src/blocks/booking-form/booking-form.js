@@ -270,7 +270,6 @@ function handleSubmit(formBox, widgetId) {
     
     await submitWithTurnstile({
       widgetId,
-      container: turnstileBox,
       data: orderedData,
       fileSource: file,
       successCallback: () => {
