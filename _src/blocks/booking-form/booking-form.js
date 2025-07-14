@@ -276,12 +276,11 @@ function handleSubmit(formBox, widgetId) {
     // convert Map to ordered object:
     const orderedData = sanitizeDataMap(data);
     const fileName = formBox.closest('.section').getAttribute('data-savedata');
-    const file = `/sites/${fileName}.xlsx`;
-    
+
     await submitWithTurnstile({
       widgetId,
       data: orderedData,
-      fileSource: file,
+      fileName,
       successCallback: () => {
         formBox.reset();
         const successMsg = formBox.querySelector('#success-message');
