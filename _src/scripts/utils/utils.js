@@ -986,7 +986,6 @@ export async function submitWithTurnstile({
   successCallback = null,
   errorCallback = null,
 }) {
-  const SITEKEY = '0x4AAAAAABkTzSd63P7J-Tl_';
   const ENDPOINT = 'https://stage.bitdefender.com/form';
 
   try {
