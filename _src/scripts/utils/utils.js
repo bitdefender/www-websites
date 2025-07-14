@@ -1018,7 +1018,6 @@ export async function submitWithTurnstile({
     if (typeof successCallback === 'function') successCallback();
     window.turnstile.reset(widgetId);
   } catch (err) {
-    console.error('Turnstile submit error:', err);
     if (typeof errorCallback === 'function') errorCallback(err);
   }
 }
@@ -1106,7 +1105,6 @@ export async function submitWithTurnstile2({
       if (typeof successCallback === 'function') successCallback();
       window.turnstile.reset(widgetId);
     } catch (err) {
-      console.error('Turnstile submit error:', err);
       if (typeof errorCallback === 'function') errorCallback(err);
     }
   }
