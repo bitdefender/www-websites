@@ -55,7 +55,7 @@
 
 .booking-form-container #success-message {
   text-align: center;
-  color: rgb(15, 151, 15);
+  color: #0f970f;
   display: none;
 }
 
@@ -93,7 +93,7 @@
 }
 
 .booking-form-container form.form_submitted h4 {
-  color: rgb(15, 151, 15);
+  color: #0f970f;
 }
 
 .booking-form-container .input-row {
