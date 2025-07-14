@@ -950,8 +950,81 @@ export function generateLDJsonSchema() {
   document.head.appendChild(script);
 }
 
-// submitWithTurnstile.js
+// Turnstile
+export function renderTurnstile(containerId) {
+  return new Promise((resolve, reject) => {
+    function renderWidget() {
+      if (!window.turnstile) {
+        reject('Turnstile not loaded.');
+        return;
+      }
+
+      const widgetId = window.turnstile.render(`#${containerId}`, {
+        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
+      });
+
+      resolve(widgetId);
+    }
+
+    if (window.turnstile) {
+      renderWidget();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+      script.async = true;
+      script.defer = true;
+      window.onloadTurnstileCallback = renderWidget;
+      document.head.appendChild(script);
+    }
+  });
+}
+
 export async function submitWithTurnstile({
+  widgetId,
+  data,
+  fileSource,
+  successCallback = null,
+  errorCallback = null,
+}) {
+  const SITEKEY = '0x4AAAAAABkTzSd63P7J-Tl_';
+  const ENDPOINT = 'https://stage.bitdefender.com/form';
+
+  try {
+    const token = window.turnstile.getResponse(widgetId);
+
+    if (!token) {
+      throw new Error('Turnstile token is missing. Please complete the challenge.');
+    }
+
+    const requestData = {
+      file: fileSource,
+      table: TABLE,
+      row: {
+        ...data,
+      },
+      token,
+    };
+
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+
+    const contentType = res.headers.get('content-type');
+    if (!contentType?.includes('application/json')) throw new Error(await res.text());
+
+    if (typeof successCallback === 'function') successCallback();
+    window.turnstile.reset(widgetId);
+  } catch (err) {
+    console.error('Turnstile submit error:', err);
+    if (typeof errorCallback === 'function') errorCallback(err);
+  }
+}
+
+export async function submitWithTurnstile2({
   container, data, fileSource, successCallback = null, errorCallback = null,
 }) {
   const SITEKEY = '0x4AAAAAABkTzSd63P7J-Tl_';

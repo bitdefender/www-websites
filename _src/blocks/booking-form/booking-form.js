@@ -1,4 +1,4 @@
-import { submitWithTurnstile } from '../../scripts/utils/utils.js';
+import { renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 
 function createForm(block) {
   const allFields = [...block.children];
@@ -65,7 +65,12 @@ function createForm(block) {
       }
 
       case 'button': {
-        inputBox.innerHTML = `
+        const turnstileDiv = document.createElement('div');
+        turnstileDiv.id = 'turnstile-container';
+        turnstileDiv.className = 'turnstile-box';
+        inputBox.appendChild(turnstileDiv);
+
+        inputBox.innerHTML += `
           <input type="submit" id="input-submit" name="${name}" class="submit-btn" value="${fieldName}">
         `;
         break;
@@ -171,7 +176,7 @@ function createForm(block) {
   return formBox;
 }
 
-function handleSubmit(formBox) {
+function handleSubmit(formBox, widgetId) {
   const locale = window.location.pathname.split('/')[1] || 'en';
   const validateFields = () => {
     let isValid = true;
@@ -263,15 +268,8 @@ function handleSubmit(formBox) {
     const fileName = formBox.closest('.section').getAttribute('data-savedata');
     const file = `/sites/${fileName}.xlsx`;
     
-
-    const turnstileBox = formBox.querySelector('#TurnstileBox') || (() => {
-      const box = document.createElement('div');
-      box.id = 'TurnstileBox';
-      formBox.appendChild(box);
-      return box;
-    })();
-
     await submitWithTurnstile({
+      widgetId,
       container: turnstileBox,
       data: orderedData,
       fileSource: file,
@@ -291,5 +289,10 @@ export default function decorate(block) {
   const formBox = createForm(block);
   block.innerHTML = '';
   block.appendChild(formBox);
-  handleSubmit(formBox);
+
+  renderTurnstile('turnstile-container')
+    .then((widgetId) => {
+      handleSubmit(formBox, widgetId);
+    })
+    .catch(console.error);
 }
