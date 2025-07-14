@@ -1016,8 +1016,8 @@ export async function submitWithTurnstile({
         table: TABLE,
         row: {
           ...data,
-          token,
         },
+        token,
       };
 
       const res = await fetch(ENDPOINT, {
