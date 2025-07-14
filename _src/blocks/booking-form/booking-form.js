@@ -147,7 +147,7 @@ function createForm(block) {
 
     const row = document.createElement('div');
     row.className = 'input-row';
-    if (fieldType !== 'title' && fieldType !== 'success_message') row.classList.add('input-row2');
+    if (fieldType !== 'success_message') row.classList.add('input-row2');
 
     if (isStandalone) {
       row.appendChild(inputBox);
@@ -174,6 +174,16 @@ function createForm(block) {
   }
 
   return formBox;
+}
+
+function sanitizeDataMap(dataMap) {
+  const riskyPattern = /^\d{1,2}[-/]\d{1,2}$/;
+  return Object.fromEntries(
+    [...dataMap.entries()].map(([k, v]) => [
+      k,
+      typeof v === 'string' && riskyPattern.test(v) ? `'${v}` : v,
+    ])
+  );
 }
 
 function handleSubmit(formBox, widgetId) {
@@ -264,7 +274,7 @@ function handleSubmit(formBox, widgetId) {
     });
 
     // convert Map to ordered object:
-    const orderedData = Object.fromEntries(data);
+    const orderedData = sanitizeDataMap(data);
     const fileName = formBox.closest('.section').getAttribute('data-savedata');
     const file = `/sites/${fileName}.xlsx`;
     
@@ -278,6 +288,9 @@ function handleSubmit(formBox, widgetId) {
         if (successMsg) {
           successMsg.style.display = 'block';
           successMsg.scrollIntoView({ behavior: 'smooth' });
+          formBox.querySelectorAll('.input-row2').forEach((el) => {
+            el.style.display = 'none';
+          });
         }
       },
     });
