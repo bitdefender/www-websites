@@ -182,7 +182,7 @@ function sanitizeDataMap(dataMap) {
     [...dataMap.entries()].map(([k, v]) => [
       k,
       typeof v === 'string' && riskyPattern.test(v) ? `'${v}` : v,
-    ])
+    ]),
   );
 }
 

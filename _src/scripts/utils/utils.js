@@ -955,7 +955,7 @@ export function renderTurnstile(containerId) {
   return new Promise((resolve, reject) => {
     function renderWidget() {
       if (!window.turnstile) {
-        reject('Turnstile not loaded.');
+        reject(new Error('Turnstile not loaded.'));
         return;
       }
 
