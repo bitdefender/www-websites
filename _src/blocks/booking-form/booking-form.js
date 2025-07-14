@@ -259,14 +259,14 @@ function handleSubmit(formBox) {
       const field = box.querySelector('input[name], select[name], textarea[name]');
       if (!field || !field.name || data.has(field.name.toUpperCase())) return;
 
-      const name = field.name;
+      const { name } = field;
       const key = name.toUpperCase().replace(/-/g, '_');
 
       if (field.type === 'checkbox') {
         const group = formBox.querySelectorAll(`input[type="checkbox"][name="${name}"]`);
         const values = Array.from(group)
-          .filter(cb => cb.checked)
-          .map(cb => cb.value.trim());
+          .filter((cb) => cb.checked)
+          .map((cb) => cb.value.trim());
         data.set(key, values.length ? values.join(', ') : 'No');
       } else if (field.type === 'radio') {
         const selected = formBox.querySelector(`input[type="radio"][name="${name}"]:checked`);
