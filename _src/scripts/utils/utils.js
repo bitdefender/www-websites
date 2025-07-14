@@ -997,7 +997,7 @@ export async function submitWithTurnstile({
 
     const requestData = {
       file: fileSource,
-      table: TABLE,
+      table: 'Table1',
       row: {
         ...data,
       },
