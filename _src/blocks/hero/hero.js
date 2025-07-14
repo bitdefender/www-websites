@@ -87,6 +87,23 @@ createNanoBlock('discount', (code, label = '{label}') => {
   return root;
 });
 
+createNanoBlock('europe_badge', (badgeText) => {
+  // code = "europe"
+  const root = document.createElement('div');
+  root.classList.add('europe-badge');
+
+  const europeFlag = document.createElement('div');
+  europeFlag.classList.add('europe-flag');
+  root.appendChild(europeFlag);
+
+  const flagText = document.createElement('span');
+  flagText.classList.add('europe-badge__text');
+  flagText.textContent = badgeText;
+  root.appendChild(flagText);
+
+  return root;
+});
+
 async function renderBubble(block) {
   await renderNanoBlocks(block);
   const bubble = block?.querySelector('.discount-bubble');
@@ -113,6 +130,7 @@ async function renderBubble(block) {
  * @param {Element} block The hero block element
  */
 export default function decorate(block) {
+  const parentSection = block.closest('.section');
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
@@ -128,7 +146,9 @@ export default function decorate(block) {
     iosTemplate,
     appStoreLink,
     googlePlayLink,
-  } = block.closest('.section').dataset;
+    backgroundcolor,
+    textcolor,
+  } = parentSection.dataset;
 
   buildHeroBlock(block);
   renderBubble(block);
@@ -158,6 +178,11 @@ export default function decorate(block) {
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
 
+  if (backgroundcolor) {
+    parentSection.style.backgroundColor = backgroundcolor;
+    block.style.backgroundColor = backgroundcolor;
+  }
+
   // get div class hero-content
   const elementHeroContent = block.querySelector('.hero div.hero-content div');
   if (elementHeroContent !== null) {
@@ -172,6 +197,12 @@ export default function decorate(block) {
       const signatureElement = createTag('div', { class: 'signature' });
       signatureElement.textContent = signature;
       document.querySelector('div.hero div div:first-child').prepend(signatureElement);
+    }
+
+    if (textcolor) {
+      block.querySelectorAll('.hero-content > div, .hero-content > div *').forEach((el) => {
+        el.style.color = textcolor;
+      });
     }
 
     // set the modal buttons in the hero banner to not refresh the modal on click

@@ -93,11 +93,13 @@ function renderStickyNavigation(block) {
 }
 
 function stickNavigationOnTop(stickyNav) {
-  const wrapperTop = document.querySelector('.sticky-navigation-container').offsetTop;
-  if (window.scrollY >= wrapperTop) {
-    stickyNav.classList.add('fixed-nav');
-  } else {
-    stickyNav.classList.remove('fixed-nav');
+  const wrapperTop = document.querySelector('.sticky-navigation-container')?.offsetTop;
+  if (wrapperTop) {
+    if (window.scrollY >= wrapperTop) {
+      stickyNav.classList.add('fixed-nav');
+    } else {
+      stickyNav.classList.remove('fixed-nav');
+    }
   }
 }
 

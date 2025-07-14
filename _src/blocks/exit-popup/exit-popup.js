@@ -1,3 +1,4 @@
+import { target } from '../../scripts/target.js';
 import { ProductInfo, Store } from '../../scripts/libs/store/store.js';
 // eslint-disable-next-line no-unused-vars
 export default async function decorate(block) {
@@ -7,7 +8,8 @@ export default async function decorate(block) {
   if (product) {
     const [alias, devices, years] = product.split(',');
     // eslint-disable-next-line no-undef
-    const products = await Store.getProducts([new ProductInfo(alias, 'consumer', custompid)]);
+    const exitPopupPromotion = (await target.getOffers({ mboxNames: 'exitPopupPid-mbox' }))?.promotion;
+    const products = await Store.getProducts([new ProductInfo(alias, 'consumer', exitPopupPromotion || custompid, true)]);
     const productItem = products[alias];
     const productCurrency = productItem.currency;
     const productRegionId = productItem.regionId;

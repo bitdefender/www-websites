@@ -1,11 +1,11 @@
-import Target from '@repobit/dex-target';
 import { User, Cookies } from '@repobit/dex-utils';
+import { target, adobeMcAppendVisitorId } from '../../scripts/target.js';
 import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
 } from '../../scripts/lib-franklin.js';
 
 import {
-  adobeMcAppendVisitorId, getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
+  getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
 
 import { Constants } from '../../scripts/libs/constants.js';
@@ -56,7 +56,7 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
   if (!userLoggedInExpirationDate
     || (userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now())) {
     loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
-      loginPopupLink.href = await Target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
+      loginPopupLink.href = await target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
     });
   }
 };
@@ -236,7 +236,7 @@ function renderDesktopHeader(block, nav) {
   if (navSections) {
     decorateBlockWithRegionId(navSections, 'Main Menu|General Links');
     const loginLink = document.querySelector('.nav-sections p:last-child');
-    loginLink.addEventListener('click', (e) => {
+    loginLink?.addEventListener('click', (e) => {
       e.preventDefault();
       handleLoginClick();
     });

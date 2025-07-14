@@ -1,0 +1,21 @@
+
+@media (min-width: 992px) {
+    .creators .default-content-wrapper h2{
+        font-size: 60px / 69px;
+        font-weight: 300;
+        font-family: 'IBM Plex Sans', Arial;
+    }
+
+    html[lang="ro"], body {
+        font-family: 'IBMPlexSans', sans-serif;
+
+        /* Activăm glifele locale pentru limba română */
+        font-feature-settings: "locl" 1;
+        -moz-font-feature-settings: "locl";
+        -webkit-font-feature-settings: "locl";
+      
+        /* Activăm contextualizarea OpenType (pentru siguranță) */
+        font-variant-ligatures: contextual;
+      
+    }
+}

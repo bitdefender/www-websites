@@ -1,87 +1,37 @@
+import Glide from '@glidejs/glide';
 import { debounce } from '@repobit/dex-utils';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
-  let currentSlideIndex = 0;
+  const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
+  const isTrusted = block.classList.contains('trusted-carousel');
+  const slidesHTML = slides.map((slide) => `
+    <li class="carousel-item glide__slide">
+      ${isTestimonials ? `
+        <div class="img-container">
+          ${slide.children[0]?.children[0]?.innerHTML}
+        </div>
+      ` : slide.children[0]?.children[0]?.innerHTML}
 
-  const countItems = slides.length;
-  let countClass = `has-${countItems}-items`;
-  if (countItems > 3 && countItems < 7) {
-    countClass = 'has-3-7-items';
-  }
-  if (countItems > 7) {
-    countClass = 'has-more-items';
-  }
-  block.classList.add(countClass);
+      <p class="title">${slide.children[0]?.children[1]?.textContent}</p>
 
-  const isTestimonials = block.closest('.section').classList.contains('testimonials');
+      ${isTestimonials ? `
+        <div class="subtitle-secondary">${slide.children[0]?.children[2]?.innerHTML}</div>
+        <div class="subtitle">${slide.children[0]?.children[3]?.innerHTML}</div>
+      ` : `
+        <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML}</div>
+      `}
+    </li>
+  `).join('');
 
-  const carouselItemStyle = {
-    margin: 20,
-  };
+  // Only one carousel-nav block: your original one with div.navigation-item
+  const navDotsHTML = slides.map((_, i) => `
+    <div class="navigation-item ${i === 0 ? 'active' : ''}" data-index="${i}"></div>
+  `).join('');
 
-  function isFirstIndex() {
-    return currentSlideIndex === 0;
-  }
-
-  function isLastIndex() {
-    return currentSlideIndex === slides.length - 3;
-  }
-
-  function scrollCarousel(offset, carousel) {
-    const carouselItem = block.querySelector('.carousel-item');
-    carousel.style.transform = `translateX(${-1 * offset * (carouselItem.offsetWidth + carouselItemStyle.margin)}px)`;
-  }
-
-  function getCarousel() {
-    return block.querySelector('.carousel');
-  }
-
-  function updateDisabledArrow() {
-    const leftArrowEl = block.querySelector('.left-arrow');
-    const rightArrowEl = block.querySelector('.right-arrow');
-
-    leftArrowEl.classList.remove('disabled');
-    rightArrowEl.classList.remove('disabled');
-
-    if (isLastIndex()) {
-      block.querySelector('.right-arrow').classList.add('disabled');
-      return;
-    }
-
-    if (isFirstIndex()) {
-      block.querySelector('.left-arrow').classList.add('disabled');
-    }
-  }
-
-  function leftArrowHandler(e) {
-    e.preventDefault();
-    if (isFirstIndex()) {
-      return;
-    }
-    currentSlideIndex -= 1;
-    scrollCarousel(currentSlideIndex, getCarousel());
-    updateDisabledArrow(currentSlideIndex);
-  }
-
-  function rightArrowHandler(e) {
-    e.preventDefault();
-    if (isLastIndex()) {
-      return;
-    }
-    currentSlideIndex += 1;
-    scrollCarousel(currentSlideIndex, getCarousel());
-    updateDisabledArrow(currentSlideIndex);
-  }
-
-  function renderArrows() {
-    block.classList.remove('scrollable');
-
-    if (isView('desktop')) {
-      const cardsNotFullyVisible = window.innerWidth > 767;
-      return cardsNotFullyVisible ? `
+  const arrowsHTML = isView('desktop') ? `
       <a href class="arrow disabled left-arrow">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -106,70 +56,108 @@ export default async function decorate(block) {
           </g>
         </svg>
       </a>
-    ` : '';
-    }
+  ` : '';
 
-    block.classList.add('scrollable');
-    return '';
-  }
-
-  function render() {
-    block.classList.add('default-content-wrapper');
-
-    block.innerHTML = `
+  block.classList.add('default-content-wrapper');
+  block.innerHTML = `
     <div class="carousel-header">
-      <div class="title">${titleEl?.children[0]?.innerHTML}</div>
-      <div class="arrows d-flex">${renderArrows()}</div>
+      <div class="title">${titleEl?.children[0]?.innerHTML ?? ''}</div>
+      <div class="arrows d-flex">${arrowsHTML}</div>
     </div>
 
-    <div class="carousel-container">
-        <div class="carousel">
-          ${slides.map((slide) => `
-            <div class="carousel-item">
-                ${isTestimonials ? `
-                  <div class="img-container">
-                    ${slide.children[0]?.children[0]?.innerHTML}
-                  </div>
-                ` : slide.children[0]?.children[0]?.innerHTML}
+    <div class="carousel-container glide">
+      <div class="carousel glide__track" data-glide-el="track">
+        <ul class="glide__slides">
+          ${slidesHTML}
+        </ul>
+      </div>
 
-                <p class="title">
-                    ${slide.children[0]?.children[1]?.textContent}
-                </p>
-
-                ${isTestimonials ? `
-                  <div class="subtitle-secondary">
-                    ${slide.children[0]?.children[2]?.innerHTML}
-                  </div>
-
-                  <div class="subtitle">
-                    ${slide.children[0]?.children[3]?.innerHTML}
-                  </div>
-                ` : `
-                   <div class="subtitle">
-                      ${slide.children[0]?.children[2]?.innerHTML}
-                   </div>
-                `}
-            </div>
-          `).join('')}
-        </div>
+      <div class="carousel-nav">
+        ${navDotsHTML}
+      </div>
     </div>
   `;
 
-    decorateIcons(block);
+  decorateIcons(block);
 
-    const leftArrowEl = block.querySelector('.left-arrow');
-    const rightArrowEl = block.querySelector('.right-arrow');
+  const glide = new Glide(block.querySelector('.glide'), {
+    type: 'carousel',
+    gap: 20,
+    perView: isTrusted ? 1 : 4,
+    breakpoints: isTrusted
+      ? {}
+      : {
+        991: { perView: 2 },
+        767: { perView: 1 },
+      },
+  });
 
-    if (leftArrowEl && rightArrowEl) {
-      leftArrowEl.removeEventListener('click', leftArrowHandler);
-      rightArrowEl.removeEventListener('click', rightArrowHandler);
+  glide.mount();
 
-      leftArrowEl.addEventListener('click', leftArrowHandler);
-      rightArrowEl.addEventListener('click', rightArrowHandler);
+  function updateNav() {
+    const navDots = block.querySelectorAll('.navigation-item');
+    navDots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === glide.index);
+    });
+  }
+
+  // Arrow click handlers to update glide
+  const leftArrow = block.querySelector('.left-arrow');
+  const rightArrow = block.querySelector('.right-arrow');
+
+  function updateArrows() {
+    if (!leftArrow || !rightArrow) return;
+
+    const currentIndex = glide.index;
+    const perView = glide.settings.perView || 1;
+    const totalSlides = slides.length;
+
+    if (currentIndex === 0) {
+      leftArrow.classList.add('disabled');
+    } else {
+      leftArrow.classList.remove('disabled');
+    }
+
+    if (currentIndex >= totalSlides - perView) {
+      rightArrow.classList.add('disabled');
+    } else {
+      rightArrow.classList.remove('disabled');
     }
   }
 
-  render();
+  updateNav();
+  updateArrows();
 
-  window.addEventListener('resize', debounce(render, 250));
+  glide.on('run', () => {
+    updateNav();
+    updateArrows();
+  });
+
+  // Add click handlers for your nav dots to control glide
+  const navDots = block.querySelectorAll('.navigation-item');
+  navDots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const idx = Number(dot.dataset.index);
+      glide.go(`=${idx}`);
+    });
+  });
+
+  if (leftArrow) {
+    leftArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      glide.go('<');
+    });
+  }
+  if (rightArrow) {
+    rightArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      glide.go('>');
+    });
+  }
+
+  window.addEventListener('resize', debounce(() => {
+    glide.update();
+  }, 250));
+
+  window.dispatchEvent(new Event('resize'));
 }
