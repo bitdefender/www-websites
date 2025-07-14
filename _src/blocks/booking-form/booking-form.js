@@ -278,8 +278,8 @@ function handleSubmit(formBox) {
 
     // convert Map to ordered object:
     const orderedData = Object.fromEntries(data);
-
-    const file = '/sites/creators-form-data.xlsx';
+    const fileName = formBox.closest('.section').getAttribute('data-savedata');
+    const file = `/sites/${fileName}.xlsx`;
 
     const turnstileBox = formBox.querySelector('#TurnstileBox') || (() => {
       const box = document.createElement('div');
