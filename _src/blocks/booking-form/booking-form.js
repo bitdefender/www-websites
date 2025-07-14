@@ -147,7 +147,7 @@ function createForm(block) {
 
     const row = document.createElement('div');
     row.className = 'input-row';
-    if (fieldType !== 'success_message') row.classList.add('input-row2');
+    if (fieldType !== 'title' && fieldType !== 'success_message') row.classList.add('input-row2');
 
     if (isStandalone) {
       row.appendChild(inputBox);
@@ -286,11 +286,10 @@ function handleSubmit(formBox, widgetId) {
         formBox.reset();
         const successMsg = formBox.querySelector('#success-message');
         if (successMsg) {
-          successMsg.style.display = 'block';
+          // successMsg.style.display = 'block';
+          formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
           successMsg.scrollIntoView({ behavior: 'smooth' });
-          formBox.querySelectorAll('.input-row2').forEach((el) => {
-            el.style.display = 'none';
-          });
+          formBox.classList.add('form_submitted');
         }
       },
     });
