@@ -59,14 +59,42 @@
   display: none;
 }
 
+
+.booking-form-container form.loading > div {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.booking-form-container form.loading::before {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: 3px solid #ccc;
+  border-top: 3px solid #026DFF;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 43%;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .booking-form-container form.form_submitted .input-row2 {
   display: none;
 }
 
-.booking-form-container form.form_submitted h2 {
+.booking-form-container form.form_submitted h4 {
   color: rgb(15, 151, 15);
 }
-
 
 .booking-form-container .input-row {
   display: flex;

@@ -1019,6 +1019,5 @@ export async function submitWithTurnstile({
     window.turnstile.reset(widgetId);
   } catch (err) {
     if (typeof errorCallback === 'function') errorCallback(err);
-    console.log('err ', err)
   }
 }

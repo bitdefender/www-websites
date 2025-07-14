@@ -241,6 +241,7 @@ function handleSubmit(formBox, widgetId) {
   };
 
   formBox.addEventListener('submit', async (e) => {
+    formBox.classList.add('loading');
     e.preventDefault();
 
     if (!validateFields()) return;
@@ -286,9 +287,10 @@ function handleSubmit(formBox, widgetId) {
         const successMsg = formBox.querySelector('#success-message');
         if (successMsg) {
           // successMsg.style.display = 'block';
+          formBox.classList.remove('loading');
+          formBox.classList.add('form_submitted');
           formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
           successMsg.scrollIntoView({ behavior: 'smooth' });
-          formBox.classList.add('form_submitted');
         }
       },
     });
