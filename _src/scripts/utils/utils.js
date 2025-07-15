@@ -1012,6 +1012,8 @@ export async function submitWithTurnstile({
       token,
     };
 
+    console.log('requestData here ', requestData)
+
     const res = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
