@@ -306,5 +306,7 @@ export default function decorate(block) {
     .then((widgetId) => {
       handleSubmit(formBox, widgetId);
     })
-    .catch(console.error);
+    .catch((error) => {
+      throw new Error(`Turnstile render failed: ${error.message}`);
+    });
 }
