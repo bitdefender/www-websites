@@ -593,12 +593,10 @@ function saveData(question, data) {
 
   renderTurnstile('turnstile-container')
     .then(async (widgetId) => {
-      console.log('Turnstile rendered with widgetId:', widgetId);
-
-      // Wait for the user to complete the challenge (max 10s)
+      // await until the token is generated
       const token = await new Promise((resolve, reject) => {
         let attempts = 0;
-        const maxAttempts = 20;
+        const maxAttempts = 5;
         const interval = setInterval(() => {
           const token = window.turnstile.getResponse(widgetId);
           if (token) {
@@ -606,12 +604,10 @@ function saveData(question, data) {
             resolve(token);
           } else if (++attempts >= maxAttempts) {
             clearInterval(interval);
-            reject(new Error('⏳ Turnstile not solved in time.'));
+            reject(new Error('Turnstile not done'));
           }
         }, 500);
       });
-
-      console.log('Token received:', token);
 
       await submitWithTurnstile({
         widgetId,
@@ -621,13 +617,11 @@ function saveData(question, data) {
 
     })
     .catch((error) => {
-      console.error('❌ Error in saveData:', error.message);
-      alert('Please complete the CAPTCHA before submitting the form.');
+      throw new Error(`Error in saveData: ${error.message}`);
     });
 }
 
 function showResult(question, results) {
-  // save results
   const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
   const locale = window.location.pathname.split('/')[1] || 'en';
   const quizResults = {
@@ -641,7 +635,6 @@ function showResult(question, results) {
     const value = userAnswers.has(i) ? userAnswers.get(i) : false;
     quizResults[`Q${i + 1}`] = value;
   }
-
   saveData(question, quizResults);
 
   const setupShareLinks = (result, shareText, resultPath) => {

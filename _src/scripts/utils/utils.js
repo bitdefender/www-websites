@@ -991,11 +991,8 @@ export async function submitWithTurnstile({
     ENDPOINT = ENDPOINT.replace('stage.', 'www.');
   }
 
-  console.log('utils data ', `/sites/common/formdata/${fileName}.xlsx`, data)
-
   try {
     const token = window.turnstile.getResponse(widgetId);
-    console.log('utils token ', token)
 
     if (!token) {
       throw new Error('Turnstile token is missing. Please complete the challenge.');
@@ -1010,38 +1007,20 @@ export async function submitWithTurnstile({
       token,
     };
 
-    console.log('requestData here ', requestData)
-
     const res = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestData),
     });
 
-    console.log('Response status:', res.status);
-    console.log('Response headers:', [...res.headers.entries()]);
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Request failed:', errorText);
-      throw new Error(errorText);
-    }
+    if (!res.ok) throw new Error(await res.text());
 
     const contentType = res.headers.get('content-type');
-    console.log('Content-Type:', contentType);
+    if (!contentType?.includes('application/json')) throw new Error(await res.text());
 
-    if (!contentType?.includes('application/json')) {
-      const errorText = await res.text();
-      console.error('Unexpected content type:', errorText);
-      throw new Error(errorText);
-    }
-
-    console.log('Request successful');
     if (typeof successCallback === 'function') successCallback();
     window.turnstile.reset(widgetId);
-    
   } catch (err) {
-    console.error('Error caught in try-catch:', err);
     if (typeof errorCallback === 'function') errorCallback(err);
   }
 }
