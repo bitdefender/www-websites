@@ -590,7 +590,7 @@ function decorateClickQuestions(question, index) {
 
 function saveData(question, data) {
   const { savedata } = question.closest('.section').dataset;
-  console.log('savedata', savedata)
+
   renderTurnstile('turnstile-container')
     .then(async (widgetId) => {
       console.log('widgetId ', widgetId)

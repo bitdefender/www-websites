@@ -995,6 +995,7 @@ export async function submitWithTurnstile({
 
   try {
     const token = window.turnstile.getResponse(widgetId);
+    console.log('token here ', token)
 
     if (!token) {
       throw new Error('Turnstile token is missing. Please complete the challenge.');
