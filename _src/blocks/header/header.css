@@ -621,6 +621,11 @@ header.quiz {
   background: white;
 
   .icon {
+
+    .svg {
+      filter: brightness(0) saturate(100%) invert(43%) sepia(75%) saturate(5246%) hue-rotate(212deg) brightness(98%) contrast(106%);
+    }
+
     width: 155px;
   }
 }
