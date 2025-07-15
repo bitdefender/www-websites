@@ -1052,7 +1052,7 @@ header.quiz {
   }
 
   header.quiz {
-    height: auto;
+    height: auto !important;
 
     .icon {
       width: 200px;
