@@ -591,16 +591,16 @@ function decorateClickQuestions(question, index) {
 function saveData(question, data) {
   const { datasave } = question.closest('.section').dataset;
   renderTurnstile('turnstile-container')
-  .then(async (widgetId) => {
-    await submitWithTurnstile({
-      widgetId,
-      data,
-      fileName: datasave,
+    .then(async (widgetId) => {
+      await submitWithTurnstile({
+        widgetId,
+        data,
+        fileName: datasave,
+      });
+    })
+    .catch((error) => {
+      throw new Error(`Turnstile render failed: ${error.message}`);
     });
-  })
-  .catch((error) => {
-    throw new Error(`Turnstile render failed: ${error.message}`);
-  });
 }
 
 function showResult(question, results) {
@@ -610,7 +610,7 @@ function showResult(question, results) {
     quizResults[`Q${index + 1}`] = item;
   });
   saveData(question, quizResults);
-  
+
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
     shareParagraph.classList.add('share-icons');
@@ -785,7 +785,6 @@ export default function decorate(block) {
     resultPage, clipboardText, savedata
   } = block.closest('.section').dataset;
 
-
   // create turnstileDiv
   if (savedata) {
     const turnstileDiv = document.createElement('div');
@@ -794,7 +793,6 @@ export default function decorate(block) {
     block.appendChild(turnstileDiv);
   }
   
-
   if (resultPage) {
     const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
     decorateResults(results);
