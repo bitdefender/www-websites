@@ -1,4 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
@@ -587,11 +588,28 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
+function saveData(question, data) {
+  const { datasave } = question.closest('.section').dataset;
+  renderTurnstile('turnstile-container')
+    .then(async (widgetId) => {
+      await submitWithTurnstile({
+        widgetId,
+        data,
+        fileName: datasave,
+      });
+    })
+    .catch((error) => {
+      throw new Error(`Turnstile render failed: ${error.message}`);
+    });
+}
+
 function showResult(question, results) {
   // save results
-  /* saveResults(formatQuizResult(
-    Array.from(userAnswers, ([key, value]) => ({ key, value }))
-  )); */
+  const quizResults = {};
+  userAnswers.forEach((item, index) => {
+    quizResults[`Q${index + 1}`] = item;
+  });
+  saveData(question, quizResults);
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
@@ -764,8 +782,16 @@ function copyToClipboard(block, caller, popupText, resultPath) {
 
 export default function decorate(block) {
   const {
-    resultPage, clipboardText,
+    resultPage, clipboardText, savedata,
   } = block.closest('.section').dataset;
+
+  // create turnstileDiv
+  if (savedata) {
+    const turnstileDiv = document.createElement('div');
+    turnstileDiv.id = 'turnstile-container';
+    turnstileDiv.className = 'turnstile-box';
+    block.appendChild(turnstileDiv);
+  }
 
   if (resultPage) {
     const results = getDivsBasedOnFirstParagraph(block, 'answer-box');

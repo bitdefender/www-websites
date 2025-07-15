@@ -182,7 +182,7 @@ function sanitizeDataMap(dataMap) {
     [...dataMap.entries()].map(([k, v]) => [
       k,
       typeof v === 'string' && riskyPattern.test(v) ? `'${v}` : v,
-    ])
+    ]),
   );
 }
 
@@ -288,7 +288,7 @@ function handleSubmit(formBox, widgetId) {
         if (successMsg) {
           // successMsg.style.display = 'block';
           formBox.classList.remove('loading');
-          formBox.classList.add('form_submitted');
+          formBox.classList.add('form-submitted');
           formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
           successMsg.scrollIntoView({ behavior: 'smooth' });
         }
@@ -306,5 +306,7 @@ export default function decorate(block) {
     .then((widgetId) => {
       handleSubmit(formBox, widgetId);
     })
-    .catch(console.error);
+    .catch((error) => {
+      throw new Error(`Turnstile render failed: ${error.message}`);
+    });
 }

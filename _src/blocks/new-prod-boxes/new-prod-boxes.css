@@ -207,7 +207,7 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .subtitle.fixed_height {
-  min-height: 80px;
+  min-height: 30px;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box hr {

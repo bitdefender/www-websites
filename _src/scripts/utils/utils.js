@@ -955,7 +955,7 @@ export function renderTurnstile(containerId) {
   return new Promise((resolve, reject) => {
     function renderWidget() {
       if (!window.turnstile) {
-        reject('Turnstile not loaded.');
+        reject(new Error('Turnstile not loaded.'));
         return;
       }
 
@@ -986,7 +986,10 @@ export async function submitWithTurnstile({
   successCallback = null,
   errorCallback = null,
 }) {
-  const ENDPOINT = 'https://stage.bitdefender.com/form';
+  let ENDPOINT = 'https://stage.bitdefender.com/form';
+  if (window.location.hostname.startsWith('www.')) {
+    ENDPOINT = ENDPOINT.replace('stage.', 'www.');
+  }
 
   try {
     const token = window.turnstile.getResponse(widgetId);
