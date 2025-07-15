@@ -617,7 +617,7 @@ header.header-wrapper #icons-sprite-bitdefender-logo path {
 }
 
 header.quiz {
-  height: auto !important;
+  height: var(--nav-height) !important;
   background: white;
 
   .icon {
