@@ -632,7 +632,9 @@ function showResult(question, results) {
   const maxKey = Math.max(...keys);
 
   for (let i = 0; i <= maxKey; i++) {
-    const value = userAnswers.has(i) ? userAnswers.get(i) : false;
+    const value = userAnswers.has(i)
+      ? userAnswers.get(i) === true ? "correct" : "incorrect"
+      : "incorrect";
     quizResults[`Q${i + 1}`] = value;
   }
   saveData(question, quizResults);
