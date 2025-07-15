@@ -994,9 +994,6 @@ export async function submitWithTurnstile({
   console.log('utils data ', `/sites/common/formdata/${fileName}.xlsx`, data)
 
   try {
-    console.log('Sending request to:', ENDPOINT);
-    console.log('Payload:', requestData);
-
     const token = window.turnstile.getResponse(widgetId);
 
     if (!token) {
