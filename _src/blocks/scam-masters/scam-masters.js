@@ -596,7 +596,7 @@ function saveData(question, data) {
       // await until the token is generated
       const token = await new Promise((resolve, reject) => {
         let attempts = 0;
-        const maxAttempts = 5;
+        const maxAttempts = 20;
         const interval = setInterval(() => {
           const token = window.turnstile.getResponse(widgetId);
           if (token) {
