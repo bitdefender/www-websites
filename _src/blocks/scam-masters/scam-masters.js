@@ -589,13 +589,14 @@ function decorateClickQuestions(question, index) {
 }
 
 function saveData(question, data) {
-  const { datasave } = question.closest('.section').dataset;
+  const { savedata } = question.closest('.section').dataset;
+  console.log('savedata', savedata)
   renderTurnstile('turnstile-container')
     .then(async (widgetId) => {
       await submitWithTurnstile({
         widgetId,
         data,
-        fileName: datasave,
+        fileName: savedata,
       });
     })
     .catch((error) => {
@@ -611,9 +612,13 @@ function showResult(question, results) {
     DATE: date,
     LOCALE: locale,
   };
-  userAnswers.forEach((item, index) => {
-    quizResults[`Q${index + 1}`] = item;
-  });
+  const keys = [...userAnswers.keys()];
+  const maxKey = Math.max(...keys);
+  
+  for (let i = 0; i <= maxKey; i++) {
+    const value = userAnswers.has(i) ? userAnswers.get(i) : false;
+    quizResults[`Q${i + 1}`] = value;
+  }
   saveData(question, quizResults);
 
   const setupShareLinks = (result, shareText, resultPath) => {
