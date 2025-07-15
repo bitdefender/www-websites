@@ -991,6 +991,8 @@ export async function submitWithTurnstile({
     ENDPOINT = ENDPOINT.replace('stage.', 'www.');
   }
 
+  console.log('utils data ', `/sites/common/formdata/${fileName}.xlsx`, data)
+
   try {
     const token = window.turnstile.getResponse(widgetId);
 
