@@ -782,7 +782,7 @@ function copyToClipboard(block, caller, popupText, resultPath) {
 
 export default function decorate(block) {
   const {
-    resultPage, clipboardText, savedata
+    resultPage, clipboardText, savedata,
   } = block.closest('.section').dataset;
 
   // create turnstileDiv
@@ -792,7 +792,7 @@ export default function decorate(block) {
     turnstileDiv.className = 'turnstile-box';
     block.appendChild(turnstileDiv);
   }
-  
+
   if (resultPage) {
     const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
     decorateResults(results);
