@@ -43,6 +43,24 @@
   }
 }
 
+.creators .columns-container .columns.creators-banner div div table:last-of-type td {
+  vertical-align: middle;
+}
+
+.creators .columns-container .columns.creators-banner table .icon {
+  margin: 0 7px;
+}
+
+.creators .columns-container .columns.creators-banner div div table:last-of-type tr > td:first-of-type {
+  padding-right: 10px;
+}
+
+.creators .columns-container .columns.creators-banner table .icon, .creators .columns-container .columns.creators-banner table .icon * {
+  height: 23px;
+  width: auto;
+  padding: 0;
+}
+
 .columns.smaller-title h4 {
   font-size: 16px;
 }
@@ -103,14 +121,18 @@
 
 .section.subtitle-blue h3 {
   font-size: 1.25rem;
-
   --tw-text-opacity: 1;
-
   color: #006DFF;
 }
 
 .creators .columns-container h3 {
-  font-weight: bold;
+  margin-bottom: 0;
+  font: normal normal bold 19px / 28px Arial, sans-serif!important;
+}
+
+.creators .columns-container p {
+  margin-top: 5px;
+  font: normal normal normal 19px / 28px Arial, sans-serif!important;
 }
 
 .columns.new-v2 h3 {
@@ -1028,6 +1050,9 @@
     margin-bottom: 20px;
     margin-top: 40px;
   }
+   .columns-container .columns.trust-factors2 table tr{
+    grid-template-columns: repeat(3, 1fr);
+   }
   
   .columns-container .columns.trust-factors td p{
     font-size: 18px;
