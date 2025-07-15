@@ -588,26 +588,41 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
-async function saveData(question, data, widgetId) {
+function saveData(question, data) {
   const { savedata } = question.closest('.section').dataset;
 
-  console.log('saveData widgetId ', widgetId)
+  renderTurnstile('turnstile-container')
+    .then(async (widgetId) => {
+      console.log('Turnstile rendered with widgetId:', widgetId);
 
-  await submitWithTurnstile({
-      widgetId,
-      data,
-      fileName: savedata,
-      successCallback: () => {
-        formBox.reset();
-        const successMsg = formBox.querySelector('#success-message');
-        if (successMsg) {
-          // successMsg.style.display = 'block';
-          formBox.classList.remove('loading');
-          formBox.classList.add('form-submitted');
-          formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
-          successMsg.scrollIntoView({ behavior: 'smooth' });
-        }
-      },
+      // Wait for the user to complete the challenge (max 10s)
+      const token = await new Promise((resolve, reject) => {
+        let attempts = 0;
+        const maxAttempts = 20;
+        const interval = setInterval(() => {
+          const token = window.turnstile.getResponse(widgetId);
+          if (token) {
+            clearInterval(interval);
+            resolve(token);
+          } else if (++attempts >= maxAttempts) {
+            clearInterval(interval);
+            reject(new Error('⏳ Turnstile not solved in time.'));
+          }
+        }, 500);
+      });
+
+      console.log('Token received:', token);
+
+      await submitWithTurnstile({
+        widgetId,
+        data,
+        fileName: savedata,
+      });
+
+    })
+    .catch((error) => {
+      console.error('❌ Error in saveData:', error.message);
+      alert('Please complete the CAPTCHA before submitting the form.');
     });
 }
 
@@ -627,13 +642,7 @@ function showResult(question, results) {
     quizResults[`Q${i + 1}`] = value;
   }
 
-  renderTurnstile('turnstile-container')
-    .then((widgetId) => {
-      saveData(question, quizResults, widgetId);
-    })
-    .catch((error) => {
-      throw new Error(`Turnstile render failed: ${error.message}`);
-    });
+  saveData(question, quizResults);
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
