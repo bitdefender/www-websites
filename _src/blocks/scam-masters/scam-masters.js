@@ -588,20 +588,26 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
-function saveData(question, data) {
+async function saveData(question, data, widgetId) {
   const { savedata } = question.closest('.section').dataset;
 
-  renderTurnstile('turnstile-container')
-    .then(async (widgetId) => {
-      console.log('widgetId ', widgetId)
-      await submitWithTurnstile({
-        widgetId,
-        data,
-        fileName: savedata,
-      });
-    })
-    .catch((error) => {
-      throw new Error(`Turnstile render failed: ${error.message}`);
+  console.log('saveData widgetId ', widgetId)
+
+  await submitWithTurnstile({
+      widgetId,
+      data,
+      fileName: savedata,
+      successCallback: () => {
+        formBox.reset();
+        const successMsg = formBox.querySelector('#success-message');
+        if (successMsg) {
+          // successMsg.style.display = 'block';
+          formBox.classList.remove('loading');
+          formBox.classList.add('form-submitted');
+          formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
+          successMsg.scrollIntoView({ behavior: 'smooth' });
+        }
+      },
     });
 }
 
@@ -620,7 +626,14 @@ function showResult(question, results) {
     const value = userAnswers.has(i) ? userAnswers.get(i) : false;
     quizResults[`Q${i + 1}`] = value;
   }
-  saveData(question, quizResults);
+
+  renderTurnstile('turnstile-container')
+    .then((widgetId) => {
+      saveData(question, quizResults, widgetId);
+    })
+    .catch((error) => {
+      throw new Error(`Turnstile render failed: ${error.message}`);
+    });
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
