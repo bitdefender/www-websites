@@ -605,7 +605,12 @@ function saveData(question, data) {
 
 function showResult(question, results) {
   // save results
-  const quizResults = {};
+  const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
+  const locale = window.location.pathname.split('/')[1] || 'en';
+  const quizResults = {
+    DATE: date,
+    LOCALE: locale,
+  };
   userAnswers.forEach((item, index) => {
     quizResults[`Q${index + 1}`] = item;
   });
