@@ -467,6 +467,7 @@
         >div:last-child {
             background-color: var(--color-bd-blue);
             border: 1px solid white;
+            align-items: center!important;
 
             &:not(.clickable-question) {
                 picture {
@@ -495,10 +496,6 @@
 
 .scam-masters .result > div {
    height: 700px;
-}
-
-.scam-masters .result > div:last-child {
-    align-items: center!important;
 }
 
 @media (max-width: 768px) {
