@@ -593,6 +593,7 @@ function saveData(question, data) {
   console.log('savedata', savedata)
   renderTurnstile('turnstile-container')
     .then(async (widgetId) => {
+      console.log('widgetId ', widgetId)
       await submitWithTurnstile({
         widgetId,
         data,
@@ -614,7 +615,7 @@ function showResult(question, results) {
   };
   const keys = [...userAnswers.keys()];
   const maxKey = Math.max(...keys);
-  
+
   for (let i = 0; i <= maxKey; i++) {
     const value = userAnswers.has(i) ? userAnswers.get(i) : false;
     quizResults[`Q${i + 1}`] = value;
