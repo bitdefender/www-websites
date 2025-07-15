@@ -994,6 +994,9 @@ export async function submitWithTurnstile({
   console.log('utils data ', `/sites/common/formdata/${fileName}.xlsx`, data)
 
   try {
+    console.log('Sending request to:', ENDPOINT);
+    console.log('Payload:', requestData);
+
     const token = window.turnstile.getResponse(widgetId);
 
     if (!token) {
@@ -1015,14 +1018,30 @@ export async function submitWithTurnstile({
       body: JSON.stringify(requestData),
     });
 
-    if (!res.ok) throw new Error(await res.text());
+    console.log('Response status:', res.status);
+    console.log('Response headers:', [...res.headers.entries()]);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('Request failed:', errorText);
+      throw new Error(errorText);
+    }
 
     const contentType = res.headers.get('content-type');
-    if (!contentType?.includes('application/json')) throw new Error(await res.text());
+    console.log('Content-Type:', contentType);
 
+    if (!contentType?.includes('application/json')) {
+      const errorText = await res.text();
+      console.error('Unexpected content type:', errorText);
+      throw new Error(errorText);
+    }
+
+    console.log('Request successful');
     if (typeof successCallback === 'function') successCallback();
     window.turnstile.reset(widgetId);
+    
   } catch (err) {
+    console.error('Error caught in try-catch:', err);
     if (typeof errorCallback === 'function') errorCallback(err);
   }
 }
