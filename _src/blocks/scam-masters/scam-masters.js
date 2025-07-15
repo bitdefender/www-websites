@@ -588,37 +588,39 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
+let isSaving = false;
 function saveData(question, data) {
+  if (isSaving) return;
+  isSaving = true;
+
   const { savedata } = question.closest('.section').dataset;
 
-  renderTurnstile('turnstile-container')
-    .then(async (widgetId) => {
-      // await until the token is generated
-      const token = await new Promise((resolve, reject) => {
-        let attempts = 0;
-        const maxAttempts = 20;
-        const interval = setInterval(() => {
-          const token = window.turnstile.getResponse(widgetId);
-          if (token) {
-            clearInterval(interval);
-            resolve(token);
-          } else if (++attempts >= maxAttempts) {
-            clearInterval(interval);
-            reject(new Error('Turnstile not done'));
-          }
-        }, 500);
-      });
+  renderTurnstile('turnstile-container', {
+    callback: async (token) => {
+      try {
+        if (!token) throw new Error('No token generated');
 
-      await submitWithTurnstile({
-        widgetId,
-        data,
-        fileName: savedata,
-      });
+        await submitWithTurnstile({
+          widgetId: null, // not needed with token in hand
+          data,
+          fileName: savedata,
+        });
 
-    })
-    .catch((error) => {
-      throw new Error(`Error in saveData: ${error.message}`);
-    });
+      } catch (error) {
+        console.error(`Error in saveData: ${error.message}`);
+      } finally {
+        isSaving = false;
+      }
+    },
+    'error-callback': () => {
+      console.error('Turnstile failed to load or generate token.');
+      isSaving = false;
+    },
+    'expired-callback': () => {
+      console.warn('Turnstile token expired.');
+      isSaving = false;
+    }
+  });
 }
 
 function showResult(question, results) {
