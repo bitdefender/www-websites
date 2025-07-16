@@ -623,23 +623,28 @@ function saveData2(question, data,) {
 
 let isExecuting = false;
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
-  console.log('saveData quizResults ', quizResults)
   if (isExecuting) {
     console.warn('[saveData] Already executing. Aborting.');
     return;
   }
 
-  console.log('[saveData] Starting submission...');
   isExecuting = true;
+  console.log('[saveData] Starting submission...');
 
   try {
     const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
 
-    const token = initialToken || window.turnstile.getResponse(widgetId);
-    if (!token) throw new Error('Turnstile token missing.');
+    let token = initialToken;
 
-    console.log('[saveData] Token:', token);
-    console.log('[saveData] Widget ID:', widgetId);
+    if (!invisible) {
+      // In visible mode, wait for user to complete challenge, then fetch token
+      token = window.latestVisibleToken;
+      console.log('[saveData] Using token from visible widget:', token);
+    }
+
+    if (!token) {
+      throw new Error('Turnstile token missing.');
+    }
 
     await submitWithTurnstile({
       widgetId,
@@ -647,13 +652,11 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
       data: quizResults,
       fileName,
     });
-
-    window.turnstile.reset(widgetId);
   } catch (err) {
     console.error('[saveData] Failed:', err.message);
   } finally {
-    console.log('[saveData] Done.');
     isExecuting = false;
+    console.log('[saveData] Done.');
   }
 }
 
