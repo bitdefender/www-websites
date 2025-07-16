@@ -648,12 +648,10 @@ function showResult(question, results) {
   }
 
   renderTurnstile('turnstile-container')
-    .then((widgetId) => {
-      saveData(widgetId, question, quizResults);
+    .then(({ widgetId, token }) => {
+      saveData(widgetId, token, question, quizResults);
     })
-    .catch((error) => {
-      throw new Error(`Turnstile render failed: ${error.message}`);
-    });
+    .catch(console.error);
   
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');

@@ -951,7 +951,7 @@ export function generateLDJsonSchema() {
 }
 
 // Turnstile
-export function renderTurnstile(containerId) {
+export function renderTurnstile2(containerId) {
   return new Promise((resolve, reject) => {
     function renderWidget() {
       if (!window.turnstile) {
@@ -964,6 +964,55 @@ export function renderTurnstile(containerId) {
       });
 
       resolve(widgetId);
+    }
+
+    if (window.turnstile) {
+      renderWidget();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+      script.async = true;
+      script.defer = true;
+      window.onloadTurnstileCallback = renderWidget;
+      document.head.appendChild(script);
+    }
+  });
+}
+
+export function renderTurnstile(containerId, { invisible = false } = {}) {
+  return new Promise((resolve, reject) => {
+    function renderWidget() {
+      if (!window.turnstile) {
+        reject(new Error('Turnstile not loaded.'));
+        return;
+      }
+
+      const params = {
+        sitekey: 'my_key',
+        callback: (token) => {
+          if (!token) {
+            reject(new Error('Turnstile failed to generate token.'));
+            return;
+          }
+          resolve({ widgetId, token });
+        },
+        'error-callback': () => {
+          reject(new Error('Turnstile error during execution.'));
+        },
+        'expired-callback': () => {
+          reject(new Error('Turnstile token expired before submission.'));
+        }
+      };
+
+      if (invisible) {
+        params.size = 'invisible';
+      }
+
+      const widgetId = window.turnstile.render(`#${containerId}`, params);
+
+      if (invisible) {
+        window.turnstile.execute(widgetId);
+      }
     }
 
     if (window.turnstile) {
