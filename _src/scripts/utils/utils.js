@@ -985,12 +985,8 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         size: invisible ? 'compact' : 'normal',
         callback: (token) => {
           widgetExecuting = false;
-          console.log('[6] Callback called → token:', token);
 
-          if (!invisible) {
-            window.latestVisibleToken = token;
-          }
-
+          if (!invisible) window.latestVisibleToken = token;
           if (!token) return finish(new Error('Token missing.'));
           finish(null, { widgetId, token });
         },
@@ -1043,18 +1039,12 @@ export async function submitWithTurnstile({
     ENDPOINT = ENDPOINT.replace('stage.', 'www.');
   }
 
-  console.log('data', data);
-  console.log('[Turnstile] Widget ID:', widgetId);
-  console.log('[Turnstile] Preparing to get token...');
-
   try {
     if (!window.turnstile || typeof window.turnstile.getResponse !== 'function') {
       throw new Error('Turnstile is not loaded.');
     }
 
     const token = window.turnstile.getResponse(widgetId);
-    console.log('[Turnstile] Retrieved token:', token);
-
     if (!token || token.length < 10) {
       throw new Error('Turnstile token is missing or invalid. Please complete the challenge.');
     }
@@ -1066,44 +1056,20 @@ export async function submitWithTurnstile({
       token,
     };
 
-    console.log('[Turnstile] Sending request to:', ENDPOINT);
-    console.log('[Turnstile] Request payload:', requestData);
-
     const res = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestData),
     });
 
-    console.log('[Turnstile] Server responded with status:', res.status);
-
-    const responseText = await res.text();
-
     if (!res.ok) {
-      console.error('[Turnstile] Server error response:', responseText);
       throw new Error(`Server returned status ${res.status}`);
     }
 
-    const contentType = res.headers.get('content-type');
-    if (!contentType?.includes('application/json')) {
-      console.warn('[Turnstile] Unexpected content-type:', contentType);
-      console.warn('[Turnstile] Raw response:', responseText);
-    }
+    if (typeof successCallback === 'function') successCallback();
 
-    if (typeof successCallback === 'function') {
-      console.log('[Turnstile] Calling successCallback...');
-      successCallback();
-    }
-
-    console.log('[Turnstile] Resetting widget...');
     window.turnstile.reset(widgetId);
-
-    console.log('[Turnstile] Done.');
   } catch (err) {
-    console.error('[Turnstile] Error occurred:', err.message || err);
-
-    if (typeof errorCallback === 'function') {
-      errorCallback(err);
-    }
+    if (typeof errorCallback === 'function') errorCallback(err);
   }
 }

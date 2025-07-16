@@ -556,23 +556,14 @@ function decorateClickQuestions(question, index) {
 
 let isExecuting = false;
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
-  if (isExecuting) {
-    console.warn('[saveData] Already executing. Aborting.');
-    return;
-  }
+  if (isExecuting) return;
 
   isExecuting = true;
-  console.log('[saveData] Starting submission...');
-
   try {
     const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
-
     let token = initialToken;
 
     if (!invisible) {
-      console.log('[saveData] Widget is visible – waiting for user interaction...');
-      
-      // Only wait if no token arrived immediately
       if (!window.latestVisibleToken) {
         token = await new Promise((resolve, reject) => {
           const timeout = setTimeout(() => reject(new Error('Timeout waiting for Turnstile token.')), 10000); // 10s
@@ -599,10 +590,10 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
       fileName,
     });
   } catch (err) {
-    console.error(`[saveData] Failed: ${err.message}`);
+    throw new Error(`[saveData] Failed: ${err.message}`);
   } finally {
     isExecuting = false;
-    console.log('[saveData] Done.');
+    console.log('Data Saved!');
   }
 }
 
