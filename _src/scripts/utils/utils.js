@@ -950,42 +950,10 @@ export function generateLDJsonSchema() {
   document.head.appendChild(script);
 }
 
-// Turnstile
-export function renderTurnstile2(containerId) {
-  return new Promise((resolve, reject) => {
-    function renderWidget() {
-      if (!window.turnstile) {
-        reject(new Error('Turnstile not loaded.'));
-        return;
-      }
-
-      const widgetId = window.turnstile.render(`#${containerId}`, {
-        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
-      });
-
-      resolve(widgetId);
-    }
-
-    if (window.turnstile) {
-      renderWidget();
-    } else {
-      const script = document.createElement('script');
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
-      script.async = true;
-      script.defer = true;
-      window.onloadTurnstileCallback = renderWidget;
-      document.head.appendChild(script);
-    }
-  });
-}
-
 let isRendering = false;
 let widgetExecuting = false;
 export function renderTurnstile(containerId, { invisible = false } = {}) {
-  console.log('[1] renderTurnstile called → invisible:', invisible);
-
   if (isRendering) {
-    console.warn('[renderTurnstile] Already rendering. Aborting duplicate call.');
     return Promise.reject(new Error('Turnstile is already rendering.'));
   }
 
@@ -1000,28 +968,23 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
     }
 
     function renderWidget() {
-      console.log('[2] renderWidget called');
-
       if (!window.turnstile) {
-        console.warn('[3] Turnstile not loaded');
         return finish(new Error('Turnstile not loaded.'));
       }
 
       const container = document.getElementById(containerId);
       if (!container) {
-        console.warn('[4] Container not found:', containerId);
         return finish(new Error(`Container "${containerId}" not found.`));
       }
 
-      container.innerHTML = ''; // Clear previous widget if any
-      console.log('[5] Container cleared:', containerId);
+      // Clear previous widget
+      container.innerHTML = '';
 
       const widgetId = window.turnstile.render(container, {
         sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
         size: invisible ? 'compact' : 'normal',
         callback: (token) => {
           widgetExecuting = false;
-          console.log('[6] Callback called → token:', token);
 
           if (!invisible) {
             window.latestVisibleToken = token;
@@ -1036,40 +999,32 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
           }
         },
         'error-callback': () => {
-          console.warn('[7] error-callback triggered');
           finish(new Error('Turnstile error during execution.'));
         },
         'expired-callback': () => {
-          console.warn('[8] expired-callback triggered');
           finish(new Error('Turnstile token expired.'));
         }
       });
 
-      console.log('[9] Widget rendered → ID:', widgetId);
-
       if (invisible) {
         if (!widgetExecuting) {
           widgetExecuting = true;
-          console.log('[10] Executing invisible widget:', widgetId);
+
           try {
             window.turnstile.execute(widgetId);
           } catch (err) {
-            console.warn('[11] Execute error, trying reset + execute');
             window.turnstile.reset(widgetId);
             window.turnstile.execute(widgetId);
           }
         }
       } else {
-        console.log('[12] Visible mode → returning widgetId only');
-        finish(null, { widgetId }); // No token returned here
+        finish(null, { widgetId });
       }
     }
 
     if (window.turnstile) {
-      console.log('[13] Turnstile already loaded → calling renderWidget');
       renderWidget();
     } else {
-      console.log('[14] Turnstile not yet loaded → injecting script');
       const script = document.createElement('script');
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
       script.async = true;
@@ -1078,52 +1033,6 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
       document.head.appendChild(script);
     }
   });
-}
-
-export async function submitWithTurnstile2({
-  widgetId,
-  data,
-  fileName,
-  successCallback = null,
-  errorCallback = null,
-}) {
-  let ENDPOINT = 'https://stage.bitdefender.com/form';
-  if (window.location.hostname.startsWith('www.')) {
-    ENDPOINT = ENDPOINT.replace('stage.', 'www.');
-  }
-
-  try {
-    const token = window.turnstile.getResponse(widgetId);
-
-    if (!token) {
-      throw new Error('Turnstile token is missing. Please complete the challenge.');
-    }
-
-    const requestData = {
-      file: `/sites/common/formdata/${fileName}.xlsx`,
-      table: 'Table1',
-      row: {
-        ...data,
-      },
-      token,
-    };
-
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestData),
-    });
-
-    if (!res.ok) throw new Error(await res.text());
-
-    const contentType = res.headers.get('content-type');
-    if (!contentType?.includes('application/json')) throw new Error(await res.text());
-
-    if (typeof successCallback === 'function') successCallback();
-    window.turnstile.reset(widgetId);
-  } catch (err) {
-    if (typeof errorCallback === 'function') errorCallback(err);
-  }
 }
 
 export async function submitWithTurnstile({
@@ -1138,20 +1047,15 @@ export async function submitWithTurnstile({
     ENDPOINT = ENDPOINT.replace('stage.', 'www.');
   }
 
-  console.log('data', data);
-  console.log('[Turnstile] Widget ID:', widgetId);
-  console.log('[Turnstile] Preparing to get token...');
-
   try {
     if (!window.turnstile || typeof window.turnstile.getResponse !== 'function') {
       throw new Error('Turnstile is not loaded.');
     }
 
     const token = window.turnstile.getResponse(widgetId);
-    console.log('[Turnstile] Retrieved token:', token);
 
     if (!token || token.length < 10) {
-      throw new Error('Turnstile token is missing or invalid. Please complete the challenge.');
+      throw new Error('token is missing or invalid');
     }
 
     const requestData = {
@@ -1161,42 +1065,24 @@ export async function submitWithTurnstile({
       token,
     };
 
-    console.log('[Turnstile] Sending request to:', ENDPOINT);
-    console.log('[Turnstile] Request payload:', requestData);
-
     const res = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestData),
     });
 
-    console.log('[Turnstile] Server responded with status:', res.status);
-
     const responseText = await res.text();
-
     if (!res.ok) {
       console.error('[Turnstile] Server error response:', responseText);
       throw new Error(`Server returned status ${res.status}`);
     }
 
-    const contentType = res.headers.get('content-type');
-    if (!contentType?.includes('application/json')) {
-      console.warn('[Turnstile] Unexpected content-type:', contentType);
-      console.warn('[Turnstile] Raw response:', responseText);
-    }
-
     if (typeof successCallback === 'function') {
-      console.log('[Turnstile] Calling successCallback...');
       successCallback();
     }
 
-    console.log('[Turnstile] Resetting widget...');
     window.turnstile.reset(widgetId);
-
-    console.log('[Turnstile] Done.');
   } catch (err) {
-    console.error('[Turnstile] Error occurred:', err.message || err);
-
     if (typeof errorCallback === 'function') {
       errorCallback(err);
     }
