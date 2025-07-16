@@ -621,17 +621,30 @@ function saveData2(question, data,) {
     });
 }
 
+let isExecuting = false;
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
-  try {
-    const result = await renderTurnstile('turnstile-container', { invisible });
-    const widgetId = result.widgetId;
-    let token = result.token || null;
+  if (isExecuting) {
+    console.warn('[saveData] Already in progress. Ignoring duplicate call.');
+    return;
+  }
 
+  isExecuting = true;
+
+  try {
+    const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
+
+    let token = initialToken;
+
+    // Handle visible CAPTCHA (user interaction required)
     if (!token) {
       token = window.turnstile.getResponse(widgetId);
+      console.log('[saveData] Fallback token from getResponse():', token);
+
       if (!token) {
         throw new Error('Please complete the CAPTCHA.');
       }
+    } else {
+      console.log('[saveData] Token received via callback:', token);
     }
 
     await submitWithTurnstile({
@@ -641,9 +654,13 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
       fileName,
     });
 
+    // Reset widget for potential re-use
     window.turnstile.reset(widgetId);
+
   } catch (err) {
-    console.error('saveData failed:', err.message);
+    console.error('[saveData] Failed:', err.message);
+  } finally {
+    isExecuting = false;
   }
 }
 
