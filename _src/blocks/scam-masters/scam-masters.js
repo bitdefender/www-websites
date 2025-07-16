@@ -621,15 +621,30 @@ function saveData2(question, data,) {
     });
 }
 
-async function saveData(widgetId, box, data) {
-  console.log('widgetId ', widgetId)
-  const { savedata } = box.closest('.section').dataset;
+async function saveData(orderedData, fileName, { invisible = false } = {}) {
+  try {
+    const result = await renderTurnstile('turnstile-container', { invisible });
+    const widgetId = result.widgetId;
+    let token = result.token || null;
 
-  await submitWithTurnstile({
+    if (!token) {
+      token = window.turnstile.getResponse(widgetId);
+      if (!token) {
+        throw new Error('Please complete the CAPTCHA.');
+      }
+    }
+
+    await submitWithTurnstile({
       widgetId,
-      data,
-      fileName: savedata,
+      token,
+      data: orderedData,
+      fileName,
     });
+
+    window.turnstile.reset(widgetId);
+  } catch (err) {
+    console.error('saveData failed:', err.message);
+  }
 }
 
 function showResult(question, results) {
@@ -647,13 +662,8 @@ function showResult(question, results) {
     quizResults[`Q${i + 1}`] = answer === true ? "correct" : "incorrect";
   }
 
-  renderTurnstile('turnstile-container')
-    .then((widgetId) => {
-      saveData(widgetId, question, quizResults);
-    })
-    .catch((error) => {
-      throw new Error(`Turnstile render failed: ${error.message}`);
-    });
+  const fileName = question.closest('.section').dataset;
+  saveData(orderedData, fileName, { invisible: true });
   
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
