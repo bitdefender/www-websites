@@ -963,6 +963,8 @@ export function renderTurnstile(containerId) {
         sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
       });
 
+      console.log('renderTurnstile widgetId ', widgetId)
+
       resolve(widgetId);
     }
 
@@ -990,6 +992,8 @@ export async function submitWithTurnstile({
   if (window.location.hostname.startsWith('www.')) {
     ENDPOINT = ENDPOINT.replace('stage.', 'www.');
   }
+
+  console.log('submitWithTurnstile widgetId ', widgetId)
 
   try {
     const token = window.turnstile.getResponse(widgetId);

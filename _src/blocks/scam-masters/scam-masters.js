@@ -588,7 +588,7 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
-function saveData(question, data) {
+function saveData2(question, data,) {
   const { savedata } = question.closest('.section').dataset;
 
   renderTurnstile('turnstile-container')
@@ -621,6 +621,17 @@ function saveData(question, data) {
     });
 }
 
+async function saveData(widgetId, box, data) {
+  console.log('widgetId ', widgetId)
+  const { savedata } = box.closest('.section').dataset;
+
+  await submitWithTurnstile({
+      widgetId,
+      data,
+      fileName: savedata,
+    });
+}
+
 function showResult(question, results) {
   const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
   const locale = window.location.pathname.split('/')[1] || 'en';
@@ -635,8 +646,15 @@ function showResult(question, results) {
     const answer = userAnswers.get(i);
     quizResults[`Q${i + 1}`] = answer === true ? "correct" : "incorrect";
   }
-  saveData(question, quizResults);
 
+  renderTurnstile('turnstile-container')
+    .then((widgetId) => {
+      saveData(widgetId, question, quizResults);
+    })
+    .catch((error) => {
+      throw new Error(`Turnstile render failed: ${error.message}`);
+    });
+  
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
     shareParagraph.classList.add('share-icons');
