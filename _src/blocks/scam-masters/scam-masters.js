@@ -621,10 +621,10 @@ function saveData2(question, data,) {
     });
 }
 
-
+let isExecuting = false;
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
   if (isExecuting) {
-    console.warn('[saveData] Already executing. Ignored.');
+    console.warn('[saveData] Already executing. Aborting.');
     return;
   }
 
@@ -633,11 +633,8 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
   try {
     const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
 
-    let token = initialToken || window.turnstile.getResponse(widgetId);
-
-    if (!token) {
-      throw new Error('Turnstile token missing.');
-    }
+    const token = initialToken || window.turnstile.getResponse(widgetId);
+    if (!token) throw new Error('Turnstile token missing.');
 
     await submitWithTurnstile({
       widgetId,
@@ -647,13 +644,13 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
     });
 
     window.turnstile.reset(widgetId);
-
   } catch (err) {
     console.error('[saveData] Failed:', err.message);
   } finally {
     isExecuting = false;
   }
 }
+
 function showResult(question, results) {
   const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
   const locale = window.location.pathname.split('/')[1] || 'en';
