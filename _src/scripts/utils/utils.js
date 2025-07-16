@@ -981,8 +981,7 @@ export function renderTurnstile2(containerId) {
 
 let isRendering = false;
 let widgetExecuting = false;
-let lastWidgetId = null; // persist widget ID across calls
-
+let lastWidgetId = null;
 export function renderTurnstile(containerId, { invisible = false } = {}) {
   console.log('[1] renderTurnstile called → invisible:', invisible);
 
@@ -1015,13 +1014,12 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         return finish(new Error(`Container "${containerId}" not found.`));
       }
 
-      // Only re-render if we haven’t already rendered a widget
       if (!lastWidgetId) {
         container.innerHTML = '';
         console.log('[5] Container cleared:', containerId);
 
         lastWidgetId = window.turnstile.render(container, {
-          sitekey: 'your_site_key', // 🔁 Replace with your real sitekey
+          sitekey: '0x4AAAAAABkTzSd63P7J-Tl_', // ⬅️ Replace this with your real key
           size: invisible ? 'invisible' : 'normal',
           callback: (token) => {
             widgetExecuting = false;
@@ -1043,17 +1041,26 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
       }
 
       if (invisible) {
-        if (!widgetExecuting) {
-          widgetExecuting = true;
-          console.log('[10] Executing invisible widget:', lastWidgetId);
-          window.turnstile.reset(lastWidgetId);
-          window.turnstile.execute(lastWidgetId);
-        } else {
-          console.warn('[11] Already executing — skip.');
-          finish(new Error('Turnstile is already executing.'));
-        }
+        console.log('[10] Preparing to execute invisible widget:', lastWidgetId);
+
+        // Always reset before execution to avoid 400020
+        window.turnstile.reset(lastWidgetId);
+        widgetExecuting = true;
+
+        console.log('[11] Executing invisible widget:', lastWidgetId);
+        window.turnstile.execute(lastWidgetId);
+
+        // Fallback timeout if callback never fires
+        setTimeout(() => {
+          if (widgetExecuting) {
+            console.warn('[Timeout] No callback after 8s. Resetting...');
+            widgetExecuting = false;
+            window.turnstile.reset(lastWidgetId);
+            finish(new Error('Execution timeout'));
+          }
+        }, 8000);
       } else {
-        console.log('[12] Visible mode → resolve only widgetId');
+        console.log('[12] Visible widget → resolving immediately');
         finish(null, { widgetId: lastWidgetId });
       }
     }
