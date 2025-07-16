@@ -1124,6 +1124,7 @@ export async function submitWithTurnstile({
     ENDPOINT = ENDPOINT.replace('stage.', 'www.');
   }
 
+  console.log('fileName ', fileName)
   console.log('[Turnstile] Widget ID:', widgetId);
   console.log('[Turnstile] Preparing to get token...');
 

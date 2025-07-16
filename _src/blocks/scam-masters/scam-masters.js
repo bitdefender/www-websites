@@ -623,6 +623,7 @@ function saveData2(question, data,) {
 
 let isExecuting = false;
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
+  console.log('saveData fileName ', fileName)
   if (isExecuting) {
     console.warn('[saveData] Already executing. Aborting.');
     return;
@@ -671,7 +672,7 @@ function showResult(question, results) {
     quizResults[`Q${i + 1}`] = answer === true ? "correct" : "incorrect";
   }
 
-  const fileName = question.closest('.section').dataset;
+  const { fileName } = question.closest('.section').dataset;
   saveData(quizResults, fileName, { invisible: true });
   
   const setupShareLinks = (result, shareText, resultPath) => {
