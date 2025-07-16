@@ -588,6 +588,40 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
+function saveData2(question, data,) {
+  const { savedata } = question.closest('.section').dataset;
+
+  renderTurnstile('turnstile-container')
+    .then(async (widgetId) => {
+      // await until the token is generated
+      const token = await new Promise((resolve, reject) => {
+        let attempts = 0;
+        const maxAttempts = 20;
+        const interval = setInterval(() => {
+          const token = window.turnstile.getResponse(widgetId);
+          if (token) {
+            clearInterval(interval);
+            resolve(token);
+          } else if (++attempts >= maxAttempts) {
+            clearInterval(interval);
+            reject(new Error('Turnstile not done'));
+          }
+        }, 500);
+      });
+
+      await submitWithTurnstile({
+        widgetId,
+        data,
+        fileName: savedata,
+      });
+
+    })
+    .catch((error) => {
+      throw new Error(`Error in saveData: ${error.message}`);
+    });
+}
+
+
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
   if (isExecuting) {
     console.warn('[saveData] Already executing. Ignored.');
@@ -620,38 +654,6 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
     isExecuting = false;
   }
 }
-
-async function saveData(quizResults, fileName, { invisible = false } = {}) {
-  if (isExecuting) {
-    console.warn('[saveData] Already executing.');
-    return;
-  }
-
-  isExecuting = true;
-
-  try {
-    const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
-
-    let token = initialToken || window.turnstile.getResponse(widgetId);
-
-    if (!token) throw new Error('Turnstile token missing.');
-
-    await submitWithTurnstile({
-      widgetId,
-      token,
-      data: quizResults,
-      fileName,
-    });
-
-    window.turnstile.reset(widgetId);
-
-  } catch (err) {
-    console.error('[saveData] Failed:', err.message);
-  } finally {
-    isExecuting = false;
-  }
-}
-
 function showResult(question, results) {
   const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
   const locale = window.location.pathname.split('/')[1] || 'en';
