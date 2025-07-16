@@ -628,17 +628,17 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
     return;
   }
 
-  isExecuting = true;
   console.log('[saveData] Starting submission...');
+  isExecuting = true;
 
   try {
     const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
 
-    console.log('[saveData] Widget ID:', widgetId);
-    console.log('[saveData] Token:', initialToken);
-
     const token = initialToken || window.turnstile.getResponse(widgetId);
     if (!token) throw new Error('Turnstile token missing.');
+
+    console.log('[saveData] Token:', token);
+    console.log('[saveData] Widget ID:', widgetId);
 
     await submitWithTurnstile({
       widgetId,
@@ -647,13 +647,12 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
       fileName,
     });
 
-    console.log('[saveData] Submission complete. Resetting widget...');
     window.turnstile.reset(widgetId);
   } catch (err) {
     console.error('[saveData] Failed:', err.message);
   } finally {
-    isExecuting = false;
     console.log('[saveData] Done.');
+    isExecuting = false;
   }
 }
 
