@@ -593,7 +593,7 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
     throw new Error(`[saveData] Failed: ${err.message}`);
   } finally {
     isExecuting = false;
-    console.log('Data Saved!');
+    // console.log('Data Saved!');
   }
 }
 
