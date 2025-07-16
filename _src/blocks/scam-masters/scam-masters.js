@@ -556,22 +556,29 @@ function decorateClickQuestions(question, index) {
 
 let isExecuting = false;
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
-  if (isExecuting) return;
+  if (isExecuting) {
+    console.warn('[saveData] Already executing. Aborting.');
+    return;
+  }
 
   isExecuting = true;
+  console.log('[saveData] Starting submission...');
+
   try {
     const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
 
     let token = initialToken;
 
     if (!invisible) {
+      console.log('[saveData] Widget is visible – waiting for user interaction...');
+      // Wait until user finishes challenge and token is set
       while (!window.latestVisibleToken) {
         await new Promise((resolve) => setTimeout(resolve, 200));
       }
 
       token = window.latestVisibleToken;
     }
-    
+
     if (!token) throw new Error('Turnstile token missing.');
 
     await submitWithTurnstile({
@@ -581,9 +588,10 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
       fileName,
     });
   } catch (err) {
-    throw new Error(`[saveData] Failed: ${err.message}`);
+    console.error('[saveData] Failed:', err.message);
   } finally {
     isExecuting = false;
+    console.log('[saveData] Done.');
   }
 }
 
