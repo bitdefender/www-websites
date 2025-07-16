@@ -980,54 +980,71 @@ export function renderTurnstile2(containerId) {
 }
 
 let widgetExecuting = false;
+
 export function renderTurnstile(containerId, { invisible = false } = {}) {
+  console.log('[1] renderTurnstile called → invisible:', invisible);
+
   return new Promise((resolve, reject) => {
     function renderWidget() {
+      console.log('[2] renderWidget called');
+
       if (!window.turnstile) {
+        console.warn('[3] Turnstile not loaded');
         return reject(new Error('Turnstile not loaded.'));
       }
 
       const container = document.getElementById(containerId);
       if (!container) {
+        console.warn('[4] Container not found:', containerId);
         return reject(new Error(`Container "${containerId}" not found.`));
       }
 
-      container.innerHTML = ''; // clear any existing widget
+      container.innerHTML = ''; // clear existing widget
+      console.log('[5] Container cleared:', containerId);
 
       const widgetId = window.turnstile.render(container, {
         sitekey: 'your_site_key',
         size: invisible ? 'invisible' : 'normal',
         callback: (token) => {
           widgetExecuting = false;
+          console.log('[6] Callback called → token:', token);
           if (!token) return reject(new Error('Token missing.'));
           resolve({ widgetId, token });
         },
         'error-callback': () => {
           widgetExecuting = false;
+          console.warn('[7] error-callback triggered');
           reject(new Error('Turnstile error during execution.'));
         },
         'expired-callback': () => {
           widgetExecuting = false;
+          console.warn('[8] expired-callback triggered');
           reject(new Error('Turnstile token expired.'));
         }
       });
 
-      // Trigger challenge in invisible mode, but only if not already running
+      console.log('[9] Widget rendered → ID:', widgetId);
+
       if (invisible) {
         if (!widgetExecuting) {
           widgetExecuting = true;
+          console.log('[10] Executing invisible widget:', widgetId);
           window.turnstile.execute(widgetId);
         } else {
+          console.warn('[11] Widget already executing, skipping execute()');
           reject(new Error('Turnstile is already executing.'));
         }
       } else {
-        resolve({ widgetId }); // no token yet in visible mode
+        console.log('[12] Visible mode → resolve only widgetId');
+        resolve({ widgetId }); // no token yet
       }
     }
 
     if (window.turnstile) {
+      console.log('[13] Turnstile already loaded → calling renderWidget');
       renderWidget();
     } else {
+      console.log('[14] Turnstile not yet loaded → injecting script');
       const script = document.createElement('script');
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
       script.async = true;
