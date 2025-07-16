@@ -635,20 +635,11 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
     const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
 
     console.log('[saveData] Widget ID:', widgetId);
-    console.log('[saveData] Initial token:', initialToken);
+    console.log('[saveData] Token:', initialToken);
 
-    let token = initialToken;
+    const token = initialToken || window.turnstile.getResponse(widgetId);
+    if (!token) throw new Error('Turnstile token missing.');
 
-    if (!token) {
-      token = window.turnstile.getResponse(widgetId);
-      console.log('[saveData] Retrieved token manually:', token);
-    }
-
-    if (!token) {
-      throw new Error('Turnstile token missing after execution.');
-    }
-
-    console.log('[saveData] Submitting data with token...');
     await submitWithTurnstile({
       widgetId,
       token,
