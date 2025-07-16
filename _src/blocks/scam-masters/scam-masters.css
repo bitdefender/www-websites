@@ -30,10 +30,6 @@
     display: none;
 }
 
-.scam-masters #turnstile-container {
-    display: none;
-}
-
 .scam-masters {
     --color-light-blue: #E6F7FF;
     --color-bd-blue: #006EFF;
