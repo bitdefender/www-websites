@@ -637,14 +637,16 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
     let token = initialToken;
 
     if (!invisible) {
-      // In visible mode, wait for user to complete challenge, then fetch token
+      console.log('[saveData] Widget is visible – waiting for user interaction...');
+      // Wait until user finishes challenge and token is set
+      while (!window.latestVisibleToken) {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      }
+
       token = window.latestVisibleToken;
-      console.log('[saveData] Using token from visible widget:', token);
     }
 
-    if (!token) {
-      throw new Error('Turnstile token missing.');
-    }
+    if (!token) throw new Error('Turnstile token missing.');
 
     await submitWithTurnstile({
       widgetId,
