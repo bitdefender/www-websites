@@ -1018,7 +1018,7 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
 
       const widgetId = window.turnstile.render(container, {
         sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
-        size: invisible ? 'invisible' : 'normal',
+        size: invisible ? 'compact' : 'normal',
         callback: (token) => {
           widgetExecuting = false;
           console.log('[6] Callback called → token:', token);
