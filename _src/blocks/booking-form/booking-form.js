@@ -302,11 +302,11 @@ export default function decorate(block) {
   block.innerHTML = '';
   block.appendChild(formBox);
 
-   renderTurnstile('turnstile-container', { invisible: false })
-    .then(({ widgetId, token }) => {
-      handleSubmit(formBox, widgetId, token);
-    })
-    .catch((error) => {
-      console.error(`Turnstile render failed: ${error.message}`);
-    }); 
+  renderTurnstile('turnstile-container', { invisible: false })
+  .then(({ widgetId, token }) => {
+    handleSubmit(formBox, widgetId, token);
+  })
+  .catch((error) => {
+    throw new Error(`Turnstile render failed: ${err.message}`);
+  }); 
 }

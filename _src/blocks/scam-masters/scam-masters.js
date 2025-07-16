@@ -607,14 +607,14 @@ function showResult(question, results) {
   const keys = [...userAnswers.keys()];
   const maxKey = Math.max(...keys);
 
-  for (let i = 0; i <= maxKey; i++) {
+  for (let i = 0; i <= maxKey; i += 1) {
     const answer = userAnswers.get(i);
-    quizResults[`Q${i + 1}`] = answer === true ? "correct" : "incorrect";
+    quizResults[`Q${i + 1}`] = answer === true ? 'correct' : 'incorrect';
   }
 
   const { savedata } = question.closest('.section').dataset;
-  saveData(quizResults, savedata, { invisible: true });
-  
+  if (savedata) saveData(quizResults, savedata, { invisible: true });
+
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
     shareParagraph.classList.add('share-icons');

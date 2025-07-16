@@ -988,14 +988,14 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
 
           if (!invisible) window.latestVisibleToken = token;
           if (!token) return finish(new Error('Token missing.'));
-          finish(null, { widgetId, token });
+          return finish(null, { widgetId, token });
         },
         'error-callback': () => {
           finish(new Error('Turnstile error during execution.'));
         },
         'expired-callback': () => {
           finish(new Error('Turnstile token expired.'));
-        }
+        },
       });
 
       if (invisible) {
@@ -1012,6 +1012,8 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
       } else {
         finish(null, { widgetId });
       }
+
+      return;
     }
 
     if (window.turnstile) {
