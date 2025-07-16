@@ -1124,24 +1124,26 @@ export async function submitWithTurnstile({
     ENDPOINT = ENDPOINT.replace('stage.', 'www.');
   }
 
-  console.log('data ', data)
+  console.log('data', data);
   console.log('[Turnstile] Widget ID:', widgetId);
   console.log('[Turnstile] Preparing to get token...');
 
   try {
+    if (!window.turnstile || typeof window.turnstile.getResponse !== 'function') {
+      throw new Error('Turnstile is not loaded.');
+    }
+
     const token = window.turnstile.getResponse(widgetId);
     console.log('[Turnstile] Retrieved token:', token);
 
-    if (!token) {
-      throw new Error('Turnstile token is missing. Please complete the challenge.');
+    if (!token || token.length < 10) {
+      throw new Error('Turnstile token is missing or invalid. Please complete the challenge.');
     }
 
     const requestData = {
       file: `/sites/common/formdata/${fileName}.xlsx`,
       table: 'Table1',
-      row: {
-        ...data,
-      },
+      row: { ...data },
       token,
     };
 
@@ -1156,18 +1158,17 @@ export async function submitWithTurnstile({
 
     console.log('[Turnstile] Server responded with status:', res.status);
 
+    const responseText = await res.text();
+
     if (!res.ok) {
-      const text = await res.text();
-      console.error('[Turnstile] Server error response:', text);
-      throw new Error(text);
+      console.error('[Turnstile] Server error response:', responseText);
+      throw new Error(`Server returned status ${res.status}`);
     }
 
     const contentType = res.headers.get('content-type');
     if (!contentType?.includes('application/json')) {
-      const text = await res.text();
-      console.error('[Turnstile] Invalid content-type:', contentType);
-      console.error('[Turnstile] Raw response:', text);
-      throw new Error(text);
+      console.warn('[Turnstile] Unexpected content-type:', contentType);
+      console.warn('[Turnstile] Raw response:', responseText);
     }
 
     if (typeof successCallback === 'function') {
@@ -1177,14 +1178,13 @@ export async function submitWithTurnstile({
 
     console.log('[Turnstile] Resetting widget...');
     window.turnstile.reset(widgetId);
-    console.log('[Turnstile] Done.');
 
+    console.log('[Turnstile] Done.');
   } catch (err) {
-    console.error('[Turnstile] Error occurred:', err);
+    console.error('[Turnstile] Error occurred:', err.message || err);
 
     if (typeof errorCallback === 'function') {
       errorCallback(err);
     }
   }
 }
-
