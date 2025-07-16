@@ -623,7 +623,7 @@ function saveData2(question, data,) {
 
 let isExecuting = false;
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
-  console.log('saveData fileName ', fileName)
+  console.log('saveData quizResults ', quizResults)
   if (isExecuting) {
     console.warn('[saveData] Already executing. Aborting.');
     return;

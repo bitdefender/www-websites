@@ -1124,7 +1124,7 @@ export async function submitWithTurnstile({
     ENDPOINT = ENDPOINT.replace('stage.', 'www.');
   }
 
-  console.log('fileName ', fileName)
+  console.log('data ', data)
   console.log('[Turnstile] Widget ID:', widgetId);
   console.log('[Turnstile] Preparing to get token...');
 
@@ -1137,7 +1137,7 @@ export async function submitWithTurnstile({
     }
 
     const requestData = {
-      file: `/sites/common/formdata/${fileName}.xlsx`,
+      file: `/common/formdata/${fileName}.xlsx`,
       table: 'Table1',
       row: {
         ...data,
