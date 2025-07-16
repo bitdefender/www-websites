@@ -979,6 +979,7 @@ export function renderTurnstile2(containerId) {
   });
 }
 
+let isExecuting = false; // shared lock
 export function renderTurnstile(containerId, { invisible = false } = {}) {
   return new Promise((resolve, reject) => {
     function renderWidget() {
@@ -987,31 +988,40 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         return;
       }
 
-      const params = {
-        sitekey: 'my_key',
+      const container = document.getElementById(containerId);
+
+      const widgetId = window.turnstile.render(container, {
+        sitekey: 'your_site_key',
+        size: invisible ? 'invisible' : 'normal',
         callback: (token) => {
+          isExecuting = false;
           if (!token) {
-            reject(new Error('Turnstile failed to generate token.'));
+            reject(new Error('[Turnstile] Empty token from callback.'));
             return;
           }
           resolve({ widgetId, token });
         },
         'error-callback': () => {
+          isExecuting = false;
           reject(new Error('Turnstile error during execution.'));
         },
         'expired-callback': () => {
-          reject(new Error('Turnstile token expired before submission.'));
+          isExecuting = false;
+          reject(new Error('Turnstile token expired before use.'));
         }
-      };
+      });
 
+      // Only execute if in invisible mode and not already executing
       if (invisible) {
-        params.size = 'invisible';
-      }
-
-      const widgetId = window.turnstile.render(`#${containerId}`, params);
-
-      if (invisible) {
-        window.turnstile.execute(widgetId);
+        if (!isExecuting) {
+          isExecuting = true;
+          window.turnstile.execute(widgetId);
+        } else {
+          reject(new Error('Turnstile already executing. Skipping duplicate execute().'));
+        }
+      } else {
+        // visible: resolve only widgetId for later manual getResponse()
+        resolve({ widgetId });
       }
     }
 
