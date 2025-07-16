@@ -621,7 +621,7 @@ function saveData2(question, data,) {
     });
 }
 
-async function saveData(orderedData, fileName, { invisible = false } = {}) {
+async function saveData(quizResults, fileName, { invisible = false } = {}) {
   try {
     const result = await renderTurnstile('turnstile-container', { invisible });
     const widgetId = result.widgetId;
@@ -637,7 +637,7 @@ async function saveData(orderedData, fileName, { invisible = false } = {}) {
     await submitWithTurnstile({
       widgetId,
       token,
-      data: orderedData,
+      data: quizResults,
       fileName,
     });
 
@@ -663,7 +663,7 @@ function showResult(question, results) {
   }
 
   const fileName = question.closest('.section').dataset;
-  saveData(orderedData, fileName, { invisible: true });
+  saveData(quizResults, fileName, { invisible: true });
   
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
