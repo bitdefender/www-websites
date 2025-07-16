@@ -186,7 +186,7 @@ function sanitizeDataMap(dataMap) {
   );
 }
 
-function handleSubmit(formBox, widgetId) {
+function handleSubmit(formBox, widgetId, token) {
   const locale = window.location.pathname.split('/')[1] || 'en';
   const validateFields = () => {
     let isValid = true;
@@ -280,13 +280,13 @@ function handleSubmit(formBox, widgetId) {
 
     await submitWithTurnstile({
       widgetId,
+      token,
       data: orderedData,
       fileName,
       successCallback: () => {
         formBox.reset();
         const successMsg = formBox.querySelector('#success-message');
         if (successMsg) {
-          // successMsg.style.display = 'block';
           formBox.classList.remove('loading');
           formBox.classList.add('form-submitted');
           formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
@@ -302,11 +302,11 @@ export default function decorate(block) {
   block.innerHTML = '';
   block.appendChild(formBox);
 
-  renderTurnstile('turnstile-container')
-    .then((widgetId) => {
-      handleSubmit(formBox, widgetId);
+   renderTurnstile('turnstile-container', { invisible: false })
+    .then(({ widgetId, token }) => {
+      handleSubmit(formBox, widgetId, token);
     })
     .catch((error) => {
-      throw new Error(`Turnstile render failed: ${error.message}`);
-    });
+      console.error(`Turnstile render failed: ${error.message}`);
+    }); 
 }

@@ -1023,14 +1023,17 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
           widgetExecuting = false;
           console.log('[6] Callback called → token:', token);
 
-          // Store token and widgetId globally for visible mode
           if (!invisible) {
             window.latestVisibleToken = token;
             window.latestWidgetId = widgetId;
           }
 
           if (!token) return finish(new Error('Token missing.'));
-          finish(null, { widgetId, token });
+
+          // Resolve only here if visible
+          if (!invisible) {
+            finish(null, { widgetId, token });
+          }
         },
         'error-callback': () => {
           console.warn('[7] error-callback triggered');
