@@ -981,6 +981,8 @@ export function renderTurnstile2(containerId) {
 
 let isRendering = false;
 let widgetExecuting = false;
+let lastWidgetId = null; // persist widget ID across calls
+
 export function renderTurnstile(containerId, { invisible = false } = {}) {
   console.log('[1] renderTurnstile called → invisible:', invisible);
 
@@ -1013,44 +1015,46 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         return finish(new Error(`Container "${containerId}" not found.`));
       }
 
-      container.innerHTML = ''; // clear existing widget
-      console.log('[5] Container cleared:', containerId);
+      // Only re-render if we haven’t already rendered a widget
+      if (!lastWidgetId) {
+        container.innerHTML = '';
+        console.log('[5] Container cleared:', containerId);
 
-      const widgetId = window.turnstile.render(container, {
-        sitekey: 'your_site_key', // 🔁 Replace with your real sitekey
-        size: invisible ? 'invisible' : 'normal',
-        callback: (token) => {
-          widgetExecuting = false;
-          console.log('[6] Callback called → token:', token);
-          if (!token) return finish(new Error('Token missing.'));
-          finish(null, { widgetId, token });
-        },
-        'error-callback': () => {
-          console.warn('[7] error-callback triggered');
-          finish(new Error('Turnstile error during execution.'));
-        },
-        'expired-callback': () => {
-          console.warn('[8] expired-callback triggered');
-          finish(new Error('Turnstile token expired.'));
-        }
-      });
+        lastWidgetId = window.turnstile.render(container, {
+          sitekey: 'your_site_key', // 🔁 Replace with your real sitekey
+          size: invisible ? 'invisible' : 'normal',
+          callback: (token) => {
+            widgetExecuting = false;
+            console.log('[6] Callback called → token:', token);
+            if (!token) return finish(new Error('Token missing.'));
+            finish(null, { widgetId: lastWidgetId, token });
+          },
+          'error-callback': () => {
+            console.warn('[7] error-callback triggered');
+            finish(new Error('Turnstile error during execution.'));
+          },
+          'expired-callback': () => {
+            console.warn('[8] expired-callback triggered');
+            finish(new Error('Turnstile token expired.'));
+          }
+        });
 
-      console.log('[9] Widget rendered → ID:', widgetId);
+        console.log('[9] Widget rendered → ID:', lastWidgetId);
+      }
 
       if (invisible) {
         if (!widgetExecuting) {
           widgetExecuting = true;
-          console.log('[10] Executing invisible widget:', widgetId);
-          window.turnstile.execute(widgetId);
+          console.log('[10] Executing invisible widget:', lastWidgetId);
+          window.turnstile.reset(lastWidgetId);
+          window.turnstile.execute(lastWidgetId);
         } else {
-          console.warn('[11] Already executing. Resetting widget before retry.');
-          window.turnstile.reset(widgetId);
-          widgetExecuting = true;
-          window.turnstile.execute(widgetId);
+          console.warn('[11] Already executing — skip.');
+          finish(new Error('Turnstile is already executing.'));
         }
       } else {
         console.log('[12] Visible mode → resolve only widgetId');
-        finish(null, { widgetId });
+        finish(null, { widgetId: lastWidgetId });
       }
     }
 
