@@ -1013,8 +1013,8 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
       console.log('[5] Container cleared:', containerId);
 
       const widgetId = window.turnstile.render(container, {
-        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_', // Replace this
-        size: 'normal', // ❗ Must be 'normal', 'compact', or 'invisible' removed
+        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
+        size: invisible ? 'compact' : 'normal',
         execution: invisible ? 'execute' : 'render',
         callback: (token) => {
           widgetExecuting = false;
