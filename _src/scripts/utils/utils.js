@@ -979,54 +979,49 @@ export function renderTurnstile2(containerId) {
   });
 }
 
-let isExecuting = false;
+let widgetExecuting = false;
 export function renderTurnstile(containerId, { invisible = false } = {}) {
   return new Promise((resolve, reject) => {
     function renderWidget() {
       if (!window.turnstile) {
-        reject(new Error('Turnstile not loaded.'));
-        return;
+        return reject(new Error('Turnstile not loaded.'));
       }
 
       const container = document.getElementById(containerId);
       if (!container) {
-        reject(new Error(`Container "${containerId}" not found.`));
-        return;
+        return reject(new Error(`Container "${containerId}" not found.`));
       }
 
-      // Clear the container to prevent duplicate widgets
-      container.innerHTML = '';
+      container.innerHTML = ''; // clear any existing widget
 
       const widgetId = window.turnstile.render(container, {
         sitekey: 'your_site_key',
         size: invisible ? 'invisible' : 'normal',
         callback: (token) => {
-          isExecuting = false;
-          if (!token) {
-            reject(new Error('Turnstile returned empty token.'));
-          } else {
-            resolve({ widgetId, token });
-          }
+          widgetExecuting = false;
+          if (!token) return reject(new Error('Token missing.'));
+          resolve({ widgetId, token });
         },
         'error-callback': () => {
-          isExecuting = false;
+          widgetExecuting = false;
           reject(new Error('Turnstile error during execution.'));
         },
         'expired-callback': () => {
-          isExecuting = false;
+          widgetExecuting = false;
           reject(new Error('Turnstile token expired.'));
         }
       });
 
+      // Trigger challenge in invisible mode, but only if not already running
       if (invisible) {
-        if (!isExecuting) {
-          isExecuting = true;
+        if (!widgetExecuting) {
+          widgetExecuting = true;
           window.turnstile.execute(widgetId);
         } else {
           reject(new Error('Turnstile is already executing.'));
         }
       } else {
-        resolve({ widgetId }); // no token yet, wait for user
+        resolve({ widgetId }); // no token yet in visible mode
       }
     }
 
