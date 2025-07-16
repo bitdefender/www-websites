@@ -672,8 +672,8 @@ function showResult(question, results) {
     quizResults[`Q${i + 1}`] = answer === true ? "correct" : "incorrect";
   }
 
-  const { fileName } = question.closest('.section').dataset;
-  saveData(quizResults, fileName, { invisible: true });
+  const { savedata } = question.closest('.section').dataset;
+  saveData(quizResults, savedata, { invisible: true });
   
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
