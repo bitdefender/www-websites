@@ -979,7 +979,7 @@ export function renderTurnstile2(containerId) {
   });
 }
 
-let isExecuting = false; // shared lock
+let isExecuting = false;
 export function renderTurnstile(containerId, { invisible = false } = {}) {
   return new Promise((resolve, reject) => {
     function renderWidget() {
@@ -989,6 +989,13 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
       }
 
       const container = document.getElementById(containerId);
+      if (!container) {
+        reject(new Error(`Container "${containerId}" not found.`));
+        return;
+      }
+
+      // Clear the container to prevent duplicate widgets
+      container.innerHTML = '';
 
       const widgetId = window.turnstile.render(container, {
         sitekey: 'your_site_key',
@@ -996,10 +1003,10 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         callback: (token) => {
           isExecuting = false;
           if (!token) {
-            reject(new Error('[Turnstile] Empty token from callback.'));
-            return;
+            reject(new Error('Turnstile returned empty token.'));
+          } else {
+            resolve({ widgetId, token });
           }
-          resolve({ widgetId, token });
         },
         'error-callback': () => {
           isExecuting = false;
@@ -1007,21 +1014,19 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         },
         'expired-callback': () => {
           isExecuting = false;
-          reject(new Error('Turnstile token expired before use.'));
+          reject(new Error('Turnstile token expired.'));
         }
       });
 
-      // Only execute if in invisible mode and not already executing
       if (invisible) {
         if (!isExecuting) {
           isExecuting = true;
           window.turnstile.execute(widgetId);
         } else {
-          reject(new Error('Turnstile already executing. Skipping duplicate execute().'));
+          reject(new Error('Turnstile is already executing.'));
         }
       } else {
-        // visible: resolve only widgetId for later manual getResponse()
-        resolve({ widgetId });
+        resolve({ widgetId }); // no token yet, wait for user
       }
     }
 
