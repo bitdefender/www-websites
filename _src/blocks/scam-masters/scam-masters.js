@@ -588,37 +588,37 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
-function saveData2(question, data,) {
-  const { savedata } = question.closest('.section').dataset;
+async function saveData(quizResults, fileName, { invisible = false } = {}) {
+  if (isExecuting) {
+    console.warn('[saveData] Already executing. Ignored.');
+    return;
+  }
 
-  renderTurnstile('turnstile-container')
-    .then(async (widgetId) => {
-      // await until the token is generated
-      const token = await new Promise((resolve, reject) => {
-        let attempts = 0;
-        const maxAttempts = 20;
-        const interval = setInterval(() => {
-          const token = window.turnstile.getResponse(widgetId);
-          if (token) {
-            clearInterval(interval);
-            resolve(token);
-          } else if (++attempts >= maxAttempts) {
-            clearInterval(interval);
-            reject(new Error('Turnstile not done'));
-          }
-        }, 500);
-      });
+  isExecuting = true;
 
-      await submitWithTurnstile({
-        widgetId,
-        data,
-        fileName: savedata,
-      });
+  try {
+    const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
 
-    })
-    .catch((error) => {
-      throw new Error(`Error in saveData: ${error.message}`);
+    let token = initialToken || window.turnstile.getResponse(widgetId);
+
+    if (!token) {
+      throw new Error('Turnstile token missing.');
+    }
+
+    await submitWithTurnstile({
+      widgetId,
+      token,
+      data: quizResults,
+      fileName,
     });
+
+    window.turnstile.reset(widgetId);
+
+  } catch (err) {
+    console.error('[saveData] Failed:', err.message);
+  } finally {
+    isExecuting = false;
+  }
 }
 
 async function saveData(quizResults, fileName, { invisible = false } = {}) {
