@@ -571,12 +571,23 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
 
     if (!invisible) {
       console.log('[saveData] Widget is visible – waiting for user interaction...');
-      // Wait until user finishes challenge and token is set
-      while (!window.latestVisibleToken) {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-      }
+      
+      // Only wait if no token arrived immediately
+      if (!window.latestVisibleToken) {
+        token = await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Timeout waiting for Turnstile token.')), 10000); // 10s
 
-      token = window.latestVisibleToken;
+          const checkInterval = setInterval(() => {
+            if (window.latestVisibleToken) {
+              clearInterval(checkInterval);
+              clearTimeout(timeout);
+              resolve(window.latestVisibleToken);
+            }
+          }, 200);
+        });
+      } else {
+        token = window.latestVisibleToken;
+      }
     }
 
     if (!token) throw new Error('Turnstile token missing.');
@@ -588,7 +599,7 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
       fileName,
     });
   } catch (err) {
-    console.error('[saveData] Failed:', err.message);
+    console.error(`[saveData] Failed: ${err.message}`);
   } finally {
     isExecuting = false;
     console.log('[saveData] Done.');
