@@ -1003,24 +1003,38 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
       console.log('[2] renderWidget called');
 
       if (!window.turnstile) {
+        console.warn('[3] Turnstile not loaded');
         return finish(new Error('Turnstile not loaded.'));
       }
 
       const container = document.getElementById(containerId);
-      if (!container) return finish(new Error(`Container "${containerId}" not found.`));
+      if (!container) {
+        console.warn('[4] Container not found:', containerId);
+        return finish(new Error(`Container "${containerId}" not found.`));
+      }
 
-      container.innerHTML = '';
+      container.innerHTML = ''; // Clear previous widget if any
       console.log('[5] Container cleared:', containerId);
 
       const widgetId = window.turnstile.render(container, {
-        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
-        size: invisible ? 'compact' : 'normal',
-        execution: invisible ? 'execute' : 'render',
+        sitekey: 'your_site_key', // 🔁 Replace with your actual sitekey
+        size: invisible ? 'invisible' : 'normal',
         callback: (token) => {
           widgetExecuting = false;
           console.log('[6] Callback called → token:', token);
-          if (!token) return finish(new Error('Token missing.'));
-          finish(null, { widgetId, token });
+
+          // For invisible, resolve immediately with token
+          if (invisible) {
+            if (!token) return finish(new Error('Token missing.'));
+            finish(null, { widgetId, token });
+          }
+
+          // For visible, just store it globally if needed
+          if (!invisible) {
+            window.latestVisibleToken = token;
+            window.latestWidgetId = widgetId;
+            console.log('[6b] Visible token stored globally');
+          }
         },
         'error-callback': () => {
           console.warn('[7] error-callback triggered');
@@ -1038,16 +1052,17 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         if (!widgetExecuting) {
           widgetExecuting = true;
           console.log('[10] Executing invisible widget:', widgetId);
-          window.turnstile.execute(widgetId);
-        } else {
-          console.warn('[11] Already executing. Resetting widget before retry.');
-          window.turnstile.reset(widgetId);
-          widgetExecuting = true;
-          window.turnstile.execute(widgetId);
+          try {
+            window.turnstile.execute(widgetId);
+          } catch (err) {
+            console.warn('[11] Execute error, trying reset + execute');
+            window.turnstile.reset(widgetId);
+            window.turnstile.execute(widgetId);
+          }
         }
       } else {
-        console.log('[12] Visible mode → resolve only widgetId');
-        finish(null, { widgetId });
+        console.log('[12] Visible mode → returning widgetId only');
+        finish(null, { widgetId }); // No token returned here
       }
     }
 
