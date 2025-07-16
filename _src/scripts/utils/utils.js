@@ -985,18 +985,14 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         size: invisible ? 'compact' : 'normal',
         callback: (token) => {
           widgetExecuting = false;
+          console.log('[6] Callback called → token:', token);
 
           if (!invisible) {
             window.latestVisibleToken = token;
-            window.latestWidgetId = widgetId;
           }
 
           if (!token) return finish(new Error('Token missing.'));
-
-          // Resolve only here if visible
-          if (!invisible) {
-            finish(null, { widgetId, token });
-          }
+          finish(null, { widgetId, token });
         },
         'error-callback': () => {
           finish(new Error('Turnstile error during execution.'));
