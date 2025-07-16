@@ -1013,7 +1013,7 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
         finish(null, { widgetId });
       }
 
-      return;
+      return undefined;
     }
 
     if (window.turnstile) {
