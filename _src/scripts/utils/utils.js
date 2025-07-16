@@ -981,7 +981,6 @@ export function renderTurnstile2(containerId) {
 
 let isRendering = false;
 let widgetExecuting = false;
-let lastWidgetId = null;
 export function renderTurnstile(containerId, { invisible = false } = {}) {
   console.log('[1] renderTurnstile called → invisible:', invisible);
 
@@ -1004,64 +1003,51 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
       console.log('[2] renderWidget called');
 
       if (!window.turnstile) {
-        console.warn('[3] Turnstile not loaded');
         return finish(new Error('Turnstile not loaded.'));
       }
 
       const container = document.getElementById(containerId);
-      if (!container) {
-        console.warn('[4] Container not found:', containerId);
-        return finish(new Error(`Container "${containerId}" not found.`));
-      }
+      if (!container) return finish(new Error(`Container "${containerId}" not found.`));
 
-      if (!lastWidgetId) {
-        container.innerHTML = '';
-        console.log('[5] Container cleared:', containerId);
+      container.innerHTML = '';
+      console.log('[5] Container cleared:', containerId);
 
-        lastWidgetId = window.turnstile.render(container, {
-          sitekey: '0x4AAAAAABkTzSd63P7J-Tl_', // ⬅️ Replace this with your real key
-          size: invisible ? 'invisible' : 'normal',
-          callback: (token) => {
-            widgetExecuting = false;
-            console.log('[6] Callback called → token:', token);
-            if (!token) return finish(new Error('Token missing.'));
-            finish(null, { widgetId: lastWidgetId, token });
-          },
-          'error-callback': () => {
-            console.warn('[7] error-callback triggered');
-            finish(new Error('Turnstile error during execution.'));
-          },
-          'expired-callback': () => {
-            console.warn('[8] expired-callback triggered');
-            finish(new Error('Turnstile token expired.'));
-          }
-        });
+      const widgetId = window.turnstile.render(container, {
+        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_', // Replace this
+        size: 'normal', // ❗ Must be 'normal', 'compact', or 'invisible' removed
+        execution: invisible ? 'execute' : 'render',
+        callback: (token) => {
+          widgetExecuting = false;
+          console.log('[6] Callback called → token:', token);
+          if (!token) return finish(new Error('Token missing.'));
+          finish(null, { widgetId, token });
+        },
+        'error-callback': () => {
+          console.warn('[7] error-callback triggered');
+          finish(new Error('Turnstile error during execution.'));
+        },
+        'expired-callback': () => {
+          console.warn('[8] expired-callback triggered');
+          finish(new Error('Turnstile token expired.'));
+        }
+      });
 
-        console.log('[9] Widget rendered → ID:', lastWidgetId);
-      }
+      console.log('[9] Widget rendered → ID:', widgetId);
 
       if (invisible) {
-        console.log('[10] Preparing to execute invisible widget:', lastWidgetId);
-
-        // Always reset before execution to avoid 400020
-        window.turnstile.reset(lastWidgetId);
-        widgetExecuting = true;
-
-        console.log('[11] Executing invisible widget:', lastWidgetId);
-        window.turnstile.execute(lastWidgetId);
-
-        // Fallback timeout if callback never fires
-        setTimeout(() => {
-          if (widgetExecuting) {
-            console.warn('[Timeout] No callback after 8s. Resetting...');
-            widgetExecuting = false;
-            window.turnstile.reset(lastWidgetId);
-            finish(new Error('Execution timeout'));
-          }
-        }, 8000);
+        if (!widgetExecuting) {
+          widgetExecuting = true;
+          console.log('[10] Executing invisible widget:', widgetId);
+          window.turnstile.execute(widgetId);
+        } else {
+          console.warn('[11] Already executing. Resetting widget before retry.');
+          window.turnstile.reset(widgetId);
+          widgetExecuting = true;
+          window.turnstile.execute(widgetId);
+        }
       } else {
-        console.log('[12] Visible widget → resolving immediately');
-        finish(null, { widgetId: lastWidgetId });
+        console.log('[12] Visible mode → resolve only widgetId');
+        finish(null, { widgetId });
       }
     }
 
