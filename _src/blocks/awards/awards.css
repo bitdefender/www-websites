@@ -70,7 +70,7 @@
 
 
 .awards-component > div:nth-child(3) div img {
-  height: 56px;
+  height: 100px;
   max-width: 100%;
   width: auto;
   object-fit: contain;
