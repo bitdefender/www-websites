@@ -829,25 +829,6 @@
   display: none;
 }
 
-.creators .columns-container .columns.creators-banner > div > div td{
-  vertical-align: middle;
-  display: inline-flex;
-  align-items: center;
-  margin-right: 10px;
-}
-
-.creators .columns-container .columns.creators-banner > div > div td .icon{
-  width: 20px;
-  height: 29px;
-  margin: 0;
-}
-
-.creators .columns-container .columns.creators-banner > div > div td .icon svg{
-  width: 24px;
-  height: 22px;
-  margin: 0;
-}
-
 .columns-container.secondary-button-blue  .columns .button.secondary {
   margin-top: 15px;
   color: #026DFF;
