@@ -829,22 +829,22 @@
   display: none;
 }
 
-.creators .columns-container .columns.creators-banner > div > div.columns-left-col td{
+.creators .columns-container .columns.creators-banner > div > div td{
   vertical-align: middle;
   display: inline-flex;
   align-items: center;
   margin-right: 10px;
 }
 
-.creators .columns-container .columns.creators-banner > div > div.columns-left-col td .icon{
+.creators .columns-container .columns.creators-banner > div > div td .icon{
   width: 20px;
-  height: 20px;
+  height: 29px;
   margin: 0;
 }
 
-.creators .columns-container .columns.creators-banner > div > div.columns-left-col td .icon svg{
-  width: 20px;
-  height: 20px;
+.creators .columns-container .columns.creators-banner > div > div td .icon svg{
+  width: 24px;
+  height: 22px;
   margin: 0;
 }
 

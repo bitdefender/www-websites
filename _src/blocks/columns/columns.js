@@ -132,7 +132,7 @@ export default function decorate(block) {
 
   if (breadcrumbs && block.classList.contains('creators-banner')) {
     const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    block.querySelector('.columns-left-col')?.prepend(breadcrumb);
+    block.querySelector('h2')?.prepend(breadcrumb);
   }
 
   // setup buylink, this can be used later as a starting point for prices.
