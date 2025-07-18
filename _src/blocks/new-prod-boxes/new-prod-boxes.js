@@ -36,7 +36,7 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div>
+        <div class="oldprice-container">
           <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
           <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
         </div>
@@ -528,4 +528,5 @@ export default async function decorate(block) {
   matchHeights(block, 'h4');
   matchHeights(block, '.plan-switcher');
   matchHeights(block, '.blueTagsWrapper');
+  matchHeights(block, '.oldprice-container');
 }
