@@ -497,8 +497,8 @@ export default async function decorate(block) {
             allPlanSwitchers.forEach((otherSwitcher) => {
               const otherBox = otherSwitcher.closest('.prod_box');
               if (
-                (isIndividual && otherBox.classList.contains('individual-box')) ||
-                (isFamily && otherBox.classList.contains('family-box'))
+                (isIndividual && otherBox.classList.contains('individual-box'))
+                || (isFamily && otherBox.classList.contains('family-box'))
               ) {
                 const otherInputs = otherSwitcher.querySelectorAll('input');
                 if (otherInputs[idx] && !otherInputs[idx].checked) {
