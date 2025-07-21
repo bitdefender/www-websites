@@ -33,6 +33,11 @@
   font-size: 32px;
 }
 
+.awards-container em {
+  color: #006DFF;
+  font-style: normal;
+}
+
 .awards-container .block.awards-component > div {
   text-align: center;
   display: flex;
@@ -304,7 +309,6 @@
 
   .awards-component h3 {
     font: normal normal bold 32px/38px Arial, sans-serif;
-    max-width: 726px;
     margin-bottom: 0;
   }
 

@@ -107,11 +107,11 @@
 }
 
 .global-display-none {
-  display: none;
+  display: none !important;
 }
 
 .global-visibility-hidden {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 
 .font-arial {

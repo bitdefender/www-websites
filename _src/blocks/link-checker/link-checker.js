@@ -69,7 +69,10 @@ class StatusMessageFactory {
 
 function changeTexts(block, result, statusTitles) {
   const titleText = statusTitles[result.status.toLowerCase()] || statusTitles.default;
-  block.querySelector('h1').textContent = titleText;
+  const h1 = block.querySelector('h1');
+  if (h1) {
+    h1.textContent = titleText;
+  }
 }
 
 const isValidUrl = (urlString) => {
@@ -143,7 +146,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
-async function resetChecker(block) {
+async function resetChecker(block, titleText = '') {
   const classesToRemove = ['danger', 'safe'];
   const section = block.closest('.section');
 
@@ -161,37 +164,13 @@ async function resetChecker(block) {
   input.removeAttribute('disabled');
   input.value = '';
   result.className = 'result';
-  h1.textContent = 'Is This Link Really Safe?';
+  if (h1) {
+    h1.textContent = titleText;
+  }
 
   AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
   AdobeDataLayerService.push(new UserDetectedEvent());
   AdobeDataLayerService.push(new WindowLoadedEvent());
-}
-
-function createSharePopup(element) {
-  element.style.maxWidth = `${element.offsetWidth}px`;
-  element.style.maxHeight = `${element.offsetHeight}px`;
-  const sharePopup = document.createElement('div');
-  sharePopup.classList.add('share-popup');
-  element.insertAdjacentElement('beforeend', sharePopup);
-  return sharePopup;
-}
-
-function copyToClipboard(block, caller, popupText) {
-  const copyText = window.location.href;
-
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText);
-  const buttonsContainer = block.querySelector('.buttons-container');
-  if (buttonsContainer) {
-    const sharePopup = block.querySelector('.share-popup') || createSharePopup(caller);
-    sharePopup.textContent = `${popupText}`;
-    const translateXValue = Math.abs((sharePopup.offsetWidth - caller.offsetWidth) / 2);
-    sharePopup.style = `transform:translateX(-${translateXValue}px); opacity: 1`;
-    setTimeout(() => {
-      sharePopup.style = `transform:translateX(-${translateXValue}px); opacity:0;`;
-    }, 2000);
-  }
 }
 
 function createStatusMessages(block) {
@@ -249,7 +228,8 @@ function createStatusTitles(block) {
   return statusTitles;
 }
 
-function createButtonsContainer(block, formContainer, clipboardText) {
+function createButtonsContainer(block) {
+  const titleText = block.querySelector('h1')?.innerText;
   const divWithButtons = Array.from(block.querySelectorAll('div')).find((div) => {
     const firstParagraph = div.querySelector('p');
     return firstParagraph && firstParagraph.textContent.includes('<buttons>');
@@ -273,43 +253,18 @@ function createButtonsContainer(block, formContainer, clipboardText) {
       if (index === 2) {
         p.querySelector('a').classList.add('check-another-button');
       }
+
       divWithButtons.appendChild(p);
       const link = p.querySelector('a');
       if (link.href.includes('#check-another')) {
-        link.addEventListener('click', () => resetChecker(block));
+        link.addEventListener('click', () => resetChecker(block, titleText));
       }
-    });
-
-    return;
-  }
-
-  // this remains here for compatibility purposes
-  const buttonsContainer = document.createElement('div');
-  buttonsContainer.classList.add('buttons-container');
-
-  const shareButton = document.createElement('button');
-  shareButton.innerHTML = '<span>Share Link Checker</span>';
-  shareButton.classList.add('share-button');
-
-  const checkAnother = document.createElement('button');
-  checkAnother.innerHTML = '<span>Check Another Link</span>';
-  checkAnother.classList.add('check-another-button');
-
-  buttonsContainer.appendChild(shareButton);
-  buttonsContainer.appendChild(checkAnother);
-  formContainer.appendChild(buttonsContainer);
-
-  checkAnother.addEventListener('click', () => resetChecker(block));
-  if (clipboardText) {
-    shareButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      copyToClipboard(block, shareButton, clipboardText);
     });
   }
 }
 
 export default function decorate(block) {
-  const { clipboardText } = block.closest('.section').dataset;
+  const { checkButtonText } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
   privacyPolicyDiv.classList.add('privacy-policy');
@@ -353,7 +308,7 @@ export default function decorate(block) {
   });
 
   const button = document.createElement('button');
-  button.textContent = 'Check URL';
+  button.textContent = checkButtonText ?? 'Check URL';
   button.classList.add('check-url');
   inputContainer.appendChild(button);
 
@@ -368,7 +323,7 @@ export default function decorate(block) {
 
   button.addEventListener('click', () => checkLink(block, input, result, statusMessages, statusTitles));
 
-  createButtonsContainer(block, formContainer, clipboardText);
+  createButtonsContainer(block);
   // if the text is cleared, do not display any error
   input.addEventListener('input', () => {
     const url = input.value.trim();

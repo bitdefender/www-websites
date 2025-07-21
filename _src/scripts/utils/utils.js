@@ -949,3 +949,78 @@ export function generateLDJsonSchema() {
   script.textContent = JSON.stringify(ldJson, null, 2); // Pretty print
   document.head.appendChild(script);
 }
+
+// Turnstile
+export function renderTurnstile(containerId) {
+  return new Promise((resolve, reject) => {
+    function renderWidget() {
+      if (!window.turnstile) {
+        reject(new Error('Turnstile not loaded.'));
+        return;
+      }
+
+      const widgetId = window.turnstile.render(`#${containerId}`, {
+        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
+      });
+
+      resolve(widgetId);
+    }
+
+    if (window.turnstile) {
+      renderWidget();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+      script.async = true;
+      script.defer = true;
+      window.onloadTurnstileCallback = renderWidget;
+      document.head.appendChild(script);
+    }
+  });
+}
+
+export async function submitWithTurnstile({
+  widgetId,
+  data,
+  fileName,
+  successCallback = null,
+  errorCallback = null,
+}) {
+  let ENDPOINT = 'https://stage.bitdefender.com/form';
+  if (window.location.hostname.startsWith('www.')) {
+    ENDPOINT = ENDPOINT.replace('stage.', 'www.');
+  }
+
+  try {
+    const token = window.turnstile.getResponse(widgetId);
+
+    if (!token) {
+      throw new Error('Turnstile token is missing. Please complete the challenge.');
+    }
+
+    const requestData = {
+      file: `/sites/common/formdata/${fileName}.xlsx`,
+      table: 'Table1',
+      row: {
+        ...data,
+      },
+      token,
+    };
+
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+
+    const contentType = res.headers.get('content-type');
+    if (!contentType?.includes('application/json')) throw new Error(await res.text());
+
+    if (typeof successCallback === 'function') successCallback();
+    window.turnstile.reset(widgetId);
+  } catch (err) {
+    if (typeof errorCallback === 'function') errorCallback(err);
+  }
+}
