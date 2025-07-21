@@ -135,6 +135,10 @@
   font: normal normal normal 19px / 28px Arial, sans-serif!important;
 }
 
+.creators .columns-container.smaller-texts p {
+  font: normal normal normal 16px / 23px Arial, sans-serif !important;
+}
+
 .columns.new-v2 h3 {
   font-family: "IBM Plex Sans" ,sans-serif;
   font-size: 25px;
@@ -192,7 +196,6 @@
 
 .columns img {
   width: 100%;
-
 }
 
 .dlp.columns-container img{
@@ -458,6 +461,43 @@
   justify-content: center;
   padding: 5px 10px;
   font-size: 14px;
+}
+
+.creators .columns-container .has-trial-btn a.button {
+  min-width: 180px;
+  background-color: white;
+  color: var(--link-color);
+  border: 0 none;
+  font: normal normal normal 15px / 26px Arial, sans-serif !important;
+  font-weight: 600!important;
+  margin: 0;
+}
+
+.creators .columns-container .has-trial-btn a.button.modal {
+  height: auto;
+  background: #E72325 0% 0% no-repeat padding-box;
+  border-radius: 30px;
+  justify-content: center;
+  padding: 9px 19px;
+  color: white;
+  font-size: 14px !important;
+}
+
+.creators .columns-container .has-trial-btn a.button::after {
+  display: none!important;
+}
+
+.creators .columns-container .has-trial-btn a.button:hover {
+  transition: unset!important;
+}
+
+.creators .columns-container .has-trial-btn p.button-container {
+  float: left;
+  margin-right: 10px;
+}
+
+.creators .columns-container .has-trial-btn table {
+  clear: both;
 }
 
 .columns-container .trust-factors {
@@ -1807,7 +1847,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     text-align: center;
   }
 
-  .percent-table .columns table{
+  .percent-table .columns table {
     justify-self: center;
   }
 
@@ -1831,6 +1871,21 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .creators .header-mobile table {
     justify-self: center;
+  }
+
+  .creators .columns-container .has-trial-btn h2 {
+    font-size: 31px;
+    margin-top: 1em;
+    margin-bottom: 10px
+  }
+
+  .creators .columns-container .has-trial-btn p.button-container {
+    float: unset;
+    margin-right: 0;
+  }
+
+  .creators .columns-container .has-trial-btn a.button.modal {
+    font-size: 14px !important;
   }
 
   .creators .columns-container h3, .creators .columns-container h5, .creators .columns-container h2, .creators .columns-container h1 {
