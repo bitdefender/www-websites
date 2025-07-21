@@ -1854,7 +1854,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     text-align: center;
   }
 
-  .percent-table .columns table{
+  .percent-table .columns table {
     justify-self: center;
   }
 
@@ -1878,6 +1878,21 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .creators .header-mobile table {
     justify-self: center;
+  }
+
+  .creators .columns-container .has-trial-btn h2 {
+    font-size: 31px;
+    margin-top: 1.5em;
+    margin-bottom: 10px
+  }
+
+  .creators .columns-container .has-trial-btn p.button-container {
+    float: unset;
+    margin-right: 0;
+  }
+
+  .creators .columns-container .has-trial-btn a.button.modal {
+    font-size: 14px !important;
   }
 
   .creators .columns-container h3, .creators .columns-container h5, .creators .columns-container h2, .creators .columns-container h1 {
