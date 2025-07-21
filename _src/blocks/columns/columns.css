@@ -135,6 +135,15 @@
   font: normal normal normal 19px / 28px Arial, sans-serif!important;
 }
 
+.creators .columns-container.smaller-texts p {
+  font: normal normal normal 16px / 23px Arial, sans-serif !important;
+}
+
+.creators .columns-container.smaller-texts p {
+  font: normal normal normal 16px / 23px Arial, sans-serif !important;
+}
+
+
 .columns.new-v2 h3 {
   font-family: "IBM Plex Sans" ,sans-serif;
   font-size: 25px;
@@ -458,6 +467,25 @@
   justify-content: center;
   padding: 5px 10px;
   font-size: 14px;
+}
+
+.creators .columns-container .has-trial-btn a.button {
+  margin: 0;
+}
+
+.creators .columns-container .has-trial-btn a.button.modal {
+  background-color: white;
+  font: normal normal normal 17px / 26px Arial, sans-serif !important;
+  font-weight: 600!important;
+}
+
+.creators .columns-container .has-trial-btn p.button-container {
+  float: left;
+  margin-right: 10px;
+}
+
+.creators .columns-container .has-trial-btn table {
+  clear: both;
 }
 
 .columns-container .trust-factors {
