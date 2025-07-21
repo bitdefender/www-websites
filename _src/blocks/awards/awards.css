@@ -38,6 +38,10 @@
   margin-bottom: 0px;
 }
 
+.awards-container .button-container {
+  margin-top: 34px;
+}
+
 .awards-container em {
   color: #006DFF;
   font-style: normal;
