@@ -29,8 +29,17 @@
   width: 100%;
 }
 
+.awards-container p {
+  line-height: 1.45;
+}
+
 .awards-container h3 {
   font-size: 32px;
+  margin-bottom: 0px;
+}
+
+.awards-container .button-container {
+  margin-top: 34px;
 }
 
 .awards-container em {
@@ -70,7 +79,7 @@
 
 
 .awards-component > div:nth-child(3) div img {
-  height: 56px;
+  height: 100px;
   max-width: 100%;
   width: auto;
   object-fit: contain;
