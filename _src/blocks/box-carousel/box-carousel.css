@@ -240,6 +240,16 @@
     width: unset;
 }
 
+.box-carousel-container .box-carousel.reviews .img-container {
+    font-size: 17px;
+}
+
+
+.box-carousel-container .box-carousel.reviews .img-container hr {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
 .box-carousel-container ul {
     padding-left: 0;
     display: grid;
@@ -300,6 +310,7 @@
 
     .box-carousel-container .box-carousel.reviews .img-container {
         width: 100%;
+        font-size: 22px;
     }
 
     .box-carousel-container.testimonials .trusted-carousel .carousel-container {

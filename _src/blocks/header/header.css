@@ -628,6 +628,10 @@ header.quiz {
 
     width: 155px;
   }
+
+  .default-content-wrapper {
+    max-width: 100%;
+  }
 }
 
 @media(min-width: 767px) { /* tablet */

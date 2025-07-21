@@ -513,7 +513,7 @@
             >div:first-child {
                 background-color: var(--color-bd-blue);
                 color: white;
-                padding-left: 30%;
+                padding-left: 25%;
 
                 h1 {
                     color: white;
@@ -521,6 +521,11 @@
                     font-size: 59px;
                     line-height: 100%;
                     letter-spacing: 0%;
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    margin-bottom: 5px;
                 }
 
                 .button {
@@ -592,7 +597,12 @@
         .question,
         .result {
             .question-content {
+                margin-bottom: 25px;
                 text-align: left;
+
+                p {
+                    margin-top: 12px;
+                }
 
                 .question-number {
                     background-color: var(--color-light-blue);
@@ -655,11 +665,16 @@
 
                 >p:nth-of-type(2) {
                     font-size: 24px;
+                    color: #000 !important;
                 }
 
                 >p:last-of-type {
                     font-size: 24px;
                     margin-top: 91px;
+                }
+
+                >p:nth-last-of-type(2) {
+                    color: #3D3D3D;
                 }
             }
 
@@ -667,6 +682,7 @@
                 .answers-list, .secondary-answers-list {
                     li {
                         padding: 0;
+                        color: #3D3D3D;
 
                         &::before {
                             content: "";
@@ -1044,6 +1060,91 @@
 
                     .answers-list li {
                         font-size: 14px;
+                    }
+                }
+            }
+
+            &.acq-quiz {
+                .start-page {
+                    border-radius: 0;
+                    background-color: var(--color-bd-blue);
+                    height: 93vh;
+                    padding: 20px;
+
+                    img {
+                        width: 70%;
+                        height: unset !important;
+                    }
+
+                    & > div:first-child {
+                        gap: 25px;
+
+                        h1 {
+                            font-size: 40px;
+                            margin: 0;
+                            font-weight: 400;
+                        }
+
+                        p {
+                            margin: 0;
+                            font-size: 16px;
+                            strong {
+                                font-size: 24px;
+                            }
+                        }
+
+                        .button {
+                            margin-top: 10px;
+                            width: 100%;
+                            justify-content: center;
+                            font-size: 18px;
+                            padding: 13px;
+                        }
+                    }
+
+                }
+
+                & .question, & .result {
+                    flex-direction: column;
+                    min-height: 93vh;
+
+                    .scam-buttons-container {
+                        flex-direction: column;
+                    }
+
+                    & .question-content {
+                        margin: 0;
+
+                        .question-number {
+                            font-size: 19px;
+                        }
+
+                        >p:last-of-type {
+                            margin-top: 52px;
+                            
+                        }
+
+                        >p:nth-of-type(2) {
+                            margin-top: 12px;
+                            margin-bottom: 0;
+                        }
+
+                        
+                    }
+
+                    >div:first-child {
+                        justify-content: space-around;
+                        flex-grow: 1;
+                        display: flex;
+                        flex-direction: column;
+
+                        .button-container {
+                            width: 100%;
+
+                            & a {
+                                min-width: 100%;
+                            }
+                        }
                     }
                 }
             }
