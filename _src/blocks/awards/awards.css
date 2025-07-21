@@ -29,8 +29,13 @@
   width: 100%;
 }
 
+.awards-container p {
+  line-height: 1.45;
+}
+
 .awards-container h3 {
   font-size: 32px;
+  margin-bottom: 0px;
 }
 
 .awards-container em {
