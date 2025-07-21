@@ -470,13 +470,31 @@
 }
 
 .creators .columns-container .has-trial-btn a.button {
+  min-width: 180px;
+  background-color: white;
+  color: var(--link-color);
+  border: 0 none;
+  font: normal normal normal 15px / 26px Arial, sans-serif !important;
+  font-weight: 600!important;
   margin: 0;
 }
 
 .creators .columns-container .has-trial-btn a.button.modal {
-  background-color: white;
-  font: normal normal normal 17px / 26px Arial, sans-serif !important;
-  font-weight: 600!important;
+  height: auto;
+  background: #E72325 0% 0% no-repeat padding-box;
+  border-radius: 30px;
+  justify-content: center;
+  padding: 9px 19px;
+  color: white;
+  font-size: 14px !important;
+}
+
+.creators .columns-container .has-trial-btn a.button::after {
+  display: none!important;
+}
+
+.creators .columns-container .has-trial-btn a.button:hover {
+  transition: unset!important;
 }
 
 .creators .columns-container .has-trial-btn p.button-container {
