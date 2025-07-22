@@ -18,4 +18,12 @@ module.exports = {
       js: 'always',
     }],
   },
+  settings: {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js"],
+        "moduleDirectory": ["node_modules"]
+      }
+    }
+  }
 };
