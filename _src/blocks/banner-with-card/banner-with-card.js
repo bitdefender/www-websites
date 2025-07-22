@@ -1,3 +1,4 @@
+import { detectModalButtons } from '../../scripts/scripts.js';
 import { createNanoBlock, createTag, renderNanoBlocks } from '../../scripts/utils/utils.js';
 
 function renderBluePill(icon, text) {
@@ -21,17 +22,18 @@ createNanoBlock('bluePill', renderBluePill);
 
 export default function decorate(block) {
   const parentElement = block.closest('.section');
-  const [textDiv, porductCard] = block.children[0].children;
+  const [textDiv, productCard] = block.children[0].children;
   textDiv.classList.add('banner-content');
-  porductCard.classList.add('product-card');
+  productCard.classList.add('product-card');
   const tosButton = parentElement.querySelector('.default-content-wrapper .button-container');
-  tosButton.parentElement.remove();
+  tosButton?.parentElement.remove();
   block.innerHTML = `
   ${textDiv.outerHTML}
   <div class="card-container">
-    ${porductCard.outerHTML}
-    ${tosButton.outerHTML ?? ''}
+    ${productCard.outerHTML}
+    ${tosButton?.outerHTML ?? ''}
   </div>`;
 
   renderNanoBlocks(block);
+  detectModalButtons(block);
 }

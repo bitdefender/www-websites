@@ -545,6 +545,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
+                padding-left: 7.5%;
 
                 .start-content {
                     display: flex;
@@ -1100,6 +1101,10 @@
                             font-size: 18px;
                             padding: 13px;
                         }
+                    }
+
+                    & div:last-child {
+                        padding-left: 0;
                     }
 
                 }

@@ -12,9 +12,10 @@ export default async function decorate(block) {
     currentStep: 0,
   };
 
+  const isAcqVariant = window.location.href.includes('acq');
+
   block.classList.add('default-content-wrapper');
   block.closest('.section').id = 'quiz-form';
-
   const steps = [...block.children];
 
   function renderStep(step, index) {
@@ -104,7 +105,7 @@ export default async function decorate(block) {
 
     const { origin, pathname } = window.location;
     // redirect
-    if (window.location.href.includes('acq')) {
+    if (isAcqVariant) {
       window.location.replace(`${origin}${pathname}${dataset.score}`);
       return;
     }
@@ -128,6 +129,17 @@ export default async function decorate(block) {
       return;
     }
 
+    if (isAcqVariant) {
+      window.adobeDataLayer.push(
+        {
+          event: 'form completed',
+          form: {
+            name: 'Who do you protect online?',
+            field: `${selectedOption.previousElementSibling.innerText}`,
+          },
+        },
+      );
+    }
     renderResults();
   }
 

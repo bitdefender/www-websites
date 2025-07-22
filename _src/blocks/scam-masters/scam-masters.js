@@ -290,7 +290,7 @@ function decorateAnswersList(question, questionIndex) {
   });
 }
 
-function showQuestion(index) {
+function showQuestion(index, isAcqVariant) {
   // Hide all questions
   const allQuestions = document.querySelectorAll('.scam-masters .question');
   const startPage = document.querySelector('.scam-masters .start-page');
@@ -309,6 +309,14 @@ function showQuestion(index) {
   const questionToShow = document.querySelector(`.scam-masters .question-${index}`);
   if (questionToShow) {
     questionToShow.style.display = '';
+    if (isAcqVariant) {
+      window.adobeDataLayer.push(
+        {
+          event: 'question-viewed',
+          asset: `question-${index} screen`,
+        },
+      );
+    }
   }
 }
 
@@ -746,7 +754,7 @@ function showResult(question, results, isAcqVariant) {
   }
 }
 
-function decorateScamButtons(question, index) {
+function decorateScamButtons(question, index, isAcqVariant) {
   // Create flex container for scam/no-scam buttons
   const scamLink = question.querySelector('a[href="#scam"]');
   const noScamLink = question.querySelector('a[href="#no-scam"]');
@@ -790,8 +798,24 @@ function decorateScamButtons(question, index) {
         if (isCorrect) {
           score += 1;
           showCorrect(question, index);
+          if (isAcqVariant) {
+            window.adobeDataLayer.push(
+              {
+                event: 'question-answered',
+                asset: `question-${index + 1} spam`,
+              },
+            );
+          }
         } else {
           showWrong(question, index);
+          if (isAcqVariant) {
+            window.adobeDataLayer.push(
+              {
+                event: 'question-answered',
+                asset: `question-${index + 1} not spam`,
+              },
+            );
+          }
         }
       });
     };
@@ -803,7 +827,7 @@ function decorateScamButtons(question, index) {
 }
 
 function decorateQuestions(questions, results, isAcqVariant) {
-  questions.forEach((question, index) => {
+  questions.forEach((question, index, passedVariant = isAcqVariant) => {
     question.classList.add('question');
     question.classList.add(`question-${index + 1}`);
     question.dataset.questionIndex = index + 1;
@@ -811,7 +835,7 @@ function decorateQuestions(questions, results, isAcqVariant) {
     processSpecialParagraphs(question, index);
     decorateAnswersList(question, index);
     decorateClickQuestions(question, index);
-    decorateScamButtons(question, index);
+    decorateScamButtons(question, index, isAcqVariant);
 
     // Hide all questions initially
     question.style.display = 'none';
@@ -820,7 +844,7 @@ function decorateQuestions(questions, results, isAcqVariant) {
       const nextButton = question.querySelector('a[href="#continue"]');
       if (nextButton && index < questions.length - 1) {
         nextButton.style.display = 'none';
-        nextButton.addEventListener('click', () => showQuestion(index + 2));
+        nextButton.addEventListener('click', () => showQuestion(index + 2, passedVariant));
       } else if (nextButton && index === questions.length - 1) {
         nextButton.style.display = 'none';
         nextButton.addEventListener('click', () => showResult(question, results, isAcqVariant));
@@ -834,6 +858,15 @@ function decorateQuestions(questions, results, isAcqVariant) {
           question.closest('.section').classList.add('fade-out');
           showResult(question, results, isAcqVariant);
           document.querySelector('.quiz-stepper-container').classList.add('fade-in');
+
+          window.adobeDataLayer.push(
+            {
+              event: 'form viewed',
+              form: {
+                name: 'Who do you protect online?',
+              },
+            },
+          );
         });
       }
     }
@@ -856,12 +889,12 @@ function decorateResults(results) {
   });
 }
 
-function setupStartButton(block) {
+function setupStartButton(block, isAcqVariant) {
   const startButton = block.querySelector('a[href="#start-quiz"]');
   if (startButton) {
     startButton.addEventListener('click', (e) => {
       e.preventDefault();
-      showQuestion(1);
+      showQuestion(1, isAcqVariant);
     });
   }
 }
@@ -919,6 +952,10 @@ export default function decorate(block) {
     resultPage, clipboardText,
   } = block.closest('.section').dataset;
 
+  const [startBlock, ...questionsAndResults] = block.children;
+  const isAcqVariant = startBlock.closest('.acq-quiz');
+  decorateStartPage(startBlock, isAcqVariant);
+
   if (resultPage) {
     const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
     decorateResults(results);
@@ -928,15 +965,11 @@ export default function decorate(block) {
     return;
   }
 
-  const [startBlock, ...questionsAndResults] = block.children;
-  const isAcqVariant = startBlock.closest('.acq-quiz');
-  decorateStartPage(startBlock, isAcqVariant);
-
   const questions = getDivsBasedOnFirstParagraph(block, 'question-box');
   const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
   decorateQuestions(questions, results, isAcqVariant);
   decorateResults(results);
-  setupStartButton(block);
+  setupStartButton(block, isAcqVariant);
 
   const questionsContainer = document.createElement('div');
   questionsContainer.classList.add('questions-container');
