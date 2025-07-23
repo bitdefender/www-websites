@@ -951,7 +951,7 @@
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         .scam-masters-container {
             padding: 15px !important;
         }
@@ -1157,7 +1157,7 @@
 
                 & .question, & .result {
                     flex-direction: column;
-                    min-height: 744px;
+                    min-height: 650px;
 
                     .scam-buttons-container {
                         flex-direction: column;
@@ -1193,13 +1193,9 @@
                             }
 
                             .image-wrapper {
-                                max-height: 155px;
+                                max-height: 340px;
                                 position: relative;
-                                top: -150px;
-
-                                .img {
-                                    max-height: 245px;
-                                }
+                                top: 0px;
                             }
                         }
                     }
@@ -1217,6 +1213,11 @@
                                 min-width: 100%;
                             }
                         }
+                    }
+
+                    >div:last-child {
+                        max-height: 300px;
+                        min-height: unset;
                     }
                 }
             }
