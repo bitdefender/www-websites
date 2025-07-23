@@ -5,9 +5,9 @@
   z-index: 999;
   top: 0;
   width: 100vw;
-  height: 100vw !important;
+  height: 100vh !important;
   min-height: 100vw !important;
-  max-height: 100vw !important;
+  max-height: 100vh !important;
   padding: 0!important;
   display: none;
 }
@@ -197,7 +197,7 @@
 @media screen and (width <= 768px) {
   .booking-form-container .booking-form-wrapper {
     width: 90vw;
-    height: 100vh;
+    height: 90vh;
   }
 
   .booking-form-container .input-row {
@@ -206,5 +206,12 @@
 
   .booking-form-container .input-row .input-box {
     margin-bottom: 1em;
+  }
+}
+
+@media screen and (width <= 500px) {
+  .creators .no-space-top .default-content-wrapper h2 {
+    padding-top: 23px;
+    text-align: center;
   }
 }
