@@ -533,8 +533,16 @@
                     color: var(--color-bd-blue);
                     border-color: var(--color-bd-blue);
 
+                    &:hover {
+                        filter: brightness(0.9);
+                    }
+
                     &::after {
-                        background-color: var(--color-bd-blue);
+                        display: none;
+                    }
+
+                    .button-text {
+                        transform: none;
                     }
                 }
             }
@@ -595,8 +603,7 @@
             }
         }
 
-        .question,
-        .result {
+        .question,.result {
             .question-content {
                 margin-bottom: 25px;
                 text-align: left;
@@ -632,6 +639,18 @@
                                 background-color: var(--color-wrong);
                                 color: white;
                                 border-color: var(--color-wrong);
+                            }
+
+                            &:hover {
+                                filter: brightness(0.9);
+                            }
+
+                            &::after {
+                                display: none;
+                            }
+
+                            .button-text {
+                                transform: none;
                             }
                         }
                     }
@@ -714,6 +733,18 @@
                             text-align: center;
                             padding: 10px 20px;
                         }
+
+                        &:hover {
+                            filter: brightness(0.9);
+                        }
+
+                        &::after {
+                            display: none;
+                        }
+
+                        .button-text {
+                            transform: none;
+                        }
                     }
                 }
 
@@ -730,8 +761,23 @@
                 >div:last-child {
                     border-radius: 20px;
 
+                    p:has(picture) {
+                        overflow: hidden;
 
+                        .image-wrapper {
+                            bottom: -10px;
+                        }
+                    }
+                    
+                }
+            }
+        }
+
+        
+            .clickable-question.correct-answer, .clickable-question.wrong-answer {
+                & >div:last-child {
                     .question-scam-tag {
+                        display: flex !important;
                         background-color: var(--color-pink);
                         color: var(--color-wrong);
                         padding: 10px 20px;
@@ -755,7 +801,7 @@
                     }
                 }
             }
-        }
+        
     }
 }
 
@@ -1069,7 +1115,7 @@
                 .start-page {
                     border-radius: 0;
                     background-color: var(--color-bd-blue);
-                    height: 93vh;
+                    min-height: 93vh;
                     padding: 20px;
 
                     img {
@@ -1111,7 +1157,7 @@
 
                 & .question, & .result {
                     flex-direction: column;
-                    min-height: 93vh;
+                    min-height: 744px;
 
                     .scam-buttons-container {
                         flex-direction: column;
@@ -1135,6 +1181,27 @@
                         }
 
                         
+                    }
+
+                    &.clickable-question {
+                        > div:last-child {
+                            border-radius: 0;
+                            overflow: hidden;
+
+                            p:has(picture) {
+                                overflow: visible;
+                            }
+
+                            .image-wrapper {
+                                max-height: 155px;
+                                position: relative;
+                                top: -150px;
+
+                                .img {
+                                    max-height: 245px;
+                                }
+                            }
+                        }
                     }
 
                     >div:first-child {

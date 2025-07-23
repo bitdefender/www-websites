@@ -87,8 +87,8 @@ main .banner-with-card-container {
                 }
             }
 
-            .button-container:last-of-type {
-                a {
+            .button-container {
+                a[href="#tos"] {
                     background: none;
                     color: #3D3D3D;
                     border: none;
