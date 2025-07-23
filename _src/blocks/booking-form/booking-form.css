@@ -209,9 +209,9 @@
   }
 }
 
-@media screen and (width <= 500px) {
-  .creators .no-space-top .default-content-wrapper h2 {
-    padding-top: 23px;
-    text-align: center;
+@media screen and (width <= 525px) {
+  .booking-form-container .input-row .checkboxes .all-checks {
+    gap: 0;
+    flex-direction: column;
   }
 }

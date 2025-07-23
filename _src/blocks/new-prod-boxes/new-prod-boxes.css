@@ -530,7 +530,7 @@
   margin-left: 5px;
 }
 
-.new-prod-boxes-container .new-prod-boxes.solutions .prod-save{
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-save {
   color: #0B6A26;
   background-color: #D1FADC;
   border-radius: 8px;
@@ -910,7 +910,7 @@
   }
 }
 
-@media screen and (width <= 500px) {
+@media screen and (width <= 525px) {
   .new-prod-boxes-container .new-prod-boxes {
     padding: var(--body-padding);
   }
