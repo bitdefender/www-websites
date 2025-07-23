@@ -1,3 +1,6 @@
+import {
+  AdobeDataLayerService, UserDetectedEvent, WindowLoadStartedEvent, WindowLoadedEvent,
+} from '@repobit/dex-data-layer';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
@@ -310,12 +313,15 @@ function showQuestion(index, isAcqVariant) {
   if (questionToShow) {
     questionToShow.style.display = '';
     if (isAcqVariant) {
-      window.adobeDataLayer.push(
-        {
-          event: 'question-viewed',
-          asset: `question-${index} screen`,
-        },
-      );
+      const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+        pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace(':product:acq', `:consumer:quiz-question ${index}`);
+        pageLoadStartedInfo.subSection = 'quiz';
+        return pageLoadStartedInfo;
+      });
+
+      AdobeDataLayerService.push(newPageLoaded);
+      AdobeDataLayerService.push(new UserDetectedEvent());
+      AdobeDataLayerService.push(new WindowLoadedEvent());
     }
   }
 }
@@ -799,22 +805,28 @@ function decorateScamButtons(question, index, isAcqVariant) {
           score += 1;
           showCorrect(question, index);
           if (isAcqVariant) {
-            window.adobeDataLayer.push(
-              {
-                event: 'question-answered',
-                asset: `question-${index + 1} spam`,
-              },
-            );
+            const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+              pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace(':product:acq', `:consumer:quiz-question ${index} spam`);
+              pageLoadStartedInfo.subSection = 'quiz';
+              return pageLoadStartedInfo;
+            });
+
+            AdobeDataLayerService.push(newPageLoaded);
+            AdobeDataLayerService.push(new UserDetectedEvent());
+            AdobeDataLayerService.push(new WindowLoadedEvent());
           }
         } else {
           showWrong(question, index);
           if (isAcqVariant) {
-            window.adobeDataLayer.push(
-              {
-                event: 'question-answered',
-                asset: `question-${index + 1} not spam`,
-              },
-            );
+            const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+              pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace(':product:acq', `:consumer:quiz-question ${index} spam`);
+              pageLoadStartedInfo.subSection = 'quiz';
+              return pageLoadStartedInfo;
+            });
+
+            AdobeDataLayerService.push(newPageLoaded);
+            AdobeDataLayerService.push(new UserDetectedEvent());
+            AdobeDataLayerService.push(new WindowLoadedEvent());
           }
         }
       });
