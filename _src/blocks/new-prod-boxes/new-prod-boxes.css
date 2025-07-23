@@ -542,7 +542,7 @@
 }
 
 .new-prod-boxes-container .prod-newprice {
-  font-size: 40px;
+  font-size: 35px;
   font-weight: bold;
 }
 .new-prod-boxes-container .prod-newprice .per-m {
@@ -907,5 +907,16 @@
   .new-prod-boxes-container.we-container {
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+@media screen and (width <= 500px) {
+  .new-prod-boxes-container .new-prod-boxes {
+    padding: var(--body-padding);
+  }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box {
+    width: 100%;
+    min-width: 100%;
   }
 }

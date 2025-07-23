@@ -208,3 +208,10 @@
     margin-bottom: 1em;
   }
 }
+
+@media screen and (width <= 500px) {
+  .creators .no-space-top .default-content-wrapper h2 {
+    padding-top: 23px;
+    text-align: center;
+  }
+}
