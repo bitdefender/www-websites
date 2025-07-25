@@ -104,10 +104,12 @@ createNanoBlock('dropdown', (...args) => {
   const dropdownWrapper = document.createElement('div');
   dropdownWrapper.classList.add('dropdown-products__selector');
 
+  let labelEl = null;
   if (labelText) {
-    const labelEl = document.createElement('label');
+    labelEl = document.createElement('label');
     labelEl.classList.add('bestValue');
     labelEl.textContent = labelText;
+    labelEl.style.visibility = 'hidden';
     dropdownWrapper.appendChild(labelEl);
   }
 
@@ -135,7 +137,8 @@ createNanoBlock('dropdown', (...args) => {
     const priceBox = createPriceBox({
       code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText,
     });
-    if (index !== 0) priceBox.style.display = 'none';
+
+    priceBox.style.display = index === 0 ? 'block' : 'none';
     root.appendChild(priceBox);
   });
 
@@ -151,7 +154,7 @@ createNanoBlock('dropdown', (...args) => {
     customDropdown.classList.toggle('open', !isOpen);
   });
 
-  [...optionsList.querySelectorAll('.custom-dropdown-item')].forEach((item) => {
+  [...optionsList.querySelectorAll('.custom-dropdown-item')].forEach((item, index) => {
     item.addEventListener('click', () => {
       const selected = item.getAttribute('data-value');
       const label = item.textContent;
@@ -166,8 +169,17 @@ createNanoBlock('dropdown', (...args) => {
       [...root.querySelectorAll('.dropdown-products__price-box')].forEach((box) => {
         box.style.display = box.dataset.code === selected ? 'block' : 'none';
       });
+
+      if (labelEl) {
+        const isFirstOption = index === 0;
+        labelEl.style.visibility = isFirstOption ? 'visible' : 'hidden';
+      }
     });
   });
+
+  if (labelEl) {
+    labelEl.style.visibility = 'visible';
+  }
 
   return root;
 });
