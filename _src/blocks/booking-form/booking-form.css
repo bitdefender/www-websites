@@ -15,6 +15,7 @@
 .booking-form-container .booking-form-wrapper {
   width: 768px;
   height: auto;
+  max-height: 85vh;
   background-color: white;
   margin: 5% auto;
   padding: 1.5em 2em 1em;

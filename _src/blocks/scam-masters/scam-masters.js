@@ -1,4 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
@@ -8,40 +9,6 @@ const userAnswers = new Map();
 const clickAttempts = new Map();
 const shareTexts = new Map();
 let score = 0;
-
-// eslint-disable-next-line no-unused-vars
-function formatQuizResult(resultArray, totalQuestions = 10) {
-  const resultMap = new Map(resultArray.map((item) => [item.key, item.value]));
-  const resultLines = [];
-
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < totalQuestions; i++) {
-    const isCorrect = resultMap.get(i) === true;
-    resultLines.push(`Q${i + 1}: ${isCorrect ? 'correct' : 'incorrect'}`);
-  }
-
-  return resultLines.join(', ');
-}
-
-// eslint-disable-next-line no-unused-vars
-async function saveResults(resultArray) {
-  const endpoint = 'https://script.google.com/macros/s/AKfycbxqADa1Mi_VK6r6mrdGcjMxNgcb_QMmPIiC7cIdRR86g3ryCmtSXymouuOjCV0NeQcZHA/exec';
-
-  try {
-    await fetch(endpoint, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ result: resultArray }),
-    });
-
-    // console.log('Data saved');
-  } catch (err) {
-    // console.error('Err:', err);
-  }
-}
 
 function decorateStartPage(startBlock) {
   if (!startBlock) return;
@@ -587,11 +554,66 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
+let isExecuting = false;
+async function saveData(quizResults, fileName, { invisible = false } = {}) {
+  if (isExecuting) return;
+
+  isExecuting = true;
+  try {
+    const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
+    let token = initialToken;
+
+    if (!invisible) {
+      if (!window.latestVisibleToken) {
+        token = await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Timeout waiting for Turnstile token.')), 10000); // 10s
+
+          const checkInterval = setInterval(() => {
+            if (window.latestVisibleToken) {
+              clearInterval(checkInterval);
+              clearTimeout(timeout);
+              resolve(window.latestVisibleToken);
+            }
+          }, 200);
+        });
+      } else {
+        token = window.latestVisibleToken;
+      }
+    }
+
+    if (!token) throw new Error('Turnstile token missing.');
+
+    await submitWithTurnstile({
+      widgetId,
+      token,
+      data: quizResults,
+      fileName,
+    });
+  } catch (err) {
+    throw new Error(`[saveData] Failed: ${err.message}`);
+  } finally {
+    isExecuting = false;
+    // console.log('Data Saved!');
+  }
+}
+
 function showResult(question, results) {
-  // save results
-  /* saveResults(formatQuizResult(
-    Array.from(userAnswers, ([key, value]) => ({ key, value }))
-  )); */
+  const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
+  const locale = window.location.pathname.split('/')[1] || 'en';
+  const quizResults = {
+    DATE: date,
+    LOCALE: locale,
+  };
+  const keys = [...userAnswers.keys()];
+  const maxKey = Math.max(...keys);
+
+  for (let i = 0; i <= maxKey; i += 1) {
+    const answer = userAnswers.get(i);
+    quizResults[`Q${i + 1}`] = answer === true ? 'correct' : 'incorrect';
+  }
+
+  const { savedata } = question.closest('.section').dataset;
+  if (savedata) saveData(quizResults, savedata, { invisible: true });
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
@@ -764,8 +786,16 @@ function copyToClipboard(block, caller, popupText, resultPath) {
 
 export default function decorate(block) {
   const {
-    resultPage, clipboardText,
+    resultPage, clipboardText, savedata,
   } = block.closest('.section').dataset;
+
+  // create turnstileDiv
+  if (savedata) {
+    const turnstileDiv = document.createElement('div');
+    turnstileDiv.id = 'turnstile-container';
+    turnstileDiv.className = 'turnstile-box';
+    block.appendChild(turnstileDiv);
+  }
 
   if (resultPage) {
     const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
