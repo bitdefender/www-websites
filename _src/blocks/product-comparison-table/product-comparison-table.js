@@ -189,6 +189,33 @@ function buildTableHeader(block) {
   const header = block.querySelector('div > div');
   header.classList.add('product-comparison-header');
   [...header.children].forEach((headerColumn) => {
+    const children = [...headerColumn.children];
+    const pToMove = [];
+    let foundH3 = false;
+
+    for (let child of children) {
+      if (child.tagName === 'H3') {
+        foundH3 = true;
+        continue;
+      }
+      console.log(foundH3);
+      if (!foundH3) continue;
+      console.log(child.innerHTML);
+      if (child.innerText.trim().toLowerCase() === '{pricecomparison}') 
+        break;
+      if (child.tagName === 'P') pToMove.push(child);
+    }
+
+    if (pToMove.length > 0) {
+  const wrapper = document.createElement('div');
+  wrapper.classList.add('paragraph-group');
+
+  const firstP = pToMove[0];
+  headerColumn.insertBefore(wrapper, firstP);
+
+  pToMove.forEach(p => wrapper.appendChild(p));
+}
+
     const buttonSection = headerColumn.querySelector('p.button-container');
     if (buttonSection) {
       const paragraphBefore = buttonSection.previousElementSibling;
@@ -197,6 +224,7 @@ function buildTableHeader(block) {
       paragraphAfter?.classList.add('product-comparison-header-subtitle');
       paragraphAfter?.nextElementSibling?.classList.add('product-comparison-header-subtitle');
     }
+    
   });
 }
 

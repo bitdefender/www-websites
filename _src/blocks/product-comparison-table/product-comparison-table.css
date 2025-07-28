@@ -928,4 +928,72 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
     .product-comparison-table-wrapper div[role="row"] div[role="cell"]:first-of-type {
         min-width: 100% !important;
     }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-header {
+        display: grid;
+        gap: 0;
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+        position: relative;
+        
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-header:has(h2) {
+        padding-top: calc(var(--heading-font-size-l) * 2.4 );
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-header > div:first-child {
+        grid-column: 1 / -1;
+        display: contents;
+        position: relative;
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-header > div:first-child h2 {
+        position: absolute;
+        bottom: calc(100% - var(--heading-font-size-l) * 2);
+        left: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0 1rem;
+        line-height: 1.2;
+        z-index: 1;
+    }
+    
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-header > div:not(:first-child) {
+        width: 100%;
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-row: 1/7;
+        
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-price {
+        display: grid;
+        grid-auto-flow: dense;
+        gap: 0;
+        grid-template-rows: repeat(1, minmax(0, auto));
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-price .old-price-box {
+        flex-direction: column-reverse;
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-price .old-price-box span {
+        font-size: 14px;
+        align-self: flex-start;
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-price .new-price-box .total-text {
+        font-size: 20px;
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-price .new-price-box sup {
+        top: unset;
+        font-size: 16px;
+        margin-left: 2px;
+    }
+
+    .product-comparison-table-wrapper .product-comparison-table.block .product-comparison-price p:last-of-type {
+        font-size: var(--body-font-size-xs);
+    }
+
 }
