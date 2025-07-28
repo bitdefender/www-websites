@@ -241,11 +241,11 @@ function handleSubmit(formBox, widgetId, token) {
   };
 
   formBox.addEventListener('submit', async (e) => {
-    formBox.classList.add('loading');
     e.preventDefault();
 
     if (!validateFields()) return;
 
+    formBox.classList.add('loading');
     const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const data = new Map();
 

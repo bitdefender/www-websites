@@ -36,7 +36,7 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div>
+        <div class="oldprice-container">
           <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
           <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
         </div>
@@ -441,6 +441,7 @@ export default async function decorate(block) {
     const benefitsLists = block.querySelectorAll('.benefitsLists');
     const btnWrappers = [];
     let anchorButtons = document.querySelectorAll('.tabs-component .button');
+    const allPlanSwitchers = block.querySelectorAll('.plan-switcher');
 
     benefitsLists.forEach((benefits) => {
       const btnWrapper = document.createElement('div');
@@ -481,6 +482,33 @@ export default async function decorate(block) {
         let individualBoxes = block.querySelectorAll('.individual-box');
         individualBoxes.forEach((box) => {
           box.style.display = 'none';
+        });
+      });
+    });
+
+    allPlanSwitchers.forEach((switcher) => {
+      const inputs = switcher.querySelectorAll('input');
+      inputs.forEach((input, idx) => {
+        input.addEventListener('change', () => {
+          if (input.checked) {
+            const box = switcher.closest('.prod_box');
+            const isIndividual = box.classList.contains('individual-box');
+            const isFamily = box.classList.contains('family-box');
+            allPlanSwitchers.forEach((otherSwitcher) => {
+              const otherBox = otherSwitcher.closest('.prod_box');
+              if (
+                (isIndividual && otherBox.classList.contains('individual-box'))
+                || (isFamily && otherBox.classList.contains('family-box'))
+              ) {
+                const otherInputs = otherSwitcher.querySelectorAll('input');
+                if (otherInputs[idx] && !otherInputs[idx].checked) {
+                  otherInputs[idx].checked = true;
+                  otherInputs[idx].dispatchEvent(new Event('change', { bubbles: true }));
+                  otherInputs[idx].dispatchEvent(new Event('click', { bubbles: true }));
+                }
+              }
+            });
+          }
         });
       });
     });
@@ -528,4 +556,5 @@ export default async function decorate(block) {
   matchHeights(block, 'h4');
   matchHeights(block, '.plan-switcher');
   matchHeights(block, '.blueTagsWrapper');
+  matchHeights(block, '.oldprice-container');
 }
