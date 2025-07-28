@@ -879,6 +879,10 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:consumer:solutions`;
     }
 
+    if (pathname.includes('acq')) {
+      tagName = `${locale}:consumer:quiz`;
+    }
+
     if (window.errorCode === '404') {
       tagName = `${locale}:404`;
     }
@@ -906,6 +910,9 @@ export const getProductFinding = () => {
       break;
     case 'downloads':
       productFinding = 'downloads page';
+      break;
+    case 'acq':
+      productFinding = 'consumer quiz';
       break;
     default:
       productFinding = 'product pages';
