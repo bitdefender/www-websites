@@ -137,7 +137,7 @@ export default async function decorate(block) {
           event: 'form completed',
           form: {
             name: 'Who do you protect online?',
-            field: `${selectedOption.previousElementSibling.innerText}`,
+            field: `${selectedOption.innerText}`,
           },
         },
       );
@@ -150,7 +150,7 @@ export default async function decorate(block) {
   `;
 
   block.querySelectorAll('form').forEach((form) => {
-    const radios = form.querySelectorAll('.step-radio-wrapper');
+    const radios = form.querySelectorAll('input[type="radio"]');
 
     radios.forEach((radio) => {
       radio.addEventListener('change', (event) => {
