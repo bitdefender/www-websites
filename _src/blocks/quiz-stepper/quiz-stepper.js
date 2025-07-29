@@ -49,9 +49,11 @@ export default async function decorate(block) {
 
     return `
                 <div class="step-radio-wrapper">
-                    <label for="${forLabel}">${option.textContent}</label>
-                    <input type="radio" id="${forLabel}" name="${fieldId}" value="${value}" required aria-required="true"/>
-                    <div class="checkbox"></div>
+                  <label for="${forLabel}">
+                  ${option.textContent}
+                  <input type="radio" id="${forLabel}" name="${fieldId}" value="${value}" required aria-required="true"/>
+                  <div class="checkbox"></div>
+                  </label>
                 </div>
                 `;
   }).join('')}
@@ -148,7 +150,7 @@ export default async function decorate(block) {
   `;
 
   block.querySelectorAll('form').forEach((form) => {
-    const radios = form.querySelectorAll('input[type="radio"]');
+    const radios = form.querySelectorAll('.step-radio-wrapper');
 
     radios.forEach((radio) => {
       radio.addEventListener('change', (event) => {
