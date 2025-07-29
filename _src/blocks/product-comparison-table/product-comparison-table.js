@@ -193,27 +193,27 @@ function buildTableHeader(block) {
     const pToMove = [];
     let foundH3 = false;
 
+    // Move all <p> elements after the first <h3> to a wrapper
     for (let child of children) {
       if (child.tagName === 'H3') {
         foundH3 = true;
         continue;
       }
-      console.log(foundH3);
       if (!foundH3) continue;
-      console.log(child.innerHTML);
+      // If we reach a price comparison tag, stop moving
       if (child.innerText.trim().toLowerCase() === '{pricecomparison}') 
         break;
+      // Collect <p> elements to move
       if (child.tagName === 'P') pToMove.push(child);
     }
 
+    // If we have <p> elements to move, wrap them
     if (pToMove.length > 0) {
-  const wrapper = document.createElement('div');
-  wrapper.classList.add('paragraph-group');
-
-  const firstP = pToMove[0];
-  headerColumn.insertBefore(wrapper, firstP);
-
-  pToMove.forEach(p => wrapper.appendChild(p));
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('paragraph-group');
+      const firstP = pToMove[0];
+      headerColumn.insertBefore(wrapper, firstP);
+      pToMove.forEach(p => wrapper.appendChild(p));
 }
 
     const buttonSection = headerColumn.querySelector('p.button-container');
