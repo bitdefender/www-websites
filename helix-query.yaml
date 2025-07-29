@@ -30,9 +30,22 @@ indices:
       breadcrumbtitle:
         select: head > meta[name="breadcrumb-title"]
         value: attribute(el, "content")  
+      blocks:
+        select: main > div > div:not(.section-metadata)
+        values: attribute(el, "className")
+      fragments:
+        select: main > div > div[class="fragment"] a
+        values: attribute(el, "href")
       robots:
         select: head > meta[name="robots"]
         value: attribute(el, "content")  
+      lastModifiedTimestamp:
+        select: none
+        value: |
+          parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      lastModified:
+        select: none
+        value: headers["last-modified"]
   index_de_de:
     include:
       - /de-de/**
