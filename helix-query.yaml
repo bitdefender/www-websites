@@ -4,8 +4,6 @@ indices:
     include:
       - /en-us/**
     exclude: &excludeList
-      - /**/fragments/**
-      - /**/experiments/**
       - /**/webview/**
       - /**/404
       - /**/footer
@@ -124,28 +122,10 @@ indices:
     exclude: *excludeList
     target: /sv-se/query-index.json
     properties: *minPros
-  index_zh_hk:
-    include:
-      - /zh-hk/**
-    exclude:
-      - /**/solutions/**/fragments/**
-      - /**/solutions/**/experiments/**
-      - /**/consumer/**/fragments/**
-      - /**/consumer/**/experiments/**
-      - /**/consumer/404
-      - /**/consumer/footer
-      - /**/consumer/nav
-      - /**/consumer/thank-you
-    target: /zh-hk/query-index.json
-    properties: *minPros
   index_zh_tw:
     include:
       - /zh-tw/**
     exclude:
-      - /**/solutions/**/fragments/**
-      - /**/solutions/**/experiments/**
-      - /**/consumer/**/fragments/**
-      - /**/consumer/**/experiments/**
       - /**/consumer/404
       - /**/consumer/footer
       - /**/consumer/nav
