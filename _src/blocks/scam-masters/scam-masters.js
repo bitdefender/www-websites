@@ -314,7 +314,7 @@ function showQuestion(index, isAcqVariant) {
     questionToShow.style.display = '';
     if (isAcqVariant) {
       const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-        pageLoadStartedInfo.name = `:consumer:quiz-question ${index}`;
+        pageLoadStartedInfo.name = `:consumer:quiz:question ${index}`;
         pageLoadStartedInfo.subSubSection = 'quiz';
         pageLoadStartedInfo.subSubSubSection = 'acq';
         return pageLoadStartedInfo;
@@ -807,7 +807,7 @@ function decorateScamButtons(question, index, isAcqVariant) {
           showCorrect(question, index);
           if (isAcqVariant) {
             const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-              pageLoadStartedInfo.name = `:consumer:quiz-question ${index + 1} spam`;
+              pageLoadStartedInfo.name = `:consumer:quiz:question ${index + 1} spam`;
               pageLoadStartedInfo.subSection = 'quiz';
               return pageLoadStartedInfo;
             });
@@ -820,7 +820,7 @@ function decorateScamButtons(question, index, isAcqVariant) {
           showWrong(question, index);
           if (isAcqVariant) {
             const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-              pageLoadStartedInfo.name = `:consumer:quiz-question ${index + 1} spam`;
+              pageLoadStartedInfo.name = `:consumer:quiz:question ${index + 1} spam`;
               pageLoadStartedInfo.subSection = 'quiz';
               return pageLoadStartedInfo;
             });
