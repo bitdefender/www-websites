@@ -881,6 +881,9 @@ export const generatePageLoadStartedName = () => {
 
     if (pathname.includes('acq')) {
       tagName = `${locale}:consumer:quiz`;
+      if (pathname.includes('result')) {
+        tagName = `${locale}:consumer:quiz:results`;
+      }
     }
 
     if (window.errorCode === '404') {

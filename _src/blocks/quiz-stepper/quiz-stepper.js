@@ -132,15 +132,15 @@ export default async function decorate(block) {
     }
 
     if (isAcqVariant) {
-      window.adobeDataLayer.push(
-        {
-          event: 'form completed',
-          form: {
-            name: 'Who do you protect online?',
-            field: `${selectedOption.innerText}`,
-          },
+      const eventData = {
+        event: 'form completed',
+        user: {
+          form: 'Who do you protect online?',
+          field: `${selectedOption.parentElement.innerText}`,
         },
-      );
+      };
+      // Store in localStorage
+      localStorage.setItem('formCompletedEvent', JSON.stringify(eventData));
     }
     renderResults();
   }

@@ -3,6 +3,7 @@ import {
 } from '@repobit/dex-data-layer';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
+import page from '../../scripts/page.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
@@ -314,9 +315,9 @@ function showQuestion(index, isAcqVariant) {
     questionToShow.style.display = '';
     if (isAcqVariant) {
       const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-        pageLoadStartedInfo.name = `:consumer:quiz:question ${index}`;
+        pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index}`;
         pageLoadStartedInfo.subSubSection = 'quiz';
-        pageLoadStartedInfo.subSubSubSection = 'acq';
+        pageLoadStartedInfo.subSubSubSection = `question ${index}`;
         return pageLoadStartedInfo;
       });
 
@@ -807,8 +808,9 @@ function decorateScamButtons(question, index, isAcqVariant) {
           showCorrect(question, index);
           if (isAcqVariant) {
             const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-              pageLoadStartedInfo.name = `:consumer:quiz:question ${index + 1} spam`;
-              pageLoadStartedInfo.subSection = 'quiz';
+              pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index + 1}:spam`;
+              pageLoadStartedInfo.subSubSection = 'quiz';
+              pageLoadStartedInfo.subSubSubSection = `question ${index + 1}`;
               return pageLoadStartedInfo;
             });
 
@@ -820,8 +822,11 @@ function decorateScamButtons(question, index, isAcqVariant) {
           showWrong(question, index);
           if (isAcqVariant) {
             const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-              pageLoadStartedInfo.name = `:consumer:quiz:question ${index + 1} spam`;
-              pageLoadStartedInfo.subSection = 'quiz';
+              pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index + 1}:no spam`;
+              pageLoadStartedInfo.subSubSection = 'quiz';
+              pageLoadStartedInfo.subSubSubSection = `question ${index + 1}`;
+
+              pageLoadStartedInfo.subSubSubSection = `question ${index}`;
               return pageLoadStartedInfo;
             });
 
@@ -871,15 +876,25 @@ function decorateQuestions(questions, results, isAcqVariant) {
           question.closest('.section').classList.add('fade-out');
           showResult(question, results, isAcqVariant);
           document.querySelector('.quiz-stepper-container').classList.add('fade-in');
-
-          window.adobeDataLayer.push(
-            {
-              event: 'form viewed',
-              form: {
-                name: 'Who do you protect online?',
+          if (isAcqVariant) {
+            const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+              pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question form`;
+              pageLoadStartedInfo.subSubSection = 'quiz';
+              pageLoadStartedInfo.subSubSubSection = 'question form';
+              return pageLoadStartedInfo;
+            });
+            AdobeDataLayerService.push(newPageLoaded);
+            AdobeDataLayerService.push(new UserDetectedEvent());
+            AdobeDataLayerService.push(
+              {
+                event: 'form viewed',
+                name: {
+                  form: 'Who do you protect online?',
+                },
               },
-            },
-          );
+            );
+            AdobeDataLayerService.push(new WindowLoadedEvent());
+          }
         });
       }
     }

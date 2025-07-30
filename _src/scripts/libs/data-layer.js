@@ -57,6 +57,30 @@ const checkClickEventAfterRedirect = () => {
   }
 }
 
+
+/**
+ * Add form events to the data layer after page redirect
+ */
+const checkFormCompletedEventAfterRedirect = () => {
+  const storedData = localStorage.getItem("formCompletedEvent");
+
+  if (storedData) {
+    const formCompletedEvent = JSON.parse(storedData);
+
+    if (formCompletedEvent?.event && formCompletedEvent?.user) {
+      AdobeDataLayerService.push({
+        event: formCompletedEvent.event,
+        user: {
+          form: formCompletedEvent.user.form,
+          field: formCompletedEvent.user.field,
+        },
+      });
+    }
+
+    localStorage.removeItem("formCompletedEvent");
+  }
+};
+
 /**
  * Add entry for free products
  */
@@ -112,5 +136,6 @@ export const resolveNonProductsDataLayer = async () => {
   pageErrorHandling();
   await resolveUserDetectedEvent();
   checkClickEventAfterRedirect();
+  checkFormCompletedEventAfterRedirect();
   getFreeProductsEvents();
 }
