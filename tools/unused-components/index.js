@@ -32,7 +32,7 @@ const fs = require('fs');
  */
 
 // Base URLs
-const jsonUrlArray = [
+const domains = [
     'de-de',
     'es-es',
     'en-global',
@@ -67,10 +67,9 @@ const fetchDataArray = async () => {
   try {
     const returnedData = [];
     const fetchPromises = [];
-    jsonUrlArray.forEach((url) => {
-      // Construct the full URL
-      const fullUrl = `https://main--www-websites--bitdefender.aem.page/${url}/query-index.json?sheet=raw_index`;
-      const promise = fetch(fullUrl)
+    domains.forEach((domain) => {
+      const url = `https://main--www-websites--bitdefender.aem.page/${domain}/query-index.json?sheet=raw_index`;
+      const promise = fetch(url)
         .then((response) => response.json())
         .then((data) => {
           if (data.data && Array.isArray(data.data)) {
