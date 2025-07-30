@@ -33,19 +33,19 @@ const fs = require('fs');
 
 // Base URLs
 const jsonUrlArray = [
-    'https://main--www-websites--bitdefender.aem.page/de-de/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/es-es/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/en-global/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/en-us/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/es-global/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/fr-fr/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/it-it/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/nl-nl/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/pt-br/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/pt-pt/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/ro-ro/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/sv-se/query-index.json?sheet=raw_index',
-    'https://main--www-websites--bitdefender.aem.page/zh-tw/query-index.json?sheet=raw_index',
+    'de-de',
+    'es-es',
+    'en-global',
+    'en-us',
+    'es-global',
+    'fr-fr',
+    'it-it',
+    'nl-nl',
+    'pt-br',
+    'pt-pt',
+    'ro-ro',
+    'sv-se',
+    'zh-tw',
 ];
 const KNOWN_USED_COMPONENTS = ['footer', 'nav', 'header'];
 
@@ -68,7 +68,9 @@ const fetchDataArray = async () => {
     const returnedData = [];
     const fetchPromises = [];
     jsonUrlArray.forEach((url) => {
-      const promise = fetch(url)
+      // Construct the full URL
+      const fullUrl = `https://main--www-websites--bitdefender.aem.page/${url}/query-index.json?sheet=raw_index`;
+      const promise = fetch(fullUrl)
         .then((response) => response.json())
         .then((data) => {
           if (data.data && Array.isArray(data.data)) {
