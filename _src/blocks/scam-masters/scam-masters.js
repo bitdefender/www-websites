@@ -826,7 +826,6 @@ function decorateScamButtons(question, index, isAcqVariant) {
               pageLoadStartedInfo.subSubSection = 'quiz';
               pageLoadStartedInfo.subSubSubSection = `question ${index + 1}`;
 
-              pageLoadStartedInfo.subSubSubSection = `question ${index}`;
               return pageLoadStartedInfo;
             });
 
