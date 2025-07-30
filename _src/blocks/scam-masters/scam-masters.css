@@ -763,7 +763,9 @@
                     border-radius: 20px;
 
                     p:has(picture) {
-                        overflow: hidden;
+                        @media (max-width: 767px) {
+                            overflow: hidden;
+                        }
 
                         .image-wrapper {
                             bottom: -10px;
