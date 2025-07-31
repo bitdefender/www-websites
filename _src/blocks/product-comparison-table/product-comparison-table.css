@@ -159,6 +159,14 @@ div[role="cell"] .button-container,
     font-size: var(--body-font-size-s);
 }
 
+.product-comparison-header div[role="columnheader"] .paragraph-group p:last-of-type {
+    font-weight: var(--font-weight-bold);
+    padding: 0;
+    color: #3c3c3c;
+    text-align: center;
+    font-size: var(--body-font-size-s);
+}
+
 .product-comparison-header div[role="cell"] p:first-of-type {
     font-weight: var(--font-weight-bold);
     padding: 0;
