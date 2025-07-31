@@ -159,14 +159,6 @@ div[role="cell"] .button-container,
     font-size: var(--body-font-size-s);
 }
 
-.product-comparison-header div[role="columnheader"] .paragraph-group p:last-of-type {
-    font-weight: var(--font-weight-bold);
-    padding: 0;
-    color: #3c3c3c;
-    text-align: center;
-    font-size: var(--body-font-size-s);
-}
-
 .product-comparison-header div[role="cell"] p:first-of-type {
     font-weight: var(--font-weight-bold);
     padding: 0;
@@ -285,6 +277,14 @@ div[role="row"] div[role="cell"]:first-of-type p {
 
 .product-comparison-table.green-tag .column-fixed-width p:first-of-type {
     text-align: left;
+}
+
+.product-comparison-header div[role="columnheader"] .paragraph-group p:last-of-type {
+    font-weight: var(--font-weight-bold);
+    padding: 0;
+    color: #3c3c3c;
+    text-align: center;
+    font-size: var(--body-font-size-s);
 }
 
 div[role="row"] div[role="cell"]:first-of-type p:last-of-type {
