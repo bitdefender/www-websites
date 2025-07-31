@@ -180,7 +180,8 @@ const processPaths = async (components) => {
         unusedComponents.push(componentName);
         return;
       }
-
+      
+      const notIncludes = ['/fragments/', '/experiments/'];
       console.log(
         `Component ${componentName} was found `,
         blocksCountMap[componentName].entries,
@@ -188,7 +189,10 @@ const processPaths = async (components) => {
         `Example paths:`,
         blocksCountMap[componentName].paths
           // eslint-disable-next-line no-unused-vars
-          .sort((a, _) => (a.includes('/en-us/') ? -1 : 1))
+          .sort((a, _) => (
+            a.includes('/en-us/consumer/')
+            && !notIncludes.some((notIncludedValue) => a.includes(notIncludedValue))
+              ? -1 : 1))
           .filter((path, index, self) => self.indexOf(path) === index)
           .slice(0, 10),
         '\n',
