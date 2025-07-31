@@ -666,9 +666,10 @@ export function pushTrialDownloadToDataLayer() {
 
     if (button?.dataset?.storeId) return button.dataset.storeId;
 
-    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
-    if (closestStoreElementWithId) {
-      return closestStoreElementWithId.dataset.storeId;
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]') || button?.closest('.section');
+    const { storeId } = closestStoreElementWithId.dataset;
+    if (storeId) {
+      return storeId;
     }
 
     // eslint-disable-next-line max-len
