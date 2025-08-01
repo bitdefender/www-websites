@@ -337,6 +337,7 @@ export default function decorate(block) {
   });
 
   matchHeights(block, 'h3');
+  matchHeights(block, '.paragraph-group');
   matchHeights(block, '.old-price-container');
   matchHeights(block, '.product-comparison-price');
 
