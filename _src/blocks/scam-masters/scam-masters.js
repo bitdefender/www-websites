@@ -108,12 +108,14 @@ function processSpecialParagraphs(question, index) {
 
       if (cellText.startsWith('tries:')) {
         const triesRaw = cellText.split('tries:')[1].trim();
+        const [singleTry, manyTries] = triesRaw.split('|');
         const triesCount = parseInt(triesRaw, 10) || 3;
 
         if (!question.querySelector('p.tries')) {
           const triesParagraph = document.createElement('p');
           triesParagraph.classList.add('tries');
-          triesParagraph.innerHTML = `Only <span>${triesCount}</span> tries left.`;
+          triesParagraph.setAttribute('data-singletry', singleTry.trim())
+          triesParagraph.innerHTML = manyTries.trim().replace('x', `<span>${triesCount}</span>`);
 
           const scamButton = question.querySelector('a[href="#not-a-scam"]');
           if (scamButton && scamButton.parentNode) {
@@ -508,7 +510,13 @@ function decorateClickQuestions(question, index) {
       if (triesSpan) {
         const current = parseInt(triesSpan.textContent, 10);
         if (!Number.isNaN(current) && current > 0) {
-          triesSpan.textContent = current - 1;
+          const newCount = current - 1;
+
+          if (newCount === 1) {
+            triesCounter.innerText = triesCounter.getAttribute('data-singletry');
+          } else {
+            triesSpan.textContent = newCount;
+          }
         }
       }
 
@@ -617,6 +625,7 @@ function showResult(question, results) {
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
+    console.log('shareParagraph ', shareParagraph)
     shareParagraph.classList.add('share-icons');
     shareParagraph.setAttribute('data-type', 'share-icons');
     const shareIcons = result.querySelector('.share-icons');
