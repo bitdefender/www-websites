@@ -114,7 +114,7 @@ function processSpecialParagraphs(question, index) {
         if (!question.querySelector('p.tries')) {
           const triesParagraph = document.createElement('p');
           triesParagraph.classList.add('tries');
-          triesParagraph.setAttribute('data-singletry', singleTry.trim())
+          triesParagraph.setAttribute('data-singletry', singleTry.trim());
           triesParagraph.innerHTML = manyTries.trim().replace('x', `<span>${triesCount}</span>`);
 
           const scamButton = question.querySelector('a[href="#not-a-scam"]');
