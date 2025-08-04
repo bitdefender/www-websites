@@ -625,7 +625,6 @@ function showResult(question, results) {
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
-    console.log('shareParagraph ', shareParagraph)
     shareParagraph.classList.add('share-icons');
     shareParagraph.setAttribute('data-type', 'share-icons');
     const shareIcons = result.querySelector('.share-icons');
