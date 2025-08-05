@@ -10,7 +10,7 @@ import {
 
 function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, mobileHide, block) {
   const button = block.querySelector('a.button');
-  const dynamicTextElement = button.parentNode.nextElementSibling;
+  const dynamicTextElement = button?.parentNode?.nextElementSibling;
   switch (UserAgent.os) {
     case 'android':
       if (mobileHide && block.closest('.section')) {
