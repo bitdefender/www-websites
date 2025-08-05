@@ -883,7 +883,8 @@ export const generatePageLoadStartedName = () => {
     if (pathname.includes('acq')) {
       tagName = `${locale}:consumer:quiz`;
       if (pathname.includes('result')) {
-        tagName = `${locale}:consumer:quiz:results`;
+        const result = document.querySelector('h1');
+        tagName = `${locale}:consumer:quiz:results${result ? `:${result.innerText?.toLowerCase()}` : ''}`;
       }
     }
 

@@ -252,6 +252,7 @@ export async function detectModalButtons(main) {
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
+      adobeMcAppendVisitorId('.modal-container');
     });
   });
 }
