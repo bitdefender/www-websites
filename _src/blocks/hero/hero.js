@@ -8,26 +8,42 @@ import {
   getBrowserName,
 } from '../../scripts/utils/utils.js';
 
-function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, block) {
+function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, mobileHide, block) {
   const button = block.querySelector('a.button');
-  const dynamicTextElement = button.parentNode.nextElementSibling;
+  const dynamicTextElement = button?.parentNode?.nextElementSibling;
   switch (UserAgent.os) {
     case 'android':
-      button.classList.add('android');
-      button.href = osLinkMapping.android.googlePlay;
-      dynamicTextElement.querySelectorAll('a').forEach((anchor, index) => {
-        anchor.textContent = osLinkMapping[androidTemplate.split(',')[index].trim()].text;
-        anchor.href = osLinkMapping[androidTemplate.split(',')[index].trim()].link;
-      });
+      if (mobileHide && block.closest('.section')) {
+        block.closest('.section').classList.add('global-display-none');
+        break;
+      }
+
+      if (button && androidTemplate && osLinkMapping && dynamicTextElement) {
+        button.classList.add('android');
+        button.href = osLinkMapping.android?.googlePlay;
+        dynamicTextElement.querySelectorAll('a')?.forEach((anchor, index) => {
+          anchor.textContent = osLinkMapping[androidTemplate.split(',')?.[index]?.trim()]?.text;
+          anchor.href = osLinkMapping[androidTemplate.split(',')?.[index].trim()]?.link;
+        });
+      }
       break;
+
     case 'ios':
-      button.classList.add('ios');
-      button.href = osLinkMapping.ios.appStore;
-      dynamicTextElement.querySelectorAll('a').forEach((anchor, index) => {
-        anchor.textContent = osLinkMapping[iosTemplate.split(',')[index].trim()].text;
-        anchor.href = osLinkMapping[iosTemplate.split(',')[index].trim()].link;
-      });
+      if (mobileHide && block.closest('.section')) {
+        block.closest('.section').classList.add('global-display-none');
+        break;
+      }
+
+      if (button && iosTemplate && osLinkMapping && dynamicTextElement) {
+        button.classList.add('ios');
+        button.href = osLinkMapping.ios?.appStore;
+        dynamicTextElement.querySelectorAll('a')?.forEach((anchor, index) => {
+          anchor.textContent = osLinkMapping[iosTemplate.split(',')?.[index]?.trim()]?.text;
+          anchor.href = osLinkMapping[iosTemplate.split(',')?.[index]?.trim()]?.link;
+        });
+      }
       break;
+
     default:
       break;
   }
@@ -148,12 +164,14 @@ export default function decorate(block) {
     googlePlayLink,
     backgroundcolor,
     textcolor,
+    mobileHide,
   } = parentSection.dataset;
 
   buildHeroBlock(block);
   renderBubble(block);
+  let osLinkMapping = null;
   if (androidLink && iosLink) {
-    const osLinkMapping = {
+    osLinkMapping = {
       android: {
         link: androidLink,
         googlePlay: googlePlayLink,
@@ -173,8 +191,9 @@ export default function decorate(block) {
         text: 'macOS',
       },
     };
-    detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, block);
   }
+
+  detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, mobileHide, block);
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
 
