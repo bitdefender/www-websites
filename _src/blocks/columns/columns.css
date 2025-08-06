@@ -791,6 +791,31 @@
       }
     }
   }
+
+  &.cards-with-img {
+    > div{
+      >div {
+        padding: 32px;
+        display: grid;
+        grid-template-rows: subgrid;;
+
+        >* {
+          padding: 0;
+        }
+        
+        img {
+          height: 64px;
+          width: auto;
+        }
+
+        h2{
+          font-size: 34px;
+          margin-bottom: 8px;
+          margin-top: -8px;
+        }
+      }
+    }
+  }
 }
 
 .columns-container.single-card-no-image .columns > div {
