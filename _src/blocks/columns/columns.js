@@ -226,7 +226,12 @@ export default function decorate(block) {
   // by dynamically setting this, i can set howewer much rows i want based on the number of
   // maximum elements expected in the row
   if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
-    block.querySelectorAll('.columns-text-col')?.forEach((element) => {
+    let cards = block.querySelectorAll('.columns-text-col');
+    if (block.classList.contains('cards-with-img')) {
+      cards = block.querySelectorAll('.columns > div > div');
+    }
+
+    cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
   }
