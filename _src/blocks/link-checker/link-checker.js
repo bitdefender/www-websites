@@ -374,10 +374,16 @@ function createButtonsContainer(block) {
 }
 
 export default function decorate(block) {
-  const { checkButtonText } = block.closest('.section').dataset;
+  const { checkButtonText, product } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
   privacyPolicyDiv.classList.add('privacy-policy');
+
+  if (product) {
+    // eslint-disable-next-line no-unused-vars
+    const [productName, productUsers, productYears] = product.split('/');
+    block.setAttribute('data-store-id', productName);
+  }
 
   const statusMessages = createStatusMessages(block);
   const statusTitles = createStatusTitles(block);
