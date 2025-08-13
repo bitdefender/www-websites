@@ -458,6 +458,15 @@ export default function decorate(block) {
       return;
     }
 
+    // Check if user has valid result data (came from link-checker)
+    const hasValidResult = displayStoredResult(block, statusMessages, statusTitles);
+
+    if (!hasValidResult) {
+      // No valid result data means direct URL access - redirect to main page
+      window.location.replace('/en-us/consumer/link-checker');
+      return;
+    }
+
     // Set up cleanup when user navigates away (but not on reload)
     window.addEventListener('beforeunload', () => {
       // Only clear data if it's not a reload (navigation away)
@@ -466,9 +475,6 @@ export default function decorate(block) {
         sessionStorage.removeItem('linkCheckerResult');
       }
     });
-
-    // Try to display stored result
-    displayStoredResult(block, statusMessages, statusTitles);
   }
 
   // if the text is cleared, do not display any error
