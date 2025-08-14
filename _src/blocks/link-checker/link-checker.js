@@ -138,13 +138,6 @@ function displayStoredResult(block, statusMessages, statusTitles) {
       buttonsContainer.style.display = 'flex';
     }
 
-    AdobeDataLayerService.push(new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-      pageLoadStartedInfo.name += `:${message.status}`;
-      return pageLoadStartedInfo;
-    }));
-    AdobeDataLayerService.push(new UserDetectedEvent());
-    AdobeDataLayerService.push(new WindowLoadedEvent());
-
     // Don't clear the stored data here - keep it for reload detection
     // It will be cleared when user reloads or after 1 hour expiration
 
