@@ -222,6 +222,7 @@ export async function createModal(path, template, stopAutomaticRefresh) {
   close.classList.add('modal-close');
   close.addEventListener('click', closeModal);
   modalContent.append(close);
+  adobeMcAppendVisitorId(modalContainer);
   return modalContainer;
 }
 
