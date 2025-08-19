@@ -355,14 +355,14 @@ export default async function decorate(block) {
               ${titleHTML}
 
               <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
-              ${(() => { 
-              const t = subtitle.innerText.trim();
-              if (!t) return '';
-              const fixed = t.split(/\s+/).length > 8 ? ' fixed_height' : '';
-              const hasInvisibleTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i.test(subtitle.innerHTML);
-              const extra = hasInvisibleTag ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"' : '';
-              return `<p class="subtitle${fixed}"${extra}>${subtitle.innerHTML}</p>`;
-            })()}
+    ${(() => {
+    const t = subtitle.innerText.trim();
+    if (!t) return '';
+    const fixed = t.split(/\s+/).length > 8 ? ' fixed_height' : '';
+    const hasInvisibleTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i.test(subtitle.innerHTML);
+    const extra = hasInvisibleTag ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"' : '';
+    return `<p class="subtitle${fixed}"${extra}>${subtitle.innerHTML}</p>`;
+  })()}
 
               <hr />
               ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
