@@ -914,7 +914,7 @@ export const getProductFinding = () => {
 
   // case when the pages are link-checker/something
   const currentPath = window.location.pathname;
-  if (currentPath.includes('/link-checker/')) {
+  if (currentPath.includes('/link-checker')) {
     productFinding = 'toolbox page';
   }
 
