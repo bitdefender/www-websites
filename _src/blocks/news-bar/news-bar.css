@@ -1,9 +1,3 @@
-.news-bar{
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-}
-
 .news-bar {
     text-align: center;
     justify-content: center;
@@ -21,6 +15,9 @@
     }
 
     transition: all 1s ease;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 }
 
 .news-bar-container.solutions {
