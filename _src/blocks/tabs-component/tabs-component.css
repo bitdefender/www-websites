@@ -27,6 +27,9 @@
 
 .tabs-component-container p {
   font: normal normal normal 16px/24px Arial, sans-serif;
+  color: grey;
+  margin-bottom: 0;
+
 }
 
 .tabs-component-container span .tag{

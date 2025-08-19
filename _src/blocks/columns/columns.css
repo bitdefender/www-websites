@@ -1139,6 +1139,10 @@
     gap: 32px;
   }
 
+  .columns > div:not(:last-child) {
+    margin-bottom: 40px;
+  }
+
   .columns.awards-fragment > div{
     align-items: baseline;
   }

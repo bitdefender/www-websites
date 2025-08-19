@@ -980,8 +980,8 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
   }
 
   main .hero-dropdown p {
-    font-size: var(--hero-dropdown-font-size-xxs);
-    margin: 0;
+    font-size: 14px;
+    margin-top: 18px;
   }
 
   main .hero-dropdown .hero-dropdown-picture picture img {

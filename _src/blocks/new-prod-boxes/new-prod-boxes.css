@@ -431,6 +431,10 @@
   display: inline-flex;
 }
 
+.new-prod-boxes-container.revert-arrows .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
+  transform: rotate(180deg);
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li p, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) ul li {
   font-size: 14px;
   line-height: 17px;
@@ -872,6 +876,10 @@
     margin-top: 10px;
     margin-bottom: 10px;
   }
+
+  .new-prod-boxes-container.revert-arrows .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
+  transform: rotate(-90deg);
+}
 }
 
 @media (min-width: 768px) {
