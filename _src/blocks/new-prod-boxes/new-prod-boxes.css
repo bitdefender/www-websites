@@ -116,6 +116,10 @@
   margin: 0 auto;
 }
 
+.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box hr:last-of-type{
+  display: none;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
   height: 30px;
   max-width: 350px;

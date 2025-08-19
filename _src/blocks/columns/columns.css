@@ -446,6 +446,21 @@
   color: #006DFF;
 }
 
+.columns-container.baby-blue-subtitles h3 {
+  color: #006DFF;
+}
+
+.columns-container.baby-blue-subtitles li {
+  font-size: 16px;
+  padding: 0;
+}
+
+.columns-container.baby-blue-subtitles h6{
+  font-size: 14px;
+  color: #5F5F5F;
+  margin-bottom: 16px;
+}
+
 .creators .columns-container.baby-blue-subtitles h3 {
   color: #006DFF;
 }
