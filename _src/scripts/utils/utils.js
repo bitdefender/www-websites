@@ -912,6 +912,12 @@ export const getProductFinding = () => {
       break;
   }
 
+  // case when the pages are link-checker/something
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/link-checker/')) {
+    productFinding = 'toolbox page';
+  }
+
   return productFinding;
 };
 
