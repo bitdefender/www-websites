@@ -436,6 +436,12 @@ export class Product {
 
 		let buyLink = new URL(yearsOption.buyLink);
 		buyLink.searchParams.set("SHOPURL", `${window.location.origin}/${window.location.pathname.split('/')[1]}/`);
+
+		// If the path doesn't match the expected format (bitdefender.com/en-us...), set the SHOPURL to the origin
+		const pathRegex = new RegExp(`^${window.location.origin}/[a-z]{2}-[a-z]{2}(?:/.*)?$`, "i");
+		if (!pathRegex.test(window.location.href)) {
+			buyLink.searchParams.set("SHOPURL", `${window.location.origin}`);
+		}
 		buyLink.searchParams.set("REF", this.promotion && this.promotion !== Store.NO_PROMOTION ? `WEBSITES_${this.promotion}` : "N/A");
 		buyLink.searchParams.set("SRC", `${window.location.origin}${window.location.pathname}`);
 
