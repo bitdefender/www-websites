@@ -633,8 +633,8 @@ function showResult(question, results) {
     const resultUrl = new URL(window.location.href);
     resultUrl.hash = '';
     const cleanUrl = resultUrl.toString();
-    const shareUrl = encodeURIComponent(`${cleanUrl}${resultPath}`);
-    const shareTextAndUrl = encodeURIComponent(`${shareText?.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
+    const shareUrl = encodeURIComponent(`${cleanUrl}/${resultPath}`);
+    const shareTextAndUrl = encodeURIComponent(`${shareText?.trim().replace(/<br>/g, '\n')} ${cleanUrl}/${resultPath}`);
 
     const linksConfig = {
       facebook: {
