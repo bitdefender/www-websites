@@ -109,7 +109,6 @@
 
 .ab-downloads main .hero a.button.modal, .ab-downloads main .hero a.button.central, .ab-downloads main .hero_mobile a.button.modal {
     height: 45px;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
