@@ -345,7 +345,7 @@ main img {
   text-align: center;
   background-color: rgb(228, 242, 255);
   color: rgb(0, 69, 173);
-  padding: 6px 0!important;
+  padding: 8px 0!important;
 }
 
 .top_blue .default-content-wrapper {
@@ -354,6 +354,7 @@ main img {
 
 .top_blue p {
   font-size: var(--body-font-size-s);
+  margin: 0;
 }
 
 .top_blue p a {
