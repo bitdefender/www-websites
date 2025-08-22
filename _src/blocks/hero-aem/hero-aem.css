@@ -287,6 +287,9 @@
   border-radius: 8px;
   height: fit-content;
   transition: all .2s cubic-bezier(.4, 0, .2, 1);
+  margin-top: 18px;
+  margin-bottom: 18px;
+  margin-right: 10px;
 }
 
 .hero-aem-container .hero-aem p em a:hover {
@@ -619,6 +622,26 @@
   line-height: 16px;
 }
 
+@media (max-width: 595px) {
+  .hero-aem-container.hide-image-mobile .hero-aem .hero-aem__mobile-image img {
+    display: none;
+  }
+
+  .hero-aem-container.hide-image-mobile .hero-aem .hero-aem__card-text {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+  .hero-aem-container .hero-aem p em a {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .hero-aem-container .hero-aem .hero-aem__card-text picture img {
+    max-height: 40px;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-aem-container.custom-btns .hero-aem__card-text > p.button-container:nth-of-type(2) {
     display: block;
@@ -789,6 +812,11 @@
     flex: 0 0 auto;
     width: 16.66%;
   }
+
+  .hero-aem-container .hero-aem p em a {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -812,5 +840,9 @@
 
   .hero-aem-container .hero-aem .hero-aem__desktop-image img {
     max-height: 600px;
+  }
+
+  .hero-aem-container .hero-aem p em a {
+    margin-right: 18px;
   }
 }

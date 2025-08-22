@@ -116,6 +116,10 @@
   margin: 0 auto;
 }
 
+.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box hr:last-of-type{
+  display: none;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
   height: 30px;
   max-width: 350px;
@@ -429,6 +433,10 @@
   position: relative;
   top: 4px;
   display: inline-flex;
+}
+
+.new-prod-boxes-container.revert-arrows .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
+  transform: rotate(180deg);
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li p, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) ul li {
@@ -871,6 +879,14 @@
   .creators .new-prod-boxes-container .new-prod-boxes .prod_box.demo-box .inner_prod_box .undeBuyLink span.demoBtn {
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+
+  .new-prod-boxes-container.revert-arrows .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
+  transform: rotate(-90deg);
+}
+
+  .new-prod-boxes-container .switchBox {
+    padding-bottom: 20px;
   }
 }
 

@@ -231,16 +231,16 @@ export default function decorate(block) {
     if (content) {
       switch (contentsize) {
         case 'half':
-          content.style.width = '50%';
+          content.classList.add('content-width-50');
           break;
         case 'larger':
-          content.style.width = '75%';
+          content.classList.add('content-width-75');
           break;
         case 'full':
-          content.style.width = '100%';
+          content.classList.add('content-width-100');
           break;
         default:
-          content.style.width = '60%';
+          content.classList.add('content-width-60');
           break;
       }
     }
