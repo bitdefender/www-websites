@@ -6,6 +6,8 @@ import { resolve as price} from "./price.js";
 import { resolve as subscription} from "./subscription.js";
 import { resolve as textVariable} from "./textVariable.js";
 import { resolve as addClass} from "./addClass.js";
+import { resolve as trialLink} from "./trialLink.js";
+
 
 export const staticAttributesResolvers = [
     hide,
@@ -15,7 +17,8 @@ export const staticAttributesResolvers = [
     price,
     subscription,
     textVariable,
-    addClass
+    addClass,
+    trialLink
 ];
 
 export const staticAttributes = {

@@ -8,36 +8,36 @@ export const getTrials = async () => {
   return await res.json();
 };
 
-const applyTrial = async (buyLink, option, duration) => {
+const applyTrial = async (option, duration) => {
   if (!duration) {
-    return data;
+    return await option.getStoreUrl();
   }
 
   const trial = await getTrials();
   const locale = window.location.pathname.split('/')[1] || 'en';
-  const pattern = [
+  const optionRegex = [
     locale,
     duration,
     option.getId(),
     option.getPromotion(),
     option.getDevices(),
     option.getSubscription()
-  ].map(k => k.trim()).join("\|");
+  ].map(k => String(k).trim()).join("|");
 
   const match = trial.data.find((row) => {
-    const optionRegex = [
+    const pattern = [
       row.locale,
       row.duration,
       row.product,
       row.campaign,
       row.devices,
       row.subscription
-    ].map(k => k.trim()).join("|");
+    ].map(k => k.trim()).join("\\|").replaceAll("*", ".*");
 
     return new RegExp(pattern, "i").test(optionRegex);
   });
 
-  const optionBuyLink = new URL(buyLink);
+  const optionBuyLink = new URL(await option.getStoreUrl());
 
   if (match?.buy_link) {
     const matchBuyLink = new URL(match.buy_link);
@@ -49,7 +49,7 @@ const applyTrial = async (buyLink, option, duration) => {
     return matchBuyLink.href
   }
 
-  return buyLink;
+  return optionBuyLink.href;
 };
 
 /**
@@ -65,5 +65,5 @@ export const resolve = async (element, { option }) => {
 
   if (!button) { return; }
 
-  button.href = await applyTrial(button.href, option, element.dataset.storeTrial);
+  button.href = await applyTrial(option, element.dataset.storeTrial);
 }
