@@ -180,6 +180,12 @@
   text-align: left;
 }
 
+@media (max-width: 579px) {
+  .awards-component > div:nth-child(3) div img {
+    height: 50px;
+  }
+}
+
 @media (min-width: 580px) {
   .awards-component > div:nth-child(3) div {
     max-width: 768px;

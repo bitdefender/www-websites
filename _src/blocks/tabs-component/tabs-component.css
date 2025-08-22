@@ -230,6 +230,36 @@
   color: #000;
 }
 
+@media (max-width: 595px) {
+  .tabs-component-container .title-class {
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .tabs-component-container .card-container img{
+    display: none;
+  }
+}
+@media (max-width: 990px) {
+  .tabs-component-container.show-categories .tabs-container {
+    margin-bottom: 20px;
+  }
+
+  .tabs-component-container.show-categories button strong {
+    display: block;
+    width: 50%;
+  }
+
+  .tabs-component-container.show-categories .tabs-container button {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
+  .tabs-component-container.show-categories .subtitle-class {
+    margin-bottom:20px;
+  }
+}
+
 @media (min-width: 768px) {
   .tabs-component-container .tabs-container {
     flex-wrap: nowrap;

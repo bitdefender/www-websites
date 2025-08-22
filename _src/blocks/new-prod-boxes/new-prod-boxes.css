@@ -884,6 +884,10 @@
   .new-prod-boxes-container.revert-arrows .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
   transform: rotate(-90deg);
 }
+
+  .new-prod-boxes-container .switchBox {
+    padding-bottom: 20px;
+  }
 }
 
 @media (min-width: 768px) {

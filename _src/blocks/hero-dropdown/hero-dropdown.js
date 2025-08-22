@@ -230,19 +230,19 @@ export default function decorate(block) {
     const content = block.querySelector('.hero-dropdown-content > div');
     if (content) {
       switch (contentsize) {
-        case 'half':
-          content.style.width = '50%';
-          break;
-        case 'larger':
-          content.style.width = '75%';
-          break;
-        case 'full':
-          content.style.width = '100%';
-          break;
-        default:
-          content.style.width = '60%';
-          break;
-      }
+      case 'half':
+        content.classList.add('content-width-50');
+        break;
+      case 'larger':
+        content.classList.add('content-width-75');
+        break;
+      case 'full':
+        content.classList.add('content-width-100');
+        break;
+      default:
+        content.classList.add('content-width-60');
+        break;
+    }
     }
   }
 

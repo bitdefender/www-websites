@@ -81,6 +81,7 @@
     width: 268px;
     vertical-align: top;
     font: normal normal normal 14px/16px var(--body-font-family);
+    justify-content: center;
   }
 
   .money-back > ul > li > div{
