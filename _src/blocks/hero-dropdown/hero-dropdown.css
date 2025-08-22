@@ -144,7 +144,7 @@ main .hero-dropdown-container.migration .hero-dropdown-content p em {
   font-style: normal;
 }
 
-main .hero-dropdown .hero-dropdown-content>div {
+main .hero-dropdown .hero-dropdown-content > div {
   width: 100%;
 }
 
@@ -1090,10 +1090,6 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
   }
 }
 
-main .hero-dropdown .hero-dropdown-content > div {
-  width: 100%;
-}
-
 main .hero-dropdown .hero-dropdown-content > div.content-width-50 {
   width: 50%;
 }
@@ -1269,7 +1265,7 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
     width: 100% !important;
   }
 
-  .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .subtitle {
+  .new-prod-boxes-container .new-prod-boxes .subtitle {
     margin-top: 5px;
   }
 }
