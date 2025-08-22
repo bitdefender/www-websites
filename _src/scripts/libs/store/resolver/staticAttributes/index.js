@@ -26,6 +26,7 @@ export const staticAttributes = {
     storeDevices: "[data-store-devices]",
     storeSubscription: "[data-store-subscription]",
     storeTextVariable: "[data-store-text-variable]",
-    storeAddClass: "[data-store-add-class]"
+    storeAddClass: "[data-store-add-class]",
+    storeTrial: "[data-store-trial]"
 };
 
