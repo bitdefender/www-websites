@@ -132,3 +132,9 @@ indices:
       - /**/consumer/thank-you
     target: /zh-tw/query-index.json
     properties: *minPros
+  index_ja_jp:
+    include:
+      - /ja-jp/**
+    exclude: *excludeList
+    target: /ja-jp/query-index.json
+    properties: *minPros
