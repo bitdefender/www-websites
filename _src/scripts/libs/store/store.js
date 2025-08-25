@@ -265,6 +265,7 @@ export class Product {
 		this.campaignType = product.campaignType;
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
+		this.symbol = option.currency_iso;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
 		this.yearDevicesMapping = Object.entries(this.options).reduce((acc, [deviceKey, values]) => {
 			Object.keys(values).forEach(yearKey => {
