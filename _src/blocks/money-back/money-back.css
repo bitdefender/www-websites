@@ -243,6 +243,17 @@
     display: flex;
   }
 
+@media (max-width: 595px) {
+      .money-back > ul > li > div {
+      display: flex;
+      gap: 10px;
+    }
+
+    .money-back > ul > li strong {
+      text-align: left;
+    }
+}
+
 @media (max-width: 991px) { /* mobile/tablet */
     .money-back-wrapper {
         padding: var(--body-padding);

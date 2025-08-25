@@ -45,6 +45,13 @@
     display: inline-block;
 }
 
+@media (max-width: 595px) {
+    
+    .hide-images-mobile .two-columns .column.has-picture {
+        display: none;
+    }
+
+}
 
 @media (width >= 768px) {
     .two-columns .columns-container {

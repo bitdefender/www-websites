@@ -158,6 +158,10 @@
   justify-content: center;
 }
 
+.hide-images-mobile .columns > div {
+  margin-bottom: 20px;
+}
+
 .columns > div > div {
   order: 1;
 }
@@ -435,6 +439,10 @@
   order: 0;
   text-align: center;
   margin-bottom: 2em;
+}
+
+.hide-images-mobile .columns .columns-img-col {
+  display: none;
 }
 
 .creators .columns-container .columns > div:last-of-type {
@@ -2032,6 +2040,14 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 @media (max-width: 500px) {
   .columns.video-presentation > div > div {
     width: 100%;
+  }
+
+  .columns-container.single-card-no-image .columns > div {
+    padding: 20px;
+  }
+
+  .columns-container.secondary-button-blue .columns .button.secondary {
+    padding: 20px;    
   }
 
   .columns.carousel > div > div {
