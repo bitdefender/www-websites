@@ -1828,4 +1828,10 @@ body > div.header-with-language-banner {
   main .section.blue a.button:any-link {
     padding: 10px 0px 8px 13px;
   }
+
+  
+  a.button:any-link, input[type="submit"] {
+    padding: 10px 13px 8px 20px;
+    font-size: 14px;
+}
 }
