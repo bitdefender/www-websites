@@ -57,7 +57,7 @@ const applyTrial = async (option, duration) => {
  * @param {import("../resolver").Context} context 
  */
 export const resolve = async (element, { option }) => {
-  if (element.dataset.storeTrial === undefined || !option) { return; }
+  if (element.dataset.storeTrialLink === undefined || !option) { return; }
 
   const button = element.nodeName === "A"
     ? element
@@ -65,5 +65,5 @@ export const resolve = async (element, { option }) => {
 
   if (!button) { return; }
 
-  button.href = await applyTrial(option, element.dataset.storeTrial);
+  button.href = await applyTrial(option, element.dataset.storeTrialLink);
 }
