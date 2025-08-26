@@ -81,6 +81,7 @@
     width: 268px;
     vertical-align: top;
     font: normal normal normal 14px/16px var(--body-font-family);
+    justify-content: center;
   }
 
   .money-back > ul > li > div{
@@ -241,6 +242,17 @@
     fill: #006df7;
     display: flex;
   }
+
+@media (max-width: 595px) {
+      .money-back > ul > li > div {
+      display: flex;
+      gap: 10px;
+    }
+
+    .money-back > ul > li strong {
+      text-align: left;
+    }
+}
 
 @media (max-width: 991px) { /* mobile/tablet */
     .money-back-wrapper {
