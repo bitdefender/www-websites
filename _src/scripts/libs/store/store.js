@@ -447,10 +447,12 @@ export class Product {
 
 		const targetBuyLinkMapping = Store.targetBuyLinkMappings?.[this.productAlias]?.[productVariation];
 		// replace the buy links with target links if they exist and return the option
-		if (targetBuyLinkMapping) {
+		if (targetBuyLinkMapping?.buyLink) {
 			buyLink = new URL(targetBuyLinkMapping.buyLink);
+		}
 
-			// if there are extra parameters which need to be added to the links, add them
+		// if there are extra parameters which need to be added to the links, add them
+		if (targetBuyLinkMapping?.extraParameters) {
 			targetBuyLinkMapping?.extraParameters?.forEach(extraParameter => {
 				buyLink.searchParams.set(extraParameter.key, extraParameter.value);
 			});
