@@ -1029,6 +1029,10 @@
     display: none;
   }
 
+  .hide-images-mobile .columns .columns-img-col {
+    display: block;
+  }
+
   .columns-container.hide-mobile {
     visibility: initial;
     height: initial;
