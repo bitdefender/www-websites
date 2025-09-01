@@ -158,6 +158,10 @@
   justify-content: center;
 }
 
+.hide-images-mobile .columns > div {
+  margin-bottom: 20px;
+}
+
 .columns > div > div {
   order: 1;
 }
@@ -437,6 +441,10 @@
   margin-bottom: 2em;
 }
 
+.hide-images-mobile .columns .columns-img-col {
+  display: none;
+}
+
 .creators .columns-container .columns > div:last-of-type {
   margin-bottom: 0;
 }
@@ -444,6 +452,21 @@
 .creators .columns-container h5 {
   font-weight: bold;
   color: #006DFF;
+}
+
+.columns-container.baby-blue-subtitles h3 {
+  color: #006DFF;
+}
+
+.columns-container.baby-blue-subtitles li {
+  font-size: 16px;
+  padding: 0;
+}
+
+.columns-container.baby-blue-subtitles h6{
+  font-size: 14px;
+  color: #5F5F5F;
+  margin-bottom: 16px;
 }
 
 .creators .columns-container.baby-blue-subtitles h3 {
@@ -1006,6 +1029,10 @@
     display: none;
   }
 
+  .hide-images-mobile .columns .columns-img-col {
+    display: block;
+  }
+
   .columns-container.hide-mobile {
     visibility: initial;
     height: initial;
@@ -1137,6 +1164,10 @@
     align-items: center;
     flex-direction: unset;
     gap: 32px;
+  }
+
+  .columns > div:not(:last-child) {
+    margin-bottom: 40px;
   }
 
   .columns.awards-fragment > div{
@@ -2013,6 +2044,14 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 @media (max-width: 500px) {
   .columns.video-presentation > div > div {
     width: 100%;
+  }
+
+  .columns-container.single-card-no-image .columns > div {
+    padding: 20px;
+  }
+
+  .columns-container.secondary-button-blue .columns .button.secondary {
+    padding: 20px;    
   }
 
   .columns.carousel > div > div {
