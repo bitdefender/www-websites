@@ -93,7 +93,7 @@
   margin: 0 auto;
   display: grid;
   gap: 0;
-  grid-template-columns: repeat(auto-fit, minmax(300px, min-content));
+  grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
   justify-content: center;
   align-items: center;
 }
@@ -317,6 +317,9 @@
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
   font-family: Arial, sans-serif;
   color: transparent;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 10;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists p {
@@ -593,6 +596,15 @@
   min-width: 144px;
 }
 
+.new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.secondary {
+  width: fit-content;
+  min-width: 150px;
+}
+
+.new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.secondary {
+  width: 100%;
+}
+
 .new-prod-boxes-container.secondary-button-blue  .new-prod-boxes .button.secondary {
   margin-top: 15px;
   color: #026DFF;
@@ -822,7 +834,6 @@
   gap: 4px;
   align-items: center;
   font-weight: bold;
-  margin-bottom: 24px;
   margin-top: 16px;
 }
 
@@ -885,9 +896,6 @@
   transform: rotate(-90deg);
 }
 
-  .new-prod-boxes-container .switchBox {
-    padding-bottom: 20px;
-  }
 }
 
 @media (min-width: 768px) {
