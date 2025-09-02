@@ -95,19 +95,27 @@
 
 .new-prod-boxes-container .new-prod-boxes {
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(300px, min-content));
   justify-content: center;
   align-items: center;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 50;
   flex: 1;
   max-width: 410px;
   margin: 8px;
+  margin-bottom: 50px;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 50;
   position: relative;
   height: 100%;
   background-color: #F6F6F6;

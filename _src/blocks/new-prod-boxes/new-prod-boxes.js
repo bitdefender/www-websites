@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 import {
-  matchHeights, formatPrice,
+  formatPrice,
   checkIfNotProductPage,
 } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
@@ -182,7 +182,7 @@ function checkAddOn(featuresSet) {
 export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
-    products, familyProducts, monthlyProducts, pid, mainProduct,
+    products, familyProducts, monthlyProducts,
     addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
 
@@ -228,7 +228,7 @@ export default async function decorate(block) {
       if (switchCheckbox.checked) {
         let familyBoxes = block.querySelectorAll('.family-box');
         familyBoxes.forEach((box) => {
-          box.style.display = 'block';
+          box.style.display = 'grid';
         });
 
         let individualBoxes = block.querySelectorAll('.individual-box');
@@ -243,7 +243,7 @@ export default async function decorate(block) {
 
         let individualBoxes = block.querySelectorAll('.individual-box');
         individualBoxes.forEach((box) => {
-          box.style.display = 'block';
+          box.style.display = 'grid';
         });
       }
     });
@@ -549,20 +549,4 @@ export default async function decorate(block) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
   }
-
-  if (blockParent.classList.contains('same-height-lists')) {
-    const prodCard = block.querySelector('.prod_box');
-    const featureLists = prodCard?.querySelectorAll('ul');
-    featureLists?.forEach((list, idx) => {
-      matchHeights(block, `div > ul:nth-of-type(${idx + 1})`);
-    });
-  }
-
-  matchHeights(block, '.subtitle');
-  matchHeights(block, '.subtitle-2');
-  matchHeights(block, 'h2');
-  matchHeights(block, 'h4');
-  matchHeights(block, '.plan-switcher');
-  matchHeights(block, '.blueTagsWrapper');
-  matchHeights(block, '.oldprice-container');
 }
