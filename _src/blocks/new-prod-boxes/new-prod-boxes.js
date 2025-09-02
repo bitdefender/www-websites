@@ -549,4 +549,6 @@ export default async function decorate(block) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
   }
+
+  switchCheckbox.dispatchEvent(new Event('change'));
 }
