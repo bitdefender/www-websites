@@ -1,14 +1,10 @@
-import { target } from "../target.js";
-import { User } from "@repobit/dex-utils";
+import user from "../user.js";
 import page from "../page.js";
 import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
 import {
   getExperimentDetails,
   generatePageLoadStartedName,
-  getCampaignBasedOnLocale,
-  getUrlPromotion,
   getProductFinding,
-  getMetadata,
 } from '../utils/utils.js';
 import { getTargetExperimentDetails } from "../target.js";
 
@@ -80,7 +76,7 @@ const resolvePageLoadStartedEvent = async () => {
     page,
     {
       experimentDetails: (await getTargetExperimentDetails()) ?? getExperimentDetails(),
-      geoRegion: await User.country,
+      geoRegion: await user.country,
       name: generatePageLoadStartedName(),
       serverName: 'hlx.live', // indicator for AEM Success Edge
     },
@@ -98,7 +94,7 @@ const resolveUserDetectedEvent = async () => {
   AdobeDataLayerService.push(new UserDetectedEvent(
     page,
     {
-      ID: await User.fingerprint,
+      ID: await user.fingerprint,
       productFinding: getProductFinding()
     }
   ));
