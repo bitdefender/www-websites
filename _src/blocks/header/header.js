@@ -534,9 +534,11 @@ async function runDefaultHeaderLogic(block) {
         });
       });
 
-      // select all the scripts from contet div and
       const scripts = contentDiv.querySelectorAll('script');
       scripts.forEach((script) => {
+        if (['dependencies'].some((key) => script.src.includes(key))) {
+          return;
+        }
         const newScript = document.createElement('script');
         newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
         newScript.defer = true;
