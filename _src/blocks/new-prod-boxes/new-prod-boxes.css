@@ -101,6 +101,7 @@
   flex: 1;
   max-width: 410px;
   margin: 8px;
+  margin-bottom: 50px;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
@@ -309,9 +310,6 @@
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
   font-family: Arial, sans-serif;
   color: transparent;
-  display: grid;
-  grid-template-rows: subgrid;
-  grid-row: span 10;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists p {
@@ -716,7 +714,7 @@
 
 .switchBox {
   text-align: center;
-  padding-bottom: 35px;
+  padding-bottom: 45px;
 }
 
 .switchBox .switch {
@@ -924,6 +922,12 @@
     grid-template-rows: subgrid;
     grid-row: span 50;
   }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 10;
+  }
 }
 
 @media (min-width: 992px) {
@@ -944,6 +948,10 @@
 @media screen and (width <= 525px) {
   .new-prod-boxes-container .new-prod-boxes {
     padding: var(--body-padding);
+  }
+
+  .new-prod-boxes-container .switchBox {
+    padding-bottom:20px;
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box {
