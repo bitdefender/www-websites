@@ -2307,3 +2307,108 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     }
   }
 }
+
+.columns-tabs .tabsSection span.tag {
+  height: 23px;
+  color: #525252;
+  border: 1px solid #A3A3A3;
+  background-color: white;
+  border-radius: 32px;
+  cursor: pointer;
+  transition: all .4s ease-in-out;
+}
+
+.columns-tabs .tabsSection span.tag:hover, .columns-tabs .tabsSection span.tag.active {
+  height: 23px;
+  color: #FFF;
+  border: 1px solid #1A1919;
+  background-color: #1A1919;
+  transition: all .4s ease-in-out;
+}
+
+.columns-tabs .block h2 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 120%;
+  letter-spacing: 0%;
+}
+
+.columns-tabs .block h3 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 30px;
+  letter-spacing: -1%;
+}
+
+.columns-tabs .block h3 a {
+  color: black;
+}
+
+.columns-tabs .block h3 a:hover {
+  text-decoration: none;
+  color: #005ED9;
+}
+
+.columns-tabs .block p:first-of-type {
+  margin-top: 0;
+}
+
+.columns-tabs .block p {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 25.6px;
+  color: #525252;
+}
+
+.columns-tabs .block p.button-container a.button {
+  background: transparent;
+  border: 0 none;
+  color: #005ED9;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.columns-tabs .block p.button-container a.button span.icon {
+  height: 14px;
+  margin: 0;
+  width: auto;
+  padding: 0 0 0 10px;
+  display: inline-block;
+  margin-top: -10px;
+}
+
+.columns-tabs .block span.tag {
+  height: 20px;
+  position: absolute;
+  top: 16px;
+  left: 13px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 13px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  border: 1px solid #fff;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.columns-tabs > div.default-content-wrapper {
+  margin-bottom: 2em;
+}
+
+.columns-tabs > div.default-content-wrapper:not(:first-of-type) {
+  margin-top: 5em;
+}
+
+.columns-tabs .block > div {
+  align-items: start;
+}
+
+.columns-tabs .block > div > div {
+  align-items: flex-start;
+  position: relative;
+}

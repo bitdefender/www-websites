@@ -93,7 +93,9 @@ function setDynamicLink(dynamicLink, dynamicLinks) {
   }
 }
 
+let count_blocks = 0
 export default function decorate(block) {
+  count_blocks++;
   const {
     linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink,
@@ -234,6 +236,35 @@ export default function decorate(block) {
     cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
+  }
+
+  // tabs version
+  if (type && type === 'tabs') {
+    const parentSection = block.closest('.section');
+    parentSection.classList.add('columns-tabs');
+    const tabName = block.closest('div.columns-wrapper')?.previousElementSibling?.closest('div.default-content-wrapper').innerText;
+
+    let tabsSection = parentSection.querySelector('.tabsSection');
+    if (!tabsSection) {
+      tabsSection = document.createElement('div');
+      tabsSection.className = 'tabsSection default-content-wrapper';
+      parentSection.prepend(tabsSection);
+    }
+
+    const tagSpan = document.createElement('span');
+    tagSpan.className = `tag ${count_blocks === 1 ? 'active' : ''}`;
+    tagSpan.innerText = tabName;
+    tabsSection.appendChild(tagSpan);
+
+    block.querySelectorAll(':scope > div > div').forEach((el) => {
+      const tagSpan = document.createElement('span');
+      tagSpan.className = 'tag';
+      tagSpan.innerText = tabName;
+      el.appendChild(tagSpan);
+    });
+
+    block.closest('div.columns-wrapper').classList.add(`data-${tabName}`);
+    block.closest('div.columns-wrapper')?.previousElementSibling?.closest('div.default-content-wrapper').classList.add(`data-${tabName}`);
   }
 
   matchHeights(block, 'h3');

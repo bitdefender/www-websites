@@ -3,6 +3,7 @@ import { debounce } from '@repobit/dex-utils';
 import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  const { navigationPosition, arrows } = block.closest('.section').dataset;
   const slides = [...block.children];
   const navItemsNames = slides.map((slideEl) => slideEl.children[0].firstElementChild.textContent);
 
@@ -10,12 +11,12 @@ export default async function decorate(block) {
   block.innerHTML = `
     <div class="carousel-container glide">
       <div class="navigation-wrapper">
-        <div class="first-nav">
+        ${!navigationPosition ? `<div class="first-nav">
           ${navItemsNames.map((text, index) => `
             <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
               <span class="text">${text}</span><span class="pill"></span>
             </div>`).join('')}
-        </div>
+        </div>` : ''}
         
         <div class="second-nav">
          <a href class="arrow disabled left-arrow">
@@ -47,9 +48,41 @@ export default async function decorate(block) {
 
       <div class="glide__track content-wrapper" data-glide-el="track">
         <ul class="glide__slides">
-          ${slides.map((slide) => `<li class="glide__slide slide">${slide.innerHTML}</li>`).join('')}
+          ${slides.map((slide) => {
+            const firstDiv = slide.querySelector("div");
+            const lastDiv = slide.querySelector("div:last-of-type");
+
+            return `
+              <li class="glide__slide slide">
+                <div class="left-content">
+                  ${firstDiv ? firstDiv.innerHTML : ""}
+                </div>
+                <div class="right-content">
+                  ${(() => {
+                    if (!lastDiv) return "";
+                    const content = lastDiv.textContent.trim();
+
+                    if (content.startsWith("https://www.youtube.com/embed/")) {
+                      return `
+                      <iframe width="100%" height="100%" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+                    }
+
+                    return lastDiv.innerHTML;
+                  })()}
+                </div>
+              </li>
+            `;
+          }).join('')}
         </ul>
       </div>
+
+      ${navigationPosition && navigationPosition === 'bottom' && `<div class="navigation-wrapper">
+        <div class="first-nav">
+          ${navItemsNames.map((text, index) => `
+            <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
+              <span class="text">${text}</span><span class="pill"></span>
+            </div>`).join('')}
+        </div>`}
     </div>
   `;
 
