@@ -84,7 +84,7 @@ function updateSlideState(nextIndex, block) {
   });
   updateControlsState(block, nextIndex);
   const allPictures = block.closest('.columns').querySelectorAll('.right-col picture');
-  if (allPictures) {
+  if (allPictures && allPictures.length > 1) {
     allPictures.forEach((picture) => {
       picture.style.display = 'none';
     });
