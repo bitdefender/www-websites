@@ -993,6 +993,55 @@
   }
 }
 
+.columns-container .block.sidebar h1 {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 48px;
+  letter-spacing: 0;
+  vertical-align: middle;
+}
+
+.columns-container .block.sidebar .columns-left-col p, .columns-container .block.sidebar .columns-left-col ul li {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 25.6px;
+  color: #525252;
+}
+
+.columns-container .block.sidebar .columns-left-col ul li {
+  margin: 5px 0;
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
+.columns-container .block.sidebar > div {
+  flex-direction: column-reverse;
+}
+
+.columns-container .block.sidebar > div > div.columns-left-col h1 {
+    display: none;
+  }
+
+  .columns-container .block.sidebar > div > div:last-of-type h1 {
+    display: block;
+  }
+
+.columns-container .block.sidebar > div > div:last-of-type {
+  width: 100%;
+}
+
+.columns-container .block.sidebar > div > div:last-of-type p.button-container * {
+  background-color: #006EFF;
+  border-color: #006EFF;
+  width: 100%;
+}
+
+.columns-container .block.sidebar > div > div:last-of-type p.iframe iframe {
+  border-radius: 16px;
+  height: 210px;
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     flex-direction: unset;
@@ -1040,7 +1089,7 @@
     margin: initial;
   }
 
-  .columns.awards-fragment > div{
+  .columns.awards-fragment > div {
     display: grid;
     grid-auto-flow: row;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -1144,6 +1193,30 @@
   
   .columns-container .columns.trust-factors td strong{
     font-size: 32px;
+  }
+
+  .columns-container .block.sidebar > div {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .columns-container .block.sidebar > div > div:last-of-type {
+    width: 412px;
+    flex: 0 0 412px;
+  }
+
+  .columns-container .block.sidebar > div > div:last-of-type p.iframe iframe {
+    border-radius: 16px;
+    height: 232px;
+  }
+
+  .columns-container .block.sidebar > div > div.columns-left-col h1 {
+    display: block;
+  }
+
+  .columns-container .block.sidebar > div > div:last-of-type h1 {
+    display: none;
   }
 }
 
@@ -2308,6 +2381,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.columns-tabs.hide-tabs {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .columns-tabs .tabsSection span.tag {
   height: 23px;
   color: #525252;
@@ -2339,7 +2417,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   font-weight: 600;
   font-size: 22px;
   line-height: 30px;
-  letter-spacing: -1%;
+  letter-spacing: 0;
 }
 
 .columns-tabs .block h3 a {
@@ -2378,22 +2456,29 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   width: auto;
   padding: 0 0 0 10px;
   display: inline-block;
-  margin-top: -10px;
+  margin-top: -7px;
 }
 
-.columns-tabs .block span.tag {
+.columns-tabs .block > div > div > p:first-of-type em {
   height: 20px;
   position: absolute;
-  top: 16px;
-  left: 13px;
+  top: 32px;
+  left: 15px;
   font-family: "IBM Plex Sans", sans-serif;
   font-weight: 500;
   font-size: 12px;
   line-height: 13px;
   border-radius: 100px;
   text-transform: uppercase;
+  letter-spacing: 0;
   border: 1px solid #fff;
+  padding: 0 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  font-style: normal;
 }
 
 .columns-tabs > div.default-content-wrapper {
@@ -2406,6 +2491,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns-tabs .block > div {
   align-items: start;
+}
+
+.columns-tabs .section-el {
+  padding-bottom: 0 !important;
+  padding-top: 0 !important;
+  margin-bottom: 0em !important;
 }
 
 .columns-tabs .block > div > div {

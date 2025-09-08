@@ -93,11 +93,52 @@ function setDynamicLink(dynamicLink, dynamicLinks) {
   }
 }
 
+const slug = s => s?.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')||'tab';
+function setupTabs({ block, firstTab }) {
+  const section = block.closest('.section');
+  const wrapper = block.closest('.columns-wrapper');
+  
+  const label = wrapper.previousElementSibling?.closest('.default-content-wrapper')?.textContent?.trim() || 'Tab';
+  const id = slug(label);
+  section.classList.add('columns-tabs');
+
+  if (!block.closest('.section').classList.contains('hide-tabs')) {
+    let tabsList = section.querySelector('.tabsSection');
+    if (!tabsList) {
+      tabsList = document.createElement('div');
+      tabsList.className = 'tabsSection default-content-wrapper';
+      tabsList.addEventListener('click', (e) => {
+        const tab = e.target.closest('span[data-tab]'); 
+        const showAll = tab.dataset.tab === firstTab.toLowerCase();
+        section.querySelectorAll('.section-el').forEach((el) => el.hidden =! showAll && !el.classList.contains(`section-${tab.dataset.tab}`));
+        tabsList.querySelectorAll('span').forEach((el) => el.classList.toggle('active', el === tab));
+      });
+      // add All tab once
+      const all = document.createElement('span');
+      all.className = 'tag active';
+      all.dataset.tab = firstTab.toLowerCase();
+      all.textContent = firstTab;
+      tabsList.appendChild(all);
+      section.prepend(tabsList);
+    }
+  
+    const tab = document.createElement('span');
+    tab.className = 'tag';
+    tab.dataset.tab = id;
+    tab.textContent = label;
+    tabsList.appendChild(tab);
+  }
+
+  wrapper.classList.add('section-el',`section-${id}`);
+  wrapper.previousElementSibling?.classList.add('section-el',`section-${id}`);
+}
+
+
 let count_blocks = 0
 export default function decorate(block) {
   count_blocks++;
   const {
-    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
@@ -239,33 +280,17 @@ export default function decorate(block) {
   }
 
   // tabs version
-  if (type && type === 'tabs') {
-    const parentSection = block.closest('.section');
-    parentSection.classList.add('columns-tabs');
-    const tabName = block.closest('div.columns-wrapper')?.previousElementSibling?.closest('div.default-content-wrapper').innerText;
+  if (type && type === 'tabs') setupTabs({ block, firstTab });
 
-    let tabsSection = parentSection.querySelector('.tabsSection');
-    if (!tabsSection) {
-      tabsSection = document.createElement('div');
-      tabsSection.className = 'tabsSection default-content-wrapper';
-      parentSection.prepend(tabsSection);
+  if (block.classList.contains('sidebar')) {
+    const videoP = cols[1].querySelector('p');
+    const content = videoP.innerText;
+    if (content.startsWith("https://www.youtube.com/embed/")) {
+      videoP.classList.add('iframe');
+      cols[1].querySelector('p').innerHTML = `<iframe width="100%" height="232" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
     }
-
-    const tagSpan = document.createElement('span');
-    tagSpan.className = `tag ${count_blocks === 1 ? 'active' : ''}`;
-    tagSpan.innerText = tabName;
-    tabsSection.appendChild(tagSpan);
-
-    block.querySelectorAll(':scope > div > div').forEach((el) => {
-      const tagSpan = document.createElement('span');
-      tagSpan.className = 'tag';
-      tagSpan.innerText = tabName;
-      el.appendChild(tagSpan);
-    });
-
-    block.closest('div.columns-wrapper').classList.add(`data-${tabName}`);
-    block.closest('div.columns-wrapper')?.previousElementSibling?.closest('div.default-content-wrapper').classList.add(`data-${tabName}`);
   }
+  
 
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');

@@ -243,6 +243,10 @@
     margin-top: 0;
 }
 
+.trusted-main-carousel-container.resources-design .carousel-container li > div.left-content {
+    padding-right: 1em
+}
+
 .trusted-main-carousel-container.resources-design .carousel-container li > div.left-content * {
     color: white;
     font-family: "IBM Plex Sans", sans-serif;
@@ -264,6 +268,17 @@
     border: 0 none;
     width: auto;
     padding: 0;
+    gap: 5px;
+}
+
+.trusted-main-carousel-container.resources-design .carousel-container li > div.left-content p.button-container a.button:any-link span.icon {
+    width: 24px;
+    margin: 0;
+}
+
+.trusted-main-carousel-container.resources-design .carousel-container li > div.left-content p.button-container a.button:any-link span.icon * {
+    color: white!important;
+    fill: white!important;
 }
 
 .trusted-main-carousel-container.resources-design .carousel-container li > div.right-content {
