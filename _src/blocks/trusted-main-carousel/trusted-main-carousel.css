@@ -45,7 +45,7 @@
 
 .trusted-main-carousel-container.resources-design .navigation-wrapper .nav-item.active {
     width: 30px;
-    transition: all 0.60s linear;
+    transition: all 0.10s linear;
     background-color: #6a83aa;
 }
 
