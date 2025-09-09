@@ -116,6 +116,7 @@
 .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
     font: normal normal bold 14px/21px "IBM Plex Sans", sans-serif;
     position: relative;
+    margin-bottom: 12px;
 }
 
 .box-carousel-container.testimonials .carousel-item .subtitle-secondary::before {
