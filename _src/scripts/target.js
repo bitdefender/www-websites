@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import Target from '@repobit/dex-target';
 import { PageLoadStartedEvent } from '@repobit/dex-data-layer';
-import { User } from '@repobit/dex-utils';
+import user from './user.js';
 import { sampleRUM } from './lib-franklin.js';
 import page from './page.js';
 import {
@@ -16,7 +16,7 @@ export const target = new Target({
     page,
     {
       name: generatePageLoadStartedName(),
-      geoRegion: await User.country,
+      geoRegion: await user.country,
       serverName: 'hlx.live', // indicator for AEM Success Edge
     },
   ),
