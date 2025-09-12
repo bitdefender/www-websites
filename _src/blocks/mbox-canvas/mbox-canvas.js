@@ -3,6 +3,7 @@ import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
+import { Constants } from '../../scripts/libs/constants.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
   const newHtml = document.createElement('div');
@@ -93,7 +94,8 @@ export default async function decorate(block) {
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
   });
-  const pageCall = await fetch(`${offer.offer}`);
+  const offerLink = `${Constants.DEV_BASE_URL}${offer.offer}`;
+  const pageCall = await fetch(offerLink);
   let offerHtml;
   await loadBlocks(block.querySelector('.canvas-content'));
 
