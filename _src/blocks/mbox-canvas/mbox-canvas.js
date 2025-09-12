@@ -94,8 +94,7 @@ export default async function decorate(block) {
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
   });
-  console.log(offer);
-  const offerLink = `${Constants.DEV_BASE_URL_REVERSED}${offer.offer}`;
+  const offerLink = `${Constants.DEV_BASE_URL}${offer.offer}`;
   const pageCall = await fetch(offerLink);
   let offerHtml;
   await loadBlocks(block.querySelector('.canvas-content'));
