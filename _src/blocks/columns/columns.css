@@ -1984,6 +1984,12 @@
     }
   }
 
+  &.dex-info-section {
+    .columns>div {
+      align-items: self-start;
+    }
+  }
+
   @media (min-width: 373px) {
     &.dex-carousel-cards-individual {
       .columns-text-col:not(:first-of-type) {
@@ -2453,6 +2459,14 @@
   }
 
   @media (min-width: 1200px) {
+    &.dex-carousel-cards {
+
+      .columns-wrapper .columns div .columns-text-col:first-of-type table:first-of-type td,
+      .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
+        padding: 24px 32px;
+      }
+    }
+
     &.dex-carousel-cards-individual {
       .columns-text-col:not(:first-of-type) {
 
@@ -2483,14 +2497,6 @@
       }
     }
 
-    &.dex-carousel-cards {
-
-      .columns-wrapper .columns div .columns-text-col:first-of-type table:first-of-type td,
-      .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
-        padding: 24px 32px;
-      }
-    }
-
     &.dex-carousel-cards-security .columns-wrapper .columns {
       padding-left: 0;
       padding-right: 0;
@@ -2504,6 +2510,15 @@
         .columns-text-col:first-of-type {
           max-width: 320px;
         }
+      }
+    }
+  }
+
+  @media (min-width: 1400px) {
+    &.dex-carousel-cards-individual,
+    &.dex-carousel-cards-family {
+      .columns-wrapper>.columns>div {
+        padding: 37px 104px;
       }
     }
   }

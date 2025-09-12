@@ -132,6 +132,7 @@
 .box-carousel-container.testimonials .carousel-item .subtitle {
     margin-top: unset;
     color: #242424;
+    line-height: 100%;
 }
 
 .box-carousel-container.testimonials .trusted-carousel .carousel-container {
@@ -347,6 +348,7 @@
 
     .box-carousel-container.testimonials .carousel-item .subtitle {
         font-size: 17px;
+        line-height: 100%;
     }
 
     .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
