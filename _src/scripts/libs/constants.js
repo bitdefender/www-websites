@@ -1,10 +1,10 @@
 import page from "../page.js";
 
 export class Constants {
-	static DEV_BASE_URL = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
+	static BASE_URL_FOR_DEV = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
 	  window.location.hostname.includes(domain)) ? 'https://www.bitdefender.com' : '';
 
-	static DEV_BASE_URL_REVERSED = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
+	static BASE_URL_FOR_PROD = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
 	  window.location.hostname.includes(domain)) ? '' : 'https://www.bitdefender.com';
   
 	static FINGERPRINT_LOCAL_STORAGE_NAME = 'rhvID';

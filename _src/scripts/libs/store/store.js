@@ -948,7 +948,7 @@ export class Store {
 	static country = page.country;
 	static mappedCountry = this.getCountry();
 	/** Private variables */
-	static baseUrl = Constants.DEV_BASE_URL;
+	static baseUrl = Constants.BASE_URL_FOR_DEV;
 
 	/**
 	 * @type {StoreConfig}
