@@ -26,7 +26,7 @@
     "@esm-bundle/chai": "4.3.4-fix.0",
     "@web/test-runner": "0.15.1",
     "@web/test-runner-commands": "0.6.5",
-    "axios": "^1.11.0",
+    "axios": "^1.12.2",
     "chai": "4.3.7",
     "eslint": "8.35.0",
     "eslint-config-airbnb-base": "15.0.0",
@@ -40,10 +40,10 @@
   },
   "dependencies": {
     "@glidejs/glide": "^3.7.1",
-    "@repobit/dex-data-layer": "^1.8.4",
-    "@repobit/dex-launch": "^2.0.6",
-    "@repobit/dex-target": "^2.5.6",
-    "@repobit/dex-utils": "^2.0.4",
+    "@repobit/dex-data-layer": "^1.8.5",
+    "@repobit/dex-launch": "^2.0.7",
+    "@repobit/dex-target": "^2.5.7",
+    "@repobit/dex-utils": "^2.0.5",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
   },
