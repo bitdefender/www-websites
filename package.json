@@ -40,10 +40,10 @@
   },
   "dependencies": {
     "@glidejs/glide": "^3.7.1",
-    "@repobit/dex-data-layer": "^1.8.5",
-    "@repobit/dex-launch": "^2.0.7",
-    "@repobit/dex-target": "^2.5.7",
-    "@repobit/dex-utils": "^2.0.5",
+    "@repobit/dex-data-layer": "^1.8.6",
+    "@repobit/dex-launch": "^2.0.8",
+    "@repobit/dex-target": "^2.5.8",
+    "@repobit/dex-utils": "^2.0.6",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
   },
