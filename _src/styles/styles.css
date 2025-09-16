@@ -266,6 +266,13 @@ hr {
   padding-bottom: 0!important;
 }
 
+.py-md-0 {
+  @media (max-width: 768px) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
 code, pre, samp {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
