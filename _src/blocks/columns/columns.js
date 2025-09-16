@@ -1,5 +1,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
-import { matchHeights, createTag } from '../../scripts/utils/utils.js';
+import {
+  matchHeights, createTag, createNanoBlock, renderNanoBlocks,
+} from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
@@ -26,6 +28,16 @@ function hideExcessElements(carousel) {
 function setActiveButton(button, buttonsWrapper) {
   buttonsWrapper.querySelector('.active-button')?.classList.remove('active-button');
   button.classList.add('active-button');
+}
+
+function renderHighlight(text) {
+  return createTag(
+    'div',
+    {
+      class: 'highlight',
+    },
+    `<span class="highlight-text">${text}</span>`,
+  );
 }
 
 function createNavigationButtons(numberOfSlides, carousel) {
@@ -92,6 +104,8 @@ function setDynamicLink(dynamicLink, dynamicLinks) {
       break;
   }
 }
+
+createNanoBlock('highlight', renderHighlight);
 
 export default function decorate(block) {
   const {
@@ -200,6 +214,8 @@ export default function decorate(block) {
 
     leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
   }
+
+  renderNanoBlocks(block);
 
   const chatOptions = document.querySelector('.chat-options');
   if (chatOptions) {
