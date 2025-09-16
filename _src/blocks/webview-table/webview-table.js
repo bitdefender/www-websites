@@ -39,21 +39,85 @@ function addAccesibilityRoles(block) {
   });
 }
 
+function createPlanSwitcher(radioButtons, prodsNames, prodsUsers, prodsYears, blockLevel = false) {
+  const planSwitcher = document.createElement('div');
+  planSwitcher.classList.add('plan-switcher');
+
+  if (prodsNames === null || prodsUsers === null || prodsYears === null) {
+    const radioArray = radioButtons.split('|').map((item) => item.trim());
+    radioArray.forEach((radio, idx) => {
+      let checked = idx === 0 ? 'checked' : '';
+      const defaultCheck = radio.match(/\[checked\]/g);
+      if (defaultCheck) {
+        radio = radio.replace('[checked]', '').trim();
+        checked = 'checked';
+      }
+
+      planSwitcher.innerHTML += `
+      <input
+      type="radio" 
+      id="${idx}-${radio}"
+      name="switcher"
+      value="${radio}" 
+      ${checked}>
+      <label for="${idx}-${radio}" class="radio-label">${radio}</label><br>
+    `;
+    });
+    return planSwitcher;
+  }
+
+  if (radioButtons === null) {
+    radioButtons = 'Annual Plan | Monthly Plan';
+    planSwitcher.classList.add('global-display-none');
+  }
+
+  const radioArray = radioButtons.split('|').map((item) => item.trim());
+  radioArray.forEach((radio, idx) => {
+    const prodName = prodsNames[idx];
+    const prodUser = prodsUsers[idx];
+    const prodYear = prodsYears[idx];
+    let checked = idx === 0 ? 'checked' : '';
+    const defaultCheck = radio.match(/\[checked\]/g);
+    if (defaultCheck) {
+      radio = radio.replace('[checked]', '').trim();
+      checked = 'checked';
+    }
+
+    if (prodName) {
+      planSwitcher.innerHTML += `
+        <input data-store-click-set-product 
+              data-store-product-id="${prodName}" 
+        data-store-product-option="${prodUser}-${prodYear}" 
+        data-store-product-department="consumer" 
+        type="radio" 
+        id="${blockLevel ? 'block-' : ''}${idx}-${prodName.trim()}"
+        name="${blockLevel ? 'block-' : ''}${prodName.trim()}"
+        value="${radio}-${prodName.trim()}" 
+        ${checked}>
+        <label for="${blockLevel ? 'block-' : ''}${idx}-${prodName.trim()}" class="radio-label">${radio}</label><br>
+      `;
+    }
+  });
+
+  return planSwitcher;
+}
+
 function renderPrices(block, metadata) {
   const {
-    products, firstYearText, featuredProduct, currentProduct, saveText,
+    products, secondaryProducts, firstYearText, featuredProduct, currentProduct, saveText,
   } = metadata;
 
   const productsAsList = Array.from(products?.split(','));
+  const secondaryProductsAsList = Array.from(secondaryProducts?.split(','));
   const cells = block.querySelectorAll('div[role="cell"]');
   let index = 0; // Manual index increment
-
   cells.forEach((cell) => {
     // Only process cells that contain the {PRICEBOX} variable
+    const [prodName, prodUsers, prodYears] = productsAsList[index]?.split('/') || [];
+    const [secondaryProdName, secondaryProdUsers, secondaryProdYears] = secondaryProductsAsList[index]?.split('/') || [];
     if (cell.textContent.includes('{PRICEBOX}')) {
       cell.parentElement.classList.add('price-row');
       cell.querySelector('p')?.remove();
-      const [prodName, prodUsers, prodYears] = productsAsList[index]?.split('/') || [];
 
       const buyBox = document.createElement('div');
       buyBox.classList.add('buy-box', 'await-loader');
@@ -71,6 +135,14 @@ function renderPrices(block, metadata) {
         cell.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
         cell.setAttribute('data-store-department', 'consumer');
         cell.setAttribute('data-store-event', 'product-loaded');
+
+        if (secondaryProdName) {
+          const prodsNames = [prodName, secondaryProdName];
+          const prodsUsers = [prodUsers, secondaryProdUsers];
+          const prodsYears = [prodYears, secondaryProdYears];
+          const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears);
+          cell.appendChild(planSwitcher);
+        }
       }
       // Add featured logic if applicable
       if (featuredProduct && isFeatured) {
@@ -86,6 +158,13 @@ function renderPrices(block, metadata) {
         block.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
         block.setAttribute('data-store-department', 'consumer');
         block.setAttribute('data-store-event', 'product-loaded');
+        if (secondaryProdName) {
+          const prodsNames = [prodName, secondaryProdName];
+          const prodsUsers = [prodUsers, secondaryProdUsers];
+          const prodsYears = [prodYears, secondaryProdYears];
+          const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears, true);
+          block.prepend(planSwitcher);
+        }
         savingsTag.innerHTML = `
           <span class="saving-tag-text" data-store-hide="no-price=discounted">
             <span data-store-discount="percentage"></span> ${saveText || ''} 
@@ -219,44 +298,34 @@ function buildTableHeader(block) {
   header.classList.add('webview-comparison-header');
   [...header.children].forEach((headerColumn) => {
     if (headerColumn.textContent.includes('Individual')) {
-      let planSwitcher = createPlanSwitcher(headerColumn.textContent, 'individual', ['Bitdefender Antivirus Plus', 'Bitdefender Antivirus Plus'], ['1', '1'], ['1', '0.08'], 'individual');
+      const planSwitcher = createPlanSwitcher(headerColumn.textContent, null, null, null);
       headerColumn.innerHTML = planSwitcher.outerHTML;
+      const inputs = headerColumn.querySelectorAll('.plan-switcher input');
+      inputs.forEach((input, idx) => {
+        input.addEventListener('click', (event) => {
+          const selectedRadio = event.target;
+          const selectedIndex = Array.from(selectedRadio.closest('.plan-switcher').querySelectorAll('input[type="radio"]')).indexOf(selectedRadio);
+
+          // Find all other plan switchers and select the radio button at the same index
+          document.querySelectorAll('.plan-switcher').forEach((switcher) => {
+            if (switcher !== selectedRadio.closest('.plan-switcher')) {
+              const radioButtons = switcher.querySelectorAll('input[type="radio"]');
+              if (radioButtons[selectedIndex]) {
+                radioButtons[selectedIndex].checked = true;
+                // Trigger change event for store functionality
+                radioButtons[selectedIndex].dispatchEvent(new Event('click', { bubbles: true }));
+              }
+            }
+          });
+        });
+      });
     }
   });
-}
-
-function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = 'default') {
-  const planSwitcher = document.createElement('div');
-  planSwitcher.classList.add('plan-switcher');
-
-  const radioArray = radioButtons.split('|');
-  radioArray.forEach((radio, idx) => {
-    const productName = prodsNames[idx];
-    const prodUser = prodsUsers[idx];
-    const prodYear = prodsYears[idx];
-    let checked = idx === 0 ? 'checked' : '';
-    console.log(radio);
-    const defaultCheck = radio.match(/\[checked\]/g);
-    console.log('defaultCheck', defaultCheck);
-    if (defaultCheck) {
-      radio = radio.replace('[checked]', '');
-      checked = 'checked';
-    }
-
-    if (productName) {
-      planSwitcher.innerHTML += `
-        <input data-store-click-set-product data-store-product-id="${productName}" data-store-product-option="${prodUser}-${prodYear}" data-store-product-department="consumer" type="radio" id="${radio}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${radio}-${productName.trim()}" ${checked}>
-        <label for="${radio}-${productName.trim()}" class="radio-label">${radio}</label><br>
-      `;
-    }
-  });
-
-  return planSwitcher;
 }
 
 export default async function decorate(block) {
   const metadata = block.closest('.section').dataset;
-  buildTableHeader(block);
+  buildTableHeader(block, metadata);
   addAccesibilityRoles(block);
   replaceTableTextToProperCheckmars(block);
 
@@ -271,7 +340,4 @@ export default async function decorate(block) {
 
   // Check and replace privacy-policy link if it gives a 404
   await checkAndReplacePrivacyPolicyLink(block);
-
-  const targetElement = document.querySelector('.webview-table');
-  adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
 }

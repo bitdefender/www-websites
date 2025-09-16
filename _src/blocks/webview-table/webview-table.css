@@ -347,10 +347,8 @@
 .plan-switcher {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
   align-items: center;
   font-weight: bold;
-  margin-top: 16px;
 }
 
 .plan-switcher input[type=radio] {
