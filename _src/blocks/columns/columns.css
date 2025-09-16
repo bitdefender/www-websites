@@ -125,6 +125,31 @@
   color: #006DFF;
 }
 
+.columns .highlight {
+  position: relative;
+  top: -62px;
+  height: 0;
+
+  .highlight-text {
+    height: 30px;
+    background: #1C7928;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: var(--font-weight-bolder);
+    color: #fff;
+    letter-spacing: .96px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+  }
+}
+
+.columns:has(.highlight) > div > div{
+  margin-top: 40px;
+}
+
+
 .creators .columns-container h3 {
   margin-bottom: 0;
   font: normal normal bold 19px / 28px Arial, sans-serif!important;
@@ -2038,6 +2063,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns.carousel > div > div {
     flex: 0 0 98%;
+  }
+
+  .columns .highlight {
+    top: -54px;
   }
 }
 
