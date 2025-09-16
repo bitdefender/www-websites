@@ -18,15 +18,6 @@ function replaceTableTextToProperCheckmars(block) {
     });
 }
 
-function buildTableHeader(block) {
-  const header = block.querySelector('div:nth-of-type(2)');
-
-  // Ensure the header exists before trying to modify it
-  if (header) {
-    header.classList.add('webview-comparison-header');
-  }
-}
-
 function addAccesibilityRoles(block) {
   block.setAttribute('role', 'table');
   const firstDiv = block.querySelector('div:first-of-type');
@@ -221,11 +212,54 @@ async function checkAndReplacePrivacyPolicyLink(block) {
   }
 }
 
+function buildTableHeader(block) {
+  const header = block.querySelector('div:nth-of-type(2)');
+  if (!header) return;
+
+  header.classList.add('webview-comparison-header');
+  [...header.children].forEach((headerColumn) => {
+    if (headerColumn.textContent.includes('Individual')) {
+      let planSwitcher = createPlanSwitcher(headerColumn.textContent, 'individual', ['Bitdefender Antivirus Plus', 'Bitdefender Antivirus Plus'], ['1', '1'], ['1', '0.08'], 'individual');
+      headerColumn.innerHTML = planSwitcher.outerHTML;
+    }
+  });
+}
+
+function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = 'default') {
+  const planSwitcher = document.createElement('div');
+  planSwitcher.classList.add('plan-switcher');
+
+  const radioArray = radioButtons.split('|');
+  radioArray.forEach((radio, idx) => {
+    const productName = prodsNames[idx];
+    const prodUser = prodsUsers[idx];
+    const prodYear = prodsYears[idx];
+    let checked = idx === 0 ? 'checked' : '';
+    console.log(radio);
+    const defaultCheck = radio.match(/\[checked\]/g);
+    console.log('defaultCheck', defaultCheck);
+    if (defaultCheck) {
+      radio = radio.replace('[checked]', '');
+      checked = 'checked';
+    }
+
+    if (productName) {
+      planSwitcher.innerHTML += `
+        <input data-store-click-set-product data-store-product-id="${productName}" data-store-product-option="${prodUser}-${prodYear}" data-store-product-department="consumer" type="radio" id="${radio}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${radio}-${productName.trim()}" ${checked}>
+        <label for="${radio}-${productName.trim()}" class="radio-label">${radio}</label><br>
+      `;
+    }
+  });
+
+  return planSwitcher;
+}
+
 export default async function decorate(block) {
   const metadata = block.closest('.section').dataset;
   buildTableHeader(block);
   addAccesibilityRoles(block);
   replaceTableTextToProperCheckmars(block);
+
   renderPrices(block, metadata);
   matchHeights(block, '.savings-tag-container');
   matchHeights(block, '.buy-box');
