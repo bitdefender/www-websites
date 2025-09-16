@@ -562,7 +562,7 @@ async function runDefaultHeaderLogic(block) {
       nav.classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
-      loginFunctionality(shadowRoot);
+      await loginFunctionality(shadowRoot);
       return;
     }
 

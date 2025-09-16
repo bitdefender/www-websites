@@ -717,7 +717,9 @@ async function loadPage() {
   //     const { visitorId } = result;
   //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
   //   });
-  AdobeDataLayerService.push(new PageLoadedEvent());
+  if (!window.BD.loginAttempted) {
+    AdobeDataLayerService.push(new PageLoadedEvent());
+  }
 
   loadDelayed();
 }
