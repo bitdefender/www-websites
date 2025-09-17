@@ -215,7 +215,7 @@ export default function decorate(block) {
     leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
   }
 
-  renderNanoBlocks(block);
+  renderNanoBlocks(block.closest('.section'), undefined, undefined, block);
 
   const chatOptions = document.querySelector('.chat-options');
   if (chatOptions) {
