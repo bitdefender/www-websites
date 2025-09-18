@@ -18,10 +18,10 @@ export default async function decorate(block) {
       <p class="title">${slide.children[0]?.children[1]?.innerHTML}</p>
 
       ${isTestimonials ? `
-        <div class="subtitle-secondary">${slide.children[0]?.children[2]?.innerHTML}</div>
-        <div class="subtitle">${slide.children[0]?.children[3]?.innerHTML}</div>
+        <div class="subtitle-secondary">${slide.children[0]?.children[2]?.innerHTML ?? ''}</div>
+        <div class="subtitle">${slide.children[0]?.children[3]?.innerHTML ?? ''}</div>
       ` : `
-        <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML}</div>
+        <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML ?? ''}</div>
       `}
     </li>
   `).join('');
