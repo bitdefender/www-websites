@@ -15,7 +15,7 @@ export default async function decorate(block) {
         </div>
       ` : slide.children[0]?.children[0]?.innerHTML}
 
-      <p class="title">${slide.children[0]?.children[1]?.outerHTML}</p>
+      <p class="title">${slide.children[0]?.children[1]?.innerHTML}</p>
 
       ${isTestimonials ? `
         <div class="subtitle-secondary">${slide.children[0]?.children[2]?.innerHTML}</div>
