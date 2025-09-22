@@ -105,8 +105,48 @@ function setDynamicLink(dynamicLink, dynamicLinks) {
   }
 }
 
-createNanoBlock('highlight', renderHighlight);
+const slug = s => s?.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')||'tab';
+function setupTabs({ block, firstTab }) {
+  const section = block.closest('.section');
+  const wrapper = block.closest('.columns-wrapper');
+  
+  const label = wrapper.previousElementSibling?.closest('.default-content-wrapper')?.textContent?.trim() || 'Tab';
+  const id = slug(label);
+  section.classList.add('columns-tabs');
 
+  if (!block.closest('.section').classList.contains('hide-tabs')) {
+    let tabsList = section.querySelector('.tabsSection');
+    if (!tabsList) {
+      tabsList = document.createElement('div');
+      tabsList.className = 'tabsSection default-content-wrapper';
+      tabsList.addEventListener('click', (e) => {
+        const tab = e.target.closest('span[data-tab]'); 
+        const showAll = tab.dataset.tab === firstTab.toLowerCase();
+        section.querySelectorAll('.section-el').forEach((el) => el.hidden =! showAll && !el.classList.contains(`section-${tab.dataset.tab}`));
+        tabsList.querySelectorAll('span').forEach((el) => el.classList.toggle('active', el === tab));
+      });
+      // add All tab once
+      const all = document.createElement('span');
+      all.className = 'tag active';
+      all.dataset.tab = firstTab.toLowerCase();
+      all.textContent = firstTab;
+      tabsList.appendChild(all);
+      section.prepend(tabsList);
+    }
+  
+    const tab = document.createElement('span');
+    tab.className = 'tag';
+    tab.dataset.tab = id;
+    tab.textContent = label;
+    tabsList.appendChild(tab);
+  }
+
+  wrapper.classList.add('section-el',`section-${id}`);
+  wrapper.previousElementSibling?.classList.add('section-el',`section-${id}`);
+}
+
+
+let count_blocks = 0
 export default function decorate(block) {
   count_blocks++;
   const {
