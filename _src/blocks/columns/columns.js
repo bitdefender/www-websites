@@ -145,7 +145,6 @@ function setupTabs({ block, firstTab }) {
   wrapper.previousElementSibling?.classList.add('section-el',`section-${id}`);
 }
 
-
 let count_blocks = 0
 export default function decorate(block) {
   count_blocks++;

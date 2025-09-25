@@ -1050,15 +1050,19 @@
 }
 
 .columns-container .block.sidebar > div > div.columns-left-col h1 {
-    display: none;
-  }
-
-  .columns-container .block.sidebar > div > div:last-of-type h1 {
-    display: block;
-  }
+  display: none;
+}
 
 .columns-container .block.sidebar > div > div:last-of-type {
   width: 100%;
+}
+
+.columns-container .block.sidebar > div > div:last-of-type h1 {
+  display: block;
+}
+
+.columns-container .block.sidebar > div > div:last-of-type img {
+  border-radius: 16px;
 }
 
 .columns-container .block.sidebar > div > div:last-of-type p.button-container * {
@@ -3232,6 +3236,14 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.section.resources-design2 {
+  padding: 64px 0 80px!important;
+}
+
+.columns-tabs {
+  padding-top: 0!important;
+}
+
 .columns-tabs.hide-tabs {
   padding-top: 0;
   padding-bottom: 0;
@@ -3247,7 +3259,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   border-radius: 32px;
   cursor: pointer;
   transition: all .4s ease-in-out;
-  margin-bottom: 10px;
+  margin: 0 16px 10px 0;
 }
 
 .columns-tabs .tabsSection span.tag:hover, .columns-tabs .tabsSection span.tag.active {
@@ -3256,6 +3268,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   border: 1px solid #1A1919;
   background-color: #1A1919;
   transition: all .4s ease-in-out;
+}
+
+.columns-tabs .block img {
+  border-radius: 16px;
 }
 
 .columns-tabs .block h2 {
@@ -3371,9 +3387,38 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 @media (max-width: 767px) {
+  .section.resources-design2 {
+    padding: 48px 0 56px!important;
+  }
+
+  .columns-tabs {
+    padding-top: 0!important;
+  }
+
   .columns-tabs .block > div {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 2em;
+  }
+
+  .columns-container .block.sidebar h1 {
+    font-size: var(--heading-font-size-l);
+    line-height: 38px;
+  }
+
+  .columns-container .block.sidebar .columns-left-col ul, .columns-container .block.sidebar .columns-left-col ul li {
+    padding-left: 0;
+  }
+
+  .trusted-main-carousel-container.resources-design {
+    padding: 80px 0 48px;
+  }
+  
+  .trusted-main-carousel-container.resources-design .carousel-container li > div.left-content h2 {
+    font-size: 30px;
+  }
+
+  .trusted-main-carousel-container.resources-design .carousel-container li > div.left-content {
+    height: 350px;
   }
 }
