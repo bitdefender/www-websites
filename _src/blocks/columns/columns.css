@@ -1772,7 +1772,7 @@
                 justify-content: center;
 
                 .button-text {
-                  font-weight: 700;
+                  font-weight: 500;
                 }
               }
             }
@@ -1855,7 +1855,7 @@
                 font-family: var(--body-font-family);
                 font-size: var(--body-font-size-s);
                 font-style: normal;
-                font-weight: 700;
+                font-weight: 500;
                 -webkit-font-smoothing: antialiased;
                 display: inline-flex;
                 align-items: center;
