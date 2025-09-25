@@ -2311,6 +2311,12 @@
       .columns-wrapper>.columns {
         background-color: #F6F6F6;
         border-radius: 10px;
+        width: 100%;
+
+        > div {
+          height: 100%;
+          align-items: center;
+        }
 
         div {
           padding: 24px;
@@ -2411,6 +2417,7 @@
 
             &:first-of-type {
               flex-direction: column-reverse;
+              flex: 0 0 320px;
 
               table:first-of-type {
                 td {
@@ -2644,8 +2651,9 @@
     &.dex-carousel-cards-individual,
     &.dex-carousel-cards-family {
       .columns-wrapper>.columns>div {
-        padding: 37px 104px;
+        padding: 37px 1em;
         height: 100%;
+        justify-content: center;
         align-items: center;
       }
     }
