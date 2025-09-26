@@ -1854,6 +1854,7 @@
                 margin-top: 10px;
                 font-family: var(--body-font-family);
                 font-size: var(--body-font-size-s);
+                line-height: 18px;
                 font-style: normal;
                 font-weight: 500;
                 -webkit-font-smoothing: antialiased;
