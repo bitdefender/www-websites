@@ -7,7 +7,35 @@ export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
   const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
   const isTrusted = block.classList.contains('trusted-carousel');
-  const slidesHTML = slides.map((slide) => `
+const slidesHTML = slides.map((slide) => {
+  if (isTestimonials && block.classList.contains('reviews')) {
+    return `
+  <li class="carousel-item glide__slide">
+    <div class="img-container">
+      ${slide.children[0]?.children[0]?.innerHTML ?? ''}
+    </div>
+
+    <p class="title">${slide.children[0]?.children[1]?.outerHTML ?? ''}</p>
+
+    <div class="subtitle-secondary">${
+      ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
+        ? (slide.children[0]?.children[2]?.innerHTML || '')
+        : '' 
+    }</div>
+
+    <div class="subtitle">${
+      (slide.children[0]?.children[3] != null)
+        ? (slide.children[0]?.children[3]?.innerHTML || '')
+        : (
+            ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
+              ? ''  
+              : (slide.children[0]?.children[2]?.innerHTML || '') 
+          )
+    }</div>
+  </li>
+`;
+  }
+  return `
     <li class="carousel-item glide__slide">
       ${isTestimonials ? `
         <div class="img-container">
@@ -24,7 +52,8 @@ export default async function decorate(block) {
         <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML}</div>
       `}
     </li>
-  `).join('');
+  `;
+}).join('');
 
   // Only one carousel-nav block: your original one with div.navigation-item
   const navDotsHTML = slides.map((_, i) => `
@@ -81,18 +110,29 @@ export default async function decorate(block) {
   decorateIcons(block);
 
   block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
+  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
+  block.querySelectorAll('.carousel-item .subtitle, .carousel-item .subtitle-secondary')
+    .forEach((el) => { if (el && el.textContent.trim() === 'undefined') el.textContent = ''; });
+}
 
   const glide = new Glide(block.querySelector('.glide'), {
-    type: 'carousel',
+    type: (slides.length > (isTrusted ? 1 : 4)) ? 'carousel' : 'slider',
     gap: 20,
-    perView: isTrusted ? 1 : 4,
+    perView: isTrusted ? 1 : Math.min(slides.length, 4),
+    rewind: false,
+    bound: slides.length <= (isTrusted ? 1 : 4),
     breakpoints: isTrusted
       ? {}
       : {
-        991: { perView: 2 },
+        991: { perView: Math.min(slides.length, 2) },
         767: { perView: 1 },
       },
   });
+  if (slides.length > (isTrusted ? 1 : 4)) {
+  block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = 'flex');
+} else {
+  block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = 'none');
+}
 
   glide.mount();
 

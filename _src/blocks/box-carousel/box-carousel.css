@@ -250,6 +250,7 @@
 .box-carousel-container .box-carousel.reviews .img-container hr {
     margin-top: 16px;
     margin-bottom: 16px;
+    width: 100%;
 }
 
 .box-carousel-container ul {
@@ -295,9 +296,13 @@
 }
 
 .box-carousel-container.testimonials .box-carousel.reviews .carousel-item {
-    grid-row: span 6;
+    grid-row: span 9;
     gap: 0;
     text-align: left;
+}
+
+.trusted .box-carousel-container .subtitle-secondary{
+  transform: translateY(-40%);
 }
 
 @media screen and (min-width: 768px) {
@@ -313,6 +318,9 @@
     .box-carousel-container .box-carousel.reviews .img-container {
         width: 100%;
         font-size: 22px;
+        display:grid;
+        grid-template-rows:subgrid;
+        grid-row: span 3;
     }
 
     .box-carousel-container.testimonials .trusted-carousel .carousel-container {
