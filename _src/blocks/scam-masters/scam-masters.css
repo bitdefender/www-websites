@@ -494,6 +494,11 @@
     }
 }
 
+.smaller-title .scam-masters .start-page > div:first-child h1 {
+    font-size: 60px;
+    line-height: 65px;
+}
+
 .scam-masters .result > div {
    height: 700px;
 }
