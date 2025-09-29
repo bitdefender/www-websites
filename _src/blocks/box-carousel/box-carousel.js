@@ -60,7 +60,7 @@ const slidesHTML = slides.map((slide) => {
     <div class="navigation-item ${i === 0 ? 'active' : ''}" data-index="${i}"></div>
   `).join('');
 
-  const arrowsHTML = isView('desktop') ? `
+  const arrowsHTML =`
       <a href class="arrow disabled left-arrow">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -85,7 +85,7 @@ const slidesHTML = slides.map((slide) => {
           </g>
         </svg>
       </a>
-  ` : '';
+  `;
 
   block.classList.add('default-content-wrapper');
   block.innerHTML = `
@@ -110,9 +110,13 @@ const slidesHTML = slides.map((slide) => {
   decorateIcons(block);
 
   block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
+  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img'))
+     block.querySelectorAll('.carousel-item .title')
+     .forEach(el=>el.style.display=(window.innerWidth<=393?'none':''));
+
   if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
-  block.querySelectorAll('.carousel-item .subtitle, .carousel-item .subtitle-secondary')
-    .forEach((el) => { if (el && el.textContent.trim() === 'undefined') el.textContent = ''; });
+     block.querySelectorAll('.carousel-item .subtitle, .carousel-item .subtitle-secondary')
+     .forEach((el) => { if (el && el.textContent.trim() === 'undefined') el.textContent = ''; });
 }
 
   const glide = new Glide(block.querySelector('.glide'), {
@@ -128,11 +132,7 @@ const slidesHTML = slides.map((slide) => {
         767: { perView: 1 },
       },
   });
-  if (slides.length > (isTrusted ? 1 : 4)) {
-  block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = 'flex');
-} else {
-  block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = 'none');
-}
+
 
   glide.mount();
 
@@ -199,7 +199,21 @@ const slidesHTML = slides.map((slide) => {
 
   window.addEventListener('resize', debounce(() => {
     glide.update();
-  }, 250));
+    updateNav();
+    updateArrows();
+    
+  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) 
+    block.querySelectorAll('.carousel-item .title')
+    .forEach(el=>el.style.display=(window.innerWidth<=393?'none':''));
+
+  if (window.innerWidth <= 767) {
+    block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = (slides.length > 1) ? 'flex' : 'none');
+  } else if (window.innerWidth <= 991) {
+    block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = (slides.length > 2) ? 'flex' : 'none');
+  } else {
+    block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = (slides.length > 4) ? 'flex' : 'none');
+  }
+}, 250));
 
   window.dispatchEvent(new Event('resize'));
 }

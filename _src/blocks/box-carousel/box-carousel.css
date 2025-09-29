@@ -320,7 +320,7 @@
         font-size: 22px;
         display:grid;
         grid-template-rows:subgrid;
-        grid-row: span 3;
+        grid-row: span 2;
     }
 
     .box-carousel-container.testimonials .trusted-carousel .carousel-container {
@@ -373,3 +373,8 @@
         box-shadow: 0 3px 40px #006EFFF2;
     }
 }
+
+@media screen and (max-width: 767px){
+    .trusted .box-carousel-container .subtitle-secondary{
+        transform: translateY(-80%);    
+    }}
