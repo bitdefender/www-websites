@@ -363,6 +363,10 @@
         font-size: 18px;
     }
 
+    .box-carousel-container.testimonials .carousel-item .subtitle-secondary::before{
+        content:none;
+    }
+
     .box-carousel-container.testimonials .trusted-carousel .carousel-container .carousel-nav {
         display: flex;
     }
@@ -374,7 +378,12 @@
     }
 }
 
-@media screen and (max-width: 767px){
+@media screen and (max-width: 768px){
     .trusted .box-carousel-container .subtitle-secondary{
         transform: translateY(-80%);    
-    }}
+    }
+    .box-carousel-container.testimonials .carousel-item .subtitle-secondary::before{
+        content:none;
+    }
+
+}

@@ -35,24 +35,55 @@ const slidesHTML = slides.map((slide) => {
   </li>
 `;
   }
-  return `
-    <li class="carousel-item glide__slide">
-      ${isTestimonials ? `
-        <div class="img-container">
-          ${slide.children[0]?.children[0]?.innerHTML}
-        </div>
-      ` : slide.children[0]?.children[0]?.innerHTML}
+return `
+  <li class="carousel-item glide__slide">
+    ${isTestimonials ? `
+      <div class="img-container">${
+        (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
+          ? (slide.children[0]?.children[0]?.innerHTML ?? '')
+          : ''
+      }</div>
+    ` : (slide.children[0]?.children[0]?.innerHTML ?? '')}
 
-      <p class="title">${slide.children[0]?.children[1]?.outerHTML}</p>
+    <p class="title">${
+      isTestimonials
+        ? (
+            (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
+              ? (slide.children[0]?.children[1]?.outerHTML ?? slide.children[0]?.children[0]?.outerHTML ?? '')
+              : (slide.children[0]?.children[0]?.outerHTML ?? '')
+          )
+        : (slide.children[0]?.children[1]?.outerHTML ?? '')
+    }</p>
 
-      ${isTestimonials ? `
-        <div class="subtitle-secondary">${slide.children[0]?.children[2]?.innerHTML}</div>
-        <div class="subtitle">${slide.children[0]?.children[3]?.innerHTML}</div>
-      ` : `
-        <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML}</div>
-      `}
-    </li>
-  `;
+    ${isTestimonials ? `
+      <div class="subtitle-secondary">${
+  (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
+    ? ( document.body.classList.contains('trusted')
+          ? (slide.children[0]?.children[2]?.innerHTML)        
+          : (slide.children[0]?.children[2]?.innerHTML ?? '')   
+      )
+    : ( document.body.classList.contains('trusted')
+          ? (slide.children[0]?.children[1]?.innerHTML)
+          : (slide.children[0]?.children[1]?.innerHTML ?? '')
+      )
+}</div>
+
+<div class="subtitle">${
+  (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
+    ? ( document.body.classList.contains('trusted')
+          ? (slide.children[0]?.children[3]?.innerHTML)        
+          : (slide.children[0]?.children[3]?.innerHTML ?? '')   
+      )
+    : ( document.body.classList.contains('trusted')
+          ? (slide.children[0]?.children[2]?.innerHTML)
+          : (slide.children[0]?.children[2]?.innerHTML ?? '')
+      )
+}</div>
+    ` : `
+      <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML ?? ''}</div>
+    `}
+  </li>
+`;
 }).join('');
 
   // Only one carousel-nav block: your original one with div.navigation-item
@@ -206,6 +237,10 @@ const slidesHTML = slides.map((slide) => {
     block.querySelectorAll('.carousel-item .title')
     .forEach(el=>el.style.display=(window.innerWidth<=393?'none':''));
 
+  if (isTestimonials && location.pathname.includes('box-carousel-testimonials-new')) {
+    block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = 'none');
+    return; 
+  }
   if (window.innerWidth <= 767) {
     block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = (slides.length > 1) ? 'flex' : 'none');
   } else if (window.innerWidth <= 991) {
