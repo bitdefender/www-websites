@@ -3251,7 +3251,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns-tabs .tabsSection span.tag {
   display: inline-block;
-  height: 23px;
   font-size: 14px;
   color: #525252;
   border: 1px solid #A3A3A3;
@@ -3260,6 +3259,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   cursor: pointer;
   transition: all .4s ease-in-out;
   margin: 0 16px 10px 0;
+  padding: 4px 16px;
 }
 
 .columns-tabs .tabsSection span.tag:hover, .columns-tabs .tabsSection span.tag.active {
