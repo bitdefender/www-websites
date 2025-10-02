@@ -7,9 +7,9 @@ export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
   const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
   const isTrusted = block.classList.contains('trusted-carousel');
-const slidesHTML = slides.map((slide) => {
-  if (isTestimonials && block.classList.contains('reviews')) {
-    return `
+  const slidesHTML = slides.map((slide) => {
+    if (isTestimonials && block.classList.contains('reviews')) {
+      return `
   <li class="carousel-item glide__slide">
     <div class="img-container">
       ${slide.children[0]?.children[0]?.innerHTML ?? ''}
@@ -18,80 +18,80 @@ const slidesHTML = slides.map((slide) => {
     <p class="title">${slide.children[0]?.children[1]?.outerHTML ?? ''}</p>
 
     <div class="subtitle-secondary">${
-      ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
-        ? (slide.children[0]?.children[2]?.innerHTML || '')
-        : '' 
-    }</div>
+  ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
+    ? (slide.children[0]?.children[2]?.innerHTML || '')
+    : ''
+}</div>
 
     <div class="subtitle">${
-      (slide.children[0]?.children[3] != null)
-        ? (slide.children[0]?.children[3]?.innerHTML || '')
-        : (
-            ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
-              ? ''  
-              : (slide.children[0]?.children[2]?.innerHTML || '') 
-          )
-    }</div>
+  (slide.children[0]?.children[3] != null)
+    ? (slide.children[0]?.children[3]?.innerHTML || '')
+    : (
+      ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
+        ? ''
+        : (slide.children[0]?.children[2]?.innerHTML || '')
+    )
+}</div>
   </li>
 `;
-  }
-return `
+    }
+    return `
   <li class="carousel-item glide__slide">
     ${isTestimonials ? `
       <div class="img-container">${
-        (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
-          ? (slide.children[0]?.children[0]?.innerHTML ?? '')
-          : ''
-      }</div>
+  (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
+    ? (slide.children[0]?.children[0]?.innerHTML ?? '')
+    : ''
+}</div>
     ` : (slide.children[0]?.children[0]?.innerHTML ?? '')}
 
     <p class="title">${
-      isTestimonials
-        ? (
-            (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
-              ? (slide.children[0]?.children[1]?.outerHTML ?? slide.children[0]?.children[0]?.outerHTML ?? '')
-              : (slide.children[0]?.children[0]?.outerHTML ?? '')
-          )
-        : (slide.children[0]?.children[1]?.outerHTML ?? '')
-    }</p>
+  isTestimonials
+    ? (
+      (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
+        ? (slide.children[0]?.children[1]?.outerHTML ?? slide.children[0]?.children[0]?.outerHTML ?? '')
+        : (slide.children[0]?.children[0]?.outerHTML ?? '')
+    )
+    : (slide.children[0]?.children[1]?.outerHTML ?? '')
+}</p>
 
     ${isTestimonials ? `
       <div class="subtitle-secondary">${
   (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
-    ? ( document.body.classList.contains('trusted')
-          ? (slide.children[0]?.children[2]?.innerHTML)        
-          : (slide.children[0]?.children[2]?.innerHTML ?? '')   
-      )
-    : ( document.body.classList.contains('trusted')
-          ? (slide.children[0]?.children[1]?.innerHTML)
-          : (slide.children[0]?.children[1]?.innerHTML ?? '')
-      )
+    ? (document.body.classList.contains('trusted')
+      ? (slide.children[0]?.children[2]?.innerHTML)
+      : (slide.children[0]?.children[2]?.innerHTML ?? '')
+    )
+    : (document.body.classList.contains('trusted')
+      ? (slide.children[0]?.children[1]?.innerHTML)
+      : (slide.children[0]?.children[1]?.innerHTML ?? '')
+    )
 }</div>
 
 <div class="subtitle">${
   (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
-    ? ( document.body.classList.contains('trusted')
-          ? (slide.children[0]?.children[3]?.innerHTML)        
-          : (slide.children[0]?.children[3]?.innerHTML ?? '')   
-      )
-    : ( document.body.classList.contains('trusted')
-          ? (slide.children[0]?.children[2]?.innerHTML)
-          : (slide.children[0]?.children[2]?.innerHTML ?? '')
-      )
+    ? (document.body.classList.contains('trusted')
+      ? (slide.children[0]?.children[3]?.innerHTML)
+      : (slide.children[0]?.children[3]?.innerHTML ?? '')
+    )
+    : (document.body.classList.contains('trusted')
+      ? (slide.children[0]?.children[2]?.innerHTML)
+      : (slide.children[0]?.children[2]?.innerHTML ?? '')
+    )
 }</div>
     ` : `
       <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML ?? ''}</div>
     `}
   </li>
 `;
-}).join('');
+  }).join('');
 
   // Only one carousel-nav block: your original one with div.navigation-item
   const navDotsHTML = slides.map((_, i) => `
     <div class="navigation-item ${i === 0 ? 'active' : ''}" data-index="${i}"></div>
   `).join('');
 
-  const arrowsHTML =`
+  const arrowsHTML = `
       <a href class="arrow disabled left-arrow">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -141,14 +141,15 @@ return `
   decorateIcons(block);
 
   block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
-  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img'))
-     block.querySelectorAll('.carousel-item .title')
-     .forEach(el=>el.style.display=(window.innerWidth<=393?'none':''));
+  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
+    block.querySelectorAll('.carousel-item .title')
+      .forEach((el) => el.style.display = (window.innerWidth <= 393 ? 'none' : ''));
+  }
 
   if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
-     block.querySelectorAll('.carousel-item .subtitle, .carousel-item .subtitle-secondary')
-     .forEach((el) => { if (el && el.textContent.trim() === 'undefined') el.textContent = ''; });
-}
+    block.querySelectorAll('.carousel-item .subtitle, .carousel-item .subtitle-secondary')
+      .forEach((el) => { if (el && el.textContent.trim() === 'undefined') el.textContent = ''; });
+  }
 
   const glide = new Glide(block.querySelector('.glide'), {
     type: (slides.length > (isTrusted ? 1 : 4)) ? 'carousel' : 'slider',
@@ -163,7 +164,6 @@ return `
         767: { perView: 1 },
       },
   });
-
 
   glide.mount();
 
@@ -232,23 +232,25 @@ return `
     glide.update();
     updateNav();
     updateArrows();
-    
-  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) 
-    block.querySelectorAll('.carousel-item .title')
-    .forEach(el=>el.style.display=(window.innerWidth<=393?'none':''));
+    const arrowsEl = block.querySelector('.arrows');
 
-  if (isTestimonials && location.pathname.includes('box-carousel-testimonials-new')) {
-    block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = 'none');
-    return; 
-  }
-  if (window.innerWidth <= 767) {
-    block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = (slides.length > 1) ? 'flex' : 'none');
-  } else if (window.innerWidth <= 991) {
-    block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = (slides.length > 2) ? 'flex' : 'none');
-  } else {
-    block.querySelector('.arrows') && (block.querySelector('.arrows').style.display = (slides.length > 4) ? 'flex' : 'none');
-  }
-}, 250));
+    if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
+      block.querySelectorAll('.carousel-item .title')
+        .forEach((el) => el.style.display = (window.innerWidth <= 393 ? 'none' : ''));
+    }
+
+    if (isTestimonials && location.pathname.includes('box-carousel-testimonials-new') && arrowsEl) {
+      arrowsEl.style.display = 'none';
+      return;
+    }
+    if (window.innerWidth <= 767) {
+      arrowsEl.style.display = (slides.length > 1) ? 'flex' : 'none';
+    } else if (window.innerWidth <= 991) {
+      arrowsEl.style.display = (slides.length > 2) ? 'flex' : 'none';
+    } else {
+      arrowsEl.style.display = (slides.length > 4) ? 'flex' : 'none';
+    }
+  }, 250));
 
   window.dispatchEvent(new Event('resize'));
 }

@@ -301,17 +301,6 @@
     text-align: left;
 }
 
-.box-carousel-container .box-carousel.reviews .carousel-item > table {
-  width: 100% !important;
-  table-layout: fixed;
-  border-collapse: collapse;
-}
-
-.box-carousel-container .box-carousel.reviews .carousel-item > table td:last-child {
-  text-align: right;
-  white-space: nowrap;
-}
-
 .trusted .box-carousel-container .subtitle-secondary{
   transform: translateY(-40%);
 }
@@ -393,6 +382,7 @@
     .trusted .box-carousel-container .subtitle-secondary{
         transform: translateY(-80%);    
     }
+
     .box-carousel-container.testimonials .carousel-item .subtitle-secondary::before{
         content:none;
     }

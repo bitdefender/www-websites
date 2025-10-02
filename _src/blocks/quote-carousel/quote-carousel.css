@@ -21,9 +21,11 @@ main .quote-carousel-container .has-multi-imgs .left-col, main .quote-carousel-c
 main .quote-carousel-container .has-multi-imgs .right-col picture {
   display: none;
 }
+
 main .quote-carousel-container .has-multi-imgs .right-col picture img {
   height: auto;
 }
+
 main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type {
   display: block;
 }
@@ -233,11 +235,13 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
   main .quote-carousel {
     margin-top: 0;
   }
+
   main .quote-carousel-container .has-multi-imgs .right-col picture img {
     width: 100%;
     height: auto;
   }
 }
+
 @media (max-width: 767px) {
   main .quote-carousel-container .has-multi-imgs .right-col picture img {
     width: 100%;
