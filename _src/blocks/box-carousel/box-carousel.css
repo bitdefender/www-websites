@@ -90,15 +90,6 @@
     min-height: fit-content;
 }
 
-.box-carousel-container.testimonials .box-carousel.reviews .glide__slides {
-  align-items: start !important;
-}
-
-.box-carousel-container.testimonials .box-carousel.reviews .glide__slide.carousel-item {
-  display: flex !important;           
-  height: auto !important;            
-}
-
 .box-carousel-container .carousel-item:first-child {
     margin-left: 0;
 }
