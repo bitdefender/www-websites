@@ -176,7 +176,6 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   }
 }
 
-
 @media (min-width: 767px){
   .image-columns.quotes > div {
     flex-direction: unset;
