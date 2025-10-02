@@ -1,7 +1,7 @@
+/* eslint-disable no-nested-ternary */
 import Glide from '@glidejs/glide';
 import { debounce } from '@repobit/dex-utils';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
@@ -143,6 +143,7 @@ export default async function decorate(block) {
   block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
   if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
     block.querySelectorAll('.carousel-item .title')
+      // eslint-disable-next-line no-return-assign
       .forEach((el) => el.style.display = (window.innerWidth <= 393 ? 'none' : ''));
   }
 
@@ -236,10 +237,11 @@ export default async function decorate(block) {
 
     if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
       block.querySelectorAll('.carousel-item .title')
+        // eslint-disable-next-line no-return-assign
         .forEach((el) => el.style.display = (window.innerWidth <= 393 ? 'none' : ''));
     }
 
-    if (isTestimonials && location.pathname.includes('box-carousel-testimonials-new') && arrowsEl) {
+    if (isTestimonials && window.pathname.includes('box-carousel-testimonials-new') && arrowsEl) {
       arrowsEl.style.display = 'none';
       return;
     }
