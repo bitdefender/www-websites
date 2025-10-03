@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import Glide from '@glidejs/glide';
 import { debounce } from '@repobit/dex-utils';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
@@ -24,13 +23,15 @@ export default async function decorate(block) {
 }</div>
 
     <div class="subtitle">${
-  (slide.children[0]?.children[3] != null)
-    ? (slide.children[0]?.children[3]?.innerHTML || '')
-    : (
-      ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
-        ? ''
-        : (slide.children[0]?.children[2]?.innerHTML || '')
-    )
+  (() => {
+    if (slide.children[0]?.children[3] != null) {
+      return slide.children[0]?.children[3]?.innerHTML || '';
+    }
+    if ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong')) {
+      return '';
+    }
+    return slide.children[0]?.children[2]?.innerHTML || '';
+  })()
 }</div>
   </li>
 `;
@@ -46,38 +47,48 @@ export default async function decorate(block) {
     ` : (slide.children[0]?.children[0]?.innerHTML ?? '')}
 
     <p class="title">${
-  isTestimonials
-    ? (
-      (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
-        ? (slide.children[0]?.children[1]?.outerHTML ?? slide.children[0]?.children[0]?.outerHTML ?? '')
-        : (slide.children[0]?.children[0]?.outerHTML ?? '')
-    )
-    : (slide.children[0]?.children[1]?.outerHTML ?? '')
+  (() => {
+    if (isTestimonials) {
+      if (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon')) {
+        return slide.children[0]?.children[1]?.outerHTML ?? slide.children[0]?.children[0]?.outerHTML ?? '';
+      }
+      return slide.children[0]?.children[0]?.outerHTML ?? '';
+    }
+    return slide.children[0]?.children[1]?.outerHTML ?? '';
+  })()
 }</p>
 
     ${isTestimonials ? `
       <div class="subtitle-secondary">${
-  (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
-    ? (document.body.classList.contains('trusted')
-      ? (slide.children[0]?.children[2]?.innerHTML)
-      : (slide.children[0]?.children[2]?.innerHTML ?? '')
-    )
-    : (document.body.classList.contains('trusted')
-      ? (slide.children[0]?.children[1]?.innerHTML)
-      : (slide.children[0]?.children[1]?.innerHTML ?? '')
-    )
+  (() => {
+    const hasImage = slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon');
+    if (hasImage) {
+      if (document.body.classList.contains('trusted')) {
+        return slide.children[0]?.children[2]?.innerHTML;
+      }
+      return slide.children[0]?.children[2]?.innerHTML ?? '';
+    }
+    if (document.body.classList.contains('trusted')) {
+      return slide.children[0]?.children[1]?.innerHTML;
+    }
+    return slide.children[0]?.children[1]?.innerHTML ?? '';
+  })()
 }</div>
 
 <div class="subtitle">${
-  (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
-    ? (document.body.classList.contains('trusted')
-      ? (slide.children[0]?.children[3]?.innerHTML)
-      : (slide.children[0]?.children[3]?.innerHTML ?? '')
-    )
-    : (document.body.classList.contains('trusted')
-      ? (slide.children[0]?.children[2]?.innerHTML)
-      : (slide.children[0]?.children[2]?.innerHTML ?? '')
-    )
+  (() => {
+    const hasImage = slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon');
+    if (hasImage) {
+      if (document.body.classList.contains('trusted')) {
+        return slide.children[0]?.children[3]?.innerHTML;
+      }
+      return slide.children[0]?.children[3]?.innerHTML ?? '';
+    }
+    if (document.body.classList.contains('trusted')) {
+      return slide.children[0]?.children[2]?.innerHTML;
+    }
+    return slide.children[0]?.children[2]?.innerHTML ?? '';
+  })()
 }</div>
     ` : `
       <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML ?? ''}</div>
@@ -142,12 +153,6 @@ export default async function decorate(block) {
 
   block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
   if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
-    block.querySelectorAll('.carousel-item .title')
-      // eslint-disable-next-line no-return-assign
-      .forEach((el) => el.style.display = (window.innerWidth <= 393 ? 'none' : ''));
-  }
-
-  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
     block.querySelectorAll('.carousel-item .subtitle, .carousel-item .subtitle-secondary')
       .forEach((el) => { if (el && el.textContent.trim() === 'undefined') el.textContent = ''; });
   }
@@ -165,6 +170,11 @@ export default async function decorate(block) {
         767: { perView: 1 },
       },
   });
+
+  const arrowsEl = block.querySelector('.arrows');
+  const showArrows = () => { arrowsEl.style.display = (slides.length > (glide.settings.perView || 1)) ? 'flex' : 'none'; };
+  glide.on(['mount.after', 'update', 'run'], showArrows);
+  showArrows();
 
   glide.mount();
 
@@ -233,26 +243,10 @@ export default async function decorate(block) {
     glide.update();
     updateNav();
     updateArrows();
-    const arrowsEl = block.querySelector('.arrows');
-
-    if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
-      block.querySelectorAll('.carousel-item .title')
-        // eslint-disable-next-line no-return-assign
-        .forEach((el) => el.style.display = (window.innerWidth <= 393 ? 'none' : ''));
-    }
-
+    
     if (isTestimonials && window.pathname.includes('box-carousel-testimonials-new') && arrowsEl) {
       arrowsEl.style.display = 'none';
-      return;
-    }
-    if (window.innerWidth <= 767) {
-      arrowsEl.style.display = (slides.length > 1) ? 'flex' : 'none';
-    } else if (window.innerWidth <= 991) {
-      arrowsEl.style.display = (slides.length > 2) ? 'flex' : 'none';
-    } else {
-      arrowsEl.style.display = (slides.length > 4) ? 'flex' : 'none';
     }
   }, 250));
-
   window.dispatchEvent(new Event('resize'));
 }
