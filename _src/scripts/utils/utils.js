@@ -892,6 +892,12 @@ export const generatePageLoadStartedName = () => {
  * @returns {string} get product findings for analytics
  */
 export const getProductFinding = () => {
+  const productFindingMetadata = getMetadata('product-finding');
+  if (productFindingMetadata) {
+    return productFindingMetadata;
+  }
+
+  console.warn('Product Finding unset in metadata');
   const pageName = page.name.toLowerCase();
   let productFinding;
   switch (pageName) {
