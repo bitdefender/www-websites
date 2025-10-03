@@ -2,9 +2,8 @@ import {
   AdobeDataLayerService, UserDetectedEvent, WindowLoadStartedEvent, WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { matchHeights } from '../../scripts/utils/utils.js';
+import { matchHeights, renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 import page from '../../scripts/page.js';
-import { renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
