@@ -1,37 +1,108 @@
 import Glide from '@glidejs/glide';
 import { debounce } from '@repobit/dex-utils';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const [titleEl, ...slides] = [...block.children];
   const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
   const isTrusted = block.classList.contains('trusted-carousel');
-  const slidesHTML = slides.map((slide) => `
-    <li class="carousel-item glide__slide">
-      ${isTestimonials ? `
-        <div class="img-container">
-          ${slide.children[0]?.children[0]?.innerHTML}
-        </div>
-      ` : slide.children[0]?.children[0]?.innerHTML}
+  const slidesHTML = slides.map((slide) => {
+    if (isTestimonials && block.classList.contains('reviews')) {
+      return `
+  <li class="carousel-item glide__slide">
+    <div class="img-container">
+      ${slide.children[0]?.children[0]?.innerHTML ?? ''}
+    </div>
 
-      <p class="title">${slide.children[0]?.children[1]?.outerHTML}</p>
+    <p class="title">${slide.children[0]?.children[1]?.outerHTML ?? ''}</p>
 
-      ${isTestimonials ? `
-        <div class="subtitle-secondary">${slide.children[0]?.children[2]?.innerHTML}</div>
-        <div class="subtitle">${slide.children[0]?.children[3]?.innerHTML}</div>
-      ` : `
-        <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML}</div>
-      `}
-    </li>
-  `).join('');
+    <div class="subtitle-secondary">${
+  ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
+    ? (slide.children[0]?.children[2]?.innerHTML || '')
+    : ''
+}</div>
+
+    <div class="subtitle">${
+  (() => {
+    if (slide.children[0]?.children[3] != null) {
+      return slide.children[0]?.children[3]?.innerHTML || '';
+    }
+    if ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong')) {
+      return '';
+    }
+    return slide.children[0]?.children[2]?.innerHTML || '';
+  })()
+}</div>
+  </li>
+`;
+    }
+    return `
+  <li class="carousel-item glide__slide">
+    ${isTestimonials ? `
+      <div class="img-container">${
+  (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
+    ? (slide.children[0]?.children[0]?.innerHTML ?? '')
+    : ''
+}</div>
+    ` : (slide.children[0]?.children[0]?.innerHTML ?? '')}
+
+    <p class="title">${
+  (() => {
+    if (isTestimonials) {
+      if (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon')) {
+        return slide.children[0]?.children[1]?.outerHTML ?? slide.children[0]?.children[0]?.outerHTML ?? '';
+      }
+      return slide.children[0]?.children[0]?.outerHTML ?? '';
+    }
+    return slide.children[0]?.children[1]?.outerHTML ?? '';
+  })()
+}</p>
+
+    ${isTestimonials ? `
+      <div class="subtitle-secondary">${
+  (() => {
+    const hasImage = slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon');
+    if (hasImage) {
+      if (document.body.classList.contains('trusted')) {
+        return slide.children[0]?.children[2]?.innerHTML;
+      }
+      return slide.children[0]?.children[2]?.innerHTML ?? '';
+    }
+    if (document.body.classList.contains('trusted')) {
+      return slide.children[0]?.children[1]?.innerHTML;
+    }
+    return slide.children[0]?.children[1]?.innerHTML ?? '';
+  })()
+}</div>
+
+<div class="subtitle">${
+  (() => {
+    const hasImage = slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon');
+    if (hasImage) {
+      if (document.body.classList.contains('trusted')) {
+        return slide.children[0]?.children[3]?.innerHTML;
+      }
+      return slide.children[0]?.children[3]?.innerHTML ?? '';
+    }
+    if (document.body.classList.contains('trusted')) {
+      return slide.children[0]?.children[2]?.innerHTML;
+    }
+    return slide.children[0]?.children[2]?.innerHTML ?? '';
+  })()
+}</div>
+    ` : `
+      <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML ?? ''}</div>
+    `}
+  </li>
+`;
+  }).join('');
 
   // Only one carousel-nav block: your original one with div.navigation-item
   const navDotsHTML = slides.map((_, i) => `
     <div class="navigation-item ${i === 0 ? 'active' : ''}" data-index="${i}"></div>
   `).join('');
 
-  const arrowsHTML = isView('desktop') ? `
+  const arrowsHTML = `
       <a href class="arrow disabled left-arrow">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -56,7 +127,7 @@ export default async function decorate(block) {
           </g>
         </svg>
       </a>
-  ` : '';
+  `;
 
   block.classList.add('default-content-wrapper');
   block.innerHTML = `
@@ -81,18 +152,29 @@ export default async function decorate(block) {
   decorateIcons(block);
 
   block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
+  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
+    block.querySelectorAll('.carousel-item .subtitle, .carousel-item .subtitle-secondary')
+      .forEach((el) => { if (el && el.textContent.trim() === 'undefined') el.textContent = ''; });
+  }
 
   const glide = new Glide(block.querySelector('.glide'), {
-    type: 'carousel',
+    type: (slides.length > (isTrusted ? 1 : 4)) ? 'carousel' : 'slider',
     gap: 20,
-    perView: isTrusted ? 1 : 4,
+    perView: isTrusted ? 1 : Math.min(slides.length, 4),
+    rewind: false,
+    bound: slides.length <= (isTrusted ? 1 : 4),
     breakpoints: isTrusted
       ? {}
       : {
-        991: { perView: 2 },
+        991: { perView: Math.min(slides.length, 2) },
         767: { perView: 1 },
       },
   });
+
+  const arrowsEl = block.querySelector('.arrows');
+  const showArrows = () => { arrowsEl.style.display = (slides.length > (glide.settings.perView || 1)) ? 'flex' : 'none'; };
+  glide.on(['mount.after', 'update', 'run'], showArrows);
+  showArrows();
 
   glide.mount();
 
@@ -159,7 +241,12 @@ export default async function decorate(block) {
 
   window.addEventListener('resize', debounce(() => {
     glide.update();
+    updateNav();
+    updateArrows();
+    
+    if (isTestimonials && window.pathname.includes('box-carousel-testimonials-new') && arrowsEl) {
+      arrowsEl.style.display = 'none';
+    }
   }, 250));
-
   window.dispatchEvent(new Event('resize'));
 }

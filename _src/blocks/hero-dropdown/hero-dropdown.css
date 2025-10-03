@@ -200,7 +200,7 @@ main .hero-dropdown-container .buttons {
 }  
 
 main .hero-dropdown-container .buttons .secondary-button{
-  background-color: #ffffff00;
+  background-color: #fff0;
   color: #006DFF;
   border: 2px solid #006DFF;
 } 
@@ -229,7 +229,7 @@ main .hero-dropdown-container .product-selector {
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 0 10px 10px;
-    color: rgb(0, 110, 255);
+    color: rgb(0 110 255);
     font-weight: bold;
     width: 75%;
 }
@@ -271,7 +271,7 @@ main .hero-dropdown .hero-dropdown-picture {
 main .hero-dropdown .hero-dropdown-content {
   display: flex;
   flex-direction: column;
-  padding: 17px var(--body-padding) 0px;
+  padding: 17px var(--body-padding) 0;
   margin: 0 auto;
   position: relative;
 }
@@ -325,7 +325,6 @@ main .hero-dropdown.comparison .hero-dropdown-content {
 }
 
 main .hero-dropdown h1 {
-  font-size: 2.125rem;
   margin: 0 0 25px;
   color: #006DFF;
   font-size: 48px;
@@ -758,7 +757,7 @@ main .hero-dropdown .custom-dropdown {
   width: 100%;
   max-width: 400px;
   background: #fff;
-  border-radius: 0 10px 10px 10px;
+  border-radius: 0 10px 10px;
   cursor: pointer;
   z-index: 10;
   margin-bottom: 12px;
@@ -790,7 +789,7 @@ main .hero-dropdown .options-list {
   background: #fff;
   border-top: none;
   border-radius: 0 0 8px 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
   transition: max-height 0.3s ease;
 }
 
@@ -1120,6 +1119,7 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
   main .hero-dropdown-container.blue-title .scamio .hero-dropdown-picture img {
     display: none;
   }
+
   main .smaller-img-tablet .hero-dropdown .hero-dropdown-picture {
     position: absolute;
     top: 5em;

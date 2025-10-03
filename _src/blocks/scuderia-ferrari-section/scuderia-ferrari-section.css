@@ -211,15 +211,14 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         max-width: unset;
     }
 
-    div:has(img):before {    
+    div:has(img)::before {    
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         width: 70%;
         height: 100%;
-        background: linear-gradient(90deg, #000000 47.5%, rgba(0, 0, 0, 0) 100%);
-       
+        background: linear-gradient(90deg, #000 47.5%, rgb(0 0 0 / 0%) 100%);
         pointer-events: none; /* Allows clicks to go through */
     }
 }
@@ -439,7 +438,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
             line-height: 1.1;
         }
 
-        P:nth-of-type(2) {
+        p:nth-of-type(2) {
             line-height: 1 !important;
             font-size: 64px;
             margin-bottom: 24px;
@@ -448,7 +447,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         p:nth-of-type(4) {
             font-size: 26px;
             margin-bottom: 52px;
-            margin-top: 0px;
+            margin-top: 0;
         }
 
         p:nth-last-of-type(2) {

@@ -27,7 +27,7 @@
     font-weight: 400;
     font-size: 18px;
     line-height: 27px;
-    letter-spacing: 0px;
+    letter-spacing: 0;
     text-align: center;
     color: #525252;
 }
@@ -205,9 +205,11 @@
     .spp-slider {
         margin: 0 auto;
     }
+
     .spp-slider .card {
         width: calc(100% - 10px);
     }
+
     .tabs-slide-container .default-content-wrapper {
         width: 100%;
     }
@@ -233,17 +235,21 @@
         width: 100%;
         transform: none;
     }
+
     .spp-slider .tabs {
         width: 90%;
         margin: 1em 20px;
     }
+
     .spp-slider .tab {
         flex: 0 0 150px;
     }
+
     .spp-slider.with-active .tab-slider {
         width: 39%;
         transform: translateX(-4px);
     }
+
     .spp-slider.without-active .tab-slider {
         width: 39%;
         transform: translateX(calc(143%));

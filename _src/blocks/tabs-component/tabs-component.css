@@ -240,6 +240,7 @@
     display: none;
   }
 }
+
 @media (max-width: 990px) {
   .tabs-component-container.show-categories .tabs-container {
     margin-bottom: 20px;
@@ -255,6 +256,7 @@
     display: flex;
     justify-content: center;
   }
+
   .tabs-component-container.show-categories .subtitle-class {
     margin-bottom:20px;
   }
