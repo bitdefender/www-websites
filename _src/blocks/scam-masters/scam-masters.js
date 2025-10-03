@@ -887,7 +887,7 @@ function decorateQuestions(questions, results, isAcqVariant) {
             AdobeDataLayerService.push(
               {
                 event: 'form viewed',
-                name: {
+                user: {
                   form: 'Who do you protect online?',
                 },
               },
