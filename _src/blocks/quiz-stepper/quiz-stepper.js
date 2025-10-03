@@ -12,7 +12,7 @@ export default async function decorate(block) {
     currentStep: 0,
   };
 
-  const isAcqVariant = window.location.href.includes('acq');
+  const isAcqVariant = document.querySelector('.acq-quiz');
 
   block.classList.add('default-content-wrapper');
   block.closest('.section').id = 'quiz-form';

@@ -880,9 +880,9 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:consumer:solutions`;
     }
 
-    if (pathname.includes('acq')) {
+    if (pathname.includes('spot-the-scam-quiz')) {
       tagName = `${locale}:consumer:quiz`;
-      if (pathname.includes('result')) {
+      if (!pathname.endsWith('/')) {
         const result = document.querySelector('h1');
         tagName = `${locale}:consumer:quiz:results${result ? `:${result.innerText?.toLowerCase()}` : ''}`;
       }
@@ -916,7 +916,7 @@ export const getProductFinding = () => {
     case 'downloads':
       productFinding = 'downloads page';
       break;
-    case 'acq':
+    case 'spot-the-scam-quiz':
       productFinding = 'consumer quiz';
       break;
     default:

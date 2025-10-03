@@ -734,16 +734,16 @@ function showResult(question, results, isAcqVariant) {
 
   const scoreRangesAcq = [
     {
-      min: 0, max: 2, resultIndex: 0, shareText: shareTexts.get(0), resultUrl: 'result-1',
+      min: 0, max: 2, resultIndex: 0, shareText: shareTexts.get(0), resultUrl: 'digital-rookie',
     },
     {
-      min: 3, max: 3, resultIndex: 1, shareText: shareTexts.get(1), resultUrl: 'result-2',
+      min: 3, max: 3, resultIndex: 1, shareText: shareTexts.get(1), resultUrl: 'scam-spotter',
     },
     {
-      min: 4, max: 4, resultIndex: 2, shareText: shareTexts.get(2), resultUrl: 'result-3',
+      min: 4, max: 4, resultIndex: 2, shareText: shareTexts.get(2), resultUrl: 'digital-detective',
     },
     {
-      min: 5, max: 5, resultIndex: 3, shareText: shareTexts.get(3), resultUrl: 'result-4',
+      min: 5, max: 5, resultIndex: 3, shareText: shareTexts.get(3), resultUrl: 'cyber-ninja',
     },
   ];
 
