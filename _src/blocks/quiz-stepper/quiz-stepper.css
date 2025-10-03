@@ -191,23 +191,6 @@
                 visibility: hidden;
             }
 
-
-            &:has(input[type="radio"]:checked) {
-                background-color: #F8FAFC;
-                border: 2px solid var(--color-bd-blue);
-            }
-
-            input[type=radio]:checked+.checkbox {
-                background-color: #3197EE;
-                box-shadow: inset 0 0 0 4px #f4f4f4;
-                border: 2px solid var(--color-bd-blue);
-            }
-
-            input[type=radio]:checked+.label {
-                background-color: #F8FAFC;
-                border: 2px solid var(--color-bd-blue);
-            }
-
             .checkbox {
                 color: #006DFF;
                 border-radius: 4px;
@@ -223,6 +206,22 @@
                 right: 15px;
                 top: 50%;
                 transform: translate(-50%, -50%);
+            }
+
+            &:has(input[type="radio"]:checked) {
+                background-color: #F8FAFC;
+                border: 2px solid var(--color-bd-blue);
+            }
+
+            input[type=radio]:checked+.checkbox {
+                background-color: #3197EE;
+                box-shadow: inset 0 0 0 4px #f4f4f4;
+                border: 2px solid var(--color-bd-blue);
+            }
+
+            input[type=radio]:checked+.label {
+                background-color: #F8FAFC;
+                border: 2px solid var(--color-bd-blue);
             }
         }
 
