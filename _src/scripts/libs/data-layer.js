@@ -68,7 +68,7 @@ const checkFormCompletedEventAfterRedirect = () => {
         event: formCompletedEvent.event,
         user: {
           form: formCompletedEvent.user.form,
-          field: formCompletedEvent.user.field,
+          formFields: formCompletedEvent.user.formFields,
         },
       });
     }
