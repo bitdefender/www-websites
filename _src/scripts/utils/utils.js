@@ -666,9 +666,10 @@ export function pushTrialDownloadToDataLayer() {
 
     if (button?.dataset?.storeId) return button.dataset.storeId;
 
-    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
-    if (closestStoreElementWithId) {
-      return closestStoreElementWithId.dataset.storeId;
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]') || button?.closest('.section');
+    const { storeId } = closestStoreElementWithId.dataset;
+    if (storeId) {
+      return storeId;
     }
 
     // eslint-disable-next-line max-len
@@ -879,6 +880,14 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:consumer:solutions`;
     }
 
+    if (pathname.includes('spot-the-scam-quiz')) {
+      tagName = `${locale}:consumer:quiz`;
+      if (!pathname.endsWith('/')) {
+        const result = page.name;
+        tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
+      }
+    }
+
     if (window.errorCode === '404') {
       tagName = `${locale}:404`;
     }
@@ -912,6 +921,9 @@ export const getProductFinding = () => {
     case 'downloads':
       productFinding = 'downloads page';
       break;
+    case 'spot-the-scam-quiz':
+      productFinding = 'consumer quiz';
+      break;
     default:
       productFinding = 'product pages';
       break;
@@ -921,6 +933,11 @@ export const getProductFinding = () => {
   const currentPath = window.location.pathname;
   if (currentPath.includes('/link-checker')) {
     productFinding = 'toolbox page';
+  }
+
+  // case when the pages are /spot-the-scam-quiz/something
+  if (currentPath.includes('/spot-the-scam-quiz')) {
+    productFinding = 'consumer quiz';
   }
 
   return productFinding;
