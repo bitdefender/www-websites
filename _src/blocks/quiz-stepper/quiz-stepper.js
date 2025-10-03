@@ -136,7 +136,7 @@ export default async function decorate(block) {
         event: 'form completed',
         user: {
           form: 'Who do you protect online?',
-          field: `${selectedOption.parentElement.innerText}`,
+          formFields: `${selectedOption.parentElement.innerText}`,
         },
       };
       // Store in localStorage
