@@ -718,6 +718,8 @@ async function loadPage() {
   //     const { visitorId } = result;
   //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
   //   });
+  await target.sendCdpData();
+
   if (!window.BD.loginAttempted) {
     AdobeDataLayerService.push(new PageLoadedEvent());
   }
