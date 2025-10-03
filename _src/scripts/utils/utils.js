@@ -930,6 +930,11 @@ export const getProductFinding = () => {
     productFinding = 'toolbox page';
   }
 
+  // case when the pages are /spot-the-scam-quiz/something
+  if (currentPath.includes('/spot-the-scam-quiz')) {
+    productFinding = 'consumer quiz';
+  }
+
   return productFinding;
 };
 
