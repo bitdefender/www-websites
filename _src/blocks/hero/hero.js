@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 // Description: Hero block
+import { faq } from '@repobit/dex-system-design/faq';
 import { UserAgent } from '@repobit/dex-utils';
 import {
   createTag,
@@ -149,6 +150,9 @@ export default function decorate(block) {
     backgroundcolor,
     textcolor,
   } = parentSection.dataset;
+
+  block.innerHTML = `<bd-faq></bd-faq>`;
+  return;
 
   buildHeroBlock(block);
   renderBubble(block);

@@ -1,4 +1,24 @@
+import '@repobit/dex-system-design/accordion-bg';
+
 export default function decorate(block) {
+
+  block.innerHTML = `
+    <bd-accordion-bg title="Terms of use">
+      <bd-accordion-bg-item title="Auto renewal terms">
+        <ul>
+          <li>Your subscription automatically begins at the purchase date;</li>
+          <li>By subscribing, you are purchasing a recurring subscription which will automatically renew;</li>
+          <li>The Bitdefender Auto Renewal Plan is designed to save you time, effort, and minimize your vulnerability risk by extending your subscription automatically before you run out of protection.</li>
+        </ul>
+      </bd-accordion-bg-item>
+      <bd-accordion-bg-item title="How to cancel + email address cancelation support">
+        <ul>
+          <li>You can cancel your automatically subscription from Bitdefender Central or by contacting Customer Support at: <a href="mailto:cancel@bitdefender.com" title="cancel@bitdefender.com">cancel@bitdefender.com</a></li>
+          <li>You can refund by contacting <a href="mailto:refunds@bitdefender.com" title="refunds@bitdefender.com">refunds@bitdefender.com</a> within 30 days of your initial purchase or of the automatic renewal date.</li>
+        </ul>
+      </bd-accordion-bg-item>
+    </bd-accordion-bg>
+  `;
   const items = Array.from(block.querySelectorAll(':scope > div'));
 
   items.forEach((item, index) => {

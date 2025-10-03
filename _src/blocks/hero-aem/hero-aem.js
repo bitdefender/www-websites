@@ -1,6 +1,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
+import '@repobit/dex-system-design/header';
 import {
   openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
 } from '../../scripts/utils/utils.js';
@@ -155,6 +156,29 @@ export default async function decorate(block, options) {
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
     dropdownTag,
   } = block.closest('.section').dataset;
+
+  block.dataset.storeContext = 'true';
+  block.dataset.storeId = 'ts_i';
+  block.dataset.storeOption = '5-1';
+  block.dataset.storeDepartment = 'consumer';
+  const picture = block.querySelector('picture');
+  picture.setAttribute('slot', 'header-image');
+  block.innerHTML = `
+    <bd-header
+      productName="Bitdefender Total Security"
+      valueProp="Test"
+      description="This is a description\n I want to be multiline"
+      fullPrice="<span data-store-text-variable>{PRICE_FULL}</span>"
+      discount="50$"
+      finalPrice="150$">
+      <bd-price />
+      ${picture.outerHTML}
+      <div class="ceva" slot="disclaimer-bottom-text-start">
+        Ceva text
+      </div>
+    </bd-header>
+  `;
+  return;
 
   renderNanoBlocks(block);
 
