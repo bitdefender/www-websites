@@ -4,8 +4,6 @@ indices:
     include:
       - /en-us/**
     exclude: &excludeList
-      - /**/fragments/**
-      - /**/experiments/**
       - /**/webview/**
       - /**/404
       - /**/footer
@@ -30,9 +28,22 @@ indices:
       breadcrumbtitle:
         select: head > meta[name="breadcrumb-title"]
         value: attribute(el, "content")  
+      blocks:
+        select: main > div > div:not(.section-metadata)
+        values: attribute(el, "className")
+      fragments:
+        select: main > div > div[class="fragment"] a
+        values: attribute(el, "href")
       robots:
         select: head > meta[name="robots"]
         value: attribute(el, "content")  
+      lastModifiedTimestamp:
+        select: none
+        value: |
+          parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      lastModified:
+        select: none
+        value: headers["last-modified"]
   index_de_de:
     include:
       - /de-de/**
@@ -111,31 +122,19 @@ indices:
     exclude: *excludeList
     target: /sv-se/query-index.json
     properties: *minPros
-  index_zh_hk:
-    include:
-      - /zh-hk/**
-    exclude:
-      - /**/solutions/**/fragments/**
-      - /**/solutions/**/experiments/**
-      - /**/consumer/**/fragments/**
-      - /**/consumer/**/experiments/**
-      - /**/consumer/404
-      - /**/consumer/footer
-      - /**/consumer/nav
-      - /**/consumer/thank-you
-    target: /zh-hk/query-index.json
-    properties: *minPros
   index_zh_tw:
     include:
       - /zh-tw/**
     exclude:
-      - /**/solutions/**/fragments/**
-      - /**/solutions/**/experiments/**
-      - /**/consumer/**/fragments/**
-      - /**/consumer/**/experiments/**
       - /**/consumer/404
       - /**/consumer/footer
       - /**/consumer/nav
       - /**/consumer/thank-you
     target: /zh-tw/query-index.json
+    properties: *minPros
+  index_ja_jp:
+    include:
+      - /ja-jp/**
+    exclude: *excludeList
+    target: /ja-jp/query-index.json
     properties: *minPros

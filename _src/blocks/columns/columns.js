@@ -1,5 +1,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
-import { matchHeights, createTag } from '../../scripts/utils/utils.js';
+import {
+  matchHeights, createTag, createNanoBlock, renderNanoBlocks,
+} from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
@@ -26,6 +28,16 @@ function hideExcessElements(carousel) {
 function setActiveButton(button, buttonsWrapper) {
   buttonsWrapper.querySelector('.active-button')?.classList.remove('active-button');
   button.classList.add('active-button');
+}
+
+function renderHighlight(text) {
+  return createTag(
+    'div',
+    {
+      class: 'highlight',
+    },
+    `<span class="highlight-text">${text}</span>`,
+  );
 }
 
 function createNavigationButtons(numberOfSlides, carousel) {
@@ -93,6 +105,8 @@ function setDynamicLink(dynamicLink, dynamicLinks) {
   }
 }
 
+createNanoBlock('highlight', renderHighlight);
+
 export default function decorate(block) {
   const {
     linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
@@ -132,7 +146,7 @@ export default function decorate(block) {
 
   if (breadcrumbs && block.classList.contains('creators-banner')) {
     const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    block.querySelector('.columns-left-col')?.prepend(breadcrumb);
+    block.querySelector('h2')?.prepend(breadcrumb);
   }
 
   // setup buylink, this can be used later as a starting point for prices.
@@ -201,6 +215,8 @@ export default function decorate(block) {
     leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
   }
 
+  renderNanoBlocks(block.closest('.section'), undefined, undefined, block);
+
   const chatOptions = document.querySelector('.chat-options');
   if (chatOptions) {
     const cardButtons = chatOptions.querySelectorAll('.button-container');
@@ -226,13 +242,22 @@ export default function decorate(block) {
   // by dynamically setting this, i can set howewer much rows i want based on the number of
   // maximum elements expected in the row
   if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
-    block.querySelectorAll('.columns-text-col')?.forEach((element) => {
+    let cards = block.querySelectorAll('.columns-text-col');
+    if (block.classList.contains('cards-with-img')) {
+      cards = block.querySelectorAll('.columns > div > div');
+    }
+
+    cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
   }
 
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
+  if (block.closest('.section').classList.contains('dex-carousel-cards')) {
+    matchHeights(block, 'div > div:not(:first-of-type) p:first-of-type');
+  }
+
   if (block.closest('.section').classList.contains('multi-blocks')) {
     matchHeights(block.closest('.section'), '.columns');
     matchHeights(block.closest('.section'), 'table');

@@ -107,11 +107,11 @@
 }
 
 .global-display-none {
-  display: none;
+  display: none !important;
 }
 
 .global-visibility-hidden {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 
 .font-arial {
@@ -266,6 +266,13 @@ hr {
   padding-bottom: 0!important;
 }
 
+.py-md-0 {
+  @media (max-width: 768px) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
 code, pre, samp {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
@@ -345,7 +352,7 @@ main img {
   text-align: center;
   background-color: rgb(228, 242, 255);
   color: rgb(0, 69, 173);
-  padding: 6px 0!important;
+  padding: 8px 0!important;
 }
 
 .top_blue .default-content-wrapper {
@@ -354,6 +361,7 @@ main img {
 
 .top_blue p {
   font-size: var(--body-font-size-s);
+  margin: 0;
 }
 
 .top_blue p a {
@@ -873,6 +881,14 @@ main .section.pb-0, .pb-0 {
   padding-bottom: 0!important;
 }
 
+main .section.mt-0, .mt-0 {
+  margin-top: 0!important;
+}
+
+main .section.mb-0, .mb-0 {
+  margin-bottom: 0!important;
+}
+
 @media (min-width: 1400px) {
   main .section {
     padding: 60px 0;
@@ -1030,7 +1046,7 @@ a.button:any-link, input[type="submit"] {
   align-items: center;
   box-sizing: border-box;
   text-decoration: none;
-  padding: 10px 26px 8px 40px;
+  padding: 10px 26px 8px 30px;
   text-align: center;
   cursor: pointer;
   color: var(--button-link-color);
@@ -1733,6 +1749,15 @@ main .section.blue p a.button.modal::after {
   display: none !important;
 }
 
+.centered {
+  text-align: center;
+  .default-content-wrapper {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+}
+
 @keyframes rotation {
   0% {
       transform: rotate(0deg);
@@ -1743,15 +1768,6 @@ main .section.blue p a.button.modal::after {
 }
 
 @media (min-width: 768px) {
-  .centered {
-    text-align: center;
-    .default-content-wrapper {
-      display: flex;
-      flex-flow: column;
-      align-items: center;
-    }
-  }
-
   .buttons-align-right > div {
     flex-direction: row;
   }
@@ -1838,4 +1854,10 @@ body > div.header-with-language-banner {
   main .section.blue a.button:any-link {
     padding: 10px 0px 8px 13px;
   }
+
+  
+  a.button:any-link, input[type="submit"] {
+    padding: 10px 13px 8px 20px;
+    font-size: 14px;
+}
 }

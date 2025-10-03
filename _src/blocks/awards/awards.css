@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1300px;
+  max-width: 1290px;
 }
 
 .awards-container.we-container {
@@ -29,8 +29,22 @@
   width: 100%;
 }
 
+.awards-container p {
+  line-height: 1.45;
+}
+
 .awards-container h3 {
   font-size: 32px;
+  margin-bottom: 0px;
+}
+
+.awards-container .button-container {
+  margin-top: 34px;
+}
+
+.awards-container em {
+  color: #006DFF;
+  font-style: normal;
 }
 
 .awards-container .block.awards-component > div {
@@ -65,7 +79,7 @@
 
 
 .awards-component > div:nth-child(3) div img {
-  height: 56px;
+  height: 100px;
   max-width: 100%;
   width: auto;
   object-fit: contain;
@@ -164,6 +178,12 @@
 
 .awards-container .awards-component div li {
   text-align: left;
+}
+
+@media (max-width: 579px) {
+  .awards-component > div:nth-child(3) div img {
+    height: 50px;
+  }
 }
 
 @media (min-width: 580px) {
@@ -304,7 +324,6 @@
 
   .awards-component h3 {
     font: normal normal bold 32px/38px Arial, sans-serif;
-    max-width: 726px;
     margin-bottom: 0;
   }
 

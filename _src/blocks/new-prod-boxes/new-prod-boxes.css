@@ -12,6 +12,29 @@
   font-weight: bold;
 }
 
+.creators .new-prod-boxes-container .new-prod-boxes .prod_box.demo-box .inner_prod_box .undeBuyLink span.demoBtn {
+  border: 2px solid var(--button-secondary-color);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  color: black;
+  padding: 15px 10px;
+  width: 100%;
+  border-radius: 8px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  margin-top: -56px;
+  margin-bottom: 32px;
+  cursor: pointer;
+}
+
+.creators .new-prod-boxes-container .new-prod-boxes .prod_box.demo-box .inner_prod_box .undeBuyLink span.demoBtn:hover {
+  text-decoration: none;
+  background-color: var(--button-secondary-hover-background-color);
+  color: var(--white-color);
+}
+
 .new-prod-boxes-container {
   padding-bottom: 0;
   font-family: 'Arial', sans-serif;
@@ -78,6 +101,7 @@
   flex: 1;
   max-width: 410px;
   margin: 8px;
+  margin-bottom: 50px;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
@@ -87,6 +111,10 @@
   border-radius: 20px;
   padding: 25px;
   margin: 0 auto;
+}
+
+.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box hr:last-of-type{
+  display: none;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
@@ -108,8 +136,8 @@
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 {
   font-weight: bold;
-  font-size: 22px;
-  line-height: 26px;
+  font-size: 20px;
+  line-height: 25px;
   font-family: Arial, sans-serif;
   margin-top: 0;
   margin-bottom: 4px;
@@ -180,7 +208,7 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .subtitle.fixed_height {
-  min-height: 80px;
+  min-height: 30px;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box hr {
@@ -249,6 +277,18 @@
 .new-prod-boxes-container .new-prod-boxes.new-green-check .inner_prod_box p:last-of-type{
   margin-top: 0;
   font-size: 14px;
+}
+
+.new-prod-boxes-container .new-prod-boxes .inner_prod_box a.demo-btn {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: -45px;
+  margin-bottom: 32px;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .buy-btn a.red-buy-button {
@@ -392,6 +432,10 @@
   display: inline-flex;
 }
 
+.new-prod-boxes-container.revert-arrows .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
+  transform: rotate(180deg);
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li p, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) ul li {
   font-size: 14px;
   line-height: 17px;
@@ -467,10 +511,6 @@
   min-height: 5em;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box.hasGreenTag {
-  margin-top: 45px;
-}
-
 .new-prod-boxes-container .new-prod-boxes .prod_box.hasGreenTag .inner_prod_box {
   box-shadow: 0 3px 7px 0 #C1C1C1;
 }
@@ -491,7 +531,7 @@
   margin-left: 5px;
 }
 
-.new-prod-boxes-container .new-prod-boxes.solutions .prod-save{
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-save {
   color: #0B6A26;
   background-color: #D1FADC;
   border-radius: 8px;
@@ -503,7 +543,7 @@
 }
 
 .new-prod-boxes-container .prod-newprice {
-  font-size: 40px;
+  font-size: 35px;
   font-weight: bold;
 }
 .new-prod-boxes-container .prod-newprice .per-m {
@@ -544,6 +584,15 @@
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.primary {
   display: inline-block;
   min-width: 144px;
+}
+
+.new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.secondary {
+  width: fit-content;
+  min-width: 150px;
+}
+
+.new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.secondary {
+  width: 100%;
 }
 
 .new-prod-boxes-container.secondary-button-blue  .new-prod-boxes .button.secondary {
@@ -665,7 +714,7 @@
 
 .switchBox {
   text-align: center;
-  padding-bottom: 35px;
+  padding-bottom: 45px;
 }
 
 .switchBox .switch {
@@ -765,13 +814,16 @@
   margin-top: 20px;
 }
 
+.demo-box .hero-aem__prices * {
+  visibility: hidden;
+}
+
 .plan-switcher {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   align-items: center;
   font-weight: bold;
-  margin-bottom: 24px;
   margin-top: 16px;
 }
 
@@ -814,6 +866,28 @@
   border-color: #3197EE;
 }
 
+@media (max-width: 768px) {
+  .demo-box .hero-aem__prices {
+    display: none;
+  }
+
+  .creators .new-prod-boxes-container .new-prod-boxes .prod_box.demo-box .inner_prod_box .undeBuyLink {
+    min-height: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .creators .new-prod-boxes-container .new-prod-boxes .prod_box.demo-box .inner_prod_box .undeBuyLink span.demoBtn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .new-prod-boxes-container.revert-arrows .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
+  transform: rotate(-90deg);
+}
+
+}
+
 @media (min-width: 768px) {
   .creators .new-prod-boxes-container .new-prod-boxes {
     padding-bottom: 10px;
@@ -830,8 +904,29 @@
     }
   }
 
-  .new-prod-boxes-container .new-prod-boxes .prod_box.hasGreenTag {
-    margin: 8px;
+  .new-prod-boxes-container .new-prod-boxes {
+    margin: 0 auto;
+    display: grid;
+    gap: 0;
+    grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
+  }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 50;
+  }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 50;
+  }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 10;
   }
 }
 
@@ -847,5 +942,20 @@
   .new-prod-boxes-container.we-container {
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+@media screen and (width <= 525px) {
+  .new-prod-boxes-container .new-prod-boxes {
+    padding: var(--body-padding);
+  }
+
+  .new-prod-boxes-container .switchBox {
+    padding-bottom:20px;
+  }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box {
+    width: 100%;
+    min-width: 100%;
   }
 }

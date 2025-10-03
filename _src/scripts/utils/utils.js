@@ -924,6 +924,12 @@ export const getProductFinding = () => {
       break;
   }
 
+  // case when the pages are link-checker/something
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/link-checker')) {
+    productFinding = 'toolbox page';
+  }
+
   return productFinding;
 };
 
@@ -960,4 +966,130 @@ export function generateLDJsonSchema() {
   script.type = 'application/ld+json';
   script.textContent = JSON.stringify(ldJson, null, 2); // Pretty print
   document.head.appendChild(script);
+}
+
+let isRendering = false;
+let widgetExecuting = false;
+export function renderTurnstile(containerId, { invisible = false } = {}) {
+  if (isRendering) {
+    return Promise.reject(new Error('Turnstile is already rendering.'));
+  }
+
+  isRendering = true;
+
+  return new Promise((resolve, reject) => {
+    function finish(error, result = null) {
+      isRendering = false;
+      widgetExecuting = false;
+      if (error) reject(error);
+      else resolve(result);
+    }
+
+    function renderWidget() {
+      if (!window.turnstile) {
+        return finish(new Error('Turnstile not loaded.'));
+      }
+
+      const container = document.getElementById(containerId);
+      if (!container) {
+        return finish(new Error(`Container "${containerId}" not found.`));
+      }
+
+      // Clear previous widget
+      container.innerHTML = '';
+
+      const widgetId = window.turnstile.render(container, {
+        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
+        size: invisible ? 'compact' : 'normal',
+        callback: (token) => {
+          widgetExecuting = false;
+
+          if (!invisible) window.latestVisibleToken = token;
+          if (!token) return finish(new Error('Token missing.'));
+          return finish(null, { widgetId, token });
+        },
+        'error-callback': () => {
+          finish(new Error('Turnstile error during execution.'));
+        },
+        'expired-callback': () => {
+          finish(new Error('Turnstile token expired.'));
+        },
+      });
+
+      if (invisible) {
+        if (!widgetExecuting) {
+          widgetExecuting = true;
+
+          try {
+            window.turnstile.execute(widgetId);
+          } catch (err) {
+            window.turnstile.reset(widgetId);
+            window.turnstile.execute(widgetId);
+          }
+        }
+      } else {
+        finish(null, { widgetId });
+      }
+
+      return undefined;
+    }
+
+    if (window.turnstile) {
+      renderWidget();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+      script.async = true;
+      script.defer = true;
+      window.onloadTurnstileCallback = renderWidget;
+      document.head.appendChild(script);
+    }
+  });
+}
+
+export async function submitWithTurnstile({
+  widgetId,
+  data,
+  fileName,
+  successCallback = null,
+  errorCallback = null,
+}) {
+  let ENDPOINT = 'https://stage.bitdefender.com/form';
+  if (window.location.hostname.startsWith('www.')) {
+    ENDPOINT = ENDPOINT.replace('stage.', 'www.');
+  }
+
+  try {
+    if (!window.turnstile || typeof window.turnstile.getResponse !== 'function') {
+      throw new Error('Turnstile is not loaded.');
+    }
+
+    const token = window.turnstile.getResponse(widgetId);
+    if (!token || token.length < 10) {
+      throw new Error('Turnstile token is missing or invalid. Please complete the challenge.');
+    }
+
+    const requestData = {
+      file: `/sites/common/formdata/${fileName}.xlsx`,
+      table: 'Table1',
+      row: { ...data },
+      token,
+    };
+
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server returned status ${res.status}`);
+    }
+
+    if (typeof successCallback === 'function') successCallback();
+
+    window.turnstile.reset(widgetId);
+  } catch (err) {
+    if (typeof errorCallback === 'function') errorCallback(err);
+  }
 }

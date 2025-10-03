@@ -1,4 +1,5 @@
-import { User, Cookies } from '@repobit/dex-utils';
+import { Cookies } from '@repobit/dex-utils';
+import user from '../../scripts/user.js';
 import { target, adobeMcAppendVisitorId } from '../../scripts/target.js';
 import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
@@ -69,8 +70,8 @@ const loginFunctionality = async (root = document) => {
   try {
     // change login container to display that the user is logged in
     // if the previous call was successfull
-    await User.login();
-    const userData = await User.info;
+    await user.login();
+    const userData = await user.info;
     if (userData) {
       const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
       updateMegaMenu(userData.firstname, userData.email, megaMenuLoginContainer);
@@ -534,9 +535,11 @@ async function runDefaultHeaderLogic(block) {
         });
       });
 
-      // select all the scripts from contet div and
       const scripts = contentDiv.querySelectorAll('script');
       scripts.forEach((script) => {
+        if (['dependencies'].some((key) => script.src.includes(key))) {
+          return;
+        }
         const newScript = document.createElement('script');
         newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
         newScript.defer = true;
@@ -559,7 +562,7 @@ async function runDefaultHeaderLogic(block) {
       nav.classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
-      loginFunctionality(shadowRoot);
+      await loginFunctionality(shadowRoot);
       return;
     }
 

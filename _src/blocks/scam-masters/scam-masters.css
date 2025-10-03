@@ -36,6 +36,10 @@
     background-color: #ffe6e6;
 }
 
+.scam-masters #turnstile-container {
+    display: none;
+}
+
 .scam-masters {
     --color-light-blue: #E6F7FF;
     --color-bd-blue: #006EFF;
@@ -172,8 +176,6 @@
             border-bottom-right-radius: 20px;
             display: flex;
             align-items: end;
-
-
         }
 
         .question-content {
@@ -483,6 +485,7 @@
         >div:last-child {
             background-color: var(--color-bd-blue);
             border: 1px solid white;
+            align-items: center!important;
 
             &:not(.clickable-question) {
                 picture {
@@ -807,7 +810,20 @@
         
     }
 }
+.smaller-title .scam-masters .start-page > div:first-child h1 {
+    font-size: 60px;
+    line-height: 65px;
+}
 
+.scam-masters .result > div {
+   height: 700px;
+}
+
+@media (max-width: 768px) {
+    .scam-masters .result > div {
+        height: 500px;
+    }
+}
 
     @media (max-width: 1425px) {
         .scam-masters {
@@ -965,11 +981,11 @@
                     max-width: 50%;
                 }
 
-                >div:first-child {
-                    .share-icons {
-                        flex-direction: column;
-                    }
+            >div:first-child { 
+                .share-icons {
+                    flex-direction: column;
                 }
+            }
 
                 >div:last-child {
                     min-height: auto;

@@ -4,6 +4,7 @@ import {
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 import page from '../../scripts/page.js';
+import { renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
@@ -175,12 +176,14 @@ function processSpecialParagraphs(question, index) {
 
       if (cellText.startsWith('tries:')) {
         const triesRaw = cellText.split('tries:')[1].trim();
+        const [singleTry, manyTries] = triesRaw.split('|');
         const triesCount = parseInt(triesRaw, 10) || 3;
 
         if (!question.querySelector('p.tries')) {
           const triesParagraph = document.createElement('p');
           triesParagraph.classList.add('tries');
-          triesParagraph.innerHTML = `Only <span>${triesCount}</span> tries left.`;
+          triesParagraph.setAttribute('data-singletry', singleTry.trim());
+          triesParagraph.innerHTML = manyTries?.trim().replace('x', `<span>${triesCount}</span>`);
 
           const scamButton = question.querySelector('a[href="#not-a-scam"]');
           if (scamButton && scamButton.parentNode) {
@@ -619,7 +622,13 @@ function decorateClickQuestions(question, index) {
       if (triesSpan) {
         const current = parseInt(triesSpan.textContent, 10);
         if (!Number.isNaN(current) && current > 0) {
-          triesSpan.textContent = current - 1;
+          const newCount = current - 1;
+
+          if (newCount === 1) {
+            triesCounter.innerText = triesCounter.getAttribute('data-singletry');
+          } else {
+            triesSpan.textContent = newCount;
+          }
         }
       }
 
@@ -665,11 +674,66 @@ function decorateClickQuestions(question, index) {
   imageContainer.parentNode.replaceChild(imageWrapper, imageContainer);
 }
 
+let isExecuting = false;
+async function saveData(quizResults, fileName, { invisible = false } = {}) {
+  if (isExecuting) return;
+
+  isExecuting = true;
+  try {
+    const { widgetId, token: initialToken } = await renderTurnstile('turnstile-container', { invisible });
+    let token = initialToken;
+
+    if (!invisible) {
+      if (!window.latestVisibleToken) {
+        token = await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Timeout waiting for Turnstile token.')), 10000); // 10s
+
+          const checkInterval = setInterval(() => {
+            if (window.latestVisibleToken) {
+              clearInterval(checkInterval);
+              clearTimeout(timeout);
+              resolve(window.latestVisibleToken);
+            }
+          }, 200);
+        });
+      } else {
+        token = window.latestVisibleToken;
+      }
+    }
+
+    if (!token) throw new Error('Turnstile token missing.');
+
+    await submitWithTurnstile({
+      widgetId,
+      token,
+      data: quizResults,
+      fileName,
+    });
+  } catch (err) {
+    throw new Error(`[saveData] Failed: ${err.message}`);
+  } finally {
+    isExecuting = false;
+    // console.log('Data Saved!');
+  }
+}
+
 function showResult(question, results, isAcqVariant) {
-  // save results
-  /* saveResults(formatQuizResult(
-    Array.from(userAnswers, ([key, value]) => ({ key, value }))
-  )); */
+  const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
+  const locale = window.location.pathname.split('/')[1] || 'en';
+  const quizResults = {
+    DATE: date,
+    LOCALE: locale,
+  };
+  const keys = [...userAnswers.keys()];
+  const maxKey = Math.max(...keys);
+
+  for (let i = 0; i <= maxKey; i += 1) {
+    const answer = userAnswers.get(i);
+    quizResults[`Q${i + 1}`] = answer === true ? 'correct' : 'incorrect';
+  }
+
+  const { savedata } = question.closest('.section').dataset;
+  if (savedata) saveData(quizResults, savedata, { invisible: true });
 
   const setupShareLinks = (result, shareText, resultPath) => {
     const shareParagraph = result.querySelector('div > p:last-of-type');
@@ -681,8 +745,8 @@ function showResult(question, results, isAcqVariant) {
     const resultUrl = new URL(window.location.href);
     resultUrl.hash = '';
     const cleanUrl = resultUrl.toString();
-    const shareUrl = encodeURIComponent(`${cleanUrl}${resultPath}`);
-    const shareTextAndUrl = encodeURIComponent(`${shareText?.trim().replace(/<br>/g, '\n')} ${cleanUrl}${resultPath}`);
+    const shareUrl = encodeURIComponent(`${cleanUrl}/${resultPath}`);
+    const shareTextAndUrl = encodeURIComponent(`${shareText?.trim().replace(/<br>/g, '\n')} ${cleanUrl}/${resultPath}`);
 
     const linksConfig = {
       facebook: {
@@ -976,12 +1040,20 @@ function copyToClipboard(block, caller, popupText, resultPath) {
 
 export default function decorate(block) {
   const {
-    resultPage, clipboardText,
+    resultPage, clipboardText, savedata,
   } = block.closest('.section').dataset;
 
   const [startBlock, ...questionsAndResults] = block.children;
   const isAcqVariant = startBlock.closest('.acq-quiz');
   decorateStartPage(startBlock, isAcqVariant);
+
+  // create turnstileDiv
+  if (savedata) {
+    const turnstileDiv = document.createElement('div');
+    turnstileDiv.id = 'turnstile-container';
+    turnstileDiv.className = 'turnstile-box';
+    block.appendChild(turnstileDiv);
+  }
 
   if (resultPage) {
     const results = getDivsBasedOnFirstParagraph(block, 'answer-box');

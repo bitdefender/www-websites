@@ -312,57 +312,57 @@
 
 .creator-cards {
   .four-cards.white-cards {
-      h3 {
-          text-align: left;
-          font-size: 17px;
-          line-height: 1.25;
-          margin-bottom: 0;
-      }
+    h3 {
+      text-align: left;
+      font-size: 17px;
+      line-height: 1.25;
+      margin-bottom: 0;
+    }
 
-      p {
-          font-size: 12px;
-          margin-bottom: 0;
-      }
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
       
-      a {
-          margin-top: 10px;
-      }
+    a {
+      margin-top: 10px;
+    }
 
-      li {
-          max-width: 428px;
-          background-color: #fff;
-      }
+    li {
+      max-width: 428px;
+      background-color: #fff;
+    }
 
-      svg {
-          width: 50px;
-          height: 50px;
-          box-shadow: rgb(0 0 0 / 5%);
-      }
+    svg {
+      width: 50px;
+      height: 50px;
+      box-shadow: rgb(0 0 0 / 5%);
+    }
   }
 
   .four-cards.centered {
-      li {
-        text-align: center;
-        max-width: 321px;
-      }
+    li {
+      text-align: center;
+      max-width: 321px;
+    }
 
-      p, strong {
-          font-size: 16px;
-      }
+    p, strong {
+      font-size: 16px;
+    }
 
-      p:first-of-type {
-          margin: 0;
-      }
+    p:first-of-type {
+      margin: 0;
+    }
 
-      span {
-          margin: 0;
-          height: 31px;
-      }
+    span {
+      margin: 0;
+      height: 31px;
+    }
 
-      svg { 
-          height: 31px;
-          width: 31px;
-      }
+    svg { 
+      height: 31px;
+      width: 31px;
+    }
   }
 }
 
@@ -416,6 +416,10 @@
     max-width: var(--section-desktop-max-width);
     padding: 23px var(--section-desktop-padding);
     border-radius: 0;
+  }
+
+  .four-cards-container.centered2 .default-content-wrapper {
+    text-align: center;
   }
 }
 
