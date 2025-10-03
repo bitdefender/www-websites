@@ -897,7 +897,6 @@ export const getProductFinding = () => {
     return productFindingMetadata;
   }
 
-  console.warn('Product Finding unset in metadata');
   const pageName = page.name.toLowerCase();
   let productFinding;
   switch (pageName) {
