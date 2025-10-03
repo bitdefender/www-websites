@@ -883,8 +883,8 @@ export const generatePageLoadStartedName = () => {
     if (pathname.includes('spot-the-scam-quiz')) {
       tagName = `${locale}:consumer:quiz`;
       if (!pathname.endsWith('/')) {
-        const result = document.querySelector('h1');
-        tagName = `${locale}:consumer:quiz:results${result ? `:${result.innerText?.toLowerCase()}` : ''}`;
+        const result = page.name;
+        tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
       }
     }
 
