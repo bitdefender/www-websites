@@ -1,6 +1,7 @@
 /* stylelint-disable no-descending-specificity */
 .box-carousel-container {
     background: white;
+   
 }
 
 .box-carousel-container .carousel-header {
@@ -305,6 +306,7 @@
   width: 90% !important;
   table-layout: fixed;
 }
+
 .trusted .box-carousel-container .subtitle-secondary{
   transform: translateY(-40%);
 }

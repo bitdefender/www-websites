@@ -7,94 +7,77 @@ export default async function decorate(block) {
   const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
   const isTrusted = block.classList.contains('trusted-carousel');
   const slidesHTML = slides.map((slide) => {
+    const r = slide.children[0];
+    const c0 = r?.children?.[0];
+    const c1 = r?.children?.[1];
+    const c2 = r?.children?.[2];
+    const c3 = r?.children?.[3];
+    const hasImg = c0?.querySelector?.('img, picture, .icon');
+    const trusted = document.body.classList.contains('trusted');
+
     if (isTestimonials && block.classList.contains('reviews')) {
+      const imgPart = c0?.innerHTML ?? '';
+      const titlePart = c1?.outerHTML ?? '';
+
+      const subSecondary = (() => {
+        const v = c2?.innerHTML || '';
+        if (v.includes('<strong')) return (c2?.innerHTML || '');
+        return '';
+      })();
+
+      const subPrimary = (() => {
+        if (c3 != null) return c3?.innerHTML || '';
+        const v = c2?.innerHTML || '';
+        if (v.includes('<strong')) return '';
+        return c2?.innerHTML || '';
+      })();
+
       return `
-  <li class="carousel-item glide__slide">
-    <div class="img-container">
-      ${slide.children[0]?.children[0]?.innerHTML ?? ''}
-    </div>
-
-    <p class="title">${slide.children[0]?.children[1]?.outerHTML ?? ''}</p>
-
-    <div class="subtitle-secondary">${
-  ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong'))
-    ? (slide.children[0]?.children[2]?.innerHTML || '')
-    : ''
-}</div>
-
-    <div class="subtitle">${
-  (() => {
-    if (slide.children[0]?.children[3] != null) {
-      return slide.children[0]?.children[3]?.innerHTML || '';
+<li class="carousel-item glide__slide">
+  <div class="img-container">${imgPart}</div>
+  <p class="title">${titlePart}</p>
+  <div class="subtitle-secondary">${subSecondary}</div>
+  <div class="subtitle">${subPrimary}</div>
+</li>`;
     }
-    if ((slide.children[0]?.children[2]?.innerHTML || '').includes('<strong')) {
-      return '';
-    }
-    return slide.children[0]?.children[2]?.innerHTML || '';
-  })()
-}</div>
-  </li>
-`;
-    }
+
+    const mediaBlock = (() => {
+      if (isTestimonials) {
+        if (hasImg) return `<div class="img-container">${c0?.innerHTML ?? ''}</div>`;
+        return '<div class="img-container"></div>';
+      }
+      return (c0?.innerHTML ?? '');
+    })();
+
+    const titleHTML = (() => {
+      if (!isTestimonials) return c1?.outerHTML ?? '';
+      if (hasImg) return (c1?.outerHTML ?? c0?.outerHTML ?? '');
+      return c0?.outerHTML ?? '';
+    })();
+
+    const subSecondary = (() => {
+      if (!isTestimonials) return '';
+      if (hasImg) return trusted ? c2?.innerHTML : (c2?.innerHTML ?? '');
+      return trusted ? c1?.innerHTML : (c1?.innerHTML ?? '');
+    })();
+
+    const subPrimary = (() => {
+      if (!isTestimonials) return c2?.innerHTML ?? '';
+      if (hasImg) return trusted ? c3?.innerHTML : (c3?.innerHTML ?? '');
+      return trusted ? c2?.innerHTML : (c2?.innerHTML ?? '');
+    })();
+
     return `
-  <li class="carousel-item glide__slide">
-    ${isTestimonials ? `
-      <div class="img-container">${
-  (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon'))
-    ? (slide.children[0]?.children[0]?.innerHTML ?? '')
-    : ''
-}</div>
-    ` : (slide.children[0]?.children[0]?.innerHTML ?? '')}
-
-    <p class="title">${
-  (() => {
-    if (isTestimonials) {
-      if (slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon')) {
-        return slide.children[0]?.children[1]?.outerHTML ?? slide.children[0]?.children[0]?.outerHTML ?? '';
-      }
-      return slide.children[0]?.children[0]?.outerHTML ?? '';
-    }
-    return slide.children[0]?.children[1]?.outerHTML ?? '';
-  })()
-}</p>
-
-    ${isTestimonials ? `
-      <div class="subtitle-secondary">${
-  (() => {
-    const hasImage = slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon');
-    if (hasImage) {
-      if (document.body.classList.contains('trusted')) {
-        return slide.children[0]?.children[2]?.innerHTML;
-      }
-      return slide.children[0]?.children[2]?.innerHTML ?? '';
-    }
-    if (document.body.classList.contains('trusted')) {
-      return slide.children[0]?.children[1]?.innerHTML;
-    }
-    return slide.children[0]?.children[1]?.innerHTML ?? '';
-  })()
-}</div>
-
-<div class="subtitle">${
-  (() => {
-    const hasImage = slide.children[0]?.children[0]?.querySelector?.('img, picture, .icon');
-    if (hasImage) {
-      if (document.body.classList.contains('trusted')) {
-        return slide.children[0]?.children[3]?.innerHTML;
-      }
-      return slide.children[0]?.children[3]?.innerHTML ?? '';
-    }
-    if (document.body.classList.contains('trusted')) {
-      return slide.children[0]?.children[2]?.innerHTML;
-    }
-    return slide.children[0]?.children[2]?.innerHTML ?? '';
-  })()
-}</div>
-    ` : `
-      <div class="subtitle">${slide.children[0]?.children[2]?.innerHTML ?? ''}</div>
-    `}
-  </li>
-`;
+<li class="carousel-item glide__slide">
+  ${mediaBlock}
+  <p class="title">${titleHTML}</p>
+  ${
+  isTestimonials
+    ? `<div class="subtitle-secondary">${subSecondary}</div>
+         <div class="subtitle">${subPrimary}</div>`
+    : `<div class="subtitle">${subPrimary}</div>`
+}
+</li>`;
   }).join('');
 
   // Only one carousel-nav block: your original one with div.navigation-item
@@ -243,7 +226,7 @@ export default async function decorate(block) {
     glide.update();
     updateNav();
     updateArrows();
-    
+
     if (isTestimonials && window.pathname.includes('box-carousel-testimonials-new') && arrowsEl) {
       arrowsEl.style.display = 'none';
     }

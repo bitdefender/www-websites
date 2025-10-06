@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Starter project for Adobe Helix",
   "scripts": {
-    "lint:js": "eslint . --fix",
+    "lint:js": "eslint .",
     "lint:css": "stylelint _src/blocks/**/*.css --fix",
     "lint": "npm run lint:js && npm run lint:css",
     "postinstall": "node .husky/update-importmap.js",
