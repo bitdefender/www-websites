@@ -1,16 +1,55 @@
+import {
+  AdobeDataLayerService, UserDetectedEvent, WindowLoadStartedEvent, WindowLoadedEvent,
+} from '@repobit/dex-data-layer';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
+import { matchHeights, renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
+import page from '../../scripts/page.js';
 
 const correctAnswersText = new Map();
 const partiallyWrongAnswersText = new Map();
 const wrongAnswersText = new Map();
 const showAfterAnswerText = new Map();
+const showBeforeListText = new Map();
 const userAnswers = new Map();
 const clickAttempts = new Map();
 const shareTexts = new Map();
 let score = 0;
 
-function decorateStartPage(startBlock) {
+// eslint-disable-next-line no-unused-vars
+function formatQuizResult(resultArray, totalQuestions = 10) {
+  const resultMap = new Map(resultArray.map((item) => [item.key, item.value]));
+  const resultLines = [];
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < totalQuestions; i++) {
+    const isCorrect = resultMap.get(i) === true;
+    resultLines.push(`Q${i + 1}: ${isCorrect ? 'correct' : 'incorrect'}`);
+  }
+
+  return resultLines.join(', ');
+}
+
+// eslint-disable-next-line no-unused-vars
+async function saveResults(resultArray) {
+  const endpoint = 'https://script.google.com/macros/s/AKfycbxqADa1Mi_VK6r6mrdGcjMxNgcb_QMmPIiC7cIdRR86g3ryCmtSXymouuOjCV0NeQcZHA/exec';
+
+  try {
+    await fetch(endpoint, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ result: resultArray }),
+    });
+
+    // console.log('Data saved');
+  } catch (err) {
+    // console.error('Err:', err);
+  }
+}
+
+function decorateStartPage(startBlock, isAcqVariant) {
   if (!startBlock) return;
   startBlock.classList.add('start-page');
 
@@ -28,6 +67,28 @@ function decorateStartPage(startBlock) {
     });
 
     ul = ul.replaceWith(legalDiv);
+  }
+
+  if (isAcqVariant) {
+    const secondDiv = startBlock.querySelector('div:nth-of-type(2)');
+    if (secondDiv) {
+      const paragraphs = secondDiv.querySelectorAll('p');
+      const contentDiv = document.createElement('div');
+      contentDiv.classList.add('start-content');
+      // for every 2 paragraphs, wrap them in a div, but not the paragraph that contains a picture
+      paragraphs.forEach((paragraph, index) => {
+        if (!paragraph.querySelector('picture')) {
+          if (index % 2 === 0) {
+            const wrapper = document.createElement('div');
+            wrapper.appendChild(paragraph);
+            contentDiv.appendChild(wrapper);
+          } else {
+            contentDiv.lastChild.appendChild(paragraph);
+          }
+        }
+      });
+      secondDiv.prepend(contentDiv);
+    }
   }
 }
 
@@ -50,10 +111,11 @@ function processStyledText(html) {
   return processedHtml;
 }
 
-function createAfterAnswerParagraph(message) {
+function createNewParagraph(message, className) {
+  if (!message) return '';
   const p = document.createElement('p');
-  p.setAttribute('data-type', 'show-after-answer-text');
-  p.classList.add('show-after-answer-text');
+  p.setAttribute('data-type', className);
+  p.classList.add(className);
   p.innerHTML = `<strong>${processStyledText(message)}</strong>`;
   return p;
 }
@@ -99,6 +161,11 @@ function processSpecialParagraphs(question, index) {
         showAfterAnswerText.set(index, message);
       }
 
+      if (cellText.startsWith('show-before-list-text:')) {
+        const message = cellText.split('show-before-list-text:')[1].trim();
+        showBeforeListText.set(index, message);
+      }
+
       if (cellText.startsWith('share-text:')) {
         let message = cellText.split('share-text:')[1].trim();
         message = decodeURIComponent(message);
@@ -137,6 +204,10 @@ function processSpecialParagraphs(question, index) {
  */
 function decorateAnswersList(question, questionIndex) {
   const answersList = question.querySelector('ul');
+  const secondaryAnswersList = question.querySelector('ul:nth-of-type(2)');
+  secondaryAnswersList?.classList.add('secondary-answers-list');
+
+  // this is a clickable question or a question where we want a list after you answer
   if (question.querySelector('h6')) {
     return;
   }
@@ -208,18 +279,24 @@ function decorateAnswersList(question, questionIndex) {
       }
 
       const nextButton = question.querySelector('a[href="#continue"]');
+      const anotherQuiz = question.querySelector('a[href="#quiz-2"]');
 
       // Show the next button if it exists
       if (nextButton) {
         nextButton.style.display = '';
       }
 
-      answersList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
+      // Show the another quiz button if it exists
+      if (anotherQuiz) {
+        anotherQuiz.style.display = '';
+      }
+
+      answersList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
     });
   });
 }
 
-function showQuestion(index) {
+function showQuestion(index, isAcqVariant) {
   // Hide all questions
   const allQuestions = document.querySelectorAll('.scam-masters .question');
   const startPage = document.querySelector('.scam-masters .start-page');
@@ -238,6 +315,18 @@ function showQuestion(index) {
   const questionToShow = document.querySelector(`.scam-masters .question-${index}`);
   if (questionToShow) {
     questionToShow.style.display = '';
+    if (isAcqVariant) {
+      const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+        pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index}`;
+        pageLoadStartedInfo.subSubSection = 'quiz';
+        pageLoadStartedInfo.subSubSubSection = `question ${index}`;
+        return pageLoadStartedInfo;
+      });
+
+      AdobeDataLayerService.push(newPageLoaded);
+      AdobeDataLayerService.push(new UserDetectedEvent());
+      AdobeDataLayerService.push(new WindowLoadedEvent());
+    }
   }
 }
 
@@ -291,8 +380,10 @@ function showWrong(question, questionIndex) {
   const questionContent = question.querySelector('.question-content');
   questionContent.classList.add('wrong-answer');
   const answerList = question.querySelector('.answers-list');
+  const secondaryAnswersList = question.querySelector('.secondary-answers-list');
   const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
   const continueButton = question.querySelector('a[href="#continue"]');
+  const anotherQuizButton = question.querySelector('a[href="#quiz-2"]');
   const triesCounter = question.querySelector('.tries');
   const questionScamTag = question.querySelector('.question-scam-tag');
 
@@ -305,13 +396,22 @@ function showWrong(question, questionIndex) {
   // Update the question content with the processed text
   questionContent.innerHTML = wrongText;
 
-  answerList.style.display = 'block';
+  if (secondaryAnswersList) {
+    secondaryAnswersList.style.display = 'block';
+  } else {
+    answerList.style.display = 'block';
+  }
+
   if (notAScamButton) {
     notAScamButton.style.display = 'none';
   }
 
   if (continueButton) {
     continueButton.style.display = '';
+  }
+
+  if (anotherQuizButton) {
+    anotherQuizButton.style.display = '';
   }
 
   if (triesCounter) {
@@ -325,7 +425,13 @@ function showWrong(question, questionIndex) {
   const explanation = document.createElement('div');
   explanation.classList.add('explanation');
   explanation.innerHTML = processStyledText(showAfterAnswerText.get(questionIndex));
-  answerList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
+  if (secondaryAnswersList) {
+    secondaryAnswersList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
+    secondaryAnswersList.prepend(createNewParagraph(showBeforeListText.get(questionIndex), 'show-before-list-text'));
+  } else {
+    answerList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
+    answerList.prepend(createNewParagraph(showBeforeListText.get(questionIndex), 'show-before-list-text'));
+  }
 }
 
 function showCorrect(question, questionIndex) {
@@ -335,6 +441,7 @@ function showCorrect(question, questionIndex) {
   const answerList = question.querySelector('.answers-list');
   const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
   const continueButton = question.querySelector('a[href="#continue"]');
+  const anotherQuizButton = question.querySelector('a[href="#quiz-2"]');
   const triesCounter = question.querySelector('.tries');
   const questionScamTag = question.querySelector('.question-scam-tag');
 
@@ -353,6 +460,10 @@ function showCorrect(question, questionIndex) {
     continueButton.style.display = '';
   }
 
+  if (anotherQuizButton) {
+    anotherQuizButton.style.display = '';
+  }
+
   if (triesCounter) {
     triesCounter.style.display = 'none';
   }
@@ -361,7 +472,7 @@ function showCorrect(question, questionIndex) {
     questionScamTag.style.display = 'flex';
   }
 
-  answerList.append(createAfterAnswerParagraph(showAfterAnswerText.get(questionIndex)));
+  answerList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
 }
 
 function decorateClickQuestions(question, index) {
@@ -605,7 +716,7 @@ async function saveData(quizResults, fileName, { invisible = false } = {}) {
   }
 }
 
-function showResult(question, results) {
+function showResult(question, results, isAcqVariant) {
   const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
   const locale = window.location.pathname.split('/')[1] || 'en';
   const quizResults = {
@@ -684,7 +795,29 @@ function showResult(question, results) {
     },
   ];
 
+  const scoreRangesAcq = [
+    {
+      min: 0, max: 2, resultIndex: 0, shareText: shareTexts.get(0), resultUrl: 'digital-rookie',
+    },
+    {
+      min: 3, max: 3, resultIndex: 1, shareText: shareTexts.get(1), resultUrl: 'scam-spotter',
+    },
+    {
+      min: 4, max: 4, resultIndex: 2, shareText: shareTexts.get(2), resultUrl: 'digital-detective',
+    },
+    {
+      min: 5, max: 5, resultIndex: 3, shareText: shareTexts.get(3), resultUrl: 'cyber-ninja',
+    },
+  ];
+
   const foundRange = scoreRanges.find((range) => score >= range.min && score <= range.max);
+  const ACQfoundRange = scoreRangesAcq.find((range) => score >= range.min && score <= range.max);
+
+  if (isAcqVariant) {
+    const finalQuiz = document.querySelector('.quiz-stepper-container');
+    finalQuiz.setAttribute('data-score', ACQfoundRange.resultUrl);
+    return;
+  }
 
   if (foundRange && results[foundRange.resultIndex]) {
     results[foundRange.resultIndex].style.display = '';
@@ -692,8 +825,89 @@ function showResult(question, results) {
   }
 }
 
-function decorateQuestions(questions, results) {
-  questions.forEach((question, index) => {
+function decorateScamButtons(question, index, isAcqVariant) {
+  // Create flex container for scam/no-scam buttons
+  const scamLink = question.querySelector('a[href="#scam"]');
+  const noScamLink = question.querySelector('a[href="#no-scam"]');
+
+  if (scamLink && noScamLink) {
+    const scamParent = scamLink.parentElement;
+    const noScamParent = noScamLink.parentElement;
+
+    // Ensure both parents exist and have the same parent
+    if (scamParent && noScamParent && scamParent.parentElement === noScamParent.parentElement) {
+      // Create a flex container
+      const buttonContainer = document.createElement('div');
+      buttonContainer.classList.add('scam-buttons-container');
+
+      // Get the common parent and remember the position of the first button
+      const commonParent = scamParent.parentElement;
+      const referenceElement = scamParent;
+
+      // Insert the container exactly where the first button was
+      commonParent.insertBefore(buttonContainer, referenceElement);
+
+      // Move both button parents into the container
+      buttonContainer.appendChild(scamParent);
+      buttonContainer.appendChild(noScamParent);
+    }
+
+    // Helper function to setup button behavior
+    const setupButton = (button) => {
+      if (button.textContent.startsWith('correct: ')) {
+        button.classList.add('correct');
+        button.textContent = button.textContent.replace('correct: ', '');
+      }
+
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (userAnswers.has(index)) return;
+
+        const isCorrect = button.classList.contains('correct');
+        userAnswers.set(index, isCorrect);
+
+        if (isCorrect) {
+          score += 1;
+          showCorrect(question, index);
+          if (isAcqVariant) {
+            const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+              pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index + 1}:spam`;
+              pageLoadStartedInfo.subSubSection = 'quiz';
+              pageLoadStartedInfo.subSubSubSection = `question ${index + 1}`;
+              return pageLoadStartedInfo;
+            });
+
+            AdobeDataLayerService.push(newPageLoaded);
+            AdobeDataLayerService.push(new UserDetectedEvent());
+            AdobeDataLayerService.push(new WindowLoadedEvent());
+          }
+        } else {
+          showWrong(question, index);
+          if (isAcqVariant) {
+            const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+              pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index + 1}:no spam`;
+              pageLoadStartedInfo.subSubSection = 'quiz';
+              pageLoadStartedInfo.subSubSubSection = `question ${index + 1}`;
+
+              return pageLoadStartedInfo;
+            });
+
+            AdobeDataLayerService.push(newPageLoaded);
+            AdobeDataLayerService.push(new UserDetectedEvent());
+            AdobeDataLayerService.push(new WindowLoadedEvent());
+          }
+        }
+      });
+    };
+
+    // Setup both buttons
+    setupButton(scamLink);
+    setupButton(noScamLink);
+  }
+}
+
+function decorateQuestions(questions, results, isAcqVariant) {
+  questions.forEach((question, index, passedVariant = isAcqVariant) => {
     question.classList.add('question');
     question.classList.add(`question-${index + 1}`);
     question.dataset.questionIndex = index + 1;
@@ -701,18 +915,49 @@ function decorateQuestions(questions, results) {
     processSpecialParagraphs(question, index);
     decorateAnswersList(question, index);
     decorateClickQuestions(question, index);
+    decorateScamButtons(question, index, isAcqVariant);
 
-    // Hide all questions initially except the first one
+    // Hide all questions initially
     question.style.display = 'none';
 
     if (index < questions.length) {
       const nextButton = question.querySelector('a[href="#continue"]');
       if (nextButton && index < questions.length - 1) {
         nextButton.style.display = 'none';
-        nextButton.addEventListener('click', () => showQuestion(index + 2));
+        nextButton.addEventListener('click', () => showQuestion(index + 2, passedVariant));
       } else if (nextButton && index === questions.length - 1) {
         nextButton.style.display = 'none';
-        nextButton.addEventListener('click', () => showResult(question, results));
+        nextButton.addEventListener('click', () => showResult(question, results, isAcqVariant));
+      }
+
+      const anotherQuiz = question.querySelector('a[href="#quiz-2"]');
+      if (anotherQuiz) {
+        anotherQuiz.style.display = 'none';
+        anotherQuiz.addEventListener('click', (e) => {
+          e.preventDefault();
+          question.closest('.section').classList.add('fade-out');
+          showResult(question, results, isAcqVariant);
+          document.querySelector('.quiz-stepper-container').classList.add('fade-in');
+          if (isAcqVariant) {
+            const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+              pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question form`;
+              pageLoadStartedInfo.subSubSection = 'quiz';
+              pageLoadStartedInfo.subSubSubSection = 'question form';
+              return pageLoadStartedInfo;
+            });
+            AdobeDataLayerService.push(newPageLoaded);
+            AdobeDataLayerService.push(new UserDetectedEvent());
+            AdobeDataLayerService.push(
+              {
+                event: 'form viewed',
+                user: {
+                  form: 'Who do you protect online?',
+                },
+              },
+            );
+            AdobeDataLayerService.push(new WindowLoadedEvent());
+          }
+        });
       }
     }
   });
@@ -734,12 +979,12 @@ function decorateResults(results) {
   });
 }
 
-function setupStartButton(block) {
+function setupStartButton(block, isAcqVariant) {
   const startButton = block.querySelector('a[href="#start-quiz"]');
   if (startButton) {
     startButton.addEventListener('click', (e) => {
       e.preventDefault();
-      showQuestion(1);
+      showQuestion(1, isAcqVariant);
     });
   }
 }
@@ -797,6 +1042,10 @@ export default function decorate(block) {
     resultPage, clipboardText, savedata,
   } = block.closest('.section').dataset;
 
+  const [startBlock, ...questionsAndResults] = block.children;
+  const isAcqVariant = startBlock.closest('.acq-quiz');
+  decorateStartPage(startBlock, isAcqVariant);
+
   // create turnstileDiv
   if (savedata) {
     const turnstileDiv = document.createElement('div');
@@ -814,14 +1063,11 @@ export default function decorate(block) {
     return;
   }
 
-  const [startBlock, ...questionsAndResults] = block.children;
-  decorateStartPage(startBlock);
-
   const questions = getDivsBasedOnFirstParagraph(block, 'question-box');
   const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
-  decorateQuestions(questions, results);
+  decorateQuestions(questions, results, isAcqVariant);
   decorateResults(results);
-  setupStartButton(block);
+  setupStartButton(block, isAcqVariant);
 
   const questionsContainer = document.createElement('div');
   questionsContainer.classList.add('questions-container');
@@ -841,5 +1087,7 @@ export default function decorate(block) {
       });
     });
   }
+
+  matchHeights(block, '.scam-buttons-container a');
   decorateIcons(block);
 }
