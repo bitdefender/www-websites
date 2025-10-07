@@ -47,29 +47,26 @@ export default async function decorate(block) {
       <div class="glide__track content-wrapper" data-glide-el="track">
         <ul class="glide__slides">
           ${slides.map((slide) => {
-            const firstDiv = slide.querySelector("div");
-            const lastDiv = slide.querySelector("div:last-of-type");
+            const firstDiv = slide.querySelector('div');
+            const lastDiv = slide.querySelector('div:last-of-type');
 
-            return `
-              <li class="glide__slide slide">
-                <div class="left-content">
-                  ${firstDiv ? firstDiv.innerHTML : ""}
-                </div>
-                <div class="right-content">
-                  ${(() => {
-                    if (!lastDiv) return "";
-                    const content = lastDiv.textContent.trim();
+            return `<li class="glide__slide slide">
+              <div class="left-content">
+                ${firstDiv ? firstDiv.innerHTML : ''}
+              </div>
+              <div class="right-content">
+                ${(() => {
+                  if (!lastDiv) return '';
+                  const content = lastDiv.textContent.trim();
 
-                    if (content.startsWith("https://www.youtube.com/embed/")) {
-                      return `
-                      <iframe width="100%" height="100%" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
-                    }
+                  if (content.startsWith('https://www.youtube.com/embed/')) {
+                    return ` <iframe width="100%" height="100%" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+                  }
 
-                    return lastDiv.innerHTML;
-                  })()}
-                </div>
-              </li>
-            `;
+                  return lastDiv.innerHTML;
+                })()}
+              </div>
+            </li>`;
           }).join('')}
         </ul>
       </div>
@@ -84,10 +81,10 @@ export default async function decorate(block) {
     </div>
   `;
 
-  const navItems  = block.querySelectorAll('.nav-item');
-  const glideEl   = block.querySelector('.glide');
+  const navItems = block.querySelectorAll('.nav-item');
+  const glideEl = block.querySelector('.glide');
   const leftArrow = block.querySelector('.left-arrow');
-  const rightArrow= block.querySelector('.right-arrow');
+  const rightArrow = block.querySelector('.right-arrow');
 
   const glide = new Glide(glideEl, {
     type: 'slider',
@@ -107,9 +104,9 @@ export default async function decorate(block) {
     const { index } = glide;
     navItems.forEach((item, i) => item.classList.toggle('active', i === index));
   });
-  
+
   navItems.forEach((item, index) => item.addEventListener('click', () => glide.go(`=${index}`)));
-  if (leftArrow)  leftArrow.addEventListener('click',  (e) => { e.preventDefault(); glide.go('<'); });
+  if (leftArrow) leftArrow.addEventListener('click',  (e) => { e.preventDefault(); glide.go('<'); });
   if (rightArrow) rightArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('>'); });
 
   glide.mount();
