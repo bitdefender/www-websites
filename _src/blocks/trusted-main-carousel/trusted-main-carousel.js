@@ -11,6 +11,7 @@ export default async function decorate(block) {
   block.innerHTML = `
     <div class="carousel-container glide">
       <div class="navigation-wrapper">
+      sdgsdfg
         ${!navigationPosition ? `<div class="first-nav">
           ${navItemsNames.map((text, index) => `
             <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
@@ -109,7 +110,7 @@ export default async function decorate(block) {
     const { index } = glide;
     navItems.forEach((item, i) => item.classList.toggle('active', i === index));
   });
-  
+
   navItems.forEach((item, index) => item.addEventListener('click', () => glide.go(`=${index}`)));
   if (leftArrow)  leftArrow.addEventListener('click',  (e) => { e.preventDefault(); glide.go('<'); });
   if (rightArrow) rightArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('>'); });
