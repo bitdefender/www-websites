@@ -196,6 +196,8 @@ export default async function decorate(block, options) {
     mobileImage = '';
   }
 
+
+
   // Get all the siblings after h1
   const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
   // Put the siblings in a new div and append it to the block
@@ -213,6 +215,7 @@ export default async function decorate(block, options) {
 
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
   desktopImage?.classList.add('hero-aem__desktop-image');
+  desktopImage?.setAttribute('loading', 'eager');
 
   const buyLink = block.querySelector('a[href*="buylink"]');
 
