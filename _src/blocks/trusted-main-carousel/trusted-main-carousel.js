@@ -86,62 +86,33 @@ export default async function decorate(block) {
     </div>
   `;
 
-  const navItems = block.querySelectorAll('.nav-item');
-  const glideEl = block.querySelector('.glide');
+  const navItems  = block.querySelectorAll('.nav-item');
+  const glideEl   = block.querySelector('.glide');
   const leftArrow = block.querySelector('.left-arrow');
-  const rightArrow = block.querySelector('.right-arrow');
+  const rightArrow= block.querySelector('.right-arrow');
 
-  // Initialize Glide config
   const glide = new Glide(glideEl, {
     type: 'slider',
     startAt: 0,
     perView: 1,
+    keyboard: true,
+    swipeThreshold: 40,
+    dragThreshold: 60,
+    touchAngle: 45,
+    perTouch: 1,
+    animationDuration: 250,
+    animationTimingFunc: 'ease-out',
+    hoverpause: false,
   });
 
   glide.on('run.after', () => {
     const { index } = glide;
     navItems.forEach((item, i) => item.classList.toggle('active', i === index));
   });
-
-  navItems.forEach((item, index) => {
-    item.addEventListener('click', () => glide.go(`=${index}`));
-  });
-
-  if (leftArrow) {
-    leftArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      glide.go('<');
-    });
-  }
-
-  if (rightArrow) {
-    rightArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      glide.go('>');
-    });
-  }
+  
+  navItems.forEach((item, index) => item.addEventListener('click', () => glide.go(`=${index}`)));
+  if (leftArrow)  leftArrow.addEventListener('click',  (e) => { e.preventDefault(); glide.go('<'); });
+  if (rightArrow) rightArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('>'); });
 
   glide.mount();
-
-  // Reinitialize autoplay on resize (desktop only)
-  const updateAutoplay = debounce(() => {
-    const isDesktop = isView('desktop');
-    const newAutoplay = isDesktop ? 3000 : false;
-
-    glide.update({ autoplay: newAutoplay });
-
-    if (newAutoplay && glide.playing === false) {
-      glide.play(newAutoplay);
-    }
-  }, 300);
-
-  window.addEventListener('resize', updateAutoplay);
-
-  // Pause/resume on hover
-  glideEl.addEventListener('mouseenter', () => glide.pause());
-  glideEl.addEventListener('mouseleave', () => {
-    if (isView('desktop')) glide.play(3000);
-  });
-
-  window.dispatchEvent(new Event('resize'));
 }
