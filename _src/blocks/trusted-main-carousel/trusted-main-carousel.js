@@ -11,7 +11,7 @@ export default async function decorate(block) {
   block.innerHTML = `
     <div class="carousel-container glide">
       <div class="navigation-wrapper">
-      sdfgsd
+      sdfgsd new
         ${!navigationPosition ? `<div class="first-nav">
           ${navItemsNames.map((text, index) => `
             <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">

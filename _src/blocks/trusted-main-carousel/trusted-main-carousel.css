@@ -507,3 +507,9 @@
         height: 222px;
     }
 }
+
+@media (max-width: 400px) {
+    .trusted-main-carousel-container.resources-design .content-wrapper .slide {
+        width: 85vw !important;
+    }
+}
