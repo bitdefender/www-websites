@@ -24,10 +24,6 @@
     justify-content: center;
 }
 
-.trusted-main-carousel-container.resources-design .navigation-wrapper .second-nav {
-    display: none;
-}
-
 .trusted-main-carousel-container.resources-design .navigation-wrapper .first-nav {
     background-color: #21212133;
     padding: 8px 10px;

@@ -1,6 +1,4 @@
 import Glide from '@glidejs/glide';
-import { debounce } from '@repobit/dex-utils';
-import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
   const { navigationPosition, arrows } = block.closest('.section').dataset;
@@ -10,15 +8,15 @@ export default async function decorate(block) {
   block.classList.add('default-content-wrapper');
   block.innerHTML = `
     <div class="carousel-container glide">
-      <div class="navigation-wrapper">
-        ${!navigationPosition ? `<div class="first-nav">
+      ${!navigationPosition ? `<div class="navigation-wrapper">
+        <div class="first-nav">
           ${navItemsNames.map((text, index) => `
             <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
               <span class="text">${text}</span><span class="pill"></span>
             </div>`).join('')}
-        </div>` : ''}
+        </div>
         
-        <div class="second-nav">
+        <div class="second-nav" ${arrows && arrows === 'hide' ? 'style="display: none;"' : ''}>
          <a href class="arrow disabled left-arrow">
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
               <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -44,7 +42,7 @@ export default async function decorate(block) {
             </svg>
           </a>
         </div>
-      </div>
+      </div>` : ''}
 
       <div class="glide__track content-wrapper" data-glide-el="track">
         <ul class="glide__slides">
