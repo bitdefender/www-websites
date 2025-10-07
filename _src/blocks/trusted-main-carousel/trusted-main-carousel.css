@@ -512,4 +512,8 @@
     .trusted-main-carousel-container.resources-design .content-wrapper .slide {
         width: 85vw !important;
     }
+
+    .trusted-main-carousel-container.resources-design .content-wrapper .slide iframe, .trusted-main-carousel-container.resources-design .content-wrapper .slide img {
+        width: 85vw !important;
+    }
 }
