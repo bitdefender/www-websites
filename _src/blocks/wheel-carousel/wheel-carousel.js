@@ -118,6 +118,7 @@ function createCarousel(block, items) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const htmlContent = Array.from(block.children).map(child => child.innerHTML);
   block.textContent = '';
   createCarousel(block, htmlContent);

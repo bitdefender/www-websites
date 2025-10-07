@@ -156,6 +156,7 @@ function decorateButtons(element) {
 }
 
 export default async function decorate(block, options) {
+  block.classList.add('global-styles');
   const {
     // eslint-disable-next-line no-unused-vars
     videoUrl,

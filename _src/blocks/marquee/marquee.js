@@ -2,6 +2,7 @@ import { debounce } from '@repobit/dex-utils';
 import { getDatasetFromSection, isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const defaultBackgroundColor = '#004299';
   const SLIDE_SIZE_ENUM = {
     MOBILE: 85 + 20 * 2,

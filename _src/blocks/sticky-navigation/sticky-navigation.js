@@ -152,6 +152,7 @@ function onScroll(stickyNav) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const stickyNav = renderStickyNavigation(block);
 
   // listen to scroll event to stick the nav on the top and update the current visible section

@@ -1,4 +1,5 @@
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const boxes = [...block.children[0].children];
 
   block.innerHTML = `

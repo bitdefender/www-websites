@@ -204,6 +204,7 @@ export async function createForm(formURL) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const form = await createForm(block.textContent.trim());
   if (form) block.append(form);
 }

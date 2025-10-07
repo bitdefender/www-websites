@@ -295,6 +295,7 @@ function initMembersMap() {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const blockDataset = getDatasetFromSection(block);
   state.blockDataset = blockDataset;
 

@@ -1,4 +1,5 @@
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const parentBlockStyle = block.closest('.section > div').style;
   const {
     // eslint-disable-next-line no-unused-vars

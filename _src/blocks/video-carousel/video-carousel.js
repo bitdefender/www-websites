@@ -59,6 +59,7 @@ function createCarousel(block, videos, titles) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const videos = Object.values(block.closest('.section').dataset).filter((value) => value.includes('https://www.youtube.com/embed/'));
   const titles = Object.keys(block.closest('.section').dataset)
     .filter((key) => key.includes('title'))

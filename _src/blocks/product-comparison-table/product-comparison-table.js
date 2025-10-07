@@ -280,6 +280,7 @@ function addProductPriceBelowSelectedColumn(block) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   addAccesibilityRoles(block);
   replaceTableTextToProperCheckmars(block);
   setExpandableRows(block);

@@ -40,6 +40,7 @@ async function loadFragment(path) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const link = block.querySelector('a');
   const path = link ? link.getAttribute('href') : block.textContent.trim();
   const fragment = await loadFragment(path);

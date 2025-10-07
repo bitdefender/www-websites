@@ -117,6 +117,7 @@ function extractFeatures(col) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const cols = [...block.firstElementChild.children];
   block.classList.add(`features-${cols.length}-cols`);
 

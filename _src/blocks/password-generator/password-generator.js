@@ -84,6 +84,7 @@ function adjustFontSize(input, password) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const { clipboardText, selectAtLeastOneCheckboxText } = block.closest('.section').dataset;
 
   // const breadcrumb = createTag('div', { class: 'breadcrumb' });

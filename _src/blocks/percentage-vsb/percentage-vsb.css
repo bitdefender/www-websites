@@ -1,109 +1,112 @@
-/* stylelint-disable no-descending-specificity */
-.percentage-vsb-container {
-  display: flex;
-  justify-content: center;
-  font-family: 'IBM Plex Sans', sans-serif;
-}
+@layer components {
 
-.percentage-vsb-container.we-container{
-  max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-top: 15px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.percentage-vsb-container a{
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  -webkit-font-smoothing: antialiased;
-  display: inline-flex;
-  align-items: center;
-  box-sizing: border-box;
-  text-decoration: none;
-  padding: 10px 26px 8px 28px;
-  text-align: center;
-  cursor: pointer;
-  color: #fff;
-  background-color: #eb0000;
-  border: 2px solid #eb0000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-radius: 8px;
-  height: fit-content;
-}
-
-.percentage-vsb-container a:hover {
-  background-color: #d80000;
-  border: 2px solid #d80000;
-  cursor: pointer;
-}
-
-.percentage-vsb-wrapper {
-  max-width: 630px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-}
-
-.percentage-vsb-wrapper .columns-container{
-  display:flex;
-  flex-direction: column;
-  gap:0;
-}
-
-.percentage-vsb-wrapper .columns-container .col{
-  width: 100%;
-  padding: 5px;
-}
-
-.percentage-vsb-wrapper .title-class h2{
-  font-size: 38px;
-  line-height: 40px;
-  margin-top: 1em;
-}
-
-.percentage-vsb-wrapper .subtitle-class{
-  font-size:18px;
-}
-
-.percentage-vsb-wrapper .columns-container h4{
-  font-size: 38px;
-  color: #F00F0F;
-  margin-top: 0;
-  margin-bottom: 9px;
-}
-
-.percentage-vsb-wrapper .button-container{
-  display: flex;
-  justify-content: center;
-  margin-top: 1em;
-}
-
-@media (min-width: 768px) {
-  .percentage-vsb-wrapper .columns-container{
-    display:flex;
-    flex-direction: row;
-    margin-top:35px;
-    margin-bottom: 42px;
-    gap:20px;
+  /* stylelint-disable no-descending-specificity */
+  .percentage-vsb-container {
+    display: flex;
+    justify-content: center;
+    font-family: 'IBM Plex Sans', sans-serif;
   }
 
-.percentage-vsb-wrapper .columns-container .col{
-  width: 33.33%;
-}
+  .percentage-vsb-container.we-container{
+    max-width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-.percentage-vsb-wrapper .title-class h2{
-  font-size:48px;
-  line-height: 55px;
-}
+  .percentage-vsb-container a{
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    text-decoration: none;
+    padding: 10px 26px 8px 28px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    background-color: #eb0000;
+    border: 2px solid #eb0000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 8px;
+    height: fit-content;
+  }
 
-.percentage-vsb-wrapper .columns-container h4{
-  font-size: 48px;
-  line-height: 55px;
-}
+  .percentage-vsb-container a:hover {
+    background-color: #d80000;
+    border: 2px solid #d80000;
+    cursor: pointer;
+  }
+
+  .percentage-vsb-wrapper {
+    max-width: 630px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+
+  .percentage-vsb-wrapper .columns-container{
+    display:flex;
+    flex-direction: column;
+    gap:0;
+  }
+
+  .percentage-vsb-wrapper .columns-container .col{
+    width: 100%;
+    padding: 5px;
+  }
+
+  .percentage-vsb-wrapper .title-class h2{
+    font-size: 38px;
+    line-height: 40px;
+    margin-top: 1em;
+  }
+
+  .percentage-vsb-wrapper .subtitle-class{
+    font-size:18px;
+  }
+
+  .percentage-vsb-wrapper .columns-container h4{
+    font-size: 38px;
+    color: #F00F0F;
+    margin-top: 0;
+    margin-bottom: 9px;
+  }
+
+  .percentage-vsb-wrapper .button-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+  }
+
+  @media (min-width: 768px) {
+    .percentage-vsb-wrapper .columns-container{
+      display:flex;
+      flex-direction: row;
+      margin-top:35px;
+      margin-bottom: 42px;
+      gap:20px;
+    }
+
+  .percentage-vsb-wrapper .columns-container .col{
+    width: 33.33%;
+  }
+
+  .percentage-vsb-wrapper .title-class h2{
+    font-size:48px;
+    line-height: 55px;
+  }
+
+  .percentage-vsb-wrapper .columns-container h4{
+    font-size: 48px;
+    line-height: 55px;
+  }
+  }
 }

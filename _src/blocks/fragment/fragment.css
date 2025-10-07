@@ -1,3 +1,6 @@
-.fragment {
-    z-index: 1;
+@layer components {
+
+  .fragment {
+      z-index: 1;
+  }
 }

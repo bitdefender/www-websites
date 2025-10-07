@@ -26,6 +26,7 @@ function getVideoElement(source, autoplay) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const { videoBtnText } = block.closest('.section').dataset;
   const [rte, videoUrl, modalLink] = [...block.children];
   const url = new URL(videoUrl.textContent.trim());

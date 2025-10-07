@@ -1,287 +1,290 @@
-.tabs-component-container .tabs-component {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 48px;
-}
+@layer components {
 
-.tabs-component-container.we-container {
-  max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-top: 15px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.tabs-component-container .icon svg {
-  width: 12px;
-  height: 14px;
-  padding-right: 2px;
-  fill: #fff;
-}
-
-.tabs-component-container h3 {
-  font: normal normal bold 24px/28px Arial, sans-serif;
-}
-
-.tabs-component-container p {
-  font: normal normal normal 16px/24px Arial, sans-serif;
-}
-
-.tabs-component-container span .tag{
-  position: relative;
-  bottom: 3px;
-}
-
-.tabs-component-container .title-class {
-  max-width: 80%;
-  margin: auto;
-  text-align: center;
-  margin-bottom: 27px;
-  font: normal normal bold 32px/37px Arial, sans-serif;
-}
-
-.tabs-component-container .subtitle-class {
-  max-width: 80%;
-  margin: auto;
-  text-align: center;
-  margin-bottom: 67px;
-  font: normal normal normal 18px/26px Arial, sans-serif;
-}
-
-.tabs-component-container .tabs-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-  border-bottom: 1px solid #E4F2FF;
-}
-
-.tabs-component-container .card-container {
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  gap: 3%;
-}
-
-.tabs-component-container .hide {
-  display: none;
-}
-
-.tabs-component-container .tabs-container button {
-  background-color: white;
-  color: black;
-  border: 0;
-  font: normal normal bold 18px/21px Arial, sans-serif;
-  padding: 9px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  position: relative;
-  cursor: pointer;
-}
-
-.tabs-component-container a {
-  color: #006dff !important;
-  background-color: #fff !important;
-  border: 0 !important;
-}
-
-.tabs-component-container a::after {
-  opacity: 1;
-  margin-left: 0;
-}
-
-.tabs-component-container .tabs-container button a {
-  background-color: white;
-  border: 0;
-  font: normal normal bold 18px/21px Arial, sans-serif;
-  padding: 9px;
-  margin-bottom: 10px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-.tabs-component-container .card-container a {
-  overflow: visible;
-  padding-left: 0 !important;
-}
-
-.tabs-component-container .card-container a .button-text {
-  transform: unset;
-}
-
-.tabs-component-container .card-container a:hover {
-  color: #0A53C5;
-}
-
-.tabs-component-container .card-container a::after {
-  background-color: #fff;
-  content: '\2192';
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  transition: all .2s cubic-bezier(.4,0,.2,1);
-  transform: translateX(0);
-  margin-left: 2px;
-  margin-bottom:2px;
-  mask: none !important;
-}
-
-.tabs-component-container .card-container a:hover::after {
-  transform: translateX(5px);
-  background-color: #fff;
-}
-
-.tabs-component-container .tabs-container button::after {
-  background: #006eff;
-  border-radius: 0;
-  content: "";
-  height: 4px;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  z-index: 1;
-}
-
-.tabs-component-container .tabs-container button.selected::after {
-  transition: all 1s ease;
-  width: 100%;
-}
-
-.tabs-component-container .left {
-  width: 80%;
-}
-
-.tabs-component-container .left img {
-  border-radius: 20px;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-}
-
-.tabs-component-container .right {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.tabs-component-container .right p {
-  font-size: 16px;
-}
-
-.tabs-component-container .tabs-container button p {
-  margin: 0;
-}
-
-.tabs-component-container .tabs-container button .icon {
-  display: unset;
-}
-
-.tabs-component-container .tabs-container button .icon svg {
-  width: 30px;
-  height: 30px;
-}
-
-.tabs-component-container .tabs-container button picture img {
-  width: 50px;
-  height: auto;
-}
-
-.tabs-component-container button strong {
-  display: none;
-}
-
-.tabs-component-container .tabs-container picture {
-  display: flex;
-  align-items: center;
-}
-
-.tabs-component-container .tabs-component ul {
-  list-style: disc;
-  margin-left: 15px;
-
-  li {
-    padding: 0;
+  .tabs-component-container .tabs-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 48px;
   }
-}
 
-.tabs-component-container {
-  align-items: normal !important;
-}
+  .tabs-component-container.we-container {
+    max-width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-.tabs-component-container .tabs-component.blue-heading h3 {
-  color: #006dff;
-}
+  .tabs-component-container .icon svg {
+    width: 12px;
+    height: 14px;
+    padding-right: 2px;
+    fill: #fff;
+  }
 
-.tabs-component-container .tabs-component.blue-heading .tabs-container button { 
-  color: #006dff
-}
+  .tabs-component-container h3 {
+    font: normal normal bold 24px/28px Arial, sans-serif;
+  }
 
-.tabs-component-container .tabs-component.blue-heading .tabs-container button.selected{
-  color: #000;
-}
+  .tabs-component-container p {
+    font: normal normal normal 16px/24px Arial, sans-serif;
+  }
 
-@media (min-width: 768px) {
+  .tabs-component-container span .tag{
+    position: relative;
+    bottom: 3px;
+  }
+
+  .tabs-component-container .title-class {
+    max-width: 80%;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 27px;
+    font: normal normal bold 32px/37px Arial, sans-serif;
+  }
+
+  .tabs-component-container .subtitle-class {
+    max-width: 80%;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 67px;
+    font: normal normal normal 18px/26px Arial, sans-serif;
+  }
+
   .tabs-component-container .tabs-container {
-    flex-wrap: nowrap;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #E4F2FF;
+  }
+
+  .tabs-component-container .card-container {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 3%;
+  }
+
+  .tabs-component-container .hide {
+    display: none;
+  }
+
+  .tabs-component-container .tabs-container button {
+    background-color: white;
+    color: black;
+    border: 0;
+    font: normal normal bold 18px/21px Arial, sans-serif;
+    padding: 9px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .tabs-component-container a {
+    color: #006dff !important;
+    background-color: #fff !important;
+    border: 0 !important;
+  }
+
+  .tabs-component-container a::after {
+    opacity: 1;
+    margin-left: 0;
+  }
+
+  .tabs-component-container .tabs-container button a {
+    background-color: white;
+    border: 0;
+    font: normal normal bold 18px/21px Arial, sans-serif;
+    padding: 9px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tabs-component-container .card-container a {
+    overflow: visible;
+    padding-left: 0 !important;
+  }
+
+  .tabs-component-container .card-container a .button-text {
+    transform: unset;
+  }
+
+  .tabs-component-container .card-container a:hover {
+    color: #0A53C5;
+  }
+
+  .tabs-component-container .card-container a::after {
+    background-color: #fff;
+    content: '\2192';
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    transition: all .2s cubic-bezier(.4,0,.2,1);
+    transform: translateX(0);
+    margin-left: 2px;
+    margin-bottom:2px;
+    mask: none !important;
+  }
+
+  .tabs-component-container .card-container a:hover::after {
+    transform: translateX(5px);
+    background-color: #fff;
+  }
+
+  .tabs-component-container .tabs-container button::after {
+    background: #006eff;
+    border-radius: 0;
+    content: "";
+    height: 4px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    z-index: 1;
+  }
+
+  .tabs-component-container .tabs-container button.selected::after {
+    transition: all 1s ease;
+    width: 100%;
   }
 
   .tabs-component-container .left {
-    width: 60%;
+    width: 80%;
+  }
+
+  .tabs-component-container .left img {
+    border-radius: 20px;
+    width: auto;
+    max-width: 100%;
+    height: auto;
   }
 
   .tabs-component-container .right {
-    width: 60%;
-  }
-}
-
-@media (min-width: 992px) {
-  .tabs-component-container .card-container {
-    flex-direction: row;
-    width: 830px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
-  .tabs-component-container button strong {
-    display: block;
+  .tabs-component-container .right p {
+    font-size: 16px;
+  }
+
+  .tabs-component-container .tabs-container button p {
+    margin: 0;
+  }
+
+  .tabs-component-container .tabs-container button .icon {
+    display: unset;
+  }
+
+  .tabs-component-container .tabs-container button .icon svg {
+    width: 30px;
+    height: 30px;
   }
 
   .tabs-component-container .tabs-container button picture img {
-    width: 30px;
+    width: 50px;
+    height: auto;
   }
 
-  .tabs-component-container .left {
-    width: 50%;
+  .tabs-component-container button strong {
+    display: none;
   }
 
-  .tabs-component-container .right {
-    width: 50%;
+  .tabs-component-container .tabs-container picture {
+    display: flex;
+    align-items: center;
   }
 
-  .tabs-component-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-}
+  .tabs-component-container .tabs-component ul {
+    list-style: disc;
+    margin-left: 15px;
 
-@media (min-width: 1200px) {
-  .tabs-component-container.we-container {
-    max-width: 1332px;
-    padding-left: 20px;
-    padding-right: 20px;
+    li {
+      padding: 0;
+    }
   }
-}
 
-@media (min-width: 1600px) {
-  .tabs-component-container.we-container {
-    max-width: 1332px;
-    padding-left: 20px;
-    padding-right: 20px;
+  .tabs-component-container {
+    align-items: normal !important;
+  }
+
+  .tabs-component-container .tabs-component.blue-heading h3 {
+    color: #006dff;
+  }
+
+  .tabs-component-container .tabs-component.blue-heading .tabs-container button { 
+    color: #006dff
+  }
+
+  .tabs-component-container .tabs-component.blue-heading .tabs-container button.selected{
+    color: #000;
+  }
+
+  @media (min-width: 768px) {
+    .tabs-component-container .tabs-container {
+      flex-wrap: nowrap;
+    }
+
+    .tabs-component-container .left {
+      width: 60%;
+    }
+
+    .tabs-component-container .right {
+      width: 60%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .tabs-component-container .card-container {
+      flex-direction: row;
+      width: 830px;
+    }
+
+    .tabs-component-container button strong {
+      display: block;
+    }
+
+    .tabs-component-container .tabs-container button picture img {
+      width: 30px;
+    }
+
+    .tabs-component-container .left {
+      width: 50%;
+    }
+
+    .tabs-component-container .right {
+      width: 50%;
+    }
+
+    .tabs-component-container.we-container {
+      max-width: 1300px;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .tabs-component-container.we-container {
+      max-width: 1332px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  @media (min-width: 1600px) {
+    .tabs-component-container.we-container {
+      max-width: 1332px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
   }
 }

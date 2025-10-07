@@ -180,6 +180,7 @@ function checkAddOn(featuresSet) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts, pid, mainProduct,

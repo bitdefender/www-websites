@@ -188,6 +188,7 @@ async function createForm(types, labels, flow, successMessage, failMessage, form
 }
 
 export default async function decorate(block, options) {
+  block.classList.add('global-styles');
   const {
     template, flow, captchaKey,
   } = block.closest('.section').dataset;

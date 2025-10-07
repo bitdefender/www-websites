@@ -3,6 +3,7 @@ import { debounce } from '@repobit/dex-utils';
 import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const slides = [...block.children];
   const navItemsNames = slides.map((slideEl) => slideEl.children[0].firstElementChild.textContent);
 

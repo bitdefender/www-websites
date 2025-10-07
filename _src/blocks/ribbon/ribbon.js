@@ -1,4 +1,5 @@
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const [, backgroundEl] = block.children;
 
   if (backgroundEl) {

@@ -1,4 +1,5 @@
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const urlDiv = block.querySelector('div > div:nth-child(2) > div');
   const url = urlDiv.textContent.trim();
 

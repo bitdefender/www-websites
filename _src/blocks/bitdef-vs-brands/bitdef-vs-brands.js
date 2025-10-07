@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const tables = block.querySelectorAll('.bitdef-vs-brands-wrapper table');
 
   tables.forEach((table) => {

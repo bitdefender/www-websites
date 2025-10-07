@@ -217,6 +217,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const parentSection = block.closest('.section');
   let shouldAutoplay = false;
   const startsfrom = parentSection.getAttribute('data-startsfrom') || 0;

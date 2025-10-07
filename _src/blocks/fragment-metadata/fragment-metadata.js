@@ -2,6 +2,7 @@ import { readBlockConfig } from '../../scripts/lib-franklin.js';
 import { openUrlForOs } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const {
     template,
     'open-url-macos': urlMacos,

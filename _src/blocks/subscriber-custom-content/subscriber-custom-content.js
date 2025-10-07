@@ -2,6 +2,7 @@
 import { addScript } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const allItems = block.querySelectorAll('td');
   block.innerHTML = `<div class="flex">
       <div class="column">

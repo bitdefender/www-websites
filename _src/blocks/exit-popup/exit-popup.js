@@ -2,6 +2,7 @@ import { target } from '../../scripts/target.js';
 import { ProductInfo, Store } from '../../scripts/libs/store/store.js';
 // eslint-disable-next-line no-unused-vars
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const parentSelector = block.closest('.section');
   const { product, custompid } = parentSelector.dataset;
 

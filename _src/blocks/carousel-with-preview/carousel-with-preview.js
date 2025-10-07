@@ -67,6 +67,7 @@ function updateArrowState(carousel, leftBtn, rightBtn) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const items = [...block.children];
   if (!items.length) return;
 

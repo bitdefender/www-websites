@@ -1,6 +1,7 @@
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const {
     // eslint-disable-next-line no-unused-vars
     margintop,

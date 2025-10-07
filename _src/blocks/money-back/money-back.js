@@ -2,6 +2,7 @@ import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 export default function decorate(block, options) {
+  block.classList.add('global-styles');
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');

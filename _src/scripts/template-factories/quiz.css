@@ -1,28 +1,31 @@
-.quiz {
-    header.landingpage {
-        background: black;
-        height: 64px;
+@layer experiment-styles {
 
-        .block {
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
+  .quiz {
+      header.landingpage {
+          background: black;
+          height: 64px;
 
-        &.header-wrapper::after {
-            content: unset;
-         }
+          .block {
+              height: 100%;
+              display: flex;
+              align-items: center;
+          }
 
-        .icon {
-            height: unset;
-            width: unset;
-            display: block;
-        }
-    }
+          &.header-wrapper::after {
+              content: unset;
+           }
 
-    .tag-light-blue {
-        background: #006EFF 0% 0% no-repeat padding-box;
-        border-radius: 20px;
-        padding: 5px 15px;
-    }
+          .icon {
+              height: unset;
+              width: unset;
+              display: block;
+          }
+      }
+
+      .tag-light-blue {
+          background: #006EFF 0% 0% no-repeat padding-box;
+          border-radius: 20px;
+          padding: 5px 15px;
+      }
+  }
 }

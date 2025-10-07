@@ -309,6 +309,7 @@ function createButtonsContainer(block, formContainer, clipboardText) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const { clipboardText } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');

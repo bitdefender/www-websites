@@ -133,6 +133,7 @@ export function createTabs(block) {
  * @param {HTMLElement} block
  */
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const tabs = createTabs(block);
   const dropDownMenu = block.querySelector('.dropdown-menu');
 

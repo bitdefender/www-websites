@@ -231,6 +231,7 @@ function applyFooterFactorySetup(footerMetadata, block) {
  * @param {Element} block The footer block element
  */
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const footerMetadata = getMetadata('footer-type');
   block.parentNode.classList.add(footerMetadata || 'default');
 

@@ -1,4 +1,5 @@
 export default async function decorate(block, options) {
+  block.classList.add('global-styles');
   block.closest('.section').id = 'tos';
 
   if (options) {

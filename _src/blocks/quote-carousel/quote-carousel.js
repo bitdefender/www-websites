@@ -126,6 +126,7 @@ function createDotsControls(slides) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const parentSection = block.closest('.section');
   const slides = createTag('div', { class: 'slides' });
   let slideIndex = 1;

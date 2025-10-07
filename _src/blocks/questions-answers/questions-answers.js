@@ -28,6 +28,7 @@ function handleAccordionItemClick(item, items) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const items = Array.from(block.querySelectorAll(':scope > div'));
   items.forEach((item) => {
     item.classList.add('questions-answers-item');

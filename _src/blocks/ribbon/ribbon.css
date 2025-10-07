@@ -1,38 +1,41 @@
-main .ribbon-container {
-  color: white;
-  text-align: center;
-  background-position: 0 -18px;
-  background-repeat: repeat;
-  background-blend-mode: unset;
-  background-color: black;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
+@layer components {
 
-.ribbon-container * {
-  font-family: Arial, sans-serif!important;
-  font-size: var(--body-font-size-xs);
-}
+  main .ribbon-container {
+    color: white;
+    text-align: center;
+    background-position: 0 -18px;
+    background-repeat: repeat;
+    background-blend-mode: unset;
+    background-color: black;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
 
-.ribbon-container p {
-  text-align: center;
-  margin: 5px 0;
-}
+  .ribbon-container * {
+    font-family: Arial, sans-serif!important;
+    font-size: var(--body-font-size-xs);
+  }
 
-.ribbon-container img {
-  width: 27px;
-  float: left;
-}
+  .ribbon-container p {
+    text-align: center;
+    margin: 5px 0;
+  }
 
-.ribbon-container a:any-link {
-  color: inherit;
-  text-decoration: underline;
-}
+  .ribbon-container img {
+    width: 27px;
+    float: left;
+  }
 
-.ribbon-container .block > div > div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  text-shadow: 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00;
+  .ribbon-container a:any-link {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .ribbon-container .block > div > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00;
+  }
 }

@@ -16,6 +16,7 @@ function replacePlaceholderWithVideo(videoUrl) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const { video } = block.closest('.section').dataset;
   replacePlaceholderWithVideo(video);
 }

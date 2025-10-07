@@ -1,145 +1,148 @@
-.terms-container {
-    --dark-background-color: #000;
-    --black-color: #000;
-    --white-color: #fff;
-    --background-color: #fff;
-    --link-color: #005ed9;
-    --link-hover-color: #00439c;
-    --button-link-color: #fff;
-    --button-background-color: #eb0000;
-    --button-hover-background-color: #d80000;
-    --button-primary-background-color: #000;
-    --button-primary-hover-background-color: #000;
-    --button-secondary-color: #000;
-    --button-secondary-hover-background-color: #000;
-    --overlay-background-color: #eee;
-    --highlight-background-color: #ccc;
-    --text-color: #000;
-    --text-error-color: #f00;
-    --color-highlight-blue: #006dff;
-    --color-dark-gray: #616161;
-    --checkbox-label: #3c3c3c;
-    --highlight-light-blue: #f3f7fe;
-    --text-dark-color: #fff;
-    --horizontal-separator-color: #dedede;
-    --modal-background-color: rgb(0 0 0 / 50%);
-    --background-color-light-sky-blue: #e4f2ff;
-    --icon-color: #205fff;
-    --background-light-blue: #d9eeff;
-    --background-blue: #005ed9;
-    --dark-blue-tag: #005eff;
-    --light-blue-tag: #13b0a7;
-    --green-tag: #218728;
-    --dark-shadow: #0000001a;
-    --background-checkmark: #61AF53;
-    --body-font-family: "Roboto", "roboto-normal-400-fallback", helvetica, ubuntu, roboto, noto, sans-serif;
-    --heading-font-family: var(--body-font-family);
-    --fixed-font-family: var(--body-font-family);
-    --font-weight-thin: 300;
-    --font-weight-regular: 400;
-    --font-weight-bold: 500;
-    --font-weight-bolder: 600;
-    --font-weight-boldest: 700;
-    --font-weight-heavy: 900;
-    --body-font-size-l: 22px;
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-    --body-font-size-xxs: 12px;
-    --body-font-size-xxxs: 10px;
-    --heading-font-size-xxxl: 60px;
-    --heading-font-size-xxl: 48px;
-    --heading-font-size-xl: 40px;
-    --heading-font-size-l: 32px;
-    --heading-font-size-m: 24px;
-    --heading-font-size-s: 20px;
-    --heading-font-size-xs: 18px;
-    --heading-font-size-xxs: 16px;
-    --nav-height: 63px;
-    --nav-height-desktop: 40px;
-    --body-max-width: 1920px;
-    --body-padding: 20px;
-    --section-desktop-max-width: 1290px;
-    --section-desktop-padding: 20px;
-    --section-desktop-padding-vertical: 48px;
-    --section-mobile-padding-vertical: 32px;
-    --cta-background-light-blue: var(--background-light-blue);
+@layer components {
 
-    background-color: #f2f2f2;
-}
+  .terms-container {
+      --dark-background-color: #000;
+      --black-color: #000;
+      --white-color: #fff;
+      --background-color: #fff;
+      --link-color: #005ed9;
+      --link-hover-color: #00439c;
+      --button-link-color: #fff;
+      --button-background-color: #eb0000;
+      --button-hover-background-color: #d80000;
+      --button-primary-background-color: #000;
+      --button-primary-hover-background-color: #000;
+      --button-secondary-color: #000;
+      --button-secondary-hover-background-color: #000;
+      --overlay-background-color: #eee;
+      --highlight-background-color: #ccc;
+      --text-color: #000;
+      --text-error-color: #f00;
+      --color-highlight-blue: #006dff;
+      --color-dark-gray: #616161;
+      --checkbox-label: #3c3c3c;
+      --highlight-light-blue: #f3f7fe;
+      --text-dark-color: #fff;
+      --horizontal-separator-color: #dedede;
+      --modal-background-color: rgb(0 0 0 / 50%);
+      --background-color-light-sky-blue: #e4f2ff;
+      --icon-color: #205fff;
+      --background-light-blue: #d9eeff;
+      --background-blue: #005ed9;
+      --dark-blue-tag: #005eff;
+      --light-blue-tag: #13b0a7;
+      --green-tag: #218728;
+      --dark-shadow: #0000001a;
+      --background-checkmark: #61AF53;
+      --body-font-family: "Roboto", "roboto-normal-400-fallback", helvetica, ubuntu, roboto, noto, sans-serif;
+      --heading-font-family: var(--body-font-family);
+      --fixed-font-family: var(--body-font-family);
+      --font-weight-thin: 300;
+      --font-weight-regular: 400;
+      --font-weight-bold: 500;
+      --font-weight-bolder: 600;
+      --font-weight-boldest: 700;
+      --font-weight-heavy: 900;
+      --body-font-size-l: 22px;
+      --body-font-size-m: 18px;
+      --body-font-size-s: 16px;
+      --body-font-size-xs: 14px;
+      --body-font-size-xxs: 12px;
+      --body-font-size-xxxs: 10px;
+      --heading-font-size-xxxl: 60px;
+      --heading-font-size-xxl: 48px;
+      --heading-font-size-xl: 40px;
+      --heading-font-size-l: 32px;
+      --heading-font-size-m: 24px;
+      --heading-font-size-s: 20px;
+      --heading-font-size-xs: 18px;
+      --heading-font-size-xxs: 16px;
+      --nav-height: 63px;
+      --nav-height-desktop: 40px;
+      --body-max-width: 1920px;
+      --body-padding: 20px;
+      --section-desktop-max-width: 1290px;
+      --section-desktop-padding: 20px;
+      --section-desktop-padding-vertical: 48px;
+      --section-mobile-padding-vertical: 32px;
+      --cta-background-light-blue: var(--background-light-blue);
 
-@media (min-width: 992px) { /* desktop */
-    .terms-wrapper {
-        max-width: var(--section-desktop-max-width);
-        padding: 15px var(--section-desktop-padding) 40px var(--section-desktop-padding);
-        margin: 0 auto;
-    }
-}
+      background-color: #f2f2f2;
+  }
 
-.terms-container h5 {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 0;
-}
+  @media (min-width: 992px) { /* desktop */
+      .terms-wrapper {
+          max-width: var(--section-desktop-max-width);
+          padding: 15px var(--section-desktop-padding) 40px var(--section-desktop-padding);
+          margin: 0 auto;
+      }
+  }
 
-.terms-container h6 {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 0;
-}
+  .terms-container h5 {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+  }
 
-.terms-container .terms div,
-.terms-container .terms div p {
-    font-size: 12px;
-}
+  .terms-container h6 {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+  }
 
-.terms-container .terms div p strong {
-    font-weight: bold;
-    margin-top: 15px;
-}
+  .terms-container .terms div,
+  .terms-container .terms div p {
+      font-size: 12px;
+  }
 
-.terms-container.we-container {
-    max-width: 1332px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin: 0 auto;
-}
+  .terms-container .terms div p strong {
+      font-weight: bold;
+      margin-top: 15px;
+  }
 
-.terms.border-on-top {
-    border-top: 1px solid #dedede;
-    padding-top: 20px;
-}
-
-@media (max-width: 992px) { /* mobile/tablet */
-    .terms-wrapper {
-        padding: var(--body-padding);
-    }
-
-    .terms-container.we-container {
-        max-width: 1300px;
-        padding-left: 50px;
-        padding-right: 50px;
-    }
-
-    .default-content-wrapper {
-        max-width: var(--section-desktop-max-width);
-        padding: 23px var(--section-desktop-padding);
-        border-radius: 0;
-    }
-}
-
-@media (min-width: 1200px) {
-    .terms-container.we-container {
+  .terms-container.we-container {
       max-width: 1332px;
       padding-left: 20px;
       padding-right: 20px;
-    }
-}
+      margin: 0 auto;
+  }
 
-@media (min-width: 1600px) {
-    .terms-container.we-container {
+  .terms.border-on-top {
+      border-top: 1px solid #dedede;
+      padding-top: 20px;
+  }
+
+  @media (max-width: 992px) { /* mobile/tablet */
+      .terms-wrapper {
+          padding: var(--body-padding);
+      }
+
+      .terms-container.we-container {
+          max-width: 1300px;
+          padding-left: 50px;
+          padding-right: 50px;
+      }
+
+      .default-content-wrapper {
+          max-width: var(--section-desktop-max-width);
+          padding: 23px var(--section-desktop-padding);
+          border-radius: 0;
+      }
+  }
+
+  @media (min-width: 1200px) {
+      .terms-container.we-container {
         max-width: 1332px;
         padding-left: 20px;
         padding-right: 20px;
-    }
+      }
+  }
+
+  @media (min-width: 1600px) {
+      .terms-container.we-container {
+          max-width: 1332px;
+          padding-left: 20px;
+          padding-right: 20px;
+      }
+  }
 }

@@ -1,87 +1,90 @@
-.video {
-  width: unset;
-  text-align: center;
-  margin-top: 32px;
-  margin-bottom: 32px;
-}
+@layer components {
 
-.video.lazy-loading {
-  /* reserve an approximate space to avoid extensive layout shifts */
-  aspect-ratio: 16/9;
-}
+  .video {
+    width: unset;
+    text-align: center;
+    margin-top: 32px;
+    margin-bottom: 32px;
+  }
 
-.video > div {
-  display: flex;
-  justify-content: center;
-  border-radius: 13px;
-  overflow: hidden;
-}
+  .video.lazy-loading {
+    /* reserve an approximate space to avoid extensive layout shifts */
+    aspect-ratio: 16/9;
+  }
 
-.video.left {
-  margin-right: auto;
-}
+  .video > div {
+    display: flex;
+    justify-content: center;
+    border-radius: 13px;
+    overflow: hidden;
+  }
 
-.video.center {
-  margin-left: auto;
-  margin-right: auto;
-}
+  .video.left {
+    margin-right: auto;
+  }
 
-.video.right {
-  margin-left: auto;
-}
+  .video.center {
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-.video video {
-  max-width: 100%;
-}
+  .video.right {
+    margin-left: auto;
+  }
 
-.video video[data-loading] {
-  /* reserve an approximate space to avoid extensive layout shifts */
-  width: 100%;
-  aspect-ratio: 16/9;
-}
+  .video video {
+    max-width: 100%;
+  }
 
-.video .video-placeholder {
-  width: 100%;
-  aspect-ratio: 16/9;
-  position: relative;
-}
+  .video video[data-loading] {
+    /* reserve an approximate space to avoid extensive layout shifts */
+    width: 100%;
+    aspect-ratio: 16/9;
+  }
 
-.video .video-placeholder > * {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  inset: 0;
-}
+  .video .video-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    position: relative;
+  }
 
-.video .video-placeholder picture img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+  .video .video-placeholder > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 0;
+  }
 
-.video .video-placeholder-play button {
-  box-sizing: border-box;
-  position: relative;
-  display: block;
-  transform: scale(3);
-  width: 22px;
-  height: 22px;
-  border: 2px solid;
-  border-radius: 20px;
-  padding: 0;
-}
+  .video .video-placeholder picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-.video .video-placeholder-play button::before {
-  content: "";
-  display: block;
-  box-sizing: border-box;
-  position: absolute;
-  width: 0;
-  height: 10px;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 6px solid;
-  top: 4px;
-  left: 7px;
+  .video .video-placeholder-play button {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(3);
+    width: 22px;
+    height: 22px;
+    border: 2px solid;
+    border-radius: 20px;
+    padding: 0;
+  }
+
+  .video .video-placeholder-play button::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 0;
+    height: 10px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 6px solid;
+    top: 4px;
+    left: 7px;
+  }
 }

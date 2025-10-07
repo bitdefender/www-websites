@@ -1,6 +1,7 @@
 import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const [rte, pictureEl] = [...block.children[0].children];
 
   if (window.location.href.indexOf('scuderiaferrari') !== -1) {

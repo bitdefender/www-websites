@@ -1,4 +1,5 @@
 export default function decorate(block) {
+  block.classList.add('global-styles');
   // search for [] to replace with span greeenTag class
   const getFirstDivs = block.querySelectorAll('.dropdownbox-compare-container .block > div > div:nth-child(1)');
   getFirstDivs.forEach((item) => {

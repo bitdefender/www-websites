@@ -94,6 +94,7 @@ function setDynamicLink(dynamicLink, dynamicLinks) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const {
     linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink,

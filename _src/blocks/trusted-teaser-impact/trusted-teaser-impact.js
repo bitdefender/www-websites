@@ -3,6 +3,7 @@ import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const [titleEl, ...boxes] = [...block.children];
 
   function render() {

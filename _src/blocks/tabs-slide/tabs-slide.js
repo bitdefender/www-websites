@@ -1,5 +1,6 @@
 /* eslint-disable */
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const parentSection = block.closest('.section');
   const [headers, contentTab1, contentTab2] = block.querySelectorAll('table');
   const [tab1, iconTab, tab2] = headers.querySelectorAll('td');

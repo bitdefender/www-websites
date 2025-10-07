@@ -151,6 +151,7 @@ function renderDevicesUsersText(text) {
 createNanoBlock('devices-users-text', renderDevicesUsersText);
 
 export default async function decorate(block, options) {
+  block.classList.add('global-styles');
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,

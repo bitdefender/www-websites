@@ -93,6 +93,7 @@ async function checkForMobile() {
 }
 
 export default async function decorate(block, options) {
+  block.classList.add('global-styles');
   await init(block, options);
 
   // uncomment this line if you want the bubbles to stop moving on mobile

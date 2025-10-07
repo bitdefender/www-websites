@@ -1,6 +1,7 @@
 import { decorateButtons } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(block, options) {
+  block.classList.add('global-styles');
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');

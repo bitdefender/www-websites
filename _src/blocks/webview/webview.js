@@ -38,6 +38,7 @@ async function checkAndReplacePrivacyPolicyLink(block) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const {
     product, saveText,
   } = block.closest('.section').dataset;

@@ -41,6 +41,7 @@ async function renderBlogGrid(block, endpoint, articlesNumber) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const { endpoint, articlesNumber } = block.closest('.section').dataset;
   const blogGrid = document.createElement('div');
   block.appendChild(blogGrid);

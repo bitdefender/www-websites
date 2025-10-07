@@ -32,6 +32,7 @@ function applyHeaderFactorySetup(headerMetadata, header, link) {
   }
 }
 export default async function decorate(block, options) {
+  block.classList.add('global-styles');
   const {
     header, link,
   } = block.closest('.section').dataset;

@@ -4,6 +4,7 @@ import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const [titleEl, ...slides] = [...block.children];
   const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
   const isTrusted = block.classList.contains('trusted-carousel');

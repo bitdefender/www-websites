@@ -1,4 +1,5 @@
 export default function decorate(block, options) {
+  block.classList.add('global-styles');
   const {
     solutions, hideDate,
   } = block.closest('.section').dataset;

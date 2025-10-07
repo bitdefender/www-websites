@@ -1,6 +1,7 @@
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const parentSection = block.closest('.section');
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);

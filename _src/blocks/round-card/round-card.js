@@ -1,4 +1,5 @@
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const innerWrapper = block.children[0];
   innerWrapper.classList = 'inner-wrapper';
 

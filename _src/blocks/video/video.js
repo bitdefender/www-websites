@@ -76,6 +76,7 @@ function positionVideoContainer(block, desktopAlign) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   block.classList.add('default-content-wrapper');
   block.closest('.section').style.padding = '0';
   const { desktopAlign } = block.closest('.section').dataset; // left / middle / right

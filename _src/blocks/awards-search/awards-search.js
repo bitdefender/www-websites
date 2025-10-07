@@ -206,6 +206,7 @@ function moveAccordionUnderFilterSection(block) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   moveAccordionUnderFilterSection(block);
   createAwardsResultContainer(block);
   fetchAwardsData(block);

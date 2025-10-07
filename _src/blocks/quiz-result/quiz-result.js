@@ -1,6 +1,7 @@
 import { getDatasetFromSection } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const dataset = getDatasetFromSection(block);
 
   const { socialTitlePost } = dataset;

@@ -131,6 +131,7 @@ async function renderBubble(block) {
  * @param {Element} block The hero block element
  */
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const parentSection = block.closest('.section');
   const {
     // this defines wether the modals automatically refresh or not in the hero banner

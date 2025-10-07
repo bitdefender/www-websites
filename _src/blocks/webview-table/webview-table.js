@@ -222,6 +222,7 @@ async function checkAndReplacePrivacyPolicyLink(block) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const metadata = block.closest('.section').dataset;
   buildTableHeader(block);
   addAccesibilityRoles(block);

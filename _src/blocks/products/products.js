@@ -322,6 +322,7 @@ createNanoBlock('bluePill', renderBluePill);
  * Main decorate function
  */
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const metadata = block.closest('.section').dataset;
   const plans = [];
 

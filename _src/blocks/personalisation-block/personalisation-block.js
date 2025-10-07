@@ -13,6 +13,7 @@ function decorateHTMLOffer(aemHeaderHtml) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const {
     mboxName, path,
   } = block.closest('.section').dataset;

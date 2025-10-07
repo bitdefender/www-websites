@@ -1,6 +1,7 @@
 import { getDatasetFromSection } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const [richTextEl, imageOnTopEl] = [...block.children];
 
   const blockDataset = getDatasetFromSection(block);

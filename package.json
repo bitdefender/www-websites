@@ -43,7 +43,7 @@
     "@glidejs/glide": "^3.7.1",
     "@repobit/dex-data-layer": "^1.8.8",
     "@repobit/dex-launch": "^2.0.9",
-    "@repobit/dex-system-design": "^0.19.1",
+    "@repobit/dex-system-design": "^0.19.2",
     "@repobit/dex-target": "^2.5.10",
     "@repobit/dex-utils": "^1.3.0",
     "@tsparticles/all": "^3.9.1",

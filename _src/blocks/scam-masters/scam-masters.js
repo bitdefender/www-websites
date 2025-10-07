@@ -648,6 +648,7 @@ function copyToClipboard(block, caller, popupText, resultPath) {
 }
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const {
     resultPage, clipboardText,
   } = block.closest('.section').dataset;

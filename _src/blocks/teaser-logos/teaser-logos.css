@@ -1,89 +1,92 @@
-/* stylelint-disable custom-property-pattern */
-.teaser-logos-container.section {
-    padding: 0;
-    background: #EFF6FF;
+@layer components {
+
+  /* stylelint-disable custom-property-pattern */
+  .teaser-logos-container.section {
+      padding: 0;
+      background: #EFF6FF;
+  }
+
+  .teaser-logos-container .main-wrapper {
+      display: flex;
+      height: 160px;
+  }
+
+  .teaser-logos-container .default-content-wrapper {
+      display: flex;
+      padding-top: 0 !important;
+      height: 200px;
+  }
+
+  .teaser-logos-container .main-wrapper .col,
+  .teaser-logos-container .default-content-wrapper .col {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      width: 50%;
+  }
+
+  .teaser-logos-container .main-wrapper .col {
+      background: #EFF6FF;
+  }
+
+  .teaser-logos-container .main-wrapper .col:first-child::before {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 170px solid var(--backgroundColor);
+      transform: rotate(180deg);
+      position: absolute;
+      right: -20px;
+      top: 0;
+      z-index: 2;
+  }
+
+  .teaser-logos-container .main-wrapper .col:last-child::before {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 170px solid var(--backgroundColor);
+      transform: rotate(0deg);
+      position: absolute;
+      left: -37.5px;
+      top: 0;
+      z-index: 1;
+  }
+
+  .teaser-logos-container .default-content-wrapper .col .img-wrapper {
+      padding-top: 30px;
+      position: relative;
+      z-index: 3;
+      width: 100%;
+  }
+
+  .teaser-logos-container .default-content-wrapper .col .img-wrapper img {
+      object-fit: cover;
+      width: 100%;
+  }
+
+  @media screen and (min-width: 768px) {
+      .teaser-logos-container .main-wrapper {
+          height: 400px;
+      }
+
+      .teaser-logos-container .main-wrapper .col:first-child::before,
+      .teaser-logos-container .main-wrapper .col:last-child::before {
+          border-bottom-width: 400px;
+      }
+
+      .teaser-logos-container .default-content-wrapper .col .img-wrapper {
+          width: 50%;
+          height: 180px;
+          display: flex;
+          align-items: center;
+      }
+  }
+
 }
-
-.teaser-logos-container .main-wrapper {
-    display: flex;
-    height: 160px;
-}
-
-.teaser-logos-container .default-content-wrapper {
-    display: flex;
-    padding-top: 0 !important;
-    height: 200px;
-}
-
-.teaser-logos-container .main-wrapper .col,
-.teaser-logos-container .default-content-wrapper .col {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    width: 50%;
-}
-
-.teaser-logos-container .main-wrapper .col {
-    background: #EFF6FF;
-}
-
-.teaser-logos-container .main-wrapper .col:first-child::before {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    border-left: 50px solid transparent;
-    border-right: 50px solid transparent;
-    border-bottom: 170px solid var(--backgroundColor);
-    transform: rotate(180deg);
-    position: absolute;
-    right: -20px;
-    top: 0;
-    z-index: 2;
-}
-
-.teaser-logos-container .main-wrapper .col:last-child::before {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    border-left: 50px solid transparent;
-    border-right: 50px solid transparent;
-    border-bottom: 170px solid var(--backgroundColor);
-    transform: rotate(0deg);
-    position: absolute;
-    left: -37.5px;
-    top: 0;
-    z-index: 1;
-}
-
-.teaser-logos-container .default-content-wrapper .col .img-wrapper {
-    padding-top: 30px;
-    position: relative;
-    z-index: 3;
-    width: 100%;
-}
-
-.teaser-logos-container .default-content-wrapper .col .img-wrapper img {
-    object-fit: cover;
-    width: 100%;
-}
-
-@media screen and (min-width: 768px) {
-    .teaser-logos-container .main-wrapper {
-        height: 400px;
-    }
-
-    .teaser-logos-container .main-wrapper .col:first-child::before,
-    .teaser-logos-container .main-wrapper .col:last-child::before {
-        border-bottom-width: 400px;
-    }
-
-    .teaser-logos-container .default-content-wrapper .col .img-wrapper {
-        width: 50%;
-        height: 180px;
-        display: flex;
-        align-items: center;
-    }
-}
-

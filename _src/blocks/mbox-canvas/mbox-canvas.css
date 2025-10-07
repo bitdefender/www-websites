@@ -1,16 +1,19 @@
-.mbox-canvas-container {
-    display: flex;
-    justify-content: center;
+@layer components {
 
-    .mbox-canvas-wrapper {
-        height: 512px;
-        width: 770px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+  .mbox-canvas-container {
+      display: flex;
+      justify-content: center;
 
-        .mbox-canvas {
-            width: 100%;
-        }
-    }
+      .mbox-canvas-wrapper {
+          height: 512px;
+          width: 770px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .mbox-canvas {
+              width: 100%;
+          }
+      }
+  }
 }

@@ -51,6 +51,7 @@ function createQuote(item) {
   );
 }
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const quoteWrap = createTag('div', { class: 'quote-wrap' });
   [...block.children].forEach((item) => {
     const quote = createQuote(item);

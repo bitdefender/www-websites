@@ -682,6 +682,7 @@ function applyHeaderFactorySetup(headerMetadata, header) {
 }
 
 export default async function decorate(block) {
+  block.classList.add('global-styles');
   const headerMetadata = getMetadata('header-type');
   block.parentNode.classList.add(headerMetadata || 'default');
   applyHeaderFactorySetup(headerMetadata, block);

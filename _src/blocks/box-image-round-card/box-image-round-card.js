@@ -2,6 +2,7 @@ import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
 import { getDatasetFromSection } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const innerWrapper = block.children[0];
   innerWrapper.classList = 'inner-wrapper';
 

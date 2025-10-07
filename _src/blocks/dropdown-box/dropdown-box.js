@@ -7,6 +7,7 @@
   - (closed) : for tab to be closed by default
 */
 export default function decorate(block) {
+  block.classList.add('global-styles');
   const parentSelector = block.closest('.section');
   const { type, topBackgroundColor, topTextColor } = parentSelector.dataset;
 

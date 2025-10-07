@@ -2,6 +2,7 @@
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
+  block.classList.add('global-styles');
   // count the children of a div
   const countChildren = (parent) => {
     const { children } = parent;
