@@ -215,7 +215,7 @@ export default async function decorate(block, options) {
 
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
   desktopImage?.classList.add('hero-aem__desktop-image');
-  desktopImage?.setAttribute('loading', 'eager');
+  desktopImage?.querySelector('img').setAttribute('loading', 'eager');
 
   const buyLink = block.querySelector('a[href*="buylink"]');
 
