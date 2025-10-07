@@ -3285,7 +3285,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   padding-bottom: 0;
 }
 
-.columns-tabs .tabsSection span.tag {
+.columns-tabs .tabs-section span.tag {
   display: inline-block;
   font-size: 14px;
   color: #525252;
@@ -3298,7 +3298,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   padding: 4px 16px;
 }
 
-.columns-tabs .tabsSection span.tag:hover, .columns-tabs .tabsSection span.tag.active {
+.columns-tabs .tabs-section span.tag:hover, .columns-tabs .tabs-section span.tag.active {
   height: 23px;
   color: #FFF;
   border: 1px solid #1A1919;

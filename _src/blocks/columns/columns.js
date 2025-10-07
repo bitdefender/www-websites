@@ -105,7 +105,7 @@ function setupTabs({ block, firstTab }) {
   section.classList.add('columns-tabs');
 
   if (!block.closest('.section').classList.contains('hide-tabs')) {
-    let tabsList = section.querySelector('.tabsSection');
+    let tabsList = section.querySelector('.tabs-section');
     if (!tabsList) {
       tabsList = document.createElement('div');
       tabsList.className = 'tabsSection default-content-wrapper';
