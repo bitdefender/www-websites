@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import Glide from '@glidejs/glide';
 
 export default async function decorate(block) {
@@ -106,7 +107,7 @@ export default async function decorate(block) {
   });
 
   navItems.forEach((item, index) => item.addEventListener('click', () => glide.go(`=${index}`)));
-  if (leftArrow) leftArrow.addEventListener('click',  (e) => { e.preventDefault(); glide.go('<'); });
+  if (leftArrow) leftArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('<'); });
   if (rightArrow) rightArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('>'); });
 
   glide.mount();

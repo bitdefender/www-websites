@@ -112,9 +112,9 @@ function setupTabs({ block, firstTab }) {
       tabsList.addEventListener('click', (e) => {
         const tab = e.target.closest('span[data-tab]');
         const showAll = tab.dataset.tab === firstTab.toLowerCase();
-        section.querySelectorAll('.section-el').forEach(
-          (el) => el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`)
-        );
+        section.querySelectorAll('.section-el').forEach((el) => {
+          el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
+        });
         tabsList.querySelectorAll('span').forEach((el) => el.classList.toggle('active', el === tab));
       });
       // add All tab once
