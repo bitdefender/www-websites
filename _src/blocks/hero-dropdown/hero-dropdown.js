@@ -45,7 +45,7 @@ function createPriceBox({
   code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText,
 }) {
   const box = document.createElement('div');
-  box.classList.add('dropdown-products__price-box');
+  box.classList.add('dropdown-products__price-box', 'await-loader');
   box.setAttribute('data-store-context', '');
   box.setAttribute('data-store-id', product);
   box.setAttribute('data-store-option', `${unit}-${year}`);
