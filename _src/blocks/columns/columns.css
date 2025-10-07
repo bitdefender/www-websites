@@ -516,6 +516,27 @@
   font-size: 14px;
 }
 
+.columns-container.blue-title .button-container a {
+  background-color: #eb0000;
+  padding: 15px 20px;
+  color: #fff;
+  width: 100%;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.columns-container.blue-title .button-container a:hover {
+  background-color:#d80000;
+}
+
+.columns-container.blue-title .button-container a::after {
+  display: none;
+}
+
+.columns-container.blue-title .columns > div {
+  align-items: baseline;
+}
+
 .creators .columns-container .has-trial-btn a.button {
   min-width: 180px;
   background-color: white;
@@ -1839,6 +1860,7 @@
 
               .button-container {
                 margin-bottom: 0;
+                margin-top: auto;
               }
 
               .button-container .button {
@@ -1848,7 +1870,7 @@
                 justify-content: center;
 
                 .button-text {
-                  font-weight: 700;
+                  font-weight: 500;
                 }
               }
             }
@@ -1930,8 +1952,9 @@
                 margin-top: 10px;
                 font-family: var(--body-font-family);
                 font-size: var(--body-font-size-s);
+                line-height: 18px;
                 font-style: normal;
-                font-weight: 700;
+                font-weight: 500;
                 -webkit-font-smoothing: antialiased;
                 display: inline-flex;
                 align-items: center;
@@ -2387,6 +2410,12 @@
       .columns-wrapper>.columns {
         background-color: #F6F6F6;
         border-radius: 10px;
+        width: 100%;
+
+        > div {
+          height: 100%;
+          align-items: center;
+        }
 
         div {
           padding: 24px;
@@ -2487,6 +2516,7 @@
 
             &:first-of-type {
               flex-direction: column-reverse;
+              flex: 0 0 320px;
 
               table:first-of-type {
                 td {
@@ -2665,6 +2695,9 @@
       .columns-wrapper .columns div .columns-text-col:first-of-type table:first-of-type td,
       .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
         padding: 24px 32px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
       }
     }
 
@@ -2717,7 +2750,10 @@
     &.dex-carousel-cards-individual,
     &.dex-carousel-cards-family {
       .columns-wrapper>.columns>div {
-        padding: 37px 104px;
+        padding: 37px 1em;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
       }
     }
   }

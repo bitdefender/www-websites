@@ -253,6 +253,7 @@ export async function detectModalButtons(main) {
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
+      adobeMcAppendVisitorId('.modal-container');
     });
   });
 }
@@ -717,6 +718,8 @@ async function loadPage() {
   //     const { visitorId } = result;
   //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
   //   });
+  await target.sendCdpData();
+
   if (!window.BD.loginAttempted) {
     AdobeDataLayerService.push(new PageLoadedEvent());
   }
