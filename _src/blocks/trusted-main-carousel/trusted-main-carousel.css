@@ -498,6 +498,10 @@
         overflow: hidden;
     }
 
+    .trusted-main-carousel-container.resources-design .content-wrapper .slide {
+        width: 90vw !important;
+    }
+
     .trusted-main-carousel-container.resources-design .content-wrapper .slide iframe, .trusted-main-carousel-container.resources-design .content-wrapper .slide img {
         width: 90vw !important;
         height: 222px;
