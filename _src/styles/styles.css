@@ -828,6 +828,10 @@ main .grey-background{
 }
 
 @media (min-width: 1200px) {
+  body > div:first-child {
+    min-height: 131px;
+  }
+
   main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
     width: 350px;
   }
@@ -1790,7 +1794,7 @@ main .section.blue p a.button.modal::after {
 
 header,
 body > div:first-child {
-  height: 64px;
+  min-height: 64px;
 }
 
 body > div.header-with-language-banner {
