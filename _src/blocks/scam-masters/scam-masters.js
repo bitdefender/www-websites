@@ -258,7 +258,7 @@ function decorateAnswersList(question, questionIndex, isAcqVariant) {
 
   // Process each list item as an answer option
   const listItems = answersList.querySelectorAll('li');
-  listItems.forEach((listItem, index, variant = isAcqVariant) => {
+  listItems.forEach((listItem, index) => {
     listItem.classList.add('answer-option');
     const emElement = listItem.querySelector('em');
     if (emElement) {
@@ -287,13 +287,13 @@ function decorateAnswersList(question, questionIndex, isAcqVariant) {
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
-        trackQuestionScreen(variant, index, 'correct');
+        trackQuestionScreen(isAcqVariant, index + 1, 'correct');
       } else {
         listItem.classList.add('wrong-answer');
         contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
-        trackQuestionScreen(variant, index, 'wrong');
+        trackQuestionScreen(isAcqVariant, index + 1, 'wrong');
       }
 
       const nextButton = question.querySelector('a[href="#continue"]');
@@ -562,7 +562,7 @@ function decorateClickQuestions(question, index, isAcqVariant) {
       if (spotsFound === totalSpots) {
         userAnswers.set(index, true);
         showCorrect(question, index);
-        trackQuestionScreen(isAcqVariant, index, 'correct');
+        trackQuestionScreen(isAcqVariant, index + 1, 'correct');
       } else if (spotsFound > 0) {
         userAnswers.set(index, 'partial');
 
@@ -574,7 +574,7 @@ function decorateClickQuestions(question, index, isAcqVariant) {
         }
 
         showWrong(question, index);
-        trackQuestionScreen(isAcqVariant, index, 'very close');
+        trackQuestionScreen(isAcqVariant, index + 1, 'very close');
 
         // Restore the original wrong text for safety
         if (partialText) {
@@ -583,7 +583,7 @@ function decorateClickQuestions(question, index, isAcqVariant) {
       } else {
         userAnswers.set(index, false);
         showWrong(question, index);
-        trackQuestionScreen(isAcqVariant, index, 'not correct');
+        trackQuestionScreen(isAcqVariant, index + 1, 'not correct');
       }
     }
   };
@@ -658,7 +658,7 @@ function decorateClickQuestions(question, index, isAcqVariant) {
           }
 
           showWrong(question, index);
-          trackQuestionScreen(isAcqVariant, index, 'very close');
+          trackQuestionScreen(isAcqVariant, index + 1, 'very close');
 
           // Restore the original wrong text for safety
           if (partialText) {
@@ -667,7 +667,7 @@ function decorateClickQuestions(question, index, isAcqVariant) {
         } else {
           userAnswers.set(index, false);
           showWrong(question, index);
-          trackQuestionScreen(isAcqVariant, index, 'wrong');
+          trackQuestionScreen(isAcqVariant, index + 1, 'wrong');
         }
       }
 
@@ -883,11 +883,11 @@ function decorateScamButtons(question, index, isAcqVariant) {
           score += 1;
           showCorrect(question, index);
           const result = isAcqVariant ? 'spam' : 'correct';
-          trackQuestionScreen(isAcqVariant, index, result);
+          trackQuestionScreen(isAcqVariant, index + 1, result);
         } else {
           showWrong(question, index);
           const result = isAcqVariant ? 'no-spam' : 'wrong';
-          trackQuestionScreen(isAcqVariant, index, result);
+          trackQuestionScreen(isAcqVariant, index + 1, result);
         }
       });
     };
@@ -899,7 +899,7 @@ function decorateScamButtons(question, index, isAcqVariant) {
 }
 
 function decorateQuestions(questions, results, isAcqVariant) {
-  questions.forEach((question, index, passedVariant = isAcqVariant) => {
+  questions.forEach((question, index) => {
     question.classList.add('question');
     question.classList.add(`question-${index + 1}`);
     question.dataset.questionIndex = index + 1;
@@ -915,8 +915,8 @@ function decorateQuestions(questions, results, isAcqVariant) {
     if (index < questions.length) {
       const nextButton = question.querySelector('a[href="#continue"]');
       if (nextButton && index < questions.length - 1) {
-        nextButton.style.display = 'none';
-        nextButton.addEventListener('click', () => showQuestion(index + 2, passedVariant));
+        nextButton.style.display = 'none';, () => showQuestion(index + 2, isAcqVariant));
+        nextButton.addEventListener('click'
       } else if (nextButton && index === questions.length - 1) {
         nextButton.style.display = 'none';
         nextButton.addEventListener('click', () => showResult(question, results, isAcqVariant));
