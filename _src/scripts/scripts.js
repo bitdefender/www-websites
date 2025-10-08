@@ -406,7 +406,6 @@ const initializeHubspotModule = () => {
 
     document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
       trigger.addEventListener('click', () => {
-        alert('dsfgsdf')
         popupContainer.style.display = 'block';
         const newPageLoadStartedEvent = new WindowLoadStartedEvent();
         newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
