@@ -52,7 +52,7 @@ async function saveResults(resultArray) {
 // function for tracking question interactions through dataLayer events
 function trackQuizScreen(isAcqVariant, index, result) {
   const quizType = isAcqVariant ? ':consumer:quiz' : ':consumer:quiz:scam-masters';
-  const question = `${index ? `:question-${index}` : ''}`;
+  const question = `${index ? `:question ${index}` : ''}`;
   const section = `${page.locale}${quizType}${question}${result ? `:${result}` : ''}`;
   const subSubSubSection = isAcqVariant ? `question ${index}` : 'scam-masters';
   const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
