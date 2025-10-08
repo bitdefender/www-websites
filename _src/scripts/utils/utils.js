@@ -890,10 +890,6 @@ export const generatePageLoadStartedName = () => {
 
     if (pathname.includes('scam-masters')) {
       tagName = `${locale}:consumer:quiz:scam-masters`;
-      if (!pathname.endsWith('/')) {
-        const result = page.name;
-        tagName = `${locale}:consumer:quiz:scam-masters:results:${result.replace('-', ' ')}`;
-      }
     }
 
     if (window.errorCode === '404') {

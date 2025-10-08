@@ -287,13 +287,13 @@ function decorateAnswersList(question, questionIndex, isAcqVariant) {
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
-        trackQuestionScreen(isAcqVariant, index, 'correct');
+        trackQuestionScreen(isAcqVariant, questionIndex + 1, 'correct');
       } else {
         listItem.classList.add('wrong-answer');
         contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
-        trackQuestionScreen(isAcqVariant, index, 'wrong');
+        trackQuestionScreen(isAcqVariant, questionIndex + 1, 'wrong');
       }
 
       const nextButton = question.querySelector('a[href="#continue"]');
@@ -831,6 +831,15 @@ function showResult(question, results, isAcqVariant) {
     finalQuiz.setAttribute('data-score', ACQfoundRange.resultUrl);
     return;
   }
+  const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+    pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:scam-masters:results screen`;
+    pageLoadStartedInfo.subSubSection = 'quiz';
+    pageLoadStartedInfo.subSubSubSection = 'scam-masters';
+    return pageLoadStartedInfo;
+  });
+  AdobeDataLayerService.push(newPageLoaded);
+  AdobeDataLayerService.push(new UserDetectedEvent());
+  AdobeDataLayerService.push(new WindowLoadedEvent());
 
   if (foundRange && results[foundRange.resultIndex]) {
     results[foundRange.resultIndex].style.display = '';
