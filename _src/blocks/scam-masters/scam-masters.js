@@ -915,8 +915,8 @@ function decorateQuestions(questions, results, isAcqVariant) {
     if (index < questions.length) {
       const nextButton = question.querySelector('a[href="#continue"]');
       if (nextButton && index < questions.length - 1) {
-        nextButton.style.display = 'none';, () => showQuestion(index + 2, isAcqVariant));
-        nextButton.addEventListener('click'
+        nextButton.style.display = 'none';
+        nextButton.addEventListener('click', () => showQuestion(index + 2, isAcqVariant));
       } else if (nextButton && index === questions.length - 1) {
         nextButton.style.display = 'none';
         nextButton.addEventListener('click', () => showResult(question, results, isAcqVariant));
