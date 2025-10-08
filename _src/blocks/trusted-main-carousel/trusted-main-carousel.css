@@ -64,18 +64,19 @@
     transition: all .25s linear;
     position: relative;
     z-index: 1;
+    overflow: hidden;
 }
 
 .trusted-main-carousel-container.resources-design .navigation-wrapper .nav-item.active {
     width: 30px;
-    transition: all 0.10s linear;
+    transition: all 0.20s linear;
     background-color: #6a83aa;
 }
 
 .trusted-main-carousel-container.resources-design .navigation-wrapper .nav-item.active::before {
     height: 8px;
     width: 30px;
-    transition: all 2s linear;
+    transition: all 9s linear;
     position: absolute;
     left: 0;
     top: 0;
@@ -495,11 +496,11 @@
     }
 
     .trusted-main-carousel-container.resources-design .content-wrapper .slide {
-        width: 90vw !important;
+        width: 91vw !important;
     }
 
     .trusted-main-carousel-container.resources-design .content-wrapper .slide iframe, .trusted-main-carousel-container.resources-design .content-wrapper .slide img {
-        width: 90vw !important;
+        width: 91vw !important;
         height: 222px;
     }
 }

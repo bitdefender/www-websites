@@ -91,6 +91,7 @@ export default async function decorate(block) {
     type: 'slider',
     startAt: 0,
     perView: 1,
+    autoplay: 9000,
     keyboard: true,
     swipeThreshold: 40,
     dragThreshold: 60,

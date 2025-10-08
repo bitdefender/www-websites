@@ -3296,6 +3296,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   transition: all .4s ease-in-out;
   margin: 0 16px 10px 0;
   padding: 4px 16px;
+  text-transform: unset;
 }
 
 .columns-tabs .tabs-section span.tag:hover, .columns-tabs .tabs-section span.tag.active {
@@ -3388,7 +3389,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 .columns-tabs > div.default-content-wrapper {
-  margin-bottom: 2em;
+  margin-bottom: 40px;
 }
 
 .columns-tabs > div.default-content-wrapper:not(:first-of-type) {
@@ -3423,6 +3424,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 @media (max-width: 767px) {
+  .columns-tabs > div.default-content-wrapper {
+    margin-bottom: 2em;
+  }
+
   .section.resources-design2 {
     padding: 48px 0 56px!important;
   }
