@@ -108,7 +108,7 @@ function setupTabs({ block, firstTab }) {
     let tabsList = section.querySelector('.tabs-section');
     if (!tabsList) {
       tabsList = document.createElement('div');
-      tabsList.className = 'tabsSection default-content-wrapper';
+      tabsList.className = 'tabs-section default-content-wrapper';
       tabsList.addEventListener('click', (e) => {
         const tab = e.target.closest('span[data-tab]');
         const showAll = tab.dataset.tab === firstTab.toLowerCase();
