@@ -287,13 +287,13 @@ function decorateAnswersList(question, questionIndex, isAcqVariant) {
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
-        trackQuestionScreen(isAcqVariant, index + 1, 'correct');
+        trackQuestionScreen(isAcqVariant, index, 'correct');
       } else {
         listItem.classList.add('wrong-answer');
         contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
-        trackQuestionScreen(isAcqVariant, index + 1, 'wrong');
+        trackQuestionScreen(isAcqVariant, index, 'wrong');
       }
 
       const nextButton = question.querySelector('a[href="#continue"]');
