@@ -54,7 +54,6 @@ function trackQuestionScreen(isAcqVariant, index, result) {
   const quizType = isAcqVariant ? 'consumer:quiz:question' : 'consumer:quiz:scam-masters:question';
   const section = `${page.locale}:${quizType} ${index}${result ? `:${result}` : ''}`;
   const subSubSubSection = isAcqVariant ? `question ${index}` : 'scam-masters';
-
   const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
     pageLoadStartedInfo.name = `${section}`;
     pageLoadStartedInfo.subSubSection = 'quiz';
@@ -220,7 +219,7 @@ function processSpecialParagraphs(question, index) {
  * @param {HTMLElement} question - The question element to process
  * @param {number} questionIndex - The question index
  */
-function decorateAnswersList(question, questionIndex) {
+function decorateAnswersList(question, questionIndex, isAcqVariant) {
   const answersList = question.querySelector('ul');
   const secondaryAnswersList = question.querySelector('ul:nth-of-type(2)');
   secondaryAnswersList?.classList.add('secondary-answers-list');
@@ -259,9 +258,8 @@ function decorateAnswersList(question, questionIndex) {
 
   // Process each list item as an answer option
   const listItems = answersList.querySelectorAll('li');
-  listItems.forEach((listItem, index) => {
+  listItems.forEach((listItem, index, variant = isAcqVariant) => {
     listItem.classList.add('answer-option');
-
     const emElement = listItem.querySelector('em');
     if (emElement) {
       correctItemIndex = index;
@@ -289,11 +287,13 @@ function decorateAnswersList(question, questionIndex) {
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
+        trackQuestionScreen(variant, index, 'correct');
       } else {
         listItem.classList.add('wrong-answer');
         contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
+        trackQuestionScreen(variant, index, 'wrong');
       }
 
       const nextButton = question.querySelector('a[href="#continue"]');
@@ -571,10 +571,10 @@ function decorateClickQuestions(question, index, isAcqVariant) {
         const partialText = partiallyWrongAnswersText.get(index);
         if (partialText) {
           wrongAnswersText.set(index, partialText);
-          trackQuestionScreen(isAcqVariant, index, 'very close');
         }
 
         showWrong(question, index);
+        trackQuestionScreen(isAcqVariant, index, 'very close');
 
         // Restore the original wrong text for safety
         if (partialText) {
@@ -658,6 +658,7 @@ function decorateClickQuestions(question, index, isAcqVariant) {
           }
 
           showWrong(question, index);
+          trackQuestionScreen(isAcqVariant, index, 'very close');
 
           // Restore the original wrong text for safety
           if (partialText) {
@@ -666,6 +667,7 @@ function decorateClickQuestions(question, index, isAcqVariant) {
         } else {
           userAnswers.set(index, false);
           showWrong(question, index);
+          trackQuestionScreen(isAcqVariant, index, 'wrong');
         }
       }
 
@@ -903,7 +905,7 @@ function decorateQuestions(questions, results, isAcqVariant) {
     question.dataset.questionIndex = index + 1;
 
     processSpecialParagraphs(question, index);
-    decorateAnswersList(question, index);
+    decorateAnswersList(question, index, isAcqVariant);
     decorateClickQuestions(question, index, isAcqVariant);
     decorateScamButtons(question, index, isAcqVariant);
 
