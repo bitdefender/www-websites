@@ -155,7 +155,7 @@ export default async function decorate(block, options) {
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
     dropdownTag,
   } = block.closest('.section').dataset;
-      const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
+  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
   if (!isHomePage) {
     const breadcrumb = createTag('div', { class: 'breadcrumb' });
