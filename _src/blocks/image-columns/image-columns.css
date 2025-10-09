@@ -37,10 +37,6 @@
   justify-items: center;
 }
 
-.affiliate .image-columns > div > .image-columns-img-col{
-  flex: 0 1 50%;
-}
-
 .image-columns.text_smaller > div > .image-columns-txt-col {
   flex: 0 1 45%;
 }
@@ -176,7 +172,6 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   }
 }
 
-
 @media (min-width: 767px){
   .image-columns.quotes > div {
     flex-direction: unset;
@@ -208,20 +203,9 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   margin: 0 0 20px;
 }
 
-.affiliate .image-columns > div > .image-columns-txt-col p {
-  padding-left: 0;
-  margin-top: 16px;
-}
-
 @media (min-width: 1400px) {
   .image-columns > div > .image-columns-txt-col p {
     font-size: 18px;
-  }
-
-  .affiliate .image-columns > div > .image-columns-txt-col p {
-    font-size: 16px;
-    padding-left: 0;
-    margin-top: 16px;
   }
 
   .ferrari .image-columns-wrapper{

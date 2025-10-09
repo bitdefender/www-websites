@@ -109,7 +109,7 @@ createNanoBlock('highlight', renderHighlight);
 
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
@@ -250,6 +250,18 @@ export default function decorate(block) {
     cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
+  }
+
+  // tabs version
+  if (type && type === 'tabs') setupTabs({ block, firstTab });
+
+  if (block.classList.contains('sidebar')) {
+    const videoP = cols[1].querySelector('p');
+    const content = videoP.innerText;
+    if (content.startsWith('https://www.youtube.com/embed/')) {
+      videoP.classList.add('iframe');
+      cols[1].querySelector('p').innerHTML = `<iframe width="100%" height="232" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+    }
   }
 
   matchHeights(block, 'h3');

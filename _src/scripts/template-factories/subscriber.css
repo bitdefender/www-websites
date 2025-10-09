@@ -818,19 +818,19 @@ main .subscriber .section {
     font-weight: 500;
     line-height: 28px;
 }
-.subscriber .columnvideo2 {
+.subscriber .columnvideo2, .subscriber .columnvideo2.resourcesvideo {
     padding-bottom: 7em;
     background: transparent;
 }
-.subscriber .columnvideo2 > div.image-columns-wrapper table {
+.subscriber .columnvideo2 > div.image-columns-wrapper table, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table {
     margin-top: 2em;
 }
-.subscriber .columnvideo2 > div.image-columns-wrapper table tr td {
+.subscriber .columnvideo2 > div.image-columns-wrapper table tr td, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table tr td {
     border: 0 none;
     padding: 0;
     cursor: pointer;
 }
-.subscriber .columnvideo2 > div.image-columns-wrapper table tr td a {
+.subscriber .columnvideo2 > div.image-columns-wrapper table tr td a, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table tr td a {
     height: 49px;
     width: 214px;
     border-radius: 8px;
@@ -844,8 +844,9 @@ main .subscriber .section {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
-.subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type {
+.subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table tr td:first-of-type {
     margin-right: 0;
     height: 49px;
     width: 214px;
@@ -861,7 +862,7 @@ main .subscriber .section {
     align-items: center;
     justify-content: center;
 }
-.subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type:hover, .subscriber .columnvideo2 > div.image-columns-wrapper table tr td a:hover {
+.subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type:hover, .subscriber .columnvideo2 > div.image-columns-wrapper table tr td a:hover, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table tr td:first-of-type:hover, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table tr td a:hover {
     opacity: 1;
     text-decoration: none;
     transition: all 0.3s ease;  
@@ -869,7 +870,7 @@ main .subscriber .section {
     color: white;
 }
 
-.subscriber .columnvideo2 > div.image-columns-wrapper table tr td:hover, .subscriber .columnvideo2 > div.image-columns-wrapper table tr td a:hover {
+.subscriber .columnvideo2 > div.image-columns-wrapper table tr td:hover, .subscriber .columnvideo2 > div.image-columns-wrapper table tr td a:hover, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table tr td:hover, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table tr td a:hover {
     background-color: #003385;
     border-radius: 8px;
     border-color: #1A7DFF;
@@ -1120,6 +1121,7 @@ main .subscriber .section {
 .subscriber .carousel-container {
     padding-left: 28%;
 }
+
 .subscriber .carousel-item iframe {
     min-width: 800px;
     height: 506px;
