@@ -107,11 +107,11 @@
 }
 
 .global-display-none {
-  display: none;
+  display: none !important;
 }
 
 .global-visibility-hidden {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 
 .font-arial {
@@ -261,6 +261,13 @@ hr {
   padding-bottom: 0!important;
 }
 
+.py-md-0 {
+  @media (max-width: 768px) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
 code, pre, samp {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
@@ -340,7 +347,7 @@ main img {
   text-align: center;
   background-color: rgb(228, 242, 255);
   color: rgb(0, 69, 173);
-  padding: 6px 0!important;
+  padding: 8px 0!important;
 }
 
 .top_blue .default-content-wrapper {
@@ -349,6 +356,7 @@ main img {
 
 .top_blue p {
   font-size: var(--body-font-size-s);
+  margin: 0;
 }
 
 .top_blue p a {
@@ -838,6 +846,24 @@ main .section.migration h2 {
   display: none;
 }
 
+.fade-out {
+  opacity: 0;
+  display: none;
+  height: 0;
+}
+
+.fade-in {
+  opacity: 1;
+  display: block;
+}
+
+@starting-style {
+  .fade-in {
+    opacity: 0;
+    height: 0;
+  }
+}
+
 main .section.py-1 {
   padding: 0;
 }
@@ -848,6 +874,14 @@ main .section.pt-0 {
 
 main .section.pb-0, .pb-0 {
   padding-bottom: 0!important;
+}
+
+main .section.mt-0, .mt-0 {
+  margin-top: 0!important;
+}
+
+main .section.mb-0, .mb-0 {
+  margin-bottom: 0!important;
 }
 
 @media (min-width: 1400px) {
@@ -1007,7 +1041,7 @@ a.button:any-link, input[type="submit"] {
   align-items: center;
   box-sizing: border-box;
   text-decoration: none;
-  padding: 10px 26px 8px 40px;
+  padding: 10px 26px 8px 30px;
   text-align: center;
   cursor: pointer;
   color: var(--button-link-color);
@@ -1140,7 +1174,7 @@ a.button:hover.secondary {
   color: var(--white-color)
 }
 
-a.button.modal, a.button.link-arrow-right, a.button.central, main .section.link-right a {
+p a.button.modal, a.button.link-arrow-right, a.button.central, main .section.link-right a {
   color: var(--link-color);
   font-weight: var(--font-weight-bold);
   background-color: transparent;
@@ -1151,7 +1185,7 @@ a.button.modal, a.button.link-arrow-right, a.button.central, main .section.link-
   text-overflow: ellipsis;
 }
 
-a.button.modal::after, a.button.link-arrow-right::after, a.button.central::after, main .section.link-right a::after {
+p a.button.modal::after, a.button.link-arrow-right::after, a.button.central::after, main .section.link-right a::after {
   background-color: var(--link-color);
   opacity: 1;
   margin: 0;
@@ -1166,13 +1200,13 @@ a.button:has(.icon)::after {
   opacity: 0;
 }
 
-a.button.modal:hover, a.button.link-arrow-right:hover, a.button.central:hover, main .section.link-right a:hover {
+p a.button.modal:hover, a.button.link-arrow-right:hover, a.button.central:hover, main .section.link-right a:hover {
   color: var(--link-hover-color);
   text-decoration: none;
   transform: none;
 }
 
-a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
+p a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
   transform: translateX(3px);
   background-color: var(--link-hover-color);
 }
@@ -1501,18 +1535,18 @@ main .section.blue a.button.secondary::after {
   background-color: var(--link-color);
 }
 
-main .section.blue a.button.modal {
+main .section.blue p a.button.modal {
   background-color: transparent;
   border: none;
   color: var(--white-color);
   font-weight: var(--font-weight-regular);
 }
 
-main .section.blue a.button.modal:hover {
+main .section.blue p a.button.modal:hover {
   opacity: .8;
 }
 
-main .section.blue a.button.modal::after {
+main .section.blue p a.button.modal::after {
   content: none;
 }
 
@@ -1710,6 +1744,15 @@ main .section.blue a.button.modal::after {
   display: none !important;
 }
 
+.centered {
+  text-align: center;
+  .default-content-wrapper {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+}
+
 @keyframes rotation {
   0% {
       transform: rotate(0deg);
@@ -1720,15 +1763,6 @@ main .section.blue a.button.modal::after {
 }
 
 @media (min-width: 768px) {
-  .centered {
-    text-align: center;
-    .default-content-wrapper {
-      display: flex;
-      flex-flow: column;
-      align-items: center;
-    }
-  }
-
   .buttons-align-right > div {
     flex-direction: row;
   }
@@ -1815,4 +1849,10 @@ body > div.header-with-language-banner {
   main .section.blue a.button:any-link {
     padding: 10px 0px 8px 13px;
   }
+
+  
+  a.button:any-link, input[type="submit"] {
+    padding: 10px 13px 8px 20px;
+    font-size: 14px;
+}
 }

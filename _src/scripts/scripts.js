@@ -222,6 +222,7 @@ export async function createModal(path, template, stopAutomaticRefresh) {
   close.classList.add('modal-close');
   close.addEventListener('click', closeModal);
   modalContent.append(close);
+  adobeMcAppendVisitorId(modalContainer);
   return modalContainer;
 }
 
@@ -252,6 +253,7 @@ export async function detectModalButtons(main) {
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
+      adobeMcAppendVisitorId('.modal-container');
     });
   });
 }
@@ -402,7 +404,7 @@ const initializeHubspotModule = () => {
     const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
     const popupContainer = hubspotContainer.querySelector('.download-popup__container');
 
-    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
+    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
       trigger.addEventListener('click', () => {
         popupContainer.style.display = 'block';
         const newPageLoadStartedEvent = new WindowLoadStartedEvent();
@@ -716,7 +718,11 @@ async function loadPage() {
   //     const { visitorId } = result;
   //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
   //   });
-  AdobeDataLayerService.push(new PageLoadedEvent());
+  await target.sendCdpData();
+
+  if (!window.BD.loginAttempted) {
+    AdobeDataLayerService.push(new PageLoadedEvent());
+  }
 
   loadDelayed();
 }

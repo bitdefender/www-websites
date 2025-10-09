@@ -4,8 +4,9 @@ import { decorateIcons } from '../../scripts/lib-franklin.js';
 function createQuote(item) {
   const paragraphs = Array.from(item.querySelectorAll('p'));
   const quote = paragraphs.find((paragraph) => {
-    const strongOrEm = paragraph.querySelector('strong, em');
-    return !strongOrEm && paragraph.textContent.trim() !== '';
+    const strong = paragraph.querySelector('strong');
+    const starsLine = /^[*]+$/.test(paragraph.textContent.trim());
+    return !strong && !starsLine && paragraph.textContent.trim() !== '';
   });
 
   const author = item.querySelector('p > strong');
@@ -46,7 +47,7 @@ function createQuote(item) {
     <div class="quote-content">
         <p class="stars">${starsContainer?.innerHTML}</p>
         <p class="description">${quote?.innerHTML}</p>
-        <p class="author">${author?.innerHTML}</p>
+        ${author ? `<p class="author">${author?.innerHTML}</p>` : '<p class="author"></p>'}
     </div>`,
   );
 }

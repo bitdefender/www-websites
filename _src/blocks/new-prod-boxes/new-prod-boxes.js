@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 import {
-  matchHeights, formatPrice,
+  formatPrice,
   checkIfNotProductPage,
 } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
@@ -36,7 +36,7 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div>
+        <div class="oldprice-container">
           <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
           <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
         </div>
@@ -182,7 +182,7 @@ function checkAddOn(featuresSet) {
 export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
-    products, familyProducts, monthlyProducts, pid, mainProduct,
+    products, familyProducts, monthlyProducts,
     addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
 
@@ -228,7 +228,7 @@ export default async function decorate(block) {
       if (switchCheckbox.checked) {
         let familyBoxes = block.querySelectorAll('.family-box');
         familyBoxes.forEach((box) => {
-          box.style.display = 'block';
+          box.style.display = 'grid';
         });
 
         let individualBoxes = block.querySelectorAll('.individual-box');
@@ -243,7 +243,7 @@ export default async function decorate(block) {
 
         let individualBoxes = block.querySelectorAll('.individual-box');
         individualBoxes.forEach((box) => {
-          box.style.display = 'block';
+          box.style.display = 'grid';
         });
       }
     });
@@ -355,7 +355,15 @@ export default async function decorate(block) {
               ${titleHTML}
 
               <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
-              ${subtitle.innerText.trim() ? `<p class="subtitle${subtitle.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle.innerHTML}</p>` : ''}
+    ${(() => {
+    const t = subtitle.innerText.trim();
+    if (!t) return '';
+    const fixed = t.split(/\s+/).length > 8 ? ' fixed_height' : '';
+    const hasInvisibleTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i.test(subtitle.innerHTML);
+    const extra = hasInvisibleTag ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"' : '';
+    return `<p class="subtitle${fixed}"${extra}>${subtitle.innerHTML}</p>`;
+  })()}
+
               <hr />
               ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
               ${radioButtons ? planSwitcher.outerHTML : ''}
@@ -441,6 +449,7 @@ export default async function decorate(block) {
     const benefitsLists = block.querySelectorAll('.benefitsLists');
     const btnWrappers = [];
     let anchorButtons = document.querySelectorAll('.tabs-component .button');
+    const allPlanSwitchers = block.querySelectorAll('.plan-switcher');
 
     benefitsLists.forEach((benefits) => {
       const btnWrapper = document.createElement('div');
@@ -484,6 +493,33 @@ export default async function decorate(block) {
         });
       });
     });
+
+    allPlanSwitchers.forEach((switcher) => {
+      const inputs = switcher.querySelectorAll('input');
+      inputs.forEach((input, idx) => {
+        input.addEventListener('change', () => {
+          if (input.checked) {
+            const box = switcher.closest('.prod_box');
+            const isIndividual = box.classList.contains('individual-box');
+            const isFamily = box.classList.contains('family-box');
+            allPlanSwitchers.forEach((otherSwitcher) => {
+              const otherBox = otherSwitcher.closest('.prod_box');
+              if (
+                (isIndividual && otherBox.classList.contains('individual-box'))
+                || (isFamily && otherBox.classList.contains('family-box'))
+              ) {
+                const otherInputs = otherSwitcher.querySelectorAll('input');
+                if (otherInputs[idx] && !otherInputs[idx].checked) {
+                  otherInputs[idx].checked = true;
+                  otherInputs[idx].dispatchEvent(new Event('change', { bubbles: true }));
+                  otherInputs[idx].dispatchEvent(new Event('click', { bubbles: true }));
+                }
+              }
+            });
+          }
+        });
+      });
+    });
   }
 
   if (individualSwitchText && familySwitchText) {
@@ -514,18 +550,5 @@ export default async function decorate(block) {
     decorateIcons(block.closest('.section'));
   }
 
-  if (blockParent.classList.contains('same-height-lists')) {
-    const prodCard = block.querySelector('.prod_box');
-    const featureLists = prodCard?.querySelectorAll('ul');
-    featureLists?.forEach((list, idx) => {
-      matchHeights(block, `div > ul:nth-of-type(${idx + 1})`);
-    });
-  }
-
-  matchHeights(block, '.subtitle');
-  matchHeights(block, '.subtitle-2');
-  matchHeights(block, 'h2');
-  matchHeights(block, 'h4');
-  matchHeights(block, '.plan-switcher');
-  matchHeights(block, '.blueTagsWrapper');
+  switchCheckbox.dispatchEvent(new Event('change'));
 }

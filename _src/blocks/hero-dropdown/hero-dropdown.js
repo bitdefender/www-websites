@@ -45,7 +45,7 @@ function createPriceBox({
   code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText,
 }) {
   const box = document.createElement('div');
-  box.classList.add('dropdown-products__price-box');
+  box.classList.add('dropdown-products__price-box', 'await-loader');
   box.setAttribute('data-store-context', '');
   box.setAttribute('data-store-id', product);
   box.setAttribute('data-store-option', `${unit}-${year}`);
@@ -58,7 +58,7 @@ function createPriceBox({
     <p class="product-details">${detailsText || ''}</p>
     <div class="discount">
       <div data-store-hide="no-price=discounted;type=visibility" class="price">
-        <span class="old-price"><del data-store-price="full">$69.99</del></span>
+        <span class="old-price"><del data-store-price="full"></del></span>
       </div>
       <div data-store-hide="no-price=discounted;type=visibility" class="featured">
         <span class="prod-save" data-store-hide="no-price=discounted"><span data-store-discount="percentage"></span> ${discounttext}</span>
@@ -66,7 +66,7 @@ function createPriceBox({
     </div>
     <div class="price">
       <strong class="new-price">
-        <strong data-store-price="discounted||full">$29.99</strong>
+        <strong data-store-price="discounted||full"></strong>
       </strong>
     </div>
     <div class="buttons">
@@ -104,10 +104,12 @@ createNanoBlock('dropdown', (...args) => {
   const dropdownWrapper = document.createElement('div');
   dropdownWrapper.classList.add('dropdown-products__selector');
 
+  let labelEl = null;
   if (labelText) {
-    const labelEl = document.createElement('label');
+    labelEl = document.createElement('label');
     labelEl.classList.add('bestValue');
     labelEl.textContent = labelText;
+    labelEl.style.visibility = 'hidden';
     dropdownWrapper.appendChild(labelEl);
   }
 
@@ -135,7 +137,8 @@ createNanoBlock('dropdown', (...args) => {
     const priceBox = createPriceBox({
       code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText,
     });
-    if (index !== 0) priceBox.style.display = 'none';
+
+    priceBox.style.display = index === 0 ? 'block' : 'none';
     root.appendChild(priceBox);
   });
 
@@ -151,7 +154,7 @@ createNanoBlock('dropdown', (...args) => {
     customDropdown.classList.toggle('open', !isOpen);
   });
 
-  [...optionsList.querySelectorAll('.custom-dropdown-item')].forEach((item) => {
+  [...optionsList.querySelectorAll('.custom-dropdown-item')].forEach((item, index) => {
     item.addEventListener('click', () => {
       const selected = item.getAttribute('data-value');
       const label = item.textContent;
@@ -166,8 +169,17 @@ createNanoBlock('dropdown', (...args) => {
       [...root.querySelectorAll('.dropdown-products__price-box')].forEach((box) => {
         box.style.display = box.dataset.code === selected ? 'block' : 'none';
       });
+
+      if (labelEl) {
+        const isFirstOption = index === 0;
+        labelEl.style.visibility = isFirstOption ? 'visible' : 'hidden';
+      }
     });
   });
+
+  if (labelEl) {
+    labelEl.style.visibility = 'visible';
+  }
 
   return root;
 });
@@ -219,16 +231,16 @@ export default function decorate(block) {
     if (content) {
       switch (contentsize) {
         case 'half':
-          content.style.width = '50%';
+          content.classList.add('content-width-50');
           break;
         case 'larger':
-          content.style.width = '75%';
+          content.classList.add('content-width-75');
           break;
         case 'full':
-          content.style.width = '100%';
+          content.classList.add('content-width-100');
           break;
         default:
-          content.style.width = '60%';
+          content.classList.add('content-width-60');
           break;
       }
     }
