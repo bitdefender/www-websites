@@ -404,7 +404,7 @@ const initializeHubspotModule = () => {
     const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
     const popupContainer = hubspotContainer.querySelector('.download-popup__container');
 
-    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
+    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
       trigger.addEventListener('click', () => {
         popupContainer.style.display = 'block';
         const newPageLoadStartedEvent = new WindowLoadStartedEvent();
