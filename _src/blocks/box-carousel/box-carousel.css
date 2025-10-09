@@ -198,7 +198,8 @@
 }
 
 .box-carousel-container.testimonials .trusted-carousel .arrows {
-    display: none !important;
+     width: 0; 
+     height: 0;
 }
 
 .box-carousel-container .left-arrow svg {
@@ -302,7 +303,7 @@
 }
 
 .box-carousel-container .box-carousel.reviews .carousel-item > table {
-  width: 90% !important;
+  width: 90%;
   table-layout: fixed;
 }
 
