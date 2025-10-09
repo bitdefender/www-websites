@@ -83,12 +83,13 @@ function updateSlideState(nextIndex, block) {
     }
   });
   updateControlsState(block, nextIndex);
-  const allPictures = block.closest('.columns').querySelectorAll('.right-col picture');
-  if (allPictures) {
+  const allPictures = block.closest('.columns')?.querySelectorAll('.right-col picture');
+  if (allPictures && allPictures.length > 1) {
     allPictures.forEach((picture) => {
       picture.style.display = 'none';
     });
-    block.closest('.columns').querySelector(`.right-col picture:nth-of-type(${nextIndex + 1})`).style.display = 'block';
+    const columnsPicture = block.closest('.columns').querySelector(`.right-col picture:nth-of-type(${nextIndex + 1})`);
+    if (columnsPicture) columnsPicture.style.display = 'block';
   }
 }
 
@@ -159,4 +160,11 @@ export default async function decorate(block) {
   updateControlsState(block, 0);
   addDotsListeners(dotsControls, slides);
   decorateIcons(block);
+
+  const dots = block.querySelectorAll('li');
+  dots.forEach((dot, idx) => {
+    if (dot.classList.contains('active')) {
+      updateSlideState(idx, block);
+    }
+  });
 }

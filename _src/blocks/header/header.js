@@ -562,7 +562,7 @@ async function runDefaultHeaderLogic(block) {
       nav.classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
-      loginFunctionality(shadowRoot);
+      await loginFunctionality(shadowRoot);
       return;
     }
 
@@ -655,9 +655,7 @@ async function runQuizPageHeaderLogic(block) {
   const html = await resp.text();
 
   block.classList.add('quiz', 'py-3', 'default-content-wrapper');
-  const headerWrapper = block.closest('header');
 
-  headerWrapper.classList.add('dark');
   block.innerHTML = html;
 
   decorateIcons(block);

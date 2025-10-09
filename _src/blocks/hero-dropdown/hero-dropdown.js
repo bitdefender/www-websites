@@ -45,7 +45,7 @@ function createPriceBox({
   code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText,
 }) {
   const box = document.createElement('div');
-  box.classList.add('dropdown-products__price-box');
+  box.classList.add('dropdown-products__price-box', 'await-loader');
   box.setAttribute('data-store-context', '');
   box.setAttribute('data-store-id', product);
   box.setAttribute('data-store-option', `${unit}-${year}`);
@@ -58,7 +58,7 @@ function createPriceBox({
     <p class="product-details">${detailsText || ''}</p>
     <div class="discount">
       <div data-store-hide="no-price=discounted;type=visibility" class="price">
-        <span class="old-price"><del data-store-price="full">$69.99</del></span>
+        <span class="old-price"><del data-store-price="full"></del></span>
       </div>
       <div data-store-hide="no-price=discounted;type=visibility" class="featured">
         <span class="prod-save" data-store-hide="no-price=discounted"><span data-store-discount="percentage"></span> ${discounttext}</span>
@@ -66,7 +66,7 @@ function createPriceBox({
     </div>
     <div class="price">
       <strong class="new-price">
-        <strong data-store-price="discounted||full">$29.99</strong>
+        <strong data-store-price="discounted||full"></strong>
       </strong>
     </div>
     <div class="buttons">

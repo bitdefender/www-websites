@@ -12,14 +12,17 @@ export default async function decorate(block) {
     currentStep: 0,
   };
 
+  const isAcqVariant = document.querySelector('.acq-quiz');
+
   block.classList.add('default-content-wrapper');
   block.closest('.section').id = 'quiz-form';
-
   const steps = [...block.children];
 
   function renderStep(step, index) {
-    const stepTitle = step.children[0].children[0].textContent;
-    const stepOptions = [...step.children[0].children[1].children];
+    const stepAboveTitle = step.querySelector('p:has(sup)');
+    const stepTitle = step.querySelector('h2').textContent || step.children[0].children[0].textContent;
+    const stepSubtitle = step.querySelector('h3');
+    const stepOptions = [...step.querySelectorAll('li')];
     const stepImage = step.children[1].children[0];
     const isFirstStep = index === 0;
     const isLastStep = index === steps.length - 1;
@@ -30,24 +33,28 @@ export default async function decorate(block) {
       <div class="form-wrapper">
         <form class="step">
            <div class="step-header">
-             <div class="step-index">${questionLabel} ${index + 1}/${steps.length}:</div>
+             <div class="step-index">${questionLabel} ${index + 1}/${steps.length}</div>
              ${!isFirstStep ? `<a class="step-previous">${previousButtonLabel}</a>` : ''}
            </div>
         
            
            <fieldset>
-             <legend>${stepTitle}</legend>
-             
-             
+             ${stepAboveTitle ? `<p>${stepAboveTitle.innerHTML}</p>` : ''}
+             <h2>${stepTitle}</h2>
+             ${stepSubtitle ? `<h3>${stepSubtitle.innerHTML}</h3>` : ''}
+
                 ${stepOptions.map((option, idx) => {
     const value = option.querySelector('u') ? 1 : 0;
     const forLabel = `${fieldId}-${idx}`;
 
     return `
                 <div class="step-radio-wrapper">
+                  <label for="${forLabel}">
+                  ${option.textContent}
                   <input type="radio" id="${forLabel}" name="${fieldId}" value="${value}" required aria-required="true"/>
-                  <label for="${forLabel}">${option.textContent}</label>
-                </div>  
+                  <div class="checkbox"></div>
+                  </label>
+                </div>
                 `;
   }).join('')}
                 <div class="error-message">${selectErrorLabel}</div>
@@ -56,10 +63,8 @@ export default async function decorate(block) {
            <p class="button-container submit">
             <a class="button modal" href="">${!isLastStep ? nextButtonLabel : seeResultsLabel}</a>
            </p>
-         
-            <div class="img-container">
-                ${stepImage.outerHTML}
-            </div>    
+
+            ${stepImage ? `<div class="img-container">${stepImage.outerHTML}</div>` : ''}
         </form>
       </div>
     `;
@@ -102,6 +107,10 @@ export default async function decorate(block) {
 
     const { origin, pathname } = window.location;
     // redirect
+    if (isAcqVariant) {
+      window.location.replace(`${origin}${pathname}${dataset.score}`);
+      return;
+    }
     window.location.replace(`${origin}${pathname}${foundLegend.template}`);
   }
 
@@ -122,6 +131,17 @@ export default async function decorate(block) {
       return;
     }
 
+    if (isAcqVariant) {
+      const eventData = {
+        event: 'form completed',
+        user: {
+          form: 'Who do you protect online?',
+          formFields: `${selectedOption.parentElement.innerText}`,
+        },
+      };
+      // Store in localStorage
+      localStorage.setItem('formCompletedEvent', JSON.stringify(eventData));
+    }
     renderResults();
   }
 
