@@ -155,7 +155,13 @@ export default async function decorate(block, options) {
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
     dropdownTag,
   } = block.closest('.section').dataset;
+      const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
+  if (!isHomePage) {
+    const breadcrumb = createTag('div', { class: 'breadcrumb' });
+    const contentWrapper = block.querySelector(':scope > div:first-child > div');
+    if (contentWrapper) contentWrapper.prepend(breadcrumb);
+  }
   renderNanoBlocks(block);
 
   if (options) {
