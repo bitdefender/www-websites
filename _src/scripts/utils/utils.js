@@ -888,6 +888,10 @@ export const generatePageLoadStartedName = () => {
       }
     }
 
+    if (pathname.includes('scam-masters')) {
+      tagName = `${locale}:consumer:quiz:scam-masters`;
+    }
+
     if (window.errorCode === '404') {
       tagName = `${locale}:404`;
     }
