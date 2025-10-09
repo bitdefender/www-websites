@@ -666,9 +666,10 @@ export function pushTrialDownloadToDataLayer() {
 
     if (button?.dataset?.storeId) return button.dataset.storeId;
 
-    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
-    if (closestStoreElementWithId) {
-      return closestStoreElementWithId.dataset.storeId;
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]') || button?.closest('.section');
+    const { storeId } = closestStoreElementWithId.dataset;
+    if (storeId) {
+      return storeId;
     }
 
     // eslint-disable-next-line max-len
@@ -879,6 +880,18 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:consumer:solutions`;
     }
 
+    if (pathname.includes('spot-the-scam-quiz')) {
+      tagName = `${locale}:consumer:quiz`;
+      if (!pathname.endsWith('/')) {
+        const result = page.name;
+        tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
+      }
+    }
+
+    if (pathname.includes('scam-masters')) {
+      tagName = `${locale}:consumer:quiz:scam-masters`;
+    }
+
     if (window.errorCode === '404') {
       tagName = `${locale}:404`;
     }
@@ -892,6 +905,11 @@ export const generatePageLoadStartedName = () => {
  * @returns {string} get product findings for analytics
  */
 export const getProductFinding = () => {
+  const productFindingMetadata = getMetadata('product-finding');
+  if (productFindingMetadata) {
+    return productFindingMetadata;
+  }
+
   const pageName = page.name.toLowerCase();
   let productFinding;
   switch (pageName) {
@@ -907,9 +925,23 @@ export const getProductFinding = () => {
     case 'downloads':
       productFinding = 'downloads page';
       break;
+    case 'spot-the-scam-quiz':
+      productFinding = 'consumer quiz';
+      break;
     default:
       productFinding = 'product pages';
       break;
+  }
+
+  // case when the pages are link-checker/something
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/link-checker')) {
+    productFinding = 'toolbox page';
+  }
+
+  // case when the pages are /spot-the-scam-quiz/something
+  if (currentPath.includes('/spot-the-scam-quiz')) {
+    productFinding = 'consumer quiz';
   }
 
   return productFinding;
@@ -988,14 +1020,14 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
 
           if (!invisible) window.latestVisibleToken = token;
           if (!token) return finish(new Error('Token missing.'));
-          finish(null, { widgetId, token });
+          return finish(null, { widgetId, token });
         },
         'error-callback': () => {
           finish(new Error('Turnstile error during execution.'));
         },
         'expired-callback': () => {
           finish(new Error('Turnstile token expired.'));
-        }
+        },
       });
 
       if (invisible) {
@@ -1012,6 +1044,8 @@ export function renderTurnstile(containerId, { invisible = false } = {}) {
       } else {
         finish(null, { widgetId });
       }
+
+      return undefined;
     }
 
     if (window.turnstile) {

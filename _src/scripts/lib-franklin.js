@@ -667,7 +667,7 @@ export function decorateButtons(element) {
           return;
         }
         // Example: <p><a href="example.com">Text</a> (example.com)</p>
-        if (up.childNodes.length === 1 && up.tagName === 'P' && a.href.includes('/fragments/')) {
+        if (up.childNodes.length === 1 && a.href.includes('/fragments/')) {
           a.className = 'button modal';
           up.classList.add('button-container');
           return;

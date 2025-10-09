@@ -1,5 +1,5 @@
 import { target } from "../../target.js";
-import { User } from "@repobit/dex-utils";
+import user from "../../user.js";
 import { Constants } from "../constants.js";
 import { getCampaignBasedOnLocale, GLOBAL_V2_LOCALES, setUrlParams, getMetadata, getUrlPromotion } from "../../utils/utils.js";
 import page from "../../page.js";
@@ -265,6 +265,7 @@ export class Product {
 		this.campaignType = product.campaignType;
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
+		this.symbol = option.currency_iso;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
 		this.yearDevicesMapping = Object.entries(this.options).reduce((acc, [deviceKey, values]) => {
 			Object.keys(values).forEach(yearKey => {
@@ -436,15 +437,23 @@ export class Product {
 
 		let buyLink = new URL(yearsOption.buyLink);
 		buyLink.searchParams.set("SHOPURL", `${window.location.origin}/${window.location.pathname.split('/')[1]}/`);
+
+		// If the path doesn't match the expected format (bitdefender.com/en-us...), set the SHOPURL to the origin
+		const pathRegex = new RegExp(`^${window.location.origin}/[a-z]{2}-[a-z]{2}(?:/.*)?$`, "i");
+		if (!pathRegex.test(window.location.href)) {
+			buyLink.searchParams.set("SHOPURL", `${window.location.origin}`);
+		}
 		buyLink.searchParams.set("REF", this.promotion && this.promotion !== Store.NO_PROMOTION ? `WEBSITES_${this.promotion}` : "N/A");
 		buyLink.searchParams.set("SRC", `${window.location.origin}${window.location.pathname}`);
 
 		const targetBuyLinkMapping = Store.targetBuyLinkMappings?.[this.productAlias]?.[productVariation];
 		// replace the buy links with target links if they exist and return the option
-		if (targetBuyLinkMapping) {
+		if (targetBuyLinkMapping?.buyLink) {
 			buyLink = new URL(targetBuyLinkMapping.buyLink);
+		}
 
-			// if there are extra parameters which need to be added to the links, add them
+		// if there are extra parameters which need to be added to the links, add them
+		if (targetBuyLinkMapping?.extraParameters) {
 			targetBuyLinkMapping?.extraParameters?.forEach(extraParameter => {
 				buyLink.searchParams.set(extraParameter.key, extraParameter.value);
 			});
@@ -763,7 +772,7 @@ class Vlaicu {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
 		let geoIpFlag = (await target.configMbox)?.useGeoIpPricing;
 		if (geoIpFlag) {
-			locale = await User.locale;
+			locale = await user.locale;
 		}
 		const pathVariablesResolverObject = {
 			// TODO: please remove the ternary operators below and only use page.locale
@@ -939,7 +948,7 @@ export class Store {
 	static country = page.country;
 	static mappedCountry = this.getCountry();
 	/** Private variables */
-	static baseUrl = Constants.DEV_BASE_URL;
+	static baseUrl = Constants.BASE_URL_FOR_DEV;
 
 	/**
 	 * @type {StoreConfig}

@@ -241,11 +241,11 @@ function handleSubmit(formBox, widgetId, token) {
   };
 
   formBox.addEventListener('submit', async (e) => {
-    formBox.classList.add('loading');
     e.preventDefault();
 
     if (!validateFields()) return;
 
+    formBox.classList.add('loading');
     const date = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const data = new Map();
 
@@ -302,11 +302,11 @@ export default function decorate(block) {
   block.innerHTML = '';
   block.appendChild(formBox);
 
-   renderTurnstile('turnstile-container', { invisible: false })
+  renderTurnstile('turnstile-container', { invisible: false })
     .then(({ widgetId, token }) => {
       handleSubmit(formBox, widgetId, token);
     })
     .catch((error) => {
-      console.error(`Turnstile render failed: ${error.message}`);
-    }); 
+      throw new Error(`Turnstile render failed: ${error.message}`);
+    });
 }

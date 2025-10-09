@@ -1,14 +1,10 @@
-import { target } from "../target.js";
-import { User } from "@repobit/dex-utils";
+import user from "../user.js";
 import page from "../page.js";
 import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
 import {
   getExperimentDetails,
   generatePageLoadStartedName,
-  getCampaignBasedOnLocale,
-  getUrlPromotion,
   getProductFinding,
-  getMetadata,
 } from '../utils/utils.js';
 import { getTargetExperimentDetails } from "../target.js";
 
@@ -57,6 +53,30 @@ const checkClickEventAfterRedirect = () => {
   }
 }
 
+
+/**
+ * Add form events to the data layer after page redirect
+ */
+const checkFormCompletedEventAfterRedirect = () => {
+  const storedData = localStorage.getItem("formCompletedEvent");
+
+  if (storedData) {
+    const formCompletedEvent = JSON.parse(storedData);
+
+    if (formCompletedEvent?.event && formCompletedEvent?.user) {
+      AdobeDataLayerService.push({
+        event: formCompletedEvent.event,
+        user: {
+          form: formCompletedEvent.user.form,
+          formFields: formCompletedEvent.user.formFields,
+        },
+      });
+    }
+
+    localStorage.removeItem("formCompletedEvent");
+  }
+};
+
 /**
  * Add entry for free products
  */
@@ -80,7 +100,7 @@ const resolvePageLoadStartedEvent = async () => {
     page,
     {
       experimentDetails: (await getTargetExperimentDetails()) ?? getExperimentDetails(),
-      geoRegion: await User.country,
+      geoRegion: await user.country,
       name: generatePageLoadStartedName(),
       serverName: 'hlx.live', // indicator for AEM Success Edge
     },
@@ -98,7 +118,7 @@ const resolveUserDetectedEvent = async () => {
   AdobeDataLayerService.push(new UserDetectedEvent(
     page,
     {
-      ID: await User.fingerprint,
+      ID: await user.fingerprint,
       productFinding: getProductFinding()
     }
   ));
@@ -112,5 +132,6 @@ export const resolveNonProductsDataLayer = async () => {
   pageErrorHandling();
   await resolveUserDetectedEvent();
   checkClickEventAfterRedirect();
+  checkFormCompletedEventAfterRedirect();
   getFreeProductsEvents();
 }

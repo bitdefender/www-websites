@@ -1,5 +1,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
-import { matchHeights, createTag } from '../../scripts/utils/utils.js';
+import {
+  matchHeights, createTag, renderNanoBlocks,
+} from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
@@ -93,9 +95,51 @@ function setDynamicLink(dynamicLink, dynamicLinks) {
   }
 }
 
+const slug = (s) => s?.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'tab';
+function setupTabs({ block, firstTab }) {
+  const section = block.closest('.section');
+  const wrapper = block.closest('.columns-wrapper');
+
+  const label = wrapper.previousElementSibling?.closest('.default-content-wrapper')?.textContent?.trim() || 'Tab';
+  const id = slug(label);
+  section.classList.add('columns-tabs');
+
+  if (!block.closest('.section').classList.contains('hide-tabs')) {
+    let tabsList = section.querySelector('.tabs-section');
+    if (!tabsList) {
+      tabsList = document.createElement('div');
+      tabsList.className = 'tabs-section default-content-wrapper';
+      tabsList.addEventListener('click', (e) => {
+        const tab = e.target.closest('span[data-tab]');
+        const showAll = tab.dataset.tab === firstTab.toLowerCase();
+        section.querySelectorAll('.section-el').forEach((el) => {
+          el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
+        });
+        tabsList.querySelectorAll('span').forEach((el) => el.classList.toggle('active', el === tab));
+      });
+      // add All tab once
+      const all = document.createElement('span');
+      all.className = 'tag active';
+      all.dataset.tab = firstTab.toLowerCase();
+      all.textContent = firstTab;
+      tabsList.appendChild(all);
+      section.prepend(tabsList);
+    }
+
+    const tab = document.createElement('span');
+    tab.className = 'tag';
+    tab.dataset.tab = id;
+    tab.textContent = label;
+    tabsList.appendChild(tab);
+  }
+
+  wrapper.classList.add('section-el', `section-${id}`);
+  wrapper.previousElementSibling?.classList.add('section-el', `section-${id}`);
+}
+
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
@@ -132,7 +176,7 @@ export default function decorate(block) {
 
   if (breadcrumbs && block.classList.contains('creators-banner')) {
     const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    block.querySelector('.columns-left-col')?.prepend(breadcrumb);
+    block.querySelector('h2')?.prepend(breadcrumb);
   }
 
   // setup buylink, this can be used later as a starting point for prices.
@@ -201,6 +245,8 @@ export default function decorate(block) {
     leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
   }
 
+  renderNanoBlocks(block.closest('.section'), undefined, undefined, block);
+
   const chatOptions = document.querySelector('.chat-options');
   if (chatOptions) {
     const cardButtons = chatOptions.querySelectorAll('.button-container');
@@ -226,13 +272,34 @@ export default function decorate(block) {
   // by dynamically setting this, i can set howewer much rows i want based on the number of
   // maximum elements expected in the row
   if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
-    block.querySelectorAll('.columns-text-col')?.forEach((element) => {
+    let cards = block.querySelectorAll('.columns-text-col');
+    if (block.classList.contains('cards-with-img')) {
+      cards = block.querySelectorAll('.columns > div > div');
+    }
+
+    cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
   }
 
+  // tabs version
+  if (type && type === 'tabs') setupTabs({ block, firstTab });
+
+  if (block.classList.contains('sidebar')) {
+    const videoP = cols[1].querySelector('p');
+    const content = videoP.innerText;
+    if (content.startsWith('https://www.youtube.com/embed/')) {
+      videoP.classList.add('iframe');
+      cols[1].querySelector('p').innerHTML = `<iframe width="100%" height="232" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+    }
+  }
+
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
+  if (block.closest('.section').classList.contains('dex-carousel-cards')) {
+    matchHeights(block, 'div > div:not(:first-of-type) p:first-of-type');
+  }
+
   if (block.closest('.section').classList.contains('multi-blocks')) {
     matchHeights(block.closest('.section'), '.columns');
     matchHeights(block.closest('.section'), 'table');
