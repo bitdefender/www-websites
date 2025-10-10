@@ -197,9 +197,8 @@
     filter: none;
 }
 
-.box-carousel-container.testimonials .trusted-carousel .arrows {
-     width: 0; 
-     height: 0;
+.box-carousel-container.testimonials .box-carousel.trusted-carousel .arrows {
+    display:none;
 }
 
 .box-carousel-container .left-arrow svg {
@@ -261,7 +260,7 @@
 }
 
 .box-carousel-container .box-carousel.reviews .title table {
-    display: flex;
+
     justify-content: space-between;
     color: #3C3C3C;  
 }

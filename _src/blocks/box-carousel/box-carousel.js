@@ -13,58 +13,49 @@ export default async function decorate(block) {
     const colSubSecondary = row?.children?.[2];
     const colSubPrimary = row?.children?.[3];
     const hasImg = colMedia?.querySelector?.('img, picture, .icon');
-    const trusted = document.body.classList.contains('trusted');
 
     if (isTestimonials && block.classList.contains('reviews')) {
-      const subtitleSecondary = colSubSecondary?.innerHTML || '';
-      const subSecondary = subtitleSecondary.includes('<strong') ? (colSubSecondary?.innerHTML || '') : '';
+      const subSecondary = colSubSecondary?.innerHTML || '';
       const subPrimary = (() => {
         if (colSubPrimary != null) return colSubPrimary?.innerHTML || '';
-        if (subtitleSecondary.includes('<strong')) return '';
         return colSubSecondary?.innerHTML || '';
       })();
       return `
 <li class="carousel-item glide__slide">
-  <div class="img-container">${colMedia?.innerHTML ?? ''}</div>
-  <p class="title">${colTitle?.outerHTML ?? ''}</p>
-  <div class="subtitle-secondary">${subSecondary}</div>
-  <div class="subtitle">${subPrimary}</div>
+  <div class="img-container">${colMedia?.innerHTML}</div>
+  <p class="title">${colTitle?.outerHTML}</p>
+  <div class="subtitle-secondary">${subSecondary ?? ''}</div>
+  <div class="subtitle">${subPrimary ?? ''}</div>
 </li>`;
     }
 
     const mediaBlock = (() => {
-      if (isTestimonials) {
-        if (hasImg) return `<div class="img-container">${colMedia?.innerHTML ?? ''}</div>`;
-        return '<div class="img-container"></div>';
-      }
-      return (colMedia?.innerHTML ?? '');
+      if (!isTestimonials) return (colMedia?.innerHTML ?? '');
+      return `<div class="img-container">${hasImg ? colMedia?.innerHTML : ''}</div>`;
     })();
 
     const titleHTML = (() => {
-      if (!isTestimonials) return colTitle?.outerHTML ?? '';
-      if (hasImg) return (colTitle?.outerHTML ?? colMedia?.outerHTML ?? '');
-      return colMedia?.outerHTML ?? '';
+      if (isTestimonials) return (hasImg ? colTitle?.outerHTML ?? colMedia?.outerHTML : colMedia?.outerHTML) ?? '';
+      return colTitle?.outerHTML ?? '';
     })();
 
     const subSecondary = (() => {
-      if (!isTestimonials) return '';
-      if (hasImg) return trusted ? colSubSecondary?.innerHTML : (colSubSecondary?.innerHTML ?? '');
-      return colTitle?.innerHTML;
+      if (isTestimonials) return (hasImg ? colSubSecondary?.innerHTML : colTitle?.innerHTML) ?? '';
+      return '';
     })();
 
     const subPrimary = (() => {
-      if (!isTestimonials) return colSubSecondary?.innerHTML ?? '';
-      if (hasImg) return trusted ? colSubPrimary?.innerHTML : (colSubPrimary?.innerHTML ?? '');
-      return colSubSecondary?.innerHTML;
+      if (isTestimonials) return (hasImg ? colSubSecondary?.innerHTML : colTitle?.innerHTML) ?? '';
+      return colSubSecondary?.innerHTML ?? '';
     })();
 
     return `
-<li class="carousel-item glide__slide">
-  ${mediaBlock}
-  <p class="title">${titleHTML}</p>
-  ${isTestimonials ? `<div class="subtitle-secondary">${subSecondary}</div>` : ''}
-    <div class="subtitle">${subPrimary}</div>
-  </li>`;
+      <li class="carousel-item glide__slide">
+        ${mediaBlock}
+        <p class="title">${titleHTML}</p>
+        ${isTestimonials ? `<div class="subtitle-secondary">${subSecondary}</div>` : ''}
+          <div class="subtitle">${subPrimary}</div>
+      </li>`;
   }).join('');
 
   // Only one carousel-nav block: your original one with div.navigation-item
@@ -122,10 +113,6 @@ export default async function decorate(block) {
   decorateIcons(block);
 
   block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
-  if (isTestimonials && !block.querySelector('.img-container picture, .img-container img')) {
-    block.querySelectorAll('.carousel-item .subtitle, .carousel-item .subtitle-secondary')
-      .forEach((el) => el.textContent || '');
-  }
 
   const glide = new Glide(block.querySelector('.glide'), {
     type: (slides.length > (isTrusted ? 1 : 4)) ? 'carousel' : 'slider',
