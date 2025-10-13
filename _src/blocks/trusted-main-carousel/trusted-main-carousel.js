@@ -72,13 +72,13 @@ export default async function decorate(block) {
         </ul>
       </div>
 
-      ${navigationPosition && navigationPosition === 'bottom' && `<div class="navigation-wrapper">
+      ${(navigationPosition && navigationPosition === 'bottom' && `<div class="navigation-wrapper">
         <div class="first-nav">
           ${navItemsNames.map((text, index) => `
             <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
               <span class="text">${text}</span><span class="pill"></span>
             </div>`).join('')}
-        </div>`}
+        </div>`) ?? ''}
     </div>
   `;
 
