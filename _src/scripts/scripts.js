@@ -6,6 +6,12 @@ import {
   WindowLoadStartedEvent,
   WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
+import {
+  registerActionNodes,
+  registerContextNodes,
+  registerRenderNodes,
+} from '@repobit/dex-store-elements';
+import store from './store.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -26,7 +32,6 @@ import {
 import {
   resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
-import { StoreResolver } from './libs/store/index.js';
 
 import {
   createTag,
@@ -249,7 +254,6 @@ export async function detectModalButtons(main) {
       // generate new modal
       const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
       document.body.append(modalContainer);
-      await StoreResolver.resolve(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
@@ -682,13 +686,25 @@ async function loadPage() {
     document.body.style = 'background-color: #141517';
   }
 
+  const main = document.querySelector('main');
+  /**
+   * @type {import('@repobit/dex-store-elements').RootNode}
+   */
+  const storeRoot = document.createElement('bd-root');
+  document.body.replaceChild(storeRoot, main);
+  storeRoot.appendChild(main);
+  storeRoot.store = store;
+
   await loadEager(document);
+  registerContextNodes();
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
 
-  await StoreResolver.resolve();
+  registerActionNodes(main);
+  registerRenderNodes(main);
+
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
   window.bd_page_ready = true;

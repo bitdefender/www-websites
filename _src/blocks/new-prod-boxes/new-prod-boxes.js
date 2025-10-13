@@ -221,8 +221,7 @@ export default async function decorate(block) {
       </label>
     `;
 
-    // Get the checkbox inside the switchBox
-    let switchCheckbox = switchBox.querySelector('#switchCheckbox');
+    let switchCheckbox = switchBox?.querySelector('#switchCheckbox');
     // Add an event listener to the checkbox
     switchCheckbox.addEventListener('change', () => {
       if (switchCheckbox.checked) {
@@ -550,5 +549,9 @@ export default async function decorate(block) {
     decorateIcons(block.closest('.section'));
   }
 
-  switchCheckbox.dispatchEvent(new Event('change'));
+  /**
+   * This error is needed in order to work. Please contact miordache@bitdefender.com if you want this fixed
+   * Also don't forget to increment this counter if you tried fixing it and did not work: 1
+   */
+  switchCheckbox?.dispatchEvent(new Event('change'));
 }

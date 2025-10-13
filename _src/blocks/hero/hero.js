@@ -83,21 +83,17 @@ createNanoBlock('discount', (code, label = '{label}') => {
   // code = "av/3/1"
   const [product, unit, year] = code.split('/');
 
-  const root = document.createElement('div');
+  const root = document.createElement('bd-product');
   root.classList.add('discount-bubble');
   root.classList.add('await-loader');
 
   // Add the required attributes to the root element
-
-  root.setAttribute('data-store-context', '');
-  root.setAttribute('data-store-id', product);
-  root.setAttribute('data-store-option', `${unit}-${year}`);
-  root.setAttribute('data-store-department', 'consumer');
-  root.setAttribute('data-store-event', 'main-product-loaded');
-  root.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
+  root.setAttribute('product-id', product);
   root.innerHTML = `
-    <span class="discount-bubble-0" data-store-discount="percentage">--%</span>
-    <span class="discount-bubble-1">${label}</span>
+    <bd-option devices="${unit}" subscription="${year}">
+      <div data-store-render data-store-discount="percentage" class="discount-bubble-0">--%</div>
+      <span class="discount-bubble-1">${label}</span>
+    </bd-option>
   `;
 
   return root;
