@@ -332,8 +332,25 @@
     color: #fff;
     line-height: 1.2;
     font-weight: 600;
-    border-top: 1px solid black;
+    border-top: 1px solid #141517;
     align-items: baseline;
+}
+
+.webview-table.two-products-variation .webview-comparison-header div[role="columnheader"]:first-child {
+    min-width: 441px;
+    align-items: end;
+    display: flex;
+}
+
+.webview-table.two-products-variation .webview-comparison-header div[role="columnheader"]:first-child .plan-switcher {
+    background-color: #141517;
+    flex-direction: row;
+    height: 70%;
+    justify-content: left;
+    align-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-color: #141517;
 }
 
 .webview-table.two-products-variation.light-mode div[role="cell"]:first-child {
@@ -342,20 +359,9 @@
     border-color: #fff;
 }
 
-.webview-table.two-products-variation.light-mode .webview-comparison-header div[role="columnheader"]:first-child {
-    min-width: 441px;
-    align-items: end;
-    display: flex;
-}
-
 .webview-table.two-products-variation.light-mode .webview-comparison-header div[role="columnheader"]:first-child .plan-switcher {
     background-color: white;
-    flex-direction: row;
-    height: 70%;
-    justify-content: left;
-    align-content: center;
-    padding-top: 0;
-    padding-bottom: 0;
+    border-color: white;
 }
 
 
