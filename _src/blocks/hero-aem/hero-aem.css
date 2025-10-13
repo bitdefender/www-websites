@@ -803,6 +803,7 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
 
   .hero-aem-container .hero-aem .hero-aem__card-text p:has(picture) {
     text-align: left;
+    min-height: 60px;
   }
 
   .hero-aem-container .hero-aem .hero-aem__card__desktop {
