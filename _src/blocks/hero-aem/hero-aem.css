@@ -1,4 +1,11 @@
 /* stylelint-disable */
+
+:root {  
+  /* breadcrumbs font size */
+  --breadcrumb-text-color-dark: #c5c5c5;
+  --breadcrumb-text-color-dark-hover: #616161;
+  --breadcrumbs-font-size-s: 12px;
+}
 .hero-aem-container.hero-vsb {
   overflow: unset !important;
 }
@@ -110,6 +117,37 @@
 
 .hero-aem-container .hero-aem .hero-aem__breadcrumb a:hover {
   text-decoration: underline;
+}
+
+main .hero-aem-container .hero-aem .breadcrumb {
+  font-weight: var(--font-weight-bold);
+  color: #dedede;
+  min-height: unset;
+  padding: 12px 0;
+  margin-bottom: 12px;
+}
+
+main .hero-aem-container .hero-aem .breadcrumb a {
+    font-size: var(--breadcrumbs-font-size-s);
+    font-weight: var(--font-weight-bold);
+    color: var(--breadcrumb-text-color-dark-hover);
+    text-decoration: none;
+    line-height: 1.7;
+    letter-spacing: .96px;
+}
+
+main .hero-aem-container .hero-aem .breadcrumb a::after {
+    content: "/";
+    display: inline-block;
+    color: var(--color-dark-gray);
+    margin: 0 3px;
+    font-size: 9pt;
+}
+
+main .hero-aem-container .hero-aem .breadcrumb a:last-child {
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
 }
 
 .hero-aem-container .hero-aem p.button-container .button.primary {
@@ -765,6 +803,7 @@
 
   .hero-aem-container .hero-aem .hero-aem__card-text p:has(picture) {
     text-align: left;
+    min-height: 60px;
   }
 
   .hero-aem-container .hero-aem .hero-aem__card__desktop {
