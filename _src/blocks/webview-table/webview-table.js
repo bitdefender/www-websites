@@ -60,7 +60,7 @@ function createPlanSwitcher(radioButtons, prodsNames, prodsUsers, prodsYears, bl
       name="switcher"
       value="${radio}" 
       ${checked}>
-      <label for="${idx}-${radio}" class="radio-label">${radio}</label><br>
+      <label for="${idx}-${radio}" class="radio-label">${radio}</label>
     `;
     });
     return planSwitcher;

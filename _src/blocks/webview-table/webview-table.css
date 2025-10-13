@@ -95,6 +95,8 @@
     font-weight: 600;
     border-top: 1px solid black;
     align-items: baseline;
+    flex-direction: row;
+    justify-content: left;
 }
 
 .webview-table .yes-check::after {
@@ -340,52 +342,71 @@
     border-color: #fff;
 }
 
-.webview-comparison-header div[role="columnheader"]:first-child {
+.webview-table.two-products-variation.light-mode .webview-comparison-header div[role="columnheader"]:first-child {
     min-width: 441px;
+    align-items: end;
+    display: flex;
 }
 
-.plan-switcher {
+.webview-table.two-products-variation.light-mode .webview-comparison-header div[role="columnheader"]:first-child .plan-switcher {
+    background-color: white;
+    flex-direction: row;
+    height: 70%;
+    justify-content: left;
+    align-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+
+.webview-comparison-header .plan-switcher {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   font-weight: bold;
+  gap: 16px;
 }
 
-.plan-switcher input[type=radio] {
+.webview-comparison-header .plan-switcher input[type=radio] {
   position: relative;
   display: none;
   opacity: 0;
   width: auto;
 }
 
-.plan-switcher .radio-label {
-  margin-right: 8px;
+.webview-comparison-header .plan-switcher .radio-label {
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
-.plan-switcher .radio-label::before {
+.webview-comparison-header .plan-switcher .radio-label::before {
   content: "";
   background: #f4f4f4;
   color: #006DFF;
   border-radius: 100%;
   border: 2px solid #006DFF;
   display: inline-block;
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 22px;
+  height: 22px;
   position: relative;
-  margin-right: 9px;
+  margin-right: 14px;
   vertical-align: top;
   cursor: pointer;
   text-align: center;
   transition: all 250ms ease;
 }
 
-.plan-switcher input[type=radio]:checked+.radio-label:before {
+.webview-comparison-header .plan-switcher input[type=radio]:checked+.radio-label:before {
   background-color: #3197EE;
   box-shadow: inset 0 0 0 4px #f4f4f4;
 }
 
-.plan-switcher input[type=radio]:focus+.radio-label:before {
+.webview-comparison-header .plan-switcher input[type=radio]:focus+.radio-label:before {
   outline: none;
   border-color: #3197EE;
+}
+
+.webview-table-container.title-left h1 {
+    text-align: left;
 }
