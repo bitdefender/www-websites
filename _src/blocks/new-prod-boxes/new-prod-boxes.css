@@ -888,6 +888,10 @@
 
 }
 
+.new-prod-boxes .await-loader {
+  min-height: 177px;
+}
+
 @media (min-width: 768px) {
   .creators .new-prod-boxes-container .new-prod-boxes {
     padding-bottom: 10px;
