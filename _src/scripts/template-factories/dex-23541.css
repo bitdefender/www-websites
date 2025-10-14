@@ -65,6 +65,10 @@
     }
 }
 
+.four-cards-container h2 {
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
 .dex-23541 {
     .dex-copilot-benefits {
         .columns-wrapper > .columns > div {
@@ -119,6 +123,13 @@
             }
 
             h1 {
+                font-size: var(--size-40);
+                margin: var(--size-0) var(--size-0) var(--size-8);
+                color: #000;
+            }
+
+            h2 {
+                color: #006DFF;
                 font-size: var(--heading-font-size-l);
                 font-weight: var(--font-weight-bolder);
                 line-height: 42px;
@@ -155,6 +166,7 @@
                     display: none;
                 }
 
+
                 .hero-aem__card-text {
                     p {
                         margin: var(--size-0) var(--size-0) var(--size-8);
@@ -166,7 +178,7 @@
                         font-weight: var(--font-weight-boldest);
                     }
 
-                    p:nth-of-type(2) {
+                    p:nth-of-type(1) {
                         font-size: var(--body-font-size-xl);
                         line-height: 23px;
                         margin-bottom: var(--size-0);
@@ -246,8 +258,8 @@
         }
 
         .new-prod-boxes-container > .default-content-wrapper > h2 > strong > a,
-        .four-cards > .default-content-wrapper > p > a,
-        .tabs-component-container .title-class a {
+        .four-cards > .default-content-wrapper > h2 a,
+        .tabs-component-container .title-class h2 a {
             display: inline-block;
             margin: var(--size-0);
             padding: var(--size-0) 5px;
@@ -506,7 +518,7 @@
                 padding: var(--size-0) var(--size-0) var(--size-32);
                 text-align: center;
 
-                p:first-of-type {
+                h3 {
                     font-size: var(--heading-font-size-xs);
                     line-height: 27px;
                     color: var(--color-highlight-blue);
@@ -514,7 +526,7 @@
                     font-weight: var(--font-weight-regular);
                 }
 
-                p:nth-of-type(2) {
+                h2 {
                     margin: var(--size-0) auto;
                     font-size: var(--heading-font-size-l);
                     line-height: 42px;
@@ -555,16 +567,20 @@
                     padding: var(--size-32);
                     border-radius: var(--size-20);
 
+                    h4 {
+                        width: calc(100% - var(--size-44));
+                        display: inline-block;
+                        vertical-align: top;
+                        margin: var(--size-0);
+                        min-height: auto !important;
+                    }
+
                     p {
                         vertical-align: top;
                         margin: var(--size-0);
                         display: inline-block;
 
                         &:nth-of-type(2) {
-                            width: calc(100% - var(--size-44));
-                        }
-
-                        &:nth-of-type(3) {
                             margin-top: var(--size-8);
                             margin-left: 45px;
                             font-size: var(--body-font-size-l);
@@ -593,7 +609,7 @@
             .default-content-wrapper {
                 padding: var(--size-0) var(--size-0) var(--size-32);
 
-                h2 {
+                h3 {
                     font-family: var(--body-font-family);
                     font-size: var(--heading-font-size-s);
                     line-height: 27px;
@@ -602,7 +618,7 @@
                     font-weight: var(--font-weight-regular);
                 }
 
-                p {
+                h2 {
                     margin: var(--size-0) auto;
                     font-size: var(--heading-font-size-l);
                     line-height: 42px;
@@ -656,9 +672,20 @@
                     margin-bottom: var(--size-32);
                 }
 
-                .title-class strong {
-                    font-size: var(--heading-font-size-l);
-                    line-height: 42px;
+                .title-class {
+
+                    strong, h2 {
+                        font-size: var(--heading-font-size-l);
+                        line-height: 42px;
+                    }
+
+                    h2 {
+                        margin-bottom: var(--size-0);
+                    }
+
+                    strong {
+                        color: black;
+                    }
                 }
 
                 .subtitle-class div {
@@ -927,8 +954,8 @@
                 text-align: center;
 
                 h2 {
-                    font-size: var(--heading-font-size-l);
-                    line-height: 42px;
+                    font-size: var(--heading-font-size-m);
+                    line-height: var(--size-36);
                     margin-bottom: var(--size-32);
                 }
 
