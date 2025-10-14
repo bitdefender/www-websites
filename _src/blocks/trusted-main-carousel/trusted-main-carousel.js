@@ -1,15 +1,15 @@
+/* eslint-disable indent */
 import Glide from '@glidejs/glide';
-import { debounce } from '@repobit/dex-utils';
-import { isView } from '../../scripts/utils/utils.js';
 
 export default async function decorate(block) {
+  const { navigationPosition, arrows } = block.closest('.section').dataset;
   const slides = [...block.children];
   const navItemsNames = slides.map((slideEl) => slideEl.children[0].firstElementChild.textContent);
 
   block.classList.add('default-content-wrapper');
   block.innerHTML = `
     <div class="carousel-container glide">
-      <div class="navigation-wrapper">
+      ${!navigationPosition ? `<div class="navigation-wrapper">
         <div class="first-nav">
           ${navItemsNames.map((text, index) => `
             <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
@@ -17,7 +17,7 @@ export default async function decorate(block) {
             </div>`).join('')}
         </div>
         
-        <div class="second-nav">
+        <div class="second-nav" ${arrows && arrows === 'hide' ? 'style="display: none;"' : ''}>
          <a href class="arrow disabled left-arrow">
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
               <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -43,13 +43,42 @@ export default async function decorate(block) {
             </svg>
           </a>
         </div>
-      </div>
+      </div>` : ''}
 
       <div class="glide__track content-wrapper" data-glide-el="track">
         <ul class="glide__slides">
-          ${slides.map((slide) => `<li class="glide__slide slide">${slide.innerHTML}</li>`).join('')}
+          ${slides.map((slide) => {
+            const firstDiv = slide.querySelector('div');
+            const lastDiv = slide.querySelector('div:last-of-type');
+
+            return `<li class="glide__slide slide">
+              <div class="left-content">
+                ${firstDiv ? firstDiv.innerHTML : ''}
+              </div>
+              <div class="right-content">
+                ${(() => {
+                  if (!lastDiv) return '';
+                  const content = lastDiv.textContent.trim();
+
+                  if (content.startsWith('https://www.youtube.com/embed/')) {
+                    return ` <iframe width="100%" height="100%" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+                  }
+
+                  return lastDiv.innerHTML;
+                })()}
+              </div>
+            </li>`;
+          }).join('')}
         </ul>
       </div>
+
+      ${(navigationPosition && navigationPosition === 'bottom' && `<div class="navigation-wrapper">
+        <div class="first-nav">
+          ${navItemsNames.map((text, index) => `
+            <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
+              <span class="text">${text}</span><span class="pill"></span>
+            </div>`).join('')}
+        </div>`) ?? ''}
     </div>
   `;
 
@@ -58,11 +87,19 @@ export default async function decorate(block) {
   const leftArrow = block.querySelector('.left-arrow');
   const rightArrow = block.querySelector('.right-arrow');
 
-  // Initialize Glide config
   const glide = new Glide(glideEl, {
     type: 'slider',
     startAt: 0,
     perView: 1,
+    autoplay: 9000,
+    keyboard: true,
+    swipeThreshold: 40,
+    dragThreshold: 60,
+    touchAngle: 45,
+    perTouch: 1,
+    animationDuration: 250,
+    animationTimingFunc: 'ease-out',
+    hoverpause: false,
   });
 
   glide.on('run.after', () => {
@@ -70,45 +107,9 @@ export default async function decorate(block) {
     navItems.forEach((item, i) => item.classList.toggle('active', i === index));
   });
 
-  navItems.forEach((item, index) => {
-    item.addEventListener('click', () => glide.go(`=${index}`));
-  });
-
-  if (leftArrow) {
-    leftArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      glide.go('<');
-    });
-  }
-
-  if (rightArrow) {
-    rightArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      glide.go('>');
-    });
-  }
+  navItems.forEach((item, index) => item.addEventListener('click', () => glide.go(`=${index}`)));
+  if (leftArrow) leftArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('<'); });
+  if (rightArrow) rightArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('>'); });
 
   glide.mount();
-
-  // Reinitialize autoplay on resize (desktop only)
-  const updateAutoplay = debounce(() => {
-    const isDesktop = isView('desktop');
-    const newAutoplay = isDesktop ? 3000 : false;
-
-    glide.update({ autoplay: newAutoplay });
-
-    if (newAutoplay && glide.playing === false) {
-      glide.play(newAutoplay);
-    }
-  }, 300);
-
-  window.addEventListener('resize', updateAutoplay);
-
-  // Pause/resume on hover
-  glideEl.addEventListener('mouseenter', () => glide.pause());
-  glideEl.addEventListener('mouseleave', () => {
-    if (isView('desktop')) glide.play(3000);
-  });
-
-  window.dispatchEvent(new Event('resize'));
 }

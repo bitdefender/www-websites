@@ -44,7 +44,7 @@
 }
 
 .ab-downloads main .hero h1 {
-    font-size: 40px;
+    font-size:32px;
     font-weight: 700;
     line-height: 42px;
     color: #006DFF;
@@ -109,7 +109,6 @@
 
 .ab-downloads main .hero a.button.modal, .ab-downloads main .hero a.button.central, .ab-downloads main .hero_mobile a.button.modal {
     height: 45px;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -162,7 +161,7 @@
 }
 
 .ab-downloads main .small-content.columns-container .block > div {
-    gap: 18px;
+    gap: 8px;
 }
 
 .ab-downloads main .small-content.columns-container .block > div > div {
@@ -268,7 +267,7 @@
     line-height: 17px;
     margin-bottom: 8px;
     list-style-type: none;
-    background: url(https://bitdefender.com/icons/circle-check-sharp-solid.svg) top 2px left no-repeat transparent;
+    background: url('/common/icons/circle-check-sharp-solid.svg') top 2px left no-repeat transparent;
     padding-left: 22px;
     background-size: 13px;
     position: relative;

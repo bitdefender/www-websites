@@ -666,9 +666,10 @@ export function pushTrialDownloadToDataLayer() {
 
     if (button?.dataset?.storeId) return button.dataset.storeId;
 
-    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
-    if (closestStoreElementWithId) {
-      return closestStoreElementWithId.dataset.storeId;
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]') || button?.closest('.section');
+    const { storeId } = closestStoreElementWithId.dataset;
+    if (storeId) {
+      return storeId;
     }
 
     // eslint-disable-next-line max-len
@@ -879,6 +880,18 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:consumer:solutions`;
     }
 
+    if (pathname.includes('spot-the-scam-quiz')) {
+      tagName = `${locale}:consumer:quiz`;
+      if (!pathname.endsWith('/')) {
+        const result = page.name;
+        tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
+      }
+    }
+
+    if (pathname.includes('scam-masters')) {
+      tagName = `${locale}:consumer:quiz:scam-masters`;
+    }
+
     if (window.errorCode === '404') {
       tagName = `${locale}:404`;
     }
@@ -892,6 +905,11 @@ export const generatePageLoadStartedName = () => {
  * @returns {string} get product findings for analytics
  */
 export const getProductFinding = () => {
+  const productFindingMetadata = getMetadata('product-finding');
+  if (productFindingMetadata) {
+    return productFindingMetadata;
+  }
+
   const pageName = page.name.toLowerCase();
   let productFinding;
   switch (pageName) {
@@ -907,9 +925,23 @@ export const getProductFinding = () => {
     case 'downloads':
       productFinding = 'downloads page';
       break;
+    case 'spot-the-scam-quiz':
+      productFinding = 'consumer quiz';
+      break;
     default:
       productFinding = 'product pages';
       break;
+  }
+
+  // case when the pages are link-checker/something
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/link-checker')) {
+    productFinding = 'toolbox page';
+  }
+
+  // case when the pages are /spot-the-scam-quiz/something
+  if (currentPath.includes('/spot-the-scam-quiz')) {
+    productFinding = 'consumer quiz';
   }
 
   return productFinding;
@@ -950,20 +982,70 @@ export function generateLDJsonSchema() {
   document.head.appendChild(script);
 }
 
-// Turnstile
-export function renderTurnstile(containerId) {
+let isRendering = false;
+let widgetExecuting = false;
+export function renderTurnstile(containerId, { invisible = false } = {}) {
+  if (isRendering) {
+    return Promise.reject(new Error('Turnstile is already rendering.'));
+  }
+
+  isRendering = true;
+
   return new Promise((resolve, reject) => {
+    function finish(error, result = null) {
+      isRendering = false;
+      widgetExecuting = false;
+      if (error) reject(error);
+      else resolve(result);
+    }
+
     function renderWidget() {
       if (!window.turnstile) {
-        reject(new Error('Turnstile not loaded.'));
-        return;
+        return finish(new Error('Turnstile not loaded.'));
       }
 
-      const widgetId = window.turnstile.render(`#${containerId}`, {
+      const container = document.getElementById(containerId);
+      if (!container) {
+        return finish(new Error(`Container "${containerId}" not found.`));
+      }
+
+      // Clear previous widget
+      container.innerHTML = '';
+
+      const widgetId = window.turnstile.render(container, {
         sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
+        size: invisible ? 'compact' : 'normal',
+        callback: (token) => {
+          widgetExecuting = false;
+
+          if (!invisible) window.latestVisibleToken = token;
+          if (!token) return finish(new Error('Token missing.'));
+          return finish(null, { widgetId, token });
+        },
+        'error-callback': () => {
+          finish(new Error('Turnstile error during execution.'));
+        },
+        'expired-callback': () => {
+          finish(new Error('Turnstile token expired.'));
+        },
       });
 
-      resolve(widgetId);
+      if (invisible) {
+        if (!widgetExecuting) {
+          widgetExecuting = true;
+
+          try {
+            window.turnstile.execute(widgetId);
+          } catch (err) {
+            window.turnstile.reset(widgetId);
+            window.turnstile.execute(widgetId);
+          }
+        }
+      } else {
+        finish(null, { widgetId });
+      }
+
+      return undefined;
     }
 
     if (window.turnstile) {
@@ -992,18 +1074,19 @@ export async function submitWithTurnstile({
   }
 
   try {
-    const token = window.turnstile.getResponse(widgetId);
+    if (!window.turnstile || typeof window.turnstile.getResponse !== 'function') {
+      throw new Error('Turnstile is not loaded.');
+    }
 
-    if (!token) {
-      throw new Error('Turnstile token is missing. Please complete the challenge.');
+    const token = window.turnstile.getResponse(widgetId);
+    if (!token || token.length < 10) {
+      throw new Error('Turnstile token is missing or invalid. Please complete the challenge.');
     }
 
     const requestData = {
       file: `/sites/common/formdata/${fileName}.xlsx`,
       table: 'Table1',
-      row: {
-        ...data,
-      },
+      row: { ...data },
       token,
     };
 
@@ -1013,12 +1096,12 @@ export async function submitWithTurnstile({
       body: JSON.stringify(requestData),
     });
 
-    if (!res.ok) throw new Error(await res.text());
-
-    const contentType = res.headers.get('content-type');
-    if (!contentType?.includes('application/json')) throw new Error(await res.text());
+    if (!res.ok) {
+      throw new Error(`Server returned status ${res.status}`);
+    }
 
     if (typeof successCallback === 'function') successCallback();
+
     window.turnstile.reset(widgetId);
   } catch (err) {
     if (typeof errorCallback === 'function') errorCallback(err);

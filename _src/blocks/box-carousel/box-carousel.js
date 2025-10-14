@@ -15,7 +15,7 @@ export default async function decorate(block) {
         </div>
       ` : slide.children[0]?.children[0]?.innerHTML}
 
-      <p class="title">${slide.children[0]?.children[1]?.textContent}</p>
+      <p class="title">${slide.children[0]?.children[1]?.outerHTML}</p>
 
       ${isTestimonials ? `
         <div class="subtitle-secondary">${slide.children[0]?.children[2]?.innerHTML}</div>
@@ -79,6 +79,8 @@ export default async function decorate(block) {
   `;
 
   decorateIcons(block);
+
+  block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
 
   const glide = new Glide(block.querySelector('.glide'), {
     type: 'carousel',
