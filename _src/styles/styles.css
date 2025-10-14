@@ -1679,12 +1679,12 @@ main .section.blue p a.button.modal::after {
   font-weight: bold;
   display: inline-flex;
   justify-content: center;
+  align-items: center;
   text-transform: none;
 }
 
 .tag-blue-pill .icon {
   position: relative;
-  top: 1.5px;
   display: flex;
   align-items: center;
   justify-content: center;
