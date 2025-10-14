@@ -21,12 +21,12 @@ export default async function decorate(block) {
         return colSubSecondary?.innerHTML || '';
       })();
       return `
-<li class="carousel-item glide__slide">
-  <div class="img-container">${colMedia?.innerHTML}</div>
-  <p class="title">${colTitle?.outerHTML}</p>
-  <div class="subtitle-secondary">${subSecondary ?? ''}</div>
-  <div class="subtitle">${subPrimary ?? ''}</div>
-</li>`;
+        <li class="carousel-item glide__slide">
+          <div class="img-container">${colMedia?.innerHTML}</div>
+          <p class="title">${colTitle?.outerHTML}</p>
+          <div class="subtitle-secondary">${subSecondary ?? ''}</div>
+          <div class="subtitle">${subPrimary ?? ''}</div>
+        </li>`;
     }
 
     const mediaBlock = (() => {
@@ -45,7 +45,7 @@ export default async function decorate(block) {
     })();
 
     const subPrimary = (() => {
-      if (isTestimonials) return (hasImg ? colSubSecondary?.innerHTML : colTitle?.innerHTML) ?? '';
+      if (isTestimonials) return (hasImg ? colSubPrimary?.innerHTML : colTitle?.innerHTML) ?? '';
       return colSubSecondary?.innerHTML ?? '';
     })();
 

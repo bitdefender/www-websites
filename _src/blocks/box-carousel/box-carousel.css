@@ -201,6 +201,10 @@
     display:none;
 }
 
+.box-carousel.trusted-carousel .carousel-header .arrows .arrow {
+  display: none;
+}
+
 .box-carousel-container .left-arrow svg {
     transform: rotate(180deg);
 }
@@ -260,7 +264,6 @@
 }
 
 .box-carousel-container .box-carousel.reviews .title table {
-
     justify-content: space-between;
     color: #3C3C3C;  
 }
