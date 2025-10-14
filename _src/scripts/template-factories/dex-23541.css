@@ -114,6 +114,10 @@
         .hero-aem-container .hero-aem {
             margin-top: var(--size-32);
 
+            p em a {
+                margin: var(--size-0);
+            }
+
             .hero-aem__card__desktop, .hero-aem__card-text {
                 background: unset;
             }
@@ -140,6 +144,7 @@
             .hero-aem__prices {
                 margin-top: var(--size-32);
                 margin-bottom: var(--size-16);
+
                 + p {
                     font-family: var(--body-font-family);
                 }
@@ -396,6 +401,11 @@
 
             .new-prod-boxes {
                 padding-bottom: var(--size-0);
+                grid-template-columns: repeat(3, 1fr);
+
+                .inner_prod_box {
+                    width: 100%;
+                }
             }
 
             .new-prod-boxes .prod_box.hasGreenTag .inner_prod_box {
@@ -423,6 +433,7 @@
 
             .new-prod-boxes {
                 width: unset;
+
                 .prod_box {
                     margin-left: 15px;
                     margin-right: 15px;
@@ -657,6 +668,7 @@
                 }
             }
         }
+
         .individual-tabs-section {
             margin-bottom: var(--size-64);
 
@@ -740,11 +752,11 @@
 
                         a.button::after, input[type="submit"]::after, main .section.link-right a::after {
                             background: white;
-                            transition: all .2s cubic-bezier(.4,0,.2,1);
+                            transition: all .2s cubic-bezier(.4, 0, .2, 1);
                             transform: translateX(0);
                             opacity: 0;
                             margin-left: -10px;
-                            -webkit-mask:url('/_src/icons/arrow-right.svg') no-repeat !important;
+                            -webkit-mask: url('/_src/icons/arrow-right.svg') no-repeat !important;
                             mask: url('/_src/icons/arrow-right.svg') no-repeat !important;
 
                         }
@@ -820,7 +832,7 @@
         .bitdef-vs-brands-container {
             margin-bottom: 65px;
 
-            div, button, p, span, h1, h2, h3, tr,  td {
+            div, button, p, span, h1, h2, h3, tr, td {
                 font-family: var(--body-font-family) !important;
             }
 
@@ -1283,6 +1295,7 @@
 
                 ul {
                     margin-top: var(--size-32);
+
                     li {
                         font-size: var(--body-font-size-xxs);
                     }
@@ -1290,55 +1303,56 @@
             }
 
         }
-    }
 
-    .benefitsLists {
-        margin-top: var(--size-32);
-        display: none;
-        overflow: visible;
-        transition: max-height 0.3s ease;
+        .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
+            margin-top: var(--size-32);
+            display: none;
+            overflow: visible;
+            transition: max-height 0.3s ease;
 
-        ul li {
-            font-family: 'IBM Plex Sans', sans-serif !important;
-        }
-
-    }
-
-    .benefitsLists.expanded {
-        display: block;
-    }
-
-    .show-more-btn-wrapper {
-        text-align: center;
-        width: 100%;
-
-        .show-more-btn, .show-less-btn {
-            background: none;
-            border: none;
-            color: var(--color-highlight-blue);
-            cursor: pointer;
-            font-weight: var(--font-weight-bolder);
-            position: relative;
-            padding-left: var(--size-20);
-            font-size: var(--body-font-size-l);
-            line-height: var(--size-20);
-            font-family: "IBM Plex Sans", sans-serif;
-
-            &::after {
-                width: var(--size-14);
-                height: var(--size-14);
-                left: var(--size-0);
-                top: var(--size-2);
-                position: absolute;
-                content: url("/_src/icons/plus-sharp-regular.svg");
-                filter: invert(21%) sepia(100%) saturate(3034%) hue-rotate(210deg) brightness(99%) contrast(102%);
+            ul li {
+                font-family: 'IBM Plex Sans', sans-serif !important;
             }
+
         }
 
-        .show-less-btn {
-            &::after {
-                content: url("/_src/icons/minus-sharp-regular.svg");
-                filter: invert(21%) sepia(100%) saturate(3034%) hue-rotate(210deg) brightness(99%) contrast(102%);
+        .benefitsLists.expanded {
+            display: block !important;
+        }
+
+
+        .show-more-btn-wrapper {
+            text-align: center;
+            width: 100%;
+
+            .show-more-btn, .show-less-btn {
+                background: none;
+                border: none;
+                color: var(--color-highlight-blue);
+                cursor: pointer;
+                font-weight: var(--font-weight-bolder);
+                position: relative;
+                padding-left: var(--size-20);
+                font-size: var(--body-font-size-l);
+                line-height: var(--size-20);
+                font-family: "IBM Plex Sans", sans-serif;
+
+                &::after {
+                    width: var(--size-14);
+                    height: var(--size-14);
+                    left: var(--size-0);
+                    top: var(--size-2);
+                    position: absolute;
+                    content: url("/_src/icons/plus-sharp-regular.svg");
+                    filter: invert(21%) sepia(100%) saturate(3034%) hue-rotate(210deg) brightness(99%) contrast(102%);
+                }
+            }
+
+            .show-less-btn {
+                &::after {
+                    content: url("/_src/icons/minus-sharp-regular.svg");
+                    filter: invert(21%) sepia(100%) saturate(3034%) hue-rotate(210deg) brightness(99%) contrast(102%);
+                }
             }
         }
     }
