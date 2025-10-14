@@ -9,11 +9,6 @@ header.header-wrapper {
   z-index: 100;
 }
 
-header.header-wrapper nav {
-  display: none;
-}
-
-
 :root {
   --dark-header-icon-color: #000;
 }
@@ -32,15 +27,6 @@ header.header-wrapper > p {
   cursor: pointer;
   width: 175px;
   height: 50px;
-}
-
-
-
-
-
-
-header.header-wrapper .nav-wrapper {
-  display: none;
 }
 
 header.header-wrapper .nav-brand,
@@ -393,10 +379,6 @@ header.header-wrapper .options-wrapper.show div::before {
 }
 
 @media (max-width: 992px) {
-  header.header-wrapper .nav-wrapper {
-    display: none;
-  }
-
   header.header-wrapper p {
     margin: 0;
   }
@@ -429,6 +411,7 @@ header.header-wrapper .menu-bar {
 }
 
 header.header-wrapper .menu-wrapper {
+  display: none !important;
   position: absolute;
   top: 17px;
   right: 20px;
@@ -464,7 +447,7 @@ header.header-wrapper .options-wrapper {
   top: var(--nav-height);
   width: 100vw;
   height: 0;
-  display: none;
+  display: none !important;
 }
 
 header.header-wrapper .options-wrapper.show{
@@ -616,6 +599,26 @@ header.header-wrapper #icons-sprite-bitdefender-logo path {
   font-weight: bold;
 }
 
+header.header-wrapper .nav-wrapper {
+  width: 100%;
+  background-color: var(--text-color);
+  z-index: 100;
+  display: block;
+  margin: 0 auto;
+  align-content: center;
+  min-height: 64px;
+  padding: 0 20px;
+}
+
+header.header-wrapper nav {
+  display: block;
+  height: 100%;
+  margin: 0 auto;  
+  position: relative;
+  display: flex;
+  align-content: center;
+}
+
 header.quiz {
   height: var(--nav-height) !important;
   background: white;
@@ -667,20 +670,7 @@ header.quiz {
   }
 
   header.header-wrapper .nav-wrapper {
-    width: 100%;
-    background-color: var(--text-color);
-    z-index: 100;
-    display: block;
-    margin: 0 auto;
-  }
-
-  header.header-wrapper nav {
-    display: block;
-    max-width: var(--section-desktop-max-width);
-    height: 100%;
-    margin: 0 auto;
-    padding: 6px var(--section-desktop-padding) 10px;
-    position: relative;
+    padding: 0 60px;
   }
 
   header.header-wrapper nav p {
