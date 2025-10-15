@@ -304,6 +304,11 @@
     text-align: left;
 }
 
+.box-carousel-container .box-carousel.reviews .carousel-item > table {
+  width: 90%;
+  table-layout: fixed;
+}
+
 .trusted .box-carousel-container .subtitle-secondary{
   transform: translateY(-40%);
 }
@@ -321,6 +326,7 @@
     .box-carousel-container .box-carousel.reviews .img-container {
         width: 100%;
         font-size: 22px;
+        display:grid;
         grid-template-rows:subgrid;
         grid-row: span 2;
     }
