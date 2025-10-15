@@ -18,7 +18,7 @@ export default async function decorate(block) {
       const subSecondary = colSubSecondary?.innerHTML || '';
       const subPrimary = (() => {
         if (colSubPrimary != null) return colSubPrimary?.innerHTML || '';
-        return colSubSecondary?.innerHTML || '';
+        return '';
       })();
       return `
         <li class="carousel-item glide__slide">
