@@ -634,6 +634,10 @@ header.quiz {
   }
 }
 
+header.header-wrapper.hidden {
+  display: none;
+}
+
 @media(min-width: 767px) { /* tablet */
   header.header-wrapper .logo-container .icon {
     width: 180px;
