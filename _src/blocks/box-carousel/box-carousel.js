@@ -15,11 +15,21 @@ export default async function decorate(block) {
     const hasImg = colMedia?.querySelector?.('img, picture, .icon');
 
     if (isTestimonials && block.classList.contains('reviews')) {
-      const subSecondary = colSubSecondary?.innerHTML || '';
-      const subPrimary = (() => {
+      let subSecondary = colSubSecondary?.innerHTML || '';
+      let subPrimary = (() => {
         if (colSubPrimary != null) return colSubPrimary?.innerHTML || '';
-        return colSubSecondary?.innerHTML || '';
+        return '';
       })();
+
+      if (
+        !colSubPrimary?.textContent?.trim()
+        && colSubSecondary?.textContent?.trim()
+        && !colSubSecondary?.querySelector('strong')
+      ) {
+        subPrimary = colSubSecondary?.innerHTML || '';
+        subSecondary = '';
+      }
+
       return `
         <li class="carousel-item glide__slide">
           <div class="img-container">${colMedia?.innerHTML}</div>
