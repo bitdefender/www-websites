@@ -782,6 +782,10 @@ main .grey-background{
     border-radius: 0;
   }
 
+  .header.quiz.default-content-wrapper {
+    padding: 0 60px;
+  }
+
   main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
     width: 200px;
   }
