@@ -6,7 +6,7 @@ import {
 } from '@repobit/dex-data-layer';
 
 function changeTexts(block, result, statusTitles, numberOfLeaks) {
-  const titleText = statusTitles[result]?.replace('0', numberOfLeaks);
+  const titleText = statusTitles?.[result]?.replace('0', numberOfLeaks);
   const h1 = block.querySelector('h1');
   if (h1) {
     h1.innerHTML = titleText;
@@ -26,13 +26,14 @@ async function fetchData(url, body) {
 
 async function checkLink(block, input, result, statusMessages, statusTitles) {
   const email = input.value.trim();
+  const { invalidEmailText } = block.closest('.section').dataset;
   const isValidEmail = (emailInput) => {
     const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(emailInput.toLowerCase());
   };
 
   if (!email || !isValidEmail(email)) {
-    result.textContent = 'Please enter a valid Email';
+    result.textContent = `${invalidEmailText ?? ''}`;
     result.className = 'result danger';
     return;
   }
@@ -51,9 +52,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   });
 
   if (firstRequest.erorr) {
-    result.innerHTML = `
-      <strong>Something went wrong</strong><br>
-      The system encountered an error while trying to check the email you provided. Please try again in a few minutes.`;
+    result.innerHTML = `${statusMessages.error ?? ''}`;
     result.className = 'result danger no-response';
     input.closest('.input-container').classList.remove('loader-circle');
     return;
@@ -69,9 +68,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   });
 
   if (secondRequest.error) {
-    result.innerHTML = `
-      <strong>Something went wrong</strong><br>
-      The system encountered an error while trying to check the email you provided. Please try again in a few minutes.`;
+    result.innerHTML = `${statusMessages.error ?? ''}`;
     result.className = 'result danger no-response';
     input.closest('.input-container').classList.remove('loader-circle');
     return;
@@ -146,13 +143,10 @@ function createStatusMessages(block) {
   // Skip the first <p> if it contains a header like "<status-messages>"
   pElements.forEach((p, index) => {
     if (index === 0) return;
-
-    // Remove <br> tags and trim spaces
-    const cleanHTML = p.innerHTML.replace(/<br\s*\/?>/gi, '').trim();
-    const parts = cleanHTML.split(':');
+    const parts = p.innerHTML.split(':');
     if (parts.length >= 2) {
       const status = parts[0].trim();
-      const message = parts.slice(1).join(':').trim();
+      const message = parts.slice(1).join(':').trim().replace('<br>', '');
       statusMessages[status.toLowerCase()] = message;
     }
   });
@@ -208,38 +202,25 @@ function createButtonsContainer(block) {
         p.remove();
         return;
       }
-
-      if (index === 1) {
-        p.querySelector('a').classList.add('share-button');
-      }
-
-      if (index === 2) {
-        p.querySelector('a').classList.add('check-another-button');
-      }
-
-      divWithButtons.appendChild(p);
       const link = p.querySelector('a');
       if (link.href.includes('#check-another')) {
+        p.querySelector('a').classList.add('check-another-button');
         link.addEventListener('click', (e) => {
           e.preventDefault();
           resetChecker(block, titleText);
         });
       }
+
+      divWithButtons.appendChild(p);
     });
   }
 }
 
 export default function decorate(block) {
-  const { checkButtonText, product } = block.closest('.section').dataset;
+  const { checkButtonText, placeholder } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
   privacyPolicyDiv.classList.add('privacy-policy');
-
-  if (product) {
-    // eslint-disable-next-line no-unused-vars
-    const [productName, productUsers, productYears] = product.split('/');
-    block.setAttribute('data-store-id', productName);
-  }
 
   const statusMessages = createStatusMessages(block);
   const statusTitles = createStatusTitles(block);
@@ -253,11 +234,8 @@ export default function decorate(block) {
 
   const input = document.createElement('input');
   input.type = 'text';
-  input.placeholder = 'example-url.com';
+  input.placeholder = `${placeholder ?? ''}`;
   input.id = 'email-checker-input';
-
-  const copyElement = document.createElement('span');
-  copyElement.id = 'copy-to-clipboard';
 
   const inputDiv = document.createElement('p');
   inputDiv.setAttribute('id', 'inputDiv');
@@ -266,18 +244,7 @@ export default function decorate(block) {
   divContainer.className = 'input-container__container';
   divContainer.appendChild(input);
   block.prepend(inputDiv);
-  divContainer.appendChild(copyElement);
-
   inputContainer.appendChild(divContainer);
-
-  copyElement.addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      input.value += text;
-    } catch (error) {
-      // continue regardless of error
-    }
-  });
 
   const button = document.createElement('button');
   button.textContent = checkButtonText ?? 'Check URL';
