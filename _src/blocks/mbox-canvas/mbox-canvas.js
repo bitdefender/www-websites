@@ -94,7 +94,9 @@ export default async function decorate(block) {
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
   });
+  console.log('Offer from Target:', offer);
   const offerLink = `${Constants.BASE_URL_FOR_PROD}${offer.offer}`;
+  console.log('Offer Link:', offerLink);
   const pageCall = await fetch(offerLink);
   let offerHtml;
   await loadBlocks(block.querySelector('.canvas-content'));
