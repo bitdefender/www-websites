@@ -106,24 +106,25 @@ async function resetChecker(block, titleText = '') {
   const classesToRemove = ['danger', 'safe'];
   const section = block.closest('.section');
 
-  // Iterate over the classes and remove them from the section
+  // Remove classes from the section
   classesToRemove.forEach((className) => {
-    if (section.classList.contains(className)) {
-      section.classList.remove(className);
-    }
+    section.classList.remove(className);
   });
 
-  // Reset the input and result elements
-  const input = block.querySelector('#email-checker-input');
-  const result = block.querySelector('.result');
+  // Reset all inputs inside the section (main + external)
+  const inputs = document.querySelectorAll('#email-checker-input');
+  inputs.forEach((input) => {
+    input.removeAttribute('disabled');
+    input.value = '';
+  });
+
+  // Reset the h1 text
   const h1 = block.querySelector('h1');
-  input.removeAttribute('disabled');
-  input.value = '';
-  result.className = 'result';
   if (h1) {
     h1.textContent = titleText;
   }
 
+  // Push events to Adobe Data Layer
   AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
   AdobeDataLayerService.push(new UserDetectedEvent());
   AdobeDataLayerService.push(new WindowLoadedEvent());
@@ -216,6 +217,47 @@ function createButtonsContainer(block) {
   }
 }
 
+function createExternalInput(inputDiv) {
+  const buttons = document.querySelectorAll('a[href*="#external-input"]');
+  const mainInput = document.querySelector('#email-checker-input');
+
+  if (!mainInput) return;
+
+  // Keep track of all inputs for syncing
+  const allInputs = [mainInput];
+
+  buttons.forEach((button) => {
+    const container = button.closest('.button-container');
+    if (!container || !inputDiv) return;
+
+    // Clone the inputDiv (keep HTML as-is)
+    const clone = inputDiv.cloneNode(true);
+    container.replaceWith(clone);
+
+    const externalInput = clone.querySelector('input');
+    const scrollButton = clone.querySelector('button');
+    if (scrollButton) {
+      scrollButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        mainInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        mainInput.focus();
+      });
+    }
+    if (!externalInput) return;
+    allInputs.push(externalInput);
+  });
+
+  // Add event listeners to sync all inputs
+  allInputs.forEach((input) => {
+    input.addEventListener('input', () => {
+      const { value } = input;
+      allInputs.forEach((otherInput) => {
+        if (otherInput !== input) otherInput.value = value;
+      });
+    });
+  });
+}
+
 export default function decorate(block) {
   const { checkButtonText, placeholder } = block.closest('.section').dataset;
 
@@ -260,7 +302,8 @@ export default function decorate(block) {
   safeImage.classList.add('safe-image');
   dangerImage.classList.add('danger-image');
 
-  button.addEventListener('click', () => checkLink(block, input, result, statusMessages, statusTitles));
-
   createButtonsContainer(block);
+  createExternalInput(inputContainer);
+
+  document.querySelectorAll('button.check-url').forEach((checkButton) => checkButton.addEventListener('click', () => checkLink(block, input, result, statusMessages, statusTitles)));
 }
