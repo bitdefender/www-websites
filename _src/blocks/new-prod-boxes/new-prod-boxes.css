@@ -959,3 +959,12 @@
     min-width: 100%;
   }
 }
+
+/* Pricing elements css */
+.new-prod-boxes {
+  bd-context, bd-product, bd-option {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 50;
+  }
+}

@@ -7,44 +7,38 @@ import {
 } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
-function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
+function setDiscountedPriceAttribute(type, prodName) {
   let priceAttribute = 'discounted||full';
 
   if (type === 'monthly') {
-    priceAttribute = hideDecimals === 'true' ? 'discounted-monthly-no-decimal||full-monthly' : 'discounted-monthly||full-monthly';
+    priceAttribute = 'discounted-monthly||full-monthly';
     if (prodName.endsWith('m')) {
-      priceAttribute = hideDecimals === 'true' ? 'discounted-no-decimal||full' : 'discounted||full';
+      priceAttribute = 'discounted||full';
     }
   }
 
   return priceAttribute;
 }
 
-async function updateProductPrice(prodName, saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
+async function updateProductPrice(prodName, saveText, buyLinkSelector = null, billed = null, type = null, perPrice = '') {
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
 
-  let priceAttribute = setDiscountedPriceAttribute(type, hideDecimals, prodName);
+  let priceAttribute = setDiscountedPriceAttribute(type, prodName);
   newPrice.setAttribute('data-store-price', priceAttribute);
-
-  let oldPrice = 'data-store-price="full"';
-  let billedPrice = 'data-store-price="discounted||full"';
-  if (hideDecimals === 'true') {
-    oldPrice = 'data-store-price="full-no-decimal"';
-    billedPrice = 'data-store-price="discounted-no-decimal||full-no-decimal"';
-  }
+  newPrice.setAttribute('data-store-render', '');
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div class="oldprice-container">
-          <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
-          <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
+          <span class="prod-oldprice" data-store-price="full" data-store-render data-store-hide="!it.option.price.discounted"></span>
+          <span class="prod-save" data-store-render data-store-hide="!it.option.price.discounted">${saveText} <span data-store-render data-store-discount="percentage"></span> </span>
         </div>
         <div class="newprice-container mt-2">
           <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
-        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
-        <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector?.innerText}</a>
+        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', '<span class="newprice-2" data-store-render data-store-price="discounted||full"></span>')}</div>` : ''}
+        <a data-store-render data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector?.innerText}</a>
       </div>`;
   return priceElement;
 }
@@ -74,8 +68,8 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
 
     if (productName) {
       planSwitcher.innerHTML += `
-        <input data-store-click-set-product data-store-product-id="${productName}" data-store-product-option="${prodUser}-${prodYear}" data-store-product-department="consumer" type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
-        <label for="${plan}-${productName.trim()}" class="radio-label">${radioText}</label><br>
+        <input type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
+        <label data-store-action data-store-set-id="${productName}" data-store-set-devices="${prodUser}" data-store-set-subscription="${prodYear}" for="${plan}-${productName.trim()}" class="radio-label">${radioText}</label><br>
       `;
     }
   });
@@ -183,7 +177,7 @@ export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts,
-    addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
+    addOnProducts, addOnMonthlyProducts, type, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
 
   const blockParent = block.closest('.section');
@@ -208,6 +202,7 @@ export default async function decorate(block) {
   }
 
   let switchBox = document.createElement('div');
+  let switchCheckbox;
   if (individualSwitchText && familySwitchText) {
     switchBox.classList.add('switchBox');
     switchBox.innerHTML = `
@@ -221,7 +216,7 @@ export default async function decorate(block) {
       </label>
     `;
 
-    let switchCheckbox = switchBox?.querySelector('#switchCheckbox');
+    switchCheckbox = switchBox?.querySelector('#switchCheckbox');
     // Add an event listener to the checkbox
     switchCheckbox.addEventListener('change', () => {
       if (switchCheckbox.checked) {
@@ -348,43 +343,49 @@ export default async function decorate(block) {
 
       prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'}${greenTag.innerText.trim() === 'demo-box' ? ' demo-box' : ''} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
-          data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
-            <div class="inner_prod_box">
-              ${greenTag.innerText.trim() && greenTag.innerText.trim() !== 'demo-box' ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
-              ${titleHTML}
+          ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
+          <bd-context>
+            <bd-product product-id="${prodName}">
+              <bd-option devices="${prodUsers}" subscription="${prodYears}">
+                <div class="inner_prod_box">
+                    ${greenTag.innerText.trim() && greenTag.innerText.trim() !== 'demo-box' ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
+                    ${titleHTML}
 
-              <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
-    ${(() => {
-    const t = subtitle.innerText.trim();
-    if (!t) return '';
-    const fixed = t.split(/\s+/).length > 8 ? ' fixed_height' : '';
-    const hasInvisibleTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i.test(subtitle.innerHTML);
-    const extra = hasInvisibleTag ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"' : '';
-    return `<p class="subtitle${fixed}"${extra}>${subtitle.innerHTML}</p>`;
-  })()}
+                    <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
+                    ${(() => {
+                      const t = subtitle.innerText.trim();
+                      if (!t) return '';
+                      const fixed = t.split(/\s+/).length > 8 ? ' fixed_height' : '';
+                      const hasInvisibleTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i.test(subtitle.innerHTML);
+                      const extra = hasInvisibleTag ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"' : '';
+                      return `<p class="subtitle${fixed}"${extra}>${subtitle.innerHTML}</p>`;
+                    })()}
 
-              <hr />
-              ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
-              ${radioButtons ? planSwitcher.outerHTML : ''}
-              <div class="hero-aem__prices await-loader"></div>
-              ${secondButton ? secondButton.outerHTML : ''}
-              ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
-              <hr />
-              ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
-              <div class="add-on-product" style="display: none;">
-                ${billed2 ? '<hr>' : ''}
-                ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
-                ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
-                <div class="hero-aem__prices__addon"></div>
-              </div>
-            </div>
+                    <hr />
+                    ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
+                    ${radioButtons ? planSwitcher.outerHTML : ''}
+                    <div class="hero-aem__prices await-loader"></div>
+                    ${secondButton ? secondButton.outerHTML : ''}
+                    ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
+                    <hr />
+                    ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
+                    <div class="add-on-product" style="display: none;">
+                      ${billed2 ? '<hr>' : ''}
+                      ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
+                      ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
+                      <div class="hero-aem__prices__addon"></div>
+                    </div>
+                  </div>
+                </bd-option>
+              </bd-product>
+            </bd-context>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
-      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice);
+      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, perPrice);
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
       let addOnPriceBox;
       if (addOn && addOnProducts) {
-        addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
+        addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, perPrice);
         block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
       }
 
@@ -551,7 +552,7 @@ export default async function decorate(block) {
 
   /**
    * This error is needed in order to work. Please contact miordache@bitdefender.com if you want this fixed
-   * Also don't forget to increment this counter if you tried fixing it and did not work: 1
+   * Also don't forget to increment this counter if you tried fixing it and did not work: 2
    */
   switchCheckbox?.dispatchEvent(new Event('change'));
 }
