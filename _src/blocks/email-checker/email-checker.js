@@ -75,27 +75,27 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   }
 
   await sleep(1000);
-  let message;
-  let className;
+  let statusCode; let message; let className;
   if (secondRequest.total_count === 0) {
+    statusCode = 'safe';
     message = statusMessages.safe;
-    changeTexts(block, 'safe', statusTitles, secondRequest.total_count);
     className = 'result safe';
   } else {
+    statusCode = 'leaks';
     message = statusMessages.leaks;
-    changeTexts(block, 'leaks', statusTitles, secondRequest.total_count);
     className = 'result danger';
   }
 
-  result.className = className;
+  changeTexts(block, statusCode, statusTitles, secondRequest.total_count);
   result.innerHTML = message;
+  result.className = className;
   block.closest('.section').classList.add(className.split(' ')[1]);
   input.setAttribute('disabled', '');
   document.getElementById('inputDiv').textContent = email;
   input.closest('.input-container').classList.remove('loader-circle');
 
   AdobeDataLayerService.push(new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-    pageLoadStartedInfo.name += '';
+    pageLoadStartedInfo.name += `:${statusCode}`;
     return pageLoadStartedInfo;
   }));
   AdobeDataLayerService.push(new UserDetectedEvent());
@@ -124,6 +124,9 @@ async function resetChecker(block, titleText = '') {
     h1.textContent = titleText;
   }
 
+  const result = block.querySelector('.result');
+  result.className = 'result';
+
   // Push events to Adobe Data Layer
   AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
   AdobeDataLayerService.push(new UserDetectedEvent());
@@ -146,7 +149,7 @@ function createStatusMessages(block) {
     if (index === 0) return;
     const parts = p.innerHTML.split(':');
     if (parts.length >= 2) {
-      const status = parts[0].trim();
+      const status = parts[0].trim().replace('<br>', '');
       const message = parts.slice(1).join(':').trim().replace('<br>', '');
       statusMessages[status.toLowerCase()] = message;
     }
