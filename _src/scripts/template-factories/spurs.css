@@ -216,3 +216,9 @@
         font-weight: 400;
     }
 }
+
+@media (min-width: 1200px) {
+   .spurs header, .spurs body > div:first-child {
+    min-height: 64px;
+  }
+}
