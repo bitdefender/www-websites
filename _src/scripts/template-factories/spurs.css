@@ -218,7 +218,7 @@
 }
 
 @media (min-width: 1200px) {
-   .spurs header, .spurs body > div:first-child {
+   header, body > div:first-child {
     min-height: 64px;
   }
 }
