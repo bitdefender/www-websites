@@ -140,8 +140,8 @@ function renderPrices(block, metadata) {
     products, secondaryProducts, firstYearText, featuredProduct, currentProduct, saveText,
   } = metadata;
 
-  const productsAsList = Array.from(products?.split(','));
-  const secondaryProductsAsList = Array.from(secondaryProducts?.split(','));
+  const productsAsList = products ? Array.from(products.split(',')) : [];
+  const secondaryProductsAsList = secondaryProducts ? Array.from(secondaryProducts.split(',')) : [];
   const cells = block.querySelectorAll('div[role="cell"]');
   let index = 0; // Manual index increment
   cells.forEach((cell) => {
