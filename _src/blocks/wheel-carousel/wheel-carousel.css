@@ -20,7 +20,6 @@
 }
 
 .wheel-carousel-container .default-content-wrapper {
-    text-align: center;
     font-weight: 400;
     font-size: 16px;
     line-height: 25.6px;
@@ -64,12 +63,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        opacity: 60%;
+        opacity: 0.6;
         transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     .carousel-item:hover {
-        opacity: 100%;
+        opacity: 1;
         transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
