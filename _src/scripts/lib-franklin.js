@@ -298,9 +298,11 @@ export async function decorateTags(root) {
     return null;
   }
 
-  // Isolate an exact substring in a text node as its own node via splitText, and return the node after it.
-  // Example: given node "abc[#" and index at '[#', split before and after marker -> remove or position around it.
-  function isolateAndRemoveMarker(startNode, index, markerLength, isOpen) {
+  // Isolate an exact substring in a text node as its own node via splitText,
+  // and return the node after it.
+  // Example: given node "abc[#" and index at '[#', split before and after marker
+  // -> remove or position around it.
+  function isolateAndRemoveMarker(startNode, index, markerLength) {
     // Split at the start of marker.
     const markerStart = startNode.splitText(index);
     // Split after the marker.
@@ -321,6 +323,7 @@ export async function decorateTags(root) {
     for (let textNode = walker.nextNode(); textNode; textNode = walker.nextNode()) {
       const text = textNode.nodeValue || '';
       const found = findEarliestOpen(text);
+      // eslint-disable-next-line no-continue
       if (!found) continue;
 
       const { index: openIdx, tag } = found;
@@ -333,6 +336,7 @@ export async function decorateTags(root) {
       if (!closeHit) {
         // No close found: put the open marker back literally and continue.
         startAfterOpen.parentNode.insertBefore(document.createTextNode(tag.open), startAfterOpen);
+        // eslint-disable-next-line no-continue
         continue;
       }
 
@@ -348,7 +352,8 @@ export async function decorateTags(root) {
       wrapper.className = `tag tag-${tag.className}`;
 
       try {
-        // This throws if the range partially selects a non-Text node; we then fall back to extract/insert.
+        // This throws if the range partially selects a non-Text node;
+        // we then fall back to extract/insert.
         range.surroundContents(wrapper);
       } catch {
         const frag = range.extractContents();

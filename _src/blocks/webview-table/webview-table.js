@@ -1,3 +1,4 @@
+import { debounce } from '@repobit/dex-utils';
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
@@ -245,6 +246,7 @@ function renderPrices(block, metadata) {
  */
 // eslint-disable-next-line max-len
 function adjustFontSizeUntilTargetHeight(elementsSelector, targetElement, targetHeight, maxSize = 100, minSize = 10, step = 1, interval = 50) {
+  const DEBOUNCE_DELAY_MS = 100;
   const elements = document.querySelectorAll(elementsSelector);
 
   // Invalid selector or target element not found.
@@ -281,14 +283,18 @@ function adjustFontSizeUntilTargetHeight(elementsSelector, targetElement, target
     }
   }
 
-  // Use MutationObserver to track height changes efficiently
-  const observer = new MutationObserver(() => {
+  function mutationObserverCallback() {
     const newHeight = targetElement.offsetHeight;
     if (newHeight !== previousHeight) {
       previousHeight = newHeight;
       adjustSize();
     }
-  });
+  }
+
+  // Use MutationObserver to track height changes efficiently
+  const observer = new MutationObserver(
+    debounce(mutationObserverCallback, DEBOUNCE_DELAY_MS),
+  );
 
   observer.observe(targetElement, { attributes: true, childList: true, subtree: true });
 
@@ -426,4 +432,7 @@ export default async function decorate(block) {
 
   // Check and replace privacy-policy link if it gives a 404
   await checkAndReplacePrivacyPolicyLink(block);
+
+  const targetElement = document.querySelector('.webview-table');
+  adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
 }
