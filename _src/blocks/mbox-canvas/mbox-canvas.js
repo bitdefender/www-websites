@@ -14,19 +14,70 @@ function decorateHTMLOffer(aemHeaderHtml) {
   return newHtml;
 }
 
-function createOfferParameters() {
+const serviceIdSegmentCache = new Map();
+async function extractServiceId(serviceId) {
+  if (!serviceId) {
+    return null;
+  }
+
+  if (serviceIdSegmentCache.has(serviceId)) {
+    return serviceIdSegmentCache.get(serviceId);
+  }
+
+  const baseUrl = 'https://stage.bitdefender.com';
+  const endpoint = `${baseUrl}/cdp/splash/${encodeURIComponent(serviceId)}`;
+
+  try {
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to fetch segments for service id ${serviceId}: ${response.status}`);
+      return null;
+    }
+
+    const payload = await response.json();
+    const segmentIds = Array.isArray(payload?.data)
+      ? payload.data
+        .map((entry) => entry?.segment_id)
+        .filter((segment) => typeof segment === 'string' && segment.trim().length > 0)
+      : [];
+
+    if (segmentIds.length === 0) {
+      return null;
+    }
+    console.log('Segment IDs:', segmentIds);
+    const segmentParam = segmentIds.join(',');
+    serviceIdSegmentCache.set(serviceId, segmentParam);
+    return segmentParam;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Failed to fetch segments for service id ${serviceId}`, error);
+  }
+
+  return null;
+}
+
+async function createOfferParameters() {
   const parameters = {};
   const urlParams = new URLSearchParams(window.location.search);
   const feature = urlParams.get('feature');
   const language = urlParams.get('lang');
-  urlParams.forEach((value) => {
-    if (value === feature) {
-      parameters.feature = feature.replaceAll('_', '-');
+  const serviceId = urlParams.get('service_id');
+
+  if (feature) {
+    parameters.feature = feature.replaceAll('_', '-');
+  }
+
+  if (language) {
+    parameters.lang = language.toLocaleLowerCase();
+  }
+
+  if (serviceId) {
+    const segment = await extractServiceId(serviceId);
+    if (segment) {
+      parameters.segment = segment;
     }
-    if (value === language) {
-      parameters.lang = language.toLocaleLowerCase();
-    }
-  });
+  }
 
   return parameters;
 }
@@ -82,7 +133,7 @@ export default async function decorate(block) {
     mboxName,
   } = block.closest('.section').dataset;
 
-  const parameters = createOfferParameters();
+  const parameters = await createOfferParameters();
   block.innerHTML += `
     <div class="canvas-content">
 
