@@ -2,6 +2,7 @@ import { debounce } from '@repobit/dex-utils';
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
+let COLUMNS_COUNT = 0;
 /**
  * Replaces text content "yes" and "no" with appropriate checkmark icons
  * @param {HTMLElement} block - The container block element
@@ -361,8 +362,13 @@ function buildTableHeader(block) {
   const header = block.querySelector('div:nth-of-type(2)');
   if (!header) return;
 
+  const metadata = block.closest('.section').dataset;
+  const { products, secondaryProducts } = metadata;
+  const productsAsList = products ? Array.from(products.split(',')) : [];
+  const secondaryProductsAsList = secondaryProducts ? Array.from(secondaryProducts.split(',')) : [];
+
   header.classList.add('webview-comparison-header');
-  [...header.children].forEach((headerColumn) => {
+  [...header.children].forEach((headerColumn, idx) => {
     if (headerColumn.textContent.includes('Individual')) {
       const planSwitcher = createPlanSwitcher(headerColumn.textContent, null, null, null);
       headerColumn.innerHTML = planSwitcher.outerHTML;
@@ -379,6 +385,19 @@ function buildTableHeader(block) {
           userIcons.forEach((icon) => {
             icon.closest('.tag').classList.toggle('global-display-none');
           });
+          const productColumns = block.querySelectorAll('[class*="product-column-"]');
+          productColumns.forEach((productColumn, prodColIdx) => {
+            // eslint-disable-next-line no-unused-vars
+            const [prodName, prodUsers, prodYears] = productsAsList[prodColIdx]?.split('/') || [];
+            // eslint-disable-next-line no-unused-vars
+            const [secondaryProdName, secondaryProdUsers, secondaryProdYears] = secondaryProductsAsList[prodColIdx]?.split('/') || [];
+            const userCount = selectedIndex === 0 ? prodUsers : secondaryProdUsers;
+            productColumn.innerHTML = productColumn.innerHTML.replace(`&lt;devices${prodColIdx + 1}&gt;`, `<span class="devices${prodColIdx + 1}">${userCount}</span>`);
+            const devicesSpan = productColumn.querySelector(`.devices${prodColIdx + 1}`);
+            if (devicesSpan) {
+              devicesSpan.textContent = userCount;
+            }
+          });
           // Find all other plan switchers and select the radio button at the same index
           document.querySelectorAll('.plan-switcher').forEach((switcher) => {
             if (switcher !== selectedRadio.closest('.plan-switcher')) {
@@ -392,6 +411,12 @@ function buildTableHeader(block) {
           });
         });
       });
+    }
+
+    // assume every column after the first is a product column
+    if (idx !== 0) {
+      headerColumn.classList.add('product-column', `product-column-${COLUMNS_COUNT + 1}`);
+      COLUMNS_COUNT += 1;
     }
   });
 }
