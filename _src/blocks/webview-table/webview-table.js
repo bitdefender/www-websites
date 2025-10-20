@@ -458,6 +458,12 @@ export default async function decorate(block) {
   // Check and replace privacy-policy link if it gives a 404
   await checkAndReplacePrivacyPolicyLink(block);
 
+  // set initial state
+  const checkedRadio = block.querySelector('[role="columnheader"] .plan-switcher input[type="radio"][checked]');
+  if (checkedRadio) {
+    checkedRadio.click();
+  }
+
   const targetElement = document.querySelector('.webview-table');
   adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
 }
