@@ -5,7 +5,6 @@ import {
   formatPrice,
   checkIfNotProductPage,
 } from '../../scripts/utils/utils.js';
-import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
 function setDiscountedPriceAttribute(type, prodName) {
   let priceAttribute = 'discounted||full';
@@ -153,6 +152,146 @@ function createFeatureList(featuresSet) {
     return `<ul>${liString}</ul>`;
   });
 }
+
+/**
+ * @param {HTMLElement} element
+ * @param {object} storeProperties
+ * @param {string} storeProperties.productId
+ * @param {number} storeProperties.devices
+ * @param {number} storeProperties.subscription
+ * @param {boolean} storeProperties.ignoreEventsParent
+ * @summary
+ * Modifies element into the following structure:
+ * ```html
+ * <bd-context>
+ *   <bd-product>
+ *     <bd-option>
+ *       initial element's children
+ *     </bd-option>
+ *   </bd-product>
+ * </bd-context>
+ * ```
+ */
+const wrapChildrenWithStoreContext = (element, {
+  productId,
+  devices,
+  subscription,
+  ignoreEventsParent = false,
+}) => {
+  if (!element || element.firstElementChild?.matches('bd-context')) {
+    return;
+  }
+
+  const context = document.createElement('bd-context');
+  if (ignoreEventsParent) {
+    context.setAttribute('ignore-events-parent', '');
+  }
+
+  const product = document.createElement('bd-product');
+  product.setAttribute('product-id', productId);
+
+  const option = document.createElement('bd-option');
+  option.setAttribute('devices', devices);
+  option.setAttribute('subscription', subscription);
+
+  while (element.firstChild) {
+    option.appendChild(element.firstChild);
+  }
+
+  product.appendChild(option);
+  context.appendChild(product);
+  element.appendChild(context);
+};
+
+/**
+ * @param {HTMLElement} element
+ * @param {Record<string, string>} attributes
+ */
+const setAttributes = (element, attributes) => {
+  if (!element) {
+    return;
+  }
+
+  Object.entries(attributes).forEach(([attr, value]) => {
+    element.setAttribute(attr, value);
+  });
+};
+
+/**
+ * @param {HTMLElement} listElement
+ */
+const configureAddOnListPrices = (listElement) => {
+  if (!listElement) {
+    return;
+  }
+
+  /**
+   * @type {import('@repobit/dex-store-elements').OptionNode}
+   */
+  const optionInListElement = listElement.querySelector('bd-option');
+  if (!optionInListElement) {
+    return;
+  }
+
+  /**
+   * @type {import('@repobit/dex-store-elements').OptionNode}
+   */
+  const optionInCardElement = listElement.closest('bd-option');
+  if (optionInCardElement) {
+    optionInListElement.updateComplete.then(() => {
+      const discountedPriceInCard = optionInCardElement.option?.getDiscountedPrice({ currency: false });
+      const discountedPriceInList = optionInListElement.option?.getDiscountedPrice({ currency: false });
+
+      if (discountedPriceInCard && discountedPriceInList) {
+        listElement.querySelector('.add-on-newprice').textContent = formatPrice(
+          Math.abs(discountedPriceInList - discountedPriceInCard),
+          optionInListElement.option.currency,
+        );
+      }
+    });
+  }
+
+  setAttributes(listElement.querySelector('.add-on-oldprice'), {
+    'data-store-price': 'full',
+    'data-store-hide': '!it.option.price.discounted',
+    'data-store-render': '',
+  });
+
+  setAttributes(listElement.querySelector('.add-on-percent-save'), {
+    'data-store-discount': 'percentage',
+    'data-store-hide': '!it.option.price.discounted',
+    'data-store-render': '',
+  });
+};
+
+/**
+ * @param {HTMLElement} addOnProductElement
+ */
+const configureAddOnProductPrices = (addOnProductElement) => {
+  if (!addOnProductElement) {
+    return;
+  }
+
+  setAttributes(addOnProductElement.querySelector('.prod-newprice span'), {
+    'data-store-price': 'discounted||full',
+    'data-store-render': '',
+  });
+
+  const addOnOldPrice = addOnProductElement.querySelector('.prod-oldprice');
+  if (addOnOldPrice?.parentElement) {
+    addOnOldPrice.parentElement.setAttribute('data-store-hide', '!it.option.price.discounted');
+  }
+
+  setAttributes(addOnOldPrice, {
+    'data-store-price': 'full',
+    'data-store-render': '',
+  });
+
+  setAttributes(addOnProductElement.querySelector('.prod-save span'), {
+    'data-store-discount': 'percentage',
+    'data-store-render': '',
+  });
+};
 
 // Function to check if content contains [add-on] text
 function checkAddOn(featuresSet) {
@@ -352,14 +491,14 @@ export default async function decorate(block) {
                     ${titleHTML}
 
                     <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
-                    ${(() => {
-                      const t = subtitle.innerText.trim();
-                      if (!t) return '';
-                      const fixed = t.split(/\s+/).length > 8 ? ' fixed_height' : '';
-                      const hasInvisibleTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i.test(subtitle.innerHTML);
-                      const extra = hasInvisibleTag ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"' : '';
-                      return `<p class="subtitle${fixed}"${extra}>${subtitle.innerHTML}</p>`;
-                    })()}
+  ${(() => {
+    const t = subtitle.innerText.trim();
+    if (!t) return '';
+    const fixed = t.split(/\s+/).length > 8 ? ' fixed_height' : '';
+    const hasInvisibleTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i.test(subtitle.innerHTML);
+    const extra = hasInvisibleTag ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"' : '';
+    return `<p class="subtitle${fixed}"${extra}>${subtitle.innerHTML}</p>`;
+  })()}
 
                     <hr />
                     ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
@@ -381,63 +520,68 @@ export default async function decorate(block) {
             </bd-context>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
+      const blockChild = block.children[key];
       let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, perPrice);
-      block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
+      blockChild.querySelector('.hero-aem__prices').appendChild(priceBox);
       let addOnPriceBox;
       if (addOn && addOnProducts) {
         addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, perPrice);
-        block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
+        blockChild.querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
       }
 
-      let checkmark = block.children[key].querySelector('.checkmark');
+      const checkmark = blockChild.querySelector('.checkmark');
       if (checkmark) {
-        let checkmarkList = checkmark.closest('ul');
+        const checkmarkList = checkmark.closest('ul');
+        const listItem = checkmark.closest('li');
+        if (!checkmarkList || !listItem) {
+          return;
+        }
+
         checkmarkList.classList.add('checkmark-list');
+        listItem.removeChild(checkmark);
 
-        let li = checkmark.closest('li');
-        li.removeChild(checkmark);
-
-        let checkBox = document.createElement('input');
+        const checkBox = document.createElement('input');
         checkBox.setAttribute('type', 'checkbox');
         checkBox.classList.add('checkmark');
 
         // rewrite the list element so flexbox can work
-        let newLi = document.createElement('li');
+        const newLi = document.createElement('li');
         newLi.innerHTML = `
           ${checkBox.outerHTML}
-          <div>${li.innerHTML}</div>`;
-        li.replaceWith(newLi);
+          <div>${listItem.innerHTML}</div>`;
+        listItem.replaceWith(newLi);
 
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-context', '');
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-id', addOnProdName);
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-department', 'consumer');
+        wrapChildrenWithStoreContext(checkmarkList, {
+          productId: addOnProdName,
+          devices: addOnProdUsers,
+          subscription: addOnProdYears,
+          ignoreEventsParent: true,
+        });
+
+        configureAddOnListPrices(checkmarkList);
+
+        const addOnProductElement = blockChild.querySelector('.add-on-product');
+        wrapChildrenWithStoreContext(addOnProductElement, {
+          productId: addOnProdName,
+          devices: addOnProdUsers,
+          subscription: addOnProdYears,
+          ignoreEventsParent: true,
+        });
+
+        // TODO: add later after understanding how to add storeEvent
         if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(addOnProdName))) {
-          block.children[key].querySelector('.add-on-product').setAttribute('data-store-event', storeEvent);
+          addOnProductElement?.setAttribute('data-store-event', storeEvent);
         }
 
-        let productObject = await Store.getProducts([new ProductInfo(prodName), new ProductInfo(addOnProdName)]);
-        let product = productObject[prodName];
-        let addOnProduct = productObject[addOnProdName];
-        if (addOnProduct) {
-          let addOnCost = addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscountedPrice('value') - product.getOption(prodUsers, prodYears).getDiscountedPrice('value');
-          addOnCost = formatPrice(addOnCost, product.getCurrency());
+        configureAddOnProductPrices(addOnProductElement);
 
-          let addOnNewPrice = newLi.querySelector('.add-on-newprice');
-          addOnNewPrice.textContent = addOnCost;
-          let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
-          addOnOldPrice.textContent = formatPrice(addOnProduct.getOption(addOnProdUsers, addOnProdYears).getPrice('value'), addOnProduct.getCurrency());
-          let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-          addOnPercentSave.textContent = `${addOnPriceBox.querySelector('.prod-save').textContent} ${addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscount('percentageWithProcent')}`;
-
-          let checkBoxSelector = newLi.querySelector('.checkmark');
+        const checkBoxSelector = newLi.querySelector('.checkmark');
+        if (checkBoxSelector) {
           checkBoxSelector.addEventListener('change', () => {
-            if (checkBoxSelector.checked) {
-              checkmarkList.classList.add('checked');
-              block.children[key].querySelector('.add-on-product').style.display = 'block';
-            } else {
-              checkmarkList.classList.remove('checked');
-              block.children[key].querySelector('.add-on-product').style.display = 'none';
+            const isChecked = checkBoxSelector.checked;
+            checkmarkList.classList.toggle('checked', isChecked);
+            if (addOnProductElement) {
+              addOnProductElement.style.display = isChecked ? 'block' : 'none';
             }
           });
         }

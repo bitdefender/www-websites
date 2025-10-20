@@ -475,6 +475,7 @@ async function loadModule(name, jsPath, cssPath, ...args) {
         try {
           mod = await import(jsPath);
           if (mod.default) {
+            console.log(args);
             await mod.default.apply(null, args);
           }
         } catch (error) {
@@ -729,6 +730,7 @@ export function decorateButtons(element) {
 export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector('.block');
   const hasLCPBlock = (block && lcpBlocks.includes(block.dataset.blockName));
+  console.log(block);
   if (hasLCPBlock) await loadBlock(block);
 
   document.body.style.display = null;

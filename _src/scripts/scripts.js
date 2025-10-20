@@ -695,8 +695,10 @@ async function loadPage() {
   storeRoot.appendChild(main);
   storeRoot.store = store;
 
-  await loadEager(document);
   registerContextNodes();
+  await storeRoot.updateComplete;
+
+  await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
