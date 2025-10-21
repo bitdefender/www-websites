@@ -29,9 +29,9 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div class="oldprice-container">
-          <span class="prod-oldprice" data-store-price="full" data-store-render data-store-hide="!it.option.price.discounted"></span>
-          <span class="prod-save" data-store-render data-store-hide="!it.option.price.discounted">${saveText} <span data-store-render data-store-discount="percentage"></span> </span>
+        <div class="oldprice-container" data-store-render data-store-hide="!it.option.discount.value">
+          <span class="prod-oldprice" data-store-render data-store-price="full"></span>
+          <span class="prod-save">${saveText} <span data-store-render data-store-discount="percentage"></span> </span>
         </div>
         <div class="newprice-container mt-2">
           <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
@@ -219,8 +219,9 @@ const setAttributes = (element, attributes) => {
 
 /**
  * @param {HTMLElement} listElement
+ * @param {string} saveText
  */
-const configureAddOnListPrices = (listElement) => {
+const configureAddOnListPrices = (listElement, saveText = 'Save ') => {
   if (!listElement) {
     return;
   }
@@ -257,10 +258,11 @@ const configureAddOnListPrices = (listElement) => {
     'data-store-render': '',
   });
 
-  setAttributes(listElement.querySelector('.add-on-percent-save'), {
-    'data-store-discount': 'percentage',
+  const percentSaveElement = listElement.querySelector('.add-on-percent-save');
+  percentSaveElement.textContent = `${saveText}{{=it.option.discount.percentage}}`;
+
+  setAttributes(percentSaveElement, {
     'data-store-hide': '!it.option.price.discounted',
-    'data-store-render': '',
   });
 };
 
@@ -558,7 +560,10 @@ export default async function decorate(block) {
           ignoreEventsParent: true,
         });
 
-        configureAddOnListPrices(checkmarkList);
+        configureAddOnListPrices(
+          checkmarkList,
+          addOnPriceBox.querySelector('.prod-save').textContent,
+        );
 
         const addOnProductElement = blockChild.querySelector('.add-on-product');
         wrapChildrenWithStoreContext(addOnProductElement, {
