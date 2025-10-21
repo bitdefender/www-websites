@@ -1,0 +1,853 @@
+.ai-page {
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', Helvetica, Arial, sans-serif;
+    background: white;
+    color: #000;
+    line-height: 1.5;
+  
+    max-width: 100%;
+  }
+
+  .wrapper {
+    width: 100%;
+    display: block;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  section > div {
+    max-width: 1320px;
+    margin: auto;
+  }
+
+  .cta-section {
+    width: 100%;
+    padding: 0;
+  }
+
+  .cta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .cta-card {
+    background: #f0f7ff;
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .cta-card img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .cta-card h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #006dff;
+    line-height: normal;
+  }
+
+  .cta-card p {
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    line-height: 23px;
+  }
+
+  .timeline-section {
+    position: relative;
+    width: 100%;
+    max-width: unset;
+    height: 533px;
+    margin: 40px 0;
+  }
+
+  .timeline-arrow {
+    position: absolute;
+    width: 5px;
+    object-fit: cover;
+  }
+
+  .timeline-content {
+    position: absolute;
+  }
+
+  .timeline-title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 8px;
+  }
+
+  .timeline-description {
+    font-weight: 400;
+    font-size: 14px;
+    color: #000;
+    line-height: normal;
+  }
+
+  .timeline-description a {
+    text-decoration: underline;
+    color: #000;
+  }
+
+  .timeline-icon {
+    position: absolute;
+  }
+
+  .timeline-line {
+    position: absolute;
+    height: 1px;
+    object-fit: cover;
+  }
+
+  .timeline-year {
+    position: absolute;
+    top: 291px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    background: #006dff;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+  }
+
+  .timeline-gradient {
+    position: absolute;
+    top: 72px;
+    height: 455px;
+  }
+
+  .timeline-button {
+    position: absolute;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .timeline-button img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .timeline-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .statistics-section {
+    width: 100%;
+    padding: 32px 16px;
+  }
+
+  .statistics-card {
+    border-radius: 20px;
+    background: linear-gradient(45deg, rgba(0,109,255,1) 0%, rgba(12,52,81,1) 100%);
+    overflow: hidden;
+  }
+
+  .statistics-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 48px;
+  }
+
+  .statistics-left h2 {
+    font-weight: 400;
+    font-size: 44px;
+    color: white;
+    line-height: normal;
+  }
+
+  .statistics-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .statistics-logo {
+    width: 209px;
+    height: 77px;
+    background: url(public/logo-gasa-transparent-rgb-web-1-2.png) no-repeat center;
+    background-size: cover;
+  }
+
+  .statistics-right p {
+    font-weight: 400;
+    font-size: 18px;
+    color: white;
+    line-height: normal;
+    margin-top: 32px;
+  }
+
+  .research-section {
+    width: 100%;
+    padding: 48px 0;
+  }
+
+  .research-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+
+  .research-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .research-left h2 {
+    font-weight: 400;
+    font-size: 44px;
+    color: #000;
+    line-height: 52px;
+  }
+
+  .research-left p {
+    font-weight: 400;
+    font-size: 18px;
+    color: #000;
+    line-height: 26px;
+  }
+
+  .research-right {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .research-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .research-stat-value {
+    font-weight: 300;
+    font-size: 64px;
+    color: #006dff;
+    line-height: 63px;
+  }
+
+  .research-stat-title {
+    font-weight: 600;
+    font-size: 20px;
+    color: #000;
+    line-height: normal;
+  }
+
+  .research-stat-description {
+    font-weight: 400;
+    font-size: 16px;
+    color: #000;
+    line-height: normal;
+  }
+
+  .introduction-section {
+    position: relative;
+    width: 100%;
+    padding: 64px 0;
+  }
+
+  .introduction-container {
+    position: relative;
+    max-width: 1290px;
+    margin: 0 auto;
+    background: #0b1f41;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .introduction-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+  }
+
+  .introduction-content {
+    position: relative;
+    z-index: 10;
+    padding: 64px 32px;
+  }
+
+  .introduction-content h2 {
+    font-weight: 500;
+    font-size: 44px;
+    color: white;
+    text-align: center;
+    line-height: normal;
+    margin-bottom: 8px;
+  }
+
+  .introduction-content h3 {
+    font-weight: 500;
+    font-size: 44px;
+    color: white;
+    text-align: center;
+    line-height: normal;
+    margin-bottom: 24px;
+  }
+
+  .introduction-content p {
+    max-width: 626px;
+    margin: 0 auto 48px;
+    font-weight: 400;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    line-height: normal;
+  }
+
+  .scam-cards-grid {
+    display: flex;
+    gap: 26px;
+    justify-content: center;
+  }
+
+  .scam-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .scam-card {
+    background: #0045ad;
+    border-radius: 12px;
+    border: 1px solid #338bff;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .scam-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    position: relative;
+  }
+
+  .scam-card-small .scam-card-content {
+    flex-direction: row;
+    padding: 10px;
+  }
+
+  .scam-card-bg {
+    position: absolute;
+  }
+
+  .scam-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    padding: 8px 0;
+    background: #0059d6;
+    border-radius: 10px;
+    border: 1px solid #338bff;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(25px);
+    position: relative;
+    z-index: 10;
+  }
+
+  .scam-icon-wrapper img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .scam-card-title {
+    font-weight: 500;
+    font-size: 14px;
+    color: #f0f7ff;
+    text-align: center;
+    line-height: 18px;
+    letter-spacing: 0.11px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .scam-card-small .scam-card-title {
+    flex: 1;
+    text-align: left;
+    color: white;
+  }
+
+  .scam-card-medium {
+    height: 192px;
+  }
+
+  .scam-card-large {
+    flex: 1;
+  }
+
+  .scam-card-special {
+    height: 232px;
+  }
+
+  .scam-card-special img.scam-text {
+    width: 100%;
+    height: 31.38px;
+    z-index: 10;
+  }
+
+  .threats-section {
+    width: 100%;
+    background: #f0f7ff;
+    padding: 64px 16px;
+  }
+
+  .threats-container {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .threats-container h2 {
+    font-weight: 400;
+    font-size: 44px;
+    color: #000;
+    text-align: center;
+    line-height: normal;
+    margin-bottom: 16px;
+  }
+
+  .threats-container > p {
+    font-weight: 400;
+    font-size: 18px;
+    color: #000;
+    text-align: center;
+    line-height: normal;
+    max-width: 409px;
+    margin: 0 auto 110px;
+  }
+
+  .threats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 30px;
+    max-width: 1290px;
+    margin: 0 auto;
+  }
+
+  .threat-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: 1/4;
+  }
+
+  .threat-card img {
+    width: 100%;
+    height: 196px;
+    object-fit: cover;
+  }
+
+  .threat-card-content {
+    padding: 36px;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: 2/4;
+  }
+
+  .threat-card-content h3 {
+    font-weight: 600;
+    font-size: 24px;
+    color: #000;
+    line-height: normal;
+    margin-bottom: 44px;
+  }
+
+  .threat-card-content a {
+    font-weight: 600;
+    font-size: 16px;
+    color: #006dff;
+    line-height: normal;
+    text-decoration: none;
+  }
+
+  .threat-card-content a:hover {
+    text-decoration: underline;
+  }
+
+  .insights-section {
+    width: 100%;
+    padding: 64px 16px;
+  }
+
+  .insights-container {
+    max-width: 1299px;
+    margin: 0 auto;
+  }
+
+  .insights-container h2 {
+    font-weight: 400;
+    font-size: 44px;
+    color: #006dff;
+    text-align: center;
+    line-height: normal;
+    margin-bottom: 16px;
+  }
+
+  .insights-container > p {
+    max-width: 629px;
+    margin: 0 auto 64px;
+    font-weight: 400;
+    font-size: 18px;
+    color: #000;
+    text-align: center;
+    line-height: normal;
+  }
+
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .insight-card {
+    background: #006dff;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .insight-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 73px 28px;
+    position: relative;
+  }
+
+  .insight-card-bg {
+    position: absolute;
+    top: -83px;
+    left: -1px;
+    width: 100%;
+    height: 420px;
+  }
+
+  .insight-card-content img.insight-icon {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 49px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .insight-card-content h3 {
+    font-weight: 600;
+    font-size: 24px;
+    color: white;
+    text-align: center;
+    line-height: normal;
+    margin-bottom: 9px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .insight-card-content p {
+    font-weight: 400;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    line-height: normal;
+    position: relative;
+    z-index: 10;
+  }
+
+  .partner-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .partner-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    border: 1px solid #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .partner-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .partner-logo.white-bg {
+    background: white;
+  }
+
+  .partner-logo.image-5 {
+    background: url(public/image-5.png) no-repeat center;
+    background-size: cover;
+  }
+
+  .partner-logo.image-7 img {
+    width: 56px;
+    height: 55.56px;
+  }
+
+  .footer-section {
+    width: 100%;
+    background: #0059d6;
+  }
+
+  .footer-wrapper {
+    width: 100%;
+    background: #006dff;
+  }
+
+  .footer-container {
+    max-width: 1292px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .footer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .footer-logo-1 {
+    width: 173.71px;
+    height: 24px;
+    background: url(public/clip-path-group.png) no-repeat center;
+    background-size: 100% 100%;
+  }
+
+  .footer-logo-2 {
+    width: 138px;
+    height: 48px;
+    background: url(public/bitdefender-masterbrand-brand-book-2023-3-7-3-rgh10-03-1.svg) no-repeat center;
+    background-size: 100% 100%;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .footer-nav-items {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+  }
+
+  .footer-nav-link {
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .footer-nav-link:hover {
+    text-decoration: none;
+  }
+
+  .footer-separator {
+    font-weight: 400;
+    font-size: 16px;
+    color: white;
+  }
+
+  .footer-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .footer-links-section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .footer-links-content {
+    display: flex;
+    flex-direction: column;
+    width: 630px;
+    gap: 24px;
+  }
+
+  .footer-links-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+    line-height: 18px;
+  }
+
+  .footer-links-columns {
+    display: flex;
+    gap: 32px;
+  }
+
+  .footer-links-column {
+    display: flex;
+    flex-direction: column;
+    width: 299px;
+    gap: 12px;
+  }
+
+  .footer-link {
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
+    text-decoration: none;
+    line-height: 18px;
+  }
+
+  .footer-link:hover {
+    text-decoration: none;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 24px;
+    padding-top: 40px;
+  }
+
+  .social-icon {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .social-icon img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .footer-bottom-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .footer-bottom-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .footer-bottom-link {
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
+    text-decoration: none;
+    line-height: 18px;
+  }
+
+  .footer-bottom-link:hover {
+    text-decoration: none;
+  }
+
+  .footer-address {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
+    text-align: right;
+    line-height: 18px;
+  }
+
+  .footer-copyright-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .footer-copyright {
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
+    line-height: 18px;
+    white-space: nowrap;
+  }
+
+  .footer-logo-3 {
+    width: 105.95px;
+    height: 26.63px;
+    background: url(public/group-33676.png) no-repeat center;
+    background-size: 100% 100%;
+  }
+
+  .footer-select-wrapper {
+    position: relative;
+  }
+
+  .footer-select {
+    width: 270px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid white;
+    background: transparent;
+    color: white;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 32px 8px 36px;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .footer-select-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+  }
+
+}

@@ -12,10 +12,65 @@ function decorateHTMLOffer(aemHeaderHtml) {
   return newHtml;
 }
 
+async function injectAiPage(block) {
+  try {
+    const response = await fetch('/_src/blocks/personalisation-block/ai-page/index.html');
+    if (response.ok) {
+      const htmlContent = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+
+      // Extract and inject styles from head
+      const styles = doc.querySelectorAll('head link[rel="stylesheet"], head style');
+      styles.forEach((style) => {
+        if (!document.head.contains(style) && !document.head.querySelector(`[href="/_src/blocks/personalisation-block/ai-page/${style.href}"]`)) {
+          const clonedStyle = style.cloneNode(true);
+          document.head.appendChild(clonedStyle);
+        }
+      });
+
+      // Extract and inject scripts from head and body
+      const scripts = doc.querySelectorAll('body > script');
+      scripts.forEach((script) => {
+        if (!document.head.querySelector(`script[src="${script.src}"]`)) {
+          // const clonedScript = script.cloneNode(true);
+          // document.head.appendChild(clonedScript);
+
+          const newScript = document.createElement('script');
+          newScript.src = `${script.getAttribute('src')}`;
+          newScript.defer = true;
+          document.body.appendChild(newScript);
+        }
+      });
+
+      // Extract just the body content (wrapper div)
+      const wrapperContent = doc.querySelector('.wrapper');
+      if (wrapperContent) {
+        block.innerHTML = wrapperContent.outerHTML;
+      } else {
+        // Fallback if wrapper not found, use body content
+        block.innerHTML = doc.body.innerHTML;
+      }
+    } else {
+      block.innerHTML = '<div class="ai-page-error">Failed to load AI page content</div>';
+    }
+  } catch (error) {
+    block.innerHTML = '<div class="ai-page-error">Failed to load AI page content</div>';
+    console.error('Error loading AI page content:', error);
+  }
+  document.body.classList.add('ai-page');
+}
+
 export default async function decorate(block) {
   const {
-    mboxName, path,
+    mboxName, path, aiPage,
   } = block.closest('.section').dataset;
+
+  if (aiPage) {
+    injectAiPage(block);
+    return;
+  }
+
   block.innerHTML += `
     <div class="personalized-content"></div>
   `;
