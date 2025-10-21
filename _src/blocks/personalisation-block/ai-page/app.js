@@ -2,36 +2,34 @@ const callToActionData = [
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/shield-check-star.svg',
     title: 'Redefining Cybersecurity with Agentic AI',
-    description: 'By integrating agentic AI into traditional cybersecurity layers, we enhance detection, adaptability, and real-time response — defining a new standard in online scam prevention.'
+    description: 'By integrating agentic AI into traditional cybersecurity layers, we enhance detection, adaptability, and real-time response — defining a new standard in online scam prevention.',
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/rhombus-stack.svg',
     title: 'Reconstructing the Defence Narrative',
-    description: 'Combining machine learning and behavioral analysis simplifies the detection of recurring scam patterns, blocks threats in real time, and anticipates future tactics.'
+    description: 'Combining machine learning and behavioral analysis simplifies the detection of recurring scam patterns, blocks threats in real time, and anticipates future tactics.',
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/frame.svg',
     title: 'Mapping Emerging Threat Landscapes',
-    description: 'Machine learning detects, analyses, and blocks mobile scam campaigns before they spread, protecting users across regions.'
+    description: 'Machine learning detects, analyses, and blocks mobile scam campaigns before they spread, protecting users across regions.',
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/asset-1-1.svg',
     title: 'Going Beyond Traditional Scans',
-    description: 'Enhanced with AI, cybersecurity now provides human-centred, context-aware protection that anticipates user needs and supports them through every stage of a scam attempt.'
+    description: 'Enhanced with AI, cybersecurity now provides human-centred, context-aware protection that anticipates user needs and supports them through every stage of a scam attempt.',
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/untitled-2-01-1.svg',
     title: 'Detecting More Complex Scam Patterns',
-    description: 'Correlating signals across devices and networks exposes unified attack campaigns spanning emails, fake domains, social media, and messaging apps.'
+    description: 'Correlating signals across devices and networks exposes unified attack campaigns spanning emails, fake domains, social media, and messaging apps.',
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/untitled-3-01-01-1.svg',
     title: 'Exploring the Future of AI-Driven Cybersecurity',
-    description: 'Deepfakes are the new battleground in cybersecurity — a rapidly growing threat driving the next wave of adaptive, AI-powered defense innovation.'
-  }
+    description: 'Deepfakes are the new battleground in cybersecurity — a rapidly growing threat driving the next wave of adaptive, AI-powered defense innovation.',
+  },
 ];
-
-
 
 const timelineData = [
   {
@@ -51,7 +49,7 @@ const timelineData = [
     iconLeft: '108px',
     iconWidth: '31px',
     iconHeight: '31px',
-    yearLeft: '75px'
+    yearLeft: '75px',
   },
   {
     year: '2011',
@@ -70,7 +68,7 @@ const timelineData = [
     iconLeft: '326px',
     iconWidth: '32px',
     iconHeight: '32px',
-    yearLeft: '295px'
+    yearLeft: '295px',
   },
   {
     year: '2013',
@@ -89,7 +87,7 @@ const timelineData = [
     iconLeft: '550px',
     iconWidth: '24px',
     iconHeight: '30px',
-    yearLeft: '515px'
+    yearLeft: '515px',
   },
   {
     year: '2014',
@@ -108,7 +106,7 @@ const timelineData = [
     iconLeft: '768px',
     iconWidth: '28px',
     iconHeight: '28px',
-    yearLeft: '735px'
+    yearLeft: '735px',
   },
   {
     year: '2017',
@@ -127,7 +125,7 @@ const timelineData = [
     iconLeft: '',
     iconWidth: '',
     iconHeight: '',
-    yearLeft: '955px'
+    yearLeft: '955px',
   },
   {
     year: '2017',
@@ -146,21 +144,21 @@ const timelineData = [
     iconLeft: '',
     iconWidth: '',
     iconHeight: '',
-    yearLeft: '1175px'
-  }
+    yearLeft: '1175px',
+  },
 ];
 
 const statisticsData = [
   {
     value: '$1.026 trillion',
     title: 'Global Financial Impact',
-    description: 'Scams have now reached a critical level globally, with total financial losses estimated at $1.026 trillion, equating to 1.05% of global GDP. This highlights an intensifying threat landscape, where scams affect more than just individual victims; they have broad economic implications as well.'
+    description: 'Scams have now reached a critical level globally, with total financial losses estimated at $1.026 trillion, equating to 1.05% of global GDP. This highlights an intensifying threat landscape, where scams affect more than just individual victims; they have broad economic implications as well.',
   },
   {
     value: '2+ billion victims',
     title: 'Victimization Rates',
-    description: 'The GASA report reveals that approximately 25.5% of people globally have experienced financial loss due to scams in the last year. This translates to 1 in 4 individuals being affected, demonstrating the pervasiveness of fraudulent activities.'
-  }
+    description: 'The GASA report reveals that approximately 25.5% of people globally have experienced financial loss due to scams in the last year. This translates to 1 in 4 individuals being affected, demonstrating the pervasiveness of fraudulent activities.',
+  },
 ];
 
 const scamCards = [
@@ -170,19 +168,19 @@ const scamCards = [
     icon: '/_src/blocks/personalisation-block/ai-page/public/hand-money.svg',
     title: 'Crypto Scams & Fake Trading Platforms',
     backgroundImage: '/_src/blocks/personalisation-block/ai-page/public/globe-02.png',
-    backgroundClass: 'top: 0; left: calc(50% - 96px); width: 192px; height: 89px;'
+    backgroundClass: 'top: 0; left: calc(50% - 96px); width: 192px; height: 89px;',
   },
   {
     id: 2,
     type: 'small',
     icon: '/_src/blocks/personalisation-block/ai-page/public/chat-bubble-hook.svg',
-    title: 'Deepfake Scams'
+    title: 'Deepfake Scams',
   },
   {
     id: 3,
     type: 'small',
     icon: '/_src/blocks/personalisation-block/ai-page/public/id-user-hook.svg',
-    title: 'Employment Scams'
+    title: 'Employment Scams',
   },
   {
     id: 4,
@@ -197,7 +195,7 @@ const scamCards = [
     icon: '/_src/blocks/personalisation-block/ai-page/public/phone-target.svg',
     title: 'Ransomware & Extortion Attacks',
     backgroundImage: '/_src/blocks/personalisation-block/ai-page/public/group-23186.png',
-    backgroundClass: 'top: 0; left: 0; width: 192px; height: 160px;'
+    backgroundClass: 'top: 0; left: 0; width: 192px; height: 160px;',
   },
   {
     id: 6,
@@ -205,19 +203,19 @@ const scamCards = [
     icon: '/_src/blocks/personalisation-block/ai-page/public/rocking-horse.svg',
     title: 'Remote Access Trojans',
     backgroundImage: '/_src/blocks/personalisation-block/ai-page/public/mask-group-2.svg',
-    backgroundClass: 'top: 0; left: 0; width: 192px; height: 192px;'
+    backgroundClass: 'top: 0; left: 0; width: 192px; height: 192px;',
   },
   {
     id: 7,
     type: 'small',
     icon: '/_src/blocks/personalisation-block/ai-page/public/male-female.svg',
-    title: 'Romance Scams'
+    title: 'Romance Scams',
   },
   {
     id: 8,
     type: 'small',
     icon: '/_src/blocks/personalisation-block/ai-page/public/headset-clock.svg',
-    title: 'Tech Support Scams'
+    title: 'Tech Support Scams',
   },
   {
     id: 9,
@@ -237,16 +235,16 @@ const scamCards = [
 const insightsData = [
   {
     image: '/_src/blocks/personalisation-block/ai-page/public/rectangle-19.png',
-    title: 'They Wear Our Faces: How Scammers Are Using AI to Swindle American Families'
+    title: 'They Wear Our Faces: How Scammers Are Using AI to Swindle American Families',
   },
   {
     image: '/_src/blocks/personalisation-block/ai-page/public/rectangle-21.png',
-    title: 'WhatsApp Shuts Down 6.8 Million Scam Accounts Linked to Worldwide Fraud Networks'
+    title: 'WhatsApp Shuts Down 6.8 Million Scam Accounts Linked to Worldwide Fraud Networks',
   },
   {
     image: '/_src/blocks/personalisation-block/ai-page/public/rectangle-23.png',
-    title: "'Your Account Has Been Hacked': Crypto and Bank Phishing Scams Surge Across Australia"
-  }
+    title: "'Your Account Has Been Hacked': Crypto and Bank Phishing Scams Surge Across Australia",
+  },
 ];
 
 const responsibleAIData = [
@@ -281,7 +279,7 @@ const navigationItems = [
   { label: 'For Consumer', active: true },
   { label: 'For Small Business', active: true },
   { label: 'For Enterprise', active: true },
-  { label: 'For Partners', active: true }
+  { label: 'For Partners', active: true },
 ];
 
 const quickLinksColumn1 = [
@@ -289,7 +287,7 @@ const quickLinksColumn1 = [
   'GravityZone Cloud Control Center',
   'Bitdefender Cyperpedia',
   'Partner Advantage Network Portal',
-  'Brand Portal'
+  'Brand Portal',
 ];
 
 const quickLinksColumn2 = [
@@ -297,7 +295,7 @@ const quickLinksColumn2 = [
   'Support for Business Products',
   'Investors',
   'Careers',
-  'InfoZone'
+  'InfoZone',
 ];
 
 const socialMediaIcons = [
@@ -315,13 +313,13 @@ const footerLinks = [
   'Site Map',
   'Company',
   'Contact Us',
-  'Privacy Settings'
+  'Privacy Settings',
 ];
 
 function renderCallToActionSection() {
   const grid = document.querySelector('.cta-grid');
 
-  callToActionData.forEach(card => {
+  callToActionData.forEach((card) => {
     const cardEl = document.createElement('div');
     cardEl.className = 'cta-card';
     cardEl.innerHTML = `
@@ -336,7 +334,7 @@ function renderCallToActionSection() {
 function renderTimelineSection() {
   const container = document.querySelector('.timeline-container');
 
-  timelineData.forEach(item => {
+  timelineData.forEach((item) => {
     const arrow = document.createElement('img');
     arrow.className = 'timeline-arrow';
     arrow.style.top = item.arrowTop;
@@ -347,7 +345,7 @@ function renderTimelineSection() {
     container.appendChild(arrow);
   });
 
-  timelineData.forEach(item => {
+  timelineData.forEach((item) => {
     const descEl = document.createElement('div');
     descEl.className = 'timeline-content timeline-description';
     descEl.style.top = item.descTop;
@@ -395,7 +393,7 @@ function renderTimelineSection() {
   line2.alt = 'Line';
   container.appendChild(line2);
 
-  timelineData.forEach(item => {
+  timelineData.forEach((item) => {
     const yearEl = document.createElement('div');
     yearEl.className = 'timeline-year';
     yearEl.style.left = item.yearLeft;
@@ -460,7 +458,7 @@ function renderResearchSection() {
 
   const rightHTML = `
     <div class="research-right">
-      ${statisticsData.map(stat => `
+      ${statisticsData.map((stat) => `
         <div class="research-stat">
           <div class="research-stat-value">${stat.value}</div>
           <div class="research-stat-title">${stat.title}</div>
@@ -479,7 +477,7 @@ function renderIntroductionSection() {
   let scamCardsHTML = '<div class="scam-cards-grid">';
 
   scamCardsHTML += '<div class="scam-column" style="width: 191.67px;">';
-  const card1 = scamCards.find(c => c.id === 1);
+  const card1 = scamCards.find((c) => c.id === 1);
   scamCardsHTML += `
     <div class="scam-card scam-card-large">
       <div class="scam-card-content">
@@ -491,7 +489,7 @@ function renderIntroductionSection() {
       </div>
     </div>
     <div class="scam-column">
-      ${scamCards.filter(c => c.id === 2 || c.id === 3).map(card => `
+      ${scamCards.filter((c) => c.id === 2 || c.id === 3).map((card) => `
         <div class="scam-card scam-card-small">
           <div class="scam-card-content">
             <div class="scam-icon-wrapper">
@@ -506,7 +504,7 @@ function renderIntroductionSection() {
   scamCardsHTML += '</div>';
 
   scamCardsHTML += '<div class="scam-column">';
-  const card4 = scamCards.find(c => c.id === 4);
+  const card4 = scamCards.find((c) => c.id === 4);
   scamCardsHTML += `
     <div class="scam-card scam-card-special">
       <div class="scam-card-content">
@@ -516,7 +514,7 @@ function renderIntroductionSection() {
       </div>
     </div>
     <div class="scam-column" style="display: flex; flex-direction: row; gap: 30px; height: 192px;">
-      ${scamCards.filter(c => c.id === 5 || c.id === 6).map(card => `
+      ${scamCards.filter((c) => c.id === 5 || c.id === 6).map((card) => `
         <div class="scam-card scam-card-medium" style="width: 191.67px;">
           <div class="scam-card-content">
             ${card.backgroundImage ? `<img class="scam-card-bg" style="${card.backgroundClass}" src="${card.backgroundImage}" alt="Background">` : ''}
@@ -534,7 +532,7 @@ function renderIntroductionSection() {
   scamCardsHTML += '<div class="scam-column" style="width: 191.67px;">';
   scamCardsHTML += `
     <div class="scam-column">
-      ${scamCards.filter(c => c.id === 7 || c.id === 8).map(card => `
+      ${scamCards.filter((c) => c.id === 7 || c.id === 8).map((card) => `
         <div class="scam-card scam-card-small">
           <div class="scam-card-content">
             <div class="scam-icon-wrapper">
@@ -546,11 +544,11 @@ function renderIntroductionSection() {
       `).join('')}
     </div>
   `;
-  const card9 = scamCards.find(c => c.id === 9);
+  const card9 = scamCards.find((c) => c.id === 9);
   scamCardsHTML += `
     <div class="scam-card scam-card-large">
       <div class="scam-card-content">
-        ${card9.concentricCircles.map(circle => `
+        ${card9.concentricCircles.map((circle) => `
           <img class="scam-card-bg" style="position: absolute; ${circle.style}" src="${circle.src}" alt="Icon">
         `).join('')}
         <div class="scam-icon-wrapper">
@@ -578,7 +576,7 @@ function renderIntroductionSection() {
 function renderThreatsSection() {
   const container = document.querySelector('.threats-container');
 
-  const gridHTML = insightsData.map(insight => `
+  const gridHTML = insightsData.map((insight) => `
     <div class="threat-card">
       <img src="${insight.image}" alt="${insight.title}">
       <div class="threat-card-content">
@@ -598,7 +596,7 @@ function renderThreatsSection() {
 function renderInsightsSection() {
   const container = document.querySelector('.insights-container');
 
-  const gridHTML = responsibleAIData.map(insight => `
+  const gridHTML = responsibleAIData.map((insight) => `
     <div class="insight-card">
       <div class="insight-card-content">
         <img class="insight-card-bg" src="${insight.component}" alt="Background">
@@ -609,7 +607,7 @@ function renderInsightsSection() {
     </div>
   `).join('');
 
-  const logosHTML = partnerLogos.map(logo => `
+  const logosHTML = partnerLogos.map((logo) => `
     <div class="partner-logo ${logo.className}">
       ${logo.className !== 'image-5' ? `<img src="${logo.src}" alt="${logo.alt}">` : ''}
     </div>
@@ -631,15 +629,15 @@ function renderFooterSection() {
     ${index < navigationItems.length - 1 ? '<span class="footer-separator">|</span>' : ''}
   `).join('');
 
-  const quickLinks1HTML = quickLinksColumn1.map(link => `
+  const quickLinks1HTML = quickLinksColumn1.map((link) => `
     <a href="#" class="footer-link">${link}</a>
   `).join('');
 
-  const quickLinks2HTML = quickLinksColumn2.map(link => `
+  const quickLinks2HTML = quickLinksColumn2.map((link) => `
     <a href="#" class="footer-link">${link}</a>
   `).join('');
 
-  const socialIconsHTML = socialMediaIcons.map(icon => `
+  const socialIconsHTML = socialMediaIcons.map((icon) => `
     <button class="social-icon">
       <img src="${icon.src}" alt="${icon.alt}">
     </button>

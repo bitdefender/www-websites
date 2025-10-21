@@ -12,9 +12,9 @@ function decorateHTMLOffer(aemHeaderHtml) {
   return newHtml;
 }
 
-async function injectAiPage(block) {
+async function loadAndInjectAiPageContent(block, path) {
   try {
-    const response = await fetch('/_src/blocks/personalisation-block/ai-page/index.html');
+    const response = await fetch(path);
     if (response.ok) {
       const htmlContent = await response.text();
       const parser = new DOMParser();
@@ -35,7 +35,6 @@ async function injectAiPage(block) {
         if (!document.head.querySelector(`script[src="${script.src}"]`)) {
           // const clonedScript = script.cloneNode(true);
           // document.head.appendChild(clonedScript);
-
           const newScript = document.createElement('script');
           newScript.src = `${script.getAttribute('src')}`;
           newScript.defer = true;
@@ -46,7 +45,7 @@ async function injectAiPage(block) {
       // Extract just the body content (wrapper div)
       const wrapperContent = doc.querySelector('.wrapper');
       if (wrapperContent) {
-        block.innerHTML = wrapperContent.outerHTML;
+        block.innerHTML += wrapperContent.outerHTML;
       } else {
         // Fallback if wrapper not found, use body content
         block.innerHTML = doc.body.innerHTML;
@@ -58,8 +57,15 @@ async function injectAiPage(block) {
     block.innerHTML = '<div class="ai-page-error">Failed to load AI page content</div>';
     console.error('Error loading AI page content:', error);
   }
+}
+
+async function injectAiPage(block) {
+  await loadAndInjectAiPageContent(block, '/_src/blocks/personalisation-block/ai-page/components/hero-js/hero.html');
+  await loadAndInjectAiPageContent(block, '/_src/blocks/personalisation-block/ai-page/index.html');
   document.body.classList.add('ai-page');
 }
+
+
 
 export default async function decorate(block) {
   const {
