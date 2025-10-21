@@ -367,6 +367,55 @@ function buildTableHeader(block) {
   const productsAsList = products ? Array.from(products.split(',')) : [];
   const secondaryProductsAsList = secondaryProducts ? Array.from(secondaryProducts.split(',')) : [];
 
+  function toggleIconVisibility(selectedIndex) {
+    const familyIcons = block.querySelectorAll('[class*="icon-family"]');
+    const userIcons = block.querySelectorAll('[class*="icon-user"]');
+    if (selectedIndex === 0) {
+      familyIcons.forEach((icon) => {
+        icon.closest('.tag').classList.add('global-display-none');
+      });
+      userIcons.forEach((icon) => {
+        icon.closest('.tag').classList.remove('global-display-none');
+      });
+    } else {
+      familyIcons.forEach((icon) => {
+        icon.closest('.tag').classList.remove('global-display-none');
+      });
+      userIcons.forEach((icon) => {
+        icon.closest('.tag').classList.add('global-display-none');
+      });
+    }
+  }
+
+  function renderUserCountInColumns(selectedIndex) {
+    const productColumns = block.querySelectorAll('[class*="product-column-"]');
+    productColumns.forEach((productColumn, prodColIdx) => {
+      // eslint-disable-next-line no-unused-vars
+      const [prodName, prodUsers, prodYears] = productsAsList[prodColIdx]?.split('/') || [];
+      // eslint-disable-next-line no-unused-vars
+      const [secondaryProdName, secondaryProdUsers, secondaryProdYears] = secondaryProductsAsList[prodColIdx]?.split('/') || [];
+      const userCount = selectedIndex === 0 ? prodUsers : secondaryProdUsers;
+      productColumn.innerHTML = productColumn.innerHTML.replace(`&lt;devices${prodColIdx + 1}&gt;`, `<span class="devices${prodColIdx + 1}">${userCount}</span>`);
+      const devicesSpan = productColumn.querySelector(`.devices${prodColIdx + 1}`);
+      if (devicesSpan) {
+        devicesSpan.textContent = userCount;
+      }
+    });
+  }
+
+  function synchronizePlanSwitchers(selectedRadio, selectedIndex) {
+    document.querySelectorAll('.plan-switcher').forEach((switcher) => {
+      if (switcher !== selectedRadio.closest('.plan-switcher')) {
+        const radioButtons = switcher.querySelectorAll('input[type="radio"]');
+        if (radioButtons[selectedIndex]) {
+          radioButtons[selectedIndex].checked = true;
+          // Trigger change event for store functionality
+          radioButtons[selectedIndex].dispatchEvent(new Event('click', { bubbles: true }));
+        }
+      }
+    });
+  }
+
   header.classList.add('webview-comparison-header');
   [...header.children].forEach((headerColumn, idx) => {
     if (headerColumn.textContent.includes('Individual')) {
@@ -377,38 +426,10 @@ function buildTableHeader(block) {
         input.addEventListener('click', (event) => {
           const selectedRadio = event.target;
           const selectedIndex = Array.from(selectedRadio.closest('.plan-switcher').querySelectorAll('input[type="radio"]')).indexOf(selectedRadio);
-          const familyIcons = block.querySelectorAll('[class*="icon-family"]');
-          familyIcons.forEach((icon) => {
-            icon.closest('.tag').classList.toggle('global-display-none');
-          });
-          const userIcons = block.querySelectorAll('[class*="icon-user"]');
-          userIcons.forEach((icon) => {
-            icon.closest('.tag').classList.toggle('global-display-none');
-          });
-          const productColumns = block.querySelectorAll('[class*="product-column-"]');
-          productColumns.forEach((productColumn, prodColIdx) => {
-            // eslint-disable-next-line no-unused-vars
-            const [prodName, prodUsers, prodYears] = productsAsList[prodColIdx]?.split('/') || [];
-            // eslint-disable-next-line no-unused-vars
-            const [secondaryProdName, secondaryProdUsers, secondaryProdYears] = secondaryProductsAsList[prodColIdx]?.split('/') || [];
-            const userCount = selectedIndex === 0 ? prodUsers : secondaryProdUsers;
-            productColumn.innerHTML = productColumn.innerHTML.replace(`&lt;devices${prodColIdx + 1}&gt;`, `<span class="devices${prodColIdx + 1}">${userCount}</span>`);
-            const devicesSpan = productColumn.querySelector(`.devices${prodColIdx + 1}`);
-            if (devicesSpan) {
-              devicesSpan.textContent = userCount;
-            }
-          });
+          toggleIconVisibility(selectedIndex);
+          renderUserCountInColumns(selectedIndex);
           // Find all other plan switchers and select the radio button at the same index
-          document.querySelectorAll('.plan-switcher').forEach((switcher) => {
-            if (switcher !== selectedRadio.closest('.plan-switcher')) {
-              const radioButtons = switcher.querySelectorAll('input[type="radio"]');
-              if (radioButtons[selectedIndex]) {
-                radioButtons[selectedIndex].checked = true;
-                // Trigger change event for store functionality
-                radioButtons[selectedIndex].dispatchEvent(new Event('click', { bubbles: true }));
-              }
-            }
-          });
+          synchronizePlanSwitchers(selectedRadio, selectedIndex);
         });
       });
     }
@@ -422,19 +443,6 @@ function buildTableHeader(block) {
 }
 
 /**
- * Sets up family icons by hiding them initially
- * @param {HTMLElement} block - The container block element
- */
-function setUpFamilyIcons(block) {
-  const familyIcons = block.querySelectorAll('[class*="icon-family"]');
-  if (!familyIcons) return;
-
-  familyIcons.forEach((icon) => {
-    icon.closest('.tag').classList.add('global-display-none');
-  });
-}
-
-/**
  * Main decoration function that initializes the webview table component
  * @param {HTMLElement} block - The webview table block element to decorate
  * @returns {Promise<void>} Promise that resolves when decoration is complete
@@ -442,7 +450,6 @@ function setUpFamilyIcons(block) {
 export default async function decorate(block) {
   const metadata = block.closest('.section').dataset;
   buildTableHeader(block, metadata);
-  setUpFamilyIcons(block);
   addAccesibilityRoles(block);
   replaceTableTextToProperCheckmars(block);
 
