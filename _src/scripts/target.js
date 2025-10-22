@@ -10,6 +10,7 @@ import {
   generatePageLoadStartedName,
   GLOBAL_EVENTS,
 } from './utils/utils.js';
+import { Constants } from './libs/constants.js';
 
 export const target = new Target({
   pageLoadStartedEvent: new PageLoadStartedEvent(
@@ -96,7 +97,8 @@ export function appendAdobeMcLinks(selector) {
 
     const hrefSelector = '[href*=".bitdefender."]';
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      if (link.hostname !== pageUrlHostname) {
+      if (link.hostname !== pageUrlHostname
+        && !Constants.DOMAINS_WITHOUT_ADOBE_MC.includes(link.hostname)) {
         const destinationURLWithVisitorIDs = await target.appendVisitorIDsTo(link.href);
         link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
       }
