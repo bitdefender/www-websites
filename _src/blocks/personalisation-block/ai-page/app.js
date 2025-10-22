@@ -331,6 +331,13 @@ function renderCallToActionSection() {
   });
 }
 
+function replaceHeader() {
+  const customHeader = document.querySelector('.header-custom');
+  const header = document.querySelector('header');
+  header.outerHTML = customHeader.outerHTML;
+  customHeader.remove();
+}
+
 function renderTimelineSection() {
   const container = document.querySelector('.timeline-container');
 
@@ -714,4 +721,5 @@ renderIntroductionSection();
 renderThreatsSection();
 renderInsightsSection();
 renderFooterSection();
+replaceHeader();
 // });

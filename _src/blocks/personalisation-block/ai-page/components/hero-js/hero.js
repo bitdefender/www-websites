@@ -400,6 +400,7 @@ function initDotHero(canvasId, sectionSelector) {
   });
 
   // Expose API
+  // eslint-disable-next-line consistent-return
   return {
     regenerate,
     updateText: (newText) => {
@@ -409,15 +410,6 @@ function initDotHero(canvasId, sectionSelector) {
   };
 }
 
-const button = document.createElement('button');
-button.innerText = 'Click Me';
-document.body.appendChild(button);
-
-button.addEventListener('click', () => {
-  console.log('Initializing Hero Animation');
-  initDotHero('heroCanvas', '.hero-section');
-});
-
 setTimeout(() => {
-  button.click();
-}, 1000);
+  initDotHero('heroCanvas', '.hero-section');
+}, 0);
