@@ -89,10 +89,17 @@ export function appendAdobeMcLinks(selector) {
   try {
     const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
 
+    // mimic production hostname on local env
+    const pageUrlHostname = window.location.hostname === 'localhost'
+      ? 'www.bitdefender.com'
+      : window.location.hostname;
+
     const hrefSelector = '[href*=".bitdefender."]';
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      const destinationURLWithVisitorIDs = await target.appendVisitorIDsTo(link.href);
-      link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+      if (link.hostname !== pageUrlHostname) {
+        const destinationURLWithVisitorIDs = await target.appendVisitorIDsTo(link.href);
+        link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+      }
     });
   } catch (e) {
     // eslint-disable-next-line no-console
