@@ -1,3 +1,19 @@
+:root {
+  --color-primary: #006DFF;
+  --color-primary-light: #A8C5FF;
+  --color-secondary: #001F5C;
+  --color-dark: #0A1628;
+  --color-dark-blue: #0B1F41;
+  --color-navy: #0045AD;
+  --color-white: #FFFFFF;
+  --color-gray-light: #F5F7FA;
+  --color-light-blue-bg: #F0F7FF;
+  --color-gray: #8B95A8;
+  --color-text: #000000;
+  --color-text-secondary: #636363;
+  --color-accent: #00D4FF;
+}
+
 .ai-page {
   body {
     font-family: 'IBM Plex Sans', Helvetica, Arial, sans-serif;
@@ -15,9 +31,76 @@
     overflow-x: hidden;
   }
 
+  .personalisation-block-container {
+    padding: 0;
+  }
+
   section > div {
     max-width: 1320px;
     margin: auto;
+  }
+
+  .ai-content-section {
+    padding: 0;
+    background-color: var(--color-white);
+    justify-content: center;
+    align-items: center;
+    display: flex; 
+    .container {
+      width: 100%;
+      display: flex;
+    }
+  }
+
+  .ai-content {
+    width: 100%;
+    display: flex;
+    margin-bottom: 64px;
+  }
+
+  .ai-left {
+    display: flex;
+    flex-direction: column;
+    gap: 31px;
+    width: 630px;
+  }
+
+  .ai-subtitle {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--color-primary);
+    text-transform: none;
+    letter-spacing: normal;
+    margin-bottom: 0;
+  }
+
+  .ai-description {
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--color-text);
+      width: 613px;
+      margin-top: 0;
+
+      strong {
+          color: var(--color-primary);
+          font-weight: 400;
+      }
+  }
+
+  .ai-right {
+      width: 628px;
+      height: 189px;
+  }
+
+  .ai-text {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--color-text-secondary);
+      width: 628px;
+      height: 184px;
   }
 
   .cta-section {

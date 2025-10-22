@@ -93,7 +93,6 @@ function initDotHero(canvasId, sectionSelector) {
     const rect = canvas.getBoundingClientRect();
     const w = Math.floor(rect.width);
     const h = Math.floor(rect.height);
-
     canvas.width = Math.round(w * DPR);
     canvas.height = Math.round(h * DPR);
     canvas.style.width = `${w}px`;
