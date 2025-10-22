@@ -410,6 +410,15 @@ function initDotHero(canvasId, sectionSelector) {
   };
 }
 
-setTimeout(() => {
+const button = document.createElement('button');
+button.innerText = 'Click Me';
+document.body.appendChild(button);
+
+button.addEventListener('click', () => {
+  console.log('Initializing Hero Animation');
   initDotHero('heroCanvas', '.hero-section');
-}, 0);
+});
+
+setTimeout(() => {
+  button.click();
+}, 1000);
