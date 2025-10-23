@@ -63,7 +63,6 @@ html, body {
   color: var(--hero-text-color);
   animation: contentSlideIn 1s ease-out 0.3s both;
   min-width: 100%;
-  visibility: hidden;
 }
 
 @keyframes contentSlideIn {
@@ -83,7 +82,6 @@ html, body {
   margin-bottom: 1.5rem;
   line-height: 1.1;
   letter-spacing: 0.02em;
-  max-width: 1320px;
   color: #FF4444;
   visibility: hidden;
   z-index: -999;
@@ -93,16 +91,10 @@ html, body {
 
 .hero-headline {
   display: block;
-  font-size: clamp(9rem, 8vw, 5rem);
+  font-size: clamp(10rem, 8vw, 5rem);
   margin-bottom: 0.5rem;
 }
 
-.hero-subheading {
-  display: block;
-  font-size: clamp(9rem, 8vw, 5rem);
-  font-weight: 600;
-  opacity: 0.9;
-}
 
 .hero-subtitle {
   font-size: clamp(1.125rem, 2vw, 1.5rem);
