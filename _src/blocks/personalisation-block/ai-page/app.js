@@ -39,17 +39,6 @@ const timelineData = [
     position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/vector.svg',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
-    arrowTop: '115px',
-    arrowLeft: '97px',
-    arrowHeight: '176px',
-    contentTop: '107px',
-    contentLeft: '146px',
-    descTop: '138px',
-    iconTop: '103px',
-    iconLeft: '108px',
-    iconWidth: '31px',
-    iconHeight: '31px',
-    yearLeft: '75px',
   },
   {
     year: '2011',
@@ -58,17 +47,6 @@ const timelineData = [
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/pentagon-curved-line.svg',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
-    arrowTop: '308px',
-    arrowLeft: '317px',
-    arrowHeight: '82px',
-    contentTop: '376px',
-    contentLeft: '366px',
-    descTop: '430px',
-    iconTop: '371px',
-    iconLeft: '326px',
-    iconWidth: '32px',
-    iconHeight: '32px',
-    yearLeft: '295px',
   },
   {
     year: '2013',
@@ -77,17 +55,6 @@ const timelineData = [
     position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/vector-1.svg',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-7.svg',
-    arrowTop: '115px',
-    arrowLeft: '537px',
-    arrowHeight: '176px',
-    contentTop: '107px',
-    contentLeft: '585px',
-    descTop: '161px',
-    iconTop: '103px',
-    iconLeft: '550px',
-    iconWidth: '24px',
-    iconHeight: '30px',
-    yearLeft: '515px',
   },
   {
     year: '2014',
@@ -96,17 +63,6 @@ const timelineData = [
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/group-7.png',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-4.svg',
-    arrowTop: '308px',
-    arrowLeft: '757px',
-    arrowHeight: '82px',
-    contentTop: '373px',
-    contentLeft: '804px',
-    descTop: '404px',
-    iconTop: '373px',
-    iconLeft: '768px',
-    iconWidth: '28px',
-    iconHeight: '28px',
-    yearLeft: '735px',
   },
   {
     year: '2017',
@@ -115,17 +71,6 @@ const timelineData = [
     position: 'top',
     icon: '',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-7.svg',
-    arrowTop: '115px',
-    arrowLeft: '977px',
-    arrowHeight: '176px',
-    contentTop: '105px',
-    contentLeft: '1024px',
-    descTop: '159px',
-    iconTop: '',
-    iconLeft: '',
-    iconWidth: '',
-    iconHeight: '',
-    yearLeft: '955px',
   },
   {
     year: '2017',
@@ -134,17 +79,30 @@ const timelineData = [
     position: 'bottom',
     icon: '',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-6.svg',
-    arrowTop: '308px',
-    arrowLeft: '1197px',
-    arrowHeight: '82px',
-    contentTop: '376px',
-    contentLeft: '1245px',
-    descTop: '407px',
-    iconTop: '',
-    iconLeft: '',
-    iconWidth: '',
-    iconHeight: '',
-    yearLeft: '1175px',
+  },
+  {
+    year: '2020',
+    title: 'First ML-based detection',
+    description: 'Bitdefender leveraged ML to improve detection of new or unknown malware.',
+    position: 'top',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/vector.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+  },
+  {
+    year: '2022',
+    title: 'First noise reduction algorithm',
+    description: 'The noise detection algorithm helped identify misclassified samples.',
+    position: 'bottom',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/pentagon-curved-line.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+  },
+  {
+    year: '2024',
+    title: 'First ML-based automated stream detection',
+    description: 'The first automated stream detection based on ML technologies.',
+    position: 'top',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/vector-1.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-7.svg',
   },
 ];
 
@@ -338,75 +296,154 @@ function replaceHeader() {
   customHeader.remove();
 }
 
+function initTimelineCarousel() {
+  const container = document.querySelector('.timeline-container');
+  if (!container) return;
+  const track = container.querySelector('.timeline-track');
+  const prevBtn = container.querySelector('.timeline-button.left');
+  const nextBtn = container.querySelector('.timeline-button.right');
+  const items = Array.from(container.querySelectorAll('.timeline-box.populated'));
+  if (!track || !prevBtn || !nextBtn || items.length === 0) return;
+
+  let currentIndex = 0;
+  const itemsToShow = 3; // number of visible boxes at a time
+  const maxIndex = Math.max(0, items.length - itemsToShow - 1);
+
+  // Amount to scroll per click (item width + gap)
+  function getScrollAmount() {
+    const item = items[0];
+    const itemWidth = item.offsetWidth;
+    const gap = parseFloat(window.getComputedStyle(track).gap) || 20;
+    return itemWidth + gap;
+  }
+
+  function updateTimeline() {
+    const offset = -(currentIndex * getScrollAmount());
+    track.style.transform = `translateX(${offset}px)`;
+    track.style.transition = 'transform 0.5s ease';
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex >= maxIndex;
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) currentIndex -= 1;
+    updateTimeline();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < maxIndex) currentIndex += 1;
+    updateTimeline();
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  track.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
+      else currentIndex = Math.max(currentIndex - 1, 0);
+      updateTimeline();
+    }
+  }, { passive: true });
+
+  // Initial position
+  updateTimeline();
+}
+
 function renderTimelineSection() {
   const container = document.querySelector('.timeline-container');
+  container.innerHTML = ''; // clear old content
 
-  timelineData.forEach((item) => {
-    const arrow = document.createElement('img');
-    arrow.className = 'timeline-arrow';
-    arrow.style.top = item.arrowTop;
-    arrow.style.left = item.arrowLeft;
-    arrow.style.height = item.arrowHeight;
-    arrow.src = item.arrowSrc;
-    arrow.alt = 'Arrow';
-    container.appendChild(arrow);
-  });
+  // Create main wrapper
+  const track = document.createElement('div');
+  track.className = 'timeline-track';
 
-  timelineData.forEach((item) => {
-    const descEl = document.createElement('div');
-    descEl.className = 'timeline-content timeline-description';
-    descEl.style.top = item.descTop;
-    descEl.style.left = item.contentLeft;
-    descEl.style.width = '229px';
-    descEl.innerHTML = item.description;
-    container.appendChild(descEl);
+  // Create 3 rows
+  const contentUp = document.createElement('div');
+  contentUp.className = 'timeline-content-up';
 
-    const titleEl = document.createElement('div');
-    titleEl.className = 'timeline-content timeline-title';
-    titleEl.style.top = item.contentTop;
-    titleEl.style.left = item.contentLeft;
-    titleEl.style.width = '229px';
-    titleEl.textContent = item.title;
-    container.appendChild(titleEl);
+  const years = document.createElement('div');
+  years.className = 'timeline-years';
 
-    if (item.icon) {
-      const iconEl = document.createElement('img');
-      iconEl.className = 'timeline-icon';
-      iconEl.style.top = item.iconTop;
-      iconEl.style.left = item.iconLeft;
-      iconEl.style.width = item.iconWidth;
-      iconEl.style.height = item.iconHeight;
-      iconEl.src = item.icon;
-      iconEl.alt = 'Icon';
-      container.appendChild(iconEl);
+  const contentDown = document.createElement('div');
+  contentDown.className = 'timeline-content-down';
+
+  // Append them to track
+  track.appendChild(contentUp);
+  track.appendChild(years);
+  track.appendChild(contentDown);
+  container.appendChild(track);
+
+  timelineData.forEach((item, index) => {
+    // --- Row 1: Top Content (even index) ---
+    const upBox = document.createElement('div');
+    upBox.className = 'timeline-box';
+    if (index % 2 === 0) {
+      upBox.classList.add('populated');
+      if (item.icon) {
+        const iconEl = document.createElement('img');
+        iconEl.className = 'timeline-icon';
+        iconEl.src = item.icon;
+        upBox.appendChild(iconEl);
+      }
+      upBox.insertAdjacentHTML('beforeend', `
+        <div class="timeline-box-content">
+          <h3 class="timeline-title">${item.title}</h3>
+          <p class="timeline-description">${item.description}</p>
+        </div>
+      `);
+
+      // Set arrow only for boxes with content
+      upBox.style.setProperty('--arrow-src', `url(${item.arrowSrc})`);
     }
-  });
+    contentUp.appendChild(upBox);
 
-  const line1 = document.createElement('img');
-  line1.className = 'timeline-line';
-  line1.style.left = '0';
-  line1.style.top = '299px';
-  line1.style.width = '75px';
-  line1.src = '/_src/blocks/personalisation-block/ai-page/public/line-1.svg';
-  line1.alt = 'Line';
-  container.appendChild(line1);
-
-  const line2 = document.createElement('img');
-  line2.className = 'timeline-line';
-  line2.style.left = '75px';
-  line2.style.top = '299px';
-  line2.style.width = '1365px';
-  line2.src = '/_src/blocks/personalisation-block/ai-page/public/line-2.svg';
-  line2.alt = 'Line';
-  container.appendChild(line2);
-
-  timelineData.forEach((item) => {
+    // --- Row 2: Year (always populated) ---
     const yearEl = document.createElement('div');
     yearEl.className = 'timeline-year';
-    yearEl.style.left = item.yearLeft;
-    yearEl.textContent = item.year;
-    container.appendChild(yearEl);
+    yearEl.innerHTML = `<span class="year-tag">${item.year}</span>`;
+    years.appendChild(yearEl);
+
+    // --- Row 3: Bottom Content (odd index) ---
+    const downBox = document.createElement('div');
+    downBox.className = 'timeline-box';
+    if (index % 2 !== 0) {
+      upBox.classList.add('populated');
+      if (item.icon) {
+        const iconEl = document.createElement('img');
+        iconEl.className = 'timeline-icon';
+        iconEl.src = item.icon;
+      }
+      downBox.insertAdjacentHTML('beforeend', `
+        <div class="timeline-box-content">
+          <h3 class="timeline-title">${item.title}</h3>
+          <p class="timeline-description">${item.description}</p>
+        </div>
+      `);
+
+      // Set arrow only for boxes with content
+      downBox.style.setProperty('--arrow-src', `url(${item.arrowSrc})`);
+    }
+    contentDown.appendChild(downBox);
   });
+
+  const buttonsContainer = document.createElement('div');
+  buttonsContainer.classList.add('timeline-controls');
+  const leftBtn = document.createElement('button');
+  leftBtn.className = 'timeline-button left';
+  leftBtn.style.left = '1269px';
+  leftBtn.disabled = true;
+  leftBtn.innerHTML = '<img src="/_src/blocks/personalisation-block/ai-page/public/left-disabled.png" alt="Left">';
+
+  const rightBtn = document.createElement('button');
+  rightBtn.className = 'timeline-button right';
+  rightBtn.style.left = '1325px';
+  rightBtn.innerHTML = '<img src="/_src/blocks/personalisation-block/ai-page/public/right-normal.png" alt="Right">';
 
   const gradient1 = document.createElement('div');
   gradient1.className = 'timeline-gradient';
@@ -416,25 +453,16 @@ function renderTimelineSection() {
   gradient1.style.background = 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)';
   container.appendChild(gradient1);
 
-  const rightBtn = document.createElement('button');
-  rightBtn.className = 'timeline-button';
-  rightBtn.style.left = '1325px';
-  rightBtn.innerHTML = '<img src="/_src/blocks/personalisation-block/ai-page/public/right-normal.png" alt="Right">';
-  container.appendChild(rightBtn);
-
-  const leftBtn = document.createElement('button');
-  leftBtn.className = 'timeline-button';
-  leftBtn.style.left = '1269px';
-  leftBtn.disabled = true;
-  leftBtn.innerHTML = '<img src="/_src/blocks/personalisation-block/ai-page/public/left-disabled.png" alt="Left">';
-  container.appendChild(leftBtn);
-
   const gradient2 = document.createElement('div');
   gradient2.className = 'timeline-gradient';
-  gradient2.style.left = '1291px';
+  gradient2.style.right = '0';
   gradient2.style.width = '149px';
   gradient2.style.background = 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)';
   container.appendChild(gradient2);
+
+  buttonsContainer.innerHTML = `${leftBtn.outerHTML}${rightBtn.outerHTML}`;
+
+  container.insertAdjacentElement('afterBegin', buttonsContainer);
 }
 
 function renderStatisticsSection() {
@@ -715,6 +743,7 @@ function renderFooterSection() {
 // document.addEventListener('DOMContentLoaded', () => {
 renderCallToActionSection();
 renderTimelineSection();
+initTimelineCarousel();
 renderStatisticsSection();
 renderResearchSection();
 renderIntroductionSection();

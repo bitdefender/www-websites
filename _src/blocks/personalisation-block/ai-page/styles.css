@@ -220,7 +220,7 @@
   .cta-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 30px;
   }
 
   .cta-card {
@@ -265,8 +265,77 @@
     object-fit: cover;
   }
 
-  .timeline-content {
-    position: absolute;
+  .timeline-container {
+    overflow: visible;
+  }
+
+  .timeline-track {
+    overflow: visible;
+  }
+
+  .timeline-track > div {
+    display: grid;
+    grid-auto-flow: column;
+    padding-left: 25px;
+    
+  }
+
+  .timeline-track::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+
+  .timeline-box {
+    min-width: 300px;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+  }
+
+  .timeline-box::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 150px;
+    background-image: var(--arrow-src);
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: relative;
+    top: -10px;
+  }
+
+  .timeline-box-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .timeline-year:not(:first-of-type) {
+    min-width: 300px;
+  }
+
+  .year-tag {
+    background: #006dff;
+    padding:5px 10px;
+    border-radius: 999px;
+  }
+
+  .timeline-track .timeline-years {
+    padding-left: 0;
+    margin-bottom: 20px;
+  }
+
+  .timeline-year::after {
+    content: "";
+    position: relative;
+    left: 0;
+    min-width: 100%;
+    height: 1px;
+    background-color: #007bff; 
+    z-index: -1;         
+  }
+
+  .timeline-year:last-of-type::after {
+    display: none;
   }
 
   .timeline-title {
@@ -288,10 +357,6 @@
     color: #000;
   }
 
-  .timeline-icon {
-    position: absolute;
-  }
-
   .timeline-line {
     position: absolute;
     height: 1px;
@@ -299,13 +364,10 @@
   }
 
   .timeline-year {
-    position: absolute;
-    top: 291px;
+    min-width: 300px;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 8px;
-    background: #006dff;
+    
     border-radius: 999px;
     font-weight: 600;
     font-size: 14px;
@@ -318,8 +380,12 @@
     height: 455px;
   }
 
+  .timeline-controls {
+    justify-self: end;
+    margin-bottom: 25px;
+  }
+
   .timeline-button {
-    position: absolute;
     top: 0;
     width: 40px;
     height: 40px;

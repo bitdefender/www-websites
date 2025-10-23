@@ -25,9 +25,9 @@ function initDotHero(canvasId, sectionSelector) {
   }
 
   const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-  const ctx = canvas.getContext('2d', { alpha: true });
+  const ctx = canvas.getContext('2d', { alpha: true, willReadFrequently: true});
   const off = document.createElement('canvas');
-  const octx = off.getContext('2d');
+  const octx = off.getContext('2d', { willReadFrequently: true});
 
   // Get configuration from data attributes
   const config = {
@@ -423,4 +423,5 @@ button.addEventListener('click', () => {
 setTimeout(() => {
   button.click();
   document.querySelector('.hero-section').style.visibility = '';
+  button.remove();
 }, 1000);
