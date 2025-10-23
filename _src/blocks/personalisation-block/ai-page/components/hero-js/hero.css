@@ -31,6 +31,7 @@ html, body {
   align-items: center;
   justify-content: center;
   animation: heroFadeIn 1s ease-out;
+  visibility: hidden;
 }
 
 @keyframes heroFadeIn {
@@ -62,6 +63,7 @@ html, body {
   color: var(--hero-text-color);
   animation: contentSlideIn 1s ease-out 0.3s both;
   min-width: 100%;
+  visibility: hidden;
 }
 
 @keyframes contentSlideIn {

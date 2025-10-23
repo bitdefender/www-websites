@@ -11,7 +11,6 @@
 function initDotHero(canvasId, sectionSelector) {
   const canvas = document.getElementById(canvasId);
   const section = document.querySelector(sectionSelector);
-  section.style.visibility = 'hidden';
 
   if (!canvas || !section) {
     console.warn('Hero canvas or section not found');
@@ -422,6 +421,6 @@ button.addEventListener('click', () => {
 
 setTimeout(() => {
   button.click();
-  document.querySelector('.hero-section').style.visibility = '';
+  document.querySelector('.hero-section').style.visibility = 'visible';
   button.remove();
 }, 1000);

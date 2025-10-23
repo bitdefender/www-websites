@@ -295,6 +295,87 @@ const researchSectionData = {
 
 };
 
+function initScrollAnimations() {
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px',
+  };
+
+  const observer = new IntersectionObserver(((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('fade-in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }), observerOptions);
+
+  // Observe elements for animation
+  const animateElements = document.querySelectorAll(
+    '.cta-card, .timeline-box, .research-card, .stat-card, .threat-card, .insight-card, .principle-card',
+  );
+
+  animateElements.forEach((element) => {
+    element.style.opacity = '0';
+    element.style.transform = 'translateY(20px)';
+    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(element);
+  });
+}
+
+// Add fade-in class styles dynamically
+const style = document.createElement('style');
+style.textContent = `
+    .fade-in {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+`;
+document.head.appendChild(style);
+
+// Observe statistics section for counter animation
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      const statNumbers = entry.target.querySelectorAll('.research-stat-value');
+      statNumbers.forEach((stat) => {
+        // Extract numeric value from text
+        const text = stat.textContent;
+        const numericValue = parseFloat(text.replace(/[^0-9.]/g, ''));
+
+        if (!numericValue.isNaN) {
+          // Animate the number
+          stat.setAttribute('data-original', text);
+          let current = 0;
+          const increment = numericValue / 100;
+
+          const animation = setInterval(() => {
+            current += increment;
+            if (current >= numericValue) {
+              stat.textContent = stat.getAttribute('data-original');
+              clearInterval(animation);
+            } else {
+              // Format the number based on original format
+              if (text.includes('trillion')) {
+                stat.textContent = `$${current.toFixed(3)} trillion`;
+              }
+              if (text.includes('billion')) {
+                stat.textContent = `${current.toFixed(1)}+ billion victims`;
+              }
+            }
+          }, 20);
+        }
+      });
+      statsObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+const statsSection = document.querySelector('.research-section');
+if (statsSection) {
+  statsObserver.observe(statsSection);
+}
+
 function renderCallToActionSection() {
   const grid = document.querySelector('.cta-grid');
 
@@ -792,4 +873,5 @@ renderThreatsSection();
 renderInsightsSection();
 renderFooterSection();
 replaceHeader();
+initScrollAnimations();
 // });

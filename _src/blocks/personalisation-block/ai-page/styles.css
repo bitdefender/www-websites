@@ -235,6 +235,7 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 3;
+    transition: opacity 0.6s, transform 0.6s;
   }
 
   .cta-card img {
