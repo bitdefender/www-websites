@@ -1103,3 +1103,53 @@ export async function submitWithTurnstile({
     if (typeof errorCallback === 'function') errorCallback(err);
   }
 }
+
+/**
+ * @param {HTMLElement} element
+ * @param {object} storeProperties
+ * @param {string} storeProperties.productId
+ * @param {number} storeProperties.devices
+ * @param {number} storeProperties.subscription
+ * @param {boolean} storeProperties.ignoreEventsParent
+ * @summary
+ * Modifies element into the following structure:
+ * ```html
+ * <bd-context>
+ *   <bd-product>
+ *     <bd-option>
+ *       initial element's children
+ *     </bd-option>
+ *   </bd-product>
+ * </bd-context>
+ * ```
+ */
+export const wrapChildrenWithStoreContext = (element, {
+  productId,
+  devices,
+  subscription,
+  ignoreEventsParent = false,
+}) => {
+  if (!element || element.firstElementChild?.matches('bd-context')) {
+    return;
+  }
+
+  const context = document.createElement('bd-context');
+  if (ignoreEventsParent) {
+    context.setAttribute('ignore-events-parent', '');
+  }
+
+  const product = document.createElement('bd-product');
+  product.setAttribute('product-id', productId);
+
+  const option = document.createElement('bd-option');
+  option.setAttribute('devices', devices);
+  option.setAttribute('subscription', subscription);
+
+  while (element.firstChild) {
+    option.appendChild(element.firstChild);
+  }
+
+  product.appendChild(option);
+  context.appendChild(product);
+  element.appendChild(context);
+};
