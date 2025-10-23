@@ -2,6 +2,7 @@ import { debounce } from '@repobit/dex-utils';
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
+let COLUMNS_COUNT = 0;
 /**
  * Replaces text content "yes" and "no" with appropriate checkmark icons
  * @param {HTMLElement} block - The container block element
@@ -361,8 +362,62 @@ function buildTableHeader(block) {
   const header = block.querySelector('div:nth-of-type(2)');
   if (!header) return;
 
+  const metadata = block.closest('.section').dataset;
+  const { products, secondaryProducts } = metadata;
+  const productsAsList = products ? Array.from(products.split(',')) : [];
+  const secondaryProductsAsList = secondaryProducts ? Array.from(secondaryProducts.split(',')) : [];
+
+  function toggleIconVisibility(selectedIndex) {
+    const familyIcons = block.querySelectorAll('[class*="icon-family"]');
+    const userIcons = block.querySelectorAll('[class*="icon-user"]');
+    if (selectedIndex === 0) {
+      familyIcons.forEach((icon) => {
+        icon.closest('.tag').classList.add('global-display-none');
+      });
+      userIcons.forEach((icon) => {
+        icon.closest('.tag').classList.remove('global-display-none');
+      });
+    } else {
+      familyIcons.forEach((icon) => {
+        icon.closest('.tag').classList.remove('global-display-none');
+      });
+      userIcons.forEach((icon) => {
+        icon.closest('.tag').classList.add('global-display-none');
+      });
+    }
+  }
+
+  function renderUserCountInColumns(selectedIndex) {
+    const productColumns = block.querySelectorAll('[class*="product-column-"]');
+    productColumns.forEach((productColumn, prodColIdx) => {
+      // eslint-disable-next-line no-unused-vars
+      const [prodName, prodUsers, prodYears] = productsAsList[prodColIdx]?.split('/') || [];
+      // eslint-disable-next-line no-unused-vars
+      const [secondaryProdName, secondaryProdUsers, secondaryProdYears] = secondaryProductsAsList[prodColIdx]?.split('/') || [];
+      const userCount = selectedIndex === 0 ? prodUsers : secondaryProdUsers;
+      productColumn.innerHTML = productColumn.innerHTML.replace(`&lt;devices${prodColIdx + 1}&gt;`, `<span class="devices${prodColIdx + 1}">${userCount}</span>`);
+      const devicesSpan = productColumn.querySelector(`.devices${prodColIdx + 1}`);
+      if (devicesSpan) {
+        devicesSpan.textContent = userCount;
+      }
+    });
+  }
+
+  function synchronizePlanSwitchers(selectedRadio, selectedIndex) {
+    document.querySelectorAll('.plan-switcher').forEach((switcher) => {
+      if (switcher !== selectedRadio.closest('.plan-switcher')) {
+        const radioButtons = switcher.querySelectorAll('input[type="radio"]');
+        if (radioButtons[selectedIndex]) {
+          radioButtons[selectedIndex].checked = true;
+          // Trigger change event for store functionality
+          radioButtons[selectedIndex].dispatchEvent(new Event('click', { bubbles: true }));
+        }
+      }
+    });
+  }
+
   header.classList.add('webview-comparison-header');
-  [...header.children].forEach((headerColumn) => {
+  [...header.children].forEach((headerColumn, idx) => {
     if (headerColumn.textContent.includes('Individual')) {
       const planSwitcher = createPlanSwitcher(headerColumn.textContent, null, null, null);
       headerColumn.innerHTML = planSwitcher.outerHTML;
@@ -371,41 +426,19 @@ function buildTableHeader(block) {
         input.addEventListener('click', (event) => {
           const selectedRadio = event.target;
           const selectedIndex = Array.from(selectedRadio.closest('.plan-switcher').querySelectorAll('input[type="radio"]')).indexOf(selectedRadio);
-          const familyIcons = block.querySelectorAll('[class*="icon-family"]');
-          familyIcons.forEach((icon) => {
-            icon.closest('.tag').classList.toggle('global-display-none');
-          });
-          const userIcons = block.querySelectorAll('[class*="icon-user"]');
-          userIcons.forEach((icon) => {
-            icon.closest('.tag').classList.toggle('global-display-none');
-          });
+          toggleIconVisibility(selectedIndex);
+          renderUserCountInColumns(selectedIndex);
           // Find all other plan switchers and select the radio button at the same index
-          document.querySelectorAll('.plan-switcher').forEach((switcher) => {
-            if (switcher !== selectedRadio.closest('.plan-switcher')) {
-              const radioButtons = switcher.querySelectorAll('input[type="radio"]');
-              if (radioButtons[selectedIndex]) {
-                radioButtons[selectedIndex].checked = true;
-                // Trigger change event for store functionality
-                radioButtons[selectedIndex].dispatchEvent(new Event('click', { bubbles: true }));
-              }
-            }
-          });
+          synchronizePlanSwitchers(selectedRadio, selectedIndex);
         });
       });
     }
-  });
-}
 
-/**
- * Sets up family icons by hiding them initially
- * @param {HTMLElement} block - The container block element
- */
-function setUpFamilyIcons(block) {
-  const familyIcons = block.querySelectorAll('[class*="icon-family"]');
-  if (!familyIcons) return;
-
-  familyIcons.forEach((icon) => {
-    icon.closest('.tag').classList.add('global-display-none');
+    // assume every column after the first is a product column
+    if (idx !== 0) {
+      headerColumn.classList.add('product-column', `product-column-${COLUMNS_COUNT + 1}`);
+      COLUMNS_COUNT += 1;
+    }
   });
 }
 
@@ -417,7 +450,6 @@ function setUpFamilyIcons(block) {
 export default async function decorate(block) {
   const metadata = block.closest('.section').dataset;
   buildTableHeader(block, metadata);
-  setUpFamilyIcons(block);
   addAccesibilityRoles(block);
   replaceTableTextToProperCheckmars(block);
 
@@ -432,6 +464,12 @@ export default async function decorate(block) {
 
   // Check and replace privacy-policy link if it gives a 404
   await checkAndReplacePrivacyPolicyLink(block);
+
+  // set initial state
+  const checkedRadio = block.querySelector('[role="columnheader"] .plan-switcher input[type="radio"][checked]');
+  if (checkedRadio) {
+    checkedRadio.click();
+  }
 
   const targetElement = document.querySelector('.webview-table');
   adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
