@@ -37,6 +37,7 @@ async function loadAndInjectAiPageContent(block, path) {
           // document.head.appendChild(clonedScript);
           const newScript = document.createElement('script');
           newScript.src = `${script.getAttribute('src')}`;
+          newScript.type = 'module';
           newScript.defer = true;
           document.body.appendChild(newScript);
         }
@@ -64,8 +65,6 @@ async function injectAiPage(block) {
   await loadAndInjectAiPageContent(block, '/_src/blocks/personalisation-block/ai-page/index.html');
   document.body.classList.add('ai-page');
 }
-
-
 
 export default async function decorate(block) {
   const {

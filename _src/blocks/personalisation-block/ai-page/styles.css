@@ -230,6 +230,9 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 3;
   }
 
   .cta-card img {
@@ -242,6 +245,7 @@
     font-weight: 500;
     color: #006dff;
     line-height: normal;
+    margin: 0;
   }
 
   .cta-card p {
@@ -249,6 +253,7 @@
     font-weight: 400;
     color: #000;
     line-height: 23px;
+    margin: 0;
   }
 
   .timeline-section {
@@ -289,18 +294,34 @@
     display: grid;
     grid-auto-flow: column;
     gap: 10px;
+    align-items: flex-start;
+    min-height: 175px;
   }
 
   .timeline-box::before {
     content: '';
     display: block;
-    width: 20px;
-    height: 150px;
+    width: 5px;
+    height: 85%;
+    align-self: end;
     background-image: var(--arrow-src);
     background-size: contain;
     background-repeat: no-repeat;
     position: relative;
     top: -10px;
+  }
+
+  .timeline-content-down {
+    .timeline-box {
+      position: relative;
+      top: 25%;
+    }
+
+    .timeline-box::before {
+      top: -28%;
+      height: 40%;
+      align-self: flex-start;
+    }
   }
 
   .timeline-box-content {
@@ -343,6 +364,7 @@
     font-size: 18px;
     color: #000;
     margin-bottom: 8px;
+    margin-top: 5px;
   }
 
   .timeline-description {
@@ -377,12 +399,13 @@
   .timeline-gradient {
     position: absolute;
     top: 72px;
-    height: 455px;
+    height: 100%;
+    width: 100px;
   }
 
   .timeline-controls {
     justify-self: end;
-    margin-bottom: 25px;
+    margin-bottom: 45px;
   }
 
   .timeline-button {
@@ -403,6 +426,49 @@
   .timeline-button:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+  }
+
+  .research-progress-section {
+    background-color: #F0F7FF;
+
+    .research-progress-container {
+      padding: 75px 0;
+
+      .progress-title {
+        font-weight: 400;
+        margin-bottom: 60px;
+        strong {
+          color: var(--color-primary);
+          font-weight: 400;
+        }
+      }
+
+      .cards-container {
+        display: flex;
+        gap: 30px;
+        .research-card {
+          display: grid;
+          grid-auto-flow: column;
+          gap: 30px;
+          .text-content {
+            .card-title {
+              font-size: 24px;
+              font-weight: 600;
+              color: var(--color-primary);
+            }
+
+            .card-description {
+              font-size: 18px;
+            }
+
+            a {
+              font-size: 18px;
+              color: var(--color-primary)
+            }
+          }
+        }
+      }
+    }
   }
 
   .statistics-section {

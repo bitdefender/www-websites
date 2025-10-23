@@ -1,3 +1,5 @@
+import { matchHeights } from '../../../scripts/utils/utils.js';
+
 const callToActionData = [
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/shield-check-star.svg',
@@ -274,6 +276,25 @@ const footerLinks = [
   'Privacy Settings',
 ];
 
+const researchSectionData = {
+  title: '<strong>Research</strong> that drives progress',
+  cards: [
+    {
+      title: 'DeepFake Detection',
+      description: 'A recognised and award-winning technology focused on identifying and analysing manipulated media through advanced machine learning.',
+      button: { text: 'Read our papers', link: '#' },
+      img: '/_src/blocks/personalisation-block/ai-page/public/group-33688.png',
+    },
+    {
+      title: 'LLM for Assembly',
+      description: 'Models fine-tuned on assembly code to improve feature quality and accuracy in tasks like anomaly detection, search, and classification.',
+      button: { text: 'Read our papers', link: '#' },
+      img: '/_src/blocks/personalisation-block/ai-page/public/group-33689.png',
+    },
+  ],
+
+};
+
 function renderCallToActionSection() {
   const grid = document.querySelector('.cta-grid');
 
@@ -418,6 +439,7 @@ function renderTimelineSection() {
         const iconEl = document.createElement('img');
         iconEl.className = 'timeline-icon';
         iconEl.src = item.icon;
+        downBox.appendChild(iconEl);
       }
       downBox.insertAdjacentHTML('beforeend', `
         <div class="timeline-box-content">
@@ -436,19 +458,16 @@ function renderTimelineSection() {
   buttonsContainer.classList.add('timeline-controls');
   const leftBtn = document.createElement('button');
   leftBtn.className = 'timeline-button left';
-  leftBtn.style.left = '1269px';
   leftBtn.disabled = true;
   leftBtn.innerHTML = '<img src="/_src/blocks/personalisation-block/ai-page/public/left-disabled.png" alt="Left">';
 
   const rightBtn = document.createElement('button');
   rightBtn.className = 'timeline-button right';
-  rightBtn.style.left = '1325px';
   rightBtn.innerHTML = '<img src="/_src/blocks/personalisation-block/ai-page/public/right-normal.png" alt="Right">';
 
   const gradient1 = document.createElement('div');
   gradient1.className = 'timeline-gradient';
   gradient1.style.left = '0';
-  gradient1.style.width = '75px';
   gradient1.style.transform = 'rotate(180deg)';
   gradient1.style.background = 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)';
   container.appendChild(gradient1);
@@ -456,7 +475,6 @@ function renderTimelineSection() {
   const gradient2 = document.createElement('div');
   gradient2.className = 'timeline-gradient';
   gradient2.style.right = '0';
-  gradient2.style.width = '149px';
   gradient2.style.background = 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)';
   container.appendChild(gradient2);
 
@@ -504,6 +522,28 @@ function renderResearchSection() {
   `;
 
   container.innerHTML = leftHTML + rightHTML;
+}
+
+function renderResearchProgressSection() {
+  const container = document.querySelector('.research-progress-container');
+  container.innerHTML = `
+    <h2 class= "progress-title">${researchSectionData.title}</h2>
+    <div class="cards-container">
+      ${researchSectionData.cards.map((card) => `
+          <div class="research-card">
+            <div class="text-content">
+              <h3 class="card-title">${card.title}</h3>
+              <p class="card-description">${card.description}<p>
+              <a class="card-button" href = '${card.button.link}'> ${card.button.text} </a>
+            </div>
+            <img src="${card.img}">
+          </div>
+      `).join('')}
+    </div>    
+  `;
+
+  matchHeights(container, '.card-title');
+  matchHeights(container, '.card-description');
 }
 
 function renderIntroductionSection() {
@@ -744,6 +784,7 @@ function renderFooterSection() {
 renderCallToActionSection();
 renderTimelineSection();
 initTimelineCarousel();
+renderResearchProgressSection();
 renderStatisticsSection();
 renderResearchSection();
 renderIntroductionSection();
