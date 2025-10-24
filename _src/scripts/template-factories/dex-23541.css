@@ -174,7 +174,7 @@
 
                 .hero-aem__card-text {
                     p {
-                        margin: var(--size-0) var(--size-0) var(--size-8);
+                        margin: var(--size-0);
                     }
 
                     p > strong {
@@ -706,6 +706,7 @@
                 }
 
                 .tabs-container {
+                    display: none;
                     button {
                         color: var(--color-highlight-blue);
                         line-height: 23px;
@@ -1176,11 +1177,58 @@
             }
         }
 
-        .system-requirements-container {
+        .system-requirements {
             padding-top: var(--size-32);
             padding-bottom: var(--size-32);
             margin-bottom: var(--size-0);
             --body-font-family: "IBM Plex Sans", sans-serif;
+            background-color: #f2f2f2;
+
+            &.dex-system-requirements {
+
+                ul {
+                    margin-top: var(--size-16);
+                    li {
+                        margin-top: var(--size-4);
+                    }
+                }
+            }
+
+            &.terms-of-use {
+                ul li {
+                    margin-top:var(--size-16);
+                }
+
+                .default-content-wrapper p a {
+                    padding: var(--size-0);
+
+                    &::before {
+                        display: none;
+                    }
+                }
+
+                p:last-child {
+                    margin-bottom: var(--size-2);
+                }
+            }
+
+
+            &.dex-system-requirements, &.terms-of-use {
+
+                p:last-child {
+                    position: relative;
+
+                    &::after {
+                        position: absolute;
+                        content: '';
+                        width: 100%;
+                        height: var(--size-2);
+                        background-color: var(--border-darker-color);
+                        top: 60px;
+                        left: var(--size-0);
+                    }
+                }
+            }
 
             .default-content-wrapper {
                 max-width: var(--section-desktop-max-width);
@@ -1200,57 +1248,7 @@
                 .button-container a::before {
                     filter: invert(21%) sepia(100%) saturate(3034%) hue-rotate(210deg) brightness(99%) contrast(102%);
                 }
-            }
 
-            .system-requirements-wrapper {
-                max-width: var(--section-desktop-max-width);
-            }
-
-            .system-requirements-wrapper + .default-content-wrapper > p span {
-                font-weight: var(--font-weight-regular);
-            }
-
-            .system-requirements-wrapper + .default-content-wrapper > h3 {
-                padding-top: var(--size-64);
-                position: relative;
-
-                &::after {
-                    position: absolute;
-                    content: '';
-                    width: 100%;
-                    height: var(--size-2);
-                    background-color: var(--border-darker-color);
-                    left: var(--size-0);
-                    top: var(--size-32);
-                }
-            }
-
-            .system-requirements-wrapper .requirement {
-                ul {
-                    li:has(strong) {
-                        margin-top: var(--size-16);
-                    }
-
-                    li {
-                        margin-top: var(--size-16);
-                    }
-
-                    li:has(strong) + li {
-                        margin-top: var(--size-0);
-                    }
-                }
-            }
-
-            .button-container {
-                margin-bottom: var(--size-0);
-
-                a {
-                    background-color: unset;
-
-                    &::after {
-                        display: none;
-                    }
-                }
             }
 
             .system-requirements-item {
@@ -1259,28 +1257,18 @@
                 }
             }
 
-            .system-requirements-item .requirement > ul > li {
-                line-height: 15px;
+
+            .system-requirements-wrapper .system-requirements {
+                padding-top: var(--size-0);
             }
 
-            .default-content-wrapper:last-of-type {
-                margin-top: var(--size-64);
-
-                p {
-                    font-size: var(--body-font-size-s);
+            &.notes {
+                p:first-of-type {
+                    font-size: var(--body-font-size-l);
                     line-height: var(--size-24);
                     font-weight: bold;
                     position: relative;
-
-                    &::after {
-                        position: absolute;
-                        content: '';
-                        width: 100%;
-                        height: var(--size-2);
-                        background-color: var(--border-darker-color);
-                        left: var(--size-0);
-                        top: -32px;
-                    }
+                    margin-top: var(--size-0);
                 }
 
                 ul, li {
@@ -1301,7 +1289,6 @@
                     }
                 }
             }
-
         }
 
         .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
