@@ -616,6 +616,14 @@
             max-width: 1290px !important;
         }
 
+        .dex-ts-cards {
+            .four-cards-wrapper ul {
+                margin: auto;
+                max-width: 967px;
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
         .four-cards-family {
             .default-content-wrapper {
                 padding: var(--size-0) var(--size-0) var(--size-32);
