@@ -282,13 +282,13 @@ const researchSectionData = {
     {
       title: 'DeepFake Detection',
       description: 'A recognised and award-winning technology focused on identifying and analysing manipulated media through advanced machine learning.',
-      button: { text: 'Read our papers', link: '#' },
+      button: { text: 'Read our papers →', link: '#' },
       img: '/_src/blocks/personalisation-block/ai-page/public/group-33688.png',
     },
     {
       title: 'LLM for Assembly',
       description: 'Models fine-tuned on assembly code to improve feature quality and accuracy in tasks like anomaly detection, search, and classification.',
-      button: { text: 'Read our papers', link: '#' },
+      button: { text: 'Read our papers →', link: '#' },
       img: '/_src/blocks/personalisation-block/ai-page/public/group-33689.png',
     },
   ],
@@ -540,11 +540,17 @@ function renderTimelineSection() {
   const leftBtn = document.createElement('button');
   leftBtn.className = 'timeline-button left';
   leftBtn.disabled = true;
-  leftBtn.innerHTML = '<img src="/_src/blocks/personalisation-block/ai-page/public/left-disabled.png" alt="Left">';
+  leftBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
+  <path d="M9.34315 1.41419L7.92893 -2.2769e-05L0.857865 7.07104L2.27208 8.48526L9.34315 1.41419Z" fill="#fff"/>
+  <path d="M2.27208 5.65683L0.857865 7.07104L7.92893 14.1421L9.34315 12.7279L2.27208 5.65683Z" fill="#fff"/>
+</svg>`;
 
   const rightBtn = document.createElement('button');
   rightBtn.className = 'timeline-button right';
-  rightBtn.innerHTML = '<img src="/_src/blocks/personalisation-block/ai-page/public/right-normal.png" alt="Right">';
+  rightBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
+  <path d="M0.656854 1.41419L2.07107 -2.2769e-05L9.14214 7.07104L7.72792 8.48526L0.656854 1.41419Z" fill="white"/>
+  <path d="M7.72792 5.65683L9.14214 7.07104L2.07107 14.1421L0.656854 12.7279L7.72792 5.65683Z" fill="white"/>
+  </svg>`;
 
   const gradient1 = document.createElement('div');
   gradient1.className = 'timeline-gradient';
