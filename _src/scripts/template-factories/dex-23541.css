@@ -1281,9 +1281,11 @@
                 }
 
                 ul {
+                    margin-left: var(--size-24);
                     margin-top: var(--size-32);
 
                     li {
+                        display: inline;
                         font-size: var(--body-font-size-xxs);
                     }
                 }
@@ -1304,6 +1306,22 @@
 
         .benefitsLists.expanded {
             display: block !important;
+        }
+
+        .dex-premium-security.new-prod-boxes-container.we-container .new-prod-boxes {
+            grid-template-columns: repeat(2, 1fr);
+            width: 940px;
+        }
+
+        .dex-premium-security {
+
+            .default-content-wrapper {
+                padding-bottom: var(--size-64);
+            }
+
+            .prod_box .inner_prod_box h4::after, .switchBox {
+                display: none;
+            }
         }
 
 
