@@ -276,19 +276,40 @@ const footerLinks = [
   'Privacy Settings',
 ];
 
+const arrowSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="9" viewBox="0 0 12 9" fill="none">
+  <path d="M11.688 4.41584L8.008 8.09584L6.872 6.95984L7.96 5.87184L8.696 5.24784L8.68 5.18384L7.32 5.26384H0.328003V3.56784H7.32L8.68 3.64784L8.696 3.58384L7.96 2.95984L6.872 1.87184L8.008 0.73584L11.688 4.41584Z" fill="#006DFF"/>
+</svg>`;
+
 const researchSectionData = {
   title: '<strong>Research</strong> that drives progress',
   cards: [
     {
       title: 'DeepFake Detection',
       description: 'A recognised and award-winning technology focused on identifying and analysing manipulated media through advanced machine learning.',
-      button: { text: 'Read our papers →', link: '#' },
+      button: [
+        {
+          text: 'Circumventing shortcuts in audio-visual deepfake detection datasets with unsupervised learning Read ',
+          link: 'https://arxiv.org/abs/2412.00175',
+        },
+        {
+          text: 'DeCLIP: Decoding CLIP representations for deepfake localization ',
+          link: '#',
+        },
+        {
+          text: 'Towards generalisable and calibrated audio deepfake detection with self-supervised representations ',
+          link: '#',
+        },
+        {
+          text: 'Weakly-supervised deepfake localization in diffusion-generated images ',
+          link: '#',
+        },
+      ],
       img: '/_src/blocks/personalisation-block/ai-page/public/group-33688.png',
     },
     {
       title: 'LLM for Assembly',
       description: 'Models fine-tuned on assembly code to improve feature quality and accuracy in tasks like anomaly detection, search, and classification.',
-      button: { text: 'Read our papers →', link: '#' },
+      button: [{ text: 'Large Language Models for Malware Analysis ', link: 'https://bit-ml.github.io/blog/post/large-language-models-for-malware-analysis/' }],
       img: '/_src/blocks/personalisation-block/ai-page/public/group-33689.png',
     },
   ],
@@ -407,7 +428,7 @@ function initTimelineCarousel() {
   const items = Array.from(container.querySelectorAll('.timeline-box.populated'));
   if (!track || !prevBtn || !nextBtn || items.length === 0) return;
 
-  let currentIndex = 0;
+  let currentIndex = 5;
   const itemsToShow = 3; // number of visible boxes at a time
   const maxIndex = Math.max(0, items.length - itemsToShow - 1);
 
@@ -539,7 +560,6 @@ function renderTimelineSection() {
   buttonsContainer.classList.add('timeline-controls');
   const leftBtn = document.createElement('button');
   leftBtn.className = 'timeline-button left';
-  leftBtn.disabled = true;
   leftBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
   <path d="M9.34315 1.41419L7.92893 -2.2769e-05L0.857865 7.07104L2.27208 8.48526L9.34315 1.41419Z" fill="#fff"/>
   <path d="M2.27208 5.65683L0.857865 7.07104L7.92893 14.1421L9.34315 12.7279L2.27208 5.65683Z" fill="#fff"/>
@@ -547,6 +567,7 @@ function renderTimelineSection() {
 
   const rightBtn = document.createElement('button');
   rightBtn.className = 'timeline-button right';
+  rightBtn.disabled = true;
   rightBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
   <path d="M0.656854 1.41419L2.07107 -2.2769e-05L9.14214 7.07104L7.72792 8.48526L0.656854 1.41419Z" fill="white"/>
   <path d="M7.72792 5.65683L9.14214 7.07104L2.07107 14.1421L0.656854 12.7279L7.72792 5.65683Z" fill="white"/>
@@ -621,7 +642,7 @@ function renderResearchProgressSection() {
             <div class="text-content">
               <h3 class="card-title">${card.title}</h3>
               <p class="card-description">${card.description}<p>
-              <a class="card-button" href = '${card.button.link}'> ${card.button.text} </a>
+              <div class="buttons-container">${card.button.map((button) => ` <a class="card-button" href = '${button.link}'> ${button.text} ${arrowSvg} </a>`).join('')}</div>
             </div>
             <img src="${card.img}">
           </div>
@@ -629,6 +650,7 @@ function renderResearchProgressSection() {
     </div>    
   `;
 
+  // Match heights for consistency
   matchHeights(container, '.card-title');
   matchHeights(container, '.card-description');
 }
@@ -725,7 +747,7 @@ function renderIntroductionSection() {
   scamCardsHTML += '</div>';
 
   container.innerHTML = `
-    <img class="introduction-bg" src="/_src/blocks/personalisation-block/ai-page/public/rectangle-34.png" alt="Background">
+
     <div class="introduction-content">
       <h2>Scams.</h2>
       <h3>The Leading Cyber Threat of Today.</h3>
