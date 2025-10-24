@@ -52,7 +52,7 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: var(--shadow-sm);
+    border-bottom: #d9d9d9 1px solid;
     min-height: 64px;
   }
 
@@ -102,7 +102,7 @@
               &::after {
                   content: '';
                   position: absolute;
-                  bottom: -8px;
+                  bottom: -16px;
                   left: 0;
                   right: 0;
                   height: 2px;
@@ -137,6 +137,10 @@
     padding: 0;
   }
 
+  section:not(:first-of-type) {
+    margin:  94px 0;
+  }
+
   section > div {
     max-width: 1320px;
     margin: auto;
@@ -163,16 +167,14 @@
   .ai-content {
     width: 100%;
     display: flex;
-    margin-bottom: 64px;
-    margin-top: 64px;
-    justify-content: space-between;
+    gap: 30px;
   }
 
   .ai-left {
     display: flex;
     flex-direction: column;
     gap: 31px;
-    width: 630px;
+    min-width: 50%;
   }
 
   .ai-subtitle {
@@ -192,6 +194,10 @@
       color: var(--color-text);
       width: 613px;
       margin: 0;
+      
+      /* Enable font ligatures */
+      font-variant-ligatures: normal; /* or 'common-ligatures' */
+      font-feature-settings: "liga" 1, "calt" 1;
 
       strong {
           color: var(--color-primary);
@@ -199,18 +205,11 @@
       }
   }
 
-  .ai-right {
-      width: 628px;
-      height: 189px;
-  }
-
   .ai-text {
       font-size: 18px;
       font-weight: 400;
       line-height: 1.3;
       color: var(--color-text-secondary);
-      width: 628px;
-      height: 184px;
       margin: 0;
   }
 
@@ -339,21 +338,36 @@
 
   .year-tag {
     background: #006dff;
-    padding:5px 10px;
+    padding:0px 8px;
     border-radius: 999px;
+    font-size: 14px;
   }
 
   .timeline-track .timeline-years {
     padding-left: 0;
     margin-bottom: 20px;
-  }
 
+    &::before {
+      content: "";
+      display: block;
+      width: 120px;
+      height: 1px;
+      border: none;
+      border-top: 2px dotted #006EFF;
+      margin: 24px 0;
+      position: absolute;
+      top: 41.1%;
+      left: -120px;
+      min-width: 3320px;
+      z-index: -2;
+  }
+  }
   .timeline-year::after {
     content: "";
     position: relative;
     left: 0;
     min-width: 100%;
-    height: 1px;
+    height: 2px;
     background-color: #007bff; 
     z-index: -1;         
   }
