@@ -756,21 +756,21 @@
   }
 
   .overlay.scam-cards-grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
 
-.scam-cards-grid-container {
-  position: relative; /* Needed so overlay positions correctly */
-}
+  .scam-cards-grid-container {
+    position: relative; /* Needed so overlay positions correctly */
+  }
 
-.overlay.scam-cards-grid .scam-card {
-  
-  opacity: var(--opacity, 0);
-  background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,255,0.2), transparent 80%);
-  transition: opacity 0.3s ease;
-}
+  .overlay.scam-cards-grid .scam-card {
+    
+    opacity: var(--opacity, 0);
+    background: radial-gradient(circle at var(--x) var(--y), rgba(255, 72, 0, 0.75));
+    transition: opacity 0.3s ease;
+  }
 
 
   .scam-card-content {

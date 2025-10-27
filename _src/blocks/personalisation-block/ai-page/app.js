@@ -12,7 +12,7 @@ const callToActionData = [
     description: 'Combining machine learning and behavioral analysis simplifies the detection of recurring scam patterns, blocks threats in real time, and anticipates future tactics.',
   },
   {
-    icon: '/_src/blocks/personalisation-block/ai-page/public/frame.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/map.svg',
     title: 'Mapping Emerging Threat<br>Landscapes',
     description: 'Machine learning detects, analyses, and blocks mobile scam campaigns before they spread, protecting users across regions.',
   },
