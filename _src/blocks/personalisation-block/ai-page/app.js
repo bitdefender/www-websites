@@ -128,7 +128,7 @@ const scamCards = [
     icon: '/_src/blocks/personalisation-block/ai-page/public/hand-money.svg',
     title: 'Crypto Scams & Fake Trading Platforms',
     backgroundImage: '/_src/blocks/personalisation-block/ai-page/public/globe-02.png',
-    backgroundClass: 'top: 0; left: calc(50% - 96px); width: 192px; height: 89px;',
+    backgroundClass: 'top: -120px; left: -5px; min-width: 202px; height: 210px;',
   },
   {
     id: 2,
@@ -155,7 +155,7 @@ const scamCards = [
     icon: '/_src/blocks/personalisation-block/ai-page/public/phone-target.svg',
     title: 'Ransomware & Extortion Attacks',
     backgroundImage: '/_src/blocks/personalisation-block/ai-page/public/group-23186.png',
-    backgroundClass: 'top: 0; left: 0; width: 192px; height: 160px;',
+    backgroundClass: 'top: 5%; left: 5%; width: 90%',
   },
   {
     id: 6,
@@ -163,7 +163,7 @@ const scamCards = [
     icon: '/_src/blocks/personalisation-block/ai-page/public/rocking-horse.svg',
     title: 'Remote Access Trojans',
     backgroundImage: '/_src/blocks/personalisation-block/ai-page/public/mask-group-2.svg',
-    backgroundClass: 'top: 0; left: 0; width: 192px; height: 192px;',
+    backgroundClass: 'top: -136px; left: -117px; min-width: 355px; min-height: 355px',
   },
   {
     id: 7,
@@ -692,7 +692,7 @@ function renderIntroductionSection() {
   scamCardsHTML += `
     <div class="scam-card scam-card-special">
       <div class="scam-card-content">
-        <img class="scam-card-bg" style="position: absolute; top: calc(50% - 54px); left: calc(50% - 197px); width: 390px; height: 56px;" src="${card4.frameImage}" alt="Frame">
+        <img class="scam-card-bg" style="position: absolute; top: calc(50% - 54px); left: calc(50% - 195px); width: 390px; height: 56px;" src="${card4.frameImage}" alt="Frame">
         <img style="width: 64px; height: 64px; position: relative; z-index: 10;" src="${card4.iconArea}" alt="Icon">
         <img class="scam-text" src="${card4.textImage}" alt="Text">
       </div>

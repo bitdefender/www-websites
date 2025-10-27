@@ -780,7 +780,6 @@
     justify-content: center;
     gap: 12px;
     padding: 16px;
-    position: relative;
   }
 
   .scam-card-small .scam-card-content {
@@ -832,14 +831,18 @@
 
   .scam-card-medium {
     height: 192px;
+    align-content: center;
   }
 
   .scam-card-large {
     flex: 1;
+    align-content: center;
+    position: relative;
   }
 
   .scam-card-special {
     height: 232px;
+    align-content: center;
   }
 
   .scam-card-special img.scam-text {
