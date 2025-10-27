@@ -23,7 +23,7 @@
 }
 
 .trusted-hero-container:has(.video-background) {
-    background: linear-gradient(0deg, #006DFF 0%, rgba(0, 0, 0, 0.53) 66.36%);;
+    background: linear-gradient(0deg, #006DFF 0%, rgb(0 0 0 / 53%) 66.36%);;
 }
 
 .trusted-hero.video-background div > * {
@@ -93,7 +93,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgb(0 0 0 / 80%);
   z-index: -1;
 }
 
