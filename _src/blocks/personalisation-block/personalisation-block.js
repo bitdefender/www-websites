@@ -70,16 +70,16 @@ export default async function decorate(block) {
   const {
     mboxName, path, aiPage,
   } = block.closest('.section').dataset;
-
+  block.classList.add('await-loader');
   if (aiPage) {
-    injectAiPage(block);
+    await injectAiPage(block);
+    block.classList.remove('await-loader');
     return;
   }
 
   block.innerHTML += `
     <div class="personalized-content"></div>
   `;
-  block.classList.add('await-loader');
 
   const offer = await target.getOffers({
     mboxNames: mboxName,
