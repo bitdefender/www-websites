@@ -304,13 +304,13 @@ const researchSectionData = {
           link: '#',
         },
       ],
-      img: '/_src/blocks/personalisation-block/ai-page/public/group-33688.png',
+      img: '/_src/blocks/personalisation-block/ai-page/public/group-33689.png',
     },
     {
       title: 'LLM for Assembly',
       description: 'Models fine-tuned on assembly code to improve feature quality and accuracy in tasks like anomaly detection, search, and classification.',
       button: [{ text: 'Large Language Models for Malware Analysis ', link: 'https://bit-ml.github.io/blog/post/large-language-models-for-malware-analysis/' }],
-      img: '/_src/blocks/personalisation-block/ai-page/public/group-33689.png',
+      img: '/_src/blocks/personalisation-block/ai-page/public/group-33688.png',
     },
   ],
 
@@ -658,9 +658,9 @@ function renderResearchProgressSection() {
 function renderIntroductionSection() {
   const container = document.querySelector('.introduction-container');
 
-  let scamCardsHTML = '<div class="scam-cards-grid">';
+  let scamCardsHTML = '<div class="scam-cards-grid-container"><div class="scam-cards-grid">';
 
-  scamCardsHTML += '<div class="scam-column" style="width: 191.67px;">';
+  scamCardsHTML += '<div class="scam-column" style="width: 192px;">';
   const card1 = scamCards.find((c) => c.id === 1);
   scamCardsHTML += `
     <div class="scam-card scam-card-large">
@@ -699,7 +699,7 @@ function renderIntroductionSection() {
     </div>
     <div class="scam-column" style="display: flex; flex-direction: row; gap: 30px; height: 192px;">
       ${scamCards.filter((c) => c.id === 5 || c.id === 6).map((card) => `
-        <div class="scam-card scam-card-medium" style="width: 191.67px;">
+        <div class="scam-card scam-card-medium" style="width:192px;">
           <div class="scam-card-content">
             ${card.backgroundImage ? `<img class="scam-card-bg" style="${card.backgroundClass}" src="${card.backgroundImage}" alt="Background">` : ''}
             <div class="scam-icon-wrapper">
@@ -713,7 +713,7 @@ function renderIntroductionSection() {
   `;
   scamCardsHTML += '</div>';
 
-  scamCardsHTML += '<div class="scam-column" style="width: 191.67px;">';
+  scamCardsHTML += '<div class="scam-column" style="width: 192px;">';
   scamCardsHTML += `
     <div class="scam-column">
       ${scamCards.filter((c) => c.id === 7 || c.id === 8).map((card) => `
@@ -744,7 +744,7 @@ function renderIntroductionSection() {
   `;
   scamCardsHTML += '</div>';
 
-  scamCardsHTML += '</div>';
+  scamCardsHTML += '</div><div class="overlay scam-cards-grid"></div></div>';
 
   container.innerHTML = `
 
@@ -898,6 +898,49 @@ renderStatisticsSection();
 renderResearchSection();
 renderIntroductionSection();
 renderThreatsSection();
+// Select main grid container and overlay container
+const cardsContainer = document.querySelector(".scam-cards-grid-container");
+const overlay = document.querySelector(".overlay.scam-cards-grid");
+
+// Clear overlay
+overlay.innerHTML = "";
+
+// Clone entire grid container content into overlay
+const clonedGrid = cardsContainer.cloneNode(true); // deep clone everything
+clonedGrid.classList.add("overlay-grid"); // optional class for overlay styling
+overlay.appendChild(clonedGrid);
+
+// Collect all real cards and overlay cards for size sync
+const allRealCards = Array.from(cardsContainer.querySelectorAll(".scam-card"));
+const overlayCards = Array.from(clonedGrid.querySelectorAll(".scam-card"));
+
+// ResizeObserver to keep overlay cards aligned
+const resizeObserver = new ResizeObserver(() => {
+  allRealCards.forEach((card, index) => {
+    const overlayCard = overlayCards[index];
+    if (!overlayCard) return;
+
+    const rect = card.getBoundingClientRect();
+
+    // Only copy width and height, keep layout structure
+    overlayCard.style.width = `${rect.width}px`;
+    overlayCard.style.height = `${rect.height}px`;
+  });
+});
+
+
+allRealCards.forEach(card => resizeObserver.observe(card));
+
+// Pointer movement to apply glow/gradient effect
+document.addEventListener("pointermove", (e) => {
+  const rect = cardsContainer.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  overlay.style.setProperty("--x", `${x}px`);
+  overlay.style.setProperty("--y", `${y}px`);
+  overlay.style.setProperty("--opacity", 1);
+});
+
 renderInsightsSection();
 renderFooterSection();
 replaceHeader();
