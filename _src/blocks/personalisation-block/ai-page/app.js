@@ -196,14 +196,17 @@ const insightsData = [
   {
     image: '/_src/blocks/personalisation-block/ai-page/public/rectangle-19.png',
     title: 'They Wear Our Faces: How Scammers Are Using AI to Swindle American Families',
+    link: 'https://www.bitdefender.com/en-us/blog/hotforsecurity/they-wear-our-faces-how-scammers-are-using-ai-to-swindle-american-families',
   },
   {
     image: '/_src/blocks/personalisation-block/ai-page/public/rectangle-21.png',
     title: 'WhatsApp Shuts Down 6.8 Million Scam Accounts Linked to Worldwide Fraud Networks',
+    link: 'https://www.bitdefender.com/en-us/blog/hotforsecurity/whatsapp-shuts-down-6-8-million-scam-accounts-linked-to-worldwide-fraud-networks',
   },
   {
     image: '/_src/blocks/personalisation-block/ai-page/public/rectangle-23.png',
     title: "'Your Account Has Been Hacked': Crypto and Bank Phishing Scams Surge Across Australia",
+    link: 'https://www.bitdefender.com/en-us/blog/hotforsecurity/your-account-has-been-hacked-crypto-and-bank-phishing-scams-surge-across-australia',
   },
 ];
 
@@ -293,15 +296,15 @@ const researchSectionData = {
         },
         {
           text: 'DeCLIP: Decoding CLIP representations for deepfake localization ',
-          link: '#',
+          link: 'https://arxiv.org/abs/2409.08849',
         },
         {
           text: 'Towards generalisable and calibrated audio deepfake detection with self-supervised representations ',
-          link: '#',
+          link: 'https://arxiv.org/pdf/2309.05384',
         },
         {
           text: 'Weakly-supervised deepfake localization in diffusion-generated images ',
-          link: '#',
+          link: 'https://openaccess.thecvf.com/content/WACV2024/papers/Tantaru_Weakly-Supervised_Deepfak[…]lization_in_Diffusion-Generated_Images_WACV_2024_paper.pdf',
         },
       ],
       img: '/_src/blocks/personalisation-block/ai-page/public/group-33689.png',
@@ -642,7 +645,7 @@ function renderResearchProgressSection() {
             <div class="text-content">
               <h3 class="card-title">${card.title}</h3>
               <p class="card-description">${card.description}<p>
-              <div class="buttons-container">${card.button.map((button) => ` <a class="card-button" href = '${button.link}'> ${button.text} ${arrowSvg} </a>`).join('')}</div>
+              <div class="buttons-container">${card.button.map((button) => ` <a class="card-button" href = '${button.link}' target="_blank"> ${button.text} ${arrowSvg} </a>`).join('')}</div>
             </div>
             <img src="${card.img}">
           </div>
@@ -765,7 +768,7 @@ function renderThreatsSection() {
       <img src="${insight.image}" alt="${insight.title}">
       <div class="threat-card-content">
         <h3>${insight.title}</h3>
-        <a href="#">Read More →</a>
+        <a href="${insight.link ?? '#'}" target="_blank">Read More ${arrowSvg}</a>
       </div>
     </div>
   `).join('');
@@ -899,20 +902,20 @@ renderResearchSection();
 renderIntroductionSection();
 renderThreatsSection();
 // Select main grid container and overlay container
-const cardsContainer = document.querySelector(".scam-cards-grid-container");
-const overlay = document.querySelector(".overlay.scam-cards-grid");
+const cardsContainer = document.querySelector('.scam-cards-grid-container');
+const overlay = document.querySelector('.overlay.scam-cards-grid');
 
 // Clear overlay
-overlay.innerHTML = "";
+overlay.innerHTML = '';
 
 // Clone entire grid container content into overlay
 const clonedGrid = cardsContainer.cloneNode(true); // deep clone everything
-clonedGrid.classList.add("overlay-grid"); // optional class for overlay styling
+clonedGrid.classList.add('overlay-grid'); // optional class for overlay styling
 overlay.appendChild(clonedGrid);
 
 // Collect all real cards and overlay cards for size sync
-const allRealCards = Array.from(cardsContainer.querySelectorAll(".scam-card"));
-const overlayCards = Array.from(clonedGrid.querySelectorAll(".scam-card"));
+const allRealCards = Array.from(cardsContainer.querySelectorAll('.scam-card'));
+const overlayCards = Array.from(clonedGrid.querySelectorAll('.scam-card'));
 
 // ResizeObserver to keep overlay cards aligned
 const resizeObserver = new ResizeObserver(() => {
@@ -928,17 +931,16 @@ const resizeObserver = new ResizeObserver(() => {
   });
 });
 
-
-allRealCards.forEach(card => resizeObserver.observe(card));
+allRealCards.forEach((card) => resizeObserver.observe(card));
 
 // Pointer movement to apply glow/gradient effect
-document.addEventListener("pointermove", (e) => {
+document.addEventListener('pointermove', (e) => {
   const rect = cardsContainer.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
-  overlay.style.setProperty("--x", `${x}px`);
-  overlay.style.setProperty("--y", `${y}px`);
-  overlay.style.setProperty("--opacity", 1);
+  overlay.style.setProperty('--x', `${x}px`);
+  overlay.style.setProperty('--y', `${y}px`);
+  overlay.style.setProperty('--opacity', 1);
 });
 
 renderInsightsSection();
