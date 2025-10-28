@@ -102,6 +102,11 @@
   --cta-background-light-blue: var(--background-light-blue)
 }
 
+header,
+body > div:first-child {
+  min-height: 64px;
+}
+
 .w-full {
   width: 100%;
 }
@@ -1776,10 +1781,6 @@ main .section.blue p a.button.modal::after {
   }
 }
 
-header,
-body > div:first-child {
-  min-height: 64px;
-}
 
 @media (min-width: 1200px) {
   header, body > div:first-child {

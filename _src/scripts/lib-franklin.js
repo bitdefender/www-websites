@@ -402,6 +402,23 @@ export function updateSectionsStatus(main) {
 }
 
 /**
+ * Updates the status of a single section element.
+ * @param {Element} section The section element
+ */
+export function updateSectionStatus(section) {
+  const status = section.dataset.sectionStatus;
+  if (status !== 'loaded') {
+    const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
+    if (loadingBlock) {
+      section.dataset.sectionStatus = 'loading';
+    } else {
+      section.dataset.sectionStatus = 'loaded';
+      section.style.display = null;
+    }
+  }
+}
+
+/**
  * Decorates all blocks in a container element.
  * @param {Element} main The container element
  */
@@ -728,7 +745,20 @@ export function decorateButtons(element) {
  */
 export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector(lcpBlocks.join(','));
-  if (block) await loadBlock(block);
+  if (block) {
+    await loadBlock(block);
+    updateSectionStatus(block.closest('.section'));
+  }
+
+  // Load news bar if present above LCP block, making sure it does not affect CLS
+  // when loading after LCP
+  const newsBar = document.querySelector('.news-bar');
+  const isSibling = newsBar && newsBar.closest('.section').nextElementSibling === block?.closest('.section');
+  if (newsBar && isSibling) {
+    await loadBlock(newsBar);
+    updateSectionStatus(newsBar.closest('.section'));
+  }
+
   document.body.style.display = block;
   const lcpCandidate = document.querySelector('main img');
   await new Promise((resolve) => {
