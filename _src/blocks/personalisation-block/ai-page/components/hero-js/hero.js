@@ -410,9 +410,18 @@ function initDotHero(canvasId, sectionSelector) {
   };
 }
 
-const heroSection = document.querySelector('.hero-section');
-heroSection.style.visibility = 'visible';
+const button = document.createElement('button');
+button.innerText = 'Click Me';
+button.style.display = 'none';
+document.body.appendChild(button);
 
-requestAnimationFrame(() => {
+button.addEventListener('click', () => {
+  console.log('Initializing Hero Animation');
   initDotHero('heroCanvas', '.hero-section');
 });
+
+setTimeout(() => {
+  button.click();
+  document.querySelector('.hero-section').style.visibility = 'visible';
+  button.remove();
+}, 1000);
