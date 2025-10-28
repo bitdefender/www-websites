@@ -122,9 +122,8 @@
 main .hero-aem-container .hero-aem .breadcrumb {
   font-weight: var(--font-weight-bold);
   color: #dedede;
-  min-height: unset;
+  min-height: 48px;
   padding: 12px 0;
-  margin-bottom: 12px;
 }
 
 main .hero-aem-container .hero-aem .breadcrumb a {
@@ -709,6 +708,11 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
   .hero-aem-container .hero-aem p em a {
     width: 100%;
     margin-bottom: 0;
+  }
+
+  .hero-aem-container .hero-aem .hero-aem__card-text picture {
+      min-height: 40px;
+      display: inline-flex;
   }
 
   .hero-aem-container .hero-aem .hero-aem__card-text picture img {

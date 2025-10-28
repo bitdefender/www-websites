@@ -729,7 +729,7 @@ export function decorateButtons(element) {
 export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector(lcpBlocks.join(','));
   if (block) await loadBlock(block);
-  document.body.style.display = null;
+  document.body.style.display = block;
   const lcpCandidate = document.querySelector('main img');
   await new Promise((resolve) => {
     if (lcpCandidate && !lcpCandidate.complete) {
