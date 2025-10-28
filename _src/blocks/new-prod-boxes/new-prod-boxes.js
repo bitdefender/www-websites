@@ -7,6 +7,17 @@ import {
   wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
+/**
+ * @param {HTMLElement} planSwitcher
+ * @param {string} oldProdCode
+ * @returns {string} -> the product code after creating the plan switcher
+ * Used to handle cases when the default is not the first input in the plans switcher
+ */
+const updateProdCodePostPlansSwitcher = (planSwitcher, oldProdCode) => {
+  const defaultPlan = planSwitcher?.querySelector('input[checked] + label');
+  return defaultPlan ? defaultPlan.dataset.storeSetId : oldProdCode;
+};
+
 function setDiscountedPriceAttribute(type, prodName) {
   let priceAttribute = 'discounted||full';
 
@@ -30,7 +41,8 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div class="oldprice-container" data-store-render data-store-hide="!it.option.discount.value">
+        <div class="oldprice-container" data-store-render data-store-hide="!it.option.price.discounted">
+          <span>{{=it.option.price.discounted}}</span>
           <span class="prod-oldprice" data-store-render data-store-price="full"></span>
           <span class="prod-save">${saveText} <span data-store-render data-store-discount="percentage"></span> </span>
         </div>
@@ -59,7 +71,7 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
     let productName = prodsNames[idx];
     let prodUser = prodsUsers[idx];
     let prodYear = prodsYears[idx];
-    let checked = idx === 0 ? 'checked' : '';
+    let checked = '';
     let defaultCheck = radio.textContent.match(/\[checked\]/g);
     if (defaultCheck) {
       radioText = radioText.replace('[checked]', '');
@@ -74,6 +86,12 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
     }
   });
 
+  const checkedPlan = planSwitcher.querySelectorAll('input[checked]');
+  if (!checkedPlan && radioButtons.children) {
+    const defaultPlanSwitcher = planSwitcher.querySelectorAll('input');
+    defaultPlanSwitcher.setAttribute('checked', '');
+    defaultPlanSwitcher.checked = true;
+  }
   return planSwitcher;
 }
 
@@ -433,11 +451,13 @@ export default async function decorate(block) {
         demoBtn = `<span class="demoBtn" data-show="${selector}" onclick="document.querySelector('.${selector.replace(/\s+/g, '')}').style.display = 'block'">${btnText}</span>`;
       }
 
+      const updatedProdName = updateProdCodePostPlansSwitcher(planSwitcher, prodName);
+      const updatedAddonProdName = updateProdCodePostPlansSwitcher(planSwitcher2, addOnProdName);
       prodBox.innerHTML = `
           <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'}${greenTag.innerText.trim() === 'demo-box' ? ' demo-box' : ''} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
-          ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
+          ${productsAsList.some((prodEntry) => prodEntry.includes(updatedProdName)) ? `data-store-event="${storeEvent}"` : ''}>
           <bd-context>
-            <bd-product product-id="${prodName}">
+            <bd-product product-id="${updatedProdName}">
               <bd-option devices="${prodUsers}" subscription="${prodYears}">
                 <div class="inner_prod_box">
                     ${greenTag.innerText.trim() && greenTag.innerText.trim() !== 'demo-box' ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
@@ -474,11 +494,11 @@ export default async function decorate(block) {
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
       const blockChild = block.children[key];
-      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, perPrice);
+      let priceBox = await updateProductPrice(updatedProdName, saveText, buyLink.querySelector('a'), billedText, type, perPrice);
       blockChild.querySelector('.hero-aem__prices').appendChild(priceBox);
       let addOnPriceBox;
       if (addOn && addOnProducts) {
-        addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, perPrice);
+        addOnPriceBox = await updateProductPrice(updatedAddonProdName, saveText, buyLink2.querySelector('a'), billed2, type, perPrice);
         blockChild.querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
       }
 
@@ -505,7 +525,7 @@ export default async function decorate(block) {
         listItem.replaceWith(newLi);
 
         wrapChildrenWithStoreContext(checkmarkList, {
-          productId: addOnProdName,
+          productId: updatedAddonProdName,
           devices: addOnProdUsers,
           subscription: addOnProdYears,
           ignoreEventsParent: true,
@@ -518,14 +538,14 @@ export default async function decorate(block) {
 
         const addOnProductElement = blockChild.querySelector('.add-on-product');
         wrapChildrenWithStoreContext(addOnProductElement, {
-          productId: addOnProdName,
+          productId: updatedAddonProdName,
           devices: addOnProdUsers,
           subscription: addOnProdYears,
           ignoreEventsParent: true,
         });
 
         // TODO: add later after understanding how to add storeEvent
-        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(addOnProdName))) {
+        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(updatedAddonProdName))) {
           addOnProductElement?.setAttribute('data-store-event', storeEvent);
         }
 

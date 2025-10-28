@@ -1,5 +1,4 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { Constants } from '../../scripts/libs/constants.js';
 import {
   createNanoBlock,
   renderNanoBlocks,
@@ -38,17 +37,18 @@ function renderPlanSelector(plans, defaultSelection) {
   for (let idx = 0; idx < plans.length - 2; idx += 3) {
     const label = plans[idx];
     const liStoreParameters = {};
+    liStoreParameters['data-store-action'] = '';
 
     if (Number(defaultSelection)) {
-      liStoreParameters['data-store-click-set-devices'] = label;
+      liStoreParameters['data-store-set-devices'] = label;
     } else {
       const productCode = plans[idx + 1];
       const variation = plans[idx + 2];
-      liStoreParameters['data-store-click-set-product'] = '';
-      liStoreParameters['data-store-product-id'] = productCode;
-      liStoreParameters['data-store-department'] = 'consumer';
-      liStoreParameters['data-product-type'] = Constants.PRODUCT_ID_MAPPINGS[productCode].isMonthlyProduct ? 'monthly' : 'yearly';
-      liStoreParameters['data-store-product-option'] = variation;
+      const [devices, subscription] = variation.match(/\d+/g)?.map(Number) ?? [];
+
+      liStoreParameters['data-store-set-id'] = productCode;
+      liStoreParameters['data-store-set-devices'] = devices;
+      liStoreParameters['data-store-set-subscription'] = subscription;
     }
 
     const li = createTag(
@@ -155,7 +155,7 @@ function renderPrice(text = '', monthly = '', monthTranslation = 'mo') {
 function renderHighlightSavings(text = 'Save', percent = '') {
   const highlighSaving = document.createElement('span');
   highlighSaving.textContent = `${text} ${
-    percent.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
+    percent?.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
   }`;
 
   const root = createTag(
@@ -353,10 +353,9 @@ export default function decorate(block) {
   });
   blockWrapperSection.appendChild(wrapperSectionContext);
 
+  let plansCounter = 0;
   [...block.children].forEach((row, idxParent) => {
-    [...(row.children)].forEach((col, idxCol) => {
-      const plansIndex = idxParent * row.children.length + idxCol;
-
+    [...(row.children)].forEach((col) => {
       // set the store event on the component
       let storeEvent = 'main-product-loaded';
       if (checkIfNotProductPage()) {
@@ -364,19 +363,24 @@ export default function decorate(block) {
       }
 
       col.classList.add('product-card');
-      const [devices, subscription] = plans[plansIndex]?.defaultVariant?.split('-') || [];
-      wrapChildrenWithStoreContext(col, {
-        productId: plans[plansIndex].productCode,
-        devices,
-        subscription,
-        ignoreEventsParent: true,
-      });
+      const [devices, subscription] = plans[plansCounter]?.defaultVariant?.split('-') || [];
+      const productCode = plans[plansCounter]?.productCode;
+      if (productCode && devices && subscription) {
+        wrapChildrenWithStoreContext(col, {
+          productId: productCode,
+          devices,
+          subscription,
+          ignoreEventsParent: true,
+        });
+      }
 
       // TODO: add data-store-event
       col.setAttribute('data-store-event', storeEvent);
       const cardButtons = col.querySelectorAll('a');
+      let hasBuyButton = false;
       cardButtons?.forEach((button) => {
         if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
+          hasBuyButton = true;
           button.href = '#';
           button.setAttribute('data-store-buy-link', '');
           button.setAttribute('data-store-render', '');
@@ -384,6 +388,10 @@ export default function decorate(block) {
       });
       block.appendChild(col);
       renderNanoBlocks(col, undefined, idxParent);
+
+      if (hasBuyButton) {
+        plansCounter += 1;
+      }
     });
     row.remove();
   });
