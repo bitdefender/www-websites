@@ -731,5 +731,5 @@ initMobileDetector('mobile');
 initMobileDetector('tablet');
 initMobileDetector('desktop');
 
-if (!window.hlx.suppressLoadPage) loadPage();
+loadPage();
 window.AdobeDataLayerService = AdobeDataLayerService;
