@@ -151,7 +151,8 @@ export class AEMEmbed extends HTMLElement {
 
   async handleMain(htmlText, body, origin) {
     await this.pseudoDecorateMain(htmlText, body, origin);
-    await StoreResolver.resolve();
+
+    await StoreResolver.resolve(body);
     body.classList.add('appear');
   }
 
