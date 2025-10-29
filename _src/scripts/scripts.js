@@ -512,7 +512,7 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
-  doc.querySelector('header').style.height = '0px';
+  // doc.querySelector('header').style.height = '0px';
 
   if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
     // eslint-disable-next-line no-unused-vars
@@ -537,18 +537,18 @@ async function loadLazy(doc) {
     loadFooter(doc.querySelector('footer'));
   }
 
-  generateLDJsonSchema();
+  // generateLDJsonSchema();
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
 
   window.hlx.plugins.run('loadLazy');
 
-  const templateMetadata = getMetadata('template');
-  const hasTemplate = getMetadata('template') !== '';
-  if (hasTemplate) {
-    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => {});
-  }
+  // const templateMetadata = getMetadata('template');
+  // const hasTemplate = getMetadata('template') !== '';
+  // if (hasTemplate) {
+  //   loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
+  //     .catch(() => {});
+  // }
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
