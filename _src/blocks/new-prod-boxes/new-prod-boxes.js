@@ -184,7 +184,7 @@ export default async function decorate(block, onDataLoaded) {
 
   const {
     // eslint-disable-next-line no-unused-vars
-    titles, descriptions, products,
+    titles, descriptions, products, featured,
   } = structuredContent || block.closest('.section').dataset;
 
   const {
@@ -571,6 +571,10 @@ export default async function decorate(block, onDataLoaded) {
     for (const [idx, description] of descriptions.entries()) {
       descriptionElement[idx].innerText = description.trim();
     }
+  }
+
+  if (featured) {
+    block.querySelector(`[data-store-id="${featured}"]`).style.border = '12px solid #0072CE';
   }
 
   switchCheckbox.dispatchEvent(new Event('change'));
