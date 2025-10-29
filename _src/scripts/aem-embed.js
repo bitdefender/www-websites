@@ -4,6 +4,7 @@
  * https://www.hlx.live/developer/block-collection/TBD
  */
 
+import { StoreResolver } from './libs/store/index.js';
 // eslint-disable-next-line import/prefer-default-export
 export class AEMEmbed extends HTMLElement {
   constructor() {
@@ -150,6 +151,7 @@ export class AEMEmbed extends HTMLElement {
 
   async handleMain(htmlText, body, origin) {
     await this.pseudoDecorateMain(htmlText, body, origin);
+    await StoreResolver.resolve();
     body.classList.add('appear');
   }
 

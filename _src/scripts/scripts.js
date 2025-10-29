@@ -512,13 +512,13 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
-  // doc.querySelector('header').style.height = '0px';
+  doc.querySelector('header').style.height = '0px';
 
-  // if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
-  //   // eslint-disable-next-line no-unused-vars
-  //   doc.querySelector('header').style.height = 'initial';
-  //   loadHeader(doc.querySelector('header'));
-  // }
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+    // eslint-disable-next-line no-unused-vars
+    doc.querySelector('header').style.height = 'initial';
+    loadHeader(doc.querySelector('header'));
+  }
 
   // only call load Trackers here if there is no experiment on the page
   if (!getPageExperimentKey()) {
@@ -537,18 +537,18 @@ async function loadLazy(doc) {
     loadFooter(doc.querySelector('footer'));
   }
 
-  // generateLDJsonSchema();
+  generateLDJsonSchema();
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
 
   window.hlx.plugins.run('loadLazy');
 
-  // const templateMetadata = getMetadata('template');
-  // const hasTemplate = getMetadata('template') !== '';
-  // if (hasTemplate) {
-  //   loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-  //     .catch(() => {});
-  // }
+  const templateMetadata = getMetadata('template');
+  const hasTemplate = getMetadata('template') !== '';
+  if (hasTemplate) {
+    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
+      .catch(() => {});
+  }
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
@@ -731,5 +731,5 @@ initMobileDetector('mobile');
 initMobileDetector('tablet');
 initMobileDetector('desktop');
 
-loadPage();
+if (!window.hlx.suppressLoadPage) loadPage();
 window.AdobeDataLayerService = AdobeDataLayerService;
