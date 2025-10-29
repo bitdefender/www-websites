@@ -3,7 +3,7 @@
  * Include content from one Helix page in any other web surface.
  * https://www.hlx.live/developer/block-collection/TBD
  */
-
+import Launch from '@repobit/dex-launch';
 import { StoreResolver } from './libs/store/index.js';
 // eslint-disable-next-line import/prefer-default-export
 export class AEMEmbed extends HTMLElement {
@@ -151,7 +151,12 @@ export class AEMEmbed extends HTMLElement {
 
   async handleMain(htmlText, body, origin) {
     await this.pseudoDecorateMain(htmlText, body, origin);
-
+    try {
+      await Launch.load(page.environment);
+      onAdobeMcLoaded();
+    } catch {
+      target.abort();
+    }
     await StoreResolver.resolve(body);
     body.classList.add('appear');
   }
