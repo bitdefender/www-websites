@@ -4,6 +4,14 @@
  * https://www.hlx.live/developer/block-collection/TBD
  */
 import Launch from '@repobit/dex-launch';
+import {
+  PageLoadedEvent,
+  AdobeDataLayerService,
+  FormEvent,
+  WindowLoadStartedEvent,
+  WindowLoadedEvent,
+} from '@repobit/dex-data-layer';
+import { target, adobeMcAppendVisitorId } from './target.js';
 import { StoreResolver } from './libs/store/index.js';
 // eslint-disable-next-line import/prefer-default-export
 export class AEMEmbed extends HTMLElement {
