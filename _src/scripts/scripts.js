@@ -514,11 +514,11 @@ async function loadLazy(doc) {
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
   // doc.querySelector('header').style.height = '0px';
 
-  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
-    // eslint-disable-next-line no-unused-vars
-    doc.querySelector('header').style.height = 'initial';
-    loadHeader(doc.querySelector('header'));
-  }
+  // if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+  //   // eslint-disable-next-line no-unused-vars
+  //   doc.querySelector('header').style.height = 'initial';
+  //   loadHeader(doc.querySelector('header'));
+  // }
 
   // only call load Trackers here if there is no experiment on the page
   if (!getPageExperimentKey()) {
