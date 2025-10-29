@@ -335,6 +335,10 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
   background-color: #006DFF;
 }
 
+.hero-aem-container.bf25 .hero-aem p em a:active, .hero-aem-container.bf25 .hero-aem p em a:hover {
+  background-color: #F00;
+}
+
 .hero-aem-container .hero-aem p em a:active {
   background-color: #0D499B;
 }
