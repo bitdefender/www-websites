@@ -560,7 +560,7 @@ export default async function decorate(block, onDataLoaded) {
   if (titles) {
     const titleElement = [...block.querySelectorAll('h4')];
     // eslint-disable-next-line no-restricted-syntax
-    for (const [idx, title] of titles.split(',').entries()) {
+    for (const [idx, title] of titles.entries()) {
       titleElement[idx].innerText = title.trim();
     }
   }
@@ -568,7 +568,7 @@ export default async function decorate(block, onDataLoaded) {
   if (descriptions) {
     const descriptionElement = [...block.querySelectorAll('p.subtitle-2')];
     // eslint-disable-next-line no-restricted-syntax
-    for (const [idx, description] of descriptions.split(',').entries()) {
+    for (const [idx, description] of descriptions.entries()) {
       descriptionElement[idx].innerText = description.trim();
     }
   }
