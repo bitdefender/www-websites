@@ -73,7 +73,7 @@ export class AEMEmbed extends HTMLElement {
     const main = body.querySelector('main');
     const header = document.createElement('header');
     body.append(header);
-    const { buildBlock } = await import(`${origin}${window.hlx.codeBasePath}/scripts/aem.js`);
+    const { buildBlock } = await import(`${origin}${window.hlx.codeBasePath}/scripts/lib-franklin.js`);
     const block = buildBlock('header', '');
     header.append(block);
 
