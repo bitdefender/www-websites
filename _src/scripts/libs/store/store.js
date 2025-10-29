@@ -710,8 +710,8 @@ export class Product {
 
 class Vlaicu {
 
-	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
-	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
+	static defaultPromotionPath = "https://www.bitdefender.com/p-api/v1/products/{bundleId}/locale/{locale}";
+	static promotionPath = "https://www.bitdefender.com/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
 	/**
 	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
