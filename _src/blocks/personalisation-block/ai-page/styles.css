@@ -185,7 +185,7 @@
     display: flex;
     flex-direction: column;
     gap: 31px;
-    min-width: 50%;
+    min-width: 49.2%;
   }
 
   .ai-right {
@@ -422,6 +422,7 @@
     font-size: 14px;
     color: #000;
     line-height: normal;
+    margin-top: 0;
   }
 
   .timeline-description a {
@@ -527,11 +528,14 @@
 
       .progress-title {
         font-weight: 400;
-        margin-bottom: 60px;
         strong {
           color: var(--color-primary);
           font-weight: 400;
         }
+      }
+      
+      .ai-content {
+        margin-bottom: 60px;
       }
 
       .cards-container {

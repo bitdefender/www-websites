@@ -124,7 +124,7 @@ const timelineData = [
   },
   {
     year: '2025',
-    title: 'AI Voce Honeypots',
+    title: 'AI Voice Honeypots',
     description: 'Our synthetic personas engage fraudsters like real victims, identify manipulation techniques, and methodically extract indicators across the attack',
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/voice.svg',
@@ -308,7 +308,7 @@ const arrowSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="9" 
 </svg>`;
 
 const researchSectionData = {
-  title: '<strong>AI research</strong> that drives progress',
+  title: '<strong>Science</strong> that drives progress',
   cards: [
     {
       title: 'DeepFake Detection',
@@ -662,7 +662,18 @@ function renderResearchSection() {
 function renderResearchProgressSection() {
   const container = document.querySelector('.research-progress-container');
   container.innerHTML = `
-    <h2 class= "progress-title">${researchSectionData.title}</h2>
+    <div class="ai-content">
+      <div class="ai-left">
+        <p class="ai-subtitle">Redefining cybersecurity through AI research</p>
+        <h2 class="ai-description">${researchSectionData.title}</h2>
+      </div>
+      <div class="ai-right">
+        <p class="ai-text">
+            We don’t just use AI. We shape its future.<br>
+            With over 70 academic papers published and 50+ researchers teaching at top universities, Bitdefender sets new standards in integrating AI in cybersecurity. 
+        </p>
+      </div>
+    </div> 
     <div class="cards-container">
       ${researchSectionData.cards.map((card) => `
           <div class="research-card">
