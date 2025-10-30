@@ -24,6 +24,12 @@
   float: left;
 }
 
+.ribbon-container.bf25 .block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ribbon-container.bf25 img {
   width: 20px;
 }
