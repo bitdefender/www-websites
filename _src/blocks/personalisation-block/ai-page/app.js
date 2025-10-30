@@ -128,7 +128,7 @@ const timelineData = [
     description: 'Our synthetic personas engage fraudsters like real victims, identify manipulation techniques, and methodically extract indicators across the attack',
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/voice.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/voice.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
 ];
 

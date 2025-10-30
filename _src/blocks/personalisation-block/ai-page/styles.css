@@ -372,29 +372,37 @@
     margin-bottom: 20px;
     position: relative;
 
-    &::before {
+    &::before, &::after {
       content: "";
       display: block;
-      width: 120px;
       height: 1px;
       border: none;
-      border-top: 2px dotted #006EFF;
+      border-top: 1px dotted #006EFF;
       margin: 24px 0;
       position: absolute;
       align-self: center;
-      left: -1000px;
-      min-width: 5320px;
       z-index: -2;
+    }
+
+    &::before {
+      left: -1320px;
+      min-width: 1320px;
+    }
+
+    &::after {
+      min-width: 1320px;
+      right: -2500px;
     }
   }
   .timeline-year::after {
     content: "";
-    position: relative;
+    position: absolute;
     left: 0;
     min-width: 100%;
-    height: 2px;
+    height: 1px;
     background-color: #007bff; 
-    z-index: -1;         
+    z-index: -1;
+    align-self: center;
   }
 
   .timeline-year:last-of-type::after {
@@ -436,6 +444,7 @@
     font-weight: 600;
     font-size: 14px;
     color: white;
+    position: relative;
   }
 
   .timeline-gradient {
