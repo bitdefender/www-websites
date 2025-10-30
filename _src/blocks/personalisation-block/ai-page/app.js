@@ -4,7 +4,7 @@ const callToActionData = [
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/shield-check-star.svg',
     title: 'Redefining Cybersecurity with<br>Agentic AI',
-    description: 'By integrating agentic AI into traditional cybersecurity layers, we enhance detection, adaptability, and real-time response — defining a new standard in online scam prevention.',
+    description: 'By integrating agentic AI in cybersecurity we enhance detection, adaptability, and real-time response, thus defining a new standard in online scam prevention.',
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/rhombus-stack.svg',
@@ -18,7 +18,7 @@ const callToActionData = [
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/asset-1-1.svg',
-    title: 'Going Beyond Traditional<br>Scans',
+    title: 'Going Towards Human-Centric Cybersecurity',
     description: 'Enhanced with AI, cybersecurity now provides human-centred, context-aware protection that anticipates user needs and supports them through every stage of a scam attempt.',
   },
   {
@@ -29,7 +29,7 @@ const callToActionData = [
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/untitled-3-01-01-1.svg',
     title: 'Exploring the Future of<br>AI-Driven Cybersecurity',
-    description: 'Deepfakes are the new battleground in cybersecurity — a rapidly growing threat driving the next wave of adaptive, AI-powered defense innovation.',
+    description: 'Deepfakes are the new battleground in cybersecurity, a rapidly growing threat driving the next wave of adaptive, AI-powered defense innovation.',
   },
 ];
 
@@ -56,7 +56,7 @@ const timelineData = [
     description: 'The first automated stream detection based on ML technologies.',
     position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/vector-1.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-7.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
   {
     year: '2014',
@@ -64,47 +64,71 @@ const timelineData = [
     description: 'The first use of deep learning AI algorithms to increase detection rates.',
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/first.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-4.svg',
-  },
-  {
-    year: '2017',
-    title: 'First tunable machine learning',
-    description: 'Bitdefender HyperDetect enables organizations to fine-tune ML detection and stop advanced attacks at pre-execution.',
-    position: 'top',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/tunable.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-7.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
   {
     year: '2017',
     title: 'Fileless Attack Protection',
     description: 'Using custom ML models to perform feature extraction from command lines and PowerShell scripts stops file-less malware. <a href="https://ieeexplore.ieee.org/abstract/document/9049836" target="_blank" rel="noopener noreferrer"><span style="text-decoration: underline;">This research</span></a> earned us the "Key Innovators" title by the European Commission.',
-    position: 'bottom',
+    position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/file-attack.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-6.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
   {
-    year: '2020',
-    title: 'Anomaly Detection in EDR',
-    description: 'Anomaly Defense leverages AI technologies to build behaviour baselines and spot anomalies with minimum noise.',
-    position: 'top',
+    year: '2021',
+    title: 'Deep learning ML models for malicious email detection',
+    description: '',
+    position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/anomaly.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+  },
+  {
+    year: '2021',
+    title: 'Prediction neural networks for malicious app detection',
+    description: '',
+    position: 'top',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/xdr.svg',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
   {
     year: '2022',
-    title: 'Native XDR with Incident Advisor',
-    description: 'Bitdefender Native XDR uses ML to automatically correlate and consolidate threat signals across endpoints, identities, apps, network, clouds, mobile devices and beyond.',
+    title: 'Extended ML models for scam types classification',
+    description: '',
     position: 'bottom',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/Frame.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+  },
+  {
+    year: '2023',
+    title: 'AI App anomaly detection',
+    description: 'A cloud-based deep learning system for detecting anomalous and malicious application behavior',
+    position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/xdr.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+  },
+  {
+    year: '2023',
+    title: 'AI Assisted Scam Detection',
+    description: 'By leveraging Bitdefender’s threat detection technologies and augmenting their power with the versatility and comprehension capabilities of AI agents we were able to research a new approach to Online Scams prevention',
+    position: 'bottom',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/Frame.svg',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
   {
     year: '2024',
-    title: 'GravityZone AI Assistant',
-    description: 'The Bitdefender GravityZone AI Assistant leverages Large Language Models (LLMs) to streamline and simplify threat investigations by answering analysts’ questions instantly.',
+    title: 'Threat Wave Clustering',
+    description: 'Deep learning models that cluster threat detections with similar indicators of compromise, revealing how scams appear and spread.',
     position: 'top',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/xdr.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+  },
+  {
+    year: '2025',
+    title: 'AI Voce Honeypots',
+    description: 'Our synthetic personas engage fraudsters like real victims, identify manipulation techniques, and methodically extract indicators across the attack',
+    position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/Frame.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-7.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
 ];
 
@@ -214,7 +238,7 @@ const responsibleAIData = [
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/shield-chat-bubble-check.svg',
     title: 'Transparency',
-    description: 'We provide clear information about how our AI makes security decisions and what data it uses, balancing technical transparency with usability.',
+    description: 'We provide clear information about how our AI enhances security decisions and what data it uses, balancing technical transparency with usability.',
     component: '/_src/blocks/personalisation-block/ai-page/public/component-2.svg',
   },
   {
@@ -284,14 +308,14 @@ const arrowSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="9" 
 </svg>`;
 
 const researchSectionData = {
-  title: '<strong>Research</strong> that drives progress',
+  title: '<strong>AI research</strong> that drives progress',
   cards: [
     {
       title: 'DeepFake Detection',
       description: 'A recognised and award-winning technology focused on identifying and analysing manipulated media through advanced machine learning.',
       button: [
         {
-          text: 'Circumventing shortcuts in audio-visual deepfake detection datasets with unsupervised learning Read ',
+          text: 'Circumventing shortcuts in audio-visual deepfake detection datasets with unsupervised learning ',
           link: 'https://arxiv.org/abs/2412.00175',
         },
         {
@@ -429,16 +453,16 @@ function initTimelineCarousel() {
   const prevBtn = container.querySelector('.timeline-button.left');
   const nextBtn = container.querySelector('.timeline-button.right');
   const items = Array.from(container.querySelectorAll('.timeline-box.populated'));
+  const upItems = Array.from(container.querySelectorAll('.timeline-content-up .timeline-box'));
   if (!track || !prevBtn || !nextBtn || items.length === 0) return;
 
-  let currentIndex = 5;
-  const itemsToShow = 3; // number of visible boxes at a time
+  let currentIndex = 6;
+  const itemsToShow = 5; // number of visible boxes at a time
   const maxIndex = Math.max(0, items.length - itemsToShow - 1);
 
   // Amount to scroll per click (item width + gap)
   function getScrollAmount() {
-    const item = items[0];
-    const itemWidth = item.offsetWidth;
+    const itemWidth = (upItems[0].offsetWidth + upItems[1].offsetWidth) / 2;
     const gap = parseFloat(window.getComputedStyle(track).gap) || 20;
     return itemWidth + gap;
   }
@@ -510,12 +534,12 @@ function renderTimelineSection() {
     const upBox = document.createElement('div');
     upBox.className = 'timeline-box';
     if (index % 2 === 0) {
-      upBox.classList.add('populated');
       if (item.icon) {
         const iconEl = document.createElement('img');
         iconEl.className = 'timeline-icon';
         iconEl.src = item.icon;
         upBox.appendChild(iconEl);
+        upBox.classList.add('populated');
       }
       upBox.insertAdjacentHTML('beforeend', `
         <div class="timeline-box-content">
@@ -539,11 +563,11 @@ function renderTimelineSection() {
     const downBox = document.createElement('div');
     downBox.className = 'timeline-box';
     if (index % 2 !== 0) {
-      upBox.classList.add('populated');
       if (item.icon) {
         const iconEl = document.createElement('img');
         iconEl.className = 'timeline-icon';
         iconEl.src = item.icon;
+        downBox.classList.add('populated');
         downBox.appendChild(iconEl);
       }
       downBox.insertAdjacentHTML('beforeend', `
@@ -615,7 +639,7 @@ function renderResearchSection() {
 
   const leftHTML = `
     <div class="research-left">
-      <h2>In cybersecurity, AI isn't just the future — it's the fight happening now.</h2>
+      <h2>In cybersecurity, AI isn't the future.<br>It's the fight happening today.</h2>
       <p>The growing use of AI has transformed both sides of the cybersecurity battlefield — while criminals exploit it to enhance deception and scale their attacks, defenders harness the same technology to anticipate, detect, and neutralize those threats faster than ever before.</p>
     </div>
   `;
