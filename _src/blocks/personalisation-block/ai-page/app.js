@@ -40,7 +40,7 @@ const timelineData = [
     description: 'Bitdefender leveraged ML to improve detection of new or unknown malware.',
     position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/vector.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
   {
     year: '2011',
@@ -48,7 +48,7 @@ const timelineData = [
     description: 'The noise detection algorithm helped identify misclassified samples.',
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/pentagon-curved-line.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
   {
     year: '2013',
@@ -56,7 +56,7 @@ const timelineData = [
     description: 'The first automated stream detection based on ML technologies.',
     position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/vector-1.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
   {
     year: '2014',
@@ -64,7 +64,7 @@ const timelineData = [
     description: 'The first use of deep learning AI algorithms to increase detection rates.',
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/first.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
   {
     year: '2017',
@@ -72,63 +72,63 @@ const timelineData = [
     description: 'Using custom ML models to perform feature extraction from command lines and PowerShell scripts stops file-less malware. <a href="https://ieeexplore.ieee.org/abstract/document/9049836" target="_blank" rel="noopener noreferrer"><span style="text-decoration: underline;">This research</span></a> earned us the "Key Innovators" title by the European Commission.',
     position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/file-attack.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
   {
     year: '2021',
     title: 'Deep learning ML models for malicious email detection',
     description: '',
     position: 'bottom',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/anomaly.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/email.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
   {
     year: '2021',
     title: 'Prediction neural networks for malicious app detection',
     description: '',
     position: 'top',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/xdr.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/anomaly.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
   {
     year: '2022',
     title: 'Extended ML models for scam types classification',
     description: '',
     position: 'bottom',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/Frame.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/classification.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
   {
     year: '2023',
     title: 'AI App anomaly detection',
     description: 'A cloud-based deep learning system for detecting anomalous and malicious application behavior',
     position: 'top',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/xdr.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/app.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
   {
     year: '2023',
     title: 'AI Assisted Scam Detection',
     description: 'By leveraging Bitdefender’s threat detection technologies and augmenting their power with the versatility and comprehension capabilities of AI agents we were able to research a new approach to Online Scams prevention',
     position: 'bottom',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/Frame.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/chat-bubble-hook.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
   },
   {
     year: '2024',
     title: 'Threat Wave Clustering',
     description: 'Deep learning models that cluster threat detections with similar indicators of compromise, revealing how scams appear and spread.',
     position: 'top',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/xdr.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/round-download.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
   },
   {
     year: '2025',
     title: 'AI Voce Honeypots',
     description: 'Our synthetic personas engage fraudsters like real victims, identify manipulation techniques, and methodically extract indicators across the attack',
     position: 'bottom',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/Frame.svg',
-    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/voice.svg',
+    arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/voice.svg',
   },
 ];
 
@@ -456,9 +456,9 @@ function initTimelineCarousel() {
   const upItems = Array.from(container.querySelectorAll('.timeline-content-up .timeline-box'));
   if (!track || !prevBtn || !nextBtn || items.length === 0) return;
 
-  let currentIndex = 6;
+  let currentIndex = 5;
   const itemsToShow = 5; // number of visible boxes at a time
-  const maxIndex = Math.max(0, items.length - itemsToShow - 1);
+  const maxIndex = Math.max(0, items.length - itemsToShow - 2);
 
   // Amount to scroll per click (item width + gap)
   function getScrollAmount() {
@@ -533,7 +533,7 @@ function renderTimelineSection() {
     // --- Row 1: Top Content (even index) ---
     const upBox = document.createElement('div');
     upBox.className = 'timeline-box';
-    if (index % 2 === 0) {
+    if (index % 2 !== 0) {
       if (item.icon) {
         const iconEl = document.createElement('img');
         iconEl.className = 'timeline-icon';
@@ -562,7 +562,7 @@ function renderTimelineSection() {
     // --- Row 3: Bottom Content (odd index) ---
     const downBox = document.createElement('div');
     downBox.className = 'timeline-box';
-    if (index % 2 !== 0) {
+    if (index % 2 === 0) {
       if (item.icon) {
         const iconEl = document.createElement('img');
         iconEl.className = 'timeline-icon';

@@ -292,6 +292,11 @@
     overflow: visible;
   }
 
+  .timeline-icon {
+    width: 32px;
+    height: 32px;
+  }
+
   .timeline-track {
     overflow: visible;
   }
