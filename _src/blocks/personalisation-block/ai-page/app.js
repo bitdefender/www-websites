@@ -7,19 +7,19 @@ const callToActionData = [
     description: 'By integrating agentic AI in cybersecurity we enhance detection, adaptability, and real-time response, thus defining a new standard in online scam prevention.',
   },
   {
-    icon: '/_src/blocks/personalisation-block/ai-page/public/rhombus-stack.svg',
-    title: 'Reconstructing the Defence<br>Narrative',
-    description: 'Combining machine learning and behavioral analysis simplifies the detection of recurring scam patterns, blocks threats in real time, and anticipates future tactics.',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/asset-1-1.svg',
+    title: 'Going Towards Human-Centric Cybersecurity',
+    description: 'Enhanced with AI, cybersecurity now provides human-centred, context-aware protection that anticipates user needs and supports them through every stage of a scam attempt.',
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/map.svg',
     title: 'Mapping Emerging Threat<br>Landscapes',
-    description: 'Machine learning detects, analyses, and blocks mobile scam campaigns before they spread, protecting users across regions.',
+    description: 'AI detects, analyses, and blocks mobile scam campaigns before they spread, protecting users across regions.',
   },
   {
-    icon: '/_src/blocks/personalisation-block/ai-page/public/asset-1-1.svg',
-    title: 'Going Towards Human-Centric Cybersecurity',
-    description: 'Enhanced with AI, cybersecurity now provides human-centred, context-aware protection that anticipates user needs and supports them through every stage of a scam attempt.',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/rhombus-stack.svg',
+    title: 'Anticipating the Behaviour of Tommorow’s Attacks',
+    description: 'Combining machine learning and behavioral analysis simplifies the detection of recurring scam patterns, blocks threats in real time, and anticipates future tactics.',
   },
   {
     icon: '/_src/blocks/personalisation-block/ai-page/public/untitled-2-01-1.svg',
@@ -76,8 +76,8 @@ const timelineData = [
   },
   {
     year: '2021',
-    title: 'Deep learning ML models for malicious email detection',
-    description: '',
+    title: 'AI Models for Malicious Email Detection',
+    description: 'Employs Deep Learning ML architectures to detect phishing, fraud, and malware-laced emails by analyzing heuristics, email components, embedded content, patterns, metadata and more',
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/email.svg',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
@@ -85,7 +85,7 @@ const timelineData = [
   {
     year: '2021',
     title: 'Prediction neural networks for malicious app detection',
-    description: '',
+    description: 'Utilizes layered deep learning models trained on extensive behavioral and static app features to predict malicious intent before execution',
     position: 'top',
     icon: '/_src/blocks/personalisation-block/ai-page/public/anomaly.svg',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-2.svg',
@@ -93,7 +93,7 @@ const timelineData = [
   {
     year: '2022',
     title: 'Extended ML models for scam types classification',
-    description: '',
+    description: 'Enhancing scam detection accuracy by leveraging advanced machine learning architectures',
     position: 'bottom',
     icon: '/_src/blocks/personalisation-block/ai-page/public/classification.svg',
     arrowSrc: '/_src/blocks/personalisation-block/ai-page/public/arrow-1.svg',
@@ -639,7 +639,7 @@ function renderResearchSection() {
 
   const leftHTML = `
     <div class="research-left">
-      <h2>In the world of cybersecurity, AI isn't the future.<br>It's <strong>the fight</strong> happening today.</h2>
+      <h2>In cybersecurity, <br>AI is not the future.<br>It's the reality of <strong>today</strong>.</h2>
       <p>The growing use of AI has transformed both sides of the cybersecurity battlefield; while criminals exploit it to enhance deception and scale their attacks, defenders harness the same technology to anticipate, detect, and neutralize those threats faster than ever before.</p>
     </div>
   `;
@@ -669,7 +669,7 @@ function renderResearchProgressSection() {
       </div>
       <div class="ai-right">
         <p class="ai-text">
-            We don’t just use AI. We shape its future.<br>
+            We don’t just use AI.<br>
             With over 70 academic papers published and 50+ researchers teaching at top universities, Bitdefender sets new standards in integrating AI in cybersecurity. 
         </p>
       </div>
@@ -810,7 +810,7 @@ function renderThreatsSection() {
 
   container.innerHTML = `
     <h2>Latest AI Insights</h2>
-    <p>Stay informed with the latest research, trends, and breakthroughs in AI security</p>
+    <p>Trends, news and breakthroughs in the world of cybersecurity</p>
     <div class="threats-grid">${gridHTML}</div>
   `;
 }
@@ -837,7 +837,10 @@ function renderInsightsSection() {
 
   container.innerHTML = `
     <h2>Responsible AI. Protected Future.</h2>
-    <p>We believe powerful AI should be paired with strong ethical principles. Our commitment to responsible AI ensures your security never comes at the cost of your privacy or digital rights</p>
+    <p>
+      We believe powerful AI should be paired with strong ethical principles. Our commitment to responsible AI ensures
+      security never comes at the cost of privacy or digital rights
+    </p>
     <div class="insights-grid">${gridHTML}</div>
     <div class="partner-logos">${logosHTML}</div>
   `;
@@ -978,8 +981,19 @@ document.addEventListener('pointermove', (e) => {
   overlay.style.setProperty('--opacity', 1);
 });
 
+function addHeaderAnimation() {
+  const header = document.querySelector('header');
+  header.querySelectorAll('li').forEach((li) => {
+    li.addEventListener('click', () => {
+      header.querySelector('li.active').classList.remove('active');
+      li.classList.add('active');
+    });
+  });
+}
+
 renderInsightsSection();
 renderFooterSection();
 replaceHeader();
+addHeaderAnimation();
 initScrollAnimations();
 // });
