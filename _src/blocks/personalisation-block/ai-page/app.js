@@ -157,7 +157,7 @@ const scamCards = [
   {
     id: 2,
     type: 'small',
-    icon: '/_src/blocks/personalisation-block/ai-page/public/chat-bubble-hook.svg',
+    icon: '/_src/blocks/personalisation-block/ai-page/public/chat-bubble-hook-white.svg',
     title: 'Deepfake Scams',
   },
   {
