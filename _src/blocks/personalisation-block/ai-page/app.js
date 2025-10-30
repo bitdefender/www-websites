@@ -639,8 +639,8 @@ function renderResearchSection() {
 
   const leftHTML = `
     <div class="research-left">
-      <h2>In cybersecurity, AI isn't the future.<br>It's the fight happening today.</h2>
-      <p>The growing use of AI has transformed both sides of the cybersecurity battlefield — while criminals exploit it to enhance deception and scale their attacks, defenders harness the same technology to anticipate, detect, and neutralize those threats faster than ever before.</p>
+      <h2>In the world of cybersecurity, AI isn't the future.<br>It's <strong>the fight</strong> happening today.</h2>
+      <p>The growing use of AI has transformed both sides of the cybersecurity battlefield; while criminals exploit it to enhance deception and scale their attacks, defenders harness the same technology to anticipate, detect, and neutralize those threats faster than ever before.</p>
     </div>
   `;
 
