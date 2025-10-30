@@ -709,7 +709,7 @@ main .hero-aem-container.bf25 .hero-aem .breadcrumb *, main .hero-aem-container.
   border-radius: 20px;
 }
 
-.hero-aem-container.bf25 .hero-aem .hero-aem__card__desktop h1, .hero-aem-container .hero-aem p em a {
+.hero-aem-container.bf25 .hero-aem .hero-aem__card__desktop h1, .hero-aem-container.bf25 .hero-aem .hero-aem__card__desktop h2, .hero-aem-container .hero-aem p em a {
   color: white;
 }
 
