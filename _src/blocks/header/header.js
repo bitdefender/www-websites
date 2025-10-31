@@ -479,7 +479,7 @@ async function runDefaultHeaderLogic(block) {
       const websiteDomain = getDomain();
       let aemFetchDomain;
 
-      if (websiteDomain === 'en-us') {
+      if (websiteDomain === 'en-us' || websiteDomain === 'drafts') {
         aemFetchDomain = 'en';
       } else if (websiteDomain.includes('-global')) {
         const [singleDomain] = websiteDomain.split('-');
