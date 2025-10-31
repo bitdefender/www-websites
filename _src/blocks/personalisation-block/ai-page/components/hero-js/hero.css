@@ -24,7 +24,7 @@ html, body {
 }
 
 /* Hero Section */
-.hero-section {
+.ai-page .hero-section {
   min-height: 420px;
   overflow: hidden;
   display: flex;
@@ -32,6 +32,8 @@ html, body {
   justify-content: center;
   animation: heroFadeIn 1s ease-out;
   visibility: hidden;
+  margin-bottom: -94px;
+  margin-top: 32px;
 }
 
 @keyframes heroFadeIn {
@@ -103,7 +105,7 @@ html, body {
   opacity: 0;
   animation: subtitleFadeIn 1s ease-out 0.6s both;
   position: absolute;
-  top: 2rem;
+  top: 3.9rem;
   right: 0;
   text-align: right;
   z-index: -999;

@@ -475,6 +475,7 @@ function initTimelineCarousel() {
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= maxIndex;
   }
+  track.addEventListener('resize', updateTimeline());
 
   prevBtn.addEventListener('click', () => {
     if (currentIndex > 0) currentIndex -= 1;
