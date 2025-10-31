@@ -207,7 +207,7 @@ export default async function decorate(block, options) {
     circleDiscountBox.className = 'circleDiscount';
     circleDiscountBox.innerHTML = `<p>${circleDiscount.replace(
       /0\s*%/g,
-      '<span data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>'
+      '<span data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>',
     )}</p>`;
     block.querySelector('.col-md-6:last-child').appendChild(circleDiscountBox);
   }
@@ -217,7 +217,7 @@ export default async function decorate(block, options) {
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
   if (product) {
-    const [prodName, prodUsers, prodYears,] = product.split('/');
+    const [prodName, prodUsers, prodYears] = product.split('/');
     cardElementContainer.setAttribute('data-store-context', '');
     cardElementContainer.setAttribute('data-store-id', prodName);
     cardElementContainer.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
