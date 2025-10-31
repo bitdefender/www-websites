@@ -5,6 +5,7 @@ import {
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
+  ProductLoadedEvent,
 } from '@repobit/dex-data-layer';
 import {
   registerActionNodes,
@@ -691,12 +692,14 @@ async function loadPage() {
    * @type {import('@repobit/dex-store-elements').RootNode}
    */
   const storeRoot = document.createElement('bd-root');
+  storeRoot.dataLayer = ({ option, event }) => {
+    AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
+  };
   document.body.replaceChild(storeRoot, main);
   storeRoot.appendChild(main);
   storeRoot.store = store;
 
   registerContextNodes();
-  await storeRoot.updateComplete;
 
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
@@ -704,6 +707,7 @@ async function loadPage() {
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
 
+  await storeRoot.updateComplete;
   registerActionNodes(main);
   registerRenderNodes(main);
 
@@ -723,19 +727,6 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
-  // eslint-disable-next-line import/no-unresolved
-  // const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
-  //   .then((FingerprintJS) => FingerprintJS.load({
-  //     region: 'eu',
-  //   }));
-
-  // Get the visitorId when you need it.
-  // await fpPromise
-  //   .then((fp) => fp.get())
-  //   .then((result) => {
-  //     const { visitorId } = result;
-  //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
-  //   });
   await target.sendCdpData();
 
   if (!window.BD.loginAttempted) {
@@ -750,3 +741,4 @@ initMobileDetector('tablet');
 initMobileDetector('desktop');
 
 loadPage();
+window.AdobeDataLayerService = AdobeDataLayerService;

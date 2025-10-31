@@ -6,6 +6,7 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   getBrowserName,
+  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, mobileHide, block) {
@@ -84,15 +85,14 @@ createNanoBlock('discount', (code, label = '{label}') => {
   const [product, unit, year] = code.split('/');
 
   const root = document.createElement('bd-product');
-  root.classList.add('discount-bubble');
-  root.classList.add('await-loader');
-
   // Add the required attributes to the root element
   root.setAttribute('product-id', product);
   root.innerHTML = `
     <bd-option devices="${unit}" subscription="${year}">
-      <div data-store-render data-store-discount="percentage" class="discount-bubble-0">--%</div>
-      <span class="discount-bubble-1">${label}</span>
+      <div data-store-render data-store-hide="!it.option.discount.value" class="discount-bubble await-loader">
+        <div data-store-render data-store-discount="percentage" class="discount-bubble-0">--%</div>
+        <span class="discount-bubble-1">${label}</span>
+      </div>
     </bd-option>
   `;
 
@@ -238,11 +238,15 @@ export default function decorate(block) {
   // make discount dynamic
   if (percentProduct) {
     const [alias, variant] = percentProduct.split(',');
-    block.setAttribute('data-store-context', '');
-    block.setAttribute('data-store-text-variable', '');
-    block.setAttribute('data-store-id', alias);
-    block.setAttribute('data-store-department', 'consumer');
-    block.setAttribute('data-store-option', variant);
+    const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
+
+    // TODO: add data-store-event
+    wrapChildrenWithStoreContext(block, {
+      productId: alias,
+      devices,
+      subscription,
+      ignoreEventsParent: true,
+    });
     block.querySelector('div').classList.add('await-loader');
   }
 

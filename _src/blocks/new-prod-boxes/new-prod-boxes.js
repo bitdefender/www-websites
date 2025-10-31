@@ -41,8 +41,7 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div class="oldprice-container" data-store-render data-store-hide="!it.option.price.discounted">
-          <span>{{=it.option.price.discounted}}</span>
+        <div class="oldprice-container" data-store-render data-store-hide="!it.option.discount.value">
           <span class="prod-oldprice" data-store-render data-store-price="full"></span>
           <span class="prod-save">${saveText} <span data-store-render data-store-discount="percentage"></span> </span>
         </div>
@@ -223,7 +222,7 @@ const configureAddOnListPrices = (listElement, saveText = 'Save ') => {
 
   setAttributes(listElement.querySelector('.add-on-oldprice'), {
     'data-store-price': 'full',
-    'data-store-hide': '!it.option.price.discounted',
+    'data-store-hide': '!it.option.discount.value',
     'data-store-render': '',
   });
 
@@ -231,7 +230,7 @@ const configureAddOnListPrices = (listElement, saveText = 'Save ') => {
   percentSaveElement.textContent = `${saveText}{{=it.option.discount.percentage}}`;
 
   setAttributes(percentSaveElement, {
-    'data-store-hide': '!it.option.price.discounted',
+    'data-store-hide': '!it.option.discount.value',
   });
 };
 
@@ -250,7 +249,7 @@ const configureAddOnProductPrices = (addOnProductElement) => {
 
   const addOnOldPrice = addOnProductElement.querySelector('.prod-oldprice');
   if (addOnOldPrice?.parentElement) {
-    addOnOldPrice.parentElement.setAttribute('data-store-hide', '!it.option.price.discounted');
+    addOnOldPrice.parentElement.setAttribute('data-store-hide', '!it.option.discount.value');
   }
 
   setAttributes(addOnOldPrice, {
@@ -427,9 +426,9 @@ export default async function decorate(block) {
       });
 
       // set the store event on the component
-      let storeEvent = 'main-product-loaded';
+      let storeEvent = 'info';
       if (checkIfNotProductPage()) {
-        storeEvent = 'product-loaded';
+        storeEvent = 'all';
       }
       const prodBox = document.createElement('div');
 
@@ -454,11 +453,11 @@ export default async function decorate(block) {
       const updatedProdName = updateProdCodePostPlansSwitcher(planSwitcher, prodName);
       const updatedAddonProdName = updateProdCodePostPlansSwitcher(planSwitcher2, addOnProdName);
       prodBox.innerHTML = `
-          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'}${greenTag.innerText.trim() === 'demo-box' ? ' demo-box' : ''} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
-          ${productsAsList.some((prodEntry) => prodEntry.includes(updatedProdName)) ? `data-store-event="${storeEvent}"` : ''}>
+          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'}${greenTag.innerText.trim() === 'demo-box' ? ' demo-box' : ''} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
           <bd-context>
             <bd-product product-id="${updatedProdName}">
-              <bd-option devices="${prodUsers}" subscription="${prodYears}">
+              <bd-option devices="${prodUsers}" subscription="${prodYears}"
+                ${productsAsList.some((prodEntry) => prodEntry.includes(updatedProdName)) ? `data-layer-event="${storeEvent}"` : ''}>
                 <div class="inner_prod_box">
                     ${greenTag.innerText.trim() && greenTag.innerText.trim() !== 'demo-box' ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
                     ${titleHTML}
@@ -536,18 +535,20 @@ export default async function decorate(block) {
           addOnPriceBox.querySelector('.prod-save').textContent,
         );
 
+        // TODO: add later after understanding how to add storeEvent
+        let addOnStoreEvent = '';
+        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(updatedAddonProdName))) {
+          addOnStoreEvent = storeEvent;
+        }
+
         const addOnProductElement = blockChild.querySelector('.add-on-product');
         wrapChildrenWithStoreContext(addOnProductElement, {
           productId: updatedAddonProdName,
           devices: addOnProdUsers,
           subscription: addOnProdYears,
           ignoreEventsParent: true,
+          addOnStoreEvent,
         });
-
-        // TODO: add later after understanding how to add storeEvent
-        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(updatedAddonProdName))) {
-          addOnProductElement?.setAttribute('data-store-event', storeEvent);
-        }
 
         configureAddOnProductPrices(addOnProductElement);
 

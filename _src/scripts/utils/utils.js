@@ -1128,6 +1128,7 @@ export const wrapChildrenWithStoreContext = (element, {
   devices,
   subscription,
   ignoreEventsParent = false,
+  storeEvent = '',
 }) => {
   if (!element || element.firstElementChild?.matches('bd-context')) {
     return;
@@ -1144,6 +1145,9 @@ export const wrapChildrenWithStoreContext = (element, {
   const option = document.createElement('bd-option');
   option.setAttribute('devices', devices);
   option.setAttribute('subscription', subscription);
+  if (storeEvent) {
+    option.setAttribute('data-layer-event', storeEvent);
+  }
 
   while (element.firstChild) {
     option.appendChild(element.firstChild);
