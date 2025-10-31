@@ -40,8 +40,9 @@ export class ProductOption {
 	 *	avangateId: string,
 	 * 	productId: string,
 	 *  productAlias: string,
-	 * 	promotion: string
-	 *  campaignType: string
+	 * 	promotion: string,
+	 *  campaignType: string,
+	 *  trialLinks: {Object.<string, string>}
 	 * }} option
 	 */
 	constructor(option) {
@@ -61,6 +62,7 @@ export class ProductOption {
 		this.avangateId = option.avangateId;
 		this.promotion = option.promotion;
 		this.campaignType = option.campaignType;
+		this.trialLinks = option.trialLinks;
 	}
 
 	/**
@@ -234,6 +236,10 @@ export class ProductOption {
 		);
 	}
 
+	getTrialLink(duration) {
+		return this.trialLinks?.[duration]
+	}
+
 	getDevices() {
 		return this.devices;
 	}
@@ -267,6 +273,7 @@ export class Product {
 		this.currency = option.currency_iso;
 		this.symbol = option.currency_iso;
 		this.avangateId = Object.values(Object.values(product.variations)[0])[0]?.platform_product_id;
+		this.trialLinks = product.trialLinks;
 		this.yearDevicesMapping = Object.entries(this.options).reduce((acc, [deviceKey, values]) => {
 			Object.keys(values).forEach(yearKey => {
 				if (!acc[yearKey]) {
@@ -412,7 +419,8 @@ export class Product {
 			subscription: Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : years * 12,
 			avangateId: this.avangateId,
 			promotion: this.promotion,
-			campaignType: this.campaignType
+			campaignType: this.campaignType,
+			trialLinks: this.trialLinks?.[devices]?.[years]
 		});
 
 		if (bundle) {
@@ -941,6 +949,23 @@ export class Store {
 		nz: "au",
 	}
 
+	static trialLinks = (async () => {
+		const res = await fetch(`https://www.bitdefender.com/common/store-config/trial-links.json?sheet=${page.locale}`);
+
+		if (!res.ok) {
+			return {};
+		}
+
+  		const { data } = await res.json();
+
+		return data.reduce((acc, {product, campaign, devices, subscription, duration, link }) => {
+			const p = acc[product] ??= {};
+			const d = p[devices] ??= {};
+			const s = d[subscription] ??= {};
+			s[duration] = link;
+			return acc;
+		}, {});
+	})();
 	static consumer = "consumer";
 	static business = "business";
 	static products = {};
@@ -989,9 +1014,14 @@ export class Store {
 							|| getCampaignBasedOnLocale();
 					}
 
-					return await this.#apiCall(
-						product
-					);
+					const data = await this.#apiCall(product);
+					const trialLinks = await this.trialLinks;
+
+					if(trialLinks[product.id]) {
+						data.trialLinks = trialLinks[product.id];
+					}
+
+					return data;
 				})))
 			.filter(product => product.status === "fulfilled" && !!product.value)
 			.map(product => new Product(product.value))

@@ -30,6 +30,6 @@ export const staticAttributes = {
     storeSubscription: "[data-store-subscription]",
     storeTextVariable: "[data-store-text-variable]",
     storeAddClass: "[data-store-add-class]",
-    storeTrial: "[data-store-trial-link]"
+    storeTrialLink: "[data-store-trial-link]"
 };
 
