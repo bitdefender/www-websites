@@ -153,7 +153,7 @@ export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
-    dropdownTag, circleDiscount
+    dropdownTag, circleDiscount,
   } = block.closest('.section').dataset;
   const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
@@ -217,7 +217,7 @@ export default async function decorate(block, options) {
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
   if (product) {
-    const [prodName, prodUsers, prodYears] = product.split('/');
+    const [prodName, prodUsers, prodYears,] = product.split('/');
     cardElementContainer.setAttribute('data-store-context', '');
     cardElementContainer.setAttribute('data-store-id', prodName);
     cardElementContainer.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
