@@ -183,7 +183,8 @@
                         font-weight: var(--font-weight-boldest);
                     }
 
-                    p:nth-of-type(1) {
+                    p:nth-of-type(1),
+                    p:nth-of-type(2) {
                         font-size: var(--body-font-size-xl);
                         line-height: 23px;
                         margin-bottom: var(--size-0);
@@ -202,66 +203,6 @@
                         }
                     }
 
-                    .hero-aem__prices + .button-container {
-                        display: none;
-                    }
-
-                    table {
-                        td {
-                            column-gap: var(--size-16);
-                            display: flex;
-
-                            .button-container {
-                                margin-bottom: var(--size-16);
-
-                                .button.modal {
-                                    background: var(--button-background-color);
-                                    color: transparent;
-                                    padding: 13px 40px;
-                                    font-size: var(--body-font-size-xl);
-                                    line-height: 23px;
-                                    font-weight: var(--font-weight-bolder);
-                                    overflow: hidden;
-                                    position: relative;
-                                    transition: background-color 0.3s ease;
-
-                                    &:hover {
-                                        background-color: var(--button-hover-background-color);
-                                    }
-
-                                    &::before {
-                                        color: white;
-                                        content: attr(title);
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);
-                                        transition: transform 0.3s ease;
-                                    }
-
-                                    &::after {
-                                        background-color: transparent;
-                                    }
-
-                                    &:hover::after {
-                                        background-color: var(--white-color);
-                                        transform: translateX(10px);
-                                    }
-
-                                    &:hover::before {
-                                        transform: translate(calc(-50% - 10px), -50%);
-                                    }
-                                }
-                                + p a {
-                                    font-size: var(--body-font-size-xl);
-                                    line-height: 23px;
-                                    font-weight: var(--font-weight-bolder);
-                                    padding: 12px;
-                                    text-decoration: none;
-                                }
-                            }
-                        }
-                    }
                 }
             }
 
@@ -370,9 +311,14 @@
                 border-top: var(--size-1) solid var(--sticky-nav-border-color);
             }
 
+            ul {
+                width: auto;
+            }
+
             .menu-with-button {
                 max-width: var(--section-desktop-max-width);
                 padding: var(--size-0) var(--size-20);
+                justify-content: initial;
 
                 li {
                     margin-right: var(--size-40);
@@ -388,10 +334,24 @@
 
                 .button-container {
                     height: var(--size-44);
+                    display: flex;
 
                     a {
                         height: var(--size-44);
-                        padding: var(--size-12) var(--size-18) var(--size-12) 27px;
+                        padding: var(--size-12) var(--size-18);
+                        border: var(--size-2) solid var(--background-blue);
+                        color: var(--background-blue);
+                        background-color: var(--white-color);
+                        transition: all .2s cubic-bezier(.4, 0, .2, 1);
+
+                        &:hover, &:focus, &:active {
+                            background-color: var(--background-blue);
+                            color: var(--white-color);
+                        }
+
+                        &::after {
+                            display: none;
+                        }
 
                         span {
                             font-size: var(--body-font-size-l);
