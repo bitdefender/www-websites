@@ -183,7 +183,8 @@
                         font-weight: var(--font-weight-boldest);
                     }
 
-                    p:nth-of-type(1) {
+                    p:nth-of-type(1),
+                    p:nth-of-type(2) {
                         font-size: var(--body-font-size-xl);
                         line-height: 23px;
                         margin-bottom: var(--size-0);
@@ -317,7 +318,7 @@
             .menu-with-button {
                 max-width: var(--section-desktop-max-width);
                 padding: var(--size-0) var(--size-20);
-                justify-content: space-between;
+                justify-content: initial;
 
                 li {
                     margin-right: var(--size-40);
