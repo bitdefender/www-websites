@@ -95,7 +95,7 @@ export function appendAdobeMcLinks(selector) {
       ? 'www.bitdefender.com'
       : window.location.hostname;
 
-    const hrefSelector = '[href*=".bitdefender."]';
+    const hrefSelector = 'a[href*=".bitdefender."]';
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
       if (link.hostname !== pageUrlHostname
         && !Constants.DOMAINS_WITHOUT_ADOBE_MC.includes(link.hostname)) {
