@@ -974,7 +974,12 @@ function decorateResults(results) {
   });
 }
 
-function setupStartButton(block, isAcqVariant) {
+function setupStartButton(block, isAcqVariant, skipStartPage) {
+  if (skipStartPage) {
+    showQuestion(1, isAcqVariant);
+    return;
+  }
+
   const startButton = block.querySelector('a[href="#start-quiz"]');
   if (startButton) {
     startButton.addEventListener('click', (e) => {
@@ -1034,7 +1039,7 @@ function copyToClipboard(block, caller, popupText, resultPath) {
 
 export default function decorate(block) {
   const {
-    resultPage, clipboardText, savedata,
+    resultPage, clipboardText, savedata, skipStartPage,
   } = block.closest('.section').dataset;
 
   const [startBlock, ...questionsAndResults] = block.children;
@@ -1062,7 +1067,7 @@ export default function decorate(block) {
   const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
   decorateQuestions(questions, results, isAcqVariant);
   decorateResults(results);
-  setupStartButton(block, isAcqVariant);
+  setupStartButton(block, isAcqVariant, skipStartPage);
 
   const questionsContainer = document.createElement('div');
   questionsContainer.classList.add('questions-container');
