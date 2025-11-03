@@ -319,7 +319,7 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
   color: #006DFF;
   background-color: transparent;
   border: 2px solid #006DFF;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 8px;
