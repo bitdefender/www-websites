@@ -98,7 +98,7 @@ function renderOldPrice(text = '', monthly = '') {
   const root = createTag(
     'div',
     {
-      'data-store-hide': '!it.option.discount.value',
+      'data-store-hide': '!it.option.price.discounted',
       'data-store-hide-type': 'visibility',
       'data-store-render': '',
       class: 'price await-loader',
@@ -161,7 +161,7 @@ function renderHighlightSavings(text = 'Save', percent = '') {
   const root = createTag(
     'div',
     {
-      'data-store-hide': '!it.option.discount.value',
+      'data-store-hide': '!it.option.price.discounted',
       'data-store-hide-type': 'visibility',
       'data-store-render': '',
       class: 'highlight await-loader',
@@ -203,7 +203,7 @@ function renderHighlight(text) {
     'div',
     {
       class: 'highlight',
-      'data-store-hide': '!it.option.discount.value',
+      'data-store-hide': '!it.option.price.discounted',
       'data-store-render': '',
     },
     `<span>${updatedText}</span>`,
@@ -268,7 +268,7 @@ function renderFeaturedSavings(text = 'Save', percent = '') {
   const root = createTag(
     'div',
     {
-      'data-store-hide': '!it.option.discount.value',
+      'data-store-hide': '!it.option.price.discounted',
       'data-store-hide-type': 'visibility',
       'data-store-render': '',
       class: 'featured',

@@ -47,7 +47,7 @@ function createPriceBox({
 }) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box', 'await-loader');
-  box.setAttribute('data-store-hide', '!it.option.discount.value');
+  box.setAttribute('data-store-hide', '!it.option.price.discounted');
   box.setAttribute('data-store-hide-type', 'visibility');
   box.setAttribute('data-store-render', '');
   box.dataset.code = code;
@@ -55,10 +55,10 @@ function createPriceBox({
   box.innerHTML = `
     <p class="product-details">${detailsText || ''}</p>
     <div class="discount">
-      <div data-store-render data-store-hide="!it.option.discount.value" data-store-hide-type="visibility" class="price">
+      <div data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility" class="price">
         <span class="old-price"><del data-store-render data-store-price="full"></del></span>
       </div>
-      <div data-store-render data-store-hide="!it.option.discount.value" data-store-hide-type="visibility" class="featured">
+      <div data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility" class="featured">
         <span class="prod-save"><span data-store-render data-store-discount="percentage"></span> ${discounttext}</span>
       </div>
     </div>

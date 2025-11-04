@@ -47,7 +47,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   }
 
   oldPriceElement.innerHTML = `
-    <div class="old-price-box" data-store-render data-store-hide="!it.option.discount.value">
+    <div class="old-price-box" data-store-render data-store-hide="!it.option.price.discounted">
       <span>${oldPriceText} <del data-store-render data-store-price="full"></del></span>
       <span class="savings d-none"><span data-store-render data-store-discount="percentage"></span> ${saveText}</span>
     </div>`;

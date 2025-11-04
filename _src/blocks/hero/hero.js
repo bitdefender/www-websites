@@ -89,7 +89,7 @@ createNanoBlock('discount', (code, label = '{label}') => {
   root.setAttribute('product-id', product);
   root.innerHTML = `
     <bd-option devices="${unit}" subscription="${year}">
-      <div data-store-render data-store-hide="!it.option.discount.value" class="discount-bubble await-loader">
+      <div data-store-render data-store-hide="!it.option.price.discounted" class="discount-bubble await-loader">
         <div data-store-render data-store-discount="percentage" class="discount-bubble-0">--%</div>
         <span class="discount-bubble-1">${label}</span>
       </div>

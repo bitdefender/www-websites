@@ -41,7 +41,7 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div class="oldprice-container" data-store-render data-store-hide="!it.option.discount.value">
+        <div class="oldprice-container" data-store-render data-store-hide="!it.option.price.discounted">
           <span class="prod-oldprice" data-store-render data-store-price="full"></span>
           <span class="prod-save">${saveText} <span data-store-render data-store-discount="percentage"></span> </span>
         </div>
@@ -222,7 +222,7 @@ const configureAddOnListPrices = (listElement, saveText = 'Save ') => {
 
   setAttributes(listElement.querySelector('.add-on-oldprice'), {
     'data-store-price': 'full',
-    'data-store-hide': '!it.option.discount.value',
+    'data-store-hide': '!it.option.price.discounted',
     'data-store-render': '',
   });
 
@@ -230,7 +230,7 @@ const configureAddOnListPrices = (listElement, saveText = 'Save ') => {
   percentSaveElement.textContent = `${saveText}{{=it.option.discount.percentage}}`;
 
   setAttributes(percentSaveElement, {
-    'data-store-hide': '!it.option.discount.value',
+    'data-store-hide': '!it.option.price.discounted',
   });
 };
 
@@ -249,7 +249,7 @@ const configureAddOnProductPrices = (addOnProductElement) => {
 
   const addOnOldPrice = addOnProductElement.querySelector('.prod-oldprice');
   if (addOnOldPrice?.parentElement) {
-    addOnOldPrice.parentElement.setAttribute('data-store-hide', '!it.option.discount.value');
+    addOnOldPrice.parentElement.setAttribute('data-store-hide', '!it.option.price.discounted');
   }
 
   setAttributes(addOnOldPrice, {
