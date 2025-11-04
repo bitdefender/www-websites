@@ -882,6 +882,7 @@ export const generatePageLoadStartedName = () => {
 
     if (pathname.includes('spot-the-scam-quiz')) {
       tagName = `${locale}:consumer:quiz`;
+      if (getMetadata('skip-start-page')) tagName = `${locale}:consumer:quiz:question-1`;
       if (!pathname.endsWith('/')) {
         const result = page.name;
         tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
