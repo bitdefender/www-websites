@@ -37,7 +37,7 @@ import {
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['hero', 'password-generator']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -732,3 +732,4 @@ initMobileDetector('tablet');
 initMobileDetector('desktop');
 
 loadPage();
+window.AdobeDataLayerService = AdobeDataLayerService;

@@ -153,9 +153,15 @@ export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
-    dropdownTag,
+    dropdownTag, circleDiscount,
   } = block.closest('.section').dataset;
+  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
+  if (!isHomePage) {
+    const breadcrumb = createTag('div', { class: 'breadcrumb' });
+    const contentWrapper = block.querySelector(':scope > div:first-child > div');
+    if (contentWrapper) contentWrapper.prepend(breadcrumb);
+  }
   renderNanoBlocks(block);
 
   if (options) {
@@ -194,6 +200,16 @@ export default async function decorate(block, options) {
     mobileImage.classList.add('hero-aem__mobile-image');
   } else {
     mobileImage = '';
+  }
+
+  if (circleDiscount) {
+    const circleDiscountBox = document.createElement('div');
+    circleDiscountBox.className = 'circleDiscount';
+    circleDiscountBox.innerHTML = `<p>${circleDiscount.replace(
+      /0\s*%/g,
+      '<span data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>',
+    )}</p>`;
+    block.querySelector('.col-md-6:last-child').appendChild(circleDiscountBox);
   }
 
   // Get all the siblings after h1

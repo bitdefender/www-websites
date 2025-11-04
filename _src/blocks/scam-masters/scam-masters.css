@@ -3,6 +3,12 @@
     --color-bd-blue: #006EFF;
 }
 
+body:has(.scam-masters-container) {
+  header, body > div:first-child {
+    min-height: 64px;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
         --color-bd-blue: #006EFF;
@@ -19,7 +25,7 @@
     &.acq-quiz {
         background-color: white;
         transition: opacity 0.25s, height 0.25s, display 0.25s allow-discrete;
-
+        padding-top: 5px !important;
         @media (max-width: 992px) {
             padding: 0 !important;
         }
