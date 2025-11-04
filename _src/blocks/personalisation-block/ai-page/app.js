@@ -464,6 +464,7 @@ function initTimelineCarousel() {
   function getScrollAmount() {
     const itemWidth = (upItems[0].offsetWidth + upItems[1].offsetWidth) / 2;
     const gap = parseFloat(window.getComputedStyle(track).gap) || 20;
+    console.log(itemWidth + gap);
     return itemWidth + gap;
   }
 
