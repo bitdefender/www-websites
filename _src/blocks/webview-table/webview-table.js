@@ -454,8 +454,6 @@ export default async function decorate(block) {
   replaceTableTextToProperCheckmars(block);
 
   renderPrices(block, metadata);
-  matchHeights(block, '.savings-tag-container');
-  matchHeights(block, '.buy-box');
 
   const url = new URL(window.location.href);
   if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'light') {
@@ -473,4 +471,7 @@ export default async function decorate(block) {
 
   const targetElement = document.querySelector('.webview-table');
   adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
+
+  matchHeights(block, '.savings-tag-container');
+  matchHeights(block, '.buy-box');
 }

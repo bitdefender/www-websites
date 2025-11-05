@@ -1,7 +1,7 @@
 import { AdobeDataLayerService, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
 import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
-import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
+import { getMetadata, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
 import { Constants } from '../../scripts/libs/constants.js';
 
@@ -63,6 +63,7 @@ async function createOfferParameters() {
   const feature = urlParams.get('feature');
   const language = urlParams.get('lang');
   const serviceId = urlParams.get('service_id');
+  const segment = urlParams.get('segment');
 
   if (feature) {
     parameters.feature = feature.replaceAll('_', '-');
@@ -73,8 +74,11 @@ async function createOfferParameters() {
   }
 
   if (serviceId) {
-    const segment = await extractServiceId(serviceId);
-    if (segment) {
+    const serviceIdSegment = await extractServiceId(serviceId);
+    if (serviceIdSegment) {
+      // search for segment in the url params
+      parameters.segment = serviceIdSegment;
+    } else {
       parameters.segment = segment;
     }
   }
@@ -172,12 +176,11 @@ export default async function decorate(block) {
   }
 
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
-
   // Make all the links that contain #buylink in href open in a new browser window
   decoratedOfferHtml.querySelectorAll('a[href*="#buylink"]').forEach((link) => {
     link.setAttribute('target', '_blank');
   });
-
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
   await loadBlocks(block.querySelector('.canvas-content'));
+  decorateIcons(block.querySelector('.canvas-content'));
 }

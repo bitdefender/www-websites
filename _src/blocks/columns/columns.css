@@ -3340,6 +3340,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   margin-top: 0;
 }
 
+.columns-tabs .block p:nth-of-type(2) {
+  height: 215px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
 .columns-tabs .block p {
   font-family: "IBM Plex Sans", sans-serif;
   font-weight: 400;
@@ -3383,7 +3389,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   font-style: normal;
 }

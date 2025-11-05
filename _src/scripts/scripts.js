@@ -732,3 +732,4 @@ initMobileDetector('tablet');
 initMobileDetector('desktop');
 
 loadPage();
+window.AdobeDataLayerService = AdobeDataLayerService;
