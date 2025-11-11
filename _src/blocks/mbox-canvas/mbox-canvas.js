@@ -4,6 +4,7 @@ import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
 import { Constants } from '../../scripts/libs/constants.js';
+import { StoreResolver } from '../../scripts/libs/store/index.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
   const newHtml = document.createElement('div');
@@ -63,7 +64,6 @@ async function createOfferParameters() {
   const feature = urlParams.get('feature');
   const language = urlParams.get('lang');
   const serviceId = urlParams.get('service_id');
-  const segment = urlParams.get('segment');
 
   if (feature) {
     parameters.feature = feature.replaceAll('_', '-');
@@ -78,8 +78,6 @@ async function createOfferParameters() {
     if (serviceIdSegment) {
       // search for segment in the url params
       parameters.segment = serviceIdSegment;
-    } else {
-      parameters.segment = segment;
     }
   }
 
@@ -181,6 +179,12 @@ export default async function decorate(block) {
     link.setAttribute('target', '_blank');
   });
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
+  const configMbox = await target.getOffers({
+    mboxNames: 'config-mbox',
+    parameters,
+    profileParameters: createOfferProfileParameters(parameters),
+  });
   await loadBlocks(block.querySelector('.canvas-content'));
+  await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
   decorateIcons(block.querySelector('.canvas-content'));
 }
