@@ -96,7 +96,7 @@ createNanoBlock('discount', (code, label = '{label}') => {
   root.setAttribute('data-store-event', 'main-product-loaded');
   root.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
   root.innerHTML = `
-    <span class="discount-bubble-0" data-store-discount="percentage">--%</span>
+    <span class="discount-bubble-0"  data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>
     <span class="discount-bubble-1">${label}</span>
   `;
 

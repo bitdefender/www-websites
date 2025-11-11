@@ -94,9 +94,11 @@ export default async function decorate(block) {
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
   });
-  console.log('Offer from Target:', offer);
-  const offerLink = `${Constants.BASE_URL_FOR_PROD}${offer.offer}`;
-  console.log('Offer Link:', offerLink);
+
+  // once in a while the offer returned has the language in uppercase which makes the fetch fail
+  // to avoid this edge case, lowercase the entire url
+  // this will break if the offer url needs to have uppercase letters, for now it is not the case
+  const offerLink = `${Constants.BASE_URL_FOR_PROD}${offer.offer}`.toLowerCase();
   const pageCall = await fetch(offerLink);
   let offerHtml;
   await loadBlocks(block.querySelector('.canvas-content'));
