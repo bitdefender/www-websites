@@ -11,12 +11,14 @@ export class ProductInfo {
 	 * @param {string} department
 	 * @param {string} promotion
 	 * @param {boolean} forcePromotion
+	 * @param {boolean} useGeoIpPricing
 	 */
-	constructor(id, department, promotion = null, forcePromotion = false) {
+	constructor(id, department, promotion = null, forcePromotion = false, useGeoIpPricing = false) {
 		this.id = id;
 		this.department = department;
 		this.promotion = promotion;
 		this.forcePromotion = forcePromotion;
+		this.useGeoIpPricing = useGeoIpPricing;
 	}
 }
 
@@ -768,10 +770,9 @@ class Vlaicu {
 		return buyLinkUrl.href;
 	}
 
-	static async getProductVariations(productId, campaign) {
+	static async getProductVariations(productId, campaign, useGeoIpPricing = false) {
 		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
-		let geoIpFlag = (await target.configMbox)?.useGeoIpPricing;
-		if (geoIpFlag) {
+		if (useGeoIpPricing) {
 			locale = await user.locale;
 		}
 		const pathVariablesResolverObject = {
@@ -820,8 +821,8 @@ class Vlaicu {
 		}
 	}
 
-	static async getProductVariationsPrice(id, campaignId) {
-		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()].bundleId, campaignId);
+	static async getProductVariationsPrice(id, campaignId, useGeoIpPricing = false) {
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()].bundleId, campaignId, useGeoIpPricing);
 		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
 			return null;
@@ -901,10 +902,10 @@ class Vlaicu {
 		return window.StoreProducts.product[id];
 	}
 
-	static async loadProduct(id, campaign) {
+	static async loadProduct(id, campaign, useGeoIpPricing = false) {
 		window.StoreProducts = window.StoreProducts || [];
 		window.StoreProducts.product = window.StoreProducts.product || {};
-		return await this.getProductVariationsPrice(id, campaign);
+		return await this.getProductVariationsPrice(id, campaign, useGeoIpPricing);
 	}
 }
 
@@ -962,16 +963,17 @@ export class Store {
 	 * @param {ProductInfo[]} productsInfo - objects describing the product to be fetched
 	 * @returns {Promise<Product>}
 	 */
-	static async getProducts(productsInfo) {
+	static async getProducts(productsInfo, configMbox = null) {
 		if (!Array.isArray(productsInfo)) { return null; }
 
+		configMbox = configMbox || (await target.configMbox);
 		if (!Constants.PRODUCT_ID_MAPPINGS) {
 			return null;
 		}
 
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
-			this.targetBuyLinkMappings = (await target.configMbox)?.products;
+			this.targetBuyLinkMappings = configMbox?.products;
 		}
 
 		// remove duplicates by id
@@ -982,13 +984,14 @@ export class Store {
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
 					if (!product.forcePromotion) {
-						product.promotion = (await target.configMbox)?.promotion
+						product.promotion = configMbox.promotion
 							|| getUrlPromotion()
 							|| product.promotion
 							|| getMetadata("pid")
 							|| getCampaignBasedOnLocale();
 					}
 
+					product.useGeoIpPricing = configMbox?.useGeoIpPricing;
 					return await this.#apiCall(
 						product
 					);
@@ -1007,7 +1010,7 @@ export class Store {
 	 */
 	static async #apiCall(productInfo) {
 		try {
-			const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);
+			const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion, productInfo.useGeoIpPricing);
 
 			if (!product) {
 				return null;
