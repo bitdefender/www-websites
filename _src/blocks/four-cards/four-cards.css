@@ -421,6 +421,14 @@
   .four-cards-container.centered2 .default-content-wrapper {
     text-align: center;
   }
+
+  .creator-cards:has(.white-cards.v2) .default-content-wrapper {
+    padding-bottom: 0;
+  }
+
+  .creator-cards .four-cards.white-cards.block.v2 ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (min-width: 992px) {
@@ -472,7 +480,6 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
-
   .creator-cards .four-cards.white-cards.block ul li {
     max-width: 360px;
     background-color: #FFF;
@@ -496,5 +503,11 @@
 
   .creator-cards .default-content-wrapper a.button:any-link {
     margin-top: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .creator-cards .four-cards.white-cards.block.v2 ul {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
