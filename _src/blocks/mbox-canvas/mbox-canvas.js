@@ -25,7 +25,7 @@ async function extractServiceId(serviceId) {
     return serviceIdSegmentCache.get(serviceId);
   }
 
-  const baseUrl = 'https://www.bitdefender.com';
+  const baseUrl = 'https://stage.bitdefender.com';
   const endpoint = `${baseUrl}/cdp/splash/${encodeURIComponent(serviceId)}`;
 
   try {
@@ -46,7 +46,6 @@ async function extractServiceId(serviceId) {
     if (segmentIds.length === 0) {
       return null;
     }
-    console.log('Segment IDs:', segmentIds);
     const segmentParam = segmentIds.join(',');
     serviceIdSegmentCache.set(serviceId, segmentParam);
     return segmentParam;
