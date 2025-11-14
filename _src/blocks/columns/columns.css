@@ -2944,6 +2944,14 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     z-index: 0;
   }
 
+  &.title-only {
+    h2 {
+      font-size: 32px;
+      margin-bottom: 64px;
+      text-align: center;
+    }
+  }
+
   @media (min-width:768px){
     .columns > div {
       align-items: baseline;

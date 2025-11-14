@@ -146,6 +146,34 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   text-align: center;
 }
 
+.image-columns.half-image {
+  border-radius: 20px;
+  background-color: #F8F8F8;
+
+  >div {
+    align-items: unset;
+  }
+
+  .image-columns-txt-col{
+    padding: 20px 40px;
+    @media (min-width: 992px) {
+      padding: 40px 0 40px 60px ;
+    }
+  }
+
+  .image-columns-img-col {
+    min-height: 100%;
+    .img-container {
+      min-height: 100%;
+      position: relative;
+      img {
+        position: absolute;
+        min-height: 100%;
+      }
+    }
+  }
+}
+
 .avfree .image-columns{
   > div {
     align-items: start;
