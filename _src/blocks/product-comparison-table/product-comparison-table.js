@@ -11,10 +11,9 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
     productId: code,
     devices,
     subscription,
+    ignoreEventsParent: false,
+    storeEvent: 'product-comparison',
   });
-
-  // TODO: set data-store-event
-  columnEl.setAttribute('data-store-event', 'product-comparison');
 
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');

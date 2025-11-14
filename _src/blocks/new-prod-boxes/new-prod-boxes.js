@@ -41,7 +41,7 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div class="oldprice-container" data-store-render data-store-hide="!it.option.price.discounted">
+        <div class="oldprice-container" data-store-hide="!it.option.price.discounted">
           <span class="prod-oldprice" data-store-render data-store-price="full"></span>
           <span class="prod-save">${saveText} <span data-store-render data-store-discount="percentage"></span> </span>
         </div>
@@ -535,7 +535,6 @@ export default async function decorate(block) {
           addOnPriceBox.querySelector('.prod-save').textContent,
         );
 
-        // TODO: add later after understanding how to add storeEvent
         let addOnStoreEvent = '';
         if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(updatedAddonProdName))) {
           addOnStoreEvent = storeEvent;

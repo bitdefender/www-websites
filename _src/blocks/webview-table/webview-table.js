@@ -1,5 +1,5 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
-import { matchHeights } from '../../scripts/utils/utils.js';
+import { matchHeights, wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
 
 function replaceTableTextToProperCheckmars(block) {
   block.querySelectorAll('div')
@@ -75,11 +75,13 @@ function renderPrices(block, metadata) {
       const isFeatured = index + 1 === Number(featuredProduct);
       const isCurrent = Number(currentProduct) === index + 1;
       if (prodName && !isCurrent) {
-        cell.setAttribute('data-store-context', '');
-        cell.setAttribute('data-store-id', prodName);
-        cell.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-        cell.setAttribute('data-store-department', 'consumer');
-        cell.setAttribute('data-store-event', 'product-loaded');
+        wrapChildrenWithStoreContext(cell, {
+          productId: prodName,
+          devices: prodUsers,
+          subscription: prodYears,
+          ignoreEventsParent: true,
+          storeEvent: 'all',
+        });
       }
       // Add featured logic if applicable
       if (featuredProduct && isFeatured) {
@@ -90,14 +92,17 @@ function renderPrices(block, metadata) {
             featuredCell.classList.add('featured');
           }
         });
-        block.setAttribute('data-store-context', '');
-        block.setAttribute('data-store-id', prodName);
-        block.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-        block.setAttribute('data-store-department', 'consumer');
-        block.setAttribute('data-store-event', 'product-loaded');
+        wrapChildrenWithStoreContext(block, {
+          productId: prodName,
+          devices: prodUsers,
+          subscription: prodYears,
+          ignoreEventsParent: true,
+          storeEvent: 'all',
+        });
+
         savingsTag.innerHTML = `
-          <span class="saving-tag-text" data-store-hide="no-price=discounted">
-            <span data-store-discount="percentage"></span> ${saveText || ''} 
+          <span class="saving-tag-text" data-store-hide="!it.option.price.discounted">
+            <span data-store-render data-store-discount="percentage"></span> ${saveText || ''} 
           </span>
         `;
         savingsTag.style.visibility = 'visible';
@@ -106,17 +111,18 @@ function renderPrices(block, metadata) {
       if (!isCurrent) {
         buyBox.innerHTML = `
           <div class="price-box">
-            <div>
-              <span class="prod-oldprice" data-store-price="full" data-store-hide="no-price=discounted"></span>
+            <div data-store-hide="!it.option.price.discounted">
+              <span class="prod-oldprice" data-store-render data-store-price="full"></span>
             </div>
             <div class="newprice-container mt-2">
-              <span class="prod-newprice"><span data-store-price="discounted||full"></span></span>
+              <span class="prod-newprice"><span data-store-render data-store-price="discounted||full"></span></span>
             </div>
           </div>
           <span class="under-price-text">${firstYearText}</span>
         `;
         const buyLink = cell.querySelector('a[href*="#buylink"]');
         buyLink?.setAttribute('data-store-buy-link', '');
+        buyLink?.setAttribute('data-store-render', '');
       } else {
         cell.classList.add('current');
       }

@@ -138,12 +138,12 @@ createNanoBlock('dropdown', (...args) => {
 
     priceBox.style.display = index === 0 ? 'block' : 'none';
     root.appendChild(priceBox);
-    // TODO: add data-store-event support
     wrapChildrenWithStoreContext(priceBox, {
       productId: product,
       devices: unit,
       subscription: year,
       ignoreEventsParent: true,
+      storeEvent: 'all',
     });
   });
 

@@ -293,7 +293,7 @@ function renderLowestPrice(...params) {
   root.classList.add('await-loader');
   textArea.textContent = text.replace(
     '0',
-    monthly.toLowerCase() === 'monthly' ? '{{=it.state.price.discounted.monthly.min}}' : '{{=it.state.price.discounted.min}}',
+    monthly.toLowerCase() === 'monthly' ? '{{=it.state.price.monthly.min}}' : '{{=it.state.price.discounted.min}}',
   );
   root.appendChild(textArea);
   return root;
@@ -371,11 +371,10 @@ export default function decorate(block) {
           devices,
           subscription,
           ignoreEventsParent: true,
+          storeEvent,
         });
       }
 
-      // TODO: add data-store-event
-      col.setAttribute('data-store-event', storeEvent);
       const cardButtons = col.querySelectorAll('a');
       let hasBuyButton = false;
       cardButtons?.forEach((button) => {

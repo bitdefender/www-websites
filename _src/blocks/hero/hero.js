@@ -240,12 +240,12 @@ export default function decorate(block) {
     const [alias, variant] = percentProduct.split(',');
     const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
 
-    // TODO: add data-store-event
     wrapChildrenWithStoreContext(block, {
       productId: alias,
       devices,
       subscription,
       ignoreEventsParent: true,
+      storeEvent: 'all',
     });
     block.querySelector('div').classList.add('await-loader');
   }
