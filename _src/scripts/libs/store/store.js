@@ -987,7 +987,7 @@ export class Store {
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
 					if (!product.forcePromotion) {
-						product.promotion = configMbox.promotion
+						product.promotion = configMbox?.promotion
 							|| getUrlPromotion()
 							|| product.promotion
 							|| getMetadata("pid")
