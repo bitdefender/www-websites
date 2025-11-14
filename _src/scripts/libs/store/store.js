@@ -966,9 +966,12 @@ export class Store {
 	static async getProducts(productsInfo, configMbox = null) {
 		if (!Array.isArray(productsInfo)) { return null; }
 
-		configMbox = configMbox || (await target.configMbox);
 		if (!Constants.PRODUCT_ID_MAPPINGS) {
 			return null;
+		}
+
+		if (!configMbox) {
+			configMbox = await target.configMbox;
 		}
 
 		// get the target buyLink mappings
