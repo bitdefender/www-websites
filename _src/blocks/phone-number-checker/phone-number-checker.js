@@ -288,6 +288,7 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
   if (!validated.isValid) {
     result.textContent = `${invalidEmailText ?? ''}`;
     result.className = 'result danger';
+    input.closest('.input-container').classList.remove('loader-circle');
     return;
   }
 
@@ -341,8 +342,6 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
     }));
 
     window.location.href = `${window.location.pathname}${resultPagePath}`;
-
-    // Redirect to the appropriate result page
   }
 }
 
