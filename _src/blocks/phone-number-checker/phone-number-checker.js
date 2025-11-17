@@ -158,10 +158,13 @@ async function inlineFlagsInOptions() {
       const text = document.createElement('span');
       text.textContent = country.code;
 
+      const name = document.createElement('span');
+      name.textContent = country.country;
+
       const flag = document.createElement('img');
       flag.src = country.flag;
 
-      option.append(flag, text);
+      option.append(flag, text, name);
       dropdown.appendChild(option);
       options.push(option);
 
@@ -196,14 +199,23 @@ async function inlineFlagsInOptions() {
     }
   }
 
-  input.addEventListener('focus', showDropdown);
+  input.addEventListener('focus', () => {
+    showDropdown();
+    input.value = '';
+    triggerFlag.src = '/_src/icons/search-icon.svg';
+    input.placeholder = 'Search';
+  });
   input.addEventListener('input', () => {
     renderOptions(input.value);
+    triggerFlag.classList.remove('search-icon');
     showDropdown();
   });
 
   triggerFlag.addEventListener('click', () => {
     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    input.value = '';
+    triggerFlag.src = '/_src/icons/search-icon.svg';
+    input.placeholder = 'Search';
   });
 
   input.addEventListener('keydown', (e) => {
