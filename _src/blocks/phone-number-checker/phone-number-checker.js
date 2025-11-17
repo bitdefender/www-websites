@@ -114,6 +114,7 @@ async function inlineFlagsInOptions() {
   triggerFlag.src = defaultCountry.flag;
 
   const input = document.createElement('input');
+  input.setAttribute('autocomplete', 'off');
   input.id = 'dropdown-input';
   input.type = 'text';
   input.value = defaultCountry.code;
