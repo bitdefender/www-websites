@@ -237,14 +237,14 @@ export class StoreResolver {
 	static staticAttributes = staticAttributes;
 	static clickAttributes = clickAttributes;
 
-	static async resolve(root = document) {
+	static async resolve(root = document, configMbox = null) {
 		await Promise.allSettled([
-			this.#resolveRootElement(root),
-			...[...root.querySelectorAll("[data-shadow-dom]")].map(element => this.#resolveRootElement(element.shadowRoot))
+			this.#resolveRootElement(root, configMbox),
+			...[...root.querySelectorAll("[data-shadow-dom]")].map(element => this.#resolveRootElement(element.shadowRoot, configMbox))
 		]);
 	}
 
-	static async #resolveRootElement(root) {
+	static async #resolveRootElement(root, configMbox) {
 		const products = root.querySelectorAll(`${this.contextAttributes.storeId}${this.contextAttributes.storeDepartment}`);
 		if (products.length === 0) { return; }
 
@@ -261,7 +261,7 @@ export class StoreResolver {
 			}
 		}).filter(element => !!element);
 
-		const storeProducts = await Store.getProducts(productsInfo);
+		const storeProducts = await Store.getProducts(productsInfo, configMbox);
 		const contexts = root.querySelectorAll(`${this.contextAttributes.storeContext}`);
 
 		for (const context of contexts) {

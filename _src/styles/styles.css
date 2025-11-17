@@ -1657,6 +1657,37 @@ main .section.blue p a.button.modal::after {
   background-color: var(--green-tag2);
 }
 
+.tag-blue-pill {
+  background-color: #026DFF;
+  padding: 4.5px 5.7px;
+  border-radius: 20px;
+  color: white;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: bold;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: none;
+}
+
+.tag-blue-pill .icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 9px;
+  height: 9px;
+  margin: 0;
+}
+
+.tag.tag-blue-pill svg {
+  width: 9px;
+  height: 9px;
+  fill: #fff;
+}
+
 .ferrari-img img{
   display: block;
   position: relative;

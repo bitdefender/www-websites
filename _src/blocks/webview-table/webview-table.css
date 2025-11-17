@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 :root {
     --first-table-cell-color: #e4f2ff;
     --yes-check-color: #4a4;
@@ -95,6 +96,8 @@
     font-weight: 600;
     border-top: 1px solid black;
     align-items: baseline;
+    flex-direction: row;
+    justify-content: left;
 }
 
 .webview-table .yes-check::after {
@@ -321,4 +324,114 @@
 
 .webview-table [data-align="center"] {
     text-align: center;
+}
+
+.webview-table.two-products-variation div[role='cell']:first-child {
+    min-width: 441px;
+    max-width: 441px;
+    background: #333;
+    color: #fff;
+    line-height: 1.2;
+    font-weight: 600;
+    border-top: 1px solid #141517;
+    align-items: baseline;
+}
+
+.webview-table.two-products-variation .webview-comparison-header div[role="columnheader"]:first-child {
+    min-width: 441px;
+    align-items: end;
+    display: flex;
+}
+
+.webview-table.two-products-variation .webview-comparison-header div[role="columnheader"]:first-child .plan-switcher {
+    background-color: #141517;
+    flex-direction: row;
+    height: 70%;
+    justify-content: left;
+    align-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-color: #141517;
+}
+
+.webview-table.two-products-variation.light-mode div[role="cell"]:first-child {
+    color: #000;
+    background-color: #f9f9fe;
+    border-color: #fff;
+}
+
+.webview-table.two-products-variation.light-mode .webview-comparison-header div[role="columnheader"]:first-child .plan-switcher {
+    background-color: white;
+    border-color: white;
+}
+
+
+.webview-comparison-header .plan-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-weight: bold;
+  gap: 16px;
+}
+
+.webview-comparison-header .plan-switcher input[type="radio"] {
+  position: relative;
+  display: none;
+  opacity: 0;
+  width: auto;
+}
+
+.webview-comparison-header .plan-switcher .radio-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.webview-comparison-header .plan-switcher .radio-label::before {
+  content: "";
+  background: transparent;
+  color: #006DFF;
+  border-radius: 100%;
+  border: 2px solid #338BFF;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  margin-right: 14px;
+  vertical-align: top;
+  cursor: pointer;
+  text-align: center;
+  transition: all 250ms ease;
+}
+
+.webview-comparison-header .plan-switcher input[type="radio"]:checked+.radio-label::before {
+  background-color: #3197EE;
+  box-shadow: inset 0 0 0 4px #141517;
+}
+
+.webview-comparison-header .plan-switcher input[type="radio"]:hover+.radio-label::before {
+  outline: none;
+  border-color: #6BABFF;
+}
+
+.webview-table-container.title-left h1 {
+    text-align: left;
+}
+
+.webview-table.two-products-variation.light-mode .webview-comparison-header .plan-switcher .radio-label::before {
+  content: "";
+  background: #f4f4f4;
+  color: #006DFF;
+  border-radius: 100%;
+  border: 2px solid #006DFF;
+}
+
+.webview-table.two-products-variation.light-mode .webview-comparison-header .plan-switcher input[type="radio"]:checked+.radio-label::before {
+  background-color: #3197EE;
+  box-shadow: inset 0 0 0 4px #f4f4f4;
+}
+
+.webview-table.two-products-variation.light-mode .webview-comparison-header .plan-switcher input[type="radio"]:focus+.radio-label::before {
+  outline: none;
+  border-color: #3197EE;
 }
