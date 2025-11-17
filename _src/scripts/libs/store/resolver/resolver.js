@@ -300,7 +300,7 @@ export class StoreResolver {
 					);
 
 					pageContexts.push(context);
-					GlobalContext.variations.push(...this.getAllVariationsFromContext(context));
+					if (!product.dataset.storeNotGlobal) GlobalContext.variations.push(...this.getAllVariationsFromContext(context));
 					optionStaticAttributes.forEach(staticAttribute => this.resolveStaticAttributes(staticAttribute, context));
 					optionClickAttributes.forEach(clickAttribute => this.resolveClickAttributes(clickAttribute, context));
 

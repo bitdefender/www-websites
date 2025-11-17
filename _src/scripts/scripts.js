@@ -30,14 +30,13 @@ import { StoreResolver } from './libs/store/index.js';
 
 import {
   createTag,
-  getPageExperimentKey,
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -473,12 +472,6 @@ export async function loadTrackers() {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  // load trackers early if there is a target experiment on the page
-  if (getPageExperimentKey()) {
-    loadTrackers();
-    await resolveNonProductsDataLayer();
-  }
-
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
@@ -518,12 +511,6 @@ async function loadLazy(doc) {
     // eslint-disable-next-line no-unused-vars
     doc.querySelector('header').style.height = 'initial';
     loadHeader(doc.querySelector('header'));
-  }
-
-  // only call load Trackers here if there is no experiment on the page
-  if (!getPageExperimentKey()) {
-    loadTrackers();
-    await resolveNonProductsDataLayer();
   }
 
   // push basic events to dataLayer
@@ -682,6 +669,8 @@ async function loadPage() {
     document.body.style = 'background-color: #141517';
   }
 
+  await loadTrackers();
+  await resolveNonProductsDataLayer();
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;

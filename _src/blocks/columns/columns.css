@@ -1299,6 +1299,10 @@
     margin-bottom: 40px;
   }
 
+  .columns-container.icon-corners .columns > div:not(:last-child) {
+    margin-bottom: 0;
+  }
+
   .columns.awards-fragment > div{
     align-items: baseline;
   }
@@ -2904,6 +2908,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns > div {
     align-items: center;
+
+    > div:has(.icon) {
+      text-align: left;
+    }
   }
 
   > div > div > div:nth-child(1) > div:nth-child(2) {
@@ -3079,7 +3087,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns-container.icon-corners {
     .columns {
-      padding: 100px;
+      padding: 50px 100px;
     }
   
     span.icon-corner-left {
