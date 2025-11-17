@@ -74,6 +74,28 @@ function renderPrices(block, metadata) {
       // Determine if current product or featured product
       const isFeatured = index + 1 === Number(featuredProduct);
       const isCurrent = Number(currentProduct) === index + 1;
+
+      // Populate buy box for non-current products
+      if (!isCurrent) {
+        buyBox.innerHTML = `
+          <div class="price-box">
+            <div data-store-hide="!it.option.price.discounted">
+              <span class="prod-oldprice" data-store-render data-store-price="full"></span>
+            </div>
+            <div class="newprice-container mt-2">
+              <span class="prod-newprice"><span data-store-render data-store-price="discounted||full"></span></span>
+            </div>
+          </div>
+          <span class="under-price-text">${firstYearText}</span>
+        `;
+        const buyLink = cell.querySelector('a[href*="#buylink"]');
+        buyLink?.setAttribute('data-store-buy-link', '');
+        buyLink?.setAttribute('data-store-render', '');
+      } else {
+        cell.classList.add('current');
+      }
+      cell.insertAdjacentElement('afterbegin', buyBox);
+
       if (prodName && !isCurrent) {
         wrapChildrenWithStoreContext(cell, {
           productId: prodName,
@@ -107,27 +129,7 @@ function renderPrices(block, metadata) {
         `;
         savingsTag.style.visibility = 'visible';
       }
-      // Populate buy box for non-current products
-      if (!isCurrent) {
-        buyBox.innerHTML = `
-          <div class="price-box">
-            <div data-store-hide="!it.option.price.discounted">
-              <span class="prod-oldprice" data-store-render data-store-price="full"></span>
-            </div>
-            <div class="newprice-container mt-2">
-              <span class="prod-newprice"><span data-store-render data-store-price="discounted||full"></span></span>
-            </div>
-          </div>
-          <span class="under-price-text">${firstYearText}</span>
-        `;
-        const buyLink = cell.querySelector('a[href*="#buylink"]');
-        buyLink?.setAttribute('data-store-buy-link', '');
-        buyLink?.setAttribute('data-store-render', '');
-      } else {
-        cell.classList.add('current');
-      }
 
-      cell.insertAdjacentElement('afterbegin', buyBox);
       const tagCell = block.querySelector(`div[role="columnheader"]:nth-of-type(${index + 2})`);
       tagCell.insertAdjacentElement('afterbegin', savingsTag);
 
