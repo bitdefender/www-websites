@@ -615,12 +615,18 @@ export default async function decorate(block) {
 
     const pastedText = event.clipboardData.getData('text');
 
-    const country = detectCountry(parsePhoneNumber(pastedText, block));
-    const countryData = countries.data.find((c) => c.ISO === country);
-    const dropdownInput = block.querySelector('#dropdown-input');
-    const dropdownFlag = block.querySelector('.dropdown-input-wrapper img');
-    dropdownInput.value = countryData.code;
-    input.value = pastedText.replace(countryData.code, '');
-    dropdownFlag.src = countryData.flag;
+    try {
+      const country = detectCountry(parsePhoneNumber(pastedText, block));
+      const countryData = countries.data.find((c) => c.ISO === country);
+      const dropdownInput = block.querySelector('#dropdown-input');
+      const dropdownFlag = block.querySelector('.dropdown-input-wrapper img');
+      dropdownInput.value = countryData.code;
+      input.value = pastedText.replace(countryData.code, '');
+      dropdownFlag.src = countryData.flag;
+    } catch (error) {
+      // if the input is invalid or incomplete (prefix already selected)
+      // phoneUtil will throw an error => fallback to standard paste
+      input.value = pastedText;
+    }
   });
 }
