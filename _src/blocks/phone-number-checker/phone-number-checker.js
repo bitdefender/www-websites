@@ -256,7 +256,14 @@ async function inlineFlagsInOptions() {
 }
 
 async function fetchData(url, body) {
-  const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Nimbus-ClientID': '95171ee6-2565-4033-859d-42c790048a24',
+    },
+    body: JSON.stringify(body),
+  });
   const json = await resp.json();
   return json.result || json;
 }
