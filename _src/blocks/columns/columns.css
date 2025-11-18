@@ -3444,10 +3444,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .columns-tabs > div.default-content-wrapper.section-el:not(:first-of-type) {
     margin: 0;
   }
-
-  .columns-tabs .block > div {
-    
-  }
 }
 
 @media (max-width: 767px) {
