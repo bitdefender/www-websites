@@ -1,4 +1,7 @@
 import '@repobit/dex-system-design/accordion-bg';
+import '@repobit/dex-system-design/heading';
+import '@repobit/dex-system-design/paragraph';
+import '@repobit/dex-system-design/link';
 
 export default function decorate(block) {
   block.classList.add('global-styles');
@@ -6,9 +9,9 @@ export default function decorate(block) {
   block.innerHTML = `
     <bd-accordion-bg title="Terms of use">
       <bd-accordion-bg-item title="Auto renewal terms">
-        <div>
-          <p>Test</p>
-        </div>
+        <bd-h as="h2" fontWeight="500">Test</bd-h>
+        <bd-p>Paragraph test <bd-link href="https://google.com" underline="true">Press me</bd-link></bd-p>
+        <h2>Test H3</h2>
       </bd-accordion-bg-item>
     </bd-accordion-bg>
   `;

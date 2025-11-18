@@ -2,6 +2,9 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 import '@repobit/dex-system-design/header';
+import '@repobit/dex-system-design/button';
+import '@repobit/dex-system-design/picture';
+// import '@repobit/dex-system-design/button';
 import {
   openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
 } from '../../scripts/utils/utils.js';
@@ -163,7 +166,33 @@ export default async function decorate(block, options) {
   block.dataset.storeOption = '5-1';
   block.dataset.storeDepartment = 'consumer';
   const picture = block.querySelector('picture');
-  picture.setAttribute('slot', 'header-image');
+
+  /** @type {HTMLElement} */
+  const createBdPictureElement = (edsPicture) => {
+    if (edsPicture) {
+      const pictureElement = document.createElement('bd-picture');
+      const sources = [...edsPicture.querySelectorAll('source')].map((sourceElement) => ({
+        type: sourceElement.type,
+        srcset: sourceElement.srcset,
+        media: sourceElement.media,
+        sizes: sourceElement.sizes,
+      }));
+
+      /** @type {HTMLImageElement} */
+      const edsImage = edsPicture.querySelector('img');
+      pictureElement.setAttribute('slot', 'header-picture');
+      pictureElement.setAttribute('sources', JSON.stringify(sources));
+      pictureElement.setAttribute('width', edsImage?.width);
+      pictureElement.setAttribute('height', edsImage?.height);
+      pictureElement.setAttribute('loading', edsImage?.loading);
+      pictureElement.setAttribute('fallbackSrc', edsImage?.src);
+
+      return pictureElement;
+    }
+
+    return null;
+  };
+
   block.innerHTML = `
     <bd-header
       productName="Bitdefender Total Security"
@@ -172,8 +201,7 @@ export default async function decorate(block, options) {
       fullPrice="<span data-store-text-variable>{PRICE_FULL}</span>"
       discount="50$"
       finalPrice="150$">
-      <bd-price />
-      ${picture.outerHTML}
+      ${createBdPictureElement(picture)?.outerHTML || ''}
       <div class="ceva" slot="disclaimer-bottom-text-start">
         Ceva text
       </div>
