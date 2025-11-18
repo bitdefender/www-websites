@@ -707,9 +707,9 @@ async function loadPage() {
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
 
-  await storeRoot.updateComplete;
   registerActionNodes(main);
   registerRenderNodes(main);
+  await storeRoot.updateComplete;
 
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));

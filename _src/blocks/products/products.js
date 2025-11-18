@@ -293,7 +293,9 @@ function renderLowestPrice(...params) {
   root.classList.add('await-loader');
   textArea.textContent = text.replace(
     '0',
-    monthly.toLowerCase() === 'monthly' ? '{{=it.state.price.monthly.min}}' : '{{=it.state.price.discounted.min}}',
+    monthly.toLowerCase() === 'monthly'
+      ? '{{=it.state.price.discounted.monthly.min || it.state.price.full.monthly.min}}'
+      : '{{=it.state.price.discounted.min || it.state.price.full.min}}',
   );
   root.appendChild(textArea);
   return root;
