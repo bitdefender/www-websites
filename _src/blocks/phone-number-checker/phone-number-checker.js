@@ -616,7 +616,16 @@ export default async function decorate(block) {
     });
   }
 
-  button.addEventListener('click', () => checkPhoneNumber(block, input, result, statusMessages, statusTitles, statusSubtitles));
+  // eslint-disable-next-line max-len
+  const handler = () => checkPhoneNumber(block, input, result, statusMessages, statusTitles, statusSubtitles);
+
+  button.addEventListener('click', handler);
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      handler();
+    }
+  });
 
   input.addEventListener('paste', (event) => {
     event.preventDefault();
