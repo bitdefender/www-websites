@@ -315,8 +315,6 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
   const deviceId = 'test_device_id';
   const encryptedPhone = xorEncode(validated.sanitized, deviceId);
 
-  console.log('Sanitized number:', validated.sanitized);
-  console.log('Encrypted: ', encryptedPhone);
   const payload = {
     d: deviceId,
     v: '1.0.0-initial-version',
@@ -326,7 +324,7 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
     },
   };
 
-  const request = await fetchData(' https://internal.lambada.nmbapp.net/lambada/phone_checker/scan', payload);
+  const request = await fetchData('https://nimbus.bitdefender.net/lambada/phone_checker/scan', payload);
   if (request.error) {
     if (request.erorr) {
       result.innerHTML = `${statusMessages.error ?? ''}`;
@@ -335,8 +333,6 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
       return;
     }
   }
-
-  console.log('Received data:', request);
 
   let statusCode; let message; let className;
   if (request.status_code === 0) {
