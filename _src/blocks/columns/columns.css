@@ -3315,8 +3315,16 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   transition: all .4s ease-in-out;
 }
 
+.columns-tabs .block {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
 .columns-tabs .block img {
   border-radius: 16px;
+  height: 100%;
+  object-fit: cover;
 }
 
 .columns-tabs .block h2 {
@@ -3412,6 +3420,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns-tabs .block > div {
   align-items: start;
+  justify-content: flex-start;
 }
 
 .columns-tabs .section-el {
@@ -3425,15 +3434,15 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   position: relative;
 }
 
+@media (max-width: 1265px) {
+  .columns-tabs .block p:nth-of-type(2) {
+    height: 170px;
+  }
+}
+
 @media (max-width: 991px) {
   .columns-tabs > div.default-content-wrapper.section-el:not(:first-of-type) {
     margin: 0;
-  }
-
-  .columns-tabs .block > div {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2em;
   }
 }
 
@@ -3450,10 +3459,16 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     padding-top: 0!important;
   }
 
+  .columns-tabs .block {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .columns-tabs .block p:nth-of-type(2) {
+    height: 185px;
+  }
+
   .columns-tabs .block > div {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 2em;
+    flex: 0 0 calc(50% - 20px);
   }
 
   .columns-container .block.sidebar h1 {
@@ -3463,5 +3478,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns-container .block.sidebar .columns-left-col ul, .columns-container .block.sidebar .columns-left-col ul li {
     padding-left: 0;
+  }
+}
+
+@media (max-width: 550px) {
+  .columns-tabs .block {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
