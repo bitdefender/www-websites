@@ -751,9 +751,10 @@ export function decorateButtons(element) {
           return;
         }
 
-        if (up.childNodes.length === 1 && up.tagName === 'EM'
-            && twoup.childNodes.length === 1 && twoup.tagName === 'STRONG'
-            && threeup?.childNodes.length === 1 && threeup?.tagName === 'P') {
+        if (up.childNodes.length === 1
+          && ((up.tagName === 'EM' && twoup.childNodes.length === 1 && twoup.tagName === 'STRONG')
+          || (up.tagName === 'STRONG' && twoup.childNodes.length === 1 && twoup.tagName === 'EM'))
+          && threeup?.childNodes.length === 1 && threeup?.tagName === 'P') {
           a.className = 'button secondary';
           threeup.classList.add('button-container');
           up.replaceWith(a);
