@@ -134,8 +134,7 @@ main .section.phone-number-checker-container {
         width: 100%;
 
         .country-dropdown-container {
-            min-width: 100px;
-            width: 130px;
+            max-width: 100px;
 
             .dropdown-input-wrapper {
                 display: flex;
@@ -147,7 +146,7 @@ main .section.phone-number-checker-container {
                 background-color: #E4F2FF;
                 border: 1px solid #006EFF;
                 border-right: none;
-                padding-left: 5px;
+                padding-left: 10px;
                 padding-right: 10px;
                 justify-items: space-between;
 
@@ -165,6 +164,7 @@ main .section.phone-number-checker-container {
                     height: 20px;
                     object-fit: cover;
                     margin-right: 8px;
+                    justify-self: center;
                 }               
             }
 
@@ -286,9 +286,9 @@ main .section.phone-number-checker-container {
             border-radius:0 8px 8px 0;
             border: 1px solid #006EFF;
             border-left: none;
-            width: 100%;
             margin: 0;
             position: relative;
+            z-index: 1;
         }
 
         #inputDiv {
@@ -304,15 +304,16 @@ main .section.phone-number-checker-container {
             display: flex;
         }
 
-        #copy-to-clipboard {
+        #paste-from-clipboard {
             width: 16px;
             height: 21px;
-            background: url("../../icons/phone-number-checker-example.svg") no-repeat;
+            background: url("../../icons/link-checker-example.svg") no-repeat;
             background-size: contain;
             position: absolute;
             top: 15px;
             right: 15px;
             cursor: pointer;
+            z-index: 9999;
         }
 
         .buttons-container {
@@ -487,10 +488,8 @@ main .section.phone-number-checker-container {
         }
 
         .privacy-policy {
-            margin-top: 20px;
             font-size: 12px;
-            width: 70%;
-            margin: auto;
+            margin: 15px 0;
 
             p {
                 font-size: 12px;

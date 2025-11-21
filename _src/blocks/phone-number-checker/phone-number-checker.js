@@ -3,6 +3,20 @@ import page from '../../scripts/page.js';
 let phoneUtil; let
   countries;
 
+const sharedPrefixMap = {
+  '+1': 'United States',
+  '+358': 'Finland',
+  '+61': 'Australia',
+  '+599': 'Curaçao',
+  '+590': 'Guadeloupe',
+  '+44': 'United Kingdom',
+  '+39': 'Italy',
+  '+212': 'Morocco',
+  '+262': 'Réunion',
+  '+47': 'Norway',
+  '+7': 'Russia',
+};
+
 async function initValidatorLibrary() {
   // --- Step 0: dynamically load libphonenumber ---
   if (typeof window.libphonenumber === 'undefined') {
@@ -113,13 +127,13 @@ async function inlineFlagsInOptions() {
   triggerFlag.classList.add('flag');
   triggerFlag.src = defaultCountry.flag;
 
-  const input = document.createElement('input');
-  input.setAttribute('autocomplete', 'off');
-  input.id = 'dropdown-input';
-  input.type = 'text';
-  input.value = defaultCountry.code;
+  const dropdownInput = document.createElement('input');
+  dropdownInput.setAttribute('autocomplete', 'off');
+  dropdownInput.id = 'dropdown-input';
+  dropdownInput.type = 'text';
+  dropdownInput.value = defaultCountry.code;
 
-  inputWrapper.append(triggerFlag, input);
+  inputWrapper.append(triggerFlag, dropdownInput);
   container.appendChild(inputWrapper);
 
   const dropdown = document.createElement('div');
@@ -129,6 +143,16 @@ async function inlineFlagsInOptions() {
   function showDropdown() {
     dropdown.style.display = 'block';
     dropdown.classList.add('open');
+    dropdown.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+    });
+  }
+
+  function activateSearchState() {
+    triggerFlag.src = '/_src/icons/search-icon.svg';
+    dropdownInput.placeholder = 'Search';
+    dropdownInput.value = '';
   }
 
   function hideDropdown() {
@@ -137,7 +161,7 @@ async function inlineFlagsInOptions() {
   }
 
   function selectOption(country) {
-    input.value = country.code;
+    dropdownInput.value = country.code;
     triggerFlag.src = country.flag;
     hideDropdown();
   }
@@ -150,7 +174,8 @@ async function inlineFlagsInOptions() {
     options = [];
     countries.data.forEach((country) => {
       if (!country.country.toLowerCase().startsWith(filter.toLowerCase())
-        && !country.code.toLowerCase().includes(filter.toLowerCase())) return;
+        && !country.code.toLowerCase().includes(filter.toLowerCase())
+        && !country.ISO.toLowerCase().startsWith(filter.toLowerCase())) return;
 
       const option = document.createElement('div');
       option.classList.add('dropdown-option');
@@ -200,26 +225,23 @@ async function inlineFlagsInOptions() {
     }
   }
 
-  input.addEventListener('focus', () => {
+  dropdownInput.addEventListener('focus', () => {
     showDropdown();
-    input.value = '';
-    triggerFlag.src = '/_src/icons/search-icon.svg';
-    input.placeholder = 'Search';
+    activateSearchState();
   });
-  input.addEventListener('input', () => {
-    renderOptions(input.value);
+
+  dropdownInput.addEventListener('input', () => {
+    renderOptions(dropdownInput.value);
     triggerFlag.classList.remove('search-icon');
     showDropdown();
   });
 
   triggerFlag.addEventListener('click', () => {
     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    input.value = '';
-    triggerFlag.src = '/_src/icons/search-icon.svg';
-    input.placeholder = 'Search';
+    activateSearchState();
   });
 
-  input.addEventListener('keydown', (e) => {
+  dropdownInput.addEventListener('keydown', (e) => {
     if (dropdown.style.display !== 'block') return;
 
     if (e.key === 'ArrowDown') {
@@ -554,16 +576,92 @@ export default async function decorate(block) {
   formContainer.appendChild(inputContainer);
 
   const input = document.createElement('input');
+
+  const result = document.createElement('div');
+  result.className = 'result';
+
+  // eslint-disable-next-line max-len
+  const handler = () => checkPhoneNumber(block, input, result, statusMessages, statusTitles, statusSubtitles);
+
   input.type = 'text';
   input.placeholder = `${placeholder ?? ''}`;
   input.id = 'phone-number-checker-input';
+  input.setAttribute('inputmode', 'numeric');
+  input.addEventListener('input', () => {
+    if (input.value.startsWith('00') || input.value.startsWith('+')) {
+      const cleanedValue = input.value.replace('00', '+');
+      const dropdownInput = block.querySelector('#dropdown-input');
+      const dropdownFlag = block.querySelector('.dropdown-input-wrapper img');
+      let foundCountry = sharedPrefixMap[cleanedValue];
+      if (foundCountry) {
+        foundCountry = countries.data.find((c) => c.country === foundCountry);
+        if (foundCountry) {
+          dropdownFlag.src = foundCountry.flag;
+          dropdownInput.value = foundCountry.code;
+          input.value = '';
+        }
+      } else {
+        foundCountry = countries.data.find((c) => c.code === cleanedValue);
+        if (foundCountry) {
+          dropdownFlag.src = foundCountry.flag;
+          dropdownInput.value = foundCountry.code;
+          input.value = '';
+        }
+      }
+    }
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      handler();
+    }
+  });
+
+  input.addEventListener('paste', (event) => {
+    event.preventDefault();
+    const pastedText = event.clipboardData.getData('text');
+
+    try {
+      const country = detectCountry(parsePhoneNumber(pastedText, block));
+      const countryData = countries.data.find((c) => c.ISO === country);
+      const dropdownInput = block.querySelector('#dropdown-input');
+      const dropdownFlag = block.querySelector('.dropdown-input-wrapper img');
+      dropdownInput.value = countryData.code;
+      input.value = pastedText.replace(countryData.code, '');
+      dropdownFlag.src = countryData.flag;
+    } catch (error) {
+      // if the input is invalid or incomplete (prefix already selected)
+      // phoneUtil will throw an error => fallback to standard paste
+      input.value = pastedText;
+    }
+  });
 
   const inputDiv = document.createElement('p');
   inputDiv.setAttribute('id', 'inputDiv');
 
+  const pasteElement = document.createElement('span');
+  pasteElement.id = 'paste-from-clipboard';
+  pasteElement.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+
+      const data = new DataTransfer();
+      data.setData('text/plain', text);
+
+      const pasteEvent = new ClipboardEvent('paste', {
+        clipboardData: data,
+      });
+
+      input.dispatchEvent(pasteEvent);
+    } catch (err) {
+      console.error('Clipboard read failed:', err);
+    }
+  });
+
   const divContainer = document.createElement('div');
   divContainer.className = 'input-container__container';
   divContainer.appendChild(input);
+  divContainer.appendChild(pasteElement);
   block.prepend(inputDiv);
 
   const selectEl = await inlineFlagsInOptions();
@@ -577,8 +675,6 @@ export default async function decorate(block) {
   button.classList.add('check-url');
   inputContainer.appendChild(button);
 
-  const result = document.createElement('div');
-  result.className = 'result';
   formContainer.appendChild(result);
 
   block.querySelectorAll(':scope > div')[1].replaceWith(formContainer);
@@ -612,34 +708,5 @@ export default async function decorate(block) {
     });
   }
 
-  // eslint-disable-next-line max-len
-  const handler = () => checkPhoneNumber(block, input, result, statusMessages, statusTitles, statusSubtitles);
-
   button.addEventListener('click', handler);
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      handler();
-    }
-  });
-
-  input.addEventListener('paste', (event) => {
-    event.preventDefault();
-
-    const pastedText = event.clipboardData.getData('text');
-
-    try {
-      const country = detectCountry(parsePhoneNumber(pastedText, block));
-      const countryData = countries.data.find((c) => c.ISO === country);
-      const dropdownInput = block.querySelector('#dropdown-input');
-      const dropdownFlag = block.querySelector('.dropdown-input-wrapper img');
-      dropdownInput.value = countryData.code;
-      input.value = pastedText.replace(countryData.code, '');
-      dropdownFlag.src = countryData.flag;
-    } catch (error) {
-      // if the input is invalid or incomplete (prefix already selected)
-      // phoneUtil will throw an error => fallback to standard paste
-      input.value = pastedText;
-    }
-  });
 }
