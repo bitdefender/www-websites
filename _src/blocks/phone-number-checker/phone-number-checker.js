@@ -619,9 +619,10 @@ export default async function decorate(block) {
 
   input.addEventListener('paste', (event) => {
     event.preventDefault();
-    const pastedText = event.clipboardData.getData('text');
+    let pastedText = event.clipboardData.getData('text');
 
     try {
+      if (pastedText.startsWith('00')) pastedText = pastedText.replace('00', '+');
       const country = detectCountry(parsePhoneNumber(pastedText, block));
       const countryData = countries.data.find((c) => c.ISO === country);
       const dropdownInput = block.querySelector('#dropdown-input');

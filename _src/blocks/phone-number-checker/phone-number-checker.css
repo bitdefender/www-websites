@@ -39,6 +39,7 @@ main .section.phone-number-checker-container {
             border: 2px dashed #D82E21;
             padding-right: 15px;
             pointer-events: none;
+            border-radius: 8px;
         }
 
         .phone-number-checker input[type="text"] {
@@ -96,6 +97,7 @@ main .section.phone-number-checker-container {
             border: 2px dashed #3D8648;
             padding-right: 15px;
             pointer-events: none;
+            border-radius: 8px;
         }
 
         .phone-number-checker input[type="text"] {
@@ -223,6 +225,10 @@ main .section.phone-number-checker-container {
             &.active .dropdown-list {
                 display: block;
             }
+        }
+
+        &:has(.dropdown-list.open) input[type="text"] {
+            border-bottom-right-radius: 0;
         }
 
     }
