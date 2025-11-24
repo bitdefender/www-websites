@@ -27,7 +27,7 @@ main .section.phone-number-checker-container {
     &.danger {
         &::before {
             background-color: #3e030b;
-            background-image: url("../../icons/phone-number-checker-pattern-red.svg");
+            background-image: url("../../icons/phone-checker-pattern-red.svg");
         }
 
         .check-url {

@@ -385,18 +385,23 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
   }
 }
 
-function getTrialPeriod(block) {
-  const { trialPeriod } = block.closest('.section').dataset;
-  if (!trialPeriod) return '';
-  const trialPeriodArray = trialPeriod.trim().split(',');
+function getTrialMessage(block, message) {
+  const { iosTrial, androidTrial, desktopTrial } = block.closest('.section').dataset;
+  if (!iosTrial || !androidTrial || !desktopTrial) return '';
+  let trialProduct; let trialPeriod;
   switch (UserAgent.os) {
     case 'ios':
-      return trialPeriodArray[1] ?? '';
+      [trialProduct, trialPeriod] = iosTrial.split('-');
+      break;
     case 'android':
-      return trialPeriodArray[1] ?? '';
+      [trialProduct, trialPeriod] = androidTrial.split('-');
+      break;
     default:
-      return trialPeriodArray[0] ?? '';
+      [trialProduct, trialPeriod] = desktopTrial.split('-');
+      break;
   }
+
+  return message.replace('{PROD}', trialProduct).replace('0', trialPeriod.trim());
 }
 
 function createStatusSubtitles(block) {
@@ -548,7 +553,7 @@ function displayStoredResult(block, statusMessages, statusTitles, statusSubtitle
     input.value = resultData.url;
     input.setAttribute('disabled', '');
     document.getElementById('inputDiv').textContent = resultData.phoneNumber;
-    result.innerHTML = resultData.message.replace('0', getTrialPeriod(block));
+    result.innerHTML = getTrialMessage(block, resultData.message);
     result.className = resultData.className;
     block.closest('.section').classList.add(resultData.className.split(' ')[1]);
 
