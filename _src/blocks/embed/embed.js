@@ -75,8 +75,6 @@ const loadEmbed = (block, link, autoplay) => {
     },
   ];
 
-  console.log(block.classList)
-
   const config = EMBEDS_CONFIG.find((e) => e.match.some((match) => link.includes(match)));
   const url = new URL(link);
   if (config) {
