@@ -1,3 +1,4 @@
+import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
 
 let phoneUtil; let
@@ -110,9 +111,10 @@ function validatePhoneNumber(input, block) {
   }
 }
 
-async function inlineFlagsInOptions() {
+async function createDropdown(block) {
   await getCountryData();
   if (!countries) return null;
+  const { dropdownPlaceholder } = block.closest('.section').dataset;
   const defaultCountryISO = page?.country?.toUpperCase();
   const defaultCountry = countries.data.find((c) => c.ISO === defaultCountryISO)
    || countries.data[0];
@@ -151,7 +153,7 @@ async function inlineFlagsInOptions() {
 
   function activateSearchState() {
     triggerFlag.src = '/_src/icons/search-icon.svg';
-    dropdownInput.placeholder = 'Search';
+    dropdownInput.placeholder = dropdownPlaceholder ?? '';
     dropdownInput.value = '';
   }
 
@@ -383,6 +385,20 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
   }
 }
 
+function getTrialPeriod(block) {
+  const { trialPeriod } = block.closest('.section').dataset;
+  if (!trialPeriod) return '';
+  const trialPeriodArray = trialPeriod.trim().split(',');
+  switch (UserAgent.os) {
+    case 'ios':
+      return trialPeriodArray[1] ?? '';
+    case 'android':
+      return trialPeriodArray[1] ?? '';
+    default:
+      return trialPeriodArray[0] ?? '';
+  }
+}
+
 function createStatusSubtitles(block) {
   const statusSubtitles = {};
 
@@ -532,7 +548,7 @@ function displayStoredResult(block, statusMessages, statusTitles, statusSubtitle
     input.value = resultData.url;
     input.setAttribute('disabled', '');
     document.getElementById('inputDiv').textContent = resultData.phoneNumber;
-    result.innerHTML = resultData.message;
+    result.innerHTML = resultData.message.replace('0', getTrialPeriod(block));
     result.className = resultData.className;
     block.closest('.section').classList.add(resultData.className.split(' ')[1]);
 
@@ -665,7 +681,7 @@ export default async function decorate(block) {
   divContainer.appendChild(pasteElement);
   block.prepend(inputDiv);
 
-  const selectEl = await inlineFlagsInOptions();
+  const selectEl = await createDropdown(block);
   selectEl.value = page.country.toUpperCase();
 
   divContainer.prepend(selectEl);

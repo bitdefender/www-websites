@@ -36,6 +36,7 @@ main .section.phone-number-checker-container {
 
         .phone-number-checker input[type="text"], .phone-number-checker #inputDiv {
             max-width: 100%;
+            min-width: 100%;
             border: 2px dashed #D82E21;
             padding-right: 15px;
             pointer-events: none;
@@ -94,6 +95,7 @@ main .section.phone-number-checker-container {
 
         .phone-number-checker input[type="text"], .phone-number-checker #inputDiv {
             max-width: 100%;
+            min-width: 100%;
             border: 2px dashed #3D8648;
             padding-right: 15px;
             pointer-events: none;
@@ -158,7 +160,6 @@ main .section.phone-number-checker-container {
                     outline: none;
                     background: transparent;
                     padding-left: 0;
-                    font-size: 16px;
                     padding-right: 0;
                 }
 
@@ -289,7 +290,7 @@ main .section.phone-number-checker-container {
 
         input[type="text"],#inputDiv {
             padding: 15px;
-            font-size: 1em;
+            font-size: 14px;
             border-radius:0 8px 8px 0;
             border: 1px solid #006EFF;
             border-left: none;
@@ -312,8 +313,8 @@ main .section.phone-number-checker-container {
         }
 
         #paste-from-clipboard {
-            width: 16px;
-            height: 21px;
+            width: 12px;
+            height: 16px;
             background: url("../../icons/link-checker-example.svg") no-repeat;
             background-size: contain;
             position: absolute;
@@ -343,7 +344,7 @@ main .section.phone-number-checker-container {
             border: none;
             border-radius: 10px;
             font-weight: bold;
-            font-size: 1em;
+            font-size: 14px;
         }
 
         button.check-url:hover {
@@ -515,6 +516,11 @@ main .section.phone-number-checker-container {
         .phone-number-checker{
             padding: 48px 60px 35px;
             
+            #paste-from-clipboard {
+                height: 21px;
+                width: 16px;
+            }
+
             .input-container{
                 flex-direction: unset;
             }
@@ -531,6 +537,7 @@ main .section.phone-number-checker-container {
 
             button.check-url {
                 white-space: nowrap;
+                font-size: 16px;
             }
 
             .share-popup{
@@ -563,6 +570,10 @@ main .section.phone-number-checker-container {
                     margin-bottom: 40px;
                 }
             }
+
+            & input[type="text"], & #inputDiv {
+                font-size: 16px;
+            }   
         }
     }
 
@@ -592,7 +603,7 @@ main .default-content-wrapper {
     input[type="text"],#inputDiv {
         padding: 15px;
         padding-right: 35px;
-        font-size: 1em;
+        font-size: 14px;
         border-radius: 8px;
         border: 1px solid #006EFF;
         width: 100%;
@@ -620,7 +631,7 @@ main .default-content-wrapper {
         border: none;
         border-radius: 10px;
         font-weight: bold;
-        font-size: 1em;
+        font-size: 14px;
         white-space: nowrap;
     }
 
