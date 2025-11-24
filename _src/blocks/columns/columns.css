@@ -507,13 +507,24 @@
   display: block;
 }
 
-.creators .columns-container a.button {
+.creators .columns-container a.button, .creators .columns-container a.button:any-link, .creators a.button:any-link {
   height: auto;
   background: #E72325 0% 0% no-repeat padding-box;
   border-radius: 30px;
   justify-content: center;
-  padding: 5px 10px;
-  font-size: 14px;
+  padding: 10px 19px;
+  font-size: 18px;
+  line-height: 18px;
+  color: white;
+}
+
+.creators a.button:any-link:hover {
+  color: white;
+}
+
+.creators a.button:any-link::after, .creators a.button:any-link:hover::after {
+  color: white;
+  background-color: white;
 }
 
 .columns-container.blue-title .button-container a {

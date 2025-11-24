@@ -437,7 +437,7 @@ main .section.light-sky-blue-parent { /* apply parent wrapper */
   background-color: var(--background-color-light-sky-blue);
 }
 
-main .section.rounded-corners { /* apply parent wrapper */
+main .section.rounded-corners, main .section .block.rounded-corners iframe { /* apply parent wrapper */
   border-radius: 20px;
 }
 
@@ -668,7 +668,7 @@ main .section.blue-title {
   }
 }
 
-main .grey-background{
+main .grey-background {
   background-color: #F6F6F6 !important;
 }
 

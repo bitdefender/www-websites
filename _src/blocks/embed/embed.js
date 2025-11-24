@@ -75,14 +75,15 @@ const loadEmbed = (block, link, autoplay) => {
     },
   ];
 
+  console.log(block.classList)
+
   const config = EMBEDS_CONFIG.find((e) => e.match.some((match) => link.includes(match)));
   const url = new URL(link);
   if (config) {
     block.innerHTML = config.embed(url, autoplay);
-    block.classList = `block embed embed-${config.match[0]}`;
+    block.classList.add(`embed-${config.match[0]}`);
   } else {
     block.innerHTML = getDefaultEmbed(url);
-    block.classList = 'block embed';
   }
   block.classList.add('embed-is-loaded');
 };
@@ -90,6 +91,7 @@ const loadEmbed = (block, link, autoplay) => {
 export default function decorate(block) {
   const placeholder = block.querySelector('picture');
   const link = block.querySelector('a').href;
+  const autoplayType = !block.classList.contains('autoplay-off');
   block.textContent = '';
 
   if (placeholder) {
@@ -98,14 +100,14 @@ export default function decorate(block) {
     wrapper.innerHTML = '<div class="embed-placeholder-play"><button title="Play"></button></div>';
     wrapper.prepend(placeholder);
     wrapper.addEventListener('click', () => {
-      loadEmbed(block, link, true);
+      loadEmbed(block, link, autoplayType);
     });
     block.append(wrapper);
   } else {
     const observer = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         observer.disconnect();
-        loadEmbed(block, link, true);
+        loadEmbed(block, link, autoplayType);
       }
     });
     observer.observe(block);
