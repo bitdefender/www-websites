@@ -17,12 +17,6 @@ function initDotHero(canvasId, sectionSelector) {
     return;
   }
 
-  // Check for reduced motion preference
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    console.log('Reduced motion detected, skipping animation');
-    return;
-  }
-
   const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
   const ctx = canvas.getContext('2d', { alpha: true, willReadFrequently: true});
   const off = document.createElement('canvas');
