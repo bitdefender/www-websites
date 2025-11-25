@@ -507,13 +507,24 @@
   display: block;
 }
 
-.creators .columns-container a.button {
+.creators .columns-container a.button, .creators .columns-container a.button:any-link, .creators a.button:any-link {
   height: auto;
   background: #E72325 0% 0% no-repeat padding-box;
   border-radius: 30px;
   justify-content: center;
-  padding: 5px 10px;
-  font-size: 14px;
+  padding: 10px 19px;
+  font-size: 18px;
+  line-height: 18px;
+  color: white;
+}
+
+.creators a.button:any-link:hover {
+  color: white;
+}
+
+.creators a.button:any-link::after, .creators a.button:any-link:hover::after {
+  color: white;
+  background-color: white;
 }
 
 .columns-container.blue-title .button-container a {
@@ -1297,6 +1308,10 @@
 
   .columns > div:not(:last-child) {
     margin-bottom: 40px;
+  }
+
+  .columns-container.icon-corners .columns > div:not(:last-child) {
+    margin-bottom: 0;
   }
 
   .columns.awards-fragment > div{
@@ -2904,6 +2919,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns > div {
     align-items: center;
+
+    > div:has(.icon) {
+      text-align: left;
+    }
   }
 
   > div > div > div:nth-child(1) > div:nth-child(2) {
@@ -3079,7 +3098,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns-container.icon-corners {
     .columns {
-      padding: 100px;
+      padding: 50px 100px;
     }
   
     span.icon-corner-left {
@@ -3307,8 +3326,16 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   transition: all .4s ease-in-out;
 }
 
+.columns-tabs .block {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
 .columns-tabs .block img {
   border-radius: 16px;
+  height: 100%;
+  object-fit: cover;
 }
 
 .columns-tabs .block h2 {
@@ -3338,6 +3365,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns-tabs .block p:first-of-type {
   margin-top: 0;
+}
+
+.columns-tabs .block p:nth-of-type(2) {
+  height: 215px;
+  overflow: hidden;
+  border-radius: 16px;
 }
 
 .columns-tabs .block p {
@@ -3383,7 +3416,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   font-style: normal;
 }
@@ -3398,6 +3431,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns-tabs .block > div {
   align-items: start;
+  justify-content: flex-start;
 }
 
 .columns-tabs .section-el {
@@ -3411,15 +3445,15 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   position: relative;
 }
 
+@media (max-width: 1265px) {
+  .columns-tabs .block p:nth-of-type(2) {
+    height: 170px;
+  }
+}
+
 @media (max-width: 991px) {
   .columns-tabs > div.default-content-wrapper.section-el:not(:first-of-type) {
     margin: 0;
-  }
-
-  .columns-tabs .block > div {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2em;
   }
 }
 
@@ -3436,10 +3470,16 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     padding-top: 0!important;
   }
 
+  .columns-tabs .block {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .columns-tabs .block p:nth-of-type(2) {
+    height: 185px;
+  }
+
   .columns-tabs .block > div {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 2em;
+    flex: 0 0 calc(50% - 20px);
   }
 
   .columns-container .block.sidebar h1 {
@@ -3449,5 +3489,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns-container .block.sidebar .columns-left-col ul, .columns-container .block.sidebar .columns-left-col ul li {
     padding-left: 0;
+  }
+}
+
+@media (max-width: 550px) {
+  .columns-tabs .block {
+    grid-template-columns: repeat(1, 1fr);
   }
 }

@@ -36,14 +36,13 @@ import {
 
 import {
   createTag,
-  getPageExperimentKey,
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['hero', 'password-generator']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -409,7 +408,7 @@ const initializeHubspotModule = () => {
     const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
     const popupContainer = hubspotContainer.querySelector('.download-popup__container');
 
-    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
+    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
       trigger.addEventListener('click', () => {
         popupContainer.style.display = 'block';
         const newPageLoadStartedEvent = new WindowLoadStartedEvent();
@@ -478,12 +477,6 @@ export async function loadTrackers() {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  // load trackers early if there is a target experiment on the page
-  if (getPageExperimentKey()) {
-    loadTrackers();
-    await resolveNonProductsDataLayer();
-  }
-
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
@@ -523,12 +516,6 @@ async function loadLazy(doc) {
     // eslint-disable-next-line no-unused-vars
     doc.querySelector('header').style.height = 'initial';
     loadHeader(doc.querySelector('header'));
-  }
-
-  // only call load Trackers here if there is no experiment on the page
-  if (!getPageExperimentKey()) {
-    loadTrackers();
-    await resolveNonProductsDataLayer();
   }
 
   // push basic events to dataLayer
@@ -701,6 +688,8 @@ async function loadPage() {
 
   registerContextNodes();
 
+  await loadTrackers();
+  await resolveNonProductsDataLayer();
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;

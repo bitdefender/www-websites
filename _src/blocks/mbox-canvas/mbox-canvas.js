@@ -1,9 +1,10 @@
 import { AdobeDataLayerService, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
 import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
-import { getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
+import { getMetadata, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
 import { Constants } from '../../scripts/libs/constants.js';
+import { StoreResolver } from '../../scripts/libs/store/index.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
   const newHtml = document.createElement('div');
@@ -14,19 +15,70 @@ function decorateHTMLOffer(aemHeaderHtml) {
   return newHtml;
 }
 
-function createOfferParameters() {
+const serviceIdSegmentCache = new Map();
+async function extractServiceId(serviceId) {
+  if (!serviceId) {
+    return null;
+  }
+
+  if (serviceIdSegmentCache.has(serviceId)) {
+    return serviceIdSegmentCache.get(serviceId);
+  }
+
+  const baseUrl = 'https://www.bitdefender.com';
+  const endpoint = `${baseUrl}/cdp/splash/${encodeURIComponent(serviceId)}`;
+
+  try {
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to fetch segments for service id ${serviceId}: ${response.status}`);
+      return null;
+    }
+
+    const payload = await response.json();
+    const segmentIds = Array.isArray(payload?.data)
+      ? payload.data
+        .map((entry) => entry?.segment_id)
+        .filter((segment) => typeof segment === 'string' && segment.trim().length > 0)
+      : [];
+
+    if (segmentIds.length === 0) {
+      return null;
+    }
+    const segmentParam = segmentIds.join(',');
+    serviceIdSegmentCache.set(serviceId, segmentParam);
+    return segmentParam;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Failed to fetch segments for service id ${serviceId}`, error);
+  }
+
+  return null;
+}
+
+async function createOfferParameters() {
   const parameters = {};
   const urlParams = new URLSearchParams(window.location.search);
   const feature = urlParams.get('feature');
   const language = urlParams.get('lang');
-  urlParams.forEach((value) => {
-    if (value === feature) {
-      parameters.feature = feature.replaceAll('_', '-');
+  const serviceId = urlParams.get('service_id');
+
+  if (feature) {
+    parameters.feature = feature.replaceAll('_', '-');
+  }
+
+  if (language) {
+    parameters.lang = language.toLocaleLowerCase();
+  }
+
+  if (serviceId) {
+    const serviceIdSegment = await extractServiceId(serviceId);
+    if (serviceIdSegment) {
+      // search for segment in the url params
+      parameters.segment = serviceIdSegment;
     }
-    if (value === language) {
-      parameters.lang = language.toLocaleLowerCase();
-    }
-  });
+  }
 
   return parameters;
 }
@@ -82,7 +134,7 @@ export default async function decorate(block) {
     mboxName,
   } = block.closest('.section').dataset;
 
-  const parameters = createOfferParameters();
+  const parameters = await createOfferParameters();
   block.innerHTML += `
     <div class="canvas-content">
 
@@ -94,7 +146,11 @@ export default async function decorate(block) {
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
   });
-  const offerLink = `${Constants.BASE_URL_FOR_PROD}${offer.offer}`;
+
+  // once in a while the offer returned has the language in uppercase which makes the fetch fail
+  // to avoid this edge case, lowercase the entire url
+  // this will break if the offer url needs to have uppercase letters, for now it is not the case
+  const offerLink = `${Constants.BASE_URL_FOR_PROD}${offer.offer}`.toLowerCase();
   const pageCall = await fetch(offerLink);
   let offerHtml;
   await loadBlocks(block.querySelector('.canvas-content'));
@@ -117,12 +173,17 @@ export default async function decorate(block) {
   }
 
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
-
   // Make all the links that contain #buylink in href open in a new browser window
   decoratedOfferHtml.querySelectorAll('a[href*="#buylink"]').forEach((link) => {
     link.setAttribute('target', '_blank');
   });
-
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
+  const configMbox = await target.getOffers({
+    mboxNames: 'config-mbox',
+    parameters,
+    profileParameters: createOfferProfileParameters(parameters),
+  });
   await loadBlocks(block.querySelector('.canvas-content'));
+  await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
+  decorateIcons(block.querySelector('.canvas-content'));
 }

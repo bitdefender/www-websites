@@ -1,7 +1,7 @@
 import {
   AdobeDataLayerService, UserDetectedEvent, WindowLoadStartedEvent, WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
-import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { decorateIcons, getMetadata } from '../../scripts/lib-franklin.js';
 import { matchHeights, renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 import page from '../../scripts/page.js';
 
@@ -47,6 +47,25 @@ async function saveResults(resultArray) {
   } catch (err) {
     // console.error('Err:', err);
   }
+}
+
+// function for tracking question interactions through dataLayer events
+function trackQuizScreen(isAcqVariant, index, result, skipStartPage) {
+  const quizType = isAcqVariant ? ':consumer:quiz' : ':consumer:quiz:scam-masters';
+  if (index === 1 && skipStartPage) return;
+  const question = `${index ? `:question ${index}` : ''}`;
+  const section = `${page.locale}${quizType}${question}${result ? `:${result}` : ''}`;
+  const subSubSubSection = isAcqVariant ? `question ${index}` : 'scam-masters';
+  const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
+    pageLoadStartedInfo.name = `${section}`;
+    pageLoadStartedInfo.subSubSection = 'quiz';
+    pageLoadStartedInfo.subSubSubSection = subSubSubSection;
+    return pageLoadStartedInfo;
+  });
+
+  AdobeDataLayerService.push(newPageLoaded);
+  AdobeDataLayerService.push(new UserDetectedEvent());
+  AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
 function decorateStartPage(startBlock, isAcqVariant) {
@@ -202,7 +221,7 @@ function processSpecialParagraphs(question, index) {
  * @param {HTMLElement} question - The question element to process
  * @param {number} questionIndex - The question index
  */
-function decorateAnswersList(question, questionIndex) {
+function decorateAnswersList(question, questionIndex, isAcqVariant) {
   const answersList = question.querySelector('ul');
   const secondaryAnswersList = question.querySelector('ul:nth-of-type(2)');
   secondaryAnswersList?.classList.add('secondary-answers-list');
@@ -243,7 +262,6 @@ function decorateAnswersList(question, questionIndex) {
   const listItems = answersList.querySelectorAll('li');
   listItems.forEach((listItem, index) => {
     listItem.classList.add('answer-option');
-
     const emElement = listItem.querySelector('em');
     if (emElement) {
       correctItemIndex = index;
@@ -271,11 +289,13 @@ function decorateAnswersList(question, questionIndex) {
         score += 1;
         contentDiv.classList.add('correct-answer');
         question.classList.add('correct-answer');
+        trackQuizScreen(isAcqVariant, questionIndex + 1, 'correct');
       } else {
         listItem.classList.add('wrong-answer');
         contentDiv.innerHTML = processStyledText(wrongAnswersText.get(questionIndex));
         contentDiv.classList.add('wrong-answer');
         question.classList.add('wrong-answer');
+        trackQuizScreen(isAcqVariant, questionIndex + 1, 'wrong');
       }
 
       const nextButton = question.querySelector('a[href="#continue"]');
@@ -296,7 +316,7 @@ function decorateAnswersList(question, questionIndex) {
   });
 }
 
-function showQuestion(index, isAcqVariant) {
+function showQuestion(index, isAcqVariant, skipStartPage) {
   // Hide all questions
   const allQuestions = document.querySelectorAll('.scam-masters .question');
   const startPage = document.querySelector('.scam-masters .start-page');
@@ -315,18 +335,7 @@ function showQuestion(index, isAcqVariant) {
   const questionToShow = document.querySelector(`.scam-masters .question-${index}`);
   if (questionToShow) {
     questionToShow.style.display = '';
-    if (isAcqVariant) {
-      const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-        pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index}`;
-        pageLoadStartedInfo.subSubSection = 'quiz';
-        pageLoadStartedInfo.subSubSubSection = `question ${index}`;
-        return pageLoadStartedInfo;
-      });
-
-      AdobeDataLayerService.push(newPageLoaded);
-      AdobeDataLayerService.push(new UserDetectedEvent());
-      AdobeDataLayerService.push(new WindowLoadedEvent());
-    }
+    trackQuizScreen(isAcqVariant, index, null, skipStartPage);
   }
 }
 
@@ -475,7 +484,7 @@ function showCorrect(question, questionIndex) {
   answerList.append(createNewParagraph(showAfterAnswerText.get(questionIndex), 'show-after-answer-text'));
 }
 
-function decorateClickQuestions(question, index) {
+function decorateClickQuestions(question, index, isAcqVariant) {
   if (!question.querySelector('h6')) {
     return;
   }
@@ -493,6 +502,7 @@ function decorateClickQuestions(question, index) {
     notAScamButton.addEventListener('click', (e) => {
       e.preventDefault();
       showWrong(question, index);
+      trackQuizScreen(isAcqVariant, index, 'not correct');
     });
   }
   // Find the image that contains the clickable elements
@@ -554,6 +564,7 @@ function decorateClickQuestions(question, index) {
       if (spotsFound === totalSpots) {
         userAnswers.set(index, true);
         showCorrect(question, index);
+        trackQuizScreen(isAcqVariant, index + 1, 'correct');
       } else if (spotsFound > 0) {
         userAnswers.set(index, 'partial');
 
@@ -565,6 +576,7 @@ function decorateClickQuestions(question, index) {
         }
 
         showWrong(question, index);
+        trackQuizScreen(isAcqVariant, index + 1, 'very close');
 
         // Restore the original wrong text for safety
         if (partialText) {
@@ -573,6 +585,7 @@ function decorateClickQuestions(question, index) {
       } else {
         userAnswers.set(index, false);
         showWrong(question, index);
+        trackQuizScreen(isAcqVariant, index + 1, 'not correct');
       }
     }
   };
@@ -647,6 +660,7 @@ function decorateClickQuestions(question, index) {
           }
 
           showWrong(question, index);
+          trackQuizScreen(isAcqVariant, index + 1, 'very close');
 
           // Restore the original wrong text for safety
           if (partialText) {
@@ -655,6 +669,7 @@ function decorateClickQuestions(question, index) {
         } else {
           userAnswers.set(index, false);
           showWrong(question, index);
+          trackQuizScreen(isAcqVariant, index + 1, 'wrong');
         }
       }
 
@@ -819,6 +834,8 @@ function showResult(question, results, isAcqVariant) {
     return;
   }
 
+  trackQuizScreen(isAcqVariant, null, 'results screen');
+
   if (foundRange && results[foundRange.resultIndex]) {
     results[foundRange.resultIndex].style.display = '';
     setupShareLinks(results[foundRange.resultIndex], foundRange.shareText, foundRange.resultUrl);
@@ -869,33 +886,12 @@ function decorateScamButtons(question, index, isAcqVariant) {
         if (isCorrect) {
           score += 1;
           showCorrect(question, index);
-          if (isAcqVariant) {
-            const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-              pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index + 1}:spam`;
-              pageLoadStartedInfo.subSubSection = 'quiz';
-              pageLoadStartedInfo.subSubSubSection = `question ${index + 1}`;
-              return pageLoadStartedInfo;
-            });
-
-            AdobeDataLayerService.push(newPageLoaded);
-            AdobeDataLayerService.push(new UserDetectedEvent());
-            AdobeDataLayerService.push(new WindowLoadedEvent());
-          }
+          const result = isAcqVariant ? 'spam' : 'correct';
+          trackQuizScreen(isAcqVariant, index + 1, result);
         } else {
           showWrong(question, index);
-          if (isAcqVariant) {
-            const newPageLoaded = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-              pageLoadStartedInfo.name = `${page.locale}:consumer:quiz:question ${index + 1}:no spam`;
-              pageLoadStartedInfo.subSubSection = 'quiz';
-              pageLoadStartedInfo.subSubSubSection = `question ${index + 1}`;
-
-              return pageLoadStartedInfo;
-            });
-
-            AdobeDataLayerService.push(newPageLoaded);
-            AdobeDataLayerService.push(new UserDetectedEvent());
-            AdobeDataLayerService.push(new WindowLoadedEvent());
-          }
+          const result = isAcqVariant ? 'no-spam' : 'wrong';
+          trackQuizScreen(isAcqVariant, index + 1, result);
         }
       });
     };
@@ -907,14 +903,14 @@ function decorateScamButtons(question, index, isAcqVariant) {
 }
 
 function decorateQuestions(questions, results, isAcqVariant) {
-  questions.forEach((question, index, passedVariant = isAcqVariant) => {
+  questions.forEach((question, index) => {
     question.classList.add('question');
     question.classList.add(`question-${index + 1}`);
     question.dataset.questionIndex = index + 1;
 
     processSpecialParagraphs(question, index);
-    decorateAnswersList(question, index);
-    decorateClickQuestions(question, index);
+    decorateAnswersList(question, index, isAcqVariant);
+    decorateClickQuestions(question, index, isAcqVariant);
     decorateScamButtons(question, index, isAcqVariant);
 
     // Hide all questions initially
@@ -924,7 +920,7 @@ function decorateQuestions(questions, results, isAcqVariant) {
       const nextButton = question.querySelector('a[href="#continue"]');
       if (nextButton && index < questions.length - 1) {
         nextButton.style.display = 'none';
-        nextButton.addEventListener('click', () => showQuestion(index + 2, passedVariant));
+        nextButton.addEventListener('click', () => showQuestion(index + 2, isAcqVariant));
       } else if (nextButton && index === questions.length - 1) {
         nextButton.style.display = 'none';
         nextButton.addEventListener('click', () => showResult(question, results, isAcqVariant));
@@ -979,7 +975,12 @@ function decorateResults(results) {
   });
 }
 
-function setupStartButton(block, isAcqVariant) {
+function setupStartButton(block, isAcqVariant, skipStartPage) {
+  if (skipStartPage) {
+    showQuestion(1, isAcqVariant, skipStartPage);
+    return;
+  }
+
   const startButton = block.querySelector('a[href="#start-quiz"]');
   if (startButton) {
     startButton.addEventListener('click', (e) => {
@@ -1042,6 +1043,7 @@ export default function decorate(block) {
     resultPage, clipboardText, savedata,
   } = block.closest('.section').dataset;
 
+  const skipStartPage = getMetadata('skip-start-page');
   const [startBlock, ...questionsAndResults] = block.children;
   const isAcqVariant = startBlock.closest('.acq-quiz');
   decorateStartPage(startBlock, isAcqVariant);
@@ -1067,7 +1069,7 @@ export default function decorate(block) {
   const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
   decorateQuestions(questions, results, isAcqVariant);
   decorateResults(results);
-  setupStartButton(block, isAcqVariant);
+  setupStartButton(block, isAcqVariant, skipStartPage);
 
   const questionsContainer = document.createElement('div');
   questionsContainer.classList.add('questions-container');

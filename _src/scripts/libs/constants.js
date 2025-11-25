@@ -92,6 +92,8 @@ export class Constants {
 
 	// TODO: please remove this once SOHO starts working correctly on zuora and de domains
 	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
+
+	static DOMAINS_WITHOUT_ADOBE_MC = ["brand.bitdefender.com"];
   
 	/**
 	 * fetch all the product id mappings for Vlaicu from websites

@@ -46,6 +46,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/awards"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/awards"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/awards"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/awards"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/antivirus-free-for-android</loc>
@@ -93,6 +94,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/antivirus-free-for-android"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/antivirus-free-for-android"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/antivirus-free-for-android"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/antivirus-free-for-android"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/trafficlight</loc>
@@ -139,6 +141,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/trafficlight"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/trafficlight"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/trafficlight"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/renewal/</loc>
@@ -186,6 +189,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/renewal/"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/renewal/"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/renewal/"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/renewal/"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/free-antivirus</loc>
@@ -233,6 +237,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/free-antivirus"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/free-antivirus"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/mobile-security-android</loc>
@@ -280,6 +285,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/mobile-security-android"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/mobile-security-android"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/mobile-security-android"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/premium-security</loc>
@@ -327,6 +333,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/premium-security"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/premium-security"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/upgrade/free</loc>
@@ -404,6 +411,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/total-security"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/total-security"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/ultimate-security</loc>
@@ -451,6 +459,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/ultimate-security"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/ultimate-security"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/password-manager</loc>
@@ -498,6 +507,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/password-manager"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/password-manager"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/password-manager"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/password-manager"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/scamio</loc>
@@ -534,6 +544,7 @@
         <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/scamio"/>
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/scamio"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/scamio"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/scamio"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/mobile-security-ios</loc>
@@ -581,6 +592,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/mobile-security-ios"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/mobile-security-ios"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/</loc>
@@ -628,6 +640,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/family-pack</loc>
@@ -675,6 +688,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/family-pack"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/family-pack"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/family-pack"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/family-pack"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/digital-identity-protection</loc>
@@ -722,6 +736,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/digital-identity-protection"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/digital-identity-protection"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/digital-identity-protection"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/digital-identity-protection"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/virus-scanner-for-mac</loc>
@@ -769,6 +784,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/virus-scanner-for-mac"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/virus-scanner-for-mac"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/virus-scanner-for-mac"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/virus-scanner-for-mac"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/antivirus</loc>
@@ -816,6 +832,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/antivirus"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/antivirus"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/small-office-security</loc>
@@ -863,6 +880,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/small-office-security"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/small-office-security"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/small-office-security"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/small-office-security"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/antivirus-for-mac</loc>
@@ -910,6 +928,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/antivirus-for-mac"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/antivirus-for-mac"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/antivirus-for-mac"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/antivirus-for-mac"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/internet-security</loc>
@@ -957,6 +976,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/internet-security"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/internet-security"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/internet-security"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/internet-security"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/vpn</loc>
@@ -1004,11 +1024,13 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/vpn"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/vpn"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/vpn"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/vpn"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/link-checker</loc>
         <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/consumer/link-checker"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/link-checker"/>
+        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/link-checker"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/link-checker"/>
         <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/consumer/link-checker"/>
         <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/consumer/link-checker"/>
@@ -1042,6 +1064,8 @@
         <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/link-checker"/>
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/link-checker"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/link-checker"/>
+        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/link-checker"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/link-checker"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/partners/affiliate-partners/</loc>
@@ -1087,6 +1111,7 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/partners/affiliate-partners/"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/partners/affiliate-partners/"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/partners/affiliate-partners/"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/partners/affiliate-partners/"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/ferrari/</loc>
@@ -1127,11 +1152,13 @@
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/ferrari/"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/ferrari/"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/ferrari/"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/ferrari/"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-my/consumer/password-generator</loc>
         <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/consumer/password-generator"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/password-generator"/>
+        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/password-generator"/>
         <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/password-generator"/>
         <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/consumer/password-generator"/>
         <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/consumer/password-generator"/>
@@ -1165,5 +1192,225 @@
         <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/password-generator"/>
         <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/password-generator"/>
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/password-generator"/>
+        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/password-generator"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/password-generator"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-my/consumer/security-for-creators</loc>
+        <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="es-co" href="https://www.bitdefender.com/es-co/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-ph" href="https://www.bitdefender.com/en-ph/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-sa" href="https://www.bitdefender.com/en-sa/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="es-cl" href="https://www.bitdefender.com/es-cl/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-il" href="https://www.bitdefender.com/en-il/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-za" href="https://www.bitdefender.com/en-za/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-no" href="https://www.bitdefender.com/en-no/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-au" href="https://www.bitdefender.com/en-au/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://www.bitdefender.com/en-gb/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-dk" href="https://www.bitdefender.com/en-dk/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-pl" href="https://www.bitdefender.com/en-pl/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-nz" href="https://www.bitdefender.com/en-nz/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-cz" href="https://www.bitdefender.com/en-cz/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-hu" href="https://www.bitdefender.com/en-hu/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-ae" href="https://www.bitdefender.com/en-ae/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="es-pe" href="https://www.bitdefender.com/es-pe/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-th" href="https://www.bitdefender.com/en-th/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://www.bitdefender.com/en-ca/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-bg" href="https://www.bitdefender.com/en-bg/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-jm" href="https://www.bitdefender.com/en-jm/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-mt" href="https://www.bitdefender.com/en-mt/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/security-for-creators"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/security-for-creators"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-my/scuderiaferrari/</loc>
+        <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://www.bitdefender.com/en-gb/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/scuderiaferrari/"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/scuderiaferrari/"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-my/trusted/</loc>
+        <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/trusted/"/>
+        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/trusted/"/>
+        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/trusted/"/>
+        <xhtml:link rel="alternate" hreflang="en-au" href="https://www.bitdefender.com/en-au/trusted/"/>
+        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/trusted/"/>
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://www.bitdefender.com/en-gb/trusted/"/>
+        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/trusted/"/>
+        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/trusted/"/>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/trusted/"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-my/consumer/small-business-security</loc>
+        <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/consumer/small-business-security"/>
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://www.bitdefender.com/en-gb/consumer/small-business-security"/>
+        <xhtml:link rel="alternate" hreflang="en-ae" href="https://www.bitdefender.com/en-ae/consumer/small-business-security"/>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/small-business-security"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-my/consumer/family</loc>
+        <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="es-co" href="https://www.bitdefender.com/es-co/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-ph" href="https://www.bitdefender.com/en-ph/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-sa" href="https://www.bitdefender.com/en-sa/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="es-cl" href="https://www.bitdefender.com/es-cl/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-il" href="https://www.bitdefender.com/en-il/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-za" href="https://www.bitdefender.com/en-za/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-no" href="https://www.bitdefender.com/en-no/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-au" href="https://www.bitdefender.com/en-au/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://www.bitdefender.com/en-gb/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="sv-se" href="https://www.bitdefender.com/sv-se/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-dk" href="https://www.bitdefender.com/en-dk/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-pl" href="https://www.bitdefender.com/en-pl/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-nz" href="https://www.bitdefender.com/en-nz/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-cz" href="https://www.bitdefender.com/en-cz/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-hu" href="https://www.bitdefender.com/en-hu/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-ae" href="https://www.bitdefender.com/en-ae/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="es-pe" href="https://www.bitdefender.com/es-pe/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-th" href="https://www.bitdefender.com/en-th/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://www.bitdefender.com/en-ca/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-bg" href="https://www.bitdefender.com/en-bg/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-jm" href="https://www.bitdefender.com/en-jm/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-mt" href="https://www.bitdefender.com/en-mt/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/family"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/family"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-my/consumer/individual</loc>
+        <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="es-co" href="https://www.bitdefender.com/es-co/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-ph" href="https://www.bitdefender.com/en-ph/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-sa" href="https://www.bitdefender.com/en-sa/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="es-cl" href="https://www.bitdefender.com/es-cl/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-il" href="https://www.bitdefender.com/en-il/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-za" href="https://www.bitdefender.com/en-za/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-no" href="https://www.bitdefender.com/en-no/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-au" href="https://www.bitdefender.com/en-au/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://www.bitdefender.com/en-gb/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="sv-se" href="https://www.bitdefender.com/sv-se/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-dk" href="https://www.bitdefender.com/en-dk/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-pl" href="https://www.bitdefender.com/en-pl/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-nz" href="https://www.bitdefender.com/en-nz/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-cz" href="https://www.bitdefender.com/en-cz/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-hu" href="https://www.bitdefender.com/en-hu/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-ae" href="https://www.bitdefender.com/en-ae/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="es-pe" href="https://www.bitdefender.com/es-pe/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-th" href="https://www.bitdefender.com/en-th/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://www.bitdefender.com/en-ca/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-bg" href="https://www.bitdefender.com/en-bg/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-jm" href="https://www.bitdefender.com/en-jm/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-mt" href="https://www.bitdefender.com/en-mt/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/individual"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/individual"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-my/partners/</loc>
+        <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/partners/"/>
+        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/partners/"/>
+        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/partners/"/>
+        <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/partners/"/>
+        <xhtml:link rel="alternate" hreflang="es-co" href="https://www.bitdefender.com/es-co/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-ph" href="https://www.bitdefender.com/en-ph/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-sa" href="https://www.bitdefender.com/en-sa/partners/"/>
+        <xhtml:link rel="alternate" hreflang="es-cl" href="https://www.bitdefender.com/es-cl/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-il" href="https://www.bitdefender.com/en-il/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-za" href="https://www.bitdefender.com/en-za/partners/"/>
+        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-no" href="https://www.bitdefender.com/en-no/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-au" href="https://www.bitdefender.com/en-au/partners/"/>
+        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://www.bitdefender.com/en-gb/partners/"/>
+        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/partners/"/>
+        <xhtml:link rel="alternate" hreflang="sv-se" href="https://www.bitdefender.com/sv-se/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-dk" href="https://www.bitdefender.com/en-dk/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-pl" href="https://www.bitdefender.com/en-pl/partners/"/>
+        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-nz" href="https://www.bitdefender.com/en-nz/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-cz" href="https://www.bitdefender.com/en-cz/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-hu" href="https://www.bitdefender.com/en-hu/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-ae" href="https://www.bitdefender.com/en-ae/partners/"/>
+        <xhtml:link rel="alternate" hreflang="es-pe" href="https://www.bitdefender.com/es-pe/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-th" href="https://www.bitdefender.com/en-th/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://www.bitdefender.com/en-ca/partners/"/>
+        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/partners/"/>
+        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/partners/"/>
+        <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-bg" href="https://www.bitdefender.com/en-bg/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-jm" href="https://www.bitdefender.com/en-jm/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-mt" href="https://www.bitdefender.com/en-mt/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/partners/"/>
+        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/partners/"/>
+        <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/partners/"/>
+        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/partners/"/>
+        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/partners/"/>
     </url>
 </urlset>

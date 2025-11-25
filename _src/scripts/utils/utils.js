@@ -879,10 +879,15 @@ export const generatePageLoadStartedName = () => {
 
     if (pathname.includes('spot-the-scam-quiz')) {
       tagName = `${locale}:consumer:quiz`;
+      if (getMetadata('skip-start-page')) tagName = `${locale}:consumer:quiz:question-1`;
       if (!pathname.endsWith('/')) {
         const result = page.name;
         tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
       }
+    }
+
+    if (pathname.includes('scam-masters')) {
+      tagName = `${locale}:consumer:quiz:scam-masters`;
     }
 
     if (window.errorCode === '404') {
