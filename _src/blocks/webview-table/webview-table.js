@@ -48,6 +48,93 @@ function addAccesibilityRoles(block) {
   });
 }
 
+/**
+ * Creates a plan switcher with radio buttons for product selection
+ * @param {string|null} radioButtons - Pipe-separated string of radio button labels
+ * @param {Array<string>|null} prodsNames - Array of product names
+ * @param {Array<string>|null} prodsUsers - Array of user counts for products
+ * @param {Array<string>|null} prodsYears - Array of year durations for products
+ * @param {boolean} [blockLevel=false] - Whether this is a block-level switcher
+ * @returns {HTMLElement} The created plan switcher element
+ */
+function createPlanSwitcher(radioButtons, prodsNames, prodsUsers, prodsYears, blockLevel = false) {
+  const planSwitcher = document.createElement('div');
+  planSwitcher.classList.add('plan-switcher');
+
+  // If any of the product arrays are null, use radioButtons only
+  if (!prodsNames || !prodsUsers || !prodsYears) {
+    const radioArray = radioButtons ? radioButtons.split('|').map((item) => item.trim()) : [];
+    radioArray.forEach((radio, idx) => {
+      let checked = idx === 0 ? 'checked' : '';
+      const defaultCheck = radio.match(/\[checked\]/g);
+      if (defaultCheck) {
+        // eslint-disable-next-line no-param-reassign
+        radio = radio.replace('[checked]', '').trim();
+        checked = 'checked';
+      }
+
+      planSwitcher.innerHTML += `
+      <input
+      type="radio" 
+      id="${idx}-${radio}"
+      name="switcher"
+      value="${radio}" 
+      ${checked}>
+      <label for="${idx}-${radio}" class="radio-label">${radio}</label>
+    `;
+    });
+    return planSwitcher;
+  }
+
+  if (radioButtons === null) {
+    // eslint-disable-next-line no-param-reassign
+    radioButtons = 'Annual Plan | Monthly Plan';
+    planSwitcher.classList.add('global-display-none');
+  }
+
+  const radioArray = radioButtons.split('|').map((item) => item.trim());
+  radioArray.forEach((radio, idx) => {
+    const prodName = prodsNames[idx];
+    const prodUser = prodsUsers[idx];
+    const prodYear = prodsYears[idx];
+    let checked = idx === 0 ? 'checked' : '';
+    const defaultCheck = radio.match(/\[checked\]/g);
+    if (defaultCheck) {
+      // eslint-disable-next-line no-param-reassign
+      radio = radio.replace('[checked]', '').trim();
+      checked = 'checked';
+    }
+
+    if (prodName) {
+      planSwitcher.innerHTML += `
+        <input data-store-action
+              data-store-set-id="${prodName}" 
+        data-store-set-devices="${prodUser}"
+        data-store-set-subscription="${prodYear}" 
+        type="radio" 
+        id="${blockLevel ? 'block-' : ''}${idx}-${prodName.trim()}"
+        name="${blockLevel ? 'block-' : ''}${prodName.trim()}"
+        value="${radio}-${prodName.trim()}" 
+        ${checked}>
+        <label for="${blockLevel ? 'block-' : ''}${idx}-${prodName.trim()}" class="radio-label">${radio}</label><br>
+      `;
+    }
+  });
+
+  return planSwitcher;
+}
+
+/**
+ * Renders price boxes and product information in table cells
+ * @param {HTMLElement} block - The container block element
+ * @param {Object} metadata - Configuration object containing product data
+ * @param {string} metadata.products - Comma-separated list of products
+ * @param {string} metadata.secondaryProducts - Comma-separated list of secondary products
+ * @param {string} metadata.firstYearText - Text to display under price
+ * @param {string} metadata.featuredProduct - Index of featured product
+ * @param {string} metadata.currentProduct - Index of current product
+ * @param {string} metadata.saveText - Text for savings tag
+ */
 function renderPrices(block, metadata) {
   const {
     products, firstYearText, featuredProduct, currentProduct, saveText,
@@ -104,6 +191,14 @@ function renderPrices(block, metadata) {
           ignoreEventsParent: true,
           storeEvent: 'all',
         });
+
+        if (secondaryProdName) {
+          const prodsNames = [prodName, secondaryProdName];
+          const prodsUsers = [prodUsers, secondaryProdUsers];
+          const prodsYears = [prodYears, secondaryProdYears];
+          const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears);
+          cell.appendChild(planSwitcher);
+        }
       }
       // Add featured logic if applicable
       if (featuredProduct && isFeatured) {
@@ -122,6 +217,13 @@ function renderPrices(block, metadata) {
           storeEvent: 'all',
         });
 
+        if (secondaryProdName) {
+          const prodsNames = [prodName, secondaryProdName];
+          const prodsUsers = [prodUsers, secondaryProdUsers];
+          const prodsYears = [prodYears, secondaryProdYears];
+          const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears, true);
+          block.prepend(planSwitcher);
+        }
         savingsTag.innerHTML = `
           <span class="saving-tag-text" data-store-hide="!it.option.price.discounted">
             <span data-store-render data-store-discount="percentage"></span> ${saveText || ''} 

@@ -701,6 +701,8 @@ async function loadPage() {
 
   registerContextNodes();
 
+  await loadTrackers();
+  await resolveNonProductsDataLayer();
   await loadEager(document);
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
