@@ -70,12 +70,19 @@ main .embed .embed-placeholder-play button::before {
   left: 0.4375rem;
 }
 
-main .ferrari.embed-container .embed{
+
+main .ferrari.embed-container .embed {
   max-width: 1332px;
   padding: 0 20px;
 }
 
-main .ferrari.embed-container .embed iframe{
+main .embed.only-mobile > div, main .embed.only-mobile iframe {
+  width: 275px !important;
+  height: 490px !important;
+  margin: 0 auto;
+}
+
+main .ferrari.embed-container .embed iframe {
   border-radius: 10px;
 }
 
@@ -85,12 +92,6 @@ main .embed.only-desktop {
 
 main .embed.only-mobile {
   display: block;
-}
-
-main .embed.only-mobile > div, main .embed.only-mobile iframe {
-  width: 275px !important;
-  height: 490px !important;
-  margin: 0 auto;
 }
 
 @media (min-width: 768px) {
