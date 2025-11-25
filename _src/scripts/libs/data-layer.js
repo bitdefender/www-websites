@@ -64,7 +64,7 @@ const getFreeProductsEvents = () => {
   const currentPage = page.name;
   if (currentPage === 'free-antivirus') {
     // on Free Antivirus page we should add Free Antivirus as the main product
-    AdobeDataLayerService.push(new FranklinProductsLoadedEvent({
+    AdobeDataLayerService.push(new ProductLoadedEvent({
       ID: '8430',
     }, 'info'));
   }
