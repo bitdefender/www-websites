@@ -1,6 +1,5 @@
 import { AdobeDataLayerService, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
 import { Store } from '@repobit/dex-store';
-import { registerActionNodes, registerRenderNodes } from '@repobit/dex-store-elements';
 import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
@@ -150,7 +149,7 @@ export default async function decorate(block) {
   });
 
   const canvasStore = new Store({
-    campaign: configMbox.promotion,
+    campaign: async () => configMbox.promotion,
     locale: configMbox.useGeoIpPricing
       ? (await user.locale)?.toLowerCase()
       : page.locale.toLowerCase(),
@@ -163,8 +162,6 @@ export default async function decorate(block) {
   canvasWrapper.appendChild(canvasRoot);
   canvasRoot.appendChild(block);
 
-  registerActionNodes(block.parentElement);
-  registerRenderNodes(canvasWrapper);
   await canvasRoot.updateComplete;
 
   const offer = await target.getOffers({
@@ -206,6 +203,5 @@ export default async function decorate(block) {
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
 
   await loadBlocks(block.querySelector('.canvas-content'));
-  // await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
   decorateIcons(block.querySelector('.canvas-content'));
 }
