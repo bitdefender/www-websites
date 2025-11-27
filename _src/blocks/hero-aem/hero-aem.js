@@ -3,6 +3,7 @@
 /* eslint-disable max-len */
 import {
   openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
+  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function createCardElementContainer(elements, mobileImage) {
@@ -61,10 +62,10 @@ function createDropdownElement(paragraph, dropdownTagText, product) {
     dropdownItem.classList.add('custom-dropdown-item');
     const [prodName, prodUsers, prodYears] = product[idx].split('/');
     dropdownItem.textContent = item;
-    dropdownItem.setAttribute('data-store-click-set-product', '');
-    dropdownItem.setAttribute('data-store-product-id', `${prodName}`);
-    dropdownItem.setAttribute('data-store-product-option', `${prodUsers}-${prodYears}`);
-    dropdownItem.setAttribute('data-store-product-department', 'consumer');
+    dropdownItem.setAttribute('data-store-action', '');
+    dropdownItem.setAttribute('data-store-set-id', `${prodName}`);
+    dropdownItem.setAttribute('data-store-set-devices', prodUsers);
+    dropdownItem.setAttribute('data-store-set-subscription', prodYears);
     dropdownOptions.appendChild(dropdownItem);
   });
 
@@ -118,17 +119,18 @@ async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceT
   pricesBox.innerHTML = `
           ${bluePillText ? `<p class="hero-aem__pill">${bluePillText}</p>` : ''}
           <div class="hero-aem__price mt-3">
-            <div>
-                <span class="prod-oldprice" data-store-price="full"></span>
-                <span class="prod-save" data-store-text-variable>${saveText} {DISCOUNT_VALUE}</span></span>
+            <div data-store-render data-store-hide="!it.option.price.discounted">
+                <span class="prod-oldprice" data-store-render data-store-price="full"></span>
+                <span class="prod-save">${saveText} {{=it.option.discount.value}}</span></span>
             </div>
             <div class="newprice-container mt-2">
-              <span class="prod-newprice" data-store-price="discounted||full"></span>
+              <span class="prod-newprice" data-store-render data-store-price="discounted||full"></span>
               <sup>${conditionText || ''}</sup>
             </div>
           </div>
           <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
   buyLink.setAttribute('data-store-buy-link', '');
+  buyLink.setAttribute('data-store-render', '');
   return pricesBox;
 }
 
@@ -218,11 +220,13 @@ export default async function decorate(block, options) {
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
   if (product) {
     const [prodName, prodUsers, prodYears] = product.split('/');
-    cardElementContainer.setAttribute('data-store-context', '');
-    cardElementContainer.setAttribute('data-store-id', prodName);
-    cardElementContainer.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-    cardElementContainer.setAttribute('data-store-department', 'consumer');
-    cardElementContainer.setAttribute('data-store-event', 'main-product-loaded');
+    wrapChildrenWithStoreContext(cardElementContainer, {
+      productId: prodName,
+      devices: prodUsers,
+      subscription: prodYears,
+      ignoreEventsParent: true,
+      storeEvent: 'info',
+    });
   }
   // Append the container after h1
   block.querySelector('h1')?.after(cardElementContainer);

@@ -727,37 +727,7 @@ class Vlaicu {
 
 		return '';
 	}
-
-	/**
-	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
-	 * @param {string} productId
-	 * @returns {string} the DIP promotion
-	 */
-	static #isDIPCornerCase(productId) {
-		if (productId === 'com.bitdefender.dataprivacy' && page.locale === 'ro-ro') {
-			return 'DIP-RO';
-		}
-
-		if (productId === 'com.bitdefender.dataprivacy' && page.locale !== 'ro-ro') {
-			return 'DIP-promo';
-		}
-
-		return '';
-	}
-
-	/**
-     * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
-     * @param {string} productId 
-     * @returns {string} the SOHO promotion
-     */
-    static #isSohoCornerCase(productId) {
-        if (Constants.SOHO_CORNER_CASES_LOCALSE.includes(page.locale) && productId === "com.bitdefender.soho") {
-			return 'SOHO_DE';
-		}
-
-		return '';
-	}
-
+	
 	/**
 	 * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
 	 * @param {string} receivedBuyLink 
@@ -771,7 +741,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariations(productId, campaign, useGeoIpPricing = false) {
-		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
+		let locale = page.locale;
 		if (useGeoIpPricing) {
 			locale = await user.locale;
 		}
@@ -780,16 +750,11 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign)
-				|| this.#isDIPCornerCase(productId)
-				|| this.#isSohoCornerCase(productId)
-				|| campaign
+			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign)	|| campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION || this.#isDIPCornerCase(productId) || this.#isSohoCornerCase(productId) ?
-			this.promotionPath :
-			this.defaultPromotionPath;
+		let productPath = campaign !== Constants.NO_PROMOTION ?	this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
@@ -872,9 +837,7 @@ class Vlaicu {
 				campaignType: productInfoResponse.campaignType,
 				price: productVariation.price,
 				// TODO: please remove this once SOHO works correctly on de-de with zuora
-				buyLink: this.#isSohoCornerCase(Constants.PRODUCT_ID_MAPPINGS[id].bundleId)
-					? this.#addLangParameter(productVariation.buyLink)
-					: productVariation.buyLink,
+				buyLink: productVariation.buyLink,
 				variation: {
 					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,

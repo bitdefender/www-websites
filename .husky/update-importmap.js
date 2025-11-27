@@ -57,7 +57,8 @@ async function updateHtmlImportMap(htmlFilePath) {
       imports: {},
     };
     for (const [name, version] of Object.entries(deps)) {
-      importMap.imports[name] = `https://esm.sh/${name}@${version}`;
+      importMap.imports[`${name}`] = `https://esm.sh/${name}@${version}`;
+      importMap.imports[`${name}/`] = `https://esm.sh/${name}@${version}/`;
     }
 
     // Read the HTML file
