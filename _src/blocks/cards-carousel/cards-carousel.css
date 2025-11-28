@@ -14,6 +14,7 @@
                 gap: 32px;
                 overflow-x: visible;
                 transition: transform 0.3s ease-in-out;
+                touch-action: none;
 
                 .carousel-card {
                     display: grid;
