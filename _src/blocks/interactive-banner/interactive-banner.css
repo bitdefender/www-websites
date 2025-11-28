@@ -20,6 +20,7 @@ main .interactive-banner-container {
             position: relative;
             aspect-ratio: 2/1;
             align-content: end;
+            overscroll-behavior: contain;
 
             h1 {
                 position:relative;
@@ -47,7 +48,9 @@ main .interactive-banner-container {
                 user-select: none; /* prevent text selection */
                 -webkit-user-select: none;
                 -moz-user-select: none;
-                -ms-user-select: none;
+                overscroll-behavior: contain;
+                touch-action: none;
+
             }
 
             p {
