@@ -1,0 +1,88 @@
+.data-columns-container {
+    .data-columns-wrapper {
+        max-width: 1140px;
+        margin: auto;
+
+        .data-columns {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            h3 {
+                font-size: 18px;
+                color: #006DFF;
+                margin: 0;
+            }
+
+            .data-wrapper {
+                display: flex;
+                flex-direction: column;
+
+                .data-column-left {
+                    h2 {
+                        font-size: 32px;
+                        line-height: 1.1;
+                        margin-bottom: 16px;
+
+                        em strong, strong em {
+                            color: #006DFF;
+                            font-weight: inherit;
+                            font-style: normal;
+                            text-decoration: none;
+                        }
+                    }
+                }
+
+                .data-column-right {
+                    color: #636363;
+                    font-size: 16px;
+                    line-height: 26px;
+                    p {
+                        font-size: inherit;
+                        font-weight: 400;
+                        margin-top: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    @media (min-width: 768px) {
+        .data-columns-wrapper {
+            .data-columns {
+                padding: 0;
+                gap: 32px;
+
+                h3 {
+                    font-size: 20px;
+                    font-weight: 500;
+                }
+
+                .data-wrapper {
+                    flex-direction: unset;
+                    gap: 32px;
+                    align-items: end;
+                    .data-column-left {
+                        h2 {
+                            font-size: 40px;
+                            font-weight: 400;
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    .data-column-right {
+                        width: 90%;
+                        font-size: 18px;
+                        line-height: 26px;
+                        p {
+                            &:last-of-type {
+                                margin-bottom: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

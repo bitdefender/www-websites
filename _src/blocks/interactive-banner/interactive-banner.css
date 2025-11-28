@@ -1,0 +1,128 @@
+:root{
+    --dot-color:#006dff;
+    --line-color:#006dff;
+    --bg:#ffffff;
+    --font:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+*{
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+main .interactive-banner-container {
+    
+
+    .interactive-banner-wrapper {
+        max-width: 1140px;
+        margin: auto;
+
+        .interactive-banner {
+            padding:0 24px;
+            position: relative;
+            aspect-ratio: 2/1;
+
+            h1 {
+                position:relative;
+                opacity:0;
+                pointer-events:none;
+                font-size: 30px;
+                line-height: 1.1;
+                letter-spacing:0.02em;
+                margin:0;
+            }
+
+            canvas {
+                inset: 0;
+                position: absolute;
+                left: 5px;
+                display:block;
+                height:auto;
+                min-width:100%;
+                max-height:82vh;
+                cursor:pointer;
+                opacity: 0;
+                min-width: 100%;
+                animation: canvasFadeIn 1.5s ease-out 0.5s both;
+                bottom: 0;
+                font-family: "IBM Plex Sans";
+            }
+
+            p {
+                position: absolute;
+                top: 0px;
+                color: #006dff;
+                margin: 0;
+                font-size: 18px;
+            }
+        }
+    }
+
+    @media (min-width: 768px) {
+        .interactive-banner-wrapper { 
+            .interactive-banner {
+                h1 {
+                    font-size: 80px;
+                }
+                
+                p {
+                    position: absolute;
+                    left: unset;
+                    right: 20px;
+                    top: 60px;
+                    margin: 0;
+                    font-size: 20px;
+                }
+
+                canvas {
+                    position: absolute;
+                    bottom: 0;
+                    justify-self: center;
+                }
+            }
+        }
+    }
+
+    @media (min-width: 992px) {
+        .interactive-banner-wrapper {
+            .interactive-banner {
+                h1 {
+                    font-size: 90px;
+                }
+
+                canvas {
+                    bottom: 0;
+                    left: -10%;
+                }
+
+                p {
+                    top: 80px;
+                }
+            }
+        }
+    }
+}
+
+
+
+@keyframes canvasFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .interactive-banner-container,
+  .interactive-banner,
+  .p,
+  .hero-canvas {
+    animation: none;
+  }
+  
+  .hero-canvas {
+    display: none;
+  }
+}
