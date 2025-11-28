@@ -44,6 +44,10 @@ main .interactive-banner-container {
                 animation: canvasFadeIn 1.5s ease-out 0.5s both;
                 bottom: 0;
                 font-family: "IBM Plex Sans";
+                user-select: none; /* prevent text selection */
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
             }
 
             p {

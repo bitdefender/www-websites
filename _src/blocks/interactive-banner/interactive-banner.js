@@ -30,7 +30,7 @@ function insertBreaks(text, isMobile) {
 
   for (let i = 0; i < words.length; i++) {
     result.push(words[i]);
-    
+
     // word index is 1-based
     const pos = i + 1;
     if (breakPositions.includes(pos)) {
@@ -400,9 +400,9 @@ async function initDotCloud(block, canvasId, isMobile = false) {
 
   // Pointer Events (modern - supports mouse, touch, pen)
   if (window.PointerEvent) {
-    canvas.addEventListener('pointermove', (e) => { const p = canvasPos(e); state.mouse.x = p.x; state.mouse.y = p.y; state.mouse.inside = true; });
-    canvas.addEventListener('pointerdown', (e) => { state.mouse.down = true; const p = canvasPos(e); state.mouse.x = p.x; state.mouse.y = p.y; });
-    canvas.addEventListener('pointerup', () => { state.mouse.down = false; });
+    canvas.addEventListener('pointermove', (e) => { e.preventDefault(); const p = canvasPos(e); state.mouse.x = p.x; state.mouse.y = p.y; state.mouse.inside = true; });
+    canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); state.mouse.down = true; const p = canvasPos(e); state.mouse.x = p.x; state.mouse.y = p.y; });
+    canvas.addEventListener('pointerup', () => { e.preventDefault(); state.mouse.down = false; });
     canvas.addEventListener('pointerleave', () => { state.mouse.inside = false; state.mouse.down = false; });
   } else {
     // Fallback for older browsers
