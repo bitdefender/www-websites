@@ -7,10 +7,11 @@ function initCarousel(block) {
 
   let currentIndex = 0;
   const totalCards = cards.length;
+  const containerStyle = getComputedStyle(cardsContainer);
 
   function updateCarousel() {
     const cardWidth = cards[0].offsetWidth;
-    const gap = 24; // Gap between cards
+    const gap = parseInt(containerStyle?.gap) || 0; // Gap between cards
     const offset = -(currentIndex * (cardWidth + gap));
     cardsContainer.style.transform = `translateX(${offset}px)`;
 
@@ -101,7 +102,7 @@ export default function decorate(block) {
     card.classList.add('carousel-card');
     child.remove();
     carouselTrack.appendChild(card);
-    dots.innerHTML += `<div class="carousel-dot ${idx === 0 ? 'active' : ''}"></div>`;
+    dots.innerHTML += `<div data-index="${idx}" class="carousel-dot ${idx === 0 ? 'active' : ''}" ></div>`;
   });
   navigation.appendChild(dots);
   navigation.appendChild(navButtons);

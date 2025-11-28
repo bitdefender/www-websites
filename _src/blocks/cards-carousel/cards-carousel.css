@@ -13,7 +13,6 @@
                 grid-template-columns: repeat(6, 1fr);
                 gap: 32px;
                 overflow-x: visible;
-                scroll-snap-type: proximity;
                 transition: transform 0.3s ease-in-out;
 
                 .carousel-card {
