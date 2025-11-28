@@ -13,13 +13,13 @@ main .interactive-banner-container {
     
 
     .interactive-banner-wrapper {
-        max-width: 1140px;
         margin: auto;
 
         .interactive-banner {
-            padding:0 24px;
+            padding: 48px 24px 24px;
             position: relative;
             aspect-ratio: 2/1;
+            align-content: end;
 
             h1 {
                 position:relative;
@@ -32,16 +32,15 @@ main .interactive-banner-container {
             }
 
             canvas {
-                inset: 0;
                 position: absolute;
-                left: 5px;
+                left: 1.5%;
                 display:block;
                 height:auto;
                 min-width:100%;
                 max-height:82vh;
                 cursor:pointer;
                 opacity: 0;
-                min-width: 100%;
+                min-width: 96%;
                 animation: canvasFadeIn 1.5s ease-out 0.5s both;
                 bottom: 0;
                 font-family: "IBM Plex Sans";
@@ -53,6 +52,7 @@ main .interactive-banner-container {
                 color: #006dff;
                 margin: 0;
                 font-size: 18px;
+                font-weight: 500;
             }
         }
     }
@@ -68,9 +68,9 @@ main .interactive-banner-container {
                     position: absolute;
                     left: unset;
                     right: 20px;
-                    top: 60px;
+                    top: 70px;
                     margin: 0;
-                    font-size: 20px;
+                    font-size: 22px;
                 }
 
                 canvas {
@@ -84,6 +84,7 @@ main .interactive-banner-container {
 
     @media (min-width: 992px) {
         .interactive-banner-wrapper {
+            max-width: 1140px;
             .interactive-banner {
                 h1 {
                     font-size: 90px;
@@ -91,11 +92,11 @@ main .interactive-banner-container {
 
                 canvas {
                     bottom: 0;
-                    left: -10%;
+                    left: -4%;
                 }
 
                 p {
-                    top: 80px;
+                    top: 104px;
                 }
             }
         }

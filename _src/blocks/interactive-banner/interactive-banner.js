@@ -23,6 +23,26 @@ function loadIBMPlexSans() {
   });
 }
 
+function insertBreaks(text, isMobile) {
+  const words = text.split(/\s+/); // split by 1+ spaces
+  const breakPositions = isMobile ? [2, 4] : [1, 4];
+  let result = [];
+
+  for (let i = 0; i < words.length; i++) {
+    result.push(words[i]);
+    
+    // word index is 1-based
+    const pos = i + 1;
+    if (breakPositions.includes(pos)) {
+      result.push("\n");
+    } else {
+      result.push(' ')
+    }
+  }
+
+  return result.join("");
+}
+
 /**
  * Initialize the dot cloud hero animation
  * @param {string} canvasId - The ID of the canvas element
@@ -44,7 +64,7 @@ async function initDotCloud(block, canvasId, isMobile = false) {
   const octx = off.getContext('2d', { willReadFrequently: true });
   const title = block.querySelector('h1');
   // Tunables - with mobile-specific overrides that preserve font characteristics
-  const FONT_WEIGHT = isMobile ? 800 : 700; // Mobile: Black weight for better visibility
+  const FONT_WEIGHT = isMobile ? 700 : 700; // Mobile: Black weight for better visibility
   const DOT_STEP = isMobile ? 3 : 3; // Mobile: density 3
   const DOT_RADIUS = isMobile ? 1 : 1; // Mobile: size 1
   const FORCE = 100;
@@ -66,7 +86,7 @@ async function initDotCloud(block, canvasId, isMobile = false) {
   let performanceQuality = 1.0; // 1.0 = full quality, lower = reduced quality
 
   const state = {
-    text: (title.innerText || 'AI-Powered').trim(),
+    text: (insertBreaks(title.innerText, isMobile) || 'AI-Powered').trim(),
     fontFamily: getComputedStyle(document.documentElement).getPropertyValue('--font') || 'IBM Plex Sans',
     points: [],
     mouse: {
