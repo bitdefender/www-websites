@@ -179,10 +179,17 @@ function checkAddOn(featuresSet) {
   return addOn;
 }
 
-export default async function decorate(block) {
+export default async function decorate(block, onDataLoaded) {
+  let structuredContent = await onDataLoaded;
+
   const {
     // eslint-disable-next-line no-unused-vars
-    products, familyProducts, monthlyProducts,
+    titles, descriptions, products, featured,
+  } = structuredContent || block.closest('.section').dataset;
+
+  const {
+    // eslint-disable-next-line no-unused-vars
+    familyProducts, monthlyProducts,
     addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
 
@@ -548,6 +555,26 @@ export default async function decorate(block) {
   if (!isInLandingPages) {
     const { decorateIcons } = await import('../../scripts/lib-franklin.js');
     decorateIcons(block.closest('.section'));
+  }
+
+  if (titles) {
+    const titleElement = [...block.querySelectorAll('h4')];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [idx, title] of titles.entries()) {
+      titleElement[idx].innerText = title.trim();
+    }
+  }
+
+  if (descriptions) {
+    const descriptionElement = [...block.querySelectorAll('p.subtitle-2')];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [idx, description] of descriptions.entries()) {
+      descriptionElement[idx].innerText = description.trim();
+    }
+  }
+
+  if (featured) {
+    block.querySelector(`[data-store-id="${featured}"]`).style.border = '12px solid #0072CE';
   }
 
   switchCheckbox.dispatchEvent(new Event('change'));
