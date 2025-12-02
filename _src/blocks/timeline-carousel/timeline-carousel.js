@@ -105,11 +105,10 @@ function initTimelineCarousel(block) {
 
   track.addEventListener('touchend', (e) => {
     const diff = touchStartX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
-      else currentIndex = Math.max(currentIndex - 1, 0);
-      updateTimeline();
-    }
+
+    if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
+    else currentIndex = Math.max(currentIndex - 1, 0);
+    updateTimeline();
     alert(diff)
   }, { passive: true });
 
