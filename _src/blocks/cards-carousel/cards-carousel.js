@@ -1,5 +1,5 @@
 function initCarousel(block) {
-  const cardsContainer = document.querySelector('.carousel-track');
+  const cardsContainer = block.querySelector('.carousel-track');
   const cards = block.querySelectorAll('.carousel-card');
   const dots = block.querySelectorAll('.carousel-dot');
   const prevBtn = block.querySelector('.button.left');
@@ -42,32 +42,36 @@ function initCarousel(block) {
     });
   });
 
-  // Touch/Swipe support
-  let touchStartX = 0;
-  let touchEndX = 0;
+  // Pointer (swipe) support
+  let pointerStartX = 0;
+  let pointerEndX = 0;
 
   function handleSwipe() {
-    const diff = touchStartX - touchEndX;
-    alert(diff)
-    if (Math.abs(diff) > 0) {
+    const diff = pointerStartX - pointerEndX;
+    if (Math.abs(diff) > 30) { // threshold
       if (diff > 0) {
-        // Swipe left - go to next
-        goToSlide(currentIndex + 1);
+        goToSlide(currentIndex + 1); // swipe left
       } else {
-        // Swipe right - go to previous
-        goToSlide(currentIndex - 1);
+        goToSlide(currentIndex - 1); // swipe right
       }
     }
   }
 
-  cardsContainer.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
+  cardsContainer.addEventListener('pointerdown', (e) => {
+    pointerStartX = e.clientX;
+    cardsContainer.setPointerCapture(e.pointerId);
+  });
 
-  cardsContainer.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
+  cardsContainer.addEventListener('pointerup', (e) => {
+    pointerEndX = e.clientX;
     handleSwipe();
-  }, { passive: true });
+    cardsContainer.releasePointerCapture(e.pointerId);
+  });
+
+  cardsContainer.addEventListener('pointercancel', (e) => {
+  // optional: handle cancel if the pointer is interrupted
+    cardsContainer.releasePointerCapture(e.pointerId);
+  });
 
   updateCarousel();
 }

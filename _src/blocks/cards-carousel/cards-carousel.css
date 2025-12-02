@@ -12,8 +12,8 @@
                 display: grid;
                 grid-template-columns: repeat(6, 1fr);
                 gap: 32px;
-                overflow-x: visible;
                 transition: transform 0.3s ease-in-out;
+                pointer-events: all;
 
                 .carousel-card {
                     display: grid;
