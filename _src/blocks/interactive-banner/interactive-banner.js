@@ -26,7 +26,7 @@ function loadIBMPlexSans() {
 function insertBreaks(text, isMobile) {
   const words = text.split(/\s+/); // split by 1+ spaces
   const breakPositions = isMobile ? [2, 4] : [1, 4];
-  let result = [];
+  const result = [];
 
   for (let i = 0; i < words.length; i++) {
     result.push(words[i]);
@@ -34,13 +34,13 @@ function insertBreaks(text, isMobile) {
     // word index is 1-based
     const pos = i + 1;
     if (breakPositions.includes(pos)) {
-      result.push("\n");
+      result.push('\n');
     } else {
-      result.push(' ')
+      result.push(' ');
     }
   }
 
-  return result.join("");
+  return result.join('');
 }
 
 /**
@@ -402,7 +402,7 @@ async function initDotCloud(block, canvasId, isMobile = false) {
   if (window.PointerEvent) {
     canvas.addEventListener('pointermove', (e) => { e.preventDefault(); const p = canvasPos(e); state.mouse.x = p.x; state.mouse.y = p.y; state.mouse.inside = true; });
     canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); state.mouse.down = true; const p = canvasPos(e); state.mouse.x = p.x; state.mouse.y = p.y; });
-    canvas.addEventListener('pointerup', () => { e.preventDefault(); state.mouse.down = false; });
+    canvas.addEventListener('pointerup', () => { state.mouse.down = false; });
     canvas.addEventListener('pointerleave', () => { state.mouse.inside = false; state.mouse.down = false; });
   } else {
     // Fallback for older browsers
