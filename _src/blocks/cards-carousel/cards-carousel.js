@@ -11,7 +11,7 @@ function initCarousel(block) {
 
   function updateCarousel() {
     const cardWidth = cards[0].offsetWidth;
-    const gap = parseInt(containerStyle?.gap) || 0; // Gap between cards
+    const gap = parseInt(containerStyle?.gap, 10) || 0; // Gap between cards
     const offset = -(currentIndex * (cardWidth + gap));
     cardsContainer.style.transform = `translateX(${offset}px)`;
 
@@ -47,10 +47,9 @@ function initCarousel(block) {
   let touchEndX = 0;
 
   function handleSwipe() {
-    const swipeThreshold = 50;
     const diff = touchStartX - touchEndX;
 
-    if (Math.abs(diff) > swipeThreshold) {
+    if (Math.abs(diff) > 0) {
       if (diff > 0) {
         // Swipe left - go to next
         goToSlide(currentIndex + 1);
