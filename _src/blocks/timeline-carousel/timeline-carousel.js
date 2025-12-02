@@ -1,3 +1,5 @@
+import { touchEndEvent } from "@tsparticles/engine";
+
 function createTimelineNavigation(block) {
   const buttonsContainer = document.createElement('div');
   buttonsContainer.classList.add('timeline-controls');
@@ -80,6 +82,7 @@ function initTimelineCarousel(block) {
     track.style.transition = 'transform 0.5s ease';
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= maxIndex;
+    alert(offset);
   }
 
   track.addEventListener('resize', updateTimeline());
@@ -107,6 +110,7 @@ function initTimelineCarousel(block) {
       else currentIndex = Math.max(currentIndex - 1, 0);
       updateTimeline();
     }
+    alert(diff)
   }, { passive: true });
 
   // Intersection Observer: only trigger once
