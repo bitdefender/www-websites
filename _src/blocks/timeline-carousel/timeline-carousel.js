@@ -76,13 +76,11 @@ function initTimelineCarousel(block) {
   const leftoverFromula = itemsToShow === 1 ? 0 : leftOverSpace;
 
   function updateTimeline() {
-    console.log(itemsToShow, currentIndex);
     const offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
     track.style.transform = `translateX(${offset}px)`;
     track.style.transition = 'transform 0.5s ease';
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= maxIndex;
-    alert(offset);
   }
 
   track.addEventListener('resize', updateTimeline());
@@ -108,8 +106,10 @@ function initTimelineCarousel(block) {
 
     if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
     else currentIndex = Math.max(currentIndex - 1, 0);
+    const t0 = performance.now();
     updateTimeline();
-    alert(diff)
+    const t1 = performance.now();
+    alert(t1-t0);
   }, { passive: true });
 
   // Intersection Observer: only trigger once
