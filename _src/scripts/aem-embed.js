@@ -166,6 +166,12 @@ export class AEMEmbed extends HTMLElement {
       target.abort();
     }
     await StoreResolver.resolve(body);
+    const elements = body.querySelectorAll('.await-loader');
+    // document.dispatchEvent(new Event('bd_page_ready'));
+    // window.bd_page_ready = true;
+    elements.forEach((element) => {
+      element.classList.remove('await-loader');
+    });
     body.classList.add('appear');
   }
 
