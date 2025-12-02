@@ -48,7 +48,7 @@ function initCarousel(block) {
 
   function handleSwipe() {
     const diff = touchStartX - touchEndX;
-
+    alert(diff)
     if (Math.abs(diff) > 0) {
       if (diff > 0) {
         // Swipe left - go to next

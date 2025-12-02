@@ -2,7 +2,6 @@
   position: relative;
   width: 100%;
   max-width: unset;
-  touch-action: none;
 
   .timeline-carousel-wrapper {
     padding: 0 24px;
