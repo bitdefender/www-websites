@@ -25,7 +25,6 @@
                     padding: 24px;
                     min-width: 320px;
                     background-color: #F0F7FF;
-                    scroll-snap-align: start;
 
                     h3 {
                         color: #006DFF;
