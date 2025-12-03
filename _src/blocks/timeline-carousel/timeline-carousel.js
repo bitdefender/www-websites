@@ -99,14 +99,18 @@ function initTimelineCarousel(block) {
   track.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
   }, { passive: true });
-
+  let timeout;
   track.addEventListener('touchend', (e) => {
-    const diff = touchStartX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
-      else currentIndex = Math.max(currentIndex - 1, 0);
-      updateTimeline();
-    }
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
+        else currentIndex = Math.max(currentIndex - 1, 0);
+        updateTimeline();
+      }
+    }, 50);
   }, { passive: true });
 
   // Intersection Observer: only trigger once
