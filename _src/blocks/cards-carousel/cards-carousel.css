@@ -9,7 +9,7 @@
             padding: 24px;
 
             .carousel-track {
-                touch-action: none;
+                touch-action: manipulation;
 
                 .cards-container {
                     display: grid;
