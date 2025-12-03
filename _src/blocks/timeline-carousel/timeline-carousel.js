@@ -74,7 +74,6 @@ function initTimelineCarousel(block) {
   const leftoverFromula = itemsToShow === 1 ? 0 : leftOverSpace;
 
   function updateTimeline() {
-    console.log(itemsToShow, currentIndex);
     const offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
     track.style.transform = `translateX(${offset}px)`;
     track.style.transition = 'transform 0.5s ease';
