@@ -49,7 +49,7 @@ function initCarousel(block) {
   function handleSwipe() {
     const diff = touchStartX - touchEndX;
 
-    if (Math.abs(diff) > 0) {
+    if (Math.abs(diff) > 10) {
       if (diff > 0) {
         // Swipe left - go to next
         goToSlide(currentIndex + 1);
@@ -64,9 +64,15 @@ function initCarousel(block) {
     touchStartX = e.changedTouches[0].screenX;
   }, { passive: true });
 
+  let timeout;
+
   cardsContainer.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, 10);
   }, { passive: true });
 
   updateCarousel();

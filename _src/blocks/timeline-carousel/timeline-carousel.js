@@ -105,12 +105,12 @@ function initTimelineCarousel(block) {
 
     timeout = setTimeout(() => {
       const diff = touchStartX - e.changedTouches[0].screenX;
-      if (Math.abs(diff) > 50) {
+      if (Math.abs(diff) > 10) {
         if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
         else currentIndex = Math.max(currentIndex - 1, 0);
         updateTimeline();
       }
-    }, 50);
+    }, 10);
   }, { passive: true });
 
   // Intersection Observer: only trigger once
