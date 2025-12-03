@@ -44,21 +44,6 @@ function initCarousel(block) {
 
   // Touch/Swipe support
   let touchStartX = 0;
-  let touchEndX = 0;
-
-  function handleSwipe() {
-    const diff = touchStartX - touchEndX;
-
-    if (Math.abs(diff) > 10) {
-      if (diff > 0) {
-        // Swipe left - go to next
-        goToSlide(currentIndex + 1);
-      } else {
-        // Swipe right - go to previous
-        goToSlide(currentIndex - 1);
-      }
-    }
-  }
 
   cardsContainer.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
@@ -70,9 +55,11 @@ function initCarousel(block) {
     clearTimeout(timeout);
 
     timeout = setTimeout(() => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    }, 10);
+      const diff = touchStartX - e.changedTouches[0].screenX;
+
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    }, 100);
   }, { passive: true });
 
   updateCarousel();
