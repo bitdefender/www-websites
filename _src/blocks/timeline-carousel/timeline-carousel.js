@@ -76,7 +76,7 @@ function initTimelineCarousel(block) {
   function updateTimeline() {
     const offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
     track.style.transform = `translateX(${offset}px)`;
-    track.style.transition = 'transform 0.3s ease';
+    track.style.transition = 'transform 0.7s ease';
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= maxIndex;
   }

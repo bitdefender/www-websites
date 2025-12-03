@@ -14,6 +14,7 @@ function initCarousel(block) {
     const gap = parseInt(containerStyle?.gap, 10) || 0; // Gap between cards
     const offset = -(currentIndex * (cardWidth + gap));
     cardsContainer.style.transform = `translateX(${offset}px)`;
+    cardsContainer.style.transition = 'transform 0.7s ease';
 
     // Update dots
     dots.forEach((dot, idx) => {

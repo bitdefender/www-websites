@@ -12,7 +12,6 @@
                 display: grid;
                 grid-template-columns: repeat(6, 1fr);
                 gap: 32px;
-                transition: transform 0.3s ease-in-out;
                 touch-action: none;
 
                 .carousel-card {
