@@ -76,7 +76,7 @@ function initTimelineCarousel(block) {
   function updateTimeline() {
     const offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
     track.style.transform = `translateX(${offset}px)`;
-    track.style.transition = 'transform 0.5s ease';
+    track.style.transition = 'transform 0.3s ease';
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= maxIndex;
   }
@@ -111,17 +111,7 @@ function initTimelineCarousel(block) {
     }, 100);
   }, { passive: true });
 
-  // Intersection Observer: only trigger once
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        updateTimeline();
-        obs.disconnect(); // stop observing after first trigger
-      }
-    });
-  }, { threshold: 0.1 });
-
-  observer.observe(block);
+  updateTimeline();
 }
 
 export default function decorate(block) {

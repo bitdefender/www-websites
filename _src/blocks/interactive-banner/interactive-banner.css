@@ -50,7 +50,6 @@ main .interactive-banner-container {
                 -moz-user-select: none;
                 overscroll-behavior: contain;
                 touch-action: none;
-
             }
 
             p {
