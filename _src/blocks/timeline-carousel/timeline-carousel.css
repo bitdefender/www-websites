@@ -19,7 +19,7 @@
     touch-action: none;
   }
 
-  .slide-container {
+  .slides-container {
     > div {
       display: grid;
       grid-auto-flow: column;

@@ -53,6 +53,7 @@ function createTimelineBoxContent(slide) {
 
 function initTimelineCarousel(block) {
   const track = block.querySelector('.timeline-track');
+  const slideContainer = block.querySelector('.slides-container');
   const prevBtn = block.querySelector('.timeline-button.left');
   const nextBtn = block.querySelector('.timeline-button.right');
   const items = Array.from(block.querySelectorAll('.timeline-box.populated'));
@@ -74,9 +75,10 @@ function initTimelineCarousel(block) {
   const leftoverFromula = itemsToShow === 1 ? 0 : leftOverSpace;
 
   function updateTimeline() {
-    const offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
-    track.style.transform = `translateX(${offset}px)`;
-    track.style.transition = 'transform 0.5s ease';
+    let offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
+    if (currentIndex === 0) offset = 0;
+    slideContainer.style.transform = `translateX(${offset}px)`;
+    slideContainer.style.transition = 'transform 0.5s ease';
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= maxIndex;
   }
@@ -95,11 +97,11 @@ function initTimelineCarousel(block) {
 
   // Touch support
   let touchStartX = 0;
-  block.addEventListener('touchstart', (e) => {
+  track.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
   }, { passive: true });
   let timeout;
-  block.addEventListener('touchend', (e) => {
+  track.addEventListener('touchend', (e) => {
     clearTimeout(timeout);
 
     timeout = setTimeout(() => {
@@ -122,7 +124,7 @@ export default function decorate(block) {
   const timelineTrack = document.createElement('div');
   timelineTrack.classList.add('timeline-track');
   const slideContainer = document.createElement('div');
-  slideContainer.classList.add('slide-container');
+  slideContainer.classList.add('slides-container');
 
   // Build top boxes
   const topBoxes = slides.map((slide, idx) => {
