@@ -16,7 +16,7 @@
   }
 
   .timeline-track {
-    touch-action: manipulation;
+    touch-action: none;
     > div {
       display: grid;
       grid-auto-flow: column;

@@ -9,7 +9,7 @@
             padding: 24px;
 
             .carousel-track {
-                touch-action: manipulation;
+                touch-action: none;
 
                 .cards-container {
                     display: grid;
@@ -156,8 +156,10 @@
                 padding: 0;
 
                 .carousel-track {
-                    gap: 32px;
-                    grid-template-columns: repeat(3, 1fr);
+                    .cards-container {
+                        gap: 32px;
+                        grid-template-columns: repeat(3, 1fr);
+                    }
                 }
             }
         }
