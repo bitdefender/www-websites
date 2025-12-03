@@ -1,5 +1,6 @@
 function initCarousel(block) {
-  const cardsContainer = document.querySelector('.carousel-track');
+  const track = block.querySelector('.carousel-track');
+  const cardsContainer = document.querySelector('.cards-container');
   const cards = block.querySelectorAll('.carousel-card');
   const dots = block.querySelectorAll('.carousel-dot');
   const prevBtn = block.querySelector('.button.left');
@@ -13,8 +14,8 @@ function initCarousel(block) {
     const cardWidth = cards[0].offsetWidth;
     const gap = parseInt(containerStyle?.gap, 10) || 0; // Gap between cards
     const offset = -(currentIndex * (cardWidth + gap));
-    cardsContainer.style.transform = `translateX(${offset}px)`;
-    cardsContainer.style.transition = 'transform 0.7s ease';
+    track.style.transform = `translateX(${offset}px)`;
+    track.style.transition = 'transform 0.7s ease';
 
     // Update dots
     dots.forEach((dot, idx) => {
@@ -46,13 +47,13 @@ function initCarousel(block) {
   // Touch/Swipe support
   let touchStartX = 0;
 
-  cardsContainer.addEventListener('touchstart', (e) => {
+  track.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
   }, { passive: true });
 
   let timeout;
 
-  cardsContainer.addEventListener('touchend', (e) => {
+  track.addEventListener('touchend', (e) => {
     clearTimeout(timeout);
 
     timeout = setTimeout(() => {
@@ -89,14 +90,15 @@ export default function decorate(block) {
   `;
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
-
-  block.querySelectorAll('.cards-carousel > div').forEach((child, idx) => {
-    const card = child.querySelector('div');
+  const cardsContainer = document.createElement('div');
+  cardsContainer.classList.add('cards-container');
+  block.querySelectorAll('.cards-carousel > div > div').forEach((card, idx) => {
     card.classList.add('carousel-card');
-    child.remove();
-    carouselTrack.appendChild(card);
+    cardsContainer.appendChild(card);
     dots.innerHTML += `<div data-index="${idx}" class="carousel-dot ${idx === 0 ? 'active' : ''}" ></div>`;
   });
+  carouselTrack.innerHTML = '';
+  carouselTrack.appendChild(cardsContainer);
   navigation.appendChild(dots);
   navigation.appendChild(navButtons);
   block.appendChild(carouselTrack);
