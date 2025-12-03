@@ -16,6 +16,9 @@
   }
 
   .timeline-track {
+    overflow-x: auto;
+     scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
     > div {
       display: grid;
       grid-auto-flow: column;
@@ -77,6 +80,7 @@
       min-height: 175px;
 
       &.populated {
+        scroll-snap-align: end;
         min-width: 300px;
 
         &::before {

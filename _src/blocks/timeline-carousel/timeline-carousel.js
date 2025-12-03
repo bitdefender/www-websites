@@ -1,5 +1,3 @@
-import { touchEndEvent } from "@tsparticles/engine";
-
 function createTimelineNavigation(block) {
   const buttonsContainer = document.createElement('div');
   buttonsContainer.classList.add('timeline-controls');
@@ -59,70 +57,75 @@ function initTimelineCarousel(block) {
   const nextBtn = block.querySelector('.timeline-button.right');
   const items = Array.from(block.querySelectorAll('.timeline-box.populated'));
   const upItems = Array.from(block.querySelectorAll('.timeline-content-up .timeline-box'));
+
   if (!track || !prevBtn || !nextBtn || items.length === 0) return;
 
-  // Amount to scroll per click (item width + gap)
+  // Calculate base box width
+  function getItemWidth() {
+    return (upItems[0].offsetWidth + upItems[1].offsetWidth) / 2;
+  }
+
   function getScrollAmount() {
-    const itemWidth = (upItems[0].offsetWidth + upItems[1].offsetWidth) / 2;
-    return itemWidth;
+    return getItemWidth(); // gap is built into layout
   }
 
-  const containerWidth = track.offsetWidth;
-  const avgWidthWithGap = getScrollAmount();
-  const itemsToShow = Math.floor(containerWidth / avgWidthWithGap);
-  const maxIndex = Math.max(0, items.length - itemsToShow);
-  let currentIndex = maxIndex;
-  const leftOverSpace = containerWidth - avgWidthWithGap * itemsToShow;
-  const leftoverFromula = itemsToShow === 1 ? 0 : leftOverSpace;
-
-  function updateTimeline() {
-    const offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
-    track.style.transform = `translateX(${offset}px)`;
-    track.style.transition = 'transform 0.5s ease';
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex >= maxIndex;
+  // Calculate how many items fit
+  function getItemsToShow() {
+    return Math.floor(track.clientWidth / getItemWidth());
   }
 
-  track.addEventListener('resize', updateTimeline());
+  function getMaxIndex() {
+    return Math.max(0, items.length - getItemsToShow());
+  }
 
-  prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) currentIndex -= 1;
-    updateTimeline();
-  });
+  let currentIndex = getMaxIndex();
 
-  nextBtn.addEventListener('click', () => {
-    if (currentIndex < maxIndex) currentIndex += 1;
-    updateTimeline();
-  });
+  function scrollToIndex(index) {
+    const left = index * getScrollAmount();
+    track.scrollTo({ left, behavior: 'smooth' });
+  }
 
-  // Touch support
-  let touchStartX = 0;
-  track.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
-
-  track.addEventListener('touchend', (e) => {
-    const diff = touchStartX - e.changedTouches[0].screenX;
-
-    if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
-    else currentIndex = Math.max(currentIndex - 1, 0);
-    const t0 = performance.now();
-    updateTimeline();
-    const t1 = performance.now();
-    alert(t1-t0);
-  }, { passive: true });
-
-  // Intersection Observer: only trigger once
+  // INITIAL ALIGN WHEN BLOCK ENTERS VIEW
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        updateTimeline();
-        obs.disconnect(); // stop observing after first trigger
+        scrollToIndex(currentIndex);
+        obs.disconnect();
       }
     });
   }, { threshold: 0.1 });
-
   observer.observe(block);
+
+  // BUTTON HANDLERS
+  prevBtn.addEventListener('click', () => {
+    currentIndex = Math.max(0, currentIndex - 1);
+    scrollToIndex(currentIndex);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentIndex = Math.min(getMaxIndex(), currentIndex + 1);
+    scrollToIndex(currentIndex);
+  });
+
+  // SCROLL → DETECT CURRENT INDEX (instead of touch)
+  let scrollTimeout;
+  track.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+
+    scrollTimeout = setTimeout(() => {
+      const idx = Math.round(track.scrollLeft / getScrollAmount());
+
+      // enable / disable buttons ONLY
+      prevBtn.disabled = idx === 0;
+      nextBtn.disabled = idx >= getMaxIndex();
+    }, 80);
+  });
+
+  // RESIZE → RECALCULATE
+  window.addEventListener('resize', () => {
+    currentIndex = Math.min(currentIndex, getMaxIndex());
+    scrollToIndex(currentIndex);
+  });
 }
 
 export default function decorate(block) {
