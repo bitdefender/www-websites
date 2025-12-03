@@ -95,11 +95,11 @@ function initTimelineCarousel(block) {
 
   // Touch support
   let touchStartX = 0;
-  track.addEventListener('touchstart', (e) => {
+  block.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
   }, { passive: true });
   let timeout;
-  track.addEventListener('touchend', (e) => {
+  block.addEventListener('touchend', (e) => {
     clearTimeout(timeout);
 
     timeout = setTimeout(() => {
@@ -121,6 +121,8 @@ export default function decorate(block) {
 
   const timelineTrack = document.createElement('div');
   timelineTrack.classList.add('timeline-track');
+  const slideContainer = document.createElement('div');
+  slideContainer.classList.add('slide-container');
 
   // Build top boxes
   const topBoxes = slides.map((slide, idx) => {
@@ -152,7 +154,7 @@ export default function decorate(block) {
     `;
   }).join('');
 
-  timelineTrack.innerHTML = `
+  slideContainer.innerHTML = `
     <div class="timeline-content-up">
       ${topBoxes}
     </div>
@@ -166,6 +168,7 @@ export default function decorate(block) {
     </div>
   `;
 
+  timelineTrack.appendChild(slideContainer);
   block.innerHTML = '';
   block.appendChild(navigation);
   block.appendChild(timelineTrack);
