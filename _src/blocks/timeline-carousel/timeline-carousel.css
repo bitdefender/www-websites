@@ -17,6 +17,9 @@
 
   .timeline-track {
     touch-action: none;
+  }
+
+  .slide-container {
     > div {
       display: grid;
       grid-auto-flow: column;
