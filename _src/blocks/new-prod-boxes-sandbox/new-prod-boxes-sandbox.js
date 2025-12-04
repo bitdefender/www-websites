@@ -2,10 +2,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
 import {
-  formatPrice,
   checkIfNotProductPage,
 } from '../../scripts/utils/utils.js';
-import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
 function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
   let priceAttribute = 'discounted||full';
@@ -52,12 +50,8 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = 'default') {
   const planSwitcher = document.createElement('div');
   planSwitcher.classList.add('plan-switcher');
-  planSwitcher.classList.toggle('addon', variant === 'addon');
 
   let radioArray = ['yearly', 'monthly', '3-rd-button'];
-  if (variant === 'addon') {
-    radioArray = ['add-on-yearly', 'add-on-monthly'];
-  }
 
   Array.from(radioButtons.children).forEach((radio, idx) => {
     let radioText = radio.textContent;
@@ -129,21 +123,6 @@ function createFeatureList(featuresSet) {
         firstTdContent = firstTdContent.replace('[checkmark]', '<span class="checkmark"></span>');
       }
 
-      if (firstTdContent.indexOf('[add-on]') !== -1) {
-        firstTdContent = firstTdContent.replace('[add-on]', '');
-      }
-
-      if (firstTdContent.indexOf('&lt;&lt;add-on-newprice&gt;&gt;') !== -1) {
-        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-newprice&gt;&gt;', '<span class="add-on-newprice"></span>');
-      }
-      if (firstTdContent.indexOf('&lt;&lt;add-on-oldprice&gt;&gt;') !== -1) {
-        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-oldprice&gt;&gt;', '<span class="add-on-oldprice"></span>');
-      }
-
-      if (firstTdContent.indexOf('&lt;&lt;add-on-percent-save&gt;&gt;') !== -1) {
-        firstTdContent = firstTdContent.replace('&lt;&lt;add-on-percent-save&gt;&gt;', '<span class="add-on-percent-save"></span>');
-      }
-
       if (firstTdContent.indexOf('[[') !== -1) {
         firstTdContent = firstTdContent.replace('[[', '(');
       }
@@ -160,25 +139,6 @@ function createFeatureList(featuresSet) {
   });
 }
 
-// Function to check if content contains [add-on] text
-function checkAddOn(featuresSet) {
-  let addOn = false;
-  // eslint-disable-next-line array-callback-return
-  Array.from(featuresSet).map((table) => {
-    const trList = Array.from(table.querySelectorAll('tr'));
-    // eslint-disable-next-line array-callback-return
-    trList.map((tr) => {
-      const tdList = Array.from(tr.querySelectorAll('td'));
-      let firstTdContent = tdList.length > 0 && tdList[0].textContent.trim() !== '' ? `${tdList[0].innerHTML}` : '';
-      if (firstTdContent.indexOf('[add-on]') !== -1) {
-        addOn = true;
-      }
-    });
-  });
-
-  return addOn;
-}
-
 export default async function decorate(block, onDataLoaded) {
   let structuredContent = await onDataLoaded;
 
@@ -190,80 +150,20 @@ export default async function decorate(block, onDataLoaded) {
   const {
     // eslint-disable-next-line no-unused-vars
     familyProducts, monthlyProducts,
-    addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
+    type, hideDecimals, thirdRadioButtonProducts, saveText,
   } = block.closest('.section').dataset;
 
   const blockParent = block.closest('.section');
   blockParent.classList.add('we-container');
 
-  let defaultContentWrapperElements = block.closest('.section').querySelector('.default-content-wrapper')?.children;
   let individualSwitchText;
   let familySwitchText;
-  if (defaultContentWrapperElements) {
-    [...defaultContentWrapperElements].forEach((element) => {
-      if (element.innerHTML.includes('&lt;slider-1 ')) {
-        element.innerHTML = element.innerHTML.replace('&lt;slider-1 ', '');
-        individualSwitchText = element.innerHTML;
-        element.remove();
-      }
-      if (element.innerHTML.includes('&lt;slider-2 ')) {
-        element.innerHTML = element.innerHTML.replace('&lt;slider-2 ', '');
-        familySwitchText = element.innerHTML;
-        element.remove();
-      }
-    });
-  }
-
-  let switchBox = document.createElement('div');
-  if (individualSwitchText && familySwitchText) {
-    switchBox.classList.add('switchBox');
-    switchBox.innerHTML = `
-      <label class="switch">
-        <input type="checkbox" id="switchCheckbox">
-        <span class="slider round">
-
-        </span>
-        <span class="label right">${individualSwitchText}</span>
-        <span class="label left">${familySwitchText}</span>
-      </label>
-    `;
-
-    // Get the checkbox inside the switchBox
-    let switchCheckbox = switchBox.querySelector('#switchCheckbox');
-    // Add an event listener to the checkbox
-    switchCheckbox.addEventListener('change', () => {
-      if (switchCheckbox.checked) {
-        let familyBoxes = block.querySelectorAll('.family-box');
-        familyBoxes.forEach((box) => {
-          box.style.display = 'grid';
-        });
-
-        let individualBoxes = block.querySelectorAll('.individual-box');
-        individualBoxes.forEach((box) => {
-          box.style.display = 'none';
-        });
-      } else {
-        let familyBoxes = block.querySelectorAll('.family-box');
-        familyBoxes.forEach((box) => {
-          box.style.display = 'none';
-        });
-
-        let individualBoxes = block.querySelectorAll('.individual-box');
-        individualBoxes.forEach((box) => {
-          box.style.display = 'grid';
-        });
-      }
-    });
-  }
 
   const productsAsList = products && products.replaceAll(' ', '').split(',');
   const familyProductsAsList = familyProducts && familyProducts.replaceAll(' ', '').split(',');
   const combinedProducts = productsAsList.concat(familyProductsAsList);
   const monthlyPricesAsList = monthlyProducts && monthlyProducts.replaceAll(' ', '').split(',');
   const thirdRadioButtonProductsAsList = thirdRadioButtonProducts && thirdRadioButtonProducts.replaceAll(' ', '').split(',');
-  const addOnProductsAsList = addOnProducts && addOnProducts.replaceAll(' ', '').split(',');
-  const addOnProductsInitial = addOnProductsAsList && addOnProductsAsList.slice(0, productsAsList.length);
-  const addOnMonthlyProductsAsList = addOnMonthlyProducts && addOnMonthlyProducts.replaceAll(' ', '').split(',');
   const billedTexts = [];
 
   if (productsAsList.length >= 5) {
@@ -277,12 +177,9 @@ export default async function decorate(block, onDataLoaded) {
       const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
       const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
       const [prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears] = thirdRadioButtonProductsAsList ? thirdRadioButtonProductsAsList[key].split('/') : [];
-      const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList ? addOnProductsAsList[key].split('/') : [];
-      const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList ? addOnMonthlyProductsAsList[key].split('/') : [];
       const featuresSet = benefitsLists.querySelectorAll('table');
       const featureList = createFeatureList(featuresSet);
       billedTexts.push(billed);
-      let addOn = checkAddOn(featuresSet);
       let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
       if (buyLinkSelector) {
         buyLinkSelector.classList.add('button', 'primary');
@@ -296,13 +193,6 @@ export default async function decorate(block, onDataLoaded) {
         let prodsUsers = [prodUsers, prodMonthlyUsers, prodThirdRadioButtonUsers];
         let prodsYears = [prodYears, prodMonthlyYears, prodThirdRadioButtonYears];
         planSwitcher = createPlanSwitcher(radioButtons, key, prodsNames, prodsUsers, prodsYears);
-      }
-      let planSwitcher2 = document.createElement('div');
-      if (addOn && addOnProducts && addOnMonthlyProducts) {
-        let prodsNames = [addOnProdName, addOnProdMonthlyName];
-        let prodsUsers = [addOnProdUsers, addOnProdMonthlyUsers];
-        let prodsYears = [addOnProdYears, addOnProdMonthlyYears];
-        planSwitcher2 = createPlanSwitcher(radioButtons, key, prodsNames, prodsUsers, prodsYears, 'addon');
       }
 
       let newBlueTag = document.createElement('div');
@@ -379,76 +269,11 @@ export default async function decorate(block, onDataLoaded) {
               ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
-              <div class="add-on-product" style="display: none;">
-                ${billed2 ? '<hr>' : ''}
-                ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
-                ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
-                <div class="hero-aem__prices__addon"></div>
-              </div>
             </div>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
       let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice);
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
-      let addOnPriceBox;
-      if (addOn && addOnProducts) {
-        addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-        block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
-      }
-
-      let checkmark = block.children[key].querySelector('.checkmark');
-      if (checkmark) {
-        let checkmarkList = checkmark.closest('ul');
-        checkmarkList.classList.add('checkmark-list');
-
-        let li = checkmark.closest('li');
-        li.removeChild(checkmark);
-
-        let checkBox = document.createElement('input');
-        checkBox.setAttribute('type', 'checkbox');
-        checkBox.classList.add('checkmark');
-
-        // rewrite the list element so flexbox can work
-        let newLi = document.createElement('li');
-        newLi.innerHTML = `
-          ${checkBox.outerHTML}
-          <div>${li.innerHTML}</div>`;
-        li.replaceWith(newLi);
-
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-context', '');
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-id', addOnProdName);
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-department', 'consumer');
-        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(addOnProdName))) {
-          block.children[key].querySelector('.add-on-product').setAttribute('data-store-event', storeEvent);
-        }
-
-        let productObject = await Store.getProducts([new ProductInfo(prodName), new ProductInfo(addOnProdName)]);
-        let product = productObject[prodName];
-        let addOnProduct = productObject[addOnProdName];
-        if (addOnProduct) {
-          let addOnCost = addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscountedPrice('value') - product.getOption(prodUsers, prodYears).getDiscountedPrice('value');
-          addOnCost = formatPrice(addOnCost, product.getCurrency());
-
-          let addOnNewPrice = newLi.querySelector('.add-on-newprice');
-          addOnNewPrice.textContent = addOnCost;
-          let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
-          addOnOldPrice.textContent = formatPrice(addOnProduct.getOption(addOnProdUsers, addOnProdYears).getPrice('value'), addOnProduct.getCurrency());
-          let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-          addOnPercentSave.textContent = `${addOnPriceBox.querySelector('.prod-save').textContent} ${addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscount('percentageWithProcent')}`;
-
-          let checkBoxSelector = newLi.querySelector('.checkmark');
-          checkBoxSelector.addEventListener('change', () => {
-            if (checkBoxSelector.checked) {
-              checkmarkList.classList.add('checked');
-              block.children[key].querySelector('.add-on-product').style.display = 'block';
-            } else {
-              checkmarkList.classList.remove('checked');
-              block.children[key].querySelector('.add-on-product').style.display = 'none';
-            }
-          });
-        }
-      }
     });
   }
 
@@ -550,13 +375,6 @@ export default async function decorate(block, onDataLoaded) {
   };
   hj('event', 'new-prod-boxes-sandbox');
 
-  // decorate icons if the component is being called from www-websites
-  const isInLandingPages = window.location.href.includes('www-landing-pages') || window.location.href.includes('bitdefender.com/pages');
-  if (!isInLandingPages) {
-    const { decorateIcons } = await import('../../scripts/lib-franklin.js');
-    decorateIcons(block.closest('.section'));
-  }
-
   if (titles) {
     const titleElement = [...block.querySelectorAll('h4')];
     // eslint-disable-next-line no-restricted-syntax
@@ -576,6 +394,4 @@ export default async function decorate(block, onDataLoaded) {
   if (featured) {
     block.querySelector(`[data-store-id="${featured}"]`).style.border = '12px solid #0072CE';
   }
-
-  switchCheckbox.dispatchEvent(new Event('change'));
 }
