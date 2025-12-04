@@ -242,6 +242,10 @@
                     .data-wrapper {
                         align-items: unset;
 
+                        .data-column-left {
+                            max-width: 49%;
+                        }
+
                         .data-column-right {
                             position: relative;
                             color: #000;
