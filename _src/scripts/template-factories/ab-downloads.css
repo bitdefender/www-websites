@@ -176,6 +176,10 @@
     padding: 2em 3em;
 }
 
+.ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2) {
+    min-height: 36px;
+}
+
 .ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
     display: block;
 }
@@ -1328,6 +1332,15 @@
         font-size: 12px;
         font-weight: 600;
         line-height: 15.6px;
+    }
+
+    .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2) {
+        min-height: auto;
+        margin-top: 10px;
+    }
+
+    .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p.button-container {
+        margin-top: 10px;
     }
 
     .ab-downloads main .accordion.terms-of-use .accordion-item .accordion-item-content p, .ab-downloads main .accordion.terms-of-use .accordion-item .accordion-item-content p *, .ab-downloads main .accordion.terms-of-use .accordion-item .accordion-item-content *, .ab-downloads main .accordion-container > .default-content-wrapper:last-of-type p {
