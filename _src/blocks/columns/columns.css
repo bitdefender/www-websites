@@ -2962,6 +2962,61 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.columns-container.gasa {
+  padding: 24px;
+  .columns-wrapper {
+    padding: 0;
+
+    .columns {
+      background: linear-gradient(178.61deg, #006DFF 20.53%, #0C3451 79.47%);
+      padding: 24px;
+      border-radius: 20px;
+
+      > div {
+        gap: 24px;
+
+        h2 {
+          font-size: 32px;
+          color: #fff;
+          font-weight: 400;
+          margin: 0;
+        }
+
+        p {
+          font-size: 18px;
+          color: #fff;
+        }
+
+        img {
+          width: 200px;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 992px) {
+    .columns-wrapper {
+      max-width: 1140px;
+      .columns {
+        background: linear-gradient(87.6deg, #006DFF 0%, #0C3451 100%);
+        padding: 48px;
+
+        > div {
+          gap: 100px;
+
+          h2 {
+            font-size: 44px;
+          }
+
+          > div:first-of-type {
+            min-width: 50%;
+          }
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 1399px) {
   .columns-wrapper {
     padding: 0 var(--section-large-desktop-padding);
