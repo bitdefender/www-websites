@@ -59,7 +59,6 @@ function initTimelineCarousel(block) {
   const items = Array.from(block.querySelectorAll('.timeline-box.populated'));
   const upItems = Array.from(block.querySelectorAll('.timeline-content-up .timeline-box'));
   if (!track || !prevBtn || !nextBtn || items.length === 0) return;
-
   // Amount to scroll per click (item width + gap)
   function getScrollAmount() {
     const itemWidth = (upItems[0].offsetWidth + upItems[1].offsetWidth) / 2;
@@ -73,12 +72,12 @@ function initTimelineCarousel(block) {
   let currentIndex = maxIndex;
   const leftOverSpace = containerWidth - avgWidthWithGap * itemsToShow;
   const leftoverFromula = itemsToShow === 1 ? 0 : leftOverSpace;
+  let offset;
 
   function updateTimeline() {
-    let offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
+    offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
     if (currentIndex === 0) offset = 0;
     slideContainer.style.transform = `translateX(${offset}px)`;
-    slideContainer.style.transition = 'transform 0.1s ease';
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= maxIndex;
   }
@@ -97,20 +96,39 @@ function initTimelineCarousel(block) {
 
   // Touch support
   let touchStartX = 0;
+  let currentOffset = 0;
+  let isDragging = false;
+
   track.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
+    // stop animation so dragging feels direct
+    slideContainer.style.transition = 'none';
+    touchStartX = e.changedTouches[0].clientX;
+    isDragging = true;
   }, { passive: true });
-  let timeout;
+
+  track.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+
+    const moveX = e.changedTouches[0].clientX;
+    const diff = moveX - touchStartX;
+
+    // Live offset: currentIndex ➜ offset + drag amount
+    const baseOffset = -currentIndex * avgWidthWithGap;
+    currentOffset = baseOffset + diff;
+
+    // Update immediately
+    slideContainer.style.transform = `translateX(${currentOffset}px)`;
+  }, { passive: true });
+
   track.addEventListener('touchend', (e) => {
-    clearTimeout(timeout);
+    isDragging = false;
+    slideContainer.style.transition = 'transform 0.3s ease';
 
-    timeout = setTimeout(() => {
-      const diff = touchStartX - e.changedTouches[0].screenX;
+    const diff = touchStartX - e.changedTouches[0].clientX;
 
-      if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
-      else currentIndex = Math.max(currentIndex - 1, 0);
-      updateTimeline();
-    }, 100);
+    if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
+    else currentIndex = Math.max(currentIndex - 1, 0);
+    updateTimeline();
   }, { passive: true });
 
   updateTimeline();
