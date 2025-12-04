@@ -59,6 +59,8 @@
                 gap: 16px;
 
                 .article-column {
+                    overflow: visible;
+
                     h3 {
                         font-size: 20px;
                     }
@@ -69,14 +71,6 @@
 
                     .button-container {
                         margin:  24px 0;
-                    }
-
-                    >:nth-child(2n) {
-                        order: 1;
-                    }
-
-                    >:nth-child(2n) {
-                        order: 1;
                     }
 
                     a.button.primary {
@@ -199,6 +193,10 @@
                 .articles-wrapper {
                     flex-direction: unset;
                     gap: 32px;
+
+                    >* {
+                        order: unset !important;
+                    }
 
                     .article-column {
                         h3 {

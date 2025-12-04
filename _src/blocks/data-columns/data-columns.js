@@ -15,7 +15,13 @@ export default function decorate(block) {
   const articlesWrapper = block.querySelector('div:nth-of-type(3)');
   articlesWrapper?.classList.add('articles-wrapper');
 
-  articlesWrapper?.querySelectorAll('div')?.forEach((child) => {
+  articlesWrapper?.querySelectorAll('div')?.forEach((child, idx) => {
+    if ((idx + 1) % 2 === 0) {
+      child.style.order = idx;
+    } else {
+      child.style.order = idx + 2;
+    }
+
     if (child.querySelector('img') || child.querySelector('.icon')) {
       child.classList.add('article-image');
       return;
