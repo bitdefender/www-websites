@@ -81,17 +81,22 @@ function buildHeroBlock(element) {
 
 createNanoBlock('discount', (code, label = '{label}') => {
   // code = "av/3/1"
-  // eslint-disable-next-line no-unused-vars
   const [product, unit, year] = code.split('/');
 
   const root = document.createElement('div');
   root.classList.add('discount-bubble');
   root.classList.add('await-loader');
+  root.setAttribute('data-store-context', '');
+  root.setAttribute('data-store-id', product);
+  root.setAttribute('data-store-option', `${unit}-${year}`);
+  root.setAttribute('data-store-department', 'consumer');
+  root.setAttribute('data-store-event', 'main-product-loaded');
+  root.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
 
   // Add the required attributes to the root element
 
   root.innerHTML = `
-    <span class="discount-bubble-0"  data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>
+    <span class="discount-bubble-0" data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>
     <span class="discount-bubble-1">${label}</span>
   `;
 
