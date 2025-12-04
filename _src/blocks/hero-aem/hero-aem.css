@@ -122,9 +122,8 @@
 main .hero-aem-container .hero-aem .breadcrumb {
   font-weight: var(--font-weight-bold);
   color: #dedede;
-  min-height: unset;
+  min-height: 48px;
   padding: 12px 0;
-  margin-bottom: 12px;
 }
 
 main .hero-aem-container .hero-aem .breadcrumb a {
@@ -698,6 +697,32 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
     gap: 13px;
     margin: 0;
   }
+}
+
+@media (max-width: 595px) {
+  .hero-aem-container.hide-image-mobile .hero-aem .hero-aem__mobile-image img {
+    display: none;
+  }
+
+  .hero-aem-container.hide-image-mobile .hero-aem .hero-aem__card-text {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+
+  .hero-aem-container .hero-aem p em a {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .hero-aem-container .hero-aem .hero-aem__card-text picture {
+      min-height: 40px;
+      display: inline-flex;
+  }
+
+  .hero-aem-container .hero-aem .hero-aem__card-text picture img {
+    max-height: 40px;
+  }
+
 }
 
 main .hero-aem-container.bf25 .hero-aem .breadcrumb *, main .hero-aem-container.bf25 .hero-aem .breadcrumb a::after {
