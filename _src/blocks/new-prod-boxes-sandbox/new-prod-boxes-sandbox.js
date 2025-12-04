@@ -548,7 +548,7 @@ export default async function decorate(block, onDataLoaded) {
   window.hj = window.hj || function initHotjar(...args) {
     (hj.q = hj.q || []).push(...args);
   };
-  hj('event', 'new-prod-boxes');
+  hj('event', 'new-prod-boxes-sandbox');
 
   // decorate icons if the component is being called from www-websites
   const isInLandingPages = window.location.href.includes('www-landing-pages') || window.location.href.includes('bitdefender.com/pages');
