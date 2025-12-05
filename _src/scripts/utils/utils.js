@@ -883,13 +883,19 @@ export const generatePageLoadStartedName = () => {
     if (pathname.includes('spot-the-scam-quiz')) {
       tagName = `${locale}:consumer:quiz`;
       if (!pathname.endsWith('/')) {
-        const result = page.name;
-        tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
+        tagName = `${locale}:consumer:quiz:results:${subSubSubSection}`;
       }
     }
 
     if (pathname.includes('scam-masters')) {
       tagName = `${locale}:consumer:quiz:scam-masters`;
+    }
+
+    if (pathname.includes('reverse-phone-lookup')) {
+      tagName = `${locale}:consumer:product:${subSubSubSection}`;
+      if (pathname.includes('/reverse-phone-lookup/')) {
+        tagName = `${locale}:consumer:product:reverse phone lookup:${subSubSubSection}`;
+      }
     }
 
     if (window.errorCode === '404') {
