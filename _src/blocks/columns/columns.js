@@ -306,6 +306,10 @@ export default function decorate(block) {
     matchHeights(block.closest('.section'), 'p:nth-last-of-type(2)');
     matchHeights(block.closest('.section'), '.columns > div');
   }
+  if (block.closest('.section').classList.contains('fix-tables-heights')) {
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(1)');
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(2)');
+  }
   if (block.classList.contains('awards-fragment')) {
     matchHeights(block, 'p:last-of-type');
   }
