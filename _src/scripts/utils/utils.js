@@ -589,7 +589,6 @@ export async function matchHeights(targetNode, selector) {
   const adjustHeights = () => {
     if (window.innerWidth >= 768) {
       resetHeights();
-      console.log(selector, targetNode)
       const elements = targetNode.querySelectorAll(selector);
       const elementsHeight = Array.from(elements).map((element) => element.offsetHeight);
       const maxHeight = Math.max(...elementsHeight);
