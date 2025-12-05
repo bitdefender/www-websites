@@ -82,7 +82,7 @@ main .section.phone-number-checker-container {
     &.safe {
         &::before {
             background-color: #3d8648;
-            background-image: url("../../icons/phone-number-checker-pattern-green.svg");
+            background-image: url("../../icons/phone-checker-pattern-green.svg");
         }
 
         .check-url {
