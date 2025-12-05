@@ -386,6 +386,32 @@
   }
 }
 
+.four-cards.blue {
+  display: flex;
+  justify-content: center;
+  ul {
+    justify-content: center;
+
+    @media (min-width: 992px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    li {
+      max-width: 300px;
+      background-color: #E4F2FF;
+      gap: 30px;
+      h4 {
+        font-size: 18px;
+      }
+
+      .icon {
+        height: 40px;
+        width: 40px;
+      }
+    }
+  }
+}
+
 @media (max-width: 991px) { /* mobile/tablet */
     .four-cards-wrapper {
         padding: var(--body-padding);

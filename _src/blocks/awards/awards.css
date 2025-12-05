@@ -42,6 +42,16 @@
   margin-top: 34px;
 }
 
+.awards-container .button-container a.button.modal {
+  gap: 5px;
+
+  &::after {
+    visibility: hidden;
+    min-width: 8px;
+  }
+
+}
+
 .awards-container em {
   color: #006DFF;
   font-style: normal;
