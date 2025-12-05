@@ -131,6 +131,10 @@
     color: #006EFF;
 }
 
+.questions-answers-container.ibm-plex-sans .questions-answers-item .question h3, .questions-answers-item .answer p {
+    font-family: "IBM Plex Sans", sans-serif!important;
+}
+
 .qa-creators.questions-answers-container .default-content-wrapper p {
     font: bold 24px / 26px "IBM Plex Sans", sans-serif;
     margin-bottom: 32px;
@@ -155,10 +159,6 @@
         margin-left: 10px;
         font-size: 14px;
     }
-}
-
-.questions-answers-container.ibm-plex-sans .questions-answers-item .question h3, .questions-answers-item .answer p {
-    font-family: "IBM Plex Sans", sans-serif!important;
 }
 
 @media (max-width: 991px) {
