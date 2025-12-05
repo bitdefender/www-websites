@@ -2,8 +2,11 @@
 import { addScript } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
+  const section = block.closest('.section');
+
   const allItems = block.querySelectorAll('td');
-  block.innerHTML = `<div class="flex">
+  block.innerHTML = `
+    <div class="flex cards-grid">
       <div class="column">
         <div class="card tall medium">
           <div class="lottie-wrapper">
@@ -112,7 +115,8 @@ export default function decorate(block) {
           <p>${allItems[8].innerHTML}</p>
         </div>
       </div>
-    </div>`;
+    </div>
+    <div class="overlay cards-grid"></div>`;
 
   addScript(
     'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js',
@@ -130,6 +134,58 @@ export default function decorate(block) {
     },
     'module'
   );
+
+  if (section.classList.contains('hover-mask')) {
+    const cardsContainer = block.querySelector('.cards-grid');
+    const overlay = block.querySelector('.overlay.cards-grid'); 
+    // Clear overlay 
+    overlay.innerHTML = ''; 
+    // Clone entire grid container content into overlay 
+    const clonedGrid = cardsContainer.cloneNode(true);  
+    clonedGrid.classList.add('overlay-grid'); 
+    // optional class for overlay styling 
+    overlay.appendChild(clonedGrid); 
+    // Collect all real cards and overlay cards for size sync 
+    const allRealCards = Array.from(cardsContainer.querySelectorAll('.card'));
+    const overlayCards = Array.from(clonedGrid.querySelectorAll('card')); 
+    // ResizeObserver to keep overlay cards aligned 
+    const resizeObserver = new ResizeObserver(() => { 
+      allRealCards.forEach((card, index) => { 
+        const overlayCard = overlayCards[index]; 
+        if (!overlayCard) return; 
+        const rect = card.getBoundingClientRect();
+       // Only copy width and height, keep layout structure 
+       overlayCard.style.width = `${rect.width}px`; 
+       overlayCard.style.height = `${rect.height}px`; 
+      }); 
+    }); 
+    allRealCards.forEach((card) => resizeObserver.observe(card)); 
+    allRealCards.forEach((real, i) => {
+      const clone = overlayCards[i];
+      if (!clone) return;
+
+      // Hover
+      real.addEventListener('pointerenter', () => clone.classList.add('is-hover'));
+      real.addEventListener('pointerleave', () => clone.classList.remove('is-hover'));
+
+      // Active/pressed
+      real.addEventListener('pointerdown', () => clone.classList.add('is-active'));
+      real.addEventListener('pointerup',   () => clone.classList.remove('is-active'));
+
+      // Optional: focus
+      real.addEventListener('focus',   () => clone.classList.add('is-focus'));
+      real.addEventListener('blur',    () => clone.classList.remove('is-focus'));
+    });
+    // Pointer movement to apply glow/gradient effect 
+    document.addEventListener('pointermove', (e) => { 
+      const rect = cardsContainer.getBoundingClientRect(); 
+      const x = e.clientX - rect.left; 
+      const y = e.clientY - rect.top; 
+      overlay.style.setProperty('--x', `${x}px`); 
+      overlay.style.setProperty('--y', `${y}px`); 
+      overlay.style.setProperty('--opacity', 1); 
+    }); 
+  }
 }
 
 function initLottieAnimations(block) {
