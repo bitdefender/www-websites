@@ -690,7 +690,8 @@ export function pushTrialDownloadToDataLayer() {
   if (sections.length) {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
-      if (trialPaths.some((trialPath) => href.includes(trialPath))) {
+      if (trialPaths.some((trialPath) => href.includes(trialPath))
+        && !button.hasAttribute('data-layer-ignore')) {
         button.addEventListener('click', () => { pushTrialData(button); });
       }
     });

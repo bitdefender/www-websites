@@ -504,7 +504,9 @@ function createButtonsContainer(block) {
       }
 
       if (index === 1) {
-        p.querySelector('a').classList.add('share-button');
+        const button = p.querySelector('a');
+        button.classList.add('share-button');
+        button.setAttribute('data-layer-ignore', 'true');
       }
 
       const checkAnotherButton = p.querySelector('a');
