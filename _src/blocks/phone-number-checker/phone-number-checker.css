@@ -321,7 +321,7 @@ main .section.phone-number-checker-container {
             top: 15px;
             right: 15px;
             cursor: pointer;
-            z-index: 9999;
+            z-index: 1;
         }
 
         .buttons-container {
