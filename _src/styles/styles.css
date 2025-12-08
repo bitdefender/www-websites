@@ -102,6 +102,12 @@
   --cta-background-light-blue: var(--background-light-blue)
 }
 
+.section.ibm-plex-sans {
+  * {
+    font-family: "IBM Plex Sans", sans-serif;
+  }
+}
+
 .w-full {
   width: 100%;
 }
