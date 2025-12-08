@@ -19,7 +19,7 @@ const sharedPrefixMap = {
 };
 
 async function initValidatorLibrary() {
-  // --- Step 0: dynamically load libphonenumber ---
+  // load libphonenumber
   if (typeof window.libphonenumber === 'undefined') {
     await new Promise((resolve, reject) => {
       const script = document.createElement('script');
@@ -39,7 +39,7 @@ function detectCountry(number) {
 }
 
 function parsePhoneNumber(number, block) {
-  // --- Step 3: sanitize input ---
+  // sanitize input
   const sanitized = number.replace(/[\s\-.()]/g, '');
   const countryPrefix = block.querySelector('#dropdown-input').value;
   let parsed;
@@ -94,7 +94,7 @@ function validatePhoneNumber(input, block) {
     const isValid = phoneUtil.isValidNumber(parsed);
     if (!isValid) return invalid('please introduce a valid phone number 3');
 
-    // --- normalize to E.164 ---
+    // normalize to E.164
     const e164 = phoneUtil.format(parsed, window.libphonenumber.PhoneNumberFormat.E164);
     const countryCode = `+${parsed.getCountryCode()}`;
     const countryIso = phoneUtil.getRegionCodeForNumber(parsed);
@@ -106,7 +106,6 @@ function validatePhoneNumber(input, block) {
       countryIso,
     };
   } catch (e) {
-    console.warn('Phone validation failed:', e);
     return invalid('please introduce a valid phone number');
   }
 }
@@ -678,7 +677,7 @@ export default async function decorate(block) {
 
       input.dispatchEvent(pasteEvent);
     } catch (err) {
-      console.error('Clipboard read failed:', err);
+      // do nothing
     }
   });
 
@@ -713,7 +712,7 @@ export default async function decorate(block) {
   const isResultPage = currentPath.includes('/reverse-phone-lookup/might-be-safe') || currentPath.includes('/reverse-phone-lookup/marked-as-spam-or-scam');
 
   if (isResultPage) {
-    // Check if user has valid result data (came from digital-footprint-checker)
+    // Check if user has valid result data (came from reverse-phone-lookup)
     // eslint-disable-next-line max-len
     const hasValidResult = displayStoredResult(block, statusMessages, statusTitles, statusSubtitles);
     if (!hasValidResult) {
