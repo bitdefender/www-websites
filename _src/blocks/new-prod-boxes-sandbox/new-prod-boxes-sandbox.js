@@ -141,6 +141,7 @@ function createFeatureList(featuresSet) {
 
 export default async function decorate(block, onDataLoaded) {
   let structuredContent = await onDataLoaded;
+  console.log('structuredContent:', structuredContent);
 
   const {
     // eslint-disable-next-line no-unused-vars
