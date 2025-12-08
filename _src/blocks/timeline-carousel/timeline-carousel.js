@@ -109,9 +109,8 @@ function initTimelineCarousel(block) {
     if (!isDragging) return;
 
     const diff = clientX - touchStartX;
-    const baseOffset = -currentIndex * avgWidthWithGap;
 
-    currentOffset = baseOffset + diff;
+    currentOffset = offset + diff;
     slideContainer.style.transform = `translateX(${currentOffset}px)`;
   }
 
