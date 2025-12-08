@@ -27,7 +27,7 @@
   max-width: 100%;
   padding-left: 20px;
   padding-right: 20px;
-  margin-top: 15px;
+  margin-top: 38px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -68,8 +68,6 @@
 
 .new-prod-boxes-sandbox-container .new-prod-boxes-sandbox .prod_box {
   flex: 1;
-  max-width: 410px;
-  margin: 8px;
   margin-bottom: 50px;
 }
 
@@ -750,8 +748,8 @@
   .new-prod-boxes-sandbox-container .new-prod-boxes-sandbox {
     margin: 0 auto;
     display: grid;
-    gap: 0;
-    grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
+    gap: 0 8px;
+    grid-template-columns: repeat(3, minmax(237px, max-content));
   }
 
   .new-prod-boxes-sandbox-container .new-prod-boxes-sandbox .prod_box {
@@ -764,6 +762,8 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 50;
+    max-width: 230px;
+    padding: 15px;
   }
 
   .new-prod-boxes-sandbox-container .new-prod-boxes-sandbox .prod_box .inner_prod_box .benefitsLists {
@@ -773,16 +773,9 @@
   }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .new-prod-boxes-sandbox-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .new-prod-boxes-sandbox-container.we-container {
+    max-width: 750px;
     padding-left: 20px;
     padding-right: 20px;
   }
