@@ -16,6 +16,7 @@ function initCarousel(block) {
     const gap = parseInt(containerStyle?.gap, 10) || 0; // Gap between cards
     offset = -(currentIndex * (cardWidth + gap));
     cardsContainer.style.transform = `translateX(${offset}px)`;
+    cardsContainer.style.transition = 'transform 0.3s ease';
 
     // Update dots
     dots.forEach((dot, idx) => {
@@ -71,7 +72,6 @@ function initCarousel(block) {
 
   track.addEventListener('touchend', (e) => {
     isDragging = false;
-    cardsContainer.style.transition = 'transform 0.3s ease';
     const diff = touchStartX - e.changedTouches[0].clientX;
 
     if (diff > 0) goToSlide(currentIndex + 1);

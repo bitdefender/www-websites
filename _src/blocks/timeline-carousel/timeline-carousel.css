@@ -186,6 +186,7 @@
   }
 
   .timeline-controls {
+    max-width: fit-content;
     justify-self: end;
     margin-bottom: 64px;
     display: flex;

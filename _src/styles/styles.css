@@ -1495,6 +1495,13 @@ main .section.checked-lists ul li::after {
   z-index: 2;
 }
 
+main .section.static-awards p{
+  max-height: 64px;
+  max-width: 400px;
+  margin: auto;
+  justify-self: center;
+}
+
 main .section.blue.checked-lists ul li::before {
   background-color: var(--background-color);
 

@@ -29,8 +29,8 @@ function createTimelineNavigation(block) {
   gradient2.style.background = 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)';
   block.appendChild(gradient2);
 
-  buttonsContainer.innerHTML = `${leftBtn.outerHTML}${rightBtn.outerHTML}`;
-
+  buttonsContainer.appendChild(leftBtn);
+  buttonsContainer.appendChild(rightBtn);
   return buttonsContainer;
 }
 
