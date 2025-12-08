@@ -82,28 +82,35 @@ function setImageAsBackgroundImage() {
   });
 }
 
-function setDynamicLink(dynamicLink, dynamicLinks, dynamicProduct) {
+function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
   switch (UserAgent.os) {
     case 'android':
       dynamicLink.href = dynamicLinks.androidLink;
-      AdobeDataLayerService.push(new ButtonClickEvent(
-        'trial downloaded',
-        dynamicProduct.storeIdAndroid,
-      ));
+      if (dynamicProducts.storeIdAndroid) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          dynamicProducts.storeIdAndroid,
+        ));
+      }
+
       break;
     case 'ios':
       dynamicLink.href = dynamicLinks.iosLink;
-      AdobeDataLayerService.push(new ButtonClickEvent(
-        'trial downloaded',
-        dynamicProduct.storeIdIos,
-      ));
+      if (dynamicProducts.storeIdIos) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          dynamicProducts.storeIdIos,
+        ));
+      }
       break;
     default:
       dynamicLink.href = dynamicLinks.defaultLink;
-      AdobeDataLayerService.push(new ButtonClickEvent(
-        'trial downloaded',
-        dynamicProduct.storeId,
-      ));
+      if (dynamicProducts.storeId) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          dynamicProducts.storeId,
+        ));
+      }
       break;
   }
 }
