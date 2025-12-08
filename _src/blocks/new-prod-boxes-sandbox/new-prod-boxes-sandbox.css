@@ -68,6 +68,7 @@
 
 .new-prod-boxes-sandbox-container .new-prod-boxes-sandbox .prod_box {
   flex: 1;
+  max-width: 410px;
   margin-bottom: 50px;
 }
 
@@ -755,7 +756,8 @@
   .new-prod-boxes-sandbox-container .new-prod-boxes-sandbox .prod_box {
     display: grid;
     grid-template-rows: subgrid;
-    grid-row: span 50;
+    grid-row: span 20;
+    margin-bottom: 0;
   }
 
   .new-prod-boxes-sandbox-container .new-prod-boxes-sandbox .prod_box .inner_prod_box {
