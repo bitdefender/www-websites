@@ -94,43 +94,79 @@ function initTimelineCarousel(block) {
     updateTimeline();
   });
 
-  // Touch support
   let touchStartX = 0;
   let currentOffset = 0;
   let isDragging = false;
 
-  track.addEventListener('touchstart', (e) => {
-    // stop animation so dragging feels direct
+  // Shared event Handlers
+  function onDragStart(clientX) {
     slideContainer.style.transition = 'none';
-    touchStartX = e.changedTouches[0].clientX;
+    touchStartX = clientX;
     isDragging = true;
-  }, { passive: true });
+  }
 
-  track.addEventListener('touchmove', (e) => {
+  function onDragMove(clientX) {
     if (!isDragging) return;
 
-    const moveX = e.changedTouches[0].clientX;
-    const diff = moveX - touchStartX;
-
-    // Live offset: currentIndex ➜ offset + drag amount
+    const diff = clientX - touchStartX;
     const baseOffset = -currentIndex * avgWidthWithGap;
+
     currentOffset = baseOffset + diff;
-
-    // Update immediately
     slideContainer.style.transform = `translateX(${currentOffset}px)`;
-  }, { passive: true });
+  }
 
-  track.addEventListener('touchend', (e) => {
+  function onDragEnd(clientX) {
+    if (!isDragging) return;
     isDragging = false;
+
     slideContainer.style.transition = 'transform 0.3s ease';
 
-    const diff = touchStartX - e.changedTouches[0].clientX;
+    const diff = touchStartX - clientX;
 
-    if (diff > 0) currentIndex = Math.min(currentIndex + 1, maxIndex);
-    else currentIndex = Math.max(currentIndex - 1, 0);
+    if (diff > 0) {
+      currentIndex = Math.min(currentIndex + 1, maxIndex);
+    } else {
+      currentIndex = Math.max(currentIndex - 1, 0);
+    }
+
     updateTimeline();
-  }, { passive: true });
+  }
 
+  function handlePointerDown(e) {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    onDragStart(e.clientX);
+  }
+
+  function handlePointerMove(e) {
+    onDragMove(e.clientX);
+  }
+
+  function handlePointerUp(e) {
+    onDragEnd(e.clientX);
+  }
+
+  // Touch Events (iOS Safari compatibility)
+  function handleTouchStart(e) {
+    onDragStart(e.changedTouches[0].clientX);
+  }
+
+  function handleTouchMove(e) {
+    onDragMove(e.changedTouches[0].clientX);
+  }
+
+  function handleTouchEnd(e) {
+    onDragEnd(e.changedTouches[0].clientX);
+  }
+
+  track.addEventListener('pointerdown', handlePointerDown);
+  track.addEventListener('pointermove', handlePointerMove);
+  track.addEventListener('pointerup', handlePointerUp);
+
+  track.addEventListener('touchstart', handleTouchStart, { passive: true });
+  track.addEventListener('touchmove', handleTouchMove, { passive: true });
+  track.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+  // Initial position
   updateTimeline();
 }
 

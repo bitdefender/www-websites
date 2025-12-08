@@ -9,13 +9,13 @@ function initCarousel(block) {
   let currentIndex = 0;
   const totalCards = cards.length;
   const containerStyle = getComputedStyle(cardsContainer);
+  let offset;
 
   function updateCarousel() {
     const cardWidth = cards[0].offsetWidth;
     const gap = parseInt(containerStyle?.gap, 10) || 0; // Gap between cards
-    const offset = -(currentIndex * (cardWidth + gap));
+    offset = -(currentIndex * (cardWidth + gap));
     cardsContainer.style.transform = `translateX(${offset}px)`;
-    cardsContainer.style.transition = 'transform 0.7s ease';
 
     // Update dots
     dots.forEach((dot, idx) => {
@@ -46,22 +46,36 @@ function initCarousel(block) {
 
   // Touch/Swipe support
   let touchStartX = 0;
+  let isDragging = false;
+  let currentOffset = 0;
 
   track.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
+    touchStartX = e.changedTouches[0].clientX;
+    isDragging = true;
+
+    // stop animation so user can drag smoothly
+    cardsContainer.style.transition = 'none';
   }, { passive: true });
 
-  let timeout;
+  track.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+
+    const moveX = e.changedTouches[0].clientX;
+    const diff = moveX - touchStartX;
+
+    currentOffset = offset + diff;
+
+    // Follow finger
+    cardsContainer.style.transform = `translateX(${currentOffset}px)`;
+  }, { passive: true });
 
   track.addEventListener('touchend', (e) => {
-    clearTimeout(timeout);
+    isDragging = false;
+    cardsContainer.style.transition = 'transform 0.3s ease';
+    const diff = touchStartX - e.changedTouches[0].clientX;
 
-    timeout = setTimeout(() => {
-      const diff = touchStartX - e.changedTouches[0].screenX;
-
-      if (diff > 0) goToSlide(currentIndex + 1);
-      else goToSlide(currentIndex - 1);
-    }, 100);
+    if (diff > 0) goToSlide(currentIndex + 1);
+    else goToSlide(currentIndex - 1);
   }, { passive: true });
 
   updateCarousel();
