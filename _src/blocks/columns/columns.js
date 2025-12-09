@@ -1,4 +1,5 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
+import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
   matchHeights, createTag, renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
@@ -81,16 +82,35 @@ function setImageAsBackgroundImage() {
   });
 }
 
-function setDynamicLink(dynamicLink, dynamicLinks) {
+function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
   switch (UserAgent.os) {
     case 'android':
       dynamicLink.href = dynamicLinks.androidLink;
+      if (dynamicProducts.storeIdAndroid) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          dynamicProducts.storeIdAndroid,
+        ));
+      }
+
       break;
     case 'ios':
       dynamicLink.href = dynamicLinks.iosLink;
+      if (dynamicProducts.storeIdIos) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          dynamicProducts.storeIdIos,
+        ));
+      }
       break;
     default:
       dynamicLink.href = dynamicLinks.defaultLink;
+      if (dynamicProducts.storeId) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          dynamicProducts.storeId,
+        ));
+      }
       break;
   }
 }
@@ -140,7 +160,7 @@ function setupTabs({ block, firstTab }) {
 export default function decorate(block) {
   const {
     linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
-    defaultLink, iosLink, androidLink,
+    defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -265,7 +285,8 @@ export default function decorate(block) {
   const dynamicLink = block.closest('.section').querySelector('a[href*="#os-dynamic-link"]');
   if (dynamicLink) {
     const dynamicLinks = { defaultLink, iosLink, androidLink };
-    setDynamicLink(dynamicLink, dynamicLinks);
+    const dynamicProducts = { storeId, storeIdAndroid, storeIdIos };
+    setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts);
   }
 
   // this will define the number of rows inside each card of the subgrid system
@@ -305,6 +326,10 @@ export default function decorate(block) {
     matchHeights(block.closest('.section'), 'table');
     matchHeights(block.closest('.section'), 'p:nth-last-of-type(2)');
     matchHeights(block.closest('.section'), '.columns > div');
+  }
+  if (block.closest('.section').classList.contains('fix-tables-heights')) {
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(1)');
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(2)');
   }
   if (block.classList.contains('awards-fragment')) {
     matchHeights(block, 'p:last-of-type');
