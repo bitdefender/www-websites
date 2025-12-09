@@ -1,6 +1,9 @@
 .data-columns-container {
+    * {
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
     .data-columns-wrapper {
-        max-width: 1140px;
+        max-width: 1290px;
         margin: auto;
 
         .data-columns {

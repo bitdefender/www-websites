@@ -1,8 +1,11 @@
 .cards-carousel-container {
     overflow: hidden;
+    * {
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
 
     .cards-carousel-wrapper {
-        max-width: 1140px;
+        max-width: 1290px;
         margin: auto;
 
         .cards-carousel {

@@ -5,12 +5,10 @@
     --font:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
 }
 
-*{
-    font-family: "IBM Plex Sans", sans-serif;
-}
-
 main .interactive-banner-container {
-    
+    * {
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
 
     .interactive-banner-wrapper {
         margin: auto;
@@ -90,7 +88,7 @@ main .interactive-banner-container {
 
     @media (min-width: 992px) {
         .interactive-banner-wrapper {
-            max-width: 1140px;
+            max-width: 1290px;
             .interactive-banner {
                 h1 {
                     font-size: 90px;

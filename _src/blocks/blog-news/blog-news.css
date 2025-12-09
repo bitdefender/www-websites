@@ -138,8 +138,12 @@
 }
 
 .ai-news {
+    * {
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+    
     .default-content-wrapper {
-        max-width: 1140px;
+        max-width: 1290px;
         margin: auto;
         padding: 24px;
         gap: 8px;
@@ -157,8 +161,9 @@
     }
 
     .blog-news-wrapper {
-        max-width: 1140px;
+        max-width: 1290px;
         margin: auto;
+        font-family: 'IBM Plex Sans', sans-serif;
     }
 
     .blog-news {

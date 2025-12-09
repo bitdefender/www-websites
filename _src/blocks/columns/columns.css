@@ -2996,7 +2996,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   @media (min-width: 992px) {
     .columns-wrapper {
-      max-width: 1140px;
+      max-width: 1290px;
       .columns {
         background: linear-gradient(87.6deg, #006DFF 0%, #0C3451 100%);
         padding: 48px;
@@ -3035,9 +3035,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .columns-wrapper {
-    max-width: 1140px;
+    max-width: 1290px;
     padding: 0;
-    
+    * {
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+
     .columns {
       padding: 24px;
       > div {
@@ -3072,11 +3075,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
             .icon {
               position: absolute;
-              width: 60px;
-              height: 60px;
-              top: 80px;
-              justify-self: center;
-              z-index: 2;
+              top: -25%;
+              left: -5%;
+              z-index: 1;
+              width: 100%;
+              min-width: 110%;
+              min-height: 110%;
             }
 
           }
@@ -3116,12 +3120,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
           gap: 32px;
           > div {
             min-height: 390px;
-            p {
-              .icon {
-                height: 90px;
-                width: 90px;
-              }
-            }
           }
         }
       }
