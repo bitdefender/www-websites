@@ -3064,13 +3064,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             z-index: 3;
             color: #fff;
             img {
-              position: absolute;
-              top: 0px;
+             position: absolute;
+              top: -22.5%;
               left: 0;
-              z-index: 1;
+              display: block;
               width: 100%;
-              aspect-ratio: 357/337;
-              
+              height: 100%;  
             }
 
           }
