@@ -82,7 +82,6 @@ function buildHeroBlock(element) {
 
 createNanoBlock('discount', (code, label = '{label}') => {
   // code = "av/3/1"
-  // eslint-disable-next-line no-unused-vars
   const [product, unit, year] = code.split('/');
 
   const root = document.createElement('bd-product');
