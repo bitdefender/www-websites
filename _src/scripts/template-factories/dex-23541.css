@@ -259,6 +259,12 @@
             }
         }
 
+        .ps-hero-section .hero-aem__card .hero-aem__card-text, .ts-hero-section .hero-aem__card .hero-aem__card-text {
+            .hero-aem__prices + .button-container {
+                display: none;
+            }
+        }
+
         .new-prod-boxes-container > .default-content-wrapper > h2 > strong > a,
         .four-cards > .default-content-wrapper > h2 a,
         .tabs-component-container .title-class h2 a {
@@ -536,6 +542,10 @@
                     }
                 }
             }
+        }
+
+        .dex-premium-security.new-prod-boxes-container.we-container > .default-content-wrapper {
+            padding-bottom: var(--size-64);
         }
 
         .dex-copilot-benefits {
