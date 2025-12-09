@@ -15,11 +15,13 @@
     object-fit: cover;
   }
 
-  .timeline-track {
-    touch-action: none;
-  }
-
   .slides-container {
+    transform: translateX(var(--offset));
+    transition: var(--transition);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+
     > div {
       display: grid;
       grid-auto-flow: column;
@@ -186,6 +188,7 @@
   }
 
   .timeline-controls {
+    touch-action: none;
     max-width: fit-content;
     justify-self: end;
     margin-bottom: 64px;

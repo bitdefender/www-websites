@@ -12,11 +12,12 @@ function initCarousel(block) {
   let offset;
 
   function updateCarousel() {
+    cardsContainer.style.setProperty('--transition', 'transform 0.3s ease');
     const cardWidth = cards[0].offsetWidth;
     const gap = parseInt(containerStyle?.gap, 10) || 0; // Gap between cards
     offset = -(currentIndex * (cardWidth + gap));
-    cardsContainer.style.transform = `translateX(${offset}px)`;
-    cardsContainer.style.transition = 'transform 0.3s ease';
+
+    cardsContainer.style.setProperty('--offset', `${offset}px`);
 
     // Update dots
     dots.forEach((dot, idx) => {
@@ -37,14 +38,6 @@ function initCarousel(block) {
   prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
   nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
-  // Dot navigation
-  dots.forEach((dot) => {
-    dot.addEventListener('click', () => {
-      const index = parseInt(dot.dataset.index, 10);
-      goToSlide(index);
-    });
-  });
-
   // Touch/Swipe support
   let touchStartX = 0;
   let isDragging = false;
@@ -55,7 +48,7 @@ function initCarousel(block) {
     isDragging = true;
 
     // stop animation so user can drag smoothly
-    cardsContainer.style.transition = 'none';
+    cardsContainer.style.setProperty('--transition', 'none');
   }, { passive: true });
 
   track.addEventListener('touchmove', (e) => {
@@ -67,7 +60,7 @@ function initCarousel(block) {
     currentOffset = offset + diff;
 
     // Follow finger
-    cardsContainer.style.transform = `translateX(${currentOffset}px)`;
+    cardsContainer.style.setProperty('--offset', `${currentOffset}px`);
   }, { passive: true });
 
   track.addEventListener('touchend', (e) => {

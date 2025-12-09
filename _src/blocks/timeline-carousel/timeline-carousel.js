@@ -77,7 +77,8 @@ function initTimelineCarousel(block) {
   function updateTimeline() {
     offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
     if (currentIndex === 0) offset = 0;
-    slideContainer.style.transform = `translateX(${offset}px)`;
+    slideContainer.style.setProperty('--transition', 'transform 0.3s ease');
+    slideContainer.style.setProperty('--offset', `${offset}px`);
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex >= maxIndex;
   }
@@ -100,7 +101,7 @@ function initTimelineCarousel(block) {
 
   // Shared event Handlers
   function onDragStart(clientX) {
-    slideContainer.style.transition = 'none';
+    slideContainer.style.setProperty('--transition', 'none');
     touchStartX = clientX;
     isDragging = true;
   }
@@ -111,14 +112,12 @@ function initTimelineCarousel(block) {
     const diff = clientX - touchStartX;
 
     currentOffset = offset + diff;
-    slideContainer.style.transform = `translateX(${currentOffset}px)`;
+    slideContainer.style.setProperty('--offset', `${currentOffset}px`);
   }
 
   function onDragEnd(clientX) {
     if (!isDragging) return;
     isDragging = false;
-
-    slideContainer.style.transition = 'transform 0.3s ease';
 
     const diff = touchStartX - clientX;
 

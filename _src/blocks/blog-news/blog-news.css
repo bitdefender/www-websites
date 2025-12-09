@@ -58,9 +58,9 @@
 
 .blog-news.carousel {
     .carousel-track {
-        touch-action: none;
         position: relative;
         .carousel-controls {
+            touch-action: none;
             justify-content: end;
             margin-top: 64px;
             display: flex;
@@ -141,7 +141,7 @@
     * {
       font-family: 'IBM Plex Sans', sans-serif;
     }
-    
+
     .default-content-wrapper {
         max-width: 1290px;
         margin: auto;

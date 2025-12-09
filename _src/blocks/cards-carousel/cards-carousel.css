@@ -12,12 +12,12 @@
             padding: 24px;
 
             .carousel-track {
-                touch-action: none;
-
                 .cards-container {
                     display: grid;
                     grid-template-columns: repeat(6, 1fr);
                     gap: 32px;
+                    transform: translateX(var(--offset));
+                    transition: var(--transition);
 
                     .carousel-card {
                         display: grid;
@@ -74,6 +74,7 @@
                 }
 
                 .nav-buttons-container {
+                    touch-action: none;
                     display: flex;
                     justify-content: space-between;
                     gap: 16px;
