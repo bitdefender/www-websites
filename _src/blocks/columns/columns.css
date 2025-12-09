@@ -3073,16 +3073,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
               
             }
 
-            .icon {
-              position: absolute;
-              top: -25%;
-              left: -5%;
-              z-index: 1;
-              width: 100%;
-              min-width: 110%;
-              min-height: 110%;
-            }
-
           }
 
           h3 {
@@ -3125,6 +3115,17 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       }
     }
   }
+}
+
+.columns-container.responsible-ai .columns > div > div .icon {
+  position: absolute;
+  top: -25%;
+  left: -5%;
+  z-index: 1;
+  width: 100%;
+  min-width: 110%;
+  min-height: 110%;
+            
 }
 
 @media (max-width: 1399px) {
