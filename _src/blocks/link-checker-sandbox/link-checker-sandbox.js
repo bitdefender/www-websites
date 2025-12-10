@@ -225,7 +225,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
-  document.getElementById('inputDiv').textContent = url;
+  block.querySelector('#inputDiv').textContent = url;
 
   changeTexts(block, message, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
