@@ -279,16 +279,22 @@ async function createDropdown(block) {
 }
 
 async function fetchData(url, body) {
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Nimbus-ClientID': '95171ee6-2565-4033-859d-42c790048a24',
-    },
-    body: JSON.stringify(body),
-  });
-  const json = await resp.json();
-  return json.result || json;
+  try {
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Nimbus-ClientID': '95171ee6-2565-4033-859d-42c790048a24',
+      },
+      body: JSON.stringify(body),
+    });
+    const json = await resp.json();
+    return json.result || json;
+  } catch {
+    return {
+      error: true,
+    };
+  }
 }
 
 function xorEncode(input, key) {
@@ -349,12 +355,10 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
 
   const request = await fetchData('https://nimbus.bitdefender.net/lambada/phone_checker/scan', payload);
   if (request.error) {
-    if (request.erorr) {
-      result.innerHTML = `${statusMessages.error ?? ''}`;
-      result.className = 'result danger no-response';
-      input.closest('.input-container').classList.remove('loader-circle');
-      return;
-    }
+    result.innerHTML = `${statusMessages.error ?? ''}`;
+    result.className = 'result danger no-response';
+    input.closest('.input-container').classList.remove('loader-circle');
+    return;
   }
 
   let statusCode; let message; let className;
