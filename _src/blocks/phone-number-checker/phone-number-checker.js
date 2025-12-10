@@ -113,7 +113,7 @@ function validatePhoneNumber(input, block) {
 async function createDropdown(block) {
   await getCountryData();
   if (!countries) return null;
-  const { dropdownPlaceholder } = block.closest('.section').dataset;
+  const { dropdownPlaceholder, dropdownNotFound } = block.closest('.section').dataset;
   const defaultCountryISO = page?.country?.toUpperCase();
   const defaultCountry = countries.data.find((c) => c.ISO === defaultCountryISO)
    || countries.data[0];
@@ -202,10 +202,11 @@ async function createDropdown(block) {
       const option = document.createElement('div');
       option.classList.add('dropdown-option');
 
-      const text = document.createElement('span');
-      text.textContent = 'Invalid input';
+      const notfoundText = document.createElement('span');
+      notfoundText.classList.add('not-found');
+      notfoundText.textContent = dropdownNotFound ?? '';
 
-      option.append(text);
+      option.append(notfoundText);
       dropdown.appendChild(option);
       options.push(option);
     }
