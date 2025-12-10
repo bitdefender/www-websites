@@ -366,7 +366,11 @@ function createButtonsContainer(block) {
   }
 }
 
-export default function decorate(block) {
+export default async function decorate(block, onDataLoaded) {
+  const structuredContent = await onDataLoaded;
+  console.log('structuredContent:', structuredContent);
+
+  let linkToCheck = structuredContent?.linkToCheck || '';
   const { checkButtonText, product } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
@@ -483,4 +487,10 @@ export default function decorate(block) {
     result.textContent = '';
     result.className = '';
   });
+
+  // If a linkToCheck is provided, auto-fill and check the link
+  if (linkToCheck) {
+    input.value = linkToCheck;
+    await checkLink(block, input, result, statusMessages, statusTitles);
+  }
 }
