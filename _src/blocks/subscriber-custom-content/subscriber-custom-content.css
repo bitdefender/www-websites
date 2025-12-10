@@ -16,6 +16,10 @@
     @media (max-width: 768px) {
         padding-right: 20px !important;
         padding-left: 20px !important;
+
+        .subscriber-custom-content-wrapper {
+            width: 100%;
+        }
     }
 
     * {box-sizing: unset;}
@@ -24,6 +28,9 @@
         display: block;
      }
 
+     .cards-grid {
+        max-width: 100%;
+     }
         p {
             margin: 0;
             line-height: 20px;
@@ -35,6 +42,7 @@
             display: flex;
             gap: 24px;
             flex-direction: column;
+            max-width: 100%;
         }
         
         .card {
@@ -369,7 +377,6 @@
         }
         
         .grid {
-            flex-direction: row;
             width: 100%;
         }
         
@@ -487,6 +494,7 @@
             display: flex;
             gap: 26px;
             justify-content: center;
+
         }
 
         .scam-column {
@@ -513,7 +521,7 @@
             inset: 0;
         }
 
-        .cards-grid-container {
+        .cards-grid {
             display: flex;
             position: relative; /* Needed so overlay positions correctly */
         }

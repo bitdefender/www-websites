@@ -59,80 +59,92 @@
 .blog-news.carousel {
     .carousel-track {
         position: relative;
-        .carousel-controls {
-            touch-action: none;
-            justify-content: end;
-            margin-top: 64px;
-            display: flex;
-            gap: 16px;
-
-            .carousel-button {
-                top: 0;
-                width: 40px;
-                height: 40px;
-                border: none;
-                cursor: pointer;
-                padding: 0;
-                background-color: #006dff;
-                border-radius: 50%;
-
-                &:hover {
-                    background-color: #0059D6;
-                }
-
-                &:active {
-                    background-color: #0045AD;
-                }
-
-                &:disabled {
-                    background-color: #F1F2F3;
-
-                    svg {
-                        path {
-                            fill: #7d7d7d;
-                        }
-                    }
-                }
-
-                &.right {
-                    svg {
-                        margin-top: 5px;
-                        margin-left: 2px;
-                        fill: #FFFFFF;
-                    }
-                }
-
-                &.left {
-                    svg {
-                        margin-top: 5px;
-                        margin-right: 2px;
-                        fill: #FFFFFF;
-                    }
-                }
-            }
-
-            .carousel-button:disabled {
-                cursor: not-allowed;
-                opacity: 0.6;
-            }
-
-            @media (min-width: 768px) {
-                display: none;   
-            }
-        }
-
         .slides-container {
-            grid-auto-flow: column;
-            justify-content: unset;
+            display: grid;
+            grid-template-columns: repeat(var(--slides-number), 1fr);
+            justify-content: flex-start;
+            gap: 16px;
             .blog-card {
                 min-width: 320px;
-                grid-row: span 2;
+                display: grid;
+                grid-template-rows: subgrid;
+                grid-row: span 3;
 
                 img {
                     aspect-ratio: 359/196;
                     min-width: 100%;
                 }
+
+                .blog-card-content {
+                    display: grid;
+                    grid-template-rows: subgrid;
+                    grid-row: span 3;
+                }
             }
+        }
+
+        
+    }
+
+    .carousel-controls {
+        touch-action: none;
+        justify-content: end;
+        margin-top: 64px;
+        display: flex;
+        gap: 16px;
+
+        .carousel-button {
+            top: 0;
+            width: 40px;
+            height: 40px;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            background-color: #006dff;
+            border-radius: 50%;
+
+            &:hover {
+                background-color: #0059D6;
+            }
+
+            &:active {
+                background-color: #0045AD;
+            }
+
+            &:disabled {
+                background-color: #F1F2F3;
+
+                svg {
+                    path {
+                        fill: #7d7d7d;
+                    }
+                }
+            }
+
+            &.right {
+                svg {
+                    margin-top: 5px;
+                    margin-left: 2px;
+                    fill: #FFFFFF;
+                }
+            }
+
+            &.left {
+                svg {
+                    margin-top: 5px;
+                    margin-right: 2px;
+                    fill: #FFFFFF;
+                }
+            }
+        }
+
+        .carousel-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        @media (min-width: 768px) {
+            display: none;   
         }
     }
 }

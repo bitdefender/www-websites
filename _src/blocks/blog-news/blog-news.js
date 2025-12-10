@@ -50,13 +50,14 @@ function initCarousel(block) {
 
   let currentIndex = 0;
   const totalCards = cards.length;
+  slidesContainer.style.setProperty('--slides-number', totalCards);
   const containerStyle = getComputedStyle(slidesContainer);
   let offset;
 
   function updateCarousel() {
     const cardWidth = cards[0].offsetWidth;
     const gap = parseInt(containerStyle?.gap, 10) || 0; // Gap between cards
-    offset = -(currentIndex * (cardWidth + gap) - 20);
+    offset = -(currentIndex * (cardWidth + gap));
     slidesContainer.style.transition = 'transform 0.3s ease';
     slidesContainer.style.transform = `translateX(${offset}px)`;
 
@@ -149,8 +150,8 @@ export default async function decorate(block) {
     blogGrid.classList.add('slides-container');
 
     carouselTrack.appendChild(blogGrid);
-    carouselTrack.appendChild(buttonsContainer);
     block.appendChild(carouselTrack);
+    block.appendChild(buttonsContainer);
   } else {
     block.appendChild(blogGrid);
   }
@@ -158,6 +159,5 @@ export default async function decorate(block) {
   await renderBlogGrid(block, endpoint, articlesNumber);
 
   matchHeights(block, 'p');
-  const isMobile = window.innerWidth < 768;
-  if (isMobile) initCarousel(block);
+  initCarousel(block);
 }
