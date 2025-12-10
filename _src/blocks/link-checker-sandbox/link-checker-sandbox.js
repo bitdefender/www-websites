@@ -77,22 +77,19 @@ function changeTexts(block, result, statusTitles) {
 }
 
 function getResultPagePath(status, mappedStatus) {
-  // Only redirect for en-us locale
-  if (page.locale !== 'en-us') {
-    return null;
-  }
+  return null;
 
-  if (status === 1 || mappedStatus.includes('safe')) {
-    return '/en-us/consumer/link-checker/safe';
-  }
+  // if (status === 1 || mappedStatus.includes('safe')) {
+  //   return '/en-us/consumer/link-checker/safe';
+  // }
 
-  if (status === 2 || status === 3
-      || mappedStatus.includes('so_far_so_good_1')
-      || mappedStatus.includes('so_far_so_good_2')) {
-    return '/en-us/consumer/link-checker/sofarsogood';
-  }
+  // if (status === 2 || status === 3
+  //     || mappedStatus.includes('so_far_so_good_1')
+  //     || mappedStatus.includes('so_far_so_good_2')) {
+  //   return '/en-us/consumer/link-checker/sofarsogood';
+  // }
 
-  return '/en-us/consumer/link-checker/malicious';
+  // return '/en-us/consumer/link-checker/malicious';
 }
 
 function displayStoredResult(block, statusMessages, statusTitles) {
