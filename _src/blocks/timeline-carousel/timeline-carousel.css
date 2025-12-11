@@ -5,7 +5,7 @@
 
   .timeline-carousel-wrapper {
     padding: 0 24px;
-    max-width: 1188px;
+    max-width: 1290px;
     margin: auto;
   }
 
@@ -56,7 +56,7 @@
 
       &::after {
         min-width: 1320px;
-        right: -2620px;
+        right: -2500px;
       }
     }
 
@@ -89,9 +89,9 @@
           display: block;
         }
 
-        .icon {
-            width: 32px;
-            height: 32px;
+        img, .icon {
+          width: 32px;
+          height: 32px;
         }
       }
 

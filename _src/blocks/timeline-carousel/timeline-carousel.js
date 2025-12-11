@@ -51,7 +51,7 @@ function createTimelineBoxContent(slide) {
   `;
 }
 
-function initTimelineCarousel(block) {
+function initTimelineCarousel(block, startPosition) {
   const track = block.querySelector('.timeline-track');
   const slideContainer = block.querySelector('.slides-container');
   const prevBtn = block.querySelector('.timeline-button.left');
@@ -69,13 +69,12 @@ function initTimelineCarousel(block) {
   const avgWidthWithGap = getScrollAmount();
   const itemsToShow = Math.floor(containerWidth / avgWidthWithGap);
   const maxIndex = Math.max(0, items.length - itemsToShow);
-  let currentIndex = maxIndex;
-  const leftOverSpace = containerWidth - avgWidthWithGap * itemsToShow;
-  const leftoverFromula = itemsToShow === 1 ? 0 : leftOverSpace;
+  let currentIndex = startPosition === 'end' ? maxIndex : 0;
+
   let offset;
 
   function updateTimeline() {
-    offset = -((currentIndex) * getScrollAmount() + leftoverFromula);
+    offset = -((currentIndex) * getScrollAmount());
     if (currentIndex === 0) offset = 0;
     slideContainer.style.setProperty('--transition', 'transform 0.3s ease');
     slideContainer.style.setProperty('--offset', `${offset}px`);
@@ -169,7 +168,7 @@ function initTimelineCarousel(block) {
 }
 
 export default function decorate(block) {
-  const { timelineYears } = block.closest('.section').dataset;
+  const { timelineYears, startPosition } = block.closest('.section').dataset;
   const slides = Array.from(block.children);
   const navigation = createTimelineNavigation(block);
 
@@ -230,7 +229,7 @@ export default function decorate(block) {
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        initTimelineCarousel(block);
+        initTimelineCarousel(block, startPosition);
         obs.disconnect(); // stop observing after first trigger
       }
     });

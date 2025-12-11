@@ -23,20 +23,29 @@ function loadIBMPlexSans() {
   });
 }
 
-function insertBreaks(text, isMobile) {
+function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
   const words = text.split(/\s+/); // split by 1+ spaces
-  const breakPositions = isMobile ? [2, 4] : [1, 4];
+  const breakPositions = isMobile ? mobileBreakpoints.split(',') : desktopBreakpoints.split(',');
   const result = [];
-
+  let wordCounter = 0;
   for (let i = 0; i < words.length; i++) {
     result.push(words[i]);
-
     // word index is 1-based
     const pos = i + 1;
-    if (breakPositions.includes(pos)) {
-      result.push('\n');
+    if (breakPositions[0]) {
+      if (breakPositions.includes(String(pos))) {
+        result.push('\n');
+      } else {
+        result.push(' ');
+      }
     } else {
-      result.push(' ');
+      const defaultBreakInterval = 2;
+      wordCounter++;
+      if (wordCounter === defaultBreakInterval) {
+        result.push('\n');
+      } else {
+        result.push(' ');
+      }
     }
   }
 
@@ -48,7 +57,8 @@ function insertBreaks(text, isMobile) {
  * @param {string} canvasId - The ID of the canvas element
  * @param {string} sectionSelector - The selector for the hero section
  */
-async function initDotCloud(block, canvasId, isMobile = false) {
+// eslint-disable-next-line max-len
+async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, desktopBreakpoints) {
   // usage
   await loadIBMPlexSans();
   const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
@@ -86,7 +96,7 @@ async function initDotCloud(block, canvasId, isMobile = false) {
   let performanceQuality = 1.0; // 1.0 = full quality, lower = reduced quality
 
   const state = {
-    text: (insertBreaks(title.innerText, isMobile) || 'AI-Powered').trim(),
+    text: (insertBreaks(title.innerText, isMobile, mobileBreakpoints, desktopBreakpoints) || 'AI-Powered').trim(),
     fontFamily: getComputedStyle(document.documentElement).getPropertyValue('--font') || 'IBM Plex Sans',
     points: [],
     mouse: {
@@ -439,6 +449,7 @@ async function initDotCloud(block, canvasId, isMobile = false) {
 }
 
 export default function decorate(block) {
+  const { mobileBreakpoints, desktopBreakpoints } = block.closest('.section').dataset;
   const isMobile = window.innerWidth < 768;
   const bannerCanvas = document.createElement('canvas');
   bannerCanvas.setAttribute('id', 'animation-canvas');
@@ -452,7 +463,7 @@ export default function decorate(block) {
 
   button.addEventListener('click', () => {
     console.log('Initializing Hero Animation', document.getElementById('animation-canvas'));
-    initDotCloud(block, 'animation-canvas', isMobile);
+    initDotCloud(block, 'animation-canvas', isMobile, desktopBreakpoints, mobileBreakpoints);
   });
 
   setTimeout(() => {
