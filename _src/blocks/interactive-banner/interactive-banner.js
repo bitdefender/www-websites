@@ -457,19 +457,5 @@ export default function decorate(block) {
   bannerCanvas.classList.add('interactive-canvas');
   block.appendChild(bannerCanvas);
 
-  const button = document.createElement('button');
-  button.innerText = 'Click Me';
-  button.style.display = 'none';
-  document.body.appendChild(button);
-
-  button.addEventListener('click', () => {
-    console.log('Initializing Hero Animation', document.getElementById('animation-canvas'));
-    initDotCloud(block, 'animation-canvas', isMobile, desktopBreakpoints, mobileBreakpoints);
-  });
-
-  setTimeout(() => {
-    button.click();
-    document.querySelector('.interactive-banner').style.visibility = 'visible';
-    button.remove();
-  }, 1000);
+  initDotCloud(block, 'animation-canvas', isMobile, mobileBreakpoints, desktopBreakpoints);
 }

@@ -486,6 +486,24 @@
     }
 
     &.hover-mask {
+        padding: 24px !important;
+
+        * {
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+
+        .default-content-wrapper {
+            padding: 0 24px 24px ;
+            h3 {
+                font-size: 32px;
+                font-weight: 400;
+            }
+            
+            p {
+                max-width: 100%;
+            }
+        }
+
         .card:hover {
             transform: none;
         }
@@ -494,7 +512,7 @@
             display: flex;
             gap: 26px;
             justify-content: center;
-
+            min-width: 100%;
         }
 
         .scam-column {
@@ -533,6 +551,7 @@
         }
 
         .overlay {
+            mix-blend-mode: color;
             position: absolute;
             inset: 0;
             pointer-events: none;
@@ -579,6 +598,10 @@
         :not(.overlay) > .card.hover {
             --lightness: 95%;
             background: #0045ad;
+        }
+
+        @media (min-width: 992px) {
+            padding: 47px 0 !important;
         }
     }
 }

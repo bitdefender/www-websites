@@ -5,7 +5,7 @@
     --font:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
 }
 
-main .interactive-banner-container {
+.interactive-banner-container {
     * {
       font-family: 'IBM Plex Sans', sans-serif;
     }
@@ -14,7 +14,7 @@ main .interactive-banner-container {
         margin: auto;
 
         .interactive-banner {
-            padding: 48px 24px 24px;
+            padding: 0 24px 24px;
             position: relative;
             aspect-ratio: 2/1;
             align-content: end;

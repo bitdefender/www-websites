@@ -160,22 +160,6 @@ export default function decorate(block) {
       }); 
     }); 
     allRealCards.forEach((card) => resizeObserver.observe(card)); 
-    allRealCards.forEach((real, i) => {
-      const clone = overlayCards[i];
-      if (!clone) return;
-
-      // Hover
-      real.addEventListener('pointerenter', () => clone.classList.add('is-hover'));
-      real.addEventListener('pointerleave', () => clone.classList.remove('is-hover'));
-
-      // Active/pressed
-      real.addEventListener('pointerdown', () => clone.classList.add('is-active'));
-      real.addEventListener('pointerup',   () => clone.classList.remove('is-active'));
-
-      // Optional: focus
-      real.addEventListener('focus',   () => clone.classList.add('is-focus'));
-      real.addEventListener('blur',    () => clone.classList.remove('is-focus'));
-    });
     // Pointer movement to apply glow/gradient effect 
     document.addEventListener('pointermove', (e) => { 
       const rect = cardsContainer.getBoundingClientRect(); 

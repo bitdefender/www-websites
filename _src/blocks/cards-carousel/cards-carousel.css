@@ -9,7 +9,7 @@
         margin: auto;
 
         .cards-carousel {
-            padding: 24px;
+            padding: 0 24px;
 
             .carousel-track {
                 .cards-container {
@@ -155,6 +155,8 @@
     }
 
     @media (min-width: 1200px) {
+        padding: 47px 0;
+
         .cards-carousel-wrapper {
             .cards-carousel {
                 padding: 0;

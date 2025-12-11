@@ -7,7 +7,7 @@
         margin: auto;
 
         .data-columns {
-            padding: 24px;
+            padding: 0 24px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -156,7 +156,8 @@
        
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
+        padding: 47px 0;
         .data-columns-wrapper {
             .data-columns {
                 padding: 0;

@@ -157,7 +157,7 @@
     .default-content-wrapper {
         max-width: 1290px;
         margin: auto;
-        padding: 24px;
+        padding: 0 24px 24px 24px;
         gap: 8px;
 
         h2 {
@@ -179,7 +179,7 @@
     }
 
     .blog-news {
-        padding: 24px;
+        padding: 0 24px;
         .blog-card {
             background-color: #FFFFFF;
             border-radius: 20px;
@@ -198,6 +198,8 @@
     }
 
     @media (min-width: 768px) {
+        padding: 47px 0;
+
         .blog-news {
             .blog-grid {
                 gap: 32px;
@@ -216,6 +218,7 @@
 }
 
 @media (min-width: 1440px){
+
     .blog-news .blog-grid{
         grid-template-columns: repeat(3, 1fr)
     }
