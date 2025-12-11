@@ -25,14 +25,14 @@ function loadIBMPlexSans() {
 
 function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
   const words = text.split(/\s+/); // split by 1+ spaces
-  const breakPositions = isMobile ? mobileBreakpoints.split(',') : desktopBreakpoints.split(',');
+  const breakPositions = isMobile ? mobileBreakpoints?.split(',') : desktopBreakpoints?.split(',');
   const result = [];
   let wordCounter = 0;
   for (let i = 0; i < words.length; i++) {
     result.push(words[i]);
     // word index is 1-based
     const pos = i + 1;
-    if (breakPositions[0]) {
+    if (breakPositions?.[0]) {
       if (breakPositions.includes(String(pos))) {
         result.push('\n');
       } else {
@@ -42,6 +42,7 @@ function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
       const defaultBreakInterval = 2;
       wordCounter++;
       if (wordCounter === defaultBreakInterval) {
+        wordCounter = 0;
         result.push('\n');
       } else {
         result.push(' ');
