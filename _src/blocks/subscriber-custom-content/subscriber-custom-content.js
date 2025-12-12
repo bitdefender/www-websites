@@ -2,8 +2,6 @@
 import { addScript } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
-  const section = block.closest('.section');
-
   const allItems = block.querySelectorAll('td');
   block.innerHTML = `
     <div class="flex cards-grid">
@@ -134,42 +132,6 @@ export default function decorate(block) {
     },
     'module'
   );
-
-  if (section.classList.contains('hover-mask')) {
-    const cardsContainer = block.querySelector('.cards-grid');
-    const overlay = block.querySelector('.overlay.cards-grid'); 
-    // Clear overlay 
-    overlay.innerHTML = ''; 
-    // Clone entire grid container content into overlay 
-    const clonedGrid = cardsContainer.cloneNode(true);  
-    clonedGrid.classList.add('overlay-grid'); 
-    // optional class for overlay styling 
-    overlay.appendChild(clonedGrid); 
-    // Collect all real cards and overlay cards for size sync 
-    const allRealCards = Array.from(cardsContainer.querySelectorAll('.card'));
-    const overlayCards = Array.from(clonedGrid.querySelectorAll('card')); 
-    // ResizeObserver to keep overlay cards aligned 
-    const resizeObserver = new ResizeObserver(() => { 
-      allRealCards.forEach((card, index) => { 
-        const overlayCard = overlayCards[index]; 
-        if (!overlayCard) return; 
-        const rect = card.getBoundingClientRect();
-       // Only copy width and height, keep layout structure 
-       overlayCard.style.width = `${rect.width}px`; 
-       overlayCard.style.height = `${rect.height}px`; 
-      }); 
-    }); 
-    allRealCards.forEach((card) => resizeObserver.observe(card)); 
-    // Pointer movement to apply glow/gradient effect 
-    document.addEventListener('pointermove', (e) => { 
-      const rect = cardsContainer.getBoundingClientRect(); 
-      const x = e.clientX - rect.left; 
-      const y = e.clientY - rect.top; 
-      overlay.style.setProperty('--x', `${x}px`); 
-      overlay.style.setProperty('--y', `${y}px`); 
-      overlay.style.setProperty('--opacity', 1); 
-    }); 
-  }
 }
 
 function initLottieAnimations(block) {

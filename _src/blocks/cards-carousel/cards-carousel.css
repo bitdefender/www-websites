@@ -69,6 +69,7 @@
                         &.active {
                             width: 20px;
                             background-color: #006DFF;
+                            transition: width .3s ease-in-out;
                         }
                     }
                 }

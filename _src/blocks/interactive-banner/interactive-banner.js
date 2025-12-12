@@ -86,10 +86,6 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
   const MAX_FPS = 60;
   const AUTO_PERF = true;
 
-  if (isMobile) {
-    console.log('[Mobile] Using optimized settings: Font Weight=900, Density=3, Size=1, Line Width=1.2');
-  }
-
   // Performance tracking
   let lastFrameTime = 0;
   const frameInterval = 1000 / MAX_FPS;

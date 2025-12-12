@@ -2,6 +2,11 @@
     * {
       font-family: 'IBM Plex Sans', sans-serif;
     }
+
+    .default-content-wrapper {
+        padding: 0 24px;
+    }
+
     .data-columns-wrapper {
         max-width: 1290px;
         margin: auto;
@@ -158,6 +163,10 @@
 
     @media (min-width: 992px) {
         padding: 47px 0;
+        .default-content-wrapper {
+            padding: 0;
+        }
+
         .data-columns-wrapper {
             .data-columns {
                 padding: 0;

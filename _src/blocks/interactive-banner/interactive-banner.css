@@ -15,6 +15,7 @@
 
         .interactive-banner {
             padding: 0 24px 24px;
+            margin-top: 20px;
             position: relative;
             aspect-ratio: 2/1;
             align-content: end;
@@ -90,6 +91,8 @@
         .interactive-banner-wrapper {
             max-width: 1290px;
             .interactive-banner {
+                margin-top: 0;
+
                 h1 {
                     font-size: 90px;
                 }
