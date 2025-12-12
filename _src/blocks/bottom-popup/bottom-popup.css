@@ -41,7 +41,7 @@ main .bottom-popup-container.is-visible {
     margin: 0;
 }
 
-.bottom-popup-container .block p {
+.bottom-popup-container .block p:not(.button-container) {
     color: #6D6D6D;
     text-align: center;
     font-size: 15px;
@@ -49,6 +49,18 @@ main .bottom-popup-container.is-visible {
     font-weight: 600;
     line-height: normal;
     margin: 0;
+}
+
+.bottom-popup-container.image-link .block p.button-container a {
+    background: transparent;
+    border: transparent;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.bottom-popup-container.image-link .block p.button-container a .icon {
+    height: auto;
+    width: auto;
 }
 
 /* Close X */
