@@ -41,6 +41,10 @@ main .bottom-popup-container.is-visible {
     margin: 0;
 }
 
+.bottom-popup-container.image-link .block p {
+    margin: 0;
+}
+
 .bottom-popup-container .block p:not(.button-container) {
     color: #6D6D6D;
     text-align: center;
@@ -48,7 +52,6 @@ main .bottom-popup-container.is-visible {
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-    margin: 0;
 }
 
 .bottom-popup-container.image-link .block p.button-container a {
@@ -58,9 +61,15 @@ main .bottom-popup-container.is-visible {
     margin-top: 20px;
 }
 
+.bottom-popup-container.image-link .block p.button-container a::after {
+    display: none;
+}
+
 .bottom-popup-container.image-link .block p.button-container a .icon {
     height: auto;
     width: auto;
+    padding: 0;
+    margin: 0;
 }
 
 /* Close X */
