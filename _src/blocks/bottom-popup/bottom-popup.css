@@ -1,4 +1,4 @@
-main .bottom-popup-container.is-visible {
+main .bottom-popup-container {
     position: fixed;
     z-index: 999;
     width: 100%;
@@ -6,6 +6,11 @@ main .bottom-popup-container.is-visible {
     height: 100%;
     top: 0;
     overflow: hidden;
+    display: none;
+}
+
+main .bottom-popup-container.is-visible {
+    display: block;
 }
 
 .bottom-popup-container .block {
@@ -17,8 +22,20 @@ main .bottom-popup-container.is-visible {
     z-index: 999;
     width: 100%;
     padding: 19px 12px;
-    animation: slideUp 0.6s cubic-bezier(0.22, 1.05, 0.32, 1);
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
     transform: translateY(0);
+  }
+}
+
+.bottom-popup-container .block.is-visible {
+    animation: slideUp 0.8s cubic-bezier(0.22, 1.05, 0.32, 1);
 }
 
 .bottom-popup-container .block > div {
@@ -26,7 +43,7 @@ main .bottom-popup-container.is-visible {
     margin: 0 auto;
 }
 
-.bottom-popup-container .block > div > div > p:first-of-type span.icon{
+.bottom-popup-container .block > div > div > p:first-of-type span.icon {
     height: 53px;
     width: 53px;
 }

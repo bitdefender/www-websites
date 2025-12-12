@@ -5,20 +5,20 @@ function isMobile() {
          window.matchMedia('(max-width: 768px)').matches;
 }
 
-function isIOS() {
+/*function isIOS() {
   const ua = navigator.userAgent || '';
   return /iPad|iPhone|iPod/.test(ua) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}
+}*/
 
 export default function decorate(block) {
-  // Only mobile
+  // only mobile
   if (!isMobile()) {
     block.remove();
     return;
   }
 
-  // Already dismissed
+  // akready closed
   if (localStorage.getItem(STORAGE_KEY) === '1') {
     block.remove();
     return;
@@ -27,7 +27,7 @@ export default function decorate(block) {
   const blockParent = block.closest('.section');
   block.classList.add('bottom-popup');
 
-  // Add close button ONLY
+  // Add close button
   const closeBtn = document.createElement('button');
   closeBtn.className = 'bottom-popup__close';
   closeBtn.type = 'button';
@@ -38,15 +38,14 @@ export default function decorate(block) {
 
   closeBtn.addEventListener('click', () => {
     blockParent.classList.remove('is-visible');
+    block.classList.remove('is-visible');
     localStorage.setItem(STORAGE_KEY, '1');
     setTimeout(() => block.remove(), 300);
   });
 
-  // Slide in from bottom
+  // slide in from bottom
   requestAnimationFrame(() => {
     blockParent.classList.add('is-visible');
+    block.classList.add('is-visible');
   });
-
-  // Optional: expose platform to CSS if needed
-  block.dataset.platform = isIOS() ? 'ios' : 'android';
 }
