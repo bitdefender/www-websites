@@ -30,7 +30,12 @@ export default async function decorate(block) {
       const dimensionEL = element.querySelector('p');
       const sizeClass = getCardClass(dimensionEL.innerText);
       dimensionEL.remove();
-      gridColumn.innerHTML += `<div class= "card ${sizeClass}"> ${element.innerHTML}</div>`;
+      const flipArray = element.innerHTML.split('<hr>');
+      gridColumn.innerHTML += `<div class= "card ${sizeClass}"> 
+          <div class="card-inner">
+            <div class="front">${flipArray[0] ?? element.innerHTML}</div>
+            <div class="back">${flipArray[1] ?? element.innerHTML}</div>
+          </div>`;
     });
     grid.appendChild(gridColumn);
   });
@@ -43,7 +48,13 @@ export default async function decorate(block) {
 
   block.appendChild(gridContainer);
 
-  matchHeights(block, '.size-medium p:last-of-type');
+  block.querySelectorAll('div:not(.overlay) .card-inner').forEach((card) => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+    });
+  });
+
+  matchHeights(block, '.size-medium .front p:last-of-type');
 
   const cardsContainer = block.querySelector('.grid');
   const overlay = block.querySelector('.overlay');
@@ -54,8 +65,8 @@ export default async function decorate(block) {
   // optional class for overlay styling
   overlay.appendChild(clonedGrid);
   // Collect all real cards and overlay cards for size sync
-  const allRealCards = Array.from(cardsContainer.querySelectorAll('.card'));
-  const overlayCards = Array.from(clonedGrid.querySelectorAll('.card'));
+  const allRealCards = Array.from(cardsContainer.querySelectorAll('.card-inner'));
+  const overlayCards = Array.from(clonedGrid.querySelectorAll('.card-inner'));
   // ResizeObserver to keep overlay cards aligned
   const resizeObserver = new ResizeObserver(() => {
     allRealCards.forEach((card, index) => {
