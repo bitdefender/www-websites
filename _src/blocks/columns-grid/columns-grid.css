@@ -90,6 +90,10 @@
                                 position: absolute;
                                 z-index: 2;
                             }
+
+                            foreignObject {
+                                display: none;
+                            }
                         }
 
                         &.size-medium {
