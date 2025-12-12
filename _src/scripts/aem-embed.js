@@ -74,6 +74,15 @@ export class AEMEmbed extends HTMLElement {
       // eslint-disable-next-line no-console
       console.log('An error occured while loading the content');
     }
+
+    const blockLinks = block.querySelectorAll('a[href]');
+    blockLinks.forEach((link) => {
+      const rawHref = link.getAttribute('href');
+      if (!rawHref) return;
+
+      const newUrl = new URL(rawHref, origin).href;
+      link.href = newUrl;
+    });
   }
 
   async handleHeader(htmlText, body, origin) {
