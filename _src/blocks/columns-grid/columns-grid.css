@@ -134,7 +134,7 @@
                                 z-index: 2;
                             }
 
-                            foreign-object {
+                            foreignObject {
                                 display: none;
                             }
                         }
