@@ -79,6 +79,7 @@
   border-radius: 20px;
   padding: 25px;
   margin: 0 auto;
+  background-color: pink;
 }
 
 .new-prod-boxes-sandbox-container.hide-last-hr .new-prod-boxes-sandbox .prod_box .inner_prod_box hr:last-of-type{
