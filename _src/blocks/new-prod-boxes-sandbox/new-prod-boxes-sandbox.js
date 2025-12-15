@@ -26,12 +26,11 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
   newPrice.setAttribute('data-store-price', priceAttribute);
 
   let oldPrice = 'data-store-price="full"';
-  // let billedPrice = 'data-store-price="discounted||full"';
+  let billedPrice = 'data-store-price="discounted||full"';
   if (hideDecimals === 'true') {
     oldPrice = 'data-store-price="full-no-decimal"';
-    // billedPrice = 'data-store-price="discounted-no-decimal||full-no-decimal"';
+    billedPrice = 'data-store-price="discounted-no-decimal||full-no-decimal"';
   }
-  // ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div class="oldprice-container">
@@ -41,6 +40,7 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
         <div class="newprice-container mt-2">
           <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
+        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
         <a data-store-buy-link href="#" class="button primary no-arrow">${buyButtonText || buyLinkSelector?.innerText}</a>
       </div>`;
   return priceElement;
@@ -277,6 +277,7 @@ export default async function decorate(block, onDataLoaded) {
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices await-loader"></div>
               ${secondButton ? secondButton.outerHTML : ''}
+              ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
             </div>
@@ -286,8 +287,6 @@ export default async function decorate(block, onDataLoaded) {
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
     });
   }
-
-  // ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
 
   if (blockParent.classList.contains('show-more-show-less')) {
     const benefitsLists = block.querySelectorAll('.benefitsLists');
