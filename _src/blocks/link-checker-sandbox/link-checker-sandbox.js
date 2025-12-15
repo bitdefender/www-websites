@@ -340,6 +340,7 @@ function createButtonsContainer(block) {
 
       if (index === 1) {
         p.querySelector('a').classList.add('share-button');
+        p.querySelector('a').target = '_blank';
       }
 
       if (index === 2) {
