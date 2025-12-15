@@ -340,7 +340,10 @@ function createButtonsContainer(block) {
 
       if (index === 1) {
         p.querySelector('a').classList.add('share-button');
-        p.querySelector('a').target = '_blank';
+        p.querySelector('a').addEventListener('click', (e) => {
+          e.preventDefault();
+          window.open(e.target.href, '_blank');
+        });
       }
 
       if (index === 2) {
