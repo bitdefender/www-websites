@@ -74,8 +74,8 @@ export class AEMEmbed extends HTMLElement {
       // eslint-disable-next-line no-console
       console.log('An error occured while loading the content');
     }
-
     const blockLinks = block.querySelectorAll('a[href]');
+    console.log('blockLinks', blockLinks);
     blockLinks.forEach((link) => {
       const rawHref = link.getAttribute('href');
       if (!rawHref) return;
