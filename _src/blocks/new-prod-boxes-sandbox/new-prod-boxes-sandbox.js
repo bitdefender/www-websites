@@ -18,7 +18,7 @@ function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
   return priceAttribute;
 }
 
-async function updateProductPrice(prodName, saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
+async function updateProductPrice(prodName, saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '', buyButtonText = null) {
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
 
@@ -26,23 +26,22 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
   newPrice.setAttribute('data-store-price', priceAttribute);
 
   let oldPrice = 'data-store-price="full"';
-  let billedPrice = 'data-store-price="discounted||full"';
+  // let billedPrice = 'data-store-price="discounted||full"';
   if (hideDecimals === 'true') {
     oldPrice = 'data-store-price="full-no-decimal"';
-    billedPrice = 'data-store-price="discounted-no-decimal||full-no-decimal"';
+    // billedPrice = 'data-store-price="discounted-no-decimal||full-no-decimal"';
   }
-
+  // ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
         <div class="oldprice-container">
           <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
-          <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
+          <span class="prod-save" data-store-hide="no-price=discounted">Save <span data-store-discount="percentage"></span> </span>
         </div>
         <div class="newprice-container mt-2">
           <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
-        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
-        <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector?.innerText}</a>
+        <a data-store-buy-link href="#" class="button primary no-arrow">${buyButtonText || buyLinkSelector?.innerText}</a>
       </div>`;
   return priceElement;
 }
@@ -150,6 +149,11 @@ export default async function decorate(block, onDataLoaded) {
 
   const {
     // eslint-disable-next-line no-unused-vars
+    buyButtonTexts, findOutMoreButtonTexts, findOutMoreUrls,
+  } = structuredContent;
+
+  const {
+    // eslint-disable-next-line no-unused-vars
     familyProducts, monthlyProducts,
     type, hideDecimals, thirdRadioButtonProducts, saveText,
   } = block.closest('.section').dataset;
@@ -209,6 +213,12 @@ export default async function decorate(block, onDataLoaded) {
       let secondButton = buyLink?.querySelectorAll('a')[1];
       if (secondButton) {
         secondButton.classList.add('button', 'secondary', 'no-arrow');
+        if (findOutMoreUrls && findOutMoreUrls[key]) {
+          secondButton.setAttribute('href', findOutMoreUrls[key]);
+        }
+        if (findOutMoreButtonTexts && findOutMoreButtonTexts[key]) {
+          secondButton.textContent = findOutMoreButtonTexts[key];
+        }
       }
 
       // default billedText will be the first one
@@ -267,16 +277,17 @@ export default async function decorate(block, onDataLoaded) {
               ${radioButtons ? planSwitcher.outerHTML : ''}
               <div class="hero-aem__prices await-loader"></div>
               ${secondButton ? secondButton.outerHTML : ''}
-              ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
               <hr />
               ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
             </div>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
-      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice);
+      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice, buyButtonTexts[key]);
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
     });
   }
+
+  // ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
 
   if (blockParent.classList.contains('show-more-show-less')) {
     const benefitsLists = block.querySelectorAll('.benefitsLists');
