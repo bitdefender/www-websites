@@ -35,9 +35,9 @@ function createTimelineNavigation(block) {
 }
 
 function createTimelineBoxContent(slide) {
-  const icon = slide.querySelector('.icon');
+  const icon = slide.querySelector('.icon') || slide.querySelector('p:has(img)');
   const title = slide.querySelector('h3');
-  const description = slide.querySelector('p:not(:has(.icon))');
+  const description = slide.querySelector('p:not(:has(.icon)):not(:has(img))');
 
   if (title) title.classList.add('timeline-title');
   if (description) description.classList.add('timeline-description');

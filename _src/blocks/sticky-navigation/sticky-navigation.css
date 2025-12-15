@@ -31,6 +31,10 @@ main .section.sticky-navigation-container {
   padding: 0 var(--body-padding) var(--body-padding) var(--body-padding);
 }
 
+.sticky-navigation.new-dimension {
+  padding: 0 24px;
+}
+
 .sticky-navigation.new-dimension .menu-with-button {
   padding: 0 24px 24px 24px;
   max-width: 1290px;
@@ -120,8 +124,6 @@ main .section.sticky-navigation-container {
 .mobile-dropdown.opened + .menu-with-button {
   display: flex;
 }
-
-
 
 .sticky-navigation .button-container {
   margin:0;

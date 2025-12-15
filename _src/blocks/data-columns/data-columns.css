@@ -8,12 +8,12 @@
     }
 
     .data-columns-wrapper {
-        max-width: 1290px;
         margin: auto;
+        max-width: 1338px;
 
         .data-columns {
-            padding: 0 24px;
             display: flex;
+            padding: 0 24px;
             flex-direction: column;
             gap: 16px;
 
@@ -63,11 +63,9 @@
             .articles-wrapper {
                 display: flex;
                 flex-direction: column;
-                order: 2 1 4 3;
                 gap: 16px;
 
                 .article-column {
-                    overflow: visible;
 
                     h3 {
                         font-size: 20px;
@@ -87,6 +85,7 @@
                         padding: 0;
                         text-align: left;
                         font-size: 16px;
+                        overflow: visible;
 
                         &::after {
                             background-color: #006DFF;
@@ -163,13 +162,9 @@
 
     @media (min-width: 992px) {
         padding: 47px 0;
-        .default-content-wrapper {
-            padding: 0;
-        }
 
         .data-columns-wrapper {
-            .data-columns {
-                padding: 0;
+            .data-columns {        
                 gap: 32px;
 
                 h3 {
@@ -212,6 +207,7 @@
                     }
 
                     .article-column {
+                        flex: 1;
                         h3 {
                             margin-top: 18px;
 

@@ -4,7 +4,7 @@
     padding: 0;
     .columns-grid-wrapper {
         display: flex;
-        max-width: 1290px;
+        max-width: 1338px;
         margin: auto;
         background: #0b1f41;
 
@@ -33,6 +33,7 @@
                 p {
                     font-size: 18px;
                     color: #fff;
+                    text-align: center;
                 }
             }
 
@@ -96,12 +97,14 @@
                                 height: 100%;
                                 transform: rotateY(-180deg);
                             }
-                            &.flipped{
+
+                            &.flipped, &:hover{
                                 >.front {
                                     opacity: 0;
                                     transform: rotateY(180deg);
                                     transform-style: preserve-3d;
                                 }
+                                
                                 >.back {
                                     opacity: 1;
                                     transform: rotateY(0deg);
@@ -251,7 +254,7 @@
 
             .columns-grid {
                 --gap: 24px;
-                padding: 47px 0;
+                padding: 47px 24px;
                 border-radius: 20px;
 
                 > div {
@@ -281,13 +284,16 @@
 
                             .card {
                                 &.size-small {
-                                    text-align: left;
                                     flex-direction: unset;
                                     min-width: 100%;
                                     width: calc((100% - var(--gap)) / 2);
 
                                     .front, .back {
                                         flex-direction: unset;
+
+                                        p {
+                                            text-align: left;
+                                        }
                                     }
                                 }
 
