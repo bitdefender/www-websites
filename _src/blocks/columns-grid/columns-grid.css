@@ -44,7 +44,6 @@
                     display: grid;
                     gap: var(--gap);
                     .card {
-                        
                         display: flex;
                         .card-inner {
                             position: relative;
@@ -104,7 +103,7 @@
                                     transform: rotateY(180deg);
                                     transform-style: preserve-3d;
                                 }
-                                
+
                                 >.back {
                                     opacity: 1;
                                     transform: rotateY(0deg);
@@ -142,8 +141,13 @@
                             }
                         }
 
+                        &.size-small {
+                            flex: 1;
+                        }
+
                         &.size-medium {
                             aspect-ratio: 1/1;
+                            flex: 2;
 
                             .icon:nth-of-type(2) {
                                 width: 200px;
@@ -165,7 +169,7 @@
                         &.size-medium-large {
                             aspect-ratio: 21/10;
                             min-width: 100%;
-                            flex: 1;  
+                            flex: 3;  
                             .icon:nth-of-type(2) {
                                 width: 200px;
                                 height: 200px;
@@ -181,6 +185,7 @@
                         }
 
                         &.size-large {
+                            flex: 4;
                             aspect-ratio: 21/10;
                             min-width: 100%;
                             p {
@@ -199,14 +204,8 @@
                     .grid-column {
                         display: flex;
                         flex-wrap: wrap;
+                        align-items: stretch;
                         gap: var(--gap);
-                     
-                        .card {
-                            &.size-medium, &.size-small {
-                                min-width: unset;
-                                width: calc((100% - var(--gap)) / 2);
-                            }
-                        }
                     }
                 }
 
@@ -269,7 +268,7 @@
 
                 .grid-container {
                     .grid {
-                        grid-template-columns: 1fr 2fr 1fr;
+                        grid-template-columns: var(--template-columns);
                         gap: var(--gap);
 
                         .grid-column {
@@ -277,7 +276,7 @@
                             flex-direction: column;
                             gap: var(--gap);
 
-                            &:nth-of-type(2) {
+                            &:has(.size-large) {
                                 flex-direction: unset;
                                 flex-wrap: wrap;
                             }
@@ -286,7 +285,6 @@
                                 &.size-small {
                                     flex-direction: unset;
                                     min-width: 100%;
-                                    width: calc((100% - var(--gap)) / 2);
 
                                     .front, .back {
                                         flex-direction: unset;
@@ -298,7 +296,6 @@
                                 }
 
                                 &.size-medium {
-                                    width: calc((100% - var(--gap)) / 2);
                                     .front, .back {
                                        align-items: center;
                                        justify-content: center;

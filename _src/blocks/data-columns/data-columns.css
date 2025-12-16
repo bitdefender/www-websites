@@ -229,8 +229,9 @@
                         p {
                             img {
                                 display: block;
-                                min-height: 163px;
-                                min-width: 163px;
+                                height: 163px;
+                                width: 163px;
+                                
                             }
 
                             .icon {

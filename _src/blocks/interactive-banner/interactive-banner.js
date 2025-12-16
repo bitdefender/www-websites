@@ -11,7 +11,7 @@ function loadIBMPlexSans() {
   return new Promise((resolve, reject) => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap';
+    link.href = '/_src/fonts/IBMPlexSans-Bold.woff2';
 
     link.onload = () => {
       document.fonts.ready.then(resolve);
@@ -75,9 +75,9 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
   const octx = off.getContext('2d', { willReadFrequently: true });
   const title = block.querySelector('h1');
   // Tunables - with mobile-specific overrides that preserve font characteristics
-  const FONT_WEIGHT = isMobile ? 700 : 700; // Mobile: Black weight for better visibility
-  const DOT_STEP = isMobile ? 3 : 3; // Mobile: density 3
-  const DOT_RADIUS = isMobile ? 1 : 1; // Mobile: size 1
+  const FONT_WEIGHT = 700; // Mobile: Black weight for better visibility
+  const DOT_STEP = 3; // Mobile: density 3
+  const DOT_RADIUS = 1; // Mobile: size 1
   const FORCE = isMobile ? 400 : 100;
   const CLEAR_RADIUS = isMobile ? 0.2 : 0.3; // Mobile: better touch area
   const LINE_WIDTH = isMobile ? 1.2 : 1; // Mobile: slightly thicker lines
