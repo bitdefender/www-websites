@@ -7,19 +7,22 @@
 // Bitdefender - Pioneering AI in Cybersecurity
 // ===========================================
 
-function loadIBMPlexSans() {
-  return new Promise((resolve, reject) => {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap';
+function loadIBMPlexSans(timeoutMs = 1000) {
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      resolve(false);
+    }, timeoutMs);
 
-    link.onload = () => {
-      document.fonts.ready.then(resolve);
-    };
-
-    link.onerror = reject;
-
-    document.head.appendChild(link);
+    document.fonts
+      .load('1em "IBM Plex Sans"')
+      .then((fonts) => {
+        clearTimeout(timeout);
+        resolve(fonts.length > 0);
+      })
+      .catch(() => {
+        clearTimeout(timeout);
+        resolve(false);
+      });
   });
 }
 
@@ -59,9 +62,7 @@ function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
  * @param {string} sectionSelector - The selector for the hero section
  */
 // eslint-disable-next-line max-len
-async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, desktopBreakpoints) {
-  // usage
-  await loadIBMPlexSans();
+function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, desktopBreakpoints) {
   const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
   const DPR_MULTIPLIER = isMobile ? 0.5 : 1;
   // Global accessibility & performance detection
@@ -436,7 +437,8 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
     canvas.addEventListener('touchend', () => { state.mouse.down = false; state.mouse.inside = false; });
   }
 
-  let resizeT; window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(regenerate, 120); });
+  let resizeT;
+  window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(regenerate, 120); });
 
   // Wait for IBM Plex Sans font to load before rendering
   document.fonts.ready.then(() => {
@@ -445,13 +447,13 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
   });
 }
 
-export default function decorate(block) {
+export default async function decorate(block) {
   const { mobileBreakpoints, desktopBreakpoints } = block.closest('.section').dataset;
   const isMobile = window.innerWidth < 768;
   const bannerCanvas = document.createElement('canvas');
   bannerCanvas.setAttribute('id', 'animation-canvas');
   bannerCanvas.classList.add('interactive-canvas');
   block.appendChild(bannerCanvas);
-
+  await loadIBMPlexSans();
   initDotCloud(block, 'animation-canvas', isMobile, mobileBreakpoints, desktopBreakpoints);
 }

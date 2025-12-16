@@ -5,6 +5,7 @@
 
     .default-content-wrapper {
         padding: 0 24px;
+        max-width: 1338px;
     }
 
     .data-columns-wrapper {
@@ -231,7 +232,7 @@
                                 display: block;
                                 height: 163px;
                                 width: 163px;
-                                
+
                             }
 
                             .icon {
