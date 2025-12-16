@@ -14,7 +14,7 @@ function loadIBMPlexSans(timeoutMs = 1000) {
     }, timeoutMs);
 
     document.fonts
-      .load('1em "IBM Plex Sans"')
+      .load('700 1em "IBM Plex Sans"')
       .then((fonts) => {
         clearTimeout(timeout);
         resolve(fonts.length > 0);
@@ -62,7 +62,8 @@ function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
  * @param {string} sectionSelector - The selector for the hero section
  */
 // eslint-disable-next-line max-len
-function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, desktopBreakpoints) {
+async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, desktopBreakpoints) {
+  await loadIBMPlexSans();
   const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
   const DPR_MULTIPLIER = isMobile ? 0.5 : 1;
   // Global accessibility & performance detection
