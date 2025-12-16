@@ -192,8 +192,7 @@
 
   .timeline-controls {
     touch-action: none;
-    max-width: fit-content;
-    justify-self: end;
+    justify-content: end;
     margin-bottom: 64px;
     display: flex;
     gap: 16px;

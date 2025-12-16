@@ -112,7 +112,7 @@ main .section.sticky-navigation-container {
 }
 
 .sticky-navigation.new-dimension .mobile-dropdown {
-  padding: 20px 24px;
+  padding: 20px 0;
 }
 
 .sticky-navigation .mobile-dropdown.opened::after {
