@@ -199,7 +199,14 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
 
   function buildPoints() {
     state.points.length = 0;
-    const { width: W, height: H } = off;
+    let W = off.width;
+    let H = off.height;
+
+    // fallback if width or height is 0
+    if (!W || !H) {
+      W = Math.min(window.innerWidth - 15, 1290);
+      H = window.innerHeight;
+    }
     const img = octx.getImageData(0, 0, W, H).data;
     const step = Math.max(2, DOT_STEP) * DPR * DPR_MULTIPLIER;
     for (let y = 0; y < H; y += step) {
