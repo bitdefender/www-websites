@@ -405,8 +405,10 @@ export default async function decorate(block, onDataLoaded) {
     block.querySelector(`[data-store-id="${featured}"]`).style.border = '12px solid #0072CE';
   }
 
-  block.querySelector('a').addEventListener('click', (e) => {
-    e.preventDefault();
-    window.open(e.target.href, '_blank');
+  block.querySelectorAll('a').forEach((anchor) => {
+    anchor.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open(e.target.href, '_blank');
+    });
   });
 }

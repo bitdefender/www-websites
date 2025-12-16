@@ -181,6 +181,14 @@ export class AEMEmbed extends HTMLElement {
     elements.forEach((element) => {
       element.classList.remove('await-loader');
     });
+
+    body.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(e.target.href, '_blank');
+      });
+    });
+
     body.classList.add('appear');
   }
 
