@@ -11,7 +11,7 @@ function loadIBMPlexSans() {
   return new Promise((resolve, reject) => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/_src/fonts/IBMPlexSans-Bold.woff2';
+    link.href = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap';
 
     link.onload = () => {
       document.fonts.ready.then(resolve);
