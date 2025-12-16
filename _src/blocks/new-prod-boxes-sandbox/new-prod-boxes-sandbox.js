@@ -147,10 +147,9 @@ export default async function decorate(block, onDataLoaded) {
     titles, descriptions, products, featured,
   } = structuredContent || block.closest('.section').dataset;
 
-  const {
-    // eslint-disable-next-line no-unused-vars
-    buyButtonTexts, findOutMoreButtonTexts, findOutMoreUrls,
-  } = structuredContent;
+  const buyButtonTexts = structuredContent ? structuredContent.buyButtonTexts : null;
+  const findOutMoreButtonTexts = structuredContent ? structuredContent.findOutMoreButtonTexts : null;
+  const findOutMoreUrls = structuredContent ? structuredContent.findOutMoreUrls : null;
 
   const {
     // eslint-disable-next-line no-unused-vars
@@ -283,7 +282,7 @@ export default async function decorate(block, onDataLoaded) {
             </div>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
-      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice, buyButtonTexts[key]);
+      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice, buyButtonTexts ? buyButtonTexts[key] : null);
       block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
     });
   }
