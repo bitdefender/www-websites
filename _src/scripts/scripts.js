@@ -24,6 +24,7 @@ import {
   getMetadata,
 } from './lib-franklin.js';
 import {
+  handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
@@ -676,6 +677,7 @@ async function loadPage() {
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
+  handleFileDownloadedEvents();
 
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');

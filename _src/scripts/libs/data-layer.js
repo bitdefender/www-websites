@@ -125,6 +125,23 @@ const resolveUserDetectedEvent = async () => {
 };
 
 /**
+ * for file download links, push a special buttonClick event
+ */
+export const handleFileDownloadedEvents = () => {
+  const fileLinks = document.querySelectorAll('[href*=".pdf"], [href*=".docx"], [href*=".xlsx"]');
+  fileLinks.forEach((fileLink) => {
+    const hrefPathname = new URL(fileLink).pathname;
+    const filename = hrefPathname.substring(hrefPathname.lastIndexOf('/') + 1);
+
+    fileLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      AdobeDataLayerService.push(new ButtonClickEvent('file downloaded', filename));
+      console.log(window.adobeDataLayer);
+    });
+  });
+};
+
+/**
  * Resolve the data layer
  */
 export const resolveNonProductsDataLayer = async () => {
