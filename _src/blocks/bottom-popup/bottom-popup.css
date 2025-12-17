@@ -24,7 +24,7 @@ main .bottom-popup-container.is-visible {
     padding: 19px 12px;
 }
 
-@keyframes slideUp {
+@keyframes slide-up {
   0% {
     transform: translateY(100%);
   }
@@ -35,7 +35,7 @@ main .bottom-popup-container.is-visible {
 }
 
 .bottom-popup-container .block.is-visible {
-    animation: slideUp 0.8s cubic-bezier(0.22, 1.05, 0.32, 1);
+    animation: slide-up 0.8s cubic-bezier(0.22, 1.05, 0.32, 1);
 }
 
 .bottom-popup-container .block > div {
