@@ -36,7 +36,7 @@ main .section.sticky-navigation-container {
 }
 
 .sticky-navigation.new-dimension .menu-with-button {
-  padding: 0 24px 24px 24px;
+  padding: 0 24px 24px;
   max-width: 1290px;
 }
 
@@ -190,6 +190,7 @@ main .section.sticky-navigation-container {
   .sticky-navigation .menu-with-button {
     padding: 0 var(--section-large-desktop-padding);
   }
+
   .sticky-navigation.new-dimension .menu-with-button {
     padding: 0;
   }

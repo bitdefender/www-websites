@@ -1,5 +1,6 @@
 .cards-carousel-container {
     overflow: hidden;
+
     * {
       font-family: 'IBM Plex Sans', sans-serif;
     }
@@ -79,6 +80,7 @@
                     display: flex;
                     justify-content: space-between;
                     gap: 16px;
+
                     .button {
                         top: 0;
                         width: 40px;
@@ -102,6 +104,7 @@
 
                         &:disabled {
                             background-color:#F1F2F3;
+
                             svg {
                                 path {
                                     fill: #7d7d7d;
@@ -112,14 +115,14 @@
                         &.right {
                             svg {
                                 margin-left: 2px;
-                                fill: #FFFFFF;
+                                fill: #FFF;
                             }
                         }
 
                         &.left {
                             svg {
                                 margin-right: 2px;
-                                fill: #FFFFFF;
+                                fill: #FFF;
                             }
                         }
 

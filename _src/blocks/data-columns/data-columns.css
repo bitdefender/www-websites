@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .data-columns-container {
     * {
       font-family: 'IBM Plex Sans', sans-serif;
@@ -53,6 +54,7 @@
                     color: #636363;
                     font-size: 16px;
                     line-height: 26px;
+
                     p {
                         font-size: inherit;
                         font-weight: 400;
@@ -67,7 +69,6 @@
                 gap: 16px;
 
                 .article-column {
-
                     h3 {
                         font-size: 20px;
                     }
@@ -122,6 +123,7 @@
 
             &.statistics {
                 gap: 0;
+
                 .data-wrapper {
                     align-items: unset;
 
@@ -177,6 +179,7 @@
                     flex-direction: unset;
                     gap: 32px;
                     align-items: end;
+
                     .data-column-left {
                         min-width: 49%;
 
@@ -191,6 +194,7 @@
                         width: 100%;
                         font-size: 18px;
                         line-height: 26px;
+
                         p {
                             &:last-of-type {
                                 margin-bottom: 0;
@@ -209,6 +213,7 @@
 
                     .article-column {
                         flex: 1;
+
                         h3 {
                             margin-top: 18px;
 
@@ -216,6 +221,7 @@
 
                         p {  
                             font-size: 18px;
+
                             &.button-container {
                                 max-width: 95%;
 
@@ -248,6 +254,7 @@
 
                 &.statistics {
                     gap: 32px;
+
                     .data-wrapper {
                         align-items: unset;
 
