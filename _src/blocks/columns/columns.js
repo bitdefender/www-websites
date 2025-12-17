@@ -89,7 +89,7 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
       if (dynamicProducts.storeIdAndroid) {
         AdobeDataLayerService.push(new ButtonClickEvent(
           'trial downloaded',
-          dynamicProducts.storeIdAndroid,
+          { productId: dynamicProducts.storeIdAndroid },
         ));
       }
 
@@ -99,7 +99,7 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
       if (dynamicProducts.storeIdIos) {
         AdobeDataLayerService.push(new ButtonClickEvent(
           'trial downloaded',
-          dynamicProducts.storeIdIos,
+          { productId: dynamicProducts.storeIdIos },
         ));
       }
       break;
@@ -108,7 +108,7 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
       if (dynamicProducts.storeId) {
         AdobeDataLayerService.push(new ButtonClickEvent(
           'trial downloaded',
-          dynamicProducts.storeId,
+          { productId: dynamicProducts.storeId },
         ));
       }
       break;
@@ -131,11 +131,17 @@ function setupTabs({ block, firstTab }) {
       tabsList.className = 'tabs-section default-content-wrapper';
       tabsList.addEventListener('click', (e) => {
         const tab = e.target.closest('span[data-tab]');
-        const showAll = tab.dataset.tab === firstTab.toLowerCase();
-        section.querySelectorAll('.section-el').forEach((el) => {
-          el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
-        });
-        tabsList.querySelectorAll('span').forEach((el) => el.classList.toggle('active', el === tab));
+        if (tab && tab && tab.dataset?.tab) {
+          const showAll = tab.dataset.tab === firstTab.toLowerCase();
+          section.querySelectorAll('.section-el').forEach((el) => {
+            el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
+          });
+          tabsList.querySelectorAll('span').forEach((el) => {
+            el.classList.toggle('active', el === tab);
+          });
+
+          AdobeDataLayerService.push(new ButtonClickEvent('click', { asset: tab.dataset.tab }));
+        }
       });
       // add All tab once
       const all = document.createElement('span');

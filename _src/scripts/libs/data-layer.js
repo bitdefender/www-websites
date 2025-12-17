@@ -46,7 +46,7 @@ const checkClickEventAfterRedirect = () => {
     const clickEvent = JSON.parse(localStorage.getItem("clickEvent"));
 
     if(clickEvent?.clickEvent) {
-      AdobeDataLayerService.push(new ButtonClickEvent(clickEvent.clickEvent, clickEvent.productId));
+      AdobeDataLayerService.push(new ButtonClickEvent(clickEvent.clickEvent, { productId: clickEvent.productId }));
     }
 
     localStorage.removeItem("clickEvent");
@@ -135,8 +135,7 @@ export const handleFileDownloadedEvents = () => {
 
     fileLink.addEventListener('click', (e) => {
       e.preventDefault();
-      AdobeDataLayerService.push(new ButtonClickEvent('file downloaded', filename));
-      console.log(window.adobeDataLayer);
+      AdobeDataLayerService.push(new ButtonClickEvent('file downloaded', { asset: filename }));
     });
   });
 };

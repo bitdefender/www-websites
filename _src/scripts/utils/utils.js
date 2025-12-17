@@ -682,7 +682,7 @@ export function pushTrialDownloadToDataLayer() {
   const pushTrialData = (button = null) => {
     AdobeDataLayerService.push(new ButtonClickEvent(
       `${downloadType} downloaded`,
-      getTrialID(currentPage, button),
+      { productId: getTrialID(currentPage, button) },
     ));
   };
 
