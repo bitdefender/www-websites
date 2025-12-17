@@ -1670,6 +1670,15 @@ main .section.blue p a.button.modal::after {
   background-color: var(--green-tag2);
 }
 
+.green-pill {
+  background: #5cb85c;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .tag-blue-pill {
   background-color: #026DFF;
   padding: 4.5px 5.7px;
