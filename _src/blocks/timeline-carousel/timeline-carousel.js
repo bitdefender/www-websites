@@ -57,11 +57,12 @@ function initTimelineCarousel(block, startPosition) {
   const prevBtn = block.querySelector('.timeline-button.left');
   const nextBtn = block.querySelector('.timeline-button.right');
   const items = Array.from(block.querySelectorAll('.timeline-box.populated'));
-  const upItems = Array.from(block.querySelectorAll('.timeline-content-up .timeline-box'));
+  const fullBox = block.querySelector('.timeline-box.populated');
+  const emptyBox = block.querySelector('.timeline-box:not(:first-of-type):not(.populated)');
   if (!track || !prevBtn || !nextBtn || items.length === 0) return;
   // Amount to scroll per click (item width + gap)
   function getScrollAmount() {
-    const itemWidth = (upItems[0].offsetWidth + upItems[1].offsetWidth) / 2;
+    const itemWidth = (fullBox.offsetWidth + emptyBox.offsetWidth) / 2;
     return itemWidth;
   }
 
@@ -177,35 +178,38 @@ export default function decorate(block) {
   const slideContainer = document.createElement('div');
   slideContainer.classList.add('slides-container');
 
-  // Build top boxes
-  const topBoxes = slides.map((slide, idx) => {
-    const isEven = idx % 2 === 0;
-    return `
-      <div class="timeline-box ${isEven ? 'populated' : ''}">
-        ${isEven ? createTimelineBoxContent(slide) : ''}
-      </div>
-    `;
-  }).join('');
+  const parityOffset = startPosition === 'end' ? 1 : 0;
+  const isTopBox = (idx) => ((idx + parityOffset) % 2 === 0);
 
-  // Build years
-  const years = timelineYears
-    .split(',')
-    .map((year) => `
-      <div class="timeline-year">
-        <span class="year-tag">${year.trim()}</span>
-      </div>
-    `)
-    .join('');
+  let topBoxes = '';
+  let years = '';
+  let bottomBoxes = '';
 
-  // Build bottom boxes
-  const bottomBoxes = slides.map((slide, idx) => {
-    const isEven = idx % 2 === 0;
-    return `
-      <div class="timeline-box ${!isEven ? 'populated' : ''}">
-        ${!isEven ? createTimelineBoxContent(slide) : ''}
-      </div>
-    `;
-  }).join('');
+  slides.forEach((slide, idx) => {
+    const isTop = isTopBox(idx);
+
+    // Top boxes
+    topBoxes += `
+    <div class="timeline-box ${isTop ? 'populated' : ''}">
+      ${isTop ? createTimelineBoxContent(slide) : ''}
+    </div>
+  `;
+
+    // Years axis
+    const year = timelineYears.split(',')[idx]?.trim() ?? '';
+    years += `
+    <div class="timeline-year">
+      <span class="year-tag">${year}</span>
+    </div>
+  `;
+
+    // Bottom boxes
+    bottomBoxes += `
+    <div class="timeline-box ${!isTop ? 'populated' : ''}">
+      ${!isTop ? createTimelineBoxContent(slide) : ''}
+    </div>
+  `;
+  });
 
   slideContainer.innerHTML = `
     <div class="timeline-content-up">
