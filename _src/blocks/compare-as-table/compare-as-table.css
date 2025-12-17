@@ -67,8 +67,11 @@
   padding-bottom: 10px;
 }
 
-.hide-prices .block.compare-as-table > div:first-of-type table .oldprice-container, .hide-prices .block.compare-as-table table .newprice-container  {
-  display: none;
+.hide-prices .block.compare-as-table table .newprice-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
 }
 
 .block.compare-as-table table a.button {
