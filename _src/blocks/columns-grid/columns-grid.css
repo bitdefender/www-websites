@@ -17,7 +17,6 @@
             margin: auto;
             gap: var(--gap);
             padding: 24px;
-            padding-top: 0;
 
             > div {
                 max-width: 874px;
