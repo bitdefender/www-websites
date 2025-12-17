@@ -340,4 +340,8 @@ export default function decorate(block) {
   if (block.classList.contains('awards-fragment')) {
     matchHeights(block, 'p:last-of-type');
   }
+
+  if (block.closest('.section').classList.contains('responsible-ai')) {
+    matchHeights(block, 'p');
+  }
 }
