@@ -1,15 +1,8 @@
 const STORAGE_KEY = 'bottom-popup:dismissed';
 
 function isMobile() {
-  return window.matchMedia('(pointer: coarse)').matches ||
-         window.matchMedia('(max-width: 768px)').matches;
+  return window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(max-width: 768px)').matches;
 }
-
-/*function isIOS() {
-  const ua = navigator.userAgent || '';
-  return /iPad|iPhone|iPod/.test(ua) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}*/
 
 export default function decorate(block) {
   // only mobile
