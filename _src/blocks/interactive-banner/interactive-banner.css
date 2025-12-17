@@ -40,7 +40,7 @@
 
 .interactive-banner-container {
     * {
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: var(--font);
     }
 
     .interactive-banner-wrapper {
@@ -73,9 +73,9 @@
                 cursor:pointer;
                 opacity: 0;
                 min-width: 96%;
-                animation: canvasFadeIn 1.5s ease-out 0.5s both;
+                animation: canvas-fade-in 1.5s ease-out 0.5s both;
                 bottom: 0;
-                font-family: "IBM Plex Sans";
+                font-family: var(--font);
                 user-select: none;
                 user-select: none;
                 user-select: none;
@@ -145,7 +145,7 @@
 
 
 
-@keyframes canvasFadeIn {
+@keyframes canvas-fade-in {
   from {
     opacity: 0;
   }
