@@ -16,10 +16,6 @@
     @media (max-width: 768px) {
         padding-right: 20px !important;
         padding-left: 20px !important;
-
-        .subscriber-custom-content-wrapper {
-            width: 100%;
-        }
     }
 
     * {box-sizing: unset;}
@@ -28,9 +24,6 @@
         display: block;
      }
 
-     .cards-grid {
-        max-width: 100%;
-     }
         p {
             margin: 0;
             line-height: 20px;
@@ -42,7 +35,6 @@
             display: flex;
             gap: 24px;
             flex-direction: column;
-            max-width: 100%;
         }
         
         .card {
@@ -147,10 +139,6 @@
             margin: 0;
             flex: 1;
             text-align: left;
-        }
-
-        .subscriber-custom-content {
-            position: relative;
         }
         
         
@@ -359,7 +347,7 @@
         transform: scale(1.05) translateZ(0);
         opacity: 1;
         background: #044ab3;
-
+        
         }
         
         @media (max-width: 720px) {
@@ -377,6 +365,7 @@
         }
         
         .grid {
+            flex-direction: row;
             width: 100%;
         }
         
@@ -483,5 +472,5 @@
             width: 100%;
             margin: 0 auto 64px;
         }
-    }
+        }
 }

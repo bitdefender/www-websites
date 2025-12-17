@@ -3,8 +3,7 @@ import { addScript } from '../../scripts/utils/utils.js';
 
 export default function decorate(block) {
   const allItems = block.querySelectorAll('td');
-  block.innerHTML = `
-    <div class="flex cards-grid">
+  block.innerHTML = `<div class="flex">
       <div class="column">
         <div class="card tall medium">
           <div class="lottie-wrapper">
@@ -113,8 +112,7 @@ export default function decorate(block) {
           <p>${allItems[8].innerHTML}</p>
         </div>
       </div>
-    </div>
-    <div class="overlay cards-grid"></div>`;
+    </div>`;
 
   addScript(
     'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js',
