@@ -1,0 +1,75 @@
+.block.compare-as-table {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.block.compare-as-table h3 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #000;
+  padding: 40px 40px 0px;
+}
+
+.block.compare-as-table td, .block.compare-as-table p {
+  margin-top: 0px;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+  color: #000000;
+  text-align: center;
+}
+
+.block.compare-as-table table {
+  border: 1px solid #d9e6f3;
+  width: 100%;
+  height: 100%;
+}
+
+.block.compare-as-table table tr, .block.compare-as-table table tr td {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.block.compare-as-table table tr:nth-of-type(4) {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.hide-prices .block.compare-as-table table .oldprice-container, .hide-prices .block.compare-as-table table .newprice-container {
+  display: none;
+}
+
+.block.compare-as-table > div > div {
+  height: 100%;
+}
+
+.block.compare-as-table table ul {
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+.block.compare-as-table table ul li {
+  min-height: 70px;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  padding: 0px 60px;
+  border-bottom: 1px solid #d9e6f3;
+}
+
+.block.compare-as-table > div:first-of-type ul {
+  background: #EEEEEE;
+}
+
+.block.compare-as-table > div:first-of-type ul li {
+  border-bottom: 1px solid white;
+}
