@@ -7,22 +7,6 @@
 // Bitdefender - Pioneering AI in Cybersecurity
 // ===========================================
 
-function loadIBMPlexSans() {
-  return new Promise((resolve, reject) => {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap';
-
-    link.onload = () => {
-      document.fonts.ready.then(resolve);
-    };
-
-    link.onerror = reject;
-
-    document.head.appendChild(link);
-  });
-}
-
 function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
   const words = text.split(/\s+/); // split by 1+ spaces
   const breakPositions = isMobile ? mobileBreakpoints?.split(',') : desktopBreakpoints?.split(',');
@@ -61,13 +45,14 @@ function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
 // eslint-disable-next-line max-len
 async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, desktopBreakpoints) {
   // usage
-  await loadIBMPlexSans();
+
   const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
   const DPR_MULTIPLIER = isMobile ? 0.5 : 1;
   // Global accessibility & performance detection
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isPageVisible = !document.hidden;
   const canvas = document.getElementById(canvasId);
+
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d', { alpha: true, willReadFrequently: true });
@@ -453,5 +438,28 @@ export default function decorate(block) {
   bannerCanvas.classList.add('interactive-canvas');
   block.appendChild(bannerCanvas);
 
-  initDotCloud(block, 'animation-canvas', isMobile, mobileBreakpoints, desktopBreakpoints);
+  const canvas = block.querySelector('#animation-canvas');
+
+  if (canvas) {
+    let initialized = false;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const { width, height } = entries[0].contentRect;
+
+      if (!initialized && width > 0 && height > 0) {
+        initDotCloud(
+          block,
+          'animation-canvas',
+          isMobile,
+          mobileBreakpoints,
+          desktopBreakpoints,
+        );
+
+        initialized = true;
+        resizeObserver.disconnect();
+      }
+    });
+
+    resizeObserver.observe(canvas);
+  }
 }

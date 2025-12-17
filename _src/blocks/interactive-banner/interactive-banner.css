@@ -68,6 +68,8 @@
                 position: absolute;
                 left: 1.5%;
                 display:block;
+                min-width: 100%;
+                min-height: 100%;
                 height:auto;
                 max-height:82vh;
                 cursor:pointer;
