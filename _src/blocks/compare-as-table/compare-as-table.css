@@ -67,6 +67,10 @@
   padding-bottom: 10px;
 }
 
+.hide-prices .block.compare-as-table > div:first-of-type table .oldprice-container {
+  display: none;
+}
+
 .hide-prices .block.compare-as-table table .newprice-container {
   display: flex;
   justify-content: center;
