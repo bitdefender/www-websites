@@ -167,6 +167,7 @@ export default async function decorate(block) {
         });
       });
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('YouTube API failed to load', e);
     }
   }
