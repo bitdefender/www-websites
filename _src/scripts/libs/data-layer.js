@@ -133,8 +133,7 @@ export const handleFileDownloadedEvents = () => {
     const hrefPathname = new URL(fileLink).pathname;
     const filename = hrefPathname.substring(hrefPathname.lastIndexOf('/') + 1);
 
-    fileLink.addEventListener('click', (e) => {
-      e.preventDefault();
+    fileLink.addEventListener('click', () => {
       AdobeDataLayerService.push(new ButtonClickEvent('file downloaded', { asset: filename }));
     });
   });
