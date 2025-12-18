@@ -1495,7 +1495,11 @@ main .section.checked-lists ul li::after {
   z-index: 2;
 }
 
-main .section.static-awards p{
+main .section.static-awards-small .default-content-wrapper {
+  padding: 0 24px;
+}
+
+main .section.static-awards-small .default-content-wrapper p {
   max-height: 64px;
   max-width: 400px;
   margin: auto;
