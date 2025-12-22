@@ -67,10 +67,6 @@
   padding-bottom: 10px;
 }
 
-.block.compare-as-table > div:first-of-type table .oldprice-container, .block.compare-as-table > div:first-of-type table .newprice-container {
-  display: none;
-}
-
 .block.compare-as-table table .newprice-container {
   display: flex;
   justify-content: center;
@@ -78,23 +74,24 @@
   gap: 7px;
 }
 
-.block.compare-as-table table a.button {
-  margin: 10px 0;
-}
-
-.block.compare-as-table table a.button.no-arrow::after, .block.compare-as-table table a.button.no-arrow:hover::after {
-  transform: unset;
-  opacity: 0;
+.block.compare-as-table > div:first-of-type table .oldprice-container, .block.compare-as-table > div:first-of-type table .newprice-container {
   display: none;
 }
 
 .block.compare-as-table table a.button {
   max-width: 300px;
   width: 300px;
+  margin: 10px 0;
   text-align: center;
   display: block;
   font-size: 16px;
   font-weight: 400;
+}
+
+.block.compare-as-table table a.button.no-arrow::after, .block.compare-as-table table a.button.no-arrow:hover::after {
+  transform: unset;
+  opacity: 0;
+  display: none;
 }
 
 .block.compare-as-table > div > div {
