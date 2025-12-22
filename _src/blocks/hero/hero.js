@@ -241,7 +241,6 @@ export default function decorate(block) {
   }
 
   // make discount dynamic
-  console.log(discountedPrice)
   if (percentProduct || discountedPrice) {
     const [alias, variant] = percentProduct?.split(',') || discountedPrice.split(',');
     block.setAttribute('data-store-context', '');
@@ -253,7 +252,7 @@ export default function decorate(block) {
 
     if (discountedPrice) {
       const dicountedTable = block.querySelector('table');
-      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', `<strong data-store-price="discounted||full"></strong>`);
+      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', '<strong data-store-price="discounted||full"></strong>');
     }
   }
 
