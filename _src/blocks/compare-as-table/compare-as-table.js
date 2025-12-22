@@ -51,43 +51,53 @@ async function updateProductPrice(prodName, saveText = null, buyLinkSelector = n
 }
 
 export default async function decorate(block) {
-  const { products, savetext } = block.closest('.section').dataset;
+  const { products, savetext } = block.closest('.section')?.dataset ?? {};
   if (!products) return;
 
-  const tables = block.querySelectorAll('table');
+  const tables = [...block.querySelectorAll('table')];
   const productList = products.split(',');
 
-  for (const [key, table] of [...tables].entries()) {
+  const tasks = tables.map(async (table, key) => {
     const rows = table.querySelectorAll('tr');
-    const billed = rows[2];
+    const billed = rows[2] ?? null;
     const priceRow = rows[3];
-    if (!priceRow) continue;
+    if (!priceRow) return;
 
     const productStr = productList[key];
-    if (!productStr) continue;
+    if (!productStr) return;
 
-    const [prodName, prodUsers, prodYears] = productStr.split('/');
+    const parts = productStr.split('/');
+    if (parts.length < 3) return;
+
+    const [prodName, prodUsers, prodYears] = parts;
     const name = prodName.trim();
 
     table.setAttribute('data-store-context', '');
     table.setAttribute('data-store-id', name);
-    table.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
+    table.setAttribute('data-store-option', `${prodUsers.trim()}-${prodYears.trim()}`);
     table.setAttribute('data-store-department', 'consumer');
     table.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
 
-    const priceBox = await updateProductPrice(name, savetext, priceRow, billed, '', '' , '', key);
-    priceRow.innerHTML = priceBox.innerHTML;
+    const priceBox = await updateProductPrice(name, savetext, priceRow, billed, null, null, '', key);
+    priceRow.innerHTML = priceBox?.innerHTML ?? priceRow.innerHTML;
 
-    if (billed.innerText) billed.innerText = '';
+    if (billed?.innerText) billed.innerText = '';
 
-    // add icon on features:
     const allfeats = rows[rows.length - 1];
-    allfeats.innerHTML = allfeats.innerHTML.replace(/\[yes\]/g, '<span class="yes-check"></span>').replace(/\[no\]/g, '<span class="no-check"></span>');
+    if (allfeats) {
+      allfeats.innerHTML = allfeats.innerHTML
+        .replace(/\[yes\]/g, '<span class="yes-check"></span>')
+        .replace(/\[no\]/g, '<span class="no-check"></span>');
+    }
+  });
 
-    matchHeights(block, 'table tr:nth-of-type(1)');
-    matchHeights(block, 'table tr:nth-of-type(2)');
-    matchHeights(block, 'table tr:nth-of-type(3)');
-    matchHeights(block, 'table tr:nth-of-type(4)');
-    matchHeights(block, 'table tr:nth-of-type(5)');
-  }
+  await Promise.all(tasks);
+
+  // Do height matching once after all updates (much cheaper than doing it per-table)
+  matchHeights(block, 'table tr:nth-of-type(1)');
+  matchHeights(block, 'table tr:nth-of-type(2)');
+  matchHeights(block, 'table tr:nth-of-type(3)');
+  matchHeights(block, 'table tr:nth-of-type(4)');
+  matchHeights(block, 'table tr:nth-of-type(5)');
 }
+
