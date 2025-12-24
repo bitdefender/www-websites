@@ -21,7 +21,7 @@ async function updateProductPrice(prodName, saveText = null, buyLinkSelector = n
   let newPrice = document.createElement('span');
   const customLink = buyLinkSelector.querySelector('a')?.getAttribute('href');
   let priceAttribute = setDiscountedPriceAttribute(type, hideDecimals, prodName);
-  const savePriceEl = saveText ? saveText.replace('0%', '<span data-store-discount="percentage"></span>') : '';
+  const savePriceEl = saveText ? saveText.replace('0%', '<span data-store-discount="percentage"></span>') : '<span data-store-discount="percentage"></span>';
   const billedText = billed?.innerHTML || '';
   newPrice.setAttribute('data-store-price', priceAttribute);
 
