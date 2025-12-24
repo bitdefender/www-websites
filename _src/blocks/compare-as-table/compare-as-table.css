@@ -15,19 +15,22 @@
 }
 
 .block.compare-as-table td, .block.compare-as-table p {
-  margin-top: 0px;
+  margin: 0;
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
   color: #000000;
   text-align: center;
-  margin: 0;
 }
 
 .block.compare-as-table table {
   border: 1px solid #d9e6f3;
   width: 100%;
   height: 100%;
+}
+
+.block.compare-as-table table tr:not(:last-of-type) {
+  padding: 0 10px;
 }
 
 .block.compare-as-table table tr, .block.compare-as-table table tr td {
