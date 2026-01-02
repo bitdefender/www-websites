@@ -7,6 +7,10 @@
     text-align: center;
 }
 
+.hide-preview .carousel-with-preview-container .main-video-container {
+    display: none;
+}
+
 .carousel-with-preview-container .featured-video iframe {
     width: 100%;
     max-width: 1000px;
@@ -100,6 +104,124 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
     transition: border 0.3s ease, transform 0.3s ease;
 }
+
+.carousel-with-preview-container.bundle-design2 {
+    position: relative;
+    max-width: 100%;
+    width: 100% !important;
+    overflow: unset;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-with-preview-wrapper {
+    padding-left: 20em;
+}
+
+.carousel-with-preview-container.bundle-design2  .carousel-wrapper {
+    margin: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-wrapper {
+    overflow: visible;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel {
+    gap: 3rem;
+}
+
+.carousel-with-preview-container.bundle-design2 .navContainer {
+    position: absolute;
+    top: -5em;
+    right: 20em;
+    margin: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item {
+    width: 398px;
+    padding: 32px 24px;
+    border: 0 none;
+    overflow: hidden;
+    cursor: default;
+    background-color: #FAFAFA;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item > div > p:first-of-type {
+    margin: -32px -24px auto!important;
+    padding: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item > div > p {
+    padding: 0;
+    margin: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item h3, .carousel-with-preview-container.bundle-design2 .carousel-item h3 * {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    color: #1B1B1B;
+    text-decoration: none;
+    margin: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item hr {
+    margin: 10px 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item ul {
+    margin: 16px 0;
+    padding: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item ul li {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 25.6px;
+    color: #3C3C3C;
+    margin: 0;
+    padding: 5px 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item ul li:last-of-type {
+    cursor: pointer;
+    color: #006DFF;
+    text-align: center;
+    font-weight: 600;
+}
+
+.carousel-with-preview-container.blue-version .carousel {
+    gap: 2rem;
+}
+
+.carousel-with-preview-container.blue-version .carousel-item {
+    width: 308px;
+    background-color: #0045AD;
+    color: white;
+}
+
+.carousel-with-preview-container.blue-version .carousel-item > div > p:first-of-type .icon {
+    margin: 32px 24px 0;
+}
+
+.carousel-with-preview-container.blue-version .carousel-item h3 {
+    color: white;
+    font-size: 20px;
+    line-height: 28px;
+}
+
+.carousel-with-preview-container.blue-version .carousel-item h3 em {
+    font-style: normal;
+    color: #80B6FF;
+    font-size: 20px;
+    line-height: 28px;
+}
+
 
 .carousel-with-preview-container .caption {
     text-align: left;

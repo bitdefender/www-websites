@@ -46,7 +46,7 @@ main .subscriber .section {
 }
 
 .subscriber #heroColumn table tr td a {
-    height: 49px;
+    height: 48px;
     width: 214px;
     border-radius: 8px;
     font-weight: 500;
@@ -330,7 +330,7 @@ main .subscriber .section {
 .subscriber #multiColumns .default-content-wrapper h3 {
     font-weight: 600;
     font-size: 40px;
-    line-height: 40px;
+    line-height: 45px;
     margin: 16px 0;
 }
 .subscriber #multiColumns .columns > div {
@@ -1170,10 +1170,149 @@ main .subscriber .section {
     font-weight: 600;
 }
 
-@media (min-width: 2000px) { 
-.subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
-    width: 825px;
+.subscriber .title-aligned-left .default-content-wrapper {
+    max-width: var(--section-large-desktop-max-width);
+    width: var(--section-large-desktop-max-width) !important;
+    padding: 0 0 0 20px;
+    text-align: left !important;
+    margin-bottom: 50px !important;
 }
+
+.subscriber .title-aligned-left .default-content-wrapper > * {
+    max-width: 590px;
+}
+
+.subscriber .title-aligned-left .default-content-wrapper h3 {
+    font-size: 32px !important;
+    margin-left: 0;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div {
+    padding: 32px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div p {
+    color: black;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table {
+    height: 100%;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table .tbody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr td {
+    padding: 1em 10px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr td:first-of-type {
+    border-right: 1px solid #E0E8EF;
+}
+
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr .icon {
+    width: 32px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr h5 {
+    font-size: 32px;
+    line-height: 40px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr p {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col, .subscriber .bundle-design2#multiColumns .columns .columns-img-col {
+    background-color: transparent;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table {
+    max-width: 365px;
+    margin-top: 2em;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table .icon {
+    width: auto;
+    height: 36px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table h5 {
+    font-size: var(--body-font-size-l);
+    list-style: var(--body-font-size-l);
+    margin: 10px 0 5px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table tbody tr:first-of-type {
+    border-bottom: 1px solid #E0E8EF;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table tbody tr:first-of-type td {
+    padding-bottom: 15px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table {
+    height: 100%;
+    width: 100%;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table tbody {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 15px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table tr {
+    display: flex;
+    justify-content: space-between;
+    background-color: #F1F5F8;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: left;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table td h6 {
+    font-size: 40px;
+    line-height: 46px;
+    margin-bottom: 10px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table tr td img {
+    max-height: 96px;
+    height: auto;
+}
+
+@media (min-width: 2000px) { 
+    .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
+        width: 825px;
+    }
 }
 
 @media (max-width: 1650px) { 
