@@ -112,8 +112,43 @@
     overflow: unset;
 }
 
-.carousel-with-preview-container.bundle-design2 .carousel-with-preview-wrapper {
-    padding-left: 20em;
+.carousel-with-preview-container.bundle-design2 .default-content-wrapper p.button-container a {
+    border: 0 none;
+    min-width: max-content;
+    width: max-content;
+    height: 48px;
+    padding: 0 28px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #006DFF;
+}
+
+.carousel-with-preview-container.bundle-design2 .default-content-wrapper p.button-container a:hover {
+    text-decoration: none;
+    opacity: 0.9;
+    transition: all 0.5s ease;
+}
+
+.carousel-with-preview-container.bundle-design2 .default-content-wrapper p.button-container a span.button-text {
+    font-size: 18px;
+    line-height: 25.2px;
+}
+
+.carousel-with-preview-container.bundle-design2 .default-content-wrapper p.button-container a::after {
+    display: none;
+}
+
+.carousel-with-preview-container.bundle-design2 .default-content-wrapper p.button-container a .icon, .carousel-with-preview-container.bundle-design2 .default-content-wrapper p.button-container a .icon svg {
+    height: 6px;
+    width: auto;
+    margin: 0;
+    display: block;
 }
 
 .carousel-with-preview-container.bundle-design2  .carousel-wrapper {
@@ -144,11 +179,19 @@
     background-color: #FAFAFA;
 }
 
+.carousel-with-preview-container.slide-full .carousel-item:first-of-type {
+    margin-left: 19em;
+}
+
 .carousel-with-preview-container.bundle-design2 .carousel-item > div {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     height: 100%;
+}
+
+.carousel-with-preview-container.bundle-design2.no-flex .carousel-item > div {
+    display: block;
 }
 
 .carousel-with-preview-container.bundle-design2 .carousel-item > div > p:first-of-type {

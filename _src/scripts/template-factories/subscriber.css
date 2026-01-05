@@ -101,6 +101,10 @@ main .subscriber .section {
     background: linear-gradient(to bottom, transparent 50%, #F1F5F8 50%);
 }
 
+.subscriber .columnvideo.no-gradient {
+    background: transparent;
+}
+
 .subscriber .columnvideo > div.image-columns-wrapper {
     background-color: black;
     border-radius: 16px;
@@ -160,6 +164,52 @@ main .subscriber .section {
     width: 41em;
     margin-bottom: -3em;
     margin-right: 0;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td {
+    border: 0 none;
+    padding-right: 16px;
+    margin: 0;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a {
+    border: 0 none;
+    min-width: max-content;
+    width: max-content;
+    height: 48px;
+    padding: 0 28px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #EB0000;
+    font-family: roboto, sans-serif;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a .icon {
+    height: 6px;
+    width: auto;
+    margin: 0;
+    display: block;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a .icon svg {
+    display: block;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a:hover {
+    text-decoration: none;
+    opacity: 0.9;
+    transition: all 0.5s ease;
+}
+
+.subscriber .columnvideo > div.image-columns-wrapper table tbody > tr td:first-of-type > a {
+    color:  black;
+    background-color: white;
 }
 .subscriber .columnvideo2 > div.image-columns-wrapper video {
     margin-bottom: 0;
@@ -1728,6 +1778,10 @@ main .subscriber .section {
 }
 
 @media (max-width: 767px) {
+    .subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #has4columns .default-content-wrapper p strong, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
+        display: block;
+        margin-bottom: 0;
+    }
     .subscriber .multicontentslider .carousel-item {
         width: 90vw;
         margin-right: 10px;
@@ -1838,6 +1892,46 @@ main .subscriber .section {
     .subscriber .multicontentvideoslider .carousel-arrows-container button {
         width: 18px;
         margin-right: 0;
+    }
+
+    .subscriber main .section#heroColumn.bundle-design {
+        padding: 40px 0;
+    }
+
+    .image-columns-container .image-columns > div > div:last-of-type img {
+        display:
+    }
+
+    .subscriber #heroColumn.bundle-design h1 {
+        font-size: 14px;
+        line-height: 18px;
+        margin-bottom: 16px;
+    }
+
+    .subscriber #heroColumn.bundle-design h2 {
+        font-size: 40px !important;
+        line-height: 45px !important;
+        margin-bottom: 16px;
+    }
+
+    .subscriber #heroColumn.bundle-design p {
+        font-size: 18px;
+        line-height: 25px;
+        margin: 0;
+    }
+
+    .subscriber #heroColumn.bundle-design p {
+        font-size: 18px;
+        line-height: 25px;
+        margin: 0 !important;
+    }
+
+    .subscriber #heroColumn.bundle-design table {
+        margin-top: 48px;
+    }
+
+    .subscriber .title-aligned-left .default-content-wrapper {
+        margin-bottom: 0 !important;
     }
 }
 @media (max-width: 636px) {

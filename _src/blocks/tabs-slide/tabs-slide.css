@@ -172,6 +172,15 @@
     padding: 16px;
 }
 
+.fix-card-width .spp-slider .content {
+    height: max-content;
+    gap: 32px;
+}
+
+.fix-card-width .spp-slider .card {
+    width: 412px;
+}
+
 .spp-slider .card > p:first-of-type {
     flex: 0 0 80px;
     position: relative;

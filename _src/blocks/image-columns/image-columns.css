@@ -225,7 +225,9 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 .bundle-design#heroColumn table tr td a {
   color: white;
   border-color: white;
-  min-width: 238px;
+  min-width: auto;
+  width: auto;
+  padding: 0 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -241,6 +243,9 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 
 .bundle-design#heroColumn table tr td a:hover {
   background-color: transparent;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: all 0.5s ease;
 }
 
 @media (min-width: 767px){
