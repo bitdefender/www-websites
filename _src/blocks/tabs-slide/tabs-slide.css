@@ -226,10 +226,6 @@
     .spp-slider .content {
         padding: 0 20px;
     }
-
-    .subscriber main .section.tabs-slide-container {
-        padding: 80px 0;
-    }
 }
 
 @media (max-width: 767px) {

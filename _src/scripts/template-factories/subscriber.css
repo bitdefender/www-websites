@@ -386,6 +386,10 @@ main .subscriber .section {
 .subscriber #multiColumns .columns > div {
     margin-bottom: 32px;
 }
+.subscriber #multiColumns.bundle-design, .subscriber #multiColumns.bundle-design .columns > div {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
 .subscriber #multiColumns .columns > div > div {
     background-color: #F1F5F8;
     border-radius: 16px;
@@ -1233,12 +1237,11 @@ main .subscriber .section {
 }
 
 .subscriber .title-aligned-left .default-content-wrapper h3 {
-    font-size: 32px !important;
     margin-left: 0;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div {
-    padding: 32px;
+    padding: 32px 24px;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div p {
@@ -1336,7 +1339,7 @@ main .subscriber .section {
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    gap: 15px;
+    gap: 16px;
 }
 
 .subscriber .bundle-design2#multiColumns .columns .columns-img-col table tr {
@@ -1357,6 +1360,32 @@ main .subscriber .section {
 .subscriber .bundle-design2#multiColumns .columns .columns-img-col table tr td img {
     max-height: 96px;
     height: auto;
+}
+
+.subscriber main .section.custom-margin-0 {
+    margin-top: 0!important;
+    margin-bottom: 0!important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+}
+
+.subscriber main .section.custom-margin-80-160 {
+    margin-top: 80px!important;
+    margin-bottom: 160px!important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+}
+
+.subscriber main .section.custom-margin-80 {
+    margin-top: 80px!important;
+    margin-bottom: 80px!important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+}
+
+.subscriber main .section.custom-padding-88 {
+    padding-top: 88px;
+    padding-bottom: 88px;
 }
 
 @media (min-width: 2000px) { 
@@ -1494,6 +1523,18 @@ main .subscriber .section {
 }
 
 @media (max-width: 991px) {
+    .subscriber main .section.custom-margin-80-160, .subscriber main .section.custom-padding-88 {
+        margin-top: 80px!important;
+        margin-bottom: 0!important;
+        padding-top: 0!important;
+        padding-bottom: 0!important;
+    }
+
+    .subscriber .section.bundle-design2 .columns-wrapper {
+        padding-top: 0!important;
+        padding-bottom: 0!important;
+    }
+
     .subscriber .default-content-wrapper {
         max-width: var(--section-desktop-max-width);
         padding: 0 var(--section-desktop-padding);
@@ -1617,6 +1658,9 @@ main .subscriber .section {
         height: auto;
         margin-bottom: 1em;
     }
+    .subscriber main .section.tabs-slide-container {
+        padding: 80px 0!important;
+    }
     .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
         height: 365px;
     }
@@ -1634,14 +1678,25 @@ main .subscriber .section {
         margin-bottom: 25px;
         margin-right: 2%;
     }
+    .subscriber #multiColumns.bundle-design .columns > div, .subscriber #multiColumns.bundle-design3 .columns > div {
+        display: flex;
+        height: 100%;
+        width: auto;
+        flex-direction: row;
+        gap: 24px;
+        float: unset;
+        margin: 0;
+    }
+    .subscriber #multiColumns.bundle-design .columns > div > div, .subscriber #multiColumns.bundle-design3 .columns > div > div {
+        margin: 0!important;
+        height: -webkit-fill-available;
+        width: auto;
+        flex: 1;
+    }
     .subscriber #multiColumns .columns > div > div h4 {
         margin: 8px 0;
     }
-    .subscriber #multiColumns .columns > div:nth-of-type(1) > div:nth-of-type(2n) {
-        margin-left: 2%;
-        margin-right: 0;
-    }
-    .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(1), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(3) {
+    .subscriber #multiColumns .columns > div:nth-of-type(1) > div:nth-of-type(2n), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(1), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(3) {
         margin-left: 2%;
         margin-right: 0;
     }
@@ -1775,12 +1830,58 @@ main .subscriber .section {
     .subscriber .columnvideo > div.image-columns-wrapper {
         height: auto;
     }
+
+    .subscriber .title-aligned-left .default-content-wrapper {
+        margin-bottom: 32px !important;
+    }
+
+    .subscriber .bundle-design2.title-aligned-left .default-content-wrapper {
+        padding-left: 0;
+    }
+
+    .subscriber .title-aligned-left .default-content-wrapper h3, .subscriber #multiColumns.title-aligned-left .default-content-wrapper h3 {
+        font-size: 28px;
+        line-height: 33px;
+        margin: 24px 0 8px;
+    }
+
+    .subscriber .title-aligned-left .default-content-wrapper p {
+        padding-top: 0;
+        margin-top: 0;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns-wrapper {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div > div, .subscriber #multiColumns.bundle-design2 .columns > div > div {
+        width: auto;
+        height: -webkit-fill-available;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        margin: 0;
+        float: unset;
+        order: unset;
+    }
+
+    .subscriber #multiColumns.bundle-design2 .columns > div {
+        display: flex;
+        flex-direction: row;
+        
+    }
 }
 
 @media (max-width: 767px) {
     .subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #has4columns .default-content-wrapper p strong, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
         display: block;
         margin-bottom: 0;
+    }
+    .subscriber .title-aligned-left .default-content-wrapper > * {
+        width: 100%;
+        max-width: unset;
     }
     .subscriber .multicontentslider .carousel-item {
         width: 90vw;
@@ -1898,10 +1999,6 @@ main .subscriber .section {
         padding: 40px 0;
     }
 
-    .image-columns-container .image-columns > div > div:last-of-type img {
-        display:
-    }
-
     .subscriber #heroColumn.bundle-design h1 {
         font-size: 14px;
         line-height: 18px;
@@ -1933,6 +2030,49 @@ main .subscriber .section {
     .subscriber .title-aligned-left .default-content-wrapper {
         margin-bottom: 0 !important;
     }
+
+    .subscriber .title-aligned-left .default-content-wrapper {
+        width: 100%!important;
+    }
+
+    .subscriber main .section.custom-margin-80-160, .subscriber main .section.custom-padding-88 {
+        margin-top: 64px !important;
+    }
+
+    .subscriber #multiColumn.bundle-design2s .columns .columns-left-col table {
+        width: 100%;
+        max-width: unset;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div > div, .subscriber #multiColumns.bundle-design2 .columns > div > div {
+        width: 100%;
+        height: auto;
+        float: none;
+        padding: 0;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div:nth-of-type(1) > div:nth-of-type(2n), .subscriber #multiColumns.bundle-design2 .columns > div:nth-of-type(1) > div:nth-of-type(2n) {
+        margin-left: 0;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div, .subscriber #multiColumns.bundle-design2 .columns > div, .subscriber #multiColumns.bundle-design3 .columns > div {
+        flex-direction: column;
+    }
+
+    .subscriber .bundle-design#multiColumns .columns > div > div {
+        padding: 23px 20px;
+    }
+
+    .subscriber .bundle-design#multiColumns .columns > div > div table tr {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 24px;
+    }
+
+    .subscriber .bundle-design2#multiColumns .columns .columns-img-col table tr {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
 }
 @media (max-width: 636px) {
     .subscriber #heroColumn h1 {

@@ -283,6 +283,11 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   padding-left: 0;
   margin-top: 16px;
 }
+@media (max-width: 991px) {
+  .image-columns-container.bundle-design .image-columns > div > div:last-of-type img {
+    visibility: hidden;
+  }
+}
 
 @media (min-width: 1400px) {
   .image-columns > div > .image-columns-txt-col p {
@@ -322,20 +327,19 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   }
 
   .avfree .image-columns {
-    > div{
-        > .image-columns-txt-col {
-            h3 {
-                font-size: 22px;
-                margin-bottom: 6px;
-            }
-
-            p {
-                font-size: 16px;
-            }
+    > div {
+      > .image-columns-txt-col {
+        h3 {
+          font-size: 22px;
+          margin-bottom: 6px;
         }
-        
+
+        p {
+          font-size: 16px;
+        }
+      }
     }
-}
+  }
 }
 
 @media (min-width: 1600px) { /* large desktop */
