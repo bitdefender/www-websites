@@ -210,6 +210,11 @@ main .section.phone-number-checker-container {
 
                         &:first-of-type {
                             width: 65px;
+                            padding-left: 10px;
+                        }
+
+                        &.not-found {
+                            width: unset;
                         }
                     }
 
