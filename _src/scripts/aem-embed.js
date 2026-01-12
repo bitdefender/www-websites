@@ -11,8 +11,12 @@ import {
   WindowLoadStartedEvent,
   WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
+import page from './page.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import { StoreResolver } from './libs/store/index.js';
+import {
+  GLOBAL_EVENTS,
+} from './utils/utils.js';
 // eslint-disable-next-line import/prefer-default-export
 export class AEMEmbed extends HTMLElement {
   constructor() {
@@ -168,6 +172,12 @@ export class AEMEmbed extends HTMLElement {
 
   async handleMain(htmlText, body, origin) {
     await this.pseudoDecorateMain(htmlText, body, origin);
+
+    const onAdobeMcLoaded = () => {
+      document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
+      window.ADOBE_MC_EVENT_LOADED = true;
+    };
+
     try {
       await Launch.load(page.environment);
       onAdobeMcLoaded();
