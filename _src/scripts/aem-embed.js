@@ -283,3 +283,4 @@ export class AEMEmbed extends HTMLElement {
 }
 
 customElements.define('aem-embed', AEMEmbed);
+window.AdobeDataLayerService = AdobeDataLayerService;
