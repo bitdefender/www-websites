@@ -29,14 +29,14 @@
   height: 100%;
 }
 
-.block.compare-as-table table tr:not(:last-of-type) {
-  padding: 0 10px;
-}
-
 .block.compare-as-table table tr, .block.compare-as-table table tr td {
   display: block;
   text-align: center;
   width: 100%;
+}
+
+.block.compare-as-table table tr:not(:last-of-type) {
+  padding: 0 10px;
 }
 
 .block.compare-as-table table tr:nth-of-type(4) {
