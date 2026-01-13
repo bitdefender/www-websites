@@ -7,12 +7,9 @@ import Launch from '@repobit/dex-launch';
 import {
   PageLoadedEvent,
   AdobeDataLayerService,
-  FormEvent,
-  WindowLoadStartedEvent,
-  WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
 import page from './page.js';
-import { target, adobeMcAppendVisitorId } from './target.js';
+import { target } from './target.js';
 import { StoreResolver } from './libs/store/index.js';
 import {
   GLOBAL_EVENTS,
@@ -82,7 +79,6 @@ export class AEMEmbed extends HTMLElement {
       console.log('An error occured while loading the content');
     }
     const blockLinks = block.querySelectorAll('a[href]');
-    console.log('blockLinks', blockLinks);
     blockLinks.forEach((link) => {
       const rawHref = link.getAttribute('href');
       if (!rawHref) return;
