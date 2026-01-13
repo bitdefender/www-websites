@@ -76,7 +76,11 @@ function changeTexts(block, result, statusTitles) {
   }
 }
 
-function getResultPagePath(status, mappedStatus) {
+function getResultPagePath(status = null, mappedStatus = null) {
+  if (!status || !mappedStatus) {
+    return null;
+  }
+
   return null;
 
   // if (status === 1 || mappedStatus.includes('safe')) {
@@ -369,9 +373,8 @@ function createButtonsContainer(block) {
 
 export default async function decorate(block, onDataLoaded) {
   const structuredContent = await onDataLoaded;
-  console.log('structuredContent:', structuredContent);
 
-  let linkToCheck = structuredContent?.linkToCheck || '';
+  const linkToCheck = structuredContent?.linkToCheck || '';
   const { checkButtonText, product } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
