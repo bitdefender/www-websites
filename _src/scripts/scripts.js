@@ -6,6 +6,7 @@ import {
   WindowLoadStartedEvent,
   WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
+import { loadScript } from '@repobit/dex-utils';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -672,6 +673,11 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
+  if (window.location.href.includes('connector')) {
+    loadScript('aem-embed', `${window.hlx.codeBasePath}/scripts/aem-embed.js`, true);
+    return;
+  }
+
   setBFCacheListener();
   initialiseSentry();
   await window.hlx.plugins.load('eager');
@@ -731,5 +737,5 @@ initMobileDetector('mobile');
 initMobileDetector('tablet');
 initMobileDetector('desktop');
 
-if (!window.hlx.suppressLoadPage) loadPage();
+loadPage();
 window.AdobeDataLayerService = AdobeDataLayerService;
