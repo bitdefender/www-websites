@@ -1,4 +1,5 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
+import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
   matchHeights, createTag, renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
@@ -81,16 +82,35 @@ function setImageAsBackgroundImage() {
   });
 }
 
-function setDynamicLink(dynamicLink, dynamicLinks) {
+function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
   switch (UserAgent.os) {
     case 'android':
       dynamicLink.href = dynamicLinks.androidLink;
+      if (dynamicProducts.storeIdAndroid) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeIdAndroid },
+        ));
+      }
+
       break;
     case 'ios':
       dynamicLink.href = dynamicLinks.iosLink;
+      if (dynamicProducts.storeIdIos) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeIdIos },
+        ));
+      }
       break;
     default:
       dynamicLink.href = dynamicLinks.defaultLink;
+      if (dynamicProducts.storeId) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeId },
+        ));
+      }
       break;
   }
 }
@@ -111,11 +131,17 @@ function setupTabs({ block, firstTab }) {
       tabsList.className = 'tabs-section default-content-wrapper';
       tabsList.addEventListener('click', (e) => {
         const tab = e.target.closest('span[data-tab]');
-        const showAll = tab.dataset.tab === firstTab.toLowerCase();
-        section.querySelectorAll('.section-el').forEach((el) => {
-          el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
-        });
-        tabsList.querySelectorAll('span').forEach((el) => el.classList.toggle('active', el === tab));
+        if (tab && tab && tab.dataset?.tab) {
+          const showAll = tab.dataset.tab === firstTab.toLowerCase();
+          section.querySelectorAll('.section-el').forEach((el) => {
+            el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
+          });
+          tabsList.querySelectorAll('span').forEach((el) => {
+            el.classList.toggle('active', el === tab);
+          });
+
+          AdobeDataLayerService.push(new ButtonClickEvent('click', { asset: tab.dataset.tab }));
+        }
       });
       // add All tab once
       const all = document.createElement('span');
@@ -140,7 +166,7 @@ function setupTabs({ block, firstTab }) {
 export default function decorate(block) {
   const {
     linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
-    defaultLink, iosLink, androidLink,
+    defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -265,7 +291,8 @@ export default function decorate(block) {
   const dynamicLink = block.closest('.section').querySelector('a[href*="#os-dynamic-link"]');
   if (dynamicLink) {
     const dynamicLinks = { defaultLink, iosLink, androidLink };
-    setDynamicLink(dynamicLink, dynamicLinks);
+    const dynamicProducts = { storeId, storeIdAndroid, storeIdIos };
+    setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts);
   }
 
   // this will define the number of rows inside each card of the subgrid system
@@ -306,7 +333,15 @@ export default function decorate(block) {
     matchHeights(block.closest('.section'), 'p:nth-last-of-type(2)');
     matchHeights(block.closest('.section'), '.columns > div');
   }
+  if (block.closest('.section').classList.contains('fix-tables-heights')) {
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(1)');
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(2)');
+  }
   if (block.classList.contains('awards-fragment')) {
     matchHeights(block, 'p:last-of-type');
+  }
+
+  if (block.closest('.section').classList.contains('responsible-ai')) {
+    matchHeights(block, 'p');
   }
 }

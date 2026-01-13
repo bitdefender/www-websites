@@ -198,6 +198,7 @@
 
 .trusted-main-carousel-container.resources-design .content-wrapper .slide>:last-child img {
     border-radius: 12px;
+    object-fit: cover;
 }
 
 .trusted-main-carousel-container .content-wrapper .slide>:first-child p.button-container a.button:any-link {
@@ -253,7 +254,6 @@
 }
 
 .trusted-main-carousel-container.resources-design .content-wrapper .slide {
-    width: 100% !important;
     margin-top: 0;
 }
 

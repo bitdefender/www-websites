@@ -184,7 +184,8 @@
                     }
 
                     p:nth-of-type(1),
-                    p:nth-of-type(2) {
+                    p:nth-of-type(2),
+                    p:nth-of-type(3) {
                         font-size: var(--body-font-size-xl);
                         line-height: 23px;
                         margin-bottom: var(--size-0);
@@ -256,6 +257,12 @@
                         padding: var(--size-12) var(--size-22);
                     }
                 }
+            }
+        }
+
+        .ps-hero-section .hero-aem__card .hero-aem__card-text, .ts-hero-section .hero-aem__card .hero-aem__card-text {
+            .hero-aem__prices + .button-container {
+                display: none;
             }
         }
 
@@ -536,6 +543,10 @@
                     }
                 }
             }
+        }
+
+        .dex-premium-security.new-prod-boxes-container.we-container > .default-content-wrapper {
+            padding-bottom: var(--size-64);
         }
 
         .dex-copilot-benefits {
