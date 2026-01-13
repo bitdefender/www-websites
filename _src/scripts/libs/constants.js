@@ -101,7 +101,7 @@ export class Constants {
 	static async #getVlaicuProductIdsMapping() {
 		  try {
 			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
-			  const response = await fetch(`https://www.bitdefender.com/common/vlaicuconfig/${nameForVlaicuConfig}.json`);
+			  const response = await fetch(`/common/vlaicuconfig/${nameForVlaicuConfig}.json`);
 			  if (!response.ok) {
 				  console.error(`Failed to fetch data.`);
 				  return;
