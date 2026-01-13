@@ -76,19 +76,30 @@ function renderStickyNavigation(block) {
   mobileDropDown.innerText = stickyNavMenu.querySelector('li').innerText;
 
   const stickyNavButton = block.querySelector('.button-container');
-  if (stickyNavButton) menuWithButton.appendChild(stickyNavButton);
-
+  if (stickyNavButton) {
+    stickyNavButton.addEventListener('click', () => {
+      window.adobeDataLayer.push(
+        {
+          event: 'click',
+          asset: 'sticky-buy',
+        },
+      );
+    });
+    menuWithButton.appendChild(stickyNavButton);
+  }
   block.replaceChildren(mobileDropDown);
   block.appendChild(menuWithButton);
   return block;
 }
 
 function stickNavigationOnTop(stickyNav) {
-  const wrapperTop = document.querySelector('.sticky-navigation-container').offsetTop;
-  if (window.scrollY >= wrapperTop) {
-    stickyNav.classList.add('fixed-nav');
-  } else {
-    stickyNav.classList.remove('fixed-nav');
+  const wrapperTop = document.querySelector('.sticky-navigation-container')?.offsetTop;
+  if (wrapperTop) {
+    if (window.scrollY >= wrapperTop) {
+      stickyNav.classList.add('fixed-nav');
+    } else {
+      stickyNav.classList.remove('fixed-nav');
+    }
   }
 }
 

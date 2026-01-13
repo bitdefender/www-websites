@@ -22,44 +22,39 @@
 }
 
 .tabs-component-container h3 {
-  font: normal normal bold 24px/28px Arial, sans-serif;
+  font-size: 24px;
+  list-style: 24px;
+  font-family: Arial, sans-serif;
 }
 
 .tabs-component-container p {
-  font: normal normal normal 16px/24px Arial, sans-serif;
+  font-size: 16px;
+  list-style: 24px;
+  font-family: Arial, sans-serif;
+  color: grey;
+  margin-bottom: 0;
+
 }
 
-.tabs-component-container span {
-  font: normal normal bold 16px/18px Arial, sans-serif;
+.tabs-component-container span .tag{
+  position: relative;
+  bottom: 3px;
 }
 
-.tabs-component-container .title-class div {
-  max-width: 630px;
+.tabs-component-container .title-class {
+  max-width: 80%;
+  margin: auto;
   text-align: center;
   margin-bottom: 27px;
   font: normal normal bold 32px/37px Arial, sans-serif;
 }
 
-.tabs-component-container .tabs-component.blue-heading .title-class{
+.tabs-component-container .subtitle-class {
   max-width: 80%;
   margin: auto;
-}
-
-.tabs-component-container .subtitle-class div {
-  max-width: 630px;
   text-align: center;
-  margin-bottom: 67px;
+  margin-bottom: 24px;
   font: normal normal normal 18px/26px Arial, sans-serif;
-}
-
-.tabs-component-container .tabs-component.blue-heading .title-class div{
-  max-width: 100%;
-}
-
-.tabs-component-container .tabs-component.blue-heading .subtitle-class div {
-  max-width: 80%;
-  margin: auto;
-  margin-bottom: 27px;
 }
 
 .tabs-component-container .tabs-container {
@@ -131,6 +126,7 @@
 }
 
 .tabs-component-container .card-container a::after {
+  background-color: #fff;
   content: '\2192';
   width: 24px;
   height: 24px;
@@ -139,11 +135,12 @@
   transform: translateX(0);
   margin-left: 2px;
   margin-bottom:2px;
-    mask: none !important;
+  mask: none !important;
 }
 
 .tabs-component-container .card-container a:hover::after {
   transform: translateX(5px);
+  background-color: #fff;
 }
 
 .tabs-component-container .tabs-container button::after {
@@ -235,6 +232,38 @@
 
 .tabs-component-container .tabs-component.blue-heading .tabs-container button.selected{
   color: #000;
+}
+
+@media (max-width: 595px) {
+  .tabs-component-container .title-class {
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .tabs-component-container .card-container img{
+    display: none;
+  }
+}
+
+@media (max-width: 990px) {
+  .tabs-component-container.show-categories .tabs-container {
+    margin-bottom: 20px;
+  }
+
+  .tabs-component-container.show-categories button strong {
+    display: block;
+    width: 50%;
+  }
+
+  .tabs-component-container.show-categories .tabs-container button {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .tabs-component-container.show-categories .subtitle-class {
+    margin-bottom:20px;
+  }
 }
 
 @media (min-width: 768px) {

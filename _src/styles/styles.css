@@ -102,16 +102,22 @@
   --cta-background-light-blue: var(--background-light-blue)
 }
 
+.section.ibm-plex-sans {
+  * {
+    font-family: "IBM Plex Sans", sans-serif;
+  }
+}
+
 .w-full {
   width: 100%;
 }
 
 .global-display-none {
-  display: none;
+  display: none !important;
 }
 
 .global-visibility-hidden {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 
 .font-arial {
@@ -134,20 +140,11 @@ body.dark-mode {
   background-color: #141517;
 }
 
-@media (min-width: 768px) {
-    body [data-mobile-detector] {
-        display: none;
-    }
-
-    body [data-tablet-detector] {
-      display: block;
-    }
-}
 
 @media (min-width: 992px) {
-    body [data-desktop-detector] {
-        display: block;
-    }
+  body [data-desktop-detector] {
+      display: block;
+  }
 }
 
 /* fallback font for Roboto (normal - 400) */
@@ -275,6 +272,13 @@ hr {
   padding-bottom: 0!important;
 }
 
+.py-md-0 {
+  @media (max-width: 768px) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
 code, pre, samp {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
@@ -354,7 +358,7 @@ main img {
   text-align: center;
   background-color: rgb(228, 242, 255);
   color: rgb(0, 69, 173);
-  padding: 6px 0!important;
+  padding: 8px 0!important;
 }
 
 .top_blue .default-content-wrapper {
@@ -363,6 +367,7 @@ main img {
 
 .top_blue p {
   font-size: var(--body-font-size-s);
+  margin: 0;
 }
 
 .top_blue p a {
@@ -440,6 +445,14 @@ main .section.light-sky-blue-parent { /* apply parent wrapper */
 
 main .section.rounded-corners { /* apply parent wrapper */
   border-radius: 20px;
+}
+
+main .section.light-gray .default-content-wrapper {
+  background-color: #F6F6F6;
+}
+
+main .section.light-gray-wide {
+  background-color: #F6F6F6;
 }
 
 main .section.light-sky-blue > * { /* apply to all children wrapper */
@@ -649,8 +662,20 @@ main .section.blue-heading h3{
   color: #006EFF;
 }
 
-main .grey-background{
-  background-color: #F6F6F6;
+main .section.blue-title {
+  text-align: left;
+  h3 {
+    color: #006DFF;
+    font-size: 18px;
+  }
+
+  .columns p {
+    font-size: 16px;
+  }
+}
+
+main .grey-background {
+  background-color: #F6F6F6 !important;
 }
 
 @media (max-width: 991px) {
@@ -660,9 +685,27 @@ main .grey-background{
 }
 
 @media (min-width: 768px) {
+  body [data-mobile-detector] {
+    display: none;
+  }
+
+  body [data-tablet-detector] {
+    display: block;
+  }
+
   main .section.wide {
     padding-left: var(--section-desktop-padding-vertical);
     padding-right: var(--section-desktop-padding-vertical);
+  }
+  
+  main .section.blue-title h3 {
+    font-size: 24px;
+    margin: 0;
+  }
+
+  main .section.rounded > div {
+    border-radius: 20px;
+    padding: 50px;
   }
 
   main .section.center .products .product-card {
@@ -745,6 +788,10 @@ main .grey-background{
     border-radius: 0;
   }
 
+  .header.quiz.default-content-wrapper {
+    padding: 0 60px;
+  }
+
   main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
     width: 200px;
   }
@@ -790,28 +837,30 @@ main .grey-background{
   }
 }
 
-@media (min-width: 1200px) {
-  main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
-    width: 350px;
-  }
-
-  main .section.bitdefender-ferrari .default-content-wrapper h2 {
-    width: 700px;
-	}
-
-  main .section.bitdefender-ferrari .default-content-wrapper .button-container {
-    margin-right: var(--section-desktop-padding);
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-}
-
 main .section.migration h2 {
   font-size: var(--heading-font-size-m);
 }
 
 .d-none {
   display: none;
+}
+
+.fade-out {
+  opacity: 0;
+  display: none;
+  height: 0;
+}
+
+.fade-in {
+  opacity: 1;
+  display: block;
+}
+
+@starting-style {
+  .fade-in {
+    opacity: 0;
+    height: 0;
+  }
 }
 
 main .section.py-1 {
@@ -824,6 +873,14 @@ main .section.pt-0 {
 
 main .section.pb-0, .pb-0 {
   padding-bottom: 0!important;
+}
+
+main .section.mt-0, .mt-0 {
+  margin-top: 0!important;
+}
+
+main .section.mb-0, .mb-0 {
+  margin-bottom: 0!important;
 }
 
 @media (min-width: 1400px) {
@@ -983,7 +1040,7 @@ a.button:any-link, input[type="submit"] {
   align-items: center;
   box-sizing: border-box;
   text-decoration: none;
-  padding: 10px 26px 8px 28px;
+  padding: 10px 26px 8px 30px;
   text-align: center;
   cursor: pointer;
   color: var(--button-link-color);
@@ -1116,7 +1173,7 @@ a.button:hover.secondary {
   color: var(--white-color)
 }
 
-a.button.modal, a.button.link-arrow-right, a.button.central, main .section.link-right a {
+p a.button.modal, a.button.link-arrow-right, a.button.central, main .section.link-right a {
   color: var(--link-color);
   font-weight: var(--font-weight-bold);
   background-color: transparent;
@@ -1127,7 +1184,7 @@ a.button.modal, a.button.link-arrow-right, a.button.central, main .section.link-
   text-overflow: ellipsis;
 }
 
-a.button.modal::after, a.button.link-arrow-right::after, a.button.central::after, main .section.link-right a::after {
+p a.button.modal::after, a.button.link-arrow-right::after, a.button.central::after, main .section.link-right a::after {
   background-color: var(--link-color);
   opacity: 1;
   margin: 0;
@@ -1142,13 +1199,13 @@ a.button:has(.icon)::after {
   opacity: 0;
 }
 
-a.button.modal:hover, a.button.link-arrow-right:hover, a.button.central:hover, main .section.link-right a:hover {
+p a.button.modal:hover, a.button.link-arrow-right:hover, a.button.central:hover, main .section.link-right a:hover {
   color: var(--link-hover-color);
   text-decoration: none;
   transform: none;
 }
 
-a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
+p a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.central:hover::after, main .section.link-right a:hover::after {
   transform: translateX(3px);
   background-color: var(--link-hover-color);
 }
@@ -1177,7 +1234,7 @@ main .section[data-backgroundcolor='black'] {
   background-color: black;
 }
 
-main .section[data-textcolor='white'] * {
+main .section[data-textcolor='white'] *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a::after {
   color: white;
 }
 
@@ -1319,9 +1376,15 @@ main .section.cta .right-col {
     width: 370px;
   }
 
+  .centered.narrow-content .default-content-wrapper p, .centered.narrow-content .default-content-wrapper h2{
+    max-width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   main .section.cta.bigger-text h2 {
     font-size: 42px;
-  }
+  }  
 }
 
 @media (min-width: 992px) {
@@ -1438,6 +1501,17 @@ main .section.checked-lists ul li::after {
   z-index: 2;
 }
 
+main .section.static-awards-small .default-content-wrapper {
+  padding: 0 24px;
+}
+
+main .section.static-awards-small .default-content-wrapper p {
+  max-height: 64px;
+  max-width: 400px;
+  margin: auto;
+  justify-self: center;
+}
+
 main .section.blue.checked-lists ul li::before {
   background-color: var(--background-color);
 
@@ -1471,18 +1545,18 @@ main .section.blue a.button.secondary::after {
   background-color: var(--link-color);
 }
 
-main .section.blue a.button.modal {
+main .section.blue p a.button.modal {
   background-color: transparent;
   border: none;
   color: var(--white-color);
   font-weight: var(--font-weight-regular);
 }
 
-main .section.blue a.button.modal:hover {
+main .section.blue p a.button.modal:hover {
   opacity: .8;
 }
 
-main .section.blue a.button.modal::after {
+main .section.blue p a.button.modal::after {
   content: none;
 }
 
@@ -1600,14 +1674,44 @@ main .section.blue a.button.modal::after {
   background-color: var(--green-tag2);
 }
 
-.centered {
-  text-align: center;
+.green-pill {
+  background: #5cb85c;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.centered.narrow-content .default-content-wrapper p, .centered.narrow-content .default-content-wrapper h2{
-  max-width: 85%;
-  margin-left: auto;
-  margin-right: auto;
+.tag-blue-pill {
+  background-color: #026DFF;
+  padding: 4.5px 5.7px;
+  border-radius: 20px;
+  color: white;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: bold;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: none;
+}
+
+.tag-blue-pill .icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 9px;
+  height: 9px;
+  margin: 0;
+}
+
+.tag.tag-blue-pill svg {
+  width: 9px;
+  height: 9px;
+  fill: #fff;
 }
 
 .ferrari-img img{
@@ -1690,6 +1794,15 @@ main .section.blue a.button.modal::after {
   display: none !important;
 }
 
+.centered {
+  text-align: center;
+  .default-content-wrapper {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+}
+
 @keyframes rotation {
   0% {
       transform: rotate(0deg);
@@ -1722,7 +1835,27 @@ main .section.blue a.button.modal::after {
 
 header,
 body > div:first-child {
-  height: 64px;
+  min-height: 64px;
+}
+
+@media (min-width: 1200px) {
+  header, body > div:first-child {
+    min-height: 131px;
+  }
+
+  main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
+    width: 350px;
+  }
+
+  main .section.bitdefender-ferrari .default-content-wrapper h2 {
+    width: 700px;
+	}
+
+  main .section.bitdefender-ferrari .default-content-wrapper .button-container {
+    margin-right: var(--section-desktop-padding);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
 }
 
 body > div.header-with-language-banner {
@@ -1786,4 +1919,10 @@ body > div.header-with-language-banner {
   main .section.blue a.button:any-link {
     padding: 10px 0px 8px 13px;
   }
+
+  
+  a.button:any-link, input[type="submit"] {
+    padding: 10px 13px 8px 20px;
+    font-size: 14px;
+}
 }

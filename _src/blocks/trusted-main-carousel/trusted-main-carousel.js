@@ -1,29 +1,42 @@
-import { debounce, isView } from '../../scripts/utils/utils.js';
+/* eslint-disable indent */
+import Glide from '@glidejs/glide';
+
+// load YouTube IFrame API once
+function loadYouTubeAPI() {
+  return new Promise((resolve) => {
+    if (window.YT && window.YT.Player) {
+      resolve(window.YT);
+      return;
+    }
+
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    window.onYouTubeIframeAPIReady = () => {
+      resolve(window.YT);
+    };
+  });
+}
 
 export default async function decorate(block) {
+  const { navigationPosition, arrows } = block.closest('.section').dataset;
   const slides = [...block.children];
-  const AUTOMATIC_SLIDING = {
-    enabled: true,
-    viewport: 'desktop',
-    slideDelay: 3 * 1000,
-  };
-
-  const state = {
-    currentStep: 0,
-    carouselIsFocused: false,
-    currentInterval: null,
-  };
-
   const navItemsNames = slides.map((slideEl) => slideEl.children[0].firstElementChild.textContent);
 
   block.classList.add('default-content-wrapper');
   block.innerHTML = `
-    <div class="navigation-wrapper">
+    <div class="carousel-container glide">
+      ${!navigationPosition ? `<div class="navigation-wrapper">
         <div class="first-nav">
-          ${navItemsNames.map((navItemName, index) => `<div class="nav-item ${index === 0 ? 'active' : ''}">${navItemName}</div>`).join('')}
+          ${navItemsNames.map((text, index) => `
+            <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
+              <span class="text">${text}</span><span class="pill"></span>
+            </div>`).join('')}
         </div>
         
-        <div class="second-nav">
+        <div class="second-nav" ${arrows && arrows === 'hide' ? 'style="display: none;"' : ''}>
          <a href class="arrow disabled left-arrow">
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
               <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -49,119 +62,113 @@ export default async function decorate(block) {
             </svg>
           </a>
         </div>
-    </div>
-    
-    <div class="content-wrapper">
-        ${slides.map((slide, index) => `
-        <div class="slide ${index === 0 ? 'active' : ''}">
-            ${slide.innerHTML}
-        </div>
-        `).join('')}
+      </div>` : ''}
+
+      <div class="glide__track content-wrapper" data-glide-el="track">
+        <ul class="glide__slides">
+          ${slides.map((slide) => {
+            const firstDiv = slide.querySelector('div');
+            const lastDiv = slide.querySelector('div:last-of-type');
+
+            return `<li class="glide__slide slide">
+              <div class="left-content">
+                ${firstDiv ? firstDiv.innerHTML : ''}
+              </div>
+              <div class="right-content">
+                ${(() => {
+                  if (!lastDiv) return '';
+                  const content = lastDiv.textContent.trim();
+
+                  if (content.startsWith('https://www.youtube.com/embed/')) {
+                    try {
+                      const url = new URL(content);
+                      url.searchParams.set('enablejsapi', '1');
+                      url.searchParams.set('origin', window.location.origin);
+                      const finalSrc = url.toString();
+                      return `<iframe width="100%" height="100%" src="${finalSrc}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+                    } catch (e) {
+                      // Fallback if URL parsing fails, use original
+                      return `<iframe width="100%" height="100%" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+                    }
+                  }
+
+                  return lastDiv.innerHTML;
+                })()}
+              </div>
+            </li>`;
+          }).join('')}
+        </ul>
+      </div>
+
+      ${(navigationPosition && navigationPosition === 'bottom' && `<div class="navigation-wrapper">
+        <div class="first-nav">
+          ${navItemsNames.map((text, index) => `
+            <div class="nav-item ${index === 0 ? 'active' : ''}" data-glide-dir="=${index}">
+              <span class="text">${text}</span><span class="pill"></span>
+            </div>`).join('')}
+        </div>`) ?? ''}
     </div>
   `;
 
-  const contentWrapper = block.querySelector('.content-wrapper');
-
   const navItems = block.querySelectorAll('.nav-item');
-  const slideItems = block.querySelectorAll('.slide');
+  const glideEl = block.querySelector('.glide');
   const leftArrow = block.querySelector('.left-arrow');
   const rightArrow = block.querySelector('.right-arrow');
-  function selectNavItem(itemPosition) {
-    navItems.forEach((item) => item.classList.remove('active'));
-    navItems[itemPosition].classList.add('active');
-  }
 
-  function selectSlideItem(itemPosition) {
-    slideItems.forEach((item) => item.classList.remove('active'));
-    slideItems[itemPosition].classList.add('active');
-  }
+  const glide = new Glide(glideEl, {
+    type: 'slider',
+    startAt: 0,
+    perView: 1,
+    autoplay: 9000,
+    keyboard: true,
+    swipeThreshold: 40,
+    dragThreshold: 60,
+    touchAngle: 45,
+    perTouch: 1,
+    animationDuration: 250,
+    animationTimingFunc: 'ease-out',
+    hoverpause: false,
+  });
 
-  function slideToSection(itemPosition) {
-    block.classList.add('scrolling');
+  glide.on('run.after', () => {
+    const { index } = glide;
+    navItems.forEach((item, i) => item.classList.toggle('active', i === index));
+  });
 
-    const transformValue = -100 * (itemPosition);
-    const offset = 50 * itemPosition;
-    contentWrapper.style.transform = `translateX(calc(${transformValue}% - ${offset}px ))`;
-    setTimeout(() => {
-      block.classList.remove('scrolling');
-    }, 200);
-  }
+  navItems.forEach((item, index) => item.addEventListener('click', () => glide.go(`=${index}`)));
+  if (leftArrow) leftArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('<'); });
+  if (rightArrow) rightArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('>'); });
 
-  function selectStep(itemPosition) {
-    state.currentStep = itemPosition;
-    selectNavItem(itemPosition);
-    selectSlideItem(itemPosition);
-    slideToSection(itemPosition);
-  }
+  glide.mount();
 
-  function endAutomaticSliding(interval) {
-    clearInterval(interval || state.currentInterval);
-  }
+  // pause/resume carousel on video play/pause
+  const ytIframes = block.querySelectorAll('.right-content iframe[src*="youtube.com/embed"]');
 
-  function beginAutomaticSliding() {
-    if (!AUTOMATIC_SLIDING.enabled) return;
+  if (ytIframes.length > 0) {
+    try {
+      const YT = await loadYouTubeAPI();
 
-    endAutomaticSliding();
+      ytIframes.forEach((iframe) => {
+        // eslint-disable-next-line no-new
+        new YT.Player(iframe, {
+          events: {
+            onStateChange: (event) => {
+              const state = event.data;
 
-    if (state.carouselIsFocused || !isView(AUTOMATIC_SLIDING.viewport)) {
-      return;
-    }
-
-    const interval = setInterval(() => {
-      const isLastStep = state.currentStep === navItems.length - 1;
-      const nextStepToSelect = isLastStep ? 0 : (state.currentStep + 1);
-      selectStep(nextStepToSelect);
-
-      if (!isView(AUTOMATIC_SLIDING.viewport) || state.carouselIsFocused) {
-        endAutomaticSliding(interval);
-      }
-    }, AUTOMATIC_SLIDING.slideDelay);
-
-    state.currentInterval = interval;
-  }
-
-  function addEventListeners() {
-    block.addEventListener('mouseenter', () => {
-      state.carouselIsFocused = true;
-      endAutomaticSliding();
-    });
-
-    block.addEventListener('mouseleave', () => {
-      state.carouselIsFocused = false;
-      beginAutomaticSliding();
-    });
-
-    navItems.forEach((navEl, itemPosition) => {
-      navEl.addEventListener('click', () => {
-        selectStep(itemPosition);
+              if (state === YT.PlayerState.PLAYING) {
+                // Video started - pause carousel
+                glide.pause();
+              } else if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
+                // Video paused - resume carousel
+                glide.play(9000);
+              }
+            },
+          },
+        });
       });
-    });
-
-    leftArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const isFirstStep = state.currentStep === 0;
-      if (isFirstStep) {
-        return;
-      }
-
-      selectStep(state.currentStep - 1);
-    });
-
-    rightArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const isLastStep = state.currentStep === navItems.length - 1;
-      if (isLastStep) {
-        return;
-      }
-
-      selectStep(state.currentStep + 1);
-    });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('YouTube API failed to load', e);
+    }
   }
-
-  addEventListeners();
-
-  beginAutomaticSliding();
-  window.addEventListener('resize', debounce(beginAutomaticSliding, 250));
 }

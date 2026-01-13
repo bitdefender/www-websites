@@ -1,6 +1,8 @@
 import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
-import { adobeMcAppendVisitorId, getDomain } from '../../scripts/utils/utils.js';
+import { getDomain } from '../../scripts/utils/utils.js';
+import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 import { decorateMain } from '../../scripts/scripts.js';
+import { Constants } from '../../scripts/libs/constants.js';
 
 function wrapImgsInLinks(container) {
   const pictures = container.querySelectorAll('picture');
@@ -129,11 +131,6 @@ async function runLandingpageLogic(block) {
 
 async function runAemFooterLogic() {
   // fetch footer content
-  const aemFooterHostname = window.location.hostname.includes('.aem.')
-    || window.location.hostname.includes('localhost')
-    ? 'https://www.bitdefender.com'
-    : '';
-
   const websiteDomain = getDomain();
   let aemFetchDomain;
 
@@ -146,7 +143,7 @@ async function runAemFooterLogic() {
     aemFetchDomain = websiteDomain.split('-').join('_');
   }
 
-  const aemFooterFetch = await fetch(`${aemFooterHostname}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/footer-fragment-v1/master/jcr:content/root.html`);
+  const aemFooterFetch = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/footer-fragment-v1/master/jcr:content/root.html`);
   if (!aemFooterFetch.ok) {
     return;
   }
@@ -160,7 +157,7 @@ async function runAemFooterLogic() {
   const loadedLinks = [];
   contentDiv.querySelectorAll('link').forEach((linkElement) => {
     // update the links so that they work on all Franklin domains
-    linkElement.href = `${aemFooterHostname}${linkElement.getAttribute('href')}`;
+    linkElement.href = `${Constants.PUBLIC_URL_ORIGIN}${linkElement.getAttribute('href')}`;
     linkElement.rel = 'stylesheet';
 
     // add a promise for each link element in the code
@@ -192,12 +189,13 @@ async function runAemFooterLogic() {
   scripts.forEach((script) => {
     //  multiple reruns of runtime lead to all the scripts
     // being run multiple times
-    if (!script.src.includes('runtime')) {
-      const newScript = document.createElement('script');
-      newScript.src = `${aemFooterHostname}${script.getAttribute('src')}`;
-      newScript.defer = true;
-      shadowRoot.appendChild(newScript);
+    if (['dependencies', 'runtime', 'vendor'].some((key) => script.src.includes(key))) {
+      return;
     }
+    const newScript = document.createElement('script');
+    newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
+    newScript.defer = true;
+    shadowRoot.appendChild(newScript);
   });
 
   shadowRoot.appendChild(contentDiv);

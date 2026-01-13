@@ -140,7 +140,7 @@ function updateBuyLink(block) {
 }
 
 function renderPrice(block, _firstProduct, secondProduct) {
-  const variant = '5-1';
+  const variant = state.blockDataset.defaultSelection ?? '5-1';
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
 
@@ -165,68 +165,87 @@ function renderPrice(block, _firstProduct, secondProduct) {
   return priceElement;
 }
 
-function renderRadioGroup(block) {
-  const metadata = block.parentElement.parentElement.dataset;
-  const [firstProduct, secondProduct] = metadata.price.split(',');
+function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
+  const { defaultSelection } = state.blockDataset;
+  const [firstProduct, secondProduct] = state.blockDataset.price.split(',');
   const el = document.createElement('DIV');
   el.classList.add('products-sideview-radio');
   el.innerHTML = `
     <input type="radio" name="type" id="monthly"
     data-store-click-set-product data-store-product-id="${secondProduct}"
     data-store-product-department="consumer"
-    data-product-type="monthly" checked/>
-    <label for="monthly">Monthly</label>
+    data-product-type="monthly" ${defaultSelection.split('-')[0] === secondProduct ? 'checked' : ''}/>
+    <label for="monthly">${monthlyLabel ?? 'Monthly'}</label>
 
     <input type="radio" name="type" id="yearly" data-store-click-set-product
     data-store-product-id="${firstProduct}"
     data-store-product-department="consumer"
-    data-product-type="yearly"/>
-    <label for="yearly">Yearly</label>
+    data-product-type="yearly" ${defaultSelection.split('-')[0] === firstProduct ? 'checked' : ''}/>
+    <label for="yearly">${yearlyLabel ?? 'Yearly'}</label>
   `;
   return el;
 }
 
-function getBlueTags(block) {
-  let blueTags = block.querySelectorAll('.tag-blue');
-  if (!blueTags.length) {
-    const benefitsList = block.querySelector('ul');
-    benefitsList?.classList.add('benefits-list');
-    const benefitsListElements = benefitsList?.querySelectorAll('li');
-    benefitsListElements?.forEach((element) => {
-      const blueTag = document.createElement('span');
+function getBlueTagsAndListItems(block) {
+  const benefitsList = block.querySelector('ul');
+  if (!benefitsList) return { blueTags: [], listItems: [] };
+
+  benefitsList.classList.add('benefits-list');
+  const listItems = [...benefitsList.querySelectorAll('li')];
+
+  listItems.forEach((li) => {
+    let blueTag = li.querySelector('.tag-blue');
+    if (!blueTag) {
+      blueTag = document.createElement('span');
       blueTag.classList.add('tag-blue');
-      element.insertAdjacentElement('beforeend', blueTag);
-    });
-    blueTags = block.querySelectorAll('.tag-blue');
-  }
-  return blueTags;
+      li.insertAdjacentElement('beforeend', blueTag);
+    }
+    li.innerHTML = li.innerHTML.replace('{benefits}', '<span class="benefits-placeholder"></span>');
+  });
+
+  const blueTags = [...benefitsList.querySelectorAll('.tag-blue')];
+  return { blueTags, listItems };
 }
 
 function updateBenefits(block, selectEl, metadata) {
-  const blueTags = getBlueTags(block);
+  if (!metadata) return;
+
+  // eslint-disable-next-line no-unused-vars
+  const { blueTags, listItems } = getBlueTagsAndListItems(block);
+
   const selectedOption = [...selectEl.options].find((option) => option.hasAttribute('selected'));
   const neededIndex = [...selectEl.options].indexOf(selectedOption);
-
   const rawMetadata = metadata[neededIndex];
+
   const cleanedArray = rawMetadata
     .slice(1, -1)
     .split(',')
     .map((item) => {
       const cleanedItem = item.trim().replace(/['"]+/g, '');
-      if (cleanedItem.includes('-icon')) {
-        return `${Number(cleanedItem.split('-icon')[0])}-icon`;
-      }
-
-      return Number(cleanedItem);
+      return cleanedItem.includes('-icon')
+        ? `${Number(cleanedItem.split('-icon')[0])}-icon`
+        : Number(cleanedItem);
     });
 
-  const updatedBenefits = cleanedArray;
-  let counter = 0;
-  blueTags.forEach((tag) => {
-    if (counter < updatedBenefits.length) {
-      /* eslint-disable-next-line no-plusplus */
-      const benefitValue = updatedBenefits[counter++];
-      tag.innerHTML = `${typeof benefitValue === 'string' ? benefitValue.replace('-icon', '') : benefitValue}x ${typeof benefitValue === 'string' && benefitValue.includes('-icon') ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>' : ''}`;
+  listItems.forEach((li, i) => {
+    if (i < cleanedArray.length) {
+      const value = cleanedArray[i];
+      const displayValue = typeof value === 'string' ? value.replace('-icon', '') : value;
+      const iconSVG = (typeof value === 'string' && value.includes('-icon'))
+        ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="7" r="4" fill="white" /><path d="M12 14c-4.418 0-8 2.686-8 6v1h16v-1c0-3.314-3.582-6-8-6z" fill="white" /></svg>'
+        : '';
+
+      // Update the tag-blue span
+      const tag = li.querySelector('.tag-blue');
+      if (tag) {
+        tag.innerHTML = `${displayValue}x ${iconSVG}`;
+      }
+
+      // Update the benefits-placeholder span
+      const placeholder = li.querySelector('.benefits-placeholder');
+      if (placeholder) {
+        placeholder.textContent = `${displayValue}`;
+      }
     }
   });
 }
@@ -235,19 +254,19 @@ function renderSelector(block, ...options) {
   const selectorOptions = options
     .filter((option) => option && !Number.isNaN(Number(option)))
     .map((opt) => Number(opt));
-  const defaultSelection = Number(state.blockDataset.defaultselection) || selectorOptions[1];
+  const defaultSelection = Number(state.blockDataset.defaultSelection?.split('-')[1]) || selectorOptions[1];
   const el = document.createElement('div');
   el.classList.add('products-sideview-selector');
 
-  el.innerHTML = `
-    <select data-store-devices-text-plural="members"
-    data-store-devices-text-singular="member"
-    data-store-click-set-devices
-    data-store-devices>
+  const selectId = `members-select-${Math.random().toString(36).substr(2, 9)}`;
 
+  el.innerHTML = `
+    <label for="${selectId}">Choose number of members</label>
+    <select id="${selectId}"
+      data-store-click-set-devices>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `
-          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}></option>
-        `).join('/n')}
+          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt === 1 ? `${opt} member` : `${opt} members`} </option>
+        `).join('')}
     </select>
   `;
 
@@ -261,7 +280,7 @@ function renderSelector(block, ...options) {
     updateBenefits(block, selectEl, metadata.benefits.split(',,'));
   });
 
-  updateBenefits(block, selectEl, metadata.benefits.split(',,'));
+  updateBenefits(block, selectEl, metadata.benefits?.split(',,'));
 
   return el;
 }

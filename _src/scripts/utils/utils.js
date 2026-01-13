@@ -1,5 +1,6 @@
-import { AdobeDataLayerService, ButtonClickEvent, Visitor } from '../libs/data-layer.js';
-import Page from '../libs/page.js';
+import { debounce, UserAgent } from '@repobit/dex-utils';
+import { ButtonClickEvent, AdobeDataLayerService } from '@repobit/dex-data-layer';
+import page from '../page.js';
 import { Constants } from '../libs/constants.js';
 
 const TRACKED_PRODUCTS = [];
@@ -131,7 +132,42 @@ const PRICE_LOCALE_MAP = new Map([
  * @returns {boolean} check if you are on exactly the consumer page (e.g /en-us/consumer/)
  */
 export function checkIfNotProductPage() {
-  return Constants.NONE_PRODUCT_PAGES.includes(Page.name);
+  return Constants.NONE_PRODUCT_PAGES.includes(page.name);
+}
+
+/* eslint-disable max-len */
+export function addScript(src, data = {}, loadStrategy = undefined, onLoadCallback = undefined, onErrorCallback = undefined, type = undefined) {
+  const s = document.createElement('script');
+
+  s.setAttribute('src', src);
+
+  if (loadStrategy) {
+    s.setAttribute(loadStrategy, true);
+  }
+
+  if (type) {
+    s.setAttribute('type', type);
+  }
+
+  if (typeof data === 'object' && data !== null) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in data) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (data.hasOwnProperty(key)) {
+        s.dataset[key] = data[key];
+      }
+    }
+  }
+
+  if (onLoadCallback) {
+    s.onload = onLoadCallback;
+  }
+
+  if (onErrorCallback) {
+    s.onerror = onErrorCallback;
+  }
+
+  document.body.appendChild(s);
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -257,7 +293,7 @@ export function generateProductBuyLink(product, productCode, month = null, years
     buyLinkPid = `pid.${getMetadata('pid')}`;
   }
 
-  if (GLOBAL_V2_LOCALES.includes(Page.locale)) {
+  if (GLOBAL_V2_LOCALES.includes(page.locale)) {
     buyLinkPid = 'pid.global_v2';
   }
 
@@ -468,49 +504,10 @@ export async function fetchIndex(indexFile, sheet, pageSize = 500) {
   return newIndex;
 }
 
-export function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-export function appendAdobeMcLinks(selector) {
-  try {
-    const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
-
-    const hrefSelector = '[href*=".bitdefender."]';
-    wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      const destinationURLWithVisitorIDs = await Visitor.appendVisitorIDsTo(link.href);
-      link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
-    });
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-  }
-}
-
 export const GLOBAL_EVENTS = {
   ADOBE_MC_LOADED: 'adobe_mc::loaded',
   PAGE_LOADED: 'page::loaded',
 };
-
-export function adobeMcAppendVisitorId(selector) {
-  // https://experienceleague.adobe.com/docs/id-service/using/id-service-api/methods/appendvisitorid.html?lang=en
-
-  if (window.ADOBE_MC_EVENT_LOADED) {
-    appendAdobeMcLinks(selector);
-  } else {
-    document.addEventListener(GLOBAL_EVENTS.ADOBE_MC_LOADED, () => {
-      appendAdobeMcLinks(selector);
-    });
-  }
-}
 
 const ICONS_CACHE = {};
 export async function decorateIcons(element) {
@@ -669,22 +666,23 @@ export function pushTrialDownloadToDataLayer() {
 
     if (button?.dataset?.storeId) return button.dataset.storeId;
 
-    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]');
-    if (closestStoreElementWithId) {
-      return closestStoreElementWithId.dataset.storeId;
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]') || button?.closest('.section');
+    const { storeId } = closestStoreElementWithId.dataset;
+    if (storeId) {
+      return storeId;
     }
 
     // eslint-disable-next-line max-len
     return getMetadata('breadcrumb-title') || getMetadata('og:title');
   };
 
-  const currentPage = Page.name;
+  const currentPage = page.name;
   const downloadType = currentPage === 'thank-you' ? 'product' : 'trial';
 
   const pushTrialData = (button = null) => {
     AdobeDataLayerService.push(new ButtonClickEvent(
       `${downloadType} downloaded`,
-      getTrialID(currentPage, button),
+      { productId: getTrialID(currentPage, button) },
     ));
   };
 
@@ -692,7 +690,8 @@ export function pushTrialDownloadToDataLayer() {
   if (sections.length) {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
-      if (trialPaths.some((trialPath) => href.includes(trialPath))) {
+      if (trialPaths.some((trialPath) => href.includes(trialPath))
+        && !button.hasAttribute('data-layer-ignore')) {
         button.addEventListener('click', () => { pushTrialData(button); });
       }
     });
@@ -739,54 +738,21 @@ export function isView(viewport) {
   return !!(element && getComputedStyle(element).display !== 'none');
 }
 
-/**
- * Returns the current user operating system based on userAgent
- * @returns {String}
- */
-export function getOperatingSystem(userAgent) {
-  const systems = [
-    ['Windows NT 10.0', 'Windows 10'],
-    ['Windows NT 6.2', 'Windows 8'],
-    ['Windows NT 6.1', 'Windows 7'],
-    ['Windows NT 6.0', 'Windows Vista'],
-    ['Windows NT 5.1', 'Windows XP'],
-    ['Windows NT 5.0', 'Windows 2000'],
-    ['X11', 'X11'],
-    ['Linux', 'Linux'],
-    ['Android', 'Android'],
-    ['iPhone', 'iOS'],
-    ['iPod', 'iOS'],
-    ['iPad', 'iOS'],
-    ['Mac', 'MacOS'],
-  ];
-
-  return systems.find(([substr]) => userAgent.includes(substr))?.[1] || 'Unknown';
-}
-
 export function openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos, anchorSelector = null) {
-  // Get user's operating system
-  const { userAgent } = navigator;
-  const userOS = getOperatingSystem(userAgent);
-
   // Open the appropriate URL based on the OS
   let openUrl;
-  switch (userOS) {
-    case 'MacOS':
+  switch (UserAgent.os) {
+    case 'Mac/iOS':
       openUrl = urlMacos;
       break;
-    case 'Windows 10':
-    case 'Windows 8':
-    case 'Windows 7':
-    case 'Windows Vista':
-    case 'Windows XP':
-    case 'Windows 2000':
+    case 'Windows':
       openUrl = urlWindows;
       break;
     case 'Linux':
-    case 'Android':
+    case 'android':
       openUrl = urlAndroid;
       break;
-    case 'iOS':
+    case 'ios':
       openUrl = urlIos;
       break;
     default:
@@ -818,13 +784,29 @@ export function getBrowserName() {
 }
 
 /**
- * Returns the value of a query parameter
- * @returns {String}
+ * Returns the promotion/campaign found in the URL
+ * @returns {string|null}
  */
-export function getParamValue(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
+export const getUrlPromotion = () => page.getParamValue('pid')
+  || page.getParamValue('promotionId')
+  || page.getParamValue('campaign')
+  || null;
+
+/**
+ * Returns the promotion/campaign found in the Vlaicu file or 'global_v2' for specific locales
+ * @returns {string|null}
+ */
+export const getCampaignBasedOnLocale = () => {
+  if (GLOBAL_V2_LOCALES.find((domain) => page.locale === domain)) {
+    return 'global_v2';
+  }
+
+  if (!Constants.ZUROA_LOCALES.includes(page.locale)) {
+    return Constants.NO_PROMOTION;
+  }
+
+  return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
+};
 
 export function decorateBlockWithRegionId(element, id) {
   // we could consider to use `element.setAttribute('s-object-region', id);` in the future
@@ -837,11 +819,147 @@ export function decorateLinkWithLinkTrackingId(element, id) {
 
 export const getPageExperimentKey = () => getMetadata(Constants.TARGET_EXPERIMENT_METADATA_KEY);
 
+/**
+ *
+ * @returns {boolean} returns wether A/B tests should be disabled or not
+ */
+export const shouldABTestsBeDisabled = () => {
+  /** This is a special case for when adobe.target is disabled using dotest query param */
+  const windowSearchParams = new URLSearchParams(window.location.search);
+  if (windowSearchParams.get(Constants.DISABLE_TARGET_PARAMS.key)
+    === Constants.DISABLE_TARGET_PARAMS.value) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ *
+ * @returns {object} - get experiment information
+ */
+export const getExperimentDetails = () => {
+  if (!window.hlx || !window.hlx.experiment) {
+    return null;
+  }
+
+  const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
+  return { experimentId, experimentVariant };
+};
+
+/**
+ * get the name of the page as seen by analytics
+ * @returns {string}
+ */
+export const generatePageLoadStartedName = () => {
+  /**
+   *
+   * @param {string[]} tags
+   * @returns {string[]} get all analytic tags
+   */
+  const getTags = (tags) => (tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : []);
+  const { pathname } = window.location;
+
+  const METADATA_ANALYTICS_TAGS = 'analytics-tags';
+  const tags = getTags(getMetadata(METADATA_ANALYTICS_TAGS));
+  const { locale } = page;
+  // currenty, the language is the default first tag and section parameter, with webview, we want
+  // something else to be the first tag and section
+  const pageSectionDataLocale = getMetadata('locale') || page.locale;
+
+  let tagName;
+  if (tags.length) {
+    tagName = [pageSectionDataLocale, ...tags].filter(Boolean).join(':'); // e.g. au:consumer:product:internet security
+  } else {
+    const allSegments = pathname.split('/').filter((segment) => segment !== '');
+    const lastSegment = allSegments[allSegments.length - 1];
+    // eslint-disable-next-line no-multi-assign
+    const subSubSubSection = allSegments[allSegments.length - 1] = allSegments[allSegments.length - 1].replace(/-/g, ' ');
+    const nameSection = lastSegment === 'subscriber-protection-platform' ? 'partners' : 'product';
+    tagName = `${locale}:${nameSection}:${subSubSubSection}`;
+    if (lastSegment === 'consumer') {
+      tagName = `${locale}:consumer:solutions`;
+    }
+
+    if (pathname.includes('spot-the-scam-quiz')) {
+      tagName = `${locale}:consumer:quiz`;
+      if (getMetadata('skip-start-page')) tagName = `${locale}:consumer:quiz:question-1`;
+      if (!pathname.endsWith('/')) {
+        tagName = `${locale}:consumer:quiz:results:${subSubSubSection}`;
+      }
+    }
+
+    if (pathname.includes('scam-masters')) {
+      tagName = `${locale}:consumer:quiz:scam-masters`;
+    }
+
+    if (pathname.includes('reverse-phone-lookup')) {
+      tagName = `${locale}:consumer:product:${subSubSubSection}`;
+      if (pathname.includes('/reverse-phone-lookup/')) {
+        tagName = `${locale}:consumer:product:reverse phone lookup:${subSubSubSection}`;
+      }
+    }
+
+    if (window.errorCode === '404') {
+      tagName = `${locale}:404`;
+    }
+  }
+
+  return tagName;
+};
+
+/**
+ *
+ * @returns {string} get product findings for analytics
+ */
+export const getProductFinding = () => {
+  const productFindingMetadata = getMetadata('product-finding');
+  if (productFindingMetadata) {
+    return productFindingMetadata;
+  }
+
+  const pageName = page.name.toLowerCase();
+  let productFinding;
+  switch (pageName) {
+    case 'consumer':
+      productFinding = 'solutions page';
+      break;
+    case 'thank-you':
+      productFinding = 'thank you page';
+      break;
+    case 'toolbox page':
+      productFinding = 'toolbox page';
+      break;
+    case 'downloads':
+      productFinding = 'downloads page';
+      break;
+    case 'spot-the-scam-quiz':
+      productFinding = 'consumer quiz';
+      break;
+    default:
+      productFinding = 'product pages';
+      break;
+  }
+
+  // case when the pages are link-checker/something
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/link-checker')) {
+    productFinding = 'toolbox page';
+  }
+
+  // case when the pages are /spot-the-scam-quiz/something
+  if (currentPath.includes('/spot-the-scam-quiz')) {
+    productFinding = 'consumer quiz';
+  }
+
+  return productFinding;
+};
+
 export function generateLDJsonSchema() {
   const country = getMetadata('jsonld-areaserved')
     .split(';')
     .map((pair) => pair.split(':'))
-    .findLast(([key]) => key === Page.locale)?.[1] || null;
+    .findLast(([key]) => key === page.locale)?.[1] || null;
 
   const jsonldName = getMetadata('jsonld-name');
 
@@ -854,7 +972,7 @@ export function generateLDJsonSchema() {
     '@type': 'WebPage',
     name: jsonldName,
     url: `${window.location.origin}${window.location.pathname}`,
-    inLanguage: Page.locale,
+    inLanguage: page.locale,
     areaServed: {
       '@type': 'Country',
       name: country,
@@ -862,7 +980,7 @@ export function generateLDJsonSchema() {
     isPartOf: {
       '@type': 'WebSite',
       name: 'Bitdefender',
-      url: `${window.location.origin}/${Page.locale}/`,
+      url: `${window.location.origin}/${page.locale}/`,
     },
   };
 
@@ -870,4 +988,130 @@ export function generateLDJsonSchema() {
   script.type = 'application/ld+json';
   script.textContent = JSON.stringify(ldJson, null, 2); // Pretty print
   document.head.appendChild(script);
+}
+
+let isRendering = false;
+let widgetExecuting = false;
+export function renderTurnstile(containerId, { invisible = false } = {}) {
+  if (isRendering) {
+    return Promise.reject(new Error('Turnstile is already rendering.'));
+  }
+
+  isRendering = true;
+
+  return new Promise((resolve, reject) => {
+    function finish(error, result = null) {
+      isRendering = false;
+      widgetExecuting = false;
+      if (error) reject(error);
+      else resolve(result);
+    }
+
+    function renderWidget() {
+      if (!window.turnstile) {
+        return finish(new Error('Turnstile not loaded.'));
+      }
+
+      const container = document.getElementById(containerId);
+      if (!container) {
+        return finish(new Error(`Container "${containerId}" not found.`));
+      }
+
+      // Clear previous widget
+      container.innerHTML = '';
+
+      const widgetId = window.turnstile.render(container, {
+        sitekey: '0x4AAAAAABkTzSd63P7J-Tl_',
+        size: invisible ? 'compact' : 'normal',
+        callback: (token) => {
+          widgetExecuting = false;
+
+          if (!invisible) window.latestVisibleToken = token;
+          if (!token) return finish(new Error('Token missing.'));
+          return finish(null, { widgetId, token });
+        },
+        'error-callback': () => {
+          finish(new Error('Turnstile error during execution.'));
+        },
+        'expired-callback': () => {
+          finish(new Error('Turnstile token expired.'));
+        },
+      });
+
+      if (invisible) {
+        if (!widgetExecuting) {
+          widgetExecuting = true;
+
+          try {
+            window.turnstile.execute(widgetId);
+          } catch (err) {
+            window.turnstile.reset(widgetId);
+            window.turnstile.execute(widgetId);
+          }
+        }
+      } else {
+        finish(null, { widgetId });
+      }
+
+      return undefined;
+    }
+
+    if (window.turnstile) {
+      renderWidget();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback';
+      script.async = true;
+      script.defer = true;
+      window.onloadTurnstileCallback = renderWidget;
+      document.head.appendChild(script);
+    }
+  });
+}
+
+export async function submitWithTurnstile({
+  widgetId,
+  data,
+  fileName,
+  successCallback = null,
+  errorCallback = null,
+}) {
+  let ENDPOINT = 'https://stage.bitdefender.com/form';
+  if (window.location.hostname.startsWith('www.')) {
+    ENDPOINT = ENDPOINT.replace('stage.', 'www.');
+  }
+
+  try {
+    if (!window.turnstile || typeof window.turnstile.getResponse !== 'function') {
+      throw new Error('Turnstile is not loaded.');
+    }
+
+    const token = window.turnstile.getResponse(widgetId);
+    if (!token || token.length < 10) {
+      throw new Error('Turnstile token is missing or invalid. Please complete the challenge.');
+    }
+
+    const requestData = {
+      file: `/sites/common/formdata/${fileName}.xlsx`,
+      table: 'Table1',
+      row: { ...data },
+      token,
+    };
+
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server returned status ${res.status}`);
+    }
+
+    if (typeof successCallback === 'function') successCallback();
+
+    window.turnstile.reset(widgetId);
+  } catch (err) {
+    if (typeof errorCallback === 'function') errorCallback(err);
+  }
 }

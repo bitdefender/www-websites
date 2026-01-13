@@ -24,7 +24,8 @@
 }
 
 .money-back.icon-centered .icon {
-  justify-self: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .creator-money-back .money-back.block {
@@ -74,13 +75,18 @@
   }
 
 .money-back > ul > li {
-    display: inline-block;
+    display: inline-flex;
     padding: 8px;
     margin: 0 37px;
     text-align: center;
     width: 268px;
     vertical-align: top;
     font: normal normal normal 14px/16px var(--body-font-family);
+    justify-content: center;
+  }
+
+  .money-back > ul > li > div{
+    min-height: 100%;
   }
 
   .creator-money-back .money-back > ul > li {
@@ -129,9 +135,9 @@
   }
 
   .money-back > ul > li strong {
-    display: inline-block;
     font: normal normal bold 18px/16px var(--body-font-family);
     padding-bottom: 11px;
+    display: inline-flex;
   }
 
   .money-back .default-content-wrapper {
@@ -237,6 +243,17 @@
     fill: #006df7;
     display: flex;
   }
+
+@media (max-width: 595px) {
+      .money-back > ul > li > div {
+      display: flex;
+      gap: 10px;
+    }
+
+    .money-back > ul > li strong {
+      text-align: left;
+    }
+}
 
 @media (max-width: 991px) { /* mobile/tablet */
     .money-back-wrapper {

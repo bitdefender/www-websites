@@ -1,3 +1,4 @@
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { Constants } from '../../scripts/libs/constants.js';
 import {
   createNanoBlock,
@@ -167,22 +168,6 @@ function renderHighlightSavings(text = 'Save', percent = '') {
 }
 
 /**
- * Nanoblock representing a text to highlight in the product card
- * @param text Text to display
- * @returns Root node of the nanoblock
- */
-function renderHighlight(text) {
-  return createTag(
-    'div',
-    {
-      class: 'highlight',
-      style: 'visibility:hidden',
-    },
-    `<span>${text}</span>`,
-  );
-}
-
-/**
  *
  * @param {string} text Text of the featured nanoblock
  * @return {string} Text with variables replaced
@@ -200,6 +185,40 @@ const replaceVariablesInText = (text) => {
 
   return replacedText;
 };
+
+/**
+ * Nanoblock representing a text to highlight in the product card
+ * @param text Text to display
+ * @returns Root node of the nanoblock
+ */
+function renderHighlight(text) {
+  const updatedText = replaceVariablesInText(text);
+  return createTag(
+    'div',
+    {
+      class: 'highlight',
+      'data-store-text-variable': '',
+      'data-store-hide': 'no-price=discounted',
+    },
+    `<span>${updatedText}</span>`,
+  );
+}
+
+function renderBluePill(icon, text) {
+  const root = createTag(
+    'div',
+    {
+      class: 'blue-pill-container',
+    },
+
+    `<div class= "blue-pill">
+      <span class = "icon icon-${icon?.toLowerCase() || ''}"></span>
+      <span class = "blue-pill-text">${text ?? ''}</span>
+     </div>`,
+  );
+
+  return root;
+}
 
 /**
  *
@@ -298,7 +317,7 @@ createNanoBlock('featuredSavings', renderFeaturedSavings);
 createNanoBlock('highlightSavings', renderHighlightSavings);
 createNanoBlock('highlight', renderHighlight);
 createNanoBlock('lowestPrice', renderLowestPrice);
-
+createNanoBlock('bluePill', renderBluePill);
 /**
  * Main decorate function
  */
@@ -337,7 +356,7 @@ export default function decorate(block) {
       }
       col.setAttribute('data-store-department', 'consumer');
       col.setAttribute('data-store-event', storeEvent);
-      const cardButtons = col.querySelectorAll('.button-container a');
+      const cardButtons = col.querySelectorAll('a');
       cardButtons?.forEach((button) => {
         if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
           button.href = '#';
@@ -448,6 +467,8 @@ export default function decorate(block) {
       emptyDiv.style.visibility = 'hidden';
     }
   });
+
+  decorateIcons(block);
   matchHeights(block, '.price.nanoblock:not(:last-of-type)');
   matchHeights(block, '.price.condition');
   matchHeights(block, 'h3:nth-of-type(2)');
@@ -456,4 +477,5 @@ export default function decorate(block) {
   matchHeights(block, 'h4');
   matchHeights(block, 'ul:not(.variant-selector)');
   matchHeights(block, '.featured.nanoblock');
+  matchHeights(block, '.blue-pill');
 }

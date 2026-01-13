@@ -1,4 +1,8 @@
-import { debounce, matchHeights, createTag } from '../../scripts/utils/utils.js';
+import { debounce, UserAgent } from '@repobit/dex-utils';
+import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
+import {
+  matchHeights, createTag, renderNanoBlocks,
+} from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
@@ -78,9 +82,91 @@ function setImageAsBackgroundImage() {
   });
 }
 
+function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
+  switch (UserAgent.os) {
+    case 'android':
+      dynamicLink.href = dynamicLinks.androidLink;
+      if (dynamicProducts.storeIdAndroid) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeIdAndroid },
+        ));
+      }
+
+      break;
+    case 'ios':
+      dynamicLink.href = dynamicLinks.iosLink;
+      if (dynamicProducts.storeIdIos) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeIdIos },
+        ));
+      }
+      break;
+    default:
+      dynamicLink.href = dynamicLinks.defaultLink;
+      if (dynamicProducts.storeId) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeId },
+        ));
+      }
+      break;
+  }
+}
+
+const slug = (s) => s?.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'tab';
+function setupTabs({ block, firstTab }) {
+  const section = block.closest('.section');
+  const wrapper = block.closest('.columns-wrapper');
+
+  const label = wrapper.previousElementSibling?.closest('.default-content-wrapper')?.textContent?.trim() || 'Tab';
+  const id = slug(label);
+  section.classList.add('columns-tabs');
+
+  if (!block.closest('.section').classList.contains('hide-tabs')) {
+    let tabsList = section.querySelector('.tabs-section');
+    if (!tabsList) {
+      tabsList = document.createElement('div');
+      tabsList.className = 'tabs-section default-content-wrapper';
+      tabsList.addEventListener('click', (e) => {
+        const tab = e.target.closest('span[data-tab]');
+        if (tab && tab && tab.dataset?.tab) {
+          const showAll = tab.dataset.tab === firstTab.toLowerCase();
+          section.querySelectorAll('.section-el').forEach((el) => {
+            el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
+          });
+          tabsList.querySelectorAll('span').forEach((el) => {
+            el.classList.toggle('active', el === tab);
+          });
+
+          AdobeDataLayerService.push(new ButtonClickEvent('click', { asset: tab.dataset.tab }));
+        }
+      });
+      // add All tab once
+      const all = document.createElement('span');
+      all.className = 'tag active';
+      all.dataset.tab = firstTab.toLowerCase();
+      all.textContent = firstTab;
+      tabsList.appendChild(all);
+      section.prepend(tabsList);
+    }
+
+    const tab = document.createElement('span');
+    tab.className = 'tag';
+    tab.dataset.tab = id;
+    tab.textContent = label;
+    tabsList.appendChild(tab);
+  }
+
+  wrapper.classList.add('section-el', `section-${id}`);
+  wrapper.previousElementSibling?.classList.add('section-el', `section-${id}`);
+}
+
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
+    defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -116,7 +202,7 @@ export default function decorate(block) {
 
   if (breadcrumbs && block.classList.contains('creators-banner')) {
     const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    block.querySelector('.columns-left-col')?.prepend(breadcrumb);
+    block.querySelector('h2')?.prepend(breadcrumb);
   }
 
   // setup buylink, this can be used later as a starting point for prices.
@@ -185,6 +271,8 @@ export default function decorate(block) {
     leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
   }
 
+  renderNanoBlocks(block.closest('.section'), undefined, undefined, block);
+
   const chatOptions = document.querySelector('.chat-options');
   if (chatOptions) {
     const cardButtons = chatOptions.querySelectorAll('.button-container');
@@ -200,13 +288,43 @@ export default function decorate(block) {
     }
   });
 
+  const dynamicLink = block.closest('.section').querySelector('a[href*="#os-dynamic-link"]');
+  if (dynamicLink) {
+    const dynamicLinks = { defaultLink, iosLink, androidLink };
+    const dynamicProducts = { storeId, storeIdAndroid, storeIdIos };
+    setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts);
+  }
+
   // this will define the number of rows inside each card of the subgrid system
   // by dynamically setting this, i can set howewer much rows i want based on the number of
   // maximum elements expected in the row
   if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
-    block.querySelectorAll('.columns-text-col')?.forEach((element) => {
+    let cards = block.querySelectorAll('.columns-text-col');
+    if (block.classList.contains('cards-with-img')) {
+      cards = block.querySelectorAll('.columns > div > div');
+    }
+
+    cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
+  }
+
+  // tabs version
+  if (type && type === 'tabs') setupTabs({ block, firstTab });
+
+  if (block.classList.contains('sidebar')) {
+    const videoP = cols[1].querySelector('p');
+    const content = videoP.innerText;
+    if (content.startsWith('https://www.youtube.com/embed/')) {
+      videoP.classList.add('iframe');
+      cols[1].querySelector('p').innerHTML = `<iframe width="100%" height="232" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+    }
+  }
+
+  matchHeights(block, 'h3');
+  matchHeights(block, 'h4');
+  if (block.closest('.section').classList.contains('dex-carousel-cards')) {
+    matchHeights(block, 'div > div:not(:first-of-type) p:first-of-type');
   }
 
   if (block.closest('.section').classList.contains('multi-blocks')) {
@@ -215,7 +333,15 @@ export default function decorate(block) {
     matchHeights(block.closest('.section'), 'p:nth-last-of-type(2)');
     matchHeights(block.closest('.section'), '.columns > div');
   }
+  if (block.closest('.section').classList.contains('fix-tables-heights')) {
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(1)');
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(2)');
+  }
   if (block.classList.contains('awards-fragment')) {
     matchHeights(block, 'p:last-of-type');
+  }
+
+  if (block.closest('.section').classList.contains('responsible-ai')) {
+    matchHeights(block, 'p');
   }
 }

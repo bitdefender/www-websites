@@ -78,7 +78,7 @@ function createDropdownElement(paragraph, dropdownTagText, product) {
   });
 
   const dropdownItemsNodes = dropdownOptions.querySelectorAll('.custom-dropdown-item');
-  dropdownItemsNodes.forEach((item) => {
+  dropdownItemsNodes.forEach((item, index) => {
     // eslint-disable-next-line func-names
     item.addEventListener('click', function () {
       dropdownButton.textContent = this.textContent;
@@ -86,6 +86,20 @@ function createDropdownElement(paragraph, dropdownTagText, product) {
       dropdownButton.classList.remove('active');
       dropdownItemsNodes.forEach((i) => i.classList.remove('selected'));
       this.classList.add('selected');
+      const dex = document.querySelector('.dex-18076');
+
+      if (dex) {
+        const dropdownTag = dex.querySelector('.custom-dropdown-tag');
+        const customDropdown = dex.querySelector('.custom-dropdown');
+
+        if (index !== 0) {
+          dropdownTag.style.display = 'none';
+          customDropdown.style.marginTop = '24px';
+        } else {
+          dropdownTag.style.display = 'inline-block';
+          customDropdown.style.marginTop = '0';
+        }
+      }
     });
   });
 
@@ -139,9 +153,15 @@ export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
-    dropdownTag,
+    dropdownTag, circleDiscount,
   } = block.closest('.section').dataset;
+  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
+  if (!isHomePage) {
+    const breadcrumb = createTag('div', { class: 'breadcrumb' });
+    const contentWrapper = block.querySelector(':scope > div:first-child > div');
+    if (contentWrapper) contentWrapper.prepend(breadcrumb);
+  }
   renderNanoBlocks(block);
 
   if (options) {
@@ -180,6 +200,16 @@ export default async function decorate(block, options) {
     mobileImage.classList.add('hero-aem__mobile-image');
   } else {
     mobileImage = '';
+  }
+
+  if (circleDiscount) {
+    const circleDiscountBox = document.createElement('div');
+    circleDiscountBox.className = 'circleDiscount';
+    circleDiscountBox.innerHTML = `<p>${circleDiscount.replace(
+      /0\s*%/g,
+      '<span data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>',
+    )}</p>`;
+    block.querySelector('.col-md-6:last-child').appendChild(circleDiscountBox);
   }
 
   // Get all the siblings after h1

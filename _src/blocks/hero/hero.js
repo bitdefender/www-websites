@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 // Description: Hero block
+import { UserAgent } from '@repobit/dex-utils';
 import {
   createTag,
   createNanoBlock,
@@ -7,28 +8,42 @@ import {
   getBrowserName,
 } from '../../scripts/utils/utils.js';
 
-import { UserAgent } from '../../scripts/libs/user-agent/user-agent.js';
-
-function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, block) {
+function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, mobileHide, block) {
   const button = block.querySelector('a.button');
-  const dynamicTextElement = button.parentNode.nextElementSibling;
+  const dynamicTextElement = button?.parentNode?.nextElementSibling;
   switch (UserAgent.os) {
     case 'android':
-      button.classList.add('android');
-      button.href = osLinkMapping.android.googlePlay;
-      dynamicTextElement.querySelectorAll('a').forEach((anchor, index) => {
-        anchor.textContent = osLinkMapping[androidTemplate.split(',')[index].trim()].text;
-        anchor.href = osLinkMapping[androidTemplate.split(',')[index].trim()].link;
-      });
+      if (mobileHide && block.closest('.section')) {
+        block.closest('.section').classList.add('global-display-none');
+        break;
+      }
+
+      if (button && androidTemplate && osLinkMapping && dynamicTextElement) {
+        button.classList.add('android');
+        button.href = osLinkMapping.android?.googlePlay;
+        dynamicTextElement.querySelectorAll('a')?.forEach((anchor, index) => {
+          anchor.textContent = osLinkMapping[androidTemplate.split(',')?.[index]?.trim()]?.text;
+          anchor.href = osLinkMapping[androidTemplate.split(',')?.[index].trim()]?.link;
+        });
+      }
       break;
+
     case 'ios':
-      button.classList.add('ios');
-      button.href = osLinkMapping.ios.appStore;
-      dynamicTextElement.querySelectorAll('a').forEach((anchor, index) => {
-        anchor.textContent = osLinkMapping[iosTemplate.split(',')[index].trim()].text;
-        anchor.href = osLinkMapping[iosTemplate.split(',')[index].trim()].link;
-      });
+      if (mobileHide && block.closest('.section')) {
+        block.closest('.section').classList.add('global-display-none');
+        break;
+      }
+
+      if (button && iosTemplate && osLinkMapping && dynamicTextElement) {
+        button.classList.add('ios');
+        button.href = osLinkMapping.ios?.appStore;
+        dynamicTextElement.querySelectorAll('a')?.forEach((anchor, index) => {
+          anchor.textContent = osLinkMapping[iosTemplate.split(',')?.[index]?.trim()]?.text;
+          anchor.href = osLinkMapping[iosTemplate.split(',')?.[index]?.trim()]?.link;
+        });
+      }
       break;
+
     default:
       break;
   }
@@ -42,12 +57,11 @@ function buildHeroBlock(element) {
   const h1 = element.querySelector('h1');
   const picture = element.querySelector('picture');
   const pictureParent = picture ? picture.parentNode : false;
+  const section = document.querySelector('div.hero');
+  const subSection = document.querySelector('div.hero div');
+  subSection.classList.add('hero-content');
   // eslint-disable-next-line no-bitwise
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    const section = document.querySelector('div.hero');
-    const subSection = document.querySelector('div.hero div');
-    subSection.classList.add('hero-content');
-
     const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
     if (!isHomePage) {
@@ -61,6 +75,8 @@ function buildHeroBlock(element) {
     section.prepend(pictureEl);
 
     pictureParent.remove();
+  } else {
+    subSection.classList.add('hero-content-full');
   }
 }
 
@@ -71,19 +87,36 @@ createNanoBlock('discount', (code, label = '{label}') => {
   const root = document.createElement('div');
   root.classList.add('discount-bubble');
   root.classList.add('await-loader');
-
-  // Add the required attributes to the root element
-
   root.setAttribute('data-store-context', '');
   root.setAttribute('data-store-id', product);
   root.setAttribute('data-store-option', `${unit}-${year}`);
   root.setAttribute('data-store-department', 'consumer');
   root.setAttribute('data-store-event', 'main-product-loaded');
   root.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
+
+  // Add the required attributes to the root element
+
   root.innerHTML = `
-    <span class="discount-bubble-0" data-store-discount="percentage">--%</span>
+    <span class="discount-bubble-0" data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>
     <span class="discount-bubble-1">${label}</span>
   `;
+
+  return root;
+});
+
+createNanoBlock('europe_badge', (badgeText) => {
+  // code = "europe"
+  const root = document.createElement('div');
+  root.classList.add('europe-badge');
+
+  const europeFlag = document.createElement('div');
+  europeFlag.classList.add('europe-flag');
+  root.appendChild(europeFlag);
+
+  const flagText = document.createElement('span');
+  flagText.classList.add('europe-badge__text');
+  flagText.textContent = badgeText;
+  root.appendChild(flagText);
 
   return root;
 });
@@ -114,11 +147,13 @@ async function renderBubble(block) {
  * @param {Element} block The hero block element
  */
 export default function decorate(block) {
+  const parentSection = block.closest('.section');
   const {
     // this defines wether the modals automatically refresh or not in the hero banner
     stopAutomaticModalRefresh,
     signature,
     percentProduct,
+    discountedPrice,
     firefoxUrl,
     buttonImage,
     iosLink,
@@ -129,12 +164,16 @@ export default function decorate(block) {
     iosTemplate,
     appStoreLink,
     googlePlayLink,
-  } = block.closest('.section').dataset;
+    backgroundcolor,
+    textcolor,
+    mobileHide,
+  } = parentSection.dataset;
 
   buildHeroBlock(block);
   renderBubble(block);
+  let osLinkMapping = null;
   if (androidLink && iosLink) {
-    const osLinkMapping = {
+    osLinkMapping = {
       android: {
         link: androidLink,
         googlePlay: googlePlayLink,
@@ -154,10 +193,16 @@ export default function decorate(block) {
         text: 'macOS',
       },
     };
-    detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, block);
   }
+
+  detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, mobileHide, block);
   // Eager load images to improve LCP
   [...block.querySelectorAll('img')].forEach((el) => el.setAttribute('loading', 'eager'));
+
+  if (backgroundcolor) {
+    parentSection.style.backgroundColor = backgroundcolor;
+    block.style.backgroundColor = backgroundcolor;
+  }
 
   // get div class hero-content
   const elementHeroContent = block.querySelector('.hero div.hero-content div');
@@ -173,6 +218,12 @@ export default function decorate(block) {
       const signatureElement = createTag('div', { class: 'signature' });
       signatureElement.textContent = signature;
       document.querySelector('div.hero div div:first-child').prepend(signatureElement);
+    }
+
+    if (textcolor) {
+      block.querySelectorAll('.hero-content > div, .hero-content > div *').forEach((el) => {
+        el.style.color = textcolor;
+      });
     }
 
     // set the modal buttons in the hero banner to not refresh the modal on click
@@ -191,14 +242,19 @@ export default function decorate(block) {
   }
 
   // make discount dynamic
-  if (percentProduct) {
-    const [alias, variant] = percentProduct.split(',');
+  if (percentProduct || discountedPrice) {
+    const [alias, variant] = percentProduct?.split(',') || discountedPrice.split(',');
     block.setAttribute('data-store-context', '');
     block.setAttribute('data-store-text-variable', '');
     block.setAttribute('data-store-id', alias);
     block.setAttribute('data-store-department', 'consumer');
     block.setAttribute('data-store-option', variant);
     block.querySelector('div').classList.add('await-loader');
+
+    if (discountedPrice) {
+      const dicountedTable = block.querySelector('table');
+      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', '<strong data-store-price="discounted||full"></strong>');
+    }
   }
 
   // Add the await-loader class to the button that leads to the thank you page, this is an exception

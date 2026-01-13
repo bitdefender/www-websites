@@ -1,15 +1,31 @@
-<!DOCTYPE html>
-<html>
-
-<head>
+<!DOCTYPE html><html><head><script type="importmap">{
+  "imports": {
+    "@glidejs/glide": "https://esm.sh/@glidejs/glide@3.7.1",
+    "@glidejs/glide/": "https://esm.sh/@glidejs/glide@3.7.1/",
+    "@repobit/dex-data-layer": "https://esm.sh/@repobit/dex-data-layer@1.9.2",
+    "@repobit/dex-data-layer/": "https://esm.sh/@repobit/dex-data-layer@1.9.2/",
+    "@repobit/dex-launch": "https://esm.sh/@repobit/dex-launch@2.0.9",
+    "@repobit/dex-launch/": "https://esm.sh/@repobit/dex-launch@2.0.9/",
+    "@repobit/dex-system-design": "https://esm.sh/@repobit/dex-system-design@0.21.2",
+    "@repobit/dex-system-design/": "https://esm.sh/@repobit/dex-system-design@0.21.2/",
+    "@repobit/dex-target": "https://esm.sh/@repobit/dex-target@2.5.13",
+    "@repobit/dex-target/": "https://esm.sh/@repobit/dex-target@2.5.13/",
+    "@repobit/dex-utils": "https://esm.sh/@repobit/dex-utils@2.0.7",
+    "@repobit/dex-utils/": "https://esm.sh/@repobit/dex-utils@2.0.7/",
+    "@tsparticles/all": "https://esm.sh/@tsparticles/all@3.9.1",
+    "@tsparticles/all/": "https://esm.sh/@tsparticles/all@3.9.1/",
+    "@tsparticles/engine": "https://esm.sh/@tsparticles/engine@3.9.1",
+    "@tsparticles/engine/": "https://esm.sh/@tsparticles/engine@3.9.1/"
+  }
+}</script>
   <title>Page not found</title>
   <script type="text/javascript">
     window.isErrorPage = true;
     window.errorCode = '404';
   </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Page not found">
-  <script src="/_src/scripts/scripts.js" type="module" crossorigin="use-credentials"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="Page not found" />
+  <script src="/_src/scripts/scripts.js" type="module"></script>
   <script type="module">
     import { decorateButtons, sampleRUM } from '/_src/scripts/lib-franklin.js';
     import { getDomain } from '/_src/scripts/scripts.js';
@@ -27,7 +43,7 @@
       sampleRUM('404', { source: document.referrer, target: window.location.href });
     });
   </script>
-  <link rel="stylesheet" href="/_src/styles/styles.css">
+  <link rel="stylesheet" href="/_src/styles/styles.css" />
   <style>
 
     :root {
@@ -135,14 +151,14 @@ main .link-section {
 }
 
   </style>
-  <link rel="stylesheet" href="/_src/styles/lazy-styles.css">
+  <link rel="stylesheet" href="/_src/styles/lazy-styles.css" />
 </head>
 
 <body>
   <header></header>
   <main class="error">
     <div class="section">
-      <svg viewBox="1 0 38 18" class="error-number">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="1 0 38 18" class="error-number">
         <text x="0" y="17">404</text>
       </svg>
       <h2 class="error-message">Page Not Found</h2>
@@ -152,6 +168,7 @@ main .link-section {
     </div>
   </main>
   <footer></footer>
-</body>
 
-</html>
+
+
+</body></html>

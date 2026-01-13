@@ -1,15 +1,15 @@
+import { Cookies } from '@repobit/dex-utils';
+import user from '../../scripts/user.js';
+import { target, adobeMcAppendVisitorId } from '../../scripts/target.js';
 import {
   getMetadata, decorateIcons, decorateButtons, decorateTags,
 } from '../../scripts/lib-franklin.js';
 
 import {
-  adobeMcAppendVisitorId, getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
+  getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
 
-import { User } from '../../scripts/libs/user.js';
-import Cookie from '../../scripts/libs/cookie.js';
 import { Constants } from '../../scripts/libs/constants.js';
-import { Visitor } from '../../scripts/libs/data-layer.js';
 
 /**
  * @param {string} username
@@ -43,8 +43,7 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
   // switch to the logged in popup
   const loginPopup = newMegaMenuLoginTab.querySelector('.mega-menu__second-level-container');
   const loginPopupHeaderLink = loginPopup.querySelector('.mega-menu__column .navigation__header-link');
-  const loginPopupLinksThatNeedToChange = [...loginPopup.querySelectorAll('.navigation__link')]
-    .filter((navigationLink) => navigationLink.dataset.loggedInLink);
+  const loginPopupLinksThatNeedToChange = loginPopup.querySelectorAll('[data-logged-in-link]');
 
   if (loginPopupHeaderLink) {
     loginPopupHeaderLink.textContent = username
@@ -52,12 +51,12 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
       : `${avatar.dataset.loginText}, ${email}`;
   }
 
-  const userLoggedInExpirationDate = Cookie.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
+  const userLoggedInExpirationDate = Cookies.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
 
   if (!userLoggedInExpirationDate
     || (userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now())) {
     loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
-      loginPopupLink.href = await Visitor.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
+      loginPopupLink.href = await target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
     });
   }
 };
@@ -70,19 +69,10 @@ const loginFunctionality = async (root = document) => {
   try {
     // change login container to display that the user is logged in
     // if the previous call was successfull
-    const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
-    const loginAttempt = sessionStorage.getItem('login-attempt');
-    const userData = await User.getUserInfo();
-
-    if (!loginAttempt && !userData) {
-      const userLoggedInExpirationDate = Cookie.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
-      if (userLoggedInExpirationDate > Date.now()) {
-        sessionStorage.setItem('login-attempt', true);
-        const loginEndpointUrl = new URL(`${Constants.LOGIN_URL_ORIGIN}${megaMenuLoginContainer.dataset.loginEndpoint}`);
-        loginEndpointUrl.searchParams.set('origin', `${window.location.pathname}${window.location.search}`);
-        window.location.href = loginEndpointUrl.href;
-      }
-    } else if (userData) {
+    await user.login();
+    const userData = await user.info;
+    if (userData) {
+      const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
       updateMegaMenu(userData.firstname, userData.email, megaMenuLoginContainer);
     }
   } catch (error) {
@@ -246,7 +236,7 @@ function renderDesktopHeader(block, nav) {
   if (navSections) {
     decorateBlockWithRegionId(navSections, 'Main Menu|General Links');
     const loginLink = document.querySelector('.nav-sections p:last-child');
-    loginLink.addEventListener('click', (e) => {
+    loginLink?.addEventListener('click', (e) => {
       e.preventDefault();
       handleLoginClick();
     });
@@ -544,9 +534,11 @@ async function runDefaultHeaderLogic(block) {
         });
       });
 
-      // select all the scripts from contet div and
       const scripts = contentDiv.querySelectorAll('script');
       scripts.forEach((script) => {
+        if (['dependencies'].some((key) => script.src.includes(key))) {
+          return;
+        }
         const newScript = document.createElement('script');
         newScript.src = `${Constants.PUBLIC_URL_ORIGIN}${script.getAttribute('src')}`;
         newScript.defer = true;
@@ -569,7 +561,7 @@ async function runDefaultHeaderLogic(block) {
       nav.classList.add('header-with-language-banner');
 
       adobeMcAppendVisitorId(shadowRoot);
-      loginFunctionality(shadowRoot);
+      await loginFunctionality(shadowRoot);
       return;
     }
 
@@ -662,9 +654,7 @@ async function runQuizPageHeaderLogic(block) {
   const html = await resp.text();
 
   block.classList.add('quiz', 'py-3', 'default-content-wrapper');
-  const headerWrapper = block.closest('header');
 
-  headerWrapper.classList.add('dark');
   block.innerHTML = html;
 
   decorateIcons(block);

@@ -23,9 +23,14 @@ const checkedNotValidUrls = new Set();
 
 async function fetchJson(url) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      redirect: "error",
+      headers: {
+        'X-Client-Id': process.env.X_CLIENT_ID,
+      }
+    });
 
-    if (!response.ok) {
+    if (!response.status === 200) {
       throw new Error(`HTTP error! status: ${response.status} for URL: ${url}`);
     }
 
@@ -64,11 +69,13 @@ async function checkUrlExists(url) {
     await new Promise(resolve => setTimeout(resolve, delay));
     const response = await fetch(url, {
       method: 'GET',
+      redirect: "error",
       headers: {
         'X-Client-Id': process.env.X_CLIENT_ID,
       }
     });
-    if (response.ok) {
+
+    if (response.status === 200) {
       checkedValidUrls.add(url);
       return true;
     } else {
@@ -104,7 +111,9 @@ async function processLocaleSitemap(locale, hreflangMap) {
 
   if (!queryData) return;
 
-  const validData = queryData.data.filter(entry => entry.path !== "0");
+  const validData = queryData.data.filter(entry => 
+    entry.path !== "0" && !entry.robots.includes("noidex")
+  );
   const filteredHreflangMap = hreflangMap.filter(([lang]) => lang !== locale);
   const sitemapPath = path.join(process.cwd(), '../../_src/sitemap/csg/sitemap_' + locale + '.xml');
 
@@ -166,6 +175,9 @@ async function processLocaleSitemap(locale, hreflangMap) {
     //hreflangMap = hreflangMap.concat(await addBucketCountriesToHreflangMap());
 
     for (const locale of localesArr) {
+      if (locale === 'es-bz') {
+        continue;
+      }
       await processLocaleSitemap(locale, hreflangMap);
     }
   } catch (error) {

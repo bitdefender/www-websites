@@ -1,8 +1,11 @@
-import Page from "./page.js"
+import page from "../page.js";
 
 export class Constants {
-	static DEV_BASE_URL = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
+	static BASE_URL_FOR_DEV = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
 	  window.location.hostname.includes(domain)) ? 'https://www.bitdefender.com' : '';
+
+	static BASE_URL_FOR_PROD = ['localhost', 'stage', '.hlx.', '.aem.'].some((domain) => 
+	  window.location.hostname.includes(domain)) ? '' : 'https://www.bitdefender.com';
   
 	static FINGERPRINT_LOCAL_STORAGE_NAME = 'rhvID';
   
@@ -78,7 +81,7 @@ export class Constants {
 	static LOGIN_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
 	  ? window.location.origin : 'https://www.bitdefender.com';
   
-	static NO_PROMOTION = "ignore";
+	static NO_PROMOTION = "";
 
 	static NONE_PRODUCT_PAGES = ["renewal", "consumer"];
 
@@ -89,13 +92,15 @@ export class Constants {
 
 	// TODO: please remove this once SOHO starts working correctly on zuora and de domains
 	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
+
+	static DOMAINS_WITHOUT_ADOBE_MC = ["brand.bitdefender.com"];
   
 	/**
 	 * fetch all the product id mappings for Vlaicu from websites
 	 */
 	static async #getVlaicuProductIdsMapping() {
 		  try {
-			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(Page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
+			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
 			  const response = await fetch(`/common/vlaicuconfig/${nameForVlaicuConfig}.json`);
 			  if (!response.ok) {
 				  console.error(`Failed to fetch data.`);

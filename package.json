@@ -6,7 +6,9 @@
   "scripts": {
     "lint:js": "eslint .",
     "lint:css": "stylelint _src/blocks/**/*.css --fix",
-    "lint": "npm run lint:js && npm run lint:css"
+    "lint": "npm run lint:js && npm run lint:css",
+    "postinstall": "node .husky/update-importmap.js",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -24,17 +26,29 @@
     "@esm-bundle/chai": "4.3.4-fix.0",
     "@web/test-runner": "0.15.1",
     "@web/test-runner-commands": "0.6.5",
-    "axios": "^1.7.7",
+    "axios": "^1.13.2",
     "chai": "4.3.7",
     "eslint": "8.35.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.27.5",
+    "happy-dom": "^17.6.3",
+    "husky": "^9.1.7",
     "jsdom": "^25.0.1",
     "sinon": "15.0.1",
     "stylelint": "15.2.0",
     "stylelint-config-standard": "30.0.1"
   },
   "dependencies": {
-    "@tsparticles/engine": "^3.2.2"
+    "@glidejs/glide": "^3.7.1",
+    "@repobit/dex-data-layer": "^2.0.1",
+    "@repobit/dex-launch": "^2.0.11",
+    "@repobit/dex-system-design": "^0.21.2",
+    "@repobit/dex-target": "^2.5.19",
+    "@repobit/dex-utils": "^2.1.1",
+    "@tsparticles/all": "^3.9.1",
+    "@tsparticles/engine": "^3.8.1"
+  },
+  "volta": {
+    "node": "22.14.0"
   }
 }

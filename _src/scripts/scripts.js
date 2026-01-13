@@ -1,3 +1,13 @@
+import Launch from '@repobit/dex-launch';
+import {
+  PageLoadedEvent,
+  AdobeDataLayerService,
+  FormEvent,
+  WindowLoadStartedEvent,
+  WindowLoadedEvent,
+} from '@repobit/dex-data-layer';
+import { target, adobeMcAppendVisitorId } from './target.js';
+import page from './page.js';
 import {
   sampleRUM,
   loadHeader,
@@ -11,28 +21,24 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  getMetadata, loadScript,
+  getMetadata,
 } from './lib-franklin.js';
 import {
-  AdobeDataLayerService,
-  PageLoadedEvent,
-  PageLoadStartedEvent,
+  handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
-  Target,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
-import Page from './libs/page.js';
 
 import {
-  adobeMcAppendVisitorId,
   createTag,
-  getPageExperimentKey,
-  GLOBAL_EVENTS, pushTrialDownloadToDataLayer,
+  GLOBAL_EVENTS,
+  pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
+  getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['hero', 'password-generator']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -217,6 +223,7 @@ export async function createModal(path, template, stopAutomaticRefresh) {
   close.classList.add('modal-close');
   close.addEventListener('click', closeModal);
   modalContent.append(close);
+  adobeMcAppendVisitorId(modalContainer);
   return modalContainer;
 }
 
@@ -247,6 +254,7 @@ export async function detectModalButtons(main) {
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
+      adobeMcAppendVisitorId('.modal-container');
     });
   });
 }
@@ -300,6 +308,144 @@ function buildCtaSections(main) {
     .forEach(buildCta);
 }
 
+// initializeHubspotModule
+const initializeHubspotModule = () => {
+  const loadHubspotScript = (callback) => {
+    if (typeof hbspt !== 'undefined') {
+      callback();
+      return;
+    }
+    const script = document.createElement('script');
+    script.charset = 'utf-8';
+    script.type = 'text/javascript';
+    script.src = '//js.hsforms.net/forms/embed/v2.js';
+    script.onload = callback;
+    document.head.appendChild(script);
+  };
+
+  const getFormEventData = (hubspotForm) => {
+    const portalId = hubspotForm.querySelector('.portal-id')?.getAttribute('value');
+    const dlFormTitle = hubspotForm.querySelector('.dl-form-title')?.getAttribute('data-value');
+    const dlFormID = hubspotForm.querySelector('.dl-form-ID')?.getAttribute('value');
+    const dlFormProduct = hubspotForm.querySelector('.dl-form-product')?.getAttribute('value') === 'true' && portalId;
+
+    return Object.fromEntries(
+      [
+        ['form', dlFormTitle],
+        ['formProduct', dlFormProduct],
+        ['formID', dlFormID],
+      ].filter(([, value]) => value),
+    );
+  };
+
+  const updateDataLayerAndRedirect = (hubspotForm) => {
+    const newPageLoadStartedEvent = new WindowLoadStartedEvent();
+    newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form submited';
+    newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
+    AdobeDataLayerService.push(newPageLoadStartedEvent);
+    AdobeDataLayerService.push(new FormEvent('form completed', getFormEventData(hubspotForm)));
+    AdobeDataLayerService.push(new WindowLoadedEvent());
+
+    const thankYouUrl = hubspotForm.querySelector('.redirect-url')?.value;
+    if (thankYouUrl) {
+      window.location.href = thankYouUrl;
+    }
+  };
+
+  const initHubspotForm = async (portalId, formId, hubspotForm) => {
+    const sfdcCampaignId = hubspotForm.querySelector('.sfdc-campaign-id')?.value;
+    const region = hubspotForm.querySelector('.region')?.value;
+    /* global hbspt */
+    hbspt.forms.create({
+      region,
+      portalId,
+      formId,
+      sfdcCampaignId,
+      target: '.hubspot-form',
+      onFormSubmit: () => updateDataLayerAndRedirect(hubspotForm),
+    });
+  };
+
+  const hubspotContainer = document.createElement('div');
+  hubspotContainer.innerHTML = `
+    <section class="download-popup download-popup__container download-popup--animate">
+      <div class="download-popup__modal download-complex !tw-overflow-auto !tw-max-w-[90%] md:!tw-max-w-[75%] lg:!tw-max-w-[60%] xl:!tw-max-w-[45%] tw-max-h-[90%]">
+        <div class="xfpage page basicpage">
+          <div id="container-3cd9406401" class="cmp-container">
+            <div class="hubspot-form">
+              <section class="hubspot-form-container tw-pt-0 tw-pb-0">
+                <input type="hidden" class="region" value="na1">
+                <input type="hidden" class="portal-id" value="341979">
+                <input type="hidden" class="form-id" value="addb61d4-4858-4349-a3ec-cddc790c4a2c">
+                <input type="hidden" class="sfdc-campaign-id" value="7016M0000027VMQQA2">
+                <input type="hidden" class="redirect-url" value="">
+                <input type="hidden" class="dl-form-title" data-value="book consultation">
+                <input type="hidden" class="dl-form-ID" value="">
+                <input type="hidden" class="dl-form-product" value="false">
+                <div class="form-for-hubspot hubspot-form-0" data-hs-forms-root="true"></div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+  document.body.appendChild(hubspotContainer);
+
+  loadHubspotScript(() => {
+    const hubspotForm = hubspotContainer.querySelector('.hubspot-form-container');
+    const portalId = hubspotForm.querySelector('.portal-id')?.value;
+    const formId = hubspotForm.querySelector('.form-id')?.value;
+
+    if (portalId && formId) {
+      initHubspotForm(portalId, formId, hubspotForm);
+    }
+
+    // Click-to-open logic
+    const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
+    const popupContainer = hubspotContainer.querySelector('.download-popup__container');
+
+    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        popupContainer.style.display = 'block';
+        const newPageLoadStartedEvent = new WindowLoadStartedEvent();
+        newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
+        newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
+        AdobeDataLayerService.push(newPageLoadStartedEvent);
+        AdobeDataLayerService.push(new FormEvent('form viewed', getFormEventData(firstForm)));
+        AdobeDataLayerService.push(new WindowLoadedEvent());
+      });
+    });
+
+    if (popupContainer) {
+      popupContainer.addEventListener('click', () => {
+        popupContainer.style.display = 'none';
+      });
+    }
+  });
+};
+
+/**
+ * since target global mbox cannot use syntasa parameters
+ * a new mbox which can insert code into the pagehas been created
+ * and it runs as soon as launch is loaded
+*/
+const applyTargetCustomCode = async () => {
+  const code = await target.getOffers({ mboxNames: 'custom-code' });
+  if (!code) {
+    return;
+  }
+
+  const codeDiv = document.createElement('div');
+  codeDiv.insertAdjacentHTML('beforeend', code);
+  const allScriptsAndStyles = codeDiv.querySelectorAll('script, style');
+  allScriptsAndStyles.forEach((element) => {
+    const newElement = document.createElement(element.tagName);
+    newElement.innerHTML = element.innerHTML;
+    document.head.appendChild(newElement);
+  });
+};
+
 export async function loadTrackers() {
   const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
 
@@ -309,27 +455,18 @@ export async function loadTrackers() {
   };
 
   if (isPageNotInDraftsFolder) {
-    const LAUNCH_URL = 'https://assets.adobedtm.com';
-    const ENVIRONMENT = Page.environment;
-
-    // Load Adobe Experience platform data collection (Launch) script
-    // const { launchProdScript, launchStageScript, launchDevScript } = await fetchPlaceholders();
-
-    const ADOBE_MC_URL_ENV_MAP = new Map([
-      ['prod', '8a93f8486ba4/5492896ad67e/launch-b1f76be4d2ee.min.js'],
-      ['stage', '8a93f8486ba4/5492896ad67e/launch-3e7065dd10db-staging.min.js'],
-      ['dev', '8a93f8486ba4/5492896ad67e/launch-fbd6d02d30e8-development.min.js'],
-    ]);
-
-    const adobeMcScriptUrl = `${LAUNCH_URL}/${ADOBE_MC_URL_ENV_MAP.get(ENVIRONMENT)}`;
     try {
-      await loadScript(adobeMcScriptUrl);
-    } catch (e) { /* empty */ }
-
-    onAdobeMcLoaded();
+      await Launch.load(page.environment);
+      onAdobeMcLoaded();
+    } catch {
+      target.abort();
+    }
   } else {
+    target.abort();
     onAdobeMcLoaded();
   }
+
+  await applyTargetCustomCode();
 }
 
 /**
@@ -340,26 +477,19 @@ async function loadEager(doc) {
   // load trackers early if there is a target experiment on the page
   if (getPageExperimentKey()) {
     loadTrackers();
+    await resolveNonProductsDataLayer();
   }
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
 
-  // TODO: if experiments stop working correctly please consider bringing this back:
-  // await window.hlx.plugins.run('loadEager');
-
-  AdobeDataLayerService.push(await new PageLoadStartedEvent());
-  await resolveNonProductsDataLayer();
-
   const templateMetadata = getMetadata('template');
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
-    // loadScript(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.js`, {
-    //   type: 'module',
-    // });
   }
+  if (templateMetadata === 'subscriber') initializeHubspotModule();
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -394,7 +524,10 @@ async function loadLazy(doc) {
   // only call load Trackers here if there is no experiment on the page
   if (!getPageExperimentKey()) {
     loadTrackers();
+    await resolveNonProductsDataLayer();
   }
+
+  // push basic events to dataLayer
   await loadBlocks(main);
 
   const { hash } = window.location;
@@ -495,6 +628,26 @@ function eventOnDropdownSlider() {
   });
 }
 
+function initialiseSentry() {
+  window.sentryOnLoad = () => {
+    window.Sentry.init({
+      release: 'www-websites@1.0.0',
+      tracesSampleRate: 1.0,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+
+      allowUrls: ['www.bitdefender.com'],
+    });
+  };
+
+  if (Math.random() < 0.01) {
+    const sentryScript = document.createElement('script');
+    sentryScript.src = 'https://js.sentry-cdn.com/453d79512df247d7983074696546ca60.min.js';
+    sentryScript.setAttribute('crossorigin', 'anonymous');
+    document.head.appendChild(sentryScript);
+  }
+}
+
 /**
  * Loads everything that happens a lot later,
  * without impacting the user experience.
@@ -510,7 +663,18 @@ function loadDelayed() {
   }, 3000);
 }
 
+function setBFCacheListener() {
+  window.addEventListener('pageshow', (event) => {
+    // Send another page loaded if the page is restored from bfcache.
+    if (event.persisted) {
+      AdobeDataLayerService.push(new PageLoadedEvent());
+    }
+  });
+}
+
 async function loadPage() {
+  setBFCacheListener();
+  initialiseSentry();
   await window.hlx.plugins.load('eager');
 
   // specific for webview
@@ -523,12 +687,9 @@ async function loadPage() {
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
-  const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
-    .then((FingerprintJS) => FingerprintJS.load({
-      region: 'eu',
-    }));
   await loadLazy(document);
-  await Target.cdpData;
+  handleFileDownloadedEvents();
+
   await StoreResolver.resolve();
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
@@ -546,21 +707,24 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
-  AdobeDataLayerService.pushEventsToDataLayer();
+  // eslint-disable-next-line import/no-unresolved
+  // const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
+  //   .then((FingerprintJS) => FingerprintJS.load({
+  //     region: 'eu',
+  //   }));
 
   // Get the visitorId when you need it.
-  await fpPromise
-    .then((fp) => fp.get())
-    .then((result) => {
-      const { visitorId } = result;
-      AdobeDataLayerService.push({
-        event: 'vistorID ready',
-        user: {
-          visitorId,
-        },
-      });
-    });
-  AdobeDataLayerService.push(new PageLoadedEvent());
+  // await fpPromise
+  //   .then((fp) => fp.get())
+  //   .then((result) => {
+  //     const { visitorId } = result;
+  //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
+  //   });
+  await target.sendCdpData();
+
+  if (!window.BD.loginAttempted) {
+    AdobeDataLayerService.push(new PageLoadedEvent());
+  }
 
   loadDelayed();
 }
@@ -570,3 +734,4 @@ initMobileDetector('tablet');
 initMobileDetector('desktop');
 
 loadPage();
+window.AdobeDataLayerService = AdobeDataLayerService;

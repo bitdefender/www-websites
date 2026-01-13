@@ -14,7 +14,14 @@
         text-decoration: underline;
     }
 
+    img {
+        height: 18px;
+    }
+
     transition: all 1s ease;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 }
 
 .news-bar-container.solutions {
@@ -56,12 +63,12 @@
 
 @media screen and (min-width: 991px) {
     .news-bar {
-        height: 44px;
+        min-height: 44px;
     }
 
     .news-bar-container.solutions {
         .news-bar {
-            height: 61px;
+            min-height: 61px;
 
             a {
                 display: inline-flex;

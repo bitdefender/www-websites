@@ -41,7 +41,7 @@ export default function decorate(block) {
 
   // if it's slider
   if (type === 'slider') {
-    block.closest('.dropdown-box-container').classList.add('container', 'dropdown-slider');
+    block.closest('.dropdown-box-container').classList.add('container', 'dropdown-slider', 'has-load-bar');
     const sliderBox = document.createElement('div');
     sliderBox.className = 'slider-box';
 

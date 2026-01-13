@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1300px;
+  max-width: 1290px;
 }
 
 .awards-container.we-container {
@@ -29,8 +29,32 @@
   width: 100%;
 }
 
+.awards-container p {
+  line-height: 1.45;
+}
+
 .awards-container h3 {
   font-size: 32px;
+  margin-bottom: 0;
+}
+
+.awards-container .button-container {
+  margin-top: 34px;
+}
+
+.awards-container .button-container a.button.modal {
+  gap: 5px;
+
+  &::after {
+    visibility: hidden;
+    min-width: 8px;
+  }
+
+}
+
+.awards-container em {
+  color: #006DFF;
+  font-style: normal;
 }
 
 .awards-container .block.awards-component > div {
@@ -65,7 +89,7 @@
 
 
 .awards-component > div:nth-child(3) div img {
-  height: 56px;
+  height: 100px;
   max-width: 100%;
   width: auto;
   object-fit: contain;
@@ -123,12 +147,52 @@
   }
 }
 
+.awards-container.new-design .block.awards-component {
+  h3 {
+    margin-bottom: 12px;
+  }
+
+  h4 {
+    margin-bottom: 24px;
+    color: #000;
+  }
+
+  >div {
+    justify-content: center;
+    text-align: -webkit-center;
+    gap: 20px;
+  }
+
+  > div:nth-child(2) {
+      min-width: 100%;
+
+      >div {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        width: 95%;
+        margin-top: 24px;
+        gap: 20px;
+      }
+
+      img {
+        height: 62px;
+      }
+  }
+}
+
 .awards-container .awards-component div ul {
   list-style: disc;
 }
 
 .awards-container .awards-component div li {
   text-align: left;
+}
+
+@media (max-width: 579px) {
+  .awards-component > div:nth-child(3) div img {
+    height: 50px;
+  }
 }
 
 @media (min-width: 580px) {
@@ -151,6 +215,16 @@
   .awards-container h3 {
     line-height: 38px;
   }
+
+  .awards-container.new-design .block.awards-component {
+    h3 {
+        font-size: 40px;
+    }
+
+    h4 {
+        font-size: 22px;
+    }
+}
 }
 
 @media (min-width: 768px) {
@@ -258,7 +332,6 @@
 
   .awards-component h3 {
     font: normal normal bold 32px/38px Arial, sans-serif;
-    max-width: 726px;
     margin-bottom: 0;
   }
 

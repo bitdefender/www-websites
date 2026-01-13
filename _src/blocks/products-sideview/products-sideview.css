@@ -61,6 +61,10 @@
     justify-content: center;
 }
 
+.products-sideview.no-blue-tags .tag-blue {
+    display: none;
+}
+
 .products-sideview .tag-blue svg {
     width: 14px;
 }
@@ -106,7 +110,7 @@
     content: '';
     background: url("/_src/icons/tabs_arrow.svg") no-repeat;
     position: absolute;
-    top: 50%;
+    top: 62.5%;
     right: 10px;
     transform: rotate(180deg) translateY(50%);
     pointer-events: none; /* Prevent the arrow from blocking clicks */

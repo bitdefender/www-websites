@@ -1,12 +1,13 @@
+import { AdobeDataLayerService } from "@repobit/dex-data-layer";
 import { Store, ProductInfo, ProductOption } from "../store.js";
-import { AdobeDataLayerService, MainProductLoadedEvent, ProductComparisonEvent, ProductsLoadedEvent } from "../../data-layer.js";
+import { FranklinProductsLoadedEvent } from "../../data-layer.js";
 import { staticAttributesResolvers, staticAttributes } from "./staticAttributes/index.js";
 import { clickAttributeResolvers, clickAttributes } from "./clickAttributes/index.js";
 import { staticGlobalAttributesResolvers } from "./staticGlobalAttributes/index.js";
 
 export class GlobalContext {
 	/**
-	 * @type {import("..").ProductOption[]}
+	 * @type {import("../index.js").ProductOption[]}
 	 */
 	static variations = [];
 
@@ -18,11 +19,11 @@ export class GlobalContext {
 export class Context {
 	constructor(product, devices, years, staticAttributes, clickAttributes, contexts, contextProducts, products, devicePropertiesMapping) {
 		/**
-		 * @type {import("..").Product}
+		 * @type {import("../index.js").Product}
 		 */
 		this.products = products;
 		/**
-		 * @type {import("..").Product}
+		 * @type {import("../index.js").Product}
 		*/
 		this._product = product;
 		/**
@@ -38,17 +39,17 @@ export class Context {
 		 */
 		this.contexts = contexts;
 		/**
-		 * @type {import("..").Product[]}
+		 * @type {import("../index.js").Product[]}
 		*/
 		this.contextProducts = contextProducts;
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		this.bundle = null;
 		this._devices = devices;
 		this._years = years;
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		this._option = product.getOption(devices, years);
 
@@ -88,7 +89,7 @@ export class Context {
 	 */
 	set years(value) {
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(this._devices, Number(value)) ||
 			this.product.getOption(this.product.getSubscriptions("years", Number(value))[0], Number(value));
@@ -110,7 +111,7 @@ export class Context {
 	 */
 	set devices(value) {
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(Number(value), this._years) ||
 			this.product.getOption(Number(value), this.product.getSubscriptions("years", Number(value))[0]);
@@ -122,7 +123,7 @@ export class Context {
 	}
 
 	/**
-	 * @type {import("..").ProductOption}
+	 * @type {import("../index.js").ProductOption}
 	 */
 	get option() {
 		if (this.bundle) {
@@ -140,7 +141,7 @@ export class Context {
 	set option(value) {
 		const [devices, years] = parseKey(value);
 		/**
-		 * @type {import("..").ProductOption}
+		 * @type {import("../index.js").ProductOption}
 		 */
 		const option = this.product.getOption(devices, years);
 		if (!option) { return; }
@@ -152,7 +153,7 @@ export class Context {
 	}
 
 	/**
-	 * @type {import("..").Product}
+	 * @type {import("../index.js").Product}
 	*/
 	get product() {
 		return this._product;
@@ -236,14 +237,14 @@ export class StoreResolver {
 	static staticAttributes = staticAttributes;
 	static clickAttributes = clickAttributes;
 
-	static async resolve(root = document) {
+	static async resolve(root = document, configMbox = null) {
 		await Promise.allSettled([
-			this.#resolveRootElement(root),
-			...[...root.querySelectorAll("[data-shadow-dom]")].map(element => this.#resolveRootElement(element.shadowRoot))
+			this.#resolveRootElement(root, configMbox),
+			...[...root.querySelectorAll("[data-shadow-dom]")].map(element => this.#resolveRootElement(element.shadowRoot, configMbox))
 		]);
 	}
 
-	static async #resolveRootElement(root) {
+	static async #resolveRootElement(root, configMbox) {
 		const products = root.querySelectorAll(`${this.contextAttributes.storeId}${this.contextAttributes.storeDepartment}`);
 		if (products.length === 0) { return; }
 
@@ -260,7 +261,7 @@ export class StoreResolver {
 			}
 		}).filter(element => !!element);
 
-		const storeProducts = await Store.getProducts(productsInfo);
+		const storeProducts = await Store.getProducts(productsInfo, configMbox);
 		const contexts = root.querySelectorAll(`${this.contextAttributes.storeContext}`);
 
 		for (const context of contexts) {
@@ -299,19 +300,19 @@ export class StoreResolver {
 					);
 
 					pageContexts.push(context);
-					GlobalContext.variations.push(...this.getAllVariationsFromContext(context));
+					if (!product.dataset.storeNotGlobal) GlobalContext.variations.push(...this.getAllVariationsFromContext(context));
 					optionStaticAttributes.forEach(staticAttribute => this.resolveStaticAttributes(staticAttribute, context));
 					optionClickAttributes.forEach(clickAttribute => this.resolveClickAttributes(clickAttribute, context));
 
 					switch(option.dataset.storeEvent) {
 						case "product-loaded":
-							AdobeDataLayerService.push(new ProductsLoadedEvent(storeOption));
+							AdobeDataLayerService.push(new FranklinProductsLoadedEvent(storeOption, 'all'));
 							break;
 						case "main-product-loaded":
-							AdobeDataLayerService.push(new MainProductLoadedEvent(storeOption));
+							AdobeDataLayerService.push(new FranklinProductsLoadedEvent(storeOption, 'info'));
 							break;
 						case "product-comparison":
-							AdobeDataLayerService.push(new ProductComparisonEvent(storeOption));
+							AdobeDataLayerService.push(new FranklinProductsLoadedEvent(storeOption, 'comparison'));
 							break;
 					}
 				}
@@ -367,18 +368,17 @@ export class StoreResolver {
 
 	/**
 	 * @param {Context} context
-	 * @return {import("..").ProductOption}
+	 * @return {import("../index.js").ProductOption}
 	 */
 	static getAllVariationsFromContext(context) {
 		/**
 		 * @param {HTMLElement} attribute
-		 * @returns {import("..").ProductOption[]}
+		 * @returns {import("../index.js").ProductOption[]}
 		 */
 		const parseNodeName = (attribute) => {
 			const options = [];
 
-			switch (attribute.nodeName) {
-				case "INPUT":
+				if (attribute.nodeName === "INPUT" && attribute.type === 'range') {
 					if (attribute.dataset.storeClickSetDevices !== undefined) {
 						const [min, max] = context.product.getMinMaxDeviceNumbers();
 
@@ -386,8 +386,9 @@ export class StoreResolver {
 							options.push(context.product.getOption(devices, context.years));
 						}
 					}
-					break;
-				case "SELECT":
+				}
+
+				if(attribute.nodeName === "SELECT") {
 					if (attribute.dataset.storeClickSetDevices !== undefined) {
 						[...attribute.options].forEach(option => options.push(
 							context.product.getOption(Number(option.value), context.years)
@@ -407,43 +408,43 @@ export class StoreResolver {
 							)
 						});
 					}
-					break;
-				default:
-					if (attribute.dataset.storeClickSetDevices !== undefined) {
-						options.push(context.product.getOption(Number(attribute.dataset.storeClickSetDevices), context.years));
-					}
-					if (attribute.dataset.storeClickSetYears !== undefined) {
-						options.push(context.product.getOption(context.devices, Number(attribute.dataset.storeClickSetYears)));
-					}
-					if (attribute.dataset.storeClickSetOption) {
-						const [devices, years] = parseKey(attribute.dataset.storeClickSetOption);
-						options.push(context.product.getOption(devices, years));
-					}
-					if (attribute.dataset.storeClickSetProduct !== undefined) {
-						const [devices, years] = parseKey(attribute.dataset.storeProductOption || `${context.devices}-${context.years}`);
-						options.push(context
-							.products[attribute.dataset.storeProductId]
-							?.getOption(devices, years)
-						)
-					}
-					if (attribute.dataset.storeClickToggleBundle !== undefined) {
-						const [devices, years] = parseKey(attribute.dataset.storeBundleOption);
-						options.push(context
-							.products[attribute.dataset.storeBundleId]
-							?.getOption(devices, years)
-						)
-					}
-					break;
-			}
+				}
+				
+				if (attribute.dataset.storeClickSetDevices !== undefined) {
+					options.push(context.product.getOption(Number(attribute.dataset.storeClickSetDevices), context.years));
+				}
+				if (attribute.dataset.storeClickSetYears !== undefined) {
+					options.push(context.product.getOption(context.devices, Number(attribute.dataset.storeClickSetYears)));
+				}
+				if (attribute.dataset.storeClickSetOption) {
+					const [devices, years] = parseKey(attribute.dataset.storeClickSetOption);
+					options.push(context.product.getOption(devices, years));
+				}
+
+				if (attribute.dataset.storeClickSetProduct !== undefined) {
+					const [devices, years] = parseKey(attribute.dataset.storeProductOption || `${context.devices}-${context.years}`);
+					options.push(context
+						.products[attribute.dataset.storeProductId]
+						?.getOption(devices, years)
+					)
+				}
+
+				if (attribute.dataset.storeClickToggleBundle !== undefined) {
+					const [devices, years] = parseKey(attribute.dataset.storeBundleOption);
+					options.push(context
+						.products[attribute.dataset.storeBundleId]
+						?.getOption(devices, years)
+					)
+				}
 
 			return options.filter(option => Boolean(option));
 		}
 
 		/**
-		 * @param {import("..").ProductOption} baseOption
-		 * @param {import("..").ProductOption} varyToOption
+		 * @param {import("../index.js").ProductOption} baseOption
+		 * @param {import("../index.js").ProductOption} varyToOption
 		 * @param {"devices"|"subscription"|"all"|"bundle"} modfier
-		 * @returns {import("..").ProductOption|null}
+		 * @returns {import("../index.js").ProductOption|null}
 		 */
 		const vary = (baseOption, varyToOption, modfier) => {
 			let devices;
@@ -528,14 +529,11 @@ export class StoreResolver {
 					.getDevices(baseOption.getSubscription("years"))
 					.map(devices => product.getOption(devices, baseOption.getSubscription("years")))
 			}
+
+			return null;
 		}
 
 		const productVariations = setProduct
-			.filter(product => product.getId() !== context.product.getId())
-			.reduce((acc, baseOption) => acc.concat(
-				devicesAndYearVariations.map(varyToOption => vary(baseOption, varyToOption, "all")),
-				generateDynamicVariationsAfterProductSelect(baseOption)
-			), [])
 			.filter(option => Boolean(option));
 
 		const bundleVariations = [

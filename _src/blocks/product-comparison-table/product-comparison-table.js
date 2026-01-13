@@ -6,21 +6,23 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   columnEl.setAttribute('data-store-department', 'consumer');
   columnEl.setAttribute('data-store-event', 'product-comparison');
   columnEl.setAttribute('data-store-context', '');
+  columnEl.setAttribute('data-store-not-global', 'true');
 
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
   const oldPriceText = block.closest('.section').dataset.old_price_text ?? '';
   const newPriceLabel = block.closest('.section').dataset.new_price_label ?? '';
   const saveText = block.closest('.section').dataset.save_text ?? '';
-  const oldPriceElement = document.createElement('p');
+  const oldPriceElement = document.createElement('div');
   priceRoot.appendChild(oldPriceElement);
-  oldPriceElement.innerText = '-';
+  oldPriceElement.innerText = '';
   oldPriceElement.classList.add('old-price-container');
   const priceElement = document.createElement('strong');
   priceRoot.appendChild(priceElement);
   priceElement.innerText = '-';
   priceElement.classList.add('current-price-container');
   const priceAppliedOnTime = document.createElement('p');
+  priceAppliedOnTime.classList.add('price-applied-on-time');
   priceRoot.appendChild(priceAppliedOnTime);
   // create a mock buyzone for free products
   if (code.includes('free')) {
@@ -32,7 +34,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
       <span class="await-loader total-text">${label} </span>
       <sup class="per-price"> </sup>
     </div>`;
-    priceAppliedOnTime.innerHTML = '<p><p>';
+    priceAppliedOnTime.innerHTML = '';
     return priceRoot;
   }
 
@@ -155,12 +157,15 @@ function addAccesibilityRoles(block) {
 function replaceTableTextToProperCheckmars(block) {
   block.querySelectorAll('div')
     .forEach(async (div) => {
-      if (div.textContent.match(/^yes/i)) {
+      if (div.getAttribute('role') === 'row') return;
+
+      const textCheck = div.textContent.trim().toLowerCase();
+      if (textCheck === 'yes') {
         div.textContent = '';
         const icon = document.createElement('div');
         icon.classList.add('yes-check');
         div.appendChild(icon);
-      } else if (div.textContent.match(/^no/i)) {
+      } else if (textCheck === 'no') {
         div.textContent = '';
         const icon = document.createElement('div');
         icon.classList.add('no-check');
@@ -185,6 +190,41 @@ function buildTableHeader(block) {
   const header = block.querySelector('div > div');
   header.classList.add('product-comparison-header');
   [...header.children].forEach((headerColumn) => {
+    const children = [...headerColumn.children];
+    const pToMove = [];
+    let foundH3 = false;
+
+    children.some((child) => {
+      if (child.tagName === 'H3') {
+        foundH3 = true;
+        return false;
+      }
+
+      if (!foundH3) {
+        return false;
+      }
+
+      if (child.innerText.trim().toLowerCase() === '{pricecomparison}') {
+        return true; // break loop
+      }
+
+      if (child.tagName === 'P') {
+        pToMove.push(child);
+      }
+
+      return false;
+    });
+
+    if (pToMove.length > 0) {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('paragraph-group');
+      const firstP = pToMove[0];
+      headerColumn.insertBefore(wrapper, firstP);
+      pToMove.forEach((p) => {
+        wrapper.appendChild(p);
+      });
+    }
+
     const buttonSection = headerColumn.querySelector('p.button-container');
     if (buttonSection) {
       const paragraphBefore = buttonSection.previousElementSibling;
@@ -298,6 +338,11 @@ export default function decorate(block) {
   });
 
   matchHeights(block, 'h3');
+  matchHeights(block, '.paragraph-group');
   matchHeights(block, '.old-price-container');
   matchHeights(block, '.product-comparison-price');
+
+  matchHeights(block, '.price-applied-on-time');
+  matchHeights(block, '.button-container');
+  matchHeights(block, 'div[role="columnheader"] p:first-of-type:not(:has(.tag))');
 }
