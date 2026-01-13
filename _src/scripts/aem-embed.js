@@ -17,6 +17,9 @@ import { StoreResolver } from './libs/store/index.js';
 import {
   GLOBAL_EVENTS,
 } from './utils/utils.js';
+import {
+  resolveNonProductsDataLayer,
+} from './libs/data-layer.js';
 // eslint-disable-next-line import/prefer-default-export
 export class AEMEmbed extends HTMLElement {
   constructor() {
@@ -200,6 +203,7 @@ export class AEMEmbed extends HTMLElement {
     });
 
     body.classList.add('appear');
+    await resolveNonProductsDataLayer();
   }
 
   /**
