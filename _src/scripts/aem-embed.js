@@ -204,6 +204,7 @@ export class AEMEmbed extends HTMLElement {
 
     body.classList.add('appear');
     await resolveNonProductsDataLayerforWidgets();
+    AdobeDataLayerService.push(new PageLoadedEvent());
   }
 
   /**
