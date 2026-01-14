@@ -238,12 +238,11 @@
             }
 
             .button-container {
-                display: flex;
-                gap: var(--size-16);
-                margin-bottom: var(--size-16) !important;
 
                 .button {
                     padding: 11.4px var(--size-40) 11.4px 50px;
+                    margin-right: var(--size-16);
+                    margin-bottom: var(--size-16);
                 }
 
                 .button, em {
@@ -257,12 +256,6 @@
                         padding: var(--size-12) var(--size-22);
                     }
                 }
-            }
-        }
-
-        .ps-hero-section .hero-aem__card .hero-aem__card-text, .ts-hero-section .hero-aem__card .hero-aem__card-text {
-            .hero-aem__prices + .button-container {
-                display: none;
             }
         }
 
