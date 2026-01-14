@@ -89,10 +89,6 @@
   cursor: pointer;
 }
 
-.tabs-component-container .tabs-container button strong {
-  font-weight: 700;
-}
-
 .tabs-component-container a {
   color: #006dff !important;
   background-color: #fff !important;
@@ -208,6 +204,10 @@
   display: none;
 }
 
+.tabs-component-container .tabs-container button strong {
+  font-weight: 700;
+}
+
 .tabs-component-container .tabs-container picture {
   display: flex;
   align-items: center;
@@ -230,7 +230,7 @@
   color: #006dff;
 }
 
-.tabs-component-container .tabs-component.blue-heading h3 strong{
+.tabs-component-container .tabs-component.blue-heading h3 strong {
   font-weight: 700;
 }
 
