@@ -1,4 +1,5 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
+import { wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
 
 function getLanguage() {
   // Try to get the language from the path
@@ -46,26 +47,30 @@ export default async function decorate(block) {
   if (product) {
     [prodName, prodUsers, prodYears] = product.split('/');
   }
-  block.setAttribute('data-store-context', '');
-  block.setAttribute('data-store-id', prodName);
-  block.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-  block.setAttribute('data-store-department', 'consumer');
-  block.setAttribute('data-store-event', 'product-loaded');
+
+  wrapChildrenWithStoreContext(block, {
+    productId: prodName,
+    devices: prodUsers,
+    subscription: prodYears,
+    ignoreEventsParent: true,
+    storeEvent: 'all',
+  });
 
   const buyLink = block.querySelector('a[href*="#buylink"]');
   buyLink?.setAttribute('data-store-buy-link', '');
+  buyLink?.setAttribute('data-store-render', '');
 
   [...block.children].forEach((child) => {
     if (child.textContent.includes('{PRICE_BOX}') && product) {
       child.innerHTML = child.innerHTML.replace('{PRICE_BOX}', '<div class="price-box">Price box</div>');
       child.innerHTML = `
       <div class="price-box">
-        <div>
-          <span class="prod-oldprice" data-store-price="full" data-store-hide="no-price=discounted"></span>
-          <span class="prod-percent" data-store-hide="no-price=discounted"> <span data-store-discount="percentage"></span> ${saveText || ''} </span>
+        <div data-store-hide="!it.option.price.discounted">
+          <span class="prod-oldprice" data-store-render data-store-price="full"></span>
+          <span class="prod-percent"> <span data-store-render data-store-discount="percentage"></span> ${saveText || ''} </span>
         </div>
         <div class="newprice-container mt-2">
-          <span class="prod-newprice"> <span data-store-price="discounted||full"> </span></span>
+          <span class="prod-newprice"> <span data-store-render data-store-price="discounted||full"> </span></span>
         </div>
       </div>`;
     }

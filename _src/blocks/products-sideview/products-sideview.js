@@ -2,6 +2,7 @@ import {
   createNanoBlock,
   getDatasetFromSection,
   renderNanoBlocks,
+  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 const state = {
@@ -135,6 +136,7 @@ function updateBuyLink(block) {
   const buyLink = block.querySelector('.button-container > .button');
   if (buyLink) {
     buyLink.href = '#';
+    buyLink.setAttribute('data-store-render', '');
     buyLink.setAttribute('data-store-buy-link', '');
   }
 }
@@ -147,17 +149,27 @@ function renderPrice(block, _firstProduct, secondProduct) {
   const oldPrice = document.createElement('div');
   oldPrice.classList.add('prod-oldprice', 'await-loader');
   oldPrice.setAttribute('data-store-price', 'full');
-  oldPrice.setAttribute('data-store-hide', 'no-price=discounted');
+  oldPrice.setAttribute('data-store-hide', '!it.option.price.discounted');
 
+  const variantTokens = variant.split('-');
+  const devices = variantTokens[variantTokens.length - 2];
+  const subscription = variantTokens[variantTokens.length - 1];
+  const defaultProduct = variantTokens.length - 3 >= 0
+    ? variantTokens[variantTokens.length - 3]
+    : (_firstProduct || secondProduct);
   const el = document.createElement('DIV');
   el.classList.add('price');
   el.classList.add('await-loader');
-  block.setAttribute('data-store-context', '');
-  block.setAttribute('data-store-id', secondProduct);
-  block.setAttribute('data-store-option', variant);
-  block.setAttribute('data-store-department', 'consumer');
-  block.setAttribute('data-store-event', 'main-product-loaded');
+  wrapChildrenWithStoreContext(block, {
+    productId: defaultProduct,
+    devices,
+    subscription,
+    ignoreEventsParent: true,
+    storeEvent: 'info',
+  });
+
   el.setAttribute('data-store-price', 'discounted||full');
+  el.setAttribute('data-store-render', '');
 
   priceElement.appendChild(oldPrice);
   priceElement.appendChild(el);
@@ -172,14 +184,12 @@ function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
   el.classList.add('products-sideview-radio');
   el.innerHTML = `
     <input type="radio" name="type" id="monthly"
-    data-store-click-set-product data-store-product-id="${secondProduct}"
-    data-store-product-department="consumer"
+    data-store-action data-store-set-id="${secondProduct}"
     data-product-type="monthly" ${defaultSelection.split('-')[0] === secondProduct ? 'checked' : ''}/>
     <label for="monthly">${monthlyLabel ?? 'Monthly'}</label>
 
-    <input type="radio" name="type" id="yearly" data-store-click-set-product
-    data-store-product-id="${firstProduct}"
-    data-store-product-department="consumer"
+    <input type="radio" name="type" id="yearly" data-store-action
+    data-store-set-id="${firstProduct}"
     data-product-type="yearly" ${defaultSelection.split('-')[0] === firstProduct ? 'checked' : ''}/>
     <label for="yearly">${yearlyLabel ?? 'Yearly'}</label>
   `;
@@ -266,7 +276,7 @@ function renderSelector(block, ...options) {
   el.innerHTML = `
     <label for="${selectId}">${labelText ?? 'Choose number of members'}</label>
     <select id="${selectId}"
-      data-store-click-set-devices>
+      data-store-action>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `
           <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt === 1 ? `${opt} ${singleMember ?? 'member'}` : `${opt} ${multipleMembers ?? 'members'}`} </option>
         `).join('')}
