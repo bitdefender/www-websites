@@ -89,6 +89,10 @@
   cursor: pointer;
 }
 
+.tabs-component-container .tabs-container button strong {
+  font-weight: 700;
+}
+
 .tabs-component-container a {
   color: #006dff !important;
   background-color: #fff !important;
@@ -224,6 +228,10 @@
 
 .tabs-component-container .tabs-component.blue-heading h3 {
   color: #006dff;
+}
+
+.tabs-component-container .tabs-component.blue-heading h3 strong{
+  font-weight: 700;
 }
 
 .tabs-component-container .tabs-component.blue-heading .tabs-container button { 
