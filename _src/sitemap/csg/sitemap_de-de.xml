@@ -1470,54 +1470,6 @@
         <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/"/>
     </url>
     <url>
-        <loc>https://www.bitdefender.com/de-de/consumer/link-checker/malicious</loc>
-        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/link-checker/malicious"/>
-        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/link-checker/malicious"/>
-    </url>
-    <url>
-        <loc>https://www.bitdefender.com/de-de/consumer/link-checker/safe</loc>
-        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/link-checker/safe"/>
-        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/link-checker/safe"/>
-    </url>
-    <url>
-        <loc>https://www.bitdefender.com/de-de/consumer/link-checker/sofarsogood</loc>
-        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/link-checker/sofarsogood"/>
-        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/link-checker/sofarsogood"/>
-    </url>
-    <url>
         <loc>https://www.bitdefender.com/de-de/consumer/downloads</loc>
         <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/consumer/downloads"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/downloads"/>
