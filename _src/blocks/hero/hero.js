@@ -58,12 +58,11 @@ function buildHeroBlock(element) {
   const h1 = element.querySelector('h1');
   const picture = element.querySelector('picture');
   const pictureParent = picture ? picture.parentNode : false;
+  const section = document.querySelector('div.hero');
+  const subSection = document.querySelector('div.hero div');
+  subSection.classList.add('hero-content');
   // eslint-disable-next-line no-bitwise
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    const section = document.querySelector('div.hero');
-    const subSection = document.querySelector('div.hero div');
-    subSection.classList.add('hero-content');
-
     const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
     if (!isHomePage) {
@@ -77,6 +76,8 @@ function buildHeroBlock(element) {
     section.prepend(pictureEl);
 
     pictureParent.remove();
+  } else {
+    subSection.classList.add('hero-content-full');
   }
 }
 
@@ -148,6 +149,7 @@ export default function decorate(block) {
     stopAutomaticModalRefresh,
     signature,
     percentProduct,
+    discountedPrice,
     firefoxUrl,
     buttonImage,
     iosLink,
@@ -236,18 +238,19 @@ export default function decorate(block) {
   }
 
   // make discount dynamic
-  if (percentProduct) {
-    const [alias, variant] = percentProduct.split(',');
-    const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
-
-    wrapChildrenWithStoreContext(block, {
-      productId: alias,
-      devices,
-      subscription,
-      ignoreEventsParent: true,
-      storeEvent: 'all',
-    });
+  if (percentProduct || discountedPrice) {
+    const [alias, variant] = percentProduct?.split(',') || discountedPrice.split(',');
+    block.setAttribute('data-store-context', '');
+    block.setAttribute('data-store-text-variable', '');
+    block.setAttribute('data-store-id', alias);
+    block.setAttribute('data-store-department', 'consumer');
+    block.setAttribute('data-store-option', variant);
     block.querySelector('div').classList.add('await-loader');
+
+    if (discountedPrice) {
+      const dicountedTable = block.querySelector('table');
+      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', '<strong data-store-price="discounted||full"></strong>');
+    }
   }
 
   // Add the await-loader class to the button that leads to the thank you page, this is an exception

@@ -26,7 +26,7 @@ const checkClickEventAfterRedirect = () => {
     const clickEvent = JSON.parse(localStorage.getItem("clickEvent"));
 
     if(clickEvent?.clickEvent) {
-      AdobeDataLayerService.push(new ButtonClickEvent(clickEvent.clickEvent, clickEvent.productId));
+      AdobeDataLayerService.push(new ButtonClickEvent(clickEvent.clickEvent, { productId: clickEvent.productId }));
     }
 
     localStorage.removeItem("clickEvent");
@@ -102,6 +102,21 @@ const resolveUserDetectedEvent = async () => {
       productFinding: getProductFinding()
     }
   ));
+};
+
+/**
+ * for file download links, push a special buttonClick event
+ */
+export const handleFileDownloadedEvents = () => {
+  const fileLinks = document.querySelectorAll('[href*=".pdf"], [href*=".docx"], [href*=".xlsx"]');
+  fileLinks.forEach((fileLink) => {
+    const hrefPathname = new URL(fileLink).pathname;
+    const filename = hrefPathname.substring(hrefPathname.lastIndexOf('/') + 1);
+
+    fileLink.addEventListener('click', () => {
+      AdobeDataLayerService.push(new ButtonClickEvent('file downloaded', { asset: filename }));
+    });
+  });
 };
 
 /**
