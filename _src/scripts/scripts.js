@@ -7,17 +7,13 @@ import {
   WindowLoadedEvent,
   ProductLoadedEvent,
 } from '@repobit/dex-data-layer';
-import {
-  registerActionNodes,
-  registerContextNodes,
-  registerRenderNodes,
-} from '@repobit/dex-store-elements';
+import { registerActionNodes, registerContextNodes, registerRenderNodes } from '@repobit/dex-store-elements';
 import store from './store.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
   sampleRUM,
-  loadHeader,
+  loadHeader, 
   loadFooter,
   decorateButtons,
   decorateIcons,
