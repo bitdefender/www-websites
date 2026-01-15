@@ -674,7 +674,7 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
-  if (window.location.href.includes('connector')) {
+  if (window.location.href.includes('oaiusercontent')) {
     loadScript('aem-embed', `${window.hlx.codeBasePath}/scripts/aem-embed.js`, true);
     return;
   }
