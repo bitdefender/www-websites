@@ -204,6 +204,10 @@
   display: none;
 }
 
+.tabs-component-container .tabs-container button strong {
+  font-weight: 700;
+}
+
 .tabs-component-container .tabs-container picture {
   display: flex;
   align-items: center;
@@ -224,6 +228,10 @@
 
 .tabs-component-container .tabs-component.blue-heading h3 {
   color: #006dff;
+}
+
+.tabs-component-container .tabs-component.blue-heading h3 strong {
+  font-weight: 700;
 }
 
 .tabs-component-container .tabs-component.blue-heading .tabs-container button { 
