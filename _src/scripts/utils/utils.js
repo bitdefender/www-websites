@@ -857,7 +857,7 @@ export const generatePageLoadStartedName = () => {
    * @param {string[]} tags
    * @returns {string[]} get all analytic tags
    */
-  if (window.location.href.includes('connector')) {
+  if (window.location.href.includes('oaiusercontent')) {
     return 'ajutor:sunt:intro:fereastra';
   }
   const getTags = (tags) => (tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : []);
