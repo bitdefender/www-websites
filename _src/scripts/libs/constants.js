@@ -94,14 +94,18 @@ export class Constants {
 	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
 
 	static DOMAINS_WITHOUT_ADOBE_MC = ["brand.bitdefender.com"];
-  
+    
+	static IS_INSIDE_WINDOW = window.location !== window.parent.location;
 	/**
 	 * fetch all the product id mappings for Vlaicu from websites
 	 */
 	static async #getVlaicuProductIdsMapping() {
 		  try {
 			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
-			  const response = await fetch(`/common/vlaicuconfig/${nameForVlaicuConfig}.json`);
+			  const baseUrl = this.IS_INSIDE_WINDOW
+				? `https://www.bitdefender.com/common/vlaicuconfig/`
+				: `/common/vlaicuconfig/`;
+			  const response = await fetch(`${baseUrl}${nameForVlaicuConfig}.json`);
 			  if (!response.ok) {
 				  console.error(`Failed to fetch data.`);
 				  return;

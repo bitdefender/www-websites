@@ -549,7 +549,7 @@ async function loadLazy(doc) {
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   sampleRUM('lazy');
@@ -675,7 +675,6 @@ function setBFCacheListener() {
 
 async function loadPage() {
   if (window.location.href.includes('oaiusercontent')) {
-    loadScript('aem-embed', `${window.hlx.codeBasePath}/scripts/aem-embed.js`, true);
     return;
   }
 
