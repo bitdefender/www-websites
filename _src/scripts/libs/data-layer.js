@@ -140,6 +140,17 @@ export const handleFileDownloadedEvents = () => {
 };
 
 /**
+ * Resolve the data layer for widget pages
+ */
+export const resolveNonProductsDataLayerforWidgets = async () => {
+  await resolvePageLoadStartedEvent();
+  pageErrorHandling();
+  checkClickEventAfterRedirect();
+  checkFormCompletedEventAfterRedirect();
+  getFreeProductsEvents();
+}
+
+/**
  * Resolve the data layer
  */
 export const resolveNonProductsDataLayer = async () => {
