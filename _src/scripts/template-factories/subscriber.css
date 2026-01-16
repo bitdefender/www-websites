@@ -1555,8 +1555,12 @@ main .subscriber .section {
         padding-left: 0em;
     }
 
-    .subscriber .columns-wrapper, .subscriber .multi-carousel-wrapper, .subscriber .columnvideo {
+    .subscriber .columns-wrapper, .subscriber .columnvideo {
         padding: var(--body-padding)!important;
+    }
+
+    .subscriber .multi-carousel-wrappe {
+        padding: var(--body-padding) 0;
     }
 
     .subscriber #customQuoteCarousel .columns, .subscriber #customQuoteCarousel .columns > div {
