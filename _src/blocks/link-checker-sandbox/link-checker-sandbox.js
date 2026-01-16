@@ -373,7 +373,7 @@ function createButtonsContainer(block) {
 
 export default async function decorate(block, onDataLoaded) {
   const structuredContent = await onDataLoaded;
-
+  console.log(structuredContent);
   const linkToCheck = structuredContent?.linkToCheck || '';
   const { checkButtonText, product } = block.closest('.section').dataset;
 
