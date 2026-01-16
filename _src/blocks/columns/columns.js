@@ -327,6 +327,8 @@ export default function decorate(block) {
     matchHeights(block, 'div > div:not(:first-of-type) p:first-of-type');
   }
 
+  if (block.classList.contains('text-over-image')) matchHeights(block, '.columns > div > div');
+
   if (block.closest('.section').classList.contains('multi-blocks')) {
     matchHeights(block.closest('.section'), '.columns');
     matchHeights(block.closest('.section'), 'table');

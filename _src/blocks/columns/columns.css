@@ -202,7 +202,7 @@
 }
 
 .text-over-image > div > div {
-  height: 600px;
+  min-height: 600px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -230,7 +230,7 @@
   gap:30px;
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: baseline;
 }
 
 .columns img {
@@ -303,7 +303,6 @@
 
 .text-over-image > div > div:first-child {
   font-size: var(--heading-font-size-s);
-  margin-bottom: -10px;
 }
 
 .percent-table .columns > div {
@@ -848,7 +847,7 @@
 }
 
 .columns-container.v-5 .columns-wrapper .columns {
-  div {
+  > div {
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -1118,6 +1117,8 @@
   .columns.benefits > div {
     display: grid;
     grid-auto-flow: column;
+    column-gap: 32px;
+    row-gap: 0;
   }
 
   .columns.benefits > div > div:has(img) {
@@ -1201,7 +1202,7 @@
     width: 100%;
     display: grid;
     grid-template-rows: subgrid;
-    grid-row: span 4;
+    grid-row: span 5;
     align-items: baseline;
     gap: 0;
   }
@@ -1247,6 +1248,8 @@
     div {
       div {
         padding: 40px 0;
+        min-height: 100%;
+        grid-auto-flow: row;
 
         > * {
           padding: 0 40px;
@@ -2891,6 +2894,10 @@
   border-radius: 5px;
   padding: 35px 0;
   color: var(--checkbox-label);
+}
+
+.columns.with-box-shadow > div {
+  align-items: baseline;
 }
 
 .columns.highlight-text.black.block > div > div:first-child {
