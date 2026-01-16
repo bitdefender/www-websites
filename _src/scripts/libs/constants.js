@@ -95,14 +95,14 @@ export class Constants {
 
 	static DOMAINS_WITHOUT_ADOBE_MC = ["brand.bitdefender.com"];
     
-	static IS_INSIDE_WINDOW = window.location !== window.parent.location;
+	static IS_INSIDE_OAI_WINDOW = window.location.href.includes('oaiusercontent');
 	/**
 	 * fetch all the product id mappings for Vlaicu from websites
 	 */
 	static async #getVlaicuProductIdsMapping() {
 		  try {
 			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
-			  const baseUrl = this.IS_INSIDE_WINDOW
+			  const baseUrl = this.IS_INSIDE_OAI_WINDOW
 				? `https://www.bitdefender.com/common/vlaicuconfig/`
 				: `/common/vlaicuconfig/`;
 			  const response = await fetch(`${baseUrl}${nameForVlaicuConfig}.json`);
