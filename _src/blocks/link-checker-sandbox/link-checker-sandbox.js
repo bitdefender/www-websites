@@ -47,8 +47,8 @@ class StatusMessageFactory {
     };
     const mappedStatus = numberToStatusMap[status] || numberToStatusMap.other;
     const isSafe = mappedStatus.includes('safe')
-                 || mappedStatus.includes('so_far_so_good_1')
-                 || mappedStatus.includes('so_far_so_good_2');
+      || mappedStatus.includes('so_far_so_good_1')
+      || mappedStatus.includes('so_far_so_good_2');
     let msg;
     if (statusMessages[mappedStatus.toLowerCase()]) {
       msg = statusMessages[mappedStatus.toLowerCase()];
@@ -152,11 +152,11 @@ function displayStoredResult(block, statusMessages, statusTitles) {
 
 const isValidUrl = (urlString) => {
   const urlPattern = new RegExp('^(https?:\\/\\/)?' // validate protocol
-      + '((([a-z\\d]([a-z\\d-_]*[a-z\\d])*)\\.)+[a-z]{2,}|' // validate domain name
-      + '((\\d{1,3}\\.){3}\\d{1,3}))' // validate OR ip (v4) address
-      + '(\\:\\d+)?(\\/[-a-z\\d%_.~+@]*)*' // validate port and path
-      + '(\\?[;&a-z\\d%\\/_@.~+=-]*)?' // validate query string
-      + '(\\#[-a-z\\d_]*)?$', 'i'); // validate fragment locator
+    + '((([a-z\\d]([a-z\\d-_]*[a-z\\d])*)\\.)+[a-z]{2,}|' // validate domain name
+    + '((\\d{1,3}\\.){3}\\d{1,3}))' // validate OR ip (v4) address
+    + '(\\:\\d+)?(\\/[-a-z\\d%_.~+@]*)*' // validate port and path
+    + '(\\?[;&a-z\\d%\\/_@.~+=-]*)?' // validate query string
+    + '(\\#[-a-z\\d_]*)?$', 'i'); // validate fragment locator
   return urlPattern.test(urlString);
 };
 
@@ -169,11 +169,11 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   }
 
   input.closest('.input-container').classList.add('loader-circle');
-  let response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
+  let response = await fetch('https://beta.nimbus.bitdefender.net/tools/link-checker', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
+      'X-Nimbus-ClientID': '2eecf6a7-7524-4ddc-9686-81bd412d2208',
     },
     body: JSON.stringify({ url }),
   });
@@ -181,11 +181,11 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   if (response.status === 401) {
     const challengeData = await response.json();
     const solvedChallenge = await BotPrevention.solveChallange(challengeData);
-    response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
+    response = await fetch('https://beta.nimbus.bitdefender.net/tools/link-checker', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
+        'X-Nimbus-ClientID': '2eecf6a7-7524-4ddc-9686-81bd412d2208',
       },
       // eslint-disable-next-line max-len
       body: JSON.stringify({ url, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
@@ -445,8 +445,8 @@ export default async function decorate(block, onDataLoaded) {
   // Check if we're on a result page and should display stored results
   const currentPath = window.location.pathname;
   const isResultPage = currentPath.includes('/link-checker/safe')
-                    || currentPath.includes('/link-checker/sofarsogood')
-                    || currentPath.includes('/link-checker/malicious');
+    || currentPath.includes('/link-checker/sofarsogood')
+    || currentPath.includes('/link-checker/malicious');
 
   if (isResultPage && page.locale === 'en-us') {
     // Check if this page load was from a reload using the Navigation API
