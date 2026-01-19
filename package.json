@@ -44,6 +44,7 @@
     "@repobit/dex-launch": "^2.0.9",
     "@repobit/dex-target": "^2.5.10",
     "@repobit/dex-utils": "^2.0.7",
+    "@repobit/login-proof-of-work": "^0.1.1",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
   },

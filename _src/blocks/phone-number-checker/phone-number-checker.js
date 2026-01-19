@@ -1,28 +1,8 @@
 import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
+import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
 
 const SITE_KEY = '6LcEH5onAAAAAH4800Uc6IYdUvmqPLHFGi_nOGeR';
-
-function loadRecaptcha() {
-  const s = document.createElement('script');
-  s.src = `https://www.google.com/recaptcha/api.js?render=${SITE_KEY}`;
-  s.async = true;
-  s.defer = true;
-  document.head.appendChild(s);
-}
-
-async function getRecaptchaToken(action) {
-  if (!window.grecaptcha) {
-    throw new Error('reCAPTCHA not loaded');
-  }
-
-  await new Promise((resolve) => {
-    window.grecaptcha.ready(() => {
-      resolve();
-    });
-  });
-  return window.grecaptcha.execute(SITE_KEY, { action });
-}
 
 let phoneUtil; let
   countries;
@@ -328,8 +308,6 @@ function getPrefix(block) {
 
 // eslint-disable-next-line max-len
 async function checkPhoneNumber(block, input, result, statusMessages, statusTitles, statusSubtitles) {
-  const recaptchaToken = await getRecaptchaToken('submit');
-
   const phoneNumberInput = input.value.trim();
   const prefix = getPrefix(block);
   const { invalidEmailText } = block.closest('.section').dataset;
@@ -361,10 +339,8 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
         device_id: 'website',
       },
       phone: `${phoneNumber}`,
-      token: recaptchaToken,
     },
   };
-
   const request = await fetchData('https://beta.nimbus.bitdefender.net/phone-checker', payload);
   if (request.error) {
     result.innerHTML = `${statusMessages.error ?? ''}`;
@@ -373,9 +349,28 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
     return;
   }
 
+  const solvedChallenge = await BotPrevention.solveChallange(request);
+
+  const solutionPayload = {
+    jsonrpc: '2.0',
+    id: 112,
+    method: 'checkPhone',
+    params: {
+      connect_source: {
+        app_id: 'com.bitdefender.website',
+        device_id: 'website',
+      },
+      pow_challenge: request.pow_challenge,
+      pow_solution: solvedChallenge.nonces,
+      phone: `${phoneNumber}`,
+    },
+  };
+
+  const secondRequest = await fetchData('https://beta.nimbus.bitdefender.net/phone-checker', solutionPayload);
+
   let statusCode; let message; let className;
 
-  switch (request.status_code) {
+  switch (secondRequest.status_code) {
     case 0:
       statusCode = 'safe';
       message = statusMessages.safe;
@@ -607,7 +602,6 @@ function displayStoredResult(block, statusMessages, statusTitles, statusSubtitle
 }
 
 export default async function decorate(block) {
-  loadRecaptcha();
   await initValidatorLibrary();
   const { checkButtonText, placeholder } = block.closest('.section').dataset;
 
