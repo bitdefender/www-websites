@@ -61,10 +61,12 @@ export class AEMEmbed extends HTMLElement {
         const onDataLoaded = new Promise((resolve) => {
           if (window.openai?.toolOutput) {
             // Already available
+            console.log('toolOutput already available');
             resolve(window.openai.toolOutput);
           } else {
             // Wait for the event
             window.addEventListener('openai:set_globals', () => {
+              console.log('toolOutput event received');
               resolve(window.openai.toolOutput);
             }, { once: true });
           }
