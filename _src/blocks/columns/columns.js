@@ -115,6 +115,12 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
   }
 }
 
+function createIframeFromHTML(html) {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html;
+  return wrapper.querySelector('iframe');
+}
+
 const slug = (s) => s?.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'tab';
 function setupTabs({ block, firstTab }) {
   const section = block.closest('.section');
@@ -161,6 +167,15 @@ function setupTabs({ block, firstTab }) {
 
   wrapper.classList.add('section-el', `section-${id}`);
   wrapper.previousElementSibling?.classList.add('section-el', `section-${id}`);
+}
+
+function isYouTubeLink(url) {
+  return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//i.test(url);
+}
+
+function getYouTubeIdFromIframe(html) {
+  const src = html.match(/src="([^"]+)"/)?.[1];
+  return src?.match(/\/embed\/([^?]+)/)?.[1];
 }
 
 export default function decorate(block) {
@@ -264,11 +279,46 @@ export default function decorate(block) {
 
   if (type && type === 'video_left') {
     block.closest('.section').classList.add('video-left');
-    const leftCol = block.querySelector('.columns-img-col');
-    const videoPath = leftCol.querySelector('tr:last-of-type').innerText.trim();
-    const videoImg = leftCol.querySelector('img').getAttribute('src');
 
-    leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
+    const leftCol = block.querySelector('.columns-img-col');
+    const raw = leftCol.querySelector('tr:last-of-type')?.innerHTML;
+    if (!raw) return;
+
+    // decode HTML
+    const decoded = (() => {
+      const t = document.createElement('textarea');
+      t.innerHTML = raw;
+      return t.value;
+    })();
+
+    // parse iframe
+    const temp = document.createElement('div');
+    temp.innerHTML = decoded;
+    const iframe = temp.querySelector('iframe');
+
+    if (!iframe || !iframe.src.includes('youtube.com/embed')) {
+      leftCol.innerHTML = decoded;
+      return;
+    }
+
+    // extract ID
+    const id = iframe.src.match(/\/embed\/([^?]+)/)?.[1];
+    if (!id) return;
+
+    // preview
+    leftCol.innerHTML = `
+      <div class="yt-preview">
+        <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+        <button class="yt-play-btn"></button>
+      </div>
+    `;
+
+    // click → iframe
+    leftCol.firstElementChild.onclick = () => {
+      iframe.src += iframe.src.includes('?') ? '&autoplay=1' : '?autoplay=1';
+      leftCol.innerHTML = '';
+      leftCol.appendChild(iframe);
+    };
   }
 
   renderNanoBlocks(block.closest('.section'), undefined, undefined, block);

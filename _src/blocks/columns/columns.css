@@ -1613,6 +1613,21 @@
   flex: none;
 }
 
+.columns-container.video-left iframe, .columns-container.video-left .yt-preview {
+  width: 100%;
+  height: 335px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.columns-container.video-left .yt-preview img {
+  margin-top: -5em;
+}
+
+.columns-container.video-left .yt-preview img {
+  
+}
+
 @media (min-width: 1271px) {
   .columns.benefits p {
     font-size: 18px;
