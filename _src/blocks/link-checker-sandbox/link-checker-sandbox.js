@@ -375,6 +375,7 @@ export default async function decorate(block, onDataLoaded) {
   const structuredContent = await onDataLoaded;
   console.log(structuredContent);
   const linkToCheck = structuredContent?.linkToCheck || '';
+  const responseText = structuredContent?.responseText || '';
   const { checkButtonText, product } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
@@ -491,6 +492,21 @@ export default async function decorate(block, onDataLoaded) {
     result.textContent = '';
     result.className = '';
   });
+
+  // if responseText is provided, don't check the link, just display the responseText
+  if (responseText) {
+    const responseTextObj = JSON.parse(responseText);
+    const { status } = responseTextObj;
+    const message = StatusMessageFactory.createMessage(status, linkToCheck, statusMessages);
+    result.innerHTML = message.text;
+    result.className = message.className;
+    block.closest('.section').classList.add(message.className.split(' ')[1]);
+    input.setAttribute('disabled', '');
+    block.querySelector('#inputDiv').textContent = linkToCheck;
+
+    changeTexts(block, message, statusTitles);
+    return;
+  }
 
   // If a linkToCheck is provided, auto-fill and check the link
   if (linkToCheck) {
