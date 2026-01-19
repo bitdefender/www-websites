@@ -6,7 +6,6 @@ import {
   WindowLoadStartedEvent,
   WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
-import { loadScript } from '@repobit/dex-utils';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {

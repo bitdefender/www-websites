@@ -373,7 +373,6 @@ function createButtonsContainer(block) {
 
 export default async function decorate(block, onDataLoaded) {
   const structuredContent = await onDataLoaded;
-  console.log(structuredContent);
   const linkToCheck = structuredContent?.linkToCheck || '';
   const responseText = structuredContent?.responseText || '';
   const { checkButtonText, product } = block.closest('.section').dataset;
@@ -508,7 +507,7 @@ export default async function decorate(block, onDataLoaded) {
     return;
   }
 
-  // If a linkToCheck is provided, auto-fill and check the link
+  // Failback for when a responseText is somehow not provided, but a linkToCheck is present
   if (linkToCheck) {
     input.value = linkToCheck;
     await checkLink(block, input, result, statusMessages, statusTitles);
