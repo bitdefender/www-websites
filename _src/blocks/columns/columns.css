@@ -2897,7 +2897,11 @@
 }
 
 .columns.with-box-shadow > div {
-  align-items: baseline;
+  align-items: flex-start;
+}
+
+.columns-container.blue-heading .columns > div {
+  align-items: flex-start;
 }
 
 .columns.highlight-text.black.block > div > div:first-child {
@@ -3013,6 +3017,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 .columns-container.gasa {
   padding: 24px;
+
   .columns-wrapper {
     padding: 0;
 
@@ -3048,6 +3053,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     .columns-wrapper {
       max-width: 1290px;
+
       .columns {
         background: linear-gradient(87.6deg, #006DFF 0%, #0C3451 100%);
         padding: 48px;
@@ -3078,7 +3084,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       color: #006DFF;
       font-size: 32px;
       font-weight: 400;
-      
       margin-bottom: 0;
     }
 
@@ -3093,12 +3098,13 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     .columns {
       padding: 0 24px;
+
       > div {
         gap: 16px;
+
         > div {
           background-color: #006DFF;
           border-radius: 20px;
-          padding: 0;
           position: relative;
           overflow: hidden;
           display: flex;
@@ -3112,6 +3118,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             margin: 0;
             z-index: 3;
             color: #fff;
+
             svg {
              position: absolute;
               top: -22.5%;
@@ -3129,6 +3136,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             margin-bottom: 8px;
             text-align: center;
             font-size: 20px;
+
             strong {
               font-weight: 600;
             }
@@ -3143,6 +3151,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     .default-content-wrapper {
       padding-bottom: 64px;
+
       h2 {
         max-width: 75%;
         font-size: 44px;
@@ -3156,6 +3165,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     .columns-wrapper {
       .columns {
         padding: 0;
+
         > div {
           gap: 32px;
 
@@ -3627,7 +3637,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgb(0 0 0 / 50%);
   color: white;
   font-style: normal;
 }
@@ -3648,7 +3658,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 .columns-tabs .section-el {
   padding-bottom: 0 !important;
   padding-top: 0 !important;
-  margin-bottom: 0em !important;
+  margin-bottom: 0 !important;
 }
 
 .columns-tabs .block > div > div {

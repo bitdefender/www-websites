@@ -307,6 +307,8 @@ export default function decorate(block) {
     cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
+
+    matchHeights(block, '.columns-container.v-5 .columns-wrapper .columns > div > div img');
   }
 
   // tabs version
