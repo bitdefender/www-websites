@@ -17,6 +17,42 @@ import {
 import {
   resolveNonProductsDataLayerforWidgets,
 } from './libs/data-layer.js';
+
+// Set up early listener for OpenAI tool output to avoid race conditions
+// This must run before any async operations to capture the event
+const openaiToolOutputPromise = new Promise((resolve) => {
+  // Check if already available (event fired before script loaded)
+  if (window.openai && 'toolOutput' in window.openai) {
+    console.log('toolOutput already available at module init');
+    resolve(window.openai.toolOutput);
+    return;
+  }
+
+  // Set up listener for the event
+  const handler = () => {
+    console.log('toolOutput event received');
+    resolve(window.openai?.toolOutput ?? null);
+  };
+  window.addEventListener('openai:set_globals', handler, { once: true });
+
+  // Also poll briefly in case the event was missed but data is set
+  let pollCount = 0;
+  const pollInterval = setInterval(() => {
+    pollCount += 1;
+    if (window.openai && 'toolOutput' in window.openai) {
+      clearInterval(pollInterval);
+      window.removeEventListener('openai:set_globals', handler);
+      console.log('toolOutput found via polling');
+      resolve(window.openai.toolOutput);
+    } else if (pollCount >= 50) {
+      // Stop polling after ~5 seconds (50 * 100ms)
+      clearInterval(pollInterval);
+      console.log('toolOutput polling timeout - no data available');
+      resolve(null);
+    }
+  }, 100);
+});
+
 // eslint-disable-next-line import/prefer-default-export
 export class AEMEmbed extends HTMLElement {
   constructor() {
@@ -57,24 +93,9 @@ export class AEMEmbed extends HTMLElement {
       // eslint-disable-next-line no-await-in-loop
       const decorateBlock = await import(blockScriptUrl);
       if (decorateBlock.default) {
-        // Create callback for when data loads
-        const onDataLoaded = new Promise((resolve) => {
-          if (window.openai?.toolOutput) {
-            // Already available
-            console.log('toolOutput already available');
-            resolve(window.openai.toolOutput);
-          } else {
-            // Wait for the event
-            window.addEventListener('openai:set_globals', () => {
-              console.log('toolOutput event received');
-              resolve(window.openai.toolOutput);
-            }, { once: true });
-          }
-        });
-
-        // Call decorate immediately with the callback
+        // Use the module-level promise that was set up early to avoid race conditions
         // eslint-disable-next-line no-await-in-loop
-        await decorateBlock.default(block, onDataLoaded);
+        await decorateBlock.default(block, openaiToolOutputPromise);
       }
     } catch (e) {
       // eslint-disable-next-line no-console
