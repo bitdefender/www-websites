@@ -115,12 +115,6 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
   }
 }
 
-function createIframeFromHTML(html) {
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = html;
-  return wrapper.querySelector('iframe');
-}
-
 const slug = (s) => s?.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'tab';
 function setupTabs({ block, firstTab }) {
   const section = block.closest('.section');
@@ -167,15 +161,6 @@ function setupTabs({ block, firstTab }) {
 
   wrapper.classList.add('section-el', `section-${id}`);
   wrapper.previousElementSibling?.classList.add('section-el', `section-${id}`);
-}
-
-function isYouTubeLink(url) {
-  return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//i.test(url);
-}
-
-function getYouTubeIdFromIframe(html) {
-  const src = html.match(/src="([^"]+)"/)?.[1];
-  return src?.match(/\/embed\/([^?]+)/)?.[1];
 }
 
 export default function decorate(block) {
