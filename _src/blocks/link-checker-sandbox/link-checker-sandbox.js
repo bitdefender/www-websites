@@ -169,11 +169,11 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   }
 
   input.closest('.input-container').classList.add('loader-circle');
-  let response = await fetch('https://beta.nimbus.bitdefender.net/tools/link-checker', {
+  let response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Nimbus-ClientID': '2eecf6a7-7524-4ddc-9686-81bd412d2208',
+      'X-Nimbus-ClientID': '76a496bc-3536-4306-8802-7c6a5e81fb5f',
     },
     body: JSON.stringify({ url }),
   });
@@ -181,11 +181,11 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   if (response.status === 401) {
     const challengeData = await response.json();
     const solvedChallenge = await BotPrevention.solveChallange(challengeData);
-    response = await fetch('https://beta.nimbus.bitdefender.net/tools/link-checker', {
+    response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Nimbus-ClientID': '2eecf6a7-7524-4ddc-9686-81bd412d2208',
+        'X-Nimbus-ClientID': '76a496bc-3536-4306-8802-7c6a5e81fb5f',
       },
       // eslint-disable-next-line max-len
       body: JSON.stringify({ url, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
