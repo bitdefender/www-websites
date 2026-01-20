@@ -65,8 +65,10 @@ export class AEMEmbed extends HTMLElement {
           } else {
             // Wait for the event
             window.addEventListener('openai:set_globals', () => {
-              resolve(window.openai.toolOutput);
-            }, { once: true });
+              if (window.openai?.toolOutput) {
+                resolve(window.openai.toolOutput);
+              }
+            });
           }
         });
 
