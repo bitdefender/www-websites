@@ -694,7 +694,9 @@ async function loadPage() {
   await loadLazy(document);
   handleFileDownloadedEvents();
 
-  await StoreResolver.resolve();
+  if (!window.disableGlobalStore) {
+    await StoreResolver.resolve();
+  }
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
   window.bd_page_ready = true;
