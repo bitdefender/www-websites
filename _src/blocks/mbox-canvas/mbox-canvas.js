@@ -185,5 +185,6 @@ export default async function decorate(block) {
   });
   await loadBlocks(block.querySelector('.canvas-content'));
   await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
+  window.disableGlobalStore = true;
   decorateIcons(block.querySelector('.canvas-content'));
 }
