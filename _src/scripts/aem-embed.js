@@ -72,6 +72,7 @@ export class AEMEmbed extends HTMLElement {
 
         // Call decorate immediately with the callback
         // eslint-disable-next-line no-await-in-loop
+        console.log(window.openai);
         console.log(onDataLoaded);
         await decorateBlock.default(block, onDataLoaded);
       }
