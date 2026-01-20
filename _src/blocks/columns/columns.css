@@ -155,10 +155,14 @@
   }
 }
 
-.columns:has(.highlight) > div > div{
+.columns:has(.highlight) > div > div {
   margin-top: 40px;
 }
 
+.boxes-type .columns.benefits > div > div {
+  grid-row: span 7;
+  align-items: flex-start;
+}
 
 .creators .columns-container h3 {
   margin-bottom: 0;
