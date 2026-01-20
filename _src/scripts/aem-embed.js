@@ -25,7 +25,6 @@ const openaiToolOutputPromise = new Promise((resolve) => {
   if (window.openai && 'toolOutput' in window.openai) {
     console.log('toolOutput already available at module init');
     resolve(window.openai.toolOutput);
-    return;
   }
 
   // Set up listener for the event
