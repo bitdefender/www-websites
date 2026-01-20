@@ -266,8 +266,10 @@ export default function decorate(block) {
     block.closest('.section').classList.add('video-left');
 
     const leftCol = block.querySelector('.columns-img-col');
-    const raw = leftCol.querySelector('tr:last-of-type')?.innerHTML;
-    if (!raw) return;
+    const cell = leftCol.querySelector('tr:last-of-type');
+    if (!cell) return;
+
+    const raw = cell.innerHTML;
 
     // decode HTML
     const decoded = (() => {
@@ -276,34 +278,50 @@ export default function decorate(block) {
       return t.value;
     })();
 
-    // parse iframe
+    // parse possible iframe
     const temp = document.createElement('div');
     temp.innerHTML = decoded;
     const iframe = temp.querySelector('iframe');
 
-    if (!iframe || !iframe.src.includes('youtube.com/embed')) {
-      leftCol.innerHTML = decoded;
+    /* youtube iframe */
+    if (iframe && iframe.src.includes('youtube.com/embed')) {
+      const id = iframe.src.match(/\/embed\/([^?]+)/)?.[1];
+      if (!id) return;
+
+      leftCol.innerHTML = `
+        <div class="yt-preview">
+          <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+          <button class="yt-play-btn"></button>
+        </div>
+      `;
+
+      leftCol.firstElementChild.onclick = () => {
+        iframe.src += iframe.src.includes('?') ? '&autoplay=1' : '?autoplay=1';
+        leftCol.innerHTML = '';
+        leftCol.appendChild(iframe);
+      };
+
       return;
     }
 
-    // extract ID
-    const id = iframe.src.match(/\/embed\/([^?]+)/)?.[1];
-    if (!id) return;
+    /* direct link */
+    const videoPath = cell.innerText.trim();
+    if (/\.(mp4|webm|ogg)$/i.test(videoPath)) {
+      const poster = leftCol.querySelector('img')?.src || '';
 
-    // preview
-    leftCol.innerHTML = `
-      <div class="yt-preview">
-        <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
-        <button class="yt-play-btn"></button>
-      </div>
-    `;
+      leftCol.innerHTML = `
+        <video
+          src="${videoPath}"
+          controls
+          playsinline
+          ${poster ? `poster="${poster}"` : ''}>
+        </video>
+      `;
+      return;
+    }
 
-    // click → iframe
-    leftCol.firstElementChild.onclick = () => {
-      iframe.src += iframe.src.includes('?') ? '&autoplay=1' : '?autoplay=1';
-      leftCol.innerHTML = '';
-      leftCol.appendChild(iframe);
-    };
+    /* fallback */
+    leftCol.innerHTML = decoded;
   }
 
   renderNanoBlocks(block.closest('.section'), undefined, undefined, block);
