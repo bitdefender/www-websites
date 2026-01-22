@@ -2070,7 +2070,7 @@
 
                 &::after {
                   content: '';
-                  width: 16px;
+                  min-width: 16px;
                   height: 14px;
                   /* stylelint-disable-next-line property-no-vendor-prefix */
                   -webkit-mask: url('/_src/icons/arrow-right-bolder.svg') no-repeat;
