@@ -101,6 +101,7 @@
 .booking-form-container form.form-submitted #title-box {
   text-align: center;
   width: 100%;
+  padding: 3em 0;
 }
 
 .booking-form-container form.form-submitted h4 .icon {
