@@ -10,7 +10,7 @@ function getItemsToShow() {
 }
 
 function countSlides(carouselContent) {
-  return Math.ceil(carouselContent.children.length / getItemsToShow());
+  return Math.ceil(carouselContent.children.length - getItemsToShow() + 1);
 }
 
 function showSlides(carousel, slideNumber) {
@@ -360,6 +360,8 @@ export default function decorate(block) {
     cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
+
+    matchHeights(block, '.columns-container.v-5 .columns-wrapper .columns > div > div img');
   }
 
   // tabs version
@@ -378,7 +380,10 @@ export default function decorate(block) {
   matchHeights(block, 'h4');
   if (block.closest('.section').classList.contains('dex-carousel-cards')) {
     matchHeights(block, 'div > div:not(:first-of-type) p:first-of-type');
+    matchHeights(block, 'div > div:not(:first-of-type) ul');
   }
+
+  if (block.classList.contains('text-over-image')) matchHeights(block, '.columns > div > div');
 
   if (block.closest('.section').classList.contains('multi-blocks')) {
     matchHeights(block.closest('.section'), '.columns');

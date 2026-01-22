@@ -173,7 +173,7 @@
 .ab-downloads main .boxes-type.columns-container .block > div > div {
     background-color: #F6F6F6;
     border-radius: 20px;
-    padding: 2em 3em;
+    padding: 2em;
 }
 
 .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2) {
@@ -194,6 +194,7 @@
 
 .ab-downloads main .boxes-type.columns-container .block > div {
     gap: 18px;
+    grid-auto-columns: 1fr;
 }
 
 .ab-downloads main .boxes-type.columns-container .block h3 {
@@ -202,6 +203,14 @@
     line-height: var(--body-font-size-xl);
     margin-top: 0;
     margin-bottom: 4px;
+}
+
+.ab-downloads main .boxes-type.columns-container .block hr {
+    height: 1px;
+    border: none;
+    background-color: #dedede;
+    margin: 0;
+    align-self: stretch;
 }
 
 .ab-downloads main .boxes-type.fix-tables-heights .block .columns-text-col > table {
@@ -225,7 +234,7 @@
 
 .ab-downloads main .boxes-type.columns-container .block a {
     width: 100%;
-    height: 45px;
+    min-height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -235,6 +244,7 @@
     font-weight: 500;
     line-height: 18.4px;
     margin: 1em 0;
+    padding: 8px 12px;
 }
 
 .ab-downloads main .boxes-type.columns-container .block em {
