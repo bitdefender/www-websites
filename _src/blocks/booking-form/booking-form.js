@@ -289,7 +289,7 @@ function handleSubmit(formBox, widgetId, token) {
         if (successMsg) {
           formBox.classList.remove('loading');
           formBox.classList.add('form-submitted');
-          formBox.querySelector('#title-box').innerHTML = successMsg.InnerHTML;
+          formBox.querySelector('#title-box').innerHTML = successMsg.innerHTML;
           successMsg.scrollIntoView({ behavior: 'smooth' });
         }
       },
