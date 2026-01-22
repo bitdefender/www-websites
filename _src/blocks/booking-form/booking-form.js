@@ -310,7 +310,7 @@ export default function decorate(block) {
       throw new Error(`Turnstile render failed: ${error.message}`);
     });
 
-    // if param d is set display the popup form
+  // if param d is set display the popup form
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('d') === 'book-a-meeting') block.closest('.section').classList.add('show');
 }
