@@ -98,8 +98,13 @@
   display: none;
 }
 
-.booking-form-container form.form-submitted h4 {
-  color: #0f970f;
+.booking-form-container form.form-submitted #title-box {
+  text-align: center;
+  width: 100%;
+}
+
+.booking-form-container form.form-submitted h4 .icon {
+  width: 30px;
 }
 
 .booking-form-container .input-row {
