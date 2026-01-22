@@ -13,6 +13,10 @@
   display: none;
 }
 
+.booking-form-container.show {
+  display: block;
+}
+
 .booking-form-container .booking-form-wrapper {
   width: 768px;
   height: auto;
@@ -137,6 +141,16 @@
   gap: 18px;
 }
 
+.booking-form-container.checkboxes-vertically .input-row .input-box.checkboxes {
+  flex: 0 0 100%;
+}
+
+.booking-form-container.checkboxes-vertically .input-row .checkboxes .all-checks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+
 .booking-form-container .input-row label.input-checkbox {
   gap: 1em;
   line-height: 20px;
@@ -209,11 +223,19 @@
   .booking-form-container .input-row .input-box {
     margin-bottom: 1em;
   }
+
+  .booking-form-container.checkboxes-vertically .input-row .checkboxes .all-checks {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media screen and (width <= 525px) {
   .booking-form-container .input-row .checkboxes .all-checks {
     gap: 0;
     flex-direction: column;
+  }
+
+  .booking-form-container.checkboxes-vertically .input-row .checkboxes .all-checks {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
