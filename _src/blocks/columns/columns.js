@@ -380,6 +380,7 @@ export default function decorate(block) {
   matchHeights(block, 'h4');
   if (block.closest('.section').classList.contains('dex-carousel-cards')) {
     matchHeights(block, 'div > div:not(:first-of-type) p:first-of-type');
+    matchHeights(block, 'div > div:not(:first-of-type) ul');
   }
 
   if (block.classList.contains('text-over-image')) matchHeights(block, '.columns > div > div');

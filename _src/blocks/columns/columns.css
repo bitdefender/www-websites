@@ -2008,6 +2008,7 @@
             ul {
               padding-left: 0;
               margin-bottom: 0;
+              margin-top: 0;
 
               li {
                 margin: 12px 0;
@@ -2064,6 +2065,8 @@
                 border-radius: 8px;
                 height: fit-content;
                 pointer-events: none;
+                max-width: 300px;
+                white-space: normal;
 
                 &::after {
                   content: '';
@@ -2458,6 +2461,7 @@
   @media (min-width: 992px) {
     &.dex-carousel-cards-individual {
       .columns-text-col:not(:first-of-type) {
+
         h4 {
           font-size: 20px;
         }
@@ -2475,7 +2479,6 @@
     &.dex-carousel-cards-family {
       .columns-text-col:not(:first-of-type) {
         h4 {
-          min-height: 48px !important;
           font-size: 20px;
         }
 
@@ -2560,6 +2563,7 @@
               box-shadow: none;
               border-color: #1EA0FF;
               padding: 20px;
+              min-height: 100%;
 
               h5 {
                 font-size: 16px;
@@ -2809,7 +2813,7 @@
     &.dex-carousel-cards-family {
       .columns-text-col:not(:first-of-type) {
         h5 {
-          min-height: 44px;
+          min-height: unset;
         }
 
         p:first-of-type {
