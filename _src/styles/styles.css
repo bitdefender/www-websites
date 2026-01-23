@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
- :root {
+ :root, :host {
   /* colors */
   --dark-background-color: #000;
   --black-color: #000;
@@ -100,6 +100,12 @@
 
   /* cta styles */
   --cta-background-light-blue: var(--background-light-blue)
+}
+
+.section.ibm-plex-sans {
+  * {
+    font-family: "IBM Plex Sans", sans-serif;
+  }
 }
 
 .w-full {
@@ -1666,6 +1672,15 @@ main .section.blue p a.button.modal::after {
 
 .tag-green {
   background-color: var(--green-tag2);
+}
+
+.green-pill {
+  background: #5cb85c;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .tag-blue-pill {

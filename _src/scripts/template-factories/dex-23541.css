@@ -184,7 +184,8 @@
                     }
 
                     p:nth-of-type(1),
-                    p:nth-of-type(2) {
+                    p:nth-of-type(2),
+                    p:nth-of-type(3) {
                         font-size: var(--body-font-size-xl);
                         line-height: 23px;
                         margin-bottom: var(--size-0);
@@ -237,12 +238,11 @@
             }
 
             .button-container {
-                display: flex;
-                gap: var(--size-16);
-                margin-bottom: var(--size-16) !important;
 
                 .button {
                     padding: 11.4px var(--size-40) 11.4px 50px;
+                    margin-right: var(--size-16);
+                    margin-bottom: var(--size-16);
                 }
 
                 .button, em {
@@ -536,6 +536,10 @@
                     }
                 }
             }
+        }
+
+        .dex-premium-security.new-prod-boxes-container.we-container > .default-content-wrapper {
+            padding-bottom: var(--size-64);
         }
 
         .dex-copilot-benefits {

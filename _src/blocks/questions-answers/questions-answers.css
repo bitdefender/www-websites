@@ -41,9 +41,10 @@
     align-items: center;
     padding-right: 25px;
     margin-bottom: 0;
+    margin-top: 2px;
 }
 
-.questions-answers-container .questions-answers-item.expanded .question h3 {
+.questions-answers-container .questions-answers-item.expanded .question h3, .questions-answers-container.blue-titles .questions-answers-item .question h3 {
     color: #006EFF;
 }
 
@@ -123,11 +124,15 @@
 }
 
 .questions-answers-item .answer p {
-    font: normal normal normal 14px/16px var(--body-font-family);
+    font: normal normal normal 14px/18px var(--body-font-family);
 }
 
 .questions-answers-item .answer p a {
     color: #006EFF;
+}
+
+.questions-answers-container.ibm-plex-sans .questions-answers-item .question h3, .questions-answers-item .answer p {
+    font-family: "IBM Plex Sans", sans-serif!important;
 }
 
 .qa-creators.questions-answers-container .default-content-wrapper p {

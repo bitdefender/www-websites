@@ -682,7 +682,7 @@ export function pushTrialDownloadToDataLayer() {
   const pushTrialData = (button = null) => {
     AdobeDataLayerService.push(new ButtonClickEvent(
       `${downloadType} downloaded`,
-      getTrialID(currentPage, button),
+      { productId: getTrialID(currentPage, button) },
     ));
   };
 
@@ -690,7 +690,8 @@ export function pushTrialDownloadToDataLayer() {
   if (sections.length) {
     sections.forEach((button) => {
       const href = button.getAttribute('href');
-      if (trialPaths.some((trialPath) => href.includes(trialPath))) {
+      if (trialPaths.some((trialPath) => href.includes(trialPath))
+        && !button.hasAttribute('data-layer-ignore')) {
         button.addEventListener('click', () => { pushTrialData(button); });
       }
     });
@@ -856,6 +857,9 @@ export const generatePageLoadStartedName = () => {
    * @param {string[]} tags
    * @returns {string[]} get all analytic tags
    */
+  if (window.location.href.includes('oaiusercontent')) {
+    return 'ajutor:sunt:intro:fereastra';
+  }
   const getTags = (tags) => (tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : []);
   const { pathname } = window.location;
 
@@ -884,13 +888,19 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:consumer:quiz`;
       if (getMetadata('skip-start-page')) tagName = `${locale}:consumer:quiz:question-1`;
       if (!pathname.endsWith('/')) {
-        const result = page.name;
-        tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
+        tagName = `${locale}:consumer:quiz:results:${subSubSubSection}`;
       }
     }
 
     if (pathname.includes('scam-masters')) {
       tagName = `${locale}:consumer:quiz:scam-masters`;
+    }
+
+    if (pathname.includes('reverse-phone-lookup')) {
+      tagName = `${locale}:consumer:product:${subSubSubSection}`;
+      if (pathname.includes('/reverse-phone-lookup/')) {
+        tagName = `${locale}:consumer:product:reverse phone lookup:${subSubSubSection}`;
+      }
     }
 
     if (window.errorCode === '404') {
