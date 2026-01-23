@@ -282,6 +282,7 @@
   width: auto;
   max-width: unset;
   height: 100px;
+  margin: auto;
 }
 
 .grey-version .columns > div {
@@ -1154,12 +1155,11 @@
     padding-top: 24px;
   
     >div {
-      flex-direction: row;
+      grid-auto-columns: 1fr;
     }
   
     > div > div {
       flex-flow: column;
-      align-items: center;
       text-align: center;
     }
   }
@@ -1491,6 +1491,8 @@
   }
 
   .creators .columns-container .columns.benefits-cards > div > div.columns-left-col, .creators .columns-container .columns.benefits-cards > div > div.columns-right-col {
+    background-color: #F6F6F6;
+    border-radius: 15px;
     padding: 27px 25px;
     height: 100%;
     text-align: left;
