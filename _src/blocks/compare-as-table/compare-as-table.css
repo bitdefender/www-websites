@@ -146,6 +146,7 @@
   align-items: center;
   padding: 0px 60px;
   border-bottom: 1px solid #d9e6f3;
+  margin: 0;
 }
 
 .block.compare-as-table > div:first-of-type ul {
