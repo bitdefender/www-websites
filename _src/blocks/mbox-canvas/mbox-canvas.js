@@ -113,8 +113,18 @@ async function updatePageLoadStartedEvent(offer) {
   trackingID = trackingID.replace('<language>', page.getParamValue('lang'));
   trackingID = trackingID.replace('<asset name>', result);
 
+  const productName = page.getParamValue('trialSku') || 'avfree';
+  const isPluginPage = !result.toLowerCase().includes('webview-table');
+  const pageType = isPluginPage ? 'plugin' : 'offer';
+
+  if (productName) {
+    trackingID = trackingID.replace('avfree', productName);
+  }
+
   const newObject = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
     pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<dynamic-content>', result);
+    pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<product>', productName);
+    pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<page-type>', pageType);
     pageLoadStartedInfo.language = page.getParamValue('lang') || 'en-us';
     return pageLoadStartedInfo;
   }, { trackingID });
