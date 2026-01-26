@@ -203,5 +203,7 @@ export default async function decorate(block) {
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
 
   await loadBlocks(block.querySelector('.canvas-content'));
+  await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
+  window.disableGlobalStore = true;
   decorateIcons(block.querySelector('.canvas-content'));
 }

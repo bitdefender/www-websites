@@ -10,7 +10,7 @@ function getItemsToShow() {
 }
 
 function countSlides(carouselContent) {
-  return Math.ceil(carouselContent.children.length / getItemsToShow());
+  return Math.ceil(carouselContent.children.length - getItemsToShow() + 1);
 }
 
 function showSlides(carousel, slideNumber) {
@@ -268,11 +268,64 @@ export default function decorate(block) {
 
   if (type && type === 'video_left') {
     block.closest('.section').classList.add('video-left');
-    const leftCol = block.querySelector('.columns-img-col');
-    const videoPath = leftCol.querySelector('tr:last-of-type').innerText.trim();
-    const videoImg = leftCol.querySelector('img').getAttribute('src');
 
-    leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
+    const leftCol = block.querySelector('.columns-img-col');
+    const cell = leftCol.querySelector('tr:last-of-type');
+    if (!cell) return;
+
+    const raw = cell.innerHTML;
+
+    // decode HTML
+    const decoded = (() => {
+      const t = document.createElement('textarea');
+      t.innerHTML = raw;
+      return t.value;
+    })();
+
+    // parse possible iframe
+    const temp = document.createElement('div');
+    temp.innerHTML = decoded;
+    const iframe = temp.querySelector('iframe');
+
+    /* youtube iframe */
+    if (iframe && iframe.src.includes('youtube.com/embed')) {
+      const id = iframe.src.match(/\/embed\/([^?]+)/)?.[1];
+      if (!id) return;
+
+      leftCol.innerHTML = `
+        <div class="yt-preview">
+          <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+          <button class="yt-play-btn"></button>
+        </div>
+      `;
+
+      leftCol.firstElementChild.onclick = () => {
+        iframe.src += iframe.src.includes('?') ? '&autoplay=1' : '?autoplay=1';
+        leftCol.innerHTML = '';
+        leftCol.appendChild(iframe);
+      };
+
+      return;
+    }
+
+    /* direct link */
+    const videoPath = cell.innerText.trim();
+    if (/\.(mp4|webm|ogg)$/i.test(videoPath)) {
+      const poster = leftCol.querySelector('img')?.src || '';
+
+      leftCol.innerHTML = `
+        <video
+          src="${videoPath}"
+          controls
+          playsinline
+          ${poster ? `poster="${poster}"` : ''}>
+        </video>
+      `;
+      return;
+    }
+
+    /* fallback */
+    leftCol.innerHTML = decoded;
   }
 
   renderNanoBlocks(block.closest('.section'), undefined, undefined, block);
@@ -312,6 +365,8 @@ export default function decorate(block) {
     cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
+
+    matchHeights(block, '.columns-container.v-5 .columns-wrapper .columns > div > div img');
   }
 
   // tabs version
@@ -330,7 +385,10 @@ export default function decorate(block) {
   matchHeights(block, 'h4');
   if (block.closest('.section').classList.contains('dex-carousel-cards')) {
     matchHeights(block, 'div > div:not(:first-of-type) p:first-of-type');
+    matchHeights(block, 'div > div:not(:first-of-type) ul');
   }
+
+  if (block.classList.contains('text-over-image')) matchHeights(block, '.columns > div > div');
 
   if (block.closest('.section').classList.contains('multi-blocks')) {
     matchHeights(block.closest('.section'), '.columns');
