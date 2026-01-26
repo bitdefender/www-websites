@@ -15,8 +15,6 @@
         transform: translateX(var(--offset));
         transition: var(--transition);
         user-select: none;
-        user-select: none;
-        user-select: none;
 
         > div {
           display: grid;

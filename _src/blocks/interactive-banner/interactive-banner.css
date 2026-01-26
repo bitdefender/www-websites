@@ -76,7 +76,6 @@
                 position: absolute;
                 left: 1.5%;
                 display:block;
-                min-width: 100%;
                 min-height: 100%;
                 height:auto;
                 max-height:82vh;
@@ -86,8 +85,6 @@
                 animation: canvas-fade-in 1.5s ease-out 0.5s both;
                 bottom: 0;
                 font-family: var(--font);
-                user-select: none;
-                user-select: none;
                 user-select: none;
                 overscroll-behavior: contain;
                 touch-action: none;
