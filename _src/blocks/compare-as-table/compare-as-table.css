@@ -29,6 +29,35 @@
   height: 100%;
 }
 
+.block.compare-as-table .active-column {
+  position: relative;
+}
+
+.block.compare-as-table .active-column::before {
+  content: "";
+  position: absolute;
+  top: -0.5625rem;
+  left: 0;
+  width: 100%;
+  height: 0.5625rem;
+  background-color: #de2985;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 1;
+}
+
+.block.compare-as-table.active-arrow .active-column::after {
+  content: "";
+  position: absolute;
+  top: -65px;
+  left: 75%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 110px; 
+  background: url("../../icons/pointing-arrow.png") no-repeat center / contain;
+  z-index: 2; 
+}
+
 .block.compare-as-table table tr, .block.compare-as-table table tr td {
   display: block;
   text-align: center;
@@ -117,6 +146,7 @@
   align-items: center;
   padding: 0px 60px;
   border-bottom: 1px solid #d9e6f3;
+  margin: 0;
 }
 
 .block.compare-as-table > div:first-of-type ul {
@@ -179,6 +209,16 @@
 
   .block.compare-as-table > div {
     margin-bottom: 1em;
+  }
+
+  .block.compare-as-table .active-column {
+    margin-top: 40px
+  }
+
+  .block.compare-as-table.active-arrow .active-column::after {
+    top: -45px;
+    width: 80px; 
+    height: 80px; 
   }
 }
 
