@@ -391,6 +391,7 @@ main .subscriber .section {
     padding-bottom: 0;
 }
 .subscriber #multiColumns .columns > div > div {
+    height: 100%;
     background-color: #F1F5F8;
     border-radius: 16px;
     padding: 24px;
@@ -1236,12 +1237,16 @@ main .subscriber .section {
     max-width: 590px;
 }
 
-.subscriber .title-aligned-left .default-content-wrapper h3 {
+.subscriber .title-aligned-left .default-content-wrapper h3, .subscriber .title-aligned-left#multiColumns .default-content-wrapper h3 {
     margin-left: 0;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div {
     padding: 32px 24px;
+    display: block;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div p {
@@ -1297,6 +1302,7 @@ main .subscriber .section {
 
 .subscriber .bundle-design2#multiColumns .columns .columns-left-col, .subscriber .bundle-design2#multiColumns .columns .columns-img-col {
     background-color: transparent;
+    display: block;
 }
 
 .subscriber .bundle-design2#multiColumns .columns .columns-left-col table tbody {
@@ -1843,9 +1849,10 @@ main .subscriber .section {
         padding-left: 0;
     }
 
-    .subscriber .title-aligned-left .default-content-wrapper h3, .subscriber #multiColumns.title-aligned-left .default-content-wrapper h3 {
-        font-size: 28px;
-        line-height: 33px;
+    .subscriber .title-aligned-left .default-content-wrapper h3, .subscriber #multiColumns.title-aligned-left .default-content-wrapper h3, .subscriber .title-aligned-left#multiColumns .default-content-wrapper h3, .bundle-design2 .columns.benefits h3 {
+        font-size: 28px!important;
+        line-height: 33px!important;
+        font-weight: 600;
         margin: 24px 0 8px;
     }
 
@@ -2065,6 +2072,7 @@ main .subscriber .section {
 
     .subscriber .bundle-design#multiColumns .columns > div > div {
         padding: 23px 20px;
+        display: block;
     }
 
     .subscriber .bundle-design#multiColumns .columns > div > div table tr {
@@ -2252,7 +2260,7 @@ main .subscriber .section {
         min-width: unset;
     }
     .subscriber #carouselLogosText .carousel-item {
-        width: 85vw;
+        width: 636px;
     }
     .subscriber #carouselLogosText .carousel-item:last-of-type {
         margin-right: 0;

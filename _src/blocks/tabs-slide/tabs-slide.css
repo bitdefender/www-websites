@@ -35,7 +35,7 @@
 .spp-slider {
     width: 100%;
     max-width: 100%;
-    margin: 30px auto;
+    margin: 0 auto;
     font-family: Arial, sans-serif;
     overflow: hidden;
 }
@@ -152,7 +152,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
-    padding: 20px;
+    padding: 20px 20px 0;
     box-sizing: border-box;
 }
 

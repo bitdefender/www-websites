@@ -165,11 +165,18 @@ function setupTabs({ block, firstTab }) {
 
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
+
+  if (bckImage) {
+    block.style.backgroundImage = `url("${bckImage}")`;
+    block.style.backgroundRepeat = "no-repeat";
+    block.style.backgroundPosition = "right";
+    block.style.backgroundSize = "auto 100%";
+  }
 
   // setup image columns
   [...block.children].forEach((row) => {
