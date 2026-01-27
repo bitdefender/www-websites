@@ -244,10 +244,6 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   top: 0;
 }
 
-.bundle-design#heroColumn table tr td:nth-of-type(1) {
-  display: none;
-}
-
 .bundle-design#heroColumn table tr td a {
   color: white;
   border-color: white;
