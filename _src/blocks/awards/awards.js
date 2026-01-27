@@ -17,7 +17,7 @@ function loadSfBadgeScript(variant) {
 }
 
 export default function decorate(block) {
-  const { dynamicAwards } = block.closest('.section').dataset;
+  const { dynamicAwards, variantIds } = block.closest('.section').dataset;
   const countChildren = (parent) => parent.children.length;
 
   [...block.children].forEach((child) => {
@@ -35,19 +35,19 @@ export default function decorate(block) {
     const target = block.querySelector('.awards > div:last-of-type > div:last-of-type');
     if (!target) return;
 
-    const variants = ['sf', 'sd', 'tbs'];
+    if (variantIds) {
+      variantIds.split(',').forEach((variantId) => {
+        const badge = document.createElement('p');
+        badge.className = 'sf-root';
+        badge.dataset.id = '3929827';
+        badge.dataset.variantId = variantId.trim();
+        badge.dataset.badge = variantId.trim() === 'tbs' ? 'partner' : 'light-partner';
+        badge.style.width = '125px';
 
-    variants.forEach((variant) => {
-      const badge = document.createElement('p');
-      badge.className = 'sf-root';
-      badge.dataset.id = '3929827';
-      badge.dataset.variantId = variant;
-      badge.dataset.badge = variant === 'tbs' ? 'partner' : 'light-partner';
-      badge.style.width = '125px';
+        target.appendChild(badge);
 
-      target.appendChild(badge);
-
-      loadSfBadgeScript(variant);
-    });
+        loadSfBadgeScript(variantId.trim());
+      });
+    }
   }
 }
