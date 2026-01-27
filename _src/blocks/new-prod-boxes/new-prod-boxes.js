@@ -118,13 +118,7 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
   const planSwitcher = document.createElement('div');
   planSwitcher.className = 'plan-switcher';
 
-  if (variant === 'addon') {
-    planSwitcher.classList.add('addon');
-  }
-
-  const radioIds = variant === 'addon'
-    ? ['add-on-yearly', 'add-on-monthly']
-    : ['yearly', 'monthly', '3-rd-button'];
+  const radioIds = ['yearly', 'monthly'];
 
   Array.from(radioButtons.children).forEach((radio, idx) => {
     const productName = prodsNames[idx];
@@ -267,18 +261,6 @@ function createFeatureList(featuresSet) {
     }).join(' ');
 
     return `<ul>${listItems}</ul>`;
-  });
-}
-
-/**
- * Checks if features contain add-on markers
- * @param {NodeList} featuresSet - Set of feature tables
- * @returns {boolean} Whether add-on content exists
- */
-function hasAddOnFeatures(featuresSet) {
-  return Array.from(featuresSet).some((table) => {
-    const cells = table.querySelectorAll('td');
-    return Array.from(cells).some((td) => td.innerHTML.includes('[add-on]'));
   });
 }
 
@@ -573,81 +555,6 @@ function setupFamilyBoxHandlers(block) {
 }
 
 /**
- * Sets up add-on checkbox functionality
- * @param {HTMLElement} boxElement - Product box element
- * @param {HTMLElement} checkmarkList - Checkmark list element
- * @param {HTMLElement} newLi - New list item element
- * @param {Object} addOnInfo - Add-on product information
- * @param {HTMLElement} addOnPriceBox - Add-on price box element
- * @param {Object} productInfo - Main product information
- */
-async function setupAddOnCheckbox(
-  boxElement,
-  checkmarkList,
-  newLi,
-  addOnInfo,
-  addOnPriceBox,
-  productInfo,
-) {
-  const { name: addOnProdName, users: addOnProdUsers, years: addOnProdYears } = addOnInfo;
-  const { name: prodName, users: prodUsers, years: prodYears } = productInfo;
-
-  const addOnProductElement = boxElement.querySelector('.add-on-product');
-  if (!addOnProductElement) return;
-
-  addOnProductElement.setAttribute('data-store-context', '');
-  addOnProductElement.setAttribute('data-store-id', addOnProdName);
-  addOnProductElement.setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-  addOnProductElement.setAttribute('data-store-department', STORE_DEPARTMENT);
-
-  try {
-    const productObject = await Store.getProducts([
-      new ProductInfo(prodName),
-      new ProductInfo(addOnProdName),
-    ]);
-
-    const product = productObject[prodName];
-    const addOnProduct = productObject[addOnProdName];
-
-    if (!addOnProduct || !product) return;
-
-    const productOption = product.getOption(prodUsers, prodYears);
-    const addOnOption = addOnProduct.getOption(addOnProdUsers, addOnProdYears);
-
-    const addOnCost = addOnOption.getDiscountedPrice('value') - productOption.getDiscountedPrice('value');
-    const formattedAddOnCost = formatPrice(addOnCost, product.getCurrency());
-
-    const addOnNewPrice = newLi.querySelector('.add-on-newprice');
-    if (addOnNewPrice) {
-      addOnNewPrice.textContent = formattedAddOnCost;
-    }
-
-    const addOnOldPrice = newLi.querySelector('.add-on-oldprice');
-    if (addOnOldPrice) {
-      addOnOldPrice.textContent = formatPrice(addOnOption.getPrice('value'), addOnProduct.getCurrency());
-    }
-
-    const addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-    if (addOnPercentSave && addOnPriceBox) {
-      const saveText = addOnPriceBox.querySelector('.prod-save')?.textContent || '';
-      const discountPercent = addOnOption.getDiscount('percentageWithProcent');
-      addOnPercentSave.textContent = `${saveText} ${discountPercent}`;
-    }
-
-    const checkboxSelector = newLi.querySelector('.checkmark');
-    if (checkboxSelector) {
-      checkboxSelector.addEventListener('change', () => {
-        checkmarkList.classList.toggle('checked', checkboxSelector.checked);
-        addOnProductElement.style.display = checkboxSelector.checked ? 'block' : 'none';
-      });
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error setting up add-on checkbox:', error);
-  }
-}
-
-/**
  * Builds a single product box HTML
  * @param {Object} config - Product box configuration
  * @returns {string} Product box HTML string
@@ -663,9 +570,6 @@ function buildProductBoxHTML(config) {
     secondButtonHTML,
     undeBuyLinkHTML,
     featureListHTML,
-    planSwitcher2HTML,
-    addonProductName,
-    hasBilled2,
     prodName,
     prodUsers,
     prodYears,
@@ -706,12 +610,6 @@ function buildProductBoxHTML(config) {
         ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
         <hr />
         <div class="benefitsLists">${featureListHTML}</div>
-        <div class="add-on-product" style="display: none;">
-          ${hasBilled2 ? '<hr>' : ''}
-          ${planSwitcher2HTML}
-          ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
-          <div class="hero-aem__prices__addon"></div>
-        </div>
       </div>
     </div>
   `;
@@ -727,13 +625,9 @@ export default async function decorate(block) {
     products,
     familyProducts,
     monthlyProducts,
-    addOnProducts,
-    addOnMonthlyProducts,
     type,
     hideDecimals,
-    thirdRadioButtonProducts,
     saveText,
-    addonProductName,
   } = section.dataset;
 
   section.classList.add('we-container');
@@ -743,10 +637,6 @@ export default async function decorate(block) {
   const familyProductsAsList = parseProductList(familyProducts);
   const combinedProducts = [...productsAsList, ...familyProductsAsList];
   const monthlyPricesAsList = parseProductList(monthlyProducts);
-  const thirdRadioButtonProductsAsList = parseProductList(thirdRadioButtonProducts);
-  const addOnProductsAsList = parseProductList(addOnProducts);
-  const addOnMonthlyProductsAsList = parseProductList(addOnMonthlyProducts);
-  const addOnProductsInitial = addOnProductsAsList?.slice(0, productsAsList.length);
 
   // Parse slider text for toggle switch
   const defaultContentWrapper = section.querySelector('.default-content-wrapper');
@@ -793,17 +683,12 @@ export default async function decorate(block) {
           buyLink,
           undeBuyLink,
           benefitsLists,
-          billed2,
-          buyLink2,
           subtitle2,
         ] = rows;
 
         // Parse product info
         const [baseProdName, baseProdUsers, baseProdYears] = (combinedProducts[key] || '').split('/');
         const monthlyInfo = monthlyPricesAsList[key]?.split('/') || [];
-        const thirdButtonInfo = thirdRadioButtonProductsAsList[key]?.split('/') || [];
-        const addOnInfo = addOnProductsAsList[key]?.split('/') || [];
-        const addOnMonthlyInfo = addOnMonthlyProductsAsList[key]?.split('/') || [];
 
         // Store billed text
         billedTexts.push(billed);
@@ -811,7 +696,6 @@ export default async function decorate(block) {
         // Check for add-on features
         const featuresSet = benefitsLists?.querySelectorAll('table') || [];
         const featureList = createFeatureList(featuresSet);
-        const hasAddOn = hasAddOnFeatures(featuresSet);
 
         // Get buy link selector
         let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
@@ -827,21 +711,9 @@ export default async function decorate(block) {
           planSwitcher = createPlanSwitcher(
             radioButtons,
             key,
-            [baseProdName, monthlyInfo[0], thirdButtonInfo[0]],
-            [baseProdUsers, monthlyInfo[1], thirdButtonInfo[1]],
-            [baseProdYears, monthlyInfo[2], thirdButtonInfo[2]],
-          );
-        }
-
-        let planSwitcher2 = document.createElement('div');
-        if (hasAddOn && addOnProducts && addOnMonthlyProducts) {
-          planSwitcher2 = createPlanSwitcher(
-            radioButtons,
-            key,
-            [addOnInfo[0], addOnMonthlyInfo[0]],
-            [addOnInfo[1], addOnMonthlyInfo[1]],
-            [addOnInfo[2], addOnMonthlyInfo[2]],
-            'addon',
+            [baseProdName, monthlyInfo[0]],
+            [baseProdUsers, monthlyInfo[1]],
+            [baseProdYears, monthlyInfo[2]],
           );
         }
 
@@ -851,12 +723,6 @@ export default async function decorate(block) {
           baseProdName,
           baseProdUsers,
           baseProdYears,
-        );
-        const addOnProductInfo = getCheckedProductInfo(
-          planSwitcher2,
-          addOnInfo[0],
-          addOnInfo[1],
-          addOnInfo[2],
         );
 
         // Get billed text based on checked radio
@@ -892,9 +758,6 @@ export default async function decorate(block) {
           secondButtonHTML: secondButton?.outerHTML || '',
           undeBuyLinkHTML: undeBuyLinkContent ? (demoBtn || undeBuyLink.innerHTML.trim()) : '',
           featureListHTML: benefitsLists?.innerText.trim() ? featureList.join('') : '',
-          planSwitcher2HTML: planSwitcher2.outerHTML || '',
-          addonProductName,
-          hasBilled2: Boolean(billed2),
           prodName: productInfo.name,
           prodUsers: productInfo.users,
           prodYears: productInfo.years,
@@ -917,57 +780,6 @@ export default async function decorate(block) {
           perPrice,
         });
         block.children[key].querySelector('.hero-aem__prices')?.appendChild(priceBox);
-
-        // Add add-on price box if needed
-        let addOnPriceBox = null;
-        if (hasAddOn && addOnProducts) {
-          addOnPriceBox = createPriceElement({
-            prodName: addOnProductInfo.name,
-            saveText,
-            buyLinkSelector: buyLink2?.querySelector('a'),
-            billedText: billed2,
-            type,
-            hideDecimals,
-            perPrice,
-          });
-          block.children[key].querySelector('.hero-aem__prices__addon')?.appendChild(addOnPriceBox);
-        }
-
-        // Setup checkmark/add-on functionality
-        const checkmark = block.children[key].querySelector('.checkmark');
-        if (checkmark) {
-          const checkmarkList = checkmark.closest('ul');
-          checkmarkList?.classList.add('checkmark-list');
-
-          const li = checkmark.closest('li');
-          if (li) {
-            li.removeChild(checkmark);
-
-            const checkBox = document.createElement('input');
-            checkBox.type = 'checkbox';
-            checkBox.className = 'checkmark';
-
-            const newLi = document.createElement('li');
-            newLi.innerHTML = `${checkBox.outerHTML}<div>${li.innerHTML}</div>`;
-            li.replaceWith(newLi);
-
-            // Set store event for add-on products
-            if (addOnProductsInitial?.some((entry) => entry.includes(addOnProductInfo.name))) {
-              block.children[key].querySelector('.add-on-product')?.setAttribute('data-store-event', storeEvent);
-            }
-
-            // Setup add-on checkbox async
-            // eslint-disable-next-line no-await-in-loop
-            await setupAddOnCheckbox(
-              block.children[key],
-              checkmarkList,
-              newLi,
-              addOnProductInfo,
-              addOnPriceBox,
-              productInfo,
-            );
-          }
-        }
       }
     }
   }
