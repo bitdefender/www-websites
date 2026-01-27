@@ -86,6 +86,10 @@
   width: 90%;
 }
 
+.awards-compact .awards-component > div:nth-child(3) {
+  width: 100%;
+}
+
 .awards-component > div:nth-child(3) div {
   display: flex;
   flex-wrap: wrap;
