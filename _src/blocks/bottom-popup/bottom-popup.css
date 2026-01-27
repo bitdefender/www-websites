@@ -2,7 +2,7 @@ main .bottom-popup-container {
     position: fixed;
     z-index: 999;
     width: 100%;
-    background: rgba(0, 0, 0, 0.50);
+    background: rgb(0 0 0 / 50%);
     height: 100%;
     top: 0;
     overflow: hidden;
@@ -14,7 +14,7 @@ main .bottom-popup-container.is-visible {
 }
 
 .bottom-popup-container .block {
-    border-radius: 20px 20px 0px 0px;
+    border-radius: 20px 20px 0 0;
     background: #FFF;
     position: fixed;
     left: 0;
