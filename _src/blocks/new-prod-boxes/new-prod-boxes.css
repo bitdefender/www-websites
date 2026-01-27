@@ -1,4 +1,4 @@
-/* stylelint-disable  */
+/* stylelint-disable selector-class-pattern, no-descending-specificity */
 .new-prod-boxes-container.remove-first > div.default-content-wrapper:first-of-type {
   display: none;
 }
@@ -16,7 +16,6 @@
   border: 2px solid var(--button-secondary-color);
   font-size: 16px;
   font-style: normal;
-  font-weight: 500;
   color: black;
   padding: 15px 10px;
   width: 100%;
@@ -35,18 +34,12 @@
   color: var(--white-color);
 }
 
-.new-prod-boxes-container {
-  padding-bottom: 0;
-  font-family: 'Arial', sans-serif;
-  margin: clamp(10px, 25px, 15px) 0;
-}
-
 .new-prod-boxes-container div.default-content-wrapper:last-of-type {
   padding: 0;
 }
 
 .new-prod-boxes-container div.default-content-wrapper:last-of-type * {
-  font: normal normal normal 12px/14px Arial;
+  font: normal normal normal 12px/14px Arial, sans-serif;
   color: black;
 }
 
@@ -87,30 +80,6 @@
   max-width: 550px;
   margin: auto;
   margin-bottom: 20px;
-}
-
-.new-prod-boxes-container .new-prod-boxes {
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.new-prod-boxes-container .new-prod-boxes .prod_box {
-  flex: 1;
-  max-width: 410px;
-  margin: 8px;
-  margin-bottom: 50px;
-}
-
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
-  position: relative;
-  height: 100%;
-  background-color: #F6F6F6;
-  border-radius: 20px;
-  padding: 25px;
-  margin: 0 auto;
 }
 
 .new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box hr:last-of-type{
@@ -172,7 +141,6 @@
   color: white;
   text-align: center;
   background-color: #026DFF;
-  display: inline-block;
   border-radius: 20px;
   padding: 6px 16px;
   margin-bottom: 10px;
@@ -279,6 +247,7 @@
   margin-bottom: 0;
   font-size: 14px;
 }
+
 .new-prod-boxes-container .new-prod-boxes.new-green-check .inner_prod_box p:last-of-type{
   margin-top: 0;
   font-size: 14px;
@@ -312,11 +281,6 @@
   margin: 10px 0;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
-  font-family: Arial, sans-serif;
-  color: transparent;
-}
-
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists p {
   margin: 0;
 }
@@ -324,12 +288,6 @@
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists u {
   font-size: var(--body-font-size-xs);
   text-decoration: none;
-}
-
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul {
-  margin-top: -5px;
-  padding: 0;
-  color: black;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li {
@@ -351,17 +309,47 @@
 }
 
 .new-prod-boxes-container {
+  padding-bottom: 0;
+  font-family: Arial, sans-serif;
+  margin: clamp(10px, 25px, 15px) 0;
+
   .new-prod-boxes {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     .prod_box {
+      flex: 1;
+      max-width: 410px;
+      margin: 8px;
+      margin-bottom: 50px;
+
       .inner_prod_box {
+        position: relative;
+        height: 100%;
+        background-color: #F6F6F6;
+        border-radius: 20px;
+        padding: 25px;
+        margin: 0 auto;
+
         .benefitsLists {
+          font-family: Arial, sans-serif;
+          color: transparent;
+
           ul {
+            margin-top: -5px;
+            padding: 0;
+            color: black;
+
             &.checkmark-list {
               background-color: #E7E7E7;
               padding: 13px 48px 16px 10px;
               filter: grayscale(1);
               border-radius: 8px;
               margin-bottom: 8px;
+
               li {
                 &:first-of-type {
                   display: flex;
@@ -369,34 +357,33 @@
                   font-size: 14px;
 
                   .checkmark {
-                      appearance: none;
-                      -webkit-appearance: none;
-                      display: grid;
+                    appearance: none;
+                    display: grid;
+                    width: 18px;
+                    height: 18px;
+                    padding: 0;
+                    border: 1px solid #FFF;
+                    border-radius: 1px;
+                    margin-right: 16px;
+                    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+
+                    &::after {
+                      content: "";
                       width: 18px;
                       height: 18px;
-                      padding: 0;
-                      border: 1px solid #FFFFFF;
-                      border-radius: 1px;
-                      margin-right: 16px;
-                      transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+                      clip-path: polygon(17% 54%, 28% 43%, 38% 54%, 70% 22%, 81% 33%, 38% 75%, 17% 54%);
+                      transform: scale(0);
+                      background-color: white;
+                    }
 
-                      &::after {
-                        content: "";
-                        width: 18px;
-                        height: 18px;
-                        clip-path: polygon(17% 54%, 28% 43%, 38% 54%, 70% 22%, 81% 33%, 38% 75%, 17% 54%);
-                        transform: scale(0);
-                        background-color: white;
-                      }
-                      &:checked {
-                        background: #016DFF 0% 0% no-repeat padding-box;
-                        -webkit-box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
-                        -moz-box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
-                        box-shadow: 0px 0px 5px 0px rgba(1,109,255,1);
-                      }
-                      &:checked::after {
-                        transform: scale(1);
-                      }
+                    &:checked {
+                      background: #016DFF 0% 0% no-repeat padding-box;
+                      box-shadow: 0 0 5px 0 rgb(1 109 255 / 100%);
+                    }
+
+                    &:checked::after {
+                      transform: scale(1);
+                    }
                   }
                 }
               }
@@ -475,17 +462,17 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) ul {
-    position: absolute;
-    background-color: white;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 28px;
-    left: 0;
-    bottom: 0;
-    z-index: 1;
-    font-size: 12px;
-    box-shadow: 4px 4px 7px -8px #000;
-    display: none;
+  position: absolute;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 28px;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  font-size: 12px;
+  box-shadow: 4px 4px 7px -8px #000;
+  display: none;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) .white-pill-content::before, .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) ul::before {
@@ -551,10 +538,12 @@
   font-size: 35px;
   font-weight: bold;
 }
+
 .new-prod-boxes-container .prod-newprice .per-m {
   font-size: 20px;
   top: -12px;
 }
+
 .new-prod-boxes-container .newprice-container {
   line-height: 1;
 }
@@ -680,7 +669,7 @@
 .new-prod-boxes-container .icon {
   width: 12px;
   height: 14px;
-  margin: 0 0 0 0;
+  margin: 0;
 }
 
 .new-prod-boxes-container .icon svg {
@@ -697,7 +686,7 @@
   color: white;
   font-style: normal;
   font-size: 11px;
-  letter-spacing: 0px;
+  letter-spacing: 0;
   font-weight: bold;
   display: inline-flex;
   justify-content: center;
@@ -832,7 +821,7 @@
   margin-top: 16px;
 }
 
-.plan-switcher input[type=radio] {
+.plan-switcher input[type="radio"] {
   position: relative;
   display: none;
   opacity: 0;
@@ -861,12 +850,12 @@
   transition: all 250ms ease;
 }
 
-.plan-switcher input[type=radio]:checked+.radio-label:before {
+.plan-switcher input[type="radio"]:checked+.radio-label::before {
   background-color: #3197EE;
   box-shadow: inset 0 0 0 4px #f4f4f4;
 }
 
-.plan-switcher input[type=radio]:focus+.radio-label:before {
+.plan-switcher input[type="radio"]:focus+.radio-label::before {
   outline: none;
   border-color: #3197EE;
 }
@@ -888,8 +877,8 @@
   }
 
   .new-prod-boxes-container.revert-arrows .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
-  transform: rotate(-90deg);
-}
+    transform: rotate(-90deg);
+  }
 
 }
 
@@ -906,18 +895,14 @@
     flex-direction: row;
     padding-bottom: 60px;
     align-items: initial;
-    margin-top: 37px;
-
-    &.five-cards {
-      flex-wrap: wrap;
-    }
-  }
-
-  .new-prod-boxes-container .new-prod-boxes {
     margin: 0 auto;
     display: grid;
     gap: 0;
     grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
+
+    &.five-cards {
+      flex-wrap: wrap;
+    }
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box {
