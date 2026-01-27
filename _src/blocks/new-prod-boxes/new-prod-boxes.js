@@ -1,5 +1,4 @@
-import { formatPrice, checkIfNotProductPage } from '../../scripts/utils/utils.js';
-import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
+import { checkIfNotProductPage } from '../../scripts/utils/utils.js';
 
 // Constants for store department and price attributes
 const STORE_DEPARTMENT = 'consumer';
