@@ -218,11 +218,6 @@ function processFeatureContent(content, tdElement) {
 
   // Handle special markers using replaceAll for consistency
   const replacements = [
-    ['[checkmark]', '<span class="checkmark"></span>'],
-    ['[add-on]', ''],
-    ['&lt;&lt;add-on-newprice&gt;&gt;', '<span class="add-on-newprice"></span>'],
-    ['&lt;&lt;add-on-oldprice&gt;&gt;', '<span class="add-on-oldprice"></span>'],
-    ['&lt;&lt;add-on-percent-save&gt;&gt;', '<span class="add-on-percent-save"></span>'],
     ['[[', '('],
     [']]', ')'],
   ];
@@ -692,7 +687,6 @@ export default async function decorate(block) {
         // Store billed text
         billedTexts.push(billed);
 
-        // Check for add-on features
         const featuresSet = benefitsLists?.querySelectorAll('table') || [];
         const featureList = createFeatureList(featuresSet);
 
