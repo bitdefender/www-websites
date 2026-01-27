@@ -201,6 +201,11 @@
     flex-wrap: nowrap;
   }
 
+  .dynamic-awards  .awards-component > div:nth-child(3) div {
+    max-width: 1024px;
+    flex-wrap: nowrap;
+  }
+
   .vsb.awards-component > div:nth-child(3) div {
     flex-wrap: wrap;
   }

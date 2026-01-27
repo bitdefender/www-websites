@@ -1,12 +1,24 @@
 // eslint-disable-next-line no-unused-vars
 import { matchHeights } from '../../scripts/utils/utils.js';
 
+// Load SourceForge badge script
+
+function loadSfBadgeScript(variant) {
+  const src = `https://b.sf-syn.com/badge_js?sf_id=3929827&variant_id=${variant}`;
+
+  if ([...document.scripts].some((s) => s.src === src)) {
+    return; // already loaded
+  }
+
+  const script = document.createElement('script');
+  script.src = src;
+  script.async = true;
+  document.body.appendChild(script);
+}
+
 export default function decorate(block) {
-  // count the children of a div
-  const countChildren = (parent) => {
-    const { children } = parent;
-    return children.length;
-  };
+  const { dynamicAwards } = block.closest('.section').dataset;
+  const countChildren = (parent) => parent.children.length;
 
   [...block.children].forEach((child) => {
     if (countChildren(child) === 2) {
@@ -18,4 +30,24 @@ export default function decorate(block) {
       });
     }
   });
+
+  if (dynamicAwards) {
+    const target = block.querySelector('.awards > div:last-of-type > div:last-of-type');
+    if (!target) return;
+
+    const variants = ['sf', 'sd', 'tbs'];
+
+    variants.forEach((variant) => {
+      const badge = document.createElement('p');
+      badge.className = 'sf-root';
+      badge.dataset.id = '3929827';
+      badge.dataset.variantId = variant;
+      badge.dataset.badge = variant === 'tbs' ? 'partner' : 'light-partner';
+      badge.style.width = '125px';
+
+      target.appendChild(badge);
+
+      loadSfBadgeScript(variant);
+    });
+  }
 }
