@@ -215,6 +215,10 @@
     padding: 0;
 }
 
+.carousel-with-preview-container.bundle-design2 .carousel-item h3 {
+    min-height: 56px;
+}
+
 .carousel-with-preview-container.bundle-design2 .carousel-item h3, .carousel-with-preview-container.bundle-design2 .carousel-item h3 * {
     font-weight: 600;
     font-size: 24px;
