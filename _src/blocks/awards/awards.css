@@ -86,7 +86,7 @@
   width: 90%;
 }
 
-.awards-compact .awards-component > div:nth-child(3) {
+.awards-component > div:nth-child(3) {
   width: 100%;
 }
 
@@ -389,7 +389,7 @@
     margin-bottom: 0;
   }
 
-  .awards-compact .awards-component h3{
+  .awards-component h3{
     max-width: 560px;
   }
 
