@@ -209,9 +209,6 @@
 @media (max-width: 579px) {
   .awards-component > div:nth-child(3) div img {
     height: 50px;
-  }
-
-  .awards-component > div:nth-child(3) div img {
     max-width: 90px;
   }
 
@@ -256,7 +253,7 @@
   }
 
     .awards-container.awards-extended h3 {
-    font: normal normal bold 24px/28px Arial;
+    font: normal normal bold 24px/28px Arial, sans-serif;
     margin-top: 10px;
   }
 
@@ -367,14 +364,14 @@
     width: 50% !important;
   }
 
-  .awards-component > div:nth-child(2){
+  .awards-compact .awards-component > div:nth-child(2){
     width: 600px !important;
-    font: normal normal normal 18px/21px Arial;
+    font: normal normal normal 18px/21px Arial, sans-serif;
   }
 
-    .awards-component > div:nth-child(4){
+  .awards-compact .awards-component > div:nth-child(4){
     width: 600px !important;
-    font: normal normal normal 18px/21px Arial;
+    font: normal normal normal 18px/21px Arial, sans-serif;
   }
 
   .awards-component > div:nth-child(3) {
@@ -389,7 +386,7 @@
     margin-bottom: 0;
   }
 
-  .awards-component h3{
+  .awards-compact .awards-component h3{
     max-width: 560px;
   }
 
