@@ -342,62 +342,7 @@
             margin-top: -5px;
             padding: 0;
             color: black;
-
-            &.checkmark-list {
-              background-color: #E7E7E7;
-              padding: 13px 48px 16px 10px;
-              filter: grayscale(1);
-              border-radius: 8px;
-              margin-bottom: 8px;
-
-              li {
-                &:first-of-type {
-                  display: flex;
-                  align-items: center;
-                  font-size: 14px;
-
-                  .checkmark {
-                    appearance: none;
-                    display: grid;
-                    width: 18px;
-                    height: 18px;
-                    padding: 0;
-                    border: 1px solid #FFF;
-                    border-radius: 1px;
-                    margin-right: 16px;
-                    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
-
-                    &::after {
-                      content: "";
-                      width: 18px;
-                      height: 18px;
-                      clip-path: polygon(17% 54%, 28% 43%, 38% 54%, 70% 22%, 81% 33%, 38% 75%, 17% 54%);
-                      transform: scale(0);
-                      background-color: white;
-                    }
-
-                    &:checked {
-                      background: #016DFF 0% 0% no-repeat padding-box;
-                      box-shadow: 0 0 5px 0 rgb(1 109 255 / 100%);
-                    }
-
-                    &:checked::after {
-                      transform: scale(1);
-                    }
-                  }
-                }
-              }
-
-              &.checked {
-                filter: grayscale(0);
-                background-color: #EAF5EC;
-              }
-            }
           }
-        }
-
-        .add-on-product {
-          transition: all 0.4s;
         }
       }
     }
