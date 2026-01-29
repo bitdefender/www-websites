@@ -240,6 +240,10 @@
   .vsb.awards-component > div:nth-child(3) div {
     flex-wrap: wrap;
   }
+
+  .awards-container .block.awards-component .cards .card .icon{
+    max-width: 38px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -393,6 +397,10 @@
 
   .awards-compact .awards-component h3{
     max-width: 560px;
+  }
+
+  .awards-extended .awards-component h3{
+    max-width: 760px;
   }
 
   .awards-container.we-container {
