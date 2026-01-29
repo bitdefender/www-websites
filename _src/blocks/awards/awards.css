@@ -390,6 +390,10 @@
     max-width: 560px;
   }
 
+  .awards-extended .awards-component h3{
+    max-width: 760px;
+  }
+
   .awards-container.we-container {
     max-width: 1332px;
     padding-left: 20px;
