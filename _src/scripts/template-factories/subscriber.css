@@ -907,8 +907,6 @@ main .subscriber .section {
     font-size: 18px;
     line-height: 25.2px;
     text-align: center;
-    border: 2px solid #1A7DFF;
-    background-color: #1A7DFF;
     color: white;
     display: inline-flex;
     align-items: center;
