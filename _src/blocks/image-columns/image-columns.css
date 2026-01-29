@@ -234,6 +234,10 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   flex: 0 0 681px;
 }
 
+.bundle-design#heroColumn .image-columns .image-columns-txt-col.mp4video {
+  mix-blend-mode: plus-lighter;
+}
+
 .bundle-design#heroColumn .image-columns > div >div:last-of-type > p {
   padding: 0;
   margin: 0;
@@ -273,7 +277,7 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   transition: all 0.5s ease;
 }
 
-@media (min-width: 767px){
+@media (min-width: 767px) {
   .image-columns.quotes > div {
     flex-direction: unset;
     column-gap: 58px;
@@ -308,9 +312,22 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   padding-left: 0;
   margin-top: 16px;
 }
+
 @media (max-width: 991px) {
   .image-columns-container.bundle-design .image-columns > div > div:last-of-type img {
     visibility: hidden;
+  }
+
+  .bundle-design#heroColumn, .bundle-design#heroColumn .block > div {
+    min-height: auto;
+  }
+
+  .bundle-design#heroColumn .image-columns .image-columns-txt-col.mp4video {
+    display: none;
+  }
+
+  .bundle-design#heroColumn .image-columns .image-columns-txt-col {
+    flex: unset
   }
 }
 

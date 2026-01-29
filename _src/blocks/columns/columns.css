@@ -2332,6 +2332,7 @@
 
     &.baby-blue-banner {
       background-color: #006eff;
+      position: relative;
 
       @media (width <= 991px) {
         border-radius: 12px;
@@ -2339,6 +2340,26 @@
 
       > div {
         display: block;
+      }
+
+      > div:nth-of-type(2) {
+        position: absolute;
+        width: 100%;
+        height: 85%;
+        top: 7%;
+        right: 10%;
+
+        .icon {
+          width: auto;
+          height: 100%;
+        }
+
+        .columns-title-col {
+          width: 100%;
+          max-width: unset;
+          height: 100%;
+          text-align: right;
+        }
       }
 
       .columns-title-col {

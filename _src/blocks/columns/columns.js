@@ -171,6 +171,7 @@ export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
+  console.log('bckImage ', bckImage)
   if (bckImage) {
     block.style.backgroundImage = `url("${bckImage}")`;
     block.style.backgroundRepeat = "no-repeat";
