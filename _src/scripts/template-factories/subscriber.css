@@ -60,13 +60,14 @@ main .subscriber .section {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    padding: 0 20px;
 }
 
 .subscriber #heroColumn table tr td a:hover {
     background-color: black;
 }
 
-.subscriber #heroColumn table tr td:nth-of-type(1) {
+.subscriber #heroColumn table tr td:nth-of-type(1) a {
     margin-right: 16px;
     height: 49px;
     width: max-content;
@@ -91,10 +92,6 @@ main .subscriber .section {
     transition: all 0.3s ease;  
     border-radius: 8px;
     color: white;
-}
-
-.subscriber #heroColumn table tr td:hover {
-    background-color: #003385;
 }
 
 .subscriber .columnvideo {
@@ -207,7 +204,7 @@ main .subscriber .section {
     transition: all 0.5s ease;
 }
 
-.subscriber .columnvideo > div.image-columns-wrapper table tbody > tr td:first-of-type > a {
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td:first-of-type > a {
     color:  black;
     background-color: white;
 }
@@ -1253,7 +1250,7 @@ main .subscriber .section {
     color: black;
 }
 
-.subscriber .bundle-design#multiColumns .columns > div > div img {
+.subscriber .bundle-design#multiColumns .columns > div > div .icon {
     width: 100%;
     height: auto;
     border-radius: 10px;
