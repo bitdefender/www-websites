@@ -186,7 +186,7 @@
 .carousel-with-preview-container.bundle-design2 .carousel-item > div {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-start;
     height: 100%;
 }
 
@@ -194,14 +194,29 @@
     display: block;
 }
 
-.carousel-with-preview-container.bundle-design2 .carousel-item > div > p:first-of-type {
-    margin: -32px -24px auto!important;
-    padding: 0;
-}
-
 .carousel-with-preview-container.bundle-design2 .carousel-item > div > p {
     padding: 0;
     margin: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item > div > p:last-of-type {
+    margin-top: auto;
+    display: flex;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item > div > p:last-of-type video {
+    width: calc(100% + 48px);
+    margin: 10px -24px -36px;
+    mix-blend-mode: plus-lighter;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item > div > p:last-of-type .icon {
+    margin: 0;
+    padding: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item h3 {
+    min-height: 56px;
 }
 
 .carousel-with-preview-container.bundle-design2 .carousel-item h3, .carousel-with-preview-container.bundle-design2 .carousel-item h3 * {
@@ -211,6 +226,11 @@
     color: #1B1B1B;
     text-decoration: none;
     margin: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item h3 em {
+    font-style: normal;
+    color: #006DFF;
 }
 
 .carousel-with-preview-container.bundle-design2 .carousel-item hr {
@@ -366,7 +386,7 @@
 }
 
 
-@media (min-width: 1600px) {
+@media (max-width: 1600px) {
     .carousel-with-preview-container {
         max-width: var(--section-large-desktop-max-width);
     }
@@ -444,6 +464,20 @@
         line-height: 38.4px !important;
     }
 
+    .carousel-with-preview-container.bundle-design2 .carousel-item {
+        padding: 24px 20px;
+    }
+
+    .carousel-with-preview-container.bundle-design2 .carousel-item h3, .carousel-with-preview-container.bundle-design2 .carousel-item h3 * {
+        font-size: 20px;
+        line-height: 25px;
+        margin-top: 10px;
+    }
+
+    .carousel-with-preview-container.bundle-design2 .carousel-wrapper {
+        margin-top: 55px;
+    }
+
     .carousel-with-preview-container .caption > strong {
         font-size: 14px;
     }
@@ -453,13 +487,17 @@
     }
 
     .carousel-with-preview-container.bundle-design2 .navContainer {
-        top: -4em;
+        top: -3em;
     }
 }
 
 @media (max-width: 550px) {
     .carousel-with-preview-container .carousel-item {
         width: 206px;
+    }
+
+    .carousel-with-preview-container.bundle-design2 .carousel-item {
+        width: 265px;
     }
 
     .carousel-with-preview-container .featured-video iframe {

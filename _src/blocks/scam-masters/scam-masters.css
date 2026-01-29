@@ -26,6 +26,7 @@ body:has(.scam-masters-container) {
         background-color: white;
         transition: opacity 0.25s, height 0.25s, display 0.25s allow-discrete;
         padding-top: 5px !important;
+
         @media (max-width: 992px) {
             padding: 0 !important;
         }
@@ -541,7 +542,7 @@ body:has(.scam-masters-container) {
                     background-color: white;
                     color: var(--color-bd-blue);
                     border-color: var(--color-bd-blue);
-                    padding: 12px 40px 12px 40px;
+                    padding: 12px 40px;
 
                     &:hover {
                         filter: brightness(0.9);
@@ -585,7 +586,7 @@ body:has(.scam-masters-container) {
 
                     div:nth-child(1) {
                         padding-left: 39px;
-                        background: url("/common/icons/acq-icon-1.svg") top 0px left no-repeat transparent;
+                        background: url("/common/icons/acq-icon-1.svg") top 0 left no-repeat transparent;
                         background-size: 26px;
 
                         p:nth-child(1) {
@@ -595,7 +596,7 @@ body:has(.scam-masters-container) {
 
                     div:nth-child(2) {
                         padding-left: 39px;
-                        background: url("/common/icons/acq-icon-2.svg") top 0px left no-repeat transparent;
+                        background: url("/common/icons/acq-icon-2.svg") top 0 left no-repeat transparent;
                         background-size: 26px;
 
                         p:nth-child(1) {
@@ -670,12 +671,14 @@ body:has(.scam-masters-container) {
                     font-weight: 700;
                     font-size: 24px;
                     line-height: 100%;
-                    letter-spacing: 0px;
+                    letter-spacing: 0;
                     color: var(--color-dark-green);
+
                     u {
                         color: black;
                         text-decoration: none;
                     }
+
                     &::before {
                         display: none;
                     }
@@ -685,7 +688,7 @@ body:has(.scam-masters-container) {
                     font-weight: 700;
                     font-size: 24px;
                     line-height: 100%;
-                    letter-spacing: 0px;
+                    letter-spacing: 0;
                     color: var(--color-wrong);
 
                     &::before {
@@ -789,7 +792,6 @@ body:has(.scam-masters-container) {
             .clickable-question.correct-answer, .clickable-question.wrong-answer {
                 & >div:last-child {
                     .question-scam-tag {
-                        display: flex !important;
                         background-color: var(--color-pink);
                         color: var(--color-wrong);
                         padding: 10px 20px;
@@ -801,7 +803,6 @@ body:has(.scam-masters-container) {
                         right: auto;
                         border-radius: 12px;
                         z-index: 10;
-                        display: flex;
                         transform: rotate(-13.23deg);
 
                         .icon {
@@ -816,6 +817,7 @@ body:has(.scam-masters-container) {
         
     }
 }
+
 .smaller-title .scam-masters .start-page > div:first-child h1 {
     font-size: 60px;
     line-height: 65px;
@@ -853,7 +855,6 @@ body:has(.scam-masters-container) {
 
     @media (max-width: 1200px) {
         .scam-masters {
-
             .question,
             .result {
                 >div:nth-of-type(2) img {
@@ -967,6 +968,7 @@ body:has(.scam-masters-container) {
                         background-color: var(--color-bd-blue);
                         border: none;
                         border-radius: 0;
+
                         .start-content {
                             display: none; 
                         }
@@ -1160,6 +1162,7 @@ body:has(.scam-masters-container) {
                         p {
                             margin: 0;
                             font-size: 16px;
+
                             strong {
                                 font-size: 24px;
                             }
@@ -1220,7 +1223,7 @@ body:has(.scam-masters-container) {
                             .image-wrapper {
                                 max-height: 290px;
                                 position: relative;
-                                top: 0px;
+                                top: 0;
                             }
                         }
                     }

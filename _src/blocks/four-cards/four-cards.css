@@ -390,6 +390,7 @@
 .four-cards.blue {
   display: flex;
   justify-content: center;
+
   ul {
     justify-content: center;
 
@@ -401,6 +402,7 @@
       max-width: 300px;
       background-color: #E4F2FF;
       gap: 30px;
+
       h4 {
         font-size: 18px;
       }
@@ -507,6 +509,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
+
   .creator-cards .four-cards.white-cards.block ul li {
     max-width: 360px;
     background-color: #FFF;

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
- :root {
+ :root, :host {
   /* colors */
   --dark-background-color: #000;
   --black-color: #000;
