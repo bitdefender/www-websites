@@ -286,7 +286,7 @@
                             gap: var(--gap);
 
                             &:has(.size-large) {
-                                flex-flow: unset wrap;
+                                flex-flow: row wrap;
                             }
 
                             .card {
