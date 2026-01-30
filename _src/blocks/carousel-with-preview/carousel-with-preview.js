@@ -207,6 +207,19 @@ export default function decorate(block) {
       initToggleList(ul);
     });
 
+    const lastItemText = itemDiv.querySelector('p:last-of-type');
+    const maybeVideo = lastItemText.textContent.includes('mp4');
+    if (maybeVideo) {
+      const videoName = lastItemText.closest('p').textContent.trim();
+      console.log(videoName)
+      lastItemText.innerHTML = `
+        <video autoplay loop muted playsinline>
+          <source src="/_src/images/${videoName}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      `;
+    }
+
     carousel.appendChild(itemDiv);
     createdItems.push(itemDiv);
   });

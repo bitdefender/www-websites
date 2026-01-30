@@ -289,7 +289,7 @@ function handleSubmit(formBox, widgetId, token) {
         if (successMsg) {
           formBox.classList.remove('loading');
           formBox.classList.add('form-submitted');
-          formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
+          formBox.querySelector('#title-box').innerHTML = successMsg.innerHTML;
           successMsg.scrollIntoView({ behavior: 'smooth' });
         }
       },
@@ -309,4 +309,8 @@ export default function decorate(block) {
     .catch((error) => {
       throw new Error(`Turnstile render failed: ${error.message}`);
     });
+
+  // if param d is set display the popup form
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('d') === 'book-a-meeting') block.closest('.section').classList.add('show');
 }

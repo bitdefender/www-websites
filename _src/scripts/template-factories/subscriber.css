@@ -60,16 +60,17 @@ main .subscriber .section {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    padding: 0 20px;
 }
 
 .subscriber #heroColumn table tr td a:hover {
     background-color: black;
 }
 
-.subscriber #heroColumn table tr td:nth-of-type(1) {
+.subscriber #heroColumn table tr td:nth-of-type(1) a {
     margin-right: 16px;
     height: 49px;
-    width: 214px;
+    width: max-content;
     border-radius: 8px;
     font-weight: 500;
     font-size: 18px;
@@ -91,10 +92,6 @@ main .subscriber .section {
     transition: all 0.3s ease;  
     border-radius: 8px;
     color: white;
-}
-
-.subscriber #heroColumn table tr td:hover {
-    background-color: #003385;
 }
 
 .subscriber .columnvideo {
@@ -207,7 +204,7 @@ main .subscriber .section {
     transition: all 0.5s ease;
 }
 
-.subscriber .columnvideo > div.image-columns-wrapper table tbody > tr td:first-of-type > a {
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td:first-of-type > a {
     color:  black;
     background-color: white;
 }
@@ -391,6 +388,7 @@ main .subscriber .section {
     padding-bottom: 0;
 }
 .subscriber #multiColumns .columns > div > div {
+    height: 100%;
     background-color: #F1F5F8;
     border-radius: 16px;
     padding: 24px;
@@ -909,8 +907,6 @@ main .subscriber .section {
     font-size: 18px;
     line-height: 25.2px;
     text-align: center;
-    border: 2px solid #1A7DFF;
-    background-color: #1A7DFF;
     color: white;
     display: inline-flex;
     align-items: center;
@@ -1236,19 +1232,23 @@ main .subscriber .section {
     max-width: 590px;
 }
 
-.subscriber .title-aligned-left .default-content-wrapper h3 {
+.subscriber .title-aligned-left .default-content-wrapper h3, .subscriber .title-aligned-left#multiColumns .default-content-wrapper h3 {
     margin-left: 0;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div {
     padding: 32px 24px;
+    display: block;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div p {
     color: black;
 }
 
-.subscriber .bundle-design#multiColumns .columns > div > div img {
+.subscriber .bundle-design#multiColumns .columns > div > div .icon {
     width: 100%;
     height: auto;
     border-radius: 10px;
@@ -1297,6 +1297,7 @@ main .subscriber .section {
 
 .subscriber .bundle-design2#multiColumns .columns .columns-left-col, .subscriber .bundle-design2#multiColumns .columns .columns-img-col {
     background-color: transparent;
+    display: block;
 }
 
 .subscriber .bundle-design2#multiColumns .columns .columns-left-col table tbody {
@@ -1843,9 +1844,10 @@ main .subscriber .section {
         padding-left: 0;
     }
 
-    .subscriber .title-aligned-left .default-content-wrapper h3, .subscriber #multiColumns.title-aligned-left .default-content-wrapper h3 {
-        font-size: 28px;
-        line-height: 33px;
+    .subscriber .title-aligned-left .default-content-wrapper h3, .subscriber #multiColumns.title-aligned-left .default-content-wrapper h3, .subscriber .title-aligned-left#multiColumns .default-content-wrapper h3, .bundle-design2 .columns.benefits h3 {
+        font-size: 28px!important;
+        line-height: 33px!important;
+        font-weight: 600;
         margin: 24px 0 8px;
     }
 
@@ -2065,6 +2067,7 @@ main .subscriber .section {
 
     .subscriber .bundle-design#multiColumns .columns > div > div {
         padding: 23px 20px;
+        display: block;
     }
 
     .subscriber .bundle-design#multiColumns .columns > div > div table tr {
@@ -2252,7 +2255,7 @@ main .subscriber .section {
         min-width: unset;
     }
     .subscriber #carouselLogosText .carousel-item {
-        width: 85vw;
+        width: 636px;
     }
     .subscriber #carouselLogosText .carousel-item:last-of-type {
         margin-right: 0;

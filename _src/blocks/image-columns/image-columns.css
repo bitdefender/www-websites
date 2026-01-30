@@ -156,6 +156,7 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 
   .image-columns-txt-col{
     padding: 20px 40px;
+
     @media (min-width: 992px) {
       padding: 40px 0 40px 60px ;
     }
@@ -163,9 +164,11 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 
   .image-columns-img-col {
     min-height: 100%;
+
     .img-container {
       min-height: 100%;
       position: relative;
+
       img {
         position: absolute;
         min-height: 100%;
@@ -207,10 +210,32 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 .bundle-design#heroColumn {
   background-color: #003385;
   padding: 0;
+  min-height: 600px;
+  display: flex;
+  overflow: hidden;
 }
 
 .bundle-design#heroColumn * {
   color: white;
+}
+
+.bundle-design#heroColumn .block > div {
+  min-height: 600px;
+}
+
+.bundle-design#heroColumn .block > div h2 {
+  font-size: 52px;
+  line-height: 60px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.bundle-design#heroColumn .image-columns .image-columns-txt-col {
+  flex: 0 0 681px;
+}
+
+.bundle-design#heroColumn .image-columns .image-columns-txt-col.mp4video {
+  mix-blend-mode: plus-lighter;
 }
 
 .bundle-design#heroColumn .image-columns > div >div:last-of-type > p {
@@ -218,8 +243,12 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   margin: 0;
 }
 
-.bundle-design#heroColumn table tr td:nth-of-type(1) {
-  display: none;
+.bundle-design#heroColumn .image-columns img {
+  width: auto;
+  position: absolute;
+  height: 600px;
+  top: 0;
+  right: -18em;
 }
 
 .bundle-design#heroColumn table tr td a {
@@ -248,7 +277,7 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   transition: all 0.5s ease;
 }
 
-@media (min-width: 767px){
+@media (min-width: 767px) {
   .image-columns.quotes > div {
     flex-direction: unset;
     column-gap: 58px;
@@ -283,9 +312,22 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   padding-left: 0;
   margin-top: 16px;
 }
+
 @media (max-width: 991px) {
   .image-columns-container.bundle-design .image-columns > div > div:last-of-type img {
     visibility: hidden;
+  }
+
+  .bundle-design#heroColumn, .bundle-design#heroColumn .block > div {
+    min-height: auto;
+  }
+
+  .bundle-design#heroColumn .image-columns .image-columns-txt-col.mp4video {
+    display: none;
+  }
+
+  .bundle-design#heroColumn .image-columns .image-columns-txt-col {
+    flex: unset
   }
 }
 
