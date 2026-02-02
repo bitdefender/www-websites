@@ -785,7 +785,7 @@ export function decorateButtons(element) {
           return;
         }
         // Example: <p><a href="example.com">? Text</a></p>
-        if (up.childNodes.length === 1 && up.tagName === 'P' && up.innerText.startsWith('?')) {
+        if (up.childNodes.length === 1 && up.tagName === 'P' && up.textContent.startsWith('?')) {
           a.className = 'info-button modal';
           up.classList.add('info-button-container');
           a.textContent = a.textContent.slice(1).trim();
@@ -793,7 +793,7 @@ export function decorateButtons(element) {
           return;
         }
 
-        if (up.childNodes.length === 1 && up.tagName === 'P' && up.innerText.startsWith('->')) {
+        if (up.childNodes.length === 1 && up.tagName === 'P' && up.textContent.startsWith('->')) {
           a.className = 'button link-arrow-right';
           up.classList.add('button-container');
           a.textContent = a.textContent.slice(2).trim();
