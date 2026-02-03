@@ -1398,6 +1398,27 @@
                 padding-bottom: 0;
             }
         }
+
+        .dex-25983-hero .hero-aem .hero-aem__card .hero-aem__card-text .button-container + p a {
+            padding: var(--size-12) var(--size-18);
+            border: var(--size-2) solid var(--background-blue);
+            color: var(--background-blue);
+            background-color: var(--white-color);
+            transition: all .2s cubic-bezier(.4, 0, .2, 1);
+
+            span {
+                transform: none;
+            }
+
+            &::after {
+                display: none;
+            }
+
+            &:hover, &:focus, &:active {
+                background-color: var(--background-blue);
+                color: var(--white-color);
+            }
+        }
     }
 }
 
