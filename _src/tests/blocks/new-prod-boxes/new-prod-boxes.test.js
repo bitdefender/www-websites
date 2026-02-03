@@ -53,8 +53,10 @@ describe('new-prod-boxes', () => {
   });
 
   it('decorates the block', () => {
-    const block = document.querySelector('.new-prod-boxes');
+    const block = document.querySelector('.new-prod-boxes-container');
+    const wrapper = block.querySelector('.new-prod-boxes-wrapper');
     expect(block).toBeTruthy();
+    expect(wrapper).toBeTruthy();
   });
 
   it('creates product boxes', () => {
