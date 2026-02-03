@@ -10,7 +10,8 @@
 
         .columns-grid {
             --gap: 16px;
-            background: radial-gradient(85.44% 88.72% at 50.04% 100%, rgba(0, 51, 133, 0) 0%, #003385 100%),
+
+            background: radial-gradient(85.44% 88.72% at 50.04% 100%, rgb(0 51 133 / 0%) 0%, #003385 100%),
             url('../../icons/cross-pattern.png') repeat;
             background-size: cover, 54px;
             min-width: 100%;
@@ -56,11 +57,13 @@
                             justify-content: center;
                             overflow: hidden;
                             min-width: 100%;
+
                             --hue: 338.69;
                             --saturation: 100%;
                             --lightness: 30.04%;
                             --flow-space: 0.5em;
                             --hsl: var(--hue), var(--saturation), var(--lightness);
+
                             transition: background 400ms  ease;
                             will-change: background;
 
@@ -82,6 +85,7 @@
 
                                 &:hover {
                                     --lightness: 95%;
+
                                     background: #0045ad; 
                                 }
                             }
@@ -224,11 +228,6 @@
                     pointer-events: none;
                     user-select: none;
                     opacity: var(--opacity, 0);
-                    -webkit-mask: radial-gradient(
-                        25rem 25rem at var(--x) var(--y),
-                        #000 1%,
-                        transparent 50%
-                    );
                     mask: radial-gradient(
                         25rem 25rem at var(--x) var(--y),
                         #000 1%,
@@ -238,13 +237,14 @@
                     will-change: mask;
 
                     .front, .back {
-                        background: radial-gradient(circle at var(--x) var(--y), rgba(255, 72, 0, 0.75));
-                        background-color: hsla(var(--hsl), 0.15);
-                        border-color: hsla(var(--hsl), 1);
+                        background: radial-gradient(circle at var(--x) var(--y), rgb(255 72 0 / 75%));
+                        background-color: hsl(var(--hsl) 0.15);
+                        border-color: hsl(var(--hsl) 1);
                         box-shadow: 0 0 0 1px inset hsl(var(--hsl));
                         opacity: var(--opacity, 0);   
                         transition: opacity 0.3s ease;
                         border: none !important;
+
                         * {
                             visibility: hidden;
                         }
@@ -261,6 +261,7 @@
 
             .columns-grid {
                 --gap: 24px;
+
                 padding: 47px 24px;
                 border-radius: 20px;
 
@@ -285,8 +286,7 @@
                             gap: var(--gap);
 
                             &:has(.size-large) {
-                                flex-direction: unset;
-                                flex-wrap: wrap;
+                                flex-flow: row wrap;
                             }
 
                             .card {

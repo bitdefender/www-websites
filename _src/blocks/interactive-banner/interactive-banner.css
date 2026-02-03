@@ -31,6 +31,14 @@
 
 @font-face {
     font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-SemiBold.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
     src: url('../../fonts/IBMPlexSans-Bold.woff2') format('woff2');
     font-style: normal;
     font-weight: 700;
@@ -68,7 +76,6 @@
                 position: absolute;
                 left: 1.5%;
                 display:block;
-                min-width: 100%;
                 min-height: 100%;
                 height:auto;
                 max-height:82vh;
@@ -78,8 +85,6 @@
                 animation: canvas-fade-in 1.5s ease-out 0.5s both;
                 bottom: 0;
                 font-family: var(--font);
-                user-select: none;
-                user-select: none;
                 user-select: none;
                 overscroll-behavior: contain;
                 touch-action: none;
