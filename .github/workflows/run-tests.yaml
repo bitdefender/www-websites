@@ -19,6 +19,7 @@ jobs:
         node-version: '20' #required for npm 8 or later.
     - run: npm install
     - run: npm run lint
+    - run: npm run test
       env:
         CI: true
   # ghost_inspector_tests:
