@@ -137,7 +137,7 @@ main .section.link-checker-container {
         margin-top: 24px;
         &::before {
             border: 1px solid #FFD2C7;
-            background-color: #006EFF;
+            background-color: #FAF4EA;
             background-image: url("../../icons/skills-checker-pattern.svg");
         }
 
