@@ -1,64 +1,81 @@
-export default function decorate(block) {
-  const items = Array.from(block.querySelectorAll(':scope > div'));
+import { Constants } from '../../scripts/libs/constants.js';
+import '@repobit/dex-system-design/accordion-bg';
+import '@repobit/dex-system-design/heading';
+import '@repobit/dex-system-design/paragraph';
+import '@repobit/dex-system-design/link';
+import '@repobit/dex-system-design/list';
+import '@repobit/dex-system-design/list-item';
 
-  items.forEach((item, index) => {
-    item.classList.add('accordion-item');
-    const [header, content] = item.children;
-    header.classList.add('accordion-item-header');
-
-    // A11Y: focusabil, activabil, semantic
-    header.setAttribute('tabindex', '0');
-    header.setAttribute('role', 'button');
-    header.setAttribute('aria-expanded', 'false');
-    header.setAttribute('aria-controls', `accordion-content-${index}`);
-    content.setAttribute('id', `accordion-content-${index}`);
-
-    if (content) {
-      content.classList.add('accordion-item-content');
-      const p = content.querySelector('p');
-      if (!p) {
-        const newP = document.createElement('p');
-        newP.innerHTML = content.innerHTML;
-        content.innerHTML = '';
-        content.appendChild(newP);
-      }
-    }
-
-    const toggleItem = () => {
-      const isOpen = item.classList.contains('expanded');
-      items.forEach((i) => {
-        i.classList.remove('expanded');
-        i.querySelector('.accordion-item-header')?.setAttribute('aria-expanded', 'false');
-      });
-
-      if (!isOpen) {
-        item.classList.add('expanded');
-        header.setAttribute('aria-expanded', 'true');
-      } else {
-        header.setAttribute('aria-expanded', 'false');
-      }
-    };
-
-    if ([...block.classList].includes('action-only-on-header')) {
-      header.addEventListener('click', toggleItem);
-    } else {
-      item.addEventListener('click', toggleItem);
-    }
-
-    // A11Y: tastatură
-    header.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleItem();
-      }
-    });
+/**
+ * transform all elements into design systems elements
+ * @param {HTMLElement} parent
+ */
+const transformAllChildren = (parent) => {
+  [...parent.children].forEach((child) => {
+    transformAllChildren(child);
   });
 
-  // Prima deschisă
-  if (block.classList.contains('first-open')) {
-    const firstItem = items[0];
-    firstItem.classList.add('expanded');
-    const header = firstItem.querySelector('.accordion-item-header');
-    if (header) header.setAttribute('aria-expanded', 'true');
+  if (['DIV', 'STRONG'].includes(parent.tagName)) {
+    return;
   }
+
+  let newParent;
+  switch (parent.tagName) {
+    case 'P': {
+      newParent = document.createElement('bd-p');
+      break;
+    }
+
+    case 'A': {
+      newParent = document.createElement('bd-link');
+      newParent.setAttribute('href', parent.href);
+      break;
+    }
+
+    case 'UL': {
+      newParent = document.createElement('bd-list');
+      break;
+    }
+
+    case 'LI': {
+      newParent = document.createElement('bd-li');
+      break;
+    }
+
+    default: {
+      newParent = document.createElement('bd-h');
+      newParent.setAttribute('as', parent.tagName.toLowerCase());
+      break;
+    }
+  }
+
+  newParent.replaceChildren(...parent.childNodes);
+  parent.replaceWith(newParent);
+};
+
+export default function decorate(block) {
+  const blockContainer = block.closest('.accordion-container');
+  const firstDefaultWrapper = blockContainer?.querySelector('.default-content-wrapper');
+  const accordionTitle = firstDefaultWrapper?.querySelector(Constants.HEADINGS_QUERY)?.textContent;
+  const bdAccordion = document.createElement('bd-accordion-bg');
+  bdAccordion.setAttribute('title', accordionTitle || '');
+  firstDefaultWrapper?.remove();
+
+  const items = Array.from(block.querySelectorAll(':scope > div'));
+  items.forEach((item) => {
+    const bdAccordionItem = document.createElement('bd-accordion-bg-item');
+    // item.classList.add('accordion-item');
+    const [header, content] = item.children;
+    const headerTitle = header.querySelector(Constants.HEADINGS_QUERY)?.textContent;
+    bdAccordionItem.setAttribute('title', headerTitle || '');
+    bdAccordionItem.appendChild(content);
+
+    [...bdAccordionItem.children].forEach((child) => {
+      transformAllChildren(child);
+    });
+
+    bdAccordion.appendChild(bdAccordionItem);
+  });
+
+  block.replaceChildren(bdAccordion);
 }
