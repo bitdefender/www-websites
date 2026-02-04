@@ -117,7 +117,7 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
   const planSwitcher = document.createElement('div');
   planSwitcher.className = 'plan-switcher';
 
-  const radioIds = ['yearly', 'monthly'];
+  const radioIds = ['yearly', 'monthly', '3-rd-button'];
 
   Array.from(radioButtons.children).forEach((radio, idx) => {
     const productName = prodsNames[idx];
@@ -619,6 +619,7 @@ export default async function decorate(block) {
     products,
     familyProducts,
     monthlyProducts,
+    thirdRadioButtonProducts,
     type,
     hideDecimals,
     saveText,
@@ -631,6 +632,7 @@ export default async function decorate(block) {
   const familyProductsAsList = parseProductList(familyProducts);
   const combinedProducts = [...productsAsList, ...familyProductsAsList];
   const monthlyPricesAsList = parseProductList(monthlyProducts);
+  const thirdRadioButtonProductsAsList = parseProductList(thirdRadioButtonProducts);
 
   // Parse slider text for toggle switch
   const defaultContentWrapper = section.querySelector('.default-content-wrapper');
@@ -677,12 +679,18 @@ export default async function decorate(block) {
           buyLink,
           undeBuyLink,
           benefitsLists,
+          // these rows are not longer used but kept for structure consistency
+          // eslint-disable-next-line no-unused-vars
+          billed2,
+          // eslint-disable-next-line no-unused-vars
+          buyLink2,
           subtitle2,
         ] = rows;
 
         // Parse product info
         const [baseProdName, baseProdUsers, baseProdYears] = (combinedProducts[key] || '').split('/');
         const monthlyInfo = monthlyPricesAsList[key]?.split('/') || [];
+        const thirdButtonInfo = thirdRadioButtonProductsAsList[key]?.split('/') || [];
 
         // Store billed text
         billedTexts.push(billed);
@@ -704,9 +712,9 @@ export default async function decorate(block) {
           planSwitcher = createPlanSwitcher(
             radioButtons,
             key,
-            [baseProdName, monthlyInfo[0]],
-            [baseProdUsers, monthlyInfo[1]],
-            [baseProdYears, monthlyInfo[2]],
+            [baseProdName, monthlyInfo[0], thirdButtonInfo[0]],
+            [baseProdUsers, monthlyInfo[1], thirdButtonInfo[1]],
+            [baseProdYears, monthlyInfo[2], thirdButtonInfo[2]],
           );
         }
 
@@ -739,7 +747,7 @@ export default async function decorate(block) {
         if (secondButton) {
           secondButton.classList.add('button', 'secondary', 'no-arrow');
         }
-
+        console.log(subtitle2);
         // Build product box HTML
         const prodBoxHTML = buildProductBoxHTML({
           greenTagText: greenTag?.textContent?.trim(),
