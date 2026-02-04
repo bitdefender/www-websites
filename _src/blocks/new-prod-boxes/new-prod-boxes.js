@@ -654,24 +654,9 @@ async function setupAddOnCheckbox(
  */
 function buildProductBoxHTML(config) {
   const {
-    greenTagText,
-    titleHTML,
-    blueTagsHTML,
-    subtitleHTML,
-    subtitle2HTML,
-    planSwitcherHTML,
-    secondButtonHTML,
-    undeBuyLinkHTML,
-    featureListHTML,
-    planSwitcher2HTML,
-    addonProductName,
-    hasBilled2,
-    prodName,
-    prodUsers,
-    prodYears,
-    isIndividual,
-    storeEvent,
-    productsAsList,
+    greenTagText, titleHTML, blueTagsHTML, subtitleHTML, subtitle2HTML, planSwitcherHTML,
+    secondButtonHTML, undeBuyLinkHTML, featureListHTML, planSwitcher2HTML, addonProductName,
+    hasBilled2, prodName, prodUsers, prodYears, isIndividual, storeEvent, productsAsList,
   } = config;
 
   const hasGreenTag = greenTagText && greenTagText !== 'demo-box';
