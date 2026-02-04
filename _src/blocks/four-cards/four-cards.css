@@ -504,6 +504,15 @@
     grid-template-columns: 300px 300px 300px;
     grid-gap: 14px;
   }
+
+  .creator-cards.full-width .four-cards-wrapper {
+    max-width: 1332px;
+    padding: 0;
+  }
+
+  .creator-cards.full-width .four-cards > ul {
+    grid-template-columns: repeat(3, minmax(300px, 424px));
+  }
   
   .creator-cards .four-cards.white-cards.block ul{
     display: grid;
