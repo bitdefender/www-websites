@@ -17,6 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Mock the external dependencies
 vi.mock('../../../scripts/utils/utils.js', () => ({
   checkIfNotProductPage: vi.fn(() => true),
+  generatePageLoadStartedName: vi.fn(() => 'test:page'),
 }));
 
 // Load mock HTML once
@@ -27,7 +28,7 @@ describe('new-prod-boxes', () => {
     // Setup window mocks
     window.hj = vi.fn();
     Object.defineProperty(window, 'location', {
-      value: { href: 'http://localhost:3000/en-us/consumer/' },
+      value: { href: 'http://localhost:3000/en-us/consumer/', hostname: 'localhost:3000' },
       writable: true,
     });
 

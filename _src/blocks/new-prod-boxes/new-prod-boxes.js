@@ -408,7 +408,7 @@ function createTitleHTML(titleRow) {
  * @returns {string} Subtitle HTML string
  */
 function createSubtitleHTML(subtitleRow) {
-  const text = subtitleRow?.innerText.trim();
+  const text = subtitleRow?.textContent.trim();
   if (!text) return '';
 
   const wordCount = text.split(/\s+/).length;
@@ -868,15 +868,15 @@ export default async function decorate(block) {
 
         // Build product box HTML
         const prodBoxHTML = buildProductBoxHTML({
-          greenTagText: greenTag?.innerText.trim(),
+          greenTagText: greenTag?.textContent.trim(),
           titleHTML,
           blueTagsHTML: blueTagsContainer.innerHTML,
           subtitleHTML,
-          subtitle2HTML: subtitle2?.innerText.trim() || '',
+          subtitle2HTML: subtitle2?.textContent.trim() || '',
           planSwitcherHTML: radioButtons ? planSwitcher.outerHTML : '',
           secondButtonHTML: secondButton?.outerHTML || '',
           undeBuyLinkHTML: undeBuyLinkContent ? (demoBtn || undeBuyLink.innerHTML.trim()) : '',
-          featureListHTML: benefitsLists?.innerText.trim() ? featureList.join('') : '',
+          featureListHTML: benefitsLists?.textContent.trim() ? featureList.join('') : '',
           planSwitcher2HTML: planSwitcher2.outerHTML || '',
           addonProductName,
           hasBilled2: Boolean(billed2),
