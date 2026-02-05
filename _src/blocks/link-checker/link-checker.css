@@ -155,15 +155,15 @@ main .section.link-checker-container {
            overflow-wrap: anywhere;
 
            &:not(.no-response) {
-            padding: 20px 30px 20px 55px;
+                padding: 20px 30px 20px 55px;
 
-            code {
-                font-family: "Courier New", Courier, monospace;
-            }
+                code {
+                    font-family: "Courier New", Courier, monospace;
+                }
 
-            &::before {
-                top: 60%;
-            }
+                &::before {
+                    top: 20px;
+                }
            }
         }
     }
