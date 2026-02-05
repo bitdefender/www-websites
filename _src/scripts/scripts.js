@@ -5,15 +5,12 @@ import {
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
-  ProductLoadedEvent,
 } from '@repobit/dex-data-layer';
-import { registerActionNodes, registerContextNodes, registerRenderNodes } from '@repobit/dex-store-elements';
-import store from './store.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
   sampleRUM,
-  loadHeader, 
+  loadHeader,
   loadFooter,
   decorateButtons,
   decorateIcons,
@@ -39,6 +36,7 @@ import {
   getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
+import { StoreResolver } from './libs/store/index.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
