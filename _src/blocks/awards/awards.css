@@ -29,13 +29,21 @@
   width: 100%;
 }
 
+.awards-compact .awards-component {
+  padding: 15px;
+}
+
 .awards-container p {
   line-height: 1.45;
 }
 
+.awards-container.awards-compact p{
+  margin: 0;
+}
+
 .awards-container h3 {
   font-size: 32px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .awards-container .button-container {
@@ -78,6 +86,10 @@
   width: 90%;
 }
 
+.awards-component > div:nth-child(3) {
+  width: 100%;
+}
+
 .awards-component > div:nth-child(3) div {
   display: flex;
   flex-wrap: wrap;
@@ -91,6 +103,7 @@
 .awards-component > div:nth-child(3) div img {
   height: 100px;
   max-width: 100%;
+  min-width: 40px;
   width: auto;
   object-fit: contain;
 }
@@ -147,8 +160,11 @@
   }
 }
 
-.awards-container.new-design .block.awards-component {
+.awards-compact .awards-component > div:nth-child(1) img {
+  width: 45px !important;
+}
 
+.awards-container.new-design .block.awards-component {
   h3 {
     margin-bottom: 12px;
   }
@@ -193,6 +209,20 @@
 @media (max-width: 579px) {
   .awards-component > div:nth-child(3) div img {
     height: 50px;
+    max-width: 90px;
+  }
+
+  .awards-extended .awards-component > div:nth-child(1) img {
+    width: 45px;
+  }
+
+  .awards-container .block.awards-component .cards .card {
+    padding: 10px 20px;
+  }
+
+  .awards-container .block.awards-component .cards .card .icon{
+    max-width: 30px;
+    margin-bottom: 0; 
   }
 }
 
@@ -202,8 +232,17 @@
     flex-wrap: nowrap;
   }
 
+  .dynamic-awards  .awards-component > div:nth-child(3) div {
+    max-width: 1024px;
+    flex-wrap: nowrap;
+  }
+
   .vsb.awards-component > div:nth-child(3) div {
     flex-wrap: wrap;
+  }
+
+  .awards-container .block.awards-component .cards .card .icon{
+    max-width: 38px;
   }
 }
 
@@ -217,8 +256,17 @@
     line-height: 38px;
   }
 
-  .awards-container.new-design .block.awards-component {
+  .awards-container.awards-compact h3 {
+    font: normal normal bold 24px/28px Arial, sans-serif;
+    margin-top: 10px;
+  }
 
+    .awards-container.awards-extended h3 {
+    font: normal normal bold 24px/28px Arial, sans-serif;
+    margin-top: 10px;
+  }
+
+  .awards-container.new-design .block.awards-component {
     h3 {
         font-size: 40px;
     }
@@ -325,6 +373,16 @@
     width: 50% !important;
   }
 
+  .awards-compact .awards-component > div:nth-child(2){
+    width: 600px !important;
+    font: normal normal normal 18px/21px Arial, sans-serif;
+  }
+
+  .awards-compact .awards-component > div:nth-child(4){
+    width: 600px !important;
+    font: normal normal normal 18px/21px Arial, sans-serif;
+  }
+
   .awards-component > div:nth-child(3) {
     display: flex;
     flex-direction: row;
@@ -335,6 +393,14 @@
   .awards-component h3 {
     font: normal normal bold 32px/38px Arial, sans-serif;
     margin-bottom: 0;
+  }
+
+  .awards-compact .awards-component h3{
+    max-width: 560px;
+  }
+
+  .awards-extended .awards-component h3{
+    max-width: 760px;
   }
 
   .awards-container.we-container {

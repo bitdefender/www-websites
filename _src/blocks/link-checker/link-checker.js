@@ -77,7 +77,12 @@ function changeTexts(block, result, statusTitles) {
 }
 
 function getResultPagePath(status, mappedStatus) {
-  // Only redirect for en-us locale
+  // Only redirect for en-us locale and link-checker pages
+  // TODO: remove this when ai-checker component is in=mplemnented
+  if (!window.location.pathname.includes('link-checker')) {
+    return null;
+  }
+
   if (page.locale !== 'en-us') {
     return null;
   }
@@ -160,49 +165,75 @@ const isValidUrl = (urlString) => {
 };
 
 async function checkLink(block, input, result, statusMessages, statusTitles) {
-  const url = input.value.trim();
-  if (!url || !isValidUrl(url)) {
+  const inputUrl = input.value.trim();
+  if (!inputUrl || !isValidUrl(inputUrl)) {
     result.textContent = 'Please enter a valid URL';
     result.className = 'result danger';
     return;
   }
 
   input.closest('.input-container').classList.add('loader-circle');
-  let response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
-    },
-    body: JSON.stringify({ url }),
-  });
-
-  if (response.status === 401) {
-    const challengeData = await response.json();
-    const solvedChallenge = await BotPrevention.solveChallange(challengeData);
+  let response;
+  if (window.location.pathname.includes('link-checker')) {
     response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
       },
-      // eslint-disable-next-line max-len
-      body: JSON.stringify({ url, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
+      body: JSON.stringify({ url: inputUrl }),
     });
-  }
 
-  if (!response.ok) {
-    result.innerHTML = `
+    if (response.status === 401) {
+      const challengeData = await response.json();
+      const solvedChallenge = await BotPrevention.solveChallange(challengeData);
+      response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
+        },
+        // eslint-disable-next-line max-len
+        body: JSON.stringify({ url: inputUrl, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
+      });
+    }
+
+    if (!response.ok) {
+      result.innerHTML = `
       <strong>Something went wrong</strong><br>
       The system encountered an error while trying to check the link you provided. Please try again in a few minutes.`;
-    result.className = 'result danger no-response';
-    input.closest('.input-container').classList.remove('loader-circle');
-    return;
+      result.className = 'result danger no-response';
+      input.closest('.input-container').classList.remove('loader-circle');
+      return;
+    }
+  } else {
+    response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'scan_url',
+        url: inputUrl,
+      }),
+    });
+
+    if (!response.ok) {
+      result.textContent = 'Please enter a valid skill URL';
+      result.className = 'result danger';
+      input.closest('.input-container').classList.remove('loader-circle');
+      return;
+    }
   }
 
   const data = await response.json();
-  const { status } = data;
-  const message = StatusMessageFactory.createMessage(status, url, statusMessages);
+  let status;
+  if (window.location.pathname.includes('link-checker')) {
+    status = data.status;
+  } else {
+    status = data.risk_level === 'CLEAN' ? 1 : 18;
+  }
+  const message = StatusMessageFactory.createMessage(status, inputUrl, statusMessages);
 
   // Redirect to a result page (only for en-us)
   const resultPagePath = getResultPagePath(status, message.status);
@@ -210,7 +241,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   if (resultPagePath) {
     // Store the result data for the result page
     sessionStorage.setItem('linkCheckerResult', JSON.stringify({
-      url,
+      url: inputUrl,
       status,
       mappedStatus: message.status,
       message: message.text,
@@ -228,7 +259,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
-  document.getElementById('inputDiv').textContent = url;
+  document.getElementById('inputDiv').textContent = inputUrl;
 
   changeTexts(block, message, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
@@ -367,7 +398,7 @@ function createButtonsContainer(block) {
 }
 
 export default function decorate(block) {
-  const { checkButtonText, product } = block.closest('.section').dataset;
+  const { checkButtonText, product, pasteLinkText } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
   privacyPolicyDiv.classList.add('privacy-policy');
@@ -390,7 +421,7 @@ export default function decorate(block) {
 
   const input = document.createElement('input');
   input.type = 'text';
-  input.placeholder = 'example-url.com';
+  input.placeholder = pasteLinkText ?? 'example-url.com';
   input.id = 'link-checker-input';
 
   const copyElement = document.createElement('span');

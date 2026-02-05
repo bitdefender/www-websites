@@ -10,6 +10,7 @@ import {
   generatePageLoadStartedName,
   GLOBAL_EVENTS,
 } from './utils/utils.js';
+import { Constants } from './libs/constants.js';
 
 export const target = new Target({
   pageLoadStartedEvent: new PageLoadStartedEvent(
@@ -89,10 +90,18 @@ export function appendAdobeMcLinks(selector) {
   try {
     const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
 
-    const hrefSelector = '[href*=".bitdefender."]';
+    // mimic production hostname on local env
+    const pageUrlHostname = window.location.hostname === 'localhost'
+      ? 'www.bitdefender.com'
+      : window.location.hostname;
+
+    const hrefSelector = 'a[href*=".bitdefender."]';
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
-      const destinationURLWithVisitorIDs = await target.appendVisitorIDsTo(link.href);
-      link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+      if (link.hostname !== pageUrlHostname
+        && !Constants.DOMAINS_WITHOUT_ADOBE_MC.includes(link.hostname)) {
+        const destinationURLWithVisitorIDs = await target.appendVisitorIDsTo(link.href);
+        link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
+      }
     });
   } catch (e) {
     // eslint-disable-next-line no-console
@@ -167,3 +176,5 @@ export function adobeMcAppendVisitorId(selector) {
     });
   }
 }
+
+window.target = target;

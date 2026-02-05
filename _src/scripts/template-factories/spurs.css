@@ -216,3 +216,9 @@
         font-weight: 400;
     }
 }
+
+@media (min-width: 1200px) {
+   header, body > div:first-child {
+    min-height: 64px;
+  }
+}

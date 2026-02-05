@@ -22,11 +22,15 @@
 }
 
 .tabs-component-container h3 {
-  font: normal normal bold 24px/28px Arial, sans-serif;
+  font-size: 24px;
+  list-style: 24px;
+  font-family: Arial, sans-serif;
 }
 
 .tabs-component-container p {
-  font: normal normal normal 16px/24px Arial, sans-serif;
+  font-size: 16px;
+  list-style: 24px;
+  font-family: Arial, sans-serif;
   color: grey;
   margin-bottom: 0;
 
@@ -200,6 +204,10 @@
   display: none;
 }
 
+.tabs-component-container .tabs-container button strong {
+  font-weight: 700;
+}
+
 .tabs-component-container .tabs-container picture {
   display: flex;
   align-items: center;
@@ -222,6 +230,10 @@
   color: #006dff;
 }
 
+.tabs-component-container .tabs-component.blue-heading h3 strong {
+  font-weight: 700;
+}
+
 .tabs-component-container .tabs-component.blue-heading .tabs-container button { 
   color: #006dff
 }
@@ -240,6 +252,7 @@
     display: none;
   }
 }
+
 @media (max-width: 990px) {
   .tabs-component-container.show-categories .tabs-container {
     margin-bottom: 20px;
@@ -255,6 +268,7 @@
     display: flex;
     justify-content: center;
   }
+
   .tabs-component-container.show-categories .subtitle-class {
     margin-bottom:20px;
   }

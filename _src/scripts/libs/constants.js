@@ -92,14 +92,20 @@ export class Constants {
 
 	// TODO: please remove this once SOHO starts working correctly on zuora and de domains
 	static SOHO_CORNER_CASES_LOCALSE = ["de-de", "de-at", "de-ch"];
-  
+
+	static DOMAINS_WITHOUT_ADOBE_MC = ["brand.bitdefender.com"];
+    
 	/**
 	 * fetch all the product id mappings for Vlaicu from websites
 	 */
 	static async #getVlaicuProductIdsMapping() {
 		  try {
 			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
-			  const response = await fetch(`/common/vlaicuconfig/${nameForVlaicuConfig}.json`);
+			  const IS_INSIDE_OAI_WINDOW = window.location.href.includes('oaiusercontent');
+			  const baseUrl = IS_INSIDE_OAI_WINDOW
+				? `https://www.bitdefender.com/common/vlaicuconfig/`
+				: `/common/vlaicuconfig/`;
+			  const response = await fetch(`${baseUrl}${nameForVlaicuConfig}.json`);
 			  if (!response.ok) {
 				  console.error(`Failed to fetch data.`);
 				  return;

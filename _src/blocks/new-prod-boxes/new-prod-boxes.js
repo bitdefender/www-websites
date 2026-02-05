@@ -65,7 +65,7 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
     let productName = prodsNames[idx];
     let prodUser = prodsUsers[idx];
     let prodYear = prodsYears[idx];
-    let checked = idx === 0 ? 'checked' : '';
+    let checked = '';
     let defaultCheck = radio.textContent.match(/\[checked\]/g);
     if (defaultCheck) {
       radioText = radioText.replace('[checked]', '');
@@ -79,6 +79,10 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
       `;
     }
   });
+
+  if (!planSwitcher.querySelector('input[checked]')) {
+    planSwitcher.querySelector('input')?.setAttribute('checked', 'true');
+  }
 
   return planSwitcher;
 }
@@ -267,10 +271,10 @@ export default async function decorate(block) {
     [...block.children].map(async (prod, key) => {
       const mainTable = prod.querySelector('tbody');
       const [greenTag, title, blueTag, subtitle, radioButtons, perPrice, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2, subtitle2] = [...mainTable.querySelectorAll(':scope > tr')];
-      const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
+      let [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
       const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
       const [prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears] = thirdRadioButtonProductsAsList ? thirdRadioButtonProductsAsList[key].split('/') : [];
-      const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList ? addOnProductsAsList[key].split('/') : [];
+      let [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList ? addOnProductsAsList[key].split('/') : [];
       const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList ? addOnMonthlyProductsAsList[key].split('/') : [];
       const featuresSet = benefitsLists.querySelectorAll('table');
       const featureList = createFeatureList(featuresSet);
@@ -345,6 +349,26 @@ export default async function decorate(block) {
       let demoBtn = '';
       if (alias.trim() === 'popup') {
         demoBtn = `<span class="demoBtn" data-show="${selector}" onclick="document.querySelector('.${selector.replace(/\s+/g, '')}').style.display = 'block'">${btnText}</span>`;
+      }
+
+      // get the checked product option from the plan switcher
+      const checkedPlan = planSwitcher.querySelector('input[checked]');
+      if (checkedPlan) {
+        prodName = checkedPlan.dataset.storeProductId || prodName;
+        const checkedPlanOption = checkedPlan.dataset.storeProductOption;
+        if (checkedPlanOption) {
+          [prodUsers, prodYears] = checkedPlanOption.split('-');
+        }
+      }
+
+      // get the checked addon product option from the plan switcher
+      const checkedAddonPlan = planSwitcher2.querySelector('input[checked]');
+      if (checkedAddonPlan) {
+        addOnProdName = checkedAddonPlan.dataset.storeProductId || prodName;
+        const checkedAddonPlanOption = checkedAddonPlan.dataset.storeProductOption;
+        if (checkedAddonPlanOption) {
+          [addOnProdUsers, addOnProdYears] = checkedAddonPlanOption.split('-');
+        }
       }
 
       prodBox.innerHTML = `

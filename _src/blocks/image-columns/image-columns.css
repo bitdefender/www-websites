@@ -156,6 +156,7 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 
   .image-columns-txt-col{
     padding: 20px 40px;
+
     @media (min-width: 992px) {
       padding: 40px 0 40px 60px ;
     }
@@ -163,9 +164,11 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 
   .image-columns-img-col {
     min-height: 100%;
+
     .img-container {
       min-height: 100%;
       position: relative;
+
       img {
         position: absolute;
         min-height: 100%;
@@ -281,7 +284,6 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   .avfree .image-columns {
     > div{
         > .image-columns-txt-col {
-
             h3 {
                 font-size: 22px;
                 margin-bottom: 6px;

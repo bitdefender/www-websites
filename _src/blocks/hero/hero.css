@@ -27,7 +27,6 @@ main .hero {
   background-color: white;
   position: relative;
   padding: 1em 0 2em;
-  min-height: 300px;
 }
 
 main .section.bfoffer .hero {
@@ -125,7 +124,7 @@ main .hero-container {
       border-bottom-right-radius: 8px;
       font-size: 14px;
       font-weight: 700;
-      padding: 8px 8px 8px 8px;
+      padding: 8px;
     }
 
     .europe-flag {
@@ -224,6 +223,68 @@ main .hero .hero-content {
   padding: 17px var(--body-padding) 56px;
   margin: 0 auto;
   position: relative;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table tr {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 16px;
+  font-family: Arial, sans-serif;
+  padding-top: 30px;
+  flex-wrap: nowrap;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table tr p {
+  margin-top: 8px;
+  margin-bottom: 0;
+  padding: 0;
+  font-size:  var(--hero-font-size-xxxs);
+  color: #000;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a {
+  width: 100%;
+  min-width: 248px !important;
+  padding: 12px;
+  font-size: var(--hero-font-size-xs);
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  color: var(--button-link-color);
+  background-color: var(--button-background-color);
+  border: 2px solid var(--button-background-color);
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a:hover {
+  text-decoration: none;
+  opacity: 0.9!important;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a:hover span {
+  transform: unset!important;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table tr td:last-of-type a {
+  background-color: #fff;
+  border: 1.5px solid #000;
+  color: #000;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table tr td:last-of-type a:hover {
+  background-color: #f2f2f2;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a span {
+  font-size: var(--hero-font-size-xs);
+  font-weight: 500;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a::after {
+  display: none;
 }
 
 main .hero.new2024design {
@@ -640,6 +701,10 @@ main .hero.ferrari .breadcrumb{
   background-color: transparent;
 }
 
+.hero-container.half-width-picture .hero-picture {
+  padding-left: 50%;
+}
+
 .hero-container.half-width-picture .hero-picture picture {
   &::after {
     content: '';
@@ -653,7 +718,7 @@ main .hero.ferrari .breadcrumb{
 }
 
 .hero-container.half-width-picture .hero-picture picture img {
-  padding-left: 50%;
+  float: right;
   position: relative;
 }
 
@@ -852,6 +917,10 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero-container.blue-title .hero-content>div {
     width: 630px;
   }
+
+  main .hero-container .hero-content.hero-content-full > div {
+    width: 100%!important;
+  }
 }
 
 @media (min-width: 990px) {
@@ -1020,6 +1089,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero-container.blue-title .scamio .hero-picture img {
     display: none;
   }
+
   main .smaller-img-tablet .hero .hero-picture {
     position: absolute;
     top: 5em;
@@ -1103,6 +1173,14 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     display: none;
   }
 
+  main .hero-container.custom-buttons .hero .hero-content>div table tr td:first-of-type {
+    display: block;
+  }
+
+  main .hero-container.custom-buttons .hero .hero-content>div table tr td:last-of-type {
+    width: auto;
+  }
+
   main .v2 .hero .hero-picture picture img {
     padding-left: 0;
   }
@@ -1130,6 +1208,24 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
   main .v2 .hero .hero-content>div table tr td:last-of-type {
     width: 100%;
+  }
+
+  main .hero-container.custom-buttons .hero .hero-content>div table tr {
+    width: 315px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    gap: 5px;
+  }
+
+  main .hero-container.custom-buttons .hero .hero-content>div table tr td {
+    width: 100%;
+  }
+
+  main .hero-container.custom-buttons .hero .hero-content>div table tr a.button {
+    display: block;
   }
 
   main .v2 .hero h1 {

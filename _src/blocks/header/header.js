@@ -43,8 +43,7 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
   // switch to the logged in popup
   const loginPopup = newMegaMenuLoginTab.querySelector('.mega-menu__second-level-container');
   const loginPopupHeaderLink = loginPopup.querySelector('.mega-menu__column .navigation__header-link');
-  const loginPopupLinksThatNeedToChange = [...loginPopup.querySelectorAll('.navigation__link')]
-    .filter((navigationLink) => navigationLink.dataset.loggedInLink);
+  const loginPopupLinksThatNeedToChange = loginPopup.querySelectorAll('[data-logged-in-link]');
 
   if (loginPopupHeaderLink) {
     loginPopupHeaderLink.textContent = username

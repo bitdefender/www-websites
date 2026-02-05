@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-spaces */
 /* eslint-disable max-classes-per-file */
 /*
  * Copyright 2022 Adobe. All rights reserved.
@@ -233,46 +234,139 @@ export async function decorateIcons(element) {
   await previousDecoration;
 }
 
-export async function decorateTags(element) {
-  const tagTypes = [
-    { regex: /\[#(.*?)#\]/g, className: 'dark-blue' },
-    { regex: /\[{(.*?)}\]/g, className: 'light-blue' },
-    { regex: /\[blue-round(.*?)blue-round\]/g, className: 'light-blue-round' },
-    { regex: /\[\$(.*?)\$\]/g, className: 'green' },
+// Wrap content between bracketed markers even when it spans multiple nodes/elements.
+// Preserves existing nodes and listeners by using DOM Range operations.
+export async function decorateTags(root) {
+  // Define open/close markers you support and the output class to apply.
+  // Add 'blue-pill' as requested.
+  const TAGS = [
+    { open: '[#',          close: '#]',          className: 'dark-blue' },
+    { open: '[{',          close: '}]',          className: 'light-blue' },
+    { open: '[blue-round', close: 'blue-round]', className: 'light-blue-round' },
+    { open: '[blue-pill',  close: 'blue-pill]',  className: 'blue-pill' },
+    { open: '[$',          close: '$]',          className: 'green' },
   ];
 
-  function replaceTags(inputValue) {
-    let nodeValue = inputValue; // Create a local copy to work on
-    let replaced = false;
+  const OPEN_MARKERS = new Map(TAGS.map((t) => [t.open, t]));
+  const OPEN_LIST = TAGS.map((t) => t.open);
 
-    tagTypes.forEach((tagType) => {
-      let match = tagType.regex.exec(nodeValue);
-      while (match !== null) {
-        nodeValue = nodeValue.replace(match[0], `<span class="tag tag-${tagType.className}">${match[1]}</span>`);
-        replaced = true;
-        tagType.regex.lastIndex = 0; // Reset regex index
-        match = tagType.regex.exec(nodeValue);
+  // Filter: skip inside already-decorated tags and script/style.
+  const TW_FILTER = {
+    acceptNode(node) {
+      const p = node.parentElement;
+      if (!p) return NodeFilter.FILTER_REJECT;
+      if (p.closest('.tag')) return NodeFilter.FILTER_REJECT;
+      const tag = p.tagName;
+      if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+      if (!node.nodeValue) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  };
+
+  // Helper: find earliest open marker in a text value.
+  function findEarliestOpen(text) {
+    let best = null;
+    OPEN_LIST.forEach((open) => {
+      const idx = text.indexOf(open);
+      if (idx !== -1 && (best === null || idx < best.index)) {
+        best = { index: idx, marker: open, tag: OPEN_MARKERS.get(open) };
       }
     });
-
-    return { nodeValue, replaced };
+    return best;
   }
 
-  function replaceTagsInNode(node) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      const originalValue = node.nodeValue;
-      const { nodeValue } = replaceTags(originalValue);
-      if (nodeValue !== originalValue) { // This checks if the nodeValue has been modified.
-        const newNode = document.createElement('span');
-        newNode.innerHTML = nodeValue;
-        node.parentNode.replaceChild(newNode, node);
+  // Helper: get the next text node under `root` after `node`.
+  function nextTextNodeAfter(node) {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, TW_FILTER);
+    w.currentNode = node;
+    return w.nextNode();
+  }
+
+  // Find the close marker for a given tag, starting at `startNode` and `fromOffset` in that node.
+  function findClose(startNode, fromOffset, closeStr) {
+    let node = startNode;
+    let offset = fromOffset;
+    while (node) {
+      const text = node.nodeValue || '';
+      const idx = text.indexOf(closeStr, offset);
+      if (idx !== -1) {
+        return { node, index: idx };
       }
-    } else if (node.nodeType === Node.ELEMENT_NODE) {
-      node.childNodes.forEach(replaceTagsInNode);
+      node = nextTextNodeAfter(node);
+      offset = 0;
+    }
+    return null;
+  }
+
+  // Isolate an exact substring in a text node as its own node via splitText,
+  // and return the node after it.
+  // Example: given node "abc[#" and index at '[#', split before and after marker
+  // -> remove or position around it.
+  function isolateAndRemoveMarker(startNode, index, markerLength) {
+    // Split at the start of marker.
+    const markerStart = startNode.splitText(index);
+    // Split after the marker.
+    const afterMarker = markerStart.splitText(markerLength);
+    // Remove the marker node itself.
+    markerStart.remove();
+    // For an open marker: the range should start at `afterMarker` offset 0.
+    // For a close marker: the range should end at `afterMarker` offset 0.
+    return afterMarker;
+  }
+
+  // Main pass: keep scanning until no changes (handles multiple tags).
+  let changedSomething = true;
+  while (changedSomething) {
+    changedSomething = false;
+
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, TW_FILTER);
+    for (let textNode = walker.nextNode(); textNode; textNode = walker.nextNode()) {
+      const text = textNode.nodeValue || '';
+      const found = findEarliestOpen(text);
+      // eslint-disable-next-line no-continue
+      if (!found) continue;
+
+      const { index: openIdx, tag } = found;
+
+      // Remove/open: split the open marker out so we can start the range after it.
+      const startAfterOpen = isolateAndRemoveMarker(textNode, openIdx, tag.open.length, true);
+
+      // Find and isolate the closing marker across subsequent nodes.
+      const closeHit = findClose(startAfterOpen, 0, tag.close);
+      if (!closeHit) {
+        // No close found: put the open marker back literally and continue.
+        startAfterOpen.parentNode.insertBefore(document.createTextNode(tag.open), startAfterOpen);
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
+      const { node: endNode, index: closeIdx } = closeHit;
+      const endAfterClose = isolateAndRemoveMarker(endNode, closeIdx, tag.close.length, false);
+
+      // Wrap range [startAfterOpen (offset 0), endAfterClose (offset 0)]
+      const range = new Range();
+      range.setStart(startAfterOpen, 0);
+      range.setEnd(endAfterClose, 0);
+
+      const wrapper = document.createElement('span');
+      wrapper.className = `tag tag-${tag.className}`;
+
+      try {
+        // This throws if the range partially selects a non-Text node;
+        // we then fall back to extract/insert.
+        range.surroundContents(wrapper);
+      } catch {
+        const frag = range.extractContents();
+        wrapper.appendChild(frag);
+        range.insertNode(wrapper);
+      }
+
+      changedSomething = true;
+
+      // Restart the outer walk because the DOM changed (nodes shifted).
+      break;
     }
   }
-
-  replaceTagsInNode(element);
 }
 
 /**
@@ -657,9 +751,10 @@ export function decorateButtons(element) {
           return;
         }
 
-        if (up.childNodes.length === 1 && up.tagName === 'EM'
-            && twoup.childNodes.length === 1 && twoup.tagName === 'STRONG'
-            && threeup?.childNodes.length === 1 && threeup?.tagName === 'P') {
+        if (up.childNodes.length === 1
+          && ((up.tagName === 'EM' && twoup.childNodes.length === 1 && twoup.tagName === 'STRONG')
+          || (up.tagName === 'STRONG' && twoup.childNodes.length === 1 && twoup.tagName === 'EM'))
+          && threeup?.childNodes.length === 1 && threeup?.tagName === 'P') {
           a.className = 'button secondary';
           threeup.classList.add('button-container');
           up.replaceWith(a);
@@ -892,14 +987,11 @@ export function setup() {
   window.hlx.plugins = new PluginsRegistry();
   window.hlx.templates = new TemplatesRegistry();
 
-  const scriptEl = document.querySelector('script[src$="/_src/scripts/scripts.js"]');
-  if (scriptEl) {
-    try {
-      [window.hlx.codeBasePath] = new URL(scriptEl.src).pathname.split('/scripts/scripts.js');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
+  try {
+    [window.hlx.codeBasePath] = new URL(import.meta.url).pathname.split('/scripts/');
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
   }
 }
 

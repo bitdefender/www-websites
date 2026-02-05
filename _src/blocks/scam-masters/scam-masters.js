@@ -1,7 +1,7 @@
 import {
   AdobeDataLayerService, UserDetectedEvent, WindowLoadStartedEvent, WindowLoadedEvent,
 } from '@repobit/dex-data-layer';
-import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { decorateIcons, getMetadata } from '../../scripts/lib-franklin.js';
 import { matchHeights, renderTurnstile, submitWithTurnstile } from '../../scripts/utils/utils.js';
 import page from '../../scripts/page.js';
 
@@ -50,8 +50,9 @@ async function saveResults(resultArray) {
 }
 
 // function for tracking question interactions through dataLayer events
-function trackQuizScreen(isAcqVariant, index, result) {
+function trackQuizScreen(isAcqVariant, index, result, skipStartPage) {
   const quizType = isAcqVariant ? ':consumer:quiz' : ':consumer:quiz:scam-masters';
+  if (index === 1 && skipStartPage) return;
   const question = `${index ? `:question ${index}` : ''}`;
   const section = `${page.locale}${quizType}${question}${result ? `:${result}` : ''}`;
   const subSubSubSection = isAcqVariant ? `question ${index}` : 'scam-masters';
@@ -315,7 +316,7 @@ function decorateAnswersList(question, questionIndex, isAcqVariant) {
   });
 }
 
-function showQuestion(index, isAcqVariant) {
+function showQuestion(index, isAcqVariant, skipStartPage) {
   // Hide all questions
   const allQuestions = document.querySelectorAll('.scam-masters .question');
   const startPage = document.querySelector('.scam-masters .start-page');
@@ -334,7 +335,7 @@ function showQuestion(index, isAcqVariant) {
   const questionToShow = document.querySelector(`.scam-masters .question-${index}`);
   if (questionToShow) {
     questionToShow.style.display = '';
-    trackQuizScreen(isAcqVariant, index);
+    trackQuizScreen(isAcqVariant, index, null, skipStartPage);
   }
 }
 
@@ -974,7 +975,12 @@ function decorateResults(results) {
   });
 }
 
-function setupStartButton(block, isAcqVariant) {
+function setupStartButton(block, isAcqVariant, skipStartPage) {
+  if (skipStartPage) {
+    showQuestion(1, isAcqVariant, skipStartPage);
+    return;
+  }
+
   const startButton = block.querySelector('a[href="#start-quiz"]');
   if (startButton) {
     startButton.addEventListener('click', (e) => {
@@ -1037,6 +1043,7 @@ export default function decorate(block) {
     resultPage, clipboardText, savedata,
   } = block.closest('.section').dataset;
 
+  const skipStartPage = getMetadata('skip-start-page');
   const [startBlock, ...questionsAndResults] = block.children;
   const isAcqVariant = startBlock.closest('.acq-quiz');
   decorateStartPage(startBlock, isAcqVariant);
@@ -1062,7 +1069,7 @@ export default function decorate(block) {
   const results = getDivsBasedOnFirstParagraph(block, 'answer-box');
   decorateQuestions(questions, results, isAcqVariant);
   decorateResults(results);
-  setupStartButton(block, isAcqVariant);
+  setupStartButton(block, isAcqVariant, skipStartPage);
 
   const questionsContainer = document.createElement('div');
   questionsContainer.classList.add('questions-container');

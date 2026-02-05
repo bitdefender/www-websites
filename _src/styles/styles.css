@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
- :root {
+ :root, :host {
   /* colors */
   --dark-background-color: #000;
   --black-color: #000;
@@ -100,6 +100,12 @@
 
   /* cta styles */
   --cta-background-light-blue: var(--background-light-blue)
+}
+
+.section.ibm-plex-sans {
+  * {
+    font-family: "IBM Plex Sans", sans-serif;
+  }
 }
 
 .w-full {
@@ -668,7 +674,7 @@ main .section.blue-title {
   }
 }
 
-main .grey-background{
+main .grey-background {
   background-color: #F6F6F6 !important;
 }
 
@@ -1495,6 +1501,17 @@ main .section.checked-lists ul li::after {
   z-index: 2;
 }
 
+main .section.static-awards-small .default-content-wrapper {
+  padding: 0 24px;
+}
+
+main .section.static-awards-small .default-content-wrapper p {
+  max-height: 64px;
+  max-width: 400px;
+  margin: auto;
+  justify-self: center;
+}
+
 main .section.blue.checked-lists ul li::before {
   background-color: var(--background-color);
 
@@ -1655,6 +1672,46 @@ main .section.blue p a.button.modal::after {
 
 .tag-green {
   background-color: var(--green-tag2);
+}
+
+.green-pill {
+  background: #5cb85c;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tag-blue-pill {
+  background-color: #026DFF;
+  padding: 4.5px 5.7px;
+  border-radius: 20px;
+  color: white;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: bold;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: none;
+}
+
+.tag-blue-pill .icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 9px;
+  height: 9px;
+  margin: 0;
+}
+
+.tag.tag-blue-pill svg {
+  width: 9px;
+  height: 9px;
+  fill: #fff;
 }
 
 .ferrari-img img{

@@ -134,6 +134,11 @@
   box-sizing: content-box;
 }
 
+.new-prod-boxes-container.bf25 .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
+  background: linear-gradient(to right, #a80000, #e00000, #a80000);
+  font-weight: bold;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 {
   font-weight: bold;
   font-size: 20px;

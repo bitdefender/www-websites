@@ -11,12 +11,14 @@ export class ProductInfo {
 	 * @param {string} department
 	 * @param {string} promotion
 	 * @param {boolean} forcePromotion
+	 * @param {boolean} useGeoIpPricing
 	 */
-	constructor(id, department, promotion = null, forcePromotion = false) {
+	constructor(id, department, promotion = null, forcePromotion = false, useGeoIpPricing = false) {
 		this.id = id;
 		this.department = department;
 		this.promotion = promotion;
 		this.forcePromotion = forcePromotion;
+		this.useGeoIpPricing = useGeoIpPricing;
 	}
 }
 
@@ -725,37 +727,7 @@ class Vlaicu {
 
 		return '';
 	}
-
-	/**
-	 * TODO: please remove this after creating a way to define pids from inside the page documents for each card
-	 * @param {string} productId
-	 * @returns {string} the DIP promotion
-	 */
-	static #isDIPCornerCase(productId) {
-		if (productId === 'com.bitdefender.dataprivacy' && page.locale === 'ro-ro') {
-			return 'DIP-RO';
-		}
-
-		if (productId === 'com.bitdefender.dataprivacy' && page.locale !== 'ro-ro') {
-			return 'DIP-promo';
-		}
-
-		return '';
-	}
-
-	/**
-     * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
-     * @param {string} productId 
-     * @returns {string} the SOHO promotion
-     */
-    static #isSohoCornerCase(productId) {
-        if (Constants.SOHO_CORNER_CASES_LOCALSE.includes(page.locale) && productId === "com.bitdefender.soho") {
-			return 'SOHO_DE';
-		}
-
-		return '';
-	}
-
+	
 	/**
 	 * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
 	 * @param {string} receivedBuyLink 
@@ -768,10 +740,9 @@ class Vlaicu {
 		return buyLinkUrl.href;
 	}
 
-	static async getProductVariations(productId, campaign) {
-		let locale = this.#isSohoCornerCase(productId) ? "en-mt" : page.locale;
-		let geoIpFlag = (await target.configMbox)?.useGeoIpPricing;
-		if (geoIpFlag) {
+	static async getProductVariations(productId, campaign, useGeoIpPricing = false) {
+		let locale = page.locale;
+		if (useGeoIpPricing) {
 			locale = await user.locale;
 		}
 		const pathVariablesResolverObject = {
@@ -779,16 +750,11 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign)
-				|| this.#isDIPCornerCase(productId)
-				|| this.#isSohoCornerCase(productId)
-				|| campaign
+			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign)	|| campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION || this.#isDIPCornerCase(productId) || this.#isSohoCornerCase(productId) ?
-			this.promotionPath :
-			this.defaultPromotionPath;
+		let productPath = campaign !== Constants.NO_PROMOTION ?	this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
 		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
@@ -820,8 +786,8 @@ class Vlaicu {
 		}
 	}
 
-	static async getProductVariationsPrice(id, campaignId) {
-		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()].bundleId, campaignId);
+	static async getProductVariationsPrice(id, campaignId, useGeoIpPricing = false) {
+		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()].bundleId, campaignId, useGeoIpPricing);
 		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
 			return null;
@@ -871,9 +837,7 @@ class Vlaicu {
 				campaignType: productInfoResponse.campaignType,
 				price: productVariation.price,
 				// TODO: please remove this once SOHO works correctly on de-de with zuora
-				buyLink: this.#isSohoCornerCase(Constants.PRODUCT_ID_MAPPINGS[id].bundleId)
-					? this.#addLangParameter(productVariation.buyLink)
-					: productVariation.buyLink,
+				buyLink: productVariation.buyLink,
 				variation: {
 					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,
@@ -901,10 +865,10 @@ class Vlaicu {
 		return window.StoreProducts.product[id];
 	}
 
-	static async loadProduct(id, campaign) {
+	static async loadProduct(id, campaign, useGeoIpPricing = false) {
 		window.StoreProducts = window.StoreProducts || [];
 		window.StoreProducts.product = window.StoreProducts.product || {};
-		return await this.getProductVariationsPrice(id, campaign);
+		return await this.getProductVariationsPrice(id, campaign, useGeoIpPricing);
 	}
 }
 
@@ -962,16 +926,20 @@ export class Store {
 	 * @param {ProductInfo[]} productsInfo - objects describing the product to be fetched
 	 * @returns {Promise<Product>}
 	 */
-	static async getProducts(productsInfo) {
+	static async getProducts(productsInfo, configMbox = null) {
 		if (!Array.isArray(productsInfo)) { return null; }
 
 		if (!Constants.PRODUCT_ID_MAPPINGS) {
 			return null;
 		}
 
+		if (!configMbox) {
+			configMbox = await target.configMbox;
+		}
+
 		// get the target buyLink mappings
 		if (!this.targetBuyLinkMappings) {
-			this.targetBuyLinkMappings = (await target.configMbox)?.products;
+			this.targetBuyLinkMappings = configMbox?.products;
 		}
 
 		// remove duplicates by id
@@ -982,13 +950,14 @@ export class Store {
 				productsInfo.map(async product => {
 					// target > url > produs > global_campaign > default campaign
 					if (!product.forcePromotion) {
-						product.promotion = (await target.configMbox)?.promotion
+						product.promotion = configMbox?.promotion
 							|| getUrlPromotion()
 							|| product.promotion
 							|| getMetadata("pid")
 							|| getCampaignBasedOnLocale();
 					}
 
+					product.useGeoIpPricing = configMbox?.useGeoIpPricing;
 					return await this.#apiCall(
 						product
 					);
@@ -1007,7 +976,7 @@ export class Store {
 	 */
 	static async #apiCall(productInfo) {
 		try {
-			const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion);
+			const product = await Vlaicu.loadProduct(productInfo.id, productInfo.promotion, productInfo.useGeoIpPricing);
 
 			if (!product) {
 				return null;

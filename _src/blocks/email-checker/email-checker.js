@@ -1,9 +1,4 @@
-import {
-  WindowLoadStartedEvent,
-  WindowLoadedEvent,
-  UserDetectedEvent,
-  AdobeDataLayerService,
-} from '@repobit/dex-data-layer';
+import page from '../../scripts/page.js';
 
 function changeTexts(block, result, statusTitles, numberOfLeaks) {
   const titleText = statusTitles?.[result]?.replace('0', numberOfLeaks);
@@ -76,7 +71,8 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
 
   await sleep(1000);
   let statusCode; let message; let className;
-  if (secondRequest.total_count === 0) {
+  const leaksNumber = secondRequest.total_count;
+  if (leaksNumber === 0) {
     statusCode = 'safe';
     message = statusMessages.safe;
     className = 'result safe';
@@ -86,51 +82,21 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
     className = 'result danger';
   }
 
-  changeTexts(block, statusCode, statusTitles, secondRequest.total_count);
-  result.innerHTML = message;
-  result.className = className;
-  block.closest('.section').classList.add(className.split(' ')[1]);
-  input.setAttribute('disabled', '');
-  document.getElementById('inputDiv').textContent = email;
-  input.closest('.input-container').classList.remove('loader-circle');
+  const resultPagePath = statusCode === 'safe' ? '/safe' : '/not-safe';
+  if (resultPagePath) {
+    // Store the result data for the result page
+    sessionStorage.setItem('emailCheckerResult', JSON.stringify({
+      email,
+      message,
+      statusCode,
+      className,
+      statusTitles,
+      leaksNumber,
+    }));
 
-  AdobeDataLayerService.push(new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-    pageLoadStartedInfo.name += `:${statusCode}`;
-    return pageLoadStartedInfo;
-  }));
-  AdobeDataLayerService.push(new UserDetectedEvent());
-  AdobeDataLayerService.push(new WindowLoadedEvent());
-}
-
-async function resetChecker(block, titleText = '') {
-  const classesToRemove = ['danger', 'safe'];
-  const section = block.closest('.section');
-
-  // Remove classes from the section
-  classesToRemove.forEach((className) => {
-    section.classList.remove(className);
-  });
-
-  // Reset all inputs inside the section (main + external)
-  const inputs = document.querySelectorAll('#email-checker-input');
-  inputs.forEach((input) => {
-    input.removeAttribute('disabled');
-    input.value = '';
-  });
-
-  // Reset the h1 text
-  const h1 = block.querySelector('h1');
-  if (h1) {
-    h1.textContent = titleText;
+    // Redirect to the appropriate result page
+    window.location.href = `${window.location.pathname}${resultPagePath}`;
   }
-
-  const result = block.querySelector('.result');
-  result.className = 'result';
-
-  // Push events to Adobe Data Layer
-  AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
-  AdobeDataLayerService.push(new UserDetectedEvent());
-  AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
 function createStatusMessages(block) {
@@ -190,7 +156,6 @@ function createStatusTitles(block) {
 }
 
 function createButtonsContainer(block) {
-  const titleText = block.querySelector('h1')?.innerText;
   const divWithButtons = Array.from(block.querySelectorAll('div')).find((div) => {
     const firstParagraph = div.querySelector('p');
     return firstParagraph && firstParagraph.textContent.includes('<buttons>');
@@ -211,7 +176,7 @@ function createButtonsContainer(block) {
         p.querySelector('a').classList.add('check-another-button');
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          resetChecker(block, titleText);
+          window.location.replace(`${window.location.origin}/${page.locale}/consumer/digital-footprint-checker`);
         });
       }
 
@@ -261,6 +226,61 @@ function createExternalInput(inputDiv) {
   });
 }
 
+function displayStoredResult(block, statusMessages, statusTitles) {
+  // Check if we have stored result data
+  const storedData = sessionStorage.getItem('emailCheckerResult');
+
+  if (!storedData) {
+    return false;
+  }
+
+  try {
+    const resultData = JSON.parse(storedData);
+
+    // Check if the data is not too old (expires after 1 hour)
+    const oneHour = 60 * 60 * 1000;
+    if (Date.now() - resultData.timestamp > oneHour) {
+      sessionStorage.removeItem('emaiCheckerResult');
+      return false;
+    }
+
+    // Get form elements
+    const input = block.querySelector('#email-checker-input');
+    const result = block.querySelector('.result');
+
+    if (!input || !result) {
+      return false;
+    }
+
+    // Display the stored result
+    input.value = resultData.url;
+    input.setAttribute('disabled', '');
+    document.getElementById('inputDiv').textContent = resultData.email;
+    result.innerHTML = resultData.message;
+    result.className = resultData.className;
+    block.closest('.section').classList.add(resultData.className.split(' ')[1]);
+
+    // Update titles
+    const { statusCode, leaksNumber } = resultData;
+    changeTexts(block, statusCode, statusTitles, leaksNumber);
+
+    // Show buttons and hide input elements for result display
+    const buttonsContainer = block.querySelector('.buttons-container');
+    if (buttonsContainer) {
+      buttonsContainer.style.display = 'flex';
+    }
+
+    // Don't clear the stored data here - keep it for reload detection
+    // It will be cleared when user reloads or after 1 hour expiration
+
+    return true;
+  } catch (error) {
+    // If there's an error parsing the data, clean up
+    sessionStorage.removeItem('linkCheckerResult');
+    return false;
+  }
+}
+
 export default function decorate(block) {
   const { checkButtonText, placeholder } = block.closest('.section').dataset;
 
@@ -307,6 +327,40 @@ export default function decorate(block) {
 
   createButtonsContainer(block);
   createExternalInput(inputContainer);
+
+  // Check if we're on a result page and should display stored results
+  const currentPath = window.location.pathname;
+  const isResultPage = currentPath.includes('digital-footprint-checker/safe') || currentPath.includes('digital-footprint-checker/not-safe');
+
+  if (isResultPage) {
+    // Check if user has valid result data (came from digital-footprint-checker)
+    const hasValidResult = displayStoredResult(block, statusMessages, statusTitles);
+
+    if (!hasValidResult) {
+      // No valid result data means direct URL access - redirect to main page
+      window.location.replace(`${window.location.origin}/${page.locale}/consumer/digital-footprint-checker`);
+      return;
+    }
+
+    // Set up cleanup when user navigates away (but not on reload)
+    window.addEventListener('beforeunload', () => {
+      // Only clear data if it's not a reload (navigation away)
+      const navigationType = performance.getEntriesByType('navigation')[0]?.type;
+      if (navigationType !== 'reload') {
+        sessionStorage.removeItem('emailCheckerResult');
+      }
+    });
+  }
+
+  // if the text is cleared, do not display any error
+  input.addEventListener('input', () => {
+    const url = input.value.trim();
+    // If the input is cleared, reset the result text and class
+    if (url === '') {
+      result.textContent = '';
+      result.className = '';
+    }
+  });
 
   document.querySelectorAll('button.check-url').forEach((checkButton) => checkButton.addEventListener('click', () => checkLink(block, input, result, statusMessages, statusTitles)));
 }

@@ -133,6 +133,25 @@ main .section.link-checker-container {
         }
     }
 
+    &.ai-skills-checker {
+        margin-top: 24px;
+        &::before {
+            border: 1px solid #FFD2C7;
+            background-color: #FAF4EA;
+            background-image: url("../../icons/skills-checker-pattern.svg");
+        }
+
+        &.danger::before {
+            background-color: #3e030b;
+            background-image: url("../../icons/skills-checker-pattern-danger.svg");
+        }
+
+        &.safe::before {
+            background-color: #3d8648;
+            background-image: url("../../icons/skills-checker-pattern-safe.svg");
+        }
+    }
+
     .link-checker-wrapper {
         max-width: 960px;
         width: 100%;

@@ -24,20 +24,21 @@ import {
   getMetadata,
 } from './lib-franklin.js';
 import {
+  handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 
 import {
   createTag,
-  getPageExperimentKey,
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
+  getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -475,7 +476,7 @@ export async function loadTrackers() {
 async function loadEager(doc) {
   // load trackers early if there is a target experiment on the page
   if (getPageExperimentKey()) {
-    loadTrackers();
+    await loadTrackers();
     await resolveNonProductsDataLayer();
   }
 
@@ -547,7 +548,7 @@ async function loadLazy(doc) {
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   sampleRUM('lazy');
@@ -672,6 +673,10 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
+  if (window.location.href.includes('oaiusercontent')) {
+    return;
+  }
+
   setBFCacheListener();
   initialiseSentry();
   await window.hlx.plugins.load('eager');
@@ -687,8 +692,11 @@ async function loadPage() {
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
+  handleFileDownloadedEvents();
 
-  await StoreResolver.resolve();
+  if (!window.disableGlobalStore) {
+    await StoreResolver.resolve();
+  }
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
   window.bd_page_ready = true;
@@ -732,3 +740,4 @@ initMobileDetector('tablet');
 initMobileDetector('desktop');
 
 loadPage();
+window.AdobeDataLayerService = AdobeDataLayerService;

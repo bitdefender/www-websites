@@ -251,6 +251,9 @@ function updateBenefits(block, selectEl, metadata) {
 }
 
 function renderSelector(block, ...options) {
+  const { labelText, membersText } = block.closest('.section').dataset;
+  const [singleMember, multipleMembers] = [...membersText.split(',')];
+
   const selectorOptions = options
     .filter((option) => option && !Number.isNaN(Number(option)))
     .map((opt) => Number(opt));
@@ -261,11 +264,11 @@ function renderSelector(block, ...options) {
   const selectId = `members-select-${Math.random().toString(36).substr(2, 9)}`;
 
   el.innerHTML = `
-    <label for="${selectId}">Choose number of members</label>
+    <label for="${selectId}">${labelText ?? 'Choose number of members'}</label>
     <select id="${selectId}"
       data-store-click-set-devices>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `
-          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt === 1 ? `${opt} member` : `${opt} members`} </option>
+          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt === 1 ? `${opt} ${singleMember ?? 'member'}` : `${opt} ${multipleMembers ?? 'members'}`} </option>
         `).join('')}
     </select>
   `;

@@ -37,10 +37,9 @@ function renderBreadcrumb(breadcrumbs) {
 
 async function createBreadcrumbs(container) {
   const { pathname } = window.location;
-  const pathSeparator = '/';
   // split pathname into parts add / at the end and remove empty parts
   const domain = getDomain();
-  const pathSplit = pathname.split('/').filter((item) => item !== domain).reduce((acc, curr, index, array) => {
+  const pathSplit = pathname.split('/').reduce((acc, curr, index, array) => {
     if (index < array.length - 1) {
       acc.push(`${curr}/`);
     } else if (curr !== '') {
@@ -51,19 +50,14 @@ async function createBreadcrumbs(container) {
 
   const pageIndex = (await fetchIndex('query-index')).data;
   fixExcelFilterZeroes(pageIndex);
-  // eslint-disable-next-line max-len
-  const urlForIndex = (index) => prependSlash(pathSplit.slice(1, index + 2).join(pathSeparator));
+  const urlForIndex = (index) => prependSlash(pathSplit.slice(1, index + 2).join(''));
 
   const breadcrumbs = [
-    {
-      name: 'Home',
-      url_path: `/${domain}/`,
-    },
     ...pathSplit.slice(1, -1).map((part, index) => {
       const url = urlForIndex(index);
       return {
-        name: getName(pageIndex, `/${domain}${url}`, part, false, domain),
-        url_path: `/${domain}${url}`,
+        name: getName(pageIndex, url, part, false, domain),
+        url_path: url,
       };
     }),
     {

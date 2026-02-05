@@ -19,7 +19,6 @@
 }    
 
 .two-columns-wrapper {
-    padding: 0;
     max-width: 1300px;
     margin: auto;
     padding: 0 18px;
@@ -39,14 +38,13 @@
 .two-columns-wrapper h4 u{
     font-weight: 700;
     font-size: 24px;
-    color:rgb(0, 0, 0);
+    color:rgb(0 0 0);
     padding-bottom: 30px;
     text-decoration: none;
     display: inline-block;
 }
 
 @media (max-width: 595px) {
-    
     .hide-images-mobile .two-columns .column.has-picture {
         display: none;
     }

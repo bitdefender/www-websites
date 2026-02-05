@@ -1,4 +1,4 @@
-main .ribbon-container {
+main .section.ribbon-container {
   color: white;
   text-align: center;
   background-position: 0 -18px;
@@ -24,6 +24,16 @@ main .ribbon-container {
   float: left;
 }
 
+.ribbon-container.bf25 .block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ribbon-container.bf25 img {
+  width: 20px;
+}
+
 .ribbon-container a:any-link {
   color: inherit;
   text-decoration: underline;
@@ -35,4 +45,21 @@ main .ribbon-container {
   align-items: center;
   gap: 10px;
   text-shadow: 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00;
+}
+
+.ribbon-container.bf25 {
+  padding: 5px 0;
+}
+
+.ribbon-container.bf25 .block > div > div {
+  text-shadow: none;
+}
+
+.ribbon-container.bf25 p {
+  font: normal normal bold 16px / 20px "IBM Plex Sans", sans-serif;
+}
+
+.ribbon-container.bf25 u {
+  text-decoration: none;
+  color: #F00;
 }

@@ -154,6 +154,14 @@ createNanoBlock('dropdown', (...args) => {
     customDropdown.classList.toggle('open', !isOpen);
   });
 
+  document.addEventListener('click', (event) => {
+    if (!customDropdown.contains(event.target)) {
+      optionsList.classList.remove('open');
+      selectedOption.classList.remove('open');
+      customDropdown.classList.remove('open');
+    }
+  });
+
   [...optionsList.querySelectorAll('.custom-dropdown-item')].forEach((item, index) => {
     item.addEventListener('click', () => {
       const selected = item.getAttribute('data-value');

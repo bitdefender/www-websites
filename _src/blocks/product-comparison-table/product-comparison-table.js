@@ -6,6 +6,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   columnEl.setAttribute('data-store-department', 'consumer');
   columnEl.setAttribute('data-store-event', 'product-comparison');
   columnEl.setAttribute('data-store-context', '');
+  columnEl.setAttribute('data-store-not-global', 'true');
 
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');

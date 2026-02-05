@@ -27,13 +27,13 @@ const checkHidingCondition = (hideCondition) => {
  *  @param {function} fn
  *  @returns {import("../../index.js").ProductOption}
  */
-const getMinOrMax = (value, options, fn) => {
+const getMinOrMax = (value, options, fn, isPercentage) => {
     let minOrMax = value === "max" ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
     let productValue = null;
 
     for (const option of options) {
         let localValue = fn(option);
-        localValue = Constants.PRODUCT_ID_MAPPINGS[option.getId()].isMonthlyProduct ? localValue * 12 : localValue;
+        localValue = Constants.PRODUCT_ID_MAPPINGS[option.getId()].isMonthlyProduct && !isPercentage ? localValue * 12 : localValue;
         if (localValue && (value === "min" && localValue < minOrMax) || (value === "max" && localValue > minOrMax)) {
             minOrMax = localValue;
             productValue = option;
@@ -102,7 +102,7 @@ const replaceVariable = (text, variableParameters, textVariable) => {
                 stopVariableSearch = true;
                 break;
             case "GLOBAL_SMALLEST_DISCOUNT_PERCENTAGE":
-                option = getMinOrMax("min", options, option => option.getDiscount("percentage"))
+                option = getMinOrMax("min", options, option => option.getDiscount("percentage"), true)
                 if (!option) {
                     break;
                 }
@@ -111,7 +111,7 @@ const replaceVariable = (text, variableParameters, textVariable) => {
                 stopVariableSearch = true;
                 break;
             case "GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE":
-                option = getMinOrMax("max", options, option => option.getDiscount("percentage"));
+                option = getMinOrMax("max", options, option => option.getDiscount("percentage"), true);
                 if (!option) {
                     break;
                 }
@@ -120,7 +120,7 @@ const replaceVariable = (text, variableParameters, textVariable) => {
                 stopVariableSearch = true;
                 break;
             case "GLOBAL_SMALLEST_DISCOUNT_VALUE":
-                option = getMinOrMax("min", options, option => option.getDiscount("value"))
+                option = getMinOrMax("min", options, option => option.getDiscount("value"), true)
                 if (!option) {
                     break;
                 }
