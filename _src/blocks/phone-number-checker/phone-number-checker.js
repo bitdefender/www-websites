@@ -341,7 +341,7 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
       phone: `${phoneNumber}`,
     },
   };
-  const request = await fetchData('https://beta.nimbus.bitdefender.net/phone-checker', payload);
+  const request = await fetchData('https://eu.nimbus.bitdefender.net/phone-checker', payload);
   if (request.error) {
     result.innerHTML = `${statusMessages.error ?? ''}`;
     result.className = 'result danger no-response';
@@ -366,7 +366,7 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
     },
   };
 
-  const secondRequest = await fetchData('https://beta.nimbus.bitdefender.net/phone-checker', solutionPayload);
+  const secondRequest = await fetchData('https://eu.nimbus.bitdefender.net/phone-checker', solutionPayload);
 
   let statusCode; let message; let className;
 
