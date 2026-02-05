@@ -8,26 +8,6 @@ import {
 } from '../utils/utils.js';
 import { getTargetExperimentDetails } from "../target.js";
 
-export class FranklinProductsLoadedEvent extends ProductLoadedEvent{
-  getOptionInfo(option) {
-    return {
-      ID: option.getAvangateId(),
-      name: option.getName(),
-      devices: option.getId() === 'psm' ? 10 : option.getDevices(), //DEPRECATED content - please remove after Vlaicu implementation
-      subscription: option.getSubscription("months"),
-      version: option.getSubscription("months") === 1 ? "monthly" : "yearly",
-      basePrice: option.getPrice("value"),
-      discountValue: option.getDiscount("value"),
-      discountRate: option.getDiscount("percentage"),
-      currency: option.getCurrency(),
-      grossPrice: option.getDiscountedPrice("value") || option.getPrice("value"),
-      discountCoupon: option.getCampaignType()
-        ? `${option.getCampaignType()}|${option.getPromotion()}`
-        : (option.getPromotion() || '')
-    };
-  }
-};
-
 /**
  * Page Error Handling
  */
@@ -84,7 +64,7 @@ const getFreeProductsEvents = () => {
   const currentPage = page.name;
   if (currentPage === 'free-antivirus') {
     // on Free Antivirus page we should add Free Antivirus as the main product
-    AdobeDataLayerService.push(new FranklinProductsLoadedEvent({
+    AdobeDataLayerService.push(new ProductLoadedEvent({
       ID: '8430',
     }, 'info'));
   }

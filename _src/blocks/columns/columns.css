@@ -1645,6 +1645,10 @@
   margin-bottom: 16px;
 }
 
+.columns-container.title-spaced h5 {
+  margin: 5px 0 10px;
+}
+
 .columns-container.video-left video {
   width: 100%;
   border-radius: 10px;

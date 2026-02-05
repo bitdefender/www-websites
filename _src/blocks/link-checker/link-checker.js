@@ -375,7 +375,7 @@ export default function decorate(block) {
   if (product) {
     // eslint-disable-next-line no-unused-vars
     const [productName, productUsers, productYears] = product.split('/');
-    block.setAttribute('data-store-id', productName);
+    block.setAttribute('product-id', productName);
   }
 
   const statusMessages = createStatusMessages(block);

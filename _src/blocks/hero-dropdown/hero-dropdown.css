@@ -436,6 +436,8 @@ main .hero-dropdown.scamio .hero-dropdown-picture picture img {
 main .hero-dropdown a.button {
   margin: 8px 13px 0 0;
   min-width: 206px;
+  justify-content: center;
+  align-items: center;
 }
 
 main .hero-dropdown a.button.modal,

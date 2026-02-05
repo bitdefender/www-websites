@@ -27,7 +27,7 @@ export default function decorate(block) {
   textDiv.classList.add('banner-content');
   productCard.classList.add('product-card');
   if (product) {
-    productCard.setAttribute('data-store-id', `${product.split('/')?.[0]}`);
+    productCard.setAttribute('product-id', `${product.split('/')?.[0]}`);
   }
   const tosButton = parentElement.querySelector('.default-content-wrapper .button-container');
   tosButton?.parentElement.remove();

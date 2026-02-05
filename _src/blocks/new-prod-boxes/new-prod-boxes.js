@@ -4,47 +4,52 @@
 import {
   formatPrice,
   checkIfNotProductPage,
+  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
-import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
-function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
+/**
+ * @param {HTMLElement} planSwitcher
+ * @param {string} oldProdCode
+ * @returns {string} -> the product code after creating the plan switcher
+ * Used to handle cases when the default is not the first input in the plans switcher
+ */
+const updateProdCodePostPlansSwitcher = (planSwitcher, oldProdCode) => {
+  const defaultPlan = planSwitcher?.querySelector('input[checked] + label');
+  return defaultPlan ? defaultPlan.dataset.storeSetId : oldProdCode;
+};
+
+function setDiscountedPriceAttribute(type, prodName) {
   let priceAttribute = 'discounted||full';
 
   if (type === 'monthly') {
-    priceAttribute = hideDecimals === 'true' ? 'discounted-monthly-no-decimal||full-monthly' : 'discounted-monthly||full-monthly';
+    priceAttribute = 'discounted-monthly||full-monthly';
     if (prodName.endsWith('m')) {
-      priceAttribute = hideDecimals === 'true' ? 'discounted-no-decimal||full' : 'discounted||full';
+      priceAttribute = 'discounted||full';
     }
   }
 
   return priceAttribute;
 }
 
-async function updateProductPrice(prodName, saveText, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '') {
+async function updateProductPrice(prodName, saveText, buyLinkSelector = null, billed = null, type = null, perPrice = '') {
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
 
-  let priceAttribute = setDiscountedPriceAttribute(type, hideDecimals, prodName);
+  let priceAttribute = setDiscountedPriceAttribute(type, prodName);
   newPrice.setAttribute('data-store-price', priceAttribute);
-
-  let oldPrice = 'data-store-price="full"';
-  let billedPrice = 'data-store-price="discounted||full"';
-  if (hideDecimals === 'true') {
-    oldPrice = 'data-store-price="full-no-decimal"';
-    billedPrice = 'data-store-price="discounted-no-decimal||full-no-decimal"';
-  }
+  newPrice.setAttribute('data-store-render', '');
 
   priceElement.innerHTML = `
       <div class="hero-aem__price mt-3">
-        <div class="oldprice-container">
-          <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
-          <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span> </span>
+        <div class="oldprice-container" data-store-hide="!it.option.price.discounted">
+          <span class="prod-oldprice" data-store-render data-store-price="full"></span>
+          <span class="prod-save">${saveText} <span data-store-render data-store-discount="percentage"></span> </span>
         </div>
         <div class="newprice-container mt-2">
           <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
         </div>
-        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
-        <a data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector?.innerText}</a>
+        ${billed ? `<div class="billed">${billed.innerHTML.replace('0', '<span class="newprice-2" data-store-render data-store-price="discounted||full"></span>')}</div>` : ''}
+        <a data-store-render data-store-buy-link href="#" class="button primary no-arrow">${buyLinkSelector?.innerText}</a>
       </div>`;
   return priceElement;
 }
@@ -74,16 +79,18 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
 
     if (productName) {
       planSwitcher.innerHTML += `
-        <input data-store-click-set-product data-store-product-id="${productName}" data-store-product-option="${prodUser}-${prodYear}" data-store-product-department="consumer" type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
-        <label for="${plan}-${productName.trim()}" class="radio-label">${radioText}</label><br>
+        <input type="radio" id="${plan}-${productName.trim()}" name="${cardNumber}-${variant}" value="${cardNumber}-${plan}-${productName.trim()}" ${checked}>
+        <label data-store-action data-store-set-id="${productName}" data-store-set-devices="${prodUser}" data-store-set-subscription="${prodYear}" for="${plan}-${productName.trim()}" class="radio-label">${radioText}</label><br>
       `;
     }
   });
 
-  if (!planSwitcher.querySelector('input[checked]')) {
-    planSwitcher.querySelector('input')?.setAttribute('checked', 'true');
+  const checkedPlan = planSwitcher.querySelectorAll('input[checked]');
+  if (!checkedPlan && radioButtons.children) {
+    const defaultPlanSwitcher = planSwitcher.querySelectorAll('input');
+    defaultPlanSwitcher.setAttribute('checked', '');
+    defaultPlanSwitcher.checked = true;
   }
-
   return planSwitcher;
 }
 
@@ -164,6 +171,98 @@ function createFeatureList(featuresSet) {
   });
 }
 
+/**
+ * @param {HTMLElement} element
+ * @param {Record<string, string>} attributes
+ */
+const setAttributes = (element, attributes) => {
+  if (!element) {
+    return;
+  }
+
+  Object.entries(attributes).forEach(([attr, value]) => {
+    element.setAttribute(attr, value);
+  });
+};
+
+/**
+ * @param {HTMLElement} listElement
+ * @param {string} saveText
+ */
+const configureAddOnListPrices = (listElement, saveText = 'Save ') => {
+  if (!listElement) {
+    return;
+  }
+
+  /**
+   * @type {import('@repobit/dex-store-elements').OptionNode}
+   */
+  const optionInListElement = listElement.querySelector('bd-option');
+  if (!optionInListElement) {
+    return;
+  }
+
+  /**
+   * @type {import('@repobit/dex-store-elements').OptionNode}
+   */
+  const optionInCardElement = listElement.closest('bd-option');
+  if (optionInCardElement) {
+    optionInListElement.updateComplete.then(() => {
+      const discountedPriceInCard = optionInCardElement.option?.getDiscountedPrice({ currency: false });
+      const discountedPriceInList = optionInListElement.option?.getDiscountedPrice({ currency: false });
+
+      if (discountedPriceInCard && discountedPriceInList) {
+        listElement.querySelector('.add-on-newprice').textContent = formatPrice(
+          Math.abs(discountedPriceInList - discountedPriceInCard),
+          optionInListElement.option.currency,
+        );
+      }
+    });
+  }
+
+  setAttributes(listElement.querySelector('.add-on-oldprice'), {
+    'data-store-price': 'full',
+    'data-store-hide': '!it.option.price.discounted',
+    'data-store-render': '',
+  });
+
+  const percentSaveElement = listElement.querySelector('.add-on-percent-save');
+  percentSaveElement.textContent = `${saveText}{{=it.option.discount.percentage}}`;
+
+  setAttributes(percentSaveElement, {
+    'data-store-hide': '!it.option.price.discounted',
+  });
+};
+
+/**
+ * @param {HTMLElement} addOnProductElement
+ */
+const configureAddOnProductPrices = (addOnProductElement) => {
+  if (!addOnProductElement) {
+    return;
+  }
+
+  setAttributes(addOnProductElement.querySelector('.prod-newprice span'), {
+    'data-store-price': 'discounted||full',
+    'data-store-render': '',
+  });
+
+  const addOnOldPrice = addOnProductElement.querySelector('.prod-oldprice');
+  if (addOnOldPrice?.parentElement) {
+    addOnOldPrice.parentElement.setAttribute('data-store-hide', '!it.option.price.discounted');
+  }
+
+  setAttributes(addOnOldPrice, {
+    'data-store-price': 'full',
+    'data-store-render': '',
+  });
+
+  setAttributes(addOnProductElement.querySelector('.prod-save span'), {
+    'data-store-discount': 'percentage',
+    'data-store-render': '',
+  });
+};
+
 // Function to check if content contains [add-on] text
 function checkAddOn(featuresSet) {
   let addOn = false;
@@ -187,7 +286,7 @@ export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
     products, familyProducts, monthlyProducts,
-    addOnProducts, addOnMonthlyProducts, type, hideDecimals, thirdRadioButtonProducts, saveText, addonProductName,
+    addOnProducts, addOnMonthlyProducts, type, thirdRadioButtonProducts, saveText, addonProductName,
   } = block.closest('.section').dataset;
 
   const blockParent = block.closest('.section');
@@ -212,6 +311,7 @@ export default async function decorate(block) {
   }
 
   let switchBox = document.createElement('div');
+  let switchCheckbox;
   if (individualSwitchText && familySwitchText) {
     switchBox.classList.add('switchBox');
     switchBox.innerHTML = `
@@ -225,8 +325,7 @@ export default async function decorate(block) {
       </label>
     `;
 
-    // Get the checkbox inside the switchBox
-    let switchCheckbox = switchBox.querySelector('#switchCheckbox');
+    switchCheckbox = switchBox?.querySelector('#switchCheckbox');
     // Add an event listener to the checkbox
     switchCheckbox.addEventListener('change', () => {
       if (switchCheckbox.checked) {
@@ -327,9 +426,9 @@ export default async function decorate(block) {
       });
 
       // set the store event on the component
-      let storeEvent = 'main-product-loaded';
+      let storeEvent = 'info';
       if (checkIfNotProductPage()) {
-        storeEvent = 'product-loaded';
+        storeEvent = 'all';
       }
       const prodBox = document.createElement('div');
 
@@ -351,35 +450,20 @@ export default async function decorate(block) {
         demoBtn = `<span class="demoBtn" data-show="${selector}" onclick="document.querySelector('.${selector.replace(/\s+/g, '')}').style.display = 'block'">${btnText}</span>`;
       }
 
-      // get the checked product option from the plan switcher
-      const checkedPlan = planSwitcher.querySelector('input[checked]');
-      if (checkedPlan) {
-        prodName = checkedPlan.dataset.storeProductId || prodName;
-        const checkedPlanOption = checkedPlan.dataset.storeProductOption;
-        if (checkedPlanOption) {
-          [prodUsers, prodYears] = checkedPlanOption.split('-');
-        }
-      }
-
-      // get the checked addon product option from the plan switcher
-      const checkedAddonPlan = planSwitcher2.querySelector('input[checked]');
-      if (checkedAddonPlan) {
-        addOnProdName = checkedAddonPlan.dataset.storeProductId || prodName;
-        const checkedAddonPlanOption = checkedAddonPlan.dataset.storeProductOption;
-        if (checkedAddonPlanOption) {
-          [addOnProdUsers, addOnProdYears] = checkedAddonPlanOption.split('-');
-        }
-      }
-
+      const updatedProdName = updateProdCodePostPlansSwitcher(planSwitcher, prodName);
+      const updatedAddonProdName = updateProdCodePostPlansSwitcher(planSwitcher2, addOnProdName);
       prodBox.innerHTML = `
-          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'}${greenTag.innerText.trim() === 'demo-box' ? ' demo-box' : ''} ${key < productsAsList.length ? 'individual-box' : 'family-box'}"
-          data-store-context data-store-id="${prodName}" data-store-option="${prodUsers}-${prodYears}" data-store-department="consumer" ${productsAsList.some((prodEntry) => prodEntry.includes(prodName)) ? `data-store-event="${storeEvent}"` : ''}>
-            <div class="inner_prod_box">
-              ${greenTag.innerText.trim() && greenTag.innerText.trim() !== 'demo-box' ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
-              ${titleHTML}
+          <div class="prod_box${greenTag.innerText.trim() && ' hasGreenTag'}${greenTag.innerText.trim() === 'demo-box' ? ' demo-box' : ''} ${key < productsAsList.length ? 'individual-box' : 'family-box'}">
+          <bd-context>
+            <bd-product product-id="${updatedProdName}">
+              <bd-option devices="${prodUsers}" subscription="${prodYears}"
+                ${productsAsList.some((prodEntry) => prodEntry.includes(updatedProdName)) ? `data-layer-event="${storeEvent}"` : ''}>
+                <div class="inner_prod_box">
+                    ${greenTag.innerText.trim() && greenTag.innerText.trim() !== 'demo-box' ? `<div class="greenTag2">${greenTag.innerText.trim()}</div>` : ''}
+                    ${titleHTML}
 
-              <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
-    ${(() => {
+                    <div class="blueTagsWrapper">${newBlueTag.innerText.trim() ? `${newBlueTag.innerHTML.trim()}` : ''}</div>
+  ${(() => {
     const t = subtitle.innerText.trim();
     if (!t) return '';
     const fixed = t.split(/\s+/).length > 8 ? ' fixed_height' : '';
@@ -388,80 +472,92 @@ export default async function decorate(block) {
     return `<p class="subtitle${fixed}"${extra}>${subtitle.innerHTML}</p>`;
   })()}
 
-              <hr />
-              ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
-              ${radioButtons ? planSwitcher.outerHTML : ''}
-              <div class="hero-aem__prices await-loader"></div>
-              ${secondButton ? secondButton.outerHTML : ''}
-              ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
-              <hr />
-              ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
-              <div class="add-on-product" style="display: none;">
-                ${billed2 ? '<hr>' : ''}
-                ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
-                ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
-                <div class="hero-aem__prices__addon"></div>
-              </div>
-            </div>
+                    <hr />
+                    ${subtitle2?.innerText.trim() ? `<p class="subtitle-2${subtitle2.innerText.trim().split(/\s+/).length > 8 ? ' fixed_height' : ''}">${subtitle2.innerText.trim()}</p>` : ''}
+                    ${radioButtons ? planSwitcher.outerHTML : ''}
+                    <div class="hero-aem__prices await-loader"></div>
+                    ${secondButton ? secondButton.outerHTML : ''}
+                    ${undeBuyLink.innerText.trim() ? `<div class="undeBuyLink">${demoBtn !== '' ? demoBtn : undeBuyLink.innerHTML.trim()}</div>` : ''}
+                    <hr />
+                    ${benefitsLists.innerText.trim() ? `<div class="benefitsLists">${featureList}</div>` : ''}
+                    <div class="add-on-product" style="display: none;">
+                      ${billed2 ? '<hr>' : ''}
+                      ${planSwitcher2.outerHTML ? planSwitcher2.outerHTML : ''}
+                      ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
+                      <div class="hero-aem__prices__addon"></div>
+                    </div>
+                  </div>
+                </bd-option>
+              </bd-product>
+            </bd-context>
           </div>`;
       block.children[key].outerHTML = prodBox.innerHTML;
-      let priceBox = await updateProductPrice(prodName, saveText, buyLink.querySelector('a'), billedText, type, hideDecimals, perPrice);
-      block.children[key].querySelector('.hero-aem__prices').appendChild(priceBox);
+      const blockChild = block.children[key];
+      let priceBox = await updateProductPrice(updatedProdName, saveText, buyLink.querySelector('a'), billedText, type, perPrice);
+      blockChild.querySelector('.hero-aem__prices').appendChild(priceBox);
       let addOnPriceBox;
       if (addOn && addOnProducts) {
-        addOnPriceBox = await updateProductPrice(addOnProdName, saveText, buyLink2.querySelector('a'), billed2, type, hideDecimals, perPrice);
-        block.children[key].querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
+        addOnPriceBox = await updateProductPrice(updatedAddonProdName, saveText, buyLink2.querySelector('a'), billed2, type, perPrice);
+        blockChild.querySelector('.hero-aem__prices__addon').appendChild(addOnPriceBox);
       }
 
-      let checkmark = block.children[key].querySelector('.checkmark');
+      const checkmark = blockChild.querySelector('.checkmark');
       if (checkmark) {
-        let checkmarkList = checkmark.closest('ul');
+        const checkmarkList = checkmark.closest('ul');
+        const listItem = checkmark.closest('li');
+        if (!checkmarkList || !listItem) {
+          return;
+        }
+
         checkmarkList.classList.add('checkmark-list');
+        listItem.removeChild(checkmark);
 
-        let li = checkmark.closest('li');
-        li.removeChild(checkmark);
-
-        let checkBox = document.createElement('input');
+        const checkBox = document.createElement('input');
         checkBox.setAttribute('type', 'checkbox');
         checkBox.classList.add('checkmark');
 
         // rewrite the list element so flexbox can work
-        let newLi = document.createElement('li');
+        const newLi = document.createElement('li');
         newLi.innerHTML = `
           ${checkBox.outerHTML}
-          <div>${li.innerHTML}</div>`;
-        li.replaceWith(newLi);
+          <div>${listItem.innerHTML}</div>`;
+        listItem.replaceWith(newLi);
 
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-context', '');
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-id', addOnProdName);
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-        block.children[key].querySelector('.add-on-product').setAttribute('data-store-department', 'consumer');
-        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(addOnProdName))) {
-          block.children[key].querySelector('.add-on-product').setAttribute('data-store-event', storeEvent);
+        wrapChildrenWithStoreContext(checkmarkList, {
+          productId: updatedAddonProdName,
+          devices: addOnProdUsers,
+          subscription: addOnProdYears,
+          ignoreEventsParent: true,
+        });
+
+        configureAddOnListPrices(
+          checkmarkList,
+          addOnPriceBox.querySelector('.prod-save').textContent,
+        );
+
+        let addOnStoreEvent = '';
+        if (addOnProductsInitial && addOnProductsInitial.some((prodEntry) => prodEntry.includes(updatedAddonProdName))) {
+          addOnStoreEvent = storeEvent;
         }
 
-        let productObject = await Store.getProducts([new ProductInfo(prodName), new ProductInfo(addOnProdName)]);
-        let product = productObject[prodName];
-        let addOnProduct = productObject[addOnProdName];
-        if (addOnProduct) {
-          let addOnCost = addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscountedPrice('value') - product.getOption(prodUsers, prodYears).getDiscountedPrice('value');
-          addOnCost = formatPrice(addOnCost, product.getCurrency());
+        const addOnProductElement = blockChild.querySelector('.add-on-product');
+        wrapChildrenWithStoreContext(addOnProductElement, {
+          productId: updatedAddonProdName,
+          devices: addOnProdUsers,
+          subscription: addOnProdYears,
+          ignoreEventsParent: true,
+          addOnStoreEvent,
+        });
 
-          let addOnNewPrice = newLi.querySelector('.add-on-newprice');
-          addOnNewPrice.textContent = addOnCost;
-          let addOnOldPrice = newLi.querySelector('.add-on-oldprice');
-          addOnOldPrice.textContent = formatPrice(addOnProduct.getOption(addOnProdUsers, addOnProdYears).getPrice('value'), addOnProduct.getCurrency());
-          let addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-          addOnPercentSave.textContent = `${addOnPriceBox.querySelector('.prod-save').textContent} ${addOnProduct.getOption(addOnProdUsers, addOnProdYears).getDiscount('percentageWithProcent')}`;
+        configureAddOnProductPrices(addOnProductElement);
 
-          let checkBoxSelector = newLi.querySelector('.checkmark');
+        const checkBoxSelector = newLi.querySelector('.checkmark');
+        if (checkBoxSelector) {
           checkBoxSelector.addEventListener('change', () => {
-            if (checkBoxSelector.checked) {
-              checkmarkList.classList.add('checked');
-              block.children[key].querySelector('.add-on-product').style.display = 'block';
-            } else {
-              checkmarkList.classList.remove('checked');
-              block.children[key].querySelector('.add-on-product').style.display = 'none';
+            const isChecked = checkBoxSelector.checked;
+            checkmarkList.classList.toggle('checked', isChecked);
+            if (addOnProductElement) {
+              addOnProductElement.style.display = isChecked ? 'block' : 'none';
             }
           });
         }
@@ -574,5 +670,9 @@ export default async function decorate(block) {
     decorateIcons(block.closest('.section'));
   }
 
-  switchCheckbox.dispatchEvent(new Event('change'));
+  /**
+   * This error is needed in order to work. Please contact miordache@bitdefender.com if you want this fixed
+   * Also don't forget to increment this counter if you tried fixing it and did not work: 2
+   */
+  switchCheckbox?.dispatchEvent(new Event('change'));
 }

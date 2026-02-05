@@ -4,6 +4,7 @@ import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
+  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function buildHeroDropdownBlock(element) {
@@ -42,35 +43,32 @@ function createDropdownItem(code, friendlyName, isActive) {
 }
 
 function createPriceBox({
-  code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText,
+  code, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText,
 }) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box', 'await-loader');
-  box.setAttribute('data-store-context', '');
-  box.setAttribute('data-store-id', product);
-  box.setAttribute('data-store-option', `${unit}-${year}`);
-  box.setAttribute('data-store-department', 'consumer');
-  box.setAttribute('data-store-event', 'product-loaded');
-  box.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
+  box.setAttribute('data-store-hide', '!it.option.price.discounted');
+  box.setAttribute('data-store-hide-type', 'visibility');
+  box.setAttribute('data-store-render', '');
   box.dataset.code = code;
 
   box.innerHTML = `
     <p class="product-details">${detailsText || ''}</p>
     <div class="discount">
-      <div data-store-hide="no-price=discounted;type=visibility" class="price">
-        <span class="old-price"><del data-store-price="full"></del></span>
+      <div data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility" class="price">
+        <span class="old-price"><del data-store-render data-store-price="full"></del></span>
       </div>
-      <div data-store-hide="no-price=discounted;type=visibility" class="featured">
-        <span class="prod-save" data-store-hide="no-price=discounted"><span data-store-discount="percentage"></span> ${discounttext}</span>
+      <div data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility" class="featured">
+        <span class="prod-save"><span data-store-render data-store-discount="percentage"></span> ${discounttext}</span>
       </div>
     </div>
     <div class="price">
       <strong class="new-price">
-        <strong data-store-price="discounted||full"></strong>
+        <strong data-store-render data-store-price="discounted||full"></strong>
       </strong>
     </div>
     <div class="buttons">
-      <a href="#" data-store-buy-link class="button primary-button">
+      <a href="#" data-store-render data-store-buy-link class="button primary-button">
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
@@ -140,6 +138,13 @@ createNanoBlock('dropdown', (...args) => {
 
     priceBox.style.display = index === 0 ? 'block' : 'none';
     root.appendChild(priceBox);
+    wrapChildrenWithStoreContext(priceBox, {
+      productId: product,
+      devices: unit,
+      subscription: year,
+      ignoreEventsParent: true,
+      storeEvent: 'all',
+    });
   });
 
   customDropdown.appendChild(selectedOption);

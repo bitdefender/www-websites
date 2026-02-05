@@ -207,6 +207,50 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   }
 }
 
+.bundle-design#heroColumn {
+  background-color: #003385;
+  padding: 0;
+}
+
+.bundle-design#heroColumn * {
+  color: white;
+}
+
+.bundle-design#heroColumn .image-columns > div >div:last-of-type > p {
+  padding: 0;
+  margin: 0;
+}
+
+.bundle-design#heroColumn table tr td:nth-of-type(1) {
+  display: none;
+}
+
+.bundle-design#heroColumn table tr td a {
+  color: white;
+  border-color: white;
+  min-width: auto;
+  width: auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.bundle-design#heroColumn table tr td a .icon, .bundle-design#heroColumn table tr td a .icon svg {
+  height: 6px;
+  width: auto;
+  margin: 0;
+  display: block;
+}
+
+.bundle-design#heroColumn table tr td a:hover {
+  background-color: transparent;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: all 0.5s ease;
+}
+
 @media (min-width: 767px){
   .image-columns.quotes > div {
     flex-direction: unset;
@@ -242,6 +286,11 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   padding-left: 0;
   margin-top: 16px;
 }
+@media (max-width: 991px) {
+  .image-columns-container.bundle-design .image-columns > div > div:last-of-type img {
+    visibility: hidden;
+  }
+}
 
 @media (min-width: 1400px) {
   .image-columns > div > .image-columns-txt-col p {
@@ -261,7 +310,6 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 }
 
 @media (min-width: 992px) { /* desktop */
-
   .image-columns {
     row-gap: 104px;
   }
@@ -282,20 +330,19 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   }
 
   .avfree .image-columns {
-    > div{
-        > .image-columns-txt-col {
-            h3 {
-                font-size: 22px;
-                margin-bottom: 6px;
-            }
-
-            p {
-                font-size: 16px;
-            }
+    > div {
+      > .image-columns-txt-col {
+        h3 {
+          font-size: 22px;
+          margin-bottom: 6px;
         }
-        
+
+        p {
+          font-size: 16px;
+        }
+      }
     }
-}
+  }
 }
 
 @media (min-width: 1600px) { /* large desktop */
