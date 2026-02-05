@@ -27,7 +27,6 @@ main .hero {
   background-color: white;
   position: relative;
   padding: 1em 0 2em;
-  min-height: 300px;
 }
 
 main .section.bfoffer .hero {

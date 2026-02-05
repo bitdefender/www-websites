@@ -51,10 +51,15 @@ async function updateProductPrice(prodName, saveText = null, buyLinkSelector = n
 }
 
 export default async function decorate(block) {
-  const { products, savetext } = block.closest('.section')?.dataset ?? {};
+  const { products, savetext, activeColumn } = block.closest('.section')?.dataset ?? {};
   if (!products) return;
 
   const tables = [...block.querySelectorAll('table')];
+  const children = [...block.children];
+  if (Number(activeColumn) >= 0) {
+    children[activeColumn - 1]?.classList.add('active-column');
+  }
+
   const productList = products.split(',');
 
   const tasks = tables.map(async (table, key) => {

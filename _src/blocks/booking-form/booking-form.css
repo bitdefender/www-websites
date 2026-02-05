@@ -13,6 +13,10 @@
   display: none;
 }
 
+.booking-form-container.show {
+  display: block;
+}
+
 .booking-form-container .booking-form-wrapper {
   width: 768px;
   height: auto;
@@ -94,8 +98,14 @@
   display: none;
 }
 
-.booking-form-container form.form-submitted h4 {
-  color: #0f970f;
+.booking-form-container form.form-submitted #title-box {
+  text-align: center;
+  width: 100%;
+  padding: 3em 0;
+}
+
+.booking-form-container form.form-submitted h4 .icon {
+  width: 30px;
 }
 
 .booking-form-container .input-row {
@@ -135,6 +145,16 @@
   text-align: center;
   justify-content: flex-start;
   gap: 18px;
+}
+
+.booking-form-container.checkboxes-vertically .input-row .input-box.checkboxes {
+  flex: 0 0 100%;
+}
+
+.booking-form-container.checkboxes-vertically .input-row .checkboxes .all-checks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
 }
 
 .booking-form-container .input-row label.input-checkbox {
@@ -209,11 +229,19 @@
   .booking-form-container .input-row .input-box {
     margin-bottom: 1em;
   }
+
+  .booking-form-container.checkboxes-vertically .input-row .checkboxes .all-checks {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media screen and (width <= 525px) {
   .booking-form-container .input-row .checkboxes .all-checks {
     gap: 0;
     flex-direction: column;
+  }
+
+  .booking-form-container.checkboxes-vertically .input-row .checkboxes .all-checks {
+    grid-template-columns: repeat(1, 1fr);
   }
 }

@@ -176,3 +176,5 @@ export function adobeMcAppendVisitorId(selector) {
     });
   }
 }
+
+window.target = target;

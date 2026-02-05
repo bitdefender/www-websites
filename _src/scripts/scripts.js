@@ -477,7 +477,7 @@ export async function loadTrackers() {
 async function loadEager(doc) {
   // load trackers early if there is a target experiment on the page
   if (getPageExperimentKey()) {
-    loadTrackers();
+    await loadTrackers();
     await resolveNonProductsDataLayer();
   }
 
@@ -549,7 +549,7 @@ async function loadLazy(doc) {
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   sampleRUM('lazy');
@@ -674,6 +674,10 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
+  if (window.location.href.includes('oaiusercontent')) {
+    return;
+  }
+
   setBFCacheListener();
   initialiseSentry();
   await window.hlx.plugins.load('eager');
@@ -691,7 +695,9 @@ async function loadPage() {
   await loadLazy(document);
   handleFileDownloadedEvents();
 
-  await StoreResolver.resolve();
+  if (!window.disableGlobalStore) {
+    await StoreResolver.resolve();
+  }
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
   window.bd_page_ready = true;

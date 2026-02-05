@@ -1,21 +1,22 @@
-<!DOCTYPE html><html><head><script type="importmap">{
+<!DOCTYPE html><html><head>
+  <script type="importmap">{
   "imports": {
     "@glidejs/glide": "https://esm.sh/@glidejs/glide@3.7.1",
     "@glidejs/glide/": "https://esm.sh/@glidejs/glide@3.7.1/",
-    "@repobit/dex-data-layer": "https://esm.sh/@repobit/dex-data-layer@2.0.1",
-    "@repobit/dex-data-layer/": "https://esm.sh/@repobit/dex-data-layer@2.0.1/",
-    "@repobit/dex-launch": "https://esm.sh/@repobit/dex-launch@2.0.11",
-    "@repobit/dex-launch/": "https://esm.sh/@repobit/dex-launch@2.0.11/",
+    "@repobit/dex-data-layer": "https://esm.sh/@repobit/dex-data-layer@2.1.0",
+    "@repobit/dex-data-layer/": "https://esm.sh/@repobit/dex-data-layer@2.1.0/",
+    "@repobit/dex-launch": "https://esm.sh/@repobit/dex-launch@2.1.0",
+    "@repobit/dex-launch/": "https://esm.sh/@repobit/dex-launch@2.1.0/",
     "@repobit/dex-store-elements": "https://esm.sh/@repobit/dex-store-elements@1.4.2",
     "@repobit/dex-store-elements/": "https://esm.sh/@repobit/dex-store-elements@1.4.2/",
     "@repobit/dex-store": "https://esm.sh/@repobit/dex-store@1.3.1",
     "@repobit/dex-store/": "https://esm.sh/@repobit/dex-store@1.3.1/",
-    "@repobit/dex-system-design": "https://esm.sh/@repobit/dex-system-design@0.21.2",
-    "@repobit/dex-system-design/": "https://esm.sh/@repobit/dex-system-design@0.21.2/",
-    "@repobit/dex-target": "https://esm.sh/@repobit/dex-target@2.5.19",
-    "@repobit/dex-target/": "https://esm.sh/@repobit/dex-target@2.5.19/",
-    "@repobit/dex-utils": "https://esm.sh/@repobit/dex-utils@2.1.1",
-    "@repobit/dex-utils/": "https://esm.sh/@repobit/dex-utils@2.1.1/",
+    "@repobit/dex-system-design": "https://esm.sh/@repobit/dex-system-design@0.22.3",
+    "@repobit/dex-system-design/": "https://esm.sh/@repobit/dex-system-design@0.22.3/",
+    "@repobit/dex-target": "https://esm.sh/@repobit/dex-target@2.10.0",
+    "@repobit/dex-target/": "https://esm.sh/@repobit/dex-target@2.10.0/",
+    "@repobit/dex-utils": "https://esm.sh/@repobit/dex-utils@2.1.2",
+    "@repobit/dex-utils/": "https://esm.sh/@repobit/dex-utils@2.1.2/",
     "@tsparticles/all": "https://esm.sh/@tsparticles/all@3.9.1",
     "@tsparticles/all/": "https://esm.sh/@tsparticles/all@3.9.1/",
     "@tsparticles/engine": "https://esm.sh/@tsparticles/engine@3.9.1",
@@ -49,7 +50,6 @@
   </script>
   <link rel="stylesheet" href="/_src/styles/styles.css" />
   <style>
-
     :root {
       --fourofour-background-color: #f4f4f4;
     }
@@ -91,69 +91,69 @@
     }
 
 
-/* Default styles (mobile-first) */
+    /* Default styles (mobile-first) */
 
-main .link-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 90%;  /* Adjusted to fit smaller screens */
-  padding: 30px;
-  margin: 0 auto;
-  border-radius: 12px;
-  background-color: var(--fourofour-background-color);
-}
+    main .link-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+      /* Adjusted to fit smaller screens */
+      padding: 30px;
+      margin: 0 auto;
+      border-radius: 12px;
+      background-color: var(--fourofour-background-color);
+    }
 
-.link-section > div:first-child > p {
-  font-size: var(--body-font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-dark-gray);
-  text-align: center;
-  text-decoration: none;
-}
+    .link-section>div:first-child>p {
+      font-size: var(--body-font-size-xs);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-dark-gray);
+      text-align: center;
+      text-decoration: none;
+    }
 
-.link-section > div:last-child {
-  margin-top: 1rem;
-  column-count: 1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+    .link-section>div:last-child {
+      margin-top: 1rem;
+      column-count: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.link-section > div:last-child .button-container {
-  margin-bottom: 1rem;
-  margin-top: 0;
-}
+    .link-section>div:last-child .button-container {
+      margin-bottom: 1rem;
+      margin-top: 0;
+    }
 
-.link-section > div:last-child .button-container a {
-  background-color: transparent;
-  border: none;
-  color: var(--link-color);
-  padding: 0;
-  padding-left: 10px;
-  text-align: center;
-}
+    .link-section>div:last-child .button-container a {
+      background-color: transparent;
+      border: none;
+      color: var(--link-color);
+      padding: 0;
+      padding-left: 10px;
+      text-align: center;
+    }
 
-.link-section > div:last-child .button-container a::after {
-  background-color: var(--link-color);
-  opacity: 1;
-  margin: 0;
-}
+    .link-section>div:last-child .button-container a::after {
+      background-color: var(--link-color);
+      opacity: 1;
+      margin: 0;
+    }
 
-@media (min-width: 992px) {
-  main .link-section {
-    width: 50vw;
-    max-width: 650px;
-  }
+    @media (min-width: 992px) {
+      main .link-section {
+        width: 50vw;
+        max-width: 650px;
+      }
 
-  .link-section > div:last-child {
-    column-count: 2;
-    display: block;
-    align-items: initial;
-  }
-}
-
+      .link-section>div:last-child {
+        column-count: 2;
+        display: block;
+        align-items: initial;
+      }
+    }
   </style>
   <link rel="stylesheet" href="/_src/styles/lazy-styles.css" />
 </head>
@@ -172,6 +172,8 @@ main .link-section {
     </div>
   </main>
   <footer></footer>
+
+
 
 
 

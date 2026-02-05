@@ -418,7 +418,6 @@ header.header-wrapper .menu-wrapper {
   width: 25px;
   height: 25px;
   cursor: pointer;
-  display: flex;
   flex-direction: column;
   justify-content: space-around;
   z-index: 100;
@@ -611,7 +610,6 @@ header.header-wrapper .nav-wrapper {
 }
 
 header.header-wrapper nav {
-  display: block;
   height: 100%;
   margin: 0 auto;  
   position: relative;
@@ -624,7 +622,6 @@ header.quiz {
   background: white;
 
   .icon {
-
     svg {
       filter: brightness(0) saturate(100%) invert(43%) sepia(75%) saturate(5246%) hue-rotate(212deg) brightness(98%) contrast(106%);
     }
@@ -1056,7 +1053,6 @@ header.header-wrapper.hidden {
   }
 
   header.quiz {
-
     .icon {
       width: 200px;
       height: 64px;

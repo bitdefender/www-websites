@@ -370,10 +370,10 @@ export default async function decorate(block) {
     [...block.children].map(async (prod, key) => {
       const mainTable = prod.querySelector('tbody');
       const [greenTag, title, blueTag, subtitle, radioButtons, perPrice, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2, subtitle2] = [...mainTable.querySelectorAll(':scope > tr')];
-      const [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
+      let [prodName, prodUsers, prodYears] = combinedProducts[key].split('/');
       const [prodMonthlyName, prodMonthlyUsers, prodMonthlyYears] = monthlyPricesAsList ? monthlyPricesAsList[key].split('/') : [];
       const [prodThirdRadioButtonName, prodThirdRadioButtonUsers, prodThirdRadioButtonYears] = thirdRadioButtonProductsAsList ? thirdRadioButtonProductsAsList[key].split('/') : [];
-      const [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList ? addOnProductsAsList[key].split('/') : [];
+      let [addOnProdName, addOnProdUsers, addOnProdYears] = addOnProductsAsList ? addOnProductsAsList[key].split('/') : [];
       const [addOnProdMonthlyName, addOnProdMonthlyUsers, addOnProdMonthlyYears] = addOnMonthlyProductsAsList ? addOnMonthlyProductsAsList[key].split('/') : [];
       const featuresSet = benefitsLists.querySelectorAll('table');
       const featureList = createFeatureList(featuresSet);
