@@ -207,7 +207,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
       return;
     }
   } else {
-    response = await fetch('https://agent-skill-scanner.ctpi-scripting-ai.nmbapp.net/skills/checker', {
+    response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -215,7 +215,6 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
       body: JSON.stringify({
         action: 'scan_url',
         url: inputUrl,
-        verify: false,
       }),
     });
   }
@@ -225,7 +224,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   if (window.location.pathname.includes('link-checker')) {
     status = data.status;
   } else {
-    status = data.risk_level === 'CRITICAL' ? 18 : 1;
+    status = data.risk_level === 'CLEAN' ? 1 : 18;
   }
   const message = StatusMessageFactory.createMessage(status, inputUrl, statusMessages);
 
