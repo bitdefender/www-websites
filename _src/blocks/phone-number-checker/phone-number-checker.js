@@ -2,8 +2,6 @@ import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
 import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
 
-const SITE_KEY = '6LcEH5onAAAAAH4800Uc6IYdUvmqPLHFGi_nOGeR';
-
 let phoneUtil; let
   countries;
 
@@ -753,9 +751,5 @@ export default async function decorate(block) {
     });
   }
 
-  button.setAttribute('g-recaptcha', '');
-  button.setAttribute('data-sitekey', SITE_KEY);
-  button.setAttribute('data-callback', 'onSubmit');
-  button.setAttribute('data-sction', 'submit');
   button.addEventListener('click', handler);
 }
