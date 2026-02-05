@@ -3015,6 +3015,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     > div:has(.icon) {
       text-align: left;
+
+      /* stylelint-disable-next-line selector-not-notation */
+      .icon:not(.icon-corner-left):not(.icon-corner-right) {
+        position: relative;
+        z-index: 10;
+      }
     }
   }
 
