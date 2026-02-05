@@ -217,6 +217,13 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
         url: inputUrl,
       }),
     });
+
+    if (!response.ok) {
+      result.textContent = 'Please enter a valid skill URL';
+      result.className = 'result danger';
+      input.closest('.input-container').classList.remove('loader-circle');
+      return;
+    }
   }
 
   const data = await response.json();
