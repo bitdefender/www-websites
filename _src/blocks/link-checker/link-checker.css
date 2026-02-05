@@ -150,6 +150,22 @@ main .section.link-checker-container {
             background-color: #3d8648;
             background-image: url("../../icons/skills-checker-pattern-safe.svg");
         }
+
+        .link-checker .result.danger {
+           overflow-wrap: anywhere;
+
+           &:not(.no-response) {
+                padding: 20px 30px 20px 55px;
+
+                code {
+                    font-family: "Courier New", Courier, monospace;
+                }
+
+                &::before {
+                    top: 20px;
+                }
+           }
+        }
     }
 
     .link-checker-wrapper {

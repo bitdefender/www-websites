@@ -255,7 +255,14 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   }
 
   // Original behavior for other locales
+
   result.innerHTML = message.text;
+  if (!window.location.pathname.includes('link-checker') && data.risk_level !== 'CLEAN') {
+    result.innerHTML = `${data.findings.map((finding) => `<code>${finding.content ?? ''}</code><br>
+      <strong>Description: ${finding.description ?? ''}</strong><hr>`).join('')} 
+      ${message.text}`;
+  }
+
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
