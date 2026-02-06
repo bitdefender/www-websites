@@ -1,5 +1,6 @@
 import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
+import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
 
 let phoneUtil; let
   countries;
@@ -298,22 +299,6 @@ async function fetchData(url, body) {
   }
 }
 
-function xorEncode(input, key) {
-  const bytes = [];
-  for (let i = 0; i < input.length; i += 1) {
-    // eslint-disable-next-line no-bitwise
-    const charCode = input.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-    bytes.push(charCode);
-  }
-
-  // Convert bytes array to base64 (browser-compatible)
-  let binary = '';
-  for (let i = 0; i < bytes.length; i += 1) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary); // btoa = base64 encode in browser
-}
-
 function getPrefix(block) {
   const prefixInput = block.querySelector('#dropdown-input');
   return prefixInput?.value;
@@ -342,19 +327,19 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
     return;
   }
 
-  const deviceId = 'test_device_id';
-  const encryptedPhone = xorEncode(validated.sanitized, deviceId);
-
   const payload = {
-    d: deviceId,
-    v: '1.0.0-initial-version',
-    phone: {
-      phn: encryptedPhone,
-      norm: encryptedPhone,
+    jsonrpc: '2.0',
+    id: 112,
+    method: 'checkPhone',
+    params: {
+      connect_source: {
+        app_id: 'com.bitdefender.website',
+        device_id: 'website',
+      },
+      phone: `${phoneNumber}`,
     },
   };
-
-  const request = await fetchData('https://nimbus.bitdefender.net/lambada/phone_checker/scan', payload);
+  const request = await fetchData('https://eu.nimbus.bitdefender.net/phone-checker', payload);
   if (request.error) {
     result.innerHTML = `${statusMessages.error ?? ''}`;
     result.className = 'result danger no-response';
@@ -362,15 +347,45 @@ async function checkPhoneNumber(block, input, result, statusMessages, statusTitl
     return;
   }
 
+  const solvedChallenge = await BotPrevention.solveChallange(request);
+
+  const solutionPayload = {
+    jsonrpc: '2.0',
+    id: 112,
+    method: 'checkPhone',
+    params: {
+      connect_source: {
+        app_id: 'com.bitdefender.website',
+        device_id: 'website',
+      },
+      pow_challenge: request.pow_challenge,
+      pow_solution: solvedChallenge.nonces,
+      phone: `${phoneNumber}`,
+    },
+  };
+
+  const secondRequest = await fetchData('https://eu.nimbus.bitdefender.net/phone-checker', solutionPayload);
+
   let statusCode; let message; let className;
-  if (request.status_code === 0) {
-    statusCode = 'safe';
-    message = statusMessages.safe;
-    className = 'result safe';
-  } else {
-    statusCode = 'danger';
-    message = statusMessages.danger;
-    className = 'result danger';
+
+  switch (secondRequest.status_code) {
+    case 0:
+      statusCode = 'safe';
+      message = statusMessages.safe;
+      className = 'result safe';
+      break;
+
+    case 1:
+      statusCode = 'danger';
+      message = statusMessages.danger;
+      className = 'result danger';
+      break;
+
+    default:
+      result.innerHTML = `${statusMessages.error ?? ''}`;
+      result.className = 'result danger no-response';
+      input.closest('.input-container').classList.remove('loader-circle');
+      break;
   }
 
   const resultPagePath = statusCode === 'safe' ? '/might-be-safe' : '/marked-as-spam-or-scam';
