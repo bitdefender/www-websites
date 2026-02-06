@@ -250,6 +250,7 @@
                         font-size: var(--body-font-size-xl);
                         line-height: 23px;
                         font-weight: var(--font-weight-bolder);
+                        text-transform: capitalize;
                     }
 
                     a {
@@ -323,6 +324,7 @@
                 li {
                     margin-right: var(--size-40);
                     border-bottom: unset;
+                    text-transform: capitalize;
                 }
 
                 li a {
@@ -398,6 +400,7 @@
             h2 {
                 max-width: 600px;
                 margin-bottom: var(--size-0);
+                text-transform: capitalize;
             }
 
             .prod_box:not(:first-of-type):not(:nth-of-type(4)) {
@@ -567,6 +570,7 @@
                     line-height: 42px;
                     max-width: 630px;
                     font-weight: bold;
+                    text-transform: capitalize;
                 }
             }
 
@@ -666,7 +670,8 @@
                     font-size: var(--heading-font-size-l);
                     line-height: 42px;
                     max-width: 630px;
-                    font-weight: bold
+                    font-weight: bold;
+                    text-transform: capitalize;
                 }
             }
 
@@ -826,6 +831,7 @@
                     line-height: 42px;
                     font-weight: var(--font-weight-bolder);
                     margin-bottom: var(--size-8);
+                    text-transform: capitalize;
                 }
 
                 div:first-of-type > p {
@@ -834,7 +840,7 @@
                 }
 
                 div:not(:last-of-type) {
-                    max-width: 726px;
+                    max-width: 760px;
                 }
 
                 div:nth-of-type(2) {
@@ -890,6 +896,7 @@
                 h2 {
                     line-height: 42px;
                     margin-bottom: var(--size-32);
+                    text-transform: capitalize;
                 }
             }
 
@@ -1002,6 +1009,7 @@
                     font-size: var(--heading-font-size-m);
                     line-height: var(--size-36);
                     margin-bottom: var(--size-32);
+                    text-transform: capitalize;
 
                     &:first-of-type {
                         margin-bottom: var(--size-0);
@@ -1372,6 +1380,7 @@
                 font-size: var(--body-font-size-l);
                 line-height: var(--size-20);
                 font-family: "IBM Plex Sans", sans-serif;
+                text-transform: capitalize;
 
                 &::after {
                     width: var(--size-14);
