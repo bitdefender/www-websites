@@ -133,6 +133,41 @@ main .section.link-checker-container {
         }
     }
 
+    &.ai-skills-checker {
+        margin-top: 24px;
+        &::before {
+            border: 1px solid #FFD2C7;
+            background-color: #FAF4EA;
+            background-image: url("../../icons/skills-checker-pattern.svg");
+        }
+
+        &.danger::before {
+            background-color: #3e030b;
+            background-image: url("../../icons/skills-checker-pattern-danger.svg");
+        }
+
+        &.safe::before {
+            background-color: #3d8648;
+            background-image: url("../../icons/skills-checker-pattern-safe.svg");
+        }
+
+        .link-checker .result.danger {
+           overflow-wrap: anywhere;
+
+           &:not(.no-response) {
+                padding: 20px 30px 20px 55px;
+
+                code {
+                    font-family: "Courier New", Courier, monospace;
+                }
+
+                &::before {
+                    top: 20px;
+                }
+           }
+        }
+    }
+
     .link-checker-wrapper {
         max-width: 960px;
         width: 100%;

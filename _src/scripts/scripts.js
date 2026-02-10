@@ -478,7 +478,7 @@ export async function loadTrackers() {
 async function loadEager(doc) {
   // load trackers early if there is a target experiment on the page
   if (getPageExperimentKey()) {
-    loadTrackers();
+    await loadTrackers();
     await resolveNonProductsDataLayer();
   }
 
