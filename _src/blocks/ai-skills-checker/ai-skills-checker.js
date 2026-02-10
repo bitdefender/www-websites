@@ -202,7 +202,7 @@ function createButtonsContainer(block) {
 
       const link = p.querySelector('a');
       if (!link) return;
-      
+
       if ( link.href.includes('/fragments/')) {
         p.querySelector('a').classList.add('share-button');
       }
@@ -211,13 +211,7 @@ function createButtonsContainer(block) {
       if (link.href.includes('#check-another')) {
         link.classList.add('check-another-button');
         link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const currentPath = window.location.pathname;
-          if (currentPath.includes('/ai-skills-checker/') && page.locale === 'en-us') {
-            window.location.href = '/en-us/consumer/ai-skills-checker';
-          } else {
             resetChecker(block, titleText);
-          }
         });
       }
     });
