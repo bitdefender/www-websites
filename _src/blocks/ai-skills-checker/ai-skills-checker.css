@@ -223,7 +223,7 @@ main .section.ai-skills-checker-container {
         #copy-to-clipboard {
             width: 16px;
             height: 21px;
-            background: url("../../icons/ai-skills-checker-example.svg") no-repeat;
+            background: url("../../icons/link-checker-example.svg") no-repeat;
             background-size: contain;
             position: absolute;
             top: 15px;
