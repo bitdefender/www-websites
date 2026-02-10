@@ -1,11 +1,12 @@
 
 /* stylelint-disable  */
-main .section.link-checker-container {
+main .section.ai-skills-checker-container {
     padding: 20px;
     background-color: #fff;
     max-width: 1350px;
     padding-top: 50px;
     padding-bottom: 50px;
+    margin-top: 24px;
     display: flex;
     justify-content: center;
     overflow: visible;
@@ -19,56 +20,57 @@ main .section.link-checker-container {
         width: 100%;
         height: 100%;
         max-height: 400px;
-        background-image: url("../../icons/link-checker-pattern.svg");
-        background-color: #006EFF;
+        border: 1px solid #FFD2C7;
+        background-color: #FAF4EA;
+        background-image: url("../../icons/skills-checker-pattern.svg");
         border-radius: 20px;
     }
 
     &.danger {
         &::before {
             background-color: #3e030b;
-            background-image: url("../../icons/link-checker-pattern-red.svg");
+            background-image: url("../../icons/skills-checker-pattern-danger.svg");
         }
 
         .check-url {
             display: none;
         }
 
-        .link-checker input[type="text"], .link-checker #inputDiv {
+        .ai-skills-checker input[type="text"], .ai-skills-checker #inputDiv {
             max-width: 100%;
             border: 2px dashed #D82E21;
             padding-right: 15px;
             pointer-events: none;
         }
 
-        .link-checker input[type="text"] {
+        .ai-skills-checker input[type="text"] {
             display: none;
         }
 
-        .link-checker #inputDiv {
+        .ai-skills-checker #inputDiv {
             display: block;
             margin-bottom: 24px;
             text-align: center;
         }
 
-        .link-checker .danger-image {
+        .ai-skills-checker .danger-image {
             display: block;
         }
 
-        .link-checker h1 {
+        .ai-skills-checker h1 {
             color: #EA0220;
             margin-bottom: 16px;
         }
 
-        .link-checker div:first-child p:not(:has(img)) {
+        .ai-skills-checker div:first-child p:not(:has(img)) {
             display: none;
         }
 
-        .link-checker .buttons-container {
+        .ai-skills-checker .buttons-container {
             display: flex;
         }
 
-        .link-checker .privacy-policy {
+        .ai-skills-checker .privacy-policy {
             display: none;
         }
 
@@ -76,7 +78,7 @@ main .section.link-checker-container {
             display: none;
         }
 
-        .link-checker .result.danger {
+        .ai-skills-checker .result.danger {
             margin-top: 0;
         }
     }
@@ -84,47 +86,47 @@ main .section.link-checker-container {
     &.safe {
         &::before {
             background-color: #3d8648;
-            background-image: url("../../icons/link-checker-pattern-green.svg");
+            background-image: url("../../icons/skills-checker-pattern-safe.svg");
         }
 
         .check-url {
             display: none;
         }
 
-        .link-checker h1 {
+        .ai-skills-checker h1 {
             margin-bottom: 16px;
         }
 
-        .link-checker input[type="text"], .link-checker #inputDiv {
+        .ai-skills-checker input[type="text"], .ai-skills-checker #inputDiv {
             max-width: 100%;
             border: 2px dashed #3D8648;
             padding-right: 15px;
             pointer-events: none;
         }
 
-        .link-checker input[type="text"] {
+        .ai-skills-checker input[type="text"] {
             display: none;
         }
 
-        .link-checker #inputDiv {
+        .ai-skills-checker #inputDiv {
             display: block;
             margin-bottom: 24px;
             text-align: center;
         }
 
-        .link-checker .safe-image {
+        .ai-skills-checker .safe-image {
             display: inline-block;
         }
 
-        .link-checker div:first-child p:not(:has(img)) {
+        .ai-skills-checker div:first-child p:not(:has(img)) {
             display: none;
         }
 
-        .link-checker .buttons-container {
+        .ai-skills-checker .buttons-container {
             display: flex;
         }
 
-        .link-checker .privacy-policy {
+        .ai-skills-checker .privacy-policy {
             display: none;
         }
 
@@ -133,16 +135,16 @@ main .section.link-checker-container {
         }
     }
 
-    .link-checker-wrapper {
+    .ai-skills-checker-wrapper {
         max-width: 960px;
         width: 100%;
     }
 
-    .link-checker-form {
+    .ai-skills-checker-form {
         width: 100%;
     }
 
-    .link-checker {
+    .ai-skills-checker {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -221,7 +223,7 @@ main .section.link-checker-container {
         #copy-to-clipboard {
             width: 16px;
             height: 21px;
-            background: url("../../icons/link-checker-example.svg") no-repeat;
+            background: url("../../icons/ai-skills-checker-example.svg") no-repeat;
             background-size: contain;
             position: absolute;
             top: 15px;
@@ -370,6 +372,7 @@ main .section.link-checker-container {
             position: relative;
             text-align: left;
             display: block;
+            overflow-wrap: anywhere;
 
             &::before {
                 content: "";
@@ -381,6 +384,18 @@ main .section.link-checker-container {
                 height: 30px;
                 background-size: contain;
             }
+
+            &:not(.no-response) {
+                padding: 20px 30px 20px 55px;
+
+                code {
+                    font-family: "Courier New", Courier, monospace;
+                }
+
+                &::before {
+                    top: 20px;
+                }
+           }
         }
 
         .result.danger.no-response {
@@ -410,7 +425,7 @@ main .section.link-checker-container {
         margin: 0 auto;
         padding-bottom: 50px;
 
-        .link-checker{
+        .ai-skills-checker{
             padding: 48px 60px 35px;
             
             .input-container{
@@ -461,7 +476,7 @@ main .section.link-checker-container {
     }
 
     @media (min-width: 991px) {
-        .link-checker {
+        .ai-skills-checker {
             padding: 48px 160px 35px;
         }
     }
