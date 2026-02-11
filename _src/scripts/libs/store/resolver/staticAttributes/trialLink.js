@@ -1,50 +1,55 @@
+import { getMetadata } from '/scripts/lib-franklin.js';
+
+const trialPeriod = getMetadata('trialbuylinks');
+
+const getLocale = () => {
+  const locale = (window.location.pathname.split('/')[1]?.split('-')[0] || '').toLowerCase();
+  return !locale || locale === 'en' ? 'COM' : locale.toUpperCase();
+};
+
 export const getTrials = async () => {
-  const res = await fetch(`https://www.bitdefender.com/common/store-config/trial-links.json`);
+  const res = await fetch('https://www.bitdefender.com/pages/triallinks.json');
+  if (!res.ok) { };
 
-  if (!res.ok) {
-    return {};
-  }
+  const { data = [] } = await res.json();
 
-  return await res.json();
+  return data;
 };
 
 const applyTrial = async (option, duration) => {
-  if (!duration) {
-    return await option.getStoreUrl();
-  }
-
   const trial = await getTrials();
-  const locale = window.location.pathname.split('/')[1] || 'en';
-  const optionRegex = [
-    locale,
-    duration,
+  if (!trial) return;
+
+  const locale = getLocale();
+  const optionKey = [
     option.getId(),
-    option.getPromotion(),
     option.getDevices(),
-    option.getSubscription()
-  ].map(k => String(k).trim()).join("|");
+    duration,
+    locale,
+  ].map(k => String(k).trim().toLowerCase()).join("|");
 
-  const match = trial.data.find((row) => {
-    const pattern = [
-      row.locale,
-      row.duration,
+  const match = trial.find((row) => {
+    const rowKey = [
       row.product,
-      row.campaign,
       row.devices,
-      row.subscription
-    ].map(k => k.trim()).join("\\|").replaceAll("*", ".*");
+      parseInt(row.duration, 10),
+      row.locale,
+    ].map(k => String(k).trim().toLowerCase()).join("|");
 
-    return new RegExp(pattern, "i").test(optionRegex);
+    return rowKey === optionKey;
   });
 
-  const optionBuyLink = new URL(await option.getStoreUrl());
+  const optionBuyLink = new URL(await option.buyLink);
 
   if (match?.buy_link) {
     const matchBuyLink = new URL(match.buy_link);
 
     optionBuyLink.searchParams.forEach((value, key) => {
-      matchBuyLink.searchParams.set(value, key)
-    })
+      if (['LANG', 'CURRENCY', 'DCURRENCY', 'COUPON'].includes(key)) {
+        matchBuyLink.searchParams.set(key, value);
+      }
+    });
+    matchBuyLink.searchParams.set('SRC', window.location.origin + window.location.pathname);
 
     return matchBuyLink.href
   }
@@ -57,13 +62,11 @@ const applyTrial = async (option, duration) => {
  * @param {import("../resolver").Context} context 
  */
 export const resolve = async (element, { option }) => {
-  if (element.dataset.storeTrialLink === undefined || !option) { return; }
-
   const button = element.nodeName === "A"
     ? element
     : element.querySelector("a");
 
   if (!button) { return; }
 
-  button.href = await applyTrial(option, element.dataset.storeTrialLink);
+  button.href = await applyTrial(option, trialPeriod);
 }
