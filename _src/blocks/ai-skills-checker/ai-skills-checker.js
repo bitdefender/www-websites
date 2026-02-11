@@ -5,8 +5,6 @@ import {
   AdobeDataLayerService,
 } from '@repobit/dex-data-layer';
 
-import page from '../../scripts/page.js';
-
 function changeTexts(block, statusCode, statusTitles) {
   const titleText = statusTitles[statusCode] || statusTitles.default;
   const h1 = block.querySelector('h1');
@@ -203,15 +201,15 @@ function createButtonsContainer(block) {
       const link = p.querySelector('a');
       if (!link) return;
 
-      if ( link.href.includes('/fragments/')) {
+      if (link.href.includes('/fragments/')) {
         p.querySelector('a').classList.add('share-button');
       }
 
       divWithButtons.appendChild(p);
       if (link.href.includes('#check-another')) {
         link.classList.add('check-another-button');
-        link.addEventListener('click', (e) => {
-            resetChecker(block, titleText);
+        link.addEventListener('click', () => {
+          resetChecker(block, titleText);
         });
       }
     });
