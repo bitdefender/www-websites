@@ -62,6 +62,8 @@ const applyTrial = async (option, duration) => {
  * @param {import("../resolver").Context} context 
  */
 export const resolve = async (element, { option }) => {
+  if (!trialPeriod) return;
+
   const button = element.nodeName === "A"
     ? element
     : element.querySelector("a");
