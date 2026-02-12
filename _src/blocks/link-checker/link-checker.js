@@ -221,8 +221,11 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
       timestamp: Date.now(),
     }));
 
+    const testParam = window.location.href.includes('dotest=1');
+    const resultUrl = new URL(resultPagePath, window.location.origin);
+    if (testParam) resultUrl.searchParams.set('dotest', '1');
     // Redirect to the appropriate result page
-    window.location.href = resultPagePath;
+    window.location.href = resultUrl.href;
     return;
   }
 
