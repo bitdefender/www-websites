@@ -1,7 +1,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, createTag, renderNanoBlocks,
+  matchHeights, createTag, renderNanoBlocks, wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -165,11 +165,19 @@ function setupTabs({ block, firstTab }) {
 
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
+
+  console.log('bckImage ', bckImage)
+  if (bckImage) {
+    block.style.backgroundImage = `url("${bckImage}")`;
+    block.style.backgroundRepeat = "no-repeat";
+    block.style.backgroundPosition = "right";
+    block.style.backgroundSize = "auto 100%";
+  }
 
   // setup image columns
   [...block.children].forEach((row) => {
@@ -209,14 +217,18 @@ export default function decorate(block) {
   const productsAsList = products?.split(',');
   if (productsAsList) {
     // eslint-disable-next-line no-unused-vars
-    [...block.children].forEach((row, rowNumber) => {
+    [...block.children].forEach((row, _) => {
       [...row.children].forEach((col, colNumber) => {
         const [prodName, prodYears, prodUsers] = productsAsList[colNumber].trim().split('/');
-        col.setAttribute('data-store-context', '');
-        col.setAttribute('data-store-id', prodName);
-        col.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-        col.setAttribute('data-store-department', 'consumer');
+        wrapChildrenWithStoreContext(col, {
+          productId: prodName,
+          devices: prodUsers,
+          subscription: prodYears,
+          ignoreEventsParent: true,
+          storeEvent: '',
+        });
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
+        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-render', '');
       });
     });
   }
@@ -226,7 +238,7 @@ export default function decorate(block) {
     [...block.children].forEach((row) => {
       row.children[i]
         ?.querySelector('a.button.modal')
-        ?.setAttribute('data-store-id', alias.trim());
+        ?.setAttribute('product-id', alias.trim());
     });
   });
 
@@ -337,6 +349,7 @@ export default function decorate(block) {
   }
   block.querySelectorAll('h3')?.forEach((element) => {
     if (element.textContent.includes('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}')) {
+      element.textContent = element.textContent.replace('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}', '{{=it.state.discount.percentage.max}}');
       element.classList.add('await-loader');
     }
   });
