@@ -2344,10 +2344,10 @@
 
       > div:nth-of-type(2) {
         position: absolute;
-        width: 100%;
+        width: 180px;
         height: 85%;
-        top: 7%;
-        right: 10%;
+        top: 2em;
+        right: 7em;
 
         .icon {
           width: auto;
@@ -2362,7 +2362,7 @@
         }
       }
 
-      .columns-title-col {
+      > div:nth-of-type(1) {
         display: block;
         width: 598px;
         max-width: 598px;
@@ -2381,6 +2381,8 @@
         }
 
         p {
+          width: 535px;
+          max-width: 535px;
           font-size: 18px;
           font-style: normal;
           font-weight: 400;
@@ -2423,8 +2425,6 @@
           }
         }
       }
-
-      
     }
   }
 
