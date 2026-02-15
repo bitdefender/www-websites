@@ -415,4 +415,23 @@ export default function decorate(block) {
   if (block.closest('.section').classList.contains('responsible-ai')) {
     matchHeights(block, 'p');
   }
+
+  console.log(block.closest('.section').classList.contains('online-safe-animated'))
+  if (block.closest('.section').classList.contains('online-safe-animated')) {
+    block.querySelector('div > div:nth-of-tupe(1)').innerHTML = `<div class="security-window">
+      <div class="security-window__header">
+        <span class="security-window__dot security-window__dot--red"></span>
+        <span class="security-window__dot security-window__dot--yellow"></span>
+        <span class="security-window__dot security-window__dot--green"></span>
+      </div>
+      <div class="security-window__body">
+         <div id="dns" class="dns lottie-container  mask">
+           <div class="dns-background" class="lottie-container mask"></div>
+         </div>
+          <div class="marquee-wrap">
+            <div class="marquee"></div>
+          </div>
+      </div>
+    </div>`;
+  }
 }
