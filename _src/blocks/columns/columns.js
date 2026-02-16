@@ -203,8 +203,8 @@ function initLottieAnimations(block) {
 }
 
 export default function decorate(block) {
-  // eslint-disable-next-line max-len
   const {
+    // eslint-disable-next-line max-len
     linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid,
   } = block.closest('.section').dataset;
