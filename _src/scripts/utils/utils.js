@@ -903,6 +903,10 @@ export const generatePageLoadStartedName = () => {
       }
     }
 
+    if (pathname.includes('bundle-solutions')) {
+      tagName = `${locale}:oem:bundle solutions`;
+    }
+
     if (window.errorCode === '404') {
       tagName = `${locale}:404`;
     }

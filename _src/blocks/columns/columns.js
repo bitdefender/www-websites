@@ -1,7 +1,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, createTag, renderNanoBlocks, wrapChildrenWithStoreContext,
+  matchHeights, createTag, renderNanoBlocks, addScript,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -171,7 +171,6 @@ export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
-  console.log('bckImage ', bckImage)
   if (bckImage) {
     block.style.backgroundImage = `url("${bckImage}")`;
     block.style.backgroundRepeat = "no-repeat";
@@ -220,13 +219,6 @@ export default function decorate(block) {
     [...block.children].forEach((row, _) => {
       [...row.children].forEach((col, colNumber) => {
         const [prodName, prodYears, prodUsers] = productsAsList[colNumber].trim().split('/');
-        wrapChildrenWithStoreContext(col, {
-          productId: prodName,
-          devices: prodUsers,
-          subscription: prodYears,
-          ignoreEventsParent: true,
-          storeEvent: '',
-        });
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-render', '');
       });
@@ -416,9 +408,8 @@ export default function decorate(block) {
     matchHeights(block, 'p');
   }
 
-  console.log(block.closest('.section').classList.contains('online-safe-animated'))
   if (block.closest('.section').classList.contains('online-safe-animated')) {
-    block.querySelector('div > div:nth-of-tupe(1)').innerHTML = `<div class="security-window">
+    block.querySelector('span.icon-online-safe-animated').closest('p').innerHTML = `<div id="lottieAnimation" class="security-window">
       <div class="security-window__header">
         <span class="security-window__dot security-window__dot--red"></span>
         <span class="security-window__dot security-window__dot--yellow"></span>
@@ -432,6 +423,174 @@ export default function decorate(block) {
             <div class="marquee"></div>
           </div>
       </div>
-    </div>`;
+    </div>
+    
+    <style>
+      #lottieAnimation.security-window {
+        max-height: 266px;
+        overflow: hidden;
+        border-radius: 14px;
+        background: #0a3d91;
+        margin-top: 2em;
+      }
+
+      #lottieAnimation .security-window__header {
+        height: 36px;
+        padding: 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #063a86;
+      }
+
+      #lottieAnimation .security-window__dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      #lottieAnimation .security-window__dot--red {
+        background: #ff5f56;
+      }
+
+      #lottieAnimation .security-window__dot--yellow {
+        background: #ffbd2e;
+      }
+
+      #lottieAnimation .security-window__dot--green {
+        background: #27c93f;
+      }
+
+      #lottieAnimation .security-window__body {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 40px;
+        flex-direction: column;
+        background: linear-gradient(135deg,
+            #0a4fb3 0%,
+            #1b6fe0 50%,
+            #1f82ff 100%);
+      }
+
+      #lottieAnimation .dns {
+        height: 150px;
+      }
+
+      #lottieAnimation .dns-background {
+        top: 0;
+        svg {
+          width: 100px;
+        }
+        position: absolute;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+      }
+
+      #lottieAnimation .dns svg {
+        width: 230px !important;
+      }
+
+      #lottieAnimation .marquee svg {
+        width: 940px !important;
+      }
+
+      #lottieAnimation .marquee-gradient {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 1) 100%);
+        mix-blend-mode: multiply;
+        opacity: 0.9;
+      }
+
+      #lottieAnimation .marquee-wrap {
+        position: relative;
+        height: auto;
+        margin-top: 1em;
+      }
+
+      #lottieAnimation .marquee {
+        width: 100%;
+        height: 100%;
+        -webkit-mask-image: linear-gradient(180deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0) 100%);
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-image: linear-gradient(180deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0) 100%);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+      }
+
+      #lottieAnimation .marquee svg {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    `;
+  }
+
+  addScript(
+    'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js',
+    {},
+    'defer',
+    () => {
+      if (typeof window.lottie !== 'undefined') {
+        initLottieAnimations(block);
+      } else {
+        console.error('Lottie failed to load properly.');
+      }
+    },
+    (err) => {
+      console.error('Failed to load Lottie script', err);
+    },
+    'module'
+  );
+}
+
+function initLottieAnimations(block) {
+  // MARQUEE
+  const marqueeEl = block.querySelector(".marquee");
+  if (marqueeEl) {
+    lottie.loadAnimation({
+      container: marqueeEl,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "/_src/scripts/vendor/lottie/marquee-data.json"
+    });
+  }
+
+  // DNS
+  const dnsEl = block.querySelector(".dns");
+  if (dnsEl) {
+    lottie.loadAnimation({
+      container: dnsEl,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "/_src/scripts/vendor/lottie/dns-data.json"
+    });
+  }
+
+  // DNS BACKGROUND
+  const dnsBgEl = block.querySelector(".dns-background");
+  if (dnsBgEl) {
+    lottie.loadAnimation({
+      container: dnsBgEl,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "/_src/scripts/vendor/lottie/dns-background-data.json"
+    });
   }
 }

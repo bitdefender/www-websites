@@ -1132,6 +1132,10 @@
     row-gap: 0;
   }
 
+  .bundle-design .columns > div {
+    grid-template-columns: repeat(2, 50%);
+  }
+
   .columns.benefits > div > div:has(img) {
     gap: 5px;
   }

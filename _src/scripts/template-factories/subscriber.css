@@ -1283,6 +1283,7 @@ main .subscriber .section {
 
 .subscriber .bundle-design#multiColumns .columns > div > div table tr .icon {
     width: 32px;
+    height: 45px;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div table tr h5 {
