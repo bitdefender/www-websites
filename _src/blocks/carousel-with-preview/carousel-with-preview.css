@@ -152,16 +152,20 @@
     display: block;
 }
 
-.carousel-with-preview-container.bundle-design2  .carousel-wrapper {
-    margin: 0;
-}
-
 .carousel-with-preview-container.bundle-design2 .carousel-wrapper {
+    margin: 0;
     overflow: visible;
 }
 
 .carousel-with-preview-container.bundle-design2 .carousel {
     gap: 32px;
+}
+
+.carousel-with-preview-container .navContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
 }
 
 .carousel-with-preview-container.bundle-design2 .navContainer {
@@ -180,6 +184,12 @@
     background-color: #FAFAFA;
 }
 
+.carousel-with-preview-container.blue-version .carousel-item {
+    width: 308px;
+    background-color: #0045AD;
+    color: white;
+}
+
 .carousel-with-preview-container.slide-full .carousel-item:first-of-type {
     margin-left: 19em;
 }
@@ -195,9 +205,14 @@
     display: block;
 }
 
-.carousel-with-preview-container.bundle-design2 .carousel-item > div > p {
-    padding: 0;
+.carousel-with-preview-container .caption p {
     margin: 0;
+    color: #525252;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0.11px;
+    vertical-align: middle;
 }
 
 .carousel-with-preview-container .default-content-wrapper p {
@@ -206,6 +221,11 @@
     font-size: 18px;
     line-height: 27px;
     letter-spacing: 0;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item > div > p {
+    padding: 0;
+    margin: 0;
 }
 
 .carousel-with-preview-container.bundle-design2 .carousel-item > div > p:last-of-type {
@@ -279,12 +299,6 @@
     gap: 32px;
 }
 
-.carousel-with-preview-container.blue-version .carousel-item {
-    width: 308px;
-    background-color: #0045AD;
-    color: white;
-}
-
 .carousel-with-preview-container.blue-version .carousel-item > div > p:first-of-type .icon {
     margin: 32px 24px 0;
 }
@@ -302,20 +316,9 @@
     line-height: 28px;
 }
 
-
 .carousel-with-preview-container .caption {
     text-align: left;
     margin-top: 10px;
-}
-
-.carousel-with-preview-container .caption p {
-    margin: 0;
-    color: #525252;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 18px;
-    letter-spacing: 0.11px;
-    vertical-align: middle;
 }
 
 .carousel-with-preview-container .caption > strong {
@@ -325,13 +328,6 @@
     margin-bottom: 5px;
     display: block;
     color: black;
-}
-
-.carousel-with-preview-container .navContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 32px;
 }
 
 .carousel-with-preview-container .carousel-arrow {
