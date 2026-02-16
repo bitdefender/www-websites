@@ -12,24 +12,24 @@ jobs:
   linting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
     - name: Use node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v6
       with:
-        node-version: '20' #required for npm 8 or later.
+        node-version: '24'
     - run: npm install
     - run: npm run lint
       env:
         CI: true
-  # ghost_inspector_tests:
-  #   needs: linting
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: execute Ghost Inspector test
-  #       uses: docker://ghostinspector/cli
-  #       with:
-  #         args: suite execute ${{ secrets.GI_SUITE }} \
-  #           --apiKey ${{ secrets.GI_API_KEY }} \
-  #           --branchName ${{ env.BRANCH_NAME }} \
-  #           --errorOnFail \
-  #           --errorOnScreenshotFail
+  unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Use node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: '24'
+    - run: npm install
+    - run: npm run test
+      env:
+        CI: true
