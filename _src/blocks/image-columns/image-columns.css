@@ -1,5 +1,6 @@
 /* stylelint-disable no-descending-specificity */
 /* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-id-pattern */
 .image-columns-container ul {
   padding-left: 0;
 }
