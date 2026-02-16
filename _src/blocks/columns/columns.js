@@ -2,7 +2,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, createTag, renderNanoBlocks, addScript,
+  matchHeights, createTag, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -258,6 +258,13 @@ export default function decorate(block) {
     [...block.children].forEach((row, _) => {
       [...row.children].forEach((col, colNumber) => {
         const [prodName, prodYears, prodUsers] = productsAsList[colNumber].trim().split('/');
+        wrapChildrenWithStoreContext(col, {
+          productId: prodName,
+          devices: prodUsers,
+          subscription: prodYears,
+          ignoreEventsParent: true,
+          storeEvent: '',
+        });
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-render', '');
       });
