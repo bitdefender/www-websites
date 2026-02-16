@@ -1,3 +1,4 @@
+/* global lottie */
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
@@ -161,6 +162,44 @@ function setupTabs({ block, firstTab }) {
 
   wrapper.classList.add('section-el', `section-${id}`);
   wrapper.previousElementSibling?.classList.add('section-el', `section-${id}`);
+}
+
+function initLottieAnimations(block) {
+  // MARQUEE
+  const marqueeEl = block.querySelector('.marquee');
+  if (marqueeEl) {
+    lottie.loadAnimation({
+      container: marqueeEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/marquee-data.json',
+    });
+  }
+
+  // DNS
+  const dnsEl = block.querySelector('.dns');
+  if (dnsEl) {
+    lottie.loadAnimation({
+      container: dnsEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/dns-data.json',
+    });
+  }
+
+  // DNS BACKGROUND
+  const dnsBgEl = block.querySelector('.dns-background');
+  if (dnsBgEl) {
+    lottie.loadAnimation({
+      container: dnsBgEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/dns-background-data.json',
+    });
+  }
 }
 
 export default function decorate(block) {
@@ -548,44 +587,6 @@ export default function decorate(block) {
         initLottieAnimations(block);
       }
     },
-    'module'
+    'module',
   );
-}
-
-function initLottieAnimations(block) {
-  // MARQUEE
-  const marqueeEl = block.querySelector('.marquee');
-  if (marqueeEl) {
-    lottie.loadAnimation({
-      container: marqueeEl,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: '/_src/scripts/vendor/lottie/marquee-data.json',
-    });
-  }
-
-  // DNS
-  const dnsEl = block.querySelector('.dns');
-  if (dnsEl) {
-    lottie.loadAnimation({
-      container: dnsEl,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: '/_src/scripts/vendor/lottie/dns-data.json',
-    });
-  }
-
-  // DNS BACKGROUND
-  const dnsBgEl = block.querySelector('.dns-background');
-  if (dnsBgEl) {
-    lottie.loadAnimation({
-      container: dnsBgEl,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: '/_src/scripts/vendor/lottie/dns-background-data.json',
-    });
-  }
 }
