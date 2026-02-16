@@ -470,6 +470,21 @@ export async function loadTrackers() {
 }
 
 /**
+ * set target_blank for pdf links when metadata is set: pdfs: new-tab
+ * @param {Element} doc The container element
+ */
+function openExternalLinksInNewTab(doc) {
+  const links = doc.querySelectorAll('a');
+
+  links.forEach((link) => {
+    if (link.href.toLowerCase().includes('.pdf')) {
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    }
+  });
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -496,6 +511,9 @@ async function loadEager(doc) {
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
+
+    if (getMetadata('pdfs') && getMetadata('pdfs') === 'new-tab') openExternalLinksInNewTab(doc);
+
     document.body.classList.add('appear', 'franklin');
     if (window.location.href.indexOf('scuderiaferrari') !== -1) {
       document.body.classList.add('sferrari');
