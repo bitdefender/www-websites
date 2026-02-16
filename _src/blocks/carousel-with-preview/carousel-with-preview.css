@@ -311,7 +311,6 @@
     color: black;
 }
 
-/* stylelint-disable-next-line selector-class-pattern */
 .carousel-with-preview-container .navContainer {
     display: flex;
     align-items: center;
