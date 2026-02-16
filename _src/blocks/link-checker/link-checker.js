@@ -77,23 +77,17 @@ function changeTexts(block, result, statusTitles) {
 }
 
 function getResultPagePath(status, mappedStatus) {
-  // Only redirect for en-us locale
-
-  if (page.locale !== 'en-us') {
-    return null;
-  }
-
   if (status === 1 || mappedStatus.includes('safe')) {
-    return '/en-us/consumer/link-checker/safe';
+    return `/${page.locale}/consumer/link-checker/safe`;
   }
 
   if (status === 2 || status === 3
       || mappedStatus.includes('so_far_so_good_1')
       || mappedStatus.includes('so_far_so_good_2')) {
-    return '/en-us/consumer/link-checker/sofarsogood';
+    return `/${page.locale}/consumer/link-checker/sofarsogood`;
   }
 
-  return '/en-us/consumer/link-checker/malicious';
+  return `/${page.locale}/consumer/link-checker/malicious`;
 }
 
 function displayStoredResult(block, statusMessages, statusTitles) {
@@ -207,7 +201,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
 
   const message = StatusMessageFactory.createMessage(status, inputUrl, statusMessages);
 
-  // Redirect to a result page (only for en-us)
+  // Redirect to a result page for all locales
   const resultPagePath = getResultPagePath(status, message.status);
 
   if (resultPagePath) {
@@ -363,8 +357,8 @@ function createButtonsContainer(block) {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const currentPath = window.location.pathname;
-          if (currentPath.includes('/link-checker/') && page.locale === 'en-us') {
-            window.location.href = '/en-us/consumer/link-checker';
+          if (currentPath.includes('/link-checker/')) {
+            window.location.href = `/${page.locale}/consumer/link-checker`;
           } else {
             resetChecker(block, titleText);
           }
@@ -448,14 +442,14 @@ export default function decorate(block) {
                     || currentPath.includes('/link-checker/sofarsogood')
                     || currentPath.includes('/link-checker/malicious');
 
-  if (isResultPage && page.locale === 'en-us') {
+  if (isResultPage) {
     // Check if this page load was from a reload using the Navigation API
     const isPageReload = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 
     if (isPageReload) {
       // Clear any stored data and redirect to main page
       sessionStorage.removeItem('linkCheckerResult');
-      window.location.replace('/en-us/consumer/link-checker');
+      window.location.replace(`/${page.locale}/consumer/link-checker`);
       return;
     }
 
@@ -464,7 +458,7 @@ export default function decorate(block) {
 
     if (!hasValidResult) {
       // No valid result data means direct URL access - redirect to main page
-      window.location.replace('/en-us/consumer/link-checker');
+      window.location.replace(`/${page.locale}/consumer/link-checker`);
       return;
     }
 
