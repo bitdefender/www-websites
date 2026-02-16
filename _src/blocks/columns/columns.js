@@ -203,6 +203,7 @@ function initLottieAnimations(block) {
 }
 
 export default function decorate(block) {
+  // eslint-disable-next-line max-len
   const {
     linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid,
@@ -212,9 +213,9 @@ export default function decorate(block) {
 
   if (bckImage) {
     block.style.backgroundImage = `url("${bckImage}")`;
-    block.style.backgroundRepeat = "no-repeat";
-    block.style.backgroundPosition = "right";
-    block.style.backgroundSize = "auto 100%";
+    block.style.backgroundRepeat = 'no-repeat';
+    block.style.backgroundPosition = 'right';
+    block.style.backgroundSize = 'auto 100%';
   }
 
   // setup image columns
