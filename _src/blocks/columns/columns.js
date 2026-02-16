@@ -546,12 +546,7 @@ export default function decorate(block) {
     () => {
       if (typeof window.lottie !== 'undefined') {
         initLottieAnimations(block);
-      } else {
-        console.error('Lottie failed to load properly.');
       }
-    },
-    (err) => {
-      console.error('Failed to load Lottie script', err);
     },
     'module'
   );
@@ -559,38 +554,38 @@ export default function decorate(block) {
 
 function initLottieAnimations(block) {
   // MARQUEE
-  const marqueeEl = block.querySelector(".marquee");
+  const marqueeEl = block.querySelector('.marquee');
   if (marqueeEl) {
     lottie.loadAnimation({
       container: marqueeEl,
-      renderer: "svg",
+      renderer: 'svg',
       loop: true,
       autoplay: true,
-      path: "/_src/scripts/vendor/lottie/marquee-data.json"
+      path: '/_src/scripts/vendor/lottie/marquee-data.json',
     });
   }
 
   // DNS
-  const dnsEl = block.querySelector(".dns");
+  const dnsEl = block.querySelector('.dns');
   if (dnsEl) {
     lottie.loadAnimation({
       container: dnsEl,
-      renderer: "svg",
+      renderer: 'svg',
       loop: true,
       autoplay: true,
-      path: "/_src/scripts/vendor/lottie/dns-data.json"
+      path: '/_src/scripts/vendor/lottie/dns-data.json',
     });
   }
 
   // DNS BACKGROUND
-  const dnsBgEl = block.querySelector(".dns-background");
+  const dnsBgEl = block.querySelector('.dns-background');
   if (dnsBgEl) {
     lottie.loadAnimation({
       container: dnsBgEl,
-      renderer: "svg",
+      renderer: 'svg',
       loop: true,
       autoplay: true,
-      path: "/_src/scripts/vendor/lottie/dns-background-data.json"
+      path: '/_src/scripts/vendor/lottie/dns-background-data.json',
     });
   }
 }

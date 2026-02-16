@@ -110,7 +110,7 @@ export default function decorate(block) {
     iframe.setAttribute('frameborder', '0');
     iframe.setAttribute(
       'allow',
-      'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+      'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
     );
     iframe.setAttribute('allowfullscreen', '');
 
@@ -155,8 +155,6 @@ export default function decorate(block) {
     const itemDiv = document.createElement('div');
     itemDiv.className = 'carousel-item';
     if (i === 0) itemDiv.classList.add('active');
-
-    let content;
 
     /* is youtube link */
     if (isYouTube) {
@@ -211,7 +209,6 @@ export default function decorate(block) {
     const maybeVideo = lastItemText.textContent.includes('mp4');
     if (maybeVideo) {
       const videoName = lastItemText.closest('p').textContent.trim();
-      console.log(videoName)
       lastItemText.innerHTML = `
         <video autoplay loop muted playsinline>
           <source src="/_src/images/${videoName}" type="video/mp4">
@@ -236,10 +233,8 @@ export default function decorate(block) {
   leftBtn.className = 'carousel-arrow left inactive';
   rightBtn.className = 'carousel-arrow right active';
 
-  leftBtn.innerHTML =
-    '<img src="/_src/icons/subscriber-icons/left-arrow-black.svg" alt="Left">';
-  rightBtn.innerHTML =
-    '<img src="/_src/icons/subscriber-icons/right-arrow-black.svg" alt="Right">';
+  leftBtn.innerHTML = '<img src="/_src/icons/subscriber-icons/left-arrow-black.svg" alt="Left">';
+  rightBtn.innerHTML = '<img src="/_src/icons/subscriber-icons/right-arrow-black.svg" alt="Right">';
 
   leftBtn.addEventListener('click', () => {
     carousel.scrollBy({ left: -350, behavior: 'smooth' });
