@@ -68,6 +68,9 @@ function initToggleList(list) {
   let expanded = false;
   function update() {
     contentItems.forEach((item) => {
+      const [txt, tooltip] = item.innerHTML.split('::');
+      if (tooltip) item.classList.add('has-tooltip');
+      item.innerHTML = `${txt} ${tooltip ? `<span class="tooltip">${tooltip}<span>` : ''}`;
       item.style.display = expanded ? 'list-item' : 'none';
     });
 
