@@ -286,6 +286,11 @@
     color: #3C3C3C;
     margin: 0;
     padding: 5px 0;
+    position: relative;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item ul li.has-tooltip {
+    cursor: pointer
 }
 
 .carousel-with-preview-container.bundle-design2 .carousel-item ul li:last-of-type {
@@ -293,6 +298,45 @@
     color: #006DFF;
     text-align: center;
     font-weight: 600;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item ul li span.tooltip {
+    position: absolute;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 28px;
+    left: 0;
+    bottom: 7px;
+    z-index: 1;
+    font-size: 12px;
+    box-shadow: 3px 5px 6px -8px #000;
+    border: 1px solid #ecebeb;
+    display: none;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item ul li:hover span.tooltip {
+    display: block;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item ul li span.tooltip::before {
+    content: "";
+    position: absolute;
+    left: 17px;
+    bottom: -21px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: #ccc transparent transparent transparent;
+}
+
+.carousel-with-preview-container.bundle-design2 .carousel-item ul li span.tooltip::after {
+    content: "";
+    position: absolute;
+    left: 17px;
+    bottom: -20px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
 }
 
 .carousel-with-preview-container.blue-version .carousel {
