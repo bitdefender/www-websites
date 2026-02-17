@@ -1,7 +1,8 @@
+/* global lottie */
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, createTag, renderNanoBlocks,
+  matchHeights, createTag, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -163,13 +164,59 @@ function setupTabs({ block, firstTab }) {
   wrapper.previousElementSibling?.classList.add('section-el', `section-${id}`);
 }
 
+function initLottieAnimations(block) {
+  // MARQUEE
+  const marqueeEl = block.querySelector('.marquee');
+  if (marqueeEl) {
+    lottie.loadAnimation({
+      container: marqueeEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/marquee-data.json',
+    });
+  }
+
+  // DNS
+  const dnsEl = block.querySelector('.dns');
+  if (dnsEl) {
+    lottie.loadAnimation({
+      container: dnsEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/dns-data.json',
+    });
+  }
+
+  // DNS BACKGROUND
+  const dnsBgEl = block.querySelector('.dns-background');
+  if (dnsBgEl) {
+    lottie.loadAnimation({
+      container: dnsBgEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/dns-background-data.json',
+    });
+  }
+}
+
 export default function decorate(block) {
   const {
-    linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
+    // eslint-disable-next-line max-len
+    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid,
   } = block.closest('.section').dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
+
+  if (bckImage) {
+    block.style.backgroundImage = `url("${bckImage}")`;
+    block.style.backgroundRepeat = 'no-repeat';
+    block.style.backgroundPosition = 'right';
+    block.style.backgroundSize = 'auto 100%';
+  }
 
   // setup image columns
   [...block.children].forEach((row) => {
@@ -209,14 +256,18 @@ export default function decorate(block) {
   const productsAsList = products?.split(',');
   if (productsAsList) {
     // eslint-disable-next-line no-unused-vars
-    [...block.children].forEach((row, rowNumber) => {
+    [...block.children].forEach((row, _) => {
       [...row.children].forEach((col, colNumber) => {
         const [prodName, prodYears, prodUsers] = productsAsList[colNumber].trim().split('/');
-        col.setAttribute('data-store-context', '');
-        col.setAttribute('data-store-id', prodName);
-        col.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-        col.setAttribute('data-store-department', 'consumer');
+        wrapChildrenWithStoreContext(col, {
+          productId: prodName,
+          devices: prodUsers,
+          subscription: prodYears,
+          ignoreEventsParent: true,
+          storeEvent: '',
+        });
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
+        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-render', '');
       });
     });
   }
@@ -226,7 +277,7 @@ export default function decorate(block) {
     [...block.children].forEach((row) => {
       row.children[i]
         ?.querySelector('a.button.modal')
-        ?.setAttribute('data-store-id', alias.trim());
+        ?.setAttribute('product-id', alias.trim());
     });
   });
 
@@ -337,6 +388,7 @@ export default function decorate(block) {
   }
   block.querySelectorAll('h3')?.forEach((element) => {
     if (element.textContent.includes('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}')) {
+      element.textContent = element.textContent.replace('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}', '{{=it.state.discount.percentage.max}}');
       element.classList.add('await-loader');
     }
   });
@@ -402,4 +454,147 @@ export default function decorate(block) {
   if (block.closest('.section').classList.contains('responsible-ai')) {
     matchHeights(block, 'p');
   }
+
+  if (block.closest('.section').classList.contains('online-safe-animated')) {
+    block.querySelector('span.icon-online-safe-animated').closest('p').innerHTML = `<div id="lottieAnimation" class="security-window">
+      <div class="security-window__header">
+        <span class="security-window__dot security-window__dot--red"></span>
+        <span class="security-window__dot security-window__dot--yellow"></span>
+        <span class="security-window__dot security-window__dot--green"></span>
+      </div>
+      <div class="security-window__body">
+         <div id="dns" class="dns lottie-container  mask">
+           <div class="dns-background" class="lottie-container mask"></div>
+         </div>
+          <div class="marquee-wrap">
+            <div class="marquee"></div>
+          </div>
+      </div>
+    </div>
+    
+    <style>
+      #lottieAnimation.security-window {
+        max-height: 266px;
+        overflow: hidden;
+        border-radius: 14px;
+        background: #0a3d91;
+        margin-top: 2em;
+      }
+
+      #lottieAnimation .security-window__header {
+        height: 36px;
+        padding: 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #063a86;
+      }
+
+      #lottieAnimation .security-window__dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      #lottieAnimation .security-window__dot--red {
+        background: #ff5f56;
+      }
+
+      #lottieAnimation .security-window__dot--yellow {
+        background: #ffbd2e;
+      }
+
+      #lottieAnimation .security-window__dot--green {
+        background: #27c93f;
+      }
+
+      #lottieAnimation .security-window__body {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 40px;
+        flex-direction: column;
+        background: linear-gradient(135deg,
+            #0a4fb3 0%,
+            #1b6fe0 50%,
+            #1f82ff 100%);
+      }
+
+      #lottieAnimation .dns {
+        height: 150px;
+      }
+
+      #lottieAnimation .dns-background {
+        top: 0;
+        svg {
+          width: 100px;
+        }
+        position: absolute;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+      }
+
+      #lottieAnimation .dns svg {
+        width: 230px !important;
+      }
+
+      #lottieAnimation .marquee svg {
+        width: 940px !important;
+      }
+
+      #lottieAnimation .marquee-gradient {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 1) 100%);
+        mix-blend-mode: multiply;
+        opacity: 0.9;
+      }
+
+      #lottieAnimation .marquee-wrap {
+        position: relative;
+        height: auto;
+        margin-top: 1em;
+      }
+
+      #lottieAnimation .marquee {
+        width: 100%;
+        height: 100%;
+        -webkit-mask-image: linear-gradient(180deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0) 100%);
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-image: linear-gradient(180deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0) 100%);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+      }
+
+      #lottieAnimation .marquee svg {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    `;
+  }
+
+  addScript(
+    'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js',
+    {},
+    'defer',
+    () => {
+      if (typeof window.lottie !== 'undefined') {
+        initLottieAnimations(block);
+      }
+    },
+    'module',
+  );
 }

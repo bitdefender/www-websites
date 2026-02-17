@@ -3,6 +3,10 @@ function extractYouTubeID(url) {
   return match ? match[1] : '';
 }
 
+function isYouTubeLink(url) {
+  return /youtube\.com|youtu\.be/.test(url);
+}
+
 function enableDragScroll(container) {
   let isDown = false;
   let startX;
@@ -15,22 +19,18 @@ function enableDragScroll(container) {
     scrollLeft = container.scrollLeft;
   });
 
-  container.addEventListener('mouseleave', () => {
-    isDown = false;
-    container.classList.remove('dragging');
-  });
-
-  container.addEventListener('mouseup', () => {
-    isDown = false;
-    container.classList.remove('dragging');
+  ['mouseleave', 'mouseup'].forEach((evt) => {
+    container.addEventListener(evt, () => {
+      isDown = false;
+      container.classList.remove('dragging');
+    });
   });
 
   container.addEventListener('mousemove', (e) => {
     if (!isDown) return;
     e.preventDefault();
     const x = e.pageX - container.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    container.scrollLeft = scrollLeft - walk;
+    container.scrollLeft = scrollLeft - (x - startX) * 1.5;
   });
 
   container.addEventListener('touchstart', (e) => {
@@ -40,8 +40,7 @@ function enableDragScroll(container) {
 
   container.addEventListener('touchmove', (e) => {
     const x = e.touches[0].pageX;
-    const walk = (x - startX) * 1.5;
-    container.scrollLeft = scrollLeft - walk;
+    container.scrollLeft = scrollLeft - (x - startX) * 1.5;
   });
 }
 
@@ -49,106 +48,182 @@ function updateArrowState(carousel, leftBtn, rightBtn) {
   const scrollLeft = Math.round(carousel.scrollLeft);
   const maxScrollLeft = Math.round(carousel.scrollWidth - carousel.clientWidth);
 
-  if (scrollLeft <= 0) {
-    leftBtn.classList.add('inactive');
-    leftBtn.classList.remove('active');
-  } else {
-    leftBtn.classList.remove('inactive');
-    leftBtn.classList.add('active');
+  leftBtn.classList.toggle('inactive', scrollLeft <= 0);
+  leftBtn.classList.toggle('active', scrollLeft > 0);
+
+  rightBtn.classList.toggle('inactive', scrollLeft >= maxScrollLeft);
+  rightBtn.classList.toggle('active', scrollLeft < maxScrollLeft);
+}
+
+function initToggleList(list) {
+  const items = [...list.querySelectorAll('li')];
+  if (items.length < 2) return;
+
+  const toggleItem = items[items.length - 1];
+  const contentItems = items.slice(0, -1);
+
+  const rawText = toggleItem.textContent;
+  const [showMoreText, showLessText] = rawText.split('|').map((t) => t.trim());
+
+  let expanded = false;
+  function update() {
+    contentItems.forEach((item) => {
+      item.style.display = expanded ? 'list-item' : 'none';
+    });
+
+    toggleItem.textContent = expanded ? showLessText || rawText : showMoreText || rawText;
   }
 
-  if (scrollLeft >= maxScrollLeft) {
-    rightBtn.classList.add('inactive');
-    rightBtn.classList.remove('active');
-  } else {
-    rightBtn.classList.remove('inactive');
-    rightBtn.classList.add('active');
-  }
+  toggleItem.setAttribute('aria-expanded', 'false');
+  toggleItem.addEventListener('click', () => {
+    expanded = !expanded;
+    toggleItem.setAttribute('aria-expanded', expanded);
+    update();
+  });
+
+  update();
 }
 
 export default function decorate(block) {
+  const { preview } = block.closest('.section').dataset;
   const items = [...block.children];
   if (!items.length) return;
 
-  block.classList.add('carousel-with-preview-container');
+  const showPreview = preview !== 'hide';
 
-  const mainVideoContainer = document.createElement('div');
-  mainVideoContainer.className = 'main-video-container';
+  let setFeatured = null;
+  let mainVideoContainer = null;
 
+  /* =========================
+     Featured / preview
+  ========================= */
+  if (showPreview) {
+    block.classList.add('carousel-with-preview-container');
+
+    mainVideoContainer = document.createElement('div');
+    mainVideoContainer.className = 'main-video-container';
+
+    const featured = document.createElement('div');
+    featured.className = 'featured-video';
+
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute(
+      'allow',
+      'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+    );
+    iframe.setAttribute('allowfullscreen', '');
+
+    const titleWrapper = document.createElement('div');
+    titleWrapper.className = 'featured-title';
+
+    const title = document.createElement('strong');
+    titleWrapper.appendChild(title);
+
+    featured.appendChild(iframe);
+    featured.appendChild(titleWrapper);
+    mainVideoContainer.appendChild(featured);
+
+    setFeatured = (url, text) => {
+      iframe.src = url;
+      title.innerHTML = text;
+    };
+  }
+
+  /* =========================
+     Carousel
+  ========================= */
   const carouselWrapper = document.createElement('div');
   carouselWrapper.className = 'carousel-wrapper';
 
   const carousel = document.createElement('div');
   carousel.className = 'carousel video-carousel';
 
-  // Featured video setup
-  const featured = document.createElement('div');
-  featured.className = 'featured-video';
-
-  const featuredIframe = document.createElement('iframe');
-  featuredIframe.setAttribute('frameborder', '0');
-  featuredIframe.setAttribute('allow', 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-  featuredIframe.setAttribute('allowfullscreen', '');
-
-  const featuredTitleWrapper = document.createElement('div');
-  featuredTitleWrapper.className = 'featured-title';
-
-  const featuredTitle = document.createElement('strong');
-  const featuredSubtitle = document.createElement('p');
-
-  featuredTitleWrapper.appendChild(featuredTitle);
-  featuredTitleWrapper.appendChild(featuredSubtitle);
-
-  featured.appendChild(featuredIframe);
-  featured.appendChild(featuredTitleWrapper);
-
-  // Function to set featured video
-  function setFeatured(videoUrl, titleText) {
-    featuredIframe.src = videoUrl;
-    featuredTitle.innerHTML = titleText;
-  }
-
-  // Build carousel items
   const createdItems = [];
 
   items.forEach((item, i) => {
-    const [titleEl, videoEl] = item.children;
-    const fullTitle = titleEl?.innerHTML.trim();
-    const videoUrl = videoEl?.textContent.trim();
+    const [titleEl, linkEl] = item.children;
+    const link = linkEl?.textContent.trim();
+    const titleHTML = titleEl?.innerHTML.trim();
 
-    if (i === 0) setFeatured(videoUrl, fullTitle);
+    const isYouTube = isYouTubeLink(link);
+
+    if (showPreview && isYouTube && i === 0 && setFeatured) {
+      setFeatured(link, titleHTML);
+    }
 
     const itemDiv = document.createElement('div');
     itemDiv.className = 'carousel-item';
-
     if (i === 0) itemDiv.classList.add('active');
 
-    const thumbWrapper = document.createElement('div');
-    thumbWrapper.className = 'thumb-wrapper';
+    /* is youtube link */
+    if (isYouTube) {
+      const thumbWrapper = document.createElement('div');
+      thumbWrapper.className = 'thumb-wrapper';
 
-    const img = document.createElement('img');
-    img.src = `https://img.youtube.com/vi/${extractYouTubeID(videoUrl)}/hqdefault.jpg`;
-    img.alt = fullTitle;
-    thumbWrapper.appendChild(img);
+      const img = document.createElement('img');
+      img.src = `https://img.youtube.com/vi/${extractYouTubeID(link)}/hqdefault.jpg`;
+      img.alt = '';
 
-    const caption = document.createElement('div');
-    caption.className = 'caption';
-    caption.innerHTML = fullTitle;
+      thumbWrapper.appendChild(img);
 
-    itemDiv.appendChild(thumbWrapper);
-    itemDiv.appendChild(caption);
+      const caption = document.createElement('div');
+      caption.className = 'caption';
+      caption.innerHTML = titleHTML;
 
-    itemDiv.addEventListener('click', () => {
-      createdItems.forEach((el) => el.classList.remove('active'));
-      itemDiv.classList.add('active');
-      setFeatured(videoUrl, fullTitle);
+      itemDiv.appendChild(thumbWrapper);
+      itemDiv.appendChild(caption);
+
+      itemDiv.addEventListener('click', () => {
+        createdItems.forEach((el) => el.classList.remove('active'));
+        itemDiv.classList.add('active');
+
+        if (setFeatured) {
+          setFeatured(link, titleHTML);
+        }
+      });
+    } else { /* external link - add it for the image */
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = titleHTML;
+
+      const img = wrapper.querySelector('img');
+
+      if (img) {
+        const anchor = document.createElement('a');
+        anchor.href = link;
+        anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+
+        img.parentNode.insertBefore(anchor, img);
+        anchor.appendChild(img);
+      }
+
+      itemDiv.appendChild(wrapper);
+    }
+
+    itemDiv.querySelectorAll('ul').forEach((ul) => {
+      initToggleList(ul);
     });
 
+    const lastItemText = itemDiv.querySelector('p:last-of-type');
+    const maybeVideo = lastItemText.textContent.includes('mp4');
+    if (maybeVideo) {
+      const videoName = lastItemText.closest('p').textContent.trim();
+      lastItemText.innerHTML = `
+        <video autoplay loop muted playsinline>
+          <source src="/_src/images/${videoName}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      `;
+    }
+
     carousel.appendChild(itemDiv);
-    createdItems.push(itemDiv); // Track dynamically created items
+    createdItems.push(itemDiv);
   });
 
-  // Arrows + Navigation
+  /* =========================
+     Navigation
+  ========================= */
   const navContainer = document.createElement('div');
   navContainer.className = 'navContainer';
 
@@ -158,8 +233,8 @@ export default function decorate(block) {
   leftBtn.className = 'carousel-arrow left inactive';
   rightBtn.className = 'carousel-arrow right active';
 
-  leftBtn.innerHTML = '<img src="/_src/icons/subscriber-icons/left-arrow-black.svg" alt="Bitdefender" />';
-  rightBtn.innerHTML = '<img src="/_src/icons/subscriber-icons/right-arrow-black.svg" alt="Bitdefender" />';
+  leftBtn.innerHTML = '<img src="/_src/icons/subscriber-icons/left-arrow-black.svg" alt="Left">';
+  rightBtn.innerHTML = '<img src="/_src/icons/subscriber-icons/right-arrow-black.svg" alt="Right">';
 
   leftBtn.addEventListener('click', () => {
     carousel.scrollBy({ left: -350, behavior: 'smooth' });
@@ -171,16 +246,20 @@ export default function decorate(block) {
     setTimeout(() => updateArrowState(carousel, leftBtn, rightBtn), 300);
   });
 
-  navContainer.appendChild(leftBtn);
-  navContainer.appendChild(rightBtn);
+  navContainer.append(leftBtn, rightBtn);
 
-  // Final DOM structure
-  mainVideoContainer.appendChild(featured);
-  carouselWrapper.appendChild(carousel);
-  carouselWrapper.appendChild(navContainer);
+  /* =========================
+     Final DOM
+  ========================= */
+  carouselWrapper.append(carousel, navContainer);
   enableDragScroll(carousel);
+
   block.innerHTML = '';
-  block.appendChild(mainVideoContainer);
+
+  if (showPreview && mainVideoContainer) {
+    block.appendChild(mainVideoContainer);
+  }
+
   block.appendChild(carouselWrapper);
 
   carousel.addEventListener('scroll', () => {
