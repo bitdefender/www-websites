@@ -245,7 +245,7 @@ main .hero-container.custom-buttons .hero .hero-content table tr p {
 
 main .hero-container.custom-buttons .hero .hero-content table a {
   width: 100%;
-  min-width: 248px !important;
+  justify-content: center;
   padding: 12px;
   font-size: var(--hero-font-size-xs);
   font-weight: 500;
