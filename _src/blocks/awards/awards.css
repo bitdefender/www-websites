@@ -37,7 +37,7 @@
   line-height: 1.45;
 }
 
-.awards-container.awards-compact p {
+.awards-container.awards-compact p{
   margin: 0;
 }
 
@@ -57,10 +57,11 @@
     visibility: hidden;
     min-width: 8px;
   }
+
 }
 
 .awards-container em {
-  color: #006dff;
+  color: #006DFF;
   font-style: normal;
 }
 
@@ -98,6 +99,7 @@
   gap: 4.5%;
 }
 
+
 .awards-component > div:nth-child(3) div img {
   height: 100px;
   max-width: 100%;
@@ -106,17 +108,17 @@
   object-fit: contain;
 }
 
-.awards-container .vsb picture {
+.awards-container .vsb picture{
   max-width: 90px;
   min-width: 8%;
 }
 
-.awards-container .vsb h3 {
+.awards-container .vsb h3{
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.awards-container .vsb p {
+.awards-container .vsb p{
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -128,7 +130,7 @@
   align-items: center;
   border-radius: 20px;
   gap: 16px;
-
+  
   .cards {
     display: grid;
     grid-template-columns: 1fr;
@@ -148,12 +150,12 @@
     }
 
     h3 {
-      color: #006dff;
+      color: #006DFF;
     }
   }
 
   h4 {
-    color: #006dff;
+    color: #006DFF;
     font-size: 34px;
   }
 }
@@ -172,27 +174,27 @@
     color: #000;
   }
 
-  > div {
+  >div {
     justify-content: center;
     text-align: -webkit-center;
     gap: 20px;
   }
 
   > div:nth-child(2) {
-    min-width: 100%;
+      min-width: 100%;
 
-    > div {
-      display: flex;
-      justify-content: space-evenly;
-      flex-wrap: wrap;
-      width: 95%;
-      margin-top: 24px;
-      gap: 20px;
-    }
+      >div {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        width: 95%;
+        margin-top: 24px;
+        gap: 20px;
+      }
 
-    img {
-      height: 62px;
-    }
+      img {
+        height: 62px;
+      }
   }
 }
 
@@ -218,9 +220,9 @@
     padding: 10px 20px;
   }
 
-  .awards-container .block.awards-component .cards .card .icon {
+  .awards-container .block.awards-component .cards .card .icon{
     max-width: 30px;
-    margin-bottom: 0;
+    margin-bottom: 0; 
   }
 }
 
@@ -230,7 +232,7 @@
     flex-wrap: nowrap;
   }
 
-  .dynamic-awards .awards-component > div:nth-child(3) div {
+  .dynamic-awards  .awards-component > div:nth-child(3) div {
     max-width: 1024px;
     flex-wrap: nowrap;
   }
@@ -239,7 +241,7 @@
     flex-wrap: wrap;
   }
 
-  .awards-container .block.awards-component .cards .card .icon {
+  .awards-container .block.awards-component .cards .card .icon{
     max-width: 38px;
   }
 }
@@ -255,28 +257,24 @@
   }
 
   .awards-container.awards-compact h3 {
-    font:
-      normal normal bold 24px/28px Arial,
-      sans-serif;
+    font: normal normal bold 24px/28px Arial, sans-serif;
     margin-top: 10px;
   }
 
-  .awards-container.awards-extended h3 {
-    font:
-      normal normal bold 24px/28px Arial,
-      sans-serif;
+    .awards-container.awards-extended h3 {
+    font: normal normal bold 24px/28px Arial, sans-serif;
     margin-top: 10px;
   }
 
   .awards-container.new-design .block.awards-component {
     h3 {
-      font-size: 40px;
+        font-size: 40px;
     }
 
     h4 {
-      font-size: 22px;
+        font-size: 22px;
     }
-  }
+}
 }
 
 @media (min-width: 768px) {
@@ -284,7 +282,7 @@
     width: 95% !important;
   }
 
-  .awards-container .vsb picture {
+  .awards-container .vsb picture{
     min-width: 100px;
   }
 
@@ -329,7 +327,7 @@
     padding-right: 50px;
   }
 
-  .awards-container .vsb picture {
+  .awards-container .vsb picture{
     min-width: 75px;
   }
 
@@ -375,18 +373,14 @@
     width: 50% !important;
   }
 
-  .awards-compact .awards-component > div:nth-child(2) {
+  .awards-compact .awards-component > div:nth-child(2){
     width: 600px !important;
-    font:
-      normal normal normal 18px/21px Arial,
-      sans-serif;
+    font: normal normal normal 18px/21px Arial, sans-serif;
   }
 
-  .awards-compact .awards-component > div:nth-child(4) {
+  .awards-compact .awards-component > div:nth-child(4){
     width: 600px !important;
-    font:
-      normal normal normal 18px/21px Arial,
-      sans-serif;
+    font: normal normal normal 18px/21px Arial, sans-serif;
   }
 
   .awards-component > div:nth-child(3) {
@@ -397,17 +391,15 @@
   }
 
   .awards-component h3 {
-    font:
-      normal normal bold 32px/38px Arial,
-      sans-serif;
+    font: normal normal bold 32px/38px Arial, sans-serif;
     margin-bottom: 0;
   }
 
-  .awards-compact .awards-component h3 {
+  .awards-compact .awards-component h3{
     max-width: 560px;
   }
 
-  .awards-extended .awards-component h3 {
+  .awards-extended .awards-component h3{
     max-width: 760px;
   }
 
@@ -422,9 +414,9 @@
     padding-right: 20px;
   }
 
-  .awards-container .vsb picture {
-    min-width: 100px;
-  }
+  .awards-container .vsb picture{
+  min-width: 100px;
+}
 }
 
 @media (min-width: 1600px) {
