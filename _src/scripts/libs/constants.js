@@ -101,7 +101,7 @@ export class Constants {
 	static async #getVlaicuProductIdsMapping() {
 		  try {
 			  const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
-			  const IS_INSIDE_OAI_WINDOW = window.location.href.includes('oaiusercontent');
+			  const IS_INSIDE_OAI_WINDOW = window.location.href.includes('oaiusercontent') || window.location.href.includes('localhost:4545');
 			  const baseUrl = IS_INSIDE_OAI_WINDOW
 				? `https://www.bitdefender.com/common/vlaicuconfig/`
 				: `/common/vlaicuconfig/`;
