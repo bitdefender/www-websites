@@ -56,23 +56,27 @@ async function updateProductPrice(prodName, saveText, buyLinkSelector = null, bi
 
 function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = 'default') {
   const planSwitcher = document.createElement('div');
-  planSwitcher.classList.add('plan-switcher');
-  planSwitcher.classList.toggle('addon', variant === 'addon');
+  planSwitcher.className = 'plan-switcher';
 
-  let radioArray = ['yearly', 'monthly', '3-rd-button'];
   if (variant === 'addon') {
-    radioArray = ['add-on-yearly', 'add-on-monthly'];
+    planSwitcher.classList.add('addon');
   }
 
+  const radioIds = variant === 'addon'
+    ? ['add-on-yearly', 'add-on-monthly']
+    : ['yearly', 'monthly', '3-rd-button'];
+
   Array.from(radioButtons.children).forEach((radio, idx) => {
+    const productName = prodsNames[idx];
+    if (!productName) return;
+
+    const prodUser = prodsUsers[idx];
+    const prodYear = prodsYears[idx];
+    const plan = radioIds[idx];
+
     let radioText = radio.textContent;
-    let plan = radioArray[idx];
-    let productName = prodsNames[idx];
-    let prodUser = prodsUsers[idx];
-    let prodYear = prodsYears[idx];
-    let checked = '';
-    let defaultCheck = radio.textContent.match(/\[checked\]/g);
-    if (defaultCheck) {
+    const isChecked = radioText.includes('[checked]');
+    if (isChecked) {
       radioText = radioText.replace('[checked]', '');
       checked = 'checked';
     }
@@ -94,42 +98,47 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
   return planSwitcher;
 }
 
-function createFeatureList(featuresSet) {
-  return Array.from(featuresSet).map((table) => {
-    const trList = Array.from(table.querySelectorAll('tr'));
-    const liString = trList.map((tr) => {
-      const tdList = Array.from(tr.querySelectorAll('td'));
-      let firstTdContent = tdList.length > 0 && tdList[0].textContent.trim() !== '' ? `${tdList[0].innerHTML}` : '';
-      const secondTdContent = tdList.length > 1 && tdList[1].textContent.trim() !== '' ? `<span class="white-pill-content">${tdList[1].innerHTML}</span>` : '';
-      let liClass = '';
+/**
+ * Processes feature content text with special markers
+ * @param {string} content - Raw content string
+ * @param {HTMLElement} tdElement - Source TD element for icon extraction
+ * @returns {Object} Processed content and CSS class
+ */
+function processFeatureContent(content, tdElement) {
+  let processedContent = content;
+  let liClass = '';
 
-      if (firstTdContent === '') {
-        liClass += 'd-none';
-      }
+  if (!processedContent) {
+    return { content: '', liClass: 'd-none' };
+  }
 
-      if (firstTdContent.indexOf('?pill') !== -1) {
-        let pillText = firstTdContent.match(/\?pill (\w+)/);
-        let iconElement = firstTdContent.match(/<span class="[^"]*">(.*?)<\/span>/);
-        if (pillText) {
-          let icon = tdList[0].querySelector('span');
-          const pillElement = document.createElement('span');
-          pillElement.classList.add('blue-pill');
-          pillElement.innerHTML = `${pillText[1]}${iconElement ? iconElement[0] : ''}`;
-          firstTdContent = firstTdContent.replace(pillText[0], `${pillElement.outerHTML}`);
-          if (icon) {
-            let count = 0;
-            firstTdContent = firstTdContent.replace(new RegExp(icon.outerHTML, 'g'), (match) => {
-              count += 1;
-              return (count === 2) ? '' : match;
-            });
-          }
-        }
-      }
+  // Handle pill markers
+  const pillMatch = processedContent.match(/\?pill (\w+)/);
+  if (pillMatch) {
+    const icon = tdElement?.querySelector('span');
+    const iconHtml = icon?.outerHTML || '';
 
-      if (firstTdContent.indexOf('&lt;pill') !== -1 || firstTdContent.indexOf('&lt;') !== -1) {
-        liClass += ' has_arrow';
-        firstTdContent = firstTdContent.replace('&lt;-', '');
-      }
+    const pillElement = document.createElement('span');
+    pillElement.className = 'blue-pill';
+    pillElement.innerHTML = `${pillMatch[1]}${iconHtml}`;
+
+    processedContent = processedContent.replace(pillMatch[0], pillElement.outerHTML);
+
+    // Remove duplicate icon if present
+    if (icon) {
+      let iconCount = 0;
+      processedContent = processedContent.replace(new RegExp(icon.outerHTML, 'g'), (match) => {
+        iconCount += 1;
+        return iconCount === 2 ? '' : match;
+      });
+    }
+  }
+
+  // Handle arrow markers
+  if (processedContent.includes('&lt;pill') || processedContent.includes('&lt;')) {
+    liClass += ' has_arrow';
+    processedContent = processedContent.replace('&lt;-', '');
+  }
 
       if (firstTdContent.indexOf('-&gt;') !== -1 || firstTdContent.indexOf('&gt;') !== -1) {
         liClass += ' has_arrow_right';
@@ -571,20 +580,20 @@ export default async function decorate(block) {
     let anchorButtons = document.querySelectorAll('.tabs-component .button');
     const allPlanSwitchers = block.querySelectorAll('.plan-switcher');
 
-    benefitsLists.forEach((benefits) => {
-      const btnWrapper = document.createElement('div');
-      btnWrapper.className = 'show-more-btn-wrapper';
+  benefitsLists.forEach((benefits) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'show-more-btn-wrapper';
 
-      const btn = document.createElement('button');
-      btn.className = 'show-more-btn';
-      btn.type = 'button';
-      btn.setAttribute('aria-expanded', 'false');
-      btn.textContent = blockParent.getAttribute('data-show-more');
+    const btn = document.createElement('button');
+    btn.className = 'show-more-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.textContent = blockParent.getAttribute('data-show-more');
 
-      btnWrapper.appendChild(btn);
-      benefits.insertAdjacentElement('beforebegin', btnWrapper);
-      btnWrappers.push(btn);
-    });
+    wrapper.appendChild(btn);
+    benefits.insertAdjacentElement('beforebegin', wrapper);
+    buttons.push(btn);
+  });
 
     btnWrappers.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -643,31 +652,267 @@ export default async function decorate(block) {
   }
 
   if (individualSwitchText && familySwitchText) {
+    switchBox = createToggleSwitch(individualSwitchText, familySwitchText);
+    switchCheckbox = switchBox.querySelector('#switchCheckbox');
+    setupToggleSwitchHandler(block, switchCheckbox);
+  }
+
+  // Add five-cards class if needed
+  if (productsAsList.length >= 5) {
+    block.classList.add('five-cards');
+  }
+
+  // Store billed texts for later use
+  const billedTexts = [];
+
+  // Determine store event type
+  const storeEvent = checkIfNotProductPage() ? 'product-loaded' : 'main-product-loaded';
+
+  // Process each product card
+  if (combinedProducts.length) {
+    const productCards = Array.from(block.children);
+
+    for (let key = 0; key < productCards.length; key += 1) {
+      const prod = productCards[key];
+      const mainTable = prod.querySelector('tbody');
+
+      if (mainTable) {
+        const rows = Array.from(mainTable.querySelectorAll(':scope > tr'));
+        const [
+          greenTag,
+          title,
+          blueTag,
+          subtitle,
+          radioButtons,
+          perPrice,
+          billed,
+          buyLink,
+          undeBuyLink,
+          benefitsLists,
+          billed2,
+          buyLink2,
+          subtitle2,
+        ] = rows;
+
+        // Parse product info
+        const [baseProdName, baseProdUsers, baseProdYears] = (combinedProducts[key] || '').split('/');
+        const monthlyInfo = monthlyPricesAsList[key]?.split('/') || [];
+        const thirdButtonInfo = thirdRadioButtonProductsAsList[key]?.split('/') || [];
+        const addOnInfo = addOnProductsAsList[key]?.split('/') || [];
+        const addOnMonthlyInfo = addOnMonthlyProductsAsList[key]?.split('/') || [];
+
+        // Store billed text
+        billedTexts.push(billed);
+
+        // Check for add-on features
+        const featuresSet = benefitsLists?.querySelectorAll('table') || [];
+        const featureList = createFeatureList(featuresSet);
+        const hasAddOn = hasAddOnFeatures(featuresSet);
+
+        // Get buy link selector
+        let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
+        if (buyLinkSelector) {
+          buyLinkSelector.classList.add('button', 'primary');
+        } else {
+          buyLinkSelector = buyLink?.querySelector('a');
+        }
+
+        // Create plan switchers
+        let planSwitcher = document.createElement('div');
+        if (radioButtons && monthlyProducts) {
+          planSwitcher = createPlanSwitcher(
+            radioButtons,
+            key,
+            [baseProdName, monthlyInfo[0], thirdButtonInfo[0]],
+            [baseProdUsers, monthlyInfo[1], thirdButtonInfo[1]],
+            [baseProdYears, monthlyInfo[2], thirdButtonInfo[2]],
+          );
+        }
+
+        let planSwitcher2 = document.createElement('div');
+        if (hasAddOn && addOnProducts && addOnMonthlyProducts) {
+          planSwitcher2 = createPlanSwitcher(
+            radioButtons,
+            key,
+            [addOnInfo[0], addOnMonthlyInfo[0]],
+            [addOnInfo[1], addOnMonthlyInfo[1]],
+            [addOnInfo[2], addOnMonthlyInfo[2]],
+            'addon',
+          );
+        }
+
+        // Get checked product info
+        const productInfo = getCheckedProductInfo(
+          planSwitcher,
+          baseProdName,
+          baseProdUsers,
+          baseProdYears,
+        );
+        const addOnProductInfo = getCheckedProductInfo(
+          planSwitcher2,
+          addOnInfo[0],
+          addOnInfo[1],
+          addOnInfo[2],
+        );
+
+        // Get billed text based on checked radio
+        let billedText = billed?.children[0];
+        if (radioButtons) {
+          Array.from(radioButtons.children).forEach((radio, idx) => {
+            if (radio.textContent.includes('[checked]') && billed?.children[idx]) {
+              billedText = billed.children[idx];
+            }
+          });
+        }
+
+        // Create UI elements
+        const blueTagsContainer = createBlueTags(blueTag);
+        const titleHTML = createTitleHTML(title);
+        const subtitleHTML = createSubtitleHTML(subtitle);
+        const { demoBtn, content: undeBuyLinkContent } = createDemoButton(undeBuyLink);
+
+        // Handle second button
+        const secondButton = buyLink?.querySelectorAll('a')[1];
+        if (secondButton) {
+          secondButton.classList.add('button', 'secondary', 'no-arrow');
+        }
+
+        // Build product box HTML
+        const prodBoxHTML = buildProductBoxHTML({
+          greenTagText: greenTag?.textContent.trim(),
+          titleHTML,
+          blueTagsHTML: blueTagsContainer.innerHTML,
+          subtitleHTML,
+          subtitle2HTML: subtitle2?.textContent.trim() || '',
+          planSwitcherHTML: radioButtons ? planSwitcher.outerHTML : '',
+          secondButtonHTML: secondButton?.outerHTML || '',
+          undeBuyLinkHTML: undeBuyLinkContent ? (demoBtn || undeBuyLink.innerHTML.trim()) : '',
+          featureListHTML: benefitsLists?.textContent.trim() ? featureList.join('') : '',
+          planSwitcher2HTML: planSwitcher2.outerHTML || '',
+          addonProductName,
+          hasBilled2: Boolean(billed2),
+          prodName: productInfo.name,
+          prodUsers: productInfo.users,
+          prodYears: productInfo.years,
+          isIndividual: key < productsAsList.length,
+          storeEvent,
+          productsAsList,
+        });
+
+        // Replace original content
+        block.children[key].outerHTML = prodBoxHTML;
+
+        // Add price box
+        const priceBox = createPriceElement({
+          prodName: productInfo.name,
+          saveText,
+          buyLinkSelector: buyLink?.querySelector('a'),
+          billedText,
+          type,
+          hideDecimals,
+          perPrice,
+        });
+        block.children[key].querySelector('.hero-aem__prices')?.appendChild(priceBox);
+
+        // Add add-on price box if needed
+        let addOnPriceBox = null;
+        if (hasAddOn && addOnProducts) {
+          addOnPriceBox = createPriceElement({
+            prodName: addOnProductInfo.name,
+            saveText,
+            buyLinkSelector: buyLink2?.querySelector('a'),
+            billedText: billed2,
+            type,
+            hideDecimals,
+            perPrice,
+          });
+          block.children[key].querySelector('.hero-aem__prices__addon')?.appendChild(addOnPriceBox);
+        }
+
+        // Setup checkmark/add-on functionality
+        const checkmark = block.children[key].querySelector('.checkmark');
+        if (checkmark) {
+          const checkmarkList = checkmark.closest('ul');
+          checkmarkList?.classList.add('checkmark-list');
+
+          const li = checkmark.closest('li');
+          if (li) {
+            li.removeChild(checkmark);
+
+            const checkBox = document.createElement('input');
+            checkBox.type = 'checkbox';
+            checkBox.className = 'checkmark';
+
+            const newLi = document.createElement('li');
+            newLi.innerHTML = `${checkBox.outerHTML}<div>${li.innerHTML}</div>`;
+            li.replaceWith(newLi);
+
+            // Set store event for add-on products
+            if (addOnProductsInitial?.some((entry) => entry.includes(addOnProductInfo.name))) {
+              block.children[key].querySelector('.add-on-product')?.setAttribute('data-store-event', storeEvent);
+            }
+
+            // Setup add-on checkbox async
+            // eslint-disable-next-line no-await-in-loop
+            await setupAddOnCheckbox(
+              block.children[key],
+              checkmarkList,
+              newLi,
+              addOnProductInfo,
+              addOnPriceBox,
+              productInfo,
+            );
+          }
+        }
+      }
+    }
+  }
+
+  // Setup show more/less if enabled
+  if (section.classList.contains('show-more-show-less')) {
+    setupShowMoreLess(block, section);
+    setupFamilyBoxHandlers(block);
+    setupSynchronizedPlanSwitching(block);
+  }
+
+  // Insert toggle switch if created
+  if (switchBox) {
     block.parentNode.insertBefore(switchBox, block);
   }
 
-  // handling of the billedText below the price
-  [...block.children].forEach((box, key) => {
+  // Setup billed text updates on plan switch
+  Array.from(block.children).forEach((box, key) => {
     box.querySelectorAll('.plan-switcher input').forEach((radio, idx) => {
       radio.addEventListener('change', () => {
-        let billedText = billedTexts[key].children[idx]?.innerHTML;
-        if (billedText) {
-          box.querySelector('.billed').innerHTML = billedText;
+        const newBilledText = billedTexts[key]?.children[idx]?.innerHTML;
+        if (newBilledText) {
+          const billedElement = box.querySelector('.billed');
+          if (billedElement) {
+            billedElement.innerHTML = newBilledText;
+          }
         }
       });
     });
   });
 
+  // Hotjar tracking
   window.hj = window.hj || function initHotjar(...args) {
-    (hj.q = hj.q || []).push(...args);
+    (window.hj.q = window.hj.q || []).push(...args);
   };
-  hj('event', 'new-prod-boxes');
+  window.hj('event', 'new-prod-boxes');
 
-  // decorate icons if the component is being called from www-websites
-  const isInLandingPages = window.location.href.includes('www-landing-pages') || window.location.href.includes('bitdefender.com/pages');
+  // Decorate icons for www-websites
+  const isInLandingPages = window.location.href.includes('www-landing-pages')
+    || window.location.href.includes('bitdefender.com/pages');
+
   if (!isInLandingPages) {
-    const { decorateIcons } = await import('../../scripts/lib-franklin.js');
-    decorateIcons(block.closest('.section'));
+    try {
+      const { decorateIcons } = await import('../../scripts/lib-franklin.js');
+      decorateIcons(section);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error decorating icons:', error);
+    }
   }
 
   /**

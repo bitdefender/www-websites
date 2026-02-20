@@ -60,16 +60,17 @@ main .subscriber .section {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    padding: 0 20px;
 }
 
 .subscriber #heroColumn table tr td a:hover {
     background-color: black;
 }
 
-.subscriber #heroColumn table tr td:nth-of-type(1) {
+.subscriber #heroColumn table tr td:nth-of-type(1) a {
     margin-right: 16px;
     height: 49px;
-    width: 214px;
+    width: max-content;
     border-radius: 8px;
     font-weight: 500;
     font-size: 18px;
@@ -91,10 +92,6 @@ main .subscriber .section {
     transition: all 0.3s ease;  
     border-radius: 8px;
     color: white;
-}
-
-.subscriber #heroColumn table tr td:hover {
-    background-color: #003385;
 }
 
 .subscriber .columnvideo {
@@ -391,6 +388,7 @@ main .subscriber .section {
     padding-bottom: 0;
 }
 .subscriber #multiColumns .columns > div > div {
+    height: 100%;
     background-color: #F1F5F8;
     border-radius: 16px;
     padding: 24px;
@@ -909,8 +907,6 @@ main .subscriber .section {
     font-size: 18px;
     line-height: 25.2px;
     text-align: center;
-    border: 2px solid #1A7DFF;
-    background-color: #1A7DFF;
     color: white;
     display: inline-flex;
     align-items: center;
@@ -2252,7 +2248,7 @@ main .subscriber .section {
         min-width: unset;
     }
     .subscriber #carouselLogosText .carousel-item {
-        width: 85vw;
+        width: 636px;
     }
     .subscriber #carouselLogosText .carousel-item:last-of-type {
         margin-right: 0;

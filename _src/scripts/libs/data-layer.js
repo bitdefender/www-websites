@@ -13,7 +13,7 @@ import { getTargetExperimentDetails } from "../target.js";
  */
 const pageErrorHandling = () => {
   const isErrorPage = window.errorCode === '404';
-  if(isErrorPage) {
+  if (isErrorPage) {
     AdobeDataLayerService.push(new PageErrorEvent());
   }
 }
@@ -22,10 +22,10 @@ const pageErrorHandling = () => {
  * Add click events to the data layer after page redirect
  */
 const checkClickEventAfterRedirect = () => {
-  if(localStorage.getItem("clickEvent") !== null) {
+  if (localStorage.getItem("clickEvent") !== null) {
     const clickEvent = JSON.parse(localStorage.getItem("clickEvent"));
 
-    if(clickEvent?.clickEvent) {
+    if (clickEvent?.clickEvent) {
       AdobeDataLayerService.push(new ButtonClickEvent(clickEvent.clickEvent, { productId: clickEvent.productId }));
     }
 

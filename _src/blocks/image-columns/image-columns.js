@@ -9,8 +9,9 @@ export default function decorate(block) {
   // setup image columns
   [...block.children].forEach((row) => {
     [...row.children].forEach((col, idx) => {
-      if (parentSection.classList.contains('columnvideo') && idx === 1) {
-        const colVideo = parentSection.getAttribute('data-video');
+      if ((parentSection.classList.contains('columnvideo') && idx === 1) || col.innerText.includes('.mp4')) {
+        if (col.innerText.includes('.mp4')) col.classList.add('mp4video');
+        const colVideo = parentSection.getAttribute('data-video') || col.innerText;
         col.innerHTML = `<video autoplay loop muted playsinline>
           <source src="/_src/images/${colVideo}" type="video/mp4">
           Your browser does not support the video tag.
