@@ -2,7 +2,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, createTag, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
+  matchHeights, createTag, renderNanoBlocks, wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -388,6 +388,7 @@ export default function decorate(block) {
   }
   block.querySelectorAll('h3')?.forEach((element) => {
     if (element.textContent.includes('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}')) {
+      element.textContent = element.textContent.replace('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}', '{{=it.state.discount.percentage.max}}');
       element.classList.add('await-loader');
     }
   });

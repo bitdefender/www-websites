@@ -664,16 +664,13 @@ export function pushTrialDownloadToDataLayer() {
       return '8430';
     }
 
-    if (button?.dataset?.storeId) return button.dataset.storeId;
+    const buttonProductId = button?.getAttribute('product-id');
+    if (buttonProductId) return buttonProductId;
 
-    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]') || button?.closest('.section');
-    const { storeId } = closestStoreElementWithId.dataset;
-    if (storeId) {
-      return storeId;
-    }
-
-    // eslint-disable-next-line max-len
-    return getMetadata('breadcrumb-title') || getMetadata('og:title');
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[product-id]') || button?.closest('.section');
+    return closestStoreElementWithId.getAttribute('product-id')
+      || getMetadata('breadcrumb-title')
+      || getMetadata('og:title');
   };
 
   const currentPage = page.name;

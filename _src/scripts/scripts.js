@@ -27,7 +27,6 @@ import {
   handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
-import { StoreResolver } from './libs/store/index.js';
 
 import {
   createTag,
@@ -37,6 +36,7 @@ import {
   getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
+import { StoreResolver } from './libs/store/index.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
@@ -250,7 +250,6 @@ export async function detectModalButtons(main) {
       // generate new modal
       const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
       document.body.append(modalContainer);
-      await StoreResolver.resolve(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
@@ -731,19 +730,6 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
-  // eslint-disable-next-line import/no-unresolved
-  // const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
-  //   .then((FingerprintJS) => FingerprintJS.load({
-  //     region: 'eu',
-  //   }));
-
-  // Get the visitorId when you need it.
-  // await fpPromise
-  //   .then((fp) => fp.get())
-  //   .then((result) => {
-  //     const { visitorId } = result;
-  //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
-  //   });
   await target.sendCdpData();
 
   if (!window.BD.loginAttempted) {
