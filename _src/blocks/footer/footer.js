@@ -1,6 +1,6 @@
 import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
 import { getDomain } from '../../scripts/utils/utils.js';
-import { adobeMcAppendVisitorId, appendAdobeMcLinks } from '../../scripts/target.js';
+import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 import { decorateMain } from '../../scripts/scripts.js';
 import { Constants } from '../../scripts/libs/constants.js';
 
