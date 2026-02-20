@@ -200,6 +200,7 @@ async function runAemFooterLogic() {
 
   shadowRoot.appendChild(contentDiv);
   document.querySelector('footer').replaceWith(footer);
+  adobeMcAppendVisitorId(contentDiv);
 }
 
 /**
