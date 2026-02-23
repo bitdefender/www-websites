@@ -252,6 +252,7 @@ function handleSubmit(formBox, widgetId, token, fileName, download) {
     // set date and locale
     data.set('DATE', date);
     data.set('LOCALE', locale);
+    data.set('PAGE', window.location.href);
 
     formBox.querySelectorAll('.input-box').forEach((box) => {
       const field = box.querySelector('input[name], select[name], textarea[name]');
