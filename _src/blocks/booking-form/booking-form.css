@@ -17,6 +17,37 @@
   display: block;
 }
 
+.booking-form-container.display-as-content {
+  margin-top: 3em;
+  display: block;
+  width: unset!important;
+  height: unset!important;
+  min-height: unset !important;
+  max-height: unset !important;
+  position: unset !important;
+  background: transparent;
+  height: auto !important;
+}
+
+.booking-form-container.display-as-content .modal-close-btn {
+  display: none;
+}
+
+.booking-form-container form.loading > div {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.booking-form-container.display-as-content .block.sidebar > div {
+  gap: 5em;
+}
+
+.booking-form-container.display-as-content .block.sidebar > div > div:last-of-type {
+  width: 500px;
+  flex: 0 0 500px;
+}
+
 .booking-form-container .booking-form-wrapper {
   width: 768px;
   height: auto;
@@ -30,6 +61,11 @@
   text-align: left;
   border-radius: .75rem;
   position: relative;
+}
+
+.booking-form-container.display-as-content .booking-form-wrapper {
+  max-height: unset;
+  overflow-y: unset;
 }
 
 .booking-form-container .booking-form-wrapper span.modal-close-btn {
@@ -63,13 +99,6 @@
   text-align: center;
   color: #0f970f;
   display: none;
-}
-
-
-.booking-form-container form.loading > div {
-  pointer-events: none;
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .booking-form-container form.loading::before {
@@ -220,6 +249,24 @@
   .booking-form-container .booking-form-wrapper {
     width: 90vw;
     height: 90vh;
+  }
+
+  .booking-form-container.display-as-content .booking-form-wrapper {
+    width: unset;
+    height: unset;
+  }
+
+  .booking-form-container.display-as-content .block.sidebar > div > div.columns-left-col h1 {
+    display: block;
+  }
+
+  .booking-form-container.display-as-content .block.sidebar > div {
+    display: block;
+  }
+
+  .booking-form-container.display-as-content .block.sidebar > div > div:last-of-type {
+    width: 100%;
+    flex: 0 0 100;
   }
 
   .booking-form-container .input-row {
