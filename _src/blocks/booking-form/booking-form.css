@@ -17,6 +17,31 @@
   display: block;
 }
 
+.booking-form-container.display-as-content {
+  margin-top: 3em;
+  display: block;
+  width: unset!important;
+  height: unset!important;
+  min-height: unset !important;
+  max-height: unset !important;
+  position: unset !important;
+  background: transparent;
+  height: auto !important;
+}
+
+.booking-form-container.display-as-content .modal-close-btn {
+  display: none;
+}
+
+.booking-form-container.display-as-content .block.sidebar > div > div:last-of-type {
+  width: 500px;
+  flex: 0 0 500px;
+}
+
+.booking-form-container.display-as-content .block.sidebar > div {
+  gap: 5em;
+}
+
 .booking-form-container .booking-form-wrapper {
   width: 768px;
   height: auto;
@@ -30,6 +55,11 @@
   text-align: left;
   border-radius: .75rem;
   position: relative;
+}
+
+.booking-form-container.display-as-content .booking-form-wrapper {
+  max-height: unset;
+  overflow-y: unset;
 }
 
 .booking-form-container .booking-form-wrapper span.modal-close-btn {
