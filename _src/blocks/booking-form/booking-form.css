@@ -33,13 +33,19 @@
   display: none;
 }
 
-.booking-form-container.display-as-content .block.sidebar > div > div:last-of-type {
-  width: 500px;
-  flex: 0 0 500px;
+.booking-form-container form.loading > div {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .booking-form-container.display-as-content .block.sidebar > div {
   gap: 5em;
+}
+
+.booking-form-container.display-as-content .block.sidebar > div > div:last-of-type {
+  width: 500px;
+  flex: 0 0 500px;
 }
 
 .booking-form-container .booking-form-wrapper {
@@ -93,13 +99,6 @@
   text-align: center;
   color: #0f970f;
   display: none;
-}
-
-
-.booking-form-container form.loading > div {
-  pointer-events: none;
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .booking-form-container form.loading::before {
