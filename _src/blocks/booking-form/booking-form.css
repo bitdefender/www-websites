@@ -252,6 +252,24 @@
     height: 90vh;
   }
 
+  .booking-form-container.display-as-content .booking-form-wrapper {
+    width: unset;
+    height: unset;
+  }
+
+  .booking-form-container.display-as-content .block.sidebar > div > div.columns-left-col h1 {
+    display: block;
+  }
+
+  .booking-form-container.display-as-content .block.sidebar > div {
+    display: block;
+  }
+
+  .booking-form-container.display-as-content .block.sidebar > div > div:last-of-type {
+    width: 100%;
+    flex: 0 0 100;
+  }
+
   .booking-form-container .input-row {
     display: block;
   }
