@@ -17,6 +17,10 @@
   display: block;
 }
 
+.booking-form-container form {
+  position: relative
+}
+
 .booking-form-container.display-as-content {
   margin-top: 3em;
   display: block;
@@ -203,6 +207,12 @@
   min-height: 22px;
   float: left;
   margin-right: 7px;
+}
+
+.booking-form-container.blue-btn .input-row input[type="submit"] {
+  background-color: #016FFF;
+  border-color: #016FFF;
+  padding: 15px;
 }
 
 .booking-form-container .input-row input[type="submit"] {
