@@ -289,7 +289,7 @@ function handleSubmit(formBox, widgetId, token, fileName, download) {
           formBox.classList.add('form-submitted');
           formBox.querySelector('#title-box').innerHTML = successMsg.innerHTML;
           successMsg.scrollIntoView({ behavior: 'smooth' });
-          if (download) window.open(download, "_blank");
+          if (download) window.open(download, '_blank');
         }
       },
     });
@@ -301,7 +301,11 @@ export default function decorate(block) {
   const { appendto, download, savedata } = sectionParent.dataset;
   const formBox = createForm(block);
   block.innerHTML = '';
-  appendto ? sectionParent.querySelector(`.${appendto}`).appendChild(formBox) : block.appendChild(formBox);
+  if (appendto) {
+    sectionParent.querySelector(`.${appendto}`).appendChild(formBox)
+  } else {
+    block.appendChild(formBox);
+  }
 
   renderTurnstile('turnstile-container', { invisible: false })
     .then(({ widgetId, token }) => {
