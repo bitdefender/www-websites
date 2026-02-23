@@ -302,7 +302,7 @@ export default function decorate(block) {
   const formBox = createForm(block);
   block.innerHTML = '';
   if (appendto) {
-    sectionParent.querySelector(`.${appendto}`).appendChild(formBox)
+    sectionParent.querySelector(`.${appendto}`).appendChild(formBox);
   } else {
     block.appendChild(formBox);
   }
