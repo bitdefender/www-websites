@@ -18,7 +18,7 @@
 }
 
 .booking-form-container form {
-  position: relative
+  position: relative;
 }
 
 .booking-form-container.display-as-content {
@@ -209,12 +209,6 @@
   margin-right: 7px;
 }
 
-.booking-form-container.blue-btn .input-row input[type="submit"] {
-  background-color: #016FFF;
-  border-color: #016FFF;
-  padding: 15px;
-}
-
 .booking-form-container .input-row input[type="submit"] {
   float: left;
   margin-right: 8px;
@@ -225,6 +219,12 @@
   font-size: 15px;
   text-transform: uppercase;
   font-weight: 500;
+}
+
+.booking-form-container.blue-btn .input-row input[type="submit"] {
+  background-color: #016FFF;
+  border-color: #016FFF;
+  padding: 15px;
 }
 
 .booking-form-container .input-row input {
