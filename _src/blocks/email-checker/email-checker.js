@@ -46,8 +46,13 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
     },
   });
 
-  if (firstRequest.erorr) {
-    result.innerHTML = `${statusMessages.error ?? ''}`;
+  if (firstRequest.error) {
+    if (firstRequest.error.data.code !== 41004) {
+      result.innerHTML = `${statusMessages.server_error ?? ''}`;
+    } else {
+      result.innerHTML = `${statusMessages.error ?? ''}`;
+    }
+
     result.className = 'result danger no-response';
     input.closest('.input-container').classList.remove('loader-circle');
     return;
@@ -63,7 +68,12 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   });
 
   if (secondRequest.error) {
-    result.innerHTML = `${statusMessages.error ?? ''}`;
+    if (secondRequest.error.data.code !== 41004) {
+      result.innerHTML = `${statusMessages.server_error ?? ''}`;
+    } else {
+      result.innerHTML = `${statusMessages.error ?? ''}`;
+    }
+
     result.className = 'result danger no-response';
     input.closest('.input-container').classList.remove('loader-circle');
     return;
@@ -72,6 +82,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
   await sleep(1000);
   let statusCode; let message; let className;
   const leaksNumber = secondRequest.total_count;
+
   if (leaksNumber === 0) {
     statusCode = 'safe';
     message = statusMessages.safe;
