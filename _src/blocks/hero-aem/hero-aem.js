@@ -4,6 +4,7 @@
 import {
   openUrlForOs, createNanoBlock, renderNanoBlocks, createTag,
 } from '../../scripts/utils/utils.js';
+import { target } from '../../scripts/target.js';
 
 function createCardElementContainer(elements, mobileImage) {
   const cardElementContainer = document.createElement('div');
@@ -331,5 +332,11 @@ export default async function decorate(block, options) {
   let termsParagraph = block.querySelector('.hero-aem-container .hero-aem .hero-aem__card-text p:last-child');
   if (termsParagraph) {
     termsParagraph.classList.add('hero-aem__terms');
+  }
+
+  const externalHTML = await target.getContentFragment({ mboxName: 'get-html-mbox' });
+  const buttonsDiv = block.querySelector('.hero-aem__card');
+  if (externalHTML) {
+    buttonsDiv.replaceChildren(externalHTML);
   }
 }
