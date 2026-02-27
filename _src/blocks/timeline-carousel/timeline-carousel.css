@@ -177,6 +177,7 @@
 
             &.empty {
               height: 18px;
+              width: 18px;
             }
           }
         }
@@ -187,7 +188,7 @@
           }
 
           >div:not(.timeline-years) {
-            padding-left: 4px;
+            padding-left: 9px;
           }
         }
       }
