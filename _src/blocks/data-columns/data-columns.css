@@ -28,6 +28,7 @@
 
             h4 {
                 font-size: 20px;
+                margin-bottom: 0;
             }
 
             strong {
@@ -40,6 +41,12 @@
                 gap: 16px;
 
                 .data-column-left {
+                    p:first-of-type {
+                        color: #636363;
+                        font-size: 18px;
+                        margin-top: 32px;
+                    }
+
                     h2 {
                         font-size: 32px;
                         line-height: 1.1;
@@ -134,7 +141,7 @@
                     .data-column-left {
                         p {
                             font-size: 18px;
-                            color: #636363;
+                            color: #000;
                         }
                     }
 
@@ -169,6 +176,7 @@
                             color: #000;
                             
                             hr {
+                                margin: 16px 0;
                                 border-color: #006DFF;
                             }
                         }

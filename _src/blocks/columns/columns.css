@@ -3340,6 +3340,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     .columns-wrapper {
       .columns {
+        gap: 32px;
         padding: 0;
 
         > div {
@@ -3352,6 +3353,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
               font-size: 24px;
               margin-bottom: 12px;
             }
+          }
+
+          &:not(:last-child) {
+            margin-bottom: 0;
           }
         }
       }
