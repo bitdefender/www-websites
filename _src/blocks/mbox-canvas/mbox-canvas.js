@@ -1,10 +1,11 @@
 import { AdobeDataLayerService, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
+import { Store } from '@repobit/dex-store';
 import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
 import { Constants } from '../../scripts/libs/constants.js';
-import { StoreResolver } from '../../scripts/libs/store/index.js';
+import user from '../../scripts/user.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
   const newHtml = document.createElement('div');
@@ -158,6 +159,28 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
+  const configMbox = await target.getOffers({
+    mboxNames: 'config-mbox',
+    parameters,
+    profileParameters: createOfferProfileParameters(parameters),
+  });
+
+  const canvasStore = new Store({
+    campaign: async () => configMbox.promotion,
+    locale: configMbox.useGeoIpPricing
+      ? (await user.locale)?.toLowerCase()
+      : page.locale.toLowerCase(),
+    provider: { name: 'vlaicu' },
+  });
+
+  const canvasRoot = document.createElement('bd-root');
+  canvasRoot.store = canvasStore;
+  const canvasWrapper = block.parentElement;
+  canvasWrapper.appendChild(canvasRoot);
+  canvasRoot.appendChild(block);
+
+  await canvasRoot.updateComplete;
+
   const offer = await target.getOffers({
     mboxNames: mboxName,
     parameters,
@@ -195,13 +218,7 @@ export default async function decorate(block) {
     link.setAttribute('target', '_blank');
   });
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
-  const configMbox = await target.getOffers({
-    mboxNames: 'config-mbox',
-    parameters,
-    profileParameters: createOfferProfileParameters(parameters),
-  });
+
   await loadBlocks(block.querySelector('.canvas-content'));
-  await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
-  window.disableGlobalStore = true;
   decorateIcons(block.querySelector('.canvas-content'));
 }

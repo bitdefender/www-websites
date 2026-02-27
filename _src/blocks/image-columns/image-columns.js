@@ -34,4 +34,7 @@ export default function decorate(block) {
     });
   });
   matchHeights(block, '.image-columns.quotes > div > div');
+
+  const hubspotForm = document.querySelector('.hubspot-form');
+  if (hubspotForm) block.innerHTML = block.innerHTML.replaceAll('[hubspot-form]', hubspotForm.innerHTML);
 }

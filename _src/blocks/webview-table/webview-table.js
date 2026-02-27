@@ -1,6 +1,6 @@
 import { debounce } from '@repobit/dex-utils';
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
-import { matchHeights } from '../../scripts/utils/utils.js';
+import { matchHeights, wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
 
 let COLUMNS_COUNT = 0;
 /**
@@ -108,10 +108,10 @@ function createPlanSwitcher(radioButtons, prodsNames, prodsUsers, prodsYears, bl
 
     if (prodName) {
       planSwitcher.innerHTML += `
-        <input data-store-click-set-product 
-              data-store-product-id="${prodName}" 
-        data-store-product-option="${prodUser}-${prodYear}" 
-        data-store-product-department="consumer" 
+        <input data-store-action
+              data-store-set-id="${prodName}" 
+        data-store-set-devices="${prodUser}"
+        data-store-set-subscription="${prodYear}" 
         type="radio" 
         id="${blockLevel ? 'block-' : ''}${idx}-${prodName.trim()}"
         name="${blockLevel ? 'block-' : ''}${prodName.trim()}"
@@ -163,19 +163,43 @@ function renderPrices(block, metadata) {
       // Determine if current product or featured product
       const isFeatured = index + 1 === Number(featuredProduct);
       const isCurrent = Number(currentProduct) === index + 1;
+
+      // Populate buy box for non-current products
+      if (!isCurrent) {
+        buyBox.innerHTML = `
+          <div class="price-box">
+            <div data-store-hide="!it.option.price.discounted">
+              <span class="prod-oldprice" data-store-render data-store-price="full"></span>
+            </div>
+            <div class="newprice-container mt-2">
+              <span class="prod-newprice"><span data-store-render data-store-price="discounted||full"></span></span>
+            </div>
+          </div>
+          <span class="under-price-text">${firstYearText}</span>
+        `;
+        const buyLink = cell.querySelector('a[href*="#buylink"]');
+        buyLink?.setAttribute('data-store-buy-link', '');
+        buyLink?.setAttribute('data-store-render', '');
+      } else {
+        cell.classList.add('current');
+      }
+      cell.insertAdjacentElement('afterbegin', buyBox);
+
       if (prodName && !isCurrent) {
-        cell.setAttribute('data-store-context', '');
-        cell.setAttribute('data-store-id', prodName);
-        cell.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-        cell.setAttribute('data-store-department', 'consumer');
-        cell.setAttribute('data-store-event', 'product-loaded');
+        wrapChildrenWithStoreContext(cell, {
+          productId: prodName,
+          devices: prodUsers,
+          subscription: prodYears,
+          ignoreEventsParent: true,
+          storeEvent: 'all',
+        });
 
         if (secondaryProdName) {
           const prodsNames = [prodName, secondaryProdName];
           const prodsUsers = [prodUsers, secondaryProdUsers];
           const prodsYears = [prodYears, secondaryProdYears];
           const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears);
-          cell.appendChild(planSwitcher);
+          cell.querySelector('bd-option').appendChild(planSwitcher);
         }
       }
       // Add featured logic if applicable
@@ -187,45 +211,29 @@ function renderPrices(block, metadata) {
             featuredCell.classList.add('featured');
           }
         });
-        block.setAttribute('data-store-context', '');
-        block.setAttribute('data-store-id', prodName);
-        block.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-        block.setAttribute('data-store-department', 'consumer');
-        block.setAttribute('data-store-event', 'product-loaded');
+        wrapChildrenWithStoreContext(block, {
+          productId: prodName,
+          devices: prodUsers,
+          subscription: prodYears,
+          ignoreEventsParent: true,
+          storeEvent: 'all',
+        });
+
         if (secondaryProdName) {
           const prodsNames = [prodName, secondaryProdName];
           const prodsUsers = [prodUsers, secondaryProdUsers];
           const prodsYears = [prodYears, secondaryProdYears];
           const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears, true);
-          block.prepend(planSwitcher);
+          block.querySelector('bd-option').prepend(planSwitcher);
         }
         savingsTag.innerHTML = `
-          <span class="saving-tag-text" data-store-hide="no-price=discounted">
-            <span data-store-discount="percentage"></span> ${saveText || ''} 
+          <span class="saving-tag-text" data-store-hide="!it.option.price.discounted">
+            <span data-store-render data-store-discount="percentage"></span> ${saveText || ''} 
           </span>
         `;
         savingsTag.style.visibility = 'visible';
       }
-      // Populate buy box for non-current products
-      if (!isCurrent) {
-        buyBox.innerHTML = `
-          <div class="price-box">
-            <div>
-              <span class="prod-oldprice" data-store-price="full" data-store-hide="no-price=discounted"></span>
-            </div>
-            <div class="newprice-container mt-2">
-              <span class="prod-newprice"><span data-store-price="discounted||full"></span></span>
-            </div>
-          </div>
-          <span class="under-price-text">${firstYearText}</span>
-        `;
-        const buyLink = cell.querySelector('a[href*="#buylink"]');
-        buyLink?.setAttribute('data-store-buy-link', '');
-      } else {
-        cell.classList.add('current');
-      }
 
-      cell.insertAdjacentElement('afterbegin', buyBox);
       const tagCell = block.querySelector(`div[role="columnheader"]:nth-of-type(${index + 2})`);
       tagCell.insertAdjacentElement('afterbegin', savingsTag);
 

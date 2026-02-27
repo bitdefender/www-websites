@@ -1,6 +1,5 @@
 import { AdobeDataLayerService } from "@repobit/dex-data-layer";
 import { Store, ProductInfo, ProductOption } from "../store.js";
-import { FranklinProductsLoadedEvent } from "../../data-layer.js";
 import { staticAttributesResolvers, staticAttributes } from "./staticAttributes/index.js";
 import { clickAttributeResolvers, clickAttributes } from "./clickAttributes/index.js";
 import { staticGlobalAttributesResolvers } from "./staticGlobalAttributes/index.js";

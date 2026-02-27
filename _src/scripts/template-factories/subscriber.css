@@ -204,7 +204,7 @@ main .subscriber .section {
     transition: all 0.5s ease;
 }
 
-.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td:first-of-type > a {
+.subscriber .columnvideo > div.image-columns-wrapper table tbody > tr td:first-of-type > a {
     color:  black;
     background-color: white;
 }
@@ -1232,23 +1232,19 @@ main .subscriber .section {
     max-width: 590px;
 }
 
-.subscriber .title-aligned-left .default-content-wrapper h3, .subscriber .title-aligned-left#multiColumns .default-content-wrapper h3 {
+.subscriber .title-aligned-left .default-content-wrapper h3 {
     margin-left: 0;
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 600;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div {
     padding: 32px 24px;
-    display: block;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div p {
     color: black;
 }
 
-.subscriber .bundle-design#multiColumns .columns > div > div .icon {
+.subscriber .bundle-design#multiColumns .columns > div > div img {
     width: 100%;
     height: auto;
     border-radius: 10px;
@@ -1283,7 +1279,6 @@ main .subscriber .section {
 
 .subscriber .bundle-design#multiColumns .columns > div > div table tr .icon {
     width: 32px;
-    height: 45px;
 }
 
 .subscriber .bundle-design#multiColumns .columns > div > div table tr h5 {
@@ -1296,47 +1291,46 @@ main .subscriber .section {
     line-height: 20px;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div {
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col, .subscriber .bundle-design2#multiColumns .columns .columns-img-col {
     background-color: transparent;
-    display: block;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table tbody {
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table tbody {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table {
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table {
     max-width: 365px;
     margin-top: 2em;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table .icon {
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table .icon {
     width: auto;
     height: 36px;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table h5 {
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table h5 {
     font-size: var(--body-font-size-l);
     list-style: var(--body-font-size-l);
     margin: 10px 0 5px;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table tbody tr:first-of-type {
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table tbody tr:first-of-type {
     border-bottom: 1px solid #E0E8EF;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table tbody tr:first-of-type td {
+.subscriber .bundle-design2#multiColumns .columns .columns-left-col table tbody tr:first-of-type td {
     padding-bottom: 15px;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table {
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table {
     height: 100%;
     width: 100%;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table tbody {
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table tbody {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1344,7 +1338,7 @@ main .subscriber .section {
     gap: 16px;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table tr {
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table tr {
     display: flex;
     justify-content: space-between;
     background-color: #F1F5F8;
@@ -1353,13 +1347,13 @@ main .subscriber .section {
     text-align: left;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table td h6 {
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table td h6 {
     font-size: 40px;
     line-height: 46px;
     margin-bottom: 10px;
 }
 
-.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table tr td img {
+.subscriber .bundle-design2#multiColumns .columns .columns-img-col table tr td img {
     max-height: 96px;
     height: auto;
 }
@@ -1845,10 +1839,9 @@ main .subscriber .section {
         padding-left: 0;
     }
 
-    .subscriber .title-aligned-left .default-content-wrapper h3, .subscriber #multiColumns.title-aligned-left .default-content-wrapper h3, .subscriber .title-aligned-left#multiColumns .default-content-wrapper h3, .bundle-design2 .columns.benefits h3 {
-        font-size: 28px!important;
-        line-height: 33px!important;
-        font-weight: 600;
+    .subscriber .title-aligned-left .default-content-wrapper h3, .subscriber #multiColumns.title-aligned-left .default-content-wrapper h3 {
+        font-size: 28px;
+        line-height: 33px;
         margin: 24px 0 8px;
     }
 
@@ -2068,7 +2061,6 @@ main .subscriber .section {
 
     .subscriber .bundle-design#multiColumns .columns > div > div {
         padding: 23px 20px;
-        display: block;
     }
 
     .subscriber .bundle-design#multiColumns .columns > div > div table tr {
@@ -2076,7 +2068,7 @@ main .subscriber .section {
         gap: 24px;
     }
 
-    .subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table tr {
+    .subscriber .bundle-design2#multiColumns .columns .columns-img-col table tr {
         flex-direction: column;
         gap: 16px;
     }
