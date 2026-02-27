@@ -26,6 +26,10 @@
                 font-weight: 500;
             }
 
+            h4 {
+                font-size: 20px;
+            }
+
             strong {
                 font-weight: 600;
             }
@@ -158,8 +162,19 @@
                      
                 }
             }
-        }
 
+            &.v3 {
+                    .data-wrapper {
+                        .data-column-right {
+                            color: #000;
+                            
+                            hr {
+                                border-color: #006DFF;
+                            }
+                        }
+                    }
+                }
+        }
        
     }
 
@@ -274,6 +289,18 @@
                         }
 
                         
+                    }
+                }
+
+                &.v2 {
+                    .data-wrapper {
+                        align-items: flex-start;
+                    }
+                }
+
+                &.v3 {
+                    .data-wrapper {
+                        align-items: flex-start;
                     }
                 }
             }

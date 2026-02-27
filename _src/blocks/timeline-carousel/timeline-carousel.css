@@ -20,6 +20,7 @@
           display: grid;
           grid-auto-flow: column;
           padding-left: 25px;
+          width: fit-content;
         }
 
         &::-webkit-scrollbar {
@@ -71,6 +72,7 @@
         .timeline-box {
           display: grid;
           min-width: 140px;
+          max-width: 140px;
           grid-auto-flow: column;
           gap: 10px;
           align-items: flex-start;
@@ -78,6 +80,7 @@
 
           &.populated {
             min-width: 300px;
+            max-width: 300px;
 
             &::before {
               display: block;
@@ -141,6 +144,7 @@
 
         .timeline-year {
           min-width: 220px;
+          max-width: 220px;
           display: inline-flex;
           align-items: center;
           border-radius: 999px;
@@ -170,6 +174,20 @@
             padding: 0 8px;
             border-radius: 999px;
             font-size: 14px;
+
+            &.empty {
+              height: 18px;
+            }
+          }
+        }
+
+        &:has(.year-tag.empty) {
+          .timeline-years {
+            display: flex;
+          }
+
+          >div:not(.timeline-years) {
+            padding-left: 4px;
           }
         }
       }

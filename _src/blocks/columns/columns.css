@@ -3263,6 +3263,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     .columns {
       padding: 0 24px;
+      gap: 16px;
+      display: flex;
+      flex-direction: column;
 
       > div {
         gap: 16px;
@@ -3279,7 +3282,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
           p {
             font-size: 16px;
-            text-align: center;
             margin: 0;
             z-index: 3;
             color: #fff;
@@ -3299,12 +3301,21 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             z-index: 3;
             color: #fff;
             margin-bottom: 8px;
-            text-align: center;
             font-size: 20px;
 
             strong {
               font-weight: 600;
             }
+          }
+        }
+      }
+
+      &.no-background {
+        > div > div {
+          text-align: left;
+          
+          h3 {
+            margin-top: 0;
           }
         }
       }

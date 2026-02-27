@@ -54,6 +54,7 @@ function createTimelineBoxContent(slide) {
 function initTimelineCarousel(block, startPosition) {
   const track = block.querySelector('.timeline-track');
   const slideContainer = block.querySelector('.slides-container');
+  const controls = block.querySelector('.timeline-controls');
   const prevBtn = block.querySelector('.timeline-button.left');
   const nextBtn = block.querySelector('.timeline-button.right');
   const items = Array.from(block.querySelectorAll('.timeline-box.populated'));
@@ -69,6 +70,11 @@ function initTimelineCarousel(block, startPosition) {
   const containerWidth = track.offsetWidth;
   const avgWidthWithGap = getScrollAmount();
   const itemsToShow = Math.floor(containerWidth / avgWidthWithGap);
+  if (itemsToShow >= items.length) {
+    controls.style.display = 'none';
+  } else {
+    controls.style.display = '';
+  }
   const maxIndex = Math.max(0, items.length - itemsToShow);
   let currentIndex = startPosition === 'end' ? maxIndex : 0;
 
@@ -196,10 +202,12 @@ export default function decorate(block) {
   `;
 
     // Years axis
-    const year = timelineYears.split(',')[idx]?.trim() ?? '';
+    const year = timelineYears?.split(',')?.[idx]?.trim() ?? '';
+
     years += `
     <div class="timeline-year">
-      <span class="year-tag">${year}</span>
+      
+      <span class="year-tag ${year ? '' : 'empty'}">${year ?? ''}</span>
     </div>
   `;
 

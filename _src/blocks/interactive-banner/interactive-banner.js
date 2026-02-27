@@ -130,7 +130,6 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
     const rect = canvas.getBoundingClientRect();
     const w = Math.floor(rect.width);
     const h = Math.floor(rect.height);
-    canvas.width = 2000;
     canvas.width = Math.round(w * DPR);
     canvas.height = Math.round(h * DPR);
     canvas.style.width = `${w}px`;
@@ -138,9 +137,10 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
   }
 
   function rasterizeTextToOffscreen() {
-    const targetW = canvas.width; const
-      targetH = canvas.height;
-    off.width = targetW; off.height = targetH;
+    const targetW = canvas.width;
+    const targetH = canvas.height;
+    off.width = targetW;
+    off.height = targetH;
     octx.clearRect(0, 0, off.width, off.height);
 
     // Split text by newlines for multi-line support
@@ -217,8 +217,8 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
     // Track performance
     updatePerformanceMetrics(elapsed);
 
-    const W = canvas.width; const
-      H = canvas.height;
+    const W = canvas.width;
+    const H = canvas.height;
     ctx.save();
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = 'source-over';
@@ -421,7 +421,11 @@ async function initDotCloud(block, canvasId, isMobile, mobileBreakpoints, deskto
     canvas.addEventListener('touchend', () => { state.mouse.down = false; state.mouse.inside = false; });
   }
 
-  let resizeT; window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(regenerate, 120); });
+  let resizeT;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(regenerate, 120);
+  });
 
   // Wait for IBM Plex Sans font to load before rendering
   document.fonts.ready.then(() => {
