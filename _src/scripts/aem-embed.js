@@ -31,6 +31,7 @@ export class AEMEmbed extends HTMLElement {
 
     window.hlx = window.hlx || {};
     window.hlx.suppressLoadPage = true;
+    window.hlx.isInAemEmbed = true;
     [window.hlx.codeBasePath] = new URL(import.meta.url).pathname.split('/scripts/');
   }
 

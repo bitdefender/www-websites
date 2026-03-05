@@ -692,7 +692,7 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
-  if (window.location.href.includes('oaiusercontent') || window.location.href.includes('localhost:4545')) {
+  if (window.hlx.isInAemEmbed) {
     return;
   }
 

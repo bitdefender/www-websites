@@ -857,8 +857,8 @@ export const generatePageLoadStartedName = () => {
    * @param {string[]} tags
    * @returns {string[]} get all analytic tags
    */
-  if (window.location.href.includes('oaiusercontent') || window.location.href.includes('localhost:4545')) {
-    return 'ajutor:sunt:intro:fereastra';
+  if (window.hlx.isInAemEmbed) {
+    return 'aem-embed';
   }
   const getTags = (tags) => (tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : []);
   const { pathname } = window.location;
