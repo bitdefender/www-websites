@@ -3,17 +3,11 @@
  * Include content from one Helix page in any other web surface.
  * https://www.hlx.live/developer/block-collection/TBD
  */
-import Launch from '@repobit/dex-launch';
 import {
   PageLoadedEvent,
   AdobeDataLayerService,
 } from '@repobit/dex-data-layer';
-import page from './page.js';
-import { target } from './target.js';
 import { StoreResolver } from './libs/store/index.js';
-import {
-  GLOBAL_EVENTS,
-} from './utils/utils.js';
 import {
   resolveNonProductsDataLayerforWidgets,
 } from './libs/data-layer.js';
