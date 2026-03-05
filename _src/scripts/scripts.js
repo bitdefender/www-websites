@@ -692,7 +692,7 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
-  if (window.hlx.isInAemEmbed) {
+  if (window.location.href.includes('oaiusercontent')) {
     return;
   }
 

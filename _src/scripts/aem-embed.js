@@ -270,4 +270,3 @@ export class AEMEmbed extends HTMLElement {
 
 customElements.define('aem-embed', AEMEmbed);
 window.AdobeDataLayerService = AdobeDataLayerService;
-window.hlx.isInAemEmbed = true;
