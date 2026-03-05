@@ -174,17 +174,6 @@ export class AEMEmbed extends HTMLElement {
   async handleMain(htmlText, body, origin) {
     await this.pseudoDecorateMain(htmlText, body, origin);
 
-    const onAdobeMcLoaded = () => {
-      document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
-      window.ADOBE_MC_EVENT_LOADED = true;
-    };
-
-    try {
-      await Launch.load(page.environment);
-      onAdobeMcLoaded();
-    } catch {
-      target.abort();
-    }
     await StoreResolver.resolve(body);
     const elements = body.querySelectorAll('.await-loader');
     // document.dispatchEvent(new Event('bd_page_ready'));
