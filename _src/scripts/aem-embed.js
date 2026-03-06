@@ -88,12 +88,10 @@ export class AEMEmbed extends HTMLElement {
       const rawSrc = img.getAttribute('src');
       if (!rawSrc) return;
 
-      const newUrl = new URL(rawSrc, origin).href;
+      const baseUrl = this.attributes.getNamedItem('url')?.value;
+      const newUrl = new URL(rawSrc, baseUrl).href;
       img.src = newUrl;
     });
-
-    const urlAttribute = this.attributes.getNamedItem('url');
-    console.log(`Block ${blockName} loaded from ${urlAttribute ? urlAttribute.value : 'unknown source'}`);
   }
 
   async handleHeader(htmlText, body, origin) {
