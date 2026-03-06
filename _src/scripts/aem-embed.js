@@ -83,7 +83,7 @@ export class AEMEmbed extends HTMLElement {
       link.href = newUrl;
     });
 
-    const baseUrl = this.attributes.getNamedItem('url')?.value || origin;
+    const baseUrl = this.attributes.getNamedItem('url')?.value;
     const rewriteUrl = (rawUrl) => {
       const parsed = new URL(rawUrl);
       const mediaFile = parsed.pathname.split('/').pop();
