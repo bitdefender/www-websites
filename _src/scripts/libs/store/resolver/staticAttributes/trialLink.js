@@ -8,7 +8,7 @@ const getLocale = () => {
 };
 
 export const getTrials = async () => {
-  const res = await fetch('https://www.bitdefender.com/pages/triallinks.json');
+  const res = await fetch('https://www.bitdefender.com/common/triallinks.json');
   if (!res.ok) { };
 
   const { data = [] } = await res.json();
