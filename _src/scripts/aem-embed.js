@@ -82,6 +82,15 @@ export class AEMEmbed extends HTMLElement {
       const newUrl = new URL(rawHref, origin).href;
       link.href = newUrl;
     });
+
+    const images = block.querySelectorAll('img');
+    images.forEach((img) => {
+      const rawSrc = img.getAttribute('src');
+      if (!rawSrc) return;
+
+      const newUrl = new URL(rawSrc, origin).href;
+      img.src = newUrl;
+    });
   }
 
   async handleHeader(htmlText, body, origin) {
