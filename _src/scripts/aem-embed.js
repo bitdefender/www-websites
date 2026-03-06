@@ -83,20 +83,17 @@ export class AEMEmbed extends HTMLElement {
       link.href = newUrl;
     });
 
-    const images = block.querySelectorAll('img');
-    images.forEach((img) => {
-      const rawSrc = img.getAttribute('src');
-      if (!rawSrc) return;
+    const baseUrl = this.attributes.getNamedItem('url')?.value;
 
-      const baseUrl = this.attributes.getNamedItem('url')?.value;
-      const newUrl = new URL(rawSrc, baseUrl).href;
-      img.src = newUrl;
+    const rewriteUrl = (rawUrl) => {
+      const parsed = new URL(rawUrl);
+      const mediaFile = parsed.pathname.split('/').pop();
+      return `${baseUrl.replace(/\/$/, '')}/${mediaFile}${parsed.search}`;
+    };
 
-      // const baseUrl = this.attributes.getNamedItem('url')?.value || origin;
-      // const mediaFile = new URL(rawSrc).pathname.split('/').pop();
-      // const { search } = new URL(rawSrc);
-      // const newUrl = `${baseUrl.replace(/\/$/, '')}/${mediaFile}${search}`;
-      // img.src = newUrl;
+    block.querySelectorAll('picture[src], picture[srcset]').forEach((el) => {
+      const attr = el.hasAttribute('srcset') ? 'srcset' : 'src';
+      el.setAttribute(attr, rewriteUrl(el.getAttribute(attr)));
     });
   }
 
