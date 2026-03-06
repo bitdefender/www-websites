@@ -82,6 +82,27 @@ export class AEMEmbed extends HTMLElement {
       const newUrl = new URL(rawHref, origin).href;
       link.href = newUrl;
     });
+
+    const baseUrl = this.attributes.getNamedItem('url')?.value;
+    const rewriteUrl = (rawUrl) => {
+      const parsed = new URL(rawUrl);
+      const mediaFile = parsed.pathname.split('/').pop();
+      return `${baseUrl.replace(/\/$/, '')}/${mediaFile}${parsed.search}`;
+    };
+
+    const images = block.querySelectorAll('img');
+    images.forEach((img) => {
+      const rawSrc = img.getAttribute('src');
+      if (!rawSrc) return;
+      img.src = rewriteUrl(rawSrc);
+    });
+
+    const sources = block.querySelectorAll('picture source');
+    sources.forEach((source) => {
+      const rawSrcset = source.getAttribute('srcset');
+      if (!rawSrcset) return;
+      source.srcset = rewriteUrl(rawSrcset);
+    });
   }
 
   async handleHeader(htmlText, body, origin) {
