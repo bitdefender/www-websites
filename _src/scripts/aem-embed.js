@@ -88,8 +88,10 @@ export class AEMEmbed extends HTMLElement {
       const rawSrc = img.getAttribute('src');
       if (!rawSrc) return;
 
-      const baseUrl = this.attributes.getNamedItem('url')?.value;
-      const newUrl = new URL(rawSrc, baseUrl).href;
+      const baseUrl = this.attributes.getNamedItem('url')?.value || origin;
+      const mediaFile = new URL(rawSrc).pathname.split('/').pop();
+      const { search } = new URL(rawSrc);
+      const newUrl = `${baseUrl.replace(/\/$/, '')}/${mediaFile}${search}`;
       img.src = newUrl;
     });
   }
