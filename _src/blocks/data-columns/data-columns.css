@@ -24,15 +24,15 @@
                 color: #006DFF;
                 margin: 0;
                 font-weight: 500;
+                
+                strong {
+                    font-weight: 700;
+                }
             }
 
             h4 {
                 font-size: 20px;
                 margin-bottom: 0;
-
-                strong {
-                    font-weight: 700;
-                }
             }
 
             strong {
