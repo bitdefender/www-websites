@@ -31,7 +31,7 @@
                         background-color: #F0F7FF;
 
                         h3 {
-                            color: #006DFF;
+                            color: #005DFF;
                             font-size: 20px;
                             margin: 0;
                         }
@@ -69,7 +69,7 @@
                         
                         &.active {
                             width: 20px;
-                            background-color: #006DFF;
+                            background-color: #005DFF;
                             transition: width .3s ease-in-out;
                         }
                     }
@@ -86,7 +86,7 @@
                         width: 40px;
                         height: 40px;
                         border: none;
-                        background-color: #006DFF;
+                        background-color: #005DFF;
                         cursor: pointer;
                         padding: 0;
                         border-radius: 50%;

@@ -170,7 +170,7 @@
           }
           
           .year-tag {
-            background: #006dff;
+            background: #005DFF;
             padding: 0 8px;
             border-radius: 999px;
             font-size: 14px;
@@ -214,8 +214,11 @@
           border: none;
           cursor: pointer;
           padding: 0;
-          background-color: #006dff;
+          background-color: #005DFF;
           border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
           &:hover {
             background-color: #0059D6;
@@ -225,9 +228,10 @@
             background-color: #0045AD;
           }
 
-          &:disabled {
+          &.disabled {
             background-color: #F1F2F3;
             cursor: not-allowed;
+            pointer-events: none;
             opacity: 0.6;
 
             svg {
@@ -239,7 +243,7 @@
 
           &.right {
             svg {
-              margin-top: 5px;
+              margin-top: 2px;
               margin-left: 2px;
               fill: #FFF;
             }
@@ -247,8 +251,8 @@
 
           &.left {
             svg {
-              margin-top: 5px;
-              margin-right: 2px;
+              margin-top: 2px;
+              margin-right: 3px;
               fill: #FFF;
             }
           }

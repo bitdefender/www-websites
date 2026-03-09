@@ -1,6 +1,6 @@
 :root{
-    --dot-color:#006dff;
-    --line-color:#006dff;
+    --dot-color:#005DFF;
+    --line-color:#005DFF;
     --bg:#fff;
     --font:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, segoe ui, roboto, helvetica, arial;
 }
@@ -93,7 +93,7 @@
             p {
                 position: absolute;
                 top: 0;
-                color: #006dff;
+                color: #005DFF;
                 margin: 0;
                 font-size: 18px;
                 font-weight: 500;

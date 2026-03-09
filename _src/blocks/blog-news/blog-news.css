@@ -42,7 +42,7 @@
 
 .blog-news .blog-card a {
     text-decoration: none;
-    color:#006EFF;
+    color:#005DFF;
     font-weight: bold;
 }
 
@@ -103,7 +103,7 @@
             border: none;
             cursor: pointer;
             padding: 0;
-            background-color: #006dff;
+            background-color: #005DFF;
             border-radius: 50%;
 
             &:hover {
