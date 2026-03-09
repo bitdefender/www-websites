@@ -394,6 +394,10 @@
             font-size: var(--body-font-size-m);
             line-height: var(--size-18);
         }
+
+        .menu-with-button li:first-of-type {
+            display: none;
+        }
     }
 
     .hero-aem__prices {
@@ -1000,6 +1004,7 @@
 
     .awards-container {
         margin-bottom: 30px;
+        margin-top: 10px;
 
         .awards-wrapper {
             margin-left: var(--size-24);
@@ -2363,6 +2368,7 @@
         }
 
         .awards-container {
+            margin-top: var(--size-0);
             margin-bottom: 96px;
 
             .block.awards-component {
@@ -2492,7 +2498,7 @@
             padding-bottom: var(--size-0);
 
             .questions-answers-wrapper {
-                padding-top: var(--size-0);
+                padding: var(--size-0) var(--size-20) var(--size-10) var(--size-20);
             }
 
             .default-content-wrapper > h2 {
@@ -2510,6 +2516,10 @@
 
         .system-requirements {
             margin-bottom: 0 !important;
+
+            &.dex-system-requirements, &.terms-of-use {
+                padding-top: var(--size-32);
+            }
 
             &.notes ul {
                 flex-direction: row;
