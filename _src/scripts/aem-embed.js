@@ -3,10 +3,6 @@
  * Include content from one Helix page in any other web surface.
  * https://www.hlx.live/developer/block-collection/TBD
  */
-import {
-  PageLoadedEvent,
-  AdobeDataLayerService,
-} from '@repobit/dex-data-layer';
 import { StoreResolver } from './libs/store/index.js';
 import {
   resolveNonProductsDataLayerforWidgets,
@@ -206,7 +202,6 @@ export class AEMEmbed extends HTMLElement {
 
     body.classList.add('appear');
     await resolveNonProductsDataLayerforWidgets();
-    AdobeDataLayerService.push(new PageLoadedEvent());
   }
 
   /**
@@ -290,4 +285,3 @@ export class AEMEmbed extends HTMLElement {
 }
 
 customElements.define('aem-embed', AEMEmbed);
-window.AdobeDataLayerService = AdobeDataLayerService;
