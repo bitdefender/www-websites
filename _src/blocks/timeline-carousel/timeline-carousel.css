@@ -170,7 +170,7 @@
           }
           
           .year-tag {
-            background: #005DFF;
+            background: #006DFF;
             padding: 0 8px;
             border-radius: 999px;
             font-size: 14px;
@@ -214,7 +214,7 @@
           border: none;
           cursor: pointer;
           padding: 0;
-          background-color: #005DFF;
+          background-color: #006DFF;
           border-radius: 50%;
           display: flex;
           justify-content: center;
