@@ -1,4 +1,4 @@
-import { getMetadata } from '/scripts/lib-franklin.js';
+import { getMetadata } from '../../../../lib-franklin.js';
 
 const trialPeriod = getMetadata('trialbuylinks');
 
