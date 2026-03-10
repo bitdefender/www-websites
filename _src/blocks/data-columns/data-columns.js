@@ -1,6 +1,6 @@
 export default function decorate(block) {
   const section = block.closest('.section');
-  const { backgroundColor } = section.dataset;
+  const { backgroundColor, active } = section.dataset;
 
   if (backgroundColor) {
     section.style.backgroundColor = backgroundColor;
@@ -9,11 +9,66 @@ export default function decorate(block) {
   const contentWrapper = block.querySelector('div:not(:first-child)');
   contentWrapper.classList.add('data-wrapper');
   const columnLeft = block.querySelector('.data-wrapper > div:first-of-type');
-  columnLeft.classList.add('data-column-left');
+  columnLeft?.classList.add('data-column-left');
   const columnRight = block.querySelector('.data-wrapper > div:nth-of-type(2)');
-  columnRight.classList.add('data-column-right');
+  columnRight?.classList.add('data-column-right');
   const articlesWrapper = block.querySelector('div:nth-of-type(3)');
   articlesWrapper?.classList.add('articles-wrapper');
+
+  const nav = block.querySelector('ul');
+  if (nav) {
+    nav?.classList.add('nav-list', 'dropdown-list');
+
+    const activeItem = nav?.querySelector(`li:nth-child(${active})`) || nav?.querySelector('li:first-child');
+    const activeText = activeItem?.textContent.trim() || 'Select';
+
+    // Create dropdown trigger
+    const dropdown = document.createElement('div');
+    dropdown.classList.add('dropdown');
+
+    const trigger = document.createElement('div');
+    trigger.classList.add('dropdown-trigger');
+    trigger.textContent = activeText;
+    dropdown.appendChild(trigger);
+    dropdown.appendChild(nav);
+
+    // Toggle dropdown on click
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      nav?.classList.toggle('open');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      nav?.classList.remove('open');
+    });
+
+    nav.querySelectorAll('li').forEach((li) => {
+      li.classList.add('nav-item');
+      const link = li.querySelector('a');
+
+      li.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Update active state
+        nav.querySelectorAll('li').forEach((item) => item.classList.remove('active'));
+        li.classList.add('active');
+
+        // Update trigger text
+        trigger.textContent = li.textContent.trim();
+
+        // Close dropdown
+        nav.classList.remove('open');
+
+        // Navigate if link exists
+        if (link?.href) window.location.href = link.href;
+      });
+    });
+
+    // Highlight initial active item
+    activeItem?.classList.add('active');
+    columnLeft.appendChild(dropdown);
+  }
 
   articlesWrapper?.querySelectorAll('div')?.forEach((child, idx) => {
     if ((idx + 1) % 2 === 0) {

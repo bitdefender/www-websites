@@ -2,6 +2,8 @@
     --dot-color:#006DFF;
     --line-color:#006DFF;
     --bg:#fff;
+    --reversed-dot-color:#fff;
+    --reverse-bg:#006DFF;
     --font:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, segoe ui, roboto, helvetica, arial;
 }
 
@@ -101,6 +103,10 @@
         }
     }
 
+    &.reverted {
+        background: var(--reverse-bg);
+    }
+
     @media (min-width: 768px) {
         .interactive-banner-wrapper { 
             .interactive-banner {
@@ -144,6 +150,24 @@
 
                 p {
                     top: 104px;
+                }
+
+                &.svg-mode {
+                    aspect-ratio: 3/1;
+                    
+                    canvas {
+                        bottom: -64px;
+                    }
+                }
+            }
+        }
+
+        &.reverted {
+            .interactive-banner-wrapper {
+                .interactive-banner {
+                    canvas {
+                        left: 0;
+                    }
                 }
             }
         }
