@@ -1,0 +1,22 @@
+{
+    "name": "Bitdefender Consumer Tools",
+    "short_name": "BD Tools",
+    "description": "Bitdefender online tools for link safety checks and strong password generation.",
+    "start_url": "/en-us/consumer/link-checker",
+    "scope": "/en-us/consumer/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ED1C24",
+    "icons": [
+        {
+            "src": "https://www.bitdefender.com/content/dam/bitdefender/favicon/android-icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://www.bitdefender.com/content/dam/bitdefender/favicon/apple-icon-180x180.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ]
+}

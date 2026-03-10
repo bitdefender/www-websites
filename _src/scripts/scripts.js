@@ -42,6 +42,11 @@ const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker'
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
+const PWA_ENABLED_PATHS = [
+  '/en-us/consumer/link-checker',
+  '/en-us/consumer/password-generator',
+];
+
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
   url: '../plugins/rum-conversion/src/index.js',
@@ -691,10 +696,33 @@ function setBFCacheListener() {
   });
 }
 
+function isPWAEnabledPage(pathname) {
+  const normalizedPath = pathname.replace(/\/$/, '');
+  return PWA_ENABLED_PATHS.includes(normalizedPath);
+}
+
+async function registerPWA() {
+  console.log('Registering service worker for PWA support');
+  if (!('serviceWorker' in navigator) || !isPWAEnabledPage(window.location.pathname)) {
+    return;
+  }
+
+  try {
+    // Keep the initial rollout limited to the consumer tools section.
+    await navigator.serviceWorker.register('/sw.js', { scope: '/en-us/consumer/' });
+    console.log('Service worker registered successfully');
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('PWA service worker registration failed:', error);
+  }
+}
+
 async function loadPage() {
   if (window.location.href.includes('oaiusercontent')) {
     return;
   }
+
+  registerPWA();
 
   setBFCacheListener();
   initialiseSentry();
