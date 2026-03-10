@@ -858,7 +858,7 @@ export const generatePageLoadStartedName = () => {
    * @returns {string[]} get all analytic tags
    */
   if (window.location.href.includes('oaiusercontent')) {
-    return 'ajutor:sunt:intro:fereastra';
+    return 'oai';
   }
   const getTags = (tags) => (tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : []);
   const { pathname } = window.location;
