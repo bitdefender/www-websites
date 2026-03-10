@@ -2,7 +2,7 @@
     "name": "Bitdefender Consumer Tools",
     "short_name": "BD Tools",
     "description": "Bitdefender online tools for link safety checks and strong password generation.",
-    "start_url": "/en-us/consumer/link-checker",
+    "start_url": "/en-us/consumer/free-tools",
     "scope": "/en-us/consumer/",
     "display": "standalone",
     "background_color": "#ffffff",
