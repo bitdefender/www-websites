@@ -39,6 +39,12 @@
                 font-weight: 600;
             }
 
+            .icon {
+                height: 24px;
+                width: 24px;
+                margin-right: 6px;
+            }
+
             .data-wrapper {
                 display: flex;
                 flex-direction: column;
@@ -138,6 +144,7 @@
                         .icon {
                             margin-top: 24px;
                             margin-bottom: 0;
+                            margin-right: 0;
                             height: 58px;
                             width: 58px;
                         }

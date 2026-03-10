@@ -452,6 +452,7 @@ export default function decorate(block) {
 
   if (block.closest('.section').classList.contains('responsible-ai')) {
     matchHeights(block, 'p');
+    matchHeights(block, '.columns.no-background > div > div');
   }
 
   if (block.closest('.section').classList.contains('online-safe-animated')) {

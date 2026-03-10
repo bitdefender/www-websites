@@ -3345,6 +3345,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
         > div {
           gap: 32px;
+          position: relative;
 
           > div {
             padding: 32px;
@@ -3359,6 +3360,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             margin-bottom: 0;
           }
         }
+
+        &.no-background {
+          > div >  div {
+            justify-content: flex-start;
+          }
       }
     }
   }
