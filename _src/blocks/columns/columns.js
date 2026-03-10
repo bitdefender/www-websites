@@ -451,7 +451,7 @@ export default function decorate(block) {
   }
 
   if (block.closest('.section').classList.contains('responsible-ai')) {
-    matchHeights(block, 'p');
+    matchHeights(block, 'p:first-of-type');
     matchHeights(block, '.columns.no-background > div > div');
   }
 

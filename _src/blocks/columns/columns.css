@@ -3306,6 +3306,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             strong {
               font-weight: 600;
             }
+
+            .icon {
+              width: 24px;
+              height: 24px;
+              margin-right: 8px;
+            }
           }
         }
       }
@@ -3365,6 +3371,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
           > div >  div {
             justify-content: flex-start;
           }
+        }
       }
     }
   }
