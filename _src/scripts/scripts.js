@@ -490,6 +490,15 @@ function openExternalLinksInNewTab(doc) {
   });
 }
 
+function isPWAEnabledPage(pathname) {
+  const normalizedPath = pathname.replace(/\/$/, '');
+  return PWA_ENABLED_PATHS.includes(normalizedPath);
+}
+
+function isStandalonePWA() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+}
+
 /**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
@@ -537,12 +546,18 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
-  doc.querySelector('header').style.height = '0px';
+  const shouldHideHeaderForPWA = isStandalonePWA() && isPWAEnabledPage(window.location.pathname);
+  const header = doc.querySelector('header');
 
-  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+  header.style.height = '0px';
+  if (shouldHideHeaderForPWA) {
+    header.style.display = 'none';
+  }
+
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder && !shouldHideHeaderForPWA) {
     // eslint-disable-next-line no-unused-vars
-    doc.querySelector('header').style.height = 'initial';
-    loadHeader(doc.querySelector('header'));
+    header.style.height = 'initial';
+    loadHeader(header);
   }
 
   // only call load Trackers here if there is no experiment on the page
@@ -696,13 +711,7 @@ function setBFCacheListener() {
   });
 }
 
-function isPWAEnabledPage(pathname) {
-  const normalizedPath = pathname.replace(/\/$/, '');
-  return PWA_ENABLED_PATHS.includes(normalizedPath);
-}
-
 async function registerPWA() {
-  console.log('Registering service worker for PWA support');
   if (!('serviceWorker' in navigator) || !isPWAEnabledPage(window.location.pathname)) {
     return;
   }
@@ -710,7 +719,6 @@ async function registerPWA() {
   try {
     // Keep the initial rollout limited to the consumer tools section.
     await navigator.serviceWorker.register('/sw.js', { scope: '/en-us/consumer/' });
-    console.log('Service worker registered successfully');
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('PWA service worker registration failed:', error);
