@@ -1,3 +1,5 @@
+import { decorateIcons } from '../../scripts/lib-franklin.js';
+
 function getVideoElement(source, autoplay) {
   const video = document.createElement('video');
   video.classList.add('bck-video');
@@ -145,4 +147,6 @@ export default async function decorate(block) {
   if (signature) {
     if (window.innerWidth > 992) signature.innerHTML = signature.innerHTML.replace('.', '.<br>');
   }
+
+  decorateIcons(block);
 }

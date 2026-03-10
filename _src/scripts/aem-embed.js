@@ -3,17 +3,7 @@
  * Include content from one Helix page in any other web surface.
  * https://www.hlx.live/developer/block-collection/TBD
  */
-import Launch from '@repobit/dex-launch';
-import {
-  PageLoadedEvent,
-  AdobeDataLayerService,
-} from '@repobit/dex-data-layer';
-import page from './page.js';
-import { target } from './target.js';
 import { StoreResolver } from './libs/store/index.js';
-import {
-  GLOBAL_EVENTS,
-} from './utils/utils.js';
 import {
   resolveNonProductsDataLayerforWidgets,
 } from './libs/data-layer.js';
@@ -87,6 +77,27 @@ export class AEMEmbed extends HTMLElement {
 
       const newUrl = new URL(rawHref, origin).href;
       link.href = newUrl;
+    });
+
+    const baseUrl = this.attributes.getNamedItem('url')?.value;
+    const rewriteUrl = (rawUrl) => {
+      const parsed = new URL(rawUrl);
+      const mediaFile = parsed.pathname.split('/').pop();
+      return `${baseUrl.replace(/\/$/, '')}/${mediaFile}${parsed.search}`;
+    };
+
+    const images = block.querySelectorAll('img');
+    images.forEach((img) => {
+      const rawSrc = img.getAttribute('src');
+      if (!rawSrc) return;
+      img.src = rewriteUrl(rawSrc);
+    });
+
+    const sources = block.querySelectorAll('picture source');
+    sources.forEach((source) => {
+      const rawSrcset = source.getAttribute('srcset');
+      if (!rawSrcset) return;
+      source.srcset = rewriteUrl(rawSrcset);
     });
   }
 
@@ -174,17 +185,6 @@ export class AEMEmbed extends HTMLElement {
   async handleMain(htmlText, body, origin) {
     await this.pseudoDecorateMain(htmlText, body, origin);
 
-    const onAdobeMcLoaded = () => {
-      document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
-      window.ADOBE_MC_EVENT_LOADED = true;
-    };
-
-    try {
-      await Launch.load(page.environment);
-      onAdobeMcLoaded();
-    } catch {
-      target.abort();
-    }
     await StoreResolver.resolve(body);
     const elements = body.querySelectorAll('.await-loader');
     // document.dispatchEvent(new Event('bd_page_ready'));
@@ -202,7 +202,6 @@ export class AEMEmbed extends HTMLElement {
 
     body.classList.add('appear');
     await resolveNonProductsDataLayerforWidgets();
-    AdobeDataLayerService.push(new PageLoadedEvent());
   }
 
   /**
@@ -286,4 +285,3 @@ export class AEMEmbed extends HTMLElement {
 }
 
 customElements.define('aem-embed', AEMEmbed);
-window.AdobeDataLayerService = AdobeDataLayerService;

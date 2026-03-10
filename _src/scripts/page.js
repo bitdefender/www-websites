@@ -4,7 +4,7 @@ import { Page } from '@repobit/dex-utils';
  * @returns {`${string}-${string}`} page locale
  */
 const getPageLocale = () => {
-  const regex = /\/([a-z]{2}-[a-z]{2})\//i; // match locale with slashes
+  const regex = /\/([a-z]{2}-(?:[a-z]{2}|global))\//i; // match locale with slashes
   // extract locale without slashes
   const match = window.location.pathname.match(regex);
   const defaultLocale = 'en-us';

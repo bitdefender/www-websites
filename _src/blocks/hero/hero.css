@@ -226,13 +226,13 @@ main .hero .hero-content {
 }
 
 main .hero-container.custom-buttons .hero .hero-content table tr {
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
   align-items: baseline;
   justify-content: center;
   gap: 16px;
   font-family: Arial, sans-serif;
   padding-top: 30px;
-  flex-wrap: nowrap;
 }
 
 main .hero-container.custom-buttons .hero .hero-content table tr p {
@@ -245,7 +245,7 @@ main .hero-container.custom-buttons .hero .hero-content table tr p {
 
 main .hero-container.custom-buttons .hero .hero-content table a {
   width: 100%;
-  min-width: 248px !important;
+  justify-content: center;
   padding: 12px;
   font-size: var(--hero-font-size-xs);
   font-weight: 500;
@@ -281,6 +281,7 @@ main .hero-container.custom-buttons .hero .hero-content table tr td:last-of-type
 main .hero-container.custom-buttons .hero .hero-content table a span {
   font-size: var(--hero-font-size-xs);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 main .hero-container.custom-buttons .hero .hero-content table a::after {
@@ -1211,8 +1212,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   }
 
   main .hero-container.custom-buttons .hero .hero-content>div table tr {
-    width: 315px;
-    flex-direction: column;
+    grid-auto-flow: row;
     justify-content: center;
     align-items: center;
     margin: 0;
@@ -1226,6 +1226,10 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
   main .hero-container.custom-buttons .hero .hero-content>div table tr a.button {
     display: block;
+  }
+  
+  main .hero-container.custom-buttons .hero .hero-content table a span {
+    white-space: normal;
   }
 
   main .v2 .hero h1 {

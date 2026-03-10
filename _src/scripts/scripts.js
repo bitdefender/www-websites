@@ -406,7 +406,8 @@ const initializeHubspotModule = () => {
     const popupContainer = hubspotContainer.querySelector('.download-popup__container');
 
     document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
-      trigger.addEventListener('click', () => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
         popupContainer.style.display = 'block';
         const newPageLoadStartedEvent = new WindowLoadStartedEvent();
         newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
@@ -470,6 +471,21 @@ export async function loadTrackers() {
 }
 
 /**
+ * set target_blank for pdf links when metadata is set: pdfs: new-tab
+ * @param {Element} doc The container element
+ */
+function openExternalLinksInNewTab(doc) {
+  const links = doc.querySelectorAll('a');
+
+  links.forEach((link) => {
+    if (link.href.toLowerCase().includes('.pdf')) {
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    }
+  });
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -496,6 +512,9 @@ async function loadEager(doc) {
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
+
+    if (getMetadata('pdfs') && getMetadata('pdfs') === 'new-tab') openExternalLinksInNewTab(doc);
+
     document.body.classList.add('appear', 'franklin');
     if (window.location.href.indexOf('scuderiaferrari') !== -1) {
       document.body.classList.add('sferrari');

@@ -1,6 +1,7 @@
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 async function renderBlogGrid(block, endpoint, articlesNumber) {
+  const { buttonText } = block.closest('.section').dataset;
   const blogGrid = block.querySelector('.blog-grid');
   try {
     const response = await fetch(endpoint);
@@ -28,7 +29,7 @@ async function renderBlogGrid(block, endpoint, articlesNumber) {
           <img src="${image}" alt="${title}">
           <div class="blog-card-content">
               <p>${title}</p>
-              <a href="${link}">Find out more</a>
+              <a href="${link}">${buttonText ?? 'Find out more'}</a>
           </div>
       `;
 

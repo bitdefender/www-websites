@@ -174,7 +174,7 @@ async function runAemFooterLogic() {
   });
 
   // a list of all the components to be received from aem components
-  const aemComponents = ['footer'];
+  const aemComponents = ['footer2025'];
 
   // add logic so that every time an AEM function is fully loaded
   // it is directly run using the shadow dom as parameter
@@ -200,6 +200,7 @@ async function runAemFooterLogic() {
 
   shadowRoot.appendChild(contentDiv);
   document.querySelector('footer').replaceWith(footer);
+  adobeMcAppendVisitorId(contentDiv);
 }
 
 /**

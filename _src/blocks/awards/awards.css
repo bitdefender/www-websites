@@ -103,7 +103,7 @@
 .awards-component > div:nth-child(3) div img {
   height: 100px;
   max-width: 100%;
-  min-width: 40px;
+  min-width: 30px;
   width: auto;
   object-fit: contain;
 }
@@ -401,6 +401,11 @@
 
   .awards-extended .awards-component h3{
     max-width: 760px;
+  }
+
+  .awards-extended .awards-component h3:nth-of-type(1) {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .awards-container.we-container {

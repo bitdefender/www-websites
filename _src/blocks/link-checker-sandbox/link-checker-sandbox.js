@@ -1,10 +1,4 @@
 import {
-  WindowLoadStartedEvent,
-  WindowLoadedEvent,
-  UserDetectedEvent,
-  AdobeDataLayerService,
-} from '@repobit/dex-data-layer';
-import {
   BotPrevention,
 } from '../../scripts/utils/bot-prevention.js';
 import page from '../../scripts/page.js';
@@ -233,13 +227,6 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
 
   changeTexts(block, message, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
-
-  AdobeDataLayerService.push(new WindowLoadStartedEvent((pageLoadStartedInfo) => {
-    pageLoadStartedInfo.name += `:${message.status}`;
-    return pageLoadStartedInfo;
-  }));
-  AdobeDataLayerService.push(new UserDetectedEvent());
-  AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
 async function resetChecker(block, titleText = '') {
@@ -263,10 +250,6 @@ async function resetChecker(block, titleText = '') {
   if (h1) {
     h1.textContent = titleText;
   }
-
-  AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
-  AdobeDataLayerService.push(new UserDetectedEvent());
-  AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
 function createStatusMessages(block) {

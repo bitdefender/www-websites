@@ -77,27 +77,17 @@ function changeTexts(block, result, statusTitles) {
 }
 
 function getResultPagePath(status, mappedStatus) {
-  // Only redirect for en-us locale and link-checker pages
-  // TODO: remove this when ai-checker component is in=mplemnented
-  if (!window.location.pathname.includes('link-checker')) {
-    return null;
-  }
-
-  if (page.locale !== 'en-us') {
-    return null;
-  }
-
   if (status === 1 || mappedStatus.includes('safe')) {
-    return '/en-us/consumer/link-checker/safe';
+    return `/${page.locale}/consumer/link-checker/safe`;
   }
 
   if (status === 2 || status === 3
       || mappedStatus.includes('so_far_so_good_1')
       || mappedStatus.includes('so_far_so_good_2')) {
-    return '/en-us/consumer/link-checker/sofarsogood';
+    return `/${page.locale}/consumer/link-checker/sofarsogood`;
   }
 
-  return '/en-us/consumer/link-checker/malicious';
+  return `/${page.locale}/consumer/link-checker/malicious`;
 }
 
 function displayStoredResult(block, statusMessages, statusTitles) {
@@ -174,68 +164,44 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
 
   input.closest('.input-container').classList.add('loader-circle');
   let response;
-  if (window.location.pathname.includes('link-checker')) {
+  response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
+    },
+    body: JSON.stringify({ url: inputUrl }),
+  });
+
+  if (response.status === 401) {
+    const challengeData = await response.json();
+    const solvedChallenge = await BotPrevention.solveChallange(challengeData);
     response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
       },
-      body: JSON.stringify({ url: inputUrl }),
+      // eslint-disable-next-line max-len
+      body: JSON.stringify({ url: inputUrl, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
     });
+  }
 
-    if (response.status === 401) {
-      const challengeData = await response.json();
-      const solvedChallenge = await BotPrevention.solveChallange(challengeData);
-      response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
-        },
-        // eslint-disable-next-line max-len
-        body: JSON.stringify({ url: inputUrl, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
-      });
-    }
-
-    if (!response.ok) {
-      result.innerHTML = `
+  if (!response.ok) {
+    result.innerHTML = `
       <strong>Something went wrong</strong><br>
       The system encountered an error while trying to check the link you provided. Please try again in a few minutes.`;
-      result.className = 'result danger no-response';
-      input.closest('.input-container').classList.remove('loader-circle');
-      return;
-    }
-  } else {
-    response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        action: 'scan_url',
-        url: inputUrl,
-      }),
-    });
-
-    if (!response.ok) {
-      result.textContent = 'Please enter a valid skill URL';
-      result.className = 'result danger';
-      input.closest('.input-container').classList.remove('loader-circle');
-      return;
-    }
+    result.className = 'result danger no-response';
+    input.closest('.input-container').classList.remove('loader-circle');
+    return;
   }
 
   const data = await response.json();
-  let status;
-  if (window.location.pathname.includes('link-checker')) {
-    status = data.status;
-  } else {
-    status = data.risk_level === 'CLEAN' ? 1 : 18;
-  }
+  const { status } = data;
+
   const message = StatusMessageFactory.createMessage(status, inputUrl, statusMessages);
 
-  // Redirect to a result page (only for en-us)
+  // Redirect to a result page for all locales
   const resultPagePath = getResultPagePath(status, message.status);
 
   if (resultPagePath) {
@@ -249,19 +215,17 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
       timestamp: Date.now(),
     }));
 
+    const testParam = window.location.href.includes('dotest=1');
+    const resultUrl = new URL(resultPagePath, window.location.origin);
+    if (testParam) resultUrl.searchParams.set('dotest', '1');
     // Redirect to the appropriate result page
-    window.location.href = resultPagePath;
+    window.location.href = resultUrl.href;
     return;
   }
 
   // Original behavior for other locales
 
   result.innerHTML = message.text;
-  if (!window.location.pathname.includes('link-checker') && data.risk_level !== 'CLEAN') {
-    result.innerHTML = `${data.findings.map((finding) => `<code>${finding.content ?? ''}</code><br>
-      <strong>Description: ${finding.description ?? ''}</strong><hr>`).join('')} 
-      ${message.text}`;
-  }
 
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
@@ -393,8 +357,8 @@ function createButtonsContainer(block) {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const currentPath = window.location.pathname;
-          if (currentPath.includes('/link-checker/') && page.locale === 'en-us') {
-            window.location.href = '/en-us/consumer/link-checker';
+          if (currentPath.includes('/link-checker/')) {
+            window.location.href = `/${page.locale}/consumer/link-checker`;
           } else {
             resetChecker(block, titleText);
           }
@@ -478,14 +442,14 @@ export default function decorate(block) {
                     || currentPath.includes('/link-checker/sofarsogood')
                     || currentPath.includes('/link-checker/malicious');
 
-  if (isResultPage && page.locale === 'en-us') {
+  if (isResultPage) {
     // Check if this page load was from a reload using the Navigation API
     const isPageReload = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 
     if (isPageReload) {
       // Clear any stored data and redirect to main page
       sessionStorage.removeItem('linkCheckerResult');
-      window.location.replace('/en-us/consumer/link-checker');
+      window.location.replace(`/${page.locale}/consumer/link-checker`);
       return;
     }
 
@@ -494,7 +458,7 @@ export default function decorate(block) {
 
     if (!hasValidResult) {
       // No valid result data means direct URL access - redirect to main page
-      window.location.replace('/en-us/consumer/link-checker');
+      window.location.replace(`/${page.locale}/consumer/link-checker`);
       return;
     }
 
