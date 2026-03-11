@@ -314,6 +314,7 @@
                     }
 
                     p:has(u) {
+                        margin-top: 12px;
                         margin-bottom: 40px;
 
                         u {
@@ -506,16 +507,17 @@
                             padding-top: 12px;
 
                             * {
-                                max-width: 60%;
+                                max-width: 554px;
                             }
 
                             h3 {
+                                max-width: 100%;
                                 margin-bottom: 8px;
                             }
 
                             p:has(u) {
                                 max-width: 100%;
-                                margin-bottom: 40px;
+                                margin-top: 16px;
 
                                 u {
                                     font-size: 18px;

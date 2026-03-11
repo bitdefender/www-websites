@@ -2,7 +2,7 @@
     overflow: hidden;
 
     * {
-      font-family: 'IBM Plex Sans', sans-serif;
+        font-family: 'IBM Plex Sans', sans-serif;
     }
 
     .cards-carousel-wrapper {
@@ -41,10 +41,52 @@
                             margin: 0;
                         }
 
+                        .button-container {
+                            display: flex;
+                            justify-content: end;
+                            margin: 0;
+
+                            a {
+                                background: transparent;
+                                border: none;
+                                position: relative;
+                                right: 0;
+                                padding: 0;
+
+                                &::after {
+                                    content: '';
+                                    min-width: 40px;
+                                    min-height: 40px;
+                                    mask: url("/_src/icons/arrow-right.svg") no-repeat;
+                                    background-color: #006DFF;
+                                    display: inline-block;
+                                    transition: all .3s cubic-bezier(.4, 0, .2, 1);
+                                    transform: translateX(4px);
+                                    opacity: 1;
+                                    margin-left: -10px;
+                                    margin-right: 8px;
+                                    overflow: visible;
+                                }
+
+                                .button-text {
+                                    display: none;
+                                }
+                            }
+                        }
+
                         .icon {
                             height: 32px;
                             width: 32px;
                             margin: 0;
+                        }
+
+                        &:has(.button-container) {
+                            padding-bottom: 12px;
+                        }
+
+                        &:hover .button-container a::after {
+                            transform: translateX(12px);
+                            opacity: 1;
                         }
                     }
                 }

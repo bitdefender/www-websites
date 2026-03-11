@@ -27,11 +27,15 @@ function renderMobileDropDown() {
 }
 
 // Builds a menu item from an existing link (<p><a/></p>)
-function renderMenuItemFromLink(linkEl) {
+function renderMenuItemFromLink(linkEl, active) {
   const navMenuItem = document.createElement('li');
   linkEl.classList.remove('button'); // in case the link has button styles, remove them for the menu
 
   navMenuItem.appendChild(linkEl);
+
+  if (navMenuItem.innerText.trim() === active) {
+    navMenuItem.classList.add('perma-active');
+  }
 
   return navMenuItem;
 }
@@ -81,6 +85,8 @@ function renderStickyNavMenuItem(section) {
 }
 
 function renderStickyNavMenu(block) {
+  const { active } = block.closest('.section').dataset;
+
   const stickyNavMenu = document.createElement('ul');
 
   const menuDefinitions = Array.from(block.querySelectorAll('p'));
@@ -100,7 +106,7 @@ function renderStickyNavMenu(block) {
 
         // p contains a link -> use it directly
         if (link) {
-          return renderMenuItemFromLink(link);
+          return renderMenuItemFromLink(link, active);
         }
 
         // p does not contain a link -> map to next section

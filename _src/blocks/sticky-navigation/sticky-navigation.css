@@ -74,6 +74,10 @@ main .section.sticky-navigation-container {
   width: 100%;
 }
 
+.sticky-navigation ul li.perma-active::after {
+  width: 100%;
+}
+
 .sticky-navigation ul li::after {
   content: "";
   display: block;
