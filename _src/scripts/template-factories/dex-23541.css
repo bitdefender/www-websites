@@ -1666,6 +1666,10 @@
     .dex-23541 {
         --section-desktop-max-width: 1330px;
 
+        .dex-see-all-see-less {
+            display: none;
+        }
+
         .section .default-content-wrapper h2 {
             margin: auto;
             text-align: center;
