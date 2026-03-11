@@ -221,10 +221,9 @@
                             cursor: pointer;
                             font-size: 16px;
                             font-weight: 500;
-                            color: #006DFF;
+                            color: #000;
+                            border-bottom: 1px solid #dedede;
                             transition: all 0.2s ease;
-                            padding-left: 16px;
-                            border-left: 2px solid #006DFF;
 
                             &::after {
                                 transform: rotate(45deg);
@@ -291,8 +290,6 @@
                                 &.active {
                                     color: #006DFF;
                                     border-bottom: 4px solid #006DFF;
-                                    padding-left: 0;
-                                    margin: 0 16px;
                                     font-weight: 600;
                                 }
 
