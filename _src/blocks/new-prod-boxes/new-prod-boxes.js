@@ -598,12 +598,10 @@ async function setupAddOnCheckbox(
   const addOnProductElement = boxElement.querySelector('.add-on-product');
   if (!addOnProductElement) return;
 
-  const benefitsList = boxElement.querySelector('.benefitsLists');
-
-  benefitsList.setAttribute('data-store-context', '');
-  benefitsList.setAttribute('data-store-id', addOnProdName);
-  benefitsList.setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-  benefitsList.setAttribute('data-store-department', STORE_DEPARTMENT);
+  addOnProductElement.setAttribute('data-store-context', '');
+  addOnProductElement.setAttribute('data-store-id', addOnProdName);
+  addOnProductElement.setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
+  addOnProductElement.setAttribute('data-store-department', STORE_DEPARTMENT);
 
   try {
     const productObject = await Store.getProducts([
@@ -632,13 +630,11 @@ async function setupAddOnCheckbox(
 
     const addOnNewPrice = newLi.querySelector('.add-on-newprice');
     if (addOnNewPrice) {
-      addOnNewPrice.setAttribute('data-store-price', 'discounted||full');
       addOnNewPrice.textContent = formattedAddOnCost;
     }
 
     const addOnOldPrice = newLi.querySelector('.add-on-oldprice');
     if (addOnOldPrice) {
-      addOnOldPrice.setAttribute('data-store-price', 'full');
       addOnOldPrice.textContent = formatPrice(addOnOption.getPrice('value'), addOnProduct.getCurrency());
     }
 
