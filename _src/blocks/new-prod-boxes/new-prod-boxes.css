@@ -87,7 +87,7 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
-  height: 30px;
+  min-height: 30px;
   max-width: 350px;
   width: 86%;
   font-family: Arial, sans-serif;
@@ -98,7 +98,7 @@
   border-top-right-radius: 10px;
   padding-top: 7px;
   position: absolute;
-  top: -39px;
+  bottom: 100%;
   left: 7%;
   box-sizing: content-box;
 }
@@ -716,7 +716,7 @@
   display: inline-flex;
   align-items: center;
   width: 302px;
-  height: 44px;
+  min-height: 44px;
   background-color: #016DFF;
   border-radius: 22px;
 }
@@ -728,7 +728,7 @@
 .switchBox .slider {
   position: absolute;
   content: "";
-  height: 40px;
+  min-height: calc(100% - 4px);
   width: 150px;
   left: 2px;
   bottom: 2px;
@@ -751,6 +751,7 @@
   color: white;
   transition: color 0.4s;
   cursor: pointer;
+  min-height: 100%;
 }
 
 .switchBox .label.right {
@@ -806,6 +807,16 @@
 
 .hero-aem__prices {
   margin-top: 20px;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 5;
+  width: fit-content;
+}
+
+.hero-aem__prices > div, .hero-aem__prices > div > div {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 5;
 }
 
 .demo-box .hero-aem__prices * {
@@ -896,6 +907,7 @@
     padding-bottom: 60px;
     align-items: initial;
     margin: 0 auto;
+    margin-top: var(--tag-margin);
     display: grid;
     gap: 0;
     grid-template-columns: repeat(auto-fit, minmax(300px, max-content));

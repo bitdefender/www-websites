@@ -60,7 +60,7 @@ function createPriceElement(options) {
   oldPriceContainer.className = 'oldprice-container';
   oldPriceContainer.innerHTML = `
     <span class="prod-oldprice" data-store-price="${oldPriceAttr}" data-store-hide="no-price=discounted"></span>
-    <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span></span>
+    <span class="prod-save" data-store-hide="no-price=discounted">${saveText ?? ''} <span data-store-discount="percentage"></span></span>
   `;
 
   // New price container
@@ -202,12 +202,15 @@ function processFeatureContent(content, tdElement) {
 
     processedContent = processedContent.replace(pillMatch[0], pillElement.outerHTML);
 
-    // Remove duplicate icon if present
     if (icon) {
-      let iconCount = 0;
-      processedContent = processedContent.replace(new RegExp(icon.outerHTML, 'g'), (match) => {
-        iconCount += 1;
-        return iconCount === 2 ? '' : match;
+      let first = true;
+
+      processedContent = processedContent.replaceAll(icon.outerHTML, () => {
+        if (first) {
+          first = false;
+          return icon.outerHTML;
+        }
+        return '';
       });
     }
   }
@@ -595,10 +598,12 @@ async function setupAddOnCheckbox(
   const addOnProductElement = boxElement.querySelector('.add-on-product');
   if (!addOnProductElement) return;
 
-  addOnProductElement.setAttribute('data-store-context', '');
-  addOnProductElement.setAttribute('data-store-id', addOnProdName);
-  addOnProductElement.setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-  addOnProductElement.setAttribute('data-store-department', STORE_DEPARTMENT);
+  const benefitsList = boxElement.querySelector('.benefitsLists');
+
+  benefitsList.setAttribute('data-store-context', '');
+  benefitsList.setAttribute('data-store-id', addOnProdName);
+  benefitsList.setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
+  benefitsList.setAttribute('data-store-department', STORE_DEPARTMENT);
 
   try {
     const productObject = await Store.getProducts([
@@ -617,13 +622,23 @@ async function setupAddOnCheckbox(
     const addOnCost = addOnOption.getDiscountedPrice('value') - productOption.getDiscountedPrice('value');
     const formattedAddOnCost = formatPrice(addOnCost, product.getCurrency());
 
+    const [addOnPart, discountPart] = newLi.innerHTML.split('(');
+    // split the content for add-ons that don't have a dicounted price
+    newLi.innerHTML = `
+    ${addOnPart}
+    <span class ="discount-info" data-store-hide="no-price=discounted"> 
+      ${discountPart ? `( ${discountPart}` : ''}
+    </span>`;
+
     const addOnNewPrice = newLi.querySelector('.add-on-newprice');
     if (addOnNewPrice) {
+      addOnNewPrice.setAttribute('data-store-price', 'discounted||full');
       addOnNewPrice.textContent = formattedAddOnCost;
     }
 
     const addOnOldPrice = newLi.querySelector('.add-on-oldprice');
     if (addOnOldPrice) {
+      addOnOldPrice.setAttribute('data-store-price', 'full');
       addOnOldPrice.textContent = formatPrice(addOnOption.getPrice('value'), addOnProduct.getCurrency());
     }
 
@@ -923,6 +938,7 @@ export default async function decorate(block) {
         if (checkmark) {
           const checkmarkList = checkmark.closest('ul');
           checkmarkList?.classList.add('checkmark-list');
+          checkmarkList?.setAttribute('data-store-context', '');
 
           const li = checkmark.closest('li');
           if (li) {
@@ -1008,4 +1024,15 @@ export default async function decorate(block) {
   if (switchCheckbox) {
     switchCheckbox.dispatchEvent(new Event('change'));
   }
+
+  const resizeObserver = new ResizeObserver(() => {
+    let tagMargin = 0;
+    block.querySelectorAll('.greenTag2').forEach((tag) => {
+      tagMargin = Math.max(tagMargin, tag.offsetHeight);
+    });
+
+    section.style.setProperty('--tag-margin', `${tagMargin}px`);
+  });
+
+  resizeObserver.observe(section);
 }
