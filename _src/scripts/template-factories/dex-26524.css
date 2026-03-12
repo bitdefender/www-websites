@@ -390,14 +390,8 @@
     }
 
     .section.sticky-navigation-container {
+        display: none;
         margin-top: var(--size-32);
-
-        .mobile-dropdown {
-            border-top: var(--size-1) solid var(--border-color);
-            padding: 22.2px var(--size-24);
-            font-size: var(--body-font-size-m);
-            line-height: var(--size-18);
-        }
 
         .menu-with-button li:first-of-type {
             display: none;
@@ -1982,6 +1976,7 @@
         }
 
         .section.sticky-navigation-container {
+            display: block;
             margin-top: var(--size-0);
             margin-bottom: var(--size-0);
             padding-bottom: var(--size-64) !important;
