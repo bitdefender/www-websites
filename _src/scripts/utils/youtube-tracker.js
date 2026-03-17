@@ -169,8 +169,10 @@ export default class YouTubeTracker {
       setTimeout(() => {
         const iframe = this.block.querySelector(`iframe[id="${this.iframeId}"]`);
         if (!iframe || !iframe.id) return;
+        const videoId = iframe.src.split('/embed/')[1].split('?')[0];
 
         const player = new window.YT.Player(iframe.id, {
+          videoId,
           events: {
             onStateChange: (event) => this.onPlayerStateChange(event, player),
           },
