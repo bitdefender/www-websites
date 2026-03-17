@@ -144,8 +144,10 @@ export default class YouTubeTracker {
   }
 
   onPlayerStateChange(event, player) {
-    const currentTime = player.getCurrentTime ? player.getCurrentTime() : 0;
-    const duration = player.getDuration ? player.getDuration() : this.trackingState.duration;
+    const currentTime = player.getCurrentTime ? player.getCurrentTime()
+    || player : player.playerInfo?.currentTime ?? 0;
+    const duration = player.getDuration ? player.getDuration()
+      : player.playerInfo?.duration ?? this.trackingState.duration;
 
     // Playing
     if (event.data === window.YT.PlayerState.PLAYING) {
