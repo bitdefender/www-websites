@@ -41,7 +41,7 @@ import {
   registerPWA,
   isStandalonePWA,
   isPWAEnabledPage,
-} from './utils/pwa.js';
+} from './utils/pwa/pwa.js';
 import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
@@ -543,7 +543,10 @@ async function loadLazy(doc) {
 
   header.style.height = '0px';
   if (shouldHideHeaderForPWA) {
-    header.style.display = 'none';
+    header.style.display = 'block';
+    header.style.height = 'initial';
+    const { default: mountPWAHeader } = await import('./utils/pwa/pwa-header.js');
+    mountPWAHeader(header);
   }
 
   if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder && !shouldHideHeaderForPWA) {

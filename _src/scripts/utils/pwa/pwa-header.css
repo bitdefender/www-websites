@@ -1,0 +1,146 @@
+:root, :host {
+  --pwa-nav-z-index: 110;
+  --pwa-nav-desktop-width: 232px;
+  --pwa-nav-desktop-collapsed-width: 84px;
+  --pwa-nav-mobile-height: 64px;
+  --pwa-nav-background: #111;
+  --pwa-nav-text: #fff;
+  --pwa-nav-active: #ed1c24;
+}
+
+body.pwa-shell {
+  padding-bottom: calc(var(--pwa-nav-mobile-height) + env(safe-area-inset-bottom));
+}
+
+header.pwa-header-mounted {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--pwa-nav-z-index);
+  background: var(--pwa-nav-background);
+  border-top: 1px solid rgb(255 255 255 / 18%);
+}
+
+header.pwa-header-mounted .pwa-app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--pwa-nav-mobile-height);
+  padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
+}
+
+header.pwa-header-mounted .pwa-app-nav__toggle {
+  display: none;
+}
+
+header.pwa-header-mounted .pwa-app-nav__list {
+  width: 100%;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
+
+header.pwa-header-mounted .pwa-app-nav__item {
+  min-width: 0;
+}
+
+header.pwa-header-mounted .pwa-app-nav__action {
+  border: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: transparent;
+  color: var(--pwa-nav-text);
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  padding: 0 6px;
+}
+
+header.pwa-header-mounted .pwa-app-nav__action[aria-current='page'] {
+  background: var(--pwa-nav-active);
+}
+
+header.pwa-header-mounted .pwa-app-nav__action:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (min-width: 992px) {
+  body.pwa-shell {
+    padding-bottom: 0;
+    padding-left: var(--pwa-nav-desktop-width);
+  }
+
+  body.pwa-shell.pwa-shell-collapsed {
+    padding-left: var(--pwa-nav-desktop-collapsed-width);
+  }
+
+  header.pwa-header-mounted {
+    top: 0;
+    bottom: 0;
+    right: auto;
+    width: var(--pwa-nav-desktop-width);
+    border-top: 0;
+    border-right: 1px solid rgb(255 255 255 / 18%);
+  }
+
+  body.pwa-shell.pwa-shell-collapsed header.pwa-header-mounted {
+    width: var(--pwa-nav-desktop-collapsed-width);
+  }
+
+  header.pwa-header-mounted .pwa-app-nav {
+    min-height: 100%;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 12px;
+    gap: 12px;
+  }
+
+  header.pwa-header-mounted .pwa-app-nav__toggle {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    color: var(--pwa-nav-text);
+    background: rgb(255 255 255 / 12%);
+  }
+
+  header.pwa-header-mounted .pwa-app-nav__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  header.pwa-header-mounted .pwa-app-nav__action {
+    min-height: 42px;
+    justify-content: flex-start;
+    font-size: 13px;
+    font-weight: var(--font-weight-bold);
+    padding: 0 12px;
+  }
+
+  body.pwa-shell.pwa-shell-collapsed header.pwa-header-mounted .pwa-app-nav__action {
+    justify-content: center;
+    padding: 0;
+  }
+
+  body.pwa-shell.pwa-shell-collapsed header.pwa-header-mounted .pwa-app-nav__label {
+    display: none;
+  }
+}
