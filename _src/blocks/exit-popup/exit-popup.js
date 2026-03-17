@@ -33,6 +33,7 @@ export default async function decorate(block) {
       buyBtnEl.setAttribute('data-currency', productCurrency);
       buyBtnEl.setAttribute('data-region', productRegionId);
       buyBtnEl.setAttribute('data-variation', `${devices}u-${years}y`);
+      buyBtnEl.setAttribute('title', `${buyBtnEl.textContent.replace(/50\s?%/, `${percentPrice}%`)}`);
     }
   }
 
