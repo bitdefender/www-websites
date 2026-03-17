@@ -1,21 +1,25 @@
-function replacePlaceholderWithVideo(videoUrl) {
-  const placeholderDiv = [...document.querySelectorAll('div')].find((div) => div.textContent.trim() === '{video}');
+import { embedYoutube } from '../../scripts/utils/utils.js';
+import YouTubeTracker from '../../scripts/utils/youtube-tracker.js';
+
+function replacePlaceholderWithVideo(block, videoUrl) {
+  const placeholderDiv = [...block.querySelectorAll('div')].find((div) => div.textContent.trim() === '{video}');
   if (!placeholderDiv) {
     return;
   }
   const videoContainer = document.createElement('div');
   videoContainer.className = 'video-container';
 
-  const iframeElement = document.createElement('iframe');
-  iframeElement.setAttribute('src', videoUrl);
-  iframeElement.setAttribute('frameborder', '0');
-  iframeElement.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-  iframeElement.setAttribute('allowfullscreen', '');
-  videoContainer.appendChild(iframeElement);
+  const url = new URL(videoUrl);
+  videoContainer.innerHTML = embedYoutube(url, false);
+
+  const videoId = videoContainer.querySelector('iframe')?.getAttribute('id');
+  const tracker = new YouTubeTracker(block, videoUrl, url, videoId);
+  tracker.initialize();
+
   placeholderDiv.replaceWith(videoContainer);
 }
 
 export default function decorate(block) {
   const { video } = block.closest('.section').dataset;
-  replacePlaceholderWithVideo(video);
+  replacePlaceholderWithVideo(block, video);
 }
