@@ -958,7 +958,9 @@ export const getProductFinding = () => {
   }
 
   const pageName = page.name.toLowerCase();
-  let productFinding;
+  const currentPath = window.location.pathname;
+
+  let productFinding = '';
   switch (pageName) {
     case 'consumer':
       productFinding = 'solutions page';
@@ -976,12 +978,11 @@ export const getProductFinding = () => {
       productFinding = 'consumer quiz';
       break;
     default:
-      productFinding = 'product pages';
+      if (currentPath.includes('/consumer/')) productFinding = 'product pages';
       break;
   }
 
   // case when the pages are link-checker/something
-  const currentPath = window.location.pathname;
   if (currentPath.includes('/link-checker')) {
     productFinding = 'toolbox page';
   }

@@ -91,6 +91,8 @@ export default class YouTubeTracker {
     }
 
     if (!this.trackingState.hasPlayed) {
+      this.trackingState.title = player.getVideoData && player.getVideoData().title
+        ? player.getVideoData().title : this.trackingState.title;
       this.trackingState.hasPlayed = true;
       this.sendTrackingEvent('youtube.play', 0, 0);
     }
