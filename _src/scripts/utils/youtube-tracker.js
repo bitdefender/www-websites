@@ -100,8 +100,10 @@ export default class YouTubeTracker {
     // Start tracking progress for milestones
     if (!this.trackingState.progressInterval) {
       this.trackingState.progressInterval = setInterval(() => {
-        const time = player.getCurrentTime ? player.getCurrentTime() : 0;
-        const dur = player.getDuration ? player.getDuration() : this.trackingState.duration;
+        const time = player.getCurrentTime ? player.getCurrentTime()
+          : player.playerInfo.currentTime ?? 0;
+        const dur = player.getDuration ? player.getDuration()
+          : player.playerInfo.duration ?? this.trackingState.duration;
 
         if (dur > 0) {
           const progress = (time / dur) * 100;
@@ -144,10 +146,8 @@ export default class YouTubeTracker {
   }
 
   onPlayerStateChange(event, player) {
-    const currentTime = player.getCurrentTime ? player.getCurrentTime()
-    || player : player.playerInfo?.currentTime ?? 0;
-    const duration = player.getDuration ? player.getDuration()
-      : player.playerInfo?.duration ?? this.trackingState.duration;
+    const currentTime = player.getCurrentTime ? player.getCurrentTime() : 0;
+    const duration = player.getDuration ? player.getDuration() : this.trackingState.duration;
 
     // Playing
     if (event.data === window.YT.PlayerState.PLAYING) {
