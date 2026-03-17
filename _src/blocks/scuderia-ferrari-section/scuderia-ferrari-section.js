@@ -20,7 +20,9 @@ export default function decorate(block) {
   replacePlaceholderWithVideo(block, video);
 
   const videoId = block.querySelector('iframe')?.getAttribute('id');
-  const url = new URL(video);
-  const tracker = new YouTubeTracker(block, video, url, videoId);
-  tracker.initialize();
+  if (video) {
+    const url = new URL(video);
+    const tracker = new YouTubeTracker(block, video, url, videoId);
+    tracker.initialize();
+  }
 }
