@@ -12,14 +12,15 @@ function replacePlaceholderWithVideo(block, videoUrl) {
   const url = new URL(videoUrl);
   videoContainer.innerHTML = embedYoutube(url, false);
 
-  const videoId = videoContainer.querySelector('iframe')?.getAttribute('id');
-  const tracker = new YouTubeTracker(block, videoUrl, url, videoId);
-  tracker.initialize();
-
   placeholderDiv.replaceWith(videoContainer);
 }
 
 export default function decorate(block) {
   const { video } = block.closest('.section').dataset;
   replacePlaceholderWithVideo(block, video);
+
+  const videoId = block.querySelector('iframe')?.getAttribute('id');
+  const url = new URL(video);
+  const tracker = new YouTubeTracker(block, video, url, videoId);
+  tracker.initialize();
 }
