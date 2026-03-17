@@ -57,8 +57,8 @@ export default class YouTubeTracker {
 
   updateVideoDataFromPlayer(player) {
     // Get video data from YouTube player
-    const videoData = player.getVideoData ? player.getVideoData() : null;
-    const duration = player.getDuration ? player.getDuration() : 0;
+    const videoData = player.getVideoData ? player.getVideoData() : player.videoData || null;
+    const duration = player.getDuration ? player.getDuration() : player.playerInfo?.duration ?? 0;
 
     if (videoData && videoData.title) {
       this.trackingState.title = videoData.title;
@@ -92,7 +92,7 @@ export default class YouTubeTracker {
 
     if (!this.trackingState.hasPlayed) {
       this.trackingState.title = player.getVideoData && player.getVideoData().title
-        ? player.getVideoData().title : this.trackingState.title;
+        ? player.getVideoData().title : player.playerInfo.title ?? this.trackingState.title;
       this.trackingState.hasPlayed = true;
       this.sendTrackingEvent('youtube.play', 0, 0);
     }
@@ -146,8 +146,10 @@ export default class YouTubeTracker {
   }
 
   onPlayerStateChange(event, player) {
-    const currentTime = player.getCurrentTime ? player.getCurrentTime() : 0;
-    const duration = player.getDuration ? player.getDuration() : this.trackingState.duration;
+    const currentTime = player.getCurrentTime ? player.getCurrentTime()
+      : player.playerInfo?.currentTime ?? 0;
+    const duration = player.getDuration ? player.getDuration()
+      : player.playerInfo?.duration ?? this.trackingState.duration;
 
     // Playing
     if (event.data === window.YT.PlayerState.PLAYING) {
