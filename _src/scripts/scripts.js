@@ -36,16 +36,17 @@ import {
   generateLDJsonSchema,
   getPageExperimentKey,
 } from './utils/utils.js';
+
+import {
+  registerPWA,
+  isStandalonePWA,
+  isPWAEnabledPage,
+} from './utils/pwa.js';
 import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
-
-const PWA_ENABLED_PATHS = [
-  '/en-us/consumer/link-checker',
-  '/en-us/consumer/password-generator',
-];
 
 window.hlx.plugins.add('rum-conversion', {
   load: 'lazy',
@@ -490,15 +491,6 @@ function openExternalLinksInNewTab(doc) {
   });
 }
 
-function isPWAEnabledPage(pathname) {
-  const normalizedPath = pathname.replace(/\/$/, '');
-  return PWA_ENABLED_PATHS.includes(normalizedPath);
-}
-
-function isStandalonePWA() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-}
-
 /**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
@@ -709,20 +701,6 @@ function setBFCacheListener() {
       AdobeDataLayerService.push(new PageLoadedEvent());
     }
   });
-}
-
-async function registerPWA() {
-  if (!('serviceWorker' in navigator) || !isPWAEnabledPage(window.location.pathname)) {
-    return;
-  }
-
-  try {
-    // Keep the initial rollout limited to the consumer tools section.
-    await navigator.serviceWorker.register('/sw.js', { scope: '/en-us/consumer/' });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('PWA service worker registration failed:', error);
-  }
 }
 
 async function loadPage() {

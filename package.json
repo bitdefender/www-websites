@@ -6,6 +6,7 @@
   "scripts": {
     "lint:js": "eslint .",
     "lint:css": "stylelint _src/blocks/**/*.css --fix",
+    "build:sw": "esbuild _src/scripts/sw-src.js --bundle --platform=browser --target=es2020 --define:process.env.NODE_ENV='\"production\"' --banner:js='/* eslint-disable */' --outfile=sw.js",
     "lint": "npm run lint:js && npm run lint:css",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -52,7 +53,13 @@
     "@repobit/dex-target": "^2.12.10",
     "@repobit/dex-utils": "^2.1.10",
     "@tsparticles/all": "^3.9.1",
-    "@tsparticles/engine": "^3.8.1"
+    "@tsparticles/engine": "^3.8.1",
+    "workbox-cacheable-response": "^7.4.0",
+    "workbox-core": "^7.4.0",
+    "workbox-expiration": "^7.4.0",
+    "workbox-routing": "^7.4.0",
+    "workbox-strategies": "^7.4.0",
+    "workbox-sw": "^7.4.0"
   },
   "volta": {
     "node": "22.14.0"

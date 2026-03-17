@@ -5,6 +5,7 @@ _src/vendor
 _src/plugins
 _src/scripts/libs/**
 _src/scripts/utils/bot-prevention.js
+sw.js
 tools
 src
 vitest.config.js
