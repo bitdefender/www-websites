@@ -143,12 +143,11 @@ export default async function decorate(block) {
     if (window.innerWidth > 992) signature.innerHTML = signature.innerHTML.replace('.', '.<br>');
   }
 
+  const videoId = block.querySelector('iframe')?.getAttribute('id');
   // Initialize YouTube tracker if it's a YouTube video
-  if (isYouTube || isYouTubeModal) {
-    const videoId = block.querySelector('iframe').getAttribute('id');
+  if ((isYouTube || isYouTubeModal) && videoId) {
     const tracker = new YouTubeTracker(block, videoUrl.textContent.trim(), url, videoId);
     tracker.initialize();
   }
-
   decorateIcons(block);
 }
