@@ -69,8 +69,11 @@
         }
     }
 
+
     .new-prod-boxes-container {
         .new-prod-boxes .prod_box .inner_prod_box {
+            display: block;
+
             .dex_inner_prod_box_paypal {
                 display: flex;
                 align-items: center;
@@ -78,6 +81,10 @@
                 border-bottom: var(--size-2) solid rgb(209, 209, 209);
                 padding-top: var(--size-10);
                 padding-bottom: var(--size-10);
+
+                &[style="opacity: 0;"] {
+                    display: none;
+                }
 
                 p {
                     font-size: var(--body-font-size-xs);
