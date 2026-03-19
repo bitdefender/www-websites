@@ -39,6 +39,7 @@ import {
 
 import {
   registerPWA,
+  syncPWAManifestExposure,
   isStandalonePWA,
   isPWAEnabledPage,
 } from './utils/pwa/pwa.js';
@@ -712,6 +713,7 @@ async function loadPage() {
     return;
   }
 
+  syncPWAManifestExposure();
   registerPWA();
 
   setBFCacheListener();
