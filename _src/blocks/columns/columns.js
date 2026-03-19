@@ -489,9 +489,10 @@ export default function decorate(block) {
     matchHeights(block, 'p:last-of-type');
   }
 
-  if (parentSection.closest('.section').classList.contains('responsible-ai')) {
+  if (parentSection.classList.contains('responsible-ai')) {
     matchHeights(block, 'p:first-of-type');
-    matchHeights(block, '.columns.no-background > div > div');
+    matchHeights(block, 'p:nth-of-type(2)');
+    matchHeights(block, '.columns > div > div');
   }
 
   if (parentSection.classList.contains('online-safe-animated')) {
