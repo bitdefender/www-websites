@@ -9,6 +9,14 @@
 
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 
+/**
+ * Insert line breaks into text at specific word positions
+ * @param {string} text - The text to format
+ * @param {boolean} isMobile - Whether rendering for mobile device
+ * @param {string} mobileBreakpoints - Comma-separated word positions for mobile breaks (1-based)
+ * @param {string} desktopBreakpoints - Comma-separated word positions for desktop breaks (1-based)
+ * @returns {string} Text with line breaks inserted at specified positions
+ */
 function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
   const words = text.split(/\s+/); // split by 1+ spaces
   const breakPositions = isMobile
@@ -42,7 +50,9 @@ function insertBreaks(text, isMobile, mobileBreakpoints, desktopBreakpoints) {
 }
 
 /**
- * Convert SVG markup to image
+ * Convert SVG markup to Image object asynchronously
+ * @param {string} svgText - SVG markup as string
+ * @returns {Promise<Image>} Resolves with loaded Image object, rejects if SVG fails to load
  */
 function svgTextToImage(svgText) {
   return new Promise((resolve, reject) => {
@@ -55,10 +65,15 @@ function svgTextToImage(svgText) {
 }
 
 /**
- * Initialize the dot cloud hero animation
- * @param {string} canvasId - The ID of the canvas element
- * @param {string} sectionSelector - The selector for the hero section
- * @param {boolean} svgMode - Whether to use SVG mode (true) or text mode (false)
+ * Initialize and render the dot cloud hero animation
+ * Supports both text and SVG rendering modes with color theming
+ * @param {HTMLElement} block - The block element containing the banner content
+ * @param {string} canvasId - The ID of the canvas element to render animation on
+ * @param {boolean} isMobile - Whether rendering for mobile viewport
+ * @param {string} mobileBreakpoints - Comma-separated word positions for mobile line breaks
+ * @param {string} desktopBreakpoints - Comma-separated word positions for desktop line breaks
+ * @param {boolean} svgMode - Whether to render SVG content (true) or text content (false)
+ * @returns {Promise<void>}
  */
 // eslint-disable-next-line max-len
 async function initDotCloud(
@@ -198,6 +213,14 @@ async function initDotCloud(
     canvas.style.height = `${h}px`;
   }
 
+  /**
+   * Render SVG content centered on offscreen canvas
+   * Maintains aspect ratio and scales to fit within 75% of target dimensions
+   * @param {Image} svg - SVG image to render
+   * @param {number} targetW - Target canvas width
+   * @param {number} targetH - Target canvas height
+   * @returns {void}
+   */
   function renderSvgContent(svg, targetW, targetH) {
     const svgW = svg.naturalWidth || svg.width || 64;
     const svgH = svg.naturalHeight || svg.height || 64;
@@ -222,6 +245,13 @@ async function initDotCloud(
     octx.drawImage(svg, drawX, drawY, drawW, drawH);
   }
 
+  /**
+   * Render multi-line text content centered on offscreen canvas
+   * Auto-scales font size to fit within canvas width with padding
+   * @param {number} targetW - Target canvas width
+   * @param {number} targetH - Target canvas height
+   * @returns {void}
+   */
   function renderTextContent(targetW, targetH) {
     const lines = state.text.split('\n');
     const lineCount = lines.length;
@@ -256,6 +286,12 @@ async function initDotCloud(
     }
   }
 
+  /**
+   * Rasterize content (SVG or text) to offscreen canvas
+   * Clears and recreates offscreen canvas with content based on rendering mode
+   * @param {Image|null} svg - SVG image to render (only used in SVG mode)
+   * @returns {void}
+   */
   function rasterizeTextToOffscreen(svg = null) {
     const targetW = canvas.width;
     const targetH = canvas.height;
@@ -270,6 +306,12 @@ async function initDotCloud(
     }
   }
 
+  /**
+   * Extract dot particles from rasterized content
+   * Samples pixels from offscreen canvas and creates particles at visible pixels
+   * Uses configured DOT_STEP for density control
+   * @returns {void}
+   */
   function buildPoints() {
     state.points.length = 0;
     const { width: W, height: H } = off;
@@ -294,6 +336,12 @@ async function initDotCloud(
     linkCache.length = 0; // reset links when rebuilding
   }
 
+  /**
+   * Animation frame callback - updates particle physics and renders to main canvas
+   * Handles page visibility and respects prefers-reduced-motion preference
+   * @param {number} currentTime - Timestamp from requestAnimationFrame
+   * @returns {void}
+   */
   function draw(currentTime) {
     // Pause animation if page is not visible
     if (!isPageVisible) {
@@ -604,6 +652,12 @@ async function initDotCloud(
   }
 }
 
+/**
+ * Decorate interactive banner block with dot cloud animation
+ * Creates canvas, initializes animation with optional SVG mode, and handles responsive resizing
+ * @param {HTMLElement} block - The banner block element to decorate
+ * @returns {Promise<void>}
+ */
 export default async function decorate(block) {
   const { mobileBreakpoints, desktopBreakpoints, svgMode } = block.closest('.section').dataset;
   const isSvgMode = svgMode === 'true' || svgMode === true;
