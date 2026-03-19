@@ -664,6 +664,7 @@ main .section.blue-heading h3{
 
 main .section.blue-title {
   text-align: left;
+  
   h3 {
     color: #006DFF;
     font-size: 18px;
@@ -679,7 +680,7 @@ main .grey-background {
 }
 
 @media (max-width: 991px) {
-  .creators main .section.hide-on-mobile {
+  main .section.hide-on-mobile {
     display: none;
   }
 }

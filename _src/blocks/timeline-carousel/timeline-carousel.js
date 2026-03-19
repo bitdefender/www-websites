@@ -1,16 +1,18 @@
 function createTimelineNavigation(block) {
   const buttonsContainer = document.createElement('div');
   buttonsContainer.classList.add('timeline-controls');
-  const leftBtn = document.createElement('button');
+  const leftBtn = document.createElement('div');
   leftBtn.className = 'timeline-button left';
+  leftBtn.name = 'timeline button left';
   leftBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
         <path d="M9.34315 1.41419L7.92893 -2.2769e-05L0.857865 7.07104L2.27208 8.48526L9.34315 1.41419Z" fill="#fff"/>
         <path d="M2.27208 5.65683L0.857865 7.07104L7.92893 14.1421L9.34315 12.7279L2.27208 5.65683Z" fill="#fff"/>
         </svg>`;
 
-  const rightBtn = document.createElement('button');
+  const rightBtn = document.createElement('div');
   rightBtn.className = 'timeline-button right';
   rightBtn.disabled = true;
+  rightBtn.name = 'timeline button right';
   rightBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
         <path d="M0.656854 1.41419L2.07107 -2.2769e-05L9.14214 7.07104L7.72792 8.48526L0.656854 1.41419Z" fill="white"/>
         <path d="M7.72792 5.65683L9.14214 7.07104L2.07107 14.1421L0.656854 12.7279L7.72792 5.65683Z" fill="white"/>
@@ -54,6 +56,7 @@ function createTimelineBoxContent(slide) {
 function initTimelineCarousel(block, startPosition) {
   const track = block.querySelector('.timeline-track');
   const slideContainer = block.querySelector('.slides-container');
+  const controls = block.querySelector('.timeline-controls');
   const prevBtn = block.querySelector('.timeline-button.left');
   const nextBtn = block.querySelector('.timeline-button.right');
   const items = Array.from(block.querySelectorAll('.timeline-box.populated'));
@@ -69,6 +72,11 @@ function initTimelineCarousel(block, startPosition) {
   const containerWidth = track.offsetWidth;
   const avgWidthWithGap = getScrollAmount();
   const itemsToShow = Math.floor(containerWidth / avgWidthWithGap);
+  if (itemsToShow >= items.length) {
+    controls.style.display = 'none';
+  } else {
+    controls.style.display = '';
+  }
   const maxIndex = Math.max(0, items.length - itemsToShow);
   let currentIndex = startPosition === 'end' ? maxIndex : 0;
 
@@ -79,8 +87,10 @@ function initTimelineCarousel(block, startPosition) {
     if (currentIndex === 0) offset = 0;
     slideContainer.style.setProperty('--transition', 'transform 0.3s ease');
     slideContainer.style.setProperty('--offset', `${offset}px`);
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex >= maxIndex;
+    if (currentIndex === 0)prevBtn.classList.add('disabled');
+    else prevBtn.classList.remove('disabled');
+    if (currentIndex >= maxIndex) nextBtn.classList.add('disabled');
+    else nextBtn.classList.remove('disabled');
   }
 
   track.addEventListener('resize', updateTimeline());
@@ -196,10 +206,12 @@ export default function decorate(block) {
   `;
 
     // Years axis
-    const year = timelineYears.split(',')[idx]?.trim() ?? '';
+    const year = timelineYears?.split(',')?.[idx]?.trim() ?? '';
+
     years += `
     <div class="timeline-year">
-      <span class="year-tag">${year}</span>
+      
+      <span class="year-tag ${year ? '' : 'empty'}">${year ?? ''}</span>
     </div>
   `;
 

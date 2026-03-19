@@ -101,6 +101,17 @@ export default function decorate(block) {
   cardsContainer.classList.add('cards-container');
   block.querySelectorAll('.cards-carousel > div > div').forEach((card, idx) => {
     card.classList.add('carousel-card');
+
+    const link = card.querySelector('a');
+    if (link) {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', (e) => {
+        // prevent double triggering if the actual link was clicked
+        if (e.target.closest('a')) return;
+        window.location.href = link.href;
+      });
+    }
+
     cardsContainer.appendChild(card);
     dots.innerHTML += `<div data-index="${idx}" class="carousel-dot ${idx === 0 ? 'active' : ''}" ></div>`;
   });

@@ -490,7 +490,9 @@ export default function decorate(block) {
   }
 
   if (parentSection.classList.contains('responsible-ai')) {
-    matchHeights(block, 'p');
+    matchHeights(block, 'p:first-of-type');
+    matchHeights(block, 'p:nth-of-type(2)');
+    matchHeights(block, '.columns > div > div');
   }
 
   if (parentSection.classList.contains('online-safe-animated')) {
