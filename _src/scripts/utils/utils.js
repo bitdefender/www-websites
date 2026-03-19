@@ -633,6 +633,38 @@ export async function matchHeights(targetNode, selector) {
   adjustHeights();
 }
 
+function isSafariMobile() {
+  return (UserAgent.os === 'ios' || UserAgent.os === 'Mac/iOS') && UserAgent.isSafari;
+}
+
+/*
+ general function to embed youtube videos based on the structure needed for the iframe API
+*/
+export function embedYoutube(url, autoplay) {
+  const usp = new URLSearchParams(url.search);
+  const muteParam = autoplay && isSafariMobile() ? '&mute=1&muted=1' : '';
+  const suffix = autoplay ? `&cc_load_policy=1&autoplay=1&playsinline=1${muteParam}` : '';
+  const startTime = usp.get('t') ? `&start=${encodeURIComponent(usp.get('t'))}` : '';
+  let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : url.pathname.split('/').pop();
+
+  if (url.origin.includes('youtu.be')) {
+    [, vid] = url.pathname.split('/');
+  }
+
+  const iframeId = `youtube-player-${Math.random().toString(36).substr(2, 9)}`;
+  const origin = encodeURIComponent(window.location.origin);
+
+  return `
+    <iframe id="${iframeId}"
+      src="https://www.youtube.com/embed/${vid}?rel=0&enablejsapi=1&origin=${origin}${suffix}${startTime}"
+      allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; picture-in-picture"
+      allowfullscreen
+      scrolling="no"
+      title="Content from Youtube"
+      loading="lazy"></iframe>
+  `;
+}
+
 export function getPidFromUrl() {
   const url = new URL(window.location.href);
   return url.searchParams.get('pid') || getMetadata('pid');
@@ -858,7 +890,7 @@ export const generatePageLoadStartedName = () => {
    * @returns {string[]} get all analytic tags
    */
   if (window.location.href.includes('oaiusercontent')) {
-    return 'ajutor:sunt:intro:fereastra';
+    return 'oai';
   }
   const getTags = (tags) => (tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : []);
   const { pathname } = window.location;
@@ -926,7 +958,9 @@ export const getProductFinding = () => {
   }
 
   const pageName = page.name.toLowerCase();
-  let productFinding;
+  const currentPath = window.location.pathname;
+
+  let productFinding = '';
   switch (pageName) {
     case 'consumer':
       productFinding = 'solutions page';
@@ -944,12 +978,11 @@ export const getProductFinding = () => {
       productFinding = 'consumer quiz';
       break;
     default:
-      productFinding = 'product pages';
+      if (currentPath.includes('/consumer/')) productFinding = 'product pages';
       break;
   }
 
   // case when the pages are link-checker/something
-  const currentPath = window.location.pathname;
   if (currentPath.includes('/link-checker')) {
     productFinding = 'toolbox page';
   }

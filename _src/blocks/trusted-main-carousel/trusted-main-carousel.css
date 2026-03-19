@@ -154,7 +154,7 @@
 }
 
 .trusted-main-carousel-container .content-wrapper .slide {
-    width: 100%;
+    width: 100% !important;
     flex-shrink: 0;
     box-sizing: border-box;
 }
@@ -240,6 +240,7 @@
 .trusted-main-carousel-container .content-wrapper ul {
     display: flex;
     padding-left: 0;
+    min-width: 100% !important;
 }
 
 .trusted-main-carousel-container .content-wrapper li {
@@ -400,7 +401,6 @@
     .trusted-main-carousel-container .content-wrapper .slide>:last-child img {
         object-fit: contain;
         position: absolute;
-        align-self: anchor-center;
     }
 
     .trusted-main-carousel-container .content-wrapper .slide>div {

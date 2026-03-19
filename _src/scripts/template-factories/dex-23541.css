@@ -60,7 +60,7 @@
 }
 
 .four-cards {
-     * {
+    * {
         --body-font-family: "IBM Plex Sans", sans-serif !important;
     }
 }
@@ -1448,11 +1448,11 @@
 @media (min-width: 1600px) {
 
     .dex-23541 .section.tabs-container .tabs-wrapper .tab-item .features-wrapper {
-            max-width: var(--section-large-desktop-max-width);
-            padding: var(--size-0);
+        max-width: var(--section-large-desktop-max-width);
+        padding: var(--size-0);
 
-            .features {
-                padding: var(--size-0) var(--size-0) var(--size-64);
+        .features {
+            padding: var(--size-0) var(--size-0) var(--size-64);
         }
     }
 }
