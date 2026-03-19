@@ -538,18 +538,19 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
-  const shouldHideHeaderForPWA = isStandalonePWA() && isPWAEnabledPage(window.location.pathname);
+  // eslint-disable-next-line max-len
+  const shouldHideHeaderAndFooterForPWA = isStandalonePWA() && isPWAEnabledPage(window.location.pathname);
   const header = doc.querySelector('header');
 
   header.style.height = '0px';
-  if (shouldHideHeaderForPWA) {
+  if (shouldHideHeaderAndFooterForPWA) {
     header.style.display = 'block';
     header.style.height = 'initial';
     const { default: mountPWAHeader } = await import('./utils/pwa/pwa-header.js');
     mountPWAHeader(header);
   }
 
-  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder && !shouldHideHeaderForPWA) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder && !shouldHideHeaderAndFooterForPWA) {
     // eslint-disable-next-line no-unused-vars
     header.style.height = 'initial';
     loadHeader(header);
@@ -568,7 +569,7 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder && !shouldHideHeaderAndFooterForPWA) {
     loadFooter(doc.querySelector('footer'));
   }
 
