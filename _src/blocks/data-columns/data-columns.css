@@ -292,6 +292,7 @@
                                     color: #006DFF;
                                     border-bottom: 4px solid #006DFF;
                                     font-weight: 600;
+                                    pointer-events: none;
                                 }
 
                                 a {
