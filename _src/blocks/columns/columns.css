@@ -3290,7 +3290,8 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       > div {
         gap: 16px;
 
-        > div {
+        > div, .card {
+          flex: 1;
           background-color: #006DFF;
           border-radius: 20px;
           position: relative;
@@ -3345,6 +3346,53 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
           }
         }
       }
+
+      &.anchor-cards {
+        > div > a {
+          .button-container {
+            display: flex;
+            justify-content: flex-end;
+
+            a {
+              background: transparent;
+              border: none;
+              position: relative;
+              right: 0;
+              padding: 0;
+              justify-items: flex-end;
+              pointer-events: none;
+
+              &::after {
+                content: '';
+                min-width: 40px;
+                min-height: 40px;
+                mask: url("/_src/icons/arrow-right.svg") no-repeat;
+                background-color: #FFF;
+                display: inline-block;
+                transition: all .3s cubic-bezier(.4, 0, .2, 1);
+                transform: translateX(4px);
+                opacity: 1;
+                margin-left: -10px;
+                margin-right: 8px;
+                overflow: visible;
+              }
+
+              .button-text {
+                display: none;
+              }
+            }
+          }
+
+          &:hover {
+            text-decoration: none;
+
+            .button-container a::after {
+              transform: translateX(12px);
+              opacity: 1;
+            }
+          }
+        } 
+      }
     }
   }
 
@@ -3373,7 +3421,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
           gap: 32px;
           position: relative;
 
-          > div {
+          > div, .card{
             padding: 32px;
 
             h3 {
