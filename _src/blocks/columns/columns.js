@@ -473,7 +473,7 @@ export default function decorate(block) {
     matchHeights(block, 'div > div:not(:first-of-type) ul');
   }
 
-  matchHeights(block, 'div > div > p:first-of-type > strong')
+  matchHeights(block, 'div > div > p:first-of-type > strong');
 
   if (block.classList.contains('text-over-image')) matchHeights(block, '.columns > div > div');
 
