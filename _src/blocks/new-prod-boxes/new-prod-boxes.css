@@ -578,11 +578,13 @@
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.primary {
   display: inline-block;
   min-width: 144px;
+  width: fit-content;
 }
 
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.secondary {
   width: fit-content;
-  min-width: 150px;
+  min-width: 144px;
+  justify-content: center;
 }
 
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.secondary {
@@ -813,12 +815,6 @@
   width: fit-content;
 }
 
-.hero-aem__prices > div, .hero-aem__prices > div > div {
-  display: grid;
-  grid-template-rows: subgrid;
-  grid-row: span 5;
-}
-
 .demo-box .hero-aem__prices * {
   visibility: hidden;
 }
@@ -933,6 +929,13 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 10;
+  }
+
+  .hero-aem__prices > div, .hero-aem__prices > div > div {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 5;
+    margin-bottom: 4px;
   }
 }
 
