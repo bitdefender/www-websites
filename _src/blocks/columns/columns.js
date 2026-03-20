@@ -490,6 +490,16 @@ export default function decorate(block) {
   }
 
   if (parentSection.classList.contains('responsible-ai')) {
+    if (block.classList.contains('anchor-cards')) {
+      block.querySelectorAll('.columns > div > div').forEach((card) => {
+        const anchorCard = document.createElement('a');
+        anchorCard.classList.add('card');
+        anchorCard.href = card.querySelector('a')?.href || '#';
+        anchorCard.innerHTML = card.innerHTML;
+        card.replaceWith(anchorCard);
+      });
+    }
+
     matchHeights(block, 'p:first-of-type');
     matchHeights(block, 'p:nth-of-type(2)');
     matchHeights(block, '.columns > div > div');
