@@ -1643,7 +1643,7 @@ main .subscriber .section {
         display: block;
     }
     .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div > div {
-        height: 110px;
+        height: auto;
         width: 50%;
         float: left;
         padding-left: 20px;
@@ -1652,8 +1652,8 @@ main .subscriber .section {
         border-left: 2px solid #B9C7DA;
     }
     .subscriber #has4columns .columns-wrapper .columns p strong {
-        font-size: 48px;
-        line-height: 48px;
+        font-size: 35px;
+        line-height: 40px;
     }
     .subscriber #blueSlider {
         padding: 5em 0;
@@ -1676,13 +1676,11 @@ main .subscriber .section {
     }
     .subscriber #multiColumns .columns > div {
         display: block;
+        margin-bottom: 20px;
     }
     .subscriber #multiColumns .columns > div > div {
-        width: 48%;
-        height: 260px;
-        float: left;
-        margin-bottom: 25px;
-        margin-right: 2%;
+        width: 100%;
+        margin: 10px 0;
     }
     .subscriber #multiColumns.bundle-design .columns > div, .subscriber #multiColumns.bundle-design3 .columns > div {
         display: flex;
@@ -1703,7 +1701,7 @@ main .subscriber .section {
         margin: 8px 0;
     }
     .subscriber #multiColumns .columns > div:nth-of-type(1) > div:nth-of-type(2n), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(1), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(3) {
-        margin-left: 2%;
+        margin-left: 0;
         margin-right: 0;
     }
     .subscriber .multivideosslider .carousel-container {
@@ -1894,6 +1892,9 @@ main .subscriber .section {
         width: 90vw;
         margin-right: 10px;
     }
+    .subscriber .section.multicontentvideoslider .default-content-wrapper {
+        margin-bottom: 1em;
+    }
     .subscriber #multiColumns.nobackground {
         padding: 80px 0;
         margin-top: 0;
@@ -1928,12 +1929,6 @@ main .subscriber .section {
         left: 50%;
         transform: translateX(-50%);
         text-align: center;
-    }
-    .subscriber .multi-carousel-container .carousel-arrows-container {
-        /*display: none;*/
-    }
-    .subscriber .multi-carousel-container.showarrows .carousel-arrows-container {
-        display: block;
     }
     .subscriber .multi-carousel-container .carousel-item {
         flex: 0 0 66.66%;
