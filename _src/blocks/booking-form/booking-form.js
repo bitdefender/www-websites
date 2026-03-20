@@ -186,7 +186,7 @@ function sanitizeDataMap(dataMap) {
   );
 }
 
-function handleSubmit(formBox, widgetId, token) {
+function handleSubmit(formBox, widgetId, token, fileName, download) {
   const locale = window.location.pathname.split('/')[1] || 'en';
   const validateFields = () => {
     let isValid = true;
@@ -252,6 +252,7 @@ function handleSubmit(formBox, widgetId, token) {
     // set date and locale
     data.set('DATE', date);
     data.set('LOCALE', locale);
+    data.set('PAGE', window.location.href);
 
     formBox.querySelectorAll('.input-box').forEach((box) => {
       const field = box.querySelector('input[name], select[name], textarea[name]');
@@ -276,8 +277,6 @@ function handleSubmit(formBox, widgetId, token) {
 
     // convert Map to ordered object:
     const orderedData = sanitizeDataMap(data);
-    const fileName = formBox.closest('.section').getAttribute('data-savedata');
-
     await submitWithTurnstile({
       widgetId,
       token,
@@ -289,8 +288,9 @@ function handleSubmit(formBox, widgetId, token) {
         if (successMsg) {
           formBox.classList.remove('loading');
           formBox.classList.add('form-submitted');
-          formBox.querySelector('h4').innerHTML = `<strong>${successMsg.innerText}</strong>`;
+          formBox.querySelector('#title-box').innerHTML = successMsg.innerHTML;
           successMsg.scrollIntoView({ behavior: 'smooth' });
+          if (download) window.open(download, '_blank');
         }
       },
     });
@@ -298,15 +298,25 @@ function handleSubmit(formBox, widgetId, token) {
 }
 
 export default function decorate(block) {
+  const sectionParent = block.closest('.section');
+  const { appendto, download, savedata } = sectionParent.dataset;
   const formBox = createForm(block);
   block.innerHTML = '';
-  block.appendChild(formBox);
+  if (appendto) {
+    sectionParent.querySelector(`.${appendto}`).appendChild(formBox);
+  } else {
+    block.appendChild(formBox);
+  }
 
   renderTurnstile('turnstile-container', { invisible: false })
     .then(({ widgetId, token }) => {
-      handleSubmit(formBox, widgetId, token);
+      handleSubmit(formBox, widgetId, token, savedata, download);
     })
     .catch((error) => {
       throw new Error(`Turnstile render failed: ${error.message}`);
     });
+
+  // if param d is set display the popup form
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('d') === 'book-a-meeting') block.closest('.section').classList.add('show');
 }

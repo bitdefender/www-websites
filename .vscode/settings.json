@@ -1,0 +1,16 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always",
+        "source.fixAll.stylelint": "always"
+    },
+    "eslint.validate": [
+        "javascript"
+    ],
+    "css.validate": true,
+    "less.validate": true,
+    "scss.validate": true,
+    "editor.formatOnSave": true,
+    "[css]": {
+        "editor.defaultFormatter": "stylelint.vscode-stylelint"
+    }
+}

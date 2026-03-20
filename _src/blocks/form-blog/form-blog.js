@@ -227,6 +227,11 @@ export default async function decorate(block, options) {
     block.classList.add('blog-template');
   }
 
+  const privacyPolicyLink = block.querySelector('a[href*="privacy-policy"]');
+  if (privacyPolicyLink) {
+    privacyPolicyLink.setAttribute('target', '_blank');
+  }
+
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
     bubbles: true,
     composed: true, // This allows the event to cross the shadow DOM boundary

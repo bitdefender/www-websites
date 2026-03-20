@@ -1,0 +1,239 @@
+.block.compare-as-table {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.block.compare-as-table h3 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #000;
+  padding: 40px 40px 0;
+}
+
+.block.compare-as-table td, .block.compare-as-table p {
+  margin: 0;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+}
+
+.block.compare-as-table table {
+  border: 1px solid #d9e6f3;
+  width: 100%;
+  height: 100%;
+}
+
+.block.compare-as-table .active-column {
+  position: relative;
+}
+
+.block.compare-as-table .active-column::before {
+  content: "";
+  position: absolute;
+  top: -0.5625rem;
+  left: 0;
+  width: 100%;
+  height: 0.5625rem;
+  background-color: #de2985;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 1;
+}
+
+.block.compare-as-table.active-arrow .active-column::after {
+  content: "";
+  position: absolute;
+  top: -65px;
+  left: 75%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 110px; 
+  background: url("../../icons/pointing-arrow.png") no-repeat center / contain;
+  z-index: 2; 
+}
+
+.block.compare-as-table table tr, .block.compare-as-table table tr td {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.block.compare-as-table table tr:not(:last-of-type) {
+  padding: 0 10px;
+}
+
+.block.compare-as-table table tr:nth-of-type(4) {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.block.compare-as-table table tr td a.no-arrow::after {
+  display: none;
+}
+
+.block.compare-as-table .prod-oldprice {
+  text-decoration: line-through;
+  margin-bottom: 8px;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 17px;
+  letter-spacing: 0.9px;
+  line-height: 19px;
+}
+
+.block.compare-as-table .prod-newprice {
+  font-weight: 700;
+  font-style: normal;
+  font-size: 30px;
+  letter-spacing: 0.9px;
+}
+
+.block.compare-as-table .billed {
+  border-bottom: 1px dashed #dedede;
+  padding-bottom: 10px;
+}
+
+.block.compare-as-table table .newprice-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
+.block.compare-as-table > div:first-of-type table .oldprice-container, .block.compare-as-table > div:first-of-type table .newprice-container {
+  display: none;
+}
+
+.block.compare-as-table table a.button {
+  max-width: 300px;
+  width: 300px;
+  margin: 10px 0;
+  text-align: center;
+  display: block;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.block.compare-as-table table a.button.no-arrow::after, .block.compare-as-table table a.button.no-arrow:hover::after {
+  transform: unset;
+  opacity: 0;
+  display: none;
+}
+
+.block.compare-as-table > div > div {
+  height: 100%;
+}
+
+.block.compare-as-table table ul {
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+.block.compare-as-table table ul li {
+  min-height: 70px;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  border-bottom: 1px solid #d9e6f3;
+  margin: 0;
+}
+
+.block.compare-as-table > div:first-of-type ul {
+  background: #EEE;
+}
+
+.block.compare-as-table > div:first-of-type ul li {
+  border-bottom: 1px solid white;
+}
+
+.block.compare-as-table > div ul li:last-of-type {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.block.compare-as-table .yes-check {
+  height: 1.375rem;
+  width: 0.775rem;
+  border-right: 0.1875rem solid #78b13f;
+  border-bottom: 0.1875rem solid #78b13f;
+  transform: rotate(40deg);
+  margin-top: -8px;
+  margin-right: 25px;
+}
+
+.block.compare-as-table .no-check {
+  height: 1.5rem;
+  width: 0.625rem;
+  position: relative;
+  margin-right: 25px;
+}
+
+.block.compare-as-table .no-check::before {
+  position: absolute;
+  height: 1.5rem;
+  width: 0.1875rem;
+  transform: rotate(-45deg);
+  content: " ";
+  background-color: #fb0000;
+}
+
+.block.compare-as-table .no-check::after {
+  position: absolute;
+  height: 1.5rem;
+  width: 0.1875rem;
+  transform: rotate(45deg);
+  content: " ";
+  background-color: #fb0000;
+}
+
+@media (max-width: 968px) {
+  .block.compare-as-table {
+    display: block;
+    padding: var(--body-padding);
+  }
+
+  .block.compare-as-table table tr:nth-of-type(2), .block.compare-as-table table tr:nth-of-type(3), .block.compare-as-table table tr:nth-of-type(4), .block.compare-as-table table tr:nth-of-type(5) {
+    min-height: auto!important;;
+  }
+
+  .block.compare-as-table > div {
+    margin-bottom: 1em;
+  }
+
+  .block.compare-as-table .active-column {
+    margin-top: 40px
+  }
+
+  .block.compare-as-table.active-arrow .active-column::after {
+    top: -45px;
+    width: 80px; 
+    height: 80px; 
+  }
+}
+
+@media (max-width: 450px) {
+  .block.compare-as-table h3 {
+    padding: 15px 15px 0;
+  }
+
+  .block.compare-as-table table a.button {
+    width: 250px;
+    max-width: 250px;
+    margin: 10px auto 5px;
+  }
+
+  .block.compare-as-table table ul li {
+    padding: 0 20px;
+  }
+}

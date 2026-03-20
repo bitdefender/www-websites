@@ -26,6 +26,42 @@ function renderMobileDropDown() {
   return mobileDropDown;
 }
 
+// Builds a menu item from an existing link (<p><a/></p>)
+function renderMenuItemFromLink(linkEl, active) {
+  const navMenuItem = document.createElement('li');
+  linkEl.classList.remove('button'); // in case the link has button styles, remove them for the menu
+
+  navMenuItem.appendChild(linkEl);
+
+  if (navMenuItem.innerText.trim() === active) {
+    navMenuItem.classList.add('perma-active');
+  }
+
+  return navMenuItem;
+}
+
+// Builds a menu item mapped to a section (no-link <p>)
+function renderMenuItemFromSection(section, label) {
+  if (!section?.id) return null;
+
+  const navMenuItem = document.createElement('li');
+  const navItemLink = document.createElement('a');
+
+  navItemLink.href = `#${section.id}`;
+  navItemLink.title = label;
+  navItemLink.innerText = label;
+
+  navMenuItem.appendChild(navItemLink);
+
+  navMenuItem.addEventListener('click', (e) => {
+    e.preventDefault();
+    scrollToAnchorWithOffset(section.id);
+  });
+
+  return navMenuItem;
+}
+
+// old behaviour: build menu only from sections using dataset key
 function renderStickyNavMenuItem(section) {
   if (!section.id) return null;
 
@@ -48,10 +84,53 @@ function renderStickyNavMenuItem(section) {
   return navMenuItem;
 }
 
-function renderStickyNavMenu() {
+function renderStickyNavMenu(block) {
+  const { active } = block.closest('.section').dataset;
+
   const stickyNavMenu = document.createElement('ul');
-  const stickyNavMenuItems = Array.from(document.querySelectorAll('.section[id]')).map(renderStickyNavMenuItem).filter(Boolean);
+
+  const menuDefinitions = Array.from(block.querySelectorAll('p'));
+  const sections = Array.from(document.querySelectorAll('.section[id]'));
+
+  /*
+   * If there are <p> elements inside the block, they define the menu.
+   *  - <p> with <a>   -> render the link
+   *  - <p> without <a> -> map to the next section[id]
+   */
+  if (menuDefinitions.length) {
+    let sectionIndex = 0;
+
+    const menuItems = menuDefinitions
+      .map((p) => {
+        const link = p.querySelector('a');
+
+        // p contains a link -> use it directly
+        if (link) {
+          return renderMenuItemFromLink(link, active);
+        }
+
+        // p does not contain a link -> map to next section
+        const nextSection = sections[sectionIndex];
+        if (!nextSection) {
+          return null;
+        }
+
+        sectionIndex += 1;
+
+        const label = p.textContent.trim();
+
+        return renderMenuItemFromSection(nextSection, label);
+      })
+      .filter(Boolean);
+
+    stickyNavMenu.append(...menuItems);
+    return stickyNavMenu;
+  }
+
+  // fallback to old behaviour: build menu from sections with dataset key
+  const stickyNavMenuItems = sections.map(renderStickyNavMenuItem).filter(Boolean);
   stickyNavMenu.append(...stickyNavMenuItems);
+
   return stickyNavMenu;
 }
 
@@ -61,7 +140,7 @@ function renderStickyNavigation(block) {
 
   const mobileDropDown = renderMobileDropDown();
 
-  const stickyNavMenu = renderStickyNavMenu();
+  const stickyNavMenu = renderStickyNavMenu(block);
   menuWithButton.appendChild(stickyNavMenu);
 
   /** close the dropdown menu after user selection */

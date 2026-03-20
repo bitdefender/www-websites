@@ -24,20 +24,21 @@ import {
   getMetadata,
 } from './lib-franklin.js';
 import {
+  handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 
 import {
   createTag,
-  getPageExperimentKey,
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
+  getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -405,7 +406,8 @@ const initializeHubspotModule = () => {
     const popupContainer = hubspotContainer.querySelector('.download-popup__container');
 
     document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
-      trigger.addEventListener('click', () => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
         popupContainer.style.display = 'block';
         const newPageLoadStartedEvent = new WindowLoadStartedEvent();
         newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
@@ -469,13 +471,28 @@ export async function loadTrackers() {
 }
 
 /**
+ * set target_blank for pdf links when metadata is set: pdfs: new-tab
+ * @param {Element} doc The container element
+ */
+function openExternalLinksInNewTab(doc) {
+  const links = doc.querySelectorAll('a');
+
+  links.forEach((link) => {
+    if (link.href.toLowerCase().includes('.pdf')) {
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    }
+  });
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
   // load trackers early if there is a target experiment on the page
   if (getPageExperimentKey()) {
-    loadTrackers();
+    await loadTrackers();
     await resolveNonProductsDataLayer();
   }
 
@@ -495,6 +512,9 @@ async function loadEager(doc) {
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
+
+    if (getMetadata('pdfs') && getMetadata('pdfs') === 'new-tab') openExternalLinksInNewTab(doc);
+
     document.body.classList.add('appear', 'franklin');
     if (window.location.href.indexOf('scuderiaferrari') !== -1) {
       document.body.classList.add('sferrari');
@@ -547,7 +567,7 @@ async function loadLazy(doc) {
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   sampleRUM('lazy');
@@ -672,6 +692,10 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
+  if (window.location.href.includes('oaiusercontent')) {
+    return;
+  }
+
   setBFCacheListener();
   initialiseSentry();
   await window.hlx.plugins.load('eager');
@@ -687,8 +711,11 @@ async function loadPage() {
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
+  handleFileDownloadedEvents();
 
-  await StoreResolver.resolve();
+  if (!window.disableGlobalStore) {
+    await StoreResolver.resolve();
+  }
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
   window.bd_page_ready = true;

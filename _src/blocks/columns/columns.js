@@ -1,6 +1,8 @@
+/* global lottie */
 import { debounce, UserAgent } from '@repobit/dex-utils';
+import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, createTag, renderNanoBlocks,
+  matchHeights, createTag, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -9,7 +11,7 @@ function getItemsToShow() {
 }
 
 function countSlides(carouselContent) {
-  return Math.ceil(carouselContent.children.length / getItemsToShow());
+  return Math.ceil(carouselContent.children.length - getItemsToShow() + 1);
 }
 
 function showSlides(carousel, slideNumber) {
@@ -81,16 +83,35 @@ function setImageAsBackgroundImage() {
   });
 }
 
-function setDynamicLink(dynamicLink, dynamicLinks) {
+function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
   switch (UserAgent.os) {
     case 'android':
       dynamicLink.href = dynamicLinks.androidLink;
+      if (dynamicProducts.storeIdAndroid) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeIdAndroid },
+        ));
+      }
+
       break;
     case 'ios':
       dynamicLink.href = dynamicLinks.iosLink;
+      if (dynamicProducts.storeIdIos) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeIdIos },
+        ));
+      }
       break;
     default:
       dynamicLink.href = dynamicLinks.defaultLink;
+      if (dynamicProducts.storeId) {
+        AdobeDataLayerService.push(new ButtonClickEvent(
+          'trial downloaded',
+          { productId: dynamicProducts.storeId },
+        ));
+      }
       break;
   }
 }
@@ -104,18 +125,24 @@ function setupTabs({ block, firstTab }) {
   const id = slug(label);
   section.classList.add('columns-tabs');
 
-  if (!block.closest('.section').classList.contains('hide-tabs')) {
+  if (!section.classList.contains('hide-tabs')) {
     let tabsList = section.querySelector('.tabs-section');
     if (!tabsList) {
       tabsList = document.createElement('div');
       tabsList.className = 'tabs-section default-content-wrapper';
       tabsList.addEventListener('click', (e) => {
         const tab = e.target.closest('span[data-tab]');
-        const showAll = tab.dataset.tab === firstTab.toLowerCase();
-        section.querySelectorAll('.section-el').forEach((el) => {
-          el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
-        });
-        tabsList.querySelectorAll('span').forEach((el) => el.classList.toggle('active', el === tab));
+        if (tab && tab && tab.dataset?.tab) {
+          const showAll = tab.dataset.tab === firstTab.toLowerCase();
+          section.querySelectorAll('.section-el').forEach((el) => {
+            el.hidden = !showAll && !el.classList.contains(`section-${tab.dataset.tab}`);
+          });
+          tabsList.querySelectorAll('span').forEach((el) => {
+            el.classList.toggle('active', el === tab);
+          });
+
+          AdobeDataLayerService.push(new ButtonClickEvent('click', { asset: tab.dataset.tab }));
+        }
       });
       // add All tab once
       const all = document.createElement('span');
@@ -137,13 +164,60 @@ function setupTabs({ block, firstTab }) {
   wrapper.previousElementSibling?.classList.add('section-el', `section-${id}`);
 }
 
+function initLottieAnimations(block) {
+  // MARQUEE
+  const marqueeEl = block.querySelector('.marquee');
+  if (marqueeEl) {
+    lottie.loadAnimation({
+      container: marqueeEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/marquee-data.json',
+    });
+  }
+
+  // DNS
+  const dnsEl = block.querySelector('.dns');
+  if (dnsEl) {
+    lottie.loadAnimation({
+      container: dnsEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/dns-data.json',
+    });
+  }
+
+  // DNS BACKGROUND
+  const dnsBgEl = block.querySelector('.dns-background');
+  if (dnsBgEl) {
+    lottie.loadAnimation({
+      container: dnsBgEl,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/_src/scripts/vendor/lottie/dns-background-data.json',
+    });
+  }
+}
+
 export default function decorate(block) {
+  const parentSection = block.closest('.section');
   const {
-    linksOpenInNewTab, type, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
-    defaultLink, iosLink, androidLink,
-  } = block.closest('.section').dataset;
+    // eslint-disable-next-line max-len
+    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
+    defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid, seeMoreBtn,
+  } = parentSection.dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
+
+  if (bckImage) {
+    block.style.backgroundImage = `url("${bckImage}")`;
+    block.style.backgroundRepeat = 'no-repeat';
+    block.style.backgroundPosition = 'right';
+    block.style.backgroundSize = 'auto 100%';
+  }
 
   // setup image columns
   [...block.children].forEach((row) => {
@@ -183,14 +257,18 @@ export default function decorate(block) {
   const productsAsList = products?.split(',');
   if (productsAsList) {
     // eslint-disable-next-line no-unused-vars
-    [...block.children].forEach((row, rowNumber) => {
+    [...block.children].forEach((row, _) => {
       [...row.children].forEach((col, colNumber) => {
         const [prodName, prodYears, prodUsers] = productsAsList[colNumber].trim().split('/');
-        col.setAttribute('data-store-context', '');
-        col.setAttribute('data-store-id', prodName);
-        col.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
-        col.setAttribute('data-store-department', 'consumer');
+        wrapChildrenWithStoreContext(col, {
+          productId: prodName,
+          devices: prodUsers,
+          subscription: prodYears,
+          ignoreEventsParent: true,
+          storeEvent: '',
+        });
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
+        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-render', '');
       });
     });
   }
@@ -200,7 +278,7 @@ export default function decorate(block) {
     [...block.children].forEach((row) => {
       row.children[i]
         ?.querySelector('a.button.modal')
-        ?.setAttribute('data-store-id', alias.trim());
+        ?.setAttribute('product-id', alias.trim());
     });
   });
 
@@ -237,15 +315,68 @@ export default function decorate(block) {
   }
 
   if (type && type === 'video_left') {
-    block.closest('.section').classList.add('video-left');
-    const leftCol = block.querySelector('.columns-img-col');
-    const videoPath = leftCol.querySelector('tr:last-of-type').innerText.trim();
-    const videoImg = leftCol.querySelector('img').getAttribute('src');
+    parentSection.classList.add('video-left');
 
-    leftCol.innerHTML = `<video data-type="dam" data-video="" src="${videoPath}" disableremoteplayback="" playsinline="" controls="" poster="${videoImg}"></video>`;
+    const leftCol = block.querySelector('.columns-img-col');
+    const cell = leftCol.querySelector('tr:last-of-type');
+    if (!cell) return;
+
+    const raw = cell.innerHTML;
+
+    // decode HTML
+    const decoded = (() => {
+      const t = document.createElement('textarea');
+      t.innerHTML = raw;
+      return t.value;
+    })();
+
+    // parse possible iframe
+    const temp = document.createElement('div');
+    temp.innerHTML = decoded;
+    const iframe = temp.querySelector('iframe');
+
+    /* youtube iframe */
+    if (iframe && iframe.src.includes('youtube.com/embed')) {
+      const id = iframe.src.match(/\/embed\/([^?]+)/)?.[1];
+      if (!id) return;
+
+      leftCol.innerHTML = `
+        <div class="yt-preview">
+          <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+          <button class="yt-play-btn"></button>
+        </div>
+      `;
+
+      leftCol.firstElementChild.onclick = () => {
+        iframe.src += iframe.src.includes('?') ? '&autoplay=1' : '?autoplay=1';
+        leftCol.innerHTML = '';
+        leftCol.appendChild(iframe);
+      };
+
+      return;
+    }
+
+    /* direct link */
+    const videoPath = cell.innerText.trim();
+    if (/\.(mp4|webm|ogg)$/i.test(videoPath)) {
+      const poster = leftCol.querySelector('img')?.src || '';
+
+      leftCol.innerHTML = `
+        <video
+          src="${videoPath}"
+          controls
+          playsinline
+          ${poster ? `poster="${poster}"` : ''}>
+        </video>
+      `;
+      return;
+    }
+
+    /* fallback */
+    leftCol.innerHTML = decoded;
   }
 
-  renderNanoBlocks(block.closest('.section'), undefined, undefined, block);
+  renderNanoBlocks(parentSection, undefined, undefined, block);
 
   const chatOptions = document.querySelector('.chat-options');
   if (chatOptions) {
@@ -262,16 +393,17 @@ export default function decorate(block) {
     }
   });
 
-  const dynamicLink = block.closest('.section').querySelector('a[href*="#os-dynamic-link"]');
+  const dynamicLink = parentSection.querySelector('a[href*="#os-dynamic-link"]');
   if (dynamicLink) {
     const dynamicLinks = { defaultLink, iosLink, androidLink };
-    setDynamicLink(dynamicLink, dynamicLinks);
+    const dynamicProducts = { storeId, storeIdAndroid, storeIdIos };
+    setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts);
   }
 
   // this will define the number of rows inside each card of the subgrid system
   // by dynamically setting this, i can set howewer much rows i want based on the number of
   // maximum elements expected in the row
-  if (block.closest('.section').classList.contains('v-5') && maxElementsInColumn) {
+  if (parentSection.classList.contains('v-5') && maxElementsInColumn) {
     let cards = block.querySelectorAll('.columns-text-col');
     if (block.classList.contains('cards-with-img')) {
       cards = block.querySelectorAll('.columns > div > div');
@@ -280,10 +412,50 @@ export default function decorate(block) {
     cards.forEach((element) => {
       element.style['grid-row'] = `span ${maxElementsInColumn}`;
     });
+
+    matchHeights(block, '.columns-container.v-5 .columns-wrapper .columns > div > div img');
   }
 
   // tabs version
   if (type && type === 'tabs') setupTabs({ block, firstTab });
+
+  if (seeMoreBtn) {
+    const [seeMoreText, seeLessText, itemsNoRaw] = seeMoreBtn.split('|');
+    const itemsNo = parseInt(itemsNoRaw, 10);
+
+    const items = Array.from(block.children);
+
+    // hide items after itemsNo initially
+    items.slice(itemsNo).forEach((item) => {
+      item.style.display = 'none';
+    });
+
+    if (items.length > itemsNo) {
+      const btnSeeMore = document.createElement('button');
+      btnSeeMore.className = 'load-more';
+      btnSeeMore.innerText = seeMoreText.trim();
+
+      let expanded = false;
+
+      btnSeeMore.addEventListener('click', () => {
+        expanded = !expanded;
+
+        if (expanded) {
+          items.slice(itemsNo).forEach((item) => {
+            item.style.display = '';
+          });
+          btnSeeMore.innerText = seeLessText.trim();
+        } else {
+          items.slice(itemsNo).forEach((item) => {
+            item.style.display = 'none';
+          });
+          btnSeeMore.innerText = seeMoreText.trim();
+        }
+      });
+
+      block.closest('.columns-wrapper').appendChild(btnSeeMore);
+    }
+  }
 
   if (block.classList.contains('sidebar')) {
     const videoP = cols[1].querySelector('p');
@@ -296,17 +468,183 @@ export default function decorate(block) {
 
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
-  if (block.closest('.section').classList.contains('dex-carousel-cards')) {
+  if (parentSection.classList.contains('dex-carousel-cards')) {
     matchHeights(block, 'div > div:not(:first-of-type) p:first-of-type');
+    matchHeights(block, 'div > div:not(:first-of-type) ul');
   }
 
-  if (block.closest('.section').classList.contains('multi-blocks')) {
-    matchHeights(block.closest('.section'), '.columns');
-    matchHeights(block.closest('.section'), 'table');
-    matchHeights(block.closest('.section'), 'p:nth-last-of-type(2)');
-    matchHeights(block.closest('.section'), '.columns > div');
+  if (block.classList.contains('text-over-image')) matchHeights(block, '.columns > div > div');
+
+  if (parentSection.classList.contains('multi-blocks')) {
+    matchHeights(parentSection, '.columns');
+    matchHeights(parentSection, 'table');
+    matchHeights(parentSection, 'p:nth-last-of-type(2)');
+    matchHeights(parentSection, '.columns > div');
+  }
+  if (parentSection.classList.contains('fix-tables-heights')) {
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(1)');
+    matchHeights(block, 'div.columns-text-col > table:nth-of-type(2)');
   }
   if (block.classList.contains('awards-fragment')) {
     matchHeights(block, 'p:last-of-type');
   }
+
+  if (parentSection.classList.contains('responsible-ai')) {
+    if (block.classList.contains('anchor-cards')) {
+      block.querySelectorAll('.columns > div > div').forEach((card) => {
+        const anchorCard = document.createElement('a');
+        anchorCard.classList.add('card');
+        anchorCard.href = card.querySelector('a')?.href || '#';
+        anchorCard.innerHTML = card.innerHTML;
+        card.replaceWith(anchorCard);
+      });
+    }
+
+    matchHeights(block, 'p:first-of-type');
+    matchHeights(block, 'p:nth-of-type(2)');
+    matchHeights(block, '.columns > div > div');
+  }
+
+  if (parentSection.classList.contains('online-safe-animated')) {
+    block.querySelector('span.icon-online-safe-animated').closest('p').innerHTML = `<div id="lottieAnimation" class="security-window">
+      <div class="security-window__header">
+        <span class="security-window__dot security-window__dot--red"></span>
+        <span class="security-window__dot security-window__dot--yellow"></span>
+        <span class="security-window__dot security-window__dot--green"></span>
+      </div>
+      <div class="security-window__body">
+         <div id="dns" class="dns lottie-container  mask">
+           <div class="dns-background" class="lottie-container mask"></div>
+         </div>
+          <div class="marquee-wrap">
+            <div class="marquee"></div>
+          </div>
+      </div>
+    </div>
+    
+    <style>
+      #lottieAnimation.security-window {
+        max-height: 266px;
+        overflow: hidden;
+        border-radius: 14px;
+        background: #0a3d91;
+        margin-top: 2em;
+      }
+
+      #lottieAnimation .security-window__header {
+        height: 36px;
+        padding: 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #063a86;
+      }
+
+      #lottieAnimation .security-window__dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      #lottieAnimation .security-window__dot--red {
+        background: #ff5f56;
+      }
+
+      #lottieAnimation .security-window__dot--yellow {
+        background: #ffbd2e;
+      }
+
+      #lottieAnimation .security-window__dot--green {
+        background: #27c93f;
+      }
+
+      #lottieAnimation .security-window__body {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 40px;
+        flex-direction: column;
+        background: linear-gradient(135deg,
+            #0a4fb3 0%,
+            #1b6fe0 50%,
+            #1f82ff 100%);
+      }
+
+      #lottieAnimation .dns {
+        height: 150px;
+      }
+
+      #lottieAnimation .dns-background {
+        top: 0;
+        svg {
+          width: 100px;
+        }
+        position: absolute;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+      }
+
+      #lottieAnimation .dns svg {
+        width: 230px !important;
+      }
+
+      #lottieAnimation .marquee svg {
+        width: 940px !important;
+      }
+
+      #lottieAnimation .marquee-gradient {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 1) 100%);
+        mix-blend-mode: multiply;
+        opacity: 0.9;
+      }
+
+      #lottieAnimation .marquee-wrap {
+        position: relative;
+        height: auto;
+        margin-top: 1em;
+      }
+
+      #lottieAnimation .marquee {
+        width: 100%;
+        height: 100%;
+        -webkit-mask-image: linear-gradient(180deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0) 100%);
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-image: linear-gradient(180deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0) 100%);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+      }
+
+      #lottieAnimation .marquee svg {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    `;
+  }
+
+  addScript(
+    'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js',
+    {},
+    'defer',
+    () => {
+      if (typeof window.lottie !== 'undefined') {
+        initLottieAnimations(block);
+      }
+    },
+    'module',
+  );
 }

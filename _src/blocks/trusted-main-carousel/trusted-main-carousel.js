@@ -1,6 +1,25 @@
 /* eslint-disable indent */
 import Glide from '@glidejs/glide';
 
+// load YouTube IFrame API once
+function loadYouTubeAPI() {
+  return new Promise((resolve) => {
+    if (window.YT && window.YT.Player) {
+      resolve(window.YT);
+      return;
+    }
+
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    window.onYouTubeIframeAPIReady = () => {
+      resolve(window.YT);
+    };
+  });
+}
+
 export default async function decorate(block) {
   const { navigationPosition, arrows } = block.closest('.section').dataset;
   const slides = [...block.children];
@@ -61,7 +80,16 @@ export default async function decorate(block) {
                   const content = lastDiv.textContent.trim();
 
                   if (content.startsWith('https://www.youtube.com/embed/')) {
-                    return ` <iframe width="100%" height="100%" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+                    try {
+                      const url = new URL(content);
+                      url.searchParams.set('enablejsapi', '1');
+                      url.searchParams.set('origin', window.location.origin);
+                      const finalSrc = url.toString();
+                      return `<iframe width="100%" height="100%" src="${finalSrc}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+                    } catch (e) {
+                      // Fallback if URL parsing fails, use original
+                      return `<iframe width="100%" height="100%" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+                    }
                   }
 
                   return lastDiv.innerHTML;
@@ -112,4 +140,35 @@ export default async function decorate(block) {
   if (rightArrow) rightArrow.addEventListener('click', (e) => { e.preventDefault(); glide.go('>'); });
 
   glide.mount();
+
+  // pause/resume carousel on video play/pause
+  const ytIframes = block.querySelectorAll('.right-content iframe[src*="youtube.com/embed"]');
+
+  if (ytIframes.length > 0) {
+    try {
+      const YT = await loadYouTubeAPI();
+
+      ytIframes.forEach((iframe) => {
+        // eslint-disable-next-line no-new
+        new YT.Player(iframe, {
+          events: {
+            onStateChange: (event) => {
+              const state = event.data;
+
+              if (state === YT.PlayerState.PLAYING) {
+                // Video started - pause carousel
+                glide.pause();
+              } else if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
+                // Video paused - resume carousel
+                glide.play(9000);
+              }
+            },
+          },
+        });
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('YouTube API failed to load', e);
+    }
+  }
 }

@@ -20,12 +20,12 @@ export default async function decorate(block) {
 
     // discount in the title
     const tileDiscountEl = block.querySelector('h5');
-    if (tileDiscountEl) tileDiscountEl.innerHTML = tileDiscountEl.innerHTML.replace('50%', `${percentPrice}%`);
+    if (tileDiscountEl) tileDiscountEl.innerHTML = tileDiscountEl.innerHTML.replace(/50\s?%/, `${percentPrice}%`);
 
     // buy button
     const buyBtnEl = block.querySelector('p.button-container a');
     if (buyBtnEl) {
-      buyBtnEl.textContent = buyBtnEl.textContent.replace('50%', `${percentPrice}%`);
+      buyBtnEl.textContent = buyBtnEl.textContent.replace(/50\s?%/, `${percentPrice}%`);
       buyBtnEl.setAttribute('href', await variation.getStoreUrl());
       buyBtnEl.setAttribute('data-product', alias);
       buyBtnEl.setAttribute('data-buy-price', newPrice);
@@ -33,6 +33,7 @@ export default async function decorate(block) {
       buyBtnEl.setAttribute('data-currency', productCurrency);
       buyBtnEl.setAttribute('data-region', productRegionId);
       buyBtnEl.setAttribute('data-variation', `${devices}u-${years}y`);
+      buyBtnEl.setAttribute('title', `${buyBtnEl.textContent.replace(/50\s?%/, `${percentPrice}%`)}`);
     }
   }
 

@@ -1,4 +1,4 @@
-.ribbon-container {
+main .section.ribbon-container {
   color: white;
   text-align: center;
   background-position: 0 -18px;
@@ -6,7 +6,7 @@
   background-blend-mode: unset;
   background-color: black;
   padding-top: 20px;
-  padding-bottom: 5px;
+  padding-bottom: 20px;
 }
 
 .ribbon-container * {

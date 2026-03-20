@@ -1,3 +1,7 @@
+import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { embedYoutube } from '../../scripts/utils/utils.js';
+import YouTubeTracker from '../../scripts/utils/youtube-tracker.js';
+
 function getVideoElement(source, autoplay) {
   const video = document.createElement('video');
   video.classList.add('bck-video');
@@ -44,6 +48,7 @@ export default async function decorate(block) {
   }
 
   const isYouTube = videoUrl.textContent.includes('youtube') || url.host.includes('youtu.be');
+  const isYouTubeModal = modalLink.innerText.includes('youtube') || modalLink.innerText.includes('youtu.be');
   const baseEmbedUrl = isYouTube
     ? `https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}` : embed}`
     : videoUrl.textContent.trim();
@@ -53,15 +58,7 @@ export default async function decorate(block) {
       <div class="rte-wrapper">${rte.innerHTML}</div> 
      
       ${!block.classList.contains('video-background') ? `<div class="video-wrapper">
-        ${isYouTube ? `
-          <iframe 
-            src="${baseEmbedUrl}"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
-            allowfullscreen 
-            scrolling="no"
-            title="Content from Youtube"
-            loading="lazy"></iframe>
-        ` : `
+        ${isYouTube ? embedYoutube(new URL(baseEmbedUrl), false) : `
           ${getVideoElement(baseEmbedUrl, false).outerHTML}
         `}
       </div>` : ''}
@@ -74,15 +71,7 @@ export default async function decorate(block) {
       ${videoBtnText}
     </button>` : ''}  
     ${block.classList.contains('video-background') ? `<div class="video-wrapper">
-        ${isYouTube ? `
-          <iframe 
-            src="${baseEmbedUrl}"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
-            allowfullscreen
-            scrolling="no"
-            title="Content from Youtube"
-            loading="lazy"></iframe>
-        ` : `
+        ${isYouTube ? embedYoutube(new URL(baseEmbedUrl), true) : `
           ${getVideoElement(baseEmbedUrl, true).outerHTML}
         `}
       </div>` : ''} 
@@ -129,13 +118,21 @@ export default async function decorate(block) {
       const modalInner = modal.querySelector('.video-modal-inner');
       const embedUrl = new URL(modalLink.innerText.trim());
       embedUrl.searchParams.set('autoplay', '1');
-      modalInner.innerHTML = `<iframe 
-        src="${embedUrl.toString()}"
-        allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
-        allowfullscreen 
-        scrolling="no"
-        title="Content from Youtube"
-        loading="lazy"></iframe>`;
+
+      if (isYouTubeModal) {
+        modalInner.innerHTML = embedYoutube(embedUrl, true);
+        const videoId = modalInner.querySelector('iframe').getAttribute('id');
+        const tracker = new YouTubeTracker(block, videoUrl.textContent.trim(), url, videoId);
+        tracker.initialize();
+      } else {
+        modalInner.innerHTML = `<iframe 
+          src="${embedUrl.toString()}"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
+          allowfullscreen 
+          scrolling="no"
+          title="Content from Youtube"
+          loading="lazy"></iframe>`;
+      }
       if (!modal.open) modal.showModal();
     });
   }
@@ -145,4 +142,12 @@ export default async function decorate(block) {
   if (signature) {
     if (window.innerWidth > 992) signature.innerHTML = signature.innerHTML.replace('.', '.<br>');
   }
+
+  const videoId = block.querySelector('iframe')?.getAttribute('id');
+  // Initialize YouTube tracker if it's a YouTube video
+  if ((isYouTube || isYouTubeModal) && videoId) {
+    const tracker = new YouTubeTracker(block, videoUrl.textContent.trim(), url, videoId);
+    tracker.initialize();
+  }
+  decorateIcons(block);
 }

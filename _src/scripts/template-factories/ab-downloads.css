@@ -173,14 +173,18 @@
 .ab-downloads main .boxes-type.columns-container .block > div > div {
     background-color: #F6F6F6;
     border-radius: 20px;
-    padding: 2em 3em;
+    padding: 2em;
+}
+
+.ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2) {
+    min-height: 36px;
 }
 
 .ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
     display: block;
 }
 
-.ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(2) {
+.ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(2) {
     display: none;
 }
 
@@ -190,14 +194,30 @@
 
 .ab-downloads main .boxes-type.columns-container .block > div {
     gap: 18px;
+    grid-auto-columns: 1fr;
 }
 
 .ab-downloads main .boxes-type.columns-container .block h3 {
     font-weight: bold;
-    font-size: 22px;
-    line-height: 26px;
+    font-size: var(--body-font-size-l);
+    line-height: var(--body-font-size-xl);
     margin-top: 0;
     margin-bottom: 4px;
+}
+
+.ab-downloads main .boxes-type.columns-container .block hr {
+    height: 1px;
+    border: none;
+    background-color: #dedede;
+    margin: 0;
+    align-self: stretch;
+}
+
+.ab-downloads main .boxes-type.fix-tables-heights .block .columns-text-col > table {
+    font-size: var(--body-font-size-xs);
+    line-height: var(--body-font-size-s);
+    font-weight: 400;
+    margin: 0;
 }
 
 .ab-downloads main .boxes-type.columns-container .block hr {
@@ -214,7 +234,7 @@
 
 .ab-downloads main .boxes-type.columns-container .block a {
     width: 100%;
-    height: 45px;
+    min-height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -224,6 +244,7 @@
     font-weight: 500;
     line-height: 18.4px;
     margin: 1em 0;
+    padding: 8px 12px;
 }
 
 .ab-downloads main .boxes-type.columns-container .block em {
@@ -376,6 +397,16 @@
     background-color: #F6F6F6;
     border-radius: 20px;
     padding: 2em;
+}
+
+.ab-downloads main .bottom-btns.columns-container .block > div > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.ab-downloads main .bottom-btns.columns-container .block > div > div p.button-container {
+    margin-top: auto;
 }
 
 .ab-downloads main .full-grey-bck.columns-container h3 {
@@ -642,7 +673,7 @@
     color: #161616;
 }
 
-.ab-downloads .modal-container .modal-content {
+/*.ab-downloads .modal-container .modal-content {
     padding: 0;
     max-width: 787px;
     height: 350px;
@@ -708,7 +739,7 @@
 
 .ab-downloads .modal-container .block .columns-text-col {
     padding: 1em;
-}
+}*/
 
 .ab-downloads main .section.blue-titles .block > div > div {
     background-color: transparent;
@@ -817,7 +848,6 @@
     }
 
     .ab-downloads .modal-container .block .columns-img-col {
-        order: 2;
         margin-bottom: 0;
         display: none;
     }
@@ -847,15 +877,10 @@
         font-size: 17px;
     }
 
-    .ab-downloads main .hero-container {
-        order: 1;
-    }
     .ab-downloads main .hero_mobile {
-        order: 2;
         margin-bottom: 2em;
     }
     .ab-downloads main .small-content.columns-container {
-        order: 3;
         padding: 0;
         margin-top: 0;
         margin-bottom: 1.5em;
@@ -868,38 +893,24 @@
     .ab-downloads main .blue-titles.small-content.columns-container {
         margin-bottom: 0;
     }
-    .ab-downloads main .section.blue-btn {
-        order: 4;
-    }
     .ab-downloads main .boxes-type.columns-container {
-        order: 5;
         margin: 0;
         padding-top: 0;
     }
     .ab-downloads main .full-grey-bck.columns-container {
-        order: 6;
         padding: 5px 0;
     }
     .ab-downloads main .has-dropdown.columns-container {
-        order: 6;
         padding-top: 0;
-        display: none;
     }
     .ab-downloads main .blue-title-v1.image-columns-container {
-        order: 8;
         padding-bottom: 0;
     }
     .ab-downloads main .blue-title-v2.image-columns-container {
-        order: 9;
         padding-top: 0;
         padding-bottom: 0;
     }
-    .ab-downloads main .what_about {
-        order: 10;
-        display: none;
-    }
     .ab-downloads main .free_tools {
-        order: 11;
         text-align: left;
     }
     .ab-downloads main .free_tools .default-content-wrapper {
@@ -923,11 +934,9 @@
     }
 
     .ab-downloads main .section.wide.awards {
-        order: 12;
         padding: 0;
     }
     .ab-downloads main .accordion-container {
-        order: 13;
         padding-top: 1em;
         padding-bottom: 1em;
     }
@@ -1133,6 +1142,27 @@
         padding-bottom: 0;
     }
 
+    .ab-downloads main .blue-titles.image-columns-container > .default-content-wrapper:first-of-type * {
+        text-align: center;
+    }
+
+    .ab-downloads main .four-cards-container.rounded.wide-v2 >:first-child {
+        margin: 0;
+        padding: 1em;
+    }
+
+    .ab-downloads main .four-cards-container.rounded.wide-v2 .four-cards-wrapper {
+        padding-top: 0;
+        padding-bottom: 1em;
+    }
+
+    .ab-downloads main .creator-cards.four-cards-container h3 {
+        margin: 0;
+        padding: 0;
+        font-size: var(--heading-font-size-s);
+        line-height: var(--heading-font-size-m);
+    }
+
     .ab-downloads main .blue-titles.image-columns-container .block .image-columns-img-col {
         display: none;
     }
@@ -1174,12 +1204,13 @@
         border-radius: 0;
     }
 
+    .ab-downloads main .full-grey-bck.columns-container p.button-container {
+        width: 100%;
+    }
+
     .ab-downloads main .full-grey-bck.columns-container p.button-container a, .ab-downloads main .boxes-type.columns-container .block a {
         width: 100%;
-        height: 36px;
-        font-size: 14px;
-        font-weight: 700;
-        line-height: 16.1px;
+        margin: 0;
     }
 
     .ab-downloads main .full-grey-bck.columns-container p.button-container a span {
@@ -1261,12 +1292,8 @@
         margin-left: 0;
     }
 
-    .ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > hr, .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(1), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(1) {
+    .ab-downloads .section[data-mobile-hide="true"] {
         display: none;
-    }
-
-    .ab-downloads main .boxes-type.columns-container .default-content-wrapper h2:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2), .ab-downloads main .boxes-type.columns-container .block .columns-text-col > ul:nth-of-type(2) {
-        display: block;
     }
 
     .ab-downloads main .boxes-type.columns-container .block p, .ab-downloads main .boxes-type.columns-container .block li {
@@ -1315,6 +1342,15 @@
         font-size: 12px;
         font-weight: 600;
         line-height: 15.6px;
+    }
+
+    .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p:nth-of-type(2) {
+        min-height: auto;
+        margin-top: 10px;
+    }
+
+    .ab-downloads main .boxes-type.columns-container .block .columns-text-col > p.button-container {
+        margin-top: 10px;
     }
 
     .ab-downloads main .accordion.terms-of-use .accordion-item .accordion-item-content p, .ab-downloads main .accordion.terms-of-use .accordion-item .accordion-item-content p *, .ab-downloads main .accordion.terms-of-use .accordion-item .accordion-item-content *, .ab-downloads main .accordion-container > .default-content-wrapper:last-of-type p {

@@ -1,6 +1,7 @@
 .quiz-stepper-container {
     --color-light-blue: #E6F7FF;
     --color-bd-blue: #006EFF;
+
     transition: opacity 0.5s, transform 0.5s, height 0.5s, display 0.5s allow-discrete;
 
     .block {
@@ -147,7 +148,6 @@
         padding-bottom: 0;
 
         .step-index {
-            background-color: var(--color-light-blue);
             color: var(--color-bd-blue);
             margin: 0;
             font-size: 22px;
@@ -198,7 +198,6 @@
                 display: inline-block;
                 width: 1.2rem;
                 height: 1.2rem;
-                position: relative;
                 cursor: pointer;
                 text-align: center;
                 transition: all 250ms ease;
@@ -213,13 +212,13 @@
                 border: 2px solid var(--color-bd-blue);
             }
 
-            input[type=radio]:checked+.checkbox {
+            input[type="radio"]:checked+.checkbox {
                 background-color: #3197EE;
                 box-shadow: inset 0 0 0 4px #f4f4f4;
                 border: 2px solid var(--color-bd-blue);
             }
 
-            input[type=radio]:checked+.label {
+            input[type="radio"]:checked+.label {
                 background-color: #F8FAFC;
                 border: 2px solid var(--color-bd-blue);
             }
@@ -228,6 +227,7 @@
         .button-container.submit {
             justify-content: left;
             margin: 0;
+
             .button {
                 background-color: black;
                 border-radius: 10px;

@@ -46,7 +46,7 @@ main .subscriber .section {
 }
 
 .subscriber #heroColumn table tr td a {
-    height: 49px;
+    height: 48px;
     width: 214px;
     border-radius: 8px;
     font-weight: 500;
@@ -60,16 +60,17 @@ main .subscriber .section {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    padding: 0 20px;
 }
 
 .subscriber #heroColumn table tr td a:hover {
     background-color: black;
 }
 
-.subscriber #heroColumn table tr td:nth-of-type(1) {
+.subscriber #heroColumn table tr td:nth-of-type(1) a {
     margin-right: 16px;
     height: 49px;
-    width: 214px;
+    width: max-content;
     border-radius: 8px;
     font-weight: 500;
     font-size: 18px;
@@ -93,12 +94,12 @@ main .subscriber .section {
     color: white;
 }
 
-.subscriber #heroColumn table tr td:hover {
-    background-color: #003385;
-}
-
 .subscriber .columnvideo {
     background: linear-gradient(to bottom, transparent 50%, #F1F5F8 50%);
+}
+
+.subscriber .columnvideo.no-gradient {
+    background: transparent;
 }
 
 .subscriber .columnvideo > div.image-columns-wrapper {
@@ -160,6 +161,52 @@ main .subscriber .section {
     width: 41em;
     margin-bottom: -3em;
     margin-right: 0;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td {
+    border: 0 none;
+    padding-right: 16px;
+    margin: 0;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a {
+    border: 0 none;
+    min-width: max-content;
+    width: max-content;
+    height: 48px;
+    padding: 0 28px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 25.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #EB0000;
+    font-family: roboto, sans-serif;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a .icon {
+    height: 6px;
+    width: auto;
+    margin: 0;
+    display: block;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a .icon svg {
+    display: block;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a:hover {
+    text-decoration: none;
+    opacity: 0.9;
+    transition: all 0.5s ease;
+}
+
+.subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td:first-of-type > a {
+    color:  black;
+    background-color: white;
 }
 .subscriber .columnvideo2 > div.image-columns-wrapper video {
     margin-bottom: 0;
@@ -330,13 +377,18 @@ main .subscriber .section {
 .subscriber #multiColumns .default-content-wrapper h3 {
     font-weight: 600;
     font-size: 40px;
-    line-height: 40px;
+    line-height: 45px;
     margin: 16px 0;
 }
 .subscriber #multiColumns .columns > div {
     margin-bottom: 32px;
 }
+.subscriber #multiColumns.bundle-design, .subscriber #multiColumns.bundle-design .columns > div {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
 .subscriber #multiColumns .columns > div > div {
+    height: 100%;
     background-color: #F1F5F8;
     border-radius: 16px;
     padding: 24px;
@@ -855,8 +907,6 @@ main .subscriber .section {
     font-size: 18px;
     line-height: 25.2px;
     text-align: center;
-    border: 2px solid #1A7DFF;
-    background-color: #1A7DFF;
     color: white;
     display: inline-flex;
     align-items: center;
@@ -1170,10 +1220,180 @@ main .subscriber .section {
     font-weight: 600;
 }
 
-@media (min-width: 2000px) { 
-.subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
-    width: 825px;
+.subscriber .title-aligned-left .default-content-wrapper {
+    max-width: var(--section-large-desktop-max-width);
+    width: var(--section-large-desktop-max-width) !important;
+    padding: 0 0 0 20px;
+    text-align: left !important;
+    margin-bottom: 50px !important;
 }
+
+.subscriber .title-aligned-left .default-content-wrapper > * {
+    max-width: 590px;
+}
+
+.subscriber .title-aligned-left .default-content-wrapper h3, .subscriber .title-aligned-left#multiColumns .default-content-wrapper h3 {
+    margin-left: 0;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div {
+    padding: 32px 24px;
+    display: block;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div p {
+    color: black;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div .icon {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table {
+    height: 100%;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table .tbody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr td {
+    padding: 1em 10px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr td:first-of-type {
+    border-right: 1px solid #E0E8EF;
+}
+
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr .icon {
+    width: 32px;
+    height: 45px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr h5 {
+    font-size: 32px;
+    line-height: 40px;
+}
+
+.subscriber .bundle-design#multiColumns .columns > div > div table tr p {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div {
+    background-color: transparent;
+    display: block;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table {
+    max-width: 365px;
+    margin-top: 2em;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table .icon {
+    width: auto;
+    height: 36px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table h5 {
+    font-size: var(--body-font-size-l);
+    list-style: var(--body-font-size-l);
+    margin: 10px 0 5px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table tbody tr:first-of-type {
+    border-bottom: 1px solid #E0E8EF;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(1) table tbody tr:first-of-type td {
+    padding-bottom: 15px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table {
+    height: 100%;
+    width: 100%;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table tbody {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 16px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table tr {
+    display: flex;
+    justify-content: space-between;
+    background-color: #F1F5F8;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: left;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table td h6 {
+    font-size: 40px;
+    line-height: 46px;
+    margin-bottom: 10px;
+}
+
+.subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table tr td img {
+    max-height: 96px;
+    height: auto;
+}
+
+.subscriber main .section.custom-margin-0 {
+    margin-top: 0!important;
+    margin-bottom: 0!important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+}
+
+.subscriber main .section.custom-margin-80-160 {
+    margin-top: 80px!important;
+    margin-bottom: 160px!important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+}
+
+.subscriber main .section.custom-margin-80 {
+    margin-top: 80px!important;
+    margin-bottom: 80px!important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+}
+
+.subscriber main .section.custom-padding-88 {
+    padding-top: 88px;
+    padding-bottom: 88px;
+}
+
+@media (min-width: 2000px) { 
+    .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
+        width: 825px;
+    }
 }
 
 @media (max-width: 1650px) { 
@@ -1305,6 +1525,18 @@ main .subscriber .section {
 }
 
 @media (max-width: 991px) {
+    .subscriber main .section.custom-margin-80-160, .subscriber main .section.custom-padding-88 {
+        margin-top: 80px!important;
+        margin-bottom: 0!important;
+        padding-top: 0!important;
+        padding-bottom: 0!important;
+    }
+
+    .subscriber .section.bundle-design2 .columns-wrapper {
+        padding-top: 0!important;
+        padding-bottom: 0!important;
+    }
+
     .subscriber .default-content-wrapper {
         max-width: var(--section-desktop-max-width);
         padding: 0 var(--section-desktop-padding);
@@ -1325,8 +1557,12 @@ main .subscriber .section {
         padding-left: 0em;
     }
 
-    .subscriber .columns-wrapper, .subscriber .multi-carousel-wrapper, .subscriber .columnvideo {
+    .subscriber .columns-wrapper, .subscriber .columnvideo {
         padding: var(--body-padding)!important;
+    }
+
+    .subscriber .multi-carousel-wrappe {
+        padding: var(--body-padding) 0;
     }
 
     .subscriber #customQuoteCarousel .columns, .subscriber #customQuoteCarousel .columns > div {
@@ -1428,6 +1664,9 @@ main .subscriber .section {
         height: auto;
         margin-bottom: 1em;
     }
+    .subscriber main .section.tabs-slide-container {
+        padding: 80px 0!important;
+    }
     .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
         height: 365px;
     }
@@ -1445,14 +1684,25 @@ main .subscriber .section {
         margin-bottom: 25px;
         margin-right: 2%;
     }
+    .subscriber #multiColumns.bundle-design .columns > div, .subscriber #multiColumns.bundle-design3 .columns > div {
+        display: flex;
+        height: 100%;
+        width: auto;
+        flex-direction: row;
+        gap: 24px;
+        float: unset;
+        margin: 0;
+    }
+    .subscriber #multiColumns.bundle-design .columns > div > div, .subscriber #multiColumns.bundle-design3 .columns > div > div {
+        margin: 0!important;
+        height: -webkit-fill-available;
+        width: auto;
+        flex: 1;
+    }
     .subscriber #multiColumns .columns > div > div h4 {
         margin: 8px 0;
     }
-    .subscriber #multiColumns .columns > div:nth-of-type(1) > div:nth-of-type(2n) {
-        margin-left: 2%;
-        margin-right: 0;
-    }
-    .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(1), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(3) {
+    .subscriber #multiColumns .columns > div:nth-of-type(1) > div:nth-of-type(2n), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(1), .subscriber #multiColumns .columns > div:nth-of-type(2) > div:nth-of-type(3) {
         margin-left: 2%;
         margin-right: 0;
     }
@@ -1586,9 +1836,60 @@ main .subscriber .section {
     .subscriber .columnvideo > div.image-columns-wrapper {
         height: auto;
     }
+
+    .subscriber .title-aligned-left .default-content-wrapper {
+        margin-bottom: 32px !important;
+    }
+
+    .subscriber .bundle-design2.title-aligned-left .default-content-wrapper {
+        padding-left: 0;
+    }
+
+    .subscriber .title-aligned-left .default-content-wrapper h3, .subscriber #multiColumns.title-aligned-left .default-content-wrapper h3, .subscriber .title-aligned-left#multiColumns .default-content-wrapper h3, .bundle-design2 .columns.benefits h3 {
+        font-size: 28px!important;
+        line-height: 33px!important;
+        font-weight: 600;
+        margin: 24px 0 8px;
+    }
+
+    .subscriber .title-aligned-left .default-content-wrapper p {
+        padding-top: 0;
+        margin-top: 0;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns-wrapper {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div > div, .subscriber #multiColumns.bundle-design2 .columns > div > div {
+        width: auto;
+        height: -webkit-fill-available;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        margin: 0;
+        float: unset;
+        order: unset;
+    }
+
+    .subscriber #multiColumns.bundle-design2 .columns > div {
+        display: flex;
+        flex-direction: row;
+        
+    }
 }
 
 @media (max-width: 767px) {
+    .subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #has4columns .default-content-wrapper p strong, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
+        display: block;
+        margin-bottom: 0;
+    }
+    .subscriber .title-aligned-left .default-content-wrapper > * {
+        width: 100%;
+        max-width: unset;
+    }
     .subscriber .multicontentslider .carousel-item {
         width: 90vw;
         margin-right: 10px;
@@ -1700,6 +2001,86 @@ main .subscriber .section {
         width: 18px;
         margin-right: 0;
     }
+
+    .subscriber main .section#heroColumn.bundle-design {
+        padding: 40px 0;
+    }
+
+    .subscriber #heroColumn.bundle-design h1 {
+        font-size: 14px;
+        line-height: 18px;
+        margin-bottom: 16px;
+    }
+
+    .subscriber #heroColumn.bundle-design h2 {
+        font-size: 40px !important;
+        line-height: 45px !important;
+        margin-bottom: 16px;
+    }
+
+    .subscriber #heroColumn.bundle-design p {
+        font-size: 18px;
+        line-height: 25px;
+        margin: 0;
+    }
+
+    .subscriber #heroColumn.bundle-design p {
+        font-size: 18px;
+        line-height: 25px;
+        margin: 0 !important;
+    }
+
+    .subscriber #heroColumn.bundle-design table {
+        margin-top: 48px;
+    }
+
+    .subscriber .title-aligned-left .default-content-wrapper {
+        margin-bottom: 0 !important;
+    }
+
+    .subscriber .title-aligned-left .default-content-wrapper {
+        width: 100%!important;
+    }
+
+    .subscriber main .section.custom-margin-80-160, .subscriber main .section.custom-padding-88 {
+        margin-top: 64px !important;
+    }
+
+    .subscriber #multiColumn.bundle-design2s .columns .columns-left-col table {
+        width: 100%;
+        max-width: unset;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div > div, .subscriber #multiColumns.bundle-design2 .columns > div > div {
+        width: 100%;
+        height: auto;
+        float: none;
+        padding: 0;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div:nth-of-type(1) > div:nth-of-type(2n), .subscriber #multiColumns.bundle-design2 .columns > div:nth-of-type(1) > div:nth-of-type(2n) {
+        margin-left: 0;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div, .subscriber #multiColumns.bundle-design2 .columns > div, .subscriber #multiColumns.bundle-design3 .columns > div {
+        flex-direction: column;
+    }
+
+    .subscriber .bundle-design#multiColumns .columns > div > div {
+        padding: 23px 20px;
+        display: block;
+    }
+
+    .subscriber .bundle-design#multiColumns .columns > div > div table tr {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 24px;
+    }
+
+    .subscriber .bundle-design2#multiColumns .columns > div > div:nth-of-type(2) table tr {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
 }
 @media (max-width: 636px) {
     .subscriber #heroColumn h1 {
@@ -1875,7 +2256,7 @@ main .subscriber .section {
         min-width: unset;
     }
     .subscriber #carouselLogosText .carousel-item {
-        width: 85vw;
+        width: 636px;
     }
     .subscriber #carouselLogosText .carousel-item:last-of-type {
         margin-right: 0;

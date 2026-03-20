@@ -77,22 +77,17 @@ function changeTexts(block, result, statusTitles) {
 }
 
 function getResultPagePath(status, mappedStatus) {
-  // Only redirect for en-us locale
-  if (page.locale !== 'en-us') {
-    return null;
-  }
-
   if (status === 1 || mappedStatus.includes('safe')) {
-    return '/en-us/consumer/link-checker/safe';
+    return `/${page.locale}/consumer/link-checker/safe`;
   }
 
   if (status === 2 || status === 3
       || mappedStatus.includes('so_far_so_good_1')
       || mappedStatus.includes('so_far_so_good_2')) {
-    return '/en-us/consumer/link-checker/sofarsogood';
+    return `/${page.locale}/consumer/link-checker/sofarsogood`;
   }
 
-  return '/en-us/consumer/link-checker/malicious';
+  return `/${page.locale}/consumer/link-checker/malicious`;
 }
 
 function displayStoredResult(block, statusMessages, statusTitles) {
@@ -155,26 +150,27 @@ const isValidUrl = (urlString) => {
       + '((\\d{1,3}\\.){3}\\d{1,3}))' // validate OR ip (v4) address
       + '(\\:\\d+)?(\\/[-a-z\\d%_.~+@]*)*' // validate port and path
       + '(\\?[;&a-z\\d%\\/_@.~+=-]*)?' // validate query string
-      + '(\\#[-a-z\\d_]*)?$', 'i'); // validate fragment locator
+      + '(\\#(!|\\/)?[-a-z\\d%_.~+@\\/?&=;]*)?$', 'i'); // validate fragment locator + hashbang and hash-based routes
   return urlPattern.test(urlString);
 };
 
 async function checkLink(block, input, result, statusMessages, statusTitles) {
-  const url = input.value.trim();
-  if (!url || !isValidUrl(url)) {
+  const inputUrl = input.value.trim();
+  if (!inputUrl || !isValidUrl(inputUrl)) {
     result.textContent = 'Please enter a valid URL';
     result.className = 'result danger';
     return;
   }
 
   input.closest('.input-container').classList.add('loader-circle');
-  let response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
+  let response;
+  response = await fetch('https://eu.nimbus.bitdefender.net/tools/link-checker', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
     },
-    body: JSON.stringify({ url }),
+    body: JSON.stringify({ url: inputUrl }),
   });
 
   if (response.status === 401) {
@@ -187,7 +183,7 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
         'X-Nimbus-ClientID': '81b10964-a3c1-44f6-b5ac-7eac82db3ab1',
       },
       // eslint-disable-next-line max-len
-      body: JSON.stringify({ url, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
+      body: JSON.stringify({ url: inputUrl, pow_challenge: challengeData.pow_challenge, pow_solution: solvedChallenge.nonces }),
     });
   }
 
@@ -202,15 +198,16 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
 
   const data = await response.json();
   const { status } = data;
-  const message = StatusMessageFactory.createMessage(status, url, statusMessages);
 
-  // Redirect to a result page (only for en-us)
+  const message = StatusMessageFactory.createMessage(status, inputUrl, statusMessages);
+
+  // Redirect to a result page for all locales
   const resultPagePath = getResultPagePath(status, message.status);
 
   if (resultPagePath) {
     // Store the result data for the result page
     sessionStorage.setItem('linkCheckerResult', JSON.stringify({
-      url,
+      url: inputUrl,
       status,
       mappedStatus: message.status,
       message: message.text,
@@ -218,17 +215,22 @@ async function checkLink(block, input, result, statusMessages, statusTitles) {
       timestamp: Date.now(),
     }));
 
+    const testParam = window.location.href.includes('dotest=1');
+    const resultUrl = new URL(resultPagePath, window.location.origin);
+    if (testParam) resultUrl.searchParams.set('dotest', '1');
     // Redirect to the appropriate result page
-    window.location.href = resultPagePath;
+    window.location.href = resultUrl.href;
     return;
   }
 
   // Original behavior for other locales
+
   result.innerHTML = message.text;
+
   result.className = message.className;
   block.closest('.section').classList.add(message.className.split(' ')[1]);
   input.setAttribute('disabled', '');
-  document.getElementById('inputDiv').textContent = url;
+  document.getElementById('inputDiv').textContent = inputUrl;
 
   changeTexts(block, message, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
@@ -355,8 +357,8 @@ function createButtonsContainer(block) {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const currentPath = window.location.pathname;
-          if (currentPath.includes('/link-checker/') && page.locale === 'en-us') {
-            window.location.href = '/en-us/consumer/link-checker';
+          if (currentPath.includes('/link-checker/')) {
+            window.location.href = `/${page.locale}/consumer/link-checker`;
           } else {
             resetChecker(block, titleText);
           }
@@ -367,7 +369,7 @@ function createButtonsContainer(block) {
 }
 
 export default function decorate(block) {
-  const { checkButtonText, product } = block.closest('.section').dataset;
+  const { checkButtonText, product, pasteLinkText } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
   privacyPolicyDiv.classList.add('privacy-policy');
@@ -390,7 +392,7 @@ export default function decorate(block) {
 
   const input = document.createElement('input');
   input.type = 'text';
-  input.placeholder = 'example-url.com';
+  input.placeholder = pasteLinkText ?? 'example-url.com';
   input.id = 'link-checker-input';
 
   const copyElement = document.createElement('span');
@@ -440,14 +442,14 @@ export default function decorate(block) {
                     || currentPath.includes('/link-checker/sofarsogood')
                     || currentPath.includes('/link-checker/malicious');
 
-  if (isResultPage && page.locale === 'en-us') {
+  if (isResultPage) {
     // Check if this page load was from a reload using the Navigation API
     const isPageReload = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 
     if (isPageReload) {
       // Clear any stored data and redirect to main page
       sessionStorage.removeItem('linkCheckerResult');
-      window.location.replace('/en-us/consumer/link-checker');
+      window.location.replace(`/${page.locale}/consumer/link-checker`);
       return;
     }
 
@@ -456,7 +458,7 @@ export default function decorate(block) {
 
     if (!hasValidResult) {
       // No valid result data means direct URL access - redirect to main page
-      window.location.replace('/en-us/consumer/link-checker');
+      window.location.replace(`/${page.locale}/consumer/link-checker`);
       return;
     }
 

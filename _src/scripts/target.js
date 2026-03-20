@@ -89,6 +89,7 @@ export async function runTargetExperiment(experimentUrl, experimentId) {
 export function appendAdobeMcLinks(selector) {
   try {
     const wrapperSelector = typeof selector === 'string' ? document.querySelector(selector) : selector;
+    const isFooterSelector = Boolean(wrapperSelector.querySelector('.footer-2025__content'));
 
     // mimic production hostname on local env
     const pageUrlHostname = window.location.hostname === 'localhost'
@@ -99,6 +100,14 @@ export function appendAdobeMcLinks(selector) {
     wrapperSelector.querySelectorAll(hrefSelector).forEach(async (link) => {
       if (link.hostname !== pageUrlHostname
         && !Constants.DOMAINS_WITHOUT_ADOBE_MC.includes(link.hostname)) {
+        if (isFooterSelector) {
+          link.addEventListener('click', async (e) => {
+            e.preventDefault();
+            window.location.assign(await target.appendVisitorIDsTo(link.href));
+          });
+          return;
+        }
+
         const destinationURLWithVisitorIDs = await target.appendVisitorIDsTo(link.href);
         link.href = destinationURLWithVisitorIDs.replace(/MCAID%3D.*%7CMCORGID/, 'MCAID%3D%7CMCORGID');
       }
@@ -176,3 +185,5 @@ export function adobeMcAppendVisitorId(selector) {
     });
   }
 }
+
+window.target = target;
