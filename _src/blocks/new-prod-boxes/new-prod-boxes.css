@@ -400,6 +400,10 @@
           transition: all 0.4s;
         }
       }
+
+      &:has(.greenTag2) {
+        margin-top: var(--tag-margin);
+      }
     }
   }
 }
@@ -903,7 +907,6 @@
     padding-bottom: 60px;
     align-items: initial;
     margin: 0 auto;
-    margin-top: var(--tag-margin);
     display: grid;
     gap: 0;
     grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
@@ -917,6 +920,7 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 50;
+    margin-top: var(--tag-margin);
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
