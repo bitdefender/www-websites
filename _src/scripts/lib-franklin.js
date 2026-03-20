@@ -842,7 +842,6 @@ export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector(lcpBlocks.join(','));
   if (block) {
     await loadBlock(block);
-    updateSectionStatus(block.closest('.section'));
   }
 
   // Load news bar if present above LCP block, making sure it does not affect CLS
@@ -854,7 +853,7 @@ export async function waitForLCP(lcpBlocks) {
     updateSectionStatus(newsBar.closest('.section'));
   }
 
-  document.body.style.display = block;
+  updateSectionStatus(block.closest('.section'));
   const lcpCandidate = document.querySelector('main img');
   await new Promise((resolve) => {
     if (lcpCandidate && !lcpCandidate.complete) {
