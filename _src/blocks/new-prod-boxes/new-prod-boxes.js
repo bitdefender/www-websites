@@ -628,7 +628,7 @@ async function updateAddOnPrices(
     if (addOnPercentSave && priceBox) {
       const saveText = priceBox.querySelector('.prod-save')?.textContent || '';
       const discountPercent = addOnInfo.getDiscount('percentageWithProcent');
-      addOnPercentSave.textContent = `${saveText} ${discountPercent}`;
+      addOnPercentSave.innerHTML = `${saveText} <span class="add-on-percent>"${discountPercent}`;
     }
   } catch (error) {
     // eslint-disable-next-line no-console
