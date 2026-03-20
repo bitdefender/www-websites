@@ -266,9 +266,9 @@ main .subscriber .section {
 }
 .subscriber #has4columns .columns-wrapper .columns p strong {
     display: block;
-    font-weight: 500;
-    font-size: 48px;
-    line-height: 48px;
+    font-weight: 600;
+    font-size: 43px;
+    line-height: 40px;
     margin-bottom: 8px;
     color: black;
 }
