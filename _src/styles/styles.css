@@ -1803,6 +1803,11 @@ main .section.blue p a.button.modal::after {
   }
 }
 
+.pwa-install-button {
+  position: absolute;
+  top: 50px;
+}
+
 @keyframes rotation {
   0% {
       transform: rotate(0deg);

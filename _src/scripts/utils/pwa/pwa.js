@@ -1,4 +1,5 @@
 const PWA_ENABLED_PATHS = [
+  '/en-us/consumer/free-tools',
   '/en-us/consumer/link-checker',
   '/en-us/consumer/password-generator',
 ];
@@ -47,4 +48,50 @@ export async function registerPWA() {
     // eslint-disable-next-line no-console
     console.error('PWA service worker registration failed:', error);
   }
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    // Prevent the mini-infobar from appearing on mobile.
+    event.preventDefault();
+    console.log('👍', 'beforeinstallprompt', event);
+    // Stash the event so it can be triggered later.
+    window.deferredPrompt = event;
+
+    const { firstChild } = document.querySelector('main');
+    const divInstall = document.createElement('div');
+    divInstall.id = 'pwa-install-container';
+    divInstall.className = 'hidden';
+    divInstall.innerHTML = `
+      <button id="pwa-install-button" type="button">Install App</button>
+    `;
+
+    firstChild.before(divInstall);
+    // Remove the 'hidden' class from the install button container.
+    divInstall.classList.toggle('hidden', false);
+
+    const butInstall = document.getElementById('pwa-install-button');
+    butInstall.addEventListener('click', async () => {
+      console.log('👍', 'butInstall-clicked');
+      const promptEvent = window.deferredPrompt;
+      if (!promptEvent) {
+        // The deferred prompt isn't available.
+        return;
+      }
+      // Show the install prompt.
+      promptEvent.prompt();
+      // Log the result
+      const result = await promptEvent.userChoice;
+      console.log('👍', 'userChoice', result);
+      // Reset the deferred prompt variable, since
+      // prompt() can only be called once.
+      window.deferredPrompt = null;
+      // Hide the install button.
+      divInstall.classList.toggle('hidden', true);
+    });
+  });
+
+  window.addEventListener('appinstalled', (event) => {
+    console.log('👍', 'appinstalled', event);
+    // Clear the deferredPrompt so it can be garbage collected
+    window.deferredPrompt = null;
+  });
 }

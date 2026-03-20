@@ -13,7 +13,7 @@ const PWA_ACTIONS = [
   {
     id: 'home',
     label: 'Home',
-    href: '/en-us/consumer',
+    href: '/en-us/consumer/free-tools',
   },
   {
     id: 'link-checker',
@@ -74,8 +74,8 @@ function getIsActiveAction(action, currentPath) {
     return false;
   }
 
-  if (action.href === '/en-us/consumer') {
-    return currentPath === '/en-us/consumer' || currentPath === '/en-us/consumer/';
+  if (action.href === '/en-us/consumer/free-tools') {
+    return currentPath === '/en-us/consumer/free-tools' || currentPath === '/en-us/consumer/free-tools/';
   }
 
   return normalizePath(action.href) === currentPath;
