@@ -1,7 +1,7 @@
-import "@repobit/dex-system-design/compare";
+/* eslint-disable-next-line import/no-unresolved */
+import '@repobit/dex-system-design/compare';
 
-const getHeadingText = (root) =>
-  root?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
+const getHeadingText = (root) => root?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
 
 const getAdjacentParagraph = (element, fallbackRoot) => {
   const candidate = element?.nextElementSibling;
@@ -91,16 +91,15 @@ export default function decorate(block) {
     for (let i = 0; i < listItems.length; i += 2) {
       const label = listItems[i]?.textContent?.trim();
       const score = listItems[i + 1]?.textContent?.trim();
-      if (!label || !score) {
-        continue;
-      }
 
-      const bar = document.createElement('compare-bar');
-      bar.setAttribute('label', label);
-      bar.setAttribute('score', normalizeScore(score));
-      bar.setAttribute('max-score', '6');
-      bar.setAttribute('variant', /bitdefender/i.test(label) ? 'primary' : 'secondary');
-      card.appendChild(bar);
+      if (label && score) {
+        const bar = document.createElement('compare-bar');
+        bar.setAttribute('label', label);
+        bar.setAttribute('score', normalizeScore(score));
+        bar.setAttribute('max-score', '6');
+        bar.setAttribute('variant', /bitdefender/i.test(label) ? 'primary' : 'secondary');
+        card.appendChild(bar);
+      }
     }
 
     compareSection.appendChild(card);
