@@ -1640,12 +1640,14 @@ main .subscriber .section {
         padding-bottom: 64px;
     }
     .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div {
-        display: block;
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-rows: repeat(2, 1fr);
+        grid-auto-columns: 48%;
+        gap: 16px;
     }
     .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div > div {
         height: auto;
-        width: 50%;
-        float: left;
         padding-left: 20px;
         margin-bottom: 32px;
         border-bottom: unset;
@@ -1932,6 +1934,9 @@ main .subscriber .section {
     }
     .subscriber .multi-carousel-container .carousel-item {
         flex: 0 0 66.66%;
+    }
+    .subscriber #has4columns .columns-wrapper .columns.with-box-shadow > div {
+        display: block;
     }
     .subscriber #has4columns, .subscriber-custom-content-container {
         padding-top: 80px;
