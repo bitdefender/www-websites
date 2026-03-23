@@ -134,7 +134,7 @@ function renderStickyNavMenu(block) {
   return stickyNavMenu;
 }
 
-function renderStickyNavigation(block) {
+function renderStickyNavigation(block, stickyNavAsset = 'sticky-buy') {
   const menuWithButton = document.createElement('div');
   menuWithButton.classList.add('menu-with-button');
 
@@ -160,7 +160,7 @@ function renderStickyNavigation(block) {
       window.adobeDataLayer.push(
         {
           event: 'click',
-          asset: 'sticky-buy',
+          asset: stickyNavAsset,
         },
       );
     });
@@ -231,7 +231,11 @@ function onScroll(stickyNav) {
 }
 
 export default function decorate(block) {
-  const stickyNav = renderStickyNavigation(block);
+  const section = block.closest('.section');
+  const {
+    stickyNavAsset,
+  } = section.dataset;
+  const stickyNav = renderStickyNavigation(block, stickyNavAsset);
 
   // listen to scroll event to stick the nav on the top and update the current visible section
   document.addEventListener('scroll', () => onScroll(stickyNav));
