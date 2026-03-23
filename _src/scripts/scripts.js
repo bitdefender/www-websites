@@ -42,6 +42,7 @@ import {
   syncPWAManifestExposure,
   isStandalonePWA,
   isPWAEnabledPage,
+  getPWADisplayMode,
 } from './utils/pwa/pwa.js';
 import { Constants } from './libs/constants.js';
 
@@ -530,6 +531,20 @@ async function loadEager(doc) {
   }
 }
 
+window.addEventListener('DOMContentLoaded', () => {
+  // Replace "standalone" with the display mode used in your manifest
+  window.matchMedia('(display-mode: standalone)')
+    .addEventListener('change', async () => {
+      // Log display mode change to analytics
+      console.log('DISPLAY_MODE_CHANGED', getPWADisplayMode());
+      if (getPWADisplayMode() === 'standalone') {
+        const { default: mountPWAHeader } = await import('./utils/pwa/pwa-header.js');
+        const header = document.querySelector('header');
+        mountPWAHeader(header);
+      }
+    });
+});
+
 /**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
@@ -542,7 +557,7 @@ async function loadLazy(doc) {
   // eslint-disable-next-line max-len
   const shouldHideHeaderAndFooterForPWA = isStandalonePWA() && isPWAEnabledPage(window.location.pathname);
   const header = doc.querySelector('header');
-
+  console.log(getPWADisplayMode());
   header.style.height = '0px';
   if (shouldHideHeaderAndFooterForPWA) {
     header.style.display = 'block';

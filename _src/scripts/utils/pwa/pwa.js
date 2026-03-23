@@ -36,6 +36,17 @@ export function syncPWAManifestExposure() {
   document.head.append(manifestLink);
 }
 
+export function getPWADisplayMode() {
+  if (document.referrer.startsWith('android-app://')) return 'twa';
+  if (window.matchMedia('(display-mode: browser)').matches) return 'browser';
+  if (window.matchMedia('(display-mode: standalone)').matches) return 'standalone';
+  if (window.matchMedia('(display-mode: minimal-ui)').matches) return 'minimal-ui';
+  if (window.matchMedia('(display-mode: fullscreen)').matches) return 'fullscreen';
+  if (window.matchMedia('(display-mode: window-controls-overlay)').matches) return 'window-controls-overlay';
+
+  return 'unknown';
+}
+
 export async function registerPWA() {
   if (!('serviceWorker' in navigator) || !isPWAEnabledPage(window.location.pathname)) {
     return;
@@ -89,9 +100,12 @@ export async function registerPWA() {
     });
   });
 
-  window.addEventListener('appinstalled', (event) => {
+  window.addEventListener('appinstalled', async (event) => {
     console.log('👍', 'appinstalled', event);
     // Clear the deferredPrompt so it can be garbage collected
     window.deferredPrompt = null;
+    const { default: mountPWAHeader } = await import('./pwa-header.js');
+    const header = document.querySelector('header');
+    mountPWAHeader(header);
   });
 }

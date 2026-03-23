@@ -1,4 +1,3 @@
-import { isPWAEnabledPage, isStandalonePWA } from './pwa.js';
 import {
   loadCSS,
 } from '../../lib-franklin.js';
@@ -119,7 +118,7 @@ function createCollapseToggle(initialCollapsed) {
 }
 
 export default function mountPWAHeader(header) {
-  if (!header || !isStandalonePWA() || !isPWAEnabledPage(window.location.pathname)) {
+  if (!header) {
     return;
   }
 
