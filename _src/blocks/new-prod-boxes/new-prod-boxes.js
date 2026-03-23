@@ -627,9 +627,15 @@ async function updateAddOnPrices(
     const addOnPercentSave = container.querySelector('.add-on-percent-save');
 
     if (addOnPercentSave && priceBox) {
-      const saveText = priceBox.querySelector('.prod-save')?.textContent || '';
+      const prodSaveEl = priceBox.querySelector('.prod-save');
+      const saveText = prodSaveEl
+        ? Array.from(prodSaveEl.childNodes)
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .map((node) => node.textContent.trim())
+          .join(' ')
+        : '';
       const discountPercent = addOnInfo.getDiscount('percentageWithProcent');
-      addOnPercentSave.innerHTML = `${saveText} <span class="add-on-percent">${discountPercent}</span>`;
+      addOnPercentSave.innerHTML = `${saveText} <span class="add-on-percent" ${discountPercent === '0%' ? 'style="display:none"' : ''}>${discountPercent}</span>`;
     }
   } catch (error) {
     // eslint-disable-next-line no-console
