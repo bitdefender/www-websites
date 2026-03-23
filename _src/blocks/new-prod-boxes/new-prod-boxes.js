@@ -635,7 +635,7 @@ async function updateAddOnPrices(
           .join(' ')
         : '';
       const discountPercent = addOnInfo.getDiscount('percentageWithProcent');
-      addOnPercentSave.innerHTML = `${saveText} <span class="add-on-percent" ${discountPercent === '0%' ? 'style="display:none"' : ''}>${discountPercent}</span>`;
+      addOnPercentSave.innerHTML = discountPercent !== '0%' ? `${saveText} <span class="add-on-percent">${discountPercent}</span>` : '';
     }
   } catch (error) {
     // eslint-disable-next-line no-console
