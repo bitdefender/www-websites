@@ -977,6 +977,8 @@ export const getProductFinding = () => {
     case 'spot-the-scam-quiz':
       productFinding = 'consumer quiz';
       break;
+    case 'scamio':
+      break;
     default:
       if (currentPath.includes('/consumer/')) productFinding = 'product pages';
       break;
