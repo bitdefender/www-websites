@@ -625,10 +625,11 @@ async function updateAddOnPrices(
     }
 
     const addOnPercentSave = container.querySelector('.add-on-percent-save');
+
     if (addOnPercentSave && priceBox) {
       const saveText = priceBox.querySelector('.prod-save')?.textContent || '';
       const discountPercent = addOnInfo.getDiscount('percentageWithProcent');
-      addOnPercentSave.innerHTML = `${saveText} <span class="add-on-percent>"${discountPercent}`;
+      addOnPercentSave.innerHTML = `${saveText} <span class="add-on-percent">${discountPercent}</span>`;
     }
   } catch (error) {
     // eslint-disable-next-line no-console
