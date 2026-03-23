@@ -240,7 +240,7 @@
   font-size: 12px;
   font-family: Arial, sans-serif;
   line-height: 13px;
-  margin: 7px 0 4px;
+  margin: 7px 0 12px;
 }
 
 .new-prod-boxes-container .new-prod-boxes.new-green-check .inner_prod_box p:first-of-type{
@@ -938,7 +938,7 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 5;
-    
+    margin-bottom: 4px;
   }
 }
 
