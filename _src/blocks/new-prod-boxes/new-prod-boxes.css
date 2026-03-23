@@ -816,7 +816,7 @@
   display: grid;
   grid-template-rows: subgrid;
   grid-row: span 5;
-  width: fit-content;
+  
 }
 
 .demo-box .hero-aem__prices * {
