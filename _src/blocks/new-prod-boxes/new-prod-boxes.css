@@ -591,6 +591,10 @@
   justify-content: center;
 }
 
+.new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.primary {
+  width: 100%;
+}
+
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.secondary {
   width: 100%;
 }
