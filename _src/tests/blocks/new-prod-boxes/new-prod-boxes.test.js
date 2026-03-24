@@ -4,6 +4,7 @@
 import {
   describe, it, expect, beforeAll, vi,
 } from 'vitest';
+
 import { readFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -26,6 +27,27 @@ const mockHtml = await readFile(path.join(__dirname, 'new-prod-boxes.mock.html')
 describe('new-prod-boxes', () => {
   beforeAll(async () => {
     // Setup window mocks
+    class ResizeObserverMock {
+      constructor(callback) {
+        this.callback = callback;
+      }
+
+      observe() {
+        return this;
+      }
+
+      unobserve() {
+        return this;
+      }
+
+      disconnect() {
+        return this;
+      }
+    }
+
+    window.ResizeObserver = ResizeObserverMock;
+    global.ResizeObserver = ResizeObserverMock;
+
     window.hj = vi.fn();
     Object.defineProperty(window, 'location', {
       value: { href: 'http://localhost:3000/en-us/consumer/', hostname: 'localhost:3000' },

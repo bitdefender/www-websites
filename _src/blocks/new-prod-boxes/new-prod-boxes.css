@@ -87,7 +87,7 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
-  height: 30px;
+  min-height: 30px;
   max-width: 350px;
   width: 86%;
   font-family: Arial, sans-serif;
@@ -98,7 +98,7 @@
   border-top-right-radius: 10px;
   padding-top: 7px;
   position: absolute;
-  top: -39px;
+  bottom: 100%;
   left: 7%;
   box-sizing: content-box;
 }
@@ -240,7 +240,7 @@
   font-size: 12px;
   font-family: Arial, sans-serif;
   line-height: 13px;
-  margin: 7px 0 20px;
+  margin: 7px 0 12px;
 }
 
 .new-prod-boxes-container .new-prod-boxes.new-green-check .inner_prod_box p:first-of-type{
@@ -399,6 +399,10 @@
         .add-on-product {
           transition: all 0.4s;
         }
+      }
+
+      &:has(.greenTag2) {
+        margin-top: var(--tag-margin);
       }
     }
   }
@@ -578,11 +582,13 @@
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.primary {
   display: inline-block;
   min-width: 144px;
+  width: fit-content;
 }
 
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons .button.secondary {
   width: fit-content;
-  min-width: 150px;
+  min-width: 144px;
+  justify-content: center;
 }
 
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.secondary {
@@ -716,7 +722,7 @@
   display: inline-flex;
   align-items: center;
   width: 302px;
-  height: 44px;
+  min-height: 44px;
   background-color: #016DFF;
   border-radius: 22px;
 }
@@ -728,7 +734,7 @@
 .switchBox .slider {
   position: absolute;
   content: "";
-  height: 40px;
+  min-height: calc(100% - 4px);
   width: 150px;
   left: 2px;
   bottom: 2px;
@@ -751,6 +757,7 @@
   color: white;
   transition: color 0.4s;
   cursor: pointer;
+  min-height: 100%;
 }
 
 .switchBox .label.right {
@@ -806,6 +813,9 @@
 
 .hero-aem__prices {
   margin-top: 20px;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 5;
 }
 
 .demo-box .hero-aem__prices * {
@@ -909,6 +919,7 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 50;
+    margin-top: var(--tag-margin);
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
@@ -921,6 +932,13 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 10;
+  }
+
+  .hero-aem__prices > div, .hero-aem__prices > div > div {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 5;
+    margin-bottom: 4px;
   }
 }
 

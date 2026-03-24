@@ -60,7 +60,7 @@ function createPriceElement(options) {
   oldPriceContainer.className = 'oldprice-container';
   oldPriceContainer.innerHTML = `
     <span class="prod-oldprice" data-store-price="${oldPriceAttr}" data-store-hide="no-price=discounted"></span>
-    <span class="prod-save" data-store-hide="no-price=discounted">${saveText} <span data-store-discount="percentage"></span></span>
+    <span class="prod-save" data-store-hide="no-price=discounted">${saveText ?? ''} <span data-store-discount="percentage"></span></span>
   `;
 
   // New price container
@@ -149,6 +149,7 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
     input.id = inputId;
     input.name = inputName;
     input.value = inputValue;
+    input.setAttribute('rank', `radio-${idx + 1}`);
     input.setAttribute('data-store-click-set-product', '');
     input.setAttribute('data-store-product-id', productName);
     input.setAttribute('data-store-product-option', `${prodUser}-${prodYear}`);
@@ -202,12 +203,15 @@ function processFeatureContent(content, tdElement) {
 
     processedContent = processedContent.replace(pillMatch[0], pillElement.outerHTML);
 
-    // Remove duplicate icon if present
     if (icon) {
-      let iconCount = 0;
-      processedContent = processedContent.replace(new RegExp(icon.outerHTML, 'g'), (match) => {
-        iconCount += 1;
-        return iconCount === 2 ? '' : match;
+      let first = true;
+
+      processedContent = processedContent.replaceAll(icon.outerHTML, () => {
+        if (first) {
+          first = false;
+          return icon.outerHTML;
+        }
+        return '';
       });
     }
   }
@@ -573,6 +577,116 @@ function setupFamilyBoxHandlers(block) {
 }
 
 /**
+ * Updates add-on pricing elements with calculated prices
+ * @param {string} productName - Main product name
+ * @param {string} productOption - Product option (users-years)
+ * @param {string} addOnName - Add-on product name
+ * @param {string} addOnOption - Add-on option (users-years)
+ * @param {HTMLElement} container - Container element to update prices in
+ * @param {HTMLElement} priceBox - Optional element to get save text from
+ * @returns {Promise<void>}
+ */
+async function updateAddOnPrices(
+  productName,
+  productOption,
+  addOnName,
+  addOnOption,
+  container,
+  priceBox = null,
+) {
+  try {
+    const products = await Store.getProducts([
+      new ProductInfo(productName),
+      new ProductInfo(addOnName),
+    ]);
+
+    const product = products[productName];
+    const addOnProduct = products[addOnName];
+
+    if (!addOnProduct || !product) return;
+
+    const [productUsers, productYears] = productOption.split('-');
+    const [addOnUsers, addOnYears] = addOnOption.split('-');
+
+    const productInfo = product.getOption(productUsers, productYears);
+    const addOnInfo = addOnProduct.getOption(addOnUsers, addOnYears);
+
+    const addOnCost = addOnInfo.getDiscountedPrice('value') - productInfo.getDiscountedPrice('value');
+    const formattedAddOnCost = formatPrice(addOnCost, product.getCurrency());
+
+    const addOnNewPrice = container.querySelector('.add-on-newprice');
+    if (addOnNewPrice) {
+      addOnNewPrice.textContent = formattedAddOnCost;
+    }
+
+    const addOnOldPrice = container.querySelector('.add-on-oldprice');
+    if (addOnOldPrice) {
+      addOnOldPrice.textContent = formatPrice(addOnInfo.getPrice('value'), addOnProduct.getCurrency());
+    }
+
+    const addOnPercentSave = container.querySelector('.add-on-percent-save');
+
+    if (addOnPercentSave && priceBox) {
+      const prodSaveEl = priceBox.querySelector('.prod-save');
+      const saveText = prodSaveEl
+        ? Array.from(prodSaveEl.childNodes)
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .map((node) => node.textContent.trim())
+          .join(' ')
+        : '';
+      const discountPercent = addOnInfo.getDiscount('percentageWithProcent');
+      addOnPercentSave.innerHTML = discountPercent !== '0%' ? `${saveText} <span class="add-on-percent">${discountPercent}</span>` : '';
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error updating add-on prices:', error);
+  }
+}
+
+/**
+ * Synchronizes add-on product selection with main product plan changes
+ * When a plan switcher radio button changes, this function updates the state
+ * and synchronizes matching radio buttons across related products,
+ * then recalculates add-on pricing based on the new selection
+ * @param {HTMLElement} boxElement - Product box element containing plan switchers
+ * @param {Object} state - State object containing current product selections
+ * @returns {void}
+ */
+function syncAddOnWithMainProduct(boxElement, state) {
+  const radios = boxElement.querySelectorAll('.plan-switcher input');
+  radios.forEach((radio) => {
+    radio.addEventListener('change', async () => {
+      const selector = radio.getAttribute('rank');
+      const matchingRadios = boxElement.querySelectorAll(`input[rank="${selector}"]`);
+
+      if (matchingRadios.length <= 1) {
+        return;
+      }
+
+      if (radio.id.includes('add-on')) {
+        state.addOnProductOption = radio.dataset.storeProductOption;
+        state.addOnProduct = radio.dataset.storeProductId;
+      } else {
+        state.productOption = radio.dataset.storeProductOption;
+        state.product = radio.dataset.storeProductId;
+      }
+
+      matchingRadios.forEach(async (matchingRadio) => matchingRadio.click());
+
+      const addOnPriceBox = boxElement.querySelector('.hero-aem__prices__addon');
+      await updateAddOnPrices(
+        state.product,
+        state.productOption,
+        state.addOnProduct,
+        state.addOnProductOption,
+        boxElement,
+        addOnPriceBox,
+      );
+    });
+  });
+}
+
+/**
  * Sets up add-on checkbox functionality
  * @param {HTMLElement} boxElement - Product box element
  * @param {HTMLElement} checkmarkList - Checkmark list element
@@ -611,28 +725,17 @@ async function setupAddOnCheckbox(
 
     if (!addOnProduct || !product) return;
 
-    const productOption = product.getOption(prodUsers, prodYears);
-    const addOnOption = addOnProduct.getOption(addOnProdUsers, addOnProdYears);
+    const productOptionStr = `${prodUsers}-${prodYears}`;
+    const addOnProductOptionStr = `${addOnProdUsers}-${addOnProdYears}`;
 
-    const addOnCost = addOnOption.getDiscountedPrice('value') - productOption.getDiscountedPrice('value');
-    const formattedAddOnCost = formatPrice(addOnCost, product.getCurrency());
-
-    const addOnNewPrice = newLi.querySelector('.add-on-newprice');
-    if (addOnNewPrice) {
-      addOnNewPrice.textContent = formattedAddOnCost;
-    }
-
-    const addOnOldPrice = newLi.querySelector('.add-on-oldprice');
-    if (addOnOldPrice) {
-      addOnOldPrice.textContent = formatPrice(addOnOption.getPrice('value'), addOnProduct.getCurrency());
-    }
-
-    const addOnPercentSave = newLi.querySelector('.add-on-percent-save');
-    if (addOnPercentSave && addOnPriceBox) {
-      const saveText = addOnPriceBox.querySelector('.prod-save')?.textContent || '';
-      const discountPercent = addOnOption.getDiscount('percentageWithProcent');
-      addOnPercentSave.textContent = `${saveText} ${discountPercent}`;
-    }
+    await updateAddOnPrices(
+      prodName,
+      productOptionStr,
+      addOnProdName,
+      addOnProductOptionStr,
+      newLi,
+      addOnPriceBox,
+    );
 
     const checkboxSelector = newLi.querySelector('.checkmark');
     if (checkboxSelector) {
@@ -923,6 +1026,7 @@ export default async function decorate(block) {
         if (checkmark) {
           const checkmarkList = checkmark.closest('ul');
           checkmarkList?.classList.add('checkmark-list');
+          checkmarkList?.setAttribute('data-store-context', '');
 
           const li = checkmark.closest('li');
           if (li) {
@@ -950,6 +1054,19 @@ export default async function decorate(block) {
               addOnProductInfo,
               addOnPriceBox,
               productInfo,
+            );
+
+            const productZones = block.children[key].querySelectorAll('[data-store-context]');
+            const state = {
+              product: block.children[key]?.getAttribute('data-store-id'),
+              productOption: block.children[key]?.getAttribute('data-store-option'),
+              addOnProduct: productZones[1]?.getAttribute('data-store-id'),
+              addOnProductOption: productZones[1]?.getAttribute('data-store-option'),
+            };
+
+            syncAddOnWithMainProduct(
+              block.children[key],
+              state,
             );
           }
         }
@@ -1008,4 +1125,15 @@ export default async function decorate(block) {
   if (switchCheckbox) {
     switchCheckbox.dispatchEvent(new Event('change'));
   }
+
+  const resizeObserver = new ResizeObserver(() => {
+    let tagMargin = 0;
+    block.querySelectorAll('.greenTag2').forEach((tag) => {
+      tagMargin = Math.max(tagMargin, tag.offsetHeight);
+    });
+
+    section.style.setProperty('--tag-margin', `${tagMargin}px`);
+  });
+
+  resizeObserver.observe(section);
 }
