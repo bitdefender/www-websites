@@ -500,6 +500,7 @@ export function updateSectionsStatus(main) {
  * @param {Element} section The section element
  */
 export function updateSectionStatus(section) {
+  if (!section) return;
   const status = section.dataset.sectionStatus;
   if (status !== 'loaded') {
     const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
@@ -853,7 +854,7 @@ export async function waitForLCP(lcpBlocks) {
     updateSectionStatus(newsBar.closest('.section'));
   }
 
-  updateSectionStatus(block.closest('.section'));
+  updateSectionStatus(block?.closest('.section'));
   const lcpCandidate = document.querySelector('main img');
   await new Promise((resolve) => {
     if (lcpCandidate && !lcpCandidate.complete) {
