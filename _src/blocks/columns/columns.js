@@ -283,7 +283,7 @@ export default function decorate(block) {
   });
 
   if (linksOpenInNewTab === 'true') {
-    block.querySelectorAll('.button-container > a').forEach((anchorEl) => {
+    block.querySelectorAll('.button-container a').forEach((anchorEl) => {
       anchorEl.target = '_blank';
       anchorEl.rel = 'noopener noreferrer';
     });
@@ -378,15 +378,31 @@ export default function decorate(block) {
 
   renderNanoBlocks(parentSection, undefined, undefined, block);
 
-  const chatOptions = document.querySelector('.chat-options');
-  if (chatOptions) {
-    const cardButtons = chatOptions.querySelectorAll('.button-container');
-    cardButtons.forEach((button) => {
-      button.previousElementSibling.classList.add('chat-options-text');
+  if (parentSection.classList.contains('chat-options')) {
+    const cards = block.querySelectorAll('.columns > div > div');
+    cards.forEach((card) => {
+      const buttonContainer = card.querySelector('.button-container');
+      if (!buttonContainer) return;
+      buttonContainer.previousElementSibling.classList.add('chat-options-text');
+
+      const button = buttonContainer.querySelector('a');
+      button.addEventListener('click', () => {
+        const h4Title = card?.querySelector('h4').textContent || '';
+
+        window.adobeDataLayer.push(
+          new ButtonClickEvent(
+            'click',
+            {
+              asset: `chat on ${h4Title.trim().toLowerCase()}`,
+            },
+          ),
+        );
+      });
     });
-    matchHeights(chatOptions, '.chat-options-text');
-    matchHeights(chatOptions, 'table');
+    matchHeights(block, '.chat-options-text');
+    matchHeights(block, 'table');
   }
+
   block.querySelectorAll('h3')?.forEach((element) => {
     if (element.textContent.includes('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}')) {
       element.classList.add('await-loader');
