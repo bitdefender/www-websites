@@ -27,11 +27,26 @@ const mockHtml = await readFile(path.join(__dirname, 'new-prod-boxes.mock.html')
 describe('new-prod-boxes', () => {
   beforeAll(async () => {
     // Setup window mocks
-    window.ResizeObserver = vi.fn(() => ({
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-      disconnect: vi.fn(),
-    }));
+    class ResizeObserverMock {
+      constructor(callback) {
+        this.callback = callback;
+      }
+
+      observe() {
+        return this;
+      }
+
+      unobserve() {
+        return this;
+      }
+
+      disconnect() {
+        return this;
+      }
+    }
+
+    window.ResizeObserver = ResizeObserverMock;
+    global.ResizeObserver = ResizeObserverMock;
 
     window.hj = vi.fn();
     Object.defineProperty(window, 'location', {
