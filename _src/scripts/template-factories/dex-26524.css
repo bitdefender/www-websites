@@ -692,18 +692,7 @@
             margin-bottom: var(--size-0);
         }
 
-        .prod_box:not(:first-of-type, :nth-of-type(4)) {
-            h4 {
-                &::after {
-                    content: 'Plus';
-                    color: var(--color-highlight-blue);
-                    transform: translateX(-100%);
-                    position: absolute;
-                }
-            }
-        }
-
-        .hero-aem__prices .button {
+        .new-prod-boxes.smallerbuttons .button.primary {
             width: 100%;
         }
 
@@ -1634,6 +1623,14 @@
             }
         }
     }
+
+    .dex-premium-security {
+
+        .switchBox {
+            display: none;
+        }
+    }
+
 }
 
 
@@ -2558,10 +2555,6 @@
         .dex-premium-security {
             .default-content-wrapper {
                 padding-bottom: var(--size-64);
-            }
-
-            .prod_box .inner_prod_box h4::after, .switchBox {
-                display: none;
             }
         }
 
