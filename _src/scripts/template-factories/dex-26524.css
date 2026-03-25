@@ -1655,6 +1655,10 @@
             width: 100%;
         }
 
+        .hero-aem__prices > div, .hero-aem__prices > div > div {
+            display: block;
+        }
+
         .new-prod-boxes-container.we-container h2 {
             margin: var(--size-0);
             font-size: var(--heading-font-size-xs);
