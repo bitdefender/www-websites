@@ -1,5 +1,8 @@
 /* eslint-disable-next-line import/no-unresolved */
 import '@repobit/dex-system-design/compare';
+import '@repobit/dex-system-design/heading';
+import '@repobit/dex-system-design/paragraph';
+import '@repobit/dex-system-design/link';
 
 const getHeadingText = (root) => root?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
 
@@ -107,3 +110,4 @@ export default function decorate(block) {
 
   block.replaceChildren(compareSection);
 }
+
