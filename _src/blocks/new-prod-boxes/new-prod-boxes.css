@@ -405,6 +405,13 @@
         margin-top: var(--tag-margin);
       }
     }
+
+    &.blue-top-tag {
+      .prod_box .inner_prod_box .greenTag2 {
+        background-color: #e4f2ff;
+        color: #0D499B;
+      }
+    }
   }
 }
 
