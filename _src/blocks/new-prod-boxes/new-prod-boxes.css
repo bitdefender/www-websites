@@ -407,9 +407,25 @@
     }
 
     &.blue-top-tag {
-      .prod_box .inner_prod_box .greenTag2 {
-        background-color: #e4f2ff;
-        color: #0D499B;
+      .prod_box {
+        .greenTag2 {
+          background-color: #d6e8ff;
+          color: #003385;
+          font-weight: 700;
+        }
+
+        .blueTag {
+          background-color: transparent;
+          color: #000;
+          padding-left: 0;
+        }
+
+        .prod-save {
+          background-color: #68BA68;
+          color: #fff;
+          font-weight: 700;
+          border-radius: 16px;
+        }
       }
     }
   }
