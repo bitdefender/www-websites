@@ -67,7 +67,7 @@ function createPriceElement(options, card) {
   const newPriceContainer = document.createElement('div');
   newPriceContainer.className = 'newprice-container mt-2';
 
-  const perPriceText = perPrice?.textContent?.replace('0', '') || '';
+  const perPriceText = perPrice?.innerHTML?.replace('0', '') || '';
   const perPriceSup = perPriceText ? `<sup class="per-m">${perPriceText}</sup>` : '';
   newPriceContainer.innerHTML = `
     <span class="prod-newprice">
@@ -1139,6 +1139,11 @@ export default async function decorate(block) {
     (window.hj.q = window.hj.q || []).push(...args);
   };
   window.hj('event', 'new-prod-boxes');
+
+  const secondaryButtons = block.querySelectorAll('a.secondary');
+  secondaryButtons.forEach((button) => {
+    if (button.href.includes('hidden-button')) button.style.visibility = 'hidden';
+  });
 
   // Decorate icons for www-websites
   const isInLandingPages = window.location.href.includes('www-landing-pages')

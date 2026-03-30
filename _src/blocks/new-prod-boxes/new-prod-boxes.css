@@ -426,6 +426,22 @@
           font-weight: 700;
           border-radius: 16px;
         }
+
+        .per-m {
+          font-size: 14px;
+          color: #3D3D3D;
+        }
+
+        .button.secondary {
+          justify-content: center;
+
+          &:hover {
+            .button-text {
+              transform: none;
+              transition: none;
+            }
+          }
+        }
       }
     }
   }
@@ -564,11 +580,17 @@
 .new-prod-boxes-container .prod-newprice {
   font-size: 35px;
   font-weight: bold;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.creators .new-prod-boxes-container .prod-newprice {
+  align-items: unset;
 }
 
 .new-prod-boxes-container .prod-newprice .per-m {
   font-size: 20px;
-  top: -12px;
 }
 
 .new-prod-boxes-container .newprice-container {
@@ -577,7 +599,6 @@
 
 .new-prod-boxes-container .newprice-container sup {
   position: relative;
-  top: -20px;
 }
 
 .new-prod-boxes-container .button.primary {
