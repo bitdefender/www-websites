@@ -107,6 +107,10 @@ body > div:first-child {
   min-height: 64px;
 }
 
+body.with-language-bar > div:first-child, header {
+  min-height: 196px;
+}
+
 .section.ibm-plex-sans {
   * {
     font-family: "IBM Plex Sans", sans-serif;
