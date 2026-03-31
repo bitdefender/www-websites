@@ -499,8 +499,7 @@ async function loadEager(doc) {
   }
 
   const userCountry = await user.country;
-
-  if (userCountry !== page.country) doc.body.classList.add('with-language-bar');
+  if (userCountry !== page.country && !localStorage.getItem('language-bar:closed')) doc.body.classList.add('with-language-bar');
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
