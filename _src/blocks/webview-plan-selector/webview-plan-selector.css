@@ -1,0 +1,265 @@
+.webview-plan-selector-container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 22px;
+    background: #f3f3f4;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.webview-plan-selector {
+    color: #111;
+}
+
+.webview-plan-selector .webview-plan-selector-layout > h1,
+.webview-plan-selector .webview-plan-selector-layout > h2,
+.webview-plan-selector .webview-plan-selector-layout > h3 {
+    margin: 0 0 26px;
+    text-align: center;
+    font-size: 42px;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+.webview-plan-selector .webview-plan-selector-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.webview-plan-selector .webview-plan-selector-benefits {
+    padding: 4px 0;
+}
+
+.webview-plan-selector .webview-plan-selector-feature-list,
+.webview-plan-selector .webview-plan-selector-trust-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.webview-plan-selector .webview-plan-selector-feature-list {
+    margin-bottom: 22px;
+}
+
+.webview-plan-selector .webview-plan-selector-feature-list li,
+.webview-plan-selector .webview-plan-selector-trust-list li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 18px;
+    font-size: 16px;
+    line-height: 1.45;
+    color: #1a1a1a;
+}
+
+.webview-plan-selector .webview-plan-selector-feature-list li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 7px;
+    width: 8px;
+    height: 14px;
+    border-right: 2px solid #37a22d;
+    border-bottom: 2px solid #37a22d;
+    transform: rotate(40deg);
+}
+
+.webview-plan-selector .webview-plan-selector-trust-list li {
+    margin-bottom: 14px;
+}
+
+.webview-plan-selector .webview-plan-selector-trust-list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #8a8f98;
+    border-radius: 50%;
+}
+
+.webview-plan-selector .webview-plan-selector-plans {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.webview-plan-selector .webview-plan-selector-plan {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    width: 100%;
+    border: 1px solid #d7d9dc;
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: #f7f7f8;
+    cursor: pointer;
+    text-align: left;
+}
+
+.webview-plan-selector .webview-plan-selector-plan.is-selected {
+    border: 2px solid #006eff;
+    background: #f5f9ff;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.webview-plan-selector .webview-plan-selector-radio {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid #c4c7cd;
+    margin-top: 8px;
+}
+
+.webview-plan-selector .webview-plan-selector-plan.is-selected .webview-plan-selector-radio {
+    border: 5px solid #006eff;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-copy {
+    display: block;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-copy h2,
+.webview-plan-selector .webview-plan-selector-plan-copy h3 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-copy p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.35;
+    color: #2f3136;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-copy .webview-plan-selector-billed {
+    margin-top: 6px;
+    color: #5b5f66;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-price {
+    min-width: 104px;
+    text-align: right;
+    margin-top: 2px;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-price strong {
+    display: block;
+    font-size: 42px;
+    line-height: 1;
+    color: #202124;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-price > span {
+    display: block;
+    font-size: 12px;
+    color: #5b5f66;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-price em {
+    margin-top: 6px;
+    display: inline-block;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1;
+    color: #fff;
+    background: #18ba7a;
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.webview-plan-selector .webview-plan-selector-cta {
+    text-align: center;
+    margin: 12px 0 0;
+}
+
+.webview-plan-selector .webview-plan-selector-cta .button {
+    width: 100%;
+    max-width: 248px;
+    justify-content: center;
+    border-radius: 8px;
+    background-color: #006eff;
+    border-color: #006eff;
+    color: #fff;
+}
+
+.webview-plan-selector .webview-plan-selector-cta .button::after {
+    content: none;
+}
+
+.webview-plan-selector .webview-plan-selector-legal {
+    margin: 12px 0 0;
+    text-align: center;
+    color: #545962;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.webview-plan-selector .webview-plan-selector-legal a {
+    color: #006eff;
+}
+
+@media (min-width: 768px) {
+    .webview-plan-selector-container {
+        padding: 30px 34px 24px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-layout > h1,
+    .webview-plan-selector .webview-plan-selector-layout > h2,
+    .webview-plan-selector .webview-plan-selector-layout > h3 {
+        margin-bottom: 30px;
+        font-size: 42px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-main {
+        grid-template-columns: minmax(250px, 1fr) minmax(390px, 1.3fr);
+        gap: 22px;
+        align-items: start;
+    }
+}
+
+@media (max-width: 767px) {
+    .webview-plan-selector-container {
+        padding: 18px 14px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-layout > h1,
+    .webview-plan-selector .webview-plan-selector-layout > h2,
+    .webview-plan-selector .webview-plan-selector-layout > h3 {
+        font-size: 30px;
+        margin-bottom: 20px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-plan {
+        padding: 10px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-radio {
+        margin-top: 6px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-plan-copy h2,
+    .webview-plan-selector .webview-plan-selector-plan-copy h3 {
+        font-size: 21px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-plan-price {
+        min-width: 90px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-plan-price strong {
+        font-size: 34px;
+    }
+}
