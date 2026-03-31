@@ -1,9 +1,14 @@
-/* eslint-disable import/no-unresolved */
-import '@repobit/dex-system-design/compare';
-import '@repobit/dex-system-design/heading';
-import '@repobit/dex-system-design/paragraph';
-import '@repobit/dex-system-design/link';
-/* eslint-enable import/no-unresolved */
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.7/';
+
+const getDsnBase = () => {
+  try {
+    const map = document.querySelector('script[type="importmap"]');
+    const imports = JSON.parse(map?.textContent || '{}').imports || {};
+    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
+  } catch {
+    return DSN_FALLBACK;
+  }
+};
 
 const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
 const VIEWPORT_ANIMATION_MS = 1000;
@@ -262,7 +267,15 @@ const activateCompareAnimationsOnViewport = (compareSection) => {
   observer.observe(compareSection);
 };
 
-export default function decorate(block) {
+export default async function decorate(block) {
+  const base = getDsnBase();
+  await Promise.all([
+    import(`${base}compare`),
+    import(`${base}heading`),
+    import(`${base}paragraph`),
+    import(`${base}link`),
+  ]);
+
   const compareSection = buildCompareSection(block);
   block.replaceChildren(compareSection);
   activateCompareAnimationsOnViewport(compareSection);
