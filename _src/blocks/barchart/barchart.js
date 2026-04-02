@@ -273,6 +273,7 @@ export default async function decorate(block) {
     import(`${base}heading`),
     import(`${base}paragraph`),
     import(`${base}link`),
+    import(`${base}image`),
   ]);
 
   const compareSection = buildCompareSection(block);
