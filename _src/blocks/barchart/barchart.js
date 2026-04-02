@@ -1,13 +1,9 @@
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.7/';
-
 const getDsnBase = () => {
-  try {
-    const map = document.querySelector('script[type="importmap"]');
-    const imports = JSON.parse(map?.textContent || '{}').imports || {};
-    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
-  } catch {
-    return DSN_FALLBACK;
-  }
+  const map = document.querySelector('script[type="importmap"]');
+  const imports = JSON.parse(map?.textContent || '{}').imports || {};
+  const base = imports['@repobit/dex-system-design/'];
+  if (!base) throw new Error('Missing @repobit/dex-system-design importmap entry');
+  return base;
 };
 
 const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
