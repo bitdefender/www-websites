@@ -29,6 +29,8 @@ import {
 } from './libs/data-layer.js';
 import { StoreResolver } from './libs/store/index.js';
 
+import user from './user.js';
+
 import {
   createTag,
   GLOBAL_EVENTS,
@@ -495,6 +497,9 @@ async function loadEager(doc) {
     await loadTrackers();
     await resolveNonProductsDataLayer();
   }
+
+  const userCountry = await user.country;
+  if (userCountry !== page.country && !sessionStorage.getItem('language-bar:closed')) doc.body.classList.add('with-language-bar');
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
