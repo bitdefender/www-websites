@@ -547,7 +547,7 @@ async function runDefaultHeaderLogic(block) {
 
       shadowRoot.appendChild(contentDiv);
       shadowRoot.querySelector('button.language-banner__decline-button')?.addEventListener('click', () => {
-        localStorage.setItem('language-bar:closed', 'true');
+        sessionStorage.setItem('language-bar:closed', 'true');
         document.body.classList.remove('with-language-bar');
       });
 
