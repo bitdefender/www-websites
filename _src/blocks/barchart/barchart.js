@@ -108,9 +108,8 @@ const buildCompareSection = (block) => {
     const titleEl = contentWrap.querySelector('h1, h2, h3, h4, h5, h6');
     const descriptionEl = getAdjacentParagraph(titleEl, contentWrap);
     const listEl = contentWrap.querySelector('ul');
-    const footnoteEl = listEl?.nextElementSibling?.tagName === 'P'
-      ? listEl.nextElementSibling
-      : contentWrap.querySelector('p:last-of-type');
+    const footnoteCandidate = listEl?.nextElementSibling;
+    const footnoteEl = footnoteCandidate?.tagName === 'P' ? footnoteCandidate : null;
 
     const card = document.createElement('compare-card');
     const cardTitle = titleEl?.textContent?.trim();
