@@ -546,8 +546,11 @@ async function runDefaultHeaderLogic(block) {
       });
 
       shadowRoot.appendChild(contentDiv);
-      shadowRoot.querySelector('button.language-banner__decline-button')?.addEventListener('click', () => {
-        document.body.classList.remove('with-language-bar');
+      shadowRoot.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.language-banner__decline-button');
+        if (btn) {
+          document.body.classList.remove('with-language-bar');
+        }
       });
 
       const body = document.querySelector('body');
