@@ -1,9 +1,10 @@
-/* eslint-disable import/no-unresolved */
-import '@repobit/dex-system-design/compare';
-import '@repobit/dex-system-design/heading';
-import '@repobit/dex-system-design/paragraph';
-import '@repobit/dex-system-design/link';
-/* eslint-enable import/no-unresolved */
+const getDsnBase = () => {
+  const map = document.querySelector('script[type="importmap"]');
+  const imports = JSON.parse(map?.textContent || '{}').imports || {};
+  const base = imports['@repobit/dex-system-design/'];
+  if (!base) throw new Error('Missing @repobit/dex-system-design importmap entry');
+  return base;
+};
 
 const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
 const VIEWPORT_ANIMATION_MS = 1000;
@@ -103,9 +104,8 @@ const buildCompareSection = (block) => {
     const titleEl = contentWrap.querySelector('h1, h2, h3, h4, h5, h6');
     const descriptionEl = getAdjacentParagraph(titleEl, contentWrap);
     const listEl = contentWrap.querySelector('ul');
-    const footnoteEl = listEl?.nextElementSibling?.tagName === 'P'
-      ? listEl.nextElementSibling
-      : contentWrap.querySelector('p:last-of-type');
+    const footnoteCandidate = listEl?.nextElementSibling;
+    const footnoteEl = footnoteCandidate?.tagName === 'P' ? footnoteCandidate : null;
 
     const card = document.createElement('compare-card');
     const cardTitle = titleEl?.textContent?.trim();
@@ -262,7 +262,16 @@ const activateCompareAnimationsOnViewport = (compareSection) => {
   observer.observe(compareSection);
 };
 
-export default function decorate(block) {
+export default async function decorate(block) {
+  const base = getDsnBase();
+  await Promise.all([
+    import(`${base}compare`),
+    import(`${base}heading`),
+    import(`${base}paragraph`),
+    import(`${base}link`),
+    import(`${base}image`),
+  ]);
+
   const compareSection = buildCompareSection(block);
   block.replaceChildren(compareSection);
   activateCompareAnimationsOnViewport(compareSection);
