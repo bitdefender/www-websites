@@ -409,9 +409,22 @@
     &.blue-top-tag {
       .prod_box {
         .greenTag2 {
-          background-color: #d6e8ff;
-          color: #003385;
+          top: -35px;
+          background: #d6e8ff;
+          border-radius: 10px 10px 0 0;
+          font-family: Arial, sans-serif;
           font-weight: 700;
+          font-size: 13px;
+          line-height: 100%;
+          vertical-align: middle;
+          width: 80%;
+          text-align: center;
+          color: #003385;
+          height: 35px;
+          display: flex;
+          align-items: anchor-center;
+          padding: 0 10px;
+          justify-content: center;
         }
 
         .blueTag {
@@ -434,12 +447,31 @@
 
         .button.secondary {
           justify-content: center;
+          width: 100%;
 
           &:hover {
             .button-text {
               transform: none;
               transition: none;
             }
+          }
+        }
+
+        .benefitsLists ul li:first-of-type.has_arrow_right {
+          display: flex;
+          padding-left: 22px;
+          position: relative;
+
+          .arrow-right {
+            position: absolute ;
+            left: 0;
+            top: unset;
+          }
+        }
+
+        @media (width < 768px) {
+          .hero-aem__prices {
+            margin-bottom: 8px;
           }
         }
       }
