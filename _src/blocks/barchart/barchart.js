@@ -1,9 +1,19 @@
-const getDsnBase = () => {
-  const map = document.querySelector('script[type="importmap"]');
-  const imports = JSON.parse(map?.textContent || '{}').imports || {};
-  const base = imports['@repobit/dex-system-design/'];
-  if (!base) throw new Error('Missing @repobit/dex-system-design importmap entry');
-  return base;
+const getDsnBase = async () => {
+  try {
+    const map = document.querySelector('script[type="importmap"]');
+    const imports = JSON.parse(map?.textContent || '{}').imports || {};
+    if (imports['@repobit/dex-system-design/']) {
+      return imports['@repobit/dex-system-design/'];
+    }
+  } catch { /* ignore */ }
+
+  const headUrl = new URL('/head.html', import.meta.url);
+  const resp = await fetch(headUrl, { cache: 'force-cache' });
+  if (!resp.ok) throw new Error(`Failed to fetch ${headUrl}`);
+  const text = await resp.text();
+  const match = text.match(/"@repobit\/dex-system-design\/"\s*:\s*"([^"]+)"/);
+  if (!match) throw new Error('Missing @repobit/dex-system-design entry in head.html importmap');
+  return match[1];
 };
 
 const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
@@ -263,7 +273,7 @@ const activateCompareAnimationsOnViewport = (compareSection) => {
 };
 
 export default async function decorate(block) {
-  const base = getDsnBase();
+  const base = await getDsnBase();
   await Promise.all([
     import(`${base}compare`),
     import(`${base}heading`),
