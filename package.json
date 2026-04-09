@@ -46,11 +46,11 @@
   },
   "dependencies": {
     "@glidejs/glide": "^3.7.1",
-    "@repobit/dex-data-layer": "^2.1.11",
-    "@repobit/dex-launch": "^3.0.2",
-    "@repobit/dex-system-design": "^0.23.13",
-    "@repobit/dex-target": "^2.13.5",
-    "@repobit/dex-utils": "^2.1.12",
+    "@repobit/dex-data-layer": "^2.2.0",
+    "@repobit/dex-launch": "^3.0.3",
+    "@repobit/dex-system-design": "^0.23.14",
+    "@repobit/dex-target": "^2.13.6",
+    "@repobit/dex-utils": "^2.2.0",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
   },
