@@ -1,33 +1,52 @@
 .webview-plan-selector-container {
-    max-width: 760px;
+    max-width: 770px;
     margin: 0 auto;
-    padding: 22px;
+    padding: 0;
     background: #f3f3f4;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: "IBM Plex Sans", sans-serif;
 }
 
 .webview-plan-selector {
-    color: #111;
+    color: #000;
+}
+
+.webview-plan-selector .webview-plan-selector-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .webview-plan-selector .webview-plan-selector-layout > h1,
 .webview-plan-selector .webview-plan-selector-layout > h2,
 .webview-plan-selector .webview-plan-selector-layout > h3 {
-    margin: 0 0 26px;
+    margin: 0;
+    padding: 33px 0;
     text-align: center;
-    font-size: 42px;
-    line-height: 1.1;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 23px;
+    line-height: 35px;
     font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #000;
 }
 
 .webview-plan-selector .webview-plan-selector-main {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: 315px 455px;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 341px;
 }
 
 .webview-plan-selector .webview-plan-selector-benefits {
-    padding: 4px 0;
+    width: 315px;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 0 30px;
+    box-sizing: border-box;
 }
 
 .webview-plan-selector .webview-plan-selector-feature-list,
@@ -38,161 +57,274 @@
 }
 
 .webview-plan-selector .webview-plan-selector-feature-list {
-    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.webview-plan-selector .webview-plan-selector-feature-list li,
-.webview-plan-selector .webview-plan-selector-trust-list li {
+.webview-plan-selector .webview-plan-selector-feature-list li {
     position: relative;
-    padding-left: 30px;
-    margin-bottom: 18px;
-    font-size: 16px;
-    line-height: 1.45;
-    color: #1a1a1a;
+    margin: 0;
+    padding-left: 37px;
+    font-size: 12px;
+    line-height: 22px;
+    font-weight: 600;
+    color: #000;
 }
 
 .webview-plan-selector .webview-plan-selector-feature-list li::before {
-    content: '';
+    content: "";
     position: absolute;
-    left: 4px;
-    top: 7px;
-    width: 8px;
-    height: 14px;
-    border-right: 2px solid #37a22d;
-    border-bottom: 2px solid #37a22d;
-    transform: rotate(40deg);
-}
-
-.webview-plan-selector .webview-plan-selector-trust-list li {
-    margin-bottom: 14px;
-}
-
-.webview-plan-selector .webview-plan-selector-trust-list li::before {
-    content: '';
-    position: absolute;
-    left: 2px;
-    top: 4px;
+    top: 5px;
+    left: 0;
     width: 16px;
-    height: 16px;
-    border: 1px solid #8a8f98;
-    border-radius: 50%;
+    height: 12px;
+    background: no-repeat center / contain;
 }
 
-.webview-plan-selector .webview-plan-selector-plans {
+.webview-plan-selector .webview-plan-selector-feature-list li.is-available::before {
+    background-image: url("/_src/icons/checkmark_normal.svg");
+}
+
+.webview-plan-selector .webview-plan-selector-feature-list li.is-not-available::before,
+.webview-plan-selector .webview-plan-selector-feature-list li.is-unavailable::before {
+    background-image: url("/_src/icons/checkmark_x_normal_pink.svg");
+    background-size: 12px 12px;
+}
+
+.webview-plan-selector .webview-plan-selector-trust-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    padding-bottom: 4px;
+}
+
+.webview-plan-selector .webview-plan-selector-trust-list li {
+    display: flex;
+    align-items: center;
+    gap: 19px;
+    margin: 0;
+    padding-left: 0;
+    font-size: 12px;
+    line-height: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #000;
+}
+
+.webview-plan-selector .webview-plan-selector-trust-list li .icon {
+    display: inline-flex;
+    width: 17px;
+    min-width: 17px;
+    height: 17px;
+    align-items: center;
+    justify-content: center;
+    color: #6d6d6d;
+}
+
+.webview-plan-selector .webview-plan-selector-trust-list li .icon svg {
+    width: 17px;
+    height: 17px;
+}
+
+.webview-plan-selector .webview-plan-selector-plans {
+    width: 455px;
+    align-self: stretch;
+    padding: 0 30px 0 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .webview-plan-selector .webview-plan-selector-plan {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px;
-    align-items: start;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 17px;
     width: 100%;
-    border: 1px solid #d7d9dc;
-    border-radius: 10px;
-    padding: 12px 14px;
-    background: #f7f7f8;
+    padding: 13px 15px 15px;
+    border: 1px solid #e7e7e7;
+    border-radius: 7px;
+    background: #fff;
+    box-shadow: 0 0 14px rgb(0 0 0 / 5%);
     cursor: pointer;
     text-align: left;
+    appearance: none;
+}
+
+/* .webview-plan-selector .await-loader {
+    min-height: 177px;
+} */
+
+.webview-plan-selector .discounted-yearly-price.await-loader {
+    min-height: 14px;
+    min-width: 34.15px;
+    display: inline-block;
+}
+
+.webview-plan-selector .billed-price.await-loader {
+    min-height: 23px;
+    min-width: 50px;
+    display: inline-block;
+}
+
+.webview-plan-selector .discount-percentage.await-loader {
+    min-height: 20px;
+    min-width: 22px;
+    display: inline-block;
+}
+
+.webview-plan-selector .webview-plan-selector-plan .webview-plan-selector-plan-buy-link {
+    display: none;
+}
+
+.webview-plan-selector .webview-plan-selector-plan:focus-visible {
+    outline: 2px solid #006dff;
+    outline-offset: 2px;
 }
 
 .webview-plan-selector .webview-plan-selector-plan.is-selected {
-    border: 2px solid #006eff;
-    background: #f5f9ff;
+    border: 2px solid #006dff;
+    background: #eff6ff;
+    box-shadow: none;
+}
+
+.webview-plan-selector .webview-plan-selector-radio {
+    flex: 0 0 11px;
+    width: 11px;
+    height: 11px;
+    border-radius: 40px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #d1d1d1;
+    background: transparent;
+}
+
+.webview-plan-selector .webview-plan-selector-plan.is-selected .webview-plan-selector-radio {
+    border-color: #edf9ff;
+    background: #006dff;
+    box-shadow: 0 0 0 1px #006dff;
 }
 
 .webview-plan-selector .webview-plan-selector-plan-content {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 14px;
-    align-items: flex-start;
-}
-
-.webview-plan-selector .webview-plan-selector-radio {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 1.5px solid #c4c7cd;
-    margin-top: 8px;
-}
-
-.webview-plan-selector .webview-plan-selector-plan.is-selected .webview-plan-selector-radio {
-    border: 5px solid #006eff;
+    grid-template-columns: minmax(0, 1fr) 62px;
+    align-items: center;
+    gap: 17px;
+    width: 100%;
+    min-width: 0;
 }
 
 .webview-plan-selector .webview-plan-selector-plan-copy {
-    display: block;
+    min-width: 0;
 }
 
 .webview-plan-selector .webview-plan-selector-plan-copy h2,
 .webview-plan-selector .webview-plan-selector-plan-copy h3 {
-    margin: 0 0 6px;
-    font-size: 24px;
-    line-height: 1.2;
-    font-weight: 700;
+    margin: 0;
+    padding: 0 0 8px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 16px;
+    line-height: 21px;
+    font-weight: 600;
+    color: #000;
 }
 
 .webview-plan-selector .webview-plan-selector-plan-copy p {
     margin: 0;
-    font-size: 14px;
-    line-height: 1.35;
-    color: #2f3136;
+}
+
+.webview-plan-selector .webview-plan-selector-plan-copy p:not(.webview-plan-selector-billed) {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    color: rgb(0 0 0 / 80%);
 }
 
 .webview-plan-selector .webview-plan-selector-plan-copy .webview-plan-selector-billed {
-    margin-top: 6px;
-    color: #5b5f66;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 12px;
+    line-height: 19px;
+    font-weight: 400;
+    color: rgb(0 0 0 / 80%);
 }
 
 .webview-plan-selector .webview-plan-selector-plan-price {
-    min-width: 104px;
+    min-width: 62px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     text-align: right;
-    margin-top: 2px;
+    gap: 8px;
 }
 
 .webview-plan-selector .webview-plan-selector-plan-price strong {
     display: block;
-    font-size: 42px;
-    line-height: 1;
-    color: #202124;
+    width: 100%;
+    font-family: "Open Sans", "IBM Plex Sans", sans-serif;
+    font-size: 20px;
+    line-height: 16px;
+    font-weight: 700;
+    color: #161616;
 }
 
 .webview-plan-selector .webview-plan-selector-plan-price > span {
     display: block;
+    width: 100%;
+    font-family: "IBM Plex Sans", sans-serif;
     font-size: 12px;
-    color: #5b5f66;
+    line-height: 19px;
+    font-weight: 400;
+    color: #161616;
 }
 
 .webview-plan-selector .webview-plan-selector-plan-price em {
-    margin-top: 6px;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    height: 20px;
+    width: stretch;
+    border-radius: 45px;
+    background: #10b981;
+    font-family: "Open Sans", "IBM Plex Sans", sans-serif;
+    font-size: 11px;
+    line-height: 20px;
     font-style: normal;
-    font-size: 12px;
-    line-height: 1;
+    font-weight: 600;
     color: #fff;
-    background: #18ba7a;
-    border-radius: 12px;
-    padding: 4px 8px;
-    font-weight: 700;
     text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.webview-plan-selector .webview-plan-selector-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    gap: 7px;
 }
 
 .webview-plan-selector .webview-plan-selector-cta {
+    margin: 0;
     text-align: center;
-    margin: 12px 0 0;
 }
 
 .webview-plan-selector .webview-plan-selector-cta .button {
-    width: 100%;
-    max-width: 248px;
+    width: 198px;
+    max-width: 100%;
+    min-height: 42px;
+    padding: 0 20px 1px;
     justify-content: center;
-    border-radius: 8px;
-    background-color: #006eff;
-    border-color: #006eff;
+    border-radius: 7px;
+    border-color: #006dff;
+    background-color: #006dff;
     color: #fff;
+    font-family: Roboto, "IBM Plex Sans", sans-serif;
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: 600;
 }
 
 .webview-plan-selector .webview-plan-selector-cta .button::after {
@@ -200,66 +332,59 @@
 }
 
 .webview-plan-selector .webview-plan-selector-legal {
-    margin: 12px 0 0;
+    width: 100%;
+    margin: 0;
     text-align: center;
-    color: #545962;
-    font-size: 12px;
-    line-height: 1.4;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 10px;
+    line-height: 16px;
+    font-weight: 400;
+    color: #000;
 }
 
 .webview-plan-selector .webview-plan-selector-legal a {
-    color: #006eff;
-}
-
-@media (min-width: 768px) {
-    .webview-plan-selector-container {
-        padding: 30px 34px 24px;
-    }
-
-    .webview-plan-selector .webview-plan-selector-layout > h1,
-    .webview-plan-selector .webview-plan-selector-layout > h2,
-    .webview-plan-selector .webview-plan-selector-layout > h3 {
-        margin-bottom: 30px;
-        font-size: 42px;
-    }
-
-    .webview-plan-selector .webview-plan-selector-main {
-        grid-template-columns: minmax(250px, 1fr) minmax(390px, 1.3fr);
-        gap: 22px;
-        align-items: start;
-    }
+    color: #006dff;
+    text-decoration: none;
 }
 
 @media (max-width: 767px) {
-    .webview-plan-selector-container {
-        padding: 18px 14px;
-    }
-
     .webview-plan-selector .webview-plan-selector-layout > h1,
     .webview-plan-selector .webview-plan-selector-layout > h2,
     .webview-plan-selector .webview-plan-selector-layout > h3 {
-        font-size: 30px;
-        margin-bottom: 20px;
+        padding: 20px 14px 16px;
+        font-size: 28px;
+        line-height: 34px;
+    }
+
+    .webview-plan-selector .webview-plan-selector-main {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        gap: 18px;
+        padding: 0 14px;
+        box-sizing: border-box;
+    }
+
+    .webview-plan-selector .webview-plan-selector-benefits,
+    .webview-plan-selector .webview-plan-selector-plans {
+        width: 100%;
+        padding: 0;
     }
 
     .webview-plan-selector .webview-plan-selector-plan {
-        padding: 10px;
+        padding: 12px;
+        gap: 12px;
     }
 
-    .webview-plan-selector .webview-plan-selector-radio {
-        margin-top: 6px;
+    .webview-plan-selector .webview-plan-selector-plan-content {
+        gap: 12px;
     }
 
-    .webview-plan-selector .webview-plan-selector-plan-copy h2,
-    .webview-plan-selector .webview-plan-selector-plan-copy h3 {
-        font-size: 21px;
+    .webview-plan-selector .webview-plan-selector-footer {
+        padding: 10px 14px 14px;
     }
 
-    .webview-plan-selector .webview-plan-selector-plan-price {
-        min-width: 90px;
-    }
-
-    .webview-plan-selector .webview-plan-selector-plan-price strong {
-        font-size: 34px;
+    .webview-plan-selector .webview-plan-selector-cta,
+    .webview-plan-selector .webview-plan-selector-cta .button {
+        width: 100%;
     }
 }

@@ -1,4 +1,5 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 const PRIVACY_POLICY_FALLBACK = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
 
@@ -16,51 +17,20 @@ function replacePricePlaceholders(html) {
   return html
     .replace(
       /&lt;discounted-yearly-price&gt;|<discounted-yearly-price>/gi,
-      '<span class="await-loader" data-store-price="discounted||full"></span>',
+      '<span class="discounted-yearly-price await-loader" data-store-price="discounted||full"></span>',
     )
     .replace(
       /&lt;full-yearly-price&gt;|<full-yearly-price>/gi,
-      '<span class="await-loader" data-store-price="full"></span>',
+      '<span class="full-yearly-price await-loader" data-store-price="full"></span>',
     )
     .replace(
       /&lt;discounted-monthly-price&gt;|<discounted-monthly-price>/gi,
-      '<span class="await-loader" data-store-price="discounted-monthly||full-monthly"></span>',
+      '<span class="discounted-monthly-price await-loader" data-store-price="discounted-monthly||full-monthly"></span>',
     )
     .replace(
       /&lt;full-monthly-price&gt;|<full-monthly-price>/gi,
-      '<span class="await-loader" data-store-price="full-monthly"></span>',
+      '<span class="full-monthly-price await-loader" data-store-price="full-monthly"></span>',
     );
-}
-
-function getMonthlyPriceFallback(text) {
-  const cleanText = (text || '').replace(/,/g, '');
-  const symbolMatch = cleanText.match(/([\u20AC\u00A3$])\s?(\d+(?:\.\d+)?)/);
-  const currencyCodeMatch = cleanText.match(/(USD|EUR|GBP)\s?(\d+(?:\.\d+)?)/i);
-  const yearlyPriceMatch = symbolMatch || currencyCodeMatch;
-
-  if (!yearlyPriceMatch) {
-    return '--';
-  }
-
-  const [, rawCurrency, amount] = yearlyPriceMatch;
-  const normalizedCurrency = rawCurrency.toUpperCase();
-  let currency = rawCurrency;
-
-  if (normalizedCurrency === 'USD') {
-    currency = '$';
-  } else if (normalizedCurrency === 'EUR') {
-    currency = 'EUR ';
-  } else if (normalizedCurrency === 'GBP') {
-    currency = 'GBP ';
-  }
-
-  const monthly = Number(amount) / 12;
-
-  if (!Number.isFinite(monthly) || monthly <= 0) {
-    return `${currency}${amount}`;
-  }
-
-  return `${currency}${monthly.toFixed(2)}`;
 }
 
 function parseProductList(sectionEl) {
@@ -81,23 +51,6 @@ function parseProductList(sectionEl) {
         years,
       };
     });
-}
-
-function applyStoreContext(block, product) {
-  if (!product?.id) {
-    block.removeAttribute('data-store-context');
-    block.removeAttribute('data-store-id');
-    block.removeAttribute('data-store-option');
-    block.removeAttribute('data-store-department');
-    block.removeAttribute('data-store-event');
-    return;
-  }
-
-  block.setAttribute('data-store-context', '');
-  block.setAttribute('data-store-id', product.id);
-  block.setAttribute('data-store-option', `${product.users}-${product.years}`);
-  block.setAttribute('data-store-department', 'consumer');
-  block.setAttribute('data-store-event', 'product-loaded');
 }
 
 async function checkAndReplacePrivacyPolicyLink(block) {
@@ -135,26 +88,77 @@ function normalizePlanName(name) {
   return (name || '').replace(/\[checked\]/gi, '').trim();
 }
 
+function normalizeMetadataKey(key) {
+  return String(key || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function parseMetadataBooleanList(value) {
+  return String(value || '')
+    .split(',')
+    .map((token) => token.trim().toLowerCase())
+    .map((token) => {
+      if (['true', '1', 'yes', 'y'].includes(token)) {
+        return true;
+      }
+
+      if (['false', '0', 'no', 'n'].includes(token)) {
+        return false;
+      }
+
+      return null;
+    });
+}
+
+function parseBenefitsByProduct(sectionEl) {
+  const benefitStatesByProduct = {};
+  const entries = Object.entries(sectionEl?.dataset || {});
+
+  entries.forEach(([key, value]) => {
+    const normalizedKey = normalizeMetadataKey(key);
+    const match = normalizedKey.match(/^benefitsproduct(\d+)$/);
+
+    if (!match) {
+      return;
+    }
+
+    const productIndex = Number(match[1]) - 1;
+    if (!Number.isInteger(productIndex) || productIndex < 0) {
+      return;
+    }
+
+    benefitStatesByProduct[productIndex] = parseMetadataBooleanList(value);
+  });
+
+  return benefitStatesByProduct;
+}
+
 export default async function decorate(block) {
   const rows = [...block.children];
   const section = block.closest('.section');
+  const products = parseProductList(section);
 
   const headingCell = getMeaningfulCells(rows[0])[0];
   const heading = headingCell?.querySelector('h1, h2, h3');
-  const headingMarkup = heading ? heading.outerHTML : '<h1>Upgrade now</h1>';
+  const headingMarkup = heading ? heading.outerHTML : '<h1>Upgrade now at an exclusive in-app price</h1>';
 
   const featuresRowCells = getMeaningfulCells(rows[1]);
   const primaryFeatures = [...(featuresRowCells[0]?.querySelectorAll('p') || [])]
     .map((p) => p.textContent.trim())
     .filter(Boolean);
   const secondaryFeatures = [...(featuresRowCells[1]?.querySelectorAll('p') || [])]
-    .map((p) => p.textContent.trim())
-    .filter(Boolean);
+    .map((p) => ({
+      html: p.innerHTML.trim(),
+      text: p.textContent.trim(),
+    }))
+    .filter((feature) => feature.text);
+  const benefitStatesByProduct = parseBenefitsByProduct(section);
 
   const planCells = getMeaningfulCells(rows[2]);
   const plans = planCells
     .filter((cell) => cell.querySelector('h2, h3'))
     .map((cell, index) => {
+      const product = products[index] || {};
+      const productOption = product.users && product.years ? `${product.users}-${product.years}` : '';
       const title = cell.querySelector('h2, h3');
       const paragraphs = [...cell.querySelectorAll('p')];
       const description = paragraphs[0]?.textContent.trim() || '';
@@ -163,10 +167,11 @@ export default async function decorate(block) {
 
       return {
         index,
+        productId: product.id || '',
+        productOption,
         name: normalizePlanName(title?.textContent || ''),
         description,
         billedHtml: replacePricePlaceholders(billedHtml),
-        monthlyFallback: getMonthlyPriceFallback(paragraphs[1]?.textContent || ''),
         isDefault: markedChecked,
       };
     });
@@ -185,9 +190,8 @@ export default async function decorate(block) {
     .replace(/&lt;privacy-policy-text&gt;|<privacy-policy-text>/gi, '')
     .trim();
 
-  const products = parseProductList(section);
-  const discountLabel = section?.dataset?.discount || '65%';
-  const offText = section?.dataset?.saveText || 'OFF';
+  const discountLabel = section?.dataset?.discount || '';
+  const offText = section?.dataset?.saveText || '';
 
   block.innerHTML = `
     <div class="webview-plan-selector-layout">
@@ -198,12 +202,23 @@ export default async function decorate(block) {
             ${primaryFeatures.map((feature) => `<li>${feature}</li>`).join('')}
           </ul>
           <ul class="webview-plan-selector-trust-list">
-            ${secondaryFeatures.map((feature) => `<li>${feature}</li>`).join('')}
+            ${secondaryFeatures.map((feature) => `<li>${feature.html}</li>`).join('')}
           </ul>
         </div>
         <div class="webview-plan-selector-plans" role="radiogroup" aria-label="Available plans">
           ${plans.map((plan, index) => `
-            <button type="button" class="webview-plan-selector-plan" role="radio" aria-checked="false" data-plan-index="${index}">
+            <div
+              class="webview-plan-selector-plan"
+              role="radio"
+              aria-checked="false"
+              tabindex="-1"
+              data-plan-index="${index}"
+              data-store-context
+              data-store-id="${plan.productId}"
+              data-store-option="${plan.productOption}"
+              data-store-department="consumer"
+              data-store-event="product-loaded"
+            >
               <span class="webview-plan-selector-radio" aria-hidden="true"></span>
               <div class="webview-plan-selector-plan-content">
                 <div class="webview-plan-selector-plan-copy">
@@ -212,26 +227,28 @@ export default async function decorate(block) {
                   <p class="webview-plan-selector-billed">${plan.billedHtml}</p>
                 </div>
                 <div class="webview-plan-selector-plan-price">
-                  <strong><span class="await-loader" data-store-price="discounted-monthly||full-monthly">${plan.monthlyFallback}</span></strong>
+                  <strong><span class="billed-price await-loader" data-store-price="discounted-monthly||full-monthly"></span></strong>
                   <span>/ month</span>
-                  <em><span data-store-discount="percentage">${discountLabel}</span> ${offText}</em>
+                  <em><span class="discount-percentage await-loader" data-store-discount="percentage">${discountLabel}</span> ${offText}</em>
                 </div>
               </div>
-            </button>
+                <a class="button webview-plan-selector-plan-buy-link" href="${ctaHref}" data-store-buy-link aria-hidden="true" tabindex="-1">${ctaText}</a>
+            </div>
           `).join('')}
         </div>
       </div>
-      <p class="button-container webview-plan-selector-cta">
-        <a class="button webview-plan-selector-upgrade" href="${ctaHref}">${ctaText}</a>
-      </p>
-      <p class="webview-plan-selector-legal">${legalHtml}</p>
+      <div class="webview-plan-selector-footer">
+        <p class="button-container webview-plan-selector-cta">
+          <a class="button webview-plan-selector-upgrade" href="${ctaHref}">${ctaText}</a>
+        </p>
+        <p class="webview-plan-selector-legal">${legalHtml}</p>
+      </div>
     </div>
   `;
 
   const upgradeLink = block.querySelector('.webview-plan-selector-upgrade');
-  if (upgradeLink?.getAttribute('href')?.includes('#buylink')) {
-    upgradeLink.setAttribute('data-store-buy-link', '');
-  }
+
+  decorateIcons(block);
 
   if (upgradeLink?.getAttribute('href')?.includes('#upgrade')) {
     const upgradeUrl = new URL(window.location.href);
@@ -240,8 +257,44 @@ export default async function decorate(block) {
   }
 
   const planButtons = [...block.querySelectorAll('.webview-plan-selector-plan')];
+  const planBuyLinks = [...block.querySelectorAll('.webview-plan-selector-plan-buy-link')];
+  const featureItems = [...block.querySelectorAll('.webview-plan-selector-feature-list li')];
   const defaultIndex = plans.findIndex((plan) => plan.isDefault);
   let selectedIndex = defaultIndex >= 0 ? defaultIndex : 0;
+
+  function syncUpgradeLinkFromSelectedPlan(planIndex) {
+    const selectedBuyLink = planBuyLinks[planIndex];
+    if (!selectedBuyLink || !upgradeLink) {
+      return;
+    }
+
+    const selectedHref = selectedBuyLink.getAttribute('href');
+    if (selectedHref) {
+      upgradeLink.href = selectedHref;
+    }
+
+    ['data-product', 'data-buy-price', 'data-old-price', 'data-currency', 'data-variation'].forEach((attr) => {
+      const value = selectedBuyLink.getAttribute(attr);
+      if (value) {
+        upgradeLink.setAttribute(attr, value);
+      } else {
+        upgradeLink.removeAttribute(attr);
+      }
+    });
+  }
+
+  function updateFeatureState(planIndex) {
+    const states = benefitStatesByProduct[planIndex];
+
+    featureItems.forEach((item, featureIndex) => {
+      const state = states?.[featureIndex];
+      const isAvailable = typeof state === 'boolean' ? state : true;
+
+      item.classList.toggle('is-not-available', !isAvailable);
+      item.classList.toggle('is-available', isAvailable);
+      item.classList.remove('is-unavailable');
+    });
+  }
 
   function selectPlan(index) {
     selectedIndex = index;
@@ -250,9 +303,11 @@ export default async function decorate(block) {
       const isSelected = buttonIndex === selectedIndex;
       button.classList.toggle('is-selected', isSelected);
       button.setAttribute('aria-checked', `${isSelected}`);
+      button.setAttribute('tabindex', isSelected ? '0' : '-1');
     });
 
-    applyStoreContext(block, products[selectedIndex]);
+    updateFeatureState(selectedIndex);
+    syncUpgradeLinkFromSelectedPlan(selectedIndex);
   }
 
   planButtons.forEach((button) => {
@@ -262,6 +317,12 @@ export default async function decorate(block) {
     });
 
     button.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        selectPlan(Number(button.dataset.planIndex || 0));
+        return;
+      }
+
       if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) {
         return;
       }
@@ -271,6 +332,19 @@ export default async function decorate(block) {
       const nextIndex = (selectedIndex + direction + planButtons.length) % planButtons.length;
       planButtons[nextIndex].focus();
       selectPlan(nextIndex);
+    });
+  });
+
+  planBuyLinks.forEach((buyLink, buyLinkIndex) => {
+    const observer = new MutationObserver(() => {
+      if (buyLinkIndex === selectedIndex) {
+        syncUpgradeLinkFromSelectedPlan(selectedIndex);
+      }
+    });
+
+    observer.observe(buyLink, {
+      attributes: true,
+      attributeFilter: ['href', 'data-product', 'data-buy-price', 'data-old-price', 'data-currency', 'data-variation'],
     });
   });
 
