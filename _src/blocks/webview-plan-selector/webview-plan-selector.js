@@ -132,6 +132,34 @@ function parseBenefitsByProduct(sectionEl) {
   return benefitStatesByProduct;
 }
 
+const NR_OF_DEVICES_TOKEN_REGEX = /&lt;nr-of-devices&gt;|<nr-of-devices\s*\/?>(?:<\/nr-of-devices>)?/gi;
+
+function registerDevicePlaceholders(block) {
+  const placeholders = [];
+
+  block.querySelectorAll('h1, h2, h3, p, li, span, strong, em, a').forEach((element) => {
+    const template = element.innerHTML;
+    NR_OF_DEVICES_TOKEN_REGEX.lastIndex = 0;
+    if (!NR_OF_DEVICES_TOKEN_REGEX.test(template)) {
+      return;
+    }
+
+    placeholders.push({ element, template });
+    NR_OF_DEVICES_TOKEN_REGEX.lastIndex = 0;
+  });
+
+  return placeholders;
+}
+
+function updateDevicePlaceholders(placeholders, products, selectedPlanIndex) {
+  const devicesValue = products?.[selectedPlanIndex]?.users || '';
+
+  placeholders.forEach(({ element, template }) => {
+    element.innerHTML = template.replace(NR_OF_DEVICES_TOKEN_REGEX, devicesValue);
+    NR_OF_DEVICES_TOKEN_REGEX.lastIndex = 0;
+  });
+}
+
 export default async function decorate(block) {
   const rows = [...block.children];
   const section = block.closest('.section');
@@ -247,6 +275,7 @@ export default async function decorate(block) {
   `;
 
   const upgradeLink = block.querySelector('.webview-plan-selector-upgrade');
+  const devicePlaceholders = registerDevicePlaceholders(block);
 
   decorateIcons(block);
 
@@ -307,6 +336,7 @@ export default async function decorate(block) {
     });
 
     updateFeatureState(selectedIndex);
+    updateDevicePlaceholders(devicePlaceholders, products, selectedIndex);
     syncUpgradeLinkFromSelectedPlan(selectedIndex);
   }
 
