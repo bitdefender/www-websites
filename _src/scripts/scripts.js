@@ -652,6 +652,24 @@ function eventOnDropdownSlider() {
   });
 }
 
+async function setIcidParameter(selector, value, manualIcid = null, mboxName) {
+  const validElements = document.querySelectorAll(selector);
+  if (validElements.length === 0) {
+    return;
+  }
+
+  const targetCampaign = (await target.getOffers({ mboxNames: mboxName }))?.campaign;
+
+  validElements.forEach((element) => {
+    const url = new URL(element.href);
+    if (!url) return;
+    const cleanPath = element.href.split('?')[0];
+    const campaignParam =  targetCampaign || manualIcid || cleanPath.split('/').pop();
+    url.searchParams.set('icid', `${value}${campaignParam}`);
+    element.href = url.toString();
+  });
+}
+
 function initialiseSentry() {
   window.sentryOnLoad = () => {
     window.Sentry.init({
@@ -712,6 +730,13 @@ async function loadPage() {
   }
 
   await loadEager(document);
+
+  const newsBarSection = document.querySelector('.news-bar-container');
+  if (newsBarSection) {
+    const { manualIcid } = newsBarSection.dataset || {};
+    setIcidParameter('.news-bar a','link|c|ribbon|' ,manualIcid, 'newsBarCampaign-mbox');
+  }
+
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
