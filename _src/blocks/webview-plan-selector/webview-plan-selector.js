@@ -382,5 +382,10 @@ export default async function decorate(block) {
     selectPlan(selectedIndex);
   }
 
+  const url = new URL(window.location.href);
+  if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'dark') {
+    block.classList.add('dark-mode');
+  }
+
   await checkAndReplacePrivacyPolicyLink(block);
 }

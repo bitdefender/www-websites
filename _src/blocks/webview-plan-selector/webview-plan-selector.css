@@ -348,6 +348,68 @@
     text-decoration: none;
 }
 
+.webview-plan-selector.dark-mode {
+    color: #e8ecf3;
+    background: #141517;
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-layout > h1,
+.webview-plan-selector.dark-mode .webview-plan-selector-layout > h2,
+.webview-plan-selector.dark-mode .webview-plan-selector-layout > h3,
+.webview-plan-selector.dark-mode .webview-plan-selector-feature-list li,
+.webview-plan-selector.dark-mode .webview-plan-selector-trust-list li,
+.webview-plan-selector.dark-mode .webview-plan-selector-plan-copy h2,
+.webview-plan-selector.dark-mode .webview-plan-selector-plan-copy h3,
+.webview-plan-selector.dark-mode .webview-plan-selector-plan-price strong,
+.webview-plan-selector.dark-mode .webview-plan-selector-plan-price > span,
+.webview-plan-selector.dark-mode .webview-plan-selector-legal {
+    color: #e8ecf3;
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-trust-list li .icon {
+    color: #9fb0c4;
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-plan {
+    border-color: #2b3646;
+    background: #111923;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-plan.is-selected {
+    border-color: #3a8fff;
+    background: #162439;
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-plan:focus-visible {
+    outline-color: #67a8ff;
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-plan .webview-plan-selector-radio {
+    border-color: #141517;
+    box-shadow: 0 0 0 1px #5f7289;
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-plan.is-selected .webview-plan-selector-radio {
+    border-color: #141517;
+    background: #4ea0ff;
+    box-shadow: 0 0 0 1px #4ea0ff;
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-plan-copy p:not(.webview-plan-selector-billed),
+.webview-plan-selector.dark-mode .webview-plan-selector-plan-copy .webview-plan-selector-billed {
+    color: rgb(232 236 243 / 80%);
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-cta .button {
+    border-color: #3a8fff;
+    background-color: #3a8fff;
+}
+
+.webview-plan-selector.dark-mode .webview-plan-selector-legal a {
+    color: #84bdff;
+}
+
 @media (max-width: 767px) {
     .webview-plan-selector .webview-plan-selector-layout > h1,
     .webview-plan-selector .webview-plan-selector-layout > h2,
