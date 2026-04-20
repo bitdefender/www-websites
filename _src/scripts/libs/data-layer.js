@@ -1,6 +1,7 @@
 import user from "../user.js";
 import page from "../page.js";
 import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
+import { getUserVisitorId } from "@repobit/dex-utils";
 import {
   getExperimentDetails,
   generatePageLoadStartedName,
@@ -119,7 +120,8 @@ const resolveUserDetectedEvent = async () => {
     page,
     {
       ID: await user.fingerprint,
-      productFinding: getProductFinding()
+      productFinding: getProductFinding(),
+      visitorID: await getUserVisitorId(),
     }
   ));
 };
