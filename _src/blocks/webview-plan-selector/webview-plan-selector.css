@@ -208,7 +208,7 @@
 
 .webview-plan-selector .webview-plan-selector-plan-content {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 62px;
+    grid-template-columns: minmax(0, 1fr) minmax(62px, max-content);
     align-items: center;
     gap: 17px;
     width: 100%;
@@ -286,6 +286,7 @@
     padding: 0 8px;
     height: 20px;
     width: stretch;
+    max-width: 62px;
     border-radius: 45px;
     background: #10b981;
     font-family: "Open Sans", "IBM Plex Sans", sans-serif;
