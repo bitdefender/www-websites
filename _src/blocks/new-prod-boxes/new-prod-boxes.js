@@ -1140,11 +1140,6 @@ export default async function decorate(block) {
   };
   window.hj('event', 'new-prod-boxes');
 
-  const secondaryButtons = block.querySelectorAll('a.secondary');
-  secondaryButtons.forEach((button) => {
-    if (button.href.includes('hidden-button')) button.style.visibility = 'hidden';
-  });
-
   // Decorate icons for www-websites
   const isInLandingPages = window.location.href.includes('www-landing-pages')
     || window.location.href.includes('bitdefender.com/pages');

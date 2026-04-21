@@ -455,6 +455,10 @@
               transition: none;
             }
           }
+
+          &[href*="hidden-button"] {
+            visibility: hidden;
+          }
         }
 
         .benefitsLists ul li:first-of-type.has_arrow_right {
