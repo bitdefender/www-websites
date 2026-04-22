@@ -5,6 +5,7 @@ import {
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
+  CdpEvent,
 } from '@repobit/dex-data-layer';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
@@ -652,6 +653,24 @@ function eventOnDropdownSlider() {
   });
 }
 
+async function setIcidParameter(selector, value, mboxName, manualIcid = null) {
+  const validElements = document.querySelectorAll(selector);
+  if (validElements.length === 0) {
+    return;
+  }
+
+  const targetCampaign = (await target.getOffers({ mboxNames: mboxName }))?.campaign;
+
+  validElements.forEach((element) => {
+    const url = new URL(element.href);
+    if (!url) return;
+    const cleanPath = element.href.split('?')[0];
+    const campaignParam = targetCampaign || manualIcid || cleanPath.split('/').pop();
+    url.searchParams.set('icid', `${value}${campaignParam}`);
+    element.href = url.toString();
+  });
+}
+
 function initialiseSentry() {
   window.sentryOnLoad = () => {
     window.Sentry.init({
@@ -712,6 +731,13 @@ async function loadPage() {
   }
 
   await loadEager(document);
+
+  const newsBarSection = document.querySelector('.news-bar-container');
+  if (newsBarSection) {
+    const { manualIcid } = newsBarSection.dataset || {};
+    setIcidParameter('.news-bar a', 'link|c|ribbon|', 'newsBarCampaign-mbox', manualIcid);
+  }
+
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
@@ -737,20 +763,11 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
-  // eslint-disable-next-line import/no-unresolved
-  // const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
-  //   .then((FingerprintJS) => FingerprintJS.load({
-  //     region: 'eu',
-  //   }));
 
-  // Get the visitorId when you need it.
-  // await fpPromise
-  //   .then((fp) => fp.get())
-  //   .then((result) => {
-  //     const { visitorId } = result;
-  //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
-  //   });
-  await target.sendCdpData();
+  const cdpData = await target.cdpData;
+  if (cdpData) {
+    AdobeDataLayerService.push(new CdpEvent(cdpData));
+  }
 
   if (!window.BD.loginAttempted) {
     AdobeDataLayerService.push(new PageLoadedEvent());
