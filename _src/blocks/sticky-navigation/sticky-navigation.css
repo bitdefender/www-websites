@@ -1,6 +1,5 @@
 ﻿main .section.sticky-navigation-container {
   padding-top: 0;
-  padding-bottom: 0;
   position: sticky;
   top: 0;
   z-index: 101;
@@ -22,9 +21,9 @@
 }
 
 /* Hide the DS-internal hardcoded "Buy now" - we supply our own CTA from content */
-.sticky-navigation bd-anchor-nav::part(buy-button) {
+/* .sticky-navigation bd-anchor-nav::part(buy-button) {
   display: none;
-}
+} */
 
 .sticky-navigation .button-container {
   flex: 0 0 auto;
