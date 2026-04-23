@@ -737,8 +737,7 @@ async function loadPage() {
 
   if (newsBarSection) {
     const { manualIcid } = newsBarSection.dataset || {};
-    const newsBarLinkSelector = `${newsBarSectionSelector} a`;
-    setIcidParameter(`${newsBarLinkSelector} a`, 'link|c|ribbon|', 'newsBarCampaign-mbox', manualIcid);
+    setIcidParameter(`${newsBarSectionSelector} a`, 'link|c|ribbon|', 'newsBarCampaign-mbox', manualIcid);
   }
 
   await window.hlx.plugins.load('lazy');
