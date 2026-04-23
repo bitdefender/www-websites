@@ -731,10 +731,14 @@ async function loadPage() {
 
   await loadEager(document);
 
-  const newsBarSection = document.querySelector('.news-bar-container');
+  const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
+    .find((selector) => document.querySelector(selector));
+  const newsBarSection = document.querySelector(newsBarSectionSelector);
+
   if (newsBarSection) {
     const { manualIcid } = newsBarSection.dataset || {};
-    setIcidParameter('.news-bar a', 'link|c|ribbon|', 'newsBarCampaign-mbox', manualIcid);
+    const newsBarLinkSelector = `${newsBarSectionSelector} a`;
+    setIcidParameter(`${newsBarLinkSelector} a`, 'link|c|ribbon|', 'newsBarCampaign-mbox', manualIcid);
   }
 
   await window.hlx.plugins.load('lazy');
