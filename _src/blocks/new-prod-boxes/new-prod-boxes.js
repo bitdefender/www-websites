@@ -791,7 +791,6 @@ function buildProductBoxHTML(config) {
         ${planSwitcherHTML}
         <div class="hero-aem__prices await-loader"></div>
         ${secondButtonHTML}
-        
         ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
         <hr />
         <div class="benefitsLists">${featureListHTML}</div>

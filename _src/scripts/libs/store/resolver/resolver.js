@@ -282,7 +282,6 @@ export class StoreResolver {
 
 				for (const option of options) {
 					const optionStaticAttributes = [...this.getAllAttributes(option, this.staticAttributes), ...productStaticAttributes, ...globalStaticAttributes];
-
 					const optionClickAttributes = [...this.getAllAttributes(option, this.clickAttributes), ...productClickAttributes, ...globalClickAttributes];
 					const [devices, years] = parseKey(option.dataset.storeOption);
 					const storeOption = storeProduct.getOption(devices, years);
