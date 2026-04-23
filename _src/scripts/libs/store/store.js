@@ -44,8 +44,10 @@ export class ProductOption {
 	 *  productAlias: string,
 	 * 	promotion: string
 	 *  campaignType: string
-	 * }} option
+	 *  variations: object,
+	 * }}
 	 */
+
 	constructor(option) {
 		this.price = option.price;
 		this.priceDiscounted = option.priceDiscounted;
@@ -63,6 +65,7 @@ export class ProductOption {
 		this.avangateId = option.avangateId;
 		this.promotion = option.promotion;
 		this.campaignType = option.campaignType;
+		this.variations = option.variations;
 	}
 
 	/**
@@ -257,6 +260,7 @@ export class ProductOption {
 
 export class Product {
 	constructor(product) {
+		this.variations = this.getVariationsCampaign(product);
 		this.id = product.id;
 		this.productId = product.product_id;
 		this.productAlias = product.product_alias;
@@ -265,6 +269,7 @@ export class Product {
 		this.department = product.department;
 		this.promotion = product.promotion || (GLOBAL_V2_LOCALES.find(domain => page.locale === domain) ? 'global_v2' : '');
 		this.campaignType = product.campaignType;
+		this.variations = this.getVariationsCampaign(product);
 		const option = Object.values(Object.values(product.variations)[0])[0];
 		this.currency = option.currency_iso;
 		this.symbol = option.currency_iso;
@@ -295,8 +300,27 @@ export class Product {
 				this.yearDevicesMapping[contentDevices] = [providerDevices]
 			} else {
 				this.yearDevicesMapping[contentDevices].push(providerDevices);
-			}	
+			}
 		}
+	}
+
+	/**
+	 * Returns variations with only campaignName preserved
+	 * @param {Object} product - Product object containing variations
+	 * @returns {Object}
+   */
+	getVariationsCampaign(product) {
+		return Object.fromEntries(
+			Object.entries(product?.variations || {}).map(([k, v]) => [
+				k,
+				Object.fromEntries(
+					Object.entries(v || {}).map(([ik, val]) => [
+						ik,
+						{ campaignName: val?.campaignName }
+					])
+				)
+			])
+		);
 	}
 
 	/**
@@ -414,7 +438,8 @@ export class Product {
 			subscription: Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : years * 12,
 			avangateId: this.avangateId,
 			promotion: this.promotion,
-			campaignType: this.campaignType
+			campaignType: this.campaignType,
+			variations: this.variations
 		});
 
 		if (bundle) {
@@ -727,13 +752,13 @@ class Vlaicu {
 
 		return '';
 	}
-	
+
 	/**
 	 * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
 	 * @param {string} receivedBuyLink 
 	 * @return {string} -> buyLink with lang parameter
 	 */
-	static #addLangParameter(receivedBuyLink){
+	static #addLangParameter(receivedBuyLink) {
 		const buyLinkUrl = new URL(receivedBuyLink);
 		buyLinkUrl.searchParams.set('LANG', page.language);
 
@@ -750,14 +775,14 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign)	|| campaign
+			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign) || campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION ?	this.promotionPath : this.defaultPromotionPath;
+		let productPath = campaign !== Constants.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
-		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
+		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"), "gi");
 		productPath = productPath.replace(pathVariablesRegex, (matched) => {
 			return pathVariablesResolverObject[matched]
 		});
@@ -812,7 +837,7 @@ class Vlaicu {
 			/**
 			 * for monthly products only add the monthly variations
 			 * e.g for vpn-monthly we do not care about the product variation if it passes 12 months (more than a year)
-			 */ 
+			 */
 			if (Constants.PRODUCT_ID_MAPPINGS[id].isMonthlyProduct && productVariation.months >= 12) {
 				return;
 			}
@@ -828,13 +853,13 @@ class Vlaicu {
 
 			const yearsSubscription = Math.ceil(productVariation.months / 12);
 			const devices_no = productVariation.slots;
-
 			const devicesObj = {
 				currency_iso: productVariation.currency,
 				product_id: Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
 				platform_product_id: productInfoResponse.platformProductId || Constants.PRODUCT_ID_MAPPINGS[id].bundleId,
 				promotion: productInfoResponse.campaign || campaignId || '',
 				campaignType: productInfoResponse.campaignType,
+				campaignName: productVariation.coupon,
 				price: productVariation.price,
 				// TODO: please remove this once SOHO works correctly on de-de with zuora
 				buyLink: productVariation.buyLink,
@@ -965,7 +990,7 @@ export class Store {
 			.filter(product => product.status === "fulfilled" && !!product.value)
 			.map(product => new Product(product.value))
 			.reduce((acc, product) => { acc[product.getId()] = product; return acc; }, {});
-		
+
 		return this.products;
 	}
 

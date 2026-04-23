@@ -791,6 +791,7 @@ function buildProductBoxHTML(config) {
         ${planSwitcherHTML}
         <div class="hero-aem__prices await-loader"></div>
         ${secondButtonHTML}
+        
         ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
         <hr />
         <div class="benefitsLists">${featureListHTML}</div>
@@ -967,6 +968,7 @@ export default async function decorate(block) {
         const secondButton = buyLink?.querySelectorAll('a')[1];
         if (secondButton) {
           secondButton.classList.add('button', 'secondary', 'no-arrow');
+          secondButton.setAttribute('data-store-trial-link', 'custom');
         }
 
         // Build product box HTML

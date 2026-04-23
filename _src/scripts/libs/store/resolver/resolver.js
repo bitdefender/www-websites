@@ -270,7 +270,7 @@ export class StoreResolver {
 			const globalClickAttributes = context.dataset.storeId ? [] : this.getAllAttributes(context, this.clickAttributes);
 
 			const pageContexts = [];
-			const contextProducts = [...products, ...this.getAdditionalProducts(context)].map(product =>storeProducts[product.dataset.storeId])
+			const contextProducts = [...products, ...this.getAdditionalProducts(context)].map(product => storeProducts[product.dataset.storeId])
 			for (const product of products) {
 				const storeProduct = storeProducts[product.dataset.storeId];
 				const productDataMapping = JSON.parse(product.dataset?.storeDevicePropertiesMapping || '{}');
@@ -282,6 +282,7 @@ export class StoreResolver {
 
 				for (const option of options) {
 					const optionStaticAttributes = [...this.getAllAttributes(option, this.staticAttributes), ...productStaticAttributes, ...globalStaticAttributes];
+
 					const optionClickAttributes = [...this.getAllAttributes(option, this.clickAttributes), ...productClickAttributes, ...globalClickAttributes];
 					const [devices, years] = parseKey(option.dataset.storeOption);
 					const storeOption = storeProduct.getOption(devices, years);
@@ -304,7 +305,7 @@ export class StoreResolver {
 					optionStaticAttributes.forEach(staticAttribute => this.resolveStaticAttributes(staticAttribute, context));
 					optionClickAttributes.forEach(clickAttribute => this.resolveClickAttributes(clickAttribute, context));
 
-					switch(option.dataset.storeEvent) {
+					switch (option.dataset.storeEvent) {
 						case "product-loaded":
 							AdobeDataLayerService.push(new FranklinProductsLoadedEvent(storeOption, 'all'));
 							break;
@@ -378,64 +379,64 @@ export class StoreResolver {
 		const parseNodeName = (attribute) => {
 			const options = [];
 
-				if (attribute.nodeName === "INPUT" && attribute.type === 'range') {
-					if (attribute.dataset.storeClickSetDevices !== undefined) {
-						const [min, max] = context.product.getMinMaxDeviceNumbers();
-
-						for (let devices = min; devices <= max; devices++) {
-							options.push(context.product.getOption(devices, context.years));
-						}
-					}
-				}
-
-				if(attribute.nodeName === "SELECT") {
-					if (attribute.dataset.storeClickSetDevices !== undefined) {
-						[...attribute.options].forEach(option => options.push(
-							context.product.getOption(Number(option.value), context.years)
-						));
-					}
-					if (attribute.dataset.storeClickSetYears !== undefined) {
-						[...attribute.options].forEach(option => options.push(
-							context.product.getOption(context.devices, Number(option.value))
-						));
-					}
-					if (attribute.dataset.storeClickSetProduct !== undefined) {
-						[...attribute.options].forEach(option => {
-							const [devices, years] = parseKey(option.dataset.storeProductOption || `${context.devices}-${context.years}` );
-							options.push(context
-								.products[option.dataset.storeProductId]
-								?.getOption(devices, years)
-							)
-						});
-					}
-				}
-				
+			if (attribute.nodeName === "INPUT" && attribute.type === 'range') {
 				if (attribute.dataset.storeClickSetDevices !== undefined) {
-					options.push(context.product.getOption(Number(attribute.dataset.storeClickSetDevices), context.years));
+					const [min, max] = context.product.getMinMaxDeviceNumbers();
+
+					for (let devices = min; devices <= max; devices++) {
+						options.push(context.product.getOption(devices, context.years));
+					}
+				}
+			}
+
+			if (attribute.nodeName === "SELECT") {
+				if (attribute.dataset.storeClickSetDevices !== undefined) {
+					[...attribute.options].forEach(option => options.push(
+						context.product.getOption(Number(option.value), context.years)
+					));
 				}
 				if (attribute.dataset.storeClickSetYears !== undefined) {
-					options.push(context.product.getOption(context.devices, Number(attribute.dataset.storeClickSetYears)));
+					[...attribute.options].forEach(option => options.push(
+						context.product.getOption(context.devices, Number(option.value))
+					));
 				}
-				if (attribute.dataset.storeClickSetOption) {
-					const [devices, years] = parseKey(attribute.dataset.storeClickSetOption);
-					options.push(context.product.getOption(devices, years));
-				}
-
 				if (attribute.dataset.storeClickSetProduct !== undefined) {
-					const [devices, years] = parseKey(attribute.dataset.storeProductOption || `${context.devices}-${context.years}`);
-					options.push(context
-						.products[attribute.dataset.storeProductId]
-						?.getOption(devices, years)
-					)
+					[...attribute.options].forEach(option => {
+						const [devices, years] = parseKey(option.dataset.storeProductOption || `${context.devices}-${context.years}`);
+						options.push(context
+							.products[option.dataset.storeProductId]
+							?.getOption(devices, years)
+						)
+					});
 				}
+			}
 
-				if (attribute.dataset.storeClickToggleBundle !== undefined) {
-					const [devices, years] = parseKey(attribute.dataset.storeBundleOption);
-					options.push(context
-						.products[attribute.dataset.storeBundleId]
-						?.getOption(devices, years)
-					)
-				}
+			if (attribute.dataset.storeClickSetDevices !== undefined) {
+				options.push(context.product.getOption(Number(attribute.dataset.storeClickSetDevices), context.years));
+			}
+			if (attribute.dataset.storeClickSetYears !== undefined) {
+				options.push(context.product.getOption(context.devices, Number(attribute.dataset.storeClickSetYears)));
+			}
+			if (attribute.dataset.storeClickSetOption) {
+				const [devices, years] = parseKey(attribute.dataset.storeClickSetOption);
+				options.push(context.product.getOption(devices, years));
+			}
+
+			if (attribute.dataset.storeClickSetProduct !== undefined) {
+				const [devices, years] = parseKey(attribute.dataset.storeProductOption || `${context.devices}-${context.years}`);
+				options.push(context
+					.products[attribute.dataset.storeProductId]
+					?.getOption(devices, years)
+				)
+			}
+
+			if (attribute.dataset.storeClickToggleBundle !== undefined) {
+				const [devices, years] = parseKey(attribute.dataset.storeBundleOption);
+				options.push(context
+					.products[attribute.dataset.storeBundleId]
+					?.getOption(devices, years)
+				)
+			}
 
 			return options.filter(option => Boolean(option));
 		}
