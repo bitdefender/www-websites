@@ -20,38 +20,9 @@
   min-width: 0;
 }
 
-/* Hide the DS-internal hardcoded "Buy now" - we supply our own CTA from content */
-/* .sticky-navigation bd-anchor-nav::part(buy-button) {
-  display: none;
-} */
-
-.sticky-navigation .button-container {
-  flex: 0 0 auto;
-  margin: 0;
-  padding: 40px 0 20px 20px;
-}
-
-.sticky-navigation .button-container a {
-  font-size: var(--body-font-size-s);
-  vertical-align: middle;
-  padding: 6px 9px 6px 18px;
-  text-transform: capitalize;
-}
-
-.sticky-navigation .button-container a .button-text {
-  white-space: nowrap;
-}
-
-@media (min-width: 992px) {
-  .sticky-navigation .button-container {
-    padding: 0;
-  }
-}
-
 @media (min-width: 1600px) {
-  .sticky-navigation .button-container a {
+  .sticky-navigation bd-anchor-nav::part(buy-button) {
     font-size: var(--body-font-size-s);
     font-weight: var(--font-weight-bold);
-    padding: 8px 8px 8px 20px;
   }
 }

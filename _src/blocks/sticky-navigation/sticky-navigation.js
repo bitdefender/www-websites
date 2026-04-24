@@ -68,40 +68,15 @@ function buildAnchorNav(block) {
     anchorNav.appendChild(navItem);
   });
 
-  // Build CTA from the authored link in the block
   const ctaLink = block.querySelector('a');
-  const { stickyNavAsset } = block.closest('.section').dataset;
-
   if (ctaLink) {
-    // Strip the .html suffix Franklin appends to in-page hrefs
-    const rawHref = ctaLink.getAttribute('href')?.replace(/\.html(?=#|$)/, '') || '';
-    ctaLink.setAttribute('href', rawHref);
-    ctaLink.classList.add('button');
-
-    const ctaWrapper = document.createElement('div');
-    ctaWrapper.className = 'button-container';
-    ctaWrapper.appendChild(ctaLink);
-
-    // Smooth-scroll with sticky-nav offset, matching the DS internal scroll logic
-    ctaWrapper.addEventListener('click', (e) => {
-      e.preventDefault();
-      const hash = rawHref.includes('#') ? rawHref.split('#').pop() : '';
-      const target = hash ? document.getElementById(hash) : null;
-      if (target) {
-        const offset = anchorNav.offsetHeight || 128;
-        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const top = target.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' });
-      }
-      if (stickyNavAsset) {
-        window.adobeDataLayer?.push({ event: 'click', asset: stickyNavAsset });
-      }
-    });
-
-    block.replaceChildren(anchorNav, ctaWrapper);
-  } else {
-    block.replaceChildren(anchorNav);
+    const ctaHref = ctaLink.getAttribute('href')?.replace(/\.html(?=#|$)/, '') || '';
+    const ctaLabel = ctaLink.textContent.trim();
+    if (ctaHref) anchorNav.setAttribute('cta-href', ctaHref);
+    if (ctaLabel) anchorNav.setAttribute('cta-label', ctaLabel);
   }
+
+  block.replaceChildren(anchorNav);
 }
 
 export default async function decorate(block) {
