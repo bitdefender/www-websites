@@ -155,6 +155,7 @@ async function createForm(types, labels, flow, successMessage, failMessage, form
 
     form.append(input);
     if (type === 'submit') {
+      input.setAttribute('value', labels[i]);
       input.classList.add('disabled');
       input.disabled = true;
     }
