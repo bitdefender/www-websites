@@ -15,10 +15,18 @@
   border-bottom: 1px solid var(--sticky-nav-border-color);
 }
 
-/* DS component takes all available horizontal space */
+/* DS component takes all available horizontal space and aligns with site content width */
 .sticky-navigation bd-anchor-nav {
   flex: 1 1 auto;
   min-width: 0;
+  --layout-ensemble-inline-padding: var(--body-padding);
+  --layout-compare-grid-max: 100%;
+}
+
+@media (min-width: 900px) {
+  .sticky-navigation bd-anchor-nav {
+    --layout-compare-grid-max: 1250px;
+  }
 }
 
 @media (min-width: 1600px) {
