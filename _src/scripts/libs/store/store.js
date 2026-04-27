@@ -778,6 +778,7 @@ class Vlaicu {
 			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign) || campaign
 		};
 
+		console.log('campaign ', campaign)
 		// get the correct path to get the prices
 		let productPath = campaign !== Constants.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
 
@@ -812,6 +813,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariationsPrice(id, campaignId, useGeoIpPricing = false) {
+		console.log('campaignId ', campaignId)
 		const productInfoResponse = await this.getProductVariations(Constants.PRODUCT_ID_MAPPINGS[id.trim()].bundleId, campaignId, useGeoIpPricing);
 		const productInfo = productInfoResponse?.product;
 		if (!productInfo) {
