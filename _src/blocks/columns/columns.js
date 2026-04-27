@@ -220,7 +220,7 @@ export default function decorate(block) {
   }
 
   // setup image columns
-  [...block.children].forEach((row) => {
+  [...block.children].forEach((row, idxRow) => {
     [...row.children].forEach((col) => {
       const pic = col.querySelector('picture');
       if (pic) {
@@ -245,6 +245,8 @@ export default function decorate(block) {
           }
         }
       }
+
+      renderNanoBlocks(col, undefined, idxRow);
     });
   });
 
@@ -375,8 +377,6 @@ export default function decorate(block) {
     /* fallback */
     leftCol.innerHTML = decoded;
   }
-
-  renderNanoBlocks(parentSection);
 
   if (parentSection.classList.contains('chat-options')) {
     const cards = block.querySelectorAll('.columns > div > div');
