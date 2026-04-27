@@ -376,7 +376,7 @@ export default function decorate(block) {
     leftCol.innerHTML = decoded;
   }
 
-  renderNanoBlocks(parentSection);
+  renderNanoBlocks(parentSection, undefined, undefined, block);
 
   if (parentSection.classList.contains('chat-options')) {
     const cards = block.querySelectorAll('.columns > div > div');

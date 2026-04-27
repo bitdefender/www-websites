@@ -427,6 +427,7 @@ export async function renderNanoBlocks(
 
         const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || '';
         const formattedDatasetEntryValue = replaceDoubleCommas(datasetEntryValue);
+        if (!formattedDatasetEntryValue) return;
 
         const newMatch = [match, formattedDatasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
 
