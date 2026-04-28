@@ -1257,6 +1257,7 @@
 
                     li {
                         text-align: center;
+                        list-style: none;
 
                         &::before {
                             position: absolute;
@@ -2466,7 +2467,6 @@
                             line-height: var(--size-23);
                             position: relative;
                             padding: var(--size-6) 15px var(--size-0) 15px;
-                            list-style: none;
                         }
                     }
                 }
