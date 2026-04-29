@@ -1000,6 +1000,7 @@ export default async function decorate(block) {
         const secondButton = buyLink?.querySelectorAll('a')[1];
         if (secondButton) {
           secondButton.classList.add('button', 'secondary', 'no-arrow');
+          secondButton.setAttribute('data-store-trial-link', 'custom');
         }
 
         // Build product box HTML
