@@ -398,7 +398,6 @@ export class Product {
 		const yearsOption = devicesOption && devicesOption[years];
 
 		if (!yearsOption) { return null; }
-		
 		const option = new ProductOption({
 			price: Number(Number(yearsOption.price).toFixed(2)),
 			priceDiscounted: Number(Number(yearsOption.discount?.discounted_price).toFixed(2)),
@@ -842,7 +841,7 @@ class Vlaicu {
 					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,
 				},
-				avangateId: productVariation.verifoneProductId ?? '', 
+				avangateId: productVariation.verifoneProductId || null,
 			}
 
 			if (productVariation.discountAmount > 0) {
