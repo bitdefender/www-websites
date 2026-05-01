@@ -29,9 +29,3 @@
   }
 }
 
-@media (min-width: 1600px) {
-  .sticky-navigation bd-anchor-nav::part(buy-button) {
-    font-size: var(--body-font-size-s);
-    font-weight: var(--font-weight-bold);
-  }
-}

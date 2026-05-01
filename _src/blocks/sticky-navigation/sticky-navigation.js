@@ -1,4 +1,4 @@
-﻿import { STICKY_NAVIGATION_DATASET_KEY } from '../../scripts/lib-franklin.js';
+import { STICKY_NAVIGATION_DATASET_KEY } from '../../scripts/lib-franklin.js';
 
 const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.13/';
 
@@ -72,8 +72,14 @@ function buildAnchorNav(block) {
   if (ctaLink) {
     const ctaHref = ctaLink.getAttribute('href')?.replace(/\.html(?=#|$)/, '') || '';
     const ctaLabel = ctaLink.textContent.trim();
-    if (ctaHref) anchorNav.setAttribute('cta-href', ctaHref);
-    if (ctaLabel) anchorNav.setAttribute('cta-label', ctaLabel);
+    const ctaKind = block.closest('.section')?.dataset.kind || 'danger';
+
+    const buttonLink = document.createElement('bd-button-link');
+    buttonLink.setAttribute('slot', 'cta');
+    buttonLink.setAttribute('href', ctaHref);
+    buttonLink.setAttribute('kind', ctaKind);
+    buttonLink.textContent = ctaLabel;
+    anchorNav.appendChild(buttonLink);
   }
 
   block.replaceChildren(anchorNav);
@@ -81,6 +87,9 @@ function buildAnchorNav(block) {
 
 export default async function decorate(block) {
   const base = getDsnBase();
-  await import(`${base}anchor`);
+  await Promise.all([
+    import(`${base}anchor`),
+    import(`${base}button`),
+  ]);
   buildAnchorNav(block);
 }
