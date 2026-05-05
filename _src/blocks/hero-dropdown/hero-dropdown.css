@@ -1223,6 +1223,10 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
     padding-top: 3rem;
     padding-bottom: 0;
   }
+  
+  main .hero-dropdown .hero-dropdown-content .button{
+    justify-content: center;
+  }
 
   main .bfoffer .hero-dropdown .hero-dropdown-content p:last-of-type picture img {
     display: block;

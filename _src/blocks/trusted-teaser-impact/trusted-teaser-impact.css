@@ -90,7 +90,6 @@
 @media (min-width: 992px) {
     .trusted-teaser-impact .box-wrapper {
         display: grid;
-        grid-auto-flow: column;
         grid-template-columns: repeat(4, 1fr);
         justify-content: center;
     }

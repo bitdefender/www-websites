@@ -247,6 +247,7 @@
 @media (max-width: 595px) {
       .money-back > ul > li > div {
       display: flex;
+      flex-direction: column;
       gap: 10px;
     }
 
