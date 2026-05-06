@@ -116,7 +116,7 @@ main .image-columns.quotes > div{
   gap: 20px;
 }
 
-main .image-columns.quotes >div > .image-columns-txt-col{
+main .image-columns.quotes >div > .image-columns-txt-col {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
@@ -127,24 +127,137 @@ main .image-columns.quotes >div > .image-columns-txt-col{
   font-size: 20px;
 }
 
-main .image-columns.quotes > div > .image-columns-txt-col p{
+main .image-columns.quotes > div > .image-columns-txt-col p {
   font-size: 25px;
   font-weight: 300;
   padding: 0;
 }
 
-main .image-columns.quotes > div > .image-columns-img-col{
+main .image-columns.quotes > div > .image-columns-img-col {
   align-items: unset;
 }
 
-main .image-columns.quotes > div > .image-columns-img-col img{
+main .image-columns.quotes > div > .image-columns-img-col img {
   position: static;
   height: auto;
   max-width: 100%;
 }
 
-.image-columns-container .image-columns .image-columns-txt-col{
+.image-columns-container .image-columns .image-columns-txt-col {
   text-align: center;
+}
+
+.image-columns-container.animated .block > div:last-of-type {
+  position: relative;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table {
+  position: absolute;
+  bottom: 4em;
+  right: -2em;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:nth-of-type(1) {
+  background: linear-gradient(75.99deg, #0059D6 1.46%, #338BFF 100%);
+  color: white;
+  top: 10em;
+  right: -2em;
+  bottom: auto;
+  width: 330px;
+  display: block;
+  border-radius: 16px;
+  opacity: 1;
+  padding: 14px 16px 14px 85px;
+  border-width: 1px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:nth-of-type(1) .icon {
+  position: absolute;
+  left: 16px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:nth-of-type(1) p strong {
+  font-size: 18px;
+  line-height: 20px;
+  font-style: normal;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:nth-of-type(1) p {
+  margin: 0;
+  font-size: 13px !important;
+  line-height: 18px !important;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:nth-of-type(2) {
+  width: 330px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:nth-of-type(2) p {
+  padding-left: 65px !important;
+  color: black !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  display: block;
+  min-height: 54px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:not(:nth-of-type(1)) {
+  border-radius: 24px;
+  border: 1px solid var(--Radial-Outline, #fff0);
+  background: #f1f5f852;
+  backdrop-filter: blur(20px);
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:not(:nth-of-type(1)) tr {
+  display: flex;
+  padding: 14px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 18px;
+  border: 1px solid #F1F5F8;
+  background: #FFF;
+  margin: 12px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:not(:nth-of-type(1)) td p {
+  font-weight: 600;
+  color: #10347e;
+  padding: 2px 8px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #ECF5FE 0%, rgb(236 245 254 / 30%) 100%);
+  backdrop-filter: blur(20px);
+  font-size: 14px !important;
+  margin-top: 0;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:not(:nth-of-type(1)) td .icon {
+  position: absolute;
+  height: 45px;
+  left: 8px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:not(:nth-of-type(1)) td p strong {
+  width: fit-content;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #CDE3FC;
+  box-shadow: 2px 4px 16px 1px #f8f8f80f inset;
+  backdrop-filter: blur(25px);
+  font-size: 11px;
+  line-height: 12px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table:last-of-type {
+  display: none;
 }
 
 .image-columns.half-image {
@@ -186,9 +299,9 @@ main .image-columns.quotes > div > .image-columns-img-col img{
       text-align: left;
 
       p {
-       padding-left: 0;
-       font-size: 16px;
-       margin-bottom: 24px;
+        padding-left: 0;
+        font-size: 16px;
+        margin-bottom: 24px;
         margin-left: 0;
       }  
 

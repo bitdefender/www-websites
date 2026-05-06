@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
- :root, :host {
+:root, :host {
   /* colors */
   --dark-background-color: #000;
   --black-color: #000;
@@ -130,19 +130,19 @@ body.with-language-bar > div:first-child, body.with-language-bar header {
 }
 
 .font-arial {
-  font-family: "Arial", sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 body [data-mobile-detector] {
-    display: block;
+  display: block;
 }
 
 body [data-tablet-detector] {
-    display: none;
+  display: none;
 }
 
 body [data-desktop-detector] {
-    display: none;
+  display: none;
 }
 
 body.dark-mode {
@@ -152,7 +152,7 @@ body.dark-mode {
 
 @media (min-width: 992px) {
   body [data-desktop-detector] {
-      display: block;
+    display: block;
   }
 }
 
@@ -365,8 +365,8 @@ main img {
 
 .top_blue {
   text-align: center;
-  background-color: rgb(228, 242, 255);
-  color: rgb(0, 69, 173);
+  background-color: rgb(228 242 255);
+  color: rgb(0 69 173);
   padding: 8px 0!important;
 }
 
@@ -614,7 +614,6 @@ main .section.bitdefender-ferrari .default-content-wrapper .button-container {
   justify-content: center;
   text-align: right;
   order: 2;
-  margin-bottom: 10px;
   background-color: #e4f2ff;
   margin-bottom: 0;
   overflow: hidden;
@@ -630,9 +629,13 @@ main .section.bitdefender-ferrari .default-content-wrapper .button-container a.b
   background-color: black;
 }
 
+.centered .block, .centered .default-content-wrapper  {
+  text-align: center;
+}
+
 header, main, footer {
-    max-width: var(--body-max-width);
-    margin: 0 auto;
+  max-width: var(--body-max-width);
+  margin: 0 auto;
 }
 
 .creators * {
@@ -661,7 +664,7 @@ header, main, footer {
   margin-bottom: 0;
 }
 
-main .section.blue-heading h2{
+main .section.blue-heading h2 {
   color: #006eff;
   font-size: 60px;
   font-weight: bold;
@@ -745,13 +748,13 @@ main .grey-background {
 
   main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) img {
     margin-right: 10px;
-	  margin-bottom: -10px;
+    margin-bottom: -10px;
   }
 
   main .section.bitdefender-ferrari .default-content-wrapper h2 {
     width: 435px;
     font-size: var(--heading-font-size-s);
-	}
+  }
 
   main .section.bitdefender-ferrari .default-content-wrapper .button-container {
     width: 250px;
@@ -809,7 +812,7 @@ main .grey-background {
   main .section.bitdefender-ferrari .default-content-wrapper h2 {
     width: 540px;
     font-size: 19px;
-	}
+  }
 
   main .section.width-medium .block, main .section.width-medium .default-content-wrapper {
     width: 940px;
@@ -834,6 +837,16 @@ main .grey-background {
   main .section.width-smallest .block, main .section.width-smallest .default-content-wrapper {
     width: 640px;
     margin: 0 auto;
+  }
+
+  main .section.width-smaller .block {
+    width: 750px;
+    margin: 0;
+  }
+
+  main .section.width-smallest-left .block {
+    width: 640px;
+    margin: 0;
   }
 
   .creators .default-content-wrapper h2 {
@@ -1136,6 +1149,7 @@ main .section.blue-btn {
   border-color: #006DFF;
   transform: unset;
 }
+
 .blue-btn a.button:hover span.button-text, .blue-btn a.button.primary:hover span.button-text {
   transform: unset;
 }
@@ -1242,6 +1256,10 @@ p a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.
 
 main .section[data-backgroundcolor='black'] {
   background-color: black;
+}
+
+main .section.bblue, main .section .block.bblue {
+  background-color: #F1F5F8;
 }
 
 main .section[data-textcolor='white'] *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a::after {
@@ -1656,7 +1674,7 @@ main .section.blue p a.button.modal::after {
   font-weight: var(--font-weight-bolder);
   line-height: 1;
   border-radius: 75pt;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .04);
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 4%);
   font-style: normal;
   letter-spacing: .8px;
   padding: 3px 7px 3px 8px;
@@ -1763,6 +1781,7 @@ main .section.blue p a.button.modal::after {
   0% {
     background-position: -800px 0;
   }
+
   100% {
     background-position: 800px 0;
   }
@@ -1806,6 +1825,7 @@ main .section.blue p a.button.modal::after {
 
 .centered {
   text-align: center;
+
   .default-content-wrapper {
     display: flex;
     flex-flow: column;
@@ -1815,10 +1835,11 @@ main .section.blue p a.button.modal::after {
 
 @keyframes rotation {
   0% {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
+
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -1863,7 +1884,7 @@ main .section.blue p a.button.modal::after {
 
   main .section.bitdefender-ferrari .default-content-wrapper h2 {
     width: 700px;
-	}
+  }
 
   main .section.bitdefender-ferrari .default-content-wrapper .button-container {
     margin-right: var(--section-desktop-padding);
@@ -1881,7 +1902,7 @@ body > div.header-with-language-banner {
 }
 
 .d-flex {
-    display: flex;
+  display: flex;
 }
 
 @media (max-width: 992px) {
@@ -1911,8 +1932,7 @@ body > div.header-with-language-banner {
   .buttons-align-right .default-content-wrapper {
     padding: 1em!important;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
   }
 
   .buttons-align-right .default-content-wrapper h2 {
@@ -1931,12 +1951,12 @@ body > div.header-with-language-banner {
   }
 
   main .section.blue a.button:any-link {
-    padding: 10px 0px 8px 13px;
+    padding: 10px 0 8px 13px;
   }
 
   
   a.button:any-link, input[type="submit"] {
     padding: 10px 13px 8px 20px;
     font-size: 14px;
-}
+  }
 }

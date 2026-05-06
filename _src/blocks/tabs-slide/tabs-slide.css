@@ -95,6 +95,16 @@
     background-color: red;
 }
 
+.tabs-slide-container[data-reversedtabs="yes"] .spp-slider.without-active .tab-slider {
+    transform: translateX(calc(260px));
+    background-color: red;
+}
+
+.tabs-slide-container[data-reversedtabs="yes"] .spp-slider.with-active .tab-slider {
+    transform: translateX(0);
+    background-color: #007bff;
+}
+
 .spp-slider .slider-container {
     overflow: hidden;
     width: 100%;

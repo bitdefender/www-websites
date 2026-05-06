@@ -12,12 +12,16 @@ main .subscriber .section {
     line-height: 25.6px;
 }
 
-.subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #has4columns .default-content-wrapper p strong, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
+.subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #has4columns .default-content-wrapper p strong, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber .subscriber-content p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
     font-weight: 500;
     font-size: 18px;
     line-height: 18px;
     margin-bottom: 10px;
     text-transform: uppercase;
+}
+
+.subscriber #has4columns .default-content-wrapper p strong {
+    text-transform: inherit;
 }
 
 .subscriber .multicontentslider .default-content-wrapper h4 {
@@ -319,6 +323,28 @@ main .subscriber .section {
     padding-bottom: 0;
 }
 
+.subscriber #multiColumns.intersected-cards .columns > div > div {
+    padding: 32px 24px 100px;
+    position: relative;
+}
+
+.subscriber #multiColumns.intersected-cards .columns > div > div h4 {
+    margin: 0;
+    padding: 0;
+}
+
+.subscriber #multiColumns.intersected-cards .columns > div > div > p:last-of-type {
+    position: absolute;
+    bottom: 20px;
+    padding: 0;
+    margin: 0;
+    display: block;
+}
+
+.subscriber #multiColumns.white-cards .columns > div > div {
+    background-color: white;
+}
+
 .subscriber #tabSlide .slide > div > div:hover {
     opacity: 0.9;
 }
@@ -373,6 +399,47 @@ main .subscriber .section {
     color: #F0F7FF;
 }
 
+.subscriber #blueSlider.animation .carousel-item {
+    height: 552px;
+    padding: 9em 2em 1em;
+}
+
+.subscriber #blueSlider.animation .carousel-item p {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 25.6px;
+    letter-spacing: -0.08px;
+}
+
+.subscriber #blueSlider.animation .carousel-item table {
+    display: none;
+}
+
+.subscriber #blueSlider .centered .carousel-item * {
+    text-align: center;
+}
+
+.subscriber #blueSlider .carousel-item p u {
+    display: inline-flex;
+    height: 28.102px;
+    padding: 4px 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    border: 0.6px solid #FFF;
+    background: #fff;
+    box-shadow: 2px 4px 16px 1px #f8f8f8 inset;
+    backdrop-filter: blur(25px);
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 12.499px;
+}
+
 .subscriber #blueSlider .carousel-item p strong {
     font-weight: 500;
     font-size: 22px;
@@ -381,13 +448,26 @@ main .subscriber .section {
     display: block;
 }
 
-.subscriber #multiColumns .default-content-wrapper p {
+.subscriber #blueSlider .carousel-item h3 {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.28px;
+    margin: 16px 0 12px;
+}
+
+.subscriber #multiColumns .default-content-wrapper p, .subscriber .subscriber-content p {
     margin: 0;
     font-weight: 400;
     font-size: 18px;
     line-height: 27px;
     letter-spacing: 0;
     color: #525252;
+}
+
+.subscriber #multiColumns.align-left .default-content-wrapper {
+    text-align: left;
 }
 
 .subscriber #tabSlide .default-content-wrapper p {
@@ -461,9 +541,17 @@ main .subscriber .section {
     margin-bottom: 4em;
 }
 
+.subscriber #blueSlider.animation {
+    background: #00439C;
+}
+
 .subscriber #blueSlider .block .carousel-container {
     max-width: var(--section-large-desktop-max-width);
     padding: 0;
+}
+
+.subscriber #blueSlider.animation .block .carousel-container {
+    overflow: visible;
 }
 
 .subscriber #blueSlider * {
@@ -504,12 +592,45 @@ main .subscriber .section {
 }
 
 .subscriber #blueSlider .carousel-item {
+    position: relative;
     border: 1px solid #338BFF;
     background-color: #0045AD;
     border-radius: 12px;
     padding: 24px 16px;
     display: flex;
     flex-direction: column;
+}
+
+.subscriber #blueSlider.animation .carousel-item {
+    border-radius: 16px;
+    border: 1px solid #ffffff14;
+    background: #ffffff14;
+    overflow: hidden;
+    transition: background 320ms cubic-bezier(0.22, 1, 0.36, 1), border-color 320ms cubic-bezier(0.22, 1, 0.36, 1), transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.subscriber #blueSlider.animation .carousel-item .carousel-content::before {
+    content: '';
+    width: 100%;
+    height: 140%;
+    display: block;
+    position: absolute;
+    background-color: #1A56A6;
+    mask-image: radial-gradient(circle at center, #1A56A6 40%, #1A56A6 60%, transparent 90%);
+    margin-top: -13%;
+    opacity: 0.7;
+}
+
+.subscriber #blueSlider.animation .carousel-item .carousel-content > div {
+    position: relative;
+    z-index: 99;
+}
+
+.subscriber #blueSlider.animation .carousel-item:hover {
+    border-radius: 16px;
+    background: #ffffff1a;
+    border-color: #ffffff1a;
+    transform: scale(1.02);
 }
 
 .subscriber #blueSlider .carousel-item:nth-of-type(2) {
@@ -542,7 +663,7 @@ main .subscriber .section {
     margin-bottom: 64px;
 }
 
-.subscriber #multiColumns .default-content-wrapper h3 {
+.subscriber #multiColumns .default-content-wrapper h3, .subscriber .subscriber-content h3 {
     font-weight: 600;
     font-size: 40px;
     line-height: 45px;
@@ -1583,6 +1704,127 @@ main .subscriber .section {
     padding-bottom: 88px;
 }
 
+.parallax-card {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    background: var(--bd-blue-800);
+    border-radius: 16px;
+    padding: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.animation .carousel-container .parallax-card {
+    width: 100%;
+}
+
+.animation .carousel-container .carousel-content {
+    position: relative;
+    z-index: 2;
+}
+
+.animation .carousel-container .carousel-content {
+
+}
+
+.parallax-icons {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.parallax-icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: #1553A4;
+    border: 1px solid #ffffff10;
+    border-radius: 12px;
+    z-index: 2;
+    will-change: transform;
+    transition: scale 0.5s, filter 0.5s;
+}
+
+.parallax-icon img {
+    opacity: 1;
+}
+
+.parallax-icon--blurred {
+    scale: 0.8;
+    filter: blur(3px);
+    z-index: 1;
+}
+
+.image-columns-container .parallax-pos-1 { top: -24px; right: 320px; }
+.image-columns-container .parallax-pos-2 { top: 48px; right: 96px; }
+.image-columns-container .parallax-pos-3 { top: 136px; right: 240px; }
+.image-columns-container .parallax-pos-4 { bottom: 40px; right: 48px; }
+.image-columns-container .parallax-pos-5 { top: 24px; right: 440px; }
+.image-columns-container .parallax-pos-6 { bottom: 8px; right: 320px; }
+
+.animation .carousel-container .parallax-icon {
+    padding: 4px 8px;
+    border-radius: 4px;
+    gap: 8px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 12.499px;
+}
+
+.animation .carousel-container > div > div.carousel-item:nth-of-type(1) .parallax-pos-1 { top: 40px; left: 40px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(1) .parallax-pos-2 { top: 72px; right: 56px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(1) .parallax-pos-3 { bottom: 64px; left: 56px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(1) .parallax-pos-4 { bottom: 32px; right: 56px; }
+
+.animation .carousel-container > div > div.carousel-item:nth-of-type(2) .parallax-pos-1 { top: 16px; left: auto; right: 80px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(2) .parallax-pos-2 { top: 96px; right: 8px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(2) .parallax-pos-3 { top: 64px; left: 56px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(2) .parallax-pos-4 { top: 148px; left: 8px; right: auto; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(2) .parallax-pos-5 { top: 80px; left: 50%; transform: translateX(-50%); }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(2) .parallax-pos-6 { bottom: 64px; left: 8px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(2) .parallax-pos-7 { bottom: 32px; right: 72px; }
+
+.animation .carousel-container > div > div.carousel-item:nth-of-type(3) .parallax-pos-1 { top: 128px; left: auto; right: 0; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(3) .parallax-pos-2 { top: 112px; left: 8px; right: auto; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(3) .parallax-pos-3 { top: 24px; left: 56px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(3) .parallax-pos-4 { top: 64px; left: 160px; right: auto; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(3) .parallax-pos-5 { top: 8px; left: auto; right: 64px; transform: none; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(3) .parallax-pos-6 { bottom: 8px; left: 112px; transform: none; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(3) .parallax-pos-7 { bottom: 72px; left: 36px; }
+.animation .carousel-container > div > div.carousel-item:nth-of-type(3) .parallax-pos-8 { bottom: 32px; right: 48px; }
+
+.parallax-lines-svg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.parallax-line {
+    stroke: white;
+    stroke-width: 1;
+}
+
+.parallax-icon-16 {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.parallax-icon-40 {
+    width: 40px!important;
+    height: 40px;
+    flex-shrink: 0;
+}
+
 @media (min-width: 2000px) { 
     .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
         width: 825px;
@@ -1866,7 +2108,7 @@ main .subscriber .section {
         padding: 0 1em;
     }
 
-    .subscriber #multiColumns .default-content-wrapper p {
+    .subscriber #multiColumns .default-content-wrapper p, .subscriber .subscriber-content p {
         font-weight: 500;
     }
 
@@ -2163,7 +2405,7 @@ main .subscriber .section {
 }
 
 @media (max-width: 767px) {
-    .subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #has4columns .default-content-wrapper p strong, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
+    .subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #has4columns .default-content-wrapper p strong, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber .subscriber-content p strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
         display: block;
         margin-bottom: 0;
     }
