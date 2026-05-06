@@ -34,7 +34,9 @@
 }
 
 .trusted-teaser-impact .box-wrapper .box-item {
-    flex-shrink: 0;
+    flex: 0 0 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     color: black;
     position: relative;
     padding-right: 10px;
@@ -90,7 +92,7 @@
 @media (min-width: 992px) {
     .trusted-teaser-impact .box-wrapper {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         justify-content: center;
     }
 

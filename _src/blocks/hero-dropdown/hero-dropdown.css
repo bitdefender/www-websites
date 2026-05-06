@@ -1113,6 +1113,10 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
   main .v2 .hero-dropdown h1 {
     font-size: var(--heading-font-size-xxl1);
   }
+
+  main .hero-dropdown .hero-dropdown-content .button{
+    justify-content: center;
+  }
 }
 
 @media (max-width: 1200px){
@@ -1222,10 +1226,6 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
   main .bfoffer main .hero-dropdown {
     padding-top: 3rem;
     padding-bottom: 0;
-  }
-  
-  main .hero-dropdown .hero-dropdown-content .button{
-    justify-content: center;
   }
 
   main .bfoffer .hero-dropdown .hero-dropdown-content p:last-of-type picture img {
