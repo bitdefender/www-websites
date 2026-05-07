@@ -37,7 +37,7 @@ function getDiscountedPriceAttribute(type, hideDecimals, prodName) {
  * @param {Object} options - Price configuration options
  * @returns {HTMLElement} Price container element
  */
-function createPriceElement(options) {
+function createPriceElement(options, card) {
   const {
     prodName,
     saveText,
@@ -67,7 +67,7 @@ function createPriceElement(options) {
   const newPriceContainer = document.createElement('div');
   newPriceContainer.className = 'newprice-container mt-2';
 
-  const perPriceText = perPrice?.textContent?.replace('0', '') || '';
+  const perPriceText = perPrice?.innerHTML?.replace('0', '') || '';
   const perPriceSup = perPriceText ? `<sup class="per-m">${perPriceText}</sup>` : '';
   newPriceContainer.innerHTML = `
     <span class="prod-newprice">
@@ -75,18 +75,44 @@ function createPriceElement(options) {
     </span>
   `;
 
-  container.appendChild(oldPriceContainer);
-  container.appendChild(newPriceContainer);
+  if (card.parentElement.classList.contains('new-buy-zone')) {
+    let billedPrice;
+    let taxesText;
+    container.appendChild(oldPriceContainer);
+    // Billed text
+    if (billedText) {
+      [billedPrice, taxesText] = billedText.innerHTML.split('<br>');
+      const billedPriceDiv = document.createElement('div');
+      billedPriceDiv.className = 'billed';
+      billedPriceDiv.innerHTML = billedPrice.replace(
+        '0',
+        `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
+      );
+      container.appendChild(billedPriceDiv);
+    }
 
-  // Billed text
-  if (billedText) {
+    container.appendChild(newPriceContainer);
+
+    if (taxesText) {
+      const taxesDiv = document.createElement('div');
+      taxesDiv.className = 'billed taxes';
+      taxesDiv.innerHTML = taxesText;
+      container.appendChild(taxesDiv);
+    }
+  } else {
+    container.appendChild(oldPriceContainer);
+    container.appendChild(newPriceContainer);
     const billedDiv = document.createElement('div');
-    billedDiv.className = 'billed';
-    billedDiv.innerHTML = billedText.innerHTML.replace(
-      '0',
-      `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
-    );
-    container.appendChild(billedDiv);
+
+    // Billed text
+    if (billedText) {
+      billedDiv.className = 'billed';
+      billedDiv.innerHTML = billedText.innerHTML.replace(
+        '0',
+        `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
+      );
+      container.appendChild(billedDiv);
+    }
   }
 
   // Buy button
@@ -421,11 +447,18 @@ function createSubtitleHTML(subtitleRow) {
   const invisibleTagPattern = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i;
   const hasInvisibleTag = invisibleTagPattern.test(subtitleRow.innerHTML);
 
+  const hiddenTagPattern = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Hidden\s*<\/span>/i;
+  const hasHiddenTag = hiddenTagPattern.test(subtitleRow.innerHTML);
+
   const extraAttrs = hasInvisibleTag
     ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"'
     : '';
 
-  return `<p class="subtitle${fixedClass}"${extraAttrs}>${subtitleRow.innerHTML}</p>`;
+  const extrahiddenAttrs = hasHiddenTag
+    ? 'style="display:none;" aria-hidden="true"'
+    : '';
+
+  return `<p class="subtitle${fixedClass}"${extraAttrs}${extrahiddenAttrs}>${subtitleRow.innerHTML}</p>`;
 }
 
 /**
@@ -1003,7 +1036,7 @@ export default async function decorate(block) {
           type,
           hideDecimals,
           perPrice,
-        });
+        }, block.children[key]);
         block.children[key].querySelector('.hero-aem__prices')?.appendChild(priceBox);
 
         // Add add-on price box if needed
@@ -1017,7 +1050,7 @@ export default async function decorate(block) {
             type,
             hideDecimals,
             perPrice,
-          });
+          }, block.children[key]);
           block.children[key].querySelector('.hero-aem__prices__addon')?.appendChild(addOnPriceBox);
         }
 

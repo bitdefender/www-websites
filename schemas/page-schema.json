@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bitdefender.local/schemas/page-schema.json",
+  "title": "AI-generated EDS page JSON",
+  "description": "Strict first-pass schema for machine-generated EDS page content. Uses metadata for page/section/block authoring data and attrs for low-level element attributes. Block-specific constraints live in component-manifest.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "metadata",
+    "imports",
+    "body"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "imports": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/importReference"
+      },
+      "default": []
+    },
+    "body": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/sectionNode"
+      }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "description": "Page-level metadata. Values are intentionally scalar or string-array only.",
+      "propertyNames": {
+        "pattern": "^[a-z0-9][a-z0-9-]*$"
+      },
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]*$": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "importReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "identifier"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "manifest",
+            "schema",
+            "component-doc",
+            "example",
+            "asset",
+            "note"
+          ]
+        },
+        "identifier": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-./]*$"
+        },
+        "path": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "sectionNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "children"
+      ],
+      "properties": {
+        "type": {
+          "const": "section"
+        },
+        "identifier": {
+          "type": "string",
+          "default": "section"
+        },
+        "variant": {
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/sectionMetadata"
+        },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/contentNode"
+          }
+        }
+      }
+    },
+    "sectionMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anchor": {
+          "type": "string"
+        },
+        "classNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "purpose": {
+          "type": "string"
+        }
+      }
+    },
+    "contentNode": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/blockNode"
+        },
+        {
+          "$ref": "#/$defs/elementNode"
+        },
+        {
+          "$ref": "#/$defs/textNode"
+        }
+      ]
+    },
+    "blockNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "identifier"
+      ],
+      "properties": {
+        "type": {
+          "const": "block"
+        },
+        "identifier": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "variant": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "metadata": {
+          "$ref": "#/$defs/blockMetadata"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contentNode"
+          }
+        }
+      }
+    },
+    "elementNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "name",
+        "children"
+      ],
+      "properties": {
+        "type": {
+          "const": "element"
+        },
+        "name": {
+          "type": "string",
+          "enum": [
+            "p",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "ul",
+            "ol",
+            "li",
+            "a",
+            "picture",
+            "img",
+            "strong",
+            "em",
+            "u",
+            "span",
+            "br",
+            "hr",
+            "table",
+            "thead",
+            "tbody",
+            "tr",
+            "td",
+            "th"
+          ]
+        },
+        "attrs": {
+          "$ref": "#/$defs/elementAttrs"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/textNode"
+              },
+              {
+                "$ref": "#/$defs/elementNode"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "elementAttrs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "href": {
+          "type": "string"
+        },
+        "src": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "classNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "textNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "value"
+      ],
+      "properties": {
+        "type": {
+          "const": "text"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "blockMetadata": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/jsonValue"
+      }
+    },
+    "jsonValue": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        }
+      ]
+    }
+  }
+}
