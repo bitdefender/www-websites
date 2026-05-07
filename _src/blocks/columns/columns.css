@@ -263,6 +263,12 @@
 
 .columns-as-tabs .columns > div {
   gap: 0;
+  flex-direction: row;
+}
+
+.columns-as-tabs .columns > div > div {
+  flex: 1;
+  order: unset;
 }
 
 .columns-as-tabs > .columns-wrapper:nth-of-type(2) .block .columns-col {
@@ -4006,6 +4012,15 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 @media (max-width: 991px) {
   .columns-tabs > div.default-content-wrapper.section-el:not(:first-of-type) {
     margin: 0;
+  }
+
+  .columns-as-tabs > .columns-wrapper .block h3 {
+    font-size: 24px;
+    line-height: 27px;
+  }
+
+  .columns-as-tabs > .columns-wrapper:nth-of-type(1) .block .columns-text-col {
+    flex: 0 0 100%;
   }
 }
 

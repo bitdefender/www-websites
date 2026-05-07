@@ -147,23 +147,23 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   text-align: center;
 }
 
-.image-columns-container.animated .block > div:last-of-type {
+.image-columns-container.animated .block > div:last-of-type, .image-columns-container.animated .block > div > div:last-of-type {
   position: relative;
 }
 
 .image-columns-container.animated .block > div > div:last-of-type table {
   position: absolute;
-  bottom: 4em;
+  top: 300px;
   right: -2em;
+  width: 330px;
 }
 
 .image-columns-container.animated .block > div > div:last-of-type table:nth-of-type(1) {
   background: linear-gradient(75.99deg, #0059D6 1.46%, #338BFF 100%);
   color: white;
-  top: 10em;
+  top: 165px;
   right: -2em;
   bottom: auto;
-  width: 330px;
   display: block;
   border-radius: 16px;
   opacity: 1;
@@ -428,6 +428,11 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 }
 
 @media (max-width: 991px) {
+  .image-columns-container.animated .block > div > div:last-of-type table {
+    width: 330px!important;
+    right: 1em!important;
+  }
+
   .image-columns-container.bundle-design .image-columns > div > div:last-of-type img {
     visibility: hidden;
   }
