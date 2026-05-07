@@ -6,10 +6,9 @@ function onChange(form) {
   const submitButton = form.querySelector('input[type="submit"]');
   const emailInput = form.querySelector('input[type="email"]');
 
-  const allCheckboxesChecked = [...form.querySelectorAll('input[type="checkbox"]:required')].every((checkbox) => checkbox.checked);
   const emailPopulated = emailInput.value.trim() !== '';
 
-  submitButton.disabled = !((allCheckboxesChecked && emailPopulated));
+  submitButton.disabled = !((emailPopulated));
 }
 
 async function hashEmail(email) {
@@ -54,14 +53,24 @@ async function handleSubmitNewsletter(e, form, flow, successMessage, failMessage
   const name = formData.get('name');
   const firstName = name.split(' ')[0];
   const lastName = name.split(' ')[1] || '';
-  const update = formData.get('checkbox');
+  const optionalCheckboxChecked = Boolean(formData.get('checkbox'));
+
+  const emarsysOptInData = {
+    non_optin: true,
+    ...(optionalCheckboxChecked
+      ? {
+        com_optin: true,
+        newsletter_comercial_optin: true,
+      }
+      : {}),
+  };
 
   const jsonObject = {
     email,
     flow,
     first_name: firstName,
     last_name: lastName,
-    update,
+    ...emarsysOptInData,
     nonce,
     challenge,
     difficulty,
@@ -139,11 +148,14 @@ async function createForm(types, labels, flow, successMessage, failMessage, form
 
     input.setAttribute('name', type);
     input.setAttribute('placeholder', labels[i]);
-    input.setAttribute('required', '');
-    input.setAttribute('aria-required', 'true');
+    if (type !== 'checkbox') {
+      input.setAttribute('required', '');
+      input.setAttribute('aria-required', 'true');
+    }
 
     form.append(input);
     if (type === 'submit') {
+      input.setAttribute('value', labels[i]);
       input.classList.add('disabled');
       input.disabled = true;
     }
@@ -202,6 +214,15 @@ export default async function decorate(block, options) {
   const formDataHTML = block.children[1];
   const successMessage = block.children[2].children[1];
   const failMessage = block.children[3].children[1];
+  const underEmailTextSource = block.children[4].children[1];
+  let underEmailText = null;
+  if (underEmailTextSource) {
+    underEmailText = document.createElement('p');
+    underEmailText.innerHTML = underEmailTextSource.innerHTML;
+    [...underEmailTextSource.attributes].forEach((attribute) => {
+      underEmailText.setAttribute(attribute.name, attribute.value);
+    });
+  }
   const formData = parseHTML(formDataHTML.innerHTML);
   const [types, labels] = [formData.insideCurlyBrackets, formData.insideSquareBrackets];
   let form = null;
@@ -220,9 +241,16 @@ export default async function decorate(block, options) {
   }
 
   if (form) block.append(form);
-  block.children[1].innerHTML = '';
-  block.children[2].innerHTML = '';
-  block.children[3].innerHTML = '';
+  if (block.children[1]) block.children[1].innerHTML = '';
+  if (block.children[2]) block.children[2].innerHTML = '';
+  if (block.children[3]) block.children[3].innerHTML = '';
+  if (block.children[4]) block.children[4].innerHTML = '';
+
+  const emailField = block.querySelector('#form-1-email');
+  if (emailField && underEmailText) {
+    emailField.insertAdjacentElement('afterend', underEmailText);
+  }
+
   if (template === 'blog') {
     block.classList.add('blog-template');
   }

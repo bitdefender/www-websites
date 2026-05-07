@@ -1113,6 +1113,10 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
   main .v2 .hero-dropdown h1 {
     font-size: var(--heading-font-size-xxl1);
   }
+
+  main .hero-dropdown .hero-dropdown-content .button{
+    justify-content: center;
+  }
 }
 
 @media (max-width: 1200px){

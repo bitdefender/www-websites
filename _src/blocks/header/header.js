@@ -478,7 +478,7 @@ async function runDefaultHeaderLogic(block) {
       const websiteDomain = getDomain();
       let aemFetchDomain;
 
-      if (websiteDomain === 'en-us') {
+      if (websiteDomain === 'en-us' || websiteDomain === 'drafts') {
         aemFetchDomain = 'en';
       } else if (websiteDomain.includes('-global')) {
         const [singleDomain] = websiteDomain.split('-');
@@ -546,6 +546,13 @@ async function runDefaultHeaderLogic(block) {
       });
 
       shadowRoot.appendChild(contentDiv);
+      shadowRoot.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.language-banner__decline-button');
+        if (btn) {
+          document.body.classList.remove('with-language-bar');
+        }
+      });
+
       const body = document.querySelector('body');
       body.style.maxWidth = 'initial';
 

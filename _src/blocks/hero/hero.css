@@ -1099,6 +1099,10 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     right: 0;
     height: 70%;
   }
+
+  main .bfoffer .hero .hero-picture picture img {
+    object-fit: contain;
+  }
 }
 
 @media (min-width: 1600px) {
@@ -1190,6 +1194,10 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     width: 265px;
     right: 0;
   }
+
+   main .bfoffer .hero .hero-content p:last-of-type picture img {
+    display: block;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1201,10 +1209,6 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .bfoffer main .hero {
     padding-top: 3rem;
     padding-bottom: 0;
-  }
-
-  main .bfoffer .hero .hero-content p:last-of-type picture img {
-    display: block;
   }
 
   main .v2 .hero .hero-content>div table tr td:last-of-type {

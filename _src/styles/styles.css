@@ -102,6 +102,15 @@
   --cta-background-light-blue: var(--background-light-blue)
 }
 
+header,
+body > div:first-child {
+  min-height: 64px;
+}
+
+body.with-language-bar > div:first-child, body.with-language-bar header {
+  min-height: 196px;
+}
+
 .section.ibm-plex-sans {
   * {
     font-family: "IBM Plex Sans", sans-serif;
@@ -1825,6 +1834,10 @@ main .section.blue p a.button.modal::after {
   .ferrari-img img{
     max-width: 80%;
   }
+
+  body.with-language-bar header, body.with-language-bar > div:first-child {
+    min-height: 128px;
+  }
 }
 
 @media (max-width: 1399px) {
@@ -1834,14 +1847,14 @@ main .section.blue p a.button.modal::after {
   }
 }
 
-header,
-body > div:first-child {
-  min-height: 64px;
-}
 
 @media (min-width: 1200px) {
   header, body > div:first-child {
     min-height: 131px;
+  }
+
+  body.with-language-bar header, body.with-language-bar > div:first-child {
+    min-height: 191px;
   }
 
   main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
