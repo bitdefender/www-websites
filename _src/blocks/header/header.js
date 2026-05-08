@@ -487,7 +487,15 @@ async function runDefaultHeaderLogic(block) {
         aemFetchDomain = websiteDomain.split('-').join('_');
       }
 
-      const aemHeaderFetch = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`);
+      // check if the menu should be brought from a different source from Target
+      let aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`;
+      const navMbox = await target.getOffers({ mboxNames: 'navmsptest' });
+      if (navMbox?.offer) {
+        const offerPath = navMbox.offer.split('.')[0];
+        aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}${offerPath}.html?currentPagePath=${Constants.PUBLIC_URL_ORIGIN}/partners/`;
+      }
+
+      const aemHeaderFetch = await fetch(aemMenuFetchPath);
       if (!aemHeaderFetch.ok) {
         return;
       }
