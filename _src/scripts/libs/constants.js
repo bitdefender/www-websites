@@ -76,7 +76,7 @@ export class Constants {
 	static TARGET_TENANT = "bitdefender";
 
 	static PUBLIC_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
-		? '' : 'https://stage.bitdefender.com';
+		? '' : 'https://www.bitdefender.com';
 
 	static LOGIN_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
 		? window.location.origin : 'https://www.bitdefender.com';

@@ -489,10 +489,10 @@ async function runDefaultHeaderLogic(block) {
 
       // check if the menu should be brought from a different source from Target
       let aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`;
-      const navMbox = await target.getOffers({ mboxNames: 'navmsptest' });
+      const navMbox = await target.getOffers({ mboxNames: 'menu-mbox' });
       if (navMbox?.offer) {
         const offerPath = navMbox.offer.split('.')[0];
-        aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}${offerPath}.html?currentPagePath=${Constants.PUBLIC_URL_ORIGIN}/partners/`;
+        aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}${offerPath}/jcr:content/root.html`;
       }
 
       const aemHeaderFetch = await fetch(aemMenuFetchPath);
