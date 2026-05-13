@@ -4,7 +4,6 @@ import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer
 import {
   matchHeights, createTag, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
-import { bdHeroStates } from '../../scripts/vendor/parallax/icons-parallax.js';
 
 function getItemsToShow() {
   const width = window.innerWidth;
