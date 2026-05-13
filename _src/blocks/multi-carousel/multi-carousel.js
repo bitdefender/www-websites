@@ -49,7 +49,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
             const [src, txt] = icon.textContent.split('|').map(s => s.trim());
             return `
                   <div class="parallax-icon parallax-pos-${k + 1}" data-about-id="${k}">
-                    <img class="parallax-icon-16" src="/common/icons/${src}.svg" alt="${txt || 'Bitdefender'}">
+                    <img class="parallax-icon-30" src="/common/icons/${src}.svg" alt="${txt || 'Bitdefender'}">
                     ${txt || ''}
                   </div>
                 `;
@@ -64,7 +64,7 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
         carouselItem.appendChild(contentElement);
 
         const parallaxCard = carouselItem.querySelector('.parallax-card');
-        if (parallaxCard) initAnimations(parallaxCard);
+        if (parallaxCard) initAnimations(parallaxCard, true);
       }
 
       if (titles && titles[index]) {

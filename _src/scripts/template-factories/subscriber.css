@@ -683,6 +683,10 @@ main .subscriber .section {
     margin: 0;
 }
 
+.subscriber #multiColumns.intersected-cards .columns > div > div .icon {
+    height: 64px;
+}
+
 .subscriber #multiColumns .columns > div > div h4 {
     font-weight: 500;
     font-size: 18px;
@@ -1167,6 +1171,16 @@ main .subscriber .section {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.subscriber .columnvideo2 > div.image-columns-wrapper table tr td a {
+    background-color: white;
+    border: 0 none;
+}
+
+.subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type a {
+    background-color: #1A7DFF;
+    color: white;
 }
 
 .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .columnvideo.resourcesvideo > div.image-columns-wrapper table tr td:first-of-type {
@@ -1814,9 +1828,9 @@ main .subscriber .section {
     stroke-width: 1;
 }
 
-.parallax-icon-16 {
-    width: 16px;
-    height: 16px;
+.parallax-icon-30 {
+    width: 30px;
+    height: 30px;
     flex-shrink: 0;
 }
 
@@ -1985,6 +1999,10 @@ main .subscriber .section {
 
     .subscriber .multicontentvideoslider .carousel-item, .subscriber .multicontentvideoslider .carousel-item iframe {
         width: 49vw;
+    }
+
+    .image-columns-container.animated .block > div > div:last-of-type > p:first-of-type {
+        top: -3em;
     }
 }
 
@@ -2400,8 +2418,7 @@ main .subscriber .section {
 
     .subscriber #multiColumns.bundle-design2 .columns > div {
         display: flex;
-        flex-direction: row;
-        
+        flex-direction: row;  
     }
 }
 
@@ -2482,7 +2499,7 @@ main .subscriber .section {
     }
 
     .subscriber #heroColumn h2, .subscriber .columnvideo > div.image-columns-wrapper h3, .subscriber #blueSlider .default-content-wrapper h3, .subscriber #multiColumns .default-content-wrapper h3, .subscriber #tabSlide .default-content-wrapper h3, .subscriber #blueBox .default-content-wrapper h3, .subscriber #customQuoteCarousel .columns h4, .subscriber .accordion-container .default-content-wrapper h3, .subscriber-custom-content-container .default-content-wrapper h3 {
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         font-size: 32px !important;
         line-height: 38.4px !important;
     }
@@ -2641,7 +2658,6 @@ main .subscriber .section {
         background: white;
         border-radius: 20px;
     }
-    
 }
 
 @media (max-width: 636px) {

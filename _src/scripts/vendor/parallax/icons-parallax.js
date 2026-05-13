@@ -22,7 +22,7 @@ const INITIAL_BLURRED = [4, 5];
 let instances = [];
 let running = false;
 
-export function initAnimations(block) {
+export function initAnimations(block, noBlur) {
     if (!block) return;
 
     const svg = document.createElementNS(SVG_NS, 'svg');
@@ -59,10 +59,12 @@ export function initAnimations(block) {
         });
 
         // initial blur
-        el.classList.toggle(
-            'parallax-icon--blurred',
-            INITIAL_BLURRED.includes(i)
-        );
+        if (!noBlur) {
+            el.classList.toggle(
+                'parallax-icon--blurred',
+                INITIAL_BLURRED.includes(i)
+            );
+        }
     });
 
     // LINES
@@ -104,7 +106,7 @@ export function initAnimations(block) {
         nodes.forEach((n) => {
             n.el.classList.toggle(
                 'parallax-icon--blurred',
-                INITIAL_BLURRED.includes(n.id)
+                !noBlur ? INITIAL_BLURRED.includes(n.id) : ''
             );
         });
     });
@@ -244,7 +246,7 @@ function tick(t) {
     requestAnimationFrame(tick);
 }
 
-export const bdHeroStates = (function () {
+export function bdHeroStates(block) {
     let steps = [];
     let current = 0;
     let phaseTimer;
@@ -301,14 +303,14 @@ export const bdHeroStates = (function () {
     }
 
     function init() {
-        const group = document.querySelector('.bd-hero-glass-group');
+        const group = block;
         if (!group) return;
 
-        steps = Array.from(group.querySelectorAll('.bd-hero-glass--state'));
+        steps = Array.from(group.querySelectorAll('.bd-hero-item'));
         if (steps.length < 2) return;
 
         runCycle();
     }
 
     return { init };
-})();
+};

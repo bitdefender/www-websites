@@ -1,5 +1,5 @@
 import { matchHeights } from '../../scripts/utils/utils.js';
-import { initAnimations } from '../../scripts/vendor/parallax/icons-parallax.js';
+import { initAnimations, bdHeroStates } from '../../scripts/vendor/parallax/icons-parallax.js';
 
 export default function decorate(block) {
   const parentSection = block.closest('.section');
@@ -10,6 +10,36 @@ export default function decorate(block) {
   // setup image columns
   [...block.children].forEach((row) => {
     [...row.children].forEach((col, idx) => {
+      if (parentSection.classList.contains('animated') && idx === 1) {
+        const tables = col.querySelectorAll('table');
+
+        // Create wrapper div
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute('data-hero-step', '0');
+        wrapper.className = 'bd-hero-item bd-hero-item-1 bd-hero-glass bd-hero-glass--state bd-hero-glass--active';
+
+        // Insert wrapper before the first table
+        tables[0].parentNode.insertBefore(wrapper, tables[0]);
+        tables[0].classList.add('bd-hero-item-0');
+        tables[1].classList.add('bd-hero-item-same');
+        tables[1].querySelector('td').classList.add('bd-hero-float--products');
+        tables[1].querySelectorAll('td p').forEach((item) => {
+          item.classList.add('bd-hero-tag');
+        });
+
+        // Move first 2 tables into wrapper
+        wrapper.appendChild(tables[0]);
+        wrapper.appendChild(tables[1]);
+        tables[2].setAttribute('data-hero-step', '1');
+        tables[2].querySelector('td').classList.add('bd-hero-float--products');
+        tables[2].classList.add('bd-hero-item', 'bd-hero-item-2', 'bd-hero-item-same', 'bd-hero-glass', 'bd-hero-glass--state');
+        tables[2].querySelectorAll('td p').forEach((item) => {
+          item.classList.add('bd-hero-tag');
+        });
+
+        bdHeroStates(col).init();
+      }
+
       if ((parentSection.classList.contains('columnvideo') && idx === 1) || col.innerText.includes('.mp4')) {
         if (col.innerText.includes('.mp4')) col.classList.add('mp4video');
         const colVideo = parentSection.getAttribute('data-video') || col.innerText;
@@ -35,6 +65,7 @@ export default function decorate(block) {
           initAnimations(col);
         }
       }
+
       const pic = col.querySelector('picture');
       if (pic) {
         const picWrapper = pic.closest('div');
