@@ -195,6 +195,13 @@ main .section.ai-skills-checker-container {
             width: 100%;
             gap: 15px;
             padding-top: 10px;
+            margin-bottom: 12px;
+
+            &:has(.tab-upload.active) {
+                #copy-to-clipboard {
+                    display: none;
+                }
+            }
         }
 
         input[type="text"],#inputDiv {
@@ -217,12 +224,6 @@ main .section.ai-skills-checker-container {
 
         .input-container__container {
             width: 100%;
-
-            &:has(.tab-upload.active) {
-                #copy-to-clipboard {
-                    display: none;
-                }
-            }
         }
 
         .input-pair {
@@ -261,20 +262,24 @@ main .section.ai-skills-checker-container {
             display: flex;
             gap: 8px;
             margin-bottom: 12px;
+            justify-content: center;
 
             .tab {
                 background: transparent;
                 border: 1px solid transparent;
-                padding: 8px 16px;
+                padding: 16px 32px;
                 border-radius: 8px;
                 cursor: pointer;
                 color: #007BFF;
                 font-weight: 600;
+                font-size: 1em;
+                border-bottom: 2px solid transparent;
 
                 &.active {
                     background: #ffffff;
-                    box-shadow: 0 1px 0 rgba(0,0,0,0.04) inset;
-                    border: 1px solid #007BFF;
+                    border-bottom: 2px solid #007BFF;
+                    transition: all 0.5s ease-in-out;
+                    border-radius: 0;
                 }
             }
         }
@@ -517,7 +522,19 @@ main .section.ai-skills-checker-container {
             padding: 48px 60px 35px;
             
             .input-container{
-                flex-direction: unset;
+                
+
+                &:has(.tab-upload.active) {
+                   
+
+                    .input-container__container {
+                        width: unset;
+                    }
+
+                    .upload-drop {
+                        min-width: 100%;
+                    }
+                }
             }
 
             .buttons-container{
@@ -532,6 +549,9 @@ main .section.ai-skills-checker-container {
 
             button.check-url {
                 white-space: nowrap;
+                height: fit-content;
+                min-width: 100%;
+                min-height: 51px;
             }
 
             .share-popup{

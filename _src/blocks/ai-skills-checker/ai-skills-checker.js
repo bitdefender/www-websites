@@ -144,7 +144,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
-async function resetChecker(block, titleText = '') {
+async function resetChecker(block, titleText = '', inputsState = {}) {
   const classesToRemove = ['danger', 'safe'];
   const section = block.closest('.section');
 
@@ -160,6 +160,8 @@ async function resetChecker(block, titleText = '') {
   const fileInput = block.querySelector('#ai-skills-checker-file');
   const result = block.querySelector('.result');
   const h1 = block.querySelector('h1');
+  const uploadText = block.querySelector('.upload-text');
+
   input.removeAttribute('disabled');
   if (fileInput) {
     fileInput.removeAttribute('disabled');
@@ -170,6 +172,7 @@ async function resetChecker(block, titleText = '') {
   const inputDiv = block.querySelector('#inputDiv');
   if (inputDiv) inputDiv.textContent = '';
   if (h1) h1.textContent = titleText;
+  if (uploadText && inputsState) uploadText.textContent = inputsState.upload || '';
 
   AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
   AdobeDataLayerService.push(new UserDetectedEvent());
@@ -202,36 +205,43 @@ function createStatusMessages(block) {
   return statusMessages;
 }
 
-function createStatusTitles(block) {
-  const statusTitles = {};
+function createKeyValueMap(block, searchKey, { className, useInnerHTML = false } = {}) {
+  const mappedValues = {};
 
-  const divWithstatusTitles = Array.from(block.querySelectorAll('div')).find((div) => {
+  const targetDiv = Array.from(block.querySelectorAll('div')).find((div) => {
     const firstParagraph = div.querySelector('p');
-    return firstParagraph && firstParagraph.textContent.includes('<titles-change>');
+    return firstParagraph && firstParagraph.textContent.includes(searchKey);
   });
 
-  divWithstatusTitles.classList.add('status-titles');
-  const pElements = divWithstatusTitles.querySelectorAll('p');
-  // Skip the first <p> if it contains a header like "<titles-change>"
+  if (!targetDiv) {
+    return mappedValues;
+  }
+
+  if (className) {
+    targetDiv.classList.add(className);
+  }
+
+  const pElements = targetDiv.querySelectorAll('p');
+  // Skip the first <p> if it contains a header like "<tabs>" or "<inputs>"
   pElements.forEach((p, index) => {
     if (index === 0) {
       return;
     }
 
-    const parts = p.textContent.split(':');
+    const source = useInnerHTML ? p.innerHTML : p.textContent;
+    const parts = source.split(':');
     if (parts.length >= 2) {
-      const status = parts[0].trim();
-      const message = parts.slice(1).join(':').trim();
-      statusTitles[status.toLowerCase()] = message;
+      const key = parts[0].trim();
+      const value = parts.slice(1).join(':').trim();
+      mappedValues[key.toLowerCase()] = value;
     }
   });
 
-  // remove the div from the dom, as it is already parsed and we don't need it anymore
-  divWithstatusTitles.remove();
-  return statusTitles;
+  targetDiv.remove();
+  return mappedValues;
 }
 
-function createButtonsContainer(block) {
+function createButtonsContainer(block, inputsState) {
   const titleText = block.querySelector('h1')?.innerText;
   const divWithButtons = Array.from(block.querySelectorAll('div')).find((div) => {
     const firstParagraph = div.querySelector('p');
@@ -260,7 +270,7 @@ function createButtonsContainer(block) {
       if (link.href.includes('#check-another')) {
         link.classList.add('check-another-button');
         link.addEventListener('click', () => {
-          resetChecker(block, titleText);
+          resetChecker(block, titleText, inputsState);
         });
       }
     });
@@ -301,7 +311,9 @@ export default function decorate(block) {
   }
 
   const statusMessages = createStatusMessages(block);
-  const statusTitles = createStatusTitles(block);
+  const statusTitles = createKeyValueMap(block, '<titles-change>', { className: 'status-titles' });
+  const tabsTitles = createKeyValueMap(block, '<tabs>');
+  const inputsState = createKeyValueMap(block, '<inputs>');
 
   const formContainer = document.createElement('div');
   formContainer.classList.add('ai-skills-checker-form');
@@ -335,15 +347,14 @@ export default function decorate(block) {
   const tabLink = document.createElement('button');
   tabLink.type = 'button';
   tabLink.className = 'tab tab-link active';
-  tabLink.textContent = 'Link';
+  tabLink.textContent = tabsTitles.link ?? '';
   const tabUpload = document.createElement('button');
   tabUpload.type = 'button';
   tabUpload.className = 'tab tab-upload';
-  tabUpload.textContent = 'Upload';
+  tabUpload.textContent = tabsTitles.upload ?? '';
   tabs.appendChild(tabLink);
   tabs.appendChild(tabUpload);
 
-  // input pair: label + file input + url input (file kept but hidden in link mode)
   const inputPair = document.createElement('div');
   inputPair.className = 'input-pair';
 
@@ -357,8 +368,7 @@ export default function decorate(block) {
   uploadDrop.innerHTML = `
     <div class="upload-inner">
       <div class="upload-icon">⬆</div>
-      <div class="upload-text">Drop your archive here or <span class="browse">browse</span></div>
-      <div class="upload-ext">.zip, .tar, .gz, .rar, .7z</div>
+      <div class="upload-text">${inputsState.upload ?? ''}</div>
     </div>
   `;
 
@@ -366,7 +376,7 @@ export default function decorate(block) {
   divContainer.className = 'input-container__container';
   divContainer.appendChild(tabs);
   divContainer.appendChild(inputPair);
-  divContainer.appendChild(uploadDrop);
+
   block.prepend(inputDiv);
 
   inputContainer.appendChild(divContainer);
@@ -403,15 +413,32 @@ export default function decorate(block) {
   tabUpload.addEventListener('click', showUpload);
 
   // upload drop interactions
-  uploadDrop.querySelector('.browse').addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
-  uploadDrop.addEventListener('dragover', (e) => { e.preventDefault(); uploadDrop.classList.add('dragover'); });
+  uploadDrop.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
+  uploadDrop.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadDrop.classList.add('dragover');
+  });
   uploadDrop.addEventListener('dragleave', () => uploadDrop.classList.remove('dragover'));
-  uploadDrop.addEventListener('drop', (e) => { e.preventDefault(); uploadDrop.classList.remove('dragover'); if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) fileInput.files = e.dataTransfer.files; });
-  fileInput.addEventListener('change', () => { if (fileInput.files && fileInput.files.length > 0) { input.value = ''; const fname = fileInput.files[0].name; uploadDrop.querySelector('.upload-text').innerHTML = `Selected: <strong>${fname}</strong>`; } });
+  uploadDrop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadDrop.classList.remove('dragover');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+      fileInput.files = e.dataTransfer.files;
+    }
+  });
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files.length > 0) {
+      input.value = '';
+      const fname = fileInput.files[0].name;
+      uploadDrop.querySelector('.upload-text').innerHTML = `${inputsState.uploadsuccess.replace('{FILE_NAME}', fname)}`;
+    }
+  });
 
   const button = document.createElement('button');
   button.textContent = checkButtonText ?? 'Check URL';
   button.classList.add('check-url');
+
+  inputContainer.appendChild(uploadDrop);
   inputContainer.appendChild(button);
 
   const result = document.createElement('div');
@@ -425,7 +452,7 @@ export default function decorate(block) {
 
   button.addEventListener('click', () => checkSkillLink(block, input, result, statusMessages, statusTitles, fileInput));
 
-  createButtonsContainer(block);
+  createButtonsContainer(block, inputsState);
 
   // if the text is cleared, do not display any error
   input.addEventListener('input', () => {
