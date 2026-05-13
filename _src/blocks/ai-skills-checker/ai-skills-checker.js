@@ -23,9 +23,24 @@ const isValidUrl = (urlString) => {
   return urlPattern.test(urlString);
 };
 
-async function checkSkillLink(block, input, result, statusMessages, statusTitles) {
+async function checkSkillLink(block, input, result, statusMessages, statusTitles, fileInput) {
+  const maxArchiveSizeBytes = 10 * 1024 * 1024;
   const inputUrl = input.value.trim();
-  if (!inputUrl || !isValidUrl(inputUrl)) {
+  const file = fileInput?.files && fileInput.files[0];
+
+  if (!inputUrl && !file) {
+    result.textContent = 'Please provide a URL or upload an archive';
+    result.className = 'result danger';
+    return;
+  }
+
+  if (file) {
+    if (file.size > maxArchiveSizeBytes) {
+      result.textContent = 'File exceeds the 10MB limit';
+      result.className = 'result danger';
+      return;
+    }
+  } else if (inputUrl && !isValidUrl(inputUrl)) {
     result.textContent = 'Please enter a valid URL';
     result.className = 'result danger';
     return;
@@ -33,59 +48,90 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
 
   input.closest('.input-container').classList.add('loader-circle');
 
-  const response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      action: 'scan_url',
-      url: inputUrl,
-    }),
-  });
+  let response;
+  try {
+    if (file) {
+      const form = new FormData();
+      form.append('file', file, file.name);
+      form.append('action', 'scan_archive');
 
-  if (!response.ok) {
-    result.textContent = 'Please enter a valid skill URL';
+      response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
+        method: 'POST',
+        body: form,
+      });
+    } else {
+      response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'scan_url', url: inputUrl }),
+      });
+    }
+  } catch (err) {
+    result.textContent = statusMessages.error ?? 'An error occurred';
+    result.className = 'result danger';
+    input.closest('.input-container').classList.remove('loader-circle');
+    return;
+  }
+
+  if (!response || !response.ok) {
+    result.textContent = statusMessages.error ?? 'Please enter a valid skill URL or upload a valid archive';
     result.className = 'result danger';
     input.closest('.input-container').classList.remove('loader-circle');
     return;
   }
 
   const data = await response.json();
-  let message; let statusCode; let
-    className;
 
-  switch (data.risk_level) {
-    case 'CLEAN':
-      statusCode = 'safe';
-      message = statusMessages.safe;
-      className = 'result safe';
-      break;
+  // determine risk level (prefer adjusted if present)
+  const rawRisk = data.adjusted_risk_level ?? data.risk_level ?? 'UNKNOWN';
+  const risk = String(rawRisk).toUpperCase();
 
-    case 'CRITICAL':
-      statusCode = 'danger';
-      message = statusMessages.default;
-      className = 'result danger';
-      break;
-
-    default:
-      result.innerHTML = `${statusMessages.error ?? ''}`;
-      result.className = 'result danger no-response';
-      input.closest('.input-container').classList.remove('loader-circle');
-      break;
+  // map to existing visuals
+  let statusCode = 'default';
+  let className = 'result danger';
+  if (risk.includes('CLEAN')) {
+    statusCode = 'safe';
+    className = 'result safe';
+  } else if (risk.includes('CRITICAL')) {
+    statusCode = 'danger';
+    className = 'result danger';
   }
 
-  result.innerHTML = message;
-  if (data.risk_level !== 'CLEAN') {
-    result.innerHTML = `${data.findings.map((finding) => `<code>${finding.content ?? ''}</code><br>
-      <strong>Description: ${finding.description ?? ''}</strong><hr>`).join('')} 
-      ${message}`;
+  // build result card HTML per spec
+  const skillName = data.skill_name ?? data.name ?? inputUrl ?? file?.name ?? '';
+  const llmSummary = data.llm_summary ?? data.summary ?? '';
+  const findings = Array.isArray(data.findings) ? data.findings : [];
+  const findingsCount = (typeof data.findings_count === 'number') ? data.findings_count : findings.length;
+
+  let findingsHtml = '';
+  if (findingsCount === 0) {
+    findingsHtml = '<p>No security findings detected.</p>';
+  } else {
+    findingsHtml = `<ol>${findings.map((f) => {
+      const descr = f.description ?? 'No description';
+      // prefer file_name or path or content as filename display
+      const filename = f.file_name ?? f.filename ?? f.path ?? f.content ?? '';
+      const fileCode = filename ? `<code>${filename}</code>` : '';
+      return `<li><strong>${descr}</strong> ${fileCode}</li>`;
+    }).join('')}</ol>`;
   }
+
+  result.innerHTML = `
+    <p><strong>Skill Scan:</strong> ${skillName}</p>
+    <h4>Summary</h4>
+    <p>${llmSummary}</p>
+    <h4>Findings (${findingsCount})</h4>
+    ${findingsHtml}
+  `;
 
   result.className = className;
   block.closest('.section').classList.add(className.split(' ')[1]);
   input.setAttribute('disabled', '');
-  document.getElementById('inputDiv').textContent = inputUrl;
+  if (fileInput) fileInput.setAttribute('disabled', '');
+  const inputDiv = document.getElementById('inputDiv');
+  if (inputDiv) {
+    inputDiv.textContent = file ? file.name : inputUrl;
+  }
 
   changeTexts(block, statusCode, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
@@ -111,14 +157,19 @@ async function resetChecker(block, titleText = '') {
 
   // Reset the input and result elements
   const input = block.querySelector('#ai-skills-checker-input');
+  const fileInput = block.querySelector('#ai-skills-checker-file');
   const result = block.querySelector('.result');
   const h1 = block.querySelector('h1');
   input.removeAttribute('disabled');
+  if (fileInput) {
+    fileInput.removeAttribute('disabled');
+    fileInput.value = '';
+  }
   input.value = '';
   result.className = 'result';
-  if (h1) {
-    h1.textContent = titleText;
-  }
+  const inputDiv = block.querySelector('#inputDiv');
+  if (inputDiv) inputDiv.textContent = '';
+  if (h1) h1.textContent = titleText;
 
   AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
   AdobeDataLayerService.push(new UserDetectedEvent());
@@ -217,6 +268,27 @@ function createButtonsContainer(block) {
 }
 
 export default function decorate(block) {
+  const acceptedArchiveInputValue = [
+    '.zip',
+    '.tar',
+    '.tgz',
+    '.tar.gz',
+    '.tar.bz2',
+    '.tbz2',
+    '.tar.xz',
+    '.gz',
+    '.bz2',
+    '.7z',
+    '.rar',
+    'application/zip',
+    'application/x-tar',
+    'application/gzip',
+    'application/x-bzip2',
+    'application/x-xz',
+    'application/x-7z-compressed',
+    'application/vnd.rar',
+  ].join(',');
+
   const { checkButtonText, product, pasteLinkText } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
@@ -238,24 +310,70 @@ export default function decorate(block) {
   inputContainer.classList.add('input-container');
   formContainer.appendChild(inputContainer);
 
+  const copyElement = document.createElement('span');
+  copyElement.id = 'copy-to-clipboard';
+
   const input = document.createElement('input');
   input.type = 'text';
   input.placeholder = pasteLinkText ?? 'example-url.com';
   input.id = 'ai-skills-checker-input';
+  input.appendChild(copyElement);
 
-  const copyElement = document.createElement('span');
-  copyElement.id = 'copy-to-clipboard';
+  // file input for archive uploads
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.id = 'ai-skills-checker-file';
+  fileInput.accept = acceptedArchiveInputValue;
+  fileInput.title = 'Upload archive (max 10MB)';
 
   const inputDiv = document.createElement('p');
   inputDiv.setAttribute('id', 'inputDiv');
 
+  // tabs (Link / Upload)
+  const tabs = document.createElement('div');
+  tabs.className = 'ai-tabs';
+  const tabLink = document.createElement('button');
+  tabLink.type = 'button';
+  tabLink.className = 'tab tab-link active';
+  tabLink.textContent = 'Link';
+  const tabUpload = document.createElement('button');
+  tabUpload.type = 'button';
+  tabUpload.className = 'tab tab-upload';
+  tabUpload.textContent = 'Upload';
+  tabs.appendChild(tabLink);
+  tabs.appendChild(tabUpload);
+
+  // input pair: label + file input + url input (file kept but hidden in link mode)
+  const inputPair = document.createElement('div');
+  inputPair.className = 'input-pair';
+
+  inputPair.appendChild(fileInput);
+  inputPair.appendChild(input);
+  inputPair.appendChild(copyElement);
+
+  // upload drop area (hidden by default)
+  const uploadDrop = document.createElement('div');
+  uploadDrop.className = 'upload-drop';
+  uploadDrop.innerHTML = `
+    <div class="upload-inner">
+      <div class="upload-icon">⬆</div>
+      <div class="upload-text">Drop your archive here or <span class="browse">browse</span></div>
+      <div class="upload-ext">.zip, .tar, .gz, .rar, .7z</div>
+    </div>
+  `;
+
   const divContainer = document.createElement('div');
   divContainer.className = 'input-container__container';
-  divContainer.appendChild(input);
+  divContainer.appendChild(tabs);
+  divContainer.appendChild(inputPair);
+  divContainer.appendChild(uploadDrop);
   block.prepend(inputDiv);
-  divContainer.appendChild(copyElement);
 
   inputContainer.appendChild(divContainer);
+
+  // default view: show link input, hide upload area and file input
+  uploadDrop.style.display = 'none';
+  fileInput.style.display = 'none';
 
   copyElement.addEventListener('click', async () => {
     try {
@@ -265,6 +383,31 @@ export default function decorate(block) {
       // continue regardless of error
     }
   });
+
+  // tab handlers
+  const showLink = () => {
+    tabLink.classList.add('active');
+    tabUpload.classList.remove('active');
+    input.style.display = '';
+    fileInput.style.display = 'none';
+    uploadDrop.style.display = 'none';
+  };
+  const showUpload = () => {
+    tabUpload.classList.add('active');
+    tabLink.classList.remove('active');
+    input.style.display = 'none';
+    fileInput.style.display = '';
+    uploadDrop.style.display = '';
+  };
+  tabLink.addEventListener('click', showLink);
+  tabUpload.addEventListener('click', showUpload);
+
+  // upload drop interactions
+  uploadDrop.querySelector('.browse').addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
+  uploadDrop.addEventListener('dragover', (e) => { e.preventDefault(); uploadDrop.classList.add('dragover'); });
+  uploadDrop.addEventListener('dragleave', () => uploadDrop.classList.remove('dragover'));
+  uploadDrop.addEventListener('drop', (e) => { e.preventDefault(); uploadDrop.classList.remove('dragover'); if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) fileInput.files = e.dataTransfer.files; });
+  fileInput.addEventListener('change', () => { if (fileInput.files && fileInput.files.length > 0) { input.value = ''; const fname = fileInput.files[0].name; uploadDrop.querySelector('.upload-text').innerHTML = `Selected: <strong>${fname}</strong>`; } });
 
   const button = document.createElement('button');
   button.textContent = checkButtonText ?? 'Check URL';
@@ -280,7 +423,7 @@ export default function decorate(block) {
   safeImage.classList.add('safe-image');
   dangerImage.classList.add('danger-image');
 
-  button.addEventListener('click', () => checkSkillLink(block, input, result, statusMessages, statusTitles));
+  button.addEventListener('click', () => checkSkillLink(block, input, result, statusMessages, statusTitles, fileInput));
 
   createButtonsContainer(block);
 
@@ -296,5 +439,13 @@ export default function decorate(block) {
   input.addEventListener('paste', () => {
     result.textContent = '';
     result.className = '';
+  });
+  fileInput.addEventListener('change', () => {
+    // clear URL input when a file is selected
+    if (fileInput.files && fileInput.files.length > 0) {
+      input.value = '';
+      result.textContent = '';
+      result.className = '';
+    }
   });
 }
