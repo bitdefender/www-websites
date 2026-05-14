@@ -91,6 +91,9 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   if (risk.includes('CLEAN')) {
     statusCode = 'safe';
     className = 'result safe';
+  } else if (risk.includes('LOW') || risk.includes('MEDIUM') || risk.includes('HIGH')) {
+    statusCode = 'intermediate';
+    className = 'result danger';
   } else if (risk.includes('CRITICAL')) {
     statusCode = 'danger';
     className = 'result danger';
