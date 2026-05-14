@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const repoRoot = path.resolve(__dirname, '..');
+const repoRoot = path.resolve(__dirname, '../..');
 const blocksRoot = path.join(repoRoot, '_src', 'blocks');
 const schemasDir = path.join(repoRoot, 'schemas');
 const aggregateManifestPath = path.join(schemasDir, 'component-manifest.json');

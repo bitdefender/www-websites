@@ -1,2 +1,7 @@
+#!/usr/bin/env sh
+
+set -e
+
 node .husky/update-importmap.js
+npm run build:component-manifest
 node .husky/commit-head.js
