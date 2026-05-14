@@ -198,12 +198,6 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   line-height: 18px !important;
 }
 
-.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 {
-  width: 265px;
-  margin-right: 0;
-  margin-left: auto;
-}
-
 .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 p {
   font-weight: 600!important;
   color: black !important;
@@ -559,8 +553,6 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   }
 }
 
-
-
 @media (max-width: 767px) {
   .image-columns-container.animated .bd-hero-glass {
     transform: scale(0.8)!important;
@@ -577,6 +569,11 @@ main .image-columns.quotes > div > .image-columns-img-col img {
     
   .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same tr {
     display: block!important;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 {
+    width: 275px!important;
+    margin-top: 5em;
   }
 }
 
@@ -615,6 +612,10 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 @media (max-width: 550px) {
   .image-columns-container.animated {
     height: 840px;
+  }
+
+  .image-columns-container.animated div.bd-hero-glass {
+    margin-top: 1em;
   }
 }
 

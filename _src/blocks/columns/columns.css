@@ -1978,7 +1978,7 @@
     align-items: center;
   }
 
-  .section.migration.table-align-top tr{
+  .section.migration.table-align-top tr {
     flex-direction: unset;
   }
 }
@@ -4057,10 +4057,34 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .columns-container .block.sidebar .columns-left-col ul, .columns-container .block.sidebar .columns-left-col ul li {
     padding-left: 0;
   }
-}
 
-@media (max-width: 550px) {
-  .columns-tabs .block {
-    grid-template-columns: repeat(1, 1fr);
+  @media (min-width: 768px) {
+    .modal-container.get-bitdefender-familypack .columns.block.columns-2-cols > div {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      order: unset;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .section.migration.table-align-top tr {
+      flex-direction: unset;
+    }
   }
-}
+
+  @media (max-width: 768px) {
+    .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
+      height: 15em;
+    }
+  }
+
+  @media (max-width: 550px) {
+    .columns-tabs .block {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
+      height: 10em;
+    }
+  }}

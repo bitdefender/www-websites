@@ -235,7 +235,7 @@ main .subscriber .section {
 }
 
 .subscriber #has4columns .default-content-wrapper {
-    width: 775px;
+    width: 767px;
     margin: 64px auto;
     text-align: center;
     padding: 0;
@@ -1909,6 +1909,11 @@ main .subscriber .section {
         padding: 1em 0;
     }
 
+    .subscriber #multiColumns.no-space-top {
+        margin-top: 0;
+        padding-top: 3em;
+    }
+
     .subscriber #tabSlide {
         padding: 5em 0 3em;
     }
@@ -2420,12 +2425,35 @@ main .subscriber .section {
         display: flex;
         flex-direction: row;  
     }
+
+    .subscriber #has4columns.top-bottom-border .columns-wrapper .columns.with-box-shadow > div > div {
+        border: 0 none;
+        border-top: 1px solid #B9C7DA;
+        border-bottom: 1px solid #B9C7DA;
+    }
 }
 
 @media (max-width: 767px) {
     .subscriber #heroColumn h1, .subscriber .columnvideo > div.image-columns-wrapper strong, .subscriber #has4columns .default-content-wrapper p strong, .subscriber #blueSlider .default-content-wrapper p strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber #blueBox .default-content-wrapper strong, .subscriber #multiColumns .default-content-wrapper p strong, .subscriber .subscriber-content p strong, .subscriber #customQuoteCarousel .columns p strong, .subscriber .multicontentslider .default-content-wrapper h4 {
         display: block;
         margin-bottom: 0;
+    }
+
+    .subscriber #has4columns .default-content-wrapper {
+        width: 100%;
+    }
+
+    .multi-carousel .carousel-dot {
+        width: 18px;
+        height: 18px;
+    }
+
+    .subscriber .multi-carousel-container.animation .carousel-navigation {
+        display: flex;
+    }
+    
+    .subscriber .columnvideo .parallax-card {
+        display: none;
     }
 
     .subscriber .title-aligned-left .default-content-wrapper > * {
@@ -2653,11 +2681,7 @@ main .subscriber .section {
         gap: 16px;
     }
 
-    .subscriber #has4columns.top-bottom-border .columns-wrapper .columns.with-box-shadow > div > div {
-        border: 0 none;
-        background: white;
-        border-radius: 20px;
-    }
+    
 }
 
 @media (max-width: 636px) {

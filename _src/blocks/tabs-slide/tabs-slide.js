@@ -7,7 +7,7 @@ export default function decorate(block) {
   const [iconTab1, iconTab2] = headers.querySelectorAll('img');
   block.classList.add('columns-wrapper');
 
-  block.innerHTML = `<div class="spp-slider ${!reversedtabs ? 'with-active' : ''}">
+  block.innerHTML = `<div class="spp-slider ${!reversedtabs ? 'without-active' : 'with-active'}">
     <div class="tabs">
       <button class="tab active" data-tab="${!reversedtabs ? 'without' : 'with'}">${tab1.textContent}</button>
       <span class="icon">
