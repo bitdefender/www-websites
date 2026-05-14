@@ -280,6 +280,15 @@ main .section.ai-skills-checker-container {
                     border-bottom: 2px solid #007BFF;
                     transition: all 0.5s ease-in-out;
                     border-radius: 0;
+
+                    &:hover {
+                        color: #0056b3;
+                        border-bottom-color: #0056b3;
+                    }
+                }
+
+                &:hover {
+                    color: #0056b3;
                 }
             }
         }
