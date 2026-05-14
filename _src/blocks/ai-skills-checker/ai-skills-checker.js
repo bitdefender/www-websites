@@ -120,9 +120,8 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
 
   result.innerHTML = `
     <p><strong>Skill Scan:</strong> ${skillName}</p>
-    <p>${statusMessages[statusCode]}</p>
-    <h4>Summary</h4>
-    ${llmSummary ? `<p>${llmSummary}</p>` : ''}
+    ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
+    ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
     <h4>Findings (${findingsCount})</h4>
     ${findingsCount !== 0 ? findingsHtml : ''}
   `;
