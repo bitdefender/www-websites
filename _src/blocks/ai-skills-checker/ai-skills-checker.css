@@ -293,6 +293,7 @@ main .section.ai-skills-checker-container {
             text-align: center;
             background: #fbfdff;
             color: #333;
+            min-width: 100%;
 
             .upload-inner {
                 display: flex;
@@ -518,6 +519,8 @@ main .section.ai-skills-checker-container {
         margin: 0 auto;
         padding-bottom: 50px;
 
+
+
         .ai-skills-checker{
             padding: 48px 60px 35px;
             
@@ -575,6 +578,20 @@ main .section.ai-skills-checker-container {
                 font-size: 16px;
                 border-radius: 8px;
                 padding-bottom: 30px;
+
+                &.danger, &.safe {
+                    h4 {
+                        font-size: 20px;
+                    }
+
+                    p {
+                        font-size: 18px;
+                    }
+
+                    li {
+                        font-size: 18px;
+                    }
+                }
             }
 
             .privacy-policy {

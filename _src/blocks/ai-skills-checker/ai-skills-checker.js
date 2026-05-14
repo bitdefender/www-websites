@@ -81,7 +81,6 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   }
 
   const data = await response.json();
-
   // determine risk level (prefer adjusted if present)
   const rawRisk = data.adjusted_risk_level ?? data.risk_level ?? 'UNKNOWN';
   const risk = String(rawRisk).toUpperCase();
@@ -112,7 +111,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
       // prefer file_name or path or content as filename display
       const filename = f.file_name ?? f.filename ?? f.path ?? f.content ?? '';
       const fileCode = filename ? `<code>${filename}</code>` : '';
-      return `<li><strong>${descr}</strong> ${fileCode}</li>`;
+      return `<li><strong>${descr}</strong> <br>${fileCode}</li>`;
     }).join('')}</ol>`;
   }
 
@@ -375,6 +374,7 @@ export default function decorate(block) {
   const divContainer = document.createElement('div');
   divContainer.className = 'input-container__container';
   divContainer.appendChild(tabs);
+  inputPair.appendChild(uploadDrop);
   divContainer.appendChild(inputPair);
 
   block.prepend(inputDiv);
@@ -438,7 +438,6 @@ export default function decorate(block) {
   button.textContent = checkButtonText ?? 'Check URL';
   button.classList.add('check-url');
 
-  inputContainer.appendChild(uploadDrop);
   inputContainer.appendChild(button);
 
   const result = document.createElement('div');
