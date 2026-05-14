@@ -123,7 +123,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
     ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
     ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
     <h4>Findings (${findingsCount})</h4>
-    ${findingsCount !== 0 ? findingsHtml : ''}
+    ${findingsHtml}
   `;
 
   result.className = className;
