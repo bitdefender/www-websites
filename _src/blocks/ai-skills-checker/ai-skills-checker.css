@@ -312,6 +312,11 @@ main .section.ai-skills-checker-container {
                 background: rgba(0,110,255,0.03);
                 border-color: #006EFF;
             }
+
+            &:hover {
+                cursor: pointer;
+                border-color: #007BFF;
+            }
         }
 
         #copy-to-clipboard {
