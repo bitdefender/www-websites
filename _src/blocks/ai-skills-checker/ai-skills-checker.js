@@ -413,6 +413,10 @@ export default function decorate(block) {
 
   // tab handlers
   const showLink = () => {
+    input.value = '';
+    if (fileInput) fileInput.value = '';
+    const uploadText = uploadDrop.querySelector('.upload-text');
+    if (uploadText) uploadText.textContent = inputsState.upload ?? '';
     tabLink.classList.add('active');
     tabUpload.classList.remove('active');
     input.style.display = '';
@@ -420,6 +424,10 @@ export default function decorate(block) {
     uploadDrop.style.display = 'none';
   };
   const showUpload = () => {
+    input.value = '';
+    if (fileInput) fileInput.value = '';
+    const uploadText = uploadDrop.querySelector('.upload-text');
+    if (uploadText) uploadText.textContent = inputsState.upload ?? '';
     tabUpload.classList.add('active');
     tabLink.classList.remove('active');
     input.style.display = 'none';
