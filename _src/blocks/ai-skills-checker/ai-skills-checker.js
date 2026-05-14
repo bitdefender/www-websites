@@ -433,7 +433,9 @@ export default function decorate(block) {
   uploadDrop.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
   uploadDrop.addEventListener('dragover', (e) => {
     e.preventDefault();
-    uploadDrop.classList.add('dragover');
+    if (!uploadDrop.classList.contains('dragover')) {
+      uploadDrop.classList.add('dragover');
+    }
   });
   uploadDrop.addEventListener('dragleave', () => uploadDrop.classList.remove('dragover'));
   uploadDrop.addEventListener('drop', (e) => {
@@ -441,6 +443,7 @@ export default function decorate(block) {
     uploadDrop.classList.remove('dragover');
     if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
       fileInput.files = e.dataTransfer.files;
+      fileInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
   });
   fileInput.addEventListener('change', () => {
