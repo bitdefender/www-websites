@@ -88,15 +88,29 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   // map to existing visuals
   let statusCode = 'default';
   let className = 'result danger';
-  if (risk.includes('CLEAN')) {
-    statusCode = 'safe';
-    className = 'result safe';
-  } else if (risk.includes('LOW') || risk.includes('MEDIUM') || risk.includes('HIGH')) {
-    statusCode = 'intermediate';
-    className = 'result danger';
-  } else if (risk.includes('CRITICAL')) {
-    statusCode = 'danger';
-    className = 'result danger';
+  switch (risk) {
+    case 'CLEAN':
+      statusCode = 'safe';
+      className = 'result safe';
+      break;
+    case 'LOW':
+      statusCode = 'lowrisk';
+      className = 'result safe';
+      break;
+    case 'MEDIUM':
+    case 'HIGH':
+      statusCode = 'intermediate';
+      className = 'result danger';
+      break;
+    case 'CRITICAL':
+      statusCode = 'danger';
+      className = 'result danger';
+      break;
+    default:
+      result.innerHTML = `${statusMessages.error ?? ''}`;
+      result.className = 'result danger no-response';
+      input.closest('.input-container').classList.remove('loader-circle');
+      break;
   }
 
   // build result card HTML per spec

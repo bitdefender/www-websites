@@ -456,7 +456,7 @@ main .section.ai-skills-checker-container {
 
         .result.safe {
             background-color: #F3FEF8;
-            padding: 8px 30px 8px 55px;
+            padding: 20px 30px 20px 55px;
             position: relative;
             text-align: left;
             display: block;
@@ -466,7 +466,7 @@ main .section.ai-skills-checker-container {
                 background: url("../../icons/safe.svg") no-repeat;
                 position: absolute;
                 left: 14px;
-                top: 15%;
+                top: 20px;
                 width: 30px;
                 height: 30px;
                 background-size: contain;
