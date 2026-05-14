@@ -101,7 +101,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
 
   // build result card HTML per spec
   const skillName = data.skill_name ?? data.name ?? inputUrl ?? file?.name ?? '';
-  const llmSummary = data.llm_summary ?? data.summary ?? '';
+  const llmSummary = data.llm_summary ?? data.summary ?? null;
   const findings = Array.isArray(data.findings) ? data.findings : [];
   const findingsCount = (typeof data.findings_count === 'number') ? data.findings_count : findings.length;
 
@@ -120,10 +120,11 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
 
   result.innerHTML = `
     <p><strong>Skill Scan:</strong> ${skillName}</p>
+    <p>${statusMessages[statusCode]}</p>
     <h4>Summary</h4>
-    <p>${llmSummary}</p>
+    ${llmSummary ? `<p>${llmSummary}</p>` : ''}
     <h4>Findings (${findingsCount})</h4>
-    ${findingsHtml}
+    ${findingsCount !== 0 ? findingsHtml : ''}
   `;
 
   result.className = className;
