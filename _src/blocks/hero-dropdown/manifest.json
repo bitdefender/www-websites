@@ -1,0 +1,104 @@
+{
+  "name": "Hero Dropdown",
+  "identifier": "hero-dropdown",
+  "sourceFile": "_src/blocks/hero-dropdown/hero-dropdown.js",
+  "role": "Promotional / hero content",
+  "description": "This block displayes the hero banner with a dropdown menu.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "This block displayes the hero banner with a dropdown menu Requirements:",
+    "Paste the component",
+    "Documented sample names: Hero-dropdown.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/hero-dropdown"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ],
+  "sectionMetadata": [
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "required": false,
+      "description": "Provide a word as color or any other form accepted by browsers.",
+      "example": "white"
+    },
+    {
+      "name": "innerBackgroundColor",
+      "type": "string",
+      "required": false,
+      "description": "Provide a word as color or any other form accepted by browsers. !!! This is working very well with image_cover: small and its purpose is to have a background_color for mobile when image_background si hidden with: background_hide: mobile",
+      "example": "blue"
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "required": false,
+      "description": "Provide a word as color or any other form accepted by browsers.",
+      "example": "black"
+    },
+    {
+      "name": "contentSize",
+      "type": "string",
+      "required": false,
+      "description": "Documented in the sidekick block page.",
+      "example": "half"
+    },
+    {
+      "name": "corners",
+      "type": "string",
+      "required": false,
+      "description": "Documented in the sidekick block page.",
+      "example": "round Makes the corners rounded."
+    },
+    {
+      "name": "Label",
+      "type": "string",
+      "required": false,
+      "description": "Adds the text from the metadata above the dropdown menu",
+      "example": "Text of the lable"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Cards",
+  "identifier": "cards",
+  "sourceFile": "_src/blocks/cards/cards.js",
+  "role": "Grid of repeatable content cards",
+  "description": "Each source row becomes one card. The block detects picture-only cells as image cells and all other cells as body content.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "description": "Repeatable cards.",
+      "itemShape": {
+        "image": {
+          "type": "image",
+          "required": false
+        },
+        "body": {
+          "type": "rich-content",
+          "required": true
+        }
+      }
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "picture",
+    "img",
+    "h2",
+    "h3",
+    "h4",
+    "p",
+    "ul",
+    "li",
+    "a"
+  ],
+  "usageNotes": [
+    "The code is explicit about the image/body split and is safe for generation.",
+    "Generated card body content should remain simple rich text."
+  ],
+  "ambiguityNotes": []
+}

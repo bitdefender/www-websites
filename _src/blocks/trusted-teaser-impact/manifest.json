@@ -1,0 +1,60 @@
+{
+  "name": "Trusted Teaser Impact",
+  "identifier": "trusted-teaser-impact",
+  "sourceFile": "_src/blocks/trusted-teaser-impact/trusted-teaser-impact.js",
+  "role": "Comparison / tabular content",
+  "description": "This block displays a ttile and some boxes. The title will be the first row in your word table, and each content box will have its own row.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "The title box should contain a underlined text and a h2 element. Each content box should contain an icon and 2 other elements. The icon should not be the 2 nd element.",
+    "Note: in order for the first element of the title to be blue you should have a page metadata of template: trusted",
+    "Metadata properties: - Style properties:",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/trusted-teaser-impact"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

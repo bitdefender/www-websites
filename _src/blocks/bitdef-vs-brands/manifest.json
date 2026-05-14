@@ -1,0 +1,61 @@
+{
+  "name": "Bitdef Vs Brands",
+  "identifier": "bitdef-vs-brands",
+  "sourceFile": "_src/blocks/bitdef-vs-brands/bitdef-vs-brands.js",
+  "role": "Documented content block",
+  "description": "This block displays the bitdef-vs-brands components",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "clasa-block: this is required for the component to work",
+    "Section Metadata properties:",
+    "svgColor : ex. : #006EFF",
+    "Documented sample names: Bitdef vs Brands.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/bitdef-vs-brands"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

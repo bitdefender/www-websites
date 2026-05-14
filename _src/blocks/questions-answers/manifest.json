@@ -1,0 +1,59 @@
+{
+  "name": "Questions Answers",
+  "identifier": "questions-answers",
+  "sourceFile": "_src/blocks/questions-answers/questions-answers.js",
+  "role": "Styled FAQ / Q&A accordion",
+  "description": "FAQ-style block with the same basic row shape as accordion: one question cell and one answer cell per item.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "itemShape": {
+        "question": {
+          "type": "rich-content",
+          "required": true
+        },
+        "answer": {
+          "type": "rich-content",
+          "required": true
+        }
+      }
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [
+    "first-open",
+    "action-only-on-header",
+    "blue-titles",
+    "ibm-plex-sans",
+    "qa-creators"
+  ],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "h3",
+    "h4",
+    "p",
+    "ul",
+    "li",
+    "a",
+    "strong",
+    "em"
+  ],
+  "usageNotes": [
+    "This is safer than the generic accordion when the design intent is clearly FAQ-like.",
+    "Answer cells are normalized to contain at least one paragraph.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/questions-answers",
+    "Documented sample names: Questions Answers."
+  ],
+  "ambiguityNotes": [
+    "Most variant names beyond first-open and action-only-on-header are inferred from CSS."
+  ]
+}

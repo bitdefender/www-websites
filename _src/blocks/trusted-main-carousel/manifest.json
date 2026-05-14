@@ -1,0 +1,59 @@
+{
+  "name": "Trusted Main Carousel",
+  "identifier": "trusted-main-carousel",
+  "sourceFile": "_src/blocks/trusted-main-carousel/trusted-main-carousel.js",
+  "role": "Interactive utility / form flow",
+  "description": "Each slide will be split into two columns and will have its own row: first one the information and the background image. The left columns must contain an h2 element underlined as this will become the button in the carousel menu. Other supported elements are h3, buttons, images and normal text.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Supported metadata -",
+    "Supported styles",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/trusted-main-carousel"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

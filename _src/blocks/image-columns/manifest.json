@@ -1,0 +1,59 @@
+{
+  "name": "Image Columns",
+  "identifier": "image-columns",
+  "sourceFile": "_src/blocks/image-columns/image-columns.js",
+  "role": "Alternating or paired image-and-text columns",
+  "description": "Row-based block where each cell is treated either as an image column or a text column. The implementation can also replace a text cell with a local MP4 video in some themed cases.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "itemShape": {
+        "columns": {
+          "type": "array",
+          "required": true,
+          "items": {
+            "type": "rich-content"
+          }
+        }
+      }
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "quotes",
+    "trusted",
+    "half-image",
+    "text_smaller"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "picture",
+    "img",
+    "video",
+    "h3",
+    "p",
+    "ul",
+    "li",
+    "a",
+    "table"
+  ],
+  "usageNotes": [
+    "Generate the plain image-plus-text structure first.",
+    "The MP4 substitution path is repo-specific and depends on section classes or local file naming; it is not part of the safe first contract.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/image-columns",
+    "Documented sample names: Image to the left, Image to the right."
+  ],
+  "ambiguityNotes": [
+    "Several visual variants are inferred from CSS only.",
+    "Theme-specific section classes such as columnvideo are intentionally omitted from the contract."
+  ]
+}

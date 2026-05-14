@@ -1,0 +1,61 @@
+{
+  "name": "Barchart",
+  "identifier": "barchart",
+  "sourceFile": "_src/blocks/barchart/barchart.js",
+  "role": "Documented content block",
+  "description": "Displays two elements which contain a barchart. Each element contains an image , a title , a list (which is the barchart) and some text.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "The title is a h3 element.",
+    "Every 2 list elements will be displayed together in one line, one being the product name, the other its performance.",
+    "Each barchart will have it’s own table line with 2 columns one being the image the other being the chart and the rest of the content.",
+    "This block doesn’t support any other styles or functionality.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/barchart"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Box Carousel",
+  "identifier": "box-carousel",
+  "sourceFile": "_src/blocks/box-carousel/box-carousel.js",
+  "role": "Multi-item navigation / carousel",
+  "description": "This block displays a carousel. The first row will be the title and then each slide will have its own row. Each slide should have 3 elements.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [
+    "testimonials",
+    "testimonials-with-green-stars",
+    "testimonials-new"
+  ],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Metadata properties: -",
+    "-testimonials: for the testimonials style you should always have 4 elements and the first one should be an image",
+    "Documented sample names: testimonials, Testimonials with green stars, testimonials-new.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/box-carousel"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

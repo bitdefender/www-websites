@@ -1,0 +1,61 @@
+{
+  "name": "Products Sideview",
+  "identifier": "products-sideview",
+  "sourceFile": "_src/blocks/products-sideview/products-sideview.js",
+  "role": "Card or product listing",
+  "description": "This block displays product selectors with custom features + Monthly/Yearly options",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Price: add list of products(montly, yearly) to be used",
+    "SelectMemembers: list of devices members to appear on selector/dropdown",
+    "Default-Selection: add the one to be selected by default",
+    "Note: if you use the monthly product the radio group will have monthly selected by default, same goes for yearly",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/products-sideview"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

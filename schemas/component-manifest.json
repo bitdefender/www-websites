@@ -1,37 +1,515 @@
 {
   "manifestVersion": "0.1.0",
-  "generatedAt": "2026-04-23",
   "repoRoot": "/Users/iconstantin/Work/www-websites",
-  "scope": "Conservative public block contract for AI-driven EDS page generation. Only blocks with directly inferable author-facing structure are included.",
+  "scope": "Docs-backed public block contract for AI-driven EDS page generation. Prefer sidekick-documented authoring patterns and examples where available.",
+  "generatedAt": "2026-05-14",
   "components": [
     {
-      "name": "Hero",
-      "identifier": "hero",
-      "sourceFile": "_src/blocks/hero/hero.js",
-      "role": "Page introduction / above-the-fold content",
-      "description": "Content-first hero block. The code promotes a picture ahead of the text when both are present and supports plain rich text plus button content.",
+      "name": "Accordion",
+      "identifier": "accordion",
+      "sourceFile": "_src/blocks/accordion/accordion.js",
+      "role": "Expandable disclosure / FAQ pattern",
+      "description": "Each direct child row becomes one accordion item with a header cell and a content cell.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "header": {
+              "type": "rich-content",
+              "required": true
+            },
+            "content": {
+              "type": "rich-content",
+              "required": true
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "first-open",
+        "action-only-on-header",
+        "smaller-text",
+        "terms-of-use",
+        "faq",
+        "system-requirements"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "h3",
+        "h4",
+        "p",
+        "ul",
+        "li",
+        "a",
+        "strong",
+        "em"
+      ],
+      "usageNotes": [
+        "The JS contract for first-open and action-only-on-header is explicit.",
+        "Content cells are normalized to contain at least one paragraph.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/accordion"
+      ],
+      "ambiguityNotes": [
+        "Some additional variants are styling-only and inferred from CSS selectors."
+      ]
+    },
+    {
+      "name": "Ai Skills Checker",
+      "identifier": "ai-skills-checker",
+      "sourceFile": "_src/blocks/ai-skills-checker/ai-skills-checker.js",
+      "role": "Interactive utility / form flow",
+      "description": "This component checks the safety of some clawhub links. It should be split into 4 rows. In the first row there should be the content itself and the safe/danger images. In the second row there should be the status messages.",
       "fields": [
         {
           "name": "content",
           "type": "rich-content",
           "required": true,
-          "description": "Primary hero content. Real code looks for headings, paragraphs, lists, buttons, and an optional picture."
-        },
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "In the third row there should be the titles-change. In the fourth row will be the buttons.",
+        "Metadata properties:",
+        "- check-button-text",
+        "- Paste-link-text",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/ai-skills-checker"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Awards",
+      "identifier": "awards",
+      "sourceFile": "_src/blocks/awards/awards.js",
+      "role": "Documented content block",
+      "description": "This block displays an awards component.",
+      "fields": [
         {
-          "name": "image",
-          "type": "image",
-          "required": false,
-          "description": "Optional hero picture. If a picture exists before the main heading in the source markup, the decorate code moves it into a dedicated hero picture area."
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "v2"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "awards-component --- this is required in order for the block to work properly",
+        "Documented sample names: Awards, V2.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/awards"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Awards Search",
+      "identifier": "awards-search",
+      "sourceFile": "_src/blocks/awards-search/awards-search.js",
+      "role": "Documented content block",
+      "description": "This block displays a search bar where you can search for awards and a dropdown menu where you can filter those awards by the year when they were received. It also generates the search items and displays them.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Note: this component might not work in sidekick or certain testing environments.",
+        "You will need to use this block in combination with the accordion block which will display the dropdown menu. You should add the class action-only-on-header to the accordion block.",
+        "Further metada is not needed, but you can still add it for various use cases you might desire in pages.(ex: add an id for a button to direct you to this component).",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/awards-search"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Barchart",
+      "identifier": "barchart",
+      "sourceFile": "_src/blocks/barchart/barchart.js",
+      "role": "Documented content block",
+      "description": "Displays two elements which contain a barchart. Each element contains an image , a title , a list (which is the barchart) and some text.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "The title is a h3 element.",
+        "Every 2 list elements will be displayed together in one line, one being the product name, the other its performance.",
+        "Each barchart will have it’s own table line with 2 columns one being the image the other being the chart and the rest of the content.",
+        "This block doesn’t support any other styles or functionality.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/barchart"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Big Teaser Section",
+      "identifier": "big-teaser-section",
+      "sourceFile": "_src/blocks/big-teaser-section/big-teaser-section.js",
+      "role": "Comparison / tabular content",
+      "description": "This block displays content along with an image. The table should have two rows, with the second row reserved for an image. The image should either overlay the default background image or remain empty. The main image will be set in the section's metadata properties.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "reverted"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata properties:",
+        "-desktop-picture",
+        "-mobile-picture",
+        "- reverted: this should be directly on the block, not as a style property",
+        "Documented sample names: reverted.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/big-teaser-section"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Bitdef Vs Brands",
+      "identifier": "bitdef-vs-brands",
+      "sourceFile": "_src/blocks/bitdef-vs-brands/bitdef-vs-brands.js",
+      "role": "Documented content block",
+      "description": "This block displays the bitdef-vs-brands components",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "clasa-block: this is required for the component to work",
+        "Section Metadata properties:",
+        "svgColor : ex. : #006EFF",
+        "Documented sample names: Bitdef vs Brands.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/bitdef-vs-brands"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Blog News",
+      "identifier": "blog-news",
+      "sourceFile": "_src/blocks/blog-news/blog-news.js",
+      "role": "Documented content block",
+      "description": "This block displays the news pulled from the bitdefender blogs.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Section Metadata Properties:",
+        "Endpoint. This is the link to the endpoint where we get the news. Articles-number: How many articles you want shown on page.",
+        "Documented sample names: Blog News.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/blog-news"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Bottom Popup",
+      "identifier": "bottom-popup",
+      "sourceFile": "_src/blocks/bottom-popup/bottom-popup.js",
+      "role": "Popup / overlay interaction",
+      "description": "This block displays a popup that slides from the bottom of the page on load, only for mobile.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
         }
       ],
       "requiredFields": [
         "content"
       ],
       "variants": [
-        "black-background",
-        "comparison",
-        "new2024design",
-        "ferrari"
+        "modal-only-on-mobile"
       ],
       "contentModel": {
         "kind": "single-block-rich-content",
@@ -40,24 +518,102 @@
         "supportsNestedBlocks": false
       },
       "allowedChildren": [
+        "a",
+        "br",
+        "em",
         "h1",
         "h2",
+        "h3",
         "h4",
-        "p",
-        "ul",
-        "li",
-        "a.button",
-        "picture",
+        "h5",
+        "h6",
+        "hr",
         "img",
-        "table"
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
       ],
       "usageNotes": [
-        "Base hero content is generation-safe.",
-        "The repository also supports many section dataset customizations, OS-specific links, and store-driven discount elements, but those are intentionally excluded from this first contract."
+        "On close is only available once per session.",
+        "Documented sample names: Bottom Popup Modal only on mobile.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/bottom-popup"
       ],
       "ambiguityNotes": [
-        "Hero variants are mostly inferred from CSS selectors rather than a dedicated authoring spec.",
-        "Do not generate section dataset fields such as app-store mappings or modal-refresh flags unless later documentation confirms them."
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Box Carousel",
+      "identifier": "box-carousel",
+      "sourceFile": "_src/blocks/box-carousel/box-carousel.js",
+      "role": "Multi-item navigation / carousel",
+      "description": "This block displays a carousel. The first row will be the title and then each slide will have its own row. Each slide should have 3 elements.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "testimonials",
+        "testimonials-with-green-stars",
+        "testimonials-new"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata properties: -",
+        "-testimonials: for the testimonials style you should always have 4 elements and the first one should be an image",
+        "Documented sample names: testimonials, Testimonials with green stars, testimonials-new.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/box-carousel"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
       ]
     },
     {
@@ -162,157 +718,33 @@
       ],
       "usageNotes": [
         "Only the plain content-driven row/column contract is included here.",
-        "The implementation reads many section dataset values for carousels, dynamic links, tabs, store context, and background images. Those features are intentionally omitted."
+        "The implementation reads many section dataset values for carousels, dynamic links, tabs, store context, and background images. Those features are intentionally omitted.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/columns",
+        "Documented sample names: 3 columns - awards, 3 columns – 2 rows - benefits, 2 columns – video presentation, 3 columns - images, 1 column – with background image - v1, 1 column – with background image - v2."
       ],
       "ambiguityNotes": [
         "Columns is widely theme-customized in template CSS. Use this manifest entry only for plain rows and columns, not campaign-specific enhancements."
       ]
     },
     {
-      "name": "Accordion",
-      "identifier": "accordion",
-      "sourceFile": "_src/blocks/accordion/accordion.js",
-      "role": "Expandable disclosure / FAQ pattern",
-      "description": "Each direct child row becomes one accordion item with a header cell and a content cell.",
-      "fields": [
-        {
-          "name": "items",
-          "type": "array",
-          "required": true,
-          "itemShape": {
-            "header": {
-              "type": "rich-content",
-              "required": true
-            },
-            "content": {
-              "type": "rich-content",
-              "required": true
-            }
-          }
-        }
-      ],
-      "requiredFields": [
-        "items"
-      ],
-      "variants": [
-        "first-open",
-        "action-only-on-header",
-        "smaller-text",
-        "terms-of-use",
-        "faq",
-        "system-requirements"
-      ],
-      "contentModel": {
-        "kind": "repeated-items",
-        "supportsTextChildren": false,
-        "supportsNestedElements": true,
-        "supportsNestedBlocks": false
-      },
-      "allowedChildren": [
-        "h3",
-        "h4",
-        "p",
-        "ul",
-        "li",
-        "a",
-        "strong",
-        "em"
-      ],
-      "usageNotes": [
-        "The JS contract for first-open and action-only-on-header is explicit.",
-        "Content cells are normalized to contain at least one paragraph."
-      ],
-      "ambiguityNotes": [
-        "Some additional variants are styling-only and inferred from CSS selectors."
-      ]
-    },
-    {
-      "name": "Questions Answers",
-      "identifier": "questions-answers",
-      "sourceFile": "_src/blocks/questions-answers/questions-answers.js",
-      "role": "Styled FAQ / Q&A accordion",
-      "description": "FAQ-style block with the same basic row shape as accordion: one question cell and one answer cell per item.",
-      "fields": [
-        {
-          "name": "items",
-          "type": "array",
-          "required": true,
-          "itemShape": {
-            "question": {
-              "type": "rich-content",
-              "required": true
-            },
-            "answer": {
-              "type": "rich-content",
-              "required": true
-            }
-          }
-        }
-      ],
-      "requiredFields": [
-        "items"
-      ],
-      "variants": [
-        "first-open",
-        "action-only-on-header",
-        "blue-titles",
-        "ibm-plex-sans",
-        "qa-creators"
-      ],
-      "contentModel": {
-        "kind": "repeated-items",
-        "supportsTextChildren": false,
-        "supportsNestedElements": true,
-        "supportsNestedBlocks": false
-      },
-      "allowedChildren": [
-        "h3",
-        "h4",
-        "p",
-        "ul",
-        "li",
-        "a",
-        "strong",
-        "em"
-      ],
-      "usageNotes": [
-        "This is safer than the generic accordion when the design intent is clearly FAQ-like.",
-        "Answer cells are normalized to contain at least one paragraph."
-      ],
-      "ambiguityNotes": [
-        "Most variant names beyond first-open and action-only-on-header are inferred from CSS."
-      ]
-    },
-    {
-      "name": "Image Columns",
-      "identifier": "image-columns",
-      "sourceFile": "_src/blocks/image-columns/image-columns.js",
-      "role": "Alternating or paired image-and-text columns",
-      "description": "Row-based block where each cell is treated either as an image column or a text column. The implementation can also replace a text cell with a local MP4 video in some themed cases.",
+      "name": "Columns Grid",
+      "identifier": "columns-grid",
+      "sourceFile": "_src/blocks/columns-grid/columns-grid.js",
+      "role": "Comparison / tabular content",
+      "description": "This block displays a grid layout with flipping cards. The front of the card will be separated from the back by inserting a ‘---’ (<hr> element) inside every table cell. The cards support 4 sizes and grow relatively to the other cards. You add the size by inserting a p element with this text content at the top of every card: size-number-card. (number: 1 trough 4).",
       "fields": [
         {
           "name": "rows",
           "type": "array",
           "required": true,
-          "itemShape": {
-            "columns": {
-              "type": "array",
-              "required": true,
-              "items": {
-                "type": "rich-content"
-              }
-            }
-          }
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
         }
       ],
       "requiredFields": [
         "rows"
       ],
       "variants": [
-        "quotes",
-        "trusted",
-        "half-image",
-        "text_smaller"
+        "with-hover-mask"
       ],
       "contentModel": {
         "kind": "row-column-grid",
@@ -321,133 +753,348 @@
         "supportsNestedBlocks": false
       },
       "allowedChildren": [
-        "picture",
-        "img",
-        "video",
-        "h3",
-        "p",
-        "ul",
-        "li",
         "a",
-        "table"
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
       ],
       "usageNotes": [
-        "Generate the plain image-plus-text structure first.",
-        "The MP4 substitution path is repo-specific and depends on section classes or local file naming; it is not part of the safe first contract."
+        "Metadata Properties:",
+        "-hover-mask: adds a hover effect",
+        "Documented sample names: With hover-mask.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/columns-grid"
       ],
       "ambiguityNotes": [
-        "Several visual variants are inferred from CSS only.",
-        "Theme-specific section classes such as columnvideo are intentionally omitted from the contract."
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
       ]
     },
     {
-      "name": "Quote",
-      "identifier": "quote",
-      "sourceFile": "_src/blocks/quote/quote.js",
-      "role": "Testimonial / highlighted quote",
-      "description": "Transforms each item into a quote card with a star rating, quote body, and optional author.",
+      "name": "Compare As Table",
+      "identifier": "compare-as-table",
+      "sourceFile": "_src/blocks/compare-as-table/compare-as-table.js",
+      "role": "Comparison / tabular content",
+      "description": "This block displays compare products as table. First card will not display the prices and its button will be white with custom link",
       "fields": [
         {
-          "name": "items",
+          "name": "rows",
           "type": "array",
           "required": true,
-          "itemShape": {
-            "quote": {
-              "type": "rich-text-fragment",
-              "required": true,
-              "description": "Main quote text."
-            },
-            "stars": {
-              "name": "stars",
-              "type": "string",
-              "required": true,
-              "description": "Asterisks-only source text, typically in emphasis markup, because the code counts literal '*' characters."
-            },
-            "author": {
-              "type": "rich-text-fragment",
-              "required": false,
-              "description": "Author line, typically authored in strong markup."
-            }
-          }
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
         }
       ],
       "requiredFields": [
-        "items"
+        "rows"
       ],
-      "variants": [],
+      "variants": [
+        "compare-product-cards"
+      ],
       "contentModel": {
-        "kind": "repeated-items",
+        "kind": "row-column-grid",
         "supportsTextChildren": false,
         "supportsNestedElements": true,
         "supportsNestedBlocks": false
       },
       "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
         "p",
+        "picture",
+        "span",
         "strong",
-        "em"
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
       ],
       "usageNotes": [
-        "Because the implementation accesses the stars element directly, the star line should be treated as required in generated content.",
-        "This block appears to be styled mainly within hero contexts."
+        "products: avfree/1/1, avpm/1/1 SaveText: 0% OFF – this will be displayed on the right of the price",
+        "Documented sample names: Compare Product Cards.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/compare-as-table"
       ],
       "ambiguityNotes": [
-        "The code expects a specific authored pattern rather than named fields, so the field names here are inferred and normalized for machine use."
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
       ]
     },
     {
-      "name": "Video",
-      "identifier": "video",
-      "sourceFile": "_src/blocks/video/video.js",
-      "role": "Embedded or hosted video",
-      "description": "Supports YouTube, Vimeo, and direct MP4 links. An optional picture acts as a click-to-play placeholder.",
+      "name": "Creators Block",
+      "identifier": "creators-block",
+      "sourceFile": "_src/blocks/creators-block/creators-block.js",
+      "role": "Comparison / tabular content",
+      "description": "This block displays a banner with a h3 element, an image to be displayed in the top right corner and some images that lead to youtube videos. It should be split into 3 table rows, the first one containing the title and the image, the second one the videos and the third one a button. In order for the image to be displayed property each video be included in its own table which will contain the following rows:",
       "fields": [
         {
-          "name": "link",
-          "type": "url",
+          "name": "rows",
+          "type": "array",
           "required": true,
-          "description": "Video source URL."
-        },
-        {
-          "name": "placeholder",
-          "type": "image",
-          "required": false,
-          "description": "Optional picture used as a click-to-play placeholder."
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
         }
       ],
       "requiredFields": [
-        "link"
+        "rows"
       ],
-      "enumValues": {
-        "supportedProviders": [
-          "youtube",
-          "youtu.be",
-          "vimeo",
-          "mp4"
-        ],
-        "desktopAlign": [
-          "left",
-          "center",
-          "right"
-        ]
-      },
       "variants": [],
       "contentModel": {
-        "kind": "single-link-plus-optional-image",
+        "kind": "row-column-grid",
         "supportsTextChildren": false,
-        "supportsNestedElements": false,
+        "supportsNestedElements": true,
         "supportsNestedBlocks": false
       },
       "allowedChildren": [
         "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
         "picture",
-        "img"
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
       ],
       "usageNotes": [
-        "The visible source contract is simple and generation-safe.",
-        "Desktop alignment is read from section dataset, not block content. Keep it optional in downstream tooling."
+        "The creator profile picture and its name His usertag The channel’s stats A link to one of his videos The background image for his card",
+        "Metadata properties:",
+        "- background-color Style properties: -",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/creators-block"
       ],
       "ambiguityNotes": [
-        "The code comment says 'left / middle / right' while the actual enum uses left, center, right. Use center, because that is what the code maps."
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Data Columns",
+      "identifier": "data-columns",
+      "sourceFile": "_src/blocks/data-columns/data-columns.js",
+      "role": "Documented content block",
+      "description": "This block displays a text layout based on columns. By adding the statistics class to this block it will animate the numbers inside h1 elements.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "blue-background-and-articles-added",
+        "with-statistics",
+        "v3-with-blue-separators"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata Properties:",
+        "-background-color: sets the background color of the entire section Style properties:",
+        "Documented sample names: Blue background and articles added, With statistics, v3- with blue separators.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/data-columns"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Dropdown Box",
+      "identifier": "dropdown-box",
+      "sourceFile": "_src/blocks/dropdown-box/dropdown-box.js",
+      "role": "Card or product listing",
+      "description": "This block displays a dropdown boxes. You can display them closed by adding a class to each box. You can add greent tags by placing your text between [].",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "slider",
+        "slider-with-loading-bar"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata properties:",
+        "- type: slider, slider-no-load-bar -top-background-color",
+        "-top-text-color Style properties: -",
+        "Documented sample names: Slider, Slider with loading bar.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/dropdown-box"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Dual Teaser",
+      "identifier": "dual-teaser",
+      "sourceFile": "_src/blocks/dual-teaser/dual-teaser.js",
+      "role": "Promotional / hero content",
+      "description": "This block should contains two rows. On the first row you should have an icon and the second row should be split into two columns. Each column normaly has an image, a h3 element and a button. The icon will be displayed between the columns.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Note: the images should be tall, not wide",
+        "Metadata properties: -",
+        "Note: in order for the buttons to turn blue you should have a page metadata property of template: trusted",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/dual-teaser"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
       ]
     },
     {
@@ -501,9 +1148,821 @@
       ],
       "usageNotes": [
         "This block is safer for generic external embeds than the specialized video block.",
-        "Use autoplay-off only when the downstream render pipeline understands block class variants."
+        "Use autoplay-off only when the downstream render pipeline understands block class variants.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/embed"
       ],
       "ambiguityNotes": []
+    },
+    {
+      "name": "Exit Popup",
+      "identifier": "exit-popup",
+      "sourceFile": "_src/blocks/exit-popup/exit-popup.js",
+      "role": "Popup / overlay interaction",
+      "description": "This block displays the exit pop-ups as seein in the antivirus and total security pages.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [
+        "av",
+        "tsmd"
+      ],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "This block is not displayed in page. It will display when you hover to the search bar.",
+        "Metadata properties:",
+        "product – the product code custom-pid – the campaign you need for the popup",
+        "Style properties: -",
+        "Documented sample names: Exit-popup-av, Exit-popup-tsmd.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/exit-popup"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Features",
+      "identifier": "features",
+      "sourceFile": "_src/blocks/features/features.js",
+      "role": "Comparison / tabular content",
+      "description": "The component displays a list of features in a table manner.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "3-columns",
+        "2-columns"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Ideally, you should have 2-3 columns. Have more than 3 and the layout can break.",
+        "To use this you have to know the following",
+        "The first text, besides the icons, is the title, and must be an H3 tag. The second text is the text under the title. The rest are the list of features: Features title ----> must be written in italics Feature text ---> richtext zone",
+        "Documented sample names: Features ( 3 columns ), Features ( 2 columns ).",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/features"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Form",
+      "identifier": "form",
+      "sourceFile": "_src/blocks/form/form.js",
+      "role": "Interactive utility / form flow",
+      "description": "This component will only render the fields by itself. For creating a new form you will need to create an excel file which will contain the fields, for each field its input type, a label(representing each field’s content),a default column which will render placeholders, a required column containing true for required attributes, a value column for which will contain either links to a file or in the buttons case its text and and if there is the case the file which will handle the submission with its source . A form can be inserted into the page like any block and it will only contain the link to the form’s data.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "In this example the form block validates the email adress and that the terms have been accepted and then starts the scan.",
+        "Note: the scan process is handled by the file designed to do so not by this block.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/form"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Four Cards",
+      "identifier": "four-cards",
+      "sourceFile": "_src/blocks/four-cards/four-cards.js",
+      "role": "Card or product listing",
+      "description": "-margin-top: sets a margin in px ex: 4 -> 4px",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "dlp",
+        "creators",
+        "with-dotted-lines"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Documented sample names: dlp, creators, four-cards with dotted lines.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/four-cards"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Fragment Metadata",
+      "identifier": "fragment-metadata",
+      "sourceFile": "_src/blocks/fragment-metadata/fragment-metadata.js",
+      "role": "Documented content block",
+      "description": "Activate your 30-day free trial. A Bitdefender account is required.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/fragment-metadata"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Hero",
+      "identifier": "hero",
+      "sourceFile": "_src/blocks/hero/hero.js",
+      "role": "Page introduction / above-the-fold content",
+      "description": "Content-first hero block. The code promotes a picture ahead of the text when both are present and supports plain rich text plus button content.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary hero content. Real code looks for headings, paragraphs, lists, buttons, and an optional picture."
+        },
+        {
+          "name": "image",
+          "type": "image",
+          "required": false,
+          "description": "Optional hero picture. If a picture exists before the main heading in the source markup, the decorate code moves it into a dedicated hero picture area."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [
+        "black-background",
+        "comparison",
+        "new2024design",
+        "ferrari"
+      ],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "h1",
+        "h2",
+        "h4",
+        "p",
+        "ul",
+        "li",
+        "a.button",
+        "picture",
+        "img",
+        "table"
+      ],
+      "usageNotes": [
+        "Base hero content is generation-safe.",
+        "The repository also supports many section dataset customizations, OS-specific links, and store-driven discount elements, but those are intentionally excluded from this first contract.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/hero",
+        "Documented sample names: Hero, Hero with black background, Hero black background, non black-friday, Hero with 2 buttons and dynamic price."
+      ],
+      "ambiguityNotes": [
+        "Hero variants are mostly inferred from CSS selectors rather than a dedicated authoring spec.",
+        "Do not generate section dataset fields such as app-store mappings or modal-refresh flags unless later documentation confirms them."
+      ],
+      "sectionMetadata": [
+        {
+          "name": "Discount",
+          "type": "string",
+          "required": false,
+          "description": "ts_i--> wanted product 5u --> number of devices 1y --> number of years This will discount in percentages in the green bubble of the hero banner",
+          "example": "ts_i/5/1"
+        },
+        {
+          "name": "Signature",
+          "type": "string",
+          "required": false,
+          "description": "Shows the blue text above the breadcrumbs of the hero-banner.",
+          "example": "Trusted. Always."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "description": "Shows the text under the discount percentage in the bubble.",
+          "example": "Discount"
+        },
+        {
+          "name": "TextColor",
+          "type": "string",
+          "required": false,
+          "description": "Primary color of the text. Only white is available for this metadata.",
+          "example": "white"
+        },
+        {
+          "name": "BackgroundColor",
+          "type": "string",
+          "required": false,
+          "description": "Primary color of the background. Only black is available. Percent-product functionality: If you need to use store text variables inside some text in order to display dynamic prices or discounts include the product code and variation in this metadata.",
+          "example": "black"
+        }
+      ]
+    },
+    {
+      "name": "Hero Aem",
+      "identifier": "hero-aem",
+      "sourceFile": "_src/blocks/hero-aem/hero-aem.js",
+      "role": "Promotional / hero content",
+      "description": "This block displayes the hero aem banner.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [
+        "hero-for-bf-with-red-circle-discount"
+      ],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Documented sample names: Hero for BF with red circle discount.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/hero-aem"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Hero Dropdown",
+      "identifier": "hero-dropdown",
+      "sourceFile": "_src/blocks/hero-dropdown/hero-dropdown.js",
+      "role": "Promotional / hero content",
+      "description": "This block displayes the hero banner with a dropdown menu.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "This block displayes the hero banner with a dropdown menu Requirements:",
+        "Paste the component",
+        "Documented sample names: Hero-dropdown.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/hero-dropdown"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ],
+      "sectionMetadata": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "required": false,
+          "description": "Provide a word as color or any other form accepted by browsers.",
+          "example": "white"
+        },
+        {
+          "name": "innerBackgroundColor",
+          "type": "string",
+          "required": false,
+          "description": "Provide a word as color or any other form accepted by browsers. !!! This is working very well with image_cover: small and its purpose is to have a background_color for mobile when image_background si hidden with: background_hide: mobile",
+          "example": "blue"
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "required": false,
+          "description": "Provide a word as color or any other form accepted by browsers.",
+          "example": "black"
+        },
+        {
+          "name": "contentSize",
+          "type": "string",
+          "required": false,
+          "description": "Documented in the sidekick block page.",
+          "example": "half"
+        },
+        {
+          "name": "corners",
+          "type": "string",
+          "required": false,
+          "description": "Documented in the sidekick block page.",
+          "example": "round Makes the corners rounded."
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "required": false,
+          "description": "Adds the text from the metadata above the dropdown menu",
+          "example": "Text of the lable"
+        }
+      ]
+    },
+    {
+      "name": "Image Columns",
+      "identifier": "image-columns",
+      "sourceFile": "_src/blocks/image-columns/image-columns.js",
+      "role": "Alternating or paired image-and-text columns",
+      "description": "Row-based block where each cell is treated either as an image column or a text column. The implementation can also replace a text cell with a local MP4 video in some themed cases.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "columns": {
+              "type": "array",
+              "required": true,
+              "items": {
+                "type": "rich-content"
+              }
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "quotes",
+        "trusted",
+        "half-image",
+        "text_smaller"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "picture",
+        "img",
+        "video",
+        "h3",
+        "p",
+        "ul",
+        "li",
+        "a",
+        "table"
+      ],
+      "usageNotes": [
+        "Generate the plain image-plus-text structure first.",
+        "The MP4 substitution path is repo-specific and depends on section classes or local file naming; it is not part of the safe first contract.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/image-columns",
+        "Documented sample names: Image to the left, Image to the right."
+      ],
+      "ambiguityNotes": [
+        "Several visual variants are inferred from CSS only.",
+        "Theme-specific section classes such as columnvideo are intentionally omitted from the contract."
+      ]
+    },
+    {
+      "name": "Interactive Banner",
+      "identifier": "interactive-banner",
+      "sourceFile": "_src/blocks/interactive-banner/interactive-banner.js",
+      "role": "Promotional / hero content",
+      "description": "This block displays a banner with an animated header and a subtitle.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata Properties:",
+        "-desktop-breakpoints: represents the number of words after a newline is inserted in the animated text -mobile-breakpoints: represents the number of words after a newline is inserted in the animated text oln mobile",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/interactive-banner"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Link Checker",
+      "identifier": "link-checker",
+      "sourceFile": "_src/blocks/link-checker/link-checker.js",
+      "role": "Interactive utility / form flow",
+      "description": "This component displays a block that checks links. It should have 5 rows. The first row should contain the two images (for safe/unsafe link) followed by a some text a title(h1) and a description.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "buttons",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "status-messages",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "titles-change",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "The second row should contain the <status-messages> tag (Safe, default-good, default). The third row should contain the text displayed under the input field.",
+        "The fourth row should contain the <titles-change> tag (Safe ,So_far_so_good_1 ,So_far_so_good_2 ,Default)",
+        "The fifth row should contain the <buttons> tag and the buttons.",
+        "Metadata properties:",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/link-checker"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Money Back",
+      "identifier": "money-back",
+      "sourceFile": "_src/blocks/money-back/money-back.js",
+      "role": "Card or product listing",
+      "description": "This block displays two cards. Generally they contain an image or icon, a h4 element, some text and a button.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "creators-money-back"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata Properties",
+        "Style Properties",
+        "Creators money-back",
+        "Documented sample names: Creators-money-back.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/money-back"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
     },
     {
       "name": "New Product Boxes",
@@ -723,11 +2182,852 @@
         "Visible pricing numbers are not authored directly. They are derived from section metadata that Franklin exposes as section.dataset values and from store data attributes added during decoration.",
         "The tuple format used by pricing metadata is 'wanted product / number of devices / number of years', for example 'us_i_m/5/1'.",
         "If a card exposes 2 radio buttons, 'monthly-products' is mandatory. If it exposes 3 radio buttons, 'third-radio-button-products' is mandatory.",
-        "For pricing generation, another agent should emit the section-level EDS metadata and the authored card rows together."
+        "For pricing generation, another agent should emit the section-level EDS metadata and the authored card rows together.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/new-prod-boxes",
+        "Documented sample names: New-prod-boxes (with family slider), New prod boxes (dynamic under_price_text)."
       ],
       "ambiguityNotes": [
         "The main pricing lists and labels are now explicit, but repo-only settings such as 'type' and 'hide-decimals' still come primarily from code rather than author documentation.",
         "The block contains advanced add-on, family/individual toggle, and synchronized plan-switch behavior. Those behaviors are code-backed but should be treated as optional extensions until dedicated generation docs exist."
+      ]
+    },
+    {
+      "name": "News Bar",
+      "identifier": "news-bar",
+      "sourceFile": "_src/blocks/news-bar/news-bar.js",
+      "role": "Documented content block",
+      "description": "Displays a blue bar with some text.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "solutions",
+        "hide-date"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata properties:",
+        "-solutions( has a bigger size than the default variation)",
+        "-hide-date: hides the block after a certain date",
+        "Documented sample names: Solutions, Hide date.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/news-bar"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Particle Background",
+      "identifier": "particle-background",
+      "sourceFile": "_src/blocks/particle-background/particle-background.js",
+      "role": "Documented content block",
+      "description": "This block displays a component where the background contains moving particles.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Documented sample names: Particle-background.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/particle-background"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Password Generator",
+      "identifier": "password-generator",
+      "sourceFile": "_src/blocks/password-generator/password-generator.js",
+      "role": "Interactive utility / form flow",
+      "description": "This component generates a password and allows you to copy it to your clipboard. It also supports some password conditions that you will have to check.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "password-generator",
+        "picture",
+        "privacy-policy",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Content wise the block is split into three rows. One first row should contain a title (h1 element). One row will be split into two columns. The first column will contain the generator part and the other will contain the copy button (link of #copy-password ). One row should contain the privacy policy. Component specific tags:",
+        "<password-generator> - this tag should be put in the first row of any column",
+        "strong-weak-text - you can insert this text in order to flag where the strenght of the generated password will be displayed followed by 4 texts split by a comma",
+        "<privacy-policy> - flags the row that contains the privacy policy",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/password-generator"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Product Comparison Table",
+      "identifier": "product-comparison-table",
+      "sourceFile": "_src/blocks/product-comparison-table/product-comparison-table.js",
+      "role": "Comparison / tabular content",
+      "description": "This block displayes 2 – 3 products in a comparisson table manner Active column: in order to set the active column you should bold the name of that certain product.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "product-comparison",
+        "product-comparison-with-details",
+        "product-comparison-with-blue-tags"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Note: bolding multiple products will result in the first product being active",
+        "Documented sample names: Product Comparison, Product Comparison with Details, Product Comparison with blue tags.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/product-comparison-table"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Products",
+      "identifier": "products",
+      "sourceFile": "_src/blocks/products/products.js",
+      "role": "Card or product listing",
+      "description": "This block displays product cards",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "The default product card will create a card with images as seen in the next section.",
+        "Adding classes to a block: You can add a class to change the block’s style properties by inserting the class name between () after the name of the block.",
+        "Possible classes: compact , plans.",
+        "Note: the plans product cards do not support images.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/products"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Products Sideview",
+      "identifier": "products-sideview",
+      "sourceFile": "_src/blocks/products-sideview/products-sideview.js",
+      "role": "Card or product listing",
+      "description": "This block displays product selectors with custom features + Monthly/Yearly options",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Price: add list of products(montly, yearly) to be used",
+        "SelectMemembers: list of devices members to appear on selector/dropdown",
+        "Default-Selection: add the one to be selected by default",
+        "Note: if you use the monthly product the radio group will have monthly selected by default, same goes for yearly",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/products-sideview"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Questions Answers",
+      "identifier": "questions-answers",
+      "sourceFile": "_src/blocks/questions-answers/questions-answers.js",
+      "role": "Styled FAQ / Q&A accordion",
+      "description": "FAQ-style block with the same basic row shape as accordion: one question cell and one answer cell per item.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "question": {
+              "type": "rich-content",
+              "required": true
+            },
+            "answer": {
+              "type": "rich-content",
+              "required": true
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "first-open",
+        "action-only-on-header",
+        "blue-titles",
+        "ibm-plex-sans",
+        "qa-creators"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "h3",
+        "h4",
+        "p",
+        "ul",
+        "li",
+        "a",
+        "strong",
+        "em"
+      ],
+      "usageNotes": [
+        "This is safer than the generic accordion when the design intent is clearly FAQ-like.",
+        "Answer cells are normalized to contain at least one paragraph.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/questions-answers",
+        "Documented sample names: Questions Answers."
+      ],
+      "ambiguityNotes": [
+        "Most variant names beyond first-open and action-only-on-header are inferred from CSS."
+      ]
+    },
+    {
+      "name": "Quote",
+      "identifier": "quote",
+      "sourceFile": "_src/blocks/quote/quote.js",
+      "role": "Testimonial / highlighted quote",
+      "description": "Transforms each item into a quote card with a star rating, quote body, and optional author.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "quote": {
+              "type": "rich-text-fragment",
+              "required": true,
+              "description": "Main quote text."
+            },
+            "stars": {
+              "name": "stars",
+              "type": "string",
+              "required": true,
+              "description": "Asterisks-only source text, typically in emphasis markup, because the code counts literal '*' characters."
+            },
+            "author": {
+              "type": "rich-text-fragment",
+              "required": false,
+              "description": "Author line, typically authored in strong markup."
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "p",
+        "strong",
+        "em"
+      ],
+      "usageNotes": [
+        "Because the implementation accesses the stars element directly, the star line should be treated as required in generated content.",
+        "This block appears to be styled mainly within hero contexts.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/quote",
+        "Documented sample names: Quote in hero banner."
+      ],
+      "ambiguityNotes": [
+        "The code expects a specific authored pattern rather than named fields, so the field names here are inferred and normalized for machine use."
+      ]
+    },
+    {
+      "name": "Quote Carousel",
+      "identifier": "quote-carousel",
+      "sourceFile": "_src/blocks/quote-carousel/quote-carousel.js",
+      "role": "Multi-item navigation / carousel",
+      "description": "This block displays a carousel with quotes.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "carousel-with-image"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "The first example it’s only the carousel alone.",
+        "In the second one it is shown besides an image.",
+        "Documented sample names: Carousel with image.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/quote-carousel"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Ribbon",
+      "identifier": "ribbon",
+      "sourceFile": "_src/blocks/ribbon/ribbon.js",
+      "role": "Promotional banner / narrow announcement strip",
+      "description": "Simple ribbon content block. If a second row contains an image, the decorate code moves that image to the section background.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary ribbon text and links."
+        },
+        {
+          "name": "backgroundImage",
+          "type": "image",
+          "required": false,
+          "description": "Optional image that is converted into a section background when authored as a second row."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [
+        "bf25"
+      ],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "p",
+        "a",
+        "u",
+        "picture",
+        "img"
+      ],
+      "usageNotes": [
+        "The implementation replaces literal '0 %' text with a store variable placeholder. Avoid relying on that replacement in generated content unless store integration is explicitly desired.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/ribbon",
+        "Documented sample names: BF version."
+      ],
+      "ambiguityNotes": [
+        "The authoring pattern for the optional background image is inferred from JS, not from formal docs."
+      ]
+    },
+    {
+      "name": "Ribbon Counter",
+      "identifier": "ribbon-counter",
+      "sourceFile": "_src/blocks/ribbon-counter/ribbon-counter.js",
+      "role": "Promotional / hero content",
+      "description": "!!! Add: [counter] in the location you want to show the counter",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "top-ribbon-with-counter"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Documented sample names: Top ribbon with counter.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/ribbon-counter"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "System Requirements",
+      "identifier": "system-requirements",
+      "sourceFile": "_src/blocks/system-requirements/system-requirements.js",
+      "role": "Documented content block",
+      "description": "Documented sidekick block: system-requirements.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Documented sample names: System Requirements.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/system-requirements"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Tabs",
+      "identifier": "tabs",
+      "sourceFile": "_src/blocks/tabs/tabs.js",
+      "role": "Multi-item navigation / carousel",
+      "description": "This functionality represents what can be described as a \"component within a component.\"",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [
+        "with-accordion",
+        "with-various-components"
+      ],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "text",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Usage explanation",
+        "The tabs component is designed to showcase various components across different tabs. For instance, in the first example, it is integrated with the accordion component to create a \"section requirement\" section.",
+        "Usage – metadata",
+        "Tab group: << name of tabroup >>",
+        "Documented sample names: Tabs with accordion, Tabs with various components.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/tabs"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Tabs Component",
+      "identifier": "tabs-component",
+      "sourceFile": "_src/blocks/tabs-component/tabs-component.js",
+      "role": "Multi-item navigation / carousel",
+      "description": "This component will display a tab menu. The first two rows should be the title and subtitle. Use bold font for the title. The third row will be the tab buttons. Each tab button should have its own column. The content for each slide will have its own table row and consist of 2 columns: -image -h3 title and text",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "blue-headings"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Documented sample names: Tabs-component, Tabs-component blue headings.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/tabs-component"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
       ]
     },
     {
@@ -772,31 +3072,144 @@
       "ambiguityNotes": []
     },
     {
-      "name": "Ribbon",
-      "identifier": "ribbon",
-      "sourceFile": "_src/blocks/ribbon/ribbon.js",
-      "role": "Promotional banner / narrow announcement strip",
-      "description": "Simple ribbon content block. If a second row contains an image, the decorate code moves that image to the section background.",
+      "name": "Terms",
+      "identifier": "terms",
+      "sourceFile": "_src/blocks/terms/terms.js",
+      "role": "Documented content block",
+      "description": "This block displays the terms of use.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Documented sample names: Terms.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/terms"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Timeline Carousel",
+      "identifier": "timeline-carousel",
+      "sourceFile": "_src/blocks/timeline-carousel/timeline-carousel.js",
+      "role": "Multi-item navigation / carousel",
+      "description": "This block displays a carousel with an axis in the middle. Note: you can only add more items by adding more years on the main axis, or the additional slides won’t render.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "with-start-position-at-the-end"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata Properties:",
+        "-timeline-years: creates a cell for each year in the carousel",
+        "-start-position: default is start",
+        "Documented sample names: With start position at the end.",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/timeline-carousel"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Trusted Hero",
+      "identifier": "trusted-hero",
+      "sourceFile": "_src/blocks/trusted-hero/trusted-hero.js",
+      "role": "Promotional / hero content",
+      "description": "This block displays a banner with a video. It supports h1 and h2 elements, normal text and buttons. In order for the block do be displayed properly the page should have a template of trusted.",
       "fields": [
         {
           "name": "content",
           "type": "rich-content",
           "required": true,
-          "description": "Primary ribbon text and links."
-        },
-        {
-          "name": "backgroundImage",
-          "type": "image",
-          "required": false,
-          "description": "Optional image that is converted into a section background when authored as a second row."
+          "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
         }
       ],
       "requiredFields": [
         "content"
       ],
-      "variants": [
-        "bf25"
-      ],
+      "variants": [],
       "contentModel": {
         "kind": "single-block-rich-content",
         "supportsTextChildren": true,
@@ -804,17 +3217,330 @@
         "supportsNestedBlocks": false
       },
       "allowedChildren": [
-        "p",
         "a",
-        "u",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Metadata properties: -",
+        "Style properties: -",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/trusted-hero"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Trusted Main Carousel",
+      "identifier": "trusted-main-carousel",
+      "sourceFile": "_src/blocks/trusted-main-carousel/trusted-main-carousel.js",
+      "role": "Interactive utility / form flow",
+      "description": "Each slide will be split into two columns and will have its own row: first one the information and the background image. The left columns must contain an h2 element underlined as this will become the button in the carousel menu. Other supported elements are h3, buttons, images and normal text.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Supported metadata -",
+        "Supported styles",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/trusted-main-carousel"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Trusted Teaser Impact",
+      "identifier": "trusted-teaser-impact",
+      "sourceFile": "_src/blocks/trusted-teaser-impact/trusted-teaser-impact.js",
+      "role": "Comparison / tabular content",
+      "description": "This block displays a ttile and some boxes. The title will be the first row in your word table, and each content box will have its own row.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "The title box should contain a underlined text and a h2 element. Each content box should contain an icon and 2 other elements. The icon should not be the 2 nd element.",
+        "Note: in order for the first element of the title to be blue you should have a page metadata of template: trusted",
+        "Metadata properties: - Style properties:",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/trusted-teaser-impact"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Two Columns",
+      "identifier": "two-columns",
+      "sourceFile": "_src/blocks/two-columns/two-columns.js",
+      "role": "Documented content block",
+      "description": "This block displays two columns component.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "Underline text has black color",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/two-columns"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+      ]
+    },
+    {
+      "name": "Video",
+      "identifier": "video",
+      "sourceFile": "_src/blocks/video/video.js",
+      "role": "Embedded or hosted video",
+      "description": "Supports YouTube, Vimeo, and direct MP4 links. An optional picture acts as a click-to-play placeholder.",
+      "fields": [
+        {
+          "name": "link",
+          "type": "url",
+          "required": true,
+          "description": "Video source URL."
+        },
+        {
+          "name": "placeholder",
+          "type": "image",
+          "required": false,
+          "description": "Optional picture used as a click-to-play placeholder."
+        }
+      ],
+      "requiredFields": [
+        "link"
+      ],
+      "enumValues": {
+        "supportedProviders": [
+          "youtube",
+          "youtu.be",
+          "vimeo",
+          "mp4"
+        ],
+        "desktopAlign": [
+          "left",
+          "center",
+          "right"
+        ]
+      },
+      "variants": [],
+      "contentModel": {
+        "kind": "single-link-plus-optional-image",
+        "supportsTextChildren": false,
+        "supportsNestedElements": false,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
         "picture",
         "img"
       ],
       "usageNotes": [
-        "The implementation replaces literal '0 %' text with a store variable placeholder. Avoid relying on that replacement in generated content unless store integration is explicitly desired."
+        "The visible source contract is simple and generation-safe.",
+        "Desktop alignment is read from section dataset, not block content. Keep it optional in downstream tooling."
       ],
       "ambiguityNotes": [
-        "The authoring pattern for the optional background image is inferred from JS, not from formal docs."
+        "The code comment says 'left / middle / right' while the actual enum uses left, center, right. Use center, because that is what the code maps."
+      ]
+    },
+    {
+      "name": "Video Carousel",
+      "identifier": "video-carousel",
+      "sourceFile": "_src/blocks/video-carousel/video-carousel.js",
+      "role": "Multi-item navigation / carousel",
+      "description": "This block displays a carousel with videos. Each video should have its own metadata properties. Metadata properties: -video{index}: this property should contain the embedded link to the video",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "br",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "picture",
+        "span",
+        "strong",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul"
+      ],
+      "usageNotes": [
+        "-title{index}: this property should contain the video title",
+        "Style properties: -",
+        "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/video-carousel"
+      ],
+      "ambiguityNotes": [
+        "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
       ]
     }
   ]

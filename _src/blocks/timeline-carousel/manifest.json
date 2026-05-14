@@ -1,0 +1,63 @@
+{
+  "name": "Timeline Carousel",
+  "identifier": "timeline-carousel",
+  "sourceFile": "_src/blocks/timeline-carousel/timeline-carousel.js",
+  "role": "Multi-item navigation / carousel",
+  "description": "This block displays a carousel with an axis in the middle. Note: you can only add more items by adding more years on the main axis, or the additional slides won’t render.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [
+    "with-start-position-at-the-end"
+  ],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Metadata Properties:",
+    "-timeline-years: creates a cell for each year in the carousel",
+    "-start-position: default is start",
+    "Documented sample names: With start position at the end.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/timeline-carousel"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

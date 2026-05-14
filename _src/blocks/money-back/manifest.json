@@ -1,0 +1,63 @@
+{
+  "name": "Money Back",
+  "identifier": "money-back",
+  "sourceFile": "_src/blocks/money-back/money-back.js",
+  "role": "Card or product listing",
+  "description": "This block displays two cards. Generally they contain an image or icon, a h4 element, some text and a button.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [
+    "creators-money-back"
+  ],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Metadata Properties",
+    "Style Properties",
+    "Creators money-back",
+    "Documented sample names: Creators-money-back.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/money-back"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

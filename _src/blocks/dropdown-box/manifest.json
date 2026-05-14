@@ -1,0 +1,64 @@
+{
+  "name": "Dropdown Box",
+  "identifier": "dropdown-box",
+  "sourceFile": "_src/blocks/dropdown-box/dropdown-box.js",
+  "role": "Card or product listing",
+  "description": "This block displays a dropdown boxes. You can display them closed by adding a class to each box. You can add greent tags by placing your text between [].",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "slider",
+    "slider-with-loading-bar"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Metadata properties:",
+    "- type: slider, slider-no-load-bar -top-background-color",
+    "-top-text-color Style properties: -",
+    "Documented sample names: Slider, Slider with loading bar.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/dropdown-box"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

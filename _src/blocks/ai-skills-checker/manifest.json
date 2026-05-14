@@ -1,0 +1,61 @@
+{
+  "name": "Ai Skills Checker",
+  "identifier": "ai-skills-checker",
+  "sourceFile": "_src/blocks/ai-skills-checker/ai-skills-checker.js",
+  "role": "Interactive utility / form flow",
+  "description": "This component checks the safety of some clawhub links. It should be split into 4 rows. In the first row there should be the content itself and the safe/danger images. In the second row there should be the status messages.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "In the third row there should be the titles-change. In the fourth row will be the buttons.",
+    "Metadata properties:",
+    "- check-button-text",
+    "- Paste-link-text",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/ai-skills-checker"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

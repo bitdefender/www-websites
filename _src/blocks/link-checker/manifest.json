@@ -1,0 +1,64 @@
+{
+  "name": "Link Checker",
+  "identifier": "link-checker",
+  "sourceFile": "_src/blocks/link-checker/link-checker.js",
+  "role": "Interactive utility / form flow",
+  "description": "This component displays a block that checks links. It should have 5 rows. The first row should contain the two images (for safe/unsafe link) followed by a some text a title(h1) and a description.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "buttons",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "status-messages",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "titles-change",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "The second row should contain the <status-messages> tag (Safe, default-good, default). The third row should contain the text displayed under the input field.",
+    "The fourth row should contain the <titles-change> tag (Safe ,So_far_so_good_1 ,So_far_so_good_2 ,Default)",
+    "The fifth row should contain the <buttons> tag and the buttons.",
+    "Metadata properties:",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/link-checker"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

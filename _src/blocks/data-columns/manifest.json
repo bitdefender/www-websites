@@ -1,0 +1,64 @@
+{
+  "name": "Data Columns",
+  "identifier": "data-columns",
+  "sourceFile": "_src/blocks/data-columns/data-columns.js",
+  "role": "Documented content block",
+  "description": "This block displays a text layout based on columns. By adding the statistics class to this block it will animate the numbers inside h1 elements.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "blue-background-and-articles-added",
+    "with-statistics",
+    "v3-with-blue-separators"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Metadata Properties:",
+    "-background-color: sets the background color of the entire section Style properties:",
+    "Documented sample names: Blue background and articles added, With statistics, v3- with blue separators.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/data-columns"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "name": "Hero Aem",
+  "identifier": "hero-aem",
+  "sourceFile": "_src/blocks/hero-aem/hero-aem.js",
+  "role": "Promotional / hero content",
+  "description": "This block displayes the hero aem banner.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [
+    "hero-for-bf-with-red-circle-discount"
+  ],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Documented sample names: Hero for BF with red circle discount.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/hero-aem"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

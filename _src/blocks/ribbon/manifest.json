@@ -1,0 +1,48 @@
+{
+  "name": "Ribbon",
+  "identifier": "ribbon",
+  "sourceFile": "_src/blocks/ribbon/ribbon.js",
+  "role": "Promotional banner / narrow announcement strip",
+  "description": "Simple ribbon content block. If a second row contains an image, the decorate code moves that image to the section background.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary ribbon text and links."
+    },
+    {
+      "name": "backgroundImage",
+      "type": "image",
+      "required": false,
+      "description": "Optional image that is converted into a section background when authored as a second row."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [
+    "bf25"
+  ],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "p",
+    "a",
+    "u",
+    "picture",
+    "img"
+  ],
+  "usageNotes": [
+    "The implementation replaces literal '0 %' text with a store variable placeholder. Avoid relying on that replacement in generated content unless store integration is explicitly desired.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/ribbon",
+    "Documented sample names: BF version."
+  ],
+  "ambiguityNotes": [
+    "The authoring pattern for the optional background image is inferred from JS, not from formal docs."
+  ]
+}

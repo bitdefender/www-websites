@@ -1,0 +1,59 @@
+{
+  "name": "Interactive Banner",
+  "identifier": "interactive-banner",
+  "sourceFile": "_src/blocks/interactive-banner/interactive-banner.js",
+  "role": "Promotional / hero content",
+  "description": "This block displays a banner with an animated header and a subtitle.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Metadata Properties:",
+    "-desktop-breakpoints: represents the number of words after a newline is inserted in the animated text -mobile-breakpoints: represents the number of words after a newline is inserted in the animated text oln mobile",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/interactive-banner"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

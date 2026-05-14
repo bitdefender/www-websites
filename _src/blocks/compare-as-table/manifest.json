@@ -1,0 +1,61 @@
+{
+  "name": "Compare As Table",
+  "identifier": "compare-as-table",
+  "sourceFile": "_src/blocks/compare-as-table/compare-as-table.js",
+  "role": "Comparison / tabular content",
+  "description": "This block displays compare products as table. First card will not display the prices and its button will be white with custom link",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "compare-product-cards"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "products: avfree/1/1, avpm/1/1 SaveText: 0% OFF – this will be displayed on the right of the price",
+    "Documented sample names: Compare Product Cards.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/compare-as-table"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

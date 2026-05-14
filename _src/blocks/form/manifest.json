@@ -1,0 +1,59 @@
+{
+  "name": "Form",
+  "identifier": "form",
+  "sourceFile": "_src/blocks/form/form.js",
+  "role": "Interactive utility / form flow",
+  "description": "This component will only render the fields by itself. For creating a new form you will need to create an excel file which will contain the fields, for each field its input type, a label(representing each field’s content),a default column which will render placeholders, a required column containing true for required attributes, a value column for which will contain either links to a file or in the buttons case its text and and if there is the case the file which will handle the submission with its source . A form can be inserted into the page like any block and it will only contain the link to the form’s data.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "In this example the form block validates the email adress and that the terms have been accepted and then starts the scan.",
+    "Note: the scan process is handled by the file designed to do so not by this block.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/form"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

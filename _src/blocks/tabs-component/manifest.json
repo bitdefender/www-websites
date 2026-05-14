@@ -1,0 +1,60 @@
+{
+  "name": "Tabs Component",
+  "identifier": "tabs-component",
+  "sourceFile": "_src/blocks/tabs-component/tabs-component.js",
+  "role": "Multi-item navigation / carousel",
+  "description": "This component will display a tab menu. The first two rows should be the title and subtitle. Use bold font for the title. The third row will be the tab buttons. Each tab button should have its own column. The content for each slide will have its own table row and consist of 2 columns: -image -h3 title and text",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "blue-headings"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Documented sample names: Tabs-component, Tabs-component blue headings.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/tabs-component"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

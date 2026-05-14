@@ -1,0 +1,66 @@
+{
+  "name": "Tabs",
+  "identifier": "tabs",
+  "sourceFile": "_src/blocks/tabs/tabs.js",
+  "role": "Multi-item navigation / carousel",
+  "description": "This functionality represents what can be described as a \"component within a component.\"",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [
+    "with-accordion",
+    "with-various-components"
+  ],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "text",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Usage explanation",
+    "The tabs component is designed to showcase various components across different tabs. For instance, in the first example, it is integrated with the accordion component to create a \"section requirement\" section.",
+    "Usage – metadata",
+    "Tab group: << name of tabroup >>",
+    "Documented sample names: Tabs with accordion, Tabs with various components.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/tabs"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

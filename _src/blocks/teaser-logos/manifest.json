@@ -1,0 +1,41 @@
+{
+  "name": "Teaser Logos",
+  "identifier": "teaser-logos",
+  "sourceFile": "_src/blocks/teaser-logos/teaser-logos.js",
+  "role": "Compact logo strip / trust indicators",
+  "description": "Wraps each child item in a logo column. Best suited for a small set of logos or badges.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "itemShape": {
+        "content": {
+          "type": "rich-content",
+          "required": true,
+          "description": "Usually an image, but the code will preserve arbitrary markup."
+        }
+      }
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "picture",
+    "img",
+    "p",
+    "a"
+  ],
+  "usageNotes": [
+    "Prefer image-only items for predictable output."
+  ],
+  "ambiguityNotes": []
+}

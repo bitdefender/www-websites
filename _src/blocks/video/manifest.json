@@ -1,0 +1,56 @@
+{
+  "name": "Video",
+  "identifier": "video",
+  "sourceFile": "_src/blocks/video/video.js",
+  "role": "Embedded or hosted video",
+  "description": "Supports YouTube, Vimeo, and direct MP4 links. An optional picture acts as a click-to-play placeholder.",
+  "fields": [
+    {
+      "name": "link",
+      "type": "url",
+      "required": true,
+      "description": "Video source URL."
+    },
+    {
+      "name": "placeholder",
+      "type": "image",
+      "required": false,
+      "description": "Optional picture used as a click-to-play placeholder."
+    }
+  ],
+  "requiredFields": [
+    "link"
+  ],
+  "enumValues": {
+    "supportedProviders": [
+      "youtube",
+      "youtu.be",
+      "vimeo",
+      "mp4"
+    ],
+    "desktopAlign": [
+      "left",
+      "center",
+      "right"
+    ]
+  },
+  "variants": [],
+  "contentModel": {
+    "kind": "single-link-plus-optional-image",
+    "supportsTextChildren": false,
+    "supportsNestedElements": false,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "picture",
+    "img"
+  ],
+  "usageNotes": [
+    "The visible source contract is simple and generation-safe.",
+    "Desktop alignment is read from section dataset, not block content. Keep it optional in downstream tooling."
+  ],
+  "ambiguityNotes": [
+    "The code comment says 'left / middle / right' while the actual enum uses left, center, right. Use center, because that is what the code maps."
+  ]
+}

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bitdefender.local/schemas/page-schema.json",
   "title": "AI-generated EDS page JSON",
-  "description": "Strict first-pass schema for machine-generated EDS page content. Uses metadata for page/section/block authoring data and attrs for low-level element attributes. Block-specific constraints live in component-manifest.json.",
+  "description": "Strict schema for machine-generated EDS page content. Uses metadata for page/section/block authoring data and attrs for low-level element attributes. Block-specific constraints live in schemas/component-manifest.json, which is generated from per-block manifests under _src/blocks/<block>/manifest.json. DOCX authoring rules such as section separators, exact block titles, per-block Section Metadata tables, and final page Metadata placement are downstream rendering concerns informed by sidekick docs and are not expressed directly in this JSON schema.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -37,7 +37,7 @@
   "$defs": {
     "metadata": {
       "type": "object",
-      "description": "Page-level metadata. Values are intentionally scalar or string-array only.",
+      "description": "Page-level metadata. Values are intentionally scalar or string-array only. In DOCX rendering this maps to the final page Metadata table, which should appear at the end of the document.",
       "propertyNames": {
         "pattern": "^[a-z0-9][a-z0-9-]*$"
       },
@@ -124,6 +124,7 @@
     },
     "sectionMetadata": {
       "type": "object",
+      "description": "Section-level authoring metadata. In DOCX rendering this commonly becomes a dedicated Section Metadata table for the specific block section it configures.",
       "additionalProperties": false,
       "properties": {
         "anchor": {
@@ -155,6 +156,7 @@
     },
     "blockNode": {
       "type": "object",
+      "description": "Block node selected by manifest identifier. Variants should be rendered into the exact EDS block title syntax during DOCX generation, for example new-prod-boxes(smallerbuttons).",
       "additionalProperties": false,
       "required": [
         "type",

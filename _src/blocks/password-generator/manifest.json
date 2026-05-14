@@ -1,0 +1,63 @@
+{
+  "name": "Password Generator",
+  "identifier": "password-generator",
+  "sourceFile": "_src/blocks/password-generator/password-generator.js",
+  "role": "Interactive utility / form flow",
+  "description": "This component generates a password and allows you to copy it to your clipboard. It also supports some password conditions that you will have to check.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "password-generator",
+    "picture",
+    "privacy-policy",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Content wise the block is split into three rows. One first row should contain a title (h1 element). One row will be split into two columns. The first column will contain the generator part and the other will contain the copy button (link of #copy-password ). One row should contain the privacy policy. Component specific tags:",
+    "<password-generator> - this tag should be put in the first row of any column",
+    "strong-weak-text - you can insert this text in order to flag where the strenght of the generated password will be displayed followed by 4 texts split by a comma",
+    "<privacy-policy> - flags the row that contains the privacy policy",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/password-generator"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

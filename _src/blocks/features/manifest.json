@@ -1,0 +1,64 @@
+{
+  "name": "Features",
+  "identifier": "features",
+  "sourceFile": "_src/blocks/features/features.js",
+  "role": "Comparison / tabular content",
+  "description": "The component displays a list of features in a table manner.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "3-columns",
+    "2-columns"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Ideally, you should have 2-3 columns. Have more than 3 and the layout can break.",
+    "To use this you have to know the following",
+    "The first text, besides the icons, is the title, and must be an H3 tag. The second text is the text under the title. The rest are the list of features: Features title ----> must be written in italics Feature text ---> richtext zone",
+    "Documented sample names: Features ( 3 columns ), Features ( 2 columns ).",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/features"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

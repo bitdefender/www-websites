@@ -1,0 +1,56 @@
+{
+  "name": "Quote",
+  "identifier": "quote",
+  "sourceFile": "_src/blocks/quote/quote.js",
+  "role": "Testimonial / highlighted quote",
+  "description": "Transforms each item into a quote card with a star rating, quote body, and optional author.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "itemShape": {
+        "quote": {
+          "type": "rich-text-fragment",
+          "required": true,
+          "description": "Main quote text."
+        },
+        "stars": {
+          "name": "stars",
+          "type": "string",
+          "required": true,
+          "description": "Asterisks-only source text, typically in emphasis markup, because the code counts literal '*' characters."
+        },
+        "author": {
+          "type": "rich-text-fragment",
+          "required": false,
+          "description": "Author line, typically authored in strong markup."
+        }
+      }
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "p",
+    "strong",
+    "em"
+  ],
+  "usageNotes": [
+    "Because the implementation accesses the stars element directly, the star line should be treated as required in generated content.",
+    "This block appears to be styled mainly within hero contexts.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/quote",
+    "Documented sample names: Quote in hero banner."
+  ],
+  "ambiguityNotes": [
+    "The code expects a specific authored pattern rather than named fields, so the field names here are inferred and normalized for machine use."
+  ]
+}

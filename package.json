@@ -11,7 +11,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "postinstall": "node .husky/update-importmap.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:component-manifest": "node tools/component-manifest/component-manifest.mjs build",
+    "split:component-manifest": "node tools/component-manifest/component-manifest.mjs split"
   },
   "repository": {
     "type": "git",

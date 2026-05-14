@@ -1,0 +1,62 @@
+{
+  "name": "Columns Grid",
+  "identifier": "columns-grid",
+  "sourceFile": "_src/blocks/columns-grid/columns-grid.js",
+  "role": "Comparison / tabular content",
+  "description": "This block displays a grid layout with flipping cards. The front of the card will be separated from the back by inserting a ‘---’ (<hr> element) inside every table cell. The cards support 4 sizes and grow relatively to the other cards. You add the size by inserting a p element with this text content at the top of every card: size-number-card. (number: 1 trough 4).",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "with-hover-mask"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Metadata Properties:",
+    "-hover-mask: adds a hover effect",
+    "Documented sample names: With hover-mask.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/columns-grid"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

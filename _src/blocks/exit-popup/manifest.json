@@ -1,0 +1,65 @@
+{
+  "name": "Exit Popup",
+  "identifier": "exit-popup",
+  "sourceFile": "_src/blocks/exit-popup/exit-popup.js",
+  "role": "Popup / overlay interaction",
+  "description": "This block displays the exit pop-ups as seein in the antivirus and total security pages.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary authored content. Follow the sidekick block page for the exact table/content shape and examples."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [
+    "av",
+    "tsmd"
+  ],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "This block is not displayed in page. It will display when you hover to the search bar.",
+    "Metadata properties:",
+    "product – the product code custom-pid – the campaign you need for the popup",
+    "Style properties: -",
+    "Documented sample names: Exit-popup-av, Exit-popup-tsmd.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/exit-popup"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

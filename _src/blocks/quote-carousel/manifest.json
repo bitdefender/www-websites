@@ -1,0 +1,62 @@
+{
+  "name": "Quote Carousel",
+  "identifier": "quote-carousel",
+  "sourceFile": "_src/blocks/quote-carousel/quote-carousel.js",
+  "role": "Multi-item navigation / carousel",
+  "description": "This block displays a carousel with quotes.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [
+    "carousel-with-image"
+  ],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "The first example it’s only the carousel alone.",
+    "In the second one it is shown besides an image.",
+    "Documented sample names: Carousel with image.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/quote-carousel"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

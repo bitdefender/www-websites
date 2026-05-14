@@ -1,0 +1,58 @@
+{
+  "name": "Terms",
+  "identifier": "terms",
+  "sourceFile": "_src/blocks/terms/terms.js",
+  "role": "Documented content block",
+  "description": "This block displays the terms of use.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Documented sample names: Terms.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/terms"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "name": "Embed",
+  "identifier": "embed",
+  "sourceFile": "_src/blocks/embed/embed.js",
+  "role": "Generic embed for video or social content",
+  "description": "Embeds YouTube, Vimeo, Twitter, or a generic iframe fallback. An optional picture acts as a click-to-load placeholder.",
+  "fields": [
+    {
+      "name": "link",
+      "type": "url",
+      "required": true,
+      "description": "Embed target URL."
+    },
+    {
+      "name": "placeholder",
+      "type": "image",
+      "required": false,
+      "description": "Optional preview image."
+    }
+  ],
+  "requiredFields": [
+    "link"
+  ],
+  "enumValues": {
+    "supportedProviders": [
+      "youtube",
+      "youtu.be",
+      "vimeo",
+      "twitter",
+      "generic-iframe"
+    ]
+  },
+  "variants": [
+    "autoplay-off",
+    "rounded-corners",
+    "only-mobile",
+    "only-desktop"
+  ],
+  "contentModel": {
+    "kind": "single-link-plus-optional-image",
+    "supportsTextChildren": false,
+    "supportsNestedElements": false,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "picture",
+    "img"
+  ],
+  "usageNotes": [
+    "This block is safer for generic external embeds than the specialized video block.",
+    "Use autoplay-off only when the downstream render pipeline understands block class variants.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/embed"
+  ],
+  "ambiguityNotes": []
+}

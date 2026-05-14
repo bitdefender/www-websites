@@ -1,0 +1,59 @@
+{
+  "name": "Columns",
+  "identifier": "columns",
+  "sourceFile": "_src/blocks/columns/columns.js",
+  "role": "Generic multi-column content layout",
+  "description": "Rows of adjacent columns containing text and optional images. The block infers image columns automatically from picture-only cells.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Each row contains one or more columns.",
+      "itemShape": {
+        "columns": {
+          "type": "array",
+          "required": true,
+          "description": "Column cells rendered side by side.",
+          "items": {
+            "type": "rich-content"
+          }
+        }
+      }
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "carousel",
+    "text-over-image"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "picture",
+    "img",
+    "h2",
+    "h3",
+    "h4",
+    "p",
+    "ul",
+    "li",
+    "a",
+    "table"
+  ],
+  "usageNotes": [
+    "Only the plain content-driven row/column contract is included here.",
+    "The implementation reads many section dataset values for carousels, dynamic links, tabs, store context, and background images. Those features are intentionally omitted.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/columns",
+    "Documented sample names: 3 columns - awards, 3 columns – 2 rows - benefits, 2 columns – video presentation, 3 columns - images, 1 column – with background image - v1, 1 column – with background image - v2."
+  ],
+  "ambiguityNotes": [
+    "Columns is widely theme-customized in template CSS. Use this manifest entry only for plain rows and columns, not campaign-specific enhancements."
+  ]
+}

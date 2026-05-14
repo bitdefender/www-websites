@@ -1,0 +1,60 @@
+{
+  "name": "Awards Search",
+  "identifier": "awards-search",
+  "sourceFile": "_src/blocks/awards-search/awards-search.js",
+  "role": "Documented content block",
+  "description": "This block displays a search bar where you can search for awards and a dropdown menu where you can filter those awards by the year when they were received. It also generates the search items and displays them.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the repeatable item structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Note: this component might not work in sidekick or certain testing environments.",
+    "You will need to use this block in combination with the accordion block which will display the dropdown menu. You should add the class action-only-on-header to the accordion block.",
+    "Further metada is not needed, but you can still add it for various use cases you might desire in pages.(ex: add an id for a button to direct you to this component).",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/awards-search"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

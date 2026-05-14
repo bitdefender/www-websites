@@ -1,0 +1,59 @@
+{
+  "name": "Accordion",
+  "identifier": "accordion",
+  "sourceFile": "_src/blocks/accordion/accordion.js",
+  "role": "Expandable disclosure / FAQ pattern",
+  "description": "Each direct child row becomes one accordion item with a header cell and a content cell.",
+  "fields": [
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "itemShape": {
+        "header": {
+          "type": "rich-content",
+          "required": true
+        },
+        "content": {
+          "type": "rich-content",
+          "required": true
+        }
+      }
+    }
+  ],
+  "requiredFields": [
+    "items"
+  ],
+  "variants": [
+    "first-open",
+    "action-only-on-header",
+    "smaller-text",
+    "terms-of-use",
+    "faq",
+    "system-requirements"
+  ],
+  "contentModel": {
+    "kind": "repeated-items",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "h3",
+    "h4",
+    "p",
+    "ul",
+    "li",
+    "a",
+    "strong",
+    "em"
+  ],
+  "usageNotes": [
+    "The JS contract for first-open and action-only-on-header is explicit.",
+    "Content cells are normalized to contain at least one paragraph.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/accordion"
+  ],
+  "ambiguityNotes": [
+    "Some additional variants are styling-only and inferred from CSS selectors."
+  ]
+}

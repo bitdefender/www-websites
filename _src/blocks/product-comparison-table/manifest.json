@@ -1,0 +1,63 @@
+{
+  "name": "Product Comparison Table",
+  "identifier": "product-comparison-table",
+  "sourceFile": "_src/blocks/product-comparison-table/product-comparison-table.js",
+  "role": "Comparison / tabular content",
+  "description": "This block displayes 2 – 3 products in a comparisson table manner Active column: in order to set the active column you should bold the name of that certain product.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "product-comparison",
+    "product-comparison-with-details",
+    "product-comparison-with-blue-tags"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Note: bolding multiple products will result in the first product being active",
+    "Documented sample names: Product Comparison, Product Comparison with Details, Product Comparison with blue tags.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/product-comparison-table"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

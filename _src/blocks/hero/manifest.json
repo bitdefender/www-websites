@@ -1,0 +1,95 @@
+{
+  "name": "Hero",
+  "identifier": "hero",
+  "sourceFile": "_src/blocks/hero/hero.js",
+  "role": "Page introduction / above-the-fold content",
+  "description": "Content-first hero block. The code promotes a picture ahead of the text when both are present and supports plain rich text plus button content.",
+  "fields": [
+    {
+      "name": "content",
+      "type": "rich-content",
+      "required": true,
+      "description": "Primary hero content. Real code looks for headings, paragraphs, lists, buttons, and an optional picture."
+    },
+    {
+      "name": "image",
+      "type": "image",
+      "required": false,
+      "description": "Optional hero picture. If a picture exists before the main heading in the source markup, the decorate code moves it into a dedicated hero picture area."
+    }
+  ],
+  "requiredFields": [
+    "content"
+  ],
+  "variants": [
+    "black-background",
+    "comparison",
+    "new2024design",
+    "ferrari"
+  ],
+  "contentModel": {
+    "kind": "single-block-rich-content",
+    "supportsTextChildren": true,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "h1",
+    "h2",
+    "h4",
+    "p",
+    "ul",
+    "li",
+    "a.button",
+    "picture",
+    "img",
+    "table"
+  ],
+  "usageNotes": [
+    "Base hero content is generation-safe.",
+    "The repository also supports many section dataset customizations, OS-specific links, and store-driven discount elements, but those are intentionally excluded from this first contract.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/hero",
+    "Documented sample names: Hero, Hero with black background, Hero black background, non black-friday, Hero with 2 buttons and dynamic price."
+  ],
+  "ambiguityNotes": [
+    "Hero variants are mostly inferred from CSS selectors rather than a dedicated authoring spec.",
+    "Do not generate section dataset fields such as app-store mappings or modal-refresh flags unless later documentation confirms them."
+  ],
+  "sectionMetadata": [
+    {
+      "name": "Discount",
+      "type": "string",
+      "required": false,
+      "description": "ts_i--> wanted product 5u --> number of devices 1y --> number of years This will discount in percentages in the green bubble of the hero banner",
+      "example": "ts_i/5/1"
+    },
+    {
+      "name": "Signature",
+      "type": "string",
+      "required": false,
+      "description": "Shows the blue text above the breadcrumbs of the hero-banner.",
+      "example": "Trusted. Always."
+    },
+    {
+      "name": "Label",
+      "type": "string",
+      "required": false,
+      "description": "Shows the text under the discount percentage in the bubble.",
+      "example": "Discount"
+    },
+    {
+      "name": "TextColor",
+      "type": "string",
+      "required": false,
+      "description": "Primary color of the text. Only white is available for this metadata.",
+      "example": "white"
+    },
+    {
+      "name": "BackgroundColor",
+      "type": "string",
+      "required": false,
+      "description": "Primary color of the background. Only black is available. Percent-product functionality: If you need to use store text variables inside some text in order to display dynamic prices or discounts include the product code and variation in this metadata.",
+      "example": "black"
+    }
+  ]
+}

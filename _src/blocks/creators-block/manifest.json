@@ -1,0 +1,60 @@
+{
+  "name": "Creators Block",
+  "identifier": "creators-block",
+  "sourceFile": "_src/blocks/creators-block/creators-block.js",
+  "role": "Comparison / tabular content",
+  "description": "This block displays a banner with a h3 element, an image to be displayed in the top right corner and some images that lead to youtube videos. It should be split into 3 table rows, the first one containing the title and the image, the second one the videos and the third one a button. In order for the image to be displayed property each video be included in its own table which will contain the following rows:",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "The creator profile picture and its name His usertag The channel’s stats A link to one of his videos The background image for his card",
+    "Metadata properties:",
+    "- background-color Style properties: -",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/creators-block"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}

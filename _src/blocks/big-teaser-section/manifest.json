@@ -1,0 +1,64 @@
+{
+  "name": "Big Teaser Section",
+  "identifier": "big-teaser-section",
+  "sourceFile": "_src/blocks/big-teaser-section/big-teaser-section.js",
+  "role": "Comparison / tabular content",
+  "description": "This block displays content along with an image. The table should have two rows, with the second row reserved for an image. The image should either overlay the default background image or remain empty. The main image will be set in the section's metadata properties.",
+  "fields": [
+    {
+      "name": "rows",
+      "type": "array",
+      "required": true,
+      "description": "Author this block using the row/column table structure documented in the sidekick block page and its examples."
+    }
+  ],
+  "requiredFields": [
+    "rows"
+  ],
+  "variants": [
+    "reverted"
+  ],
+  "contentModel": {
+    "kind": "row-column-grid",
+    "supportsTextChildren": false,
+    "supportsNestedElements": true,
+    "supportsNestedBlocks": false
+  },
+  "allowedChildren": [
+    "a",
+    "br",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "img",
+    "li",
+    "ol",
+    "p",
+    "picture",
+    "span",
+    "strong",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "ul"
+  ],
+  "usageNotes": [
+    "Metadata properties:",
+    "-desktop-picture",
+    "-mobile-picture",
+    "- reverted: this should be directly on the block, not as a style property",
+    "Documented sample names: reverted.",
+    "Sidekick docs: https://main--www-websites--bitdefender.aem.page/sidekick/blocks/big-teaser-section"
+  ],
+  "ambiguityNotes": [
+    "This entry was expanded from the sidekick block docs and local source file path, but the exact authoring table/row structure should still be taken from the documented examples when generating DOCX content."
+  ]
+}
