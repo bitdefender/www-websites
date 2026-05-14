@@ -286,7 +286,7 @@ main .section.ai-skills-checker-container {
 
         /* Upload drop area */
         .upload-drop {
-            border: 2px dashed rgba(0,110,255,0.3);
+            border: 2px dashed #007BFF;
             border-radius: 12px;
             padding: 28px;
             display: block;
@@ -303,19 +303,19 @@ main .section.ai-skills-checker-container {
             }
 
             browse {
-                color: #006EFF;
+                color: #007BFF;
                 font-weight: 700;
                 cursor: pointer;
             }
 
             &.dragover {
                 background: rgba(0,110,255,0.03);
-                border-color: #006EFF;
+                border-color: #0056b3;
             }
 
             &:hover {
                 cursor: pointer;
-                border-color: #007BFF;
+                border-color: #0056b3;
             }
         }
 
