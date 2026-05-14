@@ -303,7 +303,7 @@ export default function decorate(block) {
 
   const { checkButtonText, product, pasteLinkText } = block.closest('.section').dataset;
 
-  const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
+  const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(5)');
   privacyPolicyDiv.classList.add('privacy-policy');
 
   if (product) {
