@@ -43,7 +43,7 @@ main .section.ai-skills-checker-container {
             pointer-events: none;
         }
 
-        .ai-skills-checker input[type="text"] {
+        .ai-skills-checker .input-container {
             display: none;
         }
 
@@ -104,7 +104,7 @@ main .section.ai-skills-checker-container {
             pointer-events: none;
         }
 
-        .ai-skills-checker input[type="text"] {
+        .ai-skills-checker .input-container {
             display: none;
         }
 
@@ -195,6 +195,13 @@ main .section.ai-skills-checker-container {
             width: 100%;
             gap: 15px;
             padding-top: 10px;
+            margin-bottom: 12px;
+
+            &:has(.tab-upload.active) {
+                #copy-to-clipboard {
+                    display: none;
+                }
+            }
         }
 
         input[type="text"],#inputDiv {
@@ -217,7 +224,108 @@ main .section.ai-skills-checker-container {
 
         .input-container__container {
             width: 100%;
+        }
+
+        .input-pair {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
             position: relative;
+
+            input[type="text"] {
+                min-width: 0;
+                border-radius: 8px;
+                position: relative;
+            }
+
+            label {   
+                min-width: fit-content;
+                margin: 0;
+                padding: 15px 8px;
+                padding-right: 0;
+                border: 1px solid #007BFF;
+                border-right: 0;
+                border-radius: 8px 0 0 8px;
+                background: #fff;
+                font-size: 1em;
+                color: #007BFF;
+                font-weight: bold;
+            }
+
+            input[type="file"] {
+                display: none;
+            }
+        }
+
+        /* Tabs above the input area */
+        .ai-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            justify-content: center;
+
+            .tab {
+                background: transparent;
+                border: 1px solid transparent;
+                padding: 16px 32px;
+                border-radius: 8px;
+                cursor: pointer;
+                color: #007BFF;
+                font-weight: 600;
+                font-size: 1em;
+                border-bottom: 2px solid transparent;
+
+                &.active {
+                    background: #ffffff;
+                    border-bottom: 2px solid #007BFF;
+                    transition: all 0.5s ease-in-out;
+                    border-radius: 0;
+
+                    &:hover {
+                        color: #0056b3;
+                        border-bottom-color: #0056b3;
+                    }
+                }
+
+                &:hover {
+                    color: #0056b3;
+                }
+            }
+        }
+
+        /* Upload drop area */
+        .upload-drop {
+            border: 2px dashed #007BFF;
+            border-radius: 12px;
+            padding: 28px;
+            display: block;
+            text-align: center;
+            background: #fbfdff;
+            color: #333;
+            min-width: 100%;
+
+            .upload-inner {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            browse {
+                color: #007BFF;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            &.dragover {
+                background: rgba(0,110,255,0.03);
+                border-color: #0056b3;
+            }
+
+            &:hover {
+                cursor: pointer;
+                border-color: #0056b3;
+            }
         }
 
         #copy-to-clipboard {
@@ -348,7 +456,7 @@ main .section.ai-skills-checker-container {
 
         .result.safe {
             background-color: #F3FEF8;
-            padding: 8px 30px 8px 55px;
+            padding: 20px 30px 20px 55px;
             position: relative;
             text-align: left;
             display: block;
@@ -358,7 +466,7 @@ main .section.ai-skills-checker-container {
                 background: url("../../icons/safe.svg") no-repeat;
                 position: absolute;
                 left: 14px;
-                top: 15%;
+                top: 20px;
                 width: 30px;
                 height: 30px;
                 background-size: contain;
@@ -425,11 +533,25 @@ main .section.ai-skills-checker-container {
         margin: 0 auto;
         padding-bottom: 50px;
 
+
+
         .ai-skills-checker{
             padding: 48px 60px 35px;
             
             .input-container{
-                flex-direction: unset;
+                
+
+                &:has(.tab-upload.active) {
+                   
+
+                    .input-container__container {
+                        width: unset;
+                    }
+
+                    .upload-drop {
+                        min-width: 100%;
+                    }
+                }
             }
 
             .buttons-container{
@@ -444,6 +566,9 @@ main .section.ai-skills-checker-container {
 
             button.check-url {
                 white-space: nowrap;
+                height: fit-content;
+                min-width: 100%;
+                min-height: 51px;
             }
 
             .share-popup{
@@ -467,6 +592,20 @@ main .section.ai-skills-checker-container {
                 font-size: 16px;
                 border-radius: 8px;
                 padding-bottom: 30px;
+
+                &.danger, &.safe {
+                    h4 {
+                        font-size: 20px;
+                    }
+
+                    p {
+                        font-size: 18px;
+                    }
+
+                    li {
+                        font-size: 18px;
+                    }
+                }
             }
 
             .privacy-policy {

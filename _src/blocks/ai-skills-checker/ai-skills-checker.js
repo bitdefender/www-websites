@@ -23,9 +23,24 @@ const isValidUrl = (urlString) => {
   return urlPattern.test(urlString);
 };
 
-async function checkSkillLink(block, input, result, statusMessages, statusTitles) {
+async function checkSkillLink(block, input, result, statusMessages, statusTitles, fileInput) {
+  const maxArchiveSizeBytes = 10 * 1024 * 1024;
   const inputUrl = input.value.trim();
-  if (!inputUrl || !isValidUrl(inputUrl)) {
+  const file = fileInput?.files && fileInput.files[0];
+
+  if (!inputUrl && !file) {
+    result.textContent = 'Please provide a URL or upload an archive';
+    result.className = 'result danger';
+    return;
+  }
+
+  if (file) {
+    if (file.size > maxArchiveSizeBytes) {
+      result.textContent = 'File exceeds the 10MB limit';
+      result.className = 'result danger';
+      return;
+    }
+  } else if (inputUrl && !isValidUrl(inputUrl)) {
     result.textContent = 'Please enter a valid URL';
     result.className = 'result danger';
     return;
@@ -33,41 +48,64 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
 
   input.closest('.input-container').classList.add('loader-circle');
 
-  const response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      action: 'scan_url',
-      url: inputUrl,
-    }),
-  });
+  let response;
+  try {
+    if (file) {
+      const form = new FormData();
+      form.append('file', file, file.name);
+      form.append('action', 'scan_archive');
 
-  if (!response.ok) {
-    result.textContent = 'Please enter a valid skill URL';
+      response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
+        method: 'POST',
+        body: form,
+      });
+    } else {
+      response = await fetch('https://nimbus.bitdefender.net/skills/checker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'scan_url', url: inputUrl }),
+      });
+    }
+  } catch (err) {
+    result.textContent = statusMessages.error ?? 'An error occurred';
+    result.className = 'result danger';
+    input.closest('.input-container').classList.remove('loader-circle');
+    return;
+  }
+
+  if (!response || !response.ok) {
+    result.textContent = statusMessages.error ?? 'Please enter a valid skill URL or upload a valid archive';
     result.className = 'result danger';
     input.closest('.input-container').classList.remove('loader-circle');
     return;
   }
 
   const data = await response.json();
-  let message; let statusCode; let
-    className;
+  // determine risk level (prefer adjusted if present)
+  const rawRisk = data.adjusted_risk_level ?? data.risk_level ?? 'UNKNOWN';
+  const risk = String(rawRisk).toUpperCase();
 
-  switch (data.risk_level) {
+  // map to existing visuals
+  let statusCode = 'default';
+  let className = 'result danger';
+  switch (risk) {
     case 'CLEAN':
       statusCode = 'safe';
-      message = statusMessages.safe;
       className = 'result safe';
       break;
-
-    case 'CRITICAL':
-      statusCode = 'danger';
-      message = statusMessages.default;
+    case 'LOW':
+      statusCode = 'lowrisk';
+      className = 'result safe';
+      break;
+    case 'MEDIUM':
+    case 'HIGH':
+      statusCode = 'intermediate';
       className = 'result danger';
       break;
-
+    case 'CRITICAL':
+      statusCode = 'danger';
+      className = 'result danger';
+      break;
     default:
       result.innerHTML = `${statusMessages.error ?? ''}`;
       result.className = 'result danger no-response';
@@ -75,17 +113,41 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
       break;
   }
 
-  result.innerHTML = message;
-  if (data.risk_level !== 'CLEAN') {
-    result.innerHTML = `${data.findings.map((finding) => `<code>${finding.content ?? ''}</code><br>
-      <strong>Description: ${finding.description ?? ''}</strong><hr>`).join('')} 
-      ${message}`;
+  // build result card HTML per spec
+  const skillName = data.skill_name ?? data.name ?? inputUrl ?? file?.name ?? '';
+  const llmSummary = data.llm_summary ?? data.summary ?? null;
+  const findings = Array.isArray(data.findings) ? data.findings : [];
+  const findingsCount = (typeof data.findings_count === 'number') ? data.findings_count : findings.length;
+
+  let findingsHtml = '';
+  if (findingsCount === 0) {
+    findingsHtml = '<p>No security findings detected.</p>';
+  } else {
+    findingsHtml = `<ol>${findings.map((f) => {
+      const descr = f.description ?? 'No description';
+      // prefer file_name or path or content as filename display
+      const filename = f.file_name ?? f.filename ?? f.path ?? f.content ?? '';
+      const fileCode = filename ? `<code>${filename}</code>` : '';
+      return `<li><strong>${descr}</strong> <br>${fileCode}</li>`;
+    }).join('')}</ol>`;
   }
+
+  result.innerHTML = `
+    <p><strong>Skill Scan:</strong> ${skillName}</p>
+    ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
+    ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
+    <h4>Findings (${findingsCount})</h4>
+    ${findingsHtml}
+  `;
 
   result.className = className;
   block.closest('.section').classList.add(className.split(' ')[1]);
   input.setAttribute('disabled', '');
-  document.getElementById('inputDiv').textContent = inputUrl;
+  if (fileInput) fileInput.setAttribute('disabled', '');
+  const inputDiv = document.getElementById('inputDiv');
+  if (inputDiv) {
+    inputDiv.textContent = file ? file.name : inputUrl;
+  }
 
   changeTexts(block, statusCode, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
@@ -98,7 +160,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   AdobeDataLayerService.push(new WindowLoadedEvent());
 }
 
-async function resetChecker(block, titleText = '') {
+async function resetChecker(block, titleText = '', inputsState = {}) {
   const classesToRemove = ['danger', 'safe'];
   const section = block.closest('.section');
 
@@ -111,14 +173,22 @@ async function resetChecker(block, titleText = '') {
 
   // Reset the input and result elements
   const input = block.querySelector('#ai-skills-checker-input');
+  const fileInput = block.querySelector('#ai-skills-checker-file');
   const result = block.querySelector('.result');
   const h1 = block.querySelector('h1');
+  const uploadText = block.querySelector('.upload-text');
+
   input.removeAttribute('disabled');
+  if (fileInput) {
+    fileInput.removeAttribute('disabled');
+    fileInput.value = '';
+  }
   input.value = '';
   result.className = 'result';
-  if (h1) {
-    h1.textContent = titleText;
-  }
+  const inputDiv = block.querySelector('#inputDiv');
+  if (inputDiv) inputDiv.textContent = '';
+  if (h1) h1.textContent = titleText;
+  if (uploadText && inputsState) uploadText.textContent = inputsState.upload || '';
 
   AdobeDataLayerService.push(new WindowLoadStartedEvent({}));
   AdobeDataLayerService.push(new UserDetectedEvent());
@@ -151,36 +221,43 @@ function createStatusMessages(block) {
   return statusMessages;
 }
 
-function createStatusTitles(block) {
-  const statusTitles = {};
+function createKeyValueMap(block, searchKey, { className, useInnerHTML = false } = {}) {
+  const mappedValues = {};
 
-  const divWithstatusTitles = Array.from(block.querySelectorAll('div')).find((div) => {
+  const targetDiv = Array.from(block.querySelectorAll('div')).find((div) => {
     const firstParagraph = div.querySelector('p');
-    return firstParagraph && firstParagraph.textContent.includes('<titles-change>');
+    return firstParagraph && firstParagraph.textContent.includes(searchKey);
   });
 
-  divWithstatusTitles.classList.add('status-titles');
-  const pElements = divWithstatusTitles.querySelectorAll('p');
-  // Skip the first <p> if it contains a header like "<titles-change>"
+  if (!targetDiv) {
+    return mappedValues;
+  }
+
+  if (className) {
+    targetDiv.classList.add(className);
+  }
+
+  const pElements = targetDiv.querySelectorAll('p');
+  // Skip the first <p> if it contains a header like "<tabs>" or "<inputs>"
   pElements.forEach((p, index) => {
     if (index === 0) {
       return;
     }
 
-    const parts = p.textContent.split(':');
+    const source = useInnerHTML ? p.innerHTML : p.textContent;
+    const parts = source.split(':');
     if (parts.length >= 2) {
-      const status = parts[0].trim();
-      const message = parts.slice(1).join(':').trim();
-      statusTitles[status.toLowerCase()] = message;
+      const key = parts[0].trim();
+      const value = parts.slice(1).join(':').trim();
+      mappedValues[key.toLowerCase()] = value;
     }
   });
 
-  // remove the div from the dom, as it is already parsed and we don't need it anymore
-  divWithstatusTitles.remove();
-  return statusTitles;
+  targetDiv.remove();
+  return mappedValues;
 }
 
-function createButtonsContainer(block) {
+function createButtonsContainer(block, inputsState) {
   const titleText = block.querySelector('h1')?.innerText;
   const divWithButtons = Array.from(block.querySelectorAll('div')).find((div) => {
     const firstParagraph = div.querySelector('p');
@@ -209,7 +286,7 @@ function createButtonsContainer(block) {
       if (link.href.includes('#check-another')) {
         link.classList.add('check-another-button');
         link.addEventListener('click', () => {
-          resetChecker(block, titleText);
+          resetChecker(block, titleText, inputsState);
         });
       }
     });
@@ -217,9 +294,30 @@ function createButtonsContainer(block) {
 }
 
 export default function decorate(block) {
+  const acceptedArchiveInputValue = [
+    '.zip',
+    '.tar',
+    '.tgz',
+    '.tar.gz',
+    '.tar.bz2',
+    '.tbz2',
+    '.tar.xz',
+    '.gz',
+    '.bz2',
+    '.7z',
+    '.rar',
+    'application/zip',
+    'application/x-tar',
+    'application/gzip',
+    'application/x-bzip2',
+    'application/x-xz',
+    'application/x-7z-compressed',
+    'application/vnd.rar',
+  ].join(',');
+
   const { checkButtonText, product, pasteLinkText } = block.closest('.section').dataset;
 
-  const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(3)');
+  const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(5)');
   privacyPolicyDiv.classList.add('privacy-policy');
 
   if (product) {
@@ -229,7 +327,9 @@ export default function decorate(block) {
   }
 
   const statusMessages = createStatusMessages(block);
-  const statusTitles = createStatusTitles(block);
+  const statusTitles = createKeyValueMap(block, '<titles-change>', { className: 'status-titles' });
+  const tabsTitles = createKeyValueMap(block, '<tabs>');
+  const inputsState = createKeyValueMap(block, '<inputs>');
 
   const formContainer = document.createElement('div');
   formContainer.classList.add('ai-skills-checker-form');
@@ -238,24 +338,69 @@ export default function decorate(block) {
   inputContainer.classList.add('input-container');
   formContainer.appendChild(inputContainer);
 
+  const copyElement = document.createElement('span');
+  copyElement.id = 'copy-to-clipboard';
+
   const input = document.createElement('input');
   input.type = 'text';
   input.placeholder = pasteLinkText ?? 'example-url.com';
   input.id = 'ai-skills-checker-input';
+  input.appendChild(copyElement);
 
-  const copyElement = document.createElement('span');
-  copyElement.id = 'copy-to-clipboard';
+  // file input for archive uploads
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.id = 'ai-skills-checker-file';
+  fileInput.accept = acceptedArchiveInputValue;
+  fileInput.title = 'Upload archive (max 10MB)';
 
   const inputDiv = document.createElement('p');
   inputDiv.setAttribute('id', 'inputDiv');
 
+  // tabs (Link / Upload)
+  const tabs = document.createElement('div');
+  tabs.className = 'ai-tabs';
+  const tabLink = document.createElement('button');
+  tabLink.type = 'button';
+  tabLink.className = 'tab tab-link active';
+  tabLink.textContent = tabsTitles.link ?? '';
+  const tabUpload = document.createElement('button');
+  tabUpload.type = 'button';
+  tabUpload.className = 'tab tab-upload';
+  tabUpload.textContent = tabsTitles.upload ?? '';
+  tabs.appendChild(tabLink);
+  tabs.appendChild(tabUpload);
+
+  const inputPair = document.createElement('div');
+  inputPair.className = 'input-pair';
+
+  inputPair.appendChild(fileInput);
+  inputPair.appendChild(input);
+  inputPair.appendChild(copyElement);
+
+  // upload drop area (hidden by default)
+  const uploadDrop = document.createElement('div');
+  uploadDrop.className = 'upload-drop';
+  uploadDrop.innerHTML = `
+    <div class="upload-inner">
+      <div class="upload-icon">⬆</div>
+      <div class="upload-text">${inputsState.upload ?? ''}</div>
+    </div>
+  `;
+
   const divContainer = document.createElement('div');
   divContainer.className = 'input-container__container';
-  divContainer.appendChild(input);
+  divContainer.appendChild(tabs);
+  inputPair.appendChild(uploadDrop);
+  divContainer.appendChild(inputPair);
+
   block.prepend(inputDiv);
-  divContainer.appendChild(copyElement);
 
   inputContainer.appendChild(divContainer);
+
+  // default view: show link input, hide upload area and file input
+  uploadDrop.style.display = 'none';
+  fileInput.style.display = 'none';
 
   copyElement.addEventListener('click', async () => {
     try {
@@ -266,9 +411,61 @@ export default function decorate(block) {
     }
   });
 
+  // tab handlers
+  const showLink = () => {
+    input.value = '';
+    if (fileInput) fileInput.value = '';
+    const uploadText = uploadDrop.querySelector('.upload-text');
+    if (uploadText) uploadText.textContent = inputsState.upload ?? '';
+    tabLink.classList.add('active');
+    tabUpload.classList.remove('active');
+    input.style.display = '';
+    fileInput.style.display = 'none';
+    uploadDrop.style.display = 'none';
+  };
+  const showUpload = () => {
+    input.value = '';
+    if (fileInput) fileInput.value = '';
+    const uploadText = uploadDrop.querySelector('.upload-text');
+    if (uploadText) uploadText.textContent = inputsState.upload ?? '';
+    tabUpload.classList.add('active');
+    tabLink.classList.remove('active');
+    input.style.display = 'none';
+    fileInput.style.display = '';
+    uploadDrop.style.display = '';
+  };
+  tabLink.addEventListener('click', showLink);
+  tabUpload.addEventListener('click', showUpload);
+
+  // upload drop interactions
+  uploadDrop.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
+  uploadDrop.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (!uploadDrop.classList.contains('dragover')) {
+      uploadDrop.classList.add('dragover');
+    }
+  });
+  uploadDrop.addEventListener('dragleave', () => uploadDrop.classList.remove('dragover'));
+  uploadDrop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadDrop.classList.remove('dragover');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+      fileInput.files = e.dataTransfer.files;
+      fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files.length > 0) {
+      input.value = '';
+      const fname = fileInput.files[0].name;
+      uploadDrop.querySelector('.upload-text').innerHTML = `${inputsState.uploadsuccess.replace('{FILE_NAME}', fname)}`;
+    }
+  });
+
   const button = document.createElement('button');
   button.textContent = checkButtonText ?? 'Check URL';
   button.classList.add('check-url');
+
   inputContainer.appendChild(button);
 
   const result = document.createElement('div');
@@ -280,9 +477,9 @@ export default function decorate(block) {
   safeImage.classList.add('safe-image');
   dangerImage.classList.add('danger-image');
 
-  button.addEventListener('click', () => checkSkillLink(block, input, result, statusMessages, statusTitles));
+  button.addEventListener('click', () => checkSkillLink(block, input, result, statusMessages, statusTitles, fileInput));
 
-  createButtonsContainer(block);
+  createButtonsContainer(block, inputsState);
 
   // if the text is cleared, do not display any error
   input.addEventListener('input', () => {
@@ -296,5 +493,13 @@ export default function decorate(block) {
   input.addEventListener('paste', () => {
     result.textContent = '';
     result.className = '';
+  });
+  fileInput.addEventListener('change', () => {
+    // clear URL input when a file is selected
+    if (fileInput.files && fileInput.files.length > 0) {
+      input.value = '';
+      result.textContent = '';
+      result.className = '';
+    }
   });
 }
