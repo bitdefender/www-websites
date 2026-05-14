@@ -1,64 +1,65 @@
-export default function decorate(block) {
-  const items = Array.from(block.querySelectorAll(':scope > div'));
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.30/';
 
-  items.forEach((item, index) => {
-    item.classList.add('accordion-item');
-    const [header, content] = item.children;
-    header.classList.add('accordion-item-header');
+const getDsnBase = () => {
+  try {
+    const map = document.querySelector('script[type="importmap"]');
+    const imports = JSON.parse(map?.textContent || '{}').imports || {};
+    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
+  } catch {
+    return DSN_FALLBACK;
+  }
+};
 
-    // A11Y: focusabil, activabil, semantic
-    header.setAttribute('tabindex', '0');
-    header.setAttribute('role', 'button');
-    header.setAttribute('aria-expanded', 'false');
-    header.setAttribute('aria-controls', `accordion-content-${index}`);
-    content.setAttribute('id', `accordion-content-${index}`);
+const getSectionTitle = (block) => {
+  const section = block.closest('.section');
+  const defaultWrapper = section?.querySelector(':scope > .default-content-wrapper');
+  return defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
+};
 
-    if (content) {
-      content.classList.add('accordion-item-content');
-      const p = content.querySelector('p');
-      if (!p) {
-        const newP = document.createElement('p');
-        newP.innerHTML = content.innerHTML;
-        content.innerHTML = '';
-        content.appendChild(newP);
-      }
+const buildAccordion = (block) => {
+  const section = block.closest('.section');
+  const defaultWrapper = section?.querySelector(':scope > .default-content-wrapper');
+  const sectionTitle = getSectionTitle(block);
+
+  if (defaultWrapper && sectionTitle) {
+    defaultWrapper.remove();
+  }
+
+  const accordion = document.createElement('bd-accordion-bg');
+  if (sectionTitle) {
+    accordion.setAttribute('title', sectionTitle);
+  }
+
+  const isFirstOpen = block.classList.contains('first-open');
+  const rows = Array.from(block.querySelectorAll(':scope > div'));
+
+  rows.forEach((row, index) => {
+    const [headerCell, contentCell] = row.children;
+    if (!headerCell) return;
+
+    const titleEl = headerCell.querySelector('h1, h2, h3, h4, h5, h6, p');
+    const title = titleEl?.textContent?.trim() || headerCell.textContent.trim();
+
+    const item = document.createElement('bd-accordion-bg-item');
+    item.setAttribute('title', title);
+
+    if (isFirstOpen && index === 0) {
+      item.setAttribute('open', '');
     }
 
-    const toggleItem = () => {
-      const isOpen = item.classList.contains('expanded');
-      items.forEach((i) => {
-        i.classList.remove('expanded');
-        i.querySelector('.accordion-item-header')?.setAttribute('aria-expanded', 'false');
-      });
-
-      if (!isOpen) {
-        item.classList.add('expanded');
-        header.setAttribute('aria-expanded', 'true');
-      } else {
-        header.setAttribute('aria-expanded', 'false');
-      }
-    };
-
-    if ([...block.classList].includes('action-only-on-header')) {
-      header.addEventListener('click', toggleItem);
-    } else {
-      item.addEventListener('click', toggleItem);
+    if (contentCell) {
+      item.innerHTML = contentCell.innerHTML;
     }
 
-    // A11Y: tastatură
-    header.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleItem();
-      }
-    });
+    accordion.appendChild(item);
   });
 
-  // Prima deschisă
-  if (block.classList.contains('first-open')) {
-    const firstItem = items[0];
-    firstItem.classList.add('expanded');
-    const header = firstItem.querySelector('.accordion-item-header');
-    if (header) header.setAttribute('aria-expanded', 'true');
-  }
+  return accordion;
+};
+
+export default async function decorate(block) {
+  const base = getDsnBase();
+  await import(`${base}accordion-bg`);
+  const accordion = buildAccordion(block);
+  block.replaceChildren(accordion);
 }
