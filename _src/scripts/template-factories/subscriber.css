@@ -2429,7 +2429,8 @@ main .subscriber .section {
     .subscriber #has4columns.top-bottom-border .columns-wrapper .columns.with-box-shadow > div > div {
         border: 0 none;
         border-top: 1px solid #B9C7DA;
-        border-bottom: 1px solid #B9C7DA;
+        border-bottom: 0 none;
+        padding-bottom: 0;
     }
 }
 
