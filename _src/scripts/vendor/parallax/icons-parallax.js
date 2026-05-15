@@ -131,8 +131,16 @@ export function initAnimations(block, noBlur) {
         );
     };
 
-    updateViewBox();
-    window.addEventListener('resize', updateViewBox);
+    requestAnimationFrame(() => {
+        updateViewBox();
+
+        if (!running) {
+            running = true;
+            requestAnimationFrame(tick);
+        }
+    });
+
+    requestAnimationFrame(updateViewBox);
 
     instances.push(instance);
 
