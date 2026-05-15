@@ -132,7 +132,9 @@ export function initAnimations(block, noBlur) {
     };
 
     requestAnimationFrame(() => {
+        console.log('here')
         updateViewBox();
+        tick();
 
         if (!running) {
             running = true;
