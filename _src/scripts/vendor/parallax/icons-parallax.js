@@ -132,7 +132,7 @@ export function initAnimations(block, noBlur) {
     };
 
     requestAnimationFrame(() => {
-        console.log('here')
+        console.log('here 2')
         updateViewBox();
         tick();
 
@@ -148,7 +148,7 @@ export function initAnimations(block, noBlur) {
 
     if (!running) {
         running = true;
-        requestAnimationFrame(tick);
+        tick();
     }
 }
 
