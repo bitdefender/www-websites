@@ -132,14 +132,12 @@ export function initAnimations(block, noBlur) {
     };
 
     instances.push(instance);
-
     requestAnimationFrame(() => {
-        console.log('here')
         updateViewBox();
 
         if (!running) {
             running = true;
-            tick();
+            tick(performance.now());
         }
     });
 }
