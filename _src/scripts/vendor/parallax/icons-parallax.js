@@ -131,25 +131,17 @@ export function initAnimations(block, noBlur) {
         );
     };
 
+    instances.push(instance);
+
     requestAnimationFrame(() => {
-        console.log('here 2')
+        console.log('here')
         updateViewBox();
-        tick();
 
         if (!running) {
             running = true;
-            requestAnimationFrame(tick);
+            tick();
         }
     });
-
-    requestAnimationFrame(updateViewBox);
-
-    instances.push(instance);
-
-    if (!running) {
-        running = true;
-        tick();
-    }
 }
 
 function tick(t) {
