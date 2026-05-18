@@ -565,6 +565,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
   .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 {
     width: max-content !important;
+    padding-right: 17px;
     margin-top: 5em;
   }
 }
