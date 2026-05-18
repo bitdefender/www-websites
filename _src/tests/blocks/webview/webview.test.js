@@ -1,0 +1,118 @@
+import {
+  beforeEach, describe, expect, it, vi,
+} from 'vitest';
+
+import decorate from '../../../blocks/webview/webview.js';
+
+vi.mock('../../../scripts/scripts.js', () => ({
+  getLanguageCountryFromPath: vi.fn(() => ({
+    language: 'en',
+    country: 'us',
+  })),
+}));
+
+function setupWebview({
+  sectionClass = '',
+  blockClass = '',
+  content = '',
+} = {}) {
+  document.body.innerHTML = `
+    <main>
+      <div class="section ${sectionClass}" data-product="ps_i/5/1" data-save-text="off">
+        <div class="webview-wrapper">
+          <div class="webview ${blockClass}">
+            ${content}
+          </div>
+        </div>
+      </div>
+    </main>`;
+
+  return document.querySelector('.webview');
+}
+
+describe('webview', () => {
+  beforeEach(() => {
+    window.history.pushState({}, '', '/en-us/consumer/webview/churn-flow');
+  });
+
+  it('preserves the default price box decoration', async () => {
+    const block = setupWebview({
+      content: `
+        <div><p>{PRICE_BOX}</p></div>
+        <div><p><a href="#buylink">Buy now</a></p></div>
+      `,
+    });
+
+    await decorate(block);
+
+    expect(block.querySelector('.price-box')).toBeTruthy();
+    expect(block.querySelector('.prod-percent').textContent).toContain('off');
+    expect(block.querySelector('.prod-oldprice').dataset.storePrice).toBe('full');
+    expect(block.querySelector('.prod-newprice span').dataset.storePrice).toBe('discounted||full');
+    expect(block.querySelector('a[href*="#buylink"]').hasAttribute('data-store-buy-link')).toBe(true);
+    expect(block.querySelector('.webview-modal-offer')).toBeFalsy();
+  });
+
+  it('creates the discount modal only when the variation class is present', async () => {
+    const block = setupWebview({
+      sectionClass: 'discount-modal',
+      content: `
+        <div><h2>Thank you for your feedback!</h2></div>
+        <div><p>It really helps. <a href="https://example.com/details">Learn more</a>. As a sign of gratitude, here’s a special offer for you:</p></div>
+        <div><p>&lt;discounted-price-percentage&gt; {PRICE_BOX} applied on your next renewal</p></div>
+        <div><p>{under_price_text}</p><p>The offer is available if you choose to keep auto-renewal on.</p></div>
+        <div><p><a href="#buylink">I take the offer</a></p></div>
+        <div><p><a href="#dismiss">End auto renewal</a></p></div>
+      `,
+    });
+
+    await decorate(block);
+
+    expect(document.querySelector('.webview-wrapper').classList.contains('discount-modal')).toBe(true);
+    expect(block.querySelector('.webview-modal-offer')).toBeTruthy();
+    expect(block.querySelector('.webview-modal-product')).toBeFalsy();
+    expect(block.querySelector('.prod-oldprice')).toBeFalsy();
+    expect(block.querySelector('.prod-newprice')).toBeFalsy();
+    expect(block.querySelector('[data-store-buy-link]').textContent).toContain('I take the offer');
+    expect(block.querySelector('.webview-modal-dismiss').textContent).toContain('End auto renewal');
+    expect(block.querySelector('.webview-modal-dismiss').textContent).not.toContain('Learn more');
+    expect(block.querySelector('.prod-save').dataset.storeHide).toBe('no-price=discounted');
+    expect(block.querySelector('.prod-save').textContent).toContain('off');
+    expect(block.querySelector('.prod-save [data-store-discount="percentage"]')).toBeTruthy();
+    expect(block.querySelector('.webview-modal-offer-subtitle').textContent).toContain('applied on your next renewal');
+    expect(block.querySelector('.webview-modal-legal').textContent).toContain('keep auto-renewal on');
+  });
+
+  it('dismisses the modal from the secondary action and close button', async () => {
+    let block = setupWebview({
+      sectionClass: 'discount-modal',
+      content: `
+        <div><h2>Thank you for your feedback!</h2></div>
+        <div><p>Offer copy</p></div>
+        <div><p>Bitdefender Premium Security Individual {PRICE_BOX}</p></div>
+        <div><p><a href="#buylink">Take the offer</a></p></div>
+        <div><p><a href="#dismiss">No thanks</a></p></div>
+      `,
+    });
+
+    await decorate(block);
+    block.querySelector('.webview-modal-dismiss a').click();
+
+    expect(document.querySelector('.webview-wrapper')).toBeFalsy();
+
+    block = setupWebview({
+      sectionClass: 'discount-modal',
+      content: `
+        <div><h2>Thank you for your feedback!</h2></div>
+        <div><p>Offer copy</p></div>
+        <div><p>Bitdefender Premium Security Individual {PRICE_BOX}</p></div>
+        <div><p><a href="#buylink">Take the offer</a></p></div>
+      `,
+    });
+
+    await decorate(block);
+    block.querySelector('.webview-modal-close').click();
+
+    expect(document.querySelector('.webview-wrapper')).toBeFalsy();
+  });
+});
