@@ -608,12 +608,20 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   }
 
   .image-columns-container.animated .bd-hero-glass {
-    width: 328px;
+    width: 100%;
     margin-top: 0.5em;
   }
 
+  .image-columns-container.animated .bd-hero-glass.bd-hero-item-1 {
+    width: 232px!important;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 {
+    width: 328px;
+  }
+
   .image-columns-container.animated .block > div > div:last-of-type table {
-    width: 328px!important;
+    width: 100% !important;
   }
 
   .image-columns-container.animated .block > div > div:last-of-type > div:first-of-type table.bd-hero-item-same p {
