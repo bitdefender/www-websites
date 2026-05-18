@@ -603,7 +603,23 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
 @media (max-width: 550px) {
   .image-columns-container.animated {
-    height: 840px;
+    height: 925px;
+  }
+
+  .image-columns-container.animated .bd-hero-glass {
+    width: 100%;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table {
+    width: 100% !important;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 {
+    padding: 10px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 img {
+    display: none;
   }
 
   .image-columns-container.animated div.bd-hero-glass {
