@@ -162,23 +162,24 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 }
 
 .image-columns-container.animated .block > div > div:last-of-type table {
-  width: 330px;
+  width: 277px;
 }
 
 .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 {
   background: linear-gradient(75.99deg, #0059D6 1.46%, #338BFF 100%);
   color: white;
   top: 165px;
-  right: -2em;
+  right: -1em;
   bottom: auto;
   display: block;
   border-radius: 16px;
   opacity: 1;
-  padding: 14px 16px 14px 85px;
+  padding: 14px 16px 14px 60px;
   border-width: 1px;
 }
 
-.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 .icon {
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 img {
+  width: 28px;
   position: absolute;
   left: 16px;
 }
@@ -443,18 +444,14 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   position: absolute;
   bottom: -20px;
   right: 0;
-  transform: scale(0.82);
-  transform-origin: bottom right;
   z-index: 2;
 }
 
 .image-columns-container.animated .bd-hero-glass {
-  height: 200px!important;
+  height: 255px!important;
   position: relative;
   width: max-content;
   margin: auto 10px 10px auto;
-  transform: scale(0.9);
-  transform-origin: bottom right;
 }
 
 .image-columns-container.animated .bd-hero-glass--state {
@@ -555,8 +552,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
 @media (max-width: 767px) {
   .image-columns-container.animated .bd-hero-glass {
-    transform: scale(0.8)!important;
-    transform-origin: bottom right;
+    
   }
 
   .image-columns-container.animated .block > div > div:last-of-type > p:first-of-type {
@@ -583,7 +579,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   }
 
   .image-columns-container.animated .block > div > div:last-of-type table {
-    width: 330px!important;
+    width: 277px!important;
     right: 1em!important;
   }
 
