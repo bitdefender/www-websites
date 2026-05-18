@@ -608,7 +608,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
   .image-columns-container.animated .bd-hero-glass {
     width: 100%;
-    margin-top: 1em;
+    margin-top: 0.5em;
   }
 
   .image-columns-container.animated .block > div > div:last-of-type table {
