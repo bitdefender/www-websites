@@ -111,6 +111,7 @@
 .trusted-hero-container .video-wrapper video {
   min-width: 100%;
   min-height: 100%;
+  aspect-ratio: 16/9;
 }
 
 .video-modal-close {
