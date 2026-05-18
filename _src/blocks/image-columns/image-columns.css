@@ -478,7 +478,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   margin-top: 10px;
 }
 
-.image-columns-container.animated .bd-hero-glass .bd-hero-item-same::before, .image-columns-container.animated .bd-hero-glass.bd-hero-item-same::before{
+.image-columns-container.animated .bd-hero-glass .bd-hero-item-same::before, .image-columns-container.animated .bd-hero-glass.bd-hero-item-same::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -564,7 +564,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   }
 
   .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 {
-    width: 275px!important;
+    width: max-content !important;
     margin-top: 5em;
   }
 }
