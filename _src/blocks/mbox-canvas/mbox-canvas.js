@@ -63,6 +63,7 @@ async function createOfferParameters() {
   const feature = urlParams.get('feature');
   const language = urlParams.get('lang');
   const serviceId = urlParams.get('service_id');
+  const autoRenewal = urlParams.get('auto_renewal');
 
   if (feature) {
     parameters.feature = feature.replaceAll('_', '-');
@@ -78,6 +79,10 @@ async function createOfferParameters() {
       // search for segment in the url params
       parameters.segment = serviceIdSegment;
     }
+  }
+
+  if (autoRenewal) {
+    parameters.auto_renewal = autoRenewal;
   }
 
   return parameters;
