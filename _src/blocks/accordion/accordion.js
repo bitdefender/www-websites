@@ -1,14 +1,4 @@
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.30/';
-
-const getDsnBase = () => {
-  try {
-    const map = document.querySelector('script[type="importmap"]');
-    const imports = JSON.parse(map?.textContent || '{}').imports || {};
-    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
-  } catch {
-    return DSN_FALLBACK;
-  }
-};
+import { getDsnBase } from '../../scripts/utils/utils.js';
 
 const getSectionTitle = (block) => {
   const section = block.closest('.section');

@@ -1212,3 +1212,15 @@ export const wrapChildrenWithStoreContext = (element, {
   context.appendChild(product);
   element.appendChild(context);
 };
+
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.30/';
+
+export const getDsnBase = () => {
+  try {
+    const map = document.querySelector('script[type="importmap"]');
+    const imports = JSON.parse(map?.textContent || '{}').imports || {};
+    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
+  } catch {
+    return DSN_FALLBACK;
+  }
+};
