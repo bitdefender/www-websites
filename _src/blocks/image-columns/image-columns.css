@@ -603,7 +603,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
 @media (max-width: 550px) {
   .image-columns-container.animated {
-    height: 925px;
+    height: 950px;
   }
 
   .image-columns-container.animated .bd-hero-glass {
