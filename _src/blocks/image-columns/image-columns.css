@@ -608,12 +608,12 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   }
 
   .image-columns-container.animated .bd-hero-glass {
-    width: 100%;
+    width: 328px;
     margin-top: 0.5em;
   }
 
   .image-columns-container.animated .block > div > div:last-of-type table {
-    width: 100% !important;
+    width: 328px!important;
   }
 
   .image-columns-container.animated .block > div > div:last-of-type > div:first-of-type table.bd-hero-item-same p {
