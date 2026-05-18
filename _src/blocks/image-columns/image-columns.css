@@ -618,6 +618,21 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
   .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 {
     width: 328px;
+    padding: 10px 10px 10px 54px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 p strong {
+    font-size: 13px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 p {
+    font-size: 9.75px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same td p {
+    font-size: 10px!important;
+    padding: 4px;
+    margin-bottom: 5px;
   }
 
   .image-columns-container.animated .block > div > div:last-of-type table {
