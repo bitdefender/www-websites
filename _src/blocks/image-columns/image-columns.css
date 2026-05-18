@@ -604,7 +604,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
 @media (max-width: 550px) {
   .image-columns-container.animated {
-    height: 950px;
+    height: 854px;
   }
 
   .image-columns-container.animated .bd-hero-glass {
@@ -623,6 +623,8 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
   .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 p strong {
     font-size: 13px;
+    line-height: 15px;
+    margin-bottom: 5px;
   }
 
   .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 p {
@@ -647,6 +649,10 @@ main .image-columns.quotes > div > .image-columns-img-col img {
     padding: 7px;
     gap: 7px;
     margin: 7px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 {
+    height: max-content!important;
   }
 }
 
