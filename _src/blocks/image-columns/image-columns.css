@@ -618,6 +618,12 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   .image-columns-container.animated .block > div > div:last-of-type > div:first-of-type table.bd-hero-item-same p {
     font-size: 11px !important;
   }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same tr {
+    padding: 7px;
+    gap: 7px;
+    margin: 7px;
+  }
 }
 
 @media (min-width: 1400px) {
