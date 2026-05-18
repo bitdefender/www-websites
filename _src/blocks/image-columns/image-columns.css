@@ -551,10 +551,6 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 }
 
 @media (max-width: 767px) {
-  .image-columns-container.animated .bd-hero-glass {
-    
-  }
-
   .image-columns-container.animated .block > div > div:last-of-type > p:first-of-type {
     width: 100%;
   }
