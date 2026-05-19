@@ -51,8 +51,6 @@ export default function decorate(block) {
 
       if (parentSection.getAttribute('data-animation') && idx === 1) {
         const allImages = col.innerText.split(',').map((s) => s.trim());
-        console.log(allImages);
-
         col.innerHTML = '';
         col.classList.add('parallax-card');
 
