@@ -121,24 +121,6 @@ function replaceDiscountPercentageVariable(html = '') {
   ).replaceAll(discountPercentageMarkerPattern, discountPercentageHtml);
 }
 
-function getOfferCopy(block) {
-  const firstRow = [...block.children][0].innerHTML.trim();
-
-  let priceBox = [...block.children]
-    .find((child) => child.textContent.includes('{PRICEBOX_V2}'));
-
-  priceBox?.querySelector('h2')?.classList.add('webview-modal-discount');
-  priceBox = priceBox?.innerHTML.replaceAll('<p>{PRICEBOX_V2}</p>', '');
-
-  const offerSubtitle = replaceDiscountPercentageVariable(priceBox);
-  const thirdRow = [...block.children][2].innerHTML;
-
-  return {
-    body: firstRow,
-    offerSubtitle,
-    thirdRow,
-  };
-}
 function dismissModal(block) {
   const wrapper = block.closest('.webview-wrapper') || block;
   wrapper.remove();
@@ -148,11 +130,16 @@ function decorateDiscountModal(block) {
   const wrapper = block.closest('.webview-wrapper') || block.parentElement;
   wrapper?.classList.add('discount-modal');
 
-  const {
-    body,
-    offerSubtitle,
-    thirdRow,
-  } = getOfferCopy(block);
+  const firstRow = [...block.children][0].innerHTML.trim();
+
+  let priceBox = [...block.children]
+    .find((child) => child.textContent.includes('{PRICEBOX_V2}'));
+
+  priceBox?.querySelector('h2')?.classList.add('webview-modal-discount');
+  priceBox = priceBox?.innerHTML.replaceAll('<p>{PRICEBOX_V2}</p>', '');
+
+  priceBox = replaceDiscountPercentageVariable(priceBox);
+  const supportText = [...block.children][2].innerHTML;
 
   const buyLink = block.querySelector('a[href*="#buylink"]');
   const secondaryLink = block.querySelector('a[href*="https://localhost/dynamicupsell?view_action=close"]');
@@ -172,11 +159,11 @@ function decorateDiscountModal(block) {
   block.innerHTML = `
     <button class="webview-modal-close" type="button" aria-label="Close"></button>
     <div class="webview-modal-content">
-      <div class="webview-modal-copy">${body}</div>
+      <div class="webview-modal-copy">${firstRow}</div>
       <div class="webview-modal-offer">
-        ${offerSubtitle}
+        ${priceBox}
       </div>
-      <div class="webview-modal-legal">${thirdRow}</div>
+      <div class="webview-modal-text-bottom">${supportText}</div>
       <div class="webview-modal-actions">
         ${primaryAction}
         ${secondaryAction}
