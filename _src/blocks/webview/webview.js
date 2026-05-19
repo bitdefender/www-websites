@@ -130,23 +130,20 @@ function removeDiscountPercentageVariable(html) {
 }
 
 function getOfferCopy(block, saveText) {
-  const title = getFirstContent(block, 'h1, h2, h3, h4', 'Thank you for your feedback!');
+  const title = getFirstContent(block, 'h1, h2, h3, h4');
   const bodyHtml = [...block.querySelectorAll('p')]
     .find((paragraph) => !paragraph.closest('.button-container')
       && !paragraph.textContent.includes('{PRICE_BOX}')
-      && !paragraph.textContent.includes('{under_price_text}'))?.innerHTML.trim()
-    || 'It really helps. As a sign of gratitude, here’s a special offer for you:';
+      && !paragraph.textContent.includes('{under_price_text}'))?.innerHTML.trim() || '';
   const priceBox = [...block.children]
     .find((child) => child.textContent.includes('{PRICE_BOX}'));
   const offerSubtitle = removeDiscountPercentageVariable(priceBox?.innerHTML || '')
     .replaceAll('{PRICE_BOX}', '')
     .replace(/<\/?p>/g, '')
-    .trim()
-    || 'applied on your next renewal';
+    .trim();
   const legal = [...block.children]
     .find((child) => child.textContent.includes('{under_price_text}'))?.innerHTML
-    .replaceAll('{under_price_text}', '').trim()
-    || '<p>The offer is available if you choose to keep auto-renewal on.</p>';
+    .replaceAll('{under_price_text}', '').trim() || '';
 
   return {
     title,
@@ -187,9 +184,17 @@ function decorateDiscountModal(block, saveText) {
 
   const buyLink = block.querySelector('a[href*="#buylink"]');
   const secondaryLink = getSecondaryLink(block, buyLink);
-  const primaryText = buyLink?.textContent.trim() || 'I take the offer';
-  const secondaryText = secondaryLink?.textContent.trim() || 'End auto renewal';
+  const primaryText = buyLink?.textContent.trim() || '';
+  const secondaryText = secondaryLink?.textContent.trim() || '';
   const primaryHref = buyLink?.getAttribute('href') || '#buylink';
+  const primaryAction = buyLink ? `
+        <p class="button-container">
+          <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
+        </p>` : '';
+  const secondaryAction = secondaryLink ? `
+        <p class="button-container webview-modal-dismiss">
+          <a class="button secondary" href="#dismiss"><span class="button-text">${secondaryText}</span></a>
+        </p>` : '';
 
   block.innerHTML = `
     <button class="webview-modal-close" type="button" aria-label="Close"></button>
@@ -202,12 +207,8 @@ function decorateDiscountModal(block, saveText) {
       </div>
       <div class="webview-modal-legal">${legal}</div>
       <div class="webview-modal-actions">
-        <p class="button-container">
-          <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
-        </p>
-        <p class="button-container webview-modal-dismiss">
-          <a class="button secondary" href="#dismiss"><span class="button-text">${secondaryText}</span></a>
-        </p>
+${primaryAction}
+${secondaryAction}
       </div>
     </div>`;
 
