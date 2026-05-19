@@ -262,6 +262,7 @@ export async function detectModalButtons(main) {
     });
 
     link.removeAttribute('href');
+    link.setAttribute('location', originalHref);
   });
 }
 
