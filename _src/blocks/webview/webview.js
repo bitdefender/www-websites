@@ -106,40 +106,39 @@ function isDiscountModal(block) {
     || section?.classList.contains('discount-modal');
 }
 
-function getFirstContent(block, selector, fallback = '') {
-  const element = block.querySelector(selector);
-  return element?.innerHTML.trim() || fallback;
-}
-
 function getDiscountPercentageHtml() {
   return '<span class="prod-save" data-store-hide="no-price=discounted"> <span data-store-discount="percentage"></span></span>';
 }
 
-function replaceDiscountPercentageVariable(html) {
-  return html
-    .replace(/<discounted-price-percentage>(.*?)<\/discounted-price-percentage>/gis, `${getDiscountPercentageHtml()}$1`);
+function replaceDiscountPercentageVariable(html = '') {
+  const discountPercentageTagPattern = /(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)(.*?)(?:&#x3C;|&lt;|<)\/discounted-price-percentage(?:&gt;|>)/gis;
+  const discountPercentageMarkerPattern = /(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)/gi;
+  const discountPercentageHtml = getDiscountPercentageHtml();
+
+  return html.replaceAll(
+    discountPercentageTagPattern,
+    `${discountPercentageHtml}$1`,
+  ).replaceAll(discountPercentageMarkerPattern, discountPercentageHtml);
 }
 
 function getOfferCopy(block) {
-  const title = getFirstContent(block, 'h1, h2, h3, h4');
-  const bodyHtml = [...block.querySelectorAll('p')]
-    .find((paragraph) => !paragraph.closest('.button-container')
-      && !paragraph.textContent.includes('{PRICEBOX_V2}'));
-  const priceBox = [...block.children]
+  const firstRow = [...block.children][0].innerHTML.trim();
+
+  let priceBox = [...block.children]
     .find((child) => child.textContent.includes('{PRICEBOX_V2}'));
-  const offerSubtitle = priceBox?.innerHTML.trim() || '';
-  const legal = [...block.children]
-    .find((child) => child.textContent.includes('{under_price_text}'));
+
+  priceBox?.querySelector('h2')?.classList.add('webview-modal-discount');
+  priceBox = priceBox?.innerHTML.replaceAll('<p>{PRICEBOX_V2}</p>', '');
+
+  const offerSubtitle = replaceDiscountPercentageVariable(priceBox);
+  const thirdRow = [...block.children][2].innerHTML;
 
   return {
-    title,
-    body: bodyHtml,
-    offerDiscount: getDiscountPercentageHtml(),
-    offerSubtitle: replaceDiscountPercentageVariable(offerSubtitle),
-    legal: replaceDiscountPercentageVariable(legal),
+    body: firstRow,
+    offerSubtitle,
+    thirdRow,
   };
 }
-
 function dismissModal(block) {
   const wrapper = block.closest('.webview-wrapper') || block;
   wrapper.remove();
@@ -150,11 +149,9 @@ function decorateDiscountModal(block) {
   wrapper?.classList.add('discount-modal');
 
   const {
-    title,
     body,
-    offerDiscount,
     offerSubtitle,
-    legal,
+    thirdRow,
   } = getOfferCopy(block);
 
   const buyLink = block.querySelector('a[href*="#buylink"]');
@@ -175,13 +172,11 @@ function decorateDiscountModal(block) {
   block.innerHTML = `
     <button class="webview-modal-close" type="button" aria-label="Close"></button>
     <div class="webview-modal-content">
-      <h2>${title}</h2>
       <div class="webview-modal-copy">${body}</div>
       <div class="webview-modal-offer">
-        <div class="webview-modal-discount">${offerDiscount}</div>
-        <div class="webview-modal-offer-subtitle">${offerSubtitle}</div>
+        ${offerSubtitle}
       </div>
-      <div class="webview-modal-legal">${legal}</div>
+      <div class="webview-modal-legal">${thirdRow}</div>
       <div class="webview-modal-actions">
         ${primaryAction}
         ${secondaryAction}

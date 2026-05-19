@@ -217,12 +217,16 @@
     background: #f2fff8 url("./background.svg") center / cover no-repeat;
     border: 1px dashed #a3e1bf;
     border-radius: 8px;
+    color: #058840;
 }
 
-.webview-wrapper.discount-modal .webview-modal-discount,
-.webview-wrapper.discount-modal .webview-modal-offer-subtitle {
-    position: relative;
+.webview-wrapper.discount-modal .webview-modal-offer h2 {
     color: #058840;
+}
+
+.webview-wrapper.discount-modal .webview-modal-offer p {
+    font-size: 24px;
+    line-height: 30px;
 }
 
 .webview-wrapper.discount-modal .webview-modal-discount,
@@ -232,11 +236,6 @@
     font-size: 48px;
     font-weight: 600;
     line-height: 56px;
-}
-
-.webview-wrapper.discount-modal .webview-modal-offer-subtitle {
-    font-size: 24px;
-    line-height: 30px;
 }
 
 .webview-wrapper.discount-modal .webview-modal-legal {

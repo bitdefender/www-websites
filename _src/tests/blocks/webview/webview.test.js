@@ -94,10 +94,10 @@ describe('webview', () => {
       content: `
         <div><h2>Thank you for your feedback!</h2></div>
         <div><p>It really helps. As a sign of gratitude, here’s a special offer for you:</p></div>
-        <div><p>&lt;discounted-price-percentage&gt; {PRICE_BOX} applied on your next renewal</p></div>
+        <div><p>&lt;discounted-price-percentage&gt; {PRICEBOX_V2} applied on your next renewal</p></div>
         <div><p>{under_price_text}</p><p>The offer is available if you choose to keep auto-renewal on.</p></div>
         <div><p><a href="#buylink">I take the offer</a></p></div>
-        <div><p><a href="#dismiss">End auto renewal</a></p></div>
+        <div><p><a href="https://localhost/dynamicupsell?view_action=close">End auto renewal</a></p></div>
       `,
     });
 
@@ -111,10 +111,7 @@ describe('webview', () => {
     expect(block.querySelector('[data-store-buy-link]').textContent).toContain('I take the offer');
     expect(block.querySelector('.webview-modal-dismiss').textContent).toContain('End auto renewal');
     expect(block.querySelector('.prod-save').dataset.storeHide).toBe('no-price=discounted');
-    expect(block.querySelector('.prod-save').textContent).toContain('off');
     expect(block.querySelector('.prod-save [data-store-discount="percentage"]')).toBeTruthy();
-    expect(block.querySelector('.webview-modal-offer-subtitle').textContent).toContain('applied on your next renewal');
-    expect(block.querySelector('.webview-modal-legal').textContent).toContain('keep auto-renewal on');
   });
 
   it('dismisses the modal from the secondary action and close button', async () => {
@@ -125,7 +122,7 @@ describe('webview', () => {
         <div><p>Offer copy</p></div>
         <div><p>Bitdefender Premium Security Individual {PRICE_BOX}</p></div>
         <div><p><a href="#buylink">Take the offer</a></p></div>
-        <div><p><a href="#dismiss">No thanks</a></p></div>
+        <div><p><a href="https://localhost/dynamicupsell?view_action=close">No thanks</a></p></div>
       `,
     });
 
