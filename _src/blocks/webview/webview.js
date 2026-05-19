@@ -1,5 +1,35 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 
+export const BUNDLE_ID_MAPPING = {
+  bundleIds: {
+    'com.bitdefender.cl.av': 'av',
+    'com.bitdefender.cl.is': 'is',
+    'com.bitdefender.cl.tsmd': 'tsmd',
+    'com.bitdefender.fp': 'fp',
+    'com.bitdefender.premiumsecurity': 'ps',
+    'com.bitdefender.premiumsecurityplus': 'psp',
+    'com.bitdefender.soho': 'soho',
+    'com.bitdefender.avformac': 'mac',
+    'com.bitdefender.vpn': 'vpn',
+    'com.bitdefender.passwordmanager': 'pass',
+    'com.bitdefender.bms': 'bms',
+    'com.bitdefender.iosprotection': 'ios',
+    'com.bitdefender.dataprivacy': 'dip',
+    'com.bitdefender.tsmd.v2': 'ts_i',
+    'com.bitdefender.premiumsecurity.v2': 'ps_i',
+    'com.bitdefender.ultimatesecurityeu.v2': 'us_i',
+    'com.bitdefender.ultimatesecurityus.v2': 'us_pi',
+    'com.bitdefender.ultimatesecurityplusus.v2': 'us_pie',
+    'com.bitdefender.cl.avplus.v2': 'avpm',
+    'com.bitdefender.ultimatesecurityus': 'ultsec',
+    'com.bitdefender.securepass': 'secpass',
+    'com.bitdefender.vsb': 'vsb',
+    'com.bitdefender.ccp': 'sc',
+    'com.bitdefender.idtheftpremium': 'idtheftp',
+    'com.bitdefender.idtheftstandard': 'idthefts',
+  },
+};
+
 function getLanguage() {
   // Try to get the language from the path
   const langCountry = getLanguageCountryFromPath();
@@ -47,6 +77,25 @@ function setupStoreContext(block, product) {
   block.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
   block.setAttribute('data-store-department', 'consumer');
   block.setAttribute('data-store-event', 'product-loaded');
+}
+
+function getUrlBundleId() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const bundleId = urlParams.get('bundle_id')?.trim().toLowerCase();
+  return bundleId ? BUNDLE_ID_MAPPING.bundleIds[bundleId] : null;
+}
+
+function getUrlStoreOption() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const slots = urlParams.get('slots')?.trim();
+  const billingCycle = Number(urlParams.get('billing_cycle'));
+  const years = billingCycle / 365;
+
+  if (!slots || !Number.isInteger(years) || years <= 0) {
+    return null;
+  }
+
+  return `${slots}-${years}`;
 }
 
 function isDiscountModal(block) {
@@ -113,6 +162,17 @@ function dismissModal(block) {
   wrapper.remove();
 }
 
+function getSecondaryLink(block, buyLink) {
+  const links = [...block.querySelectorAll('a')].filter((link) => link !== buyLink);
+  return links.find((link) => {
+    const href = link.getAttribute('href') || '';
+    const text = link.textContent.trim().toLowerCase();
+    return href.includes('#dismiss')
+      || href.includes('#end-auto-renewal')
+      || text.includes('end auto renewal');
+  }) || links.filter((link) => link.closest('.button-container')).at(-1) || links.at(-1);
+}
+
 function decorateDiscountModal(block, saveText) {
   const wrapper = block.closest('.webview-wrapper') || block.parentElement;
   wrapper?.classList.add('discount-modal');
@@ -126,8 +186,7 @@ function decorateDiscountModal(block, saveText) {
   } = getOfferCopy(block, saveText);
 
   const buyLink = block.querySelector('a[href*="#buylink"]');
-  const secondaryLink = [...block.querySelectorAll('a')]
-    .find((link) => link !== buyLink);
+  const secondaryLink = getSecondaryLink(block, buyLink);
   const primaryText = buyLink?.textContent.trim() || 'I take the offer';
   const secondaryText = secondaryLink?.textContent.trim() || 'End auto renewal';
   const primaryHref = buyLink?.getAttribute('href') || '#buylink';
@@ -211,6 +270,14 @@ export default async function decorate(block) {
   } = section?.dataset || {};
 
   setupStoreContext(block, product);
+  const bundleId = getUrlBundleId();
+  if (bundleId) {
+    block.setAttribute('data-store-id', bundleId);
+  }
+  const storeOption = getUrlStoreOption();
+  if (storeOption) {
+    block.setAttribute('data-store-option', storeOption);
+  }
 
   if (isDiscountModal(block)) {
     decorateDiscountModal(block, saveText);
