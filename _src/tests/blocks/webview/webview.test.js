@@ -53,12 +53,47 @@ describe('webview', () => {
     expect(block.querySelector('.webview-modal-offer')).toBeFalsy();
   });
 
+  it('uses mapped bundle_id, slots, and billing_cycle url parameters for store context', async () => {
+    window.history.pushState(
+      {},
+      '',
+      '/en-us/consumer/webview/churn-flow?bundle_id=com.bitdefender.premiumsecurity.v2&slots=5&billing_cycle=730',
+    );
+    const block = setupWebview({
+      content: `
+        <div><p>{PRICE_BOX}</p></div>
+      `,
+    });
+
+    await decorate(block);
+
+    expect(block.dataset.storeId).toBe('ps_i');
+    expect(block.dataset.storeOption).toBe('5-2');
+  });
+
+  it('keeps the authored store option when slots or billing_cycle are invalid', async () => {
+    window.history.pushState(
+      {},
+      '',
+      '/en-us/consumer/webview/churn-flow?slots=5&billing_cycle=400',
+    );
+    const block = setupWebview({
+      content: `
+        <div><p>{PRICE_BOX}</p></div>
+      `,
+    });
+
+    await decorate(block);
+
+    expect(block.dataset.storeOption).toBe('5-1');
+  });
+
   it('creates the discount modal only when the variation class is present', async () => {
     const block = setupWebview({
       sectionClass: 'discount-modal',
       content: `
         <div><h2>Thank you for your feedback!</h2></div>
-        <div><p>It really helps. <a href="https://example.com/details">Learn more</a>. As a sign of gratitude, here’s a special offer for you:</p></div>
+        <div><p>It really helps. As a sign of gratitude, here’s a special offer for you:</p></div>
         <div><p>&lt;discounted-price-percentage&gt; {PRICE_BOX} applied on your next renewal</p></div>
         <div><p>{under_price_text}</p><p>The offer is available if you choose to keep auto-renewal on.</p></div>
         <div><p><a href="#buylink">I take the offer</a></p></div>
@@ -75,7 +110,6 @@ describe('webview', () => {
     expect(block.querySelector('.prod-newprice')).toBeFalsy();
     expect(block.querySelector('[data-store-buy-link]').textContent).toContain('I take the offer');
     expect(block.querySelector('.webview-modal-dismiss').textContent).toContain('End auto renewal');
-    expect(block.querySelector('.webview-modal-dismiss').textContent).not.toContain('Learn more');
     expect(block.querySelector('.prod-save').dataset.storeHide).toBe('no-price=discounted');
     expect(block.querySelector('.prod-save').textContent).toContain('off');
     expect(block.querySelector('.prod-save [data-store-discount="percentage"]')).toBeTruthy();

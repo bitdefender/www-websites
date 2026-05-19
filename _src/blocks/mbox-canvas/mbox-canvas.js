@@ -57,7 +57,7 @@ async function extractServiceId(serviceId) {
   return null;
 }
 
-async function createOfferParameters() {
+export async function createOfferParameters() {
   const parameters = {};
   const urlParams = new URLSearchParams(window.location.search);
   const feature = urlParams.get('feature');
@@ -88,7 +88,7 @@ async function createOfferParameters() {
   return parameters;
 }
 
-function createOfferProfileParameters(parameters) {
+export function createOfferProfileParameters(parameters) {
   const profileParameters = {};
   Object.entries(parameters).forEach(([key, value]) => {
     profileParameters[`profile.${key}`] = value;
