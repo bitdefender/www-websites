@@ -40,30 +40,29 @@ export default function decorate(block) {
         bdHeroStates(col).init();
       }
 
-      if ((parentSection.classList.contains('columnvideo') && idx === 1) || col.innerText.includes('.mp4')) {
+      if (col.innerText.includes('.mp4') && idx === 1) {
         if (col.innerText.includes('.mp4')) col.classList.add('mp4video');
         const colVideo = parentSection.getAttribute('data-video') || col.innerText;
-        if (parentSection.getAttribute('data-video')) {
-          col.innerHTML = `<video autoplay loop muted playsinline>
-            <source src="/_src/images/${colVideo}" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>`;
-        }
+        col.innerHTML = `<video autoplay loop muted playsinline>
+          <source src="/_src/images/${colVideo}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>`;
+      }
 
-        if (parentSection.getAttribute('data-animation')) {
-          const allImages = col.innerText.split(',').map((s) => s.trim());
+      if (parentSection.getAttribute('data-animation') && idx === 1) {
+        const allImages = col.innerText.split(',').map((s) => s.trim());
+        console.log(allImages);
 
-          col.innerHTML = '';
-          col.classList.add('parallax-card');
+        col.innerHTML = '';
+        col.classList.add('parallax-card');
 
-          col.innerHTML = allImages.map((icon, k) => `
+        col.innerHTML = allImages.map((icon, k) => `
             <div class="parallax-icon parallax-pos-${k + 1}" data-about-id="${k}">
               <img class="parallax-icon-40" src="/common/icons/${icon}.svg" alt="">
             </div>
           `).join('');
 
-          initAnimations(col);
-        }
+        initAnimations(col);
       }
 
       const pic = col.querySelector('picture');
