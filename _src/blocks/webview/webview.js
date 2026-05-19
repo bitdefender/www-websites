@@ -111,46 +111,32 @@ function getFirstContent(block, selector, fallback = '') {
   return element?.innerHTML.trim() || fallback;
 }
 
-function getDiscountPercentageHtml(saveText) {
-  return `<span class="prod-save" data-store-hide="no-price=discounted">${saveText ?? ''} <span data-store-discount="percentage"></span></span>`;
+function getDiscountPercentageHtml() {
+  return '<span class="prod-save" data-store-hide="no-price=discounted"> <span data-store-discount="percentage"></span></span>';
 }
 
-function replaceDiscountPercentageVariable(html, saveText) {
+function replaceDiscountPercentageVariable(html) {
   return html
-    .replace(/<discounted-price-percentage>(.*?)<\/discounted-price-percentage>/gis, `${getDiscountPercentageHtml(saveText)}$1`)
-    .replace(/&lt;discounted-price-percentage&gt;/gi, getDiscountPercentageHtml(saveText))
-    .replace(/<discounted-price-percentage>/gi, getDiscountPercentageHtml(saveText));
+    .replace(/<discounted-price-percentage>(.*?)<\/discounted-price-percentage>/gis, `${getDiscountPercentageHtml()}$1`);
 }
 
-function removeDiscountPercentageVariable(html) {
-  return html
-    .replace(/<discounted-price-percentage>(.*?)<\/discounted-price-percentage>/gis, '$1')
-    .replace(/&lt;discounted-price-percentage&gt;/gi, '')
-    .replace(/<discounted-price-percentage>/gi, '');
-}
-
-function getOfferCopy(block, saveText) {
+function getOfferCopy(block) {
   const title = getFirstContent(block, 'h1, h2, h3, h4');
   const bodyHtml = [...block.querySelectorAll('p')]
     .find((paragraph) => !paragraph.closest('.button-container')
-      && !paragraph.textContent.includes('{PRICE_BOX}')
-      && !paragraph.textContent.includes('{under_price_text}'))?.innerHTML.trim() || '';
+      && !paragraph.textContent.includes('{PRICEBOX_V2}'));
   const priceBox = [...block.children]
-    .find((child) => child.textContent.includes('{PRICE_BOX}'));
-  const offerSubtitle = removeDiscountPercentageVariable(priceBox?.innerHTML || '')
-    .replaceAll('{PRICE_BOX}', '')
-    .replace(/<\/?p>/g, '')
-    .trim();
+    .find((child) => child.textContent.includes('{PRICEBOX_V2}'));
+  const offerSubtitle = priceBox?.innerHTML.trim() || '';
   const legal = [...block.children]
-    .find((child) => child.textContent.includes('{under_price_text}'))?.innerHTML
-    .replaceAll('{under_price_text}', '').trim() || '';
+    .find((child) => child.textContent.includes('{under_price_text}'));
 
   return {
     title,
-    body: removeDiscountPercentageVariable(bodyHtml),
-    offerDiscount: getDiscountPercentageHtml(saveText),
-    offerSubtitle: replaceDiscountPercentageVariable(offerSubtitle, saveText),
-    legal: replaceDiscountPercentageVariable(legal, saveText),
+    body: bodyHtml,
+    offerDiscount: getDiscountPercentageHtml(),
+    offerSubtitle: replaceDiscountPercentageVariable(offerSubtitle),
+    legal: replaceDiscountPercentageVariable(legal),
   };
 }
 
@@ -159,18 +145,7 @@ function dismissModal(block) {
   wrapper.remove();
 }
 
-function getSecondaryLink(block, buyLink) {
-  const links = [...block.querySelectorAll('a')].filter((link) => link !== buyLink);
-  return links.find((link) => {
-    const href = link.getAttribute('href') || '';
-    const text = link.textContent.trim().toLowerCase();
-    return href.includes('#dismiss')
-      || href.includes('#end-auto-renewal')
-      || text.includes('end auto renewal');
-  }) || links.filter((link) => link.closest('.button-container')).at(-1) || links.at(-1);
-}
-
-function decorateDiscountModal(block, saveText) {
+function decorateDiscountModal(block) {
   const wrapper = block.closest('.webview-wrapper') || block.parentElement;
   wrapper?.classList.add('discount-modal');
 
@@ -180,10 +155,11 @@ function decorateDiscountModal(block, saveText) {
     offerDiscount,
     offerSubtitle,
     legal,
-  } = getOfferCopy(block, saveText);
+  } = getOfferCopy(block);
 
   const buyLink = block.querySelector('a[href*="#buylink"]');
-  const secondaryLink = getSecondaryLink(block, buyLink);
+  const secondaryLink = block.querySelector('a[href*="https://localhost/dynamicupsell?view_action=close"]');
+
   const primaryText = buyLink?.textContent.trim() || '';
   const secondaryText = secondaryLink?.textContent.trim() || '';
   const primaryHref = buyLink?.getAttribute('href') || '#buylink';
@@ -207,8 +183,8 @@ function decorateDiscountModal(block, saveText) {
       </div>
       <div class="webview-modal-legal">${legal}</div>
       <div class="webview-modal-actions">
-${primaryAction}
-${secondaryAction}
+        ${primaryAction}
+        ${secondaryAction}
       </div>
     </div>`;
 
@@ -281,7 +257,7 @@ export default async function decorate(block) {
   }
 
   if (isDiscountModal(block)) {
-    decorateDiscountModal(block, saveText);
+    decorateDiscountModal(block);
   } else {
     decorateDefaultWebview(block, product, saveText);
   }
