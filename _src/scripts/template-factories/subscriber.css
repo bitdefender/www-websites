@@ -1898,7 +1898,7 @@ main .subscriber .section {
     }
 
     .subscriber .questions-answers-container .default-content-wrapper h3 {
-        font-weight: 500;
+        font-weight: 600;
         font-size: 40px;
         line-height: 40px;
     }
@@ -2717,7 +2717,7 @@ main .subscriber .section {
     }
 
     .subscriber #has4columns .default-content-wrapper h3 {
-        font-weight: 500;
+        font-weight: 600;
         font-size: 32px;
         line-height: 38.4px;
     }
