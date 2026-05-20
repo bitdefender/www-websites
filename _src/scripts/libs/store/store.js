@@ -422,7 +422,6 @@ export class Product {
 		const yearsOption = devicesOption && devicesOption[years];
 
 		if (!yearsOption) { return null; }
-
 		const option = new ProductOption({
 			price: Number(Number(yearsOption.price).toFixed(2)),
 			priceDiscounted: Number(Number(yearsOption.discount?.discounted_price).toFixed(2)),
@@ -436,7 +435,7 @@ export class Product {
 			department: this.department,
 			devices,
 			subscription: Constants.PRODUCT_ID_MAPPINGS[this.id].isMonthlyProduct ? 1 : years * 12,
-			avangateId: this.avangateId,
+			avangateId: this.options[devices][years]?.avangateId ?? this.avangateId,
 			promotion: this.promotion,
 			campaignType: this.campaignType,
 			variations: this.variations
@@ -766,7 +765,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariations(productId, campaign, useGeoIpPricing = false) {
-		let locale = page.locale;
+		let locale = page.locale.includes('global') ? 'en-us' : page.locale;
 		if (useGeoIpPricing) {
 			locale = await user.locale;
 		}
@@ -866,7 +865,8 @@ class Vlaicu {
 				variation: {
 					variation_name: `${devices_no}u-${yearsSubscription}y`,
 					years: yearsSubscription,
-				}
+				},
+				avangateId: productVariation.verifoneProductId || null,
 			}
 
 			if (productVariation.discountAmount > 0) {
