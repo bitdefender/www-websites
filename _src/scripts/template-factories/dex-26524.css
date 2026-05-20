@@ -5,6 +5,7 @@
     --background-light-blue-color: #f0f7ff;
     --tab-header-color-blue: #006dff;
     --background-blue: #006dff;
+    --color-highlight-blue: #006dff;
 
 
     /* Font family */
@@ -628,14 +629,14 @@
                 left: var(--size-0);
                 top: var(--size-2);
                 position: absolute;
-                content: url("/_src/icons/plus-sharp-regular.svg");
+                content: url("/_src/icons/minus-sharp-regular.svg");
                 filter: invert(21%) sepia(100%) saturate(3034%) hue-rotate(210deg) brightness(99%) contrast(102%);
             }
         }
 
         .show-less-btn {
             &::after {
-                content: url("/_src/icons/minus-sharp-regular.svg");
+                content: url("/_src/icons/plus-sharp-regular.svg");
                 filter: invert(21%) sepia(100%) saturate(3034%) hue-rotate(210deg) brightness(99%) contrast(102%);
             }
         }
@@ -643,9 +644,13 @@
 
     .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists {
         margin-top: var(--size-32);
-        display: none;
+        display: block;
         overflow: visible;
         transition: max-height 0.3s ease;
+
+        &.expanded {
+            display: none !important;
+        }
 
         ul li {
             font-family: 'IBM Plex Sans', sans-serif !important;
@@ -1208,6 +1213,7 @@
                 font-size: var(--heading-font-size-xs);
                 line-height: var(--size-22);
                 margin-bottom: var(--size-30);
+                font-weight: 500;
                 text-align: left;
 
                 &:first-of-type {
@@ -1218,6 +1224,8 @@
             > p {
                 font-size: var(--body-font-size-xl);
                 line-height: var(--size-23);
+                margin-top: 1em;
+                margin-bottom: 1em;
 
                 &:first-of-type {
                     margin-bottom: var(--size-0);
@@ -1253,6 +1261,7 @@
 
                     li {
                         text-align: center;
+                        list-style: none;
 
                         &::before {
                             position: absolute;

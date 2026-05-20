@@ -5,6 +5,7 @@ import {
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
+  CdpEvent,
 } from '@repobit/dex-data-layer';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
@@ -231,6 +232,7 @@ export async function createModal(path, template, stopAutomaticRefresh) {
 
 export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
+    const originalHref = link.getAttribute('href');
     link.addEventListener('click', async (e) => {
       e.preventDefault();
       const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
@@ -238,7 +240,7 @@ export async function detectModalButtons(main) {
       // if we wish for the button to not generate a new modal everytime
       if (stopAutomaticModalRefresh) {
         // we use the last part of the link to identify the modals
-        const modalClass = link.href.split('/').pop();
+        const modalClass = originalHref.split('/').pop();
 
         // check if the modal exists in the page
         const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
@@ -250,7 +252,7 @@ export async function detectModalButtons(main) {
       }
 
       // generate new modal
-      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
+      const modalContainer = await createModal(originalHref, undefined, stopAutomaticModalRefresh);
       document.body.append(modalContainer);
       await StoreResolver.resolve(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
@@ -258,6 +260,9 @@ export async function detectModalButtons(main) {
       });
       adobeMcAppendVisitorId('.modal-container');
     });
+
+    link.removeAttribute('href');
+    link.setAttribute('location', originalHref);
   });
 }
 
@@ -652,6 +657,24 @@ function eventOnDropdownSlider() {
   });
 }
 
+async function setIcidParameter(selector, value, mboxName, manualIcid = null) {
+  const validElements = document.querySelectorAll(selector);
+  if (validElements.length === 0) {
+    return;
+  }
+
+  const targetCampaign = (await target.getOffers({ mboxNames: mboxName }))?.campaign;
+
+  validElements.forEach((element) => {
+    const url = new URL(element.href);
+    if (!url) return;
+    const cleanPath = element.href.split('?')[0];
+    const campaignParam = targetCampaign || manualIcid || cleanPath.split('/').pop();
+    url.searchParams.set('icid', `${value}${campaignParam}`);
+    element.href = url.toString();
+  });
+}
+
 function initialiseSentry() {
   window.sentryOnLoad = () => {
     window.Sentry.init({
@@ -712,6 +735,16 @@ async function loadPage() {
   }
 
   await loadEager(document);
+
+  const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
+    .find((selector) => document.querySelector(selector));
+  const newsBarSection = document.querySelector(newsBarSectionSelector);
+
+  if (newsBarSection) {
+    const { manualIcid } = newsBarSection.dataset || {};
+    setIcidParameter(`${newsBarSectionSelector} a`, 'link|c|ribbon|', 'newsBarCampaign-mbox', manualIcid);
+  }
+
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
@@ -737,20 +770,11 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
-  // eslint-disable-next-line import/no-unresolved
-  // const fpPromise = import('https://fpjscdn.net/v3/V9XgUXnh11vhRvHZw4dw')
-  //   .then((FingerprintJS) => FingerprintJS.load({
-  //     region: 'eu',
-  //   }));
 
-  // Get the visitorId when you need it.
-  // await fpPromise
-  //   .then((fp) => fp.get())
-  //   .then((result) => {
-  //     const { visitorId } = result;
-  //     AdobeDataLayerService.push(new VisitorIdEvent(visitorId));
-  //   });
-  await target.sendCdpData();
+  const cdpData = await target.cdpData;
+  if (cdpData) {
+    AdobeDataLayerService.push(new CdpEvent(cdpData));
+  }
 
   if (!window.BD.loginAttempted) {
     AdobeDataLayerService.push(new PageLoadedEvent());

@@ -202,6 +202,7 @@ function initLottieAnimations(block) {
   }
 }
 
+let count = 0;
 export default function decorate(block) {
   const parentSection = block.closest('.section');
   const {
@@ -220,31 +221,33 @@ export default function decorate(block) {
   }
 
   // setup image columns
-  [...block.children].forEach((row) => {
+  [...block.children].forEach((row, idxRow) => {
     [...row.children].forEach((col) => {
       const pic = col.querySelector('picture');
       if (pic) {
         const picWrapper = pic.closest('div');
         if (picWrapper && picWrapper.children.length === 1) {
           // picture is only content in column
-          picWrapper.classList.add('columns-img-col');
+          picWrapper.classList.add('columns-img-col', 'columns-col');
         }
       } else {
         const children = [...row.children];
 
         if (children.length === 1) {
-          col.closest('div').classList.add('columns-title-col');
+          col.closest('div').classList.add('columns-title-col', 'columns-col');
         } else {
           const firstParentIndex = children.indexOf(col.closest('div'));
 
-          col.closest('div').classList.add('columns-text-col');
+          col.closest('div').classList.add('columns-text-col', 'columns-col');
           if (firstParentIndex) {
-            col.closest('div').classList.add('columns-right-col');
+            col.closest('div').classList.add('columns-right-col', 'columns-col');
           } else {
-            col.closest('div').classList.add('columns-left-col');
+            col.closest('div').classList.add('columns-left-col', 'columns-col');
           }
         }
       }
+
+      renderNanoBlocks(col, undefined, idxRow);
     });
   });
 
@@ -342,8 +345,8 @@ export default function decorate(block) {
 
       leftCol.innerHTML = `
         <div class="yt-preview">
-          <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
-          <button class="yt-play-btn"></button>
+          <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" alt="Bitdefender">
+          <button class="yt-play-btn">Play</button>
         </div>
       `;
 
@@ -375,8 +378,6 @@ export default function decorate(block) {
     /* fallback */
     leftCol.innerHTML = decoded;
   }
-
-  renderNanoBlocks(parentSection, undefined, undefined, block);
 
   if (parentSection.classList.contains('chat-options')) {
     const cards = block.querySelectorAll('.columns > div > div');
@@ -479,6 +480,34 @@ export default function decorate(block) {
     if (content.startsWith('https://www.youtube.com/embed/')) {
       videoP.classList.add('iframe');
       cols[1].querySelector('p').innerHTML = `<iframe width="100%" height="232" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+    }
+  }
+
+  // columns as tabs
+  if (parentSection.classList.contains('columns-as-tabs')) {
+    count += 1;
+
+    const firstColumnPrev = parentSection.querySelectorAll('div.columns-wrapper:first-of-type .columns-text-col');
+
+    // set up active the prev
+    if (count === 1 && firstColumnPrev) firstColumnPrev[0].classList.add('active');
+
+    // set up the icons tabs
+    if (count === 2) {
+      const columnsIcons = block.querySelectorAll('.columns-col');
+      const firstColumnsIcon = columnsIcons[0];
+      if (firstColumnsIcon) firstColumnsIcon.classList.add('active');
+
+      columnsIcons.forEach((item, k) => {
+        item.addEventListener('click', () => {
+          columnsIcons.forEach((icon) => icon.classList.remove('active'));
+          item.classList.add('active');
+
+          // set up the prev
+          firstColumnPrev.forEach((prev) => prev.classList.remove('active'));
+          if (firstColumnPrev[k]) firstColumnPrev[k].classList.add('active');
+        });
+      });
     }
   }
 
