@@ -125,6 +125,7 @@
     border-color: black;
 }
 
+/* stylelint-disable no-descending-specificity */
 .webview-wrapper.discount-modal {
     max-width: 640px;
     padding: 20px;
@@ -303,6 +304,136 @@
     background: #fff;
 }
 
+.webview-wrapper.churn-thank-you-v1 {
+    max-width: 640px;
+    padding: 20px;
+    background: transparent;
+    font-family: Roboto, "Segoe UI", Arial, sans-serif;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    max-width: 600px;
+    min-height: 484px;
+    padding: 64px 44px 44px;
+    margin: 0 auto;
+    overflow: hidden;
+    color: #384357;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgb(7 20 45 / 9%);
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-modal-close::before,
+.webview-wrapper.churn-thank-you-v1 .webview-modal-close::after {
+    position: absolute;
+    top: 8px;
+    left: 1px;
+    width: 16px;
+    height: 2px;
+    content: "";
+    background: #07142d;
+    border-radius: 1px;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-modal-close::before {
+    transform: rotate(45deg);
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-modal-close::after {
+    transform: rotate(-45deg);
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 240px;
+    height: 184px;
+    margin-bottom: 32px;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-image img {
+    width: 240px;
+    max-width: 100%;
+    height: 184px;
+    object-fit: contain;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-title {
+    max-width: 452px;
+    margin: 0 0 15px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28px;
+    color: #07142d;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-copy {
+    max-width: 452px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 22px;
+    color: #384357;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-copy p {
+    margin: 0;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-action {
+    align-self: flex-end;
+    margin: auto 0 0;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview .button {
+    width: 106px;
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    background-color: #0f6aff;
+    border-color: #0f6aff;
+    border-radius: 4px;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview .button:hover {
+    background-color: #005eff;
+    border-color: #005eff;
+}
+
+.webview-wrapper.churn-thank-you-v1.dark-mode {
+    background: transparent;
+}
+
+.webview-wrapper.churn-thank-you-v1.dark-mode .webview {
+    background: #fff;
+}
+
 @media (width <= 600px) {
     .webview-wrapper.discount-modal {
         padding: 12px;
@@ -333,4 +464,35 @@
         font-size: 20px;
         line-height: 26px;
     }
+
+    .webview-wrapper.churn-thank-you-v1 {
+        padding: 12px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview {
+        min-height: auto;
+        padding: 44px 20px 32px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-image {
+        width: 200px;
+        height: 154px;
+        margin-bottom: 24px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-image img {
+        width: 200px;
+        height: 154px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-action {
+        align-self: stretch;
+        width: 100%;
+        margin-top: 32px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview .button {
+        width: 100%;
+    }
 }
+/* stylelint-enable no-descending-specificity */
