@@ -602,7 +602,7 @@
   display: block;
 }
 
-.creators .columns-container a.button, .creators .columns-container a.button:any-link, .creators a.button:any-link {
+.creators .columns-container a.button, .creators .columns-container a.button:any-link, .creators a.button {
   height: auto;
   background: #E72325 0% 0% no-repeat padding-box;
   border-radius: 30px;
@@ -613,11 +613,11 @@
   color: white;
 }
 
-.creators a.button:any-link:hover {
+.creators a.button:hover, .creators .columns-container a.button:hover {
   color: white;
 }
 
-.creators a.button:any-link::after, .creators a.button:any-link:hover::after {
+.creators a.button::after, .creators a.button:hover::after, .creators .columns-container a.button::after, .creators .columns-container a.button:hover::after {
   color: white;
   background-color: white;
 }
