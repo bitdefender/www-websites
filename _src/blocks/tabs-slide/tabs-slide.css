@@ -79,30 +79,42 @@
     top: 5px;
     bottom: 5px;
     width: 195px;
-    background-color: #007bff;
+    background-color: transparent;
     border-radius: 6px;
     transition: transform 0.4s ease, background-color 0.4s ease;
     z-index: 1;
 }
 
-.spp-slider.without-active .tab-slider {
+.spp-slider.with-active .tab-slider {
     transform: translateX(calc(260px));
     background-color: #007bff;
+    color: white;
 }
 
-.spp-slider.with-active .tab-slider {
+.spp-slider.without-active .tab-slider {
     transform: translateX(0);
     background-color: red;
+    color: white;
+}
+
+.spp-slider.with-active .tab.active[data-tab="with"] {
+    color: white;
+}
+
+.spp-slider.without-active .tab.active[data-tab="without"] {
+    color: white;
 }
 
 .tabs-slide-container[data-reversedtabs="yes"] .spp-slider.without-active .tab-slider {
     transform: translateX(calc(260px));
     background-color: red;
+    color: white;
 }
 
 .tabs-slide-container[data-reversedtabs="yes"] .spp-slider.with-active .tab-slider {
     transform: translateX(0);
     background-color: #007bff;
+    color: white;
 }
 
 .spp-slider .slider-container {
