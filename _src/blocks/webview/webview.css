@@ -46,6 +46,7 @@
     border-color: #006eff;
     color: white;
     font-size: 14px;
+    max-width: 100%;
     width: 264px;
     justify-content: center;
 }
@@ -90,8 +91,9 @@
 }
 
 .webview-wrapper .webview .prod-newprice {
-    font: normal normal bold 24px / 30px;
     font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
     line-height: 0.7;
 }
 
@@ -126,19 +128,17 @@
 }
 
 /* stylelint-disable no-descending-specificity */
-.webview-wrapper.discount-modal {
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) {
     max-width: 640px;
     padding: 20px;
     background: transparent;
     font-family: Roboto, "Segoe UI", Arial, sans-serif;
 }
 
-.webview-wrapper.discount-modal .webview {
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview {
     position: relative;
-    box-sizing: border-box;
     max-width: 600px;
     min-height: 484px;
-    padding: 48px 48px 32px;
     margin: 0 auto;
     overflow: hidden;
     color: #384357;
@@ -147,23 +147,27 @@
     box-shadow: 0 0 20px rgb(7 20 45 / 9%);
 }
 
-.webview-wrapper.discount-modal .webview-modal-close {
+.webview-wrapper.discount-modal .webview {
+    padding: 48px 48px 32px;
+}
+
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 18px;
-    height: 18px;
+    top: 9px;
+    right: 9px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     cursor: pointer;
     background: transparent;
     border: 0;
 }
 
-.webview-wrapper.discount-modal .webview-modal-close::before,
-.webview-wrapper.discount-modal .webview-modal-close::after {
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close::before,
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close::after {
     position: absolute;
-    top: 8px;
-    left: 1px;
+    top: 15px;
+    left: 8px;
     width: 16px;
     height: 2px;
     content: "";
@@ -171,12 +175,17 @@
     border-radius: 1px;
 }
 
-.webview-wrapper.discount-modal .webview-modal-close::before {
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close::before {
     transform: rotate(45deg);
 }
 
-.webview-wrapper.discount-modal .webview-modal-close::after {
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close::after {
     transform: rotate(-45deg);
+}
+
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close:focus-visible {
+    outline: 2px solid #0f6aff;
+    outline-offset: 2px;
 }
 
 .webview-wrapper.discount-modal .webview-modal-content {
@@ -192,6 +201,7 @@
     font-weight: 700;
     line-height: 28px;
     color: #07142d;
+    text-wrap: balance;
 }
 
 .webview-wrapper.discount-modal .webview-modal-copy {
@@ -200,6 +210,8 @@
     font-size: 16px;
     line-height: 22px;
     color: #384357;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
 }
 
 .webview-wrapper.discount-modal .webview-modal-copy p {
@@ -208,7 +220,6 @@
 
 .webview-wrapper.discount-modal .webview-modal-offer {
     position: relative;
-    box-sizing: border-box;
     width: 100%;
     max-width: 504px;
     min-height: 142px;
@@ -228,6 +239,7 @@
 .webview-wrapper.discount-modal .webview-modal-offer p {
     font-size: 24px;
     line-height: 30px;
+    text-wrap: balance;
 }
 
 .webview-wrapper.discount-modal .webview-modal-discount,
@@ -246,6 +258,8 @@
     font-size: 16px;
     line-height: 22px;
     color: #384357;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
 }
 
 .webview-wrapper.discount-modal .webview-modal-text-bottom p {
@@ -304,58 +318,9 @@
     background: #fff;
 }
 
-.webview-wrapper.churn-thank-you-v1 {
-    max-width: 640px;
-    padding: 20px;
-    background: transparent;
-    font-family: Roboto, "Segoe UI", Arial, sans-serif;
-}
-
 .webview-wrapper.churn-thank-you-v1 .webview {
-    position: relative;
-    box-sizing: border-box;
     display: flex;
-    max-width: 600px;
-    min-height: 484px;
     padding: 64px 44px 44px;
-    margin: 0 auto;
-    overflow: hidden;
-    color: #384357;
-    background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 0 20px rgb(7 20 45 / 9%);
-}
-
-.webview-wrapper.churn-thank-you-v1 .webview-modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 18px;
-    height: 18px;
-    padding: 0;
-    cursor: pointer;
-    background: transparent;
-    border: 0;
-}
-
-.webview-wrapper.churn-thank-you-v1 .webview-modal-close::before,
-.webview-wrapper.churn-thank-you-v1 .webview-modal-close::after {
-    position: absolute;
-    top: 8px;
-    left: 1px;
-    width: 16px;
-    height: 2px;
-    content: "";
-    background: #07142d;
-    border-radius: 1px;
-}
-
-.webview-wrapper.churn-thank-you-v1 .webview-modal-close::before {
-    transform: rotate(45deg);
-}
-
-.webview-wrapper.churn-thank-you-v1 .webview-modal-close::after {
-    transform: rotate(-45deg);
 }
 
 .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-content {
@@ -390,6 +355,7 @@
     font-weight: 700;
     line-height: 28px;
     color: #07142d;
+    text-wrap: balance;
 }
 
 .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-copy {
@@ -398,6 +364,8 @@
     font-size: 16px;
     line-height: 22px;
     color: #384357;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
 }
 
 .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-copy p {
