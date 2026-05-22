@@ -141,16 +141,16 @@ For all other environments, you need to know the GitHub owner and repository nam
 
 With this information, you can construct URLs for the preview environment (same content as `localhost:3000`) and the production environment (same content as the live website, approved by authors)
 
-- **Production Preview**: `https://main--{repo}--{owner}.aem.page/`
-- **Production Live**: `https://main--{repo}--{owner}.aem.live/`
-- **Feature Preview**: `https://{branch}--{repo}--{owner}.aem.page/`
+- **Production Preview**: `https://main--www-websites--bitdefender.aem.page/.aem.page/`
+- **Production Live**: `https://main--www-websites--bitdefender.aem.page/.aem.live/`
+- **Feature Preview**: `https://{branch}--www-websites--bitdefender.aem.page/`
 
 ### Publishing Process
 1. Push changes to a feature branch
 2. AEM Code Sync automatically processes changes making them available on feature preview environment for that branch
 3. Run a PageSpeed Insights check at https://developers.google.com/speed/pagespeed/insights/?url=YOUR_URL against the feature preview URL and fix any issues. Target a score of 100
 4. Open a pull request to merge changes to `main`
-   1. in the PR description, include a link to `https://{branch}--{repo}--{owner}.aem.page/{path}` with a path to a file that illustrates the change you've made. This is the same path you have been testing with locally. WITHOUT THIS YOUR PR WILL BE REJECTED
+   1. in the PR description, include a link to `https://{branch}--www-websites--bitdefender.aem.page/{path}` with a path to a file that illustrates the change you've made. This is the same path you have been testing with locally. WITHOUT THIS YOUR PR WILL BE REJECTED
    2. If an existing page to demonstrate your changes doesn't exist, create test content as a static html file and ask the user for help copying it to a cms content page you can link in the PR
 5. use `gh pr checks` to verify the status of code synchronization, linting, and performance tests
 6. A human reviewer will review the code, inspect the provided URL and merge the PR
