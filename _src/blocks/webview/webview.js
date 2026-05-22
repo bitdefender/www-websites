@@ -1,85 +1,107 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 
-export const BUNDLE_ID_MAPPING = {
-  bundleIds: {
-    'com.bitdefender.cl.av': 'av',
-    'com.bitdefender.cl.is': 'is',
-    'com.bitdefender.cl.tsmd': 'tsmd',
-    'com.bitdefender.fp': 'fp',
-    'com.bitdefender.premiumsecurity': 'ps',
-    'com.bitdefender.premiumsecurityplus': 'psp',
-    'com.bitdefender.soho': 'soho',
-    'com.bitdefender.avformac': 'mac',
-    'com.bitdefender.vpn': 'vpn',
-    'com.bitdefender.passwordmanager': 'pass',
-    'com.bitdefender.bms': 'bms',
-    'com.bitdefender.iosprotection': 'ios',
-    'com.bitdefender.dataprivacy': 'dip',
-    'com.bitdefender.tsmd.v2': 'ts_i',
-    'com.bitdefender.premiumsecurity.v2': 'ps_i',
-    'com.bitdefender.ultimatesecurityeu.v2': 'us_i',
-    'com.bitdefender.ultimatesecurityus.v2': 'us_pi',
-    'com.bitdefender.ultimatesecurityplusus.v2': 'us_pie',
-    'com.bitdefender.cl.avplus.v2': 'avpm',
-    'com.bitdefender.ultimatesecurityus': 'ultsec',
-    'com.bitdefender.securepass': 'secpass',
-    'com.bitdefender.vsb': 'vsb',
-    'com.bitdefender.ccp': 'sc',
-    'com.bitdefender.idtheftpremium': 'idtheftp',
-    'com.bitdefender.idtheftstandard': 'idthefts',
-  },
+export const BUNDLE_ID_MAP = {
+  'com.bitdefender.cl.av': 'av',
+  'com.bitdefender.cl.is': 'is',
+  'com.bitdefender.cl.tsmd': 'tsmd',
+  'com.bitdefender.fp': 'fp',
+  'com.bitdefender.premiumsecurity': 'ps',
+  'com.bitdefender.premiumsecurityplus': 'psp',
+  'com.bitdefender.soho': 'soho',
+  'com.bitdefender.avformac': 'mac',
+  'com.bitdefender.vpn': 'vpn',
+  'com.bitdefender.passwordmanager': 'pass',
+  'com.bitdefender.bms': 'bms',
+  'com.bitdefender.iosprotection': 'ios',
+  'com.bitdefender.dataprivacy': 'dip',
+  'com.bitdefender.tsmd.v2': 'ts_i',
+  'com.bitdefender.premiumsecurity.v2': 'ps_i',
+  'com.bitdefender.ultimatesecurityeu.v2': 'us_i',
+  'com.bitdefender.ultimatesecurityus.v2': 'us_pi',
+  'com.bitdefender.ultimatesecurityplusus.v2': 'us_pie',
+  'com.bitdefender.cl.avplus.v2': 'avpm',
+  'com.bitdefender.ultimatesecurityus': 'ultsec',
+  'com.bitdefender.securepass': 'secpass',
+  'com.bitdefender.vsb': 'vsb',
+  'com.bitdefender.ccp': 'sc',
+  'com.bitdefender.idtheftpremium': 'idtheftp',
+  'com.bitdefender.idtheftstandard': 'idthefts',
 };
 
+const URL_PARAMS = {
+  bundleId: 'bundle_id',
+  slots: 'slots',
+  billingCycle: 'billing_cycle',
+  remainingDays: 'remaining_days',
+  lang: 'lang',
+};
+
+function getUrlParam(name) {
+  return new URLSearchParams(window.location.search).get(name);
+}
+
+/**
+ * Get locale from path, query-params or default to en-us
+ * @returns {string} Locale in language-country format
+ */
 function getLanguage() {
-  // Try to get the language from the path
   const langCountry = getLanguageCountryFromPath();
   if (langCountry && langCountry.language && langCountry.country) {
     return `${langCountry.language}-${langCountry.country}`;
   }
 
-  // Try to get the language from the query parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const langFromQuery = urlParams.get('lang');
+  const langFromQuery = getUrlParam(URL_PARAMS.lang);
   if (langFromQuery) {
     return langFromQuery;
   }
 
-  // Default to "en-us"
   return 'en-us';
 }
 
 async function checkAndReplacePrivacyPolicyLink(block) {
-  // Select the privacy-policy tag
-  const privacyPolicyTag = block.querySelector('.privacy-policy-text');
-  if (privacyPolicyTag) {
-    // Select the link inside the privacy-policy tag
-    const privacyPolicyLink = privacyPolicyTag.querySelector('a');
-    const locale = getLanguage().toLowerCase();
-    if (privacyPolicyLink) {
-      privacyPolicyLink.href = privacyPolicyLink.href.replace('locale', locale);
-      privacyPolicyLink.setAttribute('target', '_blank');
-      const response = await fetch(privacyPolicyLink.href);
-      if (response.status === 404) {
-        // Replace the link with the en-us version
-        privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
-      }
+  const privacyPolicyLink = block.querySelector('.privacy-policy-text a');
+
+  if (!privacyPolicyLink) {
+    return;
+  }
+
+  const locale = getLanguage().toLowerCase();
+  privacyPolicyLink.href = privacyPolicyLink.href.replace('locale', locale);
+  privacyPolicyLink.setAttribute('target', '_blank');
+  privacyPolicyLink.setAttribute('rel', 'noopener noreferrer');
+
+  try {
+    const response = await fetch(privacyPolicyLink.href, { method: 'HEAD' });
+
+    if (response.status === 404) {
+      privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
     }
+  } catch {
+    privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
   }
 }
 
 function getUrlBundleId() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const bundleId = urlParams.get('bundle_id')?.trim().toLowerCase();
-  return bundleId ? BUNDLE_ID_MAPPING.bundleIds[bundleId] : null;
+  const bundleId = getUrlParam(URL_PARAMS.bundleId)?.trim().toLowerCase();
+  return bundleId ? BUNDLE_ID_MAP[bundleId] : null;
 }
 
 function getUrlStoreOption() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const slots = urlParams.get('slots')?.trim();
-  const billingCycle = Number(urlParams.get('billing_cycle'));
-  const years = billingCycle / 365;
+  const slots = getUrlParam(URL_PARAMS.slots);
+  const billingCycle = Number(getUrlParam(URL_PARAMS.billingCycle));
 
-  if (!slots || !Number.isInteger(years) || years <= 0) {
+  const VALID_BILLING_CYCLES = new Map([
+    [365, 1],
+    [730, 2],
+    [1095, 3],
+  ]);
+
+  if (!slots || !/^\d+$/.test(slots)) {
+    return null;
+  }
+
+  const years = VALID_BILLING_CYCLES.get(billingCycle);
+  if (!years) {
     return null;
   }
 
@@ -96,21 +118,16 @@ function getUrlStoreOption() {
  * @param {string} [options.bundleId]
  * @param {string} [options.urlStoreOption]
  */
-function setupStoreContext(
-  block,
-  product,
-  {
-    bundleId = getUrlBundleId(),
-    urlStoreOption = getUrlStoreOption(),
-  } = {},
-) {
+function setupStoreContext(block, product, options = {}) {
+  const bundleId = options.bundleId ?? getUrlBundleId();
+  const urlStoreOption = options.urlStoreOption ?? getUrlStoreOption();
   const [productId, productUsers, productYears] = product?.split('/') ?? [];
 
   const productStoreOption = productUsers && productYears ? `${productUsers}-${productYears}` : undefined;
 
   const attributes = {
     'data-store-context': '',
-    'data-store-id': bundleId || productId,
+    'data-store-id': bundleId ?? productId,
     'data-store-option': urlStoreOption || productStoreOption,
     'data-store-department': 'consumer',
     'data-store-event': 'product-loaded',
@@ -124,8 +141,7 @@ function setupStoreContext(
 }
 
 function getUrlRemainingDays() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const remainingDays = urlParams.get('remaining_days')?.trim();
+  const remainingDays = getUrlParam(URL_PARAMS.remainingDays)?.trim();
 
   if (!remainingDays || !/^\d+$/.test(remainingDays)) {
     return null;
@@ -138,7 +154,7 @@ function getRenewalDate() {
   const remainingDays = getUrlRemainingDays();
 
   if (remainingDays === null) {
-    return '';
+    return null;
   }
 
   const renewalDate = new Date();
@@ -153,12 +169,17 @@ function getRenewalDate() {
 
 function replaceRenewalDateMarker(block) {
   const renewalDatePattern = /(?:&#x3C;|&lt;|<)renewal-date(?:&gt;|>)/gi;
+  const renewalDate = getRenewalDate();
+
+  if (!renewalDate) {
+    return false;
+  }
 
   if (!renewalDatePattern.test(block.innerHTML)) {
     return false;
   }
 
-  block.innerHTML = block.innerHTML.replaceAll(renewalDatePattern, getRenewalDate());
+  block.innerHTML = block.innerHTML.replaceAll(renewalDatePattern, renewalDate);
   return true;
 }
 
@@ -186,16 +207,23 @@ function decorateDiscountModal(block) {
   const wrapper = block.closest('.webview-wrapper') || block.parentElement;
   wrapper?.classList.add('discount-modal');
 
-  const firstRow = [...block.children][0].innerHTML.trim();
+  const children = [...block.children];
 
-  let priceBox = [...block.children]
-    .find((child) => child.textContent.includes('{PRICEBOX_V2}'));
+  const firstRow = children[0]?.innerHTML.trim() ?? '';
+  const supportText = children[2]?.innerHTML ?? '';
 
-  priceBox?.querySelector('h2')?.classList.add('webview-modal-discount');
-  priceBox = priceBox?.innerHTML.replaceAll('<p>{PRICEBOX_V2}</p>', '');
+  const priceBoxElement = children.find((child) => child.textContent?.includes('{PRICEBOX_V2}'));
+  priceBoxElement?.querySelector('h2')?.classList.add('webview-modal-discount');
 
-  priceBox = replaceDiscountPercentageVariable(priceBox);
-  const supportText = [...block.children][2].innerHTML;
+  priceBoxElement?.querySelectorAll('p').forEach((paragraph) => {
+    if (paragraph.textContent.trim() === '{PRICEBOX_V2}') {
+      paragraph.remove();
+    }
+  });
+
+  const priceBoxHtml = replaceDiscountPercentageVariable(
+    priceBoxElement?.innerHTML ?? '',
+  );
 
   const buyLink = block.querySelector('a[href*="#buylink"]');
   const secondaryLink = block.querySelector('a[href*="https://localhost/dynamicupsell?view_action=close"]');
@@ -218,7 +246,7 @@ function decorateDiscountModal(block) {
     <div class="webview-modal-content">
       <div class="webview-modal-copy">${firstRow}</div>
       <div class="webview-modal-offer">
-        ${priceBox}
+        ${priceBoxHtml}
       </div>
       <div class="webview-modal-text-bottom">${supportText}</div>
       <div class="webview-modal-actions">
