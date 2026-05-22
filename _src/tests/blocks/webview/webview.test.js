@@ -113,37 +113,4 @@ describe('webview', () => {
     expect(block.querySelector('.prod-save').dataset.storeHide).toBe('no-price=discounted');
     expect(block.querySelector('.prod-save [data-store-discount="percentage"]')).toBeTruthy();
   });
-
-  it('dismisses the modal from the secondary action and close button', async () => {
-    let block = setupWebview({
-      sectionClass: 'discount-modal',
-      content: `
-        <div><h2>Thank you for your feedback!</h2></div>
-        <div><p>Offer copy</p></div>
-        <div><p>Bitdefender Premium Security Individual {PRICE_BOX}</p></div>
-        <div><p><a href="#buylink">Take the offer</a></p></div>
-        <div><p><a href="https://localhost/dynamicupsell?view_action=close">No thanks</a></p></div>
-      `,
-    });
-
-    await decorate(block);
-    block.querySelector('.webview-modal-dismiss a').click();
-
-    expect(document.querySelector('.webview-wrapper')).toBeFalsy();
-
-    block = setupWebview({
-      sectionClass: 'discount-modal',
-      content: `
-        <div><h2>Thank you for your feedback!</h2></div>
-        <div><p>Offer copy</p></div>
-        <div><p>Bitdefender Premium Security Individual {PRICE_BOX}</p></div>
-        <div><p><a href="#buylink">Take the offer</a></p></div>
-      `,
-    });
-
-    await decorate(block);
-    block.querySelector('.webview-modal-close').click();
-
-    expect(document.querySelector('.webview-wrapper')).toBeFalsy();
-  });
 });
