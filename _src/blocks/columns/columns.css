@@ -1237,6 +1237,7 @@
 .creators .columns-container.header-mobile .default-content-wrapper h3 {
   color:#006DFF;
   font: normal normal bold 24px/26px "IBM Plex Sans", sans-serif !important;
+  margin-top: 40px;
 }
 
 @media (min-width: 991px) {
@@ -1643,9 +1644,22 @@
     width: 100%;
   }
 
+  .creators .columns-container .columns.benefits-cards.scam-protection > div {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
   .creators .columns-container .columns.benefits-cards > div > div {
     justify-items: start;
   }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div h3 {
+    font: normal normal bold 18px/24px "IBM Plex Sans", sans-serif !important;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div p {
+    font: normal normal 14px/20px "IBM Plex Sans", sans-serif !important;
+  }
+
 
   .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div {
     background-color: #F0F7FF;
@@ -1654,6 +1668,11 @@
   .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div h3 {
     font-size: 32px !important;
     margin-bottom: 20px;
+  }
+
+  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div table h3 {
+    font-size: 18px !important;
+    margin-bottom: 0;
   }
 
   .creators .columns-container .columns.benefits-cards.narrow-grid > div {
