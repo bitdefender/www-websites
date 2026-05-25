@@ -46,7 +46,7 @@ import {
   martechLazy,
   martechDelayed,
 // eslint-disable-next-line import/no-relative-packages
-} from '../../plugins/martech/src/index.js';
+} from '../plugins/martech/src/index.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
