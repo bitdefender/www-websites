@@ -6,6 +6,29 @@ const getSectionTitle = (block) => {
   return defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
 };
 
+const buildListItem = (li) => {
+  const bdLi = document.createElement('bd-li');
+  bdLi.setAttribute('kind', 'none');
+  bdLi.setAttribute('size', 'md');
+  const bdP = document.createElement('bd-p');
+  bdP.setAttribute('kind', 'small');
+  bdP.innerHTML = li.innerHTML;
+  bdLi.appendChild(bdP);
+  return bdLi;
+};
+
+const buildList = (list) => {
+  const bdList = document.createElement('bd-list');
+  bdList.setAttribute('type', list.tagName === 'OL' ? 'ordered' : 'unordered');
+  bdList.setAttribute('spacing', 'md');
+  bdList.setAttribute('variant', 'default');
+  bdList.setAttribute('orientation', 'vertical');
+  Array.from(list.querySelectorAll(':scope > li')).forEach((li) => {
+    bdList.appendChild(buildListItem(li));
+  });
+  return bdList;
+};
+
 const buildAccordion = (block) => {
   const section = block.closest('.section');
   const defaultWrapper = section?.querySelector(':scope > .default-content-wrapper');
@@ -38,14 +61,20 @@ const buildAccordion = (block) => {
     }
 
     if (contentCell) {
-      const bdParagraphs = Array.from(contentCell.querySelectorAll('p')).map((p) => {
-        const bdP = document.createElement('bd-p');
-        bdP.innerHTML = p.innerHTML;
-        return bdP;
-      });
-
-      if (bdParagraphs.length) {
-        item.replaceChildren(...bdParagraphs);
+      const children = Array.from(contentCell.children);
+      if (children.length) {
+        const mapped = children.map((el) => {
+          if (el.tagName === 'P') {
+            const bdP = document.createElement('bd-p');
+            bdP.innerHTML = el.innerHTML;
+            return bdP;
+          }
+          if (el.tagName === 'UL' || el.tagName === 'OL') {
+            return buildList(el);
+          }
+          return el.cloneNode(true);
+        });
+        item.replaceChildren(...mapped);
       } else {
         const bdP = document.createElement('bd-p');
         bdP.innerHTML = contentCell.innerHTML;
@@ -56,6 +85,19 @@ const buildAccordion = (block) => {
     accordion.appendChild(item);
   });
 
+  if (section) {
+    section.querySelectorAll(':scope > .default-content-wrapper').forEach((wrapper) => {
+      Array.from(wrapper.querySelectorAll(':scope > p')).forEach((p) => {
+        const bdP = document.createElement('bd-p');
+        bdP.setAttribute('kind', 'small');
+        bdP.setAttribute('slot', 'footer');
+        bdP.innerHTML = p.innerHTML;
+        accordion.appendChild(bdP);
+      });
+      wrapper.remove();
+    });
+  }
+
   return accordion;
 };
 
@@ -64,6 +106,8 @@ export default async function decorate(block) {
   await Promise.all([
     import(`${base}accordion-bg`),
     import(`${base}paragraph`),
+    import(`${base}list`),
+    import(`${base}list-item`),
   ]);
   const accordion = buildAccordion(block);
   block.replaceChildren(accordion);
