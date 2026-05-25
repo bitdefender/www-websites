@@ -89,10 +89,12 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 }
 
+
 .scuderia-ferrari-section table {
     position: relative;
     margin-top: 6em;
 
+    /* stylelint-disable-next-line no-descending-specificity */
     img {
         position: absolute!important;
         height: 87px!important;
