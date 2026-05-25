@@ -38,7 +38,19 @@ const buildAccordion = (block) => {
     }
 
     if (contentCell) {
-      item.innerHTML = contentCell.innerHTML;
+      const bdParagraphs = Array.from(contentCell.querySelectorAll('p')).map((p) => {
+        const bdP = document.createElement('bd-p');
+        bdP.innerHTML = p.innerHTML;
+        return bdP;
+      });
+
+      if (bdParagraphs.length) {
+        item.replaceChildren(...bdParagraphs);
+      } else {
+        const bdP = document.createElement('bd-p');
+        bdP.innerHTML = contentCell.innerHTML;
+        item.replaceChildren(bdP);
+      }
     }
 
     accordion.appendChild(item);
@@ -49,7 +61,10 @@ const buildAccordion = (block) => {
 
 export default async function decorate(block) {
   const base = getDsnBase();
-  await import(`${base}accordion-bg`);
+  await Promise.all([
+    import(`${base}accordion-bg`),
+    import(`${base}paragraph`),
+  ]);
   const accordion = buildAccordion(block);
   block.replaceChildren(accordion);
 }
