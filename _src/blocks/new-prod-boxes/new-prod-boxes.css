@@ -149,6 +149,13 @@
   height: fit-content;
 }
 
+.new-prod-boxes-container .new-prod-boxes.transparent-tag .prod_box .inner_prod_box .blueTag {
+  background-color: transparent;
+  color: #000;
+  padding-left: 0;
+  border-radius: none;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag .icon {
   width: fit-content;
   height: auto;
@@ -523,6 +530,10 @@
   background-size: 13px;
   position: relative;
   cursor: pointer;
+}
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type).unavailable {
+  color: #B7B7B7;
 }
 
 .new-prod-boxes-container .new-prod-boxes.new-green-check .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) {
