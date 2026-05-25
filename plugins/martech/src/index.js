@@ -404,20 +404,28 @@ async function applyPropositions(instanceName) {
     .filter((p) => p.items.some(
       (i) => i.schema === 'https://ns.adobe.com/personalization/dom-action',
     ));
-  onDecoratedElement(async () => {
-    if (!propositions.length) {
+  let applying = false;
+  const applyPendingPropositions = async () => {
+    if (!propositions.length || applying) {
       return;
     }
+    applying = true;
     const appliedPropositions = await window[instanceName](
       'applyPropositions',
       { propositions },
     );
+    applying = false;
     appliedPropositions.propositions.forEach((item) => {
       if (item.renderAttempted) {
         propositions = propositions.filter((p) => p.id !== item.id);
       }
     });
-  });
+  };
+  // Apply immediately so head-targeting scripts (e.g. Target custom code)
+  // are injected before blocks start rendering.
+  await applyPendingPropositions();
+  // Retry for any body DOM actions whose elements weren't in the DOM yet.
+  onDecoratedElement(applyPendingPropositions);
   return renderDecisionResponse;
 }
 

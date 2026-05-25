@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import Launch from '@repobit/dex-launch';
 import {
   PageLoadedEvent,
@@ -37,7 +38,6 @@ import {
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
-  getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 import {
@@ -500,31 +500,35 @@ function openExternalLinksInNewTab(doc) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
+  // TODO: add these lines into dex-target
+  window.__alloyNS ||= [];
+
+  if (!window.__alloyNS.includes('alloy')) {
+    window.__alloyNS.push('alloy');
+  }
   // load trackers early if there is a target experiment on the page
   const martechLoadedPromise = initMartech(
     {
       datastreamId: '6648b064-8151-4872-8fef-c4a84b0b69c1',
       orgId: '0E920C0F53DA9E9B0A490D45@AdobeOrg',
+      edgeDomain: 'sstats.bitdefender.com',
+      defaultConsent: 'in',
       // The `debugEnabled` flag is automatically set to true on localhost and .page URLs.
       // The `defaultConsent` is automatically set to "pending".
       onBeforeEventSend: (payload) => {
-        console.log(payload);
-      },
-      edgeConfigOverrides: {
+        console.log('My payload: ', payload);
       },
     },
     // 2. Library Configuration
     {
-      personalization: !!getMetadata('target'),
-      launchUrls: ['https://assets.adobedtm.com/8a93f8486ba4/d67f8d8ef938/launch-05a25732150b-development.min.js'],
+      personalization: true,
       // See the API Reference for all available options.
     },
   );
 
-  if (getPageExperimentKey()) {
-    await loadTrackers();
-    await resolveNonProductsDataLayer();
-  }
+  await martechLoadedPromise;
+  await martechEager();
+  await resolveNonProductsDataLayer();
 
   const userCountry = await user.country;
   if (userCountry !== page.country && !sessionStorage.getItem('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
@@ -552,8 +556,6 @@ async function loadEager(doc) {
     if (window.location.href.indexOf('scuderiaferrari') !== -1) {
       document.body.classList.add('sferrari');
     }
-    await martechLoadedPromise;
-    await martechEager();
     await waitForLCP(LCP_BLOCKS);
   }
 }
@@ -576,10 +578,7 @@ async function loadLazy(doc) {
   }
 
   // only call load Trackers here if there is no experiment on the page
-  if (!getPageExperimentKey()) {
-    loadTrackers();
-    await resolveNonProductsDataLayer();
-  }
+  loadTrackers();
 
   // push basic events to dataLayer
   await loadBlocks(main);
