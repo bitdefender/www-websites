@@ -293,8 +293,6 @@ function createFeatureList(featuresSet) {
         processedContent = processedContent.replace('xxx', '');
       }
 
-      console.log(`Processed content: "${processedContent}", liClass: "${liClass}"`);
-
       const secondCellContent = secondCell?.textContent.trim()
         ? `<span class="white-pill-content">${secondCell.innerHTML}</span>`
         : '';

@@ -534,6 +534,8 @@
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type).unavailable {
   color: #B7B7B7;
+  background: url("../../icons/x-circle.svg") top 2px left no-repeat transparent !important;
+  background-size: 13px !important;
 }
 
 .new-prod-boxes-container .new-prod-boxes.new-green-check .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) {
