@@ -12,6 +12,7 @@
 
     .creators .scam-protection .default-content-wrapper p {
         font: normal normal 300 24px/34px "IBM Plex Sans", sans-serif !important;
+        margin: 0;
     }
 
     .creators .scam-protection a.button {
