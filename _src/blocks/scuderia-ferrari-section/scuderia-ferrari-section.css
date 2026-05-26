@@ -101,7 +101,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         margin-right: 10px!important;
         border-radius: 5px!important;
         width: auto !important;
-        top: -55px !important;
+        top: -38px !important;
         bottom: auto !important;
         left: 10px !important;
         border: 1px solid white;
@@ -117,7 +117,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
         color: black;
         padding-left: 81px;
         margin-bottom: 1em;
-        display: block;
+        display: inline-block;
     }
 }
 
