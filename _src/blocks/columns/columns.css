@@ -1661,7 +1661,7 @@
     font: normal normal 14px/20px "IBM Plex Sans", sans-serif !important;
   }
 
-   .creators .columns-container .columns.benefits-cards.scam-protection > div > div tr{
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div tr{
     font: bold 12px/20px "IBM Plex Sans", sans-serif !important;
   }
 
@@ -1670,7 +1670,6 @@
     height: 48px;
     margin-bottom: 0;
   }
-
 
   .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div {
     background-color: #F0F7FF;
@@ -1694,7 +1693,7 @@
     justify-items: start;
   }
 
-  .creatora .columns-container.scam-protection .columns div p {
+  .creators .columns-container.scam-protection .columns div p {
     font-size: 14px !important;
   }
 
