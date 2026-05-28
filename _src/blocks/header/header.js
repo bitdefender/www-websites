@@ -69,7 +69,6 @@ const loginFunctionality = async (root = document) => {
   try {
     // change login container to display that the user is logged in
     // if the previous call was successfull
-    await user.login();
     const userData = await user.info;
     if (userData) {
       const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
