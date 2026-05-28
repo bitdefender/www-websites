@@ -121,7 +121,8 @@ const resolveUserDetectedEvent = async () => {
     {
       ID: await user.fingerprint,
       productFinding: getProductFinding(),
-      visitorID: await getUserVisitorId(),
+      // TODO: uncomment this after consent is given
+      // visitorID: await getUserVisitorId(),
     }
   ));
 };

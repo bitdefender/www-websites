@@ -740,7 +740,7 @@ class Vlaicu {
 	}
 
 	static async getProductVariations(productId, campaign, useGeoIpPricing = false) {
-		let locale = page.locale;
+		let locale = page.locale.includes('global') ? 'en-us' : page.locale;
 		if (useGeoIpPricing) {
 			locale = await user.locale;
 		}
