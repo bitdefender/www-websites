@@ -2,7 +2,9 @@ import { getDsnBase } from '../../scripts/utils/utils.js';
 
 const getSectionTitle = (block) => {
   const section = block.closest('.section');
-  const defaultWrapper = section?.querySelector(':scope > .default-content-wrapper');
+  const accordionWrapper = block.closest('.accordion-wrapper');
+  if (!section || !accordionWrapper || accordionWrapper.parentElement !== section) return '';
+  const defaultWrapper = section.querySelector(':scope > .default-content-wrapper');
   return defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
 };
 
@@ -85,7 +87,10 @@ const buildAccordion = (block) => {
     accordion.appendChild(item);
   });
 
-  if (section) {
+  const accordionWrapper = block.closest('.accordion-wrapper');
+  const isDirectChild = accordionWrapper && section && accordionWrapper.parentElement === section;
+
+  if (isDirectChild) {
     section.querySelectorAll(':scope > .default-content-wrapper').forEach((wrapper) => {
       Array.from(wrapper.querySelectorAll(':scope > p')).forEach((p) => {
         const bdP = document.createElement('bd-p');
