@@ -1053,7 +1053,7 @@ a:hover {
 }
 
 /* buttons */
-a.button:any-link, input[type="submit"] {
+a.button, a.button:any-link, input[type="submit"] {
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-s);
   font-style: normal;

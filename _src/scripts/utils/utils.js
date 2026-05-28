@@ -721,7 +721,8 @@ export function pushTrialDownloadToDataLayer() {
   const sections = document.querySelectorAll('a.button.modal');
   if (sections.length) {
     sections.forEach((button) => {
-      const href = button.getAttribute('href');
+      const href = button.getAttribute('location');
+      if (!href) return;
       if (trialPaths.some((trialPath) => href.includes(trialPath))
         && !button.hasAttribute('data-layer-ignore')) {
         button.addEventListener('click', () => { pushTrialData(button); });

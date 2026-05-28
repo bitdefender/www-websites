@@ -40,31 +40,34 @@ function createCarousel(block, shouldAutoplay = false, videos = undefined, title
         contentElement.classList.add('carousel-content');
         contentElement.innerHTML = item;
 
-        const table = contentElement.querySelector('table');
-
-        if (table) {
-          const html = `
+        if (parentSection.classList.contains('animation')) {
+          const table = contentElement.querySelector('table');
+          if (table) {
+            const html = `
             <div class="parallax-card">
               ${[...table.querySelectorAll('td p')].map((icon, k) => {
-            const [src, txt] = icon.textContent.split('|').map(s => s.trim());
-            return `
+              const [src, txt] = icon.textContent.split('|').map(s => s.trim());
+              return `
                   <div class="parallax-icon parallax-pos-${k + 1}" data-about-id="${k}">
                     <img class="parallax-icon-30" src="/common/icons/${src}.svg" alt="${txt || 'Bitdefender'}">
                     ${txt || ''}
                   </div>
                 `;
-          }).join('')}
+            }).join('')}
             </div>
           `;
 
-          carouselItem.insertAdjacentHTML('afterbegin', html);
-          table.remove();
+            carouselItem.insertAdjacentHTML('afterbegin', html);
+            table.remove();
+          }
         }
 
         carouselItem.appendChild(contentElement);
 
-        const parallaxCard = carouselItem.querySelector('.parallax-card');
-        if (parallaxCard) initAnimations(parallaxCard, true);
+        if (parentSection.classList.contains('animation')) {
+          const parallaxCard = carouselItem.querySelector('.parallax-card');
+          if (parallaxCard) initAnimations(parallaxCard, true);
+        }
       }
 
       if (titles && titles[index]) {
