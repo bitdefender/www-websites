@@ -435,3 +435,72 @@
   outline: none;
   border-color: #3197EE;
 }
+
+.responsive .webview-table-wrapper {
+    max-width: 1000px;
+    padding: 0 18px;
+    height: unset;
+    margin: auto;
+}
+
+.responsive .webview-table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: unset;
+
+    > div {
+        min-width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    div[role='cell'] {
+        min-width: unset;
+        max-width: unset;
+        width: unset;
+        flex: 1;
+    }
+
+    div[role="columnheader"] {
+        flex: 1;
+    }
+
+
+    @media (max-width: 768px) {
+        .webview-comparison-header {
+            flex-wrap: nowrap !important;
+        }
+
+        .webview-comparison-header div[role="columnheader"] {
+            &:first-of-type {
+                min-width: unset;
+                display: none;
+            }
+
+            &:not(:first-of-type) {
+                flex: 1;
+                align-content: end;
+            }
+        }
+
+        div[role="row"] {
+            flex-wrap: wrap;
+        }
+        
+        div[role='cell'] {
+            flex: 1;
+
+            &:first-of-type {
+                width: unset;
+                min-width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        div[role='row'].price-row div[role='cell']:first-child {
+            display: none;
+        }
+    }
+}
