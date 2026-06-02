@@ -223,6 +223,65 @@
   justify-content: center;
 }
 
+.columns-as-tabs > .columns-wrapper .block h3 {
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 32px;
+}
+
+.columns-as-tabs > .columns-wrapper .block .icon, .columns-as-tabs > .columns-wrapper .block img {
+  height: 48px;
+  width: auto;
+}
+
+.columns-as-tabs > .columns-wrapper .block img {
+  margin: auto;
+}
+
+.columns-as-tabs > .columns-wrapper .block svg {
+  width: auto;
+  height: auto;
+}
+
+.columns-as-tabs > .columns-wrapper .block svg * {
+  opacity: 1;
+  display: block;
+}
+
+.columns-as-tabs > .columns-wrapper:nth-of-type(1) .block .columns-text-col {
+  flex: 0 0 812px;
+  display: none;
+}
+
+.columns-as-tabs > .columns-wrapper:nth-of-type(1) .block .columns-text-col.active {
+  display: block;
+}
+
+.columns-as-tabs > .columns-wrapper:nth-of-type(2) .block {
+  margin-top: 32px;
+}
+
+.columns-as-tabs .columns > div {
+  gap: 0;
+  flex-direction: row;
+}
+
+.columns-as-tabs .columns > div > div {
+  flex: 1;
+  order: unset;
+}
+
+.columns-as-tabs > .columns-wrapper:nth-of-type(2) .block .columns-col {
+  cursor: pointer;
+  border-top: 1px solid #DEDEDE;
+  padding-top: 32px;
+}
+
+.columns-as-tabs > .columns-wrapper:nth-of-type(2) .block .columns-col.active {
+  border-top: 1px solid #006EFF
+}
+
+
 .hide-images-mobile .columns > div {
   margin-bottom: 20px;
 }
@@ -543,7 +602,7 @@
   display: block;
 }
 
-.creators .columns-container a.button, .creators .columns-container a.button:any-link, .creators a.button:any-link {
+.creators .columns-container a.button, .creators .columns-container a.button:any-link, .creators a.button {
   height: auto;
   background: #E72325 0% 0% no-repeat padding-box;
   border-radius: 30px;
@@ -554,11 +613,11 @@
   color: white;
 }
 
-.creators a.button:any-link:hover {
+.creators a.button:hover, .creators .columns-container a.button:hover {
   color: white;
 }
 
-.creators a.button:any-link::after, .creators a.button:any-link:hover::after {
+.creators a.button::after, .creators a.button:hover::after, .creators .columns-container a.button::after, .creators .columns-container a.button:hover::after {
   color: white;
   background-color: white;
 }
@@ -816,7 +875,7 @@
 
 .columns-container.black-version{
   background-color: #000;
-    color: white;
+  color: white;
 }
 
 .columns-container.blue-h5 h5 {
@@ -1144,12 +1203,24 @@
   height: 210px;
 }
 
+.intersected-cards .columns.benefits > div hr {
+  margin: 8px 0;
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     display: grid;
     grid-auto-flow: column;
     column-gap: 32px;
     row-gap: 0;
+  }
+
+  .intersected-cards .columns.benefits > div:nth-child(odd) {
+    grid-template-columns: 1.5fr 1fr;
+  }
+
+  .intersected-cards .columns.benefits > div:nth-child(even) {
+    grid-template-columns: 1fr 1.5fr;
   }
 
   .bundle-design .columns > div {
@@ -1241,6 +1312,10 @@
     gap: 0;
   }
 
+  .intersected-cards .columns.benefits > div > div {
+    display: block;
+  }
+
   .creators .columns.benefits > div > div {
     max-width: 370px;
   }
@@ -1329,9 +1404,9 @@
     margin-top: 40px;
   }
 
-   .columns-container .columns.trust-factors2 table tr{
+  .columns-container .columns.trust-factors2 table tr{
     grid-template-columns: repeat(3, 1fr);
-   }
+  }
   
   .columns-container .columns.trust-factors td p{
     font-size: 18px;
@@ -1690,11 +1765,11 @@
 }
 
 .columns-container.video-left iframe, .columns-container.video-left .yt-preview {
+  aspect-ratio: 16 / 9;
   width: 100%;
-  height: 400px;
-  border-radius: 10px;
   overflow: hidden;
   position: relative;
+  border-radius: 20px;
 }
 
 .columns-container.video-left .yt-preview::after {
@@ -1723,7 +1798,10 @@
 }
 
 .columns-container.video-left .yt-preview img {
-  margin-top: -5em;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 @media (min-width: 1271px) {
@@ -1858,7 +1936,7 @@
 
 @media (min-width: 676px) and (max-width: 989px) {
   .slide-left {
-      transform: translateX(-50%);
+    transform: translateX(-50%);
   }
 }
 
@@ -1878,8 +1956,8 @@
   }
 
   .columns-container.video-left .columns-right-col {
-      width: 440px;
-      flex: none;
+    width: 440px;
+    flex: none;
   }
 }
 
@@ -1903,7 +1981,7 @@
     align-items: center;
   }
 
-  .section.migration.table-align-top tr{
+  .section.migration.table-align-top tr {
     flex-direction: unset;
   }
 }
@@ -3308,7 +3386,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             color: #fff;
 
             svg {
-             position: absolute;
+              position: absolute;
               top: -22.5%;
               left: 0;
               display: block;
@@ -3938,6 +4016,15 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .columns-tabs > div.default-content-wrapper.section-el:not(:first-of-type) {
     margin: 0;
   }
+
+  .columns-as-tabs > .columns-wrapper .block h3 {
+    font-size: 24px;
+    line-height: 27px;
+  }
+
+  .columns-as-tabs > .columns-wrapper:nth-of-type(1) .block .columns-text-col {
+    flex: 0 0 100%;
+  }
 }
 
 @media (max-width: 767px) {
@@ -3973,10 +4060,34 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .columns-container .block.sidebar .columns-left-col ul, .columns-container .block.sidebar .columns-left-col ul li {
     padding-left: 0;
   }
-}
 
-@media (max-width: 550px) {
-  .columns-tabs .block {
-    grid-template-columns: repeat(1, 1fr);
+  @media (min-width: 768px) {
+    .modal-container.get-bitdefender-familypack .columns.block.columns-2-cols > div {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      order: unset;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .section.migration.table-align-top tr {
+      flex-direction: unset;
+    }
   }
-}
+
+  @media (max-width: 768px) {
+    .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
+      height: 15em;
+    }
+  }
+
+  @media (max-width: 550px) {
+    .columns-tabs .block {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
+      height: 10em;
+    }
+  }}

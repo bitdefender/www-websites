@@ -69,7 +69,6 @@ const loginFunctionality = async (root = document) => {
   try {
     // change login container to display that the user is logged in
     // if the previous call was successfull
-    await user.login();
     const userData = await user.info;
     if (userData) {
       const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
@@ -487,7 +486,15 @@ async function runDefaultHeaderLogic(block) {
         aemFetchDomain = websiteDomain.split('-').join('_');
       }
 
-      const aemHeaderFetch = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`);
+      // check if the menu should be brought from a different source from Target
+      let aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`;
+      const navMbox = await target.getOffers({ mboxNames: 'menu-mbox' });
+      if (navMbox?.offer) {
+        const offerPath = navMbox.offer.split('.')[0];
+        aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}${offerPath}/jcr:content/root.html`;
+      }
+
+      const aemHeaderFetch = await fetch(aemMenuFetchPath);
       if (!aemHeaderFetch.ok) {
         return;
       }
