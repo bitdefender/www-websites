@@ -465,6 +465,10 @@
 
     div[role="columnheader"] {
         flex: 1;
+
+        &:first-of-type {
+            min-width: unset;
+        }
     }
 
 
@@ -496,6 +500,8 @@
                 width: unset;
                 min-width: 100%;
                 max-width: 100%;
+                text-align: center;
+                justify-content: center;
             }
         }
 
