@@ -705,7 +705,8 @@ export function pushTrialDownloadToDataLayer() {
     }
 
     // eslint-disable-next-line max-len
-    return getMetadata('breadcrumb-title') || getMetadata('og:title');
+    // keep breadcrumb-tittle for tracking, add a trial-id for future pages
+    return getMetadata('trial-id') || getMetadata('breadcrumb-title') || getMetadata('og:title');
   };
 
   const currentPage = page.name;

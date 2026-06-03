@@ -207,7 +207,7 @@ export default function decorate(block) {
   const parentSection = block.closest('.section');
   const {
     // eslint-disable-next-line max-len
-    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid, seeMoreBtn,
   } = parentSection.dataset;
   const cols = [...block.firstElementChild.children];
@@ -250,11 +250,6 @@ export default function decorate(block) {
       renderNanoBlocks(col, undefined, idxRow);
     });
   });
-
-  if (breadcrumbs && block.classList.contains('creators-banner')) {
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    block.querySelector('h2')?.prepend(breadcrumb);
-  }
 
   // setup buylink, this can be used later as a starting point for prices.
   const productsAsList = products?.split(',');

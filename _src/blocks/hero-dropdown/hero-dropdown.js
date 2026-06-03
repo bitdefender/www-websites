@@ -16,14 +16,6 @@ function buildHeroDropdownBlock(element) {
   const subSection = section.querySelector('div');
   subSection.classList.add('hero-dropdown-content');
 
-  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
-
-  if (!isHomePage) {
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    const contentWrapper = subSection.querySelector('div:first-child');
-    if (contentWrapper) contentWrapper.prepend(breadcrumb);
-  }
-
   const pictureEl = document.createElement('div');
   pictureEl.classList.add('hero-dropdown-picture');
   pictureEl.append(picture);

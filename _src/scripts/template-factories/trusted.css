@@ -308,13 +308,6 @@ main .section.link-right a {
 }
 
 /* ---- nav ---- */
-.trusted header .icon, .trusted .logo-container p, .trusted main .hero .hero-content .breadcrumb a, .trusted main .hero .hero-content .breadcrumb a::after {
-    color: var(--white);
-}
-
-.trusted main .hero .hero-content .breadcrumb a:last-of-type:after {
-    display: none;
-}
 
 .trusted .other-options > div > h2 {
     color: var(--black);
@@ -674,10 +667,6 @@ main .section.link-right a {
         font: normal normal normal 26px/32px var(--font-ibm);
     }
 
-    .trusted main .hero .hero-content .breadcrumb {
-        margin-top: 6em;
-    }
-
     .trusted .logo-container {
         padding-left: 1em !important;
     }
@@ -869,11 +858,6 @@ main .section.link-right a {
 
     .trusted main .hero em {
         display: none;
-    }
-
-    .trusted main .hero .hero-content .breadcrumb {
-        padding: 14px 0;
-        margin-bottom: 0;
     }
 
     .trusted .box-carousel-container .default-content-wrapper {
