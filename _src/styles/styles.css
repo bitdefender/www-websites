@@ -1262,13 +1262,10 @@ main .section.bblue, main .section .block.bblue {
   background-color: #F1F5F8;
 }
 
-main .section[data-textcolor='white'] *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a::after {
+main .section[data-textcolor='white'] *{
   color: white;
 }
 
-main .section[data-hidebreadcrumb='yes'] .breadcrumb {
-  display: none;
-}
 
 /* linked pictures with video button overlay */
 main a.video-placeholder {
