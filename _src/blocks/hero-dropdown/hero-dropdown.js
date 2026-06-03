@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 // Description: Hero Dropdown block
 import {
-  createTag,
   createNanoBlock,
   renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
