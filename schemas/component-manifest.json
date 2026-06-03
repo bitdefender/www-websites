@@ -2,7 +2,7 @@
   "manifestVersion": "0.1.0",
   "repoRoot": "/Users/iconstantin/Work/www-websites",
   "scope": "Docs-backed public block contract for AI-driven EDS page generation. Prefer sidekick-documented authoring patterns and examples where available.",
-  "generatedAt": "2026-06-02",
+  "generatedAt": "2026-06-03",
   "components": [
     {
       "name": "Accordion",

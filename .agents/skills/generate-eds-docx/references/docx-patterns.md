@@ -228,6 +228,20 @@ p.add_run('Card Title')
 
 ---
 
+## Bullet / List Items
+
+Always use the `'List Paragraph'` style for bullet list items — **never** `'List Bullet'`.
+Franklin's EDS parser recognises `List Paragraph` as list items; `List Bullet` is a Word-native style that does not translate correctly.
+
+```python
+for item in features:
+    cell.add_paragraph(item, style='List Paragraph')
+```
+
+This applies everywhere bullet lists appear: hero sections, product card feature lists, accordion body content, etc.
+
+---
+
 ## main() Skeleton
 
 ```python

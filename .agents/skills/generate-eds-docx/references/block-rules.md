@@ -52,6 +52,51 @@ After the block table, add an **empty paragraph**, then the Section Metadata tab
 
 ---
 
+## `hero-aem`
+
+**2-4 row table** — header + richText row + desktop image row + optional card rows. Rows 1 and 2 are styled side-by-side (left text, right image) at `md` breakpoint via CSS `col-md-6`.
+
+```
+| hero-aem()                                               |   row 0: header (lime green, 1 col)
+| H1 heading                                               |   row 1: richText (block.children[0]) — single cell:
+|   <picture> mobile hero image                            |     1. H1 heading (bold/strong)
+|   *Compare Plan A*  *Compare Plan B*   ← italic = button |     2. mobile hero image in <p><picture> (optional)
+|   <picture>award1<picture>award2...                      |     3. italic CTA links — *link text* in Word → <em><a> → rendered as action buttons
+|                                                          |     4. award logo images — multiple <picture> in one <p> (optional)
+| <picture> desktop hero image                             |   row 2: mainDesktopImage (block.children[1]) — single cell, one <picture>
+| [Optional card text]                                     |   row 3: richTextCard (block.children[2]) — single cell, text/rich content (optional, only with row 4)
+| Card col 1 | Card col 2 | [Card col 3]                  |   row 4: columnsCard (block.children[3]) — 2–3 cells, rendered as aem-two-cards (optional, requires row 3)
+```
+
+**Authoring rules:**
+1. **CTA links** in row 1 must be italic (`*Link text*` in Word → `<em><a>` → rendered as buttons). Non-italic links are plain hyperlinks.
+2. **Mobile image** (row 1) and **desktop image** (row 2) are often the same image. Row 1 image becomes `.hero-aem__mobile-image`; row 2 image becomes `.hero-aem__desktop-image`.
+3. **Rows 3 & 4** must be used together — row 3 provides the side-text label and row 4 the card cells. Each cell of row 4 becomes one `aem-two-cards_card` div.
+4. **Buy link** (row 1): a link whose `href` contains `buylink` — required when `product` Section Metadata is set.
+5. **Free download link** (row 1): a link whose `href` contains `#free-download` — triggers OS detection if OS metadata keys are set.
+6. **Nanoblocks** inside row 1 (optional): `benefit_list` table, `ratings` table, `breadcrumb` table, `dropdown` paragraph (`{dropdown,...}` literal text).
+
+**Section Metadata** (same section, sets `data-*` attributes on the section wrapper):
+
+| Section Metadata key | Example value | Effect |
+|---|---|---|
+| `style` | `py-0, v2` or `py-0, hide-image-mobile` | CSS classes on the section (space becomes hyphen) |
+| `product` | `ts_i/5/1` (`prodName/users/years`) | Enables store context + price box before buy link |
+| `condition-text` | `* condition applies` | Text below the new price (`<sup>` element) |
+| `save-text` | `Save` | Label before the discount value in the price box |
+| `blue-pill-text` | `Limited offer` | Pill text above the old price |
+| `under-price-text` | `per year` | Text below the price box |
+| `align-content` | `center` | Centers the richText column (adds `--center` modifier) |
+| `height` | `600` | Sets `max-height` in px on each block row |
+| `type` | `dark` | CSS class added to the containing section |
+| `circle-discount` | `Up to 0% OFF` | Circular badge on desktop image; `0%` → `{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}` |
+| `dropdown-products` | `ts_i/5/1, ts_i/10/1` | Comma-separated product IDs for the custom dropdown |
+| `dropdown-tag` | `Best value` | Label tag shown above the dropdown |
+
+> **Note on `product` format**: `prodName/users/years` — e.g., `av/1/1` = Antivirus, 1 user, 1 year. This sets `data-store-context` on the card wrapper div.
+
+---
+
 ## `big-teaser-section`
 
 ```
@@ -262,232 +307,259 @@ No Section Metadata needed for accordion itself.
 
 ---
 
-## `products`
+## Products Block
 
-Product card blocks that render dynamic-pricing cards from the store. Each table row can contain 1–N cells (columns); each cell becomes one product card. All pricing is loaded at runtime from the store using the `PlansN` Section Metadata configuration.
+The `products` block is a **1-column table**. Each product card is a separate **row** (not a column). Content items within a row are separated by `---` paragraph separators inside the same cell.
 
-Canonical reference: `sidekick/blocks/products.docx` (9 pages, 3 examples).
+**Nanoblock tokens** (placed inline in cell content, styled orange/NOTRANSLATE):
+- `{Plans}` — renders the plan selector (configured via Section Metadata `Plans1`, `Plans2`, etc.)
+- `{OldPrice}` — crossed-out original price
+- `{Price}` — discounted price
+- `{PriceCondition}` — billing text (e.g. "Billed X for first year"), supports `{BilledPrice}` token
+- `{FeaturedSavings}` — savings badge (e.g. "Save {percent}")
+- `{HighlightSavings}` — large highlighted savings banner (used as a standalone first row)
+- `{Featured}` — featured label badge (text supplied by `Featured1`, `Featured2`... in Section Metadata) — placed IN the cell in "solutions" variant
+- `{LowestPrice, productCode, variation, monthly, label text}` — placed OUTSIDE the table, in section default content BEFORE the Products table
 
-```
-| Products (variant)              |   row 0: header (colored, merged)
-| [card 1] | [card 2] | [card 3]  |   row 1: one cell per product card in this row
-| [card 4] | [card 5]             |   row 2: optional second row of cards
-```
-
-**Variants and header colors:**
-
-| Variant header text | Header color | Use case |
-|---|---|---|
-| `Products` | Lime-green | Standard product cards — image + OS icons + features list |
-| `Products (compact)` | Orange | Compact cards — no image, no OS icons, minimal features |
-| `Products (plans)` | Orange | Single plan per card, prominent plan selector |
-| `Products (plans, compare)` | Lime-green | 2-column comparison — left card shows competitor, right card shows Bitdefender plan with pricing |
-
-**Product card cell content** (in order, top to bottom):
-
-1. `{HighlightSavings}` *(optional, **must be first**)* — green savings tag at top of card; uses `HighlightSavingsN` metadata
-2. Product brand line — bold heading (e.g. `Bitdefender`)
-3. Product plan name — bold heading (e.g. `Premium VPN`)
-4. Product image *(standard variant only; omit in compact/plans)*
-5. OS availability paragraph *(standard only)* — colon-syntax icon spans, e.g. `:windows: :mac: :ios: :android:`
-6. `{Featured}` *(optional)* — featured badge; text comes from `FeaturedN` Section Metadata
-7. Description text paragraph (plain sentence)
-8. *(compact only)* Device/account count — bold, e.g. `Protect up to 10 devices`
-9. `---` separator
-10. *(compact only)* Bold italic marketing tagline
-11. `---` separator
-12. `{Plans}` — links this card to `PlansN` in Section Metadata (required)
-13. `{FeaturedSavings}` *(optional)* — savings badge; uses `FeaturedSavingsN` metadata
-14. `{Price}` — current price from store (no metadata needed)
-15. `{OldPrice}` *(optional)* — original was-price; label from `OldPriceN` metadata
-16. `{PriceCondition}` *or* `{PriceCondition, static text}` — billing condition; from `PriceConditionN` or inline text
-17. Buy link — hyperlink (label `Buy now` / `Buy Now`) → JS adds `data-store-buy-link`
-18. `---` *(optional)* — separator between the buy link and disclaimer text below
-19. Optional plain-text footnote (e.g. `Plus applicable sales tax`, `30-Day Money-Back Guarantee.`)
-20. Optional sentence with inline hyperlink (e.g. `See [Terms of Use] below.`)
-21. Learn more link *(optional)* — secondary hyperlink (e.g. `Discover Bitdefender Premium VPN`, `Learn about`)
-
-> Nanoblock tokens are authored as literal text in the cell — the exact string `{Plans}`, `{Price}`, etc.
-> They are replaced at runtime by `renderNanoBlocks()`. All tokens except `{Price}` and `{OldPrice}` require a matching Section Metadata key.
-
-**Section Metadata keys** (N = 1-based card number matching card position left-to-right across all rows):
-
-| Key | Example value | Notes |
-|-----|---------------|-------|
-| `Plans1`, `Plans2`, … | `{[ 1, mac, 1u-1y], 1}` | Device-count selector: `{[numDevices, productCode, variation], default}`. Single option = no selector menu shown. |
-| `Plans1` | `{[10, soho, 10u-1y], 10}` | Single-option device selector |
-| `Plans1` | `{[ Yearly, secpass, 1u-1y, Monthly, secpassm, 1u-1y], Yearly}` | Label-based (yearly/monthly) selector: `{[label1, code1, var1, label2, code2, var2], defaultLabel}` |
-| `PriceCondition1`, … | `*For the first year` | Billing condition text shown below price |
-| `OldPrice1`, … | `Old Price` | Text label prepended before the was-price from store |
-| `Featured1`, … | `Included in All-in-One Plans` | Featured badge text for the matching card |
-| `FeaturedSavings1`, … | `Save, {percent}` | Savings % badge. **Always include trailing comma even when no %:** `Save,` |
-| `HighlightSavings1`, … | `Save, {percent}` | Green highlight tag at top of card. Can be a full phrase: `Best Value! Go Annual & Save, {percent}`. Or static text with no token: `Best Value` |
-| `Dynamic-price-texts1`, … | `for the first year, for the first month` | Overrides `{PriceCondition}` text when plan selector changes — one entry per option, comma-separated |
-| `id` | `products` | HTML `id` on the section element (for anchor links) |
-| `Style` | `wide, light sky blue` | Section style classes — multiple values comma-separated |
-| `Sticky navigation item` | `Overview` | Label used in the sticky nav for this section |
-
-**`{LowestPrice}` nanoblock** — placed as a standalone paragraph **before** the Products block table (not inside it):
-
-```
-{LowestPrice, mac, 1u-1y, monthly, Start today for as low as 0/mo}
-```
-
-Arguments: `LowestPrice, productCode, variation, billingPeriod, textTemplate` — `0` is a placeholder replaced with the live monthly price.
+> `{OldPrice}` and `{FeaturedSavings}` appear inside a **2-column inner table** within each product card cell.
 
 ---
 
-### Example 1 — standard `Products` (2 cards, one per row, Solutions page)
+### Variant A: `Products(plans)` — Full plan cards
+
+Used for primary product plan selection pages (e.g. `/en-us/consumer/vpn`).
 
 ```
-| Products                                             |
-| Bitdefender                                          |
-| Premium VPN                                          |
-| [product image]                                      |
-| :windows: :mac: :ios: :android:                      |
-| {Featured}                                           |
-| Ultra-fast VPN that keeps your online identity safe. |
-| ---                                                  |
-| • Unlimited encrypted traffic for up to 10 devices   |
-| • 4000+ servers in over 49 countries around the world|
-| • Complete online protection and anonymity            |
-| ---                                                  |
-| {Plans}                                              |
-| {OldPrice}                                           |
-| {Price}                                              |
-| {PriceCondition}                                     |
-| Plus applicable sales tax                            |
-| See [Terms of Use] below.                            |
-| [Buy now]                                            |
-| [Discover Bitdefender Premium VPN]                   |
+| LowestPrice nanoblock (standalone, before table, orange NOTRANSLATE): |
+| {LowestPrice, vpn, 10u-1y, monthly, Start today for as low as 0/month} |
 ```
 
-Section Metadata:
+| Products(plans) |
+| --- |
+| {HighlightSavings} |
+| **1-Year Plan** (h3) / --- / {Plans} / {FeaturedSavings} / {OldPrice} / {Price} / {PriceCondition} / [Buy Now](https:/#buylink) / 30-Day Money-Back Guarantee / Plus applicable sales tax. / See Terms of Use below. / INCLUDES: / • bullet1 / • bullet2 / ... |
+| **1-Month Plan** (h3) / --- / {Plans} / {FeaturedSavings} / {OldPrice} / {Price} / {PriceCondition} / [Buy Now](https:/#buylink) / 30-Day Money-Back Guarantee / Plus applicable sales tax. / See Terms of Use below. / INCLUDES: / • bullet1 / ... |
 
-```
-| Section Metadata  |                                |
-| Plans1            | {[ 10, vpn, 10u-1y], 10}       |
-| Plans2            | {[ 1, pass, 1u-1y], 1}         |
-| PriceCondition1   | first year                     |
-| PriceCondition2   | first year                     |
-| Featured1         | Included in All-in-One Plans   |
-| Featured2         | Included in All-in-One Plans   |
-```
+**Section Metadata (plan config section that follows):**
+
+| Section Metadata | |
+| --- | --- |
+| Sticky navigation item | Overview |
+| style | light sky blue/wide/v2 |
+| HighlightSavings1 | Best Value! Go Annual & Save {percent} |
+| Plans1 | {[10, vpn, 10u-1y], 10} |
+| OldPrice1 | (empty) |
+| Price1 | ,monthly |
+| PriceCondition1 | Billed {BilledPrice} for the first year |
+| FeaturedSavings1 | Save,{percent} |
+| Plans2 | {[10, vpn-monthly, 10u-1y], 10} |
+| OldPrice2 | (empty) |
+| Price2 | (empty) |
+| PriceCondition2 | Billed {BilledPrice} for the first month |
+| FeaturedSavings2 | Save,{percent} |
+| vpn/10/1 | USD 34.99 |
+| vpn-monthly/10/1 | USD 6.99 |
+| id | products |
+
+> **Discount section**: Immediately before the plan config Section Metadata, a separate Section Metadata block sets discount info: `Discount=vpn/10/1`, `Signature=Trusted. Always.`, `Label=Discount`.
 
 ---
 
-### Example 2 — `Products (compact)` (3 cards in one row)
+### Variant B: `products (plans, compare)` — Competitor comparison table
 
-Block table has **one content row with 3 columns**. Each compact card cell:
+Used to compare the product against free/competitor alternatives.
+
+| products (plans, compare) |
+| --- |
+| What you get with / [Free VPNs](#) / --- / • No DNS leak protection / • Limited server locations / • Slow connections / • Ads and data logging / • No Kill Switch |
+| Bitdefender / [Premium VPN](#) / {FeaturedSavings} / • bullet1 / • bullet2 / • bullet3 / • bullet4 / --- / :android: :windows: :mac: :ios: / Works on all major platforms / --- / {Plans} / {OldPrice} / {Price} / {PriceCondition} / [Get Bitdefender Premium VPN](https://...) |
+| What you get with / [Other Premium VPNs](#) / --- / • bullet1 / • bullet2 / • bullet3 / • bullet4 / • bullet5 |
+
+> The middle (Bitdefender) column is centered/highlighted. `{FeaturedSavings}` appears at the top of the cell (before bullet list), unlike other variants.
+
+**Section Metadata:**
+
+| Section Metadata | |
+| --- | --- |
+| style | centered |
+| FeaturedSavings2 | Best Value! Go Annual & Save,{percent} |
+| Plans2 | {[10, vpn, 10u-1y], 10} |
+| PriceCondition2 | *For the first year |
+| id | products |
+
+---
+
+### Variant C: `products (plans, right-column)` — Compact plan card (right column context)
+
+Used inside a 2-column `Columns` layout alongside a feature list on the left.
+
+| products (plans, right-column) |
+| --- |
+| {HighlightSavings} |
+| **1-Year Plan** (h3) / --- / {Plans} / {FeaturedSavings} / {OldPrice} / {Price} / {PriceCondition} / [Buy Now](https:/#buylink) / --- / 30-Day Money-Back Guarantee / Plus applicable sales tax. / See Terms of Use below. |
+
+> Only one plan card row (no monthly plan row).
+
+**Section Metadata:**
+
+| Section Metadata | |
+| --- | --- |
+| style | Full width, blue, circle, checked lists, two-columns |
+| HighlightSavings1 | BEST VALUE! GO ANNUAL & SAVE,{percent} |
+| PriceCondition1 | Billed {BilledPrice} for the first year |
+| OldPrice1 | (empty) |
+| Price1 | ,monthly |
+| Plans1 | {[10, vpn, 10u-1y], 10} |
+| FeaturedSavings1 | Save,{percent} |
+
+---
+
+### Variant D: `Products (compact, solutions)` — Compact product cards grid
+
+Used for multi-product sections like "Device Security". Each card has a product name, device count / brief description, and pricing nanoblocks. No product image, no `{Featured}` token in the cell.
+
+**Cell structure for each product row:**
 
 ```
-Bitdefender
-Small Office Security
-Protect up to 10 devices
+Bitdefender (h3 line 1)
+Antivirus Plus (h3 line 2)
+**Protect up to 3 devices** (bold — device count)
 ---
-Complete protection For Windows, macOS, iOS and Android
+Basic protection for **Windows**, macOS, **iOS** and **Android** (description — may have orange/link styling)
 ---
 {Plans}
-{OldPrice}
+| {OldPrice} | {FeaturedSavings} |   ← 2-column inner table
 {Price}
-{PriceCondition, first year}
-GST included
-See [Terms of Use] below.
-[Buy now]
-[Learn about]
+{PriceCondition}
+**Plus** applicable sales tax
+See [Terms of Use](https://...) below.
+[Buy now](https:/#buylink)
+[Learn more](https://...)
 ```
 
-> `{PriceCondition, first year}` — inline static text passed directly to the nanoblock instead of metadata.
+**Example: "Device Security" section (3 cards)**
 
-Section Metadata (one row shared across all 3 cards' columns):
+| Products (compact, solutions) |
+| --- |
+| Bitdefender / Antivirus Plus / **Protect up to 3 devices** / --- / Basic protection for **Windows**, macOS, **iOS** and **Android** / --- / {Plans} / \| {OldPrice} \| {FeaturedSavings} \| / {Price} / {PriceCondition} / **Plus** applicable sales tax / See [Terms of Use](#) below. / [Buy now](https:/#buylink) / [Learn more](https://...) |
+| Bitdefender / Mobile Security for iOS / 1 account / --- / Complete protection for your iPhone / --- / {Plans} / \| {OldPrice} \| {FeaturedSavings} \| / {Price} / {PriceCondition} / **Plus** applicable sales tax / See [Terms of Use](#) below. / [Buy now](https:/#buylink) / [Learn more](https://...) |
+| Bitdefender / Mobile Security for Android / 1 account / --- / Complete protection for your Android smartphone / --- / {Plans} / \| {OldPrice} \| {FeaturedSavings} \| / {Price} / {PriceCondition} / **Plus** applicable sales tax / See [Terms of Use](#) below. / [Buy now](https:/#buylink) / [Learn more](https://...) |
 
-```
-| Section Metadata  |                              |
-| HighlightSavings1 | Save, Percent                |
-| HighlightSavings2 | Save, Percent                |
-| HighlightSavings3 | Save, Percent                |
-| Plans1            | {[10, soho, 10u-1y], 10}     |
-| Plans2            | {[15, fp, 15u-1y], 15}       |
-| Plans3            | {[5, ts_i, 5u-1y], 5}        |
-| PriceCondition1   | *For the first year          |
-| PriceCondition2   | *For the first 2 years       |
-| PriceCondition3   | *For the first 3 years       |
-| OldPrice1         | Old Price                    |
-| OldPrice2         | Old Price                    |
-| OldPrice3         | Old Price                    |
-| Featured3         | Included in All-in-One Plans |
-| id                | products                     |
-```
+**Section Metadata (Device Security):**
+
+| Section Metadata | |
+| --- | --- |
+| Sticky navigation item | Device Security |
+| Plans1 | {[ 3, avpm, 3u-1y], 3} |
+| Plans2 | {[ 1, mobileios, 1u-1y], 1} |
+| Plans3 | {[ 1, mobile, 1u-1y], 1} |
+| Featured3 | **Included in All-in-One Plans** |
+| PriceCondition1 | first year |
+| PriceCondition2 | first year |
+| PriceCondition3 | first year |
+| FeaturedSavings1 | Save, {percent} |
+| FeaturedSavings2 | Save, {percent} |
+| FeaturedSavings3 | Save, {percent} |
+| avpm/3/1 (Bitdefender Antivirus Plus Multiplatform) | USD 29.99 |
+| mobileios/1/1 (Bitdefender Mobile Security for Android & iOS) | USD 17.99 |
+| mobile/1/1 (Bitdefender Mobile Security) | USD 17.99 |
+
+**Example: "Identity protection" section (3 cards — compact style, no device count line)**
+
+| Products (compact, solutions) |
+| --- |
+| Bitdefender / Identity Theft Protection Premium / --- / • Instant alerts when your personal information is at risk / • Prevent damages and financial loss from identity theft / • Complete identity theft restoration services / • Identity theft insurance, up to $2 million covered / • Extensive credit and ID monitoring / • Extra reimbursements against ransomware and social engineering up to $50k / --- / {Plans} / \| {OldPrice} \| {FeaturedSavings} \| / {Price} / {PriceCondition} / **Plus** applicable sales tax / See [Terms of Use](#) below. / [Buy now](https:/#buylink) / [Learn more](https://...) |
+| Bitdefender / Identity Theft Protection Standard / --- / • bullet list... / --- / {Plans} / \| {OldPrice} \| {FeaturedSavings} \| / {Price} / {PriceCondition} / ... |
+| Bitdefender / Digital Identity Protection / --- / • bullet list... / --- / {Plans} / \| {OldPrice} \| {FeaturedSavings} \| / {Price} / {PriceCondition} / ... |
+
+> Note: In this identity variant, there is NO device count / description line after the product name. The card goes directly to `---` then bullet list.
+
+**Section Metadata (Identity protection):**
+
+| Section Metadata | |
+| --- | --- |
+| Sticky navigation item | Identity Protection |
+| Plans1 | {[ 1, idtheftp, 1u-1y], 1} |
+| PriceCondition1 | first year |
+| Plans2 | {[ 1, idthefts, 1u-1y], 1} |
+| PriceCondition2 | first year |
+| Plans3 | {[ 1, dip, 1u-1y], 1} |
+| PriceCondition3 | first year |
+| style | pt-0 |
+| FeaturedSavings1 | Save, {percent} |
+| FeaturedSavings2 | Save, {percent} |
+| FeaturedSavings3 | Save, {percent} |
 
 ---
 
-### Example 3 — `Products (plans)` (single card with plan selector)
+### Variant E: `Products(solutions)` — Full product cards with image
+
+Used for "Privacy solutions" section. Each card includes a product image, platform icon row, `{Featured}` nanoblock token, description text, bullet list, and pricing. The `{Featured}` token is placed DIRECTLY IN THE CELL (not just via Section Metadata).
+
+**Cell structure for each product row:**
 
 ```
-| products (plans)                   |
-| {HighlightSavings}                 |
-| Bitdefender Mobile Security        |
-| 1 account / billed annually        |
-| ---                                |
-| {Plans}                            |
-| {FeaturedSavings}                  |
-| {Price}                            |
-| {OldPrice}                         |
-| {PriceCondition}                   |
-| [Buy Now]                          |
-| GST included                       |
-| See [Terms of Use] below.          |
+Bitdefender (h3 line 1)
+Premium VPN (h3 line 2)
+[product image]
+:windows: :mac: :ios: :android:  (platform icons, orange NOTRANSLATE)
+{Featured}  (orange NOTRANSLATE — fetches text from Featured1/Featured2 in Section Metadata)
+Description text
+---
+• bullet 1
+• bullet 2
+• bullet 3
+• bullet 4
+---
+{Plans}
+| {OldPrice} | {FeaturedSavings} |   ← 2-column inner table
+{Price}
+{PriceCondition}
+**Plus** applicable sales tax
+See [Terms of Use](https://...) below.
+[Buy now](https:/#buylink)
+[Discover Bitdefender Premium VPN](https://...)
 ```
 
-Section Metadata:
+**Example: "Privacy solutions" section (2 cards)**
 
-```
-| Section Metadata  |                         |
-| Style             | wide, light sky blue    |
-| Plans1            | {[ 1, mobile, 1u-1y], 1}|
-| HighlightSavings1 | Save, {percent}         |
-| FeaturedSavings1  | Save, {percent}         |
-| PriceCondition1   | *For the first year     |
-```
+| Products(solutions) |
+| --- |
+| Bitdefender / Premium VPN / [image] / :windows: :mac: :ios: :android: / {Featured} / Ultra-fast VPN that keeps your online identity and activities safe from hackers, ISPs and snoops / --- / • Unlimited encrypted traffic for up to 10 devices / • Safe online media streaming and downloads / • 4000+ servers in over 49 countries around the world / • Complete online protection and anonymity, no traffic logs / --- / {Plans} / \| {OldPrice} \| {FeaturedSavings} \| / {Price} / {PriceCondition} / **Plus** applicable sales tax / See [Terms of Use](#) below. / [Buy now](https:/#buylink) / [Discover Bitdefender Premium VPN](https://...) |
+| Bitdefender / SecurePass / [image] / :windows: :mac: :ios: :android: / {Featured} / Ultra-secure, feature-rich password manager. Keep your passwords safe and access them from anywhere. / --- / • Always have your passwords at hand / • Runs and syncs on all major platforms and browsers / • Strongest data security protocols / • Simplifies the management of your online identities / --- / {Plans} / \| {OldPrice} \| {FeaturedSavings} \| / {Price} / {PriceCondition} / **Plus** applicable sales tax / See [Terms of Use](#) below. / [Buy now](https:/#buylink) / [Discover Bitdefender SecurePass](https://...) |
+
+**Section Metadata (Privacy solutions):**
+
+| Section Metadata | |
+| --- | --- |
+| Sticky navigation item | Privacy Solutions |
+| Plans1 | {[ 10, vpn, 10u-1y], 10} |
+| Plans2 | {[ 1, secpass, 1u-1y], 1} |
+| PriceCondition1 | first year |
+| PriceCondition2 | first year |
+| Featured1 | Included in All-in-One Plans |
+| Featured2 | Included in All-in-One Plans |
+| style | pt-0 |
+| FeaturedSavings1 | Save, {percent} |
+| FeaturedSavings2 | Save, {percent} |
 
 ---
 
-### Example 4 — `Products (plans, compare)` (2-column competitor comparison)
+### Section Metadata fields reference
 
-Block table has **one content row with 2 columns**. Column 1 = competitor card, column 2 = Bitdefender card. Metadata index matches column position (Bitdefender = 2).
-
-```
-| Products (plans, compare) |                                              |
-| Free VPNs                 | Bitdefender                                  |
-| "Free" VPN                | Bitdefender Premium VPN                      |
-|                           | {FeaturedSavings}                            |
-| ---                       | ---                                          |
-| • Data limits & throttling| • Unlimited encrypted traffic for 10 devices |
-| • Privacy risks           | • 4000+ servers across 49 countries          |
-| • Weak encryption         | • No activity logs, zero tracking            |
-|                           | :android: :windows: :mac: :ios:              |
-|                           | Works on all major platforms                 |
-|                           | ---                                          |
-|                           | {Plans}                                      |
-|                           | {OldPrice}                                   |
-|                           | {Price}                                      |
-|                           | {PriceCondition}                             |
-|                           | [Buy Now]                                    |
-```
-
-> The competitor card (left column) never has `{Plans}` or pricing tokens — it is a static comparison list only.
-> `{FeaturedSavings}` appears near the top of the Bitdefender card, before the features list.
-
-Section Metadata:
-
-```
-| Section Metadata    |                              |
-| Style               | centered                     |
-| FeaturedSavings2    | Best Value! Go Annual & Save, {percent} |
-| Plans2              | {[10, vpn, 10u-1y], 10}      |
-| PriceCondition2     | *For the first year          |
-| id                  | products                     |
-```
+| Field | Purpose |
+| --- | --- |
+| `Sticky navigation item` | Label shown in the sticky nav for this section |
+| `Plans1`, `Plans2`, `Plans3` | Plan config for card N: `{[qty, productCode, variation], displayQty}` |
+| `PriceCondition1` ... | Billing period text for card N (e.g. "first year"); replaces `{BilledPrice}` token |
+| `OldPrice1` ... | Original price override for card N (often empty — uses store data) |
+| `Price1` ... | Price format for card N (`,monthly` = monthly price display) |
+| `FeaturedSavings1` ... | Savings badge for card N (e.g. `Save, {percent}` or `Best Value! Go Annual & Save,{percent}`) |
+| `HighlightSavings1` ... | Large banner savings text for card N |
+| `Featured1` ... | Featured badge text for card N (displayed via `{Featured}` nanoblock in cell — solutions variant only) |
+| `style` | Section style classes (e.g. `pt-0`, `light sky blue/wide/v2`) |
+| `id` | Section ID override (e.g. `products`) |
+| `productCode/qty/seats` | Price data rows: product code + quantity + seats → USD price |
 
 ---
 
