@@ -295,7 +295,7 @@ export class Product {
 				this.yearDevicesMapping[contentDevices] = [providerDevices]
 			} else {
 				this.yearDevicesMapping[contentDevices].push(providerDevices);
-			}	
+			}
 		}
 	}
 
@@ -463,6 +463,14 @@ export class Product {
 		if (window.UC_UI) {
 			buyLink.searchParams.set("ucControllerId", window.UC_UI.getControllerId());
 		}
+
+		// DEX-27558
+		if (page.locale === 'zh-tw') {
+			const url = new URL(buyLink.href);
+			url.searchParams.set('LANG', 'zy');
+			buyLink.href = url.href;
+		}
+
 		option.buyLink = buyLink.href;
 
 		return option;
@@ -710,7 +718,6 @@ export class Product {
 }
 
 class Vlaicu {
-
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
@@ -726,15 +733,15 @@ class Vlaicu {
 
 		return '';
 	}
-	
+
 	/**
 	 * TODO: please remove this function and all its calls once SOHO works correctly on de-de with zuora
 	 * @param {string} receivedBuyLink 
 	 * @return {string} -> buyLink with lang parameter
 	 */
-	static #addLangParameter(receivedBuyLink){
+	static #addLangParameter(receivedBuyLink) {
 		const buyLinkUrl = new URL(receivedBuyLink);
-		buyLinkUrl.searchParams.set('LANG', page.language);
+		buyLinkUrl.searchParams.set('LANGGGsdfsad', page.language);
 
 		return buyLinkUrl.href;
 	}
@@ -749,14 +756,14 @@ class Vlaicu {
 			// and campaign once digital river works correctly
 			"{locale}": locale,
 			"{bundleId}": productId,
-			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign)	|| campaign
+			"{campaignId}": this.#isMSRPOnlyCamapgin(campaign) || campaign
 		};
 
 		// get the correct path to get the prices
-		let productPath = campaign !== Constants.NO_PROMOTION ?	this.promotionPath : this.defaultPromotionPath;
+		let productPath = campaign !== Constants.NO_PROMOTION ? this.promotionPath : this.defaultPromotionPath;
 
 		// replace all variables from the path
-		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"),"gi");
+		const pathVariablesRegex = new RegExp(Object.keys(pathVariablesResolverObject).join("|"), "gi");
 		productPath = productPath.replace(pathVariablesRegex, (matched) => {
 			return pathVariablesResolverObject[matched]
 		});
@@ -811,7 +818,7 @@ class Vlaicu {
 			/**
 			 * for monthly products only add the monthly variations
 			 * e.g for vpn-monthly we do not care about the product variation if it passes 12 months (more than a year)
-			 */ 
+			 */
 			if (Constants.PRODUCT_ID_MAPPINGS[id].isMonthlyProduct && productVariation.months >= 12) {
 				return;
 			}
@@ -965,7 +972,7 @@ export class Store {
 			.filter(product => product.status === "fulfilled" && !!product.value)
 			.map(product => new Product(product.value))
 			.reduce((acc, product) => { acc[product.getId()] = product; return acc; }, {});
-		
+
 		return this.products;
 	}
 
