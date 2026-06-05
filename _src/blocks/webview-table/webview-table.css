@@ -436,6 +436,10 @@
   border-color: #3197EE;
 }
 
+.responsive .default-content-wrapper {
+    margin-bottom: 16px;
+}
+
 .responsive .webview-table-wrapper {
     max-width: 1000px;
     padding: 0 18px;
@@ -456,6 +460,14 @@
         justify-content: center;
     }
 
+    div[role="row"] {
+        &:has(h6) {
+            div[role = 'cell'] {
+                background-color: #f9f9fe; 
+            }
+        }
+    }
+
     div[role='cell'] {
         min-width: unset;
         max-width: unset;
@@ -469,6 +481,10 @@
         &:first-of-type {
             min-width: unset;
         }
+    }
+
+    .no-check {
+        margin-left: 0;
     }
 
 
