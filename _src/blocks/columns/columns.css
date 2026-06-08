@@ -70,6 +70,7 @@
 .columns-container.uninstall-tools table {
   width: 100%;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .columns-container.uninstall-tools table tr {
@@ -4102,6 +4103,15 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   @media (max-width: 768px) {
     .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
       height: 15em;
+    }
+
+    .columns-container.uninstall-tools .default-content-wrapper p {
+      margin-top: 10px;
+      padding-bottom: 0;
+    }
+
+    .columns-container.uninstall-tools .columns > div > div {
+      width: 100%;
     }
   }
 
