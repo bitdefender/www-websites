@@ -351,6 +351,116 @@ main .section.ai-skills-checker-container {
             }
         }
 
+        .upsell-container {
+            display: none;
+            width: 100%;
+            margin-top: 28px;
+            border: 1px solid #E3E7EE;
+            border-radius: 16px;
+            padding: 26px 28px 22px;
+            background: #fff;
+            box-shadow: 0 1px 3px rgb(16 24 40 / 6%);
+            text-align: left;
+        }
+
+        .upsell-container.active {
+            display: block;
+        }
+
+        .upsell-content {
+            display: grid;
+            grid-template-columns: 56px 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .upsell-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: #F2F7FF url("../../icons/shield_ai.svg") center / 28px 28px no-repeat;
+        }
+
+        .upsell-copy h3 {
+            margin: 0 0 6px;
+            font-size: 18px;
+            line-height: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .upsell-copy p {
+            margin: 0;
+            padding: 0;
+            color: #4B5563;
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        .upsell-button {
+            grid-column: 1 / -1;
+            justify-self: stretch;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
+            margin: 0;
+            padding: 12px 24px;
+            border: 0;
+            border-radius: 10px;
+            background: #1C75D8;
+            color: #fff;
+            font-size: 18px;
+            line-height: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .upsell-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .upsell-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #EEF0F3;
+            color: #6B7280;
+            font-size: 15px;
+            line-height: 22px;
+        }
+
+        .upsell-privacy {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .upsell-privacy input {
+            width: 18px;
+            height: 18px;
+            margin: 2px 0 0;
+            accent-color: #1C75D8;
+            flex: 0 0 auto;
+        }
+
+        .upsell-privacy a {
+            color: #1C75D8;
+            text-decoration: underline;
+        }
+
+        .upsell-privacy.privacy-error,
+        .upsell-privacy.privacy-error a {
+            color: #D82E21;
+        }
+
+
         button.check-url {
             padding: 15px 40px;
             cursor: pointer;
@@ -562,6 +672,27 @@ main .section.ai-skills-checker-container {
                 .button-container{
                     margin: 0;
                 }
+            }
+
+            .upsell-container {
+                margin-top: 16px;
+                padding: 20px;
+            }
+
+            .upsell-content {
+                grid-template-columns: 56px 1fr auto;
+            }
+
+            .upsell-button {
+                grid-column: auto;
+                justify-self: end;
+                min-width: 178px;
+            }
+
+            .upsell-footer {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
             }
 
             button.check-url {

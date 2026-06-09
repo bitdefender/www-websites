@@ -13,6 +13,13 @@ function changeTexts(block, statusCode, statusTitles) {
   }
 }
 
+function toggleUpsell(block, show) {
+  const upsell = block.querySelector('.upsell-container');
+  if (upsell) {
+    upsell.classList.toggle('active', show);
+  }
+}
+
 const isValidUrl = (urlString) => {
   const urlPattern = new RegExp('^(https?:\\/\\/)?' // validate protocol
       + '((([a-z\\d]([a-z\\d-_]*[a-z\\d])*)\\.)+[a-z]{2,}|' // validate domain name
@@ -31,6 +38,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   if (!inputUrl && !file) {
     result.textContent = 'Please provide a URL or upload an archive';
     result.className = 'result danger';
+    toggleUpsell(block, false);
     return;
   }
 
@@ -38,11 +46,13 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
     if (file.size > maxArchiveSizeBytes) {
       result.textContent = 'File exceeds the 10MB limit';
       result.className = 'result danger';
+      toggleUpsell(block, false);
       return;
     }
   } else if (inputUrl && !isValidUrl(inputUrl)) {
     result.textContent = 'Please enter a valid URL';
     result.className = 'result danger';
+    toggleUpsell(block, false);
     return;
   }
 
@@ -69,6 +79,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   } catch (err) {
     result.textContent = statusMessages.error ?? 'An error occurred';
     result.className = 'result danger';
+    toggleUpsell(block, false);
     input.closest('.input-container').classList.remove('loader-circle');
     return;
   }
@@ -76,6 +87,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   if (!response || !response.ok) {
     result.textContent = statusMessages.error ?? 'Please enter a valid skill URL or upload a valid archive';
     result.className = 'result danger';
+    toggleUpsell(block, false);
     input.closest('.input-container').classList.remove('loader-circle');
     return;
   }
@@ -142,6 +154,7 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
 
   result.className = className;
   block.closest('.section').classList.add(className.split(' ')[1]);
+  toggleUpsell(block, true);
   input.setAttribute('disabled', '');
   if (fileInput) fileInput.setAttribute('disabled', '');
   const inputDiv = document.getElementById('inputDiv');
@@ -185,6 +198,7 @@ async function resetChecker(block, titleText = '', inputsState = {}) {
   }
   input.value = '';
   result.className = 'result';
+  toggleUpsell(block, false);
   const inputDiv = block.querySelector('#inputDiv');
   if (inputDiv) inputDiv.textContent = '';
   if (h1) h1.textContent = titleText;
@@ -290,6 +304,102 @@ function createButtonsContainer(block, inputsState) {
         });
       }
     });
+  }
+}
+
+function createUpsellButton(buttonText) {
+  const template = document.createElement('template');
+  template.innerHTML = buttonText || '';
+  const link = template.content.querySelector('a');
+
+  if (link) {
+    link.classList.add('upsell-button');
+    link.href = '#';
+    return link;
+  }
+
+  const button = document.createElement('button');
+  button.className = 'upsell-button';
+  button.type = 'button';
+  button.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"></path><polyline points="7 11 12 16 17 11"></polyline><line x1="12" y1="4" x2="12" y2="16"></line>
+        </svg> ${buttonText ?? ''}`;
+  return button;
+}
+
+function startUpsellDownload(button) {
+  const downloadUrl = 'https://nimbus.bitdefender.net/skills/checker/scanner/download';
+  button.setAttribute('aria-busy', 'true');
+  button.classList.add('await-loader');
+
+  let iframe = document.querySelector('iframe[name="ai-skills-checker-download"]');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.name = 'ai-skills-checker-download';
+    iframe.hidden = true;
+    document.body.appendChild(iframe);
+  }
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = downloadUrl;
+  form.target = iframe.name;
+  form.hidden = true;
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+
+  setTimeout(() => {
+    button.removeAttribute('aria-busy');
+    button.classList.remove('await-loader');
+  }, 1000);
+}
+
+function createUpsellZone(block) {
+  const upsellMap = createKeyValueMap(block, '<upsell>', { useInnerHTML: true });
+  if (!Object.keys(upsellMap).length) return;
+
+  const buttonsContainer = block.querySelector('.buttons-container');
+  const upsellContainer = document.createElement('div');
+  const upsellButton = createUpsellButton(upsellMap.button);
+  upsellButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    const privacyCheckbox = upsellContainer.querySelector('.upsell-privacy input');
+    const privacyLabel = upsellContainer.querySelector('.upsell-privacy');
+    if (privacyCheckbox && !privacyCheckbox.checked) {
+      privacyLabel.classList.add('privacy-error');
+      return;
+    }
+
+    AdobeDataLayerService.push(new WindowLoadStartedEvent({ name: 'upsell-clicked' }));
+    startUpsellDownload(upsellButton);
+  });
+
+  upsellContainer.classList.add('upsell-container');
+  upsellContainer.innerHTML = `
+    <div class="upsell-content">
+      <div class="upsell-icon" aria-hidden="true">
+      </div>
+      <div class="upsell-copy">
+        ${upsellMap.title ? `<h3>${upsellMap.title}</h3>` : ''}
+        ${upsellMap.description ? `<p>${upsellMap.description}</p>` : ''}
+      </div>
+    </div>
+    <div class="upsell-footer">
+      ${upsellMap.privacy ? `<label class="upsell-privacy"><input type="checkbox"> <span>${upsellMap.privacy}</span></label>` : ''}
+    </div>
+  `;
+  upsellContainer.querySelector('.upsell-content').appendChild(upsellButton);
+  upsellContainer.querySelector('.upsell-privacy input')?.addEventListener('change', (event) => {
+    if (event.target.checked) {
+      event.target.closest('.upsell-privacy')?.classList.remove('privacy-error');
+    }
+  });
+
+  if (buttonsContainer) {
+    buttonsContainer.before(upsellContainer);
+  } else {
+    block.appendChild(upsellContainer);
   }
 }
 
@@ -480,6 +590,7 @@ export default function decorate(block) {
   button.addEventListener('click', () => checkSkillLink(block, input, result, statusMessages, statusTitles, fileInput));
 
   createButtonsContainer(block, inputsState);
+  createUpsellZone(block);
 
   // if the text is cleared, do not display any error
   input.addEventListener('input', () => {
@@ -488,11 +599,13 @@ export default function decorate(block) {
     if (url === '') {
       result.textContent = '';
       result.className = '';
+      toggleUpsell(block, false);
     }
   });
   input.addEventListener('paste', () => {
     result.textContent = '';
     result.className = '';
+    toggleUpsell(block, false);
   });
   fileInput.addEventListener('change', () => {
     // clear URL input when a file is selected
@@ -500,6 +613,7 @@ export default function decorate(block) {
       input.value = '';
       result.textContent = '';
       result.className = '';
+      toggleUpsell(block, false);
     }
   });
 }
