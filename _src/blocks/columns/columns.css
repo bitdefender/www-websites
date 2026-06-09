@@ -53,7 +53,7 @@
 
 .columns-container.uninstall-tools-list .default-content-wrapper {
   position: relative;
-  margin-bottom: 3em;
+  margin-bottom: 3em!important;
 }
 
 .columns-container.uninstall-tools-list .default-content-wrapper::after {
