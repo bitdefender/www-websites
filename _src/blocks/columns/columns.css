@@ -46,6 +46,11 @@
   z-index: 1;
 }
 
+.columns-container.uninstall-tools-list h4 u {
+  text-decoration: none;
+  font-size: 20px;
+}
+
 .columns-container.uninstall-tools-list img {
   width: auto;
   height: 240px;
