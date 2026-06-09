@@ -30,6 +30,40 @@
   font-size: var(--body-font-size-s) !important;
 }
 
+.columns-container.uninstall-tools-list {
+  margin: 0 0 4em;
+  padding: 0;
+}
+
+.columns-container.uninstall-tools-list h1, .columns-container.uninstall-tools-list h2 {
+  color: #3a3a3a;
+  font-size: 24px;
+  line-height: 52px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0 25px;
+  background-color: white;
+  z-index: 1;
+}
+
+.columns-container.uninstall-tools-list img {
+  width: auto;
+  height: 240px;
+}
+
+.columns-container.uninstall-tools-list .default-content-wrapper {
+  position: relative;
+  margin-bottom: 3em;
+}
+
+.columns-container.uninstall-tools-list .default-content-wrapper::after {
+  content: '';
+  height: 1px;
+  background-color: #eee;
+  width: 100%;
+  margin-top: -26px;
+}
+
 .columns-container.uninstall-tools .columns > div {
   align-items: flex-start;
 }
