@@ -199,12 +199,15 @@ function renderPrices(block, metadata) {
           const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears, true);
           block.prepend(planSwitcher);
         }
-        savingsTag.innerHTML = `
-          <span class="saving-tag-text" data-store-hide="no-price=discounted">
-            ${block.classList.contains('text-tag') ? '' : '<span data-store-discount="percentage"></span>'} ${saveText || ''} 
-          </span>
-        `;
-        savingsTag.style.visibility = 'visible';
+
+        if (saveText) {
+          savingsTag.innerHTML = `
+            <span class="saving-tag-text" data-store-hide="no-price=discounted">
+              ${block.classList.contains('text-tag') ? '' : '<span data-store-discount="percentage"></span>'} ${saveText || ''} 
+            </span>
+          `;
+          savingsTag.style.visibility = 'visible';
+        }
       }
       // Populate buy box for non-current products
       if (!isCurrent) {
