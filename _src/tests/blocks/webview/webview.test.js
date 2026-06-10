@@ -15,10 +15,11 @@ function setupWebview({
   sectionClass = '',
   blockClass = '',
   content = '',
+  sectionAttributes = '',
 } = {}) {
   document.body.innerHTML = `
     <main>
-      <div class="section ${sectionClass}" data-product="ps_i/5/1" data-save-text="off">
+      <div class="section ${sectionClass}" data-product="ps_i/5/1" data-save-text="off" ${sectionAttributes}>
         <div class="webview-wrapper">
           <div class="webview ${blockClass}">
             ${content}
@@ -53,11 +54,11 @@ describe('webview', () => {
     expect(block.querySelector('.webview-modal-offer')).toBeFalsy();
   });
 
-  it('uses mapped bundle_id, slots, and billing_cycle url parameters for store context', async () => {
+  it('uses slots and billing_cycle url parameters for store option context', async () => {
     window.history.pushState(
       {},
       '',
-      '/en-us/consumer/webview/churn-flow?bundle_id=com.bitdefender.premiumsecurity.v2&slots=5&billing_cycle=730',
+      '/en-us/consumer/webview/churn-flow?slots=5&billing_cycle=730',
     );
     const block = setupWebview({
       content: `
@@ -88,6 +89,29 @@ describe('webview', () => {
     expect(block.dataset.storeOption).toBe('5-1');
   });
 
+  it('replaces the renewal date marker with the formatted renewal-date timestamp', async () => {
+    window.history.pushState(
+      {},
+      '',
+      '/en-us/consumer/webview/churn-flow?renewal-date=1811492795',
+    );
+    const block = setupWebview({
+      content: `
+        <div><p>Your subscription renews on &lt;renewal-date&gt;.</p></div>
+      `,
+    });
+    const expectedRenewalDate = new Intl.DateTimeFormat('en-us', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(new Date(1811492795 * 1000));
+
+    await decorate(block);
+
+    expect(block.textContent).toContain(`Your subscription renews on ${expectedRenewalDate}.`);
+    expect(block.textContent).not.toContain('<renewal-date>');
+  });
+
   it('creates the discount modal only when the variation class is present', async () => {
     const block = setupWebview({
       sectionClass: 'discount-modal',
@@ -112,5 +136,26 @@ describe('webview', () => {
     expect(block.querySelector('.webview-modal-dismiss').textContent).toContain('End auto renewal');
     expect(block.querySelector('.prod-save').dataset.storeHide).toBe('no-price=discounted');
     expect(block.querySelector('.prod-save [data-store-discount="percentage"]')).toBeTruthy();
+  });
+
+  it('uses hardcoded discount text in the discount modal when authored', async () => {
+    const block = setupWebview({
+      sectionClass: 'discount-modal',
+      sectionAttributes: 'data-hardcoded-discount="20%"',
+      content: `
+        <div><h2>Thank you for your feedback!</h2></div>
+        <div><p>It really helps. As a sign of gratitude, here’s a special offer for you:</p></div>
+        <div><p>&lt;discounted-price-percentage&gt; {PRICEBOX_V2} applied on your next renewal</p></div>
+        <div><p>{under_price_text}</p><p>The offer is available if you choose to keep auto-renewal on.</p></div>
+        <div><p><a href="#buylink">I take the offer</a></p></div>
+      `,
+    });
+
+    await decorate(block);
+
+    const discount = block.querySelector('.prod-save');
+    expect(discount.textContent).toBe('20%');
+    expect(discount.hasAttribute('data-store-hide')).toBe(false);
+    expect(discount.querySelector('[data-store-discount="percentage"]')).toBeFalsy();
   });
 });

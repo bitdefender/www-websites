@@ -1,38 +1,9 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 
-export const BUNDLE_ID_MAP = {
-  'com.bitdefender.cl.av': 'av',
-  'com.bitdefender.cl.is': 'is',
-  'com.bitdefender.cl.tsmd': 'tsmd',
-  'com.bitdefender.fp': 'fp',
-  'com.bitdefender.premiumsecurity': 'ps',
-  'com.bitdefender.premiumsecurityplus': 'psp',
-  'com.bitdefender.soho': 'soho',
-  'com.bitdefender.avformac': 'mac',
-  'com.bitdefender.vpn': 'vpn',
-  'com.bitdefender.passwordmanager': 'pass',
-  'com.bitdefender.bms': 'bms',
-  'com.bitdefender.iosprotection': 'ios',
-  'com.bitdefender.dataprivacy': 'dip',
-  'com.bitdefender.tsmd.v2': 'ts_i',
-  'com.bitdefender.premiumsecurity.v2': 'ps_i',
-  'com.bitdefender.ultimatesecurityeu.v2': 'us_i',
-  'com.bitdefender.ultimatesecurityus.v2': 'us_pi',
-  'com.bitdefender.ultimatesecurityplusus.v2': 'us_pie',
-  'com.bitdefender.cl.avplus.v2': 'avpm',
-  'com.bitdefender.ultimatesecurityus': 'ultsec',
-  'com.bitdefender.securepass': 'secpass',
-  'com.bitdefender.vsb': 'vsb',
-  'com.bitdefender.ccp': 'sc',
-  'com.bitdefender.idtheftpremium': 'idtheftp',
-  'com.bitdefender.idtheftstandard': 'idthefts',
-};
-
 const URL_PARAMS = {
-  bundleId: 'bundle_id',
   slots: 'slots',
   billingCycle: 'billing_cycle',
-  remainingDays: 'remaining_days',
+  renewalDate: 'renewal-date',
   lang: 'lang',
 };
 
@@ -81,11 +52,6 @@ async function checkAndReplacePrivacyPolicyLink(block) {
   }
 }
 
-function getUrlBundleId() {
-  const bundleId = getUrlParam(URL_PARAMS.bundleId)?.trim().toLowerCase();
-  return bundleId ? BUNDLE_ID_MAP[bundleId] : null;
-}
-
 function getUrlStoreOption() {
   const slots = getUrlParam(URL_PARAMS.slots);
   const billingCycle = Number(getUrlParam(URL_PARAMS.billingCycle));
@@ -115,11 +81,9 @@ function getUrlStoreOption() {
  * @param {HTMLElement} block
  * @param {string} [product] Product string in the format "id/users/years".
  * @param {Object} [options]
- * @param {string} [options.bundleId]
  * @param {string} [options.urlStoreOption]
  */
 function setupStoreContext(block, product, options = {}) {
-  const bundleId = options.bundleId ?? getUrlBundleId();
   const urlStoreOption = options.urlStoreOption ?? getUrlStoreOption();
   const [productId, productUsers, productYears] = product?.split('/') ?? [];
 
@@ -127,7 +91,7 @@ function setupStoreContext(block, product, options = {}) {
 
   const attributes = {
     'data-store-context': '',
-    'data-store-id': bundleId ?? productId,
+    'data-store-id': productId,
     'data-store-option': urlStoreOption || productStoreOption,
     'data-store-department': 'consumer',
     'data-store-event': 'product-loaded',
@@ -140,25 +104,17 @@ function setupStoreContext(block, product, options = {}) {
   });
 }
 
-function getUrlRemainingDays() {
-  const remainingDays = getUrlParam(URL_PARAMS.remainingDays)?.trim();
-
-  if (!remainingDays || !/^\d+$/.test(remainingDays)) {
-    return null;
-  }
-
-  return Number(remainingDays);
-}
-
 function getRenewalDate() {
-  const remainingDays = getUrlRemainingDays();
+  const renewalTimestamp = getUrlParam(URL_PARAMS.renewalDate)?.trim();
 
-  if (remainingDays === null) {
+  if (!renewalTimestamp || !/^\d+$/.test(renewalTimestamp)) {
     return null;
   }
 
-  const renewalDate = new Date();
-  renewalDate.setDate(renewalDate.getDate() + remainingDays);
+  const renewalDate = new Date(Number(renewalTimestamp) * 1000);
+  if (Number.isNaN(renewalDate.getTime())) {
+    return null;
+  }
 
   return new Intl.DateTimeFormat(getLanguage(), {
     month: 'long',
@@ -188,14 +144,25 @@ function isWebviewSectionVariant(block, variantClass) {
   return section?.classList.contains(variantClass);
 }
 
-function getDiscountPercentageHtml() {
+function escapeHtml(value) {
+  const element = document.createElement('span');
+  element.textContent = value;
+  return element.innerHTML;
+}
+
+function getDiscountPercentageHtml(hardcodedDiscount) {
+  const discount = hardcodedDiscount?.trim();
+  if (discount) {
+    return `<span class="prod-save">${escapeHtml(discount)}</span>`;
+  }
+
   return '<span class="prod-save" data-store-hide="no-price=discounted"> <span data-store-discount="percentage"></span></span>';
 }
 
-function replaceDiscountPercentageVariable(html = '') {
+function replaceDiscountPercentageVariable(html, hardcodedDiscount) {
   const discountPercentageTagPattern = /(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)(.*?)(?:&#x3C;|&lt;|<)\/discounted-price-percentage(?:&gt;|>)/gis;
   const discountPercentageMarkerPattern = /(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)/gi;
-  const discountPercentageHtml = getDiscountPercentageHtml();
+  const discountPercentageHtml = getDiscountPercentageHtml(hardcodedDiscount);
 
   return html.replaceAll(
     discountPercentageTagPattern,
@@ -203,7 +170,7 @@ function replaceDiscountPercentageVariable(html = '') {
   ).replaceAll(discountPercentageMarkerPattern, discountPercentageHtml);
 }
 
-function decorateDiscountModal(block) {
+function decorateDiscountModal(block, hardcodedDiscount) {
   const wrapper = block.closest('.webview-wrapper') || block.parentElement;
   wrapper?.classList.add('discount-modal');
 
@@ -223,8 +190,57 @@ function decorateDiscountModal(block) {
 
   const priceBoxHtml = replaceDiscountPercentageVariable(
     priceBoxElement?.innerHTML ?? '',
+    hardcodedDiscount,
   );
 
+function decorateDiscountModal(block, saveText) {
+  const wrapper = block.closest('.webview-wrapper') || block.parentElement;
+  wrapper?.classList.add('discount-modal');
+
+  const {
+    title,
+    body,
+    offerDiscount,
+    offerSubtitle,
+    legal,
+  } = getOfferCopy(block, saveText);
+
+  const buyLink = block.querySelector('a[href*="#buylink"]');
+  const secondaryLink = getSecondaryLink(block, buyLink);
+  const primaryText = buyLink?.textContent.trim() || 'I take the offer';
+  const secondaryText = secondaryLink?.textContent.trim() || 'End auto renewal';
+  const primaryHref = buyLink?.getAttribute('href') || '#buylink';
+
+  block.innerHTML = `
+    <button class="webview-modal-close" type="button" aria-label="Close"></button>
+    <div class="webview-modal-content">
+      <h2>${title}</h2>
+      <div class="webview-modal-copy">${body}</div>
+      <div class="webview-modal-offer">
+        <div class="webview-modal-discount">${offerDiscount}</div>
+        <div class="webview-modal-offer-subtitle">${offerSubtitle}</div>
+      </div>
+      <div class="webview-modal-legal">${legal}</div>
+      <div class="webview-modal-actions">
+        <p class="button-container">
+          <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
+        </p>
+        <p class="button-container webview-modal-dismiss">
+          <a class="button secondary" href="#dismiss"><span class="button-text">${secondaryText}</span></a>
+        </p>
+      </div>
+    </div>`;
+
+  block.querySelector('.webview-modal-close')
+    ?.addEventListener('click', () => dismissModal(block));
+  block.querySelector('.webview-modal-dismiss a')
+    ?.addEventListener('click', (event) => {
+      event.preventDefault();
+      dismissModal(block);
+    });
+}
+
+function decorateDefaultWebview(block, product, saveText) {
   const buyLink = block.querySelector('a[href*="#buylink"]');
   const secondaryLink = block.querySelector('a[href*="https://localhost/dynamicupsell?view_action=close"]');
 
@@ -324,9 +340,9 @@ function decorateDefaultWebview(block, product, saveText) {
   }
 }
 
-function decorateWebviewSection(block, product, saveText) {
+function decorateWebviewSection(block, product, saveText, hardcodedDiscount) {
   if (isWebviewSectionVariant(block, 'discount-modal')) {
-    return decorateDiscountModal(block);
+    return decorateDiscountModal(block, hardcodedDiscount);
   }
 
   if (isWebviewSectionVariant(block, 'churn-thank-you-v1')) {
@@ -339,12 +355,12 @@ function decorateWebviewSection(block, product, saveText) {
 export default async function decorate(block) {
   const section = block.closest('.section');
   const {
-    product, saveText,
+    product, saveText, hardcodedDiscount,
   } = section?.dataset || {};
 
   setupStoreContext(block, product);
 
-  decorateWebviewSection(block, product, saveText);
+  decorateWebviewSection(block, product, saveText, hardcodedDiscount);
 
   const url = new URL(window.location.href);
   if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'dark') {
