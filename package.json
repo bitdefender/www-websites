@@ -47,14 +47,15 @@
   "dependencies": {
     "@glidejs/glide": "^3.7.1",
     "@repobit/dex-data-layer": "^2.2.2",
-    "@repobit/dex-launch": "^3.0.19",
-    "@repobit/dex-system-design": "^0.23.32",
-    "@repobit/dex-target": "^2.14.14",
+    "@repobit/dex-launch": "^3.0.28",
+    "@repobit/dex-system-design": "^0.23.41",
+    "@repobit/dex-target": "^2.14.23",
     "@repobit/dex-utils": "^2.2.2",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
   },
   "volta": {
-    "node": "22.14.0"
+    "node": "24.16.0",
+    "npm": "11.13.0"
   }
 }
