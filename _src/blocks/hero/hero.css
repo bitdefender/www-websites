@@ -929,6 +929,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero.new2024design .hero-content:last-of-type {
     min-height: 360px;
     padding: 2em;
+    align-items: center;
   }
 
   main .hero.new2024design .hero-picture {
