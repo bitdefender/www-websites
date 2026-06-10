@@ -202,17 +202,30 @@ function decorateDiscountModal(block, hardcodedDiscount) {
 
   const canvasContent = block.closest('.mbox-canvas');
   const canvasPromo = canvasContent?.dataset?.promotion;
-  let primaryHref = buyLink?.getAttribute('href') || '#buylink';
+  const primaryHref = buyLink?.getAttribute('href') || '#buylink';
+  let primaryAction = '';
 
-  // method exposed inside product
-  if (canvasPromo) {
-    primaryHref = `acceptDiscountedOffer(${canvasPromo})`;
-  }
+  function setPrimaryAction() {
+    // Implementation for setting primary action based on the presence of canvasPromo and buyLink
+    if (canvasPromo) {
+      return `
+        <p class="button-container">
+          <a class="button" type="button" data-accept-discounted-offer><span class="button-text">${primaryText}</span></a>
+        </p>`;
+    }
 
-  const primaryAction = buyLink ? `
+    if (buyLink) {
+      return `
         <p class="button-container">
           <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
-        </p>` : '';
+        </p>`;
+    }
+
+    return '';
+  }
+
+  primaryAction = setPrimaryAction();
+
   const secondaryAction = secondaryLink ? `
         <p class="button-container webview-modal-dismiss">
           <a class="button secondary" href="${secondaryHref}""><span class="button-text">${secondaryText}</span></a>
@@ -231,6 +244,11 @@ function decorateDiscountModal(block, hardcodedDiscount) {
         ${secondaryAction}
       </div>
     </div>`;
+
+  block.querySelector('[data-accept-discounted-offer]')?.addEventListener('click', () => {
+    // eslint-disable-next-line no-undef
+    acceptDiscountedOffer(canvasPromo);
+  });
 }
 
 function decorateChurnThankYouV1(block) {
