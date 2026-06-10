@@ -57,12 +57,13 @@ async function extractServiceId(serviceId) {
   return null;
 }
 
-async function createOfferParameters() {
+export async function createOfferParameters() {
   const parameters = {};
   const urlParams = new URLSearchParams(window.location.search);
   const feature = urlParams.get('feature');
   const language = urlParams.get('lang');
   const serviceId = urlParams.get('service_id');
+  const autoRenewal = urlParams.get('auto_renewal');
 
   if (feature) {
     parameters.feature = feature.replaceAll('_', '-');
@@ -80,10 +81,14 @@ async function createOfferParameters() {
     }
   }
 
+  if (autoRenewal) {
+    parameters.auto_renewal = autoRenewal;
+  }
+
   return parameters;
 }
 
-function createOfferProfileParameters(parameters) {
+export function createOfferProfileParameters(parameters) {
   const profileParameters = {};
   Object.entries(parameters).forEach(([key, value]) => {
     profileParameters[`profile.${key}`] = value;
