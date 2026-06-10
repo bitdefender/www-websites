@@ -139,9 +139,17 @@ function replaceRenewalDateMarker(block) {
   return true;
 }
 
-function isWebviewSectionVariant(block, variantClass) {
+function isDiscountModal(block) {
   const section = block.closest('.section');
-  return section?.classList.contains(variantClass);
+  const wrapper = block.closest('.webview-wrapper') || block.parentElement;
+  return block.classList.contains('discount-modal')
+    || wrapper?.classList.contains('discount-modal')
+    || section?.classList.contains('discount-modal');
+}
+
+function getFirstContent(block, selector, fallback = '') {
+  const element = block.querySelector(selector);
+  return element?.innerHTML.trim() || fallback;
 }
 
 function escapeHtml(value) {
@@ -150,50 +158,77 @@ function escapeHtml(value) {
   return element.innerHTML;
 }
 
-function getDiscountPercentageHtml(hardcodedDiscount) {
+function getDiscountPercentageHtml(saveText, hardcodedDiscount) {
   const discount = hardcodedDiscount?.trim();
   if (discount) {
     return `<span class="prod-save">${escapeHtml(discount)}</span>`;
   }
 
-  return '<span class="prod-save" data-store-hide="no-price=discounted"> <span data-store-discount="percentage"></span></span>';
+  return `<span class="prod-save" data-store-hide="no-price=discounted">${saveText ?? ''} <span data-store-discount="percentage"></span></span>`;
 }
 
-function replaceDiscountPercentageVariable(html, hardcodedDiscount) {
-  const discountPercentageTagPattern = /(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)(.*?)(?:&#x3C;|&lt;|<)\/discounted-price-percentage(?:&gt;|>)/gis;
-  const discountPercentageMarkerPattern = /(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)/gi;
-  const discountPercentageHtml = getDiscountPercentageHtml(hardcodedDiscount);
+function replaceDiscountPercentageVariable(html, saveText, hardcodedDiscount) {
+  const discountPercentageHtml = getDiscountPercentageHtml(saveText, hardcodedDiscount);
 
-  return html.replaceAll(
-    discountPercentageTagPattern,
-    `${discountPercentageHtml}$1`,
-  ).replaceAll(discountPercentageMarkerPattern, discountPercentageHtml);
+  return html
+    .replace(/(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)(.*?)(?:&#x3C;|&lt;|<)\/discounted-price-percentage(?:&gt;|>)/gis, `${discountPercentageHtml}$1`)
+    .replace(/(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)/gi, discountPercentageHtml);
 }
 
-function decorateDiscountModal(block, hardcodedDiscount) {
-  const wrapper = block.closest('.webview-wrapper') || block.parentElement;
-  wrapper?.classList.add('discount-modal');
+function removeDiscountPercentageVariable(html) {
+  return html
+    .replace(/(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)(.*?)(?:&#x3C;|&lt;|<)\/discounted-price-percentage(?:&gt;|>)/gis, '$1')
+    .replace(/(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)/gi, '');
+}
 
-  const children = [...block.children];
+function getOfferCopy(block, saveText, hardcodedDiscount) {
+  const title = getFirstContent(block, 'h1, h2, h3, h4', 'Thank you for your feedback!');
+  const bodyHtml = [...block.querySelectorAll('p')]
+    .find((paragraph) => !paragraph.closest('.button-container')
+      && !paragraph.textContent.includes('{PRICE_BOX}')
+      && !paragraph.textContent.includes('{PRICEBOX_V2}')
+      && !paragraph.textContent.includes('{under_price_text}'))?.innerHTML.trim()
+    || 'It really helps. As a sign of gratitude, here’s a special offer for you:';
+  const priceBox = [...block.children]
+    .find((child) => child.textContent.includes('{PRICE_BOX}')
+      || child.textContent.includes('{PRICEBOX_V2}'));
+  const offerSubtitle = removeDiscountPercentageVariable(priceBox?.innerHTML || '')
+    .replaceAll('{PRICE_BOX}', '')
+    .replaceAll('{PRICEBOX_V2}', '')
+    .replace(/<\/?p>/g, '')
+    .trim()
+    || 'applied on your next renewal';
+  const legal = [...block.children]
+    .find((child) => child.textContent.includes('{under_price_text}'))?.innerHTML
+    .replaceAll('{under_price_text}', '').trim()
+    || '<p>The offer is available if you choose to keep auto-renewal on.</p>';
 
-  const firstRow = children[0]?.innerHTML.trim() ?? '';
-  const supportText = children[2]?.innerHTML ?? '';
+  return {
+    title,
+    body: removeDiscountPercentageVariable(bodyHtml),
+    offerDiscount: getDiscountPercentageHtml(saveText, hardcodedDiscount),
+    offerSubtitle: replaceDiscountPercentageVariable(offerSubtitle, saveText, hardcodedDiscount),
+    legal: replaceDiscountPercentageVariable(legal, saveText, hardcodedDiscount),
+  };
+}
 
-  const priceBoxElement = children.find((child) => child.textContent?.includes('{PRICEBOX_V2}'));
-  priceBoxElement?.querySelector('h2')?.classList.add('webview-modal-discount');
+function dismissModal(block) {
+  const wrapper = block.closest('.webview-wrapper') || block;
+  wrapper.remove();
+}
 
-  priceBoxElement?.querySelectorAll('p').forEach((paragraph) => {
-    if (paragraph.textContent.trim() === '{PRICEBOX_V2}') {
-      paragraph.remove();
-    }
-  });
+function getSecondaryLink(block, buyLink) {
+  const links = [...block.querySelectorAll('a')].filter((link) => link !== buyLink);
+  return links.find((link) => {
+    const href = link.getAttribute('href') || '';
+    const text = link.textContent.trim().toLowerCase();
+    return href.includes('#dismiss')
+      || href.includes('#end-auto-renewal')
+      || text.includes('end auto renewal');
+  }) || links.filter((link) => link.closest('.button-container')).at(-1) || links.at(-1);
+}
 
-  const priceBoxHtml = replaceDiscountPercentageVariable(
-    priceBoxElement?.innerHTML ?? '',
-    hardcodedDiscount,
-  );
-
-function decorateDiscountModal(block, saveText) {
+function decorateDiscountModal(block, saveText, hardcodedDiscount) {
   const wrapper = block.closest('.webview-wrapper') || block.parentElement;
   wrapper?.classList.add('discount-modal');
 
@@ -203,7 +238,7 @@ function decorateDiscountModal(block, saveText) {
     offerDiscount,
     offerSubtitle,
     legal,
-  } = getOfferCopy(block, saveText);
+  } = getOfferCopy(block, saveText, hardcodedDiscount);
 
   const buyLink = block.querySelector('a[href*="#buylink"]');
   const secondaryLink = getSecondaryLink(block, buyLink);
@@ -238,63 +273,6 @@ function decorateDiscountModal(block, saveText) {
       event.preventDefault();
       dismissModal(block);
     });
-}
-
-function decorateDefaultWebview(block, product, saveText) {
-  const buyLink = block.querySelector('a[href*="#buylink"]');
-  const secondaryLink = block.querySelector('a[href*="https://localhost/dynamicupsell?view_action=close"]');
-
-  const primaryText = buyLink?.textContent.trim() || '';
-  const secondaryText = secondaryLink?.textContent.trim() || '';
-  const secondaryHref = secondaryLink?.getAttribute('href');
-  const primaryHref = buyLink?.getAttribute('href') || '#buylink';
-  const primaryAction = buyLink ? `
-        <p class="button-container">
-          <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
-        </p>` : '';
-  const secondaryAction = secondaryLink ? `
-        <p class="button-container webview-modal-dismiss">
-          <a class="button secondary" href="${secondaryHref}""><span class="button-text">${secondaryText}</span></a>
-        </p>` : '';
-
-  block.innerHTML = `
-    <a href="https://localhost/dynamicupsell?view_action=close" class="webview-modal-close" type="button" aria-label="Close"></a>
-    <div class="webview-modal-content">
-      <div class="webview-modal-copy">${firstRow}</div>
-      <div class="webview-modal-offer">
-        ${priceBoxHtml}
-      </div>
-      <div class="webview-modal-text-bottom">${supportText}</div>
-      <div class="webview-modal-actions">
-        ${primaryAction}
-        ${secondaryAction}
-      </div>
-    </div>`;
-}
-
-function decorateChurnThankYouV1(block) {
-  const wrapper = block.closest('.webview-wrapper') || block.parentElement;
-  wrapper?.classList.add('churn-thank-you-v1');
-
-  const media = block.querySelector('picture, img');
-  const title = block.querySelector('h1, h2, h3, h4, h5, h6');
-  const ctaLink = block.querySelector('a');
-  const ctaHref = ctaLink?.getAttribute('href');
-  const paragraphs = [...block.querySelectorAll('p')]
-    .filter((paragraph) => !paragraph.querySelector('img, a') && paragraph.textContent.trim());
-  const body = paragraphs.map((paragraph) => paragraph.outerHTML).join('');
-  const ctaText = ctaLink?.textContent.trim();
-
-  block.innerHTML = `
-    <a href="https://localhost/dynamicupsell?view_action=close" class="webview-modal-close" type="button" aria-label="Close"></a>
-    <div class="webview-thank-you-modal-content">
-      ${media ? `<div class="webview-thank-you-modal-image">${media.outerHTML}</div>` : ''}
-      <h2 class="webview-thank-you-modal-title">${title?.innerHTML.trim()}</h2>
-      <div class="webview-thank-you-modal-copy">${body}</div>
-      <p class="button-container webview-thank-you-modal-action">
-        <a class="button" href="${ctaHref}"><span class="button-text">${ctaText}</span></a>
-      </p>
-    </div>`;
 }
 
 function decorateDefaultWebview(block, product, saveText) {
@@ -340,18 +318,6 @@ function decorateDefaultWebview(block, product, saveText) {
   }
 }
 
-function decorateWebviewSection(block, product, saveText, hardcodedDiscount) {
-  if (isWebviewSectionVariant(block, 'discount-modal')) {
-    return decorateDiscountModal(block, hardcodedDiscount);
-  }
-
-  if (isWebviewSectionVariant(block, 'churn-thank-you-v1')) {
-    return decorateChurnThankYouV1(block);
-  }
-
-  return decorateDefaultWebview(block, product, saveText);
-}
-
 export default async function decorate(block) {
   const section = block.closest('.section');
   const {
@@ -360,7 +326,11 @@ export default async function decorate(block) {
 
   setupStoreContext(block, product);
 
-  decorateWebviewSection(block, product, saveText, hardcodedDiscount);
+  if (isDiscountModal(block)) {
+    decorateDiscountModal(block, saveText, hardcodedDiscount);
+  } else {
+    decorateDefaultWebview(block, product, saveText);
+  }
 
   const url = new URL(window.location.href);
   if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'dark') {
