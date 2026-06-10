@@ -205,6 +205,9 @@ export default async function decorate(block) {
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
   });
+  if (configMbox?.promotion) {
+    block.setAttribute('data-promotion', configMbox.promotion);
+  }
   await loadBlocks(block.querySelector('.canvas-content'));
   await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
   window.disableGlobalStore = true;
