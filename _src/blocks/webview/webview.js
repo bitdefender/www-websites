@@ -1,142 +1,101 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 
-const URL_PARAMS = {
-  slots: 'slots',
-  billingCycle: 'billing_cycle',
-  renewalDate: 'renewal-date',
-  lang: 'lang',
+export const BUNDLE_ID_MAPPING = {
+  bundleIds: {
+    'com.bitdefender.cl.av': 'av',
+    'com.bitdefender.cl.is': 'is',
+    'com.bitdefender.cl.tsmd': 'tsmd',
+    'com.bitdefender.fp': 'fp',
+    'com.bitdefender.premiumsecurity': 'ps',
+    'com.bitdefender.premiumsecurityplus': 'psp',
+    'com.bitdefender.soho': 'soho',
+    'com.bitdefender.avformac': 'mac',
+    'com.bitdefender.vpn': 'vpn',
+    'com.bitdefender.passwordmanager': 'pass',
+    'com.bitdefender.bms': 'bms',
+    'com.bitdefender.iosprotection': 'ios',
+    'com.bitdefender.dataprivacy': 'dip',
+    'com.bitdefender.tsmd.v2': 'ts_i',
+    'com.bitdefender.premiumsecurity.v2': 'ps_i',
+    'com.bitdefender.ultimatesecurityeu.v2': 'us_i',
+    'com.bitdefender.ultimatesecurityus.v2': 'us_pi',
+    'com.bitdefender.ultimatesecurityplusus.v2': 'us_pie',
+    'com.bitdefender.cl.avplus.v2': 'avpm',
+    'com.bitdefender.ultimatesecurityus': 'ultsec',
+    'com.bitdefender.securepass': 'secpass',
+    'com.bitdefender.vsb': 'vsb',
+    'com.bitdefender.ccp': 'sc',
+    'com.bitdefender.idtheftpremium': 'idtheftp',
+    'com.bitdefender.idtheftstandard': 'idthefts',
+  },
 };
 
-function getUrlParam(name) {
-  return new URLSearchParams(window.location.search).get(name);
-}
-
-/**
- * Get locale from path, query-params or default to en-us
- * @returns {string} Locale in language-country format
- */
 function getLanguage() {
+  // Try to get the language from the path
   const langCountry = getLanguageCountryFromPath();
   if (langCountry && langCountry.language && langCountry.country) {
     return `${langCountry.language}-${langCountry.country}`;
   }
 
-  const langFromQuery = getUrlParam(URL_PARAMS.lang);
+  // Try to get the language from the query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const langFromQuery = urlParams.get('lang');
   if (langFromQuery) {
     return langFromQuery;
   }
 
+  // Default to "en-us"
   return 'en-us';
 }
 
 async function checkAndReplacePrivacyPolicyLink(block) {
-  const privacyPolicyLink = block.querySelector('.privacy-policy-text a');
-
-  if (!privacyPolicyLink) {
-    return;
-  }
-
-  const locale = getLanguage().toLowerCase();
-  privacyPolicyLink.href = privacyPolicyLink.href.replace('locale', locale);
-  privacyPolicyLink.setAttribute('target', '_blank');
-  privacyPolicyLink.setAttribute('rel', 'noopener noreferrer');
-
-  try {
-    const response = await fetch(privacyPolicyLink.href, { method: 'HEAD' });
-
-    if (response.status === 404) {
-      privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
+  // Select the privacy-policy tag
+  const privacyPolicyTag = block.querySelector('.privacy-policy-text');
+  if (privacyPolicyTag) {
+    // Select the link inside the privacy-policy tag
+    const privacyPolicyLink = privacyPolicyTag.querySelector('a');
+    const locale = getLanguage().toLowerCase();
+    if (privacyPolicyLink) {
+      privacyPolicyLink.href = privacyPolicyLink.href.replace('locale', locale);
+      privacyPolicyLink.setAttribute('target', '_blank');
+      const response = await fetch(privacyPolicyLink.href);
+      if (response.status === 404) {
+        // Replace the link with the en-us version
+        privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
+      }
     }
-  } catch {
-    privacyPolicyLink.href = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
   }
 }
 
-function getUrlStoreOption() {
-  const slots = getUrlParam(URL_PARAMS.slots);
-  const billingCycle = Number(getUrlParam(URL_PARAMS.billingCycle));
-
-  const VALID_BILLING_CYCLES = new Map([
-    [365, 1],
-    [730, 2],
-    [1095, 3],
-  ]);
-
-  if (!slots || !/^\d+$/.test(slots)) {
-    return null;
+function setupStoreContext(block, product) {
+  let prodName; let prodUsers; let prodYears;
+  if (product) {
+    [prodName, prodUsers, prodYears] = product.split('/');
   }
+  block.setAttribute('data-store-context', '');
+  block.setAttribute('data-store-id', prodName);
+  block.setAttribute('data-store-option', `${prodUsers}-${prodYears}`);
+  block.setAttribute('data-store-department', 'consumer');
+  block.setAttribute('data-store-event', 'product-loaded');
+}
 
-  const years = VALID_BILLING_CYCLES.get(billingCycle);
-  if (!years) {
+function getUrlBundleId() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const bundleId = urlParams.get('bundle_id')?.trim().toLowerCase();
+  return bundleId ? BUNDLE_ID_MAPPING.bundleIds[bundleId] : null;
+}
+
+function getUrlStoreOption() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const slots = urlParams.get('slots')?.trim();
+  const billingCycle = Number(urlParams.get('billing_cycle'));
+  const years = billingCycle / 365;
+
+  if (!slots || !Number.isInteger(years) || years <= 0) {
     return null;
   }
 
   return `${slots}-${years}`;
-}
-
-/**
- * Sets store context attributes on the block.
- * URL-provided values override values derived from the product string.
- *
- * @param {HTMLElement} block
- * @param {string} [product] Product string in the format "id/users/years".
- * @param {Object} [options]
- * @param {string} [options.urlStoreOption]
- */
-function setupStoreContext(block, product, options = {}) {
-  const urlStoreOption = options.urlStoreOption ?? getUrlStoreOption();
-  const [productId, productUsers, productYears] = product?.split('/') ?? [];
-
-  const productStoreOption = productUsers && productYears ? `${productUsers}-${productYears}` : undefined;
-
-  const attributes = {
-    'data-store-context': '',
-    'data-store-id': productId,
-    'data-store-option': urlStoreOption || productStoreOption,
-    'data-store-department': 'consumer',
-    'data-store-event': 'product-loaded',
-  };
-
-  Object.entries(attributes).forEach(([name, value]) => {
-    if (value !== undefined && value !== null) {
-      block.setAttribute(name, value);
-    }
-  });
-}
-
-function getRenewalDate() {
-  const renewalTimestamp = getUrlParam(URL_PARAMS.renewalDate)?.trim();
-
-  if (!renewalTimestamp || !/^\d+$/.test(renewalTimestamp)) {
-    return null;
-  }
-
-  const renewalDate = new Date(Number(renewalTimestamp) * 1000);
-  if (Number.isNaN(renewalDate.getTime())) {
-    return null;
-  }
-
-  return new Intl.DateTimeFormat(getLanguage(), {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(renewalDate);
-}
-
-function replaceRenewalDateMarker(block) {
-  const renewalDatePattern = /(?:&#x3C;|&lt;|<)renewal-date(?:&gt;|>)/gi;
-  const renewalDate = getRenewalDate();
-
-  if (!renewalDate) {
-    return false;
-  }
-
-  if (!renewalDatePattern.test(block.innerHTML)) {
-    return false;
-  }
-
-  block.innerHTML = block.innerHTML.replaceAll(renewalDatePattern, renewalDate);
-  return true;
 }
 
 function isDiscountModal(block) {
@@ -152,49 +111,35 @@ function getFirstContent(block, selector, fallback = '') {
   return element?.innerHTML.trim() || fallback;
 }
 
-function escapeHtml(value) {
-  const element = document.createElement('span');
-  element.textContent = value;
-  return element.innerHTML;
-}
-
-function getDiscountPercentageHtml(saveText, hardcodedDiscount) {
-  const discount = hardcodedDiscount?.trim();
-  if (discount) {
-    return `<span class="prod-save">${escapeHtml(discount)}</span>`;
-  }
-
+function getDiscountPercentageHtml(saveText) {
   return `<span class="prod-save" data-store-hide="no-price=discounted">${saveText ?? ''} <span data-store-discount="percentage"></span></span>`;
 }
 
-function replaceDiscountPercentageVariable(html, saveText, hardcodedDiscount) {
-  const discountPercentageHtml = getDiscountPercentageHtml(saveText, hardcodedDiscount);
-
+function replaceDiscountPercentageVariable(html, saveText) {
   return html
-    .replace(/(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)(.*?)(?:&#x3C;|&lt;|<)\/discounted-price-percentage(?:&gt;|>)/gis, `${discountPercentageHtml}$1`)
-    .replace(/(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)/gi, discountPercentageHtml);
+    .replace(/<discounted-price-percentage>(.*?)<\/discounted-price-percentage>/gis, `${getDiscountPercentageHtml(saveText)}$1`)
+    .replace(/&lt;discounted-price-percentage&gt;/gi, getDiscountPercentageHtml(saveText))
+    .replace(/<discounted-price-percentage>/gi, getDiscountPercentageHtml(saveText));
 }
 
 function removeDiscountPercentageVariable(html) {
   return html
-    .replace(/(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)(.*?)(?:&#x3C;|&lt;|<)\/discounted-price-percentage(?:&gt;|>)/gis, '$1')
-    .replace(/(?:&#x3C;|&lt;|<)discounted-price-percentage(?:&gt;|>)/gi, '');
+    .replace(/<discounted-price-percentage>(.*?)<\/discounted-price-percentage>/gis, '$1')
+    .replace(/&lt;discounted-price-percentage&gt;/gi, '')
+    .replace(/<discounted-price-percentage>/gi, '');
 }
 
-function getOfferCopy(block, saveText, hardcodedDiscount) {
+function getOfferCopy(block, saveText) {
   const title = getFirstContent(block, 'h1, h2, h3, h4', 'Thank you for your feedback!');
   const bodyHtml = [...block.querySelectorAll('p')]
     .find((paragraph) => !paragraph.closest('.button-container')
       && !paragraph.textContent.includes('{PRICE_BOX}')
-      && !paragraph.textContent.includes('{PRICEBOX_V2}')
       && !paragraph.textContent.includes('{under_price_text}'))?.innerHTML.trim()
     || 'It really helps. As a sign of gratitude, here’s a special offer for you:';
   const priceBox = [...block.children]
-    .find((child) => child.textContent.includes('{PRICE_BOX}')
-      || child.textContent.includes('{PRICEBOX_V2}'));
+    .find((child) => child.textContent.includes('{PRICE_BOX}'));
   const offerSubtitle = removeDiscountPercentageVariable(priceBox?.innerHTML || '')
     .replaceAll('{PRICE_BOX}', '')
-    .replaceAll('{PRICEBOX_V2}', '')
     .replace(/<\/?p>/g, '')
     .trim()
     || 'applied on your next renewal';
@@ -206,9 +151,9 @@ function getOfferCopy(block, saveText, hardcodedDiscount) {
   return {
     title,
     body: removeDiscountPercentageVariable(bodyHtml),
-    offerDiscount: getDiscountPercentageHtml(saveText, hardcodedDiscount),
-    offerSubtitle: replaceDiscountPercentageVariable(offerSubtitle, saveText, hardcodedDiscount),
-    legal: replaceDiscountPercentageVariable(legal, saveText, hardcodedDiscount),
+    offerDiscount: getDiscountPercentageHtml(saveText),
+    offerSubtitle: replaceDiscountPercentageVariable(offerSubtitle, saveText),
+    legal: replaceDiscountPercentageVariable(legal, saveText),
   };
 }
 
@@ -228,54 +173,6 @@ function getSecondaryLink(block, buyLink) {
   }) || links.filter((link) => link.closest('.button-container')).at(-1) || links.at(-1);
 }
 
-function decorateDiscountModal(block, saveText, hardcodedDiscount) {
-  const wrapper = block.closest('.webview-wrapper') || block.parentElement;
-  wrapper?.classList.add('discount-modal');
-
-  const {
-    title,
-    body,
-    offerDiscount,
-    offerSubtitle,
-    legal,
-  } = getOfferCopy(block, saveText, hardcodedDiscount);
-
-  const buyLink = block.querySelector('a[href*="#buylink"]');
-  const secondaryLink = getSecondaryLink(block, buyLink);
-  const primaryText = buyLink?.textContent.trim() || 'I take the offer';
-  const secondaryText = secondaryLink?.textContent.trim() || 'End auto renewal';
-  const primaryHref = buyLink?.getAttribute('href') || '#buylink';
-
-  block.innerHTML = `
-    <button class="webview-modal-close" type="button" aria-label="Close"></button>
-    <div class="webview-modal-content">
-      <h2>${title}</h2>
-      <div class="webview-modal-copy">${body}</div>
-      <div class="webview-modal-offer">
-        <div class="webview-modal-discount">${offerDiscount}</div>
-        <div class="webview-modal-offer-subtitle">${offerSubtitle}</div>
-      </div>
-      <div class="webview-modal-legal">${legal}</div>
-      <div class="webview-modal-actions">
-        <p class="button-container">
-          <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
-        </p>
-        <p class="button-container webview-modal-dismiss">
-          <a class="button secondary" href="#dismiss"><span class="button-text">${secondaryText}</span></a>
-        </p>
-      </div>
-    </div>`;
-
-  block.querySelector('.webview-modal-close')
-    ?.addEventListener('click', () => dismissModal(block));
-  block.querySelector('.webview-modal-dismiss a')
-    ?.addEventListener('click', (event) => {
-      event.preventDefault();
-      dismissModal(block);
-    });
-}
-
-function decorateDefaultWebview(block, product, saveText) {
   const buyLink = block.querySelector('a[href*="#buylink"]');
   buyLink?.setAttribute('data-store-buy-link', '');
 
@@ -321,13 +218,21 @@ function decorateDefaultWebview(block, product, saveText) {
 export default async function decorate(block) {
   const section = block.closest('.section');
   const {
-    product, saveText, hardcodedDiscount,
+    product, saveText,
   } = section?.dataset || {};
 
   setupStoreContext(block, product);
+  const bundleId = getUrlBundleId();
+  if (bundleId) {
+    block.setAttribute('data-store-id', bundleId);
+  }
+  const storeOption = getUrlStoreOption();
+  if (storeOption) {
+    block.setAttribute('data-store-option', storeOption);
+  }
 
   if (isDiscountModal(block)) {
-    decorateDiscountModal(block, saveText, hardcodedDiscount);
+    decorateDiscountModal(block, saveText);
   } else {
     decorateDefaultWebview(block, product, saveText);
   }
@@ -337,6 +242,5 @@ export default async function decorate(block) {
     block.parentElement.classList.add('dark-mode');
   }
 
-  replaceRenewalDateMarker(block);
   await checkAndReplacePrivacyPolicyLink(block);
 }
