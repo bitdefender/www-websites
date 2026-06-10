@@ -473,6 +473,10 @@
         max-width: unset;
         width: unset;
         flex: 1;
+
+        &:first-child {
+            text-align: left;
+        }
     }
 
     div[role="columnheader"] {
@@ -521,8 +525,16 @@
             }
         }
 
-        div[role='row'].price-row div[role='cell']:first-child {
-            display: none;
+        div[role='row'].price-row {
+            flex-wrap: nowrap;
+
+            div[role='cell']:first-child {
+                display: none;
+            }
+
+            .button {
+                width: unset;
+            }
         }
     }
 }
