@@ -193,6 +193,54 @@ function decorateDiscountModal(block, hardcodedDiscount) {
     hardcodedDiscount,
   );
 
+function decorateDiscountModal(block, saveText) {
+  const wrapper = block.closest('.webview-wrapper') || block.parentElement;
+  wrapper?.classList.add('discount-modal');
+
+  const {
+    title,
+    body,
+    offerDiscount,
+    offerSubtitle,
+    legal,
+  } = getOfferCopy(block, saveText);
+
+  const buyLink = block.querySelector('a[href*="#buylink"]');
+  const secondaryLink = getSecondaryLink(block, buyLink);
+  const primaryText = buyLink?.textContent.trim() || 'I take the offer';
+  const secondaryText = secondaryLink?.textContent.trim() || 'End auto renewal';
+  const primaryHref = buyLink?.getAttribute('href') || '#buylink';
+
+  block.innerHTML = `
+    <button class="webview-modal-close" type="button" aria-label="Close"></button>
+    <div class="webview-modal-content">
+      <h2>${title}</h2>
+      <div class="webview-modal-copy">${body}</div>
+      <div class="webview-modal-offer">
+        <div class="webview-modal-discount">${offerDiscount}</div>
+        <div class="webview-modal-offer-subtitle">${offerSubtitle}</div>
+      </div>
+      <div class="webview-modal-legal">${legal}</div>
+      <div class="webview-modal-actions">
+        <p class="button-container">
+          <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
+        </p>
+        <p class="button-container webview-modal-dismiss">
+          <a class="button secondary" href="#dismiss"><span class="button-text">${secondaryText}</span></a>
+        </p>
+      </div>
+    </div>`;
+
+  block.querySelector('.webview-modal-close')
+    ?.addEventListener('click', () => dismissModal(block));
+  block.querySelector('.webview-modal-dismiss a')
+    ?.addEventListener('click', (event) => {
+      event.preventDefault();
+      dismissModal(block);
+    });
+}
+
+function decorateDefaultWebview(block, product, saveText) {
   const buyLink = block.querySelector('a[href*="#buylink"]');
   const secondaryLink = block.querySelector('a[href*="https://localhost/dynamicupsell?view_action=close"]');
 

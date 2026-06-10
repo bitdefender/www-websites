@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import Launch from '@repobit/dex-launch';
 import {
   PageLoadedEvent,
@@ -37,9 +38,15 @@ import {
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
-  getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
+import {
+  initMartech,
+  martechEager,
+  martechLazy,
+  martechDelayed,
+// eslint-disable-next-line import/no-relative-packages
+} from '../plugins/martech/src/index.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
@@ -497,11 +504,35 @@ function openExternalLinksInNewTab(doc) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  // load trackers early if there is a target experiment on the page
-  if (getPageExperimentKey()) {
-    await loadTrackers();
-    await resolveNonProductsDataLayer();
+  // TODO: add these lines into dex-target
+  window.__alloyNS ||= [];
+
+  if (!window.__alloyNS.includes('alloy')) {
+    window.__alloyNS.push('alloy');
   }
+  // load trackers early if there is a target experiment on the page
+  const martechLoadedPromise = initMartech(
+    {
+      datastreamId: '6648b064-8151-4872-8fef-c4a84b0b69c1',
+      orgId: '0E920C0F53DA9E9B0A490D45@AdobeOrg',
+      edgeDomain: 'sstats.bitdefender.com',
+      defaultConsent: 'in',
+      // The `debugEnabled` flag is automatically set to true on localhost and .page URLs.
+      // The `defaultConsent` is automatically set to "pending".
+      onBeforeEventSend: (payload) => {
+        console.log('My payload: ', payload);
+      },
+    },
+    // 2. Library Configuration
+    {
+      personalization: true,
+      // See the API Reference for all available options.
+    },
+  );
+
+  await martechLoadedPromise;
+  await martechEager();
+  await resolveNonProductsDataLayer();
 
   const userCountry = await user.country;
   if (userCountry !== page.country && !sessionStorage.getItem('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
@@ -551,10 +582,7 @@ async function loadLazy(doc) {
   }
 
   // only call load Trackers here if there is no experiment on the page
-  if (!getPageExperimentKey()) {
-    loadTrackers();
-    await resolveNonProductsDataLayer();
-  }
+  loadTrackers();
 
   // push basic events to dataLayer
   await loadBlocks(main);
@@ -567,6 +595,7 @@ async function loadLazy(doc) {
     loadFooter(doc.querySelector('footer'));
   }
 
+  await martechLazy();
   generateLDJsonSchema();
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
@@ -706,6 +735,7 @@ function loadDelayed() {
     // load anything that can be postponed to the latest here
     eventOnDropdownSlider();
     // eslint-disable-next-line import/no-cycle
+    martechDelayed();
     return import('./delayed.js');
   }, 3000);
 }
