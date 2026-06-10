@@ -91,9 +91,6 @@ function adjustFontSize(input, password) {
 export default function decorate(block) {
   const { clipboardText, selectAtLeastOneCheckboxText } = block.closest('.section').dataset;
 
-  // const breadcrumb = createTag('div', { class: 'breadcrumb' });
-  // block.closest('.section').prepend(breadcrumb);
-
   const privacyPolicyRow = getDivBasedOnFirstParagraph(block, '<privacy-policy>');
   privacyPolicyRow?.classList.add('privacy-policy');
 
