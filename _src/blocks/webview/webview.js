@@ -199,7 +199,16 @@ function decorateDiscountModal(block, hardcodedDiscount) {
   const primaryText = buyLink?.textContent.trim() || '';
   const secondaryText = secondaryLink?.textContent.trim() || '';
   const secondaryHref = secondaryLink?.getAttribute('href');
-  const primaryHref = buyLink?.getAttribute('href') || '#buylink';
+
+  const canvasContent = block.closest('.mbox-canvas');
+  const canvasPromo = canvasContent?.dataset?.promotion;
+  let primaryHref = buyLink?.getAttribute('href') || '#buylink';
+
+  // method exposed inside product
+  if (canvasPromo) {
+    primaryHref = `acceptDiscountedOffer(${canvasPromo})`;
+  }
+
   const primaryAction = buyLink ? `
         <p class="button-container">
           <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
