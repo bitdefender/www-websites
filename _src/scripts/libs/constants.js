@@ -71,6 +71,7 @@ export class Constants {
 
 	static TARGET_EXPERIMENT_METADATA_KEY = "target-experiment-location";
 
+
 	static ADOBE_TARGET_SESSION_ID_PARAM = "adobeTargetSessionId";
 
 	static TARGET_TENANT = "bitdefender";
