@@ -64,6 +64,10 @@ export async function createOfferParameters() {
   const language = urlParams.get('lang');
   const serviceId = urlParams.get('service_id');
   const autoRenewal = urlParams.get('auto_renewal');
+  const bundleId = urlParams.get('bundle_id');
+  const reason = urlParams.get('reason');
+  const remainingDays = urlParams.get('remaining_days');
+  const renewalDate = urlParams.get('renewal-date');
 
   if (feature) {
     parameters.feature = feature.replaceAll('_', '-');
@@ -83,6 +87,22 @@ export async function createOfferParameters() {
 
   if (autoRenewal) {
     parameters.auto_renewal = autoRenewal;
+  }
+
+  if (bundleId) {
+    parameters.bundle_id = bundleId;
+  }
+
+  if (reason) {
+    parameters.reason = reason;
+  }
+
+  if (remainingDays) {
+    parameters.remaining_days = remainingDays;
+  }
+
+  if (renewalDate) {
+    parameters.renewal_date = renewalDate;
   }
 
   return parameters;
