@@ -302,7 +302,7 @@ export class StoreResolver {
 					if (!product.dataset.storeNotGlobal) GlobalContext.variations.push(...this.getAllVariationsFromContext(context));
 					optionStaticAttributes.forEach(staticAttribute => this.resolveStaticAttributes(staticAttribute, context));
 					optionClickAttributes.forEach(clickAttribute => this.resolveClickAttributes(clickAttribute, context));
-
+			
 					switch(option.dataset.storeEvent) {
 						case "product-loaded":
 							AdobeDataLayerService.push(new FranklinProductsLoadedEvent(storeOption, 'all'));

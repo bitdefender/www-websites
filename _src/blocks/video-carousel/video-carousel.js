@@ -1,3 +1,6 @@
+import { embedYoutube } from '../../scripts/utils/utils.js';
+import YouTubeTracker from '../../scripts/utils/youtube-tracker.js';
+
 function createCarousel(block, videos, titles) {
   const carouselContainer = document.createElement('div');
   carouselContainer.classList.add('carousel-container');
@@ -9,18 +12,23 @@ function createCarousel(block, videos, titles) {
     const carouselItem = document.createElement('div');
     carouselItem.classList.add('carousel-item');
 
-    // Create an iframe element for embedding YouTube video
-    const iframeElement = document.createElement('iframe');
-    iframeElement.setAttribute('src', `${video}`);
-    iframeElement.setAttribute('frameborder', '0');
-    iframeElement.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-    iframeElement.setAttribute('allowfullscreen', '');
-
     const videoTitle = document.createElement('div');
     videoTitle.classList.add('video-title');
     videoTitle.textContent = titles[index];
 
-    carouselItem.appendChild(iframeElement);
+    const url = new URL(video);
+    const videoContainer = document.createElement('div');
+    videoContainer.classList.add('video-container');
+    videoContainer.innerHTML = embedYoutube(url);
+
+    const videoElement = videoContainer.querySelector('iframe');
+    if (!videoElement) return;
+
+    const videoId = videoContainer.querySelector('iframe').getAttribute('id');
+    const tracker = new YouTubeTracker(block, video, url, videoId);
+    tracker.initialize();
+
+    carouselItem.appendChild(videoContainer);
     carouselItem.appendChild(videoTitle);
     carouselTrack.appendChild(carouselItem);
     carouselTrack.scroll({

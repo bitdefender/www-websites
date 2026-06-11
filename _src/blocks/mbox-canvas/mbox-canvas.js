@@ -110,12 +110,29 @@ async function updatePageLoadStartedEvent(offer) {
     return;
   }
 
+  const productName = page.getParamValue('trialSku') || 'avfree';
+  const isPluginPage = !result.toLowerCase().includes('webview-table');
+  const pageType = isPluginPage ? 'plugin' : 'offer';
+  const isSplashpage = result.toLowerCase().includes('splash');
+  const flow = isSplashpage ? 'splash' : 'webview';
+
+  const [locale, country] = (page.getParamValue('lang') || 'en-US').split('-');
+
   let trackingID = getMetadata('cid');
-  trackingID = trackingID.replace('<language>', page.getParamValue('lang'));
+  trackingID = trackingID.replace('<flow>', flow);
+  trackingID = trackingID.replace('<locale>', locale);
+  trackingID = trackingID.replace('<country>', country);
   trackingID = trackingID.replace('<asset name>', result);
+  trackingID = trackingID.replace('<product>', productName);
 
   const newObject = new WindowLoadStartedEvent((pageLoadStartedInfo) => {
     pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<dynamic-content>', result);
+    pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<product>', productName);
+    pageLoadStartedInfo.name = pageLoadStartedInfo.name.replace('<page-type>', pageType);
+
+    pageLoadStartedInfo.subSection = pageLoadStartedInfo.subSection.replace('<product>', productName);
+    pageLoadStartedInfo.subSubSection = pageLoadStartedInfo.subSubSection.replace('<page-type>', pageType);
+
     pageLoadStartedInfo.language = page.getParamValue('lang') || 'en-us';
     return pageLoadStartedInfo;
   }, { trackingID });

@@ -43,8 +43,7 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
   // switch to the logged in popup
   const loginPopup = newMegaMenuLoginTab.querySelector('.mega-menu__second-level-container');
   const loginPopupHeaderLink = loginPopup.querySelector('.mega-menu__column .navigation__header-link');
-  const loginPopupLinksThatNeedToChange = [...loginPopup.querySelectorAll('.navigation__link')]
-    .filter((navigationLink) => navigationLink.dataset.loggedInLink);
+  const loginPopupLinksThatNeedToChange = loginPopup.querySelectorAll('[data-logged-in-link]');
 
   if (loginPopupHeaderLink) {
     loginPopupHeaderLink.textContent = username
@@ -70,7 +69,6 @@ const loginFunctionality = async (root = document) => {
   try {
     // change login container to display that the user is logged in
     // if the previous call was successfull
-    await user.login();
     const userData = await user.info;
     if (userData) {
       const megaMenuLoginContainer = root.querySelector('li.mega-menu__login-container');
@@ -479,7 +477,7 @@ async function runDefaultHeaderLogic(block) {
       const websiteDomain = getDomain();
       let aemFetchDomain;
 
-      if (websiteDomain === 'en-us') {
+      if (websiteDomain === 'en-us' || websiteDomain === 'drafts') {
         aemFetchDomain = 'en';
       } else if (websiteDomain.includes('-global')) {
         const [singleDomain] = websiteDomain.split('-');
@@ -488,7 +486,15 @@ async function runDefaultHeaderLogic(block) {
         aemFetchDomain = websiteDomain.split('-').join('_');
       }
 
-      const aemHeaderFetch = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`);
+      // check if the menu should be brought from a different source from Target
+      let aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`;
+      const navMbox = await target.getOffers({ mboxNames: 'menu-mbox' });
+      if (navMbox?.offer) {
+        const offerPath = navMbox.offer.split('.')[0];
+        aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}${offerPath}/jcr:content/root.html`;
+      }
+
+      const aemHeaderFetch = await fetch(aemMenuFetchPath);
       if (!aemHeaderFetch.ok) {
         return;
       }
@@ -547,6 +553,13 @@ async function runDefaultHeaderLogic(block) {
       });
 
       shadowRoot.appendChild(contentDiv);
+      shadowRoot.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.language-banner__decline-button');
+        if (btn) {
+          document.body.classList.remove('with-language-bar');
+        }
+      });
+
       const body = document.querySelector('body');
       body.style.maxWidth = 'initial';
 

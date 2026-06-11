@@ -157,13 +157,7 @@ export default async function decorate(block, options) {
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
     dropdownTag, circleDiscount,
   } = block.closest('.section').dataset;
-  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
-  if (!isHomePage) {
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    const contentWrapper = block.querySelector(':scope > div:first-child > div');
-    if (contentWrapper) contentWrapper.prepend(breadcrumb);
-  }
   renderNanoBlocks(block);
 
   if (options) {
@@ -266,14 +260,6 @@ export default async function decorate(block, options) {
       createDropdownElement(paragraph, dropdownTag, dropdownProductsArray);
     }
   });
-
-  let breadcrumbTable = block.querySelector('table');
-
-  if (breadcrumbTable && breadcrumbTable.textContent.includes('breadcrumb')) {
-    breadcrumbTable.classList.add('hero-aem__breadcrumb');
-    // delete the first row
-    breadcrumbTable.deleteRow(0);
-  }
 
   let tables = block.querySelectorAll('table');
   // eslint-disable-next-line no-restricted-syntax

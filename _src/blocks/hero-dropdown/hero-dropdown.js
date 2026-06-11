@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 // Description: Hero Dropdown block
 import {
-  createTag,
   createNanoBlock,
   renderNanoBlocks,
   wrapChildrenWithStoreContext,
@@ -16,14 +15,6 @@ function buildHeroDropdownBlock(element) {
   const section = element.closest('div.hero-dropdown');
   const subSection = section.querySelector('div');
   subSection.classList.add('hero-dropdown-content');
-
-  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
-
-  if (!isHomePage) {
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    const contentWrapper = subSection.querySelector('div:first-child');
-    if (contentWrapper) contentWrapper.prepend(breadcrumb);
-  }
 
   const pictureEl = document.createElement('div');
   pictureEl.classList.add('hero-dropdown-picture');
@@ -157,6 +148,14 @@ createNanoBlock('dropdown', (...args) => {
     optionsList.classList.toggle('open');
     selectedOption.classList.toggle('open', !isOpen);
     customDropdown.classList.toggle('open', !isOpen);
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!customDropdown.contains(event.target)) {
+      optionsList.classList.remove('open');
+      selectedOption.classList.remove('open');
+      customDropdown.classList.remove('open');
+    }
   });
 
   [...optionsList.querySelectorAll('.custom-dropdown-item')].forEach((item, index) => {

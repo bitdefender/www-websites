@@ -1,21 +1,35 @@
-function replacePlaceholderWithVideo(videoUrl) {
-  const placeholderDiv = [...document.querySelectorAll('div')].find((div) => div.textContent.trim() === '{video}');
+import { embedYoutube } from '../../scripts/utils/utils.js';
+import YouTubeTracker from '../../scripts/utils/youtube-tracker.js';
+
+function replacePlaceholderWithVideo(block, videoUrl) {
+  const placeholderDiv = [...block.querySelectorAll('div')].find((div) => div.textContent.trim() === '{video}');
   if (!placeholderDiv) {
     return;
   }
   const videoContainer = document.createElement('div');
   videoContainer.className = 'video-container';
 
-  const iframeElement = document.createElement('iframe');
-  iframeElement.setAttribute('src', videoUrl);
-  iframeElement.setAttribute('frameborder', '0');
-  iframeElement.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-  iframeElement.setAttribute('allowfullscreen', '');
-  videoContainer.appendChild(iframeElement);
+  const url = new URL(videoUrl);
+  videoContainer.innerHTML = embedYoutube(url, false);
+
   placeholderDiv.replaceWith(videoContainer);
 }
 
 export default function decorate(block) {
-  const { video } = block.closest('.section').dataset;
-  replacePlaceholderWithVideo(video);
+  const { video, buttonImage } = block.closest('.section').dataset;
+  replacePlaceholderWithVideo(block, video);
+
+  const videoId = block.querySelector('iframe')?.getAttribute('id');
+  if (video) {
+    const url = new URL(video);
+    const tracker = new YouTubeTracker(block, video, url, videoId);
+    tracker.initialize();
+  }
+
+  if (buttonImage) {
+    const buttonImageEl = document.createElement('img');
+    buttonImageEl.setAttribute('src', buttonImage);
+    const lastBtn = block.querySelector('table tr');
+    lastBtn.insertAdjacentElement('afterbegin', buttonImageEl);
+  }
 }

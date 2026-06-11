@@ -7,3 +7,4 @@ _src/scripts/libs/**
 _src/scripts/utils/bot-prevention.js
 tools
 src
+vitest.config.js

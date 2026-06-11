@@ -496,6 +496,24 @@ export function updateSectionsStatus(main) {
 }
 
 /**
+ * Updates the status of a single section element.
+ * @param {Element} section The section element
+ */
+export function updateSectionStatus(section) {
+  if (!section) return;
+  const status = section.dataset.sectionStatus;
+  if (status !== 'loaded') {
+    const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
+    if (loadingBlock) {
+      section.dataset.sectionStatus = 'loading';
+    } else {
+      section.dataset.sectionStatus = 'loaded';
+      section.style.display = null;
+    }
+  }
+}
+
+/**
  * Decorates all blocks in a container element.
  * @param {Element} main The container element
  */
@@ -785,7 +803,7 @@ export function decorateButtons(element) {
           return;
         }
         // Example: <p><a href="example.com">? Text</a></p>
-        if (up.childNodes.length === 1 && up.tagName === 'P' && up.innerText.startsWith('?')) {
+        if (up.childNodes.length === 1 && up.tagName === 'P' && up.textContent.startsWith('?')) {
           a.className = 'info-button modal';
           up.classList.add('info-button-container');
           a.textContent = a.textContent.slice(1).trim();
@@ -793,7 +811,7 @@ export function decorateButtons(element) {
           return;
         }
 
-        if (up.childNodes.length === 1 && up.tagName === 'P' && up.innerText.startsWith('->')) {
+        if (up.childNodes.length === 1 && up.tagName === 'P' && up.textContent.startsWith('->')) {
           a.className = 'button link-arrow-right';
           up.classList.add('button-container');
           a.textContent = a.textContent.slice(2).trim();
@@ -823,8 +841,20 @@ export function decorateButtons(element) {
  */
 export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector(lcpBlocks.join(','));
-  if (block) await loadBlock(block);
-  document.body.style.display = null;
+  if (block) {
+    await loadBlock(block);
+  }
+
+  // Load news bar if present above LCP block, making sure it does not affect CLS
+  // when loading after LCP
+  const newsBar = document.querySelector('.news-bar');
+  const isSibling = newsBar && newsBar.closest('.section').nextElementSibling === block?.closest('.section');
+  if (newsBar && isSibling) {
+    await loadBlock(newsBar);
+    updateSectionStatus(newsBar.closest('.section'));
+  }
+
+  updateSectionStatus(block?.closest('.section'));
   const lcpCandidate = document.querySelector('main img');
   await new Promise((resolve) => {
     if (lcpCandidate && !lcpCandidate.complete) {
@@ -987,14 +1017,11 @@ export function setup() {
   window.hlx.plugins = new PluginsRegistry();
   window.hlx.templates = new TemplatesRegistry();
 
-  const scriptEl = document.querySelector('script[src$="/_src/scripts/scripts.js"]');
-  if (scriptEl) {
-    try {
-      [window.hlx.codeBasePath] = new URL(scriptEl.src).pathname.split('/scripts/scripts.js');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
+  try {
+    [window.hlx.codeBasePath] = new URL(import.meta.url).pathname.split('/scripts/');
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
   }
 }
 

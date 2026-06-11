@@ -6,6 +6,7 @@ import {
   WindowLoadStartedEvent,
   WindowLoadedEvent,
   ProductLoadedEvent,
+  CdpEvent,
 } from '@repobit/dex-data-layer';
 import {
   registerActionNodes,
@@ -31,18 +32,22 @@ import {
   getMetadata,
 } from './lib-franklin.js';
 import {
+  handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
 } from './libs/data-layer.js';
+
+import user from './user.js';
 
 import {
   createTag,
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
+  getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
-const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -233,6 +238,7 @@ export async function createModal(path, template, stopAutomaticRefresh) {
 
 export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
+    const originalHref = link.getAttribute('href');
     link.addEventListener('click', async (e) => {
       e.preventDefault();
       const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
@@ -240,7 +246,7 @@ export async function detectModalButtons(main) {
       // if we wish for the button to not generate a new modal everytime
       if (stopAutomaticModalRefresh) {
         // we use the last part of the link to identify the modals
-        const modalClass = link.href.split('/').pop();
+        const modalClass = originalHref.split('/').pop();
 
         // check if the modal exists in the page
         const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
@@ -252,13 +258,16 @@ export async function detectModalButtons(main) {
       }
 
       // generate new modal
-      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
+      const modalContainer = await createModal(originalHref, undefined, stopAutomaticModalRefresh);
       document.body.append(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
       adobeMcAppendVisitorId('.modal-container');
     });
+
+    link.removeAttribute('href');
+    link.setAttribute('location', originalHref);
   });
 }
 
@@ -408,8 +417,9 @@ const initializeHubspotModule = () => {
     const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
     const popupContainer = hubspotContainer.querySelector('.download-popup__container');
 
-    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
-      trigger.addEventListener('click', () => {
+    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showbookingpopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
         popupContainer.style.display = 'block';
         const newPageLoadStartedEvent = new WindowLoadStartedEvent();
         newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
@@ -473,10 +483,34 @@ export async function loadTrackers() {
 }
 
 /**
+ * set target_blank for pdf links when metadata is set: pdfs: new-tab
+ * @param {Element} doc The container element
+ */
+function openExternalLinksInNewTab(doc) {
+  const links = doc.querySelectorAll('a');
+
+  links.forEach((link) => {
+    if (link.href.toLowerCase().includes('.pdf')) {
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    }
+  });
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
+  // load trackers early if there is a target experiment on the page
+  if (getPageExperimentKey()) {
+    await loadTrackers();
+    await resolveNonProductsDataLayer();
+  }
+
+  const userCountry = await user.country;
+  if (userCountry !== page.country && !sessionStorage.getItem('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
+
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
   decorateTemplateAndTheme();
@@ -493,6 +527,9 @@ async function loadEager(doc) {
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
+
+    if (getMetadata('pdfs') && getMetadata('pdfs') === 'new-tab') openExternalLinksInNewTab(doc);
+
     document.body.classList.add('appear', 'franklin');
     if (window.location.href.indexOf('scuderiaferrari') !== -1) {
       document.body.classList.add('sferrari');
@@ -518,6 +555,12 @@ async function loadLazy(doc) {
     loadHeader(doc.querySelector('header'));
   }
 
+  // only call load Trackers here if there is no experiment on the page
+  if (!getPageExperimentKey()) {
+    loadTrackers();
+    await resolveNonProductsDataLayer();
+  }
+
   // push basic events to dataLayer
   await loadBlocks(main);
 
@@ -539,7 +582,7 @@ async function loadLazy(doc) {
   const hasTemplate = getMetadata('template') !== '';
   if (hasTemplate) {
     loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   sampleRUM('lazy');
@@ -619,6 +662,24 @@ function eventOnDropdownSlider() {
   });
 }
 
+async function setIcidParameter(selector, value, mboxName, manualIcid = null) {
+  const validElements = document.querySelectorAll(selector);
+  if (validElements.length === 0) {
+    return;
+  }
+
+  const targetCampaign = (await target.getOffers({ mboxNames: mboxName }))?.campaign;
+
+  validElements.forEach((element) => {
+    const url = new URL(element.href);
+    if (!url) return;
+    const cleanPath = element.href.split('?')[0];
+    const campaignParam = targetCampaign || manualIcid || cleanPath.split('/').pop();
+    url.searchParams.set('icid', `${value}${campaignParam}`);
+    element.href = url.toString();
+  });
+}
+
 function initialiseSentry() {
   window.sentryOnLoad = () => {
     window.Sentry.init({
@@ -664,6 +725,10 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
+  if (window.location.href.includes('oaiusercontent')) {
+    return;
+  }
+
   setBFCacheListener();
   initialiseSentry();
   await window.hlx.plugins.load('eager');
@@ -691,10 +756,21 @@ async function loadPage() {
   await loadTrackers();
   await resolveNonProductsDataLayer();
   await loadEager(document);
+
+  const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
+    .find((selector) => document.querySelector(selector));
+  const newsBarSection = document.querySelector(newsBarSectionSelector);
+
+  if (newsBarSection) {
+    const { manualIcid } = newsBarSection.dataset || {};
+    setIcidParameter(`${newsBarSectionSelector} a`, 'link|c|ribbon|', 'newsBarCampaign-mbox', manualIcid);
+  }
+
   await window.hlx.plugins.load('lazy');
   await Constants.PRODUCT_ID_MAPPINGS_CALL;
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
+  handleFileDownloadedEvents();
 
   registerActionNodes(main);
   registerRenderNodes(main);
@@ -716,7 +792,11 @@ async function loadPage() {
   adobeMcAppendVisitorId('main');
 
   pushTrialDownloadToDataLayer();
-  await target.sendCdpData();
+
+  const cdpData = await target.cdpData;
+  if (cdpData) {
+    AdobeDataLayerService.push(new CdpEvent(cdpData));
+  }
 
   if (!window.BD.loginAttempted) {
     AdobeDataLayerService.push(new PageLoadedEvent());

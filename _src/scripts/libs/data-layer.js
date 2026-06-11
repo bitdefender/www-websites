@@ -1,6 +1,7 @@
 import user from "../user.js";
 import page from "../page.js";
 import { PageLoadStartedEvent, UserDetectedEvent, ButtonClickEvent, PageErrorEvent, AdobeDataLayerService, ProductLoadedEvent } from "@repobit/dex-data-layer";
+import { getUserVisitorId } from "@repobit/dex-utils";
 import {
   getExperimentDetails,
   generatePageLoadStartedName,
@@ -8,12 +9,32 @@ import {
 } from '../utils/utils.js';
 import { getTargetExperimentDetails } from "../target.js";
 
+export class FranklinProductsLoadedEvent extends ProductLoadedEvent {
+  getOptionInfo(option) {
+    return {
+      ID: option.getAvangateId(),
+      name: option.getName(),
+      devices: option.getId() === 'psm' ? 10 : option.getDevices(), //DEPRECATED content - please remove after Vlaicu implementation
+      subscription: option.getSubscription("months"),
+      version: option.getSubscription("months") === 1 ? "monthly" : "yearly",
+      basePrice: option.getPrice("value"),
+      discountValue: option.getDiscount("value"),
+      discountRate: option.getDiscount("percentage"),
+      currency: option.getCurrency(),
+      grossPrice: option.getDiscountedPrice("value") || option.getPrice("value"),
+      discountCoupon: option.getCampaignType()
+        ? `${option.getCampaignType()}|${option.getPromotion()}`
+        : (option.getPromotion() || '')
+    };
+  }
+};
+
 /**
  * Page Error Handling
  */
 const pageErrorHandling = () => {
   const isErrorPage = window.errorCode === '404';
-  if(isErrorPage) {
+  if (isErrorPage) {
     AdobeDataLayerService.push(new PageErrorEvent());
   }
 }
@@ -22,11 +43,11 @@ const pageErrorHandling = () => {
  * Add click events to the data layer after page redirect
  */
 const checkClickEventAfterRedirect = () => {
-  if(localStorage.getItem("clickEvent") !== null) {
+  if (localStorage.getItem("clickEvent") !== null) {
     const clickEvent = JSON.parse(localStorage.getItem("clickEvent"));
 
-    if(clickEvent?.clickEvent) {
-      AdobeDataLayerService.push(new ButtonClickEvent(clickEvent.clickEvent, clickEvent.productId));
+    if (clickEvent?.clickEvent) {
+      AdobeDataLayerService.push(new ButtonClickEvent(clickEvent.clickEvent, { productId: clickEvent.productId }));
     }
 
     localStorage.removeItem("clickEvent");
@@ -99,10 +120,38 @@ const resolveUserDetectedEvent = async () => {
     page,
     {
       ID: await user.fingerprint,
-      productFinding: getProductFinding()
+      productFinding: getProductFinding(),
+      // TODO: uncomment this after consent is given
+      // visitorID: await getUserVisitorId(),
     }
   ));
 };
+
+/**
+ * for file download links, push a special buttonClick event
+ */
+export const handleFileDownloadedEvents = () => {
+  const fileLinks = document.querySelectorAll('[href*=".pdf"], [href*=".docx"], [href*=".xlsx"]');
+  fileLinks.forEach((fileLink) => {
+    const hrefPathname = new URL(fileLink).pathname;
+    const filename = hrefPathname.substring(hrefPathname.lastIndexOf('/') + 1);
+
+    fileLink.addEventListener('click', () => {
+      AdobeDataLayerService.push(new ButtonClickEvent('file downloaded', { asset: filename }));
+    });
+  });
+};
+
+/**
+ * Resolve the data layer for widget pages
+ */
+export const resolveNonProductsDataLayerforWidgets = async () => {
+  await resolvePageLoadStartedEvent();
+  pageErrorHandling();
+  checkClickEventAfterRedirect();
+  checkFormCompletedEventAfterRedirect();
+  getFreeProductsEvents();
+}
 
 /**
  * Resolve the data layer

@@ -1,5 +1,3 @@
-import { ALL_FRANKLIN_DEV_SUBDOMAINS } from './lib-franklin.js';
-
 async function sleep(ms) {
   // eslint-disable-next-line no-promise-executor-return
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -13,7 +11,6 @@ async function fetchData(url, body) {
 
 export default async function onSubmit(e) {
   try {
-    const campaign = e.target.querySelector('input[name="campaign"]')?.value;
     const email = e.target.querySelector('input[type=email]')?.value;
 
     document.querySelector('.scan-error').classList.remove('show');
@@ -59,22 +56,8 @@ export default async function onSubmit(e) {
 
     await sleep(1000);
 
-    const domain = ALL_FRANKLIN_DEV_SUBDOMAINS.some(
-      (subdomain) => window.location.hostname.includes(subdomain),
-    ) ? 'https://www.bitdefender.com' : '';
-
-    const emarsysRequest = await fetchData(`${domain}/site/Store/offerSubscribe`, {
-      email,
-      flow: campaign,
-      isDipForm: true,
-    });
-
     document.querySelector('.scan-loading h3:nth-child(3)').classList.remove('show');
     document.querySelector('.scan-loading').classList.remove('show');
-
-    if (!emarsysRequest.success) {
-      throw new Error('Scan error');
-    }
 
     document.querySelectorAll('.scan-results').forEach((el) => el.classList.add('show'));
 

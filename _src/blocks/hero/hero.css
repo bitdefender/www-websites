@@ -16,18 +16,12 @@
   --hero-h2-font-size: 24px;
   --hero-botton-border-color: #616161;
   --hero-p-color: #3c3c3c;
-
-  /* breadcrumbs font size */
-  --breadcrumb-text-color-dark: #c5c5c5;
-  --breadcrumb-text-color-dark-hover: #616161;
-  --breadcrumbs-font-size-s: 12px;
 }
 
 main .hero {
   background-color: white;
   position: relative;
   padding: 1em 0 2em;
-  min-height: 300px;
 }
 
 main .section.bfoffer .hero {
@@ -42,15 +36,6 @@ main .bfoffer .hero .hero-content p:last-of-type picture img {
   display: none;
 }
 
-/* breadcrumbs */
-main .hero .hero-content .breadcrumb {
-  font-weight: var(--font-weight-bold);
-  color: #dedede;
-  min-height: unset;
-  padding: 12px 0;
-  margin-bottom: 12px;
-}
-
 main .hero .hero-content .signature {
   font-size: 24px;
   color: #006dff;
@@ -62,46 +47,6 @@ main .hero .hero-content .signature {
   main .hero .hero-content .signature {
     margin-bottom: 12px;
   }
-}
-
-main .hero .hero-content .breadcrumb a {
-  font-size: var(--breadcrumbs-font-size-s);
-  font-weight: var(--font-weight-bold);
-  color: var(--breadcrumb-text-color-dark-hover);
-  text-decoration: none;
-  line-height: 1.7;
-  letter-spacing: .96px;
-}
-
-main .hero .hero-content .breadcrumb a:last-child {
-  padding: 0;
-  margin: 0;
-  pointer-events: none;
-}
-
-main .hero .hero-content .breadcrumb a::after {
-  content: "/";
-  display: inline-block;
-  color: var(--color-dark-gray);
-  margin: 0 3px;
-  font-size: 9pt;
-}
-
-main .hero .hero-content .breadcrumb a:hover {
-  color: var(--text-color);
-}
-
-main .hero.black-background .hero-content .breadcrumb a {
-  color: var(--breadcrumb-text-color-dark);
-  text-decoration: none;
-}
-
-main .hero.black-background .hero-content .breadcrumb a::after {
-  color: #dedede;
-}
-
-main .hero.black-background .hero-content .breadcrumb a:hover {
-  color: var(--breadcrumb-text-color-dark-hover);
 }
 
 /* hero */
@@ -193,14 +138,6 @@ main .hero.new2024design strong {
   font-weight: 600;
 }
 
-main .hero-container.breadcrumb-hidden .breadcrumb a {
-  color: transparent;
-}
-
-main .hero-container.breadcrumb-hidden .breadcrumb a::after {
-  color: transparent;
-}
-
 main .hero.black-background::after {
   content: none;
   background-color: transparent;
@@ -224,6 +161,69 @@ main .hero .hero-content {
   padding: 17px var(--body-padding) 56px;
   margin: 0 auto;
   position: relative;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table tr {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: baseline;
+  justify-content: center;
+  gap: 16px;
+  font-family: Arial, sans-serif;
+  padding-top: 30px;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table tr p {
+  margin-top: 8px;
+  margin-bottom: 0;
+  padding: 0;
+  font-size:  var(--hero-font-size-xxxs);
+  color: #000;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a {
+  width: 100%;
+  justify-content: center;
+  padding: 12px;
+  font-size: var(--hero-font-size-xs);
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  color: var(--button-link-color);
+  background-color: var(--button-background-color);
+  border: 2px solid var(--button-background-color);
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a:hover {
+  text-decoration: none;
+  opacity: 0.9!important;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a:hover span {
+  transform: unset!important;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table tr td:last-of-type a {
+  background-color: #fff;
+  border: 1.5px solid #000;
+  color: #000;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table tr td:last-of-type a:hover {
+  background-color: #f2f2f2;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a span {
+  font-size: var(--hero-font-size-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+main .hero-container.custom-buttons .hero .hero-content table a::after {
+  display: none;
 }
 
 main .hero.new2024design {
@@ -626,9 +626,6 @@ main .hero.ferrari .hero-content img{
   width: fit-content;
 }
 
-main .hero.ferrari .breadcrumb{
-  display: none;
-}
 
 .hero-container.grey-background .hero-picture {
   background-color: #f6f6f6;
@@ -638,6 +635,10 @@ main .hero.ferrari .breadcrumb{
   display: flex;
   justify-content: center;
   background-color: transparent;
+}
+
+.hero-container.half-width-picture .hero-picture {
+  padding-left: 50%;
 }
 
 .hero-container.half-width-picture .hero-picture picture {
@@ -653,7 +654,7 @@ main .hero.ferrari .breadcrumb{
 }
 
 .hero-container.half-width-picture .hero-picture picture img {
-  padding-left: 50%;
+  float: right;
   position: relative;
 }
 
@@ -694,10 +695,6 @@ main .hero-container.ferrari-migration .hero .hero-content p{
   color: #fff;
 }
 
-main .hero-container.ferrari-migration .hero .hero-content .breadcrumb{
-  display: none;
-}
-
 main .hero-container.ferrari-migration .hero .hero-content a{
   font-size: 18px;
   font-weight: 700;
@@ -719,13 +716,6 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     background-color: #006FFF;
     min-height: auto;
     padding: 2em 0;
-  }
-}
-
-@media(max-width: 991px) {
-  /* tablet */
-  main .hero.new2024design .breadcrumb {
-    display: none;
   }
 }
 
@@ -841,16 +831,12 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     font-size: 20px;
   }
 
-  main .hero .hero-content .breadcrumb {
-    min-height: 58px;
-  }
-
-  main .hero .hero-content .breadcrumb a::after {
-    margin: 0 10px;
-  }
-
   main .hero-container.blue-title .hero-content>div {
     width: 630px;
+  }
+
+  main .hero-container .hero-content.hero-content-full > div {
+    width: 100%!important;
   }
 }
 
@@ -859,6 +845,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero.new2024design .hero-content:last-of-type {
     min-height: 360px;
     padding: 2em;
+    align-items: center;
   }
 
   main .hero.new2024design .hero-picture {
@@ -939,11 +926,6 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
   main .affiliate .hero .hero-content>div  {
     width: 50%;
-  }
-
-  main .hero .hero-content .breadcrumb a {
-    line-height: 1;
-    letter-spacing: .96px;
   }
 
   main .hero ul.hero-awards {
@@ -1029,14 +1011,14 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     right: 0;
     height: 70%;
   }
+
+  main .bfoffer .hero .hero-picture picture img {
+    object-fit: contain;
+  }
 }
 
 @media (min-width: 1600px) {
   /* large desktop */
-  main .hero .hero-content .breadcrumb {
-    padding: 9px 0;
-    margin-bottom: 15px;
-  }
 
   main .hero h1 {
     font-size: 2.5rem;
@@ -1104,6 +1086,14 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     display: none;
   }
 
+  main .hero-container.custom-buttons .hero .hero-content>div table tr td:first-of-type {
+    display: block;
+  }
+
+  main .hero-container.custom-buttons .hero .hero-content>div table tr td:last-of-type {
+    width: auto;
+  }
+
   main .v2 .hero .hero-picture picture img {
     padding-left: 0;
   }
@@ -1111,6 +1101,10 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .v2 .hero .hero-content>div:last-of-type img {
     width: 265px;
     right: 0;
+  }
+
+   main .bfoffer .hero .hero-content p:last-of-type picture img {
+    display: block;
   }
 }
 
@@ -1125,12 +1119,29 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     padding-bottom: 0;
   }
 
-  main .bfoffer .hero .hero-content p:last-of-type picture img {
-    display: block;
-  }
-
   main .v2 .hero .hero-content>div table tr td:last-of-type {
     width: 100%;
+  }
+
+  main .hero-container.custom-buttons .hero .hero-content>div table tr {
+    grid-auto-flow: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    gap: 5px;
+  }
+
+  main .hero-container.custom-buttons .hero .hero-content>div table tr td {
+    width: 100%;
+  }
+
+  main .hero-container.custom-buttons .hero .hero-content>div table tr a.button {
+    display: block;
+  }
+  
+  main .hero-container.custom-buttons .hero .hero-content table a span {
+    white-space: normal;
   }
 
   main .v2 .hero h1 {

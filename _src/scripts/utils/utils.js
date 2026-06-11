@@ -633,6 +633,38 @@ export async function matchHeights(targetNode, selector) {
   adjustHeights();
 }
 
+function isSafariMobile() {
+  return (UserAgent.os === 'ios' || UserAgent.os === 'Mac/iOS') && UserAgent.isSafari;
+}
+
+/*
+ general function to embed youtube videos based on the structure needed for the iframe API
+*/
+export function embedYoutube(url, autoplay) {
+  const usp = new URLSearchParams(url.search);
+  const muteParam = autoplay && isSafariMobile() ? '&mute=1&muted=1' : '';
+  const suffix = autoplay ? `&cc_load_policy=1&autoplay=1&playsinline=1${muteParam}` : '';
+  const startTime = usp.get('t') ? `&start=${encodeURIComponent(usp.get('t'))}` : '';
+  let vid = usp.get('v') ? encodeURIComponent(usp.get('v')) : url.pathname.split('/').pop();
+
+  if (url.origin.includes('youtu.be')) {
+    [, vid] = url.pathname.split('/');
+  }
+
+  const iframeId = `youtube-player-${Math.random().toString(36).substr(2, 9)}`;
+  const origin = encodeURIComponent(window.location.origin);
+
+  return `
+    <iframe id="${iframeId}"
+      src="https://www.youtube.com/embed/${vid}?rel=0&enablejsapi=1&origin=${origin}${suffix}${startTime}"
+      allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; picture-in-picture"
+      allowfullscreen
+      scrolling="no"
+      title="Content from Youtube"
+      loading="lazy"></iframe>
+  `;
+}
+
 export function getPidFromUrl() {
   const url = new URL(window.location.href);
   return url.searchParams.get('pid') || getMetadata('pid');
@@ -667,10 +699,15 @@ export function pushTrialDownloadToDataLayer() {
     const buttonProductId = button?.getAttribute('product-id');
     if (buttonProductId) return buttonProductId;
 
-    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[product-id]') || button?.closest('.section');
-    return closestStoreElementWithId.getAttribute('product-id')
-      || getMetadata('breadcrumb-title')
-      || getMetadata('og:title');
+    const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]') || button?.closest('.section');
+    const { storeId } = closestStoreElementWithId.dataset;
+    if (storeId) {
+      return storeId;
+    }
+
+    // eslint-disable-next-line max-len
+    // keep breadcrumb-tittle for tracking, add a trial-id for future pages
+    return getMetadata('trial-id') || getMetadata('breadcrumb-title') || getMetadata('og:title');
   };
 
   const currentPage = page.name;
@@ -679,15 +716,17 @@ export function pushTrialDownloadToDataLayer() {
   const pushTrialData = (button = null) => {
     AdobeDataLayerService.push(new ButtonClickEvent(
       `${downloadType} downloaded`,
-      getTrialID(currentPage, button),
+      { productId: getTrialID(currentPage, button) },
     ));
   };
 
   const sections = document.querySelectorAll('a.button.modal');
   if (sections.length) {
     sections.forEach((button) => {
-      const href = button.getAttribute('href');
-      if (trialPaths.some((trialPath) => href.includes(trialPath))) {
+      const href = button.getAttribute('location');
+      if (!href) return;
+      if (trialPaths.some((trialPath) => href.includes(trialPath))
+        && !button.hasAttribute('data-layer-ignore')) {
         button.addEventListener('click', () => { pushTrialData(button); });
       }
     });
@@ -853,6 +892,9 @@ export const generatePageLoadStartedName = () => {
    * @param {string[]} tags
    * @returns {string[]} get all analytic tags
    */
+  if (window.location.href.includes('oaiusercontent')) {
+    return 'oai';
+  }
   const getTags = (tags) => (tags ? tags.split(':').filter((tag) => !!tag).map((tag) => tag.trim()) : []);
   const { pathname } = window.location;
 
@@ -881,13 +923,23 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:consumer:quiz`;
       if (getMetadata('skip-start-page')) tagName = `${locale}:consumer:quiz:question-1`;
       if (!pathname.endsWith('/')) {
-        const result = page.name;
-        tagName = `${locale}:consumer:quiz:results:${result.replace('-', ' ')}`;
+        tagName = `${locale}:consumer:quiz:results:${subSubSubSection}`;
       }
     }
 
     if (pathname.includes('scam-masters')) {
       tagName = `${locale}:consumer:quiz:scam-masters`;
+    }
+
+    if (pathname.includes('reverse-phone-lookup')) {
+      tagName = `${locale}:consumer:product:${subSubSubSection}`;
+      if (pathname.includes('/reverse-phone-lookup/')) {
+        tagName = `${locale}:consumer:product:reverse phone lookup:${subSubSubSection}`;
+      }
+    }
+
+    if (pathname.includes('bundle-solutions')) {
+      tagName = `${locale}:oem:bundle solutions`;
     }
 
     if (window.errorCode === '404') {
@@ -909,7 +961,9 @@ export const getProductFinding = () => {
   }
 
   const pageName = page.name.toLowerCase();
-  let productFinding;
+  const currentPath = window.location.pathname;
+
+  let productFinding = '';
   switch (pageName) {
     case 'consumer':
       productFinding = 'solutions page';
@@ -926,13 +980,14 @@ export const getProductFinding = () => {
     case 'spot-the-scam-quiz':
       productFinding = 'consumer quiz';
       break;
+    case 'scamio':
+      break;
     default:
-      productFinding = 'product pages';
+      if (currentPath.includes('/consumer/')) productFinding = 'product pages';
       break;
   }
 
   // case when the pages are link-checker/something
-  const currentPath = window.location.pathname;
   if (currentPath.includes('/link-checker')) {
     productFinding = 'toolbox page';
   }
@@ -1159,4 +1214,16 @@ export const wrapChildrenWithStoreContext = (element, {
   product.appendChild(option);
   context.appendChild(product);
   element.appendChild(context);
+};
+
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.40/';
+
+export const getDsnBase = () => {
+  try {
+    const map = document.querySelector('script[type="importmap"]');
+    const imports = JSON.parse(map?.textContent || '{}').imports || {};
+    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
+  } catch {
+    return DSN_FALLBACK;
+  }
 };

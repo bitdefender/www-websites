@@ -58,31 +58,24 @@ function buildHeroBlock(element) {
   const h1 = element.querySelector('h1');
   const picture = element.querySelector('picture');
   const pictureParent = picture ? picture.parentNode : false;
+  const section = document.querySelector('div.hero');
+  const subSection = document.querySelector('div.hero div');
+  subSection.classList.add('hero-content');
   // eslint-disable-next-line no-bitwise
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    const section = document.querySelector('div.hero');
-    const subSection = document.querySelector('div.hero div');
-    subSection.classList.add('hero-content');
-
-    const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
-
-    if (!isHomePage) {
-      const breadcrumb = createTag('div', { class: 'breadcrumb' });
-      document.querySelector('div.hero div div:first-child').prepend(breadcrumb);
-    }
-
     const pictureEl = document.createElement('div');
     pictureEl.classList.add('hero-picture');
     pictureEl.append(picture);
     section.prepend(pictureEl);
 
     pictureParent.remove();
+  } else {
+    subSection.classList.add('hero-content-full');
   }
 }
 
 createNanoBlock('discount', (code, label = '{label}') => {
   // code = "av/3/1"
-  // eslint-disable-next-line no-unused-vars
   const [product, unit, year] = code.split('/');
 
   const root = document.createElement('bd-product');
@@ -91,7 +84,7 @@ createNanoBlock('discount', (code, label = '{label}') => {
   root.innerHTML = `
     <bd-option devices="${unit}" subscription="${year}">
       <div data-store-render data-store-hide="!it.option.price.discounted" class="discount-bubble await-loader">
-        <div data-store-render data-store-discount="percentage" class="discount-bubble-0">--%</div>
+        <div data-store-render data-store-discount="percentage" class="discount-bubble-0">{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</div>
         <span class="discount-bubble-1">${label}</span>
       </div>
     </bd-option>
@@ -149,6 +142,7 @@ export default function decorate(block) {
     stopAutomaticModalRefresh,
     signature,
     percentProduct,
+    discountedPrice,
     firefoxUrl,
     buttonImage,
     iosLink,
@@ -237,8 +231,8 @@ export default function decorate(block) {
   }
 
   // make discount dynamic
-  if (percentProduct) {
-    const [alias, variant] = percentProduct.split(',');
+  if (percentProduct || discountedPrice) {
+    const [alias, variant] = percentProduct.split(',') || discountedPrice.split(',');
     const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
 
     wrapChildrenWithStoreContext(block, {
@@ -249,6 +243,11 @@ export default function decorate(block) {
       storeEvent: 'all',
     });
     block.querySelector('div').classList.add('await-loader');
+
+    if (discountedPrice) {
+      const dicountedTable = block.querySelector('table');
+      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', '<strong data-store-price="discounted||full"></strong>');
+    }
   }
 
   // Add the await-loader class to the button that leads to the thank you page, this is an exception
