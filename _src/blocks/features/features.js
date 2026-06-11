@@ -1,148 +1,109 @@
-import { matchHeights } from '../../scripts/utils/utils.js';
+import { getDsnBase } from '../../scripts/utils/utils.js';
 
-function expandItem(content) {
-  content.style.height = `${content.scrollHeight}px`;
-  const transitionEndCallback = () => {
-    content.removeEventListener('transitionend', transitionEndCallback);
-    content.style.height = 'auto';
-  };
-  content.addEventListener('transitionend', transitionEndCallback);
-  content.classList.add('expanded');
-}
-
-function collapseItem(content) {
-  content.style.height = `${content.scrollHeight}px`;
-  requestAnimationFrame(() => {
-    content.classList.remove('expanded');
-    content.style.height = 0;
-  });
-}
-
-function eventListener(ul) {
-  return (event) => {
-    let target = null;
-
-    // find ancestor a tag
-    if (event.target.tagName !== 'A') {
-      target = event.target.closest('a');
-    } else {
-      target = event.target;
+const getIconElement = (col) => {
+  const iconSpan = col.querySelector('[class*="icon-"]');
+  if (iconSpan) {
+    const iconName = Array.from(iconSpan.classList)
+      .find((cls) => cls.startsWith('icon-'))
+      ?.substring(5);
+    if (iconName) {
+      const img = document.createElement('img');
+      img.src = `/common/icons/${iconName}.svg`;
+      img.setAttribute('width', '40');
+      img.setAttribute('height', '40');
+      img.style.width = '40px';
+      img.style.height = '40px';
+      img.style.display = 'block';
+      img.setAttribute('alt', '');
+      img.setAttribute('slot', 'icon');
+      return img;
     }
+  }
+  const picture = col.querySelector('picture');
+  if (picture) {
+    const clone = picture.cloneNode(true);
+    clone.setAttribute('slot', 'icon');
+    return clone;
+  }
+  return null;
+};
 
-    // if the clicked node is not open then open it
-    if (!target.classList.contains('is-open')) {
-      target.classList.add('is-open');
+const buildFeatureCol = (col, firstOpen) => {
+  const heading = col.querySelector('h1, h2, h3');
+  const title = heading?.textContent?.trim() || '';
 
-      // if the clicked node has children then toggle the expanded class
-      if (target.parentNode.children.length > 1) {
-        target.parentNode.querySelectorAll('.features-tabs-content').forEach((content) => {
-          expandItem(content);
-        });
-      }
+  const featureCol = document.createElement('bd-feature-col');
+  featureCol.setAttribute('title', title);
 
-      // hid the other tabs
-      ul.querySelectorAll('li').forEach((collapsedLi) => {
-        if (collapsedLi !== target.parentNode) {
-          collapsedLi.children[0].classList.remove('is-open');
-          collapsedLi.querySelectorAll('.features-tabs-content').forEach((content) => {
-            collapseItem(content);
-          });
+  const iconEl = getIconElement(col);
+  if (iconEl) featureCol.appendChild(iconEl);
+
+  const h4s = [...col.querySelectorAll('h4')];
+  const firstH4 = h4s[0] || null;
+
+  const descParts = [];
+  for (const child of col.children) {
+    if (child === firstH4) break;
+    if (child.tagName === 'P'
+        && !child.querySelector('[class*="icon-"]')
+        && child.textContent.trim()
+        && !child.textContent.trim().match(/^#[0-9a-fA-F]{3,6}$/)) {
+      descParts.push(child.innerHTML);
+    }
+  }
+  if (descParts.length) {
+    const desc = document.createElement('bd-p');
+    desc.setAttribute('slot', 'description');
+    desc.setAttribute('kind', 'small');
+    desc.innerHTML = descParts.join(' ');
+    featureCol.appendChild(desc);
+  }
+
+  if (h4s.length) {
+    const accordionSection = document.createElement('bd-accordion-section');
+    accordionSection.setAttribute('no-container', '');
+
+    h4s.forEach((h4, index) => {
+      const item = document.createElement('bd-accordion-item');
+      item.setAttribute('title', h4.textContent.trim());
+      if (index === 0 && firstOpen) item.setAttribute('open', '');
+
+      let next = h4.nextElementSibling;
+      while (next && next.tagName !== 'H4') {
+        if (next.textContent.trim()) {
+          const bdP = document.createElement('bd-p');
+          bdP.setAttribute('kind', 'small');
+          bdP.innerHTML = next.innerHTML;
+          item.appendChild(bdP);
         }
-      });
-    } else {
-      target.classList.remove('is-open');
-      // if the clicked node has children then toggle the expanded class
-      if (target.parentNode.children.length > 1) {
-        target.parentNode.querySelectorAll('.features-tabs-content').forEach((content) => {
-          collapseItem(content);
-        });
+        next = next.nextElementSibling;
       }
-    }
-  };
-}
 
-function extractFeatures(col) {
-  const ul = document.createElement('ul');
-  ul.classList.add('features-tabs');
-
-  // select all h4 tags as feature titles
-  col.querySelectorAll('h4').forEach((h4) => {
-    const li = document.createElement('li');
-    ul.appendChild(li);
-
-    const a = document.createElement('a');
-    a.setAttribute('href', '#');
-
-    // register click event on a tag
-
-    a.addEventListener('click', (event) => {
-      event.preventDefault();
-      eventListener(ul)(event);
+      accordionSection.appendChild(item);
     });
 
-    h4.childNodes.forEach((node) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        a.appendChild(document.createTextNode(node.textContent));
-      } else {
-        a.appendChild(node);
-      }
-    });
+    featureCol.appendChild(accordionSection);
+  }
 
-    a.classList.add('features-tabs-title');
+  return featureCol;
+};
 
-    li.appendChild(a);
+export default async function decorate(block) {
+  const base = getDsnBase();
+  await Promise.all([
+    import(`${base}tabs`),
+    import(`${base}paragraph`),
+    import(`${base}accordion`),
+  ]);
 
-    // all descendants of a that have class tag
-    a.querySelectorAll('.tag').forEach((tag) => {
-      li.appendChild(tag);
-    });
+  const firstOpen = block.classList.contains('first-open');
+  const featuresEl = document.createElement('bd-features');
 
-    const content = document.createElement('div');
-    content.classList.add('features-tabs-content');
-    li.appendChild(content);
-
-    // every oaragraph until next h4
-    let nextElement = h4.nextElementSibling;
-    while (nextElement && nextElement.tagName !== 'H4') {
-      content.appendChild(nextElement);
-      nextElement = h4.nextElementSibling;
-    }
-
-    ul.appendChild(li);
-
-    h4.remove();
-  });
-
-  return ul;
-}
-
-export default function decorate(block) {
-  const cols = [...block.firstElementChild.children];
-  block.classList.add(`features-${cols.length}-cols`);
-
-  // setup image columns
   [...block.children].forEach((row) => {
     [...row.children].forEach((col) => {
-      const pic = col.querySelector('picture');
-      if (pic) {
-        const picWrapper = pic.closest('div');
-        if (picWrapper && picWrapper.children.length === 1) {
-          // picture is only content in column
-          picWrapper.classList.add('features-img-col');
-        }
-      }
-
-      // setup tabs
-      col.appendChild(extractFeatures(col));
+      featuresEl.appendChild(buildFeatureCol(col, firstOpen));
     });
   });
 
-  const featuresList = block.querySelectorAll('ul');
-  if (featuresList) {
-    featuresList.forEach((list) => {
-      const featureText = list.previousElementSibling;
-      featureText.classList.add('feature-text');
-    });
-  }
-  matchHeights(block, '.feature-text');
+  block.replaceChildren(featuresEl);
 }
