@@ -51,12 +51,12 @@ describe('mbox-canvas offer parameters', () => {
     window.history.pushState({}, '', '/en-us/consumer/webview/churn-flow');
   });
 
-  it('does not add bundle_id from url parameters', async () => {
+  it('adds bundle_id from url parameters', async () => {
     expect(await createOfferParameters()).not.toHaveProperty('bundle_id');
 
     window.history.pushState({}, '', '/en-us/consumer/webview/churn-flow?bundle_id=com.bitdefender.premiumsecurity.v2');
 
-    expect(await createOfferParameters()).not.toHaveProperty('bundle_id');
+    expect(await createOfferParameters()).toHaveProperty('bundle_id', 'com.bitdefender.premiumsecurity.v2');
   });
 
   it('preserves existing url parameters', async () => {
@@ -72,11 +72,13 @@ describe('mbox-canvas offer parameters', () => {
       feature: 'main-ui',
       lang: 'en-us',
       auto_renewal: '1',
+      bundle_id: 'com.bitdefender.tsmd.v2',
     });
     expect(createOfferProfileParameters(parameters)).toEqual({
       'profile.feature': 'main-ui',
       'profile.lang': 'en-us',
       'profile.auto_renewal': '1',
+      'profile.bundle_id': 'com.bitdefender.tsmd.v2',
     });
   });
 });
