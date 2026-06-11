@@ -45,9 +45,9 @@ const buildFeatureCol = (col, firstOpen) => {
   for (const child of col.children) {
     if (child === firstH4) break;
     if (child.tagName === 'P'
-        && !child.querySelector('[class*="icon-"]')
-        && child.textContent.trim()
-        && !child.textContent.trim().match(/^#[0-9a-fA-F]{3,6}$/)) {
+      && !child.querySelector('[class*="icon-"]')
+      && child.textContent.trim()
+      && !child.textContent.trim().match(/^#[0-9a-fA-F]{3,6}$/)) {
       descParts.push(child.innerHTML);
     }
   }
