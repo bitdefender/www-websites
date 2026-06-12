@@ -4147,6 +4147,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     width: auto;
     height: 100px;
   }
+
+  .columns-container.uninstall-tools-list a.button:any-link {
+    padding: 6px 2px 6px 15px;
+  }
 }
 
 @media (min-width: 768px) {
