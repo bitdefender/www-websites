@@ -42,12 +42,10 @@ export default function decorate(block) {
   const loader = createLoader();
   block.append(loader);
 
-  // AICI definim progress corect
   const progress = loader.querySelector('.upgrade-loader-progress');
 
   // reset + trigger animation
   progress.style.width = '0';
-
   setTimeout(() => {
     progress.style.transition = 'width 8s linear';
     progress.style.width = '100%';
