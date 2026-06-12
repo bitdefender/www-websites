@@ -10,7 +10,6 @@ const decodeUpgrade = (encoded) => {
 
     return atob(base64);
   } catch (error) {
-    console.error('Failed to decode upgrade parameter:', error);
     return null;
   }
 };
