@@ -10,7 +10,6 @@ const decodeUpgrade = (encoded) => {
 
     return atob(base64);
   } catch (error) {
-    console.error('Failed to decode upgrade parameter:', error);
     return null;
   }
 };
@@ -42,12 +41,15 @@ export default function decorate(block) {
   const loader = createLoader();
   block.append(loader);
 
-  // start loader animation
-  requestAnimationFrame(() => {
-    loader.querySelector('.upgrade-loader-progress').style.width = '100%';
-  });
+  const progress = loader.querySelector('.upgrade-loader-progress');
 
-  // redirect after 8sec
+  // reset + trigger animation
+  progress.style.width = '0';
+  setTimeout(() => {
+    progress.style.transition = 'width 8s linear';
+    progress.style.width = '100%';
+  }, 50);
+
   setTimeout(() => {
     window.location.href = redirectUrl;
   }, 8000);
