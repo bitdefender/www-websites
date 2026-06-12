@@ -226,7 +226,7 @@
     padding: 25px 28px 24px;
     margin-bottom: 16px;
     overflow: hidden;
-    background: #f2fff8 url("./background.svg") center / cover no-repeat;
+    background: #f2fff8 url("../../icons/percent-background.svg") center / cover no-repeat;
     border: 1px dashed #a3e1bf;
     border-radius: 8px;
     color: #058840;
