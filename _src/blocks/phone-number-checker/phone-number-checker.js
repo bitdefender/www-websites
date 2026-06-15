@@ -116,10 +116,9 @@ async function createDropdown(block) {
   await getCountryData();
   if (!countries) return null;
   const { dropdownPlaceholder, dropdownNotFound } = block.closest('.section').dataset;
-  const userGeoIp = await user.country;
-  const defaultCountryISO = userGeoIp?.toUpperCase() ?? page?.country?.toUpperCase();
+  const defaultCountryISO = page?.country?.toUpperCase();
   const defaultCountry = countries.data.find((c) => c.ISO === defaultCountryISO)
-   || countries.data[0];
+  || countries.data[0];
 
   const container = document.createElement('div');
   container.classList.add('country-dropdown-container');
@@ -754,4 +753,13 @@ export default async function decorate(block) {
   }
 
   button.addEventListener('click', handler);
+
+  document.addEventListener('bd_page_ready', async () => {
+    const userConsent = window.adobeDataLayer.getState('ucCategory.functional');
+    if (userConsent) {
+      const userCountry = await user.country;
+      selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
+      selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
+    }
+  });
 }
