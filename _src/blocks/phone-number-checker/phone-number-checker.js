@@ -1,5 +1,6 @@
 import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
+import user from '../../scripts/user.js';
 import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
 
 let phoneUtil; let
@@ -115,7 +116,8 @@ async function createDropdown(block) {
   await getCountryData();
   if (!countries) return null;
   const { dropdownPlaceholder, dropdownNotFound } = block.closest('.section').dataset;
-  const defaultCountryISO = page?.country?.toUpperCase();
+  const userGeoIp = await user.country;
+  const defaultCountryISO = userGeoIp.toUpperCase() ?? page?.country?.toUpperCase();
   const defaultCountry = countries.data.find((c) => c.ISO === defaultCountryISO)
    || countries.data[0];
 
