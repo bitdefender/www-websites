@@ -117,7 +117,7 @@ async function createDropdown(block) {
   if (!countries) return null;
   const { dropdownPlaceholder, dropdownNotFound } = block.closest('.section').dataset;
   const userGeoIp = await user.country;
-  const defaultCountryISO = userGeoIp.toUpperCase() ?? page?.country?.toUpperCase();
+  const defaultCountryISO = userGeoIp?.toUpperCase() ?? page?.country?.toUpperCase();
   const defaultCountry = countries.data.find((c) => c.ISO === defaultCountryISO)
    || countries.data[0];
 
