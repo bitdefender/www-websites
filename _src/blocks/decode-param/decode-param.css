@@ -1,0 +1,38 @@
+.decode-param-container h1 {
+    font-size: 30px;
+    margin-bottom: 0;
+}
+
+.decode-param-container h2 {
+    font-size: 20px;
+}
+
+.decode-param-container h2 strong {
+    font-weight: 500;
+}
+
+.decode-param-container p {
+    font-size: 18px;
+}
+
+.decode-param-container img {
+    width: 90px;
+}
+
+.decode-param-container .upgrade-loader {
+    width: 160px;
+    height: 10px;
+    border: 1px solid #8c8c8c;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    margin: 24px auto;
+}
+
+.decode-param-container .upgrade-loader-progress {
+    width: 0;
+    height: 100%;
+    background: #1a73e8;
+    border-radius: 10px;
+    transition: width 8s linear;
+}
