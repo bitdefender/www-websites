@@ -75,21 +75,19 @@ function buildHeroBlock(element) {
 }
 
 createNanoBlock('discount', (code, label = '{label}') => {
-  // code = "av/3/1"
-  const [product, unit, year] = code.split('/');
+  const root = createTag('div', {
+    'data-store-render': '',
+    'data-store-hide': '!it.state.discount.percentage.max',
+    class: 'discount-bubble await-loader',
+  });
 
-  const root = document.createElement('bd-product');
-  // Add the required attributes to the root element
-  root.setAttribute('product-id', product);
-  root.innerHTML = `
-    <bd-option devices="${unit}" subscription="${year}">
-      <div data-store-render data-store-hide="!it.option.price.discounted" class="discount-bubble await-loader">
-        <div data-store-render data-store-discount="percentage" class="discount-bubble-0">{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</div>
-        <span class="discount-bubble-1">${label}</span>
-      </div>
-    </bd-option>
-  `;
+  const percentage = createTag('div', { class: 'discount-bubble-0' });
+  percentage.textContent = '{{=it.state.discount.percentage.max}}';
 
+  const labelEl = createTag('span', { class: 'discount-bubble-1' });
+  labelEl.textContent = label;
+
+  root.append(percentage, labelEl);
   return root;
 });
 

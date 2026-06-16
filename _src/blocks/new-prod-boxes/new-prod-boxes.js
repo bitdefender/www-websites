@@ -1,4 +1,4 @@
-import { formatPrice, checkIfNotProductPage } from '../../scripts/utils/utils.js';
+import { formatPrice, checkIfNotProductPage, wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
 // Constants for store department and price attributes
@@ -58,9 +58,15 @@ function createPriceElement(options, card) {
   // Old price container
   const oldPriceContainer = document.createElement('div');
   oldPriceContainer.className = 'oldprice-container';
+  oldPriceContainer.setAttribute('data-store-render', '');
+  oldPriceContainer.setAttribute('data-store-hide', '!it.option.price.discounted');
+  oldPriceContainer.setAttribute('data-store-hide-type', 'visibility');
+
   oldPriceContainer.innerHTML = `
-    <span class="prod-oldprice" data-store-price="${oldPriceAttr}" data-store-hide="no-price=discounted"></span>
-    <span class="prod-save" data-store-hide="no-price=discounted">${saveText ?? ''} <span data-store-discount="percentage"></span></span>
+    <span class="prod-oldprice" data-store-price="${oldPriceAttr}"></span>
+    <span class="prod-save">
+      ${saveText ?? ''} <span data-store-render data-store-discount="percentage"></span>
+    </span>
   `;
 
   // New price container
@@ -71,7 +77,7 @@ function createPriceElement(options, card) {
   const perPriceSup = perPriceText ? `<sup class="per-m">${perPriceText}</sup>` : '';
   newPriceContainer.innerHTML = `
     <span class="prod-newprice">
-      <span data-store-price="${priceAttribute}"></span>${perPriceSup}
+      <span data-store-render data-store-price="${priceAttribute}"></span>${perPriceSup}
     </span>
   `;
 
@@ -86,7 +92,7 @@ function createPriceElement(options, card) {
       billedPriceDiv.className = 'billed';
       billedPriceDiv.innerHTML = billedPrice.replace(
         '0',
-        `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
+        `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`,
       );
       container.appendChild(billedPriceDiv);
     }
@@ -109,7 +115,7 @@ function createPriceElement(options, card) {
       billedDiv.className = 'billed';
       billedDiv.innerHTML = billedText.innerHTML.replace(
         '0',
-        `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
+        `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`,
       );
       container.appendChild(billedDiv);
     }
@@ -120,6 +126,7 @@ function createPriceElement(options, card) {
     const buyLink = document.createElement('a');
     buyLink.href = '#';
     buyLink.className = 'button primary no-arrow';
+    buyLink.setAttribute('data-store-render', '');
     buyLink.setAttribute('data-store-buy-link', '');
     buyLink.textContent = buyLinkSelector.innerText;
     container.appendChild(buyLink);
@@ -176,10 +183,10 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
     input.name = inputName;
     input.value = inputValue;
     input.setAttribute('rank', `radio-${idx + 1}`);
-    input.setAttribute('data-store-click-set-product', '');
-    input.setAttribute('data-store-product-id', productName);
-    input.setAttribute('data-store-product-option', `${prodUser}-${prodYear}`);
-    input.setAttribute('data-store-product-department', STORE_DEPARTMENT);
+    input.setAttribute('data-store-action', '');
+    input.setAttribute('data-store-set-id', productName);
+    input.setAttribute('data-store-set-devices', prodUser);
+    input.setAttribute('data-store-set-subscription', prodYear);
     if (isChecked) {
       input.setAttribute('checked', '');
     }
@@ -495,6 +502,7 @@ function getCheckedProductInfo(planSwitcher, defaultName, defaultUsers, defaultY
     return { name: defaultName, users: defaultUsers, years: defaultYears };
   }
 
+  // TODO: modify here as well
   const name = checkedPlan.dataset.storeProductId || defaultName;
   const option = checkedPlan.dataset.storeProductOption || `${defaultUsers}-${defaultYears}`;
   const [users, years] = option.split('-');
@@ -802,40 +810,44 @@ function buildProductBoxHTML(config) {
     greenTagText ? 'hasGreenTag' : '',
     isDemoBox ? 'demo-box' : '',
     isIndividual ? 'individual-box' : 'family-box',
-  ].filter(Boolean).join(' ');
+  ];
 
   const shouldAddStoreEvent = productsAsList.some((entry) => entry.includes(prodName));
-  const storeEventAttr = shouldAddStoreEvent ? `data-store-event="${storeEvent}"` : '';
 
-  return `
-    <div class="${boxClasses}"
-      data-store-context
-      data-store-id="${prodName}"
-      data-store-option="${prodUsers}-${prodYears}"
-      data-store-department="${STORE_DEPARTMENT}"
-      ${storeEventAttr}>
-      <div class="inner_prod_box">
-        ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
-        ${titleHTML}
-        <div class="blueTagsWrapper">${blueTagsHTML}</div>
-        ${subtitleHTML}
-        <hr />
-        ${subtitle2HTML ? `<p class="subtitle-2">${subtitle2HTML}</p>` : ''}
-        ${planSwitcherHTML}
-        <div class="hero-aem__prices await-loader"></div>
-        ${secondButtonHTML}
-        ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
-        <hr />
-        <div class="benefitsLists">${featureListHTML}</div>
-        <div class="add-on-product" style="display: none;">
-          ${hasBilled2 ? '<hr>' : ''}
-          ${planSwitcher2HTML}
-          ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
-          <div class="hero-aem__prices__addon"></div>
-        </div>
+  const productBox = document.createElement('div');
+  productBox.classList.add(...boxClasses.filter(Boolean));
+  productBox.innerHTML = `
+    <div class="inner_prod_box">
+      ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
+      ${titleHTML}
+      <div class="blueTagsWrapper">${blueTagsHTML}</div>
+      ${subtitleHTML}
+      <hr />
+      ${subtitle2HTML ? `<p class="subtitle-2">${subtitle2HTML}</p>` : ''}
+      ${planSwitcherHTML}
+      <div class="hero-aem__prices await-loader"></div>
+      ${secondButtonHTML}
+      ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
+      <hr />
+      <div class="benefitsLists">${featureListHTML}</div>
+      <div class="add-on-product" style="display: none;">
+        ${hasBilled2 ? '<hr>' : ''}
+        ${planSwitcher2HTML}
+        ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
+        <div class="hero-aem__prices__addon"></div>
       </div>
     </div>
   `;
+
+  wrapChildrenWithStoreContext(productBox, {
+    productId: prodName,
+    devices: prodUsers,
+    subscription: prodYears,
+    ignoreEventsParent: true,
+    storeEvent: shouldAddStoreEvent ? storeEvent : '',
+  });
+
+  return productBox;
 }
 
 /**
@@ -1025,7 +1037,7 @@ export default async function decorate(block) {
         });
 
         // Replace original content
-        block.children[key].outerHTML = prodBoxHTML;
+        block.children[key].replaceWith(prodBoxHTML);
 
         // Add price box
         const priceBox = createPriceElement({
