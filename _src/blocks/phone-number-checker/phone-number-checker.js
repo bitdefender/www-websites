@@ -2,6 +2,7 @@ import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
 import user from '../../scripts/user.js';
 import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
+import { onCookiesAccepted } from '../../scripts/utils/utils.js';
 
 let phoneUtil; let
   countries;
@@ -601,9 +602,6 @@ function displayStoredResult(block, statusMessages, statusTitles, statusSubtitle
 }
 
 async function displayCountryOnUserConset(selectEl) {
-  const userConsent = window.adobeDataLayer.getState('ucCategory.functional');
-  if (!userConsent) return;
-
   const userCountry = await user.country;
   selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
   selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
@@ -763,6 +761,7 @@ export default async function decorate(block) {
 
   button.addEventListener('click', handler);
 
-  window.adobeDataLayer.addEventListener('consent_status', () => displayCountryOnUserConset(selectEl));
-  if (window.adobeDataLayer.getState('ucCategory.functional')) displayCountryOnUserConset(selectEl);
+  onCookiesAccepted(() => {
+    displayCountryOnUserConset(selectEl);
+  });
 }
