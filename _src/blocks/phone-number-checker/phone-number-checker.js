@@ -754,12 +754,9 @@ export default async function decorate(block) {
 
   button.addEventListener('click', handler);
 
-  document.addEventListener('bd_page_ready', async () => {
-    const userConsent = window.adobeDataLayer.getState('ucCategory.functional');
-    if (userConsent) {
-      const userCountry = await user.country;
-      selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
-      selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
-    }
+  window.adobeDataLayer.addEventListener('onAcceptAllServices', async () => {
+    const userCountry = await user.country;
+    selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
+    selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
   });
 }
