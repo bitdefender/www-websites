@@ -600,6 +600,15 @@ function displayStoredResult(block, statusMessages, statusTitles, statusSubtitle
   }
 }
 
+async function displayCountryOnUserConset(selectEl) {
+  const userConsent = window.adobeDataLayer.getState('ucCategory.functional');
+  if (!userConsent) return;
+
+  const userCountry = await user.country;
+  selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
+  selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
+}
+
 export default async function decorate(block) {
   await initValidatorLibrary();
   const { checkButtonText, placeholder } = block.closest('.section').dataset;
@@ -754,9 +763,6 @@ export default async function decorate(block) {
 
   button.addEventListener('click', handler);
 
-  window.adobeDataLayer.addEventListener('onAcceptAllServices', async () => {
-    const userCountry = await user.country;
-    selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
-    selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
-  });
+  window.adobeDataLayer.addEventListener('consent_status', () => displayCountryOnUserConset(selectEl));
+  if (window.adobeDataLayer.getState('ucCategory.functional')) displayCountryOnUserConset(selectEl);
 }
