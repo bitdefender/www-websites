@@ -1,5 +1,6 @@
 import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
+import user from '../../scripts/user.js';
 import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
 
 let phoneUtil; let
@@ -117,7 +118,7 @@ async function createDropdown(block) {
   const { dropdownPlaceholder, dropdownNotFound } = block.closest('.section').dataset;
   const defaultCountryISO = page?.country?.toUpperCase();
   const defaultCountry = countries.data.find((c) => c.ISO === defaultCountryISO)
-   || countries.data[0];
+  || countries.data[0];
 
   const container = document.createElement('div');
   container.classList.add('country-dropdown-container');
@@ -752,4 +753,13 @@ export default async function decorate(block) {
   }
 
   button.addEventListener('click', handler);
+
+  document.addEventListener('bd_page_ready', async () => {
+    const userConsent = window.adobeDataLayer.getState('ucCategory.functional');
+    if (userConsent) {
+      const userCountry = await user.country;
+      selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
+      selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
+    }
+  });
 }
