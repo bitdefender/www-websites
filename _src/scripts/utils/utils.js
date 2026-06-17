@@ -1229,5 +1229,9 @@ export const getDsnBase = () => {
 
 export function onCookiesAccepted(callback) {
   if (window.adobeDataLayer.getState('ucCategory.functional')) callback();
-  else window.adobeDataLayer.addEventListener('consent_status', callback);
+  else {
+    window.adobeDataLayer.addEventListener('consent_status', () => {
+      if (window.adobeDataLayer.getState('ucCategory.functional')) callback();
+    });
+  }
 }
