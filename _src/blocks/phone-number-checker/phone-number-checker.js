@@ -2,6 +2,7 @@ import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
 import user from '../../scripts/user.js';
 import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
+import { onCookiesAccepted } from '../../scripts/utils/utils.js';
 
 let phoneUtil; let
   countries;
@@ -754,12 +755,9 @@ export default async function decorate(block) {
 
   button.addEventListener('click', handler);
 
-  document.addEventListener('bd_page_ready', async () => {
-    const userConsent = window.adobeDataLayer.getState('ucCategory.functional');
-    if (userConsent) {
-      const userCountry = await user.country;
-      selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
-      selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
-    }
+  onCookiesAccepted(async () => {
+    const userCountry = await user.country;
+    selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
+    selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
   });
 }
