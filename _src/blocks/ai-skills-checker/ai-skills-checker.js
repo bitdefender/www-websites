@@ -414,7 +414,7 @@ function createUpsellButton(buttonText) {
   }
 
   const button = document.createElement('button');
-  button.className = 'upsell-button';
+  button.className = 'upsell-button disabled';
   button.type = 'button';
   button.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"></path><polyline points="7 11 12 16 17 11"></polyline><line x1="12" y1="4" x2="12" y2="16"></line>
@@ -457,7 +457,6 @@ function createUpsellZone(block) {
   const buttonsContainer = block.querySelector('.buttons-container');
   const upsellContainer = document.createElement('div');
   const upsellButton = createUpsellButton(upsellMap.button);
-  upsellButton.disabled = true;
   upsellButton.addEventListener('click', (event) => {
     event.preventDefault();
     const privacyCheckbox = upsellContainer.querySelector('.upsell-privacy input');
@@ -486,12 +485,14 @@ function createUpsellZone(block) {
   `;
   upsellContainer.querySelector('.upsell-content').appendChild(upsellButton);
   const privacyCheckbox = upsellContainer.querySelector('.upsell-privacy input');
-  upsellButton.disabled = Boolean(privacyCheckbox) && !privacyCheckbox.checked;
   privacyCheckbox?.addEventListener('change', (event) => {
-    upsellButton.disabled = !event.target.checked;
     if (event.target.checked) {
+      upsellButton.classList.remove('disabled');
       event.target.closest('.upsell-privacy')?.classList.remove('privacy-error');
+      return;
     }
+
+    upsellButton.classList.add('disabled');
   });
 
   if (buttonsContainer) {

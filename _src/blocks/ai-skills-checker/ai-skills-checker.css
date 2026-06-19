@@ -418,7 +418,7 @@ main .section.ai-skills-checker-container {
             text-decoration: none;
             cursor: pointer;
 
-            &:disabled {
+            &.disabled {
                 background-color: #C7CDD1;
             }
         }
