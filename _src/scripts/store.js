@@ -12,7 +12,7 @@ export default new Store({
       const products = (await target.configMbox)?.products;
       const { buyLink, product, option } = param;
       const buyLinkURL = new URL(buyLink);
-      buyLinkURL.searchParams.set('REF', this.promotion && this.promotion !== Store.NO_PROMOTION ? `WEBSITES_${this.promotion}` : 'N/A');
+      buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
       if (products) {
         const monthsToYears = option.subscription / (option.subscription === 1 ? 1 : 12);
         const extraParameters = products[product.alias]?.[`${option.devices}-${monthsToYears}`]?.extraParameters || [];
