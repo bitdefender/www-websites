@@ -199,6 +199,7 @@ async function checkSkillLink(
 
   // build result card HTML per spec
   const skillName = data.skill_name ?? data.name ?? inputUrl ?? file?.name ?? '';
+  const llmSummary = data.llm_summary ?? data.summary ?? null;
   const findings = Array.isArray(data.findings) ? data.findings : [];
   const findingsCount = (typeof data.findings_count === 'number') ? data.findings_count : findings.length;
 
@@ -221,6 +222,7 @@ async function checkSkillLink(
     skillResult.innerHTML = `
       <p><strong>Skill Scan:</strong> ${skillName}</p>
       ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
+      ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
       <h4>Findings (${findingsCount})</h4>
       ${findingsHtml}
     `;
@@ -241,6 +243,7 @@ async function checkSkillLink(
   result.innerHTML = `
     <p><strong>Skill Scan:</strong> ${skillName}</p>
     ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
+    ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
     <h4>Findings (${findingsCount})</h4>
     ${findingsHtml}
   `;
@@ -255,7 +258,6 @@ async function checkSkillLink(
     inputDiv.textContent = file ? file.name : inputUrl;
   }
 
-  changeTexts(block, statusCode, statusTitles);
   input.closest('.input-container').classList.remove('loader-circle');
 
   AdobeDataLayerService.push(new WindowLoadStartedEvent((pageLoadStartedInfo) => {

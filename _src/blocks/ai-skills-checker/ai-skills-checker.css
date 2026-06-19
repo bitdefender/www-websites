@@ -58,8 +58,7 @@ main .section.ai-skills-checker-container {
         }
 
         .ai-skills-checker h1 {
-            color: #EA0220;
-            margin-bottom: 16px;
+            display: none;
         }
 
         .ai-skills-checker div:first-child p:not(:has(img)) {
@@ -94,7 +93,7 @@ main .section.ai-skills-checker-container {
         }
 
         .ai-skills-checker h1 {
-            margin-bottom: 16px;
+            display: none;
         }
 
         .ai-skills-checker input[type="text"], .ai-skills-checker #inputDiv {
