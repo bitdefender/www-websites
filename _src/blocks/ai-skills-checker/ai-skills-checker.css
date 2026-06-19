@@ -368,7 +368,6 @@ main .section.ai-skills-checker-container {
 
         .upsell-content {
             display: grid;
-            grid-template-columns: 56px 1fr;
             gap: 20px;
             align-items: center;
         }
@@ -394,6 +393,7 @@ main .section.ai-skills-checker-container {
             color: #4B5563;
             font-size: 16px;
             line-height: 22px;
+            display: block !important;
         }
 
         .upsell-button {
@@ -473,6 +473,7 @@ main .section.ai-skills-checker-container {
             border-radius: 10px;
             font-weight: bold;
             font-size: 1em;
+            min-width: 100%;
         }
 
         button.check-url:hover {
@@ -690,7 +691,7 @@ main .section.ai-skills-checker-container {
                 display: block;
 
                 div:first-child {
-                    display: flex;
+                    display: grid;
                 }
             }
 
