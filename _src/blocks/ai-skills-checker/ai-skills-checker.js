@@ -270,8 +270,10 @@ async function checkSkillLink(
 }
 
 async function resetChecker(block, titleText = '', inputsState = {}) {
-  const classesToRemove = ['danger', 'safe'];
+  const classesToRemove = ['danger', 'safe', 'no-response'];
   const section = block.closest('.section');
+
+  block.classList.remove('multiple-skills', 'multiple-skills-check');
 
   // Iterate over the classes and remove them from the section
   classesToRemove.forEach((className) => {
