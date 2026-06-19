@@ -30,7 +30,15 @@ const isValidUrl = (urlString) => {
   return urlPattern.test(urlString);
 };
 
-async function checkSkillLink(block, input, result, statusMessages, statusTitles, fileInput) {
+async function checkSkillLink(
+  block,
+  input,
+  result,
+  statusMessages,
+  statusTitles,
+  fileInput,
+  skillIndex,
+) {
   const maxArchiveSizeBytes = 10 * 1024 * 1024;
   const inputUrl = input.value.trim();
   const file = fileInput?.files && fileInput.files[0];
@@ -85,6 +93,70 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
   }
 
   if (!response || !response.ok) {
+    console.log(response);
+    if (response.status === 409) {
+      result.classList.remove('danger');
+      block.classList.add('multiple-skills');
+      input.closest('.input-container').classList.remove('loader-circle');
+      const data = await response.json();
+      console.log('Multiple skills found:', data.detail.skills);
+      const title = data.detail.message;
+
+      const skills = data.detail.skills || [];
+
+      // build DOM for multiple skills and attach event listeners
+      result.innerHTML = '';
+
+      const header = document.createElement('h3');
+      header.className = 'multiple-results';
+      header.textContent = 'Multiple skills found';
+
+      const subtitle = document.createElement('h1');
+      subtitle.textContent = title;
+
+      const list = document.createElement('ul');
+
+      skills.forEach((skill, idx) => {
+        const li = document.createElement('li');
+        li.classList.add(`skill-item-${idx}`);
+
+        const strong = document.createElement('strong');
+        strong.textContent = skill.name || '';
+
+        const skillInput = document.createElement('input');
+        skillInput.type = 'text';
+        skillInput.value = skill.url || '';
+        skillInput.setAttribute('readonly', '');
+
+        const inputContainer = document.createElement('div');
+        inputContainer.className = 'input-container';
+        inputContainer.appendChild(skillInput);
+
+        const skillButton = document.createElement('button');
+        skillButton.className = 'check-url';
+        skillButton.type = 'button';
+        skillButton.textContent = 'Check Skill';
+        // attach the same listener as the main button
+        skillButton.addEventListener('click', () => {
+          checkSkillLink(block, skillInput, result, statusMessages, statusTitles, fileInput, idx);
+          if (!block.classList.contains('multiple-skills-check')) block.classList.add('multiple-skills-check');
+        });
+
+        li.appendChild(strong);
+        li.appendChild(inputContainer);
+        li.appendChild(skillButton);
+        list.appendChild(li);
+      });
+
+      result.innerHTML = '';
+
+      result.appendChild(header);
+      result.appendChild(subtitle);
+      result.appendChild(list);
+
+      return;
+    }
+
     result.textContent = statusMessages.error ?? 'Please enter a valid skill URL or upload a valid archive';
     result.className = 'result danger';
     toggleUpsell(block, false);
@@ -142,6 +214,30 @@ async function checkSkillLink(block, input, result, statusMessages, statusTitles
       const fileCode = filename ? `<code>${filename}</code>` : '';
       return `<li><strong>${descr}</strong> <br>${fileCode}</li>`;
     }).join('')}</ol>`;
+  }
+
+  if (block.classList.contains('multiple-skills-check')) {
+    const skillScanned = block.querySelector(`.skill-item-${skillIndex}`);
+    const skillResult = document.createElement('div');
+    skillResult.innerHTML = `
+      <p><strong>Skill Scan:</strong> ${skillName}</p>
+      ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
+      ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
+      <h4>Findings (${findingsCount})</h4>
+      ${findingsHtml}
+    `;
+
+    skillScanned.classList.add(className.split(' ')[1]);
+
+    input.setAttribute('disabled', '');
+    skillScanned.querySelector('button').remove();
+    skillResult.className = className;
+    skillScanned.appendChild(skillResult);
+    toggleUpsell(block, true);
+
+    input.closest('.input-container').classList.remove('loader-circle');
+
+    return;
   }
 
   result.innerHTML = `

@@ -637,6 +637,66 @@ main .section.ai-skills-checker-container {
             margin-top: 20px;
             font-size: 12px;
         }
+
+        &.multiple-skills {
+            div:first-child {
+                display: none;
+            }
+
+            .input-container {
+                display: none;
+            }
+
+            li {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                li {
+                    align-items: flex-start;
+                }
+
+                .result {
+                    align-items: flex-start;   
+                }
+
+                .safe input {
+                    border: 2px dashed #3D8648;
+                }
+
+                .input-container {
+                    display: block;
+                }
+
+                &.danger input {
+                    border: 2px dashed #D82E21;
+                }
+
+                &.safe input {
+                    border: 2px dashed #3D8648;
+                }
+            }
+
+            .upsell-container {
+                display: block;
+
+                div:first-child {
+                    display: flex;
+                }
+            }
+
+            .privacy-policy {
+                display: none;
+            }
+
+            .result {
+                display: block;
+            }
+
+            .buttons-container {
+                display: block;
+            }
+        }
     }
 
     @media (min-width:768px) {
