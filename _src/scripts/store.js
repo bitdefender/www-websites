@@ -11,15 +11,15 @@ export default new Store({
     buyLink: async (param) => {
       const products = (await target.configMbox)?.products;
       const { buyLink, product, option } = param;
-      const buyLinkURL = new URL(buyLink);
+      const monthsToYears = option.subscription / (option.subscription === 1 ? 1 : 12);
+      const targetOverride = products?.[product.alias]?.[`${option.devices}-${monthsToYears}`];
+
+      const buyLinkURL = new URL(targetOverride?.buyLink || buyLink);
       buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
-      if (products) {
-        const monthsToYears = option.subscription / (option.subscription === 1 ? 1 : 12);
-        const extraParameters = products[product.alias]?.[`${option.devices}-${monthsToYears}`]?.extraParameters || [];
-        extraParameters.forEach(({ key, value }) => {
-          buyLinkURL.searchParams.set(key, value);
-        });
-      }
+
+      targetOverride?.extraParameters.forEach(({ key, value }) => {
+        buyLinkURL.searchParams.set(key, value);
+      });
 
       return buyLinkURL.href;
     },

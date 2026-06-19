@@ -2,7 +2,6 @@ import { formatPrice, checkIfNotProductPage, wrapChildrenWithStoreContext } from
 import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
 
 // Constants for store department and price attributes
-const STORE_DEPARTMENT = 'consumer';
 const PRICE_ATTRIBUTES = {
   default: 'discounted||full',
   monthly: 'discounted-monthly||full-monthly',
@@ -502,10 +501,9 @@ function getCheckedProductInfo(planSwitcher, defaultName, defaultUsers, defaultY
     return { name: defaultName, users: defaultUsers, years: defaultYears };
   }
 
-  // TODO: modify here as well
-  const name = checkedPlan.dataset.storeProductId || defaultName;
-  const option = checkedPlan.dataset.storeProductOption || `${defaultUsers}-${defaultYears}`;
-  const [users, years] = option.split('-');
+  const name = checkedPlan.dataset.storeSetId || defaultName;
+  const users = checkedPlan.dataset.storeSetDevices || defaultUsers;
+  const years = checkedPlan.dataset.storeSetSubscription || defaultYears;
 
   return { name, users, years };
 }
@@ -705,11 +703,11 @@ function syncAddOnWithMainProduct(boxElement, state) {
       }
 
       if (radio.id.includes('add-on')) {
-        state.addOnProductOption = radio.dataset.storeProductOption;
-        state.addOnProduct = radio.dataset.storeProductId;
+        state.addOnProductOption = `${radio.dataset.storeSetDevices}-${radio.dataset.storeSetSubscription}`;
+        state.addOnProduct = radio.dataset.storeSetId;
       } else {
-        state.productOption = radio.dataset.storeProductOption;
-        state.product = radio.dataset.storeProductId;
+        state.productOption = `${radio.dataset.storeSetDevices}-${radio.dataset.storeSetSubscription}`;
+        state.product = radio.dataset.storeSetId;
       }
 
       matchingRadios.forEach(async (matchingRadio) => matchingRadio.click());
@@ -750,10 +748,13 @@ async function setupAddOnCheckbox(
   const addOnProductElement = boxElement.querySelector('.add-on-product');
   if (!addOnProductElement) return;
 
-  addOnProductElement.setAttribute('data-store-context', '');
-  addOnProductElement.setAttribute('data-store-id', addOnProdName);
-  addOnProductElement.setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-  addOnProductElement.setAttribute('data-store-department', STORE_DEPARTMENT);
+  wrapChildrenWithStoreContext(addOnProductElement, {
+    productId: addOnProdName,
+    devices: addOnProdUsers,
+    subscription: addOnProdYears,
+    ignoreEventsParent: true,
+    storeEvent: 'all',
+  });
 
   try {
     const productObject = await Store.getProducts([
@@ -1101,12 +1102,18 @@ export default async function decorate(block) {
               productInfo,
             );
 
-            const productZones = block.children[key].querySelectorAll('[data-store-context]');
+            const productZones = block.children[key].querySelectorAll('bd-context');
+            const cardBdOption = block.children[key]?.querySelector('bd-option');
+            const productOption = `${cardBdOption.getAttribute('devices')}-${cardBdOption.getAttribute('subscription')}`;
+
+            const addOnBdOption = productZones[1]?.querySelector('bd-option');
+            const addOnProductOption = `${addOnBdOption.getAttribute('devices')}-${addOnBdOption.getAttribute('subscription')}`;
+
             const state = {
-              product: block.children[key]?.getAttribute('data-store-id'),
-              productOption: block.children[key]?.getAttribute('data-store-option'),
-              addOnProduct: productZones[1]?.getAttribute('data-store-id'),
-              addOnProductOption: productZones[1]?.getAttribute('data-store-option'),
+              product: productZones[0]?.querySelector('bd-product')?.getAttribute('product-id'),
+              productOption,
+              addOnProduct: productZones[1]?.querySelector('bd-product')?.getAttribute('product-id'),
+              addOnProductOption,
             };
 
             syncAddOnWithMainProduct(
