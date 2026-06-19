@@ -93,7 +93,6 @@ async function checkSkillLink(
   }
 
   if (!response || !response.ok) {
-    console.log(response);
     if (response.status === 409) {
       result.classList.remove('danger');
       block.classList.add('multiple-skills');
@@ -149,7 +148,6 @@ async function checkSkillLink(
       });
 
       result.innerHTML = '';
-
       result.appendChild(header);
       result.appendChild(subtitle);
       result.appendChild(list);
@@ -157,11 +155,13 @@ async function checkSkillLink(
       return;
     }
 
-    result.textContent = statusMessages.error ?? 'Please enter a valid skill URL or upload a valid archive';
-    result.className = 'result danger';
-    toggleUpsell(block, false);
-    input.closest('.input-container').classList.remove('loader-circle');
-    return;
+    if (!block.classList.contains('multiple-skills')) {
+      result.textContent = statusMessages.error ?? 'Please enter a valid skill URL or upload a valid archive';
+      result.className = 'result danger';
+      toggleUpsell(block, false);
+      input.closest('.input-container').classList.remove('loader-circle');
+      return;
+    }
   }
 
   const data = await response.json();
@@ -199,7 +199,6 @@ async function checkSkillLink(
 
   // build result card HTML per spec
   const skillName = data.skill_name ?? data.name ?? inputUrl ?? file?.name ?? '';
-  const llmSummary = data.llm_summary ?? data.summary ?? null;
   const findings = Array.isArray(data.findings) ? data.findings : [];
   const findingsCount = (typeof data.findings_count === 'number') ? data.findings_count : findings.length;
 
@@ -222,7 +221,6 @@ async function checkSkillLink(
     skillResult.innerHTML = `
       <p><strong>Skill Scan:</strong> ${skillName}</p>
       ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
-      ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
       <h4>Findings (${findingsCount})</h4>
       ${findingsHtml}
     `;
@@ -243,7 +241,6 @@ async function checkSkillLink(
   result.innerHTML = `
     <p><strong>Skill Scan:</strong> ${skillName}</p>
     ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
-    ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
     <h4>Findings (${findingsCount})</h4>
     ${findingsHtml}
   `;
@@ -460,6 +457,7 @@ function createUpsellZone(block) {
   const buttonsContainer = block.querySelector('.buttons-container');
   const upsellContainer = document.createElement('div');
   const upsellButton = createUpsellButton(upsellMap.button);
+  upsellButton.disabled = true;
   upsellButton.addEventListener('click', (event) => {
     event.preventDefault();
     const privacyCheckbox = upsellContainer.querySelector('.upsell-privacy input');
@@ -469,7 +467,6 @@ function createUpsellZone(block) {
       return;
     }
 
-    AdobeDataLayerService.push(new WindowLoadStartedEvent({ name: 'upsell-clicked' }));
     startUpsellDownload(upsellButton);
   });
 
@@ -488,7 +485,10 @@ function createUpsellZone(block) {
     </div>
   `;
   upsellContainer.querySelector('.upsell-content').appendChild(upsellButton);
-  upsellContainer.querySelector('.upsell-privacy input')?.addEventListener('change', (event) => {
+  const privacyCheckbox = upsellContainer.querySelector('.upsell-privacy input');
+  upsellButton.disabled = Boolean(privacyCheckbox) && !privacyCheckbox.checked;
+  privacyCheckbox?.addEventListener('change', (event) => {
+    upsellButton.disabled = !event.target.checked;
     if (event.target.checked) {
       event.target.closest('.upsell-privacy')?.classList.remove('privacy-error');
     }
@@ -702,7 +702,7 @@ export default function decorate(block) {
   });
   input.addEventListener('paste', () => {
     result.textContent = '';
-    result.className = '';
+    result.className = 'result';
     toggleUpsell(block, false);
   });
   fileInput.addEventListener('change', () => {
