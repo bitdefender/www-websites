@@ -37,7 +37,7 @@ import {
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
-  getPageExperimentKey,
+  // getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
@@ -498,10 +498,10 @@ function openExternalLinksInNewTab(doc) {
  */
 async function loadEager(doc) {
   // load trackers early if there is a target experiment on the page
-  if (getPageExperimentKey()) {
-    await loadTrackers();
-    await resolveNonProductsDataLayer();
-  }
+  // if (getPageExperimentKey()) {
+  //   await loadTrackers();
+  //   await resolveNonProductsDataLayer();
+  // }
 
   const userCountry = await user.country;
   if (userCountry !== page.country && !sessionStorage.getItem('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
@@ -551,10 +551,10 @@ async function loadLazy(doc) {
   }
 
   // only call load Trackers here if there is no experiment on the page
-  if (!getPageExperimentKey()) {
-    loadTrackers();
-    await resolveNonProductsDataLayer();
-  }
+  // if (!getPageExperimentKey()) {
+  //   loadTrackers();
+  //   await resolveNonProductsDataLayer();
+  // }
 
   // push basic events to dataLayer
   await loadBlocks(main);
@@ -734,6 +734,9 @@ async function loadPage() {
     document.body.style = 'background-color: #141517';
   }
 
+  // TODO: please remove this as soon as the Syntasa A/B test gets finished
+  await loadTrackers();
+  await resolveNonProductsDataLayer();
   await loadEager(document);
 
   const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
