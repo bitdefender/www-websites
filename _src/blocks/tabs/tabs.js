@@ -284,20 +284,28 @@ export default async function decorate(block) {
 
     const dropDownMenu = block.querySelector('.dropdown-menu');
 
-    // After a tab becomes visible, re-trigger bd-features height equalization.
-    // Uses double rAF so the browser has time to paint the visible content.
+    // After a tab becomes visible, call _equalizeRows directly on any bd-features inside.
+    // - Uses customElements.whenDefined so it works regardless of block loading order.
+    // - setTimeout(100) lets bd-features' own _measureMaxHeight finish first, then we
+    //   re-equalize on the fully-rendered nodes. This avoids the race condition where
+    //   _measureMaxHeight's internal re-render briefly sets heights back to 0.
     const measurePanelFeatures = (panel) => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
+      const doEqualize = () => {
+        setTimeout(() => {
           panel.querySelectorAll('bd-features').forEach((el) => {
             // eslint-disable-next-line no-underscore-dangle
-            el._measureMaxHeight?.();
+            el._equalizeRows?.();
           });
-        });
-      });
+        }, 100);
+      };
+      if (customElements.get('bd-features')) {
+        doEqualize();
+      } else {
+        customElements.whenDefined('bd-features').then(doEqualize);
+      }
     };
 
-    // Measure first tab immediately; the double rAF inside gives bd-features time to paint.
+    // Measure first tab on initial load.
     if (tabs[0]) measurePanelFeatures(tabs[0].$content);
 
     const activateTab = (index, { toggleDropdown = true } = {}) => {
