@@ -227,7 +227,7 @@ function renderPrices(block, metadata) {
           block.querySelector('bd-option').prepend(planSwitcher);
         }
         savingsTag.innerHTML = `
-          <span class="saving-tag-text" data-store-hide="!it.option.price.discounted">
+          <span class="saving-tag-text" data-store-render data-store-hide="!it.option.price.discounted">
             <span data-store-render data-store-discount="percentage"></span> ${saveText || ''} 
           </span>
         `;

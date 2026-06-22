@@ -17,19 +17,19 @@ function replacePricePlaceholders(html) {
   return html
     .replace(
       /&lt;discounted-yearly-price&gt;|<discounted-yearly-price>/gi,
-      '<span class="discounted-yearly-price await-loader" data-store-price="discounted||full"></span>',
+      '<span class="discounted-yearly-price await-loader" data-store-render data-store-price="discounted||full"></span>',
     )
     .replace(
       /&lt;full-yearly-price&gt;|<full-yearly-price>/gi,
-      '<span class="full-yearly-price await-loader" data-store-price="full"></span>',
+      '<span class="full-yearly-price await-loader" data-store-render data-store-price="full"></span>',
     )
     .replace(
       /&lt;discounted-monthly-price&gt;|<discounted-monthly-price>/gi,
-      '<span class="discounted-monthly-price await-loader" data-store-price="discounted-monthly||full-monthly"></span>',
+      '<span class="discounted-monthly-price await-loader" data-store-render data-store-price="discounted-monthly||full-monthly"></span>',
     )
     .replace(
       /&lt;full-monthly-price&gt;|<full-monthly-price>/gi,
-      '<span class="full-monthly-price await-loader" data-store-price="full-monthly"></span>',
+      '<span class="full-monthly-price await-loader" data-store-render data-store-price="full-monthly"></span>',
     );
 }
 
@@ -186,7 +186,6 @@ export default async function decorate(block) {
     .filter((cell) => cell.querySelector('h2, h3'))
     .map((cell, index) => {
       const product = products[index] || {};
-      const productOption = product.users && product.years ? `${product.users}-${product.years}` : '';
       const title = cell.querySelector('h2, h3');
       const paragraphs = [...cell.querySelectorAll('p')];
       const description = paragraphs[0]?.textContent.trim() || '';
@@ -196,7 +195,8 @@ export default async function decorate(block) {
       return {
         index,
         productId: product.id || '',
-        productOption,
+        devices: product.users,
+        subscription: product.years,
         name: normalizePlanName(title?.textContent || ''),
         description,
         billedHtml: replacePricePlaceholders(billedHtml),
@@ -241,28 +241,29 @@ export default async function decorate(block) {
               aria-checked="false"
               tabindex="-1"
               data-plan-index="${index}"
-              data-store-context
-              data-store-id="${plan.productId}"
-              data-store-option="${plan.productOption}"
-              data-store-department="consumer"
-              data-store-event="product-loaded"
             >
-              <span class="webview-plan-selector-radio" aria-hidden="true"></span>
-              <div class="webview-plan-selector-plan-content">
-                <div class="webview-plan-selector-plan-copy">
-                  <h2>${plan.name}</h2>
-                  <p>${plan.description}</p>
-                  <p class="webview-plan-selector-billed">${plan.billedHtml}</p>
-                </div>
-                <div class="webview-plan-selector-plan-price">
-                  <strong><span class="billed-price await-loader" data-store-price="discounted-monthly||full-monthly"></span></strong>
-                  <span>/ month</span>
-                  <em><span class="discount-percentage await-loader" data-store-discount="percentage">${discountLabel}</span> ${offText}</em>
-                </div>
-              </div>
-                <a class="button webview-plan-selector-plan-buy-link" href="${ctaHref}" data-store-buy-link aria-hidden="true" tabindex="-1">${ctaText}</a>
-            </div>
-          `).join('')}
+              <bd-context ignore-events-parent>
+                <bd-product product-id="${plan.productId}">
+                  <bd-option devices="${plan.devices}" subscription="${plan.subscription}" data-layer-event="all">
+                    <span class="webview-plan-selector-radio" aria-hidden="true"></span>
+                    <div class="webview-plan-selector-plan-content">
+                      <div class="webview-plan-selector-plan-copy">
+                        <h2>${plan.name}</h2>
+                        <p>${plan.description}</p>
+                        <p class="webview-plan-selector-billed">${plan.billedHtml}</p>
+                      </div>
+                      <div class="webview-plan-selector-plan-price">
+                        <strong><span class="billed-price await-loader" data-store-render data-store-price="discounted-monthly||full-monthly"></span></strong>
+                        <span>/ month</span>
+                        <em><span class="discount-percentage await-loader" data-store-render data-store-discount="percentage">${discountLabel}</span> ${offText}</em>
+                      </div>
+                    </div>
+                    <a class="button webview-plan-selector-plan-buy-link" href="${ctaHref}" data-store-render data-store-buy-link aria-hidden="true" tabindex="-1">${ctaText}</a>
+                </bd-option>
+              </bd-product>
+            </bd-context>
+          </div>
+        `).join('')}
         </div>
       </div>
       <div class="webview-plan-selector-footer">

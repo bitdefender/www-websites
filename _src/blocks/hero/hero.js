@@ -244,7 +244,7 @@ export default function decorate(block) {
 
     if (discountedPrice) {
       const dicountedTable = block.querySelector('table');
-      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', '<strong data-store-price="discounted||full"></strong>');
+      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', '<strong data-store-render data-store-price="discounted||full"></strong>');
     }
   }
 
