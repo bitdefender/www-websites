@@ -71,6 +71,12 @@
 
 .columns-container.uninstall-tools .columns > div {
   align-items: flex-start;
+  flex-direction: unset;
+  gap: 32px;
+}
+
+.columns-container.uninstall-tools .columns > div > div {
+  flex: 1;
 }
 
 .columns-container.uninstall-tools h1 {
@@ -4175,5 +4181,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
     height: 10em;
+  }
+
+  .columns-container.uninstall-tools .columns > div {
+    flex-direction: column;
+    gap: 0;
   }
 }
