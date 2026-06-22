@@ -63,9 +63,9 @@ const buildTabCol = (cells, isFirstOpen) => {
   accordionSection.setAttribute('no-container', '');
   col.appendChild(accordionSection);
 
-  col._accordionSection = accordionSection;
-  col._isFirstOpen = isFirstOpen;
-  col._firstItemAdded = false;
+  col.accordionSection = accordionSection;
+  col.isFirstOpen = isFirstOpen;
+  col.firstItemAdded = false;
 
   return col;
 };
@@ -78,10 +78,10 @@ const appendAccordionItem = (col, cells) => {
   const item = document.createElement('bd-accordion-item');
   item.setAttribute('title', titleText);
 
-  if (col._isFirstOpen && !col._firstItemAdded) {
+  if (col.isFirstOpen && !col.firstItemAdded) {
     item.setAttribute('open', '');
   }
-  col._firstItemAdded = true;
+  col.firstItemAdded = true;
 
   if (contentCell) {
     const children = Array.from(contentCell.children);
@@ -100,7 +100,7 @@ const appendAccordionItem = (col, cells) => {
     }
   }
 
-  col._accordionSection.appendChild(item);
+  col.accordionSection.appendChild(item);
 };
 
 const getSectionContext = (block) => {
@@ -153,8 +153,8 @@ const buildTabsFromBlock = (block, title, subtitle) => {
       }
       currentCol = buildTabCol(cells, isFirstOpen);
       currentPanel.appendChild(currentCol);
-    } else {
-      if (currentCol) appendAccordionItem(currentCol, cells);
+    } else if (currentCol) {
+      appendAccordionItem(currentCol, cells);
     }
   });
 
@@ -276,37 +276,31 @@ export default async function decorate(block) {
   const config = readBlockConfig(block);
 
   if ('tab-group' in config) {
-    // Mode 1: data-tab sections — clear config rows, then build custom navigation
-    const base = getDsnBase();
-    await Promise.all([
-      import(`${base}tabs`),
-      import(`${base}paragraph`),
-      import(`${base}accordion`),
-    ]);
-
+    // Mode 1: pure DOM manipulation — move [data-tab] sections into tab-items.
+    // No DSN imports needed here; features blocks inside each tab handle their own.
     [...block.children].forEach((child) => child.remove());
     const tabs = buildTabsFromSections(block, config);
     if (!tabs.length) return;
 
     const dropDownMenu = block.querySelector('.dropdown-menu');
 
-    async function measurePanelFeatures(panel) {
-      await customElements.whenDefined('bd-features');
-      await Promise.all(Array.from(panel.querySelectorAll('bd-features'))
-        .map((el) => el.updateComplete || Promise.resolve()));
-      await new Promise((resolve) => requestAnimationFrame(resolve));
-      panel.querySelectorAll('bd-features').forEach((el) => {
-        el._measureMaxHeight?.();
-      });
-    }
-
-    if (tabs[0]) {
+    // After a tab becomes visible, re-trigger bd-features height equalization.
+    // Uses double rAF so the browser has time to paint the visible content.
+    const measurePanelFeatures = (panel) => {
       requestAnimationFrame(() => {
-        measurePanelFeatures(tabs[0].$content);
+        requestAnimationFrame(() => {
+          panel.querySelectorAll('bd-features').forEach((el) => {
+            // eslint-disable-next-line no-underscore-dangle
+            el._measureMaxHeight?.();
+          });
+        });
       });
-    }
+    };
 
-    function activateTab(index, { toggleDropdown = true } = {}) {
+    // Measure first tab immediately; the double rAF inside gives bd-features time to paint.
+    if (tabs[0]) measurePanelFeatures(tabs[0].$content);
+
+    const activateTab = (index, { toggleDropdown = true } = {}) => {
       tabs.forEach((t, i) => {
         const isActive = i === index;
         t.$tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
@@ -318,7 +312,7 @@ export default async function decorate(block) {
       dropDownMenu.innerText = tabs[index].$tab.innerText;
       if (isMobileScreenSize() && toggleDropdown) toggleMenu(dropDownMenu);
       measurePanelFeatures(tabs[index].$content);
-    }
+    };
 
     tabs.forEach((tab, index) => {
       tab.$tab.addEventListener('click', () => {
@@ -353,15 +347,21 @@ export default async function decorate(block) {
     if (defaultWrapper && title) defaultWrapper.remove();
 
     const base = getDsnBase();
-    await Promise.all([
-      import(`${base}tabs`),
-      import(`${base}paragraph`),
-      import(`${base}accordion`),
-      import(`${base}individual-icon`),
-    ]);
+    try {
+      await Promise.all([
+        import(`${base}tabs`),
+        import(`${base}paragraph`),
+        import(`${base}accordion`),
+        import(`${base}individual-icon`),
+      ]);
+    } catch (err) {
+      // If DSN imports fail, warn and proceed — we'll still build DOM structure
+      // so titles/subtitles and content from the block are preserved.
+      // eslint-disable-next-line no-console
+      console.warn('DSN imports failed (Mode 2)', err);
+    }
 
     const tabsEl = buildTabsFromBlock(block, title, subtitle);
     if (tabsEl) block.replaceChildren(tabsEl);
   }
 }
-
