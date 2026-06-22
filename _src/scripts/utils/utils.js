@@ -1215,7 +1215,7 @@ export const wrapChildrenWithStoreContext = (element, {
   element.appendChild(context);
 };
 
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.46/';
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.50/';
 
 export const getDsnBase = () => {
   try {

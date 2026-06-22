@@ -1,19 +1,41 @@
 import { getDsnBase } from '../../scripts/utils/utils.js';
 
-const getIconElement = (col) => {
+const ICON_COLOR = '#006eff';
+
+const getIconElement = async (col) => {
   const iconSpan = col.querySelector('[class*="icon-"]');
   if (iconSpan) {
     const iconName = Array.from(iconSpan.classList)
       .find((cls) => cls.startsWith('icon-'))
       ?.substring(5);
     if (iconName) {
+      try {
+        const resp = await fetch(`/common/icons/${iconName}.svg`);
+        if (resp.ok) {
+          const svgText = await resp.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(svgText, 'image/svg+xml');
+          const svgEl = doc.querySelector('svg');
+          if (svgEl) {
+            svgEl.setAttribute('width', '40');
+            svgEl.setAttribute('height', '40');
+            svgEl.removeAttribute('class');
+            const wrapper = document.createElement('span');
+            wrapper.style.cssText = `display:inline-flex;color:${ICON_COLOR};width:40px;height:40px;flex-shrink:0;`;
+            wrapper.setAttribute('slot', 'icon');
+            wrapper.setAttribute('aria-hidden', 'true');
+            wrapper.appendChild(document.importNode(svgEl, true));
+            return wrapper;
+          }
+        }
+      } catch (e) {
+        // fall through to img fallback
+      }
       const img = document.createElement('img');
       img.src = `/common/icons/${iconName}.svg`;
       img.setAttribute('width', '40');
       img.setAttribute('height', '40');
-      img.style.width = '40px';
-      img.style.height = '40px';
-      img.style.display = 'block';
+      img.style.cssText = 'width:40px;height:40px;display:block;';
       img.setAttribute('alt', '');
       img.setAttribute('slot', 'icon');
       return img;
@@ -28,14 +50,14 @@ const getIconElement = (col) => {
   return null;
 };
 
-const buildFeatureCol = (col, firstOpen) => {
+const buildFeatureCol = async (col, firstOpen) => {
   const heading = col.querySelector('h1, h2, h3');
   const title = heading?.textContent?.trim() || '';
 
   const featureCol = document.createElement('bd-feature-col');
   featureCol.setAttribute('title', title);
 
-  const iconEl = getIconElement(col);
+  const iconEl = await getIconElement(col);
   if (iconEl) featureCol.appendChild(iconEl);
 
   const h4s = [...col.querySelectorAll('h4')];
@@ -99,11 +121,14 @@ export default async function decorate(block) {
   const firstOpen = block.classList.contains('first-open');
   const featuresEl = document.createElement('bd-features');
 
+  const colPromises = [];
   [...block.children].forEach((row) => {
     [...row.children].forEach((col) => {
-      featuresEl.appendChild(buildFeatureCol(col, firstOpen));
+      colPromises.push(buildFeatureCol(col, firstOpen));
     });
   });
+  const featureCols = await Promise.all(colPromises);
+  featureCols.forEach((fc) => featuresEl.appendChild(fc));
 
   block.replaceChildren(featuresEl);
 }

@@ -277,11 +277,34 @@ export default async function decorate(block) {
 
   if ('tab-group' in config) {
     // Mode 1: data-tab sections — clear config rows, then build custom navigation
+    const base = getDsnBase();
+    await Promise.all([
+      import(`${base}tabs`),
+      import(`${base}paragraph`),
+      import(`${base}accordion`),
+    ]);
+
     [...block.children].forEach((child) => child.remove());
     const tabs = buildTabsFromSections(block, config);
     if (!tabs.length) return;
 
     const dropDownMenu = block.querySelector('.dropdown-menu');
+
+    async function measurePanelFeatures(panel) {
+      await customElements.whenDefined('bd-features');
+      await Promise.all(Array.from(panel.querySelectorAll('bd-features'))
+        .map((el) => el.updateComplete || Promise.resolve()));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      panel.querySelectorAll('bd-features').forEach((el) => {
+        el._measureMaxHeight?.();
+      });
+    }
+
+    if (tabs[0]) {
+      requestAnimationFrame(() => {
+        measurePanelFeatures(tabs[0].$content);
+      });
+    }
 
     function activateTab(index, { toggleDropdown = true } = {}) {
       tabs.forEach((t, i) => {
@@ -294,9 +317,7 @@ export default async function decorate(block) {
       tabs[index].$tab.focus();
       dropDownMenu.innerText = tabs[index].$tab.innerText;
       if (isMobileScreenSize() && toggleDropdown) toggleMenu(dropDownMenu);
-      tabs[index].$content.querySelectorAll('bd-features').forEach((el) => {
-        el._measureMaxHeight?.();
-      });
+      measurePanelFeatures(tabs[index].$content);
     }
 
     tabs.forEach((tab, index) => {

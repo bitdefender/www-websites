@@ -31,7 +31,7 @@
     "@vitest/ui": "^4.0.18",
     "@web/test-runner": "0.15.1",
     "@web/test-runner-commands": "0.6.5",
-    "axios": "^1.17.0",
+    "axios": "^1.18.0",
     "chai": "4.3.7",
     "eslint": "8.35.0",
     "eslint-config-airbnb-base": "15.0.0",
@@ -47,9 +47,9 @@
   "dependencies": {
     "@glidejs/glide": "^3.7.1",
     "@repobit/dex-data-layer": "^2.2.2",
-    "@repobit/dex-launch": "^3.0.33",
-    "@repobit/dex-system-design": "^0.23.46",
-    "@repobit/dex-target": "^2.14.28",
+    "@repobit/dex-launch": "^3.0.37",
+    "@repobit/dex-system-design": "^0.23.50",
+    "@repobit/dex-target": "^2.14.32",
     "@repobit/dex-utils": "^2.2.2",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
