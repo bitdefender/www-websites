@@ -35,12 +35,12 @@ async function updateProductPrice(prodName, saveText = null, buyLinkSelector = n
 
   priceElement.innerHTML = `
     <div class="hero-aem__price mt-3">
-      <div class="oldprice-container" data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility">
+      <div class="oldprice-container" data-store-render data-store-hide="!it.option?.price?.discounted" data-store-hide-type="visibility">
         <span class="prod-oldprice" data-store-render ${oldPrice}></span>
       </div>
       <div class="newprice-container mt-2">
         <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
-        <span class="prod-save green-pill" data-store-render data-store-hide="!it.option.price.discounted">${savePriceEl}</span>
+        <span class="prod-save green-pill" data-store-render data-store-hide="!it.option?.price?.discounted">${savePriceEl}</span>
       </div>
       
       ${billedText.includes('0') ? `<div class="billed"> ${billedText.replace('0', `<span class="newprice-2" data-store-render ${billedPrice}></span>`)}</div>` : ''}
@@ -78,15 +78,17 @@ export default async function decorate(block) {
     const [prodName, prodUsers, prodYears] = parts;
     const name = prodName.trim();
 
-    wrapChildrenWithStoreContext(table, {
-      productId: name,
-      devices: prodUsers.trim(),
-      subscription: prodYears.trim(),
-      ignoreEventsParent: true,
-      storeEvent: '',
-    });
+    if (name !== 'avfree') {
+      wrapChildrenWithStoreContext(table, {
+        productId: name,
+        devices: prodUsers.trim(),
+        subscription: prodYears.trim(),
+        ignoreEventsParent: true,
+        storeEvent: '',
+      });
+    }
 
-    tableBuyLink = table.querySelector('a[href*="#buylink"]');
+    const tableBuyLink = table.querySelector('a[href*="#buylink"]');
     tableBuyLink?.setAttribute('data-store-buy-link', '');
     tableBuyLink?.setAttribute('data-store-render', '');
 

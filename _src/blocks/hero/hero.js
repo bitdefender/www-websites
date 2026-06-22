@@ -230,7 +230,7 @@ export default function decorate(block) {
 
   // make discount dynamic
   if (percentProduct || discountedPrice) {
-    const [alias, variant] = percentProduct.split(',') || discountedPrice.split(',');
+    const [alias, variant] = percentProduct?.split(',') || discountedPrice.split(',');
     const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
 
     wrapChildrenWithStoreContext(block, {

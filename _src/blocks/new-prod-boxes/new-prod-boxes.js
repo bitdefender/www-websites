@@ -1,5 +1,5 @@
 import { formatPrice, checkIfNotProductPage, wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
-import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
+import store from '../../scripts/store.js';
 
 // Constants for store department and price attributes
 const PRICE_ATTRIBUTES = {
@@ -634,23 +634,33 @@ async function updateAddOnPrices(
   priceBox = null,
 ) {
   try {
-    const products = await Store.getProducts([
-      new ProductInfo(productName),
-      new ProductInfo(addOnName),
+    const [product, addOnProduct] = await store.getProduct([
+      {
+        id: productName,
+      },
+      {
+        id: addOnName,
+      },
     ]);
-
-    const product = products[productName];
-    const addOnProduct = products[addOnName];
 
     if (!addOnProduct || !product) return;
 
     const [productUsers, productYears] = productOption.split('-');
     const [addOnUsers, addOnYears] = addOnOption.split('-');
 
-    const productInfo = product.getOption(productUsers, productYears);
-    const addOnInfo = addOnProduct.getOption(addOnUsers, addOnYears);
+    const [productInfo, addOnInfo] = (await Promise.allSettled([
+      product.getOption({
+        devices: productUsers,
+        subscription: productYears,
+      }),
+      addOnProduct.getOption({
+        devices: addOnUsers,
+        subscription: addOnYears,
+      }),
+    ])).map((result) => result.value);
 
-    const addOnCost = addOnInfo.getDiscountedPrice('value') - productInfo.getDiscountedPrice('value');
+    const addOnCost = addOnInfo.getDiscountedPrice({ currency: false })
+      - productInfo.getDiscountedPrice({ currency: false });
     const formattedAddOnCost = formatPrice(addOnCost, product.getCurrency());
 
     const addOnNewPrice = container.querySelector('.add-on-newprice');
@@ -660,7 +670,10 @@ async function updateAddOnPrices(
 
     const addOnOldPrice = container.querySelector('.add-on-oldprice');
     if (addOnOldPrice) {
-      addOnOldPrice.textContent = formatPrice(addOnInfo.getPrice('value'), addOnProduct.getCurrency());
+      addOnOldPrice.textContent = formatPrice(
+        addOnInfo.getPrice({ currency: false }),
+        addOnProduct.getCurrency(),
+      );
     }
 
     const addOnPercentSave = container.querySelector('.add-on-percent-save');
@@ -673,7 +686,7 @@ async function updateAddOnPrices(
           .map((node) => node.textContent.trim())
           .join(' ')
         : '';
-      const discountPercent = addOnInfo.getDiscount('percentageWithProcent');
+      const discountPercent = addOnInfo.getDiscount({ percentage: true });
       addOnPercentSave.innerHTML = discountPercent !== '0%' ? `${saveText} <span class="add-on-percent">${discountPercent}</span>` : '';
     }
   } catch (error) {
@@ -757,16 +770,6 @@ async function setupAddOnCheckbox(
   });
 
   try {
-    const productObject = await Store.getProducts([
-      new ProductInfo(prodName),
-      new ProductInfo(addOnProdName),
-    ]);
-
-    const product = productObject[prodName];
-    const addOnProduct = productObject[addOnProdName];
-
-    if (!addOnProduct || !product) return;
-
     const productOptionStr = `${prodUsers}-${prodYears}`;
     const addOnProductOptionStr = `${addOnProdUsers}-${addOnProdYears}`;
 
