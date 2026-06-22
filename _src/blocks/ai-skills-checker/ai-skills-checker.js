@@ -5,14 +5,6 @@ import {
   AdobeDataLayerService,
 } from '@repobit/dex-data-layer';
 
-function changeTexts(block, statusCode, statusTitles) {
-  const titleText = statusTitles[statusCode] || statusTitles.default;
-  const h1 = block.querySelector('h1');
-  if (h1) {
-    h1.textContent = titleText;
-  }
-}
-
 function toggleUpsell(block, show) {
   const upsell = block.querySelector('.upsell-container');
   if (upsell) {
@@ -98,7 +90,6 @@ async function checkSkillLink(
       block.classList.add('multiple-skills');
       input.closest('.input-container').classList.remove('loader-circle');
       const data = await response.json();
-      console.log('Multiple skills found:', data.detail.skills);
       const title = data.detail.message;
 
       const skills = data.detail.skills || [];
