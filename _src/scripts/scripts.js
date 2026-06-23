@@ -239,6 +239,7 @@ export async function createModal(path, template, stopAutomaticRefresh) {
 
 export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
+    const originalHref = link.getAttribute('href');
     link.addEventListener('click', async (e) => {
       e.preventDefault();
       const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
@@ -246,7 +247,7 @@ export async function detectModalButtons(main) {
       // if we wish for the button to not generate a new modal everytime
       if (stopAutomaticModalRefresh) {
         // we use the last part of the link to identify the modals
-        const modalClass = link.href.split('/').pop();
+        const modalClass = originalHref.split('/').pop();
 
         // check if the modal exists in the page
         const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
@@ -258,7 +259,7 @@ export async function detectModalButtons(main) {
       }
 
       // generate new modal
-      const modalContainer = await createModal(link.href, undefined, stopAutomaticModalRefresh);
+      const modalContainer = await createModal(originalHref, undefined, stopAutomaticModalRefresh);
       document.body.append(modalContainer);
       await StoreResolver.resolve(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
@@ -266,6 +267,9 @@ export async function detectModalButtons(main) {
       });
       adobeMcAppendVisitorId('.modal-container');
     });
+
+    link.removeAttribute('href');
+    link.setAttribute('location', originalHref);
   });
 }
 
@@ -415,7 +419,7 @@ const initializeHubspotModule = () => {
     const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
     const popupContainer = hubspotContainer.querySelector('.download-popup__container');
 
-    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
+    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showbookingpopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
         popupContainer.style.display = 'block';

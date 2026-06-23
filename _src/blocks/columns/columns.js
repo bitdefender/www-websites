@@ -2,7 +2,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, createTag, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
+  matchHeights, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -207,7 +207,7 @@ export default function decorate(block) {
   const parentSection = block.closest('.section');
   const {
     // eslint-disable-next-line max-len
-    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid, seeMoreBtn,
   } = parentSection.dataset;
   const cols = [...block.firstElementChild.children];
@@ -251,11 +251,6 @@ export default function decorate(block) {
     });
   });
 
-  if (breadcrumbs && block.classList.contains('creators-banner')) {
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    block.querySelector('h2')?.prepend(breadcrumb);
-  }
-
   // setup buylink, this can be used later as a starting point for prices.
   const productsAsList = products?.split(',');
   if (productsAsList) {
@@ -279,9 +274,11 @@ export default function decorate(block) {
   // setup data-store-id on mobal buttons
   aliases?.split(',').forEach((alias, i) => {
     [...block.children].forEach((row) => {
-      row.children[i]
-        ?.querySelector('a.button.modal')
-        ?.setAttribute('product-id', alias.trim());
+      const buttonModal = row.children[i]
+        ?.querySelector('a.button.modal');
+
+      buttonModal?.setAttribute('product-id', alias.trim());
+      buttonModal?.setAttribute('data-store-id', alias.trim());
     });
   });
 
