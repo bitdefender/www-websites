@@ -130,7 +130,6 @@
     border-radius: 0;
     border-bottom: 1px solid var(--color-neutral-100, #e5e5e5);
     margin-top: var(--spacing-32, 32px);
-    margin-bottom: var(--spacing-48, 48px);
     width: auto;
     padding: 0;
   }
