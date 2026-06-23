@@ -205,19 +205,20 @@ function createTabsNavigation(block) {
   dropDownMenu.classList.add('dropdown-menu');
   tabsNavigation.appendChild(dropDownMenu);
 
-  const $ul = document.createElement('ul');
-  $ul.setAttribute('role', 'tablist');
+  const $tabsContainer = document.createElement('div');
+  $tabsContainer.classList.add('tabs-container');
+  $tabsContainer.setAttribute('role', 'tablist');
   if (!isMobileScreenSize()) {
-    $ul.classList.add('expanded');
+    $tabsContainer.classList.add('expanded');
   }
-  tabsNavigation.appendChild($ul);
+  tabsNavigation.appendChild($tabsContainer);
 
   dropDownMenu.addEventListener('click', (event) => {
     event.preventDefault();
     toggleMenu(dropDownMenu);
   });
 
-  return { dropDownMenu, $ul };
+  return { dropDownMenu, $tabsContainer };
 }
 
 /**
@@ -234,20 +235,20 @@ function buildTabsFromSections(block, config) {
   const $sections = [...document.querySelectorAll(tabsSelector)];
   if (!$sections.length) return [];
 
-  const { dropDownMenu, $ul } = createTabsNavigation(block);
+  const { dropDownMenu, $tabsContainer } = createTabsNavigation(block);
   const tabs = [];
 
   $sections.forEach(($section, index) => {
     const title = $section.dataset.tab;
 
-    const $li = document.createElement('li');
-    $li.classList.add('tab');
-    $li.setAttribute('role', 'tab');
-    $li.setAttribute('tabindex', index === 0 ? '0' : '-1');
-    $li.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
-    $li.setAttribute('id', `tab-${index}`);
-    $li.innerText = title;
-    $ul.appendChild($li);
+    const $btn = document.createElement('button');
+    $btn.setAttribute('type', 'button');
+    $btn.setAttribute('role', 'tab');
+    $btn.setAttribute('tabindex', index === 0 ? '0' : '-1');
+    $btn.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+    $btn.setAttribute('id', `tab-${index}`);
+    $btn.innerText = title;
+    $tabsContainer.appendChild($btn);
 
     const tabContentDiv = document.createElement('div');
     tabContentDiv.classList.add('tab-item');
@@ -260,11 +261,11 @@ function buildTabsFromSections(block, config) {
     $section.remove();
 
     if (index === 0) {
-      $li.classList.add('active');
+      $btn.classList.add('selected');
       dropDownMenu.innerText = title;
     }
 
-    tabs.push({ $tab: $li, $content: tabContentDiv });
+    tabs.push({ $tab: $btn, $content: tabContentDiv });
   });
 
   return tabs;
@@ -313,7 +314,7 @@ export default async function decorate(block) {
         const isActive = i === index;
         t.$tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
         t.$tab.setAttribute('tabindex', isActive ? '0' : '-1');
-        t.$tab.classList.toggle('active', isActive);
+        t.$tab.classList.toggle('selected', isActive);
         t.$content.classList.toggle('hidden', !isActive);
       });
       tabs[index].$tab.focus();
