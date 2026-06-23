@@ -517,6 +517,7 @@ async function loadEager(doc) {
       orgId: '0E920C0F53DA9E9B0A490D45@AdobeOrg',
       edgeDomain: 'sstats.bitdefender.com',
       defaultConsent: 'in',
+      debugEnabled: true,
       idMigrationEnabled: true,
       targetMigrationEnabled: true,
       // The `debugEnabled` flag is automatically set to true on localhost and .page URLs.
