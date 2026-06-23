@@ -121,7 +121,7 @@ const resolveUserDetectedEvent = async () => {
     {
       ID: await user.fingerprint,
       productFinding: getProductFinding(),
-      visitorID: await getUserVisitorId(),
+      // visitorID: await getUserVisitorId(),
     }
   ));
 };
