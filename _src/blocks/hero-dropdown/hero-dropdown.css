@@ -16,6 +16,11 @@
   --hero-dropdown-h2-font-size: 24px;
   --hero-dropdown-botton-border-color: #616161;
   --hero-dropdown-p-color: #3c3c3c;
+
+  /* breadcrumbs font size */
+  --breadcrumb-text-color-dark: #c5c5c5;
+  --breadcrumb-text-color-dark-hover: #616161;
+  --breadcrumbs-font-size-s: 12px;
 }
 
 main .hero-dropdown {
@@ -39,6 +44,15 @@ main .bfoffer .hero-dropdown .hero-dropdown-content p:last-of-type picture img {
   display: none;
 }
 
+/* breadcrumbs */
+main .hero-dropdown .hero-dropdown-content .breadcrumb {
+  font-weight: var(--font-weight-bold);
+  color: #dedede;
+  min-height: unset;
+  padding: 12px 0;
+  margin-bottom: 12px;
+}
+
 main .hero-dropdown .hero-dropdown-content .signature {
   font-size: 24px;
   color: #006dff;
@@ -54,6 +68,46 @@ main .hero-dropdown .hero-dropdown-content .signature {
   main .hero-dropdown .hero-dropdown-content {
     padding: 17px var(--body-padding) 56px;
   }
+}
+
+main .hero-dropdown .hero-dropdown-content .breadcrumb a {
+  font-size: var(--breadcrumbs-font-size-s);
+  font-weight: var(--font-weight-bold);
+  color: var(--breadcrumb-text-color-dark-hover);
+  text-decoration: none;
+  line-height: 1.7;
+  letter-spacing: .96px;
+}
+
+main .hero-dropdown .hero-dropdown-content .breadcrumb a:last-child {
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+main .hero-dropdown .hero-dropdown-content .breadcrumb a::after {
+  content: "/";
+  display: inline-block;
+  color: var(--color-dark-gray);
+  margin: 0 3px;
+  font-size: 9pt;
+}
+
+main .hero-dropdown .hero-dropdown-content .breadcrumb a:hover {
+  color: var(--text-color);
+}
+
+main .hero-dropdown.black-background .hero-dropdown-content .breadcrumb a {
+  color: var(--breadcrumb-text-color-dark);
+  text-decoration: none;
+}
+
+main .hero-dropdown.black-background .hero-dropdown-content .breadcrumb a::after {
+  color: #dedede;
+}
+
+main .hero-dropdown.black-background .hero-dropdown-content .breadcrumb a:hover {
+  color: var(--breadcrumb-text-color-dark-hover);
 }
 
 /* hero-dropdown */
@@ -120,6 +174,14 @@ main .hero-dropdown.new2024design .hero-dropdown-picture:last-of-type {
 
 main .hero-dropdown.new2024design strong {
   font-weight: 600;
+}
+
+main .hero-dropdown-container.breadcrumb-hidden .breadcrumb a {
+  color: transparent;
+}
+
+main .hero-dropdown-container.breadcrumb-hidden .breadcrumb a::after {
+  color: transparent;
 }
 
 main .hero-dropdown-container .featured {
@@ -602,6 +664,10 @@ main .hero-dropdown.ferrari .hero-dropdown-content img{
   width: fit-content;
 }
 
+main .hero-dropdown.ferrari .breadcrumb{
+  display: none;
+}
+
 .hero-dropdown-container.grey-background .hero-dropdown-picture {
   background-color: #f6f6f6;
 }
@@ -664,6 +730,10 @@ main .hero-dropdown-container.ferrari-migration .hero-dropdown .hero-dropdown-co
 
 main .hero-dropdown-container.ferrari-migration .hero-dropdown .hero-dropdown-content p{
   color: #fff;
+}
+
+main .hero-dropdown-container.ferrari-migration .hero-dropdown .hero-dropdown-content .breadcrumb{
+  display: none;
 }
 
 main .hero-dropdown-container.ferrari-migration .hero-dropdown .hero-dropdown-content a{
@@ -763,6 +833,7 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
   background-color: #006DFF;
 }
 
+
 @media(max-width: 989px) {
   main .hero-dropdown.new2024design {
     background-color: #006FFF;
@@ -770,6 +841,15 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
     padding: 2em 0;
   }
 }
+
+@media(max-width: 991px) {
+  /* tablet */
+  main .hero-dropdown.new2024design .breadcrumb {
+    display: none;
+  }
+}
+
+
 
 .hero-dropdown-container .hero-dropdown.block.grey-background {
   width: 100%;
@@ -838,6 +918,14 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 
   main .hero-dropdown h2 {
     font-size: 20px;
+  }
+
+  main .hero-dropdown .hero-dropdown-content .breadcrumb {
+    min-height: 58px;
+  }
+
+  main .hero-dropdown .hero-dropdown-content .breadcrumb a::after {
+    margin: 0 10px;
   }
 
   main .hero-dropdown-container.blue-title .hero-dropdown-content>div {
@@ -934,6 +1022,11 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 
   main .affiliate .hero-dropdown .hero-dropdown-content>div  {
     width: 50%;
+  }
+
+  main .hero-dropdown .hero-dropdown-content .breadcrumb a {
+    line-height: 1;
+    letter-spacing: .96px;
   }
 
   main .hero-dropdown ul.hero-dropdown-awards {
@@ -1043,6 +1136,11 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
 
 @media (min-width: 1600px) {
   /* large desktop */
+  main .hero-dropdown .hero-dropdown-content .breadcrumb {
+    padding: 9px 0;
+    margin-bottom: 15px;
+  }
+
   main .hero-dropdown h1 {
     font-size: 2.5rem;
     font-weight: 700;

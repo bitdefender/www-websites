@@ -346,6 +346,7 @@ export default async function decorate(block) {
     block.parentElement.classList.add('dark-mode');
   }
 
+  // ADD comment
   replaceRenewalDateMarker(block);
   await checkAndReplacePrivacyPolicyLink(block);
 }
