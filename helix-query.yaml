@@ -44,6 +44,9 @@ indices:
       lastModified:
         select: none
         value: headers["last-modified"]
+      priority:
+        select: head > meta[name="priority"]
+        value: attribute(el, "content")
   index_de_de:
     include:
       - /de-de/**
