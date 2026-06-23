@@ -522,13 +522,15 @@ async function loadEager(doc) {
       targetMigrationEnabled: true,
       // The `debugEnabled` flag is automatically set to true on localhost and .page URLs.
       // The `defaultConsent` is automatically set to "pending".
-      onBeforeEventSend: (payload) => {
-        console.log('My payload: ', payload);
+      onBeforeEventSend(payload) {
+        console.debug('[Web SDK payload]', payload);
       },
     },
     // 2. Library Configuration
     {
       personalization: true,
+      includeDataLayerState: false,
+      trackPageView: false,
       // See the API Reference for all available options.
     },
   );
