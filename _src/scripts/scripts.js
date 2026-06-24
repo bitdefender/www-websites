@@ -7,7 +7,7 @@ import {
   WindowLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
-import { Constants as RepobitConstants } from '@repobit/dex-constants';
+import Launch from '@repobit/dex-launch';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -536,9 +536,9 @@ async function loadEager(doc) {
       personalization: true,
       includeDataLayerState: false,
       trackPageView: false,
-      launchUrls: [RepobitConstants.ADOBE_MC_URL_ENV_MAP.get(page.environment)],
+      // launchUrls: [RepobitConstants.ADOBE_MC_URL_ENV_MAP.get(page.environment)],
       shouldProcessEvent(payload) {
-        console.debug('[Event not processed]', payload);
+        console.debug('[Event processed]', payload);
         return false;
       },
       // See the API Reference for all available options.
@@ -596,6 +596,7 @@ async function loadLazy(doc) {
   }
 
   // push basic events to dataLayer
+  Launch.load(page.environment);
   await loadBlocks(main);
 
   const { hash } = window.location;
