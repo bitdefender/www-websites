@@ -538,8 +538,8 @@ async function loadEager(doc) {
       trackPageView: false,
       launchUrls: [RepobitConstants.ADOBE_MC_URL_ENV_MAP.get(page.environment)],
       shouldProcessEvent(payload) {
-        console.debug('[Event not processed]', payload);
-        return false;
+        console.debug('[Event processed]', payload);
+        return true;
       },
       // See the API Reference for all available options.
     },
