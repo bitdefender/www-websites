@@ -996,12 +996,6 @@ export default async function decorate(block) {
         const subtitleHTML = createSubtitleHTML(subtitle);
         const { demoBtn, content: undeBuyLinkContent } = createDemoButton(undeBuyLink);
 
-        // Handle second button
-        const secondButton = buyLink?.querySelectorAll('a')[1];
-        if (secondButton) {
-          secondButton.classList.add('button', 'secondary', 'no-arrow');
-        }
-
         // Build product box HTML
         const prodBoxHTML = buildProductBoxHTML({
           greenTagText: greenTag?.textContent.trim(),
@@ -1010,7 +1004,7 @@ export default async function decorate(block) {
           subtitleHTML,
           subtitle2HTML: subtitle2?.textContent.trim() || '',
           planSwitcherHTML: radioButtons ? planSwitcher.outerHTML : '',
-          secondButtonHTML: secondButton?.outerHTML || '',
+          secondButtonHTML: '',
           undeBuyLinkHTML: undeBuyLinkContent ? (demoBtn || undeBuyLink.innerHTML.trim()) : '',
           featureListHTML: benefitsLists?.textContent.trim() ? featureList.join('') : '',
           planSwitcher2HTML: planSwitcher2.outerHTML || '',
@@ -1038,6 +1032,13 @@ export default async function decorate(block) {
           perPrice,
         }, block.children[key]);
         block.children[key].querySelector('.hero-aem__prices')?.appendChild(priceBox);
+        // Handle second button
+        const secondButton = buyLink?.querySelectorAll('a')[1];
+        if (secondButton) {
+          secondButton.classList.add('button', 'secondary', 'no-arrow');
+          secondButton.setAttribute('data-store-trial-link', 'custom');
+          block.children[key].querySelector('.hero-aem__prices')?.appendChild(secondButton);
+        }
 
         // Add add-on price box if needed
         let addOnPriceBox = null;
