@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-import Launch from '@repobit/dex-launch';
 import {
   PageLoadedEvent,
   AdobeDataLayerService,
@@ -8,6 +7,7 @@ import {
   WindowLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
+import { Constants as RepobitConstants } from '@repobit/dex-constants';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -461,29 +461,6 @@ const applyTargetCustomCode = async () => {
   });
 };
 
-export async function loadTrackers() {
-  const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
-
-  const onAdobeMcLoaded = () => {
-    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
-    window.ADOBE_MC_EVENT_LOADED = true;
-  };
-
-  if (isPageNotInDraftsFolder) {
-    try {
-      await Launch.load(page.environment);
-      onAdobeMcLoaded();
-    } catch {
-      target.abort();
-    }
-  } else {
-    target.abort();
-    onAdobeMcLoaded();
-  }
-
-  await applyTargetCustomCode();
-}
-
 /**
  * set target_blank for pdf links when metadata is set: pdfs: new-tab
  * @param {Element} doc The container element
@@ -497,6 +474,34 @@ function openExternalLinksInNewTab(doc) {
       link.rel = 'noopener noreferrer';
     }
   });
+}
+
+/**
+ * load webSDK functionality via martech plugin
+ * @param {Promise<void>} martechLoadedPromise
+ */
+async function loadWebSDK(martechLoadedPromise) {
+  const isPageInDraftsFolder = window.location.pathname.includes('/drafts/');
+
+  const onAdobeMcLoaded = () => {
+    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
+    window.ADOBE_MC_EVENT_LOADED = true;
+  };
+
+  if (isPageInDraftsFolder) {
+    target.abort();
+    onAdobeMcLoaded();
+  } else {
+    try {
+      await martechLoadedPromise;
+      await martechEager();
+      onAdobeMcLoaded();
+    } catch (error) {
+      target.abort();
+    }
+  }
+
+  await applyTargetCustomCode();
 }
 
 /**
@@ -531,12 +536,16 @@ async function loadEager(doc) {
       personalization: true,
       includeDataLayerState: false,
       trackPageView: false,
+      launchUrls: [RepobitConstants.ADOBE_MC_URL_ENV_MAP.get(page.environment)],
+      shouldProcessEvent(payload) {
+        console.debug('[Event not processed]', payload);
+        return false;
+      },
       // See the API Reference for all available options.
     },
   );
 
-  await martechLoadedPromise;
-  await martechEager();
+  await loadWebSDK(martechLoadedPromise);
   await resolveNonProductsDataLayer();
 
   const userCountry = await user.country;
@@ -585,9 +594,6 @@ async function loadLazy(doc) {
     doc.querySelector('header').style.height = 'initial';
     loadHeader(doc.querySelector('header'));
   }
-
-  // only call load Trackers here if there is no experiment on the page
-  loadTrackers();
 
   // push basic events to dataLayer
   await loadBlocks(main);
