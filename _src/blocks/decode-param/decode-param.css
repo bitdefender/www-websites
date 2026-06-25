@@ -20,7 +20,8 @@
 }
 
 .decode-param-container table {
-    width: 400px;
+    width: 420px;
+    padding: 0 10px;
     margin: 30px auto 20px;
     text-align: left;
 }
