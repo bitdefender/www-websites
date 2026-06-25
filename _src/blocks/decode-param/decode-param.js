@@ -33,10 +33,10 @@ const createLoader = () => {
 
 export default function decorate(block) {
   const upgrade = getParam('upgrade');
-  if (!upgrade) return;
+  // if (!upgrade) return;
 
   const redirectUrl = decodeUpgrade(upgrade);
-  if (!redirectUrl) return;
+  // if (!redirectUrl) return;
 
   const loader = createLoader();
   block.append(loader);
@@ -51,6 +51,6 @@ export default function decorate(block) {
   }, 50);
 
   setTimeout(() => {
-    window.location.href = redirectUrl;
+    // window.location.href = redirectUrl;
   }, 8000);
 }
