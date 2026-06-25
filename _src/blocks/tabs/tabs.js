@@ -28,7 +28,7 @@ const parseIconSize = (cell) => {
   return match ? match[1] : '40';
 };
 
-const buildTabCol = (cells, isFirstOpen) => {
+const buildTabCol = (cells, isFirstOpen, bgBlue) => {
   const [titleCell, iconCell, descCell] = cells;
   const heading = titleCell.querySelector('h1, h2, h3, h4, h5, h6');
 
@@ -61,6 +61,7 @@ const buildTabCol = (cells, isFirstOpen) => {
 
   const accordionSection = document.createElement('bd-accordion-section');
   accordionSection.setAttribute('no-container', '');
+  if (bgBlue) accordionSection.setAttribute('bg-blue', '');
   col.appendChild(accordionSection);
 
   col.accordionSection = accordionSection;
@@ -122,15 +123,17 @@ const getSectionContext = (block) => {
 
 /**
  * Mode 2 — all-in-block:
- * H1–H3 → bd-tab-panel, H4–H6 → bd-feature-col, plain P → bd-accordion-item
+ * H1–H3 → bd-tab-panel, H4–H6 → bd-feature-col inside bd-features, plain P → bd-accordion-item
+ * DSN 0.23.55+: bd-accordion-section accepts bg-blue to adapt to blue backgrounds.
  */
-const buildTabsFromBlock = (block, title, subtitle) => {
+const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
   const tabsEl = document.createElement('bd-tabs');
   if (title) tabsEl.setAttribute('title', title);
   if (subtitle) tabsEl.setAttribute('subtitle', subtitle);
 
   const isFirstOpen = block.classList.contains('first-open');
   let currentPanel = null;
+  let currentFeatures = null;
   let currentCol = null;
 
   Array.from(block.querySelectorAll(':scope > div')).forEach((row) => {
@@ -145,14 +148,19 @@ const buildTabsFromBlock = (block, title, subtitle) => {
       currentPanel = document.createElement('bd-tab-panel');
       currentPanel.setAttribute('title', heading.textContent.trim());
       tabsEl.appendChild(currentPanel);
+      currentFeatures = null;
       currentCol = null;
     } else if (headingLevel !== null) {
       if (!currentPanel) {
         currentPanel = document.createElement('bd-tab-panel');
         tabsEl.appendChild(currentPanel);
       }
-      currentCol = buildTabCol(cells, isFirstOpen);
-      currentPanel.appendChild(currentCol);
+      if (!currentFeatures) {
+        currentFeatures = document.createElement('bd-features');
+        currentPanel.appendChild(currentFeatures);
+      }
+      currentCol = buildTabCol(cells, isFirstOpen, bgBlue);
+      currentFeatures.appendChild(currentCol);
     } else if (currentCol) {
       appendAccordionItem(currentCol, cells);
     }
@@ -161,195 +169,102 @@ const buildTabsFromBlock = (block, title, subtitle) => {
   return tabsEl;
 };
 
-// ── Helpers for Mode 1 (data-tab sections / custom navigation) ────────────────
+// ── Helpers for Mode 1 (bd-tabs + bd-tab-panel with slot) ────────────────────
 
-function isMobileScreenSize() {
-  return !window.matchMedia('(min-width: 900px)').matches;
-}
+/**
+ * DSN 0.23.54 measures all panels to find the tallest and applies that as
+ * min-height on bd-panel-wrapper to prevent layout shift during tab switching.
+ * For tabs with different content heights this creates dead space below shorter
+ * panels. Observe the wrapper and remove min-height whenever it is set.
+ */
+function suppressPanelMinHeight(bdTabs) {
+  const { shadowRoot } = bdTabs;
+  if (!shadowRoot) return;
 
-function showMenuItems(content) {
-  content.style.height = `${content.scrollHeight}px`;
-  const transitionEndCallback = () => {
-    content.removeEventListener('transitionend', transitionEndCallback);
-    content.style.height = 'auto';
+  let wrapperObs = null;
+
+  const attachToWrapper = () => {
+    const wrapper = shadowRoot.querySelector('.bd-panel-wrapper');
+    if (!wrapper) return;
+    if (wrapper.style.minHeight) wrapper.style.removeProperty('min-height');
+    if (wrapperObs) wrapperObs.disconnect();
+    wrapperObs = new MutationObserver(() => {
+      if (wrapper.style.minHeight) wrapper.style.removeProperty('min-height');
+    });
+    wrapperObs.observe(wrapper, { attributes: true, attributeFilter: ['style'] });
   };
-  content.addEventListener('transitionend', transitionEndCallback);
-  content.classList.add('expanded');
-}
 
-function hideMenuItems(content) {
-  content.style.height = `${content.scrollHeight}px`;
-  requestAnimationFrame(() => {
-    content.classList.remove('expanded');
-    content.style.height = 0;
-  });
-}
-
-function toggleMenu(dropDownMenu) {
-  const $ul = dropDownMenu.nextElementSibling;
-  if (dropDownMenu.classList.contains('opened')) {
-    hideMenuItems($ul);
-    dropDownMenu.classList.remove('opened');
-  } else {
-    showMenuItems($ul);
-    dropDownMenu.classList.add('opened');
+  const component = shadowRoot.querySelector('.bd-tabs-component');
+  if (component) {
+    new MutationObserver(attachToWrapper).observe(component, { childList: true });
   }
-}
-
-function createTabsNavigation(block) {
-  const tabsNavigation = document.createElement('div');
-  tabsNavigation.classList.add('tabs-navigation');
-  block.appendChild(tabsNavigation);
-
-  const dropDownMenu = document.createElement('div');
-  dropDownMenu.classList.add('dropdown-menu');
-  tabsNavigation.appendChild(dropDownMenu);
-
-  const $tabsContainer = document.createElement('div');
-  $tabsContainer.classList.add('tabs-container');
-  $tabsContainer.setAttribute('role', 'tablist');
-  if (!isMobileScreenSize()) {
-    $tabsContainer.classList.add('expanded');
-  }
-  tabsNavigation.appendChild($tabsContainer);
-
-  dropDownMenu.addEventListener('click', (event) => {
-    event.preventDefault();
-    toggleMenu(dropDownMenu);
-  });
-
-  return { dropDownMenu, $tabsContainer };
+  attachToWrapper();
 }
 
 /**
  * Mode 1 — data-tab sections:
  * Block has "tab-group" config; content lives in [data-tab] sections.
- * Restores the original custom navigation (dropdown + ul > li tabs + tab-item panels).
+ * DSN 0.23.54+: bd-tab-panel has a <slot> and bd-tabs clones the active panel,
+ * so arbitrary content placed inside bd-tab-panel now renders correctly.
  */
-function buildTabsFromSections(block, config) {
+function buildTabsFromSections(config, title, subtitle) {
   const tabGroupName = config['tab-group'];
   const tabsSelector = tabGroupName
     ? `[data-tab-group="${tabGroupName}"][data-tab]`
     : '[data-tab]';
 
-  const $sections = [...document.querySelectorAll(tabsSelector)];
-  if (!$sections.length) return [];
+  const sections = [...document.querySelectorAll(tabsSelector)];
+  if (!sections.length) return null;
 
-  const { dropDownMenu, $tabsContainer } = createTabsNavigation(block);
-  const tabs = [];
+  const bdTabs = document.createElement('bd-tabs');
+  if ('bg-blue' in config) bdTabs.setAttribute('bg-blue', '');
+  if (title) bdTabs.setAttribute('title', title);
+  if (subtitle) bdTabs.setAttribute('subtitle', subtitle);
 
-  $sections.forEach(($section, index) => {
-    const title = $section.dataset.tab;
-
-    const $btn = document.createElement('button');
-    $btn.setAttribute('type', 'button');
-    $btn.setAttribute('role', 'tab');
-    $btn.setAttribute('tabindex', index === 0 ? '0' : '-1');
-    $btn.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
-    $btn.setAttribute('id', `tab-${index}`);
-    $btn.innerText = title;
-    $tabsContainer.appendChild($btn);
-
-    const tabContentDiv = document.createElement('div');
-    tabContentDiv.classList.add('tab-item');
-    if (index !== 0) tabContentDiv.classList.add('hidden');
-    tabContentDiv.setAttribute('role', 'tabpanel');
-    tabContentDiv.setAttribute('aria-labelledby', `tab-${index}`);
-
-    while ($section.firstChild) tabContentDiv.appendChild($section.firstChild);
-    block.appendChild(tabContentDiv);
-    $section.remove();
-
-    if (index === 0) {
-      $btn.classList.add('selected');
-      dropDownMenu.innerText = title;
-    }
-
-    tabs.push({ $tab: $btn, $content: tabContentDiv });
+  sections.forEach((section) => {
+    const tabPanel = document.createElement('bd-tab-panel');
+    tabPanel.setAttribute('title', section.dataset.tab);
+    // Move section content directly into bd-tab-panel — rendered via its <slot>
+    while (section.firstChild) tabPanel.appendChild(section.firstChild);
+    section.remove();
+    bdTabs.appendChild(tabPanel);
   });
 
-  return tabs;
+  return bdTabs;
 }
 
 // ── Main decorate ─────────────────────────────────────────────────────────────
 
 export default async function decorate(block) {
   const config = readBlockConfig(block);
+  const bgBlue = 'bg-blue' in config;
 
   if ('tab-group' in config) {
-    // Mode 1: pure DOM manipulation — move [data-tab] sections into tab-items.
-    // No DSN imports needed here; features blocks inside each tab handle their own.
+    // Mode 1: use bd-tabs for title/subtitle/navigation with full DSN styling,
+    // and manage panel content ourselves via custom show/hide logic.
+    // All DOM manipulation is synchronous (before any await) so [data-tab]
+    // sections are still present in the document when queried.
     [...block.children].forEach((child) => child.remove());
-    const tabs = buildTabsFromSections(block, config);
-    if (!tabs.length) return;
 
-    const dropDownMenu = block.querySelector('.dropdown-menu');
+    const { defaultWrapper, title, subtitle } = getSectionContext(block);
+    if (defaultWrapper && title) defaultWrapper.remove();
 
-    // After a tab becomes visible, call _equalizeRows directly on any bd-features inside.
-    // - Uses customElements.whenDefined so it works regardless of block loading order.
-    // - setTimeout(100) lets bd-features' own _measureMaxHeight finish first, then we
-    //   re-equalize on the fully-rendered nodes. This avoids the race condition where
-    //   _measureMaxHeight's internal re-render briefly sets heights back to 0.
-    const measurePanelFeatures = (panel) => {
-      const doEqualize = () => {
-        setTimeout(() => {
-          panel.querySelectorAll('bd-features').forEach((el) => {
-            // eslint-disable-next-line no-underscore-dangle
-            el._equalizeRows?.();
-          });
-        }, 100);
-      };
-      if (customElements.get('bd-features')) {
-        doEqualize();
-      } else {
-        customElements.whenDefined('bd-features').then(doEqualize);
-      }
-    };
+    const bdTabs = buildTabsFromSections(config, title, subtitle);
+    if (bdTabs) {
+      block.replaceChildren(bdTabs);
 
-    // Measure first tab on initial load.
-    if (tabs[0]) measurePanelFeatures(tabs[0].$content);
-
-    const activateTab = (index, { toggleDropdown = true } = {}) => {
-      tabs.forEach((t, i) => {
-        const isActive = i === index;
-        t.$tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-        t.$tab.setAttribute('tabindex', isActive ? '0' : '-1');
-        t.$tab.classList.toggle('selected', isActive);
-        t.$content.classList.toggle('hidden', !isActive);
-      });
-      tabs[index].$tab.focus();
-      dropDownMenu.innerText = tabs[index].$tab.innerText;
-      if (isMobileScreenSize() && toggleDropdown) toggleMenu(dropDownMenu);
-      measurePanelFeatures(tabs[index].$content);
-    };
-
-    tabs.forEach((tab, index) => {
-      tab.$tab.addEventListener('click', () => {
-        if (tab.$tab.getAttribute('aria-selected') !== 'true') activateTab(index);
-      });
-      tab.$tab.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          activateTab(index);
+      const base = getDsnBase();
+      try {
+        await import(`${base}tabs`);
+        if (typeof bdTabs.updateComplete?.then === 'function') {
+          await bdTabs.updateComplete;
         }
-      });
-    });
-
-    block.addEventListener('keydown', (e) => {
-      const focusedTab = document.activeElement;
-      if (focusedTab.getAttribute('role') !== 'tab') return;
-      const currentIndex = tabs.findIndex((t) => t.$tab === focusedTab);
-      let newIndex = currentIndex;
-      switch (e.key) {
-        case 'ArrowRight': newIndex = (currentIndex + 1) % tabs.length; break;
-        case 'ArrowLeft': newIndex = (currentIndex - 1 + tabs.length) % tabs.length; break;
-        case 'Home': newIndex = 0; break;
-        case 'End': newIndex = tabs.length - 1; break;
-        default: return;
+        suppressPanelMinHeight(bdTabs);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('DSN imports failed (Mode 1)', err);
       }
-      e.preventDefault();
-      activateTab(newIndex, { toggleDropdown: false });
-    });
+    }
   } else {
     // Mode 2: all-in-block — bd-tabs + bd-feature-col + bd-accordion-section
     const { defaultWrapper, title, subtitle } = getSectionContext(block);
@@ -370,7 +285,7 @@ export default async function decorate(block) {
       console.warn('DSN imports failed (Mode 2)', err);
     }
 
-    const tabsEl = buildTabsFromBlock(block, title, subtitle);
+    const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
     if (tabsEl) block.replaceChildren(tabsEl);
   }
 }
