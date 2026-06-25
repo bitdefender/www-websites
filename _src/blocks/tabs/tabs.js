@@ -172,6 +172,30 @@ const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
 // ── Helpers for Mode 1 (bd-tabs + bd-tab-panel with slot) ────────────────────
 
 /**
+ * Waits for all AEM blocks nested inside a container to finish decorating.
+ * bd-tabs clones the active panel's DOM at upgrade time — if inner blocks
+ * (features, accordion, etc.) are still in "loading" state at that moment,
+ * the snapshot captures undecorated HTML. Awaiting their "loaded" state
+ * before importing the DSN tabs module prevents that first-render glitch.
+ */
+function waitForInnerBlocks(container) {
+  const pending = [...container.querySelectorAll('[data-block-status]')]
+    .filter((el) => el.getAttribute('data-block-status') !== 'loaded');
+  if (!pending.length) return Promise.resolve();
+
+  return Promise.all(pending.map((innerBlock) => new Promise((resolve) => {
+    const obs = new MutationObserver(() => {
+      if (innerBlock.getAttribute('data-block-status') === 'loaded') {
+        obs.disconnect();
+        resolve();
+      }
+    });
+    obs.observe(innerBlock, { attributes: true, attributeFilter: ['data-block-status'] });
+    setTimeout(() => { obs.disconnect(); resolve(); }, 8000);
+  })));
+}
+
+/**
  * DSN 0.23.54 measures all panels to find the tallest and applies that as
  * min-height on bd-panel-wrapper to prevent layout shift during tab switching.
  * For tabs with different content heights this creates dead space below shorter
@@ -260,6 +284,22 @@ export default async function decorate(block) {
           await bdTabs.updateComplete;
         }
         suppressPanelMinHeight(bdTabs);
+
+        // bd-tabs clones the first panel at upgrade time; inner blocks decorated
+        // later are not reflected in that clone. Once all inner blocks finish
+        // loading, simulate a tab switch and back so bd-tabs re-renders panel 0
+        // from the current (decorated) DOM — same effect as pressing a tab button.
+        waitForInnerBlocks(bdTabs).then(() => {
+          const { shadowRoot } = bdTabs;
+          if (!shadowRoot) return;
+          const buttons = [...shadowRoot.querySelectorAll('[role="tab"]')];
+          if (buttons.length < 2) return;
+          const activeIdx = buttons.findIndex((btn) => btn.getAttribute('aria-selected') === 'true');
+          const otherIdx = activeIdx === 0 ? 1 : 0;
+          // Two synchronous clicks — browser batches the repaint so no visible flash
+          buttons[otherIdx].click();
+          buttons[activeIdx < 0 ? 0 : activeIdx].click();
+        });
       } catch (err) {
         // eslint-disable-next-line no-console
         console.warn('DSN imports failed (Mode 1)', err);
