@@ -21,7 +21,6 @@
 
 .decode-param-container table {
     width: 420px;
-    padding: 0 10px;
     margin: 30px auto 20px;
     text-align: left;
 }
@@ -32,7 +31,7 @@
     align-items: center;
     gap: 10px;
     padding-bottom: 10px;
-    margin-bottom: 10px;
+    margin: 0 10px 10px;
 }
 
 .decode-param-container table tr td {
@@ -72,6 +71,16 @@
 }
 
 @media (width < 767px) {
+    .decode-param-container h1 {
+        font-size: 23px;
+        line-height: 27px;
+        margin-bottom: 10px;
+    }
+
+    .decode-param-container h2 {
+        font-size: 18px;
+    }
+
     .decode-param-container table {
         width: 100%;
     }
