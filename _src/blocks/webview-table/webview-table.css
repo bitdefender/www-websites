@@ -476,6 +476,7 @@
 
         &:first-child {
             text-align: left;
+            font-weight: 300;
         }
     }
 
