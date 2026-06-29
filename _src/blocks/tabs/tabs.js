@@ -1,8 +1,6 @@
 import { getDsnBase } from '../../scripts/utils/utils.js';
 import { readBlockConfig } from '../../scripts/lib-franklin.js';
 
-// ── Helpers for Mode 2 (all-in-block / bd-tabs) ───────────────────────────────
-
 const getIconSrc = (iconCell) => {
   const image = iconCell?.querySelector('img');
   const imageSrc = image?.currentSrc || image?.getAttribute('src') || '';
@@ -121,11 +119,6 @@ const getSectionContext = (block) => {
   };
 };
 
-/**
- * Mode 2 — all-in-block:
- * H1–H3 → bd-tab-panel, H4–H6 → bd-feature-col inside bd-features, plain P → bd-accordion-item
- * DSN 0.23.55+: bd-accordion-section accepts bg-blue to adapt to blue backgrounds.
- */
 const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
   const tabsEl = document.createElement('bd-tabs');
   if (title) tabsEl.setAttribute('title', title);
@@ -169,15 +162,6 @@ const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
   return tabsEl;
 };
 
-// ── Helpers for Mode 1 (bd-tabs + bd-tab-panel with slot) ────────────────────
-
-/**
- * Waits for all AEM blocks nested inside a container to finish decorating.
- * bd-tabs clones the active panel's DOM at upgrade time — if inner blocks
- * (features, accordion, etc.) are still in "loading" state at that moment,
- * the snapshot captures undecorated HTML. Awaiting their "loaded" state
- * before importing the DSN tabs module prevents that first-render glitch.
- */
 function waitForInnerBlocks(container) {
   const pending = [...container.querySelectorAll('[data-block-status]')]
     .filter((el) => el.getAttribute('data-block-status') !== 'loaded');
@@ -195,12 +179,6 @@ function waitForInnerBlocks(container) {
   })));
 }
 
-/**
- * DSN 0.23.54 measures all panels to find the tallest and applies that as
- * min-height on bd-panel-wrapper to prevent layout shift during tab switching.
- * For tabs with different content heights this creates dead space below shorter
- * panels. Observe the wrapper and remove min-height whenever it is set.
- */
 function suppressPanelMinHeight(bdTabs) {
   const { shadowRoot } = bdTabs;
   if (!shadowRoot) return;
@@ -225,12 +203,6 @@ function suppressPanelMinHeight(bdTabs) {
   attachToWrapper();
 }
 
-/**
- * Mode 1 — data-tab sections:
- * Block has "tab-group" config; content lives in [data-tab] sections.
- * DSN 0.23.54+: bd-tab-panel has a <slot> and bd-tabs clones the active panel,
- * so arbitrary content placed inside bd-tab-panel now renders correctly.
- */
 function buildTabsFromSections(config, title, subtitle) {
   const tabGroupName = config['tab-group'];
   const tabsSelector = tabGroupName
@@ -248,7 +220,6 @@ function buildTabsFromSections(config, title, subtitle) {
   sections.forEach((section) => {
     const tabPanel = document.createElement('bd-tab-panel');
     tabPanel.setAttribute('title', section.dataset.tab);
-    // Move section content directly into bd-tab-panel — rendered via its <slot>
     while (section.firstChild) tabPanel.appendChild(section.firstChild);
     section.remove();
     bdTabs.appendChild(tabPanel);
@@ -257,17 +228,11 @@ function buildTabsFromSections(config, title, subtitle) {
   return bdTabs;
 }
 
-// ── Main decorate ─────────────────────────────────────────────────────────────
-
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   const bgBlue = 'bg-blue' in config;
 
   if ('tab-group' in config) {
-    // Mode 1: use bd-tabs for title/subtitle/navigation with full DSN styling,
-    // and manage panel content ourselves via custom show/hide logic.
-    // All DOM manipulation is synchronous (before any await) so [data-tab]
-    // sections are still present in the document when queried.
     [...block.children].forEach((child) => child.remove());
 
     const { defaultWrapper, title, subtitle } = getSectionContext(block);
@@ -285,10 +250,6 @@ export default async function decorate(block) {
         }
         suppressPanelMinHeight(bdTabs);
 
-        // bd-tabs clones the first panel at upgrade time; inner blocks decorated
-        // later are not reflected in that clone. Once all inner blocks finish
-        // loading, simulate a tab switch and back so bd-tabs re-renders panel 0
-        // from the current (decorated) DOM — same effect as pressing a tab button.
         waitForInnerBlocks(bdTabs).then(() => {
           const { shadowRoot } = bdTabs;
           if (!shadowRoot) return;
@@ -296,17 +257,14 @@ export default async function decorate(block) {
           if (buttons.length < 2) return;
           const activeIdx = buttons.findIndex((btn) => btn.getAttribute('aria-selected') === 'true');
           const otherIdx = activeIdx === 0 ? 1 : 0;
-          // Two synchronous clicks — browser batches the repaint so no visible flash
           buttons[otherIdx].click();
           buttons[activeIdx < 0 ? 0 : activeIdx].click();
         });
       } catch (err) {
-        // eslint-disable-next-line no-console
-        console.warn('DSN imports failed (Mode 1)', err);
+        globalThis.console?.warn('DSN imports failed (Mode 1)', err);
       }
     }
   } else {
-    // Mode 2: all-in-block — bd-tabs + bd-feature-col + bd-accordion-section
     const { defaultWrapper, title, subtitle } = getSectionContext(block);
     if (defaultWrapper && title) defaultWrapper.remove();
 
@@ -319,10 +277,7 @@ export default async function decorate(block) {
         import(`${base}individual-icon`),
       ]);
     } catch (err) {
-      // If DSN imports fail, warn and proceed — we'll still build DOM structure
-      // so titles/subtitles and content from the block are preserved.
-      // eslint-disable-next-line no-console
-      console.warn('DSN imports failed (Mode 2)', err);
+      globalThis.console?.warn('DSN imports failed (Mode 2)', err);
     }
 
     const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
