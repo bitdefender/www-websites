@@ -261,7 +261,7 @@ export default async function decorate(block) {
           buttons[activeIdx < 0 ? 0 : activeIdx].click();
         });
       } catch (err) {
-        globalThis.console?.warn('DSN imports failed (Mode 1)', err);
+        console.warn('DSN imports failed (Mode 1)', err);
       }
     }
   } else {
@@ -277,7 +277,7 @@ export default async function decorate(block) {
         import(`${base}individual-icon`),
       ]);
     } catch (err) {
-      globalThis.console?.warn('DSN imports failed (Mode 2)', err);
+      console.warn('DSN imports failed (Mode 2)', err);
     }
 
     const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
