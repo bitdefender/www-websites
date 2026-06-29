@@ -274,9 +274,11 @@ export default function decorate(block) {
   // setup data-store-id on mobal buttons
   aliases?.split(',').forEach((alias, i) => {
     [...block.children].forEach((row) => {
-      row.children[i]
-        ?.querySelector('a.button.modal')
-        ?.setAttribute('product-id', alias.trim());
+      const buttonModal = row.children[i]
+        ?.querySelector('a.button.modal');
+
+      buttonModal?.setAttribute('product-id', alias.trim());
+      buttonModal?.setAttribute('data-store-id', alias.trim());
     });
   });
 
