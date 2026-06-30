@@ -1,204 +1,286 @@
-/**
- * @typedef TabInfo
- * @property {string} name
- * @property {HTMLElement} $tab
- * @property {HTMLElement} $content
- */
+import { getDsnBase } from '../../scripts/utils/utils.js';
+import { readBlockConfig } from '../../scripts/lib-franklin.js';
 
-import {
-  readBlockConfig,
-} from '../../scripts/lib-franklin.js';
+const getIconSrc = (iconCell) => {
+  const image = iconCell?.querySelector('img');
+  const imageSrc = image?.currentSrc || image?.getAttribute('src') || '';
+  if (imageSrc) return imageSrc;
 
-function isMobileScreenSize() {
-  return !window.matchMedia('(min-width: 900px)').matches;
-}
+  const iconElement = iconCell?.querySelector('[class*="icon-"]');
+  if (!iconElement) return '';
 
-function showMenuItems(content) {
-  content.style.height = `${content.scrollHeight}px`;
-  const transitionEndCallback = () => {
-    content.removeEventListener('transitionend', transitionEndCallback);
-    content.style.height = 'auto';
-  };
-  content.addEventListener('transitionend', transitionEndCallback);
-  content.classList.add('expanded');
-}
+  const iconName = Array.from(iconElement.classList)
+    .find((cls) => cls.startsWith('icon-'))
+    ?.substring(5);
 
-function hideMenuItems(content) {
-  content.style.height = `${content.scrollHeight}px`;
-  requestAnimationFrame(() => {
-    content.classList.remove('expanded');
-    content.style.height = 0;
-  });
-}
+  return iconName ? `/common/icons/${iconName}.svg` : '';
+};
 
-function toggleMenu(dropDownMenu) {
-  const $ul = dropDownMenu.nextElementSibling;
+const parseIconColor = (cell) => {
+  const match = cell?.textContent?.match(/#[0-9a-fA-F]{3,6}/);
+  return match ? match[0] : null;
+};
 
-  if (dropDownMenu.classList.contains('opened')) {
-    hideMenuItems($ul);
-    dropDownMenu.classList.remove('opened');
-  } else {
-    showMenuItems($ul);
-    dropDownMenu.classList.add('opened');
+const parseIconSize = (cell) => {
+  const match = cell?.textContent?.match(/\bsize:?\s*(\d+)/i);
+  return match ? match[1] : '40';
+};
+
+const buildTabCol = (cells, isFirstOpen, bgBlue) => {
+  const [titleCell, iconCell, descCell] = cells;
+  const heading = titleCell.querySelector('h1, h2, h3, h4, h5, h6');
+
+  const col = document.createElement('bd-feature-col');
+  col.setAttribute('title', heading?.textContent?.trim() || titleCell.textContent.trim());
+
+  const icon = document.createElement('bd-individual-icon');
+  icon.setAttribute('slot', 'icon');
+  icon.setAttribute('size', parseIconSize(iconCell));
+  const color = parseIconColor(iconCell);
+  if (color) icon.setAttribute('color', color);
+  const iconSrc = getIconSrc(iconCell);
+  if (iconSrc) {
+    const img = document.createElement('img');
+    img.src = iconSrc;
+    icon.appendChild(img);
   }
-}
+  col.appendChild(icon);
 
-function createTabsNavigation(block) {
-  const tabsNavigation = document.createElement('div');
-  tabsNavigation.classList.add('tabs-navigation');
-  block.appendChild(tabsNavigation);
-
-  const dropDownMenu = document.createElement('div');
-  dropDownMenu.classList.add('dropdown-menu');
-  tabsNavigation.appendChild(dropDownMenu);
-
-  const $ul = document.createElement('ul');
-  $ul.setAttribute('role', 'tablist');
-  if (!isMobileScreenSize()) {
-    $ul.classList.add('expanded');
+  if (descCell) {
+    const descText = descCell.textContent.trim();
+    if (descText) {
+      const bdP = document.createElement('bd-p');
+      bdP.setAttribute('slot', 'description');
+      bdP.setAttribute('kind', 'small');
+      bdP.innerHTML = descCell.innerHTML;
+      col.appendChild(bdP);
+    }
   }
-  tabsNavigation.appendChild($ul);
 
-  dropDownMenu.addEventListener('click', (event) => {
-    event.preventDefault();
-    toggleMenu(dropDownMenu);
-  });
+  const accordionSection = document.createElement('bd-accordion-section');
+  accordionSection.setAttribute('no-container', '');
+  if (bgBlue) accordionSection.setAttribute('bg-blue', '');
+  col.appendChild(accordionSection);
 
+  col.accordionSection = accordionSection;
+  col.isFirstOpen = isFirstOpen;
+  col.firstItemAdded = false;
+
+  return col;
+};
+
+const appendAccordionItem = (col, cells) => {
+  const [titleCell, contentCell] = cells;
+  const titleText = titleCell?.textContent?.trim();
+  if (!titleText) return;
+
+  const item = document.createElement('bd-accordion-item');
+  item.setAttribute('title', titleText);
+
+  if (col.isFirstOpen && !col.firstItemAdded) {
+    item.setAttribute('open', '');
+  }
+  col.firstItemAdded = true;
+
+  if (contentCell) {
+    const children = Array.from(contentCell.children);
+    if (children.length) {
+      children.forEach((child) => {
+        const bdP = document.createElement('bd-p');
+        bdP.setAttribute('kind', 'small');
+        bdP.innerHTML = child.innerHTML;
+        item.appendChild(bdP);
+      });
+    } else {
+      const bdP = document.createElement('bd-p');
+      bdP.setAttribute('kind', 'small');
+      bdP.innerHTML = contentCell.innerHTML;
+      item.appendChild(bdP);
+    }
+  }
+
+  col.accordionSection.appendChild(item);
+};
+
+const getSectionContext = (block) => {
+  const section = block.closest('.section');
+  const wrapper = block.closest('.tabs-wrapper');
+  const defaultWrapper = wrapper?.parentElement === section
+    ? section.querySelector(':scope > .default-content-wrapper')
+    : null;
+  const titleEl = defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6') || null;
+  const subtitleEl = titleEl?.nextElementSibling?.tagName === 'P'
+    ? titleEl.nextElementSibling
+    : null;
   return {
-    dropDownMenu, $ul,
+    defaultWrapper,
+    title: titleEl?.textContent?.trim() || '',
+    subtitle: subtitleEl?.textContent?.trim() || '',
   };
+};
+
+const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
+  const tabsEl = document.createElement('bd-tabs');
+  if (title) tabsEl.setAttribute('title', title);
+  if (subtitle) tabsEl.setAttribute('subtitle', subtitle);
+
+  const isFirstOpen = block.classList.contains('first-open');
+  let currentPanel = null;
+  let currentFeatures = null;
+  let currentCol = null;
+
+  Array.from(block.querySelectorAll(':scope > div')).forEach((row) => {
+    const cells = Array.from(row.children);
+    const firstCell = cells[0];
+    if (!firstCell) return;
+
+    const heading = firstCell.querySelector('h1, h2, h3, h4, h5, h6');
+    const headingLevel = heading ? parseInt(heading.tagName[1], 10) : null;
+
+    if (headingLevel !== null && headingLevel <= 3) {
+      currentPanel = document.createElement('bd-tab-panel');
+      currentPanel.setAttribute('title', heading.textContent.trim());
+      tabsEl.appendChild(currentPanel);
+      currentFeatures = null;
+      currentCol = null;
+    } else if (headingLevel !== null) {
+      if (!currentPanel) {
+        currentPanel = document.createElement('bd-tab-panel');
+        tabsEl.appendChild(currentPanel);
+      }
+      if (!currentFeatures) {
+        currentFeatures = document.createElement('bd-features');
+        currentPanel.appendChild(currentFeatures);
+      }
+      currentCol = buildTabCol(cells, isFirstOpen, bgBlue);
+      currentFeatures.appendChild(currentCol);
+    } else if (currentCol) {
+      appendAccordionItem(currentCol, cells);
+    }
+  });
+
+  return tabsEl;
+};
+
+function waitForInnerBlocks(container) {
+  const pending = [...container.querySelectorAll('[data-block-status]')]
+    .filter((el) => el.getAttribute('data-block-status') !== 'loaded');
+  if (!pending.length) return Promise.resolve();
+
+  return Promise.all(pending.map((innerBlock) => new Promise((resolve) => {
+    const obs = new MutationObserver(() => {
+      if (innerBlock.getAttribute('data-block-status') === 'loaded') {
+        obs.disconnect();
+        resolve();
+      }
+    });
+    obs.observe(innerBlock, { attributes: true, attributeFilter: ['data-block-status'] });
+    setTimeout(() => { obs.disconnect(); resolve(); }, 8000);
+  })));
 }
 
-/**
- * @param {HTMLElement} block
- * @return {TabInfo[]}
- */
-export function createTabs(block) {
-  const config = readBlockConfig(block);
-  block.innerHTML = '';
+function suppressPanelMinHeight(bdTabs) {
+  const { shadowRoot } = bdTabs;
+  if (!shadowRoot) return;
 
-  const tabsSelector = config['tab-group']
-    ? `[data-tab-group="${config['tab-group']}"][data-tab]`
+  let wrapperObs = null;
+
+  const attachToWrapper = () => {
+    const wrapper = shadowRoot.querySelector('.bd-panel-wrapper');
+    if (!wrapper) return;
+    if (wrapper.style.minHeight) wrapper.style.removeProperty('min-height');
+    if (wrapperObs) wrapperObs.disconnect();
+    wrapperObs = new MutationObserver(() => {
+      if (wrapper.style.minHeight) wrapper.style.removeProperty('min-height');
+    });
+    wrapperObs.observe(wrapper, { attributes: true, attributeFilter: ['style'] });
+  };
+
+  const component = shadowRoot.querySelector('.bd-tabs-component');
+  if (component) {
+    new MutationObserver(attachToWrapper).observe(component, { childList: true });
+  }
+  attachToWrapper();
+}
+
+function buildTabsFromSections(config, title, subtitle) {
+  const tabGroupName = config['tab-group'];
+  const tabsSelector = tabGroupName
+    ? `[data-tab-group="${tabGroupName}"][data-tab]`
     : '[data-tab]';
 
-  /** @type TabInfo[] */
-  const tabs = [];
-  const {
-    dropDownMenu, $ul,
-  } = createTabsNavigation(block);
+  const sections = [...document.querySelectorAll(tabsSelector)];
+  if (!sections.length) return null;
 
-  const $sections = document.querySelectorAll(tabsSelector);
+  const bdTabs = document.createElement('bd-tabs');
+  if ('bg-blue' in config) bdTabs.setAttribute('bg-blue', '');
+  if (title) bdTabs.setAttribute('title', title);
+  if (subtitle) bdTabs.setAttribute('subtitle', subtitle);
 
-  [...$sections].forEach(($tabContent, index) => {
-    const title = $tabContent.dataset.tab;
-    const name = title.toLowerCase().trim();
-
-    const $li = document.createElement('li');
-    $li.classList.add('tab');
-    $li.setAttribute('role', 'tab');
-    $li.setAttribute('tabindex', index === 0 ? '0' : '-1');
-    $li.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
-    $li.setAttribute('id', `tab-${index}`);
-    $li.innerText = title;
-
-    $ul.appendChild($li);
-
-    const tabContentDiv = document.createElement('div');
-    tabContentDiv.classList.add('tab-item');
-    tabContentDiv.classList.add('hidden');
-    tabContentDiv.setAttribute('role', 'tabpanel');
-    tabContentDiv.setAttribute('aria-labelledby', `tab-${index}`);
-    tabContentDiv.append(...$tabContent.children);
-
-    block.appendChild(tabContentDiv);
-    $tabContent.remove();
-
-    if (index === 0) {
-      $li.classList.add('active');
-      tabContentDiv.classList.remove('hidden');
-      dropDownMenu.innerText = title;
-    }
-
-    tabs.push({
-      name,
-      $tab: $li,
-      $content: tabContentDiv,
-    });
+  sections.forEach((section) => {
+    const tabPanel = document.createElement('bd-tab-panel');
+    tabPanel.setAttribute('title', section.dataset.tab);
+    while (section.firstChild) tabPanel.appendChild(section.firstChild);
+    section.remove();
+    bdTabs.appendChild(tabPanel);
   });
 
-  return tabs;
+  return bdTabs;
 }
 
-/**
- * @param {HTMLElement} block
- */
-export default function decorate(block) {
-  const tabs = createTabs(block);
-  const dropDownMenu = block.querySelector('.dropdown-menu');
+export default async function decorate(block) {
+  const config = readBlockConfig(block);
+  const bgBlue = 'bg-blue' in config;
 
-  /**
-   * Activează un tab
-   * @param {number} index
-   * @param {{ toggleDropdown?: boolean }} options
-   */
-  function activateTab(index, { toggleDropdown = true } = {}) {
-    tabs.forEach((t, i) => {
-      const isActive = i === index;
+  if ('tab-group' in config) {
+    [...block.children].forEach((child) => child.remove());
 
-      t.$tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      t.$tab.setAttribute('tabindex', isActive ? '0' : '-1');
-      t.$tab.classList.toggle('active', isActive);
-      t.$content.classList.toggle('hidden', !isActive);
-    });
+    const { defaultWrapper, title, subtitle } = getSectionContext(block);
+    if (defaultWrapper && title) defaultWrapper.remove();
 
-    tabs[index].$tab.focus();
-    dropDownMenu.innerText = tabs[index].$tab.innerText;
+    const bdTabs = buildTabsFromSections(config, title, subtitle);
+    if (bdTabs) {
+      block.replaceChildren(bdTabs);
 
-    if (isMobileScreenSize() && toggleDropdown) {
-      toggleMenu(dropDownMenu);
+      const base = getDsnBase();
+      try {
+        await import(`${base}tabs`);
+        if (typeof bdTabs.updateComplete?.then === 'function') {
+          await bdTabs.updateComplete;
+        }
+        suppressPanelMinHeight(bdTabs);
+
+        waitForInnerBlocks(bdTabs).then(() => {
+          const { shadowRoot } = bdTabs;
+          if (!shadowRoot) return;
+          const buttons = [...shadowRoot.querySelectorAll('[role="tab"]')];
+          if (buttons.length < 2) return;
+          const activeIdx = buttons.findIndex((btn) => btn.getAttribute('aria-selected') === 'true');
+          const otherIdx = activeIdx === 0 ? 1 : 0;
+          buttons[otherIdx].click();
+          buttons[activeIdx < 0 ? 0 : activeIdx].click();
+        });
+      } catch (err) {
+        console.warn('DSN imports failed (Mode 1)', err);
+      }
     }
+  } else {
+    const { defaultWrapper, title, subtitle } = getSectionContext(block);
+    if (defaultWrapper && title) defaultWrapper.remove();
+
+    const base = getDsnBase();
+    try {
+      await Promise.all([
+        import(`${base}tabs`),
+        import(`${base}paragraph`),
+        import(`${base}accordion`),
+        import(`${base}individual-icon`),
+      ]);
+    } catch (err) {
+      console.warn('DSN imports failed (Mode 2)', err);
+    }
+
+    const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
+    if (tabsEl) block.replaceChildren(tabsEl);
   }
-
-  tabs.forEach((tab, index) => {
-    tab.$tab.addEventListener('click', () => {
-      if (tab.$tab.getAttribute('aria-selected') !== 'true') {
-        activateTab(index); // toggleDropdown = true (default)
-      }
-    });
-
-    tab.$tab.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        activateTab(index); // suport și pentru Enter / Space
-      }
-    });
-  });
-
-  block.addEventListener('keydown', (e) => {
-    const focusedTab = document.activeElement;
-    if (focusedTab.getAttribute('role') !== 'tab') return;
-
-    const currentIndex = tabs.findIndex((t) => t.$tab === focusedTab);
-    let newIndex = currentIndex;
-
-    switch (e.key) {
-      case 'ArrowRight':
-        newIndex = (currentIndex + 1) % tabs.length;
-        break;
-      case 'ArrowLeft':
-        newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
-        break;
-      case 'Home':
-        newIndex = 0;
-        break;
-      case 'End':
-        newIndex = tabs.length - 1;
-        break;
-      default:
-        return;
-    }
-
-    e.preventDefault();
-    activateTab(newIndex, { toggleDropdown: false });
-  });
 }
