@@ -1,5 +1,5 @@
 import { getDsnBase } from '../../scripts/utils/utils.js';
-import { readBlockConfig } from '../../scripts/lib-franklin.js';
+import { readBlockConfig, loadBlocks } from '../../scripts/lib-franklin.js';
 
 const getIconSrc = (iconCell) => {
   const image = iconCell?.querySelector('img');
@@ -162,23 +162,6 @@ const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
   return tabsEl;
 };
 
-function waitForInnerBlocks(container) {
-  const pending = [...container.querySelectorAll('[data-block-status]')]
-    .filter((el) => el.getAttribute('data-block-status') !== 'loaded');
-  if (!pending.length) return Promise.resolve();
-
-  return Promise.all(pending.map((innerBlock) => new Promise((resolve) => {
-    const obs = new MutationObserver(() => {
-      if (innerBlock.getAttribute('data-block-status') === 'loaded') {
-        obs.disconnect();
-        resolve();
-      }
-    });
-    obs.observe(innerBlock, { attributes: true, attributeFilter: ['data-block-status'] });
-    setTimeout(() => { obs.disconnect(); resolve(); }, 8000);
-  })));
-}
-
 function suppressPanelMinHeight(bdTabs) {
   const { shadowRoot } = bdTabs;
   if (!shadowRoot) return;
@@ -245,21 +228,11 @@ export default async function decorate(block) {
       const base = getDsnBase();
       try {
         await import(`${base}tabs`);
+        await loadBlocks(bdTabs);
         if (typeof bdTabs.updateComplete?.then === 'function') {
           await bdTabs.updateComplete;
         }
         suppressPanelMinHeight(bdTabs);
-
-        waitForInnerBlocks(bdTabs).then(() => {
-          const { shadowRoot } = bdTabs;
-          if (!shadowRoot) return;
-          const buttons = [...shadowRoot.querySelectorAll('[role="tab"]')];
-          if (buttons.length < 2) return;
-          const activeIdx = buttons.findIndex((btn) => btn.getAttribute('aria-selected') === 'true');
-          const otherIdx = activeIdx === 0 ? 1 : 0;
-          buttons[otherIdx].click();
-          buttons[activeIdx < 0 ? 0 : activeIdx].click();
-        });
       } catch (err) {
         console.warn('DSN imports failed (Mode 1)', err);
       }
