@@ -1028,6 +1028,27 @@
   background: linear-gradient(to bottom, #e4f2ff, white);
 }
 
+
+
+.creators .real-check .creators-banner p.button-container {
+  a {
+    background-color: #006DFF;
+    color: #fff;
+  }
+
+  &:last-of-type a{
+    background-color: transparent;
+    border: 1px solid #006DFF;
+    color: #006DFF;
+  }
+}
+
+.creators .real-check .creators-banner .columns-img-col picture img {
+  max-width: 450px;
+  aspect-ratio: 1/1;
+  float: right;
+}
+
 .creators .columns-container .columns.creators-banner .breadcrumb {
   font-weight: var(--font-weight-bold);
   color: #000;
