@@ -211,6 +211,35 @@ function buildTabsFromSections(config, title, subtitle) {
   return bdTabs;
 }
 
+function normalizeLoadingFeatureIcons(container) {
+  const selectors = [
+    '.features.block [class*="icon-"] svg',
+  ];
+
+  container.querySelectorAll(selectors.join(', ')).forEach((svg) => {
+    svg.style.width = '40px';
+    svg.style.height = '40px';
+    svg.style.maxWidth = '40px';
+    svg.style.maxHeight = '40px';
+    svg.style.display = 'block';
+  });
+}
+
+function watchAndNormalizeFeatureIcons(container) {
+  const observer = new MutationObserver(() => {
+    normalizeLoadingFeatureIcons(container);
+  });
+
+  observer.observe(container, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-block-status'],
+  });
+
+  return observer;
+}
+
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   const bgBlue = 'bg-blue' in config;
@@ -224,16 +253,24 @@ export default async function decorate(block) {
     const bdTabs = buildTabsFromSections(config, title, subtitle);
     if (bdTabs) {
       block.replaceChildren(bdTabs);
+      normalizeLoadingFeatureIcons(bdTabs);
+      const iconObserver = watchAndNormalizeFeatureIcons(bdTabs);
 
       const base = getDsnBase();
       try {
-        await import(`${base}tabs`);
         await loadBlocks(bdTabs);
+        normalizeLoadingFeatureIcons(bdTabs);
+        await import(`${base}tabs`);
+        if (typeof bdTabs.requestUpdate === 'function') {
+          bdTabs.requestUpdate();
+        }
+        iconObserver.disconnect();
         if (typeof bdTabs.updateComplete?.then === 'function') {
           await bdTabs.updateComplete;
         }
         suppressPanelMinHeight(bdTabs);
       } catch (err) {
+        iconObserver.disconnect();
         console.warn('DSN imports failed (Mode 1)', err);
       }
     }
