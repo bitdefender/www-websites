@@ -15,7 +15,7 @@ function replaceTableTextToProperCheckmars(block) {
         const icon = document.createElement('div');
         icon.classList.add('yes-check');
         div.appendChild(icon);
-      } else if (div.textContent.match(/^no/i)) {
+      } else if (div.textContent.match(/^\bno\b$/i)) {
         div.textContent = '';
         const icon = document.createElement('div');
         icon.classList.add('no-check');
@@ -199,12 +199,15 @@ function renderPrices(block, metadata) {
           const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears, true);
           block.prepend(planSwitcher);
         }
-        savingsTag.innerHTML = `
-          <span class="saving-tag-text" data-store-hide="no-price=discounted">
-            <span data-store-discount="percentage"></span> ${saveText || ''} 
-          </span>
-        `;
-        savingsTag.style.visibility = 'visible';
+
+        if (saveText) {
+          savingsTag.innerHTML = `
+            <span class="saving-tag-text" data-store-hide="no-price=discounted">
+              ${block.classList.contains('text-tag') ? '' : '<span data-store-discount="percentage"></span>'} ${saveText || ''} 
+            </span>
+          `;
+          savingsTag.style.visibility = 'visible';
+        }
       }
       // Populate buy box for non-current products
       if (!isCurrent) {
@@ -470,7 +473,7 @@ export default async function decorate(block) {
   }
 
   const targetElement = document.querySelector('.webview-table');
-  adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
+  if (!block.classList.contains('fixed-font-size')) adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
 
   matchHeights(block, '.savings-tag-container');
   matchHeights(block, '.buy-box');
