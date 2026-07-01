@@ -1261,6 +1261,14 @@
   margin-top: 40px;
 }
 
+.creators .columns-container.scam-protection div p {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+}
+
+.creators .columns-container.scam-protection div h2 {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     display: grid;
