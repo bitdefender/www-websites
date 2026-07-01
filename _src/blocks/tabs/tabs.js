@@ -271,6 +271,7 @@ export default async function decorate(block) {
         suppressPanelMinHeight(bdTabs);
       } catch (err) {
         iconObserver.disconnect();
+        // eslint-disable-next-line no-console
         console.warn('DSN imports failed (Mode 1)', err);
       }
     }
@@ -287,6 +288,7 @@ export default async function decorate(block) {
         import(`${base}individual-icon`),
       ]);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.warn('DSN imports failed (Mode 2)', err);
     }
 
