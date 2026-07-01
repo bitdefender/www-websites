@@ -1,5 +1,5 @@
 import { getDsnBase } from '../../scripts/utils/utils.js';
-import { readBlockConfig } from '../../scripts/lib-franklin.js';
+import { readBlockConfig, loadBlocks } from '../../scripts/lib-franklin.js';
 
 const getIconSrc = (iconCell) => {
   const image = iconCell?.querySelector('img');
@@ -162,23 +162,6 @@ const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
   return tabsEl;
 };
 
-function waitForInnerBlocks(container) {
-  const pending = [...container.querySelectorAll('[data-block-status]')]
-    .filter((el) => el.getAttribute('data-block-status') !== 'loaded');
-  if (!pending.length) return Promise.resolve();
-
-  return Promise.all(pending.map((innerBlock) => new Promise((resolve) => {
-    const obs = new MutationObserver(() => {
-      if (innerBlock.getAttribute('data-block-status') === 'loaded') {
-        obs.disconnect();
-        resolve();
-      }
-    });
-    obs.observe(innerBlock, { attributes: true, attributeFilter: ['data-block-status'] });
-    setTimeout(() => { obs.disconnect(); resolve(); }, 8000);
-  })));
-}
-
 function suppressPanelMinHeight(bdTabs) {
   const { shadowRoot } = bdTabs;
   if (!shadowRoot) return;
@@ -228,6 +211,35 @@ function buildTabsFromSections(config, title, subtitle) {
   return bdTabs;
 }
 
+function normalizeLoadingFeatureIcons(container) {
+  const selectors = [
+    '.features.block [class*="icon-"] svg',
+  ];
+
+  container.querySelectorAll(selectors.join(', ')).forEach((svg) => {
+    svg.style.width = '40px';
+    svg.style.height = '40px';
+    svg.style.maxWidth = '40px';
+    svg.style.maxHeight = '40px';
+    svg.style.display = 'block';
+  });
+}
+
+function watchAndNormalizeFeatureIcons(container) {
+  const observer = new MutationObserver(() => {
+    normalizeLoadingFeatureIcons(container);
+  });
+
+  observer.observe(container, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-block-status'],
+  });
+
+  return observer;
+}
+
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   const bgBlue = 'bg-blue' in config;
@@ -241,26 +253,25 @@ export default async function decorate(block) {
     const bdTabs = buildTabsFromSections(config, title, subtitle);
     if (bdTabs) {
       block.replaceChildren(bdTabs);
+      normalizeLoadingFeatureIcons(bdTabs);
+      const iconObserver = watchAndNormalizeFeatureIcons(bdTabs);
 
       const base = getDsnBase();
       try {
+        await loadBlocks(bdTabs);
+        normalizeLoadingFeatureIcons(bdTabs);
         await import(`${base}tabs`);
+        if (typeof bdTabs.requestUpdate === 'function') {
+          bdTabs.requestUpdate();
+        }
+        iconObserver.disconnect();
         if (typeof bdTabs.updateComplete?.then === 'function') {
           await bdTabs.updateComplete;
         }
         suppressPanelMinHeight(bdTabs);
-
-        waitForInnerBlocks(bdTabs).then(() => {
-          const { shadowRoot } = bdTabs;
-          if (!shadowRoot) return;
-          const buttons = [...shadowRoot.querySelectorAll('[role="tab"]')];
-          if (buttons.length < 2) return;
-          const activeIdx = buttons.findIndex((btn) => btn.getAttribute('aria-selected') === 'true');
-          const otherIdx = activeIdx === 0 ? 1 : 0;
-          buttons[otherIdx].click();
-          buttons[activeIdx < 0 ? 0 : activeIdx].click();
-        });
       } catch (err) {
+        iconObserver.disconnect();
+        // eslint-disable-next-line no-console
         console.warn('DSN imports failed (Mode 1)', err);
       }
     }
@@ -277,6 +288,7 @@ export default async function decorate(block) {
         import(`${base}individual-icon`),
       ]);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.warn('DSN imports failed (Mode 2)', err);
     }
 
