@@ -51,6 +51,7 @@ main .section .awards-search .award-search-filter-wrapper .accordion-wrapper {
 
 .awards-search-container {
     padding: 0 var(--body-padding) !important;
+    margin-top: 24px;
 }
 
 main .section .awards-search .awards-results-container .award-item-container {
