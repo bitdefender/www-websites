@@ -142,6 +142,11 @@ main .section .awards-search .awards-results-container .award-results-filters-co
     margin-bottom: unset;
 }
 
+.section.accordion-container.awards-search-container label {
+  display: flex;
+  justify-self: flex-start;
+}
+
 .accordion-item {
     padding-left: 1rem !important;
     padding-right: 1rem !important;

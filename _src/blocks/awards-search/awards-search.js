@@ -234,7 +234,7 @@ export default async function decorate(block) {
       style.textContent = `
         .bd-accordion-bg-container {
           padding-top: 0 !important;
-          padding-bottom: 0 !important;
+          padding-bottom: 12px !important;
         }
       `;
       accordionShadowRoot.appendChild(style);

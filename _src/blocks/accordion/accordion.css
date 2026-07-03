@@ -2,8 +2,3 @@
 .section.accordion-container {
   padding: 0;
 }
-
-.section.accordion-container.awards-search-container label {
-  display: flex;
-  justify-self: flex-start;
-}
