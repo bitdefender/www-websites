@@ -127,7 +127,6 @@ function createFilterBySection(block, data) {
     const checkboxElement = document.createElement('input');
     checkboxElement.setAttribute('type', 'checkbox');
     checkboxElement.setAttribute('value', year);
-    checkboxElement.addEventListener('click', handleFilterByYearCheckbox.bind(null, block));
     const checkboxLabel = document.createElement('label');
     checkboxLabel.append(checkboxElement);
     checkboxLabel.append(year);
@@ -210,4 +209,12 @@ export default async function decorate(block) {
   createAwardsResultContainer(block);
   fetchAwardsData(block);
   removeAwardsLinkFromDom(block);
+
+  // add event listener only after system design modifies the elements
+  window.addEventListener('accordion-bg:loaded', () => {
+    const yearInputs = block.querySelectorAll('.accordion input');
+    yearInputs.forEach((input) => {
+      input.addEventListener('click', handleFilterByYearCheckbox.bind(null, block));
+    });
+  });
 }
