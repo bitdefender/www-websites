@@ -61,6 +61,7 @@ export default async function decorate(block) {
       // so the short name fails on ESM.sh.
       import(`${base}src/components/cards/card.js`),
       import(`${base}paragraph`),
+      import(`${base}button`),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console
