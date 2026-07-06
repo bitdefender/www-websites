@@ -1152,6 +1152,33 @@
   display: none;
 }
 
+.creators .columns-container .columns.benefits-cards.narrow-grid > div > div {
+  justify-items: center;
+}
+
+.creators .columns-container .columns.benefits-cards > div > div {
+  justify-items: center;
+}
+
+.creators .columns-container .columns.benefits-cards > div > div h1 {
+  font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+  color: #006DFF;
+}
+
+.creators .columns-container .columns.benefits-cards > div > div tr {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+
+  td:last-of-type {
+    background-color: #006DFF;
+    border-radius: 20px;
+    color: #fff;
+    padding: 4px 8px;
+  }
+}
+
 .columns-container.secondary-button-blue  .columns .button.secondary {
   margin-top: 15px;
   color: #026DFF;
@@ -1274,6 +1301,12 @@
 
 .intersected-cards .columns.benefits > div hr {
   margin: 8px 0;
+}
+
+.creators .columns-container.header-mobile .default-content-wrapper h3 {
+  color:#006DFF;
+  font: normal normal bold 24px/26px "IBM Plex Sans", sans-serif !important;
+  margin-top: 40px;
 }
 
 @media (min-width: 991px) {
@@ -1672,21 +1705,76 @@
     width: 100%;
   }
 
-  .creators .columns-container .columns.benefits-cards > div{
+  .creators .columns-container .columns.benefits-cards > div {
     display: grid;
     gap: 30px;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-auto-flow: column;
     width: 100%;
   }
 
-  .columns-wrapper:has(.benefits-cards){
-    max-width: 1420px;
+  .creators .columns-container .columns.benefits-cards.scam-protection > div {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    margin-bottom: 30px;
+  }
+
+  .creators .columns-container .columns.benefits-cards > div > div {
+    justify-items: start;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div h3 {
+    font: normal normal bold 18px/24px "IBM Plex Sans", sans-serif !important;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div p {
+    font: normal normal 14px/20px "IBM Plex Sans", sans-serif !important;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div tr{
+    font: bold 12px/20px "IBM Plex Sans", sans-serif !important;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div .icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0;
+  }
+
+  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div {
+    background-color: #F0F7FF;
+  }
+
+  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div h3 {
+    font: normal normal bold 30px / 36px "IBM Plex Sans", sans-serif !important;
+    margin-bottom: 20px;
+  }
+
+  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div table h3 {
+    font-size: 18px !important;
+    margin-bottom: 0;
+  }
+
+  .creators .columns-container .columns.benefits-cards.narrow-grid > div {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 422px)); 
+  }
+
+  .creators .columns-container .columns.benefits-cards.narrow-grid > div > div {
+    justify-items: start;
+  }
+
+  .creators .columns-container.scam-protection .columns div p {
+    font-size: 18px !important;
   }
 
   .creators .columns-container .columns > div > div.columns-img-col {
     width: 50%;
     flex: none;
+  }
+
+  .creators .columns-container.scam-protection .columns:not(.creators-banner) > div > div.columns-img-col img{
+    max-width: 450px;
+    aspect-ratio: 1/1;
+    justify-self: center;
   }
 
   .creators .columns-container h5 {
