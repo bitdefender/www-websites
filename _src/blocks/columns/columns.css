@@ -1032,14 +1032,12 @@
 
 .creators .real-check .creators-banner p.button-container {
   a {
-    background-color: #006DFF;
+    background-color: #eb0000;
     color: #fff;
-  }
 
-  &:last-of-type a{
-    background-color: transparent;
-    border: 1px solid #006DFF;
-    color: #006DFF;
+    &:hover {
+      background-color: #d80000;
+    }
   }
 }
 
