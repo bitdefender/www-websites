@@ -44,10 +44,20 @@ const buildCardItem = (row) => {
     (p) => !p.querySelector('picture') && !p.querySelector('[class*="icon-"]') && p.textContent.trim(),
   );
   paragraphs.forEach((p) => {
-    const bdP = document.createElement('bd-p');
-    bdP.setAttribute('kind', 'regular');
-    bdP.textContent = p.textContent;
-    item.appendChild(bdP);
+    const link = p.querySelector('a');
+    if (link) {
+      const bdBtn = document.createElement('bd-button');
+      bdBtn.setAttribute('kind', 'danger');
+      bdBtn.setAttribute('href', link.getAttribute('href'));
+      bdBtn.setAttribute('slot', 'cta');
+      bdBtn.textContent = link.textContent.trim();
+      item.appendChild(bdBtn);
+    } else {
+      const bdP = document.createElement('bd-p');
+      bdP.setAttribute('kind', 'regular');
+      bdP.innerHTML = p.innerHTML;
+      item.appendChild(bdP);
+    }
   });
 
   return item;
@@ -79,14 +89,19 @@ export default async function decorate(block) {
   }
 
   const rows = [...block.children];
+  const firstRow = rows[0];
+  const firstRowHasMedia = firstRow?.querySelector('picture, img, [class*="icon-"]');
+  const firstRowHasDescription = [...(firstRow?.querySelectorAll('p') || [])].some(
+    (p) => !p.querySelector('picture') && !p.querySelector('[class*="icon-"]') && p.textContent.trim(),
+  );
 
-  // If the first row contains only a heading (no picture/icon) treat it as the
-  // section title; otherwise all rows are card items.
-  const firstRowHasMedia = rows[0]?.querySelector('picture, img, [class*="icon-"]');
-  const sectionTitle = !firstRowHasMedia
-    ? rows[0]?.querySelector('h1,h2,h3,h4,h5,h6,p')?.textContent?.trim() || ''
+  // Treat first row as section title only when it has a heading but no media
+  // and no description paragraph — i.e. it is a heading-only row.
+  const isSectionTitleRow = !firstRowHasMedia && !firstRowHasDescription;
+  const sectionTitle = isSectionTitleRow
+    ? firstRow?.querySelector('h1,h2,h3,h4,h5,h6')?.textContent?.trim() || ''
     : '';
-  const cardRows = firstRowHasMedia ? rows : rows.slice(1);
+  const cardRows = isSectionTitleRow ? rows.slice(1) : rows;
 
   const cardSection = document.createElement('bd-card-section');
   if (sectionTitle) cardSection.setAttribute('title', sectionTitle);
@@ -96,4 +111,34 @@ export default async function decorate(block) {
   });
 
   block.replaceChildren(cardSection);
+
+  // Process default-content-wrapper siblings:
+  // - headings → become the bd-card-section title (DS-styled)
+  // - button links → become bd-button appended to bd-card-section
+  const sectionEl = block.closest('.section');
+  const allDefaultWrappers = [...(sectionEl?.querySelectorAll('.default-content-wrapper') || [])];
+
+  allDefaultWrappers.forEach((wrapper) => {
+    // Extract heading → set as DS-managed section title
+    const heading = wrapper.querySelector('h1,h2,h3,h4,h5,h6');
+    if (heading && !cardSection.hasAttribute('title')) {
+      cardSection.setAttribute('title', heading.textContent.trim());
+      heading.remove();
+    }
+
+    // Extract button link → move into bd-card-section as bd-button
+    const link = wrapper.querySelector('a');
+    if (link) {
+      const bdBtn = document.createElement('bd-button');
+      bdBtn.setAttribute('kind', 'danger');
+      bdBtn.setAttribute('href', link.getAttribute('href'));
+      bdBtn.textContent = link.textContent.trim();
+      cardSection.appendChild(bdBtn);
+      const btnParagraph = link.closest('p') || link.parentElement;
+      btnParagraph.remove();
+    }
+
+    // Remove wrapper if now empty
+    if (!wrapper.textContent.trim()) wrapper.remove();
+  });
 }
