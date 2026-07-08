@@ -530,8 +530,14 @@
         div[role='row'].price-row {
             flex-wrap: nowrap;
 
-            div[role='cell']:first-child {
-                display: none;
+            div[role='cell'] {
+                &:first-child {
+                    display: none;
+                }
+
+                &.current {
+                    justify-content: end;
+                }
             }
 
             .button {
