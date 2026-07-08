@@ -507,6 +507,7 @@
             &:not(:first-of-type) {
                 flex: 1;
                 align-content: end;
+                width: unset;
             }
         }
 
