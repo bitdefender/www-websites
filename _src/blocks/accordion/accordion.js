@@ -64,7 +64,10 @@ const buildAccordion = (block) => {
 
     if (contentCell) {
       const children = Array.from(contentCell.children);
-      if (children.length) {
+      const hasDirectText = Array.from(contentCell.childNodes).some(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
+      );
+      if (children.length && !hasDirectText) {
         const mapped = children.map((el) => {
           if (el.tagName === 'P') {
             const bdP = document.createElement('bd-p');
