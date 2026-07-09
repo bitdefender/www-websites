@@ -24,16 +24,24 @@ export default function decorate(block) {
       }
     }
 
-    const toggleItem = () => {
-      const isOpen = item.classList.contains('expanded');
-      items.forEach((i) => {
-        i.classList.remove('expanded');
-        i.querySelector('.accordion-item-header')?.setAttribute('aria-expanded', 'false');
-      });
-
-      if (!isOpen) {
-        item.classList.add('expanded');
-        header.setAttribute('aria-expanded', 'true');
+    if (contentCell) {
+      const children = Array.from(contentCell.children);
+      const hasDirectText = Array.from(contentCell.childNodes).some(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
+      );
+      if (children.length && !hasDirectText) {
+        const mapped = children.map((el) => {
+          if (el.tagName === 'P') {
+            const bdP = document.createElement('bd-p');
+            bdP.innerHTML = el.innerHTML;
+            return bdP;
+          }
+          if (el.tagName === 'UL' || el.tagName === 'OL') {
+            return buildList(el);
+          }
+          return el.cloneNode(true);
+        });
+        item.replaceChildren(...mapped);
       } else {
         header.setAttribute('aria-expanded', 'false');
       }
@@ -61,4 +69,19 @@ export default function decorate(block) {
     const header = firstItem.querySelector('.accordion-item-header');
     if (header) header.setAttribute('aria-expanded', 'true');
   }
+
+  return accordion;
+};
+
+export default async function decorate(block) {
+  const base = getDsnBase();
+  await Promise.all([
+    import(`${base}accordion-bg`),
+    import(`${base}paragraph`),
+    import(`${base}list`),
+    import(`${base}list-item`),
+  ]);
+  const accordion = buildAccordion(block);
+  block.replaceChildren(accordion);
+  document.dispatchEvent(new CustomEvent('accordion-bg:loaded', { bubbles: true }));
 }
