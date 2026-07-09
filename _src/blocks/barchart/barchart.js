@@ -1,4 +1,14 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.13/';
+
+const getDsnBase = () => {
+  try {
+    const map = document.querySelector('script[type="importmap"]');
+    const imports = JSON.parse(map?.textContent || '{}').imports || {};
+    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
+  } catch {
+    return DSN_FALLBACK;
+  }
+};
 
 const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
 const VIEWPORT_ANIMATION_MS = 1000;
