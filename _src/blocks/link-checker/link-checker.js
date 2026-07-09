@@ -4,6 +4,7 @@ import {
   UserDetectedEvent,
   AdobeDataLayerService,
 } from '@repobit/dex-data-layer';
+import { UserAgent } from '@repobit/dex-utils';
 import {
   BotPrevention,
 } from '../../scripts/utils/bot-prevention.js';
@@ -344,7 +345,18 @@ function createButtonsContainer(block) {
       }
 
       if (index === 1) {
-        p.querySelector('a').classList.add('share-button');
+        const button = p.querySelector('a');
+        button.classList.add('share-button');
+        if (UserAgent.isAndroid || UserAgent.isIos) {
+          const { mobileLink } = block.closest('.section').dataset;
+          if (mobileLink) {
+            const newButton = button.cloneNode(true);
+            newButton.href = mobileLink;
+            newButton.classList.add('mobile-link-button');
+            button.setAttribute('target', '_blank');
+            button.replaceWith(newButton);
+          }
+        }
       }
 
       if (index === 2) {
