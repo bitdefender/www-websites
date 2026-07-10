@@ -116,4 +116,5 @@ export default async function decorate(block) {
   ]);
   const accordion = buildAccordion(block);
   block.replaceChildren(accordion);
+  document.dispatchEvent(new CustomEvent('accordion-bg:loaded', { bubbles: true }));
 }
