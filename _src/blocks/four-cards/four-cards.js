@@ -7,8 +7,6 @@ const getIconElement = (col) => {
       .find((cls) => cls.startsWith('icon-'))
       ?.substring(5);
     if (iconName) {
-      // Plain img with slot="icon" — bd-individual-icon has no <slot> so
-      // children placed inside it would never be rendered.
       const img = document.createElement('img');
       img.src = `/common/icons/${iconName}.svg`;
       img.setAttribute('slot', 'icon');
@@ -111,6 +109,15 @@ export default async function decorate(block) {
   });
 
   block.replaceChildren(cardSection);
+
+  // DS components call preventDefault on non-hash links — handle navigation manually.
+  cardSection.addEventListener('click', (e) => {
+    const bdBtn = e.composedPath().find((el) => el.tagName === 'BD-BUTTON');
+    if (!bdBtn) return;
+    const href = bdBtn.getAttribute('href');
+    if (!href || href.startsWith('#')) return;
+    window.location.href = href;
+  });
 
   // Process default-content-wrapper siblings:
   // - headings → become the bd-card-section title (DS-styled)
