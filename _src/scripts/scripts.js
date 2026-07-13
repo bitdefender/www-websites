@@ -795,7 +795,6 @@ async function loadPage() {
 
   registerContextNodes();
 
-  await loadTrackers();
   await resolveNonProductsDataLayer();
   await loadEager(document);
 
