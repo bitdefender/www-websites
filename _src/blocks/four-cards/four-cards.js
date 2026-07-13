@@ -133,6 +133,15 @@ export default async function decorate(block) {
       heading.remove();
     }
 
+    // Extract plain paragraph → set as DS-managed section subtitle
+    const subtitleP = [...wrapper.querySelectorAll('p')].find(
+      (p) => !p.querySelector('a') && !p.querySelector('picture') && p.textContent.trim(),
+    );
+    if (subtitleP && !cardSection.hasAttribute('subtitle')) {
+      cardSection.setAttribute('subtitle', subtitleP.textContent.trim());
+      subtitleP.remove();
+    }
+
     // Extract button link → move into bd-card-section as bd-button
     const link = wrapper.querySelector('a');
     if (link) {
