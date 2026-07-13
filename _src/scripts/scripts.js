@@ -1,4 +1,4 @@
-import Launch from '@repobit/dex-launch';
+/* eslint-disable no-underscore-dangle */
 import {
   PageLoadedEvent,
   AdobeDataLayerService,
@@ -13,6 +13,7 @@ import {
   registerContextNodes,
   registerRenderNodes,
 } from '@repobit/dex-store-elements';
+import Launch from '@repobit/dex-launch';
 import store from './store.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
@@ -43,9 +44,15 @@ import {
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
-  getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
+import {
+  initMartech,
+  martechEager,
+  martechLazy,
+  martechDelayed,
+// eslint-disable-next-line import/no-relative-packages
+} from '../plugins/martech/src/index.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
@@ -459,29 +466,6 @@ const applyTargetCustomCode = async () => {
   });
 };
 
-export async function loadTrackers() {
-  const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
-
-  const onAdobeMcLoaded = () => {
-    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
-    window.ADOBE_MC_EVENT_LOADED = true;
-  };
-
-  if (isPageNotInDraftsFolder) {
-    try {
-      await Launch.load(page.environment);
-      onAdobeMcLoaded();
-    } catch {
-      target.abort();
-    }
-  } else {
-    target.abort();
-    onAdobeMcLoaded();
-  }
-
-  await applyTargetCustomCode();
-}
-
 /**
  * set target_blank for pdf links when metadata is set: pdfs: new-tab
  * @param {Element} doc The container element
@@ -498,15 +482,76 @@ function openExternalLinksInNewTab(doc) {
 }
 
 /**
+ * load webSDK functionality via martech plugin
+ * @param {Promise<void>} martechLoadedPromise
+ */
+async function loadWebSDK(martechLoadedPromise) {
+  const isPageInDraftsFolder = window.location.pathname.includes('/drafts/');
+
+  const onAdobeMcLoaded = () => {
+    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
+    window.ADOBE_MC_EVENT_LOADED = true;
+  };
+
+  if (isPageInDraftsFolder) {
+    target.abort();
+    onAdobeMcLoaded();
+  } else {
+    try {
+      await martechLoadedPromise;
+      await martechEager();
+      onAdobeMcLoaded();
+    } catch (error) {
+      target.abort();
+    }
+  }
+
+  await applyTargetCustomCode();
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  // load trackers early if there is a target experiment on the page
-  if (getPageExperimentKey()) {
-    await loadTrackers();
-    await resolveNonProductsDataLayer();
+  // TODO: add these lines into dex-target
+  window.__alloyNS ||= [];
+
+  if (!window.__alloyNS.includes('alloy')) {
+    window.__alloyNS.push('alloy');
   }
+  // load trackers early if there is a target experiment on the page
+  const martechLoadedPromise = initMartech(
+    {
+      datastreamId: '6648b064-8151-4872-8fef-c4a84b0b69c1',
+      orgId: '0E920C0F53DA9E9B0A490D45@AdobeOrg',
+      edgeDomain: 'sstats.bitdefender.com',
+      defaultConsent: 'in',
+      debugEnabled: true,
+      idMigrationEnabled: true,
+      targetMigrationEnabled: true,
+      // The `debugEnabled` flag is automatically set to true on localhost and .page URLs.
+      // The `defaultConsent` is automatically set to "pending".
+      onBeforeEventSend(payload) {
+        console.debug('[Web SDK payload]', payload);
+      },
+    },
+    // 2. Library Configuration
+    {
+      personalization: true,
+      includeDataLayerState: false,
+      trackPageView: false,
+      // launchUrls: [RepobitConstants.ADOBE_MC_URL_ENV_MAP.get(page.environment)],
+      shouldProcessEvent(payload) {
+        console.debug('[Event processed]', payload);
+        return false;
+      },
+      // See the API Reference for all available options.
+    },
+  );
+
+  await loadWebSDK(martechLoadedPromise);
+  await resolveNonProductsDataLayer();
 
   const userCountry = await user.country;
   if (userCountry !== page.country && !sessionStorage.getItem('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
@@ -555,13 +600,8 @@ async function loadLazy(doc) {
     loadHeader(doc.querySelector('header'));
   }
 
-  // only call load Trackers here if there is no experiment on the page
-  if (!getPageExperimentKey()) {
-    loadTrackers();
-    await resolveNonProductsDataLayer();
-  }
-
   // push basic events to dataLayer
+  Launch.load(page.environment);
   await loadBlocks(main);
 
   const { hash } = window.location;
@@ -572,6 +612,7 @@ async function loadLazy(doc) {
     loadFooter(doc.querySelector('footer'));
   }
 
+  await martechLazy();
   generateLDJsonSchema();
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
@@ -711,6 +752,7 @@ function loadDelayed() {
     // load anything that can be postponed to the latest here
     eventOnDropdownSlider();
     // eslint-disable-next-line import/no-cycle
+    martechDelayed();
     return import('./delayed.js');
   }, 3000);
 }

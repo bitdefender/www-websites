@@ -63,6 +63,13 @@ function buildHeroBlock(element) {
   subSection.classList.add('hero-content');
   // eslint-disable-next-line no-bitwise
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
+    const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
+
+    if (!isHomePage) {
+      const breadcrumb = createTag('div', { class: 'breadcrumb' });
+      document.querySelector('div.hero div div:first-child').prepend(breadcrumb);
+    }
+
     const pictureEl = document.createElement('div');
     pictureEl.classList.add('hero-picture');
     pictureEl.append(picture);
