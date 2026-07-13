@@ -15,7 +15,7 @@ function replaceTableTextToProperCheckmars(block) {
         const icon = document.createElement('div');
         icon.classList.add('yes-check');
         div.appendChild(icon);
-      } else if (div.textContent.match(/^no/i)) {
+      } else if (div.textContent.match(/^\bno\b$/i)) {
         div.textContent = '';
         const icon = document.createElement('div');
         icon.classList.add('no-check');
@@ -478,7 +478,7 @@ export default async function decorate(block) {
   }
 
   const targetElement = document.querySelector('.webview-table');
-  adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
+  if (!block.classList.contains('fixed-font-size')) adjustFontSizeUntilTargetHeight('.webview-table > div[role="row"] > div:nth-child(1)', targetElement, 512);
 
   matchHeights(block, '.savings-tag-container');
   matchHeights(block, '.buy-box');

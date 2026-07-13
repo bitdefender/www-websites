@@ -1216,7 +1216,7 @@ export const wrapChildrenWithStoreContext = (element, {
   element.appendChild(context);
 };
 
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.40/';
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.72/';
 
 export const getDsnBase = () => {
   try {
@@ -1227,3 +1227,12 @@ export const getDsnBase = () => {
     return DSN_FALLBACK;
   }
 };
+
+export function onCookiesAccepted(callback) {
+  if (window.adobeDataLayer.getState('ucCategory.functional')) callback();
+  else {
+    window.adobeDataLayer.addEventListener('consent_status', () => {
+      if (window.adobeDataLayer.getState('ucCategory.functional')) callback();
+    });
+  }
+}

@@ -293,13 +293,17 @@ function createFeatureList(featuresSet) {
 
       const firstCellContent = firstCell?.textContent.trim() ? firstCell.innerHTML : '';
       const processed = processFeatureContent(firstCellContent, firstCell);
-      const { content: processedContent, liClass } = processed;
+      let { content: processedContent, liClass } = processed;
+      if (processedContent.includes('xxx')) {
+        liClass = 'unavailable';
+        processedContent = processedContent.replace('xxx', '');
+      }
 
       const secondCellContent = secondCell?.textContent.trim()
         ? `<span class="white-pill-content">${secondCell.innerHTML}</span>`
         : '';
 
-      return `<li class="${liClass}">${processedContent}${secondCellContent}</li>`;
+      return `<li ${liClass ? `class="${liClass}"` : ''}>${processedContent}${secondCellContent}</li>`;
     }).join(' ');
 
     return `<ul>${listItems}</ul>`;
