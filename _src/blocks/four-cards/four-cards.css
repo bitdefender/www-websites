@@ -1,7 +1,1 @@
 /* All styling is handled by Design System components */
-
-.four-cards-wrapper .four-cards > bd-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 24px;
-}

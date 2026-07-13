@@ -142,15 +142,14 @@ export default async function decorate(block) {
       subtitleP.remove();
     }
 
-    // Extract button link → append to block (outside bd-card-section) so it
-    // renders below the cards grid rather than as a grid item inside it.
+    // Extract button link → move into bd-card-section as bd-button
     const link = wrapper.querySelector('a');
     if (link) {
       const bdBtn = document.createElement('bd-button');
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('href', link.getAttribute('href'));
       bdBtn.textContent = link.textContent.trim();
-      block.appendChild(bdBtn);
+      cardSection.appendChild(bdBtn);
       const btnParagraph = link.closest('p') || link.parentElement;
       btnParagraph.remove();
     }
