@@ -355,46 +355,35 @@ export default function decorate(block) {
   });
   blockWrapperSection.appendChild(wrapperSectionContext);
 
-  let plansCounter = 0;
   [...block.children].forEach((row, idxParent) => {
-    [...(row.children)].forEach((col) => {
-      // set the store event on the component
-      let storeEvent = 'main-product-loaded';
-      if (checkIfNotProductPage()) {
-        storeEvent = 'product-loaded';
-      }
+    // set the store event on the component
+    let storeEvent = 'main-product-loaded';
+    if (checkIfNotProductPage()) {
+      storeEvent = 'product-loaded';
+    }
 
-      col.classList.add('product-card');
-      const [devices, subscription] = plans[plansCounter]?.defaultVariant?.split('-') || [];
-      const productCode = plans[plansCounter]?.productCode;
-      if (productCode && devices && subscription) {
-        wrapChildrenWithStoreContext(col, {
-          productId: productCode,
-          devices,
-          subscription,
-          ignoreEventsParent: true,
-          storeEvent,
-        });
-      }
-
-      const cardButtons = col.querySelectorAll('a');
-      let hasBuyButton = false;
-      cardButtons?.forEach((button) => {
-        if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
-          hasBuyButton = true;
-          button.href = '#';
-          button.setAttribute('data-store-buy-link', '');
-          button.setAttribute('data-store-render', '');
-        }
+    row.classList.add('product-card');
+    const [devices, subscription] = plans[idxParent]?.defaultVariant?.split('-') || [];
+    const productCode = plans[idxParent]?.productCode;
+    if (productCode && devices && subscription) {
+      wrapChildrenWithStoreContext(row, {
+        productId: productCode,
+        devices,
+        subscription,
+        ignoreEventsParent: true,
+        storeEvent,
       });
-      block.appendChild(col);
-      renderNanoBlocks(col, undefined, idxParent);
+    }
 
-      if (hasBuyButton) {
-        plansCounter += 1;
+    const cardButtons = row.querySelectorAll('a');
+    cardButtons?.forEach((button) => {
+      if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
+        button.href = '#';
+        button.setAttribute('data-store-buy-link', '');
+        button.setAttribute('data-store-render', '');
       }
     });
-    row.remove();
+    renderNanoBlocks(row, undefined, idxParent);
   });
 
   // render nanoblocks in section's content default wrapper

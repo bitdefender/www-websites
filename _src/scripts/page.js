@@ -26,7 +26,7 @@ const getEnvironment = () => {
   if (hostname.includes('www.bitdefender')) {
     return 'prod';
   }
-  return 'prod';
+  return 'dev';
 };
 
 /**
