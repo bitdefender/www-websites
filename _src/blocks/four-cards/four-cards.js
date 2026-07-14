@@ -101,11 +101,16 @@ export default async function decorate(block) {
     : '';
   const cardRows = isSectionTitleRow ? rows.slice(1) : rows;
 
+  const sectionEl = block.closest('.section');
+  const isCentered = sectionEl?.classList.contains('centered');
+
   const cardSection = document.createElement('bd-card-section');
   if (sectionTitle) cardSection.setAttribute('title', sectionTitle);
 
   cardRows.forEach((row) => {
-    cardSection.appendChild(buildCardItem(row));
+    const item = buildCardItem(row);
+    if (isCentered) item.setAttribute('align', 'center');
+    cardSection.appendChild(item);
   });
 
   block.replaceChildren(cardSection);
@@ -122,7 +127,6 @@ export default async function decorate(block) {
   // Process default-content-wrapper siblings:
   // - headings → become the bd-card-section title (DS-styled)
   // - button links → become bd-button appended to bd-card-section
-  const sectionEl = block.closest('.section');
   const allDefaultWrappers = [...(sectionEl?.querySelectorAll('.default-content-wrapper') || [])];
 
   allDefaultWrappers.forEach((wrapper) => {
