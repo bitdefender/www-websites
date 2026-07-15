@@ -47,9 +47,6 @@ function createPriceBox({
 }) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box', 'await-loader');
-  box.setAttribute('data-store-hide', '!it.option.price.discounted');
-  box.setAttribute('data-store-hide-type', 'visibility');
-  box.setAttribute('data-store-render', '');
   box.dataset.code = code;
 
   box.innerHTML = `
