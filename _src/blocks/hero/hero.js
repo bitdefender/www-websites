@@ -6,6 +6,7 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   getBrowserName,
+  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 function detectAndRenderOSContent(osLinkMapping, androidTemplate, iosTemplate, mobileHide, block) {
@@ -81,26 +82,19 @@ function buildHeroBlock(element) {
 }
 
 createNanoBlock('discount', (code, label = '{label}') => {
-  // code = "av/3/1"
-  const [product, unit, year] = code.split('/');
+  const root = createTag('div', {
+    'data-store-render': '',
+    'data-store-hide': '!it.state.discount.percentage.max',
+    class: 'discount-bubble await-loader',
+  });
 
-  const root = document.createElement('div');
-  root.classList.add('discount-bubble');
-  root.classList.add('await-loader');
-  root.setAttribute('data-store-context', '');
-  root.setAttribute('data-store-id', product);
-  root.setAttribute('data-store-option', `${unit}-${year}`);
-  root.setAttribute('data-store-department', 'consumer');
-  root.setAttribute('data-store-event', 'main-product-loaded');
-  root.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
+  const percentage = createTag('div', { class: 'discount-bubble-0' });
+  percentage.textContent = '{{=it.state.discount.percentage.max}}';
 
-  // Add the required attributes to the root element
+  const labelEl = createTag('span', { class: 'discount-bubble-1' });
+  labelEl.textContent = label;
 
-  root.innerHTML = `
-    <span class="discount-bubble-0" data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>
-    <span class="discount-bubble-1">${label}</span>
-  `;
-
+  root.append(percentage, labelEl);
   return root;
 });
 
@@ -244,16 +238,20 @@ export default function decorate(block) {
   // make discount dynamic
   if (percentProduct || discountedPrice) {
     const [alias, variant] = percentProduct?.split(',') || discountedPrice.split(',');
-    block.setAttribute('data-store-context', '');
-    block.setAttribute('data-store-text-variable', '');
-    block.setAttribute('data-store-id', alias);
-    block.setAttribute('data-store-department', 'consumer');
-    block.setAttribute('data-store-option', variant);
+    const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
+
+    wrapChildrenWithStoreContext(block, {
+      productId: alias,
+      devices,
+      subscription,
+      ignoreEventsParent: true,
+      storeEvent: 'all',
+    });
     block.querySelector('div').classList.add('await-loader');
 
     if (discountedPrice) {
       const dicountedTable = block.querySelector('table');
-      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', '<strong data-store-price="discounted||full"></strong>');
+      dicountedTable.innerHTML = dicountedTable.innerHTML.replace('[discounted_price]', '<strong data-store-render data-store-price="discounted||full"></strong>');
     }
   }
 

@@ -696,7 +696,8 @@ export function pushTrialDownloadToDataLayer() {
       return '8430';
     }
 
-    if (button?.dataset?.storeId) return button.dataset.storeId;
+    const buttonProductId = button?.getAttribute('product-id');
+    if (buttonProductId) return buttonProductId;
 
     const closestStoreElementWithId = button?.closest('.section')?.querySelector('[data-store-id]') || button?.closest('.section');
     const { storeId } = closestStoreElementWithId.dataset;

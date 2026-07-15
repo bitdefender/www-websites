@@ -1,12 +1,19 @@
-import { createNanoBlock, renderNanoBlocks, matchHeights } from '../../scripts/utils/utils.js';
+import {
+  createNanoBlock,
+  renderNanoBlocks,
+  matchHeights,
+  wrapChildrenWithStoreContext,
+} from '../../scripts/utils/utils.js';
 
 createNanoBlock('priceComparison', (code, variant, label, block, productIndex, columnEl) => {
-  columnEl.setAttribute('data-store-id', code);
-  columnEl.setAttribute('data-store-option', variant);
-  columnEl.setAttribute('data-store-department', 'consumer');
-  columnEl.setAttribute('data-store-event', 'product-comparison');
-  columnEl.setAttribute('data-store-context', '');
-  columnEl.setAttribute('data-store-not-global', 'true');
+  const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
+  wrapChildrenWithStoreContext(columnEl, {
+    productId: code,
+    devices,
+    subscription,
+    ignoreEventsParent: false,
+    storeEvent: 'product-comparison',
+  });
 
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
@@ -39,13 +46,13 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   }
 
   oldPriceElement.innerHTML = `
-    <div class="old-price-box">
-      <span  data-store-hide="no-price=discounted;type=visibility">${oldPriceText} <del data-store-price="full"></del></span>
-      <span class="savings d-none" data-store-hide="no-price=discounted;type=visibility"><span data-store-discount="percentage"></span> ${saveText}</span>
+    <div class="old-price-box" data-store-render data-store-hide="!it.option.price.discounted">
+      <span>${oldPriceText} <del data-store-render data-store-price="full"></del></span>
+      <span class="savings d-none"><span data-store-render data-store-discount="percentage"></span> ${saveText}</span>
     </div>`;
   priceElement.innerHTML = `
     <div class="new-price-box">
-      <span class="await-loader total-text" data-store-price="discounted||full"> </span>
+      <span class="await-loader total-text" data-store-render data-store-price="discounted||full"> </span>
       <sup class="per-price"> ${newPriceLabel} </sup>
     </div>`;
   priceAppliedOnTime.innerHTML = label;
@@ -54,6 +61,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   const buyLink = columnEl.querySelector('.button-container a');
   if (buyLink.href.includes('/buy/') || buyLink.href.includes('#buylink')) {
     buyLink.href = '#';
+    buyLink.setAttribute('data-store-render', '');
     buyLink.setAttribute('data-store-buy-link', '');
   }
 

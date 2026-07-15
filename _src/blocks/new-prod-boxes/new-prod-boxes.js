@@ -1,8 +1,7 @@
-import { formatPrice, checkIfNotProductPage } from '../../scripts/utils/utils.js';
-import { Store, ProductInfo } from '../../scripts/libs/store/index.js';
+import { formatPrice, checkIfNotProductPage, wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
+import store from '../../scripts/store.js';
 
 // Constants for store department and price attributes
-const STORE_DEPARTMENT = 'consumer';
 const PRICE_ATTRIBUTES = {
   default: 'discounted||full',
   monthly: 'discounted-monthly||full-monthly',
@@ -58,9 +57,15 @@ function createPriceElement(options, card) {
   // Old price container
   const oldPriceContainer = document.createElement('div');
   oldPriceContainer.className = 'oldprice-container';
+  oldPriceContainer.setAttribute('data-store-render', '');
+  oldPriceContainer.setAttribute('data-store-hide', '!it.option.price.discounted');
+  oldPriceContainer.setAttribute('data-store-hide-type', 'visibility');
+
   oldPriceContainer.innerHTML = `
-    <span class="prod-oldprice" data-store-price="${oldPriceAttr}" data-store-hide="no-price=discounted"></span>
-    <span class="prod-save" data-store-hide="no-price=discounted">${saveText ?? ''} <span data-store-discount="percentage"></span></span>
+    <span class="prod-oldprice" data-store-price="${oldPriceAttr}"></span>
+    <span class="prod-save">
+      ${saveText ?? ''} <span data-store-render data-store-discount="percentage"></span>
+    </span>
   `;
 
   // New price container
@@ -71,7 +76,7 @@ function createPriceElement(options, card) {
   const perPriceSup = perPriceText ? `<sup class="per-m">${perPriceText}</sup>` : '';
   newPriceContainer.innerHTML = `
     <span class="prod-newprice">
-      <span data-store-price="${priceAttribute}"></span>${perPriceSup}
+      <span data-store-render data-store-price="${priceAttribute}"></span>${perPriceSup}
     </span>
   `;
 
@@ -86,7 +91,7 @@ function createPriceElement(options, card) {
       billedPriceDiv.className = 'billed';
       billedPriceDiv.innerHTML = billedPrice.replace(
         '0',
-        `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
+        `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`,
       );
       container.appendChild(billedPriceDiv);
     }
@@ -109,7 +114,7 @@ function createPriceElement(options, card) {
       billedDiv.className = 'billed';
       billedDiv.innerHTML = billedText.innerHTML.replace(
         '0',
-        `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
+        `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`,
       );
       container.appendChild(billedDiv);
     }
@@ -120,6 +125,7 @@ function createPriceElement(options, card) {
     const buyLink = document.createElement('a');
     buyLink.href = '#';
     buyLink.className = 'button primary no-arrow';
+    buyLink.setAttribute('data-store-render', '');
     buyLink.setAttribute('data-store-buy-link', '');
     buyLink.textContent = buyLinkSelector.innerText;
     container.appendChild(buyLink);
@@ -176,10 +182,10 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
     input.name = inputName;
     input.value = inputValue;
     input.setAttribute('rank', `radio-${idx + 1}`);
-    input.setAttribute('data-store-click-set-product', '');
-    input.setAttribute('data-store-product-id', productName);
-    input.setAttribute('data-store-product-option', `${prodUser}-${prodYear}`);
-    input.setAttribute('data-store-product-department', STORE_DEPARTMENT);
+    input.setAttribute('data-store-action', '');
+    input.setAttribute('data-store-set-id', productName);
+    input.setAttribute('data-store-set-devices', prodUser);
+    input.setAttribute('data-store-set-subscription', prodYear);
     if (isChecked) {
       input.setAttribute('checked', '');
     }
@@ -499,9 +505,9 @@ function getCheckedProductInfo(planSwitcher, defaultName, defaultUsers, defaultY
     return { name: defaultName, users: defaultUsers, years: defaultYears };
   }
 
-  const name = checkedPlan.dataset.storeProductId || defaultName;
-  const option = checkedPlan.dataset.storeProductOption || `${defaultUsers}-${defaultYears}`;
-  const [users, years] = option.split('-');
+  const name = checkedPlan.dataset.storeSetId || defaultName;
+  const users = checkedPlan.dataset.storeSetDevices || defaultUsers;
+  const years = checkedPlan.dataset.storeSetSubscription || defaultYears;
 
   return { name, users, years };
 }
@@ -632,23 +638,33 @@ async function updateAddOnPrices(
   priceBox = null,
 ) {
   try {
-    const products = await Store.getProducts([
-      new ProductInfo(productName),
-      new ProductInfo(addOnName),
+    const [product, addOnProduct] = await store.getProduct([
+      {
+        id: productName,
+      },
+      {
+        id: addOnName,
+      },
     ]);
-
-    const product = products[productName];
-    const addOnProduct = products[addOnName];
 
     if (!addOnProduct || !product) return;
 
     const [productUsers, productYears] = productOption.split('-');
     const [addOnUsers, addOnYears] = addOnOption.split('-');
 
-    const productInfo = product.getOption(productUsers, productYears);
-    const addOnInfo = addOnProduct.getOption(addOnUsers, addOnYears);
+    const [productInfo, addOnInfo] = (await Promise.allSettled([
+      product.getOption({
+        devices: productUsers,
+        subscription: productYears,
+      }),
+      addOnProduct.getOption({
+        devices: addOnUsers,
+        subscription: addOnYears,
+      }),
+    ])).map((result) => result.value);
 
-    const addOnCost = addOnInfo.getDiscountedPrice('value') - productInfo.getDiscountedPrice('value');
+    const addOnCost = addOnInfo.getDiscountedPrice({ currency: false })
+      - productInfo.getDiscountedPrice({ currency: false });
     const formattedAddOnCost = formatPrice(addOnCost, product.getCurrency());
 
     const addOnNewPrice = container.querySelector('.add-on-newprice');
@@ -658,7 +674,10 @@ async function updateAddOnPrices(
 
     const addOnOldPrice = container.querySelector('.add-on-oldprice');
     if (addOnOldPrice) {
-      addOnOldPrice.textContent = formatPrice(addOnInfo.getPrice('value'), addOnProduct.getCurrency());
+      addOnOldPrice.textContent = formatPrice(
+        addOnInfo.getPrice({ currency: false }),
+        addOnProduct.getCurrency(),
+      );
     }
 
     const addOnPercentSave = container.querySelector('.add-on-percent-save');
@@ -671,7 +690,7 @@ async function updateAddOnPrices(
           .map((node) => node.textContent.trim())
           .join(' ')
         : '';
-      const discountPercent = addOnInfo.getDiscount('percentageWithProcent');
+      const discountPercent = addOnInfo.getDiscount({ percentage: true });
       addOnPercentSave.innerHTML = discountPercent !== '0%' ? `${saveText} <span class="add-on-percent">${discountPercent}</span>` : '';
     }
   } catch (error) {
@@ -701,11 +720,11 @@ function syncAddOnWithMainProduct(boxElement, state) {
       }
 
       if (radio.id.includes('add-on')) {
-        state.addOnProductOption = radio.dataset.storeProductOption;
-        state.addOnProduct = radio.dataset.storeProductId;
+        state.addOnProductOption = `${radio.dataset.storeSetDevices}-${radio.dataset.storeSetSubscription}`;
+        state.addOnProduct = radio.dataset.storeSetId;
       } else {
-        state.productOption = radio.dataset.storeProductOption;
-        state.product = radio.dataset.storeProductId;
+        state.productOption = `${radio.dataset.storeSetDevices}-${radio.dataset.storeSetSubscription}`;
+        state.product = radio.dataset.storeSetId;
       }
 
       matchingRadios.forEach(async (matchingRadio) => matchingRadio.click());
@@ -746,22 +765,15 @@ async function setupAddOnCheckbox(
   const addOnProductElement = boxElement.querySelector('.add-on-product');
   if (!addOnProductElement) return;
 
-  addOnProductElement.setAttribute('data-store-context', '');
-  addOnProductElement.setAttribute('data-store-id', addOnProdName);
-  addOnProductElement.setAttribute('data-store-option', `${addOnProdUsers}-${addOnProdYears}`);
-  addOnProductElement.setAttribute('data-store-department', STORE_DEPARTMENT);
+  wrapChildrenWithStoreContext(addOnProductElement, {
+    productId: addOnProdName,
+    devices: addOnProdUsers,
+    subscription: addOnProdYears,
+    ignoreEventsParent: true,
+    storeEvent: 'all',
+  });
 
   try {
-    const productObject = await Store.getProducts([
-      new ProductInfo(prodName),
-      new ProductInfo(addOnProdName),
-    ]);
-
-    const product = productObject[prodName];
-    const addOnProduct = productObject[addOnProdName];
-
-    if (!addOnProduct || !product) return;
-
     const productOptionStr = `${prodUsers}-${prodYears}`;
     const addOnProductOptionStr = `${addOnProdUsers}-${addOnProdYears}`;
 
@@ -806,40 +818,44 @@ function buildProductBoxHTML(config) {
     greenTagText ? 'hasGreenTag' : '',
     isDemoBox ? 'demo-box' : '',
     isIndividual ? 'individual-box' : 'family-box',
-  ].filter(Boolean).join(' ');
+  ];
 
   const shouldAddStoreEvent = productsAsList.some((entry) => entry.includes(prodName));
-  const storeEventAttr = shouldAddStoreEvent ? `data-store-event="${storeEvent}"` : '';
 
-  return `
-    <div class="${boxClasses}"
-      data-store-context
-      data-store-id="${prodName}"
-      data-store-option="${prodUsers}-${prodYears}"
-      data-store-department="${STORE_DEPARTMENT}"
-      ${storeEventAttr}>
-      <div class="inner_prod_box">
-        ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
-        ${titleHTML}
-        <div class="blueTagsWrapper">${blueTagsHTML}</div>
-        ${subtitleHTML}
-        <hr />
-        ${subtitle2HTML ? `<p class="subtitle-2">${subtitle2HTML}</p>` : ''}
-        ${planSwitcherHTML}
-        <div class="hero-aem__prices await-loader"></div>
-        ${secondButtonHTML}
-        ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
-        <hr />
-        <div class="benefitsLists">${featureListHTML}</div>
-        <div class="add-on-product" style="display: none;">
-          ${hasBilled2 ? '<hr>' : ''}
-          ${planSwitcher2HTML}
-          ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
-          <div class="hero-aem__prices__addon"></div>
-        </div>
+  const productBox = document.createElement('div');
+  productBox.classList.add(...boxClasses.filter(Boolean));
+  productBox.innerHTML = `
+    <div class="inner_prod_box">
+      ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
+      ${titleHTML}
+      <div class="blueTagsWrapper">${blueTagsHTML}</div>
+      ${subtitleHTML}
+      <hr />
+      ${subtitle2HTML ? `<p class="subtitle-2">${subtitle2HTML}</p>` : ''}
+      ${planSwitcherHTML}
+      <div class="hero-aem__prices await-loader"></div>
+      ${secondButtonHTML}
+      ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
+      <hr />
+      <div class="benefitsLists">${featureListHTML}</div>
+      <div class="add-on-product" style="display: none;">
+        ${hasBilled2 ? '<hr>' : ''}
+        ${planSwitcher2HTML}
+        ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
+        <div class="hero-aem__prices__addon"></div>
       </div>
     </div>
   `;
+
+  wrapChildrenWithStoreContext(productBox, {
+    productId: prodName,
+    devices: prodUsers,
+    subscription: prodYears,
+    ignoreEventsParent: true,
+    storeEvent: shouldAddStoreEvent ? storeEvent : '',
+  });
+
+  return productBox;
 }
 
 /**
@@ -1029,7 +1045,7 @@ export default async function decorate(block) {
         });
 
         // Replace original content
-        block.children[key].outerHTML = prodBoxHTML;
+        block.children[key].replaceWith(prodBoxHTML);
 
         // Add price box
         const priceBox = createPriceElement({
@@ -1093,12 +1109,18 @@ export default async function decorate(block) {
               productInfo,
             );
 
-            const productZones = block.children[key].querySelectorAll('[data-store-context]');
+            const productZones = block.children[key].querySelectorAll('bd-context');
+            const cardBdOption = block.children[key]?.querySelector('bd-option');
+            const productOption = `${cardBdOption.getAttribute('devices')}-${cardBdOption.getAttribute('subscription')}`;
+
+            const addOnBdOption = productZones[1]?.querySelector('bd-option');
+            const addOnProductOption = `${addOnBdOption.getAttribute('devices')}-${addOnBdOption.getAttribute('subscription')}`;
+
             const state = {
-              product: block.children[key]?.getAttribute('data-store-id'),
-              productOption: block.children[key]?.getAttribute('data-store-option'),
-              addOnProduct: productZones[1]?.getAttribute('data-store-id'),
-              addOnProductOption: productZones[1]?.getAttribute('data-store-option'),
+              product: productZones[0]?.querySelector('bd-product')?.getAttribute('product-id'),
+              productOption,
+              addOnProduct: productZones[1]?.querySelector('bd-product')?.getAttribute('product-id'),
+              addOnProductOption,
             };
 
             syncAddOnWithMainProduct(

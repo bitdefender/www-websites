@@ -1,4 +1,5 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
+import { wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
 
 const URL_PARAMS = {
   slots: 'slots',
@@ -52,7 +53,7 @@ async function checkAndReplacePrivacyPolicyLink(block) {
   }
 }
 
-function getUrlStoreOption() {
+function getUrlStoreOption(block, productId) {
   const slots = getUrlParam(URL_PARAMS.slots);
   const billingCycle = Number(getUrlParam(URL_PARAMS.billingCycle));
 
@@ -71,6 +72,14 @@ function getUrlStoreOption() {
     return null;
   }
 
+  wrapChildrenWithStoreContext(block, {
+    productId,
+    devices: slots,
+    subscription: years,
+    ignoreEventsParent: true,
+    storeEvent: 'all',
+  });
+
   return `${slots}-${years}`;
 }
 
@@ -84,8 +93,8 @@ function getUrlStoreOption() {
  * @param {string} [options.urlStoreOption]
  */
 function setupStoreContext(block, product, options = {}) {
-  const urlStoreOption = options.urlStoreOption ?? getUrlStoreOption();
   const [productId, productUsers, productYears] = product?.split('/') ?? [];
+  const urlStoreOption = options.urlStoreOption ?? getUrlStoreOption(block, productId);
 
   const productStoreOption = productUsers && productYears ? `${productUsers}-${productYears}` : undefined;
 
@@ -279,18 +288,19 @@ function decorateChurnThankYouV1(block) {
 function decorateDefaultWebview(block, product, saveText) {
   const buyLink = block.querySelector('a[href*="#buylink"]');
   buyLink?.setAttribute('data-store-buy-link', '');
+  buyLink?.setAttribute('data-store-render', '');
 
   [...block.children].forEach((child) => {
     if (child.textContent.includes('{PRICE_BOX}') && product) {
       child.innerHTML = child.innerHTML.replace('{PRICE_BOX}', '<div class="price-box">Price box</div>');
       child.innerHTML = `
       <div class="price-box">
-        <div>
-          <span class="prod-oldprice" data-store-price="full" data-store-hide="no-price=discounted"></span>
-          <span class="prod-percent" data-store-hide="no-price=discounted"> <span data-store-discount="percentage"></span> ${saveText || ''} </span>
+        <div data-store-hide="!it.option.price.discounted">
+          <span class="prod-oldprice" data-store-render data-store-price="full"></span>
+          <span class="prod-percent"> <span data-store-render data-store-discount="percentage"></span> ${saveText || ''} </span>
         </div>
         <div class="newprice-container mt-2">
-          <span class="prod-newprice"> <span data-store-price="discounted||full"> </span></span>
+          <span class="prod-newprice"> <span data-store-render data-store-price="discounted||full"> </span></span>
         </div>
       </div>`;
     }

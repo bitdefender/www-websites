@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
 /* eslint-disable max-len */
-import { matchHeights } from '../../scripts/utils/utils.js';
+import { matchHeights, wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
 
 function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
   let priceAttribute = 'discounted||full';
@@ -21,9 +21,10 @@ async function updateProductPrice(prodName, saveText = null, buyLinkSelector = n
   let newPrice = document.createElement('span');
   const customLink = buyLinkSelector.querySelector('a')?.getAttribute('href');
   let priceAttribute = setDiscountedPriceAttribute(type, hideDecimals, prodName);
-  const savePriceEl = saveText ? saveText.replace('0%', '<span data-store-discount="percentage"></span>') : '<span data-store-discount="percentage"></span>';
+  const savePriceEl = saveText ? saveText.replace('0%', '<span data-store-render data-store-discount="percentage"></span>') : '<span data-store-render data-store-discount="percentage"></span>';
   const billedText = billed?.innerHTML || '';
   newPrice.setAttribute('data-store-price', priceAttribute);
+  newPrice.setAttribute('data-store-render', '');
 
   let oldPrice = 'data-store-price="full"';
   let billedPrice = 'data-store-price="discounted||full"';
@@ -34,18 +35,18 @@ async function updateProductPrice(prodName, saveText = null, buyLinkSelector = n
 
   priceElement.innerHTML = `
     <div class="hero-aem__price mt-3">
-      <div class="oldprice-container">
-        <span class="prod-oldprice" ${oldPrice} data-store-hide="no-price=discounted"></span>
+      <div class="oldprice-container" data-store-render data-store-hide="!it.option?.price?.discounted" data-store-hide-type="visibility">
+        <span class="prod-oldprice" data-store-render ${oldPrice}></span>
       </div>
       <div class="newprice-container mt-2">
         <span class="prod-newprice"> ${newPrice.outerHTML}  ${perPrice && `<sup class="per-m">${perPrice.textContent.replace('0', '')}</sup>`}</span>
-        <span class="prod-save green-pill" data-store-hide="no-price=discounted">${savePriceEl}</span>
+        <span class="prod-save green-pill" data-store-render data-store-hide="!it.option?.price?.discounted">${savePriceEl}</span>
       </div>
       
-      ${billedText.includes('0') ? `<div class="billed"> ${billedText.replace('0', `<span class="newprice-2" ${billedPrice}></span>`)}</div>` : ''}
+      ${billedText.includes('0') ? `<div class="billed"> ${billedText.replace('0', `<span class="newprice-2" data-store-render ${billedPrice}></span>`)}</div>` : ''}
       ${!billedText.includes('0') ? `<div class="billed">${billedText}</div>` : ''}
 
-      <a ${customLink ? `href="${customLink}"` : 'href="#"'} href="#" data-store-buy-link class="button ${key === 0 ? 'primary' : ''} no-arrow">${buyLinkSelector?.innerText}</a>
+      <a ${customLink ? `href="${customLink}"` : 'href="#"'} href="#" data-store-render data-store-buy-link class="button ${key === 0 ? 'primary' : ''} no-arrow">${buyLinkSelector?.innerText}</a>
     </div>`;
   return priceElement;
 }
@@ -77,11 +78,19 @@ export default async function decorate(block) {
     const [prodName, prodUsers, prodYears] = parts;
     const name = prodName.trim();
 
-    table.setAttribute('data-store-context', '');
-    table.setAttribute('data-store-id', name);
-    table.setAttribute('data-store-option', `${prodUsers.trim()}-${prodYears.trim()}`);
-    table.setAttribute('data-store-department', 'consumer');
-    table.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
+    if (name !== 'avfree') {
+      wrapChildrenWithStoreContext(table, {
+        productId: name,
+        devices: prodUsers.trim(),
+        subscription: prodYears.trim(),
+        ignoreEventsParent: true,
+        storeEvent: '',
+      });
+    }
+
+    const tableBuyLink = table.querySelector('a[href*="#buylink"]');
+    tableBuyLink?.setAttribute('data-store-buy-link', '');
+    tableBuyLink?.setAttribute('data-store-render', '');
 
     const priceBox = await updateProductPrice(name, savetext, priceRow, billed, null, null, '', key);
     priceRow.innerHTML = priceBox?.innerHTML ?? priceRow.innerHTML;
