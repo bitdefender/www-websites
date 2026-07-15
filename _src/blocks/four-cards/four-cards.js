@@ -103,6 +103,7 @@ export default async function decorate(block) {
 
   const sectionEl = block.closest('.section');
   const isCentered = sectionEl?.classList.contains('centered');
+  const isBlue = block.classList.contains('blue') || sectionEl?.classList.contains('blue');
 
   const cardSection = document.createElement('bd-card-section');
   if (sectionTitle) cardSection.setAttribute('title', sectionTitle);
@@ -110,6 +111,7 @@ export default async function decorate(block) {
   cardRows.forEach((row) => {
     const item = buildCardItem(row);
     if (isCentered) item.setAttribute('align', 'center');
+    if (isBlue) item.setAttribute('bg-blue', '');
     cardSection.appendChild(item);
   });
 
