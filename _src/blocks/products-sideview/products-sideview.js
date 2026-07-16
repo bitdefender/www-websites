@@ -313,18 +313,18 @@ function initMembersMap() {
 export default function decorate(block) {
   const blockDataset = getDatasetFromSection(block);
   state.blockDataset = blockDataset;
-
+  const productsViewWrapper = block.firstElementChild;
   initMembersMap();
 
-  block.firstElementChild.classList.add('d-flex');
-  block.firstElementChild.firstElementChild.classList.add('pricing-wrapper');
-  block.firstElementChild.lastElementChild.classList.add('features-wrapper');
+  productsViewWrapper.classList.add('d-flex');
+  productsViewWrapper.firstElementChild.classList.add('pricing-wrapper');
+  productsViewWrapper.lastElementChild.classList.add('features-wrapper');
 
-  renderNanoBlocks(block.firstElementChild, block);
+  renderNanoBlocks(productsViewWrapper, block);
 
-  const cols = [...block.firstElementChild.children];
+  const cols = [...productsViewWrapper.children];
   block.classList.add(`features-${cols.length}-cols`);
 
-  const col = block.children[0].children[1];
+  const col = productsViewWrapper.children[1];
   col.appendChild(extractFeatures(col));
 }
