@@ -339,12 +339,14 @@ export default function decorate(block) {
   Object.entries(metadata).forEach(([key, value]) => {
     if (key.includes('plans')) {
       const allImportantData = value.match(/[^,{}[\]]+/gu).map((importantData) => importantData.trim());
-      plans.push({
+      const suffix = parseInt(key.replace('plans', ''), 10);
+      const index = Number.isNaN(suffix) ? plans.length : suffix - 1;
+      plans[index] = {
         productCode: allImportantData[1],
         defaultVariant: `${Number(allImportantData.slice(-1)[0])
           ? allImportantData.slice(-1)[0] : allImportantData[2].match(/[0-9-]+/g)[0]
         }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
-      });
+      };
     }
   });
 
