@@ -5,30 +5,21 @@ import store from '../../scripts/store.js';
 const PRICE_ATTRIBUTES = {
   default: 'discounted||full',
   monthly: 'discounted-monthly||full-monthly',
-  monthlyNoDecimal: 'discounted-monthly-no-decimal||full-monthly',
-  noDecimal: 'discounted-no-decimal||full-no-decimal',
   full: 'full',
-  fullNoDecimal: 'full-no-decimal',
 };
 
 /**
  * Determines the appropriate price attribute based on billing type and decimal settings
  * @param {string} type - Billing type ('monthly' or default)
- * @param {string} hideDecimals - Whether to hide decimals ('true' or 'false')
  * @param {string} prodName - Product name
  * @returns {string} Price attribute string
  */
-function getDiscountedPriceAttribute(type, hideDecimals, prodName) {
-  if (type !== 'monthly') {
+function getDiscountedPriceAttribute(type, prodName) {
+  if (type !== 'monthly' || prodName.endsWith('m')) {
     return PRICE_ATTRIBUTES.default;
   }
 
-  // Monthly products ending with 'm' use default pricing
-  if (prodName.endsWith('m')) {
-    return hideDecimals === 'true' ? PRICE_ATTRIBUTES.noDecimal : PRICE_ATTRIBUTES.default;
-  }
-
-  return hideDecimals === 'true' ? PRICE_ATTRIBUTES.monthlyNoDecimal : PRICE_ATTRIBUTES.monthly;
+  return PRICE_ATTRIBUTES.monthly;
 }
 
 /**
@@ -43,13 +34,12 @@ function createPriceElement(options, card) {
     buyLinkSelector,
     billedText,
     type,
-    hideDecimals,
     perPrice,
   } = options;
 
-  const priceAttribute = getDiscountedPriceAttribute(type, hideDecimals, prodName);
-  const oldPriceAttr = hideDecimals === 'true' ? PRICE_ATTRIBUTES.fullNoDecimal : PRICE_ATTRIBUTES.full;
-  const billedPriceAttr = hideDecimals === 'true' ? PRICE_ATTRIBUTES.noDecimal : PRICE_ATTRIBUTES.default;
+  const priceAttribute = getDiscountedPriceAttribute(type, prodName);
+  const oldPriceAttr = PRICE_ATTRIBUTES.full;
+  const billedPriceAttr = PRICE_ATTRIBUTES.default;
 
   const container = document.createElement('div');
   container.className = 'hero-aem__price mt-3';
@@ -871,7 +861,6 @@ export default async function decorate(block) {
     addOnProducts,
     addOnMonthlyProducts,
     type,
-    hideDecimals,
     thirdRadioButtonProducts,
     saveText,
     addonProductName,
@@ -1054,7 +1043,6 @@ export default async function decorate(block) {
           buyLinkSelector: buyLink?.querySelector('a'),
           billedText,
           type,
-          hideDecimals,
           perPrice,
         }, block.children[key]);
         block.children[key].querySelector('.hero-aem__prices')?.appendChild(priceBox);
@@ -1068,7 +1056,6 @@ export default async function decorate(block) {
             buyLinkSelector: buyLink2?.querySelector('a'),
             billedText: billed2,
             type,
-            hideDecimals,
             perPrice,
           }, block.children[key]);
           block.children[key].querySelector('.hero-aem__prices__addon')?.appendChild(addOnPriceBox);
