@@ -1144,6 +1144,25 @@
   background: linear-gradient(to bottom, #e4f2ff, white);
 }
 
+
+
+.creators .real-check .creators-banner p.button-container {
+  a {
+    background-color: #eb0000;
+    color: #fff;
+
+    &:hover {
+      background-color: #d80000;
+    }
+  }
+}
+
+.creators .real-check .creators-banner .columns-img-col picture img {
+  max-width: 450px;
+  aspect-ratio: 1/1;
+  float: right;
+}
+
 .creators .columns-container .columns.creators-banner > div .columns-img-col {
   margin-bottom: 0;
 }
@@ -1307,6 +1326,14 @@
   color:#006DFF;
   font: normal normal bold 24px/26px "IBM Plex Sans", sans-serif !important;
   margin-top: 40px;
+}
+
+.creators .columns-container.scam-protection div p {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+}
+
+.creators .columns-container.scam-protection div h2 {
+  font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
 @media (min-width: 991px) {
