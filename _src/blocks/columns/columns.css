@@ -1163,53 +1163,6 @@
   float: right;
 }
 
-.creators .columns-container .columns.creators-banner .breadcrumb {
-  font-weight: var(--font-weight-bold);
-  color: #000;
-  min-height: unset;
-  padding: 12px 0;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-}
-
-.creators .columns-container .columns.creators-banner .breadcrumb a {
-  font-size: 12px;
-  font-weight: var(--font-weight-bold);
-  color: var(--breadcrumb-text-color-dark-hover);
-  text-decoration: none;
-  line-height: 1.7;
-  letter-spacing: .96px;
-  border: none;
-  background: transparent;
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  padding: 0;
-  text-align: left;
-  min-width: unset;
-}
-
-.creators .columns-container .columns.creators-banner .breadcrumb a:last-child {
-  padding: 0;
-  margin: 0;
-  pointer-events: none;
-  display: inline-block;
-}
-
-.creators .columns-container .columns.creators-banner .breadcrumb a::after {
-  content: "/";
-  display: inline-block;
-  color: #000;
-  margin: 0 3px;
-  font-size: 9pt;
-}
-
-.creators .columns-container .columns.creators-banner .breadcrumb a:hover {
-  color: var(--text-color);
-}
-
 .creators .columns-container .columns.creators-banner > div .columns-img-col {
   margin-bottom: 0;
 }
