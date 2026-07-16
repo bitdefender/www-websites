@@ -429,7 +429,7 @@
           color: #003385;
           height: 35px;
           display: flex;
-          align-items: anchor-center;
+          align-items: center;
           padding: 0 10px;
           justify-content: center;
         }
