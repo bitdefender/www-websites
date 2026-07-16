@@ -1,27 +1,65 @@
-export default function decorate(block) {
-  const items = Array.from(block.querySelectorAll(':scope > div'));
+import { getDsnBase } from '../../scripts/utils/utils.js';
 
-  items.forEach((item, index) => {
-    item.classList.add('accordion-item');
-    const [header, content] = item.children;
-    header.classList.add('accordion-item-header');
+const getSectionTitle = (block) => {
+  const section = block.closest('.section');
+  const accordionWrapper = block.closest('.accordion-wrapper');
+  if (!section || !accordionWrapper || accordionWrapper.parentElement !== section) return '';
+  const defaultWrapper = section.querySelector(':scope > .default-content-wrapper');
+  return defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
+};
 
-    // A11Y: focusabil, activabil, semantic
-    header.setAttribute('tabindex', '0');
-    header.setAttribute('role', 'button');
-    header.setAttribute('aria-expanded', 'false');
-    header.setAttribute('aria-controls', `accordion-content-${index}`);
-    content.setAttribute('id', `accordion-content-${index}`);
+const buildListItem = (li) => {
+  const bdLi = document.createElement('bd-li');
+  bdLi.setAttribute('kind', 'none');
+  bdLi.setAttribute('size', 'md');
+  const bdP = document.createElement('bd-p');
+  bdP.setAttribute('kind', 'small');
+  bdP.innerHTML = li.innerHTML;
+  bdLi.appendChild(bdP);
+  return bdLi;
+};
 
-    if (content) {
-      content.classList.add('accordion-item-content');
-      const p = content.querySelector('p');
-      if (!p) {
-        const newP = document.createElement('p');
-        newP.innerHTML = content.innerHTML;
-        content.innerHTML = '';
-        content.appendChild(newP);
-      }
+const buildList = (list) => {
+  const bdList = document.createElement('bd-list');
+  bdList.setAttribute('type', list.tagName === 'OL' ? 'ordered' : 'unordered');
+  bdList.setAttribute('spacing', 'md');
+  bdList.setAttribute('variant', 'default');
+  bdList.setAttribute('orientation', 'vertical');
+  Array.from(list.querySelectorAll(':scope > li')).forEach((li) => {
+    bdList.appendChild(buildListItem(li));
+  });
+  return bdList;
+};
+
+const buildAccordion = (block) => {
+  const section = block.closest('.section');
+  const defaultWrapper = section?.querySelector(':scope > .default-content-wrapper');
+  const sectionTitle = getSectionTitle(block);
+
+  if (defaultWrapper && sectionTitle) {
+    defaultWrapper.remove();
+  }
+
+  const accordion = document.createElement('bd-accordion-bg');
+  if (sectionTitle) {
+    accordion.setAttribute('title', sectionTitle);
+  }
+
+  const isFirstOpen = block.classList.contains('first-open');
+  const rows = Array.from(block.querySelectorAll(':scope > div'));
+
+  rows.forEach((row, index) => {
+    const [headerCell, contentCell] = row.children;
+    if (!headerCell) return;
+
+    const titleEl = headerCell.querySelector('h1, h2, h3, h4, h5, h6, p');
+    const title = titleEl?.textContent?.trim() || headerCell.textContent.trim();
+
+    const item = document.createElement('bd-accordion-bg-item');
+    item.setAttribute('title', title);
+
+    if (isFirstOpen && index === 0) {
+      item.setAttribute('open', '');
     }
 
     if (contentCell) {
@@ -43,31 +81,29 @@ export default function decorate(block) {
         });
         item.replaceChildren(...mapped);
       } else {
-        header.setAttribute('aria-expanded', 'false');
+        const bdP = document.createElement('bd-p');
+        bdP.innerHTML = contentCell.innerHTML;
+        item.replaceChildren(bdP);
       }
-    };
-
-    if ([...block.classList].includes('action-only-on-header')) {
-      header.addEventListener('click', toggleItem);
-    } else {
-      item.addEventListener('click', toggleItem);
     }
 
-    // A11Y: tastatură
-    header.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleItem();
-      }
-    });
+    accordion.appendChild(item);
   });
 
-  // Prima deschisă
-  if (block.classList.contains('first-open')) {
-    const firstItem = items[0];
-    firstItem.classList.add('expanded');
-    const header = firstItem.querySelector('.accordion-item-header');
-    if (header) header.setAttribute('aria-expanded', 'true');
+  const accordionWrapper = block.closest('.accordion-wrapper');
+  const isDirectChild = accordionWrapper && section && accordionWrapper.parentElement === section;
+
+  if (isDirectChild) {
+    section.querySelectorAll(':scope > .default-content-wrapper').forEach((wrapper) => {
+      Array.from(wrapper.querySelectorAll(':scope > p')).forEach((p) => {
+        const bdP = document.createElement('bd-p');
+        bdP.setAttribute('kind', 'small');
+        bdP.setAttribute('slot', 'footer');
+        bdP.innerHTML = p.innerHTML;
+        accordion.appendChild(bdP);
+      });
+      wrapper.remove();
+    });
   }
 
   return accordion;
