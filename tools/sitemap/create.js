@@ -3,6 +3,19 @@ import convert from 'xml-js';
 import path from 'path';
 import 'dotenv/config';
 
+/**
+ * Converts a Unix timestamp (seconds or milliseconds) to YYYY-MM-DD.
+ * @param {number|string} timestamp
+ * @returns {string} ISO date string, e.g. "2026-06-13"
+ */
+function toIsoDate(timestamp) {
+  if (!timestamp) return null;
+  const ts = Number(timestamp);
+  // AEM returns seconds; JS Date expects milliseconds
+  const ms = ts > 1e10 ? ts : ts * 1000;
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
 const LOCALES = 'https://www.bitdefender.com/p-api/v1/locales-and-countries';
 const COUNTRIES = 'https://www.bitdefender.com/p-api/v1/locales/{locale}/countries';
 const QUERY_INDEX_URL = 'https://www.bitdefender.com/{locale}/query-index.json';
@@ -111,7 +124,7 @@ async function processLocaleSitemap(locale, hreflangMap) {
 
   if (!queryData) return;
 
-  const validData = queryData.data.filter(entry => 
+  const validData = queryData.data.filter(entry =>
     entry.path !== "0" && !entry.robots.includes("noidex")
   );
   const filteredHreflangMap = hreflangMap.filter(([lang]) => lang !== locale);
@@ -153,6 +166,8 @@ async function processLocaleSitemap(locale, hreflangMap) {
 
         return {
           loc: `${DOMAIN_URL}${row.path}`,
+          ...(row.priority ? { priority: row.priority } : {}),
+          lastmod: toIsoDate(row.lastModifiedTimestamp),
           'xhtml:link': alternateLinks,
         };
       })),

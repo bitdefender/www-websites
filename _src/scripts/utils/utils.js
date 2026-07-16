@@ -705,7 +705,8 @@ export function pushTrialDownloadToDataLayer() {
     }
 
     // eslint-disable-next-line max-len
-    return getMetadata('breadcrumb-title') || getMetadata('og:title');
+    // keep breadcrumb-tittle for tracking, add a trial-id for future pages
+    return getMetadata('trial-id') || getMetadata('breadcrumb-title') || getMetadata('og:title');
   };
 
   const currentPage = page.name;
@@ -1213,3 +1214,24 @@ export const wrapChildrenWithStoreContext = (element, {
   context.appendChild(product);
   element.appendChild(context);
 };
+
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.72/';
+
+export const getDsnBase = () => {
+  try {
+    const map = document.querySelector('script[type="importmap"]');
+    const imports = JSON.parse(map?.textContent || '{}').imports || {};
+    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
+  } catch {
+    return DSN_FALLBACK;
+  }
+};
+
+export function onCookiesAccepted(callback) {
+  if (window.adobeDataLayer.getState('ucCategory.functional')) callback();
+  else {
+    window.adobeDataLayer.addEventListener('consent_status', () => {
+      if (window.adobeDataLayer.getState('ucCategory.functional')) callback();
+    });
+  }
+}

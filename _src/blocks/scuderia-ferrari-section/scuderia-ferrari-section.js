@@ -16,7 +16,7 @@ function replacePlaceholderWithVideo(block, videoUrl) {
 }
 
 export default function decorate(block) {
-  const { video } = block.closest('.section').dataset;
+  const { video, buttonImage } = block.closest('.section').dataset;
   replacePlaceholderWithVideo(block, video);
 
   const videoId = block.querySelector('iframe')?.getAttribute('id');
@@ -24,5 +24,12 @@ export default function decorate(block) {
     const url = new URL(video);
     const tracker = new YouTubeTracker(block, video, url, videoId);
     tracker.initialize();
+  }
+
+  if (buttonImage) {
+    const buttonImageEl = document.createElement('img');
+    buttonImageEl.setAttribute('src', buttonImage);
+    const lastBtn = block.querySelector('table tr');
+    lastBtn.insertAdjacentElement('afterbegin', buttonImageEl);
   }
 }
