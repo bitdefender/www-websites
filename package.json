@@ -47,9 +47,9 @@
   "dependencies": {
     "@glidejs/glide": "^3.7.1",
     "@repobit/dex-data-layer": "^2.2.2",
-    "@repobit/dex-launch": "^3.0.73",
-    "@repobit/dex-system-design": "^0.23.86",
-    "@repobit/dex-target": "^2.15.19",
+    "@repobit/dex-launch": "^3.0.75",
+    "@repobit/dex-system-design": "^0.23.88",
+    "@repobit/dex-target": "^2.15.21",
     "@repobit/dex-utils": "^2.2.2",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
