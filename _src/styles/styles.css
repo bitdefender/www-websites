@@ -464,7 +464,7 @@ main .section.light-gray-wide {
   background-color: #F6F6F6;
 }
 
-main .section.light-sky-blue > * { /* apply to all children wrapper */
+main .section.light-sky-blue > *, main .section.light-sky-blue bd-context > * { /* apply to all children wrapper */
   background-color: var(--background-color-light-sky-blue);
 }
 
@@ -513,17 +513,17 @@ main .section.wide img {
   object-fit: contain;
 }
 
-main .section.wide > :first-child {
+main .section.wide > :first-child:not(bd-context), main .section.wide bd-context > :first-child {
   border-radius: 8px 8px 0 0;
   padding-top: 56px;
 }
 
-main .section.wide > :last-child {
+main .section.wide > :last-child:not(bd-context), main .section.wide bd-context > :last-child {
   border-radius: 0 0 8px 8px;
   padding-bottom: 56px;
 }
 
-main .section.wide > :only-child {
+main .section.wide > :only-child:not(bd-context), main .section.wide bd-context > :only-child {
   border-radius: 8px;
 }
 
@@ -532,12 +532,12 @@ main .section.wide .default-content-wrapper {
   padding-bottom: 15px;
 }
 
-main .section.wide-v2 > :first-child {
+main .section.wide-v2 > :first-child:not(bd-context), main .section.wide-v2 bd-context > :first-child {
   border-radius: 8px 8px 0 0;
   padding-top: 56px;
 }
 
-main .section.wide-v2 > :last-child {
+main .section.wide-v2 > :last-child:not(bd-context), main .section.wide-v2 bd-context > :last-child {
   border-radius: 0 0 8px 8px;
   padding-bottom: 56px;
 }
@@ -781,7 +781,7 @@ main .grey-background {
     font-weight: var(--font-weight-bold);
   }
 
-  main div.section.wide > * { /* apply to all children wrapper */
+  main div.section.wide > *:not(bd-context), main div.section.wide bd-context > * { /* apply to all children wrapper */
     max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
     padding-top: 1px; /* hack to handle margin of child paragraphs */
   }

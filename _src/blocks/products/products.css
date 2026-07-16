@@ -400,8 +400,8 @@
   z-index: 2;
 }
 
-.product-card > ul li:not(.with-del)::before,
-.product-card bd-option > ul li:not(.with-del)::before {
+.product-card > div > ul li:not(.with-del)::before,
+.product-card bd-option > div > ul li:not(.with-del)::before {
   content: "";
   position: absolute;
   left: 0;
@@ -413,8 +413,8 @@
   z-index: 1;
 }
 
-.product-card > ul li:not(.with-del)::after,
-.product-card bd-option > ul li:not(.with-del)::after {
+.product-card > div > ul li:not(.with-del)::after,
+.product-card bd-option > div > ul li:not(.with-del)::after {
   content: "";
   position: absolute;
   left: 5px;
