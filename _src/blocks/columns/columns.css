@@ -1336,6 +1336,119 @@
   font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
+.columns.bordered-block {
+  background-color: #F0F7FF;
+  padding: 24px;
+  border-radius: 20px;
+
+  >div {
+    > div {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding-left: 40px;
+      padding-right: 24px;
+      text-align: left;
+      border-right: #D6E8FF 1px solid;
+
+      p {
+        margin: 0;
+      }
+
+      h3 {
+        font-size: 18px;
+        color: #006DFF;
+        margin-bottom: 12px;
+      }
+
+      .icon {
+        left: 0;
+        top: 0;
+        height: 32px;
+        width: 32px;
+        position: absolute;
+      }
+
+      &:last-of-type {
+        border-right: none;
+      }
+    }
+  }
+}
+
+.columns.benefits-cards.bordered-cards {
+  >div {
+    >div {
+      background-color: #F6F6F6;
+      padding: 24px;
+      border: #C5C9CE 1px solid;
+      border-radius: 20px;
+      text-align: left;
+
+      h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+
+      p {
+        font-size: 14px;
+        margin: 0;
+      }
+
+      .icon {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
+
+  &.v2 {
+    >div >div {
+      position: relative;
+      padding: 24px;
+      padding-left: 80px;
+      min-height: 96px;
+      border: 2px solid #006DFF;
+
+      .icon {
+        justify-self: center;
+        left: 24px;
+        height: 48px;
+        width: 48px;
+        position: absolute;
+      }
+    }
+  }
+
+  &.faded {
+    > div >div {
+      border-color: #C5C9CE;
+    }
+  }
+}
+
+.smaller-image .columns > div {
+  .columns-img-col {
+    justify-items: end;
+  }
+
+  picture {
+    justify-self: end;
+    width: fit-content;
+    display: block;
+    justify-items: center;
+  }
+
+  img {
+    height: 100%;
+    width: 50%;
+  }
+}
+
+.columns-container.faded p{
+  color: #C5C9CE
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     display: grid;
@@ -1740,28 +1853,28 @@
     width: 100%;
   }
 
-  .creators .columns-container .columns.benefits-cards.scam-protection > div {
+ .columns-container .columns.benefits-cards.scam-protection > div {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     margin-bottom: 30px;
   }
 
-  .creators .columns-container .columns.benefits-cards > div > div {
+  .columns-container .columns.benefits-cards > div > div {
     justify-items: start;
   }
 
-  .creators .columns-container .columns.benefits-cards.scam-protection > div > div h3 {
+.columns-container .columns.benefits-cards.scam-protection > div > div h3 {
     font: normal normal bold 18px/24px "IBM Plex Sans", sans-serif !important;
   }
 
-  .creators .columns-container .columns.benefits-cards.scam-protection > div > div p {
+  .columns-container .columns.benefits-cards.scam-protection > div > div p {
     font: normal normal 14px/20px "IBM Plex Sans", sans-serif !important;
   }
 
-  .creators .columns-container .columns.benefits-cards.scam-protection > div > div tr{
+  .columns-container .columns.benefits-cards.scam-protection > div > div tr{
     font: bold 12px/20px "IBM Plex Sans", sans-serif !important;
   }
 
-  .creators .columns-container .columns.benefits-cards.scam-protection > div > div .icon {
+  .columns-container .columns.benefits-cards.scam-protection > div > div .icon {
     width: 48px;
     height: 48px;
     margin-bottom: 0;

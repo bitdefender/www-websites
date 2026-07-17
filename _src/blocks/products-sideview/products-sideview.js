@@ -144,10 +144,24 @@ function renderPrice(block, _firstProduct, secondProduct) {
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
 
+  const oldPriceContainer = document.createElement('div');
+  oldPriceContainer.classList.add('prod-oldprice-container', 'await-loader');
+
   const oldPrice = document.createElement('div');
   oldPrice.classList.add('prod-oldprice', 'await-loader');
   oldPrice.setAttribute('data-store-price', 'full');
   oldPrice.setAttribute('data-store-hide', 'no-price=discounted');
+
+  const saveTag = document.createElement('div');
+  saveTag.classList.add('prod-save', 'await-loader');
+  saveTag.setAttribute('data-store-hide', 'no-price=discounted');
+  const { saveText } = block.closest('.section').dataset;
+
+  saveTag.innerHTML = `${saveText ?? ''} <span data-store-discount="percentage"></span>`;
+
+  oldPriceContainer.appendChild(oldPrice);
+  oldPriceContainer.appendChild(saveTag);
+  priceElement.appendChild(oldPriceContainer);
 
   const el = document.createElement('DIV');
   el.classList.add('price');
@@ -159,7 +173,6 @@ function renderPrice(block, _firstProduct, secondProduct) {
   block.setAttribute('data-store-event', 'main-product-loaded');
   el.setAttribute('data-store-price', 'discounted||full');
 
-  priceElement.appendChild(oldPrice);
   priceElement.appendChild(el);
   updateBuyLink(block);
   return priceElement;
