@@ -2,11 +2,14 @@ import { Store } from '@repobit/dex-store';
 import { target } from './target.js';
 import page from './page.js';
 import { getUrlPromotion, getMetadata, getCampaignBasedOnLocale } from './utils/utils.js';
+import getTrialLinkMap from './trialLinkMap.js';
 
+const trialLinkMap = await getTrialLinkMap();
 export default new Store({
   campaign: async ({ campaign }) => (await target.configMbox)?.promotion || getUrlPromotion() || campaign || getMetadata('pid') || getCampaignBasedOnLocale(),
   locale: page.locale,
   provider: { name: 'vlaicu' },
+  trialLinks: trialLinkMap,
   transformers: {
     buyLink: async (param) => {
       const products = (await target.configMbox)?.products;

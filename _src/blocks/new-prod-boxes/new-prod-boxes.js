@@ -52,7 +52,7 @@ function createPriceElement(options, card) {
   oldPriceContainer.setAttribute('data-store-hide-type', 'visibility');
 
   oldPriceContainer.innerHTML = `
-    <span class="prod-oldprice" data-store-price="${oldPriceAttr}"></span>
+    <span class="prod-oldprice" data-store-render data-store-price="${oldPriceAttr}"></span>
     <span class="prod-save">
       ${saveText ?? ''} <span data-store-render data-store-discount="percentage"></span>
     </span>
