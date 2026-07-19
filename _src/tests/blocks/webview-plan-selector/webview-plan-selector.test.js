@@ -177,6 +177,7 @@ describe('webview-plan-selector factory', () => {
 
     expect(block.parentElement.classList.contains('v2')).toBe(true);
     expect(block.classList.contains('v2')).toBe(true);
+    expect(block.classList.contains('dark-mode')).toBe(false);
     expect(block.querySelector('.webview-plan-selector-v2-title').textContent).toBe('Stay protected — choose your plan');
     expect(block.querySelectorAll('.webview-plan-selector-v2-feature-group')).toHaveLength(2);
     expect(block.querySelector('.webview-plan-selector-v2-pill').textContent).toBe('AI-powered');
@@ -189,6 +190,17 @@ describe('webview-plan-selector factory', () => {
     expect(block.querySelector('.webview-plan-selector-v2-price-period').textContent).toBe('/ 1st year');
     expect(block.querySelector('.webview-plan-selector-legal a').href).toContain('/en-us/');
     expect(block.querySelector('.webview-plan-selector-upgrade').href).toContain('feature=main_ui');
+  });
+
+  it('adds the dark-mode class to v2 when requested through the theme query parameter', async () => {
+    getMetadataMock.mockReturnValue('v2');
+    window.history.pushState({}, '', '/en-us/consumer/webview/plan-selector?theme=dark');
+    const block = setupV2PlanSelector();
+
+    await decorate(block);
+
+    expect(block.classList.contains('v2')).toBe(true);
+    expect(block.classList.contains('dark-mode')).toBe(true);
   });
 
   it('renders both authored generic toggle labels', async () => {

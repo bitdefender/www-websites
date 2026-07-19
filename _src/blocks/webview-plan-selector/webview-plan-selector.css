@@ -1,5 +1,6 @@
-.webview-plan-selector-container {
+main .section.webview-plan-selector-container {
     max-width: 770px;
+    max-height: 512px;
     margin: 0 auto;
     padding: 0;
     background: #fff;
@@ -460,6 +461,8 @@ main .webview-plan-selector.v2 {
     --v2-grey-100: #f0f2f5;
     --v2-grey-200: #e7e7e7;
     --v2-grey-500: #777;
+    --v2-badge-neutral-background: #f0f0f0;
+    --v2-badge-neutral-color: #666;
 
     width: 100%;
     max-width: 770px;
@@ -722,8 +725,8 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-plan-badge {
     margin: 0 0 5px;
     padding-inline: 7px;
     border-radius: 4px;
-    background: #f0f0f0;
-    color: #666;
+    background: var(--v2-badge-neutral-background);
+    color: var(--v2-badge-neutral-color);
     font-size: 0.625rem;
     font-weight: 700;
     line-height: 1.3;
@@ -862,6 +865,7 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-trust-item .icon {
     justify-content: center;
     width: 20px;
     height: 20px;
+    margin: 0;
 }
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-trust-item .icon svg {
@@ -919,6 +923,97 @@ main .webview-plan-selector.v2 .webview-plan-selector-legal {
 main .webview-plan-selector.v2 .webview-plan-selector-legal a {
     color: var(--v2-blue);
     text-decoration: none;
+}
+
+main .webview-plan-selector.v2.dark-mode {
+    --v2-blue: #3a8fff;
+    --v2-blue-dark: #2979ee;
+    --v2-blue-light: #162439;
+    --v2-grey-100: #1e2432;
+    --v2-grey-200: #2b3646;
+    --v2-grey-500: #6d7f9a;
+    --v2-badge-neutral-background: #2b3646;
+    --v2-badge-neutral-color: #9fb0c4;
+
+    background: #141517;
+    box-shadow: 0 4px 32px rgb(0 0 0 / 50%);
+    color: #e8ecf3;
+    color-scheme: dark;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-title,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-feature-list li,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-plan-name,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-price-promotional {
+    color: #e8ecf3;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-feature-title,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-price-period,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-trust-item {
+    color: #9fb0c4;
+}
+
+main .webview-plan-selector.v2.dark-mode .is-highlighted .webview-plan-selector-v2-feature-title {
+    color: #4ea0ff;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-toggle-input:checked + span {
+    background: #2b3646;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 30%);
+    color: #e8ecf3;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-toggle-input:focus-visible + span,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-plan-input:focus-visible + .webview-plan-selector-v2-plan-label,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-cta.button:focus-visible {
+    outline-color: #67a8ff;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-plan-option {
+    background: #111923;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-plan-option.is-selected {
+    background: var(--v2-blue-light);
+    box-shadow: none;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-radio {
+    border-color: #141517;
+    box-shadow: 0 0 0 1px #5f7289;
+}
+
+main .webview-plan-selector.v2.dark-mode .is-selected .webview-plan-selector-v2-radio {
+    border-color: #141517;
+    background: #4ea0ff;
+    box-shadow: 0 0 0 1px #4ea0ff;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-plan-option + .webview-plan-selector-v2-plan-option .webview-plan-selector-v2-plan-badge {
+    background: var(--v2-blue);
+    color: #fff;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-plan-description {
+    color: rgb(232 236 243 / 65%);
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-price-original,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-legal {
+    color: #4a5a70;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-trust-item .icon,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-trust-item .icon svg,
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-trust-item .icon svg * {
+    color: #4ea0ff;
+    fill: #4ea0ff;
+}
+
+main .webview-plan-selector.v2.dark-mode .webview-plan-selector-legal a {
+    color: #84bdff;
 }
 
 @media (width >= 600px) {
