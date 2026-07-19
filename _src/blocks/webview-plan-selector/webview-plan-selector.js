@@ -1,5 +1,5 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
-import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { decorateIcons, getMetadata } from '../../scripts/lib-franklin.js';
 
 const PRIVACY_POLICY_FALLBACK = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
 
@@ -160,7 +160,7 @@ function updateDevicePlaceholders(placeholders, products, selectedPlanIndex) {
   });
 }
 
-export default async function decorate(block) {
+async function runDefaultWebviewPlanSelectorLogic(block) {
   const rows = [...block.children];
   const section = block.closest('.section');
   const products = parseProductList(section);
@@ -388,4 +388,35 @@ export default async function decorate(block) {
   }
 
   await checkAndReplacePrivacyPolicyLink(block);
+}
+
+function runV2WebviewPlanSelectorLogic(block) {
+  // TODO
+}
+
+/**
+ * Applies the webview plan selector factory based on its page metadata variation.
+ * @param {string} planSelectorMetadata The webview plan selector variation.
+ * @param {Element} block The webview plan selector block element.
+ */
+async function applyWebviewPlanSelectorFactorySetup(planSelectorMetadata, block) {
+  switch (planSelectorMetadata) {
+    case 'v2':
+      runV2WebviewPlanSelectorLogic(block);
+      break;
+    default:
+      await runDefaultWebviewPlanSelectorLogic(block);
+      break;
+  }
+}
+
+/**
+ * Loads and decorates the webview plan selector.
+ * @param {Element} block The webview plan selector block element.
+ */
+export default async function decorate(block) {
+  const planSelectorMetadata = getMetadata('webview-plan-selector-type');
+  block.parentNode.classList.add(planSelectorMetadata || 'default');
+
+  await applyWebviewPlanSelectorFactorySetup(planSelectorMetadata, block);
 }
