@@ -1342,6 +1342,8 @@
   border-radius: 20px;
 
   >div {
+    gap: 20px;
+
     > div {
       position: relative;
       display: flex;
@@ -1372,12 +1374,19 @@
       &:last-of-type {
         border-right: none;
       }
+
+      @media (max-width: 992px) {
+        border-right: none;
+        padding-right: 0;
+      }
     }
   }
 }
 
 .columns.benefits-cards.bordered-cards {
   >div {
+    gap: 20px;
+
     >div {
       background-color: #F6F6F6;
       padding: 24px;
@@ -1409,6 +1418,7 @@
       padding-left: 80px;
       min-height: 96px;
       border: 2px solid #006DFF;
+      width: 100%;
 
       .icon {
         justify-self: center;
@@ -1428,6 +1438,9 @@
 }
 
 .smaller-image .columns > div {
+  max-width: 1000px;
+  margin: 0 auto;
+
   .columns-img-col {
     justify-items: end;
   }
@@ -1443,6 +1456,44 @@
     height: 100%;
     width: 50%;
   }
+}
+
+.blue-tab .columns{
+  > div {
+    h3 {
+      font-size: 20px;
+      margin-bottom: 0;
+      margin-top: 30px;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+    }
+
+    .columns-text-col {
+      position: relative;
+      padding-left: 20px;
+
+      &::before {
+        width: 4px;
+        height: 100px;
+        background-color: #006DFF;
+        content: '';
+        position: absolute;
+        left: 0;
+      }
+    }
+  }
+}
+
+.narrow-section .columns-wrapper {
+  max-width: 1000px;
 }
 
 .columns-container.faded p{
@@ -1853,7 +1904,7 @@
     width: 100%;
   }
 
- .columns-container .columns.benefits-cards.scam-protection > div {
+  .columns-container .columns.benefits-cards.scam-protection > div {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     margin-bottom: 30px;
   }
@@ -1862,7 +1913,7 @@
     justify-items: start;
   }
 
-.columns-container .columns.benefits-cards.scam-protection > div > div h3 {
+  .columns-container .columns.benefits-cards.scam-protection > div > div h3 {
     font: normal normal bold 18px/24px "IBM Plex Sans", sans-serif !important;
   }
 
@@ -3456,6 +3507,18 @@
 
 .columns-container.blue-heading .columns > div {
   align-items: flex-start;
+}
+
+.columns-container.blue-heading h5 {
+  color: #006DFF;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.columns-container.faded-heading h5 {
+  color: #C5C9CE;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 .columns.highlight-text.black.block > div > div:first-child {
