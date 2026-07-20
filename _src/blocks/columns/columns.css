@@ -1349,6 +1349,10 @@ main .creators-banner .signature {
   color: #000 !important;
 }
 
+.small-business .columns > div {
+  align-items: baseline;
+}
+
 .columns.bordered-block {
   background-color: #F0F7FF;
   padding: 24px;
@@ -1399,6 +1403,7 @@ main .creators-banner .signature {
 .columns.benefits-cards.bordered-cards {
   >div {
     gap: 20px;
+    align-items: baseline;
 
     >div {
       background-color: #F6F6F6;
@@ -1406,6 +1411,7 @@ main .creators-banner .signature {
       border: #C5C9CE 1px solid;
       border-radius: 20px;
       text-align: left;
+      height: stretch;
 
       h3 {
         font-size: 18px;
