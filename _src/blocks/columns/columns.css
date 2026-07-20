@@ -1336,6 +1336,10 @@
   font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
+.small-business .columns > div {
+  align-items: baseline;
+}
+
 .columns.bordered-block {
   background-color: #F0F7FF;
   padding: 24px;
@@ -1386,6 +1390,7 @@
 .columns.benefits-cards.bordered-cards {
   >div {
     gap: 20px;
+    align-items: baseline;
 
     >div {
       background-color: #F6F6F6;
@@ -1393,6 +1398,7 @@
       border: #C5C9CE 1px solid;
       border-radius: 20px;
       text-align: left;
+      height: stretch;
 
       h3 {
         font-size: 18px;
