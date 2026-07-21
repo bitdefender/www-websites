@@ -139,8 +139,11 @@ function updateBuyLink(block) {
   }
 }
 
-function renderPrice(block, _firstProduct, secondProduct) {
-  const variant = state.blockDataset.defaultSelection ?? '5-1';
+function renderPrice(block, firstProduct) {
+  const { saveText, defaultSelection } = block.closest('.section').dataset;
+  const [productName, productUsers, productYears] = [...defaultSelection.split('-')];
+  const variant = `${productUsers}-${productYears}`;
+
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
 
@@ -155,7 +158,6 @@ function renderPrice(block, _firstProduct, secondProduct) {
   const saveTag = document.createElement('div');
   saveTag.classList.add('prod-save', 'await-loader');
   saveTag.setAttribute('data-store-hide', 'no-price=discounted');
-  const { saveText } = block.closest('.section').dataset;
 
   saveTag.innerHTML = `${saveText ?? ''} <span data-store-discount="percentage"></span>`;
 
@@ -167,7 +169,8 @@ function renderPrice(block, _firstProduct, secondProduct) {
   el.classList.add('price');
   el.classList.add('await-loader');
   block.setAttribute('data-store-context', '');
-  block.setAttribute('data-store-id', secondProduct);
+  block.setAttribute('data-store-id', productName ?? firstProduct);
+  console.log('variant', variant, firstProduct);
   block.setAttribute('data-store-option', variant);
   block.setAttribute('data-store-department', 'consumer');
   block.setAttribute('data-store-event', 'main-product-loaded');
