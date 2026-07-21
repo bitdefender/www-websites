@@ -2,7 +2,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
+  matchHeights, renderNanoBlocks, addScript, wrapChildrenWithStoreContext, createTag,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -209,6 +209,7 @@ export default function decorate(block) {
     // eslint-disable-next-line max-len
     linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid, seeMoreBtn,
+    signature,
   } = parentSection.dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -506,6 +507,12 @@ export default function decorate(block) {
         });
       });
     }
+  }
+
+  if (signature && block.classList.contains('creators-banner')) {
+    const signatureElement = createTag('div', { class: 'signature' });
+    signatureElement.textContent = signature;
+    document.querySelector('div.creators-banner div div:first-child').prepend(signatureElement);
   }
 
   matchHeights(block, 'h3');

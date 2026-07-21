@@ -200,6 +200,14 @@
   padding: 0;
 }
 
+main .creators-banner .signature {
+  font-size: 24px;
+  color: #006dff;
+  font-weight: bold;
+  margin-top: 8px;
+  font-family: 'Ibm Plex Sans', sans-serif;
+}
+
 .columns.smaller-title h4 {
   font-size: 16px;
 }
