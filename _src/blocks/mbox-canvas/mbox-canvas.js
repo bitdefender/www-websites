@@ -191,8 +191,8 @@ export default async function decorate(block) {
   });
 
   const canvasStore = new Store({
-    campaign: async () => configMbox.promotion,
-    locale: configMbox.useGeoIpPricing
+    campaign: async () => configMbox?.promotion,
+    locale: configMbox?.useGeoIpPricing
       ? (await user.locale)?.toLowerCase()
       : page.locale.toLowerCase(),
     provider: { name: 'vlaicu' },
