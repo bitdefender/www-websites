@@ -245,6 +245,7 @@
 }
 
 .webview-table div[role='row'].price-row div[role='cell'] .buy-box .under-price-text {
+    text-align: center;
     font-size: 10px;
 }
 

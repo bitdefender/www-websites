@@ -151,6 +151,13 @@
     cursor: pointer;
     text-align: left;
     appearance: none;
+
+    bd-option {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 17px;
+    }
 }
 
 /* .webview-plan-selector .await-loader {
