@@ -1,5 +1,3 @@
-import { getMetadata } from './lib-franklin.js';
-
 const SUBSCRIPTION_MONTHS = 12;
 const DEFAULT_CAMPAIGN = 'default';
 
@@ -15,8 +13,8 @@ const getTrials = async () => {
 };
 
 const getLocale = () => {
-  const locale = (window.location.pathname.split('/')[1]?.split('-')[0] || '').toLowerCase();
-  return !locale || locale === 'en' ? 'COM' : locale.toUpperCase();
+  const locale = (window.location.pathname.split('/')[1]?.split('-')[1] || '').toLowerCase();
+  return !locale || locale === 'us' ? 'COM' : locale.toUpperCase();
 };
 
 let trialMapCache = null;
@@ -41,11 +39,6 @@ let trialMapCache = null;
  */
 export default async function getTrialLinkMap() {
   if (trialMapCache) return trialMapCache;
-  const trialPeriod = getMetadata('trialbuylinks');
-  if (!trialPeriod) {
-    trialMapCache = {};
-    return trialMapCache;
-  }
 
   const trials = await getTrials();
   if (!trials?.length) {
@@ -55,7 +48,7 @@ export default async function getTrialLinkMap() {
 
   const locale = getLocale();
   const map = trials.reduce((acc, {
-    product, devices, buy_link: buyLink, locale: rowLocale,
+    product, devices, buy_link: buyLink, locale: rowLocale, duration,
   }) => {
     if (!product || !devices || !buyLink) return acc;
     if (rowLocale?.toUpperCase() !== locale) return acc;
@@ -64,7 +57,8 @@ export default async function getTrialLinkMap() {
 
     acc[product] ??= {};
     acc[product][DEFAULT_CAMPAIGN] ??= {};
-    acc[product][DEFAULT_CAMPAIGN][variantKey] ??= buyLink;
+    acc[product][DEFAULT_CAMPAIGN][variantKey] ??= {};
+    acc[product][DEFAULT_CAMPAIGN][variantKey][duration] ??= buyLink;
 
     return acc;
   }, {});

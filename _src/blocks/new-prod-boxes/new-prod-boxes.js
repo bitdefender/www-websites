@@ -35,6 +35,7 @@ function createPriceElement(options, card) {
     billedText,
     type,
     perPrice,
+    trialDuration,
   } = options;
 
   const priceAttribute = getDiscountedPriceAttribute(type, prodName);
@@ -116,7 +117,11 @@ function createPriceElement(options, card) {
     buyLink.href = '#';
     buyLink.className = 'button primary no-arrow';
     buyLink.setAttribute('data-store-render', '');
-    buyLink.setAttribute('data-store-buy-link', '');
+    if (trialDuration) {
+      buyLink.setAttribute('data-store-trial-link', trialDuration);
+    } else {
+      buyLink.setAttribute('data-store-buy-link', '');
+    }
     buyLink.textContent = buyLinkSelector.innerText;
     container.appendChild(buyLink);
   }
@@ -864,6 +869,7 @@ export default async function decorate(block) {
     thirdRadioButtonProducts,
     saveText,
     addonProductName,
+    trialDuration,
   } = section.dataset;
 
   section.classList.add('we-container');
@@ -901,6 +907,9 @@ export default async function decorate(block) {
 
   // Determine store event type
   const storeEvent = checkIfNotProductPage() ? 'product-loaded' : 'main-product-loaded';
+
+  // Set Trial Durations
+  const trialDurations = trialDuration.split(',').map((trial) => trial.trim());
 
   // Process each product card
   if (combinedProducts.length) {
@@ -1044,6 +1053,7 @@ export default async function decorate(block) {
           billedText,
           type,
           perPrice,
+          trialDuration: Number(productInfo.years) === 1 ? trialDurations[key] : null,
         }, block.children[key]);
         block.children[key].querySelector('.hero-aem__prices')?.appendChild(priceBox);
 
@@ -1057,6 +1067,7 @@ export default async function decorate(block) {
             billedText: billed2,
             type,
             perPrice,
+            trialDuration: Number(productInfo.years) === 1 ? trialDurations[key] : null,
           }, block.children[key]);
           block.children[key].querySelector('.hero-aem__prices__addon')?.appendChild(addOnPriceBox);
         }
