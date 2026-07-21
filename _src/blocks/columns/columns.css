@@ -1404,6 +1404,7 @@ main .creators-banner .signature {
   >div {
     gap: 20px;
     align-items: baseline;
+    margin-bottom: 20px;
 
     >div {
       background-color: #F6F6F6;
@@ -1461,19 +1462,16 @@ main .creators-banner .signature {
   margin: 0 auto;
 
   .columns-img-col {
-    justify-items: end;
+    width: 100%;
+    height: stretch;
   }
 
   picture {
-    justify-self: end;
+    justify-self: center;
+    align-self: center;
     width: fit-content;
     display: block;
     justify-items: center;
-  }
-
-  img {
-    height: 100%;
-    width: 50%;
   }
 }
 
@@ -1483,6 +1481,10 @@ main .creators-banner .signature {
       font-size: 20px;
       margin-bottom: 0;
       margin-top: 30px;
+
+      &:first-of-type {
+        margin-top: 15px;
+      }
     }
 
     p {
