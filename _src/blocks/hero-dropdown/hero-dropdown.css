@@ -40,7 +40,7 @@ main .bfoffer .hero-dropdown .hero-dropdown-content p:last-of-type picture img {
 }
 
 main .hero-dropdown .hero-dropdown-content .signature {
-  font-size: 24px;
+  font-size: 16px;
   color: #006dff;
   font-weight: bold;
   margin-top: 8px;
@@ -846,7 +846,11 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 
   main .hero-dropdown-container .buttons{
     display: inline;
-  }  
+  } 
+
+  main .hero-dropdown .hero-dropdown-content .signature {
+    font-size: 24px;
+  }
 }
 
 @media (min-width: 990px) {

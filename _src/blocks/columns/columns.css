@@ -201,7 +201,7 @@
 }
 
 main .creators-banner .signature {
-  font-size: 24px;
+  font-size: 20px;
   color: #006dff;
   font-weight: bold;
   margin-top: 8px;
@@ -1577,6 +1577,10 @@ main .creators-banner .signature {
 
   .columns-container .block.sidebar > div > div:last-of-type h1 {
     display: none;
+  }
+
+  main .creators-banner .signature {
+    font-size: 24px;
   }
 }
 

@@ -37,16 +37,10 @@ main .bfoffer .hero .hero-content p:last-of-type picture img {
 }
 
 main .hero .hero-content .signature {
-  font-size: 24px;
+  font-size: 16px;
   color: #006dff;
   font-weight: bold;
   margin-top: 8px;
-}
-
-@media (min-width: 480px) {
-  main .hero .hero-content .signature {
-    margin-bottom: 12px;
-  }
 }
 
 /* hero */
@@ -774,6 +768,11 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 @media(min-width: 767px) { /* tablet */
   main .hero.ferrari{
     min-height: 768px;
+  }
+
+  main .hero .hero-content .signature {
+    font-size: 24px;
+    margin-bottom: 12px;
   }
 
   main .hero.ferrari .hero-picture picture img{
