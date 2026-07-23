@@ -874,6 +874,12 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-trust-item .icon {
 main .webview-plan-selector.v2 .webview-plan-selector-v2-trust-item .icon svg {
     max-width: 20px;
     max-height: 20px;
+    
+}
+
+main .webview-plan-selector.v2 .webview-plan-selector-v2-trust-item .icon svg * {
+    color: #4ea0ff;
+    fill: #4ea0ff;
 }
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-cta.button {
@@ -1027,13 +1033,6 @@ main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-plan-descript
 main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-price-original,
 main .webview-plan-selector.v2.dark-mode .webview-plan-selector-legal {
     color: #4a5a70;
-}
-
-main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-trust-item .icon,
-main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-trust-item .icon svg,
-main .webview-plan-selector.v2.dark-mode .webview-plan-selector-v2-trust-item .icon svg * {
-    color: #4ea0ff;
-    fill: #4ea0ff;
 }
 
 main .webview-plan-selector.v2.dark-mode .webview-plan-selector-legal a {

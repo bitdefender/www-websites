@@ -496,6 +496,10 @@ async function runV2WebviewPlanSelectorLogic(block) {
   const firstToggleLabel = section?.dataset?.firstToggleLabel || '';
   const secondToggleLabel = section?.dataset?.secondToggleLabel || '';
   const pricePeriod = section?.dataset?.pricePeriod || '';
+  const planCtaTexts = [
+    section?.dataset?.firstPlanButtonText,
+    section?.dataset?.secondPlanButtonText,
+  ];
 
   const plans = planCells.map((cell, index) => {
     const title = cell.querySelector('h2, h3');
@@ -710,7 +714,7 @@ async function runV2WebviewPlanSelectorLogic(block) {
       return;
     }
 
-    cta.textContent = buyLink.textContent;
+    cta.textContent = planCtaTexts[selectedPlanIndex] || buyLink.textContent;
     cta.href = getWebviewUpgradeHref(buyLink.getAttribute('href'));
     STORE_LINK_ATTRIBUTES.forEach((attribute) => {
       const value = buyLink.getAttribute(attribute);
