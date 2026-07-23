@@ -1099,14 +1099,15 @@
 .creators .columns-container .columns.benefits-cards > div > div tr {
   display: flex;
   gap: 12px;
-  align-items: center;
   margin-bottom: 12px;
+  align-items: baseline;
 
   td:last-of-type {
     background-color: #006DFF;
     border-radius: 20px;
     color: #fff;
     padding: 4px 8px;
+    text-align: center;
   }
 }
 
