@@ -1195,7 +1195,7 @@ main .creators-banner .signature {
 .creators .columns-container .columns.benefits-cards > div > div tr {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: baseline;
   margin-bottom: 12px;
 
   td:last-of-type {
@@ -1203,6 +1203,7 @@ main .creators-banner .signature {
     border-radius: 20px;
     color: #fff;
     padding: 4px 8px;
+    text-align: center;
   }
 }
 
