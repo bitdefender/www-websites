@@ -117,11 +117,7 @@ function createPriceElement(options, card) {
     buyLink.href = '#';
     buyLink.className = 'button primary no-arrow';
     buyLink.setAttribute('data-store-render', '');
-    if (trialDuration) {
-      buyLink.setAttribute('data-store-trial-link', trialDuration);
-    } else {
-      buyLink.setAttribute('data-store-buy-link', '');
-    }
+    buyLink.setAttribute('data-store-buy-link', trialDuration || '');
     buyLink.textContent = buyLinkSelector.innerText;
     container.appendChild(buyLink);
   }
@@ -1053,7 +1049,7 @@ export default async function decorate(block) {
           billedText,
           type,
           perPrice,
-          trialDuration: Number(productInfo.years) === 1 ? trialDurations[key] : null,
+          trialDuration: trialDurations[key],
         }, block.children[key]);
         block.children[key].querySelector('.hero-aem__prices')?.appendChild(priceBox);
 
@@ -1067,7 +1063,7 @@ export default async function decorate(block) {
             billedText: billed2,
             type,
             perPrice,
-            trialDuration: Number(productInfo.years) === 1 ? trialDurations[key] : null,
+            trialDuration: trialDurations[key],
           }, block.children[key]);
           block.children[key].querySelector('.hero-aem__prices__addon')?.appendChild(addOnPriceBox);
         }
