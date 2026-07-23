@@ -544,12 +544,14 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-feature-list {
 main .webview-plan-selector.v2 .webview-plan-selector-v2-feature-list li {
     position: relative;
     margin: 0;
-    padding-inline-start: 22px;
+    padding-inline-start: 20px;
     color: #000;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.42;
     overflow-wrap: anywhere;
+    display: inline-flex;
+    gap: 4px;
 }
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-feature-list li::before {
@@ -809,6 +811,7 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-price-discount {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 1px;
     min-width: 38px;
     min-height: 18px;
     margin-block-start: 3px;
@@ -906,7 +909,22 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-cta.button:focus-visibl
 }
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-cta.button::after {
-    content: none;
+    display: inline-block;
+    min-width: 24px;
+    min-height: 24px;
+    margin-left: 8px;
+    content: "";
+    background-color: currentcolor;
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-mask: url("/_src/icons/arrow-right.svg") no-repeat center;
+    mask: url("/_src/icons/arrow-right.svg") no-repeat center;
+    opacity: 1;
+    transform: translateX(0);
+    transition: transform 0.2s ease;
+}
+
+main .webview-plan-selector.v2 .webview-plan-selector-v2-cta.button:hover::after {
+    transform: translateX(2px);
 }
 
 main .webview-plan-selector.v2 .webview-plan-selector-legal {
@@ -923,6 +941,12 @@ main .webview-plan-selector.v2 .webview-plan-selector-legal {
 main .webview-plan-selector.v2 .webview-plan-selector-legal a {
     color: var(--v2-blue);
     text-decoration: none;
+}
+
+main .webview-plan-selector.v2 .tag-blue-pill {
+    font-size: 9px;
+    margin: 0;
+    padding: 3px 6px;
 }
 
 main .webview-plan-selector.v2.dark-mode {

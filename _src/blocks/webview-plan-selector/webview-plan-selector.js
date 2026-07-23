@@ -419,6 +419,7 @@ function decorateAuthoredPills(element) {
 }
 
 function createV2StoreContext({
+  section,
   product,
   planIndex,
   toggleIndex,
@@ -453,10 +454,13 @@ function createV2StoreContext({
   period.className = 'webview-plan-selector-v2-price-period';
   period.textContent = pricePeriod;
 
+  const discountLabelText = document.createElement('span');
+  discountLabelText.className = 'webview-plan-selector-v2-price-discount await-loader';
+  discountLabelText.textContent = section?.dataset?.discountLabelText || '';
   const discount = document.createElement('span');
-  discount.className = 'webview-plan-selector-v2-price-discount await-loader';
   discount.setAttribute('data-store-discount', 'percentage');
   discount.setAttribute('data-store-hide', 'no-price=discounted');
+  discountLabelText.append(discount);
 
   const buyLink = document.createElement('a');
   buyLink.className = 'webview-plan-selector-v2-store-buy-link';
@@ -466,7 +470,7 @@ function createV2StoreContext({
   buyLink.setAttribute('aria-hidden', 'true');
   buyLink.setAttribute('tabindex', '-1');
 
-  context.append(originalPrice, promotionalPrice, period, discount, buyLink);
+  context.append(originalPrice, promotionalPrice, period, discountLabelText, buyLink);
   return context;
 }
 
@@ -651,6 +655,7 @@ async function runV2WebviewPlanSelectorLogic(block) {
     priceStack.className = 'webview-plan-selector-v2-price-stack';
     productLists.forEach((productList, toggleIndex) => {
       const context = createV2StoreContext({
+        section,
         product: productList[plan.index],
         planIndex: plan.index,
         toggleIndex,
