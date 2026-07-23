@@ -853,6 +853,10 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
   h1 {
     color: #000;
   }
+
+  a.button.modal {
+    padding: 10px 26px 8px 30px;
+  }
 }
 
 @media(min-width: 767px) { /* tablet */

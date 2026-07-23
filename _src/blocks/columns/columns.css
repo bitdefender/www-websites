@@ -1440,6 +1440,10 @@
   &.faded {
     > div >div {
       border-color: #C5C9CE;
+
+      svg path {
+        fill: #C5C9CE;
+      }
     }
   }
 }
