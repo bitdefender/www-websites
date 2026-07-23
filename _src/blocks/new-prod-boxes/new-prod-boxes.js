@@ -905,7 +905,7 @@ export default async function decorate(block) {
   const storeEvent = checkIfNotProductPage() ? 'product-loaded' : 'main-product-loaded';
 
   // Set Trial Durations
-  const trialDurations = trialDuration.split(',').map((trial) => trial.trim());
+  const trialDurations = trialDuration?.split(',')?.map((trial) => trial.trim()) || [];
 
   // Process each product card
   if (combinedProducts.length) {
