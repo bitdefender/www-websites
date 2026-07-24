@@ -1,13 +1,12 @@
 import { resolve as buyLink } from "./buyLink.js";
 import { resolve as devices } from "./devices.js";
-import { resolve as discount} from "./discount.js";
+import { resolve as discount } from "./discount.js";
 import { resolve as hide } from "./hide.js";
-import { resolve as price} from "./price.js";
-import { resolve as subscription} from "./subscription.js";
-import { resolve as textVariable} from "./textVariable.js";
-import { resolve as addClass} from "./addClass.js";
-import { resolve as trialLink} from "./trialLink.js";
-
+import { resolve as price } from "./price.js";
+import { resolve as subscription } from "./subscription.js";
+import { resolve as textVariable } from "./textVariable.js";
+import { resolve as addClass } from "./addClass.js";
+import { resolve as trialLink } from "./trialLink.js";
 
 export const staticAttributesResolvers = [
     hide,
@@ -30,6 +29,6 @@ export const staticAttributes = {
     storeSubscription: "[data-store-subscription]",
     storeTextVariable: "[data-store-text-variable]",
     storeAddClass: "[data-store-add-class]",
-    storeTrial: "[data-store-trial-link]"
+    storeTrialLink: "[data-store-trial-link]"
 };
 
