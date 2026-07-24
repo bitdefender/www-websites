@@ -25,9 +25,6 @@ indices:
         # 2. if the h1 is in the default content, than there are no other blocks before this default content => main > div > h1
         select: main > div:first-child > div:first-child h1, main div > h1
         value: textContent(el)
-      breadcrumbtitle:
-        select: head > meta[name="breadcrumb-title"]
-        value: attribute(el, "content")  
       blocks:
         select: main > div > div:not(.section-metadata)
         values: attribute(el, "className")
@@ -44,6 +41,9 @@ indices:
       lastModified:
         select: none
         value: headers["last-modified"]
+      priority:
+        select: head > meta[name="priority"]
+        value: attribute(el, "content")
   index_de_de:
     include:
       - /de-de/**

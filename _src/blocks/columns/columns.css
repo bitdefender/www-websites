@@ -30,6 +30,122 @@
   font-size: var(--body-font-size-s) !important;
 }
 
+.columns-container.uninstall-tools-list {
+  margin: 0 0 4em;
+  padding: 0;
+}
+
+.columns-container.uninstall-tools-list h1, .columns-container.uninstall-tools-list h2 {
+  color: #3a3a3a;
+  font-size: 24px;
+  line-height: 52px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0 25px;
+  background-color: white;
+  z-index: 1;
+}
+
+.columns-container.uninstall-tools-list h4 u {
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.columns-container.uninstall-tools-list img {
+  width: auto;
+  height: 240px;
+}
+
+.columns-container.uninstall-tools-list .default-content-wrapper {
+  position: relative;
+  margin-bottom: 3em!important;
+}
+
+.columns-container.uninstall-tools-list .default-content-wrapper::after {
+  content: '';
+  height: 1px;
+  background-color: #eee;
+  width: 100%;
+  margin-top: -26px;
+}
+
+.columns-container.uninstall-tools .columns > div {
+  align-items: flex-start;
+  flex-direction: unset;
+  gap: 32px;
+}
+
+.columns-container.uninstall-tools .columns > div > div {
+  flex: 1;
+}
+
+.columns-container.uninstall-tools h1 {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0 0 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.columns-container.uninstall-tools .default-content-wrapper p {
+  margin-top: 40px;
+}
+
+.columns-container.uninstall-tools h5 {
+  background: #eee;
+  padding: .5em;
+  text-align: center;
+}
+
+.columns-container.uninstall-tools h5 a {
+  display: block;
+  padding: 0;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.columns-container.uninstall-tools h5 a:hover {
+  text-decoration: none;
+  transition: all 0.3s ease;
+  color: #e80000;
+}
+
+.columns-container.uninstall-tools table {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.columns-container.uninstall-tools table tr {
+  display: flex;
+  gap: 12px;
+}
+
+.columns-container.uninstall-tools table tr td {
+  flex: 1;
+}
+
+.columns-container.uninstall-tools table tr td a {
+  background: #eee;
+  text-align: center;
+  flex: 1;
+  padding: .75em;
+  display: block;
+  color: #5b5b5b;
+  font-weight: 400;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.columns-container.uninstall-tools table tr td a:hover {
+  background: #dcdcdc;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  color: #e80000;
+}
+
 .columns-container.linear-gradient h3 {
   font-size: var(--heading-font-size-xl);
   margin-bottom: 1em;
@@ -82,6 +198,14 @@
   height: 23px;
   width: auto;
   padding: 0;
+}
+
+main .creators-banner .signature {
+  font-size: 20px;
+  color: #006dff;
+  font-weight: bold;
+  margin-top: 8px;
+  font-family: 'Ibm Plex Sans', sans-serif;
 }
 
 .columns.smaller-title h4 {
@@ -602,7 +726,7 @@
   display: block;
 }
 
-.creators .columns-container a.button, .creators .columns-container a.button:any-link, .creators a.button:any-link {
+.creators .columns-container a.button, .creators .columns-container a.button:any-link, .creators a.button {
   height: auto;
   background: #E72325 0% 0% no-repeat padding-box;
   border-radius: 30px;
@@ -613,11 +737,11 @@
   color: white;
 }
 
-.creators a.button:any-link:hover {
+.creators a.button:hover, .creators .columns-container a.button:hover {
   color: white;
 }
 
-.creators a.button:any-link::after, .creators a.button:any-link:hover::after {
+.creators a.button::after, .creators a.button:hover::after, .creators .columns-container a.button::after, .creators .columns-container a.button:hover::after {
   color: white;
   background-color: white;
 }
@@ -1028,51 +1152,23 @@
   background: linear-gradient(to bottom, #e4f2ff, white);
 }
 
-.creators .columns-container .columns.creators-banner .breadcrumb {
-  font-weight: var(--font-weight-bold);
-  color: #000;
-  min-height: unset;
-  padding: 12px 0;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
+
+
+.creators .real-check .creators-banner p.button-container {
+  a {
+    background-color: #eb0000;
+    color: #fff;
+
+    &:hover {
+      background-color: #d80000;
+    }
+  }
 }
 
-.creators .columns-container .columns.creators-banner .breadcrumb a {
-  font-size: 12px;
-  font-weight: var(--font-weight-bold);
-  color: var(--breadcrumb-text-color-dark-hover);
-  text-decoration: none;
-  line-height: 1.7;
-  letter-spacing: .96px;
-  border: none;
-  background: transparent;
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  padding: 0;
-  text-align: left;
-  min-width: unset;
-}
-
-.creators .columns-container .columns.creators-banner .breadcrumb a:last-child {
-  padding: 0;
-  margin: 0;
-  pointer-events: none;
-  display: inline-block;
-}
-
-.creators .columns-container .columns.creators-banner .breadcrumb a::after {
-  content: "/";
-  display: inline-block;
-  color: #000;
-  margin: 0 3px;
-  font-size: 9pt;
-}
-
-.creators .columns-container .columns.creators-banner .breadcrumb a:hover {
-  color: var(--text-color);
+.creators .real-check .creators-banner .columns-img-col picture img {
+  max-width: 450px;
+  aspect-ratio: 1/1;
+  float: right;
 }
 
 .creators .columns-container .columns.creators-banner > div .columns-img-col {
@@ -1081,6 +1177,34 @@
 
 .creators .columns-container .columns.creators-banner > div .columns-img-col img{
   display: none;
+}
+
+.creators .columns-container .columns.benefits-cards.narrow-grid > div > div {
+  justify-items: center;
+}
+
+.creators .columns-container .columns.benefits-cards > div > div {
+  justify-items: center;
+}
+
+.creators .columns-container .columns.benefits-cards > div > div h1 {
+  font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+  color: #006DFF;
+}
+
+.creators .columns-container .columns.benefits-cards > div > div tr {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 12px;
+
+  td:last-of-type {
+    background-color: #006DFF;
+    border-radius: 20px;
+    color: #fff;
+    padding: 4px 8px;
+    text-align: center;
+  }
 }
 
 .columns-container.secondary-button-blue  .columns .button.secondary {
@@ -1205,6 +1329,20 @@
 
 .intersected-cards .columns.benefits > div hr {
   margin: 8px 0;
+}
+
+.creators .columns-container.header-mobile .default-content-wrapper h3 {
+  color:#006DFF;
+  font: normal normal bold 24px/26px "IBM Plex Sans", sans-serif !important;
+  margin-top: 40px;
+}
+
+.creators .columns-container.scam-protection div p {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+}
+
+.creators .columns-container.scam-protection div h2 {
+  font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
 @media (min-width: 991px) {
@@ -1441,6 +1579,10 @@
   .columns-container .block.sidebar > div > div:last-of-type h1 {
     display: none;
   }
+
+  main .creators-banner .signature {
+    font-size: 24px;
+  }
 }
 
 @media (min-width: 992px) { /* desktop */
@@ -1603,21 +1745,76 @@
     width: 100%;
   }
 
-  .creators .columns-container .columns.benefits-cards > div{
+  .creators .columns-container .columns.benefits-cards > div {
     display: grid;
     gap: 30px;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-auto-flow: column;
     width: 100%;
   }
 
-  .columns-wrapper:has(.benefits-cards){
-    max-width: 1420px;
+  .creators .columns-container .columns.benefits-cards.scam-protection > div {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    margin-bottom: 30px;
+  }
+
+  .creators .columns-container .columns.benefits-cards > div > div {
+    justify-items: start;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div h3 {
+    font: normal normal bold 18px/24px "IBM Plex Sans", sans-serif !important;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div p {
+    font: normal normal 14px/20px "IBM Plex Sans", sans-serif !important;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div tr{
+    font: bold 12px/20px "IBM Plex Sans", sans-serif !important;
+  }
+
+  .creators .columns-container .columns.benefits-cards.scam-protection > div > div .icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0;
+  }
+
+  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div {
+    background-color: #F0F7FF;
+  }
+
+  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div h3 {
+    font: normal normal bold 30px / 36px "IBM Plex Sans", sans-serif !important;
+    margin-bottom: 20px;
+  }
+
+  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div table h3 {
+    font-size: 18px !important;
+    margin-bottom: 0;
+  }
+
+  .creators .columns-container .columns.benefits-cards.narrow-grid > div {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 422px)); 
+  }
+
+  .creators .columns-container .columns.benefits-cards.narrow-grid > div > div {
+    justify-items: start;
+  }
+
+  .creators .columns-container.scam-protection .columns div p {
+    font-size: 18px !important;
   }
 
   .creators .columns-container .columns > div > div.columns-img-col {
     width: 50%;
     flex: none;
+  }
+
+  .creators .columns-container.scam-protection .columns:not(.creators-banner) > div > div.columns-img-col img{
+    max-width: 450px;
+    aspect-ratio: 1/1;
+    justify-self: center;
   }
 
   .creators .columns-container h5 {
@@ -4061,33 +4258,61 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     padding-left: 0;
   }
 
-  @media (min-width: 768px) {
-    .modal-container.get-bitdefender-familypack .columns.block.columns-2-cols > div {
-      display: flex;
-      flex: 1;
-      flex-direction: row;
-      order: unset;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .section.migration.table-align-top tr {
-      flex-direction: unset;
-    }
+  .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
+    height: 15em;
   }
 
-  @media (max-width: 768px) {
-    .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
-      height: 15em;
-    }
+  .columns-container.uninstall-tools .default-content-wrapper p {
+    margin-top: 10px;
+    padding-bottom: 0;
   }
 
-  @media (max-width: 550px) {
-    .columns-tabs .block {
-      grid-template-columns: repeat(1, 1fr);
-    }
+  .columns-container.uninstall-tools .columns > div > div {
+    width: 100%;
+  }
 
-    .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
-      height: 10em;
-    }
-  }}
+  .columns-container.uninstall-tools-list  .columns > div {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .columns-container.uninstall-tools-list img {
+    width: auto;
+    height: 100px;
+  }
+
+  .columns-container.uninstall-tools-list a.button:any-link {
+    padding: 6px 2px 6px 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-container.get-bitdefender-familypack .columns.block.columns-2-cols > div {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    order: unset;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .section.migration.table-align-top tr {
+    flex-direction: unset;
+  }
+}
+
+@media (max-width: 550px) {
+  .columns-tabs .block {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .columns-container.video-left iframe, .columns-container.video-left .yt-preview { 
+    height: 10em;
+  }
+
+  .columns-container.uninstall-tools .columns > div {
+    flex-direction: column;
+    gap: 0;
+  }
+}
