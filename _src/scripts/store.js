@@ -26,5 +26,28 @@ export default new Store({
 
       return buyLinkURL.href;
     },
+    trialLink: async (param) => {
+      const {
+        buyLink, option, trialLink,
+      } = param;
+
+      if (!trialLink) {
+        return undefined;
+      }
+
+      const optionBuyLink = new URL(buyLink);
+      const pageCoupon = page.getParamValue('coupon') || getMetadata('coupon');
+      const coupon = pageCoupon || option.coupon;
+      const matchBuyLinkURL = new URL(trialLink);
+      optionBuyLink.searchParams.forEach((value, key) => {
+        if (['LANG', 'CURRENCY', 'DCURRENCY', 'COUPON'].includes(key)) {
+          matchBuyLinkURL.searchParams.set(key, value);
+        }
+      });
+      matchBuyLinkURL.searchParams.set('SRC', window.location.origin + window.location.pathname);
+      if (coupon) matchBuyLinkURL.searchParams.set('COUPON', coupon);
+
+      return matchBuyLinkURL.href;
+    },
   },
 });
