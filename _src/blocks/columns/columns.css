@@ -200,6 +200,14 @@
   padding: 0;
 }
 
+main .creators-banner .signature {
+  font-size: 20px;
+  color: #006dff;
+  font-weight: bold;
+  margin-top: 8px;
+  font-family: 'Ibm Plex Sans', sans-serif;
+}
+
 .columns.smaller-title h4 {
   font-size: 16px;
 }
@@ -1144,6 +1152,25 @@
   background: linear-gradient(to bottom, #e4f2ff, white);
 }
 
+
+
+.creators .real-check .creators-banner p.button-container {
+  a {
+    background-color: #eb0000;
+    color: #fff;
+
+    &:hover {
+      background-color: #d80000;
+    }
+  }
+}
+
+.creators .real-check .creators-banner .columns-img-col picture img {
+  max-width: 450px;
+  aspect-ratio: 1/1;
+  float: right;
+}
+
 .creators .columns-container .columns.creators-banner > div .columns-img-col {
   margin-bottom: 0;
 }
@@ -1168,7 +1195,7 @@
 .creators .columns-container .columns.benefits-cards > div > div tr {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: baseline;
   margin-bottom: 12px;
 
   td:last-of-type {
@@ -1176,6 +1203,7 @@
     border-radius: 20px;
     color: #fff;
     padding: 4px 8px;
+    text-align: center;
   }
 }
 
@@ -1307,6 +1335,14 @@
   color:#006DFF;
   font: normal normal bold 24px/26px "IBM Plex Sans", sans-serif !important;
   margin-top: 40px;
+}
+
+.creators .columns-container.scam-protection div p {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+}
+
+.creators .columns-container.scam-protection div h2 {
+  font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
 @media (min-width: 991px) {
@@ -1542,6 +1578,10 @@
 
   .columns-container .block.sidebar > div > div:last-of-type h1 {
     display: none;
+  }
+
+  main .creators-banner .signature {
+    font-size: 24px;
   }
 }
 
