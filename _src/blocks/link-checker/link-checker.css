@@ -229,6 +229,13 @@ main .section.link-checker-container {
             cursor: pointer;
         }
 
+        .signature {
+            font-size: 16px;
+            color: #006dff;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
         .buttons-container {
             justify-content: center;
             margin-top: 40px;
@@ -456,6 +463,11 @@ main .section.link-checker-container {
 
             .privacy-policy {
                 font-size: 14px;
+            }
+
+            .signature {
+                font-size: 22px;
+                margin-top: 20px;
             }
         }
     }
