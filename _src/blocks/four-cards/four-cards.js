@@ -29,11 +29,13 @@ const getIconElement = (col) => {
 };
 
 const buildCardItem = (row) => {
-  const heading = row.querySelector('h4, h3, h2, h1');
-  const title = heading?.textContent?.trim() || '';
+  const headings = [...row.querySelectorAll('h4, h3, h2, h1')];
+  const title = headings.map((h) => h.textContent.trim()).filter(Boolean).join(' ');
+  const titleHtml = headings.map((h) => h.innerHTML.trim()).filter(Boolean).join('<br>');
 
   const item = document.createElement('bd-card-item');
   item.setAttribute('title', title);
+  if (titleHtml !== title) item.dataset.titleHtml = titleHtml;
 
   const iconEl = getIconElement(row);
   if (iconEl) item.appendChild(iconEl);
@@ -110,12 +112,21 @@ export default async function decorate(block) {
 
   cardRows.forEach((row) => {
     const item = buildCardItem(row);
-    if (isCentered) item.setAttribute('align', 'center');
+    if (isCentered) {
+      item.setAttribute('align', 'center');
+      item.querySelector('bd-button[slot="cta"]')?.setAttribute('align', 'center');
+    }
     if (isBlue) item.setAttribute('bg-blue', '');
     cardSection.appendChild(item);
   });
 
   block.replaceChildren(cardSection);
+
+  // Patch bd-h titles with raw HTML (preserves <br> from authored content)
+  block.querySelectorAll('bd-card-item[data-title-html]').forEach((cardItem) => {
+    const bdH = cardItem.shadowRoot?.querySelector('bd-h');
+    if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
+  });
 
   // DS components call preventDefault on non-hash links — handle navigation manually.
   cardSection.addEventListener('click', (e) => {
