@@ -317,6 +317,12 @@ main .section.phone-number-checker-container {
             display: flex;
         }
 
+        .signature {
+            font-size: 16px;
+            color: #006dff;
+            font-weight: bold;
+        }
+
         #paste-from-clipboard {
             width: 12px;
             height: 16px;
@@ -572,7 +578,7 @@ main .section.phone-number-checker-container {
                 font-size: 14px;
                 margin-top: 30px;
                 p:first-of-type {
-                    margin-bottom: 40px;
+                    margin-bottom: 14px;
                 }
             }
 
@@ -585,6 +591,10 @@ main .section.phone-number-checker-container {
     @media (min-width: 991px) {
         .phone-number-checker {
             padding: 48px 160px 35px;
+
+            .signature {
+                font-size: 22px;
+            }
         }
     }
 }

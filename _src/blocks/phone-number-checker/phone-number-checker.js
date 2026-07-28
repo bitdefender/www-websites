@@ -603,10 +603,17 @@ function displayStoredResult(block, statusMessages, statusTitles, statusSubtitle
 
 export default async function decorate(block) {
   await initValidatorLibrary();
-  const { checkButtonText, placeholder } = block.closest('.section').dataset;
+  const { checkButtonText, placeholder, signature } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(4)');
   privacyPolicyDiv.classList.add('privacy-policy');
+
+  if (signature) {
+    const signatureElement = document.createElement('div');
+    signatureElement.classList.add('signature');
+    signatureElement.textContent = signature;
+    privacyPolicyDiv.after(signatureElement);
+  }
 
   const statusMessages = createStatusMessages(block);
   const statusTitles = createStatusTitles(block);
