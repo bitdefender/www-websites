@@ -244,7 +244,6 @@ export default function decorate(block) {
       productId: alias,
       devices,
       subscription,
-      ignoreEventsParent: true,
       storeEvent: 'all',
     });
     block.querySelector('div').classList.add('await-loader');

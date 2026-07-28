@@ -1,8 +1,10 @@
 import {
   createNanoBlock,
+  createBdContext,
+  createBdProduct,
+  createBdOption,
   getDatasetFromSection,
   renderNanoBlocks,
-  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 const state = {
@@ -160,13 +162,6 @@ function renderPrice(block, _firstProduct, secondProduct) {
   const el = document.createElement('DIV');
   el.classList.add('price');
   el.classList.add('await-loader');
-  wrapChildrenWithStoreContext(block, {
-    productId: defaultProduct,
-    devices,
-    subscription,
-    ignoreEventsParent: true,
-    storeEvent: 'info',
-  });
 
   el.setAttribute('data-store-price', 'discounted||full');
   el.setAttribute('data-store-render', '');
@@ -174,7 +169,25 @@ function renderPrice(block, _firstProduct, secondProduct) {
   priceElement.appendChild(oldPrice);
   priceElement.appendChild(el);
   updateBuyLink(block);
-  return priceElement;
+
+  const option = createBdOption({ devices, subscription, storeEvent: 'info' });
+  option.appendChild(priceElement);
+
+  const buttonContainer = block.querySelector('.button-container');
+  if (buttonContainer) option.appendChild(buttonContainer);
+
+  if (!block.firstElementChild?.matches('bd-context')) {
+    const product = createBdProduct(defaultProduct);
+    while (block.firstChild) {
+      product.appendChild(block.firstChild);
+    }
+    product.appendChild(option);
+    const context = createBdContext();
+    context.appendChild(product);
+    block.appendChild(context);
+  }
+
+  return option;
 }
 
 function renderRadioGroup(block, monthlyLabel, yearlyLabel) {

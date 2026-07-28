@@ -224,7 +224,6 @@ export default async function decorate(block, options) {
       productId: prodName,
       devices: prodUsers,
       subscription: prodYears,
-      ignoreEventsParent: true,
       storeEvent: 'info',
     });
   }

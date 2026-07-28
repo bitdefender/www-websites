@@ -190,7 +190,6 @@ function renderPrices(block, metadata) {
           productId: prodName,
           devices: prodUsers,
           subscription: prodYears,
-          ignoreEventsParent: true,
           storeEvent: 'all',
         });
 
@@ -215,7 +214,6 @@ function renderPrices(block, metadata) {
           productId: prodName,
           devices: prodUsers,
           subscription: prodYears,
-          ignoreEventsParent: true,
           storeEvent: 'all',
         });
 

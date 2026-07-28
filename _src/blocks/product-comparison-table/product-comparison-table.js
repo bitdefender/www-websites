@@ -11,7 +11,6 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
     productId: code,
     devices,
     subscription,
-    ignoreEventsParent: false,
     storeEvent: 'product-comparison',
   });
 

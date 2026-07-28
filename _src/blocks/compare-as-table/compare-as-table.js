@@ -83,7 +83,6 @@ export default async function decorate(block) {
         productId: name,
         devices: prodUsers.trim(),
         subscription: prodYears.trim(),
-        ignoreEventsParent: true,
         storeEvent: '',
       });
     }

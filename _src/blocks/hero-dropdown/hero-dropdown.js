@@ -5,7 +5,6 @@ import {
   createNanoBlock,
   renderNanoBlocks,
   wrapChildrenWithStoreContext,
-  createTag,
 } from '../../scripts/utils/utils.js';
 
 function buildHeroDropdownBlock(element) {
@@ -140,7 +139,6 @@ createNanoBlock('dropdown', (...args) => {
       productId: product,
       devices: unit,
       subscription: year,
-      ignoreEventsParent: true,
       storeEvent: 'all',
     });
   });
