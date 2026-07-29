@@ -619,7 +619,7 @@ async function runDefaultHeaderLogic(block) {
 
   // assign an aria-label to the a tag inside of .logo
   const logoLink = document.querySelector('.logo a');
-  logoLink.setAttribute('aria-label', 'Logo');
+  logoLink?.setAttribute('aria-label', 'Logo');
   decorateLinkWithLinkTrackingId(logoLink, 'Bitdefender Logo');
 
   const secondSpan = document.querySelector('.header-wrapper > div > p span:nth-child(2)');
