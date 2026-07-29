@@ -1160,6 +1160,24 @@ export async function submitWithTurnstile({
   }
 }
 
+export const createBdContext = () => document.createElement('bd-context');
+
+export const createBdProduct = (productId) => {
+  const bdProductElement = document.createElement('bd-product');
+  bdProductElement.setAttribute('product-id', productId);
+  return bdProductElement;
+};
+
+export const createBdOption = ({ devices, subscription, storeEvent = '' }) => {
+  const bdOptionElement = document.createElement('bd-option');
+  bdOptionElement.setAttribute('devices', devices);
+  bdOptionElement.setAttribute('subscription', subscription);
+  if (storeEvent) {
+    bdOptionElement.setAttribute('data-layer-event', storeEvent);
+  }
+  return bdOptionElement;
+};
+
 /**
  * @param {HTMLElement} element
  * @param {object} storeProperties
@@ -1184,35 +1202,23 @@ export const wrapChildrenWithStoreContext = (element, {
   productId,
   devices,
   subscription,
-  ignoreEventsParent = false,
   storeEvent = '',
 }) => {
   if (!element || element.firstElementChild?.matches('bd-context')) {
     return;
   }
 
-  const context = document.createElement('bd-context');
-  if (ignoreEventsParent) {
-    context.setAttribute('ignore-events-parent', '');
-  }
-
-  const product = document.createElement('bd-product');
-  product.setAttribute('product-id', productId);
-
-  const option = document.createElement('bd-option');
-  option.setAttribute('devices', devices);
-  option.setAttribute('subscription', subscription);
-  if (storeEvent) {
-    option.setAttribute('data-layer-event', storeEvent);
-  }
+  const bdContext = createBdContext();
+  const bdProduct = createBdProduct(productId);
+  const bdOption = createBdOption({ devices, subscription, storeEvent });
 
   while (element.firstChild) {
-    option.appendChild(element.firstChild);
+    bdOption.appendChild(element.firstChild);
   }
 
-  product.appendChild(option);
-  context.appendChild(product);
-  element.appendChild(context);
+  bdProduct.appendChild(bdOption);
+  bdContext.appendChild(bdProduct);
+  element.appendChild(bdContext);
 };
 
 const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.72/';

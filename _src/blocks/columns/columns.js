@@ -263,7 +263,6 @@ export default function decorate(block) {
           productId: prodName,
           devices: prodUsers,
           subscription: prodYears,
-          ignoreEventsParent: true,
           storeEvent: '',
         });
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');

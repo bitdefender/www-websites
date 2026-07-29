@@ -760,7 +760,6 @@ async function setupAddOnCheckbox(
     productId: addOnProdName,
     devices: addOnProdUsers,
     subscription: addOnProdYears,
-    ignoreEventsParent: true,
     storeEvent: 'all',
   });
 
@@ -842,7 +841,6 @@ function buildProductBoxHTML(config) {
     productId: prodName,
     devices: prodUsers,
     subscription: prodYears,
-    ignoreEventsParent: true,
     storeEvent: shouldAddStoreEvent ? storeEvent : '',
   });
 

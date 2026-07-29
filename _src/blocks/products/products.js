@@ -372,7 +372,6 @@ export default function decorate(block) {
         productId: productCode,
         devices,
         subscription,
-        ignoreEventsParent: true,
         storeEvent,
       });
     }

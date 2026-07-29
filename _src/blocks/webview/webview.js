@@ -76,7 +76,6 @@ function getUrlStoreOption(block, productId) {
     productId,
     devices: slots,
     subscription: years,
-    ignoreEventsParent: true,
     storeEvent: 'all',
   });
 
