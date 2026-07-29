@@ -209,7 +209,7 @@ export default function decorate(block) {
     // eslint-disable-next-line max-len
     linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid, seeMoreBtn,
-    signature,
+    signature, trialDuration,
   } = parentSection.dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -254,6 +254,7 @@ export default function decorate(block) {
 
   // setup buylink, this can be used later as a starting point for prices.
   const productsAsList = products?.split(',');
+  const trialDurations = trialDuration?.split(',')?.map((t) => t.trim()) || [];
   if (productsAsList) {
     // eslint-disable-next-line no-unused-vars
     [...block.children].forEach((row, _) => {
@@ -265,7 +266,7 @@ export default function decorate(block) {
           subscription: prodYears,
           storeEvent: '',
         });
-        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
+        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', trialDurations[colNumber] || '');
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-render', '');
       });
     });

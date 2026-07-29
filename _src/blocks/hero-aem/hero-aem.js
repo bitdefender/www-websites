@@ -113,7 +113,7 @@ function createDropdownElement(paragraph, dropdownTagText, product) {
   });
 }
 
-async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText) {
+async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText, trialDuration) {
   const pricesBox = document.createElement('div');
   pricesBox.classList.add('hero-aem__prices', 'await-loader');
   pricesBox.innerHTML = `
@@ -129,7 +129,7 @@ async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceT
             </div>
           </div>
           <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
-  buyLink.setAttribute('data-store-buy-link', '');
+  buyLink.setAttribute('data-store-buy-link', trialDuration || '');
   buyLink.setAttribute('data-store-render', '');
   return pricesBox;
 }
@@ -155,7 +155,7 @@ export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
-    dropdownTag, circleDiscount,
+    dropdownTag, circleDiscount, trialDuration,
   } = block.closest('.section').dataset;
 
   renderNanoBlocks(block);
@@ -230,7 +230,7 @@ export default async function decorate(block, options) {
   const buyLink = block.querySelector('a[href*="buylink"]');
 
   if (product && !options) {
-    let priceBox = await createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText);
+    let priceBox = await createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText, trialDuration);
     // Select all paragraph elements
     const paragraphs = document.querySelectorAll('p');
     let insertPricesParagraph = null;

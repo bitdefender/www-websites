@@ -139,7 +139,7 @@ function updateBuyLink(block) {
   if (buyLink) {
     buyLink.href = '#';
     buyLink.setAttribute('data-store-render', '');
-    buyLink.setAttribute('data-store-buy-link', '');
+    buyLink.setAttribute('data-store-buy-link', state.blockDataset.trialDuration || '');
   }
 }
 

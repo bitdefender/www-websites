@@ -178,7 +178,7 @@ function replaceDiscountPercentageVariable(html, hardcodedDiscount) {
   ).replaceAll(discountPercentageMarkerPattern, discountPercentageHtml);
 }
 
-function decorateDiscountModal(block, hardcodedDiscount) {
+function decorateDiscountModal(block, hardcodedDiscount, trialDuration) {
   const wrapper = block.closest('.webview-wrapper') || block.parentElement;
   wrapper?.classList.add('discount-modal');
 
@@ -225,7 +225,7 @@ function decorateDiscountModal(block, hardcodedDiscount) {
     if (buyLink) {
       return `
         <p class="button-container">
-          <a class="button" href="${primaryHref}" data-store-buy-link><span class="button-text">${primaryText}</span></a>
+          <a class="button" href="${primaryHref}" data-store-buy-link="${trialDuration || ''}"><span class="button-text">${primaryText}</span></a>
         </p>`;
     }
 
@@ -284,9 +284,9 @@ function decorateChurnThankYouV1(block) {
     </div>`;
 }
 
-function decorateDefaultWebview(block, product, saveText) {
+function decorateDefaultWebview(block, product, saveText, trialDuration) {
   const buyLink = block.querySelector('a[href*="#buylink"]');
-  buyLink?.setAttribute('data-store-buy-link', '');
+  buyLink?.setAttribute('data-store-buy-link', trialDuration || '');
   buyLink?.setAttribute('data-store-render', '');
 
   [...block.children].forEach((child) => {
@@ -328,27 +328,27 @@ function decorateDefaultWebview(block, product, saveText) {
   }
 }
 
-function decorateWebviewSection(block, product, saveText, hardcodedDiscount) {
+function decorateWebviewSection(block, product, saveText, hardcodedDiscount, trialDuration) {
   if (isWebviewSectionVariant(block, 'discount-modal')) {
-    return decorateDiscountModal(block, hardcodedDiscount);
+    return decorateDiscountModal(block, hardcodedDiscount, trialDuration);
   }
 
   if (isWebviewSectionVariant(block, 'churn-thank-you-v1')) {
     return decorateChurnThankYouV1(block);
   }
 
-  return decorateDefaultWebview(block, product, saveText);
+  return decorateDefaultWebview(block, product, saveText, trialDuration);
 }
 
 export default async function decorate(block) {
   const section = block.closest('.section');
   const {
-    product, saveText, hardcodedDiscount,
+    product, saveText, hardcodedDiscount, trialDuration,
   } = section?.dataset || {};
 
   setupStoreContext(block, product);
 
-  decorateWebviewSection(block, product, saveText, hardcodedDiscount);
+  decorateWebviewSection(block, product, saveText, hardcodedDiscount, trialDuration);
 
   const url = new URL(window.location.href);
   if (url.searchParams.has('theme') && url.searchParams.get('theme') === 'dark') {

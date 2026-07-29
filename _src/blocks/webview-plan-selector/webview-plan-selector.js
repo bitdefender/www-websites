@@ -220,6 +220,7 @@ export default async function decorate(block) {
 
   const discountLabel = section?.dataset?.discount || '';
   const offText = section?.dataset?.saveText || '';
+  const trialDuration = section?.dataset?.trialDuration || '';
 
   block.innerHTML = `
     <div class="webview-plan-selector-layout">
@@ -258,7 +259,7 @@ export default async function decorate(block) {
                         <em><span class="discount-percentage await-loader" data-store-render data-store-discount="percentage">${discountLabel}</span> ${offText}</em>
                       </div>
                     </div>
-                    <a class="button webview-plan-selector-plan-buy-link" href="${ctaHref}" data-store-render data-store-buy-link aria-hidden="true" tabindex="-1">${ctaText}</a>
+                    <a class="button webview-plan-selector-plan-buy-link" href="${ctaHref}" data-store-render data-store-buy-link="${trialDuration}" aria-hidden="true" tabindex="-1">${ctaText}</a>
                 </bd-option>
               </bd-product>
             </bd-context>

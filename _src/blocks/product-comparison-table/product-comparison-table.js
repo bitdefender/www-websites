@@ -16,9 +16,11 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
 
   const priceRoot = document.createElement('div');
   priceRoot.classList.add('product-comparison-price');
-  const oldPriceText = block.closest('.section').dataset.old_price_text ?? '';
-  const newPriceLabel = block.closest('.section').dataset.new_price_label ?? '';
-  const saveText = block.closest('.section').dataset.save_text ?? '';
+  const sectionDataset = block.closest('.section')?.dataset;
+  const oldPriceText = sectionDataset?.old_price_text ?? '';
+  const newPriceLabel = sectionDataset?.new_price_label ?? '';
+  const saveText = sectionDataset?.save_text ?? '';
+  const trialDuration = sectionDataset?.[`trialDuration${productIndex + 1}`] ?? sectionDataset?.trialDuration ?? '';
   const oldPriceElement = document.createElement('div');
   priceRoot.appendChild(oldPriceElement);
   oldPriceElement.innerText = '';
@@ -61,7 +63,7 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   if (buyLink.href.includes('/buy/') || buyLink.href.includes('#buylink')) {
     buyLink.href = '#';
     buyLink.setAttribute('data-store-render', '');
-    buyLink.setAttribute('data-store-buy-link', '');
+    buyLink.setAttribute('data-store-buy-link', trialDuration || '');
   }
 
   return priceRoot;
