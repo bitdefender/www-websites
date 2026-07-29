@@ -16,7 +16,7 @@ function setDiscountedPriceAttribute(type, hideDecimals, prodName) {
   return priceAttribute;
 }
 
-async function updateProductPrice(prodName, saveText = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '', key = null) {
+async function updateProductPrice(prodName, saveText = null, buyLinkSelector = null, billed = null, type = null, hideDecimals = null, perPrice = '', key = null, trialDuration = '') {
   let priceElement = document.createElement('div');
   let newPrice = document.createElement('span');
   const customLink = buyLinkSelector.querySelector('a')?.getAttribute('href');
@@ -46,13 +46,15 @@ async function updateProductPrice(prodName, saveText = null, buyLinkSelector = n
       ${billedText.includes('0') ? `<div class="billed"> ${billedText.replace('0', `<span class="newprice-2" data-store-render ${billedPrice}></span>`)}</div>` : ''}
       ${!billedText.includes('0') ? `<div class="billed">${billedText}</div>` : ''}
 
-      <a ${customLink ? `href="${customLink}"` : 'href="#"'} href="#" data-store-render data-store-buy-link class="button ${key === 0 ? 'primary' : ''} no-arrow">${buyLinkSelector?.innerText}</a>
+      <a ${customLink ? `href="${customLink}"` : 'href="#"'} href="#" data-store-render data-store-buy-link="${trialDuration}" class="button ${key === 0 ? 'primary' : ''} no-arrow">${buyLinkSelector?.innerText}</a>
     </div>`;
   return priceElement;
 }
 
 export default async function decorate(block) {
-  const { products, savetext, activeColumn } = block.closest('.section')?.dataset ?? {};
+  const {
+    products, savetext, activeColumn, trialDuration,
+  } = block.closest('.section')?.dataset ?? {};
   if (!products) return;
 
   const tables = [...block.querySelectorAll('table')];
@@ -62,6 +64,7 @@ export default async function decorate(block) {
   }
 
   const productList = products.split(',');
+  const trialDurations = trialDuration?.split(',')?.map((t) => t.trim()) || [];
 
   const tasks = tables.map(async (table, key) => {
     const rows = table.querySelectorAll('tr');
@@ -88,10 +91,10 @@ export default async function decorate(block) {
     }
 
     const tableBuyLink = table.querySelector('a[href*="#buylink"]');
-    tableBuyLink?.setAttribute('data-store-buy-link', '');
+    tableBuyLink?.setAttribute('data-store-buy-link', trialDurations[key] || '');
     tableBuyLink?.setAttribute('data-store-render', '');
 
-    const priceBox = await updateProductPrice(name, savetext, priceRow, billed, null, null, '', key);
+    const priceBox = await updateProductPrice(name, savetext, priceRow, billed, null, null, '', key, trialDurations[key]);
     priceRow.innerHTML = priceBox?.innerHTML ?? priceRow.innerHTML;
 
     if (billed?.innerText) billed.innerText = '';

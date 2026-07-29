@@ -334,6 +334,8 @@ createNanoBlock('bluePill', renderBluePill);
 export default function decorate(block) {
   const blockWrapperSection = block.closest('.section');
   const metadata = blockWrapperSection.dataset;
+  const { trialDuration } = metadata;
+  const trialDurations = trialDuration?.split(',')?.map((t) => t.trim()) || [];
   const plans = [];
 
   Object.entries(metadata).forEach(([key, value]) => {
@@ -380,7 +382,7 @@ export default function decorate(block) {
     cardButtons?.forEach((button) => {
       if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
         button.href = '#';
-        button.setAttribute('data-store-buy-link', '');
+        button.setAttribute('data-store-buy-link', trialDurations[idxParent] || '');
         button.setAttribute('data-store-render', '');
       }
     });

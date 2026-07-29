@@ -35,7 +35,7 @@ function createDropdownItem(code, friendlyName, isActive) {
 }
 
 function createPriceBox({
-  code, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText,
+  code, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText, trialDuration,
 }) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box', 'await-loader');
@@ -57,7 +57,7 @@ function createPriceBox({
       </strong>
     </div>
     <div class="buttons">
-      <a href="#" data-store-render data-store-buy-link class="button primary-button">
+      <a href="#" data-store-render data-store-buy-link="${trialDuration || ''}" class="button primary-button">
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
@@ -84,6 +84,7 @@ createNanoBlock('dropdown', (...args) => {
     secondbuttonlink,
     label: labelText,
     productnames = '',
+    trialDuration,
   } = block?.dataset || {};
 
   const productNames = productnames.split(',').map((n) => n.trim());
@@ -122,7 +123,7 @@ createNanoBlock('dropdown', (...args) => {
     optionsList.appendChild(option);
 
     const priceBox = createPriceBox({
-      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText,
+      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText, trialDuration,
     });
 
     priceBox.style.display = index === 0 ? 'block' : 'none';
@@ -204,6 +205,7 @@ export default function decorate(block) {
     contentsize,
     textcolor,
     signature,
+    trialDuration,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
@@ -224,6 +226,7 @@ export default function decorate(block) {
     ...(label && { label }),
     ...(productnames && { productnames }),
     ...(discounttext && { discounttext }),
+    ...(trialDuration && { trialDuration }),
   });
 
   buildHeroDropdownBlock(block);

@@ -138,11 +138,12 @@ function createPlanSwitcher(radioButtons, prodsNames, prodsUsers, prodsYears, bl
  */
 function renderPrices(block, metadata) {
   const {
-    products, secondaryProducts, firstYearText, featuredProduct, currentProduct, saveText,
+    products, secondaryProducts, firstYearText, featuredProduct, currentProduct, saveText, trialDuration,
   } = metadata;
 
   const productsAsList = products ? Array.from(products.split(',')) : [];
   const secondaryProductsAsList = secondaryProducts ? Array.from(secondaryProducts.split(',')) : [];
+  const trialDurations = trialDuration?.split(',')?.map((t) => t.trim()) || [];
   const cells = block.querySelectorAll('div[role="cell"]');
   let index = 0; // Manual index increment
   cells.forEach((cell) => {
@@ -178,7 +179,7 @@ function renderPrices(block, metadata) {
           <span class="under-price-text">${firstYearText}</span>
         `;
         const buyLink = cell.querySelector('a[href*="#buylink"]');
-        buyLink?.setAttribute('data-store-buy-link', '');
+        buyLink?.setAttribute('data-store-buy-link', trialDurations[index] || '');
         buyLink?.setAttribute('data-store-render', '');
       } else {
         cell.classList.add('current');
