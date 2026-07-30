@@ -153,7 +153,7 @@ export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
-    dropdownTag, circleDiscount,
+    dropdownTag, circleDiscount, signature,
   } = block.closest('.section').dataset;
 
   renderNanoBlocks(block);
@@ -316,6 +316,13 @@ export default async function decorate(block, options) {
 
   let termsParagraph = block.querySelector('.hero-aem-container .hero-aem .hero-aem__card-text p:last-child');
   if (termsParagraph) {
-    termsParagraph.classList.add('hero-aem__terms');
+    // termsParagraph.classList.add('hero-aem__terms');
+  }
+
+  // add signature to the top of the banner
+  if (signature) {
+    const signatureElement = createTag('div', { class: 'signature' });
+    signatureElement.textContent = signature;
+    block.querySelector('h1')?.before(signatureElement);
   }
 }
