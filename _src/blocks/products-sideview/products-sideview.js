@@ -170,7 +170,6 @@ function renderPrice(block, firstProduct) {
   el.classList.add('await-loader');
   block.setAttribute('data-store-context', '');
   block.setAttribute('data-store-id', productName ?? firstProduct);
-  console.log('variant', variant, firstProduct);
   block.setAttribute('data-store-option', variant);
   block.setAttribute('data-store-department', 'consumer');
   block.setAttribute('data-store-event', 'main-product-loaded');
