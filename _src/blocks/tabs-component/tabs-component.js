@@ -1,4 +1,6 @@
-export default function decorate(block, options) {
+import { getDsnBase } from '../../scripts/utils/utils.js';
+
+export default async function decorate(block, options) {
   if (options) {
     // eslint-disable-next-line no-param-reassign
     block = block.querySelector('.block');
@@ -6,42 +8,57 @@ export default function decorate(block, options) {
     blockParent.classList.add('we-container');
   }
 
+  block.classList.add('bd-tabs-component');
+
+  const base = getDsnBase();
+  await Promise.all([
+    import(`${base}heading`),
+    import(`${base}paragraph`),
+  ]);
+
   const parentSelector = block.closest('.section');
   // eslint-disable-next-line no-unused-vars
   const metaData = parentSelector.dataset;
   const [title, subtitle, tabsTitle, ...sections] = block.children;
 
-  title.classList.add('title-class');
-  subtitle.classList.add('subtitle-class');
-  // Add class 'tabs-container' to the first div
-  tabsTitle.classList.add('tabs-container');
+  const bdTitle = document.createElement('bd-h');
+  bdTitle.setAttribute('as', 'h2');
+  bdTitle.classList.add('bd-tabs-title');
+  bdTitle.textContent = title.textContent.trim();
+  title.replaceWith(bdTitle);
 
-  // Get the container for the buttons
-  const container = block.querySelector('.tabs-container');
+  const bdSubtitle = document.createElement('bd-p');
+  bdSubtitle.setAttribute('kind', 'regular');
+  bdSubtitle.classList.add('bd-tabs-subtitle');
+  bdSubtitle.textContent = subtitle.textContent.trim();
+  subtitle.replaceWith(bdSubtitle);
 
-  // Check if the container exists
+  tabsTitle.classList.add('bd-tabs-container');
+
+  const container = block.querySelector('.bd-tabs-container');
+
   if (container) {
     const divs = container.querySelectorAll('div');
 
-    // Loop through each div to create buttons
     divs.forEach((div, index) => {
       const button = document.createElement('button');
-      if (index === 0) button.classList.add('selected');
-      button.innerHTML = div.innerHTML; // Use innerHTML instead of textContent
+      button.classList.add('bd-tab-button');
+      button.setAttribute('role', 'tab');
+      button.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+      button.setAttribute('aria-controls', `tab-content-${index}`);
+      button.setAttribute('id', `tab-${index}`);
+      if (index === 0) button.classList.add('bd-selected');
+      button.innerHTML = div.innerHTML;
       button.addEventListener('click', () => {
-        // Remove 'selected' class from all buttons
-        const buttons = block.querySelectorAll('.tabs-container button');
-        buttons.forEach((btn) => btn.classList.remove('selected'));
+        block.querySelectorAll('.bd-tabs-container button').forEach((btn) => {
+          btn.classList.remove('bd-selected');
+          btn.setAttribute('aria-selected', 'false');
+        });
+        button.classList.add('bd-selected');
+        button.setAttribute('aria-selected', 'true');
 
-        // Add 'selected' class to the clicked button
-        button.classList.add('selected');
-
-        // Hide all card-container elements
-        const cardContainers = block.querySelectorAll('.card-container');
-        cardContainers.forEach((card) => card.classList.add('hide'));
-
-        // Show the corresponding card-container element based on the index
-        sections[index].classList.remove('hide');
+        block.querySelectorAll('.bd-card-container').forEach((card) => { card.style.display = 'none'; });
+        sections[index].style.display = '';
       });
 
       div.parentNode.replaceChild(button, div);
@@ -51,33 +68,24 @@ export default function decorate(block, options) {
     console.error('Container not found');
   }
 
-  // click on the next element every 5 seconds
-  // setInterval(() => {
-  //   const buttons = block.querySelectorAll('.tabs-container button');
-  //   const selectedButton = block.querySelector('.tabs-container button.selected');
-  //   const buttonIndex = Array.from(buttons).indexOf(selectedButton);
-  //   const nextIndex = (buttonIndex + 1) % buttons.length;
-  //   buttons[nextIndex].click();
-  // }, 6000);
-
-  // Add classes to each card-container and hide all but the first one
   sections.forEach((element, index) => {
-    element.classList.add('card-container');
-    if (index === 0) {
-      element.classList.add('show');
-    }
-    if (index !== 0) {
-      element.classList.add('hide');
-    }
+    element.classList.add('bd-card-container');
+    element.setAttribute('id', `tab-content-${index}`);
+    element.setAttribute('role', 'tabpanel');
+    element.setAttribute('aria-labelledby', `tab-${index}`);
+    if (index !== 0) element.style.display = 'none';
 
-    // Add classes to children divs
     const photoDiv = element.querySelector('div:nth-child(1)');
     const textDiv = element.querySelector('div:nth-child(2)');
-    photoDiv.classList.add('left');
-    textDiv.classList.add('right');
+    photoDiv.classList.add('bd-left');
+    textDiv.classList.add('bd-right');
+
+    const heading = textDiv.querySelector('h2, h3, h4');
+    if (heading) heading.id = `tab-content-heading-${index}`;
   });
+
   window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
     bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
+    composed: true,
   });
 }
