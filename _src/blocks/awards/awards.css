@@ -444,7 +444,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50% !important;
+    width: 60% !important;
   }
 
   .awards-compact .awards-component > div:nth-child(2){
