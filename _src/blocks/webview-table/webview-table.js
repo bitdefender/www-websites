@@ -3,6 +3,129 @@ import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
 let COLUMNS_COUNT = 0;
+const REALCHECK_PRICES_URL = '/common/realcheck-prices.json';
+const REALCHECK_PRICE_PLACEHOLDER = '{realcheck_price}';
+const REALCHECK_PRICE_FIELDS = [
+  'Basic MSRP Monthly Prices',
+  'PRO MSRP Monthly Prices',
+];
+let realCheckPricesPromise;
+
+/**
+ * Loads the RealCheck price rows once per page.
+ * @returns {Promise<Array<Object>>} RealCheck price rows
+ */
+async function loadRealCheckPrices() {
+  if (!realCheckPricesPromise) {
+    realCheckPricesPromise = (async () => {
+      const response = await fetch(REALCHECK_PRICES_URL);
+      if (!response.ok) {
+        throw new Error(`RealCheck prices request failed with status ${response.status}`);
+      }
+
+      const payload = await response.json();
+      if (!Array.isArray(payload?.data)) {
+        throw new Error('RealCheck prices response does not contain a data array');
+      }
+
+      return payload.data;
+    })();
+  }
+
+  return realCheckPricesPromise;
+}
+
+/**
+ * Finds authored RealCheck price placeholders without replacing their surrounding markup.
+ * @param {HTMLElement} block - The webview table block
+ * @returns {Array<{textNode: Text, container: HTMLElement}>} Placeholder text nodes
+ */
+function getRealCheckPricePlaceholders(block) {
+  return [...block.querySelectorAll('*')]
+    .flatMap((element) => [...element.childNodes])
+    .filter((node) => node.nodeType === Node.TEXT_NODE
+      && node.textContent.includes(REALCHECK_PRICE_PLACEHOLDER))
+    .map((textNode) => ({
+      textNode,
+      container: textNode.parentElement.closest('h1, h2, h3, h4, h5, h6, p')
+        || textNode.parentElement,
+    }));
+}
+
+/**
+ * Formats a price from the RealCheck sheet for the current page locale.
+ * @param {string|number} value - Price value from the sheet
+ * @param {string} locale - Page locale
+ * @param {string} currency - ISO 4217 currency code
+ * @returns {string|null} Localized price, or null for invalid input
+ */
+function formatRealCheckPrice(value, locale, currency) {
+  if (value === null || value === undefined || String(value).trim() === '') {
+    return null;
+  }
+
+  const price = Number(value);
+  const normalizedCurrency = String(currency || '').trim().toUpperCase();
+  if (!Number.isFinite(price) || price < 0 || !/^[A-Z]{3}$/.test(normalizedCurrency)) {
+    return null;
+  }
+
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: normalizedCurrency,
+    }).format(price);
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * Replaces authored RealCheck price placeholders with localized sheet values.
+ * @param {HTMLElement} block - The webview table block
+ * @returns {Promise<void>} Resolves after prices are decorated
+ */
+async function decorateRealCheckPrices(block) {
+  const placeholders = getRealCheckPricePlaceholders(block);
+  if (!placeholders.length) return;
+
+  placeholders.forEach(({ container }) => {
+    container.hidden = true;
+  });
+
+  const { language, country } = getLanguageCountryFromPath();
+  if (!language || !country) return;
+
+  try {
+    const rows = await loadRealCheckPrices();
+    const countryCode = country.trim().toUpperCase();
+    const locale = `${language}-${country}`;
+    const priceRow = rows.find((row) => String(row?.['Country Code'] || '')
+      .trim().toUpperCase() === countryCode);
+
+    if (!priceRow) {
+      throw new Error(`RealCheck prices do not contain country ${countryCode}`);
+    }
+
+    const currency = priceRow.Currency;
+    placeholders.forEach(({ textNode, container }, index) => {
+      const formattedPrice = formatRealCheckPrice(
+        priceRow[REALCHECK_PRICE_FIELDS[index]],
+        locale,
+        currency,
+      );
+      if (!formattedPrice) return;
+
+      textNode.textContent = textNode.textContent
+        .replaceAll(REALCHECK_PRICE_PLACEHOLDER, formattedPrice);
+      container.hidden = false;
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console -- surface feed failures without exposing placeholders
+    console.warn(`[webview-table] ${error.message}`);
+  }
+}
+
 /**
  * Replaces text content "yes" and "no" with appropriate checkmark icons
  * @param {HTMLElement} block - The container block element
@@ -451,6 +574,7 @@ function buildTableHeader(block) {
  * @returns {Promise<void>} Promise that resolves when decoration is complete
  */
 export default async function decorate(block) {
+  const realCheckPriceDecoration = decorateRealCheckPrices(block);
   const metadata = block.closest('.section').dataset;
   buildTableHeader(block, metadata);
   addAccesibilityRoles(block);
@@ -463,8 +587,11 @@ export default async function decorate(block) {
     block.classList.add('light-mode');
   }
 
-  // Check and replace privacy-policy link if it gives a 404
-  await checkAndReplacePrivacyPolicyLink(block);
+  // Resolve remote content without blocking the block's synchronous decoration.
+  await Promise.all([
+    realCheckPriceDecoration,
+    checkAndReplacePrivacyPolicyLink(block),
+  ]);
 
   // set initial state
   const checkedRadio = block.querySelector('[role="columnheader"] .plan-switcher input[type="radio"][checked]');
