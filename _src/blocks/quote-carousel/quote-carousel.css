@@ -324,6 +324,17 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
     }
   }
 
+  &.section.wide > * { /* apply to all children wrapper */
+    max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
+  }
+
+  &.section.wide img {
+    height: initial;
+    width: initial;
+    margin: initial;
+    object-fit: initial;
+  }
+
   @media (max-width: 992px) {
     .quote-carousel {
       max-width: 100%;
