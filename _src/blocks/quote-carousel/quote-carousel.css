@@ -318,7 +318,7 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
       border-radius: 100%;
       position: absolute;
       right: -100px;
-      height: 90%;
+      height: 200px;
       top: 15%;
       aspect-ratio: 1/1;
     }
