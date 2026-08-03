@@ -487,6 +487,10 @@
         }
       }
     }
+
+    &.solutions {
+      padding-bottom: 0;
+    }
   }
 }
 
