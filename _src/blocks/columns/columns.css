@@ -1345,6 +1345,10 @@ main .creators-banner .signature {
   font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
+.columns-container.black-heading h2 {
+  color: #000 !important;
+}
+
 @media (min-width: 991px) {
   .columns.benefits > div {
     display: grid;
@@ -3667,6 +3671,39 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             }
           }
         } 
+      }
+    }
+  }
+
+  &.variant-b {
+    .columns-wrapper {
+      .columns {
+        > div {
+          gap: 16px;
+  
+          > div, .card {
+            padding: 40px;
+            padding-top: 80px;
+            border: 2px solid #2E6BF6;
+            background-color: #f9fcff;
+            color: #000;
+
+            h3 {
+              color: #2E6BF6;
+              margin-top: 60px;
+            }
+
+            p {
+              color: #000;
+            }
+
+            svg {
+              position: relative;
+              width: 65px;
+              height: 75px;
+            }
+          }
+        }
       }
     }
   }

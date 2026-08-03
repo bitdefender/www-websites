@@ -517,7 +517,16 @@ export default function decorate(block) {
     'application/vnd.rar',
   ].join(',');
 
-  const { checkButtonText, product, pasteLinkText } = block.closest('.section').dataset;
+  const {
+    checkButtonText, product, pasteLinkText, signature,
+  } = block.closest('.section').dataset;
+
+  if (signature) {
+    const signatureElement = document.createElement('div');
+    signatureElement.classList.add('signature');
+    signatureElement.textContent = signature;
+    block.appendChild(signatureElement);
+  }
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(5)');
   privacyPolicyDiv.classList.add('privacy-policy');
