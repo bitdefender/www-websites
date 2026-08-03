@@ -138,7 +138,13 @@ function createPlanSwitcher(radioButtons, prodsNames, prodsUsers, prodsYears, bl
  */
 function renderPrices(block, metadata) {
   const {
-    products, secondaryProducts, firstYearText, featuredProduct, currentProduct, saveText, trialDuration,
+    products,
+    secondaryProducts,
+    firstYearText,
+    featuredProduct,
+    currentProduct,
+    saveText,
+    trialDuration,
   } = metadata;
 
   const productsAsList = products ? Array.from(products.split(',')) : [];
