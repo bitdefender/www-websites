@@ -278,7 +278,7 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
     max-width: 1000px;
     box-shadow: none;
     background-color: transparent;
-
+    
     .slides-controls {
       max-width: calc(100% - 100px);
       background-color: #fff;
@@ -318,8 +318,8 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
       border-radius: 100%;
       position: absolute;
       right: -100px;
-      height: 80%;
-      top: 10%;
+      height: 90%;
+      top: 15%;
       aspect-ratio: 1/1;
     }
 
