@@ -637,6 +637,13 @@ main .section.ai-skills-checker-container {
             }
         }
 
+        .signature {
+            font-size: 16px;
+            color: #006dff;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
         .privacy-policy {
             margin-top: 20px;
             font-size: 12px;
@@ -807,6 +814,11 @@ main .section.ai-skills-checker-container {
                         font-size: 18px;
                     }
                 }
+            }
+
+            .signature {
+                font-size: 22px;
+                margin-top: 20px;
             }
 
             .privacy-policy {
