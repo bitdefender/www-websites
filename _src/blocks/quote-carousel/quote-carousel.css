@@ -307,6 +307,10 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
     .icon {
       position: absolute;
       left: 26px;
+
+      text {
+        fill: #006eff;
+      }
     }
 
     .quote-image {
