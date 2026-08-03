@@ -16,10 +16,14 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Mock the external dependencies
-vi.mock('../../../scripts/utils/utils.js', () => ({
-  checkIfNotProductPage: vi.fn(() => true),
-  generatePageLoadStartedName: vi.fn(() => 'test:page'),
-}));
+vi.mock('../../../scripts/utils/utils.js', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    checkIfNotProductPage: vi.fn(() => true),
+    generatePageLoadStartedName: vi.fn(() => 'test:page'),
+  };
+});
 
 // Load mock HTML once
 const mockHtml = await readFile(path.join(__dirname, 'new-prod-boxes.mock.html'), 'utf-8');
@@ -50,7 +54,16 @@ describe('new-prod-boxes', () => {
 
     window.hj = vi.fn();
     Object.defineProperty(window, 'location', {
-      value: { href: 'http://localhost:3000/en-us/consumer/', hostname: 'localhost:3000' },
+      value: {
+        href: 'http://localhost:3000/en-us/consumer/',
+        origin: 'http://localhost:3000',
+        protocol: 'http:',
+        host: 'localhost:3000',
+        hostname: 'localhost',
+        pathname: '/en-us/consumer/',
+        search: '',
+        hash: '',
+      },
       writable: true,
     });
 
@@ -120,11 +133,16 @@ describe('new-prod-boxes', () => {
   });
 
   it('sets store context on product boxes', () => {
-    const storeContextBoxes = document.querySelectorAll('[data-store-context]');
-    expect(storeContextBoxes.length).toBe(8);
+    const prodBoxes = document.querySelectorAll('.prod_box');
+    expect(prodBoxes.length).toBe(8);
 
-    storeContextBoxes.forEach((box) => {
-      expect(box.dataset.storeDepartment).toBe('consumer');
+    const expectedProductIds = ['ts_i', 'ps_i', 'us_i', 'us_pi', 'ts_f', 'ps_f', 'us_f', 'us_pf'];
+
+    prodBoxes.forEach((box, index) => {
+      const product = box.querySelector(':scope > bd-context > bd-product');
+      expect(product).toBeTruthy();
+      expect(product.getAttribute('product-id')).toBe(expectedProductIds[index]);
+      expect(product.querySelector(':scope > bd-option')).toBeTruthy();
     });
   });
 
@@ -151,20 +169,22 @@ describe('new-prod-boxes', () => {
     expect(section.classList.contains('we-container')).toBe(true);
   });
 
-  it('sets correct data-store-option values', () => {
-    const prodBoxes = document.querySelectorAll('.prod_box[data-store-option]');
-    expect(prodBoxes.length).toBe(8);
+  it('sets correct store option values', () => {
+    const prodOptions = document.querySelectorAll('.prod_box > bd-context > bd-product > bd-option');
+    expect(prodOptions.length).toBe(8);
 
     // Individual products have 5 users, 1 year (ts_i/5/1, ps_i/5/1, etc.)
-    const individualBoxes = document.querySelectorAll('.individual-box[data-store-option]');
-    individualBoxes.forEach((box) => {
-      expect(box.dataset.storeOption).toBe('5-1');
+    const individualOptions = document.querySelectorAll('.individual-box > bd-context > bd-product > bd-option');
+    individualOptions.forEach((option) => {
+      expect(option.getAttribute('devices')).toBe('5');
+      expect(option.getAttribute('subscription')).toBe('1');
     });
 
     // Family products have 25 users, 1 year (ts_f/25/1, ps_f/25/1, etc.)
-    const familyBoxes = document.querySelectorAll('.family-box[data-store-option]');
-    familyBoxes.forEach((box) => {
-      expect(box.dataset.storeOption).toBe('25-1');
+    const familyOptions = document.querySelectorAll('.family-box > bd-context > bd-product > bd-option');
+    familyOptions.forEach((option) => {
+      expect(option.getAttribute('devices')).toBe('25');
+      expect(option.getAttribute('subscription')).toBe('1');
     });
   });
 });
