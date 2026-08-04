@@ -159,7 +159,9 @@ export default async function decorate(block) {
     slidesAction.append(button);
     controlsElements.push(slidesAction);
   }
-  const slidesControls = createTag('div', { class: 'slides-controls' }, controlsElements);
+
+  let slidesControls = '';
+  if (controlsElements.length > 1) slidesControls = createTag('div', { class: 'slides-controls' }, controlsElements);
   const slidesContainer = createTag('div', { class: 'slides-container' }, [slides, slidesControls]);
   block.replaceChildren(slidesContainer);
   updateControlsState(block, 0);
