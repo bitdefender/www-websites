@@ -55,6 +55,7 @@ function getCurrentSlideIndex(slides) {
 
 function updateControlsState(block, nextIndex) {
   const dots = block.querySelector('.slides-dots');
+  if (!dots) return;
   const currentActive = dots.querySelector('.active');
   if (currentActive) {
     currentActive.classList.remove('active');
@@ -160,8 +161,7 @@ export default async function decorate(block) {
     controlsElements.push(slidesAction);
   }
 
-  let slidesControls = '';
-  if (controlsElements.length > 1) slidesControls = createTag('div', { class: 'slides-controls' }, controlsElements);
+  const slidesControls = createTag('div', { class: 'slides-controls' }, controlsElements);
   const slidesContainer = createTag('div', { class: 'slides-container' }, [slides, slidesControls]);
   block.replaceChildren(slidesContainer);
   updateControlsState(block, 0);
@@ -169,6 +169,7 @@ export default async function decorate(block) {
   decorateIcons(block);
 
   const dots = block.querySelectorAll('li');
+  if (dots.length === 1) dots[0].parentElement.remove();
   dots.forEach((dot, idx) => {
     if (dot.classList.contains('active')) {
       updateSlideState(idx, block);
