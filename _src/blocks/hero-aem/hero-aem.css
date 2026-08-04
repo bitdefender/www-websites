@@ -295,12 +295,6 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
   transform: translateX(5px);
 }
 
-.hero-aem__card-text p:last-child a {
-  color: inherit;
-  margin-left: 8px;
-  font-weight: normal;
-}
-
 .hero-aem-container .hero-aem p em a {
   min-width: 185px;
   font-size: 16px;
@@ -779,6 +773,20 @@ main .hero-aem-container.bf25 .hero-aem .breadcrumb *, main .hero-aem-container.
   border: 2px solid #FFF;
 }
 
+.hero-aem-container .signature {
+  font-size: 24px;
+  color: #016DFF;
+  font-weight: bold;
+  font-family: 'Ibm Plex Sans', sans-serif;
+}
+
+.hero-aem-container.h1-black {
+  h1 {
+    color: #000;
+    line-height: 1.2;
+  }
+}
+
 @media (min-width: 768px) {
   .hero-aem-container .hero-aem {
     display: flex;
@@ -865,6 +873,8 @@ main .hero-aem-container.bf25 .hero-aem .breadcrumb *, main .hero-aem-container.
   .hero-aem-container .hero-aem .hero-aem__card-text p:has(picture) {
     text-align: left;
     min-height: 60px;
+    display: flex;
+    gap: 30px;
   }
 
   .hero-aem-container .hero-aem .hero-aem__card__desktop {

@@ -23,7 +23,7 @@ export default function decorate(block) {
   [...block.children].forEach((child) => {
     if (countChildren(child) === 2) {
       child.classList.add('cards');
-      matchHeights(child, 'p');
+      matchHeights(child, 'p:not(:has(.icon))');
       matchHeights(child, 'h3');
       [...child.children].forEach((card) => {
         card.classList.add('card');

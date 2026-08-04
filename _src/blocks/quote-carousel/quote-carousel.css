@@ -254,3 +254,132 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
     border-radius: 8px;
   }
 }
+
+.quote-carousel-container.creators-carousel {
+  .quote-carousel-wrapper {
+    max-width: 1320px;
+    margin: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .quote-carousel {
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+    min-width: 100%;
+    max-width: 850px;
+    justify-self: end;
+  }
+
+  .slides-container {
+    justify-self: center;
+    overflow: hidden;
+    max-width: 1000px;
+    box-shadow: none;
+    background-color: transparent;
+    
+    .slides-controls {
+      max-width: calc(100% - 100px);
+      background-color: #fff;
+      border-radius: 0 0 20px 20px;
+    }
+  }
+
+  .slide {
+    position: relative;
+    padding: 0;
+    width: 100%;
+
+    .slide-content {
+      padding: 24px;
+      margin-right: 100px;
+      margin-left: 2px;
+      padding-right: 15%;
+      position: relative;
+      width: 100%;
+      text-align: left;
+      padding-left: 90px;
+      background-color: #fff;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .icon {
+      position: absolute;
+      left: 26px;
+
+      text {
+        fill: #006eff;
+      }
+    }
+
+    .quote-image {
+      background-color: #F5F5F7;
+      border-radius: 100%;
+      position: absolute;
+      right: -100px;
+      height: 200px;
+      top: 15%;
+      aspect-ratio: 1/1;
+    }
+
+    &.active {
+      visibility: visible;
+    }
+  }
+
+  &.section.wide > * { /* apply to all children wrapper */
+    max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
+  }
+
+  &.section.wide img {
+    height: initial;
+    width: initial;
+    margin: initial;
+    object-fit: initial;
+  }
+
+  @media (max-width: 992px) {
+    .quote-carousel {
+      max-width: 100%;
+    }
+
+    .slides-container {
+      padding-top: 80px;
+
+      .slides-controls {
+        padding-right: 0;
+        max-width: 100%;
+      }
+    }
+
+    .slide .slide-content {
+      margin-right: 0;
+      padding-right: 24px;
+      padding-left: 24px;
+      padding-top: 80px;
+
+      .icon {
+        top: 20px;
+      }
+    }
+
+    .slide .quote-image {
+      top: -80px;
+      justify-self: center;
+      right: unset;
+      width: 150px;
+      height: 150px;
+    }
+  }
+}
+
+.section.light-gray .quote-carousel-wrapper {
+  background-color: #F6F6F6;
+}
+
+.section.light-gray .default-content-wrapper {
+  padding-bottom: 30px;
+  padding-top: 30px;
+  max-width: 1320px;
+}
