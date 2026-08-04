@@ -487,6 +487,10 @@
         }
       }
     }
+
+    &.solutions {
+      padding-bottom: 0;
+    }
   }
 }
 
@@ -690,6 +694,7 @@
 
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.secondary {
   width: 100%;
+  margin-top: 8px;
 }
 
 .new-prod-boxes-container.secondary-button-blue  .new-prod-boxes .button.secondary {
@@ -910,7 +915,6 @@
 
 .hero-aem__prices {
   margin-top: 20px;
-  display: grid;
   grid-template-rows: subgrid;
   grid-row: span 6;
 }
@@ -1029,6 +1033,10 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 10;
+  }
+
+  .hero-aem__prices {
+    display: grid;
   }
 
   .hero-aem__prices > div, .hero-aem__prices > div > div {
