@@ -34,6 +34,18 @@
   flex-flow: column;
 }
 
+/* The plan selector is hoisted out of bd-option into bd-product so the store
+   product-switch action resolves at the product level (bd-option ignores the
+   product id). Flatten the store wrappers into the card's flex column so the
+   hoisted selector and the option content share one flex context; the JS sets
+   `order` inline to preserve the authored visual position. */
+.product-card bd-context,
+.product-card bd-product,
+.product-card bd-option,
+.product-card bd-option > div {
+  display: contents;
+}
+
 .product-card > *, .product-card bd-option > div > * {
   flex: 0;
 }
