@@ -1453,7 +1453,8 @@
   margin: 0 auto;
 
   .columns-img-col {
-    width: 100%;
+    width: 50%;
+    margin: auto;
     height: stretch;
   }
 
@@ -1463,6 +1464,7 @@
     width: fit-content;
     display: block;
     justify-items: center;
+    max-width: 50%;
   }
 }
 
