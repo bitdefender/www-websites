@@ -6,6 +6,8 @@ import {
   createTag,
 } from '../../scripts/utils/utils.js';
 
+import { detectModalButtons } from '../../scripts/scripts.js';
+
 function buildHeroDropdownBlock(element) {
   const picture = element.querySelector('picture');
   const pictureParent = picture?.parentNode;
@@ -66,7 +68,7 @@ function createPriceBox({
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
-        <a href="${secondButtonLink}" class="button secondary-button">
+        <a href="${secondButtonLink}" class="button secondary-button ${secondButtonLink.includes('fragments') ? 'modal' : ''}">
           <span class="button-text">${secondButtonText}</span>
         </a>` : ''}
     </div>
@@ -254,4 +256,5 @@ export default function decorate(block) {
   }
 
   renderDropdown(block);
+  detectModalButtons(block);
 }
