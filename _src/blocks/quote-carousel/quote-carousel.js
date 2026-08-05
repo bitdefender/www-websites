@@ -14,6 +14,7 @@ function createSlide(item, index, parentSection) {
 
   const author = item.querySelector('p > strong');
   const description = item.querySelector('p > em');
+  const image = item.querySelector('p:has(img)');
   if (!quote) {
     return null;
   }
@@ -32,14 +33,18 @@ function createSlide(item, index, parentSection) {
       ? `<div class="quote-content">
         ${item.innerHTML}
       </div>`
-      : `<div class="quote">
-        <span class="icon icon-dark-blue-quote"></span>
-      </div>
-      <div class="quote-content">
-        <h4>${quote?.innerHTML}</h4>
-        <h5>${author?.textContent}</h5>
+      : `<div class="slide-content">
+        <div class="quote">
+          <span class="icon icon-dark-blue-quote"></span>
+        </div>
+        <div class="quote-content">
+          <h4>${quote?.innerHTML}</h4>
+          <h5>${author?.textContent}</h5>
         <p>${description?.innerHTML}</p>
-      </div>`
+      </div>
+     ${image ? `<div class="quote-image">${image?.innerHTML}</div>` : ''}
+      </div>
+      `
     }`,
   );
 }

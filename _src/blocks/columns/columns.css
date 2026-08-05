@@ -200,6 +200,14 @@
   padding: 0;
 }
 
+main .creators-banner .signature {
+  font-size: 20px;
+  color: #006dff;
+  font-weight: bold;
+  margin-top: 8px;
+  font-family: 'Ibm Plex Sans', sans-serif;
+}
+
 .columns.smaller-title h4 {
   font-size: 16px;
 }
@@ -1187,7 +1195,7 @@
 .creators .columns-container .columns.benefits-cards > div > div tr {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: baseline;
   margin-bottom: 12px;
 
   td:last-of-type {
@@ -1195,6 +1203,7 @@
     border-radius: 20px;
     color: #fff;
     padding: 4px 8px;
+    text-align: center;
   }
 }
 
@@ -1512,6 +1521,8 @@
 
 .columns-container.faded p{
   color: #C5C9CE
+.columns-container.black-heading h2 {
+  color: #000 !important;
 }
 
 @media (min-width: 991px) {
@@ -1747,6 +1758,10 @@
 
   .columns-container .block.sidebar > div > div:last-of-type h1 {
     display: none;
+  }
+
+  main .creators-banner .signature {
+    font-size: 24px;
   }
 }
 
@@ -3844,6 +3859,39 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
             }
           }
         } 
+      }
+    }
+  }
+
+  &.variant-b {
+    .columns-wrapper {
+      .columns {
+        > div {
+          gap: 16px;
+  
+          > div, .card {
+            padding: 40px;
+            padding-top: 80px;
+            border: 2px solid #2E6BF6;
+            background-color: #f9fcff;
+            color: #000;
+
+            h3 {
+              color: #2E6BF6;
+              margin-top: 60px;
+            }
+
+            p {
+              color: #000;
+            }
+
+            svg {
+              position: relative;
+              width: 65px;
+              height: 75px;
+            }
+          }
+        }
       }
     }
   }

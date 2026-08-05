@@ -3,6 +3,7 @@
 import {
   createNanoBlock,
   renderNanoBlocks,
+  createTag,
 } from '../../scripts/utils/utils.js';
 
 import { detectModalButtons } from '../../scripts/scripts.js';
@@ -203,6 +204,7 @@ export default function decorate(block) {
     corners,
     contentsize,
     textcolor,
+    signature,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
@@ -226,6 +228,12 @@ export default function decorate(block) {
   });
 
   buildHeroDropdownBlock(block);
+
+  if (signature) {
+    const signatureElement = createTag('div', { class: 'signature' });
+    signatureElement.textContent = signature;
+    document.querySelector('div.hero-dropdown div div:first-child').prepend(signatureElement);
+  }
 
   if (contentsize) {
     const content = block.querySelector('.hero-dropdown-content > div');
