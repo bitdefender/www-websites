@@ -1466,7 +1466,8 @@ main .creators-banner .signature {
   margin: 0 auto;
 
   .columns-img-col {
-    width: 100%;
+    width: 50%;
+    margin: auto;
     height: stretch;
   }
 
@@ -1476,6 +1477,7 @@ main .creators-banner .signature {
     width: fit-content;
     display: block;
     justify-items: center;
+    max-width: 50%;
   }
 }
 
