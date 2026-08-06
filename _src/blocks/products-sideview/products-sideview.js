@@ -143,22 +143,29 @@ function updateBuyLink(block) {
   }
 }
 
-function renderPrice(block, _firstProduct, secondProduct) {
-  const variant = state.blockDataset.defaultSelection ?? '5-1';
+function renderPrice(block) {
+  const { saveText, defaultSelection } = block.closest('.section').dataset;
+  const [productId, devices, subscription] = [...defaultSelection.split('-')];
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
+
+  const oldPriceContainer = document.createElement('div');
+  oldPriceContainer.classList.add('prod-oldprice-container', 'await-loader');
 
   const oldPrice = document.createElement('div');
   oldPrice.classList.add('prod-oldprice', 'await-loader');
   oldPrice.setAttribute('data-store-price', 'full');
   oldPrice.setAttribute('data-store-hide', '!it.option.price.discounted');
+  oldPriceContainer.append(oldPrice);
 
-  const variantTokens = variant.split('-');
-  const devices = variantTokens[variantTokens.length - 2];
-  const subscription = variantTokens[variantTokens.length - 1];
-  const defaultProduct = variantTokens.length - 3 >= 0
-    ? variantTokens[variantTokens.length - 3]
-    : (_firstProduct || secondProduct);
+  if (saveText) {
+    const saveTag = document.createElement('div');
+    saveTag.classList.add('prod-save', 'await-loader');
+    saveTag.setAttribute('data-store-hide', '!it.option.price.discounted');
+
+    saveTag.innerHTML = `${saveText ?? ''} <span data-store-render data-store-discount="percentage"></span>`;
+    oldPriceContainer.append(saveTag);
+  }
   const el = document.createElement('DIV');
   el.classList.add('price');
   el.classList.add('await-loader');
@@ -166,7 +173,7 @@ function renderPrice(block, _firstProduct, secondProduct) {
   el.setAttribute('data-store-price', 'discounted||full');
   el.setAttribute('data-store-render', '');
 
-  priceElement.appendChild(oldPrice);
+  priceElement.appendChild(oldPriceContainer);
   priceElement.appendChild(el);
   updateBuyLink(block);
 
@@ -177,7 +184,7 @@ function renderPrice(block, _firstProduct, secondProduct) {
   if (buttonContainer) option.appendChild(buttonContainer);
 
   if (!block.firstElementChild?.matches('bd-context')) {
-    const product = createBdProduct(defaultProduct);
+    const product = createBdProduct(productId);
     while (block.firstChild) {
       product.appendChild(block.firstChild);
     }

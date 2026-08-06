@@ -7,7 +7,7 @@ import getTrialLinkMap from './trialLinkMap.js';
 const trialLinkMap = await getTrialLinkMap();
 export default new Store({
   campaign: async ({ campaign }) => (await target.configMbox)?.promotion || getUrlPromotion() || campaign || getMetadata('pid') || getCampaignBasedOnLocale(),
-  locale: page.locale,
+  locale: page.locale.includes('global') ? 'en-us' : page.locale,
   provider: { name: 'vlaicu' },
   trialLinks: trialLinkMap,
   transformers: {
