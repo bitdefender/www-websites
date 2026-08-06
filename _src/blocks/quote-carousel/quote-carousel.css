@@ -80,12 +80,13 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
   transition: all 0.3s ease-in-out;
   padding: 2em 2em 1em;
   gap: 8px;
+  padding-left: 70px;
 }
 
 @media (min-width: 1200px) {
   .slides-container .slide {
     gap: 8px;
-    padding-left: 30px;
+    padding-left: 90px;
   }
 
   main .quote-carousel .slides-container {
@@ -96,6 +97,8 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
 .slide .icon {
   width: 45px;
   height: 46px;
+  position: absolute;
+  left: 24px;
 }
 
 @media (min-width: 1200px) {
@@ -168,7 +171,6 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
 }
 
 /* Controls styles */
-
 .slides-container .slides-controls {
   padding-right: 30px;
   padding-left: 90px;
@@ -278,72 +280,74 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
     max-width: 1000px;
     box-shadow: none;
     background-color: transparent;
+    margin-bottom: 0;
     
     .slides-controls {
       max-width: calc(100% - 100px);
       background-color: #fff;
       border-radius: 0 0 20px 20px;
     }
-  }
-
-  .slide {
-    position: relative;
-    padding: 0;
-    width: 100%;
-
-    .slide-content {
-      padding: 24px;
-      margin-right: 100px;
-      margin-left: 2px;
-      padding-right: 15%;
-      position: relative;
-      width: 100%;
-      text-align: left;
-      padding-left: 90px;
-      background-color: #fff;
-      border-radius: 20px 20px 0 0;
     }
 
-    .icon {
-      position: absolute;
-      left: 26px;
+    .slide {
+      position: relative;
+      padding: 0;
+      width: 100%;
 
-      text {
-        fill: #006eff;
+      .slide-content {
+        padding: 24px;
+        margin-right: 100px;
+        margin-left: 2px;
+        padding-right: 15%;
+        position: relative;
+        width: 100%;
+        text-align: left;
+        padding-left: 90px;
+        background-color: #fff;
+        border-radius: 20px 20px 0 0;
+        align-content: space-evenly;
+      }
+
+      .icon {
+        position: absolute;
+        left: 26px;
+
+        text {
+          fill: #006eff;
+        }
+      }
+
+      .quote-image {
+        background-color: #F5F5F7;
+        border-radius: 100%;
+        position: absolute;
+        right: -100px;
+        height: 200px;
+        top: 15%;
+        aspect-ratio: 1/1;
+      }
+
+      &.active {
+        visibility: visible;
       }
     }
-
-    .quote-image {
-      background-color: #F5F5F7;
-      border-radius: 100%;
-      position: absolute;
-      right: -100px;
-      height: 200px;
-      top: 15%;
-      aspect-ratio: 1/1;
-    }
-
-    &.active {
-      visibility: visible;
-    }
-  }
 
   &.section.wide > * { /* apply to all children wrapper */
     max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
   }
 
   &.section.wide img {
-    height: initial;
-    width: initial;
-    margin: initial;
-    object-fit: initial;
+    object-fit: cover;
+    min-height: 100%;
+    min-width: 100%;
+    border-radius: 50%;
   }
 
   @media (max-width: 992px) {
     .quote-carousel {
       max-width: 100%;
     }
-
+    
     .slides-container {
       padding-top: 80px;
 
@@ -370,7 +374,7 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
       right: unset;
       width: 150px;
       height: 150px;
-    }
+    }    
   }
 }
 
