@@ -154,9 +154,8 @@ function renderPrice(text = '', monthly = '', monthTranslation = 'mo') {
  */
 function renderHighlightSavings(text = 'Save', percent = '') {
   const highlighSaving = document.createElement('span');
-  highlighSaving.textContent = `${text} ${
-    percent?.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
-  }`;
+  highlighSaving.textContent = `${text} ${percent?.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
+    }`;
 
   const root = createTag(
     'div',
@@ -261,9 +260,8 @@ function renderFeatured(text) {
  */
 function renderFeaturedSavings(text = 'Save', percent = '') {
   const featuredSaving = document.createElement('span');
-  featuredSaving.textContent = `${text} ${
-    percent.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
-  }`;
+  featuredSaving.textContent = `${text} ${percent.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
+    }`;
 
   const root = createTag(
     'div',
@@ -347,7 +345,7 @@ export default function decorate(block) {
         productCode: allImportantData[1],
         defaultVariant: `${Number(allImportantData.slice(-1)[0])
           ? allImportantData.slice(-1)[0] : allImportantData[2].match(/[0-9-]+/g)[0]
-        }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
+          }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
       };
     }
   });
@@ -387,6 +385,32 @@ export default function decorate(block) {
       }
     });
     renderNanoBlocks(row, undefined, idxParent);
+
+    // The plan selector switches the product id (data-store-set-id). The nearest
+    // bd-* ancestor catches the bd-action-request, and bd-option only applies
+    // devices/subscription — it ignores the product id. So the selector must sit
+    // above bd-option (as a direct child of bd-product) for the product switch to
+    // cascade down. Hoist it out of bd-option, mirroring products-sideview.
+    // Preserve its authored visual position via flex `order` (the store wrappers
+    // are flattened with `display: contents` in CSS, so all card content shares
+    // one flex context).
+    const bdProduct = row.querySelector('bd-product');
+    const bdOption = bdProduct?.querySelector('bd-option');
+    const planSelector = bdOption?.querySelector('.variant-selector');
+    if (bdProduct && bdOption && planSelector) {
+      const planSelectorContainer = planSelector.closest('.nanoblock') || planSelector;
+      // remember the authored position among the option's content children
+      const contentRoot = planSelectorContainer.parentElement;
+      const authoredIndex = [...contentRoot.children].indexOf(planSelectorContainer);
+      planSelectorContainer.classList.add('plan-selector-hoisted');
+      bdProduct.insertBefore(planSelectorContainer, bdOption);
+      // shift every option child at/after the authored position down by one,
+      // and place the selector at its original index
+      bdOption.querySelectorAll(':scope > div > *').forEach((child, i) => {
+        child.style.order = i >= authoredIndex ? i + 2 : i + 1;
+      });
+      planSelectorContainer.style.order = authoredIndex + 1;
+    }
   });
 
   // render nanoblocks in section's content default wrapper
