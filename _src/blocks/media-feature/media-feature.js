@@ -1,42 +1,61 @@
 import { getDsnBase } from '../../scripts/utils/utils.js';
 
 const VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
+const YOUTUBE_RE = /(?:youtube\.com|youtu\.be)/i;
+const IFRAME_SRC_RE = /<iframe[^>]+\bsrc=["']([^"']+)["']/i;
 
 const isMediaCell = (cell) => !!(
     cell.querySelector('picture, video, iframe')
     || VIDEO_EXTS.test(cell.textContent.trim())
+    || YOUTUBE_RE.test(cell.textContent.trim())
 );
 
 const buildMediaSlot = (cell) => {
     const picture = cell.querySelector('picture');
+    const iframe = cell.querySelector('iframe');
+    const video = cell.querySelector('video');
+
+    let videoSrc = null;
+    if (iframe) {
+        videoSrc = iframe.getAttribute('src');
+    } else if (video) {
+        videoSrc = video.getAttribute('src');
+    } else {
+        const urlText = cell.textContent.trim();
+        const iframeMatch = IFRAME_SRC_RE.exec(urlText);
+        if (iframeMatch) {
+            videoSrc = iframeMatch[1];
+        } else if (VIDEO_EXTS.test(urlText) || YOUTUBE_RE.test(urlText)) {
+            videoSrc = urlText;
+        }
+    }
+
+    if (videoSrc) {
+        const thumbImg = picture?.querySelector('img');
+        // bd-video-player autoplays native video when no thumb; use it only for YouTube or when a thumb is available
+        if (YOUTUBE_RE.test(videoSrc) || thumbImg) {
+            const player = document.createElement('bd-video-player');
+            player.setAttribute('slot', 'media');
+            player.setAttribute('src', videoSrc);
+            if (thumbImg) {
+                player.setAttribute('thumb', thumbImg.src);
+                if (thumbImg.alt) player.setAttribute('thumb-alt', thumbImg.alt);
+            }
+            return player;
+        }
+
+        const vid = document.createElement('video');
+        vid.setAttribute('src', videoSrc);
+        vid.setAttribute('controls', '');
+        vid.setAttribute('playsinline', '');
+        vid.setAttribute('slot', 'media');
+        return vid;
+    }
+
     if (picture) {
         const clone = picture.cloneNode(true);
-        clone.setAttribute('slot', 'image');
+        clone.setAttribute('slot', 'media');
         return clone;
-    }
-
-    const video = cell.querySelector('video');
-    if (video) {
-        const clone = video.cloneNode(true);
-        clone.setAttribute('slot', 'image');
-        return clone;
-    }
-
-    const iframe = cell.querySelector('iframe');
-    if (iframe) {
-        const clone = iframe.cloneNode(true);
-        clone.setAttribute('slot', 'image');
-        return clone;
-    }
-
-    const url = cell.textContent.trim();
-    if (VIDEO_EXTS.test(url)) {
-        const vid = document.createElement('video');
-        vid.src = url;
-        vid.controls = true;
-        vid.setAttribute('playsinline', '');
-        vid.setAttribute('slot', 'image');
-        return vid;
     }
 
     return null;
@@ -132,7 +151,10 @@ const buildFeaturesTab = (row, shouldReverse) => {
 export default async function decorate(block) {
     const base = getDsnBase();
     try {
-        await import(`${base}features-tab`);
+        await Promise.all([
+            import(`${base}features-tab`),
+            import(`${base}video-player`),
+        ]);
     } catch (err) {
         // eslint-disable-next-line no-console
         console.warn('media-feature: DSN import failed', err);
