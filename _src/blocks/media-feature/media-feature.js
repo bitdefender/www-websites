@@ -70,6 +70,29 @@ const buildHeadingSlot = (headingEl) => {
     return bdH;
 };
 
+const buildListItem = (li) => {
+    const bdLi = document.createElement('bd-li');
+    bdLi.setAttribute('kind', 'bullet');
+    bdLi.setAttribute('size', 'md');
+    const bdP = document.createElement('bd-p');
+    bdP.setAttribute('kind', 'regular');
+    bdP.innerHTML = li.innerHTML;
+    bdLi.appendChild(bdP);
+    return bdLi;
+};
+
+const buildList = (listEl) => {
+    const bdList = document.createElement('bd-list');
+    bdList.setAttribute('type', listEl.tagName === 'OL' ? 'ordered' : 'unordered');
+    bdList.setAttribute('spacing', 'md');
+    bdList.setAttribute('variant', 'default');
+    bdList.setAttribute('orientation', 'vertical');
+    Array.from(listEl.querySelectorAll(':scope > li')).forEach((li) => {
+        bdList.appendChild(buildListItem(li));
+    });
+    return bdList;
+};
+
 const buildContentSlot = (cell, headingEl) => {
     const slot = document.createElement('div');
     slot.setAttribute('slot', 'content');
@@ -79,7 +102,7 @@ const buildContentSlot = (cell, headingEl) => {
         if (child.classList.contains('button-container')) return;
 
         if (child.tagName === 'UL' || child.tagName === 'OL') {
-            slot.appendChild(child.cloneNode(true));
+            slot.appendChild(buildList(child));
             return;
         }
 
@@ -154,6 +177,8 @@ export default async function decorate(block) {
         await Promise.all([
             import(`${base}features-tab`),
             import(`${base}video-player`),
+            import(`${base}list`),
+            import(`${base}list-item`),
         ]);
     } catch (err) {
         // eslint-disable-next-line no-console
