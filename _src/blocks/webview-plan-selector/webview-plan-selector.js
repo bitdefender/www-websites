@@ -807,7 +807,7 @@ async function applyWebviewPlanSelectorFactorySetup(planSelectorMetadata, block)
  * @param {Element} block The webview plan selector block element.
  */
 export default async function decorate(block) {
-  const planSelectorMetadata = getMetadata('webview-plan-selector-type');
+  const planSelectorMetadata = block.closest('.section').dataset.webviewPlanSelectorType;
   block.parentNode.classList.add(planSelectorMetadata || 'default');
 
   await applyWebviewPlanSelectorFactorySetup(planSelectorMetadata, block);
