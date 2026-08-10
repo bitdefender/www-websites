@@ -314,7 +314,6 @@
 
         ul {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
             gap: 16px;
 
             li {
@@ -359,6 +358,14 @@
                 strong {
                     color: #006DFF;
                 }
+            }
+        }
+    }
+
+    @media (min-width: 992px) {
+        .features-wrapper {
+            ul {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     }

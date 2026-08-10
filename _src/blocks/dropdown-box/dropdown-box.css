@@ -494,6 +494,38 @@
 .dropdown-box-container.new-tabs {
     max-width: 1000px;
 
+    .dropdown-box {
+        &::after {
+            content: "";
+            position: absolute;
+            display: block;
+            top: 0;
+            bottom: 0;
+            margin: auto 0;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            border: solid #006DFF;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            transition: top 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
+            transition: top 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transition: top 0.3s ease-in-out, transform 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
+        }
+
+         h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #006DFF;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 0;
+        }
+    }
+
+
     .slider-box .row {
         .title {
             box-shadow: none;
