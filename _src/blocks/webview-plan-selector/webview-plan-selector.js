@@ -1,5 +1,5 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
-import { decorateIcons, getMetadata } from '../../scripts/lib-franklin.js';
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 const PRIVACY_POLICY_FALLBACK = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
 
