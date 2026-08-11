@@ -86,7 +86,7 @@ function setImageAsBackgroundImage() {
 function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
   switch (UserAgent.os) {
     case 'android':
-      dynamicLink.href = dynamicLinks.androidLink;
+      dynamicLink.href = dynamicLinks.androidLink ?? dynamicLinks.defaultLink;
       if (dynamicProducts.storeIdAndroid) {
         AdobeDataLayerService.push(new ButtonClickEvent(
           'trial downloaded',
@@ -96,7 +96,7 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
 
       break;
     case 'ios':
-      dynamicLink.href = dynamicLinks.iosLink;
+      dynamicLink.href = dynamicLinks.iosLink ?? dynamicLinks.defaultLink;
       if (dynamicProducts.storeIdIos) {
         AdobeDataLayerService.push(new ButtonClickEvent(
           'trial downloaded',
@@ -105,7 +105,7 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
       }
       break;
 
-    case 'windows':
+    case 'Windows':
       dynamicLink.href = dynamicLinks.windowsLink ?? dynamicLinks.defaultLink;
       break;
 
