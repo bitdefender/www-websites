@@ -2,10 +2,6 @@ import {
   beforeEach, describe, expect, it, vi,
 } from 'vitest';
 
-const { getMetadataMock } = vi.hoisted(() => ({
-  getMetadataMock: vi.fn(() => ''),
-}));
-
 vi.mock('../../../scripts/scripts.js', () => ({
   getLanguageCountryFromPath: vi.fn(() => ({
     language: 'en',
@@ -15,16 +11,17 @@ vi.mock('../../../scripts/scripts.js', () => ({
 
 vi.mock('../../../scripts/lib-franklin.js', () => ({
   decorateIcons: vi.fn(),
-  getMetadata: getMetadataMock,
 }));
 
 const { default: decorate } = await import('../../../blocks/webview-plan-selector/webview-plan-selector.js');
 
-function setupDefaultPlanSelector() {
+function setupDefaultPlanSelector({ variation = '' } = {}) {
+  const variationAttribute = variation ? ` data-webview-plan-selector-type="${variation}"` : '';
+
   document.body.innerHTML = `
     <main>
       <div
-        class="section"
+        class="section"${variationAttribute}
         data-products="basic/3/1,premium/10/1"
         data-benefits-product1="true,false"
         data-benefits-product2="true,true"
@@ -78,6 +75,7 @@ function setupV2PlanSelector({
     <main>
       <div
         class="section"
+        data-webview-plan-selector-type="v2"
         data-products="total-individual/5/1,premium-individual/5/1"
         data-second-toggle-products="${secondToggleProducts}"
         data-first-toggle-label="Individual · up to 5 devices"
@@ -140,8 +138,6 @@ function selectRadio(input) {
 
 describe('webview-plan-selector factory', () => {
   beforeEach(() => {
-    getMetadataMock.mockReset();
-    getMetadataMock.mockReturnValue('');
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true })));
     window.history.pushState({}, '', '/en-us/consumer/webview/plan-selector');
   });
@@ -151,7 +147,6 @@ describe('webview-plan-selector factory', () => {
 
     await decorate(block);
 
-    expect(getMetadataMock).toHaveBeenCalledWith('webview-plan-selector-type');
     expect(block.parentElement.classList.contains('default')).toBe(true);
     expect(block.querySelectorAll('.webview-plan-selector-plan')).toHaveLength(2);
     expect(block.querySelector('[data-plan-index="1"]').classList.contains('is-selected')).toBe(true);
@@ -159,8 +154,7 @@ describe('webview-plan-selector factory', () => {
   });
 
   it('keeps unknown factory values on the wrapper and falls back to default decoration', async () => {
-    getMetadataMock.mockReturnValue('experiment');
-    const block = setupDefaultPlanSelector();
+    const block = setupDefaultPlanSelector({ variation: 'experiment' });
 
     await decorate(block);
 
@@ -170,7 +164,6 @@ describe('webview-plan-selector factory', () => {
   });
 
   it('decorates the v2 variation from authored content and generic metadata', async () => {
-    getMetadataMock.mockReturnValue('v2');
     const block = setupV2PlanSelector();
 
     await decorate(block);
@@ -193,7 +186,6 @@ describe('webview-plan-selector factory', () => {
   });
 
   it('adds the dark-mode class to v2 when requested through the theme query parameter', async () => {
-    getMetadataMock.mockReturnValue('v2');
     window.history.pushState({}, '', '/en-us/consumer/webview/plan-selector?theme=dark');
     const block = setupV2PlanSelector();
 
@@ -204,7 +196,6 @@ describe('webview-plan-selector factory', () => {
   });
 
   it('renders both authored generic toggle labels', async () => {
-    getMetadataMock.mockReturnValue('v2');
     const block = setupV2PlanSelector();
 
     await decorate(block);
@@ -218,7 +209,6 @@ describe('webview-plan-selector factory', () => {
   });
 
   it('maps every plan and toggle combination to products in authored plan-cell order', async () => {
-    getMetadataMock.mockReturnValue('v2');
     const block = setupV2PlanSelector();
 
     await decorate(block);
@@ -247,7 +237,6 @@ describe('webview-plan-selector factory', () => {
   });
 
   it('uses the authored [checked] marker for the initial plan selection', async () => {
-    getMetadataMock.mockReturnValue('v2');
     const block = setupV2PlanSelector({ checkedPlanIndex: 1 });
 
     await decorate(block);
@@ -260,7 +249,6 @@ describe('webview-plan-selector factory', () => {
   });
 
   it('switches native plan and toggle radios and shows the matching store prices', async () => {
-    getMetadataMock.mockReturnValue('v2');
     const block = setupV2PlanSelector({ checkedPlanIndex: 1 });
 
     await decorate(block);
@@ -286,7 +274,6 @@ describe('webview-plan-selector factory', () => {
   });
 
   it('synchronizes the authored footer CTA after selected store-link mutations', async () => {
-    getMetadataMock.mockReturnValue('v2');
     const block = setupV2PlanSelector({ checkedPlanIndex: 1 });
 
     await decorate(block);
@@ -318,7 +305,6 @@ describe('webview-plan-selector factory', () => {
     ['an incomplete product list', 'total-family/25/1', 'Family · up to 25 devices'],
     ['a missing label', 'total-family/25/1,premium-family/25/1', ''],
   ])('omits the second toggle for %s', async (description, secondToggleProducts, secondToggleLabel) => {
-    getMetadataMock.mockReturnValue('v2');
     const block = setupV2PlanSelector({ secondToggleProducts, secondToggleLabel });
 
     await decorate(block);
