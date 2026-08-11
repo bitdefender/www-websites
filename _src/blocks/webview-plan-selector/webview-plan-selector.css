@@ -3,7 +3,6 @@ main .section.webview-plan-selector-container {
     max-height: 512px;
     margin: 0 auto;
     padding: 0;
-    background: #fff;
     font-family: "IBM Plex Sans", sans-serif;
 }
 
