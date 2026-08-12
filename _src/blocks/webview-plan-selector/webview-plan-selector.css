@@ -787,6 +787,16 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context[hidden] {
     display: none;
 }
 
+/* Accommodate bd-context > bd-product > bd-option wrapping from local store library */
+main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context bd-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    width: 100%;
+    text-align: end;
+}
+
 main .webview-plan-selector.v2 .webview-plan-selector-v2-price-original {
     min-width: 40px;
     min-height: 14px;

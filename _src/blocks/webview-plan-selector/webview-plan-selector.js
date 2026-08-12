@@ -1,5 +1,6 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
-import { decorateIcons, getMetadata } from '../../scripts/lib-franklin.js';
+import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { createBdProduct, createBdOption } from '../../scripts/utils/utils.js';
 
 const PRIVACY_POLICY_FALLBACK = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
 
@@ -433,24 +434,18 @@ function createV2StoreContext({
   context.className = 'webview-plan-selector-v2-store-context';
   context.dataset.planIndex = planIndex;
   context.dataset.toggleIndex = toggleIndex;
-  context.setAttribute('data-store-context', '');
-  context.setAttribute('data-store-id', product?.id || '');
-  context.setAttribute(
-    'data-store-option',
-    product?.users && product?.years ? `${product.users}-${product.years}` : '',
-  );
-  context.setAttribute('data-store-department', 'consumer');
-  context.setAttribute('data-store-event', 'product-loaded');
   context.hidden = toggleIndex !== 0;
 
   const originalPrice = document.createElement('span');
   originalPrice.className = 'webview-plan-selector-v2-price-original await-loader';
   originalPrice.setAttribute('data-store-price', 'full');
-  originalPrice.setAttribute('data-store-hide', 'no-price=discounted');
+  originalPrice.setAttribute('data-store-render', '');
+  originalPrice.setAttribute('data-store-hide', '!it.option.price.discounted');
 
   const promotionalPrice = document.createElement('strong');
   promotionalPrice.className = 'webview-plan-selector-v2-price-promotional await-loader';
   promotionalPrice.setAttribute('data-store-price', 'discounted||full');
+  promotionalPrice.setAttribute('data-store-render', '');
 
   const period = document.createElement('span');
   period.className = 'webview-plan-selector-v2-price-period';
@@ -461,7 +456,8 @@ function createV2StoreContext({
   discountLabelText.textContent = section?.dataset?.discountLabelText || '';
   const discount = document.createElement('span');
   discount.setAttribute('data-store-discount', 'percentage');
-  discount.setAttribute('data-store-hide', 'no-price=discounted');
+  discount.setAttribute('data-store-render', '');
+  discount.setAttribute('data-store-hide', '!it.option.price.discounted');
   discountLabelText.append(discount);
 
   const buyLink = document.createElement('a');
@@ -469,10 +465,19 @@ function createV2StoreContext({
   buyLink.href = ctaHref;
   buyLink.textContent = ctaText;
   buyLink.setAttribute('data-store-buy-link', '');
+  buyLink.setAttribute('data-store-render', '');
   buyLink.setAttribute('aria-hidden', 'true');
   buyLink.setAttribute('tabindex', '-1');
 
-  context.append(originalPrice, promotionalPrice, period, discountLabelText, buyLink);
+  const bdProduct = createBdProduct(product?.id || '');
+  const bdOption = createBdOption({
+    devices: product.users,
+    subscription: product.years,
+    storeEvent: 'product-loaded',
+  });
+  bdOption.append(originalPrice, promotionalPrice, period, discountLabelText, buyLink);
+  bdProduct.append(bdOption);
+  context.append(bdProduct);
   return context;
 }
 
