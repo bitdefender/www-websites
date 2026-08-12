@@ -198,12 +198,11 @@ export default async function decorate(block) {
     provider: { name: 'vlaicu' },
   });
 
-  const canvasRoot = document.createElement('bd-root');
-  canvasRoot.store = canvasStore;
+  const canvasRoot = document.createElement('bd-context');
   const canvasWrapper = block.parentElement;
   canvasWrapper.appendChild(canvasRoot);
   canvasRoot.appendChild(block);
-
+  canvasRoot.store = canvasStore;
   await canvasRoot.updateComplete;
 
   const offer = await target.getOffers({
