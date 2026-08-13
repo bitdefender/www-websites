@@ -106,7 +106,7 @@ const buildCompareSection = (block) => {
       titleEl = iconWrap.querySelector('h1, h2, h3, h4, h5, h6')
         // Fall back to first text-only paragraph when no heading is authored.
         ?? Array.from(iconWrap.querySelectorAll(':scope > p'))
-          .find((p) => p.textContent.trim() && !p.querySelector('picture, img'));
+          .find((p) => p.textContent.trim() && !p.querySelector('picture, img, svg, [class*="icon-"]'));
       const descCandidate = titleEl?.nextElementSibling;
       descriptionEl = descCandidate?.tagName === 'P' ? descCandidate : null;
       const footnoteCandidate = descriptionEl?.nextElementSibling;
