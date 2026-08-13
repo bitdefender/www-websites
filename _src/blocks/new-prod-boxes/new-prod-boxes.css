@@ -149,6 +149,13 @@
   height: fit-content;
 }
 
+.new-prod-boxes-container .new-prod-boxes.transparent-tag .prod_box .inner_prod_box .blueTag {
+  background-color: transparent;
+  color: #000;
+  padding-left: 0;
+  border-radius: none;
+}
+
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .blueTag .icon {
   width: fit-content;
   height: auto;
@@ -405,6 +412,85 @@
         margin-top: var(--tag-margin);
       }
     }
+
+    &.blue-top-tag {
+      .prod_box {
+        .greenTag2 {
+          top: -35px;
+          background: #d6e8ff;
+          border-radius: 10px 10px 0 0;
+          font-family: Arial, sans-serif;
+          font-weight: 700;
+          font-size: 13px;
+          line-height: 100%;
+          vertical-align: middle;
+          width: 80%;
+          text-align: center;
+          color: #003385;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          padding: 0 10px;
+          justify-content: center;
+        }
+
+        .blueTag {
+          background-color: transparent;
+          color: #000;
+          padding-left: 0;
+        }
+
+        .prod-save {
+          background-color: #68BA68;
+          color: #fff;
+          font-weight: 700;
+          border-radius: 16px;
+        }
+
+        .per-m {
+          font-size: 14px;
+          color: #3D3D3D;
+        }
+
+        .button.secondary {
+          justify-content: center;
+          width: 100%;
+
+          &:hover {
+            .button-text {
+              transform: none;
+              transition: none;
+            }
+          }
+
+          &[href*="hidden-button"] {
+            visibility: hidden;
+          }
+        }
+
+        .benefitsLists ul li:first-of-type.has_arrow_right {
+          display: flex;
+          padding-left: 22px;
+          position: relative;
+
+          .arrow-right {
+            position: absolute ;
+            left: 0;
+            top: unset;
+          }
+        }
+
+        @media (width < 768px) {
+          .hero-aem__prices {
+            margin-bottom: 8px;
+          }
+        }
+      }
+    }
+
+    &.solutions {
+      padding-bottom: 0;
+    }
   }
 }
 
@@ -448,6 +534,12 @@
   background-size: 13px;
   position: relative;
   cursor: pointer;
+}
+
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type).unavailable {
+  color: #B7B7B7;
+  background: url("../../icons/x-circle.svg") top 2px left no-repeat transparent !important;
+  background-size: 13px !important;
 }
 
 .new-prod-boxes-container .new-prod-boxes.new-green-check .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) {
@@ -541,11 +633,17 @@
 .new-prod-boxes-container .prod-newprice {
   font-size: 35px;
   font-weight: bold;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.creators .new-prod-boxes-container .prod-newprice {
+  align-items: unset;
 }
 
 .new-prod-boxes-container .prod-newprice .per-m {
   font-size: 20px;
-  top: -12px;
 }
 
 .new-prod-boxes-container .newprice-container {
@@ -554,7 +652,6 @@
 
 .new-prod-boxes-container .newprice-container sup {
   position: relative;
-  top: -20px;
 }
 
 .new-prod-boxes-container .button.primary {
@@ -597,6 +694,7 @@
 
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.secondary {
   width: 100%;
+  margin-top: 8px;
 }
 
 .new-prod-boxes-container.secondary-button-blue  .new-prod-boxes .button.secondary {
@@ -817,9 +915,8 @@
 
 .hero-aem__prices {
   margin-top: 20px;
-  display: grid;
   grid-template-rows: subgrid;
-  grid-row: span 5;
+  grid-row: span 6;
 }
 
 .demo-box .hero-aem__prices * {
@@ -936,6 +1033,10 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 10;
+  }
+
+  .hero-aem__prices {
+    display: grid;
   }
 
   .hero-aem__prices > div, .hero-aem__prices > div > div {

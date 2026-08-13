@@ -2,7 +2,7 @@
 import { debounce, UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
 import {
-  matchHeights, createTag, renderNanoBlocks, addScript, wrapChildrenWithStoreContext,
+  matchHeights, renderNanoBlocks, addScript, wrapChildrenWithStoreContext, createTag,
 } from '../../scripts/utils/utils.js';
 
 function getItemsToShow() {
@@ -202,12 +202,14 @@ function initLottieAnimations(block) {
   }
 }
 
+let count = 0;
 export default function decorate(block) {
   const parentSection = block.closest('.section');
   const {
     // eslint-disable-next-line max-len
-    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, breadcrumbs, aliases,
+    linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, aliases,
     defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid, seeMoreBtn,
+    signature,
   } = parentSection.dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -220,38 +222,35 @@ export default function decorate(block) {
   }
 
   // setup image columns
-  [...block.children].forEach((row) => {
+  [...block.children].forEach((row, idxRow) => {
     [...row.children].forEach((col) => {
       const pic = col.querySelector('picture');
       if (pic) {
         const picWrapper = pic.closest('div');
         if (picWrapper && picWrapper.children.length === 1) {
           // picture is only content in column
-          picWrapper.classList.add('columns-img-col');
+          picWrapper.classList.add('columns-img-col', 'columns-col');
         }
       } else {
         const children = [...row.children];
 
         if (children.length === 1) {
-          col.closest('div').classList.add('columns-title-col');
+          col.closest('div').classList.add('columns-title-col', 'columns-col');
         } else {
           const firstParentIndex = children.indexOf(col.closest('div'));
 
-          col.closest('div').classList.add('columns-text-col');
+          col.closest('div').classList.add('columns-text-col', 'columns-col');
           if (firstParentIndex) {
-            col.closest('div').classList.add('columns-right-col');
+            col.closest('div').classList.add('columns-right-col', 'columns-col');
           } else {
-            col.closest('div').classList.add('columns-left-col');
+            col.closest('div').classList.add('columns-left-col', 'columns-col');
           }
         }
       }
+
+      renderNanoBlocks(col, undefined, idxRow);
     });
   });
-
-  if (breadcrumbs && block.classList.contains('creators-banner')) {
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    block.querySelector('h2')?.prepend(breadcrumb);
-  }
 
   // setup buylink, this can be used later as a starting point for prices.
   const productsAsList = products?.split(',');
@@ -276,9 +275,11 @@ export default function decorate(block) {
   // setup data-store-id on mobal buttons
   aliases?.split(',').forEach((alias, i) => {
     [...block.children].forEach((row) => {
-      row.children[i]
-        ?.querySelector('a.button.modal')
-        ?.setAttribute('product-id', alias.trim());
+      const buttonModal = row.children[i]
+        ?.querySelector('a.button.modal');
+
+      buttonModal?.setAttribute('product-id', alias.trim());
+      buttonModal?.setAttribute('data-store-id', alias.trim());
     });
   });
 
@@ -342,8 +343,8 @@ export default function decorate(block) {
 
       leftCol.innerHTML = `
         <div class="yt-preview">
-          <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
-          <button class="yt-play-btn"></button>
+          <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" alt="Bitdefender">
+          <button class="yt-play-btn">Play</button>
         </div>
       `;
 
@@ -375,8 +376,6 @@ export default function decorate(block) {
     /* fallback */
     leftCol.innerHTML = decoded;
   }
-
-  renderNanoBlocks(parentSection, undefined, undefined, block);
 
   if (parentSection.classList.contains('chat-options')) {
     const cards = block.querySelectorAll('.columns > div > div');
@@ -480,6 +479,40 @@ export default function decorate(block) {
       videoP.classList.add('iframe');
       cols[1].querySelector('p').innerHTML = `<iframe width="100%" height="232" src="${content}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
     }
+  }
+
+  // columns as tabs
+  if (parentSection.classList.contains('columns-as-tabs')) {
+    count += 1;
+
+    const firstColumnPrev = parentSection.querySelectorAll('div.columns-wrapper:first-of-type .columns-text-col');
+
+    // set up active the prev
+    if (count === 1 && firstColumnPrev) firstColumnPrev[0].classList.add('active');
+
+    // set up the icons tabs
+    if (count === 2) {
+      const columnsIcons = block.querySelectorAll('.columns-col');
+      const firstColumnsIcon = columnsIcons[0];
+      if (firstColumnsIcon) firstColumnsIcon.classList.add('active');
+
+      columnsIcons.forEach((item, k) => {
+        item.addEventListener('click', () => {
+          columnsIcons.forEach((icon) => icon.classList.remove('active'));
+          item.classList.add('active');
+
+          // set up the prev
+          firstColumnPrev.forEach((prev) => prev.classList.remove('active'));
+          if (firstColumnPrev[k]) firstColumnPrev[k].classList.add('active');
+        });
+      });
+    }
+  }
+
+  if (signature && block.classList.contains('creators-banner')) {
+    const signatureElement = createTag('div', { class: 'signature' });
+    signatureElement.textContent = signature;
+    document.querySelector('div.creators-banner div div:first-child').prepend(signatureElement);
   }
 
   matchHeights(block, 'h3');
@@ -665,4 +698,81 @@ export default function decorate(block) {
     },
     'module',
   );
+  if (block.classList.contains('scam-protection')) {
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+
+        const statNumbers = entry.target.querySelectorAll('h1');
+
+        statNumbers.forEach((stat) => {
+          const originalText = stat.textContent.trim();
+
+          // Normalize text for number extraction
+          const normalized = originalText
+            .replace(/[^0-9.,\s]/g, '') // keep numeric symbols
+            .replace(/\s/g, '') // remove spaces (1 234 → 1234)
+            .replace(/,/g, '.') // convert commas to dots
+            .replace(/(\.\d*)\./g, '$1'); // fix "1.234.567"
+
+          const numericValue = parseFloat(normalized);
+
+          if (Number.isNaN(numericValue)) return;
+
+          // Store original format for final restoration
+          stat.setAttribute('data-original', originalText);
+
+          let current = 0;
+          const increment = numericValue / 100;
+
+          const animation = setInterval(() => {
+            current += increment;
+
+            if (current >= numericValue) {
+              stat.textContent = originalText;
+              clearInterval(animation);
+              return;
+            }
+
+            // ---- Detect keywords (multi-language) ----
+            const lower = originalText.toLowerCase();
+
+            const suffixes = {
+              trillion: ['trillion', 'billón', 'billion', '兆', 'B'],
+              billion: ['billion', 'milliard', 'mil millones', '亿'],
+              million: ['million', 'millón', '百万', 'M'],
+            };
+
+            const formatValue = (num) => new Intl.NumberFormat(
+              undefined,
+              { maximumFractionDigits: 3 },
+            ).format(num);
+
+            let matchedWord = null;
+
+            Object.entries(suffixes).some(([, words]) => words.some((word) => {
+              if (lower.includes(word.toLowerCase())) {
+                matchedWord = word; // use this exact word in final text
+                return true; // stop inner some
+              }
+              return false;
+            }));
+
+            let formatted = formatValue(current);
+
+            if (matchedWord) {
+              formatted = `${formatted} ${matchedWord}`;
+            }
+
+            // Preserve other text ("+" signs, words, etc.)
+            stat.textContent = formatted;
+          }, 20);
+        });
+
+        statsObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.2 });
+
+    statsObserver.observe(parentSection);
+  }
 }

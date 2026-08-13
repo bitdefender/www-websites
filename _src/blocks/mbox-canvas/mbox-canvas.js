@@ -57,12 +57,17 @@ async function extractServiceId(serviceId) {
   return null;
 }
 
-async function createOfferParameters() {
+export async function createOfferParameters() {
   const parameters = {};
   const urlParams = new URLSearchParams(window.location.search);
   const feature = urlParams.get('feature');
   const language = urlParams.get('lang');
   const serviceId = urlParams.get('service_id');
+  const autoRenewal = urlParams.get('auto_renewal');
+  const bundleId = urlParams.get('bundle_id');
+  const reason = urlParams.get('reason');
+  const remainingDays = urlParams.get('remaining_days');
+  const renewalDate = urlParams.get('renewal-date');
 
   if (feature) {
     parameters.feature = feature.replaceAll('_', '-');
@@ -80,10 +85,30 @@ async function createOfferParameters() {
     }
   }
 
+  if (autoRenewal) {
+    parameters.auto_renewal = autoRenewal;
+  }
+
+  if (bundleId) {
+    parameters.bundle_id = bundleId;
+  }
+
+  if (reason) {
+    parameters.reason = reason;
+  }
+
+  if (remainingDays) {
+    parameters.remaining_days = remainingDays;
+  }
+
+  if (renewalDate) {
+    parameters.renewal_date = renewalDate;
+  }
+
   return parameters;
 }
 
-function createOfferProfileParameters(parameters) {
+export function createOfferProfileParameters(parameters) {
   const profileParameters = {};
   Object.entries(parameters).forEach(([key, value]) => {
     profileParameters[`profile.${key}`] = value;
@@ -200,6 +225,9 @@ export default async function decorate(block) {
     parameters,
     profileParameters: createOfferProfileParameters(parameters),
   });
+  if (configMbox?.promotion) {
+    block.setAttribute('data-promotion', configMbox.promotion);
+  }
   await loadBlocks(block.querySelector('.canvas-content'));
   await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
   window.disableGlobalStore = true;

@@ -3,19 +3,29 @@
     .creators .default-content-wrapper h2{
         font-size: 60px / 69px;
         font-weight: 300;
-        font-family: 'IBM Plex Sans', Arial;
+        font-family: 'IBM Plex Sans', sans-serif;
+    }
+
+    .creators .scam-protection .default-content-wrapper h2 {
+        font: normal normal 300 60px/70px "IBM Plex Sans", sans-serif !important;
+    }
+
+    .creators .scam-protection .default-content-wrapper p {
+        font: normal normal 300 24px/34px "IBM Plex Sans", sans-serif !important;
+        margin: 0;
+    }
+
+    .creators .scam-protection a.button {
+        border-radius: 8px !important;
     }
 
     html[lang="ro"], body {
-        font-family: 'IBMPlexSans', sans-serif;
+        font-family: 'IBM Plex Sans', sans-serif;
 
-        /* Activăm glifele locale pentru limba română */
         font-feature-settings: "locl" 1;
         -moz-font-feature-settings: "locl";
         -webkit-font-feature-settings: "locl";
-      
-        /* Activăm contextualizarea OpenType (pentru siguranță) */
-        font-variant-ligatures: contextual;
-      
+
+        font-variant-ligatures: contextual;     
     }
 }

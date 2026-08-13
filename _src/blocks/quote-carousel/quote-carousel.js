@@ -14,6 +14,7 @@ function createSlide(item, index, parentSection) {
 
   const author = item.querySelector('p > strong');
   const description = item.querySelector('p > em');
+  const image = item.querySelector('p:has(img)');
   if (!quote) {
     return null;
   }
@@ -32,14 +33,18 @@ function createSlide(item, index, parentSection) {
       ? `<div class="quote-content">
         ${item.innerHTML}
       </div>`
-      : `<div class="quote">
-        <span class="icon icon-dark-blue-quote"></span>
-      </div>
-      <div class="quote-content">
-        <h4>${quote?.innerHTML}</h4>
-        <h5>${author?.textContent}</h5>
+      : `<div class="slide-content">
+        <div class="quote">
+          <span class="icon icon-dark-blue-quote"></span>
+        </div>
+        <div class="quote-content">
+          <h4>${quote?.innerHTML}</h4>
+          <h5>${author?.textContent}</h5>
         <p>${description?.innerHTML}</p>
-      </div>`
+      </div>
+     ${image ? `<div class="quote-image">${image?.innerHTML}</div>` : ''}
+      </div>
+      `
     }`,
   );
 }
@@ -50,6 +55,7 @@ function getCurrentSlideIndex(slides) {
 
 function updateControlsState(block, nextIndex) {
   const dots = block.querySelector('.slides-dots');
+  if (!dots) return;
   const currentActive = dots.querySelector('.active');
   if (currentActive) {
     currentActive.classList.remove('active');
@@ -154,6 +160,7 @@ export default async function decorate(block) {
     slidesAction.append(button);
     controlsElements.push(slidesAction);
   }
+
   const slidesControls = createTag('div', { class: 'slides-controls' }, controlsElements);
   const slidesContainer = createTag('div', { class: 'slides-container' }, [slides, slidesControls]);
   block.replaceChildren(slidesContainer);
@@ -162,6 +169,7 @@ export default async function decorate(block) {
   decorateIcons(block);
 
   const dots = block.querySelectorAll('li');
+  if (dots.length === 1) dots[0].parentElement.remove();
   dots.forEach((dot, idx) => {
     if (dot.classList.contains('active')) {
       updateSlideState(idx, block);

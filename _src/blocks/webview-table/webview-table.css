@@ -435,3 +435,114 @@
   outline: none;
   border-color: #3197EE;
 }
+
+.responsive .default-content-wrapper {
+    margin-bottom: 16px;
+}
+
+.responsive .webview-table-wrapper {
+    max-width: 1000px;
+    padding: 0 18px;
+    height: unset;
+    margin: auto;
+}
+
+.responsive .webview-table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: unset;
+
+    > div {
+        min-width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    div[role="row"] {
+        &:has(h6) {
+            div[role = 'cell'] {
+                background-color: #f9f9fe; 
+            }
+        }
+    }
+
+    div[role='cell'] {
+        min-width: unset;
+        max-width: unset;
+        width: unset;
+        flex: 1;
+
+        &:first-child {
+            text-align: left;
+            font-weight: 300;
+        }
+    }
+
+    div[role="columnheader"] {
+        flex: 1;
+
+        &:first-of-type {
+            min-width: unset;
+        }
+    }
+
+    .no-check {
+        margin-left: 0;
+    }
+
+
+    @media (max-width: 768px) {
+        .webview-comparison-header {
+            flex-wrap: nowrap !important;
+        }
+
+        .webview-comparison-header div[role="columnheader"] {
+            &:first-of-type {
+                min-width: unset;
+                display: none;
+            }
+
+            &:not(:first-of-type) {
+                flex: 1;
+                align-content: end;
+                width: unset;
+            }
+        }
+
+        div[role="row"] {
+            flex-wrap: wrap;
+        }
+        
+        div[role='cell'] {
+            flex: 1;
+
+            &:first-of-type {
+                width: unset;
+                min-width: 100%;
+                max-width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        div[role='row'].price-row {
+            flex-wrap: nowrap;
+
+            div[role='cell'] {
+                &:first-child {
+                    display: none;
+                }
+
+                &.current {
+                    justify-content: end;
+                }
+            }
+
+            .button {
+                width: unset;
+            }
+        }
+    }
+}

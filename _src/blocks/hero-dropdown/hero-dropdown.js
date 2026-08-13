@@ -1,10 +1,12 @@
 /* eslint-disable max-len */
 // Description: Hero Dropdown block
 import {
-  createTag,
   createNanoBlock,
   renderNanoBlocks,
+  createTag,
 } from '../../scripts/utils/utils.js';
+
+import { detectModalButtons } from '../../scripts/scripts.js';
 
 function buildHeroDropdownBlock(element) {
   const picture = element.querySelector('picture');
@@ -15,14 +17,6 @@ function buildHeroDropdownBlock(element) {
   const section = element.closest('div.hero-dropdown');
   const subSection = section.querySelector('div');
   subSection.classList.add('hero-dropdown-content');
-
-  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
-
-  if (!isHomePage) {
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    const contentWrapper = subSection.querySelector('div:first-child');
-    if (contentWrapper) contentWrapper.prepend(breadcrumb);
-  }
 
   const pictureEl = document.createElement('div');
   pictureEl.classList.add('hero-dropdown-picture');
@@ -74,7 +68,7 @@ function createPriceBox({
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
-        <a href="${secondButtonLink}" class="button secondary-button">
+        <a href="${secondButtonLink}" class="button secondary-button ${secondButtonLink.includes('fragments') ? 'modal' : ''}">
           <span class="button-text">${secondButtonText}</span>
         </a>` : ''}
     </div>
@@ -210,6 +204,7 @@ export default function decorate(block) {
     corners,
     contentsize,
     textcolor,
+    signature,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
@@ -234,6 +229,12 @@ export default function decorate(block) {
 
   buildHeroDropdownBlock(block);
 
+  if (signature) {
+    const signatureElement = createTag('div', { class: 'signature' });
+    signatureElement.textContent = signature;
+    document.querySelector('div.hero-dropdown div div:first-child').prepend(signatureElement);
+  }
+
   if (contentsize) {
     const content = block.querySelector('.hero-dropdown-content > div');
     if (content) {
@@ -255,4 +256,5 @@ export default function decorate(block) {
   }
 
   renderDropdown(block);
+  detectModalButtons(block);
 }

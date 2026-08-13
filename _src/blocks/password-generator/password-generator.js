@@ -89,13 +89,17 @@ function adjustFontSize(input, password) {
 }
 
 export default function decorate(block) {
-  const { clipboardText, selectAtLeastOneCheckboxText } = block.closest('.section').dataset;
-
-  // const breadcrumb = createTag('div', { class: 'breadcrumb' });
-  // block.closest('.section').prepend(breadcrumb);
+  const { clipboardText, selectAtLeastOneCheckboxText, signature } = block.closest('.section').dataset;
 
   const privacyPolicyRow = getDivBasedOnFirstParagraph(block, '<privacy-policy>');
   privacyPolicyRow?.classList.add('privacy-policy');
+
+  if (signature) {
+    const signatureElement = document.createElement('div');
+    signatureElement.classList.add('signature');
+    signatureElement.textContent = signature;
+    privacyPolicyRow?.after(signatureElement);
+  }
 
   const passwordGeneratorRow = getDivBasedOnFirstParagraph(block, '<password-generator>');
   passwordGeneratorRow.classList.add('password-generator-grid');

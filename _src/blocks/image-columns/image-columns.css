@@ -116,7 +116,7 @@ main .image-columns.quotes > div{
   gap: 20px;
 }
 
-main .image-columns.quotes >div > .image-columns-txt-col{
+main .image-columns.quotes >div > .image-columns-txt-col {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
@@ -127,24 +127,146 @@ main .image-columns.quotes >div > .image-columns-txt-col{
   font-size: 20px;
 }
 
-main .image-columns.quotes > div > .image-columns-txt-col p{
+main .image-columns.quotes > div > .image-columns-txt-col p {
   font-size: 25px;
   font-weight: 300;
   padding: 0;
 }
 
-main .image-columns.quotes > div > .image-columns-img-col{
+main .image-columns.quotes > div > .image-columns-img-col {
   align-items: unset;
 }
 
-main .image-columns.quotes > div > .image-columns-img-col img{
+main .image-columns.quotes > div > .image-columns-img-col img {
   position: static;
   height: auto;
   max-width: 100%;
 }
 
-.image-columns-container .image-columns .image-columns-txt-col{
+.image-columns-container .image-columns .image-columns-txt-col {
   text-align: center;
+}
+
+.image-columns-container.animated {
+  height: 35em;
+  padding: 10em 0;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type > p:first-of-type {
+  position: absolute;
+  top: -7em;
+}
+
+.image-columns-container.animated .block > div:last-of-type, .image-columns-container.animated .block > div > div:last-of-type {
+  position: relative;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table {
+  width: 277px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 {
+  background: linear-gradient(75.99deg, #0059D6 1.46%, #338BFF 100%);
+  color: white;
+  top: 165px;
+  right: -1em;
+  bottom: auto;
+  display: block;
+  border-radius: 16px;
+  opacity: 1;
+  padding: 14px 16px 14px 60px;
+  border-width: 1px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 img {
+  width: 28px;
+  position: absolute;
+  left: 16px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 p strong {
+  font-size: 18px;
+  line-height: 20px;
+  font-style: normal;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 p {
+  margin: 0;
+  font-size: 13px !important;
+  line-height: 18px !important;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 p {
+  font-weight: 600!important;
+  color: black !important;
+  font-size: 14px!important;
+  line-height: 16px!important;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type > div:first-of-type table.bd-hero-item-same p {
+  padding-left: 65px !important;
+  color: black !important;
+  font-weight: 600 !important;
+  line-height: 16px !important;
+  display: block;
+  min-height: 54px;
+}
+
+.image-columns-container.animated .block table.bd-hero-item-same {
+  height: max-content;
+  border-radius: 24px;
+  border: 1px solid #fff0;
+  background: #f1f5f852;
+  backdrop-filter: blur(20px);
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same tr {
+  display: flex;
+  padding: 14px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 18px;
+  border: 1px solid #F1F5F8;
+  background: #FFF;
+  margin: 12px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same td p {
+  font-weight: 600;
+  color: #10347e;
+  padding: 4px 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #ECF5FE 0%, #ecf5fe4d 100%);
+  backdrop-filter: blur(20px);
+  font-size: 14px !important;
+  margin-top: 0;
+}
+
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same td .icon {
+  position: absolute;
+  height: 45px;
+  left: 8px;
+}
+
+.image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same td p strong {
+  width: fit-content;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #CDE3FC;
+  box-shadow: 2px 4px 16px 1px #f8f8f80f inset;
+  backdrop-filter: blur(25px);
+  font-size: 11px;
+  line-height: 12px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .image-columns.half-image {
@@ -186,9 +308,9 @@ main .image-columns.quotes > div > .image-columns-img-col img{
       text-align: left;
 
       p {
-       padding-left: 0;
-       font-size: 16px;
-       margin-bottom: 24px;
+        padding-left: 0;
+        font-size: 16px;
+        margin-bottom: 24px;
         margin-left: 0;
       }  
 
@@ -314,7 +436,155 @@ main .image-columns.quotes > div > .image-columns-img-col img{
   margin-top: 16px;
 }
 
+.subscriber #heroColumn table tr td:nth-of-type(1) {
+  height: auto;
+}
+
+.image-columns-container.animated .bd-hero-glass-group {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  z-index: 2;
+}
+
+.image-columns-container.animated .bd-hero-glass {
+  height: 255px!important;
+  position: relative;
+  width: max-content;
+  margin: auto 10px 10px auto;
+}
+
+.image-columns-container.animated .bd-hero-glass--state {
+  display: none;
+}
+
+.image-columns-container.animated .bd-hero-glass--active {
+  display: block;
+}
+
+.image-columns-container.animated .bd-hero-glass--state[data-hero-step='0'] .bd-hero-float--bundles {
+  width: max-content;
+}
+
+.image-columns-container.animated .bd-hero-glass-enter {
+  animation: bd-hero-enter-bottom 1000ms cubic-bezier(0.25, 0.95, 0.3, 1) both;
+}
+
+.image-columns-container.animated .bd-hero-glass-exit-top {
+  animation: bd-hero-exit-top 1000ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+.image-columns-container.animated .bd-hero-glass .bd-hero-item-same {
+  margin-top: 10px;
+}
+
+.image-columns-container.animated .bd-hero-glass .bd-hero-item-same::before, .image-columns-container.animated .bd-hero-glass.bd-hero-item-same::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(45deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 50%) 50%, rgb(255 255 255 / 0%) 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.image-columns-container.animated .bd-hero-float--products {
+  overflow: hidden;
+  position: relative;
+}
+
+.image-columns-container.animated .bd-hero-glass--active .bd-hero-float--products > :not(.bd-hero-rand-lines) {
+  opacity: 0;
+  transform: translateY(22px) scale(0.72);
+  transform-origin: top center;
+  animation: bd-hero-item-build 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.image-columns-container.animated .bd-hero-glass--active .bd-hero-float--products > :not(.bd-hero-rand-lines):nth-child(2) { animation-delay: 120ms; }
+
+.image-columns-container.animated .bd-hero-glass--active .bd-hero-float--products > :not(.bd-hero-rand-lines):nth-child(3) { animation-delay: 220ms; }
+
+.image-columns-container.animated .bd-hero-glass--active .bd-hero-float--products > :not(.bd-hero-rand-lines):nth-child(4) { animation-delay: 320ms; }
+
+.image-columns-container.animated .bd-hero-glass--active .bd-hero-float--products > :not(.bd-hero-rand-lines):nth-child(5) { animation-delay: 420ms; }
+
+.image-columns-container.animated .bd-hero-glass--active .bd-hero-float--products > :not(.bd-hero-rand-lines):nth-child(6) { animation-delay: 520ms; }
+
+.image-columns-container.animated .bd-hero-glass--active .bd-hero-float--products > :not(.bd-hero-rand-lines):nth-child(7) { animation-delay: 620ms; }
+
+@keyframes bd-hero-enter-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bd-hero-exit-top {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+}
+
+@keyframes bd-hero-item-build {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.72);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 767px) {
+  .image-columns-container.animated .block > div > div:last-of-type > p:first-of-type {
+    width: 100%;
+  }
+
+  .image-columns-container.animated table tr td {
+    height: auto;
+  }
+    
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same tr {
+    display: block!important;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 {
+    width: max-content !important;
+    padding-right: 15px;
+    margin-top: 5em;
+  }
+}
+
 @media (max-width: 991px) {
+  .image-columns-container.animated {
+    height: 47em;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table {
+    width: 277px!important;
+    right: 1em!important;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type > p:first-of-type {
+    top: -3em;
+    width: 100%;
+  }
+
   .image-columns-container.bundle-design .image-columns > div > div:last-of-type img {
     visibility: hidden;
   }
@@ -329,6 +599,60 @@ main .image-columns.quotes > div > .image-columns-img-col img{
 
   .bundle-design#heroColumn .image-columns .image-columns-txt-col {
     flex: unset
+  }
+}
+
+@media (max-width: 550px) {
+  .image-columns-container.animated {
+    height: 900px;
+  }
+
+  .image-columns-container.animated .bd-hero-glass {
+    width: 100%;
+    margin-top: 0.5em;
+  }
+
+  .image-columns-container.animated .bd-hero-glass.bd-hero-item-1 {
+    width: 232px!important;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 {
+    width: 328px;
+    padding: 10px 10px 10px 54px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 p strong {
+    font-size: 13px;
+    line-height: 15px;
+    margin-bottom: 5px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-0 p {
+    font-size: 9.75px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same td p {
+    font-size: 10px!important;
+    padding: 4px;
+    margin-bottom: 5px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table {
+    width: 100% !important;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type > div:first-of-type table.bd-hero-item-same p {
+    font-size: 11px !important;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-same tr {
+    padding: 7px;
+    gap: 7px;
+    margin: 7px;
+  }
+
+  .image-columns-container.animated .block > div > div:last-of-type table.bd-hero-item-2 {
+    height: max-content!important;
   }
 }
 

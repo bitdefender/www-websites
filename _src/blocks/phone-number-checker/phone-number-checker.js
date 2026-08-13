@@ -1,6 +1,8 @@
 import { UserAgent } from '@repobit/dex-utils';
 import page from '../../scripts/page.js';
+import user from '../../scripts/user.js';
 import { BotPrevention } from '../../scripts/utils/bot-prevention.js';
+import { onCookiesAccepted } from '../../scripts/utils/utils.js';
 
 let phoneUtil; let
   countries;
@@ -117,7 +119,7 @@ async function createDropdown(block) {
   const { dropdownPlaceholder, dropdownNotFound } = block.closest('.section').dataset;
   const defaultCountryISO = page?.country?.toUpperCase();
   const defaultCountry = countries.data.find((c) => c.ISO === defaultCountryISO)
-   || countries.data[0];
+  || countries.data[0];
 
   const container = document.createElement('div');
   container.classList.add('country-dropdown-container');
@@ -601,10 +603,17 @@ function displayStoredResult(block, statusMessages, statusTitles, statusSubtitle
 
 export default async function decorate(block) {
   await initValidatorLibrary();
-  const { checkButtonText, placeholder } = block.closest('.section').dataset;
+  const { checkButtonText, placeholder, signature } = block.closest('.section').dataset;
 
   const privacyPolicyDiv = block.querySelector(':scope > div:nth-child(4)');
   privacyPolicyDiv.classList.add('privacy-policy');
+
+  if (signature) {
+    const signatureElement = document.createElement('div');
+    signatureElement.classList.add('signature');
+    signatureElement.textContent = signature;
+    privacyPolicyDiv.after(signatureElement);
+  }
 
   const statusMessages = createStatusMessages(block);
   const statusTitles = createStatusTitles(block);
@@ -752,4 +761,10 @@ export default async function decorate(block) {
   }
 
   button.addEventListener('click', handler);
+
+  onCookiesAccepted(async () => {
+    const userCountry = await user.country;
+    selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
+    selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
+  });
 }

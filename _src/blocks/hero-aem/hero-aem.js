@@ -153,15 +153,9 @@ export default async function decorate(block, options) {
   const {
     product, conditionText, saveText, MacOS, Windows, Android, IOS,
     alignContent, height, type, dropdownProducts, bluePillText, underPriceText,
-    dropdownTag, circleDiscount,
+    dropdownTag, circleDiscount, signature,
   } = block.closest('.section').dataset;
-  const isHomePage = window.location.pathname.split('/').filter((item) => item).length === 1;
 
-  if (!isHomePage) {
-    const breadcrumb = createTag('div', { class: 'breadcrumb' });
-    const contentWrapper = block.querySelector(':scope > div:first-child > div');
-    if (contentWrapper) contentWrapper.prepend(breadcrumb);
-  }
   renderNanoBlocks(block);
 
   if (options) {
@@ -263,14 +257,6 @@ export default async function decorate(block, options) {
     }
   });
 
-  let breadcrumbTable = block.querySelector('table');
-
-  if (breadcrumbTable && breadcrumbTable.textContent.includes('breadcrumb')) {
-    breadcrumbTable.classList.add('hero-aem__breadcrumb');
-    // delete the first row
-    breadcrumbTable.deleteRow(0);
-  }
-
   let tables = block.querySelectorAll('table');
   // eslint-disable-next-line no-restricted-syntax
   for (const listTable of tables) {
@@ -330,6 +316,13 @@ export default async function decorate(block, options) {
 
   let termsParagraph = block.querySelector('.hero-aem-container .hero-aem .hero-aem__card-text p:last-child');
   if (termsParagraph) {
-    termsParagraph.classList.add('hero-aem__terms');
+    // termsParagraph.classList.add('hero-aem__terms');
+  }
+
+  // add signature to the top of the banner
+  if (signature) {
+    const signatureElement = createTag('div', { class: 'signature' });
+    signatureElement.textContent = signature;
+    block.querySelector('h1')?.before(signatureElement);
   }
 }

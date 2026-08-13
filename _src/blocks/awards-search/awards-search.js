@@ -84,6 +84,21 @@ function renderFilters(block) {
   });
 
   clearAllLink.innerText = 'Clear All';
+  clearAllLink.addEventListener('click', () => {
+    yearsToFilterBy = [];
+    const checkboxes = block.querySelectorAll('input');
+    [...checkboxes].forEach((checkbox) => { checkbox.checked = false; });
+    filteredAwards = [...awardsData];
+
+    const awardsResultsContainer = block.querySelector('.awards-results-container');
+    if (awardsResultsContainer) {
+      awardsResultsContainer.innerHTML = '';
+      createFiltersContainer(awardsResultsContainer);
+    }
+
+    renderFilters(block);
+    renderAwards(block, filteredAwards);
+  });
   filtersContainer.append(clearAllLink);
 }
 
@@ -127,7 +142,6 @@ function createFilterBySection(block, data) {
     const checkboxElement = document.createElement('input');
     checkboxElement.setAttribute('type', 'checkbox');
     checkboxElement.setAttribute('value', year);
-    checkboxElement.addEventListener('click', handleFilterByYearCheckbox.bind(null, block));
     const checkboxLabel = document.createElement('label');
     checkboxLabel.append(checkboxElement);
     checkboxLabel.append(year);
@@ -210,4 +224,25 @@ export default async function decorate(block) {
   createAwardsResultContainer(block);
   fetchAwardsData(block);
   removeAwardsLinkFromDom(block);
+
+  // add event listener only after system design modifies the elements
+  window.addEventListener('accordion-bg:loaded', () => {
+    const accordionShadowRoot = block.querySelector('bd-accordion-bg').shadowRoot;
+    if (accordionShadowRoot) {
+      const style = document.createElement('style');
+
+      style.textContent = `
+        .bd-accordion-bg-container {
+          padding-top: 0 !important;
+          padding-bottom: 12px !important;
+        }
+      `;
+      accordionShadowRoot.appendChild(style);
+    }
+
+    const yearInputs = block.querySelectorAll('.accordion input');
+    yearInputs.forEach((input) => {
+      input.addEventListener('click', handleFilterByYearCheckbox.bind(null, block));
+    });
+  });
 }

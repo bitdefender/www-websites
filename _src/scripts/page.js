@@ -20,7 +20,7 @@ const getPageLocale = () => {
  */
 const getEnvironment = () => {
   const { hostname } = window.location;
-  if (hostname.includes('hlx.page') || hostname.includes('hlx.live')) {
+  if (['aem.page', 'aem.live', 'stage.bitdefender'].some((stageHostname) => hostname.includes(stageHostname))) {
     return 'stage';
   }
   if (hostname.includes('www.bitdefender')) {

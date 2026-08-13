@@ -1,0 +1,821 @@
+{
+  "manifestVersion": "0.1.0",
+  "generatedAt": "2026-04-23",
+  "repoRoot": "/Users/iconstantin/Work/www-websites",
+  "scope": "Conservative public block contract for AI-driven EDS page generation. Only blocks with directly inferable author-facing structure are included.",
+  "components": [
+    {
+      "name": "Hero",
+      "identifier": "hero",
+      "sourceFile": "_src/blocks/hero/hero.js",
+      "role": "Page introduction / above-the-fold content",
+      "description": "Content-first hero block. The code promotes a picture ahead of the text when both are present and supports plain rich text plus button content.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary hero content. Real code looks for headings, paragraphs, lists, buttons, and an optional picture."
+        },
+        {
+          "name": "image",
+          "type": "image",
+          "required": false,
+          "description": "Optional hero picture. If a picture exists before the main heading in the source markup, the decorate code moves it into a dedicated hero picture area."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [
+        "black-background",
+        "comparison",
+        "new2024design",
+        "ferrari"
+      ],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "h1",
+        "h2",
+        "h4",
+        "p",
+        "ul",
+        "li",
+        "a.button",
+        "picture",
+        "img",
+        "table"
+      ],
+      "usageNotes": [
+        "Base hero content is generation-safe.",
+        "The repository also supports many section dataset customizations, OS-specific links, and store-driven discount elements, but those are intentionally excluded from this first contract."
+      ],
+      "ambiguityNotes": [
+        "Hero variants are mostly inferred from CSS selectors rather than a dedicated authoring spec.",
+        "Do not generate section dataset fields such as app-store mappings or modal-refresh flags unless later documentation confirms them."
+      ]
+    },
+    {
+      "name": "Cards",
+      "identifier": "cards",
+      "sourceFile": "_src/blocks/cards/cards.js",
+      "role": "Grid of repeatable content cards",
+      "description": "Each source row becomes one card. The block detects picture-only cells as image cells and all other cells as body content.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Repeatable cards.",
+          "itemShape": {
+            "image": {
+              "type": "image",
+              "required": false
+            },
+            "body": {
+              "type": "rich-content",
+              "required": true
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "picture",
+        "img",
+        "h2",
+        "h3",
+        "h4",
+        "p",
+        "ul",
+        "li",
+        "a"
+      ],
+      "usageNotes": [
+        "The code is explicit about the image/body split and is safe for generation.",
+        "Generated card body content should remain simple rich text."
+      ],
+      "ambiguityNotes": []
+    },
+    {
+      "name": "Columns",
+      "identifier": "columns",
+      "sourceFile": "_src/blocks/columns/columns.js",
+      "role": "Generic multi-column content layout",
+      "description": "Rows of adjacent columns containing text and optional images. The block infers image columns automatically from picture-only cells.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "description": "Each row contains one or more columns.",
+          "itemShape": {
+            "columns": {
+              "type": "array",
+              "required": true,
+              "description": "Column cells rendered side by side.",
+              "items": {
+                "type": "rich-content"
+              }
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "carousel",
+        "text-over-image"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "picture",
+        "img",
+        "h2",
+        "h3",
+        "h4",
+        "p",
+        "ul",
+        "li",
+        "a",
+        "table"
+      ],
+      "usageNotes": [
+        "Only the plain content-driven row/column contract is included here.",
+        "The implementation reads many section dataset values for carousels, dynamic links, tabs, store context, and background images. Those features are intentionally omitted."
+      ],
+      "ambiguityNotes": [
+        "Columns is widely theme-customized in template CSS. Use this manifest entry only for plain rows and columns, not campaign-specific enhancements."
+      ]
+    },
+    {
+      "name": "Accordion",
+      "identifier": "accordion",
+      "sourceFile": "_src/blocks/accordion/accordion.js",
+      "role": "Expandable disclosure / FAQ pattern",
+      "description": "Each direct child row becomes one accordion item with a header cell and a content cell.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "header": {
+              "type": "rich-content",
+              "required": true
+            },
+            "content": {
+              "type": "rich-content",
+              "required": true
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "first-open",
+        "action-only-on-header",
+        "smaller-text",
+        "terms-of-use",
+        "faq",
+        "system-requirements"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "h3",
+        "h4",
+        "p",
+        "ul",
+        "li",
+        "a",
+        "strong",
+        "em"
+      ],
+      "usageNotes": [
+        "The JS contract for first-open and action-only-on-header is explicit.",
+        "Content cells are normalized to contain at least one paragraph."
+      ],
+      "ambiguityNotes": [
+        "Some additional variants are styling-only and inferred from CSS selectors."
+      ]
+    },
+    {
+      "name": "Questions Answers",
+      "identifier": "questions-answers",
+      "sourceFile": "_src/blocks/questions-answers/questions-answers.js",
+      "role": "Styled FAQ / Q&A accordion",
+      "description": "FAQ-style block with the same basic row shape as accordion: one question cell and one answer cell per item.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "question": {
+              "type": "rich-content",
+              "required": true
+            },
+            "answer": {
+              "type": "rich-content",
+              "required": true
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [
+        "first-open",
+        "action-only-on-header",
+        "blue-titles",
+        "ibm-plex-sans",
+        "qa-creators"
+      ],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "h3",
+        "h4",
+        "p",
+        "ul",
+        "li",
+        "a",
+        "strong",
+        "em"
+      ],
+      "usageNotes": [
+        "This is safer than the generic accordion when the design intent is clearly FAQ-like.",
+        "Answer cells are normalized to contain at least one paragraph."
+      ],
+      "ambiguityNotes": [
+        "Most variant names beyond first-open and action-only-on-header are inferred from CSS."
+      ]
+    },
+    {
+      "name": "Image Columns",
+      "identifier": "image-columns",
+      "sourceFile": "_src/blocks/image-columns/image-columns.js",
+      "role": "Alternating or paired image-and-text columns",
+      "description": "Row-based block where each cell is treated either as an image column or a text column. The implementation can also replace a text cell with a local MP4 video in some themed cases.",
+      "fields": [
+        {
+          "name": "rows",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "columns": {
+              "type": "array",
+              "required": true,
+              "items": {
+                "type": "rich-content"
+              }
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "rows"
+      ],
+      "variants": [
+        "quotes",
+        "trusted",
+        "half-image",
+        "text_smaller"
+      ],
+      "contentModel": {
+        "kind": "row-column-grid",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "picture",
+        "img",
+        "video",
+        "h3",
+        "p",
+        "ul",
+        "li",
+        "a",
+        "table"
+      ],
+      "usageNotes": [
+        "Generate the plain image-plus-text structure first.",
+        "The MP4 substitution path is repo-specific and depends on section classes or local file naming; it is not part of the safe first contract."
+      ],
+      "ambiguityNotes": [
+        "Several visual variants are inferred from CSS only.",
+        "Theme-specific section classes such as columnvideo are intentionally omitted from the contract."
+      ]
+    },
+    {
+      "name": "Quote",
+      "identifier": "quote",
+      "sourceFile": "_src/blocks/quote/quote.js",
+      "role": "Testimonial / highlighted quote",
+      "description": "Transforms each item into a quote card with a star rating, quote body, and optional author.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "quote": {
+              "type": "rich-text-fragment",
+              "required": true,
+              "description": "Main quote text."
+            },
+            "stars": {
+              "name": "stars",
+              "type": "string",
+              "required": true,
+              "description": "Asterisks-only source text, typically in emphasis markup, because the code counts literal '*' characters."
+            },
+            "author": {
+              "type": "rich-text-fragment",
+              "required": false,
+              "description": "Author line, typically authored in strong markup."
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "p",
+        "strong",
+        "em"
+      ],
+      "usageNotes": [
+        "Because the implementation accesses the stars element directly, the star line should be treated as required in generated content.",
+        "This block appears to be styled mainly within hero contexts."
+      ],
+      "ambiguityNotes": [
+        "The code expects a specific authored pattern rather than named fields, so the field names here are inferred and normalized for machine use."
+      ]
+    },
+    {
+      "name": "Video",
+      "identifier": "video",
+      "sourceFile": "_src/blocks/video/video.js",
+      "role": "Embedded or hosted video",
+      "description": "Supports YouTube, Vimeo, and direct MP4 links. An optional picture acts as a click-to-play placeholder.",
+      "fields": [
+        {
+          "name": "link",
+          "type": "url",
+          "required": true,
+          "description": "Video source URL."
+        },
+        {
+          "name": "placeholder",
+          "type": "image",
+          "required": false,
+          "description": "Optional picture used as a click-to-play placeholder."
+        }
+      ],
+      "requiredFields": [
+        "link"
+      ],
+      "enumValues": {
+        "supportedProviders": [
+          "youtube",
+          "youtu.be",
+          "vimeo",
+          "mp4"
+        ],
+        "desktopAlign": [
+          "left",
+          "center",
+          "right"
+        ]
+      },
+      "variants": [],
+      "contentModel": {
+        "kind": "single-link-plus-optional-image",
+        "supportsTextChildren": false,
+        "supportsNestedElements": false,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "picture",
+        "img"
+      ],
+      "usageNotes": [
+        "The visible source contract is simple and generation-safe.",
+        "Desktop alignment is read from section dataset, not block content. Keep it optional in downstream tooling."
+      ],
+      "ambiguityNotes": [
+        "The code comment says 'left / middle / right' while the actual enum uses left, center, right. Use center, because that is what the code maps."
+      ]
+    },
+    {
+      "name": "Embed",
+      "identifier": "embed",
+      "sourceFile": "_src/blocks/embed/embed.js",
+      "role": "Generic embed for video or social content",
+      "description": "Embeds YouTube, Vimeo, Twitter, or a generic iframe fallback. An optional picture acts as a click-to-load placeholder.",
+      "fields": [
+        {
+          "name": "link",
+          "type": "url",
+          "required": true,
+          "description": "Embed target URL."
+        },
+        {
+          "name": "placeholder",
+          "type": "image",
+          "required": false,
+          "description": "Optional preview image."
+        }
+      ],
+      "requiredFields": [
+        "link"
+      ],
+      "enumValues": {
+        "supportedProviders": [
+          "youtube",
+          "youtu.be",
+          "vimeo",
+          "twitter",
+          "generic-iframe"
+        ]
+      },
+      "variants": [
+        "autoplay-off",
+        "rounded-corners",
+        "only-mobile",
+        "only-desktop"
+      ],
+      "contentModel": {
+        "kind": "single-link-plus-optional-image",
+        "supportsTextChildren": false,
+        "supportsNestedElements": false,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "a",
+        "picture",
+        "img"
+      ],
+      "usageNotes": [
+        "This block is safer for generic external embeds than the specialized video block.",
+        "Use autoplay-off only when the downstream render pipeline understands block class variants."
+      ],
+      "ambiguityNotes": []
+    },
+    {
+      "name": "New Product Boxes",
+      "identifier": "new-prod-boxes",
+      "sourceFile": "_src/blocks/new-prod-boxes/new-prod-boxes.js",
+      "role": "Pricing / product comparison cards",
+      "description": "Table-driven pricing cards for consumer products. The block derives live pricing, discounts, and buy links from store product identifiers configured at section level, while most visible card content is authored in ordered table rows.",
+      "fields": [
+        {
+          "name": "cards",
+          "type": "array",
+          "required": true,
+          "description": "One authored table per product card.",
+          "itemShape": {
+            "greenTag": {
+              "type": "rich-text-fragment",
+              "required": false,
+              "description": "Optional top tag such as 'Most Popular'. The special value 'demo-box' is also checked by the implementation."
+            },
+            "title": {
+              "type": "rich-content",
+              "required": true,
+              "description": "Primary product title row. Usually contains a linked product name."
+            },
+            "blueTags": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Optional row containing zero or more blue pill/tag fragments."
+            },
+            "subtitle": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Primary descriptive subtitle shown above pricing."
+            },
+            "planOptions": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Optional row used as radio-label source for yearly/monthly/third-button plan switching. The implementation reads labels from child nodes and supports a '[checked]' marker."
+            },
+            "perPrice": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Optional price suffix row. The implementation strips a literal '0' placeholder and appends the remainder as superscript text."
+            },
+            "billedText": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Billed/tax messaging associated with the current plan."
+            },
+            "buyLinks": {
+              "type": "rich-content",
+              "required": true,
+              "description": "Primary buy CTA and optional secondary link/button row."
+            },
+            "underBuyLink": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Optional text or popup trigger below the buy button."
+            },
+            "benefits": {
+              "type": "rich-content",
+              "required": true,
+              "description": "Feature tables that are converted into benefits lists. The code supports markers such as '[checkmark]', '[add-on]', '->', '?pill', and add-on price placeholders."
+            },
+            "addOnBilledText": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Optional billed text for add-on pricing."
+            },
+            "addOnBuyLinks": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Optional add-on buy CTA row."
+            },
+            "subtitle2": {
+              "type": "rich-content",
+              "required": false,
+              "description": "Optional secondary subtitle shown below the first divider."
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "cards"
+      ],
+      "sectionMetadata": [
+        {
+          "name": "products",
+          "type": "array",
+          "required": true,
+          "description": "Mandatory EDS section metadata. These products are shown when the component first loads. After Franklin processing this is exposed to the block as data-products / section.dataset.products.",
+          "items": {
+            "type": "string",
+            "format": "product-id/devices/years"
+          },
+          "example": [
+            "us_i_m/5/1",
+            "us_pi_m/5/1",
+            "us_pie_m/5/1"
+          ]
+        },
+        {
+          "name": "family-products",
+          "type": "array",
+          "required": false,
+          "description": "EDS section metadata for the family tab product list. Same tuple format as products.",
+          "items": {
+            "type": "string",
+            "format": "product-id/devices/years"
+          }
+        },
+        {
+          "name": "monthly-products",
+          "type": "array",
+          "required": false,
+          "description": "EDS section metadata for the second radio button. Mandatory when the card has 2 radio buttons. Despite the name, the second radio can point to any product tuple, not only monthly plans.",
+          "items": {
+            "type": "string",
+            "format": "product-id/devices/years"
+          }
+        },
+        {
+          "name": "third-radio-button-products",
+          "type": "array",
+          "required": false,
+          "description": "EDS section metadata for the third radio button. Mandatory when the card has 3 radio buttons.",
+          "items": {
+            "type": "string",
+            "format": "product-id/devices/years"
+          }
+        },
+        {
+          "name": "add-on-products",
+          "type": "array",
+          "required": false,
+          "description": "EDS section metadata for products used in the add-on section.",
+          "items": {
+            "type": "string",
+            "format": "product-id/devices/years"
+          }
+        },
+        {
+          "name": "add-on-monthly-products",
+          "type": "array",
+          "required": false,
+          "description": "EDS section metadata for second-radio products in the add-on section. The implementation also accepts a '0' placeholder for cards without a second add-on option.",
+          "items": {
+            "type": "string",
+            "format": "product-id/devices/years-or-0"
+          },
+          "example": [
+            "0",
+            "us_pi_m/5/1",
+            "0"
+          ]
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Optional EDS section metadata key that overrides the default component id."
+        },
+        {
+          "name": "add-on-product-name",
+          "type": "string",
+          "required": false,
+          "description": "EDS section metadata for the title displayed in the add-on section."
+        },
+        {
+          "name": "save-text",
+          "type": "string",
+          "required": false,
+          "description": "EDS section metadata for the static label shown before the computed discount percentage, for example 'Save'."
+        }
+      ],
+      "requiredSectionMetadata": [
+        "products"
+      ],
+      "enumValues": {
+        "recognizedBenefitMarkers": [
+          "[checkmark]",
+          "[add-on]",
+          "?pill",
+          "->",
+          "&lt;&lt;add-on-newprice&gt;&gt;",
+          "&lt;&lt;add-on-oldprice&gt;&gt;",
+          "&lt;&lt;add-on-percent-save&gt;&gt;"
+        ],
+        "productTupleFormat": [
+          "product-id/devices/years"
+        ]
+      },
+      "variants": [
+        "smallerbuttons",
+        "solutions",
+        "five-cards",
+        "blue-top-tag",
+        "show-more-show-less",
+        "hide-last-hr",
+        "bf25"
+      ],
+      "contentModel": {
+        "kind": "table-driven-product-cards",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "p",
+        "a",
+        "em",
+        "strong",
+        "span"
+      ],
+      "usageNotes": [
+        "This block is required for pricing previews, but generated content should stay close to the authored row order used by the implementation.",
+        "Visible pricing numbers are not authored directly. They are derived from section metadata that Franklin exposes as section.dataset values and from store data attributes added during decoration.",
+        "The tuple format used by pricing metadata is 'wanted product / number of devices / number of years', for example 'us_i_m/5/1'.",
+        "If a card exposes 2 radio buttons, 'monthly-products' is mandatory. If it exposes 3 radio buttons, 'third-radio-button-products' is mandatory.",
+        "For pricing generation, another agent should emit the section-level EDS metadata and the authored card rows together."
+      ],
+      "ambiguityNotes": [
+        "The main pricing lists and labels are now explicit, but repo-only settings such as 'type' and 'hide-decimals' still come primarily from code rather than author documentation.",
+        "The block contains advanced add-on, family/individual toggle, and synchronized plan-switch behavior. Those behaviors are code-backed but should be treated as optional extensions until dedicated generation docs exist."
+      ]
+    },
+    {
+      "name": "Teaser Logos",
+      "identifier": "teaser-logos",
+      "sourceFile": "_src/blocks/teaser-logos/teaser-logos.js",
+      "role": "Compact logo strip / trust indicators",
+      "description": "Wraps each child item in a logo column. Best suited for a small set of logos or badges.",
+      "fields": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "itemShape": {
+            "content": {
+              "type": "rich-content",
+              "required": true,
+              "description": "Usually an image, but the code will preserve arbitrary markup."
+            }
+          }
+        }
+      ],
+      "requiredFields": [
+        "items"
+      ],
+      "variants": [],
+      "contentModel": {
+        "kind": "repeated-items",
+        "supportsTextChildren": false,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "picture",
+        "img",
+        "p",
+        "a"
+      ],
+      "usageNotes": [
+        "Prefer image-only items for predictable output."
+      ],
+      "ambiguityNotes": []
+    },
+    {
+      "name": "Ribbon",
+      "identifier": "ribbon",
+      "sourceFile": "_src/blocks/ribbon/ribbon.js",
+      "role": "Promotional banner / narrow announcement strip",
+      "description": "Simple ribbon content block. If a second row contains an image, the decorate code moves that image to the section background.",
+      "fields": [
+        {
+          "name": "content",
+          "type": "rich-content",
+          "required": true,
+          "description": "Primary ribbon text and links."
+        },
+        {
+          "name": "backgroundImage",
+          "type": "image",
+          "required": false,
+          "description": "Optional image that is converted into a section background when authored as a second row."
+        }
+      ],
+      "requiredFields": [
+        "content"
+      ],
+      "variants": [
+        "bf25"
+      ],
+      "contentModel": {
+        "kind": "single-block-rich-content",
+        "supportsTextChildren": true,
+        "supportsNestedElements": true,
+        "supportsNestedBlocks": false
+      },
+      "allowedChildren": [
+        "p",
+        "a",
+        "u",
+        "picture",
+        "img"
+      ],
+      "usageNotes": [
+        "The implementation replaces literal '0 %' text with a store variable placeholder. Avoid relying on that replacement in generated content unless store integration is explicitly desired."
+      ],
+      "ambiguityNotes": [
+        "The authoring pattern for the optional background image is inferred from JS, not from formal docs."
+      ]
+    }
+  ]
+}

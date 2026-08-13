@@ -7,6 +7,13 @@ const getLocale = () => {
   return !locale || locale === 'en' ? 'COM' : locale.toUpperCase();
 };
 
+export function getParamByName(name, link = window.location.href) {
+  const escapedName = name.replace(/[[\]]/g, '\\$&');
+  const regex = new RegExp(`[?&]${escapedName}=([^&#]*)`);
+  const results = regex.exec(link);
+  return results ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : null;
+}
+
 export const getTrials = async () => {
   const res = await fetch('https://www.bitdefender.com/common/triallinks.json');
   if (!res.ok) { };
@@ -41,15 +48,22 @@ const applyTrial = async (option, duration) => {
 
   const optionBuyLink = new URL(await option.buyLink);
 
+  // if it's truesubs
+  let trueSubsCoupon = '';
+  if (getParamByName('theme', optionBuyLink.search) === 'truesubs') {
+    const { devices, subscription } = option;
+    trueSubsCoupon = option.variations?.[devices][Math.floor(subscription / 12)].campaignName;
+  }
+
   if (match?.buy_link) {
     const matchBuyLink = new URL(match.buy_link);
-
     optionBuyLink.searchParams.forEach((value, key) => {
       if (['LANG', 'CURRENCY', 'DCURRENCY', 'COUPON'].includes(key)) {
         matchBuyLink.searchParams.set(key, value);
       }
     });
     matchBuyLink.searchParams.set('SRC', window.location.origin + window.location.pathname);
+    if (trueSubsCoupon) matchBuyLink.searchParams.set('COUPON', trueSubsCoupon);
 
     return matchBuyLink.href
   }
@@ -68,7 +82,12 @@ export const resolve = async (element, { option }) => {
     ? element
     : element.querySelector("a");
 
-  if (!button) { return; }
+  if (!button) return;
 
-  button.href = await applyTrial(option, trialPeriod);
-}
+  const originalText = button.textContent;
+  if (originalText.includes('skip_trial')) {
+    button.textContent = originalText.replace('skip_trial', '');
+  } else {
+    button.href = await applyTrial(option, trialPeriod);
+  }
+};
