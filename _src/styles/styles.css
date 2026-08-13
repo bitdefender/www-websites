@@ -849,7 +849,7 @@ main .grey-background {
     margin: 0;
   }
 
-  .creators .default-content-wrapper h2 {
+  .creators .section .default-content-wrapper h2 {
     font: normal normal 300 60px/69px "IBM Plex Sans", sans-serif;
   }
 }

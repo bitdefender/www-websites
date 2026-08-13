@@ -139,27 +139,42 @@ function updateBuyLink(block) {
   }
 }
 
-function renderPrice(block, _firstProduct, secondProduct) {
-  const variant = state.blockDataset.defaultSelection ?? '5-1';
+function renderPrice(block, firstProduct) {
+  const { saveText, defaultSelection } = block.closest('.section').dataset;
+  const [productName, productUsers, productYears] = [...defaultSelection.split('-')];
+  const variant = `${productUsers}-${productYears}`;
+
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
+
+  const oldPriceContainer = document.createElement('div');
+  oldPriceContainer.classList.add('prod-oldprice-container', 'await-loader');
 
   const oldPrice = document.createElement('div');
   oldPrice.classList.add('prod-oldprice', 'await-loader');
   oldPrice.setAttribute('data-store-price', 'full');
   oldPrice.setAttribute('data-store-hide', 'no-price=discounted');
 
+  const saveTag = document.createElement('div');
+  saveTag.classList.add('prod-save', 'await-loader');
+  saveTag.setAttribute('data-store-hide', 'no-price=discounted');
+
+  saveTag.innerHTML = `${saveText ?? ''} <span data-store-discount="percentage"></span>`;
+
+  oldPriceContainer.appendChild(oldPrice);
+  oldPriceContainer.appendChild(saveTag);
+  priceElement.appendChild(oldPriceContainer);
+
   const el = document.createElement('DIV');
   el.classList.add('price');
   el.classList.add('await-loader');
   block.setAttribute('data-store-context', '');
-  block.setAttribute('data-store-id', secondProduct);
+  block.setAttribute('data-store-id', productName ?? firstProduct);
   block.setAttribute('data-store-option', variant);
   block.setAttribute('data-store-department', 'consumer');
   block.setAttribute('data-store-event', 'main-product-loaded');
   el.setAttribute('data-store-price', 'discounted||full');
 
-  priceElement.appendChild(oldPrice);
   priceElement.appendChild(el);
   updateBuyLink(block);
   return priceElement;
@@ -210,6 +225,7 @@ function getBlueTagsAndListItems(block) {
 function updateBenefits(block, selectEl, metadata) {
   if (!metadata) return;
 
+  const { firstBenefitLabel, secondBenefitLabel, thirdBenefitLabel } = block.closest('.section').dataset;
   // eslint-disable-next-line no-unused-vars
   const { blueTags, listItems } = getBlueTagsAndListItems(block);
 
@@ -229,6 +245,20 @@ function updateBenefits(block, selectEl, metadata) {
 
   listItems.forEach((li, i) => {
     if (i < cleanedArray.length) {
+      let benefits = null;
+      switch (i) {
+        case 0:
+          benefits = firstBenefitLabel;
+          break;
+        case 1:
+          benefits = secondBenefitLabel;
+          break;
+        case 2:
+          benefits = thirdBenefitLabel;
+          break;
+        default:
+          break;
+      }
       const value = cleanedArray[i];
       const displayValue = typeof value === 'string' ? value.replace('-icon', '') : value;
       const iconSVG = (typeof value === 'string' && value.includes('-icon'))
@@ -243,6 +273,12 @@ function updateBenefits(block, selectEl, metadata) {
 
       // Update the benefits-placeholder span
       const placeholder = li.querySelector('.benefits-placeholder');
+      const [benefitsSingular, benefitsPlural] = benefits?.split(',') ?? [];
+      const textNode = [...li.childNodes].find((node) => node.nodeType === Node.TEXT_NODE);
+      if (textNode && benefits) {
+        textNode.textContent = Number(displayValue) === 1 ? ` ${benefitsSingular}` : ` ${benefitsPlural}`;
+      }
+
       if (placeholder) {
         placeholder.textContent = `${displayValue}`;
       }
@@ -264,7 +300,7 @@ function renderSelector(block, ...options) {
   const selectId = `members-select-${Math.random().toString(36).substr(2, 9)}`;
 
   el.innerHTML = `
-    <label for="${selectId}">${labelText ?? 'Choose number of members'}</label>
+    <label for="${selectId}">${labelText}</label>
     <select id="${selectId}"
       data-store-click-set-devices>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `

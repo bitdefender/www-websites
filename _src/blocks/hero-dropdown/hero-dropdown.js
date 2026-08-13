@@ -3,7 +3,10 @@
 import {
   createNanoBlock,
   renderNanoBlocks,
+  createTag,
 } from '../../scripts/utils/utils.js';
+
+import { detectModalButtons } from '../../scripts/scripts.js';
 
 function buildHeroDropdownBlock(element) {
   const picture = element.querySelector('picture');
@@ -65,7 +68,7 @@ function createPriceBox({
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
-        <a href="${secondButtonLink}" class="button secondary-button">
+        <a href="${secondButtonLink}" class="button secondary-button ${secondButtonLink.includes('fragments') ? 'modal' : ''}">
           <span class="button-text">${secondButtonText}</span>
         </a>` : ''}
     </div>
@@ -201,6 +204,7 @@ export default function decorate(block) {
     corners,
     contentsize,
     textcolor,
+    signature,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
@@ -225,6 +229,12 @@ export default function decorate(block) {
 
   buildHeroDropdownBlock(block);
 
+  if (signature) {
+    const signatureElement = createTag('div', { class: 'signature' });
+    signatureElement.textContent = signature;
+    document.querySelector('div.hero-dropdown div div:first-child').prepend(signatureElement);
+  }
+
   if (contentsize) {
     const content = block.querySelector('.hero-dropdown-content > div');
     if (content) {
@@ -246,4 +256,5 @@ export default function decorate(block) {
   }
 
   renderDropdown(block);
+  detectModalButtons(block);
 }
