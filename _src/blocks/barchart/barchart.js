@@ -86,20 +86,39 @@ const buildCompareSection = (block) => {
   if (sectionTitle) {
     compareSection.setAttribute('title', sectionTitle);
   }
-  compareSection.setAttribute('gap', '32px');
-
   const rows = Array.from(block.querySelectorAll(':scope > div'));
+  const validRows = rows.filter((row) => row.children.length >= 2);
+  const isSingleCard = validRows.length === 1;
+
   rows.forEach((row) => {
     const [iconWrap, contentWrap] = row.children;
     if (!contentWrap) {
       return;
     }
 
-    const titleEl = contentWrap.querySelector('h1, h2, h3, h4, h5, h6');
-    const descriptionEl = getAdjacentParagraph(titleEl, contentWrap);
-    const listEl = contentWrap.querySelector('ul');
-    const footnoteCandidate = listEl?.nextElementSibling;
-    const footnoteEl = footnoteCandidate?.tagName === 'P' ? footnoteCandidate : null;
+    let titleEl;
+    let descriptionEl;
+    let listEl;
+    let footnoteEl;
+
+    if (isSingleCard) {
+      // Left column carries the info panel; right column carries only bars.
+      titleEl = iconWrap.querySelector('h1, h2, h3, h4, h5, h6')
+        // Fall back to first text-only paragraph when no heading is authored.
+        ?? Array.from(iconWrap.querySelectorAll(':scope > p'))
+          .find((p) => p.textContent.trim() && !p.querySelector('picture, img'));
+      const descCandidate = titleEl?.nextElementSibling;
+      descriptionEl = descCandidate?.tagName === 'P' ? descCandidate : null;
+      const footnoteCandidate = descriptionEl?.nextElementSibling;
+      footnoteEl = footnoteCandidate?.tagName === 'P' ? footnoteCandidate : null;
+      listEl = contentWrap.querySelector('ul');
+    } else {
+      titleEl = contentWrap.querySelector('h1, h2, h3, h4, h5, h6');
+      descriptionEl = getAdjacentParagraph(titleEl, contentWrap);
+      listEl = contentWrap.querySelector('ul');
+      const footnoteCandidate = listEl?.nextElementSibling;
+      footnoteEl = footnoteCandidate?.tagName === 'P' ? footnoteCandidate : null;
+    }
 
     const card = document.createElement('compare-card');
     const cardTitle = titleEl?.textContent?.trim();
@@ -127,6 +146,10 @@ const buildCompareSection = (block) => {
       if (footnoteLink?.href) {
         card.setAttribute('footnote-href', footnoteLink.href);
       }
+    }
+
+    if (isSingleCard) {
+      card.setAttribute('layout', 'horizontal');
     }
 
     const listItems = Array.from(listEl?.querySelectorAll('li') || []);
