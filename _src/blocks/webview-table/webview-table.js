@@ -1,6 +1,8 @@
-import { debounce } from '@repobit/dex-utils';
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
-import { matchHeights } from '../../scripts/utils/utils.js';
+import {
+  adjustFontSizeUntilTargetHeight,
+  matchHeights,
+} from '../../scripts/utils/utils.js';
 
 let COLUMNS_COUNT = 0;
 /**
@@ -233,73 +235,6 @@ function renderPrices(block, metadata) {
       index++; // Increment index manually
     }
   });
-}
-
-/**
- * Dynamically adjusts font size of elements until target height is reached
- * @param {string} elementsSelector - CSS selector for elements to adjust
- * @param {HTMLElement} targetElement - Element whose height to monitor
- * @param {number} targetHeight - Target height in pixels
- * @param {number} [maxSize=100] - Maximum font size in pixels
- * @param {number} [minSize=10] - Minimum font size in pixels
- * @param {number} [step=1] - Font size adjustment step in pixels
- * @param {number} [interval=50] - Adjustment interval in milliseconds
- */
-// eslint-disable-next-line max-len
-function adjustFontSizeUntilTargetHeight(elementsSelector, targetElement, targetHeight, maxSize = 100, minSize = 10, step = 1, interval = 50) {
-  const DEBOUNCE_DELAY_MS = 100;
-  const elements = document.querySelectorAll(elementsSelector);
-
-  // Invalid selector or target element not found.
-  if (!elements.length || !targetElement) {
-    return;
-  }
-
-  let previousHeight = targetElement.offsetHeight;
-
-  function adjustSize() {
-    const currentHeight = targetElement.offsetHeight;
-
-    if (Math.abs(currentHeight - targetHeight) < 2) {
-      return; // Stop when the target height is reached
-    }
-
-    let fontChanged = false;
-
-    elements.forEach((el) => {
-      const currentSize = parseInt(window.getComputedStyle(el).fontSize, 10);
-
-      if (currentHeight < targetHeight && currentSize < maxSize) {
-        el.style.fontSize = `${currentSize + step}px`; // Increase size
-        fontChanged = true;
-      } else if (currentHeight > targetHeight && currentSize > minSize) {
-        el.style.fontSize = `${currentSize - step}px`; // Decrease size
-        fontChanged = true;
-      }
-    });
-
-    // Continue adjusting only if font size was changed
-    if (fontChanged) {
-      setTimeout(adjustSize, interval); // Slight delay for smooth adjustment
-    }
-  }
-
-  function mutationObserverCallback() {
-    const newHeight = targetElement.offsetHeight;
-    if (newHeight !== previousHeight) {
-      previousHeight = newHeight;
-      adjustSize();
-    }
-  }
-
-  // Use MutationObserver to track height changes efficiently
-  const observer = new MutationObserver(
-    debounce(mutationObserverCallback, DEBOUNCE_DELAY_MS),
-  );
-
-  observer.observe(targetElement, { attributes: true, childList: true, subtree: true });
-
-  adjustSize();
 }
 
 /**
