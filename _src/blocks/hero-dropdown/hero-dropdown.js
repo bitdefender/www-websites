@@ -94,9 +94,6 @@ createNanoBlock('dropdown', (...args) => {
     hardcodedLink,
   } = block.closest('.section').dataset || {};
 
-  console.log(block.dataset, 'block.dataset');
-  console.log(hardcodedLink, 'hardcodedLink');
-
   const productNames = productnames.split(',').map((n) => n.trim());
 
   const dropdownWrapper = document.createElement('div');
