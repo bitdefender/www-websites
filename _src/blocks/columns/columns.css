@@ -1346,7 +1346,10 @@ main .creators-banner .signature {
   color: #000;
 }
 
-
+.columns-container .columns.benefits-cards.scam-protection > div > div  .button.primary:hover {
+  background-color: #000;
+  color: #fff;
+}
 
 .creators .columns-container.scam-protection div p {
   font-family: 'IBM Plex Sans', sans-serif !important;
