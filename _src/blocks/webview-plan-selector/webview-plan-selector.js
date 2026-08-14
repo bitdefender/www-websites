@@ -237,6 +237,7 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
   const rows = [...block.children];
   const section = block.closest('.section');
   const products = parseProductList(section);
+  const pricePeriod = section?.dataset?.pricePeriod || '';
 
   const headingCell = getMeaningfulCells(rows[0])[0];
   const heading = headingCell?.querySelector('h1, h2, h3');
@@ -329,7 +330,7 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
                 </div>
                 <div class="webview-plan-selector-plan-price">
                   <strong><span class="billed-price await-loader" data-store-price="discounted-monthly||full-monthly"></span></strong>
-                  <span>/ month</span>
+                  <span>${pricePeriod}</span>
                   <em><span class="discount-percentage await-loader" data-store-discount="percentage">${discountLabel}</span> ${offText}</em>
                 </div>
               </div>

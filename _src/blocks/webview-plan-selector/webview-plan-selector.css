@@ -328,8 +328,7 @@ main .section.webview-plan-selector-container {
     font-style: normal;
     font-weight: 600;
     color: #fff;
-    text-transform: uppercase;
-    white-space: nowrap;
+    gap: 2px;
 }
 
 .webview-plan-selector .webview-plan-selector-footer {
