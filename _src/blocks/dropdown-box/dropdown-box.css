@@ -190,17 +190,6 @@
     position: relative;
 }
 
-.dropdown-box-container>div:nth-child(2) .new::after,
-.dropdown-box-container.new>div:nth-child(2) .block::after {
-    content: "";
-    position: absolute;
-    top: -60px;
-    right: 0;
-    width: 196px;
-    height: 90pt;
-    background: url("../../images/patter_grid_blue.png") no-repeat;
-    z-index: -1;
-}
 
 .dropdown-box-container .new div:nth-child(1),
 .dropdown-box-container.new .block div:nth-child(1) {
@@ -498,7 +487,7 @@
         &::after {
             content: "";
             position: absolute;
-            display: block;
+            display: block !important;
             top: 0;
             bottom: 0;
             margin: auto 0;
@@ -622,14 +611,6 @@
 
     .dropdown-box-container.no-dropdown-logic .new>div:nth-child(1)>div::after,
     .dropdown-box-container.no-dropdown-logic.new .block>div:nth-child(1)>div::after {
-        display: none;
-    }
-
-    .dropdown-box-container>div:nth-child(2) .new::after {
-        top: -90px;
-        right: 0;
-        width: 135px;
-        height: 90pt;
         display: none;
     }
 

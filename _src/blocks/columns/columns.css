@@ -1393,6 +1393,7 @@ main .creators-banner .signature {
 
   >div {
     gap: 20px;
+    align-items: baseline;
 
     > div {
       position: relative;
@@ -1436,7 +1437,7 @@ main .creators-banner .signature {
 .columns.benefits-cards.bordered-cards {
   >div {
     gap: 20px;
-    align-items: baseline;
+    align-items: stretch;
     margin-bottom: 20px;
 
     >div {
@@ -1445,6 +1446,8 @@ main .creators-banner .signature {
       border-radius: 20px;
       text-align: left;
       height: stretch;
+      min-height: 100%;
+      display: grid;
 
       h3 {
         font-size: 18px;
