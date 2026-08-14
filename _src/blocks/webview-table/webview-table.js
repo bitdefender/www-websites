@@ -1,4 +1,4 @@
-import { debounce } from '@repobit/dex-utils';
+import { UserAgent, debounce } from '@repobit/dex-utils';
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 import { matchHeights } from '../../scripts/utils/utils.js';
 
@@ -592,6 +592,14 @@ export default async function decorate(block) {
     realCheckPriceDecoration,
     checkAndReplacePrivacyPolicyLink(block),
   ]);
+
+  const windowsLink = metadata.windowsLink || '';
+  if (windowsLink && UserAgent.os === 'Windows') {
+    const buttons = block.querySelectorAll('.button-container a');
+    buttons.forEach((button) => {
+      button.href = windowsLink;
+    });
+  }
 
   // set initial state
   const checkedRadio = block.querySelector('[role="columnheader"] .plan-switcher input[type="radio"][checked]');
