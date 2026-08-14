@@ -245,7 +245,7 @@ function renderPrices(block, metadata) {
  * @param {number} targetHeight - Target height in pixels
  * @param {number} [maxSize=100] - Maximum font size in pixels
  * @param {number} [minSize=10] - Minimum font size in pixels
- * @param {number} [step=1] - Adjustment step in pixels
+ * @param {number} [step=1] - Font size adjustment  step in pixels
  * @param {number} [interval=50] - Adjustment interval in milliseconds
  */
 // eslint-disable-next-line max-len
