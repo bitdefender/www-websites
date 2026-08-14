@@ -656,14 +656,40 @@ export function adjustFontSizeUntilTargetHeight(elementsSelector, targetElement,
   }
 
   let previousHeight = targetElement.offsetHeight;
+  let previousDirection = 0;
+  let active = true;
+  let timer;
+  let observer;
+
+  function stop() {
+    active = false;
+    window.clearTimeout(timer);
+    observer?.disconnect();
+  }
 
   function adjustSize() {
+    if (!active) {
+      return;
+    }
+
     const currentHeight = targetElement.offsetHeight;
     if (Math.abs(currentHeight - targetHeight) <= 2) {
+      stop();
       return;
     }
 
     const direction = currentHeight > targetHeight ? -1 : 1;
+    if (previousDirection && direction !== previousDirection) {
+      if (Math.abs(previousHeight - targetHeight) < Math.abs(currentHeight - targetHeight)) {
+        elements.forEach((element) => {
+          const currentSize = parseFloat(window.getComputedStyle(element).fontSize);
+          element.style.fontSize = `${currentSize - (direction * step)}px`;
+        });
+      }
+      stop();
+      return;
+    }
+
     let fontChanged = false;
 
     elements.forEach((element) => {
@@ -677,12 +703,19 @@ export function adjustFontSizeUntilTargetHeight(elementsSelector, targetElement,
     });
 
     if (fontChanged) {
-      window.setTimeout(adjustSize, interval);
+      timer = window.setTimeout(adjustSize, interval);
+    } else {
+      stop();
     }
+
+    previousDirection = direction;
   }
 
-  const observer = new MutationObserver(
+  observer = new MutationObserver(
     debounce(() => {
+      if (!active) {
+        return;
+      }
       const newHeight = targetElement.offsetHeight;
       if (newHeight !== previousHeight) {
         previousHeight = newHeight;

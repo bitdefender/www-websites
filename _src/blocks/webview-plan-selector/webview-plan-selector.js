@@ -226,6 +226,11 @@ async function fitDesktopCopy(block) {
   if (largestPlanCopy && largestPlanCopy.offsetHeight > 84) {
     adjustFontSizeUntilTargetHeight('.webview-plan-selector-plan-copy p:not(.webview-plan-selector-billed)', largestPlanCopy, 80, 12, 9, 0.5, 50, block);
   }
+
+  const benefits = block.querySelector('.webview-plan-selector-benefits');
+  if (benefits) {
+    adjustFontSizeUntilTargetHeight('.webview-plan-selector-benefits li', benefits, 341, 12, 11, 0.5, 50, block);
+  }
 }
 
 async function runDefaultWebviewPlanSelectorLogic(block) {
