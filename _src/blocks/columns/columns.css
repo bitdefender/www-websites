@@ -1447,7 +1447,6 @@ main .creators-banner .signature {
       text-align: left;
       height: stretch;
       min-height: 100%;
-      display: grid;
 
       h3 {
         font-size: 18px;
