@@ -170,7 +170,6 @@ export default async function decorate(block) {
       import(`${base}tabs`),
       import(`${base}paragraph`),
       import(`${base}accordion`),
-      import(`${base}individual-icon`),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

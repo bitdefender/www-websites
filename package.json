@@ -49,8 +49,11 @@
     "@repobit/dex-constants": "^2.1.35",
     "@repobit/dex-data-layer": "^2.2.2",
     "@repobit/dex-launch": "^3.0.104",
+<<<<<<< HEAD
     "@repobit/dex-store": "^1.6.15",
     "@repobit/dex-store-elements": "^2.0.20",
+=======
+>>>>>>> d943c452050351e6ed009a93e2c28679f7691772
     "@repobit/dex-system-design": "^0.23.117",
     "@repobit/dex-target": "^2.15.50",
     "@repobit/dex-utils": "^2.2.2",
