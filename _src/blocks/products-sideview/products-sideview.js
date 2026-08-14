@@ -154,15 +154,15 @@ function renderPrice(block, firstProduct) {
   oldPrice.classList.add('prod-oldprice', 'await-loader');
   oldPrice.setAttribute('data-store-price', 'full');
   oldPrice.setAttribute('data-store-hide', 'no-price=discounted');
-
-  const saveTag = document.createElement('div');
-  saveTag.classList.add('prod-save', 'await-loader');
-  saveTag.setAttribute('data-store-hide', 'no-price=discounted');
-
-  saveTag.innerHTML = `${saveText ?? ''} <span data-store-discount="percentage"></span>`;
-
   oldPriceContainer.appendChild(oldPrice);
-  oldPriceContainer.appendChild(saveTag);
+
+  if (saveText) {
+    const saveTag = document.createElement('div');
+    saveTag.classList.add('prod-save', 'await-loader');
+    saveTag.setAttribute('data-store-hide', 'no-price=discounted');
+    saveTag.innerHTML = `${saveText ?? ''} <span data-store-discount="percentage"></span>`;
+    oldPriceContainer.appendChild(saveTag);
+  }
   priceElement.appendChild(oldPriceContainer);
 
   const el = document.createElement('DIV');
