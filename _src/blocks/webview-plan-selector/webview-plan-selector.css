@@ -119,6 +119,10 @@ main .section.webview-plan-selector-container {
     background-image: url("/_src/icons/checkmark_normal.svg");
 }
 
+.webview-plan-selector .webview-plan-selector-feature-list li.is-not-available {
+    color: #0009;
+}
+
 .webview-plan-selector .webview-plan-selector-feature-list li.is-not-available::before,
 .webview-plan-selector .webview-plan-selector-feature-list li.is-unavailable::before {
     background-image: url("/_src/icons/checkmark_x_normal_pink.svg");
