@@ -314,13 +314,11 @@
 
         ul {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
             gap: 16px;
 
             li {
                 position: relative;
                 display: flex;
-                align-items: center;
                 padding-left: 32px;
                 font-size: 14px;
 
@@ -359,6 +357,14 @@
                 strong {
                     color: #006DFF;
                 }
+            }
+        }
+    }
+
+    @media (min-width: 992px) {
+        .features-wrapper {
+            ul {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     }

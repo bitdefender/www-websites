@@ -37,7 +37,7 @@ function createDropdownItem(code, friendlyName, isActive) {
 }
 
 function createPriceBox({
-  code, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText, trialDuration,
+  code, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText, trialDuration, hardcodedLink,
 }) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box', 'await-loader');
@@ -59,7 +59,7 @@ function createPriceBox({
       </strong>
     </div>
     <div class="buttons">
-      <a href="#" data-store-render data-store-buy-link="${trialDuration || ''}" class="button primary-button">
+      <a  ${hardcodedLink ? `href="${hardcodedLink}"` : `href="#" data-store-render data-store-buy-link="${trialDuration || ''}"`} class="button primary-button">
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
@@ -87,7 +87,8 @@ createNanoBlock('dropdown', (...args) => {
     label: labelText,
     productnames = '',
     trialDuration,
-  } = block?.dataset || {};
+    hardcodedLink,
+  } = block.closest('.section').dataset || {};
 
   const productNames = productnames.split(',').map((n) => n.trim());
 
@@ -125,7 +126,7 @@ createNanoBlock('dropdown', (...args) => {
     optionsList.appendChild(option);
 
     const priceBox = createPriceBox({
-      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText, trialDuration,
+      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText, trialDuration, hardcodedLink,
     });
 
     priceBox.style.display = index === 0 ? 'block' : 'none';
