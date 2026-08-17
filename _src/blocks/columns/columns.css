@@ -1347,6 +1347,43 @@ main .creators-banner .signature {
 
 .small-business .columns > div {
   align-items: baseline;
+
+  @media (max-width: 992px) {
+    > div {
+      position: relative;
+
+      p:nth-of-type(2) {
+        margin-left: 60px;
+        margin-bottom: 30px;
+        font-size: 16px;
+        margin-top: 0;
+      }
+
+      .icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    > div {
+      p:nth-of-type(2) {
+        margin-left: 60px;
+        margin-bottom: 20px;
+        font-size: 16px;
+        margin-top: 0;
+      }
+
+      .icon {
+        position: absolute;
+        top: 8px;
+        left: 0;
+      }
+    }
+  }
+
 }
 
 .columns.bordered-block {
@@ -1356,6 +1393,7 @@ main .creators-banner .signature {
 
   >div {
     gap: 20px;
+    align-items: baseline;
 
     > div {
       position: relative;
@@ -1399,16 +1437,16 @@ main .creators-banner .signature {
 .columns.benefits-cards.bordered-cards {
   >div {
     gap: 20px;
-    align-items: baseline;
+    align-items: stretch;
     margin-bottom: 20px;
 
     >div {
-      background-color: #F6F6F6;
       padding: 24px;
       border: #C5C9CE 1px solid;
       border-radius: 20px;
       text-align: left;
       height: stretch;
+      min-height: 100%;
 
       h3 {
         font-size: 18px;
@@ -1433,7 +1471,8 @@ main .creators-banner .signature {
       padding: 24px;
       padding-left: 80px;
       min-height: 96px;
-      border: 2px solid #006DFF;
+      border: 1px solid #006DFF;
+      background-color: #F0F7FF;
       width: 100%;
 
       .icon {
@@ -1449,6 +1488,7 @@ main .creators-banner .signature {
   &.faded {
     > div >div {
       border-color: #C5C9CE;
+      background-color: transparent;
 
       svg path {
         fill: #C5C9CE;
