@@ -774,5 +774,6 @@ export default function decorate(block) {
     }, { threshold: 0.2 });
 
     statsObserver.observe(parentSection);
+    matchHeights(parentSection, 'h1');
   }
 }
