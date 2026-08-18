@@ -240,11 +240,11 @@ export async function decorateTags(root) {
   // Define open/close markers you support and the output class to apply.
   // Add 'blue-pill' as requested.
   const TAGS = [
-    { open: '[#', close: '#]', className: 'dark-blue' },
-    { open: '[{', close: '}]', className: 'light-blue' },
+    { open: '[#',          close: '#]',          className: 'dark-blue' },
+    { open: '[{',          close: '}]',          className: 'light-blue' },
     { open: '[blue-round', close: 'blue-round]', className: 'light-blue-round' },
-    { open: '[blue-pill', close: 'blue-pill]', className: 'blue-pill' },
-    { open: '[$', close: '$]', className: 'green' },
+    { open: '[blue-pill',  close: 'blue-pill]',  className: 'blue-pill' },
+    { open: '[$',          close: '$]',          className: 'green' },
   ];
 
   const OPEN_MARKERS = new Map(TAGS.map((t) => [t.open, t]));
