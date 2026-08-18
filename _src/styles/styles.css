@@ -1677,6 +1677,7 @@ main .section.blue p a.button.modal::after {
   padding: 3px 7px 3px 8px;
   text-transform: uppercase;
   white-space: nowrap;
+  align-content: center;
 }
 
 .tag-dark-blue {
