@@ -3,6 +3,15 @@
 }
 
 .blog-insert-container {
+  --background-color: #fff;
+  --text-color: #000;
+  --color-highlight-blue: #006dff;
+  --font-weight-boldest: 700;
+  --body-font-size-s: 16px;
+  --font-weight-regular: 400;
+  --white-color: #fff;
+  --link-hover-color: #00439c;
+
   text-align: center;
 }
 
