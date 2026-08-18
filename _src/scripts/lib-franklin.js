@@ -240,11 +240,11 @@ export async function decorateTags(root) {
   // Define open/close markers you support and the output class to apply.
   // Add 'blue-pill' as requested.
   const TAGS = [
-    { open: '[#',          close: '#]',          className: 'dark-blue' },
-    { open: '[{',          close: '}]',          className: 'light-blue' },
+    { open: '[#', close: '#]', className: 'dark-blue' },
+    { open: '[{', close: '}]', className: 'light-blue' },
     { open: '[blue-round', close: 'blue-round]', className: 'light-blue-round' },
-    { open: '[blue-pill',  close: 'blue-pill]',  className: 'blue-pill' },
-    { open: '[$',          close: '$]',          className: 'green' },
+    { open: '[blue-pill', close: 'blue-pill]', className: 'blue-pill' },
+    { open: '[$', close: '$]', className: 'green' },
   ];
 
   const OPEN_MARKERS = new Map(TAGS.map((t) => [t.open, t]));
@@ -771,7 +771,7 @@ export function decorateButtons(element) {
 
         if (up.childNodes.length === 1
           && ((up.tagName === 'EM' && twoup.childNodes.length === 1 && twoup.tagName === 'STRONG')
-          || (up.tagName === 'STRONG' && twoup.childNodes.length === 1 && twoup.tagName === 'EM'))
+            || (up.tagName === 'STRONG' && twoup.childNodes.length === 1 && twoup.tagName === 'EM'))
           && threeup?.childNodes.length === 1 && threeup?.tagName === 'P') {
           a.className = 'button secondary';
           threeup.classList.add('button-container');
@@ -787,7 +787,7 @@ export function decorateButtons(element) {
         }
 
         // Example: <p><a href="https://central.bitdefender.com">Text</a> (example text)</p>
-        if (up.childNodes.length === 1 && up.tagName === 'P' && a.href.includes('central.bitdefender')) {
+        if (up.childNodes.length === 1 && up.tagName === 'P' && a.origin.includes('central.bitdefender')) {
           a.className = 'button central';
           up.classList.add('button-container');
           return;
@@ -944,7 +944,7 @@ class PluginsRegistry {
   async load(phase) {
     [...this.#plugins.entries()]
       .filter(([, plugin]) => plugin.condition
-      && !plugin.condition(document, plugin.options, executionContext))
+        && !plugin.condition(document, plugin.options, executionContext))
       .map(([id]) => this.#plugins.delete(id));
     return Promise.all([...this.#plugins.entries()]
       // Filter plugins that don't match the execution conditions
@@ -976,7 +976,7 @@ class PluginsRegistry {
     return [...this.#plugins.values()]
       .reduce((promise, plugin) => ( // Using reduce to execute plugins sequencially
         plugin[phase] && (!plugin.condition
-            || plugin.condition(document, plugin.options, executionContext))
+          || plugin.condition(document, plugin.options, executionContext))
           ? promise.then(() => plugin[phase](document, plugin.options, executionContext))
           : promise
       ), Promise.resolve());
