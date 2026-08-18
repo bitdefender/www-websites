@@ -1,4 +1,11 @@
-import { formatPrice, checkIfNotProductPage, wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
+import {
+  formatPrice,
+  checkIfNotProductPage,
+  createBdContext,
+  createBdProduct,
+  createBdOption,
+  wrapChildrenWithStoreContext,
+} from '../../scripts/utils/utils.js';
 import store from '../../scripts/store.js';
 
 // Constants for store department and price attributes
@@ -790,11 +797,11 @@ async function setupAddOnCheckbox(
 }
 
 /**
- * Builds a single product box HTML
+ * Builds a single product box
  * @param {Object} config - Product box configuration
- * @returns {string} Product box HTML string
+ * @returns {HTMLElement} Product box element
  */
-function buildProductBoxHTML(config) {
+function buildProductBox(config) {
   const {
     greenTagText, titleHTML, blueTagsHTML, subtitleHTML, subtitle2HTML, planSwitcherHTML,
     secondButtonHTML, undeBuyLinkHTML, featureListHTML, planSwitcher2HTML, addonProductName,
@@ -814,35 +821,45 @@ function buildProductBoxHTML(config) {
 
   const productBox = document.createElement('div');
   productBox.classList.add(...boxClasses.filter(Boolean));
-  productBox.innerHTML = `
-    <div class="inner_prod_box">
-      ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
-      ${titleHTML}
-      <div class="blueTagsWrapper">${blueTagsHTML}</div>
-      ${subtitleHTML}
-      <hr />
-      ${subtitle2HTML ? `<p class="subtitle-2">${subtitle2HTML}</p>` : ''}
-      ${planSwitcherHTML}
-      <div class="hero-aem__prices await-loader"></div>
-      ${secondButtonHTML}
-      ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
-      <hr />
-      <div class="benefitsLists">${featureListHTML}</div>
-      <div class="add-on-product" style="display: none;">
-        ${hasBilled2 ? '<hr>' : ''}
-        ${planSwitcher2HTML}
-        ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
-        <div class="hero-aem__prices__addon"></div>
-      </div>
-    </div>
-  `;
-
-  wrapChildrenWithStoreContext(productBox, {
-    productId: prodName,
+  const bdContext = createBdContext();
+  const bdProduct = createBdProduct(prodName);
+  const innerProductBox = document.createElement('div');
+  innerProductBox.className = 'inner_prod_box';
+  const bdOption = createBdOption({
     devices: prodUsers,
     subscription: prodYears,
     storeEvent: shouldAddStoreEvent ? storeEvent : '',
   });
+
+  const productContent = document.createRange().createContextualFragment(`
+    ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
+    ${titleHTML}
+    <div class="blueTagsWrapper">${blueTagsHTML}</div>
+    ${subtitleHTML}
+    <hr />
+    ${subtitle2HTML ? `<p class="subtitle-2">${subtitle2HTML}</p>` : ''}
+    ${planSwitcherHTML}
+  `);
+  innerProductBox.append(productContent, bdOption);
+
+  const optionContent = document.createRange().createContextualFragment(`
+    <div class="hero-aem__prices await-loader"></div>
+    ${secondButtonHTML}
+    ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
+    <hr />
+    <div class="benefitsLists">${featureListHTML}</div>
+    <div class="add-on-product" style="display: none;">
+      ${hasBilled2 ? '<hr>' : ''}
+      ${planSwitcher2HTML}
+      ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
+      <div class="hero-aem__prices__addon"></div>
+    </div>
+  `);
+  bdOption.append(optionContent);
+
+  bdProduct.appendChild(innerProductBox);
+  bdContext.appendChild(bdProduct);
+  productBox.appendChild(bdContext);
 
   return productBox;
 }
@@ -1009,7 +1026,7 @@ export default async function decorate(block) {
         const { demoBtn, content: undeBuyLinkContent } = createDemoButton(undeBuyLink);
 
         // Build product box HTML
-        const prodBoxHTML = buildProductBoxHTML({
+        const productBox = buildProductBox({
           greenTagText: greenTag?.textContent.trim(),
           titleHTML,
           blueTagsHTML: blueTagsContainer.innerHTML,
@@ -1031,7 +1048,7 @@ export default async function decorate(block) {
         });
 
         // Replace original content
-        block.children[key].replaceWith(prodBoxHTML);
+        block.children[key].replaceWith(productBox);
 
         // Add price box
         const priceBox = createPriceElement({
