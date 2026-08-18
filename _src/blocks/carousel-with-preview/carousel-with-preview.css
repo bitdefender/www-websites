@@ -326,7 +326,7 @@
     bottom: -21px;
     border-width: 10px;
     border-style: solid;
-    border-color: #ccc transparent transparent transparent;
+    border-color: #ccc transparent transparent;
 }
 
 .carousel-with-preview-container.bundle-design2 .carousel-item ul li span.tooltip::after {
@@ -336,7 +336,7 @@
     bottom: -20px;
     border-width: 10px;
     border-style: solid;
-    border-color: white transparent transparent transparent;
+    border-color: white transparent transparent;
 }
 
 .carousel-with-preview-container.blue-version .carousel {
