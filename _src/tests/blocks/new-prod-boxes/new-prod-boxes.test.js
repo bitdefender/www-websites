@@ -142,7 +142,14 @@ describe('new-prod-boxes', () => {
       const product = box.querySelector(':scope > bd-context > bd-product');
       expect(product).toBeTruthy();
       expect(product.getAttribute('product-id')).toBe(expectedProductIds[index]);
-      expect(product.querySelector(':scope > bd-option')).toBeTruthy();
+      const innerProductBox = product.querySelector(':scope > .inner_prod_box');
+      const planSwitcher = innerProductBox.querySelector(':scope > .plan-switcher');
+      const option = innerProductBox.querySelector(':scope > bd-option');
+      expect(option).toBeTruthy();
+      if (planSwitcher) {
+        expect(planSwitcher.nextElementSibling).toBe(option);
+      }
+      expect(option.querySelector(':scope > .hero-aem__prices')).toBeTruthy();
     });
   });
 
@@ -170,18 +177,18 @@ describe('new-prod-boxes', () => {
   });
 
   it('sets correct store option values', () => {
-    const prodOptions = document.querySelectorAll('.prod_box > bd-context > bd-product > bd-option');
+    const prodOptions = document.querySelectorAll('.prod_box > bd-context > bd-product > .inner_prod_box > bd-option');
     expect(prodOptions.length).toBe(8);
 
     // Individual products have 5 users, 1 year (ts_i/5/1, ps_i/5/1, etc.)
-    const individualOptions = document.querySelectorAll('.individual-box > bd-context > bd-product > bd-option');
+    const individualOptions = document.querySelectorAll('.individual-box > bd-context > bd-product > .inner_prod_box > bd-option');
     individualOptions.forEach((option) => {
       expect(option.getAttribute('devices')).toBe('5');
       expect(option.getAttribute('subscription')).toBe('1');
     });
 
     // Family products have 25 users, 1 year (ts_f/25/1, ps_f/25/1, etc.)
-    const familyOptions = document.querySelectorAll('.family-box > bd-context > bd-product > bd-option');
+    const familyOptions = document.querySelectorAll('.family-box > bd-context > bd-product > .inner_prod_box > bd-option');
     familyOptions.forEach((option) => {
       expect(option.getAttribute('devices')).toBe('25');
       expect(option.getAttribute('subscription')).toBe('1');
