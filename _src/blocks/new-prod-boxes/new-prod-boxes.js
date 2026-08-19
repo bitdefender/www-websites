@@ -81,13 +81,16 @@ function createPriceElement(options, card) {
 
     container.appendChild(oldPriceContainer);
 
+    // Billed text
     if (billedText) {
       const parts = billedText.innerHTML.split('<br>');
+      const [billedPriceText, taxesTextValue] = parts;
 
       if (parts.length > 1) {
-        [billedPrice, taxesText] = parts;
+        billedPrice = billedPriceText;
+        taxesText = taxesTextValue;
       } else {
-        [taxesText] = parts;
+        taxesText = billedPriceText;
       }
 
       if (billedPrice) {
@@ -827,7 +830,7 @@ function buildProductBoxHTML(config) {
       data-store-option="${prodUsers}-${prodYears}"
       data-store-department="${STORE_DEPARTMENT}"
       ${storeEventAttr}>
-      <div class="greenTag2 ${!greenTagText || greenTagText.innerText === '' ? 'empty' : ''}">${greenTagText}</div>
+      <div class="greenTag2 ${!greenTagText ? 'empty' : ''}">${greenTagText || ''}</div>
       <div class="inner_prod_box">
         ${titleHTML}
         <div class="blueTagsWrapper">${blueTagsHTML}</div>
