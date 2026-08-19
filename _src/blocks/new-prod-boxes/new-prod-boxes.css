@@ -578,9 +578,9 @@
   background-color: white;
   padding: 10px;
   border-radius: 10px;
-  margin-bottom: 28px;
+  margin-bottom: 10px;
   left: 15px;
-  bottom: 0;
+  bottom: 100%;
   z-index: 1;
   font-size: 12px;
   box-shadow: 4px 4px 7px -8px #000;
