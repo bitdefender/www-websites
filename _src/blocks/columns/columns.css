@@ -1198,7 +1198,7 @@ main .creators-banner .signature {
   align-items: baseline;
   margin-bottom: 12px;
 
-  td:last-of-type {
+  td:last-of-type:not(:empty) {
     background-color: #006DFF;
     border-radius: 20px;
     color: #fff;
@@ -1335,6 +1335,20 @@ main .creators-banner .signature {
   color:#006DFF;
   font: normal normal bold 24px/26px "IBM Plex Sans", sans-serif !important;
   margin-top: 40px;
+}
+
+.creators .columns-container.scam-protection .columns.benefits-cards > div > div > div *{
+  width: 100%;
+}
+
+.columns-container .columns.benefits-cards.scam-protection > div > div  .button.primary {
+  background-color: #fff;
+  color: #000;
+}
+
+.columns-container .columns.benefits-cards.scam-protection > div > div  .button.primary:hover {
+  background-color: #000;
+  color: #fff;
 }
 
 .creators .columns-container.scam-protection div p {
@@ -1874,10 +1888,6 @@ main .creators-banner .signature {
     margin-top: 0;
   }
 
-  .columns.awards > div > div {
-    flex: 0;
-  }
-
   /* stylelint-disable-next-line selector-class-pattern */
   .section.b_mark .columns-img-col img {
     margin-top: -200px;
@@ -1965,13 +1975,13 @@ main .creators-banner .signature {
     height: 100%;
     text-align: left;
     width: 100%;
+    justify-items: flex-start;
   }
 
   .creators .columns-container .columns.benefits-cards > div {
     display: grid;
     gap: 30px;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    grid-auto-flow: column;
     width: 100%;
   }
 
