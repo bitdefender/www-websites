@@ -81,17 +81,13 @@ function createPriceElement(options, card) {
 
     container.appendChild(oldPriceContainer);
 
-    // Billed text
     if (billedText) {
       const parts = billedText.innerHTML.split('<br>');
 
-      const [billedPriceText, taxesTextValue] = parts;
-
       if (parts.length > 1) {
-        billedPrice = billedPriceText;
-        taxesText = taxesTextValue;
+        [billedPrice, taxesText] = parts;
       } else {
-        taxesText = billedPriceText;
+        [taxesText] = parts;
       }
 
       if (billedPrice) {
