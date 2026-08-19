@@ -1,0 +1,142 @@
+.bd-rpl-pwa-install,
+.bd-rpl-pwa-notifications {
+  --rpl-pwa-red: #ed1c24;
+  --rpl-pwa-ink: #171717;
+  --rpl-pwa-border: #e5e5e5;
+
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--rpl-pwa-border);
+  border-radius: 16px 16px 0 0;
+  bottom: 0;
+  box-shadow: 0 -4px 24px rgb(0 0 0 / 14%);
+  color: var(--rpl-pwa-ink);
+  display: flex;
+  gap: 16px;
+  left: 0;
+  padding: 16px max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  position: fixed;
+  right: 0;
+  z-index: 1000;
+}
+
+.bd-rpl-pwa-install[hidden],
+.bd-rpl-pwa-notifications[hidden] {
+  display: none;
+}
+
+.bd-rpl-pwa-install__content,
+.bd-rpl-pwa-notifications__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.bd-rpl-pwa-install__title,
+.bd-rpl-pwa-notifications__title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.bd-rpl-pwa-install__subtitle,
+.bd-rpl-pwa-notifications__body,
+.bd-rpl-pwa-install__ios {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.bd-rpl-pwa-install__logo {
+  border-radius: 50%;
+  flex: 0 0 40px;
+  height: 40px;
+  width: 40px;
+}
+
+.bd-rpl-pwa-install__close,
+.bd-rpl-pwa-notifications__close {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--rpl-pwa-ink);
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 44px;
+  font-size: 24px;
+  height: 44px;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  width: 44px;
+}
+
+.bd-rpl-pwa-install__button,
+.bd-rpl-pwa-notifications__button {
+  align-items: center;
+  background: var(--rpl-pwa-red);
+  border: 0;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-weight: 700;
+  height: 44px;
+  justify-content: center;
+  min-width: 108px;
+  padding: 0 20px;
+}
+
+.bd-rpl-pwa-install button:focus-visible,
+.bd-rpl-pwa-notifications button:focus-visible {
+  outline: 3px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+.bd-rpl-pwa-notifications {
+  border-radius: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 16px;
+  right: 16px;
+}
+
+@media (width >= 900px) {
+  .bd-rpl-pwa-install,
+  .bd-rpl-pwa-notifications {
+    border-radius: 14px;
+    bottom: 24px;
+    left: auto;
+    max-width: 530px;
+    padding: 12px 12px 12px 16px;
+    right: 24px;
+  }
+
+  .bd-rpl-pwa-install__content,
+  .bd-rpl-pwa-notifications__content {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bd-rpl-pwa-install__subtitle,
+  .bd-rpl-pwa-notifications__body {
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bd-rpl-pwa-install,
+  .bd-rpl-pwa-notifications {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}
+
+body.bd-rpl-pwa-standalone header {
+  display: none !important;
+  min-height: 0;
+}
