@@ -78,17 +78,28 @@ function createPriceElement(options, card) {
   if (card.parentElement.classList.contains('new-buy-zone')) {
     let billedPrice;
     let taxesText;
+
     container.appendChild(oldPriceContainer);
+
     // Billed text
     if (billedText) {
-      [billedPrice, taxesText] = billedText.innerHTML.split('<br>');
-      const billedPriceDiv = document.createElement('div');
-      billedPriceDiv.className = 'billed';
-      billedPriceDiv.innerHTML = billedPrice.replace(
-        '0',
-        `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
-      );
-      container.appendChild(billedPriceDiv);
+      const parts = billedText.innerHTML.split('<br>');
+
+      if (parts.length > 1) {
+        [billedPrice, taxesText] = parts;
+      } else {
+        taxesText = parts[0];
+      }
+
+      if (billedPrice) {
+        const billedPriceDiv = document.createElement('div');
+        billedPriceDiv.className = 'billed 123';
+        billedPriceDiv.innerHTML = billedPrice.replace(
+          '0',
+          `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
+        );
+        container.appendChild(billedPriceDiv);
+      }
     }
 
     container.appendChild(newPriceContainer);
@@ -818,8 +829,8 @@ function buildProductBoxHTML(config) {
       data-store-option="${prodUsers}-${prodYears}"
       data-store-department="${STORE_DEPARTMENT}"
       ${storeEventAttr}>
+      <div class="greenTag2 ${!greenTagText || greenTagText.innerText === '' ? 'empty' : ''}">${greenTagText}</div>
       <div class="inner_prod_box">
-        ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
         ${titleHTML}
         <div class="blueTagsWrapper">${blueTagsHTML}</div>
         ${subtitleHTML}
