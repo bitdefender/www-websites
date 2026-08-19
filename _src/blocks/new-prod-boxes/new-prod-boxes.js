@@ -85,10 +85,13 @@ function createPriceElement(options, card) {
     if (billedText) {
       const parts = billedText.innerHTML.split('<br>');
 
+      const [billedPriceText, taxesTextValue] = parts;
+
       if (parts.length > 1) {
-        [billedPrice, taxesText] = parts;
+        billedPrice = billedPriceText;
+        taxesText = taxesTextValue;
       } else {
-        taxesText = parts[0];
+        taxesText = billedPriceText;
       }
 
       if (billedPrice) {
@@ -810,7 +813,6 @@ function buildProductBoxHTML(config) {
     hasBilled2, prodName, prodUsers, prodYears, isIndividual, storeEvent, productsAsList,
   } = config;
 
-  const hasGreenTag = greenTagText && greenTagText !== 'demo-box';
   const isDemoBox = greenTagText === 'demo-box';
   const boxClasses = [
     'prod_box',
