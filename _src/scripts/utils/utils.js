@@ -633,6 +633,101 @@ export async function matchHeights(targetNode, selector) {
   adjustHeights();
 }
 
+/**
+ * Adjusts the font size of matching elements until a target element reaches a
+ * target height. The adjustment is bounded so localized copy cannot become
+ * unreadably small.
+ * @param {string} elementsSelector CSS selector for elements to adjust
+ * @param {HTMLElement} targetElement Element whose height should be matched
+ * @param {number} targetHeight Target height in pixels
+ * @param {number} [maxSize=100] Maximum font size in pixels
+ * @param {number} [minSize=10] Minimum font size in pixels
+ * @param {number} [step=1] Font size adjustment step in pixels
+ * @param {number} [interval=50] Adjustment interval in milliseconds
+ * @param {HTMLElement|Document} [rootElement=document] Query root
+ */
+// eslint-disable-next-line max-len
+export function adjustFontSizeUntilTargetHeight(elementsSelector, targetElement, targetHeight, maxSize = 100, minSize = 10, step = 1, interval = 50, rootElement = document) {
+  const DEBOUNCE_DELAY_MS = 100;
+  const elements = rootElement.querySelectorAll(elementsSelector);
+
+  if (!elements.length || !targetElement || !targetElement.offsetHeight) {
+    return;
+  }
+
+  let previousHeight = targetElement.offsetHeight;
+  let previousDirection = 0;
+  let active = true;
+  let timer;
+  let observer;
+
+  function stop() {
+    active = false;
+    window.clearTimeout(timer);
+    observer?.disconnect();
+  }
+
+  function adjustSize() {
+    if (!active) {
+      return;
+    }
+
+    const currentHeight = targetElement.offsetHeight;
+    if (Math.abs(currentHeight - targetHeight) <= 2) {
+      stop();
+      return;
+    }
+
+    const direction = currentHeight > targetHeight ? -1 : 1;
+    if (previousDirection && direction !== previousDirection) {
+      if (Math.abs(previousHeight - targetHeight) < Math.abs(currentHeight - targetHeight)) {
+        elements.forEach((element) => {
+          const currentSize = parseFloat(window.getComputedStyle(element).fontSize);
+          element.style.fontSize = `${currentSize - (direction * step)}px`;
+        });
+      }
+      stop();
+      return;
+    }
+
+    let fontChanged = false;
+
+    elements.forEach((element) => {
+      const currentSize = parseFloat(window.getComputedStyle(element).fontSize);
+      const nextSize = Math.min(maxSize, Math.max(minSize, currentSize + (direction * step)));
+
+      if (nextSize !== currentSize) {
+        element.style.fontSize = `${nextSize}px`;
+        fontChanged = true;
+      }
+    });
+
+    if (fontChanged) {
+      timer = window.setTimeout(adjustSize, interval);
+    } else {
+      stop();
+    }
+
+    previousDirection = direction;
+  }
+
+  observer = new MutationObserver(
+    debounce(() => {
+      if (!active) {
+        return;
+      }
+      const newHeight = targetElement.offsetHeight;
+      if (newHeight !== previousHeight) {
+        previousHeight = newHeight;
+        adjustSize();
+      }
+    }, DEBOUNCE_DELAY_MS),
+  );
+
+  observer.observe(targetElement, { attributes: true, childList: true, subtree: true });
+  adjustSize();
+}
+
 function isSafariMobile() {
   return (UserAgent.os === 'ios' || UserAgent.os === 'Mac/iOS') && UserAgent.isSafari;
 }
@@ -1221,7 +1316,7 @@ export const wrapChildrenWithStoreContext = (element, {
   element.appendChild(bdContext);
 };
 
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.23.103/';
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.24.0/';
 
 export const getDsnBase = () => {
   try {

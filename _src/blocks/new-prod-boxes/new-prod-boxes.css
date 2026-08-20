@@ -86,7 +86,7 @@
   display: none;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
+.new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2 {
   min-height: 30px;
   max-width: 350px;
   width: 86%;
@@ -96,14 +96,19 @@
   background-color: #1C7928;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  padding-top: 7px;
-  position: absolute;
-  bottom: 100%;
-  left: 7%;
+  margin: 0 auto;
   box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 5px;
 }
 
-.new-prod-boxes-container.bf25 .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
+.new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2.empty {
+  background-color: transparent;
+}
+
+.new-prod-boxes-container.bf25 .new-prod-boxes .prod_box .greenTag2 {
   background: linear-gradient(to right, #a80000, #e00000, #a80000);
   font-weight: bold;
 }
@@ -331,11 +336,12 @@
       flex: 1;
       max-width: 410px;
       margin: 8px;
-      margin-bottom: 50px;
+      margin-bottom: 10px;
 
       .inner_prod_box {
         position: relative;
         height: 100%;
+        width: 100%;
         background-color: #F6F6F6;
         border-radius: 20px;
         padding: 25px;
@@ -416,28 +422,38 @@
     &.blue-top-tag {
       .prod_box {
         .greenTag2 {
-          top: -35px;
+          margin: 0 auto;
           background: #d6e8ff;
           border-radius: 10px 10px 0 0;
           font-family: Arial, sans-serif;
           font-weight: 700;
           font-size: 13px;
           line-height: 100%;
-          vertical-align: middle;
           width: 80%;
           text-align: center;
           color: #003385;
-          height: 35px;
+          min-height: 35px;
           display: flex;
           align-items: center;
-          padding: 0 10px;
           justify-content: center;
+          padding: 5px 10px;
+          
+          &.empty {
+            background-color: transparent;
+          }
         }
 
         .blueTag {
           background-color: transparent;
           color: #000;
           padding-left: 0;
+
+          .tag {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+          }
         }
 
         .prod-save {
@@ -455,6 +471,11 @@
         .button.secondary {
           justify-content: center;
           width: 100%;
+          margin-top: 5px;
+
+          @media (max-width: 768px) {
+            margin-top: 10px;
+          }
 
           &:hover {
             .button-text {
@@ -562,9 +583,9 @@
   background-color: white;
   padding: 10px;
   border-radius: 10px;
-  margin-bottom: 28px;
-  left: 0;
-  bottom: 0;
+  margin-bottom: 10px;
+  left: 15px;
+  bottom: 100%;
   z-index: 1;
   font-size: 12px;
   box-shadow: 4px 4px 7px -8px #000;
@@ -991,6 +1012,14 @@
     transform: rotate(-90deg);
   }
 
+  .new-prod-boxes-container .new-prod-boxes .prod_box {
+    margin: 1em auto;
+  }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2.empty {
+    display: none;
+  }
+
 }
 
 .new-prod-boxes .await-loader {
@@ -1009,7 +1038,9 @@
     margin: 0 auto;
     display: grid;
     gap: 0;
-    grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 410px));
+    justify-content: center;
 
     &.five-cards {
       flex-wrap: wrap;

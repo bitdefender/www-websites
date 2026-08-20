@@ -81,17 +81,29 @@ function createPriceElement(options, card) {
   if (card.parentElement.classList.contains('new-buy-zone')) {
     let billedPrice;
     let taxesText;
+
     container.appendChild(oldPriceContainer);
+
     // Billed text
     if (billedText) {
-      [billedPrice, taxesText] = billedText.innerHTML.split('<br>');
-      const billedPriceDiv = document.createElement('div');
-      billedPriceDiv.className = 'billed';
-      billedPriceDiv.innerHTML = billedPrice.replace(
-        '0',
-        `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`,
-      );
-      container.appendChild(billedPriceDiv);
+      const parts = billedText.innerHTML.split('<br>');
+      const [billedPriceText, taxesTextValue] = parts;
+      if (parts.length > 1) {
+        billedPrice = billedPriceText;
+        taxesText = taxesTextValue;
+      } else {
+        taxesText = billedPriceText;
+      }
+
+      if (billedPrice) {
+        const billedPriceDiv = document.createElement('div');
+        billedPriceDiv.className = 'billed';
+        billedPriceDiv.innerHTML = billedPrice.replace(
+          '0',
+          `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`,
+        );
+        container.appendChild(billedPriceDiv);
+      }
     }
 
     container.appendChild(newPriceContainer);
@@ -808,7 +820,6 @@ function buildProductBox(config) {
     hasBilled2, prodName, prodUsers, prodYears, isIndividual, storeEvent, productsAsList,
   } = config;
 
-  const hasGreenTag = greenTagText && greenTagText !== 'demo-box';
   const isDemoBox = greenTagText === 'demo-box';
   const boxClasses = [
     'prod_box',

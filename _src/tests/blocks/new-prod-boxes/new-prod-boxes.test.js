@@ -109,8 +109,13 @@ describe('new-prod-boxes', () => {
   });
 
   it('creates green tags for "Most Popular" products', () => {
-    const greenTags = document.querySelectorAll('.greenTag2');
+    const greenTags = document.querySelectorAll('.greenTag2:not(.empty)');
+
     expect(greenTags.length).toBe(2);
+
+    greenTags.forEach((tag) => {
+      expect(tag.textContent).toBe('Most Popular');
+    });
 
     greenTags.forEach((tag) => {
       expect(tag.textContent).toBe('Most Popular');
