@@ -40,13 +40,14 @@ import {
   getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
-import {
-  initializeReversePhoneLookupPWA,
-  isEligibleRoute,
-  isStandalonePWA,
-} from './utils/pwa/pwa.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
+
+// no need to import pwa.js for other routes
+const PWA_ROUTE_PATTERN = /^\/en-us\/consumer\/reverse-phone-lookup(?:\/|$)/;
+const pwaModulePromise = PWA_ROUTE_PATTERN.test(window.location.pathname)
+  ? import('./utils/pwa/pwa.js')
+  : null;
 
 export const SUPPORTED_LANGUAGES = ['en'];
 
@@ -547,8 +548,9 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
-  const standaloneReversePhoneLookup = isEligibleRoute(window.location.pathname)
-    && isStandalonePWA(window);
+  const pwaModule = pwaModulePromise ? await pwaModulePromise : null;
+  const standaloneReversePhoneLookup = pwaModule?.isEligibleRoute(window.location.pathname)
+    && pwaModule.isStandalonePWA(window);
   const header = doc.querySelector('header');
   header.style.height = '0px';
 
@@ -796,6 +798,8 @@ initMobileDetector('mobile');
 initMobileDetector('tablet');
 initMobileDetector('desktop');
 
-initializeReversePhoneLookupPWA();
+pwaModulePromise
+  ?.then(({ initializeReversePhoneLookupPWA }) => initializeReversePhoneLookupPWA())
+  .catch(() => { });
 loadPage();
 window.AdobeDataLayerService = AdobeDataLayerService;
