@@ -1008,6 +1008,14 @@
     transform: rotate(-90deg);
   }
 
+  .new-prod-boxes-container .new-prod-boxes .prod_box {
+    margin: 1em auto;
+  }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2.empty {
+    display: none;
+  }
+
 }
 
 .new-prod-boxes .await-loader {
@@ -1027,6 +1035,8 @@
     display: grid;
     gap: 0;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 410px));
+    justify-content: center;
 
     &.five-cards {
       flex-wrap: wrap;
