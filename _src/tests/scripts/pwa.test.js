@@ -4,11 +4,9 @@ import {
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { AdobeDataLayerService } from '@repobit/dex-data-layer';
 import {
   PWA_SCOPE,
   PWA_ROUTES,
-  PWA_ASSET_IDS,
   consumeInstallSession,
   getPlatformVariant,
   isEligibleRoute,
@@ -26,20 +24,9 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
   it('keeps the manifest and worker limited to the online PWA scope', () => {
     const parsedManifest = JSON.parse(manifest);
     expect(parsedManifest.scope).toBe(PWA_SCOPE);
-    expect(parsedManifest.start_url).toBe(PWA_SCOPE);
+    expect(parsedManifest.start_url).toBe(`${PWA_SCOPE}?mode=PWA`);
     expect(parsedManifest.icons).toHaveLength(3);
     expect(serviceWorker).not.toMatch(/fetch|caches|workbox/i);
-  });
-
-  it('exposes the stable analytics asset IDs', () => {
-    expect(Object.values(PWA_ASSET_IDS)).toEqual([
-      'rpl-pwa-install-banner-shown',
-      'rpl-pwa-install-banner-dismissed',
-      'rpl-pwa-install-prompt-accepted',
-      'rpl-pwa-install-prompt-dismissed',
-      'rpl-pwa-app-installed',
-      'rpl-pwa-app-opened',
-    ]);
   });
 
   it('includes the base and verdict routes, but no other consumer route', () => {
@@ -53,6 +40,23 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
     expect(isEligibleRoute(`${PWA_SCOPE}/might-be-safe`)).toBe(true);
     expect(isEligibleRoute(`${PWA_SCOPE}/marked-as-spam-or-scam/`)).toBe(true);
     expect(isEligibleRoute('/en-us/consumer/free-tools')).toBe(false);
+  });
+
+  it('adds mode=PWA to standalone eligible route URLs', () => {
+    const originalPath = window.location.pathname;
+    const originalSearch = window.location.search;
+    const originalMatchMedia = window.matchMedia;
+    window.history.replaceState({}, '', `${PWA_SCOPE}/might-be-safe?cid=test`);
+    window.matchMedia = () => ({ matches: true });
+    document.body.replaceChildren();
+
+    initializeReversePhoneLookupPWA(document, window);
+
+    expect(window.location.pathname).toBe(`${PWA_SCOPE}/might-be-safe`);
+    expect(window.location.search).toBe('?cid=test&mode=PWA');
+
+    window.history.replaceState({}, '', `${originalPath}${originalSearch}`);
+    window.matchMedia = originalMatchMedia;
   });
 
   it('detects standalone mode through display-mode and Apple standalone', () => {
@@ -79,41 +83,11 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
     })).toBe('chromium');
   });
 
-  it('offers notifications on the second standalone session and only after clicking Enable', () => {
-    const push = vi.spyOn(AdobeDataLayerService, 'push').mockImplementation(() => {});
-    const originalPath = window.location.pathname;
-    const originalMatchMedia = window.matchMedia;
-    const originalNotification = window.Notification;
-    window.history.replaceState({}, '', PWA_SCOPE);
-    window.matchMedia = () => ({ matches: true });
-    window.Notification = {
-      permission: 'default',
-      requestPermission: vi.fn().mockResolvedValue('granted'),
-    };
-    document.body.replaceChildren(document.createElement('header'));
-    initializeReversePhoneLookupPWA(document, window);
-    expect(document.querySelector('header').style.display).toBe('none');
-    expect(document.getElementById('bd-rpl-pwa-notifications')).toBeNull();
-    sessionStorage.clear();
-    initializeReversePhoneLookupPWA(document, window);
-    const enable = document.querySelector('.bd-rpl-pwa-notifications__button');
-    expect(enable).not.toBeNull();
-    expect(window.Notification.requestPermission).not.toHaveBeenCalled();
-    enable.click();
-    expect(window.Notification.requestPermission).toHaveBeenCalledTimes(1);
-    expect(push).toHaveBeenCalled();
-    push.mockRestore();
-    window.history.replaceState({}, '', originalPath);
-    window.matchMedia = originalMatchMedia;
-    window.Notification = originalNotification;
-  });
-
   it('captures beforeinstallprompt, prevents the browser default, and consumes it on Install', async () => {
     const originalPath = window.location.pathname;
     const originalMatchMedia = window.matchMedia;
     window.history.replaceState({}, '', PWA_SCOPE);
     window.matchMedia = () => ({ matches: false });
-    window.adobeDataLayer = { getState: () => true, push: vi.fn() };
     document.body.replaceChildren();
     localStorage.clear();
     sessionStorage.clear();
@@ -136,6 +110,31 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
     expect(document.getElementById('bd-rpl-pwa-install').hidden).toBe(true);
     window.history.replaceState({}, '', originalPath);
     window.matchMedia = originalMatchMedia;
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it('shows the install banner without consent infrastructure', () => {
+    const originalPath = window.location.pathname;
+    const originalMatchMedia = window.matchMedia;
+    const originalDataLayer = window.adobeDataLayer;
+    window.history.replaceState({}, '', PWA_SCOPE);
+    window.matchMedia = () => ({ matches: false });
+    window.adobeDataLayer = undefined;
+    document.body.replaceChildren();
+    localStorage.clear();
+    sessionStorage.clear();
+    initializeReversePhoneLookupPWA(document, window);
+
+    const beforeInstallPrompt = new Event('beforeinstallprompt');
+    beforeInstallPrompt.prompt = vi.fn();
+    beforeInstallPrompt.userChoice = Promise.resolve({ outcome: 'accepted' });
+    window.dispatchEvent(beforeInstallPrompt);
+    expect(document.getElementById('bd-rpl-pwa-install')).not.toBeNull();
+
+    window.history.replaceState({}, '', originalPath);
+    window.matchMedia = originalMatchMedia;
+    window.adobeDataLayer = originalDataLayer;
     localStorage.clear();
     sessionStorage.clear();
   });

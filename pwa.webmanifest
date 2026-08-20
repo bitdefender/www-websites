@@ -2,7 +2,7 @@
   "id": "/en-us/consumer/reverse-phone-lookup",
   "name": "Bitdefender Phone Lookup",
   "short_name": "Phone Lookup",
-  "start_url": "/en-us/consumer/reverse-phone-lookup",
+  "start_url": "/en-us/consumer/reverse-phone-lookup?mode=PWA",
   "scope": "/en-us/consumer/reverse-phone-lookup",
   "display": "standalone",
   "background_color": "#ffffff",
