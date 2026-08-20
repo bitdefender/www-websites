@@ -548,7 +548,12 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
-  const pwaModule = pwaModulePromise ? await pwaModulePromise : null;
+  let pwaModule = null;
+  try {
+    pwaModule = pwaModulePromise ? await pwaModulePromise : null;
+  } catch {
+    pwaModule = null;
+  }
   const standaloneReversePhoneLookup = pwaModule?.isEligibleRoute(window.location.pathname)
     && pwaModule.isStandalonePWA(window);
   const header = doc.querySelector('header');
