@@ -1888,10 +1888,6 @@ main .creators-banner .signature {
     margin-top: 0;
   }
 
-  .columns.awards > div > div {
-    flex: 0;
-  }
-
   /* stylelint-disable-next-line selector-class-pattern */
   .section.b_mark .columns-img-col img {
     margin-top: -200px;

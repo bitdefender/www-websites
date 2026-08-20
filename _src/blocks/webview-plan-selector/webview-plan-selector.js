@@ -1,6 +1,6 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { createBdProduct, createBdOption } from '../../scripts/utils/utils.js';
+import { createBdProduct, createBdOption, adjustFontSizeUntilTargetHeight } from '../../scripts/utils/utils.js';
 
 const PRIVACY_POLICY_FALLBACK = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
 
@@ -165,10 +165,79 @@ function updateDevicePlaceholders(placeholders, products, selectedPlanIndex) {
   });
 }
 
+/**
+ * Waits until an element has a measurable layout before continuing.
+ * @param {HTMLElement} element Element whose layout should be observed
+ * @returns {Promise<void>} Resolves when the element is measurable or the wait expires
+ */
+function waitForLayout(element) {
+  if (element.offsetHeight) {
+    return Promise.resolve();
+  }
+
+  if (typeof ResizeObserver === 'undefined') {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    let attempts = 0;
+    let checkLayout;
+    const observer = new ResizeObserver(() => {
+      if (element.offsetHeight) {
+        window.clearInterval(checkLayout);
+        observer.disconnect();
+        resolve();
+      }
+    });
+    observer.observe(element);
+    checkLayout = window.setInterval(() => {
+      attempts += 1;
+      if (element.offsetHeight || attempts >= 20) {
+        window.clearInterval(checkLayout);
+        observer.disconnect();
+        resolve();
+      }
+    }, 50);
+  });
+}
+
+/**
+ * Fits localized copy into the desktop plan-selector geometry.
+ * @param {HTMLElement} block The plan-selector block
+ * @returns {Promise<void>} Resolves after fonts are ready and fitting starts
+ */
+async function fitDesktopCopy(block) {
+  if (document.fonts?.ready) {
+    await document.fonts.ready;
+  }
+  await waitForLayout(block);
+
+  const heading = block.querySelector('.webview-plan-selector-layout > h1');
+  const planCopies = [...block.querySelectorAll('.webview-plan-selector-plan-copy')];
+  const largestPlanCopy = planCopies.reduce(
+    (largest, copy) => (copy.offsetHeight > largest.offsetHeight ? copy : largest),
+    planCopies[0],
+  );
+
+  if (heading) {
+    adjustFontSizeUntilTargetHeight('.webview-plan-selector-layout > h1', heading, 82, 23, 16, 1, 50, block);
+  }
+
+  if (largestPlanCopy && largestPlanCopy.offsetHeight > 84) {
+    adjustFontSizeUntilTargetHeight('.webview-plan-selector-plan-copy p:not(.webview-plan-selector-billed)', largestPlanCopy, 80, 12, 9, 0.5, 50, block);
+  }
+
+  const benefits = block.querySelector('.webview-plan-selector-benefits');
+  if (benefits) {
+    adjustFontSizeUntilTargetHeight('.webview-plan-selector-benefits li', benefits, 341, 12, 11, 0.5, 50, block);
+  }
+}
+
 async function runDefaultWebviewPlanSelectorLogic(block) {
   const rows = [...block.children];
   const section = block.closest('.section');
   const products = parseProductList(section);
+  const pricePeriod = section?.dataset?.pricePeriod || '';
 
   const headingCell = getMeaningfulCells(rows[0])[0];
   const heading = headingCell?.querySelector('h1, h2, h3');
@@ -394,6 +463,7 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
     block.classList.add('dark-mode');
   }
 
+  fitDesktopCopy(block);
   await checkAndReplacePrivacyPolicyLink(block);
 }
 
