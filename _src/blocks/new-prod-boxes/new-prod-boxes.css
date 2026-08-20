@@ -86,7 +86,7 @@
   display: none;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
+.new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2 {
   min-height: 30px;
   max-width: 350px;
   width: 86%;
@@ -96,14 +96,15 @@
   background-color: #1C7928;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  padding-top: 7px;
-  position: absolute;
-  bottom: 100%;
-  left: 7%;
+  margin: 0 auto;
   box-sizing: content-box;
 }
 
-.new-prod-boxes-container.bf25 .new-prod-boxes .prod_box .inner_prod_box .greenTag2 {
+.new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2.empty {
+  background-color: transparent;
+}
+
+.new-prod-boxes-container.bf25 .new-prod-boxes .prod_box .greenTag2 {
   background: linear-gradient(to right, #a80000, #e00000, #a80000);
   font-weight: bold;
 }
