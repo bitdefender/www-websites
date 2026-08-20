@@ -413,10 +413,6 @@
           transition: all 0.4s;
         }
       }
-
-      &:has(.greenTag2) {
-        margin-top: var(--tag-margin);
-      }
     }
 
     &.blue-top-tag {
@@ -1050,7 +1046,7 @@
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 50;
-    margin-top: var(--tag-margin);
+    margin-top: 10px;
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
