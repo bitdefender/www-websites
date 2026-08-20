@@ -247,26 +247,32 @@ function createInstallBanner(doc, variant, deferredPrompt, win) {
   logo.alt = 'Bitdefender';
   logo.width = 40;
   logo.height = 40;
-  banner.append(logo);
+  const topRow = doc.createElement('div');
+  topRow.className = 'bd-rpl-pwa-install__toprow';
+  topRow.append(logo);
 
   const content = doc.createElement('div');
   content.className = 'bd-rpl-pwa-install__content';
+  const text = doc.createElement('div');
+  text.className = 'bd-rpl-pwa-install__text';
   const title = doc.createElement('strong');
   title.className = 'bd-rpl-pwa-install__title';
   title.textContent = 'Install Phone Lookup';
-  content.append(title);
+  text.append(title);
   if (variant === 'ios') {
     const instructions = doc.createElement('p');
     instructions.className = 'bd-rpl-pwa-install__ios';
     instructions.textContent = 'Tap ••• near address bar → Share → More → Add to Home Screen → Add';
-    content.append(instructions);
+    text.append(instructions);
+    content.append(text);
   } else {
     const subtitle = doc.createElement('p');
     subtitle.className = 'bd-rpl-pwa-install__subtitle';
     subtitle.textContent = win.innerWidth >= 900
       ? 'Quick access to this page, one click away'
       : 'Quick access to this page, one tap away';
-    content.append(subtitle);
+    text.append(subtitle);
+    content.append(text);
     const install = makeButton(doc, 'Install', 'bd-rpl-pwa-install__button');
     install.addEventListener('click', async () => {
       if (!deferredPrompt) return;
@@ -282,7 +288,6 @@ function createInstallBanner(doc, variant, deferredPrompt, win) {
     });
     content.append(install);
   }
-  banner.append(content);
   const close = makeButton(doc, '×', 'bd-rpl-pwa-install__close');
   close.setAttribute('aria-label', 'Close install prompt');
   close.addEventListener('click', () => {
@@ -290,7 +295,8 @@ function createInstallBanner(doc, variant, deferredPrompt, win) {
     trackPwaEvent(PWA_ASSET_IDS.bannerDismissed);
     setHidden(banner, true);
   });
-  banner.append(close);
+  topRow.append(close);
+  banner.append(topRow, content);
   doc.body.append(banner);
   return banner;
 }
