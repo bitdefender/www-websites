@@ -98,6 +98,10 @@
   border-top-right-radius: 10px;
   margin: 0 auto;
   box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 5px;
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2.empty {
