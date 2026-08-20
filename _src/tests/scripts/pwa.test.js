@@ -102,12 +102,16 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
     const install = document.querySelector('.bd-rpl-pwa-install__button');
     expect(prevented).toHaveBeenCalledTimes(1);
     expect(install).not.toBeNull();
+    install.focus();
+    expect(document.activeElement).toBe(install);
     install.click();
     await new Promise((resolve) => {
       setTimeout(resolve, 0);
     });
     expect(prompt).toHaveBeenCalledTimes(1);
     expect(document.getElementById('bd-rpl-pwa-install').hidden).toBe(true);
+    expect(document.activeElement).not.toBe(install);
+    expect(document.getElementById('bd-rpl-pwa-install').hasAttribute('aria-hidden')).toBe(false);
     window.history.replaceState({}, '', originalPath);
     window.matchMedia = originalMatchMedia;
     localStorage.clear();

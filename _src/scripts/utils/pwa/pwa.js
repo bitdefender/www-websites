@@ -59,9 +59,11 @@ export function getPlatformVariant(navigatorObject = window.navigator) {
 }
 
 function setHidden(element, hidden) {
-  element.hidden = hidden;
-  element.setAttribute('aria-hidden', String(hidden));
+  if (hidden && element.contains(element.ownerDocument.activeElement)) {
+    element.ownerDocument.activeElement.blur();
+  }
   element.inert = hidden;
+  element.hidden = hidden;
 }
 
 export function consumeInstallSession(win = window) {
@@ -117,13 +119,6 @@ function addMetadata(doc) {
     theme.name = 'theme-color';
     theme.content = '#ed1c24';
     doc.head.append(theme);
-  }
-  if (!doc.head.querySelector('#bd-rpl-pwa-mobile-web-app')) {
-    const appleMeta = doc.createElement('meta');
-    appleMeta.id = 'bd-rpl-pwa-mobile-web-app';
-    appleMeta.name = 'apple-mobile-web-app-capable';
-    appleMeta.content = 'yes';
-    doc.head.append(appleMeta);
   }
 }
 
