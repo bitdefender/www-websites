@@ -1986,9 +1986,19 @@ main .creators-banner .signature {
     width: 100%;
   }
 
+  .creators .columns-container .columns.benefits-cards.light-sky-blue.scam-pro > div {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    width: 100%;
+  }
+
   .columns-container .columns.benefits-cards.scam-protection > div {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: grid;
+    gap: 30px;
     margin-bottom: 30px;
+    width: 100%;
   }
 
   .columns-container .columns.benefits-cards > div > div {
@@ -2013,16 +2023,34 @@ main .creators-banner .signature {
     margin-bottom: 0;
   }
 
-  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div {
+  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div {
     background-color: #edf9ff;
+    border-radius: 1.5rem;
+    padding: 27px 25px;
+    height: 100%;
+    text-align: left;
+    width: 100%;
+    justify-items: flex-start;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
+    gap: 0;
   }
 
-  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div h3 {
+  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div p {
+    margin: 0;
+  }
+
+  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div p:has(.icon) {
+    margin-bottom: 8px;
+  }
+
+  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div h3 {
     font: normal normal bold 30px / 36px "IBM Plex Sans", sans-serif !important;
     margin-bottom: 20px;
   }
 
-  .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div table h3 {
+  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div table h3 {
     font-size: 18px !important;
     margin-bottom: 0;
   }
