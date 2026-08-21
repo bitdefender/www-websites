@@ -1334,7 +1334,8 @@ main .creators-banner .signature {
 .creators .columns-container.header-mobile .default-content-wrapper h3 {
   color:#006DFF;
   font: normal normal bold 24px/26px "IBM Plex Sans", sans-serif !important;
-  margin-top: 40px;
+  margin-top: 70px;
+  margin-bottom: 12px;
 }
 
 .creators .columns-container.scam-protection .columns.benefits-cards > div > div > div *{
