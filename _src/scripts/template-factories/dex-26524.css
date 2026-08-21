@@ -352,6 +352,10 @@
                     line-height: var(--size-18);
                 }
 
+                p br {
+                    display: none;
+                }
+
                 > p {
                     margin-bottom: var(--size-0);
                     margin-top: var(--size-0);
@@ -369,6 +373,12 @@
                         }
                     }
                 }
+
+
+                p:first-of-type {
+                    margin-bottom: var(--size-8);
+                }
+
 
                 .hero-aem__prices {
                     margin-top: var(--size-20);
@@ -423,6 +433,16 @@
         .hero-aem-wrapper {
             padding-left: var(--size-24);
             padding-right: var(--size-24);
+        }
+    }
+
+    .us-hero-section  {
+        .hero-aem .hero-aem__card__desktop h2 + h1 {
+            margin-bottom: 0;
+        }
+
+        .hero-aem .hero-aem__card-text h1 {
+            margin-top: 0;
         }
     }
 
@@ -2030,6 +2050,10 @@
                         + p {
                             font-size: var(--body-font-size-m);
                         }
+                    }
+
+                    p:first-of-type {
+                        margin-bottom: var(--size-8);
                     }
 
                 }
