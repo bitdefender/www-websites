@@ -110,7 +110,7 @@ function addMetadata(doc) {
     appleIcon.id = 'bd-rpl-pwa-apple-icon';
     appleIcon.rel = 'apple-touch-icon';
     appleIcon.sizes = '180x180';
-    appleIcon.href = '/_src/icons/apple-icon-180x180.png';
+    appleIcon.href = '/_src/icons/phone-lookup-icon-180.png';
     doc.head.append(appleIcon);
   }
   if (!doc.head.querySelector('#bd-rpl-pwa-theme-color')) {
