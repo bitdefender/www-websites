@@ -691,6 +691,22 @@ main .grey-background {
   background-color: #F6F6F6 !important;
 }
 
+main .section.p-top-1em {
+  padding-top: 1em;
+}
+
+main .section.p-botom-1em {
+  padding-top: 1em;
+}
+
+main .section.p-top-0 {
+  padding-top: 0;
+}
+
+main .section.p-bottom-0 {
+  padding-bottom: 0;
+}
+
 @media (max-width: 991px) {
   main .section.hide-on-mobile {
     display: none;
@@ -1511,6 +1527,17 @@ main .section.checked-lists ul li::before {
   background-color: var(--background-checkmark);
   border-radius: 50%;
   z-index: 1;
+}
+
+main .section.blue-checks ul li::before {
+  background-color: #006DFF;
+}
+
+main .section.bigger-checks ul li::before {
+  left: -17px;
+  top: 3px;
+  width: 20px;
+  height: 20px;
 }
 
 main .section.checked-lists ul li::after {
