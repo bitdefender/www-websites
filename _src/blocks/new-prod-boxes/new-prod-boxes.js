@@ -842,8 +842,11 @@ function buildProductBox(config) {
     storeEvent: shouldAddStoreEvent ? storeEvent : '',
   });
 
+  const greenTag = document.createRange().createContextualFragment(`
+    <div class="greenTag2 ${!greenTagText ? 'empty' : ''}">${greenTagText || ''}</div>
+  `);
+
   const productContent = document.createRange().createContextualFragment(`
-    ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
     ${titleHTML}
     <div class="blueTagsWrapper">${blueTagsHTML}</div>
     ${subtitleHTML}
@@ -868,6 +871,7 @@ function buildProductBox(config) {
   `);
   bdOption.append(optionContent);
 
+  bdProduct.appendChild(greenTag);
   bdProduct.appendChild(innerProductBox);
   bdContext.appendChild(bdProduct);
   productBox.appendChild(bdContext);
