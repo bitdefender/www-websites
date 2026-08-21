@@ -1969,8 +1969,8 @@ main .creators-banner .signature {
   }
 
   .creators .columns-container .columns.benefits-cards > div > div.columns-left-col, .creators .columns-container .columns.benefits-cards > div > div.columns-right-col {
-    background-color: #F6F6F6;
-    border-radius: 15px;
+    background-color: #fafafa;
+    border-radius: 1.5rem;
     padding: 27px 25px;
     height: 100%;
     text-align: left;
@@ -2013,7 +2013,7 @@ main .creators-banner .signature {
   }
 
   .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div {
-    background-color: #F0F7FF;
+    background-color: #edf9ff;
   }
 
   .creators .columns-container .columns.benefits-cards.light-sky-blue > div > div h3 {
@@ -2096,9 +2096,9 @@ main .creators-banner .signature {
 
   .columns-container .trust-factors {
     justify-items: center;
-    background: #F5F5F7 0% 0% no-repeat padding-box;
+    background: #fafafa 0% 0% no-repeat padding-box;
     padding: 50px;
-    border-radius: 16px;
+    border-radius: 1.5rem;
   }
   
   .columns-container .columns.trust-factors > div {
@@ -2110,7 +2110,7 @@ main .creators-banner .signature {
   
   .columns-container .columns.trust-factors h2 {
     text-align: center;
-    font: normal normal 300 60px/70px "IBM Plex Sans", sans-serif;
+    font: 600 40px/48px "IBM Plex Sans", sans-serif;
     letter-spacing: 0;
     color: #000;
     opacity: 1;
