@@ -43,6 +43,12 @@ import { Constants } from './libs/constants.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
+// no need to import pwa.js for other routes
+const PWA_ROUTE_PATTERN = /^\/en-us\/consumer\/reverse-phone-lookup(?:\/|$)/;
+const pwaModulePromise = PWA_ROUTE_PATTERN.test(window.location.pathname)
+  ? import('./utils/pwa/pwa.js')
+  : null;
+
 export const SUPPORTED_LANGUAGES = ['en'];
 
 window.hlx.plugins.add('rum-conversion', {
@@ -542,12 +548,22 @@ async function loadLazy(doc) {
 
   const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
   const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
-  doc.querySelector('header').style.height = '0px';
+  let pwaModule = null;
+  try {
+    pwaModule = pwaModulePromise ? await pwaModulePromise : null;
+  } catch {
+    pwaModule = null;
+  }
+  const standaloneReversePhoneLookup = pwaModule?.isEligibleRoute(window.location.pathname)
+    && pwaModule.isStandalonePWA(window);
+  const header = doc.querySelector('header');
+  header.style.height = '0px';
 
-  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder
+    && !standaloneReversePhoneLookup) {
     // eslint-disable-next-line no-unused-vars
-    doc.querySelector('header').style.height = 'initial';
-    loadHeader(doc.querySelector('header'));
+    header.style.height = 'initial';
+    loadHeader(header);
   }
 
   // only call load Trackers here if there is no experiment on the page
@@ -787,5 +803,8 @@ initMobileDetector('mobile');
 initMobileDetector('tablet');
 initMobileDetector('desktop');
 
+pwaModulePromise
+  ?.then(({ initializeReversePhoneLookupPWA }) => initializeReversePhoneLookupPWA())
+  .catch(() => { });
 loadPage();
 window.AdobeDataLayerService = AdobeDataLayerService;
