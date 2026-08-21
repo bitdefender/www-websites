@@ -2038,7 +2038,11 @@ main .creators-banner .signature {
   }
 
   .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div p {
-    margin-top: 0;
+    margin: 0;
+  }
+
+  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div h4 {
+    margin-top: 12px;
   }
 
   .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div p:has(.icon) {
