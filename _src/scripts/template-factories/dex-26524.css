@@ -108,6 +108,7 @@
                 margin-left: var(--size-8);
                 padding: var(--size-2) var(--size-10);
                 border-radius: 20px;
+                bottom: -2px;
                 color: white;
                 background-color: #026DFF;
             }
@@ -341,6 +342,10 @@
                 padding: var(--size-0);
                 background-color: white;
 
+                .hero-aem__prices + .button-container {
+                    display: none;
+                }
+
                 > p:nth-last-of-type(2) {
                     font-size: var(--body-font-size-m);
                     margin-top: var(--size-16);
@@ -391,10 +396,6 @@
                     .hero-aem__underPriceText {
                         display: none;
                     }
-                }
-
-                .button-container:nth-of-type(2) {
-                    display: none;
                 }
 
                 > .button-container {
@@ -507,13 +508,28 @@
             }
         }
 
+
+
+        bd-accordion-bg-item::part(bd-accordion-bg-question) {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m19 9 -7 6 -7 -6' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: 16px 16px;
+        }
         bd-accordion-bg-item {
             padding: 0 var(--size-24);
             background-color: var(--accordion-bg);
 
-            &::part(bd-accordion-bg-question) {
-                padding: var(--size-20) 0 var(--size-10);
+            &[open] {
+                &::part(bd-accordion-bg-question) {
+                    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m19 15 -7 -6 -7 6' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'%3E%3C/path%3E%3C/svg%3E");
+                }
             }
+
+            &::part(bd-accordion-bg-icon) {
+                display: none;
+            }
+
 
             &::part(bd-accordion-bg-icon) {
                 position: relative;
@@ -867,7 +883,7 @@
 
                 .inner_prod_box {
                     border: var(--size-1) solid var(--color-dex-gray);
-                    padding: var(--size-16);
+                    padding: var(--size-32);
 
                     h4, p, div, input, label {
                         font-family: "IBM Plex Sans", sans-serif;
