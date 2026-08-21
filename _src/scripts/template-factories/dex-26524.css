@@ -352,10 +352,6 @@
                     line-height: var(--size-18);
                 }
 
-                p br {
-                    display: none;
-                }
-
                 > p {
                     margin-bottom: var(--size-0);
                     margin-top: var(--size-0);
