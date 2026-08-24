@@ -2116,13 +2116,16 @@ main .creators-banner .signature {
     text-align: left;
   }
 
+  .creators .header-mobile.columns-container .columns.creators-banner p {
+    text-align: left;
+  }
+
   .creators .columns-container h3 {
     font: normal normal bold 24px "IBM Plex Sans", sans-serif;
   }
 
   .creators .columns-container p {
     font: normal normal normal 24px/33px Arial, sans-serif;
-    text-align: left;
   }
 
   .creators .columns-container.smaller-text p {
