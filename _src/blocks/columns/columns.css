@@ -1570,6 +1570,21 @@ main .creators-banner .signature {
   }
 }
 
+.columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div {
+  gap: 24px;
+}
+
+.columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div {
+  background-color: #edf9ff;
+  border-radius: 1.5rem;
+  padding: 27px 25px;
+  height: 100%;
+  text-align: left;
+  width: 100%;
+  justify-items: flex-start;
+  gap: 0;
+}
+
 .narrow-section .columns-wrapper {
   max-width: 1000px;
 }
@@ -1820,6 +1835,16 @@ main .creators-banner .signature {
   main .creators-banner .signature {
     font-size: 24px;
   }
+
+  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div {
+    row-gap: 0;
+  }
+
+  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 10;
+  }
 }
 
 @media (min-width: 992px) { /* desktop */
@@ -2027,19 +2052,6 @@ main .creators-banner .signature {
     margin-bottom: 0;
   }
 
-  .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div {
-    background-color: #edf9ff;
-    border-radius: 1.5rem;
-    padding: 27px 25px;
-    height: 100%;
-    text-align: left;
-    width: 100%;
-    justify-items: flex-start;
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 4;
-    gap: 0;
-  }
 
   .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div p {
     margin: 0;
