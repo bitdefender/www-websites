@@ -1,6 +1,6 @@
 ---
 name: eds-sharepoint-da-import
-description: Inventory and migrate locale content from a SharePoint-backed AEM Edge Delivery Services site into DA, including published robots:noindex pages omitted from query indexes. Use for locale-by-locale SharePoint-to-DA imports, missing-page discovery, deduplication against DA, and paste-ready DA Import URL batches.
+description: Inventory and migrate locale content from a SharePoint-backed AEM Edge Delivery Services site into DA, including published robots:noindex pages omitted from query indexes. Use for locale-by-locale SharePoint-to-DA imports, missing-page discovery, deduplication against DA, direct DA Source API uploads, and paste-ready URL batches.
 ---
 
 # SharePoint-backed EDS to DA import
@@ -27,8 +27,9 @@ defaults for an unrelated project.
 ## Required supporting guidance
 
 Before using authenticated DA or AEM Admin APIs, load the available
-`da-auth` and `da-content` skills. Before driving the DA Import web UI, load
-the available browser-control skill.
+`da-auth` and `da-content` skills. Load the browser-control skill only when
+the user explicitly requests the DA Import UI or the Source API path is
+unavailable.
 
 ## Workflow
 
@@ -38,7 +39,33 @@ Resolve the locale and whether the user wants discovery only, a paste-ready
 URL list, or an authorized import. Treat imports as destination mutations.
 Discovery and URL generation are read-only and must not start an import.
 
-### 2. Import the query-index batch
+### 2. Choose the import method
+
+Use the authenticated DA Source API by default. Do not open or automate the
+DA Import web UI for a normal migration. The UI is a manual fallback when the
+API path is unavailable or the user explicitly requests it.
+
+For a Source API import:
+
+1. Run the analyzer first and remove destination paths already present in DA.
+2. For each approved page URL, fetch its `.md` representation and convert it
+   with the same md2da conversion used by DA Import (`mdToDocDom` followed by
+   `docDomToAemHtml`). Upload the converted EDS HTML, not the source markdown.
+3. Discover and queue same-origin linked fragments and binary assets using the
+   same rules as DA Import. Preserve binary content types and file extensions.
+4. Upload with a multipart `data` field using `PUT` to
+   `https://admin.da.live/source/{destination-org}/{destination-site}{path}`.
+   Page routes map to `.html` (a trailing slash maps to `index.html`); asset
+   routes keep their original extension.
+5. Use bounded concurrency (five workers is the default), retry only transient
+   `429`/`5xx` responses, and record every source URL, destination path,
+   status, redirect, and error. Never retry a failed mutation blindly.
+
+Direct Source API writes preserve the original locale paths, can overwrite a
+matching destination path, and do not preview or publish content. Follow the
+`da-content` skill for the exact HTML and Source API contract.
+
+### 3. Manual DA Import UI fallback
 
 For the first batch, use the locale query index in DA Import:
 
@@ -56,7 +83,7 @@ After completion, report total, successes, redirects, and errors. Identify
 each failed source URL and status. Do not preview or publish unless the user
 separately requests it.
 
-### 3. Discover content omitted from the query index
+### 4. Discover content omitted from the query index
 
 Run the deterministic analyzer:
 
@@ -96,7 +123,7 @@ The project currently rejects bulk-status requests that add `edit` or
 `pathsOnly`; keep the analyzer's known-working `preview`/`live` request shape
 unless the API behavior is re-verified.
 
-### 4. Present a go/no-go checkpoint
+### 5. Present a go/no-go checkpoint
 
 Before importing the follow-up batch, report:
 
@@ -120,11 +147,13 @@ default:
 Ask for a go/no-go decision before starting the follow-up import. If the user
 asks only for the list, provide the `--format urls` result and do not import.
 
-### 5. Follow-up import
+### 6. Follow-up import
 
-Paste the approved full URLs into DA Import's **By URL** field. Use the same
-linked-content, production-domain, organization, and site settings as the
-query-index batch.
+Import the approved full URL set through the direct DA Source API by default,
+using the same linked-content discovery and original-path rules as the first
+batch. If the UI fallback is required, paste the URLs into DA Import's **By
+URL** field and use the same linked-content, production-domain, organization,
+and site settings as the query-index batch.
 
 Afterward, rerun the analyzer. A clean result has no remaining recommended
 published `noindex` URLs. Report any errors without retrying destructive
@@ -135,6 +164,8 @@ operations automatically.
 - The SharePoint source remains unchanged.
 - DA import may overwrite matching destination paths; never call it a merge.
 - Importing into DA does not preview or publish content.
+- Direct Source API uploads use the multipart `data` field and original locale
+  paths; they do not preview or publish content.
 - Preserve and verify `robots:noindex` metadata before any later publish.
 - Never print, persist in project files, or expose the Adobe IMS token.
 - Authentication failures, unexpected inventory shrinkage, or a destination
