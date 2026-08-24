@@ -1152,8 +1152,6 @@ main .creators-banner .signature {
   background: linear-gradient(to bottom, #e4f2ff, white);
 }
 
-
-
 .creators .real-check .creators-banner p.button-container {
   a {
     background-color: #eb0000;
@@ -1838,6 +1836,8 @@ main .creators-banner .signature {
 
   .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div {
     row-gap: 0;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: grid;
   }
 
   .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div {

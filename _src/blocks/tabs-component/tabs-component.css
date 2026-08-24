@@ -206,6 +206,7 @@
 
 .tabs-component-container .tabs-container button strong {
   font-weight: 700;
+  display: none;
 }
 
 .tabs-component-container .tabs-container picture {
@@ -259,12 +260,10 @@
   }
 
   .tabs-component-container.show-categories button strong {
-    display: block;
     width: 50%;
   }
 
   .tabs-component-container.show-categories .tabs-container button {
-    width: 50%;
     display: flex;
     justify-content: center;
   }
@@ -295,7 +294,7 @@
   }
 
   .tabs-component-container button strong {
-    display: block;
+    display: block !important;
   }
 
   .tabs-component-container .tabs-container button picture img {
