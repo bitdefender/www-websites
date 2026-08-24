@@ -322,6 +322,10 @@
                 line-height: 100%;
                 font-weight: var(--font-weight-bolder);
                 margin-bottom: var(--size-8);
+
+                &:first-of-type {
+                    font-size: var(--body-font-size-l);
+                }
             }
 
             h1 {
@@ -1976,6 +1980,11 @@
                 line-height: var(--size-42);
                 letter-spacing: var(--size-0);
                 margin: var(--size-0) var(--size-0) var(--size-8);
+
+                &:first-of-type {
+                    font-size: var(--heading-font-size-s);
+                    line-height: var(--size-36);
+                }
             }
 
             .hero-aem__card-text .hero-aem__prices {
