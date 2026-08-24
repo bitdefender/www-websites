@@ -829,6 +829,7 @@ main .creators-banner .signature {
   letter-spacing: 0;
   color: #000;
   opacity: 1;
+  text-align: center;
 }
 
 .columns-container .columns.trust-factors table{
