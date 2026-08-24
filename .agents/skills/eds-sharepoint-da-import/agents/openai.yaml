@@ -1,0 +1,4 @@
+interface:
+  display_name: "EDS SharePoint to DA Import"
+  short_description: "Inventory and import locale content into DA"
+  default_prompt: "Use $eds-sharepoint-da-import to inventory and prepare the next locale for SharePoint-to-DA migration."
