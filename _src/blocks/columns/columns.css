@@ -2005,6 +2005,10 @@ main .creators-banner .signature {
     justify-items: start;
   }
 
+  main .creators-banner .signature {
+    text-align: left;
+  }
+
   .columns-container .columns.benefits-cards.scam-protection > div > div h3 {
     font: normal normal bold 18px/24px "IBM Plex Sans", sans-serif !important;
   }
@@ -2089,12 +2093,14 @@ main .creators-banner .signature {
 
   .creators .header-mobile.columns-container h1 {
     font: normal normal bold 60px/70px "IBM Plex Sans", sans-serif;
+    text-align: left;
   }
 
   .creators .header-mobile.columns-container .columns.creators-banner h2 {
     color: #006DFF;
     font: normal normal bold 32px/45px "IBM Plex Sans", sans-serif;
     margin-bottom: 0;
+    text-align: left;
   }
 
   .creators .columns-container h3 {
@@ -2103,6 +2109,7 @@ main .creators-banner .signature {
 
   .creators .columns-container p {
     font: normal normal normal 24px/33px Arial, sans-serif;
+    text-align: left;
   }
 
   .creators .columns-container.smaller-text p {
