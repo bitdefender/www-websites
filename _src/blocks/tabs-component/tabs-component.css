@@ -257,6 +257,7 @@
 @media (max-width: 990px) {
   .tabs-component-container.show-categories .tabs-container {
     margin-bottom: 20px;
+    min-width: 80%;
   }
 
   .tabs-component-container.show-categories button strong {
@@ -266,6 +267,11 @@
   .tabs-component-container.show-categories .tabs-container button {
     display: flex;
     justify-content: center;
+    flex: 1;
+  }
+
+  .tabs-component-container .tabs-container button picture img {
+    width: 40px;
   }
 
   .tabs-component-container.show-categories .subtitle-class {
