@@ -105,13 +105,16 @@ function addMetadata(doc) {
     manifest.href = MANIFEST_PATH;
     doc.head.append(manifest);
   }
+  doc.head
+    .querySelectorAll('link[rel~="apple-touch-icon"]:not(#bd-rpl-pwa-apple-icon)')
+    .forEach((icon) => icon.remove());
   if (!doc.head.querySelector('#bd-rpl-pwa-apple-icon')) {
     const appleIcon = doc.createElement('link');
     appleIcon.id = 'bd-rpl-pwa-apple-icon';
     appleIcon.rel = 'apple-touch-icon';
     appleIcon.sizes = '180x180';
     appleIcon.href = '/_src/icons/phone-lookup-icon-180.png';
-    doc.head.append(appleIcon);
+    doc.head.prepend(appleIcon);
   }
   if (!doc.head.querySelector('#bd-rpl-pwa-theme-color')) {
     const theme = doc.createElement('meta');

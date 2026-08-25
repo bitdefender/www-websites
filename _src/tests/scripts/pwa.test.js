@@ -59,6 +59,35 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
     window.matchMedia = originalMatchMedia;
   });
 
+  it('replaces the global Apple touch icons on eligible routes', () => {
+    const originalPath = window.location.pathname;
+    const originalMatchMedia = window.matchMedia;
+    window.history.replaceState({}, '', PWA_SCOPE);
+    window.matchMedia = () => ({ matches: true });
+    document.body.replaceChildren();
+
+    const defaultIcon = document.createElement('link');
+    defaultIcon.rel = 'apple-touch-icon';
+    defaultIcon.sizes = '180x180';
+    defaultIcon.href = '/content/dam/bitdefender/favicon/apple-icon-180x180.png';
+    const smallerDefaultIcon = document.createElement('link');
+    smallerDefaultIcon.rel = 'apple-touch-icon';
+    smallerDefaultIcon.sizes = '120x120';
+    smallerDefaultIcon.href = '/content/dam/bitdefender/favicon/apple-icon-120x120.png';
+    document.head.append(defaultIcon, smallerDefaultIcon);
+
+    initializeReversePhoneLookupPWA(document, window);
+
+    const appleIcons = [...document.head.querySelectorAll('link[rel~="apple-touch-icon"]')];
+    expect(appleIcons).toHaveLength(1);
+    expect(appleIcons[0].id).toBe('bd-rpl-pwa-apple-icon');
+    expect(appleIcons[0].href).toContain('/_src/icons/phone-lookup-icon-180.png');
+
+    document.head.querySelectorAll('#bd-rpl-pwa-manifest, #bd-rpl-pwa-apple-icon, #bd-rpl-pwa-theme-color, link[rel="stylesheet"][href="/_src/scripts/utils/pwa/pwa.css"]').forEach((element) => element.remove());
+    window.history.replaceState({}, '', originalPath);
+    window.matchMedia = originalMatchMedia;
+  });
+
   it('detects standalone mode through display-mode and Apple standalone', () => {
     expect(isStandalonePWA({
       navigator: {},
