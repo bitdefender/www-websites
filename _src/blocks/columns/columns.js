@@ -86,7 +86,7 @@ function setImageAsBackgroundImage() {
 function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
   switch (UserAgent.os) {
     case 'android':
-      dynamicLink.href = dynamicLinks.androidLink;
+      dynamicLink.href = dynamicLinks.androidLink ?? dynamicLinks.defaultLink;
       if (dynamicProducts.storeIdAndroid) {
         AdobeDataLayerService.push(new ButtonClickEvent(
           'trial downloaded',
@@ -96,7 +96,7 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
 
       break;
     case 'ios':
-      dynamicLink.href = dynamicLinks.iosLink;
+      dynamicLink.href = dynamicLinks.iosLink ?? dynamicLinks.defaultLink;
       if (dynamicProducts.storeIdIos) {
         AdobeDataLayerService.push(new ButtonClickEvent(
           'trial downloaded',
@@ -104,6 +104,15 @@ function setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts) {
         ));
       }
       break;
+
+    case 'Windows':
+      dynamicLink.href = dynamicLinks.windowsLink ?? dynamicLinks.defaultLink;
+      break;
+
+    case 'Mac/iOS':
+      dynamicLink.href = dynamicLinks.macosLink ?? dynamicLinks.defaultLink;
+      break;
+
     default:
       dynamicLink.href = dynamicLinks.defaultLink;
       if (dynamicProducts.storeId) {
@@ -208,8 +217,8 @@ export default function decorate(block) {
   const {
     // eslint-disable-next-line max-len
     linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, aliases,
-    defaultLink, iosLink, androidLink, storeId, storeIdIos, storeIdAndroid, seeMoreBtn,
-    signature,
+    defaultLink, iosLink, androidLink, windowsLink, macosLink, storeId, storeIdIos,
+    storeIdAndroid, seeMoreBtn, signature,
   } = parentSection.dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -410,7 +419,9 @@ export default function decorate(block) {
 
   const dynamicLink = parentSection.querySelector('a[href*="#os-dynamic-link"]');
   if (dynamicLink) {
-    const dynamicLinks = { defaultLink, iosLink, androidLink };
+    const dynamicLinks = {
+      defaultLink, iosLink, androidLink, windowsLink, macosLink,
+    };
     const dynamicProducts = { storeId, storeIdAndroid, storeIdIos };
     setDynamicLink(dynamicLink, dynamicLinks, dynamicProducts);
   }
