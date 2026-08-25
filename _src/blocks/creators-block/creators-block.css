@@ -10,7 +10,7 @@
 @media (min-width: 1600px) {
   /* large desktop */
   .creators-block-wrapper {
-    max-width: var(--section-large-desktop-max-width);
+    max-width: 1290px;
     padding: 0 var(--section-large-desktop-padding);
   }
 }
@@ -76,7 +76,7 @@
 
 .creators-block.block>div:nth-child(2)>div {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   grid-gap: 30px;
   justify-content: center;
   padding-bottom: 40px;
