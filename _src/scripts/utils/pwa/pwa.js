@@ -11,6 +11,7 @@ const INSTALL_ID = 'bd-rpl-pwa-install';
 const COOLDOWN_KEY = 'bd-rpl-pwa-install-cooldown';
 const SESSION_KEY = 'bd-rpl-pwa-install-session';
 const LOGO_PATH = '/_src/icons/b-logo-red.svg';
+const SHARE_IOS_PATH = '/_src/icons/share_ios.svg';
 const PWA_MODE_PARAM = 'mode';
 const PWA_MODE_VALUE = 'PWA';
 let inMemoryCooldown = 0;
@@ -165,7 +166,17 @@ function createInstallBanner(doc, variant, deferredPrompt, win) {
   if (variant === 'ios') {
     const instructions = doc.createElement('p');
     instructions.className = 'bd-rpl-pwa-install__ios';
-    instructions.textContent = 'Tap ••• near address bar → Share → More → Add to Home Screen → Add';
+    const shareIcon = doc.createElement('img');
+    shareIcon.className = 'bd-rpl-pwa-install__share';
+    shareIcon.src = SHARE_IOS_PATH;
+    shareIcon.alt = 'Share';
+    shareIcon.width = 12;
+    shareIcon.height = 15;
+    instructions.append(
+      'To add this web app to the homescreen: tap ',
+      shareIcon,
+      ' and then Add to Home Screen',
+    );
     text.append(instructions);
     content.append(text);
   } else {

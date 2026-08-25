@@ -171,6 +171,40 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
     localStorage.clear();
     sessionStorage.clear();
   });
+
+  it('embeds the iOS share icon in the homescreen instructions', async () => {
+    const originalPath = window.location.pathname;
+    const originalMatchMedia = window.matchMedia;
+    const originalUserAgent = Object.getOwnPropertyDescriptor(Navigator.prototype, 'userAgent')
+      || Object.getOwnPropertyDescriptor(navigator, 'userAgent');
+    window.history.replaceState({}, '', PWA_SCOPE);
+    window.matchMedia = () => ({ matches: false });
+    Object.defineProperty(navigator, 'userAgent', {
+      configurable: true,
+      get: () => 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1',
+    });
+    document.body.replaceChildren();
+    localStorage.clear();
+    sessionStorage.clear();
+
+    initializeReversePhoneLookupPWA(document, window);
+    await new Promise((resolve) => { setTimeout(resolve, 0); });
+
+    const instructions = document.querySelector('.bd-rpl-pwa-install__ios');
+    const shareIcon = instructions?.querySelector('.bd-rpl-pwa-install__share');
+    expect(instructions).not.toBeNull();
+    expect(shareIcon).not.toBeNull();
+    expect(shareIcon.getAttribute('src')).toBe('/_src/icons/share_ios.svg');
+    expect(shareIcon.getAttribute('alt')).toBe('Share');
+    expect(instructions.textContent).toContain('tap');
+    expect(instructions.textContent).toContain('Add to Home Screen');
+
+    window.history.replaceState({}, '', originalPath);
+    window.matchMedia = originalMatchMedia;
+    if (originalUserAgent) Object.defineProperty(navigator, 'userAgent', originalUserAgent);
+    localStorage.clear();
+    sessionStorage.clear();
+  });
 });
 
 describe('Reverse Phone Lookup PWA install cooldown', () => {

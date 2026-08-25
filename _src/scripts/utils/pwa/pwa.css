@@ -62,6 +62,14 @@
   margin: 4px 0 8px;
 }
 
+.bd-rpl-pwa-install__share {
+  display: inline-block;
+  height: 1.1em;
+  margin: 0 0.15em;
+  vertical-align: -0.18em;
+  width: auto;
+}
+
 .bd-rpl-pwa-install__logo {
   border-radius: 50%;
   flex: 0 0 30px;
