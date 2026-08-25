@@ -78,17 +78,30 @@ function createPriceElement(options, card) {
   if (card.parentElement.classList.contains('new-buy-zone')) {
     let billedPrice;
     let taxesText;
+
     container.appendChild(oldPriceContainer);
+
     // Billed text
     if (billedText) {
-      [billedPrice, taxesText] = billedText.innerHTML.split('<br>');
-      const billedPriceDiv = document.createElement('div');
-      billedPriceDiv.className = 'billed';
-      billedPriceDiv.innerHTML = billedPrice.replace(
-        '0',
-        `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
-      );
-      container.appendChild(billedPriceDiv);
+      const parts = billedText.innerHTML.split('<br>');
+      const [billedPriceText, taxesTextValue] = parts;
+
+      if (parts.length > 1) {
+        billedPrice = billedPriceText;
+        taxesText = taxesTextValue;
+      } else {
+        taxesText = billedPriceText;
+      }
+
+      if (billedPrice) {
+        const billedPriceDiv = document.createElement('div');
+        billedPriceDiv.className = 'billed 123';
+        billedPriceDiv.innerHTML = billedPrice.replace(
+          '0',
+          `<span class="newprice-2" data-store-price="${billedPriceAttr}"></span>`,
+        );
+        container.appendChild(billedPriceDiv);
+      }
     }
 
     container.appendChild(newPriceContainer);
@@ -799,7 +812,6 @@ function buildProductBoxHTML(config) {
     hasBilled2, prodName, prodUsers, prodYears, isIndividual, storeEvent, productsAsList,
   } = config;
 
-  const hasGreenTag = greenTagText && greenTagText !== 'demo-box';
   const isDemoBox = greenTagText === 'demo-box';
   const boxClasses = [
     'prod_box',
@@ -818,8 +830,8 @@ function buildProductBoxHTML(config) {
       data-store-option="${prodUsers}-${prodYears}"
       data-store-department="${STORE_DEPARTMENT}"
       ${storeEventAttr}>
+      <div class="greenTag2 ${!greenTagText ? 'empty' : ''}">${greenTagText || ''}</div>
       <div class="inner_prod_box">
-        ${hasGreenTag ? `<div class="greenTag2">${greenTagText}</div>` : ''}
         ${titleHTML}
         <div class="blueTagsWrapper">${blueTagsHTML}</div>
         ${subtitleHTML}
