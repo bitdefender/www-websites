@@ -1703,7 +1703,7 @@ main .section.blue p a.button.modal::after {
   background-color: var(--green-tag2);
 }
 
-.green-pill {
+.green-pill:not(.section) {
   background: #5cb85c;
   color: white;
   padding: 4px 12px;
