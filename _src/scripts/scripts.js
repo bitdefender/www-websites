@@ -9,6 +9,7 @@ import {
 } from '@repobit/dex-data-layer';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
+import { registerBitdefenderWebMcp } from './webmcp.js';
 import {
   sampleRUM,
   loadHeader,
@@ -740,6 +741,7 @@ async function loadPage() {
     return;
   }
 
+  registerBitdefenderWebMcp().catch(() => undefined);
   setBFCacheListener();
   initialiseSentry();
   await window.hlx.plugins.load('eager');
