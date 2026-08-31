@@ -457,11 +457,11 @@ main .section.rounded-corners { /* apply parent wrapper */
 }
 
 main .section.light-gray .default-content-wrapper {
-  background-color: #F6F6F6;
+  background-color: #fafafa;
 }
 
 main .section.light-gray-wide {
-  background-color: #F6F6F6;
+  background-color: #fafafa;
 }
 
 main .section.light-sky-blue > * { /* apply to all children wrapper */
@@ -514,12 +514,12 @@ main .section.wide img {
 }
 
 main .section.wide > :first-child {
-  border-radius: 8px 8px 0 0;
+  border-radius: 1.5rem 1.5rem 0 0;
   padding-top: 56px;
 }
 
 main .section.wide > :last-child {
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 1.5rem 1.5rem;
   padding-bottom: 56px;
 }
 
@@ -639,7 +639,7 @@ header, main, footer {
 }
 
 .creators * {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 
 .creators .default-content-wrapper h2 {
@@ -850,7 +850,7 @@ main .grey-background {
   }
 
   .creators .section .default-content-wrapper h2 {
-    font: normal normal 300 60px/69px "IBM Plex Sans", sans-serif;
+    font: 600 40px/48px "IBM Plex Sans", sans-serif;
   }
 }
 
@@ -1674,7 +1674,7 @@ main .section.blue p a.button.modal::after {
   box-shadow: 0 2px 4px 0 rgb(0 0 0 / 4%);
   font-style: normal;
   letter-spacing: .8px;
-  padding: 3px 7px 3px 8px;
+  padding: 5px 7px;
   text-transform: uppercase;
   white-space: nowrap;
   align-content: center;
