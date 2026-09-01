@@ -74,6 +74,7 @@
   border-radius: 50%;
   flex: 0 0 30px;
   height: 30px;
+  align-self: flex-start;
   width: 30px;
 }
 
@@ -86,10 +87,12 @@
   display: inline-flex;
   flex: 0 0 44px;
   font-size: 19px;
-  justify-content: center;
+  justify-content: end;
   line-height: 1;
   padding: 0;
   width: 44px;
+  height: -webkit-fill-available;
+  align-items: flex-start;
 }
 
 .bd-rpl-pwa-install__button {
@@ -141,7 +144,7 @@
   }
 
   .bd-rpl-pwa-install__title {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .bd-rpl-pwa-install__content {
