@@ -91,8 +91,7 @@
   line-height: 1;
   padding: 0;
   width: 44px;
-  height: -webkit-fill-available;
-  align-items: flex-start;
+  align-self: flex-start;
 }
 
 .bd-rpl-pwa-install__button {
