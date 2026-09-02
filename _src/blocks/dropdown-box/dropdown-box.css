@@ -190,17 +190,6 @@
     position: relative;
 }
 
-.dropdown-box-container>div:nth-child(2) .new::after,
-.dropdown-box-container.new>div:nth-child(2) .block::after {
-    content: "";
-    position: absolute;
-    top: -60px;
-    right: 0;
-    width: 196px;
-    height: 90pt;
-    background: url("../../images/patter_grid_blue.png") no-repeat;
-    z-index: -1;
-}
 
 .dropdown-box-container .new div:nth-child(1),
 .dropdown-box-container.new .block div:nth-child(1) {
@@ -479,6 +468,94 @@
     }
 }
 
+.dropdown-box-container.reverted {
+    .slider-box .row {
+        flex-direction: row-reverse;
+
+        .description {
+            left: 10%;
+            width: 40%;
+            top: 10%;
+        }
+    }
+}
+
+.dropdown-box-container.new-tabs {
+    max-width: 1000px;
+
+    .dropdown-box {
+        &::after {
+            content: "";
+            position: absolute;
+            display: block !important;
+            top: 0;
+            bottom: 0;
+            margin: auto 0;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            border: solid #006DFF;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            transition: top 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
+            transition: top 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transition: top 0.3s ease-in-out, transform 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
+        }
+
+         h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #006DFF;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 0;
+        }
+    }
+
+
+    .slider-box .row {
+        .title {
+            box-shadow: none;
+            padding: 24px;
+            margin: 0;
+            position: relative;
+
+            h3 {
+                font-size: 20px;
+                margin-bottom: 0;
+                color: #006DFF;
+            }
+
+            p {
+                font-size: 16px;
+                margin: 0;
+            }
+
+            .loading-bar {
+                display: none;
+            }
+
+            &::after {
+                display: none;
+            }
+        }
+        
+        &.active {
+            .title::before {
+                width: 4px;
+                height: 100%;
+                background-color: #006DFF;
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    }
+}
+
 
 @media (width <=991px) {
     .dropdown-box-container .default-content-wrapper h5 {
@@ -534,14 +611,6 @@
 
     .dropdown-box-container.no-dropdown-logic .new>div:nth-child(1)>div::after,
     .dropdown-box-container.no-dropdown-logic.new .block>div:nth-child(1)>div::after {
-        display: none;
-    }
-
-    .dropdown-box-container>div:nth-child(2) .new::after {
-        top: -90px;
-        right: 0;
-        width: 135px;
-        height: 90pt;
         display: none;
     }
 

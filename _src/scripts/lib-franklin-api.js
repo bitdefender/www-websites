@@ -198,10 +198,10 @@ function decorateBlock(block) {
   }
 }
 
-export async function loadComponent(offer, block, options, selector)  {
+export async function loadComponent(offer, block, options, selector) {
   const offerURL = new URL(offer);
   const origin = offerURL.origin;
-  const offerFolder = offerURL.pathname.split("/").slice(0,-1).join("/");
+  const offerFolder = offerURL.pathname.split("/").slice(0, -1).join("/");
   const container = selector ? document.querySelector(selector) : document.createElement('div');
   const shadowRoot = container.attachShadow({ mode: 'open' });
 
@@ -211,54 +211,40 @@ export async function loadComponent(offer, block, options, selector)  {
     fetch(offer).then(r => r.text()),
     import(`${origin}/_src/blocks/${block}/${block}.js`)
   ])
-  // If the block is a particle background,
-  // a new div is created and appended to the body so the external library can work
-  if (block === "particle-background") {
-    const newDiv = document.createElement('div');
-    newDiv.style.display = "none";
-    newDiv.innerHTML += html;
-    decorateSections(newDiv);
-    decorateBlock(newDiv.querySelector(`.${block}`));
-    updateLinkSources(newDiv, `${origin}${offerFolder}/`);
-    document.body.appendChild(newDiv);
-    await js.default(newDiv, {...options});
-    shadowRoot.appendChild(newDiv);
-    newDiv.style.display = "block";
-  } else {
-    // in order to have a structure as close as possible as in franklin
-    // when we import in aem, we also decorate the sections and the block
-    // the functions are taken from lib-franklin.js
-    let franklinHTMLStructure = document.createElement('div')
-    franklinHTMLStructure.innerHTML = html;
-    decorateSections(franklinHTMLStructure);
-    decorateBlock(franklinHTMLStructure.querySelector(`.${block}`));
-    shadowRoot.innerHTML +=  franklinHTMLStructure.innerHTML;
-    updateLinkSources(shadowRoot, `${origin}${offerFolder}/`);
-    await js.default(shadowRoot.querySelector('.section'), {...options});
-    decorateIcons(shadowRoot);
 
-    // Get the current page path without the hash part and query
-    const currentPagePath = window.location.protocol + '//' + window.location.host + window.location.pathname;
-    // get all the links that pointing within the page with a hash
-    shadowRoot.querySelectorAll('a[href*="#"]').forEach(link => {
-      let linkAnchor = link.getAttribute('href');
-      try {
-        const parsedLinkAnchor = new URL(linkAnchor, currentPagePath);
-        const linkAnchorPath = parsedLinkAnchor.protocol + '//' + parsedLinkAnchor.host + parsedLinkAnchor.pathname;
-        if (currentPagePath === linkAnchorPath) {
-          link.addEventListener('click', (event) => {
-            event.preventDefault();
-  
-            linkAnchor = '#' + linkAnchor.split('#')[1];
-            const target = document.querySelector(linkAnchor);
-            target.scrollIntoView({ behavior: 'smooth' });
-          });
-        }
-      } catch (e) {
-        return;
+  // in order to have a structure as close as possible as in franklin
+  // when we import in aem, we also decorate the sections and the block
+  // the functions are taken from lib-franklin.js
+  let franklinHTMLStructure = document.createElement('div')
+  franklinHTMLStructure.innerHTML = html;
+  decorateSections(franklinHTMLStructure);
+  decorateBlock(franklinHTMLStructure.querySelector(`.${block}`));
+  shadowRoot.innerHTML += franklinHTMLStructure.innerHTML;
+  updateLinkSources(shadowRoot, `${origin}${offerFolder}/`);
+  await js.default(shadowRoot.querySelector('.block'), { ...options });
+  decorateIcons(shadowRoot);
+
+  // Get the current page path without the hash part and query
+  const currentPagePath = window.location.protocol + '//' + window.location.host + window.location.pathname;
+  // get all the links that pointing within the page with a hash
+  shadowRoot.querySelectorAll('a[href*="#"]').forEach(link => {
+    let linkAnchor = link.getAttribute('href');
+    try {
+      const parsedLinkAnchor = new URL(linkAnchor, currentPagePath);
+      const linkAnchorPath = parsedLinkAnchor.protocol + '//' + parsedLinkAnchor.host + parsedLinkAnchor.pathname;
+      if (currentPagePath === linkAnchorPath) {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+
+          linkAnchor = '#' + linkAnchor.split('#')[1];
+          const target = document.querySelector(linkAnchor);
+          target.scrollIntoView({ behavior: 'smooth' });
+        });
       }
-    });
-  }
+    } catch (e) {
+      return;
+    }
+  });
 
   return container;
 }

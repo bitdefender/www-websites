@@ -206,6 +206,71 @@
   text-align: left;
 }
 
+.awards-container .awards-component.quotes-cards {
+  picture img{
+    max-height: 58px;
+  }
+
+  h3:has(em) {
+    margin-bottom: 30px;
+    margin-top: 30px;
+  }
+
+  > div:nth-child(3) > div[data-valign="middle"] {
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .cards .card {
+    padding: 30px 30px 30px 72px;
+    position: relative;
+
+    p {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    h4 {
+      font-size: 14px;
+      font-weight: bold;
+      position: relative;
+      margin-top: 28px;
+      margin-bottom: 0;
+      color: #000;
+
+      &::before {
+        position: absolute;
+        content: '';
+        width: 24px;
+        height: 0;
+        top: -12px;
+        border: 1px solid #2E6BF6;
+      }
+    }
+
+    p:last-of-type {
+      min-height: unset !important;
+    }
+
+    p:has(.icon) {
+      position: absolute;
+      left: 22px;
+      top: 22px;
+      height: 50px;
+      width: 50px;
+      
+      .icon {
+        max-width: 50px;
+        height: 50px;
+        
+        * {
+          font-family: Arial, Helvetica, sans-serif;
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 579px) {
   .awards-component > div:nth-child(3) div img {
     height: 50px;
@@ -223,6 +288,19 @@
   .awards-container .block.awards-component .cards .card .icon{
     max-width: 30px;
     margin-bottom: 0; 
+  }
+
+  .awards-container .awards-component.quotes-cards { 
+    .cards .card {
+      padding: 24px 24px 24px 56px;
+
+      p:has(.icon) {
+        .icon {
+          max-width: 30px;
+          height: 30px;
+        }
+      }
+    }
   }
 }
 
@@ -370,7 +448,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50% !important;
+    width: 60% !important;
   }
 
   .awards-compact .awards-component > div:nth-child(2){

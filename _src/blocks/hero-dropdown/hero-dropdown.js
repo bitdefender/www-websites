@@ -6,6 +6,8 @@ import {
   createTag,
 } from '../../scripts/utils/utils.js';
 
+import { detectModalButtons } from '../../scripts/scripts.js';
+
 function buildHeroDropdownBlock(element) {
   const picture = element.querySelector('picture');
   const pictureParent = picture?.parentNode;
@@ -34,7 +36,7 @@ function createDropdownItem(code, friendlyName, isActive) {
 }
 
 function createPriceBox({
-  code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText,
+  code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText, hardcodedLink,
 }) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box', 'await-loader');
@@ -62,11 +64,11 @@ function createPriceBox({
       </strong>
     </div>
     <div class="buttons">
-      <a href="#" data-store-buy-link class="button primary-button">
+      <a  ${hardcodedLink ? `href="${hardcodedLink}"` : 'href="#" data-store-buy-link'} class="button primary-button">
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
-        <a href="${secondButtonLink}" class="button secondary-button">
+        <a href="${secondButtonLink}" class="button secondary-button ${secondButtonLink.includes('fragments') ? 'modal' : ''}">
           <span class="button-text">${secondButtonText}</span>
         </a>` : ''}
     </div>
@@ -89,7 +91,8 @@ createNanoBlock('dropdown', (...args) => {
     secondbuttonlink,
     label: labelText,
     productnames = '',
-  } = block?.dataset || {};
+    hardcodedLink,
+  } = block.closest('.section').dataset || {};
 
   const productNames = productnames.split(',').map((n) => n.trim());
 
@@ -127,7 +130,7 @@ createNanoBlock('dropdown', (...args) => {
     optionsList.appendChild(option);
 
     const priceBox = createPriceBox({
-      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText,
+      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText, hardcodedLink,
     });
 
     priceBox.style.display = index === 0 ? 'block' : 'none';
@@ -254,4 +257,5 @@ export default function decorate(block) {
   }
 
   renderDropdown(block);
+  detectModalButtons(block);
 }

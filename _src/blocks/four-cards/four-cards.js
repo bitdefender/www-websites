@@ -46,7 +46,7 @@ const buildCardItem = (row) => {
   paragraphs.forEach((p) => {
     const link = p.querySelector('a');
     if (link) {
-      const bdBtn = document.createElement('bd-button');
+      const bdBtn = document.createElement('bd-button-link');
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('href', link.getAttribute('href'));
       bdBtn.setAttribute('slot', 'cta');
@@ -114,7 +114,7 @@ export default async function decorate(block) {
     const item = buildCardItem(row);
     if (isCentered) {
       item.setAttribute('align', 'center');
-      item.querySelector('bd-button[slot="cta"]')?.setAttribute('align', 'center');
+      item.querySelector('bd-button-link[slot="cta"]')?.setAttribute('align', 'center');
     }
     if (isBlue) item.setAttribute('bg-blue', '');
     cardSection.appendChild(item);
@@ -126,15 +126,6 @@ export default async function decorate(block) {
   block.querySelectorAll('bd-card-item[data-title-html]').forEach((cardItem) => {
     const bdH = cardItem.shadowRoot?.querySelector('bd-h');
     if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
-  });
-
-  // DS components call preventDefault on non-hash links — handle navigation manually.
-  cardSection.addEventListener('click', (e) => {
-    const bdBtn = e.composedPath().find((el) => el.tagName === 'BD-BUTTON');
-    if (!bdBtn) return;
-    const href = bdBtn.getAttribute('href');
-    if (!href || href.startsWith('#')) return;
-    window.location.href = href;
   });
 
   // Process default-content-wrapper siblings:
@@ -163,7 +154,7 @@ export default async function decorate(block) {
     // renders below the cards grid rather than as a grid item inside it.
     const link = wrapper.querySelector('a');
     if (link) {
-      const bdBtn = document.createElement('bd-button');
+      const bdBtn = document.createElement('bd-button-link');
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('align', 'center');
       bdBtn.setAttribute('href', link.getAttribute('href'));
