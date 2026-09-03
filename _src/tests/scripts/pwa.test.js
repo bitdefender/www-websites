@@ -59,6 +59,35 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
     window.matchMedia = originalMatchMedia;
   });
 
+  it('replaces the global Apple touch icons on eligible routes', () => {
+    const originalPath = window.location.pathname;
+    const originalMatchMedia = window.matchMedia;
+    window.history.replaceState({}, '', PWA_SCOPE);
+    window.matchMedia = () => ({ matches: true });
+    document.body.replaceChildren();
+
+    const defaultIcon = document.createElement('link');
+    defaultIcon.rel = 'apple-touch-icon';
+    defaultIcon.sizes = '180x180';
+    defaultIcon.href = '/content/dam/bitdefender/favicon/apple-icon-180x180.png';
+    const smallerDefaultIcon = document.createElement('link');
+    smallerDefaultIcon.rel = 'apple-touch-icon';
+    smallerDefaultIcon.sizes = '120x120';
+    smallerDefaultIcon.href = '/content/dam/bitdefender/favicon/apple-icon-120x120.png';
+    document.head.append(defaultIcon, smallerDefaultIcon);
+
+    initializeReversePhoneLookupPWA(document, window);
+
+    const appleIcons = [...document.head.querySelectorAll('link[rel~="apple-touch-icon"]')];
+    expect(appleIcons).toHaveLength(1);
+    expect(appleIcons[0].id).toBe('bd-rpl-pwa-apple-icon');
+    expect(appleIcons[0].href).toContain('/_src/icons/phone-lookup-icon-180.png');
+
+    document.head.querySelectorAll('#bd-rpl-pwa-manifest, #bd-rpl-pwa-apple-icon, #bd-rpl-pwa-theme-color, link[rel="stylesheet"][href="/_src/scripts/utils/pwa/pwa.css"]').forEach((element) => element.remove());
+    window.history.replaceState({}, '', originalPath);
+    window.matchMedia = originalMatchMedia;
+  });
+
   it('detects standalone mode through display-mode and Apple standalone', () => {
     expect(isStandalonePWA({
       navigator: {},
@@ -139,6 +168,40 @@ describe('Reverse Phone Lookup PWA route and display gating', () => {
     window.history.replaceState({}, '', originalPath);
     window.matchMedia = originalMatchMedia;
     window.adobeDataLayer = originalDataLayer;
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it('embeds the iOS share icon in the homescreen instructions', async () => {
+    const originalPath = window.location.pathname;
+    const originalMatchMedia = window.matchMedia;
+    const originalUserAgent = Object.getOwnPropertyDescriptor(Navigator.prototype, 'userAgent')
+      || Object.getOwnPropertyDescriptor(navigator, 'userAgent');
+    window.history.replaceState({}, '', PWA_SCOPE);
+    window.matchMedia = () => ({ matches: false });
+    Object.defineProperty(navigator, 'userAgent', {
+      configurable: true,
+      get: () => 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1',
+    });
+    document.body.replaceChildren();
+    localStorage.clear();
+    sessionStorage.clear();
+
+    initializeReversePhoneLookupPWA(document, window);
+    await new Promise((resolve) => { setTimeout(resolve, 0); });
+
+    const instructions = document.querySelector('.bd-rpl-pwa-install__ios');
+    const shareIcon = instructions?.querySelector('.bd-rpl-pwa-install__share');
+    expect(instructions).not.toBeNull();
+    expect(shareIcon).not.toBeNull();
+    expect(shareIcon.getAttribute('src')).toBe('/_src/icons/share_ios.svg');
+    expect(shareIcon.getAttribute('alt')).toBe('Share');
+    expect(instructions.textContent).toContain('tap');
+    expect(instructions.textContent).toContain('Add to Home Screen');
+
+    window.history.replaceState({}, '', originalPath);
+    window.matchMedia = originalMatchMedia;
+    if (originalUserAgent) Object.defineProperty(navigator, 'userAgent', originalUserAgent);
     localStorage.clear();
     sessionStorage.clear();
   });
