@@ -1,0 +1,238 @@
+:root {
+    /* Color variables */
+    --border-color: #e1e3e5;
+    --border-darker-color: #b1b1b1;
+    --background-light-blue-color: #f0f7ff;
+    --tab-header-color-blue: #006dff;
+    --background-blue: #006dff;
+    --color-highlight-blue: #006dff;
+
+
+    /* Font family */
+    --body-font-family: "IBM Plex Sans", sans-serif;
+
+    /* Body default */
+    --body-font-size-xs: 12px;
+    --body-font-size-s: 13px; /* 17.329px = 1.083rem */
+    --body-font-size-m: 14px; /* 18.662px = 1.167rem */
+    --body-font-size-l: 16px; /* 21.328px = 1.333rem */
+    --body-font-size-xl: 18px; /* 23.994px = 1.5rem */
+
+    /* Heading default */
+    --heading-font-size-xxs: 18px; /* 23.994px = 1.5rem */
+    --heading-font-size-xs: 20px; /* 26.66px = 1.667rem */
+    --heading-font-size-s: 24px; /* 31.992px = 2rem */
+    --heading-font-size-m: 28px; /* 37.324px = 2.333rem */
+    --heading-font-size-l: 32px; /* 42.656px = 2.667rem */
+    --heading-font-size-xl: 36px; /* 47.988px = 2.999rem */
+    --heading-font-size-xxl: 40px; /* 53.32px = 3.333rem */
+
+    /* Colors */
+    --color-dex-gray: #fafafa;
+    --color-dex-dark-gray: #fafafa;
+
+    /* PADDING VALUES */
+    --size-0: 0;
+    --size-1: 1px;
+    --size-2: 2px;
+    --size-4: 4px;
+    --size-6: 6px;
+    --size-8: 8px;
+    --size-10: 10px;
+    --size-12: 12px;
+    --size-14: 14px;
+    --size-16: 16px;
+    --size-18: 18px;
+    --size-20: 20px;
+    --size-22: 22px;
+    --size-23: 23px;
+    --size-24: 24px;
+    --size-26: 26px;
+    --size-30: 30px;
+    --size-32: 32px;
+    --size-34: 34px;
+    --size-36: 36px;
+    --size-40: 40px;
+    --size-42: 42px;
+    --size-44: 44px;
+    --size-48: 48px;
+    --size-52: 52px;
+    --size-64: 64px;
+    --size-full: 99999999999999999999;
+
+    /* SECTION */
+    --section-large-desktop-max-width: 1320px;
+
+}
+
+
+.dex-28259 {
+
+    .new-prod-boxes-container .button.primary {
+        &::before {
+        }
+    }
+
+    .new-prod-boxes-container .new-prod-boxes {
+
+        span, li, div, h4, p {
+            font-family: 'IBM Plex Sans', sans-serif !important;
+        }
+
+        &.blue-top-tag {
+            .prod_box .blueTag {
+                margin-bottom: 16px;
+                padding: 0;
+
+                .tag {
+                    margin-left: 0;
+                    text-transform: unset;
+                    font-size: var(--body-font-size-xxs);
+                }
+            }
+
+            .prod_box .button.secondary {
+                display: none;
+            }
+
+            .prod_box:nth-child(1) .blueTag .tag {
+                color: #40474F;
+                background-color: #F1F2F3;
+            }
+
+            .prod_box:nth-child(1) .taxes p:last-of-type {
+
+            }
+
+            .prod_box:nth-child(2) .blueTag .tag {
+                color: #1C7928;
+                background-color: #C6FCDA;
+            }
+
+            .prod_box:nth-child(2) .taxes p:last-of-type {
+
+            }
+
+            .prod_box:nth-child(3) .blueTag .tag {
+                background-color: #006DFF;
+            }
+
+            .prod_box:nth-child(3) .taxes p:last-of-type {
+
+            }
+        }
+
+        .prod_box {
+            .inner_prod_box {
+                background-color: white;
+                border: 1px solid #D1D1D1;
+                padding: 28px;
+                display: grid;
+
+                .blueTagsWrapper {
+                    order: 1;
+                }
+
+                h4 {
+                    order: 2;
+                    font-size: 22px;
+                    margin-bottom: 16px;
+                }
+
+                .subtitle-2 {
+                    order: 3;
+                    margin-top: 0;
+                    font-size: 14px;
+                }
+
+                .hero-aem__prices {
+                    order: 5;
+                    margin-top: 16px;
+                }
+
+                .undeBuyLink {
+                    order: 6;
+                }
+
+                .benefitsLists {
+                    order: 8;
+                }
+
+                hr:first-of-type {
+                    order: 4;
+                    margin-top: 16px;
+                }
+
+                hr:last-of-type {
+                    order: 7;
+                }
+
+                .taxes {
+                    margin-bottom: 16px;
+
+                    p:last-of-type {
+                        border-radius: 8px;
+                        width: 100%;
+                        font-size: 14px;
+                        padding: 12px 0;
+                        text-align: center;
+                    }
+                }
+            }
+
+            /*&:nth-of-type(1) .inner_prod_box .taxes p:last-of-type {*/
+            /*    background-color: red;*/
+            /*}*/
+        }
+
+        &.blue-top-tag .prod_box {
+            .greenTag2 {
+                background-color: #008724;
+                font-size: var(--body-font-size-xs);
+                padding: 10px 0;
+                text-transform: uppercase;
+                color: white;
+                min-height: auto;
+            }
+        }
+
+        .prod_box.hasGreenTag {
+            .inner_prod_box {
+                box-shadow: none;
+                border: 2px solid #008724;
+            }
+        }
+    }
+
+    .new-prod-boxes-container.we-container {
+        max-width: 1169px;
+    }
+
+    .new-prod-boxes-container .new-prod-boxes .prod_box {
+        /*margin: 0;*/
+    }
+}
+
+@media (min-width: 1200px) {
+
+    .dex-28259 {
+
+        .new-prod-boxes-container.we-container {
+            padding: 0;
+
+            .prod_box {
+                margin-left: 15px;
+                margin-right: 15px;
+
+                &:first-of-type {
+                    margin-left: 0;
+                }
+
+                &:last-of-type {
+                    margin-right: 0;
+                }
+            }
+        }
+
+    }
+}
