@@ -1569,6 +1569,10 @@ main .creators-banner .signature {
   }
 }
 
+.columns-container .columns.benefits-cards.light-sky-blue.scam-protection {
+  background-color: transparent;
+}
+
 .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div {
   gap: 24px;
 }
