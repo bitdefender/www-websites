@@ -17,10 +17,13 @@ export default function decorate(block) {
   const confirmText = columns[2].textContent.trim();
   const savedText = columns[3].textContent.trim();
 
+  const yesSelected = yesText.includes('[selected]');
+  const noSelected = noText.includes('[selected]');
+
   const options = document.createElement('div');
   options.className = 'tracking-options';
 
-  const createOption = (text, value, checked = false) => {
+  const createOption = (text, value, checked = false, disabled = false) => {
     const label = document.createElement('label');
     label.className = 'tracking-option';
 
@@ -29,13 +32,14 @@ export default function decorate(block) {
     input.name = 'email-tracking';
     input.value = value;
     input.checked = checked;
+    input.disabled = disabled;
 
     const radio = document.createElement('span');
     radio.className = 'tracking-radio';
 
     const textElement = document.createElement('span');
     textElement.className = 'tracking-option-text';
-    textElement.textContent = text;
+    textElement.textContent = text.replace('[selected]', '').trim();
 
     label.append(input, radio, textElement);
 
@@ -43,8 +47,18 @@ export default function decorate(block) {
   };
 
   options.append(
-    createOption(yesText, 'yes'),
-    createOption(noText, 'no', true),
+    createOption(
+      yesText,
+      'yes',
+      yesSelected,
+      noSelected,
+    ),
+    createOption(
+      noText,
+      'no',
+      noSelected,
+      yesSelected,
+    ),
   );
 
   const confirmButton = document.createElement('button');

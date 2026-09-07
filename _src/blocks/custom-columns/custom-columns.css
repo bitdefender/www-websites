@@ -186,10 +186,6 @@
   line-height: 1.4;
 }
 
-.custom-columns-wrapper .custom-columns .tracking-option:hover {
-  border-color: #ed1f24;
-}
-
 .custom-columns-wrapper .custom-columns .tracking-option:has(input:checked) {
   border-color: #ed1f24;
   background: #fdf3f3;
