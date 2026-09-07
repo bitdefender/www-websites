@@ -31,7 +31,7 @@
 
 /* =========================================
    Logo
-   ========================================= */
+========================================= */
 
 .custom-columns-container.logo .custom-columns-wrapper .custom-columns > div {
   padding: 0;
@@ -70,8 +70,8 @@
 }
 
 /* =========================================
-   H1
-   ========================================= */
+   Title-subtitle
+========================================= */
 
 .custom-columns-container.title-subtitle .custom-columns-wrapper .custom-columns {
   padding: 0;
@@ -97,7 +97,7 @@
 
 /* =========================================
    Info message
-   ========================================= */
+========================================= */
 
 .custom-columns-container.grey-bck .custom-columns-wrapper .custom-columns {
   padding: 16px 18px;
@@ -123,7 +123,7 @@
 
 /* =========================================
    Tracking preferences
-   ========================================= */
+========================================= */
 
 .custom-columns-wrapper .custom-columns .tracking-options {
   display: flex;
@@ -181,6 +181,10 @@
   line-height: 1.4;
 }
 
+.custom-columns-wrapper .custom-columns .tracking-option:hover {
+  border-color: #ed1f24;
+}
+
 .custom-columns-wrapper .custom-columns .tracking-option:has(input:checked) {
   border-color: #ed1f24;
   background: #fdf3f3;
@@ -194,13 +198,9 @@
   background: #ed1f24;
 }
 
-.custom-columns-wrapper .custom-columns .tracking-option:hover {
-  border-color: #ed1f24;
-}
-
 /* =========================================
    Confirm button
-   ========================================= */
+========================================= */
 
 .custom-columns-wrapper .custom-columns .tracking-confirm {
   display: inline-flex;
@@ -229,7 +229,7 @@
 
 /* =========================================
    Confirmation message
-   ========================================= */
+========================================= */
 
 .custom-columns-wrapper .custom-columns .tracking-saved {
   padding: 16px 0;
