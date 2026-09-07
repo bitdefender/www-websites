@@ -48,6 +48,7 @@
     --size-23: 23px;
     --size-24: 24px;
     --size-26: 26px;
+    --size-28: 28px;
     --size-30: 30px;
     --size-32: 32px;
     --size-34: 34px;
@@ -68,8 +69,34 @@
 
 .dex-28259 {
 
-    .new-prod-boxes-container .button.primary {
-        &::before {
+    .section.new-prod-boxes-container {
+        margin-top: 96px;
+
+        .prod-oldprice {
+            font-size: var(--body-font-size-m);
+        }
+
+        .default-content-wrapper {
+            padding: var(--size-0);
+
+            h1 {
+                font-size: var(--size-40);
+                margin-bottom: var(--size-32);
+            }
+
+            p {
+                font-size: var(--size-18);
+                margin-bottom: 54px;
+
+                strong {
+                    font-weight: 500;
+                    color: #0781FF;
+                }
+            }
+
+            h1, p {
+                text-align: center;
+            }
         }
     }
 
@@ -81,18 +108,44 @@
 
         &.blue-top-tag {
             .prod_box .blueTag {
-                margin-bottom: 16px;
-                padding: 0;
+                margin-bottom: var(--size-16);
+                padding: var(--size-0);
 
                 .tag {
-                    margin-left: 0;
+                    margin-left: var(--size-0);
                     text-transform: unset;
                     font-size: var(--body-font-size-xxs);
                 }
             }
 
+            .prod_box {
+
+                .billed {
+                    margin-bottom: var(--size-4);
+                }
+
+                .billed, .billed > p {
+                    margin-top: var(--size-0);
+                }
+
+                &:not(:last-of-type) .prod-save {
+                    display: none;
+                }
+
+                .prod-save {
+                    color: #1C7928;
+                    background-color: #DEFAE1;
+                    border: 1px solid #D3F8D7;
+                    margin-bottom: var(--size-4);
+                }
+            }
+
             .prod_box .button.secondary {
                 display: none;
+            }
+
+            .prod_box:nth-child(1) .prod-oldprice {
+                text-decoration: unset;
             }
 
             .prod_box:nth-child(1) .blueTag .tag {
@@ -101,7 +154,8 @@
             }
 
             .prod_box:nth-child(1) .taxes p:last-of-type {
-
+                background-color: #F0F7FF;
+                color: #41474D;
             }
 
             .prod_box:nth-child(2) .blueTag .tag {
@@ -110,7 +164,8 @@
             }
 
             .prod_box:nth-child(2) .taxes p:last-of-type {
-
+                background-color: #C6FCDA;
+                color: #006D19;
             }
 
             .prod_box:nth-child(3) .blueTag .tag {
@@ -118,7 +173,32 @@
             }
 
             .prod_box:nth-child(3) .taxes p:last-of-type {
+                background-color: #D3EAFF;
+                color: #005BDF;
+            }
 
+            .prod_box .benefitsLists li:first-child {
+                margin-bottom: var(--size-24);
+            }
+
+            .prod_box:nth-child(3) .benefitsLists li:first-child {
+                background-color: #EDF9FF;
+                color: #005BDF;
+                padding: var(--size-12) var(--size-14) var(--size-12) var(--size-40);
+                line-height: var(--size-22);
+                border-radius: var(--size-10);
+                font-weight: 500;
+                display: block;
+
+                .arrow-right {
+                    transform: none;
+                    background-image: url("data:image/svg+xml,%3Csvg width='13' height='11' viewBox='0 0 13 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.464844 5.57812L0 5.11328L0.464844 4.64844L4.64844 0.464844L5.11328 0L6.04297 0.929688L5.57812 1.39453L2.51562 4.45703H11.5664H12.2227V5.76953H11.5664H2.51562L5.57812 8.85938L6.04297 9.32422L5.11328 10.2539L4.64844 9.78906L0.464844 5.57812Z' fill='black'/%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 13px 11px;
+                    margin-right: var(--size-6);
+                    margin-left: var(--size-14);
+                }
             }
         }
 
@@ -126,7 +206,7 @@
             .inner_prod_box {
                 background-color: white;
                 border: 1px solid #D1D1D1;
-                padding: 28px;
+                padding: var(--size-28);
                 display: grid;
 
                 .blueTagsWrapper {
@@ -135,23 +215,27 @@
 
                 h4 {
                     order: 2;
-                    font-size: 22px;
-                    margin-bottom: 16px;
+                    font-size: var(--size-22);
+                    margin-bottom: var(--size-16);
                 }
 
                 .subtitle-2 {
                     order: 3;
-                    margin-top: 0;
-                    font-size: 14px;
+                    margin-top: var(--size-0);
+                    font-size: var(--size-14);
                 }
 
                 .hero-aem__prices {
                     order: 5;
-                    margin-top: 16px;
+                    margin-top: var(--size-16);
                 }
 
                 .undeBuyLink {
                     order: 6;
+                    text-align: center;
+                    font-weight: 600;
+                    font-size: var(--size-14);
+                    margin-top: var(--size-0);
                 }
 
                 .benefitsLists {
@@ -160,7 +244,7 @@
 
                 hr:first-of-type {
                     order: 4;
-                    margin-top: 16px;
+                    margin-top: var(--size-16);
                 }
 
                 hr:last-of-type {
@@ -168,28 +252,26 @@
                 }
 
                 .taxes {
-                    margin-bottom: 16px;
+                    margin-bottom: var(--size-8);
 
                     p:last-of-type {
-                        border-radius: 8px;
+                        border-radius: var(--size-8);
                         width: 100%;
-                        font-size: 14px;
-                        padding: 12px 0;
+                        font-size: var(--size-14);
+                        padding: var(--size-12) var(--size-0);
                         text-align: center;
+                        margin-top: var(--size-16);
+                        margin-bottom: var(--size-0);
                     }
                 }
             }
-
-            /*&:nth-of-type(1) .inner_prod_box .taxes p:last-of-type {*/
-            /*    background-color: red;*/
-            /*}*/
         }
 
         &.blue-top-tag .prod_box {
             .greenTag2 {
                 background-color: #008724;
                 font-size: var(--body-font-size-xs);
-                padding: 10px 0;
+                padding: var(--size-10) var(--size-0);
                 text-transform: uppercase;
                 color: white;
                 min-height: auto;
@@ -199,17 +281,13 @@
         .prod_box.hasGreenTag {
             .inner_prod_box {
                 box-shadow: none;
-                border: 2px solid #008724;
+                border: var(--size-2) solid #008724;
             }
         }
     }
 
     .new-prod-boxes-container.we-container {
         max-width: 1169px;
-    }
-
-    .new-prod-boxes-container .new-prod-boxes .prod_box {
-        /*margin: 0;*/
     }
 }
 
@@ -218,18 +296,18 @@
     .dex-28259 {
 
         .new-prod-boxes-container.we-container {
-            padding: 0;
+            padding: var(--size-0);
 
             .prod_box {
                 margin-left: 15px;
                 margin-right: 15px;
 
                 &:first-of-type {
-                    margin-left: 0;
+                    margin-left: var(--size-0);
                 }
 
                 &:last-of-type {
-                    margin-right: 0;
+                    margin-right: var(--size-0);
                 }
             }
         }
