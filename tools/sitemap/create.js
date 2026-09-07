@@ -20,6 +20,80 @@ const LOCALES = 'https://www.bitdefender.com/p-api/v1/locales-and-countries';
 const COUNTRIES = 'https://www.bitdefender.com/p-api/v1/locales/{locale}/countries';
 const QUERY_INDEX_URL = 'https://www.bitdefender.com/{locale}/query-index.json';
 const DOMAIN_URL = 'https://www.bitdefender.com';
+const REDIRECTS_404_URL = 'https://api.github.com/repos/bitdefender/locale-router/contents/src/404-handling/404-redirects.json';
+
+async function fetchRedirects404() {
+  const { GITHUB_TOKEN } = process.env;
+  if (!GITHUB_TOKEN) {
+    throw new Error('GITHUB_TOKEN is required to fetch locale-router sitemap exclusions.');
+  }
+
+  const response = await fetch(REDIRECTS_404_URL, {
+    headers: {
+      Accept: 'application/vnd.github.raw+json',
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch locale-router sitemap exclusions: HTTP ${response.status}`);
+  }
+
+  let redirects;
+  try {
+    redirects = await response.json();
+  } catch {
+    throw new Error('Failed to parse locale-router sitemap exclusions as JSON.');
+  }
+
+  if (!Array.isArray(redirects)) {
+    throw new Error('Expected locale-router sitemap exclusions to be an array.');
+  }
+
+  return redirects;
+}
+
+/**
+ * Converts a locale-router 404 path into a regular expression.
+ * A trailing /* matches the page itself, subpaths, and query parameters.
+ * @param {string} pathPattern
+ * @returns {RegExp}
+ */
+function toPathPattern(pathPattern) {
+  const hasTrailingWildcard = pathPattern.endsWith('/*');
+  const routePath = hasTrailingWildcard ? pathPattern.slice(0, -2) : pathPattern;
+  const parts = routePath.split('<locale>');
+
+  if (parts.length !== 2) {
+    throw new Error(`404 redirect path must contain exactly one <locale>: ${pathPattern}`);
+  }
+
+  const escapePathPart = (part) => part
+    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    .replace(/\\\*/g, '.*');
+  const pattern = `${escapePathPart(parts[0])}([^/?]+)${escapePathPart(parts[1])}`;
+  const suffix = hasTrailingWildcard ? '(?:[/?].*)?' : '(?:\\?.*)?';
+
+  return new RegExp(`^${pattern}${suffix}$`, 'i');
+}
+
+let excludedPathPatterns = [];
+
+function setExcludedPathPatterns(redirects) {
+  excludedPathPatterns = redirects
+    .filter(({ path: redirectPath }) => !redirectPath.startsWith('/pages/'))
+    .map(({ path: redirectPath, locales }) => ({
+      pattern: toPathPattern(redirectPath),
+      locales: new Set(locales.map((locale) => locale.toLowerCase())),
+    }));
+}
+
+function isExcludedPath(pathname) {
+  return excludedPathPatterns.some(({ pattern, locales }) => {
+    const match = pattern.exec(pathname);
+    return Boolean(match && locales.has(match[1].toLowerCase()));
+  });
+}
 
 /**
  * these are not a content buckets
@@ -125,7 +199,9 @@ async function processLocaleSitemap(locale, hreflangMap) {
   if (!queryData) return;
 
   const validData = queryData.data.filter(entry =>
-    entry.path !== "0" && !entry.robots.includes("noidex")
+    entry.path !== "0"
+    && !entry.robots.includes("noidex")
+    && !isExcludedPath(entry.path)
   );
   const filteredHreflangMap = hreflangMap.filter(([lang]) => lang !== locale);
   const sitemapPath = path.join(process.cwd(), '../../_src/sitemap/csg/sitemap_' + locale + '.xml');
@@ -150,6 +226,10 @@ async function processLocaleSitemap(locale, hreflangMap) {
           const pathWithoutLocale = row.path.replace(/^\/[a-z]{2}-[a-z]{2}\//, '/');
           const localeUrl = bucketLocale || hreflang;
           const href = `${baseUrl}${localeUrl}${pathWithoutLocale}`;
+
+          if (isExcludedPath(new URL(href).pathname)) {
+            continue;
+          }
 
           if (await checkUrlExists(href)) { // Only include URLs with a 200 status code
             alternateLinks.push({
@@ -182,6 +262,8 @@ async function processLocaleSitemap(locale, hreflangMap) {
 
 (async () => {
   try {
+    setExcludedPathPatterns(await fetchRedirects404());
+
     const localesData = await fetchJson(LOCALES);
     const localesArr = getUniqueLocales(localesData);
 
