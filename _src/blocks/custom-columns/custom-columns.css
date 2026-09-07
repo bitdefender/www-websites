@@ -1,3 +1,7 @@
+.section.custom-columns-container {
+  padding: 10px 0;
+}
+
 .custom-columns-wrapper {
   padding: 0 var(--body-padding);
 }
@@ -126,6 +130,7 @@
 ========================================= */
 
 .custom-columns-wrapper .custom-columns .tracking-options {
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 13px;
