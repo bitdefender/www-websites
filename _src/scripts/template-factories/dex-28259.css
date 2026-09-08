@@ -1,35 +1,4 @@
 :root {
-    /* Color variables */
-    --border-color: #e1e3e5;
-    --border-darker-color: #b1b1b1;
-    --background-light-blue-color: #f0f7ff;
-    --tab-header-color-blue: #006dff;
-    --background-blue: #006dff;
-    --color-highlight-blue: #006dff;
-
-
-    /* Font family */
-    --body-font-family: "IBM Plex Sans", sans-serif;
-
-    /* Body default */
-    --body-font-size-xs: 12px;
-    --body-font-size-s: 13px; /* 17.329px = 1.083rem */
-    --body-font-size-m: 14px; /* 18.662px = 1.167rem */
-    --body-font-size-l: 16px; /* 21.328px = 1.333rem */
-    --body-font-size-xl: 18px; /* 23.994px = 1.5rem */
-
-    /* Heading default */
-    --heading-font-size-xxs: 18px; /* 23.994px = 1.5rem */
-    --heading-font-size-xs: 20px; /* 26.66px = 1.667rem */
-    --heading-font-size-s: 24px; /* 31.992px = 2rem */
-    --heading-font-size-m: 28px; /* 37.324px = 2.333rem */
-    --heading-font-size-l: 32px; /* 42.656px = 2.667rem */
-    --heading-font-size-xl: 36px; /* 47.988px = 2.999rem */
-    --heading-font-size-xxl: 40px; /* 53.32px = 3.333rem */
-
-    /* Colors */
-    --color-dex-gray: #fafafa;
-    --color-dex-dark-gray: #fafafa;
 
     /* PADDING VALUES */
     --size-0: 0;
@@ -40,7 +9,9 @@
     --size-8: 8px;
     --size-10: 10px;
     --size-12: 12px;
+    --size-13: 13px;
     --size-14: 14px;
+    --size-15: 15px;
     --size-16: 16px;
     --size-18: 18px;
     --size-20: 20px;
@@ -66,14 +37,12 @@
 
 }
 
-
 .dex-28259 {
-
     .section.new-prod-boxes-container {
         margin-top: 96px;
 
         .prod-oldprice {
-            font-size: var(--body-font-size-m);
+            font-size: var(--size-14);
         }
 
         .default-content-wrapper {
@@ -101,8 +70,7 @@
     }
 
     .new-prod-boxes-container .new-prod-boxes {
-
-        span, li, div, h4, p {
+        span, li, div, h4, p, a {
             font-family: 'IBM Plex Sans', sans-serif !important;
         }
 
@@ -114,18 +82,18 @@
                 .tag {
                     margin-left: var(--size-0);
                     text-transform: unset;
-                    font-size: var(--body-font-size-xxs);
+                    font-size: var(--size-12);
                 }
             }
 
             .prod_box {
-
                 .billed {
                     margin-bottom: var(--size-4);
                 }
 
                 .billed, .billed > p {
                     margin-top: var(--size-0);
+                    font-size: var(--size-14);
                 }
 
                 &:not(:last-of-type) .prod-save {
@@ -135,8 +103,23 @@
                 .prod-save {
                     color: #1C7928;
                     background-color: #DEFAE1;
-                    border: 1px solid #D3F8D7;
+                    border: var(--size-1) solid #D3F8D7;
+                    font-size: var(--size-13);
                     margin-bottom: var(--size-4);
+                }
+
+                .prod-newprice {
+                    align-items: unset;
+                    margin-bottom: var(--size-8);
+
+                    sup {
+                        padding-top: var(--size-4);
+                        color: black;
+                    }
+                }
+
+                .prod-newprice span {
+                    font-size: var(--size-40);
                 }
             }
 
@@ -195,7 +178,7 @@
                     background-image: url("data:image/svg+xml,%3Csvg width='13' height='11' viewBox='0 0 13 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.464844 5.57812L0 5.11328L0.464844 4.64844L4.64844 0.464844L5.11328 0L6.04297 0.929688L5.57812 1.39453L2.51562 4.45703H11.5664H12.2227V5.76953H11.5664H2.51562L5.57812 8.85938L6.04297 9.32422L5.11328 10.2539L4.64844 9.78906L0.464844 5.57812Z' fill='black'/%3E%3C/svg%3E");
                     background-repeat: no-repeat;
                     background-position: center;
-                    background-size: 13px 11px;
+                    background-size: var(--size-13) 11px;
                     margin-right: var(--size-6);
                     margin-left: var(--size-14);
                 }
@@ -205,7 +188,7 @@
         .prod_box {
             .inner_prod_box {
                 background-color: white;
-                border: 1px solid #D1D1D1;
+                border: var(--size-1) solid #D1D1D1;
                 padding: var(--size-28);
                 display: grid;
 
@@ -270,7 +253,7 @@
         &.blue-top-tag .prod_box {
             .greenTag2 {
                 background-color: #008724;
-                font-size: var(--body-font-size-xs);
+                font-size: var(--size-12);
                 padding: var(--size-10) var(--size-0);
                 text-transform: uppercase;
                 color: white;
@@ -292,15 +275,13 @@
 }
 
 @media (min-width: 1200px) {
-
     .dex-28259 {
-
         .new-prod-boxes-container.we-container {
             padding: var(--size-0);
 
             .prod_box {
-                margin-left: 15px;
-                margin-right: 15px;
+                margin-left: var(--size-15);
+                margin-right: var(--size-15);
 
                 &:first-of-type {
                     margin-left: var(--size-0);
