@@ -69,10 +69,13 @@
         }
     }
 
-    .new-prod-boxes-container .new-prod-boxes {
-        span, li, div, h4, p, a {
+    .new-prod-boxes-container {
+        span, li, div, h1, h2, h3, h4, p, a, strong {
             font-family: 'IBM Plex Sans', sans-serif !important;
         }
+    }
+
+    .new-prod-boxes-container .new-prod-boxes {
 
         &.blue-top-tag {
             .prod_box .blueTag {
