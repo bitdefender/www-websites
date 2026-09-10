@@ -206,6 +206,7 @@
 
 .tabs-component-container .tabs-container button strong {
   font-weight: 700;
+  display: none;
 }
 
 .tabs-component-container .tabs-container picture {
@@ -256,17 +257,21 @@
 @media (max-width: 990px) {
   .tabs-component-container.show-categories .tabs-container {
     margin-bottom: 20px;
+    min-width: 80%;
   }
 
   .tabs-component-container.show-categories button strong {
-    display: block;
     width: 50%;
   }
 
   .tabs-component-container.show-categories .tabs-container button {
-    width: 50%;
     display: flex;
     justify-content: center;
+    flex: 1;
+  }
+
+  .tabs-component-container .tabs-container button picture img {
+    width: 40px;
   }
 
   .tabs-component-container.show-categories .subtitle-class {
@@ -295,7 +300,7 @@
   }
 
   .tabs-component-container button strong {
-    display: block;
+    display: block !important;
   }
 
   .tabs-component-container .tabs-container button picture img {
