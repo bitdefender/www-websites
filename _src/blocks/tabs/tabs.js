@@ -260,6 +260,7 @@ export default async function decorate(block) {
       try {
         await loadBlocks(bdTabs);
         normalizeLoadingFeatureIcons(bdTabs);
+        bdTabs.querySelectorAll('bd-accordion-bg').forEach((el) => el.setAttribute('no-padding', ''));
         await import(`${base}tabs`);
         if (typeof bdTabs.requestUpdate === 'function') {
           bdTabs.requestUpdate();

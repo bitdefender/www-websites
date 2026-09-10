@@ -1,0 +1,28 @@
+{
+  "id": "/en-us/consumer/reverse-phone-lookup",
+  "name": "Bitdefender Phone Lookup",
+  "short_name": "Phone Lookup",
+  "start_url": "/en-us/consumer/reverse-phone-lookup?mode=PWA",
+  "scope": "/en-us/consumer/reverse-phone-lookup",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ed1c24",
+  "icons": [
+    {
+      "src": "/_src/icons/phone-lookup-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/_src/icons/phone-lookup-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/_src/icons/phone-lookup-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

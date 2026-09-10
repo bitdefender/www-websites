@@ -312,6 +312,10 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
         position: absolute;
         left: 26px;
 
+        * {
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
         text {
           fill: #006eff;
         }
@@ -379,7 +383,7 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
 }
 
 .section.light-gray .quote-carousel-wrapper {
-  background-color: #F6F6F6;
+  background-color: #fafafa;
 }
 
 .section.light-gray .default-content-wrapper {

@@ -284,24 +284,28 @@
         }
     }
 
-    .dex-25983-hero .hero-aem .hero-aem__card .hero-aem__card-text .button-container + p a {
-        padding: var(--size-12) var(--size-18);
+    bd-button-link[kind="danger"]::part(my-danger-button) {
         border: var(--size-2) solid var(--background-blue);
         color: var(--background-blue);
         background-color: var(--white-color);
         transition: all .2s cubic-bezier(.4, 0, .2, 1);
+    }
 
+
+    bd-button-link[kind="danger"]::part(my-danger-button):hover,
+    bd-button-link[kind="danger"]::part(my-danger-button):active {
+        background-color: var(--background-blue);
+        color: var(--white-color);
+    }
+
+    .dex-25983-hero .hero-aem .hero-aem__card .hero-aem__card-text .button-container + p a {
+        padding: var(--size-12) var(--size-18);
         span {
             transform: none;
         }
 
         &::after {
             display: none;
-        }
-
-        &:hover, &:focus, &:active {
-            background-color: var(--background-blue);
-            color: var(--white-color);
         }
     }
 
@@ -322,6 +326,10 @@
                 line-height: 100%;
                 font-weight: var(--font-weight-bolder);
                 margin-bottom: var(--size-8);
+
+                &:first-of-type {
+                    font-size: var(--body-font-size-l);
+                }
             }
 
             h1 {
@@ -369,6 +377,12 @@
                         }
                     }
                 }
+
+
+                p:first-of-type {
+                    margin-bottom: var(--size-8);
+                }
+
 
                 .hero-aem__prices {
                     margin-top: var(--size-20);
@@ -423,6 +437,16 @@
         .hero-aem-wrapper {
             padding-left: var(--size-24);
             padding-right: var(--size-24);
+        }
+    }
+
+    .us-hero-section  {
+        .hero-aem .hero-aem__card__desktop h2 + h1 {
+            margin-bottom: 0;
+        }
+
+        .hero-aem .hero-aem__card-text h1 {
+            margin-top: 0;
         }
     }
 
@@ -1960,6 +1984,11 @@
                 line-height: var(--size-42);
                 letter-spacing: var(--size-0);
                 margin: var(--size-0) var(--size-0) var(--size-8);
+
+                &:first-of-type {
+                    font-size: var(--heading-font-size-s);
+                    line-height: var(--size-36);
+                }
             }
 
             .hero-aem__card-text .hero-aem__prices {
@@ -2030,6 +2059,10 @@
                         + p {
                             font-size: var(--body-font-size-m);
                         }
+                    }
+
+                    p:first-of-type {
+                        margin-bottom: var(--size-8);
                     }
 
                 }
