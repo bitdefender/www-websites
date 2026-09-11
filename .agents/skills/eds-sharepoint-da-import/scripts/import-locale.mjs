@@ -14,7 +14,10 @@ const { mdToDocDom, docDomToAemHtml } = await import('./da-converters.mjs');
 
 const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
 const PAGE_CONCURRENCY = 5;
-const BINARY_EXTENSIONS = new Set(['json', 'svg', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'pdf']);
+const BINARY_EXTENSIONS = new Set([
+  'json', 'svg', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'pdf',
+  'xls', 'xlsx', 'xlsm', 'xlsb',
+]);
 const BINARY_SELECTORS = [
   'a[href*="/fragments/"]',
   'a[href*=".mp4"]',
@@ -32,6 +35,10 @@ const MIME_BY_EXTENSION = {
   gif: 'image/gif',
   mp4: 'video/mp4',
   pdf: 'application/pdf',
+  xls: 'application/vnd.ms-excel',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  xlsm: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+  xlsb: 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
 };
 
 function usage() {
@@ -42,6 +49,8 @@ function usage() {
 Options:
   --dry-run                 Prepare and validate without DA mutations
   --include-linked          Opt in to same-locale linked fragments/assets
+  --assets-only             Exclude indexed/non-indexed page candidates
+  --include-extensions <list>  Include unsupported resources by extension
   --dest-org <org>          Destination organization (default: bitdefender)
   --dest-repo <repo>        Destination site (default: www-doc-authoring)
   --live-origin <url>       Source live origin override
@@ -52,7 +61,7 @@ Options:
 
 function parseArgs(argv) {
   const args = {};
-  const booleanOptions = new Set(['dry-run', 'help', 'include-linked']);
+  const booleanOptions = new Set(['dry-run', 'help', 'include-linked', 'assets-only']);
   for (let i = 2; i < argv.length; i += 1) {
     const arg = argv[i];
     if (!arg.startsWith('--')) throw new Error(`Unexpected argument: ${arg}`);
@@ -160,6 +169,15 @@ function assetDestinationPath(pathname) {
 function extension(pathname) {
   const match = pathname.toLowerCase().match(/\.([a-z0-9]+)$/);
   return match?.[1] || '';
+}
+
+function parseExtensions(value) {
+  if (!value) return new Set();
+  const extensions = value.split(',').map((item) => item.trim().toLowerCase()).filter(Boolean);
+  if (extensions.some((item) => !/^[a-z0-9]+$/.test(item))) {
+    throw new Error('--include-extensions must be a comma-separated list of file extensions');
+  }
+  return new Set(extensions);
 }
 
 function mimeType(pathname, response) {
@@ -329,13 +347,25 @@ async function listDAPaths({ destOrg, destRepo, locale, token }) {
 }
 
 async function prepareLocale(report, options, token) {
-  const initial = [...report.indexed, ...report.nonIndexed].map((candidate) => ({
+  const pageCandidates = options.assetsOnly ? [] : [...report.indexed, ...report.nonIndexed];
+  const assetCandidates = [...(report.exclusions || [])]
+    .filter(({ reason, url }) => {
+      if (reason !== 'unsupported_resource' || !url) return false;
+      return options.includeExtensions.has(extension(new URL(url).pathname));
+    });
+  const initial = pageCandidates.map((candidate) => ({
     kind: 'page',
     sourceUrl: candidate.url,
     sourcePath: new URL(candidate.url).pathname,
     destinationPath: pageDestinationPath(new URL(candidate.url).pathname),
     alreadyInDA: candidate.alreadyInDA,
-  }));
+  })).concat(assetCandidates.map((candidate) => ({
+    kind: 'asset',
+    sourceUrl: candidate.url,
+    sourcePath: new URL(candidate.url).pathname,
+    destinationPath: assetDestinationPath(new URL(candidate.url).pathname),
+    alreadyInDA: false,
+  })));
   const knownPaths = new Set(initial.map((task) => task.sourcePath));
   const tasks = [...initial];
   const prepared = [];
@@ -519,7 +549,12 @@ const options = {
   liveOrigin: args['live-origin'] || 'https://main--www-websites--bitdefender.aem.live',
   previewOrigin: args['preview-origin'] || 'https://main--www-websites--bitdefender.aem.page',
   includeLinked: Boolean(args['include-linked']),
+  assetsOnly: Boolean(args['assets-only']),
+  includeExtensions: parseExtensions(args['include-extensions']),
 };
+if (options.assetsOnly && !options.includeExtensions.size) {
+  throw new Error('--assets-only requires --include-extensions');
+}
 await mkdir(args['output-dir'], { recursive: true });
 const output = {
   startedAt: new Date().toISOString(),
@@ -537,11 +572,22 @@ for (const report of reports) {
   }
   validatePreparedScope(prepared, options);
   if (args['dry-run']) {
+    const preparedAssets = prepared.prepared.filter(({ kind }) => kind === 'asset');
     output.locales.push({
       ...summarizeLocale(prepared),
       pagesPrepared: prepared.prepared.filter(({ kind }) => kind === 'page').length,
-      assetsPrepared: prepared.prepared.filter(({ kind }) => kind === 'asset').length,
+      assetsPrepared: preparedAssets.length,
       existingDestinations: prepared.prepared.filter(({ alreadyInDA }) => alreadyInDA).length,
+      existingDestinationPaths: prepared.prepared
+        .filter(({ alreadyInDA }) => alreadyInDA)
+        .map(({ destinationPath }) => destinationPath),
+      assetExtensionCounts: preparedAssets.reduce((counts, task) => {
+        const ext = extension(task.sourcePath);
+        return { ...counts, [ext]: (counts[ext] || 0) + 1 };
+      }, {}),
+      oversizedSvgs: preparedAssets
+        .filter((task) => extension(task.sourcePath) === 'svg' && task.bytes.byteLength > 40 * 1024)
+        .map(({ sourcePath, bytes }) => ({ sourcePath, bytes: bytes.byteLength })),
     });
     continue;
   }
