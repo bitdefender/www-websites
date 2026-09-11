@@ -81,6 +81,20 @@
         min-height: unset;
     }
 
+    .dex-trust-pills {
+        .columns > div {
+            align-items: center;
+
+            .columns-col {
+                text-align: center;
+
+                p:first-of-type .icon {
+                    position: relative;
+                }
+            }
+        }
+    }
+
     .new-prod-boxes {
 
         [data-store-id="us_pi"] h4::after, [data-store-id="us_pf"] h4::after {
@@ -1851,6 +1865,11 @@
         display: none;
     }
 
+    .dex-trial-section {
+        padding: var(--size-20);
+
+    }
+
 }
 
 
@@ -1911,6 +1930,16 @@
         .bd-css-slider {
             display: none !important;
         }
+
+        .dex-new-product-boxes.we-container h2 {
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .dex-new-product-boxes.new-prod-boxes-container.we-container .new-prod-boxes {
+            grid-template-columns: auto;
+        }
+
     }
 }
 
@@ -2882,6 +2911,14 @@
                 padding-top: 56px;
                 padding-bottom: 24px;
             }
+        }
+
+        .dex-new-product-boxes.new-prod-boxes-container.we-container .new-prod-boxes {
+            grid-template-columns: auto;
+        }
+
+        .dex-trial-section {
+            display: none;
         }
     }
 }
