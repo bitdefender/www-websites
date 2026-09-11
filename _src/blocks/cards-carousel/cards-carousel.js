@@ -103,7 +103,7 @@ export default function decorate(block) {
     card.classList.add('carousel-card');
 
     const link = card.querySelector('a');
-    if (link) {
+    if (link && !block.closest('.section').classList.contains('trusted-carousel')) {
       card.style.cursor = 'pointer';
       card.addEventListener('click', (e) => {
         // prevent double triggering if the actual link was clicked

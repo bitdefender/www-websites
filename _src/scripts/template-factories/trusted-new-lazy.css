@@ -1,0 +1,1104 @@
+/* Trusted Always V2.2 below-the-fold layout. */
+/* stylelint-disable no-descending-specificity */
+/* stylelint-disable selector-not-notation */
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-Light.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-Regular.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-Medium.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-SemiBold.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-Bold.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+
+.trusted-new {
+  --trusted-sky: #f4f8ff;
+  --trusted-ink: #0b0d12;
+  --trusted-muted: #4d5665;
+  --trusted-line: #D4D4D4;
+}
+
+.trusted-new main {
+  color: var(--trusted-ink);
+  font-family: var(--trusted-font);
+}
+
+.trusted-new main > .section {
+  box-sizing: border-box;
+}
+
+.trusted-new main > .section:empty {
+  display: none;
+}
+
+.trusted-new main .default-content-wrapper,
+.trusted-new main .trusted-teaser-impact-wrapper,
+.trusted-new main .testimonials-wrapper,
+.trusted-new main .timeline-carousel-wrapper,
+.trusted-new main .trusted-main-carousel-wrapper,
+.trusted-new main .image-columns-wrapper,
+.trusted-new main .scuderia-ferrari-section-wrapper {
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding-inline: 50px;
+}
+
+.trusted-new main .section.light-sky-blue, .trusted-new main .section.light-sky-blue .default-content-wrapper {
+  background-color: #EFF6FF;
+  text-align: left;
+}
+
+.trusted-new main h2,
+.trusted-new main h3,
+.trusted-new main h4,
+.trusted-new main p,
+.trusted-new main a,
+.trusted-new main button {
+  font-family: var(--trusted-font);
+}
+
+.trusted-new main h2,
+.trusted-new main h3 {
+  color: var(--trusted-ink);
+  letter-spacing: -0.025em;
+}
+
+.trusted-new main p {
+  color: var(--trusted-muted);
+  font-size: 13px;
+}
+
+.trusted-new main .tag-light-blue {
+  background: #D0E4FF;
+  border-radius: 23px;
+  color: #006DFF;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  padding: 5px 10px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.trusted-new main .button-container a.button {
+  align-items: center;
+  background: var(--trusted-blue);
+  border: 2px solid var(--trusted-blue);
+  border-radius: 10px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 15px;
+  font-weight: 500;
+  justify-content: center;
+  line-height: 1;
+  min-height: 44px;
+  padding: 15px 20px;
+
+  &::after {
+    min-height: 15px;
+    min-width: 15px;
+  }
+}
+
+/* Recognition bar beneath the hero. */
+.trusted-new main > .dynamic-awards {
+  background: #fff;
+  min-height: 260px;
+  padding-block: 52px;
+}
+
+.trusted-new main > .dynamic-awards .default-content-wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  justify-content: center;
+  text-align: center;
+}
+
+.trusted-new main > .dynamic-awards p {
+  color: #263445;
+  font-size: 13px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.trusted-new main > .dynamic-awards picture,
+.trusted-new main > .dynamic-awards img {
+  max-height: 58px;
+  object-fit: contain;
+  width: auto;
+}
+
+.trusted-new main > .trusted-teaser-impact-container.pb-0 {
+  display: none;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .trusted-teaser-impact-wrapper {
+  padding-inline: 50px;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .carousel-header {
+  display: block;
+  margin: 0 0 42px;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .carousel-header .title {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .carousel-header .title > p:first-child {
+  margin: 0 0 13px;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .carousel-header .title h2 {
+  font-size: 35px !important;
+  font-weight: 500 !important;
+  line-height: 1.1;
+  margin: 0 0 16px;
+  max-width: 780px;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .carousel-header .title h2 + p {
+  font-size: 14px;
+  line-height: 1.45;
+  margin: 0 0 42px;
+  max-width: 760px;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .carousel-header .title h2:last-child {
+  font-size: 27px !important;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .box-wrapper {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 40px;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item {
+  border-right: 1px solid var(--trusted-line);
+  padding: 0 28px 0 0;
+  width: auto;
+  min-height: 146px;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item:last-child {
+  border-right: 0;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item .icon {
+  height: 52px;
+  margin-bottom: 18px;
+  width: 52px;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item .title {
+  color: var(--trusted-ink);
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item .subtitle {
+  color: var(--trusted-muted);
+  font-size: 14px;
+  line-height: 1.35;
+  margin: 10px 0 0;
+}
+
+/* Analyst recognition carousel. */
+.trusted-new main > .testimonials.box-carousel-container {
+  background: var(--trusted-sky);
+  padding-block: 74px 82px;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .carousel-header {
+  display: block;
+  margin: 0 0 28px;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .carousel-header .title {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .carousel-header .title p:first-child {
+  margin: 0 0 13px;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .carousel-header .title h2 {
+  font-size: 35px !important;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .trusted-carousel .carousel-container {
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .trusted-carousel .carousel {
+  gap: 20px;
+  overflow: visible;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .trusted-carousel .glide__slides {
+  display: flex;
+  grid-auto-flow: unset;
+  grid-template-columns: none;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .trusted-carousel .carousel-item {
+  align-items: flex-start;
+  background: #fff;
+  border-radius: 8px;
+  box-sizing: border-box;
+  flex: 0 0 100%;
+  min-height: 218px;
+  padding: 28px;
+  text-align: left !important;
+  width: 100% !important;
+  gap: 0;
+  justify-content: flex-start;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .trusted-carousel .carousel-item .img-container {
+  margin: 0 0 22px;
+  width: auto;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .trusted-carousel .carousel-item img {
+  height: 42px;
+  max-width: 180px;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .trusted-carousel .carousel-item .title {
+  color: var(--trusted-ink);
+  font-size: 16px;
+  line-height: 1.35;
+  margin: 0 0 18px;
+  text-align: left;
+  width: 100%;
+}
+
+.trusted-new main > .testimonials.box-carousel-container .trusted-carousel .carousel-item .subtitle {
+  color: var(--trusted-muted);
+  font-size: 17px;
+  line-height: 1.4;
+  margin: 0;
+  text-align: left;
+}
+
+/* Section introductions and AI timeline. */
+.trusted-new main > .section.centered {
+  background: #fff;
+  padding-block: 76px 38px;
+  text-align: center;
+}
+
+.trusted-new main > .section.centered .default-content-wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.trusted-new main > .section.centered .default-content-wrapper p:first-child {
+  margin: 0 0 13px;
+}
+
+.trusted-new main > .section.centered h2 {
+  font-size: 35px !important;
+  font-weight: 500;
+  line-height: 1.1;
+  margin: 0 0 18px;
+  max-width: 850px;
+}
+
+.trusted-new main > .section.centered p {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 820px;
+}
+
+.trusted-new main > .timeline-carousel-container {
+  background: #fff;
+  padding-block: 16px 88px;
+}
+
+.trusted-new main > .timeline-carousel-container .timeline-carousel-wrapper {
+  padding-inline: 50px;
+}
+
+.trusted-new main > .timeline-carousel-container .timeline-controls {
+  gap: 10px;
+  margin-bottom: 34px;
+}
+
+.trusted-new main > .timeline-carousel-container .timeline-controls .timeline-button {
+  height: 34px;
+  width: 34px;
+}
+
+.trusted-new main > .timeline-carousel-container .timeline-box .timeline-title {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.trusted-new main > .timeline-carousel-container .timeline-box .timeline-description {
+  color: var(--trusted-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Trust recognition carousel. */
+.trusted-new main > .trusted-main-carousel-container.blue-background {
+  background: var(--trusted-blue);
+  color: #fff;
+  padding-block: 70px 82px;
+}
+
+.trusted-new main > .trusted-main-carousel-container.blue-background .trusted-main-carousel-wrapper {
+  background: transparent;
+  padding-inline: 50px;
+  padding-top: 0;
+}
+
+.trusted-new main > .trusted-main-carousel-container .navigation-wrapper {
+  border-bottom: 1px solid rgb(255 255 255 / 30%);
+  margin-bottom: 42px;
+  padding-bottom: 12px;
+}
+
+.trusted-new main > .trusted-main-carousel-container .navigation-wrapper .nav-item {
+  color: rgb(255 255 255 / 68%);
+  font-size: 14px;
+  padding: 12px 20px;
+}
+
+.trusted-new main > .trusted-main-carousel-container .navigation-wrapper .nav-item.active {
+  color: #fff;
+}
+
+.trusted-new main > .trusted-main-carousel-container .navigation-wrapper .nav-item.active .pill {
+  background: #c1daff;
+  height: 4px;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide {
+  align-items: center;
+  display: grid;
+  gap: 56px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide > .left-content,
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide > .right-content {
+  width: 100% !important;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide > :last-child {
+  margin-left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide > :last-child img {
+  border-radius: 9px;
+  height: 400px;
+  object-fit: cover;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide h2 {
+  color: #fff;
+  font-size: 35px;
+  line-height: 1.12;
+  margin: 0 0 20px;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide .left-content > *:not(h2) {
+  margin-block: 0 20px;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide .left-content h2 + h2 {
+  margin-top: 0;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide .left-content p.button-container {
+  margin-top: 24px;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide p {
+  color: rgb(255 255 255 / 86%);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.trusted-new main > .trusted-main-carousel-container .content-wrapper .slide p.button-container a.button {
+  background: #fff;
+  border-color: #fff;
+  color: var(--trusted-blue);
+  margin-top: 16px;
+}
+
+/* Partnerships metrics. */
+.trusted-new main > .light-sky-blue {
+  background: var(--trusted-sky);
+  padding-block: 78px 84px;
+}
+
+.trusted-new main > .light-sky-blue .default-content-wrapper > h2 {
+  font-size: 35px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 35px;
+}
+
+.trusted-new main > .light-sky-blue .columns.statistics {
+  display: block;
+}
+
+.trusted-new main > .light-sky-blue .columns-wrapper {
+  background-color: transparent;
+}
+
+.trusted-new main > .light-sky-blue .columns > div {
+  background: transparent;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.trusted-new main > .light-sky-blue .columns.statistics > div > div {
+  background: #fff;
+  border-radius: 20px;
+  min-height: stretch;
+  padding: 28px;
+
+  h1 {
+    color: #006DFF;
+    font-size: 40px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+}
+
+.trusted-new main > .light-sky-blue .columns h2,
+.trusted-new main > .light-sky-blue .columns h3 {
+  color: var(--trusted-blue);
+  font-size: 35px;
+  line-height: 1;
+  margin: 0 0 12px;
+}
+
+.trusted-new main > .light-sky-blue .columns p {
+  font-size: 14px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+/* Ferrari partner card. */
+.trusted-new main > .scuderia-ferrari-section-container {
+  background: var(--trusted-sky);
+  padding-block: 0 28px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section-wrapper {
+  max-width: 1432px;
+  padding-inline: 50px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted {
+  align-items: flex-start;
+  background: linear-gradient(90deg, #006DFF 78.29%, rgba(0, 109, 255, 0) 160.22%);
+  border-radius: 20px;
+  box-sizing: border-box;
+  display: flex;
+  min-height: 420px;
+  overflow: hidden;
+  padding: 52px 48% 52px 52px;
+  position: relative;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted::before {
+  content: "";
+  inset: 0 35% 0 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted > div {
+  max-width: none;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted > div:first-child {
+  flex: 0 0 0;
+  height: 0;
+  position: static;
+  width: 0;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted > div:first-child > div {
+  height: 0;
+  position: static;
+  width: 0;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted > div:last-of-type {
+  max-width: none;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted img {
+  bottom: 0;
+  height: 100%;
+  left: auto;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
+  z-index: 0;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted h2 {
+  color: #fff;
+  font-size: 64px !important;
+  line-height: 0.9;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted h3 {
+  color: #fff;
+  font-size: 27px;
+  line-height: 1.12;
+  margin: 12px 0 20px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted p {
+  color: rgb(255 255 255 / 92%);
+  font-size: 17px;
+  line-height: 1.35;
+  margin: 0 0 18px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted p:nth-of-type(2) {
+  font-size: 29px;
+  line-height: 1.15;
+  margin-bottom: 18px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted p:nth-of-type(4) {
+  font-size: 15px;
+  margin-bottom: 22px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted a {
+  background: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+
+/* White Spurs partner card. */
+.trusted-new main > .scuderia-ferrari-section-container:has(.image-right) {
+  padding-block: 28px 78px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right {
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  box-sizing: border-box;
+  display: grid;
+  gap: 50px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  min-height: 350px;
+  padding: 44px 48px;
+  position: relative;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right > div:first-child {
+  min-width: 0;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right > div:last-child {
+  max-width: none;
+  padding: 0;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right img {
+  border-radius: 8px;
+  display: block;
+  height: 260px;
+  margin: 0;
+  max-width: 100%;
+  object-fit: cover;
+  position: static;
+  width: 100%;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right h2 {
+  color: var(--trusted-blue);
+  font-size: 30px;
+  line-height: 1.1;
+  margin: 0 0 16px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right h3 {
+  font-size: 25px;
+  line-height: 1.15;
+  margin: 0 0 16px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right p {
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0 0 16px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container:has(.white-block) {
+  background: var(--trusted-sky);
+  padding-block: 0 78px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block {
+  align-items: center;
+  background: #fff;
+  border-radius: 20px;
+  box-sizing: border-box;
+  color: var(--trusted-ink);
+  display: grid;
+  gap: 50px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  min-height: 350px;
+  padding: 24px 24px 24px 48px;
+  position: relative;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div {
+  max-width: none;
+  padding: 0;
+  position: static;
+  width: auto;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:first-child {
+  grid-column: 2;
+  grid-row: 1;
+  height: 100%;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:first-child > div {
+  width: 100%;
+  max-width: 100%;
+  height: stretch;
+  padding: 0;
+}
+
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child > div {
+  width: 100%;
+  max-width: 100%;
+  height: stretch;
+  padding: 0;
+}
+
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:first-child img {
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
+  position: static;
+  width: 100%;
+}
+
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child p:first-child {
+  margin: 0 0 18px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child p:first-child img {
+  display: block;
+  height: auto;
+  max-width: 170px;
+  position: static;
+  width: 170px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child p {
+  color: var(--trusted-muted);
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0 0 16px;
+}
+
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child p:nth-of-type(2) {
+  color: var(--trusted-ink);
+  font-size: 25px;
+  line-height: 1.15;
+}
+
+/* Mission rows. */
+.trusted-new main > .image-columns-container {
+  background: #fff;
+  padding-block: 84px 98px;
+}
+
+.trusted-new main > .image-columns-container .image-columns-wrapper {
+  padding-inline: 50px;
+}
+
+.trusted-new main > .image-columns-container > .default-content-wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.trusted-new main > .image-columns-container > .default-content-wrapper p {
+  margin: 0 0 13px;
+}
+
+.trusted-new main > .image-columns-container > .default-content-wrapper h2 {
+  font-size: 35px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 54px;
+  max-width: 820px;
+}
+
+.trusted-new main > .image-columns-container .image-columns {
+  row-gap: 82px;
+}
+
+.trusted-new main > .image-columns-container .image-columns > div {
+  align-items: center;
+  column-gap: 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  row-gap: 0;
+}
+
+.trusted-new main > .image-columns-container .image-columns > div:nth-child(even) {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+
+.trusted-new main > .image-columns-container .image-columns > div > .image-columns-img-col,
+.trusted-new main > .image-columns-container .image-columns > div > .image-columns-txt-col {
+  flex: unset;
+  min-width: 0;
+  width: auto;
+}
+
+.trusted-new main > .image-columns-container .image-columns > div > .image-columns-txt-col {
+  padding: 0;
+  text-align: left;
+}
+
+.trusted-new main > .image-columns-container .image-columns > div > div:has(.button) {
+  min-width: 0;
+  padding: 0;
+  text-align: left;
+
+  p {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  img {
+    max-height: 60px;
+    max-width: 250px;
+    border-radius: 0;
+  }
+}
+
+.trusted-new main > .image-columns-container .image-columns img {
+  border-radius: 10px;
+  display: block;
+  width: 100%;
+}
+
+.trusted-new main > .image-columns-container .image-columns h3 {
+  font-size: 27px;
+  line-height: 1.12;
+  margin: 0 0 16px;
+}
+
+.trusted-new main > .image-columns-container .image-columns > div > div:nth-child(2) h3 {
+  font-size: 27px;
+  line-height: 1.12;
+  margin: 0 0 16px;
+}
+
+.trusted-new main > .image-columns-container .image-columns p,
+.trusted-new main > .image-columns-container .image-columns li {
+  color: var(--trusted-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.trusted-new main > .image-columns-container .image-columns p {
+  margin: 0 0 18px;
+}
+
+.trusted-new main > .image-columns-container .image-columns > div > div:nth-child(2) p img {
+  height: 60px;
+  object-fit: contain;
+  width: min-content;
+}
+
+.trusted-new main > .image-columns-container .image-columns > div > div:nth-child(2) p:first-child {
+  margin-bottom: 18px;
+}
+
+.trusted-new main > .image-columns-container .image-columns .button-container {
+  margin-top: 24px;
+}
+
+@media (max-width: 991px) {
+  .trusted-new main .default-content-wrapper,
+  .trusted-new main .trusted-teaser-impact-wrapper,
+  .trusted-new main .testimonials-wrapper,
+  .trusted-new main .timeline-carousel-wrapper,
+  .trusted-new main .trusted-main-carousel-wrapper,
+  .trusted-new main .image-columns-wrapper,
+  .trusted-new main .scuderia-ferrari-section-wrapper {
+    padding-inline: 24px;
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container .trusted-teaser-impact-wrapper,
+  .trusted-new main > .timeline-carousel-container .timeline-carousel-wrapper,
+  .trusted-new main > .trusted-main-carousel-container.blue-background .trusted-main-carousel-wrapper,
+  .trusted-new main > .image-columns-container .image-columns-wrapper {
+    padding-inline: 24px;
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container .box-wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item:nth-child(2) {
+    border-right: 0;
+  }
+
+  .trusted-new main > .light-sky-blue .columns > div {
+    grid-template-columns: unset;
+    padding: 0 24px;
+  }
+
+  .trusted-new main > .trusted-main-carousel-container .content-wrapper .slide {
+    gap: 28px;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted {
+    padding-inline: 34px;
+  }
+}
+
+@media (max-width: 767px) {
+  .trusted-new main > .dynamic-awards {
+    min-height: 220px;
+    padding-block: 38px;
+  }
+
+  .trusted-new main > .dynamic-awards picture, .trusted-new main > .dynamic-awards img {
+    max-height: 25px;
+    object-fit: contain;
+    width: auto;
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container,
+  .trusted-new main > .testimonials.box-carousel-container,
+  .trusted-new main > .section.centered,
+  .trusted-new main > .timeline-carousel-container,
+  .trusted-new main > .trusted-main-carousel-container.blue-background,
+  .trusted-new main > .light-sky-blue,
+  .trusted-new main > .image-columns-container {
+    padding-block: 56px;
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container .carousel-header .title h2,
+  .trusted-new main > .testimonials.box-carousel-container .carousel-header .title h2,
+  .trusted-new main > .section.centered h2,
+  .trusted-new main > .light-sky-blue .default-content-wrapper > h2 {
+    font-size: 27px !important;
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container .box-wrapper {
+    gap: 28px 20px;
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item {
+    padding-right: 0;
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item .title {
+    font-size: 34px;
+  }
+
+  .trusted-new main > .testimonials.box-carousel-container .trusted-carousel .carousel-item {
+    flex-basis: 100%;
+    min-height: 205px;
+    width: 100% !important;
+  }
+
+  .trusted-new main > .trusted-main-carousel-container .navigation-wrapper .nav-item {
+    font-size: 13px;
+    padding-inline: 12px;
+  }
+
+  .trusted-new main > .trusted-main-carousel-container .content-wrapper .slide {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .trusted-new main > .trusted-main-carousel-container .content-wrapper .slide > :last-child img {
+    height: 260px;
+  }
+
+  .trusted-new main > .light-sky-blue .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted {
+    min-height: 560px;
+    padding: 32px 24px;
+    margin-top: 24px;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section-wrapper {
+    padding-inline: 24px;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted > div:first-child {
+    height: unset;
+    width: unset;
+
+    > div {
+      height: unset;
+      width: unset;
+    }
+
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted img {
+    top: 0;
+    width: 100%;
+    left: 0 !important;
+    position: relative;
+    object-fit: cover;
+    border-radius: 20px;
+    z-index: 999;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted 
+    div:last-of-type:has(h2) p:has(img){
+      margin: 0;
+
+      img {
+        margin: 0;
+        object-fit: contain;
+      }
+    }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted h3 {
+    font-size: 24px;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 28px 24px;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 28px 24px;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:first-child,
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child {
+    width: 100%;
+  }
+
+  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.image-right img {
+    height: 220px;
+  }
+
+  .trusted-new main > .image-columns-container .image-columns {
+    row-gap: 54px;
+  }
+
+  .trusted-new main > .image-columns-container .image-columns > div,
+  .trusted-new main > .image-columns-container .image-columns > div:nth-child(even) {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .trusted-new main > .image-columns-container .image-columns > div > .image-columns-img-col,
+  .trusted-new main > .image-columns-container .image-columns > div:nth-child(even) > .image-columns-img-col,
+  .trusted-new main > .image-columns-container .image-columns > div > .image-columns-txt-col,
+  .trusted-new main > .image-columns-container .image-columns > div:nth-child(even) > .image-columns-txt-col {
+    order: initial;
+  }
+
+  .trusted-new main > .image-columns-container .image-columns > div > .image-columns-txt-col {
+    text-align: left;
+  }
+}

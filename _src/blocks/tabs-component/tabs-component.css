@@ -60,9 +60,14 @@
 .tabs-component-container .tabs-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
+}
+
+.tabs-component-container .tabs-container .buttons-container {
+  display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  border-bottom: 1px solid #E4F2FF;
+  gap: 10px;
+  width: 100%;
 }
 
 .tabs-component-container .card-container {
@@ -241,6 +246,76 @@
 
 .tabs-component-container .tabs-component.blue-heading .tabs-container button.selected{
   color: #000;
+}
+
+.tabs-component-container.trusted {
+  max-width: unset;
+
+  .tabs-component-wrapper {
+    max-width: unset;
+
+    .tabs-component {
+      .title-class, .subtitle-class {
+        margin: 0;
+      }
+
+      .tabs-container {
+        width: 100%;
+        border-top: #D9D9D9 1px solid;
+        border-bottom: #D9D9D9 1px solid;
+        margin-top: -1px;
+        margin-bottom: -1px;
+
+        button {
+          border: #D9D9D9 1px solid;
+          flex: 1;
+          min-width: 110px;
+
+          img {
+            width: 80%;
+            margin: auto;
+          }
+
+          &.selected {
+            background-color: #EDEDED;
+            transition: all 0.3s ease-in-out;
+
+            &::after {
+              display: none;
+            }
+          }
+        }
+
+        .buttons-container {
+          gap: 0;
+          max-width: 1232px;
+        }
+      }
+
+      .card-container {
+        width: 100%;
+        max-width: 1232px;
+        gap: 0;
+
+        p {
+          max-width: 80%;
+          font-size: 18px;
+          color: #000;
+
+          &:has(em) {
+            font-size: 25px;
+            font-weight: 400;
+            margin-bottom: 30px;
+
+            em {
+              font-style: normal;
+            }
+          }
+        }
+      }
+
+    }
+  }
 }
 
 @media (max-width: 595px) {

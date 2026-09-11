@@ -16,14 +16,14 @@ export default async function decorate(block) {
     <div class="box-wrapper">
         ${boxes.map((box) => `
             <div class="box-item">
-                ${box.children[0].children[0].innerHTML}
+                ${box.children[0]?.children[0]?.innerHTML ?? ''}
             
                 <div class="title">
-                    ${box.children[0].children[1].textContent}
+                    ${box.children[0]?.children[1]?.textContent ?? ''}
                 </div>
                 
                 <p class="subtitle">
-                    ${box.children[0].children[2].innerHTML}
+                    ${box.children[0]?.children[2]?.innerHTML ?? ''}
                  </p>
             </div>
           `).join('')}

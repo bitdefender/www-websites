@@ -22,6 +22,8 @@ export default function decorate(block, options) {
   // Check if the container exists
   if (container) {
     const divs = container.querySelectorAll('div');
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'buttons-container';
 
     // Loop through each div to create buttons
     divs.forEach((div, index) => {
@@ -44,8 +46,10 @@ export default function decorate(block, options) {
         sections[index].classList.remove('hide');
       });
 
-      div.parentNode.replaceChild(button, div);
+      buttonsContainer.appendChild(button);
     });
+
+    container.replaceChildren(buttonsContainer);
   } else {
     // eslint-disable-next-line no-console
     console.error('Container not found');

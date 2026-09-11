@@ -23,7 +23,7 @@
                     .carousel-card {
                         display: grid;
                         grid-template-rows: subgrid;
-                        grid-row: span 4;
+                        grid-row: span 5;
                         gap: 8px;
                         border-radius: 20px;
                         padding: 24px;
@@ -169,6 +169,89 @@
                         }
 
                         
+                    }
+                }
+            }
+        }
+    }
+
+    &.trusted-carousel {
+        background-color: #EFF6FF !important;
+        position: relative;
+
+        .cards-carousel-wrapper {
+            margin-top: 40px;
+
+            .cards-carousel {
+                .navigation {
+                    display: flex;
+                    position: absolute;
+                    top: 40px;
+                    left: 75%;
+                    
+
+                    .dots-container {
+                        display: none;
+
+                    }
+                }
+
+                .carousel-track {
+                    .cards-container {
+                        display: grid;
+                        grid-auto-flow: column;
+                        grid-template-columns: unset;
+                        grid-auto-columns: 80%;
+
+                        .carousel-card {
+                            text-align: left;
+                            background-color: #fff;
+                            padding: 40px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+
+                            h4 {
+                                color: #006DFF;
+                                font-size: 19px;
+                                margin: 0;
+                                font-weight: 600;
+                            }
+
+                            h3 {
+                                color: #000;
+                                font-size: 29px;
+                                font-weight: 500;
+
+                            }
+
+                            p {
+                                font-size: 17px;
+                                font-weight: 400;
+
+                                img {
+                                    height: 30px;
+                                }
+                            }
+
+                            .button-container {
+                                justify-content: start;
+                                
+                                a {
+                                    .button-text {
+                                        display: inline-block;
+                                        color: #006DFF;
+                                        font-size: 17px;
+                                        font-weight: 400;
+                                        text-align: left;
+                                    }
+
+                                    &::after {
+                                        display: none;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

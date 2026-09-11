@@ -308,6 +308,22 @@
   transform: translateY(-40%);
 }
 
+.trusted-new .box-carousel-container .title {
+    margin: 0 !important;
+}
+
+.trusted-new .box-carousel-container p {
+    color: #006DFF;
+    font-size: 16px;
+    margin: 0;
+}
+
+.trusted-new .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
+    font-size: 29px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
 @media screen and (min-width: 768px) {
     .box-carousel-container .carousel-header {
         justify-content: space-between;
