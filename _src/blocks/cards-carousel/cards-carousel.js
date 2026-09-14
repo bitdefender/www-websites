@@ -38,38 +38,67 @@ function initCarousel(block) {
   prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
   nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
-  // Touch/Swipe support
+  // Drag/Swipe support for touch and mouse
   let touchStartX = 0;
   let isDragging = false;
   let currentOffset = 0;
 
-  track.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].clientX;
+  function startDrag(clientX) {
+    touchStartX = clientX;
     isDragging = true;
 
     // stop animation so user can drag smoothly
     cardsContainer.style.setProperty('--transition', 'none');
-  }, { passive: true });
+  }
 
-  track.addEventListener('touchmove', (e) => {
+  function moveDrag(clientX) {
     if (!isDragging) return;
 
-    const moveX = e.changedTouches[0].clientX;
-    const diff = moveX - touchStartX;
-
+    const diff = clientX - touchStartX;
     currentOffset = offset + diff;
 
-    // Follow finger
+    // Follow finger/mouse
     cardsContainer.style.setProperty('--offset', `${currentOffset}px`);
-  }, { passive: true });
+  }
 
-  track.addEventListener('touchend', (e) => {
+  function endDrag(clientX) {
+    if (!isDragging) return;
+
     isDragging = false;
-    const diff = touchStartX - e.changedTouches[0].clientX;
+    const diff = touchStartX - clientX;
 
     if (diff > 0) goToSlide(currentIndex + 1);
     else goToSlide(currentIndex - 1);
+  }
+
+  track.addEventListener('touchstart', (e) => {
+    startDrag(e.changedTouches[0].clientX);
   }, { passive: true });
+
+  track.addEventListener('touchmove', (e) => {
+    moveDrag(e.changedTouches[0].clientX);
+  }, { passive: true });
+
+  track.addEventListener('touchend', (e) => {
+    endDrag(e.changedTouches[0].clientX);
+  }, { passive: true });
+
+  track.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+
+    startDrag(e.clientX);
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    moveDrag(e.clientX);
+  });
+
+  window.addEventListener('mouseup', (e) => {
+    endDrag(e.clientX);
+  });
 
   updateCarousel();
 }

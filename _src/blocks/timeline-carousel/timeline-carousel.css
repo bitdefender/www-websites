@@ -141,6 +141,12 @@
               color: #000;
             }
           }
+
+          &:has(.timeline-department) {
+            .timeline-box-content {
+              margin-top: -22px;
+            }
+          }
         }
 
         .timeline-line {

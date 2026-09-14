@@ -10,6 +10,9 @@
   background:
     linear-gradient(180deg, rgb(2 8 18 / 76%) 0%, rgb(7 25 66 / 44%) 48%, rgb(0 109 255 / 92%) 100%),
     #020812;
+
+  background: linear-gradient(89.94deg, #006DFF 29.66%, rgba(0, 109, 255, 0) 100%) !important;
+;
   color: var(--trusted-white);
   font-family: var(--trusted-font);
   overflow: hidden;
@@ -38,8 +41,7 @@
   color: var(--trusted-white);
   font-size: 52px;
   font-weight: 600;
-  line-height: 0.94;
-  letter-spacing: -0.03em;
+  line-height: 55px;
   margin: 0 0 24px;
   max-width: 470px;
 }
@@ -50,11 +52,15 @@
 }
 
 .trusted-new .trusted-hero-container .rte-wrapper > div > p {
-  color: rgb(255 255 255 / 88%);
+  color: #fff !important;
   font-size: 19px;
   line-height: 1.28;
   margin: 0 0 24px;
   max-width: 490px;
+}
+
+hr {
+  border-color: #3F91FF;
 }
 
 .trusted-new .trusted-hero-container .default-content-wrapper {
@@ -80,19 +86,25 @@
     display: block;
     min-height: 20px;
     min-width: 20px;
+    background-color: #006DFF;
   }
 }
+
 
 .trusted-new .trusted-hero-container .rte-wrapper > div > p.button-container:nth-of-type(3) a {
   background: transparent !important;
   color: #fff !important;
+
+  &:hover::after {
+    background-color: #fff;
+  }
 }
 
 .trusted-new .trusted-hero-container .rte-wrapper > div > p:nth-last-child(2) {
   color: rgb(255 255 255 / 78%);
   font-size: 17px;
   line-height: 1.25;
-  max-width: 390px;
+  max-width: 490px;
 }
 
 .trusted-new .trusted-hero-container .rte-wrapper > div > p:last-child {
@@ -125,7 +137,7 @@
   gap: 15px;
   padding: 4px 17px 4px 4px;
   right: max(50px, calc((100% - 1332px) / 2 + 50px));
-  top: auto;
+  bottom: -320px;
   width: fit-content;
   align-self: center;
 }
@@ -155,7 +167,7 @@
 
 .trusted-new .columns-container .columns.blue-banner {
   background-color: #0022FF; 
-  padding: 80px 50px;
+  padding: 50px;
 
   h4 {
     font-size: 18px;
@@ -177,6 +189,11 @@
   p {
     color: #fff;
     font-size: 17px;
+    margin: 0;
+  }
+
+  .button-container {
+    margin-top: 32px;
   }
 
   table {
@@ -228,6 +245,12 @@
 
   &.dark {
     background-color: #080081;
+
+    h2 {
+      font-size: 40px;
+      line-height: 1.2;
+      margin-top: 20px;
+    }
   }
 
   @media (min-width: 992px) {
@@ -318,6 +341,10 @@
   text-align: left;
 }
 
+.trusted-new main .section.light-sky-blue.columns-container {
+  padding-bottom: 40px;
+}
+
 .trusted-new main h2,
 .trusted-new main h3,
 .trusted-new main h4,
@@ -349,7 +376,6 @@
   display: inline-block;
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.08em;
   line-height: 1;
   padding: 5px 10px;
   text-decoration: none;
@@ -381,6 +407,15 @@
   background: #fff;
   min-height: 260px;
   padding-block: 52px;
+
+  .columns-wrapper {
+    padding: 0;
+
+    img {
+      max-height: 80px;
+      min-height: 80px;
+    }
+  }
 }
 
 .trusted-new main > .dynamic-awards .default-content-wrapper {
@@ -393,7 +428,7 @@
 }
 
 .trusted-new main > .dynamic-awards p {
-  color: #263445;
+  color: #656565;
   font-size: 20px;
   line-height: 1.35;
   margin: 0;
@@ -402,7 +437,7 @@
 
 .trusted-new main > .dynamic-awards picture,
 .trusted-new main > .dynamic-awards img {
-  max-height: 58px;
+  max-height: 80px;
   object-fit: contain;
   width: auto;
 }
@@ -428,7 +463,8 @@
 }
 
 .trusted-new main > .trusted-teaser-impact-container .carousel-header .title > p:first-child {
-  margin: 0 0 13px;
+  margin: 0;
+  font-size: 14px;
 }
 
 .trusted-new main > .trusted-teaser-impact-container .carousel-header .title h2 {
@@ -763,6 +799,7 @@
   border-radius: 20px;
   min-height: stretch;
   padding: 28px;
+  border: 1px solid #E3EEFF;
 
   h1 {
     color: #006DFF;
@@ -1095,10 +1132,12 @@
     gap: 32px;
     align-items: center;
     font-size: 17px;
+    line-height: 1.2;
   }
 
   img {
     max-height: 60px;
+    height: 30px;
     max-width: 250px;
     border-radius: 0;
   }
@@ -1131,6 +1170,13 @@
 
 .trusted-new main > .image-columns-container .image-columns p {
   margin: 0 0 18px;
+
+  &:has(strong) {
+    justify-content: space-between;
+    color: #0C3451;
+    font-size: 19px;
+    font-weight: 600;
+  }
 }
 
 .trusted-new main > .image-columns-container .image-columns > div > div:nth-child(2) p img {
@@ -1378,6 +1424,10 @@
   .trusted-new .trusted-hero-container .trusted-hero {
     height: 770px;
   }
+
+    .trusted-new .columns-container .columns.benefits-cards.scam-protection > div > div p {
+      font-size: 18px !important;
+    }
 }
 
 @media (max-width: 991px) {
