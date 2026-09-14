@@ -421,7 +421,7 @@
 }
 
 .trusted-new main > .trusted-teaser-impact-container .carousel-header .title {
-  align-items: unset;
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
   text-align: center;
