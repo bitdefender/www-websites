@@ -213,13 +213,16 @@ describe('webview-plan-selector factory', () => {
 
     await decorate(block);
 
-    const contexts = [...block.querySelectorAll('[data-store-context]')];
+    const contexts = [...block.querySelectorAll('.webview-plan-selector-v2-store-context')];
     expect(contexts).toHaveLength(4);
     expect(contexts.map((context) => ({
       plan: context.dataset.planIndex,
       toggle: context.dataset.toggleIndex,
-      id: context.dataset.storeId,
-      option: context.dataset.storeOption,
+      id: context.querySelector('bd-product')?.getAttribute('product-id'),
+      option: (() => {
+        const option = context.querySelector('bd-option');
+        return `${option?.getAttribute('devices')}-${option?.getAttribute('subscription')}`;
+      })(),
     }))).toEqual([
       {
         plan: '0', toggle: '0', id: 'total-individual', option: '5-1',
@@ -256,7 +259,7 @@ describe('webview-plan-selector factory', () => {
     const familyToggle = block.querySelector('.webview-plan-selector-v2-toggle-input[value="1"]');
     const totalPlan = block.querySelector('.webview-plan-selector-v2-plan-input[value="0"]');
     const familyTotalContext = block.querySelector(
-      '[data-store-context][data-plan-index="0"][data-toggle-index="1"]',
+      '.webview-plan-selector-v2-store-context[data-plan-index="0"][data-toggle-index="1"]',
     );
     familyTotalContext.querySelector('[data-store-price="discounted||full"]').textContent = '$99.99';
     familyTotalContext.querySelector('[data-store-buy-link]').href = 'https://checkout.example.test/family-total';
@@ -266,8 +269,8 @@ describe('webview-plan-selector factory', () => {
     expect(familyToggle.checked).toBe(true);
     expect(totalPlan.checked).toBe(true);
     expect(block.querySelector('[data-plan-index="0"]').classList.contains('is-selected')).toBe(true);
-    expect(block.querySelector('[data-store-context][data-plan-index="0"][data-toggle-index="0"]').hidden).toBe(true);
-    expect(block.querySelector('[data-store-context][data-plan-index="0"][data-toggle-index="1"]').hidden).toBe(false);
+    expect(block.querySelector('.webview-plan-selector-v2-store-context[data-plan-index="0"][data-toggle-index="0"]').hidden).toBe(true);
+    expect(block.querySelector('.webview-plan-selector-v2-store-context[data-plan-index="0"][data-toggle-index="1"]').hidden).toBe(false);
     expect(familyTotalContext.querySelector('[data-store-price="discounted||full"]').textContent).toBe('$99.99');
     expect(block.querySelector('.webview-plan-selector-upgrade').href)
       .toBe('https://checkout.example.test/family-total');
@@ -279,7 +282,7 @@ describe('webview-plan-selector factory', () => {
     await decorate(block);
 
     const activeBuyLink = block.querySelector(
-      '[data-store-context][data-plan-index="1"][data-toggle-index="0"] [data-store-buy-link]',
+      '.webview-plan-selector-v2-store-context[data-plan-index="1"][data-toggle-index="0"] [data-store-buy-link]',
     );
     activeBuyLink.href = 'https://checkout.example.test/premium';
     activeBuyLink.textContent = 'Upgrade subscription';
@@ -311,8 +314,8 @@ describe('webview-plan-selector factory', () => {
 
     expect(description).toBeTruthy();
     expect(block.querySelector('.webview-plan-selector-v2-toggle-fieldset')).toBeFalsy();
-    expect(block.querySelectorAll('[data-store-context]')).toHaveLength(2);
-    expect([...block.querySelectorAll('[data-store-context]')]
+    expect(block.querySelectorAll('.webview-plan-selector-v2-store-context')).toHaveLength(2);
+    expect([...block.querySelectorAll('.webview-plan-selector-v2-store-context')]
       .every((context) => context.dataset.toggleIndex === '0')).toBe(true);
   });
 });

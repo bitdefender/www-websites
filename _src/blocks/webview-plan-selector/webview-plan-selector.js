@@ -237,7 +237,6 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
   const rows = [...block.children];
   const section = block.closest('.section');
   const products = parseProductList(section);
-  const pricePeriod = section?.dataset?.pricePeriod || '';
 
   const headingCell = getMeaningfulCells(rows[0])[0];
   const heading = headingCell?.querySelector('h1, h2, h3');
