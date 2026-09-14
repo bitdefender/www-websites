@@ -38,9 +38,8 @@ export default async function decorate(block) {
   const base = getDsnBase();
   try {
     await Promise.all([
-      // Full src paths — 'review' is not in the exports map so short names fail on ESM.sh.
-      import(`${base}src/components/review/review-grid.js`),
-      import(`${base}src/components/review/review.js`),
+      import(`${base}review-grid`),
+      import(`${base}review`),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console
