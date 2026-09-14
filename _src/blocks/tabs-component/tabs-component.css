@@ -255,6 +255,10 @@
     max-width: unset;
 
     .tabs-component {
+      background-image: radial-gradient(circle, #FAFAFA 2px, transparent 1.5px);
+      background-size: 12px 12px;
+      background-repeat: repeat;
+
       .title-class, .subtitle-class {
         margin: 0;
       }
@@ -265,6 +269,8 @@
         border-bottom: #D9D9D9 1px solid;
         margin-top: -1px;
         margin-bottom: -1px;
+        background-color: #fff;
+        background: #fff;
 
         button {
           border: #D9D9D9 1px solid;

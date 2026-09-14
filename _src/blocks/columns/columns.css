@@ -1587,6 +1587,7 @@ main .creators-banner .signature {
       >div {
         position: relative;
         padding: 24px;
+        padding-right: 44px;
         border: 2px solid #006DFF;
         border-radius: 20px;
 

@@ -65,12 +65,6 @@
     display: none;
 }
 
-.trusted-new .trusted-teaser-impact .box-wrapper .box-item .title {
-    font-size: 64px !important;
-    font-weight: 400 !important;
-    color: #2B2B2B !important;
-}
-
 .trusted-teaser-impact-container.light-gray {
     background-color: #FAFAFA;
 }
@@ -100,6 +94,12 @@
 
     .trusted-teaser-impact .box-item .subtitle {
         margin-top: 12px;
+    }
+
+    .trusted-new .trusted-teaser-impact .box-wrapper .box-item .title {
+        font-size: 64px !important;
+        font-weight: 400 !important;
+        color: #2B2B2B !important;
     }
 
 }

@@ -254,6 +254,18 @@
                         }
                     }
                 }
+
+                @media (max-width: 767px) {
+                    .navigation {
+                        display: none;
+                    }
+
+                    .carousel-track {
+                        .cards-container {
+                            grid-auto-columns: 100%;
+                        }
+                    }
+                }
             }
         }
     }
