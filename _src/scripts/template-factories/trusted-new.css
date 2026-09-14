@@ -806,6 +806,12 @@
   overflow: hidden;
   padding: 52px 48% 52px 52px;
   position: relative;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 109, 255, 1) 0%,
+    rgba(0, 109, 255, 1) 78.29%,
+    rgba(0, 109, 255, 0) 100%
+  );
 }
 
 .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted::before {
