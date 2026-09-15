@@ -218,7 +218,7 @@ export default function decorate(block) {
     // eslint-disable-next-line max-len
     linksOpenInNewTab, type, bckImage, firstTab, maxElementsInColumn, products, aliases,
     defaultLink, iosLink, androidLink, windowsLink, macosLink, storeId, storeIdIos,
-    storeIdAndroid, seeMoreBtn, signature,
+    storeIdAndroid, seeMoreBtn, signature, trialDuration,
   } = parentSection.dataset;
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -263,6 +263,7 @@ export default function decorate(block) {
 
   // setup buylink, this can be used later as a starting point for prices.
   const productsAsList = products?.split(',');
+  const trialDurations = trialDuration?.split(',')?.map((t) => t.trim()) || [];
   if (productsAsList) {
     // eslint-disable-next-line no-unused-vars
     [...block.children].forEach((row, _) => {
@@ -272,10 +273,9 @@ export default function decorate(block) {
           productId: prodName,
           devices: prodUsers,
           subscription: prodYears,
-          ignoreEventsParent: true,
           storeEvent: '',
         });
-        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', '');
+        col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-buy-link', trialDurations[colNumber] || '');
         col.querySelector('a[href*="#buylink"]')?.setAttribute('data-store-render', '');
       });
     });
@@ -413,6 +413,7 @@ export default function decorate(block) {
 
   block.querySelectorAll('h3')?.forEach((element) => {
     if (element.textContent.includes('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}')) {
+      element.textContent = element.textContent.replace('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}', '{{=it.state.discount.percentage.max}}');
       element.classList.add('await-loader');
     }
   });
