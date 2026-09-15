@@ -155,7 +155,7 @@ function renderPrice(text = '', monthly = '', monthTranslation = 'mo') {
 function renderHighlightSavings(text = 'Save', percent = '') {
   const highlighSaving = document.createElement('span');
   highlighSaving.textContent = `${text} ${percent?.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
-    }`;
+  }`;
 
   const root = createTag(
     'div',
@@ -261,7 +261,7 @@ function renderFeatured(text) {
 function renderFeaturedSavings(text = 'Save', percent = '') {
   const featuredSaving = document.createElement('span');
   featuredSaving.textContent = `${text} ${percent.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
-    }`;
+  }`;
 
   const root = createTag(
     'div',
@@ -345,7 +345,7 @@ export default function decorate(block) {
         productCode: allImportantData[1],
         defaultVariant: `${Number(allImportantData.slice(-1)[0])
           ? allImportantData.slice(-1)[0] : allImportantData[2].match(/[0-9-]+/g)[0]
-          }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
+        }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
       };
     }
   });
