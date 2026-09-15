@@ -4,7 +4,6 @@ import {
   createBdContext,
   createBdProduct,
   createBdOption,
-  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 import store from '../../scripts/store.js';
 
@@ -775,12 +774,24 @@ async function setupAddOnCheckbox(
   const addOnProductElement = boxElement.querySelector('.add-on-product');
   if (!addOnProductElement) return;
 
-  wrapChildrenWithStoreContext(addOnProductElement, {
-    productId: addOnProdName,
+  const addOnContext = createBdContext();
+  const addOnProduct = createBdProduct(addOnProdName);
+  const addOnOption = createBdOption({
     devices: addOnProdUsers,
     subscription: addOnProdYears,
     storeEvent: 'all',
   });
+
+  const addOnPlanSwitcher = addOnProductElement.querySelector(':scope > .plan-switcher.addon');
+  while (addOnProductElement.firstChild) {
+    addOnOption.append(addOnProductElement.firstChild);
+  }
+  if (addOnPlanSwitcher) {
+    addOnProduct.append(addOnPlanSwitcher);
+  }
+  addOnProduct.append(addOnOption);
+  addOnContext.append(addOnProduct);
+  addOnProductElement.append(addOnContext);
 
   try {
     const productOptionStr = `${prodUsers}-${prodYears}`;
@@ -932,7 +943,7 @@ export default async function decorate(block) {
   const billedTexts = [];
 
   // Determine store event type
-  const storeEvent = checkIfNotProductPage() ? 'product-loaded' : 'main-product-loaded';
+  const storeEvent = checkIfNotProductPage() ? 'all' : 'info';
 
   // Set Trial Durations
   const trialDurations = trialDuration?.split(',')?.map((trial) => trial.trim()) || [];

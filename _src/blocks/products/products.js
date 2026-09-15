@@ -359,9 +359,9 @@ export default function decorate(block) {
 
   [...block.children].forEach((row, idxParent) => {
     // set the store event on the component
-    let storeEvent = 'main-product-loaded';
+    let storeEvent = 'info';
     if (checkIfNotProductPage()) {
-      storeEvent = 'product-loaded';
+      storeEvent = 'all';
     }
 
     row.classList.add('product-card');
