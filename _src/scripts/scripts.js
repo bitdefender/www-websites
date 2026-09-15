@@ -769,7 +769,6 @@ async function loadPage() {
 
   registerContextNodes();
 
-  await resolveNonProductsDataLayer();
   await loadEager(document);
 
   const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']

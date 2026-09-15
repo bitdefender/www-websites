@@ -82,7 +82,7 @@
   margin-bottom: 20px;
 }
 
-.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box hr:last-of-type{
+.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box bd-option hr:last-of-type{
   display: none;
 }
 
