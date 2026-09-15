@@ -542,7 +542,7 @@ function createV2StoreContext({
   const bdOption = createBdOption({
     devices: product.users,
     subscription: product.years,
-    storeEvent: 'product-loaded',
+    storeEvent: 'all',
   });
   bdOption.append(originalPrice, promotionalPrice, period, discountLabelText, buyLink);
   bdProduct.append(bdOption);
