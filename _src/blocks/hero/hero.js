@@ -78,10 +78,11 @@ createNanoBlock('discount', (code, label = '{label}') => {
   const root = createTag('div', {
     'data-store-render': '',
     'data-store-hide': '!it.state.discount.percentage.max',
+    'data-store-hide-type': 'visibility',
     class: 'discount-bubble await-loader',
   });
 
-  const percentage = createTag('div', { class: 'discount-bubble-0' });
+  const percentage = createTag('span', { class: 'discount-bubble-0' });
   percentage.textContent = '{{=it.state.discount.percentage.max}}';
 
   const labelEl = createTag('span', { class: 'discount-bubble-1' });
