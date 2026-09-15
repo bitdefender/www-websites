@@ -2,7 +2,7 @@
   padding-top: 0;
   position: sticky;
   top: 0;
-  z-index: 101;
+  z-index: 999;
   overflow: visible;
   padding-bottom: 0;
 }
@@ -28,6 +28,10 @@
 @media (min-width: 900px) {
   .sticky-navigation bd-anchor-nav {
     --layout-compare-grid-max: 1250px;
+  }
+
+  .trusted bd-anchor-nav::part(inner) {
+    gap: 0 !important;
   }
 }
 

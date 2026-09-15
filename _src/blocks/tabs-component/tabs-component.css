@@ -308,6 +308,7 @@
           max-width: 80%;
           font-size: 18px;
           color: #000;
+          margin-bottom: 20px;
 
           &:has(em) {
             font-size: 25px;

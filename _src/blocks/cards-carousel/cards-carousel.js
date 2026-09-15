@@ -66,9 +66,15 @@ function initCarousel(block) {
 
     isDragging = false;
     const diff = touchStartX - clientX;
+    const DRAG_THRESHOLD = 40; // minimum pixels to drag before changing slide
 
-    if (diff > 0) goToSlide(currentIndex + 1);
-    else goToSlide(currentIndex - 1);
+    if (Math.abs(diff) > DRAG_THRESHOLD) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    } else {
+      // Not enough drag, snap back to current slide
+      goToSlide(currentIndex);
+    }
   }
 
   track.addEventListener('touchstart', (e) => {

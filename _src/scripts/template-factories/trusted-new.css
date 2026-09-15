@@ -12,10 +12,14 @@
     #020812;
 
   background: linear-gradient(89.94deg, #006DFF 29.66%, rgba(0, 109, 255, 0) 100%) !important;
-;
   color: var(--trusted-white);
   font-family: var(--trusted-font);
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    background: linear-gradient(89.94deg, #006DFF 48.66%, rgba(0, 109, 255, 0) 100%) !important;
+  }
+   
 }
 
 .trusted-new .trusted-hero-container:has(.video-background) {
@@ -168,6 +172,7 @@ hr {
 .trusted-new .columns-container .columns.blue-banner {
   background-color: #0022FF; 
   padding: 50px;
+  border-radius: 20px;
 
   h4 {
     font-size: 18px;
@@ -274,8 +279,9 @@ hr {
     border-radius: 20px;
 
     img {
-      max-height: 80px;
-      max-width: 160px;
+      max-width: 100%;
+      object-fit: cover;
+      margin-top: 32px;
     }
 
     @media (min-width: 768px) {
@@ -367,6 +373,7 @@ hr {
 .trusted-new main p {
   color: var(--trusted-muted);
   font-size: 13px;
+  margin-bottom: 0;
 }
 
 .trusted-new main .tag-light-blue {
@@ -414,6 +421,11 @@ hr {
     img {
       max-height: 80px;
       min-height: 80px;
+
+      @media (max-width: 768px) {
+        max-height: 50px;
+        min-height: 50px;
+      }
     }
   }
 }
@@ -486,6 +498,7 @@ hr {
   font-size: 35px !important;
   line-height: 1.15;
   margin: 0;
+  text-align: left;
 }
 
 .trusted-new main > .trusted-teaser-impact-container .box-wrapper {
@@ -628,7 +641,7 @@ hr {
 }
 
 .trusted-new main > .section.centered .default-content-wrapper p:first-child {
-  margin: 0 0 13px;
+  margin: 0;
 }
 
 .trusted-new main > .section.centered h2 {
@@ -770,14 +783,12 @@ hr {
 /* Partnerships metrics. */
 .trusted-new main > .light-sky-blue {
   background: var(--trusted-sky);
-  padding-block: 78px 84px;
 }
 
 .trusted-new main > .light-sky-blue .default-content-wrapper > h2 {
   font-size: 35px;
   font-weight: 600;
   line-height: 1.1;
-  margin: 0 0 35px;
 }
 
 .trusted-new main > .light-sky-blue .columns.statistics {
@@ -1027,12 +1038,25 @@ hr {
 }
 
 
-.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:first-child img {
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:first-child {
+  position: relative;
+  img {
   border-radius: 8px;
   display: block;
   object-fit: cover;
   position: static;
   width: 100%;
+  position: relative;
+}
+
+  p:not(:has(img)) {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-size: 13px;
+    color: #fff;
+
+  }
 }
 
 
@@ -1051,6 +1075,7 @@ hr {
   max-width: 170px;
   position: static;
   width: 170px;
+  object-fit: contain;
 }
 
 .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child p {
@@ -1069,7 +1094,6 @@ hr {
 /* Mission rows. */
 .trusted-new main > .image-columns-container {
   background: #fff;
-  padding-block: 84px 98px;
 }
 
 .trusted-new main > .image-columns-container .image-columns-wrapper {
@@ -1221,7 +1245,12 @@ hr {
 
   .trusted-new main > .light-sky-blue .columns > div {
     grid-template-columns: unset;
-    padding: 0 24px;
+  }
+
+
+  .trusted-new main > .light-sky-blue .columns-wrapper {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   .trusted-new main > .trusted-main-carousel-container .content-wrapper .slide {
@@ -1265,7 +1294,7 @@ hr {
   .trusted-new main > .trusted-main-carousel-container.blue-background,
   .trusted-new main > .light-sky-blue,
   .trusted-new main > .image-columns-container {
-    padding-block: 56px;
+    padding-block: 0px;
   }
 
   .trusted-new main > .trusted-teaser-impact-container .carousel-header .title h2,
@@ -1411,8 +1440,10 @@ hr {
 
   .trusted-new .trusted-hero.video-background .rte-wrapper > div > p:has(img) {
     position: relative;
-    left: -50px;
-    margin: 0;
+    margin: 20px 0;
+    img {
+      max-height: 55px;
+    }
   }
 
   .trusted-new .trusted-hero-container {

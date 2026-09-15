@@ -344,7 +344,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
       padding: 24px !important;
 
       h3 {
-        z-index: 999;
+        z-index: 998;
         position: relative;
         color: #fff;
         font-size: 30px;
@@ -352,7 +352,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
       }
 
       h4 {
-        z-index: 999;
+        z-index: 998;
         position: relative;
         color: #fff;
         font-size: 27px;
@@ -361,7 +361,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
       p {
         color: #fff;
-        z-index: 999;
+        z-index: 998;
         position: relative;
         display: block !important;
 
@@ -401,7 +401,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
           height: 100%;
           background:  linear-gradient(360deg, #006DFF 24.98%, #006DFF 49.17%, rgba(0, 109, 255, 0.695975) 58.42%, rgba(0, 109, 255, 0) 84.63%);
           opacity: 1;
-          z-index: 998;
+          z-index: 997;
           border-radius: 0 0 20px 20px;
         }
 
@@ -425,7 +425,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
         background:  rgba(0, 109, 255, 0.75) 0 0 no-repeat padding-box;
         backdrop-filter: blur(20px);
         border-radius: 20px  0 0  20px;
-        z-index: 998;
+        z-index: 997;
         position: relative;
         
         &::after {
@@ -465,7 +465,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
           height: 100%;
           width: 65%;
           right: 0;
-          z-index: 997;
+          z-index: 996;
         }
 
         img {
