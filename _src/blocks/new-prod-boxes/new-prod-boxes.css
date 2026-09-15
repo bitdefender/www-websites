@@ -82,7 +82,7 @@
   margin-bottom: 20px;
 }
 
-.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box hr:last-of-type{
+.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box bd-option hr:last-of-type{
   display: none;
 }
 
@@ -1100,5 +1100,20 @@
   .new-prod-boxes-container .new-prod-boxes .prod_box {
     width: 100%;
     min-width: 100%;
+  }
+}
+
+/* Pricing elements css */
+.new-prod-boxes {
+  bd-context, bd-product, bd-option {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 50;
+  }
+
+  .checkmark-list {
+    bd-context, bd-product, bd-option {
+      display: block;
+    }
   }
 }

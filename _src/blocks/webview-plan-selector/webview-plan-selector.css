@@ -191,6 +191,13 @@ main .section.webview-plan-selector-container {
     cursor: pointer;
     text-align: left;
     appearance: none;
+
+    bd-option {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 17px;
+    }
 }
 
 .webview-plan-selector .discounted-yearly-price.await-loader {
@@ -813,6 +820,16 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context {
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context[hidden] {
     display: none;
+}
+
+/* Accommodate bd-context > bd-product > bd-option wrapping from local store library */
+main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context bd-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    width: 100%;
+    text-align: end;
 }
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-price-original {

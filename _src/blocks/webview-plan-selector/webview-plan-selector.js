@@ -1,6 +1,6 @@
 import { getLanguageCountryFromPath } from '../../scripts/scripts.js';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { adjustFontSizeUntilTargetHeight } from '../../scripts/utils/utils.js';
+import { createBdProduct, createBdOption, adjustFontSizeUntilTargetHeight } from '../../scripts/utils/utils.js';
 
 const PRIVACY_POLICY_FALLBACK = 'https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html';
 
@@ -18,19 +18,19 @@ function replacePricePlaceholders(html) {
   return html
     .replace(
       /&lt;discounted-yearly-price&gt;|<discounted-yearly-price>/gi,
-      '<span class="discounted-yearly-price await-loader" data-store-price="discounted||full"></span>',
+      '<span class="discounted-yearly-price await-loader" data-store-render data-store-price="discounted||full"></span>',
     )
     .replace(
       /&lt;full-yearly-price&gt;|<full-yearly-price>/gi,
-      '<span class="full-yearly-price await-loader" data-store-price="full"></span>',
+      '<span class="full-yearly-price await-loader" data-store-render data-store-price="full"></span>',
     )
     .replace(
       /&lt;discounted-monthly-price&gt;|<discounted-monthly-price>/gi,
-      '<span class="discounted-monthly-price await-loader" data-store-price="discounted-monthly||full-monthly"></span>',
+      '<span class="discounted-monthly-price await-loader" data-store-render data-store-price="discounted-monthly||full-monthly"></span>',
     )
     .replace(
       /&lt;full-monthly-price&gt;|<full-monthly-price>/gi,
-      '<span class="full-monthly-price await-loader" data-store-price="full-monthly"></span>',
+      '<span class="full-monthly-price await-loader" data-store-render data-store-price="full-monthly"></span>',
     );
 }
 
@@ -237,7 +237,6 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
   const rows = [...block.children];
   const section = block.closest('.section');
   const products = parseProductList(section);
-  const pricePeriod = section?.dataset?.pricePeriod || '';
 
   const headingCell = getMeaningfulCells(rows[0])[0];
   const heading = headingCell?.querySelector('h1, h2, h3');
@@ -260,7 +259,6 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
     .filter((cell) => cell.querySelector('h2, h3'))
     .map((cell, index) => {
       const product = products[index] || {};
-      const productOption = product.users && product.years ? `${product.users}-${product.years}` : '';
       const title = cell.querySelector('h2, h3');
       const paragraphs = [...cell.querySelectorAll('p')];
       const description = paragraphs[0]?.textContent.trim() || '';
@@ -270,7 +268,8 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
       return {
         index,
         productId: product.id || '',
-        productOption,
+        devices: product.users,
+        subscription: product.years,
         name: normalizePlanName(title?.textContent || ''),
         description,
         billedHtml: replacePricePlaceholders(billedHtml),
@@ -294,6 +293,7 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
 
   const discountLabel = section?.dataset?.discount || '';
   const offText = section?.dataset?.saveText || '';
+  const trialDuration = section?.dataset?.trialDuration || '';
 
   block.innerHTML = `
     <div class="webview-plan-selector-layout">
@@ -315,28 +315,29 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
               aria-checked="false"
               tabindex="-1"
               data-plan-index="${index}"
-              data-store-context
-              data-store-id="${plan.productId}"
-              data-store-option="${plan.productOption}"
-              data-store-department="consumer"
-              data-store-event="product-loaded"
             >
-              <span class="webview-plan-selector-radio" aria-hidden="true"></span>
-              <div class="webview-plan-selector-plan-content">
-                <div class="webview-plan-selector-plan-copy">
-                  <h2>${plan.name}</h2>
-                  <p>${plan.description}</p>
-                  <p class="webview-plan-selector-billed">${plan.billedHtml}</p>
-                </div>
-                <div class="webview-plan-selector-plan-price">
-                  <strong><span class="billed-price await-loader" data-store-price="discounted-monthly||full-monthly"></span></strong>
-                  <span>${pricePeriod}</span>
-                  <em><span class="discount-percentage await-loader" data-store-discount="percentage">${discountLabel}</span> ${offText}</em>
-                </div>
-              </div>
-                <a class="button webview-plan-selector-plan-buy-link" href="${ctaHref}" data-store-buy-link aria-hidden="true" tabindex="-1">${ctaText}</a>
-            </div>
-          `).join('')}
+              <bd-context ignore-events-parent>
+                <bd-product product-id="${plan.productId}">
+                  <bd-option devices="${plan.devices}" subscription="${plan.subscription}" data-layer-event="all">
+                    <span class="webview-plan-selector-radio" aria-hidden="true"></span>
+                    <div class="webview-plan-selector-plan-content">
+                      <div class="webview-plan-selector-plan-copy">
+                        <h2>${plan.name}</h2>
+                        <p>${plan.description}</p>
+                        <p class="webview-plan-selector-billed">${plan.billedHtml}</p>
+                      </div>
+                      <div class="webview-plan-selector-plan-price">
+                        <strong><span class="billed-price await-loader" data-store-render data-store-price="discounted-monthly||full-monthly"></span></strong>
+                        <span>/ month</span>
+                        <em><span class="discount-percentage await-loader" data-store-render data-store-discount="percentage">${discountLabel}</span> ${offText}</em>
+                      </div>
+                    </div>
+                    <a class="button webview-plan-selector-plan-buy-link" href="${ctaHref}" data-store-render data-store-buy-link="${trialDuration}" aria-hidden="true" tabindex="-1">${ctaText}</a>
+                </bd-option>
+              </bd-product>
+            </bd-context>
+          </div>
+        `).join('')}
         </div>
       </div>
       <div class="webview-plan-selector-footer">
@@ -502,24 +503,18 @@ function createV2StoreContext({
   context.className = 'webview-plan-selector-v2-store-context';
   context.dataset.planIndex = planIndex;
   context.dataset.toggleIndex = toggleIndex;
-  context.setAttribute('data-store-context', '');
-  context.setAttribute('data-store-id', product?.id || '');
-  context.setAttribute(
-    'data-store-option',
-    product?.users && product?.years ? `${product.users}-${product.years}` : '',
-  );
-  context.setAttribute('data-store-department', 'consumer');
-  context.setAttribute('data-store-event', 'product-loaded');
   context.hidden = toggleIndex !== 0;
 
   const originalPrice = document.createElement('span');
   originalPrice.className = 'webview-plan-selector-v2-price-original await-loader';
   originalPrice.setAttribute('data-store-price', 'full');
-  originalPrice.setAttribute('data-store-hide', 'no-price=discounted');
+  originalPrice.setAttribute('data-store-render', '');
+  originalPrice.setAttribute('data-store-hide', '!it.option.price.discounted');
 
   const promotionalPrice = document.createElement('strong');
   promotionalPrice.className = 'webview-plan-selector-v2-price-promotional await-loader';
   promotionalPrice.setAttribute('data-store-price', 'discounted||full');
+  promotionalPrice.setAttribute('data-store-render', '');
 
   const period = document.createElement('span');
   period.className = 'webview-plan-selector-v2-price-period';
@@ -530,7 +525,8 @@ function createV2StoreContext({
   discountLabelText.textContent = section?.dataset?.discountLabelText || '';
   const discount = document.createElement('span');
   discount.setAttribute('data-store-discount', 'percentage');
-  discount.setAttribute('data-store-hide', 'no-price=discounted');
+  discount.setAttribute('data-store-render', '');
+  discount.setAttribute('data-store-hide', '!it.option.price.discounted');
   discountLabelText.append(discount);
 
   const buyLink = document.createElement('a');
@@ -538,10 +534,19 @@ function createV2StoreContext({
   buyLink.href = ctaHref;
   buyLink.textContent = ctaText;
   buyLink.setAttribute('data-store-buy-link', '');
+  buyLink.setAttribute('data-store-render', '');
   buyLink.setAttribute('aria-hidden', 'true');
   buyLink.setAttribute('tabindex', '-1');
 
-  context.append(originalPrice, promotionalPrice, period, discountLabelText, buyLink);
+  const bdProduct = createBdProduct(product?.id || '');
+  const bdOption = createBdOption({
+    devices: product.users,
+    subscription: product.years,
+    storeEvent: 'all',
+  });
+  bdOption.append(originalPrice, promotionalPrice, period, discountLabelText, buyLink);
+  bdProduct.append(bdOption);
+  context.append(bdProduct);
   return context;
 }
 

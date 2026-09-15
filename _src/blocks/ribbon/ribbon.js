@@ -11,5 +11,5 @@ export default function decorate(block) {
       backgroundEl.remove();
     }
   }
-  block.innerHTML = block.innerHTML.replace(/0\s*%/g, '<span data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>');
+  block.innerHTML = block.innerHTML.replace(/0\s*%/g, '<span data-store-text-variable>{{=it.state.discount.percentage.max}}</span>');
 }
