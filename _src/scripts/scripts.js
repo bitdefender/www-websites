@@ -859,6 +859,9 @@ async function loadPage() {
     AdobeDataLayerService.push(new PageLoadedEvent());
   }
 
+  import('./webmcp.js')
+    .then(({ registerBitdefenderWebMcp }) => registerBitdefenderWebMcp())
+    .catch(() => undefined);
   loadDelayed();
 }
 
