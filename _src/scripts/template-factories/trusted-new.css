@@ -124,6 +124,10 @@ hr {
   .button-text {
     transition: none;
     transform: none;
+    
+  }
+
+  &:hover .button-text {
     text-decoration: underline;
   }
 }
