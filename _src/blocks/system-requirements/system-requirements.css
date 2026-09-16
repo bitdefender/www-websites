@@ -243,7 +243,8 @@
         padding-right: 50px;
     }
 
-    .default-content-wrapper {
+    .default-content-wrapper,
+    .default-content-wrapper:not(bd-context) {
         max-width: var(--section-desktop-max-width);
         padding: 23px var(--section-desktop-padding);
         border-radius: 0;
@@ -252,9 +253,9 @@
 
 @media (min-width: 1200px) {
     .system-requirements-container.we-container {
-      max-width: 1332px;
-      padding-left: 20px;
-      padding-right: 20px;
+        max-width: 1332px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 }
 
