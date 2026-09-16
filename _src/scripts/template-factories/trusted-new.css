@@ -1287,7 +1287,7 @@ hr {
     width: auto;
   }
 
-  .trusted-new main > .trusted-teaser-impact-container,
+  
   .trusted-new main > .testimonials.box-carousel-container,
   .trusted-new main > .section.centered,
   .trusted-new main > .timeline-carousel-container,
@@ -1295,6 +1295,10 @@ hr {
   .trusted-new main > .light-sky-blue,
   .trusted-new main > .image-columns-container {
     padding-block: 0px;
+  }
+
+  .trusted-new main > .trusted-teaser-impact-container .trusted-teaser-impact-wrapper {
+    padding-inline: 0;
   }
 
   .trusted-new main > .trusted-teaser-impact-container .carousel-header .title h2,
