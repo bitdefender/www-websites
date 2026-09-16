@@ -120,6 +120,12 @@ hr {
   padding: 0;
   font-weight: 600 !important;
   margin-bottom: 22px;
+
+  .button-text {
+    transition: none;
+    transform: none;
+    text-decoration: underline;
+  }
 }
 
 .trusted-new .trusted-hero-container .trusted-hero.video-background .play-btn {
