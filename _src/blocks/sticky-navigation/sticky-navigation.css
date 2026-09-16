@@ -25,13 +25,13 @@
   --layout-compare-grid-max: 100%;
 }
 
+.trusted bd-anchor-nav::part(inner) {
+  gap: 0 !important;
+}
+
 @media (min-width: 900px) {
   .sticky-navigation bd-anchor-nav {
     --layout-compare-grid-max: 1250px;
-  }
-
-  .trusted bd-anchor-nav::part(inner) {
-    gap: 0 !important;
-  }
+  } 
 }
 
