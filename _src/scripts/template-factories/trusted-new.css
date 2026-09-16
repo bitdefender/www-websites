@@ -136,7 +136,7 @@ hr {
   gap: 15px;
   padding: 4px 17px 4px 4px;
   right: max(50px, calc((100% - 1332px) / 2 + 50px));
-  top: 75%;
+  top: 85%;
   width: fit-content;
   align-self: center;
   margin-top: 20px;
@@ -1467,18 +1467,12 @@ hr {
   }
 
   .trusted-new .trusted-hero-container {
-    min-height: 770px;
     padding: 0;
   }
 
-  .trusted-new .trusted-hero-container .trusted-hero-wrapper,
-  .trusted-new .trusted-hero-container .trusted-hero {
-    height: 770px;
+  .trusted-new .columns-container .columns.benefits-cards.scam-protection > div > div p {
+    font-size: 18px !important;
   }
-
-    .trusted-new .columns-container .columns.benefits-cards.scam-protection > div > div p {
-      font-size: 18px !important;
-    }
 }
 
 @media (max-width: 991px) {

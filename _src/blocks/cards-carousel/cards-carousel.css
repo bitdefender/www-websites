@@ -207,10 +207,7 @@
                             text-align: left;
                             background-color: #fff;
                             padding: 40px;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-between;
-
+                            
                             h4 {
                                 color: #006DFF;
                                 font-size: 19px;
@@ -244,10 +241,16 @@
                                         font-size: 17px;
                                         font-weight: 400;
                                         text-align: left;
+                                        transition: none;
+                                        transform: none;
                                     }
 
                                     &::after {
                                         display: none;
+                                    }
+
+                                    &:hover .button-text {
+                                        text-decoration: underline;
                                     }
                                 }
                             }
