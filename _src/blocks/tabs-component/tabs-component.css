@@ -258,6 +258,7 @@
       background-image: radial-gradient(circle, #FAFAFA 2px, transparent 1.5px);
       background-size: 12px 12px;
       background-repeat: repeat;
+      margin-top: 0;
       
 
       .title-class, .subtitle-class {

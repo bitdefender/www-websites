@@ -366,9 +366,17 @@ main .image-columns.quotes > div > .image-columns-img-col img {
         display: block !important;
 
         &:has(img) {
+          margin-bottom: 0;
           img {
             height: 120px;
             object-fit: contain;
+
+
+            @media (min-width: 992px) {
+              min-width: 360px;
+              min-height: 120px;
+              
+            }
           }
         }
       }

@@ -7,17 +7,13 @@
 }
 
 .trusted-new .trusted-hero-container {
-  background:
-    linear-gradient(180deg, rgb(2 8 18 / 76%) 0%, rgb(7 25 66 / 44%) 48%, rgb(0 109 255 / 92%) 100%),
-    #020812;
-
-  background: linear-gradient(89.94deg, #006DFF 29.66%, rgba(0, 109, 255, 0) 100%) !important;
+  background: linear-gradient(90deg, #006DFF 29.66%, rgba(0, 109, 255, 0) 100%) !important;
   color: var(--trusted-white);
   font-family: var(--trusted-font);
   overflow: hidden;
 
   @media (max-width: 768px) {
-    background: linear-gradient(89.94deg, #006DFF 48.66%, rgba(0, 109, 255, 0) 100%) !important;
+    background: linear-gradient(360deg, #006DFF 48.66%, rgba(0, 109, 255, 0) 100%) !important;
   }
    
 }
@@ -51,7 +47,6 @@
 }
 
 .trusted-new .trusted-hero-container .rte-wrapper {
-  padding-top: 90px;
   padding-bottom: 40px !important;
 }
 
@@ -141,9 +136,10 @@ hr {
   gap: 15px;
   padding: 4px 17px 4px 4px;
   right: max(50px, calc((100% - 1332px) / 2 + 50px));
-  bottom: -320px;
+  top: 75%;
   width: fit-content;
   align-self: center;
+  margin-top: 20px;
 }
 
 .trusted-new .trusted-hero-container .trusted-hero.video-background .play-btn svg {
@@ -170,8 +166,8 @@ hr {
 }
 
 .trusted-new .columns-container .columns.blue-banner {
-  background-color: #0022FF; 
-  padding: 50px;
+  background-color: #02F; 
+  padding: 48px 24px;
   border-radius: 20px;
 
   h4 {
@@ -259,6 +255,8 @@ hr {
   }
 
   @media (min-width: 992px) {
+    padding: 50px;
+
     h2 {
       font-size: 52px !important;
     }
@@ -304,6 +302,23 @@ hr {
     @media (min-width: 1200px) {
       >div {
         max-width: 50%;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    >div {
+      h2 {
+        font-size: 52px !important;
+        line-height: 1.21;
+      }
+
+      h3 {
+        font-size: 31px;
+      }
+
+      h4 {
+        font-size: 18px;
       }
     }
   }
@@ -387,6 +402,7 @@ hr {
   padding: 5px 10px;
   text-decoration: none;
   text-transform: uppercase;
+  margin-bottom: 5px;
 }
 
 .trusted-new main .button-container a.button {
@@ -1108,7 +1124,7 @@ hr {
 }
 
 .trusted-new main > .image-columns-container > .default-content-wrapper p {
-  margin: 0 0 13px;
+  margin: 0;
 }
 
 .trusted-new main > .image-columns-container > .default-content-wrapper h2 {
@@ -1467,8 +1483,8 @@ hr {
 
 @media (max-width: 991px) {
   .trusted-new .trusted-hero-container h1 {
-    font-size: 34px;
-    line-height: 1;
+    font-size: 45px;
+    line-height: 1.11;
   }
 
   .trusted-new .trusted-hero-container .rte-wrapper > div > p {
