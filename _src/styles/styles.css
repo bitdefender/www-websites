@@ -790,11 +790,13 @@ main .grey-background {
     padding-top: 1px; /* hack to handle margin of child paragraphs */
   }
 
-  main .section {
+  main .section,
+  main .section:not(bd-context) {
     padding: var(--section-desktop-padding-vertical) 0;
   }
 
-  main .section.no-vertical-padding {
+  main .section.no-vertical-padding,
+  main .section.no-vertical-padding:not(bd-context) {
     padding-top: 0;
     padding-bottom: 0;
   }
