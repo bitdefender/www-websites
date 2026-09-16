@@ -1255,7 +1255,14 @@ export async function submitWithTurnstile({
   }
 }
 
-export const createBdContext = () => document.createElement('bd-context');
+export const createBdContext = (topologyBoundary) => {
+  const bdContext = document.createElement('bd-context');
+  if (topologyBoundary) {
+    bdContext.setAttribute('topology-boundary', '');
+  }
+
+  return bdContext;
+};
 
 export const createBdProduct = (productId) => {
   const bdProductElement = document.createElement('bd-product');
@@ -1298,12 +1305,13 @@ export const wrapChildrenWithStoreContext = (element, {
   devices,
   subscription,
   storeEvent = '',
+  topologyBoundary = false,
 }) => {
   if (!element || element.firstElementChild?.matches('bd-context')) {
     return;
   }
 
-  const bdContext = createBdContext();
+  const bdContext = createBdContext(topologyBoundary);
   const bdProduct = createBdProduct(productId);
   const bdOption = createBdOption({ devices, subscription, storeEvent });
 
