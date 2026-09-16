@@ -192,6 +192,15 @@ export default async function decorate(block) {
 
   const canvasStore = new Store({
     campaign: async () => configMbox?.promotion,
+    transformers: {
+      buyLink: async (param) => {
+        const { buyLink, product } = param;
+        const buyLinkURL = new URL(buyLink);
+        buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
+
+        return buyLinkURL.href;
+      },
+    },
     locale: configMbox?.useGeoIpPricing
       ? (await user.locale)?.toLowerCase()
       : page.locale.toLowerCase(),
