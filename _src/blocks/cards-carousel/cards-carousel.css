@@ -181,6 +181,7 @@
 
         .cards-carousel-wrapper {
             margin-top: 40px;
+            max-width: 1232px;
 
             .cards-carousel {
                 .navigation {
