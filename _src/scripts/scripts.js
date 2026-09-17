@@ -8,7 +8,6 @@ import {
   ProductLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
-
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -800,13 +799,12 @@ async function loadPage() {
       registerRenderNodes,
     // eslint-disable-next-line import/no-extraneous-dependencies
     } = await import('@repobit/dex-store-elements');
-
-    const store = await import('./store.js');
+    const { default: store } = await import('./store.js');
 
     const main = document.querySelector('main');
     /**
-       * @type {import('@repobit/dex-store-elements').RootNode}
-       */
+     * @type {import('@repobit/dex-store-elements').RootNode}
+     */
     const storeRoot = document.createElement('bd-context');
     storeRoot.dataLayer = ({ option, event }) => {
       AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
