@@ -818,7 +818,7 @@ async function loadPage() {
     registerActionNodes(main);
     registerRenderNodes(main);
     await storeRoot.updateComplete;
-  }, 7000 - performance.now());
+  }, Math.max(0, 7000 - performance.now()));
 
   import('./webmcp.js')
     .then(({ registerBitdefenderWebMcp }) => registerBitdefenderWebMcp())
