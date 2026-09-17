@@ -8,12 +8,7 @@ import {
   ProductLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
-import {
-  registerActionNodes,
-  registerContextNodes,
-  registerRenderNodes,
-} from '@repobit/dex-store-elements';
-import store from './store.js';
+
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
 import {
@@ -755,20 +750,6 @@ async function loadPage() {
     document.body.style = 'background-color: #141517';
   }
 
-  const main = document.querySelector('main');
-  /**
-   * @type {import('@repobit/dex-store-elements').RootNode}
-   */
-  const storeRoot = document.createElement('bd-context');
-  storeRoot.dataLayer = ({ option, event }) => {
-    AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
-  };
-  document.body.replaceChild(storeRoot, main);
-  storeRoot.appendChild(main);
-  storeRoot.store = store;
-
-  registerContextNodes();
-
   await loadEager(document);
 
   const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
@@ -785,10 +766,6 @@ async function loadPage() {
   // eslint-disable-next-line import/no-unresolved
   await loadLazy(document);
   handleFileDownloadedEvents();
-
-  registerActionNodes(main);
-  registerRenderNodes(main);
-  await storeRoot.updateComplete;
 
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
@@ -815,6 +792,35 @@ async function loadPage() {
   if (!window.BD.loginAttempted) {
     AdobeDataLayerService.push(new PageLoadedEvent());
   }
+
+  setTimeout(async () => {
+    const {
+      registerActionNodes,
+      registerContextNodes,
+      registerRenderNodes,
+    // eslint-disable-next-line import/no-extraneous-dependencies
+    } = await import('@repobit/dex-store-elements');
+
+    const store = await import('./store.js');
+
+    const main = document.querySelector('main');
+    /**
+       * @type {import('@repobit/dex-store-elements').RootNode}
+       */
+    const storeRoot = document.createElement('bd-context');
+    storeRoot.dataLayer = ({ option, event }) => {
+      AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
+    };
+    document.body.replaceChild(storeRoot, main);
+    storeRoot.appendChild(main);
+    storeRoot.store = store;
+
+    registerContextNodes();
+
+    registerActionNodes(main);
+    registerRenderNodes(main);
+    await storeRoot.updateComplete;
+  }, 7000 - performance.now());
 
   import('./webmcp.js')
     .then(({ registerBitdefenderWebMcp }) => registerBitdefenderWebMcp())
