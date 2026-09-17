@@ -735,7 +735,7 @@ body:has(.scam-masters-container) {
                     text-align: left;
 
                     a {
-                        &[href="#continue"], &[href="#quiz-2"] {
+                        &[href="#continue"], &[href="#quiz-2"], &.next-button {
                             background-color: black;
                             color: white;
                             border-color: black;

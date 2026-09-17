@@ -391,7 +391,7 @@ function showWrong(question, questionIndex) {
   const answerList = question.querySelector('.answers-list');
   const secondaryAnswersList = question.querySelector('.secondary-answers-list');
   const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
-  const continueButton = question.querySelector('a[href="#continue"]');
+  const continueButton = question.querySelector('a[href="#continue"]') || question.querySelector('.question > div > .button-container a');
   const anotherQuizButton = question.querySelector('a[href="#quiz-2"]');
   const triesCounter = question.querySelector('.tries');
   const questionScamTag = question.querySelector('.question-scam-tag');
@@ -449,7 +449,7 @@ function showCorrect(question, questionIndex) {
   questionContent.classList.add('correct-answer');
   const answerList = question.querySelector('.answers-list');
   const notAScamButton = question.querySelector('a[href="#not-a-scam"]');
-  const continueButton = question.querySelector('a[href="#continue"]');
+  const continueButton = question.querySelector('a[href="#continue"]') || question.querySelector('.question > div > .button-container a');
   const anotherQuizButton = question.querySelector('a[href="#quiz-2"]');
   const triesCounter = question.querySelector('.tries');
   const questionScamTag = question.querySelector('.question-scam-tag');
@@ -915,9 +915,11 @@ function decorateQuestions(questions, results, isAcqVariant) {
 
     // Hide all questions initially
     question.style.display = 'none';
+    console.log(question);
 
     if (index < questions.length) {
-      const nextButton = question.querySelector('a[href="#continue"]');
+      const nextButton = question.querySelector('a[href="#continue"]') || question.querySelector('.question > div > .button-container a');
+      nextButton?.classList.add('next-button');
       if (nextButton && index < questions.length - 1) {
         nextButton.style.display = 'none';
         nextButton.addEventListener('click', () => showQuestion(index + 2, isAcqVariant));
