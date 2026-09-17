@@ -522,6 +522,11 @@ export default function decorate(block) {
       space.insertAdjacentElement('afterend', emptyDiv);
       emptyDiv.classList.add('featured', 'nanoblock');
       emptyDiv.style.visibility = 'hidden';
+      // The store wrapper assigns inline orders to authored content. This
+      // placeholder is added afterwards, so preserve its position after h3.
+      if (space.style.order) {
+        emptyDiv.style.order = `${Number(space.style.order) + 1}`;
+      }
     }
   });
 
