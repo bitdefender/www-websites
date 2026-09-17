@@ -399,6 +399,19 @@ export default function decorate(block) {
     const planSelector = bdOption?.querySelector('.variant-selector');
     if (bdProduct && bdOption && planSelector) {
       const planSelectorContainer = planSelector.closest('.nanoblock') || planSelector;
+      const activePlan = planSelector.querySelector('li.active');
+      if (activePlan) {
+        const { storeSetId, storeSetDevices, storeSetSubscription } = activePlan.dataset;
+        if (storeSetId) {
+          bdProduct.setAttribute('product-id', storeSetId);
+        }
+        if (storeSetDevices) {
+          bdOption.setAttribute('devices', storeSetDevices);
+        }
+        if (storeSetSubscription) {
+          bdOption.setAttribute('subscription', storeSetSubscription);
+        }
+      }
       // remember the authored position among the option's content children
       const contentRoot = planSelectorContainer.parentElement;
       const authoredIndex = [...contentRoot.children].indexOf(planSelectorContainer);
@@ -509,6 +522,11 @@ export default function decorate(block) {
       space.insertAdjacentElement('afterend', emptyDiv);
       emptyDiv.classList.add('featured', 'nanoblock');
       emptyDiv.style.visibility = 'hidden';
+      // The store wrapper assigns inline orders to authored content. This
+      // placeholder is added afterwards, so preserve its position after h3.
+      if (space.style.order) {
+        emptyDiv.style.order = `${Number(space.style.order) + 1}`;
+      }
     }
   });
 

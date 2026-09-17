@@ -54,13 +54,10 @@ function createPriceElement(options, card) {
   // Old price container
   const oldPriceContainer = document.createElement('div');
   oldPriceContainer.className = 'oldprice-container';
-  oldPriceContainer.setAttribute('data-store-render', '');
-  oldPriceContainer.setAttribute('data-store-hide', '!it.option.price.discounted');
-  oldPriceContainer.setAttribute('data-store-hide-type', 'visibility');
 
   oldPriceContainer.innerHTML = `
-    <span class="prod-oldprice" data-store-render data-store-price="${oldPriceAttr}"></span>
-    <span class="prod-save">
+    <span class="prod-oldprice" data-store-render data-store-hide="!it.option.price.discounted" data-store-price="${oldPriceAttr}"></span>
+    <span class="prod-save" data-store-render data-store-hide="!it.option.price.discounted">
       ${saveText ?? ''} <span data-store-render data-store-discount="percentage"></span>
     </span>
   `;
