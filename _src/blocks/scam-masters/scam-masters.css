@@ -796,7 +796,6 @@ body:has(.scam-masters-container) {
             .clickable-question.correct-answer, .clickable-question.wrong-answer {
                 h6 {
                     display: block;
-                    text-align: center;
                 }
 
                 & >div:last-child {
