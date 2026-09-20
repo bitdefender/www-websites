@@ -1142,17 +1142,17 @@ export default async function decorate(block) {
               productInfo,
             );
 
-            const productZones = block.children[key].querySelectorAll('bd-context');
-            const cardBdOption = block.children[key]?.querySelector('bd-option');
+            const productZones = block.children[key].querySelectorAll('.store-context');
+            const cardBdOption = block.children[key]?.querySelector('.store-option');
             const productOption = `${cardBdOption.getAttribute('devices')}-${cardBdOption.getAttribute('subscription')}`;
 
-            const addOnBdOption = productZones[1]?.querySelector('bd-option');
+            const addOnBdOption = productZones[1]?.querySelector('.store-option');
             const addOnProductOption = `${addOnBdOption.getAttribute('devices')}-${addOnBdOption.getAttribute('subscription')}`;
 
             const state = {
-              product: productZones[0]?.querySelector('bd-product')?.getAttribute('product-id'),
+              product: productZones[0]?.querySelector('.store-product')?.getAttribute('product-id'),
               productOption,
-              addOnProduct: productZones[1]?.querySelector('bd-product')?.getAttribute('product-id'),
+              addOnProduct: productZones[1]?.querySelector('.store-product')?.getAttribute('product-id'),
               addOnProductOption,
             };
 

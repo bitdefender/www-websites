@@ -350,9 +350,11 @@ export default function decorate(block) {
     }
   });
 
-  // add bd-context node below the section
+  // Keep the original section wrappers addressable after adding the store context.
   const wrapperSectionContext = document.createElement('bd-context');
+  wrapperSectionContext.classList.add('store-context', 'store-section-context');
   [...blockWrapperSection.children].forEach((child) => {
+    child.classList.add('store-section-content');
     wrapperSectionContext.appendChild(child);
   });
   blockWrapperSection.appendChild(wrapperSectionContext);
@@ -375,6 +377,7 @@ export default function decorate(block) {
         storeEvent,
       });
     }
+    row.querySelector('.store-option > div')?.classList.add('store-option-content');
 
     const cardButtons = row.querySelectorAll('a');
     cardButtons?.forEach((button) => {
@@ -394,32 +397,32 @@ export default function decorate(block) {
     // Preserve its authored visual position via flex `order` (the store wrappers
     // are flattened with `display: contents` in CSS, so all card content shares
     // one flex context).
-    const bdProduct = row.querySelector('bd-product');
-    const bdOption = bdProduct?.querySelector('bd-option');
-    const planSelector = bdOption?.querySelector('.variant-selector');
-    if (bdProduct && bdOption && planSelector) {
+    const storeProduct = row.querySelector('.store-product');
+    const storeOption = storeProduct?.querySelector('.store-option');
+    const planSelector = storeOption?.querySelector('.variant-selector');
+    if (storeProduct && storeOption && planSelector) {
       const planSelectorContainer = planSelector.closest('.nanoblock') || planSelector;
       const activePlan = planSelector.querySelector('li.active');
       if (activePlan) {
         const { storeSetId, storeSetDevices, storeSetSubscription } = activePlan.dataset;
         if (storeSetId) {
-          bdProduct.setAttribute('product-id', storeSetId);
+          storeProduct.setAttribute('product-id', storeSetId);
         }
         if (storeSetDevices) {
-          bdOption.setAttribute('devices', storeSetDevices);
+          storeOption.setAttribute('devices', storeSetDevices);
         }
         if (storeSetSubscription) {
-          bdOption.setAttribute('subscription', storeSetSubscription);
+          storeOption.setAttribute('subscription', storeSetSubscription);
         }
       }
       // remember the authored position among the option's content children
       const contentRoot = planSelectorContainer.parentElement;
       const authoredIndex = [...contentRoot.children].indexOf(planSelectorContainer);
       planSelectorContainer.classList.add('plan-selector-hoisted');
-      bdProduct.insertBefore(planSelectorContainer, bdOption);
+      storeProduct.insertBefore(planSelectorContainer, storeOption);
       // shift every option child at/after the authored position down by one,
       // and place the selector at its original index
-      bdOption.querySelectorAll(':scope > div > *').forEach((child, i) => {
+      storeOption.querySelectorAll(':scope > .store-option-content > *').forEach((child, i) => {
         child.style.order = i >= authoredIndex ? i + 2 : i + 1;
       });
       planSelectorContainer.style.order = authoredIndex + 1;

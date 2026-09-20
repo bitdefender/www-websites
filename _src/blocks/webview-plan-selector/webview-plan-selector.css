@@ -192,7 +192,7 @@ main .section.webview-plan-selector-container {
     text-align: left;
     appearance: none;
 
-    bd-option {
+    :where(.store-option) {
         display: flex;
         align-items: center;
         width: 100%;
@@ -822,8 +822,8 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context[hidden] {
     display: none;
 }
 
-/* Accommodate bd-context > bd-product > bd-option wrapping from local store library */
-main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context bd-option {
+/* Align the store option within the V2 price context. */
+main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context :where(.store-option) {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
