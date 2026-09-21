@@ -1,0 +1,43 @@
+/* Trusted Always V2.2 below-the-fold layout. */
+/* stylelint-disable no-descending-specificity */
+/* stylelint-disable selector-not-notation */
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-Light.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-Regular.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-Medium.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-SemiBold.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('../../fonts/IBMPlexSans-Bold.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+

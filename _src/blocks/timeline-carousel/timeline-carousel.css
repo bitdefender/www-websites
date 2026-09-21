@@ -114,6 +114,13 @@
             flex-direction: column;
           }
 
+          .timeline-department {
+            font-weight: 500;
+            font-size: 12px;
+            color: #939393;
+            margin-bottom: 4px;
+          }
+
           .timeline-title {
             font-weight: 600;
             font-size: 18px;
@@ -132,6 +139,12 @@
             a {
               text-decoration: underline;
               color: #000;
+            }
+          }
+
+          &:has(.timeline-department) {
+            .timeline-box-content {
+              margin-top: -22px;
             }
           }
         }
