@@ -774,7 +774,6 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     }
 
     .scuderia-ferrari-section table {
-        /* stylelint-disable-next-line no-descending-specificity */
         img {
             top: -42px !important;
         }
