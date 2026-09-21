@@ -8,7 +8,6 @@ export default async function decorate(block) {
   const isTrusted = block.classList.contains('trusted-carousel');
   const slidesHTML = slides.map((slide) => {
     const row = slide.children[0];
-    console.log('row', row);
     const colMedia = row?.children?.[0];
     const colTitle = row?.children?.[1];
     const colSubSecondary = row?.children?.[2];

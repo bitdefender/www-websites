@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper{
     margin: 0;
     padding: 0;
@@ -94,7 +95,6 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
     position: relative;
     margin-top: 6em;
 
-    /* stylelint-disable-next-line no-descending-specificity */
     img {
         position: absolute!important;
         height: 87px!important;
