@@ -61,7 +61,7 @@ function createPriceBox({
       </strong>
     </div>
     <div class="buttons">
-      <a  ${hardcodedLink && UserAgent.isEdge && microsoftEdgeLink ? `href="${microsoftEdgeLink}"` : `${hardcodedLink ? `href="${hardcodedLink}"` : `href="#" data-store-render data-store-buy-link="${trialDuration || ''}"`}`} class="button primary-button">
+      <a  ${hardcodedLink && UserAgent.browser === 'edge' && microsoftEdgeLink ? `href="${microsoftEdgeLink}"` : `${hardcodedLink ? `href="${hardcodedLink}"` : `href="#" data-store-render data-store-buy-link="${trialDuration || ''}"`}`} class="button primary-button">
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
