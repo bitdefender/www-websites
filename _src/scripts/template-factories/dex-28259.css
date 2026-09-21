@@ -206,9 +206,16 @@
                 }
 
                 .subtitle-2 {
-                    order: 3;
+                    order: 2;
                     margin-top: var(--size-0);
+                    margin-bottom: var(--size-0);
+                    padding-bottom: var(--size-16);
+                    border-bottom: 1px solid #D1D1D1;
                     font-size: var(--size-14);
+                }
+
+                bd-option {
+                    order: 2;
                 }
 
                 .hero-aem__prices {
@@ -222,19 +229,16 @@
                     font-weight: 600;
                     font-size: var(--size-14);
                     margin-top: var(--size-0);
+                    padding-bottom: var(--size-16);
+                    border-bottom: 1px solid #D1D1D1;
                 }
 
                 .benefitsLists {
                     order: 8;
                 }
 
-                hr:first-of-type {
-                    order: 4;
-                    margin-top: var(--size-16);
-                }
-
-                hr:last-of-type {
-                    order: 7;
+                hr {
+                    display: none;
                 }
 
                 .taxes {
