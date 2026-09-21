@@ -151,7 +151,7 @@
     /* padding: 40px 15px 20px; */
 }
 
-.products-sideview bd-product > div {
+.products-sideview :where(.store-product) > div {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -161,20 +161,20 @@
     width: 100%;
 }
 
-.products-sideview bd-product > div > div {
+.products-sideview :where(.store-product) > div > div {
     position: relative;
     order: 1;
 }
 
-.products-sideview bd-product > div > div:last-child::after {
+.products-sideview :where(.store-product) > div > div:last-child::after {
     display: none;
 }
 
-.products-sideview bd-product > div > .features-img-col {
+.products-sideview :where(.store-product) > div > .features-img-col {
     order: 0;
 }
 
-.products-sideview bd-product > div > .features-img-col img {
+.products-sideview :where(.store-product) > div > .features-img-col img {
     display: block;
 }
 
@@ -409,11 +409,11 @@
         position: relative;
     }
 
-    .products-sideview bd-product > div {
+    .products-sideview :where(.store-product) > div {
         flex-flow: wrap;
     }
 
-    .products-sideview bd-product > div > div {
+    .products-sideview :where(.store-product) > div > div {
         padding: 0 20px 20px;
     }
 
@@ -423,22 +423,22 @@
         margin: 0 auto;
     }
 
-    .products-sideview bd-product > div > div:nth-child(2)::after {
+    .products-sideview :where(.store-product) > div > div:nth-child(2)::after {
         display:none;
     }
 }
 
 @media (min-width: 993px) {
-    .products-sideview.features-3-cols bd-product > div > div {
+    .products-sideview.features-3-cols :where(.store-product) > div > div {
         width: calc(33.33% - 30px);
         margin: 0 15px;
     }
 
-    .products-sideview.features-3-cols bd-product > div > div:nth-child(2)::after {
+    .products-sideview.features-3-cols :where(.store-product) > div > div:nth-child(2)::after {
         display:block;
     }
 
-    .products-sideview.features-2-cols bd-product > div > div:nth-child(2)::after {
+    .products-sideview.features-2-cols :where(.store-product) > div > div:nth-child(2)::after {
         display:none;
     }
 }

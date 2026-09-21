@@ -316,9 +316,9 @@ async function runDefaultWebviewPlanSelectorLogic(block) {
               tabindex="-1"
               data-plan-index="${index}"
             >
-              <bd-context ignore-events-parent>
-                <bd-product product-id="${plan.productId}">
-                  <bd-option devices="${plan.devices}" subscription="${plan.subscription}" data-layer-event="all">
+              <bd-context class="store-context" ignore-events-parent>
+                <bd-product class="store-product" product-id="${plan.productId}">
+                  <bd-option class="store-option" devices="${plan.devices}" subscription="${plan.subscription}" data-layer-event="all">
                     <span class="webview-plan-selector-radio" aria-hidden="true"></span>
                     <div class="webview-plan-selector-plan-content">
                       <div class="webview-plan-selector-plan-copy">

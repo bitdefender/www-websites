@@ -82,7 +82,7 @@
   margin-bottom: 20px;
 }
 
-.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box bd-option hr:last-of-type{
+.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box :where(.store-option) hr:last-of-type{
   display: none;
 }
 
@@ -205,7 +205,7 @@
   margin-bottom: 0;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box bd-option hr:last-of-type {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box :where(.store-option) hr:last-of-type {
   margin-bottom: 10px;
 }
 
@@ -1105,14 +1105,14 @@
 
 /* Pricing elements css */
 .new-prod-boxes {
-  bd-context, bd-product, bd-option {
+  :where(.store-context), :where(.store-product), :where(.store-option) {
     display: grid;
     grid-template-rows: subgrid;
     grid-row: span 50;
   }
 
   .checkmark-list {
-    bd-context, bd-product, bd-option {
+    :where(.store-context), :where(.store-product), :where(.store-option) {
       display: block;
     }
   }
