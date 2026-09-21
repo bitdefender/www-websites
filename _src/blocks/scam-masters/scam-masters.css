@@ -712,7 +712,7 @@ body:has(.scam-masters-container) {
             }
 
             &.clickable-question {
-                h6 {
+                h5 {
                     display: none;
                 }
 
@@ -794,7 +794,7 @@ body:has(.scam-masters-container) {
 
         
             .clickable-question.correct-answer, .clickable-question.wrong-answer {
-                h6 {
+                h5 {
                     display: block;
                 }
 
