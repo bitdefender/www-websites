@@ -915,7 +915,6 @@ function decorateQuestions(questions, results, isAcqVariant) {
 
     // Hide all questions initially
     question.style.display = 'none';
-    console.log(question);
 
     if (index < questions.length) {
       const nextButton = question.querySelector('a[href="#continue"]') || question.querySelector('.question > div > .button-container a');
