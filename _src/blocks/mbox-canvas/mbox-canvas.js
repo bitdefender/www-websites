@@ -1,10 +1,11 @@
 import { AdobeDataLayerService, WindowLoadStartedEvent } from '@repobit/dex-data-layer';
+import { Store } from '@repobit/dex-store';
 import { target } from '../../scripts/target.js';
 import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
 import { Constants } from '../../scripts/libs/constants.js';
-import { StoreResolver } from '../../scripts/libs/store/index.js';
+import user from '../../scripts/user.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
   const newHtml = document.createElement('div');
@@ -183,6 +184,36 @@ export default async function decorate(block) {
     </div>
   `;
   block.classList.add('loader-circle');
+  const configMbox = await target.getOffers({
+    mboxNames: 'config-mbox',
+    parameters,
+    profileParameters: createOfferProfileParameters(parameters),
+  });
+
+  const canvasStore = new Store({
+    campaign: async () => configMbox?.promotion,
+    transformers: {
+      buyLink: async (param) => {
+        const { buyLink, product } = param;
+        const buyLinkURL = new URL(buyLink);
+        buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
+
+        return buyLinkURL.href;
+      },
+    },
+    locale: configMbox?.useGeoIpPricing
+      ? (await user.locale)?.toLowerCase()
+      : page.locale.toLowerCase(),
+    provider: { name: 'vlaicu' },
+  });
+
+  const canvasRoot = document.createElement('bd-context');
+  const canvasWrapper = block.parentElement;
+  canvasWrapper.appendChild(canvasRoot);
+  canvasRoot.appendChild(block);
+  canvasRoot.store = canvasStore;
+  await canvasRoot.updateComplete;
+
   const offer = await target.getOffers({
     mboxNames: mboxName,
     parameters,
@@ -220,16 +251,6 @@ export default async function decorate(block) {
     link.setAttribute('target', '_blank');
   });
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
-  const configMbox = await target.getOffers({
-    mboxNames: 'config-mbox',
-    parameters,
-    profileParameters: createOfferProfileParameters(parameters),
-  });
-  if (configMbox?.promotion) {
-    block.setAttribute('data-promotion', configMbox.promotion);
-  }
   await loadBlocks(block.querySelector('.canvas-content'));
-  await StoreResolver.resolve(block.querySelector('.canvas-content'), configMbox);
-  window.disableGlobalStore = true;
   decorateIcons(block.querySelector('.canvas-content'));
 }

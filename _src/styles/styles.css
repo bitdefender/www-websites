@@ -464,7 +464,7 @@ main .section.light-gray-wide {
   background-color: #fafafa;
 }
 
-main .section.light-sky-blue > * { /* apply to all children wrapper */
+main .section.light-sky-blue > *, main .section.light-sky-blue bd-context > * { /* apply to all children wrapper */
   background-color: var(--background-color-light-sky-blue);
 }
 
@@ -513,36 +513,38 @@ main .section.wide img {
   object-fit: contain;
 }
 
-main .section.wide > :first-child {
+main .section.wide > :first-child:not(bd-context), main .section.wide bd-context > :first-child {
   border-radius: 1.5rem 1.5rem 0 0;
   padding-top: 56px;
 }
 
-main .section.wide > :last-child {
+main .section.wide > :last-child:not(bd-context), main .section.wide bd-context > :last-child {
   border-radius: 0 0 1.5rem 1.5rem;
   padding-bottom: 56px;
 }
 
-main .section.wide > :only-child {
+main .section.wide > :only-child:not(bd-context), main .section.wide bd-context > :only-child {
   border-radius: 8px;
 }
 
-main .section.wide .default-content-wrapper {
+main .section.wide .default-content-wrapper,
+main .section.wide .default-content-wrapper:not(bd-context) {
   text-align: center;
   padding-bottom: 15px;
 }
 
-main .section.wide-v2 > :first-child {
+main .section.wide-v2 > :first-child:not(bd-context), main .section.wide-v2 bd-context > :first-child {
   border-radius: 8px 8px 0 0;
   padding-top: 56px;
 }
 
-main .section.wide-v2 > :last-child {
+main .section.wide-v2 > :last-child:not(bd-context), main .section.wide-v2 bd-context > :last-child {
   border-radius: 0 0 8px 8px;
   padding-bottom: 56px;
 }
 
-main .section.no-padding-top-bottom .default-content-wrapper {
+main .section.no-padding-top-bottom .default-content-wrapper,
+main .section.no-padding-top-bottom .default-content-wrapper:not(bd-context) {
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -781,21 +783,26 @@ main .grey-background {
     font-weight: var(--font-weight-bold);
   }
 
-  main div.section.wide > * { /* apply to all children wrapper */
+  main div.section.wide > *,
+  main div.section.wide bd-context > *,
+  main div.section.wide > *:not(bd-context) { /* apply to all children wrapper */
     max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
     padding-top: 1px; /* hack to handle margin of child paragraphs */
   }
 
-  main .section {
+  main .section,
+  main .section:not(bd-context) {
     padding: var(--section-desktop-padding-vertical) 0;
   }
 
-  main .section.no-vertical-padding {
+  main .section.no-vertical-padding,
+  main .section.no-vertical-padding:not(bd-context) {
     padding-top: 0;
     padding-bottom: 0;
   }
 
-  .default-content-wrapper {
+  .default-content-wrapper,
+  .default-content-wrapper:not(bd-context) {
     max-width: var(--section-desktop-max-width);
     padding: 0 var(--section-desktop-padding-vertical);
     border-radius: 0;
@@ -982,12 +989,14 @@ main .section.mb-0, .mb-0 {
     letter-spacing: normal;
   }
 
-  main div.section.wide > * { /* apply to all children wrapper */
+  main div.section.wide > *,
+  main div.section.wide > *:not(bd-context) { /* apply to all children wrapper */
     max-width: calc(var(--section-large-desktop-max-width) - 2 * var(--section-large-desktop-padding));
     padding-top: 1px; /* hack to handle margin of child paragraphs */
   }
 
-  .default-content-wrapper {
+  .default-content-wrapper,
+  .default-content-wrapper:not(bd-context) {
     max-width: var(--section-large-desktop-max-width);
     padding: 0 var(--section-large-desktop-padding);
   }

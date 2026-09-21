@@ -1,18 +1,18 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { Constants } from '../../scripts/libs/constants.js';
 import {
   createNanoBlock,
   renderNanoBlocks,
   createTag,
   matchHeights,
   checkIfNotProductPage,
+  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 // all avaiable text variables
 const TEXT_VARIABLES_MAPPING = [
   {
     variable: 'percent',
-    storeVariable: '{DISCOUNT_PERCENTAGE}',
+    storeVariable: '{{=it.option.discount.percentage}}',
   },
 ];
 
@@ -37,17 +37,18 @@ function renderPlanSelector(plans, defaultSelection) {
   for (let idx = 0; idx < plans.length - 2; idx += 3) {
     const label = plans[idx];
     const liStoreParameters = {};
+    liStoreParameters['data-store-action'] = '';
 
     if (Number(defaultSelection)) {
-      liStoreParameters['data-store-click-set-devices'] = label;
+      liStoreParameters['data-store-set-devices'] = label;
     } else {
       const productCode = plans[idx + 1];
       const variation = plans[idx + 2];
-      liStoreParameters['data-store-click-set-product'] = '';
-      liStoreParameters['data-store-product-id'] = productCode;
-      liStoreParameters['data-store-department'] = 'consumer';
-      liStoreParameters['data-product-type'] = Constants.PRODUCT_ID_MAPPINGS[productCode].isMonthlyProduct ? 'monthly' : 'yearly';
-      liStoreParameters['data-store-product-option'] = variation;
+      const [devices, subscription] = variation.match(/\d+/g)?.map(Number) ?? [];
+
+      liStoreParameters['data-store-set-id'] = productCode;
+      liStoreParameters['data-store-set-devices'] = devices;
+      liStoreParameters['data-store-set-subscription'] = subscription;
     }
 
     const li = createTag(
@@ -87,6 +88,7 @@ function renderPlanSelector(plans, defaultSelection) {
 function renderOldPrice(text = '', monthly = '') {
   // TODO: simplify CSS
   const oldPrice = document.createElement('del');
+  oldPrice.setAttribute('data-store-render', '');
   if (monthly.toLowerCase() === 'monthly') {
     oldPrice.setAttribute('data-store-price', 'full-monthly');
   } else {
@@ -96,7 +98,9 @@ function renderOldPrice(text = '', monthly = '') {
   const root = createTag(
     'div',
     {
-      'data-store-hide': 'no-price=discounted;type=visibility',
+      'data-store-hide': '!it.option.price.discounted',
+      'data-store-hide-type': 'visibility',
+      'data-store-render': '',
       class: 'price await-loader',
     },
     `<span class='old-price'>${text} ${oldPrice.outerHTML}</span>`,
@@ -119,6 +123,7 @@ function renderOldPrice(text = '', monthly = '') {
 function renderPrice(text = '', monthly = '', monthTranslation = 'mo') {
   // TODO simplify CSS
   const newPrice = document.createElement('strong');
+  newPrice.setAttribute('data-store-render', '');
   if (monthly.toLowerCase() === 'monthly') {
     newPrice.setAttribute('data-store-price', 'discounted-monthly||full-monthly');
   } else {
@@ -149,15 +154,15 @@ function renderPrice(text = '', monthly = '', monthTranslation = 'mo') {
  */
 function renderHighlightSavings(text = 'Save', percent = '') {
   const highlighSaving = document.createElement('span');
-  highlighSaving.setAttribute('data-store-text-variable', '');
-  highlighSaving.textContent = `${text} ${
-    percent.toLowerCase() === 'percent' ? '{DISCOUNT_PERCENTAGE}' : '{DISCOUNT_VALUE}'
+  highlighSaving.textContent = `${text} ${percent?.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
   }`;
 
   const root = createTag(
     'div',
     {
-      'data-store-hide': 'no-price=discounted;type=visibility',
+      'data-store-hide': '!it.option.price.discounted',
+      'data-store-hide-type': 'visibility',
+      'data-store-render': '',
       class: 'highlight await-loader',
       style: 'display=none',
     },
@@ -197,8 +202,8 @@ function renderHighlight(text) {
     'div',
     {
       class: 'highlight',
-      'data-store-text-variable': '',
-      'data-store-hide': 'no-price=discounted',
+      'data-store-hide': '!it.option.price.discounted',
+      'data-store-render': '',
     },
     `<span>${updatedText}</span>`,
   );
@@ -236,7 +241,6 @@ const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
  */
 function renderFeatured(text) {
   const root = document.createElement('div');
-  root.setAttribute('data-store-text-variable', '');
   root.classList.add('featured');
   root.textContent = text;
 
@@ -256,15 +260,15 @@ function renderFeatured(text) {
  */
 function renderFeaturedSavings(text = 'Save', percent = '') {
   const featuredSaving = document.createElement('span');
-  featuredSaving.setAttribute('data-store-text-variable', '');
-  featuredSaving.textContent = `${text} ${
-    percent.toLowerCase() === 'percent' ? '{DISCOUNT_PERCENTAGE}' : '{DISCOUNT_VALUE}'
+  featuredSaving.textContent = `${text} ${percent.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
   }`;
 
   const root = createTag(
     'div',
     {
-      'data-store-hide': 'no-price=discounted;type=visibility',
+      'data-store-hide': '!it.option.price.discounted',
+      'data-store-hide-type': 'visibility',
+      'data-store-render': '',
       class: 'featured',
     },
     `${featuredSaving.outerHTML}`,
@@ -285,8 +289,12 @@ function renderLowestPrice(...params) {
   const root = document.createElement('p');
   const textArea = document.createElement('span');
   root.classList.add('await-loader');
-  textArea.setAttribute('data-store-text-variable', '');
-  textArea.textContent = text.replace('0', monthly.toLowerCase() === 'monthly' ? '{SMALLEST_PRICE_PER_MONTH}' : '{SMALLEST_PRICE}');
+  textArea.textContent = text.replace(
+    '0',
+    monthly.toLowerCase() === 'monthly'
+      ? '{{=it.state.price.discounted.monthly.min || it.state.price.full.monthly.min}}'
+      : '{{=it.state.price.discounted.min || it.state.price.full.min}}',
+  );
   root.appendChild(textArea);
   return root;
 }
@@ -297,7 +305,7 @@ function renderLowestPrice(...params) {
  * @returns Root node of the nanoblock
  */
 function renderPriceCondition(text) {
-  const updatedText = text.replace('BilledPrice', '<em data-store-price="discounted||full" class="await-loader"></em>');
+  const updatedText = text.replace('BilledPrice', '<em data-store-render data-store-price="discounted||full" class="await-loader"></em>');
   return createTag(
     'div',
     {
@@ -322,51 +330,100 @@ createNanoBlock('bluePill', renderBluePill);
  * Main decorate function
  */
 export default function decorate(block) {
-  const metadata = block.closest('.section').dataset;
+  const blockWrapperSection = block.closest('.section');
+  const metadata = blockWrapperSection.dataset;
+  const { trialDuration } = metadata;
+  const trialDurations = trialDuration?.split(',')?.map((t) => t.trim()) || [];
   const plans = [];
 
   Object.entries(metadata).forEach(([key, value]) => {
     if (key.includes('plans')) {
       const allImportantData = value.match(/[^,{}[\]]+/gu).map((importantData) => importantData.trim());
-      plans.push({
+      const suffix = parseInt(key.replace('plans', ''), 10);
+      const index = Number.isNaN(suffix) ? plans.length : suffix - 1;
+      plans[index] = {
         productCode: allImportantData[1],
         defaultVariant: `${Number(allImportantData.slice(-1)[0])
           ? allImportantData.slice(-1)[0] : allImportantData[2].match(/[0-9-]+/g)[0]
         }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
-      });
+      };
     }
   });
 
-  block.parentElement.parentElement.setAttribute('data-store-context', '');
+  // add bd-context node below the section
+  const wrapperSectionContext = document.createElement('bd-context');
+  [...blockWrapperSection.children].forEach((child) => {
+    wrapperSectionContext.appendChild(child);
+  });
+  blockWrapperSection.appendChild(wrapperSectionContext);
+
   [...block.children].forEach((row, idxParent) => {
-    [...(row.children)].forEach((col, idxCol) => {
-      const plansIndex = idxParent * row.children.length + idxCol;
+    // set the store event on the component
+    let storeEvent = 'info';
+    if (checkIfNotProductPage()) {
+      storeEvent = 'all';
+    }
 
-      // set the store event on the component
-      let storeEvent = 'main-product-loaded';
-      if (checkIfNotProductPage()) {
-        storeEvent = 'product-loaded';
-      }
-
-      col.classList.add('product-card');
-      col.setAttribute('data-store-context', '');
-      if (plans[plansIndex]) {
-        col.setAttribute('data-store-id', plans[plansIndex].productCode);
-        col.setAttribute('data-store-option', plans[plansIndex].defaultVariant);
-      }
-      col.setAttribute('data-store-department', 'consumer');
-      col.setAttribute('data-store-event', storeEvent);
-      const cardButtons = col.querySelectorAll('a');
-      cardButtons?.forEach((button) => {
-        if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
-          button.href = '#';
-          button.setAttribute('data-store-buy-link', '');
-        }
+    row.classList.add('product-card');
+    const [devices, subscription] = plans[idxParent]?.defaultVariant?.split('-') || [];
+    const productCode = plans[idxParent]?.productCode;
+    if (productCode && devices && subscription) {
+      wrapChildrenWithStoreContext(row, {
+        productId: productCode,
+        devices,
+        subscription,
+        storeEvent,
       });
-      block.appendChild(col);
-      renderNanoBlocks(col, undefined, idxParent);
+    }
+
+    const cardButtons = row.querySelectorAll('a');
+    cardButtons?.forEach((button) => {
+      if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
+        button.href = '#';
+        button.setAttribute('data-store-buy-link', trialDurations[idxParent] || '');
+        button.setAttribute('data-store-render', '');
+      }
     });
-    row.remove();
+    renderNanoBlocks(row, undefined, idxParent);
+
+    // The plan selector switches the product id (data-store-set-id). The nearest
+    // bd-* ancestor catches the bd-action-request, and bd-option only applies
+    // devices/subscription — it ignores the product id. So the selector must sit
+    // above bd-option (as a direct child of bd-product) for the product switch to
+    // cascade down. Hoist it out of bd-option, mirroring products-sideview.
+    // Preserve its authored visual position via flex `order` (the store wrappers
+    // are flattened with `display: contents` in CSS, so all card content shares
+    // one flex context).
+    const bdProduct = row.querySelector('bd-product');
+    const bdOption = bdProduct?.querySelector('bd-option');
+    const planSelector = bdOption?.querySelector('.variant-selector');
+    if (bdProduct && bdOption && planSelector) {
+      const planSelectorContainer = planSelector.closest('.nanoblock') || planSelector;
+      const activePlan = planSelector.querySelector('li.active');
+      if (activePlan) {
+        const { storeSetId, storeSetDevices, storeSetSubscription } = activePlan.dataset;
+        if (storeSetId) {
+          bdProduct.setAttribute('product-id', storeSetId);
+        }
+        if (storeSetDevices) {
+          bdOption.setAttribute('devices', storeSetDevices);
+        }
+        if (storeSetSubscription) {
+          bdOption.setAttribute('subscription', storeSetSubscription);
+        }
+      }
+      // remember the authored position among the option's content children
+      const contentRoot = planSelectorContainer.parentElement;
+      const authoredIndex = [...contentRoot.children].indexOf(planSelectorContainer);
+      planSelectorContainer.classList.add('plan-selector-hoisted');
+      bdProduct.insertBefore(planSelectorContainer, bdOption);
+      // shift every option child at/after the authored position down by one,
+      // and place the selector at its original index
+      bdOption.querySelectorAll(':scope > div > *').forEach((child, i) => {
+        child.style.order = i >= authoredIndex ? i + 2 : i + 1;
+      });
+      planSelectorContainer.style.order = authoredIndex + 1;
+    }
   });
 
   // render nanoblocks in section's content default wrapper
@@ -465,6 +522,11 @@ export default function decorate(block) {
       space.insertAdjacentElement('afterend', emptyDiv);
       emptyDiv.classList.add('featured', 'nanoblock');
       emptyDiv.style.visibility = 'hidden';
+      // The store wrapper assigns inline orders to authored content. This
+      // placeholder is added afterwards, so preserve its position after h3.
+      if (space.style.order) {
+        emptyDiv.style.order = `${Number(space.style.order) + 1}`;
+      }
     }
   });
 
