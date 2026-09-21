@@ -802,6 +802,7 @@ async function loadPage() {
    * @type {import('@repobit/dex-store-elements').RootNode}
    */
   const storeRoot = document.createElement('bd-context');
+  storeRoot.classList.add('store-context');
   storeRoot.dataLayer = ({ option, event }) => {
     AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
   };
