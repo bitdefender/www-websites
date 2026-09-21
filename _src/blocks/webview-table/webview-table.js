@@ -232,14 +232,14 @@ function createPlanSwitcher(radioButtons, prodsNames, prodsUsers, prodsYears, bl
     if (prodName) {
       planSwitcher.innerHTML += `
         <input data-store-action
-              data-store-set-id="${prodName}"
-        data-store-set-devices="${prodUser}"
-        data-store-set-subscription="${prodYear}"
-        type="radio" 
-        id="${blockLevel ? 'block-' : ''}${idx}-${prodName.trim()}"
-        name="${blockLevel ? 'block-' : ''}${prodName.trim()}"
-        value="${radio}-${prodName.trim()}" 
-        ${checked}>
+          data-store-set-id="${prodName}"
+          data-store-set-devices="${prodUser}"
+          data-store-set-subscription="${prodYear}"
+          type="radio" 
+          id="${blockLevel ? 'block-' : ''}${idx}-${prodName.trim()}"
+          name="${blockLevel ? 'block-' : ''}${prodName.trim()}"
+          value="${radio}-${prodName.trim()}" 
+          ${checked}>
         <label for="${blockLevel ? 'block-' : ''}${idx}-${prodName.trim()}" class="radio-label">${radio}</label><br>
       `;
     }

@@ -2,6 +2,10 @@
     font-family: Arial;
 }
 
+.ab-downloads .breadcrumb {
+    display: none;
+}
+
 .ab-downloads main h2, .ab-downloads main .default-content-wrapper h2 {
     font-size: 34px;
     font-weight: 700;

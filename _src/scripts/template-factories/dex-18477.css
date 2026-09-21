@@ -19,7 +19,7 @@
             line-height: 1.35;
         }
 
-        .hero-aem__card > p {
+        .hero-aem__breadcrumb, .hero-aem__card > p {
             display: none;
         }
 
@@ -797,8 +797,13 @@
         }
 
         .hero-aem-container {
+
             .hero-aem {
                 max-width: 1200px;
+            }
+
+            .hero-aem__breadcrumb {
+                display: block;
             }
 
             .hero-aem__terms {

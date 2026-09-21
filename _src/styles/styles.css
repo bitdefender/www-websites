@@ -1272,10 +1272,13 @@ main .section.bblue, main .section .block.bblue {
   background-color: #F1F5F8;
 }
 
-main .section[data-textcolor='white'] *{
+main .section[data-textcolor='white'] *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb *,  main .section[data-textcolor='white'] .hero .hero-content .breadcrumb a::after {
   color: white;
 }
 
+main .section[data-hidebreadcrumb='yes'] .breadcrumb {
+  display: none;
+}
 
 /* linked pictures with video button overlay */
 main a.video-placeholder {
@@ -1967,4 +1970,5 @@ body > div.header-with-language-banner {
     padding: 10px 13px 8px 20px;
     font-size: 14px;
   }
+}
 }
