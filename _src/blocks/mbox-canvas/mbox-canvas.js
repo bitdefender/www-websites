@@ -208,6 +208,7 @@ export default async function decorate(block) {
   });
 
   const canvasRoot = document.createElement('bd-context');
+  canvasRoot.classList.add('store-context');
   const canvasWrapper = block.parentElement;
   canvasWrapper.appendChild(canvasRoot);
   canvasRoot.appendChild(block);

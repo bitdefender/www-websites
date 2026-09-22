@@ -183,7 +183,7 @@ function renderPrice(block) {
   const buttonContainer = block.querySelector('.button-container');
   if (buttonContainer) option.appendChild(buttonContainer);
 
-  if (!block.firstElementChild?.matches('bd-context')) {
+  if (!block.firstElementChild?.matches('.store-context')) {
     const product = createBdProduct(productId);
     while (block.firstChild) {
       product.appendChild(block.firstChild);
