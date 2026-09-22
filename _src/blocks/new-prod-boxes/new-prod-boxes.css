@@ -82,7 +82,7 @@
   margin-bottom: 20px;
 }
 
-.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box hr:last-of-type{
+.new-prod-boxes-container.hide-last-hr .new-prod-boxes .prod_box .inner_prod_box :where(.store-option) hr:last-of-type{
   display: none;
 }
 
@@ -205,7 +205,7 @@
   margin-bottom: 0;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box hr:last-of-type {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box :where(.store-option) hr:last-of-type {
   margin-bottom: 10px;
 }
 
@@ -514,7 +514,7 @@
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow::before {
   content: "";
   margin: 0 5px 20px 0;
-  background: url("https://bitdefender.com/pages/icons/arrow-left-blue.png") no-repeat center transparent;
+  background: url("../../icons/arrow-left-blue.png") no-repeat center transparent;
   width: 20px;
   height: 20px;
   background-size: 15px 12px;
@@ -522,7 +522,7 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.has_arrow_right .arrow-right {
-  background: url("https://bitdefender.com/common/icons/arrow-right-solid.svg") no-repeat center transparent;
+  background: url("../../icons/arrow-right-solid.svg") no-repeat center transparent;
   width: 20px;
   height: 20px;
   background-size: 15px 12px;
@@ -546,7 +546,7 @@
   line-height: 17px;
   margin-bottom: 8px;
   list-style-type: none;
-  background: url("https://bitdefender.com/common/icons/circle-check-sharp-solid.svg") top 2px left no-repeat transparent;
+  background: url("/common/icons/circle-check-sharp-solid.svg") top 2px left no-repeat transparent;
   padding-left: 22px;
   background-size: 13px;
   position: relative;
@@ -560,7 +560,7 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes.new-green-check .prod_box .inner_prod_box .benefitsLists ul li:not(:first-of-type) {
-  background: url("https://www.bitdefender.com/common/icons/checkmark-solid-circle-white-bg.svg") top 2px left no-repeat transparent;
+  background: url("/common/icons/checkmark-solid-circle-white-bg.svg") top 2px left no-repeat transparent;
   padding-left: 22px;
   background-size: 13px;
   position: relative;
@@ -608,7 +608,7 @@
   color: white;
   border-radius: 20px;
   padding: 2px 21px 2px 7px;
-  background: url("https://bitdefender.com/pages/images/icons/individual.svg") center right 6px no-repeat #026DFF;
+  background: url("../../images/icons/individual.svg") center right 6px no-repeat #026DFF;
   background-size: auto 12px;
 }
 
@@ -1100,5 +1100,20 @@
   .new-prod-boxes-container .new-prod-boxes .prod_box {
     width: 100%;
     min-width: 100%;
+  }
+}
+
+/* Pricing elements css */
+.new-prod-boxes {
+  :where(.store-context), :where(.store-product), :where(.store-option) {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 50;
+  }
+
+  .checkmark-list {
+    :where(.store-context), :where(.store-product), :where(.store-option) {
+      display: block;
+    }
   }
 }

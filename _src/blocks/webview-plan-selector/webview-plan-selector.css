@@ -191,6 +191,13 @@ main .section.webview-plan-selector-container {
     cursor: pointer;
     text-align: left;
     appearance: none;
+
+    :where(.store-option) {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 17px;
+    }
 }
 
 .webview-plan-selector .discounted-yearly-price.await-loader {
@@ -813,6 +820,16 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context {
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context[hidden] {
     display: none;
+}
+
+/* Align the store option within the V2 price context. */
+main .webview-plan-selector.v2 .webview-plan-selector-v2-store-context :where(.store-option) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    width: 100%;
+    text-align: end;
 }
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-price-original {

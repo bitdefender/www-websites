@@ -1,5 +1,8 @@
 import {
   createNanoBlock,
+  createBdContext,
+  createBdProduct,
+  createBdOption,
   getDatasetFromSection,
   renderNanoBlocks,
 } from '../../scripts/utils/utils.js';
@@ -135,15 +138,14 @@ function updateBuyLink(block) {
   const buyLink = block.querySelector('.button-container > .button');
   if (buyLink) {
     buyLink.href = '#';
-    buyLink.setAttribute('data-store-buy-link', '');
+    buyLink.setAttribute('data-store-render', '');
+    buyLink.setAttribute('data-store-buy-link', state.blockDataset.trialDuration || '');
   }
 }
 
-function renderPrice(block, firstProduct) {
+function renderPrice(block) {
   const { saveText, defaultSelection } = block.closest('.section').dataset;
-  const [productName, productUsers, productYears] = [...defaultSelection.split('-')];
-  const variant = `${productUsers}-${productYears}`;
-
+  const [productId, devices, subscription] = [...defaultSelection.split('-')];
   const priceElement = document.createElement('div');
   priceElement.classList.add('price-element-wrapper');
 
@@ -153,31 +155,46 @@ function renderPrice(block, firstProduct) {
   const oldPrice = document.createElement('div');
   oldPrice.classList.add('prod-oldprice', 'await-loader');
   oldPrice.setAttribute('data-store-price', 'full');
-  oldPrice.setAttribute('data-store-hide', 'no-price=discounted');
-  oldPriceContainer.appendChild(oldPrice);
+  oldPrice.setAttribute('data-store-hide', '!it.option.price.discounted');
+  oldPriceContainer.append(oldPrice);
 
   if (saveText) {
     const saveTag = document.createElement('div');
     saveTag.classList.add('prod-save', 'await-loader');
-    saveTag.setAttribute('data-store-hide', 'no-price=discounted');
-    saveTag.innerHTML = `${saveText ?? ''} <span data-store-discount="percentage"></span>`;
-    oldPriceContainer.appendChild(saveTag);
-  }
-  priceElement.appendChild(oldPriceContainer);
+    saveTag.setAttribute('data-store-hide', '!it.option.price.discounted');
 
+    saveTag.innerHTML = `${saveText ?? ''} <span data-store-render data-store-discount="percentage"></span>`;
+    oldPriceContainer.append(saveTag);
+  }
   const el = document.createElement('DIV');
   el.classList.add('price');
   el.classList.add('await-loader');
-  block.setAttribute('data-store-context', '');
-  block.setAttribute('data-store-id', productName ?? firstProduct);
-  block.setAttribute('data-store-option', variant);
-  block.setAttribute('data-store-department', 'consumer');
-  block.setAttribute('data-store-event', 'main-product-loaded');
-  el.setAttribute('data-store-price', 'discounted||full');
 
+  el.setAttribute('data-store-price', 'discounted||full');
+  el.setAttribute('data-store-render', '');
+
+  priceElement.appendChild(oldPriceContainer);
   priceElement.appendChild(el);
   updateBuyLink(block);
-  return priceElement;
+
+  const option = createBdOption({ devices, subscription, storeEvent: 'info' });
+  option.appendChild(priceElement);
+
+  const buttonContainer = block.querySelector('.button-container');
+  if (buttonContainer) option.appendChild(buttonContainer);
+
+  if (!block.firstElementChild?.matches('.store-context')) {
+    const product = createBdProduct(productId);
+    while (block.firstChild) {
+      product.appendChild(block.firstChild);
+    }
+    product.appendChild(option);
+    const context = createBdContext();
+    context.appendChild(product);
+    block.appendChild(context);
+  }
+
+  return option;
 }
 
 function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
@@ -187,14 +204,14 @@ function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
   el.classList.add('products-sideview-radio');
   el.innerHTML = `
     <input type="radio" name="type" id="monthly"
-    data-store-click-set-product data-store-product-id="${secondProduct}"
-    data-store-product-department="consumer"
+    data-store-action data-store-set-id="${secondProduct}"
+    data-store-set-subscription="1"
     data-product-type="monthly" ${defaultSelection.split('-')[0] === secondProduct ? 'checked' : ''}/>
     <label for="monthly">${monthlyLabel ?? 'Monthly'}</label>
 
-    <input type="radio" name="type" id="yearly" data-store-click-set-product
-    data-store-product-id="${firstProduct}"
-    data-store-product-department="consumer"
+    <input type="radio" name="type" id="yearly" data-store-action
+    data-store-set-id="${firstProduct}"
+    data-store-set-subscription="1"
     data-product-type="yearly" ${defaultSelection.split('-')[0] === firstProduct ? 'checked' : ''}/>
     <label for="yearly">${yearlyLabel ?? 'Yearly'}</label>
   `;
@@ -225,7 +242,6 @@ function getBlueTagsAndListItems(block) {
 function updateBenefits(block, selectEl, metadata) {
   if (!metadata) return;
 
-  const { firstBenefitLabel, secondBenefitLabel, thirdBenefitLabel } = block.closest('.section').dataset;
   // eslint-disable-next-line no-unused-vars
   const { blueTags, listItems } = getBlueTagsAndListItems(block);
 
@@ -245,20 +261,6 @@ function updateBenefits(block, selectEl, metadata) {
 
   listItems.forEach((li, i) => {
     if (i < cleanedArray.length) {
-      let benefits = null;
-      switch (i) {
-        case 0:
-          benefits = firstBenefitLabel;
-          break;
-        case 1:
-          benefits = secondBenefitLabel;
-          break;
-        case 2:
-          benefits = thirdBenefitLabel;
-          break;
-        default:
-          break;
-      }
       const value = cleanedArray[i];
       const displayValue = typeof value === 'string' ? value.replace('-icon', '') : value;
       const iconSVG = (typeof value === 'string' && value.includes('-icon'))
@@ -273,12 +275,6 @@ function updateBenefits(block, selectEl, metadata) {
 
       // Update the benefits-placeholder span
       const placeholder = li.querySelector('.benefits-placeholder');
-      const [benefitsSingular, benefitsPlural] = benefits?.split(',') ?? [];
-      const textNode = [...li.childNodes].find((node) => node.nodeType === Node.TEXT_NODE);
-      if (textNode && benefits) {
-        textNode.textContent = Number(displayValue) === 1 ? ` ${benefitsSingular}` : ` ${benefitsPlural}`;
-      }
-
       if (placeholder) {
         placeholder.textContent = `${displayValue}`;
       }
@@ -300,11 +296,14 @@ function renderSelector(block, ...options) {
   const selectId = `members-select-${Math.random().toString(36).substr(2, 9)}`;
 
   el.innerHTML = `
-    <label for="${selectId}">${labelText}</label>
+    <label for="${selectId}">${labelText ?? 'Choose number of members'}</label>
     <select id="${selectId}"
-      data-store-click-set-devices>
+      data-store-action>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `
-          <option value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>${opt === 1 ? `${opt} ${singleMember ?? 'member'}` : `${opt} ${multipleMembers ?? 'members'}`} </option>
+          <option data-store-set-devices="${opt}"
+          value="${opt}" ${opt === defaultSelection ? 'selected' : ''}>
+            ${opt === 1 ? `${opt} ${singleMember ?? 'member'}` : `${opt} ${multipleMembers ?? 'members'}`}
+          </option>
         `).join('')}
     </select>
   `;
@@ -336,18 +335,18 @@ function initMembersMap() {
 export default function decorate(block) {
   const blockDataset = getDatasetFromSection(block);
   state.blockDataset = blockDataset;
-
+  const productsViewWrapper = block.firstElementChild;
   initMembersMap();
 
-  block.firstElementChild.classList.add('d-flex');
-  block.firstElementChild.firstElementChild.classList.add('pricing-wrapper');
-  block.firstElementChild.lastElementChild.classList.add('features-wrapper');
+  productsViewWrapper.classList.add('d-flex');
+  productsViewWrapper.firstElementChild.classList.add('pricing-wrapper');
+  productsViewWrapper.lastElementChild.classList.add('features-wrapper');
 
-  renderNanoBlocks(block.firstElementChild, block);
+  renderNanoBlocks(productsViewWrapper, block);
 
-  const cols = [...block.firstElementChild.children];
+  const cols = [...productsViewWrapper.children];
   block.classList.add(`features-${cols.length}-cols`);
 
-  const col = block.children[0].children[1];
+  const col = productsViewWrapper.children[1];
   col.appendChild(extractFeatures(col));
 }

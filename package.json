@@ -46,16 +46,18 @@
   },
   "dependencies": {
     "@glidejs/glide": "^3.7.1",
-    "@repobit/dex-data-layer": "^2.2.2",
-    "@repobit/dex-launch": "^3.0.118",
-    "@repobit/dex-system-design": "^0.24.13",
-    "@repobit/dex-target": "^2.16.3",
-    "@repobit/dex-utils": "^2.2.2",
+    "@repobit/dex-constants": "^2.1.115",
+    "@repobit/dex-data-layer": "^2.3.4",
+    "@repobit/dex-launch": "^3.0.119",
+    "@repobit/dex-store": "^1.6.32",
+    "@repobit/dex-store-elements": "^2.1.2",
+    "@repobit/dex-system-design": "^0.24.14",
+    "@repobit/dex-target": "^2.16.4",
+    "@repobit/dex-utils": "^2.3.83",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
   },
   "volta": {
-    "node": "24.16.0",
-    "npm": "11.13.0"
+    "node": "22.14.0"
   }
 }

@@ -330,6 +330,161 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   }
 }
 
+.image-columns.trusted.ferrari {
+  border-radius: 20px;
+  position: relative;
+
+  > div {
+    position: relative;
+
+    div:has(.button){
+      position: relative;
+      border-radius: 0 0 20px 20px;
+      margin-top: 200px;
+      padding: 24px !important;
+
+      h3 {
+        z-index: 998;
+        position: relative;
+        color: #fff;
+        font-size: 30px;
+        font-weight: 400;
+      }
+
+      h4 {
+        z-index: 998;
+        position: relative;
+        color: #fff;
+        font-size: 27px;
+        font-weight: 300;
+      }
+
+      p {
+        color: #fff;
+        z-index: 998;
+        position: relative;
+        display: block !important;
+
+        &:has(img) {
+          margin-bottom: 0;
+
+          img {
+            height: 120px;
+            object-fit: contain;
+
+
+            @media (min-width: 992px) {
+              min-width: 360px;
+              min-height: 120px;
+              
+            }
+          }
+        }
+      }
+
+      .button-container {
+        width: fit-content;
+      }
+
+      .button {
+        border: 2px solid #fff;
+        text-align: left;
+        width: fit-content;
+        font-size: 20px;
+
+      }
+    }
+
+    .image-columns-img-col {
+        position: absolute !important;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        margin-top: 0;
+
+        &::before {
+          display: block;
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background:  linear-gradient(360deg, #006DFF 24.98%, #006DFF 49.17%, rgb(0 109 255 / 69.6%) 58.42%, rgb(0 109 255 / 0%) 84.63%);
+          opacity: 1;
+          z-index: 997;
+          border-radius: 0 0 20px 20px;
+        }
+
+        .img-container {
+          position: absolute;
+          height: 60%;
+          width: 100%;
+          margin-top: 0;
+          top: 0;
+        }
+
+      img {
+        border-radius: 20px 20px 0 0;
+      }
+    }
+  }
+
+  @media (min-width: 992px) {
+    > div {
+      >div:has(.button){
+        background:  rgb(0 109 255 / 75%) 0 0 no-repeat padding-box;
+        backdrop-filter: blur(20px);
+        border-radius: 20px  0 0  20px;
+        z-index: 997;
+        position: relative;
+        
+        &::after {
+          display: block;
+          height: 100%;
+          width: 100%;
+          position: absolute;
+        }
+
+        margin-top: 0;
+        padding: 40px !important;
+
+        h3 {
+          font-size: 34px;
+        }
+
+        h4 {
+          font-size: 30px;
+        }
+
+        p {
+          font-size: 20px;
+        }
+      }
+
+      .image-columns-img-col {
+        &::before {
+          width: 100%;
+           background: linear-gradient(90deg, #006DFF 24.98%, #006DFF 49.17%, #006DFF 58.42%, rgb(0 109 255 / 0%) 100%);
+          border-radius: 20px;
+          opacity: 1;
+          z-index: 1;
+        }
+
+        .img-container {
+          height: 100%;
+          width: 65%;
+          right: 0;
+          z-index: 996;
+        }
+
+        img {
+          height: 100%;
+          border-radius: 0 20px 20px 0;
+        }
+      }
+    }
+  }
+}
+
 .bundle-design#heroColumn {
   background-color: #003385;
   padding: 0;

@@ -1,9 +1,10 @@
 /* eslint-disable max-len */
 // Description: Hero Dropdown block
 import {
+  createTag,
   createNanoBlock,
   renderNanoBlocks,
-  createTag,
+  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
 import { detectModalButtons } from '../../scripts/scripts.js';
@@ -36,35 +37,29 @@ function createDropdownItem(code, friendlyName, isActive) {
 }
 
 function createPriceBox({
-  code, product, unit, year, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText, hardcodedLink,
+  code, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText, trialDuration, hardcodedLink,
 }) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box', 'await-loader');
-  box.setAttribute('data-store-context', '');
-  box.setAttribute('data-store-id', product);
-  box.setAttribute('data-store-option', `${unit}-${year}`);
-  box.setAttribute('data-store-department', 'consumer');
-  box.setAttribute('data-store-event', 'product-loaded');
-  box.setAttribute('data-store-hide', 'no-price=discounted;type=visibility');
   box.dataset.code = code;
 
   box.innerHTML = `
     <p class="product-details">${detailsText || ''}</p>
     <div class="discount">
-      <div data-store-hide="no-price=discounted;type=visibility" class="price">
-        <span class="old-price"><del data-store-price="full"></del></span>
+      <div data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility" class="price">
+        <span class="old-price"><del data-store-render data-store-price="full"></del></span>
       </div>
-      <div data-store-hide="no-price=discounted;type=visibility" class="featured">
-        <span class="prod-save" data-store-hide="no-price=discounted"><span data-store-discount="percentage"></span> ${discounttext}</span>
+      <div data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility" class="featured">
+        <span class="prod-save"><span data-store-render data-store-discount="percentage"></span> ${discounttext}</span>
       </div>
     </div>
     <div class="price">
       <strong class="new-price">
-        <strong data-store-price="discounted||full"></strong>
+        <strong data-store-render data-store-price="discounted||full"></strong>
       </strong>
     </div>
     <div class="buttons">
-      <a  ${hardcodedLink ? `href="${hardcodedLink}"` : 'href="#" data-store-buy-link'} class="button primary-button">
+      <a  ${hardcodedLink ? `href="${hardcodedLink}"` : `href="#" data-store-render data-store-buy-link="${trialDuration || ''}"`} class="button primary-button">
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
@@ -91,6 +86,7 @@ createNanoBlock('dropdown', (...args) => {
     secondbuttonlink,
     label: labelText,
     productnames = '',
+    trialDuration,
     hardcodedLink,
   } = block.closest('.section').dataset || {};
 
@@ -130,11 +126,17 @@ createNanoBlock('dropdown', (...args) => {
     optionsList.appendChild(option);
 
     const priceBox = createPriceBox({
-      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText, hardcodedLink,
+      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText, trialDuration, hardcodedLink,
     });
 
     priceBox.style.display = index === 0 ? 'block' : 'none';
     root.appendChild(priceBox);
+    wrapChildrenWithStoreContext(priceBox, {
+      productId: product,
+      devices: unit,
+      subscription: year,
+      storeEvent: 'all',
+    });
   });
 
   customDropdown.appendChild(selectedOption);
@@ -206,6 +208,7 @@ export default function decorate(block) {
     contentsize,
     textcolor,
     signature,
+    trialDuration,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
@@ -226,6 +229,7 @@ export default function decorate(block) {
     ...(label && { label }),
     ...(productnames && { productnames }),
     ...(discounttext && { discounttext }),
+    ...(trialDuration && { trialDuration }),
   });
 
   buildHeroDropdownBlock(block);

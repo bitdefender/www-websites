@@ -29,11 +29,28 @@
   max-width: 100%;
 }
 
-.product-card > * {
+.product-card :where(.store-option-content) {
+  display: flex;
+  flex-flow: column;
+}
+
+/* The plan selector is hoisted out of the option into the product so the store
+   product-switch action resolves at the product level (the option ignores the
+   product id). Flatten the store wrappers into the card's flex column so the
+   hoisted selector and the option content share one flex context; the JS sets
+   `order` inline to preserve the authored visual position. */
+.product-card :where(.store-context),
+.product-card :where(.store-product),
+.product-card :where(.store-option),
+.product-card :where(.store-option-content) {
+  display: contents;
+}
+
+.product-card > *, .product-card :where(.store-option-content) > * {
   flex: 0;
 }
 
-.product-card > *:not(.button-container) {
+.product-card > *:not(.button-container), .product-card :where(.store-option-content) > *:not(.button-container) {
   flex-grow: 0;
 }
 
@@ -338,7 +355,7 @@
   color: #fff;
   width: 100%;
 
-   &:hover {
+  &:hover {
     text-decoration: none;
     filter: brightness(0.85) !important;
   }
@@ -395,7 +412,8 @@
   z-index: 2;
 }
 
-.product-card > ul li:not(.with-del)::before {
+.product-card :where(.store-option-content) > ul li:not(.with-del)::before,
+.product-card > div > ul li:not(.with-del)::before {
   content: "";
   position: absolute;
   left: 0;
@@ -407,7 +425,8 @@
   z-index: 1;
 }
 
-.product-card > ul li:not(.with-del)::after {
+.product-card :where(.store-option-content) > ul li:not(.with-del)::after,
+.product-card > div > ul li:not(.with-del)::after {
   content: "";
   position: absolute;
   left: 5px;
@@ -909,13 +928,13 @@
 
 @media (width <= 992px) {
   .products.compact, .products.plans {
-      --max-columns: 2;
+    --max-columns: 2;
 
-      display: flex;
-      flex-wrap: wrap;
-      text-align: center;
-      justify-content: center;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+  }
 
   .products.compact .product-card, .products.plans .product-card {
     max-width: unset;

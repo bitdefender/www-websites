@@ -444,7 +444,8 @@ main .section.images-floated .default-content-wrapper p.button-container {
 }
 
 /* section metadata */
-main .section.highlight > * { /* apply to all children wrapper */
+main .section.highlight > :not(:where(.store-section-context)),
+main .section.highlight :where(.store-section-content) { /* apply to authored content wrappers */
   background-color: var(--highlight-background-color);
 }
 
@@ -464,7 +465,8 @@ main .section.light-gray-wide {
   background-color: #fafafa;
 }
 
-main .section.light-sky-blue > * { /* apply to all children wrapper */
+main .section.light-sky-blue > :not(:where(.store-section-context)),
+main .section.light-sky-blue :where(.store-section-content) { /* apply to authored content wrappers */
   background-color: var(--background-color-light-sky-blue);
 }
 
@@ -513,17 +515,20 @@ main .section.wide img {
   object-fit: contain;
 }
 
-main .section.wide > :first-child {
+main .section.wide > :first-child:not(:where(.store-section-context)),
+main .section.wide :where(.store-section-content):first-child {
   border-radius: 1.5rem 1.5rem 0 0;
   padding-top: 56px;
 }
 
-main .section.wide > :last-child {
+main .section.wide > :last-child:not(:where(.store-section-context)),
+main .section.wide :where(.store-section-content):last-child {
   border-radius: 0 0 1.5rem 1.5rem;
   padding-bottom: 56px;
 }
 
-main .section.wide > :only-child {
+main .section.wide > :only-child:not(:where(.store-section-context)),
+main .section.wide :where(.store-section-content):only-child {
   border-radius: 8px;
 }
 
@@ -532,12 +537,14 @@ main .section.wide .default-content-wrapper {
   padding-bottom: 15px;
 }
 
-main .section.wide-v2 > :first-child {
+main .section.wide-v2 > :first-child:not(:where(.store-section-context)),
+main .section.wide-v2 :where(.store-section-content):first-child {
   border-radius: 8px 8px 0 0;
   padding-top: 56px;
 }
 
-main .section.wide-v2 > :last-child {
+main .section.wide-v2 > :last-child:not(:where(.store-section-context)),
+main .section.wide-v2 :where(.store-section-content):last-child {
   border-radius: 0 0 8px 8px;
   padding-bottom: 56px;
 }
@@ -716,7 +723,8 @@ main .grey-background {
     margin: 0;
   }
 
-  main .section.rounded > div {
+  main .section.rounded > :not(:where(.store-section-context)),
+  main .section.rounded :where(.store-section-content) {
     border-radius: 20px;
     padding: 50px;
   }
@@ -781,7 +789,8 @@ main .grey-background {
     font-weight: var(--font-weight-bold);
   }
 
-  main div.section.wide > * { /* apply to all children wrapper */
+  main div.section.wide > :not(:where(.store-section-context)),
+  main div.section.wide :where(.store-section-content) { /* apply to authored content wrappers */
     max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
     padding-top: 1px; /* hack to handle margin of child paragraphs */
   }
@@ -982,7 +991,8 @@ main .section.mb-0, .mb-0 {
     letter-spacing: normal;
   }
 
-  main div.section.wide > * { /* apply to all children wrapper */
+  main div.section.wide > :not(:where(.store-section-context)),
+  main div.section.wide :where(.store-section-content) { /* apply to authored content wrappers */
     max-width: calc(var(--section-large-desktop-max-width) - 2 * var(--section-large-desktop-padding));
     padding-top: 1px; /* hack to handle margin of child paragraphs */
   }
