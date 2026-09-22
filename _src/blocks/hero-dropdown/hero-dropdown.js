@@ -212,6 +212,7 @@ export default function decorate(block) {
     textcolor,
     signature,
     trialDuration,
+    linksOpenInNewTab,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
@@ -265,4 +266,14 @@ export default function decorate(block) {
 
   renderDropdown(block);
   detectModalButtons(block);
+
+  if (linksOpenInNewTab) {
+    block.querySelectorAll('a.button').forEach((link) => {
+      // leave anchors as they are
+      if (!link.href.includes('#')) {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      }
+    });
+  }
 }
