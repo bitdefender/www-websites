@@ -1,0 +1,313 @@
+{
+  "id": "0071c667-a429-4042-bb45-70e5f68910d0",
+  "name": "BITDEFENDER_26-09-09_0071c667-a429-4042-bb45-70e5f68910d0",
+  "metadata": {
+    "brandName": "BITDEFENDER",
+    "version": "1.0.0",
+    "language": "en",
+    "namespace": "brand-concierge"
+  },
+  "behavior": {
+    "multimodalCarousel": {
+      "cardClickAction": "openLink"
+    },
+    "input": {
+      "enableVoiceInput": false,
+      "continuousVoiceMode": false,
+      "disableMultiline": true,
+      "showAiChatIcon": {
+        "icon": ""
+      }
+    },
+    "chat": {
+      "messageAlignment": "normal",
+      "messageWidth": "100%"
+    },
+    "privacyNotice": {
+      "title": "Privacy Notice",
+      "text": "Your use of this automated chatbot constitutes your consent that the personal information you provide in the chat session can be collected, used, disclosed, and retained by YourBrand and service providers acting on YourBrand's behalf in accordance with the YourBrand {Privacy Policy}. Please do not provide sensitive personal information (such as financial or health information) in the chatbot.",
+      "links": [
+        {
+          "text": "Privacy Policy",
+          "url": "<your-privacy-policy-url>"
+        }
+      ]
+    },
+    "meetingForm": {
+      "fieldsPerRow": 2,
+      "fieldLayoutRules": {
+        "textInputs": {
+          "allowTwoColumns": true,
+          "fieldTypes": [
+            "string",
+            "email",
+            "tel",
+            "number"
+          ],
+          "identifyBy": null
+        },
+        "dropdowns": {
+          "allowTwoColumns": false,
+          "fieldTypes": [
+            "select"
+          ],
+          "identifyBy": "hasOptions"
+        },
+        "checkboxes": {
+          "allowTwoColumns": false,
+          "fieldTypes": [
+            "boolean",
+            "checkbox"
+          ],
+          "identifyBy": null
+        }
+      },
+      "title": {
+        "text": "Schedule a Meeting",
+        "alignment": "left"
+      },
+      "subtitle": {
+        "text": "Connect with our experts to find the best cybersecurity solutions for your needs.",
+        "alignment": "left"
+      },
+      "buttons": {
+        "submit": {
+          "text": "Submit",
+          "alignment": "left"
+        },
+        "cancel": {
+          "text": "Cancel",
+          "alignment": "left"
+        }
+      }
+    },
+    "calendarWidget": {
+      "title": {
+        "text": "Pick a Date and Time",
+        "alignment": "left"
+      },
+      "subtitle": {
+        "text": "Choose a convenient time for your consultation.",
+        "alignment": "left"
+      },
+      "postTitle": {
+        "text": "Once confirmed, you will receive a calendar invite with all the details. The specialist will already have this conversation context, so no need to repeat anything. Looking forward to connecting you with the right expert!",
+        "alignment": "left"
+      },
+      "buttons": {
+        "confirm": {
+          "text": "Confirm",
+          "alignment": "left"
+        },
+        "cancel": {
+          "text": "Cancel",
+          "alignment": "left"
+        }
+      }
+    },
+    "productCard": {
+      "actionButtonSize": "S"
+    },
+    "b2bLiveChat": {
+      "enabled": true
+    }
+  },
+  "disclaimer": {
+    "text": "All rights reserved by BITDEFENDER. See our terms for more details.",
+    "links": [
+      {
+        "text": "Terms of Use",
+        "url": "https://www.bitdefender.com/site/view/legal-terms-and-conditions-for-home-users-solutions.html"
+      }
+    ]
+  },
+  "text": {
+    "welcome.heading": "Welcome to BITDEFENDER",
+    "welcome.subheading": "Your trusted partner in cybersecurity solutions.",
+    "input.placeholder": "Ask about our cybersecurity solutions or services.",
+    "input.messageInput.aria": "Type your message here",
+    "input.send.aria": "Send message",
+    "input.aiChatIcon.tooltip": "Chat with BITDEFENDER",
+    "input.mic.aria": "Use voice input",
+    "card.aria.select": "Select this option",
+    "carousel.prev.aria": "Previous",
+    "carousel.next.aria": "Next",
+    "scroll.bottom.aria": "Scroll to bottom",
+    "error.network": "Network error. Please try again.",
+    "loading.message": "Loading...",
+    "feedback.dialog.title.positive": "Positive Feedback",
+    "feedback.dialog.title.negative": "Negative Feedback",
+    "feedback.dialog.question.positive": "What did you like?",
+    "feedback.dialog.question.negative": "What can we improve?",
+    "feedback.dialog.notes": "Additional comments",
+    "feedback.dialog.submit": "Submit",
+    "feedback.dialog.cancel": "Cancel",
+    "feedback.dialog.notes.placeholder": "Type your comments here",
+    "feedback.toast.success": "Thank you for your feedback!",
+    "feedback.thumbsUp.aria": "Thumbs up",
+    "feedback.thumbsDown.aria": "Thumbs down",
+    "feedback.title": "Share your feedback",
+    "feedback.positive.title": "What did you like?",
+    "feedback.negative.title": "What can we improve?",
+    "feedback.submitButton": "Submit Feedback",
+    "feedback.positive.options": "",
+    "feedback.negative.options": ""
+  },
+  "arrays": {
+    "welcome.examples": [
+      {
+        "text": "What are your cybersecurity solutions?",
+        "systemPrompt": "Explain the cybersecurity solutions offered by BITDEFENDER.",
+        "backgroundColor": "#006dff",
+        "image": "https://www.bitdefender.com/adobe/dynamicmedia/deliver/dm-aid--d8ab0c3f-57a9-47d0-a60d-8bd786da6039/for-consumer.webp?width=1024&preferwebp=true&quality=50"
+      },
+      {
+        "text": "How can I protect my small business?",
+        "systemPrompt": "Provide details on how BITDEFENDER helps small businesses with cybersecurity.",
+        "backgroundColor": "#2683ff",
+        "image": "https://www.bitdefender.com/adobe/dynamicmedia/deliver/dm-aid--940909b9-3f4d-4cb6-bd1d-a44f1f456412/for-smallb.webp?width=1024&preferwebp=true&quality=50"
+      },
+      {
+        "text": "What solutions do you offer for enterprises?",
+        "systemPrompt": "Describe the enterprise-level cybersecurity solutions provided by BITDEFENDER.",
+        "backgroundColor": "#4d99ff",
+        "image": "https://www.bitdefender.com/adobe/dynamicmedia/deliver/dm-aid--86963439-d426-4915-875d-298dbac9821f/for-enterprise.webp?width=1024&preferwebp=true&quality=50"
+      },
+      {
+        "text": "What awards has BITDEFENDER won?",
+        "systemPrompt": "List the awards and recognitions BITDEFENDER has received.",
+        "backgroundColor": "#73afff",
+        "image": "https://www.bitdefender.com/adobe/dynamicmedia/deliver/dm-aid--a7bbd3a0-eba2-4348-ae2c-1e111723b1be/gartner-peer-insights-customers-choice-badge-color-2026-outline.webp?width=420&preferwebp=true&quality=50"
+      }
+    ],
+    "feedback.positive.options": [
+      "Easy to use",
+      "Comprehensive solutions",
+      "Great customer support",
+      "Reliable threat detection",
+      "Other"
+    ],
+    "feedback.negative.options": [
+      "Difficult to navigate",
+      "Limited features",
+      "Slow response time",
+      "High pricing",
+      "Other"
+    ]
+  },
+  "assets": {
+    "icons": {
+      "company": "https://www.bitdefender.com/content/dam/bitdefender/global/logo/bitdefender-logo.svg"
+    }
+  },
+  "visualProfile": {
+    "sendIconIconColor": "#ffffff",
+    "sendIconBackgroundColor": "#522752"
+  },
+  "theme": {
+    "--welcome-input-order": "3",
+    "--welcome-cards-order": "2",
+    "--welcome-heading-size-desktop": "2rem",
+    "--welcome-heading-size-mobile": "1.5rem",
+    "--welcome-heading-weight": "700",
+    "--welcome-heading-text-align": "center",
+    "--welcome-subheading-size-desktop": "1.25rem",
+    "--welcome-subheading-size-mobile": "1rem",
+    "--welcome-subheading-text-align": "center",
+    "--welcome-padding": "2rem",
+    "--prompt-suggestion-background": "#522752",
+    "--prompt-suggestion-background-hover": "#522752",
+    "--prompt-suggestion-text-color": "#522752",
+    "--prompt-suggestion-border-color": "#522752",
+    "--font-family": "'IBM Plex Sans', sans-serif",
+    "--color-primary": "#006dff",
+    "--color-text": "#522752",
+    "--line-height-body": "1.5",
+    "--main-container-background": "#ffffff",
+    "--input-height": "48px",
+    "--input-height-mobile": "40px",
+    "--input-border-radius": "8px",
+    "--input-border-radius-mobile": "6px",
+    "--input-background": "#ffffff",
+    "--input-outline-color": "#d9d9d9",
+    "--input-outline-width": "1px",
+    "--input-box-shadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+    "--input-focus-outline-width": "2px",
+    "--input-focus-outline-color": "#006dff",
+    "--input-font-size": "1rem",
+    "--input-font-weight": "400",
+    "--input-text-color": "#000000",
+    "--input-button-height": "36px",
+    "--input-button-width": "36px",
+    "--submit-button-fill-color": "#ffffff",
+    "--submit-button-fill-color-disabled": "#CCCCCC",
+    "--color-button-submit": "#006dff",
+    "--color-button-submit-hover": "#522752",
+    "--input-button-border-radius": "8px",
+    "--button-disabled-background": "#F0F0F0",
+    "--disclaimer-color": "#6c757d",
+    "--disclaimer-font-size": "0.875rem",
+    "--disclaimer-font-weight": "400",
+    "--message-user-background": "#006dff",
+    "--message-user-text": "#ffffff",
+    "--message-border-radius": "8px",
+    "--message-padding": "1rem",
+    "--message-concierge-background": "#f3f3f3",
+    "--message-concierge-text": "#000000",
+    "--message-max-width": "100%",
+    "--chat-interface-max-width": "768px",
+    "--message-blocker-height": "48px",
+    "--loading-message-background": "#d9d9d9",
+    "--loading-dot-background": "#626262",
+    "--color-text-muted": "#626262",
+    "--citations-text-font-weight": "400",
+    "--citations-desktop-button-font-size": "0.875rem",
+    "--feedback-icon-btn-background": "#f0f0f0",
+    "--feedback-icon-btn-hover-background": "#e0e0e0",
+    "--feedback-icon-btn-size-desktop": "40px",
+    "--feedback-container-gap": "1rem",
+    "--multimodal-card-box-shadow": "0 4px 8px rgba(0, 0, 0, 0.1)",
+    "--border-radius-card": "8px",
+    "--button-height-s": "36px",
+    "--button-primary-background": "#006dff",
+    "--button-primary-text": "#ffffff",
+    "--button-primary-hover": "#522752",
+    "--button-secondary-border": "1px solid #0059d6",
+    "--button-secondary-text": "#0059d6",
+    "--button-secondary-hover": "#00439c",
+    "--color-button-secondary-hover-text": "#ffffff",
+    "--privacy-notice-background": "#ffffff",
+    "--privacy-notice-padding": "1rem",
+    "--privacy-notice-title-color": "#626262",
+    "--privacy-notice-text-color": "#626262",
+    "--privacy-notice-text-font-size": "0.875rem",
+    "--privacy-notice-title-font-size": "1rem",
+    "--message-concierge-link-decoration": "underline",
+    "--color-secondary": "#0059d6",
+    "--prompt-suggestion-button-background": "#d9d9d9",
+    "--prompt-pill-background": "#006dff",
+    "--button-primary-mobile-background": "#522752",
+    "--button-primary-mobile-hover": "#522752",
+    "--main-container-mobile-background": "#ffffff",
+    "--message-concierge-border-width": "1px",
+    "--message-concierge-link-color": "#006dff",
+    "--prompt-suggestion-button-border-radius": "16px",
+    "--prompt-suggestion-button-padding": "0.5rem 1rem",
+    "--prompt-suggestions-container-gap": "0.5rem",
+    "--card-background": "#006dff",
+    "--card-text-font-size": "1rem",
+    "--card-text-padding": "1rem",
+    "--chat-container-background": "#ffffff",
+    "--message-blocker-background": "#ffffff",
+    "--card-text-color": "#ffffff",
+    "--prompt-pill-border-color": "#006dff",
+    "--prompt-pill-text-color": "#000000",
+    "--prompt-suggestion-button-text-color": "#626262",
+    "--prompt-suggestion-button-background-hover": "#d9d9d9",
+    "--welcome-heading-text-color": "#000000",
+    "--welcome-subheading-text-color": "#000000",
+    "--welcome-header-order": "1",
+    "--prompt-suggestions-flex-direction": "row",
+    "--prompt-suggestions-flex-wrap": "wrap"
+  }
+}

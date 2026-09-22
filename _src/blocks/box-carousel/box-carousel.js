@@ -12,7 +12,7 @@ export default async function decorate(block) {
     const colTitle = row?.children?.[1];
     const colSubSecondary = row?.children?.[2];
     const colSubPrimary = row?.children?.[3];
-    const hasImg = colMedia?.querySelector?.('img, picture, .icon');
+    const hasImg = row.querySelector?.('img, picture, .icon');
 
     if (isTestimonials && block.classList.contains('reviews')) {
       let subSecondary = colSubSecondary?.innerHTML || '';

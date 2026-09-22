@@ -38,38 +38,73 @@ function initCarousel(block) {
   prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
   nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
-  // Touch/Swipe support
+  // Drag/Swipe support for touch and mouse
   let touchStartX = 0;
   let isDragging = false;
   let currentOffset = 0;
 
-  track.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].clientX;
+  function startDrag(clientX) {
+    touchStartX = clientX;
     isDragging = true;
 
     // stop animation so user can drag smoothly
     cardsContainer.style.setProperty('--transition', 'none');
+  }
+
+  function moveDrag(clientX) {
+    if (!isDragging) return;
+
+    const diff = clientX - touchStartX;
+    currentOffset = offset + diff;
+
+    // Follow finger/mouse
+    cardsContainer.style.setProperty('--offset', `${currentOffset}px`);
+  }
+
+  function endDrag(clientX) {
+    if (!isDragging) return;
+
+    isDragging = false;
+    const diff = touchStartX - clientX;
+    const DRAG_THRESHOLD = 40; // minimum pixels to drag before changing slide
+
+    if (Math.abs(diff) > DRAG_THRESHOLD) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    } else {
+      // Not enough drag, snap back to current slide
+      goToSlide(currentIndex);
+    }
+  }
+
+  track.addEventListener('touchstart', (e) => {
+    startDrag(e.changedTouches[0].clientX);
   }, { passive: true });
 
   track.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-
-    const moveX = e.changedTouches[0].clientX;
-    const diff = moveX - touchStartX;
-
-    currentOffset = offset + diff;
-
-    // Follow finger
-    cardsContainer.style.setProperty('--offset', `${currentOffset}px`);
+    moveDrag(e.changedTouches[0].clientX);
   }, { passive: true });
 
   track.addEventListener('touchend', (e) => {
-    isDragging = false;
-    const diff = touchStartX - e.changedTouches[0].clientX;
-
-    if (diff > 0) goToSlide(currentIndex + 1);
-    else goToSlide(currentIndex - 1);
+    endDrag(e.changedTouches[0].clientX);
   }, { passive: true });
+
+  track.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+
+    startDrag(e.clientX);
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    moveDrag(e.clientX);
+  });
+
+  window.addEventListener('mouseup', (e) => {
+    endDrag(e.clientX);
+  });
 
   updateCarousel();
 }
@@ -103,7 +138,7 @@ export default function decorate(block) {
     card.classList.add('carousel-card');
 
     const link = card.querySelector('a');
-    if (link) {
+    if (link && !block.closest('.section').classList.contains('trusted-carousel')) {
       card.style.cursor = 'pointer';
       card.addEventListener('click', (e) => {
         // prevent double triggering if the actual link was clicked
