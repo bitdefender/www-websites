@@ -264,8 +264,6 @@
                 }
 
                 @media (max-width: 767px) {
-                   
-
                     .navigation {
                         display: none;
                     }
@@ -280,7 +278,7 @@
         }
 
         @media (max-width: 767px) {
-           .default-content-wrapper * {
+            .default-content-wrapper * {
                 max-width: 100%;
             }
         }

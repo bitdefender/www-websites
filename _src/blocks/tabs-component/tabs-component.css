@@ -60,6 +60,9 @@
 .tabs-component-container .tabs-container {
   display: flex;
   justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #E4F2FF;
 }
 
 .tabs-component-container .tabs-container .buttons-container {

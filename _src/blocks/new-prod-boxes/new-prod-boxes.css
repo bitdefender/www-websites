@@ -88,6 +88,7 @@
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2 {
   min-height: 30px;
+  height: fit-content;
   max-width: 350px;
   width: 86%;
   font-family: Arial, sans-serif;
@@ -100,6 +101,7 @@
   box-sizing: content-box;
   display: flex;
   align-items: center;
+  align-self: end;
   justify-content: center;
   padding: 3px 5px;
 }
@@ -991,6 +993,10 @@
 @media (max-width: 768px) {
   .demo-box .hero-aem__prices {
     display: none;
+  }
+
+  .new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2 {
+    min-height: auto;
   }
 
   .creators .new-prod-boxes-container .new-prod-boxes .prod_box.demo-box .inner_prod_box .undeBuyLink {
