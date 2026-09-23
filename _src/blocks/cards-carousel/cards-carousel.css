@@ -23,7 +23,7 @@
                     .carousel-card {
                         display: grid;
                         grid-template-rows: subgrid;
-                        grid-row: span 5;
+                        grid-row: span 4;
                         gap: 8px;
                         border-radius: 20px;
                         padding: 24px;
@@ -278,7 +278,7 @@
         }
 
         @media (max-width: 767px) {
-           .default-content-wrapper * {
+            .default-content-wrapper * {
                 max-width: 100%;
             }
         }

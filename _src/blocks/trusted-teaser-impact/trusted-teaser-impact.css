@@ -52,10 +52,10 @@
     font-weight: bold;
 }
 
- .trusted-teaser-impact .box-wrapper .box-item .icon {
+.trusted-teaser-impact .box-wrapper .box-item .icon {
     width: 70px;
     height: 70px;
- }
+}
 
 .trusted-teaser-impact .box-item .subtitle {
     margin-top: 0;

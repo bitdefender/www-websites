@@ -1,5 +1,4 @@
 :root {
-
     /* PADDING VALUES */
     --size-0: 0;
     --size-1: 1px;
@@ -76,7 +75,6 @@
     }
 
     .new-prod-boxes-container .new-prod-boxes {
-
         &.blue-top-tag {
             .prod_box .blueTag {
                 margin-bottom: var(--size-16);
@@ -229,8 +227,6 @@
                     font-weight: 600;
                     font-size: var(--size-14);
                     margin-top: var(--size-0);
-                    padding-bottom: var(--size-16);
-                    border-bottom: 1px solid #D1D1D1;
                 }
 
                 .benefitsLists {
