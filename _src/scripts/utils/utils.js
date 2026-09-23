@@ -1009,6 +1009,11 @@ export const generatePageLoadStartedName = () => {
     const subSubSubSection = allSegments[allSegments.length - 1] = allSegments[allSegments.length - 1].replace(/-/g, ' ');
     const nameSection = lastSegment === 'subscriber-protection-platform' ? 'partners' : 'product';
     tagName = `${locale}:${nameSection}:${subSubSubSection}`;
+
+    if (lastSegment === 'trusted' || lastSegment === 'scuderiaferrari') {
+      tagName = `${locale}:${lastSegment}`;
+    }
+
     if (lastSegment === 'consumer') {
       tagName = `${locale}:consumer:solutions`;
     }

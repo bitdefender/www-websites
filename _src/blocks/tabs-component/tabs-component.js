@@ -29,6 +29,15 @@ export default function decorate(block, options) {
     divs.forEach((div, index) => {
       const button = document.createElement('button');
       if (index === 0) button.classList.add('selected');
+
+      // Tab labels are image-only. If the authored tab image has no alt text,
+      // use the corresponding card logo's alt text as the accessible label.
+      const tabImage = div.querySelector('img');
+      const cardImage = sections[index]?.querySelector('img');
+      const tabAlt = tabImage?.getAttribute('alt')?.trim();
+      const cardAlt = cardImage?.getAttribute('alt')?.trim();
+      if (tabImage && !tabAlt && cardAlt) tabImage.setAttribute('alt', cardAlt);
+
       button.innerHTML = div.innerHTML; // Use innerHTML instead of textContent
       button.addEventListener('click', () => {
         // Remove 'selected' class from all buttons
