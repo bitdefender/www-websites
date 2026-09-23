@@ -264,11 +264,10 @@
                 }
 
                 @media (max-width: 767px) {
-                   
-
-                    .navigation {
-                        display: none;
-                    }
+                   .navigation {
+                        position: static;
+                        justify-content: center;
+                   }
 
                     .carousel-track {
                         .cards-container {
