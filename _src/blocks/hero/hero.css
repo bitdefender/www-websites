@@ -63,46 +63,6 @@ main .hero .hero-content .signature {
   }
 }
 
-main .hero .hero-content .breadcrumb a {
-  font-size: var(--breadcrumbs-font-size-s);
-  font-weight: var(--font-weight-bold);
-  color: var(--breadcrumb-text-color-dark-hover);
-  text-decoration: none;
-  line-height: 1.7;
-  letter-spacing: .96px;
-}
-
-main .hero .hero-content .breadcrumb a:last-child {
-  padding: 0;
-  margin: 0;
-  pointer-events: none;
-}
-
-main .hero .hero-content .breadcrumb a::after {
-  content: "/";
-  display: inline-block;
-  color: var(--color-dark-gray);
-  margin: 0 3px;
-  font-size: 9pt;
-}
-
-main .hero .hero-content .breadcrumb a:hover {
-  color: var(--text-color);
-}
-
-main .hero.black-background .hero-content .breadcrumb a {
-  color: var(--breadcrumb-text-color-dark);
-  text-decoration: none;
-}
-
-main .hero.black-background .hero-content .breadcrumb a::after {
-  color: #dedede;
-}
-
-main .hero.black-background .hero-content .breadcrumb a:hover {
-  color: var(--breadcrumb-text-color-dark-hover);
-}
-
 /* hero */
 main .hero-container>div {
   max-width: unset;
@@ -686,10 +646,6 @@ main .hero.ferrari .hero-content{
 main .hero.ferrari .hero-content img{
   position: relative;
   width: fit-content;
-}
-
-main .hero.ferrari .breadcrumb{
-  display: none;
 }
 
 .hero-container.grey-background .hero-picture {

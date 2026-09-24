@@ -213,6 +213,10 @@ main .hero-dropdown-container .discount {
   font-weight: 600;
 }
 
+main .hero-dropdown-container.no-pricing .discount {
+  display: none;
+}
+
 main .hero-dropdown-container .product-details{
   margin-bottom: 8px;
   font-size: 14px;

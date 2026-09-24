@@ -8,6 +8,7 @@
     --dark2: #0c0f14;
     --darker: #06080a;
     --font-ibm: "IBM Plex Sans", sans-serif;
+
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -77,8 +78,8 @@
 
 .trusted u {
     text-decoration: none;
-    font: normal normal 600 14px/18px IBM Plex Sans;
-    letter-spacing: 0px;
+    font: normal normal 600 14px/18px "IBM Plex Sans";
+    letter-spacing: 0;
     color: #006EFF;
 }
 
@@ -142,7 +143,7 @@
     margin: 0 auto;
 }
 
-.trusted main a.button:any-link:not(.modal):not(.primary) {
+.trusted main a.button:any-link:not(.modal, .primary) {
     background-color: var(--blue);
     border: 1px solid var(--blue);
 }
@@ -236,7 +237,7 @@ main .section.link-right a {
     margin: auto;
     left: 10%;
     top: 17em;
-    -webkit-transform: translateX(-20%);
+    transform: translateX(-20%);
     z-index: 9999;
 }
 
@@ -252,8 +253,8 @@ main .section.link-right a {
     height: 60px;
     width: 38px;
     border-radius: 30px;
-    -webkit-transform: none;
-    -ms-transform: none;
+    transform: none;
+    transform: none;
     transform: none;
     border: 2px solid var(--white);
     top: 170px;
@@ -265,26 +266,26 @@ main .section.link-right a {
 }
 
 .trusted #mouse-scroll .down-arrow-1, .trusted #mouse-scroll .down-arrow-2, .trusted #mouse-scroll .down-arrow-3 {
-    -webkit-animation: mouse-scroll 1s infinite;
-    -moz-animation: mouse-scroll 1s infinite;
+    animation: mouse-scroll 1s infinite;
+    animation: mouse-scroll 1s infinite;
 }
 
 .trusted #mouse-croll .down-arrow-1 {
-    -webkit-animation-delay: .1s;
-    -moz-animation-delay: .1s;
-    -webkit-animation-direction: alternate;
+    animation-delay: .1s;
+    animation-delay: .1s;
+    animation-direction: alternate;
 }
 
 .trusted #mouse-scroll .down-arrow-2 {
-    -webkit-animation-delay: .2s;
-    -moz-animation-delay: .2s;
-    -webkit-animation-direction: alternate;
+    animation-delay: .2s;
+    animation-delay: .2s;
+    animation-direction: alternate;
 }
 
 .trusted #mouse-scroll .down-arrow-3 {
-    -webkit-animation-delay: .3s;
+    animation-delay: .3s;
     -moz-animation-dekay: .3s;
-    -webkit-animation-direction: alternate;
+    animation-direction: alternate;
 }
 
 .trusted #mouse-scroll .mouse-in {
@@ -298,8 +299,8 @@ main .section.link-right a {
 }
 
 .trusted #mouse-scroll .mouse-in {
-    -webkit-animation: animated-mouse 1.2s ease infinite;
-    -moz-animation: mouse-animated 1.2s ease infinite;
+    animation: animated-mouse 1.2s ease infinite;
+    animation: mouse-animated 1.2s ease infinite;
 }
 
 .trusted canvas {
@@ -381,8 +382,9 @@ main .section.link-right a {
 
 /* awards band */
 .trusted .section.static-awards {
-    /*todo remove block */
-    /*display: none;*/
+    /* todo remove block */
+
+    /* display: none; */
     background: white;
     padding: 0;
 }
@@ -425,6 +427,7 @@ main .section.link-right a {
     object-position: inherit;
     filter: grayscale(100%);
 }
+
 /* end awards band */
 
 /* override columns bg */
@@ -433,16 +436,21 @@ main .section.link-right a {
     color: black;
 }
 
-/*.trusted .section.columns-container.trusted-bg-1 h2,*/
-/*.trusted .section.columns-container.trusted-bg-1 h3,*/
-/*.trusted .section.columns-container.trusted-bg-1 h4 {*/
-/*    font: normal normal 600 20px/24px IBM Plex Sans;*/
-/*}*/
+/* .trusted .section.columns-container.trusted-bg-1 h2, */
+
+/* .trusted .section.columns-container.trusted-bg-1 h3, */
+
+/* .trusted .section.columns-container.trusted-bg-1 h4 { */
+
+/*    font: normal normal 600 20px/24px IBM Plex Sans; */
+
+/* } */
 
 .trusted .section.columns-container.trusted-bg-1 p,
 .trusted .section.columns-container.trusted-bg-1 div {
-    font: normal normal normal 14px/21px IBM Plex Sans;
+    font: normal normal normal 14px/21px "IBM Plex Sans";
 }
+
 /* end override columns */
 
 /* columns with logos */
@@ -464,27 +472,33 @@ main .section.link-right a {
     width: 160px;
 }
 
-/*.trusted .section.columns-container h2,*/
-/*.trusted .section.columns-container h3,*/
-/*.trusted .section.columns-container h4 {*/
-/*    font: normal normal 600 20px/24px IBM Plex Sans;*/
-/*}*/
+/* .trusted .section.columns-container h2, */
+
+/* .trusted .section.columns-container h3, */
+
+/* .trusted .section.columns-container h4 { */
+
+/*    font: normal normal 600 20px/24px IBM Plex Sans; */
+
+/* } */
 
 .trusted .section.columns-container p,
 .trusted .section.columns-container div {
-    font: normal normal 300 17px/24px IBM Plex Sans;
+    font: normal normal 300 17px/24px "IBM Plex Sans";
 }
+
 /* end columns with logos */
 
 /* particle band section */
 .trusted .section.particle-band {
     display: none;
 }
+
 /* end particle band section */
 
 .trusted .section.small-text p {
     line-height: 1.4;
-    color: #777777;
+    color: #777;
 }
 
 .trusted .columns-container a:not(.button):any-link {
@@ -498,13 +512,13 @@ main .section.link-right a {
     text-decoration: underline;
 }
 
-.trusted .columns-container a.button:any-link:not(.modal):not(.primary) {
+.trusted .columns-container a.button:any-link:not(.modal, .primary) {
     border: solid white 2px;
     width: 100%;
     justify-content: center;
 }
 
-.trusted .columns-container.bg-white a.button:any-link:not(.modal):not(.primary) {
+.trusted .columns-container.bg-white a.button:any-link:not(.modal, .primary) {
     border: solid black 2px;
     background: white;
     color: black;
@@ -512,7 +526,7 @@ main .section.link-right a {
     justify-content: center;
 }
 
-.trusted .columns-container.bg-white a.button:any-link:not(.modal):not(.primary)::after {
+.trusted .columns-container.bg-white a.button:any-link:not(.modal, .primary)::after {
     background: black;
 }
 
@@ -553,7 +567,7 @@ main .section.link-right a {
 }
 
 .trusted .section.dealsbluebanner .block  {
-    background-color: rgb(239, 246, 255) !important;
+    background-color: rgb(239 246 255) !important;
     border-radius: 15px;
     margin-top: 3em;
     padding: 0 0 0 3em;
@@ -575,9 +589,9 @@ main .section.link-right a {
     left: 0;
     width: 31%;
     height: 100%;
-    background: linear-gradient(to right, rgba(239, 246, 255, 1), rgba(239, 246, 255, 0));
+    background: linear-gradient(to right, rgb(239 246 255 / 100%), rgb(239 246 255 / 0%));
     pointer-events: none;
-  }
+}
 
 .trusted .section.dealsbluebanner .columns-img-col img {
     height: 100%;
@@ -594,25 +608,28 @@ main .section.link-right a {
 @keyframes animated-mouse {
     0% {
         opacity: 1;
-        -webkit-transform: translateY(0);
-        -ms-transform: translateY(0);
+        transform: translateY(0);
+        transform: translateY(0);
         transform: translateY(0);
     }
+
     100% {
         opacity: 0;
-        -webkit-transform: translateY(6px);
-        -ms-transform: translateY(6px);
+        transform: translateY(6px);
+        transform: translateY(6px);
         transform: translateY(6px);
     }
 }
 
-@-webkit-keyframes mouse-scroll {
+@keyframes mouse-scroll {
     0% {
         opacity: 1;
     }
+
     50% {
         opacity: .5;
     }
+
     100% {
         opacity: 1;
     }
@@ -622,9 +639,11 @@ main .section.link-right a {
     0% {
         opacity: 0;
     }
+
     50% {
         opacity: 0.5;
     }
+
     100% {
         opacity: 1;
     }
@@ -746,8 +765,8 @@ main .section.link-right a {
         object-fit: cover;
     }
 
-    .trusted .columns-container a.button:any-link:not(.modal):not(.primary),
-    .trusted .columns-container.bg-white a.button:any-link:not(.modal):not(.primary) {
+    .trusted .columns-container a.button:any-link:not(.modal, .primary),
+    .trusted .columns-container.bg-white a.button:any-link:not(.modal, .primary) {
         width: unset;
         justify-content: unset;
     }
@@ -773,10 +792,12 @@ main .section.link-right a {
         flex-wrap: unset;
         padding: 0 7em;
     }
+
     .trusted .section.static-awards .default-content-wrapper > * {
         width: calc(100% - 66px);
         height: calc(100% - 30px);
     }
+
     /* end awards band */
 
     /* columns bg-1 override */
@@ -786,7 +807,7 @@ main .section.link-right a {
 
     .trusted .section.columns-container.trusted-bg-1 p,
     .trusted .section.columns-container.trusted-bg-1 div{
-        font: normal normal normal 18px/27px IBM Plex Sans;
+        font: normal normal normal 18px/27px "IBM Plex Sans";
     }
 
     .trusted .section.columns-container.trusted-bg-1 .columns > div  {
@@ -796,12 +817,14 @@ main .section.link-right a {
     .trusted .section.columns-container.trusted-bg-1 .columns > div > div:nth-child(2) {
         padding: 46px 0 30px;
     }
+
     /* end columns bg-1 override */
 
     /* columns with logos */
     .trusted .section.columns-container {
         padding-bottom: 0;
     }
+
     .trusted .section.columns-container .columns-img-col {
         display: block;
     }
@@ -811,13 +834,14 @@ main .section.link-right a {
     }
 
     .trusted p.button-container a {
-         font: normal normal normal 23px var(--font-ibm);
+        font: normal normal normal 23px var(--font-ibm);
     }
 
     .trusted .section.columns-container p,
     .trusted .section.columns-container div {
-        font: normal normal 300 26px/32px IBM Plex Sans;
+        font: normal normal 300 26px/32px "IBM Plex Sans";
     }
+
     /* end columns with logos */
 
     .trusted .section.apartnership_box .default-content-wrapper > * {
@@ -841,10 +865,11 @@ main .section.link-right a {
     .trusted .section.particle-band .default-content-wrapper p {
         margin: 0
     }
+
     /* end particle band section */
 
     .trusted .section.small-text p {
-        font: normal normal var(--font-weight-bold) 13px/1 IBM Plex Sans;
+        font: normal normal var(--font-weight-bold) 13px/1 "IBM Plex Sans";
     }
 
     .trusted main .hero .hero-picture picture img {

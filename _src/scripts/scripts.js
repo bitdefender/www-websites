@@ -729,7 +729,8 @@ async function setIcidParameter(selector, value, mboxName, manualIcid = null) {
 
   validElements.forEach((element) => {
     const url = new URL(element.href);
-    if (!url) return;
+    // do not add icid if there is only an anchor link
+    if (!url || element.href.includes('#')) return;
     const cleanPath = element.href.split('?')[0];
     const campaignParam = targetCampaign || manualIcid || cleanPath.split('/').pop();
     url.searchParams.set('icid', `${value}${campaignParam}`);
