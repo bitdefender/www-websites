@@ -11,7 +11,8 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
     productId: code,
     devices,
     subscription,
-    storeEvent: 'product-comparison',
+    storeEvent: 'comparison',
+    topologyBoundary: true,
   });
 
   const priceRoot = document.createElement('div');

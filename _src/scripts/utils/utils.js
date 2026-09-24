@@ -1255,16 +1255,26 @@ export async function submitWithTurnstile({
   }
 }
 
-export const createBdContext = () => document.createElement('bd-context');
+export const createBdContext = (topologyBoundary) => {
+  const bdContext = document.createElement('bd-context');
+  bdContext.classList.add('store-context');
+  if (topologyBoundary) {
+    bdContext.setAttribute('topology-boundary', '');
+  }
+
+  return bdContext;
+};
 
 export const createBdProduct = (productId) => {
   const bdProductElement = document.createElement('bd-product');
+  bdProductElement.classList.add('store-product');
   bdProductElement.setAttribute('product-id', productId);
   return bdProductElement;
 };
 
 export const createBdOption = ({ devices, subscription, storeEvent = '' }) => {
   const bdOptionElement = document.createElement('bd-option');
+  bdOptionElement.classList.add('store-option');
   bdOptionElement.setAttribute('devices', devices);
   bdOptionElement.setAttribute('subscription', subscription);
   if (storeEvent) {
@@ -1298,12 +1308,13 @@ export const wrapChildrenWithStoreContext = (element, {
   devices,
   subscription,
   storeEvent = '',
+  topologyBoundary = false,
 }) => {
-  if (!element || element.firstElementChild?.matches('bd-context')) {
+  if (!element || element.firstElementChild?.matches('.store-context')) {
     return;
   }
 
-  const bdContext = createBdContext();
+  const bdContext = createBdContext(topologyBoundary);
   const bdProduct = createBdProduct(productId);
   const bdOption = createBdOption({ devices, subscription, storeEvent });
 
@@ -1316,7 +1327,7 @@ export const wrapChildrenWithStoreContext = (element, {
   element.appendChild(bdContext);
 };
 
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.24.0/';
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@0.24.13/';
 
 export const getDsnBase = () => {
   try {

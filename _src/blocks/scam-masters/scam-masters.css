@@ -4,9 +4,9 @@
 }
 
 body:has(.scam-masters-container) {
-  header, body > div:first-child {
-    min-height: 64px;
-  }
+    header, body > div:first-child {
+        min-height: 64px;
+    }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -712,6 +712,10 @@ body:has(.scam-masters-container) {
             }
 
             &.clickable-question {
+                h5 {
+                    display: none;
+                }
+
                 .answers-list, .secondary-answers-list {
                     li {
                         padding: 0;
@@ -789,31 +793,35 @@ body:has(.scam-masters-container) {
         }
 
         
-            .clickable-question.correct-answer, .clickable-question.wrong-answer {
-                & >div:last-child {
-                    .question-scam-tag {
-                        background-color: var(--color-pink);
-                        color: var(--color-wrong);
-                        padding: 10px 20px;
-                        font-size: 30px;
-                        align-items: center;
-                        position: absolute;
-                        top: 30px;
-                        left: 20px;
-                        right: auto;
-                        border-radius: 12px;
-                        z-index: 10;
-                        transform: rotate(-13.23deg);
+        .clickable-question.correct-answer, .clickable-question.wrong-answer {
+            h5 {
+                display: block;
+            }
 
-                        .icon {
-                            margin-right: 5px;
-                            filter: var(--color-wrong-filter);
-                            width: 30px;
-                            height: 30px;
-                        }
+            & >div:last-child {
+                .question-scam-tag {
+                    background-color: var(--color-pink);
+                    color: var(--color-wrong);
+                    padding: 10px 20px;
+                    font-size: 30px;
+                    align-items: center;
+                    position: absolute;
+                    top: 30px;
+                    left: 20px;
+                    right: auto;
+                    border-radius: 12px;
+                    z-index: 10;
+                    transform: rotate(-13.23deg);
+
+                    .icon {
+                        margin-right: 5px;
+                        filter: var(--color-wrong-filter);
+                        width: 30px;
+                        height: 30px;
                     }
                 }
             }
+        }
         
     }
 }
@@ -824,7 +832,7 @@ body:has(.scam-masters-container) {
 }
 
 .scam-masters .result > div {
-   height: 700px;
+    height: 700px;
 }
 
 @media (max-width: 768px) {
@@ -833,161 +841,161 @@ body:has(.scam-masters-container) {
     }
 }
 
-    @media (max-width: 1425px) {
-        .scam-masters {
-            & .start-page {
-                &>div:first-child {
-                    h1 {
-                        font: normal normal normal 68px / 80px "IBM Plex Sans", sans-serif;
-                    }
-                }
-            }
-
-            &.acq-quiz {
-                .start-page {
-                    >div:first-child {
-                        padding-left: 15%;
-                    }
+@media (max-width: 1425px) {
+    .scam-masters {
+        & .start-page {
+            &>div:first-child {
+                h1 {
+                    font: normal normal normal 68px / 80px "IBM Plex Sans", sans-serif;
                 }
             }
         }
-    }
 
-    @media (max-width: 1200px) {
-        .scam-masters {
-            .question,
-            .result {
-                >div:nth-of-type(2) img {
-                    max-width: 75%;
-                    margin: 0 auto;
-                }
-
-                >div:first-child {
-                    padding: 2em;
-
-                    h1 {
-                        font-size: 40px;
-                        line-height: 44px;
-                    }
-
-                    h2 {
-                        font-size: var(--heading-font-size-l);
-                    }
-                }
-
-                &:not(.clickable-question) {
-                    >div:last-child {
-                        picture {
-                            max-width: 100%;
-                        }
-                    }
-                }
-
-                &.clickable-question {
-                    >div:last-child {
-                        .question-scam-tag {
-                            font-size: 30px;
-                            z-index: 10;
-                        }
-
-                        .icon {
-                            width: 30px;
-                            height: 30px;
-                        }
-                    }
-                }
-
-                .question-content.correct-answer {
-                    font-size: 24px;
-                    line-height: 1;
-                }
-
-                .question-content.wrong-answer {
-                    font-size: 24px;
-                    line-height: 1;
-                }
-            }
-
-            &.acq-quiz {
-                .start-page {
-                    >div:last-child {
-                        .start-content {
-                            display: none; 
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @media (max-width: 992px) {
-        .scam-masters-container {
-            padding: 15px !important;
-        }
-
-        .scam-masters {
+        &.acq-quiz {
             .start-page {
                 >div:first-child {
-                    padding: 2em;
+                    padding-left: 15%;
+                }
+            }
+        }
+    }
+}
 
-                    h1 {
-                        font-size: 40px;
-                        line-height: 44px;
-                    }
+@media (max-width: 1200px) {
+    .scam-masters {
+        .question,
+        .result {
+            >div:nth-of-type(2) img {
+                max-width: 75%;
+                margin: 0 auto;
+            }
 
-                    p {
-                        font-size: 18px;
+            >div:first-child {
+                padding: 2em;
 
-                        &.button-container {
-                            margin-top: 0;
-                        }
-                    }
+                h1 {
+                    font-size: 40px;
+                    line-height: 44px;
+                }
 
-                    .legal-links {
-                        grid-template-columns: 3fr 3fr 2fr 3fr 2fr;
+                h2 {
+                    font-size: var(--heading-font-size-l);
+                }
+            }
 
-                        p a {
-                            font-size: 12px;
-                            line-height: 15px;
-                            display: block;
-                            margin-bottom: 10px;
-                        }
+            &:not(.clickable-question) {
+                >div:last-child {
+                    picture {
+                        max-width: 100%;
                     }
                 }
             }
 
-            &.acq-quiz {
-                .start-page {
-                    >div:first-child {
-                        padding: 20px;
-                        border-radius: 0;
-                        text-align: center;
+            &.clickable-question {
+                >div:last-child {
+                    .question-scam-tag {
+                        font-size: 30px;
+                        z-index: 10;
                     }
 
-                    >div:last-child {
-                        background-color: var(--color-bd-blue);
-                        border: none;
-                        border-radius: 0;
+                    .icon {
+                        width: 30px;
+                        height: 30px;
+                    }
+                }
+            }
 
-                        .start-content {
-                            display: none; 
-                        }
+            .question-content.correct-answer {
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .question-content.wrong-answer {
+                font-size: 24px;
+                line-height: 1;
+            }
+        }
+
+        &.acq-quiz {
+            .start-page {
+                >div:last-child {
+                    .start-content {
+                        display: none; 
                     }
                 }
             }
         }
     }
+}
 
-    @media (max-width: 767px) {
-        .scam-masters-container {
-            padding: 15px !important;
+@media (max-width: 992px) {
+    .scam-masters-container {
+        padding: 15px !important;
+    }
+
+    .scam-masters {
+        .start-page {
+            >div:first-child {
+                padding: 2em;
+
+                h1 {
+                    font-size: 40px;
+                    line-height: 44px;
+                }
+
+                p {
+                    font-size: 18px;
+
+                    &.button-container {
+                        margin-top: 0;
+                    }
+                }
+
+                .legal-links {
+                    grid-template-columns: 3fr 3fr 2fr 3fr 2fr;
+
+                    p a {
+                        font-size: 12px;
+                        line-height: 15px;
+                        display: block;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
         }
 
-        .scam-masters {
-            .result {
-                >div:nth-of-type(2) img {
-                    max-width: 50%;
+        &.acq-quiz {
+            .start-page {
+                >div:first-child {
+                    padding: 20px;
+                    border-radius: 0;
+                    text-align: center;
                 }
+
+                >div:last-child {
+                    background-color: var(--color-bd-blue);
+                    border: none;
+                    border-radius: 0;
+
+                    .start-content {
+                        display: none; 
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .scam-masters-container {
+        padding: 15px !important;
+    }
+
+    .scam-masters {
+        .result {
+            >div:nth-of-type(2) img {
+                max-width: 50%;
+            }
 
             >div:first-child { 
                 .share-icons {
@@ -995,259 +1003,259 @@ body:has(.scam-masters-container) {
                 }
             }
 
-                >div:last-child {
-                    min-height: auto;
-                }
-
+            >div:last-child {
+                min-height: auto;
             }
 
-            .question {
-                >div:nth-of-type(2) img {
-                    max-width: 97%;
-                }
+        }
+
+        .question {
+            >div:nth-of-type(2) img {
+                max-width: 97%;
             }
+        }
 
-            .start-page {
-                display: flex;
-                flex-direction: column;
+        .start-page {
+            display: flex;
+            flex-direction: column;
 
-                >div:first-child {
-                    height: auto;
-                    padding: 20px;
-                    border-radius: 20px 20px 0 0;
+            >div:first-child {
+                height: auto;
+                padding: 20px;
+                border-radius: 20px 20px 0 0;
 
-                    h1 {
-                        font-size: 24px;
-                        line-height: 1;
-                        margin-bottom: 10px;
-                    }
+                h1 {
+                    font-size: 24px;
+                    line-height: 1;
+                    margin-bottom: 10px;
+                }
+
+                p {
+                    font-size: 16px;
+                }
+
+                .legal-links {
+                    grid-template-columns: 1fr 1fr;
 
                     p {
-                        font-size: 16px;
-                    }
-
-                    .legal-links {
-                        grid-template-columns: 1fr 1fr;
-
-                        p {
-                            &:last-of-type {
-                                grid-column: 1 / -1;
-                            }
+                        &:last-of-type {
+                            grid-column: 1 / -1;
                         }
                     }
                 }
+            }
 
-                >div:last-child {
-                    height: auto;
-                    border-radius: 0 0 20px 20px;
+            >div:last-child {
+                height: auto;
+                border-radius: 0 0 20px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                picture {
                     display: flex;
                     align-items: center;
                     justify-content: center;
 
-                    picture {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-
-                        img {
-                            height: 20em;
-                        }
+                    img {
+                        height: 20em;
                     }
+                }
 
+            }
+        }
+
+        .question,
+        .result {
+            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column-reverse;
+
+            >div {
+                height: auto;
+            }
+
+            >div:first-child {
+                order: 1;
+                padding: 18px;
+                border-radius: 20px 20px 0 0;
+
+                .button-container {
+                    margin: 0 auto 10px;
+
+                    .button {
+                        padding: 10px 20px;
+                        font-size: 16px;
+                    }
                 }
             }
 
-            .question,
-            .result {
-                grid-template-columns: 1fr;
-                display: flex;
-                flex-direction: column-reverse;
+            >div:last-child {
+                border-radius: 0 0 20px 20px;
+                min-height: 345px;
+            }
 
-                >div {
-                    height: auto;
+            .question-content.correct-answer {
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .question-content.wrong-answer {
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .show-after-answer-text {
+                font-size: 12px;
+            }
+
+            &:not(.clickable-question) {
+                >div:last-child {
+                    picture {
+                        max-width: 100%;
+                    }
+                }
+            }
+
+            &.clickable-question {
+                >div:last-child {
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    border-radius: 0 0 20px 20px;
+
+                    p:has(.image-wrapper) {
+                        max-width: 100%;
+                        width: fit-content;
+                    }
+
+                    .question-scam-tag {
+                        font-size: 24px;
+                        z-index: 10;
+
+                        .icon {
+                            width: 25px;
+                            height: 25px;
+                        }
+                    }
+                }
+
+                .answers-list li {
+                    font-size: 14px;
+                }
+            }
+        }
+
+        &.acq-quiz {
+            .start-page {
+                border-radius: 0;
+                background-color: var(--color-bd-blue);
+                min-height: 93vh;
+                padding: 20px;
+
+                img {
+                    width: 70%;
+                    height: unset !important;
+                }
+
+                & > div:first-child {
+                    gap: 25px;
+
+                    h1 {
+                        font-size: 40px;
+                        margin: 0;
+                        font-weight: 400;
+                    }
+
+                    p {
+                        margin: 0;
+                        font-size: 16px;
+
+                        strong {
+                            font-size: 24px;
+                        }
+                    }
+
+                    .button {
+                        margin-top: 10px;
+                        width: 100%;
+                        justify-content: center;
+                        font-size: 18px;
+                        padding: 13px;
+                    }
+                }
+
+                & div:last-child {
+                    padding-left: 0;
+                }
+
+            }
+
+            & .question, & .result {
+                flex-direction: column;
+                min-height: 610px;
+
+                .scam-buttons-container {
+                    flex-direction: column;
+                }
+
+                & .question-content {
+                    margin: 0;
+
+                    .question-number {
+                        font-size: 19px;
+                    }
+
+                    >p:last-of-type {
+                        margin-top: 26px;
+                            
+                    }
+
+                    >p:nth-of-type(2) {
+                        margin-top: 12px;
+                        margin-bottom: 0;
+                    }
+
+                        
+                }
+
+                &.clickable-question {
+                    > div:last-child {
+                        border-radius: 0;
+                        overflow: hidden;
+
+                        p:has(picture) {
+                            overflow: visible;
+                        }
+
+                        .image-wrapper {
+                            max-height: 290px;
+                            position: relative;
+                            top: 0;
+                        }
+                    }
                 }
 
                 >div:first-child {
-                    order: 1;
-                    padding: 18px;
-                    border-radius: 20px 20px 0 0;
+                    justify-content: space-around;
+                    flex-grow: 1;
+                    display: flex;
+                    flex-direction: column;
 
                     .button-container {
-                        margin: 0 auto 10px;
+                        width: 100%;
 
-                        .button {
-                            padding: 10px 20px;
-                            font-size: 16px;
+                        & a {
+                            min-width: 100%;
                         }
                     }
                 }
 
                 >div:last-child {
-                    border-radius: 0 0 20px 20px;
-                    min-height: 345px;
-                }
-
-                .question-content.correct-answer {
-                    font-size: 24px;
-                    line-height: 1;
-                }
-
-                .question-content.wrong-answer {
-                    font-size: 24px;
-                    line-height: 1;
-                }
-
-                .show-after-answer-text {
-                    font-size: 12px;
-                }
-
-                &:not(.clickable-question) {
-                    >div:last-child {
-                        picture {
-                            max-width: 100%;
-                        }
-                    }
-                }
-
-                &.clickable-question {
-                    >div:last-child {
-                        position: relative;
-                        display: flex;
-                        justify-content: center;
-                        border-radius: 0 0 20px 20px;
-
-                        p:has(.image-wrapper) {
-                            max-width: 100%;
-                            width: fit-content;
-                        }
-
-                        .question-scam-tag {
-                            font-size: 24px;
-                            z-index: 10;
-
-                            .icon {
-                                width: 25px;
-                                height: 25px;
-                            }
-                        }
-                    }
-
-                    .answers-list li {
-                        font-size: 14px;
-                    }
-                }
-            }
-
-            &.acq-quiz {
-                .start-page {
-                    border-radius: 0;
-                    background-color: var(--color-bd-blue);
-                    min-height: 93vh;
-                    padding: 20px;
-
-                    img {
-                        width: 70%;
-                        height: unset !important;
-                    }
-
-                    & > div:first-child {
-                        gap: 25px;
-
-                        h1 {
-                            font-size: 40px;
-                            margin: 0;
-                            font-weight: 400;
-                        }
-
-                        p {
-                            margin: 0;
-                            font-size: 16px;
-
-                            strong {
-                                font-size: 24px;
-                            }
-                        }
-
-                        .button {
-                            margin-top: 10px;
-                            width: 100%;
-                            justify-content: center;
-                            font-size: 18px;
-                            padding: 13px;
-                        }
-                    }
-
-                    & div:last-child {
-                        padding-left: 0;
-                    }
-
-                }
-
-                & .question, & .result {
-                    flex-direction: column;
-                    min-height: 610px;
-
-                    .scam-buttons-container {
-                        flex-direction: column;
-                    }
-
-                    & .question-content {
-                        margin: 0;
-
-                        .question-number {
-                            font-size: 19px;
-                        }
-
-                        >p:last-of-type {
-                            margin-top: 26px;
-                            
-                        }
-
-                        >p:nth-of-type(2) {
-                            margin-top: 12px;
-                            margin-bottom: 0;
-                        }
-
-                        
-                    }
-
-                    &.clickable-question {
-                        > div:last-child {
-                            border-radius: 0;
-                            overflow: hidden;
-
-                            p:has(picture) {
-                                overflow: visible;
-                            }
-
-                            .image-wrapper {
-                                max-height: 290px;
-                                position: relative;
-                                top: 0;
-                            }
-                        }
-                    }
-
-                    >div:first-child {
-                        justify-content: space-around;
-                        flex-grow: 1;
-                        display: flex;
-                        flex-direction: column;
-
-                        .button-container {
-                            width: 100%;
-
-                            & a {
-                                min-width: 100%;
-                            }
-                        }
-                    }
-
-                    >div:last-child {
-                        max-height: 280px;
-                        min-height: unset;
-                    }
+                    max-height: 280px;
+                    min-height: unset;
                 }
             }
         }
     }
+}

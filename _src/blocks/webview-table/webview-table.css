@@ -23,7 +23,7 @@
     color: #999;
 }
 
-.webview-table bd-context {
+.webview-table :where(.store-context) {
     width: 100%;
 }
 

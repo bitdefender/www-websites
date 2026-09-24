@@ -4,7 +4,6 @@ import {
   createBdContext,
   createBdProduct,
   createBdOption,
-  wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 import store from '../../scripts/store.js';
 
@@ -55,13 +54,10 @@ function createPriceElement(options, card) {
   // Old price container
   const oldPriceContainer = document.createElement('div');
   oldPriceContainer.className = 'oldprice-container';
-  oldPriceContainer.setAttribute('data-store-render', '');
-  oldPriceContainer.setAttribute('data-store-hide', '!it.option.price.discounted');
-  oldPriceContainer.setAttribute('data-store-hide-type', 'visibility');
 
   oldPriceContainer.innerHTML = `
-    <span class="prod-oldprice" data-store-render data-store-price="${oldPriceAttr}"></span>
-    <span class="prod-save">
+    <span class="prod-oldprice" data-store-render data-store-hide="!it.option.price.discounted" data-store-price="${oldPriceAttr}"></span>
+    <span class="prod-save" data-store-render data-store-hide="!it.option.price.discounted">
       ${saveText ?? ''} <span data-store-render data-store-discount="percentage"></span>
     </span>
   `;
@@ -775,12 +771,24 @@ async function setupAddOnCheckbox(
   const addOnProductElement = boxElement.querySelector('.add-on-product');
   if (!addOnProductElement) return;
 
-  wrapChildrenWithStoreContext(addOnProductElement, {
-    productId: addOnProdName,
+  const addOnContext = createBdContext();
+  const addOnProduct = createBdProduct(addOnProdName);
+  const addOnOption = createBdOption({
     devices: addOnProdUsers,
     subscription: addOnProdYears,
     storeEvent: 'all',
   });
+
+  const addOnPlanSwitcher = addOnProductElement.querySelector(':scope > .plan-switcher.addon');
+  while (addOnProductElement.firstChild) {
+    addOnOption.append(addOnProductElement.firstChild);
+  }
+  if (addOnPlanSwitcher) {
+    addOnProduct.append(addOnPlanSwitcher);
+  }
+  addOnProduct.append(addOnOption);
+  addOnContext.append(addOnProduct);
+  addOnProductElement.append(addOnContext);
 
   try {
     const productOptionStr = `${prodUsers}-${prodYears}`;
@@ -932,7 +940,7 @@ export default async function decorate(block) {
   const billedTexts = [];
 
   // Determine store event type
-  const storeEvent = checkIfNotProductPage() ? 'product-loaded' : 'main-product-loaded';
+  const storeEvent = checkIfNotProductPage() ? 'all' : 'info';
 
   // Set Trial Durations
   const trialDurations = trialDuration?.split(',')?.map((trial) => trial.trim()) || [];
@@ -1134,17 +1142,17 @@ export default async function decorate(block) {
               productInfo,
             );
 
-            const productZones = block.children[key].querySelectorAll('bd-context');
-            const cardBdOption = block.children[key]?.querySelector('bd-option');
+            const productZones = block.children[key].querySelectorAll('.store-context');
+            const cardBdOption = block.children[key]?.querySelector('.store-option');
             const productOption = `${cardBdOption.getAttribute('devices')}-${cardBdOption.getAttribute('subscription')}`;
 
-            const addOnBdOption = productZones[1]?.querySelector('bd-option');
+            const addOnBdOption = productZones[1]?.querySelector('.store-option');
             const addOnProductOption = `${addOnBdOption.getAttribute('devices')}-${addOnBdOption.getAttribute('subscription')}`;
 
             const state = {
-              product: productZones[0]?.querySelector('bd-product')?.getAttribute('product-id'),
+              product: productZones[0]?.querySelector('.store-product')?.getAttribute('product-id'),
               productOption,
-              addOnProduct: productZones[1]?.querySelector('bd-product')?.getAttribute('product-id'),
+              addOnProduct: productZones[1]?.querySelector('.store-product')?.getAttribute('product-id'),
               addOnProductOption,
             };
 
