@@ -151,6 +151,10 @@ main .hero-dropdown-container .discount {
   font-weight: 600;
 }
 
+main .hero-dropdown-container.no-pricing .discount {
+  display: none;
+}
+
 main .hero-dropdown-container .product-details{
   margin-bottom: 8px;
   font-size: 14px;
@@ -374,6 +378,8 @@ main .hero-dropdown.scamio .hero-dropdown-picture picture img {
 main .hero-dropdown a.button {
   margin: 8px 13px 0 0;
   min-width: 206px;
+  justify-content: center;
+  align-items: center;
 }
 
 main .hero-dropdown a.button.modal,

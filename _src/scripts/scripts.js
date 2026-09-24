@@ -688,7 +688,8 @@ async function setIcidParameter(selector, value, mboxName, manualIcid = null) {
 
   validElements.forEach((element) => {
     const url = new URL(element.href);
-    if (!url) return;
+    // do not add icid if there is only an anchor link
+    if (!url || element.href.includes('#')) return;
     const cleanPath = element.href.split('?')[0];
     const campaignParam = targetCampaign || manualIcid || cleanPath.split('/').pop();
     url.searchParams.set('icid', `${value}${campaignParam}`);
@@ -760,6 +761,7 @@ async function loadPage() {
    * @type {import('@repobit/dex-store-elements').RootNode}
    */
   const storeRoot = document.createElement('bd-context');
+  storeRoot.classList.add('store-context');
   storeRoot.dataLayer = ({ option, event }) => {
     AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
   };

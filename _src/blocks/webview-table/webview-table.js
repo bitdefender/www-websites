@@ -328,7 +328,7 @@ function renderPrices(block, metadata) {
           const prodsUsers = [prodUsers, secondaryProdUsers];
           const prodsYears = [prodYears, secondaryProdYears];
           const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears);
-          cell.querySelector('bd-option').appendChild(planSwitcher);
+          cell.querySelector('.store-option').appendChild(planSwitcher);
         }
       }
       // Add featured logic if applicable
@@ -352,7 +352,7 @@ function renderPrices(block, metadata) {
           const prodsUsers = [prodUsers, secondaryProdUsers];
           const prodsYears = [prodYears, secondaryProdYears];
           const planSwitcher = createPlanSwitcher(null, prodsNames, prodsUsers, prodsYears, true);
-          block.querySelector('bd-option').prepend(planSwitcher);
+          block.querySelector('.store-option').prepend(planSwitcher);
         }
         savingsTag.innerHTML = `
           <span class="saving-tag-text" data-store-render data-store-hide="!it.option.price.discounted">

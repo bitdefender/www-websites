@@ -510,7 +510,6 @@
     }
 
     .full-width-mobile.columns-container {
-
         h2 {
             font-weight: 600;
 
@@ -649,7 +648,6 @@
 }
 
 @media (min-width: 373px) {
-
     .dex-18477 {
         .dex-carousel-cards-individual {
             .columns-text-col:not(:first-of-type) {
@@ -694,7 +692,6 @@
 }
 
 @media (min-width: 420px) {
-
     .dex-18477 {
         .dex-carousel-cards-individual {
             .columns-text-col:not(:first-of-type) {
@@ -750,7 +747,6 @@
 
         .dex-carousel-cards-family {
             .columns-text-col:not(:first-of-type) {
-
                 h5 {
                     min-height: 22px;
                 }
@@ -769,7 +765,6 @@
 
 @media (min-width: 768px) {
     .dex-18477 {
-
         .dex-carousel-cards-individual {
             .columns-text-col:not(:first-of-type) {
                 p:first-of-type {
@@ -914,11 +909,8 @@
 
 @media (min-width: 992px) {
     .dex-18477 {
-
         .dex-carousel-cards-individual {
-
             .columns-text-col:not(:first-of-type) {
-
                 h4 {
                     font-size: 20px;
                 }
@@ -934,9 +926,7 @@
         }
 
         .dex-carousel-cards-family {
-
             .columns-text-col:not(:first-of-type) {
-
                 h4 {
                     min-height: 48px !important;
                     font-size: 20px;
@@ -1252,9 +1242,7 @@
         }
 
         .dex-carousel-cards-security {
-
             .columns-wrapper .columns div .columns-text-col {
-
                 h4 {
                     font-size: 24px;
                     line-height: 1.35;
@@ -1276,6 +1264,7 @@
             border-right: 2px solid #1EA0FF;
             border-top-right-radius: 6px;
             border-bottom-right-radius: 6px;
+
             &::after {
                 box-shadow: unset !important;
             }
@@ -1301,7 +1290,6 @@
         }
 
         .dex-cards-review {
-
             .columns {
                 > div {
                     align-items: flex-start;
@@ -1459,10 +1447,8 @@
 
 @media (min-width: 1200px) {
     .dex-18477 {
-
         .dex-carousel-cards-individual {
             .columns-text-col:not(:first-of-type) {
-
                 p:first-of-type {
                     min-height: 72px;
                 }
@@ -1475,7 +1461,6 @@
 
         .dex-carousel-cards-family {
             .columns-text-col:not(:first-of-type) {
-
                 h5 {
                     min-height: 44px;
                 }
@@ -1498,7 +1483,6 @@
         }
 
         .hero-aem-container {
-
             .hero-aem-wrapper {
                 background-color: unset;
                 padding-left: 0;
@@ -1533,7 +1517,6 @@
         }
 
         .dex-carousel-cards {
-
             .columns-wrapper .columns div .columns-text-col:first-of-type table:first-of-type td,
             .columns-wrapper .columns div .columns-text-col:not(:first-of-type) {
                 padding: 24px 32px;
