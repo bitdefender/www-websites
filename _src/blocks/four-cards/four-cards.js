@@ -39,11 +39,22 @@ const buildCardItem = (row) => {
 
   const iconEl = getIconElement(row);
   if (iconEl) item.appendChild(iconEl);
+  // When no icon span exists, the first picture is already used as the icon.
+  const iconPicture = iconEl?.tagName === 'PICTURE' ? row.querySelector('picture') : null;
 
-  const paragraphs = [...row.querySelectorAll('p')].filter(
-    (p) => !p.querySelector('picture') && !p.querySelector('[class*="icon-"]') && p.textContent.trim(),
-  );
-  paragraphs.forEach((p) => {
+  [...row.querySelectorAll('p')].forEach((p) => {
+    const picture = p.querySelector('picture');
+    if (picture) {
+      if (picture === iconPicture) return;
+      // Keep linked pictures (a.linked-image from decorateLinkedPictures) with their link
+      const media = document.createElement('div');
+      media.className = 'card-media';
+      media.append(picture.closest('a.linked-image') || picture);
+      item.appendChild(media);
+      return;
+    }
+    if (p.querySelector('[class*="icon-"]') || !p.textContent.trim()) return;
+
     const link = p.querySelector('a');
     if (link) {
       const bdBtn = document.createElement('bd-button-link');
@@ -108,6 +119,8 @@ export default async function decorate(block) {
   const isBlue = block.classList.contains('blue') || sectionEl?.classList.contains('blue');
 
   const cardSection = document.createElement('bd-card-section');
+  // Subgrid layout: icon, title, each text/picture row and CTA line up across cards
+  cardSection.setAttribute('align-rows', '');
   if (sectionTitle) cardSection.setAttribute('title', sectionTitle);
 
   cardRows.forEach((row) => {
