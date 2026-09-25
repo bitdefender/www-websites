@@ -117,10 +117,12 @@ export default async function decorate(block) {
   const sectionEl = block.closest('.section');
   const isCentered = sectionEl?.classList.contains('centered');
   const isBlue = block.classList.contains('blue') || sectionEl?.classList.contains('blue');
+  // Opt-in until the subgrid layout is rolled out to every four-cards
+  const useSubgrid = block.classList.contains('use-subgrid') || sectionEl?.classList.contains('use-subgrid');
 
   const cardSection = document.createElement('bd-card-section');
   // Subgrid layout: icon, title, each text/picture row and CTA line up across cards
-  cardSection.setAttribute('align-rows', '');
+  if (useSubgrid) cardSection.setAttribute('align-rows', '');
   if (sectionTitle) cardSection.setAttribute('title', sectionTitle);
 
   cardRows.forEach((row) => {
