@@ -8,7 +8,7 @@
 
 .four-cards .card-media {
     display: flex;
-    margin-bottom: 16px;
+    margin-top: 16px;
 }
 
 .four-cards bd-card-item[align="center"] .card-media {
