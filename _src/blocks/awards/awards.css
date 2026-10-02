@@ -133,13 +133,13 @@
   
   .cards {
     display: grid;
-    grid-template-columns: 1fr;
     justify-content: center;
-    gap: 20px;
+    column-gap: 20px;
 
     .card {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-row: span 5;
+      grid-template-rows: subgrid;
       padding: 49px 32px;
       border-radius: 20px;
       text-align: left;
@@ -147,6 +147,8 @@
       box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
       width: 100%;
       max-width: 420px;
+      margin-bottom: 20px;
+      min-height: 100%;
     }
 
     h3 {
