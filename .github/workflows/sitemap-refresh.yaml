@@ -1,0 +1,178 @@
+name: Sitemap refresh
+
+# Regenerating the sitemaps takes ~3 hours, because create.js probes every hreflang
+# alternate with a deliberate 1-3s delay. So the cheap question is asked first: the
+# detect job fingerprints every locale's query-index.json in about a second, and the
+# expensive generate job only runs when something create.js actually reads has changed.
+
+on:
+  schedule:
+    # Hourly, off the hour to avoid the GitHub-wide cron spike.
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Regenerate even when no change is detected
+        type: boolean
+        default: false
+
+# One refresh at a time. GitHub keeps at most one run queued behind the active one, so
+# hourly checks cannot pile up behind a generation that is still running.
+concurrency:
+  group: sitemap-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  SITEMAP_BRANCH: chore/sitemap-refresh
+
+jobs:
+  detect:
+    name: Check locale indices
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.check.outputs.changed }}
+      summary: ${{ steps.check.outputs.summary }}
+      pr_open: ${{ steps.existing.outputs.open }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install sitemap tool dependencies
+        working-directory: tools/sitemap
+        run: npm ci
+
+      - name: Fingerprint every locale index
+        id: check
+        working-directory: tools/sitemap
+        env:
+          X_CLIENT_ID: ${{ secrets.X_CLIENT_ID }}
+          # create.js and check-index.js read locale-router via GITHUB_TOKEN. The default
+          # Actions token cannot read another private repo, so a PAT is required here.
+          GITHUB_TOKEN: ${{ secrets.LOCALE_ROUTER_TOKEN }}
+        run: node check-index.js
+
+      # index-state.json only advances when a refresh PR is merged. While one is open,
+      # main still looks stale, so every hourly run would otherwise kick off another
+      # 3-hour regeneration. Wait for the human instead.
+      - name: Check for an already-open refresh PR
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          number=$(gh pr list --head "$SITEMAP_BRANCH" --state open --json number --jq '.[].number' | head -1)
+          if [ -n "$number" ]; then
+            echo 'open=true' >> "$GITHUB_OUTPUT"
+            echo "Refresh PR #${number} is still open; skipping regeneration until it is merged or closed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'open=false' >> "$GITHUB_OUTPUT"
+          fi
+
+  generate:
+    name: Regenerate sitemaps
+    needs: detect
+    if: >-
+      (needs.detect.outputs.changed == 'true' && needs.detect.outputs.pr_open == 'false')
+      || github.event.inputs.force == 'true'
+    runs-on: ubuntu-latest
+    # create.js is ~3h; the GitHub-hosted ceiling is 6h. Leave headroom, but fail rather
+    # than hang if the upstream probes start timing out.
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install sitemap tool dependencies
+        working-directory: tools/sitemap
+        run: npm ci
+
+      - name: Mark the start of the run
+        run: touch "${RUNNER_TEMP}/sitemap-run-marker"
+
+      - name: Regenerate sitemaps
+        working-directory: tools/sitemap
+        env:
+          X_CLIENT_ID: ${{ secrets.X_CLIENT_ID }}
+          GITHUB_TOKEN: ${{ secrets.LOCALE_ROUTER_TOKEN }}
+        run: npm start
+
+      # create.js logs fetch errors but always exits 0, and it returns early without
+      # writing when a locale index fails to load. An untouched file is therefore the
+      # signal that a locale was silently skipped - refuse to commit a partial run.
+      - name: Verify every sitemap was rewritten
+        run: |
+          set -euo pipefail
+          stale=$(find _src/sitemap/csg -name 'sitemap_*.xml' ! -newer "${RUNNER_TEMP}/sitemap-run-marker")
+          if [ -n "$stale" ]; then
+            echo "::error::create.js skipped these locales, so the run is incomplete:"
+            echo "$stale"
+            exit 1
+          fi
+          echo "All $(find _src/sitemap/csg -name 'sitemap_*.xml' | wc -l) sitemaps were rewritten."
+
+      - name: Record the new index fingerprints
+        working-directory: tools/sitemap
+        env:
+          X_CLIENT_ID: ${{ secrets.X_CLIENT_ID }}
+          GITHUB_TOKEN: ${{ secrets.LOCALE_ROUTER_TOKEN }}
+        run: node check-index.js --write
+
+      - name: Open or update the pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGE_SUMMARY: ${{ needs.detect.outputs.summary }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Regeneration produced no diff; nothing to open a PR for."
+            exit 0
+          fi
+
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          # A fixed branch, force-pushed: if a refresh PR is already open and unmerged,
+          # later runs update it in place instead of stacking up new PRs.
+          git checkout -B "$SITEMAP_BRANCH"
+          git add _src/sitemap tools/sitemap/index-state.json
+          git commit -m 'chore(sitemap): refresh generated sitemaps'
+          git push --force origin "$SITEMAP_BRANCH"
+
+          if [ -n "$(gh pr list --head "$SITEMAP_BRANCH" --state open --json number --jq '.[].number')" ]; then
+            echo "An open refresh PR already exists; pushed the new sitemaps to it."
+            exit 0
+          fi
+
+          gh pr create \
+            --base main \
+            --head "$SITEMAP_BRANCH" \
+            --title 'chore(sitemap): refresh generated sitemaps' \
+            --body "$(cat <<BODY
+          Automated sitemap refresh, triggered by [\`sitemap-refresh\`](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}).
+
+          ### What changed upstream
+
+          ${CHANGE_SUMMARY}
+
+          ### What this PR contains
+
+          - regenerated \`_src/sitemap/csg/sitemap_*.xml\`
+          - updated \`tools/sitemap/index-state.json\` (the fingerprints the checker compares against)
+
+          Review the XML diff before merging. Merging publishes the sitemaps via AEM Code Sync.
+
+          > Note: PRs opened by \`GITHUB_TOKEN\` do not trigger \`on: pull_request\` workflows, so the
+          > lint/test workflow will not run here. It only covers JS and CSS, neither of which this PR touches.
+          BODY
+          )"
