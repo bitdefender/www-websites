@@ -336,8 +336,10 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
   > div {
     position: relative;
+    display: grid;
+    grid-template-columns: none !important;
 
-    div:has(.button){
+    div:has(h3){
       position: relative;
       border-radius: 0 0 20px 20px;
       margin-top: 200px;
@@ -368,10 +370,10 @@ main .image-columns.quotes > div > .image-columns-img-col img {
         &:has(img) {
           margin-bottom: 0;
 
+
           img {
             height: 120px;
             object-fit: contain;
-
 
             @media (min-width: 992px) {
               min-width: 360px;
@@ -396,31 +398,31 @@ main .image-columns.quotes > div > .image-columns-img-col img {
     }
 
     .image-columns-img-col {
-        position: absolute !important;
+      position: absolute !important;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      margin-top: 0;
+
+      &::before {
+        display: block;
+        content: "";
+        position: absolute;
         width: 100%;
         height: 100%;
-        top: 0;
+        background:  linear-gradient(360deg, #006DFF 24.98%, #006DFF 49.17%, rgb(0 109 255 / 69.6%) 58.42%, rgb(0 109 255 / 0%) 84.63%);
+        opacity: 1;
+        z-index: 997;
+        border-radius: 0 0 20px 20px;
+      }
+
+      .img-container {
+        position: absolute;
+        height: 60%;
+        width: 100%;
         margin-top: 0;
-
-        &::before {
-          display: block;
-          content: "";
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          background:  linear-gradient(360deg, #006DFF 24.98%, #006DFF 49.17%, rgb(0 109 255 / 69.6%) 58.42%, rgb(0 109 255 / 0%) 84.63%);
-          opacity: 1;
-          z-index: 997;
-          border-radius: 0 0 20px 20px;
-        }
-
-        .img-container {
-          position: absolute;
-          height: 60%;
-          width: 100%;
-          margin-top: 0;
-          top: 0;
-        }
+        top: 0;
+      }
 
       img {
         border-radius: 20px 20px 0 0;
@@ -430,8 +432,10 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
   @media (min-width: 992px) {
     > div {
-      >div:has(.button){
-        background:  rgb(0 109 255 / 75%) 0 0 no-repeat padding-box;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr) !important;
+      
+      >div:has(h3){
+        background:  rgba(0, 109, 255, 0.75) 0 0 no-repeat padding-box;
         backdrop-filter: blur(20px);
         border-radius: 20px  0 0  20px;
         z-index: 997;
@@ -463,7 +467,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
       .image-columns-img-col {
         &::before {
           width: 100%;
-           background: linear-gradient(90deg, #006DFF 24.98%, #006DFF 49.17%, #006DFF 58.42%, rgb(0 109 255 / 0%) 100%);
+          background: linear-gradient(90deg, #006DFF 24.98%, #006DFF 49.17%, #006DFF 58.42%, rgb(0 109 255 / 0%) 100%);
           border-radius: 20px;
           opacity: 1;
           z-index: 1;

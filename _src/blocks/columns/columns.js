@@ -715,7 +715,7 @@ export default function decorate(block) {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
 
-        const statNumbers = entry.target.querySelectorAll('h1');
+        const statNumbers = entry.target.querySelectorAll('h1', 'h6');
 
         statNumbers.forEach((stat) => {
           const originalText = stat.textContent.trim();

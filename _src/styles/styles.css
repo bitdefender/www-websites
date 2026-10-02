@@ -1272,7 +1272,7 @@ main .section.bblue, main .section .block.bblue {
   background-color: #F1F5F8;
 }
 
-main .section[data-textcolor='white'] *{
+main .section[data-textcolor='white'] * {
   color: white;
 }
 
@@ -1967,4 +1967,5 @@ body > div.header-with-language-banner {
     padding: 10px 13px 8px 20px;
     font-size: 14px;
   }
+}
 }
