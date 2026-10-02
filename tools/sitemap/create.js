@@ -4,16 +4,16 @@ import path from 'path';
 import 'dotenv/config';
 
 /**
- * Converts a Unix timestamp (seconds or milliseconds) to YYYY-MM-DD.
+ * Converts a Unix timestamp (seconds or milliseconds) to a full UTC ISO 8601 date-time.
  * @param {number|string} timestamp
- * @returns {string} ISO date string, e.g. "2026-06-13"
+ * @returns {string} ISO date-time string, e.g. "2026-09-09T14:30:15.000Z"
  */
 function toIsoDate(timestamp) {
   if (!timestamp) return null;
   const ts = Number(timestamp);
   // AEM returns seconds; JS Date expects milliseconds
   const ms = ts > 1e10 ? ts : ts * 1000;
-  return new Date(ms).toISOString().slice(0, 10);
+  return new Date(ms).toISOString();
 }
 
 const LOCALES = 'https://www.bitdefender.com/p-api/v1/locales-and-countries';
