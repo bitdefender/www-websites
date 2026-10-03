@@ -826,6 +826,7 @@ function buildProductBox(config) {
     greenTagText, titleHTML, blueTagsHTML, subtitleHTML, subtitle2HTML, planSwitcherHTML,
     secondButtonHTML, undeBuyLinkHTML, featureListHTML, planSwitcher2HTML, addonProductName,
     hasBilled2, prodName, prodUsers, prodYears, isIndividual, storeEvent, productsAsList,
+    globalContextException,
   } = config;
 
   const isDemoBox = greenTagText === 'demo-box';
@@ -840,7 +841,7 @@ function buildProductBox(config) {
 
   const productBox = document.createElement('div');
   productBox.classList.add(...boxClasses.filter(Boolean));
-  const bdContext = createBdContext();
+  const bdContext = createBdContext(globalContextException);
   const bdProduct = createBdProduct(prodName);
   const innerProductBox = document.createElement('div');
   innerProductBox.className = 'inner_prod_box';
@@ -972,7 +973,7 @@ export default async function decorate(block) {
         ] = rows;
 
         // Parse product info
-        const [baseProdName, baseProdUsers, baseProdYears] = (combinedProducts[key] || '').split('/');
+        const [baseProdName, baseProdUsers, baseProdYears, globalContextException] = (combinedProducts[key] || '').split('/');
         const monthlyInfo = monthlyPricesAsList[key]?.split('/') || [];
         const thirdButtonInfo = thirdRadioButtonProductsAsList[key]?.split('/') || [];
         const addOnInfo = addOnProductsAsList[key]?.split('/') || [];
@@ -1068,6 +1069,7 @@ export default async function decorate(block) {
           isIndividual: key < productsAsList.length,
           storeEvent,
           productsAsList,
+          globalContextException,
         });
 
         // Replace original content
