@@ -57,8 +57,12 @@ Notes on behaviour worth knowing:
 something changed. On a change it regenerates all sitemaps, verifies that every file was
 actually rewritten, updates `index-state.json`, and opens a PR against `main` for review.
 
-Repeated detections force-push to the same `chore/sitemap-refresh` branch, so an unmerged
-refresh PR is updated in place rather than duplicated.
+While a refresh PR is open, the checker compares against **that PR's** `index-state.json`
+instead of `main`'s, because `main`'s baseline only advances on merge. A new upstream change
+therefore regenerates once and force-pushes to the same `chore/sitemap-refresh` branch, so
+the open PR is updated in place (with a comment listing what changed) rather than
+duplicated, and an unchanged hour costs nothing. Closing the PR unmerged makes the next run
+compare against `main` again and open a fresh PR.
 
 It can also be started by hand from the Actions tab, with a `force` input that regenerates
 even when nothing changed.
