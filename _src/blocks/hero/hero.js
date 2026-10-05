@@ -218,6 +218,7 @@ export default function decorate(block) {
     if (stopAutomaticModalRefresh === 'true') {
       block.querySelectorAll('a.modal.button').forEach((modalButton) => {
         modalButton.setAttribute('data-stop-automatic-modal-refresh', true);
+        modalButton.setAttribute('data-store-id', percentProduct.split(',')?.[0]?.trim());
       });
     }
 

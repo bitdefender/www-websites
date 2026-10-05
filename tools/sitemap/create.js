@@ -4,16 +4,34 @@ import path from 'path';
 import 'dotenv/config';
 
 /**
- * Converts a Unix timestamp (seconds or milliseconds) to YYYY-MM-DD.
+ * Converts a Unix timestamp (seconds or milliseconds) to a full UTC ISO 8601 date-time.
  * @param {number|string} timestamp
- * @returns {string} ISO date string, e.g. "2026-06-13"
+ * @returns {string} ISO date-time string, e.g. "2026-09-09T14:30:15.000Z"
  */
 function toIsoDate(timestamp) {
   if (!timestamp) return null;
   const ts = Number(timestamp);
   // AEM returns seconds; JS Date expects milliseconds
   const ms = ts > 1e10 ? ts : ts * 1000;
-  return new Date(ms).toISOString().slice(0, 10);
+  return new Date(ms).toISOString();
+}
+
+/**
+ * Normalizes a query-index priority into a value safe to emit in a sitemap.
+ * The index stores the string "0" when the page carries no priority meta tag, so that
+ * has to be treated as absent rather than as a real priority of zero - emitting
+ * <priority>0</priority> would tell crawlers the page is the least important on the site.
+ * Values outside the 0 < priority <= 1 range the sitemap protocol allows are dropped too.
+ * @param {number|string} value
+ * @returns {string|null} the priority to emit, or null when the field must be omitted
+ */
+function toPriority(value) {
+  if (value === undefined || value === null) return null;
+
+  const priority = Number(String(value).trim());
+  if (!Number.isFinite(priority) || priority <= 0 || priority > 1) return null;
+
+  return String(priority);
 }
 
 const LOCALES = 'https://www.bitdefender.com/p-api/v1/locales-and-countries';
@@ -244,9 +262,11 @@ async function processLocaleSitemap(locale, hreflangMap) {
           }
         }
 
+        const priority = toPriority(row.priority);
+
         return {
           loc: `${DOMAIN_URL}${row.path}`,
-          ...(row.priority ? { priority: row.priority } : {}),
+          ...(priority ? { priority } : {}),
           lastmod: toIsoDate(row.lastModifiedTimestamp),
           'xhtml:link': alternateLinks,
         };

@@ -413,7 +413,9 @@ export default function decorate(block) {
 
   block.querySelectorAll('h3')?.forEach((element) => {
     if (element.textContent.includes('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}')) {
-      element.textContent = element.textContent.replace('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}', '{{=it.state.discount.percentage.max}}');
+      // swap the token in the markup rather than assigning textContent, which would
+      // flatten away authored inline elements such as the <strong> wrapping the heading
+      element.innerHTML = element.innerHTML.replace('{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}', '{{=it.state.discount.percentage.max}}');
       element.classList.add('await-loader');
     }
   });
@@ -715,7 +717,7 @@ export default function decorate(block) {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
 
-        const statNumbers = entry.target.querySelectorAll('h1');
+        const statNumbers = entry.target.querySelectorAll('h1', 'h6');
 
         statNumbers.forEach((stat) => {
           const originalText = stat.textContent.trim();

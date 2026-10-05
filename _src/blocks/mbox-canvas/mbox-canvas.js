@@ -198,7 +198,9 @@ export default async function decorate(block) {
         const buyLinkURL = new URL(buyLink);
         buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
 
-        return buyLinkURL.href;
+        // the store rebuilds this link on every option change, so the visitor IDs
+        // have to be part of the link itself rather than applied to the rendered DOM
+        return target.appendVisitorIDsTo(buyLinkURL.href);
       },
     },
     locale: configMbox?.useGeoIpPricing

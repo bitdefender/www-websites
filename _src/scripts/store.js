@@ -24,7 +24,9 @@ export default new Store({
         buyLinkURL.searchParams.set(key, value);
       });
 
-      return buyLinkURL.href;
+      // the store rebuilds this link on every option change, so the visitor IDs
+      // have to be part of the link itself rather than applied to the rendered DOM
+      return target.appendVisitorIDsTo(buyLinkURL.href);
     },
     trialLink: async (param) => {
       const {
@@ -47,7 +49,7 @@ export default new Store({
       matchBuyLinkURL.searchParams.set('SRC', window.location.origin + window.location.pathname);
       if (coupon) matchBuyLinkURL.searchParams.set('COUPON', coupon);
 
-      return matchBuyLinkURL.href;
+      return target.appendVisitorIDsTo(matchBuyLinkURL.href);
     },
   },
 });
