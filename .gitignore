@@ -6,7 +6,6 @@ node_modules/*
 
 helix-importer-ui
 .DS_Store
-CLAUDE.md
 
 tools/sitemap/node_modules/*
 
