@@ -28,7 +28,7 @@ const getIconElement = (col) => {
   return null;
 };
 
-const buildCardItem = (row) => {
+const buildCardItem = (row, shape) => {
   const headings = [...row.querySelectorAll('h4, h3, h2, h1')];
   const title = headings.map((h) => h.textContent.trim()).filter(Boolean).join(' ');
   const titleHtml = headings.map((h) => h.innerHTML.trim()).filter(Boolean).join('<br>');
@@ -61,6 +61,7 @@ const buildCardItem = (row) => {
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('href', link.getAttribute('href'));
       bdBtn.setAttribute('slot', 'cta');
+      if (shape) bdBtn.setAttribute('shape', shape);
       bdBtn.textContent = link.textContent.trim();
       item.appendChild(bdBtn);
     } else {
@@ -92,6 +93,7 @@ export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
     margintop,
+    shape,
   } = block.closest('.section').dataset;
 
   if (margintop) {
@@ -126,12 +128,13 @@ export default async function decorate(block) {
   if (sectionTitle) cardSection.setAttribute('title', sectionTitle);
 
   cardRows.forEach((row) => {
-    const item = buildCardItem(row);
+    const item = buildCardItem(row, shape);
     if (isCentered) {
       item.setAttribute('align', 'center');
       item.querySelector('bd-button-link[slot="cta"]')?.setAttribute('align', 'center');
     }
     if (isBlue) item.setAttribute('bg-blue', '');
+    if (shape) item.setAttribute('shape', shape);
     cardSection.appendChild(item);
   });
 
@@ -173,6 +176,7 @@ export default async function decorate(block) {
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('align', 'center');
       bdBtn.setAttribute('href', link.getAttribute('href'));
+      if (shape) bdBtn.setAttribute('shape', shape);
       bdBtn.textContent = link.textContent.trim();
       block.appendChild(bdBtn);
       const btnParagraph = link.closest('p') || link.parentElement;
