@@ -4,6 +4,7 @@ import {
   UserDetectedEvent,
   AdobeDataLayerService,
 } from '@repobit/dex-data-layer';
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 function toggleUpsell(block, show) {
   const upsell = block.querySelector('.upsell-container');
@@ -443,6 +444,34 @@ function startUpsellDownload(button) {
   }, 1000);
 }
 
+async function copyUpsellCommand(text) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (error) {
+    // Fall back to the legacy copy API below.
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch (error) {
+    // Keep the button usable when copying is blocked by the browser.
+  }
+  textarea.remove();
+  return copied;
+}
+
 function createUpsellZone(block) {
   const upsellMap = createKeyValueMap(block, '<upsell>', { useInnerHTML: true });
   if (!Object.keys(upsellMap).length) return;
@@ -461,10 +490,11 @@ function createUpsellZone(block) {
 
     startUpsellDownload(upsellButton);
   });
+  console.log(upsellMap);
 
   upsellContainer.classList.add('upsell-container');
   upsellContainer.innerHTML = `
-    <div class="upsell-content">
+    <div class="upsell-content-container">
       <div class="upsell-icon" aria-hidden="true">
       </div>
       <div class="upsell-copy">
@@ -475,8 +505,32 @@ function createUpsellZone(block) {
     <div class="upsell-footer">
       ${upsellMap.privacy ? `<label class="upsell-privacy"><input type="checkbox"> <span>${upsellMap.privacy}</span></label>` : ''}
     </div>
+    <div class="upsell-compatibility">
+      ${upsellMap.compatible ? `<p>${upsellMap.compatible}</p>` : ''}
+    </div>
+
+    <div class="separator">${upsellMap.separator || ''}</div>
+    <div class="upsell-code">
+      <code>${upsellMap.command || ''}</code>
+      <button class="copy-code" type="button" aria-label="${upsellMap.copyButton || 'Copy code to clipboard'}">${upsellMap.copyButton || 'Copy'}</button>
+    </div>
   `;
-  upsellContainer.querySelector('.upsell-content').appendChild(upsellButton);
+  decorateIcons(upsellContainer);
+  upsellContainer.querySelector('.upsell-content-container').appendChild(upsellButton);
+  const copyButton = upsellContainer.querySelector('.copy-code');
+  const command = upsellContainer.querySelector('.upsell-code code')?.textContent.trim();
+  copyButton?.addEventListener('click', async () => {
+    if (!command) return;
+
+    const copied = await copyUpsellCommand(command);
+    if (!copied) return;
+
+    copyButton.textContent = upsellMap.copied || 'Copied';
+    setTimeout(() => {
+      copyButton.textContent = upsellMap.copyButton || 'Copy';
+    }, 1600);
+  });
+
   const privacyCheckbox = upsellContainer.querySelector('.upsell-privacy input');
   privacyCheckbox?.addEventListener('change', (event) => {
     if (event.target.checked) {
