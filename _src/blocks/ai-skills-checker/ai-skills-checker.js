@@ -490,7 +490,6 @@ function createUpsellZone(block) {
 
     startUpsellDownload(upsellButton);
   });
-  console.log(upsellMap);
 
   upsellContainer.classList.add('upsell-container');
   upsellContainer.innerHTML = `
