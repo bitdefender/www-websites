@@ -15,10 +15,6 @@
         margin: 0;
     }
 
-    .creators .scam-protection a.button {
-        border-radius: 8px !important;
-    }
-
     html[lang="ro"], body {
         font-family: 'IBM Plex Sans', sans-serif;
 
