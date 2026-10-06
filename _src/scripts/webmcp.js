@@ -1,12 +1,26 @@
+import {
+  trackDynamicVariables,
+  trackPageEvent,
+} from './utils/contentsquare.js';
+
 const PRODUCT_PRICE_PATH = '/p-api/v1/products/{bundleId}/locale/{locale}';
 const PRODUCT_MSRP_PATH = `${PRODUCT_PRICE_PATH}/campaign/none`;
 const PRODUCT_CATALOG_PATH = '/p-api/v1/catalog/products';
 const BUNDLE_ID_PATTERN = /^[a-z0-9][a-z0-9._-]*$/i;
 const LOCALE_PATTERN = /^[a-z]{2}-(?:[a-z]{2}|global)$/i;
 const DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
+const TOOL_EVENT_IDS = {
+  bitdefender_product_catalog: 'catalog',
+  bitdefender_product_prices: 'prices',
+  bitdefender_product_msrp: 'msrp',
+};
+const ERROR_CODE_PATTERN = /^[a-z][a-z0-9_]{0,48}$/;
+const SAFE_PRODUCT_PATTERN = /^[a-z0-9 .+&'-]{1,64}$/i;
 
 let controller;
 let registeredModelContext;
+let toolCalls = 0;
+let toolErrors = 0;
 
 const catalogProperties = {
   lineOfBusiness: {
@@ -261,6 +275,90 @@ async function fetchProductPricing(input, path) {
   };
 }
 
+/**
+ * Resolves the reporting context for a tool call, preferring the server-resolved product.
+ * Agent-supplied text is never reported verbatim: it is matched against an allowlist and
+ * collapsed to "other" when it does not fit, bounding both cardinality and content.
+ * @param {Object} input The tool input
+ * @param {Object} result The tool result
+ * @returns {Object} Product, bundle id, and locale safe to report
+ */
+function getCallContext(input, result) {
+  const resolved = result?.resolvedProduct;
+
+  if (resolved) return resolved;
+
+  const toolInput = input || {};
+  const product = normalizeProduct(toolInput.product);
+  const bundleId = String(toolInput.bundleId || '').trim();
+  const locale = normalizeLocale(toolInput.locale);
+
+  return {
+    product: product && (SAFE_PRODUCT_PATTERN.test(product) ? product : 'other'),
+    bundleId: BUNDLE_ID_PATTERN.test(bundleId) ? bundleId : undefined,
+    locale: LOCALE_PATTERN.test(locale) ? locale : undefined,
+  };
+}
+
+/**
+ * Reports the outcome of a tool call to Contentsquare. Tool handlers return an error payload
+ * rather than throwing, so the error code is read off the result.
+ * @param {string} toolId Short tool id used in event names
+ * @param {Object} input The tool input
+ * @param {Object} result The tool result
+ * @param {number} startedAt Timestamp captured before the call
+ */
+function trackToolResult(toolId, input, result, startedAt) {
+  const code = result?.error?.code;
+  const errorCode = code && ERROR_CODE_PATTERN.test(code) ? code : 'unknown_error';
+  const context = getCallContext(input, result);
+
+  toolCalls += 1;
+  if (code) toolErrors += 1;
+
+  trackPageEvent(code ? `webmcp:${toolId}:error:${errorCode}` : `webmcp:${toolId}:success`);
+
+  trackDynamicVariables({
+    webmcp_calls: toolCalls,
+    webmcp_errors: toolErrors,
+    webmcp_last_tool: toolId,
+    webmcp_last_outcome: code ? 'error' : 'success',
+    webmcp_last_error: code ? errorCode : undefined,
+    webmcp_last_product: context.product,
+    webmcp_last_bundle_id: context.bundleId,
+    webmcp_last_locale: context.locale,
+    webmcp_last_duration_ms: Math.round(performance.now() - startedAt),
+  });
+}
+
+/**
+ * Wraps a tool so every invocation is reported to Contentsquare. Only execute is replaced,
+ * so the tool contract seen by the agent is unchanged.
+ * @param {Object} tool The tool definition
+ * @returns {Object} The instrumented tool definition
+ */
+export function withTracking(tool) {
+  const toolId = TOOL_EVENT_IDS[tool.name] || 'tool';
+  const { execute } = tool;
+
+  return {
+    ...tool,
+    execute: async (input, ...rest) => {
+      trackPageEvent(`webmcp:${toolId}:start`);
+      const startedAt = performance.now();
+
+      try {
+        const result = await execute(input, ...rest);
+        trackToolResult(toolId, input, result, startedAt);
+        return result;
+      } catch (error) {
+        trackToolResult(toolId, input, createError('exception', ''), startedAt);
+        throw error;
+      }
+    },
+  };
+}
+
 function createProductCatalogTool() {
   return {
     name: 'bitdefender_product_catalog',
@@ -300,15 +398,18 @@ function createProductMsrpTool() {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export async function registerBitdefenderWebMcp() {
   const modelContext = getModelContext();
 
   if (!modelContext?.registerTool) {
+    trackPageEvent('webmcp:register:unsupported');
+    trackDynamicVariables({ webmcp_status: 'unsupported' });
     return null;
   }
 
   if (controller && registeredModelContext === modelContext) {
+    trackPageEvent('webmcp:register:duplicate');
+    trackDynamicVariables({ webmcp_status: 'duplicate' });
     return null;
   }
 
@@ -317,11 +418,25 @@ export async function registerBitdefenderWebMcp() {
   }
 
   const nextController = new AbortController();
-  await Promise.all([
-    modelContext.registerTool(createProductCatalogTool(), { signal: nextController.signal }),
-    modelContext.registerTool(createProductPricingTool(), { signal: nextController.signal }),
-    modelContext.registerTool(createProductMsrpTool(), { signal: nextController.signal }),
-  ]);
+  const tools = [
+    createProductCatalogTool(),
+    createProductPricingTool(),
+    createProductMsrpTool(),
+  ].map(withTracking);
+
+  try {
+    await Promise.all(tools.map((tool) => modelContext.registerTool(
+      tool,
+      { signal: nextController.signal },
+    )));
+  } catch (error) {
+    trackPageEvent('webmcp:register:error');
+    trackDynamicVariables({ webmcp_status: 'error' });
+    throw error;
+  }
+
+  trackPageEvent('webmcp:register:ok');
+  trackDynamicVariables({ webmcp_status: 'registered', webmcp_tools: tools.length });
 
   controller = nextController;
   registeredModelContext = modelContext;

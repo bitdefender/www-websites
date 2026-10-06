@@ -14,6 +14,7 @@ import {
   registerRenderNodes,
 } from '@repobit/dex-store-elements';
 import Launch from '@repobit/dex-launch';
+import { Cookies } from '@repobit/dex-utils';
 import store from './store.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
@@ -560,7 +561,7 @@ async function loadEager(doc) {
   await resolveNonProductsDataLayer();
 
   const userCountry = await user.country;
-  if (userCountry !== page.country && !sessionStorage.getItem('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
+  if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
