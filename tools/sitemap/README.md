@@ -73,6 +73,65 @@ even when nothing changed.
 | --- | --- |
 | `X_CLIENT_ID` | the `X-Client-Id` header both scripts send to `www.bitdefender.com` |
 | `LOCALE_ROUTER_TOKEN` | PAT that can read `bitdefender/locale-router`; the default Actions token cannot read another private repo |
+| `SLACK_WEBHOOK_URL` | incoming webhook for the notification Slack app. Optional — without it the refresh still runs and only logs a warning |
 
 The workflow also needs **Settings → Actions → General → Workflow permissions → "Allow
 GitHub Actions to create and approve pull requests"** to be enabled.
+
+## Slack notifications
+
+A refresh PR is useless until someone merges it, so the channel is told twice: once when the
+PR appears or is updated, and then once a day for as long as it sits unmerged.
+
+Both messages are posted by the workflow itself, through a Bitdefender-owned Slack app with
+the `incoming-webhook` scope. The GitHub Slack app is deliberately **not** used — it cannot
+say "waiting three days", and it can only mention people who have each linked their GitHub
+account to Slack.
+
+| Knob | Where | Purpose |
+| --- | --- | --- |
+| `SLACK_WEBHOOK_URL` | repo secret | the incoming webhook. One webhook posts to one fixed channel, chosen when it was created |
+| `SLACK_MENTIONS` | workflow `env` | mention string pasted verbatim into the payload |
+| `NAG_HOUR` | workflow `env` | UTC hour the daily reminder fires (default `09`) |
+
+### `SLACK_MENTIONS` has to use IDs, not names
+
+A plain `@someone` in an API payload renders as grey text and notifies nobody. Only these forms
+produce a real ping:
+
+| Form | Meaning |
+| --- | --- |
+| `<@U01ABCDEF>` | one person. Slack profile -> ⋮ -> Copy member ID |
+| `<!subteam^S01ABCDEF>` | a user group |
+| `<!here>` | everyone currently active in the channel — needs no IDs, and survives team changes |
+
+Several can be space-separated. Leaving it empty is valid: the messages still post, they just
+ping nobody.
+
+### How the two messages work
+
+- **PR opened or updated** — sent from the generate job once the PR exists, carrying the change
+  summary and a link.
+- **Daily reminder** — sent from the *detect* job, which runs hourly whether or not anything
+  changed, so it is the natural place to surface a forgotten PR. It fires only when the UTC
+  hour matches `NAG_HOUR`, which makes it daily without storing any state, and only once the PR
+  is at least a day old.
+
+### Failure behaviour
+
+Notifications are a nicety and are wired so they can never cost a three-hour regeneration:
+
+- a missing `SLACK_WEBHOOK_URL` logs a warning and the run continues
+- a failed POST logs a warning; the PR is already open by then
+- in the reminder, a `gh` outage or an unparseable PR timestamp exits quietly. An unguarded
+  `NaN` here would be a fatal bash error and would take down the job that gates the whole
+  refresh.
+
+The payload is built with `jq`, because the change summary contains backticks and newlines that
+would otherwise need hand-escaping into JSON.
+
+### What the label and reviewers are still for
+
+The `sitemap` label and `SITEMAP_REVIEWERS` predate this and no longer drive Slack. They are
+kept because they are independently useful: the label makes these PRs filterable, and the review
+request is how the PR shows up in a reviewer's GitHub queue.
