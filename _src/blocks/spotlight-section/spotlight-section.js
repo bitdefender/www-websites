@@ -78,31 +78,31 @@ export default async function decorate(block) {
   try {
     await Promise.all([
       // The component is not exposed by the package exports map.
-      import(`${base}src/components/announcement-banner/announcement-banner.js`),
+      import(`${base}src/components/spotlight-section/spotlight-section.js`),
       import(`${base}button`),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.warn('announcement-banner: DSN import failed, continuing with native rendering', err);
+    console.warn('spotlight-section: DSN import failed, continuing with native rendering', err);
   }
 
   const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
   const { headingCell, descriptionCell } = getContentCells(block, heading);
   const description = getDescription(block, heading, descriptionCell);
-  const announcementBanner = document.createElement('bd-announcement-banner');
+  const spotlightSection = document.createElement('bd-spotlight-section');
   const title = heading?.textContent.trim();
 
-  if (title) announcementBanner.setAttribute('title', title);
-  if (description) announcementBanner.setAttribute('description', description);
+  if (title) spotlightSection.setAttribute('title', title);
+  if (description) spotlightSection.setAttribute('description', description);
 
   const icon = getIcon(block);
   if (icon) {
     icon.setAttribute('slot', 'icon');
-    announcementBanner.append(icon);
+    spotlightSection.append(icon);
   }
 
-  appendButtons(announcementBanner, headingCell, 'left-buttons');
-  appendButtons(announcementBanner, descriptionCell, 'right-buttons');
+  appendButtons(spotlightSection, headingCell, 'left-buttons');
+  appendButtons(spotlightSection, descriptionCell, 'right-buttons');
 
-  block.replaceChildren(announcementBanner);
+  block.replaceChildren(spotlightSection);
 }
