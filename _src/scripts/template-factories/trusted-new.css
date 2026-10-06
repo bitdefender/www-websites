@@ -18,7 +18,7 @@
   font-family: var(--trusted-font);
   overflow: hidden;
 
-  @media (max-width: 768px) {
+  @media (max-width: 991px) {
     background: linear-gradient(360deg, #006DFF 48.66%, rgba(0, 109, 255, 0%) 100%) !important;
   }
 }
@@ -227,7 +227,7 @@ hr {
     display: flex;
     width: 100%;
 
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       width: unset;
     }
   }
@@ -297,7 +297,8 @@ hr {
       margin-top: 32px;
     }
 
-    @media (min-width: 768px) {
+
+    @media (min-width: 992px) {
       >div {
         max-width: 60%;
         
@@ -321,7 +322,7 @@ hr {
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 991px) {
     >div {
       h2 {
         font-size: 52px !important;
@@ -444,7 +445,7 @@ hr {
       max-height: 80px;
       min-height: 80px;
 
-      @media (max-width: 768px) {
+      @media (max-width: 991px) {
         max-height: 50px;
         min-height: 50px;
       }
@@ -835,7 +836,7 @@ hr {
   padding: 28px;
   border: 1px solid #E3EEFF;
 
-  h1 {
+  h1, h6 {
     color: #006DFF;
     font-size: 40px;
     font-weight: 500;
@@ -930,7 +931,7 @@ hr {
 }
 
 .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child p:first-child {
-  margin: 0 0 18px;
+  margin: 24px 0 18px;
 }
 
 .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child p:first-child img {
@@ -949,10 +950,11 @@ hr {
   margin: 0 0 16px;
 }
 
-.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child p:nth-of-type(2) {
-  color: var(--trusted-ink);
+.trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.white-block > div:last-child h3 {
+  color: #3b3b3b;
   font-size: 30px;
   line-height: 1.15;
+  margin-top: 16px;
 }
 
 /* Mission rows. */
@@ -1109,6 +1111,7 @@ hr {
 
   .trusted-new main > .light-sky-blue .columns > div {
     grid-template-columns: unset;
+    justify-content: unset;
   }
 
 

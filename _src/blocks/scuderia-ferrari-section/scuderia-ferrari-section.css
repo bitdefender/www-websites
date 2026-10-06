@@ -199,6 +199,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 
     img {
         left: unset;
+        width: 70%;
     }
 
     p{
@@ -261,6 +262,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
                 height: 120px !important;
                 width: 100% !important;
                 left: -40px !important;
+                object-fit: contain;
             }
         }
     }
@@ -511,6 +513,7 @@ main .scuderia-ferrari-section-container, main .scuderia-ferrari-section-wrapper
 
         p img {
             width: auto;
+            object-fit: cover !important;
         }
 
         .button-text {

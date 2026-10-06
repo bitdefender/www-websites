@@ -21,7 +21,7 @@ export default function decorate(block) {
   const countChildren = (parent) => parent.children.length;
 
   [...block.children].forEach((child) => {
-    if (countChildren(child) === 2) {
+    if (countChildren(child) === 2 || countChildren(child) === 3) {
       child.classList.add('cards');
       matchHeights(child, 'p:not(:has(.icon))');
       matchHeights(child, 'h3');
