@@ -353,46 +353,50 @@ main .section.ai-skills-checker-container {
         .upsell-container {
             display: none;
             width: 100%;
-            margin-top: 28px;
-            border: 1px solid #E3E7EE;
-            border-radius: 16px;
-            padding: 26px 28px 22px;
-            background: #fff;
-            box-shadow: 0 1px 3px rgb(16 24 40 / 6%);
+            margin-top: 16px;
             text-align: left;
         }
 
         .upsell-container.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
         }
 
-        .upsell-content {
+        .upsell-content-container {
             display: grid;
-            gap: 20px;
+            grid-template-columns: 44px minmax(0, 1fr);
+            gap: 14px;
             align-items: center;
+            padding: 12px 24px;
+            border: 1px solid #E5E7EB;
+            border-bottom: 0;
+            border-radius: 14px 14px 0 0;
+            background: #fff;
         }
 
         .upsell-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            background: #F2F7FF url("../../icons/shield_ai.svg") center / 28px 28px no-repeat;
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            background: #EEF4FF url("../../icons/shield_ai.svg") center / 22px 22px no-repeat;
         }
 
         .upsell-copy h3 {
-            margin: 0 0 6px;
+            margin: 0;
             font-size: 18px;
-            line-height: 24px;
-            font-weight: 700;
-            color: #111827;
+            line-height: 1.25;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            color: #0A0E1A;
         }
 
         .upsell-copy p {
-            margin: 0;
+            margin: 3px 0 0;
             padding: 0;
             color: #4B5563;
-            font-size: 16px;
-            line-height: 22px;
+            font-size: 14px;
+            line-height: 1.45;
             display: block !important;
         }
 
@@ -404,21 +408,25 @@ main .section.ai-skills-checker-container {
             align-items: center;
             justify-content: center;
             gap: 10px;
+            width: 100%;
+            height: 42px;
             min-height: 48px;
             margin: 0;
             padding: 12px 24px;
             border: 0;
             border-radius: 10px;
-            background: #1C75D8;
-            color: #fff;
-            font-size: 18px;
-            line-height: 24px;
-            font-weight: 700;
+            background: #E5E7EB;
+            color: #9199A5;
+            font-size: 15px;
+            line-height: 1;
+            font-weight: 600;
             text-decoration: none;
-            cursor: pointer;
+            cursor: not-allowed;
 
-            &.disabled {
-                background-color: #C7CDD1;
+            &:not(.disabled) {
+                background: #006EFF;
+                color: #fff;
+                cursor: pointer;
             }
         }
 
@@ -428,39 +436,176 @@ main .section.ai-skills-checker-container {
         }
 
         .upsell-footer {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #EEF0F3;
-            color: #6B7280;
-            font-size: 15px;
-            line-height: 22px;
+            margin: 0;
+            padding: 12px 24px;
+            border: 1px solid #E5E7EB;
+            border-top-color: #F0F0F0;
+            border-bottom: 0;
+            background: #fff;
+            color: #4B5563;
+            font-size: 13.5px;
+            line-height: 1.45;
         }
 
         .upsell-privacy {
             display: flex;
             align-items: flex-start;
             gap: 10px;
+            cursor: pointer;
         }
 
         .upsell-privacy input {
-            width: 18px;
-            height: 18px;
-            margin: 2px 0 0;
-            accent-color: #1C75D8;
+            width: 16px;
+            height: 16px;
+            margin: 1px 0 0;
+            accent-color: #006EFF;
             flex: 0 0 auto;
         }
 
         .upsell-privacy a {
-            color: #1C75D8;
+            color: #006EFF;
             text-decoration: underline;
+            text-underline-offset: 2px;
         }
 
         .upsell-privacy.privacy-error,
         .upsell-privacy.privacy-error a {
             color: #D82E21;
+        }
+
+        .upsell-compatibility {
+            margin: 0;
+            padding: 12px 24px;
+            border: 1px solid #E5E7EB;
+            border-top-color: #F0F0F0;
+            border-radius: 0 0 14px 14px;
+            background: #F9FAFB;
+            color: #374151;
+            font-size: 12.5px;
+            line-height: 1.4;
+        }
+
+        .upsell-compatibility p {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+            color: #374151;
+            font-size: 12.5px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .upsell-compatibility img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .upsell-compatibility .icon {
+            display: inline-block;
+            width: 16px;
+            min-width: 16px;
+            height: 16px;
+            margin: 0;
+
+            &:first-of-type {
+                margin-left: 12px;
+            }
+        }
+
+        .upsell-compatibility .icon svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 14px;
+            padding: 4px 2px 2px;
+            color: #5C6470;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .separator::before,
+        .separator::after {
+            flex: 1 1 auto;
+            height: 1px;
+            background: #DFE2E7;
+            content: '';
+        }
+
+        .separator a {
+            color: inherit;
+            text-decoration: underline;
+            text-decoration-color: #C4C9D1;
+            text-underline-offset: 3px;
+        }
+
+        .upsell-code {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            min-height: 46px;
+            box-sizing: border-box;
+            margin: 10px 2px 0;
+            padding: 9px 8px 9px 16px;
+            border-radius: 12px;
+            background: #1B1B1F;
+        }
+
+        .upsell-code code {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: 100%;
+            overflow-wrap: anywhere;
+            color: #E8EAED;
+            font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 13.5px;
+            letter-spacing: -0.01em;
+            line-height: 28px;
+        }
+
+        .copy-code {
+            display: inline-flex;
+            flex: none;
+            align-items: center;
+            justify-content: center;
+            min-width: 56px;
+            width: 100%;
+            height: 28px;
+            padding: 0 11px;
+            border: 0;
+            border-radius: 7px;
+            background: #33333A;
+            color: #F2F2F2;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+
+            &.copied {
+                background: #3D8648;
+                color: #fff;
+
+                &:hover {
+                    background: #3D8648;
+                }
+            }
+        }
+
+        .copy-code:hover {
+            background: #45454E;
         }
 
 
@@ -753,23 +898,27 @@ main .section.ai-skills-checker-container {
 
             .upsell-container {
                 margin-top: 16px;
-                padding: 20px;
             }
 
-            .upsell-content {
-                grid-template-columns: 56px 1fr auto;
+            .upsell-content-container {
+                grid-template-columns: 44px minmax(0, 1fr) auto;
+                column-gap: 18px;
             }
 
             .upsell-button {
                 grid-column: auto;
                 justify-self: end;
+                width: auto;
                 min-width: 178px;
             }
 
-            .upsell-footer {
+            .upsell-code {
                 flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
+            }
+
+            .upsell-code code,
+            .copy-code {
+                width: auto;
             }
 
             button.check-url {
@@ -830,6 +979,10 @@ main .section.ai-skills-checker-container {
     @media (min-width: 991px) {
         .ai-skills-checker {
             padding: 48px 160px 35px;
+        }
+
+        .upsell-container {
+            width: min(680px, calc(100% + 40px));
         }
     }
 }
