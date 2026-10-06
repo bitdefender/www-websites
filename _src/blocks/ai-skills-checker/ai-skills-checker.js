@@ -525,8 +525,10 @@ function createUpsellZone(block) {
     if (!copied) return;
 
     copyButton.textContent = upsellMap.copied || 'Copied';
+    copyButton.classList.add('copied');
     setTimeout(() => {
       copyButton.textContent = upsellMap.copyButton || 'Copy';
+      copyButton.classList.remove('copied');
     }, 1600);
   });
 

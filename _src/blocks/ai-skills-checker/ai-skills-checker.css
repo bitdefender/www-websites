@@ -526,7 +526,7 @@ main .section.ai-skills-checker-container {
         .separator {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 4px;
             margin-top: 14px;
             padding: 4px 2px 2px;
             color: #5C6470;
@@ -593,6 +593,15 @@ main .section.ai-skills-checker-container {
             font-size: 12.5px;
             font-weight: 600;
             cursor: pointer;
+
+            &.copied {
+                background: #3D8648;
+                color: #fff;
+
+                &:hover {
+                    background: #3D8648;
+                }
+            }
         }
 
         .copy-code:hover {
