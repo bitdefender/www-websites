@@ -787,7 +787,7 @@ main .creators-banner .signature {
   font-size: 14px !important;
 }
 
-.creators .columns-container .has-trial-btn a.button::after {
+.creators .columns-container:not(.real-check) .has-trial-btn a.button::after {
   display: none!important;
 }
 
