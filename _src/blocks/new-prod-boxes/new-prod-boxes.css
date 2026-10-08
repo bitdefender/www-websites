@@ -337,7 +337,6 @@
     .prod_box {
       flex: 1;
       max-width: 410px;
-      margin: 8px;
       margin-bottom: 10px;
 
       .inner_prod_box {
@@ -1017,18 +1016,13 @@
   .new-prod-boxes-container .new-prod-boxes .prod_box {
     margin: 1em auto;
   }
-
-  .new-prod-boxes-container .new-prod-boxes .prod_box .greenTag2.empty {
-    display: none;
-  }
-
 }
 
 .new-prod-boxes .await-loader {
   min-height: 177px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 767px) {
   .creators .new-prod-boxes-container .new-prod-boxes {
     padding-bottom: 10px;
   }
@@ -1039,10 +1033,11 @@
     align-items: initial;
     margin: 0 auto;
     display: grid;
-    gap: 0;
+    column-gap: 16px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     justify-content: center;
     min-width: 700px;
+    max-width: 100%;
     width: fit-content;
 
     &.five-cards {
