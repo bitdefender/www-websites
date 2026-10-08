@@ -1042,6 +1042,8 @@
     gap: 0;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     justify-content: center;
+    min-width: 700px;
+    width: fit-content;
 
     &.five-cards {
       flex-wrap: wrap;
