@@ -6,3 +6,4 @@ package.json
 package-lock.json
 test/*
 _src/tests/*
+skills-lock.json
