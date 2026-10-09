@@ -1,0 +1,1345 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`products block - compare variant (vpn) > matches the rendered snapshot 1`] = `
+<div
+  class="products plans compare block"
+  data-block-name="products"
+  data-block-status="initialized"
+>
+  
+    
+  <div
+    class="product-card"
+  >
+    
+      
+    <div
+      data-valign="middle"
+    >
+      
+        
+      <p>
+        What you get with
+      </p>
+      
+        
+      <h3
+        id="free-vpns"
+      >
+        Free VPNs
+      </h3>
+      
+        
+      <hr />
+      <div
+        class="featured nanoblock"
+        style="visibility: hidden; min-height: 0px;"
+      />
+      
+        
+      <ul
+        style="min-height: 0px;"
+      >
+        
+          
+        <li
+          class="icon-important"
+        >
+          <u>
+            1 user/device
+          </u>
+        </li>
+        
+          
+        <li
+          class="icon-important"
+        >
+          <u>
+            Limited to 500 MB per day (insufficient for streaming)
+          </u>
+        </li>
+        
+          
+        <li
+          class="icon-important"
+        >
+          <u>
+            3 server locations (or less)
+          </u>
+        </li>
+        
+        
+      </ul>
+      
+      
+    </div>
+    
+    
+  </div>
+  
+    
+  <div
+    class="product-card featured"
+  >
+    <bd-context
+      class="store-context"
+    >
+      <bd-product
+        class="store-product"
+        product-id="vpn"
+      >
+        <div
+          class="nanoblock plan-selector-hoisted"
+          style="order: 9;"
+        >
+          <ul
+            class="variant-selector"
+            style="display: none;"
+          >
+            <li
+              class="active"
+              data-store-action=""
+              data-store-set-devices="10"
+            >
+              <span>
+                10
+              </span>
+            </li>
+          </ul>
+        </div>
+        <bd-option
+          class="store-option"
+          data-layer-event="info"
+          devices="10"
+          subscription="1"
+        >
+          
+      
+          <div
+            class="store-option-content"
+            data-valign="middle"
+          >
+            
+        
+            <p
+              style="order: 1;"
+            >
+              Bitdefender
+            </p>
+            
+        
+            <h3
+              id="premium-vpn"
+              style="order: 2;"
+            >
+              Premium VPN
+            </h3>
+            
+        
+            <div
+              class="featured await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 3; min-height: 0px;"
+            >
+              <span>
+                Best Value! Go Annual & Save {{=it.option.discount.percentage}}
+              </span>
+            </div>
+            
+        
+            <ul
+              style="order: 4; min-height: 0px;"
+            >
+              
+          
+              <li>
+                10 users or devices
+              </li>
+              
+          
+              <li>
+                Unlimited traffic encryption (great for streaming)
+              </li>
+              
+          
+              <li>
+                100+ server locations
+              </li>
+              
+        
+            </ul>
+            
+        
+            <hr
+              style="order: 5;"
+            />
+            
+        
+            <p
+              class="os-availability"
+              style="order: 6; min-height: 0px;"
+            >
+              <span
+                class="icon icon-android"
+              >
+                undefined
+              </span>
+              <span
+                class="icon icon-windows"
+              >
+                undefined
+              </span>
+              <span
+                class="icon icon-mac"
+              >
+                undefined
+              </span>
+              <span
+                class="icon icon-ios"
+              >
+                undefined
+              </span>
+            </p>
+            
+        
+            <p
+              class="os-availability-text"
+              style="order: 7; min-height: 0px;"
+            >
+              Works on all major platforms
+            </p>
+            
+        
+            <hr
+              style="order: 8;"
+            />
+            
+        
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 10; min-height: 0px;"
+            >
+              <span
+                class="old-price"
+              >
+                 
+                <del
+                  data-store-price="full"
+                  data-store-render=""
+                />
+              </span>
+            </div>
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              style="order: 11; min-height: 0px;"
+            >
+              <strong
+                class="new-price"
+              >
+                 
+                <strong
+                  data-store-price="discounted-monthly||full-monthly"
+                  data-store-render=""
+                />
+                <sup>
+                  /mo
+                </sup>
+              </strong>
+            </div>
+            
+        
+            <div
+              class="price condition nanoblock"
+              style="order: 12; min-height: 0px;"
+            >
+              <em>
+                Billed 
+                <em
+                  class="await-loader"
+                  data-store-price="discounted||full"
+                  data-store-render=""
+                />
+                 for the first year
+              </em>
+            </div>
+            
+        
+            <p
+              class="button-container"
+              style="order: 13;"
+            >
+              <a
+                class="button"
+                data-store-buy-link=""
+                data-store-render=""
+                href="#"
+                title="Get Bitdefender Premium VPN"
+              >
+                <span
+                  class="button-text"
+                >
+                  Get Bitdefender Premium VPN
+                </span>
+              </a>
+            </p>
+            
+      
+          </div>
+          
+    
+        </bd-option>
+      </bd-product>
+    </bd-context>
+  </div>
+  
+    
+  <div
+    class="product-card"
+  >
+    
+      
+    <div
+      data-valign="middle"
+    >
+      
+        
+      <p>
+        What you get with
+      </p>
+      
+        
+      <h3
+        id="other-premium-vpns"
+      >
+        Other Premium VPNs
+      </h3>
+      
+        
+      <hr />
+      <div
+        class="featured nanoblock"
+        style="visibility: hidden; min-height: 0px;"
+      />
+      
+        
+      <ul
+        style="min-height: 0px;"
+      >
+        
+          
+        <li
+          class="icon-important"
+        >
+          <u>
+            5-6 users/devices
+          </u>
+        </li>
+        
+          
+        <li
+          class="icon-important"
+        >
+          <u>
+            Unlimited traffic encryption
+          </u>
+        </li>
+        
+          
+        <li
+          class="icon-important"
+        >
+          <u>
+            40+ server locations
+          </u>
+        </li>
+        
+        
+      </ul>
+      
+      
+    </div>
+    
+    
+  </div>
+  
+  
+</div>
+`;
+
+exports[`products block - plans variant (antivirus-for-mac) > matches the rendered snapshot 1`] = `
+<div
+  class="products plans block"
+  data-block-name="products"
+  data-block-status="initialized"
+>
+  
+    
+  <div
+    class="product-card featured"
+  >
+    <bd-context
+      class="store-context"
+    >
+      <bd-product
+        class="store-product"
+        product-id="mac"
+      >
+        <div
+          class="nanoblock plan-selector-hoisted"
+          style="order: 5;"
+        >
+          <ul
+            class="variant-selector"
+          >
+            <li
+              class="active"
+              data-store-action=""
+              data-store-set-devices="1"
+            >
+              <span>
+                1
+              </span>
+            </li>
+            <li
+              data-store-action=""
+              data-store-set-devices="3"
+            >
+              <span>
+                3
+              </span>
+            </li>
+          </ul>
+        </div>
+        <bd-option
+          class="store-option"
+          data-layer-event="info"
+          devices="1"
+          subscription="1"
+        >
+          
+      
+          <div
+            class="store-option-content"
+            data-valign="middle"
+          >
+            
+        
+            <h3
+              id="year-plan"
+              style="order: 1;"
+            >
+              1-Year Plan
+            </h3>
+            
+        
+            <div
+              class="highlight await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 2;"
+            >
+              <span>
+                Save {{=it.option.discount.percentage}}
+              </span>
+            </div>
+            
+        
+            <hr
+              style="order: 3;"
+            />
+            
+        
+            <p
+              style="order: 4;"
+            >
+              Number of devices
+            </p>
+            
+        
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              style="order: 6; min-height: 0px;"
+            >
+              <strong
+                class="new-price"
+              >
+                 
+                <strong
+                  data-store-price="discounted||full"
+                  data-store-render=""
+                />
+              </strong>
+            </div>
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 7; min-height: 0px;"
+            >
+              <span
+                class="old-price"
+              >
+                Old Price 
+                <del
+                  data-store-price="full"
+                  data-store-render=""
+                />
+              </span>
+            </div>
+            
+        
+            <div
+              class="featured await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 8; min-height: 0px;"
+            >
+              <span>
+                Save {{=it.option.discount.value}}
+              </span>
+            </div>
+            
+        
+            <div
+              class="price condition nanoblock"
+              style="order: 9; min-height: 0px;"
+            >
+              <em>
+                *For the first year
+              </em>
+            </div>
+            
+        
+            <p
+              class="button-container"
+              style="order: 10; min-height: 0px;"
+            >
+              <a
+                class="button"
+                data-store-buy-link=""
+                data-store-render=""
+                href="#"
+                title="Buy Now"
+              >
+                <span
+                  class="button-text"
+                >
+                  Buy Now
+                </span>
+              </a>
+            </p>
+            
+        
+            <p
+              style="order: 11; min-height: 0px;"
+            >
+              Plus applicable sales tax.
+              <br />
+              See 
+              <a
+                href="/en-us/consumer/antivirus-for-mac#terms-of-use"
+                title="Terms of Use"
+              >
+                Terms of Use
+              </a>
+               below.
+            </p>
+            
+      
+          </div>
+          
+    
+        </bd-option>
+      </bd-product>
+    </bd-context>
+  </div>
+  
+    
+  <div
+    class="product-card featured"
+  >
+    <bd-context
+      class="store-context"
+    >
+      <bd-product
+        class="store-product"
+        product-id="mac"
+      >
+        <div
+          class="nanoblock plan-selector-hoisted"
+          style="order: 4;"
+        >
+          <ul
+            class="variant-selector"
+          >
+            <li
+              class="active"
+              data-store-action=""
+              data-store-set-devices="1"
+            >
+              <span>
+                1
+              </span>
+            </li>
+            <li
+              data-store-action=""
+              data-store-set-devices="3"
+            >
+              <span>
+                3
+              </span>
+            </li>
+          </ul>
+        </div>
+        <bd-option
+          class="store-option"
+          data-layer-event="info"
+          devices="1"
+          subscription="2"
+        >
+          
+      
+          <div
+            class="store-option-content"
+            data-valign="middle"
+          >
+            
+        
+            <h3
+              id="years-plan"
+              style="order: 1;"
+            >
+              2-Years Plan
+            </h3>
+            
+        
+            <hr
+              style="order: 2;"
+            />
+            
+        
+            <p
+              style="order: 3;"
+            >
+              Number of devices
+            </p>
+            
+        
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              style="order: 5; min-height: 0px;"
+            >
+              <strong
+                class="new-price"
+              >
+                 
+                <strong
+                  data-store-price="discounted||full"
+                  data-store-render=""
+                />
+              </strong>
+            </div>
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 6; min-height: 0px;"
+            >
+              <span
+                class="old-price"
+              >
+                Old Price 
+                <del
+                  data-store-price="full"
+                  data-store-render=""
+                />
+              </span>
+            </div>
+            
+        
+            <div
+              class="featured await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 7; min-height: 0px;"
+            >
+              <span>
+                 {{=it.option.discount.value}}
+              </span>
+            </div>
+            
+        
+            <div
+              class="price condition nanoblock"
+              style="order: 8; min-height: 0px;"
+            >
+              <em>
+                *For the first 2 years
+              </em>
+            </div>
+            
+        
+            <p
+              class="button-container"
+              style="order: 9; min-height: 0px;"
+            >
+              <a
+                class="button primary"
+                data-store-buy-link=""
+                data-store-render=""
+                href="#"
+                title="Buy Now"
+              >
+                <span
+                  class="button-text"
+                >
+                  Buy Now
+                </span>
+              </a>
+            </p>
+            
+        
+            <p
+              style="order: 10; min-height: 0px;"
+            >
+              Plus applicable sales tax.
+              <br />
+              See 
+              <a
+                href="/en-us/consumer/antivirus-for-mac#terms-of-use"
+                title="Terms of Use"
+              >
+                Terms of Use
+              </a>
+               below.
+            </p>
+            
+      
+          </div>
+          
+    
+        </bd-option>
+      </bd-product>
+    </bd-context>
+  </div>
+  
+    
+  <div
+    class="product-card featured"
+  >
+    <bd-context
+      class="store-context"
+    >
+      <bd-product
+        class="store-product"
+        product-id="mac"
+      >
+        <div
+          class="nanoblock plan-selector-hoisted"
+          style="order: 4;"
+        >
+          <ul
+            class="variant-selector"
+          >
+            <li
+              class="active"
+              data-store-action=""
+              data-store-set-devices="1"
+            >
+              <span>
+                1
+              </span>
+            </li>
+            <li
+              data-store-action=""
+              data-store-set-devices="3"
+            >
+              <span>
+                3
+              </span>
+            </li>
+          </ul>
+        </div>
+        <bd-option
+          class="store-option"
+          data-layer-event="info"
+          devices="1"
+          subscription="3"
+        >
+          
+      
+          <div
+            class="store-option-content"
+            data-valign="middle"
+          >
+            
+        
+            <h3
+              id="years-plan-1"
+              style="order: 1;"
+            >
+              3-Years Plan
+            </h3>
+            
+        
+            <hr
+              style="order: 2;"
+            />
+            
+        
+            <p
+              style="order: 3;"
+            >
+              Number of devices
+            </p>
+            
+        
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              style="order: 5; min-height: 0px;"
+            >
+              <strong
+                class="new-price"
+              >
+                 
+                <strong
+                  data-store-price="discounted||full"
+                  data-store-render=""
+                />
+              </strong>
+            </div>
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 6; min-height: 0px;"
+            >
+              <span
+                class="old-price"
+              >
+                Old Price 
+                <del
+                  data-store-price="full"
+                  data-store-render=""
+                />
+              </span>
+            </div>
+            
+        
+            <div
+              class="featured await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 7; min-height: 0px;"
+            >
+              <span>
+                 {{=it.option.discount.value}}
+              </span>
+            </div>
+            
+        
+            <div
+              class="price condition nanoblock"
+              style="order: 8; min-height: 0px;"
+            >
+              <em>
+                *For the first 3 years
+              </em>
+            </div>
+            
+        
+            <p
+              class="button-container"
+              style="order: 9; min-height: 0px;"
+            >
+              <a
+                class="button primary"
+                data-store-buy-link=""
+                data-store-render=""
+                href="#"
+                title="Buy Now"
+              >
+                <span
+                  class="button-text"
+                >
+                  Buy Now
+                </span>
+              </a>
+            </p>
+            
+        
+            <p
+              style="order: 10; min-height: 0px;"
+            >
+              Plus applicable sales tax.
+              <br />
+              See 
+              <a
+                href="/en-us/consumer/antivirus-for-mac#terms-of-use"
+                title="Terms of Use"
+              >
+                Terms of Use
+              </a>
+               below.
+            </p>
+            
+      
+          </div>
+          
+    
+        </bd-option>
+      </bd-product>
+    </bd-context>
+  </div>
+  
+  
+</div>
+`;
+
+exports[`products block - product switching (synthetic) > matches the rendered snapshot 1`] = `
+<div
+  class="products block"
+  data-block-name="products"
+  data-block-status="initialized"
+>
+  
+    
+  <div
+    class="product-card"
+  >
+    <bd-context
+      class="store-context"
+    >
+      <bd-product
+        class="store-product"
+        product-id="ts_i"
+      >
+        <div
+          class="nanoblock plan-selector-hoisted"
+          style="order: 6;"
+        >
+          <ul
+            class="variant-selector"
+          >
+            <li
+              class="active"
+              data-store-action=""
+              data-store-set-devices="5"
+              data-store-set-id="ts_i"
+              data-store-set-subscription="1"
+            >
+              <span>
+                Individual
+              </span>
+            </li>
+            <li
+              data-store-action=""
+              data-store-set-devices="25"
+              data-store-set-id="ts_f"
+              data-store-set-subscription="1"
+            >
+              <span>
+                Family
+              </span>
+            </li>
+          </ul>
+        </div>
+        <bd-option
+          class="store-option"
+          data-layer-event="all"
+          devices="5"
+          subscription="1"
+        >
+          
+      
+          <div
+            class="store-option-content"
+          >
+            
+        
+            <p
+              style="order: 1;"
+            >
+              <picture>
+                <img
+                  alt="Total Security"
+                  height="80"
+                  src="./media_test.png"
+                  width="80"
+                />
+              </picture>
+            </p>
+            
+        
+            <p
+              class="img-adjacent-text"
+              style="order: 2; min-height: 0px;"
+            >
+              Complete protection for all your devices
+            </p>
+            
+        
+            <h3
+              id="total-security"
+              style="order: 3;"
+            >
+              Total Security
+            </h3>
+            
+        
+            <div
+              class="blue-pill-container nanoblock"
+              style="order: 4;"
+            >
+              <div
+                class="blue-pill"
+                style="min-height: 0px;"
+              >
+                
+      
+                <span
+                  class="icon icon-star"
+                >
+                  undefined
+                </span>
+                
+      
+                <span
+                  class="blue-pill-text"
+                >
+                  Most popular
+                </span>
+                
+     
+              </div>
+            </div>
+            <div
+              class="featured nanoblock"
+              style="visibility: hidden; order: 5; min-height: 0px;"
+            />
+            
+        
+            <div
+              class="highlight nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-render=""
+              style="order: 5;"
+            >
+              <span>
+                Save {{=it.option.discount.percentage}} today
+              </span>
+            </div>
+            
+        
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              style="order: 7; min-height: 0px;"
+            >
+              <strong
+                class="new-price"
+              >
+                 
+                <strong
+                  data-store-price="discounted-monthly||full-monthly"
+                  data-store-render=""
+                />
+                <sup>
+                  /lună
+                </sup>
+              </strong>
+            </div>
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 8; min-height: 0px;"
+            >
+              <span
+                class="old-price"
+              >
+                Was 
+                <del
+                  data-store-price="full-monthly"
+                  data-store-render=""
+                />
+                <sup>
+                  /mo
+                </sup>
+              </span>
+            </div>
+            
+        
+            <div
+              class="price condition nanoblock"
+              style="order: 9; min-height: 0px;"
+            >
+              <em>
+                Billed 
+                <em
+                  class="await-loader"
+                  data-store-price="discounted||full"
+                  data-store-render=""
+                />
+                 for the first year
+              </em>
+            </div>
+            
+        
+            <p
+              class="button-container"
+              style="order: 10; min-height: 0px;"
+            >
+              <a
+                class="button"
+                data-store-buy-link="30"
+                data-store-render=""
+                href="#"
+                title="Buy Now"
+              >
+                <span
+                  class="button-text"
+                >
+                  Buy Now
+                </span>
+              </a>
+            </p>
+            
+        
+            <p
+              class="ul-header-text"
+              style="order: 11;"
+            >
+              Includes:
+            </p>
+            
+        
+            <ul
+              style="order: 12; min-height: 0px;"
+            >
+              
+          
+              <li>
+                Antivirus
+              </li>
+              
+          
+              <li
+                class="icon-important"
+              >
+                <u>
+                  VPN 200MB/day
+                </u>
+              </li>
+              
+        
+            </ul>
+            
+      
+          </div>
+          
+    
+        </bd-option>
+      </bd-product>
+    </bd-context>
+  </div>
+  
+    
+  <div
+    class="product-card featured"
+  >
+    <bd-context
+      class="store-context"
+    >
+      <bd-product
+        class="store-product"
+        product-id="ps_i"
+      >
+        <div
+          class="nanoblock plan-selector-hoisted"
+          style="order: 5;"
+        >
+          <ul
+            class="variant-selector"
+            style="display: none;"
+          >
+            <li
+              class="active"
+              data-store-action=""
+              data-store-set-devices="10"
+            >
+              <span>
+                10
+              </span>
+            </li>
+          </ul>
+        </div>
+        <bd-option
+          class="store-option"
+          data-layer-event="all"
+          devices="10"
+          subscription="1"
+        >
+          
+      
+          <div
+            class="store-option-content"
+          >
+            
+        
+            <p
+              style="order: 1;"
+            >
+              <picture>
+                <img
+                  alt="Premium Security"
+                  height="80"
+                  src="./media_test2.png"
+                  width="80"
+                />
+              </picture>
+            </p>
+            
+        
+            <p
+              class="img-adjacent-text"
+              style="order: 2; min-height: 0px;"
+            >
+              Premium protection with unlimited VPN
+            </p>
+            
+        
+            <h3
+              id="premium-security"
+              style="order: 3;"
+            >
+              Premium Security
+            </h3>
+            
+        
+            <div
+              class="featured await-loader nanoblock"
+              style="order: 4; min-height: 0px;"
+            >
+              Best value - save {{=it.option.discount.percentage}}
+            </div>
+            
+        
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              style="order: 6; min-height: 0px;"
+            >
+              <strong
+                class="new-price"
+              >
+                 
+                <strong
+                  data-store-price="discounted||full"
+                  data-store-render=""
+                />
+              </strong>
+            </div>
+            
+        
+            <div
+              class="price await-loader nanoblock"
+              data-store-hide="!it.option.price.discounted"
+              data-store-hide-type="visibility"
+              data-store-render=""
+              style="order: 7;"
+            >
+              <span
+                class="old-price"
+              >
+                 
+                <del
+                  data-store-price="full"
+                  data-store-render=""
+                />
+              </span>
+            </div>
+            
+        
+            <p
+              class="button-container"
+              style="order: 8; min-height: 0px;"
+            >
+              <a
+                class="button"
+                data-store-buy-link="60"
+                data-store-render=""
+                href="#"
+                title="Buy Now"
+              >
+                <span
+                  class="button-text"
+                >
+                  Buy Now
+                </span>
+              </a>
+            </p>
+            
+        
+            <p
+              class="button-container"
+              style="order: 9;"
+            >
+              <a
+                class="button"
+                href="/en-us/consumer/premium-security"
+                title="Find out more"
+              >
+                <span
+                  class="button-text"
+                >
+                  Find out more
+                </span>
+              </a>
+            </p>
+            
+      
+          </div>
+          
+    
+        </bd-option>
+      </bd-product>
+    </bd-context>
+  </div>
+  
+  
+</div>
+`;
