@@ -20,7 +20,8 @@ export default new Store({
       const buyLinkURL = new URL(targetOverride?.buyLink || buyLink);
       buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
 
-      targetOverride?.extraParameters.forEach(({ key, value }) => {
+      // An override may set buyLink alone, without extraParameters.
+      targetOverride?.extraParameters?.forEach(({ key, value }) => {
         buyLinkURL.searchParams.set(key, value);
       });
 

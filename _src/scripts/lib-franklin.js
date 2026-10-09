@@ -587,7 +587,13 @@ async function loadModule(name, jsPath, cssPath, ...args) {
         try {
           mod = await import(jsPath);
           if (mod.default) {
-            await mod.default.apply(null, args);
+            // Extension point for blocks: window.hlx.blockDecorator may wrap a block's
+            // decorate(), e.g. to apply a Target test before the block is shown.
+            const [block] = args;
+            const decorator = block?.dataset?.blockName && window.hlx.blockDecorator;
+            await (decorator
+              ? decorator(name, mod.default, block)
+              : mod.default.apply(null, args));
           }
         } catch (error) {
           // eslint-disable-next-line no-console

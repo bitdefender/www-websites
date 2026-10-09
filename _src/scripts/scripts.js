@@ -47,6 +47,12 @@ import {
   getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
+import {
+  applyStructuralHooks,
+  blockMboxNames,
+  installBlockHooks,
+  reportUnappliedHooks,
+} from './utils/block-hooks.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
@@ -446,16 +452,11 @@ const initializeHubspotModule = () => {
 };
 
 /**
- * since target global mbox cannot use syntasa parameters
- * a new mbox which can insert code into the pagehas been created
- * and it runs as soon as launch is loaded
-*/
-const applyTargetCustomCode = async () => {
-  const code = await target.getOffers({ mboxNames: 'custom-code' });
-  if (!code) {
-    return;
-  }
-
+ * Run the <script> and <style> blocks of a Target html offer. Only their text is copied into
+ * <head>, where scripts execute as soon as they are appended.
+ * @param {string} code
+ */
+const injectOfferCode = (code) => {
   const codeDiv = document.createElement('div');
   codeDiv.insertAdjacentHTML('beforeend', code);
   const allScriptsAndStyles = codeDiv.querySelectorAll('script, style');
@@ -464,6 +465,42 @@ const applyTargetCustomCode = async () => {
     newElement.innerHTML = element.innerHTML;
     document.head.appendChild(newElement);
   });
+};
+
+/**
+ * since target global mbox cannot use syntasa parameters
+ * a new mbox which can insert code into the pagehas been created
+ * and it runs as soon as launch is loaded
+*/
+const applyTargetCustomCode = async () => {
+  const code = await target.getOffers({ mboxNames: 'custom-code' });
+  if (code) injectOfferCode(code);
+};
+
+/**
+ * On pages with an experiment key: fetch custom-code and the mbox of every block type on the
+ * page in one request, and run them before anything is decorated. Block offers register hooks
+ * that change their block before it is shown (see utils/block-hooks.js).
+ * @param {Element} main
+ */
+const applyTargetOffers = async (main) => {
+  const mboxNames = ['custom-code', ...blockMboxNames(main)];
+  const offers = await target.getOffers({ mboxNames });
+  mboxNames.forEach((name) => {
+    if (typeof offers?.[name] === 'string') injectOfferCode(offers[name]);
+  });
+};
+
+/**
+ * Local development only: run block hooks saved in localStorage under "bd-block-hooks-dev",
+ * so a component test can be tried without a Target activity.
+ */
+const applyDevBlockHooks = () => {
+  if (window.location.hostname !== 'localhost') return;
+  try {
+    const code = window.localStorage.getItem('bd-block-hooks-dev');
+    if (code) injectOfferCode(code);
+  } catch { /* storage unavailable */ }
 };
 
 export async function loadTrackers() {
@@ -485,8 +522,6 @@ export async function loadTrackers() {
     target.abort();
     onAdobeMcLoaded();
   }
-
-  await applyTargetCustomCode();
 }
 
 /**
@@ -509,11 +544,19 @@ function openExternalLinksInNewTab(doc) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
+  installBlockHooks({
+    report: (name, status) => sampleRUM('target-block-hook', { source: name, target: status }),
+  });
   // load trackers early if there is a target experiment on the page
   if (getPageExperimentKey()) {
     await loadTrackers();
     await resolveNonProductsDataLayer();
+    // Only now is main final: resolving the data layer can swap it for a challenger page,
+    // which would both erase custom-code's edits and change which blocks are on the page.
+    const main = doc.querySelector('main');
+    if (main) await applyTargetOffers(main);
   }
+  applyDevBlockHooks();
 
   const userCountry = await user.country;
   if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
@@ -530,6 +573,9 @@ async function loadEager(doc) {
   if (templateMetadata === 'subscriber') initializeHubspotModule();
   const main = doc.querySelector('main');
   if (main) {
+    // Removed and added sections are applied to the authored HTML, so everything below sees
+    // the page as if it had been authored that way.
+    applyStructuralHooks(main);
     decorateMain(main);
     buildCtaSections(main);
     buildTwoColumnsSection(main);
@@ -574,7 +620,7 @@ async function loadLazy(doc) {
 
   // only call load Trackers here if there is no experiment on the page
   if (!getPageExperimentKey()) {
-    loadTrackers();
+    loadTrackers().then(() => applyTargetCustomCode());
     await resolveNonProductsDataLayer();
   }
 
@@ -796,6 +842,7 @@ async function loadPage() {
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
   window.bd_page_ready = true;
+  reportUnappliedHooks();
   elements.forEach((element) => {
     element.classList.remove('await-loader');
   });
