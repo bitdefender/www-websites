@@ -12,3 +12,5 @@ tools/sitemap/node_modules/*
 .env
 
 .aider*
+# Claude Code personal settings
+.claude/settings.local.json
