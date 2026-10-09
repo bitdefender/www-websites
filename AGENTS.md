@@ -17,4 +17,5 @@ Edge Delivery Services, diverged from aem-boilerplate. Read a block first. Omiss
 - Merging `main` ships code; content publishes separately.
 - A PR without a `https://{branch}--www-websites--bitdefender.aem.page/{path}` link is rejected. Writing `<branch>` in the description works; a workflow fills it in.
 - All committed files are served unless `.hlxignore` excludes them.
-- Skills: `/plugin marketplace add adobe/skills`, then `aem-edge-delivery-services` (incl. `docs-search`). Web platform guides: `.agents/skills/modern-web-guidance`.
+- Skills: `/plugin marketplace add adobe/skills`, then `aem-edge-delivery-services` (incl. `docs-search`).
+- Web platform guides: read `.agents/skills/modern-web-guidance/guides/` directly; don't run its `npx …@latest`. Claude Code: `web-guidance` skill. `npx skills update` also links `.claude/skills/modern-web-guidance`; delete it.

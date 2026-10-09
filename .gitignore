@@ -14,3 +14,5 @@ tools/sitemap/node_modules/*
 .aider*
 # Claude Code personal settings
 .claude/settings.local.json
+# Linked by `npx skills update`; runs npx @latest. Use .claude/skills/web-guidance.
+.claude/skills/modern-web-guidance
