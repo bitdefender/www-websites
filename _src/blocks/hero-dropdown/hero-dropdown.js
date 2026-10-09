@@ -1,12 +1,15 @@
 /* eslint-disable max-len */
 // Description: Hero Dropdown block
 import { UserAgent } from '@repobit/dex-utils';
+import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
+import page from '../../scripts/page.js';
 
 import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
   wrapChildrenWithStoreContext,
+  generatePageLoadStartedName,
 } from '../../scripts/utils/utils.js';
 
 import { detectModalButtons } from '../../scripts/scripts.js';
@@ -213,6 +216,7 @@ export default function decorate(block) {
     signature,
     trialDuration,
     linksOpenInNewTab,
+    hardcodedLink,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
@@ -266,6 +270,15 @@ export default function decorate(block) {
 
   renderDropdown(block);
   detectModalButtons(block);
+
+  if (hardcodedLink && page.name === 'web-sage') {
+    block.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown-products__price-box .primary-button')) return;
+      const clickEvent = new ButtonClickEvent('click', { asset: 'get it free' });
+      clickEvent.eventInfo = { page: generatePageLoadStartedName() };
+      AdobeDataLayerService.push(clickEvent);
+    });
+  }
 
   if (linksOpenInNewTab) {
     block.querySelectorAll('a.button').forEach((link) => {
