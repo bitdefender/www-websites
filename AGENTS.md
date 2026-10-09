@@ -1,10 +1,11 @@
 # AGENTS.md
 
-Edge Delivery Services, diverged from aem-boilerplate. Read a block first. Omissions are in the repo or known.
+Edge Delivery Services, diverged from aem-boilerplate. Read a block first. Omissions are in the repo or known. Where a skill or general EDS advice conflicts with this file, this file wins.
 
 ## Avoid
 - Code lives in `_src/` (`blocks`, `scripts`, `styles`), not at the repo root.
 - `_src/scripts/lib-franklin.js` is our fork of `aem.js`. Every page loads it; edit only on purpose.
+- Content is authored in SharePoint Word docs (`fstab.yaml`, still in use). Ignore skills for Document Authoring (da.live), Universal Editor and page import.
 - Markup comes from the backend. `curl localhost:3000/x.plain.html` first.
 - Authors omit and add cells. Decorate defensively.
 - No build step. `dependencies` load from esm.sh via the import map in `head.html` and `404.html`; the pre-commit hook regenerates it. Never edit the map by hand.
@@ -17,5 +18,5 @@ Edge Delivery Services, diverged from aem-boilerplate. Read a block first. Omiss
 - Merging `main` ships code; content publishes separately.
 - A PR without a `https://{branch}--www-websites--bitdefender.aem.page/{path}` link is rejected. Writing `<branch>` in the description works; a workflow fills it in.
 - All committed files are served unless `.hlxignore` excludes them.
-- Skills: `/plugin marketplace add adobe/skills`, then `aem-edge-delivery-services` (incl. `docs-search`).
+- Skills: Claude Code gets the `aem-edge-delivery-services@adobe-skills` plugin (incl. `docs-search`) from `.claude/settings.json`.
 - Web platform guides: read `.agents/skills/modern-web-guidance/guides/` directly; don't run its `npx …@latest`. Claude Code: `web-guidance` skill. `npx skills update` also links `.claude/skills/modern-web-guidance`; delete it.
