@@ -18,5 +18,5 @@ Edge Delivery Services, diverged from aem-boilerplate. Read a block first. Omiss
 - Merging `main` ships code; content publishes separately.
 - A PR without a `https://{branch}--www-websites--bitdefender.aem.page/{path}` link is rejected. Writing `<branch>` in the description works; a workflow fills it in.
 - All committed files are served unless `.hlxignore` excludes them.
-- Skills: Claude Code gets the `aem-edge-delivery-services@adobe-skills` plugin (incl. `docs-search`) from `.claude/settings.json`.
+- Skills: Claude Code uses the `aem-edge-delivery-services@adobe-skills` plugin (incl. `docs-search`). `.claude/settings.json` enables it but doesn't install it. If its skills are missing, have the user run `claude plugin install aem-edge-delivery-services@adobe-skills --scope project` once per clone, then restart the session.
 - Web platform guides: read `.agents/skills/modern-web-guidance/guides/` directly; don't run its `npx …@latest`. Claude Code: `web-guidance` skill. `npx skills update` also links `.claude/skills/modern-web-guidance`; delete it.
