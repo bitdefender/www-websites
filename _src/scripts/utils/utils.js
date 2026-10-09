@@ -1037,6 +1037,10 @@ export const generatePageLoadStartedName = () => {
       }
     }
 
+    if (lastSegment === 'web-sage') {
+      tagName = `${locale}:consumer:product:${subSubSubSection}`;
+    }
+
     if (pathname.includes('bundle-solutions')) {
       tagName = `${locale}:oem:bundle solutions`;
     }
