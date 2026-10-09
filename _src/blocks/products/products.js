@@ -8,13 +8,61 @@ import {
   wrapChildrenWithStoreContext,
 } from '../../scripts/utils/utils.js';
 
-// all avaiable text variables
+const DISCOUNT_PERCENTAGE = '{{=it.option.discount.percentage}}';
+const DISCOUNT_VALUE = '{{=it.option.discount.value}}';
+const BILLED_PRICE_PLACEHOLDER = '{BilledPrice}';
+
+// all available text variables
 const TEXT_VARIABLES_MAPPING = [
   {
     variable: 'percent',
-    storeVariable: '{{=it.option.discount.percentage}}',
+    storeVariable: DISCOUNT_PERCENTAGE,
   },
 ];
+
+// elements whose heights are aligned across the product cards
+const MATCH_HEIGHTS_SELECTORS = [
+  '.price.nanoblock:not(:last-of-type)',
+  '.price.condition',
+  'h3:nth-of-type(2)',
+  'p:nth-of-type(2)',
+  'p:nth-of-type(3)',
+  'h4',
+  'ul:not(.variant-selector)',
+  '.featured.nanoblock',
+  '.blue-pill',
+];
+
+/**
+ * @param {*} value nanoblock parameter
+ * @returns {boolean} true if the parameter asks for the monthly price
+ */
+const isMonthly = (value) => typeof value === 'string' && value.toLowerCase() === 'monthly';
+
+/**
+ * @param {*} value nanoblock parameter
+ * @returns {string} store template of the discount, as a percentage or as a value
+ */
+const getDiscountTemplate = (value) => (
+  typeof value === 'string' && value.toLowerCase() === 'percent' ? DISCOUNT_PERCENTAGE : DISCOUNT_VALUE
+);
+
+/**
+ * @param {string} text Text of the nanoblock
+ * @return {string} Text with variables replaced
+ */
+const replaceVariablesInText = (text) => TEXT_VARIABLES_MAPPING.reduce(
+  (replacedText, { variable, storeVariable }) => replacedText.replaceAll(variable, storeVariable),
+  text,
+);
+
+/**
+ * @param {string} text
+ * @return {boolean} whether the text contains variables or not
+ */
+const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
+  ({ variable }) => text.includes(variable),
+);
 
 /**
  * Nanoblock representing the plan selectors.
@@ -24,7 +72,6 @@ const TEXT_VARIABLES_MAPPING = [
  * @returns Root node of the nanoblock
  */
 function renderPlanSelector(plans, defaultSelection) {
-  // TODO: Remove unecessary div
   const root = document.createElement('div');
   const ul = document.createElement('ul');
   ul.classList.add('variant-selector');
@@ -36,12 +83,13 @@ function renderPlanSelector(plans, defaultSelection) {
 
   for (let idx = 0; idx < plans.length - 2; idx += 3) {
     const label = plans[idx];
-    const liStoreParameters = {};
-    liStoreParameters['data-store-action'] = '';
+    const liStoreParameters = { 'data-store-action': '' };
 
     if (Number(defaultSelection)) {
+      // only the number of devices changes
       liStoreParameters['data-store-set-devices'] = label;
     } else {
+      // the product changes together with its variant
       const productCode = plans[idx + 1];
       const variation = plans[idx + 2];
       const [devices, subscription] = variation.match(/\d+/g)?.map(Number) ?? [];
@@ -51,13 +99,8 @@ function renderPlanSelector(plans, defaultSelection) {
       liStoreParameters['data-store-set-subscription'] = subscription;
     }
 
-    const li = createTag(
-      'li',
-      liStoreParameters,
-      `<span>${label}</span>`,
-    );
+    const li = createTag('li', liStoreParameters, `<span>${label}</span>`);
 
-    // set the default selection
     if (defaultSelection === label) {
       li.classList.add('active');
       li.checked = true;
@@ -86,16 +129,10 @@ function renderPlanSelector(plans, defaultSelection) {
  * @returns Root node of the nanoblock
  */
 function renderOldPrice(text = '', monthly = '') {
-  // TODO: simplify CSS
-  const oldPrice = document.createElement('del');
-  oldPrice.setAttribute('data-store-render', '');
-  if (monthly.toLowerCase() === 'monthly') {
-    oldPrice.setAttribute('data-store-price', 'full-monthly');
-  } else {
-    oldPrice.setAttribute('data-store-price', 'full');
-  }
+  const priceType = isMonthly(monthly) ? 'full-monthly' : 'full';
+  const monthlySuffix = isMonthly(monthly) ? '<sup>/mo</sup>' : '';
 
-  const root = createTag(
+  return createTag(
     'div',
     {
       'data-store-hide': '!it.option.price.discounted',
@@ -103,93 +140,60 @@ function renderOldPrice(text = '', monthly = '') {
       'data-store-render': '',
       class: 'price await-loader',
     },
-    `<span class='old-price'>${text} ${oldPrice.outerHTML}</span>`,
+    `<span class='old-price'>${text} <del data-store-render data-store-price="${priceType}"></del>${monthlySuffix}</span>`,
   );
-
-  // insert text to mark monthly price
-  if (monthly.toLowerCase() === 'monthly') {
-    root.querySelector('.old-price').insertAdjacentHTML('beforeend', '<sup>/mo</sup>');
-  }
-
-  return root;
 }
 
 /**
  * Nanoblock representing the new product price
  * @param text The text located before the price
  * @param monthly Show the monthly price if equal to 'monthly'
+ * @param monthTranslation The translation of the month abbreviation
  * @returns Root node of the nanoblock
  */
 function renderPrice(text = '', monthly = '', monthTranslation = 'mo') {
-  // TODO simplify CSS
-  const newPrice = document.createElement('strong');
-  newPrice.setAttribute('data-store-render', '');
-  if (monthly.toLowerCase() === 'monthly') {
-    newPrice.setAttribute('data-store-price', 'discounted-monthly||full-monthly');
-  } else {
-    newPrice.setAttribute('data-store-price', 'discounted||full');
-  }
+  const priceType = isMonthly(monthly) ? 'discounted-monthly||full-monthly' : 'discounted||full';
+  const monthlySuffix = isMonthly(monthly) ? `<sup>/${monthTranslation}</sup>` : '';
 
-  const root = createTag(
+  return createTag(
     'div',
-    {
-      class: 'price await-loader',
-    },
-    `<strong class='new-price'>${text} ${newPrice.outerHTML}</strong>`,
+    { class: 'price await-loader' },
+    `<strong class='new-price'>${text} <strong data-store-render data-store-price="${priceType}"></strong>${monthlySuffix}</strong>`,
   );
-
-  // insert text to mark monthly price
-  if (monthly.toLowerCase() === 'monthly') {
-    root.querySelector('.new-price').insertAdjacentHTML('beforeend', `<sup>/${monthTranslation}</sup>`);
-  }
-
-  return root;
 }
 
 /**
- * Renders the green section on top of the product card highlighting the potential savings
+ * Renders the potential savings, visible only when the product is discounted
+ * @param className Class of the nanoblock
  * @param text Text to display
  * @param percent Show the saving in percentage if equals to `percent`
  * @returns Root node of the nanoblock
  */
-function renderHighlightSavings(text = 'Save', percent = '') {
-  const highlighSaving = document.createElement('span');
-  highlighSaving.textContent = `${text} ${percent?.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
-  }`;
+function renderSavings(className, text = 'Save', percent = '') {
+  const savings = document.createElement('span');
+  savings.textContent = `${text} ${getDiscountTemplate(percent)}`;
 
-  const root = createTag(
+  return createTag(
     'div',
     {
       'data-store-hide': '!it.option.price.discounted',
       'data-store-hide-type': 'visibility',
       'data-store-render': '',
-      class: 'highlight await-loader',
-      style: 'display=none',
+      class: `${className} await-loader`,
     },
-    `${highlighSaving.outerHTML}`,
+    savings,
   );
-
-  return root;
 }
 
 /**
- *
- * @param {string} text Text of the featured nanoblock
- * @return {string} Text with variables replaced
+ * Renders the green section on top of the product card highlighting the potential savings
  */
-const replaceVariablesInText = (text) => {
-  let replacedText = text;
+const renderHighlightSavings = (...params) => renderSavings('highlight', ...params);
 
-  // replace the percent variable with correct percentage of the produc
-  TEXT_VARIABLES_MAPPING.forEach((textVariableMapping) => {
-    replacedText = replacedText.replaceAll(
-      textVariableMapping.variable,
-      textVariableMapping.storeVariable,
-    );
-  });
-
-  return replacedText;
-};
+/**
+ * Nanoblock representing a text to Featured and the corresponding savings
+ */
+const renderFeaturedSavings = (...params) => renderSavings('featured', ...params);
 
 /**
  * Nanoblock representing a text to highlight in the product card
@@ -197,7 +201,6 @@ const replaceVariablesInText = (text) => {
  * @returns Root node of the nanoblock
  */
 function renderHighlight(text) {
-  const updatedText = replaceVariablesInText(text);
   return createTag(
     'div',
     {
@@ -205,34 +208,20 @@ function renderHighlight(text) {
       'data-store-hide': '!it.option.price.discounted',
       'data-store-render': '',
     },
-    `<span>${updatedText}</span>`,
+    `<span>${replaceVariablesInText(text)}</span>`,
   );
 }
 
 function renderBluePill(icon, text) {
-  const root = createTag(
+  return createTag(
     'div',
-    {
-      class: 'blue-pill-container',
-    },
-
+    { class: 'blue-pill-container' },
     `<div class= "blue-pill">
       <span class = "icon icon-${icon?.toLowerCase() || ''}"></span>
       <span class = "blue-pill-text">${text ?? ''}</span>
      </div>`,
   );
-
-  return root;
 }
-
-/**
- *
- * @param {string} text
- * @return {boolean} wether the text contains variables or not
- */
-const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
-  (textVariableMapping) => text.includes(textVariableMapping.variable),
-);
 
 /**
  * Nanoblock representing a text to Featured
@@ -240,63 +229,37 @@ const checkIfTextContainsVariables = (text) => TEXT_VARIABLES_MAPPING.some(
  * @returns Root node of the nanoblock
  */
 function renderFeatured(text) {
-  const root = document.createElement('div');
-  root.classList.add('featured');
+  const root = createTag('div', { class: 'featured' });
   root.textContent = text;
 
   if (checkIfTextContainsVariables(text)) {
     root.classList.add('await-loader');
-    root.textContent = replaceVariablesInText(root.textContent);
+    root.textContent = replaceVariablesInText(text);
   }
 
   return root;
 }
 
 /**
- * Nanoblock representing a text to Featured and the corresponding savings
- * @param text Text of the featured nanoblock
- * @param percent Show the saving in percentage if equals to `percent`
- * @returns Root node of the nanoblock
- */
-function renderFeaturedSavings(text = 'Save', percent = '') {
-  const featuredSaving = document.createElement('span');
-  featuredSaving.textContent = `${text} ${percent.toLowerCase() === 'percent' ? '{{=it.option.discount.percentage}}' : '{{=it.option.discount.value}}'
-  }`;
-
-  const root = createTag(
-    'div',
-    {
-      'data-store-hide': '!it.option.price.discounted',
-      'data-store-hide-type': 'visibility',
-      'data-store-render': '',
-      class: 'featured',
-    },
-    `${featuredSaving.outerHTML}`,
-  );
-  root.classList.add('await-loader');
-
-  return root;
-}
-
-/**
  * Nanoblock representing the lowest product price
+ * The last two text parameters are used: [monthly], text. In the text, `0` is replaced
+ * by the lowest price.
  * @returns root node of the nanoblock
  */
 function renderLowestPrice(...params) {
-  const filteredParams = params.filter((paramValue) => paramValue && (typeof paramValue !== 'object')).slice(-2);
-  const text = filteredParams.length > 1 ? filteredParams[1] : filteredParams[0];
-  const monthly = filteredParams.length > 1 ? filteredParams[0] : '';
-  const root = document.createElement('p');
+  const textParams = params.filter((param) => param && typeof param !== 'object').slice(-2);
+  const text = textParams.at(-1);
+  const monthly = textParams.length > 1 ? textParams[0] : '';
+
   const textArea = document.createElement('span');
-  root.classList.add('await-loader');
   textArea.textContent = text.replace(
     '0',
-    monthly.toLowerCase() === 'monthly'
+    isMonthly(monthly)
       ? '{{=it.state.price.discounted.monthly.min || it.state.price.full.monthly.min}}'
       : '{{=it.state.price.discounted.min || it.state.price.full.min}}',
   );
-  root.appendChild(textArea);
-  return root;
+
+  return createTag('p', { class: 'await-loader' }, textArea);
 }
 
 /**
@@ -306,146 +269,164 @@ function renderLowestPrice(...params) {
  */
 function renderPriceCondition(text) {
   const updatedText = text.replace('BilledPrice', '<em data-store-render data-store-price="discounted||full" class="await-loader"></em>');
-  return createTag(
-    'div',
-    {
-      class: 'price condition',
-    },
-    `<em>${updatedText}</em>`,
-  );
+  return createTag('div', { class: 'price condition' }, `<em>${updatedText}</em>`);
 }
 
-// declare nanoblocks
-createNanoBlock('plans', renderPlanSelector);
-createNanoBlock('price', renderPrice);
-createNanoBlock('oldPrice', renderOldPrice);
-createNanoBlock('priceCondition', renderPriceCondition);
-createNanoBlock('featured', renderFeatured);
-createNanoBlock('featuredSavings', renderFeaturedSavings);
-createNanoBlock('highlightSavings', renderHighlightSavings);
-createNanoBlock('highlight', renderHighlight);
-createNanoBlock('lowestPrice', renderLowestPrice);
-createNanoBlock('bluePill', renderBluePill);
 /**
- * Main decorate function
+ * Registers the nanoblocks of this block.
+ * Nanoblocks share one registry and other blocks register some of the same names
+ * (e.g. products-sideview registers `price`), so they are registered again before
+ * every render to make sure this block uses its own renderers.
  */
-export default function decorate(block) {
-  const blockWrapperSection = block.closest('.section');
-  const metadata = blockWrapperSection.dataset;
-  const { trialDuration } = metadata;
-  const trialDurations = trialDuration?.split(',')?.map((t) => t.trim()) || [];
+function registerNanoBlocks() {
+  createNanoBlock('plans', renderPlanSelector);
+  createNanoBlock('price', renderPrice);
+  createNanoBlock('oldPrice', renderOldPrice);
+  createNanoBlock('priceCondition', renderPriceCondition);
+  createNanoBlock('featured', renderFeatured);
+  createNanoBlock('featuredSavings', renderFeaturedSavings);
+  createNanoBlock('highlightSavings', renderHighlightSavings);
+  createNanoBlock('highlight', renderHighlight);
+  createNanoBlock('lowestPrice', renderLowestPrice);
+  createNanoBlock('bluePill', renderBluePill);
+}
+
+// other blocks (e.g. columns) render these nanoblocks too, keep them available on import
+registerNanoBlocks();
+
+/**
+ * Reads the default plan of every card from the `PlansN` section metadata.
+ * The metadata looks like `{[label, productCode, 5u-1y, ...], defaultSelection}`. When the
+ * default selection is a number it overrides the number of devices of the first variant.
+ * @param {DOMStringMap|object} metadata section metadata
+ * @returns {Array<{productCode: string, devices: string, subscription: string}>} plans by card
+ */
+export function parsePlans(metadata) {
   const plans = [];
 
   Object.entries(metadata).forEach(([key, value]) => {
-    if (key.includes('plans')) {
-      const allImportantData = value.match(/[^,{}[\]]+/gu).map((importantData) => importantData.trim());
-      const suffix = parseInt(key.replace('plans', ''), 10);
-      const index = Number.isNaN(suffix) ? plans.length : suffix - 1;
-      plans[index] = {
-        productCode: allImportantData[1],
-        defaultVariant: `${Number(allImportantData.slice(-1)[0])
-          ? allImportantData.slice(-1)[0] : allImportantData[2].match(/[0-9-]+/g)[0]
-        }${allImportantData[2].match(/[0-9-]+/g)[1]}`,
-      };
-    }
+    if (!key.includes('plans')) return;
+
+    const values = value.match(/[^,{}[\]]+/gu)?.map((data) => data.trim());
+    const [variantDevices, variantSubscription] = values?.[2]?.match(/[0-9-]+/g) ?? [];
+    if (!variantDevices) return;
+
+    const defaultSelection = values.at(-1);
+    const suffix = parseInt(key.replace('plans', ''), 10);
+    const index = Number.isNaN(suffix) ? plans.length : suffix - 1;
+
+    plans[index] = {
+      productCode: values[1],
+      devices: Number(defaultSelection) ? defaultSelection : variantDevices,
+      subscription: variantSubscription?.replace(/^-/, ''),
+    };
   });
 
-  // Keep the original section wrappers addressable after adding the store context.
-  const wrapperSectionContext = document.createElement('bd-context');
-  wrapperSectionContext.classList.add('store-context', 'store-section-context');
-  [...blockWrapperSection.children].forEach((child) => {
-    child.classList.add('store-section-content');
-    wrapperSectionContext.appendChild(child);
-  });
-  blockWrapperSection.appendChild(wrapperSectionContext);
+  return plans;
+}
 
-  [...block.children].forEach((row, idxParent) => {
-    // set the store event on the component
-    let storeEvent = 'info';
-    if (checkIfNotProductPage()) {
-      storeEvent = 'all';
-    }
-
-    row.classList.add('product-card');
-    const [devices, subscription] = plans[idxParent]?.defaultVariant?.split('-') || [];
-    const productCode = plans[idxParent]?.productCode;
-    if (productCode && devices && subscription) {
-      wrapChildrenWithStoreContext(row, {
-        productId: productCode,
-        devices,
-        subscription,
-        storeEvent,
-      });
-    }
-    row.querySelector('.store-option > div')?.classList.add('store-option-content');
-
-    const cardButtons = row.querySelectorAll('a');
-    cardButtons?.forEach((button) => {
-      if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
-        button.href = '#';
-        button.setAttribute('data-store-buy-link', trialDurations[idxParent] || '');
-        button.setAttribute('data-store-render', '');
-      }
-    });
-    renderNanoBlocks(row, undefined, idxParent);
-
-    // The plan selector switches the product id (data-store-set-id). The nearest
-    // bd-* ancestor catches the bd-action-request, and bd-option only applies
-    // devices/subscription — it ignores the product id. So the selector must sit
-    // above bd-option (as a direct child of bd-product) for the product switch to
-    // cascade down. Hoist it out of bd-option, mirroring products-sideview.
-    // Preserve its authored visual position via flex `order` (the store wrappers
-    // are flattened with `display: contents` in CSS, so all card content shares
-    // one flex context).
-    const storeProduct = row.querySelector('.store-product');
-    const storeOption = storeProduct?.querySelector('.store-option');
-    const planSelector = storeOption?.querySelector('.variant-selector');
-    if (storeProduct && storeOption && planSelector) {
-      const planSelectorContainer = planSelector.closest('.nanoblock') || planSelector;
-      const activePlan = planSelector.querySelector('li.active');
-      if (activePlan) {
-        const { storeSetId, storeSetDevices, storeSetSubscription } = activePlan.dataset;
-        if (storeSetId) {
-          storeProduct.setAttribute('product-id', storeSetId);
-        }
-        if (storeSetDevices) {
-          storeOption.setAttribute('devices', storeSetDevices);
-        }
-        if (storeSetSubscription) {
-          storeOption.setAttribute('subscription', storeSetSubscription);
-        }
-      }
-      // remember the authored position among the option's content children
-      const contentRoot = planSelectorContainer.parentElement;
-      const authoredIndex = [...contentRoot.children].indexOf(planSelectorContainer);
-      planSelectorContainer.classList.add('plan-selector-hoisted');
-      storeProduct.insertBefore(planSelectorContainer, storeOption);
-      // shift every option child at/after the authored position down by one,
-      // and place the selector at its original index
-      storeOption.querySelectorAll(':scope > .store-option-content > *').forEach((child, i) => {
-        child.style.order = i >= authoredIndex ? i + 2 : i + 1;
-      });
-      planSelectorContainer.style.order = authoredIndex + 1;
-    }
-  });
-
-  // render nanoblocks in section's content default wrapper
-  const defaultContent = block.parentNode.parentNode.querySelector('.default-content-wrapper');
-  if (defaultContent) {
-    renderNanoBlocks(defaultContent);
+/**
+ * Replaces the text of the price condition, keeping the store price element in place.
+ * The store price element holds store listeners, so it can't be re-created.
+ * @param {HTMLElement} priceConditionEl the price condition element
+ * @param {string} template text to display, `{BilledPrice}` marks the store price
+ */
+export function updatePriceConditionText(priceConditionEl, template) {
+  if (!template.includes(BILLED_PRICE_PLACEHOLDER)) {
+    priceConditionEl.textContent = template;
+    return;
   }
 
-  // style the product card if the author has added a featured card inside
-  [...block.querySelectorAll('.product-card .featured')].forEach((featured) => {
-    featured.closest('.product-card').classList.add('featured');
-  });
+  const [before, after] = template.split(BILLED_PRICE_PLACEHOLDER);
+  [...priceConditionEl.childNodes]
+    .filter((node) => node.nodeType === Node.TEXT_NODE)
+    .forEach((node) => node.remove());
+  if (before) priceConditionEl.prepend(before);
+  if (after) priceConditionEl.append(after);
+}
 
-  // add class to avoid using :has selector
+/**
+ * Moves the section content inside a store context, keeping the section wrappers addressable.
+ * @param {HTMLElement} section
+ */
+function wrapSectionInStoreContext(section) {
+  const sectionContext = document.createElement('bd-context');
+  sectionContext.classList.add('store-context', 'store-section-context');
+  [...section.children].forEach((child) => {
+    child.classList.add('store-section-content');
+    sectionContext.appendChild(child);
+  });
+  section.appendChild(sectionContext);
+}
+
+/**
+ * Turns the buy links of the card into store buy links.
+ * @param {HTMLElement} card
+ * @param {string} trialDuration
+ */
+function decorateBuyLinks(card, trialDuration) {
+  card.querySelectorAll('a').forEach((button) => {
+    if (button.href?.includes('/buy/') || button.href?.includes('#buylink')) {
+      button.href = '#';
+      button.setAttribute('data-store-buy-link', trialDuration);
+      button.setAttribute('data-store-render', '');
+    }
+  });
+}
+
+/**
+ * The plan selector switches the product id (data-store-set-id). The nearest
+ * bd-* ancestor catches the bd-action-request, and bd-option only applies
+ * devices/subscription — it ignores the product id. So the selector must sit
+ * above bd-option (as a direct child of bd-product) for the product switch to
+ * cascade down. Hoist it out of bd-option, mirroring products-sideview.
+ * Preserve its authored visual position via flex `order` (the store wrappers
+ * are flattened with `display: contents` in CSS, so all card content shares
+ * one flex context).
+ * @param {HTMLElement} card
+ */
+function hoistPlanSelector(card) {
+  const storeProduct = card.querySelector('.store-product');
+  const storeOption = storeProduct?.querySelector('.store-option');
+  const planSelector = storeOption?.querySelector('.variant-selector');
+  if (!storeProduct || !storeOption || !planSelector) return;
+
+  const planSelectorContainer = planSelector.closest('.nanoblock') || planSelector;
+  const activePlan = planSelector.querySelector('li.active');
+  if (activePlan) {
+    const { storeSetId, storeSetDevices, storeSetSubscription } = activePlan.dataset;
+    if (storeSetId) {
+      storeProduct.setAttribute('product-id', storeSetId);
+    }
+    if (storeSetDevices) {
+      storeOption.setAttribute('devices', storeSetDevices);
+    }
+    if (storeSetSubscription) {
+      storeOption.setAttribute('subscription', storeSetSubscription);
+    }
+  }
+
+  // remember the authored position among the option's content children
+  const contentRoot = planSelectorContainer.parentElement;
+  const authoredIndex = [...contentRoot.children].indexOf(planSelectorContainer);
+  planSelectorContainer.classList.add('plan-selector-hoisted');
+  storeProduct.insertBefore(planSelectorContainer, storeOption);
+  // shift every option child at/after the authored position down by one,
+  // and place the selector at its original index
+  storeOption.querySelectorAll(':scope > .store-option-content > *').forEach((child, i) => {
+    child.style.order = i >= authoredIndex ? i + 2 : i + 1;
+  });
+  planSelectorContainer.style.order = authoredIndex + 1;
+}
+
+/**
+ * Adds the classes used to style the card lists, to avoid using :has selectors.
+ * @param {HTMLElement} block
+ */
+function decorateLists(block) {
   block.querySelectorAll('.product-card li').forEach((li) => {
     if (li.querySelector('del')) {
       li.classList.add('with-del');
-    } else {
-      li.classList.remove('with-del');
     }
   });
 
@@ -455,92 +436,131 @@ export default function decorate(block) {
     }
   });
 
-  block.querySelectorAll('.product-card ul li u').forEach((li) => {
-    li.parentNode.classList.add('icon-important');
+  block.querySelectorAll('.product-card ul li u').forEach((underline) => {
+    underline.parentNode.classList.add('icon-important');
   });
+}
 
-  const paragraphs = block.querySelectorAll('.product-card.featured p');
+/**
+ * Marks the icon only paragraphs of the featured cards (OS icons) and their caption.
+ * @param {HTMLElement} block
+ */
+function decorateOsAvailability(block) {
+  block.querySelectorAll('.product-card.featured p').forEach((paragraph) => {
+    const containsOnlySpans = [...paragraph.childNodes].every((node) => node.nodeName === 'SPAN');
+    if (!containsOnlySpans) return;
 
-  // Iterate through each paragraph
-  paragraphs.forEach((paragraph) => {
-    // Check if the paragraph only contains span elements
-    const containsOnlySpans = Array.from(paragraph.childNodes).every((node) => node.nodeName === 'SPAN');
+    paragraph.classList.add('os-availability');
+    if (paragraph.nextElementSibling?.nodeName === 'P') {
+      paragraph.nextElementSibling.classList.add('os-availability-text');
+    }
+  });
+}
 
-    // If the paragraph only contains span elements, add a class
-    if (containsOnlySpans) {
-      paragraph.classList.add('os-availability');
+/**
+ * Updates the price condition of the card with the `DynamicPriceTextsN` text of the
+ * selected plan.
+ * @param {HTMLElement} card
+ * @param {string} dynamicPriceTexts comma separated texts, one per plan
+ */
+function setupDynamicPriceTexts(card, dynamicPriceTexts) {
+  const priceConditionEl = card.querySelector('.price.condition em');
+  if (!priceConditionEl) return;
 
-      if (paragraph.nextElementSibling.nodeName === 'P') {
-        paragraph.nextElementSibling.classList.add('os-availability-text');
+  const texts = dynamicPriceTexts.split(',');
+  card.querySelectorAll('.variant-selector li').forEach((option, idx) => {
+    option.addEventListener('click', () => {
+      if (option.classList.contains('active')) {
+        updatePriceConditionText(priceConditionEl, texts[idx] || '');
       }
-    }
+    });
   });
+}
 
-  // Height matching and Dynamic texts logic
-  const cards = block.querySelectorAll('.product-card');
-  const featuredCard = block.querySelector('.product-card.featured');
-  cards.forEach((card, cardIndex) => {
-    const hasImage = card.querySelector('img') !== null;
-    if (hasImage && !block.classList.contains('plans') && !block.classList.contains('compact')) {
-      // If the image exists, set max-width to the paragraph next to the image
-      const firstPElement = card.querySelector('p:not(:has(img, .icon))');
-      firstPElement.classList.add('img-adjacent-text');
-    }
-    const planSelector = card.querySelector('.variant-selector');
-    const dynamicPriceTextsKey = `dynamicPriceTexts${cardIndex + 1}`;
-    if (metadata[dynamicPriceTextsKey]) {
-      const dynamicPriceTexts = [...metadata[dynamicPriceTextsKey].split(',')];
-      const priceConditionEl = card.querySelector('.price.condition em');
-      planSelector?.querySelectorAll('li')?.forEach((option, idx) => {
-        option.addEventListener('click', () => {
-          if (option.classList.contains('active') && priceConditionEl && dynamicPriceTexts) {
-            const textTemplate = dynamicPriceTexts[idx] || '';
-            // in order to preserve the store eventListeners we can't replace the priceElement
-            // every time another option is selected therefore we're using a string template
-            if (textTemplate.includes('{BilledPrice}')) {
-              const [before, after] = textTemplate.split('{BilledPrice}');
-              const nodesToRemove = Array.from(priceConditionEl.childNodes).filter(
-                (node) => node.nodeType === Node.TEXT_NODE,
-              );
-              // Clear only non-<em> text nodes (this element contains store events)
-              nodesToRemove.forEach((node) => priceConditionEl.removeChild(node));
-              // eslint-disable-next-line max-len
-              if (before) priceConditionEl.insertBefore(document.createTextNode(before), priceConditionEl.firstChild);
-              if (after) priceConditionEl.appendChild(document.createTextNode(after));
-            } else {
-              priceConditionEl.textContent = textTemplate;
-            }
-          }
-        });
+/**
+ * Adds an invisible featured element after the first element following the heading,
+ * so the content of the card lines up with the featured card.
+ * @param {HTMLElement} card
+ */
+function addFeaturedPlaceholder(card) {
+  const space = card.querySelector('h3')?.nextElementSibling;
+  if (!space) return;
+
+  const placeholder = document.createElement('div');
+  space.insertAdjacentElement('afterend', placeholder);
+  placeholder.classList.add('featured', 'nanoblock');
+  placeholder.style.visibility = 'hidden';
+  // The store wrapper assigns inline orders to authored content. This
+  // placeholder is added afterwards, so preserve its position after h3.
+  if (space.style.order) {
+    placeholder.style.order = `${Number(space.style.order) + 1}`;
+  }
+}
+
+/**
+ * Main decorate function
+ */
+export default function decorate(block) {
+  registerNanoBlocks();
+
+  const section = block.closest('.section');
+  const metadata = section.dataset;
+  const trialDurations = metadata.trialDuration?.split(',').map((t) => t.trim()) || [];
+  const plans = parsePlans(metadata);
+  const storeEvent = checkIfNotProductPage() ? 'all' : 'info';
+
+  wrapSectionInStoreContext(section);
+
+  [...block.children].forEach((card, idx) => {
+    card.classList.add('product-card');
+
+    const { productCode, devices, subscription } = plans[idx] || {};
+    if (productCode && devices && subscription) {
+      wrapChildrenWithStoreContext(card, {
+        productId: productCode,
+        devices,
+        subscription,
+        storeEvent,
       });
     }
-    if (!card.classList.contains('featured')) {
-      // If there is no featured card, do nothing
-      if (!featuredCard) {
-        return;
-      }
-      let space = card.querySelector('h3');
-      space = space.nextElementSibling;
-      const emptyDiv = document.createElement('div');
-      space.insertAdjacentElement('afterend', emptyDiv);
-      emptyDiv.classList.add('featured', 'nanoblock');
-      emptyDiv.style.visibility = 'hidden';
-      // The store wrapper assigns inline orders to authored content. This
-      // placeholder is added afterwards, so preserve its position after h3.
-      if (space.style.order) {
-        emptyDiv.style.order = `${Number(space.style.order) + 1}`;
-      }
+    card.querySelector('.store-option > div')?.classList.add('store-option-content');
+
+    decorateBuyLinks(card, trialDurations[idx] || '');
+    renderNanoBlocks(card, undefined, idx);
+    hoistPlanSelector(card);
+  });
+
+  // render nanoblocks in section's content default wrapper
+  const defaultContent = block.parentNode.parentNode.querySelector('.default-content-wrapper');
+  if (defaultContent) {
+    renderNanoBlocks(defaultContent);
+  }
+
+  // style the product card if the author has added a featured card inside
+  block.querySelectorAll('.product-card .featured').forEach((featured) => {
+    featured.closest('.product-card').classList.add('featured');
+  });
+
+  decorateLists(block);
+  decorateOsAvailability(block);
+
+  const hasFeaturedCard = !!block.querySelector('.product-card.featured');
+  const hasImageAdjacentText = !block.classList.contains('plans') && !block.classList.contains('compact');
+  block.querySelectorAll('.product-card').forEach((card, idx) => {
+    if (hasImageAdjacentText && card.querySelector('img')) {
+      card.querySelector('p:not(:has(img, .icon))')?.classList.add('img-adjacent-text');
+    }
+
+    const dynamicPriceTexts = metadata[`dynamicPriceTexts${idx + 1}`];
+    if (dynamicPriceTexts) {
+      setupDynamicPriceTexts(card, dynamicPriceTexts);
+    }
+
+    if (hasFeaturedCard && !card.classList.contains('featured')) {
+      addFeaturedPlaceholder(card);
     }
   });
 
   decorateIcons(block);
-  matchHeights(block, '.price.nanoblock:not(:last-of-type)');
-  matchHeights(block, '.price.condition');
-  matchHeights(block, 'h3:nth-of-type(2)');
-  matchHeights(block, 'p:nth-of-type(2)');
-  matchHeights(block, 'p:nth-of-type(3)');
-  matchHeights(block, 'h4');
-  matchHeights(block, 'ul:not(.variant-selector)');
-  matchHeights(block, '.featured.nanoblock');
-  matchHeights(block, '.blue-pill');
+  MATCH_HEIGHTS_SELECTORS.forEach((selector) => matchHeights(block, selector));
 }

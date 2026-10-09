@@ -18,7 +18,8 @@ import path from 'path';
 import {
   decorateBlocks, decorateButtons, decorateSections, decorateIcons, decorateTags,
 } from '../../../scripts/lib-franklin.js';
-import { checkIfNotProductPage } from '../../../scripts/utils/utils.js';
+import { checkIfNotProductPage, createNanoBlock } from '../../../scripts/utils/utils.js';
+import { parsePlans, updatePriceConditionText } from '../../../blocks/products/products.js';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -410,5 +411,92 @@ describe('products block - product switching (synthetic)', () => {
     expect(lowestPrice.textContent).toBe(
       'Starting at {{=it.state.price.discounted.min || it.state.price.full.min}}',
     );
+  });
+});
+
+describe('products block - nanoblock registry', () => {
+  it('renders its own price nanoblock when another block registered the same name', async () => {
+    vi.mocked(checkIfNotProductPage).mockReturnValue(false);
+    // e.g. products-sideview registers its own `price` nanoblock
+    createNanoBlock('price', () => {
+      const otherPrice = document.createElement('div');
+      otherPrice.classList.add('other-price');
+      return otherPrice;
+    });
+
+    const { block } = await renderFixture('products-plans');
+    expect(block.querySelector('.other-price')).toBeNull();
+    expect(block.querySelectorAll('.price .new-price')).toHaveLength(3);
+  });
+});
+
+describe('parsePlans', () => {
+  it('reads product, devices and subscription for every card', () => {
+    expect(parsePlans({
+      plans1: '{[ 1, mac, 1u-1y, 3, mac, 3u-1y], 1}',
+      plans2: '{[ 1, mac, 1u-2y, 3, mac, 3u-2y], 3}',
+    })).toEqual([
+      { productCode: 'mac', devices: '1', subscription: '1' },
+      { productCode: 'mac', devices: '3', subscription: '2' },
+    ]);
+  });
+
+  it('uses the devices of the first variant when the default selection is a label', () => {
+    expect(parsePlans({
+      plans1: '{[Individual, ts_i, 5u-1y, Family, ts_f, 25u-1y], Individual}',
+    })).toEqual([{ productCode: 'ts_i', devices: '5', subscription: '1' }]);
+  });
+
+  it('places plans by their suffix and appends plans without one', () => {
+    const plans = parsePlans({
+      plans3: '{[10, vpn, 10u-2y], 10}',
+      plans: '{[10, vpn, 10u-1y], 10}',
+    });
+    expect(plans[2]).toEqual({ productCode: 'vpn', devices: '10', subscription: '2' });
+    expect(plans[3]).toEqual({ productCode: 'vpn', devices: '10', subscription: '1' });
+  });
+
+  it('ignores other metadata and malformed plans', () => {
+    expect(parsePlans({
+      style: 'wide',
+      plans1: '',
+      plans3: '{[10, vpn, unlimited], 10}',
+    })).toEqual([]);
+  });
+
+  it('leaves the subscription empty when the variant has none', () => {
+    expect(parsePlans({ plans1: '{[10, vpn, 10u], 10}' }))
+      .toEqual([{ productCode: 'vpn', devices: '10', subscription: undefined }]);
+  });
+});
+
+describe('updatePriceConditionText', () => {
+  const createCondition = () => {
+    const condition = document.createElement('em');
+    condition.innerHTML = 'Billed <em data-store-price="discounted||full"></em> for the first year';
+    return condition;
+  };
+
+  it('replaces the text around the store price and keeps the store price element', () => {
+    const condition = createCondition();
+    const storePrice = condition.querySelector('em');
+    updatePriceConditionText(condition, 'Pay {BilledPrice} every 2 years');
+    expect(condition.textContent).toBe('Pay  every 2 years');
+    expect(condition.querySelector('em')).toBe(storePrice);
+    expect(condition.firstChild.textContent).toBe('Pay ');
+  });
+
+  it('supports texts with only a prefix or only a suffix', () => {
+    const condition = createCondition();
+    updatePriceConditionText(condition, '{BilledPrice} per year');
+    expect(condition.innerHTML).toBe('<em data-store-price="discounted||full"></em> per year');
+    updatePriceConditionText(condition, 'Billed {BilledPrice}');
+    expect(condition.innerHTML).toBe('Billed <em data-store-price="discounted||full"></em>');
+  });
+
+  it('replaces the whole content when there is no store price', () => {
+    const condition = createCondition();
+    updatePriceConditionText(condition, 'Free for 30 days');
+    expect(condition.innerHTML).toBe('Free for 30 days');
   });
 });
