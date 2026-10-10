@@ -488,6 +488,14 @@ export class Product {
 		if (window.UC_UI) {
 			buyLink.searchParams.set("ucControllerId", window.UC_UI.getControllerId());
 		}
+
+		// DEX-27558
+		if (page.locale === 'zh-tw') {
+			const url = new URL(buyLink.href);
+			url.searchParams.set('LANG', 'zy');
+			buyLink.href = url.href;
+		}
+
 		option.buyLink = buyLink.href;
 
 		return option;
@@ -735,7 +743,6 @@ export class Product {
 }
 
 class Vlaicu {
-
 	static defaultPromotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}";
 	static promotionPath = "/p-api/v1/products/{bundleId}/locale/{locale}/campaign/{campaignId}";
 
@@ -759,7 +766,7 @@ class Vlaicu {
 	 */
 	static #addLangParameter(receivedBuyLink) {
 		const buyLinkUrl = new URL(receivedBuyLink);
-		buyLinkUrl.searchParams.set('LANG', page.language);
+		buyLinkUrl.searchParams.set('LANGGGsdfsad', page.language);
 
 		return buyLinkUrl.href;
 	}
