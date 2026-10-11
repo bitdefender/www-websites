@@ -15,53 +15,34 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
     topologyBoundary: true,
   });
 
-  const priceRoot = document.createElement('div');
-  priceRoot.classList.add('product-comparison-price');
   const sectionDataset = block.closest('.section')?.dataset;
   const oldPriceText = sectionDataset?.old_price_text ?? '';
-  const newPriceLabel = sectionDataset?.new_price_label ?? '';
-  const saveText = sectionDataset?.save_text ?? '';
   const trialDuration = sectionDataset?.[`trialDuration${productIndex + 1}`] ?? sectionDataset?.trialDuration ?? '';
-  const oldPriceElement = document.createElement('div');
-  priceRoot.appendChild(oldPriceElement);
-  oldPriceElement.innerText = '';
-  oldPriceElement.classList.add('old-price-container');
-  const priceElement = document.createElement('strong');
-  priceRoot.appendChild(priceElement);
-  priceElement.innerText = '-';
-  priceElement.classList.add('current-price-container');
-  const priceAppliedOnTime = document.createElement('p');
-  priceAppliedOnTime.classList.add('price-applied-on-time');
-  priceRoot.appendChild(priceAppliedOnTime);
-  // create a mock buyzone for free products
-  if (code.includes('free')) {
-    oldPriceElement.innerHTML = `
-     <div class="old-price-box">
-      </div>
-    `;
-    priceElement.innerHTML = `<div class="new-price-box">
-      <span class="await-loader total-text">${label} </span>
-      <sup class="per-price"> </sup>
-    </div>`;
-    priceAppliedOnTime.innerHTML = '';
-    return priceRoot;
-  }
+  const priceRoot = document.createElement('div');
+  priceRoot.classList.add('product-comparison-price');
 
+  const oldPriceElement = document.createElement('div');
+  oldPriceElement.classList.add('old-price-container');
   oldPriceElement.innerHTML = `
     <div class="old-price-box" data-store-render data-store-hide="!it.option.price.discounted">
       <span>${oldPriceText} <del data-store-render data-store-price="full"></del></span>
-      <span class="savings d-none"><span data-store-render data-store-discount="percentage"></span> ${saveText}</span>
     </div>`;
+
+  const priceElement = document.createElement('strong');
+  priceElement.classList.add('current-price-container');
   priceElement.innerHTML = `
     <div class="new-price-box">
       <span class="await-loader total-text" data-store-render data-store-price="discounted||full"> </span>
-      <sup class="per-price"> ${newPriceLabel} </sup>
     </div>`;
+
+  const priceAppliedOnTime = document.createElement('p');
+  priceAppliedOnTime.classList.add('price-applied-on-time');
   priceAppliedOnTime.innerHTML = label;
 
-  // update buy link
+  priceRoot.append(oldPriceElement, priceElement, priceAppliedOnTime);
+
   const buyLink = columnEl.querySelector('.button-container a');
-  if (buyLink.href.includes('/buy/') || buyLink.href.includes('#buylink')) {
+  if (buyLink?.href.includes('/buy/') || buyLink?.href.includes('#buylink')) {
     buyLink.href = '#';
     buyLink.setAttribute('data-store-render', '');
     buyLink.setAttribute('data-store-buy-link', trialDuration || '');
@@ -70,278 +51,124 @@ createNanoBlock('priceComparison', (code, variant, label, block, productIndex, c
   return priceRoot;
 });
 
-function handleExpanableRowClick(rows, expandableRowIndex, evt) {
-  evt.currentTarget.classList.toggle('expanded');
-  evt.currentTarget.nextElementSibling.classList.toggle('expanded');
-  evt.currentTarget.nextElementSibling.classList.toggle('collapsed');
-
-  [...rows].forEach((row, index) => {
-    if (row.classList.contains('expanded') && index !== expandableRowIndex) {
-      row.classList.remove('expanded');
-      row.classList.add('collpased');
-      row.nextElementSibling.classList.remove('expanded');
-      row.nextElementSibling.classList.add('collapsed');
-    }
-  });
-}
-
-function markHiddenRowsUnderExpandableRows(rows, expandableRowsIndexes) {
-  if (!expandableRowsIndexes || expandableRowsIndexes.length === 0) {
-    return;
-  }
-  let lastExpandableRow = 0;
-
-  rows.forEach((row, rowIndex) => {
-    const index = expandableRowsIndexes.indexOf(rowIndex);
-    if (index !== -1 || rowIndex === 0) {
-      lastExpandableRow = expandableRowsIndexes[index];
-      return;
-    }
-
-    row.setAttribute('expandable-row-index', lastExpandableRow);
-  });
-
-  expandableRowsIndexes.forEach((expandableRowIndex) => {
-    const groupOfHiddenRows = [...rows].filter((row) => row.getAttribute('expandable-row-index') === `${expandableRowIndex}`);
-    const hiddenRowsWrapper = document.createElement('div');
-    hiddenRowsWrapper.classList.add('hidden-rows-wrapper');
-    hiddenRowsWrapper.setAttribute('role', 'rowgroup');
-    hiddenRowsWrapper.append(...groupOfHiddenRows);
-    rows[expandableRowIndex].after(hiddenRowsWrapper);
-  });
-}
-
-function addArrowAndEventToExpandableRows(rows) {
-  rows.forEach((row, index) => {
-    if (row.classList.contains('expandable-row')
-      && row.nextElementSibling !== null
-      && row.nextElementSibling.childElementCount > 0
-      && !row.nextElementSibling.classList.contains('expandable-row')) {
-      row.classList.add('expandable-arrow');
-      row.nextElementSibling.classList.add('collapsed');
-      row.addEventListener('click', handleExpanableRowClick.bind(null, rows, index));
-    }
-  });
-}
-
-function addClassesForExpandableRows(rows) {
-  const expandableRowsIndexes = [];
-
-  rows.forEach((row, index) => {
-    const expandableRowMarker = row.querySelectorAll('h4');
-    if (expandableRowMarker.length === 0 || row.classList.contains('product-comparison-header')) {
-      return;
-    }
-
-    row.classList.add('expandable-row');
-    expandableRowsIndexes.push(index);
-  });
-
-  markHiddenRowsUnderExpandableRows(rows, expandableRowsIndexes);
-  addArrowAndEventToExpandableRows(rows);
-}
-
-function setExpandableRows(block) {
-  const rows = block.querySelectorAll('div[role="row"]');
-  addClassesForExpandableRows(rows);
-}
-
-function addAccesibilityRoles(block) {
+function addAccessibilityRoles(block) {
   block.setAttribute('role', 'table');
 
-  block.querySelectorAll('div')
-    .forEach((div) => {
-      if (div.childElementCount > 1 && div.parentElement.getAttribute('role') === 'table') {
-        div.setAttribute('role', 'row');
-      } else if (!div.hasAttribute('role')) {
-        div.setAttribute('role', 'cell');
-      }
-    });
+  block.querySelectorAll('div').forEach((div) => {
+    if (div.childElementCount > 1 && div.parentElement.getAttribute('role') === 'table') {
+      div.setAttribute('role', 'row');
+    } else if (!div.hasAttribute('role')) {
+      div.setAttribute('role', 'cell');
+    }
+  });
 
   const header = block.querySelector('div > div');
-  [...header.children].forEach((headerColumns) => {
-    headerColumns.setAttribute('role', 'columnheader');
+  [...header.children].forEach((headerColumn) => {
+    headerColumn.setAttribute('role', 'columnheader');
   });
 }
 
-function replaceTableTextToProperCheckmars(block) {
-  block.querySelectorAll('div')
-    .forEach(async (div) => {
-      if (div.getAttribute('role') === 'row') return;
+function replaceYesNoWithIcons(block) {
+  block.querySelectorAll('div[role="cell"]').forEach((cell) => {
+    const text = cell.textContent.trim().toLowerCase();
+    if (text !== 'yes' && text !== 'no') return;
 
-      const textCheck = div.textContent.trim().toLowerCase();
-      if (textCheck === 'yes') {
-        div.textContent = '';
-        const icon = document.createElement('div');
-        icon.classList.add('yes-check');
-        div.appendChild(icon);
-      } else if (textCheck === 'no') {
-        div.textContent = '';
-        const icon = document.createElement('div');
-        icon.classList.add('no-check');
-        div.appendChild(icon);
-      }
-    });
-}
-
-function extractTextFromStrongTagToParent(element) {
-  if (element.children.length > 0) {
-    [...element.children].forEach((children) => {
-      extractTextFromStrongTagToParent(children);
-    });
-  }
-
-  if (element.tagName === 'STRONG' && element.parentElement) {
-    element.parentElement.innerHTML = element.textContent;
-  }
+    const icon = document.createElement('div');
+    icon.classList.add(text === 'yes' ? 'yes-check' : 'no-check');
+    cell.replaceChildren(icon);
+  });
 }
 
 function buildTableHeader(block) {
   const header = block.querySelector('div > div');
   header.classList.add('product-comparison-header');
   [...header.children].forEach((headerColumn) => {
-    const children = [...headerColumn.children];
-    const pToMove = [];
-    let foundH3 = false;
+    // group the paragraphs between the product title and the price
+    const paragraphs = [];
+    let next = headerColumn.querySelector('h3')?.nextElementSibling;
+    while (next && next.textContent.trim().toLowerCase() !== '{pricecomparison}') {
+      if (next.tagName === 'P') paragraphs.push(next);
+      next = next.nextElementSibling;
+    }
 
-    children.some((child) => {
-      if (child.tagName === 'H3') {
-        foundH3 = true;
-        return false;
-      }
-
-      if (!foundH3) {
-        return false;
-      }
-
-      if (child.innerText.trim().toLowerCase() === '{pricecomparison}') {
-        return true; // break loop
-      }
-
-      if (child.tagName === 'P') {
-        pToMove.push(child);
-      }
-
-      return false;
-    });
-
-    if (pToMove.length > 0) {
+    if (paragraphs.length > 0) {
       const wrapper = document.createElement('div');
       wrapper.classList.add('paragraph-group');
-      const firstP = pToMove[0];
-      headerColumn.insertBefore(wrapper, firstP);
-      pToMove.forEach((p) => {
-        wrapper.appendChild(p);
-      });
+      paragraphs[0].before(wrapper);
+      wrapper.append(...paragraphs);
     }
 
     const buttonSection = headerColumn.querySelector('p.button-container');
-    if (buttonSection) {
-      const paragraphBefore = buttonSection.previousElementSibling;
-      paragraphBefore?.classList.add('per-year-statement');
-      const paragraphAfter = buttonSection.nextElementSibling;
-      paragraphAfter?.classList.add('product-comparison-header-subtitle');
-      paragraphAfter?.nextElementSibling?.classList.add('product-comparison-header-subtitle');
-    }
-  });
-}
-
-function setBuyButtonsToPrimary(columnHeaders) {
-  columnHeaders.forEach((columnHeader) => {
-    columnHeader.querySelectorAll('.button-container')
-      .forEach((button) => button.classList.add('red'));
+    const subtitle = buttonSection?.nextElementSibling;
+    subtitle?.classList.add('product-comparison-header-subtitle');
+    subtitle?.nextElementSibling?.classList.add('product-comparison-header-subtitle');
   });
 }
 
 function setColumnsStyle(block) {
-  const columnHeaders = block.querySelectorAll('div[role="columnheader"]');
-  const numberOfProductHeaders = [...columnHeaders]
-    .filter((columnHeader) => [...columnHeader.children].length > 1).length;
+  const columnHeaders = [...block.querySelectorAll('div[role="columnheader"]')];
+  const numberOfProductHeaders = columnHeaders
+    .filter((columnHeader) => columnHeader.children.length > 1).length;
 
-  if (numberOfProductHeaders > 2) {
-    block.classList.add('with-fixed-width');
-  } else {
-    [...columnHeaders].forEach((columnHeader, index) => {
-      if (index === 0) return;
-      columnHeader.classList.add('column-fixed-width');
-    });
-  }
+  if (numberOfProductHeaders > 2) return;
+
+  columnHeaders.slice(1).forEach((columnHeader) => columnHeader.classList.add('column-fixed-width'));
 }
 
-function setActiveColumn(block) {
-  const columnHeaders = block.querySelectorAll('div[role="columnheader"]');
-
-  const tableActiveColumn = [...columnHeaders]
-    .findIndex((header) => header.innerHTML.includes('<strong>'));
-
-  if (tableActiveColumn <= 0) {
-    setBuyButtonsToPrimary(columnHeaders);
-    return;
-  }
-
-  const rows = block.querySelectorAll('div[role="row"]');
-  [...rows].forEach((row) => row.children[tableActiveColumn].classList.add('active'));
+// the authored column header markers are: <strong> = active column, <em> = price repeated below
+function getColumnIndex(block, marker) {
+  return [...block.querySelectorAll('div[role="columnheader"]')]
+    .findIndex((header) => header.querySelector(marker));
 }
 
-function setColumnWithPriceDisplayedAlsoBelow(block) {
-  const columnHeaders = block.querySelectorAll('div[role="columnheader"]');
-  const columnWithPriceBelow = [...columnHeaders]
-    .findIndex((header) => header.innerHTML.includes('<em>'));
-
-  if (columnWithPriceBelow <= 0) {
-    return;
-  }
-
-  const rows = block.querySelectorAll('div[role="row"]');
-  [...rows].forEach((row) => row.children[columnWithPriceBelow].classList.add('display-price-below'));
+function markColumn(block, columnIndex, className) {
+  if (columnIndex <= 0) return;
+  block.querySelectorAll('div[role="row"]')
+    .forEach((row) => row.children[columnIndex].classList.add(className));
 }
 
-function removeNotNeededRoles(element) {
-  element.removeAttribute('role');
+function addProductPriceBelowColumn(block, columnIndex) {
+  const lastRow = block.querySelector('div[role="row"]:last-of-type');
+  const priceRow = lastRow.cloneNode(true);
+  priceRow.classList.add('product-comparison-last-row-with-prices');
+  lastRow.after(priceRow);
 
-  [...element.children].forEach((children) => {
-    if (children.tagName === 'H3' || children.innerText.match(/devices/i)) {
-      children.remove();
-    }
+  [...priceRow.children].forEach((cell, index) => {
+    cell.innerHTML = '';
+    if (index !== columnIndex) return;
+
+    const headerCell = block.querySelector('div[role="row"]').children[index].cloneNode(true);
+    headerCell.removeAttribute('role');
+    headerCell.querySelector('h3')?.remove();
+    cell.appendChild(headerCell);
   });
 }
 
-function addProductPriceBelowSelectedColumn(block) {
-  const lastRow = block.querySelector('div[role="row"]:last-of-type');
-  const copiedRow = lastRow.cloneNode(true);
-
-  copiedRow.classList.add('product-comparison-last-row-with-prices');
-  lastRow.after(copiedRow);
-  [...copiedRow.children].forEach((cell, index) => {
-    cell.innerHTML = '';
-    if (cell.classList.contains('display-price-below')) {
-      const headerRow = block.querySelector('div[role="row"]');
-      if (headerRow) {
-        const headerCellToCopy = headerRow.children[index];
-        const copiedCell = headerCellToCopy.cloneNode(true);
-        removeNotNeededRoles(copiedCell);
-        cell.appendChild(copiedCell);
-      }
-    }
+function unwrapStrongTags(block) {
+  block.querySelectorAll('strong').forEach((strong) => {
+    if (strong.parentElement) strong.parentElement.innerHTML = strong.textContent;
   });
 }
 
 export default function decorate(block) {
-  addAccesibilityRoles(block);
-  replaceTableTextToProperCheckmars(block);
-  setExpandableRows(block);
+  addAccessibilityRoles(block);
+  replaceYesNoWithIcons(block);
   setColumnsStyle(block);
-  setActiveColumn(block);
-  setColumnWithPriceDisplayedAlsoBelow(block);
+
+  const activeColumn = getColumnIndex(block, 'strong');
+  const priceBelowColumn = getColumnIndex(block, 'em');
+  markColumn(block, activeColumn, 'active');
+  markColumn(block, priceBelowColumn, 'display-price-below');
+
   buildTableHeader(block);
-  if (block.querySelector('div[role="columnheader"] em')) {
-    addProductPriceBelowSelectedColumn(block);
+  if (priceBelowColumn > 0) {
+    addProductPriceBelowColumn(block, priceBelowColumn);
   }
 
-  extractTextFromStrongTagToParent(block);
-  const headerList = [...block.children[0].children].slice(1);
-  const lastRowWithPrice = block.querySelector('.product-comparison-last-row-with-prices');
-  [...headerList, lastRowWithPrice].forEach((item, idx) => {
+  unwrapStrongTags(block);
+  const headerColumns = [...block.children[0].children].slice(1);
+  const priceRow = block.querySelector('.product-comparison-last-row-with-prices');
+  [...headerColumns, priceRow].forEach((item, idx) => {
     if (item) {
       renderNanoBlocks(item, undefined, idx, block);
     }
@@ -351,7 +178,6 @@ export default function decorate(block) {
   matchHeights(block, '.paragraph-group');
   matchHeights(block, '.old-price-container');
   matchHeights(block, '.product-comparison-price');
-
   matchHeights(block, '.price-applied-on-time');
   matchHeights(block, '.button-container');
   matchHeights(block, 'div[role="columnheader"] p:first-of-type:not(:has(.tag))');
