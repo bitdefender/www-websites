@@ -824,7 +824,7 @@ main .grey-background {
   }
 
   main .section.width-medium .block, main .section.width-medium .default-content-wrapper {
-    width: 940px;
+    max-width: 940px;
     margin: 0 auto;
   }
 
