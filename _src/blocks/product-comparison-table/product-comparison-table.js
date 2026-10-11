@@ -79,6 +79,78 @@ function replaceYesNoWithIcons(block) {
   });
 }
 
+function handleExpandableRowClick(rows, expandableRowIndex, evt) {
+  evt.currentTarget.classList.toggle('expanded');
+  evt.currentTarget.nextElementSibling.classList.toggle('expanded');
+  evt.currentTarget.nextElementSibling.classList.toggle('collapsed');
+
+  // keep only one group open at a time
+  [...rows].forEach((row, index) => {
+    if (row.classList.contains('expanded') && index !== expandableRowIndex) {
+      row.classList.remove('expanded');
+      row.nextElementSibling.classList.remove('expanded');
+      row.nextElementSibling.classList.add('collapsed');
+    }
+  });
+}
+
+// wraps the rows that follow each expandable row (marked with an h4) into a collapsible group
+function groupRowsUnderExpandableRows(rows, expandableRowsIndexes) {
+  if (expandableRowsIndexes.length === 0) {
+    return;
+  }
+  let lastExpandableRow = 0;
+
+  rows.forEach((row, rowIndex) => {
+    const index = expandableRowsIndexes.indexOf(rowIndex);
+    if (index !== -1 || rowIndex === 0) {
+      lastExpandableRow = expandableRowsIndexes[index];
+      return;
+    }
+
+    row.setAttribute('expandable-row-index', lastExpandableRow);
+  });
+
+  expandableRowsIndexes.forEach((expandableRowIndex) => {
+    const groupOfHiddenRows = [...rows].filter((row) => row.getAttribute('expandable-row-index') === `${expandableRowIndex}`);
+    const hiddenRowsWrapper = document.createElement('div');
+    hiddenRowsWrapper.classList.add('hidden-rows-wrapper');
+    hiddenRowsWrapper.setAttribute('role', 'rowgroup');
+    hiddenRowsWrapper.append(...groupOfHiddenRows);
+    rows[expandableRowIndex].after(hiddenRowsWrapper);
+  });
+}
+
+function addArrowAndEventToExpandableRows(rows) {
+  rows.forEach((row, index) => {
+    if (row.classList.contains('expandable-row')
+      && row.nextElementSibling !== null
+      && row.nextElementSibling.childElementCount > 0
+      && !row.nextElementSibling.classList.contains('expandable-row')) {
+      row.classList.add('expandable-arrow');
+      row.nextElementSibling.classList.add('collapsed');
+      row.addEventListener('click', handleExpandableRowClick.bind(null, rows, index));
+    }
+  });
+}
+
+function setExpandableRows(block) {
+  const rows = block.querySelectorAll('div[role="row"]');
+  const expandableRowsIndexes = [];
+
+  rows.forEach((row, index) => {
+    if (row.classList.contains('product-comparison-header') || !row.querySelector('h4')) {
+      return;
+    }
+
+    row.classList.add('expandable-row');
+    expandableRowsIndexes.push(index);
+  });
+
+  groupRowsUnderExpandableRows(rows, expandableRowsIndexes);
+  addArrowAndEventToExpandableRows(rows);
+}
+
 function buildTableHeader(block) {
   const header = block.querySelector('div > div');
   header.classList.add('product-comparison-header');
@@ -153,6 +225,7 @@ function unwrapStrongTags(block) {
 export default function decorate(block) {
   addAccessibilityRoles(block);
   replaceYesNoWithIcons(block);
+  setExpandableRows(block);
   setColumnsStyle(block);
 
   const activeColumn = getColumnIndex(block, 'strong');
