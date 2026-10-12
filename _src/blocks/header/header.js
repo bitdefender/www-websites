@@ -6,7 +6,7 @@ import {
 } from '../../scripts/lib-franklin.js';
 
 import {
-  getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
+  getAemFragmentLocale, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
 
 import { Constants } from '../../scripts/libs/constants.js';
@@ -474,17 +474,7 @@ async function runDefaultHeaderLogic(block) {
     const html = await resp.text();
 
     if (html.includes('aem-banner')) {
-      const websiteDomain = getDomain();
-      let aemFetchDomain;
-
-      if (websiteDomain === 'en-us' || websiteDomain === 'drafts') {
-        aemFetchDomain = 'en';
-      } else if (websiteDomain.includes('-global')) {
-        const [singleDomain] = websiteDomain.split('-');
-        aemFetchDomain = singleDomain;
-      } else {
-        aemFetchDomain = websiteDomain.split('-').join('_');
-      }
+      const aemFetchDomain = getAemFragmentLocale();
 
       // check if the menu should be brought from a different source from Target
       let aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`;
