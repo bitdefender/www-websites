@@ -156,6 +156,10 @@
         }
     }
 
+    .awards-container .block.awards-component {
+        background-color: #EDF9FF;
+    }
+
     .system-requirements {
         padding-top: var(--size-32);
         padding-bottom: var(--size-32);
