@@ -8,11 +8,6 @@ import {
   ProductLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
-import {
-  registerActionNodes,
-  registerContextNodes,
-  registerRenderNodes,
-} from '@repobit/dex-store-elements';
 import { Cookies } from '@repobit/dex-utils';
 import store from './store.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
@@ -28,6 +23,7 @@ import {
   decorateBlocks,
   decorateTemplateAndTheme,
   waitForLCP,
+  updateSectionsStatus,
   loadBlocks,
   loadCSS,
   getMetadata,
@@ -482,8 +478,11 @@ export async function loadTrackers() {
       target.abort();
     }
   } else {
+    // Target is aborted, so getOffers would return nothing, but only after
+    // waiting on the /cdp/ call
     target.abort();
     onAdobeMcLoaded();
+    return;
   }
 
   await applyTargetCustomCode();
@@ -542,6 +541,9 @@ async function loadEager(doc) {
       document.body.classList.add('sferrari');
     }
     await waitForLCP(LCP_BLOCKS);
+    // show the block-less sections after the LCP block now instead of in loadLazy;
+    // they are often the LCP element on mobile
+    updateSectionsStatus(main);
   }
 }
 
@@ -770,9 +772,16 @@ async function loadPage() {
   storeRoot.appendChild(main);
   storeRoot.store = store;
 
-  registerContextNodes();
-
   await loadEager(document);
+
+  // the store elements (and lit) aren't needed until loadLazy renders prices,
+  // so they don't hold back the LCP; bd-context upgrades in place once defined
+  const {
+    registerActionNodes,
+    registerContextNodes,
+    registerRenderNodes,
+  } = await import('@repobit/dex-store-elements');
+  registerContextNodes();
 
   const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
     .find((selector) => document.querySelector(selector));
