@@ -58,6 +58,34 @@ let report = /** @type {HookReporter} */ (() => {});
 
 const normalize = (text) => (text || '').replace(/\s+/g, ' ').trim();
 
+/** Elements whose edges separate words on screen. */
+const WORD_BREAKS = new Set(['BR', 'HR', 'P', 'DIV', 'LI', 'UL', 'OL', 'DL', 'DT', 'DD', 'TABLE', 'TR', 'TD',
+  'TH', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'PICTURE', 'SECTION', 'HEADER', 'FOOTER']);
+
+/**
+ * An element's text as a reader sees it. textContent runs "Bitdefender<br>Total Security" into
+ * "BitdefenderTotal Security", so a match written from the page as displayed would never be found;
+ * here line breaks and block edges count as spaces. The Target MCP server's suggested matches
+ * (inspect_block) use the same rule.
+ */
+function readableText(root) {
+  let out = '';
+  const walk = (node) => {
+    node.childNodes.forEach((child) => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        out += child.nodeValue;
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        const breaks = WORD_BREAKS.has(child.nodeName);
+        if (breaks) out += ' ';
+        walk(child);
+        if (breaks) out += ' ';
+      }
+    });
+  };
+  walk(root);
+  return normalize(out);
+}
+
 /** Marks a section a hook added, so other hooks never match the copies it may contain. */
 const INSERTED = 'targetInsertedBy';
 
@@ -66,7 +94,7 @@ function remember(block) {
   // another hook's match ambiguous, or retarget it to the copy.
   if (authored.has(block) || block.closest('[data-target-inserted-by]')) return;
   authored.set(block, {
-    text: normalize(block.textContent),
+    text: readableText(block),
     ids: new Set([...block.querySelectorAll('[id]')].map((el) => el.id)),
   });
   instances.push(block);
@@ -229,7 +257,7 @@ export function applyStructuralHooks(main) {
       .filter((el) => el.classList[0] === hook.block)
       .filter((el) => (match.startsWith('#')
         ? [...el.querySelectorAll('[id]')].some((child) => child.id === match.slice(1))
-        : normalize(el.textContent).includes(match)));
+        : readableText(el).includes(match)));
 
     if (hook.instance === undefined && candidates.length > 1) {
       settle(hook, 'ambiguous', `"${hook.match}" is in ${candidates.length} ${hook.block} blocks; set instance or a more specific match`);

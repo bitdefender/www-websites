@@ -356,4 +356,26 @@ describe('Target block hooks', () => {
       expect(document.body.textContent).not.toContain('X');
     });
   });
+
+  it('matches text as displayed: line breaks and block edges count as spaces, inline tags do not', async () => {
+    document.body.innerHTML = `<main><div class="section">
+      <div class="new-prod-boxes block" data-block-name="new-prod-boxes"><div><div>
+        <table><tr><td><a href="/x">Bitdefender<br>Total Security</a></td></tr></table>
+        <h3>Bitdefender</h3><h3>Antivirus Plus</h3><p>Bit<strong>defender</strong> Shield</p>
+      </div></div></div></div></main>`;
+    const block = document.querySelector('.new-prod-boxes');
+    const ran = [];
+    ['Bitdefender Total Security', 'Bitdefender Antivirus Plus', 'Bitdefender Shield'].forEach((match, i) => register({
+      name: `m${i}`, block: 'new-prod-boxes', match, run: (b, d) => { ran.push(match); return d(); },
+    }));
+
+    await decorateWithHooks('new-prod-boxes', heroDecorate, block);
+    reportUnappliedHooks();
+
+    // The first hook claims the block. The others matched it too,
+    // so they report conflict rather than missed.
+    expect(ran).toEqual(['Bitdefender Total Security']);
+    expect(report).toHaveBeenCalledWith('m1', 'conflict', expect.any(String));
+    expect(report).toHaveBeenCalledWith('m2', 'conflict', expect.any(String));
+  });
 });
