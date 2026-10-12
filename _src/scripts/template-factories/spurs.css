@@ -13,7 +13,7 @@
 }
 
 .spurs * {
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
 }
 
 .spurs .official-partner .default-content-wrapper > p {

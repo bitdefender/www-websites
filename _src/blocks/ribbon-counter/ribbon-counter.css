@@ -10,7 +10,7 @@ main .ribbon-counter-container {
 }
 
 .ribbon-counter-container * {
-  font-family: Arial, sans-serif!important;
+  font-family: var(--body-font-family)!important;
   font-size: var(--body-font-size-xs);
 }
 

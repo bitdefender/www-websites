@@ -32,7 +32,6 @@
     --green-tag: #218728;
     --dark-shadow: #0000001a;
     --background-checkmark: #61AF53;
-    --body-font-family: "Roboto", "roboto-normal-400-fallback", helvetica, ubuntu, roboto, noto, sans-serif;
     --heading-font-family: var(--body-font-family);
     --fixed-font-family: var(--body-font-family);
     --font-weight-thin: 300;

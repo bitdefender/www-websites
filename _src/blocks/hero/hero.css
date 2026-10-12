@@ -126,7 +126,7 @@ main .hero.black-background {
 
 main .hero.new2024design * {
   font-weight: normal;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
   color: white;
 }
 
@@ -169,7 +169,7 @@ main .hero-container.custom-buttons .hero .hero-content table tr {
   align-items: baseline;
   justify-content: center;
   gap: 16px;
-  font-family: Arial, sans-serif;
+  font-family: var(--body-font-family);
   padding-top: 30px;
 }
 
@@ -190,7 +190,7 @@ main .hero-container.custom-buttons .hero .hero-content table a {
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: Arial, sans-serif;
+  font-family: var(--body-font-family);
   margin: 0;
   color: var(--button-link-color);
   background-color: var(--button-background-color);
@@ -676,7 +676,7 @@ main .hero.ferrari .hero-content img{
 
 main .hero-container.ferrari-migration .hero{
   background-color:#006DFF;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
   font-weight: 300;
 }
 
@@ -874,7 +874,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 
   main .hero .hero-picture {
@@ -1027,7 +1027,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 
   main .v2 .hero h1 {

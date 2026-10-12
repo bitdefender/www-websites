@@ -256,7 +256,7 @@ a.we-btn-black, button.we-btn-black {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -327,7 +327,7 @@ a.we-btn-red, button.we-btn-red {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -403,7 +403,7 @@ a.we-btn-green, button.we-btn-green {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -479,7 +479,7 @@ a.we-btn-blue, button.we-btn-blue {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -559,7 +559,7 @@ a.we-app-store, button.we-app-store {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -651,7 +651,7 @@ a.we-btn-white, button.we-btn-white {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -730,7 +730,7 @@ a.we-btn-transparent, button.we-btn-transparent {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -813,7 +813,7 @@ a.we-btn-black-border, button.we-btn-black-border {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -899,7 +899,7 @@ a.we-btn-black-border:hover span, button.we-btn-black-border:hover span {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -1049,7 +1049,7 @@ a.we-btn-blue-border, button.we-btn-blue-border {
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -1367,7 +1367,7 @@ body main.container, body > section {
 }
 
 li, ol, ul {
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     margin: 0;
     padding: 0
 }
@@ -1392,7 +1392,7 @@ section ul {
 }
 
 section ul li {
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 18px;
     font-stretch: normal;
     font-style: normal;
@@ -1433,7 +1433,7 @@ section ul li:before {
 
 a {
     cursor: pointer;
-    font-family: roboto, sans-serif
+    font-family: var(--body-font-family)
 }
 
 a, a:hover {
@@ -2024,7 +2024,7 @@ input[type=number] {
 
 h1 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 56px;
     font-weight: 700;
     line-height: 1.21;
@@ -2108,7 +2108,7 @@ h1 span {
 
 h2 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 40px;
     font-weight: 500;
     line-height: 1.2;
@@ -2174,7 +2174,7 @@ h2 span {
 
 h3 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 32px;
     font-weight: 500;
     line-height: 1.15;
@@ -2214,7 +2214,7 @@ h3 {
 
 h4 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 24px;
     font-weight: 500;
     line-height: 1.25;
@@ -2253,7 +2253,7 @@ h4 {
 
 h5 {
     color: #3c3c3c;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 18px;
     font-weight: 400;
     line-height: 1.5
@@ -2272,7 +2272,7 @@ h6 {
 }
 
 .para-18, h6 {
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     line-height: 1.5
 }
 
@@ -2290,7 +2290,7 @@ h6 {
 
 p {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 400;
     letter-spacing: .006em;
@@ -2315,7 +2315,7 @@ p a {
 }
 
 .heading-1, .small-font, span {
-    font-family: roboto, sans-serif
+    font-family: var(--body-font-family)
 }
 
 .heading-1 {
@@ -2397,7 +2397,7 @@ p a {
 
 .heading-2 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 40px;
     font-weight: 500;
     line-height: 1.2;
@@ -2463,7 +2463,7 @@ p a {
 
 .heading-3 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 32px;
     font-weight: 500;
     line-height: 1.15;
@@ -2503,7 +2503,7 @@ p a {
 
 .heading-4 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 24px;
     font-weight: 500;
     line-height: 1.25;
@@ -2542,7 +2542,7 @@ p a {
 
 .heading-5 {
     color: #3c3c3c;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 18px;
     font-weight: 400;
     line-height: 1.5
@@ -2562,7 +2562,7 @@ p a {
 
 .h1, .heading-6 {
     color: #000;
-    font-family: roboto, sans-serif
+    font-family: var(--body-font-family)
 }
 
 .h1 {
@@ -2604,7 +2604,7 @@ p a {
 
 .h2 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 40px;
     font-weight: 500;
     line-height: 1.2
@@ -2637,7 +2637,7 @@ p a {
 
 .h3 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 32px;
     font-weight: 500;
     line-height: 1.15
@@ -2676,7 +2676,7 @@ p a {
 
 .h4 {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 24px;
     font-weight: 500;
     line-height: 1.25
@@ -2714,7 +2714,7 @@ p a {
 
 .h5 {
     color: #3c3c3c;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 18px;
     font-weight: 400;
     line-height: 1.5
@@ -2733,7 +2733,7 @@ p a {
 
 .h6, .paragraph {
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px
 }
 
@@ -3402,7 +3402,7 @@ section.intro-block.oem-intro table {
 
 section.intro-block.oem-intro td, section.intro-block.oem-intro th {
     border: 1px solid #616161;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     line-height: 1.67;
     padding: 10px;
@@ -3672,7 +3672,7 @@ section.blue-bar.height-24 {
     border-radius: 4px;
     color: #616161;
     display: block;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     height: 40px;
     margin: 0;
@@ -3709,7 +3709,7 @@ section.blue-bar.height-24 {
 
 .popup-form label {
     display: inline-block;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     margin: 0 0 10px
 }
@@ -3799,7 +3799,7 @@ section.blue-bar.height-24 {
     color: #fff;
     cursor: pointer;
     display: inline-flex;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 500;
     height: -moz-fit-content;
@@ -3993,7 +3993,7 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
 }
 
 .mega-menu a, .mega-menu span {
-    font-family: Arial, sans-serif
+    font-family: var(--body-font-family)
 }
 
 .mega-menu__l2-link, .mega-menu__link, .mega-menu__right-link {
@@ -4920,7 +4920,7 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
 }
 
 .navigation__anchor + li.navigation__link {
-    font-family: Arial, sans-serif;
+    font-family: var(--body-font-family);
     pointer-events: none
 }
 

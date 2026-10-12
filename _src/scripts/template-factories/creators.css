@@ -3,20 +3,20 @@
     .creators .default-content-wrapper h2{
         font-size: 60px / 69px;
         font-weight: 300;
-        font-family: 'IBM Plex Sans', sans-serif;
+        font-family: var(--body-font-family);
     }
 
     .creators .scam-protection .default-content-wrapper h2 {
-        font: 600 40px/48px "IBM Plex Sans", sans-serif !important;
+        font: 600 40px/48px var(--body-font-family) !important;
     }
 
     .creators .scam-protection .default-content-wrapper p {
-        font: normal normal 300 24px/34px "IBM Plex Sans", sans-serif !important;
+        font: normal normal 300 24px/34px var(--body-font-family) !important;
         margin: 0;
     }
 
     html[lang="ro"], body {
-        font-family: 'IBM Plex Sans', sans-serif;
+        font-family: var(--body-font-family);
 
         font-feature-settings: "locl" 1;
         -moz-font-feature-settings: "locl";

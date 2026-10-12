@@ -495,7 +495,7 @@
 }
 
 .product-card .price.nanoblock, .product-card .featured.nanoblock{
-  font-family: Arial, sans-serif;
+  font-family: var(--body-font-family);
 }
 
 .products.solutions .product-card tr {

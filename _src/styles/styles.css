@@ -48,7 +48,7 @@
   --background-checkmark: #61AF53;
 
   /* fonts */
-  --body-font-family: "Roboto", "roboto-normal-400-fallback", helvetica, ubuntu, roboto, noto, sans-serif;
+  --body-font-family: "IBM Plex Sans", "IBM Plex Sans Fallback", sans-serif;
   --heading-font-family: var(--body-font-family);
   --fixed-font-family: var(--body-font-family);
 
@@ -113,7 +113,7 @@ body.with-language-bar > div:first-child, body.with-language-bar header {
 
 .section.ibm-plex-sans {
   * {
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 }
 
@@ -156,11 +156,14 @@ body.dark-mode {
   }
 }
 
-/* fallback font for Roboto (normal - 400) */
+/* metric-matched fallback for IBM Plex Sans, shown until fonts.css loads */
 @font-face {
-  font-family: "roboto-normal-400-fallback";
-  size-adjust: 99.6%;
-  src: local("Helvetica");
+  font-family: "IBM Plex Sans Fallback";
+  src: local("Arial");
+  size-adjust: 101.67%;
+  ascent-override: 100.82%;
+  descent-override: 27.05%;
+  line-gap-override: 0%;
 }
 
 html, body, div, span, applet, object, iframe,
@@ -215,6 +218,11 @@ body {
   line-height: 1.5;
   display: none;
   -webkit-font-smoothing: antialiased;
+}
+
+/* form controls don't inherit the page font by default */
+button, input, select, textarea {
+  font-family: inherit;
 }
 
 h1, h2, h3,
@@ -646,7 +654,7 @@ header, main, footer {
 }
 
 .creators * {
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
 }
 
 .creators .default-content-wrapper h2 {
@@ -859,7 +867,7 @@ main .grey-background {
   }
 
   .creators .section .default-content-wrapper h2 {
-    font: 600 40px/48px "IBM Plex Sans", sans-serif;
+    font: 600 40px/48px var(--body-font-family);
   }
 }
 
@@ -1139,7 +1147,7 @@ main .section.blue-btn {
   background-color: transparent;
   color: #006DFF;
   border-color: #006DFF;
-  font-family: Arial;
+  font-family: var(--body-font-family);
   font-size: 16px;
   font-weight: 700;
   line-height: 18.4px;
