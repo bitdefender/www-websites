@@ -1,0 +1,312 @@
+:root {
+
+    /* Font family */
+    --body-font-family: "IBM Plex Sans", sans-serif;
+
+    /* Body default */
+    --body-font-size-xs: 12px;
+    --body-font-size-s: 13px; /* 17.329px = 1.083rem */
+    --body-font-size-m: 14px; /* 18.662px = 1.167rem */
+    --body-font-size-l: 16px; /* 21.328px = 1.333rem */
+    --body-font-size-xl: 18px; /* 23.994px = 1.5rem */
+
+    /* Heading default */
+    --heading-font-size-xxs: 18px; /* 23.994px = 1.5rem */
+    --heading-font-size-xs: 20px; /* 26.66px = 1.667rem */
+    --heading-font-size-s: 24px; /* 31.992px = 2rem */
+    --heading-font-size-m: 28px; /* 37.324px = 2.333rem */
+    --heading-font-size-l: 32px; /* 42.656px = 2.667rem */
+    --heading-font-size-xl: 36px; /* 47.988px = 2.999rem */
+    --heading-font-size-xxl: 40px; /* 53.32px = 3.333rem */
+
+    /* Colors */
+    --color-dex-gray: #fafafa;
+    --color-dex-dark-gray: #fafafa;
+
+    /* PADDING VALUES */
+    --size-0: 0;
+    --size-1: 1px;
+    --size-2: 2px;
+    --size-4: 4px;
+    --size-6: 6px;
+    --size-8: 8px;
+    --size-10: 10px;
+    --size-12: 12px;
+    --size-14: 14px;
+    --size-16: 16px;
+    --size-18: 18px;
+    --size-20: 20px;
+    --size-22: 22px;
+    --size-23: 23px;
+    --size-24: 24px;
+    --size-26: 26px;
+    --size-30: 30px;
+    --size-32: 32px;
+    --size-34: 34px;
+    --size-36: 36px;
+    --size-40: 40px;
+    --size-42: 42px;
+    --size-44: 44px;
+    --size-48: 48px;
+    --size-52: 52px;
+    --size-64: 64px;
+    --size-full: 99999999999999999999;
+
+    /* SECTION */
+    --section-large-desktop-max-width: 1320px;
+
+}
+
+.dex-27176 {
+
+    .has-dropdown {
+        display: none;
+    }
+
+    .dex-trust-pills {
+
+        .columns {
+            padding-left: 0;
+        }
+
+        .columns > div {
+            align-items: center;
+
+            .columns-col {
+                text-align: center;
+
+                p:first-of-type .icon {
+                    position: relative;
+                }
+            }
+        }
+    }
+
+    .what_about h2 {
+        font-size: var(--size-18);
+        margin-bottom: var(--size-0);
+        font-weight: 500;
+        line-height: var(--size-22);
+        text-align: left;
+    }
+
+    .hero_mobile h2 {
+        color: #006DFF;
+        font-size: var(--size-24);
+        font-weight: 600;
+        line-height: var(--size-30);
+        text-align: left;
+    }
+
+    .hero_mobile ul li {
+        font-size: var(--size-12);
+        font-weight: 400;
+        line-height: var(--size-14);
+        text-align: left;
+    }
+
+    .hero_mobile {
+        background-color: #F6F6F6;
+
+        .default-content-wrapper {
+
+            h2 {
+                font-size: var(--size-18);
+                font-weight: 500;
+                line-height: var(--size-22);
+                text-align: left;
+            }
+
+        }
+    }
+
+    .hero-dropdown.small-business-banner {
+
+        h1 {
+            font-size: var(--heading-font-size-s);
+        }
+
+        p {
+            font-size: var(--body-font-size-l);
+            line-height: var(--size-22);
+        }
+
+        .discount {
+            .old-price {
+                font-size: var(--heading-font-size-xxs);
+                font-weight: 500;
+            }
+            .prod-save {
+                font-size: var(--body-font-size-l);
+                font-weight: 700;
+            }
+        }
+
+        .buttons {
+            margin-top: 0;
+
+            .button {
+                margin-top: var(--size-16);
+                width: 100%;
+            }
+        }
+
+        .new-price {
+            font-size: var(--size-32);
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .dex-27176 {
+
+        .four-cards-container {
+            padding-left: var(--size-20);
+            padding-right: var(--size-20);
+
+            + .trust-pills .default-content-wrapper {
+                padding-top: var(--size-0);
+            }
+        }
+
+        .dex-scammers-section {
+            p {
+                margin: var(--size-0);
+            }
+        }
+
+
+        .hero-dropdown.small-business-banner {
+            p img {
+                display: none;
+            }
+
+            h2:first-of-type {
+                font-size: var(--body-font-size-l);
+            }
+
+            h2:last-of-type {
+                font-size: var(--heading-font-size-xxs);
+            }
+
+            h1 {
+                font-size: var(--heading-font-size-s);
+                margin-bottom: 8px;
+            }
+        }
+
+        .what_about {
+            .default-content-wrapper {
+                padding-bottom: var(--size-24);
+            }
+        }
+
+
+
+        .what_about h2 {
+            font-size: var(--size-34);
+            font-weight: 700;
+            line-height: var(--size-40);
+            text-align: center;
+            max-width: 655px;
+            margin: 0 auto;
+        }
+
+        .has-dropdown {
+            display: block;
+
+            .block > div:first-of-type {
+                background-color: #E4F2FF;
+                padding: 1em 3em;
+                margin-bottom: 1em;
+            }
+
+            .block > div:first-of-type img {
+                width: 170px;
+            }
+
+            .block > div:first-of-type > div {
+                display: flex;
+                align-items: center;
+                gap: 2em;
+            }
+
+            .block > div:first-of-type p {
+                font-family: "Ibm Plex Sans", sans-serif;
+                font-size: var(--size-18);
+                font-weight: 400;
+                line-height: var(--size-24);
+                letter-spacing: 0.5px;
+            }
+
+            .block > div:first-of-type p strong {
+                padding-bottom: var(--size-14);
+                display: inline-block;
+            }
+        }
+    }
+
+    .hero_mobile {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .dex-27176 {
+
+        .dex-trust-pills {
+
+            .columns > div {
+                align-items: center;
+            }
+        }
+
+        .has-dropdown {
+            padding-bottom: var(--size-0);
+        }
+
+        .hero-dropdown.small-business-banner {
+
+            h2:first-of-type {
+                font-size: var(--heading-font-size-s);
+                line-height: var(--size-36);
+            }
+
+            h2:last-of-type {
+                font-size: var(--heading-font-size-l);
+                line-height: var(--size-42);
+            }
+
+            h1 {
+                font-size: var(--heading-font-size-xxl);
+                line-height: var(--size-44);
+            }
+
+            p {
+                font-size: var(--heading-font-size-xxs);
+                line-height: var(--size-24);
+            }
+
+            .new-price {
+                font-size: var(--size-42);
+                line-height: 55px;
+            }
+
+            .buttons {
+                .button {
+                    width: auto;
+                }
+            }
+
+            .hero-dropdown-picture::after {
+                content: "Trusted.Always.";
+                position: absolute;
+                bottom: var(--size-12);
+                right: var(--size-12);
+                color: white;
+                font-weight: var(--font-weight-boldest);
+                font-size: var(--heading-font-size-l);
+            }
+        }
+    }
+}
