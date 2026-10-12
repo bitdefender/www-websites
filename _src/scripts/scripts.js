@@ -775,12 +775,22 @@ async function loadPage() {
   await loadEager(document);
 
   // the store elements (and lit) aren't needed until loadLazy renders prices,
-  // so they don't hold back the LCP; bd-context upgrades in place once defined
+  // so they don't hold back the LCP
   const {
+    ContextNode,
     registerActionNodes,
     registerContextNodes,
     registerRenderNodes,
   } = await import('@repobit/dex-store-elements');
+  // bd-context only renders a <slot>. Attaching that shadow root now, to the storeRoot
+  // that's already painted, would rebuild the layout of all of main and can report a new LCP.
+  customElements.define('bd-context', class extends ContextNode {
+    // eslint-disable-next-line class-methods-use-this
+    createRenderRoot() { return this; }
+
+    // eslint-disable-next-line class-methods-use-this
+    render() { return undefined; }
+  });
   registerContextNodes();
 
   const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
