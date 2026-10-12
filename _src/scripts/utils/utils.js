@@ -880,6 +880,27 @@ export function getAemFragmentLocale(domain = getDomain()) {
   return region === 'global' ? language : `${language}_${region}`;
 }
 
+/**
+ * Prefixes the root-relative image URLs (src, srcset, data-cmp-src) of an AEM
+ * fragment with the public origin, so they load from bitdefender.com instead of
+ * the current host (aem.page, localhost). No-op where the origin is the site itself.
+ * @param {ParentNode} root fragment content
+ * @param {string} [origin] defaults to Constants.PUBLIC_URL_ORIGIN
+ */
+export function makeImagePathsAbsolute(root, origin = Constants.PUBLIC_URL_ORIGIN) {
+  if (!origin) return;
+
+  const rootRelative = /(^|,)(\s*)(\/(?!\/)[^\s,]*)/g;
+  root.querySelectorAll('img, source, [data-cmp-src]').forEach((element) => {
+    ['src', 'srcset', 'data-cmp-src'].forEach((attribute) => {
+      const value = element.getAttribute(attribute);
+      if (value) {
+        element.setAttribute(attribute, value.replace(rootRelative, `$1$2${origin}$3`));
+      }
+    });
+  });
+}
+
 export function isView(viewport) {
   const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
   return !!(element && getComputedStyle(element).display !== 'none');

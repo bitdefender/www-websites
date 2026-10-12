@@ -1,5 +1,5 @@
 import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
-import { getAemFragmentLocale } from '../../scripts/utils/utils.js';
+import { getAemFragmentLocale, makeImagePathsAbsolute } from '../../scripts/utils/utils.js';
 import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 import { decorateMain } from '../../scripts/scripts.js';
 import { Constants } from '../../scripts/libs/constants.js';
@@ -141,7 +141,11 @@ async function runAemFooterLogic() {
   const footer = document.createElement('footer');
   const shadowRoot = footer.attachShadow({ mode: 'open' });
   const contentDiv = document.createElement('div');
-  contentDiv.innerHTML = aemFooterHtml;
+  // parse in a template so images don't start loading before their paths are fixed
+  const template = document.createElement('template');
+  template.innerHTML = aemFooterHtml;
+  makeImagePathsAbsolute(template.content);
+  contentDiv.append(template.content);
 
   const loadedLinks = [];
   contentDiv.querySelectorAll('link').forEach((linkElement) => {
