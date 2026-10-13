@@ -1,5 +1,5 @@
 import { decorateIcons, getMetadata, loadBlocks } from '../../scripts/lib-franklin.js';
-import { getDomain } from '../../scripts/utils/utils.js';
+import { getAemFragmentLocale, makeImagePathsAbsolute } from '../../scripts/utils/utils.js';
 import { adobeMcAppendVisitorId } from '../../scripts/target.js';
 import { decorateMain } from '../../scripts/scripts.js';
 import { Constants } from '../../scripts/libs/constants.js';
@@ -131,18 +131,7 @@ async function runLandingpageLogic(block) {
 
 async function runAemFooterLogic() {
   // fetch footer content
-  const websiteDomain = getDomain();
-  let aemFetchDomain;
-
-  if (websiteDomain === 'en-us') {
-    aemFetchDomain = 'en';
-  } else if (websiteDomain.includes('-global')) {
-    const [singleDomain] = websiteDomain.split('-');
-    aemFetchDomain = singleDomain;
-  } else {
-    aemFetchDomain = websiteDomain.split('-').join('_');
-  }
-
+  const aemFetchDomain = getAemFragmentLocale();
   const aemFooterFetch = await fetch(`${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/footer-fragment-v1/master/jcr:content/root.html`);
   if (!aemFooterFetch.ok) {
     return;
@@ -152,7 +141,11 @@ async function runAemFooterLogic() {
   const footer = document.createElement('footer');
   const shadowRoot = footer.attachShadow({ mode: 'open' });
   const contentDiv = document.createElement('div');
-  contentDiv.innerHTML = aemFooterHtml;
+  // parse in a template so images don't start loading before their paths are fixed
+  const template = document.createElement('template');
+  template.innerHTML = aemFooterHtml;
+  makeImagePathsAbsolute(template.content);
+  contentDiv.append(template.content);
 
   const loadedLinks = [];
   contentDiv.querySelectorAll('link').forEach((linkElement) => {
