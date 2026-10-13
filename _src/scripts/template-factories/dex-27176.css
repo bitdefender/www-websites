@@ -64,7 +64,6 @@
         &:not(.hero_mobile, .gasa) {
             .default-content-wrapper h2,
             .columns h2 {
-                background-color: grey;
                 font-size: var(--heading-font-size-l);
                 line-height: var(--size-38);
             }
