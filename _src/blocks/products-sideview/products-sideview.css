@@ -287,8 +287,13 @@
             }
         }
 
+        label {
+            font-weight: bold;
+        }
+
         .products-sideview-selector select{
             border-color: #006DFF;
+            margin-top: 12px;
         }
 
         .prod-oldprice-container {
@@ -302,6 +307,11 @@
             border-radius: 20px;
             color: #0B6A26;
             padding: 4px 8px;
+            font-weight: bold;
+        }
+
+        .button[data-store-buy-link] {
+            font-size: 18px;
         }
     }
 
@@ -320,15 +330,15 @@
                 position: relative;
                 display: flex;
                 padding-left: 32px;
-                font-size: 14px;
+                font-size: 16px;
 
                 &::before {
                     content: url("/_src/icons/checkmark-green-circle.svg");
                     position: absolute;
                     left: 0;
                     top: 4px;
-                    width: 24px;
-                    height: 24px;
+                    width: 20px;
+                    height: 20px;
                 }
             }
         }
