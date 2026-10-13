@@ -254,7 +254,7 @@
     margin-bottom: 4px;
 }
 
-.webview-table-wrapper .webview-table .button-container:hover {
+.webview-table-wrapper .webview-table .button-container a:hover {
     filter: brightness(0.9);
 }
 

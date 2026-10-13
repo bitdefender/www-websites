@@ -15,7 +15,7 @@ Make the most of the elements and attributes built for creating forms:
 
 These enable built-in browser functionality, improve accessibility, and add meaning to markup.
 
-### Use the <label> element to label form fields for data entry
+### Use the `<label>` element to label form fields for data entry
 
 To label an `<input>`, `<select>`, or `<textarea>`, use a `<label>`. Associate a label with an input by giving the label's `for` attribute the same value as the input's `id`.
 
@@ -68,7 +68,7 @@ Add the `required` attribute to mandatory fields.
 
 ### Fallback strategies
 
-:autofill has limited availability.
+Browser support for :autofill: Limited availability.
 Supported by: Chrome 110 (Feb 2023), Edge 110 (Feb 2023), and Safari 15 (Sep 2021).
 Unsupported in: Firefox.
 

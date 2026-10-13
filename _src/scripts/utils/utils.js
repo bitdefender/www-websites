@@ -862,6 +862,45 @@ export function getDomain() {
   return window.location.pathname.split('/').filter((item) => item)[0];
 }
 
+/**
+ * Maps a site locale (first path segment) to the locale folder of the AEM
+ * experience fragments on bitdefender.com: en-us -> en, xx-global -> xx,
+ * xx-yy -> xx_yy. Anything that isn't shaped like a locale (/drafts/, the
+ * site root, etc.) falls back to en, since language_master has no folder for it.
+ * @param {string} [domain] site locale, defaults to getDomain()
+ * @returns {string} AEM fragment locale
+ */
+export function getAemFragmentLocale(domain = getDomain()) {
+  const locale = domain?.toLowerCase();
+  if (!locale || !/^[a-z]{2}-([a-z]{2}|global)$/.test(locale) || locale === 'en-us') {
+    return 'en';
+  }
+
+  const [language, region] = locale.split('-');
+  return region === 'global' ? language : `${language}_${region}`;
+}
+
+/**
+ * Prefixes the root-relative image URLs (src, srcset, data-cmp-src) of an AEM
+ * fragment with the public origin, so they load from bitdefender.com instead of
+ * the current host (aem.page, localhost). No-op where the origin is the site itself.
+ * @param {ParentNode} root fragment content
+ * @param {string} [origin] defaults to Constants.PUBLIC_URL_ORIGIN
+ */
+export function makeImagePathsAbsolute(root, origin = Constants.PUBLIC_URL_ORIGIN) {
+  if (!origin) return;
+
+  const rootRelative = /(^|,)(\s*)(\/(?!\/)[^\s,]*)/g;
+  root.querySelectorAll('img, source, [data-cmp-src]').forEach((element) => {
+    ['src', 'srcset', 'data-cmp-src'].forEach((attribute) => {
+      const value = element.getAttribute(attribute);
+      if (value) {
+        element.setAttribute(attribute, value.replace(rootRelative, `$1$2${origin}$3`));
+      }
+    });
+  });
+}
+
 export function isView(viewport) {
   const element = document.querySelectorAll(`[data-${viewport}-detector]`)[0];
   return !!(element && getComputedStyle(element).display !== 'none');
@@ -1035,6 +1074,10 @@ export const generatePageLoadStartedName = () => {
       if (pathname.includes('/reverse-phone-lookup/')) {
         tagName = `${locale}:consumer:product:reverse phone lookup:${subSubSubSection}`;
       }
+    }
+
+    if (lastSegment === 'web-sage') {
+      tagName = `${locale}:consumer:product:${subSubSubSection}`;
     }
 
     if (pathname.includes('bundle-solutions')) {
