@@ -300,6 +300,10 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   }
 }
 
+.avfree.image-columns-container {
+  padding-top: 0;
+}
+
 .avfree .image-columns{
   > div {
     align-items: start;
@@ -321,8 +325,6 @@ main .image-columns.quotes > div > .image-columns-img-col img {
     }
     
     >.image-columns-img-col img {
-      display: none;
-
       @media (min-width: 992px) {
         display: block;
       }
@@ -678,6 +680,18 @@ main .image-columns.quotes > div > .image-columns-img-col img {
 
       &::after {
         left: 5px;
+      }
+    }
+  }
+
+  @media (max-width:767px) {
+    padding-top: 0;
+     
+    div div .image-columns-txt-col{
+      text-align: left;
+
+      h3 {
+        font-size: 24px;
       }
     }
   }

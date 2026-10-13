@@ -377,7 +377,7 @@ main .hero-dropdown.scamio .hero-dropdown-picture picture img {
 
 main .hero-dropdown a.button {
   margin: 8px 13px 0 0;
-  min-width: 206px;
+  min-width: 230px;
   justify-content: center;
   align-items: center;
 }
@@ -846,6 +846,10 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
     font-weight: bold;
     font-family: 'Ibm Plex Sans', sans-serif;
     padding-left: 50px;
+
+    @media (max-width: 767px) {
+      padding-left: 20px;
+    }
   }
 
   .hero-dropdown-picture {
