@@ -30,6 +30,30 @@ export class FranklinProductsLoadedEvent extends ProductLoadedEvent {
 };
 
 /**
+ * Products sold per member, keyed by product alias (as authored, e.g. soho_new).
+ * The store option holds the number of members, but tracking expects the number of devices.
+ */
+const DEVICES_PER_MEMBER_MAPPING = {
+  soho_new: 2,
+  soho_new_m: 2,
+};
+
+/**
+ * Product loaded event for the dex-store-elements options
+ */
+export class StoreProductLoadedEvent extends ProductLoadedEvent {
+  getOptionInfo(option) {
+    const optionInfo = super.getOptionInfo(option);
+    const devicesPerMember = DEVICES_PER_MEMBER_MAPPING[option.getProduct().getAlias()];
+    if (devicesPerMember) {
+      optionInfo.devices = option.getDevices() * devicesPerMember;
+    }
+
+    return optionInfo;
+  }
+};
+
+/**
  * Page Error Handling
  */
 const pageErrorHandling = () => {
