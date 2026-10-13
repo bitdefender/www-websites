@@ -482,8 +482,11 @@ export async function loadTrackers() {
       target.abort();
     }
   } else {
+    // Target is aborted, so getOffers would return nothing, but only after
+    // waiting on the /cdp/ call
     target.abort();
     onAdobeMcLoaded();
+    return;
   }
 
   await applyTargetCustomCode();
