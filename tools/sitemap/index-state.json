@@ -1,193 +1,193 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-06T14:38:21.268Z",
+  "generatedAt": "2026-10-09T13:45:28.219Z",
   "redirects": {
     "sha": "7d0bb45978188e1a321998fb64df18d4e2bd5df26dd1daac9729654590d7048d",
     "entries": 1
   },
   "locales": {
     "de-at": {
-      "sha": "31eb5b78caf4dc7a54535a63cca1904d476642190943617f229b32e475458f99",
+      "sha": "69af4ff952b47ff9f0e2e6cb0f3ae9a5ac6987750c5039890e35bedd771e3ae2",
       "rows": 43
     },
     "de-ch": {
-      "sha": "d19c0efcd3a42abdc7d1739e4456927696802a52f70f2b40c356d718efca50cc",
+      "sha": "a271c78790ffd24b30f7210fc2d7323b7498e992fed36ecdb2d0e0c132f65978",
       "rows": 43
     },
     "de-de": {
-      "sha": "5ae53a36f74ab8382ad91bc7d540fbb7a5349c8814cb321b3a74abcaddedd1b5",
+      "sha": "5c47a774bc52d751516cd35e484789e6d691c6315ad6581d0978845bce60596b",
       "rows": 43
     },
     "en-ae": {
-      "sha": "3b98037c39b04683f788324f28b41e8a2cac7d114af6cc0650c734db810a8d8f",
+      "sha": "b8e13acec4b260279fe57cdf7998b834f8dc86b4835e3d1763f069aff08fa35b",
       "rows": 40
     },
     "en-au": {
-      "sha": "90ad2b49c8a21cdfb41f6a572b2430ad4d0ee4bcdf570185ec547768b258905e",
+      "sha": "4d11ad3ffeec2c91ee274753e2543487a3e5b26dff840d19ac737f951be7e4d4",
       "rows": 40
     },
     "en-bg": {
-      "sha": "7a341ebe615dda98a8266f4756d79db393c170f9e2d162e9277618c8a859a26d",
+      "sha": "322fb0034624c75114ac9f962c638fa1531b7a8b021222d2c56fd685efad01cf",
       "rows": 40
     },
     "en-bz": {
-      "sha": "98ec0b15877c1d0f23d3695841157568bb2250ec3ab10b669741331d61298d0b",
+      "sha": "fddd35a540d9f4aad1a065531fde6876235f2f97b951ec5aaf4fd45cf60ab854",
       "rows": 40
     },
     "en-ca": {
-      "sha": "c2d140d11c9c4b6e996cdad81d73c20761b1ece2186f38fd3f4ff03c306edbe3",
+      "sha": "ebcceed476e753151bc005ca6171ca24bcb3b3a20499380e31212b8855e94fce",
       "rows": 40
     },
     "en-cz": {
-      "sha": "0901808b2ed9bc244af1ff48170af99433783d4f23f78ad380e28e45b1051938",
+      "sha": "12c8ce04c70f7960cb2c5f25a47ceb86b43da54dbc06b3f45487dbc43c14afc2",
       "rows": 40
     },
     "en-dk": {
-      "sha": "f7cc5b9025025bbffd5c85fbd045acadfc0853d31cc0ee54592e44264e07a6a3",
+      "sha": "a1fb4f6a9eab9e4da68804888326fcff439d2f4c26e005241b2e9e95e32dbd50",
       "rows": 40
     },
     "en-gb": {
-      "sha": "a1b3d82abfa2440896a813c1e157389ad1bdb2ec408b91bd6ecc0244545edaa3",
+      "sha": "29bae8e6ac37b09c84c58fb108f9eec11f24f90ef5ad9377743a22302bb4156f",
       "rows": 40
     },
     "en-hu": {
-      "sha": "2263b0b54ed5baa4d3ba4403a5dd720c72bee40d564ceea7ae6ffd46873f5aec",
+      "sha": "0217e8e41352b547f216f7c70f86d824e3c9c2aaf0d9bf69ba477aab7e14785f",
       "rows": 40
     },
     "en-id": {
-      "sha": "b0537a1e335723ff703597f336df5e9168ebd569bf04ee55471d3954620095cc",
+      "sha": "f5897a21238fc3ebd061c47db487e074b05be6216c7f00c01a1c6928cb262314",
       "rows": 40
     },
     "en-il": {
-      "sha": "0258ce9eefcd2b8d18a109ce6be9292758c5e544e60ec4d64f5e5bf3b301deb4",
+      "sha": "80c685e4a2044ba395678625349d579fccd66069b77f674b242c9dced5596119",
       "rows": 40
     },
     "en-in": {
-      "sha": "c957d93283d63e1357653dbeea76397fd01978d7759b56c389560f6405b25dc6",
+      "sha": "0d99e70e6a9e6c34941bd491c04ed4874b759615b5e71214559fad2f548d79e0",
       "rows": 40
     },
     "en-jm": {
-      "sha": "17f04ca9540743f3bc01db2ba196965b359b8c8c78021cedfc651d4c78c1e2c2",
+      "sha": "bd47f9fdfaaa94a73bd7d37a3d20a254f22b95fa090cb157f030773148513ca6",
       "rows": 40
     },
     "en-kr": {
-      "sha": "3e7a98d3874d4217b196a5282e4cda8a305bc255ce1d5ff22eb7e9f4fca59fa7",
+      "sha": "f9bf9f395708731c2b7cbb296129d0c0495baff2dcb331a264791bb694e52ac3",
       "rows": 40
     },
     "en-lv": {
-      "sha": "c115e0207554c089bc21c9893c5fd3ead56848afe3cabd13e13b6f8b89de024a",
+      "sha": "a51c8d587df5f5417f569cce3057310000933790d3f2843b3d575914cc6a1369",
       "rows": 40
     },
     "en-mt": {
-      "sha": "e2e7de5fd76649c486855c61cb9df0e02261255d40985cf5a4bd9ffc7319d28b",
+      "sha": "ad151c0773dd4e7c3fe265790b3b64126a8a74e9c4f1d6af0011bbf26c22da1d",
       "rows": 40
     },
     "en-my": {
-      "sha": "c67b8b9c3175f58f0cbdd0ff1be846ba626566ff77083bfee7d2d3e5545b4ebd",
+      "sha": "a69f13f5e5e558fe72d5a08c38cf7f5096d975571f56c5d6e45b0bbe40a121f5",
       "rows": 40
     },
     "en-no": {
-      "sha": "23fde0ceb34eb9cc82b0dd5b92f4695103f7a9f9ae55fbc736cd17b55445a5ae",
+      "sha": "9f1132a14887cd28970f8aecb3d1348824a31984d82046bf72ae2299bb8c30a1",
       "rows": 40
     },
     "en-nz": {
-      "sha": "56cc82711eb164d476b70eba863fb49ff6b353dc1429968650d16c68ead7be8a",
+      "sha": "53ed1650837ea0c983d910ade99bb96b4edd9eb6ca093971a545ce058dce7d38",
       "rows": 40
     },
     "en-ph": {
-      "sha": "990fcc19f6226db905a7a0275429bc86600f0daca99791c225ddbb2e93a86fdc",
+      "sha": "20aaf6744058d2212e171510a4f6f4d52bee65d107f9e520b8d3bcea9f08fdfa",
       "rows": 40
     },
     "en-pl": {
-      "sha": "aa27cb07d19e20685bf63c20db3f765282d70e992ad293a1514e0cb812dad329",
+      "sha": "6a7dabb7420a2bd15420be971bdd3c49301cfda026180abcb3a7bcd25e314a27",
       "rows": 40
     },
     "en-sa": {
-      "sha": "19d1b5db44b9e2751c73017e85c57c6c676a4f4ea9f66dcfcffe448e5e3fcc03",
+      "sha": "fe007125aabc9294e6542928dfc231ca7f35453274f5d93bb492344c509b9434",
       "rows": 40
     },
     "en-sg": {
-      "sha": "40958740050122db5ec8eb5474900f904d3438d450508c674ce34bb66911c05e",
+      "sha": "dc9de8579ad5f8f5f00504e3531823840299fbcf337f888d2155eb079bec52c4",
       "rows": 40
     },
     "en-th": {
-      "sha": "82abab1c1543f899f773ba38fa8e6484d839490f623e8a1ffa3d8ae1841ce05e",
+      "sha": "0ae8f080b6105e9889beaf46120565bf51c6be6609ac12005259105e59e3dd82",
       "rows": 40
     },
     "en-us": {
-      "sha": "a7e873527dcd6d7fa3a30475c9a39a87fd97884d3acfdd2a9cfe61789d61e921",
+      "sha": "3a8530fa82d6500abfec56221596345bc48d7afa7e9240857c711876a81e73cd",
       "rows": 117
     },
     "en-za": {
-      "sha": "b271b266278337f5d43526655fc1873f99fa0ae3ddff99a1686e1f032cf108f7",
+      "sha": "16188c655c2e6d2d89aef084f5679d6e37e99365859a65457aba3f50468b95d1",
       "rows": 40
     },
     "es-bz": {
-      "sha": "98ec0b15877c1d0f23d3695841157568bb2250ec3ab10b669741331d61298d0b",
+      "sha": "fddd35a540d9f4aad1a065531fde6876235f2f97b951ec5aaf4fd45cf60ab854",
       "rows": 40
     },
     "es-cl": {
-      "sha": "2f89cdca6ccb54f7c0df38f48586b385b9d61377e08df82cd87ad72e076e2316",
+      "sha": "faa2d556211f4d53c2ca3f1ca66e6b12f6cde3f46b1ff3e23b3a44796cac9eb2",
       "rows": 34
     },
     "es-co": {
-      "sha": "13d58bd57af9219804f85712de0d34eb23058c82798547f1d16ed157dfb4f422",
+      "sha": "e73ac6af64c65f160ed3010055a791b2f3cbd34587031590503ec97fd95fd970",
       "rows": 34
     },
     "es-es": {
-      "sha": "8e1aef11f6ed43b1c75dc73849cbd96abd3f6f7432fe733822dbe075b580397c",
+      "sha": "8058c587c9fce32044d315816398b4f0f066b90b8091d971e8ddeeb63fe8dc83",
       "rows": 37
     },
     "es-mx": {
-      "sha": "ac15c761cbbdb64c8bfa7d1c01d5480b43e0836b13afacd2e50d42791ab6c38f",
+      "sha": "9b960af8392833896259fc2d6bc4638ad37a34310b6698f3cb0b8c6a13ffa4ba",
       "rows": 34
     },
     "es-pe": {
-      "sha": "0af7d01f0e6e1d2571d85e0b2b8b97ade26d6efbaf3b64de90b98427211c432a",
+      "sha": "2bc266f4789d0fe5e74431ba364c1e1cce37a8329e5123d02edb466751c3d4f6",
       "rows": 34
     },
     "fr-be": {
-      "sha": "c1e0fb858e0c2c80bfb1e9f205e47a0a61e63568768a8817ba585eda09aac77b",
+      "sha": "cbc619b988487adad16846497bfa42426f824077f0615e2b11ff6f2db9176765",
       "rows": 45
     },
     "fr-fr": {
-      "sha": "9f14bfbf686539ec996234bb35ab7295cb0f7bf0cfb022e78dd7d5f9d5cf9423",
+      "sha": "11031271f90b5d8943b738426a5fd9b5f0f4115d57942dbe51f03d205136f932",
       "rows": 45
     },
     "it-it": {
-      "sha": "8f8d94d96ffcfac6d1a2917ee2971e84ba4bfbfce782f51788db77ce4200ce8a",
+      "sha": "7f4d137e444472eb676dc6af6d164d37a893995483593f961d39709e33bbfee6",
       "rows": 41
     },
     "nl-be": {
-      "sha": "1ed95b2de566e2324eb57dfb465364ce4f6feb79517e462a7d9a3ef445899ed8",
+      "sha": "71adbc6ced735dc32474703713c7745be39ff17fb9b9582dad6a0f22f072e2a1",
       "rows": 34
     },
     "nl-nl": {
-      "sha": "7c89ac06b7cca175ddff8a9f7837292e3c710a65d0a001e9a95e7e7653f7d820",
+      "sha": "8e6cafcb4611c5b9bd345aaf28fd186b5611a0d031e1dd31af78f668781f4132",
       "rows": 34
     },
     "pt-br": {
-      "sha": "2a74ba32e17b4eb3f6120bf13e869c0de50b9a1aadf4271b5c4ff9e44862ace6",
+      "sha": "99b7ea422318fa6924986c31431c0fb45da81d31bd1c723be6a2fd13bf37929f",
       "rows": 36
     },
     "pt-pt": {
-      "sha": "3a1984c329f9ac563811fe3bbb82fff41a329fc468660352aa968e7db42eda3b",
+      "sha": "891cb148d30a9f3d9d7624ed27378cc5eefaf58efe8a88a76d766b1cd2e791b2",
       "rows": 36
     },
     "ro-ro": {
-      "sha": "3badbfd69653947418ac237318afff604b0b2209762d99f188586c261e33169d",
+      "sha": "c321baaebce3f6299b48b9d4cde93e9486cb10fb0c1700f0297c52a300730ae7",
       "rows": 45
     },
     "sv-se": {
-      "sha": "3eb544e44f2beb53cf66c6a376829ca114619e1a9a6bdd9cd7858acc107443de",
+      "sha": "87a16da6981a040a72f94d6e8c179fa3494417c4d2af80bfd693259bb3cffb5a",
       "rows": 32
     },
     "zh-hk": {
-      "sha": "2063a28d2e7715ba3ca2fb22b9d1cebf5570d065a4e46f06c17b96a3093b42e7",
+      "sha": "99cfafc7fce7ab3bd3d47b5c25c461e503d8809df25b89ff0ff13631a09c4f66",
       "rows": 31
     },
     "zh-tw": {
-      "sha": "671e11fa5e1fad83cf82b64e73595df83ef1a2a868659eb66a61c7a203043047",
+      "sha": "94a0eff8509454ed3cc3cc8ede3c63254663c9da98189a63d1e0fa937f19f66d",
       "rows": 31
     }
   }

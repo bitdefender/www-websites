@@ -145,7 +145,6 @@
 
 .product-card p a {
   text-decoration: none;
-  color: inherit;
   color: var(--link-color);
 }
 
@@ -157,18 +156,8 @@
   margin-bottom: 0;
 }
 
-.products.plans .variant-selector > p {
-  margin-bottom: 15px;
-}
-
 .products.compare .product-card p {
   font-size: var(--body-font-size-xs);
-}
-
-.product-card .price + p
-.product-card ul.variant-selector > p {
-  font-size: 9pt;
-  padding: 11px 0;
 }
 
 .product-card h3 {
@@ -258,19 +247,7 @@
 }
 
 .products.compact .product-card img {
-  position: inherit;
-  object-position: inherit;
-  object-fit: inherit;
-  border-radius: inherit;
-  width: 210px;
-  margin: 60px 0 25px;
-  top: auto;
-  right: auto;
   display: none;
-}
-
-.products.compact .product-card .featured ~ p img {
-  margin-top: 0;
 }
 
 .products.personalisation-fragment .product-card {
@@ -294,7 +271,6 @@
   margin-right: 10px;
   filter: invert(78%) sepia(11%) saturate(298%) hue-rotate(183deg) brightness(83%) contrast(87%);
 }
-
 
 .products.personalisation-fragment table {
   margin-top: 20px;
@@ -324,9 +300,6 @@
 .products.personalisation-fragment table:last-of-type{
   margin-bottom: 10px;
 }
-
-
-
 
 .product-card li a {
   color: inherit;
@@ -376,15 +349,10 @@
   text-align: left;
 }
 
-.product-card ul li {
-  text-align: left;
-}
-
 .product-card .ul-header-text {
   margin: 1.5rem 0;
   text-align: left;
 }
-
 
 .product-card li.with-del {
   color: #595959;
@@ -512,13 +480,6 @@
   font-weight: bold;
 }
 
-@media (width <= 480px) {
-  .product-card a.button::after {
-    top: calc(50% - 10px);
-  }
-
-}
-
 .product-card .button-text {
   font-weight: 500 !important;
   font-size: var(--body-font-size-s);
@@ -553,110 +514,6 @@
   color: #fff;
   background: #005ed9;
   border-color: #005ed9;
-}
-
-@media (width >= 768px) {
-  .products {
-    grid-template-columns: repeat(var(--max-columns), 1fr);
-  }
-
-  .products.compact, .products.plans {
-    --max-columns: 2;
-  }
-
-  .products.personalisation-fragment tr {
-    flex-flow: row;
-  }
-
-  .products.personalisation-fragment tr:has(a) {
-    flex-flow: row;
-  }
-
-  .products.personalisation-fragment td {
-    width: unset;
-  }
-
-  .products.personalisation-fragment table a {
-    width: unset;
-  }
-}
-
-@media (width >= 992px) { /* desktop */
-  .products-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
-  }
-
-  .products.compact, .products.plans {
-    --max-columns: 3;
-  }
-
-  .wide .products.plans {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    --max-columns: none;
-  }
-
-  .wide .products.plans .product-card {
-    margin: 9px 6px 0;
-    max-width: 380px;
-    min-width: 300px;
-  }
-
-  .two-columns .products.plans.right-column {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    --max-columns: none;
-  }
-
-  .two-columns .columns > div {
-    align-items: flex-start;
-  }
-
-  .two-columns .left-col {
-    flex: 60;
-  }
-
-  .two-columns .right-col {
-    flex: 40;
-  }
-
-  .two-columns .right-col .products.plans .product-card {
-    max-width: 410px;
-    width: 100%;
-    text-align: center;
-  }
-
-}
-
-@media (width >= 1200px) { /* desktop variation */
-  .products:not(.compact, .plans) .product-card img {
-    display: inline;
-    position: absolute;
-    object-position: -10px center;
-    object-fit:fill;
-    border-radius: 50%;
-    width: 250px;
-    height: 250px;
-    top: -42px;
-    right: -60px;
-    border: 20px white solid;
-  }
-
-  .product-card .img-adjacent-text{
-    width: 74%;
-  }
-}
-
-@media (width >= 1600px) { /* large desktop */
-  .products-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-  }
 }
 
 .product-card .highlight {
@@ -839,6 +696,83 @@
   margin-bottom: 10px;
 }
 
+@media (width >= 768px) {
+  .products {
+    grid-template-columns: repeat(var(--max-columns), 1fr);
+  }
+
+  .products.personalisation-fragment tr {
+    flex-flow: row;
+  }
+
+  .products.personalisation-fragment tr:has(a) {
+    flex-flow: row;
+  }
+
+  .products.personalisation-fragment td {
+    width: unset;
+  }
+
+  .products.personalisation-fragment table a {
+    width: unset;
+  }
+}
+
+@media (width >= 992px) {
+  .products-wrapper {
+    max-width: var(--section-desktop-max-width);
+    padding: 0 var(--section-desktop-padding);
+    margin: 0 auto;
+  }
+
+  .products.compact, .products.plans {
+    --max-columns: 3;
+  }
+
+  .wide .products.plans {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    --max-columns: none;
+  }
+
+  .wide .products.plans .product-card {
+    margin: 9px 6px 0;
+    max-width: 380px;
+    min-width: 300px;
+  }
+
+  .two-columns .products.plans.right-column {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    --max-columns: none;
+  }
+
+  .two-columns .columns > div {
+    align-items: flex-start;
+  }
+
+  .two-columns .left-col {
+    flex: 60;
+  }
+
+  .two-columns .right-col {
+    flex: 40;
+  }
+
+  .two-columns .right-col .products.plans .product-card {
+    max-width: 410px;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* The compare rules are kept in their own block, after the layout rules above:
+   for a featured compare card in a wide section both set margin and min-width,
+   and the compare values must win. */
 @media (width >= 992px) {
   .products.compare {
     gap: 0;
@@ -885,7 +819,37 @@
   .products.compare .product-card ul li u {
     font-size: 20px;
   }
+}
 
+@media (width >= 1200px) {
+  .products:not(.compact, .plans) .product-card img {
+    display: inline;
+    position: absolute;
+    object-position: -10px center;
+    object-fit:fill;
+    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    top: -42px;
+    right: -60px;
+    border: 20px white solid;
+  }
+
+  .product-card .img-adjacent-text{
+    width: 74%;
+  }
+}
+
+@media (width >= 1600px) {
+  .products-wrapper {
+    max-width: var(--section-large-desktop-max-width);
+  }
+}
+
+@media (width <= 480px) {
+  .product-card a.button::after {
+    top: calc(50% - 10px);
+  }
 }
 
 @media (width >= 310px) and (width <= 768px) {
@@ -909,14 +873,6 @@
 @media (width <= 768px) {
   .products.plans {
     flex-direction: column;
-  }
-
-  .products.plans .product-card .price .old-price.no-old-price {
-    display: none;
-  }
-
-  .product-card .featured.no-save-price {
-    display: none;
   }
 
   .products.plans .product-card {
