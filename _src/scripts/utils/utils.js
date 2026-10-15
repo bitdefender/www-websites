@@ -1045,10 +1045,6 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:oem:bundle solutions`;
     }
 
-    if (pathname.includes('small-office-security')) {
-      tagName = `${locale}:small business:small office security`;
-    }
-
     if (window.errorCode === '404') {
       tagName = `${locale}:404`;
     }
