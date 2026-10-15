@@ -5,3 +5,23 @@
 .four-cards bd-button-link {
     margin-bottom: 24px;
 }
+
+.four-cards .card-media {
+    display: flex;
+    margin-top: 16px;
+}
+
+.four-cards bd-card-item[align="center"] .card-media {
+    justify-content: center;
+}
+
+.four-cards .card-media img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.four-cards .card-media .linked-image img {
+    width: auto;
+    max-height: 72px;
+}

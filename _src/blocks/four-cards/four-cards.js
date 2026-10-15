@@ -28,7 +28,7 @@ const getIconElement = (col) => {
   return null;
 };
 
-const buildCardItem = (row) => {
+const buildCardItem = (row, shape) => {
   const headings = [...row.querySelectorAll('h4, h3, h2, h1')];
   const title = headings.map((h) => h.textContent.trim()).filter(Boolean).join(' ');
   const titleHtml = headings.map((h) => h.innerHTML.trim()).filter(Boolean).join('<br>');
@@ -39,17 +39,29 @@ const buildCardItem = (row) => {
 
   const iconEl = getIconElement(row);
   if (iconEl) item.appendChild(iconEl);
+  // When no icon span exists, the first picture is already used as the icon.
+  const iconPicture = iconEl?.tagName === 'PICTURE' ? row.querySelector('picture') : null;
 
-  const paragraphs = [...row.querySelectorAll('p')].filter(
-    (p) => !p.querySelector('picture') && !p.querySelector('[class*="icon-"]') && p.textContent.trim(),
-  );
-  paragraphs.forEach((p) => {
+  [...row.querySelectorAll('p')].forEach((p) => {
+    const picture = p.querySelector('picture');
+    if (picture) {
+      if (picture === iconPicture) return;
+      // Keep linked pictures (a.linked-image from decorateLinkedPictures) with their link
+      const media = document.createElement('div');
+      media.className = 'card-media';
+      media.append(picture.closest('a.linked-image') || picture);
+      item.appendChild(media);
+      return;
+    }
+    if (p.querySelector('[class*="icon-"]') || !p.textContent.trim()) return;
+
     const link = p.querySelector('a');
     if (link) {
       const bdBtn = document.createElement('bd-button-link');
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('href', link.getAttribute('href'));
       bdBtn.setAttribute('slot', 'cta');
+      if (shape) bdBtn.setAttribute('shape', shape);
       bdBtn.textContent = link.textContent.trim();
       item.appendChild(bdBtn);
     } else {
@@ -81,6 +93,7 @@ export default async function decorate(block) {
   const {
     // eslint-disable-next-line no-unused-vars
     margintop,
+    shape,
   } = block.closest('.section').dataset;
 
   if (margintop) {
@@ -106,17 +119,22 @@ export default async function decorate(block) {
   const sectionEl = block.closest('.section');
   const isCentered = sectionEl?.classList.contains('centered');
   const isBlue = block.classList.contains('blue') || sectionEl?.classList.contains('blue');
+  // Opt-in until the subgrid layout is rolled out to every four-cards
+  const useSubgrid = block.classList.contains('use-subgrid') || sectionEl?.classList.contains('use-subgrid');
 
   const cardSection = document.createElement('bd-card-section');
+  // Subgrid layout: icon, title, each text/picture row and CTA line up across cards
+  if (useSubgrid) cardSection.setAttribute('align-rows', '');
   if (sectionTitle) cardSection.setAttribute('title', sectionTitle);
 
   cardRows.forEach((row) => {
-    const item = buildCardItem(row);
+    const item = buildCardItem(row, shape);
     if (isCentered) {
       item.setAttribute('align', 'center');
       item.querySelector('bd-button-link[slot="cta"]')?.setAttribute('align', 'center');
     }
     if (isBlue) item.setAttribute('bg-blue', '');
+    if (shape) item.setAttribute('shape', shape);
     cardSection.appendChild(item);
   });
 
@@ -158,6 +176,7 @@ export default async function decorate(block) {
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('align', 'center');
       bdBtn.setAttribute('href', link.getAttribute('href'));
+      if (shape) bdBtn.setAttribute('shape', shape);
       bdBtn.textContent = link.textContent.trim();
       block.appendChild(bdBtn);
       const btnParagraph = link.closest('p') || link.parentElement;

@@ -5,7 +5,6 @@ import {
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
-  ProductLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
 import {
@@ -13,6 +12,7 @@ import {
   registerContextNodes,
   registerRenderNodes,
 } from '@repobit/dex-store-elements';
+import { Cookies } from '@repobit/dex-utils';
 import store from './store.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
 import page from './page.js';
@@ -34,6 +34,7 @@ import {
 import {
   handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
+  StoreProductLoadedEvent,
 } from './libs/data-layer.js';
 
 import user from './user.js';
@@ -515,7 +516,7 @@ async function loadEager(doc) {
   }
 
   const userCountry = await user.country;
-  if (userCountry !== page.country && !sessionStorage.getItem('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
+  if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
@@ -688,7 +689,8 @@ async function setIcidParameter(selector, value, mboxName, manualIcid = null) {
 
   validElements.forEach((element) => {
     const url = new URL(element.href);
-    if (!url) return;
+    // do not add icid if there is only an anchor link
+    if (!url || element.href.includes('#')) return;
     const cleanPath = element.href.split('?')[0];
     const campaignParam = targetCampaign || manualIcid || cleanPath.split('/').pop();
     url.searchParams.set('icid', `${value}${campaignParam}`);
@@ -762,7 +764,7 @@ async function loadPage() {
   const storeRoot = document.createElement('bd-context');
   storeRoot.classList.add('store-context');
   storeRoot.dataLayer = ({ option, event }) => {
-    AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
+    AdobeDataLayerService.push(new StoreProductLoadedEvent(option, event));
   };
   document.body.replaceChild(storeRoot, main);
   storeRoot.appendChild(main);

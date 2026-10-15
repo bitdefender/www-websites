@@ -1,10 +1,15 @@
 /* eslint-disable max-len */
 // Description: Hero Dropdown block
+import { UserAgent } from '@repobit/dex-utils';
+import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
+import page from '../../scripts/page.js';
+
 import {
   createTag,
   createNanoBlock,
   renderNanoBlocks,
   wrapChildrenWithStoreContext,
+  generatePageLoadStartedName,
 } from '../../scripts/utils/utils.js';
 
 import { detectModalButtons } from '../../scripts/scripts.js';
@@ -37,7 +42,7 @@ function createDropdownItem(code, friendlyName, isActive) {
 }
 
 function createPriceBox({
-  code, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText, trialDuration, hardcodedLink,
+  code, discounttext, buyButtonText, secondButtonText, secondButtonLink, detailsText, trialDuration, hardcodedLink, microsoftEdgeLink,
 }) {
   const box = document.createElement('div');
   box.classList.add('dropdown-products__price-box', 'await-loader');
@@ -59,7 +64,7 @@ function createPriceBox({
       </strong>
     </div>
     <div class="buttons">
-      <a  ${hardcodedLink ? `href="${hardcodedLink}"` : `href="#" data-store-render data-store-buy-link="${trialDuration || ''}"`} class="button primary-button">
+      <a  ${hardcodedLink && UserAgent.browser === 'edge' && microsoftEdgeLink ? `href="${microsoftEdgeLink}"` : `${hardcodedLink ? `href="${hardcodedLink}"` : `href="#" data-store-render data-store-buy-link="${trialDuration || ''}"`}`} class="button primary-button">
         <span class="button-text">${buyButtonText}</span>
       </a>
       ${secondButtonText && secondButtonLink ? `
@@ -88,6 +93,7 @@ createNanoBlock('dropdown', (...args) => {
     productnames = '',
     trialDuration,
     hardcodedLink,
+    microsoftEdgeLink,
   } = block.closest('.section').dataset || {};
 
   const productNames = productnames.split(',').map((n) => n.trim());
@@ -126,7 +132,7 @@ createNanoBlock('dropdown', (...args) => {
     optionsList.appendChild(option);
 
     const priceBox = createPriceBox({
-      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText, trialDuration, hardcodedLink,
+      code, product, unit, year, discounttext, buyButtonText: buybuttontext, secondButtonText: secondbuttontext, secondButtonLink: secondbuttonlink, detailsText, trialDuration, hardcodedLink, microsoftEdgeLink,
     });
 
     priceBox.style.display = index === 0 ? 'block' : 'none';
@@ -209,6 +215,8 @@ export default function decorate(block) {
     textcolor,
     signature,
     trialDuration,
+    linksOpenInNewTab,
+    hardcodedLink,
   } = parentSection.dataset;
 
   if (backgroundcolor) parentSection.style.backgroundColor = backgroundcolor;
@@ -262,4 +270,23 @@ export default function decorate(block) {
 
   renderDropdown(block);
   detectModalButtons(block);
+
+  if (hardcodedLink && page.name === 'web-sage') {
+    block.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown-products__price-box .primary-button')) return;
+      const clickEvent = new ButtonClickEvent('click', { asset: 'get it free' });
+      clickEvent.eventInfo = { page: generatePageLoadStartedName() };
+      AdobeDataLayerService.push(clickEvent);
+    });
+  }
+
+  if (linksOpenInNewTab) {
+    block.querySelectorAll('a.button').forEach((link) => {
+      // leave anchors as they are
+      if (!link.href.includes('#')) {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      }
+    });
+  }
 }

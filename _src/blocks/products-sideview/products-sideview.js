@@ -241,6 +241,7 @@ function getBlueTagsAndListItems(block) {
 
 function updateBenefits(block, selectEl, metadata) {
   if (!metadata) return;
+  const { firstBenefitLabel, secondBenefitLabel, thirdBenefitLabel } = block.closest('.section').dataset;
 
   // eslint-disable-next-line no-unused-vars
   const { blueTags, listItems } = getBlueTagsAndListItems(block);
@@ -260,6 +261,21 @@ function updateBenefits(block, selectEl, metadata) {
     });
 
   listItems.forEach((li, i) => {
+    let benefits = null;
+    switch (i) {
+      case 0:
+        benefits = firstBenefitLabel;
+        break;
+      case 1:
+        benefits = secondBenefitLabel;
+        break;
+      case 2:
+        benefits = thirdBenefitLabel;
+        break;
+      default:
+        break;
+    }
+
     if (i < cleanedArray.length) {
       const value = cleanedArray[i];
       const displayValue = typeof value === 'string' ? value.replace('-icon', '') : value;
@@ -275,6 +291,11 @@ function updateBenefits(block, selectEl, metadata) {
 
       // Update the benefits-placeholder span
       const placeholder = li.querySelector('.benefits-placeholder');
+      const [benefitsSingular, benefitsPlural] = benefits?.split(',') ?? [];
+      const textNode = [...li.childNodes].find((node) => node.nodeType === Node.TEXT_NODE);
+      if (textNode && benefits) {
+        textNode.textContent = Number(displayValue) === 1 ? ` ${benefitsSingular}` : ` ${benefitsPlural}`;
+      }
       if (placeholder) {
         placeholder.textContent = `${displayValue}`;
       }
@@ -296,7 +317,7 @@ function renderSelector(block, ...options) {
   const selectId = `members-select-${Math.random().toString(36).substr(2, 9)}`;
 
   el.innerHTML = `
-    <label for="${selectId}">${labelText ?? 'Choose number of members'}</label>
+    <label for="${selectId}">${labelText ?? ''}</label>
     <select id="${selectId}"
       data-store-action>
         ${selectorOptions.sort((first, second) => first - second).map((opt) => `

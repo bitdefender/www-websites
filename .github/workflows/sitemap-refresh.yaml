@@ -1,0 +1,297 @@
+name: Sitemap refresh
+
+# Regenerating the sitemaps takes ~3 hours, because create.js probes every hreflang
+# alternate with a deliberate 1-3s delay. So the cheap question is asked first: the
+# detect job fingerprints every locale's query-index.json in about a second, and the
+# expensive generate job only runs when something create.js actually reads has changed.
+
+on:
+  schedule:
+    # Hourly, off the hour to avoid the GitHub-wide cron spike.
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Regenerate even when no change is detected
+        type: boolean
+        default: false
+
+# One refresh at a time. GitHub keeps at most one run queued behind the active one, so
+# hourly checks cannot pile up behind a generation that is still running.
+concurrency:
+  group: sitemap-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  # Applying a label to a PR needs only pull-requests, but creating one in the repo is an
+  # issues-API call.
+  issues: write
+
+env:
+  SITEMAP_BRANCH: chore/sitemap-refresh
+  # The Slack channel subscribes with `+label:"sitemap"`, so only labelled PRs notify it.
+  SITEMAP_LABEL: sitemap
+  # Space-separated GitHub usernames - not Slack handles. The Slack app pings someone by
+  # resolving their GitHub identity to their Slack one, so a review request here is what
+  # produces the mention. Everyone listed must have run `/github signin` in Slack, or they
+  # render as plain text and no notification fires.
+  SITEMAP_REVIEWERS: 'enake iconstantin-bd inastase'
+  # Slack mention string, pasted verbatim into the payload. Member IDs look like
+  # `<@U01ABCDEF>`; a plain `@name` renders as grey text and notifies nobody. `<!here>` works
+  # too and needs no IDs. Empty means the messages still post, just without pinging anyone.
+  SLACK_MENTIONS: '<@U04HKQDB5P1> <@U2GCQJLSK> <@U03BCRFTLKC>'
+  # The schedule is hourly, so posting the reminder only on this UTC hour makes it a daily
+  # nag without needing any stored state.
+  NAG_HOUR: '09'
+
+jobs:
+  detect:
+    name: Check locale indices
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.check.outputs.changed }}
+      summary: ${{ steps.check.outputs.summary }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install sitemap tool dependencies
+        working-directory: tools/sitemap
+        run: npm ci
+
+      # index-state.json only advances on main when a refresh PR is merged. While one is
+      # open, main's baseline is stale, so comparing against it would start another 3-hour
+      # regeneration every hour. Compare against the open PR's fingerprints instead: the
+      # PR is then regenerated only when something changed since its last update.
+      - name: Use the open refresh PR as the baseline
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          number=$(gh pr list --head "$SITEMAP_BRANCH" --state open --json number --jq '.[].number' | head -1)
+          if [ -z "$number" ]; then
+            echo "No open refresh PR; comparing against main."
+            exit 0
+          fi
+          git fetch --depth=1 origin "$SITEMAP_BRANCH"
+          if git show FETCH_HEAD:tools/sitemap/index-state.json > "${RUNNER_TEMP}/index-state.json"; then
+            mv "${RUNNER_TEMP}/index-state.json" tools/sitemap/index-state.json
+            echo "Refresh PR #${number} is open; comparing against its fingerprints." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::Refresh PR #${number} has no index-state.json; comparing against main."
+          fi
+
+      # Nags about a refresh PR that is open but unmerged. This lives in detect because detect
+      # runs every hour regardless of whether anything changed, which is exactly when a
+      # forgotten PR needs surfacing.
+      - name: Remind Slack about a waiting PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+          [ "$(date -u +%H)" = "$NAG_HOUR" ] || exit 0
+          [ -n "${SLACK_WEBHOOK_URL:-}" ] || exit 0
+
+          # A reminder is a nicety; it must never fail the cheap job that gates the whole
+          # refresh, so a gh outage here is silently tolerated.
+          pr=$(gh pr list --head "$SITEMAP_BRANCH" --state open \
+            --json number,createdAt --jq '.[0] // empty | "\(.number) \(.createdAt)"' || true)
+          [ -n "$pr" ] || exit 0
+
+          number="${pr%% *}"
+          created="${pr##* }"
+          # node rather than `date -d`, which is GNU-only and cannot be exercised locally.
+          # An unparseable timestamp yields NaN, and `[ NaN -ge 1 ]` is a fatal bash error -
+          # which would take down the job that gates the whole refresh over a cosmetic
+          # reminder. Emit -1 instead, and treat anything not a plain integer as "skip".
+          days=$(node -e 'const t = Date.parse(process.argv[1]); process.stdout.write(String(Number.isFinite(t) ? Math.floor((Date.now() - t) / 86400000) : -1))' "$created" || echo -1)
+          case "$days" in ''|*[!0-9]*) days=-1 ;; esac
+          # An implausible age means the timestamp was misread, not that a PR really is old.
+          { [ "$days" -ge 1 ] && [ "$days" -le 3650 ]; } || exit 0
+
+          waited="$days days"
+          [ "$days" -eq 1 ] && waited='1 day'
+
+          text=":hourglass_flowing_sand: Sitemap refresh PR #${number} has been waiting ${waited}. ${SLACK_MENTIONS}
+          ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${number}"
+
+          jq -n --arg text "$text" '{text: $text}' \
+            | curl -fsS -X POST -H 'content-type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null \
+            || echo "::warning::Slack reminder failed to post."
+
+      - name: Fingerprint every locale index
+        id: check
+        working-directory: tools/sitemap
+        env:
+          X_CLIENT_ID: ${{ secrets.X_CLIENT_ID }}
+          # create.js and check-index.js read locale-router via GITHUB_TOKEN. The default
+          # Actions token cannot read another private repo, so a PAT is required here.
+          GITHUB_TOKEN: ${{ secrets.LOCALE_ROUTER_TOKEN }}
+        run: node check-index.js
+
+  generate:
+    name: Regenerate sitemaps
+    needs: detect
+    if: needs.detect.outputs.changed == 'true' || github.event.inputs.force == 'true'
+    runs-on: ubuntu-latest
+    # create.js is ~3h; the GitHub-hosted ceiling is 6h. Leave headroom, but fail rather
+    # than hang if the upstream probes start timing out.
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install sitemap tool dependencies
+        working-directory: tools/sitemap
+        run: npm ci
+
+      - name: Mark the start of the run
+        run: touch "${RUNNER_TEMP}/sitemap-run-marker"
+
+      - name: Regenerate sitemaps
+        working-directory: tools/sitemap
+        env:
+          X_CLIENT_ID: ${{ secrets.X_CLIENT_ID }}
+          GITHUB_TOKEN: ${{ secrets.LOCALE_ROUTER_TOKEN }}
+        run: npm start
+
+      # create.js logs fetch errors but always exits 0, and it returns early without
+      # writing when a locale index fails to load. An untouched file is therefore the
+      # signal that a locale was silently skipped - refuse to commit a partial run.
+      - name: Verify every sitemap was rewritten
+        run: |
+          set -euo pipefail
+          stale=$(find _src/sitemap/csg -name 'sitemap_*.xml' ! -newer "${RUNNER_TEMP}/sitemap-run-marker")
+          if [ -n "$stale" ]; then
+            echo "::error::create.js skipped these locales, so the run is incomplete:"
+            echo "$stale"
+            exit 1
+          fi
+          echo "All $(find _src/sitemap/csg -name 'sitemap_*.xml' | wc -l) sitemaps were rewritten."
+
+      - name: Record the new index fingerprints
+        working-directory: tools/sitemap
+        env:
+          X_CLIENT_ID: ${{ secrets.X_CLIENT_ID }}
+          GITHUB_TOKEN: ${{ secrets.LOCALE_ROUTER_TOKEN }}
+        run: node check-index.js --write
+
+      - name: Open or update the pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGE_SUMMARY: ${{ needs.detect.outputs.summary }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Regeneration produced no diff; nothing to open a PR for."
+            exit 0
+          fi
+
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          # A fixed branch, force-pushed: if a refresh PR is already open and unmerged,
+          # later runs update it in place instead of stacking up new PRs.
+          git checkout -B "$SITEMAP_BRANCH"
+          git add _src/sitemap tools/sitemap/index-state.json
+          git commit -m 'chore(sitemap): refresh generated sitemaps'
+          git push --force origin "$SITEMAP_BRANCH"
+
+          # The Slack subscription filters on this label, so the `opened` event has to carry
+          # it already - a label added after the fact does not match the filter. Creating the
+          # label is idempotent, and failing to create it only costs a notification, so it
+          # must never take down a three-hour run.
+          label_args=()
+          gh label create "$SITEMAP_LABEL" \
+            --description 'Automated sitemap refresh' \
+            --color 'B4A7D6' > /dev/null 2>&1 || true
+          if gh label list --json name --jq '.[].name' | grep -qxF "$SITEMAP_LABEL"; then
+            label_args=(--label "$SITEMAP_LABEL")
+          else
+            echo "::warning::Label '${SITEMAP_LABEL}' is missing, so Slack will not pick this PR up."
+          fi
+
+          number=$(gh pr list --head "$SITEMAP_BRANCH" --state open --json number --jq '.[].number' | head -1)
+          if [ -n "$number" ]; then
+            # The PR body only describes the first run, so record each update as a comment.
+            gh pr comment "$number" --body "$(cat <<BODY
+          Sitemaps regenerated by [\`sitemap-refresh\`](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}).
+
+          ### What changed upstream since the last update
+
+          ${CHANGE_SUMMARY}
+          BODY
+          )"
+            # Back-fills the label onto a PR that was opened before Slack was wired up.
+            if [ ${#label_args[@]} -gt 0 ]; then
+              gh pr edit "$number" --add-label "$SITEMAP_LABEL" > /dev/null
+            fi
+            action='updated with fresh sitemaps'
+            echo "Pushed the new sitemaps to open refresh PR #${number}."
+          else
+            url=$(gh pr create \
+              --base main \
+              --head "$SITEMAP_BRANCH" \
+              ${label_args[@]+"${label_args[@]}"} \
+              --title 'chore(sitemap): refresh generated sitemaps' \
+              --body "$(cat <<BODY
+          Automated sitemap refresh, triggered by [\`sitemap-refresh\`](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}).
+
+          ### What changed upstream
+
+          ${CHANGE_SUMMARY}
+
+          ### What this PR contains
+
+          - regenerated \`_src/sitemap/csg/sitemap_*.xml\`
+          - updated \`tools/sitemap/index-state.json\` (the fingerprints the checker compares against)
+
+          Review the XML diff before merging. Merging publishes the sitemaps via AEM Code Sync.
+
+          > Note: PRs opened by \`GITHUB_TOKEN\` do not trigger \`on: pull_request\` workflows, so the
+          > lint/test workflow will not run here. It only covers JS and CSS, neither of which this PR touches.
+          BODY
+          )")
+            number="${url##*/}"
+            action='opened and is ready for review'
+            echo "Opened refresh PR #${number}."
+          fi
+
+          # Scheduled reminders only nag while a review request is outstanding, so re-requesting
+          # on every update restarts the reminder when fresh sitemaps land on a PR that someone
+          # had already reviewed. A reviewer that cannot be resolved is a warning, not a reason
+          # to throw away the run.
+          for reviewer in $SITEMAP_REVIEWERS; do
+            gh pr edit "$number" --add-reviewer "$reviewer" > /dev/null \
+              || echo "::warning::Could not request a review from '${reviewer}'."
+          done
+
+          # The PR is already open at this point, so a Slack outage is worth a warning and
+          # nothing more. jq builds the payload because CHANGE_SUMMARY carries backticks and
+          # newlines that would otherwise have to be hand-escaped into JSON.
+          if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
+            echo "::warning::SLACK_WEBHOOK_URL is not set; skipping the Slack notification."
+            exit 0
+          fi
+
+          text=":world_map: Sitemap refresh PR #${number} ${action}. ${SLACK_MENTIONS}
+          ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${number}
+
+          *What changed upstream*
+          ${CHANGE_SUMMARY}"
+
+          jq -n --arg text "$text" '{text: $text}' \
+            | curl -fsS -X POST -H 'content-type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null \
+            || echo "::warning::Slack notification failed to post."
+

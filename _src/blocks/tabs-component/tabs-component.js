@@ -21,7 +21,7 @@ export default function decorate(block, options) {
 
   // Check if the container exists
   if (container) {
-    const divs = container.querySelectorAll('div');
+    const divs = container.querySelectorAll(':scope > div');
     const buttonsContainer = document.createElement('div');
     buttonsContainer.className = 'buttons-container';
 
@@ -29,7 +29,16 @@ export default function decorate(block, options) {
     divs.forEach((div, index) => {
       const button = document.createElement('button');
       if (index === 0) button.classList.add('selected');
-      button.innerHTML = div.innerHTML; // Use innerHTML instead of textContent
+
+      // Tab labels are image-only. If the authored tab image has no alt text,
+      // use the corresponding card logo's alt text as the accessible label.
+      const tabImage = div.querySelector('img');
+      const cardImage = sections[index]?.querySelector('img');
+      const tabAlt = tabImage?.getAttribute('alt')?.trim();
+      const cardAlt = cardImage?.getAttribute('alt')?.trim();
+      if (tabImage && !tabAlt && cardAlt) tabImage.setAttribute('alt', cardAlt);
+
+      button.append(...div.childNodes);
       button.addEventListener('click', () => {
         // Remove 'selected' class from all buttons
         const buttons = block.querySelectorAll('.tabs-container button');
