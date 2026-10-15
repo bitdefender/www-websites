@@ -315,12 +315,6 @@
         <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/free-antivirus"/>
     </url>
     <url>
-        <loc>https://www.bitdefender.com/es-es/consumer/trafficlight</loc>
-        <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
-        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/consumer/trafficlight"/>
-    </url>
-    <url>
         <loc>https://www.bitdefender.com/es-es/consumer/</loc>
         <priority>0.9</priority>
         <lastmod>2026-10-12T13:56:52.000Z</lastmod>

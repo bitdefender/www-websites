@@ -465,12 +465,6 @@
         <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/password-manager"/>
     </url>
     <url>
-        <loc>https://www.bitdefender.com/pt-br/consumer/trafficlight</loc>
-        <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
-        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/consumer/trafficlight"/>
-    </url>
-    <url>
         <loc>https://www.bitdefender.com/pt-br/consumer/virus-scanner-for-mac</loc>
         <priority>0.8</priority>
         <lastmod>2026-09-23T18:29:24.000Z</lastmod>

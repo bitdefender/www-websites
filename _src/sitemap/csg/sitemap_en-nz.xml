@@ -101,12 +101,6 @@
         <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/antivirus-free-for-android"/>
     </url>
     <url>
-        <loc>https://www.bitdefender.com/en-nz/consumer/trafficlight</loc>
-        <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
-        <xhtml:link rel="alternate" hreflang="en-nz" href="https://www.bitdefender.com/en-nz/consumer/trafficlight"/>
-    </url>
-    <url>
         <loc>https://www.bitdefender.com/en-nz/renewal/</loc>
         <priority>0.9</priority>
         <lastmod>2026-09-23T18:29:24.000Z</lastmod>
@@ -1116,11 +1110,6 @@
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/partners/affiliate-partners/"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/partners/affiliate-partners/"/>
         <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/partners/affiliate-partners/"/>
-    </url>
-    <url>
-        <loc>https://www.bitdefender.com/en-nz/ferrari/</loc>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
-        <xhtml:link rel="alternate" hreflang="en-nz" href="https://www.bitdefender.com/en-nz/ferrari/"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-nz/consumer/password-generator</loc>
