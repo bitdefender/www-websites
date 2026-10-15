@@ -5,7 +5,6 @@ import {
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
-  ProductLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
 import {
@@ -35,6 +34,7 @@ import {
 import {
   handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
+  StoreProductLoadedEvent,
 } from './libs/data-layer.js';
 
 import user from './user.js';
@@ -764,7 +764,7 @@ async function loadPage() {
   const storeRoot = document.createElement('bd-context');
   storeRoot.classList.add('store-context');
   storeRoot.dataLayer = ({ option, event }) => {
-    AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
+    AdobeDataLayerService.push(new StoreProductLoadedEvent(option, event));
   };
   document.body.replaceChild(storeRoot, main);
   storeRoot.appendChild(main);
