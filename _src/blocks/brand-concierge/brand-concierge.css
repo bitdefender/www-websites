@@ -1,4 +1,4 @@
-.brand-concierge #brand-concierge-mount .bc-card__image {
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
+/* The component and its styles come from AEM, in a shadow root - see brand-concierge.js */
+.brand-concierge {
+  width: 100%;
 }
