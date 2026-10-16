@@ -20,7 +20,7 @@ const SHARED_AEM_CHUNKS = ['dependencies', 'runtime', 'vendor'];
  * @returns {string} URL of the brand concierge experience fragment
  */
 export function getFragmentUrl(locale = getAemFragmentLocale()) {
-  return `${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${locale}/brand-concierge/master/jcr:content/root.html`;
+  return `${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${locale}/consumer/brand-concierge/master/jcr:content/root.html`;
 }
 
 /**

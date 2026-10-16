@@ -48,9 +48,9 @@ describe('brand-concierge', () => {
     await decorateWithLoadedCss(setupBlock());
 
     expect(global.fetch).toHaveBeenCalledWith(
-      `${ORIGIN}/content/experience-fragments/bitdefender/language_master/ro_ro/brand-concierge/master/jcr:content/root.html`,
+      `${ORIGIN}/content/experience-fragments/bitdefender/language_master/ro_ro/consumer/brand-concierge/master/jcr:content/root.html`,
     );
-    expect(getFragmentUrl('en')).toContain('/language_master/en/brand-concierge/master/');
+    expect(getFragmentUrl('en')).toContain('/language_master/en/consumer/brand-concierge/master/');
   });
 
   it('renders the fragment in a shadow root with absolute CSS and script URLs', async () => {
