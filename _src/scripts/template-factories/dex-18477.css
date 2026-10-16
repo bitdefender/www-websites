@@ -7,7 +7,7 @@
     --section-large-desktop-max-width: 1200px;
 
     h1, h2, h3, h4, h5, p, span, ul, li {
-        font-family: "IBM Plex Sans", sans-serif !important;
+        font-family: var(--body-font-family) !important;
     }
 
     .hero-aem-container {
@@ -173,7 +173,7 @@
                         }
 
                         h4, p, li {
-                            font-family: "IBM Plex Sans", sans-serif;
+                            font-family: var(--body-font-family);
                         }
 
                         h4 {
@@ -374,7 +374,7 @@
 
         .columns-wrapper {
             h2, h5, p {
-                font-family: "IBM Plex Sans", sans-serif;
+                font-family: var(--body-font-family);
                 line-height: 1.35;
             }
 
@@ -443,7 +443,7 @@
         .columns-wrapper {
             h3, p {
                 font-weight: 600;
-                font-family: "IBM Plex Sans", sans-serif;
+                font-family: var(--body-font-family);
             }
 
             h3 {

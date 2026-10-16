@@ -1,32 +1,5 @@
 /* below the fold CSS goes here */
 
-@font-face {
-  font-family: Roboto;
-  src: url('../fonts/roboto-300.woff2') format("woff2");
-  font-display:swap;
-  font-stretch: normal;
-  font-style: normal;
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: Roboto;
-  src: url('../fonts/roboto-400.woff2') format("woff2");
-  font-display:swap;
-  font-stretch: normal;
-  font-style: normal;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: Roboto;
-  src: url('../fonts/roboto-500.woff2') format("woff2");
-  font-display:swap;
-  font-stretch: normal;
-  font-style: normal;
-  font-weight: 500;
-}
-
 /* modal */
 .modal-container {
   position: fixed;
@@ -115,7 +88,7 @@
   font-size: 18px;
   font-weight: 600;
   margin: 10px 0;
-  font-family: "Arial", sans-serif;
+  font-family: var(--body-font-family);
 }
 
 .modal-container .popup-v2 .default-content-wrapper {
@@ -126,7 +99,7 @@
 }
 
 .modal-container .popup-v2 .default-content-wrapper * {
-  font-family: "Arial", sans-serif;
+  font-family: var(--body-font-family);
 }
 
 .modal-container .popup-v2 .default-content-wrapper a {

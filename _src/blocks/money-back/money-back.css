@@ -98,7 +98,7 @@
   text-align: left;
   margin: 0 30px;
   vertical-align: top;
-  font: normal normal normal 20px/23px Arial, sans-serif;
+  font: normal normal normal 20px/23px var(--body-font-family);
 }
 
 .money-back > ul > li h6 {
@@ -110,11 +110,11 @@
 }
 
 .creator-money-back .money-back > ul > li h4 {
-  font: normal normal bold 32px/38px "IBM Plex Sans", sans-serif;
+  font: normal normal bold 32px/38px var(--body-font-family);
 }
 
 .creator-money-back .money-back > ul > li p {
-  font: normal normal normal 20px/26px Arial, sans-serif;
+  font: normal normal normal 20px/26px var(--body-font-family);
 }
 
 .money-back > ul > li p:first-of-type {
@@ -190,7 +190,7 @@
   background: #E72325 0% 0% no-repeat padding-box;
   border-radius: 40px;
   justify-content: center;
-  font: normal normal 500 18px / 24px Roboto, sans-serif;
+  font: normal normal 500 18px / 24px var(--body-font-family);
   color: white;
 }
 

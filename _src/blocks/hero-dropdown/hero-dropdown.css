@@ -110,7 +110,7 @@ main .hero-dropdown.black-background {
 
 main .hero-dropdown.new2024design * {
   font-weight: normal;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
   color: white;
 }
 
@@ -654,7 +654,7 @@ main .hero-dropdown.ferrari .hero-dropdown-content img{
 
 main .hero-dropdown-container.ferrari-migration .hero-dropdown{
   background-color:#006DFF;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
   font-weight: 300;
 }
 
@@ -948,7 +948,7 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
   main .hero-dropdown h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 
   main .hero-dropdown .hero-dropdown-picture {
@@ -1116,7 +1116,7 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
   main .hero-dropdown h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 
   main .v2 .hero-dropdown h1 {

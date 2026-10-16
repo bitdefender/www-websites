@@ -10,7 +10,7 @@ main .section.ribbon-container {
 }
 
 .ribbon-container * {
-  font-family: Arial, sans-serif!important;
+  font-family: var(--body-font-family)!important;
   font-size: var(--body-font-size-xs);
 }
 
@@ -56,7 +56,7 @@ main .section.ribbon-container {
 }
 
 .ribbon-container.bf25 p {
-  font: normal normal bold 16px / 20px "IBM Plex Sans", sans-serif;
+  font: normal normal bold 16px / 20px var(--body-font-family);
 }
 
 .ribbon-container.bf25 u {

@@ -437,7 +437,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
       grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr) !important;
       
       >div:has(h3){
-        background:  rgba(0, 109, 255, 0.75) 0 0 no-repeat padding-box;
+        background:  rgb(0 109 255 / 75%) 0 0 no-repeat padding-box;
         backdrop-filter: blur(20px);
         border-radius: 20px  0 0  20px;
         z-index: 997;

@@ -527,6 +527,19 @@ function openExternalLinksInNewTab(doc) {
 }
 
 /**
+ * Loads the IBM Plex Sans font faces and remembers it for the session,
+ * so later pages can load them eagerly from the browser cache.
+ */
+async function loadFonts() {
+  await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
+  try {
+    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
+  } catch {
+    // do nothing
+  }
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -564,6 +577,15 @@ async function loadEager(doc) {
       document.body.classList.add('sferrari');
     }
     await waitForLCP(LCP_BLOCKS);
+  }
+
+  try {
+    // on desktop or once cached, load fonts before LCP to avoid a visible swap
+    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
+      loadFonts();
+    }
+  } catch {
+    // do nothing
   }
 }
 
@@ -614,6 +636,7 @@ async function loadLazy(doc) {
   generateLDJsonSchema();
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadFonts();
 
   window.hlx.plugins.run('loadLazy');
 
