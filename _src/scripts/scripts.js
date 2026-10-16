@@ -27,6 +27,7 @@ import {
   decorateBlocks,
   decorateTemplateAndTheme,
   waitForLCP,
+  updateSectionsStatus,
   loadBlocks,
   loadCSS,
   getMetadata,
@@ -564,6 +565,9 @@ async function loadEager(doc) {
       document.body.classList.add('sferrari');
     }
     await waitForLCP(LCP_BLOCKS);
+    // show the block-less sections after the LCP block now instead of in loadLazy;
+    // they are often the LCP element on mobile
+    updateSectionsStatus(main);
   }
 }
 
