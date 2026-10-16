@@ -99,7 +99,9 @@
   --section-mobile-padding-vertical: 32px;
 
   /* cta styles */
-  --cta-background-light-blue: var(--background-light-blue)
+  --cta-background-light-blue: var(--background-light-blue);
+  
+  color-scheme: only light;
 }
 
 header,
