@@ -113,6 +113,7 @@ hr {
 
 .trusted-new .trusted-hero-container .rte-wrapper > div > p:last-child {
   margin: 0;
+  font-size: 17px;
 }
 
 .trusted-new .trusted-hero-container .rte-wrapper > div > p:last-child a {
@@ -410,6 +411,7 @@ hr {
   text-decoration: none;
   text-transform: uppercase;
   margin-bottom: 5px;
+  margin-left: 0;
 }
 
 .trusted-new main .button-container a.button {
