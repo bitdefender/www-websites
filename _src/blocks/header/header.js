@@ -67,7 +67,15 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
  * run the login logic after the menu is loaded in
  */
 const loginFunctionality = async (root = document) => {
+  // switched on by the login-enabled metadata, as the Mega Menu Login CA config does on AEM pages
+  if (getMetadata('login-enabled') !== 'true') {
+    return;
+  }
+
   try {
+    // sign in users that Login already has signed in, without a prompt (once per tab)
+    await user.login();
+
     // change login container to display that the user is logged in
     // if the previous call was successfull
     const userData = await user.info;
