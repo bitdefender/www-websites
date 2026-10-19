@@ -53,7 +53,7 @@
     "@repobit/dex-store-elements": "^2.1.16",
     "@repobit/dex-system-design": "^0.25.9",
     "@repobit/dex-target": "^2.16.20",
-    "@repobit/dex-utils": "^2.4.3",
+    "@repobit/dex-utils": "^2.5.0",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
   },
