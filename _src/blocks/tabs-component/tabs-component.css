@@ -273,6 +273,7 @@
         border-bottom: #D9D9D9 1px solid;
         background: #fff;
         background-color: #fff;
+        margin-bottom: 0;
 
         button {
           border: #D9D9D9 1px solid;
@@ -281,7 +282,7 @@
           min-height: 80px;
           margin: -1px;
 
-          img {
+          img, .icon {
             width: 80%;
             margin: auto;
           }
