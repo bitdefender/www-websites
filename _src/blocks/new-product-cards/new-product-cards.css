@@ -286,6 +286,7 @@
                             width: 12px;
                             fill: #FFF;
                             position: relative;
+                            margin: 0;
 
                             svg {
                                 position: absolute;
@@ -425,7 +426,11 @@
                                         padding: 1px 6.7px;
                                         margin-right: 4px;
                                         margin-bottom: 0;
-                                    }   
+
+                                        .icon {
+                                            margin: 0;
+                                        }
+                                    }
                                 }
                             }
 
