@@ -1,5 +1,9 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { getDatasetFromSection, wrapChildrenWithStoreContext } from '../../scripts/utils/utils.js';
+import {
+  createNanoBlock,
+  renderNanoBlocks,
+  wrapChildrenWithStoreContext,
+} from '../../scripts/utils/utils.js';
 
 const productsList = [];
 
@@ -12,110 +16,12 @@ function updateProductsList(product) {
   window.productsListCount = productsList.length;
 }
 
-const nanoBlocks = new Map();
-
-function createNanoBlock(name, renderer) {
-  nanoBlocks.set(name.toLowerCase(), renderer);
-}
-
-function findTextNodes(parent) {
-  let all = [];
-  for (let node = parent.firstChild; node; node = node.nextSibling) {
-    if (node.nodeType === Node.TEXT_NODE) all.push(node);
-    else all = all.concat(findTextNodes(node));
-  }
-  return all;
-}
-
-function parseParams(params) {
-  const segments = params.split(',').map((segment) => segment.trim());
-  const result = [];
-
-  let tempArray = [];
-  let isInArray = false;
-
-  segments.forEach((segment) => {
-    if (isInArray) {
-      if (segment.endsWith(']')) {
-        tempArray.push(segment.slice(0, -1).trim());
-        result.push(tempArray);
-        tempArray = [];
-        isInArray = false;
-      } else {
-        tempArray.push(segment.trim());
-      }
-    } else if (segment.startsWith('[')) {
-      if (segment.endsWith(']')) {
-        result.push(segment.slice(1, -1).trim());
-      } else {
-        tempArray.push(segment.slice(1).trim());
-        isInArray = true;
-      }
-    } else {
-      result.push(segment);
-    }
-  });
-
-  return result;
-}
-
-function replaceDoubleCommas(str) {
-  // Convert the string to an array for easy manipulation
-  const arr = str.split('');
-
-  // Loop through the array from the end to the beginning
-  for (let i = arr.length - 1; i > 0; i -= 1) {
-    // Check if there are two consecutive commas
-    if (arr[i] === ',' && arr[i - 1] === ',') {
-      // Replace the two consecutive commas with a single comma
-      arr.splice(i, 1);
-    }
-  }
-
-  // Convert the array back to a string
-  return arr.join('');
-}
-
 function getDiscountedPriceAttribute(type, prodName) {
   if (type !== 'monthly' || prodName.endsWith('m')) {
     return 'discounted||full';
   }
 
   return 'discounted-monthly||full-monthly';
-}
-
-function renderNanoBlocks(
-  parent = document.body,
-  mv = undefined,
-  index = undefined,
-  block = undefined,
-) {
-  const regex = /{([^}]+)}/g;
-  findTextNodes(parent).forEach((node) => {
-    const text = node.textContent.trim();
-    const matches = text.match(regex);
-    if (matches) {
-      matches.forEach((match) => {
-        const [name] = parseParams(match.slice(1, -1));
-        const datasetValue = getDatasetFromSection(parent);
-
-        const datasetEntryValue = (index !== undefined ? datasetValue[`${name.toLowerCase()}${index + 1}`] : datasetValue[name.toLowerCase()]) || '';
-        const formattedDatasetEntryValue = replaceDoubleCommas(datasetEntryValue);
-
-        const newMatch = [match, formattedDatasetEntryValue.split(',')].join(',').replace(/[{}]/g, '');
-
-        const [newName, ...params] = parseParams(newMatch);
-        const renderer = nanoBlocks.get(newName.toLowerCase());
-        if (renderer) {
-          // eslint-disable-next-line max-len
-          const element = mv ? renderer(mv, ...params, block, index, parent) : renderer(...params, block, index, parent);
-          element.classList.add('nanoblock');
-          const oldElement = node.parentNode;
-          oldElement.parentNode.replaceChild(element, oldElement);
-        }
-      });
-    }
-  });
 }
 
 function updateTagsMargin(block) {
