@@ -232,6 +232,27 @@ function decorateLinkedProductName(innerCard) {
   nameParagraph.replaceWith(title);
 }
 
+// a standalone 0 in the text is the billed price placeholder (not the 0 in "30 days").
+// Only text nodes are searched, so markup like an icon's svg viewBox is never touched.
+function addBilledPriceContainer(paragraph) {
+  const placeholder = /(^|\s)0(?=%|[\s.,]|$)/;
+  const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
+
+  while (walker.nextNode()) {
+    const textNode = walker.currentNode;
+    const match = textNode.textContent.match(placeholder);
+
+    if (match) {
+      const zero = textNode.splitText(match.index + match[1].length);
+      zero.textContent = zero.textContent.slice(1);
+      const container = document.createElement('span');
+      container.classList.add('billed-price-container');
+      zero.before(container);
+      return;
+    }
+  }
+}
+
 function removeArrowMarker(element) {
   const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
 
@@ -347,11 +368,7 @@ export default async function decorate(block) {
         button.setAttribute('data-store-buy-link', '');
       });
 
-      const paragraphs = card.querySelectorAll('p');
-      paragraphs.forEach((p) => {
-        // only a standalone 0 is the billed price placeholder (not the 0 in "30 days")
-        p.innerHTML = p.innerHTML.replace(/(^|[\s>])0(?=%|[\s.,<]|$)/, '$1<span class="billed-price-container"></span>');
-      });
+      card.querySelectorAll('p').forEach(addBilledPriceContainer);
 
       const addOnList = card.querySelector(':scope  div  ol');
       if (addOnList) {
