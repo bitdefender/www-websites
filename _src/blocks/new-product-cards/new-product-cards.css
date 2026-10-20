@@ -1,6 +1,8 @@
 /* stylelint-disable no-descending-specificity */
 /* stylelint-disable selector-class-pattern */
 .new-product-cards-container {
+    font-family: "IBM Plex Sans", sans-serif;
+
     .new-product-cards-wrapper {
         max-width: 1320px;
         margin: 0 auto;
@@ -63,7 +65,7 @@
                 }
 
                 .label {
-                    font-family: Arial, Helvetica, sans-serif;
+                    font-family: inherit;
                     width: 50%;
                     height: 50px;
                     text-align: center;
@@ -122,7 +124,7 @@
             gap: 0 16px;
             padding-inline: var(--body-padding);
             text-align: left;
-            font-family: Arial, sans-serif;
+            font-family: inherit;
 
             @media (width >= 768px) {
                 padding-inline: 0;
@@ -163,7 +165,7 @@
                         font-weight: bold;
                         font-size: 20px;
                         line-height: 25px;
-                        font-family: Arial, sans-serif;
+                        font-family: inherit;
                         margin: 0 0 4px;
                         max-width: 80%;
 
@@ -213,7 +215,7 @@
                         font-size: 16px;
                         line-height: 24px;
                         padding: 3px 5px;
-                        font-family: Arial, sans-serif;
+                        font-family: inherit;
                         color: white;
                         text-align: center;
                         font-weight: normal;
@@ -233,7 +235,7 @@
 
                     .blue-pill {
                         font-size: var(--body-font-size-xs);
-                        font-family: Arial, sans-serif;
+                        font-family: inherit;
                         color: white;
                         text-align: left;
                         background-color: #026DFF;
@@ -265,7 +267,7 @@
 
                     .green-pill {
                         font-size: 16px;
-                        font-family: Arial, sans-serif;
+                        font-family: inherit;
                         color: white;
                         text-align: center;
                         background-color: #68ba68;
@@ -508,6 +510,7 @@
                         justify-content: center;
                         margin: 0;
                         padding: 10px 26px 8px 28px;
+                        font-family: inherit;
                         font-size: 16px;
                         line-height: 24px;
                         font-weight: 500;
