@@ -1181,6 +1181,10 @@ hr {
     gap: 28px 20px;
   }
 
+  .trusted-new main > .trusted-teaser-impact-container.large-mobile .box-wrapper {
+    grid-template-columns: unset;
+  }
+
   .trusted-new main > .trusted-teaser-impact-container .box-wrapper .box-item {
     padding-right: 0;
   }
