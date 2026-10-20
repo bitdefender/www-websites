@@ -73,20 +73,6 @@
         min-height: unset;
     }
 
-    .dex-trust-pills {
-        .columns > div {
-            align-items: center;
-
-            .columns-col {
-                text-align: center;
-
-                p:first-of-type .icon {
-                    position: relative;
-                }
-            }
-        }
-    }
-
     .new-prod-boxes {
 
         [data-store-id="us_pi"] h4::after, [data-store-id="us_pf"] h4::after {
@@ -1864,70 +1850,11 @@
     .has-dropdown {
         display: none;
     }
-
-    .hero_mobile {
-        margin-bottom: 2em;
-    }
-
-    .hero_mobile h2 {
-        color: #006DFF;
-        font-size: var(--size-24);
-        font-weight: 600;
-        line-height: var(--size-30);
-        text-align: left;
-    }
-
-    .hero_mobile ul li {
-        font-size: var(--size-12);
-        font-weight: 400;
-        line-height: var(--size-14);
-        text-align: left;
-    }
-
-    .hero_mobile {
-        background-color: #F6F6F6;
-        padding-top: var(--size-0);
-        padding-bottom: var(--size-0);
-
-        .default-content-wrapper {
-            padding: var(--size-24) !important;
-
-            h2 {
-                font-size: var(--size-18);
-                font-weight: 500;
-                line-height: var(--size-22);
-                text-align: left;
-            }
-        }
-    }
-
-    .what_about h2 {
-        font-size: var(--size-18);
-        margin-bottom: var(--size-0);
-        font-weight: 500;
-        line-height: var(--size-22);
-        text-align: left;
-    }
 }
 
 
 @media (min-width: 768px) {
     .dex-26524 {
-
-        .what_about {
-            .default-content-wrapper {
-                padding-bottom: var(--size-24);
-            }
-        }
-
-        .what_about h2 {
-            font-size: var(--size-34);
-            font-weight: 700;
-            line-height: var(--size-40);
-            text-align: center;
-            max-width: 655px;
-            margin: 0 auto;
-        }
 
         .hero_mobile {
             display: none;

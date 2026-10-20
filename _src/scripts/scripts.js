@@ -5,7 +5,6 @@ import {
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
-  ProductLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
 import {
@@ -35,6 +34,7 @@ import {
 import {
   handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
+  StoreProductLoadedEvent,
 } from './libs/data-layer.js';
 
 import user from './user.js';
@@ -142,7 +142,8 @@ export default function decorateLinkedPictures(main) {
             event.preventDefault();
             // eslint-disable-next-line no-use-before-define
             const modalContainer = await createModal(link, 'video-modal');
-            document.body.append(modalContainer);
+            // eslint-disable-next-line no-use-before-define
+            appendModal(modalContainer);
           });
           const up = a.parentElement;
           if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
@@ -182,6 +183,27 @@ export function decorateMain(main) {
   decorateLinkedPictures(main);
   decorateSections(main);
   decorateBlocks(main);
+}
+
+let modalsRoot;
+
+/**
+ * Modals live outside of main, so they are added to a dedicated container inside the
+ * page store root, registered for store render and action nodes like main.
+ * This way the store elements in the modals are rendered (prices, discounts, buy links).
+ * @param {Element} modalContainer
+ */
+function appendModal(modalContainer) {
+  if (!modalsRoot) {
+    modalsRoot = document.createElement('div');
+    modalsRoot.classList.add('modals-root');
+    const storeRoot = document.querySelector('body > bd-context.store-context');
+    (storeRoot || document.body).append(modalsRoot);
+    registerActionNodes(modalsRoot);
+    registerRenderNodes(modalsRoot);
+  }
+
+  modalsRoot.append(modalContainer);
 }
 
 /**
@@ -266,7 +288,7 @@ export async function detectModalButtons(main) {
 
       // generate new modal
       const modalContainer = await createModal(originalHref, undefined, stopAutomaticModalRefresh);
-      document.body.append(modalContainer);
+      appendModal(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
@@ -787,7 +809,7 @@ async function loadPage() {
   const storeRoot = document.createElement('bd-context');
   storeRoot.classList.add('store-context');
   storeRoot.dataLayer = ({ option, event }) => {
-    AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
+    AdobeDataLayerService.push(new StoreProductLoadedEvent(option, event));
   };
   document.body.replaceChild(storeRoot, main);
   storeRoot.appendChild(main);

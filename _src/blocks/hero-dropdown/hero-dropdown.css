@@ -319,7 +319,7 @@ main .hero-dropdown p {
 main .hero-dropdown h1+p {
   margin: 8px 0 0;
   color: #616161;
-  font-size: var(--hero-dropdown-font-size-xxxs);
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -377,7 +377,7 @@ main .hero-dropdown.scamio .hero-dropdown-picture picture img {
 
 main .hero-dropdown a.button {
   margin: 8px 13px 0 0;
-  min-width: 206px;
+  min-width: 230px;
   justify-content: center;
   align-items: center;
 }
@@ -829,6 +829,28 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 
 .hero-dropdown.small-business-banner {
   background-color: transparent;
+
+  p {
+    font-size: 16px;
+  }
+
+  h4 {
+    color: #006DFF;
+    font-size: 20px;
+    margin-top: 12px;
+  }
+
+  .signature {
+    font-size: 24px;
+    color: #016DFF;
+    font-weight: bold;
+    font-family: var(--body-font-family);
+    padding-left: 50px;
+
+    @media (max-width: 767px) {
+      padding-left: 20px;
+    }
+  }
 
   .hero-dropdown-picture {
     width: 50%;
