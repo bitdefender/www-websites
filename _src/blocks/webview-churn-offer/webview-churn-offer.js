@@ -21,8 +21,9 @@
  * - onAccept, onDecline, onClose: callbacks receiving the event detail
  *
  * Every action also dispatches a composed, bubbling, cancelable CustomEvent
- * (`churn-offer:accept`, `churn-offer:decline`, `churn-offer:close`) that reaches the host
- * document through the shadow root. detail: { action, discount, lang, promotion }.
+ * (`webview-churn-offer:accept`, `webview-churn-offer:decline`, `webview-churn-offer:close`)
+ * that reaches the host document through the shadow root.
+ * detail: { action, discount, lang, promotion }.
  * Decline and close keep the in-product `https://localhost/dynamicupsell?view_action=close`
  * link; navigation is prevented when a callback is passed or a listener calls preventDefault().
  * Accept without onAccept falls back to the in-product window.acceptDiscountedOffer(promotion).
@@ -100,10 +101,10 @@ function createAction({
     decline: options.onDecline,
     close: options.onClose,
   };
-  element.dataset.churnOfferAction = action;
+  element.dataset.webviewChurnOfferAction = action;
   element.addEventListener('click', (clickEvent) => {
     const eventDetail = { action, ...detail };
-    const event = new CustomEvent(`churn-offer:${action}`, {
+    const event = new CustomEvent(`webview-churn-offer:${action}`, {
       bubbles: true, composed: true, cancelable: true, detail: eventDetail,
     });
     const callback = callbacks[action];
@@ -146,7 +147,7 @@ export default function decorate(block, options = {}) {
   offerRow?.querySelectorAll('p').forEach((paragraph) => {
     if (paragraph.textContent.trim() === PRICEBOX_MARKER) paragraph.remove();
   });
-  offerRow?.querySelector('h1, h2, h3, h4, h5, h6')?.classList.add('churn-offer-discount');
+  offerRow?.querySelector('h1, h2, h3, h4, h5, h6')?.classList.add('webview-churn-offer-discount');
 
   const actions = [];
   if (acceptLink) {
@@ -159,20 +160,20 @@ export default function decorate(block, options = {}) {
   if (declineLink) {
     const link = createElement('a', 'button secondary', [createElement('span', 'button-text', [declineLink.textContent.trim()])]);
     link.href = declineLink.getAttribute('href');
-    actions.push(createElement('p', 'button-container churn-offer-dismiss', [createAction({
+    actions.push(createElement('p', 'button-container webview-churn-offer-dismiss', [createAction({
       element: link, action: 'decline', block, options, detail,
     })]));
   }
 
-  const close = createElement('a', 'churn-offer-close');
+  const close = createElement('a', 'webview-churn-offer-close');
   close.href = CLOSE_URL;
   close.setAttribute('aria-label', 'Close');
 
-  const content = createElement('div', 'churn-offer-content', [
-    createElement('div', 'churn-offer-copy', rowsContent(copyRows)),
-    ...(offerRow ? [createElement('div', 'churn-offer-offer', rowsContent([offerRow]))] : []),
-    ...(supportRows.length ? [createElement('div', 'churn-offer-text-bottom', rowsContent(supportRows))] : []),
-    ...(actions.length ? [createElement('div', 'churn-offer-actions', actions)] : []),
+  const content = createElement('div', 'webview-churn-offer-content', [
+    createElement('div', 'webview-churn-offer-copy', rowsContent(copyRows)),
+    ...(offerRow ? [createElement('div', 'webview-churn-offer-offer', rowsContent([offerRow]))] : []),
+    ...(supportRows.length ? [createElement('div', 'webview-churn-offer-text-bottom', rowsContent(supportRows))] : []),
+    ...(actions.length ? [createElement('div', 'webview-churn-offer-actions', actions)] : []),
   ]);
 
   block.replaceChildren(createAction({

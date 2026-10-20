@@ -1,5 +1,5 @@
 /* Self-contained: in Central this renders in a shadow root without styles.css. */
-.churn-offer {
+.webview-churn-offer {
     position: relative;
     box-sizing: border-box;
     max-width: 600px;
@@ -17,17 +17,17 @@
     box-shadow: 0 0 20px rgb(7 20 45 / 9%);
 }
 
-.churn-offer *,
-.churn-offer *::before,
-.churn-offer *::after {
+.webview-churn-offer *,
+.webview-churn-offer *::before,
+.webview-churn-offer *::after {
     box-sizing: inherit;
 }
 
-.churn-offer p {
+.webview-churn-offer p {
     margin: 0;
 }
 
-.churn-offer .churn-offer-close {
+.webview-churn-offer .webview-churn-offer-close {
     position: absolute;
     top: 9px;
     right: 9px;
@@ -39,8 +39,8 @@
     border: 0;
 }
 
-.churn-offer .churn-offer-close::before,
-.churn-offer .churn-offer-close::after {
+.webview-churn-offer .webview-churn-offer-close::before,
+.webview-churn-offer .webview-churn-offer-close::after {
     position: absolute;
     top: 15px;
     left: 8px;
@@ -51,21 +51,21 @@
     border-radius: 1px;
 }
 
-.churn-offer .churn-offer-close::before {
+.webview-churn-offer .webview-churn-offer-close::before {
     transform: rotate(45deg);
 }
 
-.churn-offer .churn-offer-close::after {
+.webview-churn-offer .webview-churn-offer-close::after {
     transform: rotate(-45deg);
 }
 
-.churn-offer .churn-offer-content {
+.webview-churn-offer .webview-churn-offer-content {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.churn-offer h2 {
+.webview-churn-offer h2 {
     margin: 0 0 30px;
     font-size: 24px;
     font-weight: 700;
@@ -74,8 +74,8 @@
     text-wrap: balance;
 }
 
-.churn-offer .churn-offer-copy,
-.churn-offer .churn-offer-text-bottom {
+.webview-churn-offer .webview-churn-offer-copy,
+.webview-churn-offer .webview-churn-offer-text-bottom {
     width: 100%;
     max-width: 504px;
     margin-bottom: 16px;
@@ -83,11 +83,11 @@
     text-wrap: pretty;
 }
 
-.churn-offer .churn-offer-text-bottom {
+.webview-churn-offer .webview-churn-offer-text-bottom {
     margin-bottom: 43px;
 }
 
-.churn-offer .churn-offer-offer {
+.webview-churn-offer .webview-churn-offer-offer {
     width: 100%;
     max-width: 504px;
     min-height: 142px;
@@ -100,24 +100,24 @@
     border-radius: 8px;
 }
 
-.churn-offer .churn-offer-offer p {
+.webview-churn-offer .webview-churn-offer-offer p {
     font-size: 24px;
     line-height: 30px;
     text-wrap: balance;
 }
 
-.churn-offer .churn-offer-offer h2 {
+.webview-churn-offer .webview-churn-offer-offer h2 {
     color: #058840;
 }
 
-.churn-offer .churn-offer-offer .churn-offer-discount {
+.webview-churn-offer .webview-churn-offer-offer .webview-churn-offer-discount {
     margin: 0;
     font-size: 48px;
     font-weight: 600;
     line-height: 56px;
 }
 
-.churn-offer .churn-offer-actions {
+.webview-churn-offer .webview-churn-offer-actions {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -125,7 +125,7 @@
     width: 252px;
 }
 
-.churn-offer .button {
+.webview-churn-offer .button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -145,44 +145,44 @@
     border-radius: 4px;
 }
 
-.churn-offer .button:hover {
+.webview-churn-offer .button:hover {
     background-color: #047236;
     border-color: #047236;
 }
 
-.churn-offer .button.secondary {
+.webview-churn-offer .button.secondary {
     width: auto;
     color: #ea0220;
     background: transparent;
     border: 0;
 }
 
-.churn-offer .button.secondary:hover {
+.webview-churn-offer .button.secondary:hover {
     color: #c6001a;
 }
 
-.churn-offer :is(.button, .churn-offer-close):focus-visible {
+.webview-churn-offer :is(.button, .webview-churn-offer-close):focus-visible {
     outline: 2px solid #0f6aff;
     outline-offset: 2px;
 }
 
 @media (width <= 600px) {
-    .churn-offer {
+    .webview-churn-offer {
         min-height: auto;
         margin: 12px;
         padding: 36px 20px 40px;
     }
 
-    .churn-offer .churn-offer-offer {
+    .webview-churn-offer .webview-churn-offer-offer {
         padding: 20px 16px;
     }
 
-    .churn-offer .churn-offer-actions,
-    .churn-offer .button {
+    .webview-churn-offer .webview-churn-offer-actions,
+    .webview-churn-offer .button {
         width: 100%;
     }
 
-    .churn-offer .churn-offer-offer .churn-offer-discount {
+    .webview-churn-offer .webview-churn-offer-offer .webview-churn-offer-discount {
         font-size: 40px;
         line-height: 48px;
     }

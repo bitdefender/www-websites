@@ -4,7 +4,7 @@ import {
   afterEach, describe, expect, it, vi,
 } from 'vitest';
 
-import decorate from '../../../blocks/churn-offer/churn-offer.js';
+import decorate from '../../../blocks/webview-churn-offer/webview-churn-offer.js';
 
 const CLOSE_URL = 'https://localhost/dynamicupsell?view_action=close';
 
@@ -27,22 +27,22 @@ const CHURN_FLOW_CONTENT = `
 
 function setupChurnOffer({ content = CHURN_FLOW_CONTENT, discount = '20%' } = {}) {
   document.body.innerHTML = `
-    <div class="section churn-offer-container" ${discount ? `data-hardcoded-discount="${discount}"` : ''}>
-      <div class="churn-offer-wrapper">
-        <div class="churn-offer block">${content}</div>
+    <div class="section webview-churn-offer-container" ${discount ? `data-hardcoded-discount="${discount}"` : ''}>
+      <div class="webview-churn-offer-wrapper">
+        <div class="webview-churn-offer block">${content}</div>
       </div>
     </div>`;
 
-  return document.querySelector('.churn-offer');
+  return document.querySelector('.webview-churn-offer');
 }
 
-describe('churn-offer', () => {
+describe('webview-churn-offer', () => {
   afterEach(() => {
     delete window.acceptDiscountedOffer;
   });
 
   it('has no imports, so it loads on hosts without the www-websites import map', () => {
-    const source = readFileSync(resolve('_src/blocks/churn-offer/churn-offer.js'), 'utf8');
+    const source = readFileSync(resolve('_src/blocks/webview-churn-offer/webview-churn-offer.js'), 'utf8');
 
     expect(source).not.toMatch(/^\s*import\b|\bimport\(/m);
   });
@@ -52,16 +52,16 @@ describe('churn-offer', () => {
 
     decorate(block);
 
-    expect(block.querySelector('.churn-offer-copy h2').textContent).toBe('Thank you for your feedback!');
-    expect(block.querySelector('.churn-offer-offer .churn-offer-discount').textContent).toBe('20%');
-    expect(block.querySelector('.churn-offer-offer .prod-save').textContent).toBe('20%');
-    expect(block.querySelector('.churn-offer-offer').textContent).not.toContain('{PRICEBOX_V2}');
-    expect(block.querySelector('.churn-offer-offer').textContent).toContain('applied on your next renewal');
-    expect(block.querySelector('.churn-offer-text-bottom').textContent).toContain('keep auto-renewal on');
-    expect(block.querySelector('button[data-churn-offer-action="accept"]').textContent).toBe('I Take the offer');
-    expect(block.querySelector('.churn-offer-dismiss a').href).toBe(CLOSE_URL);
-    expect(block.querySelector('.churn-offer-dismiss a').textContent).toBe('End auto-renewal');
-    expect(block.querySelector('.churn-offer-close').href).toBe(CLOSE_URL);
+    expect(block.querySelector('.webview-churn-offer-copy h2').textContent).toBe('Thank you for your feedback!');
+    expect(block.querySelector('.webview-churn-offer-offer .webview-churn-offer-discount').textContent).toBe('20%');
+    expect(block.querySelector('.webview-churn-offer-offer .prod-save').textContent).toBe('20%');
+    expect(block.querySelector('.webview-churn-offer-offer').textContent).not.toContain('{PRICEBOX_V2}');
+    expect(block.querySelector('.webview-churn-offer-offer').textContent).toContain('applied on your next renewal');
+    expect(block.querySelector('.webview-churn-offer-text-bottom').textContent).toContain('keep auto-renewal on');
+    expect(block.querySelector('button[data-webview-churn-offer-action="accept"]').textContent).toBe('I Take the offer');
+    expect(block.querySelector('.webview-churn-offer-dismiss a').href).toBe(CLOSE_URL);
+    expect(block.querySelector('.webview-churn-offer-dismiss a').textContent).toBe('End auto-renewal');
+    expect(block.querySelector('.webview-churn-offer-close').href).toBe(CLOSE_URL);
   });
 
   it('does not render markup from the discount metadata', () => {
@@ -78,7 +78,7 @@ describe('churn-offer', () => {
 
     decorate(block);
 
-    expect(block.querySelector('.churn-offer-discount').textContent).toBe('');
+    expect(block.querySelector('.webview-churn-offer-discount').textContent).toBe('');
     expect(block.textContent).not.toContain('discounted-price-percentage');
   });
 
@@ -89,7 +89,7 @@ describe('churn-offer', () => {
 
     decorate(block);
 
-    expect(block.querySelector('.churn-offer-offer p').textContent).toBe('20% off your renewal');
+    expect(block.querySelector('.webview-churn-offer-offer p').textContent).toBe('20% off your renewal');
   });
 
   it('formats the renewal date in options.lang', () => {
@@ -99,7 +99,7 @@ describe('churn-offer', () => {
 
     decorate(block, { lang: 'fr-fr', renewalDate: Date.UTC(2026, 11, 15, 12) / 1000 });
 
-    expect(block.querySelector('.churn-offer-copy p').textContent).toBe('Your plan renews on 15 décembre 2026.');
+    expect(block.querySelector('.webview-churn-offer-copy p').textContent).toBe('Your plan renews on 15 décembre 2026.');
   });
 
   it('removes the renewal date marker without a valid date', () => {
@@ -109,7 +109,7 @@ describe('churn-offer', () => {
 
     decorate(block, { renewalDate: 'not a date' });
 
-    expect(block.querySelector('.churn-offer-copy p').textContent).toBe('Renews on ');
+    expect(block.querySelector('.webview-churn-offer-copy p').textContent).toBe('Renews on ');
   });
 
   it('survives missing rows', () => {
@@ -117,10 +117,10 @@ describe('churn-offer', () => {
 
     decorate(block);
 
-    expect(block.querySelector('.churn-offer-copy h2').textContent).toBe('Only a title');
-    expect(block.querySelector('.churn-offer-offer')).toBeNull();
-    expect(block.querySelector('.churn-offer-actions')).toBeNull();
-    expect(block.querySelector('.churn-offer-close')).toBeTruthy();
+    expect(block.querySelector('.webview-churn-offer-copy h2').textContent).toBe('Only a title');
+    expect(block.querySelector('.webview-churn-offer-offer')).toBeNull();
+    expect(block.querySelector('.webview-churn-offer-actions')).toBeNull();
+    expect(block.querySelector('.webview-churn-offer-close')).toBeTruthy();
   });
 
   it('uses the link next to the decline link as accept when #buylink is missing', () => {
@@ -132,19 +132,19 @@ describe('churn-offer', () => {
 
     decorate(block);
 
-    expect(block.querySelector('[data-churn-offer-action="accept"]').textContent).toBe('Keep it');
-    expect(block.querySelector('.churn-offer-copy a').textContent).toBe('link');
+    expect(block.querySelector('[data-webview-churn-offer-action="accept"]').textContent).toBe('Keep it');
+    expect(block.querySelector('.webview-churn-offer-copy a').textContent).toBe('link');
   });
 
   it('calls onAccept and dispatches a composed accept event', () => {
     const block = setupChurnOffer();
     const onAccept = vi.fn();
     const listener = vi.fn();
-    document.addEventListener('churn-offer:accept', listener);
+    document.addEventListener('webview-churn-offer:accept', listener);
     window.acceptDiscountedOffer = vi.fn();
 
     decorate(block, { lang: 'en-us', promotion: 'CHURN20', onAccept });
-    block.querySelector('[data-churn-offer-action="accept"]').click();
+    block.querySelector('[data-webview-churn-offer-action="accept"]').click();
 
     const detail = {
       action: 'accept', discount: '20%', lang: 'en-us', promotion: 'CHURN20',
@@ -155,7 +155,7 @@ describe('churn-offer', () => {
     expect(listener.mock.calls[0][0].composed).toBe(true);
     expect(window.acceptDiscountedOffer).not.toHaveBeenCalled();
 
-    document.removeEventListener('churn-offer:accept', listener);
+    document.removeEventListener('webview-churn-offer:accept', listener);
   });
 
   it('falls back to window.acceptDiscountedOffer without onAccept', () => {
@@ -163,7 +163,7 @@ describe('churn-offer', () => {
     window.acceptDiscountedOffer = vi.fn();
 
     decorate(block, { promotion: 'CHURN20' });
-    block.querySelector('[data-churn-offer-action="accept"]').click();
+    block.querySelector('[data-webview-churn-offer-action="accept"]').click();
 
     expect(window.acceptDiscountedOffer).toHaveBeenCalledWith('CHURN20');
   });
@@ -172,13 +172,13 @@ describe('churn-offer', () => {
     const block = setupChurnOffer();
     const onDecline = vi.fn();
     const closeListener = (event) => event.preventDefault();
-    block.addEventListener('churn-offer:close', closeListener);
+    block.addEventListener('webview-churn-offer:close', closeListener);
 
     decorate(block, { onDecline });
     const decline = new MouseEvent('click', { bubbles: true, cancelable: true });
-    block.querySelector('[data-churn-offer-action="decline"]').dispatchEvent(decline);
+    block.querySelector('[data-webview-churn-offer-action="decline"]').dispatchEvent(decline);
     const close = new MouseEvent('click', { bubbles: true, cancelable: true });
-    block.querySelector('[data-churn-offer-action="close"]').dispatchEvent(close);
+    block.querySelector('[data-webview-churn-offer-action="close"]').dispatchEvent(close);
 
     expect(onDecline).toHaveBeenCalledWith(expect.objectContaining({ action: 'decline' }));
     expect(decline.defaultPrevented).toBe(true);
@@ -197,7 +197,7 @@ describe('churn-offer', () => {
     document.addEventListener('click', stopNavigation);
 
     decorate(block);
-    block.querySelector('[data-churn-offer-action="decline"]').click();
+    block.querySelector('[data-webview-churn-offer-action="decline"]').click();
 
     expect(navigates).toBe(true);
     document.removeEventListener('click', stopNavigation);
