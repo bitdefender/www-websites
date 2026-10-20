@@ -97,7 +97,8 @@
     }
 
     .trusted-new .trusted-teaser-impact .box-wrapper .box-item .title {
-        font-size: 64px !important;
+        font-size: clamp(32px, 4vw, 64px) !important;
+        overflow-wrap: anywhere;
         font-weight: 400 !important;
         color: #2B2B2B !important;
     }
