@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+/* stylelint-disable selector-class-pattern */
 .new-product-cards-container {
     .new-product-cards-wrapper {
         max-width: 1320px;
@@ -117,10 +119,20 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             justify-content: center;
-            gap: 0;
+            gap: 0 16px;
+            padding-inline: var(--body-padding);
             text-align: left;
+            font-family: Arial, sans-serif;
+
+            @media (width >= 768px) {
+                padding-inline: 0;
+            }
 
             .prod_box {
+                width: 100%;
+                max-width: 410px;
+                justify-self: center;
+                box-sizing: border-box;
                 padding: 25px;
                 background-color: #f6f6f6;
                 border-radius: 20px;
@@ -130,8 +142,10 @@
                 grid-row: span 50;
                 gap: 0;
                 margin-top: var(--green-tag-height);
-                margin-left: 15px;
-                margin-right: 15px;
+
+                &:has(.green-tag:not(.hidden)) {
+                    box-shadow: 0 3px 7px 0 #c1c1c1;
+                }
 
                .inner_prod_box {
                     display: grid;
@@ -150,34 +164,42 @@
                         font-size: 20px;
                         line-height: 25px;
                         font-family: Arial, sans-serif;
-                        margin-top: 10px;
-                        margin-bottom: 8px;
+                        margin: 0 0 4px;
+                        max-width: 80%;
 
                         a {
                             color: inherit;
                             text-decoration: none;
+                            transition: color 0.5s ease;
 
                             &:hover {
-                                text-decoration: underline;
+                                color: var(--link-color);
                             }
                         }
                     }
 
                     p {
-                        font-size: 12px;
-                        line-height: 14px;
-                        color: #555;
+                        font-size: var(--body-font-size-xs);
+                        line-height: 1.25;
+                        color: var(--text-color);
                         margin-bottom: 8px;
                         margin-top: 0;
 
-                        .prod-newprice {
-                            font-size: 12px;
-                            line-height: 14px;
-                            color: #555;
-                        }
-
                         &:has(.blue-pill), &:has(.green-pill) {
                             display: flex;
+                        }
+                    }
+
+                    /* billed text and notes under the price */
+                    .pricing-container ~ p:not(.button-container) {
+                        font-size: 12px;
+                        line-height: 13px;
+                        margin-bottom: 12px;
+
+                        .prod-newprice {
+                            font-size: inherit;
+                            line-height: inherit;
+                            font-weight: inherit;
                         }
                     }
 
@@ -185,21 +207,24 @@
                         position: absolute;
                         justify-self: center;
                         bottom: 100%;
+                        box-sizing: content-box;
                         height: fit-content;
-                        font-size: 14px;
-                        line-height: 15px;
-                        padding: 5px;
+                        min-height: 30px;
+                        font-size: 16px;
+                        line-height: 24px;
+                        padding: 3px 5px;
                         font-family: Arial, sans-serif;
                         color: white;
                         text-align: center;
-                        font-weight: bold;
+                        font-weight: normal;
                         background-color: #1C7928;
                         border-top-left-radius: 10px;
                         border-top-right-radius: 10px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        width: 90%;
+                        width: 86%;
+                        max-width: 350px;
 
                         &.hidden {
                             visibility: hidden;
@@ -277,25 +302,43 @@
                             gap: 5px;
                             align-items: center;
 
-                            input {
-                                width: 18px;
-                                height: 18px;
-                                margin: 0;
+                            input[type="radio"] {
+                                appearance: none;
+                                flex-shrink: 0;
+                                box-sizing: border-box;
+                                width: 1.2rem;
+                                height: 1.2rem;
+                                padding: 0;
+                                margin: 0 4px 0 0;
+                                background: #f4f4f4;
+                                border: 2px solid var(--color-highlight-blue);
+                                border-radius: 50%;
+                                cursor: pointer;
+                                transition: all 250ms ease;
+
+                                &:checked {
+                                    background-color: #3197EE;
+                                    box-shadow: inset 0 0 0 4px #f4f4f4;
+                                }
+
+                                &:focus-visible {
+                                    outline: none;
+                                    border-color: #3197EE;
+                                }
                             }
 
                             label {
                                 min-width: fit-content;
                                 font-size: 16px;
                                 font-weight: 700;
+                                cursor: pointer;
                             }
                         }
                     }
 
-
                     hr {
-                        margin-top: 1em;
-                        margin-bottom: 1em;
-                        border-top: 1px solid #D1D1D1;
+                        margin: 10px 0;
+                        border: 1px solid #D1D1D1;
                         width: 100%;
                     }
 
@@ -310,22 +353,26 @@
                             list-style: none;
                             padding-left: 0;
                             margin: 0;
+                            font-size: 16px;
+                            line-height: 18px;
+                            font-weight: bold;
 
                             >ul {
                                 padding-left: 0;
-                                margin-top: 12px;
+                                margin-top: 8px;
                                 display: block;
 
                                 li {
-                                    min-height: 19px;
                                     font-size: 14px;
                                     line-height: 17px;
+                                    font-weight: normal;
                                     margin-bottom: 8px;
                                     list-style-type: none;
                                     background: url('../../icons/checkmark-green-circle.svg') top 2px left no-repeat transparent;
                                     padding-left: 22px;
-                                    background-size: 16px;
+                                    background-size: 13px;
                                     position: relative;
+                                    cursor: pointer;
 
                                     >ul {
                                         display: none;
@@ -342,28 +389,18 @@
                                                 background-color: white;
                                                 padding: 10px;
                                                 border-radius: 10px;      
-                                                left: 0;
-                                                bottom: calc(100% + 5px);
+                                                left: 15px;
+                                                bottom: calc(100% + 10px);
                                                 z-index: 1;
                                                 font-size: 12px;
+                                                line-height: 17px;
                                                 box-shadow: 4px 4px 7px -8px #000;
-                                                border: 1px solid #adacac;
 
                                                 &::before {
                                                     content: "";
                                                     position: absolute;
                                                     left: 17px;
                                                     bottom: -20px;
-                                                    border-width: 10px;
-                                                    border-style: solid;
-                                                    border-color: #adacac transparent transparent;
-                                                }
-
-                                                &::after {
-                                                    content: "";
-                                                    position: absolute;
-                                                    left: 17px;
-                                                    bottom: -19px;
                                                     border-width: 10px;
                                                     border-style: solid;
                                                     border-color: white transparent transparent;
@@ -469,20 +506,42 @@
                     a.button {
                         width: 100%;
                         justify-content: center;
-                        margin-top: 8px;
-                        padding: 12px 3% !important;
+                        margin: 0;
+                        padding: 10px 26px 8px 28px;
+                        font-size: 16px;
+                        line-height: 24px;
+                        font-weight: 500;
 
-                        &, &:hover {
-                            border-width: 1px;
+                        &::after {
+                            content: none;
                         }
 
-                        &.primary {
-                            background: #fff;
-                            color: #000;
-                            border-color: #000;
+                        &:hover .button-text {
+                            transform: none;
+                        }
+
+                        &.buy-button {
+                            &:hover {
+                                background-color: #B10304;
+                                border-color: #B10304;
+                            }
+
+                            &:active {
+                                background-color: #920A0A;
+                                border-color: #920A0A;
+                            }
+                        }
+
+                        /* outline button, same as the global secondary one */
+                        &.primary,
+                        &.secondary {
+                            background-color: transparent;
+                            border-color: var(--button-secondary-color);
+                            color: var(--button-secondary-color);
 
                             &:hover {
-                                filter: brightness(0.9);
+                                background-color: var(--button-secondary-hover-background-color);
+                                color: var(--white-color);
                             }
                         }
                     }
@@ -506,33 +565,32 @@
                                 display: flex;
 
                                 sup {
-                                    top: -4px;
-                                    font-size: 14px;
-                                    line-height: 16px;
-                                    color: #3D3D3D;
+                                    font-size: var(--heading-font-size-s);
+                                    line-height: var(--heading-font-size-s);
                                     font-weight: bold;
-                                    margin: 10px 0 0 10px;
+                                    margin: 15px 0 0 5px;
                                     text-align: left;
                                 }
 
                                 .prod-newprice {
-                                    font-size: 32px;
-                                    line-height: 32px;
-                                    margin-bottom: 12px;
-                                    font-weight: 600;
+                                    font-size: 35px;
+                                    line-height: 35px;
+                                    margin-bottom: 7px;
+                                    font-weight: bold;
                                 }
                             }
 
                             .save_price_box {
                                 display: flex;
                                 align-items: center;
-                                gap: 10px;
+                                gap: 0;
                                 margin-bottom: 8px;
 
                                 .prod-oldprice {
-                                    font-size: var(--heading-font-size-xs);
-                                    line-height: var(--heading-font-size-xs);
+                                    font-size: 16px;
+                                    line-height: 24px;
                                     text-decoration: line-through;
+                                    margin-right: 5px;
                                 }
 
                                 .prod-percent {
@@ -553,18 +611,6 @@
                         visibility: inherit;
                     }
                 }
-
-               @media (width > 768px) {
-                    &.individual-box:not(.individual-box ~ .individual-box),
-                    &.family-box:not(.family-box ~ .family-box) {
-                        margin-left: 0;
-                    }
-
-                    &.individual-box:not(:has(~ .individual-box)),
-                    &.family-box:not(:has(~ .family-box)) {
-                        margin-right: 0;
-                    }
-               }
             }
         }
     }
@@ -578,6 +624,7 @@
                             .pricing {
                                 .save_price_box {
                                     margin-bottom: 6px;
+                                    
                                     .prod-percent {
                                         color: #EDF9FF;
                                         background-color: #68BA68;
