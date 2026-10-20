@@ -330,6 +330,15 @@ export default async function decorate(block) {
         }
       });
 
+      // wrap the heading of each top-level list item so it fills a single subgrid row
+      innerCard.querySelectorAll('ul > li').forEach((li) => {
+        if (li.parentElement.closest('li')) return;
+        const heading = document.createElement('div');
+        heading.classList.add('list-heading');
+        [...li.childNodes].filter((node) => node.nodeName !== 'UL').forEach((node) => heading.append(node));
+        li.prepend(heading);
+      });
+
       const buyButtons = innerCard.querySelectorAll('a[href*="#buylink"]');
 
       buyButtons.forEach((button) => {

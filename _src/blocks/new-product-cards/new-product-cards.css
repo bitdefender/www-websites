@@ -324,7 +324,7 @@
                         margin: 0;
                         display: grid;
                         grid-template-rows: subgrid;
-                        grid-row: span 10;
+                        grid-row: span 20;
 
                         >li {
                             list-style: none;
@@ -333,13 +333,17 @@
                             font-size: 16px;
                             line-height: 18px;
                             font-weight: bold;
+                            display: grid;
+                            grid-template-rows: subgrid;
+                            grid-row: span 20;
 
                             >ul {
                                 padding-left: 0;
                                 margin-top: 8px;
                                 display: block;
 
-                                li {
+                                >li {
+                                    display: block;
                                     font-size: 14px;
                                     line-height: 17px;
                                     font-weight: normal;
@@ -409,20 +413,24 @@
                             }
 
                             &.has-arrow-left {
-                                &::before {
-                                    position: relative;
-                                    content: "";
-                                    top: 2px;
-                                    margin: 0 5px 20px 0;
-                                    background: url('../../icons/arrow-left-blue.png') no-repeat center transparent;
-                                    width: 20px;
-                                    height: 20px;
-                                    background-size: 15px 12px;
-                                    float: left;
-                                }
+                                .list-heading {
+                                    display: block;
 
-                                > strong {
-                                    margin-bottom: 18px;
+                                    &::before {
+                                        position: relative;
+                                        content: "";
+                                        top: 2px;
+                                        margin: 0 5px 20px 0;
+                                        background: url('../../icons/arrow-left-blue.png') no-repeat center transparent;
+                                        width: 20px;
+                                        height: 20px;
+                                        background-size: 15px 12px;
+                                        float: left;
+                                    }
+
+                                    > strong {
+                                        margin-bottom: 18px;
+                                    }
                                 }
                             }
                         }
