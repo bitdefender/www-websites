@@ -24,13 +24,13 @@
 .tabs-component-container h3 {
   font-size: 24px;
   list-style: 24px;
-  font-family: Arial, sans-serif;
+  font-family: var(--body-font-family);
 }
 
 .tabs-component-container p {
   font-size: 16px;
   list-style: 24px;
-  font-family: Arial, sans-serif;
+  font-family: var(--body-font-family);
   color: grey;
   margin-bottom: 0;
 
@@ -46,7 +46,7 @@
   margin: auto;
   text-align: center;
   margin-bottom: 27px;
-  font: normal normal bold 32px/37px Arial, sans-serif;
+  font: normal normal bold 32px/37px var(--body-font-family);
 }
 
 .tabs-component-container .subtitle-class {
@@ -54,7 +54,7 @@
   margin: auto;
   text-align: center;
   margin-bottom: 24px;
-  font: normal normal normal 18px/26px Arial, sans-serif;
+  font: normal normal normal 18px/26px var(--body-font-family);
 }
 
 .tabs-component-container .tabs-container {
@@ -88,7 +88,7 @@
   background-color: white;
   color: black;
   border: 0;
-  font: normal normal bold 18px/21px Arial, sans-serif;
+  font: normal normal bold 18px/21px var(--body-font-family);
   padding: 9px;
   display: flex;
   gap: 10px;
@@ -111,7 +111,7 @@
 .tabs-component-container .tabs-container button a {
   background-color: white;
   border: 0;
-  font: normal normal bold 18px/21px Arial, sans-serif;
+  font: normal normal bold 18px/21px var(--body-font-family);
   padding: 9px;
   margin-bottom: 10px;
   display: flex;

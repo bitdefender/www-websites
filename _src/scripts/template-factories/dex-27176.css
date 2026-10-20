@@ -1,7 +1,5 @@
 :root {
 
-    /* Font family */
-    --body-font-family: "IBM Plex Sans", sans-serif;
 
     /* Body default */
     --body-font-size-xs: 12px;
@@ -176,7 +174,6 @@
         padding-top: var(--size-32);
         padding-bottom: var(--size-32);
         margin-bottom: var(--size-0);
-        --body-font-family: "IBM Plex Sans", sans-serif;
         background-color: #f2f2f2;
 
         &.dex-system-requirements {
@@ -362,7 +359,7 @@
             }
 
             .block > div:first-of-type p {
-                font-family: "Ibm Plex Sans", sans-serif;
+                font-family: var(--body-font-family);
                 font-size: var(--size-18);
                 font-weight: 400;
                 line-height: var(--size-24);

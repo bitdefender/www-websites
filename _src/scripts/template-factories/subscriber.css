@@ -1,5 +1,5 @@
 .subscriber * {
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
 }
 
 main .subscriber .section {
@@ -69,7 +69,7 @@ main .subscriber .section {
     justify-content: center;
     gap: 10px;
     background-color: #EB0000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
 }
 
 .subscriber .columnvideo.white-red-btns > div.image-columns-wrapper table tbody > tr td > a:hover {

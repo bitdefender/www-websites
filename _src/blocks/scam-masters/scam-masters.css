@@ -60,7 +60,7 @@ body:has(.scam-masters-container) {
     --color-background-wrong: #CC0707;
     --color-dark-red: #850000;
 
-    font-family: Arial, sans-serif;
+    font-family: var(--body-font-family);
 
     .text-black {
         color: var(--black-color);
@@ -89,7 +89,7 @@ body:has(.scam-masters-container) {
             border-bottom-left-radius: 20px;
 
             h1 {
-                font: normal normal normal 80px/90px "IBM Plex Sans", sans-serif;
+                font: normal normal normal 80px/90px var(--body-font-family);
                 color: var(--color-bd-blue);
             }
 
@@ -159,7 +159,7 @@ body:has(.scam-masters-container) {
                     width: 100%;
                     justify-content: center;
                     padding: 16px 32px;
-                    font: normal normal bold 25px/29px Arial, sans-serif;
+                    font: normal normal bold 25px/29px var(--body-font-family);
                     border-radius: 8px;
                 }
             }
@@ -203,7 +203,7 @@ body:has(.scam-masters-container) {
         }
 
         .question-content.correct-answer {
-            font: normal normal normal 50px/65px "IBM Plex Sans", sans-serif;
+            font: normal normal normal 50px/65px var(--body-font-family);
             text-align: center;
             color: var(--color-bd-blue);
 
@@ -228,7 +228,7 @@ body:has(.scam-masters-container) {
 
         .question-content.wrong-answer,
         .question-content.partially-wrong-answer {
-            font: normal normal normal 50px/55px "IBM Plex Sans", sans-serif;
+            font: normal normal normal 50px/55px var(--body-font-family);
             text-align: center;
             color: var(--color-wrong);
 
@@ -452,7 +452,7 @@ body:has(.scam-masters-container) {
                     width: 100%;
                     justify-content: center;
                     padding: 16px 32px;
-                    font: normal normal bold 20px/23px Arial, sans-serif;
+                    font: normal normal bold 20px/23px var(--body-font-family);
                     border-radius: 8px;
 
                     &::after {
@@ -846,7 +846,7 @@ body:has(.scam-masters-container) {
         & .start-page {
             &>div:first-child {
                 h1 {
-                    font: normal normal normal 68px / 80px "IBM Plex Sans", sans-serif;
+                    font: normal normal normal 68px / 80px var(--body-font-family);
                 }
             }
         }

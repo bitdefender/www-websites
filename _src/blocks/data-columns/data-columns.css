@@ -1,7 +1,7 @@
 /* stylelint-disable no-descending-specificity */
 .data-columns-container {
     * {
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: var(--body-font-family);
     }
 
     .default-content-wrapper {

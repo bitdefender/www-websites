@@ -1174,7 +1174,7 @@ header.header-wrapper.hidden {
     padding-bottom: 0;
     color: black;
     font-size: 15px;
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: var(--body-font-family);
     text-transform: uppercase;
   }
 

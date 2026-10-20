@@ -170,7 +170,7 @@
     line-height: 1.2;
     font-weight: 500;
     color: #000;
-    font-family: roboto, sans-serif;
+    font-family: var(--body-font-family);
     margin-bottom: 22px;
     text-align: left;
 }
