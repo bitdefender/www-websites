@@ -640,13 +640,6 @@ async function loadLazy(doc) {
 
   window.hlx.plugins.run('loadLazy');
 
-  const templateMetadata = getMetadata('template');
-  const hasTemplate = getMetadata('template') !== '';
-  if (hasTemplate) {
-    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => { });
-  }
-
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
