@@ -70,7 +70,7 @@
 }
 
 .dropdownbox-compare-container .block > div > div p {
-  font-family: roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 14px;
   font-weight: 400;
 }
@@ -94,7 +94,7 @@
   color: #3c3c3c;
   color: #fff !important;
   display: block;
-  font-family: roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 10px !important;
   font-style: normal;
   font-weight: 700;

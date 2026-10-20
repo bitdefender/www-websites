@@ -106,7 +106,7 @@
 }
 
 .box-carousel-container .carousel-item .subtitle {
-    font: normal normal normal 12px/15px "IBM Plex Sans", sans-serif;
+    font: normal normal normal 12px/15px var(--body-font-family);
     letter-spacing: 0;
     overflow: hidden;
     margin-top: auto;
@@ -114,7 +114,7 @@
 }
 
 .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
-    font: normal normal bold 14px/21px "IBM Plex Sans", sans-serif;
+    font: normal normal bold 14px/21px var(--body-font-family);
     position: relative;
     margin-bottom: 12px;
 }
@@ -351,11 +351,11 @@
     }
 
     .box-carousel-container .carousel-item .subtitle {
-        font: normal normal normal 18px/23px "IBM Plex Sans", sans-serif;
+        font: normal normal normal 18px/23px var(--body-font-family);
     }
 
     .box-carousel-container.testimonials .carousel-item .subtitle {
-        font: normal normal normal 12px/15px "IBM Plex Sans", sans-serif;
+        font: normal normal normal 12px/15px var(--body-font-family);
     }
 }
 

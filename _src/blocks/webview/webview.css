@@ -5,7 +5,7 @@
     background: url("../../icons/pattern.png") repeat-x;
     background-size: 188px 104px;
     text-align: center;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: var(--body-font-family);
 }
 
 .webview-wrapper .webview {
@@ -91,7 +91,7 @@
 }
 
 .webview-wrapper .webview .prod-newprice {
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 24px;
     font-weight: 700;
     line-height: 0.7;
@@ -132,7 +132,7 @@
     max-width: 640px;
     padding: 20px;
     background: transparent;
-    font-family: Roboto, "Segoe UI", Arial, sans-serif;
+    font-family: var(--body-font-family);
 }
 
 .webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview {
@@ -245,7 +245,7 @@
 .webview-wrapper.discount-modal .webview-modal-discount,
 .webview-wrapper.discount-modal .webview-modal-discount .prod-save,
 .webview-wrapper.discount-modal .webview-modal-discount [data-store-discount="percentage"] {
-    font-family: Roboto, "Segoe UI", Arial, sans-serif;
+    font-family: var(--body-font-family);
     font-size: 48px;
     font-weight: 600;
     line-height: 56px;

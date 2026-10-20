@@ -19,7 +19,7 @@
 }
 
 .trusted-teaser-impact .carousel-header .title h2 {
-    font: normal normal 700 34px / 38px "IBM Plex Sans", sans-serif !important;
+    font: normal normal 700 34px / 38px var(--body-font-family) !important;
 }
 
 .trusted-teaser-impact .carousel-header .title >:first-child {
@@ -85,7 +85,7 @@
     }
 
     .trusted-teaser-impact .carousel-header .title h2 {
-        font: normal normal 700 48px / 50px "IBM Plex Sans", sans-serif !important;
+        font: normal normal 700 48px / 50px var(--body-font-family) !important;
     }
 
     .trusted-teaser-impact .carousel-header .title {
@@ -97,7 +97,8 @@
     }
 
     .trusted-new .trusted-teaser-impact .box-wrapper .box-item .title {
-        font-size: 64px !important;
+        font-size: clamp(32px, 4vw, 64px) !important;
+        overflow-wrap: anywhere;
         font-weight: 400 !important;
         color: #2B2B2B !important;
     }

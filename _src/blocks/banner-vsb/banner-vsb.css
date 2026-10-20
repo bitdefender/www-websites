@@ -7,7 +7,6 @@
     --gray-bg: rgb(246 246 246 / 100%);
     --button-background-color: #eb0000;
     --button-link-color: #fff;
-    --body-font-family: "Roboto", "roboto-normal-400-fallback", helvetica, ubuntu, roboto, noto, sans-serif;
     --body-font-size-s: 16px;
     --font-weight-bold: 500;
     --button-hover-background-color: #d80000;
@@ -86,19 +85,19 @@
 }
 
 .banner-vsb-container h1 {
-    font: normal normal bold 32px / 36px "IBM Plex Sans", sans-serif;
+    font: normal normal bold 32px / 36px var(--body-font-family);
     color: #006EFF;
 }
 
 .banner-vsb-container h2,
 .banner-vsb-container h3,
 .banner-vsb-container h4 {
-    font: normal normal bold 20px/24px "IBM Plex Sans", sans-serif;
+    font: normal normal bold 20px/24px var(--body-font-family);
 }
 
 .banner-vsb-container p,
 .banner-vsb-container div {
-    font: normal normal normal 20px/16px "IBM Plex Sans", sans-serif;
+    font: normal normal normal 20px/16px var(--body-font-family);
 }
 
 .banner-vsb-container .rte-wrapper {
@@ -211,13 +210,13 @@
 
 @media (min-width: 992px) {
     .banner-vsb-container h1 {
-        font: normal normal bold 48px/55px "IBM Plex Sans", sans-serif;
+        font: normal normal bold 48px/55px var(--body-font-family);
     }
 
     .banner-vsb-container h2,
     .banner-vsb-container h3,
     .banner-vsb-container h4 {
-        font: normal normal bold 40px/52px "IBM Plex Sans", sans-serif;
+        font: normal normal bold 40px/52px var(--body-font-family);
     }
 
     .banner-vsb-container {
