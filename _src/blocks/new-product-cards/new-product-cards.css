@@ -10,14 +10,18 @@
 
         .switchBox {
             text-align: center;
-            padding-bottom: 50px;
+            padding-bottom: 45px;
+
+            @media (width <= 525px) {
+                padding-bottom: 20px;
+            }
 
             .switch {
                 position: relative;
                 display: inline-flex;
                 align-items: center;
                 width: 302px;
-                height: 44px;
+                min-height: 44px;
                 background-color: #016DFF;
                 border-radius: 22px;
 
@@ -26,94 +30,67 @@
                 }
 
                 .slider {
-                        position: absolute;
-                        content: "";
-                        height: 40px;
-                        width: 150px;
-                        left: 2px;
-                        bottom: 2px;
-                        background-color: white;
-                        border-radius: 20px;
-                        transition: all 0.4s;
-
-                    &.round {
-                        border-radius: 22px;
-                    }
+                    position: absolute;
+                    min-height: calc(100% - 4px);
+                    width: 150px;
+                    left: 2px;
+                    bottom: 2px;
+                    background-color: var(--white-color);
+                    border-radius: 20px;
+                    transition: all 0.4s;
                 }
 
-                &.is-family {
-                    .slider {
-                        transform: translateX(148px);
-                    }
-
-                    .label.left {
-                        color: #fff !important;
-
-                        .icon,
-                        .icon svg path {
-                            fill: #fff !important;
-                        }
-                    }
-
-                    .label.right {
-                        color: #000 !important;
-
-                        .icon,
-                        .icon svg path {
-                            fill: #000 !important;
-                        }
-                    }
-                }
-
+                /* the selected side sits on the white slider */
                 .label {
-                    font-family: inherit;
+                    position: relative;
+                    z-index: 1;
                     width: 50%;
-                    height: 50px;
-                    text-align: center;
-                    font-weight: bold;
-                    font-size: 16px;
-                    color: white;
-                    transition: color 0.4s;
-                    cursor: pointer;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    gap: 5px;
+                    font-family: inherit;
+                    font-size: 16px;
+                    font-weight: bold;
+                    line-height: 34px;
+                    color: var(--white-color);
+                    text-align: center;
+                    cursor: pointer;
+                    transition: color 0.4s;
 
                     p {
                         margin: 0;
                     }
 
-                    .icon{
-                        width: 14px;
-                        height: 16px;
-                        margin-bottom: 6px;
-                    }
+                    .icon {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 12px;
+                        height: 14px;
+                        margin: 0 10px 0 0;
 
-                    svg {
-                        width: 100% !important;
-                        height: 100% !important;
-                    }
-
-                    &.right {
-                        z-index: 10;
-                        color: #fff;
-
-                        .icon,
-                        .icon svg path {
-                            fill: #fff !important;
+                        svg {
+                            display: block;
+                            flex-shrink: 0;
+                            width: 14px;
+                            height: 16px;
+                            fill: var(--white-color);
+                            transition: fill 0.4s;
                         }
                     }
+                }
 
-                    &.left {
-                        z-index: 10;
-                        color: #000;
+                &:not(.is-family) .label.left,
+                &.is-family .label.right {
+                    color: var(--black-color);
 
-                        .icon,
-                        .icon svg path {
-                            fill: #000 !important;
-                        }
+                    .icon svg {
+                        fill: #026DFF;
                     }
+                }
+
+                &.is-family .slider {
+                    transform: translateX(149px);
                 }
             }
         }

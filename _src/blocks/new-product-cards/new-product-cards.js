@@ -280,29 +280,10 @@ export default async function decorate(block) {
     // Get the checkbox inside the switchBox
     switchCheckbox = switchBox.querySelector('#switchCheckbox');
     const switchLabel = switchBox.querySelector('.switch');
-    const leftLabel = switchBox.querySelector('.label.left');
-    const rightLabel = switchBox.querySelector('.label.right');
 
-    const setLabelColors = (label, textColor, iconColor) => {
-      if (!label) return;
-      label.style.color = textColor;
-      label.querySelectorAll('.icon, .icon svg, .icon svg *').forEach((iconNode) => {
-        iconNode.style.fill = iconColor;
-        iconNode.style.stroke = iconColor;
-      });
-    };
-
+    // label and icon colors for each state live in the CSS (.switch.is-family)
     const syncSwitchState = () => {
-      const isFamily = switchCheckbox.checked;
-      switchLabel?.classList.toggle('is-family', isFamily);
-
-      if (isFamily) {
-        setLabelColors(leftLabel, '#fff', '#fff');
-        setLabelColors(rightLabel, '#000', '#000');
-      } else {
-        setLabelColors(leftLabel, '#000', '#000');
-        setLabelColors(rightLabel, '#fff', '#fff');
-      }
+      switchLabel?.classList.toggle('is-family', switchCheckbox.checked);
     };
 
     if (section.classList.contains('reverted-slider')) {
