@@ -4,7 +4,8 @@
     font-family: "IBM Plex Sans", sans-serif;
 
     .new-product-cards-wrapper {
-        max-width: 1320px;
+        /* the cards keep a side padding on every width, so add it on top of the content width */
+        max-width: calc(1320px + 2 * var(--body-padding));
         margin: 0 auto;
 
         .switchBox {
@@ -125,10 +126,6 @@
             padding-inline: var(--body-padding);
             text-align: left;
             font-family: inherit;
-
-            @media (width >= 768px) {
-                padding-inline: 0;
-            }
 
             .prod_box {
                 width: 100%;

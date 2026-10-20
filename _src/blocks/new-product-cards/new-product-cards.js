@@ -94,8 +94,11 @@ function renderPricing(...products) {
     || products[0].split('/')[0];
   const priceAttribute = getDiscountedPriceAttribute(monthlyPrice ? 'monthly' : '', productId);
 
-  const saveHtml = saveText ? saveText.replace('0%', '<span data-store-render data-store-discount="percentage"></span>')
-    : 'Save <span data-store-render data-store-discount="percentage"></span>';
+  const percentHtml = '<span data-store-render data-store-discount="percentage"></span>';
+  let saveHtml = `Save ${percentHtml}`;
+  if (saveText) {
+    saveHtml = saveText.includes('0%') ? saveText.replace('0%', percentHtml) : `${saveText} ${percentHtml}`;
+  }
 
   root.innerHTML += `
         <div class="pricing">
@@ -356,7 +359,8 @@ export default async function decorate(block) {
 
       const paragraphs = card.querySelectorAll('p');
       paragraphs.forEach((p) => {
-        p.innerHTML = p.innerHTML.replace(0, '<span class="billed-price-container"></span>');
+        // only a standalone 0 is the billed price placeholder (not the 0 in "30 days")
+        p.innerHTML = p.innerHTML.replace(/(^|[\s>])0(?=%|[\s.,<]|$)/, '$1<span class="billed-price-container"></span>');
       });
 
       const addOnList = card.querySelector(':scope  div  ol');
