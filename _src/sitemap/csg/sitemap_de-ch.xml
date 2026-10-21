@@ -234,7 +234,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/antivirus</loc>
         <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-10-13T07:40:17.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/antivirus"/>
@@ -392,54 +392,6 @@
         <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/mobile-security-ios"/>
     </url>
     <url>
-        <loc>https://www.bitdefender.com/de-ch/consumer/trafficlight</loc>
-        <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
-        <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-in" href="https://www.bitdefender.com/en-in/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="es-co" href="https://www.bitdefender.com/es-co/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-kr" href="https://www.bitdefender.com/en-kr/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-id" href="https://www.bitdefender.com/en-id/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-ph" href="https://www.bitdefender.com/en-ph/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-my" href="https://www.bitdefender.com/en-my/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-sa" href="https://www.bitdefender.com/en-sa/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="es-cl" href="https://www.bitdefender.com/es-cl/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-il" href="https://www.bitdefender.com/en-il/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-za" href="https://www.bitdefender.com/en-za/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="pt-br" href="https://www.bitdefender.com/pt-br/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-no" href="https://www.bitdefender.com/en-no/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-au" href="https://www.bitdefender.com/en-au/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="de-de" href="https://www.bitdefender.com/de-de/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-gb" href="https://www.bitdefender.com/en-gb/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="fr-fr" href="https://www.bitdefender.com/fr-fr/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-dk" href="https://www.bitdefender.com/en-dk/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-pl" href="https://www.bitdefender.com/en-pl/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-nz" href="https://www.bitdefender.com/en-nz/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-cz" href="https://www.bitdefender.com/en-cz/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-hu" href="https://www.bitdefender.com/en-hu/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-ae" href="https://www.bitdefender.com/en-ae/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="es-pe" href="https://www.bitdefender.com/es-pe/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-th" href="https://www.bitdefender.com/en-th/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-ca" href="https://www.bitdefender.com/en-ca/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="es-es" href="https://www.bitdefender.com/es-es/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="it-it" href="https://www.bitdefender.com/it-it/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="pt-pt" href="https://www.bitdefender.com/pt-pt/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-bg" href="https://www.bitdefender.com/en-bg/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-bz" href="https://www.bitdefender.com/en-bz/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="zh-hk" href="https://www.bitdefender.com/zh-hk/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-jm" href="https://www.bitdefender.com/en-jm/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-mt" href="https://www.bitdefender.com/en-mt/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="zh-tw" href="https://www.bitdefender.com/zh-tw/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-lv" href="https://www.bitdefender.com/en-lv/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="de-at" href="https://www.bitdefender.com/de-at/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/trafficlight"/>
-        <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/trafficlight"/>
-    </url>
-    <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/mobile-security-android</loc>
         <priority>0.8</priority>
         <lastmod>2026-09-23T18:29:24.000Z</lastmod>
@@ -592,7 +544,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/total-security</loc>
         <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-10-13T07:41:22.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/total-security"/>
@@ -741,7 +693,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/premium-security</loc>
         <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-10-12T13:56:52.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/premium-security"/>
@@ -841,7 +793,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/</loc>
         <priority>0.9</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-10-12T13:56:52.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/"/>
@@ -1034,7 +986,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/free-antivirus</loc>
         <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-10-16T08:13:31.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/free-antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/free-antivirus"/>
@@ -1098,7 +1050,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/ultimate-security</loc>
         <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-10-13T07:42:44.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/ultimate-security"/>
@@ -1310,7 +1262,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/family</loc>
         <priority>0.8</priority>
-        <lastmod>2026-10-09T12:45:28.000Z</lastmod>
+        <lastmod>2026-10-13T07:41:00.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/family"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/family"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/family"/>
@@ -1360,7 +1312,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/individual</loc>
         <priority>0.8</priority>
-        <lastmod>2026-10-09T13:03:11.000Z</lastmod>
+        <lastmod>2026-10-13T07:43:06.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/individual"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/individual"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/individual"/>
@@ -1506,7 +1458,7 @@
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/downloads</loc>
         <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-10-13T14:06:13.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/downloads"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/downloads"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/downloads"/>
@@ -1722,7 +1674,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/de-ch/consumer/web-sage</loc>
-        <lastmod>2026-10-01T10:53:33.000Z</lastmod>
+        <lastmod>2026-10-20T13:03:06.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.bitdefender.com/de-ch/consumer/web-sage"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/web-sage"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/web-sage"/>

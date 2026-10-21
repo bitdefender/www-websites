@@ -22,13 +22,13 @@
 }
 
 .bitdef-vs-brands-wrapper h2 {
-  font: normal normal bold 32px/37px Arial, sans-serif;
+  font: normal normal bold 32px/37px var(--body-font-family);
 }
 
 .bitdef-vs-brands-wrapper h3 {
   margin-bottom: 6px;
   margin-top: 5px;
-  font: normal normal bold 24px Arial, sans-serif;
+  font: normal normal bold 24px var(--body-font-family);
 }
 
 .bitdef-vs-brands-wrapper .row-2 {
@@ -48,7 +48,7 @@
   padding: 9px;
   margin-top: 4px;
   margin-bottom: 4px;
-  font: normal normal bold 14px/14px Arial, sans-serif;
+  font: normal normal bold 14px/14px var(--body-font-family);
 }
 
 .bitdef-vs-brands-wrapper table .grey-background p {
@@ -56,7 +56,7 @@
   padding: 9px;
   margin-top: 4px;
   margin-bottom: 4px;
-  font: normal normal normal 14px/14px Arial, sans-serif;
+  font: normal normal normal 14px/14px var(--body-font-family);
 }
 
 .bitdef-vs-brands-wrapper table .blue-background p:nth-child(1) {
@@ -97,12 +97,12 @@
 
 .bitdef-vs-brands .row-2 > .column-0 {
   padding-bottom: 14px;
-  font: normal normal normal 14px/18px Arial, sans-serif;
+  font: normal normal normal 14px/18px var(--body-font-family);
 }
 
 .bitdef-vs-brands .row-6 > .column-0 {
   padding-top: 14px;
-  font: normal normal normal 12px/14px Arial, sans-serif;
+  font: normal normal normal 12px/14px var(--body-font-family);
 }
 
 @keyframes increase-width-row1 {

@@ -68,7 +68,7 @@
 
 .dual-teaser-container .col-container .box p,
 .dual-teaser-container .col-container .box div {
-    font: normal normal normal 14px/18px "IBM Plex Sans", sans-serif;
+    font: normal normal normal 14px/18px var(--body-font-family);
     letter-spacing: 0;
     margin: 0;
 }
@@ -131,7 +131,7 @@
 
     .dual-teaser-container .col-container .box p,
     .dual-teaser-container .col-container .box div {
-        font: normal normal normal 18px/23px "IBM Plex Sans", sans-serif;
+        font: normal normal normal 18px/23px var(--body-font-family);
         letter-spacing: 0;
     }
 

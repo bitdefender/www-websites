@@ -5,7 +5,6 @@ import {
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
-  ProductLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
 import {
@@ -35,6 +34,7 @@ import {
 import {
   handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
+  StoreProductLoadedEvent,
 } from './libs/data-layer.js';
 
 import user from './user.js';
@@ -148,7 +148,8 @@ export default function decorateLinkedPictures(main) {
             event.preventDefault();
             // eslint-disable-next-line no-use-before-define
             const modalContainer = await createModal(link, 'video-modal');
-            document.body.append(modalContainer);
+            // eslint-disable-next-line no-use-before-define
+            appendModal(modalContainer);
           });
           const up = a.parentElement;
           if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
@@ -188,6 +189,27 @@ export function decorateMain(main) {
   decorateLinkedPictures(main);
   decorateSections(main);
   decorateBlocks(main);
+}
+
+let modalsRoot;
+
+/**
+ * Modals live outside of main, so they are added to a dedicated container inside the
+ * page store root, registered for store render and action nodes like main.
+ * This way the store elements in the modals are rendered (prices, discounts, buy links).
+ * @param {Element} modalContainer
+ */
+function appendModal(modalContainer) {
+  if (!modalsRoot) {
+    modalsRoot = document.createElement('div');
+    modalsRoot.classList.add('modals-root');
+    const storeRoot = document.querySelector('body > bd-context.store-context');
+    (storeRoot || document.body).append(modalsRoot);
+    registerActionNodes(modalsRoot);
+    registerRenderNodes(modalsRoot);
+  }
+
+  modalsRoot.append(modalContainer);
 }
 
 /**
@@ -272,7 +294,7 @@ export async function detectModalButtons(main) {
 
       // generate new modal
       const modalContainer = await createModal(originalHref, undefined, stopAutomaticModalRefresh);
-      document.body.append(modalContainer);
+      appendModal(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
@@ -540,6 +562,19 @@ function openExternalLinksInNewTab(doc) {
 }
 
 /**
+ * Loads the IBM Plex Sans font faces and remembers it for the session,
+ * so later pages can load them eagerly from the browser cache.
+ */
+async function loadFonts() {
+  await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
+  try {
+    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
+  } catch {
+    // do nothing
+  }
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -588,6 +623,15 @@ async function loadEager(doc) {
       document.body.classList.add('sferrari');
     }
     await waitForLCP(LCP_BLOCKS);
+  }
+
+  try {
+    // on desktop or once cached, load fonts before LCP to avoid a visible swap
+    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
+      loadFonts();
+    }
+  } catch {
+    // do nothing
   }
 }
 
@@ -638,15 +682,9 @@ async function loadLazy(doc) {
   generateLDJsonSchema();
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadFonts();
 
   window.hlx.plugins.run('loadLazy');
-
-  const templateMetadata = getMetadata('template');
-  const hasTemplate = getMetadata('template') !== '';
-  if (hasTemplate) {
-    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => { });
-  }
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
@@ -810,7 +848,7 @@ async function loadPage() {
   const storeRoot = document.createElement('bd-context');
   storeRoot.classList.add('store-context');
   storeRoot.dataLayer = ({ option, event }) => {
-    AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
+    AdobeDataLayerService.push(new StoreProductLoadedEvent(option, event));
   };
   document.body.replaceChild(storeRoot, main);
   storeRoot.appendChild(main);

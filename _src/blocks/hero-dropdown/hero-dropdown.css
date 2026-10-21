@@ -110,7 +110,7 @@ main .hero-dropdown.black-background {
 
 main .hero-dropdown.new2024design * {
   font-weight: normal;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
   color: white;
 }
 
@@ -319,7 +319,7 @@ main .hero-dropdown p {
 main .hero-dropdown h1+p {
   margin: 8px 0 0;
   color: #616161;
-  font-size: var(--hero-dropdown-font-size-xxxs);
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -377,7 +377,7 @@ main .hero-dropdown.scamio .hero-dropdown-picture picture img {
 
 main .hero-dropdown a.button {
   margin: 8px 13px 0 0;
-  min-width: 206px;
+  min-width: 230px;
   justify-content: center;
   align-items: center;
 }
@@ -654,7 +654,7 @@ main .hero-dropdown.ferrari .hero-dropdown-content img{
 
 main .hero-dropdown-container.ferrari-migration .hero-dropdown{
   background-color:#006DFF;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
   font-weight: 300;
 }
 
@@ -830,6 +830,28 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 .hero-dropdown.small-business-banner {
   background-color: transparent;
 
+  p {
+    font-size: 16px;
+  }
+
+  h4 {
+    color: #006DFF;
+    font-size: 20px;
+    margin-top: 12px;
+  }
+
+  .signature {
+    font-size: 24px;
+    color: #016DFF;
+    font-weight: bold;
+    font-family: var(--body-font-family);
+    padding-left: 50px;
+
+    @media (max-width: 767px) {
+      padding-left: 20px;
+    }
+  }
+
   .hero-dropdown-picture {
     width: 50%;
     justify-self: end;
@@ -926,7 +948,7 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
   main .hero-dropdown h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 
   main .hero-dropdown .hero-dropdown-picture {
@@ -1094,7 +1116,7 @@ main .hero-dropdown .hero-dropdown-content > div.content-width-60 {
   main .hero-dropdown h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 
   main .v2 .hero-dropdown h1 {

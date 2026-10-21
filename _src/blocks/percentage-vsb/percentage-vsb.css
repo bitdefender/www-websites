@@ -2,7 +2,7 @@
 .percentage-vsb-container {
   display: flex;
   justify-content: center;
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: var(--body-font-family);
 }
 
 .percentage-vsb-container.we-container{

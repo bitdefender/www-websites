@@ -1,7 +1,5 @@
 :root {
 
-    /* Font family */
-    --body-font-family: "IBM Plex Sans", sans-serif;
 
     /* Body default */
     --body-font-size-xs: 12px;
@@ -44,6 +42,7 @@
     --size-32: 32px;
     --size-34: 34px;
     --size-36: 36px;
+    --size-38: 38px;
     --size-40: 40px;
     --size-42: 42px;
     --size-44: 44px;
@@ -58,6 +57,17 @@
 }
 
 .dex-27176 {
+
+    .section {
+        &:not(.hero_mobile, .gasa) {
+            .default-content-wrapper h2,
+            .columns h2 {
+                font-size: var(--heading-font-size-l);
+                line-height: var(--size-38);
+            }
+        }
+    }
+
 
     .has-dropdown {
         display: none;
@@ -164,7 +174,6 @@
         padding-top: var(--size-32);
         padding-bottom: var(--size-32);
         margin-bottom: var(--size-0);
-        --body-font-family: "IBM Plex Sans", sans-serif;
         background-color: #f2f2f2;
 
         &.dex-system-requirements {
@@ -350,7 +359,7 @@
             }
 
             .block > div:first-of-type p {
-                font-family: "Ibm Plex Sans", sans-serif;
+                font-family: var(--body-font-family);
                 font-size: var(--size-18);
                 font-weight: 400;
                 line-height: var(--size-24);
@@ -362,10 +371,20 @@
                 display: inline-block;
             }
         }
-    }
 
-    .hero_mobile {
-        display: none;
+        .hero_mobile {
+            display: none;
+        }
+
+        .section {
+            &:not(.hero_mobile, .gasa) {
+                .default-content-wrapper h2,
+                .columns h2 {
+                    font-size: var(--heading-font-size-xl);
+                    line-height: var(--size-44);
+                }
+            }
+        }
     }
 }
 
@@ -439,6 +458,21 @@
                 margin-left: var(--size-24);
                 margin-top: var(--size-32);
                 gap: var(--size-8)
+            }
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+
+    .dex-27176 {
+        .section {
+            &:not(.hero_mobile, .gasa) {
+                .default-content-wrapper h2,
+                .columns h2 {
+                    font-size: var(--heading-font-size-xxl);
+                    line-height: var(--size-48);
+                }
             }
         }
     }

@@ -3,7 +3,7 @@
         display: flex;
         flex-direction: column;
         flex: 0 1 50%;
-        font-family: Arial, Roboto, sans-serif;
+        font-family: var(--body-font-family);
 
         @media (min-width: 768px) {
             & {
@@ -195,7 +195,6 @@
     --background-checkmark: #61AF53;
   
     /* fonts */
-    --body-font-family: "Roboto", "roboto-normal-400-fallback", helvetica, ubuntu, roboto, noto, sans-serif;
     --heading-font-family: var(--body-font-family);
     --fixed-font-family: var(--body-font-family);
   
