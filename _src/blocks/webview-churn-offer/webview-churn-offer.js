@@ -11,11 +11,13 @@
  * - offer: the row with the <discounted-price-percentage> marker, replaced with the
  *   `hardcoded-discount` section metadata (e.g. 20%)
  * - support text: rows after the offer
- * - actions: a `#buylink` link (accept) and a `view_action=close` link (decline).
+ * - actions: a `#buylink` or `#reactivate` link (accept) and a `view_action=close` link (decline).
  *   Without an accept link (e.g. churn-flow-not-renewal), the decline link is the only action
  *   and renders as the primary button ("Got it"); it still dispatches `decline`.
  * Date markers such as `<renewal-date>` and `<end-date>` are left as text: Central replaces
  * them inside the shadow root.
+ * Section style `churn-small-purple-card` renders a small card without the close button
+ * (churn-flow-reactivate-subscription).
  *
  * Options (componentOptions in getContentFragment):
  * - lang: echoed in the event detail, e.g. 'fr-fr' (default 'en-us')
@@ -35,7 +37,7 @@ const CLOSE_URL = 'https://localhost/dynamicupsell?view_action=close';
 const DISCOUNT_MARKER = /<\/?discounted-price-percentage>/gi;
 const PRICEBOX_MARKER = '{PRICEBOX_V2}';
 
-const isAcceptLink = (link) => link.getAttribute('href')?.includes('#buylink');
+const isAcceptLink = (link) => /#(buylink|reactivate)\b/.test(link.getAttribute('href') || '');
 const isDeclineLink = (link) => link.getAttribute('href')?.includes('view_action=close');
 
 /**
