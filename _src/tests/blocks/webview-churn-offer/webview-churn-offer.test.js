@@ -121,6 +121,24 @@ describe('webview-churn-offer', () => {
     expect(onDecline).toHaveBeenCalledWith(expect.objectContaining({ action: 'decline' }));
   });
 
+  it('renders a #reactivate link as the accept button', () => {
+    const block = setupChurnOffer({
+      content: `
+        <div><div><h2>Reactivate your subscription</h2><p>Get <strong>40% discount</strong> by turning auto-renewal back on.</p></div></div>
+        <div><div><em><strong><a href="https://#reactivate">Reactivate subscription</a></strong></em></div></div>`,
+      discount: '',
+    });
+    const onAccept = vi.fn();
+
+    decorate(block, { onAccept, promotion: 'ChurnReactivateSubscription' });
+    const button = block.querySelector('.webview-churn-offer-actions button.button');
+    button.click();
+
+    expect(button.textContent).toBe('Reactivate subscription');
+    expect(block.querySelector('.webview-churn-offer-copy a')).toBeNull();
+    expect(onAccept).toHaveBeenCalledWith(expect.objectContaining({ action: 'accept', promotion: 'ChurnReactivateSubscription' }));
+  });
+
   it('survives missing rows', () => {
     const block = setupChurnOffer({ content: '<div><div><h2>Only a title</h2></div></div>' });
 
