@@ -55,6 +55,12 @@
       <option value="https://assets.adobedtm.com/8a93f8486ba4/5492896ad67e/launch-b1f76be4d2ee.min.js">prodCentral</option>
     </select>
   </label>
+  <label>screen
+    <select name="screen">
+      <option value="">— churn flow —</option>
+      <option>reactivate-subscription</option>
+    </select>
+  </label>
   <label>reason
     <select name="reason">
       <option>PriceReasons</option><option>PreferManualRenew</option><option>NotSatisfiedWithProduct</option><option>DontNeedProduct</option><option>Other</option>
@@ -105,6 +111,12 @@
     if (value != null) el.value = value;
   });
 
+  // a screen (e.g. reactivate-subscription) is requested on its own, without the churn-flow fields
+  const churnFields = ['reason', 'remaining_days', 'bundle_id', 'locale'].map((name) => form.elements[name]);
+  const toggleChurnFields = () => churnFields.forEach((el) => { el.disabled = !!form.screen.value; });
+  form.screen.addEventListener('change', toggleChurnFields);
+  toggleChurnFields();
+
   // same order as the website: the Target proxy queues alloy calls until Launch loads
   const target = new Target();
   const launch = document.createElement('script');
@@ -138,10 +150,12 @@
     }
 
     const parameters = {
-      reason: data.reason,
-      remaining_days: data.remaining_days,
-      bundle_id: data.bundle_id,
-      locale: data.locale,
+      ...(data.screen ? { screen: data.screen } : {
+        reason: data.reason,
+        remaining_days: data.remaining_days,
+        bundle_id: data.bundle_id,
+        locale: data.locale,
+      }),
       // activities 209920/209921 only deliver with this gate until go-live
       ...(qs.get('qa_churn') && { qa_churn: qs.get('qa_churn') }),
     };
