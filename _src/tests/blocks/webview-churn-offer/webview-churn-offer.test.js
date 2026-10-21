@@ -92,24 +92,33 @@ describe('webview-churn-offer', () => {
     expect(block.querySelector('.webview-churn-offer-offer p').textContent).toBe('20% off your renewal');
   });
 
-  it('formats the renewal date in options.lang', () => {
+  it('leaves date markers for Central to replace', () => {
     const block = setupChurnOffer({
-      content: '<div><div><p>Your plan renews on &lt;renewal-date&gt;.</p></div></div>',
+      content: '<div><div><p>Renews on &lt;renewal-date&gt;, protected until &lt;end-date&gt;</p></div></div>',
     });
 
-    decorate(block, { lang: 'fr-fr', renewalDate: Date.UTC(2026, 11, 15, 12) / 1000 });
+    decorate(block, { lang: 'fr-fr' });
 
-    expect(block.querySelector('.webview-churn-offer-copy p').textContent).toBe('Your plan renews on 15 décembre 2026.');
+    expect(block.querySelector('.webview-churn-offer-copy p').textContent).toBe('Renews on <renewal-date>, protected until <end-date>');
   });
 
-  it('removes the renewal date marker without a valid date', () => {
+  it('renders the decline link as the primary "Got it" button when there is nothing to accept', () => {
     const block = setupChurnOffer({
-      content: '<div><div><p>Renews on &lt;renewal-date&gt;</p></div></div>',
+      content: `
+        <div><div><h2>Thank you for your feedback!</h2><p>Auto-renewal is now disabled.</p></div></div>
+        <div><div><em><strong><a href="${CLOSE_URL}">Got it</a></strong></em></div></div>`,
+      discount: '',
     });
+    const onDecline = vi.fn();
 
-    decorate(block, { renewalDate: 'not a date' });
+    decorate(block, { onDecline });
+    const gotIt = block.querySelector('.webview-churn-offer-actions-end .button.acknowledge');
+    gotIt.click();
 
-    expect(block.querySelector('.webview-churn-offer-copy p').textContent).toBe('Renews on ');
+    expect(gotIt.textContent).toBe('Got it');
+    expect(gotIt.classList.contains('secondary')).toBe(false);
+    expect(block.querySelectorAll('.webview-churn-offer-actions .button')).toHaveLength(1);
+    expect(onDecline).toHaveBeenCalledWith(expect.objectContaining({ action: 'decline' }));
   });
 
   it('survives missing rows', () => {
