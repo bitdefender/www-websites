@@ -50,7 +50,7 @@
     "@repobit/dex-data-layer": "^2.4.0",
     "@repobit/dex-launch": "^3.0.141",
     "@repobit/dex-store": "^1.6.52",
-    "@repobit/dex-store-elements": "^2.1.11",
+    "@repobit/dex-store-elements": "^2.1.22",
     "@repobit/dex-system-design": "^2.1.1",
     "@repobit/dex-target": "^2.17.3",
     "@repobit/dex-utils": "^2.5.1",

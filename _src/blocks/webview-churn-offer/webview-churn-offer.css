@@ -1,0 +1,189 @@
+/* Self-contained: in Central this renders in a shadow root without styles.css. */
+.webview-churn-offer {
+    position: relative;
+    box-sizing: border-box;
+    max-width: 600px;
+    min-height: 484px;
+    margin: 20px auto;
+    padding: 48px 48px 32px;
+    overflow: hidden;
+    font-family: Roboto, "Segoe UI", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 22px;
+    color: #384357;
+    text-align: center;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgb(7 20 45 / 9%);
+}
+
+.webview-churn-offer *,
+.webview-churn-offer *::before,
+.webview-churn-offer *::after {
+    box-sizing: inherit;
+}
+
+.webview-churn-offer p {
+    margin: 0;
+}
+
+.webview-churn-offer .webview-churn-offer-close {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+}
+
+.webview-churn-offer .webview-churn-offer-close::before,
+.webview-churn-offer .webview-churn-offer-close::after {
+    position: absolute;
+    top: 15px;
+    left: 8px;
+    width: 16px;
+    height: 2px;
+    content: "";
+    background: #07142d;
+    border-radius: 1px;
+}
+
+.webview-churn-offer .webview-churn-offer-close::before {
+    transform: rotate(45deg);
+}
+
+.webview-churn-offer .webview-churn-offer-close::after {
+    transform: rotate(-45deg);
+}
+
+.webview-churn-offer .webview-churn-offer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.webview-churn-offer h2 {
+    margin: 0 0 30px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28px;
+    color: #07142d;
+    text-wrap: balance;
+}
+
+.webview-churn-offer .webview-churn-offer-copy,
+.webview-churn-offer .webview-churn-offer-text-bottom {
+    width: 100%;
+    max-width: 504px;
+    margin-bottom: 16px;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+}
+
+.webview-churn-offer .webview-churn-offer-text-bottom {
+    margin-bottom: 43px;
+}
+
+.webview-churn-offer .webview-churn-offer-offer {
+    width: 100%;
+    max-width: 504px;
+    min-height: 142px;
+    padding: 25px 28px 24px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    color: #058840;
+    background: #f2fff8 url("../../icons/percent-background.svg") center / cover no-repeat;
+    border: 1px dashed #a3e1bf;
+    border-radius: 8px;
+}
+
+.webview-churn-offer .webview-churn-offer-offer p {
+    font-size: 24px;
+    line-height: 30px;
+    text-wrap: balance;
+}
+
+.webview-churn-offer .webview-churn-offer-offer h2 {
+    color: #058840;
+}
+
+.webview-churn-offer .webview-churn-offer-offer .webview-churn-offer-discount {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 56px;
+}
+
+.webview-churn-offer .webview-churn-offer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 252px;
+}
+
+.webview-churn-offer .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 252px;
+    max-width: 100%;
+    min-height: 36px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #058840;
+    border: 1px solid #058840;
+    border-radius: 4px;
+}
+
+.webview-churn-offer .button:hover {
+    background-color: #047236;
+    border-color: #047236;
+}
+
+.webview-churn-offer .button.secondary {
+    width: auto;
+    color: #ea0220;
+    background: transparent;
+    border: 0;
+}
+
+.webview-churn-offer .button.secondary:hover {
+    color: #c6001a;
+}
+
+.webview-churn-offer :is(.button, .webview-churn-offer-close):focus-visible {
+    outline: 2px solid #0f6aff;
+    outline-offset: 2px;
+}
+
+@media (width <= 600px) {
+    .webview-churn-offer {
+        min-height: auto;
+        margin: 12px;
+        padding: 36px 20px 40px;
+    }
+
+    .webview-churn-offer .webview-churn-offer-offer {
+        padding: 20px 16px;
+    }
+
+    .webview-churn-offer .webview-churn-offer-actions,
+    .webview-churn-offer .button {
+        width: 100%;
+    }
+
+    .webview-churn-offer .webview-churn-offer-offer .webview-churn-offer-discount {
+        font-size: 40px;
+        line-height: 48px;
+    }
+}
