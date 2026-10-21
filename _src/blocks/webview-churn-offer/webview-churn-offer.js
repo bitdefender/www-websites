@@ -31,30 +31,10 @@
 
 const CLOSE_URL = 'https://localhost/dynamicupsell?view_action=close';
 const DISCOUNT_MARKER = /<\/?discounted-price-percentage>/gi;
-const RENEWAL_DATE_MARKER = /<renewal-date>/gi;
 const PRICEBOX_MARKER = '{PRICEBOX_V2}';
 
 const isAcceptLink = (link) => link.getAttribute('href')?.includes('#buylink');
 const isDeclineLink = (link) => link.getAttribute('href')?.includes('view_action=close');
-
-function formatRenewalDate(renewalDate, lang) {
-  if (renewalDate === undefined || renewalDate === null || renewalDate === '') {
-    return '';
-  }
-
-  const date = typeof renewalDate === 'number' || /^\d+$/.test(renewalDate)
-    ? new Date(Number(renewalDate) * 1000)
-    : new Date(renewalDate);
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
-
-  try {
-    return new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
-  } catch {
-    return new Intl.DateTimeFormat('en-us', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
-  }
-}
 
 /**
  * Replaces a text marker in every text node under root.
@@ -181,6 +161,4 @@ export default function decorate(block, options = {}) {
   }), content);
 
   replaceTextMarker(content, DISCOUNT_MARKER, () => createElement('span', 'prod-save', [discount]));
-  const renewalDate = formatRenewalDate(options.renewalDate, lang);
-  replaceTextMarker(content, RENEWAL_DATE_MARKER, () => renewalDate);
 }
