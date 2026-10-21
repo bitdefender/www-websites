@@ -11,12 +11,14 @@
  * - offer: the row with the <discounted-price-percentage> marker, replaced with the
  *   `hardcoded-discount` section metadata (e.g. 20%)
  * - support text: rows after the offer
- * - actions: a `#buylink` link (accept) and a `view_action=close` link (decline)
- *
+ * - actions: a `#buylink` link (accept) and a `view_action=close` link (decline).
+ *   Without an accept link (e.g. churn-flow-not-renewal), the decline link is the only action
+ *   and renders as the primary button ("Got it"); it still dispatches `decline`.
+ * Date markers such as `<renewal-date>` and `<end-date>` are left as text: Central replaces
+ * them inside the shadow root.
  *
  * Options (componentOptions in getContentFragment):
- * - lang: locale used to format the renewal date, e.g. 'fr-fr' (default 'en-us')
- * - renewalDate: Date, ISO string or unix timestamp in seconds
+ * - lang: echoed in the event detail, e.g. 'fr-fr' (default 'en-us')
  * - promotion: echoed in the event detail and passed to window.acceptDiscountedOffer
  * - onAccept, onDecline, onClose: callbacks receiving the event detail
  *
@@ -138,7 +140,8 @@ export default function decorate(block, options = {}) {
     })]));
   }
   if (declineLink) {
-    const link = createElement('a', 'button secondary', [createElement('span', 'button-text', [declineLink.textContent.trim()])]);
+    // with nothing to accept, "Got it" is the screen's only action
+    const link = createElement('a', acceptLink ? 'button secondary' : 'button acknowledge', [createElement('span', 'button-text', [declineLink.textContent.trim()])]);
     link.href = declineLink.getAttribute('href');
     actions.push(createElement('p', 'button-container webview-churn-offer-dismiss', [createAction({
       element: link, action: 'decline', block, options, detail,
@@ -153,7 +156,7 @@ export default function decorate(block, options = {}) {
     createElement('div', 'webview-churn-offer-copy', rowsContent(copyRows)),
     ...(offerRow ? [createElement('div', 'webview-churn-offer-offer', rowsContent([offerRow]))] : []),
     ...(supportRows.length ? [createElement('div', 'webview-churn-offer-text-bottom', rowsContent(supportRows))] : []),
-    ...(actions.length ? [createElement('div', 'webview-churn-offer-actions', actions)] : []),
+    ...(actions.length ? [createElement('div', `webview-churn-offer-actions${acceptLink ? '' : ' webview-churn-offer-actions-end'}`, actions)] : []),
   ]);
 
   block.replaceChildren(createAction({

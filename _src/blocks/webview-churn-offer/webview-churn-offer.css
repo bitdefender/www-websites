@@ -161,6 +161,22 @@
     color: #c6001a;
 }
 
+.webview-churn-offer .webview-churn-offer-actions-end {
+    align-self: stretch;
+    align-items: flex-end;
+    width: auto;
+}
+
+.webview-churn-offer .button.acknowledge {
+    width: 160px;
+    background-color: #0f6aff;
+    border: 0;
+}
+
+.webview-churn-offer .button.acknowledge:hover {
+    background-color: #0b55cc;
+}
+
 .webview-churn-offer :is(.button, .webview-churn-offer-close):focus-visible {
     outline: 2px solid #0f6aff;
     outline-offset: 2px;
