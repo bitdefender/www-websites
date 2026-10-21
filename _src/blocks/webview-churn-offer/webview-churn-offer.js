@@ -12,7 +12,7 @@
  *   `hardcoded-discount` section metadata (e.g. 20%)
  * - support text: rows after the offer
  * - actions: a `#buylink` link (accept) and a `view_action=close` link (decline)
- * `<renewal-date>` anywhere is replaced with options.renewalDate, or removed.
+ *
  *
  * Options (componentOptions in getContentFragment):
  * - lang: locale used to format the renewal date, e.g. 'fr-fr' (default 'en-us')
