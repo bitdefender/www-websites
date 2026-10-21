@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central churn simulator</title>
+<script>
+  // Central does not ship the www-websites import map. Add ?importmap=1 to compare
+  // what the webview block needs when it is rendered from another origin.
+  if (new URLSearchParams(location.search).get('importmap') === '1') {
+    const map = document.createElement('script');
+    map.type = 'importmap';
+    map.textContent = JSON.stringify({ imports: {
+      '@repobit/dex-constants': 'https://esm.sh/@repobit/dex-constants@2.4.0',
+      '@repobit/dex-constants/': 'https://esm.sh/@repobit/dex-constants@2.4.0/',
+      '@repobit/dex-data-layer': 'https://esm.sh/@repobit/dex-data-layer@2.4.0',
+      '@repobit/dex-data-layer/': 'https://esm.sh/@repobit/dex-data-layer@2.4.0/',
+      '@repobit/dex-launch': 'https://esm.sh/@repobit/dex-launch@3.0.141',
+      '@repobit/dex-launch/': 'https://esm.sh/@repobit/dex-launch@3.0.141/',
+      '@repobit/dex-store-elements': 'https://esm.sh/@repobit/dex-store-elements@2.1.18',
+      '@repobit/dex-store-elements/': 'https://esm.sh/@repobit/dex-store-elements@2.1.18/',
+      '@repobit/dex-store': 'https://esm.sh/@repobit/dex-store@1.6.52',
+      '@repobit/dex-store/': 'https://esm.sh/@repobit/dex-store@1.6.52/',
+      '@repobit/dex-system-design': 'https://esm.sh/@repobit/dex-system-design@0.25.11',
+      '@repobit/dex-system-design/': 'https://esm.sh/@repobit/dex-system-design@0.25.11/',
+      '@repobit/dex-target': 'https://esm.sh/@repobit/dex-target@2.17.3',
+      '@repobit/dex-target/': 'https://esm.sh/@repobit/dex-target@2.17.3/',
+      '@repobit/dex-utils': 'https://esm.sh/@repobit/dex-utils@2.5.1',
+      '@repobit/dex-utils/': 'https://esm.sh/@repobit/dex-utils@2.5.1/',
+    } });
+    document.currentScript.after(map);
+  }
+</script>
+<style>
+  :root { color-scheme: light dark; font: 14px/1.4 system-ui, sans-serif; }
+  body { margin: 0 auto; max-width: 960px; padding: 16px; }
+  form { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px 16px; align-items: end; }
+  label { display: grid; gap: 4px; font-weight: 600; }
+  select, input, button { font: inherit; padding: 6px 8px; }
+  button { cursor: pointer; }
+  pre { background: color-mix(in srgb, currentColor 8%, transparent); padding: 8px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+  #fragment { border: 1px dashed currentColor; min-height: 40px; padding: 8px; }
+  .err { color: #d33; }
+</style>
+</head>
+<body>
+<h1>Central churn simulator</h1>
+<p>Calls <code>@repobit/dex-target</code> the way Central does: <code>getOffers('config-mbox')</code> and <code>getContentFragment('webview')</code>, with Central's Launch property. Draft activities need a Target QA preview link (<code>at_preview_token</code> in this page's URL).</p>
+
+<form id="form">
+  <label>Launch property
+    <select name="env">
+      <option value="https://assets.adobedtm.com/8a93f8486ba4/5492896ad67e/launch-fbd6d02d30e8-development.min.js">devCentral</option>
+      <option value="https://assets.adobedtm.com/8a93f8486ba4/5492896ad67e/launch-3e7065dd10db-staging.min.js">stageCentral</option>
+      <option value="https://assets.adobedtm.com/8a93f8486ba4/5492896ad67e/launch-b1f76be4d2ee.min.js">prodCentral</option>
+    </select>
+  </label>
+  <label>reason
+    <select name="reason">
+      <option>PriceReasons</option><option>PreferManualRenew</option><option>NotSatisfiedWithProduct</option><option>DontNeedProduct</option><option>Other</option>
+    </select>
+  </label>
+  <label>remaining_days <input name="remaining_days" type="number" value="60"></label>
+  <label>bundle_id
+    <select name="bundle_id">
+      <optgroup label="DLP"><option>com.bitdefender.tsmd.v2</option><option>com.bitdefender.cl.avplus.v2</option><option>com.bitdefender.premiumsecurity.v2</option><option>com.bitdefender.ultimatesecurityus.v2</option></optgroup>
+      <optgroup label="OldCLPSPSPlus"><option>com.bitdefender.cl.tsmd</option><option>com.bitdefender.cl.av</option><option>com.bitdefender.premiumsecurity</option></optgroup>
+      <optgroup label="VPN"><option>com.bitdefender.vpn</option></optgroup>
+      <optgroup label="DIP"><option>com.bitdefender.dataprivacy</option></optgroup>
+      <optgroup label="UTP"><option>com.bitdefender.idtheftpremium</option><option>com.bitdefender.idtheftstandard</option></optgroup>
+    </select>
+  </label>
+  <label>locale
+    <select name="locale"><option>COM</option><option>RO</option><option>AU</option><option>UK</option><option>FR</option><option>COM/SOLUTIONS</option></select>
+  </label>
+  <label>profile.lang <input name="lang" value="en-us"></label>
+  <button>Run</button>
+</form>
+
+<h2>Request</h2><pre id="request">–</pre>
+<h2>config-mbox</h2><pre id="config">–</pre>
+<h2>webview offer</h2><pre id="webview">–</pre>
+<h2>getContentFragment result</h2><div id="fragment"></div>
+<h2>Log</h2><pre id="log"></pre>
+
+<script type="module">
+  import Target from 'https://esm.sh/@repobit/dex-target@2.17.3';
+
+  const $ = (id) => document.getElementById(id);
+  const form = $('form');
+  const log = (msg, isError) => {
+    const line = document.createElement('div');
+    line.textContent = `${new Date().toISOString().slice(11, 23)} ${msg}`;
+    if (isError) line.className = 'err';
+    $('log').append(line);
+  };
+  window.addEventListener('error', (e) => log(`error: ${e.message}`, true));
+  window.addEventListener('unhandledrejection', (e) => log(`unhandled rejection: ${e.reason?.message || e.reason}`, true));
+
+  const qs = new URLSearchParams(location.search);
+  const remembered = JSON.parse(sessionStorage.getItem('central-churn-sim') || '{}');
+  [...form.elements].forEach((el) => {
+    if (!el.name) return;
+    const value = qs.get(el.name) ?? remembered[el.name];
+    if (value != null) el.value = value;
+  });
+
+  // same order as the website: the Target proxy queues alloy calls until Launch loads
+  const target = new Target();
+  const launch = document.createElement('script');
+  launch.src = form.env.value;
+  launch.async = true;
+  launch.onload = () => log(`Launch loaded: ${form.env.selectedOptions[0].text}`);
+  launch.onerror = () => log('Launch failed to load', true);
+  document.head.append(launch);
+  log(`importmap: ${qs.get('importmap') === '1' ? 'www-websites map' : 'none (like Central)'}`);
+
+  const describe = (proposition) => {
+    if (!proposition) return 'no proposition (no activity/experience matched)';
+    const { activity, experience } = proposition.scopeDetails || {};
+    return JSON.stringify({
+      activity: activity?.id,
+      experience: experience?.id,
+      content: proposition.items?.[0]?.data?.content,
+    }, null, 2);
+  };
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    sessionStorage.setItem('central-churn-sim', JSON.stringify(data));
+    if (data.env !== launch.src) {
+      log('Launch property changed: reloading the page with the new property');
+      const url = new URL(location.href);
+      url.searchParams.set('env', data.env);
+      location.href = url.href;
+      return;
+    }
+
+    const parameters = {
+      reason: data.reason,
+      remaining_days: data.remaining_days,
+      bundle_id: data.bundle_id,
+      locale: data.locale,
+      // activities 209920/209921 only deliver with this gate until go-live
+      ...(qs.get('qa_churn') && { qa_churn: qs.get('qa_churn') }),
+    };
+    const profileParameters = { 'profile.lang': data.lang.toLowerCase() };
+    $('request').textContent = JSON.stringify({ parameters, profileParameters }, null, 2);
+    ['config', 'webview'].forEach((id) => { $(id).textContent = '…'; });
+    $('fragment').replaceChildren();
+
+    try {
+      const [config, fragment] = await Promise.all([
+        target.getOffers({ mboxNames: 'config-mbox', parameters, profileParameters }),
+        target.getContentFragment({ mboxName: 'webview', parameters, profileParameters }),
+      ]);
+      const [configProposition, webviewProposition] = await Promise.all(['config-mbox', 'webview']
+        .map((mboxName) => target.getMboxProposition({ mboxName, parameters, profileParameters })));
+      $('config').textContent = describe(configProposition);
+      $('webview').textContent = describe(webviewProposition);
+      log(`config-mbox: ${config ? JSON.stringify(config) : 'empty'}`);
+      if (fragment) {
+        $('fragment').append(fragment);
+        log('getContentFragment returned a fragment');
+      } else {
+        $('fragment').textContent = 'null';
+        log('getContentFragment returned null', true);
+      }
+    } catch (e) {
+      log(`run failed: ${e.message}`, true);
+    }
+  });
+</script>
+</body>
+</html>
