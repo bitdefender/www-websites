@@ -187,6 +187,73 @@
     outline-offset: 2px;
 }
 
+/* section style churn-small-purple-card: small card, e.g. churn-flow-reactivate-subscription */
+.churn-small-purple-card .webview-churn-offer {
+    min-height: auto;
+    max-width: none;
+    margin: 0;
+    padding: 24px;
+    color: rgb(0 0 0 / 80%);
+    text-align: left;
+    border-radius: 8px;
+    box-shadow: 0 4px 2px rgb(0 0 0 / 10%);
+}
+
+.churn-small-purple-card .webview-churn-offer .webview-churn-offer-close {
+    display: none;
+}
+
+.churn-small-purple-card .webview-churn-offer .webview-churn-offer-content {
+    gap: 24px;
+    align-items: stretch;
+}
+
+.churn-small-purple-card .webview-churn-offer .webview-churn-offer-copy {
+    max-width: none;
+    margin: 0;
+}
+
+.churn-small-purple-card .webview-churn-offer h2 {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 0 0 16px;
+    font-size: 16px;
+    line-height: 30px;
+    color: #000;
+}
+
+.churn-small-purple-card .webview-churn-offer h2 .icon,
+.churn-small-purple-card .webview-churn-offer h2 .icon svg {
+    flex: none;
+    width: 32px;
+    height: 32px;
+}
+
+.churn-small-purple-card .webview-churn-offer p {
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.churn-small-purple-card .webview-churn-offer strong {
+    color: #8f5ee0;
+}
+
+.churn-small-purple-card .webview-churn-offer .webview-churn-offer-actions {
+    align-items: stretch;
+    width: 100%;
+}
+
+.churn-small-purple-card .webview-churn-offer .button {
+    width: 100%;
+    background-color: #8f5ee0;
+    border: 0;
+}
+
+.churn-small-purple-card .webview-churn-offer .button:hover {
+    background-color: #7a48cc;
+}
+
 @media (width <= 600px) {
     .webview-churn-offer {
         min-height: auto;
