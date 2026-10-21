@@ -1,10 +1,6 @@
 /* stylelint-disable property-no-vendor-prefix */
 .ab-downloads main * {
-    font-family: Arial;
-}
-
-.ab-downloads .breadcrumb {
-    display: none;
+    font-family: var(--body-font-family);
 }
 
 .ab-downloads main h2, .ab-downloads main .default-content-wrapper h2 {
@@ -293,7 +289,7 @@
 
 .ab-downloads main .boxes-type.columns-container > .default-content-wrapper:last-of-type p {
     color: #3D3D3D;
-    font-family: Arial;
+    font-family: var(--body-font-family);
     font-size: 12px;
     font-weight: 700;
     line-height: 13.8px;
@@ -303,7 +299,7 @@
 .ab-downloads main .boxes-type.columns-container > .default-content-wrapper:last-of-type p a {
     text-decoration: none;
     color: #006EFF;
-    font-family: Arial;
+    font-family: var(--body-font-family);
     font-size: 12px;
     font-weight: 700;
     line-height: 13.8px;
@@ -416,7 +412,7 @@
 }
 
 .ab-downloads main .full-grey-bck.columns-container .columns-text-col > p:first-of-type {
-    font-family: Arial;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 700;
     line-height: 18.4px;
@@ -529,7 +525,7 @@
 }
 
 .ab-downloads main .has-dropdown.columns-container .block > div:first-of-type p {
-    font-family: Roboto;
+    font-family: var(--body-font-family);
     font-size: 18px;
     font-weight: 400;
     line-height: 24px;
@@ -546,7 +542,7 @@
 }
 
 .ab-downloads main .has-dropdown.columns-container p {
-    font-family: Roboto;
+    font-family: var(--body-font-family);
     font-size: 18px;
     font-weight: 400;
     line-height: 24px;
@@ -750,7 +746,7 @@
     min-width: 256px;
     justify-content: center;
     align-items: center;
-    font-family: Arial;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 700;
     line-height: 18.4px;
@@ -797,7 +793,7 @@
     background-color: transparent;
     color: #006DFF;
     border-color: #006DFF;
-    font-family: Arial;
+    font-family: var(--body-font-family);
     font-size: 16px;
     font-weight: 700;
     line-height: 18.4px;

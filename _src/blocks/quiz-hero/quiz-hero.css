@@ -8,18 +8,18 @@
 }
 
 .quiz-hero-container h1 {
-    font: normal normal normal 32px/40px "IBM Plex Sans", sans-serif;
+    font: normal normal normal 32px/40px var(--body-font-family);
 }
 
 .quiz-hero-container h2,
 .quiz-hero-container h3,
 .quiz-hero-container h4 {
-    font: normal normal normal 20px/23px Arial, sans-serif;
+    font: normal normal normal 20px/23px var(--body-font-family);
 }
 
 .quiz-hero-container p,
 .quiz-hero-container div {
-    font: normal normal normal 14px/18px Arial, sans-serif;
+    font: normal normal normal 14px/18px var(--body-font-family);
 }
 
 .quiz-hero-container .rte-wrapper {
@@ -61,18 +61,18 @@
     }
 
     .quiz-hero-container h1 {
-        font: normal normal normal 60px/66px "IBM Plex Sans", sans-serif;
+        font: normal normal normal 60px/66px var(--body-font-family);
     }
 
     .quiz-hero-container h2,
     .quiz-hero-container h3,
     .quiz-hero-container h4 {
-        font: normal normal normal 32px/37px Arial, sans-serif;
+        font: normal normal normal 32px/37px var(--body-font-family);
     }
 
     .quiz-hero-container p,
     .quiz-hero-container div {
-        font: normal normal normal 18px/25px Arial, sans-serif;
+        font: normal normal normal 18px/25px var(--body-font-family);
     }
 
     .quiz-hero-container {

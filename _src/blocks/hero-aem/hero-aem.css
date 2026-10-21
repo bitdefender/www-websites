@@ -1,11 +1,4 @@
 /* stylelint-disable */
-
-:root {  
-  /* breadcrumbs font size */
-  --breadcrumb-text-color-dark: #c5c5c5;
-  --breadcrumb-text-color-dark-hover: #616161;
-  --breadcrumbs-font-size-s: 12px;
-}
 .hero-aem-container.hero-vsb {
   overflow: unset !important;
 }
@@ -101,52 +94,6 @@
 
 .hero-aem-container .hero-aem .hero-aem__card-text p:has(picture) {
   text-align: center;
-}
-
-.hero-aem-container .hero-aem .hero-aem__breadcrumb {
-  border-spacing: 0;
-  font-size: 12px;
-  margin-bottom: 5px;
-  align-self: flex-start;
-}
-
-.hero-aem-container .hero-aem .hero-aem__breadcrumb a {
-  color: #202020;
-  text-decoration: none;
-}
-
-.hero-aem-container .hero-aem .hero-aem__breadcrumb a:hover {
-  text-decoration: underline;
-}
-
-main .hero-aem-container .hero-aem .breadcrumb {
-  font-weight: var(--font-weight-bold);
-  color: #dedede;
-  min-height: 48px;
-  padding: 12px 0;
-}
-
-main .hero-aem-container .hero-aem .breadcrumb a {
-    font-size: var(--breadcrumbs-font-size-s);
-    font-weight: var(--font-weight-bold);
-    color: var(--breadcrumb-text-color-dark-hover);
-    text-decoration: none;
-    line-height: 1.7;
-    letter-spacing: .96px;
-}
-
-main .hero-aem-container .hero-aem .breadcrumb a::after {
-    content: "/";
-    display: inline-block;
-    color: var(--color-dark-gray);
-    margin: 0 3px;
-    font-size: 9pt;
-}
-
-main .hero-aem-container .hero-aem .breadcrumb a:last-child {
-    padding: 0;
-    margin: 0;
-    pointer-events: none;
 }
 
 .hero-aem-container .hero-aem p.button-container .button.primary {
@@ -643,7 +590,7 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
 }
 
 .hero-aem-container .devices-years-text {
-  font-family: Arial;
+  font-family: var(--body-font-family);
   font-size: 16px;
   line-height: 24px;
   color: #4F4F4F;
@@ -652,7 +599,7 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
 
 .hero-aem-container .hero-aem__prices+p {
   margin: 8px 0;
-  font-family: Arial;
+  font-family: var(--body-font-family);
   font-size: 14px;
   line-height: 16px;
 }
@@ -666,8 +613,7 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
     line-height: 1.35;
   }
 
-  .hero-aem__breadcrumb,
-  .hero-aem__card>p {
+  .hero-aem__card > p {
     display: none;
   }
 
@@ -719,10 +665,6 @@ main .hero-aem-container .hero-aem .breadcrumb a:last-child {
 
 }
 
-main .hero-aem-container.bf25 .hero-aem .breadcrumb *, main .hero-aem-container.bf25 .hero-aem .breadcrumb a::after {
-  color: white;
-}
-
 .hero-aem-container.bf25 .hero-aem, .hero-aem-container.bf25 .hero-aem .hero-aem__card__desktop {
   background-color: black;
   border-radius: 20px;
@@ -766,7 +708,7 @@ main .hero-aem-container.bf25 .hero-aem .breadcrumb *, main .hero-aem-container.
   width: 100%;
   font-size: 26px;
   line-height: 28px;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
 }
 
 .hero-aem-container.bf25 .hero-aem p em a {
@@ -777,7 +719,7 @@ main .hero-aem-container.bf25 .hero-aem .breadcrumb *, main .hero-aem-container.
   font-size: 24px;
   color: #016DFF;
   font-weight: bold;
-  font-family: 'Ibm Plex Sans', sans-serif;
+  font-family: var(--body-font-family);
 }
 
 .hero-aem-container.h1-black {
@@ -925,11 +867,6 @@ main .hero-aem-container.bf25 .hero-aem .breadcrumb *, main .hero-aem-container.
   }
 
   .hero-aem-container.v2 {
-
-    .hero-aem__breadcrumb {
-      display: block;
-    }
-
     .hero-aem__terms {
       font-size: 24px;
     }

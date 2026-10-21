@@ -31,7 +31,7 @@
     text-align: center;
     font-size: 24px;
     font-weight: 700;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: var(--body-font-family);
     color: #f7f7f7;
     margin: 10px 0 8px;
 }
@@ -148,7 +148,7 @@
     max-width: 770px;
     height: 512px;
     margin: 0 auto;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: var(--body-font-family);
 }
 
 .webview-table-wrapper .light-mode {
@@ -228,7 +228,7 @@
     text-align: center;
     text-decoration: line-through;
     font-size: 14px;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: var(--body-font-family);
     letter-spacing: 0;
     opacity: 1;
 }
@@ -237,7 +237,7 @@
     text-align: center;
     font-size: 20px;
     font-weight: 700;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: var(--body-font-family);
     letter-spacing: 0;
     color: #fff;
     opacity: 1;
@@ -254,7 +254,7 @@
     margin-bottom: 4px;
 }
 
-.webview-table-wrapper .webview-table .button-container:hover {
+.webview-table-wrapper .webview-table .button-container a:hover {
     filter: brightness(0.9);
 }
 

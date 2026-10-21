@@ -16,11 +16,6 @@
   --hero-h2-font-size: 24px;
   --hero-botton-border-color: #616161;
   --hero-p-color: #3c3c3c;
-
-  /* breadcrumbs font size */
-  --breadcrumb-text-color-dark: #c5c5c5;
-  --breadcrumb-text-color-dark-hover: #616161;
-  --breadcrumbs-font-size-s: 12px;
 }
 
 main .hero {
@@ -39,15 +34,6 @@ main .section.bfoffer .hero .hero-content {
 
 main .bfoffer .hero .hero-content p:last-of-type picture img {
   display: none;
-}
-
-/* breadcrumbs */
-main .hero .hero-content .breadcrumb {
-  font-weight: var(--font-weight-bold);
-  color: #dedede;
-  min-height: unset;
-  padding: 12px 0;
-  margin-bottom: 12px;
 }
 
 main .hero .hero-content .signature {
@@ -140,7 +126,7 @@ main .hero.black-background {
 
 main .hero.new2024design * {
   font-weight: normal;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
   color: white;
 }
 
@@ -150,14 +136,6 @@ main .hero.new2024design .hero-picture:last-of-type {
 
 main .hero.new2024design strong {
   font-weight: 600;
-}
-
-main .hero-container.breadcrumb-hidden .breadcrumb a {
-  color: transparent;
-}
-
-main .hero-container.breadcrumb-hidden .breadcrumb a::after {
-  color: transparent;
 }
 
 main .hero.black-background::after {
@@ -191,7 +169,7 @@ main .hero-container.custom-buttons .hero .hero-content table tr {
   align-items: baseline;
   justify-content: center;
   gap: 16px;
-  font-family: Arial, sans-serif;
+  font-family: var(--body-font-family);
   padding-top: 30px;
 }
 
@@ -212,7 +190,7 @@ main .hero-container.custom-buttons .hero .hero-content table a {
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: Arial, sans-serif;
+  font-family: var(--body-font-family);
   margin: 0;
   color: var(--button-link-color);
   background-color: var(--button-background-color);
@@ -698,7 +676,7 @@ main .hero.ferrari .hero-content img{
 
 main .hero-container.ferrari-migration .hero{
   background-color:#006DFF;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--body-font-family);
   font-weight: 300;
 }
 
@@ -714,10 +692,6 @@ main .hero-container.ferrari-migration .hero .hero-content h2{
 
 main .hero-container.ferrari-migration .hero .hero-content p{
   color: #fff;
-}
-
-main .hero-container.ferrari-migration .hero .hero-content .breadcrumb{
-  display: none;
 }
 
 main .hero-container.ferrari-migration .hero .hero-content a{
@@ -741,13 +715,6 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     background-color: #006FFF;
     min-height: auto;
     padding: 2em 0;
-  }
-}
-
-@media(max-width: 991px) {
-  /* tablet */
-  main .hero.new2024design .breadcrumb {
-    display: none;
   }
 }
 
@@ -868,14 +835,6 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     font-size: 20px;
   }
 
-  main .hero .hero-content .breadcrumb {
-    min-height: 58px;
-  }
-
-  main .hero .hero-content .breadcrumb a::after {
-    margin: 0 10px;
-  }
-
   main .hero-container.blue-title .hero-content>div {
     width: 630px;
   }
@@ -915,7 +874,7 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   main .hero h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 
   main .hero .hero-picture {
@@ -971,11 +930,6 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
   main .affiliate .hero .hero-content>div  {
     width: 50%;
-  }
-
-  main .hero .hero-content .breadcrumb a {
-    line-height: 1;
-    letter-spacing: .96px;
   }
 
   main .hero ul.hero-awards {
@@ -1069,15 +1023,11 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
 @media (min-width: 1600px) {
   /* large desktop */
-  main .hero .hero-content .breadcrumb {
-    padding: 9px 0;
-    margin-bottom: 15px;
-  }
 
   main .hero h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
   }
 
   main .v2 .hero h1 {

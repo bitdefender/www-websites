@@ -25,20 +25,20 @@ footer.default .footer a {
   color: #fff;
   cursor: pointer;
   outline: 0;
-  font-family: var(--body-font-family),sans-serif;
+  font-family: var(--body-font-family);
 }
 
 footer.default .footer ul {
   list-style: none;
   padding: 0 1.25rem;
   margin: 0;
-  font-family: var(--body-font-family), sans-serif;
+  font-family: var(--body-font-family);
 }
 
 footer.default .footer ul li {
   font-size: var(--body-font-size-s);
   line-height: 1.63;
-  font-family: var(--body-font-family),sans-serif;
+  font-family: var(--body-font-family);
   margin: 0 0 0.4375rem;
   padding-left: 0;
 }
@@ -278,7 +278,7 @@ footer.default .footer > div > :nth-child(5) > p {
   letter-spacing: 0;
   line-height: 1.5rem;
   font-weight: var(--font-weight-boldest);
-  font-family: "IBM Plex Sans" ,sans-serif;
+  font-family: var(--body-font-family);
 }
 
 footer.default .footer > div > :nth-child(6) > p {

@@ -1,11 +1,10 @@
-/* eslint-disable no-underscore-dangle */
+import Launch from '@repobit/dex-launch';
 import {
   PageLoadedEvent,
   AdobeDataLayerService,
   FormEvent,
   WindowLoadStartedEvent,
   WindowLoadedEvent,
-  ProductLoadedEvent,
   CdpEvent,
 } from '@repobit/dex-data-layer';
 import {
@@ -13,7 +12,6 @@ import {
   registerContextNodes,
   registerRenderNodes,
 } from '@repobit/dex-store-elements';
-import Launch from '@repobit/dex-launch';
 import { Cookies } from '@repobit/dex-utils';
 import store from './store.js';
 import { target, adobeMcAppendVisitorId } from './target.js';
@@ -36,6 +34,7 @@ import {
 import {
   handleFileDownloadedEvents,
   resolveNonProductsDataLayer,
+  StoreProductLoadedEvent,
 } from './libs/data-layer.js';
 
 import user from './user.js';
@@ -45,15 +44,15 @@ import {
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
+  getPageExperimentKey,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 import {
-  initMartech,
-  martechEager,
-  martechLazy,
-  martechDelayed,
-// eslint-disable-next-line import/no-relative-packages
-} from '../plugins/martech/src/index.js';
+  applyStructuralHooks,
+  blockMboxNames,
+  installBlockHooks,
+  reportUnappliedHooks,
+} from './utils/block-hooks.js';
 
 const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
@@ -149,7 +148,8 @@ export default function decorateLinkedPictures(main) {
             event.preventDefault();
             // eslint-disable-next-line no-use-before-define
             const modalContainer = await createModal(link, 'video-modal');
-            document.body.append(modalContainer);
+            // eslint-disable-next-line no-use-before-define
+            appendModal(modalContainer);
           });
           const up = a.parentElement;
           if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
@@ -189,6 +189,27 @@ export function decorateMain(main) {
   decorateLinkedPictures(main);
   decorateSections(main);
   decorateBlocks(main);
+}
+
+let modalsRoot;
+
+/**
+ * Modals live outside of main, so they are added to a dedicated container inside the
+ * page store root, registered for store render and action nodes like main.
+ * This way the store elements in the modals are rendered (prices, discounts, buy links).
+ * @param {Element} modalContainer
+ */
+function appendModal(modalContainer) {
+  if (!modalsRoot) {
+    modalsRoot = document.createElement('div');
+    modalsRoot.classList.add('modals-root');
+    const storeRoot = document.querySelector('body > bd-context.store-context');
+    (storeRoot || document.body).append(modalsRoot);
+    registerActionNodes(modalsRoot);
+    registerRenderNodes(modalsRoot);
+  }
+
+  modalsRoot.append(modalContainer);
 }
 
 /**
@@ -273,7 +294,7 @@ export async function detectModalButtons(main) {
 
       // generate new modal
       const modalContainer = await createModal(originalHref, undefined, stopAutomaticModalRefresh);
-      document.body.append(modalContainer);
+      appendModal(modalContainer);
       modalContainer.querySelectorAll('.await-loader').forEach((element) => {
         element.classList.remove('await-loader');
       });
@@ -453,16 +474,11 @@ const initializeHubspotModule = () => {
 };
 
 /**
- * since target global mbox cannot use syntasa parameters
- * a new mbox which can insert code into the pagehas been created
- * and it runs as soon as launch is loaded
-*/
-const applyTargetCustomCode = async () => {
-  const code = await target.getOffers({ mboxNames: 'custom-code' });
-  if (!code) {
-    return;
-  }
-
+ * Run the <script> and <style> blocks of a Target html offer. Only their text is copied into
+ * <head>, where scripts execute as soon as they are appended.
+ * @param {string} code
+ */
+const injectOfferCode = (code) => {
   const codeDiv = document.createElement('div');
   codeDiv.insertAdjacentHTML('beforeend', code);
   const allScriptsAndStyles = codeDiv.querySelectorAll('script, style');
@@ -472,6 +488,63 @@ const applyTargetCustomCode = async () => {
     document.head.appendChild(newElement);
   });
 };
+
+/**
+ * since target global mbox cannot use syntasa parameters
+ * a new mbox which can insert code into the pagehas been created
+ * and it runs as soon as launch is loaded
+*/
+const applyTargetCustomCode = async () => {
+  const code = await target.getOffers({ mboxNames: 'custom-code' });
+  if (code) injectOfferCode(code);
+};
+
+/**
+ * On pages with an experiment key: fetch custom-code and the mbox of every block type on the
+ * page in one request, and run them before anything is decorated. Block offers register hooks
+ * that change their block before it is shown (see utils/block-hooks.js).
+ * @param {Element} main
+ */
+const applyTargetOffers = async (main) => {
+  const mboxNames = ['custom-code', ...blockMboxNames(main)];
+  const offers = await target.getOffers({ mboxNames });
+  mboxNames.forEach((name) => {
+    if (typeof offers?.[name] === 'string') injectOfferCode(offers[name]);
+  });
+};
+
+/**
+ * Local development only: run block hooks saved in localStorage under "bd-block-hooks-dev",
+ * so a component test can be tried without a Target activity.
+ */
+const applyDevBlockHooks = () => {
+  if (window.location.hostname !== 'localhost') return;
+  try {
+    const code = window.localStorage.getItem('bd-block-hooks-dev');
+    if (code) injectOfferCode(code);
+  } catch { /* storage unavailable */ }
+};
+
+export async function loadTrackers() {
+  const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
+
+  const onAdobeMcLoaded = () => {
+    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
+    window.ADOBE_MC_EVENT_LOADED = true;
+  };
+
+  if (isPageNotInDraftsFolder) {
+    try {
+      await Launch.load(page.environment);
+      onAdobeMcLoaded();
+    } catch {
+      target.abort();
+    }
+  } else {
+    target.abort();
+    onAdobeMcLoaded();
+  }
+}
 
 /**
  * set target_blank for pdf links when metadata is set: pdfs: new-tab
@@ -489,31 +562,16 @@ function openExternalLinksInNewTab(doc) {
 }
 
 /**
- * load webSDK functionality via martech plugin
- * @param {Promise<void>} martechLoadedPromise
+ * Loads the IBM Plex Sans font faces and remembers it for the session,
+ * so later pages can load them eagerly from the browser cache.
  */
-async function loadWebSDK(martechLoadedPromise) {
-  const isPageInDraftsFolder = window.location.pathname.includes('/drafts/');
-
-  const onAdobeMcLoaded = () => {
-    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
-    window.ADOBE_MC_EVENT_LOADED = true;
-  };
-
-  if (isPageInDraftsFolder) {
-    target.abort();
-    onAdobeMcLoaded();
-  } else {
-    try {
-      await martechLoadedPromise;
-      await martechEager();
-      onAdobeMcLoaded();
-    } catch (error) {
-      target.abort();
-    }
+async function loadFonts() {
+  await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
+  try {
+    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
+  } catch {
+    // do nothing
   }
-
-  await applyTargetCustomCode();
 }
 
 /**
@@ -521,44 +579,19 @@ async function loadWebSDK(martechLoadedPromise) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  // TODO: add these lines into dex-target
-  window.__alloyNS ||= [];
-
-  if (!window.__alloyNS.includes('alloy')) {
-    window.__alloyNS.push('alloy');
-  }
+  installBlockHooks({
+    report: (name, status) => sampleRUM('target-block-hook', { source: name, target: status }),
+  });
   // load trackers early if there is a target experiment on the page
-  const martechLoadedPromise = initMartech(
-    {
-      datastreamId: '6648b064-8151-4872-8fef-c4a84b0b69c1',
-      orgId: '0E920C0F53DA9E9B0A490D45@AdobeOrg',
-      edgeDomain: 'sstats.bitdefender.com',
-      defaultConsent: 'in',
-      debugEnabled: true,
-      idMigrationEnabled: true,
-      targetMigrationEnabled: true,
-      // The `debugEnabled` flag is automatically set to true on localhost and .page URLs.
-      // The `defaultConsent` is automatically set to "pending".
-      onBeforeEventSend(payload) {
-        console.debug('[Web SDK payload]', payload);
-      },
-    },
-    // 2. Library Configuration
-    {
-      personalization: true,
-      includeDataLayerState: false,
-      trackPageView: false,
-      // launchUrls: [RepobitConstants.ADOBE_MC_URL_ENV_MAP.get(page.environment)],
-      shouldProcessEvent(payload) {
-        console.debug('[Event processed]', payload);
-        return false;
-      },
-      // See the API Reference for all available options.
-    },
-  );
-
-  await loadWebSDK(martechLoadedPromise);
-  await resolveNonProductsDataLayer();
+  if (getPageExperimentKey()) {
+    await loadTrackers();
+    await resolveNonProductsDataLayer();
+    // Only now is main final: resolving the data layer can swap it for a challenger page,
+    // which would both erase custom-code's edits and change which blocks are on the page.
+    const main = doc.querySelector('main');
+    if (main) await applyTargetOffers(main);
+  }
+  applyDevBlockHooks();
 
   const userCountry = await user.country;
   if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
@@ -575,6 +608,9 @@ async function loadEager(doc) {
   if (templateMetadata === 'subscriber') initializeHubspotModule();
   const main = doc.querySelector('main');
   if (main) {
+    // Removed and added sections are applied to the authored HTML, so everything below sees
+    // the page as if it had been authored that way.
+    applyStructuralHooks(main);
     decorateMain(main);
     buildCtaSections(main);
     buildTwoColumnsSection(main);
@@ -587,6 +623,15 @@ async function loadEager(doc) {
       document.body.classList.add('sferrari');
     }
     await waitForLCP(LCP_BLOCKS);
+  }
+
+  try {
+    // on desktop or once cached, load fonts before LCP to avoid a visible swap
+    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
+      loadFonts();
+    }
+  } catch {
+    // do nothing
   }
 }
 
@@ -617,8 +662,13 @@ async function loadLazy(doc) {
     loadHeader(header);
   }
 
+  // only call load Trackers here if there is no experiment on the page
+  if (!getPageExperimentKey()) {
+    loadTrackers().then(() => applyTargetCustomCode());
+    await resolveNonProductsDataLayer();
+  }
+
   // push basic events to dataLayer
-  Launch.load(page.environment);
   await loadBlocks(main);
 
   const { hash } = window.location;
@@ -629,19 +679,12 @@ async function loadLazy(doc) {
     loadFooter(doc.querySelector('footer'));
   }
 
-  await martechLazy();
   generateLDJsonSchema();
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadFonts();
 
   window.hlx.plugins.run('loadLazy');
-
-  const templateMetadata = getMetadata('template');
-  const hasTemplate = getMetadata('template') !== '';
-  if (hasTemplate) {
-    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}-lazy.css`)
-      .catch(() => { });
-  }
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
@@ -770,7 +813,6 @@ function loadDelayed() {
     // load anything that can be postponed to the latest here
     eventOnDropdownSlider();
     // eslint-disable-next-line import/no-cycle
-    martechDelayed();
     return import('./delayed.js');
   }, 3000);
 }
@@ -806,7 +848,7 @@ async function loadPage() {
   const storeRoot = document.createElement('bd-context');
   storeRoot.classList.add('store-context');
   storeRoot.dataLayer = ({ option, event }) => {
-    AdobeDataLayerService.push(new ProductLoadedEvent(option, event));
+    AdobeDataLayerService.push(new StoreProductLoadedEvent(option, event));
   };
   document.body.replaceChild(storeRoot, main);
   storeRoot.appendChild(main);
@@ -814,7 +856,6 @@ async function loadPage() {
 
   registerContextNodes();
 
-  await resolveNonProductsDataLayer();
   await loadEager(document);
 
   const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
@@ -839,6 +880,7 @@ async function loadPage() {
   const elements = document.querySelectorAll('.await-loader');
   document.dispatchEvent(new Event('bd_page_ready'));
   window.bd_page_ready = true;
+  reportUnappliedHooks();
   elements.forEach((element) => {
     element.classList.remove('await-loader');
   });

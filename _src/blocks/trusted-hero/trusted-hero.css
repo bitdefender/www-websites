@@ -10,7 +10,7 @@
 
 .trusted-hero-container h1,
 .trusted-hero-container h2 {
-    font: normal normal normal 34px/38px var(--font-ibm);
+    font: normal normal normal 34px/38px var(--body-font-family);
 }
 
 .trusted-hero-container h1 {
@@ -149,7 +149,7 @@
 
 .trusted-hero.video-background table td h5{
     margin-bottom: 12px;
-    font: normal normal normal 24px/28px "IBM Plex Sans", sans-serif;
+    font: normal normal normal 24px/28px var(--body-font-family);
 }
 
 .trusted-hero.video-background table td .icon{

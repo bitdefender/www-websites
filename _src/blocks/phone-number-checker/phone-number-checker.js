@@ -601,12 +601,6 @@ function displayStoredResult(block, statusMessages, statusTitles, statusSubtitle
   }
 }
 
-async function displayCountryOnUserConsent(selectEl) {
-  const userCountry = await user.country;
-  selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
-  selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
-}
-
 export default async function decorate(block) {
   await initValidatorLibrary();
   const { checkButtonText, placeholder, signature } = block.closest('.section').dataset;
@@ -768,7 +762,9 @@ export default async function decorate(block) {
 
   button.addEventListener('click', handler);
 
-  onCookiesAccepted(() => {
-    displayCountryOnUserConsent(selectEl);
+  onCookiesAccepted(async () => {
+    const userCountry = await user.country;
+    selectEl.querySelector('input').value = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.code || '';
+    selectEl.querySelector('img').src = countries.data.find((c) => c.ISO === userCountry.toUpperCase())?.flag || '';
   });
 }

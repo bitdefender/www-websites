@@ -17,7 +17,7 @@ Make the most of the elements and attributes built for creating forms:
 
 These enable built-in browser functionality, improve accessibility, and add meaning to markup.
 
-### Use the <label> element to label form fields for data entry
+### Use the `<label>` element to label form fields for data entry
 
 To label an `<input>`, `<select>`, or `<textarea>`, use a `<label>`. Associate a label with an input by giving the label's `for` attribute the same value as the input's `id`.
 
@@ -28,6 +28,8 @@ Make it easy for users to enter data, by using the appropriate `<input>` element
 Always use `type="email"` for email addresses and `type="tel"` for phone numbers.
 
 Every `<input>`, `<select>`, and `<textarea>` element SHOULD have an appropriate `autocomplete` attribute, to improve accessibility and help users avoid re-entering data.
+
+Username and email inputs hold identifiers, not prose. Add `spellcheck="false"` so the browser does not rewrite them into something the account does not match. `autocorrect` and `autocapitalize` are always disabled for `input type="email"`, but are required for non-email usernames.
 
 ### Make buttons helpful
 
@@ -57,7 +59,7 @@ This enables browsers to help users by securely storing sign-in details and corr
 
 Validate data entry both in realtime and before form submission. Use `type="email"` for email inputs — the browser will validate the format automatically. Add the `required` attribute to mandatory fields to prevent empty submissions.
 
-### Put sign-in in its own <form> element
+### Put sign-in in its own `<form>` element
 
 Always use the `<form>` element when you're getting users to enter data
 
@@ -129,7 +131,11 @@ Disallowing password pasting annoys users, encourages passwords that are memorab
 
 Baseline status for Email, telephone, and URL <input> types: Widely available. It's been Baseline since 2015-07-29.
 Supported by: Chrome 5 (May 2010), Edge 12 (Jul 2015), Firefox 4 (Mar 2011), Safari 5 (Jun 2010), and Safari iOS 3 (Jun 2009).
+
 Baseline status for inputmode: Widely available. It's been Baseline since 2021-12-07.
 Supported by: Chrome 66 (Apr 2018), Edge 79 (Jan 2020), Firefox 95 (Dec 2021), Safari 12.1 (Mar 2019), and Safari iOS 12.2 (Mar 2019).
+
+Baseline status for autocorrect: Newly available. It's been Baseline since 2026-09-11.
+Supported by: Chrome 153, Edge 153, Firefox 136 (Mar 2025), Safari 14.1 (Apr 2021), and Safari iOS 14.5 (Apr 2021).
 
 Autofill is a progressive enhancement. In browsers that do not support autofill, users will simply need to manually enter their sign-in credentials. The semantic HTML constraints (such as `type`, `inputmode`, and `required`) will still function appropriately to validate user input and provide the correct virtual keyboards.

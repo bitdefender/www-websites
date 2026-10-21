@@ -36,7 +36,7 @@ main .section.webview-plan-selector-container {
     max-height: 512px;
     margin: 0 auto;
     padding: 0;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
 }
 
 
@@ -56,7 +56,7 @@ main .section.webview-plan-selector-container {
     margin: 0;
     padding: 27px 0;
     text-align: center;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 23px;
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -266,7 +266,7 @@ main .section.webview-plan-selector-container {
 .webview-plan-selector .webview-plan-selector-plan-copy h3 {
     margin: 0;
     padding: 0 0 8px;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     line-height: 21px;
     font-weight: 600;
@@ -278,7 +278,7 @@ main .section.webview-plan-selector-container {
 }
 
 .webview-plan-selector .webview-plan-selector-plan-copy p:not(.webview-plan-selector-billed) {
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 12px;
     line-height: 16px;
     font-weight: 600;
@@ -287,7 +287,7 @@ main .section.webview-plan-selector-container {
 }
 
 .webview-plan-selector .webview-plan-selector-plan-copy .webview-plan-selector-billed {
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 12px;
     line-height: 19px;
     font-weight: 400;
@@ -306,7 +306,7 @@ main .section.webview-plan-selector-container {
 .webview-plan-selector .webview-plan-selector-plan-price strong {
     display: block;
     width: 100%;
-    font-family: "Open Sans", "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 20px;
     line-height: 16px;
     font-weight: 700;
@@ -316,7 +316,7 @@ main .section.webview-plan-selector-container {
 .webview-plan-selector .webview-plan-selector-plan-price > span {
     display: block;
     width: 100%;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 12px;
     line-height: 19px;
     font-weight: 400;
@@ -332,7 +332,7 @@ main .section.webview-plan-selector-container {
     width: stretch;
     border-radius: 45px;
     background: #10b981;
-    font-family: "Open Sans", "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 11px;
     line-height: 20px;
     font-style: normal;
@@ -364,7 +364,7 @@ main .section.webview-plan-selector-container {
     border-color: #006dff;
     background-color: #006dff;
     color: #fff;
-    font-family: Roboto, "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 16px;
     line-height: 19px;
     font-weight: 600;
@@ -378,7 +378,7 @@ main .section.webview-plan-selector-container {
     width: 100%;
     margin: 0;
     text-align: center;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 10px;
     line-height: 16px;
     font-weight: 400;
@@ -510,7 +510,7 @@ main .webview-plan-selector.v2 {
     overflow: hidden;
     background: #fff;
     color: #000;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
 }
 
 main .webview-plan-selector.v2 .webview-plan-selector-v2-layout {
@@ -524,7 +524,7 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-title {
     margin: 0;
     padding: 24px 16px 20px;
     color: #000;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 1.4375rem;
     font-weight: 700;
     line-height: 1.52;
@@ -946,7 +946,7 @@ main .webview-plan-selector.v2 .webview-plan-selector-v2-cta.button {
     border-radius: 7px;
     background: var(--v2-blue);
     color: #fff;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.2;
