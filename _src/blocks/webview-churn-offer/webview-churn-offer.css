@@ -27,6 +27,11 @@
     margin: 0;
 }
 
+.webview-churn-offer img {
+    max-width: 100%;
+    height: auto;
+}
+
 .webview-churn-offer .webview-churn-offer-close {
     position: absolute;
     top: 9px;
