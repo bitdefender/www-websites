@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font: italic normal normal 14px/19px Arial, sans-serif;
+  font: italic normal normal 14px/19px var(--body-font-family);
 }
 
 .testimonials-component-container h2 {
-  font: normal normal bold 32px/37px Arial, sans-serif;
+  font: normal normal bold 32px/37px var(--body-font-family);
 }
 
 .testimonials-component-container .testimonials-component {
@@ -25,11 +25,11 @@
 
 .testimonials-component-container .title-class {
   text-align: center;
-  font: normal normal bold 32px/37px Arial, sans-serif;
+  font: normal normal bold 32px/37px var(--body-font-family);
 }
 
 .testimonials-component-container .subtitle-class {
-  font: normal normal normal 18px/21px Arial, sans-serif;
+  font: normal normal normal 18px/21px var(--body-font-family);
   margin-bottom: 40px;
   text-align: center;
   max-width: 90%;

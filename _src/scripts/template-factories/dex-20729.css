@@ -10,7 +10,7 @@
   
     .columns {
       min-height: 420px;
-      font-family: 'IBM Plex Sans';
+      font-family: var(--body-font-family);
       
       h3 {
         margin-bottom: 0;

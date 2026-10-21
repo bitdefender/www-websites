@@ -12,8 +12,11 @@ import {
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 
+// trackers don't load in /drafts/ (see loadTrackers), so there's no CDP call to make either
+const isPageInDraftsFolder = window.location.pathname.includes('/drafts/');
+
 export const target = new Target({
-  pageLoadStartedEvent: new PageLoadStartedEvent(
+  pageLoadStartedEvent: isPageInDraftsFolder ? undefined : new PageLoadStartedEvent(
     page,
     {
       name: generatePageLoadStartedName(),

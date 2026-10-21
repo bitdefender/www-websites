@@ -7,7 +7,7 @@
     --dark: #010f10;
     --dark2: #0c0f14;
     --darker: #06080a;
-    --font-ibm: "IBM Plex Sans", sans-serif;
+    --font-ibm: var(--body-font-family);
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -16,7 +16,7 @@
 /* tipography */
 .trusted {
     color: var(--white);
-    font-family: var(--font-ibm);
+    font-family: var(--body-font-family);
     position: relative;
     background: black;
 }
@@ -52,13 +52,13 @@
 }
 
 .trusted h2 {
-    font: normal normal 500 34px/38px "IBM Plex Sans", sans-serif;
+    font: normal normal 500 34px/38px var(--body-font-family);
     color: #252525;
     text-align: left;
 }
 
 .trusted h3 {
-    font: normal normal normal 20px/27px var(--font-ibm);
+    font: normal normal normal 20px/27px var(--body-font-family);
     text-align: left;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .trusted p, .trusted main .hero p {
-    font: normal normal normal 17px/20px var(--font-ibm);
+    font: normal normal normal 17px/20px var(--body-font-family);
     text-align: left;
 }
 
@@ -78,7 +78,7 @@
 
 .trusted u {
     text-decoration: none;
-    font: normal normal 600 14px/18px "IBM Plex Sans";
+    font: normal normal 600 14px/18px var(--body-font-family);
     letter-spacing: 0;
     color: #006EFF;
 }
@@ -309,13 +309,6 @@ main .section.link-right a {
 }
 
 /* ---- nav ---- */
-.trusted header .icon, .trusted .logo-container p, .trusted main .hero .hero-content .breadcrumb a, .trusted main .hero .hero-content .breadcrumb a::after {
-    color: var(--white);
-}
-
-.trusted main .hero .hero-content .breadcrumb a:last-of-type:after {
-    display: none;
-}
 
 .trusted .other-options > div > h2 {
     color: var(--black);
@@ -448,7 +441,7 @@ main .section.link-right a {
 
 .trusted .section.columns-container.trusted-bg-1 p,
 .trusted .section.columns-container.trusted-bg-1 div {
-    font: normal normal normal 14px/21px "IBM Plex Sans";
+    font: normal normal normal 14px/21px var(--body-font-family);
 }
 
 /* end override columns */
@@ -484,7 +477,7 @@ main .section.link-right a {
 
 .trusted .section.columns-container p,
 .trusted .section.columns-container div {
-    font: normal normal 300 17px/24px "IBM Plex Sans";
+    font: normal normal 300 17px/24px var(--body-font-family);
 }
 
 /* end columns with logos */
@@ -668,7 +661,7 @@ main .section.link-right a {
 
 @media (min-width: 768px) {
     .trusted h1, .trusted main .hero h1 {
-        font: normal normal bold 96px/82px var(--font-ibm);
+        font: normal normal bold 96px/82px var(--body-font-family);
     }
 
     .trusted h2 {
@@ -676,11 +669,11 @@ main .section.link-right a {
     }
 
     .trusted .v2 h2 {
-        font: normal normal bold 39px/45px var(--font-ibm);
+        font: normal normal bold 39px/45px var(--body-font-family);
     }
 
     .trusted h3 {
-        font: normal normal normal 40px/45px var(--font-ibm);
+        font: normal normal normal 40px/45px var(--body-font-family);
     }
 
     .trusted h4 {
@@ -690,11 +683,7 @@ main .section.link-right a {
     }
 
     .trusted p {
-        font: normal normal normal 26px/32px var(--font-ibm);
-    }
-
-    .trusted main .hero .hero-content .breadcrumb {
-        margin-top: 6em;
+        font: normal normal normal 26px/32px var(--body-font-family);
     }
 
     .trusted .logo-container {
@@ -715,7 +704,7 @@ main .section.link-right a {
     }
 
     .trusted u {
-        font: normal normal normal 24px/24px var(--font-ibm);
+        font: normal normal normal 24px/24px var(--body-font-family);
     }
 
     .trusted #mouse-scroll {
@@ -807,7 +796,7 @@ main .section.link-right a {
 
     .trusted .section.columns-container.trusted-bg-1 p,
     .trusted .section.columns-container.trusted-bg-1 div{
-        font: normal normal normal 18px/27px "IBM Plex Sans";
+        font: normal normal normal 18px/27px var(--body-font-family);
     }
 
     .trusted .section.columns-container.trusted-bg-1 .columns > div  {
@@ -834,12 +823,12 @@ main .section.link-right a {
     }
 
     .trusted p.button-container a {
-        font: normal normal normal 23px var(--font-ibm);
+        font: normal normal normal 23px var(--body-font-family);
     }
 
     .trusted .section.columns-container p,
     .trusted .section.columns-container div {
-        font: normal normal 300 26px/32px "IBM Plex Sans";
+        font: normal normal 300 26px/32px var(--body-font-family);
     }
 
     /* end columns with logos */
@@ -869,7 +858,7 @@ main .section.link-right a {
     /* end particle band section */
 
     .trusted .section.small-text p {
-        font: normal normal var(--font-weight-bold) 13px/1 "IBM Plex Sans";
+        font: normal normal var(--font-weight-bold) 13px/1 var(--body-font-family);
     }
 
     .trusted main .hero .hero-picture picture img {
@@ -894,11 +883,6 @@ main .section.link-right a {
 
     .trusted main .hero em {
         display: none;
-    }
-
-    .trusted main .hero .hero-content .breadcrumb {
-        padding: 14px 0;
-        margin-bottom: 0;
     }
 
     .trusted .box-carousel-container .default-content-wrapper {

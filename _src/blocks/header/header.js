@@ -6,7 +6,8 @@ import {
 } from '../../scripts/lib-franklin.js';
 
 import {
-  getDomain, decorateBlockWithRegionId, decorateLinkWithLinkTrackingId,
+  getAemFragmentLocale, makeImagePathsAbsolute, decorateBlockWithRegionId,
+  decorateLinkWithLinkTrackingId,
 } from '../../scripts/utils/utils.js';
 
 import { Constants } from '../../scripts/libs/constants.js';
@@ -87,23 +88,6 @@ const loginFunctionality = async (root = document) => {
     console.warn(error);
   }
 };
-
-function makeImagePathsAbsolute(contentDiv, baseUrl) {
-  contentDiv.querySelectorAll('img').forEach((imgElement) => {
-    // Update the `src` attribute with an absolute URL
-    imgElement.src = `${baseUrl}${imgElement.getAttribute('src')}`;
-
-    // Function to update relative paths in `srcset` with absolute URLs
-    function makeSrcsetAbsolute(srcset) {
-      return srcset.replace(/(?:,|^)\s*(\/[^\s,]+)/g, (match, path) => match.replace(path, `${baseUrl}${path}`));
-    }
-
-    // Update the `srcset` attribute with absolute URLs
-    if (imgElement.srcset) {
-      imgElement.srcset = makeSrcsetAbsolute(imgElement.srcset, baseUrl);
-    }
-  });
-}
 
 function createLoginModal() {
   const loginModal = document.querySelector('nav > div:nth-child(4)');
@@ -482,17 +466,7 @@ async function runDefaultHeaderLogic(block) {
     const html = await resp.text();
 
     if (html.includes('aem-banner')) {
-      const websiteDomain = getDomain();
-      let aemFetchDomain;
-
-      if (websiteDomain === 'en-us' || websiteDomain === 'drafts') {
-        aemFetchDomain = 'en';
-      } else if (websiteDomain.includes('-global')) {
-        const [singleDomain] = websiteDomain.split('-');
-        aemFetchDomain = singleDomain;
-      } else {
-        aemFetchDomain = websiteDomain.split('-').join('_');
-      }
+      const aemFetchDomain = getAemFragmentLocale();
 
       // check if the menu should be brought from a different source from Target
       let aemMenuFetchPath = `${Constants.PUBLIC_URL_ORIGIN}/content/experience-fragments/bitdefender/language_master/${aemFetchDomain}/header-navigation/mega-menu/master/jcr:content/root.html`;
@@ -513,12 +487,11 @@ async function runDefaultHeaderLogic(block) {
       const contentDiv = document.createElement('div');
       contentDiv.style.display = 'none';
 
-      contentDiv.innerHTML = aemHeaderHtml;
-
-      // make image paths absolute for non-production environments
-      if (Constants.PUBLIC_URL_ORIGIN === 'https://stage.bitdefender.com') {
-        makeImagePathsAbsolute(contentDiv, Constants.PUBLIC_URL_ORIGIN);
-      }
+      // parse in a template so images don't start loading before their paths are fixed
+      const template = document.createElement('template');
+      template.innerHTML = aemHeaderHtml;
+      makeImagePathsAbsolute(template.content);
+      contentDiv.append(template.content);
 
       const loadedLinks = [];
       contentDiv.querySelectorAll('link').forEach((linkElement) => {
@@ -629,7 +602,7 @@ async function runDefaultHeaderLogic(block) {
 
   // assign an aria-label to the a tag inside of .logo
   const logoLink = document.querySelector('.logo a');
-  logoLink?.setAttribute('aria-label', 'Logo');
+  logoLink.setAttribute('aria-label', 'Logo');
   decorateLinkWithLinkTrackingId(logoLink, 'Bitdefender Logo');
 
   const secondSpan = document.querySelector('.header-wrapper > div > p span:nth-child(2)');

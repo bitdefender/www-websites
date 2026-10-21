@@ -14,7 +14,7 @@
 }
 
 .marquee-container .title {
-  font: normal normal 600 12px/15px "IBM Plex Sans", sans-serif;
+  font: normal normal 600 12px/15px var(--body-font-family);
   letter-spacing: 0;
 }
 
@@ -55,7 +55,7 @@
   }
 
   .marquee-container .title {
-    font: normal normal 600 18px/23px "IBM Plex Sans", sans-serif;
+    font: normal normal 600 18px/23px var(--body-font-family);
     position: absolute;
     top: -45px;
     z-index: 1;

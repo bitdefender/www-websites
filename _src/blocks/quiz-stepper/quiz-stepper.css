@@ -33,7 +33,7 @@
         fieldset {
             h2 {
                 text-align: left;
-                font: normal normal bold 18px/22px Arial, sans-serif;
+                font: normal normal bold 18px/22px var(--body-font-family);
                 color: #000;
                 margin-bottom: 20px;
             }
@@ -75,7 +75,7 @@
     }
 
     .step-previous {
-        font: normal normal normal 12px/14px Arial, sans-serif;
+        font: normal normal normal 12px/14px var(--body-font-family);
         color: #7E7E7E;
         margin-left: auto;
         position: relative;
@@ -112,7 +112,7 @@
         }
 
         label {
-            font: normal normal normal 16px/18px Arial, sans-serif;
+            font: normal normal normal 16px/18px var(--body-font-family);
             margin-left: 10px;
             cursor: pointer;
         }
@@ -144,7 +144,7 @@
     }
 
     .acq-quiz {
-        font-family: "IBM Plex Sans", sans-serif;
+        font-family: var(--body-font-family);
         padding-bottom: 0;
 
         .step-index {
@@ -284,12 +284,12 @@
 
             fieldset {
                 h2 {
-                    font: normal normal bold 22px/27px Arial, sans-serif;
+                    font: normal normal bold 22px/27px var(--body-font-family);
                     margin-bottom: 30px;
                 }
 
                 label {
-                    font: normal normal normal 18px/21px Arial, sans-serif;
+                    font: normal normal normal 18px/21px var(--body-font-family);
                 }
             }
         }

@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "adobe-skills": {
+      "source": {
+        "source": "github",
+        "repo": "adobe/skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "aem-edge-delivery-services@adobe-skills": true
+  }
+}

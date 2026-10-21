@@ -8,8 +8,6 @@
     --color-highlight-blue: #006dff;
 
 
-    /* Font family */
-    --body-font-family: "IBM Plex Sans", sans-serif;
 
     /* Body default */
     --body-font-size-xs: 12px;
@@ -65,34 +63,14 @@
 
 }
 
-.four-cards {
-    * {
-        --body-font-family: "IBM Plex Sans", sans-serif !important;
-    }
-}
-
 .four-cards-container h2 {
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: var(--body-font-family);
 }
 
 .dex-26524 {
 
     .header-wrapper.default {
         min-height: unset;
-    }
-
-    .dex-trust-pills {
-        .columns > div {
-            align-items: center;
-
-            .columns-col {
-                text-align: center;
-
-                p:first-of-type .icon {
-                    position: relative;
-                }
-            }
-        }
     }
 
     .new-prod-boxes {
@@ -799,7 +777,7 @@
             padding-left: var(--size-20);
             font-size: var(--body-font-size-l);
             line-height: var(--size-20);
-            font-family: "IBM Plex Sans", sans-serif;
+            font-family: var(--body-font-family);
 
             &::after {
                 width: var(--size-14);
@@ -831,7 +809,7 @@
         }
 
         ul li {
-            font-family: 'IBM Plex Sans', sans-serif !important;
+            font-family: var(--body-font-family) !important;
         }
 
     }
@@ -906,7 +884,7 @@
             justify-content: center;
             padding-top: var(--size-0);
             height: 38px;
-            font-family: "IBM Plex Sans", sans-serif;
+            font-family: var(--body-font-family);
         }
 
         .new-prod-boxes .prod_box .inner_prod_box {
@@ -925,7 +903,7 @@
                     padding: var(--size-32);
 
                     h4, p, div, input, label {
-                        font-family: "IBM Plex Sans", sans-serif;
+                        font-family: var(--body-font-family);
                     }
 
                     h4 {
@@ -1720,8 +1698,6 @@
         padding-bottom: var(--size-32);
         margin-bottom: var(--size-0);
 
-        --body-font-family: "IBM Plex Sans", sans-serif;
-
         background-color: #f2f2f2;
 
         &.dex-system-requirements {
@@ -1874,70 +1850,11 @@
     .has-dropdown {
         display: none;
     }
-
-    .hero_mobile {
-        margin-bottom: 2em;
-    }
-
-    .hero_mobile h2 {
-        color: #006DFF;
-        font-size: var(--size-24);
-        font-weight: 600;
-        line-height: var(--size-30);
-        text-align: left;
-    }
-
-    .hero_mobile ul li {
-        font-size: var(--size-12);
-        font-weight: 400;
-        line-height: var(--size-14);
-        text-align: left;
-    }
-
-    .hero_mobile {
-        background-color: #F6F6F6;
-        padding-top: var(--size-0);
-        padding-bottom: var(--size-0);
-
-        .default-content-wrapper {
-            padding: var(--size-24) !important;
-
-            h2 {
-                font-size: var(--size-18);
-                font-weight: 500;
-                line-height: var(--size-22);
-                text-align: left;
-            }
-        }
-    }
-
-    .what_about h2 {
-        font-size: var(--size-18);
-        margin-bottom: var(--size-0);
-        font-weight: 500;
-        line-height: var(--size-22);
-        text-align: left;
-    }
 }
 
 
 @media (min-width: 768px) {
     .dex-26524 {
-
-        .what_about {
-            .default-content-wrapper {
-                padding-bottom: var(--size-24);
-            }
-        }
-
-        .what_about h2 {
-            font-size: var(--size-34);
-            font-weight: 700;
-            line-height: var(--size-40);
-            text-align: center;
-            max-width: 655px;
-            margin: 0 auto;
-        }
 
         .hero_mobile {
             display: none;
@@ -2028,7 +1945,7 @@
             }
 
             .block > div:first-of-type p {
-                font-family: "Ibm Plex Sans", sans-serif;
+                font-family: var(--body-font-family);
                 font-size: var(--size-18);
                 font-weight: 400;
                 line-height: var(--size-24);
@@ -2216,7 +2133,7 @@
                     color: white;
                     font-weight: var(--font-weight-boldest);
                     font-size: var(--heading-font-size-l);
-                    font-family: "IBM Plex Sans", sans-serif;
+                    font-family: var(--body-font-family);
                 }
 
                 &::after {

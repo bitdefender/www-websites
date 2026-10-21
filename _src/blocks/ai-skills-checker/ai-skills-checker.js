@@ -23,6 +23,57 @@ const isValidUrl = (urlString) => {
   return urlPattern.test(urlString);
 };
 
+function createTextElement(tag, text) {
+  const element = document.createElement(tag);
+  element.textContent = text;
+  return element;
+}
+
+/**
+ * Builds the scan result card. Values from the scan response or the uploaded
+ * archive are set as text only, since they can contain HTML from the scanned skill.
+ */
+function buildScanResult({
+  skillName, statusMessage, llmSummary, findings, findingsCount,
+}) {
+  const fragment = document.createDocumentFragment();
+
+  const scanTitle = document.createElement('p');
+  scanTitle.append(createTextElement('strong', 'Skill Scan:'), ` ${skillName}`);
+  fragment.append(scanTitle);
+
+  if (statusMessage) {
+    // status messages are authored content and may contain markup
+    const status = document.createElement('p');
+    status.innerHTML = statusMessage;
+    fragment.append(status);
+  }
+
+  if (llmSummary) {
+    fragment.append(createTextElement('h4', 'Summary'), createTextElement('p', llmSummary));
+  }
+
+  fragment.append(createTextElement('h4', `Findings (${findingsCount})`));
+
+  if (findingsCount === 0) {
+    fragment.append(createTextElement('p', 'No security findings detected.'));
+    return fragment;
+  }
+
+  const list = document.createElement('ol');
+  findings.forEach((f) => {
+    const item = document.createElement('li');
+    item.append(createTextElement('strong', f.description ?? 'No description'), ' ', document.createElement('br'));
+    // prefer file_name or path or content as filename display
+    const filename = f.file_name ?? f.filename ?? f.path ?? f.content ?? '';
+    if (filename) item.append(createTextElement('code', filename));
+    list.append(item);
+  });
+  fragment.append(list);
+
+  return fragment;
+}
+
 async function checkSkillLink(
   block,
   input,
@@ -195,29 +246,18 @@ async function checkSkillLink(
   const findings = Array.isArray(data.findings) ? data.findings : [];
   const findingsCount = (typeof data.findings_count === 'number') ? data.findings_count : findings.length;
 
-  let findingsHtml = '';
-  if (findingsCount === 0) {
-    findingsHtml = '<p>No security findings detected.</p>';
-  } else {
-    findingsHtml = `<ol>${findings.map((f) => {
-      const descr = f.description ?? 'No description';
-      // prefer file_name or path or content as filename display
-      const filename = f.file_name ?? f.filename ?? f.path ?? f.content ?? '';
-      const fileCode = filename ? `<code>${filename}</code>` : '';
-      return `<li><strong>${descr}</strong> <br>${fileCode}</li>`;
-    }).join('')}</ol>`;
-  }
+  const scanResult = {
+    skillName,
+    statusMessage: statusMessages[statusCode],
+    llmSummary,
+    findings,
+    findingsCount,
+  };
 
   if (block.classList.contains('multiple-skills-check')) {
     const skillScanned = block.querySelector(`.skill-item-${skillIndex}`);
     const skillResult = document.createElement('div');
-    skillResult.innerHTML = `
-      <p><strong>Skill Scan:</strong> ${skillName}</p>
-      ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
-      ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
-      <h4>Findings (${findingsCount})</h4>
-      ${findingsHtml}
-    `;
+    skillResult.append(buildScanResult(scanResult));
 
     skillScanned.classList.add(className.split(' ')[1]);
 
@@ -232,13 +272,7 @@ async function checkSkillLink(
     return;
   }
 
-  result.innerHTML = `
-    <p><strong>Skill Scan:</strong> ${skillName}</p>
-    ${statusMessages[statusCode] ? `<p>${statusMessages[statusCode]}</p>` : ''}
-    ${llmSummary ? `<h4>Summary</h4><p>${llmSummary}</p>` : ''}
-    <h4>Findings (${findingsCount})</h4>
-    ${findingsHtml}
-  `;
+  result.replaceChildren(buildScanResult(scanResult));
 
   result.className = className;
   block.closest('.section').classList.add(className.split(' ')[1]);
@@ -724,7 +758,7 @@ export default function decorate(block) {
     if (fileInput.files && fileInput.files.length > 0) {
       input.value = '';
       const fname = fileInput.files[0].name;
-      uploadDrop.querySelector('.upload-text').innerHTML = `${inputsState.uploadsuccess.replace('{FILE_NAME}', fname)}`;
+      uploadDrop.querySelector('.upload-text').textContent = inputsState.uploadsuccess.replace('{FILE_NAME}', () => fname);
     }
   });
 

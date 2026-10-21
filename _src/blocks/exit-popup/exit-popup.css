@@ -53,14 +53,14 @@ main .exit-popup-container .block > div:first-of-type {
 
 main .exit-popup-container .block > div:first-of-type p {
   margin-top: 0;
-  font-family: roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 24px;
   line-height: 32px;
   font-weight: 400;
 }
 
 main .exit-popup-container .block > div:first-of-type h5 {
-  font-family: roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 32px;
   line-height: 35px;
   font-weight: 500;
@@ -72,7 +72,7 @@ main .exit-popup-container .block > div:last-of-type a:last-of-type {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 18px;
   line-height: 24px;
   font-weight: 500;
@@ -84,7 +84,7 @@ main .exit-popup-container .block > div:last-of-type a:last-of-type:hover::after
 }
 
 main .exit-popup-container .block > div:last-of-type p strong {
-  font-family: roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 24px;
   line-height: 32px;
 }

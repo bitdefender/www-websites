@@ -1,6 +1,6 @@
 .dex-18076 {
     p, li, strong, h1, h2, h3, h4, h5, h6, p, blockquote, pre, div, a, span {
-        font-family: Arial, sans-serif;
+        font-family: var(--body-font-family);
     }
 
     .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul {
