@@ -65,7 +65,8 @@ const buildHeadingSlot = (headingEl) => {
   const bdH = document.createElement('bd-h');
   bdH.setAttribute('slot', 'heading');
   bdH.setAttribute('as', headingEl.tagName.toLowerCase());
-  bdH.setAttribute('color', 'var(--color-blue-500)');
+  // a role name: 1.0.0 drops raw CSS values on bd-h
+  bdH.setAttribute('color', 'primary');
   bdH.innerHTML = headingEl.innerHTML;
   return bdH;
 };

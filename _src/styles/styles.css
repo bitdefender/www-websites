@@ -866,6 +866,13 @@ main .grey-background {
     margin: 0;
   }
 
+  /* the width-* block is already the column: a dex-system-design section inside it
+     (bd-ensemble) must not add its own gutter or cap on top */
+  main .section:is(.width-medium, .width-medium-percent, .width-smaller, .width-smallest, .width-smallest-left) .block {
+    --bd-ensemble-max-width: none;
+    --bd-ensemble-inline-padding: 0;
+  }
+
   .creators .section .default-content-wrapper h2 {
     font: 600 40px/48px var(--body-font-family);
   }
