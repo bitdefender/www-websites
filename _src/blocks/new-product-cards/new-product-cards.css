@@ -1,0 +1,672 @@
+/* stylelint-disable no-descending-specificity */
+/* stylelint-disable selector-class-pattern */
+.new-product-cards-container {
+    font-family: "IBM Plex Sans", sans-serif;
+
+    .new-product-cards-wrapper {
+        /* the cards keep a side padding on every width, so add it on top of the content width */
+        max-width: calc(1320px + 2 * var(--body-padding));
+        margin: 0 auto;
+
+        .switchBox {
+            text-align: center;
+            padding-bottom: 45px;
+
+            @media (width <= 525px) {
+                padding-bottom: 20px;
+            }
+
+            .switch {
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+                width: 302px;
+                min-height: 44px;
+                background-color: #016DFF;
+                border-radius: 22px;
+
+                input {
+                    display: none;
+                }
+
+                .slider {
+                    position: absolute;
+                    min-height: calc(100% - 4px);
+                    width: 150px;
+                    left: 2px;
+                    bottom: 2px;
+                    background-color: var(--white-color);
+                    border-radius: 20px;
+                    transition: all 0.4s;
+                }
+
+                /* the selected side sits on the white slider */
+                .label {
+                    position: relative;
+                    z-index: 1;
+                    width: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: inherit;
+                    color: var(--white-color);
+                    text-align: center;
+                    cursor: pointer;
+                    transition: color 0.4s;
+
+                    p {
+                        margin: 0;
+                        font-size: 16px;
+                        font-weight: 700;
+                        line-height: 34px;
+                    }
+
+                    .icon {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 12px;
+                        height: 14px;
+                        margin: 0 10px 0 0;
+
+                        svg {
+                            display: block;
+                            flex-shrink: 0;
+                            width: 14px;
+                            height: 16px;
+                            fill: var(--white-color);
+                            transition: fill 0.4s;
+                        }
+                    }
+                }
+
+                &:not(.is-family) .label.left,
+                &.is-family .label.right {
+                    color: var(--black-color);
+
+                    .icon svg {
+                        fill: #026DFF;
+                    }
+                }
+
+                &.is-family .slider {
+                    transform: translateX(149px);
+                }
+            }
+        }
+
+        .new-product-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            justify-content: center;
+            gap: 0 16px;
+            padding-inline: var(--body-padding);
+            text-align: left;
+            font-family: inherit;
+
+            .prod_box {
+                width: 100%;
+                max-width: 410px;
+                justify-self: center;
+                box-sizing: border-box;
+                padding: 25px;
+                background-color: #f6f6f6;
+                border-radius: 20px;
+                position: relative;
+                display: grid;
+                grid-template-rows: subgrid;
+                grid-row: span 50;
+                gap: 0;
+                margin-top: var(--green-tag-height);
+
+                &:has(.green-tag:not(.hidden)) {
+                    box-shadow: 0 3px 7px 0 #c1c1c1;
+                }
+
+               .inner_prod_box {
+                    display: grid;
+                    grid-template-rows: subgrid;
+                    grid-row: span 50;
+                    gap: 0;
+
+                    bd-context, bd-option, bd-product {
+                        display: grid;
+                        grid-template-rows: subgrid;
+                        grid-row: span 50;
+                    }
+
+                    h3 {
+                        font-weight: bold;
+                        font-size: 20px;
+                        line-height: 25px;
+                        font-family: inherit;
+                        margin: 0 0 4px;
+                        max-width: 80%;
+
+                        a {
+                            color: inherit;
+                            text-decoration: none;
+                            transition: color 0.5s ease;
+
+                            &:hover {
+                                color: var(--link-color);
+                            }
+                        }
+                    }
+
+                    p {
+                        font-size: var(--body-font-size-xs);
+                        line-height: 1.25;
+                        color: var(--text-color);
+                        margin-bottom: 8px;
+                        margin-top: 0;
+
+                        &:has(.blue-pill), &:has(.green-pill) {
+                            display: flex;
+                        }
+                    }
+
+                    /* billed text and notes under the price */
+                    .pricing-container ~ p:not(.button-container) {
+                        font-size: 12px;
+                        line-height: 13px;
+                        margin-bottom: 12px;
+
+                        .prod-newprice {
+                            font-size: inherit;
+                            line-height: inherit;
+                            font-weight: inherit;
+                        }
+                    }
+
+                    .green-tag {
+                        position: absolute;
+                        justify-self: center;
+                        bottom: 100%;
+                        box-sizing: content-box;
+                        height: fit-content;
+                        min-height: 30px;
+                        font-size: 16px;
+                        line-height: 24px;
+                        padding: 3px 5px;
+                        font-family: inherit;
+                        color: white;
+                        text-align: center;
+                        font-weight: normal;
+                        background-color: #1C7928;
+                        border-top-left-radius: 10px;
+                        border-top-right-radius: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 86%;
+                        max-width: 350px;
+
+                        &.hidden {
+                            visibility: hidden;
+                        }
+                    }
+
+                    .blue-pill {
+                        font-size: var(--body-font-size-xs);
+                        font-family: inherit;
+                        color: white;
+                        text-align: left;
+                        background-color: #026DFF;
+                        display: inline-flex;
+                        gap: 5px;
+                        border-radius: 20px;
+                        padding: 6px 12px;
+                        margin-bottom: 5px;
+                        min-height: 28px;
+                        align-items: center;
+                        margin-right: 8px;
+                        width: fit-content;
+
+                        .icon {
+                            height: 14px;
+                            width: 12px;
+                            fill: #FFF;
+                            position: relative;
+                            margin: 0;
+
+                            svg {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                fill: #FFF;
+                            }
+                        }
+                    }
+
+                    .green-pill {
+                        font-size: 16px;
+                        font-family: inherit;
+                        color: white;
+                        text-align: center;
+                        background-color: #68ba68;
+                        display: inline-flex;
+                        gap: 5px;
+                        border-radius: 20px;
+                        padding: 1px 12px;
+                        margin-bottom: 5px;
+                        min-height: 28px;
+                        align-items: center;
+                        margin-right: 8px;
+                        width: fit-content;
+
+                        .icon {
+                            height: 14px;
+                            width: 12px;
+                            fill: #FFF;
+                            position: relative;
+                            margin: 0;
+
+                            svg {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                            }
+                        }
+                    }
+
+                    .radios-container {
+                        display: flex;
+                        gap: 20px;
+
+                        .radio-wrapper {
+                            display: flex;
+                            gap: 5px;
+                            align-items: center;
+
+                            input[type="radio"] {
+                                appearance: none;
+                                flex-shrink: 0;
+                                box-sizing: border-box;
+                                width: 1.2rem;
+                                height: 1.2rem;
+                                padding: 0;
+                                margin: 0 4px 0 0;
+                                background: #f4f4f4;
+                                border: 2px solid var(--color-highlight-blue);
+                                border-radius: 50%;
+                                cursor: pointer;
+                                transition: all 250ms ease;
+
+                                &:checked {
+                                    background-color: #3197EE;
+                                    box-shadow: inset 0 0 0 4px #f4f4f4;
+                                }
+
+                                &:focus-visible {
+                                    outline: none;
+                                    border-color: #3197EE;
+                                }
+                            }
+
+                            label {
+                                min-width: fit-content;
+                                font-size: 16px;
+                                font-weight: 700;
+                                cursor: pointer;
+                            }
+                        }
+                    }
+
+                    hr {
+                        margin: 10px 0;
+                        border: 1px solid #D1D1D1;
+                        width: 100%;
+                    }
+
+                    ul {
+                        padding-left: 0;
+                        margin: 0;
+                        display: grid;
+                        grid-template-rows: subgrid;
+                        grid-row: span 20;
+
+                        >li {
+                            list-style: none;
+                            padding-left: 0;
+                            margin: 0;
+                            font-size: 16px;
+                            line-height: 18px;
+                            font-weight: bold;
+                            display: grid;
+                            grid-template-rows: subgrid;
+                            grid-row: span 20;
+
+                            >ul {
+                                padding-left: 0;
+                                margin-top: 8px;
+                                display: block;
+
+                                >li {
+                                    display: block;
+                                    font-size: 14px;
+                                    line-height: 17px;
+                                    font-weight: normal;
+                                    margin-bottom: 8px;
+                                    list-style-type: none;
+                                    background: url('../../icons/checkmark-green-circle.svg') top 2px left no-repeat transparent;
+                                    padding-left: 22px;
+                                    background-size: 13px;
+                                    position: relative;
+                                    cursor: pointer;
+
+                                    >ul {
+                                        display: none;
+                                        margin-top: 0;
+                                    }
+
+                                    &:hover {
+                                        > ul {
+                                            display: block;
+
+                                            li {
+                                                position: absolute;
+                                                background: none;
+                                                background-color: white;
+                                                padding: 10px;
+                                                border-radius: 10px;      
+                                                left: 15px;
+                                                bottom: calc(100% + 10px);
+                                                z-index: 1;
+                                                font-size: 12px;
+                                                line-height: 17px;
+                                                box-shadow: 4px 4px 7px -8px #000;
+
+                                                &::before {
+                                                    content: "";
+                                                    position: absolute;
+                                                    left: 17px;
+                                                    bottom: -20px;
+                                                    border-width: 10px;
+                                                    border-style: solid;
+                                                    border-color: white transparent transparent;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    .icon {
+                                        width: 12px;
+                                        height: 12px;
+                                        fill: #fff;
+                                        margin-left: 5px;
+                                    }
+
+                                    .blue-pill, .green-pill {
+                                        min-height: unset;
+                                        gap: 0;
+                                        font-size: 11px;
+                                        padding: 1px 6.7px;
+                                        margin-right: 4px;
+                                        margin-bottom: 0;
+
+                                        .icon {
+                                            margin: 0;
+                                        }
+                                    }
+                                }
+                            }
+
+                            &.has-arrow-left {
+                                .list-heading {
+                                    display: block;
+
+                                    &::before {
+                                        position: relative;
+                                        content: "";
+                                        top: 2px;
+                                        margin: 0 5px 20px 0;
+                                        background: url('../../icons/arrow-left-blue.png') no-repeat center transparent;
+                                        width: 20px;
+                                        height: 20px;
+                                        background-size: 15px 12px;
+                                        float: left;
+                                    }
+
+                                    > strong {
+                                        margin-bottom: 18px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    /* a nested grid here inflates the subgrid row height, so keep it as a block */
+                    ol {
+                        display: block;
+                        list-style: none;
+                        padding-left: 0;
+                        margin: 0;
+
+                        bd-context, bd-option, bd-product {
+                            display: block;
+                        }
+
+                        li {
+                            display: flex;
+                            gap: 5px;
+                            font-size: 14px;
+                            line-height: 22px;
+                            margin: 0 0 12px;
+                            padding: 0;
+
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+
+                            .icon {
+                                flex-shrink: 0;
+                                width: 23px;
+                                height: 23px;
+                                margin: 0;
+                                fill: #fff;
+                            }
+
+                            /* the add-on box fills the row so it lines up with the other cards */
+                            &:has(.vpn_box) {
+                                height: 100%;
+                            }
+                        }
+
+                        .vpn_box {
+                            flex: 1;
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                            font-size: 14px;
+                            line-height: 16px;
+                            color: #000;
+                            background-color: #EAF5EC;
+                            border-radius: 4px;
+                            padding: 20px;
+
+                            input {
+                                width: 14px;
+                                margin: 0;
+                                margin-right: 10px;
+                            }
+
+                            .prod-newprice {
+                                font-size: 14px;
+                                font-weight: unset;
+                            }
+
+                            .prod-oldprice {
+                                color: #000;
+                                text-decoration: line-through;
+                            }
+                        }
+                    }
+
+                    a.button {
+                        width: 100%;
+                        justify-content: center;
+                        margin: 0;
+                        padding: 10px 26px 8px 28px;
+                        font-family: inherit;
+                        font-size: 16px;
+                        line-height: 24px;
+                        font-weight: 500;
+
+                        &::after {
+                            content: none;
+                        }
+
+                        &:hover .button-text {
+                            transform: none;
+                        }
+
+                        &.buy-button {
+                            &:hover {
+                                background-color: #B10304;
+                                border-color: #B10304;
+                            }
+
+                            &:active {
+                                background-color: #920A0A;
+                                border-color: #920A0A;
+                            }
+                        }
+
+                        /* outline button, same as the global secondary one */
+                        &.primary,
+                        &.secondary {
+                            background-color: transparent;
+                            border-color: var(--button-secondary-color);
+                            color: var(--button-secondary-color);
+
+                            &:hover {
+                                background-color: var(--button-secondary-hover-background-color);
+                                color: var(--white-color);
+                            }
+                        }
+                    }
+
+                    .pricing-container {
+                        display: grid;
+                        grid-template-rows: subgrid;
+                        grid-row: span 2;
+
+                        .pricing {
+                            display: grid;
+                            grid-template-rows: subgrid;
+                            grid-row: span 2;
+
+                            a {
+                                min-width: 100%;
+                            }
+
+                            .prices_box {
+                                text-align: left;
+                                display: flex;
+
+                                sup {
+                                    font-size: var(--heading-font-size-s);
+                                    line-height: var(--heading-font-size-s);
+                                    font-weight: bold;
+                                    margin: 15px 0 0 5px;
+                                    text-align: left;
+                                }
+
+                                .prod-newprice {
+                                    font-size: 35px;
+                                    line-height: 35px;
+                                    margin-bottom: 7px;
+                                    font-weight: bold;
+                                }
+                            }
+
+                            .save_price_box {
+                                display: flex;
+                                align-items: center;
+                                gap: 0;
+                                margin-bottom: 8px;
+
+                                .prod-oldprice {
+                                    font-size: 16px;
+                                    line-height: 24px;
+                                    text-decoration: line-through;
+                                    margin-right: 5px;
+                                }
+
+                                .prod-percent {
+                                    color: #0B6A26;
+                                    background-color: #D1FADC;
+                                    border-radius: 8px;
+                                    font-weight: bold;
+                                    padding: 2px 8px;
+                                    display: inline-block;
+                                    margin-left: 5px;
+                                }
+                            }
+
+                        }
+                    }
+
+                    .prod-percent {
+                        visibility: inherit;
+                    }
+                }
+            }
+        }
+    }
+
+    &.green-pill {
+        .new-product-cards-wrapper {
+            .new-product-cards {
+                .prod_box {
+                    .inner_prod_box {
+                        .pricing-container {
+                            .pricing {
+                                .save_price_box {
+                                    margin-bottom: 6px;
+                                    
+                                    .prod-percent {
+                                        color: #EDF9FF;
+                                        background-color: #68BA68;
+                                        font-weight: bold;
+                                        padding: 4px 8px;
+                                        border-radius: 16px;
+                                        font-size: 14px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.width-smaller {
+        .new-product-cards-wrapper {
+            .new-product-cards {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+
+                /* override the global .width-smaller .block width so the cards stay centered */
+                width: auto;
+                margin: 0 auto;
+            }
+        }
+    }
+
+    &.vertical-radios {
+        .new-product-cards-wrapper {
+            .new-product-cards {
+                .prod_box {
+                    .inner_prod_box {
+                        .radios-container {
+                            flex-direction: column;
+                            gap: 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
