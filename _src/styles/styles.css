@@ -446,7 +446,7 @@ main .section.images-floated .default-content-wrapper p.button-container {
 /* bd-section-header sets its own measure and gutters, as the blocks under it do */
 .default-content-wrapper:has(> bd-section-header) {
   max-width: none;
-  padding-inline: 0;
+  padding: 0;
 }
 
 .img-container img {
@@ -1988,4 +1988,13 @@ body > div.header-with-language-banner {
     padding: 10px 13px 8px 20px;
     font-size: 14px;
   }
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+main .section[data-header-lifted] > .default-content-wrapper > bd-section-header > p {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
 }

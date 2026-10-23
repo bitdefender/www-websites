@@ -21,6 +21,25 @@ References:
   - The AI-assistant section in frame `1260:7096` is out of scope.
   - The Figma MCP seat hits its tool-call limit quickly. Use `get_screenshot` per section; avoid `get_metadata` on the whole page.
 
+## Progress (updated 2026-10-23)
+
+| # | Block | State |
+|---|---|---|
+| 1 | `brand-hero` | Done (`311541fc`). Matches Figma at 390, 768 and 1440. Below lg the hero's blue runs behind the audience cards; the card gap is 16 below lg and 24 from it (bd-grid takes one gap, so the block switches it at 992) |
+| 2 | `logo-marquee` | Done (`2c5da9bd`) |
+| 3 | `bento-cards` | Done (`5f960ee2`, plus the gaps below). The gap under the header follows Figma: 24 phone, 32 tablet, 64 desktop |
+| 4 | `stat-tiles` | Done in this change. It uses `liftSectionHeader`, the same gaps as bento-cards, and the design system's page column (see below). Figma: phone has one tile per row 16 apart and a full-width CTA; tablet two across 24 apart and a hug CTA; desktop the highlight beside the 2×3 tiles. That corrects the `cols-sm="2"` in the table below: the phone frame is one column |
+| 5–8 | `awards-spotlight`, `partner-banner`, `post-feed`, `link-columns` | Not started |
+
+Found along the way:
+- **The `liftSectionHeader` wrapper now has no padding.** `.default-content-wrapper:has(> bd-section-header)` had reset only `padding-inline`, so the site's default 20px stayed above and below the header and doubled the Figma gaps on phone and tablet. It now sets `padding: 0`; the block under the header owns the gap.
+- **The header's lead takes its type from the design system.** `liftSectionHeader` slots a light-DOM `<p>`, and the site's global `p` rules (size, line-height 1.31, letter-spacing, 1em margins) outrank the component's `::slotted` rules. `styles.css` resets it at page level, `main .section[data-header-lifted] > .default-content-wrapper > bd-section-header > p` (last in the file, so no section `p` rule overrides it), to inherit the header's body-regular role below lg and body-large from lg. Any light-DOM text slotted into a DS component needs the same treatment.
+- **The page column outside a component.** A block that lays out its own `bd-grid` (stat-tiles) is not inside any design-system column, so it sat on the site's wider container, off the hero's edges. `stat-tiles.css` restates the design system's `ensembleCSS` on its grid: `--grid-container-max-*` and `--grid-padding-*` at sm 576, md 768, lg 992, xl 1200, xxl 1400, xxxl 1600. If more blocks need it, move it into one shared class.
+- **Section 4 content was re-authored** to default content above the block, without Section Metadata. Its header renders `stacked` until the author adds `Header | split` (Figma draws it split). Section 3 still has the `section-header` table.
+- **Verifying in the Claude browser pane:** when the pane is hidden, ResizeObserver callbacks don't run. bd-bento-grid then keeps its first layout, which it computes at width 0 and so with its 960 fallback, and shows two columns at 768. In a visible page it stacks correctly. Measure tablet and phone in a visible browser, for example in an iframe of that width.
+- **esm.sh builds a new version on first request**, and until then it answers 408 "waiting to be built". A fresh `@repobit/dex-system-design` release can leave every DS block blank for a few minutes after the import map moves to it.
+- **dex-core follow-up:** `bd-stat-tile` puts a fixed 48 between value and caption at every width, so the phone tiles are about 173px tall against Figma's 124.
+
 ## What already exists (Phase A, done)
 - `@repobit/dex-system-design@2.3.0` is published on npm and holds every component this page needs.
 - Each component's Storybook story documents its API. Run in dex-core:

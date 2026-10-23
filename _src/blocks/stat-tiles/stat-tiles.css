@@ -1,0 +1,85 @@
+/* The gap under the section header, as for the AI cards: 24 on the Figma
+   phone frame, 32 on the tablet frame, 64 on the desktop frame. */
+.stat-tiles {
+  padding-top: var(--spacing-24, 24px);
+}
+
+@media (width >= 768px) {
+  .stat-tiles {
+    padding-top: var(--spacing-32, 32px);
+  }
+}
+
+@media (width >= 960px) {
+  .stat-tiles {
+    padding-top: var(--spacing-64, 64px);
+  }
+}
+
+/* The design system's page column (its ensembleCSS), so the figures sit on
+   the same edges as bd-hero and the other design-system sections: the
+   --grid-container-max-* cap and --grid-padding-* gutter at its breakpoints
+   (sm 576, md 768, lg 992, xl 1200, xxl 1400, xxxl 1600). Read through
+   --bd-ensemble-* so a width-* section, which is already the column, turns it
+   off (styles.css). */
+.stat-tiles > .stat-tiles-column {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xs));
+  margin-inline: auto;
+  padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-xs));
+}
+
+@media (width >= 576px) {
+  .stat-tiles > .stat-tiles-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-sm));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-sm));
+  }
+}
+
+@media (width >= 768px) {
+  .stat-tiles > .stat-tiles-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-md));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-md));
+  }
+}
+
+@media (width >= 992px) {
+  .stat-tiles > .stat-tiles-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-lg));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-lg));
+  }
+}
+
+@media (width >= 1200px) {
+  .stat-tiles > .stat-tiles-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xl));
+  }
+}
+
+@media (width >= 1400px) {
+  .stat-tiles > .stat-tiles-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxl));
+  }
+}
+
+@media (width >= 1600px) {
+  .stat-tiles > .stat-tiles-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxxl));
+  }
+}
+
+/* the highlight, its copy and the CTA, stacked 24 apart; bd-p's own bottom
+   margin is the gap's job here */
+.stat-tiles .stat-tiles-lead {
+  --bd-paragraph-margin-bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-24);
+}
+
+.stat-tiles .stat-tiles-lead bd-button-link[fullwidth] {
+  align-self: stretch;
+}

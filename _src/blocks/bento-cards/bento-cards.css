@@ -1,6 +1,13 @@
-/* The gap under the section header: 64 on the Figma desktop frame. */
+/* The gap under the section header: 24 on the Figma phone frame, 32 on the
+   tablet frame, 64 on the desktop frame. */
 .bento-cards {
-  padding-top: var(--spacing-32, 32px);
+  padding-top: var(--spacing-24, 24px);
+}
+
+@media (min-width: 768px) {
+  .bento-cards {
+    padding-top: var(--spacing-32, 32px);
+  }
 }
 
 @media (min-width: 960px) {
