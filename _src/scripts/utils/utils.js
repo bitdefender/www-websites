@@ -1387,6 +1387,89 @@ export const getDsnBase = () => {
   }
 };
 
+const HEADER_LAYOUTS = ['stacked', 'split', 'centered'];
+
+// A lead's link, as bd-section-header asks: underlined, since colour alone fails WCAG 1.4.1.
+const toLeadParagraph = (p) => {
+  const lead = document.createElement('p');
+  lead.slot = 'lead';
+  lead.append(...p.childNodes);
+  lead.querySelectorAll('a').forEach((a) => {
+    const link = document.createElement('bd-link');
+    link.setAttribute('href', a.getAttribute('href') || '');
+    link.setAttribute('inline', '');
+    link.setAttribute('underline', '');
+    link.append(...a.childNodes);
+    a.replaceWith(link);
+  });
+  return lead;
+};
+
+/**
+ * Turns the default content that opens a block's section (an eyebrow p, an
+ * h1-h3 and a lead p) into a bd-section-header, in place, so the wrapper keeps
+ * its margins. Button links stay under it. One header per section: the first
+ * block to call this claims it. Layout comes from Section Metadata `Header`.
+ *
+ * Until sections are re-authored, a `section-header` block table in the same
+ * section is read too, its variant class giving the layout.
+ *
+ * @param {HTMLElement} block
+ * @param {{ layout?: string }} [options] a layout that wins over the section's
+ * @returns {Promise<HTMLElement|null>} the header, or null when there is none
+ */
+export const liftSectionHeader = async (block, { layout } = {}) => {
+  const section = block.closest('.section');
+  if (!section || section.dataset.headerLifted !== undefined) return null;
+
+  const legacy = section.querySelector(':scope > .section-header-wrapper > .section-header');
+  const wrapper = section.querySelector(':scope > .default-content-wrapper');
+  const source = wrapper?.querySelector('h1, h2, h3') ? wrapper : legacy;
+  const heading = source?.querySelector('h1, h2, h3');
+  if (!heading) return null;
+  section.dataset.headerLifted = '';
+
+  const eyebrow = heading.previousElementSibling?.matches('p:not(.button-container)')
+    ? heading.previousElementSibling : null;
+  let lead = heading.nextElementSibling;
+  while (lead && !(lead.matches('p:not(.button-container)') && lead.textContent.trim() && !lead.querySelector('picture'))) {
+    lead = lead.nextElementSibling;
+  }
+
+  const legacyLayout = legacy && HEADER_LAYOUTS.find((name) => legacy.classList.contains(name));
+  const requested = (layout || section.dataset.header || legacyLayout || '').trim().toLowerCase();
+
+  const header = document.createElement('bd-section-header');
+  header.setAttribute('heading', heading.textContent.trim());
+  header.setAttribute('as', heading.tagName.toLowerCase());
+  header.setAttribute('layout', HEADER_LAYOUTS.includes(requested) ? requested : 'stacked');
+  if (eyebrow) header.setAttribute('eyebrow', eyebrow.textContent.trim());
+  // the heading's anchor still lands on the section
+  if (heading.id) header.id = heading.id;
+
+  const base = getDsnBase();
+  try {
+    await Promise.all([import(`${base}section-header`), import(`${base}link`)]);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('liftSectionHeader: DSN import failed, continuing with native rendering', err);
+  }
+
+  if (lead) header.append(toLeadParagraph(lead));
+  heading.replaceWith(header);
+  eyebrow?.remove();
+  lead?.remove();
+
+  if (source === legacy) {
+    // move it out of the block table, which then has nothing left to show
+    const legacyWrapper = legacy.parentElement;
+    legacyWrapper.classList.replace('section-header-wrapper', 'default-content-wrapper');
+    legacyWrapper.replaceChildren(header, ...legacy.querySelectorAll('.button-container'));
+  }
+
+  return header;
+};
+
 export function onCookiesAccepted(callback) {
   if (window.adobeDataLayer.getState('ucCategory.functional')) callback();
   else {

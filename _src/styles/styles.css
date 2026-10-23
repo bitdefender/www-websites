@@ -443,6 +443,12 @@ main .section.images-floated .default-content-wrapper p.button-container {
   position: relative;
 }
 
+/* bd-section-header sets its own measure and gutters, as the blocks under it do */
+.default-content-wrapper:has(> bd-section-header) {
+  max-width: none;
+  padding-inline: 0;
+}
+
 .img-container img {
   height: 100%;
   width: 100%;
