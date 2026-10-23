@@ -1,0 +1,9 @@
+/* bd-hero is a full-bleed band with its own column: the section adds no
+   padding of its own around it */
+.section.brand-hero-container {
+  padding: 0;
+}
+
+.brand-hero bd-hero {
+  display: block;
+}
