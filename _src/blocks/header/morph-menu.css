@@ -1,0 +1,218 @@
+/* loaded into the shadow root of the AEM mega menu, see morph-menu.js */
+/* stylelint-disable selector-class-pattern -- the mega-menu__* class names come from AEM */
+.mega-menu .morph-menu .morph-menu__card,
+.mega-menu .morph-menu .morph-menu__preview {
+  display: none;
+}
+
+@media (min-width: 1200px) and (hover: hover) and (pointer: fine) {
+  .mega-menu .morph-menu {
+    --morph-gap: 8px;
+    --morph-radius: 14px;
+    --morph-duration: 260ms;
+    --morph-ease: cubic-bezier(0.32, 0.72, 0, 1);
+    --morph-bg: rgb(16 19 24 / 84%);
+    --morph-edge: rgb(255 255 255 / 9%);
+    --morph-text: rgb(255 255 255 / 92%);
+    --morph-muted: rgb(255 255 255 / 50%);
+    --morph-hover: rgb(255 255 255 / 8%);
+    --morph-accent: #5ca2ff;
+    --morph-preview-width: 300px;
+  }
+
+  /* hidden panels still count towards scroll width */
+  .mega-menu .morph-menu .mega-menu__second-level {
+    overflow-x: clip;
+  }
+
+  /* the other triggers step back while a dropdown is open */
+  .mega-menu .morph-menu .mega-menu__l2-link {
+    transition: opacity 200ms ease-out;
+  }
+
+  .mega-menu .morph-menu .morph-menu--open .mega-menu__l2-item:not(.morph-menu__item--active) .mega-menu__l2-link {
+    opacity: 0.45;
+  }
+
+  .mega-menu .morph-menu .morph-menu__item--active .mega-menu__l2-link[href]:not([href='']) {
+    color: #006dff;
+  }
+
+  .mega-menu .morph-menu .morph-menu__item--active .mega-menu__l2-link::after {
+    transform: rotate(0deg);
+  }
+
+  /* every panel stays laid out so it can be measured; morph-menu.js clips it to the card */
+  .mega-menu .morph-menu .mega-menu__third-level {
+    display: block;
+    top: 100%;
+    z-index: 2;
+    width: max-content;
+    padding-top: var(--morph-gap);
+    background: none;
+    box-shadow: none;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 150ms ease-out,
+      clip-path var(--morph-duration) var(--morph-ease),
+      visibility 0s linear var(--morph-duration);
+  }
+
+  .mega-menu .morph-menu .morph-menu--open .morph-menu__item--active > .mega-menu__third-level {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition:
+      opacity 200ms ease-out 40ms,
+      clip-path var(--morph-duration) var(--morph-ease),
+      visibility 0s;
+  }
+
+  .mega-menu .morph-menu .morph-menu__card {
+    display: block;
+    position: absolute;
+    top: calc(100% + var(--morph-gap));
+    left: 0;
+    z-index: 1;
+    width: var(--morph-w, 0);
+    height: var(--morph-h, 0);
+    translate: var(--morph-x, 0) 0;
+    border-radius: var(--morph-radius);
+    background: var(--morph-bg);
+    box-shadow:
+      inset 0 0 0 1px var(--morph-edge),
+      0 24px 48px rgb(0 0 0 / 24%),
+      0 4px 12px rgb(0 0 0 / 12%);
+    backdrop-filter: blur(20px) saturate(160%);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 150ms ease-out,
+      translate var(--morph-duration) var(--morph-ease),
+      width var(--morph-duration) var(--morph-ease),
+      height var(--morph-duration) var(--morph-ease);
+  }
+
+  .mega-menu .morph-menu .morph-menu--open .morph-menu__card {
+    opacity: 1;
+  }
+
+  /* opening from closed: no morph from the last spot, just a short drop in */
+  .mega-menu .morph-menu .morph-menu--entering .morph-menu__card {
+    transition-property: opacity;
+  }
+
+  .mega-menu .morph-menu .morph-menu--entering .morph-menu__card,
+  .mega-menu .morph-menu .morph-menu--entering .morph-menu__item--active > .mega-menu__third-level {
+    animation: morph-menu-drop 180ms ease-out;
+  }
+
+  /* panel content, restyled for the dark card */
+  .mega-menu .morph-menu .mega-menu__third-level-content {
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    margin: 0;
+    padding: 18px 22px 12px;
+  }
+
+  .mega-menu .morph-menu .mega-menu__third-level-content .mega-menu__row {
+    margin-bottom: 8px;
+  }
+
+  .mega-menu .morph-menu .mega-menu__third-level-content .mega-menu__col {
+    margin-right: 28px;
+  }
+
+  .mega-menu .morph-menu .mega-menu__third-level-content .mega-menu__col:last-child {
+    margin-right: 0;
+  }
+
+  .mega-menu .morph-menu .mega-menu__third-level-content .navigation__header-link {
+    margin-bottom: 6px;
+    color: var(--morph-muted);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .mega-menu .morph-menu .mega-menu__third-level-content a.navigation__header-link::after {
+    filter: invert(1);
+  }
+
+  .mega-menu .morph-menu .mega-menu__third-level-content .navigation .navigation__link {
+    display: block;
+    margin: 0 -10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--morph-text);
+    font-size: 0.875rem;
+    line-height: 1.2;
+    transition: background-color 150ms ease-out;
+  }
+
+  .mega-menu .morph-menu .mega-menu__third-level-content .navigation .navigation__link[href]:hover {
+    background-color: var(--morph-hover);
+    color: #fff;
+  }
+
+  .mega-menu .morph-menu .mega-menu__third-level-content .mega-menu__category-link {
+    color: var(--morph-accent);
+  }
+
+  /* banner of the hovered link's page, pinned to the right edge of the card */
+  .mega-menu .morph-menu .mega-menu__third-level-content.morph-menu__content--preview {
+    min-height: 240px;
+    padding-right: calc(var(--morph-preview-width) + 34px);
+  }
+
+  .mega-menu .morph-menu .morph-menu__preview {
+    display: block;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    bottom: 6px;
+    width: var(--morph-preview-width);
+    overflow: hidden;
+    border-radius: calc(var(--morph-radius) - 6px);
+    background: rgb(255 255 255 / 4%);
+  }
+
+  .mega-menu .morph-menu .morph-menu__preview img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    opacity: 0;
+    scale: 1.04;
+    transition:
+      opacity 250ms ease-out,
+      scale 600ms var(--morph-ease);
+  }
+
+  .mega-menu .morph-menu .morph-menu__preview .morph-menu__preview-image--shown {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@media (min-width: 1200px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+  .mega-menu .morph-menu .mega-menu__third-level,
+  .mega-menu .morph-menu .morph-menu__card,
+  .mega-menu .morph-menu .morph-menu__preview img {
+    transition-duration: 0s;
+    transition-delay: 0s;
+    animation: none;
+  }
+}
+
+@keyframes morph-menu-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}

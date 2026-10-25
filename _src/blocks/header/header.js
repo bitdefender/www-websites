@@ -11,6 +11,7 @@ import {
 } from '../../scripts/utils/utils.js';
 
 import { Constants } from '../../scripts/libs/constants.js';
+import morphMegaMenu from './morph-menu.js';
 
 /**
  * @param {string} username
@@ -556,6 +557,7 @@ async function runDefaultHeaderLogic(block) {
       await Promise.allSettled(loadedLinks);
       contentDiv.style.display = 'block';
       nav.classList.add('header-with-language-banner');
+      morphMegaMenu(shadowRoot);
 
       adobeMcAppendVisitorId(shadowRoot);
       await loginFunctionality(shadowRoot);
