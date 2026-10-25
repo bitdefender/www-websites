@@ -103,6 +103,19 @@ describe('logo-marquee', () => {
     expect(marquee.getAttribute('label')).toBe('Proven by Independent Testing');
   });
 
+  it('is still named by the section heading once an earlier block has lifted it', async () => {
+    const block = setupMarquee({
+      variant: 'awards',
+      header: '<bd-section-header heading="Proven by Independent Testing"></bd-section-header>',
+      content: `<div><div>${logo('idc', 120, 48)}</div></div>`,
+    });
+
+    await decorate(block);
+
+    expect(block.querySelector('bd-logo-marquee').getAttribute('label'))
+      .toBe('Proven by Independent Testing');
+  });
+
   it('empties the block when there is nothing to show', async () => {
     const block = setupMarquee({ content: '<div><div></div></div>' });
 

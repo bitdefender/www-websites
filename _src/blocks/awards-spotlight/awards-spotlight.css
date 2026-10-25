@@ -1,0 +1,36 @@
+/* The gap above the card: 32 on the Figma desktop frame, under the buttons.
+   bd-awards-spotlight is its own page column (bd-ensemble), so the block adds
+   no gutters. */
+.awards-spotlight {
+  padding-top: var(--spacing-24, 24px);
+}
+
+@media (width >= 768px) {
+  .awards-spotlight {
+    padding-top: var(--spacing-32, 32px);
+  }
+}
+
+/* The header's two buttons, 24 under it: side by side and of one width across
+   the centred header's 588 measure, each wrapping under the other when the
+   column cannot hold both (the phone frame). */
+.awards-spotlight-container > .default-content-wrapper > .awards-spotlight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-16, 16px);
+  box-sizing: content-box;
+  max-width: 588px;
+  margin: var(--spacing-24, 24px) auto 0;
+  padding-inline: var(--grid-padding-xs, 16px);
+}
+
+.awards-spotlight-container > .default-content-wrapper > .awards-spotlight-actions > bd-button-link {
+  flex: 1 1 240px;
+}
+
+@media (width >= 768px) {
+  .awards-spotlight-container > .default-content-wrapper > .awards-spotlight-actions {
+    gap: var(--spacing-24, 24px);
+  }
+}

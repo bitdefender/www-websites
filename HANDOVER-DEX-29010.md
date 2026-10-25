@@ -29,7 +29,8 @@ References:
 | 2 | `logo-marquee` | Done (`2c5da9bd`) |
 | 3 | `bento-cards` | Done (`5f960ee2`, plus the gaps below). The gap under the header follows Figma: 24 phone, 32 tablet, 64 desktop |
 | 4 | `stat-tiles` | Done in this change. It uses `liftSectionHeader`, the same gaps as bento-cards, and the design system's page column (see below). Figma: phone has one tile per row 16 apart and a full-width CTA; tablet two across 24 apart and a hug CTA; desktop the highlight beside the 2×3 tiles. That corrects the `cols-sm="2"` in the table below: the phone frame is one column |
-| 5–8 | `awards-spotlight`, `partner-banner`, `post-feed`, `link-columns` | Not started |
+| 5 | `awards-spotlight` | Done, not committed (2026-10-25). Header lifted `centered` unless Section Metadata says otherwise; its button links become two primary `bd-button-link`s, 282 each and 24 apart across the header's 588 measure, wrapping full-width on phone; the card 32 under them (24 on phone). Marks drawn at width/1.5 like logo-marquee, requested at 2× as webp. Checked at 1440 against Figma `986:8643`; tablet and phone follow the component's own steps (Figma MCP limit hit before those frames). logo-marquee now reads its label from a lifted `bd-section-header` too |
+| 6–8 | `partner-banner`, `post-feed`, `link-columns` | Not started |
 
 Found along the way:
 - **The `liftSectionHeader` wrapper now has no padding.** `.default-content-wrapper:has(> bd-section-header)` had reset only `padding-inline`, so the site's default 20px stayed above and below the header and doubled the Figma gaps on phone and tablet. It now sets `padding: 0`; the block under the header owns the gap.
