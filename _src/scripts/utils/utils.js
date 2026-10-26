@@ -1375,7 +1375,7 @@ export const wrapChildrenWithStoreContext = (element, {
   element.appendChild(bdContext);
 };
 
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@2.3.0/';
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@2.3.2/';
 
 export const getDsnBase = () => {
   try {
@@ -1468,6 +1468,21 @@ export const liftSectionHeader = async (block, { layout } = {}) => {
   }
 
   return header;
+};
+
+/**
+ * The homepage's phone frames run a section's CTAs across the column; from md
+ * (768, the design system's) they hug their label. bd-button-link stretches
+ * only through its own fullwidth attribute, so this sets it below md and keeps
+ * it in step when the viewport crosses md.
+ *
+ * @param {...HTMLElement} buttons bd-button-link (or bd-button) elements
+ */
+export const fullWidthOnPhone = (...buttons) => {
+  const tablet = window.matchMedia?.('(min-width: 768px)');
+  const set = () => buttons.forEach((button) => button.toggleAttribute('fullwidth', !!tablet && !tablet.matches));
+  set();
+  tablet?.addEventListener('change', set);
 };
 
 export function onCookiesAccepted(callback) {

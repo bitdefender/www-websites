@@ -1,0 +1,32 @@
+/* The gap under the section header, as for the other homepage sections: 24 on
+   the Figma phone frame, 32 on the tablet frame, 64 on the desktop frame. */
+.awards-spotlight {
+  padding-top: var(--spacing-24, 24px);
+}
+
+@media (width >= 768px) {
+  .awards-spotlight {
+    padding-top: var(--spacing-32, 32px);
+  }
+}
+
+@media (width >= 960px) {
+  .awards-spotlight {
+    padding-top: var(--spacing-64, 64px);
+  }
+}
+
+/* The section's two buttons, centred under the centred header as every frame
+   draws Proven: in a row from md, stacked across the column on a phone
+   (fullWidthOnPhone sets fullwidth). */
+.awards-spotlight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-16, 16px);
+  margin-top: var(--spacing-24, 24px);
+}
+
+.awards-spotlight-actions bd-button-link[fullwidth] {
+  flex-basis: 100%;
+}

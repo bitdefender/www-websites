@@ -1,4 +1,4 @@
-import { getDsnBase, liftSectionHeader } from '../../scripts/utils/utils.js';
+import { fullWidthOnPhone, getDsnBase, liftSectionHeader } from '../../scripts/utils/utils.js';
 
 /*
  * The homepage's Why-trust figures, rendered with the design system's
@@ -56,11 +56,7 @@ const buildLead = (row) => {
     button.setAttribute('href', link.getAttribute('href') || '');
     if (link.target) button.setAttribute('target', link.target);
     button.textContent = text(link);
-    // the phone frame runs the CTA across the column; from md it hugs its label
-    const tablet = window.matchMedia?.(TABLET);
-    const setWidth = () => button.toggleAttribute('fullwidth', !!tablet && !tablet.matches);
-    setWidth();
-    tablet?.addEventListener('change', setWidth);
+    fullWidthOnPhone(button);
     lead.append(button);
   }
   return lead;
@@ -108,7 +104,8 @@ export default async function decorate(block) {
   // phone: one column, tiles 16 apart; tablet: tiles two across, 24 apart;
   // desktop: the highlight beside the tiles
   const layout = grid(['1', '1', '1', leadRow ? '2' : '1']);
-  layout.className = 'stat-tiles-column';
+  // the design system's page column (styles.css), on the hero's edges
+  layout.className = 'stat-tiles-column ds-page-column';
   layout.setAttribute('gap', 'md');
   const tiles = grid(['1', '1', '2', '2']);
   const tablet = window.matchMedia?.(TABLET);
