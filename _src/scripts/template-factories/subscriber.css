@@ -2205,11 +2205,19 @@ main .subscriber .section {
         margin: 0;
     }
 
+    .subscriber #multiColumns.bundle-design .columns > div {
+        flex-direction: column;
+    }
+
     .subscriber #multiColumns.bundle-design .columns > div > div, .subscriber #multiColumns.bundle-design3 .columns > div > div {
         margin: 0!important;
         height: fill-available;
         width: auto;
         flex: 1;
+    }
+
+    .subscriber #multiColumns.bundle-design .columns > div > div, .subscriber #multiColumns.bundle-design .columns > div > div p {
+        width: 100%!important;
     }
 
     .subscriber #multiColumns .columns > div > div h4 {
