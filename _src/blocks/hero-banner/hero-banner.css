@@ -1,0 +1,396 @@
+/* stylelint-disable custom-property-pattern -- the tokens are dex-core's, named in camelCase */
+
+/*
+ * The product page hero, drawn in dex-core's Figma as "herobanners".
+ * Every value is a dex-core token with the design's value as the fallback: the hero
+ * matches Figma without loading tokens.css, and follows a theme when tokens are present.
+ *
+ * Rooted on .hero-banner.block, not .hero-banner: a section style of the same name
+ * (hero-dropdown pages have one) must not pick up the block's styles.
+ */
+.hero-banner.block {
+  --hero-banner-surface: var(--color-surface-container, #fafafa);
+  --hero-banner-text: var(--color-text-primary, #151719);
+  --hero-banner-muted: var(--color-text-muted, #565e66);
+  --hero-banner-brand: var(--color-text-brand, #0059d6);
+  --hero-banner-focus: 0 0 0 2px var(--color-neutral-0, #fff), 0 0 0 4px var(--color-brand-500, #006dff);
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1290px;
+  margin: 0 auto;
+  color: var(--hero-banner-text);
+  font-family: var(--typography-fontFamily-sans, var(--body-font-family));
+  text-align: left;
+}
+
+.hero-banner.block.hero-banner--card {
+  gap: 0;
+  padding: var(--spacing-16, 16px);
+  border-radius: var(--radius-3xl, 24px);
+  background: var(--hero-banner-surface);
+}
+
+/* media panel: on top below lg, on the right from lg */
+.hero-banner .hero-banner__media {
+  position: relative;
+  order: -1;
+  overflow: hidden;
+  min-height: 240px;
+  border-radius: var(--radius-2xl, 16px);
+}
+
+.hero-banner.hero-banner--no-media .hero-banner__media {
+  display: none;
+}
+
+.hero-banner .hero-banner__media picture,
+.hero-banner .hero-banner__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-banner .hero-banner__media img {
+  object-fit: cover;
+}
+
+/* card look: the image fades into the card */
+.hero-banner.hero-banner--card .hero-banner__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgb(250 250 250 / 0%) 55%, var(--hero-banner-surface));
+  pointer-events: none;
+}
+
+/* product look: a brand scrim along the bottom, the signature on it */
+.hero-banner .hero-banner__scrim {
+  position: absolute;
+  inset: auto 0 0;
+  height: 160px;
+  background: radial-gradient(100% 100% at 100% 100%, rgb(0 109 255 / 100%) 0%, rgb(0 88 209 / 75%) 25%, rgb(0 67 163 / 50%) 50%, rgb(0 25 71 / 0%) 100%);
+  pointer-events: none;
+}
+
+.hero-banner .hero-banner__signature {
+  position: absolute;
+  right: var(--spacing-24, 24px);
+  bottom: var(--spacing-24, 24px);
+  margin: 0;
+  color: var(--color-text-inverse, #fff);
+  font-size: var(--typography-fontSize-2xl, 1.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* copy column */
+.hero-banner .hero-banner__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-16, 16px);
+  min-width: 0;
+  padding-block: var(--spacing-24, 24px);
+}
+
+.hero-banner .hero-banner__content p,
+.hero-banner .hero-banner__content h1,
+.hero-banner .hero-banner__content h2,
+.hero-banner .hero-banner__content h3 {
+  margin: 0;
+}
+
+.hero-banner .hero-banner__eyebrow {
+  color: var(--color-brand-500, #006dff);
+  font-size: var(--typography-fontSize-2xl, 1.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.hero-banner .hero-banner__product,
+.hero-banner .hero-banner__product strong {
+  color: var(--hero-banner-brand);
+  font-size: var(--typography-heading-h4-fontSize, clamp(1.3125rem, calc(1.2232rem + 0.4464vw), 1.5rem));
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.hero-banner .hero-banner__title,
+.hero-banner .hero-banner__title strong {
+  color: var(--hero-banner-text);
+  font-size: var(--typography-display-md-fontSize, clamp(1.875rem, calc(1.3393rem + 2.6786vw), 3rem));
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.hero-banner .hero-banner__description {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8, 8px);
+}
+
+/* the description sits 8px under the title, the rest of the body 16px apart */
+.hero-banner .hero-banner__title + .hero-banner__description {
+  margin-top: calc(var(--spacing-8, 8px) - var(--spacing-16, 16px));
+}
+
+/* authors write the description as paragraphs or as a bold h2: it reads as body text either way */
+.hero-banner .hero-banner__description > *,
+.hero-banner .hero-banner__description > * strong {
+  color: var(--hero-banner-text);
+  font-size: var(--typography-fontSize-base, 1rem);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.hero-banner .hero-banner__description > * strong {
+  font-weight: 600;
+}
+
+/* a heading used as the description comes bolded whole from Word; Figma draws it regular */
+.hero-banner .hero-banner__description > :is(h2, h3, h4) strong {
+  font-weight: 400;
+}
+
+/* dropdown: a native select, so keyboard, touch and screen readers work as they do anywhere */
+.hero-banner .hero-banner__selector {
+  position: relative;
+  width: 100%;
+}
+
+.hero-banner .hero-banner__selector::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: var(--spacing-16, 16px);
+  width: 16px;
+  height: 16px;
+  background-color: var(--hero-banner-muted);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 11.98 3.57 5.55 1.8 7.32l7.32 7.31a1.25 1.25 0 0 0 1.76 0l7.32-7.31-1.77-1.77z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 11.98 3.57 5.55 1.8 7.32l7.32 7.31a1.25 1.25 0 0 0 1.76 0l7.32-7.31-1.77-1.77z'/%3E%3C/svg%3E") center / contain no-repeat;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.hero-banner .hero-banner__selector:focus-within::after {
+  background-color: var(--hero-banner-brand);
+}
+
+.hero-banner .hero-banner__select {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: var(--spacing-12, 12px) calc(var(--spacing-16, 16px) * 2 + 16px) var(--spacing-12, 12px) var(--spacing-16, 16px);
+  border: var(--border-width-1, 1px) solid var(--color-border-default, #88909b);
+  border-radius: var(--radius-md, 6px);
+  background: var(--color-surface-default, #fff);
+  color: var(--hero-banner-text);
+  font: inherit;
+  font-size: var(--typography-fontSize-base, 1rem);
+  font-weight: 500;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.hero-banner .hero-banner__select:focus-visible {
+  outline: none;
+  box-shadow: var(--hero-banner-focus);
+}
+
+/* price boxes: one per product, the selected one shown */
+.hero-banner .hero-banner__offer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16, 16px);
+  width: 100%;
+}
+
+.hero-banner .hero-banner__offer[hidden] {
+  display: none;
+}
+
+/* the store wraps the offer in its context elements: let the offer's gap reach through them */
+.hero-banner .hero-banner__offer :is(bd-context, bd-product, bd-option) {
+  display: contents;
+}
+
+.hero-banner .hero-banner__details {
+  font-size: var(--typography-fontSize-sm, 0.875rem);
+  line-height: 1.45;
+}
+
+.hero-banner .hero-banner__was {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-8, 8px);
+}
+
+.hero-banner .hero-banner__full {
+  color: var(--hero-banner-muted);
+  font-size: var(--typography-fontSize-base, 1rem);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.hero-banner .hero-banner__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4, 4px);
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  border-radius: var(--radius-full, 9999px);
+  background: var(--status-success-fill, #0e8532);
+  color: var(--status-success-on-fill, #fff);
+  font-size: var(--typography-fontSize-sm, 0.875rem);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.hero-banner .hero-banner__final {
+  font-size: var(--typography-heading-h2-fontSize, clamp(1.6875rem, calc(1.4196rem + 1.3393vw), 2.25rem));
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* CTAs: full width and stacked below md, side by side from md */
+.hero-banner .hero-banner__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8, 8px);
+  width: 100%;
+}
+
+.hero-banner a.hero-banner__cta,
+.hero-banner a.hero-banner__cta:any-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: auto;
+  margin: 0;
+  padding: var(--spacing-16, 16px) var(--spacing-32, 32px);
+  border: 0;
+  border-radius: var(--radius-lg, 8px);
+  font-family: inherit;
+  font-size: var(--typography-fontSize-lg, 1.125rem);
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+}
+
+/* the global a.button arrow */
+.hero-banner a.hero-banner__cta::after {
+  content: none;
+}
+
+.hero-banner a.hero-banner__cta--primary,
+.hero-banner a.hero-banner__cta--primary:any-link {
+  background: var(--color-action-accent, #d60000);
+  color: var(--color-text-inverse, #fff);
+}
+
+.hero-banner a.hero-banner__cta--primary:hover {
+  background: var(--color-action-accent-hover, #b30000);
+  border: 0;
+}
+
+/* the outline is a 2px inset ring, as bd-button draws it, so it doesn't change the size */
+.hero-banner a.hero-banner__cta--secondary,
+.hero-banner a.hero-banner__cta--secondary:any-link {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-2, 2px) var(--color-border-brand, #006dff);
+  color: var(--hero-banner-brand);
+}
+
+.hero-banner a.hero-banner__cta--secondary:hover {
+  background: var(--color-surface-brand-subtle, #ebf3ff);
+  border: 0;
+}
+
+.hero-banner a.hero-banner__cta:focus-visible {
+  outline: none;
+  box-shadow: var(--hero-banner-focus);
+}
+
+.hero-banner a.hero-banner__cta--secondary:focus-visible {
+  box-shadow: inset 0 0 0 var(--border-width-2, 2px) var(--color-border-brand, #006dff), var(--hero-banner-focus);
+}
+
+/* the disclaimer is 8px under the CTAs */
+.hero-banner .hero-banner__disclaimer {
+  margin-top: calc(var(--spacing-8, 8px) - var(--spacing-16, 16px));
+}
+
+.hero-banner .hero-banner__disclaimer,
+.hero-banner .hero-banner__disclaimer > * {
+  color: var(--hero-banner-muted);
+  font-size: var(--typography-fontSize-xs, 0.75rem);
+  line-height: 1.5;
+}
+
+.hero-banner .hero-banner__marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-24, 24px);
+  margin-top: var(--spacing-8, 8px);
+}
+
+.hero-banner .hero-banner__marks img {
+  display: block;
+  width: auto;
+  height: 56px;
+}
+
+@media (width >= 768px) {
+  .hero-banner .hero-banner__ctas {
+    flex-flow: row wrap;
+    gap: var(--spacing-16, 16px);
+    width: auto;
+  }
+
+  .hero-banner .hero-banner__selector {
+    width: 320px;
+    max-width: 100%;
+  }
+}
+
+@media (width >= 992px) {
+  .hero-banner.block {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-40, 40px);
+    padding-block: var(--spacing-16, 16px);
+  }
+
+  .hero-banner.block.hero-banner--card {
+    gap: 0;
+    padding: var(--spacing-16, 16px) var(--spacing-16, 16px) var(--spacing-16, 16px) var(--spacing-40, 40px);
+  }
+
+  .hero-banner.block.hero-banner--no-media {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-banner .hero-banner__media {
+    order: 0;
+    min-height: 0;
+  }
+
+  .hero-banner.hero-banner--card .hero-banner__media::after {
+    background: linear-gradient(to left, rgb(250 250 250 / 0%) 40%, var(--hero-banner-surface));
+  }
+}
