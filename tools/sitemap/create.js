@@ -126,6 +126,9 @@ const checkedValidUrls = new Set();
 // Set to cache checked URLs that are invalid (do not return a 200 status)
 const checkedNotValidUrls = new Set();
 
+const URL_CHECK_ATTEMPTS = 3;
+const isTransientStatus = (status) => status === 429 || status >= 500;
+
 async function fetchJson(url) {
   try {
     const response = await fetch(url, {
@@ -168,30 +171,41 @@ async function checkUrlExists(url) {
     return false;
   }
 
-  try {
-    const min = 1000, max = 3000;
-    const delay = Math.floor(Math.random() * (max - min + 1)) + min;
-    await new Promise(resolve => setTimeout(resolve, delay));
-    const response = await fetch(url, {
-      method: 'GET',
-      redirect: "error",
-      headers: {
-        'X-Client-Id': process.env.X_CLIENT_ID,
-      }
-    });
+  // An answer from the page decides, and is cached for the rest of the run. A network error
+  // or a 429/5xx says nothing about the page, so it is retried; a single ECONNRESET used to
+  // be cached as invalid and dropped that alternate from every locale's sitemap.
+  for (let attempt = 1; attempt <= URL_CHECK_ATTEMPTS; attempt++) {
+    try {
+      const min = 1000, max = 3000;
+      const delay = Math.floor(Math.random() * (max - min + 1)) + min + (attempt - 1) * 5000;
+      await new Promise(resolve => setTimeout(resolve, delay));
+      // "manual" returns a redirect as its 3xx response. "error" threw on it, the same
+      // TypeError a network failure throws, so redirects could not be told apart.
+      const response = await fetch(url, {
+        method: 'GET',
+        redirect: "manual",
+        headers: {
+          'X-Client-Id': process.env.X_CLIENT_ID,
+        }
+      });
 
-    if (response.status === 200) {
-      checkedValidUrls.add(url);
-      return true;
-    } else {
-      checkedNotValidUrls.add(url);
-      return false;
+      if (response.status === 200) {
+        checkedValidUrls.add(url);
+        return true;
+      }
+      if (!isTransientStatus(response.status)) {
+        checkedNotValidUrls.add(url);
+        return false;
+      }
+      console.error(`Failed to check URL (attempt ${attempt}/${URL_CHECK_ATTEMPTS}): ${url} HTTP ${response.status}`);
+    } catch (error) {
+      console.error(`Failed to check URL (attempt ${attempt}/${URL_CHECK_ATTEMPTS}): ${url}`, error);
     }
-  } catch (error) {
-    console.error(`Failed to check URL: ${url}`, error);
-    checkedNotValidUrls.add(url);
-    return false; // Return false if there’s any error
   }
+
+  // Still unreachable: leave it out of this locale, but don't cache it, so the next locale
+  // that links to it checks again.
+  return false;
 }
 
 async function addBucketCountriesToHreflangMap() {

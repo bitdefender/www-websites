@@ -250,9 +250,11 @@ function formatSummary(diff, failures, isFirstRun) {
     if (diff.redirectsChanged) lines.push('- `404-redirects.json` changed (affects every locale)');
     diff.added.forEach((l) => lines.push(`- \`${l}\` added`));
     diff.removed.forEach((l) => lines.push(`- \`${l}\` removed`));
+    // The fingerprint is one hash per locale, so it says that an index changed, not how
+    // many rows did. The count is the index's size, labelled so it doesn't read as the diff.
     diff.modified.forEach(({ locale, rowsBefore, rowsAfter }) => {
-      const delta = rowsBefore === rowsAfter ? `${rowsAfter} rows` : `${rowsBefore} -> ${rowsAfter} rows`;
-      lines.push(`- \`${locale}\` changed (${delta})`);
+      const size = rowsBefore === rowsAfter ? `${rowsAfter} rows` : `${rowsBefore} -> ${rowsAfter} rows`;
+      lines.push(`- \`${locale}\` changed (index: ${size})`);
     });
   }
   failures.forEach(({ locale, reason }) => lines.push(`- :warning: \`${locale}\` could not be checked (${reason}); previous fingerprint kept`));
