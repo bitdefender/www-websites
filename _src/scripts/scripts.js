@@ -550,13 +550,6 @@ const startTrackers = () => {
 };
 
 /**
- * How long the first paint waits for Target's offers on a page that can't be swapped for a
- * challenger. A later custom-code still runs; a later block offer finds its block already
- * decorated, and reportUnappliedHooks reports it.
- */
-const TARGET_FIRST_PAINT_CAP = 1000;
-
-/**
  * A challenger can replace main only when the page names both the experiment's location and
  * the experiment (see getTargetExperimentDetails in target.js).
  * @returns {boolean}
@@ -610,10 +603,12 @@ async function loadEager(doc) {
     if (main) await applyTargetOffers(main);
   } else if (main) {
     // Every other page gives Target up to TARGET_FIRST_PAINT_CAP before it is shown. The
-    // offers run after installBlockHooks, so the hooks they register apply.
+    // offers run after installBlockHooks, so the hooks they register apply. A later
+    // custom-code still runs; a later block offer finds its block already decorated, and
+    // reportUnappliedHooks reports it.
     await Promise.race([
       startTrackers().then(() => applyTargetOffers(main)),
-      new Promise((resolve) => { setTimeout(resolve, TARGET_FIRST_PAINT_CAP); }),
+      new Promise((resolve) => { setTimeout(resolve, Constants.TARGET_FIRST_PAINT_CAP); }),
     ]);
   }
   applyDevBlockHooks();

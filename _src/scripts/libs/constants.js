@@ -75,6 +75,9 @@ export class Constants {
 
 	static TARGET_TENANT = "bitdefender";
 
+	// ms the first paint waits for Target's offers on a page that can't swap to a challenger
+	static TARGET_FIRST_PAINT_CAP = 1000;
+
 	static PUBLIC_URL_ORIGIN = ['www.', 'stage.'].some(domain => window.location.hostname.includes(domain))
 		? '' : 'https://www.bitdefender.com';
 
