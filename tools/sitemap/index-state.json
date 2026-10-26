@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-21T10:41:19.431Z",
+  "generatedAt": "2026-10-26T09:55:24.326Z",
   "redirects": {
     "sha": "7d0bb45978188e1a321998fb64df18d4e2bd5df26dd1daac9729654590d7048d",
     "entries": 1
@@ -115,7 +115,7 @@
       "rows": 38
     },
     "en-us": {
-      "sha": "9e686b1f3eb31bb0240c8cd5dac754e4e87318cbd9dfa5a1ee5333a9aa20f65c",
+      "sha": "7546081be86c9fbc4b9aba2b8085433c19c24aa4f54edfff4e81ee6300949ef1",
       "rows": 116
     },
     "en-za": {
