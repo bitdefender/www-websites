@@ -72,10 +72,11 @@ describe('bento-cards block', () => {
     expect(consumer.getAttribute('body')).toMatch(/^Smarter protection for everyday digital life\. .* threats\.$/);
   });
 
-  it('turns the link into an outline-white lg CTA', () => {
+  it('turns the link into an outline-white CTA at the responsive size', () => {
     const cta = cards[0].querySelector(':scope > bd-button-link');
     expect(cta.getAttribute('variant')).toBe('outline-white');
-    expect(cta.getAttribute('size')).toBe('lg');
+    // no size: the design system's default is md below lg and lg from it
+    expect(cta.hasAttribute('size')).toBe(false);
     expect(cta.getAttribute('href')).toBe('https://www.bitdefender.com/en-us/consumer/ai/');
     expect(cta.textContent).toBe('Explore Consumer AI');
   });

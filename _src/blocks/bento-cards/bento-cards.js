@@ -61,7 +61,6 @@ const buildCard = (row) => {
     const link = p.querySelector('a');
     const cta = document.createElement('bd-button-link');
     cta.setAttribute('variant', 'outline-white');
-    cta.setAttribute('size', 'lg');
     cta.setAttribute('href', link.getAttribute('href') || '');
     cta.textContent = link.textContent.trim();
     card.append(cta);

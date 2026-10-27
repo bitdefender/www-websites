@@ -1,4 +1,4 @@
-import { fullWidthOnPhone, getDsnBase } from '../../scripts/utils/utils.js';
+import { getDsnBase } from '../../scripts/utils/utils.js';
 
 /*
  * The Ferrari section, on the design system's bd-partner-banner. Authored as:
@@ -64,7 +64,6 @@ export default async function decorate(block) {
     button.textContent = text(link);
     return button;
   });
-  fullWidthOnPhone(...buttons);
 
   banner.append(...[slotted(photo, 'photo'), slotted(lockup, 'lockup'), ...buttons].filter(Boolean));
   block.replaceChildren(banner);
