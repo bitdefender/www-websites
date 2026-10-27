@@ -1998,3 +1998,52 @@ main .section[data-header-lifted] > .default-content-wrapper > bd-section-header
   letter-spacing: inherit;
   color: inherit;
 }
+
+/* The design system's page column (its ensembleCSS) for a block's own light-DOM
+   layout, on the same edges as the DS sections around it */
+.ds-page-column {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xs));
+  margin-inline: auto;
+  padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-xs));
+}
+
+@media (width >= 576px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-sm));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-sm));
+  }
+}
+
+@media (width >= 768px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-md));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-md));
+  }
+}
+
+@media (width >= 992px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-lg));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-lg));
+  }
+}
+
+@media (width >= 1200px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xl));
+  }
+}
+
+@media (width >= 1400px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxl));
+  }
+}
+
+@media (width >= 1600px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxxl));
+  }
+}

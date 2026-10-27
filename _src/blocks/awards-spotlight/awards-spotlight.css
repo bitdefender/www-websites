@@ -1,6 +1,5 @@
-/* The gap above the card: 32 on the Figma desktop frame, under the buttons.
-   bd-awards-spotlight is its own page column (bd-ensemble), so the block adds
-   no gutters. */
+/* The gap under the section header, as for the other homepage sections: 24 on
+   the Figma phone frame, 32 on the tablet frame, 64 on the desktop frame. */
 .awards-spotlight {
   padding-top: var(--spacing-24, 24px);
 }
@@ -11,26 +10,23 @@
   }
 }
 
-/* The header's two buttons, 24 under it: side by side and of one width across
-   the centred header's 588 measure, each wrapping under the other when the
-   column cannot hold both (the phone frame). */
-.awards-spotlight-container > .default-content-wrapper > .awards-spotlight-actions {
+@media (width >= 960px) {
+  .awards-spotlight {
+    padding-top: var(--spacing-64, 64px);
+  }
+}
+
+/* The section's two buttons, centred under the centred header as every frame
+   draws Proven: in a row from md, stacked across the column on a phone
+   (fullWidthOnPhone sets fullwidth). */
+.awards-spotlight-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--spacing-16, 16px);
-  box-sizing: content-box;
-  max-width: 588px;
-  margin: var(--spacing-24, 24px) auto 0;
-  padding-inline: var(--grid-padding-xs, 16px);
+  margin-top: var(--spacing-24, 24px);
 }
 
-.awards-spotlight-container > .default-content-wrapper > .awards-spotlight-actions > bd-button-link {
-  flex: 1 1 240px;
-}
-
-@media (width >= 768px) {
-  .awards-spotlight-container > .default-content-wrapper > .awards-spotlight-actions {
-    gap: var(--spacing-24, 24px);
-  }
+.awards-spotlight-actions bd-button-link[fullwidth] {
+  flex-basis: 100%;
 }
