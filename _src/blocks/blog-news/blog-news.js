@@ -1,4 +1,90 @@
-import { matchHeights } from '../../scripts/utils/utils.js';
+import { getDsnBase, liftSectionHeader, matchHeights } from '../../scripts/utils/utils.js';
+
+/*
+ * The multi-endpoint variant is the homepage's Latest insights, on the design
+ * system's bd-post-card under the section header: the newest post from each
+ * feed in Section Metadata (Endpoint, Endpoint-business, Endpoint-labs),
+ * taken in turn until Articles-number. Each card's badge is its feed's
+ * channel title, so it arrives translated with the feed.
+ */
+
+// the design system's lg (992): the cards go three across
+const DESKTOP = '(min-width: 992px)';
+
+const readFeed = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${url}: ${response.status}`);
+  const xml = new window.DOMParser().parseFromString(await response.text(), 'text/xml');
+  const channel = xml.querySelector('channel > title')?.textContent.trim() || '';
+  return [...xml.querySelectorAll('item')].map((item) => ({
+    title: item.querySelector('title')?.textContent.trim() || '',
+    link: item.querySelector('link')?.textContent.trim() || '',
+    image: item.getElementsByTagName('media:content')[0]?.getAttribute('url') || '',
+    channel,
+  })).filter((post) => post.title && post.link);
+};
+
+async function decorateFeedCards(block) {
+  const section = block.closest('.section');
+  const { dataset } = section;
+  const feeds = Object.keys(dataset)
+    .filter((key) => /^endpoint/.test(key) && dataset[key])
+    .map((key) => dataset[key]);
+
+  // the section's heading, as bd-section-header
+  const header = liftSectionHeader(block);
+  const base = getDsnBase();
+  const [modules, ...results] = await Promise.allSettled([
+    Promise.all([import(`${base}post-card`), import(`${base}grid`)]),
+    ...feeds.map(readFeed),
+  ]);
+  if (modules.status === 'rejected') {
+    // eslint-disable-next-line no-console
+    console.warn('blog-news: DSN import failed', modules.reason);
+  }
+
+  // the newest of each feed first, then the next of each, until the count
+  const lists = results.map((result) => {
+    if (result.status === 'fulfilled') return result.value;
+    // eslint-disable-next-line no-console
+    console.error('blog-news:', result.reason);
+    return [];
+  });
+  const count = parseInt(dataset.articlesNumber, 10) || feeds.length;
+  const posts = [];
+  for (let round = 0; posts.length < count && lists.some((list) => list[round]); round += 1) {
+    lists.forEach((list) => {
+      if (list[round] && posts.length < count) posts.push(list[round]);
+    });
+  }
+
+  const cards = posts.map(({
+    title, link, image, channel,
+  }) => {
+    const card = document.createElement('bd-post-card');
+    card.setAttribute('heading', title);
+    card.setAttribute('href', link);
+    if (channel) card.setAttribute('badge', channel);
+    if (image) card.setAttribute('image', image);
+    if (dataset.buttonText) card.setAttribute('read-more', dataset.buttonText);
+    return card;
+  });
+
+  const grid = document.createElement('bd-grid');
+  // the design system's page column (styles.css), on the hero's edges
+  grid.className = 'ds-page-column';
+  [['cols', '1'], ['cols-sm', '1'], ['cols-md', '1'], ['cols-lg', '3']]
+    .forEach(([name, value]) => grid.setAttribute(name, value));
+  // phone and tablet stack the posts 16 apart; the desktop row sets them 24 apart
+  const desktop = window.matchMedia?.(DESKTOP);
+  const setGap = () => grid.setAttribute('gap', !desktop || desktop.matches ? 'md' : 'sm');
+  setGap();
+  desktop?.addEventListener('change', setGap);
+  grid.append(...cards);
+
+  block.replaceChildren(grid);
+  await header;
+}
 
 async function renderBlogGrid(block, endpoint, articlesNumber) {
   const { buttonText } = block.closest('.section').dataset;
@@ -137,6 +223,11 @@ function createCarouselNavigation() {
 }
 
 export default async function decorate(block) {
+  if (block.classList.contains('multi-endpoint')) {
+    await decorateFeedCards(block);
+    return;
+  }
+
   const section = block.closest('.section');
   const { endpoint, articlesNumber, sectionColor } = section.dataset;
   if (sectionColor) section.style.backgroundColor = sectionColor;
