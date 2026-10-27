@@ -490,21 +490,6 @@ const injectOfferCode = (code) => {
 };
 
 /**
- * Fetch custom-code and the mbox of every block type on the page in one request, and run
- * them. custom-code exists because Target's global mbox cannot use syntasa parameters. Block
- * offers register hooks that change their block before it is shown (see utils/block-hooks.js),
- * so they only take effect if they arrive before the blocks are decorated.
- * @param {Element} main
- */
-const applyTargetOffers = async (main) => {
-  const mboxNames = ['custom-code', ...blockMboxNames(main)];
-  const offers = await target.getOffers({ mboxNames });
-  mboxNames.forEach((name) => {
-    if (typeof offers?.[name] === 'string') injectOfferCode(offers[name]);
-  });
-};
-
-/**
  * Local development only: run block hooks saved in localStorage under "bd-block-hooks-dev",
  * so a component test can be tried without a Target activity.
  */
@@ -514,6 +499,27 @@ const applyDevBlockHooks = () => {
     const code = window.localStorage.getItem('bd-block-hooks-dev');
     if (code) injectOfferCode(code);
   } catch { /* storage unavailable */ }
+};
+
+/**
+ * Waits for the Launch tag head.html starts while the page parses. A page without one (404.html,
+ * or a head.html older than this code) loads Launch here instead. Launch.load can't be used to
+ * wait: loadScript resolves straight away when it finds the tag, whether it has loaded or not.
+ * @returns {Promise<void>}
+ */
+const loadLaunch = () => {
+  const launch = document.getElementById('adobe-launch');
+  if (!launch) return Launch.load(page.environment);
+  return new Promise((resolve, reject) => {
+    if (launch.dataset.state === 'loaded') {
+      resolve();
+    } else if (launch.dataset.state === 'failed') {
+      reject(new Error('Launch failed to load'));
+    } else {
+      launch.addEventListener('load', () => resolve(), { once: true });
+      launch.addEventListener('error', () => reject(new Error('Launch failed to load')), { once: true });
+    }
+  });
 };
 
 export async function loadTrackers() {
@@ -526,7 +532,7 @@ export async function loadTrackers() {
 
   if (isPageNotInDraftsFolder) {
     try {
-      await Launch.load(page.environment);
+      await loadLaunch();
       onAdobeMcLoaded();
     } catch {
       target.abort();
@@ -538,15 +544,30 @@ export async function loadTrackers() {
 }
 
 /**
- * Starts Launch once per page. loadPage starts it first thing, so Target has as long as
- * possible to answer before the first paint. Launch.load resolves straight away when called a
- * second time, even if the script is still loading, so later callers await this one.
+ * Loads the trackers once per page; every caller awaits the same promise. loadPage calls it
+ * first thing, for pages where head.html hasn't started Launch already.
  * @returns {Promise<void>}
  */
 let trackersLoaded;
 const startTrackers = () => {
   trackersLoaded ??= loadTrackers();
   return trackersLoaded;
+};
+
+/**
+ * Fetch custom-code and the mbox of every block type on the page in one request, and run
+ * them. custom-code exists because Target's global mbox cannot use syntasa parameters. Block
+ * offers register hooks that change their block before it is shown (see utils/block-hooks.js),
+ * so they only take effect if they arrive before the blocks are decorated.
+ * @param {Element} main the authored main: decorated, its sections' -wrapper classes would be
+ * read as block names
+ */
+const applyTargetOffers = async (main) => {
+  const mboxNames = ['custom-code', ...blockMboxNames(main)];
+  const offers = await target.getOffers({ mboxNames });
+  mboxNames.forEach((name) => {
+    if (typeof offers?.[name] === 'string') injectOfferCode(offers[name]);
+  });
 };
 
 /**
@@ -592,25 +613,16 @@ async function loadEager(doc) {
   installBlockHooks({
     report: (name, status) => sampleRUM('target-block-hook', { source: name, target: status }),
   });
+  // Every page waits for Launch and Target's offers before it is shown. If Launch fails to
+  // load, Target is aborted and the offers resolve at once.
+  await startTrackers();
+  // Resolving the data layer is what swaps main for a challenger page, which would both erase
+  // custom-code's edits and change which blocks are on the page, so it goes first there.
+  // Other pages resolve it in loadLazy, after the first paint.
+  if (hasChallengerExperiment()) await resolveNonProductsDataLayer();
+  // The offers run after installBlockHooks, so the hooks they register apply.
   const main = doc.querySelector('main');
-  if (hasChallengerExperiment()) {
-    // Waits for Target however long it takes: showing the page and then swapping it for the
-    // challenger would be worse than a late first paint.
-    await startTrackers();
-    await resolveNonProductsDataLayer();
-    // Only now is main final: resolving the data layer can swap it for a challenger page,
-    // which would both erase custom-code's edits and change which blocks are on the page.
-    if (main) await applyTargetOffers(main);
-  } else if (main) {
-    // Every other page gives Target up to TARGET_FIRST_PAINT_CAP before it is shown. The
-    // offers run after installBlockHooks, so the hooks they register apply. A later
-    // custom-code still runs; a later block offer finds its block already decorated, and
-    // reportUnappliedHooks reports it.
-    await Promise.race([
-      startTrackers().then(() => applyTargetOffers(main)),
-      new Promise((resolve) => { setTimeout(resolve, Constants.TARGET_FIRST_PAINT_CAP); }),
-    ]);
-  }
+  if (main) await applyTargetOffers(main);
   applyDevBlockHooks();
 
   const userCountry = await user.country;
