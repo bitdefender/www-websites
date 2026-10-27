@@ -6,11 +6,12 @@ import page from '../../scripts/page.js';
 
 import {
   createTag,
+  getDsnBase,
   wrapChildrenWithStoreContext,
   generatePageLoadStartedName,
 } from '../../scripts/utils/utils.js';
 
-import { detectModalButtons } from '../../scripts/scripts.js';
+import { openModal } from '../../scripts/scripts.js';
 
 /*
  * Authored content, one cell:
@@ -34,12 +35,20 @@ import { detectModalButtons } from '../../scripts/scripts.js';
  * The look follows the content: a product name gives the product look (white, the
  * signature over the image), otherwise it is the card look (grey card, signature as the
  * eyebrow). The block classes `product` and `card` force one.
+ *
+ * Text, controls and the badge are dex-system-design atoms (bd-h, bd-p, bd-custom-dropdown,
+ * bd-button-link, bd-badge); the layout around them is this block's, on the same tokens.
+ * The hero is drawn without waiting for them: it is the LCP, and they take a second to
+ * download on mobile. The CSS sizes each one as it will render, so the upgrade moves nothing.
  */
 
 const DROPDOWN_MARKER = /^\{\s*dropdown\s*\}$/i;
 
-// the dropdown is labelled by the description, which needs an id unique on the page
-let instanceCount = 0;
+const ATOMS = ['heading', 'paragraph', 'badge', 'button', 'dropdown'];
+
+// Resolves once the atom is defined and has rendered its shadow root
+const whenRendered = (atom) => customElements.whenDefined(atom.localName)
+  .then(() => atom.updateComplete);
 
 // the codes look like ps_i/5/1; anything without the three parts is not a product
 function parseProducts(raw = '') {
@@ -67,20 +76,51 @@ const isPicturesOnly = (el) => el.tagName === 'P' && el.querySelector('picture')
 const isButtonOnly = (el) => el.tagName === 'P' && el.querySelectorAll('a').length === 1
   && !!el.querySelector('a.button') && el.textContent.trim() === el.querySelector('a').textContent.trim();
 
+// The atom's slot keeps the authored inline markup (links, line breaks, emphasis)
+function toAtom(tagName, source, attributes = {}) {
+  const atom = createTag(tagName, attributes);
+  atom.append(...source.childNodes);
+  if (source.id) atom.id = source.id;
+  return atom;
+}
+
+/*
+ * A CTA is a bd-button-link: accent (red) for the buy button, tertiary (blue outline)
+ * for the other. Its anchor is in the shadow root, so:
+ *  - the store only fills a buy link in when the host carries data-bd-watch-shadow, and
+ *    only looks into a shadow root when the host is added to the page. The host is usually
+ *    added before the atom has upgraded, so it is put back in place once it has rendered;
+ *  - a fragment link opens a modal from a click on the host, as detectModalButtons
+ *    does for a light-DOM a.button.modal.
+ */
 function createCta({
-  text, href, primary, buyLink, trialDuration,
+  text, href, primary, buyLink, trialDuration, keepModal = false,
 }) {
-  const cta = createTag('a', {
+  const cta = createTag('bd-button-link', {
     class: `hero-banner__cta hero-banner__cta--${primary ? 'primary' : 'secondary'}`,
-    href: href || '#',
+    variant: primary ? 'accent' : 'tertiary',
+    size: 'lg',
+    fullwidth: '',
   });
-  if (buyLink) {
-    cta.dataset.storeRender = '';
-    cta.dataset.storeBuyLink = trialDuration || '';
-  }
-  // detectModalButtons only binds a.button.modal
-  if (href?.includes('/fragments/')) cta.classList.add('button', 'modal');
   cta.textContent = text;
+
+  if (buyLink) {
+    cta.buyLink = true;
+    cta.setAttribute('data-bd-watch-shadow', '');
+    whenRendered(cta).then(() => {
+      // the atom marks its anchor as a buy link with no value; a trial needs the duration on it
+      const anchor = cta.shadowRoot?.querySelector('a');
+      if (anchor && trialDuration) anchor.dataset.storeBuyLink = trialDuration;
+      if (cta.isConnected) cta.parentNode.insertBefore(cta, cta.nextSibling);
+    });
+  } else if (href?.includes('/fragments/')) {
+    cta.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(href, keepModal);
+    });
+  } else if (href) {
+    cta.href = href;
+  }
   return cta;
 }
 
@@ -114,21 +154,20 @@ function buildCtas(settings) {
 function buildPriceBox(product, details, settings) {
   const box = createTag('div', { class: 'hero-banner__offer await-loader' });
 
-  if (details) box.append(createTag('p', { class: 'hero-banner__details' }, details));
+  if (details) box.append(createTag('bd-p', { class: 'hero-banner__details', variant: 'small' }, details));
 
+  // the store renders into light-DOM nodes, which the atoms slot
   box.insertAdjacentHTML('beforeend', `
     <div class="hero-banner__price">
       <div class="hero-banner__was" data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility">
-        <s class="hero-banner__full" data-store-render data-store-price="full"></s>
-        <span class="hero-banner__badge"><span data-store-render data-store-discount="percentage"></span> ${settings.discounttext || 'OFF'}</span>
+        <bd-p class="hero-banner__full" variant="regular" font-weight="medium" color="muted"><s data-store-render data-store-price="full"></s></bd-p>
+        <bd-badge class="hero-banner__badge" tone="success" variant="fill" size="lg"><span data-store-render data-store-discount="percentage"></span> ${settings.discounttext || 'OFF'}</bd-badge>
       </div>
       <p class="hero-banner__final"><span data-store-render data-store-price="discounted||full"></span></p>
     </div>
   `);
 
-  const ctas = buildCtas({ ...settings, hasProduct: true });
-  box.append(ctas);
-  detectModalButtons(ctas);
+  box.append(buildCtas({ ...settings, hasProduct: true }));
 
   wrapChildrenWithStoreContext(box, {
     productId: product.productId,
@@ -140,23 +179,47 @@ function buildPriceBox(product, details, settings) {
   return box;
 }
 
-function buildSelector(products, names, labelledBy, boxes) {
-  const select = createTag('select', { class: 'hero-banner__select', name: 'hero-banner-product' });
-  if (labelledBy) select.setAttribute('aria-labelledby', labelledBy);
-
+/*
+ * bd-custom-dropdown takes its options as text and reports the chosen text, so the
+ * labels have to be unique to map back to a product. It has no way to be named from
+ * outside its shadow root, and Figma draws no visible label, so the select inside is
+ * given the description (or the h1) as its aria-label once it has rendered.
+ */
+function buildSelector(products, names, accessibleName, boxes) {
+  const labels = [];
   products.forEach((product, index) => {
-    const option = createTag('option', { value: String(index) }, names[index]?.name || product.productId);
-    select.append(option);
+    const { name, details } = names[index] || {};
+    let label = name || product.productId;
+    if (labels.includes(label) && details) label = `${label} - ${details}`;
+    if (labels.includes(label)) label = `${label} (${index + 1})`;
+    labels.push(label);
   });
 
-  select.addEventListener('change', () => {
+  const dropdown = createTag('bd-custom-dropdown', {
+    class: 'hero-banner__select',
+    name: 'hero-banner-product',
+    size: 'md',
+  });
+  dropdown.options = labels;
+  [dropdown.value] = labels;
+  // shown until the atom renders, which has no slot and hides it
+  [dropdown.textContent] = labels;
+
+  dropdown.addEventListener('bd-change', (e) => {
+    const chosen = labels.indexOf(e.detail.value);
     boxes.forEach((box, index) => {
-      box.hidden = String(index) !== select.value;
+      box.hidden = index !== chosen;
     });
   });
 
+  if (accessibleName) {
+    whenRendered(dropdown).then(() => {
+      dropdown.shadowRoot?.querySelector('select')?.setAttribute('aria-label', accessibleName);
+    });
+  }
+
   const selector = createTag('div', { class: 'hero-banner__selector' });
-  selector.append(select);
+  selector.append(dropdown);
   return selector;
 }
 
@@ -214,6 +277,29 @@ function buildMedia(picture, signature, isProductLook) {
   return media;
 }
 
+// The authored button paragraphs: bold is the red one, plain the outline one
+function authoredCta(paragraph) {
+  const link = paragraph.querySelector('a');
+  // detectModalButtons has already moved a fragment link's href to `location`
+  const href = link.getAttribute('href') || link.getAttribute('location');
+  return createCta({
+    text: link.textContent.trim(),
+    href,
+    primary: link.classList.contains('primary'),
+    keepModal: link.dataset.stopAutomaticModalRefresh === 'true',
+  });
+}
+
+async function loadAtoms() {
+  const base = getDsnBase();
+  try {
+    await Promise.all(ATOMS.map((atom) => import(`${base}${atom}`)));
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('hero-banner: DSN import failed, continuing with native rendering', err);
+  }
+}
+
 export default function decorate(block) {
   const section = block.closest('.section');
   const settings = { ...(section?.dataset || {}) };
@@ -237,20 +323,27 @@ export default function decorate(block) {
     copy.append(createTag('p', { class: 'hero-banner__eyebrow' }, signature));
   }
   if (content.productName) {
-    content.productName.classList.add('hero-banner__product');
-    copy.append(content.productName);
+    // the authored level stays: the page owns the outline, the design the size
+    copy.append(toAtom('bd-h', content.productName, {
+      class: 'hero-banner__product',
+      as: content.productName.tagName.toLowerCase(),
+      'visual-level': 'h4',
+      color: 'primary',
+    }));
   }
   if (content.h1) {
-    content.h1.classList.add('hero-banner__title');
-    copy.append(content.h1);
+    copy.append(toAtom('bd-h', content.h1, { class: 'hero-banner__title', as: 'h1', 'visual-level': 'h1' }));
   }
 
-  let descriptionId = '';
   if (content.description.length) {
-    instanceCount += 1;
-    descriptionId = `hero-banner-description-${instanceCount}`;
-    const description = createTag('div', { class: 'hero-banner__description', id: descriptionId });
-    description.append(...content.description);
+    const description = createTag('div', { class: 'hero-banner__description' });
+    // Figma draws the description as body text, so a heading used as one becomes a paragraph
+    description.append(...content.description.map((el) => {
+      const paragraph = toAtom('bd-p', el, { variant: 'regular' });
+      // Word bolds such a heading whole; the CSS takes that weight off
+      if (/^H[1-6]$/.test(el.tagName)) paragraph.dataset.authoredAs = 'heading';
+      return paragraph;
+    }));
     copy.append(description);
   }
 
@@ -263,30 +356,26 @@ export default function decorate(block) {
 
     if (products.length > 1) {
       // the dropdown is named by what the hero asks the visitor to pick
-      copy.append(buildSelector(products, names, descriptionId || content.h1?.id, boxes));
+      const accessibleName = (content.description.length
+        ? copy.querySelector('.hero-banner__description')
+        : copy.querySelector('.hero-banner__title'))?.textContent.trim();
+      copy.append(buildSelector(products, names, accessibleName, boxes));
     }
     copy.append(...boxes);
   } else {
     const ctas = buildCtas({ ...settings, hasProduct: false });
-    if (ctas.children.length) {
-      copy.append(ctas);
-      detectModalButtons(ctas);
-    }
+    if (ctas.children.length) copy.append(ctas);
   }
 
   if (content.ctas.length) {
     const authored = createTag('div', { class: 'hero-banner__ctas hero-banner__ctas--authored' });
-    content.ctas.forEach((paragraph) => {
-      const link = paragraph.querySelector('a');
-      link.classList.add('hero-banner__cta', `hero-banner__cta--${link.classList.contains('primary') ? 'primary' : 'secondary'}`);
-      authored.append(link);
-    });
+    authored.append(...content.ctas.map(authoredCta));
     copy.append(authored);
   }
 
   if (content.disclaimer.length) {
     const disclaimer = createTag('div', { class: 'hero-banner__disclaimer' });
-    disclaimer.append(...content.disclaimer);
+    disclaimer.append(...content.disclaimer.map((el) => toAtom('bd-p', el, { variant: 'xsmall', color: 'muted' })));
     copy.append(disclaimer);
   }
 
@@ -298,6 +387,14 @@ export default function decorate(block) {
 
   block.replaceChildren(copy, buildMedia(content.picture, signature, isProductLook));
 
+  // the image is the LCP: on a slow connection the atoms would share its bandwidth, so they
+  // load once it has, and until then the CSS draws them
+  const img = block.querySelector('.hero-banner__media img');
+  if (img && !img.complete) {
+    img.addEventListener('load', loadAtoms, { once: true });
+    img.addEventListener('error', loadAtoms, { once: true });
+  } else loadAtoms();
+
   if (hardcodedLink && page.name === 'web-sage') {
     block.addEventListener('click', (e) => {
       if (!e.target.closest('.hero-banner__cta--primary')) return;
@@ -308,12 +405,9 @@ export default function decorate(block) {
   }
 
   if (linksOpenInNewTab) {
-    block.querySelectorAll('a.hero-banner__cta').forEach((link) => {
-      // leave anchors as they are
-      if (!link.href.includes('#')) {
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-      }
+    block.querySelectorAll('bd-button-link.hero-banner__cta').forEach((cta) => {
+      // leave anchors and store buy links as they are
+      if (cta.href && !cta.href.includes('#')) cta.target = '_blank';
     });
   }
 }

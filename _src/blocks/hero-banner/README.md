@@ -55,10 +55,17 @@ or `(card)` to the block name to choose.
 
 ## Notes
 
-- The dropdown is a native `<select>`: keyboard, touch and screen readers work as anywhere.
-  It is named by the description, so write one when there is a dropdown.
-- Styles are dex-core tokens with the Figma values as fallbacks, so the hero needs no
-  dex-core JS or `tokens.css`, and follows a theme when the page has the tokens.
+- Text, controls and the badge are dex-system-design atoms: `bd-h` (title, product name),
+  `bd-p` (description, details, disclaimer), `bd-custom-dropdown`, `bd-button-link`
+  (`accent` buy button, `tertiary` second button) and `bd-badge`. The card, image, scrim
+  and price are this block's CSS, on the design-system tokens.
+- The hero is the LCP, so it draws without waiting for the atoms. They load once the hero
+  image has, and until then the CSS draws each one at the size it renders, so nothing moves.
+  The token fallbacks are there for the same reason: the atoms install the tokens.
+- The dropdown is a native `<select>` inside `bd-custom-dropdown`. The atom can't be named
+  from outside, so the block gives the select the description as its `aria-label`: write
+  one when there is a dropdown. A heading used as the description becomes a paragraph.
+- The signature is text, not `bd-brand-signature-icon`: the mark is drawn in English.
 - Prices, discounts and buy links come from the store (`bd-context` per product).
 - Rollback for a page: rename the block back to `Hero Dropdown` and republish it.
 - Adobe Target slots are named after the block (`hero-banner-mbox`): a test running on a
