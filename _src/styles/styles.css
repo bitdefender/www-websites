@@ -2047,3 +2047,21 @@ main .section[data-header-lifted] > .default-content-wrapper > bd-section-header
     max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxxl));
   }
 }
+
+/* The homepage's design-system sections on the site menu's and footer's edges:
+   a 20px gutter below 992, then min(1200px, viewport - 100px), and 1292 from
+   1600. Set as the design system's grid tokens, which its page column, the
+   hero's art and .ds-page-column all read; keyed on the brand hero, which only
+   the homepage has. */
+main:has(.brand-hero) {
+  --grid-container-max-sm: 100%;
+  --grid-container-max-md: 100%;
+  --grid-container-max-lg: min(1300px, 100%);
+  --grid-container-max-xl: min(1300px, 100%);
+  --grid-container-max-xxl: min(1300px, 100%);
+  --grid-container-max-xxxl: min(1392px, 100%);
+  --grid-padding-xs: 20px;
+  --grid-padding-sm: 20px;
+  --grid-padding-md: 20px;
+  --grid-padding-lg: 50px;
+}
