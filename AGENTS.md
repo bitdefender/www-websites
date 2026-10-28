@@ -8,7 +8,7 @@ Edge Delivery Services, diverged from aem-boilerplate. Read a block first. Omiss
 - Content is authored in SharePoint Word docs (`fstab.yaml`, still in use). Ignore skills for Document Authoring (da.live), Universal Editor and page import.
 - Markup comes from the backend. `curl localhost:3000/x.plain.html` first.
 - Authors omit and add cells. Decorate defensively.
-- No build step. `dependencies` load from esm.sh via the import map in `head.html` and `404.html`; the pre-commit hook regenerates it. Never edit the map by hand.
+- No build step. `dependencies` load from esm.sh via the import map in `head.html` and `404.html`; the pre-commit hook regenerates it from `package-lock.json` (CI fails if the committed map doesn't match). Never edit the map by hand.
 - Scope CSS to `.blockname`; `-wrapper`/`-container` are section classes.
 - Blocks don't import each other. Shared code goes in `_src/scripts/` (usually `utils/utils.js`).
 
