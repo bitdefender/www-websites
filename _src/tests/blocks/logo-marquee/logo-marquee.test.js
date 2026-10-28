@@ -40,14 +40,14 @@ describe('logo-marquee', () => {
     vi.restoreAllMocks();
   });
 
-  it('builds the trusted line with the default timing', async () => {
+  it('leaves the trusted line at the design system speed', async () => {
     const block = setupMarquee();
 
     await decorate(block);
 
     const marquee = block.querySelector(':scope > bd-logo-marquee');
     expect(block.children).toHaveLength(1);
-    expect(marquee.getAttribute('duration')).toBe('18');
+    expect(marquee.hasAttribute('duration')).toBe(false);
     expect(marquee.getAttribute('gap')).toBe('48');
     expect(marquee.getAttribute('label')).toBe('#1 most awarded');
   });
@@ -98,7 +98,7 @@ describe('logo-marquee', () => {
     await decorate(block);
 
     const marquee = block.querySelector('bd-logo-marquee');
-    expect(marquee.getAttribute('duration')).toBe('10');
+    expect(marquee.hasAttribute('duration')).toBe(false);
     expect(marquee.getAttribute('gap')).toBe('24');
     expect(marquee.getAttribute('label')).toBe('Proven by Independent Testing');
   });

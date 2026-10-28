@@ -3,9 +3,10 @@ import { getDsnBase } from '../../scripts/utils/utils.js';
 // The logo assets are exported at 1.5x the size Figma draws them.
 const ASSET_SCALE = 1.5;
 
-const VARIANTS = {
-  default: { duration: '18', gap: '48' },
-  awards: { duration: '10', gap: '24' },
+// The speed is bd-logo-marquee's own (35s for partners and awards alike).
+const GAPS = {
+  default: '48',
+  awards: '24',
 };
 
 /* bd-logo-marquee clones its items into its shadow root, where block CSS does
@@ -99,10 +100,8 @@ export default async function decorate(block) {
     return;
   }
 
-  const { duration, gap } = block.classList.contains('awards') ? VARIANTS.awards : VARIANTS.default;
   const marquee = document.createElement('bd-logo-marquee');
-  marquee.setAttribute('duration', duration);
-  marquee.setAttribute('gap', gap);
+  marquee.setAttribute('gap', block.classList.contains('awards') ? GAPS.awards : GAPS.default);
   const label = getLabel(block, textItem);
   if (label) marquee.setAttribute('label', label);
   marquee.append(...items);
