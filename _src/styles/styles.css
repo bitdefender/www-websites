@@ -2008,15 +2008,6 @@ body > div.header-with-language-banner {
   }
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
-main .section[data-header-lifted] > .default-content-wrapper > bd-section-header > p {
-  margin: 0;
-  padding: 0;
-  font: inherit;
-  letter-spacing: inherit;
-  color: inherit;
-}
-
 /* The design system's page column (its ensembleCSS) for a block's own light-DOM
    layout, on the same edges as the DS sections around it */
 .ds-page-column {
