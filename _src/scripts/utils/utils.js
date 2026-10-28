@@ -1423,9 +1423,13 @@ export const wrapSectionsInDsSection = (main) => {
 
 const HEADER_LAYOUTS = ['stacked', 'split', 'centered'];
 
-// A lead's link, as bd-section-header asks: underlined, since colour alone fails WCAG 1.4.1.
-const toLeadParagraph = (p) => {
-  const lead = document.createElement('p');
+/* The lead's copy for bd-section-header's lead slot. A span, as the header's
+   own lead text is: the header sets the lead's type on its wrapper and the
+   slotted copy inherits it, which a <p> would lose to the page's own p rules.
+   Its links as bd-section-header asks: underlined, since colour alone fails
+   WCAG 1.4.1. */
+const toLead = (p) => {
+  const lead = document.createElement('span');
   lead.slot = 'lead';
   lead.append(...p.childNodes);
   lead.querySelectorAll('a').forEach((a) => {
@@ -1490,7 +1494,7 @@ export const liftSectionHeader = async (block, { layout } = {}) => {
     console.warn('liftSectionHeader: DSN import failed, continuing with native rendering', err);
   }
 
-  if (lead) header.append(toLeadParagraph(lead));
+  if (lead) header.append(toLead(lead));
   heading.replaceWith(header);
   eyebrow?.remove();
   lead?.remove();

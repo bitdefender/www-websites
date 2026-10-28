@@ -420,6 +420,10 @@ main .section:has(> bd-section:defined) {
   overflow: visible;
 }
 
+main .section:last-child > bd-section:defined {
+  padding-block-end: calc(var(--bd-section-padding) * 2);
+}
+
 main .section.margin-0 {
   padding-top: 0;
   padding-bottom: 0;

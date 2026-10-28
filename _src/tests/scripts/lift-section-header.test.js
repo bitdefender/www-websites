@@ -53,7 +53,7 @@ describe('liftSectionHeader', () => {
 
     const header = await liftSectionHeader(block);
 
-    const lead = header.querySelector(':scope > p[slot="lead"]');
+    const lead = header.querySelector(':scope > span[slot="lead"]');
     expect(lead.textContent).toBe('Independent analysts recognize Bitdefender.');
     const link = lead.querySelector('bd-link');
     expect(link.getAttribute('href')).toBe('/awards/');
