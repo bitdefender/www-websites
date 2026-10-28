@@ -1,9 +1,3 @@
-/* bd-partner-banner is a full-bleed band with its own column: the section adds
-   no padding of its own around it */
-.section.partner-banner-container {
-  padding: 0;
-}
-
 /* The component cover-fits the slotted <picture>; the <img> inside it is light
    DOM, out of the component's reach, so it fills the picture from here. */
 .partner-banner bd-partner-banner > picture[slot="photo"] img {

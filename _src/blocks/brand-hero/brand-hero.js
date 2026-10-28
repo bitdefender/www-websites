@@ -90,6 +90,10 @@ const buildCard = (row) => {
 };
 
 export default async function decorate(block) {
+  // the hero's band starts under the site menu: its section keeps only the
+  // inset below it, so the cards stand twice the inset clear of what follows
+  block.closest('bd-section')?.setAttribute('no-padding-top', '');
+
   const base = getDsnBase();
   try {
     await Promise.all([

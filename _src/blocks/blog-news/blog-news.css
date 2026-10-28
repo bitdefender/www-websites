@@ -236,22 +236,9 @@
 
 /* multi-endpoint: the homepage's Latest insights on bd-post-card. The grid
    sits on the design system's page column (.ds-page-column), so the block
-   drops its own width and gutter. The gap under the section header is the
-   other homepage sections': 24 on the Figma phone frame, 32 on the tablet
-   frame, 64 on the desktop frame. */
+   drops its own width and gutter, and the gap under the section header is
+   bd-section's. */
 .blog-news.multi-endpoint {
     max-width: none;
-    padding: var(--spacing-24, 24px) 0 0;
-}
-
-@media (width >= 768px) {
-    .blog-news.multi-endpoint {
-        padding-top: var(--spacing-32, 32px);
-    }
-}
-
-@media (width >= 960px) {
-    .blog-news.multi-endpoint {
-        padding-top: var(--spacing-64, 64px);
-    }
+    padding: 0;
 }

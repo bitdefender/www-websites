@@ -1,4 +1,6 @@
-import { fullWidthOnPhone, getDsnBase, liftSectionHeader } from '../../scripts/utils/utils.js';
+import {
+  fullWidthOnPhone, getDsnBase, getSectionContent, liftSectionHeader,
+} from '../../scripts/utils/utils.js';
 
 /*
  * The Proven section's awards carousel, on the design system's
@@ -35,7 +37,8 @@ const readAward = (row) => {
 
 /** The section's authored button links, as a row of primary DS buttons under the header. */
 const liftActions = (block) => {
-  const wrapper = block.closest('.section')?.querySelector(':scope > .default-content-wrapper');
+  const section = block.closest('.section');
+  const wrapper = section && getSectionContent(section).querySelector(':scope > .default-content-wrapper');
   const containers = [...(wrapper?.querySelectorAll(':scope > .button-container') || [])];
   if (!containers.length) return;
 

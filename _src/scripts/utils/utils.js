@@ -1375,7 +1375,7 @@ export const wrapChildrenWithStoreContext = (element, {
   element.appendChild(bdContext);
 };
 
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@2.4.0/';
+const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@2.5.0/';
 
 export const getDsnBase = () => {
   try {
@@ -1385,6 +1385,40 @@ export const getDsnBase = () => {
   } catch {
     return DSN_FALLBACK;
   }
+};
+
+/**
+ * The element that holds a section's wrappers: the bd-section a page laid
+ * out on the design system's rhythm puts them in, or else the section itself.
+ * @param {HTMLElement} section
+ * @returns {HTMLElement}
+ */
+export const getSectionContent = (section) => section?.querySelector(':scope > bd-section') || section;
+
+/**
+ * Lays every section of `main` out on the design system's vertical rhythm:
+ * its wrappers go into one bd-section, which pads the section (24 below md,
+ * 32 from md) and sets its blocks twice that apart, so the section adds no
+ * padding of its own (main .section:has(> bd-section) in styles.css). The
+ * Section Metadata styles `no-padding-top` and `no-padding-bottom` turn that
+ * edge's inset off.
+ * Runs after the blocks are decorated, which find them as section > wrapper.
+ * @param {HTMLElement} main
+ */
+export const wrapSectionsInDsSection = (main) => {
+  main.querySelectorAll(':scope > div.section').forEach((section) => {
+    const bdSection = document.createElement('bd-section');
+    ['no-padding-top', 'no-padding-bottom'].forEach((edge) => {
+      if (section.classList.contains(edge)) bdSection.setAttribute(edge, '');
+    });
+    bdSection.append(...section.children);
+    section.append(bdSection);
+  });
+
+  import(`${getDsnBase()}section`).catch((err) => {
+    // eslint-disable-next-line no-console
+    console.warn('bd-section: DSN import failed, sections keep their authored spacing', err);
+  });
 };
 
 const HEADER_LAYOUTS = ['stacked', 'split', 'centered'];
@@ -1422,8 +1456,9 @@ export const liftSectionHeader = async (block, { layout } = {}) => {
   const section = block.closest('.section');
   if (!section || section.dataset.headerLifted !== undefined) return null;
 
-  const legacy = section.querySelector(':scope > .section-header-wrapper > .section-header');
-  const wrapper = section.querySelector(':scope > .default-content-wrapper');
+  const content = getSectionContent(section);
+  const legacy = content.querySelector(':scope > .section-header-wrapper > .section-header');
+  const wrapper = content.querySelector(':scope > .default-content-wrapper');
   const source = wrapper?.querySelector('h1, h2, h3') ? wrapper : legacy;
   const heading = source?.querySelector('h1, h2, h3');
   if (!heading) return null;

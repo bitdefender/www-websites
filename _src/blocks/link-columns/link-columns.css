@@ -1,21 +1,3 @@
-/* The gap under the section header, as for the other homepage sections: 24 on
-   the Figma phone frame, 32 on the tablet frame, 64 on the desktop frame. */
-.link-columns {
-  padding-top: var(--spacing-24, 24px);
-}
-
-@media (width >= 768px) {
-  .link-columns {
-    padding-top: var(--spacing-32, 32px);
-  }
-}
-
-@media (width >= 960px) {
-  .link-columns {
-    padding-top: var(--spacing-64, 64px);
-  }
-}
-
 /* A column: the link over its line, 12 apart. Below lg the phone and tablet
    frames rule each column off above, in the design system's container edge. */
 .link-columns .link-columns-item {

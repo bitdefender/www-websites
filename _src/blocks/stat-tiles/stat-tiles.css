@@ -1,21 +1,3 @@
-/* The gap under the section header, as for the AI cards: 24 on the Figma
-   phone frame, 32 on the tablet frame, 64 on the desktop frame. */
-.stat-tiles {
-  padding-top: var(--spacing-24, 24px);
-}
-
-@media (width >= 768px) {
-  .stat-tiles {
-    padding-top: var(--spacing-32, 32px);
-  }
-}
-
-@media (width >= 960px) {
-  .stat-tiles {
-    padding-top: var(--spacing-64, 64px);
-  }
-}
-
 /* the highlight, its copy and the CTA, stacked 24 apart; bd-p's own bottom
    margin is the gap's job here */
 .stat-tiles .stat-tiles-lead {

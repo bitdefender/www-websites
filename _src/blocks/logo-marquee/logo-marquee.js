@@ -1,4 +1,4 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
+import { getDsnBase, getSectionContent } from '../../scripts/utils/utils.js';
 
 // The logo assets are exported at 1.5x the size Figma draws them.
 const ASSET_SCALE = 1.5;
@@ -57,7 +57,8 @@ const buildTextItem = (cell) => {
 
 const getLabel = (block, textItem) => {
   if (textItem) return textItem.textContent.replace(/\s+/g, ' ').trim();
-  const wrapper = block.closest('.section')?.querySelector(':scope > .default-content-wrapper');
+  const section = block.closest('.section');
+  const wrapper = section && getSectionContent(section).querySelector(':scope > .default-content-wrapper');
   // a block earlier in the section may have lifted the heading into bd-section-header
   const lifted = wrapper?.querySelector(':scope > bd-section-header')?.getAttribute('heading');
   return lifted || wrapper?.querySelector(':is(h1, h2, h3)')?.textContent.trim() || '';

@@ -1,14 +1,3 @@
-/* The trusted line is a section of its own, 32px clear of the hero cards and
-   the AI section, so it carries its own spacing instead of the section's. */
-main .section:has(> .logo-marquee-wrapper:only-child) {
-  padding-block: 0;
-}
-
-.logo-marquee {
-  padding-block: var(--spacing-32, 32px);
-}
-
-/* Under the awards carousel, inside the Proven section's own padding. */
-.logo-marquee.awards {
-  padding-block: var(--spacing-32, 32px) 0;
-}
+/* No spacing of its own: the trusted line and the awards line sit on
+   bd-section's rhythm, its inset around a section and twice it between
+   blocks. */

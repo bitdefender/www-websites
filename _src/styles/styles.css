@@ -410,6 +410,16 @@ main .section {
   overflow: hidden;
 }
 
+/* A section on the design system's rhythm: the bd-section inside pads it and
+   spaces its blocks, so the section adds no padding, and it does not clip
+   what a block spills past its edge (the hero's glow). Only once bd-section
+   is defined: if the design system fails to load, the section keeps its own
+   padding rather than the page losing all of its spacing. */
+main .section:has(> bd-section:defined) {
+  padding: 0;
+  overflow: visible;
+}
+
 main .section.margin-0 {
   padding-top: 0;
   padding-bottom: 0;
