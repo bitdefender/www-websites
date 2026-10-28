@@ -594,6 +594,9 @@ async function loadEager(doc) {
   applyDevBlockHooks();
 
   const userCountry = await user.country;
+
+  if (page.name.includes(page.locale)) doc.body.classList.add('homepage');
+
   if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);

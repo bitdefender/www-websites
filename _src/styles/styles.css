@@ -1903,6 +1903,10 @@ main .section.blue p a.button.modal::after {
     min-height: 131px;
   }
 
+  .homepage header, body.homepage > div:first-child {
+    min-height: 64px;
+  }
+
   body.with-language-bar header, body.with-language-bar > div:first-child {
     min-height: 191px;
   }
