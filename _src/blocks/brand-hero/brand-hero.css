@@ -1,7 +1,10 @@
 /* bd-hero is a full-bleed band with its own column: the section adds no
-   padding of its own around it */
+   padding of its own around it. From lg its glow spills out under the band,
+   behind the next section, so the section must not clip it (bd-hero clips
+   the glow sideways itself). */
 .section.brand-hero-container {
   padding: 0;
+  overflow: visible;
 }
 
 .brand-hero bd-hero {
