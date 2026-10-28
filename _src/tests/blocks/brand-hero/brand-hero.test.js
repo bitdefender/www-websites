@@ -59,7 +59,8 @@ describe('brand-hero block', () => {
   });
 
   it('takes the eyebrow, h1 and lead from the first row', () => {
-    expect(hero.getAttribute('eyebrow')).toBe('25 Years. Trusted. Always.');
+    // the authored <br> arrives as a newline, which bd-hero renders as a break
+    expect(hero.getAttribute('eyebrow')).toBe('25 Years.\nTrusted. Always.');
     expect(hero.getAttribute('heading')).toBe('Cybersecurity for the AI Era.');
     expect(hero.getAttribute('lead')).toMatch(/^Bitdefender protects consumers, .* tested and proven\.$/);
   });

@@ -11,7 +11,22 @@ import { getDsnBase } from '../../scripts/utils/utils.js';
 // the audience icons the design system draws; any other authored icon is kept as is
 const DS_ICONS = ['home', 'small-business', 'enterprise'];
 
-const text = (el) => el?.textContent.replace(/\s+/g, ' ').trim() || '';
+// a private-use character stands in for each <br> while the source whitespace collapses
+const BREAK = '';
+
+/**
+ * The element's text on one line, except where the author wrote a <br>: that
+ * becomes a newline, which bd-hero and bd-audience-card render as a break.
+ */
+const text = (el) => {
+  if (!el) return '';
+  const copy = el.cloneNode(true);
+  copy.querySelectorAll('br').forEach((br) => br.replaceWith(BREAK));
+  return copy.textContent.split(BREAK)
+    .map((line) => line.replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n');
+};
 
 /** The cell's text without its icon's, which decorateIcons may fill with markup. */
 const labelText = (cell) => {
