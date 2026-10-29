@@ -61,6 +61,7 @@ const buildCardItem = (row, shape) => {
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('href', link.getAttribute('href'));
       bdBtn.setAttribute('slot', 'cta');
+      bdBtn.setAttribute('size', 'md');
       if (shape) bdBtn.setAttribute('shape', shape);
       bdBtn.textContent = link.textContent.trim();
       item.appendChild(bdBtn);
@@ -176,6 +177,7 @@ export default async function decorate(block) {
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('align', 'center');
       bdBtn.setAttribute('href', link.getAttribute('href'));
+      bdBtn.setAttribute('size', 'md');
       if (shape) bdBtn.setAttribute('shape', shape);
       bdBtn.textContent = link.textContent.trim();
       block.appendChild(bdBtn);

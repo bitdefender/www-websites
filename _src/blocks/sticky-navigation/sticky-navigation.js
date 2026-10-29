@@ -128,6 +128,7 @@ function buildFromSections(anchorNav, block) {
     buttonLink.setAttribute('slot', 'cta');
     buttonLink.setAttribute('href', ctaHref);
     buttonLink.setAttribute('kind', ctaKind);
+    buttonLink.setAttribute('size', 'md');
     buttonLink.textContent = ctaLabel;
     anchorNav.appendChild(buttonLink);
   }
