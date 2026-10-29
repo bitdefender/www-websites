@@ -1,4 +1,4 @@
-import { getDsnBase, liftSectionHeader } from '../../scripts/utils/utils.js';
+import { getDsnBase, liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The homepage's Latest insights, on the design system's bd-post-card, under
@@ -35,6 +35,7 @@ const buildCard = (row) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   // the section's heading, as bd-section-header
   const header = liftSectionHeader(block);
   const base = getDsnBase();

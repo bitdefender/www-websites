@@ -80,14 +80,14 @@ describe('awards-spotlight block', () => {
   });
 
   it('lifts the section header, centred as every frame draws it', () => {
-    const header = section.querySelector(':scope > .default-content-wrapper > bd-section-header');
+    const header = section.querySelector(':scope > bd-section > .default-content-wrapper > bd-section-header');
     expect(header.getAttribute('layout')).toBe('centered');
     expect(header.getAttribute('heading')).toBe('Proven by Independent Testing and Industry Analysts');
     expect(header.querySelector('[slot="lead"]').textContent).toMatch(/^Independent analysts/);
   });
 
   it('turns the section button links into primary DS buttons under the header', () => {
-    const wrapper = section.querySelector(':scope > .default-content-wrapper');
+    const wrapper = section.querySelector(':scope > bd-section > .default-content-wrapper');
     const actions = wrapper.querySelector(':scope > bd-section-header + .awards-spotlight-actions');
     const buttons = [...actions.querySelectorAll('bd-button-link')];
     expect(buttons.map((button) => [button.textContent, button.getAttribute('variant')])).toEqual([

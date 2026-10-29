@@ -1,4 +1,6 @@
-import { fullWidthOnPhone, getDsnBase, liftSectionHeader } from '../../scripts/utils/utils.js';
+import {
+  fullWidthOnPhone, getDsnBase, liftSectionHeader, wrapSectionInDsSection,
+} from '../../scripts/utils/utils.js';
 
 /*
  * The homepage's Why-trust figures, rendered with the design system's
@@ -79,6 +81,7 @@ const grid = (cols) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   // the section's eyebrow, heading and lead, as bd-section-header
   const header = liftSectionHeader(block);
   const base = getDsnBase();

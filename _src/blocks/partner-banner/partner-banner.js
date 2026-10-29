@@ -1,4 +1,4 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
+import { getDsnBase, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The Ferrari section, on the design system's bd-partner-banner. Authored as:
@@ -19,6 +19,7 @@ const slotted = (picture, slot) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   const base = getDsnBase();
   try {
     await Promise.all([

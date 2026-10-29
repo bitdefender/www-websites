@@ -1396,29 +1396,34 @@ export const getDsnBase = () => {
 export const getSectionContent = (section) => section?.querySelector(':scope > bd-section') || section;
 
 /**
- * Lays every section of `main` out on the design system's vertical rhythm:
- * its wrappers go into one bd-section, which pads the section (24 below md,
- * 32 from md) and sets its blocks twice that apart, so the section adds no
- * padding of its own (main .section:has(> bd-section) in styles.css). The
- * Section Metadata styles `no-padding-top` and `no-padding-bottom` turn that
- * edge's inset off.
- * Runs after the blocks are decorated, which find them as section > wrapper.
- * @param {HTMLElement} main
+ * Puts the block's section on the design system's vertical rhythm: every
+ * design system block calls it first, so its section's wrappers go into one
+ * bd-section, which pads the section (24 below md, 32 from md) and sets its
+ * blocks twice that apart, and the section adds no padding of its own
+ * (main .section:has(> bd-section) in styles.css). The Section Metadata
+ * styles `no-padding-top` and `no-padding-bottom` turn that edge's inset off.
+ * A second block in the same section finds the bd-section already there.
+ * @param {HTMLElement} block
+ * @returns {HTMLElement|null} the section's bd-section
  */
-export const wrapSectionsInDsSection = (main) => {
-  main.querySelectorAll(':scope > div.section').forEach((section) => {
-    const bdSection = document.createElement('bd-section');
-    ['no-padding-top', 'no-padding-bottom'].forEach((edge) => {
-      if (section.classList.contains(edge)) bdSection.setAttribute(edge, '');
-    });
-    bdSection.append(...section.children);
-    section.append(bdSection);
+export const wrapSectionInDsSection = (block) => {
+  const section = block.closest('.section');
+  if (!section) return null;
+  const existing = section.querySelector(':scope > bd-section');
+  if (existing) return existing;
+
+  const bdSection = document.createElement('bd-section');
+  ['no-padding-top', 'no-padding-bottom'].forEach((edge) => {
+    if (section.classList.contains(edge)) bdSection.setAttribute(edge, '');
   });
+  bdSection.append(...section.children);
+  section.append(bdSection);
 
   import(`${getDsnBase()}section`).catch((err) => {
     // eslint-disable-next-line no-console
-    console.warn('bd-section: DSN import failed, sections keep their authored spacing', err);
+    console.warn('bd-section: DSN import failed, the section keeps its authored spacing', err);
   });
+  return bdSection;
 };
 
 const HEADER_LAYOUTS = ['stacked', 'split', 'centered'];

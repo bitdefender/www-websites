@@ -1,4 +1,4 @@
-import { getDsnBase, getSectionContent } from '../../scripts/utils/utils.js';
+import { getDsnBase, getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 // The logo assets are exported at 1.5x the size Figma draws them.
 const ASSET_SCALE = 1.5;
@@ -65,6 +65,7 @@ const getLabel = (block, textItem) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   const base = getDsnBase();
   try {
     await Promise.all([

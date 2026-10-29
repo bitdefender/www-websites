@@ -95,7 +95,7 @@ describe('bento-cards block', () => {
 
   it('lifts the section-header table into a split bd-section-header', () => {
     const section = block.closest('.section');
-    const header = section.querySelector(':scope > .default-content-wrapper > bd-section-header');
+    const header = section.querySelector(':scope > bd-section > .default-content-wrapper > bd-section-header');
     expect(header.getAttribute('layout')).toBe('split');
     expect(header.getAttribute('eyebrow')).toBe('15+ years of AI-driven security innovation');
     expect(header.getAttribute('heading')).toBe('AI Across Bitdefender');

@@ -1,5 +1,5 @@
 import {
-  fullWidthOnPhone, getDsnBase, getSectionContent, liftSectionHeader,
+  fullWidthOnPhone, getDsnBase, getSectionContent, liftSectionHeader, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -59,6 +59,7 @@ const liftActions = (block) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   // the section's heading and lead, as bd-section-header: Proven is centred in
   // every frame, so the block asks for it rather than leaving it to metadata
   const header = liftSectionHeader(block, { layout: 'centered' });

@@ -1,4 +1,4 @@
-import { getDsnBase, liftSectionHeader } from '../../scripts/utils/utils.js';
+import { getDsnBase, liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The homepage's solution splitter, under the section header: one column per
@@ -33,6 +33,7 @@ const buildColumn = (row) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   // the section's heading and lead, as bd-section-header
   const header = liftSectionHeader(block);
   const base = getDsnBase();

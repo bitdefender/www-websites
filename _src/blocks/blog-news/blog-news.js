@@ -1,4 +1,6 @@
-import { getDsnBase, liftSectionHeader, matchHeights } from '../../scripts/utils/utils.js';
+import {
+  getDsnBase, liftSectionHeader, matchHeights, wrapSectionInDsSection,
+} from '../../scripts/utils/utils.js';
 
 /*
  * The multi-endpoint variant is the homepage's Latest insights, on the design
@@ -25,6 +27,7 @@ const readFeed = async (url) => {
 };
 
 async function decorateFeedCards(block) {
+  wrapSectionInDsSection(block);
   const section = block.closest('.section');
   const { dataset } = section;
   const feeds = Object.keys(dataset)

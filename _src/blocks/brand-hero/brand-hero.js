@@ -1,4 +1,4 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
+import { getDsnBase, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The homepage hero, rendered by the design system's bd-hero with the brand
@@ -92,7 +92,7 @@ const buildCard = (row) => {
 export default async function decorate(block) {
   // the hero's band starts under the site menu: its section keeps only the
   // inset below it, so the cards stand twice the inset clear of what follows
-  block.closest('bd-section')?.setAttribute('no-padding-top', '');
+  wrapSectionInDsSection(block)?.setAttribute('no-padding-top', '');
 
   const base = getDsnBase();
   try {

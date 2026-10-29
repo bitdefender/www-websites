@@ -1,4 +1,4 @@
-import { getDsnBase, liftSectionHeader } from '../../scripts/utils/utils.js';
+import { getDsnBase, liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 // The attribute each bd-motion-art object reads its labels from.
 const ART_LABELS = {
@@ -70,6 +70,7 @@ const buildCard = (row) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   const header = liftSectionHeader(block);
   const base = getDsnBase();
   try {

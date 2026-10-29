@@ -45,7 +45,6 @@ import {
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
   getPageExperimentKey,
-  wrapSectionsInDsSection,
 } from './utils/utils.js';
 import { Constants } from './libs/constants.js';
 import {
@@ -618,8 +617,6 @@ async function loadEager(doc) {
     decorateMain(main);
     buildCtaSections(main);
     buildTwoColumnsSection(main);
-    // the homepage is built from the design system, on its vertical rhythm
-    if (doc.body.classList.contains('homepage')) wrapSectionsInDsSection(main);
     detectModalButtons(main);
 
     if (getMetadata('pdfs') && getMetadata('pdfs') === 'new-tab') openExternalLinksInNewTab(doc);

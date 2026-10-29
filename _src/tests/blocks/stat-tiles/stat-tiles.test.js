@@ -64,9 +64,16 @@ describe('stat-tiles block', () => {
     vi.restoreAllMocks();
   });
 
+  it('puts its section on the design system rhythm, in a bd-section', () => {
+    const section = block.closest('.section');
+    expect(section.children).toHaveLength(1);
+    expect(section.firstElementChild.tagName).toBe('BD-SECTION');
+    expect(block.closest('bd-section')).toBe(section.firstElementChild);
+  });
+
   it('lifts the section header above the figures', () => {
     const section = block.closest('.section');
-    const header = section.querySelector(':scope > .default-content-wrapper > bd-section-header');
+    const header = section.querySelector(':scope > bd-section > .default-content-wrapper > bd-section-header');
     expect(header.getAttribute('eyebrow')).toBe('25 years of Cybersecurity Excellence');
     expect(header.getAttribute('heading')).toBe('Why Millions Trust Bitdefender');
     expect(header.id).toBe('why-millions-trust-bitdefender');
