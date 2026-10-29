@@ -187,8 +187,15 @@
     outline-offset: 2px;
 }
 
-/* section style churn-small-purple-card: small card, e.g. churn-flow-reactivate-subscription */
+/*
+ * section style churn-small-purple-card: small card, e.g. churn-flow-reactivate-subscription.
+ * Matches Central's Manage Subscription cards (Helios ui-card raised, ui-button solid md);
+ * it fills its grid slot so the button lines up with the cards next to it.
+ */
 .churn-small-purple-card .webview-churn-offer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     min-height: auto;
     max-width: none;
     margin: 0;
@@ -196,7 +203,9 @@
     color: rgb(0 0 0 / 80%);
     text-align: left;
     border-radius: 8px;
-    box-shadow: 0 4px 2px rgb(0 0 0 / 10%);
+    box-shadow: 0 4px 4px rgb(0 0 0 / 10%);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .churn-small-purple-card .webview-churn-offer .webview-churn-offer-close {
@@ -204,11 +213,13 @@
 }
 
 .churn-small-purple-card .webview-churn-offer .webview-churn-offer-content {
+    flex: 1;
     gap: 24px;
     align-items: stretch;
 }
 
 .churn-small-purple-card .webview-churn-offer .webview-churn-offer-copy {
+    flex: 1;
     max-width: none;
     margin: 0;
 }
@@ -219,8 +230,9 @@
     align-items: center;
     margin: 0 0 16px;
     font-size: 16px;
-    line-height: 30px;
+    line-height: 22px;
     color: #000;
+    text-wrap: wrap;
 }
 
 .churn-small-purple-card .webview-churn-offer h2 .icon,
@@ -246,12 +258,18 @@
 
 .churn-small-purple-card .webview-churn-offer .button {
     width: 100%;
+    padding: 8px 16px;
     background-color: #8f5ee0;
     border: 0;
 }
 
+/* Helios solid button: 20% / 40% black over the fill */
 .churn-small-purple-card .webview-churn-offer .button:hover {
-    background-color: #7a48cc;
+    background-color: #724bb3;
+}
+
+.churn-small-purple-card .webview-churn-offer .button:active {
+    background-color: #563886;
 }
 
 @media (width <= 600px) {
