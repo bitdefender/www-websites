@@ -4,9 +4,22 @@ import page from './page.js';
 import { getUrlPromotion, getMetadata, getCampaignBasedOnLocale } from './utils/utils.js';
 import getTrialLinkMap from './trialLinkMap.js';
 
-const trialLinkMap = await getTrialLinkMap();
+// filled in by getTrialLinkMap() instead of awaited at the top level, which would block the page;
+// the store reads it after resolving the campaign, so campaign() waits for it
+const trialLinkMap = {};
+let trialLinkMapLoaded;
+const loadTrialLinkMap = () => {
+  trialLinkMapLoaded ??= getTrialLinkMap()
+    .then((map) => Object.assign(trialLinkMap, map))
+    .catch(() => {});
+  return trialLinkMapLoaded;
+};
+
 export default new Store({
-  campaign: async ({ campaign }) => (await target.configMbox)?.promotion || getUrlPromotion() || campaign || getMetadata('pid') || getCampaignBasedOnLocale(),
+  campaign: async ({ campaign }) => {
+    const [configMbox] = await Promise.all([target.configMbox, loadTrialLinkMap()]);
+    return configMbox?.promotion || getUrlPromotion() || campaign || getMetadata('pid') || getCampaignBasedOnLocale();
+  },
   locale: page.locale.includes('global') ? 'en-us' : page.locale,
   provider: { name: 'vlaicu' },
   trialLinks: trialLinkMap,
