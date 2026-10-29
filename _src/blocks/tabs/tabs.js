@@ -281,12 +281,13 @@ export default async function decorate(block) {
     if (defaultWrapper && title) defaultWrapper.remove();
 
     const base = getDsnBase();
+    // no icons module: bd-individual-icon here only wraps the authored <img>,
+    // and the design system's element of that name draws its own glyph instead
     try {
       await Promise.all([
         import(`${base}tabs`),
         import(`${base}paragraph`),
         import(`${base}accordion`),
-        import(`${base}individual-icon`),
       ]);
     } catch (err) {
       // eslint-disable-next-line no-console
