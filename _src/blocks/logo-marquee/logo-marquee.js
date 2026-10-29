@@ -108,4 +108,13 @@ export default async function decorate(block) {
   marquee.append(...items);
 
   block.replaceChildren(marquee);
+
+  /* No pause button on the strips, by request: they still pause on hover and
+     focus. The button has no part, so the rule goes into the shadow root. */
+  await marquee.updateComplete;
+  if (marquee.shadowRoot) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync('.toggle { display: none; }');
+    marquee.shadowRoot.adoptedStyleSheets = [...marquee.shadowRoot.adoptedStyleSheets, sheet];
+  }
 }
