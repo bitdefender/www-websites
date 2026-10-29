@@ -1447,7 +1447,9 @@ const toLead = (p) => {
  * Turns the default content that opens a block's section (an eyebrow p, an
  * h1-h3 and a lead p) into a bd-section-header, in place, so the wrapper keeps
  * its margins. Button links stay under it. One header per section: the first
- * block to call this claims it. Layout comes from Section Metadata `Header`.
+ * block to call this claims it. Layout comes from the section's Section
+ * Metadata: a `section-header-<layout>` Style (Section-header-split) or a
+ * `Header` key.
  *
  * Until sections are re-authored, a `section-header` block table in the same
  * section is read too, its variant class giving the layout.
@@ -1475,8 +1477,9 @@ export const liftSectionHeader = async (block, { layout } = {}) => {
     lead = lead.nextElementSibling;
   }
 
+  const styleLayout = HEADER_LAYOUTS.find((name) => section.classList.contains(`section-header-${name}`));
   const legacyLayout = legacy && HEADER_LAYOUTS.find((name) => legacy.classList.contains(name));
-  const requested = (layout || section.dataset.header || legacyLayout || '').trim().toLowerCase();
+  const requested = (layout || styleLayout || section.dataset.header || legacyLayout || '').trim().toLowerCase();
 
   const header = document.createElement('bd-section-header');
   header.setAttribute('heading', heading.textContent.trim());

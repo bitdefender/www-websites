@@ -5,10 +5,12 @@ import {
 import { liftSectionHeader } from '../../scripts/utils/utils.js';
 
 // a section as decorateSections leaves it: default content, then a block
-function setupSection({ content, header = '', blocks = 1 }) {
+function setupSection({
+  content, header = '', style = '', blocks = 1,
+}) {
   document.body.innerHTML = `
     <main>
-      <div class="section" ${header ? `data-header="${header}"` : ''}>
+      <div class="section ${style}" ${header ? `data-header="${header}"` : ''}>
         <div class="default-content-wrapper">${content}</div>
         ${Array.from({ length: blocks }, (_, i) => `
           <div class="demo-wrapper"><div class="demo block" data-index="${i}"></div></div>`).join('')}
@@ -79,6 +81,17 @@ describe('liftSectionHeader', () => {
 
     [block] = setupSection({ content: PROVEN, header: 'centered' });
     expect((await liftSectionHeader(block, { layout: 'split' })).getAttribute('layout')).toBe('split');
+  });
+
+  it('takes the layout from a section-header-<layout> Section Metadata style', async () => {
+    let [block] = setupSection({ content: PROVEN, style: 'section-header-split' });
+    expect((await liftSectionHeader(block)).getAttribute('layout')).toBe('split');
+
+    [block] = setupSection({ content: PROVEN, style: 'section-header-split', header: 'centered' });
+    expect((await liftSectionHeader(block)).getAttribute('layout')).toBe('split');
+
+    [block] = setupSection({ content: PROVEN, style: 'section-header-split' });
+    expect((await liftSectionHeader(block, { layout: 'centered' })).getAttribute('layout')).toBe('centered');
   });
 
   it('lifts one header per section, for the first block that asks', async () => {
