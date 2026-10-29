@@ -1388,6 +1388,40 @@ export const getDsnBase = () => {
 };
 
 /**
+ * An authored icon (span.icon, the page's inline SVG) readied for a design
+ * system component's icon slot: a copy, sized, in the brand's colour unless
+ * the page names one.
+ *
+ * The component copies its slots into its shadow root once, when it renders,
+ * where the page's CSS cannot follow; so the icon goes in as an SVG that is
+ * already there, carrying its own colour. The icon set draws with
+ * currentColor, which an <img> cannot pass in: shown as images,
+ * complete-protection and online-privacy came out black beside performance,
+ * whose blue is in its file. An icon with its colours in its file keeps them.
+ *
+ * The caller awaits decorateIcons (lib-franklin) on its block first. The
+ * page's icon pass is not awaited, and that call queues behind it, so every
+ * span.icon in the block holds its SVG by the time this copies it.
+ */
+export const slotIcon = (span, { color, size = 40 } = {}) => {
+  const icon = span.cloneNode(true);
+  icon.style.display = 'block';
+  icon.style.width = `${size}px`;
+  icon.style.height = `${size}px`;
+  icon.style.color = color || 'var(--color-brand-500)';
+  const svg = icon.querySelector('svg');
+  if (svg) {
+    svg.style.display = 'block';
+    svg.style.width = '100%';
+    svg.style.height = '100%';
+  } else {
+    // an icon whose file did not load is filled with the text "undefined"
+    icon.replaceChildren();
+  }
+  return icon;
+};
+
+/**
  * The element that holds a section's wrappers: the bd-section a page laid
  * out on the design system's rhythm puts them in, or else the section itself.
  * @param {HTMLElement} section

@@ -1,4 +1,5 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
+import { decorateIcons } from '../../scripts/lib-franklin.js';
+import { getDsnBase, slotIcon } from '../../scripts/utils/utils.js';
 
 const parseTrailingGreenPill = (text) => {
   const marker = text.match(/\[\$([^\]]+?)\$\]\s*$/);
@@ -58,23 +59,15 @@ const getIconElement = (col) => {
   icon.setAttribute('slot', 'icon');
   icon.setAttribute('size', '40');
 
-  const iconSpan = col.querySelector('[class*="icon-"]');
+  // the page's own inline SVG: decorate() waited for the icon pass
+  const iconSpan = col.querySelector('span.icon');
   if (iconSpan) {
-    const iconName = Array.from(iconSpan.classList)
-      .find((cls) => cls.startsWith('icon-'))
-      ?.substring(5);
-    if (iconName) {
-      const img = document.createElement('img');
-      img.src = `/common/icons/${iconName}.svg`;
-      img.setAttribute('width', '40');
-      img.setAttribute('height', '40');
-      img.style.width = '40px';
-      img.style.height = '40px';
-      img.style.display = 'block';
-      img.setAttribute('alt', '');
-      icon.appendChild(img);
-      return icon;
-    }
+    // a paragraph holding only a hex value is the column's icon colour
+    const color = [...col.querySelectorAll('p')]
+      .map((p) => p.textContent.trim())
+      .find((text) => /^#[0-9a-fA-F]{3,6}$/.test(text));
+    icon.appendChild(slotIcon(iconSpan, { color }));
+    return icon;
   }
 
   const image = col.querySelector('img');
@@ -164,6 +157,8 @@ const buildFeatureCol = (col, firstOpen) => {
 };
 
 export default async function decorate(block) {
+  // the icons are SVG before bd-features copies them (slotIcon)
+  await decorateIcons(block);
   const base = getDsnBase();
   try {
     await Promise.all([

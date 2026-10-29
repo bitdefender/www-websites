@@ -1,19 +1,9 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
-import { readBlockConfig, loadBlocks } from '../../scripts/lib-franklin.js';
+import { getDsnBase, slotIcon } from '../../scripts/utils/utils.js';
+import { readBlockConfig, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 
-const getIconSrc = (iconCell) => {
+const getImageSrc = (iconCell) => {
   const image = iconCell?.querySelector('img');
-  const imageSrc = image?.currentSrc || image?.getAttribute('src') || '';
-  if (imageSrc) return imageSrc;
-
-  const iconElement = iconCell?.querySelector('[class*="icon-"]');
-  if (!iconElement) return '';
-
-  const iconName = Array.from(iconElement.classList)
-    .find((cls) => cls.startsWith('icon-'))
-    ?.substring(5);
-
-  return iconName ? `/common/icons/${iconName}.svg` : '';
+  return image?.currentSrc || image?.getAttribute('src') || '';
 };
 
 const parseIconColor = (cell) => {
@@ -35,14 +25,18 @@ const buildTabCol = (cells, isFirstOpen, bgBlue) => {
 
   const icon = document.createElement('bd-individual-icon');
   icon.setAttribute('slot', 'icon');
-  icon.setAttribute('size', parseIconSize(iconCell));
-  const color = parseIconColor(iconCell);
-  if (color) icon.setAttribute('color', color);
-  const iconSrc = getIconSrc(iconCell);
-  if (iconSrc) {
+  const imageSrc = getImageSrc(iconCell);
+  // the page's own inline SVG: decorate() waited for the icon pass
+  const iconSpan = !imageSrc && iconCell?.querySelector('span.icon');
+  if (imageSrc) {
     const img = document.createElement('img');
-    img.src = iconSrc;
+    img.src = imageSrc;
     icon.appendChild(img);
+  } else if (iconSpan) {
+    icon.appendChild(slotIcon(iconSpan, {
+      color: parseIconColor(iconCell),
+      size: parseIconSize(iconCell),
+    }));
   }
   col.appendChild(icon);
 
@@ -277,6 +271,8 @@ export default async function decorate(block) {
       }
     }
   } else {
+    // the icons are SVG before bd-features copies them (slotIcon)
+    await decorateIcons(block);
     const { defaultWrapper, title, subtitle } = getSectionContext(block);
     if (defaultWrapper && title) defaultWrapper.remove();
 
