@@ -233,3 +233,12 @@
 
 }
 
+
+/* multi-endpoint: the homepage's Latest insights on bd-post-card. The grid
+   sits on the design system's page column (.ds-page-column), so the block
+   drops its own width and gutter, and the gap under the section header is
+   bd-section's. */
+.blog-news.multi-endpoint {
+    max-width: none;
+    padding: 0;
+}

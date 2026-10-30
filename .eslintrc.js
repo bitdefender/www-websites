@@ -19,5 +19,18 @@ module.exports = {
     'import/extensions': ['error', {
       js: 'always',
     }],
+    // the node resolver doesn't read `exports`; vite.config.mjs resolves these
+    'import/no-unresolved': ['error', { ignore: ['^@repobit/dex-system-design/'] }],
   },
+  overrides: [{
+    // the build runs in Node and imports build tools, which are devDependencies:
+    // `dependencies` lists only the runtime packages the build bundles
+    files: ['vite.config.mjs'],
+    env: { browser: false, node: true },
+    rules: {
+      'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      // the node resolver doesn't read `exports`
+      'import/no-unresolved': ['error', { ignore: ['^vite$'] }],
+    },
+  }],
 };

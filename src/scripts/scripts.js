@@ -1,0 +1,958 @@
+import Launch from '@repobit/dex-launch';
+import {
+  PageLoadedEvent,
+  AdobeDataLayerService,
+  FormEvent,
+  WindowLoadStartedEvent,
+  WindowLoadedEvent,
+  CdpEvent,
+} from '@repobit/dex-data-layer';
+import {
+  registerActionNodes,
+  registerContextNodes,
+  registerRenderNodes,
+} from '@repobit/dex-store-elements';
+import { Cookies } from '@repobit/dex-utils';
+import store from './store.js';
+import { target, adobeMcAppendVisitorId } from './target.js';
+import page from './page.js';
+import {
+  sampleRUM,
+  loadHeader,
+  loadFooter,
+  decorateButtons,
+  decorateIcons,
+  decorateTags,
+  decorateSections,
+  decorateBlocks,
+  decorateTemplateAndTheme,
+  waitForLCP,
+  loadBlocks,
+  loadCSS,
+  getMetadata,
+} from './lib-franklin.js';
+import {
+  handleFileDownloadedEvents,
+  resolveNonProductsDataLayer,
+  StoreProductLoadedEvent,
+} from './libs/data-layer.js';
+
+import user from './user.js';
+
+import {
+  createTag,
+  GLOBAL_EVENTS,
+  pushTrialDownloadToDataLayer,
+  generateLDJsonSchema,
+  getPageExperimentKey,
+} from './utils/utils.js';
+import { Constants } from './libs/constants.js';
+import {
+  applyStructuralHooks,
+  blockMboxNames,
+  installBlockHooks,
+  reportUnappliedHooks,
+} from './utils/block-hooks.js';
+
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
+
+// no need to import pwa.js for other routes
+const PWA_ROUTE_PATTERN = /^\/en-us\/consumer\/reverse-phone-lookup(?:\/|$)/;
+const pwaModulePromise = PWA_ROUTE_PATTERN.test(window.location.pathname)
+  ? import('./utils/pwa/pwa.js')
+  : null;
+
+export const SUPPORTED_LANGUAGES = ['en'];
+
+window.hlx.plugins.add('rum-conversion', {
+  load: 'lazy',
+  url: '../plugins/rum-conversion/src/index.js',
+});
+
+window.hlx.plugins.add('experimentation', {
+  condition: () => getMetadata('experiment'),
+  options: {
+    prodHost: 'www.bitdefender.com',
+  },
+  url: '../plugins/experimentation/src/index.js',
+});
+
+window.ADOBE_MC_EVENT_LOADED = false;
+
+function initMobileDetector(viewport) {
+  const mobileDetectorDiv = document.createElement('div');
+  mobileDetectorDiv.setAttribute(`data-${viewport}-detector`, '');
+  document.body.append(mobileDetectorDiv);
+}
+
+/**
+ * Creates a meta tag with the given name and value and appends it to the head.
+ * @param {String} name The name of the meta tag
+ * @param {String} value The value of the meta tag
+ */
+export function createMetadata(name, value) {
+  const meta = document.createElement('meta');
+  meta.setAttribute('name', name);
+  meta.setAttribute('content', value);
+  document.head.append(meta);
+}
+
+export function getLanguageCountryFromPath() {
+  const currentPathUrl = window.location.pathname;
+  return {
+    language: currentPathUrl.split('/')[1].split('-')[0],
+    country: currentPathUrl.split('/')[1].split('-')[1],
+  };
+}
+
+export function getLocalizedResourceUrl(resourceName) {
+  const { pathname } = window.location;
+  const lastCharFromUrl = pathname.charAt(pathname.length - 1);
+  const lpIsInFolder = lastCharFromUrl === '/';
+
+  let pathnameAsArray = pathname.split('/');
+
+  if (lpIsInFolder) {
+    return `${pathnameAsArray.join('/')}${resourceName}`;
+  }
+
+  const basePathIndex = pathname.startsWith('/pages/') ? 3 : 2;
+  pathnameAsArray = pathnameAsArray.slice(0, basePathIndex + 1); // "/consumer/en";
+
+  return `${pathnameAsArray.join('/')}/${resourceName}`;
+}
+
+/**
+ * Decorates picture elements with a link to a video.
+ * @param {Element} main The main element
+ */
+export default function decorateLinkedPictures(main) {
+  main.querySelectorAll('picture').forEach((picture) => {
+    // this condition checks if the picture is part of some content block ( rte )
+    // and not a direct element in some DIV block
+    // that could have different behaviour for some blocks (ex: columns )
+    if (!picture.closest('div.block') && picture.parentElement.tagName !== 'DIV') {
+      const next = picture.parentNode.nextElementSibling;
+      if (next) {
+        const a = next.querySelector('a');
+        const link = a?.textContent;
+        /* Modal video */
+        if (a && link.startsWith('https://') && link.includes('fragments')) {
+          a.innerHTML = '';
+          a.className = 'video-placeholder';
+          a.appendChild(picture);
+          const overlayPlayButton = document.createElement('span');
+          overlayPlayButton.className = 'video-placeholder-play';
+          a.appendChild(overlayPlayButton);
+          a.addEventListener('click', async (event) => {
+            event.preventDefault();
+            // eslint-disable-next-line no-use-before-define
+            const modalContainer = await createModal(link, 'video-modal');
+            // eslint-disable-next-line no-use-before-define
+            appendModal(modalContainer);
+          });
+          const up = a.parentElement;
+          if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+            up.classList.add('modal-video-container');
+          }
+          return;
+        }
+        // Basic linked image
+        if (a && link.startsWith('https://')) {
+          a.innerHTML = '';
+          a.className = 'linked-image';
+          const pictureParent = picture.parentNode;
+          a.append(picture);
+          if (pictureParent.children.length === 0) {
+            pictureParent.parentNode.removeChild(pictureParent);
+          }
+          const up = a.parentElement;
+          if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+            up.classList.add('linked-image-container');
+          }
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Decorates the main element.
+ * @param {Element} main The main element
+ */
+// eslint-disable-next-line import/prefer-default-export
+export function decorateMain(main) {
+  // hopefully forward compatible button decoration
+  decorateButtons(main);
+  decorateIcons(main);
+  decorateTags(main);
+  decorateLinkedPictures(main);
+  decorateSections(main);
+  decorateBlocks(main);
+}
+
+let modalsRoot;
+
+/**
+ * Modals live outside of main, so they are added to a dedicated container inside the
+ * page store root, registered for store render and action nodes like main.
+ * This way the store elements in the modals are rendered (prices, discounts, buy links).
+ * @param {Element} modalContainer
+ */
+function appendModal(modalContainer) {
+  if (!modalsRoot) {
+    modalsRoot = document.createElement('div');
+    modalsRoot.classList.add('modals-root');
+    const storeRoot = document.querySelector('body > bd-context.store-context');
+    (storeRoot || document.body).append(modalsRoot);
+    registerActionNodes(modalsRoot);
+    registerRenderNodes(modalsRoot);
+  }
+
+  modalsRoot.append(modalContainer);
+}
+
+/**
+ *
+ * @param {String} path The path to the modal
+ * @param {String} template The template to use for the modal styling
+ * @param {Boolean} stopAutomaticRefresh Wether the modal refreshes after exiting or not
+ * @returns {Promise<Element>}
+ * @example
+ */
+export async function createModal(path, template, stopAutomaticRefresh) {
+  const modalContainer = document.createElement('div');
+  modalContainer.classList.add('modal-container');
+
+  // add the class which makes the modal identifiable in the page
+  if (stopAutomaticRefresh) {
+    const modalClass = path.split('/').pop();
+    modalContainer.classList.add(modalClass);
+  }
+
+  const modalContent = document.createElement('div');
+  modalContent.classList.add('modal-content');
+
+  // fetch modal content
+  const resp = await fetch(`${path}.plain.html`);
+
+  if (!resp.ok) {
+    // eslint-disable-next-line no-console
+    console.error(`modal url cannot be loaded: ${path}`);
+    return modalContainer;
+  }
+
+  const html = await resp.text();
+  modalContent.innerHTML = html;
+
+  decorateMain(modalContent);
+  await loadBlocks(modalContent);
+  modalContainer.append(modalContent);
+
+  // add class to modal container for opportunity to add custom modal styling
+  if (template) modalContainer.classList.add(template);
+
+  const closeModal = () => {
+    // if the modal is still supposed to exist just hide it
+    if (stopAutomaticRefresh) {
+      modalContainer.classList.add('global-display-none');
+      return;
+    }
+
+    // if it's supposed to refresh delete it so that it can be rerendered
+    modalContainer.remove();
+  };
+
+  const close = document.createElement('div');
+  close.classList.add('modal-close');
+  close.addEventListener('click', closeModal);
+  modalContent.append(close);
+  adobeMcAppendVisitorId(modalContainer);
+  return modalContainer;
+}
+
+export async function detectModalButtons(main) {
+  main.querySelectorAll('a.button.modal').forEach((link) => {
+    const originalHref = link.getAttribute('href');
+    link.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
+
+      // if we wish for the button to not generate a new modal everytime
+      if (stopAutomaticModalRefresh) {
+        // we use the last part of the link to identify the modals
+        const modalClass = originalHref.split('/').pop();
+
+        // check if the modal exists in the page
+        const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+        if (existingModal) {
+          // if it exists just display it
+          existingModal.classList.remove('global-display-none');
+          return;
+        }
+      }
+
+      // generate new modal
+      const modalContainer = await createModal(originalHref, undefined, stopAutomaticModalRefresh);
+      appendModal(modalContainer);
+      modalContainer.querySelectorAll('.await-loader').forEach((element) => {
+        element.classList.remove('await-loader');
+      });
+      adobeMcAppendVisitorId('.modal-container');
+    });
+
+    link.removeAttribute('href');
+    link.setAttribute('location', originalHref);
+  });
+}
+
+function populateColumns(section) {
+  if (section.querySelectorAll('.columns div div').length === 2) {
+    const rightColContainer = section.querySelector('.columns div div:last-child');
+    rightColContainer.classList.add('right-col');
+    section.querySelector('.columns div div:last-child').classList.add('right-col');
+    const leftColContainer = section.querySelector('.columns div div:first-child');
+    leftColContainer.classList.add('left-col');
+
+    section.querySelectorAll('.right-column').forEach((el) => rightColContainer.append(el));
+    section.querySelectorAll('.left-column').forEach((el) => leftColContainer.append(el));
+  }
+}
+
+function populateHero(section) {
+  if (section.querySelectorAll('.hero div div').length === 2) {
+    const rightColContainer = section.querySelector('.hero div div:last-child');
+    rightColContainer.classList.add('right-col');
+    section.querySelector('.hero div div:last-child').classList.add('right-col');
+    const leftColContainer = section.querySelector('.hero div div:first-child');
+    leftColContainer.classList.add('left-col');
+
+    section.querySelectorAll('.right-column').forEach((el) => rightColContainer.append(el));
+    section.querySelectorAll('.left-column').forEach((el) => leftColContainer.append(el));
+  }
+}
+
+function buildTwoColumnsSection(main) {
+  main.querySelectorAll('div.section.two-columns').forEach((section) => {
+    populateHero(section);
+    populateColumns(section);
+  });
+}
+
+function buildCta(section) {
+  populateColumns(section);
+  const fullWidthContainer = createTag(
+    'div',
+    { class: 'full-width' },
+    '',
+  );
+  [...section.children].forEach((el) => fullWidthContainer.append(el));
+  section.append(fullWidthContainer);
+}
+
+function buildCtaSections(main) {
+  main.querySelectorAll('div.section.cta, div.section.footer-cta')
+    .forEach(buildCta);
+}
+
+// initializeHubspotModule
+const initializeHubspotModule = () => {
+  const loadHubspotScript = (callback) => {
+    if (typeof hbspt !== 'undefined') {
+      callback();
+      return;
+    }
+    const script = document.createElement('script');
+    script.charset = 'utf-8';
+    script.type = 'text/javascript';
+    script.src = '//js.hsforms.net/forms/embed/v2.js';
+    script.onload = callback;
+    document.head.appendChild(script);
+  };
+
+  const getFormEventData = (hubspotForm) => {
+    const portalId = hubspotForm.querySelector('.portal-id')?.getAttribute('value');
+    const dlFormTitle = hubspotForm.querySelector('.dl-form-title')?.getAttribute('data-value');
+    const dlFormID = hubspotForm.querySelector('.dl-form-ID')?.getAttribute('value');
+    const dlFormProduct = hubspotForm.querySelector('.dl-form-product')?.getAttribute('value') === 'true' && portalId;
+
+    return Object.fromEntries(
+      [
+        ['form', dlFormTitle],
+        ['formProduct', dlFormProduct],
+        ['formID', dlFormID],
+      ].filter(([, value]) => value),
+    );
+  };
+
+  const updateDataLayerAndRedirect = (hubspotForm) => {
+    const newPageLoadStartedEvent = new WindowLoadStartedEvent();
+    newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form submited';
+    newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
+    AdobeDataLayerService.push(newPageLoadStartedEvent);
+    AdobeDataLayerService.push(new FormEvent('form completed', getFormEventData(hubspotForm)));
+    AdobeDataLayerService.push(new WindowLoadedEvent());
+
+    const thankYouUrl = hubspotForm.querySelector('.redirect-url')?.value;
+    if (thankYouUrl) {
+      window.location.href = thankYouUrl;
+    }
+  };
+
+  const initHubspotForm = async (portalId, formId, hubspotForm) => {
+    const sfdcCampaignId = hubspotForm.querySelector('.sfdc-campaign-id')?.value;
+    const region = hubspotForm.querySelector('.region')?.value;
+    /* global hbspt */
+    hbspt.forms.create({
+      region,
+      portalId,
+      formId,
+      sfdcCampaignId,
+      target: '.hubspot-form',
+      onFormSubmit: () => updateDataLayerAndRedirect(hubspotForm),
+    });
+  };
+
+  const hubspotContainer = document.createElement('div');
+  hubspotContainer.innerHTML = `
+    <section class="download-popup download-popup__container download-popup--animate">
+      <div class="download-popup__modal download-complex !tw-overflow-auto !tw-max-w-[90%] md:!tw-max-w-[75%] lg:!tw-max-w-[60%] xl:!tw-max-w-[45%] tw-max-h-[90%]">
+        <div class="xfpage page basicpage">
+          <div id="container-3cd9406401" class="cmp-container">
+            <div class="hubspot-form">
+              <section class="hubspot-form-container tw-pt-0 tw-pb-0">
+                <input type="hidden" class="region" value="na1">
+                <input type="hidden" class="portal-id" value="341979">
+                <input type="hidden" class="form-id" value="addb61d4-4858-4349-a3ec-cddc790c4a2c">
+                <input type="hidden" class="sfdc-campaign-id" value="7016M0000027VMQQA2">
+                <input type="hidden" class="redirect-url" value="">
+                <input type="hidden" class="dl-form-title" data-value="book consultation">
+                <input type="hidden" class="dl-form-ID" value="">
+                <input type="hidden" class="dl-form-product" value="false">
+                <div class="form-for-hubspot hubspot-form-0" data-hs-forms-root="true"></div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+  document.body.appendChild(hubspotContainer);
+
+  loadHubspotScript(() => {
+    const hubspotForm = hubspotContainer.querySelector('.hubspot-form-container');
+    const portalId = hubspotForm.querySelector('.portal-id')?.value;
+    const formId = hubspotForm.querySelector('.form-id')?.value;
+
+    if (portalId && formId) {
+      initHubspotForm(portalId, formId, hubspotForm);
+    }
+
+    // Click-to-open logic
+    const firstForm = hubspotContainer.querySelector('.hubspot-form-container');
+    const popupContainer = hubspotContainer.querySelector('.download-popup__container');
+
+    document.querySelectorAll('.subscriber #heroColumn table tr td:nth-of-type(1), .subscriber .columnvideo2 > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showBookingPopup > div.image-columns-wrapper table tr td:first-of-type, .subscriber .showbookingpopup > div.image-columns-wrapper table tr td:first-of-type').forEach((trigger) => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        popupContainer.style.display = 'block';
+        const newPageLoadStartedEvent = new WindowLoadStartedEvent();
+        newPageLoadStartedEvent.page.info.name = 'en-us:partners:subscriber protection platform:form';
+        newPageLoadStartedEvent.page.info.subSubSubSection = 'book consultation';
+        AdobeDataLayerService.push(newPageLoadStartedEvent);
+        AdobeDataLayerService.push(new FormEvent('form viewed', getFormEventData(firstForm)));
+        AdobeDataLayerService.push(new WindowLoadedEvent());
+      });
+    });
+
+    if (popupContainer) {
+      popupContainer.addEventListener('click', () => {
+        popupContainer.style.display = 'none';
+      });
+    }
+  });
+};
+
+/**
+ * Run the <script> and <style> blocks of a Target html offer. Only their text is copied into
+ * <head>, where scripts execute as soon as they are appended.
+ * @param {string} code
+ */
+const injectOfferCode = (code) => {
+  const codeDiv = document.createElement('div');
+  codeDiv.insertAdjacentHTML('beforeend', code);
+  const allScriptsAndStyles = codeDiv.querySelectorAll('script, style');
+  allScriptsAndStyles.forEach((element) => {
+    const newElement = document.createElement(element.tagName);
+    newElement.innerHTML = element.innerHTML;
+    document.head.appendChild(newElement);
+  });
+};
+
+/**
+ * Local development only: run block hooks saved in localStorage under "bd-block-hooks-dev",
+ * so a component test can be tried without a Target activity.
+ */
+const applyDevBlockHooks = () => {
+  if (window.location.hostname !== 'localhost') return;
+  try {
+    const code = window.localStorage.getItem('bd-block-hooks-dev');
+    if (code) injectOfferCode(code);
+  } catch { /* storage unavailable */ }
+};
+
+/**
+ * Waits for the Launch tag head.html starts while the page parses. A page without one (404.html,
+ * or a head.html older than this code) loads Launch here instead. Launch.load can't be used to
+ * wait: loadScript resolves straight away when it finds the tag, whether it has loaded or not.
+ * @returns {Promise<void>}
+ */
+const loadLaunch = () => {
+  const launch = document.getElementById('adobe-launch');
+  if (!launch) return Launch.load(page.environment);
+  return new Promise((resolve, reject) => {
+    if (launch.dataset.state === 'loaded') {
+      resolve();
+    } else if (launch.dataset.state === 'failed') {
+      reject(new Error('Launch failed to load'));
+    } else {
+      launch.addEventListener('load', () => resolve(), { once: true });
+      launch.addEventListener('error', () => reject(new Error('Launch failed to load')), { once: true });
+    }
+  });
+};
+
+export async function loadTrackers() {
+  const isPageNotInDraftsFolder = window.location.pathname.indexOf('/drafts/') === -1;
+
+  const onAdobeMcLoaded = () => {
+    document.dispatchEvent(new Event(GLOBAL_EVENTS.ADOBE_MC_LOADED));
+    window.ADOBE_MC_EVENT_LOADED = true;
+  };
+
+  if (isPageNotInDraftsFolder) {
+    try {
+      await loadLaunch();
+      onAdobeMcLoaded();
+    } catch {
+      target.abort();
+    }
+  } else {
+    target.abort();
+    onAdobeMcLoaded();
+  }
+}
+
+/**
+ * Loads the trackers once per page; every caller awaits the same promise. loadPage calls it
+ * first thing, for pages where head.html hasn't started Launch already.
+ * @returns {Promise<void>}
+ */
+let trackersLoaded;
+const startTrackers = () => {
+  trackersLoaded ??= loadTrackers();
+  return trackersLoaded;
+};
+
+/**
+ * Fetch custom-code and the mbox of every block type on the page in one request, and run
+ * them. custom-code exists because Target's global mbox cannot use syntasa parameters. Block
+ * offers register hooks that change their block before it is shown (see utils/block-hooks.js),
+ * so they only take effect if they arrive before the blocks are decorated.
+ * @param {Element} main the authored main: decorated, its sections' -wrapper classes would be
+ * read as block names
+ */
+const applyTargetOffers = async (main) => {
+  const mboxNames = ['custom-code', ...blockMboxNames(main)];
+  const offers = await target.getOffers({ mboxNames });
+  mboxNames.forEach((name) => {
+    if (typeof offers?.[name] === 'string') injectOfferCode(offers[name]);
+  });
+};
+
+/**
+ * A challenger can replace main only when the page names both the experiment's location and
+ * the experiment (see getTargetExperimentDetails in target.js).
+ * @returns {boolean}
+ */
+const hasChallengerExperiment = () => !!(getPageExperimentKey() && getMetadata('target-experiment'));
+
+/**
+ * set target_blank for pdf links when metadata is set: pdfs: new-tab
+ * @param {Element} doc The container element
+ */
+function openExternalLinksInNewTab(doc) {
+  const links = doc.querySelectorAll('a');
+
+  links.forEach((link) => {
+    if (link.href.toLowerCase().includes('.pdf')) {
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    }
+  });
+}
+
+/**
+ * Loads the IBM Plex Sans font faces and remembers it for the session,
+ * so later pages can load them eagerly from the browser cache.
+ */
+async function loadFonts() {
+  await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
+  try {
+    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
+  } catch {
+    // do nothing
+  }
+}
+
+/**
+ * Loads everything needed to get to LCP.
+ * @param {Element} doc The container element
+ */
+async function loadEager(doc) {
+  installBlockHooks({
+    report: (name, status) => sampleRUM('target-block-hook', { source: name, target: status }),
+  });
+  // Every page waits for Launch and Target's offers before it is shown. If Launch fails to
+  // load, Target is aborted and the offers resolve at once.
+  await startTrackers();
+  // Resolving the data layer is what swaps main for a challenger page, which would both erase
+  // custom-code's edits and change which blocks are on the page, so it goes first there.
+  // Other pages resolve it in loadLazy, after the first paint.
+  if (hasChallengerExperiment()) await resolveNonProductsDataLayer();
+  // The offers run after installBlockHooks, so the hooks they register apply.
+  const main = doc.querySelector('main');
+  if (main) await applyTargetOffers(main);
+  applyDevBlockHooks();
+
+  const userCountry = await user.country;
+
+  if (page.name.includes(page.locale)) doc.body.classList.add('homepage');
+
+  if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
+
+  createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
+  createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
+  decorateTemplateAndTheme();
+
+  const templateMetadata = getMetadata('template');
+  const hasTemplate = getMetadata('template') !== '';
+  if (hasTemplate) {
+    loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
+  }
+  if (templateMetadata === 'subscriber') initializeHubspotModule();
+  // a challenger swaps main's content, not the element, so main is still the one to decorate
+  if (main) {
+    // Removed and added sections are applied to the authored HTML, so everything below sees
+    // the page as if it had been authored that way.
+    applyStructuralHooks(main);
+    decorateMain(main);
+    buildCtaSections(main);
+    buildTwoColumnsSection(main);
+    detectModalButtons(main);
+
+    if (getMetadata('pdfs') && getMetadata('pdfs') === 'new-tab') openExternalLinksInNewTab(doc);
+
+    document.body.classList.add('appear', 'franklin');
+    if (window.location.href.indexOf('scuderiaferrari') !== -1) {
+      document.body.classList.add('sferrari');
+    }
+    await waitForLCP(LCP_BLOCKS);
+  }
+
+  try {
+    // on desktop or once cached, load fonts before LCP to avoid a visible swap
+    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
+      loadFonts();
+    }
+  } catch {
+    // do nothing
+  }
+}
+
+/**
+ * Loads everything that doesn't need to be delayed.
+ * @param {Element} doc The container element
+ */
+async function loadLazy(doc) {
+  const main = doc.querySelector('main');
+
+  const pageIsNotInFragmentsFolder = window.location.pathname.indexOf('/fragments/') === -1;
+  const pageIsNotInWebviewFolder = window.location.pathname.indexOf('/webview/') === -1;
+  let pwaModule = null;
+  try {
+    pwaModule = pwaModulePromise ? await pwaModulePromise : null;
+  } catch {
+    pwaModule = null;
+  }
+  const standaloneReversePhoneLookup = pwaModule?.isEligibleRoute(window.location.pathname)
+    && pwaModule.isStandalonePWA(window);
+  const header = doc.querySelector('header');
+  header.style.height = '0px';
+
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder
+    && !standaloneReversePhoneLookup) {
+    // eslint-disable-next-line no-unused-vars
+    header.style.height = 'initial';
+    loadHeader(header);
+  }
+
+  // Launch and the offers are already under way (see loadEager); a page with a challenger
+  // experiment has resolved the data layer there too
+  if (!hasChallengerExperiment()) {
+    await resolveNonProductsDataLayer();
+  }
+
+  // push basic events to dataLayer
+  await loadBlocks(main);
+
+  const { hash } = window.location;
+  const element = hash ? doc.getElementById(hash.substring(1)) : false;
+  if (hash && element) element.scrollIntoView();
+
+  if (pageIsNotInFragmentsFolder && pageIsNotInWebviewFolder) {
+    loadFooter(doc.querySelector('footer'));
+  }
+
+  generateLDJsonSchema();
+
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadFonts();
+
+  window.hlx.plugins.run('loadLazy');
+
+  sampleRUM('lazy');
+  sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
+  sampleRUM.observe(main.querySelectorAll('picture > img'));
+}
+
+/**
+ * Event listener for dropdown slider dropdown-box.js component.
+ * This is imported from www-landing-pages repo.
+ * @returns {void}
+* */
+function eventOnDropdownSlider() {
+  document.querySelectorAll('.dropdown-slider').forEach((slider) => {
+    const titles = slider.querySelectorAll('.title');
+    const loadingBars = slider.querySelectorAll('.loading-bar');
+    let activeIndex = 0;
+    let interval;
+
+    function showLoadingBar(index) {
+      const loadingBar = loadingBars[index];
+      loadingBar.style.width = '0';
+      let width = 0;
+      const interval2 = setInterval(() => {
+        width += 1;
+        loadingBar.style.width = `${width}%`;
+        if (width >= 100) {
+          clearInterval(interval2);
+        }
+      }, 30); // Adjust the interval for smoother animation
+    }
+
+    function moveToNextItem() {
+      titles.forEach((title, index) => {
+        if (index === activeIndex) {
+          title.parentNode.classList.add('active');
+          title.closest('.dropdown-slider').setAttribute('style', `min-height: ${title.parentNode.querySelector('.description').offsetHeight + 50}px`);
+          if (loadingBars.length) {
+            showLoadingBar(index);
+          }
+        } else {
+          title.parentNode.classList.remove('active');
+        }
+      });
+
+      activeIndex = (activeIndex + 1) % titles.length; // Move to the next item and handle wrapping
+    }
+
+    function startAutomaticMovement() {
+      interval = setInterval(moveToNextItem, 4000); // Set the interval
+    }
+
+    function stopAutomaticMovement() {
+      clearInterval(interval); // Clear the interval
+    }
+
+    // Set the initial active item
+    moveToNextItem();
+
+    if (loadingBars.length) {
+      // Start automatic movement after the loading is complete
+      setTimeout(() => {
+        startAutomaticMovement();
+      }, 1000);
+
+      // Click event listener on titles
+      titles.forEach((title, index) => {
+        title.addEventListener('click', () => {
+          stopAutomaticMovement();
+          activeIndex = index;
+          showLoadingBar(index);
+          moveToNextItem();
+          startAutomaticMovement();
+        });
+      });
+    }
+  });
+}
+
+async function setIcidParameter(selector, value, mboxName, manualIcid = null) {
+  const validElements = document.querySelectorAll(selector);
+  if (validElements.length === 0) {
+    return;
+  }
+
+  const targetCampaign = (await target.getOffers({ mboxNames: mboxName }))?.campaign;
+
+  validElements.forEach((element) => {
+    const url = new URL(element.href);
+    // do not add icid if there is only an anchor link
+    if (!url || element.href.includes('#')) return;
+    const cleanPath = element.href.split('?')[0];
+    const campaignParam = targetCampaign || manualIcid || cleanPath.split('/').pop();
+    url.searchParams.set('icid', `${value}${campaignParam}`);
+    element.href = url.toString();
+  });
+}
+
+function initialiseSentry() {
+  window.sentryOnLoad = () => {
+    window.Sentry.init({
+      release: 'www-websites@1.0.0',
+      tracesSampleRate: 1.0,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+
+      allowUrls: ['www.bitdefender.com'],
+    });
+  };
+
+  if (Math.random() < 0.01) {
+    const sentryScript = document.createElement('script');
+    sentryScript.src = 'https://js.sentry-cdn.com/453d79512df247d7983074696546ca60.min.js';
+    sentryScript.setAttribute('crossorigin', 'anonymous');
+    document.head.appendChild(sentryScript);
+  }
+}
+
+/**
+ * Loads everything that happens a lot later,
+ * without impacting the user experience.
+ */
+function loadDelayed() {
+  window.setTimeout(() => {
+    window.hlx.plugins.load('delayed');
+    window.hlx.plugins.run('loadDelayed');
+    // load anything that can be postponed to the latest here
+    eventOnDropdownSlider();
+    // eslint-disable-next-line import/no-cycle
+    return import('./delayed.js');
+  }, 3000);
+}
+
+function setBFCacheListener() {
+  window.addEventListener('pageshow', (event) => {
+    // Send another page loaded if the page is restored from bfcache.
+    if (event.persisted) {
+      AdobeDataLayerService.push(new PageLoadedEvent());
+    }
+  });
+}
+
+async function loadPage() {
+  if (window.location.href.includes('oaiusercontent')) {
+    return;
+  }
+
+  setBFCacheListener();
+  initialiseSentry();
+  // first thing, so Target has as long as possible to answer before the first paint
+  startTrackers();
+  await window.hlx.plugins.load('eager');
+
+  // specific for webview
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('theme') === 'dark' && window.location.href.includes('canvas')) {
+    document.body.style = 'background-color: #141517';
+  }
+
+  const main = document.querySelector('main');
+  /**
+   * @type {import('@repobit/dex-store-elements').RootNode}
+   */
+  const storeRoot = document.createElement('bd-context');
+  storeRoot.classList.add('store-context');
+  storeRoot.dataLayer = ({ option, event }) => {
+    AdobeDataLayerService.push(new StoreProductLoadedEvent(option, event));
+  };
+  document.body.replaceChild(storeRoot, main);
+  storeRoot.appendChild(main);
+  storeRoot.store = store;
+
+  registerContextNodes();
+
+  await loadEager(document);
+
+  const newsBarSectionSelector = ['.news-bar-container', '.section.top_blue']
+    .find((selector) => document.querySelector(selector));
+  const newsBarSection = document.querySelector(newsBarSectionSelector);
+
+  if (newsBarSection) {
+    const { manualIcid } = newsBarSection.dataset || {};
+    setIcidParameter(`${newsBarSectionSelector} a`, 'link|c|ribbon|', 'newsBarCampaign-mbox', manualIcid);
+  }
+
+  await window.hlx.plugins.load('lazy');
+  await Constants.PRODUCT_ID_MAPPINGS_CALL;
+  // eslint-disable-next-line import/no-unresolved
+  await loadLazy(document);
+  handleFileDownloadedEvents();
+
+  registerActionNodes(main);
+  registerRenderNodes(main);
+  await storeRoot.updateComplete;
+
+  const elements = document.querySelectorAll('.await-loader');
+  document.dispatchEvent(new Event('bd_page_ready'));
+  window.bd_page_ready = true;
+  reportUnappliedHooks();
+  elements.forEach((element) => {
+    element.classList.remove('await-loader');
+  });
+
+  // loader circle used in mbox-canvas
+  const loaderCircle = document.querySelectorAll('.loader-circle');
+  loaderCircle.forEach((element) => {
+    element.classList.remove('loader-circle');
+  });
+
+  adobeMcAppendVisitorId('main');
+
+  pushTrialDownloadToDataLayer();
+
+  const cdpData = await target.cdpData;
+  if (cdpData) {
+    AdobeDataLayerService.push(new CdpEvent(cdpData));
+  }
+
+  if (!window.BD.loginAttempted) {
+    AdobeDataLayerService.push(new PageLoadedEvent());
+  }
+
+  import('./webmcp.js')
+    .then(({ registerBitdefenderWebMcp }) => registerBitdefenderWebMcp())
+    .catch(() => undefined);
+  loadDelayed();
+}
+
+initMobileDetector('mobile');
+initMobileDetector('tablet');
+initMobileDetector('desktop');
+
+pwaModulePromise
+  ?.then(({ initializeReversePhoneLookupPWA }) => initializeReversePhoneLookupPWA())
+  .catch(() => { });
+loadPage();
+window.AdobeDataLayerService = AdobeDataLayerService;

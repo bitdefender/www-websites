@@ -7,7 +7,7 @@
     {
       "name": "Hero",
       "identifier": "hero",
-      "sourceFile": "_src/blocks/hero/hero.js",
+      "sourceFile": "src/blocks/hero/hero.js",
       "role": "Page introduction / above-the-fold content",
       "description": "Content-first hero block. The code promotes a picture ahead of the text when both are present and supports plain rich text plus button content.",
       "fields": [
@@ -63,7 +63,7 @@
     {
       "name": "Cards",
       "identifier": "cards",
-      "sourceFile": "_src/blocks/cards/cards.js",
+      "sourceFile": "src/blocks/cards/cards.js",
       "role": "Grid of repeatable content cards",
       "description": "Each source row becomes one card. The block detects picture-only cells as image cells and all other cells as body content.",
       "fields": [
@@ -114,7 +114,7 @@
     {
       "name": "Columns",
       "identifier": "columns",
-      "sourceFile": "_src/blocks/columns/columns.js",
+      "sourceFile": "src/blocks/columns/columns.js",
       "role": "Generic multi-column content layout",
       "description": "Rows of adjacent columns containing text and optional images. The block infers image columns automatically from picture-only cells.",
       "fields": [
@@ -171,7 +171,7 @@
     {
       "name": "Accordion",
       "identifier": "accordion",
-      "sourceFile": "_src/blocks/accordion/accordion.js",
+      "sourceFile": "src/blocks/accordion/accordion.js",
       "role": "Expandable disclosure / FAQ pattern",
       "description": "Each direct child row becomes one accordion item with a header cell and a content cell.",
       "fields": [
@@ -229,7 +229,7 @@
     {
       "name": "Questions Answers",
       "identifier": "questions-answers",
-      "sourceFile": "_src/blocks/questions-answers/questions-answers.js",
+      "sourceFile": "src/blocks/questions-answers/questions-answers.js",
       "role": "Styled FAQ / Q&A accordion",
       "description": "FAQ-style block with the same basic row shape as accordion: one question cell and one answer cell per item.",
       "fields": [
@@ -286,7 +286,7 @@
     {
       "name": "Image Columns",
       "identifier": "image-columns",
-      "sourceFile": "_src/blocks/image-columns/image-columns.js",
+      "sourceFile": "src/blocks/image-columns/image-columns.js",
       "role": "Alternating or paired image-and-text columns",
       "description": "Row-based block where each cell is treated either as an image column or a text column. The implementation can also replace a text cell with a local MP4 video in some themed cases.",
       "fields": [
@@ -343,7 +343,7 @@
     {
       "name": "Quote",
       "identifier": "quote",
-      "sourceFile": "_src/blocks/quote/quote.js",
+      "sourceFile": "src/blocks/quote/quote.js",
       "role": "Testimonial / highlighted quote",
       "description": "Transforms each item into a quote card with a star rating, quote body, and optional author.",
       "fields": [
@@ -397,7 +397,7 @@
     {
       "name": "Video",
       "identifier": "video",
-      "sourceFile": "_src/blocks/video/video.js",
+      "sourceFile": "src/blocks/video/video.js",
       "role": "Embedded or hosted video",
       "description": "Supports YouTube, Vimeo, and direct MP4 links. An optional picture acts as a click-to-play placeholder.",
       "fields": [
@@ -453,7 +453,7 @@
     {
       "name": "Embed",
       "identifier": "embed",
-      "sourceFile": "_src/blocks/embed/embed.js",
+      "sourceFile": "src/blocks/embed/embed.js",
       "role": "Generic embed for video or social content",
       "description": "Embeds YouTube, Vimeo, Twitter, or a generic iframe fallback. An optional picture acts as a click-to-load placeholder.",
       "fields": [
@@ -508,7 +508,7 @@
     {
       "name": "New Product Boxes",
       "identifier": "new-prod-boxes",
-      "sourceFile": "_src/blocks/new-prod-boxes/new-prod-boxes.js",
+      "sourceFile": "src/blocks/new-prod-boxes/new-prod-boxes.js",
       "role": "Pricing / product comparison cards",
       "description": "Table-driven pricing cards for consumer products. The block derives live pricing, discounts, and buy links from store product identifiers configured at section level, while most visible card content is authored in ordered table rows.",
       "fields": [
@@ -733,7 +733,7 @@
     {
       "name": "Teaser Logos",
       "identifier": "teaser-logos",
-      "sourceFile": "_src/blocks/teaser-logos/teaser-logos.js",
+      "sourceFile": "src/blocks/teaser-logos/teaser-logos.js",
       "role": "Compact logo strip / trust indicators",
       "description": "Wraps each child item in a logo column. Best suited for a small set of logos or badges.",
       "fields": [
@@ -774,7 +774,7 @@
     {
       "name": "Ribbon",
       "identifier": "ribbon",
-      "sourceFile": "_src/blocks/ribbon/ribbon.js",
+      "sourceFile": "src/blocks/ribbon/ribbon.js",
       "role": "Promotional banner / narrow announcement strip",
       "description": "Simple ribbon content block. If a second row contains an image, the decorate code moves that image to the section background.",
       "fields": [

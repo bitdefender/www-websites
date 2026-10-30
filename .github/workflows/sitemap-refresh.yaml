@@ -172,13 +172,20 @@ jobs:
       - name: Verify every sitemap was rewritten
         run: |
           set -euo pipefail
-          stale=$(find _src/sitemap/csg -name 'sitemap_*.xml' ! -newer "${RUNNER_TEMP}/sitemap-run-marker")
+          stale=$(find src/sitemap/csg -name 'sitemap_*.xml' ! -newer "${RUNNER_TEMP}/sitemap-run-marker")
           if [ -n "$stale" ]; then
             echo "::error::create.js skipped these locales, so the run is incomplete:"
             echo "$stale"
             exit 1
           fi
-          echo "All $(find _src/sitemap/csg -name 'sitemap_*.xml' | wc -l) sitemaps were rewritten."
+          echo "All $(find src/sitemap/csg -name 'sitemap_*.xml' | wc -l) sitemaps were rewritten."
+
+      # _src/ is generated from src/ (vite.config.mjs): rebuild it so the served
+      # copies in _src/sitemap/csg match the regenerated sources.
+      - name: Rebuild _src
+        run: |
+          npm ci
+          npm run build
 
       - name: Record the new index fingerprints
         working-directory: tools/sitemap
@@ -206,7 +213,7 @@ jobs:
           git fetch --depth=1 origin main
           git reset -q FETCH_HEAD
           git add -- tools/sitemap/index-state.json \
-            $(find _src/sitemap/csg -name 'sitemap_*.xml' -newer "${RUNNER_TEMP}/sitemap-run-marker")
+            $(find src/sitemap/csg _src/sitemap/csg -name 'sitemap_*.xml' -newer "${RUNNER_TEMP}/sitemap-run-marker")
 
           if git diff --cached --quiet; then
             echo "Regeneration produced no diff; nothing to open a PR for."
@@ -265,7 +272,7 @@ jobs:
 
           ### What this PR contains
 
-          - regenerated \`_src/sitemap/csg/sitemap_*.xml\`
+          - regenerated \`src/sitemap/csg/sitemap_*.xml\`, and their served copies in \`_src/sitemap/csg/\`
           - updated \`tools/sitemap/index-state.json\` (the fingerprints the checker compares against)
 
           Review the XML diff before merging. Merging publishes the sitemaps via AEM Code Sync.

@@ -410,6 +410,20 @@ main .section {
   overflow: hidden;
 }
 
+/* A section on the design system's rhythm: the bd-section inside pads it and
+   spaces its blocks, so the section adds no padding, and it does not clip
+   what a block spills past its edge (the hero's glow). Only once bd-section
+   is defined: if the design system fails to load, the section keeps its own
+   padding rather than the page losing all of its spacing. */
+main .section:has(> bd-section:defined) {
+  padding: 0;
+  overflow: visible;
+}
+
+main .section:last-child > bd-section:defined {
+  padding-block-end: calc(var(--bd-section-padding) * 2);
+}
+
 main .section.margin-0 {
   padding-top: 0;
   padding-bottom: 0;
@@ -441,6 +455,12 @@ main .section.images-floated .default-content-wrapper p.button-container {
   max-width: var(--body-max-width);
   padding: var(--body-padding);
   position: relative;
+}
+
+/* bd-section-header sets its own measure and gutters, as the blocks under it do */
+.default-content-wrapper:has(> bd-section-header) {
+  max-width: none;
+  padding: 0;
 }
 
 .img-container img {
@@ -1897,8 +1917,17 @@ main .section.blue p a.button.modal::after {
     min-height: 131px;
   }
 
+  .homepage header, body.homepage > div:first-child {
+    min-height: 64px;
+  }
+
   body.with-language-bar header, body.with-language-bar > div:first-child {
     min-height: 191px;
+  }
+
+  /* the homepage's 64px menu under the 60px language bar */
+  body.homepage.with-language-bar header, body.homepage.with-language-bar > div:first-child {
+    min-height: 124px;
   }
 
   main .section.bitdefender-ferrari .default-content-wrapper p:nth-of-type(1) {
@@ -1981,5 +2010,54 @@ body > div.header-with-language-banner {
   a.button:any-link, input[type="submit"] {
     padding: 10px 13px 8px 20px;
     font-size: 14px;
+  }
+}
+
+/* The design system's page column (its ensembleCSS) for a block's own light-DOM
+   layout, on the same edges as the DS sections around it */
+.ds-page-column {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xs));
+  margin-inline: auto;
+  padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-xs));
+}
+
+@media (width >= 576px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-sm));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-sm));
+  }
+}
+
+@media (width >= 768px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-md));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-md));
+  }
+}
+
+@media (width >= 992px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-lg));
+    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-lg));
+  }
+}
+
+@media (width >= 1200px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xl));
+  }
+}
+
+@media (width >= 1400px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxl));
+  }
+}
+
+@media (width >= 1600px) {
+  .ds-page-column {
+    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxxl));
   }
 }

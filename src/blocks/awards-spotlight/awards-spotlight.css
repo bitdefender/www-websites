@@ -1,0 +1,14 @@
+/* The section's two buttons, centred under the centred header as every frame
+   draws Proven: in a row from md, stacked across the column on a phone
+   (fullWidthOnPhone sets fullwidth). */
+.awards-spotlight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-16, 16px);
+  margin-top: var(--spacing-24, 24px);
+}
+
+.awards-spotlight-actions bd-button-link[fullwidth] {
+  flex-basis: 100%;
+}

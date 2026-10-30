@@ -19,11 +19,12 @@ jobs:
         node-version: '24'
         check-latest: true
     - run: npm install
-    # regenerate the import map from package-lock.json: it must match the committed one
-    - name: Check the import map
+    # _src/ is generated from src/ and package-lock.json: it must match a rebuild
+    - name: Check the generated _src
       run: |
-        node .husky/update-importmap.js
-        git diff --exit-code -- head.html 404.html
+        npm run build
+        git diff --exit-code -- _src
+        test -z "$(git ls-files --others --exclude-standard -- _src)"
     - run: npm run lint
       env:
         CI: true

@@ -1,0 +1,26 @@
+/* The gap under the section header, as for the other homepage sections: 24 on
+   the Figma phone frame, 32 on the tablet frame, 64 on the desktop frame. */
+.post-feed {
+  padding-top: var(--spacing-24, 24px);
+}
+
+@media (width >= 768px) {
+  .post-feed {
+    padding-top: var(--spacing-32, 32px);
+  }
+}
+
+@media (width >= 960px) {
+  .post-feed {
+    padding-top: var(--spacing-64, 64px);
+  }
+}
+
+/* The card cover-fits the slotted <picture>; the <img> inside it is light DOM,
+   out of the component's reach, so it fills the picture from here. */
+.post-feed bd-post-card > picture[slot="image"] img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

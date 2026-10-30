@@ -19,6 +19,6 @@ If nothing matches, say so and carry on. Don't invent a guide.
 
 ## Apply it
 
-- Guides are framework-agnostic. Adapt them to AGENTS.md: vanilla JS, no build step, CSS scoped to the block in `_src/blocks/`.
+- Guides are framework-agnostic. Adapt them to AGENTS.md: vanilla JS, CSS scoped to the block in `src/blocks/`.
 - Baseline Widely available features need no fallback. For anything newer, follow the guide's fallback advice.
 - Prefer a platform feature from a guide over adding a dependency.

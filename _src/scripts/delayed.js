@@ -1,20 +1,9 @@
-// eslint-disable-next-line import/no-cycle
-import {
-  sampleRUM,
-  getMetadata,
-} from './lib-franklin.js';
-
-import { openUrlForOs } from './utils/utils.js';
-
-// Core Web Vitals RUM collection
-sampleRUM('cwv');
-
-// Get the open URL for the user's OS
-const urlMacos = getMetadata('open-url-macos');
-const urlWindows = getMetadata('open-url-windows');
-const urlAndroid = getMetadata('open-url-android');
-const urlIos = getMetadata('open-url-ios');
-
-if (urlMacos || urlWindows || urlAndroid || urlIos) {
-  openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos);
-}
+import { getMetadata, sampleRUM } from "./lib-franklin.js";
+import { openUrlForOs } from "./utils/utils.js";
+// src/scripts/delayed.js
+sampleRUM("cwv");
+var urlMacos = getMetadata("open-url-macos");
+var urlWindows = getMetadata("open-url-windows");
+var urlAndroid = getMetadata("open-url-android");
+var urlIos = getMetadata("open-url-ios");
+if (urlMacos || urlWindows || urlAndroid || urlIos) openUrlForOs(urlMacos, urlWindows, urlAndroid, urlIos);

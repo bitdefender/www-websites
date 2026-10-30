@@ -1,79 +1,64 @@
-import Glide from '@glidejs/glide';
-import { debounce } from '@repobit/dex-utils';
-import { decorateIcons } from '../../scripts/lib-franklin.js';
-
-export default async function decorate(block) {
-  const [titleEl, ...slides] = [...block.children];
-  const isTestimonials = block.closest('.section')?.classList.contains('testimonials');
-  const isTrusted = block.classList.contains('trusted-carousel');
-  const slidesHTML = slides.map((slide) => {
-    const row = slide.children[0];
-    const colMedia = row?.children?.[0];
-    const colTitle = row?.children?.[1];
-    const colSubSecondary = row?.children?.[2];
-    const colSubPrimary = row?.children?.[3];
-    const hasImg = row.querySelector?.('img, picture, .icon');
-
-    if (isTestimonials && block.classList.contains('reviews')) {
-      let subSecondary = colSubSecondary?.innerHTML || '';
-      let subPrimary = (() => {
-        if (colSubPrimary != null) return colSubPrimary?.innerHTML || '';
-        return '';
-      })();
-
-      if (
-        !colSubPrimary?.textContent?.trim()
-        && colSubSecondary?.textContent?.trim()
-        && !colSubSecondary?.querySelector('strong')
-      ) {
-        subPrimary = colSubSecondary?.innerHTML || '';
-        subSecondary = '';
-      }
-
-      return `
+import { decorateIcons } from "../../scripts/lib-franklin.js";
+import { debounce } from "../../vendor/repobit/dex-utils.js";
+import Glide from "../../vendor/glidejs/glide.js";
+// src/blocks/box-carousel/box-carousel.js
+async function decorate(block) {
+	const [titleEl, ...slides] = [...block.children];
+	const isTestimonials = block.closest(".section")?.classList.contains("testimonials");
+	const isTrusted = block.classList.contains("trusted-carousel");
+	const slidesHTML = slides.map((slide) => {
+		const row = slide.children[0];
+		const colMedia = row?.children?.[0];
+		const colTitle = row?.children?.[1];
+		const colSubSecondary = row?.children?.[2];
+		const colSubPrimary = row?.children?.[3];
+		const hasImg = row.querySelector?.("img, picture, .icon");
+		if (isTestimonials && block.classList.contains("reviews")) {
+			let subSecondary = colSubSecondary?.innerHTML || "";
+			let subPrimary = (() => {
+				if (colSubPrimary != null) return colSubPrimary?.innerHTML || "";
+				return "";
+			})();
+			if (!colSubPrimary?.textContent?.trim() && colSubSecondary?.textContent?.trim() && !colSubSecondary?.querySelector("strong")) {
+				subPrimary = colSubSecondary?.innerHTML || "";
+				subSecondary = "";
+			}
+			return `
         <li class="carousel-item glide__slide">
           <div class="img-container">${colMedia?.innerHTML}</div>
           <p class="title">${colTitle?.outerHTML}</p>
-          <div class="subtitle-secondary">${subSecondary ?? ''}</div>
-          <div class="subtitle">${subPrimary ?? ''}</div>
+          <div class="subtitle-secondary">${subSecondary ?? ""}</div>
+          <div class="subtitle">${subPrimary ?? ""}</div>
         </li>`;
-    }
-
-    const mediaBlock = (() => {
-      if (!isTestimonials) return (colMedia?.innerHTML ?? '');
-      return `<div class="img-container">${hasImg ? colMedia?.innerHTML : ''}</div>`;
-    })();
-
-    const titleHTML = (() => {
-      if (isTestimonials) return (hasImg ? colTitle?.outerHTML ?? colMedia?.outerHTML : colMedia?.outerHTML) ?? '';
-      return colTitle?.outerHTML ?? '';
-    })();
-
-    const subSecondary = (() => {
-      if (isTestimonials) return (hasImg ? colSubSecondary?.innerHTML : colTitle?.innerHTML) ?? '';
-      return '';
-    })();
-
-    const subPrimary = (() => {
-      if (isTestimonials) return (hasImg ? colSubPrimary?.innerHTML : colTitle?.innerHTML) ?? '';
-      return colSubSecondary?.innerHTML ?? '';
-    })();
-
-    return `
+		}
+		const mediaBlock = (() => {
+			if (!isTestimonials) return colMedia?.innerHTML ?? "";
+			return `<div class="img-container">${hasImg ? colMedia?.innerHTML : ""}</div>`;
+		})();
+		const titleHTML = (() => {
+			if (isTestimonials) return (hasImg ? colTitle?.outerHTML ?? colMedia?.outerHTML : colMedia?.outerHTML) ?? "";
+			return colTitle?.outerHTML ?? "";
+		})();
+		const subSecondary = (() => {
+			if (isTestimonials) return (hasImg ? colSubSecondary?.innerHTML : colTitle?.innerHTML) ?? "";
+			return "";
+		})();
+		const subPrimary = (() => {
+			if (isTestimonials) return (hasImg ? colSubPrimary?.innerHTML : colTitle?.innerHTML) ?? "";
+			return colSubSecondary?.innerHTML ?? "";
+		})();
+		return `
       <li class="carousel-item glide__slide">
         ${mediaBlock}
         <p class="title">${titleHTML}</p>
-        ${isTestimonials ? `<div class="subtitle-secondary">${subSecondary}</div>` : ''}
+        ${isTestimonials ? `<div class="subtitle-secondary">${subSecondary}</div>` : ""}
           <div class="subtitle">${subPrimary}</div>
       </li>`;
-  }).join('');
-
-  // Only one carousel-nav block: your original one with div.navigation-item
-  const navDotsHTML = slides.map((_, i) => `
-    <div class="navigation-item ${i === 0 ? 'active' : ''}" data-index="${i}"></div>
-  `).join('');
-
-  const arrowsHTML = `
+	}).join("");
+	const navDotsHTML = slides.map((_, i) => `
+    <div class="navigation-item ${i === 0 ? "active" : ""}" data-index="${i}"></div>
+  `).join("");
+	const arrowsHTML = `
       <a href class="arrow disabled left-arrow">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 752" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0,752) scale(0.1,-0.1)">
@@ -99,11 +84,10 @@ export default async function decorate(block) {
         </svg>
       </a>
   `;
-
-  block.classList.add('default-content-wrapper');
-  block.innerHTML = `
+	block.classList.add("default-content-wrapper");
+	block.innerHTML = `
     <div class="carousel-header">
-      <div class="title">${titleEl?.children[0]?.innerHTML ?? ''}</div>
+      <div class="title">${titleEl?.children[0]?.innerHTML ?? ""}</div>
       <div class="arrows d-flex">${arrowsHTML}</div>
     </div>
 
@@ -119,94 +103,70 @@ export default async function decorate(block) {
       </div>
     </div>
   `;
-
-  decorateIcons(block);
-
-  block.innerHTML = block.innerHTML.replaceAll('---', '<hr />');
-
-  const glide = new Glide(block.querySelector('.glide'), {
-    type: (slides.length > (isTrusted ? 1 : 4)) ? 'carousel' : 'slider',
-    gap: 20,
-    perView: isTrusted ? 1 : Math.min(slides.length, 4),
-    rewind: false,
-    bound: slides.length <= (isTrusted ? 1 : 4),
-    breakpoints: isTrusted
-      ? {}
-      : {
-        991: { perView: Math.min(slides.length, 2) },
-        767: { perView: 1 },
-      },
-  });
-
-  const arrowsEl = block.querySelector('.arrows');
-  const showArrows = () => { arrowsEl.style.display = (slides.length > (glide.settings.perView || 1)) ? 'flex' : 'none'; };
-  glide.on(['mount.after', 'update', 'run'], showArrows);
-  showArrows();
-
-  glide.mount();
-
-  function updateNav() {
-    const navDots = block.querySelectorAll('.navigation-item');
-    navDots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === glide.index);
-    });
-  }
-
-  // Arrow click handlers to update glide
-  const leftArrow = block.querySelector('.left-arrow');
-  const rightArrow = block.querySelector('.right-arrow');
-
-  function updateArrows() {
-    if (!leftArrow || !rightArrow) return;
-
-    const currentIndex = glide.index;
-    const perView = glide.settings.perView || 1;
-    const totalSlides = slides.length;
-
-    if (currentIndex === 0) {
-      leftArrow.classList.add('disabled');
-    } else {
-      leftArrow.classList.remove('disabled');
-    }
-
-    if (currentIndex >= totalSlides - perView) {
-      rightArrow.classList.add('disabled');
-    } else {
-      rightArrow.classList.remove('disabled');
-    }
-  }
-
-  glide.on('run', () => {
-    updateNav();
-    updateArrows();
-  });
-
-  // Add click handlers for your nav dots to control glide
-  const navDots = block.querySelectorAll('.navigation-item');
-  navDots.forEach((dot) => {
-    dot.addEventListener('click', () => {
-      const idx = Number(dot.dataset.index);
-      glide.go(`=${idx}`);
-    });
-  });
-
-  if (leftArrow) {
-    leftArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      glide.go('<');
-    });
-  }
-  if (rightArrow) {
-    rightArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      glide.go('>');
-    });
-  }
-
-  window.addEventListener('resize', debounce(() => {
-    glide.update();
-    updateNav();
-    updateArrows();
-  }, 250));
-  window.dispatchEvent(new Event('resize'));
+	decorateIcons(block);
+	block.innerHTML = block.innerHTML.replaceAll("---", "<hr />");
+	const glide = new Glide(block.querySelector(".glide"), {
+		type: slides.length > (isTrusted ? 1 : 4) ? "carousel" : "slider",
+		gap: 20,
+		perView: isTrusted ? 1 : Math.min(slides.length, 4),
+		rewind: false,
+		bound: slides.length <= (isTrusted ? 1 : 4),
+		breakpoints: isTrusted ? {} : {
+			991: { perView: Math.min(slides.length, 2) },
+			767: { perView: 1 }
+		}
+	});
+	const arrowsEl = block.querySelector(".arrows");
+	const showArrows = () => {
+		arrowsEl.style.display = slides.length > (glide.settings.perView || 1) ? "flex" : "none";
+	};
+	glide.on([
+		"mount.after",
+		"update",
+		"run"
+	], showArrows);
+	showArrows();
+	glide.mount();
+	function updateNav() {
+		block.querySelectorAll(".navigation-item").forEach((dot, idx) => {
+			dot.classList.toggle("active", idx === glide.index);
+		});
+	}
+	const leftArrow = block.querySelector(".left-arrow");
+	const rightArrow = block.querySelector(".right-arrow");
+	function updateArrows() {
+		if (!leftArrow || !rightArrow) return;
+		const currentIndex = glide.index;
+		const perView = glide.settings.perView || 1;
+		const totalSlides = slides.length;
+		if (currentIndex === 0) leftArrow.classList.add("disabled");
+		else leftArrow.classList.remove("disabled");
+		if (currentIndex >= totalSlides - perView) rightArrow.classList.add("disabled");
+		else rightArrow.classList.remove("disabled");
+	}
+	glide.on("run", () => {
+		updateNav();
+		updateArrows();
+	});
+	block.querySelectorAll(".navigation-item").forEach((dot) => {
+		dot.addEventListener("click", () => {
+			const idx = Number(dot.dataset.index);
+			glide.go(`=${idx}`);
+		});
+	});
+	if (leftArrow) leftArrow.addEventListener("click", (e) => {
+		e.preventDefault();
+		glide.go("<");
+	});
+	if (rightArrow) rightArrow.addEventListener("click", (e) => {
+		e.preventDefault();
+		glide.go(">");
+	});
+	window.addEventListener("resize", debounce(() => {
+		glide.update();
+		updateNav();
+		updateArrows();
+	}, 250));
+	window.dispatchEvent(new Event("resize"));
 }
+export { decorate as default };
