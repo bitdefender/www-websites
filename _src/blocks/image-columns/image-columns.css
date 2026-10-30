@@ -58,7 +58,7 @@
 
 .image-columns > div > .image-columns-img-col img {
   display: block;
-  border-radius: 10px;
+  border-radius: 20px;
   object-fit: cover;
   object-position: center;
 }
