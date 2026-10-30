@@ -21,11 +21,15 @@
  *   vendor   every npm specifier `src/` imports -> minified ESM under
  *            `vendor/`, one file per specifier plus shared chunks
  *
- * plus vite-plugin-static-copy for files served verbatim: everything that
- * isn't first-party JS (CSS, SVG, images, fonts, JSON, sitemaps), and the
+ * plus copyVerbatim() for files served as they are: everything that isn't
+ * first-party JS (CSS, SVG, images, fonts, JSON, sitemaps), and the
  * third-party code in VENDORED.
  *
  * Source-only files never reach the output: tests, markdown, package.json.
+ *
+ * Only changed files are written (skipUnchanged(), copyVerbatim()): `aem up`
+ * reloads the page on every write to a file it served, so a watch rebuild
+ * that rewrote everything reloaded it several times per edit.
  *
  * Neither environment empties the output: one would wipe the other's
  * files. `npm run build` does the clean instead.
@@ -41,7 +45,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { defineConfig, parseSync } from 'vite';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const SRC = 'src';
 const OUT = '_src';
@@ -211,19 +214,52 @@ function discoverEntries() {
 }
 
 /**
- * Rolldown's watcher only sees the module graph, so on its own an edit to a
- * copied file (a block's CSS, say) waits for the next JS change to reach
- * `_src/`. Watching the copied files too makes that edit rebuild the modules
- * environment, and vite-plugin-static-copy re-copies on every rebuild.
+ * Copy the files served verbatim into `_src/` at the same path, skipping
+ * any already there unchanged (same size, not older than its source).
+ * Rolldown's watcher only sees the module graph, so the copied files are
+ * watched too: editing one (a block's CSS, say) rebuilds the modules
+ * environment, and this copies just that file.
  * @param {string[]} files absolute paths of the files copied verbatim
  * @returns {import('vite').Plugin}
  */
-function watchCopied(files) {
+function copyVerbatim(files) {
   return {
-    name: 'watch-copied',
+    name: 'copy-verbatim',
     applyToEnvironment: (environment) => environment.name === 'modules',
     buildStart() {
       if (this.meta.watchMode) files.forEach((file) => this.addWatchFile(file));
+    },
+    writeBundle() {
+      files.forEach((file) => {
+        const dest = path.join(OUT, path.relative(SRC, file));
+        const source = fs.statSync(file);
+        const copy = fs.existsSync(dest) && fs.statSync(dest);
+        if (copy && copy.size === source.size && copy.mtimeMs >= source.mtimeMs) return;
+        fs.mkdirSync(path.dirname(dest), { recursive: true });
+        fs.copyFileSync(file, dest);
+      });
+    },
+  };
+}
+
+/**
+ * Leave output that didn't change alone. A watch rebuild re-emits every
+ * module, and `aem up` live-reloads the page for each burst of writes to
+ * files it served, so rewriting identical files turned one edit into
+ * several reloads. A clean build has nothing on disk to match, and writes
+ * everything.
+ * @returns {import('vite').Plugin}
+ */
+function skipUnchanged() {
+  return {
+    name: 'skip-unchanged',
+    generateBundle(options, bundle) {
+      Object.values(bundle)
+        .filter((output) => output.type === 'chunk')
+        .forEach(({ fileName, code }) => {
+          const file = path.join(options.dir, fileName);
+          if (fs.existsSync(file) && fs.readFileSync(file, 'utf8') === code) delete bundle[fileName];
+        });
     },
   };
 }
@@ -240,9 +276,8 @@ function noAssets({ names }) {
 
 /**
  * One line per environment build, in place of Vite's per-file report
- * (`logLevel: 'warn'` hides that, and the static copy's count). In watch
- * mode every rebuild prints its line too. Last in `plugins`, so the line
- * comes after the static copy.
+ * (`logLevel: 'warn'` hides that). In watch mode every rebuild prints its
+ * line too. Last in `plugins`, so the line comes after the copy.
  * @returns {import('vite').Plugin}
  */
 function summary() {
@@ -286,33 +321,8 @@ export default defineConfig({
   },
   plugins: [
     vendorImports(entries.dependencies),
-    watchCopied(entries.copied),
-    viteStaticCopy({
-      environment: 'modules',
-      targets: [
-        {
-          // Everything that isn't first-party JS: CSS, SVG, images, fonts,
-          // JSON, sitemaps. Its own target, so the `.js` exclusion here
-          // can't cancel the vendored JS below.
-          src: [
-            `${SRC}/**/*`,
-            `!${SRC}/**/*.js`,
-            `!${SRC}/tests/**`,
-            `!${SRC}/**/*.md`,
-            `!${SRC}/**/package.json`,
-            `!${SRC}/**/package-lock.json`,
-            `!${SRC}/**/.DS_Store`,
-          ],
-          dest: '',
-          rename: { stripBase: 1 }, // drop the leading `src/`
-        },
-        {
-          src: VENDORED.map((prefix) => `${SRC}/${prefix}**/*.js`),
-          dest: '',
-          rename: { stripBase: 1 },
-        },
-      ],
-    }),
+    skipUnchanged(),
+    copyVerbatim(entries.copied),
     summary(),
   ],
   environments: {
