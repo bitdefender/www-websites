@@ -238,6 +238,27 @@ function noAssets({ names }) {
   throw new Error(`unexpected emitted asset ${names[0]}; static files are copied verbatim, not bundled`);
 }
 
+/**
+ * One line per environment build, in place of Vite's per-file report
+ * (`logLevel: 'warn'` hides that, and the static copy's count). In watch
+ * mode every rebuild prints its line too. Last in `plugins`, so the line
+ * comes after the static copy.
+ * @returns {import('vite').Plugin}
+ */
+function summary() {
+  let start = 0;
+  return {
+    name: 'summary',
+    buildStart() {
+      start = performance.now();
+    },
+    writeBundle() {
+      // eslint-disable-next-line no-console
+      console.log(`${OUT}/ ${this.environment.name} built in ${Math.round(performance.now() - start)}ms`);
+    },
+  };
+}
+
 checkInstall();
 
 const entries = discoverEntries();
@@ -255,6 +276,7 @@ const shared = {
 
 export default defineConfig({
   publicDir: false,
+  logLevel: 'warn', // warnings and errors only; summary() reports each build
   builder: {
     // There is no client build (CSS is copied verbatim): modules, then vendor.
     async buildApp(builder) {
@@ -291,6 +313,7 @@ export default defineConfig({
         },
       ],
     }),
+    summary(),
   ],
   environments: {
     modules: {
