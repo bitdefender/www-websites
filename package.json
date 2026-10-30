@@ -7,10 +7,11 @@
     "lint:js": "eslint .",
     "lint:css": "stylelint _src/blocks/**/*.css --fix",
     "lint": "npm run lint:js && npm run lint:css",
+    "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "postinstall": "node .husky/update-importmap.js",
+    "postinstall": "npm run build",
     "prepare": "husky"
   },
   "repository": {
@@ -42,6 +43,7 @@
     "sinon": "15.0.1",
     "stylelint": "15.2.0",
     "stylelint-config-standard": "30.0.1",
+    "vite": "^8.3.3",
     "vitest": "^4.0.18"
   },
   "dependencies": {

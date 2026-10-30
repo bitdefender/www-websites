@@ -1,4 +1,4 @@
-import { getDsnBase, liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The homepage's Latest insights, on the design system's bd-post-card, under
@@ -38,11 +38,10 @@ export default async function decorate(block) {
   wrapSectionInDsSection(block);
   // the section's heading, as bd-section-header
   const header = liftSectionHeader(block);
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}post-card`),
-      import(`${base}grid`),
+      import('@repobit/dex-system-design/post-card'),
+      import('@repobit/dex-system-design/grid'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

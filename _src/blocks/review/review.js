@@ -1,5 +1,3 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
-
 const buildReview = (cell, variant) => {
   const paragraphs = [...cell.querySelectorAll('p')].filter(
     (p) => !p.querySelector('[class*="icon-"]') && p.textContent.trim(),
@@ -35,11 +33,10 @@ const buildReview = (cell, variant) => {
 };
 
 export default async function decorate(block) {
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}review-grid`),
-      import(`${base}review`),
+      import('@repobit/dex-system-design/review-grid'),
+      import('@repobit/dex-system-design/review'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

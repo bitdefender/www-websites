@@ -1,7 +1,5 @@
 import { STICKY_NAVIGATION_DATASET_KEY } from '../../scripts/lib-franklin.js';
 
-import { getDsnBase } from '../../scripts/utils/utils.js';
-
 // ─── helpers ───────────────────────────────────────────────────────────────────
 
 /** True if href is an anchor on the current page (#id or /same-path#id). */
@@ -174,10 +172,9 @@ function buildAnchorNav(block) {
 }
 
 export default async function decorate(block) {
-  const base = getDsnBase();
   await Promise.all([
-    import(`${base}anchor`),
-    import(`${base}button`),
+    import('@repobit/dex-system-design/anchor'),
+    import('@repobit/dex-system-design/button'),
   ]);
   buildAnchorNav(block);
 }

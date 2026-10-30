@@ -29,8 +29,9 @@ function setupMarquee({ content = TRUSTED_CONTENT, variant = '', header = '' } =
   return document.querySelector('.logo-marquee');
 }
 
-/* The design system loads from esm.sh, which a test cannot reach: the import
-   fails, the block logs it, and still builds the bd-* tree. */
+/* The design system modules are an empty stub in tests (vitest.config.js):
+   the bd-* elements stay un-upgraded, the tests check the tree the block
+   builds. */
 describe('logo-marquee', () => {
   beforeEach(() => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});

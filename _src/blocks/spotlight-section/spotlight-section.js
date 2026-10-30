@@ -1,5 +1,3 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
-
 const getIcon = (block) => {
   const picture = block.querySelector('picture');
   if (picture) return picture.cloneNode(true);
@@ -74,12 +72,11 @@ const appendButtons = (banner, cell, slot) => {
 };
 
 export default async function decorate(block) {
-  const base = getDsnBase();
   try {
     await Promise.all([
-      // The component is not exposed by the package exports map.
-      import(`${base}src/components/spotlight-section/spotlight-section.js`),
-      import(`${base}button`),
+      // Not in the package's exports map: UNEXPORTED in vite.config.mjs maps it.
+      import('@repobit/dex-system-design/spotlight-section'),
+      import('@repobit/dex-system-design/button'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

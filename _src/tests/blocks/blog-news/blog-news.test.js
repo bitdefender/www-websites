@@ -20,13 +20,6 @@ import {
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// every `${base}<module>` the block imports resolves to an empty module: the
-// module name lands in a comment after `export {}`
-vi.mock('../../../scripts/utils/utils.js', async (importOriginal) => ({
-  ...(await importOriginal()),
-  getDsnBase: vi.fn(() => 'data:text/javascript,export {}//'),
-}));
-
 const rss = (channel, posts) => `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
@@ -74,8 +67,6 @@ describe('blog-news block, multi-endpoint', () => {
   let fetchSpy;
 
   beforeAll(async () => {
-    // liftSectionHeader imports from esm.sh, which a test cannot reach
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
     fetchSpy = vi.spyOn(window, 'fetch').mockImplementation(async (url) => {
       const feed = Object.keys(FEEDS).find((name) => String(url).includes(`/rss/${name}/`));
       return new Response(FEEDS[feed], { status: 200, headers: { 'Content-Type': 'text/xml' } });

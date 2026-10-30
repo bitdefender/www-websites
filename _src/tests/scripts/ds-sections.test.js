@@ -21,8 +21,8 @@ function setupMain(firstClass = '') {
   return document.querySelector('main');
 }
 
-/* The design system loads from esm.sh, which a test cannot reach: the import
-   fails and the helper logs it, but the section is still wrapped. */
+/* The design system modules are an empty stub in tests (vitest.config.js):
+   bd-section stays un-upgraded, the tests check how the section is wrapped. */
 describe('wrapSectionInDsSection', () => {
   beforeEach(() => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});

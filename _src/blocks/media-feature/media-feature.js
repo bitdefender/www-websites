@@ -1,5 +1,3 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
-
 const VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
 const YOUTUBE_RE = /(?:youtube\.com|youtu\.be)/i;
 const IFRAME_SRC_RE = /<iframe[^>]+\bsrc=["']([^"']+)["']/i;
@@ -173,13 +171,12 @@ const buildFeaturesTab = (row, shouldReverse) => {
 };
 
 export default async function decorate(block) {
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}features-tab`),
-      import(`${base}video-player`),
-      import(`${base}list`),
-      import(`${base}list-item`),
+      import('@repobit/dex-system-design/features-tab'),
+      import('@repobit/dex-system-design/video-player'),
+      import('@repobit/dex-system-design/list'),
+      import('@repobit/dex-system-design/list-item'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

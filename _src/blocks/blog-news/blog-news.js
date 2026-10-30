@@ -1,5 +1,5 @@
 import {
-  getDsnBase, liftSectionHeader, matchHeights, wrapSectionInDsSection,
+  liftSectionHeader, matchHeights, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -36,9 +36,8 @@ async function decorateFeedCards(block) {
 
   // the section's heading, as bd-section-header
   const header = liftSectionHeader(block);
-  const base = getDsnBase();
   const [modules, ...results] = await Promise.allSettled([
-    Promise.all([import(`${base}post-card`), import(`${base}grid`)]),
+    Promise.all([import('@repobit/dex-system-design/post-card'), import('@repobit/dex-system-design/grid')]),
     ...feeds.map(readFeed),
   ]);
   if (modules.status === 'rejected') {

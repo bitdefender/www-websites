@@ -1,4 +1,4 @@
-import { getDsnBase, getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 // The logo assets are exported at 1.5x the size Figma draws them.
 const ASSET_SCALE = 1.5;
@@ -66,12 +66,11 @@ const getLabel = (block, textItem) => {
 
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}logo-marquee`),
-      import(`${base}display`),
-      import(`${base}paragraph`),
+      import('@repobit/dex-system-design/logo-marquee'),
+      import('@repobit/dex-system-design/display'),
+      import('@repobit/dex-system-design/paragraph'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

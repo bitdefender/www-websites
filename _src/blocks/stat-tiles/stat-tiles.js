@@ -1,5 +1,5 @@
 import {
-  fullWidthOnPhone, getDsnBase, liftSectionHeader, wrapSectionInDsSection,
+  fullWidthOnPhone, liftSectionHeader, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -84,13 +84,12 @@ export default async function decorate(block) {
   wrapSectionInDsSection(block);
   // the section's eyebrow, heading and lead, as bd-section-header
   const header = liftSectionHeader(block);
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}stat`),
-      import(`${base}grid`),
-      import(`${base}paragraph`),
-      import(`${base}button`),
+      import('@repobit/dex-system-design/stat'),
+      import('@repobit/dex-system-design/grid'),
+      import('@repobit/dex-system-design/paragraph'),
+      import('@repobit/dex-system-design/button'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

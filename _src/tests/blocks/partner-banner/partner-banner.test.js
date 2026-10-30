@@ -5,7 +5,7 @@
  * check the markup the block builds, not the components' rendering.
  */
 import {
-  beforeAll, describe, expect, it, vi,
+  beforeAll, describe, expect, it,
 } from 'vitest';
 
 import { readFile } from 'fs/promises';
@@ -17,13 +17,6 @@ import {
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// every `${base}<module>` the block imports resolves to an empty module: the
-// module name lands in a comment after `export {}`
-vi.mock('../../../scripts/utils/utils.js', async (importOriginal) => ({
-  ...(await importOriginal()),
-  getDsnBase: vi.fn(() => 'data:text/javascript,export {}//'),
-}));
 
 async function renderFixture() {
   const html = await readFile(path.join(__dirname, 'partner-banner.mock.html'), 'utf-8');

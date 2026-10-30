@@ -1,4 +1,4 @@
-import { getDsnBase, liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The homepage's solution splitter, under the section header: one column per
@@ -36,12 +36,11 @@ export default async function decorate(block) {
   wrapSectionInDsSection(block);
   // the section's heading and lead, as bd-section-header
   const header = liftSectionHeader(block);
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}link`),
-      import(`${base}paragraph`),
-      import(`${base}grid`),
+      import('@repobit/dex-system-design/link'),
+      import('@repobit/dex-system-design/paragraph'),
+      import('@repobit/dex-system-design/grid'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

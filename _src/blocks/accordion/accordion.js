@@ -1,5 +1,3 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
-
 const getSectionTitle = (block) => {
   const section = block.closest('.section');
   const accordionWrapper = block.closest('.accordion-wrapper');
@@ -110,12 +108,11 @@ const buildAccordion = (block) => {
 };
 
 export default async function decorate(block) {
-  const base = getDsnBase();
   await Promise.all([
-    import(`${base}accordion-bg`),
-    import(`${base}paragraph`),
-    import(`${base}list`),
-    import(`${base}list-item`),
+    import('@repobit/dex-system-design/accordion-bg'),
+    import('@repobit/dex-system-design/paragraph'),
+    import('@repobit/dex-system-design/list'),
+    import('@repobit/dex-system-design/list-item'),
   ]);
   const accordion = buildAccordion(block);
   block.replaceChildren(accordion);

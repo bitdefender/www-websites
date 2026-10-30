@@ -21,13 +21,6 @@ import {
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// every `${base}<module>` the block imports resolves to an empty module: the
-// module name lands in a comment after `export {}`
-vi.mock('../../../scripts/utils/utils.js', async (importOriginal) => ({
-  ...(await importOriginal()),
-  getDsnBase: vi.fn(() => 'data:text/javascript,export {}//'),
-}));
-
 // Section Metadata, as an author adds it under the block
 const withMetadata = (key, value) => (html) => html.replace(/<\/div>\s*$/, `
   <div class="section-metadata"><div><div>${key}</div><div>${value}</div></div></div>
@@ -54,8 +47,6 @@ describe('stat-tiles block', () => {
   let layout;
 
   beforeAll(async () => {
-    // liftSectionHeader imports from esm.sh, which a test cannot reach
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
     block = await renderFixture();
     layout = block.querySelector(':scope > bd-grid.stat-tiles-column');
   });

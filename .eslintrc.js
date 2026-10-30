@@ -19,5 +19,7 @@ module.exports = {
     'import/extensions': ['error', {
       js: 'always',
     }],
+    // the node resolver doesn't read `exports`; vite.config.mjs resolves these
+    'import/no-unresolved': ['error', { ignore: ['^@repobit/dex-system-design/'] }],
   },
 };

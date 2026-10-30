@@ -1,4 +1,4 @@
-import { getDsnBase, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The Ferrari section, on the design system's bd-partner-banner. Authored as:
@@ -20,11 +20,10 @@ const slotted = (picture, slot) => {
 
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}partner-banner`),
-      import(`${base}button`),
+      import('@repobit/dex-system-design/partner-banner'),
+      import('@repobit/dex-system-design/button'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

@@ -19,13 +19,6 @@ import {
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// every `${base}<module>` the block imports resolves to an empty module: the
-// module name lands in a comment after `export {}`
-vi.mock('../../../scripts/utils/utils.js', async (importOriginal) => ({
-  ...(await importOriginal()),
-  getDsnBase: vi.fn(() => 'data:text/javascript,export {}//'),
-}));
-
 async function renderFixture() {
   const html = await readFile(path.join(__dirname, 'link-columns.mock.html'), 'utf-8');
   document.body.innerHTML = `<main>${html}</main>`;
@@ -47,8 +40,6 @@ describe('link-columns block', () => {
   let columns;
 
   beforeAll(async () => {
-    // liftSectionHeader imports from esm.sh, which a test cannot reach
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
     block = await renderFixture();
     grid = block.querySelector(':scope > bd-grid');
     columns = [...grid.querySelectorAll(':scope > .link-columns-item')];

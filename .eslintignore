@@ -8,3 +8,4 @@ _src/scripts/utils/bot-prevention.js
 tools
 src
 vitest.config.js
+_src/dist

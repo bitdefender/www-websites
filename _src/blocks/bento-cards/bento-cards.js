@@ -1,4 +1,4 @@
-import { getDsnBase, liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 // The attribute each bd-motion-art object reads its labels from.
 const ART_LABELS = {
@@ -72,12 +72,11 @@ const buildCard = (row) => {
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
   const header = liftSectionHeader(block);
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}bento-grid`),
-      import(`${base}motion-art`),
-      import(`${base}button`),
+      import('@repobit/dex-system-design/bento-grid'),
+      import('@repobit/dex-system-design/motion-art'),
+      import('@repobit/dex-system-design/button'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

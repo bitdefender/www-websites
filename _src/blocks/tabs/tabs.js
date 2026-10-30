@@ -1,4 +1,4 @@
-import { getDsnBase, slotIcon } from '../../scripts/utils/utils.js';
+import { slotIcon } from '../../scripts/utils/utils.js';
 import { readBlockConfig, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 
 const getImageSrc = (iconCell) => {
@@ -250,12 +250,11 @@ export default async function decorate(block) {
       normalizeLoadingFeatureIcons(bdTabs);
       const iconObserver = watchAndNormalizeFeatureIcons(bdTabs);
 
-      const base = getDsnBase();
       try {
         await loadBlocks(bdTabs);
         normalizeLoadingFeatureIcons(bdTabs);
         bdTabs.querySelectorAll('bd-accordion-bg').forEach((el) => el.setAttribute('no-padding', ''));
-        await import(`${base}tabs`);
+        await import('@repobit/dex-system-design/tabs');
         if (typeof bdTabs.requestUpdate === 'function') {
           bdTabs.requestUpdate();
         }
@@ -276,14 +275,13 @@ export default async function decorate(block) {
     const { defaultWrapper, title, subtitle } = getSectionContext(block);
     if (defaultWrapper && title) defaultWrapper.remove();
 
-    const base = getDsnBase();
     // no icons module: bd-individual-icon here only wraps the authored <img>,
     // and the design system's element of that name draws its own glyph instead
     try {
       await Promise.all([
-        import(`${base}tabs`),
-        import(`${base}paragraph`),
-        import(`${base}accordion`),
+        import('@repobit/dex-system-design/tabs'),
+        import('@repobit/dex-system-design/paragraph'),
+        import('@repobit/dex-system-design/accordion'),
       ]);
     } catch (err) {
       // eslint-disable-next-line no-console

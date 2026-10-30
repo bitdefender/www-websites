@@ -1,7 +1,16 @@
+import { fileURLToPath } from 'url';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     cacheDir: '../node_modules/.vitest',
+    resolve: {
+        // the design system's components are an empty module in tests: they
+        // check the markup the blocks build, not the components' rendering
+        alias: [{
+            find: /^@repobit\/dex-system-design\/.*$/,
+            replacement: fileURLToPath(new URL('./_src/tests/dsn-stub.js', import.meta.url)),
+        }],
+    },
     test: {
         environment: 'jsdom',
         globals: true,
@@ -15,6 +24,7 @@ export default defineConfig({
                 'tests/',
                 '**/*.config.js',
                 '**/vendor/**',
+                'dist/**',
             ],
         },
         reporters: ['default'],

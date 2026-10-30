@@ -24,8 +24,9 @@ const PROVEN = `
   <p>Independent analysts <a href="/awards/">recognize</a> Bitdefender.</p>
   <p class="button-container"><a class="button primary" href="/consumer/">Consumer Recognition</a></p>`;
 
-/* The design system loads from esm.sh, which a test cannot reach: the import
-   fails, the helper logs it, and still builds the header. */
+/* The design system modules are an empty stub in tests (vitest.config.js):
+   the bd-* elements stay un-upgraded, the tests check the header the helper
+   builds. */
 describe('liftSectionHeader', () => {
   beforeEach(() => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});

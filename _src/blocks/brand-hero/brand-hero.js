@@ -1,4 +1,4 @@
-import { getDsnBase, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The homepage hero, rendered by the design system's bd-hero with the brand
@@ -94,14 +94,13 @@ export default async function decorate(block) {
   // inset below it, so the cards stand twice the inset clear of what follows
   wrapSectionInDsSection(block)?.setAttribute('no-padding-top', '');
 
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}hero`),
-      import(`${base}motion-art`),
-      import(`${base}audience-card`),
-      import(`${base}grid`),
-      import(`${base}icons`),
+      import('@repobit/dex-system-design/hero'),
+      import('@repobit/dex-system-design/motion-art'),
+      import('@repobit/dex-system-design/audience-card'),
+      import('@repobit/dex-system-design/grid'),
+      import('@repobit/dex-system-design/icons'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

@@ -1,2 +1,2 @@
-node .husky/update-importmap.js
+npm run build --silent
 node .husky/commit-head.js

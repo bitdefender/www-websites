@@ -1,5 +1,3 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
-
 const getIconElement = (col) => {
   const iconSpan = col.querySelector('[class*="icon-"]');
   if (iconSpan) {
@@ -77,14 +75,11 @@ const buildCardItem = (row, shape) => {
 };
 
 export default async function decorate(block) {
-  const base = getDsnBase();
   try {
     await Promise.all([
-      // Use full src paths — 'cards' is not in the package.json exports map
-      // so the short name fails on ESM.sh.
-      import(`${base}src/components/cards/card.js`),
-      import(`${base}paragraph`),
-      import(`${base}button`),
+      import('@repobit/dex-system-design/cards'),
+      import('@repobit/dex-system-design/paragraph'),
+      import('@repobit/dex-system-design/button'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

@@ -1,5 +1,5 @@
 import {
-  fullWidthOnPhone, getDsnBase, getSectionContent, liftSectionHeader, wrapSectionInDsSection,
+  fullWidthOnPhone, getSectionContent, liftSectionHeader, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -63,11 +63,10 @@ export default async function decorate(block) {
   // the section's heading and lead, as bd-section-header: Proven is centred in
   // every frame, so the block asks for it rather than leaving it to metadata
   const header = liftSectionHeader(block, { layout: 'centered' });
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}awards-spotlight`),
-      import(`${base}button`),
+      import('@repobit/dex-system-design/awards-spotlight'),
+      import('@repobit/dex-system-design/button'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console

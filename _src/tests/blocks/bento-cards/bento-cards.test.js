@@ -19,11 +19,6 @@ import {
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-vi.mock('../../../scripts/utils/utils.js', async (importOriginal) => ({
-  ...(await importOriginal()),
-  getDsnBase: vi.fn(() => 'data:text/javascript,export {}//'),
-}));
-
 async function renderFixture(transform = (html) => html) {
   const html = await readFile(path.join(__dirname, 'bento-cards.mock.html'), 'utf-8');
   document.body.innerHTML = `<main>${transform(html)}</main>`;
@@ -45,8 +40,6 @@ describe('bento-cards block', () => {
   let cards;
 
   beforeAll(async () => {
-    // liftSectionHeader imports from esm.sh, which a test cannot reach
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
     block = await renderFixture();
     grid = block.querySelector(':scope > bd-bento-grid');
     cards = [...grid.querySelectorAll(':scope > bd-bento-item')];

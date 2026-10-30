@@ -18,13 +18,6 @@ import {
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// every `${base}<module>` the block imports resolves to an empty module: the
-// module name lands in a comment after `export {}`
-vi.mock('../../../scripts/utils/utils.js', async (importOriginal) => ({
-  ...(await importOriginal()),
-  getDsnBase: vi.fn(() => 'data:text/javascript,export {}//'),
-}));
-
 // icons are fetched by decorateIcons, there is no server in tests
 global.fetch = vi.fn(async () => ({ ok: false }));
 

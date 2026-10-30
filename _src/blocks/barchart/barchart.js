@@ -1,5 +1,3 @@
-import { getDsnBase } from '../../scripts/utils/utils.js';
-
 const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
 const VIEWPORT_ANIMATION_MS = 1000;
 const EASE_OUT_CUBIC = (value) => 1 - ((1 - value) ** 3);
@@ -280,13 +278,12 @@ const activateCompareAnimationsOnViewport = (compareSection) => {
 };
 
 export default async function decorate(block) {
-  const base = getDsnBase();
   await Promise.all([
-    import(`${base}compare`),
-    import(`${base}heading`),
-    import(`${base}paragraph`),
-    import(`${base}link`),
-    import(`${base}image`),
+    import('@repobit/dex-system-design/compare'),
+    import('@repobit/dex-system-design/heading'),
+    import('@repobit/dex-system-design/paragraph'),
+    import('@repobit/dex-system-design/link'),
+    import('@repobit/dex-system-design/image'),
   ]);
 
   const compareSection = buildCompareSection(block);

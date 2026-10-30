@@ -1375,18 +1375,6 @@ export const wrapChildrenWithStoreContext = (element, {
   element.appendChild(bdContext);
 };
 
-const DSN_FALLBACK = 'https://esm.sh/@repobit/dex-system-design@2.7.1/';
-
-export const getDsnBase = () => {
-  try {
-    const map = document.querySelector('script[type="importmap"]');
-    const imports = JSON.parse(map?.textContent || '{}').imports || {};
-    return imports['@repobit/dex-system-design/'] || DSN_FALLBACK;
-  } catch {
-    return DSN_FALLBACK;
-  }
-};
-
 /**
  * An authored icon (span.icon, the page's inline SVG) readied for a design
  * system component's icon slot: a copy, sized, in the brand's colour unless
@@ -1453,7 +1441,7 @@ export const wrapSectionInDsSection = (block) => {
   bdSection.append(...section.children);
   section.append(bdSection);
 
-  import(`${getDsnBase()}section`).catch((err) => {
+  import('@repobit/dex-system-design/section').catch((err) => {
     // eslint-disable-next-line no-console
     console.warn('bd-section: DSN import failed, the section keeps its authored spacing', err);
   });
@@ -1528,9 +1516,8 @@ export const liftSectionHeader = async (block, { layout } = {}) => {
   // the heading's anchor still lands on the section
   if (heading.id) header.id = heading.id;
 
-  const base = getDsnBase();
   try {
-    await Promise.all([import(`${base}section-header`), import(`${base}link`)]);
+    await Promise.all([import('@repobit/dex-system-design/section-header'), import('@repobit/dex-system-design/link')]);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.warn('liftSectionHeader: DSN import failed, continuing with native rendering', err);

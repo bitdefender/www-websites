@@ -1,5 +1,5 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
-import { getDsnBase, slotIcon } from '../../scripts/utils/utils.js';
+import { slotIcon } from '../../scripts/utils/utils.js';
 
 const parseTrailingGreenPill = (text) => {
   const marker = text.match(/\[\$([^\]]+?)\$\]\s*$/);
@@ -159,12 +159,11 @@ const buildFeatureCol = (col, firstOpen) => {
 export default async function decorate(block) {
   // the icons are SVG before bd-features copies them (slotIcon)
   await decorateIcons(block);
-  const base = getDsnBase();
   try {
     await Promise.all([
-      import(`${base}tabs`),
-      import(`${base}paragraph`),
-      import(`${base}accordion`),
+      import('@repobit/dex-system-design/tabs'),
+      import('@repobit/dex-system-design/paragraph'),
+      import('@repobit/dex-system-design/accordion'),
     ]);
   } catch (err) {
     // eslint-disable-next-line no-console
