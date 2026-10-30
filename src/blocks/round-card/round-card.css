@@ -1,0 +1,87 @@
+main .section.round-card-container.mt-n60 {
+    padding-top: 0;
+    margin-top: -60px;
+}
+
+.round-card-container .inner-wrapper {
+    display: flex;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px 0 rgb(0 0 0 / 8%);
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+    width: 100%;
+    margin: 10px 0;
+    padding: 40px 23px 2pc;
+}
+
+/* first paragraph */
+.round-card-container .inner-wrapper > div:nth-child(2) > p:nth-child(3) {
+    margin-top: 40px;
+}
+
+.round-card-container .inner-wrapper > div:last-child {
+    border-radius: 50%;
+    position: absolute;
+    right: -35px;
+    top: -60px;
+    width: 225px;
+    height: 225px;
+    overflow: hidden;
+}
+
+.round-card-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .3s ease-in-out,-webkit-transform .3s ease-in-out;
+    transform: scale(1);
+}
+
+.round-card-container .inner-wrapper > a:first-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    text-indent: -999999px;
+}
+
+.round-card-container .inner-wrapper > div:nth-child(2) > * {
+    max-width: 150px;
+}
+
+@media(min-width: 767px) {
+    /* tablet */
+    .round-card-container .inner-wrapper > div:nth-child(2) {
+        max-width: calc(100% - 280px);
+    }
+
+    .round-card-container .inner-wrapper > div:nth-child(2) > * {
+        max-width: unset;
+    }
+
+    .round-card-container .inner-wrapper p {
+        font-size: 18px;
+    }
+
+    .round-card-container .inner-wrapper > div:last-child {
+        width: 285px;
+        height: 285px;
+    }
+
+    .round-card-container .inner-wrapper > a:first-child:hover ~ div p.button-container > a::after {
+        transform: translateX(5px);
+        opacity: 1;
+    }
+
+    .round-card-container .inner-wrapper > a:first-child:hover ~ div p.button-container > a span.button-text {
+        transform: translate(-10px, 0);
+    }
+
+    .round-card-container .inner-wrapper > a:first-child:hover ~ div img {
+        transform: scale(1.1);
+    }
+}

@@ -79,10 +79,10 @@ Found along the way:
 ## First steps
 1. Work on the existing branch `DEX-29010`. It is already on origin, so run `git fetch origin && git checkout DEX-29010`; don't create a new one. Its branch preview is https://dex-29010--www-websites--bitdefender.aem.page/en-us/, and the PR description needs that link.
 2. In `package.json`, set `"@repobit/dex-system-design": "^2.3.0"`, then run `npm install`. The husky hook regenerates the import map in `head.html` and `404.html`; don't edit those by hand.
-3. In `_src/scripts/utils/utils.js`, update `DSN_FALLBACK`, which still pins `esm.sh/@repobit/dex-system-design@2.2.2/`. Move it to `@2.3.0`.
+3. In `src/scripts/utils/utils.js`, update `DSN_FALLBACK`, which still pins `esm.sh/@repobit/dex-system-design@2.2.2/`. Move it to `@2.3.0`.
 
 ## Block pattern to follow
-- Copy `_src/blocks/four-cards/four-cards.js` and `_src/blocks/spotlight-section/spotlight-section.js`:
+- Copy `src/blocks/four-cards/four-cards.js` and `src/blocks/spotlight-section/spotlight-section.js`:
   - `const base = getDsnBase();`
   - `try { await import(`${base}hero`) } catch (e) { console.warn(...) }`
   - read the cells defensively;
@@ -96,7 +96,7 @@ Found along the way:
 ## The section header: no block, lift default content
 - Decision: there is no `section-header` block. A section's heading is plain default content above its block (eyebrow paragraph, H2, lead paragraph, optional button links).
 - Each big block calls one shared helper that turns `section > .default-content-wrapper` into a `<bd-section-header>`.
-- Precedent: `_src/blocks/accordion/accordion.js:7` and `_src/blocks/barchart/barchart.js:78` already lift `:scope > .default-content-wrapper`.
+- Precedent: `src/blocks/accordion/accordion.js:7` and `src/blocks/barchart/barchart.js:78` already lift `:scope > .default-content-wrapper`.
 
 Helper, `liftSectionHeader(block, { layout })` in `utils.js`:
 - Find `block.closest('.section')`, then its `:scope > .default-content-wrapper`.
@@ -134,7 +134,7 @@ Content has to change in two places before the helper can work:
 | 8 | `link-columns` | One row per column: link + description `p` → `bd-link variant="bold" arrow` + `bd-p variant="small"` in `bd-grid cols="1" cols-md="2" cols-lg="4"` |
 
 ## Tests and checks
-- One vitest file per block, in `_src/tests/blocks/<block>/<block>.test.js`. Reference: `_src/tests/blocks/webview-churn-offer/webview-churn-offer.test.js`.
+- One vitest file per block, in `src/tests/blocks/<block>/<block>.test.js`. Reference: `src/tests/blocks/webview-churn-offer/webview-churn-offer.test.js`.
   - Build the section markup in `document.body`.
   - Mock the dynamic DS imports.
   - Assert the generated `bd-*` tree and attributes.

@@ -1,0 +1,65 @@
+main .section.ribbon-container {
+  color: white;
+  text-align: center;
+  background-position: 0 -18px;
+  background-repeat: repeat;
+  background-blend-mode: unset;
+  background-color: black;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.ribbon-container * {
+  font-family: var(--body-font-family)!important;
+  font-size: var(--body-font-size-xs);
+}
+
+.ribbon-container p {
+  text-align: center;
+  margin: 5px 0;
+}
+
+.ribbon-container img {
+  width: 27px;
+  float: left;
+}
+
+.ribbon-container.bf25 .block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ribbon-container.bf25 img {
+  width: 20px;
+}
+
+.ribbon-container a:any-link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ribbon-container .block > div > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-shadow: 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00, 0 0 34px #f00;
+}
+
+.ribbon-container.bf25 {
+  padding: 5px 0;
+}
+
+.ribbon-container.bf25 .block > div > div {
+  text-shadow: none;
+}
+
+.ribbon-container.bf25 p {
+  font: normal normal bold 16px / 20px var(--body-font-family);
+}
+
+.ribbon-container.bf25 u {
+  text-decoration: none;
+  color: #F00;
+}

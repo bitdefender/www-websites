@@ -5,6 +5,6 @@ LICENSE
 package.json
 package-lock.json
 test/*
-_src/tests/*
+src/
 skills-lock.json
 vite.config.mjs

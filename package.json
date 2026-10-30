@@ -5,13 +5,14 @@
   "description": "Starter project for Adobe Helix",
   "scripts": {
     "lint:js": "eslint .",
-    "lint:css": "stylelint _src/blocks/**/*.css --fix",
+    "lint:css": "stylelint src/blocks/**/*.css --fix",
     "lint": "npm run lint:js && npm run lint:css",
-    "build": "vite build",
+    "build": "rm -rf _src && vite build",
+    "watch": "vite build --watch",
+    "dev": "npm run build && concurrently --kill-others --names watch,aem -P \"vite build --watch\" \"aem up {@}\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "postinstall": "npm run build",
     "prepare": "husky"
   },
   "repository": {
@@ -34,6 +35,7 @@
     "@web/test-runner-commands": "0.6.5",
     "axios": "^1.20.0",
     "chai": "4.3.7",
+    "concurrently": "^10.0.6",
     "eslint": "8.35.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.27.5",
@@ -44,6 +46,7 @@
     "stylelint": "15.2.0",
     "stylelint-config-standard": "30.0.1",
     "vite": "^8.3.3",
+    "vite-plugin-static-copy": "^4.1.1",
     "vitest": "^4.0.18"
   },
   "dependencies": {

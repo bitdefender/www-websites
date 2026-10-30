@@ -1,292 +1,180 @@
-const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
-const VIEWPORT_ANIMATION_MS = 1000;
-const EASE_OUT_CUBIC = (value) => 1 - ((1 - value) ** 3);
-
-const getHeadingText = (root) => root?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
-
-const getAdjacentParagraph = (element, fallbackRoot) => {
-  const candidate = element?.nextElementSibling;
-  if (candidate?.tagName === 'P') {
-    return candidate;
-  }
-  return fallbackRoot?.querySelector('p') || null;
+// src/blocks/barchart/barchart.js
+var DEFAULT_SECONDARY_SCALES = ["0.93", "0.47"];
+var VIEWPORT_ANIMATION_MS = 1e3;
+var EASE_OUT_CUBIC = (value) => 1 - (1 - value) ** 3;
+var getHeadingText = (root) => root?.querySelector("h1, h2, h3, h4, h5, h6")?.textContent?.trim() || "";
+var getAdjacentParagraph = (element, fallbackRoot) => {
+	const candidate = element?.nextElementSibling;
+	if (candidate?.tagName === "P") return candidate;
+	return fallbackRoot?.querySelector("p") || null;
 };
-
-const normalizeScore = (score) => score.replace(',', '.');
-
-const parseScaleValue = (value) => {
-  if (!value) {
-    return null;
-  }
-
-  const normalizedValue = normalizeScore(value).replace('%', '').trim();
-  const parsedValue = Number(normalizedValue);
-
-  if (!Number.isFinite(parsedValue) || parsedValue < 0) {
-    return null;
-  }
-
-  if (parsedValue <= 1) {
-    return String(parsedValue);
-  }
-
-  if (parsedValue <= 100) {
-    return String(parsedValue / 100);
-  }
-
-  return null;
+var normalizeScore = (score) => score.replace(",", ".");
+var parseScaleValue = (value) => {
+	if (!value) return null;
+	const normalizedValue = normalizeScore(value).replace("%", "").trim();
+	const parsedValue = Number(normalizedValue);
+	if (!Number.isFinite(parsedValue) || parsedValue < 0) return null;
+	if (parsedValue <= 1) return String(parsedValue);
+	if (parsedValue <= 100) return String(parsedValue / 100);
+	return null;
 };
-
-const getCardIconSrc = (iconWrap) => {
-  const image = iconWrap?.querySelector('img');
-  const imageSrc = image?.currentSrc || image?.getAttribute('src') || '';
-  if (imageSrc) {
-    return imageSrc;
-  }
-
-  const iconElement = iconWrap?.querySelector('[class*="icon-"]');
-  if (!iconElement) {
-    return '';
-  }
-
-  const iconName = Array.from(iconElement.classList)
-    .find((className) => className.startsWith('icon-'))
-    ?.substring(5);
-
-  if (!iconName) {
-    return '';
-  }
-
-  return `/common/icons/${iconName}.svg`;
+var getCardIconSrc = (iconWrap) => {
+	const image = iconWrap?.querySelector("img");
+	const imageSrc = image?.currentSrc || image?.getAttribute("src") || "";
+	if (imageSrc) return imageSrc;
+	const iconElement = iconWrap?.querySelector("[class*=\"icon-\"]");
+	if (!iconElement) return "";
+	const iconName = Array.from(iconElement.classList).find((className) => className.startsWith("icon-"))?.substring(5);
+	if (!iconName) return "";
+	return `/common/icons/${iconName}.svg`;
 };
-
-const getFallbackScale = (secondaryIndex) => DEFAULT_SECONDARY_SCALES[secondaryIndex]
-  ?? DEFAULT_SECONDARY_SCALES[DEFAULT_SECONDARY_SCALES.length - 1];
-
-const prefersReducedMotion = () => {
-  try {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  } catch {
-    return false;
-  }
+var getFallbackScale = (secondaryIndex) => DEFAULT_SECONDARY_SCALES[secondaryIndex] ?? DEFAULT_SECONDARY_SCALES[DEFAULT_SECONDARY_SCALES.length - 1];
+var prefersReducedMotion = () => {
+	try {
+		return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	} catch {
+		return false;
+	}
 };
-
-const buildCompareSection = (block) => {
-  const section = block.closest('.section');
-  const defaultWrapper = section?.querySelector(':scope > .default-content-wrapper');
-  const sectionTitle = getHeadingText(defaultWrapper);
-
-  if (defaultWrapper && sectionTitle) {
-    defaultWrapper.remove();
-  }
-
-  const compareSection = document.createElement('bd-compare-section');
-  if (sectionTitle) {
-    compareSection.setAttribute('title', sectionTitle);
-  }
-  const rows = Array.from(block.querySelectorAll(':scope > div'));
-  const validRows = rows.filter((row) => row.children.length >= 2);
-  const isSingleCard = validRows.length === 1;
-
-  rows.forEach((row) => {
-    const [iconWrap, contentWrap] = row.children;
-    if (!contentWrap) {
-      return;
-    }
-
-    let titleEl;
-    let descriptionEl;
-    let listEl;
-    let footnoteEl;
-
-    if (isSingleCard) {
-      // Left column carries the info panel; right column carries only bars.
-      titleEl = iconWrap.querySelector('h1, h2, h3, h4, h5, h6')
-        // Fall back to first text-only paragraph when no heading is authored.
-        ?? Array.from(iconWrap.querySelectorAll(':scope > p'))
-          .find((p) => p.textContent.trim() && !p.querySelector('picture, img, svg, [class*="icon-"]'));
-      const descCandidate = titleEl?.nextElementSibling;
-      descriptionEl = descCandidate?.tagName === 'P' ? descCandidate : null;
-      const footnoteCandidate = descriptionEl?.nextElementSibling;
-      footnoteEl = footnoteCandidate?.tagName === 'P' ? footnoteCandidate : null;
-      listEl = contentWrap.querySelector('ul');
-    } else {
-      titleEl = contentWrap.querySelector('h1, h2, h3, h4, h5, h6');
-      descriptionEl = getAdjacentParagraph(titleEl, contentWrap);
-      listEl = contentWrap.querySelector('ul');
-      const footnoteCandidate = listEl?.nextElementSibling;
-      footnoteEl = footnoteCandidate?.tagName === 'P' ? footnoteCandidate : null;
-    }
-
-    const card = document.createElement('compare-card');
-    const cardTitle = titleEl?.textContent?.trim();
-    if (cardTitle) {
-      card.setAttribute('title', cardTitle);
-    }
-
-    const cardDescription = descriptionEl?.textContent?.trim();
-    if (cardDescription) {
-      card.setAttribute('description', cardDescription);
-    }
-
-    const iconSrc = getCardIconSrc(iconWrap);
-    if (iconSrc) {
-      card.setAttribute('icon-src', iconSrc);
-    }
-
-    if (footnoteEl) {
-      const footnoteText = footnoteEl.textContent.trim();
-      if (footnoteText) {
-        card.setAttribute('footnote', footnoteText);
-      }
-
-      const footnoteLink = footnoteEl.querySelector('a');
-      if (footnoteLink?.href) {
-        card.setAttribute('footnote-href', footnoteLink.href);
-      }
-    }
-
-    if (isSingleCard) {
-      card.setAttribute('layout', 'horizontal');
-    }
-
-    const listItems = Array.from(listEl?.querySelectorAll('li') || []);
-    let hasScaledBars = false;
-    let secondaryBarIndex = 0;
-
-    for (let i = 0; i < listItems.length;) {
-      const label = listItems[i]?.textContent?.trim();
-      const score = listItems[i + 1]?.textContent?.trim();
-
-      if (label && score) {
-        const isPrimaryBar = /bitdefender/i.test(label);
-        const parsedScale = parseScaleValue(listItems[i + 2]?.textContent?.trim());
-
-        const bar = document.createElement('compare-bar');
-        bar.setAttribute('label', label);
-        bar.setAttribute('score', normalizeScore(score));
-        bar.setAttribute('max-score', '6');
-        bar.setAttribute('variant', isPrimaryBar ? 'primary' : 'secondary');
-
-        if (parsedScale) {
-          bar.setAttribute('scale', parsedScale);
-          hasScaledBars = true;
-        } else if (!isPrimaryBar) {
-          bar.setAttribute('scale', getFallbackScale(secondaryBarIndex));
-          hasScaledBars = true;
-        }
-
-        if (!isPrimaryBar) {
-          secondaryBarIndex += 1;
-        }
-
-        i += parsedScale ? 3 : 2;
-        card.appendChild(bar);
-      } else {
-        i += 1;
-      }
-    }
-
-    if (hasScaledBars) {
-      card.setAttribute('bar-stretch', 'false');
-    }
-
-    compareSection.appendChild(card);
-  });
-
-  return compareSection;
+var buildCompareSection = (block) => {
+	const defaultWrapper = block.closest(".section")?.querySelector(":scope > .default-content-wrapper");
+	const sectionTitle = getHeadingText(defaultWrapper);
+	if (defaultWrapper && sectionTitle) defaultWrapper.remove();
+	const compareSection = document.createElement("bd-compare-section");
+	if (sectionTitle) compareSection.setAttribute("title", sectionTitle);
+	const rows = Array.from(block.querySelectorAll(":scope > div"));
+	const isSingleCard = rows.filter((row) => row.children.length >= 2).length === 1;
+	rows.forEach((row) => {
+		const [iconWrap, contentWrap] = row.children;
+		if (!contentWrap) return;
+		let titleEl;
+		let descriptionEl;
+		let listEl;
+		let footnoteEl;
+		if (isSingleCard) {
+			titleEl = iconWrap.querySelector("h1, h2, h3, h4, h5, h6") ?? Array.from(iconWrap.querySelectorAll(":scope > p")).find((p) => p.textContent.trim() && !p.querySelector("picture, img, svg, [class*=\"icon-\"]"));
+			const descCandidate = titleEl?.nextElementSibling;
+			descriptionEl = descCandidate?.tagName === "P" ? descCandidate : null;
+			const footnoteCandidate = descriptionEl?.nextElementSibling;
+			footnoteEl = footnoteCandidate?.tagName === "P" ? footnoteCandidate : null;
+			listEl = contentWrap.querySelector("ul");
+		} else {
+			titleEl = contentWrap.querySelector("h1, h2, h3, h4, h5, h6");
+			descriptionEl = getAdjacentParagraph(titleEl, contentWrap);
+			listEl = contentWrap.querySelector("ul");
+			const footnoteCandidate = listEl?.nextElementSibling;
+			footnoteEl = footnoteCandidate?.tagName === "P" ? footnoteCandidate : null;
+		}
+		const card = document.createElement("compare-card");
+		const cardTitle = titleEl?.textContent?.trim();
+		if (cardTitle) card.setAttribute("title", cardTitle);
+		const cardDescription = descriptionEl?.textContent?.trim();
+		if (cardDescription) card.setAttribute("description", cardDescription);
+		const iconSrc = getCardIconSrc(iconWrap);
+		if (iconSrc) card.setAttribute("icon-src", iconSrc);
+		if (footnoteEl) {
+			const footnoteText = footnoteEl.textContent.trim();
+			if (footnoteText) card.setAttribute("footnote", footnoteText);
+			const footnoteLink = footnoteEl.querySelector("a");
+			if (footnoteLink?.href) card.setAttribute("footnote-href", footnoteLink.href);
+		}
+		if (isSingleCard) card.setAttribute("layout", "horizontal");
+		const listItems = Array.from(listEl?.querySelectorAll("li") || []);
+		let hasScaledBars = false;
+		let secondaryBarIndex = 0;
+		for (let i = 0; i < listItems.length;) {
+			const label = listItems[i]?.textContent?.trim();
+			const score = listItems[i + 1]?.textContent?.trim();
+			if (label && score) {
+				const isPrimaryBar = /bitdefender/i.test(label);
+				const parsedScale = parseScaleValue(listItems[i + 2]?.textContent?.trim());
+				const bar = document.createElement("compare-bar");
+				bar.setAttribute("label", label);
+				bar.setAttribute("score", normalizeScore(score));
+				bar.setAttribute("max-score", "6");
+				bar.setAttribute("variant", isPrimaryBar ? "primary" : "secondary");
+				if (parsedScale) {
+					bar.setAttribute("scale", parsedScale);
+					hasScaledBars = true;
+				} else if (!isPrimaryBar) {
+					bar.setAttribute("scale", getFallbackScale(secondaryBarIndex));
+					hasScaledBars = true;
+				}
+				if (!isPrimaryBar) secondaryBarIndex += 1;
+				i += parsedScale ? 3 : 2;
+				card.appendChild(bar);
+			} else i += 1;
+		}
+		if (hasScaledBars) card.setAttribute("bar-stretch", "false");
+		compareSection.appendChild(card);
+	});
+	return compareSection;
 };
-
-const runBarsIntroAnimation = (compareSection) => {
-  if (compareSection.dataset.barchartAnimated === 'true' || prefersReducedMotion()) {
-    return;
-  }
-
-  const secondaryBars = Array.from(compareSection.querySelectorAll('compare-bar'))
-    .filter((bar) => bar.getAttribute('variant') !== 'primary');
-
-  if (!secondaryBars.length) {
-    return;
-  }
-
-  compareSection.dataset.barchartAnimated = 'true';
-
-  const animationState = secondaryBars.map((bar) => {
-    const maxScore = Number(normalizeScore(bar.getAttribute('max-score') || '6')) || 6;
-    const finalScore = Number(normalizeScore(bar.getAttribute('score') || '0')) || 0;
-    const finalScale = Number(parseScaleValue(bar.getAttribute('scale')) ?? '1');
-
-    bar.setAttribute('score', String(maxScore));
-    bar.setAttribute('scale', '1');
-
-    return {
-      bar,
-      maxScore,
-      finalScore,
-      finalScale,
-    };
-  });
-
-  const startedAt = performance.now();
-  const step = (now) => {
-    const elapsed = now - startedAt;
-    const progress = Math.min(1, elapsed / VIEWPORT_ANIMATION_MS);
-    const easedProgress = EASE_OUT_CUBIC(progress);
-
-    animationState.forEach(({
-      bar, maxScore, finalScore, finalScale,
-    }) => {
-      const nextScore = maxScore + ((finalScore - maxScore) * easedProgress);
-      const nextScale = 1 + ((finalScale - 1) * easedProgress);
-
-      bar.setAttribute('score', nextScore.toFixed(2));
-      bar.setAttribute('scale', nextScale.toFixed(4));
-    });
-
-    if (progress < 1) {
-      requestAnimationFrame(step);
-      return;
-    }
-
-    animationState.forEach(({ bar, finalScore, finalScale }) => {
-      bar.setAttribute('score', finalScore.toFixed(2));
-      bar.setAttribute('scale', String(finalScale));
-    });
-  };
-
-  requestAnimationFrame(() => requestAnimationFrame(step));
+var runBarsIntroAnimation = (compareSection) => {
+	if (compareSection.dataset.barchartAnimated === "true" || prefersReducedMotion()) return;
+	const secondaryBars = Array.from(compareSection.querySelectorAll("compare-bar")).filter((bar) => bar.getAttribute("variant") !== "primary");
+	if (!secondaryBars.length) return;
+	compareSection.dataset.barchartAnimated = "true";
+	const animationState = secondaryBars.map((bar) => {
+		const maxScore = Number(normalizeScore(bar.getAttribute("max-score") || "6")) || 6;
+		const finalScore = Number(normalizeScore(bar.getAttribute("score") || "0")) || 0;
+		const finalScale = Number(parseScaleValue(bar.getAttribute("scale")) ?? "1");
+		bar.setAttribute("score", String(maxScore));
+		bar.setAttribute("scale", "1");
+		return {
+			bar,
+			maxScore,
+			finalScore,
+			finalScale
+		};
+	});
+	const startedAt = performance.now();
+	const step = (now) => {
+		const elapsed = now - startedAt;
+		const progress = Math.min(1, elapsed / VIEWPORT_ANIMATION_MS);
+		const easedProgress = EASE_OUT_CUBIC(progress);
+		animationState.forEach(({ bar, maxScore, finalScore, finalScale }) => {
+			const nextScore = maxScore + (finalScore - maxScore) * easedProgress;
+			const nextScale = 1 + (finalScale - 1) * easedProgress;
+			bar.setAttribute("score", nextScore.toFixed(2));
+			bar.setAttribute("scale", nextScale.toFixed(4));
+		});
+		if (progress < 1) {
+			requestAnimationFrame(step);
+			return;
+		}
+		animationState.forEach(({ bar, finalScore, finalScale }) => {
+			bar.setAttribute("score", finalScore.toFixed(2));
+			bar.setAttribute("scale", String(finalScale));
+		});
+	};
+	requestAnimationFrame(() => requestAnimationFrame(step));
 };
-
-const activateCompareAnimationsOnViewport = (compareSection) => {
-  if (!('IntersectionObserver' in window)) {
-    runBarsIntroAnimation(compareSection);
-    return;
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    if (!entries.some((entry) => entry.isIntersecting)) {
-      return;
-    }
-    observer.disconnect();
-    runBarsIntroAnimation(compareSection);
-  }, {
-    threshold: 0.25,
-    rootMargin: '0px 0px -10% 0px',
-  });
-
-  observer.observe(compareSection);
+var activateCompareAnimationsOnViewport = (compareSection) => {
+	if (!("IntersectionObserver" in window)) {
+		runBarsIntroAnimation(compareSection);
+		return;
+	}
+	const observer = new IntersectionObserver((entries) => {
+		if (!entries.some((entry) => entry.isIntersecting)) return;
+		observer.disconnect();
+		runBarsIntroAnimation(compareSection);
+	}, {
+		threshold: .25,
+		rootMargin: "0px 0px -10% 0px"
+	});
+	observer.observe(compareSection);
 };
-
-export default async function decorate(block) {
-  await Promise.all([
-    import('@repobit/dex-system-design/compare'),
-    import('@repobit/dex-system-design/heading'),
-    import('@repobit/dex-system-design/paragraph'),
-    import('@repobit/dex-system-design/link'),
-    import('@repobit/dex-system-design/image'),
-  ]);
-
-  const compareSection = buildCompareSection(block);
-  block.replaceChildren(compareSection);
-  activateCompareAnimationsOnViewport(compareSection);
+async function decorate(block) {
+	await Promise.all([
+		import("../../vendor/repobit/dex-system-design/compare.js"),
+		import("../../vendor/repobit/dex-system-design/heading.js"),
+		import("../../vendor/repobit/dex-system-design/paragraph.js"),
+		import("../../vendor/repobit/dex-system-design/link.js"),
+		import("../../vendor/repobit/dex-system-design/image.js")
+	]);
+	const compareSection = buildCompareSection(block);
+	block.replaceChildren(compareSection);
+	activateCompareAnimationsOnViewport(compareSection);
 }
+export { decorate as default };

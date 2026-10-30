@@ -1,456 +1,335 @@
-import {
-  trackDynamicVariables,
-  trackPageEvent,
-} from './utils/contentsquare.js';
-
-const PRODUCT_PRICE_PATH = '/p-api/v1/products/{bundleId}/locale/{locale}';
-const PRODUCT_MSRP_PATH = `${PRODUCT_PRICE_PATH}/campaign/none`;
-const PRODUCT_CATALOG_PATH = '/p-api/v1/catalog/products';
-const BUNDLE_ID_PATTERN = /^[a-z0-9][a-z0-9._-]*$/i;
-const LOCALE_PATTERN = /^[a-z]{2}-(?:[a-z]{2}|global)$/i;
-const DEV_DOMAINS = ['localhost', 'stage', '.hlx.', '.aem.'];
-const TOOL_EVENT_IDS = {
-  bitdefender_product_catalog: 'catalog',
-  bitdefender_product_prices: 'prices',
-  bitdefender_product_msrp: 'msrp',
+import { trackDynamicVariables, trackPageEvent } from "./utils/contentsquare.js";
+// src/scripts/webmcp.js
+var PRODUCT_PRICE_PATH = "/p-api/v1/products/{bundleId}/locale/{locale}";
+var PRODUCT_MSRP_PATH = `${PRODUCT_PRICE_PATH}/campaign/none`;
+var PRODUCT_CATALOG_PATH = "/p-api/v1/catalog/products";
+var BUNDLE_ID_PATTERN = /^[a-z0-9][a-z0-9._-]*$/i;
+var LOCALE_PATTERN = /^[a-z]{2}-(?:[a-z]{2}|global)$/i;
+var DEV_DOMAINS = [
+	"localhost",
+	"stage",
+	".hlx.",
+	".aem."
+];
+var TOOL_EVENT_IDS = {
+	bitdefender_product_catalog: "catalog",
+	bitdefender_product_prices: "prices",
+	bitdefender_product_msrp: "msrp"
 };
-const ERROR_CODE_PATTERN = /^[a-z][a-z0-9_]{0,48}$/;
-const SAFE_PRODUCT_PATTERN = /^[a-z0-9 .+&'-]{1,64}$/i;
-
-let controller;
-let registeredModelContext;
-let toolCalls = 0;
-let toolErrors = 0;
-
-const catalogProperties = {
-  lineOfBusiness: {
-    type: 'string',
-    enum: ['consumer', 'business'],
-    description: 'Product audience. Accepted values are consumer and business.',
-  },
-  locale: {
-    type: 'string',
-    description: 'Locale in language-country format, such as en-us.',
-  },
-  product: {
-    type: 'string',
-    description: 'Product display name or product-page slug, such as Total Security or total-security.',
-  },
-  bundleId: {
-    type: 'string',
-    description: 'Exact Bitdefender delivery-service bundle id, matched case-insensitively.',
-  },
+var ERROR_CODE_PATTERN = /^[a-z][a-z0-9_]{0,48}$/;
+var SAFE_PRODUCT_PATTERN = /^[a-z0-9 .+&'-]{1,64}$/i;
+var controller;
+var registeredModelContext;
+var toolCalls = 0;
+var toolErrors = 0;
+var catalogProperties = {
+	lineOfBusiness: {
+		type: "string",
+		enum: ["consumer", "business"],
+		description: "Product audience. Accepted values are consumer and business."
+	},
+	locale: {
+		type: "string",
+		description: "Locale in language-country format, such as en-us."
+	},
+	product: {
+		type: "string",
+		description: "Product display name or product-page slug, such as Total Security or total-security."
+	},
+	bundleId: {
+		type: "string",
+		description: "Exact Bitdefender delivery-service bundle id, matched case-insensitively."
+	}
 };
-
-const productCatalogInputSchema = {
-  type: 'object',
-  properties: catalogProperties,
-  additionalProperties: false,
+var productCatalogInputSchema = {
+	type: "object",
+	properties: catalogProperties,
+	additionalProperties: false
 };
-
-const productPricingInputSchema = {
-  type: 'object',
-  properties: {
-    ...catalogProperties,
-  },
-  anyOf: [
-    { required: ['bundleId'] },
-    { required: ['product'] },
-  ],
-  additionalProperties: false,
+var productPricingInputSchema = {
+	type: "object",
+	properties: { ...catalogProperties },
+	anyOf: [{ required: ["bundleId"] }, { required: ["product"] }],
+	additionalProperties: false
 };
-
 function getModelContext() {
-  return document.modelContext || window.navigator?.modelContext;
+	return document.modelContext || window.navigator?.modelContext;
 }
-
 function getPageLocale() {
-  const match = window.location.pathname.match(/\/([a-z]{2}-(?:[a-z]{2}|global))\//i);
-  return match ? match[1] : 'en-us';
+	const match = window.location.pathname.match(/\/([a-z]{2}-(?:[a-z]{2}|global))\//i);
+	return match ? match[1] : "en-us";
 }
-
 function getPricingOrigin() {
-  if (DEV_DOMAINS.some((domain) => window.location.hostname.includes(domain))) {
-    return 'https://www.bitdefender.com';
-  }
-
-  return window.location.origin;
+	if (DEV_DOMAINS.some((domain) => window.location.hostname.includes(domain))) return "https://www.bitdefender.com";
+	return window.location.origin;
 }
-
 function createError(code, message) {
-  return {
-    error: {
-      code,
-      message,
-    },
-  };
+	return { error: {
+		code,
+		message
+	} };
 }
-
 function normalizeProduct(product) {
-  return String(product || '').trim().replace(/^bitdefender\s+/i, '');
+	return String(product || "").trim().replace(/^bitdefender\s+/i, "");
 }
-
 function normalizeLocale(locale = getPageLocale()) {
-  const normalized = String(locale || getPageLocale()).trim().toLowerCase();
-  return normalized.includes('global') ? 'en-us' : normalized;
+	const normalized = String(locale || getPageLocale()).trim().toLowerCase();
+	return normalized.includes("global") ? "en-us" : normalized;
 }
-
 async function fetchJson(endpoint, errorCode, fallbackMessage) {
-  try {
-    const response = await fetch(endpoint.href, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-    const payload = await response.json().catch(() => null);
-
-    if (!response.ok || !payload) {
-      return createError(errorCode, payload?.message || `${fallbackMessage} HTTP ${response.status}.`);
-    }
-
-    return payload;
-  } catch {
-    return createError(errorCode, fallbackMessage);
-  }
+	try {
+		const response = await fetch(endpoint.href, {
+			method: "GET",
+			headers: { Accept: "application/json" }
+		});
+		const payload = await response.json().catch(() => null);
+		if (!response.ok || !payload) return createError(errorCode, payload?.message || `${fallbackMessage} HTTP ${response.status}.`);
+		return payload;
+	} catch {
+		return createError(errorCode, fallbackMessage);
+	}
 }
-
 function validateCatalogInput(input = {}) {
-  const toolInput = input || {};
-  const lineOfBusiness = String(toolInput.lineOfBusiness || '').trim().toLowerCase();
-  const locale = toolInput.locale ? normalizeLocale(toolInput.locale) : '';
-  const product = normalizeProduct(toolInput.product);
-  const bundleId = String(toolInput.bundleId || '').trim();
-
-  if (lineOfBusiness && !['consumer', 'business'].includes(lineOfBusiness)) {
-    return createError('invalid_line_of_business', 'Provide consumer or business as the line of business.');
-  }
-
-  if (locale && !LOCALE_PATTERN.test(locale)) {
-    return createError('invalid_locale', 'Provide a locale in the format en-us.');
-  }
-
-  if (bundleId && !BUNDLE_ID_PATTERN.test(bundleId)) {
-    return createError('invalid_bundle_id', 'Provide a valid Bitdefender product bundle id.');
-  }
-
-  return {
-    lineOfBusiness,
-    locale,
-    product,
-    bundleId,
-  };
+	const toolInput = input || {};
+	const lineOfBusiness = String(toolInput.lineOfBusiness || "").trim().toLowerCase();
+	const locale = toolInput.locale ? normalizeLocale(toolInput.locale) : "";
+	const product = normalizeProduct(toolInput.product);
+	const bundleId = String(toolInput.bundleId || "").trim();
+	if (lineOfBusiness && !["consumer", "business"].includes(lineOfBusiness)) return createError("invalid_line_of_business", "Provide consumer or business as the line of business.");
+	if (locale && !LOCALE_PATTERN.test(locale)) return createError("invalid_locale", "Provide a locale in the format en-us.");
+	if (bundleId && !BUNDLE_ID_PATTERN.test(bundleId)) return createError("invalid_bundle_id", "Provide a valid Bitdefender product bundle id.");
+	return {
+		lineOfBusiness,
+		locale,
+		product,
+		bundleId
+	};
 }
-
 async function fetchProductCatalog(input = {}) {
-  const filters = validateCatalogInput(input);
-
-  if (filters.error) {
-    return filters;
-  }
-
-  const endpoint = new URL(PRODUCT_CATALOG_PATH, getPricingOrigin());
-  Object.entries(filters).forEach(([name, value]) => {
-    if (value) endpoint.searchParams.set(name, value);
-  });
-
-  return fetchJson(endpoint, 'catalog_request_failed', 'Unable to retrieve the Bitdefender product catalog.');
+	const filters = validateCatalogInput(input);
+	if (filters.error) return filters;
+	const endpoint = new URL(PRODUCT_CATALOG_PATH, getPricingOrigin());
+	Object.entries(filters).forEach(([name, value]) => {
+		if (value) endpoint.searchParams.set(name, value);
+	});
+	return fetchJson(endpoint, "catalog_request_failed", "Unable to retrieve the Bitdefender product catalog.");
 }
-
 function createProductCandidates(products) {
-  return products
-    .flatMap((product) => (product.bundleIds || []).map((bundleId) => ({
-      product: product.product,
-      bundleId,
-      productUrl: product.productUrl,
-    })))
-    .filter((candidate, index, candidates) => (
-      candidates.findIndex(({ bundleId }) => bundleId === candidate.bundleId) === index
-    ));
+	return products.flatMap((product) => (product.bundleIds || []).map((bundleId) => ({
+		product: product.product,
+		bundleId,
+		productUrl: product.productUrl
+	}))).filter((candidate, index, candidates) => candidates.findIndex(({ bundleId }) => bundleId === candidate.bundleId) === index);
 }
-
 async function resolveProduct(input = {}) {
-  const bundleId = String(input.bundleId || '').trim();
-
-  if (bundleId) {
-    if (!BUNDLE_ID_PATTERN.test(bundleId)) {
-      return createError('invalid_bundle_id', 'Provide a valid Bitdefender product bundle id.');
-    }
-
-    return { bundleId };
-  }
-
-  const product = normalizeProduct(input.product);
-
-  if (!product) {
-    return createError('missing_product', 'Provide a product name, website product id, or bundle id.');
-  }
-
-  const catalog = await fetchProductCatalog({
-    lineOfBusiness: input.lineOfBusiness,
-    locale: input.locale,
-    product,
-  });
-
-  if (catalog.error) {
-    return catalog;
-  }
-
-  const candidates = createProductCandidates(catalog.products || []);
-
-  if (!candidates.length) {
-    return createError('product_not_found', 'The product could not be matched to a Bitdefender bundle id.');
-  }
-
-  if (candidates.length > 1) {
-    return {
-      ...createError('ambiguous_product', 'The product name matched multiple Bitdefender products. Retry with one candidate.'),
-      candidates: candidates.slice(0, 5),
-    };
-  }
-
-  return {
-    bundleId: candidates[0].bundleId,
-    product: candidates[0].product,
-  };
+	const bundleId = String(input.bundleId || "").trim();
+	if (bundleId) {
+		if (!BUNDLE_ID_PATTERN.test(bundleId)) return createError("invalid_bundle_id", "Provide a valid Bitdefender product bundle id.");
+		return { bundleId };
+	}
+	const product = normalizeProduct(input.product);
+	if (!product) return createError("missing_product", "Provide a product name, website product id, or bundle id.");
+	const catalog = await fetchProductCatalog({
+		lineOfBusiness: input.lineOfBusiness,
+		locale: input.locale,
+		product
+	});
+	if (catalog.error) return catalog;
+	const candidates = createProductCandidates(catalog.products || []);
+	if (!candidates.length) return createError("product_not_found", "The product could not be matched to a Bitdefender bundle id.");
+	if (candidates.length > 1) return {
+		...createError("ambiguous_product", "The product name matched multiple Bitdefender products. Retry with one candidate."),
+		candidates: candidates.slice(0, 5)
+	};
+	return {
+		bundleId: candidates[0].bundleId,
+		product: candidates[0].product
+	};
 }
-
 async function validateInput(input = {}) {
-  const toolInput = input || {};
-  const { locale } = toolInput;
-  const normalizedLocale = normalizeLocale(locale);
-
-  if (!LOCALE_PATTERN.test(normalizedLocale)) {
-    return createError('invalid_locale', 'Provide a locale in the format en-us.');
-  }
-
-  const product = await resolveProduct({
-    ...toolInput,
-    locale: normalizedLocale,
-  });
-
-  if (product.error) {
-    return product;
-  }
-
-  return {
-    ...product,
-    locale: normalizedLocale,
-  };
+	const toolInput = input || {};
+	const { locale } = toolInput;
+	const normalizedLocale = normalizeLocale(locale);
+	if (!LOCALE_PATTERN.test(normalizedLocale)) return createError("invalid_locale", "Provide a locale in the format en-us.");
+	const product = await resolveProduct({
+		...toolInput,
+		locale: normalizedLocale
+	});
+	if (product.error) return product;
+	return {
+		...product,
+		locale: normalizedLocale
+	};
 }
-
 function getProductPricingUrl(bundleId, locale, path) {
-  const productPath = path
-    .replace('{bundleId}', encodeURIComponent(bundleId))
-    .replace('{locale}', encodeURIComponent(locale));
-
-  return new URL(productPath, getPricingOrigin());
+	const productPath = path.replace("{bundleId}", encodeURIComponent(bundleId)).replace("{locale}", encodeURIComponent(locale));
+	return new URL(productPath, getPricingOrigin());
 }
-
 async function fetchProductPricing(input, path) {
-  const request = await validateInput(input);
-
-  if (request.error) {
-    return request;
-  }
-
-  const endpoint = getProductPricingUrl(request.bundleId, request.locale, path);
-  const payload = await fetchJson(
-    endpoint,
-    'pricing_request_failed',
-    'Unable to retrieve Bitdefender product pricing.',
-  );
-
-  if (payload.error) {
-    return payload;
-  }
-
-  return {
-    ...payload,
-    resolvedProduct: {
-      product: request.product,
-      bundleId: request.bundleId,
-      locale: request.locale,
-    },
-  };
+	const request = await validateInput(input);
+	if (request.error) return request;
+	const payload = await fetchJson(getProductPricingUrl(request.bundleId, request.locale, path), "pricing_request_failed", "Unable to retrieve Bitdefender product pricing.");
+	if (payload.error) return payload;
+	return {
+		...payload,
+		resolvedProduct: {
+			product: request.product,
+			bundleId: request.bundleId,
+			locale: request.locale
+		}
+	};
 }
-
 /**
- * Resolves the reporting context for a tool call, preferring the server-resolved product.
- * Agent-supplied text is never reported verbatim: it is matched against an allowlist and
- * collapsed to "other" when it does not fit, bounding both cardinality and content.
- * @param {Object} input The tool input
- * @param {Object} result The tool result
- * @returns {Object} Product, bundle id, and locale safe to report
- */
+* Resolves the reporting context for a tool call, preferring the server-resolved product.
+* Agent-supplied text is never reported verbatim: it is matched against an allowlist and
+* collapsed to "other" when it does not fit, bounding both cardinality and content.
+* @param {Object} input The tool input
+* @param {Object} result The tool result
+* @returns {Object} Product, bundle id, and locale safe to report
+*/
 function getCallContext(input, result) {
-  const resolved = result?.resolvedProduct;
-
-  if (resolved) return resolved;
-
-  const toolInput = input || {};
-  const product = normalizeProduct(toolInput.product);
-  const bundleId = String(toolInput.bundleId || '').trim();
-  const locale = normalizeLocale(toolInput.locale);
-
-  return {
-    product: product && (SAFE_PRODUCT_PATTERN.test(product) ? product : 'other'),
-    bundleId: BUNDLE_ID_PATTERN.test(bundleId) ? bundleId : undefined,
-    locale: LOCALE_PATTERN.test(locale) ? locale : undefined,
-  };
+	const resolved = result?.resolvedProduct;
+	if (resolved) return resolved;
+	const toolInput = input || {};
+	const product = normalizeProduct(toolInput.product);
+	const bundleId = String(toolInput.bundleId || "").trim();
+	const locale = normalizeLocale(toolInput.locale);
+	return {
+		product: product && (SAFE_PRODUCT_PATTERN.test(product) ? product : "other"),
+		bundleId: BUNDLE_ID_PATTERN.test(bundleId) ? bundleId : void 0,
+		locale: LOCALE_PATTERN.test(locale) ? locale : void 0
+	};
 }
-
 /**
- * Reports the outcome of a tool call to Contentsquare. Tool handlers return an error payload
- * rather than throwing, so the error code is read off the result.
- * @param {string} toolId Short tool id used in event names
- * @param {Object} input The tool input
- * @param {Object} result The tool result
- * @param {number} startedAt Timestamp captured before the call
- */
+* Reports the outcome of a tool call to Contentsquare. Tool handlers return an error payload
+* rather than throwing, so the error code is read off the result.
+* @param {string} toolId Short tool id used in event names
+* @param {Object} input The tool input
+* @param {Object} result The tool result
+* @param {number} startedAt Timestamp captured before the call
+*/
 function trackToolResult(toolId, input, result, startedAt) {
-  const code = result?.error?.code;
-  const errorCode = code && ERROR_CODE_PATTERN.test(code) ? code : 'unknown_error';
-  const context = getCallContext(input, result);
-
-  toolCalls += 1;
-  if (code) toolErrors += 1;
-
-  trackPageEvent(code ? `webmcp:${toolId}:error:${errorCode}` : `webmcp:${toolId}:success`);
-
-  trackDynamicVariables({
-    webmcp_calls: toolCalls,
-    webmcp_errors: toolErrors,
-    webmcp_last_tool: toolId,
-    webmcp_last_outcome: code ? 'error' : 'success',
-    webmcp_last_error: code ? errorCode : undefined,
-    webmcp_last_product: context.product,
-    webmcp_last_bundle_id: context.bundleId,
-    webmcp_last_locale: context.locale,
-    webmcp_last_duration_ms: Math.round(performance.now() - startedAt),
-  });
+	const code = result?.error?.code;
+	const errorCode = code && ERROR_CODE_PATTERN.test(code) ? code : "unknown_error";
+	const context = getCallContext(input, result);
+	toolCalls += 1;
+	if (code) toolErrors += 1;
+	trackPageEvent(code ? `webmcp:${toolId}:error:${errorCode}` : `webmcp:${toolId}:success`);
+	trackDynamicVariables({
+		webmcp_calls: toolCalls,
+		webmcp_errors: toolErrors,
+		webmcp_last_tool: toolId,
+		webmcp_last_outcome: code ? "error" : "success",
+		webmcp_last_error: code ? errorCode : void 0,
+		webmcp_last_product: context.product,
+		webmcp_last_bundle_id: context.bundleId,
+		webmcp_last_locale: context.locale,
+		webmcp_last_duration_ms: Math.round(performance.now() - startedAt)
+	});
 }
-
 /**
- * Wraps a tool so every invocation is reported to Contentsquare. Only execute is replaced,
- * so the tool contract seen by the agent is unchanged.
- * @param {Object} tool The tool definition
- * @returns {Object} The instrumented tool definition
- */
-export function withTracking(tool) {
-  const toolId = TOOL_EVENT_IDS[tool.name] || 'tool';
-  const { execute } = tool;
-
-  return {
-    ...tool,
-    execute: async (input, ...rest) => {
-      trackPageEvent(`webmcp:${toolId}:start`);
-      const startedAt = performance.now();
-
-      try {
-        const result = await execute(input, ...rest);
-        trackToolResult(toolId, input, result, startedAt);
-        return result;
-      } catch (error) {
-        trackToolResult(toolId, input, createError('exception', ''), startedAt);
-        throw error;
-      }
-    },
-  };
+* Wraps a tool so every invocation is reported to Contentsquare. Only execute is replaced,
+* so the tool contract seen by the agent is unchanged.
+* @param {Object} tool The tool definition
+* @returns {Object} The instrumented tool definition
+*/
+function withTracking(tool) {
+	const toolId = TOOL_EVENT_IDS[tool.name] || "tool";
+	const { execute } = tool;
+	return {
+		...tool,
+		execute: async (input, ...rest) => {
+			trackPageEvent(`webmcp:${toolId}:start`);
+			const startedAt = performance.now();
+			try {
+				const result = await execute(input, ...rest);
+				trackToolResult(toolId, input, result, startedAt);
+				return result;
+			} catch (error) {
+				trackToolResult(toolId, input, createError("exception", ""), startedAt);
+				throw error;
+			}
+		}
+	};
 }
-
 function createProductCatalogTool() {
-  return {
-    name: 'bitdefender_product_catalog',
-    description: 'Returns the Bitdefender product catalog for product discovery, comparison, and recommendations. Filters are optional and combinable; omit all filters for the full catalog.',
-    inputSchema: productCatalogInputSchema,
-    execute: fetchProductCatalog,
-    annotations: {
-      readOnlyHint: true,
-      untrustedContentHint: true,
-    },
-  };
+	return {
+		name: "bitdefender_product_catalog",
+		description: "Returns the Bitdefender product catalog for product discovery, comparison, and recommendations. Filters are optional and combinable; omit all filters for the full catalog.",
+		inputSchema: productCatalogInputSchema,
+		execute: fetchProductCatalog,
+		annotations: {
+			readOnlyHint: true,
+			untrustedContentHint: true
+		}
+	};
 }
-
 function createProductPricingTool() {
-  return {
-    name: 'bitdefender_product_prices',
-    description: 'Returns active website campaign prices for a Bitdefender product name, website product id, or bundle id.',
-    inputSchema: productPricingInputSchema,
-    execute: (input) => fetchProductPricing(input, PRODUCT_PRICE_PATH),
-    annotations: {
-      readOnlyHint: true,
-      untrustedContentHint: true,
-    },
-  };
+	return {
+		name: "bitdefender_product_prices",
+		description: "Returns active website campaign prices for a Bitdefender product name, website product id, or bundle id.",
+		inputSchema: productPricingInputSchema,
+		execute: (input) => fetchProductPricing(input, PRODUCT_PRICE_PATH),
+		annotations: {
+			readOnlyHint: true,
+			untrustedContentHint: true
+		}
+	};
 }
-
 function createProductMsrpTool() {
-  return {
-    name: 'bitdefender_product_msrp',
-    description: 'Returns MSRP prices for a Bitdefender product name, website product id, or bundle id.',
-    inputSchema: productPricingInputSchema,
-    execute: (input) => fetchProductPricing(input, PRODUCT_MSRP_PATH),
-    annotations: {
-      readOnlyHint: true,
-      untrustedContentHint: true,
-    },
-  };
+	return {
+		name: "bitdefender_product_msrp",
+		description: "Returns MSRP prices for a Bitdefender product name, website product id, or bundle id.",
+		inputSchema: productPricingInputSchema,
+		execute: (input) => fetchProductPricing(input, PRODUCT_MSRP_PATH),
+		annotations: {
+			readOnlyHint: true,
+			untrustedContentHint: true
+		}
+	};
 }
-
-export async function registerBitdefenderWebMcp() {
-  const modelContext = getModelContext();
-
-  if (!modelContext?.registerTool) {
-    trackPageEvent('webmcp:register:unsupported');
-    trackDynamicVariables({ webmcp_status: 'unsupported' });
-    return null;
-  }
-
-  if (controller && registeredModelContext === modelContext) {
-    trackPageEvent('webmcp:register:duplicate');
-    trackDynamicVariables({ webmcp_status: 'duplicate' });
-    return null;
-  }
-
-  if (controller) {
-    controller.abort();
-  }
-
-  const nextController = new AbortController();
-  const tools = [
-    createProductCatalogTool(),
-    createProductPricingTool(),
-    createProductMsrpTool(),
-  ].map(withTracking);
-
-  try {
-    await Promise.all(tools.map((tool) => modelContext.registerTool(
-      tool,
-      { signal: nextController.signal },
-    )));
-  } catch (error) {
-    trackPageEvent('webmcp:register:error');
-    trackDynamicVariables({ webmcp_status: 'error' });
-    throw error;
-  }
-
-  trackPageEvent('webmcp:register:ok');
-  trackDynamicVariables({ webmcp_status: 'registered', webmcp_tools: tools.length });
-
-  controller = nextController;
-  registeredModelContext = modelContext;
-
-  window.addEventListener('pagehide', (event) => {
-    if (!event.persisted) {
-      nextController.abort();
-
-      if (controller === nextController) {
-        controller = null;
-        registeredModelContext = null;
-      }
-    }
-  }, { once: true });
-
-  return controller;
+async function registerBitdefenderWebMcp() {
+	const modelContext = getModelContext();
+	if (!modelContext?.registerTool) {
+		trackPageEvent("webmcp:register:unsupported");
+		trackDynamicVariables({ webmcp_status: "unsupported" });
+		return null;
+	}
+	if (controller && registeredModelContext === modelContext) {
+		trackPageEvent("webmcp:register:duplicate");
+		trackDynamicVariables({ webmcp_status: "duplicate" });
+		return null;
+	}
+	if (controller) controller.abort();
+	const nextController = new AbortController();
+	const tools = [
+		createProductCatalogTool(),
+		createProductPricingTool(),
+		createProductMsrpTool()
+	].map(withTracking);
+	try {
+		await Promise.all(tools.map((tool) => modelContext.registerTool(tool, { signal: nextController.signal })));
+	} catch (error) {
+		trackPageEvent("webmcp:register:error");
+		trackDynamicVariables({ webmcp_status: "error" });
+		throw error;
+	}
+	trackPageEvent("webmcp:register:ok");
+	trackDynamicVariables({
+		webmcp_status: "registered",
+		webmcp_tools: tools.length
+	});
+	controller = nextController;
+	registeredModelContext = modelContext;
+	window.addEventListener("pagehide", (event) => {
+		if (!event.persisted) {
+			nextController.abort();
+			if (controller === nextController) {
+				controller = null;
+				registeredModelContext = null;
+			}
+		}
+	}, { once: true });
+	return controller;
 }
+export { registerBitdefenderWebMcp, withTracking };

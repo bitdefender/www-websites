@@ -8,13 +8,13 @@ export default defineConfig({
         // check the markup the blocks build, not the components' rendering
         alias: [{
             find: /^@repobit\/dex-system-design\/.*$/,
-            replacement: fileURLToPath(new URL('./_src/tests/dsn-stub.js', import.meta.url)),
+            replacement: fileURLToPath(new URL('./src/tests/dsn-stub.js', import.meta.url)),
         }],
     },
     test: {
         environment: 'jsdom',
         globals: true,
-        root: '_src',
+        root: 'src',
         include: ['tests/**/*.test.js'],
         coverage: {
             provider: 'v8',
@@ -24,7 +24,6 @@ export default defineConfig({
                 'tests/',
                 '**/*.config.js',
                 '**/vendor/**',
-                'dist/**',
             ],
         },
         reporters: ['default'],

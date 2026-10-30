@@ -1,10 +1,3 @@
+import { Product, ProductInfo, ProductOption, Store } from "./store.js";
 import { StoreResolver } from "./resolver/resolver.js";
-import { Store, Product, ProductInfo, ProductOption } from "./store.js";
-
-export {
-	StoreResolver,
-	Store,
-	Product,
-	ProductInfo,
-	ProductOption,
-};
+export { Product, ProductInfo, ProductOption, Store, StoreResolver };

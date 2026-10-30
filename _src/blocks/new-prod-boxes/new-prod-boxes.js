@@ -1,382 +1,286 @@
-import {
-  formatPrice,
-  checkIfNotProductPage,
-  createBdContext,
-  createBdProduct,
-  createBdOption,
-} from '../../scripts/utils/utils.js';
-import store from '../../scripts/store.js';
-
-// Constants for store department and price attributes
-const PRICE_ATTRIBUTES = {
-  default: 'discounted||full',
-  monthly: 'discounted-monthly||full-monthly',
-  full: 'full',
+import { checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, formatPrice } from "../../scripts/utils/utils.js";
+import store_default from "../../scripts/store.js";
+// src/blocks/new-prod-boxes/new-prod-boxes.js
+var PRICE_ATTRIBUTES = {
+	default: "discounted||full",
+	monthly: "discounted-monthly||full-monthly",
+	full: "full"
 };
-
 /**
- * Determines the appropriate price attribute based on billing type and decimal settings
- * @param {string} type - Billing type ('monthly' or default)
- * @param {string} prodName - Product name
- * @returns {string} Price attribute string
- */
+* Determines the appropriate price attribute based on billing type and decimal settings
+* @param {string} type - Billing type ('monthly' or default)
+* @param {string} prodName - Product name
+* @returns {string} Price attribute string
+*/
 function getDiscountedPriceAttribute(type, prodName) {
-  if (type !== 'monthly' || prodName.endsWith('m')) {
-    return PRICE_ATTRIBUTES.default;
-  }
-
-  return PRICE_ATTRIBUTES.monthly;
+	if (type !== "monthly" || prodName.endsWith("m")) return PRICE_ATTRIBUTES.default;
+	return PRICE_ATTRIBUTES.monthly;
 }
-
 /**
- * Creates a price element with old price, discount, new price, and buy button
- * @param {Object} options - Price configuration options
- * @returns {HTMLElement} Price container element
- */
+* Creates a price element with old price, discount, new price, and buy button
+* @param {Object} options - Price configuration options
+* @returns {HTMLElement} Price container element
+*/
 function createPriceElement(options, card) {
-  const {
-    prodName,
-    saveText,
-    buyLinkSelector,
-    billedText,
-    type,
-    perPrice,
-    trialDuration,
-  } = options;
-
-  const priceAttribute = getDiscountedPriceAttribute(type, prodName);
-  const oldPriceAttr = PRICE_ATTRIBUTES.full;
-  const billedPriceAttr = PRICE_ATTRIBUTES.default;
-
-  const container = document.createElement('div');
-  container.className = 'hero-aem__price mt-3';
-
-  // Old price container
-  const oldPriceContainer = document.createElement('div');
-  oldPriceContainer.className = 'oldprice-container';
-
-  oldPriceContainer.innerHTML = `
+	const { prodName, saveText, buyLinkSelector, billedText, type, perPrice, trialDuration } = options;
+	const priceAttribute = getDiscountedPriceAttribute(type, prodName);
+	const oldPriceAttr = PRICE_ATTRIBUTES.full;
+	const billedPriceAttr = PRICE_ATTRIBUTES.default;
+	const container = document.createElement("div");
+	container.className = "hero-aem__price mt-3";
+	const oldPriceContainer = document.createElement("div");
+	oldPriceContainer.className = "oldprice-container";
+	oldPriceContainer.innerHTML = `
     <span class="prod-oldprice" data-store-render data-store-hide="!it.option.price.discounted" data-store-price="${oldPriceAttr}"></span>
     <span class="prod-save" data-store-render data-store-hide="!it.option.price.discounted">
-      ${saveText ?? ''} <span data-store-render data-store-discount="percentage"></span>
+      ${saveText ?? ""} <span data-store-render data-store-discount="percentage"></span>
     </span>
   `;
-
-  // New price container
-  const newPriceContainer = document.createElement('div');
-  newPriceContainer.className = 'newprice-container mt-2';
-
-  const perPriceText = perPrice?.innerHTML?.replace('0', '') || '';
-  const perPriceSup = perPriceText ? `<sup class="per-m">${perPriceText}</sup>` : '';
-  newPriceContainer.innerHTML = `
+	const newPriceContainer = document.createElement("div");
+	newPriceContainer.className = "newprice-container mt-2";
+	const perPriceText = perPrice?.innerHTML?.replace("0", "") || "";
+	newPriceContainer.innerHTML = `
     <span class="prod-newprice">
-      <span data-store-render data-store-price="${priceAttribute}"></span>${perPriceSup}
+      <span data-store-render data-store-price="${priceAttribute}"></span>${perPriceText ? `<sup class="per-m">${perPriceText}</sup>` : ""}
     </span>
   `;
-
-  if (card.parentElement.classList.contains('new-buy-zone')) {
-    let billedPrice;
-    let taxesText;
-
-    container.appendChild(oldPriceContainer);
-
-    // Billed text
-    if (billedText) {
-      const parts = billedText.innerHTML.split('<br>');
-      const [billedPriceText, taxesTextValue] = parts;
-      if (parts.length > 1) {
-        billedPrice = billedPriceText;
-        taxesText = taxesTextValue;
-      } else {
-        taxesText = billedPriceText;
-      }
-
-      if (billedPrice) {
-        const billedPriceDiv = document.createElement('div');
-        billedPriceDiv.className = 'billed';
-        billedPriceDiv.innerHTML = billedPrice.replace(
-          '0',
-          `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`,
-        );
-        container.appendChild(billedPriceDiv);
-      }
-    }
-
-    container.appendChild(newPriceContainer);
-
-    if (taxesText) {
-      const taxesDiv = document.createElement('div');
-      taxesDiv.className = 'billed taxes';
-      taxesDiv.innerHTML = taxesText;
-      container.appendChild(taxesDiv);
-    }
-  } else {
-    container.appendChild(oldPriceContainer);
-    container.appendChild(newPriceContainer);
-    const billedDiv = document.createElement('div');
-
-    // Billed text
-    if (billedText) {
-      billedDiv.className = 'billed';
-      billedDiv.innerHTML = billedText.innerHTML.replace(
-        '0',
-        `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`,
-      );
-      container.appendChild(billedDiv);
-    }
-  }
-
-  // Buy button
-  if (buyLinkSelector) {
-    const buyLink = document.createElement('a');
-    buyLink.href = '#';
-    buyLink.className = 'button primary no-arrow';
-    buyLink.setAttribute('data-store-render', '');
-    buyLink.setAttribute('data-store-buy-link', trialDuration || '');
-    buyLink.textContent = buyLinkSelector.innerText;
-    container.appendChild(buyLink);
-  }
-
-  const wrapper = document.createElement('div');
-  wrapper.appendChild(container);
-  return wrapper;
+	if (card.parentElement.classList.contains("new-buy-zone")) {
+		let billedPrice;
+		let taxesText;
+		container.appendChild(oldPriceContainer);
+		if (billedText) {
+			const parts = billedText.innerHTML.split("<br>");
+			const [billedPriceText, taxesTextValue] = parts;
+			if (parts.length > 1) {
+				billedPrice = billedPriceText;
+				taxesText = taxesTextValue;
+			} else taxesText = billedPriceText;
+			if (billedPrice) {
+				const billedPriceDiv = document.createElement("div");
+				billedPriceDiv.className = "billed";
+				billedPriceDiv.innerHTML = billedPrice.replace("0", `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`);
+				container.appendChild(billedPriceDiv);
+			}
+		}
+		container.appendChild(newPriceContainer);
+		if (taxesText) {
+			const taxesDiv = document.createElement("div");
+			taxesDiv.className = "billed taxes";
+			taxesDiv.innerHTML = taxesText;
+			container.appendChild(taxesDiv);
+		}
+	} else {
+		container.appendChild(oldPriceContainer);
+		container.appendChild(newPriceContainer);
+		const billedDiv = document.createElement("div");
+		if (billedText) {
+			billedDiv.className = "billed";
+			billedDiv.innerHTML = billedText.innerHTML.replace("0", `<span class="newprice-2" data-store-render data-store-price="${billedPriceAttr}"></span>`);
+			container.appendChild(billedDiv);
+		}
+	}
+	if (buyLinkSelector) {
+		const buyLink = document.createElement("a");
+		buyLink.href = "#";
+		buyLink.className = "button primary no-arrow";
+		buyLink.setAttribute("data-store-render", "");
+		buyLink.setAttribute("data-store-buy-link", trialDuration || "");
+		buyLink.textContent = buyLinkSelector.innerText;
+		container.appendChild(buyLink);
+	}
+	const wrapper = document.createElement("div");
+	wrapper.appendChild(container);
+	return wrapper;
 }
-
 /**
- * Creates a plan switcher with radio buttons for different pricing options
- * @param {HTMLElement} radioButtons - Container with radio button labels
- * @param {number} cardNumber - Card index for unique naming
- * @param {Array} prodsNames - Array of product names
- * @param {Array} prodsUsers - Array of user counts
- * @param {Array} prodsYears - Array of year counts
- * @param {string} variant - Variant type ('default' or 'addon')
- * @returns {HTMLElement} Plan switcher element
- */
-function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = 'default') {
-  const planSwitcher = document.createElement('div');
-  planSwitcher.className = 'plan-switcher';
-
-  if (variant === 'addon') {
-    planSwitcher.classList.add('addon');
-  }
-
-  const radioIds = variant === 'addon'
-    ? ['add-on-yearly', 'add-on-monthly']
-    : ['yearly', 'monthly', '3-rd-button'];
-
-  Array.from(radioButtons.children).forEach((radio, idx) => {
-    const productName = prodsNames[idx];
-    if (!productName) return;
-
-    const prodUser = prodsUsers[idx];
-    const prodYear = prodsYears[idx];
-    const plan = radioIds[idx];
-
-    let radioText = radio.textContent;
-    const isChecked = radioText.includes('[checked]');
-    if (isChecked) {
-      radioText = radioText.replace('[checked]', '');
-    }
-
-    const inputId = `${plan}-${productName.trim()}`;
-    const inputName = `${cardNumber}-${variant}`;
-    const inputValue = `${cardNumber}-${plan}-${productName.trim()}`;
-
-    const input = document.createElement('input');
-    input.type = 'radio';
-    input.id = inputId;
-    input.name = inputName;
-    input.value = inputValue;
-    input.setAttribute('rank', `radio-${idx + 1}`);
-    input.setAttribute('data-store-action', '');
-    input.setAttribute('data-store-set-id', productName);
-    input.setAttribute('data-store-set-devices', prodUser);
-    input.setAttribute('data-store-set-subscription', prodYear);
-    if (isChecked) {
-      input.setAttribute('checked', '');
-    }
-
-    const label = document.createElement('label');
-    label.htmlFor = inputId;
-    label.className = 'radio-label';
-    label.textContent = radioText;
-
-    planSwitcher.appendChild(input);
-    planSwitcher.appendChild(label);
-    planSwitcher.appendChild(document.createElement('br'));
-  });
-
-  // Ensure at least one radio is checked
-  const firstInput = planSwitcher.querySelector('input');
-  if (firstInput && !planSwitcher.querySelector('input[checked]')) {
-    firstInput.setAttribute('checked', 'true');
-  }
-
-  return planSwitcher;
+* Creates a plan switcher with radio buttons for different pricing options
+* @param {HTMLElement} radioButtons - Container with radio button labels
+* @param {number} cardNumber - Card index for unique naming
+* @param {Array} prodsNames - Array of product names
+* @param {Array} prodsUsers - Array of user counts
+* @param {Array} prodsYears - Array of year counts
+* @param {string} variant - Variant type ('default' or 'addon')
+* @returns {HTMLElement} Plan switcher element
+*/
+function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, prodsYears, variant = "default") {
+	const planSwitcher = document.createElement("div");
+	planSwitcher.className = "plan-switcher";
+	if (variant === "addon") planSwitcher.classList.add("addon");
+	const radioIds = variant === "addon" ? ["add-on-yearly", "add-on-monthly"] : [
+		"yearly",
+		"monthly",
+		"3-rd-button"
+	];
+	Array.from(radioButtons.children).forEach((radio, idx) => {
+		const productName = prodsNames[idx];
+		if (!productName) return;
+		const prodUser = prodsUsers[idx];
+		const prodYear = prodsYears[idx];
+		const plan = radioIds[idx];
+		let radioText = radio.textContent;
+		const isChecked = radioText.includes("[checked]");
+		if (isChecked) radioText = radioText.replace("[checked]", "");
+		const inputId = `${plan}-${productName.trim()}`;
+		const inputName = `${cardNumber}-${variant}`;
+		const inputValue = `${cardNumber}-${plan}-${productName.trim()}`;
+		const input = document.createElement("input");
+		input.type = "radio";
+		input.id = inputId;
+		input.name = inputName;
+		input.value = inputValue;
+		input.setAttribute("rank", `radio-${idx + 1}`);
+		input.setAttribute("data-store-action", "");
+		input.setAttribute("data-store-set-id", productName);
+		input.setAttribute("data-store-set-devices", prodUser);
+		input.setAttribute("data-store-set-subscription", prodYear);
+		if (isChecked) input.setAttribute("checked", "");
+		const label = document.createElement("label");
+		label.htmlFor = inputId;
+		label.className = "radio-label";
+		label.textContent = radioText;
+		planSwitcher.appendChild(input);
+		planSwitcher.appendChild(label);
+		planSwitcher.appendChild(document.createElement("br"));
+	});
+	const firstInput = planSwitcher.querySelector("input");
+	if (firstInput && !planSwitcher.querySelector("input[checked]")) firstInput.setAttribute("checked", "true");
+	return planSwitcher;
 }
-
 /**
- * Processes feature content text with special markers
- * @param {string} content - Raw content string
- * @param {HTMLElement} tdElement - Source TD element for icon extraction
- * @returns {Object} Processed content and CSS class
- */
+* Processes feature content text with special markers
+* @param {string} content - Raw content string
+* @param {HTMLElement} tdElement - Source TD element for icon extraction
+* @returns {Object} Processed content and CSS class
+*/
 function processFeatureContent(content, tdElement) {
-  let processedContent = content;
-  let liClass = '';
-
-  if (!processedContent) {
-    return { content: '', liClass: 'd-none' };
-  }
-
-  // Handle pill markers
-  const pillMatch = processedContent.match(/\?pill (\w+)/);
-  if (pillMatch) {
-    const icon = tdElement?.querySelector('span');
-    const iconHtml = icon?.outerHTML || '';
-
-    const pillElement = document.createElement('span');
-    pillElement.className = 'blue-pill';
-    pillElement.innerHTML = `${pillMatch[1]}${iconHtml}`;
-
-    processedContent = processedContent.replace(pillMatch[0], pillElement.outerHTML);
-
-    if (icon) {
-      let first = true;
-
-      processedContent = processedContent.replaceAll(icon.outerHTML, () => {
-        if (first) {
-          first = false;
-          return icon.outerHTML;
-        }
-        return '';
-      });
-    }
-  }
-
-  // Handle arrow markers
-  if (processedContent.includes('&lt;pill') || processedContent.includes('&lt;')) {
-    liClass += ' has_arrow';
-    processedContent = processedContent.replace('&lt;-', '');
-  }
-
-  if (processedContent.includes('-&gt;') || processedContent.includes('&gt;')) {
-    liClass += ' has_arrow_right';
-    processedContent = processedContent.replace('-&gt;', '<span class="arrow-right"></span>');
-  }
-
-  // Handle special markers using replaceAll for consistency
-  const replacements = [
-    ['[checkmark]', '<span class="checkmark"></span>'],
-    ['[add-on]', ''],
-    ['&lt;&lt;add-on-newprice&gt;&gt;', '<span class="add-on-newprice"></span>'],
-    ['&lt;&lt;add-on-oldprice&gt;&gt;', '<span class="add-on-oldprice"></span>'],
-    ['&lt;&lt;add-on-percent-save&gt;&gt;', '<span class="add-on-percent-save"></span>'],
-    ['[[', '('],
-    [']]', ')'],
-  ];
-
-  replacements.forEach(([marker, replacement]) => {
-    processedContent = processedContent.replaceAll(marker, replacement);
-  });
-
-  return { content: processedContent, liClass: liClass.trim() };
+	let processedContent = content;
+	let liClass = "";
+	if (!processedContent) return {
+		content: "",
+		liClass: "d-none"
+	};
+	const pillMatch = processedContent.match(/\?pill (\w+)/);
+	if (pillMatch) {
+		const icon = tdElement?.querySelector("span");
+		const iconHtml = icon?.outerHTML || "";
+		const pillElement = document.createElement("span");
+		pillElement.className = "blue-pill";
+		pillElement.innerHTML = `${pillMatch[1]}${iconHtml}`;
+		processedContent = processedContent.replace(pillMatch[0], pillElement.outerHTML);
+		if (icon) {
+			let first = true;
+			processedContent = processedContent.replaceAll(icon.outerHTML, () => {
+				if (first) {
+					first = false;
+					return icon.outerHTML;
+				}
+				return "";
+			});
+		}
+	}
+	if (processedContent.includes("&lt;pill") || processedContent.includes("&lt;")) {
+		liClass += " has_arrow";
+		processedContent = processedContent.replace("&lt;-", "");
+	}
+	if (processedContent.includes("-&gt;") || processedContent.includes("&gt;")) {
+		liClass += " has_arrow_right";
+		processedContent = processedContent.replace("-&gt;", "<span class=\"arrow-right\"></span>");
+	}
+	[
+		["[checkmark]", "<span class=\"checkmark\"></span>"],
+		["[add-on]", ""],
+		["&lt;&lt;add-on-newprice&gt;&gt;", "<span class=\"add-on-newprice\"></span>"],
+		["&lt;&lt;add-on-oldprice&gt;&gt;", "<span class=\"add-on-oldprice\"></span>"],
+		["&lt;&lt;add-on-percent-save&gt;&gt;", "<span class=\"add-on-percent-save\"></span>"],
+		["[[", "("],
+		["]]", ")"]
+	].forEach(([marker, replacement]) => {
+		processedContent = processedContent.replaceAll(marker, replacement);
+	});
+	return {
+		content: processedContent,
+		liClass: liClass.trim()
+	};
 }
-
 /**
- * Creates feature list HTML from table data
- * @param {NodeList} featuresSet - Set of feature tables
- * @returns {Array} Array of HTML list strings
- */
+* Creates feature list HTML from table data
+* @param {NodeList} featuresSet - Set of feature tables
+* @returns {Array} Array of HTML list strings
+*/
 function createFeatureList(featuresSet) {
-  return Array.from(featuresSet).map((table) => {
-    const rows = Array.from(table.querySelectorAll('tr'));
-
-    const listItems = rows.map((tr) => {
-      const cells = Array.from(tr.querySelectorAll('td'));
-      const firstCell = cells[0];
-      const secondCell = cells[1];
-
-      const firstCellContent = firstCell?.textContent.trim() ? firstCell.innerHTML : '';
-      const processed = processFeatureContent(firstCellContent, firstCell);
-      let { content: processedContent, liClass } = processed;
-      if (processedContent.includes('xxx')) {
-        liClass = 'unavailable';
-        processedContent = processedContent.replace('xxx', '');
-      }
-
-      const secondCellContent = secondCell?.textContent.trim()
-        ? `<span class="white-pill-content">${secondCell.innerHTML}</span>`
-        : '';
-
-      return `<li ${liClass ? `class="${liClass}"` : ''}>${processedContent}${secondCellContent}</li>`;
-    }).join(' ');
-
-    return `<ul>${listItems}</ul>`;
-  });
+	return Array.from(featuresSet).map((table) => {
+		return `<ul>${Array.from(table.querySelectorAll("tr")).map((tr) => {
+			const cells = Array.from(tr.querySelectorAll("td"));
+			const firstCell = cells[0];
+			const secondCell = cells[1];
+			let { content: processedContent, liClass } = processFeatureContent(firstCell?.textContent.trim() ? firstCell.innerHTML : "", firstCell);
+			if (processedContent.includes("xxx")) {
+				liClass = "unavailable";
+				processedContent = processedContent.replace("xxx", "");
+			}
+			const secondCellContent = secondCell?.textContent.trim() ? `<span class="white-pill-content">${secondCell.innerHTML}</span>` : "";
+			return `<li ${liClass ? `class="${liClass}"` : ""}>${processedContent}${secondCellContent}</li>`;
+		}).join(" ")}</ul>`;
+	});
 }
-
 /**
- * Checks if features contain add-on markers
- * @param {NodeList} featuresSet - Set of feature tables
- * @returns {boolean} Whether add-on content exists
- */
+* Checks if features contain add-on markers
+* @param {NodeList} featuresSet - Set of feature tables
+* @returns {boolean} Whether add-on content exists
+*/
 function hasAddOnFeatures(featuresSet) {
-  return Array.from(featuresSet).some((table) => {
-    const cells = table.querySelectorAll('td');
-    return Array.from(cells).some((td) => td.innerHTML.includes('[add-on]'));
-  });
+	return Array.from(featuresSet).some((table) => {
+		const cells = table.querySelectorAll("td");
+		return Array.from(cells).some((td) => td.innerHTML.includes("[add-on]"));
+	});
 }
-
 /**
- * Parses product list string into array
- * @param {string} productString - Comma-separated product string
- * @returns {Array} Array of product identifiers
- */
+* Parses product list string into array
+* @param {string} productString - Comma-separated product string
+* @returns {Array} Array of product identifiers
+*/
 function parseProductList(productString) {
-  return productString ? productString.replaceAll(' ', '').split(',') : [];
+	return productString ? productString.replaceAll(" ", "").split(",") : [];
 }
-
 /**
- * Parses slider text from default content
- * @param {HTMLElement} defaultContentWrapper - Default content wrapper element
- * @returns {Object} Individual and family switch text
- */
+* Parses slider text from default content
+* @param {HTMLElement} defaultContentWrapper - Default content wrapper element
+* @returns {Object} Individual and family switch text
+*/
 function parseSliderText(defaultContentWrapper) {
-  let individualSwitchText = null;
-  let familySwitchText = null;
-
-  if (!defaultContentWrapper) {
-    return { individualSwitchText, familySwitchText };
-  }
-
-  const elements = Array.from(defaultContentWrapper.children);
-  elements.forEach((element) => {
-    if (element.innerHTML.includes('&lt;slider-1 ')) {
-      element.innerHTML = element.innerHTML.replace('&lt;slider-1 ', '');
-      individualSwitchText = element.innerHTML;
-      element.remove();
-    }
-    if (element.innerHTML.includes('&lt;slider-2 ')) {
-      element.innerHTML = element.innerHTML.replace('&lt;slider-2 ', '');
-      familySwitchText = element.innerHTML;
-      element.remove();
-    }
-  });
-
-  return { individualSwitchText, familySwitchText };
+	let individualSwitchText = null;
+	let familySwitchText = null;
+	if (!defaultContentWrapper) return {
+		individualSwitchText,
+		familySwitchText
+	};
+	Array.from(defaultContentWrapper.children).forEach((element) => {
+		if (element.innerHTML.includes("&lt;slider-1 ")) {
+			element.innerHTML = element.innerHTML.replace("&lt;slider-1 ", "");
+			individualSwitchText = element.innerHTML;
+			element.remove();
+		}
+		if (element.innerHTML.includes("&lt;slider-2 ")) {
+			element.innerHTML = element.innerHTML.replace("&lt;slider-2 ", "");
+			familySwitchText = element.innerHTML;
+			element.remove();
+		}
+	});
+	return {
+		individualSwitchText,
+		familySwitchText
+	};
 }
-
 /**
- * Creates the individual/family toggle switch
- * @param {string} individualText - Label for individual products
- * @param {string} familyText - Label for family products
- * @returns {HTMLElement} Switch container element
- */
+* Creates the individual/family toggle switch
+* @param {string} individualText - Label for individual products
+* @param {string} familyText - Label for family products
+* @returns {HTMLElement} Switch container element
+*/
 function createToggleSwitch(individualText, familyText) {
-  const switchBox = document.createElement('div');
-  switchBox.className = 'switchBox';
-  switchBox.innerHTML = `
+	const switchBox = document.createElement("div");
+	switchBox.className = "switchBox";
+	switchBox.innerHTML = `
     <label class="switch">
       <input type="checkbox" id="switchCheckbox">
       <span class="slider round"></span>
@@ -384,850 +288,549 @@ function createToggleSwitch(individualText, familyText) {
       <span class="label left">${familyText}</span>
     </label>
   `;
-  return switchBox;
+	return switchBox;
 }
-
 /**
- * Handles toggle switch change events
- * @param {HTMLElement} block - Block element
- * @param {HTMLInputElement} checkbox - Switch checkbox
- */
+* Handles toggle switch change events
+* @param {HTMLElement} block - Block element
+* @param {HTMLInputElement} checkbox - Switch checkbox
+*/
 function setupToggleSwitchHandler(block, checkbox) {
-  checkbox.addEventListener('change', () => {
-    const familyBoxes = block.querySelectorAll('.family-box');
-    const individualBoxes = block.querySelectorAll('.individual-box');
-    const isChecked = checkbox.checked;
-
-    familyBoxes.forEach((box) => {
-      box.style.display = isChecked ? 'grid' : 'none';
-    });
-
-    individualBoxes.forEach((box) => {
-      box.style.display = isChecked ? 'none' : 'grid';
-    });
-  });
+	checkbox.addEventListener("change", () => {
+		const familyBoxes = block.querySelectorAll(".family-box");
+		const individualBoxes = block.querySelectorAll(".individual-box");
+		const isChecked = checkbox.checked;
+		familyBoxes.forEach((box) => {
+			box.style.display = isChecked ? "grid" : "none";
+		});
+		individualBoxes.forEach((box) => {
+			box.style.display = isChecked ? "none" : "grid";
+		});
+	});
 }
-
 /**
- * Creates blue tag elements from content
- * @param {HTMLElement} blueTagRow - Row containing blue tag content
- * @returns {HTMLElement} Container with blue tags
- */
+* Creates blue tag elements from content
+* @param {HTMLElement} blueTagRow - Row containing blue tag content
+* @returns {HTMLElement} Container with blue tags
+*/
 function createBlueTags(blueTagRow) {
-  const container = document.createElement('div');
-  if (!blueTagRow || !blueTagRow.textContent.trim()) return container;
-
-  Array.from(blueTagRow.children).forEach((child) => {
-    // Only create blueTag if the child has actual content
-    if (child.innerHTML.trim()) {
-      const tag = document.createElement('div');
-      tag.className = 'blueTag';
-      tag.innerHTML = child.innerHTML;
-      container.appendChild(tag);
-    }
-  });
-
-  return container;
+	const container = document.createElement("div");
+	if (!blueTagRow || !blueTagRow.textContent.trim()) return container;
+	Array.from(blueTagRow.children).forEach((child) => {
+		if (child.innerHTML.trim()) {
+			const tag = document.createElement("div");
+			tag.className = "blueTag";
+			tag.innerHTML = child.innerHTML;
+			container.appendChild(tag);
+		}
+	});
+	return container;
 }
-
 /**
- * Creates the title HTML for a product box
- * @param {HTMLElement} titleRow - Row containing title
- * @returns {string} Title HTML string
- */
+* Creates the title HTML for a product box
+* @param {HTMLElement} titleRow - Row containing title
+* @returns {string} Title HTML string
+*/
 function createTitleHTML(titleRow) {
-  if (!titleRow?.textContent.trim()) return '';
-
-  const anchor = titleRow.querySelector('a');
-  if (anchor) {
-    const href = anchor.getAttribute('href');
-    const refactoredTitle = titleRow.textContent.replace(/(Bitdefender)(?!\s*<br>)/i, '$1<br>');
-    return `<h4><a href="${href}" title="${titleRow.textContent}">${refactoredTitle}</a></h4>`;
-  }
-
-  return `<h4>${titleRow.innerHTML}</h4>`;
+	if (!titleRow?.textContent.trim()) return "";
+	const anchor = titleRow.querySelector("a");
+	if (anchor) {
+		const href = anchor.getAttribute("href");
+		const refactoredTitle = titleRow.textContent.replace(/(Bitdefender)(?!\s*<br>)/i, "$1<br>");
+		return `<h4><a href="${href}" title="${titleRow.textContent}">${refactoredTitle}</a></h4>`;
+	}
+	return `<h4>${titleRow.innerHTML}</h4>`;
 }
-
 /**
- * Creates subtitle HTML with optional visibility handling
- * @param {HTMLElement} subtitleRow - Row containing subtitle
- * @returns {string} Subtitle HTML string
- */
+* Creates subtitle HTML with optional visibility handling
+* @param {HTMLElement} subtitleRow - Row containing subtitle
+* @returns {string} Subtitle HTML string
+*/
 function createSubtitleHTML(subtitleRow) {
-  const text = subtitleRow?.textContent.trim();
-  if (!text) return '';
-
-  const wordCount = text.split(/\s+/).length;
-  const fixedClass = wordCount > 8 ? ' fixed_height' : '';
-
-  const invisibleTagPattern = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i;
-  const hasInvisibleTag = invisibleTagPattern.test(subtitleRow.innerHTML);
-
-  const hiddenTagPattern = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Hidden\s*<\/span>/i;
-  const hasHiddenTag = hiddenTagPattern.test(subtitleRow.innerHTML);
-
-  const extraAttrs = hasInvisibleTag
-    ? ' style="min-height:18px;visibility:hidden;pointer-events:none;" aria-hidden="true"'
-    : '';
-
-  const extrahiddenAttrs = hasHiddenTag
-    ? 'style="display:none;" aria-hidden="true"'
-    : '';
-
-  return `<p class="subtitle${fixedClass}"${extraAttrs}${extrahiddenAttrs}>${subtitleRow.innerHTML}</p>`;
+	const text = subtitleRow?.textContent.trim();
+	if (!text) return "";
+	const fixedClass = text.split(/\s+/).length > 8 ? " fixed_height" : "";
+	const hasInvisibleTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Invisible\s*<\/span>/i.test(subtitleRow.innerHTML);
+	const hasHiddenTag = /<span[^>]*class="[^"]*\btag\b[^"]*\btag-dark-blue\b[^"]*"[^>]*>\s*Hidden\s*<\/span>/i.test(subtitleRow.innerHTML);
+	return `<p class="subtitle${fixedClass}"${hasInvisibleTag ? " style=\"min-height:18px;visibility:hidden;pointer-events:none;\" aria-hidden=\"true\"" : ""}${hasHiddenTag ? "style=\"display:none;\" aria-hidden=\"true\"" : ""}>${subtitleRow.innerHTML}</p>`;
 }
-
 /**
- * Creates demo button HTML if applicable
- * @param {HTMLElement} undeBuyLinkRow - Row containing under-buy-link content
- * @returns {Object} Demo button HTML and raw content
- */
+* Creates demo button HTML if applicable
+* @param {HTMLElement} undeBuyLinkRow - Row containing under-buy-link content
+* @returns {Object} Demo button HTML and raw content
+*/
 function createDemoButton(undeBuyLinkRow) {
-  const content = undeBuyLinkRow?.innerText?.trim() || '';
-  if (!content) return { demoBtn: '', content: '' };
-
-  const [alias, selector, btnText] = content.split('|');
-
-  if (alias?.trim() === 'popup' && selector && btnText) {
-    const cleanSelector = selector.replace(/\s+/g, '');
-    const demoBtn = `<span class="demoBtn" data-show="${selector}" onclick="document.querySelector('.${cleanSelector}').style.display = 'block'">${btnText}</span>`;
-    return { demoBtn, content };
-  }
-
-  return { demoBtn: '', content };
+	const content = undeBuyLinkRow?.innerText?.trim() || "";
+	if (!content) return {
+		demoBtn: "",
+		content: ""
+	};
+	const [alias, selector, btnText] = content.split("|");
+	if (alias?.trim() === "popup" && selector && btnText) return {
+		demoBtn: `<span class="demoBtn" data-show="${selector}" onclick="document.querySelector('.${selector.replace(/\s+/g, "")}').style.display = 'block'">${btnText}</span>`,
+		content
+	};
+	return {
+		demoBtn: "",
+		content
+	};
 }
-
 /**
- * Gets checked product info from plan switcher
- * @param {HTMLElement} planSwitcher - Plan switcher element
- * @param {string} defaultName - Default product name
- * @param {string} defaultUsers - Default users count
- * @param {string} defaultYears - Default years count
- * @returns {Object} Product info object
- */
+* Gets checked product info from plan switcher
+* @param {HTMLElement} planSwitcher - Plan switcher element
+* @param {string} defaultName - Default product name
+* @param {string} defaultUsers - Default users count
+* @param {string} defaultYears - Default years count
+* @returns {Object} Product info object
+*/
 function getCheckedProductInfo(planSwitcher, defaultName, defaultUsers, defaultYears) {
-  const checkedPlan = planSwitcher.querySelector('input[checked]');
-  if (!checkedPlan) {
-    return { name: defaultName, users: defaultUsers, years: defaultYears };
-  }
-
-  const name = checkedPlan.dataset.storeSetId || defaultName;
-  const users = checkedPlan.dataset.storeSetDevices || defaultUsers;
-  const years = checkedPlan.dataset.storeSetSubscription || defaultYears;
-
-  return { name, users, years };
+	const checkedPlan = planSwitcher.querySelector("input[checked]");
+	if (!checkedPlan) return {
+		name: defaultName,
+		users: defaultUsers,
+		years: defaultYears
+	};
+	return {
+		name: checkedPlan.dataset.storeSetId || defaultName,
+		users: checkedPlan.dataset.storeSetDevices || defaultUsers,
+		years: checkedPlan.dataset.storeSetSubscription || defaultYears
+	};
 }
-
 /**
- * Sets up show more/less functionality for benefits lists
- * @param {HTMLElement} block - Block element
- * @param {HTMLElement} blockParent - Parent section element
- */
+* Sets up show more/less functionality for benefits lists
+* @param {HTMLElement} block - Block element
+* @param {HTMLElement} blockParent - Parent section element
+*/
 function setupShowMoreLess(block, blockParent) {
-  const benefitsLists = block.querySelectorAll('.benefitsLists');
-  const buttons = [];
-
-  benefitsLists.forEach((benefits) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'show-more-btn-wrapper';
-
-    const btn = document.createElement('button');
-    btn.className = 'show-more-btn';
-    btn.type = 'button';
-    btn.setAttribute('aria-expanded', 'false');
-    btn.textContent = blockParent.getAttribute('data-show-more');
-
-    wrapper.appendChild(btn);
-    benefits.insertAdjacentElement('beforebegin', wrapper);
-    buttons.push(btn);
-  });
-
-  buttons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const shouldExpand = !benefitsLists[0]?.classList.contains('expanded');
-
-      benefitsLists.forEach((benefits) => {
-        benefits.classList.toggle('expanded', shouldExpand);
-      });
-
-      buttons.forEach((button) => {
-        button.textContent = shouldExpand
-          ? blockParent.getAttribute('data-show-less')
-          : blockParent.getAttribute('data-show-more');
-        button.className = shouldExpand ? 'show-less-btn' : 'show-more-btn';
-        button.setAttribute('aria-expanded', String(shouldExpand));
-      });
-    });
-  });
+	const benefitsLists = block.querySelectorAll(".benefitsLists");
+	const buttons = [];
+	benefitsLists.forEach((benefits) => {
+		const wrapper = document.createElement("div");
+		wrapper.className = "show-more-btn-wrapper";
+		const btn = document.createElement("button");
+		btn.className = "show-more-btn";
+		btn.type = "button";
+		btn.setAttribute("aria-expanded", "false");
+		btn.textContent = blockParent.getAttribute("data-show-more");
+		wrapper.appendChild(btn);
+		benefits.insertAdjacentElement("beforebegin", wrapper);
+		buttons.push(btn);
+	});
+	buttons.forEach((btn) => {
+		btn.addEventListener("click", () => {
+			const shouldExpand = !benefitsLists[0]?.classList.contains("expanded");
+			benefitsLists.forEach((benefits) => {
+				benefits.classList.toggle("expanded", shouldExpand);
+			});
+			buttons.forEach((button) => {
+				button.textContent = shouldExpand ? blockParent.getAttribute("data-show-less") : blockParent.getAttribute("data-show-more");
+				button.className = shouldExpand ? "show-less-btn" : "show-more-btn";
+				button.setAttribute("aria-expanded", String(shouldExpand));
+			});
+		});
+	});
 }
-
 /**
- * Sets up synchronized plan switching across cards
- * @param {HTMLElement} block - Block element
- */
+* Sets up synchronized plan switching across cards
+* @param {HTMLElement} block - Block element
+*/
 function setupSynchronizedPlanSwitching(block) {
-  const allPlanSwitchers = block.querySelectorAll('.plan-switcher');
-
-  allPlanSwitchers.forEach((switcher) => {
-    const inputs = switcher.querySelectorAll('input');
-
-    inputs.forEach((input, idx) => {
-      input.addEventListener('change', () => {
-        if (!input.checked) return;
-
-        const box = switcher.closest('.prod_box');
-        const isIndividual = box.classList.contains('individual-box');
-        const isFamily = box.classList.contains('family-box');
-
-        allPlanSwitchers.forEach((otherSwitcher) => {
-          const otherBox = otherSwitcher.closest('.prod_box');
-          const shouldSync = (isIndividual && otherBox.classList.contains('individual-box'))
-            || (isFamily && otherBox.classList.contains('family-box'));
-
-          if (shouldSync) {
-            const otherInputs = otherSwitcher.querySelectorAll('input');
-            const targetInput = otherInputs[idx];
-
-            if (targetInput && !targetInput.checked) {
-              targetInput.checked = true;
-              targetInput.dispatchEvent(new Event('change', { bubbles: true }));
-              targetInput.dispatchEvent(new Event('click', { bubbles: true }));
-            }
-          }
-        });
-      });
-    });
-  });
+	const allPlanSwitchers = block.querySelectorAll(".plan-switcher");
+	allPlanSwitchers.forEach((switcher) => {
+		switcher.querySelectorAll("input").forEach((input, idx) => {
+			input.addEventListener("change", () => {
+				if (!input.checked) return;
+				const box = switcher.closest(".prod_box");
+				const isIndividual = box.classList.contains("individual-box");
+				const isFamily = box.classList.contains("family-box");
+				allPlanSwitchers.forEach((otherSwitcher) => {
+					const otherBox = otherSwitcher.closest(".prod_box");
+					if (isIndividual && otherBox.classList.contains("individual-box") || isFamily && otherBox.classList.contains("family-box")) {
+						const targetInput = otherSwitcher.querySelectorAll("input")[idx];
+						if (targetInput && !targetInput.checked) {
+							targetInput.checked = true;
+							targetInput.dispatchEvent(new Event("change", { bubbles: true }));
+							targetInput.dispatchEvent(new Event("click", { bubbles: true }));
+						}
+					}
+				});
+			});
+		});
+	});
 }
-
 /**
- * Sets up family box anchor button handlers
- * @param {HTMLElement} block - Block element
- */
+* Sets up family box anchor button handlers
+* @param {HTMLElement} block - Block element
+*/
 function setupFamilyBoxHandlers(block) {
-  const anchorButtons = document.querySelectorAll('.tabs-component .button');
-  const switchCheckbox = document.getElementById('switchCheckbox');
-
-  anchorButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      if (switchCheckbox) {
-        switchCheckbox.checked = true;
-      }
-
-      block.querySelectorAll('.family-box').forEach((box) => {
-        box.style.display = 'block';
-      });
-
-      block.querySelectorAll('.individual-box').forEach((box) => {
-        box.style.display = 'none';
-      });
-    });
-  });
+	const anchorButtons = document.querySelectorAll(".tabs-component .button");
+	const switchCheckbox = document.getElementById("switchCheckbox");
+	anchorButtons.forEach((button) => {
+		button.addEventListener("click", () => {
+			if (switchCheckbox) switchCheckbox.checked = true;
+			block.querySelectorAll(".family-box").forEach((box) => {
+				box.style.display = "block";
+			});
+			block.querySelectorAll(".individual-box").forEach((box) => {
+				box.style.display = "none";
+			});
+		});
+	});
 }
-
 /**
- * Updates add-on pricing elements with calculated prices
- * @param {string} productName - Main product name
- * @param {string} productOption - Product option (users-years)
- * @param {string} addOnName - Add-on product name
- * @param {string} addOnOption - Add-on option (users-years)
- * @param {HTMLElement} container - Container element to update prices in
- * @param {HTMLElement} priceBox - Optional element to get save text from
- * @returns {Promise<void>}
- */
-async function updateAddOnPrices(
-  productName,
-  productOption,
-  addOnName,
-  addOnOption,
-  container,
-  priceBox = null,
-) {
-  try {
-    const [product, addOnProduct] = await store.getProduct([
-      {
-        id: productName,
-      },
-      {
-        id: addOnName,
-      },
-    ]);
-
-    if (!addOnProduct || !product) return;
-
-    const [productUsers, productYears] = productOption.split('-');
-    const [addOnUsers, addOnYears] = addOnOption.split('-');
-
-    const [productInfo, addOnInfo] = (await Promise.allSettled([
-      product.getOption({
-        devices: productUsers,
-        subscription: productYears,
-      }),
-      addOnProduct.getOption({
-        devices: addOnUsers,
-        subscription: addOnYears,
-      }),
-    ])).map((result) => result.value);
-
-    const addOnCost = addOnInfo.getDiscountedPrice({ currency: false })
-      - productInfo.getDiscountedPrice({ currency: false });
-    const formattedAddOnCost = formatPrice(addOnCost, product.getCurrency());
-
-    const addOnNewPrice = container.querySelector('.add-on-newprice');
-    if (addOnNewPrice) {
-      addOnNewPrice.textContent = formattedAddOnCost;
-    }
-
-    const addOnOldPrice = container.querySelector('.add-on-oldprice');
-    if (addOnOldPrice) {
-      addOnOldPrice.textContent = formatPrice(
-        addOnInfo.getPrice({ currency: false }),
-        addOnProduct.getCurrency(),
-      );
-    }
-
-    const addOnPercentSave = container.querySelector('.add-on-percent-save');
-
-    if (addOnPercentSave && priceBox) {
-      const prodSaveEl = priceBox.querySelector('.prod-save');
-      const saveText = prodSaveEl
-        ? Array.from(prodSaveEl.childNodes)
-          .filter((node) => node.nodeType === Node.TEXT_NODE)
-          .map((node) => node.textContent.trim())
-          .join(' ')
-        : '';
-      const discountPercent = addOnInfo.getDiscount({ percentage: true });
-      addOnPercentSave.innerHTML = discountPercent !== '0%' ? `${saveText} <span class="add-on-percent">${discountPercent}</span>` : '';
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error updating add-on prices:', error);
-  }
+* Updates add-on pricing elements with calculated prices
+* @param {string} productName - Main product name
+* @param {string} productOption - Product option (users-years)
+* @param {string} addOnName - Add-on product name
+* @param {string} addOnOption - Add-on option (users-years)
+* @param {HTMLElement} container - Container element to update prices in
+* @param {HTMLElement} priceBox - Optional element to get save text from
+* @returns {Promise<void>}
+*/
+async function updateAddOnPrices(productName, productOption, addOnName, addOnOption, container, priceBox = null) {
+	try {
+		const [product, addOnProduct] = await store_default.getProduct([{ id: productName }, { id: addOnName }]);
+		if (!addOnProduct || !product) return;
+		const [productUsers, productYears] = productOption.split("-");
+		const [addOnUsers, addOnYears] = addOnOption.split("-");
+		const [productInfo, addOnInfo] = (await Promise.allSettled([product.getOption({
+			devices: productUsers,
+			subscription: productYears
+		}), addOnProduct.getOption({
+			devices: addOnUsers,
+			subscription: addOnYears
+		})])).map((result) => result.value);
+		const addOnCost = addOnInfo.getDiscountedPrice({ currency: false }) - productInfo.getDiscountedPrice({ currency: false });
+		const formattedAddOnCost = formatPrice(addOnCost, product.getCurrency());
+		const addOnNewPrice = container.querySelector(".add-on-newprice");
+		if (addOnNewPrice) addOnNewPrice.textContent = formattedAddOnCost;
+		const addOnOldPrice = container.querySelector(".add-on-oldprice");
+		if (addOnOldPrice) addOnOldPrice.textContent = formatPrice(addOnInfo.getPrice({ currency: false }), addOnProduct.getCurrency());
+		const addOnPercentSave = container.querySelector(".add-on-percent-save");
+		if (addOnPercentSave && priceBox) {
+			const prodSaveEl = priceBox.querySelector(".prod-save");
+			const saveText = prodSaveEl ? Array.from(prodSaveEl.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE).map((node) => node.textContent.trim()).join(" ") : "";
+			const discountPercent = addOnInfo.getDiscount({ percentage: true });
+			addOnPercentSave.innerHTML = discountPercent !== "0%" ? `${saveText} <span class="add-on-percent">${discountPercent}</span>` : "";
+		}
+	} catch (error) {
+		console.error("Error updating add-on prices:", error);
+	}
 }
-
 /**
- * Synchronizes add-on product selection with main product plan changes
- * When a plan switcher radio button changes, this function updates the state
- * and synchronizes matching radio buttons across related products,
- * then recalculates add-on pricing based on the new selection
- * @param {HTMLElement} boxElement - Product box element containing plan switchers
- * @param {Object} state - State object containing current product selections
- * @returns {void}
- */
+* Synchronizes add-on product selection with main product plan changes
+* When a plan switcher radio button changes, this function updates the state
+* and synchronizes matching radio buttons across related products,
+* then recalculates add-on pricing based on the new selection
+* @param {HTMLElement} boxElement - Product box element containing plan switchers
+* @param {Object} state - State object containing current product selections
+* @returns {void}
+*/
 function syncAddOnWithMainProduct(boxElement, state) {
-  const radios = boxElement.querySelectorAll('.plan-switcher input');
-  radios.forEach((radio) => {
-    radio.addEventListener('change', async () => {
-      const selector = radio.getAttribute('rank');
-      const matchingRadios = boxElement.querySelectorAll(`input[rank="${selector}"]`);
-
-      if (matchingRadios.length <= 1) {
-        return;
-      }
-
-      if (radio.id.includes('add-on')) {
-        state.addOnProductOption = `${radio.dataset.storeSetDevices}-${radio.dataset.storeSetSubscription}`;
-        state.addOnProduct = radio.dataset.storeSetId;
-      } else {
-        state.productOption = `${radio.dataset.storeSetDevices}-${radio.dataset.storeSetSubscription}`;
-        state.product = radio.dataset.storeSetId;
-      }
-
-      matchingRadios.forEach(async (matchingRadio) => matchingRadio.click());
-
-      const addOnPriceBox = boxElement.querySelector('.hero-aem__prices__addon');
-      await updateAddOnPrices(
-        state.product,
-        state.productOption,
-        state.addOnProduct,
-        state.addOnProductOption,
-        boxElement,
-        addOnPriceBox,
-      );
-    });
-  });
+	boxElement.querySelectorAll(".plan-switcher input").forEach((radio) => {
+		radio.addEventListener("change", async () => {
+			const selector = radio.getAttribute("rank");
+			const matchingRadios = boxElement.querySelectorAll(`input[rank="${selector}"]`);
+			if (matchingRadios.length <= 1) return;
+			if (radio.id.includes("add-on")) {
+				state.addOnProductOption = `${radio.dataset.storeSetDevices}-${radio.dataset.storeSetSubscription}`;
+				state.addOnProduct = radio.dataset.storeSetId;
+			} else {
+				state.productOption = `${radio.dataset.storeSetDevices}-${radio.dataset.storeSetSubscription}`;
+				state.product = radio.dataset.storeSetId;
+			}
+			matchingRadios.forEach(async (matchingRadio) => matchingRadio.click());
+			const addOnPriceBox = boxElement.querySelector(".hero-aem__prices__addon");
+			await updateAddOnPrices(state.product, state.productOption, state.addOnProduct, state.addOnProductOption, boxElement, addOnPriceBox);
+		});
+	});
 }
-
 /**
- * Sets up add-on checkbox functionality
- * @param {HTMLElement} boxElement - Product box element
- * @param {HTMLElement} checkmarkList - Checkmark list element
- * @param {HTMLElement} newLi - New list item element
- * @param {Object} addOnInfo - Add-on product information
- * @param {HTMLElement} addOnPriceBox - Add-on price box element
- * @param {Object} productInfo - Main product information
- */
-async function setupAddOnCheckbox(
-  boxElement,
-  checkmarkList,
-  newLi,
-  addOnInfo,
-  addOnPriceBox,
-  productInfo,
-) {
-  const { name: addOnProdName, users: addOnProdUsers, years: addOnProdYears } = addOnInfo;
-  const { name: prodName, users: prodUsers, years: prodYears } = productInfo;
-
-  const addOnProductElement = boxElement.querySelector('.add-on-product');
-  if (!addOnProductElement) return;
-
-  const addOnContext = createBdContext();
-  const addOnProduct = createBdProduct(addOnProdName);
-  const addOnOption = createBdOption({
-    devices: addOnProdUsers,
-    subscription: addOnProdYears,
-    storeEvent: 'all',
-  });
-
-  const addOnPlanSwitcher = addOnProductElement.querySelector(':scope > .plan-switcher.addon');
-  while (addOnProductElement.firstChild) {
-    addOnOption.append(addOnProductElement.firstChild);
-  }
-  if (addOnPlanSwitcher) {
-    addOnProduct.append(addOnPlanSwitcher);
-  }
-  addOnProduct.append(addOnOption);
-  addOnContext.append(addOnProduct);
-  addOnProductElement.append(addOnContext);
-
-  try {
-    const productOptionStr = `${prodUsers}-${prodYears}`;
-    const addOnProductOptionStr = `${addOnProdUsers}-${addOnProdYears}`;
-
-    await updateAddOnPrices(
-      prodName,
-      productOptionStr,
-      addOnProdName,
-      addOnProductOptionStr,
-      newLi,
-      addOnPriceBox,
-    );
-
-    const checkboxSelector = newLi.querySelector('.checkmark');
-    if (checkboxSelector) {
-      checkboxSelector.addEventListener('change', () => {
-        checkmarkList.classList.toggle('checked', checkboxSelector.checked);
-        addOnProductElement.style.display = checkboxSelector.checked ? 'block' : 'none';
-      });
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error setting up add-on checkbox:', error);
-  }
+* Sets up add-on checkbox functionality
+* @param {HTMLElement} boxElement - Product box element
+* @param {HTMLElement} checkmarkList - Checkmark list element
+* @param {HTMLElement} newLi - New list item element
+* @param {Object} addOnInfo - Add-on product information
+* @param {HTMLElement} addOnPriceBox - Add-on price box element
+* @param {Object} productInfo - Main product information
+*/
+async function setupAddOnCheckbox(boxElement, checkmarkList, newLi, addOnInfo, addOnPriceBox, productInfo) {
+	const { name: addOnProdName, users: addOnProdUsers, years: addOnProdYears } = addOnInfo;
+	const { name: prodName, users: prodUsers, years: prodYears } = productInfo;
+	const addOnProductElement = boxElement.querySelector(".add-on-product");
+	if (!addOnProductElement) return;
+	const addOnContext = createBdContext();
+	const addOnProduct = createBdProduct(addOnProdName);
+	const addOnOption = createBdOption({
+		devices: addOnProdUsers,
+		subscription: addOnProdYears,
+		storeEvent: "all"
+	});
+	const addOnPlanSwitcher = addOnProductElement.querySelector(":scope > .plan-switcher.addon");
+	while (addOnProductElement.firstChild) addOnOption.append(addOnProductElement.firstChild);
+	if (addOnPlanSwitcher) addOnProduct.append(addOnPlanSwitcher);
+	addOnProduct.append(addOnOption);
+	addOnContext.append(addOnProduct);
+	addOnProductElement.append(addOnContext);
+	try {
+		await updateAddOnPrices(prodName, `${prodUsers}-${prodYears}`, addOnProdName, `${addOnProdUsers}-${addOnProdYears}`, newLi, addOnPriceBox);
+		const checkboxSelector = newLi.querySelector(".checkmark");
+		if (checkboxSelector) checkboxSelector.addEventListener("change", () => {
+			checkmarkList.classList.toggle("checked", checkboxSelector.checked);
+			addOnProductElement.style.display = checkboxSelector.checked ? "block" : "none";
+		});
+	} catch (error) {
+		console.error("Error setting up add-on checkbox:", error);
+	}
 }
-
 /**
- * Builds a single product box
- * @param {Object} config - Product box configuration
- * @returns {HTMLElement} Product box element
- */
+* Builds a single product box
+* @param {Object} config - Product box configuration
+* @returns {HTMLElement} Product box element
+*/
 function buildProductBox(config) {
-  const {
-    greenTagText, titleHTML, blueTagsHTML, subtitleHTML, subtitle2HTML, planSwitcherHTML,
-    secondButtonHTML, undeBuyLinkHTML, featureListHTML, planSwitcher2HTML, addonProductName,
-    hasBilled2, prodName, prodUsers, prodYears, isIndividual, storeEvent, productsAsList,
-    globalContextException,
-  } = config;
-
-  const isDemoBox = greenTagText === 'demo-box';
-  const boxClasses = [
-    'prod_box',
-    greenTagText ? 'hasGreenTag' : '',
-    isDemoBox ? 'demo-box' : '',
-    isIndividual ? 'individual-box' : 'family-box',
-  ];
-
-  const shouldAddStoreEvent = productsAsList.some((entry) => entry.includes(prodName));
-
-  const productBox = document.createElement('div');
-  productBox.classList.add(...boxClasses.filter(Boolean));
-  const bdContext = createBdContext(globalContextException);
-  const bdProduct = createBdProduct(prodName);
-  const innerProductBox = document.createElement('div');
-  innerProductBox.className = 'inner_prod_box';
-  const bdOption = createBdOption({
-    devices: prodUsers,
-    subscription: prodYears,
-    storeEvent: shouldAddStoreEvent ? storeEvent : '',
-  });
-
-  const greenTag = document.createRange().createContextualFragment(`
-    <div class="greenTag2 ${!greenTagText ? 'empty' : ''}">${greenTagText || ''}</div>
+	const { greenTagText, titleHTML, blueTagsHTML, subtitleHTML, subtitle2HTML, planSwitcherHTML, secondButtonHTML, undeBuyLinkHTML, featureListHTML, planSwitcher2HTML, addonProductName, hasBilled2, prodName, prodUsers, prodYears, isIndividual, storeEvent, productsAsList, globalContextException } = config;
+	const boxClasses = [
+		"prod_box",
+		greenTagText ? "hasGreenTag" : "",
+		greenTagText === "demo-box" ? "demo-box" : "",
+		isIndividual ? "individual-box" : "family-box"
+	];
+	const shouldAddStoreEvent = productsAsList.some((entry) => entry.includes(prodName));
+	const productBox = document.createElement("div");
+	productBox.classList.add(...boxClasses.filter(Boolean));
+	const bdContext = createBdContext(globalContextException);
+	const bdProduct = createBdProduct(prodName);
+	const innerProductBox = document.createElement("div");
+	innerProductBox.className = "inner_prod_box";
+	const bdOption = createBdOption({
+		devices: prodUsers,
+		subscription: prodYears,
+		storeEvent: shouldAddStoreEvent ? storeEvent : ""
+	});
+	const greenTag = document.createRange().createContextualFragment(`
+    <div class="greenTag2 ${!greenTagText ? "empty" : ""}">${greenTagText || ""}</div>
   `);
-
-  const productContent = document.createRange().createContextualFragment(`
+	const productContent = document.createRange().createContextualFragment(`
     ${titleHTML}
     <div class="blueTagsWrapper">${blueTagsHTML}</div>
     ${subtitleHTML}
     <hr />
-    ${subtitle2HTML ? `<p class="subtitle-2">${subtitle2HTML}</p>` : ''}
+    ${subtitle2HTML ? `<p class="subtitle-2">${subtitle2HTML}</p>` : ""}
     ${planSwitcherHTML}
   `);
-  innerProductBox.append(productContent, bdOption);
-
-  const optionContent = document.createRange().createContextualFragment(`
+	innerProductBox.append(productContent, bdOption);
+	const optionContent = document.createRange().createContextualFragment(`
     <div class="hero-aem__prices await-loader"></div>
     ${secondButtonHTML}
-    ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ''}
+    ${undeBuyLinkHTML ? `<div class="undeBuyLink">${undeBuyLinkHTML}</div>` : ""}
     <hr />
     <div class="benefitsLists">${featureListHTML}</div>
     <div class="add-on-product" style="display: none;">
-      ${hasBilled2 ? '<hr>' : ''}
+      ${hasBilled2 ? "<hr>" : ""}
       ${planSwitcher2HTML}
-      ${addonProductName ? `<h4>${addonProductName}</h4>` : ''}
+      ${addonProductName ? `<h4>${addonProductName}</h4>` : ""}
       <div class="hero-aem__prices__addon"></div>
     </div>
   `);
-  bdOption.append(optionContent);
-
-  bdProduct.appendChild(greenTag);
-  bdProduct.appendChild(innerProductBox);
-  bdContext.appendChild(bdProduct);
-  productBox.appendChild(bdContext);
-
-  return productBox;
+	bdOption.append(optionContent);
+	bdProduct.appendChild(greenTag);
+	bdProduct.appendChild(innerProductBox);
+	bdContext.appendChild(bdProduct);
+	productBox.appendChild(bdContext);
+	return productBox;
 }
-
 /**
- * Main block decoration function
- * @param {HTMLElement} block - Block element to decorate
- */
-export default async function decorate(block) {
-  const section = block.closest('.section');
-  const {
-    products,
-    familyProducts,
-    monthlyProducts,
-    addOnProducts,
-    addOnMonthlyProducts,
-    type,
-    thirdRadioButtonProducts,
-    saveText,
-    addonProductName,
-    trialDuration,
-  } = section.dataset;
-
-  section.classList.add('we-container');
-
-  // Parse product lists
-  const productsAsList = parseProductList(products);
-  const familyProductsAsList = parseProductList(familyProducts);
-  const combinedProducts = [...productsAsList, ...familyProductsAsList];
-  const monthlyPricesAsList = parseProductList(monthlyProducts);
-  const thirdRadioButtonProductsAsList = parseProductList(thirdRadioButtonProducts);
-  const addOnProductsAsList = parseProductList(addOnProducts);
-  const addOnMonthlyProductsAsList = parseProductList(addOnMonthlyProducts);
-  const addOnProductsInitial = addOnProductsAsList?.slice(0, productsAsList.length);
-
-  // Parse slider text for toggle switch
-  const defaultContentWrapper = section.querySelector('.default-content-wrapper');
-  const { individualSwitchText, familySwitchText } = parseSliderText(defaultContentWrapper);
-
-  // Create toggle switch if both labels exist
-  let switchBox = null;
-  let switchCheckbox = null;
-  if (individualSwitchText && familySwitchText) {
-    switchBox = createToggleSwitch(individualSwitchText, familySwitchText);
-    switchCheckbox = switchBox.querySelector('#switchCheckbox');
-    setupToggleSwitchHandler(block, switchCheckbox);
-  }
-
-  // Add five-cards class if needed
-  if (productsAsList.length >= 5) {
-    block.classList.add('five-cards');
-  }
-
-  // Store billed texts for later use
-  const billedTexts = [];
-
-  // Determine store event type
-  const storeEvent = checkIfNotProductPage() ? 'all' : 'info';
-
-  // Set Trial Durations
-  const trialDurations = trialDuration?.split(',')?.map((trial) => trial.trim()) || [];
-
-  // Process each product card
-  if (combinedProducts.length) {
-    const productCards = Array.from(block.children);
-
-    for (let key = 0; key < productCards.length; key += 1) {
-      const prod = productCards[key];
-      const mainTable = prod.querySelector('tbody');
-
-      if (mainTable) {
-        const rows = Array.from(mainTable.querySelectorAll(':scope > tr'));
-        const [
-          greenTag,
-          title,
-          blueTag,
-          subtitle,
-          radioButtons,
-          perPrice,
-          billed,
-          buyLink,
-          undeBuyLink,
-          benefitsLists,
-          billed2,
-          buyLink2,
-          subtitle2,
-        ] = rows;
-
-        // Parse product info
-        const [baseProdName, baseProdUsers, baseProdYears, globalContextException] = (combinedProducts[key] || '').split('/');
-        const monthlyInfo = monthlyPricesAsList[key]?.split('/') || [];
-        const thirdButtonInfo = thirdRadioButtonProductsAsList[key]?.split('/') || [];
-        const addOnInfo = addOnProductsAsList[key]?.split('/') || [];
-        const addOnMonthlyInfo = addOnMonthlyProductsAsList[key]?.split('/') || [];
-
-        // Store billed text
-        billedTexts.push(billed);
-
-        // Check for add-on features
-        const featuresSet = benefitsLists?.querySelectorAll('table') || [];
-        const featureList = createFeatureList(featuresSet);
-        const hasAddOn = hasAddOnFeatures(featuresSet);
-
-        // Get buy link selector
-        let buyLinkSelector = prod.querySelector('a[href*="#buylink"]');
-        if (buyLinkSelector) {
-          buyLinkSelector.classList.add('button', 'primary');
-        } else {
-          buyLinkSelector = buyLink?.querySelector('a');
-        }
-
-        // Create plan switchers
-        let planSwitcher = document.createElement('div');
-        if (radioButtons && monthlyProducts) {
-          planSwitcher = createPlanSwitcher(
-            radioButtons,
-            key,
-            [baseProdName, monthlyInfo[0], thirdButtonInfo[0]],
-            [baseProdUsers, monthlyInfo[1], thirdButtonInfo[1]],
-            [baseProdYears, monthlyInfo[2], thirdButtonInfo[2]],
-          );
-        }
-
-        let planSwitcher2 = document.createElement('div');
-        if (hasAddOn && addOnProducts && addOnMonthlyProducts) {
-          planSwitcher2 = createPlanSwitcher(
-            radioButtons,
-            key,
-            [addOnInfo[0], addOnMonthlyInfo[0]],
-            [addOnInfo[1], addOnMonthlyInfo[1]],
-            [addOnInfo[2], addOnMonthlyInfo[2]],
-            'addon',
-          );
-        }
-
-        // Get checked product info
-        const productInfo = getCheckedProductInfo(
-          planSwitcher,
-          baseProdName,
-          baseProdUsers,
-          baseProdYears,
-        );
-        const addOnProductInfo = getCheckedProductInfo(
-          planSwitcher2,
-          addOnInfo[0],
-          addOnInfo[1],
-          addOnInfo[2],
-        );
-
-        // Get billed text based on checked radio
-        let billedText = billed?.children[0];
-        if (radioButtons) {
-          Array.from(radioButtons.children).forEach((radio, idx) => {
-            if (radio.textContent.includes('[checked]') && billed?.children[idx]) {
-              billedText = billed.children[idx];
-            }
-          });
-        }
-
-        // Create UI elements
-        const blueTagsContainer = createBlueTags(blueTag);
-        const titleHTML = createTitleHTML(title);
-        const subtitleHTML = createSubtitleHTML(subtitle);
-        const { demoBtn, content: undeBuyLinkContent } = createDemoButton(undeBuyLink);
-
-        // Build product box HTML
-        const productBox = buildProductBox({
-          greenTagText: greenTag?.textContent.trim(),
-          titleHTML,
-          blueTagsHTML: blueTagsContainer.innerHTML,
-          subtitleHTML,
-          subtitle2HTML: subtitle2?.textContent.trim() || '',
-          planSwitcherHTML: radioButtons ? planSwitcher.outerHTML : '',
-          secondButtonHTML: '',
-          undeBuyLinkHTML: undeBuyLinkContent ? (demoBtn || undeBuyLink.innerHTML.trim()) : '',
-          featureListHTML: benefitsLists?.textContent.trim() ? featureList.join('') : '',
-          planSwitcher2HTML: planSwitcher2.outerHTML || '',
-          addonProductName,
-          hasBilled2: Boolean(billed2),
-          prodName: productInfo.name,
-          prodUsers: productInfo.users,
-          prodYears: productInfo.years,
-          isIndividual: key < productsAsList.length,
-          storeEvent,
-          productsAsList,
-          globalContextException,
-        });
-
-        // Replace original content
-        block.children[key].replaceWith(productBox);
-
-        // Add price box
-        const priceBox = createPriceElement({
-          prodName: productInfo.name,
-          saveText,
-          buyLinkSelector: buyLink?.querySelector('a'),
-          billedText,
-          type,
-          perPrice,
-          trialDuration: trialDurations[key],
-        }, block.children[key]);
-        block.children[key].querySelector('.hero-aem__prices')?.appendChild(priceBox);
-        // Handle second button
-        const secondButton = buyLink?.querySelectorAll('a')[1];
-        if (secondButton) {
-          secondButton.classList.add('button', 'secondary', 'no-arrow');
-          secondButton.setAttribute('data-store-trial-link', 'custom');
-          block.children[key].querySelector('.hero-aem__prices')?.appendChild(secondButton);
-        }
-
-        // Add add-on price box if needed
-        let addOnPriceBox = null;
-        if (hasAddOn && addOnProducts) {
-          addOnPriceBox = createPriceElement({
-            prodName: addOnProductInfo.name,
-            saveText,
-            buyLinkSelector: buyLink2?.querySelector('a'),
-            billedText: billed2,
-            type,
-            perPrice,
-            trialDuration: trialDurations[key],
-          }, block.children[key]);
-          block.children[key].querySelector('.hero-aem__prices__addon')?.appendChild(addOnPriceBox);
-        }
-
-        // Setup checkmark/add-on functionality
-        const checkmark = block.children[key].querySelector('.checkmark');
-        if (checkmark) {
-          const checkmarkList = checkmark.closest('ul');
-          checkmarkList?.classList.add('checkmark-list');
-          checkmarkList?.setAttribute('data-store-context', '');
-
-          const li = checkmark.closest('li');
-          if (li) {
-            li.removeChild(checkmark);
-
-            const checkBox = document.createElement('input');
-            checkBox.type = 'checkbox';
-            checkBox.className = 'checkmark';
-
-            const newLi = document.createElement('li');
-            newLi.innerHTML = `${checkBox.outerHTML}<div>${li.innerHTML}</div>`;
-            li.replaceWith(newLi);
-
-            // Set store event for add-on products
-            if (addOnProductsInitial?.some((entry) => entry.includes(addOnProductInfo.name))) {
-              block.children[key].querySelector('.add-on-product')?.setAttribute('data-store-event', storeEvent);
-            }
-
-            // Setup add-on checkbox async
-            // eslint-disable-next-line no-await-in-loop
-            await setupAddOnCheckbox(
-              block.children[key],
-              checkmarkList,
-              newLi,
-              addOnProductInfo,
-              addOnPriceBox,
-              productInfo,
-            );
-
-            const productZones = block.children[key].querySelectorAll('.store-context');
-            const cardBdOption = block.children[key]?.querySelector('.store-option');
-            const productOption = `${cardBdOption.getAttribute('devices')}-${cardBdOption.getAttribute('subscription')}`;
-
-            const addOnBdOption = productZones[1]?.querySelector('.store-option');
-            const addOnProductOption = `${addOnBdOption.getAttribute('devices')}-${addOnBdOption.getAttribute('subscription')}`;
-
-            const state = {
-              product: productZones[0]?.querySelector('.store-product')?.getAttribute('product-id'),
-              productOption,
-              addOnProduct: productZones[1]?.querySelector('.store-product')?.getAttribute('product-id'),
-              addOnProductOption,
-            };
-
-            syncAddOnWithMainProduct(
-              block.children[key],
-              state,
-            );
-          }
-        }
-      }
-    }
-  }
-
-  // Setup show more/less if enabled
-  if (section.classList.contains('show-more-show-less')) {
-    setupShowMoreLess(block, section);
-    setupFamilyBoxHandlers(block);
-    setupSynchronizedPlanSwitching(block);
-  }
-
-  // Insert toggle switch if created
-  if (switchBox) {
-    block.parentNode.insertBefore(switchBox, block);
-  }
-
-  // Setup billed text updates on plan switch
-  Array.from(block.children).forEach((box, key) => {
-    box.querySelectorAll('.plan-switcher input').forEach((radio, idx) => {
-      radio.addEventListener('change', () => {
-        const newBilledText = billedTexts[key]?.children[idx]?.innerHTML;
-        if (newBilledText) {
-          const billedElement = box.querySelector('.billed');
-          if (billedElement) {
-            billedElement.innerHTML = newBilledText;
-          }
-        }
-      });
-    });
-  });
-
-  // Hotjar tracking
-  window.hj = window.hj || function initHotjar(...args) {
-    (window.hj.q = window.hj.q || []).push(...args);
-  };
-  window.hj('event', 'new-prod-boxes');
-
-  // Decorate icons for www-websites
-  const isInLandingPages = window.location.href.includes('www-landing-pages')
-    || window.location.href.includes('bitdefender.com/pages');
-
-  if (!isInLandingPages) {
-    try {
-      const { decorateIcons } = await import('../../scripts/lib-franklin.js');
-      decorateIcons(section);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error decorating icons:', error);
-    }
-  }
-
-  // Trigger initial toggle state only if switch exists
-  if (switchCheckbox) {
-    switchCheckbox.dispatchEvent(new Event('change'));
-  }
-
-  const resizeObserver = new ResizeObserver(() => {
-    let tagMargin = 0;
-    block.querySelectorAll('.greenTag2').forEach((tag) => {
-      tagMargin = Math.max(tagMargin, tag.offsetHeight);
-    });
-
-    section.style.setProperty('--tag-margin', `${tagMargin}px`);
-  });
-
-  resizeObserver.observe(section);
+* Main block decoration function
+* @param {HTMLElement} block - Block element to decorate
+*/
+async function decorate(block) {
+	const section = block.closest(".section");
+	const { products, familyProducts, monthlyProducts, addOnProducts, addOnMonthlyProducts, type, thirdRadioButtonProducts, saveText, addonProductName, trialDuration } = section.dataset;
+	section.classList.add("we-container");
+	const productsAsList = parseProductList(products);
+	const familyProductsAsList = parseProductList(familyProducts);
+	const combinedProducts = [...productsAsList, ...familyProductsAsList];
+	const monthlyPricesAsList = parseProductList(monthlyProducts);
+	const thirdRadioButtonProductsAsList = parseProductList(thirdRadioButtonProducts);
+	const addOnProductsAsList = parseProductList(addOnProducts);
+	const addOnMonthlyProductsAsList = parseProductList(addOnMonthlyProducts);
+	const addOnProductsInitial = addOnProductsAsList?.slice(0, productsAsList.length);
+	const { individualSwitchText, familySwitchText } = parseSliderText(section.querySelector(".default-content-wrapper"));
+	let switchBox = null;
+	let switchCheckbox = null;
+	if (individualSwitchText && familySwitchText) {
+		switchBox = createToggleSwitch(individualSwitchText, familySwitchText);
+		switchCheckbox = switchBox.querySelector("#switchCheckbox");
+		setupToggleSwitchHandler(block, switchCheckbox);
+	}
+	if (productsAsList.length >= 5) block.classList.add("five-cards");
+	const billedTexts = [];
+	const storeEvent = checkIfNotProductPage() ? "all" : "info";
+	const trialDurations = trialDuration?.split(",")?.map((trial) => trial.trim()) || [];
+	if (combinedProducts.length) {
+		const productCards = Array.from(block.children);
+		for (let key = 0; key < productCards.length; key += 1) {
+			const prod = productCards[key];
+			const mainTable = prod.querySelector("tbody");
+			if (mainTable) {
+				const [greenTag, title, blueTag, subtitle, radioButtons, perPrice, billed, buyLink, undeBuyLink, benefitsLists, billed2, buyLink2, subtitle2] = Array.from(mainTable.querySelectorAll(":scope > tr"));
+				const [baseProdName, baseProdUsers, baseProdYears, globalContextException] = (combinedProducts[key] || "").split("/");
+				const monthlyInfo = monthlyPricesAsList[key]?.split("/") || [];
+				const thirdButtonInfo = thirdRadioButtonProductsAsList[key]?.split("/") || [];
+				const addOnInfo = addOnProductsAsList[key]?.split("/") || [];
+				const addOnMonthlyInfo = addOnMonthlyProductsAsList[key]?.split("/") || [];
+				billedTexts.push(billed);
+				const featuresSet = benefitsLists?.querySelectorAll("table") || [];
+				const featureList = createFeatureList(featuresSet);
+				const hasAddOn = hasAddOnFeatures(featuresSet);
+				let buyLinkSelector = prod.querySelector("a[href*=\"#buylink\"]");
+				if (buyLinkSelector) buyLinkSelector.classList.add("button", "primary");
+				else buyLinkSelector = buyLink?.querySelector("a");
+				let planSwitcher = document.createElement("div");
+				if (radioButtons && monthlyProducts) planSwitcher = createPlanSwitcher(radioButtons, key, [
+					baseProdName,
+					monthlyInfo[0],
+					thirdButtonInfo[0]
+				], [
+					baseProdUsers,
+					monthlyInfo[1],
+					thirdButtonInfo[1]
+				], [
+					baseProdYears,
+					monthlyInfo[2],
+					thirdButtonInfo[2]
+				]);
+				let planSwitcher2 = document.createElement("div");
+				if (hasAddOn && addOnProducts && addOnMonthlyProducts) planSwitcher2 = createPlanSwitcher(radioButtons, key, [addOnInfo[0], addOnMonthlyInfo[0]], [addOnInfo[1], addOnMonthlyInfo[1]], [addOnInfo[2], addOnMonthlyInfo[2]], "addon");
+				const productInfo = getCheckedProductInfo(planSwitcher, baseProdName, baseProdUsers, baseProdYears);
+				const addOnProductInfo = getCheckedProductInfo(planSwitcher2, addOnInfo[0], addOnInfo[1], addOnInfo[2]);
+				let billedText = billed?.children[0];
+				if (radioButtons) Array.from(radioButtons.children).forEach((radio, idx) => {
+					if (radio.textContent.includes("[checked]") && billed?.children[idx]) billedText = billed.children[idx];
+				});
+				const blueTagsContainer = createBlueTags(blueTag);
+				const titleHTML = createTitleHTML(title);
+				const subtitleHTML = createSubtitleHTML(subtitle);
+				const { demoBtn, content: undeBuyLinkContent } = createDemoButton(undeBuyLink);
+				const productBox = buildProductBox({
+					greenTagText: greenTag?.textContent.trim(),
+					titleHTML,
+					blueTagsHTML: blueTagsContainer.innerHTML,
+					subtitleHTML,
+					subtitle2HTML: subtitle2?.textContent.trim() || "",
+					planSwitcherHTML: radioButtons ? planSwitcher.outerHTML : "",
+					secondButtonHTML: "",
+					undeBuyLinkHTML: undeBuyLinkContent ? demoBtn || undeBuyLink.innerHTML.trim() : "",
+					featureListHTML: benefitsLists?.textContent.trim() ? featureList.join("") : "",
+					planSwitcher2HTML: planSwitcher2.outerHTML || "",
+					addonProductName,
+					hasBilled2: Boolean(billed2),
+					prodName: productInfo.name,
+					prodUsers: productInfo.users,
+					prodYears: productInfo.years,
+					isIndividual: key < productsAsList.length,
+					storeEvent,
+					productsAsList,
+					globalContextException
+				});
+				block.children[key].replaceWith(productBox);
+				const priceBox = createPriceElement({
+					prodName: productInfo.name,
+					saveText,
+					buyLinkSelector: buyLink?.querySelector("a"),
+					billedText,
+					type,
+					perPrice,
+					trialDuration: trialDurations[key]
+				}, block.children[key]);
+				block.children[key].querySelector(".hero-aem__prices")?.appendChild(priceBox);
+				const secondButton = buyLink?.querySelectorAll("a")[1];
+				if (secondButton) {
+					secondButton.classList.add("button", "secondary", "no-arrow");
+					secondButton.setAttribute("data-store-trial-link", "custom");
+					block.children[key].querySelector(".hero-aem__prices")?.appendChild(secondButton);
+				}
+				let addOnPriceBox = null;
+				if (hasAddOn && addOnProducts) {
+					addOnPriceBox = createPriceElement({
+						prodName: addOnProductInfo.name,
+						saveText,
+						buyLinkSelector: buyLink2?.querySelector("a"),
+						billedText: billed2,
+						type,
+						perPrice,
+						trialDuration: trialDurations[key]
+					}, block.children[key]);
+					block.children[key].querySelector(".hero-aem__prices__addon")?.appendChild(addOnPriceBox);
+				}
+				const checkmark = block.children[key].querySelector(".checkmark");
+				if (checkmark) {
+					const checkmarkList = checkmark.closest("ul");
+					checkmarkList?.classList.add("checkmark-list");
+					checkmarkList?.setAttribute("data-store-context", "");
+					const li = checkmark.closest("li");
+					if (li) {
+						li.removeChild(checkmark);
+						const checkBox = document.createElement("input");
+						checkBox.type = "checkbox";
+						checkBox.className = "checkmark";
+						const newLi = document.createElement("li");
+						newLi.innerHTML = `${checkBox.outerHTML}<div>${li.innerHTML}</div>`;
+						li.replaceWith(newLi);
+						if (addOnProductsInitial?.some((entry) => entry.includes(addOnProductInfo.name))) block.children[key].querySelector(".add-on-product")?.setAttribute("data-store-event", storeEvent);
+						await setupAddOnCheckbox(block.children[key], checkmarkList, newLi, addOnProductInfo, addOnPriceBox, productInfo);
+						const productZones = block.children[key].querySelectorAll(".store-context");
+						const cardBdOption = block.children[key]?.querySelector(".store-option");
+						const productOption = `${cardBdOption.getAttribute("devices")}-${cardBdOption.getAttribute("subscription")}`;
+						const addOnBdOption = productZones[1]?.querySelector(".store-option");
+						const addOnProductOption = `${addOnBdOption.getAttribute("devices")}-${addOnBdOption.getAttribute("subscription")}`;
+						const state = {
+							product: productZones[0]?.querySelector(".store-product")?.getAttribute("product-id"),
+							productOption,
+							addOnProduct: productZones[1]?.querySelector(".store-product")?.getAttribute("product-id"),
+							addOnProductOption
+						};
+						syncAddOnWithMainProduct(block.children[key], state);
+					}
+				}
+			}
+		}
+	}
+	if (section.classList.contains("show-more-show-less")) {
+		setupShowMoreLess(block, section);
+		setupFamilyBoxHandlers(block);
+		setupSynchronizedPlanSwitching(block);
+	}
+	if (switchBox) block.parentNode.insertBefore(switchBox, block);
+	Array.from(block.children).forEach((box, key) => {
+		box.querySelectorAll(".plan-switcher input").forEach((radio, idx) => {
+			radio.addEventListener("change", () => {
+				const newBilledText = billedTexts[key]?.children[idx]?.innerHTML;
+				if (newBilledText) {
+					const billedElement = box.querySelector(".billed");
+					if (billedElement) billedElement.innerHTML = newBilledText;
+				}
+			});
+		});
+	});
+	window.hj = window.hj || function initHotjar(...args) {
+		(window.hj.q = window.hj.q || []).push(...args);
+	};
+	window.hj("event", "new-prod-boxes");
+	if (!(window.location.href.includes("www-landing-pages") || window.location.href.includes("bitdefender.com/pages"))) try {
+		const { decorateIcons } = await import("../../scripts/lib-franklin.js");
+		decorateIcons(section);
+	} catch (error) {
+		console.error("Error decorating icons:", error);
+	}
+	if (switchCheckbox) switchCheckbox.dispatchEvent(new Event("change"));
+	new ResizeObserver(() => {
+		let tagMargin = 0;
+		block.querySelectorAll(".greenTag2").forEach((tag) => {
+			tagMargin = Math.max(tagMargin, tag.offsetHeight);
+		});
+		section.style.setProperty("--tag-margin", `${tagMargin}px`);
+	}).observe(section);
 }
+export { decorate as default };

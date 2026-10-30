@@ -1,0 +1,4 @@
+/* features.css file */
+main .section.features-container > .features-wrapper {
+  --bd-features-padding-bottom: 0;
+}

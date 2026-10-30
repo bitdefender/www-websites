@@ -1,56 +1,46 @@
-import { Store } from '@repobit/dex-store';
-import { target } from './target.js';
-import page from './page.js';
-import { getUrlPromotion, getMetadata, getCampaignBasedOnLocale } from './utils/utils.js';
-import getTrialLinkMap from './trialLinkMap.js';
-
-const trialLinkMap = await getTrialLinkMap();
-export default new Store({
-  campaign: async ({ campaign }) => (await target.configMbox)?.promotion || getUrlPromotion() || campaign || getMetadata('pid') || getCampaignBasedOnLocale(),
-  locale: page.locale.includes('global') ? 'en-us' : page.locale,
-  provider: { name: 'vlaicu' },
-  trialLinks: trialLinkMap,
-  transformers: {
-    buyLink: async (param) => {
-      const products = (await target.configMbox)?.products;
-      const { buyLink, product, option } = param;
-      const monthsToYears = option.subscription / (option.subscription === 1 ? 1 : 12);
-      const targetOverride = products?.[product.alias]?.[`${option.devices}-${monthsToYears}`];
-
-      const buyLinkURL = new URL(targetOverride?.buyLink || buyLink);
-      buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
-
-      // An override may set buyLink alone, without extraParameters.
-      targetOverride?.extraParameters?.forEach(({ key, value }) => {
-        buyLinkURL.searchParams.set(key, value);
-      });
-
-      // the store rebuilds this link on every option change, so the visitor IDs
-      // have to be part of the link itself rather than applied to the rendered DOM
-      return target.appendVisitorIDsTo(buyLinkURL.href);
-    },
-    trialLink: async (param) => {
-      const {
-        buyLink, option, trialLink,
-      } = param;
-
-      if (!trialLink) {
-        return undefined;
-      }
-
-      const optionBuyLink = new URL(buyLink);
-      const pageCoupon = page.getParamValue('coupon') || getMetadata('coupon');
-      const coupon = pageCoupon || option.coupon;
-      const matchBuyLinkURL = new URL(trialLink);
-      optionBuyLink.searchParams.forEach((value, key) => {
-        if (['LANG', 'CURRENCY', 'DCURRENCY', 'COUPON'].includes(key)) {
-          matchBuyLinkURL.searchParams.set(key, value);
-        }
-      });
-      matchBuyLinkURL.searchParams.set('SRC', window.location.origin + window.location.pathname);
-      if (coupon) matchBuyLinkURL.searchParams.set('COUPON', coupon);
-
-      return target.appendVisitorIDsTo(matchBuyLinkURL.href);
-    },
-  },
+import page_default from "./page.js";
+import { getCampaignBasedOnLocale, getMetadata, getUrlPromotion } from "./utils/utils.js";
+import { target } from "./target.js";
+import getTrialLinkMap from "./trialLinkMap.js";
+import { Store } from "../vendor/repobit/dex-store.js";
+// src/scripts/store.js
+var trialLinkMap = await getTrialLinkMap();
+var store_default = new Store({
+	campaign: async ({ campaign }) => (await target.configMbox)?.promotion || getUrlPromotion() || campaign || getMetadata("pid") || getCampaignBasedOnLocale(),
+	locale: page_default.locale.includes("global") ? "en-us" : page_default.locale,
+	provider: { name: "vlaicu" },
+	trialLinks: trialLinkMap,
+	transformers: {
+		buyLink: async (param) => {
+			const products = (await target.configMbox)?.products;
+			const { buyLink, product, option } = param;
+			const monthsToYears = option.subscription / (option.subscription === 1 ? 1 : 12);
+			const targetOverride = products?.[product.alias]?.[`${option.devices}-${monthsToYears}`];
+			const buyLinkURL = new URL(targetOverride?.buyLink || buyLink);
+			buyLinkURL.searchParams.set("REF", product.campaign && product.campaign !== "ignore" ? `WEBSITES_${product.campaign}` : "N/A");
+			targetOverride?.extraParameters?.forEach(({ key, value }) => {
+				buyLinkURL.searchParams.set(key, value);
+			});
+			return target.appendVisitorIDsTo(buyLinkURL.href);
+		},
+		trialLink: async (param) => {
+			const { buyLink, option, trialLink } = param;
+			if (!trialLink) return;
+			const optionBuyLink = new URL(buyLink);
+			const coupon = page_default.getParamValue("coupon") || getMetadata("coupon") || option.coupon;
+			const matchBuyLinkURL = new URL(trialLink);
+			optionBuyLink.searchParams.forEach((value, key) => {
+				if ([
+					"LANG",
+					"CURRENCY",
+					"DCURRENCY",
+					"COUPON"
+				].includes(key)) matchBuyLinkURL.searchParams.set(key, value);
+			});
+			matchBuyLinkURL.searchParams.set("SRC", window.location.origin + window.location.pathname);
+			if (coupon) matchBuyLinkURL.searchParams.set("COUPON", coupon);
+			return target.appendVisitorIDsTo(matchBuyLinkURL.href);
+		}
+	}
 });
+export { store_default as default };
