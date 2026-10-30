@@ -3,7 +3,6 @@ import { decorateButtons, decorateIcons, decorateTags, getMetadata } from "../..
 import { Constants } from "../../scripts/libs/constants.js";
 import { decorateBlockWithRegionId, decorateLinkWithLinkTrackingId, getAemFragmentLocale, makeImagePathsAbsolute } from "../../scripts/utils/utils.js";
 import { adobeMcAppendVisitorId, target } from "../../scripts/target.js";
-import { Cookies } from "../../vendor/repobit/dex-utils.js";
 // src/blocks/header/header.js
 /**
 * @param {string} username
@@ -30,8 +29,7 @@ var updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
 	const loginPopupHeaderLink = loginPopup.querySelector(".mega-menu__column .navigation__header-link");
 	const loginPopupLinksThatNeedToChange = loginPopup.querySelectorAll("[data-logged-in-link]");
 	if (loginPopupHeaderLink) loginPopupHeaderLink.textContent = username ? `${avatar.dataset.loginText}, ${username}` : `${avatar.dataset.loginText}, ${email}`;
-	const userLoggedInExpirationDate = Cookies.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
-	if (!userLoggedInExpirationDate || userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now()) loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
+	loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
 		loginPopupLink.href = await target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
 	});
 };

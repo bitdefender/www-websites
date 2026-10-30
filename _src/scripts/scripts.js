@@ -348,28 +348,6 @@ var injectOfferCode = (code) => {
 	});
 };
 /**
-* since target global mbox cannot use syntasa parameters
-* a new mbox which can insert code into the pagehas been created
-* and it runs as soon as launch is loaded
-*/
-var applyTargetCustomCode = async () => {
-	const code = await target.getOffers({ mboxNames: "custom-code" });
-	if (code) injectOfferCode(code);
-};
-/**
-* On pages with an experiment key: fetch custom-code and the mbox of every block type on the
-* page in one request, and run them before anything is decorated. Block offers register hooks
-* that change their block before it is shown (see utils/block-hooks.js).
-* @param {Element} main
-*/
-var applyTargetOffers = async (main) => {
-	const mboxNames = ["custom-code", ...blockMboxNames(main)];
-	const offers = await target.getOffers({ mboxNames });
-	mboxNames.forEach((name) => {
-		if (typeof offers?.[name] === "string") injectOfferCode(offers[name]);
-	});
-};
-/**
 * Local development only: run block hooks saved in localStorage under "bd-block-hooks-dev",
 * so a component test can be tried without a Target activity.
 */
@@ -380,6 +358,24 @@ var applyDevBlockHooks = () => {
 		if (code) injectOfferCode(code);
 	} catch {}
 };
+/**
+* Waits for the Launch tag head.html starts while the page parses. A page without one (404.html,
+* or a head.html older than this code) loads Launch here instead. Launch.load can't be used to
+* wait: loadScript resolves straight away when it finds the tag, whether it has loaded or not.
+* @returns {Promise<void>}
+*/
+var loadLaunch = () => {
+	const launch = document.getElementById("adobe-launch");
+	if (!launch) return Launch.load(page_default.environment);
+	return new Promise((resolve, reject) => {
+		if (launch.dataset.state === "loaded") resolve();
+		else if (launch.dataset.state === "failed") reject(/* @__PURE__ */ new Error("Launch failed to load"));
+		else {
+			launch.addEventListener("load", () => resolve(), { once: true });
+			launch.addEventListener("error", () => reject(/* @__PURE__ */ new Error("Launch failed to load")), { once: true });
+		}
+	});
+};
 async function loadTrackers() {
 	const isPageNotInDraftsFolder = window.location.pathname.indexOf("/drafts/") === -1;
 	const onAdobeMcLoaded = () => {
@@ -387,7 +383,7 @@ async function loadTrackers() {
 		window.ADOBE_MC_EVENT_LOADED = true;
 	};
 	if (isPageNotInDraftsFolder) try {
-		await Launch.load(page_default.environment);
+		await loadLaunch();
 		onAdobeMcLoaded();
 	} catch {
 		target.abort();
@@ -397,6 +393,37 @@ async function loadTrackers() {
 		onAdobeMcLoaded();
 	}
 }
+/**
+* Loads the trackers once per page; every caller awaits the same promise. loadPage calls it
+* first thing, for pages where head.html hasn't started Launch already.
+* @returns {Promise<void>}
+*/
+var trackersLoaded;
+var startTrackers = () => {
+	trackersLoaded ??= loadTrackers();
+	return trackersLoaded;
+};
+/**
+* Fetch custom-code and the mbox of every block type on the page in one request, and run
+* them. custom-code exists because Target's global mbox cannot use syntasa parameters. Block
+* offers register hooks that change their block before it is shown (see utils/block-hooks.js),
+* so they only take effect if they arrive before the blocks are decorated.
+* @param {Element} main the authored main: decorated, its sections' -wrapper classes would be
+* read as block names
+*/
+var applyTargetOffers = async (main) => {
+	const mboxNames = ["custom-code", ...blockMboxNames(main)];
+	const offers = await target.getOffers({ mboxNames });
+	mboxNames.forEach((name) => {
+		if (typeof offers?.[name] === "string") injectOfferCode(offers[name]);
+	});
+};
+/**
+* A challenger can replace main only when the page names both the experiment's location and
+* the experiment (see getTargetExperimentDetails in target.js).
+* @returns {boolean}
+*/
+var hasChallengerExperiment = () => !!(getPageExperimentKey() && getMetadata("target-experiment"));
 /**
 * set target_blank for pdf links when metadata is set: pdfs: new-tab
 * @param {Element} doc The container element
@@ -428,12 +455,10 @@ async function loadEager(doc) {
 		source: name,
 		target: status
 	}) });
-	if (getPageExperimentKey()) {
-		await loadTrackers();
-		await resolveNonProductsDataLayer();
-		const main = doc.querySelector("main");
-		if (main) await applyTargetOffers(main);
-	}
+	await startTrackers();
+	if (hasChallengerExperiment()) await resolveNonProductsDataLayer();
+	const main = doc.querySelector("main");
+	if (main) await applyTargetOffers(main);
 	applyDevBlockHooks();
 	const userCountry = await user_default.country;
 	if (page_default.name.includes(page_default.locale)) doc.body.classList.add("homepage");
@@ -444,7 +469,6 @@ async function loadEager(doc) {
 	const templateMetadata = getMetadata("template");
 	if (getMetadata("template") !== "") loadCSS(`${window.hlx.codeBasePath}/scripts/template-factories/${templateMetadata}.css`);
 	if (templateMetadata === "subscriber") initializeHubspotModule();
-	const main = doc.querySelector("main");
 	if (main) {
 		applyStructuralHooks(main);
 		decorateMain(main);
@@ -481,10 +505,7 @@ async function loadLazy(doc) {
 		header.style.height = "initial";
 		loadHeader(header);
 	}
-	if (!getPageExperimentKey()) {
-		loadTrackers().then(() => applyTargetCustomCode());
-		await resolveNonProductsDataLayer();
-	}
+	if (!hasChallengerExperiment()) await resolveNonProductsDataLayer();
 	await loadBlocks(main);
 	const { hash } = window.location;
 	const element = hash ? doc.getElementById(hash.substring(1)) : false;
@@ -603,6 +624,7 @@ async function loadPage() {
 	if (window.location.href.includes("oaiusercontent")) return;
 	setBFCacheListener();
 	initialiseSentry();
+	startTrackers();
 	await window.hlx.plugins.load("eager");
 	if (new URLSearchParams(window.location.search).get("theme") === "dark" && window.location.href.includes("canvas")) document.body.style = "background-color: #141517";
 	const main = document.querySelector("main");

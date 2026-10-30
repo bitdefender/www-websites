@@ -1,5 +1,28 @@
 <meta name="referrer" content="no-referrer-when-downgrade" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>
+  // Starts Adobe Launch while the page is still parsing, so Target can answer before the first
+  // paint (loadTrackers in scripts.js waits for this tag). The rules mirror loadTrackers and
+  // getEnvironment in page.js, and the URLs ADOBE_MC_URL_ENV_MAP in @repobit/dex-constants:
+  // change them together.
+  (() => {
+    const { hostname, pathname, href } = window.location;
+    if (pathname.includes('/drafts/') || href.includes('oaiusercontent')) return;
+    let environment = 'dev';
+    if (['aem.page', 'aem.live', 'stage.bitdefender'].some((host) => hostname.includes(host))) environment = 'stage';
+    else if (hostname.includes('www.bitdefender')) environment = 'prod';
+    const launch = document.createElement('script');
+    launch.id = 'adobe-launch';
+    launch.src = {
+      prod: 'https://www.bitdefender.com/content/dam/launch/8a93f8486ba4/d67f8d8ef938/launch-b3452d9f2d73.min.js',
+      stage: 'https://assets.adobedtm.com/8a93f8486ba4/d67f8d8ef938/launch-83ab74c906bc-staging.min.js',
+      dev: 'https://assets.adobedtm.com/8a93f8486ba4/d67f8d8ef938/launch-05a25732150b-development.min.js',
+    }[environment];
+    launch.onload = () => { launch.dataset.state = 'loaded'; };
+    launch.onerror = () => { launch.dataset.state = 'failed'; };
+    document.head.append(launch);
+  })();
+</script>
 <script src="/_src/scripts/lib-franklin.js" type="module"></script>
 <script src="/_src/scripts/utils/utils.js" type="module"></script>
 <script src="/_src/scripts/scripts.js" type="module"></script>
