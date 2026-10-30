@@ -243,7 +243,8 @@ checkInstall();
 const entries = discoverEntries();
 
 /** Vendor entries: output key -> bare specifier (or the file an unexported one stands for). */
-const vendorInput = Object.fromEntries(entries.dependencies.map((specifier) => [vendorKey(specifier), UNEXPORTED[specifier] ?? specifier]));
+const vendorInput = Object.fromEntries(entries.dependencies
+  .map((specifier) => [vendorKey(specifier), UNEXPORTED[specifier] ?? specifier]));
 
 const shared = {
   outDir: OUT,
