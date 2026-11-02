@@ -32,9 +32,9 @@ import { openModal } from '../../scripts/scripts.js';
  *   buyButtonText, discountText, secondButtonText, secondButtonLink, trialDuration,
  *   Hardcoded-link, Microsoft-edge-link, Links-open-in-new-tab   as in hero-dropdown
  *
- * The look follows the content: a product name gives the product look (white, the
- * signature over the image), otherwise it is the card look (grey card, signature as the
- * eyebrow). The block classes `product` and `card` force one.
+ * The look follows the content: a product name or a single product gives the product look
+ * (white, the signature over the image), otherwise it is the card look (grey card, signature
+ * as the eyebrow). The block classes `product` and `card` force one.
  *
  * Text, controls and the badge are dex-system-design atoms (bd-h, bd-p, bd-custom-dropdown,
  * bd-button-link, bd-badge); the layout around them is this block's, on the same tokens.
@@ -321,8 +321,9 @@ export default function decorate(block) {
   const products = parseProducts(settings.dropdown);
   const names = parseProductNames(settings.productnames);
 
+  // the single-product hero carries the signature on its image, with or without a name
   const isProductLook = block.classList.contains('product')
-    || (!block.classList.contains('card') && !!content.productName);
+    || (!block.classList.contains('card') && (!!content.productName || products.length === 1));
   block.classList.add(isProductLook ? 'hero-banner--product' : 'hero-banner--card');
   if (!content.picture) block.classList.add('hero-banner--no-media');
 

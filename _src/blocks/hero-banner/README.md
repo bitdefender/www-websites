@@ -45,10 +45,10 @@ Section metadata:
 - **One code**: the price, no dropdown. This is the single-product hero.
 - **Two or more codes**: the dropdown, the details line, and the chosen product's price.
 
-The look follows the content. With a product name it is the **product** look: white, the
-image on its own with the signature on a blue scrim. Without one it is the **card** look:
-a grey card, the signature as the eyebrow, the image fading into the card. Add `(product)`
-or `(card)` to the block name to choose.
+The look follows the content. With a product name, or with one product code, it is the
+**product** look: white, the image on its own with the signature on a blue scrim. Otherwise
+it is the **card** look: a grey card, the signature as the eyebrow, the image fading into the
+card. Add `(product)` or `(card)` to the block name to choose.
 
 `hero-dropdown` metadata this block ignores, because the design fixes it:
 `backgroundColor`, `innerBackgroundColor`, `corners`, `contentSize`, `textColor`, `Label`.

@@ -262,6 +262,16 @@ describe('hero-banner', () => {
       expect(openModal).toHaveBeenCalledWith('https://www.bitdefender.com/en-us/consumer/fragments/demo', false);
     });
 
+    it('puts the signature over the image without a product name too', async () => {
+      const single = await setup(`${PICTURE}<h1>Title</h1><p>{Dropdown}</p>`, {
+        dropdown: 'vsb/5/1',
+        signature: 'Trusted. Always.',
+      });
+      expect(single.classList.contains('hero-banner--product')).toBe(true);
+      expect(single.querySelector('.hero-banner__media .hero-banner__signature').textContent).toBe('Trusted. Always.');
+      expect(single.querySelector('.hero-banner__eyebrow')).toBeNull();
+    });
+
     it('can be forced to the card look', async () => {
       const card = await setup(`${PICTURE}<h2>Bitdefender</h2><h1>Title</h1><p>{Dropdown}</p>`, { dropdown: 'vsb/5/1' }, 'card');
       expect(card.classList.contains('hero-banner--card')).toBe(true);

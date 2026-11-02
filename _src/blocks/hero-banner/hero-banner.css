@@ -19,7 +19,9 @@
   grid-template-columns: 1fr;
   gap: 0;
   box-sizing: border-box;
-  width: 100%;
+
+  /* the section has no side padding: keep the page's gutter until the hero reaches its width */
+  width: calc(100% - 2 * var(--body-padding, 20px));
   max-width: 1290px;
   margin: 0 auto;
   color: var(--color-text-primary, #151719);
@@ -59,8 +61,10 @@
   height: 100%;
 }
 
+/* above the copy the panel is a wide strip: keep the top, where the faces are */
 .hero-banner .hero-banner__media img {
   object-fit: cover;
+  object-position: center top;
 }
 
 /* card look: the image fades into the card */
@@ -357,6 +361,10 @@
   .hero-banner .hero-banner__media {
     order: 0;
     min-height: 0;
+  }
+
+  .hero-banner .hero-banner__media img {
+    object-position: center;
   }
 
   .hero-banner.hero-banner--card .hero-banner__media::after {
