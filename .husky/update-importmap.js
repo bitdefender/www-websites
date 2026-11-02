@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable import/no-extraneous-dependencies */
-const { exec } = require('child_process');
 const { readFileSync, writeFileSync } = require('fs');
 const { XMLSerializer, Window } = require('happy-dom');
 
@@ -17,38 +16,28 @@ const window = new Window({
 });
 const { document } = window;
 
-// Function to run the npm ls command and return parsed JSON
-function execNpmLs() {
-  return new Promise((resolve, reject) => {
-    exec('npm ls --json -all --omit=dev', (err, stdout) => {
-      if (err) {
-        // Sometimes npm ls returns an error code even if the JSON output is usable.
-        try {
-          const parsed = JSON.parse(stdout);
-          return resolve(parsed);
-        } catch (parseErr) {
-          return reject(err);
-        }
-      }
-      return resolve(JSON.parse(stdout));
-    });
-  });
-}
-
-// Recursively collect unique dependencies from the npm ls JSON
-function collectDependencies(deps, result = {}) {
-  Object.entries(deps).forEach(([name, info]) => {
-    result[name] = info.version;
-  });
-  return result;
+// Versions come from package-lock.json, not node_modules: an install older than
+// the lockfile must not end up in the import map (it shipped a downgrade once)
+function getLockedDependencies() {
+  const { dependencies } = JSON.parse(readFileSync('package.json', 'utf-8'));
+  const lock = JSON.parse(readFileSync('package-lock.json', 'utf-8'));
+  const lockedRanges = lock.packages[''].dependencies || {};
+  const result = [];
+  for (const [name, range] of Object.entries(dependencies)) {
+    const version = lock.packages[`node_modules/${name}`]?.version;
+    if (lockedRanges[name] !== range || !version) {
+      throw new Error(`package-lock.json has no ${name}@${range}, run npm install`);
+    }
+    result.push([name, version]);
+  }
+  // npm ls order (by name@version), which the committed import maps already follow
+  return Object.fromEntries(result.sort(([a, av], [b, bv]) => `${a}@${av}`.localeCompare(`${b}@${bv}`, 'en')));
 }
 
 // Main function that updates the import map in an HTML file
 async function updateHtmlImportMap(htmlFilePath) {
   try {
-    // Get the npm dependency tree for production dependencies
-    const npmLsOutput = await execNpmLs();
-    const deps = collectDependencies(npmLsOutput.dependencies);
+    const deps = getLockedDependencies();
 
     // Build an import map object.
     // For demonstration purposes, we create a mapping where each dependency is mapped
@@ -95,6 +84,8 @@ async function updateHtmlImportMap(htmlFilePath) {
     console.log(`Updated ${htmlFilePath} with the new import map.`);
   } catch (err) {
     console.error('Error updating the import map:', err);
+    // fail the pre-commit hook instead of committing a stale import map
+    process.exitCode = 1;
   }
 }
 

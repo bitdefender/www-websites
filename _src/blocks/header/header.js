@@ -1,4 +1,3 @@
-import { Cookies } from '@repobit/dex-utils';
 import user from '../../scripts/user.js';
 import { target, adobeMcAppendVisitorId } from '../../scripts/target.js';
 import {
@@ -52,14 +51,9 @@ const updateMegaMenu = (username, email, newMegaMenuLoginTab) => {
       : `${avatar.dataset.loginText}, ${email}`;
   }
 
-  const userLoggedInExpirationDate = Cookies.get(Constants.LOGIN_LOGGED_USER_EXPIRY_COOKIE_NAME);
-
-  if (!userLoggedInExpirationDate
-    || (userLoggedInExpirationDate && userLoggedInExpirationDate > Date.now())) {
-    loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
-      loginPopupLink.href = await target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
-    });
-  }
+  loginPopupLinksThatNeedToChange.forEach(async (loginPopupLink) => {
+    loginPopupLink.href = await target.appendVisitorIDsTo(loginPopupLink.dataset.loggedInLink);
+  });
 };
 
 /**
