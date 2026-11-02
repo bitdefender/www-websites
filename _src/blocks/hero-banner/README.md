@@ -21,7 +21,7 @@ One block, one cell, in this order. Every part is optional except the h1.
 | `{Dropdown}` on its own line | Where the dropdown, price and buttons go |
 | Paragraphs after `{Dropdown}` | The disclaimer (small grey text) |
 | A paragraph holding only pictures | Award marks, under the buttons |
-| A paragraph holding only a link | An extra button: **bold** is the red one, plain is the outline one |
+| A paragraph holding only links | One button per link: **bold** is the red one, _italic_ or plain is the outline one |
 
 Section metadata:
 

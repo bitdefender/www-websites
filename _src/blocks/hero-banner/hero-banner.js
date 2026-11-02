@@ -72,9 +72,19 @@ function parseProductNames(raw = '') {
 const isPicturesOnly = (el) => el.tagName === 'P' && el.querySelector('picture')
   && !el.textContent.trim();
 
-// decorateButtons nests the link in strong/em for the primary and secondary looks
-const isButtonOnly = (el) => el.tagName === 'P' && el.querySelectorAll('a').length === 1
-  && !!el.querySelector('a.button') && el.textContent.trim() === el.querySelector('a').textContent.trim();
+/*
+ * A paragraph of links and nothing else is a row of buttons. decorateButtons only makes a
+ * button of a link alone in its paragraph; hero-aem pages put two in one, which it leaves
+ * as plain links. Like decorateButtons, a bare URL or an image link is not a button.
+ */
+const isButtonLink = (a) => a.href !== a.textContent && !a.querySelector('img');
+
+const isButtonsOnly = (el) => {
+  const links = [...el.querySelectorAll('a')];
+  if (el.tagName !== 'P' || !links.length || !links.every(isButtonLink)) return false;
+  const rest = links.reduce((text, a) => text.replace(a.textContent, ''), el.textContent);
+  return !rest.trim();
+};
 
 // The atom's slot keeps the authored inline markup (links, line breaks, emphasis)
 function toAtom(tagName, source, attributes = {}) {
@@ -241,7 +251,7 @@ function readContent(cell) {
 
   const isHeroPicture = (el) => picture && el.contains(picture);
   const marks = [...body, ...tail].filter((el) => isPicturesOnly(el) && !isHeroPicture(el));
-  const ctas = [...body, ...tail].filter(isButtonOnly);
+  const ctas = [...body, ...tail].filter(isButtonsOnly);
   const rest = (list) => list.filter((el) => !marks.includes(el) && !ctas.includes(el)
     && !isHeroPicture(el));
 
@@ -277,15 +287,14 @@ function buildMedia(picture, signature, isProductLook) {
   return media;
 }
 
-// The authored button paragraphs: bold is the red one, plain the outline one
-function authoredCta(paragraph) {
-  const link = paragraph.querySelector('a');
+// An authored button link: bold is the red one, italic or plain the outline one
+function authoredCta(link) {
   // detectModalButtons has already moved a fragment link's href to `location`
   const href = link.getAttribute('href') || link.getAttribute('location');
   return createCta({
     text: link.textContent.trim(),
     href,
-    primary: link.classList.contains('primary'),
+    primary: link.classList.contains('primary') || !!link.closest('strong'),
     keepModal: link.dataset.stopAutomaticModalRefresh === 'true',
   });
 }
@@ -369,7 +378,8 @@ export default function decorate(block) {
 
   if (content.ctas.length) {
     const authored = createTag('div', { class: 'hero-banner__ctas hero-banner__ctas--authored' });
-    authored.append(...content.ctas.map(authoredCta));
+    authored.append(...content.ctas.flatMap((paragraph) => [...paragraph.querySelectorAll('a')])
+      .map(authoredCta));
     copy.append(authored);
   }
 

@@ -343,6 +343,40 @@ describe('hero-banner', () => {
     });
   });
 
+  describe('hero-aem content: several links in one paragraph', () => {
+    let block;
+
+    // the homepage's hero-aem cell, renamed: decorateButtons leaves these links as they are
+    beforeEach(async () => {
+      block = await setup(`
+        <h1><strong>Digital Safety,</strong><br><strong>Built Around You</strong></h1>
+        ${PICTURE}
+        <p><em><a href="/en-us/consumer/individual">Compare Individual Plans</a></em> <em><a href="/en-us/consumer/family">Compare Family Plans</a></em></p>
+        <p><strong><a href="/en-us/consumer/ultimate">Buy Ultimate</a></strong> <a href="https://www.bitdefender.com/">https://www.bitdefender.com/</a></p>
+        <p><picture><img src="./best-brands.png" alt="PCMag Best Brands"></picture></p>`, {
+        signature: 'Trusted. Always.',
+      });
+    });
+
+    it('makes each link of a links-only paragraph a button: italic the outline one', () => {
+      const ctas = [...block.querySelectorAll('.hero-banner__ctas--authored bd-button-link')];
+      expect(ctas.map((cta) => cta.textContent)).toEqual(['Compare Individual Plans', 'Compare Family Plans']);
+      expect(ctas.map((cta) => cta.getAttribute('variant'))).toEqual(['tertiary', 'tertiary']);
+      expect(ctas.map((cta) => anchorOf(cta).getAttribute('href')))
+        .toEqual(['/en-us/consumer/individual', '/en-us/consumer/family']);
+    });
+
+    it('leaves a paragraph with a bare URL in it as text', () => {
+      expect(block.querySelector('.hero-banner__description').textContent).toContain('Buy Ultimate');
+      expect(block.querySelectorAll('.hero-banner__ctas--authored bd-button-link')).toHaveLength(2);
+    });
+
+    it('keeps the image after the h1 as the hero image and the award marks under the buttons', () => {
+      expect(block.querySelector('.hero-banner__media img').getAttribute('src')).toBe('./hero.jpg');
+      expect(block.querySelectorAll('.hero-banner__marks img')).toHaveLength(1);
+    });
+  });
+
   describe('defensive decoration', () => {
     it('renders without a picture, as one column', async () => {
       const block = await setup('<h1>Title</h1><p>Text</p>', {});
