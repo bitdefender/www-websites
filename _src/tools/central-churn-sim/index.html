@@ -61,6 +61,12 @@
       <option>reactivate-subscription</option>
     </select>
   </label>
+  <label>flow
+    <select name="flow">
+      <option value="">— churn flow —</option>
+      <option>reactivate</option>
+    </select>
+  </label>
   <label>reason
     <select name="reason">
       <option>PriceReasons</option><option>PreferManualRenew</option><option>NotSatisfiedWithProduct</option><option>DontNeedProduct</option><option>Other</option>
@@ -111,10 +117,14 @@
     if (value != null) el.value = value;
   });
 
-  // a screen (e.g. reactivate-subscription) is requested on its own, without the churn-flow fields
+  // a screen (e.g. reactivate-subscription) or flow (e.g. reactivate) is requested on its own,
+  // without the churn-flow fields
   const churnFields = ['reason', 'remaining_days', 'bundle_id', 'locale'].map((name) => form.elements[name]);
-  const toggleChurnFields = () => churnFields.forEach((el) => { el.disabled = !!form.screen.value; });
+  const toggleChurnFields = () => churnFields.forEach((el) => {
+    el.disabled = !!(form.screen.value || form.flow.value);
+  });
   form.screen.addEventListener('change', toggleChurnFields);
+  form.flow.addEventListener('change', toggleChurnFields);
   toggleChurnFields();
 
   // same order as the website: the Target proxy queues alloy calls until Launch loads
@@ -150,7 +160,9 @@
     }
 
     const parameters = {
-      ...(data.screen ? { screen: data.screen } : {
+      ...(data.screen && { screen: data.screen }),
+      ...(data.flow && { flow: data.flow }),
+      ...(!data.screen && !data.flow && {
         reason: data.reason,
         remaining_days: data.remaining_days,
         bundle_id: data.bundle_id,
