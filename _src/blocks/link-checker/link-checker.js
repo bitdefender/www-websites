@@ -444,6 +444,12 @@ export default function decorate(block) {
   button.classList.add('check-url');
   inputContainer.appendChild(button);
 
+  // A page restored from the back/forward cache comes back as it was left: mid-check, with
+  // the loader still spinning. Stop it so the form can be used again without a reload.
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) inputContainer.classList.remove('loader-circle');
+  });
+
   const result = document.createElement('div');
   result.className = 'result';
   formContainer.appendChild(result);
