@@ -3,6 +3,11 @@ main .quote-carousel {
   margin: 55px auto 0;
 }
 
+.section.wide.quote-carousel-container-v2 {
+  padding-left: var(--section-mobile-padding);
+  padding-right: var(--section-mobile-padding);
+}
+
 main .quote-carousel .slides-container {
   border-radius: 8px;
   max-width: auto;

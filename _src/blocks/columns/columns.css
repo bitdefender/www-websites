@@ -3909,6 +3909,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.columns-container.gasa-v2 {
+  padding-left: var(--section-mobile-padding);
+  padding-right: var(--section-mobile-padding);
+}
+
 .columns-container.responsible-ai {
   * {
     font-family: var(--body-font-family);
@@ -4128,6 +4133,15 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.columns-container.responsible-ai-v2 {
+  .columns-wrapper {
+    .columns {
+      padding-left: var(--section-mobile-padding);
+      padding-right: var(--section-mobile-padding);
+    }
+  }
+}
+
 @media (max-width: 1399px) {
   .columns-wrapper {
     padding: 0 var(--section-large-desktop-padding);
@@ -4282,6 +4296,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 @media (max-width: 767px) {
   .columns-wrapper {
     padding: var(--body-padding) var(--body-padding) 0;
+  }
+
+  .columns-container-v2 {
+    .columns-wrapper {
+      padding: var(--body-padding) var(--section-mobile-padding) 0;
+    }
   }
 
   .cta .columns-img-col picture {

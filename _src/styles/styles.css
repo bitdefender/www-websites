@@ -45,6 +45,7 @@
   --green-tag: #0E8532;
   --green-tag2: #0E8532;
   --dark-shadow: #0000001a;
+  --gray-color: #fafafa;
   --background-checkmark: #61AF53;
 
   /* fonts */
@@ -97,6 +98,33 @@
   --section-large-desktop-padding: 50px;
   --section-desktop-padding-vertical: 48px;
   --section-mobile-padding-vertical: 32px;
+  --section-mobile-padding: 16px;
+  --section-mobile-margin: 48px;
+
+  /* PADDING VALUES */
+  --size-0: 0;
+  --size-1: 1px;
+  --size-2: 2px;
+  --size-4: 4px;
+  --size-6: 6px;
+  --size-8: 8px;
+  --size-10: 10px;
+  --size-12: 12px;
+  --size-14: 14px;
+  --size-16: 16px;
+  --size-18: 18px;
+  --size-20: 20px;
+  --size-22: 22px;
+  --size-24: 24px;
+  --size-30: 32px;
+  --size-32: 32px;
+  --size-36: 36px;
+  --size-40: 40px;
+  --size-44: 44px;
+  --size-48: 48px;
+  --size-52: 52px;
+  --size-64: 64px;
+  --size-full: 99999999999999999999;
 
   /* cta styles */
   --cta-background-light-blue: var(--background-light-blue)

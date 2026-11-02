@@ -729,6 +729,124 @@
   }
 }
 
+.hero-aem-v2 {
+
+  .hero-aem-wrapper {
+    padding: 0 var(--section-mobile-padding);
+  }
+
+  .hero-aem__mobile-image, .hero-aem__desktop-image {
+    position: relative;
+
+    &:before {
+      content: "Trusted.Always.";
+      position: absolute;
+      bottom: var(--size-20);
+      right: var(--size-20);
+      color: white;
+      font-weight: var(--font-weight-boldest);
+      font-size: var(--heading-font-size-s);
+      z-index: 1;
+    }
+  }
+
+  .hero-aem {
+
+    h2 {
+      color: var(--color-highlight-blue);
+      font-size: var(--heading-font-size-xs);
+      line-height: 100%;
+      font-weight: var(--font-weight-bolder);
+      margin-bottom: var(--size-8);
+    }
+
+    h1 {
+      color: black;
+      font-size: var(--heading-font-size-m);
+      line-height: var(--size-30);
+      margin-bottom: var(--size-0);
+      margin-top: var(--size-8);
+    }
+
+    .hero-aem__card-text {
+      padding: var(--size-0);
+      background-color: white;
+
+      > p {
+        margin-top: var(--size-0);
+        margin-bottom: var(--size-8);
+        font-size: var(--body-font-size-s);
+        line-height: var(--size-22);
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+      }
+
+      .button-container {
+        margin-bottom: 0;
+
+        + p {
+          margin-bottom: var(--size-16);
+        }
+      }
+    }
+
+    .prod-oldprice {
+      font-size: var(--body-font-size-m);
+      line-height: var(--size-24);
+    }
+
+    .prod-save {
+      font-size: var(--body-font-size-s);
+      line-height: var(--size-20);
+    }
+  }
+
+  .hero-aem__prices {
+    margin-top: var(--size-20);
+    margin-bottom: var(--size-16);
+
+    .hero-aem__underPriceText {
+       margin: 0;
+    }
+
+    .newprice-container {
+      padding-top: var(--size-4);
+
+      .prod-newprice {
+        font-size: var(--heading-font-size-l);
+        line-height: var(--size-42);
+      }
+    }
+  }
+
+  .button-container {
+    a {
+      width: 100%;
+      padding-top: var(--size-12);
+      padding-bottom: var(--size-12);
+      margin-bottom: var(--size-16);
+
+      &:hover span {
+          transform: none;
+      }
+
+      span {
+        margin: auto;
+        font-size: var(--body-font-size-s);
+        transform: none;
+
+
+      }
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+
 @media (min-width: 768px) {
   .hero-aem-container .hero-aem {
     display: flex;
@@ -770,6 +888,15 @@
     display: block;
     height: 100%;
     position: relative;
+  }
+
+  .hero-aem-v2.hero-aem-container .hero-aem .hero-aem__desktop-image {
+    position: absolute;
+    top: 0;
+
+    &:before {
+      font-size: var(--heading-font-size-l);
+    }
   }
 
   .hero-aem-container .hero-aem .hero-aem__desktop-image::after {
