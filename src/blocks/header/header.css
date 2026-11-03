@@ -634,10 +634,6 @@ header.quiz {
   }
 }
 
-header.header-wrapper.hidden {
-  display: none;
-}
-
 @media(min-width: 767px) { /* tablet */
   header.header-wrapper .logo-container .icon {
     width: 180px;
@@ -646,6 +642,12 @@ header.header-wrapper.hidden {
 }
 
 @media(min-width: 992px) {
+  /* the default desktop header scrolls away with the page; relative, not static, keeps
+     its stacking context and the containing block of the mega menu and login modal */
+  header.header-wrapper.default {
+    position: relative;
+  }
+
   header.header-wrapper::after {
     position: absolute;
     top: 64px;
