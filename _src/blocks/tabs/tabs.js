@@ -1,5 +1,6 @@
 import { decorateIcons, loadBlocks, readBlockConfig } from "../../scripts/lib-franklin.js";
 import { slotIcon } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/tabs/tabs.js
 var getImageSrc = (iconCell) => {
 	const image = iconCell?.querySelector("img");
@@ -18,7 +19,7 @@ var buildTabCol = (cells, isFirstOpen, bgBlue) => {
 	const heading = titleCell.querySelector("h1, h2, h3, h4, h5, h6");
 	const col = document.createElement("bd-feature-col");
 	col.setAttribute("title", heading?.textContent?.trim() || titleCell.textContent.trim());
-	const icon = document.createElement("bd-individual-icon");
+	const icon = document.createElement("span");
 	icon.setAttribute("slot", "icon");
 	const imageSrc = getImageSrc(iconCell);
 	const iconSpan = !imageSrc && iconCell?.querySelector("span.icon");
@@ -196,7 +197,7 @@ async function decorate(block) {
 				await loadBlocks(bdTabs);
 				normalizeLoadingFeatureIcons(bdTabs);
 				bdTabs.querySelectorAll("bd-accordion-bg").forEach((el) => el.setAttribute("no-padding", ""));
-				await import("../../vendor/repobit/dex-system-design/tabs.js");
+				await load(bdTabs);
 				if (typeof bdTabs.requestUpdate === "function") bdTabs.requestUpdate();
 				iconObserver.disconnect();
 				if (typeof bdTabs.updateComplete?.then === "function") await bdTabs.updateComplete;
@@ -210,17 +211,13 @@ async function decorate(block) {
 		await decorateIcons(block);
 		const { defaultWrapper, title, subtitle } = getSectionContext(block);
 		if (defaultWrapper && title) defaultWrapper.remove();
+		const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
 		try {
-			await Promise.all([
-				import("../../vendor/repobit/dex-system-design/tabs.js"),
-				import("../../vendor/repobit/dex-system-design/paragraph.js"),
-				import("../../vendor/repobit/dex-system-design/accordion.js")
-			]);
+			await load(tabsEl);
 		} catch (err) {
 			console.warn("DSN imports failed (Mode 2)", err);
 		}
-		const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
-		if (tabsEl) block.replaceChildren(tabsEl);
+		block.replaceChildren(tabsEl);
 	}
 }
 export { decorate as default };

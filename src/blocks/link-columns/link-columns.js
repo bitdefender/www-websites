@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
@@ -36,18 +37,6 @@ export default async function decorate(block) {
   wrapSectionInDsSection(block);
   // the section's heading and lead, as bd-section-header
   const header = liftSectionHeader(block);
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/link'),
-      import('@repobit/dex-system-design/paragraph'),
-      import('@repobit/dex-system-design/grid'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('link-columns: DSN import failed, keeping the authored content', err);
-    await header;
-    return;
-  }
 
   const grid = document.createElement('bd-grid');
   // the design system's page column (styles.css), on the hero's edges
@@ -56,6 +45,15 @@ export default async function decorate(block) {
     .forEach(([name, value]) => grid.setAttribute(name, value));
   grid.append(...[...block.children].map(buildColumn).filter(Boolean));
 
+  // the columns are built from copies, so the authored rows are whole until they replace them
+  try {
+    await load(grid);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('link-columns: DSN import failed, keeping the authored content', err);
+    await header;
+    return;
+  }
   block.replaceChildren(grid);
   await header;
 }

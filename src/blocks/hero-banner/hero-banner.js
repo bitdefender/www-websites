@@ -2,6 +2,7 @@
 // the redesign of hero-dropdown, which stays as it is for the pages not yet moved
 import { UserAgent } from '@repobit/dex-utils';
 import { AdobeDataLayerService, ButtonClickEvent } from '@repobit/dex-data-layer';
+import { load } from '@repobit/dex-system-design/loader';
 import page from '../../scripts/page.js';
 
 import {
@@ -296,15 +297,9 @@ function authoredCta(link) {
   });
 }
 
-async function loadAtoms() {
+async function loadAtoms(block) {
   try {
-    await Promise.all([
-      import('@repobit/dex-system-design/heading'),
-      import('@repobit/dex-system-design/paragraph'),
-      import('@repobit/dex-system-design/badge'),
-      import('@repobit/dex-system-design/button'),
-      import('@repobit/dex-system-design/dropdown'),
-    ]);
+    await load(block);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.warn('hero-banner: DSN import failed, continuing with native rendering', err);
@@ -404,9 +399,9 @@ export default function decorate(block) {
   // load once it has, and until then the CSS draws them
   const img = block.querySelector('.hero-banner__media img');
   if (img && !img.complete) {
-    img.addEventListener('load', loadAtoms, { once: true });
-    img.addEventListener('error', loadAtoms, { once: true });
-  } else loadAtoms();
+    img.addEventListener('load', () => loadAtoms(block), { once: true });
+    img.addEventListener('error', () => loadAtoms(block), { once: true });
+  } else loadAtoms(block);
 
   if (hardcodedLink && page.name === 'web-sage') {
     block.addEventListener('click', (e) => {

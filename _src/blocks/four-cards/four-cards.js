@@ -1,3 +1,4 @@
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/four-cards/four-cards.js
 var getIconElement = (col) => {
 	const iconSpan = col.querySelector("[class*=\"icon-\"]");
@@ -61,15 +62,6 @@ var buildCardItem = (row, shape) => {
 	return item;
 };
 async function decorate(block) {
-	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/cards.js"),
-			import("../../vendor/repobit/dex-system-design/paragraph.js"),
-			import("../../vendor/repobit/dex-system-design/button.js")
-		]);
-	} catch (err) {
-		console.warn("four-cards: DSN import failed, continuing with native rendering", err);
-	}
 	const { margintop, shape } = block.closest(".section").dataset;
 	if (margintop) {
 		const blockParent = block.closest(".section");
@@ -99,12 +91,9 @@ async function decorate(block) {
 		if (shape) item.setAttribute("shape", shape);
 		cardSection.appendChild(item);
 	});
-	block.replaceChildren(cardSection);
-	block.querySelectorAll("bd-card-item[data-title-html]").forEach((cardItem) => {
-		const bdH = cardItem.shadowRoot?.querySelector("bd-h");
-		if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
-	});
-	[...sectionEl?.querySelectorAll(".default-content-wrapper") || []].forEach((wrapper) => {
+	const allDefaultWrappers = [...sectionEl?.querySelectorAll(".default-content-wrapper") || []];
+	const buttons = [];
+	allDefaultWrappers.forEach((wrapper) => {
 		const heading = wrapper.querySelector("h1,h2,h3,h4,h5,h6");
 		if (heading && !cardSection.hasAttribute("title")) {
 			cardSection.setAttribute("title", heading.textContent.trim());
@@ -124,10 +113,20 @@ async function decorate(block) {
 			bdBtn.setAttribute("size", "md");
 			if (shape) bdBtn.setAttribute("shape", shape);
 			bdBtn.textContent = link.textContent.trim();
-			block.appendChild(bdBtn);
+			buttons.push(bdBtn);
 			(link.closest("p") || link.parentElement).remove();
 		}
 		if (!wrapper.textContent.trim()) wrapper.remove();
+	});
+	try {
+		await load([cardSection, ...buttons]);
+	} catch (err) {
+		console.warn("four-cards: DSN import failed, continuing with native rendering", err);
+	}
+	block.replaceChildren(cardSection, ...buttons);
+	block.querySelectorAll("bd-card-item[data-title-html]").forEach((cardItem) => {
+		const bdH = cardItem.shadowRoot?.querySelector("bd-h");
+		if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
 	});
 }
 export { decorate as default };

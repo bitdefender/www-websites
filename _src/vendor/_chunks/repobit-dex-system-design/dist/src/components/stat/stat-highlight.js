@@ -1,0 +1,7 @@
+import{a as e,n as t,t as n}from"../../../../../lit/index.js";import{n as r,t as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import{t as s}from"../shared/controller.observer.js";import{t as c}from"./stat.css.js";var l=`0123456789`,u=class extends n{constructor(...e){super(...e),this.value=``,this.label=``,this._rolled=!1,this._inView=new s(this,()=>new IntersectionObserver(e=>{e.some(e=>e.isIntersecting)&&(this._rolled=!0,this._inView.stop())},{threshold:.5}),e=>e.observe(this))}static{this.styles=[c]}willUpdate(){this.hasUpdated||this._rolled||!window.matchMedia?.(`(prefers-reduced-motion: reduce)`).matches||(this._rolled=!0,this._inView.stop())}_renderChar(t,n){let r=l.indexOf(t);return r<0?e`<span class="char">${t}</span>`:e`<span class="char digit" style="--bd-stat-digit: ${this._rolled?r:0}; --bd-stat-order: ${n};">
+      <span class="reel">${[...l].map(t=>e`<span>${t}</span>`)}</span>
+    </span>`}render(){return this.value?e`
+      <p class="highlight" role="img" aria-label="${this.label||this.value}">
+        <span class="chars" aria-hidden="true">${[...this.value].map((e,t)=>this._renderChar(e,t))}</span>
+      </p>
+    `:t}};o([r({type:String})],u.prototype,`value`,void 0),o([r({type:String})],u.prototype,`label`,void 0),o([i()],u.prototype,`_rolled`,void 0),u=o([a(`bd-stat-highlight`)],u);export{u as StatHighlight};

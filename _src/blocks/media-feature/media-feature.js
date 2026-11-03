@@ -1,3 +1,4 @@
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/media-feature/media-feature.js
 var VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
 var YOUTUBE_RE = /(?:youtube\.com|youtu\.be)/i;
@@ -127,16 +128,6 @@ var buildFeaturesTab = (row, shouldReverse) => {
 	return bdFT;
 };
 async function decorate(block) {
-	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/features-tab.js"),
-			import("../../vendor/repobit/dex-system-design/video-player.js"),
-			import("../../vendor/repobit/dex-system-design/list.js"),
-			import("../../vendor/repobit/dex-system-design/list-item.js")
-		]);
-	} catch (err) {
-		console.warn("media-feature: DSN import failed", err);
-	}
 	const isAlternating = block.classList.contains("alternating");
 	const forceReverse = block.classList.contains("reverse") ? true : null;
 	const rows = Array.from(block.children);
@@ -147,6 +138,11 @@ async function decorate(block) {
 		const tab = buildFeaturesTab(row, shouldReverse);
 		if (tab) fragment.appendChild(tab);
 	});
+	try {
+		await load(fragment);
+	} catch (err) {
+		console.warn("media-feature: DSN import failed", err);
+	}
 	block.replaceChildren(fragment);
 }
 export { decorate as default };

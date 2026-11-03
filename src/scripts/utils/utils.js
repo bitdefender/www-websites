@@ -1441,10 +1441,14 @@ export const wrapSectionInDsSection = (block) => {
   bdSection.append(...section.children);
   section.append(bdSection);
 
-  import('@repobit/dex-system-design/section').catch((err) => {
-    // eslint-disable-next-line no-console
-    console.warn('bd-section: DSN import failed, the section keeps its authored spacing', err);
-  });
+  // by tag, not the tree: what the section holds is its blocks', which load their own.
+  // The loader is imported here, not at the top: utils.js is on every page.
+  import('@repobit/dex-system-design/loader')
+    .then(({ load }) => load(['bd-section']))
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('bd-section: DSN import failed, the section keeps its authored spacing', err);
+    });
   return bdSection;
 };
 
@@ -1515,15 +1519,16 @@ export const liftSectionHeader = async (block, { layout } = {}) => {
   if (eyebrow) header.setAttribute('eyebrow', eyebrow.textContent.trim());
   // the heading's anchor still lands on the section
   if (heading.id) header.id = heading.id;
+  if (lead) header.append(toLead(lead));
 
   try {
-    await Promise.all([import('@repobit/dex-system-design/section-header'), import('@repobit/dex-system-design/link')]);
+    const { load } = await import('@repobit/dex-system-design/loader');
+    await load(header);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.warn('liftSectionHeader: DSN import failed, continuing with native rendering', err);
   }
 
-  if (lead) header.append(toLead(lead));
   heading.replaceWith(header);
   eyebrow?.remove();
   lead?.remove();

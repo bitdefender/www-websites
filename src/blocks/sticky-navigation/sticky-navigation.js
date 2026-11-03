@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { STICKY_NAVIGATION_DATASET_KEY } from '../../scripts/lib-franklin.js';
 
 // ─── helpers ───────────────────────────────────────────────────────────────────
@@ -56,6 +57,7 @@ function getRowLabel(p) {
   return link?.getAttribute('title') || link?.textContent.trim() || p.textContent.trim();
 }
 
+/** Builds the items from the authored rows; returns the id of the active one, if any. */
 function buildFromAuthoredRows(anchorNav, block, activeLabel) {
   const sectionItems = collectSectionItems(block);
 
@@ -88,15 +90,11 @@ function buildFromAuthoredRows(anchorNav, block, activeLabel) {
     anchorNav.appendChild(navItem);
   });
 
-  // setTimeout(0) lets LitElement finish before we override the active item.
-  if (activeLabel) {
-    const idx = rows.findIndex(
-      (p) => getRowLabel(p).toLowerCase() === activeLabel.toLowerCase(),
-    );
-    if (idx >= 0) {
-      setTimeout(() => { anchorNav.activeId = `anchor-${idx + 1}`; }, 0);
-    }
-  }
+  if (!activeLabel) return null;
+  const idx = rows.findIndex(
+    (p) => getRowLabel(p).toLowerCase() === activeLabel.toLowerCase(),
+  );
+  return idx >= 0 ? `anchor-${idx + 1}` : null;
 }
 
 function buildFromSections(anchorNav, block) {
@@ -134,9 +132,11 @@ function buildFromSections(anchorNav, block) {
 
 // ─── main decorator ────────────────────────────────────────────────────────────
 
+/** Builds the nav; returns it with the id of the item to show active, if any. */
 function buildAnchorNav(block) {
   const navSection = block.closest('.section');
   const activeLabel = navSection?.dataset.active || '';
+  let activeId = null;
 
   // Mode A: 2+ authored <p> rows → nav from block content, no CTA.
   // Mode B: 0–1 rows → nav from section-metadata/headings, optional CTA.
@@ -148,7 +148,7 @@ function buildAnchorNav(block) {
   const anchorNav = document.createElement('bd-anchor-nav');
 
   if (isAuthoredMode) {
-    buildFromAuthoredRows(anchorNav, block, activeLabel);
+    activeId = buildFromAuthoredRows(anchorNav, block, activeLabel);
 
     // DS preventDefault blocks non-hash links — handle navigation manually.
     anchorNav.addEventListener('click', (e) => {
@@ -168,13 +168,13 @@ function buildAnchorNav(block) {
     buildFromSections(anchorNav, block);
   }
 
-  block.replaceChildren(anchorNav);
+  return { anchorNav, activeId };
 }
 
 export default async function decorate(block) {
-  await Promise.all([
-    import('@repobit/dex-system-design/anchor'),
-    import('@repobit/dex-system-design/button'),
-  ]);
-  buildAnchorNav(block);
+  const { anchorNav, activeId } = buildAnchorNav(block);
+  await load(anchorNav);
+  block.replaceChildren(anchorNav);
+  // setTimeout(0) lets LitElement finish before we override the active item.
+  if (activeId) setTimeout(() => { anchorNav.activeId = activeId; }, 0);
 }

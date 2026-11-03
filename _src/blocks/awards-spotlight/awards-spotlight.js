@@ -1,4 +1,5 @@
 import { fullWidthOnPhone, getSectionContent, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/awards-spotlight/awards-spotlight.js
 var ASSET_SCALE = 1.5;
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
@@ -23,8 +24,11 @@ var readAward = (row) => {
 	}
 	return award;
 };
-/** The section's authored button links, as a row of primary DS buttons under the header. */
-var liftActions = (block) => {
+/**
+* The section's authored button links, as a row of primary DS buttons under
+* the header. The links stay as they are if the buttons fail to load.
+*/
+var liftActions = async (block) => {
 	const section = block.closest(".section");
 	const containers = [...(section && getSectionContent(section).querySelector(":scope > .default-content-wrapper"))?.querySelectorAll(":scope > .button-container") || []];
 	if (!containers.length) return;
@@ -40,24 +44,30 @@ var liftActions = (block) => {
 	});
 	actions.append(...buttons);
 	fullWidthOnPhone(...buttons);
+	try {
+		await load(actions);
+	} catch (err) {
+		console.warn("awards-spotlight: DSN import failed, keeping the authored links", err);
+		return;
+	}
 	containers[0].before(actions);
 	containers.forEach((container) => container.remove());
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);
 	const header = liftSectionHeader(block, { layout: "centered" });
+	const spotlight = document.createElement("bd-awards-spotlight");
+	spotlight.awards = [...block.children].map(readAward).filter(Boolean);
+	spotlight.setAttribute("autoplay", "");
 	try {
-		await Promise.all([import("../../vendor/repobit/dex-system-design/awards-spotlight.js"), import("../../vendor/repobit/dex-system-design/button.js")]);
+		await load(spotlight);
 	} catch (err) {
 		console.warn("awards-spotlight: DSN import failed, keeping the authored content", err);
 		await header;
 		return;
 	}
-	const spotlight = document.createElement("bd-awards-spotlight");
-	spotlight.awards = [...block.children].map(readAward).filter(Boolean);
-	spotlight.setAttribute("autoplay", "");
 	block.replaceChildren(spotlight);
 	await header;
-	liftActions(block);
+	await liftActions(block);
 }
 export { decorate as default };

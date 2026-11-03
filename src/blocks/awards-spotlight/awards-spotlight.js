@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import {
   fullWidthOnPhone, getSectionContent, liftSectionHeader, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
@@ -35,8 +36,11 @@ const readAward = (row) => {
   return award;
 };
 
-/** The section's authored button links, as a row of primary DS buttons under the header. */
-const liftActions = (block) => {
+/**
+ * The section's authored button links, as a row of primary DS buttons under
+ * the header. The links stay as they are if the buttons fail to load.
+ */
+const liftActions = async (block) => {
   const section = block.closest('.section');
   const wrapper = section && getSectionContent(section).querySelector(':scope > .default-content-wrapper');
   const containers = [...(wrapper?.querySelectorAll(':scope > .button-container') || [])];
@@ -54,6 +58,13 @@ const liftActions = (block) => {
   });
   actions.append(...buttons);
   fullWidthOnPhone(...buttons);
+  try {
+    await load(actions);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('awards-spotlight: DSN import failed, keeping the authored links', err);
+    return;
+  }
   containers[0].before(actions);
   containers.forEach((container) => container.remove());
 };
@@ -63,23 +74,21 @@ export default async function decorate(block) {
   // the section's heading and lead, as bd-section-header: Proven is centred in
   // every frame, so the block asks for it rather than leaving it to metadata
   const header = liftSectionHeader(block, { layout: 'centered' });
+
+  // likely not defined yet: Lit keeps a property set before the upgrade
+  const spotlight = document.createElement('bd-awards-spotlight');
+  spotlight.awards = [...block.children].map(readAward).filter(Boolean);
+  spotlight.setAttribute('autoplay', '');
   try {
-    await Promise.all([
-      import('@repobit/dex-system-design/awards-spotlight'),
-      import('@repobit/dex-system-design/button'),
-    ]);
+    await load(spotlight);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.warn('awards-spotlight: DSN import failed, keeping the authored content', err);
     await header;
     return;
   }
-
-  const spotlight = document.createElement('bd-awards-spotlight');
-  spotlight.awards = [...block.children].map(readAward).filter(Boolean);
-  spotlight.setAttribute('autoplay', '');
   block.replaceChildren(spotlight);
 
   await header;
-  liftActions(block);
+  await liftActions(block);
 }

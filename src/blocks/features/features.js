@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 import { slotIcon } from '../../scripts/utils/utils.js';
 
@@ -55,7 +56,10 @@ const createGreenBadge = (pill) => {
 };
 
 const getIconElement = (col) => {
-  const icon = document.createElement('bd-individual-icon');
+  // a plain wrapper for the authored icon: bd-features finds it by its slot.
+  // Not bd-individual-icon, which the loader would define as the design
+  // system's own glyph, drawn in place of the authored one.
+  const icon = document.createElement('span');
   icon.setAttribute('slot', 'icon');
   icon.setAttribute('size', '40');
 
@@ -159,16 +163,6 @@ const buildFeatureCol = (col, firstOpen) => {
 export default async function decorate(block) {
   // the icons are SVG before bd-features copies them (slotIcon)
   await decorateIcons(block);
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/tabs'),
-      import('@repobit/dex-system-design/paragraph'),
-      import('@repobit/dex-system-design/accordion'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('features: DSN import failed, continuing with native rendering', err);
-  }
 
   const firstOpen = block.classList.contains('first-open');
   const featuresEl = document.createElement('bd-features');
@@ -179,5 +173,11 @@ export default async function decorate(block) {
     });
   });
 
+  try {
+    await load(featuresEl);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('features: DSN import failed, continuing with native rendering', err);
+  }
   block.replaceChildren(featuresEl);
 }

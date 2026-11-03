@@ -69,15 +69,6 @@ const EXTERNAL = [
   /(^|\/)(vendor|plugins)\//,
 ];
 
-/**
- * Specifiers a package doesn't export, mapped to the file they stand for.
- * The bundler can't resolve them; the vendor build makes them entries.
- */
-const UNEXPORTED = Object.fromEntries(Object.entries({
-  '@repobit/dex-system-design/spotlight-section': 'spotlight-section/spotlight-section.js',
-  '@repobit/dex-system-design/video-player': 'video-player/video-player.js',
-}).map(([specifier, file]) => [specifier, path.resolve('node_modules/@repobit/dex-system-design/src/components', file)]));
-
 const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
 
 /** Runtime dependency names from package.json: the packages that get bundled. */
@@ -147,14 +138,19 @@ function packageImports(file) {
 const vendorKey = (specifier) => `vendor/${specifier.replace(/^@/, '')}`;
 
 /**
- * Name a shared vendor chunk after the package of its last module, the one
- * the chunk's other modules exist for. No hash: the output is committed, so
- * a changed chunk diffs in place. Rolldown numbers a name that repeats.
+ * Name a vendor chunk after its last module, the one the chunk's other
+ * modules exist for: its package, then its path in the package. No hash: the
+ * output is committed, so a changed chunk diffs in place. A module is in one
+ * chunk only, so no two names repeat, and none is numbered by build order --
+ * the design system's loader makes a chunk of every component, and numbers
+ * would shift through all of them when one is added.
  * @param {{ name: string, moduleIds: string[] }} chunk
  */
 function vendorChunkName({ name, moduleIds }) {
-  const pkg = moduleIds.at(-1)?.match(/node_modules[\\/]((?:@[^\\/]+[\\/])?[^\\/]+)/)?.[1];
-  return `vendor/_chunks/${pkg ? pkg.replace(/^@/, '').replace(/[\\/]/, '-') : name}.js`;
+  const [, pkg, file] = moduleIds.at(-1)?.match(/node_modules[\\/]((?:@[^\\/]+[\\/])?[^\\/]+)[\\/](.+)$/) || [];
+  if (!pkg) return `vendor/_chunks/${name}.js`;
+  const dir = pkg.replace(/^@/, '').replace(/[\\/]/, '-');
+  return `vendor/_chunks/${dir}/${file.split(path.sep).join('/').replace(/\.[cm]?js$/, '')}.js`;
 }
 
 /**
@@ -298,9 +294,9 @@ checkInstall();
 
 const entries = discoverEntries();
 
-/** Vendor entries: output key -> bare specifier (or the file an unexported one stands for). */
+/** Vendor entries: output key -> bare specifier. */
 const vendorInput = Object.fromEntries(entries.dependencies
-  .map((specifier) => [vendorKey(specifier), UNEXPORTED[specifier] ?? specifier]));
+  .map((specifier) => [vendorKey(specifier), specifier]));
 
 const shared = {
   outDir: OUT,

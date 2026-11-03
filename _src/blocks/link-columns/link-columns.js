@@ -1,4 +1,5 @@
 import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/link-columns/link-columns.js
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
 var buildColumn = (row) => {
@@ -24,17 +25,6 @@ var buildColumn = (row) => {
 async function decorate(block) {
 	wrapSectionInDsSection(block);
 	const header = liftSectionHeader(block);
-	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/link.js"),
-			import("../../vendor/repobit/dex-system-design/paragraph.js"),
-			import("../../vendor/repobit/dex-system-design/grid.js")
-		]);
-	} catch (err) {
-		console.warn("link-columns: DSN import failed, keeping the authored content", err);
-		await header;
-		return;
-	}
 	const grid = document.createElement("bd-grid");
 	grid.className = "ds-page-column";
 	[
@@ -45,6 +35,13 @@ async function decorate(block) {
 		["gap", "md"]
 	].forEach(([name, value]) => grid.setAttribute(name, value));
 	grid.append(...[...block.children].map(buildColumn).filter(Boolean));
+	try {
+		await load(grid);
+	} catch (err) {
+		console.warn("link-columns: DSN import failed, keeping the authored content", err);
+		await header;
+		return;
+	}
 	block.replaceChildren(grid);
 	await header;
 }

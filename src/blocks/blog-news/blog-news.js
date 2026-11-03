@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import {
   liftSectionHeader, matchHeights, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
@@ -36,8 +37,9 @@ async function decorateFeedCards(block) {
 
   // the section's heading, as bd-section-header
   const header = liftSectionHeader(block);
+  // by tag, not the tree, so the components load while the feeds do
   const [modules, ...results] = await Promise.allSettled([
-    Promise.all([import('@repobit/dex-system-design/post-card'), import('@repobit/dex-system-design/grid')]),
+    load(['bd-grid', 'bd-post-card']),
     ...feeds.map(readFeed),
   ]);
   if (modules.status === 'rejected') {

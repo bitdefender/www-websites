@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 // The logo assets are exported at 1.5x the size Figma draws them.
@@ -66,16 +67,6 @@ const getLabel = (block, textItem) => {
 
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/logo-marquee'),
-      import('@repobit/dex-system-design/display'),
-      import('@repobit/dex-system-design/paragraph'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('logo-marquee: DSN import failed, continuing with native rendering', err);
-  }
 
   // Logos can be one per row or several in one cell; keep the authored order.
   const items = [];
@@ -107,6 +98,12 @@ export default async function decorate(block) {
   if (label) marquee.setAttribute('label', label);
   marquee.append(...items);
 
+  try {
+    await load(marquee);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('logo-marquee: DSN import failed, continuing with native rendering', err);
+  }
   block.replaceChildren(marquee);
 
   /* No pause button on the strips, by request: they still pause on hover and

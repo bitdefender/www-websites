@@ -1,2 +1,0 @@
-import{u as e}from"./lit.js";var t=[`-moz-available`,`-webkit-fill-available`,`stretch`],n=()=>e([`:host { width: 100%; }`,...t.map(e=>`@supports (width: ${e}) { :host { width: ${e}; } }`)].join(`
-`));export{n as t};

@@ -3,6 +3,7 @@ import { createTag, generatePageLoadStartedName, wrapChildrenWithStoreContext } 
 import { openModal } from "../../scripts/scripts.js";
 import { UserAgent } from "../../vendor/repobit/dex-utils.js";
 import { AdobeDataLayerService, ButtonClickEvent } from "../../vendor/repobit/dex-data-layer.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/hero-banner/hero-banner.js
 var DROPDOWN_MARKER = /^\{\s*dropdown\s*\}$/i;
 var whenRendered = (atom) => customElements.whenDefined(atom.localName).then(() => atom.updateComplete);
@@ -184,15 +185,9 @@ function authoredCta(link) {
 		keepModal: link.dataset.stopAutomaticModalRefresh === "true"
 	});
 }
-async function loadAtoms() {
+async function loadAtoms(block) {
 	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/heading.js"),
-			import("../../vendor/repobit/dex-system-design/paragraph.js"),
-			import("../../vendor/repobit/dex-system-design/badge.js"),
-			import("../../vendor/repobit/dex-system-design/button.js"),
-			import("../../vendor/repobit/dex-system-design/dropdown.js")
-		]);
+		await load(block);
 	} catch (err) {
 		console.warn("hero-banner: DSN import failed, continuing with native rendering", err);
 	}
@@ -267,9 +262,9 @@ function decorate(block) {
 	block.replaceChildren(copy, buildMedia(content.picture, signature, isProductLook));
 	const img = block.querySelector(".hero-banner__media img");
 	if (img && !img.complete) {
-		img.addEventListener("load", loadAtoms, { once: true });
-		img.addEventListener("error", loadAtoms, { once: true });
-	} else loadAtoms();
+		img.addEventListener("load", () => loadAtoms(block), { once: true });
+		img.addEventListener("error", () => loadAtoms(block), { once: true });
+	} else loadAtoms(block);
 	if (hardcodedLink && page_default.name === "web-sage") block.addEventListener("click", (e) => {
 		if (!e.target.closest(".hero-banner__cta--primary")) return;
 		const clickEvent = new ButtonClickEvent("click", { asset: "get it free" });

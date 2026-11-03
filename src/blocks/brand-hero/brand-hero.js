@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
@@ -94,20 +95,6 @@ export default async function decorate(block) {
   // inset below it, so the cards stand twice the inset clear of what follows
   wrapSectionInDsSection(block)?.setAttribute('no-padding-top', '');
 
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/hero'),
-      import('@repobit/dex-system-design/motion-art'),
-      import('@repobit/dex-system-design/audience-card'),
-      import('@repobit/dex-system-design/grid'),
-      import('@repobit/dex-system-design/icons'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('brand-hero: DSN import failed, keeping the authored content', err);
-    return;
-  }
-
   const [copyRow, ...cardRows] = [...block.children];
   const { eyebrow, heading, lead } = readCopy(copyRow || block);
 
@@ -139,5 +126,13 @@ export default async function decorate(block) {
     hero.append(grid);
   }
 
+  // the hero is built from copies, so the authored rows are whole until it replaces them
+  try {
+    await load(hero);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('brand-hero: DSN import failed, keeping the authored content', err);
+    return;
+  }
   block.replaceChildren(hero);
 }
