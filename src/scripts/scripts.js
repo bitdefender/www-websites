@@ -54,7 +54,7 @@ import {
   reportUnappliedHooks,
 } from './utils/block-hooks.js';
 
-const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.hero-banner', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.hero-banner', '.creators-banner', '.realcheck-checker', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
 // no need to import pwa.js for other routes
 const PWA_ROUTE_PATTERN = /^\/en-us\/consumer\/reverse-phone-lookup(?:\/|$)/;
@@ -638,6 +638,8 @@ async function loadEager(doc) {
   if (page.name.includes(page.locale)) doc.body.classList.add('homepage');
 
   if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
+  // hidden before the first paint, so the space styles.css reserves for the header never shows
+  if (getMetadata('header-type') === 'hidden') doc.body.classList.add('header-hidden');
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
