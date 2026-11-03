@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import {
   fullWidthOnPhone, liftSectionHeader, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
@@ -84,19 +85,6 @@ export default async function decorate(block) {
   wrapSectionInDsSection(block);
   // the section's eyebrow, heading and lead, as bd-section-header
   const header = liftSectionHeader(block);
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/stat'),
-      import('@repobit/dex-system-design/grid'),
-      import('@repobit/dex-system-design/paragraph'),
-      import('@repobit/dex-system-design/button'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('stat-tiles: DSN import failed, keeping the authored content', err);
-    await header;
-    return;
-  }
 
   const rows = [...block.children];
   // a first row with a second cell carrying copy is the highlight; otherwise all are tiles
@@ -118,6 +106,16 @@ export default async function decorate(block) {
 
   if (leadRow) layout.append(buildLead(leadRow));
   layout.append(tiles);
+
+  // the layout is built from copies, so the authored rows are whole until it replaces them
+  try {
+    await load(layout);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('stat-tiles: DSN import failed, keeping the authored content', err);
+    await header;
+    return;
+  }
   block.replaceChildren(layout);
   await header;
 }

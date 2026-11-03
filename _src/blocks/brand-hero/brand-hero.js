@@ -1,4 +1,5 @@
 import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/brand-hero/brand-hero.js
 var DS_ICONS = [
 	"home",
@@ -68,18 +69,6 @@ var buildCard = (row) => {
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block)?.setAttribute("no-padding-top", "");
-	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/hero.js"),
-			import("../../vendor/repobit/dex-system-design/motion-art.js"),
-			import("../../vendor/repobit/dex-system-design/audience-card.js"),
-			import("../../vendor/repobit/dex-system-design/grid.js"),
-			import("../../vendor/repobit/dex-system-design/icons.js")
-		]);
-	} catch (err) {
-		console.warn("brand-hero: DSN import failed, keeping the authored content", err);
-		return;
-	}
 	const [copyRow, ...cardRows] = [...block.children];
 	const { eyebrow, heading, lead } = readCopy(copyRow || block);
 	const hero = document.createElement("bd-hero");
@@ -104,6 +93,12 @@ async function decorate(block) {
 		desktop?.addEventListener("change", setGap);
 		grid.append(...cards);
 		hero.append(grid);
+	}
+	try {
+		await load(hero);
+	} catch (err) {
+		console.warn("brand-hero: DSN import failed, keeping the authored content", err);
+		return;
 	}
 	block.replaceChildren(hero);
 }

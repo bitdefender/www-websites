@@ -1,0 +1,10 @@
+import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i,t as a}from"../../../../../lit/decorators.js";import{n as o,t as s}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import{t as c}from"../shared/prop-vocabulary.js";var l=r`:host{display:inline-flex}.avatar{width:var(--dimension-40);height:var(--dimension-40);border-radius:var(--radius-full);background:var(--status-brand-surface);color:var(--color-text-brand);font-family:var(--typography-fontFamily-sans);font-size:var(--typography-fontSize-sm);font-weight:var(--typography-fontWeight-semibold);line-height:var(--typography-lineHeight-none);flex:none;justify-content:center;align-items:center;display:inline-flex;overflow:hidden}:host([size=sm]) .avatar{width:var(--dimension-24);height:var(--dimension-24);font-size:var(--typography-fontSize-xxs)}:host([size=lg]) .avatar{width:var(--dimension-64);height:var(--dimension-64);font-size:var(--typography-fontSize-lg)}img{object-fit:cover;width:100%;height:100%;display:block}`,u=class extends n{constructor(...e){super(...e),this.src=``,this.name=``,this.size=`md`}static{this.styles=[l]}willUpdate(e){e.has(`size`)&&(this.size=c(this.size,`md`)),e.has(`src`)&&(this._failed=!1)}get _initials(){return(this.name??``).trim().split(/\s+/).map(e=>e[0]||``).join(``).slice(0,2).toUpperCase()}render(){let n=(this.name??``).trim(),r=this.src&&!this._failed;return e`
+      <span
+        class="avatar"
+        role=${n?`img`:t}
+        aria-label=${n||t}
+        aria-hidden=${n?t:`true`}
+      >
+        ${r?e`<img src=${this.src} alt="" @error=${()=>{this._failed=!0}} />`:this._initials}
+      </span>
+    `}};s([i({type:String})],u.prototype,`src`,void 0),s([i({type:String})],u.prototype,`name`,void 0),s([i({type:String,reflect:!0})],u.prototype,`size`,void 0),s([a()],u.prototype,`_failed`,void 0),u=s([o(`bd-avatar`)],u);export{u as BdAvatar};

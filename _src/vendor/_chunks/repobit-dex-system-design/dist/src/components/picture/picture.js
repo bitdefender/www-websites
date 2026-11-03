@@ -1,0 +1,24 @@
+import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import{r as s}from"../shared/prop-vocabulary.js";var c=r`@layer bd-components{.bd-picture,.bd-picture img{max-width:100%;height:auto;display:block}.bd-picture.fit-cover img{object-fit:cover}.bd-picture.fit-contain img{object-fit:contain}.bd-picture.fit-fill img{object-fit:fill}.bd-picture.fit-none img{object-fit:none}.bd-picture.fit-scale-down img{object-fit:scale-down}.bd-picture.radius-none img{border-radius:var(--radius-none)}.bd-picture.radius-sm img{border-radius:var(--shape-radius-sm)}.bd-picture.radius-md img{border-radius:var(--shape-radius-md)}.bd-picture.radius-lg img{border-radius:var(--shape-radius-lg)}.bd-picture.radius-xl img{border-radius:var(--shape-radius-xl)}.bd-picture.radius-2xl img{border-radius:var(--shape-radius-2xl)}.bd-picture.radius-3xl img{border-radius:var(--shape-radius-3xl)}.bd-picture.radius-full img{border-radius:var(--radius-full)}.bd-picture:not([loaded]){background-color:var(--color-surface-muted);min-height:100px;color:var(--color-text-muted);position:relative}.bd-picture:not([loaded]):before{content:var(--bd-img-loading-label,"Loading image");font-size:var(--typography-fontSize-sm);inset:var(--spacing-0);justify-content:center;align-items:center;display:flex;position:absolute}.bd-picture img{transition:opacity var(--transition-duration-slow) var(--transition-easing-smooth), transform var(--transition-duration-slow) var(--transition-easing-smooth)}.bd-picture img[loading=lazy]{opacity:0;transform:scale(.95)}.bd-picture img[loading=lazy][loaded]{opacity:1;transform:scale(1)}@media print{.bd-picture{break-inside:avoid}.bd-picture img{max-width:100%;height:auto}}@media (prefers-contrast:more){.bd-picture img{border:var(--border-width-1) solid currentColor}}@media (prefers-reduced-motion:reduce){.bd-picture img{transition:none}}}`,l=[`none`,`sm`,`md`,`lg`,`xl`,`2xl`,`3xl`,`full`],u=[`cover`,`contain`,`fill`,`none`,`scale-down`],d=class extends n{constructor(...e){super(...e),this.sources=[],this.alt=``,this.fallbackSrc=``,this.width=null,this.height=null,this.loading=`lazy`,this.fetchPriority=``,this.decoding=``,this.fit=`cover`,this.radius=`none`,this.referrerPolicy=``}render(){let n=[`bd-picture`,`fit-${s(u,this.fit)?this.fit:`cover`}`,`radius-${s(l,this.radius)?this.radius:`none`}`].filter(Boolean).join(` `),r=this.fetchPriority===`high`;return e`
+      <picture class="${n}">
+        ${this.sources.map(n=>e`
+          <source
+            type="${n.type||t}"
+            srcset="${n.srcset}"
+            media="${n.media||t}"
+            sizes="${n.sizes||t}"
+          >
+        `)}
+        <img
+          loading="${r?t:this.loading}"
+          fetchpriority="${this.fetchPriority||t}"
+          decoding="${this.decoding||t}"
+          alt="${this.alt}"
+          src="${this.fallbackSrc}"
+          width="${this.width??t}"
+          height="${this.height??t}"
+          referrerpolicy="${this.referrerPolicy||t}"
+          @load="${this._onLoad}"
+          @error="${this._onError}"
+        >
+      </picture>
+    `}firstUpdated(){let e=this.renderRoot?.querySelector(`img`);e?.complete&&e.naturalWidth>0&&this._markLoaded(e)}updated(e){if(!e.has(`fallbackSrc`)&&!e.has(`sources`))return;let t=this.renderRoot?.querySelector(`img`);if(t){if(t.complete&&t.naturalWidth>0)return this._markLoaded(t);t.removeAttribute(`loaded`),this.renderRoot?.querySelector(`picture`)?.removeAttribute(`loaded`)}}_onLoad(e){this._markLoaded(e.currentTarget)}_onError(){}_markLoaded(e){e.setAttribute(`loaded`,``),this.renderRoot?.querySelector(`picture`)?.setAttribute(`loaded`,``)}static{this.styles=[c]}};o([i({type:Array})],d.prototype,`sources`,void 0),o([i({type:String})],d.prototype,`alt`,void 0),o([i({type:String,attribute:`fallback-src`})],d.prototype,`fallbackSrc`,void 0),o([i({type:Number})],d.prototype,`width`,void 0),o([i({type:Number})],d.prototype,`height`,void 0),o([i({type:String})],d.prototype,`loading`,void 0),o([i({type:String,attribute:`fetchpriority`})],d.prototype,`fetchPriority`,void 0),o([i({type:String})],d.prototype,`decoding`,void 0),o([i({type:String})],d.prototype,`fit`,void 0),o([i({type:String})],d.prototype,`radius`,void 0),o([i({type:String,attribute:`referrer-policy`})],d.prototype,`referrerPolicy`,void 0),d=o([a(`bd-picture`)],d);export{d as BdPicture};

@@ -1,3 +1,4 @@
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/accordion/accordion.js
 var getSectionTitle = (block) => {
 	const section = block.closest(".section");
@@ -77,13 +78,8 @@ var buildAccordion = (block) => {
 	return accordion;
 };
 async function decorate(block) {
-	await Promise.all([
-		import("../../vendor/repobit/dex-system-design/accordion-bg.js"),
-		import("../../vendor/repobit/dex-system-design/paragraph.js"),
-		import("../../vendor/repobit/dex-system-design/list.js"),
-		import("../../vendor/repobit/dex-system-design/list-item.js")
-	]);
 	const accordion = buildAccordion(block);
+	await load(accordion);
 	block.replaceChildren(accordion);
 	document.dispatchEvent(new CustomEvent("accordion-bg:loaded", { bubbles: true }));
 }

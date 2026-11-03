@@ -1,3 +1,4 @@
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/barchart/barchart.js
 var DEFAULT_SECONDARY_SCALES = ["0.93", "0.47"];
 var VIEWPORT_ANIMATION_MS = 1e3;
@@ -166,14 +167,8 @@ var activateCompareAnimationsOnViewport = (compareSection) => {
 	observer.observe(compareSection);
 };
 async function decorate(block) {
-	await Promise.all([
-		import("../../vendor/repobit/dex-system-design/compare.js"),
-		import("../../vendor/repobit/dex-system-design/heading.js"),
-		import("../../vendor/repobit/dex-system-design/paragraph.js"),
-		import("../../vendor/repobit/dex-system-design/link.js"),
-		import("../../vendor/repobit/dex-system-design/image.js")
-	]);
 	const compareSection = buildCompareSection(block);
+	await load(compareSection);
 	block.replaceChildren(compareSection);
 	activateCompareAnimationsOnViewport(compareSection);
 }

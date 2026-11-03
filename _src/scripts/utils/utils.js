@@ -1327,7 +1327,7 @@ var wrapSectionInDsSection = (block) => {
 	});
 	bdSection.append(...section.children);
 	section.append(bdSection);
-	import("../../vendor/repobit/dex-system-design/section.js").catch((err) => {
+	import("../../vendor/repobit/dex-system-design/loader.js").then(({ load }) => load(["bd-section"])).catch((err) => {
 		console.warn("bd-section: DSN import failed, the section keeps its authored spacing", err);
 	});
 	return bdSection;
@@ -1388,12 +1388,13 @@ var liftSectionHeader = async (block, { layout } = {}) => {
 	header.setAttribute("layout", HEADER_LAYOUTS.includes(requested) ? requested : "stacked");
 	if (eyebrow) header.setAttribute("eyebrow", eyebrow.textContent.trim());
 	if (heading.id) header.id = heading.id;
+	if (lead) header.append(toLead(lead));
 	try {
-		await Promise.all([import("../../vendor/repobit/dex-system-design/section-header.js"), import("../../vendor/repobit/dex-system-design/link.js")]);
+		const { load } = await import("../../vendor/repobit/dex-system-design/loader.js");
+		await load(header);
 	} catch (err) {
 		console.warn("liftSectionHeader: DSN import failed, continuing with native rendering", err);
 	}
-	if (lead) header.append(toLead(lead));
 	heading.replaceWith(header);
 	eyebrow?.remove();
 	lead?.remove();

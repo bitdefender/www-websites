@@ -1,4 +1,5 @@
 import { liftSectionHeader, matchHeights, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/blog-news/blog-news.js
 var DESKTOP = "(min-width: 992px)";
 var readFeed = async (url) => {
@@ -18,7 +19,7 @@ async function decorateFeedCards(block) {
 	const { dataset } = block.closest(".section");
 	const feeds = Object.keys(dataset).filter((key) => /^endpoint/.test(key) && dataset[key]).map((key) => dataset[key]);
 	const header = liftSectionHeader(block);
-	const [modules, ...results] = await Promise.allSettled([Promise.all([import("../../vendor/repobit/dex-system-design/post-card.js"), import("../../vendor/repobit/dex-system-design/grid.js")]), ...feeds.map(readFeed)]);
+	const [modules, ...results] = await Promise.allSettled([load(["bd-grid", "bd-post-card"]), ...feeds.map(readFeed)]);
 	if (modules.status === "rejected") console.warn("blog-news: DSN import failed", modules.reason);
 	const lists = results.map((result) => {
 		if (result.status === "fulfilled") return result.value;

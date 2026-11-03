@@ -1,3 +1,5 @@
+import { load } from '@repobit/dex-system-design/loader';
+
 const getIconElement = (col) => {
   const iconSpan = col.querySelector('[class*="icon-"]');
   if (iconSpan) {
@@ -75,17 +77,6 @@ const buildCardItem = (row, shape) => {
 };
 
 export default async function decorate(block) {
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/cards'),
-      import('@repobit/dex-system-design/paragraph'),
-      import('@repobit/dex-system-design/button'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('four-cards: DSN import failed, continuing with native rendering', err);
-  }
-
   const {
     // eslint-disable-next-line no-unused-vars
     margintop,
@@ -134,18 +125,11 @@ export default async function decorate(block) {
     cardSection.appendChild(item);
   });
 
-  block.replaceChildren(cardSection);
-
-  // Patch bd-h titles with raw HTML (preserves <br> from authored content)
-  block.querySelectorAll('bd-card-item[data-title-html]').forEach((cardItem) => {
-    const bdH = cardItem.shadowRoot?.querySelector('bd-h');
-    if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
-  });
-
   // Process default-content-wrapper siblings:
   // - headings → become the bd-card-section title (DS-styled)
   // - button links → become bd-button appended to bd-card-section
   const allDefaultWrappers = [...(sectionEl?.querySelectorAll('.default-content-wrapper') || [])];
+  const buttons = [];
 
   allDefaultWrappers.forEach((wrapper) => {
     // Extract heading → set as DS-managed section title
@@ -175,12 +159,26 @@ export default async function decorate(block) {
       bdBtn.setAttribute('size', 'md');
       if (shape) bdBtn.setAttribute('shape', shape);
       bdBtn.textContent = link.textContent.trim();
-      block.appendChild(bdBtn);
+      buttons.push(bdBtn);
       const btnParagraph = link.closest('p') || link.parentElement;
       btnParagraph.remove();
     }
 
     // Remove wrapper if now empty
     if (!wrapper.textContent.trim()) wrapper.remove();
+  });
+
+  try {
+    await load([cardSection, ...buttons]);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('four-cards: DSN import failed, continuing with native rendering', err);
+  }
+  block.replaceChildren(cardSection, ...buttons);
+
+  // Patch bd-h titles with raw HTML (preserves <br> from authored content)
+  block.querySelectorAll('bd-card-item[data-title-html]').forEach((cardItem) => {
+    const bdH = cardItem.shadowRoot?.querySelector('bd-h');
+    if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
   });
 }

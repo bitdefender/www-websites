@@ -1,5 +1,6 @@
 import { decorateIcons } from "../../scripts/lib-franklin.js";
 import { slotIcon } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/features/features.js
 var parseTrailingGreenPill = (text) => {
 	const marker = text.match(/\[\$([^\]]+?)\$\]\s*$/);
@@ -50,7 +51,7 @@ var createGreenBadge = (pill) => {
 	return badge;
 };
 var getIconElement = (col) => {
-	const icon = document.createElement("bd-individual-icon");
+	const icon = document.createElement("span");
 	icon.setAttribute("slot", "icon");
 	icon.setAttribute("size", "40");
 	const iconSpan = col.querySelector("span.icon");
@@ -125,15 +126,6 @@ var buildFeatureCol = (col, firstOpen) => {
 };
 async function decorate(block) {
 	await decorateIcons(block);
-	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/tabs.js"),
-			import("../../vendor/repobit/dex-system-design/paragraph.js"),
-			import("../../vendor/repobit/dex-system-design/accordion.js")
-		]);
-	} catch (err) {
-		console.warn("features: DSN import failed, continuing with native rendering", err);
-	}
 	const firstOpen = block.classList.contains("first-open");
 	const featuresEl = document.createElement("bd-features");
 	[...block.children].forEach((row) => {
@@ -141,6 +133,11 @@ async function decorate(block) {
 			featuresEl.appendChild(buildFeatureCol(col, firstOpen));
 		});
 	});
+	try {
+		await load(featuresEl);
+	} catch (err) {
+		console.warn("features: DSN import failed, continuing with native rendering", err);
+	}
 	block.replaceChildren(featuresEl);
 }
 export { decorate as default };

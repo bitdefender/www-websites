@@ -1,0 +1,4 @@
+import{a as e,t,u as n}from"../../../../../lit/index.js";import{n as r,t as i}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../icons/check-icon.js";var a=n`.feature{align-items:start;gap:var(--spacing-8);font-family:var(--typography-fontFamily-sans);font-size:var(--typography-label-small-fontSize);color:var(--color-text-primary);display:flex}.feature bd-check-icon{color:var(--status-success-accent);margin-top:var(--spacing-2);flex-shrink:0}`,o=class extends t{static{this.styles=[a]}render(){return e`<div class="feature">
+      <bd-check-icon size="xs" aria-hidden="true"></bd-check-icon>
+      <span class="feature-text"><slot></slot></span>
+    </div>`}};o=i([r(`pricing-feature-item`)],o);

@@ -1,4 +1,5 @@
 import { getSectionContent, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/logo-marquee/logo-marquee.js
 var ASSET_SCALE = 1.5;
 var GAPS = {
@@ -48,15 +49,6 @@ var getLabel = (block, textItem) => {
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);
-	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/logo-marquee.js"),
-			import("../../vendor/repobit/dex-system-design/display.js"),
-			import("../../vendor/repobit/dex-system-design/paragraph.js")
-		]);
-	} catch (err) {
-		console.warn("logo-marquee: DSN import failed, continuing with native rendering", err);
-	}
 	const items = [];
 	let textItem = null;
 	[...block.querySelectorAll(":scope > div > div")].forEach((cell) => {
@@ -83,6 +75,11 @@ async function decorate(block) {
 	const label = getLabel(block, textItem);
 	if (label) marquee.setAttribute("label", label);
 	marquee.append(...items);
+	try {
+		await load(marquee);
+	} catch (err) {
+		console.warn("logo-marquee: DSN import failed, continuing with native rendering", err);
+	}
 	block.replaceChildren(marquee);
 	await marquee.updateComplete;
 	if (marquee.shadowRoot) {

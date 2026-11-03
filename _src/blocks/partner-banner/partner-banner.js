@@ -1,4 +1,5 @@
 import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/partner-banner/partner-banner.js
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
 var slotted = (picture, slot) => {
@@ -10,12 +11,6 @@ var slotted = (picture, slot) => {
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);
-	try {
-		await Promise.all([import("../../vendor/repobit/dex-system-design/partner-banner.js"), import("../../vendor/repobit/dex-system-design/button.js")]);
-	} catch (err) {
-		console.warn("partner-banner: DSN import failed, keeping the authored content", err);
-		return;
-	}
 	const heading = block.querySelector("h1, h2, h3, h4, h5, h6");
 	const headingCell = heading?.closest(".partner-banner > div > div");
 	const pictures = [...block.querySelectorAll("picture")];
@@ -42,11 +37,14 @@ async function decorate(block) {
 		button.textContent = text(link);
 		return button;
 	});
-	banner.append(...[
-		slotted(photo, "photo"),
-		slotted(lockup, "lockup"),
-		...buttons
-	].filter(Boolean));
+	banner.append(...buttons);
+	try {
+		await load(banner);
+	} catch (err) {
+		console.warn("partner-banner: DSN import failed, keeping the authored content", err);
+		return;
+	}
+	banner.prepend(...[slotted(photo, "photo"), slotted(lockup, "lockup")].filter(Boolean));
 	block.replaceChildren(banner);
 }
 export { decorate as default };

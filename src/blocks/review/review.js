@@ -1,3 +1,5 @@
+import { load } from '@repobit/dex-system-design/loader';
+
 const buildReview = (cell, variant) => {
   const paragraphs = [...cell.querySelectorAll('p')].filter(
     (p) => !p.querySelector('[class*="icon-"]') && p.textContent.trim(),
@@ -33,16 +35,6 @@ const buildReview = (cell, variant) => {
 };
 
 export default async function decorate(block) {
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/review-grid'),
-      import('@repobit/dex-system-design/review'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('review: DSN import failed, continuing with native rendering', err);
-  }
-
   const sectionEl = block.closest('.section');
   const wrapper = sectionEl?.querySelector('.default-content-wrapper');
   const heading = wrapper?.querySelector('h1, h2, h3, h4, h5, h6');
@@ -59,6 +51,12 @@ export default async function decorate(block) {
     if (review) reviewGrid.append(review);
   });
 
+  try {
+    await load(reviewGrid);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('review: DSN import failed, continuing with native rendering', err);
+  }
   block.replaceChildren(reviewGrid);
 
   if (title) {
