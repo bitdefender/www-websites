@@ -399,10 +399,6 @@ body.no-scroll {
   overflow: hidden;
 }
 
-header.header-wrapper {
-  height: var(--nav-height);
-}
-
 main .section {
   width: 100%;
   position: relative;
@@ -803,15 +799,6 @@ main .grey-background {
 }
 
 @media screen and (min-width: 992px) { /* desktop */
-  /* no position: header.css makes it sticky, and absolute until then takes it out of the flow */
-  header.header-wrapper {
-    height: var(--nav-height-desktop);
-    z-index: 999;
-    margin: auto;
-    left: 0;
-    right: 0;
-  }
-
   main .section.wide h2 {
     font-size: var(--heading-font-size-xl);
     font-weight: var(--font-weight-bold);
@@ -967,12 +954,6 @@ main .section.mb-0, .mb-0 {
     padding: 1em 0;
   }
 
-}
-
-@media (min-width: 1000px) {
-  header.header-wrapper {
-    height: var(--nav-height-desktop);
-  }
 }
 
 @media (min-width: 596px) {
