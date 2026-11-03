@@ -531,6 +531,9 @@ async function decorate(block) {
 	button.textContent = checkButtonText ?? "Check URL";
 	button.classList.add("check-url");
 	inputContainer.appendChild(button);
+	window.addEventListener("pageshow", (event) => {
+		if (event.persisted) inputContainer.classList.remove("loader-circle");
+	});
 	formContainer.appendChild(result);
 	block.querySelectorAll(":scope > div")[1].replaceWith(formContainer);
 	const [safeImage, dangerImage] = block.querySelectorAll("picture");
