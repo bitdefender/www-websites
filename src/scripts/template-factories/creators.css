@@ -1,0 +1,27 @@
+
+@media (min-width: 992px) {
+    .creators .default-content-wrapper h2{
+        font-size: 60px / 69px;
+        font-weight: 300;
+        font-family: var(--body-font-family);
+    }
+
+    .creators .scam-protection .default-content-wrapper h2 {
+        font: 600 40px/48px var(--body-font-family) !important;
+    }
+
+    .creators .scam-protection .default-content-wrapper p {
+        font: normal normal 300 24px/34px var(--body-font-family) !important;
+        margin: 0;
+    }
+
+    html[lang="ro"], body {
+        font-family: var(--body-font-family);
+
+        font-feature-settings: "locl" 1;
+        -moz-font-feature-settings: "locl";
+        -webkit-font-feature-settings: "locl";
+
+        font-variant-ligatures: contextual;     
+    }
+}

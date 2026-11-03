@@ -1,0 +1,1 @@
+var e=class{constructor(e){this.host=e,this.status=``,this._timer=0,e.addController(this)}say(e){clearTimeout(this._timer),this._set(``),this._timer=setTimeout(()=>this._set(e),100)}_set(e){this.status=e,this.host.requestUpdate()}hostDisconnected(){clearTimeout(this._timer)}};export{e as t};

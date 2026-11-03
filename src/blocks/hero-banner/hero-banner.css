@@ -1,0 +1,371 @@
+/* stylelint-disable custom-property-pattern -- the tokens are dex-core's, named in camelCase */
+
+/*
+ * The product page hero, drawn in dex-core's Figma as "herobanners".
+ * Text, controls and the badge are dex-system-design atoms, styled by the atoms. This file
+ * lays them out and draws what has no atom (the card, the image, the price) with the
+ * design-system tokens. The atoms install the tokens, and the hero is drawn before they
+ * arrive, so every token has its value as the fallback. Until each atom upgrades, the
+ * rules at the end size its host as the atom will render.
+ *
+ * Rooted on .hero-banner.block, not .hero-banner: a section style of the same name
+ * (hero-dropdown pages have one) must not pick up the block's styles.
+ */
+.hero-banner.block {
+  /* bd-p's flow margin off: the column spaces its parts with gap */
+  --bd-paragraph-margin-bottom: 0;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  box-sizing: border-box;
+
+  /* the section has no side padding: keep the page's gutter until the hero reaches its width */
+  width: calc(100% - 2 * var(--body-padding, 20px));
+  max-width: 1290px;
+  margin: 0 auto;
+  color: var(--color-text-primary, #151719);
+  font-family: var(--typography-fontFamily-sans, var(--body-font-family));
+  text-align: left;
+}
+
+.hero-banner.block.hero-banner--card {
+  padding: var(--spacing-16, 16px);
+  border-radius: var(--shape-radius-3xl, 24px);
+  background: var(--color-surface-container, #fafafa);
+}
+
+/* media panel: on top below lg, on the right from lg */
+.hero-banner .hero-banner__media {
+  position: relative;
+  order: -1;
+  overflow: hidden;
+  min-height: 240px;
+  border-radius: var(--shape-radius-2xl, 16px);
+}
+
+.hero-banner.hero-banner--no-media .hero-banner__media {
+  display: none;
+}
+
+.hero-banner .hero-banner__media picture,
+.hero-banner .hero-banner__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* above the copy the panel is a wide strip: keep the top, where the faces are */
+.hero-banner .hero-banner__media img {
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* card look: the image fades into the card */
+.hero-banner.hero-banner--card .hero-banner__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, var(--color-surface-container, #fafafa));
+  pointer-events: none;
+}
+
+/*
+ * product look: a brand glow from the signature's corner, the signature on it. Figma's scrim:
+ * a 160px band, an ellipse as wide as the panel, blue-500 in the corner fading through
+ * blue-950. Its middle stops are the two mixed, at the opacity of the stop.
+ */
+.hero-banner .hero-banner__scrim {
+  --hero-banner-glow: var(--color-brand-500, #006dff);
+  --hero-banner-glow-end: var(--color-brand-950, #001947);
+  --hero-banner-glow-corner: 100% 100%;
+
+  position: absolute;
+  inset: auto 0 0;
+  height: 160px;
+  background: radial-gradient(
+    100% 100% at var(--hero-banner-glow-corner),
+    var(--hero-banner-glow) 0,
+    color-mix(in srgb, color-mix(in srgb, var(--hero-banner-glow) 75%, var(--hero-banner-glow-end)) 75%, transparent) 25%,
+    color-mix(in srgb, color-mix(in srgb, var(--hero-banner-glow) 50%, var(--hero-banner-glow-end)) 50%, transparent) 50%,
+    color-mix(in srgb, var(--hero-banner-glow-end) 0%, transparent) 100%
+  );
+  pointer-events: none;
+}
+
+/* text, not bd-brand-signature-icon: the mark is drawn in English, the metadata is per locale */
+.hero-banner .hero-banner__signature {
+  position: absolute;
+  right: var(--spacing-24, 24px);
+  bottom: var(--spacing-24, 24px);
+  margin: 0;
+  color: var(--color-text-inverse, #fff);
+  font-size: var(--typography-fontSize-2xl, 1.5rem);
+  font-weight: var(--typography-fontWeight-bold, 700);
+  line-height: var(--typography-lineHeight-none, 1);
+  letter-spacing: -0.02em;
+}
+
+/* copy column */
+.hero-banner .hero-banner__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-16, 16px);
+  min-width: 0;
+  padding-block: var(--spacing-24, 24px);
+}
+
+.hero-banner .hero-banner__content p {
+  margin: 0;
+}
+
+.hero-banner .hero-banner__content :is(bd-h, bd-p) {
+  width: 100%;
+}
+
+.hero-banner .hero-banner__eyebrow {
+  color: var(--color-brand-500, #006dff);
+  font-size: var(--typography-fontSize-2xl, 1.5rem);
+  font-weight: var(--typography-fontWeight-bold, 700);
+  line-height: var(--typography-lineHeight-none, 1);
+  letter-spacing: -0.02em;
+}
+
+.hero-banner .hero-banner__description {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8, 8px);
+  width: 100%;
+}
+
+/* the description sits 8px under the title, the rest of the body 16px apart */
+.hero-banner .hero-banner__title + .hero-banner__description {
+  margin-top: calc(var(--spacing-8, 8px) - var(--spacing-16, 16px));
+}
+
+/* a heading used as the description comes bolded whole from Word; Figma draws it regular */
+.hero-banner .hero-banner__description [data-authored-as='heading'] strong {
+  font-weight: inherit;
+}
+
+.hero-banner .hero-banner__selector {
+  width: 100%;
+}
+
+/* price boxes: one per product, the selected one shown */
+.hero-banner .hero-banner__offer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16, 16px);
+  width: 100%;
+}
+
+.hero-banner .hero-banner__offer[hidden] {
+  display: none;
+}
+
+/* the store wraps the offer in its context elements: let the offer's gap reach through them */
+.hero-banner .hero-banner__offer :is(bd-context, bd-product, bd-option) {
+  display: contents;
+}
+
+.hero-banner .hero-banner__was {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-8, 8px);
+}
+
+.hero-banner .hero-banner__was bd-p {
+  width: auto;
+}
+
+.hero-banner .hero-banner__final {
+  font-family: var(--typography-heading-h2-fontFamily, inherit);
+  font-size: var(--typography-heading-h2-fontSize, clamp(1.6875rem, calc(1.4196rem + 1.3393vw), 2.25rem));
+  font-weight: var(--typography-heading-h2-fontWeight, 700);
+  line-height: var(--typography-heading-h2-lineHeight, 1.25);
+  letter-spacing: var(--typography-heading-h2-letterSpacing, normal);
+}
+
+/* CTAs: full width and stacked below md, side by side from md */
+.hero-banner .hero-banner__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8, 8px);
+  width: 100%;
+}
+
+/* the disclaimer is 8px under the CTAs */
+.hero-banner .hero-banner__disclaimer {
+  margin-top: calc(var(--spacing-8, 8px) - var(--spacing-16, 16px));
+  width: 100%;
+}
+
+.hero-banner .hero-banner__marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-24, 24px);
+  margin-top: var(--spacing-8, 8px);
+}
+
+.hero-banner .hero-banner__marks img {
+  display: block;
+  width: auto;
+  height: var(--dimension-56, 56px);
+}
+
+/*
+ * Until the atoms upgrade: each host drawn with the tokens the atom renders with
+ * (dex-system-design 2.3.0), at their values, so nothing moves when it does.
+ */
+.hero-banner :is(bd-h, bd-p, bd-custom-dropdown):not(:defined) {
+  display: block;
+}
+
+.hero-banner bd-h.hero-banner__title:not(:defined) {
+  font-size: var(--typography-heading-h1-fontSize, clamp(1.875rem, calc(1.3393rem + 2.6786vw), 3rem));
+  font-weight: var(--typography-heading-h1-fontWeight, 700);
+  line-height: var(--typography-heading-h1-lineHeight, 1.25);
+}
+
+.hero-banner bd-h.hero-banner__product:not(:defined) {
+  color: var(--color-text-brand, #0059d6);
+  font-size: var(--typography-heading-h4-fontSize, clamp(1.3125rem, calc(1.2232rem + 0.4464vw), 1.5rem));
+  font-weight: var(--typography-heading-h4-fontWeight, 600);
+  line-height: var(--typography-heading-h4-lineHeight, 1.3);
+}
+
+.hero-banner bd-p:not(:defined) {
+  font-size: var(--typography-body-regular-fontSize, 1rem);
+  line-height: var(--typography-body-regular-lineHeight, 1.5);
+}
+
+.hero-banner bd-p[variant='small']:not(:defined) {
+  font-size: var(--typography-body-small-fontSize, 0.875rem);
+  line-height: var(--typography-body-small-lineHeight, 1.45);
+}
+
+.hero-banner bd-p[variant='xsmall']:not(:defined) {
+  color: var(--color-text-muted, #565e66);
+  font-size: var(--typography-body-xsmall-fontSize, 0.75rem);
+  line-height: var(--typography-body-small-lineHeight, 1.45);
+}
+
+.hero-banner bd-p.hero-banner__full:not(:defined) {
+  color: var(--color-text-muted, #565e66);
+  font-weight: var(--typography-fontWeight-medium, 500);
+}
+
+.hero-banner bd-badge:not(:defined) {
+  display: inline-flex;
+  gap: var(--spacing-4, 4px);
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  border-radius: var(--radius-full, 9999px);
+  background: var(--status-success-fill, #0e8532);
+  color: var(--status-success-on-fill, #fff);
+  font-size: var(--typography-control-label-default-fontSize, 0.875rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+}
+
+/* the dropdown shows its first label, a light-DOM text the rendered atom has no slot for */
+.hero-banner bd-custom-dropdown:not(:defined) {
+  box-sizing: border-box;
+  height: var(--form-input-medium-height, 44px);
+  padding: 11px 40px 11px var(--spacing-16, 16px);
+  overflow: hidden;
+  border: var(--form-input-default-borderWidth, 1px) solid var(--form-input-default-borderColor, #88909b);
+  border-radius: var(--form-input-medium-borderRadius, 6px);
+  background: var(--form-input-default-backgroundColor, #fff) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23565e66'%3E%3Cpath d='M10 11.98 3.57 5.55 1.8 7.32l7.32 7.31a1.25 1.25 0 0 0 1.76 0l7.32-7.31-1.77-1.77z'/%3E%3C/svg%3E") right var(--spacing-16, 16px) center / 16px no-repeat;
+  font-size: var(--form-input-medium-fontSize, 1rem);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hero-banner bd-button-link:not(:defined) {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--button-large-padding, 16px 32px);
+  border-radius: var(--button-large-borderRadius, 8px);
+  font-size: var(--button-large-fontSize, 1.125rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+}
+
+.hero-banner bd-button-link[variant='accent']:not(:defined) {
+  background: var(--button-accent-background-default, #d60000);
+  color: var(--button-accent-text-default, #fff);
+}
+
+.hero-banner bd-button-link[variant='tertiary']:not(:defined) {
+  box-shadow: inset 0 0 0 var(--border-width-2, 2px) var(--button-tertiary-border-default, #006dff);
+  color: var(--button-tertiary-text-default, #0059d6);
+}
+
+/* below md Figma moves the signature, and the glow under it, to the bottom left */
+@media (width < 768px) {
+  .hero-banner .hero-banner__scrim {
+    --hero-banner-glow-corner: 0 100%;
+  }
+
+  .hero-banner .hero-banner__signature {
+    right: auto;
+    left: var(--spacing-24, 24px);
+  }
+}
+
+@media (width >= 768px) {
+  .hero-banner .hero-banner__ctas {
+    flex-flow: row wrap;
+    gap: var(--spacing-16, 16px);
+    width: auto;
+  }
+
+  /* the atom's fullwidth makes the host a block: from md the buttons size to their label */
+  .hero-banner .hero-banner__ctas bd-button-link {
+    display: inline-flex;
+    width: auto;
+  }
+
+  .hero-banner .hero-banner__selector {
+    width: 320px;
+    max-width: 100%;
+  }
+}
+
+@media (width >= 992px) {
+  .hero-banner.block {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-40, 40px);
+    padding-block: var(--spacing-16, 16px);
+  }
+
+  .hero-banner.block.hero-banner--card {
+    gap: 0;
+    padding: var(--spacing-16, 16px) var(--spacing-16, 16px) var(--spacing-16, 16px) var(--spacing-40, 40px);
+  }
+
+  .hero-banner.block.hero-banner--no-media {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-banner .hero-banner__media {
+    order: 0;
+    min-height: 0;
+  }
+
+  .hero-banner .hero-banner__media img {
+    object-position: center;
+  }
+
+  .hero-banner.hero-banner--card .hero-banner__media::after {
+    background: linear-gradient(to left, transparent 40%, var(--color-surface-container, #fafafa));
+  }
+}

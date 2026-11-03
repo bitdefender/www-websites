@@ -1,0 +1,14 @@
+/* the highlight, its copy and the CTA, stacked 24 apart; bd-p's own bottom
+   margin is the gap's job here */
+.stat-tiles .stat-tiles-lead {
+  --bd-paragraph-margin-bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-24);
+}
+
+.stat-tiles .stat-tiles-lead bd-button-link[fullwidth] {
+  align-self: stretch;
+}

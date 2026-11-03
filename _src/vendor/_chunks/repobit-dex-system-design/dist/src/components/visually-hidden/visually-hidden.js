@@ -1,0 +1,3 @@
+import{a as e,t,u as n}from"../../../../../lit/index.js";import{n as r,t as i}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";var a=n`:host{clip-path:inset(50%);white-space:nowrap;border:0;width:1px;height:1px;margin:-1px;padding:0;position:absolute;overflow:hidden}`,o=class extends t{static{this.styles=[a]}render(){return e`
+      <slot></slot>
+    `}};o=i([r(`bd-visually-hidden`)],o);export{o as BdVisuallyHidden};

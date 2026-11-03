@@ -1,0 +1,61 @@
+import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../heading/heading.js";import"../shared/token-scales.js";import"../paragraph/paragraph.js";import{t as s}from"../shared/ensemble.css.js";import"../icons/av-comparatives-icon.js";import"../icons/best-brands-icon.js";import"../icons/laurel-icon.js";import"../icons/pc-mag-2024-icon.js";import"../icons/pc-mag-business-icon.js";import"../icons/pc-mag-icon.js";import"../icons/pc-mag-readers-icon.js";import"../icons/top-product-icon.js";import"../icons/analysis-icon.js";import"../icons/machine-learning-icon.js";var c=r`:host{font-family:var(--typography-fontFamily-sans);box-sizing:border-box;background:var(--layout-awards-section-background);padding:var(--spacing-32);display:block}.bd-awards-root{align-items:center;gap:var(--spacing-48);padding-block:var(--spacing-48);box-sizing:border-box;flex-direction:column;max-width:100%;display:flex}.bd-awards-trust-banner{align-items:center;gap:var(--spacing-24);width:100%;max-width:var(--layout-awards-cluster-max-width);text-align:center;box-sizing:border-box;flex-direction:column;margin:0 auto;display:flex}.bd-awards-tagline{color:var(--color-text-brand)}.bd-awards-section-title,.bd-awards-feature-title{margin:var(--spacing-0) var(--spacing-0) var(--spacing-14)}.bd-awards-trust-intro{align-items:center;gap:var(--spacing-16);width:100%;max-width:var(--layout-awards-intro-max-width);box-sizing:border-box;flex-direction:column;display:flex}.bd-awards-laurel-icon{color:var(--color-brand-500);width:var(--spacing-80);height:var(--spacing-80);flex-shrink:0;justify-content:center;align-items:center;display:flex}.bd-awards-trust-intro .bd-awards-subtext{width:100%;max-width:100%;padding:0 var(--spacing-8);box-sizing:border-box}@media (width>=576px){.bd-awards-trust-intro .bd-awards-subtext{padding:0 var(--spacing-16)}}.bd-awards-secret-section .bd-awards-section-title{margin:0 0 var(--spacing-16);display:block}.bd-awards-bar{justify-content:center;align-items:center;gap:var(--spacing-32);box-sizing:border-box;flex-wrap:wrap;width:100%;display:flex}.bd-awards-badge{box-sizing:border-box;padding:var(--spacing-0);background:0 0;justify-content:center;align-items:center;display:flex}.bd-awards-row{display:contents}.bd-awards-row--mobile-only{display:none}.bd-awards-lower{align-items:stretch;gap:var(--spacing-32);width:100%;max-width:940px;padding:0 var(--spacing-24);box-sizing:border-box;flex-direction:column;margin:0 auto;display:flex}.bd-awards-secret-section{text-align:center;padding:0 var(--spacing-16) var(--spacing-16);box-sizing:border-box;width:100%}@media (width>=576px){.bd-awards-secret-section{padding:var(--spacing-8) var(--spacing-20) var(--spacing-16)}}@media (width>=768px){.bd-awards-secret-section{padding:var(--spacing-8) var(--spacing-24) var(--spacing-16)}}.bd-awards-features-grid{gap:var(--spacing-32);box-sizing:border-box;grid-template-columns:1fr;width:100%;margin:0;padding:0;display:grid}@media (width>=768px){.bd-awards-features-grid{gap:var(--spacing-32);grid-template-columns:1fr 1fr}}.bd-awards-feature-card{background:var(--color-surface-default);border:var(--border-width-1) solid var(--color-border-container);border-radius:var(--card-radius);padding:var(--card-padding);gap:var(--spacing-8);box-sizing:border-box;text-align:left;flex-direction:column;height:100%;display:flex}.bd-awards-feature-text{gap:var(--spacing-8);flex-direction:column;align-self:stretch;display:flex}.bd-awards-feature-icon{width:var(--icon-2xl-size);height:var(--icon-2xl-size);flex-shrink:0;justify-content:center;align-items:center;display:flex}.bd-awards-feature-card .bd-awards-feature-title{margin:0;display:block}@media (width<576px){.bd-awards-root{padding-block:var(--spacing-24);gap:var(--spacing-24)}.bd-awards-trust-banner{align-items:stretch;max-width:100%}.bd-awards-trust-intro{gap:var(--spacing-8);max-width:none;padding:0 var(--spacing-24);box-sizing:border-box}.bd-awards-laurel-icon{width:var(--spacing-40);height:var(--spacing-40)}.bd-awards-laurel-icon bd-laurel-icon{height:var(--spacing-40)}.bd-awards-trust-intro .bd-awards-subtext{padding:0}.bd-awards-bar{align-items:center}.bd-awards-row--desktop-only{display:none}.bd-awards-row--mobile-only{justify-content:center;align-items:center;gap:var(--spacing-16);flex-wrap:wrap;width:100%;display:flex}.bd-awards-badge svg{height:var(--spacing-32);width:auto}.bd-awards-lower{gap:var(--spacing-16);padding:0 var(--spacing-8)}.bd-awards-secret-section .bd-awards-section-title{margin-bottom:var(--spacing-8)}.bd-awards-secret-section{padding:0 var(--spacing-24) var(--spacing-16)}.bd-awards-features-grid{gap:var(--spacing-32);padding:0}.bd-awards-tagline{--typography-body-large-fontSize:var(--typography-body-small-fontSize);--typography-body-large-fontWeight:var(--typography-body-small-fontWeight);--typography-body-large-lineHeight:var(--typography-body-small-lineHeight);--typography-body-large-letterSpacing:var(--typography-body-small-letterSpacing)}.bd-awards-headline,.bd-awards-section-title{--typography-heading-h3-fontSize:var(--typography-heading-h4-fontSize);--typography-heading-h3-fontWeight:var(--typography-heading-h4-fontWeight);--typography-heading-h3-lineHeight:var(--typography-heading-h4-lineHeight);--typography-heading-h3-letterSpacing:var(--typography-heading-h4-letterSpacing);--typography-heading-h3-fontFamily:var(--typography-heading-h4-fontFamily)}.bd-awards-subtext,.bd-awards-section-subtext{--typography-body-regular-fontSize:var(--typography-body-small-fontSize);--typography-body-regular-fontWeight:var(--typography-body-small-fontWeight);--typography-body-regular-lineHeight:var(--typography-body-small-lineHeight);--typography-body-regular-letterSpacing:var(--typography-body-small-letterSpacing)}}@media (width<768px){.bd-awards-feature-title{--typography-heading-h4-fontSize:var(--typography-heading-h6-fontSize);--typography-heading-h4-fontWeight:var(--typography-heading-h6-fontWeight);--typography-heading-h4-lineHeight:var(--typography-heading-h6-lineHeight);--typography-heading-h4-letterSpacing:var(--typography-heading-h6-letterSpacing);--typography-heading-h4-fontFamily:var(--typography-heading-h6-fontFamily)}.bd-awards-feature-desc{--typography-body-regular-fontSize:var(--typography-body-small-fontSize);--typography-body-regular-fontWeight:var(--typography-body-small-fontWeight);--typography-body-regular-lineHeight:var(--typography-body-small-lineHeight);--typography-body-regular-letterSpacing:var(--typography-body-small-letterSpacing)}}`,l={"bd-pc-mag-icon":()=>e`<bd-pc-mag-icon></bd-pc-mag-icon>`,"bd-av-comparatives-icon":()=>e`<bd-av-comparatives-icon></bd-av-comparatives-icon>`,"bd-best-brands-icon":()=>e`<bd-best-brands-icon></bd-best-brands-icon>`,"bd-pc-mag-2024-icon":()=>e`<bd-pc-mag-2024-icon></bd-pc-mag-2024-icon>`,"bd-pc-mag-readers-icon":()=>e`<bd-pc-mag-readers-icon height="64" width="37"></bd-pc-mag-readers-icon>`,"bd-pc-mag-business-icon":()=>e`<bd-pc-mag-business-icon></bd-pc-mag-business-icon>`,"bd-top-product-icon":()=>e`<bd-top-product-icon></bd-top-product-icon>`,"bd-machine-learning-icon":()=>e`<bd-machine-learning-icon></bd-machine-learning-icon>`,"bd-analysis-icon":()=>e`<bd-analysis-icon></bd-analysis-icon>`},u=class extends n{constructor(...e){super(...e),this.content=`full`,this.tagline=`You're Making A Great Choice`,this.headline=`World-class security software you can trust. Always.`,this.subtext=`We've added 25 new accolades in the past two years to the hundreds we have won since we started in 2001 - so you know you are in good hands.`,this.secretTitle=`What's our secret`,this.secretSubtext=`At the heart of Bitdefender lies a powerhouse of proprietary technology, setting it miles apart from the competition.`,this.desktopAwards=[{label:`PC MAG
+EDITORS' CHOICE`,type:`red`,tag:`bd-pc-mag-icon`,id:`pc-mag`},{label:`AV
+comparatives`,type:`dark`,tag:`bd-av-comparatives-icon`,id:`av-comparatives`},{label:`Best
+Brands
+2024`,type:`dark`,tag:`bd-best-brands-icon`,id:`best-brands`},{label:`PC
+Choice
+2024`,type:`red`,tag:`bd-pc-mag-2024-icon`,id:`pc-mag-2024`},{label:`PC MAG
+READERS'
+CHOICE`,type:`red`,tag:`bd-pc-mag-readers-icon`,id:`pc-mag-readers`},{label:`PC
+Business
+Choice`,type:`red`,tag:`bd-pc-mag-business-icon`,id:`pc-mag-business`},{label:`AV
+TEST
+TOP
+PRODUCT`,type:`red`,tag:`bd-top-product-icon`,id:`top-product`}],this.features=[{tag:`bd-machine-learning-icon`,title:`Machine Learning`,description:`Imagine Bitdefender as a super-smart detective, constantly learning and getting better at spotting bad guys. Just like how you learn from your experiences, Bitdefender learns from millions of cyber threats it encounters every day. It studies their patterns, figures out their tricks, and uses that knowledge to protect your devices from future attacks.`},{tag:`bd-analysis-icon`,title:`Behavioral Analysis`,description:`Bitdefender keeps an eye on how you and your devices normally behave. So, when something unusual happens, like a strange file trying to sneak into your computer or a suspicious website trying to steal your info, Bitdefender sounds the alarm. It's like having a loyal sidekick that never sleeps, always on the lookout for trouble and ready to jump into action to keep you safe.`}]}static{this.styles=[s,c]}_renderBadge(t){let n=l[t.tag],r=t.label.replace(/\n/g,` `),i=`bd-awards-badge ${t.type===`dark`?`bd-awards-badge--dark`:``}`;return e`
+      <div class="${i}" data-award-id="${t.id}" role="listitem" aria-label="${r}">
+        ${n?n():``}
+      </div>
+    `}_renderFeature(t){let n=l[t.tag];return e`
+      <article class="bd-awards-feature-card">
+        <div class="bd-awards-feature-icon" aria-hidden="true">
+          ${n?n():``}
+        </div>
+        <div class="bd-awards-feature-text">
+          <bd-h as="h4" fontWeight="bold" class="bd-awards-feature-title">${t.title}</bd-h>
+          <bd-p variant="regular" class="bd-awards-feature-desc">${t.description}</bd-p>
+        </div>
+      </article>
+    `}render(){return this.content===`summary`?e`<div class="bd-ensemble bd-awards-root">${this._renderUpper()}</div>`:e`${this._renderUpper()}${this._renderLower()}`}_renderUpper(){return e`
+      <div class="bd-awards-trust-banner">
+        <div class="bd-awards-trust-intro">
+          <span class="bd-awards-laurel-icon" aria-hidden="true">
+            <bd-laurel-icon></bd-laurel-icon>
+          </span>
+
+          <bd-p variant="large" class="bd-awards-tagline">${this.tagline}</bd-p>
+          <bd-h as="h3" class="bd-awards-headline">${this.headline}</bd-h>
+          <bd-p variant="regular" class="bd-awards-subtext">${this.subtext}</bd-p>
+        </div>
+
+        <div class="bd-awards-bar" role="list" aria-label="Industry awards">
+          <div class="bd-awards-row" role="presentation">
+            ${this.desktopAwards.slice(0,3).map(e=>this._renderBadge(e))}
+          </div>
+          <div class="bd-awards-row" role="presentation">
+            ${this.desktopAwards.slice(3).map(e=>this._renderBadge(e))}
+          </div>
+        </div>
+      </div>
+
+    `}_renderLower(){return this.content===`summary`?t:e`
+      <div class="bd-awards-lower">
+        <section class="bd-awards-secret-section">
+          <bd-h as="h3" class="bd-awards-section-title">${this.secretTitle}</bd-h>
+          <bd-p variant="regular" class="bd-awards-section-subtext">${this.secretSubtext}</bd-p>
+        </section>
+
+        <div class="bd-awards-features-grid">
+          ${this.features.map(e=>this._renderFeature(e))}
+        </div>
+      </div>
+    `}};o([i({type:String,reflect:!0})],u.prototype,`content`,void 0),o([i({type:String})],u.prototype,`tagline`,void 0),o([i({type:String})],u.prototype,`headline`,void 0),o([i({type:String})],u.prototype,`subtext`,void 0),o([i({type:String})],u.prototype,`secretTitle`,void 0),o([i({type:String})],u.prototype,`secretSubtext`,void 0),o([i({type:Array})],u.prototype,`desktopAwards`,void 0),o([i({type:Array})],u.prototype,`features`,void 0),u=o([a(`bd-awards-section`)],u);export{u as AwardsSection};

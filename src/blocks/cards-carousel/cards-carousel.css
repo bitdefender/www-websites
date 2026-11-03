@@ -1,0 +1,329 @@
+.cards-carousel-container {
+    overflow: hidden;
+
+    * {
+        font-family: var(--body-font-family);
+    }
+
+    .cards-carousel-wrapper {
+        max-width: 1290px;
+        margin: auto;
+
+        .cards-carousel {
+            padding: 0 24px;
+
+            .carousel-track {
+                .cards-container {
+                    display: grid;
+                    grid-template-columns: repeat(6, 1fr);
+                    gap: 32px;
+                    transform: translateX(var(--offset));
+                    transition: var(--transition);
+
+                    .carousel-card {
+                        display: grid;
+                        grid-template-rows: subgrid;
+                        grid-row: span 5;
+                        gap: 8px;
+                        border-radius: 20px;
+                        padding: 24px;
+                        min-width: 320px;
+                        background-color: #F0F7FF;
+
+                        h3 {
+                            color: #006DFF;
+                            font-size: 20px;
+                            margin: 0;
+                        }
+
+                        p {
+                            font-size: 14px;
+                            margin: 0;
+                        }
+
+                        .button-container {
+                            display: flex;
+                            justify-content: end;
+                            margin: 0;
+
+                            a {
+                                background: transparent;
+                                border: none;
+                                position: relative;
+                                right: 0;
+                                padding: 0;
+
+                                &::after {
+                                    content: '';
+                                    min-width: 40px;
+                                    min-height: 40px;
+                                    mask: url("/_src/icons/arrow-right.svg") no-repeat;
+                                    background-color: #006DFF;
+                                    display: inline-block;
+                                    transition: all .3s cubic-bezier(.4, 0, .2, 1);
+                                    transform: translateX(4px);
+                                    opacity: 1;
+                                    margin-left: -10px;
+                                    margin-right: 8px;
+                                    overflow: visible;
+                                }
+
+                                .button-text {
+                                    display: none;
+                                }
+                            }
+                        }
+
+                        .icon {
+                            height: 32px;
+                            width: 32px;
+                            margin: 0;
+                        }
+
+                        &:has(.button-container) {
+                            padding-bottom: 12px;
+                        }
+
+                        &:hover .button-container a::after {
+                            transform: translateX(12px);
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+
+            .navigation {
+                margin-top: 32px;
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+
+                .dots-container {
+                    display: inline-flex;
+                    gap: 4px;
+
+                    .carousel-dot {
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 8px;
+                        background-color: #8F8F8F;
+                        
+                        &.active {
+                            width: 20px;
+                            background-color: #006DFF;
+                            transition: width .3s ease-in-out;
+                        }
+                    }
+                }
+
+                .nav-buttons-container {
+                    touch-action: none;
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 16px;
+
+                    .button {
+                        top: 0;
+                        width: 40px;
+                        height: 40px;
+                        border: none;
+                        background-color: #006DFF;
+                        cursor: pointer;
+                        padding: 0;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        &:hover {
+                            background-color: #0059D6;
+                        }
+
+                        &:active {
+                            background-color: #0045AD;
+                        }
+
+                        &:disabled {
+                            background-color:#F1F2F3;
+
+                            svg {
+                                path {
+                                    fill: #7d7d7d;
+                                }
+                            }
+                        }
+
+                        &.right {
+                            svg {
+                                margin-left: 2px;
+                                fill: #FFF;
+                            }
+                        }
+
+                        &.left {
+                            svg {
+                                margin-right: 2px;
+                                fill: #FFF;
+                            }
+                        }
+
+                        
+                    }
+                }
+            }
+        }
+    }
+
+    &.trusted-carousel {
+        background-color: #EFF6FF !important;
+        position: relative;
+
+        .default-content-wrapper * {
+            max-width: 75%;
+        }
+
+        .cards-carousel-wrapper {
+            margin-top: 40px;
+            max-width: 1232px;
+
+            .cards-carousel {
+                .navigation {
+                    display: flex;
+                    position: absolute;
+                    top: 40px;
+                    left: 75%;
+                    
+
+                    .dots-container {
+                        display: none;
+
+                    }
+                }
+
+                .carousel-track {
+                    .cards-container {
+                        display: grid;
+                        grid-auto-flow: column;
+                        grid-template-columns: unset;
+                        grid-auto-columns: 80%;
+
+                        .carousel-card {
+                            text-align: left;
+                            background-color: #fff;
+                            padding: 40px;
+                            
+                            h4 {
+                                color: #006DFF;
+                                font-size: 19px;
+                                margin: 0;
+                                font-weight: 600;
+                            }
+
+                            h3 {
+                                color: #000;
+                                font-size: 29px;
+                                font-weight: 500;
+
+                            }
+
+                            p {
+                                font-size: 17px;
+                                font-weight: 400;
+
+                                img {
+                                    height: 80px;
+                                }
+                            }
+
+                            .button-container {
+                                justify-content: start;
+                                
+                                a {
+                                    .button-text {
+                                        display: inline-block;
+                                        color: #006DFF;
+                                        font-size: 17px;
+                                        font-weight: 400;
+                                        text-align: left;
+                                        transition: none;
+                                        transform: none;
+                                    }
+
+                                    &::after {
+                                        display: none;
+                                    }
+
+                                    &:hover .button-text {
+                                        text-decoration: underline;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @media (max-width: 767px) {
+                   .navigation {
+                        position: static;
+                        justify-content: center;
+                   }
+
+                    .carousel-track {
+                        .cards-container {
+                            grid-auto-columns: 100%;
+                        }
+                    }
+                }
+            }
+        }
+
+        @media (max-width: 767px) {
+            .default-content-wrapper * {
+                max-width: 100%;
+            }
+        }
+    }
+
+    @media (min-width: 768px) {
+        .cards-carousel-wrapper {
+            .cards-carousel {
+                .carousel-track {
+                    grid-template-columns: repeat(2, 1fr);
+
+                    .carousel-card {
+                        p {
+                            font-size: 16px;
+                        }
+
+                        .icon {
+                            width: 64px;
+                            height: 64px;
+                        }
+                    }
+                }
+
+                .navigation {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    @media (min-width: 1200px) {
+        padding: 47px 0;
+
+        .cards-carousel-wrapper {
+            .cards-carousel {
+                padding: 0;
+
+                .carousel-track {
+                    .cards-container {
+                        gap: 32px;
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+                }
+            }
+        }
+    }
+}
