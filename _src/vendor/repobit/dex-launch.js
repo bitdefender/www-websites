@@ -1,0 +1,1 @@
+import{t as e}from"../_chunks/repobit-dex-constants.js";import{r as t}from"../_chunks/repobit-dex-utils.js";var n=class{static async load(n){window.BD.state.launchScript||(window.BD.state.launchScript=`${e.ADOBE_MC_URL_ENV_MAP.get(n)}`,await t(window.BD.state.launchScript))}};window.BD=window.BD||{},window.BD.state=window.BD.state||{};export{n as default};

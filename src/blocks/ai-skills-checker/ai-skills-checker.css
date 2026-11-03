@@ -1,0 +1,988 @@
+
+/* stylelint-disable  */
+main .section.ai-skills-checker-container {
+    padding: 20px;
+    background-color: #fff;
+    max-width: 1350px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+    font-family: var(--body-font-family);
+
+    &::before {
+        content: ' ';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        max-height: 400px;
+        border: 1px solid #FFD2C7;
+        background-color: #FAF4EA;
+        background-image: url("../../icons/skills-checker-pattern.svg");
+        border-radius: 20px;
+    }
+
+    &.danger {
+        &::before {
+            background-color: #3e030b;
+            background-image: url("../../icons/skills-checker-pattern-danger.svg");
+        }
+
+        .check-url {
+            display: none;
+        }
+
+        .ai-skills-checker input[type="text"], .ai-skills-checker #inputDiv {
+            max-width: 100%;
+            border: 2px dashed #D82E21;
+            padding-right: 15px;
+            pointer-events: none;
+        }
+
+        .ai-skills-checker .input-container {
+            display: none;
+        }
+
+        .ai-skills-checker #inputDiv {
+            display: block;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .ai-skills-checker .danger-image {
+            display: block;
+        }
+
+        .ai-skills-checker h1 {
+            display: none;
+        }
+
+        .ai-skills-checker div:first-child p:not(:has(img)) {
+            display: none;
+        }
+
+        .ai-skills-checker .buttons-container {
+            display: flex;
+        }
+
+        .ai-skills-checker .privacy-policy {
+            display: none;
+        }
+
+        #copy-to-clipboard {
+            display: none;
+        }
+
+        .ai-skills-checker .result.danger {
+            margin-top: 0;
+        }
+    }
+
+    &.safe {
+        &::before {
+            background-color: #3d8648;
+            background-image: url("../../icons/skills-checker-pattern-safe.svg");
+        }
+
+        .check-url {
+            display: none;
+        }
+
+        .ai-skills-checker h1 {
+            display: none;
+        }
+
+        .ai-skills-checker input[type="text"], .ai-skills-checker #inputDiv {
+            max-width: 100%;
+            border: 2px dashed #3D8648;
+            padding-right: 15px;
+            pointer-events: none;
+        }
+
+        .ai-skills-checker .input-container {
+            display: none;
+        }
+
+        .ai-skills-checker #inputDiv {
+            display: block;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .ai-skills-checker .safe-image {
+            display: inline-block;
+        }
+
+        .ai-skills-checker div:first-child p:not(:has(img)) {
+            display: none;
+        }
+
+        .ai-skills-checker .buttons-container {
+            display: flex;
+        }
+
+        .ai-skills-checker .privacy-policy {
+            display: none;
+        }
+
+        #copy-to-clipboard {
+            display: none;
+        }
+    }
+
+    .ai-skills-checker-wrapper {
+        max-width: 960px;
+        width: 100%;
+    }
+
+    .ai-skills-checker-form {
+        width: 100%;
+    }
+
+    .ai-skills-checker {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
+        position: relative;
+    
+        h1 {
+            font-weight: bold;
+            font-size: 32px;
+            color: #006EFF;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding: 0;
+        }
+
+        .safe-image {
+            display: none;
+
+            img {
+                max-width: 196px;
+            }
+        }
+
+        .danger-image {
+            display: none;
+
+            img {
+                max-width: 196px;
+            }
+        }
+
+        p:first-of-type {
+            margin: 0;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            gap: 15px;
+            padding-top: 10px;
+            margin-bottom: 12px;
+
+            &:has(.tab-upload.active) {
+                #copy-to-clipboard {
+                    display: none;
+                }
+            }
+        }
+
+        input[type="text"],#inputDiv {
+            padding: 15px;
+            padding-right: 35px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: 1px solid #006EFF;
+            width: 100%;
+            margin: 0;
+            position: relative;
+        }
+
+        #inputDiv {
+            text-align: left;
+            word-wrap: break-word;
+            pointer-events: none;
+            display: none;
+        }
+
+        .input-container__container {
+            width: 100%;
+        }
+
+        .input-pair {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+            position: relative;
+
+            input[type="text"] {
+                min-width: 0;
+                border-radius: 8px;
+                position: relative;
+            }
+
+            label {   
+                min-width: fit-content;
+                margin: 0;
+                padding: 15px 8px;
+                padding-right: 0;
+                border: 1px solid #007BFF;
+                border-right: 0;
+                border-radius: 8px 0 0 8px;
+                background: #fff;
+                font-size: 1em;
+                color: #007BFF;
+                font-weight: bold;
+            }
+
+            input[type="file"] {
+                display: none;
+            }
+        }
+
+        /* Tabs above the input area */
+        .ai-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            justify-content: center;
+
+            .tab {
+                background: transparent;
+                border: 1px solid transparent;
+                padding: 16px 32px;
+                border-radius: 8px;
+                cursor: pointer;
+                color: #007BFF;
+                font-weight: 600;
+                font-size: 1em;
+                border-bottom: 2px solid transparent;
+
+                &.active {
+                    background: #ffffff;
+                    border-bottom: 2px solid #007BFF;
+                    transition: all 0.5s ease-in-out;
+                    border-radius: 0;
+
+                    &:hover {
+                        color: #0056b3;
+                        border-bottom-color: #0056b3;
+                    }
+                }
+
+                &:hover {
+                    color: #0056b3;
+                }
+            }
+        }
+
+        /* Upload drop area */
+        .upload-drop {
+            border: 2px dashed #007BFF;
+            border-radius: 12px;
+            padding: 28px;
+            display: block;
+            text-align: center;
+            background: #fbfdff;
+            color: #333;
+            min-width: 100%;
+
+            .upload-inner {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            browse {
+                color: #007BFF;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            &.dragover {
+                background: rgba(0,110,255,0.03);
+                border-color: #0056b3;
+            }
+
+            &:hover {
+                cursor: pointer;
+                border-color: #0056b3;
+            }
+        }
+
+        #copy-to-clipboard {
+            width: 16px;
+            height: 21px;
+            background: url("../../icons/link-checker-example.svg") no-repeat;
+            background-size: contain;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .buttons-container {
+            justify-content: center;
+            margin-top: 40px;
+            display: none;
+            gap: 40px;
+            margin-bottom: 20px;
+
+            .button-container {
+                margin: 0;
+            }
+        }
+
+        .upsell-container {
+            display: none;
+            width: 100%;
+            margin-top: 16px;
+            text-align: left;
+        }
+
+        .upsell-container.active {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .upsell-content-container {
+            display: grid;
+            grid-template-columns: 44px minmax(0, 1fr);
+            gap: 14px;
+            align-items: center;
+            padding: 12px 24px;
+            border: 1px solid #E5E7EB;
+            border-bottom: 0;
+            border-radius: 14px 14px 0 0;
+            background: #fff;
+        }
+
+        .upsell-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            background: #EEF4FF url("../../icons/shield_ai.svg") center / 22px 22px no-repeat;
+        }
+
+        .upsell-copy h3 {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.25;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            color: #0A0E1A;
+        }
+
+        .upsell-copy p {
+            margin: 3px 0 0;
+            padding: 0;
+            color: #4B5563;
+            font-size: 14px;
+            line-height: 1.45;
+            display: block !important;
+        }
+
+        .upsell-button {
+            grid-column: 1 / -1;
+            justify-self: stretch;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            height: 42px;
+            min-height: 48px;
+            margin: 0;
+            padding: 12px 24px;
+            border: 0;
+            border-radius: 10px;
+            background: #E5E7EB;
+            color: #9199A5;
+            font-size: 15px;
+            line-height: 1;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: not-allowed;
+
+            &:not(.disabled) {
+                background: #006EFF;
+                color: #fff;
+                cursor: pointer;
+            }
+        }
+
+        .upsell-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .upsell-footer {
+            margin: 0;
+            padding: 12px 24px;
+            border: 1px solid #E5E7EB;
+            border-top-color: #F0F0F0;
+            border-bottom: 0;
+            background: #fff;
+            color: #4B5563;
+            font-size: 13.5px;
+            line-height: 1.45;
+        }
+
+        .upsell-privacy {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .upsell-privacy input {
+            width: 16px;
+            height: 16px;
+            margin: 1px 0 0;
+            accent-color: #006EFF;
+            flex: 0 0 auto;
+        }
+
+        .upsell-privacy a {
+            color: #006EFF;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .upsell-privacy.privacy-error,
+        .upsell-privacy.privacy-error a {
+            color: #D82E21;
+        }
+
+        .upsell-compatibility {
+            margin: 0;
+            padding: 12px 24px;
+            border: 1px solid #E5E7EB;
+            border-top-color: #F0F0F0;
+            border-radius: 0 0 14px 14px;
+            background: #F9FAFB;
+            color: #374151;
+            font-size: 12.5px;
+            line-height: 1.4;
+        }
+
+        .upsell-compatibility p {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+            color: #374151;
+            font-size: 12.5px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .upsell-compatibility img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .upsell-compatibility .icon {
+            display: inline-block;
+            width: 16px;
+            min-width: 16px;
+            height: 16px;
+            margin: 0;
+
+            &:first-of-type {
+                margin-left: 12px;
+            }
+        }
+
+        .upsell-compatibility .icon svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 14px;
+            padding: 4px 2px 2px;
+            color: #5C6470;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .separator::before,
+        .separator::after {
+            flex: 1 1 auto;
+            height: 1px;
+            background: #DFE2E7;
+            content: '';
+        }
+
+        .separator a {
+            color: inherit;
+            text-decoration: underline;
+            text-decoration-color: #C4C9D1;
+            text-underline-offset: 3px;
+        }
+
+        .upsell-code {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            min-height: 46px;
+            box-sizing: border-box;
+            margin: 10px 2px 0;
+            padding: 9px 8px 9px 16px;
+            border-radius: 12px;
+            background: #1B1B1F;
+        }
+
+        .upsell-code code {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: 100%;
+            overflow-wrap: anywhere;
+            color: #E8EAED;
+            font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 13.5px;
+            letter-spacing: -0.01em;
+            line-height: 28px;
+        }
+
+        .copy-code {
+            display: inline-flex;
+            flex: none;
+            align-items: center;
+            justify-content: center;
+            min-width: 56px;
+            width: 100%;
+            height: 28px;
+            padding: 0 11px;
+            border: 0;
+            border-radius: 7px;
+            background: #33333A;
+            color: #F2F2F2;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+
+            &.copied {
+                background: #3D8648;
+                color: #fff;
+
+                &:hover {
+                    background: #3D8648;
+                }
+            }
+        }
+
+        .copy-code:hover {
+            background: #45454E;
+        }
+
+
+        button.check-url {
+            padding: 15px 40px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1em;
+            min-width: 100%;
+        }
+
+        button.check-url:hover {
+            background-color: #0056b3;
+        }
+
+        .share-button, button.check-another-button, .check-another-button {
+            position: relative;
+            cursor: pointer;
+            color: #007BFF;
+            border: none;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 16px;
+            gap:10px;
+            display: inline-flex;
+            align-items: center;
+            padding: 15px;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                background-color: #dbf0f9;
+                border-radius: 8px;
+
+                span.button-text {
+                    transform: none;
+                }
+            }
+        }
+
+        .share-button::before {
+            content: url("../../icons/shield_ai.svg");
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+        }
+
+        button.check-another-button::before, .check-another-button::before {
+            content: url("../../icons/check.svg");
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+        }
+
+        button.check-another-button::after, .check-another-button::after,
+        .share-button::after {
+            content: "";
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        .share-popup {
+            position: absolute;
+            top: -85px;
+            min-width: fit-content;
+            background-color: #000; 
+            color: #fff; 
+            padding: 8px 12px; 
+            border-radius: 5px; 
+            font-size: 14px; 
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgb(0 0 0 / 20%); 
+            z-index: 10; 
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+          }
+          
+          .share-popup::after {
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent; 
+            border-right: 6px solid transparent;
+            border-top: 6px solid #000;
+          }
+
+        .button-container .share-button:hover + .share-popup,
+        .button-container .share-button:focus + .share-popup {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .result {
+            font-size: 14px;
+            border-radius: 8px;
+            padding-bottom: 20px;
+            display: none;
+        }
+
+        .result.safe {
+            background-color: #F3FEF8;
+            padding: 20px 30px 20px 55px;
+            position: relative;
+            text-align: left;
+            display: block;
+
+            &::before {
+                content: "";
+                background: url("../../icons/safe.svg") no-repeat;
+                position: absolute;
+                left: 14px;
+                top: 20px;
+                width: 30px;
+                height: 30px;
+                background-size: contain;
+            }
+        }
+
+        .result.danger {
+            margin-top: 24px;
+            background-color: #FDF3F4;
+            padding: 8px 30px 8px 55px;
+            position: relative;
+            text-align: left;
+            display: block;
+            overflow-wrap: anywhere;
+
+            &::before {
+                content: "";
+                background: url("../../icons/bulb-pink.svg") no-repeat;
+                position: absolute;
+                left: 14px;
+                top: 15%;
+                width: 30px;
+                height: 30px;
+                background-size: contain;
+            }
+
+            &:not(.no-response) {
+                padding: 20px 30px 20px 55px;
+
+                code {
+                    font-family: "Courier New", Courier, monospace;
+                }
+
+                &::before {
+                    top: 20px;
+                }
+           }
+        }
+
+        .result.danger.no-response {
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 19px;
+
+            &::before {
+                content: "";
+                background: url("../../icons/no-response.svg") no-repeat;
+                position: absolute;
+                left: 15px;
+                top: 20%;
+                width: 25px;
+                height: 25px;
+                background-size: contain;
+            }
+        }
+
+        .signature {
+            font-size: 16px;
+            color: #006dff;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        .privacy-policy {
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        &.multiple-skills {
+            div:first-child {
+                display: none;
+            }
+
+            .input-container {
+                display: none;
+            }
+
+            ul {
+                padding-left: 0;
+            }
+
+            li {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-left: 0;
+
+                li {
+                    display: list-item;
+                    margin-left: 20px;
+                }
+
+                .result {
+                    align-items: flex-start;   
+                }
+
+                .safe input {
+                    border: 2px dashed #3D8648;
+                }
+
+                .input-container {
+                    display: block;
+                }
+
+                &.danger input {
+                    border: 2px dashed #D82E21;
+                }
+
+                &.safe input {
+                    border: 2px dashed #3D8648;
+                }
+            }
+
+            .upsell-container {
+                display: block;
+
+                div:first-child {
+                    display: grid;
+                }
+            }
+
+            .privacy-policy {
+                display: none;
+            }
+
+            .result {
+                display: block;
+            }
+
+            .buttons-container {
+                display: block;
+            }
+        }
+    }
+
+    @media (min-width:768px) {
+        margin: 0 auto;
+        padding-bottom: 50px;
+
+
+
+        .ai-skills-checker{
+            padding: 48px 60px 35px;
+            
+            .input-container{
+                
+
+                &:has(.tab-upload.active) {
+                   
+
+                    .input-container__container {
+                        width: unset;
+                    }
+
+                    .upload-drop {
+                        min-width: 100%;
+                    }
+                }
+            }
+
+            .buttons-container{
+                flex-flow: row;
+                margin-top: 50px;
+                justify-content: center;
+
+                .button-container{
+                    margin: 0;
+                }
+            }
+
+            .upsell-container {
+                margin-top: 16px;
+            }
+
+            .upsell-content-container {
+                grid-template-columns: 44px minmax(0, 1fr) auto;
+                column-gap: 18px;
+            }
+
+            .upsell-button {
+                grid-column: auto;
+                justify-self: end;
+                width: auto;
+                min-width: 178px;
+            }
+
+            .upsell-code {
+                flex-direction: row;
+            }
+
+            .upsell-code code,
+            .copy-code {
+                width: auto;
+            }
+
+            button.check-url {
+                white-space: nowrap;
+                height: fit-content;
+                min-width: 100%;
+                min-height: 51px;
+            }
+
+            .share-popup{
+                top: -40px;
+                max-width: unset;
+                white-space: nowrap;
+            }
+
+            p {
+                font-size: 20px;
+                margin-bottom: 20px;
+                padding: 0;
+            }
+
+            h1 {
+                font-size: 40px;
+                margin-bottom: 40px;
+            }
+
+            .result {
+                font-size: 16px;
+                border-radius: 8px;
+                padding-bottom: 30px;
+
+                &.danger, &.safe {
+                    h4 {
+                        font-size: 20px;
+                    }
+
+                    p {
+                        font-size: 18px;
+                    }
+
+                    li {
+                        font-size: 18px;
+                    }
+                }
+            }
+
+            .signature {
+                font-size: 22px;
+                margin-top: 20px;
+            }
+
+            .privacy-policy {
+                font-size: 14px;
+            }
+        }
+    }
+
+    @media (min-width: 991px) {
+        .ai-skills-checker {
+            padding: 48px 160px 35px;
+        }
+
+        .upsell-container {
+            width: min(680px, calc(100% + 40px));
+        }
+    }
+}
