@@ -1,283 +1,41 @@
-import{c as e,i as t,n,t as r}from"./lit.js";import"./repobit-dex-system-design.js";import{i,o as a}from"./repobit-dex-system-design3.js";import"./repobit-dex-system-design12.js";var o=e`
-  /* Every axis here is the standalone role's. Weight used to be the one
-     exception -- it read --typography-link-default-fontWeight, the inline
-     role's 400 -- so a standalone link rendered 400 against the 500 its own
-     role, the Figma link/standalone style and the homepage all draw. The
-     inline role's weight now lives in the inline block below, with the rest
-     of that role. */
-  .bd-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-4);
-    font-family: var(--typography-fontFamily-sans);
-    font-size: var(--typography-link-standalone-fontSize);
-    font-weight: var(--typography-link-standalone-fontWeight);
-    line-height: var(--typography-link-standalone-lineHeight);
-    color: var(--bd-link-color, var(--color-text-brand));
-    text-decoration: none;
-    text-underline-offset: var(--typography-link-underlineOffset);
-    cursor: pointer;
-    /* the properties that actually change, rather than all: a link that
-       animates every property also animates the ones it inherits */
-    transition: color var(--transition-duration-fast) var(--transition-easing-smooth),
-      text-decoration-color var(--transition-duration-fast) var(--transition-easing-smooth);
-  }
-
-  /* ---- inline ------------------------------------------------------------
-     A link in a sentence is that sentence's text, so it takes its type from
-     the sentence. --typography-link-default-* is the role that says so: size,
-     leading, tracking and family are all inherit. Four of those axes had no
-     consumer, because the base rule above reads the standalone role instead --
-     1rem and 1.5 regardless of context -- which is why an inline link measured
-     16px inside a 12px caption and inside a 32px lede alike.
-
-     display returns to inline as well. An inline-flex box does not hug its
-     own text: in a 220px column the same link measured the full 220px where a
-     plain <a> measured 209px, so it does not sit in the line the way a real
-     inline element does. The gap and align-items above go inert with it, which
-     is correct here -- an inline link is a run of text, not a row. */
-  :host([inline]) .bd-link {
-    display: inline;
-    font-size: var(--typography-link-default-fontSize);
-    font-weight: var(--typography-link-default-fontWeight);
-    line-height: var(--typography-link-default-lineHeight);
-    letter-spacing: var(--typography-link-default-letterSpacing);
-    font-family: var(--typography-link-default-fontFamily);
-  }
-
-  /* ---- kinds ------------------------------------------------------------ */
-  .bd-link--primary {
-    color: var(--bd-link-color, var(--color-text-brand));
-  }
-  .bd-link--primary:hover {
-    color: var(--color-text-brand-hover);
-    text-decoration: underline;
-  }
-
-  .bd-link--secondary {
-    color: var(--bd-link-color, var(--color-text-muted));
-  }
-  .bd-link--secondary:hover {
-    color: var(--color-text-secondary);
-    text-decoration: underline;
-  }
-
-  .bd-link--subtle {
-    color: var(--bd-link-color, var(--color-text-subtle));
-    text-decoration: none;
-  }
-  .bd-link--subtle:hover {
-    color: var(--color-text-secondary);
-    text-decoration: underline;
-  }
-
-  .bd-link--bold {
-    color: var(--bd-link-color, var(--color-text-brand));
-    /* no role: the bold modifier on a link -- a state or modifier weight, not a text-content
-       type. See button.css.js's .button--bold for the argument. */
-    font-weight: var(--typography-fontWeight-semibold);
-    text-decoration: none;
-  }
-  .bd-link--bold:hover {
-    color: var(--color-text-brand-hover);
-    text-decoration: underline;
-  }
-
-  /* Red on a link is the error role, not bd-button's accent. The button's red
-     is this system's conversion colour and it deliberately has no danger kind;
-     a link is the opposite case — red text reads as a warning about where the
-     link goes, so it takes --color-text-error and says so. */
-  .bd-link--danger {
-    color: var(--bd-link-color, var(--color-text-error));
-  }
-  .bd-link--danger:hover {
-    color: var(--color-text-error);
-    text-decoration: underline;
-  }
-
-  /* ---- surface ----------------------------------------------------------
-     The same attribute bd-button uses to say the same thing. It replaces the
-     light kind, which described the surface rather than the link and could
-     not be combined with any of the kinds above. */
-  :host([surface="dark"]) .bd-link,
-  :host([surface="dark"]) .bd-link--primary,
-  :host([surface="dark"]) .bd-link--secondary,
-  :host([surface="dark"]) .bd-link--subtle,
-  :host([surface="dark"]) .bd-link--bold {
-    color: var(--color-text-inverse);
-  }
-
-  /* Colour only. This rule used to carry text-decoration: underline as well,
-     and at (0,4,0) it outweighed .bd-link--no-underline:hover at (0,2,0) --
-     so a link explicitly asking for no underline got one anyway, but only on a
-     dark surface. Measured: dark/primary/no-underline went none -> underline on
-     hover, where the same link on a light surface stayed none.
-
-     The underline is the kinds' business, and every kind already declares it. */
-  :host([surface="dark"]) .bd-link:hover {
-    color: var(--color-text-inverse);
-  }
-
-  /* On a band filled with the brand: the brand's ink, which a theme must
-     clear 4.5:1 on that fill. text-inverse is white, and on a light partner
-     brand white is the one ink that cannot be read. On Bitdefender the two
-     are the same white. */
-  :host([surface="brand"]) .bd-link,
-  :host([surface="brand"]) .bd-link--primary,
-  :host([surface="brand"]) .bd-link--secondary,
-  :host([surface="brand"]) .bd-link--subtle,
-  :host([surface="brand"]) .bd-link--bold,
-  :host([surface="brand"]) .bd-link:hover {
-    color: var(--color-brand-on-fill);
-  }
-
-  /* ---- modifiers --------------------------------------------------------
-     Ordered after the kinds rather than marked !important. Four declarations
-     carried it before, which made the atom unoverridable by a consuming page —
-     the exact failure the cascade-layer token work was done to avoid. */
-  .bd-link--underline {
-    text-decoration: underline;
-  }
-  .bd-link--underline:hover {
-    text-decoration-thickness: var(--typography-link-underlineThickness);
-  }
-
-  .bd-link--no-underline,
-  .bd-link--no-underline:hover {
-    text-decoration: none;
-  }
-
-  /* ---- arrow ------------------------------------------------------------
-     spacing/8 between the label and the arrow, the icon-to-label gap bd-back
-     and the md and lg buttons already use. The base row's spacing/4 was set
-     for text alone, and the Figma set measures 8.
-
-     The underline needs no rule of its own. The anchor is a flex container,
-     so the decoration propagates to its flex items and is drawn only where
-     there is text: under the label, not under the arrow, which is what the
-     Link arrow set draws. That was the set's open question, and it is
-     answered by the layout this atom already had rather than by a choice. */
-  .bd-link--arrow {
-    gap: var(--spacing-8);
-  }
-
-  /* a swapped icon is held to the step the default arrow is drawn at */
-  .bd-link--arrow ::slotted([slot="icon"]) {
-    height: var(--icon-sm-size);
-  }
-
-  /* inline returns the link to a run of text, so there is no row and the gap
-     goes inert; a start margin keeps the arrow off the last letter instead.
-     The icon has no text, so its baseline is its bottom edge and it sat on
-     the line about 4px high; middle centres it on the x-height. */
-  :host([inline]) .bd-link--arrow bd-arrow-icon,
-  :host([inline]) .bd-link--arrow ::slotted([slot="icon"]) {
-    margin-inline-start: var(--spacing-4);
-    vertical-align: middle;
-  }
-
-  /* The current link, read off the aria-current the <a> carries rather than
-     a class beside it, so what is drawn and what is announced are one
-     attribute and cannot disagree. */
-  .bd-link[aria-current] {
-    /* no role: a link in its active state -- a state or modifier weight, not a text-content
-       type. See button.css.js's .button--bold for the argument. */
-    font-weight: var(--typography-fontWeight-bold);
-    color: var(--color-text-primary);
-  }
-
-  /* The current item does not move under the pointer.
-
-     The current state and --primary are both present on a current nav item,
-     and .bd-link--primary:hover outweighed the class this used to be -- so
-     without this rule hovering the page you are already on turned it back to
-     the brand ink, which is the one thing that colour is not supposed to mean
-     here. Measured on bd-page-switcher before the wayfinding family review:
-     current + hover reported action/primary-active, the only one of the
-     three that recoloured an item the reader had already arrived at.
-
-     It outranks every kind hover, so it wins whatever the order. */
-  .bd-link[aria-current]:hover {
-    color: var(--color-text-primary);
-  }
-
-  /* ---- states ----------------------------------------------------------- */
-  .bd-link--disabled,
-  span.bd-link--disabled {
-    color: var(--color-text-disabled);
-    cursor: not-allowed;
-    text-decoration: none;
-    pointer-events: none;
-  }
-
-  /* No :focus { outline: none } beside this: the browser's own ring is a
-     :focus-visible ring too, so a pointer focus never drew one. */
-  .bd-link:focus-visible {
-    /* the one focus ring — see Foundations/Focus. A two-colour ring whose
-       white inner band keeps it visible on a coloured or dark surface, which a
-       single-colour outline cannot do. surface="dark" keeps it too: a link has
-       no fill or border, so its white band meets the hero directly, 4.53:1 on
-       blue-500 and more on every darker ground. */
-    /* forced-colors mode does not paint box-shadow, so the ring
-       vanishes there; it does paint an outline, in a system colour. This one
-       is transparent everywhere else, and the offset lands it on the ring's
-       outer band. */
-    outline: var(--border-width-2) solid transparent;
-    outline-offset: var(--focus-outline-offset);
-    box-shadow: var(--focus-outline-primary);
-    border-radius: var(--focus-outline-radius);
-  }
-
-  /* The two-colour ring puts a white band against the link, which is what
-     carries it on Bitdefender's blue band and what vanishes on a light partner
-     band. Under surface="brand" the ring is one band in the brand's ink, held
-     off the text so the gap is the band itself -- bd-button's ring, for the
-     same reason. */
-  :host([surface="brand"]) .bd-link:focus-visible {
-    outline: var(--focus-outline-traditional-on-brand);
-    box-shadow: none;
-  }
-
-  a.bd-link {
-    cursor: pointer;
-  }
-
-  /* There is no element-qualified reset here, and that is the point.
-
-     The anchor's underline is already off: .bd-link sets text-decoration none,
-     and an author rule beats the UA stylesheet whatever its specificity. What
-     the old a.bd-link:not(.bd-link--underline) rule added was weight -- (0,2,1)
-     against the (0,2,0) of every .bd-link--<kind>:hover -- so the hover
-     underline each of the five kinds declares lost the cascade and never
-     painted. Measured on light surfaces: primary, secondary, subtle, bold and
-     danger all went none -> none across a hover. On a dark surface the same
-     hover underlined, because that rule is (0,4,0) and outweighed the reset.
-
-     The kinds and the modifiers sort themselves out on class weight alone, in
-     source order: --underline and --no-underline are declared after the kinds,
-     so they still win. */
-  span.bd-link {
-    cursor: default;
-  }
-
-  /* An <a> with no href is not a link, so it does not get the hand: the
-     pointer would promise a destination there is none of. */
-  a.bd-link:not([href]) {
-    cursor: default;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .bd-link {
-      transition: none;
-    }
-  }
-`,s={light:`primary`},c=[`primary`,`secondary`,`subtle`,`bold`,`danger`],l=class extends r{static properties={href:{type:String},target:{type:String},variant:{type:String,reflect:!0},kind:{type:String},underline:{type:Boolean,reflect:!0},noUnderline:{type:Boolean,attribute:`no-underline`},disabled:{type:Boolean,reflect:!0},fontSize:{type:String,attribute:`font-size`},inline:{type:Boolean,reflect:!0},color:{type:String},current:{type:String,reflect:!0,converter:{toAttribute:e=>e||null}},active:{type:Boolean,reflect:!0},surface:{type:String,reflect:!0},arrow:{type:Boolean,reflect:!0},description:{type:String}};constructor(){super(),this.href=``,this.target=`_self`,this.variant=`primary`,this.kind=``,this.underline=!1,this.noUnderline=!1,this.disabled=!1,this.fontSize=``,this.inline=!1,this.color=``,this.current=``,this.active=!1,this.surface=`light`,this.arrow=!1,this.description=``}willUpdate(e){(e.has(`kind`)||e.has(`variant`))&&(e.has(`kind`)&&this.kind&&(this.variant=this.kind),this.variant===`light`&&(this.surface=`dark`),s[this.variant]&&(this.variant=s[this.variant]),c.includes(this.variant)||(this.variant=`primary`))}static styles=[o];get _classes(){return[`bd-link`,`bd-link--${this.variant}`,this.underline?`bd-link--underline`:``,this.noUnderline?`bd-link--no-underline`:``,this.disabled?`bd-link--disabled`:``,this.arrow?`bd-link--arrow`:``].filter(Boolean).join(` `)}get _arrow(){return this.arrow?t`<slot name="icon"><bd-arrow-icon size="sm" aria-hidden="true"></bd-arrow-icon></slot>`:n}get _inlineStyle(){return[[`font-size`,this.inline?``:a(this.fontSize)],[`--bd-link-color`,i(this.color)]].filter(([,e])=>e).map(([e,t])=>`${e}: ${t}`).join(`; `)}get _current(){return this.current||(this.active?`true`:``)}render(){return this.disabled?t`<span part="link" class="${this._classes}" style="${this._inlineStyle}"><slot></slot>${this._arrow}</span>`:t`<a
-        part="link"
+import{a as e,l as t,n,t as r}from"./lit.js";import{n as i,t as a}from"./lit2.js";import{n as o,t as s}from"./repobit-dex-system-design.js";import"./repobit-dex-system-design2.js";import{c,l}from"./repobit-dex-system-design4.js";import{n as u}from"./repobit-dex-system-design7.js";import"./repobit-dex-system-design14.js";var d=t`:host{--bd-button-primary-bg:var(--button-primary-background-default);--bd-button-primary-bg-hover:var(--button-primary-background-hover);--bd-button-primary-bg-active:var(--button-primary-background-active);--bd-button-primary-text:var(--button-primary-text-default);--bd-button-secondary-bg:var(--button-secondary-background-default);--bd-button-secondary-bg-hover:var(--button-secondary-background-hover);--bd-button-secondary-bg-active:var(--button-secondary-background-active);--bd-button-secondary-text:var(--button-secondary-text-default);--bd-button-tertiary-text:var(--button-tertiary-text-default);--bd-button-tertiary-border:var(--button-tertiary-border-default);--bd-button-tertiary-bg-hover:var(--button-tertiary-background-hover);--bd-button-tertiary-text-hover:var(--button-tertiary-text-hover);--bd-button-tertiary-border-hover:var(--button-tertiary-border-hover);--bd-button-tertiary-bg-active:var(--button-tertiary-background-active);--bd-button-tertiary-text-active:var(--button-tertiary-text-active);--bd-button-ghost-text:var(--button-ghost-text-default);--bd-button-ghost-border:var(--button-ghost-border-default);--bd-button-ghost-bg-hover:var(--button-ghost-background-hover);--bd-button-ghost-text-hover:var(--button-ghost-text-hover);--bd-button-ghost-bg-active:var(--button-ghost-background-active);--bd-button-ghost-text-active:var(--button-ghost-text-active);--bd-button-accent-bg:var(--button-accent-background-default);--bd-button-accent-bg-hover:var(--button-accent-background-hover);--bd-button-accent-bg-active:var(--button-accent-background-active);--bd-button-accent-text:var(--button-accent-text-default);--bd-button-white-bg:var(--button-white-background-default);--bd-button-white-bg-hover:var(--button-white-background-hover);--bd-button-white-bg-active:var(--button-white-background-active);--bd-button-white-text:var(--button-white-text-default);--bd-button-outline-white-text:var(--button-outline-white-text-default);--bd-button-outline-white-border:var(--button-outline-white-border-default);--bd-button-outline-white-bg-hover:var(--button-outline-white-background-hover);--bd-button-outline-white-bg-active:var(--button-outline-white-background-active);--bd-button-disabled-bg:var(--button-disabled-backgroundColor);--bd-button-disabled-text:var(--button-disabled-color);--bd-button-disabled-border:var(--button-disabled-borderColor);--bd-button-accent-ring:var(--button-accent-ring-default);--bd-button-focus-ring:var(--button-shared-focus-outline);--bd-button-border-width:var(--border-width-2);display:inline-flex}:host(:not([icon-only])),:where(.button:not(.button--icon-only)){width:var(--bd-button-width,auto)}:host([align=center]){justify-content:center;width:100%;display:flex}:host([align=right]){justify-content:flex-end;width:100%;display:flex}:host([align=left]){justify-content:flex-start;display:inline-flex}:host([fullwidth]){width:100%;display:block}:host([align=center][fullwidth]) .button,:host([align=right][fullwidth]) .button{width:100%}.max--width{width:100%;display:flex}.button:focus-visible{outline:var(--bd-button-focus-ring);outline-offset:var(--button-shared-focus-outlineOffset)}.button--white:focus-visible,.button--outline-white:focus-visible{outline:var(--focus-outline-traditional-inverse)}a.button{text-decoration:none}.button,.bd-contact-btn{text-align:center;cursor:pointer;font-family:var(--typography-fontFamily-sans);font-weight:var(--typography-control-label-large-fontWeight);line-height:var(--typography-control-label-large-lineHeight);vertical-align:middle;box-sizing:border-box;--bd-button-edge:0 0 0 0 transparent;box-shadow:var(--bd-button-edge);transition:background-color var(--transition-duration-normal) var(--transition-easing-smooth), box-shadow var(--transition-duration-normal) var(--transition-easing-smooth), color var(--transition-duration-normal) var(--transition-easing-smooth);border:none;justify-content:center;align-items:center;text-decoration:none;display:inline-flex}.button.bd-contact-btn{color:var(--color-text-brand);gap:var(--spacing-8);padding:var(--spacing-12) var(--spacing-16);border-radius:var(--button-medium-borderRadius);background-color:#0000}.button--small{padding:var(--button-small-padding);font-size:var(--button-small-fontSize);border-radius:var(--button-small-borderRadius);gap:var(--button-small-gap)}.button--medium{padding:var(--button-medium-padding);font-size:var(--button-medium-fontSize);border-radius:var(--button-medium-borderRadius);gap:var(--button-medium-gap)}.button--large{padding:var(--button-large-padding);font-size:var(--button-large-fontSize);border-radius:var(--button-large-borderRadius);gap:var(--button-large-gap)}.button--responsive{padding:var(--button-medium-padding);font-size:var(--button-medium-fontSize);border-radius:var(--button-medium-borderRadius);gap:var(--button-medium-gap)}@media (width>=992px){.button--responsive{padding:var(--button-large-padding);font-size:var(--button-large-fontSize);border-radius:var(--button-large-borderRadius);gap:var(--button-large-gap)}}.button--bold{font-weight:var(--typography-fontWeight-semibold)}.button--rounded{border-radius:var(--shape-radius-3xl)}.button__label{display:inline-block}.button--with-arrow{--_dir:1;position:relative;overflow:hidden}:host(:dir(rtl)) .button--with-arrow{--_dir:-1}.button--with-arrow .button__label{transition:transform var(--transition-duration-normal) var(--transition-easing-smooth)}.button--with-arrow .button__arrow{top:50%;opacity:0;transform:translate(calc(-1 * var(--_dir) * var(--spacing-8)), -50%);transition:opacity var(--transition-duration-normal) var(--transition-easing-smooth), transform var(--transition-duration-normal) var(--transition-easing-smooth);pointer-events:none;position:absolute;inset-inline-end:var(--spacing-12)}.button--with-arrow:focus-visible .button__label{transform:translateX(calc(-1 * var(--_dir) * var(--spacing-12)))}.button--with-arrow:focus-visible .button__arrow{opacity:1;transform:translate(var(--spacing-0), -50%)}@media (hover:hover){.button--with-arrow:hover .button__label{transform:translateX(calc(-1 * var(--_dir) * var(--spacing-12)))}.button--with-arrow:hover .button__arrow{opacity:1;transform:translate(var(--spacing-0), -50%)}}.button--icon-only{line-height:var(--typography-lineHeight-none)}.button--icon-only.button--small{--bd-button-icon-size:var(--icon-sm-size);padding:var(--spacing-8);border-radius:var(--radius-full)}.button--icon-only.button--medium{--bd-button-icon-size:var(--icon-md-size);padding:var(--spacing-12);border-radius:var(--radius-full)}.button--icon-only.button--large{--bd-button-icon-size:var(--icon-lg-size);padding:var(--spacing-16);border-radius:var(--radius-full)}.button--icon-only.button--responsive{--bd-button-icon-size:var(--icon-md-size);padding:var(--spacing-12);border-radius:var(--radius-full)}@media (width>=992px){.button--icon-only.button--responsive{--bd-button-icon-size:var(--icon-lg-size);padding:var(--spacing-16)}}.button__icon{--bd-icon-size:var(--bd-button-icon-size)}.button--icon-only>::slotted(*){height:var(--bd-button-icon-size)}.button--icon-only .spinner{width:var(--bd-button-icon-size);height:var(--bd-button-icon-size)}.button--primary{background-color:var(--bd-button-primary-bg);color:var(--bd-button-primary-text)}.button--primary:hover{background-color:var(--bd-button-primary-bg-hover)}.button--primary:active{background-color:var(--bd-button-primary-bg-active)}.button--secondary{background-color:var(--bd-button-secondary-bg);color:var(--bd-button-secondary-text)}.button--secondary:hover{background-color:var(--bd-button-secondary-bg-hover)}.button--secondary:active{background-color:var(--bd-button-secondary-bg-active)}.button--tertiary{--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--bd-button-tertiary-border);color:var(--bd-button-tertiary-text);background-color:#0000}.button--tertiary:hover{background-color:var(--bd-button-tertiary-bg-hover);--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--bd-button-tertiary-border-hover);color:var(--bd-button-tertiary-text-hover)}.button--tertiary:active{background-color:var(--bd-button-tertiary-bg-active);--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--bd-button-tertiary-bg-active);color:var(--bd-button-tertiary-text-active)}.button--ghost{--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--bd-button-ghost-border);color:var(--bd-button-ghost-text);background-color:#0000}.button--ghost:hover{background-color:var(--bd-button-ghost-bg-hover);color:var(--bd-button-ghost-text-hover)}.button--ghost:active{background-color:var(--bd-button-ghost-bg-active);--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--bd-button-ghost-bg-active);color:var(--bd-button-ghost-text-active)}.button--accent{background-color:var(--bd-button-accent-bg);color:var(--bd-button-accent-text);--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--bd-button-accent-ring)}.button--accent:hover{background-color:var(--bd-button-accent-bg-hover)}.button--accent:active{background-color:var(--bd-button-accent-bg-active)}:host([surface=dark]){--bd-button-primary-bg:var(--color-neutral-0);--bd-button-primary-bg-hover:var(--color-neutral-50);--bd-button-primary-bg-active:var(--color-neutral-100);--bd-button-primary-text:var(--color-text-brand);--bd-button-secondary-bg:var(--color-neutral-100);--bd-button-secondary-bg-hover:var(--color-neutral-50);--bd-button-secondary-bg-active:var(--color-neutral-0);--bd-button-secondary-text:var(--color-text-primary);--bd-button-tertiary-text:var(--color-text-inverse);--bd-button-tertiary-border:var(--color-neutral-0);--bd-button-tertiary-bg-hover:var(--color-neutral-0);--bd-button-tertiary-text-hover:var(--color-text-brand);--bd-button-tertiary-border-hover:var(--color-neutral-0);--bd-button-tertiary-bg-active:var(--color-neutral-50);--bd-button-tertiary-text-active:var(--color-text-brand);--bd-button-ghost-text:var(--color-text-inverse);--bd-button-ghost-border:transparent;--bd-button-ghost-bg-hover:var(--color-neutral-0);--bd-button-ghost-text-hover:var(--color-text-primary);--bd-button-ghost-bg-active:var(--color-neutral-50);--bd-button-ghost-text-active:var(--color-text-primary);--bd-button-accent-ring:var(--color-neutral-0);--bd-button-focus-ring:var(--focus-outline-traditional-inverse);--bd-button-disabled-bg:var(--color-neutral-700);--bd-button-disabled-text:var(--color-text-disabled);--bd-button-disabled-border:var(--color-neutral-600)}:host([surface=brand]){--bd-button-primary-bg:var(--color-brand-on-fill);--bd-button-primary-text:var(--color-action-primary);--bd-button-tertiary-text:var(--color-brand-on-fill);--bd-button-tertiary-border:var(--color-brand-on-fill);--bd-button-tertiary-bg-hover:var(--color-brand-on-fill);--bd-button-tertiary-text-hover:var(--color-action-primary);--bd-button-tertiary-border-hover:var(--color-brand-on-fill);--bd-button-tertiary-bg-active:var(--color-brand-on-fill);--bd-button-tertiary-text-active:var(--color-action-primary);--bd-button-ghost-text:var(--color-brand-on-fill);--bd-button-ghost-border:transparent;--bd-button-ghost-bg-hover:var(--color-brand-on-fill);--bd-button-ghost-text-hover:var(--color-action-primary);--bd-button-ghost-bg-active:var(--color-brand-on-fill);--bd-button-ghost-text-active:var(--color-action-primary);--bd-button-accent-ring:var(--color-brand-on-fill);--bd-button-focus-ring:var(--focus-outline-traditional-on-brand);--bd-button-disabled-bg:color-mix(in srgb, var(--color-brand-on-fill) 20%, transparent);--bd-button-disabled-text:color-mix(in srgb, var(--color-brand-on-fill) 55%, transparent);--bd-button-disabled-border:color-mix(in srgb, var(--color-brand-on-fill) 40%, transparent)}:host([surface=brand]) .button--primary:hover,:host([surface=brand]) .button--primary:active{--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--color-brand-on-fill);color:var(--color-brand-on-fill);background-color:#0000}:host([surface=brand]) .button--secondary:not(:disabled,[aria-disabled=true]){--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--color-brand-on-fill)}.button:disabled,.button[aria-disabled=true]{cursor:not-allowed;pointer-events:none;background-color:var(--bd-button-disabled-bg);--bd-button-edge:0 0 0 0 transparent;color:var(--bd-button-disabled-text)}.button--tertiary:disabled,.button--ghost:disabled,.button--tertiary[aria-disabled=true],.button--ghost[aria-disabled=true]{--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--bd-button-disabled-border);color:var(--bd-button-disabled-text);background-color:#0000}.button--loading{cursor:progress;pointer-events:none}.spinner{box-sizing:border-box;border:var(--border-width-2) solid currentColor;border-radius:var(--radius-full);width:1em;height:1em;animation:bd-button-spin var(--transition-duration-slower) var(--transition-easing-linear) infinite;border-top-color:#0000;flex:none}@keyframes bd-button-spin{to{transform:rotate(360deg)}}.button__label>::slotted(*){text-align:center;display:inline-block}@media (forced-colors:active){.button--tertiary,.button--ghost{border:var(--bd-button-border-width) solid currentColor}}@media (prefers-reduced-motion:reduce){.button,.bd-contact-btn,.button__label,.button__arrow{transition:none!important}.spinner{animation:bd-button-pulse var(--transition-duration-slower) var(--transition-easing-smooth) infinite alternate;border-top-color:currentColor}@keyframes bd-button-pulse{to{opacity:var(--opacity-pulse)}}}.button--white{background-color:var(--bd-button-white-bg);color:var(--bd-button-white-text)}.button--white:hover{background-color:var(--bd-button-white-bg-hover)}.button--white:active{background-color:var(--bd-button-white-bg-active)}.button--outline-white{--bd-button-edge:inset 0 0 0 var(--bd-button-border-width) var(--bd-button-outline-white-border);color:var(--bd-button-outline-white-text);background-color:#0000}.button--outline-white:hover{background-color:var(--bd-button-outline-white-bg-hover)}.button--outline-white:active{background-color:var(--bd-button-outline-white-bg-active)}`,f=/* @__PURE__ */ new Set([`text`,`search`,`url`,`tel`,`email`,`password`,`date`,`month`,`week`,`time`,`datetime-local`,`number`]),p=e=>{class t extends e{static{this.formAssociated=!0}constructor(...e){super(...e),this._formDisabled=!1,this._attempted=!1,this._internals=this.attachInternals(),this.addEventListener(`invalid`,()=>{this._attempted=!0}),this.addEventListener(`click`,e=>{e.composedPath()[0]===this&&this._fromOutside(e)&&(e.stopImmediatePropagation(),this._activate())})}_fromOutside(e){if(!e.isTrusted)return!0;let t=this.getBoundingClientRect();return e.clientX<t.left||e.clientX>t.right||e.clientY<t.top||e.clientY>t.bottom}get _control(){return null}_activate(){this._control?.focus()}get form(){return this._internals.form}get labels(){return this._internals.labels}get validity(){return this._internals.validity}get validationMessage(){return this._internals.validationMessage}get willValidate(){return this._internals.willValidate}checkValidity(){return this._internals.checkValidity()}reportValidity(){return this._internals.reportValidity()}_submitImplicitly(){let e=this.form;if(!e)return;let t=[...e.elements],n=t.find(e=>e.type===`submit`||e.type===`image`);n?n.matches(`:disabled`)||n.click():t.filter(e=>f.has(e.type)).length<=1&&e.requestSubmit()}formDisabledCallback(e){this._formDisabled=e}formResetCallback(){this._attempted=!1}_mirrorValidity(e){!e?.willValidate||e.validity.valid?this._internals.setValidity({}):this._internals.setValidity(e.validity,e.validationMessage,e)}}return s([a()],t.prototype,`_formDisabled`,void 0),s([a()],t.prototype,`_attempted`,void 0),t},m=[`primary`,`secondary`,`tertiary`,`ghost`,`accent`,`white`,`outline-white`],h={outline:`ghost`,"primary-outline":`tertiary`,danger:`accent`,destructive:`accent`},g={sm:`button--small`,md:`button--medium`,lg:`button--large`},_=`button--responsive`,v=[`light`,`dark`,`brand`],y=[`default`,`rounded`],b=[`button`,`submit`,`reset`],x=()=>new CustomEvent(`custom-click`,{bubbles:!0,composed:!0}),S=class extends r{constructor(...e){super(...e),this.label=``,this.size=``,this.variant=`primary`,this.kind=``,this.fullWidth=!1,this.strong=!1,this.disabled=!1,this.loading=!1,this.fontSize=``,this.fontWeight=``,this.align=`left`,this.surface=`light`,this.shape=`default`,this.noArrow=!1,this.iconOnly=!1,this.description=``}static{this.styles=[d]}willUpdate(e){e.has(`kind`)&&this.kind&&(this.variant=this.kind),(e.has(`variant`)||e.has(`kind`))&&(h[this.variant]&&(this.variant=h[this.variant]),u(m,this.variant)||(this.variant=`primary`)),e.has(`size`)&&!g[this.size]&&(this.size=``),e.has(`surface`)&&!u(v,this.surface)&&(this.surface=`light`),e.has(`shape`)&&!u(y,this.shape)&&(this.shape=`default`)}get _inert(){return this.disabled||this.loading}get _hasArrow(){return this.variant===`accent`&&!this.noArrow&&!this._inert&&!this.iconOnly}get _classes(){return[`button`,`button--${this.variant}`,g[this.size]||_,this.iconOnly?`button--icon-only`:``,this.fullWidth&&!this.iconOnly?`max--width`:``,this.strong?`button--bold`:``,this.shape===`rounded`&&!this.iconOnly?`button--rounded`:``,this._hasArrow?`button--with-arrow`:``,this.loading?`button--loading`:``].filter(Boolean).join(` `)}get _inlineStyle(){return[[`font-size`,l(this.fontSize)],[`font-weight`,c(this.fontWeight)]].filter(([,e])=>e).map(([e,t])=>`${e}: ${t};`).join(` `)}get _content(){return this.iconOnly?this._iconContent:e`${this.loading?e`<span class="spinner" aria-hidden="true"></span>`:n}<span class="button__label"><slot>${this.label}</slot></span>${this._hasArrow?e`<bd-arrow-icon class="button__arrow" aria-hidden="true"></bd-arrow-icon>`:n}`}get _describedBy(){return this.description?`description`:n}get _description(){return this.description?e`<span id="description" hidden>${this.description}</span>`:n}get _iconContent(){return this.loading?e`<span class="spinner" aria-hidden="true"></span>`:e`<slot><bd-arrow-icon class="button__icon" aria-hidden="true"></bd-arrow-icon></slot>`}_handleClick(e){this._inert?(e.preventDefault(),e.stopPropagation()):this.dispatchEvent(x())}};s([i({type:String})],S.prototype,`label`,void 0),s([i({type:String})],S.prototype,`size`,void 0),s([i({type:String,reflect:!0})],S.prototype,`variant`,void 0),s([i({type:String})],S.prototype,`kind`,void 0),s([i({type:Boolean,attribute:`fullwidth`})],S.prototype,`fullWidth`,void 0),s([i({type:Boolean})],S.prototype,`strong`,void 0),s([i({type:Boolean,reflect:!0})],S.prototype,`disabled`,void 0),s([i({type:Boolean,reflect:!0})],S.prototype,`loading`,void 0),s([i({type:String,attribute:`font-size`})],S.prototype,`fontSize`,void 0),s([i({type:String,attribute:`font-weight`})],S.prototype,`fontWeight`,void 0),s([i({type:String})],S.prototype,`align`,void 0),s([i({type:String,reflect:!0})],S.prototype,`surface`,void 0),s([i({type:String,reflect:!0})],S.prototype,`shape`,void 0),s([i({type:Boolean,attribute:`no-arrow`})],S.prototype,`noArrow`,void 0),s([i({type:Boolean,attribute:`icon-only`,reflect:!0})],S.prototype,`iconOnly`,void 0),s([i({type:String})],S.prototype,`description`,void 0);var C=class extends p(S){constructor(...e){super(...e),this.type=`button`}willUpdate(e){super.willUpdate(e),e.has(`type`)&&!u(b,this.type)&&(this.type=`button`)}get _control(){return this.renderRoot?.querySelector?.(`button`)}get _inert(){return super._inert||this._formDisabled}_activate(){this._control?.click()}_handleClick(e){super._handleClick(e),!this._inert&&(this.type===`submit`?this.form?.requestSubmit():this.type===`reset`&&this.form?.reset())}render(){return e`
+      <button
+        type="button"
+        part="button"
         class="${this._classes}"
+        aria-label="${this.label||n}"
+        aria-busy="${this.loading?`true`:n}"
+        aria-describedby="${this._describedBy}"
+        ?disabled="${this.disabled||this._formDisabled}"
         style="${this._inlineStyle}"
+        @click=${this._handleClick}
+      >${this._content}</button>${this._description}
+    `}};s([i({type:String})],C.prototype,`type`,void 0),C=s([o(`bd-button`)],C);var w=class extends S{constructor(){super(),this.href=``,this.buyLink=!1,this.target=``,this.rel=``,this.align=`left`}connectedCallback(){super.connectedCallback(),this.toggleAttribute(`data-bd-watch-shadow`,this.buyLink)}willUpdate(e){super.willUpdate(e),e.has(`buyLink`)&&this.isConnected&&this.toggleAttribute(`data-bd-watch-shadow`,this.buyLink)}get _rel(){return this.rel?this.rel:this.target===`_blank`?`noopener noreferrer`:``}render(){let t=this._inert||!this.href?n:this.href;return e`
+      <a
+        part="button"
+        href="${t}"
+        target="${this.target||n}"
+        rel="${this._rel||n}"
+        role="${this._inert?`link`:n}"
+        tabindex="${this._inert?`-1`:n}"
+        class="${this._classes}"
+        aria-label="${this.label||n}"
+        aria-busy="${this.loading?`true`:n}"
+        aria-disabled="${this.disabled?`true`:n}"
+        aria-describedby="${this._describedBy}"
+        style="${this._inlineStyle}"
+        @click=${this._handleClick}
+        ?data-store-render="${this.buyLink}"
+        ?data-store-buy-link="${this.buyLink}"
+      >${this._content}</a>${this._description}
+    `}};s([i({type:String})],w.prototype,`href`,void 0),s([i({type:Boolean})],w.prototype,`buyLink`,void 0),s([i({type:String})],w.prototype,`target`,void 0),s([i({type:String})],w.prototype,`rel`,void 0),w=s([o(`bd-button-link`)],w);var T=class extends r{constructor(...e){super(...e),this.label=`Contact us`,this.href=``,this.align=`left`,this.shape=`default`}static{this.styles=[d]}_handleClick(){this.dispatchEvent(x())}render(){return e`
+      <a
+        class="button bd-contact-btn ${this.shape===`rounded`?`button--rounded`:``}"
         href="${this.href||n}"
-        target="${this.href?this.target:n}"
-        aria-current="${this._current||n}"
-        aria-describedby="${this.description?`description`:n}"
-        @click="${this._handleClick}"
-      ><slot></slot>${this._arrow}</a>${this.description?t`<span id="description" hidden>${this.description}</span>`:n}`}_handleClick(e){this.disabled&&(e.preventDefault(),e.stopImmediatePropagation())}};customElements.define(`bd-link`,l);
+        aria-label="${this.label||n}"
+        @click=${this._handleClick}
+      >
+        ${this.label}
+        <bd-arrow-icon aria-hidden="true"></bd-arrow-icon>
+      </a>
+    `}};s([i({type:String})],T.prototype,`label`,void 0),s([i({type:String})],T.prototype,`href`,void 0),s([i({type:String})],T.prototype,`align`,void 0),s([i({type:String,reflect:!0})],T.prototype,`shape`,void 0),T=s([o(`bd-contact-button`)],T);
