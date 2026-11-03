@@ -1,0 +1,38 @@
+﻿main .section.sticky-navigation-container {
+  padding-top: 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+.sticky-navigation {
+  cursor: pointer;
+  background-color: var(--white-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid var(--sticky-nav-border-color);
+}
+
+/* DS component takes all available horizontal space and aligns with site content width */
+.sticky-navigation bd-anchor-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  --layout-ensemble-inline-padding: var(--body-padding);
+  --layout-compare-grid-max: 100%;
+}
+
+.trusted bd-anchor-nav::part(inner) {
+  gap: 0 !important;
+  min-height: 70px;
+}
+
+@media (min-width: 900px) {
+  .sticky-navigation bd-anchor-nav {
+    --layout-compare-grid-max: 1250px;
+  }
+}
+

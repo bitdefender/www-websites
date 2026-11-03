@@ -1,0 +1,105 @@
+main .bottom-popup-container {
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+    background: rgb(0 0 0 / 50%);
+    height: 100%;
+    top: 0;
+    overflow: hidden;
+    display: none;
+}
+
+main .bottom-popup-container.is-visible {
+    display: block;
+}
+
+.bottom-popup-container .block {
+    border-radius: 20px 20px 0 0;
+    background: #FFF;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 999;
+    width: 100%;
+    padding: 19px 12px;
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.bottom-popup-container .block.is-visible {
+    animation: slide-up 0.8s cubic-bezier(0.22, 1.05, 0.32, 1);
+}
+
+.bottom-popup-container .block > div {
+    width: 290px;
+    margin: 0 auto;
+}
+
+.bottom-popup-container .block > div > div > p:first-of-type span.icon {
+    height: 53px;
+    width: 53px;
+}
+
+.bottom-popup-container .block h3 {
+    color: #161616;
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+}
+
+.bottom-popup-container.image-link .block p {
+    margin: 0;
+}
+
+.bottom-popup-container .block p:not(.button-container) {
+    color: #6D6D6D;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.bottom-popup-container.image-link .block p.button-container a {
+    background: transparent;
+    border: transparent;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.bottom-popup-container.image-link .block p.button-container a::after {
+    display: none;
+}
+
+.bottom-popup-container.image-link .block p.button-container a .icon {
+    height: auto;
+    width: auto;
+    padding: 0;
+    margin: 0;
+}
+
+/* Close X */
+.bottom-popup-container .block .bottom-popup__close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    z-index: 2;
+    border: 0;
+    background: transparent;
+    font-size: 35px;
+    line-height: 28px;
+    font-weight: lighter;
+    cursor: pointer;
+    color: #777;
+}

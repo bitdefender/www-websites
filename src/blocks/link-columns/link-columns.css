@@ -1,0 +1,18 @@
+/* A column: the link over its line, 12 apart. Below lg the phone and tablet
+   frames rule each column off above, in the design system's container edge. */
+.link-columns .link-columns-item {
+  --bd-paragraph-margin-bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12, 12px);
+  padding-top: var(--spacing-16, 16px);
+  border-top: var(--border-width-1, 1px) solid var(--color-border-container);
+}
+
+@media (width >= 992px) {
+  .link-columns .link-columns-item {
+    padding-top: 0;
+    border-top: 0;
+  }
+}

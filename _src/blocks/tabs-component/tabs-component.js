@@ -1,96 +1,50 @@
-export default function decorate(block, options) {
-  if (options) {
-    // eslint-disable-next-line no-param-reassign
-    block = block.querySelector('.block');
-    const blockParent = block.closest('.section');
-    blockParent.classList.add('we-container');
-  }
-
-  const parentSelector = block.closest('.section');
-  // eslint-disable-next-line no-unused-vars
-  const metaData = parentSelector.dataset;
-  const [title, subtitle, tabsTitle, ...sections] = block.children;
-
-  title.classList.add('title-class');
-  subtitle.classList.add('subtitle-class');
-  // Add class 'tabs-container' to the first div
-  tabsTitle.classList.add('tabs-container');
-
-  // Get the container for the buttons
-  const container = block.querySelector('.tabs-container');
-
-  // Check if the container exists
-  if (container) {
-    const divs = container.querySelectorAll(':scope > div');
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'buttons-container';
-
-    // Loop through each div to create buttons
-    divs.forEach((div, index) => {
-      const button = document.createElement('button');
-      if (index === 0) button.classList.add('selected');
-
-      // Tab labels are image-only. If the authored tab image has no alt text,
-      // use the corresponding card logo's alt text as the accessible label.
-      const tabImage = div.querySelector('img');
-      const cardImage = sections[index]?.querySelector('img');
-      const tabAlt = tabImage?.getAttribute('alt')?.trim();
-      const cardAlt = cardImage?.getAttribute('alt')?.trim();
-      if (tabImage && !tabAlt && cardAlt) tabImage.setAttribute('alt', cardAlt);
-
-      button.append(...div.childNodes);
-      button.addEventListener('click', () => {
-        // Remove 'selected' class from all buttons
-        const buttons = block.querySelectorAll('.tabs-container button');
-        buttons.forEach((btn) => btn.classList.remove('selected'));
-
-        // Add 'selected' class to the clicked button
-        button.classList.add('selected');
-
-        // Hide all card-container elements
-        const cardContainers = block.querySelectorAll('.card-container');
-        cardContainers.forEach((card) => card.classList.add('hide'));
-
-        // Show the corresponding card-container element based on the index
-        sections[index].classList.remove('hide');
-      });
-
-      buttonsContainer.appendChild(button);
-    });
-
-    container.replaceChildren(buttonsContainer);
-  } else {
-    // eslint-disable-next-line no-console
-    console.error('Container not found');
-  }
-
-  // click on the next element every 5 seconds
-  // setInterval(() => {
-  //   const buttons = block.querySelectorAll('.tabs-container button');
-  //   const selectedButton = block.querySelector('.tabs-container button.selected');
-  //   const buttonIndex = Array.from(buttons).indexOf(selectedButton);
-  //   const nextIndex = (buttonIndex + 1) % buttons.length;
-  //   buttons[nextIndex].click();
-  // }, 6000);
-
-  // Add classes to each card-container and hide all but the first one
-  sections.forEach((element, index) => {
-    element.classList.add('card-container');
-    if (index === 0) {
-      element.classList.add('show');
-    }
-    if (index !== 0) {
-      element.classList.add('hide');
-    }
-
-    // Add classes to children divs
-    const photoDiv = element.querySelector('div:nth-child(1)');
-    const textDiv = element.querySelector('div:nth-child(2)');
-    photoDiv.classList.add('left');
-    textDiv.classList.add('right');
-  });
-  window.dispatchEvent(new CustomEvent('shadowDomLoaded'), {
-    bubbles: true,
-    composed: true, // This allows the event to cross the shadow DOM boundary
-  });
+// src/blocks/tabs-component/tabs-component.js
+function decorate(block, options) {
+	if (options) {
+		block = block.querySelector(".block");
+		block.closest(".section").classList.add("we-container");
+	}
+	block.closest(".section").dataset;
+	const [title, subtitle, tabsTitle, ...sections] = block.children;
+	title.classList.add("title-class");
+	subtitle.classList.add("subtitle-class");
+	tabsTitle.classList.add("tabs-container");
+	const container = block.querySelector(".tabs-container");
+	if (container) {
+		const divs = container.querySelectorAll(":scope > div");
+		const buttonsContainer = document.createElement("div");
+		buttonsContainer.className = "buttons-container";
+		divs.forEach((div, index) => {
+			const button = document.createElement("button");
+			if (index === 0) button.classList.add("selected");
+			const tabImage = div.querySelector("img");
+			const cardImage = sections[index]?.querySelector("img");
+			const tabAlt = tabImage?.getAttribute("alt")?.trim();
+			const cardAlt = cardImage?.getAttribute("alt")?.trim();
+			if (tabImage && !tabAlt && cardAlt) tabImage.setAttribute("alt", cardAlt);
+			button.append(...div.childNodes);
+			button.addEventListener("click", () => {
+				block.querySelectorAll(".tabs-container button").forEach((btn) => btn.classList.remove("selected"));
+				button.classList.add("selected");
+				block.querySelectorAll(".card-container").forEach((card) => card.classList.add("hide"));
+				sections[index].classList.remove("hide");
+			});
+			buttonsContainer.appendChild(button);
+		});
+		container.replaceChildren(buttonsContainer);
+	} else console.error("Container not found");
+	sections.forEach((element, index) => {
+		element.classList.add("card-container");
+		if (index === 0) element.classList.add("show");
+		if (index !== 0) element.classList.add("hide");
+		const photoDiv = element.querySelector("div:nth-child(1)");
+		const textDiv = element.querySelector("div:nth-child(2)");
+		photoDiv.classList.add("left");
+		textDiv.classList.add("right");
+	});
+	window.dispatchEvent(new CustomEvent("shadowDomLoaded"), {
+		bubbles: true,
+		composed: true
+	});
 }
+export { decorate as default };

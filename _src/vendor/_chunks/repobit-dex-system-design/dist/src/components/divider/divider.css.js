@@ -1,0 +1,1 @@
+import{u as e}from"../../../../../lit/index.js";var t=e`.hr-line{border:none;border-top:var(--border-width-1) solid var(--color-border-container);width:100%;margin:0 auto}`,n=e`.divider{background-color:var(--color-border-default);display:inline-block}`;export{t as n,n as t};
