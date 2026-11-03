@@ -19,6 +19,7 @@ var LCP_BLOCKS = [
 	".link-checker",
 	".trusted-hero",
 	".hero-dropdown",
+	".hero-banner",
 	".creators-banner",
 	".email-checker",
 	".interactive-banner"
@@ -176,26 +177,34 @@ async function createModal(path, template, stopAutomaticRefresh) {
 	adobeMcAppendVisitorId(modalContainer);
 	return modalContainer;
 }
+/**
+* Opens the fragment at href as a modal, as a click on an a.button.modal does.
+* For buttons detectModalButtons can't see, like a design-system button's shadow-root anchor.
+* @param {string} href The fragment's path
+* @param {boolean} stopAutomaticModalRefresh Keep the modal and show it again, not reload it
+*/
+async function openModal(href, stopAutomaticModalRefresh = false) {
+	if (stopAutomaticModalRefresh) {
+		const modalClass = href.split("/").pop();
+		const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+		if (existingModal) {
+			existingModal.classList.remove("global-display-none");
+			return;
+		}
+	}
+	const modalContainer = await createModal(href, void 0, stopAutomaticModalRefresh);
+	appendModal(modalContainer);
+	modalContainer.querySelectorAll(".await-loader").forEach((element) => {
+		element.classList.remove("await-loader");
+	});
+	adobeMcAppendVisitorId(".modal-container");
+}
 async function detectModalButtons(main) {
 	main.querySelectorAll("a.button.modal").forEach((link) => {
 		const originalHref = link.getAttribute("href");
-		link.addEventListener("click", async (e) => {
+		link.addEventListener("click", (e) => {
 			e.preventDefault();
-			const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === "true";
-			if (stopAutomaticModalRefresh) {
-				const modalClass = originalHref.split("/").pop();
-				const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
-				if (existingModal) {
-					existingModal.classList.remove("global-display-none");
-					return;
-				}
-			}
-			const modalContainer = await createModal(originalHref, void 0, stopAutomaticModalRefresh);
-			appendModal(modalContainer);
-			modalContainer.querySelectorAll(".await-loader").forEach((element) => {
-				element.classList.remove("await-loader");
-			});
-			adobeMcAppendVisitorId(".modal-container");
+			openModal(originalHref, link.dataset.stopAutomaticModalRefresh === "true");
 		});
 		link.removeAttribute("href");
 		link.setAttribute("location", originalHref);
@@ -678,4 +687,4 @@ initMobileDetector("desktop");
 pwaModulePromise?.then(({ initializeReversePhoneLookupPWA }) => initializeReversePhoneLookupPWA()).catch(() => {});
 loadPage();
 window.AdobeDataLayerService = AdobeDataLayerService;
-export { SUPPORTED_LANGUAGES, createMetadata, createModal, decorateMain, decorateLinkedPictures as default, detectModalButtons, getLanguageCountryFromPath, getLocalizedResourceUrl, loadTrackers };
+export { SUPPORTED_LANGUAGES, createMetadata, createModal, decorateMain, decorateLinkedPictures as default, detectModalButtons, getLanguageCountryFromPath, getLocalizedResourceUrl, loadTrackers, openModal };
