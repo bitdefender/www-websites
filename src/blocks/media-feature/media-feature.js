@@ -1,3 +1,5 @@
+import { load } from '@repobit/dex-system-design/loader';
+
 const VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
 const YOUTUBE_RE = /(?:youtube\.com|youtu\.be)/i;
 const IFRAME_SRC_RE = /<iframe[^>]+\bsrc=["']([^"']+)["']/i;
@@ -171,18 +173,6 @@ const buildFeaturesTab = (row, shouldReverse) => {
 };
 
 export default async function decorate(block) {
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/features-tab'),
-      import('@repobit/dex-system-design/video-player'),
-      import('@repobit/dex-system-design/list'),
-      import('@repobit/dex-system-design/list-item'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('media-feature: DSN import failed', err);
-  }
-
   const isAlternating = block.classList.contains('alternating');
   const forceReverse = block.classList.contains('reverse') ? true : null;
 
@@ -197,5 +187,11 @@ export default async function decorate(block) {
     if (tab) fragment.appendChild(tab);
   });
 
+  try {
+    await load(fragment);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('media-feature: DSN import failed', err);
+  }
   block.replaceChildren(fragment);
 }

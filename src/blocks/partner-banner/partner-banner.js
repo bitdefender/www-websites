@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
@@ -20,16 +21,6 @@ const slotted = (picture, slot) => {
 
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/partner-banner'),
-      import('@repobit/dex-system-design/button'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('partner-banner: DSN import failed, keeping the authored content', err);
-    return;
-  }
 
   const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
   const headingCell = heading?.closest('.partner-banner > div > div');
@@ -65,6 +56,16 @@ export default async function decorate(block) {
     return button;
   });
 
-  banner.append(...[slotted(photo, 'photo'), slotted(lockup, 'lockup'), ...buttons].filter(Boolean));
+  banner.append(...buttons);
+  try {
+    await load(banner);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('partner-banner: DSN import failed, keeping the authored content', err);
+    return;
+  }
+
+  // the pictures move only now, so a failed load leaves them in the authored rows
+  banner.prepend(...[slotted(photo, 'photo'), slotted(lockup, 'lockup')].filter(Boolean));
   block.replaceChildren(banner);
 }

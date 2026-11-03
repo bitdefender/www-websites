@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 // The attribute each bd-motion-art object reads its labels from.
@@ -72,16 +73,6 @@ const buildCard = (row) => {
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
   const header = liftSectionHeader(block);
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/bento-grid'),
-      import('@repobit/dex-system-design/motion-art'),
-      import('@repobit/dex-system-design/button'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('bento-cards: DSN import failed, continuing with native rendering', err);
-  }
 
   const cards = [...block.children].map(buildCard).filter(Boolean);
   // an odd card out runs the full row, with the featured card's wider art
@@ -92,6 +83,12 @@ export default async function decorate(block) {
   grid.setAttribute('min-card-width', '440');
   grid.append(...cards);
 
+  try {
+    await load(grid);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('bento-cards: DSN import failed, continuing with native rendering', err);
+  }
   block.replaceChildren(grid);
   await header;
 }

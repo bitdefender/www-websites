@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
@@ -23,32 +24,22 @@ const buildCard = (row) => {
   if (heading) card.setAttribute('as', heading.tagName.toLowerCase());
   if (link) card.setAttribute('href', link.getAttribute('href') || '');
   if (category) card.setAttribute('badge', text(category));
-
-  const picture = row.querySelector('picture');
-  if (picture) {
-    picture.setAttribute('slot', 'image');
-    // the cover illustrates the title beside it
-    picture.querySelector('img')?.setAttribute('alt', '');
-    card.append(picture);
-  }
   return card;
+};
+
+const addCover = (card, row) => {
+  const picture = row.querySelector('picture');
+  if (!picture) return;
+  picture.setAttribute('slot', 'image');
+  // the cover illustrates the title beside it
+  picture.querySelector('img')?.setAttribute('alt', '');
+  card.append(picture);
 };
 
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
   // the section's heading, as bd-section-header
   const header = liftSectionHeader(block);
-  try {
-    await Promise.all([
-      import('@repobit/dex-system-design/post-card'),
-      import('@repobit/dex-system-design/grid'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('post-feed: DSN import failed, keeping the authored content', err);
-    await header;
-    return;
-  }
 
   const grid = document.createElement('bd-grid');
   // the design system's page column (styles.css), on the hero's edges
@@ -60,8 +51,22 @@ export default async function decorate(block) {
   const setGap = () => grid.setAttribute('gap', !desktop || desktop.matches ? 'md' : 'sm');
   setGap();
   desktop?.addEventListener('change', setGap);
-  grid.append(...[...block.children].map(buildCard).filter(Boolean));
+  const posts = [...block.children]
+    .map((row) => ({ row, card: buildCard(row) }))
+    .filter(({ card }) => card);
+  grid.append(...posts.map(({ card }) => card));
 
+  try {
+    await load(grid);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('post-feed: DSN import failed, keeping the authored content', err);
+    await header;
+    return;
+  }
+
+  // the covers move only now, so a failed load leaves them in the authored rows
+  posts.forEach(({ row, card }) => addCover(card, row));
   block.replaceChildren(grid);
   await header;
 }

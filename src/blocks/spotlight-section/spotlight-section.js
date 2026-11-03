@@ -1,3 +1,5 @@
+import { load } from '@repobit/dex-system-design/loader';
+
 const getIcon = (block) => {
   const picture = block.querySelector('picture');
   if (picture) return picture.cloneNode(true);
@@ -72,17 +74,6 @@ const appendButtons = (banner, cell, slot) => {
 };
 
 export default async function decorate(block) {
-  try {
-    await Promise.all([
-      // Not in the package's exports map: UNEXPORTED in vite.config.mjs maps it.
-      import('@repobit/dex-system-design/spotlight-section'),
-      import('@repobit/dex-system-design/button'),
-    ]);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('spotlight-section: DSN import failed, continuing with native rendering', err);
-  }
-
   const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
   const { headingCell, descriptionCell } = getContentCells(block, heading);
   const description = getDescription(block, heading, descriptionCell);
@@ -101,5 +92,11 @@ export default async function decorate(block) {
   appendButtons(spotlightSection, headingCell, 'left-buttons');
   appendButtons(spotlightSection, descriptionCell, 'right-buttons');
 
+  try {
+    await load(spotlightSection);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('spotlight-section: DSN import failed, continuing with native rendering', err);
+  }
   block.replaceChildren(spotlightSection);
 }

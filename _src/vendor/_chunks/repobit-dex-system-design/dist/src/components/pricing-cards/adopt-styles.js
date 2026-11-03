@@ -1,0 +1,1 @@
+function e(e,...t){let n=e.getRootNode();if(!(`adoptedStyleSheets`in n))return;let r=t.map(e=>e.styleSheet).filter(e=>!!e&&!n.adoptedStyleSheets.includes(e));r.length&&(n.adoptedStyleSheets=[...n.adoptedStyleSheets,...r])}export{e as t};

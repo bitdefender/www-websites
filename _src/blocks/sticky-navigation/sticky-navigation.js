@@ -1,4 +1,5 @@
 import { STICKY_NAVIGATION_DATASET_KEY } from "../../scripts/lib-franklin.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/sticky-navigation/sticky-navigation.js
 /** True if href is an anchor on the current page (#id or /same-path#id). */
 function isPageAnchorHref(href) {
@@ -41,6 +42,7 @@ function getRowLabel(p) {
 	const link = p.querySelector("a");
 	return link?.getAttribute("title") || link?.textContent.trim() || p.textContent.trim();
 }
+/** Builds the items from the authored rows; returns the id of the active one, if any. */
 function buildFromAuthoredRows(anchorNav, block, activeLabel) {
 	const sectionItems = collectSectionItems(block);
 	const rows = Array.from(block.querySelectorAll("p")).filter((p) => p.textContent.trim() !== "");
@@ -63,12 +65,9 @@ function buildFromAuthoredRows(anchorNav, block, activeLabel) {
 		if (href) navItem.setAttribute("href", href);
 		anchorNav.appendChild(navItem);
 	});
-	if (activeLabel) {
-		const idx = rows.findIndex((p) => getRowLabel(p).toLowerCase() === activeLabel.toLowerCase());
-		if (idx >= 0) setTimeout(() => {
-			anchorNav.activeId = `anchor-${idx + 1}`;
-		}, 0);
-	}
+	if (!activeLabel) return null;
+	const idx = rows.findIndex((p) => getRowLabel(p).toLowerCase() === activeLabel.toLowerCase());
+	return idx >= 0 ? `anchor-${idx + 1}` : null;
 }
 function buildFromSections(anchorNav, block) {
 	collectSectionItems(block).forEach((item, index) => {
@@ -92,12 +91,14 @@ function buildFromSections(anchorNav, block) {
 		anchorNav.appendChild(buttonLink);
 	}
 }
+/** Builds the nav; returns it with the id of the item to show active, if any. */
 function buildAnchorNav(block) {
 	const activeLabel = block.closest(".section")?.dataset.active || "";
+	let activeId = null;
 	const isAuthoredMode = Array.from(block.querySelectorAll("p")).filter((p) => p.textContent.trim() !== "").length >= 2;
 	const anchorNav = document.createElement("bd-anchor-nav");
 	if (isAuthoredMode) {
-		buildFromAuthoredRows(anchorNav, block, activeLabel);
+		activeId = buildFromAuthoredRows(anchorNav, block, activeLabel);
 		anchorNav.addEventListener("click", (e) => {
 			const bdLink = e.composedPath().find((el) => el.tagName === "BD-LINK");
 			if (!bdLink) return;
@@ -110,10 +111,17 @@ function buildAnchorNav(block) {
 			else window.location.href = href;
 		});
 	} else buildFromSections(anchorNav, block);
-	block.replaceChildren(anchorNav);
+	return {
+		anchorNav,
+		activeId
+	};
 }
 async function decorate(block) {
-	await Promise.all([import("../../vendor/repobit/dex-system-design/anchor.js"), import("../../vendor/repobit/dex-system-design/button.js")]);
-	buildAnchorNav(block);
+	const { anchorNav, activeId } = buildAnchorNav(block);
+	await load(anchorNav);
+	block.replaceChildren(anchorNav);
+	if (activeId) setTimeout(() => {
+		anchorNav.activeId = activeId;
+	}, 0);
 }
 export { decorate as default };

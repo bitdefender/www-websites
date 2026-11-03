@@ -1,3 +1,4 @@
+import { load } from '@repobit/dex-system-design/loader';
 import { slotIcon } from '../../scripts/utils/utils.js';
 import { readBlockConfig, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 
@@ -23,7 +24,10 @@ const buildTabCol = (cells, isFirstOpen, bgBlue) => {
   const col = document.createElement('bd-feature-col');
   col.setAttribute('title', heading?.textContent?.trim() || titleCell.textContent.trim());
 
-  const icon = document.createElement('bd-individual-icon');
+  // a plain wrapper for the authored icon: bd-features finds it by its slot.
+  // Not bd-individual-icon, which the loader would define as the design
+  // system's own glyph, drawn in place of the authored one.
+  const icon = document.createElement('span');
   icon.setAttribute('slot', 'icon');
   const imageSrc = getImageSrc(iconCell);
   // the page's own inline SVG: decorate() waited for the icon pass
@@ -254,7 +258,7 @@ export default async function decorate(block) {
         await loadBlocks(bdTabs);
         normalizeLoadingFeatureIcons(bdTabs);
         bdTabs.querySelectorAll('bd-accordion-bg').forEach((el) => el.setAttribute('no-padding', ''));
-        await import('@repobit/dex-system-design/tabs');
+        await load(bdTabs);
         if (typeof bdTabs.requestUpdate === 'function') {
           bdTabs.requestUpdate();
         }
@@ -275,20 +279,13 @@ export default async function decorate(block) {
     const { defaultWrapper, title, subtitle } = getSectionContext(block);
     if (defaultWrapper && title) defaultWrapper.remove();
 
-    // no icons module: bd-individual-icon here only wraps the authored <img>,
-    // and the design system's element of that name draws its own glyph instead
+    const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
     try {
-      await Promise.all([
-        import('@repobit/dex-system-design/tabs'),
-        import('@repobit/dex-system-design/paragraph'),
-        import('@repobit/dex-system-design/accordion'),
-      ]);
+      await load(tabsEl);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.warn('DSN imports failed (Mode 2)', err);
     }
-
-    const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
-    if (tabsEl) block.replaceChildren(tabsEl);
+    block.replaceChildren(tabsEl);
   }
 }

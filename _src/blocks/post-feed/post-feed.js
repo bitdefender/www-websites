@@ -1,4 +1,5 @@
 import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/post-feed/post-feed.js
 var DESKTOP = "(min-width: 992px)";
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
@@ -12,24 +13,18 @@ var buildCard = (row) => {
 	if (heading) card.setAttribute("as", heading.tagName.toLowerCase());
 	if (link) card.setAttribute("href", link.getAttribute("href") || "");
 	if (category) card.setAttribute("badge", text(category));
-	const picture = row.querySelector("picture");
-	if (picture) {
-		picture.setAttribute("slot", "image");
-		picture.querySelector("img")?.setAttribute("alt", "");
-		card.append(picture);
-	}
 	return card;
+};
+var addCover = (card, row) => {
+	const picture = row.querySelector("picture");
+	if (!picture) return;
+	picture.setAttribute("slot", "image");
+	picture.querySelector("img")?.setAttribute("alt", "");
+	card.append(picture);
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);
 	const header = liftSectionHeader(block);
-	try {
-		await Promise.all([import("../../vendor/repobit/dex-system-design/post-card.js"), import("../../vendor/repobit/dex-system-design/grid.js")]);
-	} catch (err) {
-		console.warn("post-feed: DSN import failed, keeping the authored content", err);
-		await header;
-		return;
-	}
 	const grid = document.createElement("bd-grid");
 	grid.className = "ds-page-column";
 	[
@@ -42,7 +37,19 @@ async function decorate(block) {
 	const setGap = () => grid.setAttribute("gap", !desktop || desktop.matches ? "md" : "sm");
 	setGap();
 	desktop?.addEventListener("change", setGap);
-	grid.append(...[...block.children].map(buildCard).filter(Boolean));
+	const posts = [...block.children].map((row) => ({
+		row,
+		card: buildCard(row)
+	})).filter(({ card }) => card);
+	grid.append(...posts.map(({ card }) => card));
+	try {
+		await load(grid);
+	} catch (err) {
+		console.warn("post-feed: DSN import failed, keeping the authored content", err);
+		await header;
+		return;
+	}
+	posts.forEach(({ row, card }) => addCover(card, row));
 	block.replaceChildren(grid);
 	await header;
 }

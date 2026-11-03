@@ -1,4 +1,5 @@
 import { fullWidthOnPhone, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/stat-tiles/stat-tiles.js
 var TABLET = "(min-width: 768px)";
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
@@ -67,18 +68,6 @@ var grid = (cols) => {
 async function decorate(block) {
 	wrapSectionInDsSection(block);
 	const header = liftSectionHeader(block);
-	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/stat.js"),
-			import("../../vendor/repobit/dex-system-design/grid.js"),
-			import("../../vendor/repobit/dex-system-design/paragraph.js"),
-			import("../../vendor/repobit/dex-system-design/button.js")
-		]);
-	} catch (err) {
-		console.warn("stat-tiles: DSN import failed, keeping the authored content", err);
-		await header;
-		return;
-	}
 	const rows = [...block.children];
 	const leadRow = rows[0]?.children.length > 1 && rows[0].children[1].querySelector("p, a") ? rows.shift() : null;
 	const layout = grid([
@@ -102,6 +91,13 @@ async function decorate(block) {
 	tiles.append(...rows.map(buildTile));
 	if (leadRow) layout.append(buildLead(leadRow));
 	layout.append(tiles);
+	try {
+		await load(layout);
+	} catch (err) {
+		console.warn("stat-tiles: DSN import failed, keeping the authored content", err);
+		await header;
+		return;
+	}
 	block.replaceChildren(layout);
 	await header;
 }

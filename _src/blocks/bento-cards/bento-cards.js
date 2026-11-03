@@ -1,4 +1,5 @@
 import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/bento-cards/bento-cards.js
 var ART_LABELS = {
 	"mesh-globe": "badges",
@@ -57,21 +58,17 @@ var buildCard = (row) => {
 async function decorate(block) {
 	wrapSectionInDsSection(block);
 	const header = liftSectionHeader(block);
-	try {
-		await Promise.all([
-			import("../../vendor/repobit/dex-system-design/bento-grid.js"),
-			import("../../vendor/repobit/dex-system-design/motion-art.js"),
-			import("../../vendor/repobit/dex-system-design/button.js")
-		]);
-	} catch (err) {
-		console.warn("bento-cards: DSN import failed, continuing with native rendering", err);
-	}
 	const cards = [...block.children].map(buildCard).filter(Boolean);
 	if (cards.length % 2) cards.at(-1).setAttribute("priority", "featured");
 	const grid = document.createElement("bd-bento-grid");
 	grid.setAttribute("wide-share", "0.5");
 	grid.setAttribute("min-card-width", "440");
 	grid.append(...cards);
+	try {
+		await load(grid);
+	} catch (err) {
+		console.warn("bento-cards: DSN import failed, continuing with native rendering", err);
+	}
 	block.replaceChildren(grid);
 	await header;
 }

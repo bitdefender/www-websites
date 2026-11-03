@@ -1,0 +1,18 @@
+import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../heading/heading.js";import"../shared/token-scales.js";import"../button/button.js";import"../shared/fill-width.css.js";var s=r`:host{width:100%;height:100%;display:block;container-type:inline-size}@supports (width:-moz-available){:host{width:-moz-available}}@supports (width:-webkit-fill-available){:host{width:-webkit-fill-available}}@supports (width:stretch){:host{width:-webkit-fill-available;width:-moz-available;width:stretch}}.card{box-sizing:border-box;justify-content:space-between;align-items:flex-end;gap:var(--spacing-8);height:100%;padding:var(--card-padding-compact);background:var(--color-surface-default);border:var(--border-width-1) solid var(--color-border-container);border-radius:var(--card-radius);flex-direction:column;display:flex;position:relative}.copy{align-self:stretch;gap:var(--spacing-8);flex-direction:column;min-width:0;display:flex}.eyebrow{align-items:center;gap:var(--spacing-8);font-family:var(--typography-label-default-fontFamily);font-size:var(--typography-label-default-fontSize);font-weight:var(--typography-label-default-fontWeight);line-height:var(--typography-label-default-lineHeight);letter-spacing:var(--typography-label-default-letterSpacing);text-transform:uppercase;color:var(--color-text-brand);margin:0;display:flex}::slotted([slot=icon]){color:var(--color-text-brand);flex:none}.heading{margin:0}.description{font-family:var(--typography-body-regular-fontFamily);font-size:var(--typography-body-regular-fontSize);font-weight:var(--typography-body-regular-fontWeight);line-height:var(--typography-body-regular-lineHeight);letter-spacing:var(--typography-body-regular-letterSpacing);color:var(--color-text-primary);margin:0}.arrow{flex:none}.arrow::part(button):after{content:"";position:absolute;inset:0}@container (width>=576px){.card{align-items:center;gap:var(--spacing-24);flex-direction:row}.copy{flex:auto}}.text,.description{white-space:pre-line}`,c=class extends n{constructor(...e){super(...e),this.eyebrow=``,this.heading=``,this.description=``,this.href=``,this.target=``,this.label=``,this.as=`h2`}static{this.styles=[s]}render(){return e`
+      <article class="card">
+        <div class="copy">
+          ${this.eyebrow?e`<p class="eyebrow"><slot name="icon"></slot><span class="text">${this.eyebrow}</span></p>`:t}
+          <bd-h as="${this.as}" visual-level="h4" class="heading"><span class="text">${this.heading}</span></bd-h>
+          ${this.description?e`<p class="description">${this.description}</p>`:t}
+        </div>
+        ${this.href?e`<bd-button-link
+              class="arrow"
+              variant="accent"
+              size="md"
+              icon-only
+              href="${this.href}"
+              target="${this.target||t}"
+              label="${this.label||this.eyebrow||this.heading}"
+            ></bd-button-link>`:t}
+      </article>
+    `}};o([i({type:String})],c.prototype,`eyebrow`,void 0),o([i({type:String})],c.prototype,`heading`,void 0),o([i({type:String})],c.prototype,`description`,void 0),o([i({type:String})],c.prototype,`href`,void 0),o([i({type:String})],c.prototype,`target`,void 0),o([i({type:String})],c.prototype,`label`,void 0),o([i({type:String})],c.prototype,`as`,void 0),c=o([a(`bd-audience-card`)],c);export{c as AudienceCard};

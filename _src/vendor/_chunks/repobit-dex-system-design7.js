@@ -1,1 +1,0 @@
-function e(e,{allowed:t,legacy:n={},fallback:r}){let i=Object.hasOwn(n,e)?n[e]:e;return t.includes(i)?i:r}var t=(e,t)=>e.includes(t);export{t as n,e as t};
