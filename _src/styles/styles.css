@@ -803,9 +803,9 @@ main .grey-background {
 }
 
 @media screen and (min-width: 992px) { /* desktop */
+  /* no position: header.css makes it sticky, and absolute until then takes it out of the flow */
   header.header-wrapper {
     height: var(--nav-height-desktop);
-    position: absolute;
     z-index: 999;
     margin: auto;
     left: 0;
