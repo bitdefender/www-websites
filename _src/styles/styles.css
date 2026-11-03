@@ -111,6 +111,11 @@ body.with-language-bar > div:first-child, body.with-language-bar header {
   min-height: 196px;
 }
 
+/* header-type: hidden */
+body.header-hidden header {
+  display: none;
+}
+
 .section.ibm-plex-sans {
   * {
     font-family: var(--body-font-family);
