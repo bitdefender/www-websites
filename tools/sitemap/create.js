@@ -236,7 +236,7 @@ async function processLocaleSitemap(locale, hreflangMap) {
     && !isExcludedPath(entry.path)
   );
   const filteredHreflangMap = hreflangMap.filter(([lang]) => lang !== locale);
-  const sitemapPath = path.join(process.cwd(), '../../_src/sitemap/csg/sitemap_' + locale + '.xml');
+  const sitemapPath = path.join(process.cwd(), '../../src/sitemap/csg/sitemap_' + locale + '.xml');
 
   const output = {
     urlset: {

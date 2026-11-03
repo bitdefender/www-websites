@@ -1,0 +1,35 @@
+import { embedYoutube } from '../../scripts/utils/utils.js';
+import YouTubeTracker from '../../scripts/utils/youtube-tracker.js';
+
+function replacePlaceholderWithVideo(block, videoUrl) {
+  const placeholderDiv = [...block.querySelectorAll('div')].find((div) => div.textContent.trim() === '{video}');
+  if (!placeholderDiv) {
+    return;
+  }
+  const videoContainer = document.createElement('div');
+  videoContainer.className = 'video-container';
+
+  const url = new URL(videoUrl);
+  videoContainer.innerHTML = embedYoutube(url, false);
+
+  placeholderDiv.replaceWith(videoContainer);
+}
+
+export default function decorate(block) {
+  const { video, buttonImage } = block.closest('.section').dataset;
+  replacePlaceholderWithVideo(block, video);
+
+  const videoId = block.querySelector('iframe')?.getAttribute('id');
+  if (video) {
+    const url = new URL(video);
+    const tracker = new YouTubeTracker(block, video, url, videoId);
+    tracker.initialize();
+  }
+
+  if (buttonImage) {
+    const buttonImageEl = document.createElement('img');
+    buttonImageEl.setAttribute('src', buttonImage);
+    const lastBtn = block.querySelector('table tr');
+    lastBtn.insertAdjacentElement('afterbegin', buttonImageEl);
+  }
+}
