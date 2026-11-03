@@ -1,5 +1,10 @@
-import{i as e}from"./lit.js";import{t}from"./repobit-dex-system-design4.js";var n=class extends t{static defaultSize=`md`;render(){return e`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99999 8.01777L16.433 14.4508L18.2008 12.6831L10.8839 5.36612C10.3957 4.87796 9.60426 4.87796 9.1161 5.36612L1.79916 12.6831L3.56693 14.4508L9.99999 8.01777Z" fill="currentColor"/>
+import{a as e}from"./lit.js";import{n as t,t as n}from"./repobit-dex-system-design.js";import{t as r}from"./repobit-dex-system-design5.js";var i=class extends r{static{this.defaultSize=`sm`}render(){return e`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.25 7H13.75V9H2.25V7Z" fill="currentColor"/>
       </svg>
-    `}};customElements.define(`bd-arrow-up-icon`,n);
+
+    `}};i=n([t(`bd-minus-icon`)],i);var a=class extends r{static{this.defaultSize=`sm`}render(){return e`  
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M9 1H7V7H1V9H7V15H9V9H15V7H9V1Z" fill="currentColor"/>
+      </svg>
+    `}};a=n([t(`bd-plus-icon`)],a);

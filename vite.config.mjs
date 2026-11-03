@@ -76,7 +76,7 @@ const EXTERNAL = [
 const UNEXPORTED = Object.fromEntries(Object.entries({
   '@repobit/dex-system-design/spotlight-section': 'spotlight-section/spotlight-section.js',
   '@repobit/dex-system-design/video-player': 'video-player/video-player.js',
-}).map(([specifier, file]) => [specifier, path.resolve('node_modules/@repobit/dex-system-design/src/components', file)]));
+}).map(([specifier, file]) => [specifier, path.resolve('node_modules/@repobit/dex-system-design/dist/src/components', file)]));
 
 const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
 

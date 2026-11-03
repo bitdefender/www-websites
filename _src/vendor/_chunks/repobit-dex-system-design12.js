@@ -1,5 +1,5 @@
-import{i as e}from"./lit.js";import{n as t,t as n}from"./repobit-dex-system-design4.js";var r=class extends n{static defaultSize=`sm`;static styles=[n.styles,t];render(){return e`
+import{a as e}from"./lit.js";import{n as t,t as n}from"./repobit-dex-system-design.js";import{t as r}from"./repobit-dex-system-design5.js";var i=class extends r{static{this.defaultSize=`md`}render(){return e`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.482 11.2501L10.9327 14.7993L12.7005 16.5671L19.2675 10L12.7005 3.43298L10.9327 5.20075L14.482 8.75006L1.875 8.75006V11.2501L14.482 11.2501Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99999 8.01777L16.433 14.4508L18.2008 12.6831L10.8839 5.36612C10.3957 4.87796 9.60426 4.87796 9.1161 5.36612L1.79916 12.6831L3.56693 14.4508L9.99999 8.01777Z" fill="currentColor"/>
       </svg>
-    `}};customElements.define(`bd-arrow-icon`,r);
+    `}};i=n([t(`bd-arrow-up-icon`)],i);
