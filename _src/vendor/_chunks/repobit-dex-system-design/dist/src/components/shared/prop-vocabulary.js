@@ -1,0 +1,1 @@
+var e=[`sm`,`md`,`lg`],t={small:`sm`,medium:`md`,default:`md`,large:`lg`};function n(e,{allowed:t,legacy:n={},fallback:r}){let i=Object.hasOwn(n,e)?n[e]:e;return t.includes(i)?i:r}var r=(e,t)=>e.includes(t),i=(r,i=`md`)=>n(r,{allowed:e,legacy:t,fallback:i});export{n,r,i as t};

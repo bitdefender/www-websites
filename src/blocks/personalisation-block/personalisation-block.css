@@ -1,0 +1,14 @@
+.pesonalization-block-container {
+    display: flex;
+    justify-content: center;
+
+    pesonalization-block-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .personalization-block {
+            width: 100%;
+        }
+    }
+}

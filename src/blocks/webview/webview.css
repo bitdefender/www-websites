@@ -1,0 +1,466 @@
+.webview-wrapper {
+    max-width: 768px;
+    padding: 0 var(--section-desktop-padding);
+    margin: 0 auto;
+    background: url("../../icons/pattern.png") repeat-x;
+    background-size: 188px 104px;
+    text-align: center;
+    font-family: var(--body-font-family);
+}
+
+.webview-wrapper .webview {
+    max-width: 438px;
+    margin: auto;
+    padding-top: 48px;
+    padding-bottom: 35px;
+}
+
+.webview-wrapper .webview img {
+    width: 92px;
+    height: auto;
+}
+
+.webview-wrapper .webview h2 {
+    margin-top: 16px;
+    font-size: 32px;
+    line-height: 32px;
+    font-weight: 700;
+    color: #006eff;
+}
+
+.webview-wrapper .webview h3 {
+    margin-top: 30px;
+    margin-bottom: 16px;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 700;
+}
+
+.webview-wrapper .webview .button-container {
+    margin-top: 14px;
+    margin-bottom: 0;
+}
+
+.webview-wrapper .webview .button {
+    background-color: #006eff;
+    border-color: #006eff;
+    color: white;
+    font-size: 14px;
+    max-width: 100%;
+    width: 264px;
+    justify-content: center;
+}
+
+.webview-wrapper .webview .button::after {
+    content: none;
+}
+
+.webview-wrapper .webview .button:hover {
+    background-color: #0056cc;
+    border-color: #0056cc;
+}
+
+.webview-wrapper .webview .button:hover span {
+    transform: translateX(0);
+}
+
+.webview-wrapper .webview .button.secondary {
+    background-color: white;
+    border-color: white;
+    color: #006eff;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.webview-wrapper .webview .prod-oldprice {
+    font-size: var(--body-font-size-xs);
+    line-height: var(--body-font-size-xs);
+    text-decoration: line-through;
+    margin-right: 10px;
+}
+
+.webview-wrapper .webview .prod-percent {
+    font-size: 13px;
+    line-height: 15px;
+    color: white;
+    background-color: #61a851;
+    border-radius: 11px;
+    padding: 4px 10px;
+    font-weight: bold;
+}
+
+.webview-wrapper .webview .prod-newprice {
+    font-family: var(--body-font-family);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 0.7;
+}
+
+.webview-wrapper .webview .under-price-text {
+    font-size: var(--body-font-size-xxs);
+    line-height: var(--body-font-size-xxs);
+    color: #666;
+}
+
+.webview-wrapper .webview .under-price-text p {
+    margin: 0;
+    font-size: var(--body-font-size-xxxs);
+}
+
+.webview-wrapper .webview .price-box {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.webview-wrapper.dark-mode {
+    background-color: black;
+}
+
+.webview-wrapper.dark-mode .webview {
+    color: white;
+}
+
+.webview-wrapper.dark-mode .webview .button.secondary {
+    background-color: black;
+    border-color: black;
+}
+
+/* stylelint-disable no-descending-specificity */
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) {
+    max-width: 640px;
+    padding: 20px;
+    background: transparent;
+    font-family: var(--body-font-family);
+}
+
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview {
+    position: relative;
+    max-width: 600px;
+    min-height: 484px;
+    margin: 0 auto;
+    overflow: hidden;
+    color: #384357;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgb(7 20 45 / 9%);
+}
+
+.webview-wrapper.discount-modal .webview {
+    padding: 48px 48px 32px;
+}
+
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+}
+
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close::before,
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close::after {
+    position: absolute;
+    top: 15px;
+    left: 8px;
+    width: 16px;
+    height: 2px;
+    content: "";
+    background: #07142d;
+    border-radius: 1px;
+}
+
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close::before {
+    transform: rotate(45deg);
+}
+
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close::after {
+    transform: rotate(-45deg);
+}
+
+.webview-wrapper:is(.discount-modal, .churn-thank-you-v1) .webview-modal-close:focus-visible {
+    outline: 2px solid #0f6aff;
+    outline-offset: 2px;
+}
+
+.webview-wrapper.discount-modal .webview-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.webview-wrapper.discount-modal .webview h2 {
+    margin: 0 0 30px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28px;
+    color: #07142d;
+    text-wrap: balance;
+}
+
+.webview-wrapper.discount-modal .webview-modal-copy {
+    max-width: 504px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 22px;
+    color: #384357;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+}
+
+.webview-wrapper.discount-modal .webview-modal-copy p {
+    margin: 0;
+}
+
+.webview-wrapper.discount-modal .webview-modal-offer {
+    position: relative;
+    width: 100%;
+    max-width: 504px;
+    min-height: 142px;
+    padding: 25px 28px 24px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    background: #f2fff8 url("../../icons/percent-background.svg") center / cover no-repeat;
+    border: 1px dashed #a3e1bf;
+    border-radius: 8px;
+    color: #058840;
+}
+
+.webview-wrapper.discount-modal .webview-modal-offer h2 {
+    color: #058840;
+}
+
+.webview-wrapper.discount-modal .webview-modal-offer p {
+    font-size: 24px;
+    line-height: 30px;
+    text-wrap: balance;
+}
+
+.webview-wrapper.discount-modal .webview-modal-discount,
+.webview-wrapper.discount-modal .webview-modal-discount .prod-save,
+.webview-wrapper.discount-modal .webview-modal-discount [data-store-discount="percentage"] {
+    font-family: var(--body-font-family);
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 56px;
+}
+
+.webview-wrapper.discount-modal .webview-modal-text-bottom {
+    width: 100%;
+    max-width: 504px;
+    margin-bottom: 43px;
+    font-size: 16px;
+    line-height: 22px;
+    color: #384357;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+}
+
+.webview-wrapper.discount-modal .webview-modal-text-bottom p {
+    margin: 0;
+}
+
+.webview-wrapper.discount-modal .webview-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 252px;
+}
+
+.webview-wrapper.discount-modal .webview .button-container {
+    margin: 0;
+}
+
+.webview-wrapper.discount-modal .webview .button {
+    width: 252px;
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    background-color: #058840;
+    border-color: #058840;
+    border-radius: 4px;
+}
+
+.webview-wrapper.discount-modal .webview .button:hover {
+    background-color: #047236;
+    border-color: #047236;
+}
+
+.webview-wrapper.discount-modal .webview .button.secondary {
+    width: auto;
+    min-height: 36px;
+    color: #ea0220;
+    background: transparent;
+    border: 0;
+}
+
+.webview-wrapper.discount-modal .webview .button.secondary:hover {
+    color: #c6001a;
+    background: transparent;
+    border: 0;
+}
+
+.webview-wrapper.discount-modal.dark-mode {
+    background: transparent;
+}
+
+.webview-wrapper.discount-modal.dark-mode .webview,
+.webview-wrapper.discount-modal.dark-mode .webview .button.secondary {
+    background: #fff;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview {
+    display: flex;
+    padding: 64px 44px 44px;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 240px;
+    height: 184px;
+    margin-bottom: 32px;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-image img {
+    width: 240px;
+    max-width: 100%;
+    height: 184px;
+    object-fit: contain;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-title {
+    max-width: 452px;
+    margin: 0 0 15px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28px;
+    color: #07142d;
+    text-wrap: balance;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-copy {
+    max-width: 452px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 22px;
+    color: #384357;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-copy p {
+    margin: 0;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-action {
+    align-self: flex-end;
+    margin: auto 0 0;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview .button {
+    width: 106px;
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    background-color: #0f6aff;
+    border-color: #0f6aff;
+    border-radius: 4px;
+}
+
+.webview-wrapper.churn-thank-you-v1 .webview .button:hover {
+    background-color: #005eff;
+    border-color: #005eff;
+}
+
+.webview-wrapper.churn-thank-you-v1.dark-mode {
+    background: transparent;
+}
+
+.webview-wrapper.churn-thank-you-v1.dark-mode .webview {
+    background: #fff;
+}
+
+@media (width <= 600px) {
+    .webview-wrapper.discount-modal {
+        padding: 12px;
+    }
+
+    .webview-wrapper.discount-modal .webview {
+        min-height: auto;
+        padding: 36px 20px 40px;
+    }
+
+    .webview-wrapper.discount-modal .webview-modal-offer {
+        padding: 20px 16px;
+    }
+
+    .webview-wrapper.discount-modal .webview-modal-actions,
+    .webview-wrapper.discount-modal .webview .button {
+        width: 100%;
+    }
+
+    .webview-wrapper.discount-modal .webview-modal-discount,
+    .webview-wrapper.discount-modal .webview-modal-discount .prod-save,
+    .webview-wrapper.discount-modal .webview-modal-discount [data-store-discount="percentage"] {
+        font-size: 40px;
+        line-height: 48px;
+    }
+
+    .webview-wrapper.discount-modal .webview-modal-offer-subtitle {
+        font-size: 20px;
+        line-height: 26px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 {
+        padding: 12px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview {
+        min-height: auto;
+        padding: 44px 20px 32px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-image {
+        width: 200px;
+        height: 154px;
+        margin-bottom: 24px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-image img {
+        width: 200px;
+        height: 154px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview-thank-you-modal-action {
+        align-self: stretch;
+        width: 100%;
+        margin-top: 32px;
+    }
+
+    .webview-wrapper.churn-thank-you-v1 .webview .button {
+        width: 100%;
+    }
+}
+/* stylelint-enable no-descending-specificity */

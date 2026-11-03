@@ -1,0 +1,24 @@
+/* The component cover-fits the slotted <picture>; the <img> inside it is light
+   DOM, out of the component's reach, so it fills the picture from here. */
+.partner-banner bd-partner-banner > picture[slot="photo"] img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* The lockup at the size the frames draw it: 230 wide on phone and tablet,
+   299 on desktop (the asset is a 2x export of 299 x 35), its height following. */
+.partner-banner bd-partner-banner > picture[slot="lockup"] img {
+  display: block;
+  width: 230px;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (width >= 992px) {
+  .partner-banner bd-partner-banner > picture[slot="lockup"] img {
+    width: 299px;
+  }
+}
