@@ -21,6 +21,7 @@ var LCP_BLOCKS = [
 	".hero-dropdown",
 	".hero-banner",
 	".creators-banner",
+	".realcheck-checker",
 	".email-checker",
 	".interactive-banner"
 ];
