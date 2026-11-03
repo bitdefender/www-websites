@@ -35,13 +35,8 @@
   background: var(--color-surface-container, #fafafa);
 }
 
-/* media panel: on top below lg, on the right from lg. The mark lengths size the scrim below */
+/* media panel: on top below lg, on the right from lg */
 .hero-banner .hero-banner__media {
-  --hero-banner-mark-inset: var(--spacing-24, 24px);
-  --hero-banner-mark-height: var(--icon-lg-size, 24px);
-  --hero-banner-scrim-fade: var(--spacing-112, 112px);
-  --hero-banner-scrim-mid: var(--spacing-40, 40px);
-
   position: relative;
   order: -1;
   overflow: hidden;
@@ -77,19 +72,24 @@
 }
 
 /*
- * product look: a brand scrim along the bottom, the signature on it. bd-header's scrim:
- * 60% blue-950 under the signature, 22% 40px above it, gone at the top of the band.
+ * product look: a brand glow from the signature's corner, the signature on it. Figma's scrim:
+ * a 160px band, an ellipse as wide as the panel, blue-500 in the corner fading through
+ * blue-950. Its middle stops are the two mixed, at the opacity of the stop.
  */
 .hero-banner .hero-banner__scrim {
+  --hero-banner-glow: var(--color-brand-500, #006dff);
+  --hero-banner-glow-end: var(--color-brand-950, #001947);
+  --hero-banner-glow-corner: 100% 100%;
+
   position: absolute;
   inset: auto 0 0;
-  height: calc(var(--hero-banner-mark-inset) + var(--hero-banner-mark-height) + var(--hero-banner-scrim-fade));
-  background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--color-brand-950, #001947) 60%, transparent) 0,
-    color-mix(in srgb, var(--color-brand-950, #001947) 60%, transparent) calc(var(--hero-banner-mark-inset) + var(--hero-banner-mark-height)),
-    color-mix(in srgb, var(--color-brand-950, #001947) 22%, transparent) calc(var(--hero-banner-mark-inset) + var(--hero-banner-mark-height) + var(--hero-banner-scrim-mid)),
-    transparent 100%
+  height: 160px;
+  background: radial-gradient(
+    100% 100% at var(--hero-banner-glow-corner),
+    var(--hero-banner-glow) 0,
+    color-mix(in srgb, color-mix(in srgb, var(--hero-banner-glow) 75%, var(--hero-banner-glow-end)) 75%, transparent) 25%,
+    color-mix(in srgb, color-mix(in srgb, var(--hero-banner-glow) 50%, var(--hero-banner-glow-end)) 50%, transparent) 50%,
+    color-mix(in srgb, var(--hero-banner-glow-end) 0%, transparent) 100%
   );
   pointer-events: none;
 }
@@ -97,8 +97,8 @@
 /* text, not bd-brand-signature-icon: the mark is drawn in English, the metadata is per locale */
 .hero-banner .hero-banner__signature {
   position: absolute;
-  right: var(--hero-banner-mark-inset);
-  bottom: var(--hero-banner-mark-inset);
+  right: var(--spacing-24, 24px);
+  bottom: var(--spacing-24, 24px);
   margin: 0;
   color: var(--color-text-inverse, #fff);
   font-size: var(--typography-fontSize-2xl, 1.5rem);
@@ -309,17 +309,15 @@
   color: var(--button-tertiary-text-default, #0059d6);
 }
 
-/* below md bd-header shrinks the signature's corner and its band */
+/* below md Figma moves the signature, and the glow under it, to the bottom left */
 @media (width < 768px) {
-  .hero-banner .hero-banner__media {
-    --hero-banner-mark-inset: var(--spacing-16, 16px);
-    --hero-banner-mark-height: var(--icon-sm-size, 16px);
-    --hero-banner-scrim-fade: var(--spacing-48, 48px);
-    --hero-banner-scrim-mid: var(--spacing-16, 16px);
+  .hero-banner .hero-banner__scrim {
+    --hero-banner-glow-corner: 0 100%;
   }
 
   .hero-banner .hero-banner__signature {
-    font-size: var(--typography-fontSize-base, 1rem);
+    right: auto;
+    left: var(--spacing-24, 24px);
   }
 }
 
