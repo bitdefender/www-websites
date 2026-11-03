@@ -463,6 +463,7 @@ async function loadEager(doc) {
 	const userCountry = await user_default.country;
 	if (page_default.name.includes(page_default.locale)) doc.body.classList.add("homepage");
 	if (userCountry !== page_default.country && !Cookies.get("language-bar-interacted-with")) doc.body.classList.add("with-language-bar");
+	if (getMetadata("header-type") === "hidden") doc.body.classList.add("header-hidden");
 	createMetadata("nav", `${getLocalizedResourceUrl("nav")}`);
 	createMetadata("footer", `${getLocalizedResourceUrl("footer")}`);
 	decorateTemplateAndTheme();

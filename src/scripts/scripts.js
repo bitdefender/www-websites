@@ -630,6 +630,8 @@ async function loadEager(doc) {
   if (page.name.includes(page.locale)) doc.body.classList.add('homepage');
 
   if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
+  // hidden before the first paint, so the space styles.css reserves for the header never shows
+  if (getMetadata('header-type') === 'hidden') doc.body.classList.add('header-hidden');
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);
