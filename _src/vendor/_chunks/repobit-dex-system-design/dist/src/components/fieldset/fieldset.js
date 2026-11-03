@@ -1,0 +1,6 @@
+import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";var s=r`:host{display:block}fieldset{padding:var(--spacing-16);border:var(--border-width-1) solid var(--color-border-subtle);border-radius:var(--shape-radius-md);margin:0}legend{padding:0 var(--spacing-8);font-family:var(--form-label-large-fontFamily);font-size:var(--form-label-large-fontSize);font-weight:var(--form-label-large-fontWeight);line-height:var(--form-label-large-lineHeight);color:var(--form-label-large-color)}.fields{gap:var(--form-fieldSpacing);flex-direction:column;display:flex}`,c=class extends n{constructor(...e){super(...e),this.legend=``}static{this.styles=[s]}render(){return e`
+      <fieldset>
+        ${this.legend?e`<legend>${this.legend}</legend>`:t}
+        <div class="fields"><slot></slot></div>
+      </fieldset>
+    `}};o([i({type:String})],c.prototype,`legend`,void 0),c=o([a(`bd-fieldset`)],c);export{c as BdFieldset};
