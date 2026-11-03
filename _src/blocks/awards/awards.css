@@ -280,6 +280,10 @@
   .block.awards-component {
     background-color: var(--color-blue-50);
   }
+
+  .awards-wrapper {
+    padding-block: var(--size-0);
+  }
 }
 
 @media (max-width: 579px) {
@@ -379,6 +383,10 @@
     .cards {
       grid-template-columns: 1fr 1fr;
     }
+  }
+
+  .awards-container.awards-v2.section.wide {
+    padding-inline: var(--size-0);
   }
 }
 

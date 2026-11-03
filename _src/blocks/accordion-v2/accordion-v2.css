@@ -87,56 +87,60 @@
   }
 }
 
-  @media (prefers-reduced-motion: reduce) {
-    .accordion-v2-container .accordion-v2 .accordion-v2-chevron {
-      transition: none;
-    }
+@media (prefers-reduced-motion: reduce) {
+  .accordion-v2-container .accordion-v2 .accordion-v2-chevron {
+    transition: none;
   }
+}
 
-  @media (min-width: 768px) {
-    .accordion-v2-container {
-      .accordion-v2 {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--size-16);
+@media (min-width: 768px) {
+  .accordion-v2-container {
+    .default-content-wrapper h2 {
+      text-align: center;
+    }
 
-        .accordion-v2-item {
-          padding: var(--size-24);
-          border-radius: var(--size-16);
+    .accordion-v2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--size-16);
+
+      .accordion-v2-item {
+        padding: var(--size-24);
+        border-radius: var(--size-16);
+      }
+
+      .accordion-v2-title {
+        line-height: var(--size-20);
+      }
+
+      .accordion-v2-title button {
+        display: block;
+        cursor: default;
+      }
+
+      .accordion-v2-icon {
+        margin-bottom: var(--size-16);
+
+        img {
+          width: var(--size-32);
+          height: var(--size-32);
         }
+      }
 
-        .accordion-v2-title {
-          line-height: var(--size-20);
-        }
+      .accordion-v2-chevron {
+        display: none;
+      }
 
-        .accordion-v2-title button {
-          display: block;
-          cursor: default;
-        }
+      .accordion-v2-panel {
+        margin-top: var(--size-8);
+      }
 
-        .accordion-v2-icon {
-          margin-bottom: var(--size-16);
-
-          img {
-            width: var(--size-32);
-            height: var(--size-32);
-          }
-        }
-
-        .accordion-v2-chevron {
-          display: none;
-        }
-
-        .accordion-v2-panel {
-          margin-top: var(--size-8);
-        }
-
-        .accordion-v2-panel[hidden] {
-          display: block;
-        }
+      .accordion-v2-panel[hidden] {
+        display: block;
       }
     }
   }
+}
 
 @media (min-width: 992px) {
   .accordion-v2-container .accordion-v2 {

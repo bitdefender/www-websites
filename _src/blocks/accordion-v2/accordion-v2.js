@@ -64,7 +64,7 @@ function buildItem(row, idPrefix) {
 }
 
 /**
- * Mobile: accordion, first item open. Desktop: all items shown as cards.
+ * Mobile: accordion, all items closed. Desktop: all items shown as cards.
  * @param {HTMLElement} block
  */
 export default function decorate(block) {
@@ -92,8 +92,8 @@ export default function decorate(block) {
     panel.hidden = !open;
   };
 
-  toggles.forEach((toggle, idx) => {
-    setOpen(toggle, idx === 0);
+  toggles.forEach((toggle) => {
+    setOpen(toggle, false);
     toggle.button.addEventListener('click', () => {
       setOpen(toggle, toggle.button.getAttribute('aria-expanded') !== 'true');
     });

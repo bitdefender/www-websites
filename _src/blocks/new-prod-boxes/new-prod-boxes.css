@@ -1161,7 +1161,6 @@
     }
   }
 
-  /* .new-prod-boxes is needed to beat the desktop `.benefitsLists { display: grid }` rule */
   .new-prod-boxes .benefitsLists.expanded {
     display: none;
   }
@@ -1303,7 +1302,48 @@
   }
 }
 
+@media (max-width: 767px) {
+  .new-prod-boxes-container.new-prod-boxes-container-v2 .new-prod-boxes {
+    gap: var(--size-16);
+
+    .prod_box {
+      margin-block: var(--size-16) var(--size-0);
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .new-prod-boxes-container.new-prod-boxes-container-v2.we-container {
+    max-width: none;
+    padding-inline: var(--size-0);
+  }
+
+  .new-prod-boxes-container.new-prod-boxes-container-v2.we-container .new-prod-boxes {
+    --v2-boxes-max: 2;
+    --v2-boxes-gap: var(--size-16);
+
+    min-width: var(--size-0);
+    max-width: none;
+    width: 100%;
+    column-gap: var(--v2-boxes-gap);
+    justify-content: center;
+    grid-template-columns: repeat(
+      auto-fit,
+      calc((100% - (var(--v2-boxes-max) - 1) * var(--v2-boxes-gap)) / var(--v2-boxes-max) - 0.5px)
+    );
+
+    .prod_box {
+      max-width: none;
+      margin: var(--size-0);
+    }
+  }
+}
+
 @media (min-width: 992px) {
+  .new-prod-boxes-container.new-prod-boxes-container-v2.we-container .new-prod-boxes {
+    --v2-boxes-max: 3;
+  }
+
   .new-prod-boxes-container.we-container {
     max-width: 1300px;
     padding-left: 50px;
