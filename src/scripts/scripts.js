@@ -271,34 +271,41 @@ export async function createModal(path, template, stopAutomaticRefresh) {
   return modalContainer;
 }
 
+/**
+ * Opens the fragment at `path` as a modal, like a click on an `a.button.modal`.
+ * @param {String} path The path to the modal fragment
+ * @param {Boolean} stopAutomaticModalRefresh Reuse the modal instead of rebuilding it
+ */
+export async function openModal(path, stopAutomaticModalRefresh = false) {
+  // if we wish for the button to not generate a new modal everytime
+  if (stopAutomaticModalRefresh) {
+    // we use the last part of the link to identify the modals
+    const modalClass = path.split('/').pop();
+
+    // check if the modal exists in the page
+    const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+    if (existingModal) {
+      // if it exists just display it
+      existingModal.classList.remove('global-display-none');
+      return;
+    }
+  }
+
+  // generate new modal
+  const modalContainer = await createModal(path, undefined, stopAutomaticModalRefresh);
+  appendModal(modalContainer);
+  modalContainer.querySelectorAll('.await-loader').forEach((element) => {
+    element.classList.remove('await-loader');
+  });
+  adobeMcAppendVisitorId('.modal-container');
+}
+
 export async function detectModalButtons(main) {
   main.querySelectorAll('a.button.modal').forEach((link) => {
     const originalHref = link.getAttribute('href');
-    link.addEventListener('click', async (e) => {
+    link.addEventListener('click', (e) => {
       e.preventDefault();
-      const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === 'true';
-
-      // if we wish for the button to not generate a new modal everytime
-      if (stopAutomaticModalRefresh) {
-        // we use the last part of the link to identify the modals
-        const modalClass = originalHref.split('/').pop();
-
-        // check if the modal exists in the page
-        const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
-        if (existingModal) {
-          // if it exists just display it
-          existingModal.classList.remove('global-display-none');
-          return;
-        }
-      }
-
-      // generate new modal
-      const modalContainer = await createModal(originalHref, undefined, stopAutomaticModalRefresh);
-      appendModal(modalContainer);
-      modalContainer.querySelectorAll('.await-loader').forEach((element) => {
-        element.classList.remove('await-loader');
-      });
-      adobeMcAppendVisitorId('.modal-container');
+      openModal(originalHref, link.dataset.stopAutomaticModalRefresh === 'true');
     });
 
     link.removeAttribute('href');

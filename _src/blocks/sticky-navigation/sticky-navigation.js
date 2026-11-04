@@ -1,4 +1,5 @@
 import { STICKY_NAVIGATION_DATASET_KEY } from "../../scripts/lib-franklin.js";
+import { openModal } from "../../scripts/scripts.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/sticky-navigation/sticky-navigation.js
 /** True if href is an anchor on the current page (#id or /same-path#id). */
@@ -80,7 +81,8 @@ function buildFromSections(anchorNav, block) {
 	const ctaKind = block.closest(".section")?.dataset.kind || "danger";
 	const ctaLink = block.querySelector("a");
 	if (ctaLink) {
-		const ctaHref = ctaLink.getAttribute("href")?.replace(/\.html(?=#|$)/, "") || "";
+		const isModal = ctaLink.classList.contains("modal");
+		const ctaHref = (ctaLink.getAttribute("href") || ctaLink.getAttribute("location") || "").replace(/\.html(?=#|$)/, "");
 		const ctaLabel = ctaLink.textContent.trim();
 		const buttonLink = document.createElement("bd-button-link");
 		buttonLink.setAttribute("slot", "cta");
@@ -88,6 +90,10 @@ function buildFromSections(anchorNav, block) {
 		buttonLink.setAttribute("kind", ctaKind);
 		buttonLink.setAttribute("size", "md");
 		buttonLink.textContent = ctaLabel;
+		if (isModal && ctaHref) buttonLink.addEventListener("click", (e) => {
+			e.preventDefault();
+			openModal(ctaHref, ctaLink.dataset.stopAutomaticModalRefresh === "true");
+		});
 		anchorNav.appendChild(buttonLink);
 	}
 }

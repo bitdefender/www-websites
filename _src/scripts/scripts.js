@@ -176,26 +176,33 @@ async function createModal(path, template, stopAutomaticRefresh) {
 	adobeMcAppendVisitorId(modalContainer);
 	return modalContainer;
 }
+/**
+* Opens the fragment at `path` as a modal, like a click on an `a.button.modal`.
+* @param {String} path The path to the modal fragment
+* @param {Boolean} stopAutomaticModalRefresh Reuse the modal instead of rebuilding it
+*/
+async function openModal(path, stopAutomaticModalRefresh = false) {
+	if (stopAutomaticModalRefresh) {
+		const modalClass = path.split("/").pop();
+		const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
+		if (existingModal) {
+			existingModal.classList.remove("global-display-none");
+			return;
+		}
+	}
+	const modalContainer = await createModal(path, void 0, stopAutomaticModalRefresh);
+	appendModal(modalContainer);
+	modalContainer.querySelectorAll(".await-loader").forEach((element) => {
+		element.classList.remove("await-loader");
+	});
+	adobeMcAppendVisitorId(".modal-container");
+}
 async function detectModalButtons(main) {
 	main.querySelectorAll("a.button.modal").forEach((link) => {
 		const originalHref = link.getAttribute("href");
-		link.addEventListener("click", async (e) => {
+		link.addEventListener("click", (e) => {
 			e.preventDefault();
-			const stopAutomaticModalRefresh = link.dataset.stopAutomaticModalRefresh === "true";
-			if (stopAutomaticModalRefresh) {
-				const modalClass = originalHref.split("/").pop();
-				const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
-				if (existingModal) {
-					existingModal.classList.remove("global-display-none");
-					return;
-				}
-			}
-			const modalContainer = await createModal(originalHref, void 0, stopAutomaticModalRefresh);
-			appendModal(modalContainer);
-			modalContainer.querySelectorAll(".await-loader").forEach((element) => {
-				element.classList.remove("await-loader");
-			});
-			adobeMcAppendVisitorId(".modal-container");
+			openModal(originalHref, link.dataset.stopAutomaticModalRefresh === "true");
 		});
 		link.removeAttribute("href");
 		link.setAttribute("location", originalHref);
@@ -678,4 +685,4 @@ initMobileDetector("desktop");
 pwaModulePromise?.then(({ initializeReversePhoneLookupPWA }) => initializeReversePhoneLookupPWA()).catch(() => {});
 loadPage();
 window.AdobeDataLayerService = AdobeDataLayerService;
-export { SUPPORTED_LANGUAGES, createMetadata, createModal, decorateMain, decorateLinkedPictures as default, detectModalButtons, getLanguageCountryFromPath, getLocalizedResourceUrl, loadTrackers };
+export { SUPPORTED_LANGUAGES, createMetadata, createModal, decorateMain, decorateLinkedPictures as default, detectModalButtons, getLanguageCountryFromPath, getLocalizedResourceUrl, loadTrackers, openModal };
