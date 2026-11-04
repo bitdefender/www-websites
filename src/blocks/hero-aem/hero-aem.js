@@ -129,9 +129,35 @@ async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceT
             </div>
           </div>
           <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
-  buyLink.setAttribute('data-store-buy-link', trialDuration || '');
-  buyLink.setAttribute('data-store-render', '');
+  // authors may leave the buy link out: the price still shows
+  buyLink?.setAttribute('data-store-buy-link', trialDuration || '');
+  buyLink?.setAttribute('data-store-render', '');
   return pricesBox;
+}
+
+/**
+ * Puts the price box where the author asked for it: an <insert-prices>
+ * paragraph, else before the buy link, else before the first CTA, else at the
+ * end of the card text.
+ * @param {HTMLElement} block the hero-aem block
+ * @param {HTMLElement} priceBox the price box
+ * @param {HTMLAnchorElement | null} buyLink the buy link, if authored
+ */
+function placePriceBox(block, priceBox, buyLink) {
+  const insertPricesParagraph = [...block.querySelectorAll('p')]
+    .findLast((paragraph) => paragraph.textContent.includes('<insert-prices>'));
+  if (insertPricesParagraph) {
+    insertPricesParagraph.replaceWith(priceBox);
+    return;
+  }
+
+  const cardText = block.querySelector('.hero-aem__card-text');
+  const anchor = buyLink?.parentNode || cardText?.querySelector('.button-container');
+  if (anchor) {
+    anchor.before(priceBox);
+  } else {
+    (cardText || block).append(priceBox);
+  }
 }
 
 /**
@@ -231,25 +257,7 @@ export default async function decorate(block, options) {
 
   if (product && !options) {
     let priceBox = await createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText, trialDuration);
-    // Select all paragraph elements
-    const paragraphs = document.querySelectorAll('p');
-    let insertPricesParagraph = null;
-
-    // Iterate through the paragraphs
-    paragraphs.forEach((paragraph) => {
-      // Check if the paragraph contains the text <insert-prices>
-      if (paragraph.textContent.includes('<insert-prices>')) {
-        // Perform any additional actions here
-        insertPricesParagraph = paragraph;
-      }
-    });
-
-    if (insertPricesParagraph) {
-      insertPricesParagraph.replaceWith(priceBox);
-    } else {
-      buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
-    }
-
+    placePriceBox(block, priceBox, buyLink);
     pricesContainers.set(product, priceBox);
   }
 

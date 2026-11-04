@@ -95,9 +95,28 @@ async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceT
             </div>
           </div>
           <p class="hero-aem__underPriceText">${underPriceText || ""}</p>`;
-	buyLink.setAttribute("data-store-buy-link", trialDuration || "");
-	buyLink.setAttribute("data-store-render", "");
+	buyLink?.setAttribute("data-store-buy-link", trialDuration || "");
+	buyLink?.setAttribute("data-store-render", "");
 	return pricesBox;
+}
+/**
+* Puts the price box where the author asked for it: an <insert-prices>
+* paragraph, else before the buy link, else before the first CTA, else at the
+* end of the card text.
+* @param {HTMLElement} block the hero-aem block
+* @param {HTMLElement} priceBox the price box
+* @param {HTMLAnchorElement | null} buyLink the buy link, if authored
+*/
+function placePriceBox(block, priceBox, buyLink) {
+	const insertPricesParagraph = [...block.querySelectorAll("p")].findLast((paragraph) => paragraph.textContent.includes("<insert-prices>"));
+	if (insertPricesParagraph) {
+		insertPricesParagraph.replaceWith(priceBox);
+		return;
+	}
+	const cardText = block.querySelector(".hero-aem__card-text");
+	const anchor = buyLink?.parentNode || cardText?.querySelector(".button-container");
+	if (anchor) anchor.before(priceBox);
+	else (cardText || block).append(priceBox);
 }
 /**
 * Nanoblock representing the price conditions below the Price
@@ -152,13 +171,7 @@ async function decorate(block, options) {
 	const buyLink = block.querySelector("a[href*=\"buylink\"]");
 	if (product && !options) {
 		let priceBox = await createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText, trialDuration);
-		const paragraphs = document.querySelectorAll("p");
-		let insertPricesParagraph = null;
-		paragraphs.forEach((paragraph) => {
-			if (paragraph.textContent.includes("<insert-prices>")) insertPricesParagraph = paragraph;
-		});
-		if (insertPricesParagraph) insertPricesParagraph.replaceWith(priceBox);
-		else buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
+		placePriceBox(block, priceBox, buyLink);
 		pricesContainers.set(product, priceBox);
 	}
 	block.querySelectorAll("p").forEach((paragraph) => {
