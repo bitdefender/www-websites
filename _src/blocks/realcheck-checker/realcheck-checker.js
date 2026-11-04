@@ -1,7 +1,7 @@
 import { createTag, renderTurnstile } from "../../scripts/utils/utils.js";
 import { UserAgent } from "../../vendor/repobit/dex-utils.js";
 // src/blocks/realcheck-checker/realcheck-checker.js
-var ENDPOINT = "https://stage.bitdefender.com/napi/realcheck/v1/analyze";
+var ENDPOINT = "/napi/realcheck/v1/analyze";
 var PLATFORMS = [
 	"youtube.com",
 	"youtu.be",
@@ -472,7 +472,7 @@ async function decorate(block) {
 	const { texts, parts } = readTexts(block);
 	const { eyebrow, intro } = buildIntro(block.firstElementChild);
 	const mock = new URLSearchParams(window.location.search).get("realcheck-mock");
-	const endpoint = dataset.realcheckEndpoint || "https://stage.bitdefender.com/napi/realcheck/v1/analyze";
+	const endpoint = dataset.realcheckEndpoint || "/napi/realcheck/v1/analyze";
 	const request = mock !== null ? (await import("./realcheck-checker-mock.js")).default(mock) : window.fetch.bind(window);
 	const band = createTag("div", {
 		class: "realcheck-checker__band",
