@@ -5,7 +5,7 @@ import { createTag, renderTurnstile } from '../../scripts/utils/utils.js';
  * The proxy in front of the RealCheck API: it adds the API key, which the browser must never
  * see. A page can point elsewhere with the section metadata `realcheck-endpoint`.
  */
-export const ENDPOINT = 'https://stage.bitdefender.com/napi/realcheck/v1/analyze';
+export const ENDPOINT = '/napi/realcheck/v1/analyze';
 
 const PLATFORMS = ['youtube.com', 'youtu.be', 'x.com', 'twitter.com', 'instagram.com',
   'tiktok.com', 'facebook.com', 'fb.watch'];
