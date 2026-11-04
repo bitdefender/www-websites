@@ -54,7 +54,7 @@ import {
   reportUnappliedHooks,
 } from './utils/block-hooks.js';
 
-const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
+const LCP_BLOCKS = ['.hero', '.hero-aem', '.password-generator', '.link-checker', '.trusted-hero', '.hero-dropdown', '.hero-banner', '.creators-banner', '.email-checker', '.interactive-banner']; // add your LCP blocks to the list
 
 // no need to import pwa.js for other routes
 const PWA_ROUTE_PATTERN = /^\/en-us\/consumer\/reverse-phone-lookup(?:\/|$)/;
@@ -272,15 +272,16 @@ export async function createModal(path, template, stopAutomaticRefresh) {
 }
 
 /**
- * Opens the fragment at `path` as a modal, like a click on an `a.button.modal`.
- * @param {String} path The path to the modal fragment
- * @param {Boolean} stopAutomaticModalRefresh Reuse the modal instead of rebuilding it
+ * Opens the fragment at href as a modal, as a click on an a.button.modal does.
+ * For buttons detectModalButtons can't see, like a design-system button's shadow-root anchor.
+ * @param {string} href The fragment's path
+ * @param {boolean} stopAutomaticModalRefresh Keep the modal and show it again, not reload it
  */
-export async function openModal(path, stopAutomaticModalRefresh = false) {
+export async function openModal(href, stopAutomaticModalRefresh = false) {
   // if we wish for the button to not generate a new modal everytime
   if (stopAutomaticModalRefresh) {
     // we use the last part of the link to identify the modals
-    const modalClass = path.split('/').pop();
+    const modalClass = href.split('/').pop();
 
     // check if the modal exists in the page
     const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
@@ -292,7 +293,7 @@ export async function openModal(path, stopAutomaticModalRefresh = false) {
   }
 
   // generate new modal
-  const modalContainer = await createModal(path, undefined, stopAutomaticModalRefresh);
+  const modalContainer = await createModal(href, undefined, stopAutomaticModalRefresh);
   appendModal(modalContainer);
   modalContainer.querySelectorAll('.await-loader').forEach((element) => {
     element.classList.remove('await-loader');
@@ -637,6 +638,8 @@ async function loadEager(doc) {
   if (page.name.includes(page.locale)) doc.body.classList.add('homepage');
 
   if (userCountry !== page.country && !Cookies.get('language-bar-interacted-with')) doc.body.classList.add('with-language-bar');
+  // hidden before the first paint, so the space styles.css reserves for the header never shows
+  if (getMetadata('header-type') === 'hidden') doc.body.classList.add('header-hidden');
 
   createMetadata('nav', `${getLocalizedResourceUrl('nav')}`);
   createMetadata('footer', `${getLocalizedResourceUrl('footer')}`);

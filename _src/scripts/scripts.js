@@ -19,6 +19,7 @@ var LCP_BLOCKS = [
 	".link-checker",
 	".trusted-hero",
 	".hero-dropdown",
+	".hero-banner",
 	".creators-banner",
 	".email-checker",
 	".interactive-banner"
@@ -177,20 +178,21 @@ async function createModal(path, template, stopAutomaticRefresh) {
 	return modalContainer;
 }
 /**
-* Opens the fragment at `path` as a modal, like a click on an `a.button.modal`.
-* @param {String} path The path to the modal fragment
-* @param {Boolean} stopAutomaticModalRefresh Reuse the modal instead of rebuilding it
+* Opens the fragment at href as a modal, as a click on an a.button.modal does.
+* For buttons detectModalButtons can't see, like a design-system button's shadow-root anchor.
+* @param {string} href The fragment's path
+* @param {boolean} stopAutomaticModalRefresh Keep the modal and show it again, not reload it
 */
-async function openModal(path, stopAutomaticModalRefresh = false) {
+async function openModal(href, stopAutomaticModalRefresh = false) {
 	if (stopAutomaticModalRefresh) {
-		const modalClass = path.split("/").pop();
+		const modalClass = href.split("/").pop();
 		const existingModal = document.querySelector(`div.modal-container.${modalClass}`);
 		if (existingModal) {
 			existingModal.classList.remove("global-display-none");
 			return;
 		}
 	}
-	const modalContainer = await createModal(path, void 0, stopAutomaticModalRefresh);
+	const modalContainer = await createModal(href, void 0, stopAutomaticModalRefresh);
 	appendModal(modalContainer);
 	modalContainer.querySelectorAll(".await-loader").forEach((element) => {
 		element.classList.remove("await-loader");
@@ -470,6 +472,7 @@ async function loadEager(doc) {
 	const userCountry = await user_default.country;
 	if (page_default.name.includes(page_default.locale)) doc.body.classList.add("homepage");
 	if (userCountry !== page_default.country && !Cookies.get("language-bar-interacted-with")) doc.body.classList.add("with-language-bar");
+	if (getMetadata("header-type") === "hidden") doc.body.classList.add("header-hidden");
 	createMetadata("nav", `${getLocalizedResourceUrl("nav")}`);
 	createMetadata("footer", `${getLocalizedResourceUrl("footer")}`);
 	decorateTemplateAndTheme();

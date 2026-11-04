@@ -604,17 +604,11 @@ async function runDefaultHeaderLogic(block) {
     secondSpan.parentNode.removeChild(secondSpan);
   }
 
-  const header = document.getElementsByClassName('header-wrapper')[0];
-
+  // on desktop the header scrolls away with the page (header.css), so close the login modal with it
+  const desktop = window.matchMedia('(min-width: 992px)');
   window.addEventListener('scroll', () => {
-    if (window.innerWidth > 990) {
-      if (window.scrollY > 0) {
-        header.style.display = 'none';
-        const loginModal = document.querySelector('nav > div:nth-child(4)');
-        loginModal.classList.remove('show');
-      } else {
-        header.style.display = 'block';
-      }
+    if (desktop.matches && window.scrollY > 0) {
+      document.querySelector('.login-modal')?.classList.remove('show');
     }
   });
 }

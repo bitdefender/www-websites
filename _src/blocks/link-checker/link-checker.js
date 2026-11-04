@@ -298,6 +298,9 @@ function decorate(block) {
 	button.textContent = checkButtonText ?? "Check URL";
 	button.classList.add("check-url");
 	inputContainer.appendChild(button);
+	window.addEventListener("pageshow", (event) => {
+		if (event.persisted) inputContainer.classList.remove("loader-circle");
+	});
 	const result = document.createElement("div");
 	result.className = "result";
 	formContainer.appendChild(result);

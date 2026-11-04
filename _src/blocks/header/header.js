@@ -395,14 +395,9 @@ async function runDefaultHeaderLogic(block) {
 	decorateLinkWithLinkTrackingId(logoLink, "Bitdefender Logo");
 	const secondSpan = document.querySelector(".header-wrapper > div > p span:nth-child(2)");
 	if (secondSpan) secondSpan.parentNode.removeChild(secondSpan);
-	const header = document.getElementsByClassName("header-wrapper")[0];
+	const desktop = window.matchMedia("(min-width: 992px)");
 	window.addEventListener("scroll", () => {
-		if (window.innerWidth > 990) {
-			if (window.scrollY > 0) {
-				header.style.display = "none";
-				document.querySelector("nav > div:nth-child(4)").classList.remove("show");
-			} else header.style.display = "block";
-		}
+		if (desktop.matches && window.scrollY > 0) document.querySelector(".login-modal")?.classList.remove("show");
 	});
 }
 async function runLandingPageHeaderLogic(block) {
