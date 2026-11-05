@@ -361,9 +361,7 @@ function buildResult(texts, parts, dataset) {
 		if (href) {
 			const app = createTag("a", {
 				class: "realcheck-checker__app",
-				href,
-				target: "_blank",
-				rel: "noopener"
+				href
 			});
 			app.textContent = source?.textContent.trim() || texts["report-title"];
 			upsell.append(app);
