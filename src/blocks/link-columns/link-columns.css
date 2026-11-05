@@ -9,6 +9,12 @@
   gap: var(--spacing-12, 12px);
   padding-top: var(--spacing-16, 16px);
   border-top: var(--border-width-1, 1px) solid var(--color-border-container);
+
+  /* bd-grid spaces aligned rows with a margin under each item, the grid's
+     gap (md), and takes the last one back under the grid; the global div
+     reset in styles.css beats bd-grid's ::slotted() rule, so the column says
+     it again here, or the section ends a gap short */
+  margin-block-end: var(--spacing-24, 24px);
 }
 
 @media (width >= 992px) {
