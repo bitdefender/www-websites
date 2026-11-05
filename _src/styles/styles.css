@@ -139,6 +139,11 @@ body.with-language-bar > div:first-child, body.with-language-bar header {
   min-height: 196px;
 }
 
+/* header-type: hidden */
+body.header-hidden header {
+  display: none;
+}
+
 .section.ibm-plex-sans {
   * {
     font-family: var(--body-font-family);
@@ -425,10 +430,6 @@ body.appear {
 
 body.no-scroll {
   overflow: hidden;
-}
-
-header.header-wrapper {
-  height: var(--nav-height);
 }
 
 main .section {
@@ -924,15 +925,6 @@ main div.section:is(
 }
 
 @media screen and (min-width: 992px) { /* desktop */
-  header.header-wrapper {
-    height: var(--nav-height-desktop);
-    position: absolute;
-    z-index: 999;
-    margin: auto;
-    left: 0;
-    right: 0;
-  }
-
   main .section.wide h2 {
     font-size: var(--heading-font-size-xl);
     font-weight: var(--font-weight-bold);
@@ -1099,12 +1091,6 @@ main .section.mb-0, .mb-0 {
     padding: 1em 0;
   }
 
-}
-
-@media (min-width: 1000px) {
-  header.header-wrapper {
-    height: var(--nav-height-desktop);
-  }
 }
 
 @media (min-width: 596px) {
