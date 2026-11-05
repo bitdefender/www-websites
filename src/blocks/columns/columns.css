@@ -645,7 +645,7 @@ main .creators-banner .signature {
     flex: 1;
 
     &.columns-img-col {
-      flex: 0 0 30%;
+      flex: 0 0 33%;
     }
   }
   
