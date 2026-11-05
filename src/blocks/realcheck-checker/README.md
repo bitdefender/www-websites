@@ -25,7 +25,7 @@ Every other row is `key | content`. These rows take content the block can't writ
 |---|---|
 | `Note` | The line under the field (supported platforms) |
 | `Terms` | The terms line, with its links (they open in a new tab) |
-| `App` | The app link for phones, e.g. `Try RealCheck Free`. `https://#os-dynamic-link` uses the section's `iosLink` / `androidLink` / `defaultLink` |
+| `App` | The app link for phones, e.g. `Try RealCheck Free` linking to the app's OneLink. `https://#os-dynamic-link` uses the section metadata `ios-link` / `android-link` / `default-link`; without them there is no button |
 | `QR` | The QR code picture, shown on desktop |
 | `Report` | The blurred report picture, the same for every result |
 

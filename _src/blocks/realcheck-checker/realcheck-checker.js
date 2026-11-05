@@ -213,7 +213,7 @@ function appLink(source, dataset) {
 	if (href && !href.includes("#os-dynamic-link")) return href;
 	if (UserAgent.isIos && dataset.iosLink) return dataset.iosLink;
 	if (UserAgent.isAndroid && dataset.androidLink) return dataset.androidLink;
-	return dataset.defaultLink || href;
+	return dataset.defaultLink || "";
 }
 function buildIntro(row) {
 	const cell = row?.querySelector(":scope > div") || row;

@@ -138,10 +138,10 @@ describe('decorate', () => {
   let block;
   let fetch;
 
-  const setup = async ({ rows = '', mobile = false } = {}) => {
+  const setup = async ({ rows = '', mobile = false, defaultLink = 'https://app.example/default' } = {}) => {
     userAgent.isIos = mobile;
     document.body.innerHTML = `
-      <main><div class="section" data-signature="Trusted. Always." data-default-link="https://app.example/default">
+      <main><div class="section" data-signature="Trusted. Always." ${defaultLink ? `data-default-link="${defaultLink}"` : ''}>
         <div class="realcheck-checker">
           <div><div><h2>Bitdefender RealCheck</h2><h1>Spot deepfakes before they trick you.</h1><p>Description</p></div></div>
           <div><div>Note</div><div><p>Works with public links.</p></div></div>
@@ -291,6 +291,11 @@ describe('decorate', () => {
     const app = block.querySelector('.realcheck-checker__app');
     expect(app.href).toBe('https://app.example/default');
     expect(app.textContent).toBe('Try RealCheck Free');
+  });
+
+  it('leaves the app button out when the section has no link for the placeholder', async () => {
+    await setup({ mobile: true, defaultLink: '' });
+    expect(block.querySelector('.realcheck-checker__app')).toBeNull();
   });
 
   it('uses localized texts from the authored rows', async () => {
