@@ -1002,6 +1002,7 @@
     position: relative;
   }
 
+  /* stylelint-disable-next-line selector-id-pattern */
   #switchCheckbox {
     display: block;
     position: absolute;
@@ -1028,15 +1029,6 @@
     width: 100%;
   }
 
-  .new-prod-boxes {
-    padding-bottom: var(--size-0);
-    grid-template-columns: repeat(3, 1fr);
-
-    .inner_prod_box {
-      width: 100%;
-    }
-  }
-
   .new-prod-boxes .prod_box.hasGreenTag .inner_prod_box {
     box-shadow: none;
     border: var(--size-2) solid #1D7928;
@@ -1055,12 +1047,14 @@
     height: 38px;
   }
 
-  .new-prod-boxes .prod_box .inner_prod_box {
-    background-color: var(--color-dex-gray);
-  }
-
   .new-prod-boxes {
+    padding-bottom: var(--size-0);
+    grid-template-columns: repeat(3, 1fr);
     width: unset;
+
+    .inner_prod_box {
+      width: 100%;
+    }
 
     .prod_box {
       margin-left: 15px;
@@ -1103,7 +1097,7 @@
           justify-content: center;
         }
 
-        .plan-switcher input[type=radio]:checked + .radio-label:before {
+        .plan-switcher input[type="radio"]:checked + .radio-label::before {
           background-color: var(--color-highlight-blue);
         }
 

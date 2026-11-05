@@ -6,6 +6,7 @@
     padding: var(--size-0) var(--section-mobile-padding);
   }
 
+  /* stylelint-disable custom-property-pattern */
   .default-content-wrapper h2 {
     font-size: var(--typography-heading-h3-fontSize);
     font-weight: var(--typography-heading-h3-fontWeight);
@@ -13,6 +14,7 @@
     letter-spacing: var(--typography-heading-h3-letterSpacing);
     margin-bottom: var(--size-24);
   }
+  /* stylelint-enable custom-property-pattern */
 
   .accordion-to-cards {
     display: flex;
