@@ -18,18 +18,18 @@ function buildItem(row, idPrefix) {
   if (!title) return null;
 
   const item = document.createElement('div');
-  item.className = 'accordion-v2-item';
+  item.className = 'accordion-to-cards-item';
 
   const heading = document.createElement('h3');
-  heading.className = 'accordion-v2-title';
+  heading.className = 'accordion-to-cards-title';
 
   const button = document.createElement('button');
   button.type = 'button';
   button.id = `${idPrefix}-button`;
-  button.innerHTML = '<span class="accordion-v2-icon"></span><span class="accordion-v2-label"></span>';
-  if (picture) button.querySelector('.accordion-v2-icon').append(picture);
-  else button.querySelector('.accordion-v2-icon').remove();
-  button.querySelector('.accordion-v2-label').textContent = title;
+  button.innerHTML = '<span class="accordion-to-cards-icon"></span><span class="accordion-to-cards-label"></span>';
+  if (picture) button.querySelector('.accordion-to-cards-icon').append(picture);
+  else button.querySelector('.accordion-to-cards-icon').remove();
+  button.querySelector('.accordion-to-cards-label').textContent = title;
   heading.append(button);
   item.append(heading);
 
@@ -41,7 +41,7 @@ function buildItem(row, idPrefix) {
   }
 
   const panel = document.createElement('div');
-  panel.className = 'accordion-v2-panel';
+  panel.className = 'accordion-to-cards-panel';
   panel.id = `${idPrefix}-panel`;
   panel.setAttribute('role', 'region');
   panel.setAttribute('aria-labelledby', button.id);
@@ -55,7 +55,7 @@ function buildItem(row, idPrefix) {
   item.append(panel);
 
   const chevron = document.createElement('span');
-  chevron.className = 'accordion-v2-chevron';
+  chevron.className = 'accordion-to-cards-chevron';
   chevron.setAttribute('aria-hidden', 'true');
   button.append(chevron);
   button.setAttribute('aria-controls', panel.id);
@@ -70,20 +70,20 @@ function buildItem(row, idPrefix) {
 export default function decorate(block) {
   instanceCount += 1;
   const items = [...block.querySelectorAll(':scope > div')]
-    .map((row, idx) => buildItem(row, `accordion-v2-${instanceCount}-${idx}`))
+    .map((row, idx) => buildItem(row, `accordion-to-cards-${instanceCount}-${idx}`))
     .filter(Boolean);
   block.replaceChildren(...items);
 
   // desktop columns: at most 4 per row, rows as even as possible (5 -> 3 + 2, 6 -> 3 + 3)
   if (items.length) {
     const rows = Math.ceil(items.length / MAX_DESKTOP_COLUMNS);
-    block.style.setProperty('--accordion-v2-columns', Math.ceil(items.length / rows));
+    block.style.setProperty('--accordion-to-cards-columns', Math.ceil(items.length / rows));
   }
 
   const toggles = items
     .map((item) => ({
       button: item.querySelector('button'),
-      panel: item.querySelector('.accordion-v2-panel'),
+      panel: item.querySelector('.accordion-to-cards-panel'),
     }))
     .filter(({ panel }) => panel);
 

@@ -4148,12 +4148,14 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   margin-bottom: 0;
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (max-width: 991px) {
   .columns-container.columns-container-v2 .columns.video-presentation > div > div {
     width: auto;
     margin-inline: 0;
   }
+}
 
+@media (min-width: 768px) and (max-width: 991px) {
   .columns-container.columns-container-v2 .columns.video-presentation .modal-video-container :is(.video-placeholder, img) {
     display: block;
     width: 100%;

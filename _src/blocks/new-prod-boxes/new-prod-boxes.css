@@ -1024,17 +1024,6 @@
     text-transform: capitalize;
   }
 
-  .prod_box:not(:first-of-type):not(:nth-of-type(4)) {
-    h4 {
-      &::after {
-        content: 'Plus';
-        color: var(--color-highlight-blue);
-        transform: translateX(-100%);
-        position: absolute;
-      }
-    }
-  }
-
   .hero-aem__prices .button {
     width: 100%;
   }

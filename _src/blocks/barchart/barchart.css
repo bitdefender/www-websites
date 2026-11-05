@@ -1,1 +1,5 @@
 /* Bar Chart Styles */
+
+.barchart-container-v2 bd-compare-section {
+  --cs-gap: max(var(--spacing-32, 32px), calc(100% - 2 * 598px));
+}

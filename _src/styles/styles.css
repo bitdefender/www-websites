@@ -755,7 +755,7 @@ main .grey-background {
 }
 
 main div.section:is(
-  .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-v2-container,
+  .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
   .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
   .money-back-container-v2, .barchart-container-v2, .container-v2,
   .copilot-benefits-v2.columns-container
@@ -795,6 +795,7 @@ main div.section:is(
 
     &:has(.accordion.terms-of-use) {
       margin-block-start: var(--size-0);
+      background-color: var(--bd-acc-section-bg, var(--color-surface-container));
     }
 
     &:has(.accordion.faq) {
@@ -899,7 +900,7 @@ main div.section:is(
   }
 
   main div.section:is(
-    .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-v2-container,
+    .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
     .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
     .money-back-container-v2, .barchart-container-v2, .container-v2,
     .copilot-benefits-v2.columns-container
@@ -1018,7 +1019,7 @@ main div.section:is(
   }
 
   main div.section:is(
-    .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-v2-container,
+    .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
     .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
     .money-back-container-v2, .barchart-container-v2, .container-v2,
     .copilot-benefits-v2.columns-container

@@ -1,8 +1,8 @@
-.accordion-v2-container {
+.accordion-to-cards-container {
   margin-top: var(--section-mobile-margin);
   margin-bottom: var(--section-mobile-margin);
 
-  .default-content-wrapper, .accordion-v2-wrapper {
+  .default-content-wrapper, .accordion-to-cards-wrapper {
     padding: var(--size-0) var(--section-mobile-padding);
   }
 
@@ -14,24 +14,24 @@
     margin-bottom: var(--size-24);
   }
 
-  .accordion-v2 {
+  .accordion-to-cards {
     display: flex;
     flex-direction: column;
     gap: var(--size-12);
 
-    .accordion-v2-item {
+    .accordion-to-cards-item {
       padding: var(--size-20) var(--size-24);
       border-radius: var(--size-20);
       background-color: var(--color-dex-gray, #fafafa);
     }
 
-    .accordion-v2-title {
+    .accordion-to-cards-title {
       margin: 0;
       font-size: var(--body-font-size-s);
       line-height: var(--size-24);
     }
 
-    .accordion-v2-title button {
+    .accordion-to-cards-title button {
       display: flex;
       align-items: center;
       gap: var(--size-8);
@@ -47,7 +47,7 @@
       cursor: pointer;
     }
 
-    .accordion-v2-icon {
+    .accordion-to-cards-icon {
       flex: none;
       display: flex;
 
@@ -59,7 +59,7 @@
       }
     }
 
-    .accordion-v2-chevron {
+    .accordion-to-cards-chevron {
       flex: none;
       width: var(--size-8);
       height: var(--size-8);
@@ -71,11 +71,11 @@
       transition: transform .2s;
     }
 
-    button[aria-expanded="false"] .accordion-v2-chevron {
+    button[aria-expanded="false"] .accordion-to-cards-chevron {
       transform: translateY(25%) rotate(-135deg);
     }
 
-    .accordion-v2-panel {
+    .accordion-to-cards-panel {
       margin-top: var(--size-12);
 
       p {
@@ -88,37 +88,37 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .accordion-v2-container .accordion-v2 .accordion-v2-chevron {
+  .accordion-to-cards-container .accordion-to-cards .accordion-to-cards-chevron {
     transition: none;
   }
 }
 
 @media (min-width: 768px) {
-  .accordion-v2-container {
+  .accordion-to-cards-container {
     .default-content-wrapper h2 {
       text-align: center;
     }
 
-    .accordion-v2 {
+    .accordion-to-cards {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: var(--size-16);
 
-      .accordion-v2-item {
+      .accordion-to-cards-item {
         padding: var(--size-24);
         border-radius: var(--size-16);
       }
 
-      .accordion-v2-title {
+      .accordion-to-cards-title {
         line-height: var(--size-20);
       }
 
-      .accordion-v2-title button {
+      .accordion-to-cards-title button {
         display: block;
         cursor: default;
       }
 
-      .accordion-v2-icon {
+      .accordion-to-cards-icon {
         margin-bottom: var(--size-16);
 
         img {
@@ -127,15 +127,15 @@
         }
       }
 
-      .accordion-v2-chevron {
+      .accordion-to-cards-chevron {
         display: none;
       }
 
-      .accordion-v2-panel {
+      .accordion-to-cards-panel {
         margin-top: var(--size-8);
       }
 
-      .accordion-v2-panel[hidden] {
+      .accordion-to-cards-panel[hidden] {
         display: block;
       }
     }
@@ -143,8 +143,8 @@
 }
 
 @media (min-width: 992px) {
-  .accordion-v2-container .accordion-v2 {
-    grid-template-columns: repeat(var(--accordion-v2-columns, 4), 1fr);
+  .accordion-to-cards-container .accordion-to-cards {
+    grid-template-columns: repeat(var(--accordion-to-cards-columns, 4), 1fr);
   }
 }
 
