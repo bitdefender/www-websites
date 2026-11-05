@@ -1376,3 +1376,114 @@
     }
   }
 }
+
+.new-prod-boxes-container .mobile-slider-frame {
+  display: contents;
+
+  .nav-button {
+    display: none;
+  }
+}
+
+.new-prod-boxes-container .mobile-slider-dots {
+  display: none;
+}
+
+@media (width < 768px) {
+  .new-prod-boxes-container .mobile-slider-frame {
+    --mobile-slider-gutter: 40px;
+
+    display: block;
+    position: relative;
+
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      z-index: 1;
+      transform: translateY(-50%);
+      width: var(--mobile-slider-gutter);
+      height: 48px;
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--background-blue);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+
+      &:disabled {
+        visibility: hidden;
+      }
+
+      &.left {
+        left: 0;
+      }
+
+      &.right {
+        right: 0;
+      }
+    }
+  }
+
+  .new-prod-boxes-container .new-prod-boxes.mobile-slider {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--mobile-slider-gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 var(--mobile-slider-gutter);
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .prod_box {
+      flex: 0 0 100%;
+      width: auto;
+      min-width: 0;
+      max-width: none;
+      margin: 0;
+      scroll-snap-align: center;
+    }
+
+    .prod_box > .store-context,
+    .prod_box > .store-context > .store-product {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .inner_prod_box {
+      flex: 1;
+    }
+  }
+
+  .new-prod-boxes-container .mobile-slider-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--size-20);
+    padding: var(--size-24) 0 var(--size-8);
+
+    .carousel-dot {
+      width: 14px;
+      height: 14px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background-color: #E1E3E5;
+      cursor: pointer;
+      transition: background-color .25s;
+      -webkit-tap-highlight-color: transparent;
+
+      &.active {
+        background-color: var(--background-blue);
+      }
+    }
+  }
+}

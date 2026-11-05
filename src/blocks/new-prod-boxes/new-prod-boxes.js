@@ -409,6 +409,111 @@ function setupToggleSwitchHandler(block, checkbox) {
 }
 
 /**
+ * Adds arrows and dots for the mobile slider (scrolling itself is CSS scroll-snap)
+ * @param {HTMLElement} block - Block element, also the scroll container
+ * @param {HTMLInputElement|null} checkbox - Individual/family switch, if present
+ */
+function setupMobileSliderNav(block, checkbox) {
+  const chevron = (d) => `
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20" fill="none" aria-hidden="true">
+      <path d="${d}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+
+  const frame = document.createElement('div');
+  frame.className = 'mobile-slider-frame';
+  frame.innerHTML = `
+    <button type="button" class="nav-button left" aria-label="Previous product">${chevron('M10 2L2 10L10 18')}</button>
+    <button type="button" class="nav-button right" aria-label="Next product">${chevron('M2 2L10 10L2 18')}</button>
+  `;
+  const prevBtn = frame.querySelector('.nav-button.left');
+  const nextBtn = frame.querySelector('.nav-button.right');
+  block.before(frame);
+  prevBtn.after(block);
+
+  const dotsContainer = document.createElement('div');
+  dotsContainer.className = 'mobile-slider-dots';
+  frame.after(dotsContainer);
+
+  let activeIndex = 0;
+
+  // boxes hidden by the individual/family switch are not part of the slider
+  const getVisibleBoxes = () => [...block.querySelectorAll(':scope > .prod_box')]
+    .filter((box) => box.style.display !== 'none');
+
+  const getBoxScrollLeft = (box, boxes) => box.offsetLeft - boxes[0].offsetLeft;
+
+  const getMaxScroll = () => block.scrollWidth - block.clientWidth;
+
+  const getActiveIndex = (boxes) => {
+    // maxScroll is 0 while the section is still hidden or nothing overflows
+    const maxScroll = getMaxScroll();
+    if (maxScroll > 0 && block.scrollLeft >= maxScroll - 1) return boxes.length - 1;
+    let active = 0;
+    boxes.forEach((box, idx) => {
+      const distance = Math.abs(getBoxScrollLeft(box, boxes) - block.scrollLeft);
+      const activeDistance = Math.abs(getBoxScrollLeft(boxes[active], boxes) - block.scrollLeft);
+      if (distance < activeDistance) active = idx;
+    });
+    return active;
+  };
+
+  const goTo = (index, behavior = 'smooth') => {
+    const boxes = getVisibleBoxes();
+    const target = boxes[Math.max(0, Math.min(index, boxes.length - 1))];
+    if (target) block.scrollTo({ left: getBoxScrollLeft(target, boxes), behavior });
+  };
+
+  const update = () => {
+    const boxes = getVisibleBoxes();
+    if (!boxes.length) return;
+
+    if (dotsContainer.children.length !== boxes.length) {
+      dotsContainer.innerHTML = boxes
+        .map((_, idx) => `<button type="button" class="carousel-dot" data-index="${idx}" aria-label="Go to product ${idx + 1}"></button>`)
+        .join('');
+    }
+
+    activeIndex = getActiveIndex(boxes);
+    [...dotsContainer.children].forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeIndex);
+      dot.setAttribute('aria-current', idx === activeIndex ? 'true' : 'false');
+    });
+
+    const canScroll = getMaxScroll() > 1;
+    prevBtn.disabled = !canScroll || activeIndex === 0;
+    nextBtn.disabled = !canScroll || activeIndex === boxes.length - 1;
+  };
+
+  prevBtn.addEventListener('click', () => goTo(activeIndex - 1));
+  nextBtn.addEventListener('click', () => goTo(activeIndex + 1));
+  dotsContainer.addEventListener('click', (e) => {
+    const dot = e.target.closest('.carousel-dot');
+    if (dot) goTo(Number(dot.dataset.index));
+  });
+
+  let pendingUpdate = null;
+  block.addEventListener('scroll', () => {
+    if (pendingUpdate) return;
+    pendingUpdate = requestAnimationFrame(() => {
+      pendingUpdate = null;
+      update();
+    });
+  }, { passive: true });
+
+  // registered after setupToggleSwitchHandler, so the boxes are already shown/hidden here;
+  // keep the same slide position when switching between individual and family
+  checkbox?.addEventListener('change', () => {
+    goTo(activeIndex, 'instant');
+    update();
+  });
+
+  // the section is hidden while blocks decorate, so recheck once it gets a size
+  // (and on viewport changes, e.g. crossing the mobile breakpoint)
+  new ResizeObserver(update).observe(block);
+  update();
+}
+
+/**
  * Creates blue tag elements from content
  * @param {HTMLElement} blueTagRow - Row containing blue tag content
  * @returns {HTMLElement} Container with blue tags
@@ -909,6 +1014,12 @@ export default async function decorate(block) {
 
   section.classList.add('we-container');
 
+  const isMobileSlider = section.classList.contains('mobile-slider')
+    || section.dataset.mobileSlider === 'true';
+  if (isMobileSlider) {
+    block.classList.add('mobile-slider');
+  }
+
   // Parse product lists
   const productsAsList = parseProductList(products);
   const familyProductsAsList = parseProductList(familyProducts);
@@ -1213,6 +1324,10 @@ export default async function decorate(block) {
       // eslint-disable-next-line no-console
       console.error('Error decorating icons:', error);
     }
+  }
+
+  if (isMobileSlider) {
+    setupMobileSliderNav(block, switchCheckbox);
   }
 
   // Trigger initial toggle state only if switch exists
