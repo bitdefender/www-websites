@@ -291,6 +291,8 @@ describe('decorate', () => {
     const app = block.querySelector('.realcheck-checker__app');
     expect(app.href).toBe('https://app.example/default');
     expect(app.textContent).toBe('Try RealCheck Free');
+    // a new tab would stay blank once the store app opens
+    expect(app.hasAttribute('target')).toBe(false);
   });
 
   it('leaves the app button out when the section has no link for the placeholder', async () => {
