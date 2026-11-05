@@ -232,6 +232,10 @@
 
 .realcheck-checker .realcheck-checker__notes {
   max-width: 560px;
+}
+
+/* on the paragraphs: styles.css sizes every p, up to 18px on wide screens */
+.realcheck-checker .realcheck-checker__notes p {
   font-size: 12px;
   line-height: 1.5;
 }
