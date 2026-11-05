@@ -2,7 +2,7 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 
-import { liftSectionHeader } from '../../scripts/utils/utils.js';
+import { liftSectionHeader, splitAroundHeading } from '../../scripts/utils/utils.js';
 
 // a section as decorateSections leaves it: default content, then a block
 function setupSection({
@@ -103,10 +103,83 @@ describe('liftSectionHeader', () => {
     expect(document.querySelectorAll('bd-section-header')).toHaveLength(1);
   });
 
-  it('does nothing without a heading', async () => {
+  it('lifts a lone paragraph as the lead when there is no heading', async () => {
     const [block] = setupSection({ content: '<p>Just a paragraph</p>' });
 
+    const header = await liftSectionHeader(block);
+
+    expect(header.hasAttribute('heading')).toBe(false);
+    expect(header.hasAttribute('eyebrow')).toBe(false);
+    expect(header.querySelector('[slot="lead"]').textContent).toBe('Just a paragraph');
+    expect(document.querySelector('.default-content-wrapper > p')).toBeNull();
+  });
+
+  it('reads the first of two paragraphs as the eyebrow when there is no heading', async () => {
+    const [block] = setupSection({
+      content: '<p>15+ years of AI-driven security innovation</p><p>Bitdefender is applying AI.</p>',
+      style: 'section-header-split',
+    });
+
+    const header = await liftSectionHeader(block);
+
+    expect(header.getAttribute('eyebrow')).toBe('15+ years of AI-driven security innovation');
+    expect(header.querySelector('[slot="lead"]').textContent).toBe('Bitdefender is applying AI.');
+    expect(header.getAttribute('layout')).toBe('split');
+  });
+
+  it('leaves a picture where it is and lifts the copy under it', async () => {
+    const [block] = setupSection({
+      content: '<p><picture><img src="logo.png" alt=""></picture></p><p>Whatever you protect.</p>',
+    });
+
+    const header = await liftSectionHeader(block);
+    const wrapper = document.querySelector('.default-content-wrapper');
+
+    expect(header.querySelector('[slot="lead"]').textContent).toBe('Whatever you protect.');
+    expect(wrapper.firstElementChild.querySelector('picture')).not.toBeNull();
+    expect(wrapper.lastElementChild).toBe(header);
+  });
+
+  it('does nothing when there is no heading and no copy', async () => {
+    const [block] = setupSection({
+      content: '<p class="button-container"><a class="button" href="/">Go</a></p>',
+    });
+
     expect(await liftSectionHeader(block)).toBeNull();
-    expect(document.querySelector('.default-content-wrapper').innerHTML).toContain('Just a paragraph');
+    expect(document.querySelector('bd-section-header')).toBeNull();
+  });
+});
+
+describe('splitAroundHeading', () => {
+  const copy = (html) => {
+    const root = document.createElement('div');
+    root.innerHTML = html;
+    return [root, [...root.querySelectorAll('p')]];
+  };
+
+  it('splits the copy at the heading', () => {
+    const [root, paragraphs] = copy('<p>Eyebrow</p><h3>Title</h3><p>Body</p><p>More</p>');
+
+    const { heading, before, after } = splitAroundHeading(root, paragraphs);
+
+    expect(heading.textContent).toBe('Title');
+    expect(before.map((p) => p.textContent)).toEqual(['Eyebrow']);
+    expect(after.map((p) => p.textContent)).toEqual(['Body', 'More']);
+  });
+
+  it('reads a lone paragraph as the copy after a missing heading', () => {
+    const [root, paragraphs] = copy('<p>Body</p>');
+
+    expect(splitAroundHeading(root, paragraphs))
+      .toEqual({ heading: null, before: [], after: paragraphs });
+  });
+
+  it('reads the first of two or more as the copy before a missing heading', () => {
+    const [root, paragraphs] = copy('<p>Badge</p><p>Body</p><p>More</p>');
+
+    const { before, after } = splitAroundHeading(root, paragraphs);
+
+    expect(before).toEqual([paragraphs[0]]);
+    expect(after).toEqual(paragraphs.slice(1));
   });
 });

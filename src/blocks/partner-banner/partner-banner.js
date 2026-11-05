@@ -23,9 +23,11 @@ export default async function decorate(block) {
   wrapSectionInDsSection(block);
 
   const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
-  const headingCell = heading?.closest('.partner-banner > div > div');
   const pictures = [...block.querySelectorAll('picture')];
-  // the lockup sits with the heading; the photo is the other picture
+  // the lockup sits with the heading, in the copy row under the photo's; without a
+  // heading it is still the picture after the photo
+  const headingCell = heading?.closest('.partner-banner > div > div')
+    || pictures[1]?.closest('.partner-banner > div > div');
   const lockup = pictures.find((picture) => headingCell?.contains(picture));
   const photo = pictures.find((picture) => picture !== lockup);
 

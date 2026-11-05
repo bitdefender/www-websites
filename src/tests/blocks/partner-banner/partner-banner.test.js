@@ -18,10 +18,11 @@ import {
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-async function renderFixture() {
+async function renderFixture(prepare = () => {}) {
   const html = await readFile(path.join(__dirname, 'partner-banner.mock.html'), 'utf-8');
   document.body.innerHTML = `<main>${html}</main>`;
   const main = document.querySelector('main');
+  prepare(main);
 
   // as on the page: decorateButtons turns the bold link into a.button.primary
   decorateButtons(main);
@@ -70,5 +71,17 @@ describe('partner-banner block', () => {
       ['Watch the Ferrari story', 'outline-white'],
     ]);
     expect(buttons[0].getAttribute('href')).toBe('https://www.bitdefender.com/en-us/ferrari/');
+  });
+});
+
+// DEX-29311 case 5: the author leaves the h2 out
+describe('partner-banner block without a heading', () => {
+  it('still slots the partner lockup', async () => {
+    const block = await renderFixture((main) => main.querySelector('.partner-banner h2').remove());
+    const banner = block.querySelector('bd-partner-banner');
+
+    expect(banner.hasAttribute('heading')).toBe(false);
+    expect(banner.querySelector('[slot="lockup"]')).not.toBeNull();
+    expect(banner.querySelector('[slot="photo"]')).not.toBeNull();
   });
 });

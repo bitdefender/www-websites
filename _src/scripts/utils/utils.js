@@ -1337,6 +1337,34 @@ var HEADER_LAYOUTS = [
 	"split",
 	"centered"
 ];
+/**
+* A heading and the copy on either side of it: an eyebrow or a badge before,
+* a lead or a body after. Authors leave the heading out, so without one the
+* copy is read the way it would sit around a heading: a lone paragraph is
+* the copy that follows it, and of two or more the first is the one before.
+*
+* @param {HTMLElement|null} root where the heading is looked for
+* @param {HTMLElement[]} paragraphs the copy, in document order, without
+*   link-only or picture paragraphs, which no heading puts before or after
+* @returns {{ heading: HTMLElement|null, before: HTMLElement[], after: HTMLElement[] }}
+*/
+var splitAroundHeading = (root, paragraphs) => {
+	const heading = root?.querySelector("h1, h2, h3, h4, h5, h6") || null;
+	if (!heading) {
+		const before = paragraphs.length > 1 ? paragraphs.slice(0, 1) : [];
+		return {
+			heading,
+			before,
+			after: paragraphs.slice(before.length)
+		};
+	}
+	const before = paragraphs.filter((p) => heading.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_PRECEDING);
+	return {
+		heading,
+		before,
+		after: paragraphs.filter((p) => !before.includes(p))
+	};
+};
 var toLead = (p) => {
 	const lead = document.createElement("span");
 	lead.slot = "lead";
@@ -1372,22 +1400,33 @@ var liftSectionHeader = async (block, { layout } = {}) => {
 	const content = getSectionContent(section);
 	const legacy = content.querySelector(":scope > .section-header-wrapper > .section-header");
 	const wrapper = content.querySelector(":scope > .default-content-wrapper");
-	const source = wrapper?.querySelector("h1, h2, h3") ? wrapper : legacy;
+	const source = wrapper?.querySelector("h1, h2, h3") || !legacy?.querySelector("h1, h2, h3") ? wrapper : legacy;
 	const heading = source?.querySelector("h1, h2, h3");
-	if (!heading) return null;
+	const isCopy = (el) => el?.matches("p:not(.button-container)") && el.textContent.trim() && !el.querySelector("picture");
+	let eyebrow = null;
+	let lead = null;
+	if (heading) {
+		eyebrow = isCopy(heading.previousElementSibling) ? heading.previousElementSibling : null;
+		lead = heading.nextElementSibling;
+		while (lead && !isCopy(lead)) lead = lead.nextElementSibling;
+	} else {
+		const { before, after } = splitAroundHeading(null, [...source?.children || []].filter(isCopy));
+		[eyebrow = null] = before;
+		[lead = null] = after;
+	}
+	if (!heading && !eyebrow && !lead) return null;
 	section.dataset.headerLifted = "";
-	const eyebrow = heading.previousElementSibling?.matches("p:not(.button-container)") ? heading.previousElementSibling : null;
-	let lead = heading.nextElementSibling;
-	while (lead && !(lead.matches("p:not(.button-container)") && lead.textContent.trim() && !lead.querySelector("picture"))) lead = lead.nextElementSibling;
 	const styleLayout = HEADER_LAYOUTS.find((name) => section.classList.contains(`section-header-${name}`));
 	const legacyLayout = legacy && HEADER_LAYOUTS.find((name) => legacy.classList.contains(name));
 	const requested = (layout || styleLayout || section.dataset.header || legacyLayout || "").trim().toLowerCase();
 	const header = document.createElement("bd-section-header");
-	header.setAttribute("heading", heading.textContent.trim());
-	header.setAttribute("as", heading.tagName.toLowerCase());
+	if (heading) {
+		header.setAttribute("heading", heading.textContent.trim());
+		header.setAttribute("as", heading.tagName.toLowerCase());
+		if (heading.id) header.id = heading.id;
+	}
 	header.setAttribute("layout", HEADER_LAYOUTS.includes(requested) ? requested : "stacked");
 	if (eyebrow) header.setAttribute("eyebrow", eyebrow.textContent.trim());
-	if (heading.id) header.id = heading.id;
 	if (lead) header.append(toLead(lead));
 	try {
 		const { load } = await import("../../vendor/repobit/dex-system-design/loader.js");
@@ -1395,7 +1434,7 @@ var liftSectionHeader = async (block, { layout } = {}) => {
 	} catch (err) {
 		console.warn("liftSectionHeader: DSN import failed, continuing with native rendering", err);
 	}
-	heading.replaceWith(header);
+	(heading || eyebrow || lead).replaceWith(header);
 	eyebrow?.remove();
 	lead?.remove();
 	if (source === legacy) {
@@ -1425,4 +1464,4 @@ function onCookiesAccepted(callback) {
 		if (window.adobeDataLayer.getState("ucCategory.functional")) callback();
 	});
 }
-export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };
+export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };

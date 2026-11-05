@@ -30,7 +30,7 @@ import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as
           <div class="bd-ensemble column">
             <div class="copy">
               ${this.eyebrow?e`<p class="eyebrow">${this.eyebrow}</p>`:t}
-              <h1 class="heading">${this.heading}</h1>
+              ${this.heading?e`<h1 class="heading">${this.heading}</h1>`:t}
               ${this.lead?e`<p class="lead">${this.lead}</p>`:t}
             </div>
           </div>

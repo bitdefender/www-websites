@@ -27,14 +27,17 @@ async function decorate(block) {
 	const header = liftSectionHeader(block);
 	const grid = document.createElement("bd-grid");
 	grid.className = "ds-page-column";
+	const columns = [...block.children].map(buildColumn).filter(Boolean);
+	const cols = (most) => String(Math.max(1, Math.min(columns.length, most)));
 	[
 		["cols", "1"],
 		["cols-sm", "1"],
-		["cols-md", "2"],
-		["cols-lg", "4"],
+		["cols-md", cols(2)],
+		["cols-lg", cols(4)],
 		["gap", "md"]
 	].forEach(([name, value]) => grid.setAttribute(name, value));
-	grid.append(...[...block.children].map(buildColumn).filter(Boolean));
+	grid.setAttribute("item-rows", "2");
+	grid.append(...columns);
 	try {
 		await load(grid);
 	} catch (err) {
