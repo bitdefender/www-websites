@@ -273,6 +273,19 @@
   }
 }
 
+.awards-container.awards-v2.section.wide {
+  padding-left: var(--section-mobile-padding);
+  padding-right: var(--section-mobile-padding);
+
+  .block.awards-component {
+    background-color: var(--color-blue-50);
+  }
+
+  .awards-wrapper {
+    padding-block: var(--size-0);
+  }
+}
+
 @media (max-width: 579px) {
   .awards-component > div:nth-child(3) div img {
     height: 50px;
@@ -370,6 +383,10 @@
     .cards {
       grid-template-columns: 1fr 1fr;
     }
+  }
+
+  .awards-container.awards-v2.section.wide {
+    padding-inline: var(--size-0);
   }
 }
 

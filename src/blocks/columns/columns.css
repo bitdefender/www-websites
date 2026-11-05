@@ -3911,6 +3911,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.columns-container.gasa-v2 {
+  padding-left: var(--section-mobile-padding);
+  padding-right: var(--section-mobile-padding);
+}
+
 .columns-container.responsible-ai {
   * {
     font-family: var(--body-font-family);
@@ -4130,6 +4135,33 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.columns-container.responsible-ai-v2 {
+  .columns-wrapper {
+    .columns {
+      padding-left: var(--section-mobile-padding);
+      padding-right: var(--section-mobile-padding);
+    }
+  }
+}
+
+.columns-container.columns-container-v2 .columns > div:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 991px) {
+  .columns-container.columns-container-v2 .columns.video-presentation > div > div {
+    width: auto;
+    margin-inline: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .columns-container.columns-container-v2 .columns.video-presentation .modal-video-container :is(.video-placeholder, img) {
+    display: block;
+    width: 100%;
+  }
+}
+
 @media (max-width: 1399px) {
   .columns-wrapper {
     padding: 0 var(--section-large-desktop-padding);
@@ -4279,11 +4311,27 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       height: 300px;
     }
   }
+
+  .columns-container:is(.gasa-v2, .responsible-ai-v2) .columns-wrapper {
+    max-width: var(--v2-container-max-width);
+    margin-inline: auto;
+    padding-inline: var(--v2-container-padding);
+  }
+
+  .columns-container.responsible-ai-v2 .columns-wrapper .columns {
+    padding-inline: 0;
+  }
 }
 
 @media (max-width: 767px) {
   .columns-wrapper {
     padding: var(--body-padding) var(--body-padding) 0;
+  }
+
+  .columns-container-v2 {
+    .columns-wrapper {
+      padding: var(--body-padding) var(--section-mobile-padding) 0;
+    }
   }
 
   .cta .columns-img-col picture {
@@ -4701,6 +4749,140 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.section.copilot-benefits-v2.columns-container {
+  font-size: 13px;
+  line-height: 1.5;
+  padding-inline: var(--section-mobile-padding, var(--size-16));
+
+  .default-content-wrapper.dex-see-all-see-less {
+    padding: var(--size-0);
+
+    p {
+      display: flex;
+    }
+
+    svg {
+      width: var(--size-20);
+    }
+
+    &:last-of-type p::after {
+      display: none;
+    }
+  }
+
+  > div {
+    padding-block: var(--size-0);
+    padding-inline: var(--size-0);
+  }
+
+  .default-content-wrapper {
+    text-align: center;
+
+    h3 {
+      font-size: var(--body-font-size-s);
+      line-height: var(--size-20);
+      color: #006dff;
+      font-weight: 400;
+      margin: var(--size-0) var(--size-0) var(--size-8);
+    }
+
+    > :last-child {
+      margin-bottom: var(--size-0);
+    }
+  }
+
+  .columns-wrapper {
+    margin-top: var(--size-24);
+
+    .columns {
+      --copilot-gap: var(--size-16);
+
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(max(310px,(100% - 2 * var(--copilot-gap)) / 3), 1fr));
+      gap: var(--copilot-gap);
+      height: auto !important;
+      overflow: unset;
+
+      &::after {
+        display: none;
+      }
+
+      > div {
+        display: contents;
+      }
+    }
+
+    .tag-green {
+      background-color: #026DFF;
+      font-size: var(--body-font-size-xxs);
+      line-height: var(--size-12);
+      vertical-align: middle;
+    }
+
+    .columns > div > div {
+      display: grid;
+      grid-template-columns: var(--size-32) 1fr;
+      grid-template-rows: none;
+      grid-row: auto;
+      width: auto;
+      align-content: start;
+      align-items: start;
+      gap: var(--size-4) var(--size-12);
+      margin: var(--size-0);
+      padding: var(--size-24);
+      background-color: #fafafa;
+      border-radius: var(--size-20);
+
+      > * {
+        grid-column: 2;
+        margin: var(--size-0);
+      }
+
+      > p:has(picture, .icon) {
+        grid-column: 1;
+        grid-row: 1;
+        width: var(--size-32);
+        height: var(--size-32);
+        line-height: 0;
+
+        img, .icon, svg {
+          width: var(--size-32);
+          height: var(--size-32);
+          object-fit: contain;
+        }
+      }
+
+      h4 {
+        grid-row: 1;
+        align-self: center;
+        min-height: auto !important;
+        font-size: var(--body-font-size-m);
+        line-height: 1.35;
+
+        strong {
+          font-size: inherit;
+        }
+      }
+
+      p {
+        font-size: var(--body-font-size-s);
+        line-height: var(--size-24);
+      }
+
+      p sup {
+        vertical-align: 5px;
+        line-height: 0;
+        font-size: var(--body-font-size-xxs);
+        text-decoration: underline;
+      }
+
+      &:not(:has(> p picture, > p .icon)) > * {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+}
+
 @media (min-width: 768px) {
   .modal-container.get-bitdefender-familypack .columns.block.columns-2-cols > div {
     display: flex;
@@ -4713,6 +4895,18 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
   .section.migration.table-align-top tr {
     flex-direction: unset;
+  }
+
+  .section.copilot-benefits-v2.columns-container .columns-wrapper {
+    margin-top: var(--size-32);
+
+    .columns {
+      --copilot-gap: var(--size-24);
+    }
+
+    .columns > div > div {
+      padding: var(--size-32);
+    }
   }
 }
 

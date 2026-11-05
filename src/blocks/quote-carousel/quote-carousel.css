@@ -3,6 +3,11 @@ main .quote-carousel {
   margin: 55px auto 0;
 }
 
+.section.wide.quote-carousel-container-v2 {
+  padding-left: var(--section-mobile-padding);
+  padding-right: var(--section-mobile-padding);
+}
+
 main .quote-carousel .slides-container {
   border-radius: 8px;
   max-width: auto;
@@ -43,6 +48,15 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
 
   main .quote-carousel .slides-container {
     margin-bottom: 60px;
+  }
+
+  .section.wide.quote-carousel-container-v2 {
+    padding-inline: var(--size-0);
+  }
+
+  .section.quote-carousel-container.quote-carousel-container-v2.creators-carousel > :is(.default-content-wrapper, .quote-carousel-wrapper) {
+    max-width: calc(var(--v2-container-max-width) - 2 * var(--v2-container-padding));
+    margin-inline: auto;
   }
 }
 

@@ -45,6 +45,7 @@
   --green-tag: #0E8532;
   --green-tag2: #0E8532;
   --dark-shadow: #0000001a;
+  --gray-color: #fafafa;
   --background-checkmark: #61AF53;
 
   /* fonts */
@@ -97,6 +98,33 @@
   --section-large-desktop-padding: 50px;
   --section-desktop-padding-vertical: 48px;
   --section-mobile-padding-vertical: 32px;
+  --section-mobile-padding: 16px;
+  --section-mobile-margin: 48px;
+
+  /* PADDING VALUES */
+  --size-0: 0;
+  --size-1: 1px;
+  --size-2: 2px;
+  --size-4: 4px;
+  --size-6: 6px;
+  --size-8: 8px;
+  --size-10: 10px;
+  --size-12: 12px;
+  --size-14: 14px;
+  --size-16: 16px;
+  --size-18: 18px;
+  --size-20: 20px;
+  --size-22: 22px;
+  --size-24: 24px;
+  --size-30: 32px;
+  --size-32: 32px;
+  --size-36: 36px;
+  --size-40: 40px;
+  --size-44: 44px;
+  --size-48: 48px;
+  --size-52: 52px;
+  --size-64: 64px;
+  --size-full: 99999999999999999999;
 
   /* cta styles */
   --cta-background-light-blue: var(--background-light-blue)
@@ -727,6 +755,76 @@ main .grey-background {
   background-color: #F6F6F6 !important;
 }
 
+main div.section:is(
+  .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
+  .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
+  .money-back-container-v2, .barchart-container-v2, .container-v2,
+  .copilot-benefits-v2.columns-container
+) {
+  --v2-section-spacing: var(--size-32);
+
+  > div {
+    --bd-ensemble-max-width: none;
+    --bd-ensemble-inline-padding: var(--section-mobile-padding);
+  }
+
+  &:not(.hero-aem-v2) {
+    margin-block: var(--v2-section-spacing) var(--size-0);
+    padding-block: var(--size-0);
+
+    > .default-content-wrapper {
+      padding-block-start: var(--size-0);
+    }
+
+    > div:last-child {
+      padding-block-end: var(--size-0);
+    }
+
+    &:is(.tabs-container-v2, .full-width) {
+      padding-block: var(--v2-section-spacing);
+    }
+
+    &.quote-carousel-container-v2 {
+      > div:first-child {
+        padding-block-start: var(--v2-section-spacing);
+      }
+
+      > div:last-child {
+        padding-block-end: var(--v2-section-spacing);
+      }
+    }
+
+    &:has(.accordion.terms-of-use) {
+      margin-block-start: var(--size-0);
+      background-color: var(--bd-acc-section-bg, var(--color-surface-container));
+    }
+
+    &:has(.accordion.faq) {
+      margin-block: calc(var(--v2-section-spacing) - var(--spacing-64, 64px)) calc(-1 * var(--spacing-64, 64px));
+    }
+
+    &:is(.money-back-container-v2 + div.section) {
+      margin-block-start: var(--v2-section-spacing);
+    }
+
+    &.tabs-container {
+      margin-block-start: calc(var(--v2-section-spacing) - var(--spacing-24, 24px));
+
+      &.tabs-container-v2 {
+        margin-block-start: var(--v2-section-spacing);
+        padding-block-start: calc(var(--v2-section-spacing) - var(--spacing-24, 24px));
+      }
+    }
+
+    :is(.default-content-wrapper, .block, .block *) h2 {
+      font-size: var(--typography-heading-h3-fontSize, clamp(1.5rem, calc(1.2619rem + 1.1905vw), 2rem));
+      font-weight: var(--typography-heading-h3-fontWeight, var(--font-weight-bolder));
+      line-height: var(--typography-heading-h3-lineHeight, 1.3);
+      letter-spacing: var(--typography-heading-h3-letterSpacing, normal);
+    }
+  }
+}
+
 @media (max-width: 991px) {
   main .section.hide-on-mobile {
     display: none;
@@ -800,6 +898,29 @@ main .grey-background {
     text-align: center;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+  }
+
+  main div.section:is(
+    .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
+    .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
+    .money-back-container-v2, .barchart-container-v2, .container-v2,
+    .copilot-benefits-v2.columns-container
+  ) {
+    --v2-section-spacing: var(--size-48);
+    --v2-container-max-width: 100%;
+    --v2-container-padding: var(--size-20);
+
+    padding-inline: var(--size-0);
+
+    > div {
+      --bd-ensemble-max-width: none;
+      --bd-ensemble-inline-padding: 0;
+
+      box-sizing: border-box;
+      max-width: var(--v2-container-max-width);
+      margin-inline: auto;
+      padding-inline: var(--v2-container-padding);
+    }
   }
 }
 
@@ -887,6 +1008,17 @@ main .grey-background {
 
   .creators .section .default-content-wrapper h2 {
     font: 600 40px/48px var(--body-font-family);
+  }
+
+  main div.section:is(
+    .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
+    .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
+    .money-back-container-v2, .barchart-container-v2, .container-v2,
+    .copilot-benefits-v2.columns-container
+  ) {
+    --v2-section-spacing: var(--size-64);
+    --v2-container-padding: var(--section-large-desktop-padding);
+    --v2-container-max-width: calc(1292px + 2 * var(--v2-container-padding));
   }
 }
 
