@@ -211,7 +211,8 @@ function appLink(source, dataset) {
   if (href && !href.includes('#os-dynamic-link')) return href;
   if (UserAgent.isIos && dataset.iosLink) return dataset.iosLink;
   if (UserAgent.isAndroid && dataset.androidLink) return dataset.androidLink;
-  return dataset.defaultLink || href;
+  // a placeholder the section doesn't resolve would lead nowhere: no button then
+  return dataset.defaultLink || '';
 }
 
 // The intro row: an eyebrow before the h1, the h1, then the description

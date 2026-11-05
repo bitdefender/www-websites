@@ -379,6 +379,9 @@
   line-height: 1.4;
   color: #1a2133;
   text-wrap: balance;
+
+  /* a title can be a file name with no spaces */
+  overflow-wrap: anywhere;
 }
 
 .realcheck-checker .realcheck-checker__video__link {
