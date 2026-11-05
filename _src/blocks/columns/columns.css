@@ -945,8 +945,7 @@ main .creators-banner .signature {
 }
 
 .columns-wrapper > div.grey-bck div.columns-text-col {
-  padding-left: 4em;
-  padding-right: 1em;
+  padding: 2em 1em 2em 4em;
 }
 
 .section.baby-blue-bck .columns-wrapper {
@@ -4728,5 +4727,45 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .columns-container.uninstall-tools .columns > div {
     flex-direction: column;
     gap: 0;
+  }
+}
+
+.columns.grey-bck > div > .columns-text-col,
+.columns.grey-bck > div > .columns-title-col {
+  padding-block: 2rem;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.columns.grey-bck > div > .columns-title-col {
+  padding-inline: 2rem;
+}
+
+@media (width >= 992px) {
+  .columns.grey-bck > div {
+    align-items: stretch;
+    gap: 0;
+    min-height: 20rem;
+  }
+
+  .columns.grey-bck > div > .columns-img-col {
+    position: relative;
+    min-width: 0;
+  }
+
+  .columns.grey-bck > div > .columns-img-col p {
+    margin: 0;
+  }
+
+  .columns.grey-bck > div > .columns-img-col picture {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  .columns.grey-bck > div > .columns-img-col img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
