@@ -640,6 +640,18 @@ main .creators-banner .signature {
   flex: 0 0 50%;
 }
 
+.columns-container.small-image .columns-wrapper > div.grey-bck > div {
+  >div {
+    flex: 1;
+
+    &.columns-img-col {
+      flex: 0 0 33%;
+    }
+  }
+  
+  
+}
+
 .columns.carousel > div:nth-child(1) {
   position: relative;
   left: 0;
