@@ -1080,6 +1080,11 @@ export const generatePageLoadStartedName = () => {
       tagName = `${locale}:consumer:product:${subSubSubSection}`;
     }
 
+    // the locale's homepage (/en-us/, /fr-fr/, ...) is the splitter, as on the old site
+    if (lastSegment === locale) {
+      tagName = `${locale}:splitter homepage`;
+    }
+
     if (pathname.includes('bundle-solutions')) {
       tagName = `${locale}:oem:bundle solutions`;
     }

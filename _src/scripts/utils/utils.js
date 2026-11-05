@@ -1067,6 +1067,7 @@ var generatePageLoadStartedName = () => {
 			if (pathname.includes("/reverse-phone-lookup/")) tagName = `${locale}:consumer:product:reverse phone lookup:${subSubSubSection}`;
 		}
 		if (lastSegment === "web-sage") tagName = `${locale}:consumer:product:${subSubSubSection}`;
+		if (lastSegment === locale) tagName = `${locale}:splitter homepage`;
 		if (pathname.includes("bundle-solutions")) tagName = `${locale}:oem:bundle solutions`;
 		if (window.errorCode === "404") tagName = `${locale}:404`;
 	}
