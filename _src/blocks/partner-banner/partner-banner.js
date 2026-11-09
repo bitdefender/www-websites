@@ -12,8 +12,8 @@ var slotted = (picture, slot) => {
 async function decorate(block) {
 	wrapSectionInDsSection(block);
 	const heading = block.querySelector("h1, h2, h3, h4, h5, h6");
-	const headingCell = heading?.closest(".partner-banner > div > div");
 	const pictures = [...block.querySelectorAll("picture")];
+	const headingCell = heading?.closest(".partner-banner > div > div") || pictures[1]?.closest(".partner-banner > div > div");
 	const lockup = pictures.find((picture) => headingCell?.contains(picture));
 	const photo = pictures.find((picture) => picture !== lockup);
 	const copy = [...block.querySelectorAll("p")].filter((p) => text(p) && !p.querySelector("picture") && !headingCell?.contains(p));

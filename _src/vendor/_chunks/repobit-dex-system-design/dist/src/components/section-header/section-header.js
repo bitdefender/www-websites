@@ -2,7 +2,7 @@ import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as
       <header class="bd-ensemble root">
         ${this.eyebrow?e`<bd-p variant="eyebrow" class="eyebrow"><span class="text">${this.eyebrow}</span></bd-p>`:t}
         <div class="row">
-          <bd-h as="${this.as}" visual-level="h2" class="heading"><span class="text">${this.heading}</span></bd-h>
+          ${this.heading?e`<bd-h as="${this.as}" visual-level="h2" class="heading"><span class="text">${this.heading}</span></bd-h>`:t}
           <div class="lead" ?hidden=${!n}>
             <slot name="lead" @slotchange=${this._onLeadSlot}><span class="text">${this.lead}</span></slot>
           </div>

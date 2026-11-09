@@ -26,10 +26,11 @@ const withMetadata = (key, value) => (html) => html.replace(/<\/div>\s*$/, `
   <div class="section-metadata"><div><div>${key}</div><div>${value}</div></div></div>
 </div>`);
 
-async function renderFixture(transform = (html) => html) {
+async function renderFixture(transform = (html) => html, prepare = () => {}) {
   const html = await readFile(path.join(__dirname, 'stat-tiles.mock.html'), 'utf-8');
   document.body.innerHTML = `<main>${transform(html)}</main>`;
   const main = document.querySelector('main');
+  prepare(main);
 
   decorateButtons(main);
   decorateIcons(main);
@@ -120,5 +121,19 @@ describe('stat-tiles block', () => {
     const items = [...block.querySelectorAll('bd-stat-tile')];
     expect(items[4].getAttribute('label')).toBe('50 billion plus');
     expect(items[0].hasAttribute('label')).toBe(false);
+  });
+});
+
+// DEX-29311 case 11: the highlight's copy is one bare line, with no button
+describe('stat-tiles block without the highlight button', () => {
+  it('still reads the bold first row as the highlight', async () => {
+    const block = await renderFixture(undefined, (main) => {
+      const copyCell = main.querySelector('.stat-tiles > div > div:nth-child(2)');
+      copyCell.textContent = copyCell.querySelector('p').textContent;
+    });
+
+    expect(block.querySelector('bd-stat-highlight')?.getAttribute('value')).toBe('$1.5B+');
+    expect(block.querySelector('bd-button-link')).toBeNull();
+    expect(block.querySelectorAll('bd-stat-tile')).toHaveLength(6);
   });
 });

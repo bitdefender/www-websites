@@ -69,7 +69,8 @@ async function decorate(block) {
 	wrapSectionInDsSection(block);
 	const header = liftSectionHeader(block);
 	const rows = [...block.children];
-	const leadRow = rows[0]?.children.length > 1 && rows[0].children[1].querySelector("p, a") ? rows.shift() : null;
+	const [valueCell, copyCell] = rows[0]?.children || [];
+	const leadRow = !!copyCell && !!(copyCell.querySelector("p, a") || valueCell.querySelector("strong, b")) ? rows.shift() : null;
 	const layout = grid([
 		"1",
 		"1",

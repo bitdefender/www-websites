@@ -21,10 +21,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // icons are fetched by decorateIcons, there is no server in tests
 global.fetch = vi.fn(async () => ({ ok: false }));
 
-async function renderFixture() {
+async function renderFixture(prepare = () => {}) {
   const html = await readFile(path.join(__dirname, 'brand-hero.mock.html'), 'utf-8');
   document.body.innerHTML = `<main>${html}</main>`;
   const main = document.querySelector('main');
+  prepare(main);
 
   decorateButtons(main);
   decorateIcons(main);
@@ -91,5 +92,32 @@ describe('brand-hero block', () => {
     expect(icons.map((i) => i.tagName.toLowerCase())).toEqual([
       'bd-home-icon', 'bd-small-business-icon', 'bd-enterprise-icon',
     ]);
+  });
+});
+
+// DEX-29311 case 3: the author leaves the h1 out
+describe('brand-hero block without a heading', () => {
+  it('still reads the first paragraph as the eyebrow and the next as the lead', async () => {
+    const block = await renderFixture((main) => main.querySelector('.brand-hero h1').remove());
+    const hero = block.querySelector('bd-hero');
+
+    expect(hero.hasAttribute('heading')).toBe(false);
+    expect(hero.getAttribute('eyebrow')).toMatch(/25 Years/);
+    expect(hero.getAttribute('lead')).not.toMatch(/25 Years/);
+  });
+});
+
+// DEX-29311 cases 6 and 8: a fourth card, and cards whose parts must line up
+describe('brand-hero block with four cards', () => {
+  it('sets every card in one row from lg, on rows the cards share', async () => {
+    const block = await renderFixture((main) => {
+      const rows = main.querySelector('.brand-hero').children;
+      rows[0].parentElement.append(rows[rows.length - 1].cloneNode(true));
+    });
+    const grid = block.querySelector('bd-grid');
+
+    expect(grid.querySelectorAll('bd-audience-card')).toHaveLength(4);
+    expect(grid.getAttribute('cols-lg')).toBe('4');
+    expect(grid.getAttribute('item-rows')).toBe('4');
   });
 });

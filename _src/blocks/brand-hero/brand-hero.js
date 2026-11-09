@@ -1,4 +1,4 @@
-import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { splitAroundHeading, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/brand-hero/brand-hero.js
 var DS_ICONS = [
@@ -24,12 +24,13 @@ var labelText = (cell) => {
 	copy.querySelectorAll(".icon").forEach((icon) => icon.remove());
 	return text(copy);
 };
-/** The copy row: paragraphs before the heading are the eyebrow, after it the lead. */
+/**
+* The copy row: paragraphs before the heading are the eyebrow, after it the
+* lead. Without a heading, the first of two or more is still the eyebrow.
+*/
 var readCopy = (row) => {
-	const heading = row.querySelector("h1, h2, h3, h4, h5, h6");
 	const paragraphs = [...row.querySelectorAll("p")].filter((p) => text(p));
-	const before = paragraphs.filter((p) => heading && p.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING);
-	const after = paragraphs.filter((p) => !before.includes(p));
+	const { heading, before, after } = splitAroundHeading(row, paragraphs);
 	return {
 		eyebrow: before.map(text).join(" "),
 		heading: text(heading),
@@ -53,7 +54,7 @@ var buildCard = (row) => {
 	const card = document.createElement("bd-audience-card");
 	const eyebrow = labelText(label);
 	if (eyebrow) card.setAttribute("eyebrow", eyebrow);
-	card.setAttribute("heading", text(heading));
+	if (text(heading)) card.setAttribute("heading", text(heading));
 	if (description) card.setAttribute("description", text(description));
 	if (link) {
 		card.setAttribute("href", link.getAttribute("href") || "");
@@ -73,7 +74,7 @@ async function decorate(block) {
 	const { eyebrow, heading, lead } = readCopy(copyRow || block);
 	const hero = document.createElement("bd-hero");
 	if (eyebrow) hero.setAttribute("eyebrow", eyebrow);
-	hero.setAttribute("heading", heading);
+	if (heading) hero.setAttribute("heading", heading);
 	if (lead) hero.setAttribute("lead", lead);
 	const art = document.createElement("bd-motion-art");
 	art.setAttribute("slot", "media");
@@ -86,7 +87,8 @@ async function decorate(block) {
 		grid.setAttribute("cols", "1");
 		grid.setAttribute("cols-sm", "1");
 		grid.setAttribute("cols-md", "1");
-		grid.setAttribute("cols-lg", String(Math.min(cards.length, 3)));
+		grid.setAttribute("cols-lg", String(cards.length));
+		grid.setAttribute("item-rows", "4");
 		const desktop = window.matchMedia?.("(min-width: 992px)");
 		const setGap = () => grid.setAttribute("gap", !desktop || desktop.matches ? "md" : "sm");
 		setGap();
