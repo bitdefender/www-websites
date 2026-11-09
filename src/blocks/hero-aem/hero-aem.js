@@ -234,8 +234,28 @@ export default async function decorate(block, options) {
     block.querySelector('.col-md-6:last-child').appendChild(circleDiscountBox);
   }
 
+  let titleHeading = block.querySelector('h1');
   // Get all the siblings after h1
-  const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
+  let cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
+
+  // v2: the headings above the card can be any mix of h1/h2 (SEO), so the card goes
+  // after the last of them and classes carry the styling instead of the tag names
+  if (titleHeading && block.closest('.section').classList.contains('hero-aem-v2')) {
+    while (titleHeading.previousElementSibling?.matches('h1, h2')) {
+      titleHeading = titleHeading.previousElementSibling;
+    }
+    titleHeading.classList.add('hero-aem__eyebrow');
+    while (titleHeading.nextElementSibling?.matches('h1, h2')) {
+      titleHeading = titleHeading.nextElementSibling;
+      titleHeading.classList.add('hero-aem__eyebrow');
+    }
+    titleHeading.classList.replace('hero-aem__eyebrow', 'hero-aem__title');
+
+    cardElements = [];
+    for (let el = titleHeading.nextElementSibling; el; el = el.nextElementSibling) {
+      cardElements.push(el);
+    }
+  }
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
   if (product) {
@@ -248,7 +268,7 @@ export default async function decorate(block, options) {
     });
   }
   // Append the container after h1
-  block.querySelector('h1')?.after(cardElementContainer);
+  titleHeading?.after(cardElementContainer);
 
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
   desktopImage?.classList.add('hero-aem__desktop-image');
