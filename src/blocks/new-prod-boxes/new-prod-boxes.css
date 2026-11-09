@@ -1148,6 +1148,12 @@
     display: none;
   }
 
+  .new-prod-boxes .prod_box .inner_prod_box .benefitsLists ul li.footnote {
+    font-size: var(--body-font-size-xs);
+    line-height: 17px;
+    font-weight: normal;
+  }
+
   .new-prod-boxes :where(.show-more-btn-wrapper) {
     text-align: center;
     width: 100%;
