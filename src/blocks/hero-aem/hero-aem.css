@@ -752,15 +752,16 @@
 
   .hero-aem {
 
-    h2 {
+    .hero-aem__eyebrow {
       color: var(--color-highlight-blue);
       font-size: var(--heading-font-size-xs);
       line-height: 100%;
       font-weight: var(--font-weight-bolder);
+      margin-top: var(--size-0);
       margin-bottom: var(--size-8);
     }
 
-    h1 {
+    .hero-aem__title {
       color: black;
       font-size: var(--heading-font-size-m);
       line-height: var(--size-30);
@@ -1102,13 +1103,13 @@
   }
 
   .hero-aem-v2.hero-aem-container .hero-aem {
-    h2 {
+    .hero-aem__eyebrow {
       font-size: var(--heading-font-size-l);
       line-height: 42px;
       margin: var(--size-0) var(--size-0) var(--size-8);
     }
 
-    h1 {
+    .hero-aem__title {
       font-size: var(--heading-font-size-xl);
       line-height: var(--size-44);
       margin: var(--size-0);

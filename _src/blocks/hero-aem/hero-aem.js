@@ -156,7 +156,20 @@ async function decorate(block, options) {
 		circleDiscountBox.innerHTML = `<p>${circleDiscount.replace(/0\s*%/g, "<span data-store-text-variable>{GLOBAL_BIGGEST_DISCOUNT_PERCENTAGE}</span>")}</p>`;
 		block.querySelector(".col-md-6:last-child").appendChild(circleDiscountBox);
 	}
-	const cardElementContainer = createCardElementContainer(Array.from(block.querySelectorAll("h1 ~ *")), mobileImage);
+	let titleHeading = block.querySelector("h1");
+	let cardElements = Array.from(block.querySelectorAll("h1 ~ *"));
+	if (titleHeading && block.closest(".section").classList.contains("hero-aem-v2")) {
+		while (titleHeading.previousElementSibling?.matches("h1, h2")) titleHeading = titleHeading.previousElementSibling;
+		titleHeading.classList.add("hero-aem__eyebrow");
+		while (titleHeading.nextElementSibling?.matches("h1, h2")) {
+			titleHeading = titleHeading.nextElementSibling;
+			titleHeading.classList.add("hero-aem__eyebrow");
+		}
+		titleHeading.classList.replace("hero-aem__eyebrow", "hero-aem__title");
+		cardElements = [];
+		for (let el = titleHeading.nextElementSibling; el; el = el.nextElementSibling) cardElements.push(el);
+	}
+	const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
 	if (product) {
 		const [prodName, prodUsers, prodYears] = product.split("/");
 		wrapChildrenWithStoreContext(cardElementContainer, {
@@ -166,7 +179,7 @@ async function decorate(block, options) {
 			storeEvent: "info"
 		});
 	}
-	block.querySelector("h1")?.after(cardElementContainer);
+	titleHeading?.after(cardElementContainer);
 	block.querySelector(".hero-aem > div > div > picture")?.classList.add("hero-aem__desktop-image");
 	const buyLink = block.querySelector("a[href*=\"buylink\"]");
 	if (product && !options) {
