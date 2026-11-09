@@ -1,4 +1,4 @@
-import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { liftSectionHeader, splitAroundHeading, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/bento-cards/bento-cards.js
 var ART_LABELS = {
@@ -27,25 +27,29 @@ var buildArt = (cell) => {
 	if (labels.length) art.setAttribute(ART_LABELS[object], labels.join("|"));
 	return art;
 };
+/** The cell holding a card's art: a picture, or a bd-motion-art object's name. */
+var isArtCell = (cell) => !!cell.querySelector("picture") || !!ART_LABELS[(cell.querySelector("p")?.textContent || cell.textContent).trim().toLowerCase()];
 var buildCard = (row) => {
 	const cells = [...row.children];
-	const copy = cells.find((cell) => cell.querySelector("h1, h2, h3, h4, h5, h6"));
+	const copy = cells.find((cell) => cell.querySelector("h1, h2, h3, h4, h5, h6")) || cells.find((cell) => !isArtCell(cell));
 	if (!copy) return null;
-	const heading = copy.querySelector("h1, h2, h3, h4, h5, h6");
-	const paragraphs = [...copy.querySelectorAll("p")];
-	const before = paragraphs.filter((p) => heading.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_PRECEDING);
-	const after = paragraphs.filter((p) => !before.includes(p));
+	const paragraphs = [...copy.querySelectorAll("p")].filter((p) => p.textContent.trim());
+	const prose = paragraphs.filter((p) => !isLinkOnly(p));
+	const { heading, before, after } = splitAroundHeading(copy, prose);
+	if (!heading && !before.length && !after.length) return null;
 	const card = document.createElement("bd-bento-item");
 	card.setAttribute("tone", "brand");
-	card.setAttribute("as", heading.tagName.toLowerCase());
-	card.setAttribute("title", heading.textContent.trim());
-	const badge = before.find((p) => p.textContent.trim());
+	if (heading) {
+		card.setAttribute("as", heading.tagName.toLowerCase());
+		card.setAttribute("title", heading.textContent.trim());
+	}
+	const [badge] = before;
 	if (badge) card.setAttribute("badge", badge.textContent.trim());
-	const body = after.find((p) => p.textContent.trim() && !isLinkOnly(p));
+	const [body] = after;
 	if (body) card.setAttribute("body", body.textContent.trim());
 	const art = buildArt(cells.find((cell) => cell !== copy));
 	if (art) card.append(art);
-	after.filter(isLinkOnly).forEach((p) => {
+	paragraphs.filter(isLinkOnly).forEach((p) => {
 		const link = p.querySelector("a");
 		const cta = document.createElement("bd-button-link");
 		cta.setAttribute("variant", "outline-white");

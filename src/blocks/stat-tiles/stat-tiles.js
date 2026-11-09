@@ -87,8 +87,11 @@ export default async function decorate(block) {
   const header = liftSectionHeader(block);
 
   const rows = [...block.children];
-  // a first row with a second cell carrying copy is the highlight; otherwise all are tiles
-  const hasLead = rows[0]?.children.length > 1 && rows[0].children[1].querySelector('p, a');
+  // the first row is the highlight when its copy is more than a caption -- paragraphs or a
+  // link -- or its figure is bold, as the highlight's is authored even when its copy is one
+  // bare line with no link; otherwise every row is a tile
+  const [valueCell, copyCell] = rows[0]?.children || [];
+  const hasLead = !!copyCell && !!(copyCell.querySelector('p, a') || valueCell.querySelector('strong, b'));
   const leadRow = hasLead ? rows.shift() : null;
 
   // phone: one column, tiles 16 apart; tablet: tiles two across, 24 apart;

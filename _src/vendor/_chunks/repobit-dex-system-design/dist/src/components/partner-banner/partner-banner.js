@@ -6,7 +6,7 @@ import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as
             <div class="card">
               <div class="intro">
                 <div class="lockup"><slot name="lockup"></slot></div>
-                <bd-h as="${this.as}" visual-level="h2" color="on-brand" class="heading"><span class="text">${this.heading}</span></bd-h>
+                ${this.heading?e`<bd-h as="${this.as}" visual-level="h2" color="on-brand" class="heading"><span class="text">${this.heading}</span></bd-h>`:t}
               </div>
               <div class="detail">
                 ${this.quote?e`<figure class="quote">

@@ -19,10 +19,11 @@ import {
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-async function renderFixture(transform = (html) => html) {
+async function renderFixture(transform = (html) => html, prepare = () => {}) {
   const html = await readFile(path.join(__dirname, 'bento-cards.mock.html'), 'utf-8');
   document.body.innerHTML = `<main>${transform(html)}</main>`;
   const main = document.querySelector('main');
+  prepare(main);
 
   decorateButtons(main);
   decorateSections(main);
@@ -103,5 +104,22 @@ describe('bento-cards block', () => {
     const items = [...twoCards.querySelectorAll('bd-bento-item')];
     expect(items).toHaveLength(2);
     expect(items.some((item) => item.hasAttribute('priority'))).toBe(false);
+  });
+});
+
+// DEX-29311 case 11: cards authored without an h3
+describe('bento-cards block without card headings', () => {
+  it('still builds every card, the first line its badge and the next its body', async () => {
+    const block = await renderFixture(undefined, (main) => {
+      main.querySelectorAll('.bento-cards h3').forEach((h3) => h3.remove());
+    });
+    const cards = [...block.querySelectorAll('bd-bento-item')];
+
+    expect(cards).toHaveLength(3);
+    cards.forEach((card) => expect(card.hasAttribute('title')).toBe(false));
+    expect(cards[0].getAttribute('badge')).toBe('AI for Consumers');
+    expect(cards[0].getAttribute('body')).toMatch(/^Smarter protection/);
+    expect(cards[0].querySelector('bd-button-link')).not.toBeNull();
+    expect(cards[0].querySelector('bd-motion-art')).not.toBeNull();
   });
 });
