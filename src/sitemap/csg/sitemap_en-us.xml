@@ -945,7 +945,7 @@
     <url>
         <loc>https://www.bitdefender.com/en-us/consumer/small-business-security</loc>
         <priority>0.8</priority>
-        <lastmod>2026-10-15T10:06:30.000Z</lastmod>
+        <lastmod>2026-11-05T11:09:54.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/small-business-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/small-business-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/small-business-security"/>
@@ -1488,7 +1488,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/</loc>
-        <lastmod>2026-10-08T21:44:57.000Z</lastmod>
+        <lastmod>2026-11-02T09:59:24.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/partners/subscriber-protection-platform/resources/"/>
         <xhtml:link rel="alternate" hreflang="es-mx" href="https://www.bitdefender.com/es-mx/partners/subscriber-protection-platform/resources/"/>
@@ -2088,7 +2088,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-us/consumer/web-sage</loc>
-        <lastmod>2026-10-21T07:10:45.000Z</lastmod>
+        <lastmod>2026-11-02T14:04:23.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/web-sage"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/web-sage"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/web-sage"/>
@@ -2134,5 +2134,15 @@
         <xhtml:link rel="alternate" hreflang="en-sg" href="https://www.bitdefender.com/en-sg/consumer/web-sage"/>
         <xhtml:link rel="alternate" hreflang="nl-be" href="https://www.bitdefender.com/nl-be/consumer/web-sage"/>
         <xhtml:link rel="alternate" hreflang="fr-be" href="https://www.bitdefender.com/fr-be/consumer/web-sage"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/the-bitdefender-and-netgear-2026-iot-security-landscape-report</loc>
+        <lastmod>2026-11-04T13:45:12.000Z</lastmod>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/the-bitdefender-and-netgear-2026-iot-security-landscape-report"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/cybersecurity-for-telcos-ai-scams-old-threats-and-the-router-opportunity</loc>
+        <lastmod>2026-11-02T10:01:37.000Z</lastmod>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/cybersecurity-for-telcos-ai-scams-old-threats-and-the-router-opportunity"/>
     </url>
 </urlset>
