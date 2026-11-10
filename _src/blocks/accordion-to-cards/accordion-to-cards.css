@@ -13,6 +13,7 @@
     line-height: var(--typography-heading-h3-lineHeight);
     letter-spacing: var(--typography-heading-h3-letterSpacing);
     margin-bottom: var(--size-24);
+    text-align: center;
   }
   /* stylelint-enable custom-property-pattern */
 
@@ -97,10 +98,6 @@
 
 @media (min-width: 768px) {
   .accordion-to-cards-container {
-    .default-content-wrapper h2 {
-      text-align: center;
-    }
-
     .accordion-to-cards {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
