@@ -304,6 +304,10 @@ function createFeatureList(featuresSet) {
         liClass = 'unavailable';
         processedContent = processedContent.replace('xxx', '');
       }
+      // A one-row table starting with "*" is a footnote, not a list heading
+      if (rows.length === 1 && firstCell?.textContent.trim().startsWith('*')) {
+        liClass = `${liClass} footnote`.trim();
+      }
 
       const secondCellContent = secondCell?.textContent.trim()
         ? `<span class="white-pill-content">${secondCell.innerHTML}</span>`

@@ -209,7 +209,8 @@ function processFeatureContent(content, tdElement) {
 */
 function createFeatureList(featuresSet) {
 	return Array.from(featuresSet).map((table) => {
-		return `<ul>${Array.from(table.querySelectorAll("tr")).map((tr) => {
+		const rows = Array.from(table.querySelectorAll("tr"));
+		return `<ul>${rows.map((tr) => {
 			const cells = Array.from(tr.querySelectorAll("td"));
 			const firstCell = cells[0];
 			const secondCell = cells[1];
@@ -218,6 +219,7 @@ function createFeatureList(featuresSet) {
 				liClass = "unavailable";
 				processedContent = processedContent.replace("xxx", "");
 			}
+			if (rows.length === 1 && firstCell?.textContent.trim().startsWith("*")) liClass = `${liClass} footnote`.trim();
 			const secondCellContent = secondCell?.textContent.trim() ? `<span class="white-pill-content">${secondCell.innerHTML}</span>` : "";
 			return `<li ${liClass ? `class="${liClass}"` : ""}>${processedContent}${secondCellContent}</li>`;
 		}).join(" ")}</ul>`;

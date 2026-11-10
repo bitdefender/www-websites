@@ -4895,6 +4895,12 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+.section.copilot-benefits-v2.columns-container + .section.columns-container sup {
+  vertical-align: 5px;
+  line-height: 0;
+  font-size: var(--body-font-size-xxs);
+}
+
 @media (min-width: 768px) {
   .modal-container.get-bitdefender-familypack .columns.block.columns-2-cols > div {
     display: flex;

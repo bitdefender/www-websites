@@ -1,5 +1,11 @@
 /* Bar Chart Styles */
 
 .barchart-container-v2 bd-compare-section {
+  /* stylelint-disable custom-property-pattern */
   --cs-gap: max(var(--spacing-32, 32px), calc(100% - 2 * 598px));
+  --typography-heading-h4-fontSize: var(--typography-heading-h3-fontSize);
+  --typography-heading-h4-fontWeight: var(--typography-heading-h3-fontWeight);
+  --typography-heading-h4-lineHeight: var(--typography-heading-h3-lineHeight);
+  --typography-heading-h4-letterSpacing: var(--typography-heading-h3-letterSpacing);
+  /* stylelint-enable custom-property-pattern */
 }
