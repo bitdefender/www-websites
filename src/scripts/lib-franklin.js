@@ -846,7 +846,9 @@ export function decorateButtons(element) {
  * Load LCP block and/or wait for LCP in default content.
  */
 export async function waitForLCP(lcpBlocks) {
-  const block = document.querySelector(lcpBlocks.join(','));
+  // Only decorated blocks: a section styled with a block's name carries its class too, and
+  // comes first in document order, which loaded /blocks/undefined/undefined.{css,js}.
+  const block = document.querySelector(lcpBlocks.map((selector) => `.block${selector}`).join(','));
   if (block) {
     await loadBlock(block);
   }

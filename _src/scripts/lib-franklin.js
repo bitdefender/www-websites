@@ -711,7 +711,7 @@ function decorateButtons(element) {
 * Load LCP block and/or wait for LCP in default content.
 */
 async function waitForLCP(lcpBlocks) {
-	const block = document.querySelector(lcpBlocks.join(","));
+	const block = document.querySelector(lcpBlocks.map((selector) => `.block${selector}`).join(","));
 	if (block) await loadBlock(block);
 	const newsBar = document.querySelector(".news-bar");
 	const isSibling = newsBar && newsBar.closest(".section").nextElementSibling === block?.closest(".section");
