@@ -60,9 +60,11 @@ describe('logo-marquee', () => {
 
     const [text] = block.querySelector('bd-logo-marquee').children;
     expect(text.tagName).toBe('SPAN');
-    expect(text.querySelector('bd-display').getAttribute('variant')).toBe('md');
+    expect(text.querySelector('bd-display').getAttribute('appearance')).toBe('md');
+    expect(text.querySelector('bd-display').hasAttribute('variant')).toBe(false);
     expect(text.querySelector('bd-display').textContent).toBe('#1');
-    expect(text.querySelector('bd-p').getAttribute('variant')).toBe('small');
+    expect(text.querySelector('bd-p').getAttribute('appearance')).toBe('small');
+    expect(text.querySelector('bd-p').hasAttribute('variant')).toBe(false);
     expect(text.querySelector('bd-p').textContent.trim()).toBe('most awarded');
   });
 

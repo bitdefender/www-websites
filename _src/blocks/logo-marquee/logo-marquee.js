@@ -28,13 +28,13 @@ var buildTextItem = (cell) => {
 	item.style.cssText = "display: inline-flex; align-items: center; gap: var(--spacing-8); --bd-paragraph-margin-bottom: 0;";
 	if (figure) {
 		const display = document.createElement("bd-display");
-		display.setAttribute("variant", "md");
+		display.setAttribute("appearance", "md");
 		display.textContent = figure;
 		item.append(display);
 	}
 	if (label.textContent.trim()) {
 		const p = document.createElement("bd-p");
-		p.setAttribute("variant", "small");
+		p.setAttribute("appearance", "small");
 		p.style.width = "min-content";
 		p.append(...label.childNodes);
 		item.append(p);
@@ -45,7 +45,7 @@ var getLabel = (block, textItem) => {
 	if (textItem) return textItem.textContent.replace(/\s+/g, " ").trim();
 	const section = block.closest(".section");
 	const wrapper = section && getSectionContent(section).querySelector(":scope > .default-content-wrapper");
-	return wrapper?.querySelector(":scope > bd-section-header")?.getAttribute("heading") || wrapper?.querySelector(":is(h1, h2, h3)")?.textContent.trim() || "";
+	return wrapper?.querySelector(":scope > bd-section-header > bd-h[slot=\"title\"]")?.textContent.trim() || wrapper?.querySelector(":is(h1, h2, h3)")?.textContent.trim() || "";
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);

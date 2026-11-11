@@ -39,14 +39,14 @@ const buildTextItem = (cell) => {
 
   if (figure) {
     const display = document.createElement('bd-display');
-    display.setAttribute('variant', 'md');
+    display.setAttribute('appearance', 'md');
     display.textContent = figure;
     item.append(display);
   }
 
   if (label.textContent.trim()) {
     const p = document.createElement('bd-p');
-    p.setAttribute('variant', 'small');
+    p.setAttribute('appearance', 'small');
     // one word a line, as Figma stacks "most / awarded"
     p.style.width = 'min-content';
     p.append(...label.childNodes);
@@ -60,8 +60,8 @@ const getLabel = (block, textItem) => {
   if (textItem) return textItem.textContent.replace(/\s+/g, ' ').trim();
   const section = block.closest('.section');
   const wrapper = section && getSectionContent(section).querySelector(':scope > .default-content-wrapper');
-  // a block earlier in the section may have lifted the heading into bd-section-header
-  const lifted = wrapper?.querySelector(':scope > bd-section-header')?.getAttribute('heading');
+  // a block earlier in the section may have lifted the heading into bd-section-header's title slot
+  const lifted = wrapper?.querySelector(':scope > bd-section-header > bd-h[slot="title"]')?.textContent.trim();
   return lifted || wrapper?.querySelector(':is(h1, h2, h3)')?.textContent.trim() || '';
 };
 
