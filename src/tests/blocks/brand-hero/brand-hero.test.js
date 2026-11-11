@@ -21,6 +21,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // icons are fetched by decorateIcons, there is no server in tests
 global.fetch = vi.fn(async () => ({ ok: false }));
 
+// what a component's named slot holds, among its own children
+const inSlot = (host, slot) => host.querySelector(`:scope > [slot="${slot}"]`);
+
 async function renderFixture(prepare = () => {}) {
   const html = await readFile(path.join(__dirname, 'brand-hero.mock.html'), 'utf-8');
   document.body.innerHTML = `<main>${html}</main>`;
@@ -53,10 +56,23 @@ describe('brand-hero block', () => {
   });
 
   it('takes the eyebrow, h1 and lead from the first row', () => {
-    // the authored <br> arrives as a newline, which bd-hero renders as a break
-    expect(hero.getAttribute('eyebrow')).toBe('25 Years.\nTrusted. Always.');
-    expect(hero.getAttribute('heading')).toBe('Cybersecurity for the AI Era.');
-    expect(hero.getAttribute('lead')).toMatch(/^Bitdefender protects consumers, .* tested and proven\.$/);
+    // the authored <br> stays a line break in the slotted eyebrow
+    const eyebrow = inSlot(hero, 'eyebrow');
+    expect(eyebrow.localName).toBe('span');
+    expect(eyebrow.innerHTML).toBe('25 Years.<br>Trusted. Always.');
+    const title = inSlot(hero, 'title');
+    expect(title.localName).toBe('bd-h');
+    expect(title.getAttribute('as')).toBe('h1');
+    expect(title.textContent).toBe('Cybersecurity for the AI Era.');
+    const lead = inSlot(hero, 'description');
+    expect(lead.localName).toBe('bd-p');
+    expect(lead.textContent).toMatch(/^Bitdefender protects consumers, .* tested and proven\.$/);
+  });
+
+  it('keeps only the inset below the hero on its section', () => {
+    const section = block.closest('bd-section');
+    expect(section.hasAttribute('without-padding-top')).toBe(true);
+    expect(section.hasAttribute('without-padding-bottom')).toBe(false);
   });
 
   it('slots the brand sphere as the media', () => {
@@ -65,17 +81,19 @@ describe('brand-hero block', () => {
   });
 
   it('builds an audience card per remaining row, in a three-column grid', () => {
-    const grid = hero.querySelector(':scope > bd-grid[slot="cards"]');
+    // the cards are the hero's default slot
+    const grid = hero.querySelector(':scope > bd-grid:not([slot])');
     expect(grid.getAttribute('cols')).toBe('1');
     expect(grid.getAttribute('cols-lg')).toBe('3');
 
     const cards = [...grid.querySelectorAll(':scope > bd-audience-card')];
-    expect(cards.map((c) => c.getAttribute('heading'))).toEqual([
+    expect(cards.map((c) => inSlot(c, 'title').getAttribute('as'))).toEqual(['h2', 'h2', 'h2']);
+    expect(cards.map((c) => inSlot(c, 'title').textContent)).toEqual([
       'Protect Your Digital Life',
       'Protect What You’ve Built',
       'Defend Your Organization',
     ]);
-    expect(cards.map((c) => c.getAttribute('eyebrow'))).toEqual([
+    expect(cards.map((c) => inSlot(c, 'eyebrow').textContent)).toEqual([
       'For home', 'For small business', 'For enterprise',
     ]);
     expect(cards.map((c) => c.getAttribute('href'))).toEqual([
@@ -84,13 +102,15 @@ describe('brand-hero block', () => {
       'https://www.bitdefender.com/en-us/business/',
     ]);
     expect(cards[0].getAttribute('label')).toBe('For home');
-    expect(cards[0].getAttribute('description')).toMatch(/^AI-powered protection against scams/);
+    expect(inSlot(cards[0], 'description').localName).toBe('bd-p');
+    expect(inSlot(cards[0], 'description').textContent).toMatch(/^AI-powered protection against scams/);
   });
 
   it('draws the authored audience icons with the design system icons', () => {
     const icons = [...hero.querySelectorAll('bd-audience-card > [slot="icon"]')];
-    expect(icons.map((i) => i.tagName.toLowerCase())).toEqual([
-      'bd-home-icon', 'bd-small-business-icon', 'bd-enterprise-icon',
+    expect(icons.map((i) => i.tagName.toLowerCase())).toEqual(['bd-icon', 'bd-icon', 'bd-icon']);
+    expect(icons.map((i) => i.getAttribute('name'))).toEqual([
+      'home', 'small-business', 'enterprise',
     ]);
   });
 });
@@ -101,9 +121,9 @@ describe('brand-hero block without a heading', () => {
     const block = await renderFixture((main) => main.querySelector('.brand-hero h1').remove());
     const hero = block.querySelector('bd-hero');
 
-    expect(hero.hasAttribute('heading')).toBe(false);
-    expect(hero.getAttribute('eyebrow')).toMatch(/25 Years/);
-    expect(hero.getAttribute('lead')).not.toMatch(/25 Years/);
+    expect(inSlot(hero, 'title')).toBeNull();
+    expect(inSlot(hero, 'eyebrow').textContent).toMatch(/25 Years/);
+    expect(inSlot(hero, 'description').textContent).not.toMatch(/25 Years/);
   });
 });
 
