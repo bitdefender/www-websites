@@ -84,6 +84,19 @@ describe('partner-banner block', () => {
     expect(lockup.getAttribute('alt')).toBe('');
   });
 
+  it('puts the section on the design system rhythm', () => {
+    const bdSection = block.closest('.section').querySelector(':scope > bd-section');
+    expect(bdSection.contains(block)).toBe(true);
+  });
+
+  it('slots the copy as atoms the banner draws, with no look of their own', () => {
+    ['title', 'description'].forEach((slot) => {
+      const atom = inSlot(banner, slot);
+      ['visual-level', 'color', 'font-weight', 'appearance']
+        .forEach((name) => expect(atom.hasAttribute(name)).toBe(false));
+    });
+  });
+
   it('makes the bold link the white button and the plain one outline-white', () => {
     const buttons = [...banner.querySelectorAll(':scope > bd-button[slot="actions"]')];
     expect(buttons.map((button) => [button.textContent, button.getAttribute('appearance')])).toEqual([
