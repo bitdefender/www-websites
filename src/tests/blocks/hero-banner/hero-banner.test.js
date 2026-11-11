@@ -82,6 +82,14 @@ customElements.define('bd-select', class extends FakeAtom {
 
 vi.spyOn(console, 'warn').mockImplementation(() => {});
 
+/* jsdom has no matchMedia: a viewport at md (768) and up, or below it */
+const setViewport = ({ phone }) => {
+  window.matchMedia = vi.fn((query) => ({
+    matches: query === '(min-width: 768px)' ? !phone : false,
+    addEventListener: vi.fn(),
+  }));
+};
+
 const { default: decorate } = await import('../../../blocks/hero-banner/hero-banner.js');
 const { openModal } = await import('../../../scripts/scripts.js');
 
@@ -122,6 +130,26 @@ describe('hero-banner', () => {
   beforeEach(() => {
     userAgent.browser = 'chrome';
     vi.mocked(openModal).mockClear();
+    setViewport({ phone: false });
+  });
+
+  describe('section and column', () => {
+    it('puts the section on the design system rhythm, both insets kept', async () => {
+      const block = await setup(`${PICTURE}<h1>Title</h1>`);
+      const bdSection = block.closest('.section').querySelector(':scope > bd-section');
+      expect(bdSection.contains(block)).toBe(true);
+      expect(bdSection.hasAttribute('without-padding-top')).toBe(false);
+      expect(bdSection.hasAttribute('without-padding-bottom')).toBe(false);
+    });
+
+    it('sits on the page column, the copy and the image in one panel', async () => {
+      const block = await setup(`${PICTURE}<h1>Title</h1>`);
+      expect(block.classList.contains('ds-page-column')).toBe(true);
+      const [panel] = block.children;
+      expect(block.children).toHaveLength(1);
+      expect([...panel.children].map((child) => child.className))
+        .toEqual(['hero-banner__content', 'hero-banner__media']);
+    });
   });
 
   describe('plan look: two or more products', () => {
@@ -158,6 +186,8 @@ describe('hero-banner', () => {
       expect(options.map((option) => option.getAttribute('value')))
         .toEqual(['Premium Security', 'Total Security', 'Ultimate Security']);
       expect(dropdown.value).toBe('Premium Security');
+      // the field's own size
+      expect(dropdown.hasAttribute('size')).toBe(false);
       expect(dropdown.shadowRoot.querySelector('select').getAttribute('aria-label'))
         .toBe('Explore and select the Individual plan');
     });
@@ -183,7 +213,9 @@ describe('hero-banner', () => {
 
     it('renders the store price zones in light DOM, and the discount in the badge atom', () => {
       const offer = visibleOffer(block);
-      expect(offer.querySelector('bd-p.hero-banner__full [data-store-price="full"]')).not.toBeNull();
+      const full = offer.querySelector('bd-p.hero-banner__full');
+      expect(full.querySelector('[data-store-price="full"]')).not.toBeNull();
+      expect(full.getAttribute('color')).toBe('muted');
       expect(offer.querySelector('[data-store-price="discounted||full"]')).not.toBeNull();
       const badge = offer.querySelector('bd-badge.hero-banner__badge');
       expect(badge.getAttribute('variant')).toBe('success');
@@ -197,7 +229,6 @@ describe('hero-banner', () => {
       const [buy, second] = visibleOffer(block).querySelectorAll('bd-button.hero-banner__cta');
       expect(buy.textContent).toBe('Get it now');
       expect(buy.getAttribute('appearance')).toBe('accent');
-      expect(buy.hasAttribute('full-width')).toBe(true);
       expect(buy.hasAttribute('data-bd-watch-shadow')).toBe(true);
       expect(anchorOf(buy).dataset.storeBuyLink).toBe('');
       expect(second.textContent).toBe('Compare plans');
@@ -208,12 +239,16 @@ describe('hero-banner', () => {
     it('makes the h1 a heading atom and the description and disclaimer paragraph atoms', () => {
       const title = block.querySelector('bd-h.hero-banner__title');
       expect(title.getAttribute('as')).toBe('h1');
+      // drawn at the role its level gives it
+      expect(title.hasAttribute('visual-level')).toBe(false);
       expect(title.id).toBe('title');
       expect(title.textContent).toBe('Personalized protection');
+      // a heading used as the description is body copy, without Word's bold
       const description = block.querySelector('.hero-banner__description bd-p');
-      expect(description.dataset.authoredAs).toBe('heading');
-      expect(description.getAttribute('appearance')).toBe('regular');
-      expect(description.querySelector('strong').textContent).toBe('Explore and select the Individual plan');
+      expect(description.attributes).toHaveLength(1);
+      expect(description.id).toBe('sub');
+      expect(description.querySelector('strong')).toBeNull();
+      expect(description.textContent).toBe('Explore and select the Individual plan');
       const disclaimer = block.querySelector('.hero-banner__disclaimer bd-p');
       expect(disclaimer.textContent.trim()).toBe('*First year price.');
       expect(disclaimer.getAttribute('appearance')).toBe('xsmall');
@@ -251,8 +286,10 @@ describe('hero-banner', () => {
     it('uses the product look, with the product name and the signature over the image', () => {
       expect(block.classList.contains('hero-banner--product')).toBe(true);
       const product = block.querySelector('bd-h.hero-banner__product');
+      // the author's level, drawn at the h4 role in brand ink
       expect(product.getAttribute('as')).toBe('h2');
       expect(product.getAttribute('visual-level')).toBe('h4');
+      expect(product.getAttribute('color')).toBe('primary');
       expect(product.textContent).toContain('Ultimate Small Business Security');
       expect(block.querySelector('.hero-banner__media .hero-banner__scrim')).not.toBeNull();
       expect(block.querySelector('.hero-banner__media .hero-banner__signature').textContent).toBe('Trusted. Always.');
@@ -398,6 +435,30 @@ describe('hero-banner', () => {
     it('keeps the image after the h1 as the hero image and the award marks under the buttons', () => {
       expect(block.querySelector('.hero-banner__media img').getAttribute('src')).toBe('./hero.jpg');
       expect(block.querySelectorAll('.hero-banner__marks img')).toHaveLength(1);
+    });
+  });
+
+  describe('CTA width', () => {
+    const ctasOn = async (phone) => {
+      setViewport({ phone });
+      const block = await setup(`${PICTURE}<h1>Title</h1><p>{Dropdown}</p>`, {
+        dropdown: 'ps_i/5/1',
+        secondbuttontext: 'Compare plans',
+        secondbuttonlink: '#plans',
+      });
+      return [...block.querySelectorAll('bd-button.hero-banner__cta')];
+    };
+
+    it('runs the CTAs across the column on a phone, at the button\'s own size', async () => {
+      const ctas = await ctasOn(true);
+      expect(ctas).toHaveLength(2);
+      expect(ctas.every((cta) => cta.hasAttribute('full-width'))).toBe(true);
+      expect(ctas.some((cta) => cta.hasAttribute('size'))).toBe(false);
+    });
+
+    it('lets the CTAs hug their labels from md', async () => {
+      const ctas = await ctasOn(false);
+      expect(ctas.some((cta) => cta.hasAttribute('full-width'))).toBe(false);
     });
   });
 

@@ -55,18 +55,25 @@ card. Add `(product)` or `(card)` to the block name to choose.
 
 ## Notes
 
-- Text, controls and the badge are dex-system-design atoms: `bd-h` (title, product name),
-  `bd-p` (description, details, disclaimer), `bd-select` (one `bd-select-option` per
-  product), `bd-button` (`appearance="accent"` buy button, `appearance="tertiary"` second
-  button) and `bd-badge`. The card, image, scrim and price are this block's CSS, on the
-  design-system tokens.
+- Text, controls and the badge are dex-system-design atoms, drawn by their own attributes:
+  `bd-h` (the title at its h1 level; the product name at the h4 role in brand ink, as
+  `bd-product-hero` draws it), `bd-p` (description, details, disclaimer), `bd-select` (one
+  `bd-select-option` per product), `bd-button` (`appearance="accent"` buy button,
+  `appearance="tertiary"` second button, at the button's responsive size, full width on a
+  phone) and `bd-badge`. The card, image, scrim, signature and price are this block's CSS,
+  on the design-system tokens.
+- The section is on the design system's rhythm (`bd-section`), and the hero on its page
+  column (`ds-page-column`), so it lines up with the design-system sections around it.
 - The hero is the LCP, so it draws without waiting for the atoms. They load once the hero
-  image has, and until then the CSS draws each one at the size it renders, so nothing moves.
-  The token fallbacks are there for the same reason: the atoms install the tokens.
-- The dropdown is a native `<select>` inside `bd-select`. The atom's only name is its
-  `label` slot, which it draws above the field, and the design has no label, so the block
+  image has, and until then the CSS draws each one as it renders, so nothing moves (the
+  `v4 gap:` rules: the design system draws nothing before an atom is defined). The token
+  fallbacks are there for the same reason: the atoms install the tokens.
+- The dropdown is a native `<select>` inside `bd-select`. The atom's only name in 4.0.0 is
+  its `label` slot, which it draws above the field, and the design has no label, so the block
   gives the select the description as its `aria-label`: write one when there is a dropdown.
-  A heading used as the description becomes a paragraph.
+  dex-core PR #426 lets `bd-select` take `aria-label` itself; once it is released, the
+  block sets it there instead. A heading used as the description becomes a paragraph, and
+  Word's bold on it goes.
 - The signature is text, not `<bd-icon name="brand-signature">`: the mark is drawn in English.
 - Prices, discounts and buy links come from the store (`bd-context` per product).
 - Rollback for a page: rename the block back to `Hero Dropdown` and republish it.

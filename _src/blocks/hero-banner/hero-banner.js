@@ -1,5 +1,5 @@
 import page_default from "../../scripts/page.js";
-import { createTag, generatePageLoadStartedName, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
+import { createTag, fullWidthOnPhone, generatePageLoadStartedName, wrapChildrenWithStoreContext, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { openModal } from "../../scripts/scripts.js";
 import { UserAgent } from "../../vendor/repobit/dex-utils.js";
 import { AdobeDataLayerService, ButtonClickEvent } from "../../vendor/repobit/dex-data-layer.js";
@@ -42,11 +42,10 @@ function toAtom(tagName, source, attributes = {}) {
 function createCta({ text, href, primary, buyLink, trialDuration, keepModal = false }) {
 	const cta = createTag("bd-button", {
 		class: `hero-banner__cta hero-banner__cta--${primary ? "primary" : "secondary"}`,
-		appearance: primary ? "accent" : "tertiary",
-		size: "lg",
-		"full-width": ""
+		appearance: primary ? "accent" : "tertiary"
 	});
 	cta.textContent = text;
+	fullWidthOnPhone(cta);
 	if (buyLink) {
 		cta.buyLink = true;
 		cta.setAttribute("data-bd-watch-shadow", "");
@@ -107,6 +106,11 @@ function buildPriceBox(product, details, settings) {
 	});
 	return box;
 }
+function nameSelect(dropdown, accessibleName) {
+	whenRendered(dropdown).then(() => {
+		dropdown.shadowRoot?.querySelector("select")?.setAttribute("aria-label", accessibleName);
+	});
+}
 function buildSelector(products, names, accessibleName, boxes) {
 	const labels = [];
 	products.forEach((product, index) => {
@@ -118,8 +122,7 @@ function buildSelector(products, names, accessibleName, boxes) {
 	});
 	const dropdown = createTag("bd-select", {
 		class: "hero-banner__select",
-		name: "hero-banner-product",
-		size: "md"
+		name: "hero-banner-product"
 	});
 	dropdown.append(...labels.map((label) => {
 		const option = createTag("bd-select-option", { value: label });
@@ -133,9 +136,7 @@ function buildSelector(products, names, accessibleName, boxes) {
 			box.hidden = index !== chosen;
 		});
 	});
-	if (accessibleName) whenRendered(dropdown).then(() => {
-		dropdown.shadowRoot?.querySelector("select")?.setAttribute("aria-label", accessibleName);
-	});
+	if (accessibleName) nameSelect(dropdown, accessibleName);
 	const selector = createTag("div", { class: "hero-banner__selector" });
 	selector.append(dropdown);
 	return selector;
@@ -195,7 +196,12 @@ async function loadAtoms(block) {
 		console.warn("hero-banner: DSN import failed, continuing with native rendering", err);
 	}
 }
+function unbold(el) {
+	el.querySelectorAll("strong, b").forEach((bold) => bold.replaceWith(...bold.childNodes));
+	return el;
+}
 function decorate(block) {
+	wrapSectionInDsSection(block);
 	const settings = { ...block.closest(".section")?.dataset || {} };
 	const { signature, hardcodedLink, linksOpenInNewTab } = settings;
 	const content = readContent(block.querySelector(":scope > div > div") || block);
@@ -214,16 +220,11 @@ function decorate(block) {
 	}));
 	if (content.h1) copy.append(toAtom("bd-h", content.h1, {
 		class: "hero-banner__title",
-		as: "h1",
-		"visual-level": "h1"
+		as: "h1"
 	}));
 	if (content.description.length) {
 		const description = createTag("div", { class: "hero-banner__description" });
-		description.append(...content.description.map((el) => {
-			const paragraph = toAtom("bd-p", el, { appearance: "regular" });
-			if (/^H[1-6]$/.test(el.tagName)) paragraph.dataset.authoredAs = "heading";
-			return paragraph;
-		}));
+		description.append(...content.description.map((el) => toAtom("bd-p", /^H[1-6]$/.test(el.tagName) ? unbold(el) : el)));
 		copy.append(description);
 	}
 	if (products.length) {
@@ -262,7 +263,10 @@ function decorate(block) {
 		content.marks.forEach((paragraph) => marks.append(...paragraph.querySelectorAll("picture")));
 		copy.append(marks);
 	}
-	block.replaceChildren(copy, buildMedia(content.picture, signature, isProductLook));
+	block.classList.add("ds-page-column");
+	const panel = createTag("div", { class: "hero-banner__panel" });
+	panel.append(copy, buildMedia(content.picture, signature, isProductLook));
+	block.replaceChildren(panel);
 	const img = block.querySelector(".hero-banner__media img");
 	if (img && !img.complete) {
 		img.addEventListener("load", () => loadAtoms(block), { once: true });
