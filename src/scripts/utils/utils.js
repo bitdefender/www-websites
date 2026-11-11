@@ -1409,6 +1409,8 @@ export const wrapChildrenWithStoreContext = (element, {
  *   names for the icon; a step of the icon scale, xs to 3xl
  * @returns {HTMLElement|null} the bd-icon, or null when the icon's file did not load
  */
+// slotIcon's one import of the icon registry, shared by every icon it slots
+let iconRegistry;
 export const slotIcon = (span, { color, size = '2xl' } = {}) => {
   const svg = span.querySelector('svg');
   const file = [...span.classList].find((name) => name.startsWith('icon-'))?.slice(5);
@@ -1424,7 +1426,8 @@ export const slotIcon = (span, { color, size = '2xl' } = {}) => {
 
   const drawing = svg.outerHTML;
   // imported here, not at the top: utils.js is on every page
-  import('@repobit/dex-system-design/icons/registry')
+  iconRegistry ??= import('@repobit/dex-system-design/icons/registry');
+  iconRegistry
     .then(({ registerIcon }) => registerIcon(name, drawing))
     .catch((err) => {
       // eslint-disable-next-line no-console

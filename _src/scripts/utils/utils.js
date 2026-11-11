@@ -1298,6 +1298,7 @@ var wrapChildrenWithStoreContext = (element, { productId, devices, subscription,
 *   names for the icon; a step of the icon scale, xs to 3xl
 * @returns {HTMLElement|null} the bd-icon, or null when the icon's file did not load
 */
+var iconRegistry;
 var slotIcon = (span, { color, size = "2xl" } = {}) => {
 	const svg = span.querySelector("svg");
 	const file = [...span.classList].find((name) => name.startsWith("icon-"))?.slice(5);
@@ -1309,7 +1310,8 @@ var slotIcon = (span, { color, size = "2xl" } = {}) => {
 	icon.setAttribute("size", size);
 	if (color) icon.style.color = color;
 	const drawing = svg.outerHTML;
-	import("../../vendor/repobit/dex-system-design/icons/registry.js").then(({ registerIcon }) => registerIcon(name, drawing)).catch((err) => {
+	iconRegistry ??= import("../../vendor/repobit/dex-system-design/icons/registry.js");
+	iconRegistry.then(({ registerIcon }) => registerIcon(name, drawing)).catch((err) => {
 		console.warn(`slotIcon: the ${file} icon was not registered, its bd-icon draws a placeholder`, err);
 	});
 	return icon;
