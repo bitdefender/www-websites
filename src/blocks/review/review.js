@@ -1,6 +1,15 @@
 import { load } from '@repobit/dex-system-design/loader';
+import { getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
-const buildReview = (cell, background) => {
+/*
+ * Reviews on the design system's bd-review-grid, which sets them in a row
+ * under the section's title. Authored one review a cell: the quote, the
+ * source as a heading, and the date as the last paragraph; icon paragraphs
+ * are left out. The `neutral` style puts the reviews on the container ground
+ * instead of the brand wash.
+ */
+
+const buildReview = (cell, neutral) => {
   const paragraphs = [...cell.querySelectorAll('p')].filter(
     (p) => !p.querySelector('[class*="icon-"]') && p.textContent.trim(),
   );
@@ -10,7 +19,7 @@ const buildReview = (cell, background) => {
   if (!quoteP) return null;
 
   const review = document.createElement('bd-review');
-  review.setAttribute('background', background);
+  if (neutral) review.setAttribute('background', 'container');
 
   // the quote is the review's own content, its default slot
   const quote = document.createElement('span');
@@ -35,17 +44,16 @@ const buildReview = (cell, background) => {
 };
 
 export default async function decorate(block) {
-  const sectionEl = block.closest('.section');
-  const wrapper = sectionEl?.querySelector('.default-content-wrapper');
+  wrapSectionInDsSection(block);
+  const section = block.closest('.section');
+  const wrapper = getSectionContent(section)?.querySelector(':scope > .default-content-wrapper');
   const heading = wrapper?.querySelector('h1, h2, h3, h4, h5, h6');
   const title = heading?.textContent.trim() || '';
-
-  // the container ground, or the brand wash
-  const background = block.classList.contains('neutral') ? 'container' : 'tint';
+  const neutral = block.classList.contains('neutral');
 
   const reviewGrid = document.createElement('bd-review-grid');
   if (title) {
-    // the level 3.x drew the grid's title at
+    // the section's title, an h2 in the page outline; the grid sets its size
     const titleEl = document.createElement('bd-h');
     titleEl.setAttribute('slot', 'title');
     titleEl.setAttribute('as', 'h2');
@@ -55,7 +63,7 @@ export default async function decorate(block) {
 
   const cells = [...block.querySelectorAll(':scope > div > div')];
   cells.forEach((cell) => {
-    const review = buildReview(cell, background);
+    const review = buildReview(cell, neutral);
     if (review) reviewGrid.append(review);
   });
 
@@ -69,6 +77,7 @@ export default async function decorate(block) {
 
   if (title) {
     heading.remove();
+    // an empty wrapper would still take a place in the section's rhythm
     if (!wrapper.textContent.trim()) wrapper.remove();
   }
 }

@@ -1,12 +1,13 @@
+import { getSectionContent, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/review/review.js
-var buildReview = (cell, background) => {
+var buildReview = (cell, neutral) => {
 	const paragraphs = [...cell.querySelectorAll("p")].filter((p) => !p.querySelector("[class*=\"icon-\"]") && p.textContent.trim());
 	const [quoteP, dateP] = [paragraphs[0], paragraphs[paragraphs.length - 1]];
 	const source = cell.querySelector("h1, h2, h3, h4, h5, h6");
 	if (!quoteP) return null;
 	const review = document.createElement("bd-review");
-	review.setAttribute("background", background);
+	if (neutral) review.setAttribute("background", "container");
 	const quote = document.createElement("span");
 	quote.innerHTML = quoteP.innerHTML;
 	review.append(quote);
@@ -25,10 +26,12 @@ var buildReview = (cell, background) => {
 	return review;
 };
 async function decorate(block) {
-	const wrapper = block.closest(".section")?.querySelector(".default-content-wrapper");
+	wrapSectionInDsSection(block);
+	const section = block.closest(".section");
+	const wrapper = getSectionContent(section)?.querySelector(":scope > .default-content-wrapper");
 	const heading = wrapper?.querySelector("h1, h2, h3, h4, h5, h6");
 	const title = heading?.textContent.trim() || "";
-	const background = block.classList.contains("neutral") ? "container" : "tint";
+	const neutral = block.classList.contains("neutral");
 	const reviewGrid = document.createElement("bd-review-grid");
 	if (title) {
 		const titleEl = document.createElement("bd-h");
@@ -38,7 +41,7 @@ async function decorate(block) {
 		reviewGrid.append(titleEl);
 	}
 	[...block.querySelectorAll(":scope > div > div")].forEach((cell) => {
-		const review = buildReview(cell, background);
+		const review = buildReview(cell, neutral);
 		if (review) reviewGrid.append(review);
 	});
 	try {
