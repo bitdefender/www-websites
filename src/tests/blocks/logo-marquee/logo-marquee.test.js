@@ -91,7 +91,7 @@ describe('logo-marquee', () => {
     expect(block.querySelectorAll('bd-logo-marquee > picture')).toHaveLength(2);
   });
 
-  it('runs the awards variant faster and tighter, named by the section heading', async () => {
+  it('sets the awards strip\'s logos 24 apart, named by the section heading', async () => {
     const block = setupMarquee({
       variant: 'awards',
       header: '<h2>Proven by Independent Testing</h2>',
@@ -117,6 +117,27 @@ describe('logo-marquee', () => {
 
     expect(block.querySelector('bd-logo-marquee').getAttribute('label'))
       .toBe('Proven by Independent Testing');
+  });
+
+  it('leaves the marquee\'s own pause button in place', async () => {
+    /* a stand-in for the upgraded element: its shadow root, where a sheet
+       hiding the button would be adopted */
+    customElements.define('bd-logo-marquee', class extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' }).adoptedStyleSheets = [];
+      }
+
+      // eslint-disable-next-line class-methods-use-this
+      get updateComplete() { return Promise.resolve(true); }
+    });
+    const block = setupMarquee();
+
+    await decorate(block);
+
+    const marquee = block.querySelector('bd-logo-marquee');
+    expect(marquee.shadowRoot.adoptedStyleSheets).toEqual([]);
+    expect(marquee.hasAttribute('paused')).toBe(false);
   });
 
   it('empties the block when there is nothing to show', async () => {

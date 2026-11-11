@@ -4,7 +4,8 @@ import { getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/u
 // The logo assets are exported at 1.5x the size Figma draws them.
 const ASSET_SCALE = 1.5;
 
-// The speed is bd-logo-marquee's own (35s for partners and awards alike).
+/* The space between two logos, the steps bd-logo-marquee names for each
+   strip; the speed is the component's own, 35s for both. */
 const GAPS = {
   default: '48',
   awards: '24',
@@ -105,13 +106,4 @@ export default async function decorate(block) {
     console.warn('logo-marquee: DSN import failed, continuing with native rendering', err);
   }
   block.replaceChildren(marquee);
-
-  /* No pause button on the strips, by request: they still pause on hover and
-     focus. The button has no part, so the rule goes into the shadow root. */
-  await marquee.updateComplete;
-  if (marquee.shadowRoot) {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync('.toggle { display: none; }');
-    marquee.shadowRoot.adoptedStyleSheets = [...marquee.shadowRoot.adoptedStyleSheets, sheet];
-  }
 }
