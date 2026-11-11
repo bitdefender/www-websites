@@ -80,8 +80,8 @@ describe('features block', () => {
     expect(icon.tagName).toBe('BD-ICON');
     expect(icon.getAttribute('name')).toBe('site-complete-protection');
     expect(icon.getAttribute('size')).toBe('2xl');
-    // no ink of its own: the text's around it
-    expect(icon.style.color).toBe('');
+    // the brand's text ink, unless the page names one
+    expect(icon.style.color).toBe('var(--color-text-brand)');
 
     await vi.waitFor(() => expect(registerIcon).toHaveBeenCalledWith('site-complete-protection', expect.stringContaining('viewBox="0 0 100.9 89.6"')));
   });
