@@ -81,5 +81,11 @@ async function decorate(block) {
 		console.warn("logo-marquee: DSN import failed, continuing with native rendering", err);
 	}
 	block.replaceChildren(marquee);
+	await marquee.updateComplete;
+	if (marquee.shadowRoot) {
+		const sheet = new CSSStyleSheet();
+		sheet.replaceSync(".toggle { display: none; }");
+		marquee.shadowRoot.adoptedStyleSheets = [...marquee.shadowRoot.adoptedStyleSheets, sheet];
+	}
 }
 export { decorate as default };

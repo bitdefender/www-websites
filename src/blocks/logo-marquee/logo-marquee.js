@@ -106,4 +106,15 @@ export default async function decorate(block) {
     console.warn('logo-marquee: DSN import failed, continuing with native rendering', err);
   }
   block.replaceChildren(marquee);
+
+  /* No pause button on the strips, by request (2026-10-26): they still hold
+     while the pointer or focus is on them, and stand still under reduced
+     motion. bd-logo-marquee has no attribute or part for its button, so the
+     rule goes into its shadow root. */
+  await marquee.updateComplete;
+  if (marquee.shadowRoot) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync('.toggle { display: none; }');
+    marquee.shadowRoot.adoptedStyleSheets = [...marquee.shadowRoot.adoptedStyleSheets, sheet];
+  }
 }
