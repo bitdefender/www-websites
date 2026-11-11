@@ -69,7 +69,7 @@ const buildCard = (row) => {
   card.setAttribute('background', 'brand');
   const [badge] = before;
   if (badge) {
-    // the info badge 3.x drew over the brand card's title
+    // the line above the title: an info badge over it
     const label = slotted('bd-badge', 'badge', badge.textContent.trim());
     label.setAttribute('variant', 'info');
     label.setAttribute('appearance', 'shade');

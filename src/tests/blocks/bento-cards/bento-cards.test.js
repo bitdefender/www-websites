@@ -61,7 +61,7 @@ describe('bento-cards block', () => {
     const [consumer] = cards;
     expect(consumer.getAttribute('background')).toBe('brand');
 
-    // the info badge 3.x drew on the brand card, now the block's
+    // the line above the title, as an info badge
     const badge = consumer.querySelector(':scope > bd-badge[slot="badge"]');
     expect(badge.textContent).toBe('AI for Consumers');
     expect(badge.getAttribute('variant')).toBe('info');
