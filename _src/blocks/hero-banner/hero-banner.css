@@ -94,7 +94,7 @@
   pointer-events: none;
 }
 
-/* text, not bd-brand-signature-icon: the mark is drawn in English, the metadata is per locale */
+/* text, not bd-icon name="brand-signature": the mark is drawn in English, the metadata is per locale */
 .hero-banner .hero-banner__signature {
   position: absolute;
   right: var(--spacing-24, 24px);
@@ -244,12 +244,12 @@
   line-height: var(--typography-body-regular-lineHeight, 1.5);
 }
 
-.hero-banner bd-p[variant='small']:not(:defined) {
+.hero-banner bd-p[appearance='small']:not(:defined) {
   font-size: var(--typography-body-small-fontSize, 0.875rem);
   line-height: var(--typography-body-small-lineHeight, 1.45);
 }
 
-.hero-banner bd-p[variant='xsmall']:not(:defined) {
+.hero-banner bd-p[appearance='xsmall']:not(:defined) {
   color: var(--color-text-muted, #565e66);
   font-size: var(--typography-body-xsmall-fontSize, 0.75rem);
   line-height: var(--typography-body-small-lineHeight, 1.45);
@@ -272,7 +272,8 @@
   line-height: var(--typography-lineHeight-tight, 1.25);
 }
 
-/* the dropdown shows its first label, a light-DOM text the rendered atom has no slot for */
+/* the dropdown shows its first option: the options are light-DOM data the rendered atom
+   draws as native options, and slots none of */
 .hero-banner bd-select:not(:defined) {
   box-sizing: border-box;
   height: var(--form-input-medium-height, 44px);
@@ -287,6 +288,10 @@
   text-overflow: ellipsis;
 }
 
+.hero-banner bd-select:not(:defined) > bd-select-option:not(:first-child) {
+  display: none;
+}
+
 .hero-banner bd-button:not(:defined) {
   display: flex;
   justify-content: center;
@@ -299,12 +304,12 @@
   line-height: var(--typography-lineHeight-tight, 1.25);
 }
 
-.hero-banner bd-button[variant='accent']:not(:defined) {
+.hero-banner bd-button[appearance='accent']:not(:defined) {
   background: var(--button-accent-background-default, #d60000);
   color: var(--button-accent-text-default, #fff);
 }
 
-.hero-banner bd-button[variant='tertiary']:not(:defined) {
+.hero-banner bd-button[appearance='tertiary']:not(:defined) {
   box-shadow: inset 0 0 0 var(--border-width-2, 2px) var(--button-tertiary-border-default, #006dff);
   color: var(--button-tertiary-text-default, #0059d6);
 }
@@ -328,7 +333,7 @@
     width: auto;
   }
 
-  /* the atom's fullwidth makes the host a block: from md the buttons size to their label */
+  /* the atom's full-width makes the host a block: from md the buttons size to their label */
   .hero-banner .hero-banner__ctas bd-button {
     display: inline-flex;
     width: auto;

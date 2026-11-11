@@ -56,16 +56,18 @@ card. Add `(product)` or `(card)` to the block name to choose.
 ## Notes
 
 - Text, controls and the badge are dex-system-design atoms: `bd-h` (title, product name),
-  `bd-p` (description, details, disclaimer), `bd-custom-dropdown`, `bd-button-link`
-  (`accent` buy button, `tertiary` second button) and `bd-badge`. The card, image, scrim
-  and price are this block's CSS, on the design-system tokens.
+  `bd-p` (description, details, disclaimer), `bd-select` (one `bd-select-option` per
+  product), `bd-button` (`appearance="accent"` buy button, `appearance="tertiary"` second
+  button) and `bd-badge`. The card, image, scrim and price are this block's CSS, on the
+  design-system tokens.
 - The hero is the LCP, so it draws without waiting for the atoms. They load once the hero
   image has, and until then the CSS draws each one at the size it renders, so nothing moves.
   The token fallbacks are there for the same reason: the atoms install the tokens.
-- The dropdown is a native `<select>` inside `bd-custom-dropdown`. The atom can't be named
-  from outside, so the block gives the select the description as its `aria-label`: write
-  one when there is a dropdown. A heading used as the description becomes a paragraph.
-- The signature is text, not `bd-brand-signature-icon`: the mark is drawn in English.
+- The dropdown is a native `<select>` inside `bd-select`. The atom's only name is its
+  `label` slot, which it draws above the field, and the design has no label, so the block
+  gives the select the description as its `aria-label`: write one when there is a dropdown.
+  A heading used as the description becomes a paragraph.
+- The signature is text, not `<bd-icon name="brand-signature">`: the mark is drawn in English.
 - Prices, discounts and buy links come from the store (`bd-context` per product).
 - Rollback for a page: rename the block back to `Hero Dropdown` and republish it.
 - Adobe Target slots are named after the block (`hero-banner-mbox`): a test running on a

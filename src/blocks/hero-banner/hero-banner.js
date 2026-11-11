@@ -36,8 +36,8 @@ import { openModal } from '../../scripts/scripts.js';
  * (white, the signature over the image), otherwise it is the card look (grey card, signature
  * as the eyebrow). The block classes `product` and `card` force one.
  *
- * Text, controls and the badge are dex-system-design atoms (bd-h, bd-p, bd-custom-dropdown,
- * bd-button-link, bd-badge); the layout around them is this block's, on the same tokens.
+ * Text, controls and the badge are dex-system-design atoms (bd-h, bd-p, bd-select,
+ * bd-button, bd-badge); the layout around them is this block's, on the same tokens.
  * The hero is drawn without waiting for them: it is the LCP, and they take a second to
  * download on mobile. The CSS sizes each one as it will render, so the upgrade moves nothing.
  */
@@ -93,8 +93,8 @@ function toAtom(tagName, source, attributes = {}) {
 }
 
 /*
- * A CTA is a bd-button-link: accent (red) for the buy button, tertiary (blue outline)
- * for the other. Its anchor is in the shadow root, so:
+ * A CTA is a bd-button with an href: accent (red) for the buy button, tertiary (blue
+ * outline) for the other. Its anchor is in the shadow root, so:
  *  - the store only fills a buy link in when the host carries data-bd-watch-shadow, and
  *    only looks into a shadow root when the host is added to the page. The host is usually
  *    added before the atom has upgraded, so it is put back in place once it has rendered;
@@ -104,11 +104,11 @@ function toAtom(tagName, source, attributes = {}) {
 function createCta({
   text, href, primary, buyLink, trialDuration, keepModal = false,
 }) {
-  const cta = createTag('bd-button-link', {
+  const cta = createTag('bd-button', {
     class: `hero-banner__cta hero-banner__cta--${primary ? 'primary' : 'secondary'}`,
-    variant: primary ? 'accent' : 'tertiary',
+    appearance: primary ? 'accent' : 'tertiary',
     size: 'lg',
-    fullwidth: '',
+    'full-width': '',
   });
   cta.textContent = text;
 
@@ -162,7 +162,7 @@ function buildCtas(settings) {
 function buildPriceBox(product, details, settings) {
   const box = createTag('div', { class: 'hero-banner__offer await-loader' });
 
-  if (details) box.append(createTag('bd-p', { class: 'hero-banner__details', variant: 'small' }, details));
+  if (details) box.append(createTag('bd-p', { class: 'hero-banner__details', appearance: 'small' }, details));
 
   // the store renders into light-DOM nodes, which the atoms slot
   box.insertAdjacentHTML('beforeend', `
@@ -188,10 +188,11 @@ function buildPriceBox(product, details, settings) {
 }
 
 /*
- * bd-custom-dropdown takes its options as text and reports the chosen text, so the
- * labels have to be unique to map back to a product. It has no way to be named from
- * outside its shadow root, and Figma draws no visible label, so the select inside is
- * given the description (or the h1) as its aria-label once it has rendered.
+ * bd-select takes its options as bd-select-option children, each valued by its label, and
+ * reports the chosen value, so the labels have to be unique to map back to a product. Its
+ * only name is its label slot, which it draws above the field, and Figma draws no visible
+ * label, so the select inside is given the description (or the h1) as its aria-label once
+ * it has rendered.
  */
 function buildSelector(products, names, accessibleName, boxes) {
   const labels = [];
@@ -203,18 +204,21 @@ function buildSelector(products, names, accessibleName, boxes) {
     labels.push(label);
   });
 
-  const dropdown = createTag('bd-custom-dropdown', {
+  const dropdown = createTag('bd-select', {
     class: 'hero-banner__select',
     name: 'hero-banner-product',
     size: 'md',
   });
-  dropdown.options = labels;
+  // data the atom draws as native options; until it renders, the CSS shows the first
+  dropdown.append(...labels.map((label) => {
+    const option = createTag('bd-select-option', { value: label });
+    option.textContent = label;
+    return option;
+  }));
   [dropdown.value] = labels;
-  // shown until the atom renders, which has no slot and hides it
-  [dropdown.textContent] = labels;
 
-  dropdown.addEventListener('bd-change', (e) => {
-    const chosen = labels.indexOf(e.detail.value);
+  dropdown.addEventListener('change', (e) => {
+    const chosen = labels.indexOf(e.target.value);
     boxes.forEach((box, index) => {
       box.hidden = index !== chosen;
     });
@@ -346,7 +350,7 @@ export default function decorate(block) {
     const description = createTag('div', { class: 'hero-banner__description' });
     // Figma draws the description as body text, so a heading used as one becomes a paragraph
     description.append(...content.description.map((el) => {
-      const paragraph = toAtom('bd-p', el, { variant: 'regular' });
+      const paragraph = toAtom('bd-p', el, { appearance: 'regular' });
       // Word bolds such a heading whole; the CSS takes that weight off
       if (/^H[1-6]$/.test(el.tagName)) paragraph.dataset.authoredAs = 'heading';
       return paragraph;
@@ -383,7 +387,7 @@ export default function decorate(block) {
 
   if (content.disclaimer.length) {
     const disclaimer = createTag('div', { class: 'hero-banner__disclaimer' });
-    disclaimer.append(...content.disclaimer.map((el) => toAtom('bd-p', el, { variant: 'xsmall', color: 'muted' })));
+    disclaimer.append(...content.disclaimer.map((el) => toAtom('bd-p', el, { appearance: 'xsmall', color: 'muted' })));
     copy.append(disclaimer);
   }
 

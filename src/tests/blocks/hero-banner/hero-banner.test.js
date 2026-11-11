@@ -52,7 +52,7 @@ class FakeAtom extends HTMLElement {
   }
 }
 
-customElements.define('bd-button-link', class extends FakeAtom {
+customElements.define('bd-button', class extends FakeAtom {
   render() {
     const anchor = document.createElement('a');
     if (this.href) anchor.setAttribute('href', this.href);
@@ -64,13 +64,17 @@ customElements.define('bd-button-link', class extends FakeAtom {
   }
 });
 
-customElements.define('bd-custom-dropdown', class extends FakeAtom {
+// like 4.0's bd-select: a native option per bd-select-option child, valued by its value
+// attribute (else its words), and the native change sent again from the host
+customElements.define('bd-select', class extends FakeAtom {
   render() {
     const select = document.createElement('select');
-    select.append(...this.options.map((option) => new Option(option, option)));
+    select.append(...[...this.querySelectorAll(':scope > bd-select-option')]
+      .map((option) => new Option(option.textContent, option.getAttribute('value') ?? option.textContent)));
+    select.value = this.value;
     select.addEventListener('change', () => {
       this.value = select.value;
-      this.dispatchEvent(new CustomEvent('bd-change', { detail: { value: select.value }, bubbles: true, composed: true }));
+      this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
     });
     this.shadowRoot.replaceChildren(select);
   }
@@ -112,6 +116,8 @@ const visibleOffer = (block) => [...block.querySelectorAll('.hero-banner__offer'
 
 const anchorOf = (cta) => cta.shadowRoot.querySelector('a');
 
+const optionsOf = (dropdown) => [...dropdown.querySelectorAll(':scope > bd-select-option')];
+
 describe('hero-banner', () => {
   beforeEach(() => {
     userAgent.browser = 'chrome';
@@ -146,7 +152,11 @@ describe('hero-banner', () => {
 
     it('renders the dropdown atom with one option per product, named by the description', () => {
       const dropdown = block.querySelector('bd-select.hero-banner__select');
-      expect(dropdown.options).toEqual(['Premium Security', 'Total Security', 'Ultimate Security']);
+      const options = optionsOf(dropdown);
+      expect(options.map((option) => option.textContent))
+        .toEqual(['Premium Security', 'Total Security', 'Ultimate Security']);
+      expect(options.map((option) => option.getAttribute('value')))
+        .toEqual(['Premium Security', 'Total Security', 'Ultimate Security']);
       expect(dropdown.value).toBe('Premium Security');
       expect(dropdown.shadowRoot.querySelector('select').getAttribute('aria-label'))
         .toBe('Explore and select the Individual plan');
@@ -158,8 +168,9 @@ describe('hero-banner', () => {
       expect([...offers].map((o) => o.querySelector('bd-context').dataset.product))
         .toEqual(['ps_i/5/1', 'ts_i/5/1', 'us_i/5/1']);
       expect([...offers].map((o) => o.hidden)).toEqual([false, true, true]);
-      expect(visibleOffer(block).querySelector('bd-p.hero-banner__details').textContent)
-        .toBe('1 Member & 5 Devices');
+      const details = visibleOffer(block).querySelector('bd-p.hero-banner__details');
+      expect(details.textContent).toBe('1 Member & 5 Devices');
+      expect(details.getAttribute('appearance')).toBe('small');
     });
 
     it('shows the chosen product\'s offer when the dropdown changes', () => {
@@ -175,8 +186,8 @@ describe('hero-banner', () => {
       expect(offer.querySelector('bd-p.hero-banner__full [data-store-price="full"]')).not.toBeNull();
       expect(offer.querySelector('[data-store-price="discounted||full"]')).not.toBeNull();
       const badge = offer.querySelector('bd-badge.hero-banner__badge');
-      expect(badge.getAttribute('tone')).toBe('success');
-      expect(badge.getAttribute('variant')).toBe('fill');
+      expect(badge.getAttribute('variant')).toBe('success');
+      expect(badge.getAttribute('appearance')).toBe('fill');
       expect(badge.querySelector('[data-store-discount="percentage"]')).not.toBeNull();
       expect(badge.textContent.trim()).toBe('OFF');
       expect(offer.querySelector('.hero-banner__was').dataset.storeHide).toBe('!it.option.price.discounted');
@@ -185,11 +196,12 @@ describe('hero-banner', () => {
     it('makes the primary CTA an accent store buy link the store can see, and keeps the second button', () => {
       const [buy, second] = visibleOffer(block).querySelectorAll('bd-button.hero-banner__cta');
       expect(buy.textContent).toBe('Get it now');
-      expect(buy.getAttribute('variant')).toBe('accent');
+      expect(buy.getAttribute('appearance')).toBe('accent');
+      expect(buy.hasAttribute('full-width')).toBe(true);
       expect(buy.hasAttribute('data-bd-watch-shadow')).toBe(true);
       expect(anchorOf(buy).dataset.storeBuyLink).toBe('');
       expect(second.textContent).toBe('Compare plans');
-      expect(second.getAttribute('variant')).toBe('tertiary');
+      expect(second.getAttribute('appearance')).toBe('tertiary');
       expect(anchorOf(second).getAttribute('href')).toBe('#new-prod-boxes');
     });
 
@@ -200,8 +212,11 @@ describe('hero-banner', () => {
       expect(title.textContent).toBe('Personalized protection');
       const description = block.querySelector('.hero-banner__description bd-p');
       expect(description.dataset.authoredAs).toBe('heading');
+      expect(description.getAttribute('appearance')).toBe('regular');
       expect(description.querySelector('strong').textContent).toBe('Explore and select the Individual plan');
-      expect(block.querySelector('.hero-banner__disclaimer bd-p').textContent.trim()).toBe('*First year price.');
+      const disclaimer = block.querySelector('.hero-banner__disclaimer bd-p');
+      expect(disclaimer.textContent.trim()).toBe('*First year price.');
+      expect(disclaimer.getAttribute('appearance')).toBe('xsmall');
       expect(block.textContent).not.toContain('{Dropdown}');
     });
 
@@ -334,7 +349,7 @@ describe('hero-banner', () => {
       const ctas = [...authored.querySelectorAll('bd-button')];
       expect(ctas.map((cta) => cta.textContent))
         .toEqual(['Compare Individual Plans', 'Compare Family Plans', 'See all plans']);
-      expect(ctas.map((cta) => cta.getAttribute('variant'))).toEqual(['tertiary', 'accent', 'tertiary']);
+      expect(ctas.map((cta) => cta.getAttribute('appearance'))).toEqual(['tertiary', 'accent', 'tertiary']);
       expect(anchorOf(ctas[1]).getAttribute('href')).toBe('/en-us/consumer/family');
       expect(authored.querySelector('a')).toBeNull();
       expect(block.querySelector('.hero-banner__description')).toBeNull();
@@ -370,7 +385,7 @@ describe('hero-banner', () => {
     it('makes each link of a links-only paragraph a button: italic the outline one', () => {
       const ctas = [...block.querySelectorAll('.hero-banner__ctas--authored bd-button')];
       expect(ctas.map((cta) => cta.textContent)).toEqual(['Compare Individual Plans', 'Compare Family Plans']);
-      expect(ctas.map((cta) => cta.getAttribute('variant'))).toEqual(['tertiary', 'tertiary']);
+      expect(ctas.map((cta) => cta.getAttribute('appearance'))).toEqual(['tertiary', 'tertiary']);
       expect(ctas.map((cta) => anchorOf(cta).getAttribute('href')))
         .toEqual(['/en-us/consumer/individual', '/en-us/consumer/family']);
     });
@@ -411,7 +426,7 @@ describe('hero-banner', () => {
         dropdown: 'ps_i/5/1, ps_i/10/1',
         productnames: 'Premium Security | 5 Devices, Premium Security | 10 Devices',
       });
-      expect(block.querySelector('bd-select').options)
+      expect(optionsOf(block.querySelector('bd-select')).map((option) => option.getAttribute('value')))
         .toEqual(['Premium Security', 'Premium Security - 10 Devices']);
     });
 

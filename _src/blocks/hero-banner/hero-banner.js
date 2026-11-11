@@ -40,11 +40,11 @@ function toAtom(tagName, source, attributes = {}) {
 	return atom;
 }
 function createCta({ text, href, primary, buyLink, trialDuration, keepModal = false }) {
-	const cta = createTag("bd-button-link", {
+	const cta = createTag("bd-button", {
 		class: `hero-banner__cta hero-banner__cta--${primary ? "primary" : "secondary"}`,
-		variant: primary ? "accent" : "tertiary",
+		appearance: primary ? "accent" : "tertiary",
 		size: "lg",
-		fullwidth: ""
+		"full-width": ""
 	});
 	cta.textContent = text;
 	if (buyLink) {
@@ -84,7 +84,7 @@ function buildPriceBox(product, details, settings) {
 	const box = createTag("div", { class: "hero-banner__offer await-loader" });
 	if (details) box.append(createTag("bd-p", {
 		class: "hero-banner__details",
-		variant: "small"
+		appearance: "small"
 	}, details));
 	box.insertAdjacentHTML("beforeend", `
     <div class="hero-banner__price">
@@ -116,16 +116,19 @@ function buildSelector(products, names, accessibleName, boxes) {
 		if (labels.includes(label)) label = `${label} (${index + 1})`;
 		labels.push(label);
 	});
-	const dropdown = createTag("bd-custom-dropdown", {
+	const dropdown = createTag("bd-select", {
 		class: "hero-banner__select",
 		name: "hero-banner-product",
 		size: "md"
 	});
-	dropdown.options = labels;
+	dropdown.append(...labels.map((label) => {
+		const option = createTag("bd-select-option", { value: label });
+		option.textContent = label;
+		return option;
+	}));
 	[dropdown.value] = labels;
-	[dropdown.textContent] = labels;
-	dropdown.addEventListener("bd-change", (e) => {
-		const chosen = labels.indexOf(e.detail.value);
+	dropdown.addEventListener("change", (e) => {
+		const chosen = labels.indexOf(e.target.value);
 		boxes.forEach((box, index) => {
 			box.hidden = index !== chosen;
 		});
@@ -217,7 +220,7 @@ function decorate(block) {
 	if (content.description.length) {
 		const description = createTag("div", { class: "hero-banner__description" });
 		description.append(...content.description.map((el) => {
-			const paragraph = toAtom("bd-p", el, { variant: "regular" });
+			const paragraph = toAtom("bd-p", el, { appearance: "regular" });
 			if (/^H[1-6]$/.test(el.tagName)) paragraph.dataset.authoredAs = "heading";
 			return paragraph;
 		}));
@@ -249,7 +252,7 @@ function decorate(block) {
 	if (content.disclaimer.length) {
 		const disclaimer = createTag("div", { class: "hero-banner__disclaimer" });
 		disclaimer.append(...content.disclaimer.map((el) => toAtom("bd-p", el, {
-			variant: "xsmall",
+			appearance: "xsmall",
 			color: "muted"
 		})));
 		copy.append(disclaimer);
