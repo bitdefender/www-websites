@@ -4,7 +4,6 @@ import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 var ASSET_SCALE = 1.5;
 var LABEL = "Awards and recognition";
 var ITEM_LABEL = "Go to award";
-var AUTOPLAY_DELAY = "6000";
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
 /** A row as a bd-award: its mark the logo bd-img, its h3 the title, its paragraph the text. */
 var buildAward = (row) => {
@@ -72,7 +71,6 @@ async function decorate(block) {
 	const spotlight = document.createElement("bd-awards");
 	spotlight.setAttribute("layout", "spotlight");
 	spotlight.setAttribute("autoplay", "");
-	spotlight.setAttribute("autoplay-delay", AUTOPLAY_DELAY);
 	spotlight.setAttribute("label", LABEL);
 	spotlight.setAttribute("item-label", ITEM_LABEL);
 	spotlight.append(...[...block.children].map(buildAward).filter(Boolean));

@@ -15,11 +15,9 @@ import {
 // The award marks are exported at 1.5x the size the design draws them (160 wide).
 const ASSET_SCALE = 1.5;
 
-// What 3.x's spotlight drew without being told, and 4.0 leaves to the page:
-// the carousel's and its dots' accessible names, and its 6s slide
+// The carousel's and its dots' accessible names: bd-awards has no words of its own
 const LABEL = 'Awards and recognition';
 const ITEM_LABEL = 'Go to award';
-const AUTOPLAY_DELAY = '6000';
 
 const text = (el) => el?.textContent.replace(/\s+/g, ' ').trim() || '';
 
@@ -42,12 +40,12 @@ const buildAward = (row) => {
       logo.setAttribute('width', String(Math.round(width / ASSET_SCALE)));
       logo.setAttribute('height', String(Math.round(height / ASSET_SCALE)));
     }
-    // the mark whole in its column, as 3.x's spotlight drew it
+    // a mark is never cropped: it shows whole in the award's column
     logo.setAttribute('fit', 'contain');
     award.append(logo);
   }
   if (text(title)) {
-    // an h3 under the section's h2, the level 3.x's spotlight drew
+    // an h3: each award sits under the section's h2
     const heading = document.createElement('bd-h');
     heading.slot = 'title';
     heading.setAttribute('as', 'h3');
@@ -100,8 +98,8 @@ export default async function decorate(block) {
 
   const spotlight = document.createElement('bd-awards');
   spotlight.setAttribute('layout', 'spotlight');
+  // the awards advance on their own, at the carousel's own pace
   spotlight.setAttribute('autoplay', '');
-  spotlight.setAttribute('autoplay-delay', AUTOPLAY_DELAY);
   // the carousel has no title of its own to name it: the section header is outside it
   spotlight.setAttribute('label', LABEL);
   spotlight.setAttribute('item-label', ITEM_LABEL);

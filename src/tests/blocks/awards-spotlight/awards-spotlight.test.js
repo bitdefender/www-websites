@@ -65,10 +65,14 @@ describe('awards-spotlight block', () => {
     expect(spotlight.hasAttribute('autoplay')).toBe(true);
   });
 
-  it('writes what 3.x\'s spotlight drew by default: its names and its 6s slide', () => {
-    expect(spotlight.getAttribute('autoplay-delay')).toBe('6000');
+  it('names the carousel and its dots, and leaves the slide time to the carousel', () => {
     expect(spotlight.getAttribute('label')).toBe('Awards and recognition');
     expect(spotlight.getAttribute('item-label')).toBe('Go to award');
+    expect(spotlight.hasAttribute('autoplay-delay')).toBe(false);
+  });
+
+  it('puts the section on the design system rhythm', () => {
+    expect(section.querySelector(':scope > bd-section').contains(block)).toBe(true);
   });
 
   it('builds an award per row: title, body and its mark at the drawn size', () => {
@@ -83,6 +87,11 @@ describe('awards-spotlight block', () => {
     ]);
     expect(awards.map((award) => inSlot(award, 'title').getAttribute('as')))
       .toEqual(['h3', 'h3', 'h3', 'h3', 'h3']);
+    // the award draws its title: no size or ink of the page's
+    awards.forEach((award) => {
+      ['visual-level', 'color', 'font-weight']
+        .forEach((name) => expect(inSlot(award, 'title').hasAttribute(name)).toBe(false));
+    });
     const [gartner] = awards;
     expect(defaultText(gartner)).toMatch(/^Bitdefender received a dual recognition from Gartner/);
     const logo = inSlot(gartner, 'media');
