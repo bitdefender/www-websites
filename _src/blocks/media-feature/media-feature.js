@@ -1,3 +1,4 @@
+import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/media-feature/media-feature.js
 var VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
@@ -99,8 +100,6 @@ var buildActions = (cell) => {
 	bdBtn.setAttribute("slot", "actions");
 	bdBtn.setAttribute("href", anchor.getAttribute("href") || "#");
 	bdBtn.setAttribute("appearance", anchor.classList.contains("secondary") ? "secondary" : "accent");
-	bdBtn.setAttribute("size", "md");
-	bdBtn.setAttribute("strong", "");
 	bdBtn.textContent = anchor.textContent.trim();
 	if (anchor.target === "_blank") {
 		bdBtn.setAttribute("target", "_blank");
@@ -128,6 +127,7 @@ var buildFeaturesTab = (row, shouldReverse) => {
 	return bdFT;
 };
 async function decorate(block) {
+	wrapSectionInDsSection(block);
 	const isAlternating = block.classList.contains("alternating");
 	const forceReverse = block.classList.contains("reverse") ? true : null;
 	const rows = Array.from(block.children);

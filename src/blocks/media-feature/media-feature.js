@@ -1,4 +1,11 @@
 import { load } from '@repobit/dex-system-design/loader';
+import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+
+/*
+ * Copy beside media, a bd-features-tab a row: one cell holds a heading, the
+ * body and a button, the other a picture, a video or a YouTube link.
+ * `alternating` puts the media on alternate sides, `reverse` on the left.
+ */
 
 const VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
 const YOUTUBE_RE = /(?:youtube\.com|youtu\.be)/i;
@@ -37,7 +44,8 @@ const buildMediaSlot = (cell) => {
       const player = document.createElement('bd-video-player');
       player.setAttribute('slot', 'media');
       player.setAttribute('src', videoSrc);
-      // 4.0 has no default names: these are the ones 3.x gave the player
+      // bd-video-player names nothing itself: the thumbnail's alt, the play and
+      // close controls, and the frame
       if (thumbImg) {
         player.setAttribute('thumb', thumbImg.src);
         player.setAttribute('thumb-alt', thumbImg.alt || 'Video preview');
@@ -65,7 +73,7 @@ const buildMediaSlot = (cell) => {
   return null;
 };
 
-// bd-features-tab draws its title's size and brand ink; the level is the author's
+// bd-features-tab sets its title's size and ink; the level is the author's
 const buildTitle = (headingEl) => {
   const bdH = document.createElement('bd-h');
   bdH.setAttribute('slot', 'title');
@@ -128,10 +136,9 @@ const buildActions = (cell) => {
   const bdBtn = document.createElement('bd-button');
   bdBtn.setAttribute('slot', 'actions');
   bdBtn.setAttribute('href', anchor.getAttribute('href') || '#');
-  // accent is the red conversion fill, 3.x's danger kind
+  // the accent fill a conversion CTA takes, unless the author made the button
+  // secondary; its size is bd-button's responsive default
   bdBtn.setAttribute('appearance', anchor.classList.contains('secondary') ? 'secondary' : 'accent');
-  bdBtn.setAttribute('size', 'md');
-  bdBtn.setAttribute('strong', '');
   bdBtn.textContent = anchor.textContent.trim();
 
   if (anchor.target === '_blank') {
@@ -176,6 +183,7 @@ const buildFeaturesTab = (row, shouldReverse) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   const isAlternating = block.classList.contains('alternating');
   const forceReverse = block.classList.contains('reverse') ? true : null;
 
