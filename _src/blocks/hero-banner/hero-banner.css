@@ -11,6 +11,10 @@
  * Rooted on .hero-banner.block, not .hero-banner: a section style of the same name
  * (hero-dropdown pages have one) must not pick up the block's styles.
  */
+.hero-banner-container {
+  padding-top: 24px !important;
+}
+
 .hero-banner.block {
   /* bd-p's flow margin off: the column spaces its parts with gap */
   --bd-paragraph-margin-bottom: 0;
@@ -341,6 +345,10 @@
 }
 
 @media (width >= 992px) {
+  .hero-banner-container {
+    padding-top: 0 !important;
+  }
+
   .hero-banner.block {
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-40, 40px);
