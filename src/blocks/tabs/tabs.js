@@ -1,6 +1,25 @@
 import { load } from '@repobit/dex-system-design/loader';
-import { slotIcon } from '../../scripts/utils/utils.js';
+import { getSectionContent, slotIcon, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 import { readBlockConfig, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
+
+/*
+ * A bd-tab-group, built one of two ways:
+ *   Tab group   a `Tab group` row names the group; every section whose
+ *               Section Metadata has that `Tab group` and a `Tab` becomes a
+ *               panel, its blocks decorated inside it
+ *   table       rows with an h1-h3 start a tab; rows with an h4-h6 add a
+ *               bd-feature-column to it; the rows under a column are its
+ *               accordion's items
+ * The section's heading and the paragraph after it are the group's title and
+ * description, which bd-tab-group draws (heading-h3 and body-large, centred)
+ * and which name its tab strip.
+ */
+
+// the heading level a section title takes where the section has none
+const SECTION_LEVEL = 2;
+
+/** One level under `level`, h6 at most. */
+const below = (level) => Math.min(level + 1, 6);
 
 const getImageSrc = (iconCell) => {
   const image = iconCell?.querySelector('img');
@@ -28,9 +47,9 @@ const nearestIconStep = (px) => ICON_STEPS.reduce(
 
 /**
  * The column's icon, as bd-feature-column's icon slot takes it: the cell's
- * image as a bd-img, 40px wide unless the cell names a size, or its inline
- * SVG as a bd-icon (slotIcon), at the nearest step of the icon scale to the
- * size the cell names.
+ * image as a bd-img, at the size the cell names or else 40px, the column
+ * icon of bd-feature-column's own examples; or its inline SVG as a bd-icon
+ * (slotIcon), at the step of the icon scale nearest the size the cell names.
  * @param {HTMLElement} [iconCell]
  * @returns {HTMLElement|null}
  */
@@ -57,32 +76,34 @@ const buildColumnIcon = (iconCell) => {
 };
 
 /**
- * A heading in a slot: the component around it draws it, the page picks its
- * level.
+ * A heading in a slot: the component around it sets its size, the page's
+ * outline its level.
  * @param {string} text
- * @param {string} as the level, h1 to h6
+ * @param {number} level 1 to 6
  */
-const buildTitle = (text, as) => {
+const buildTitle = (text, level) => {
   const bdH = document.createElement('bd-h');
   bdH.setAttribute('slot', 'title');
-  bdH.setAttribute('as', as);
+  bdH.setAttribute('as', `h${level}`);
   bdH.textContent = text;
   return bdH;
 };
 
 /**
- * The tab group with the section's title and subtitle, which 3.x's bd-tabs
- * drew at h3 and in a large paragraph.
- * @param {string} title
- * @param {string} subtitle
+ * The tab group with the section's title, at the level the page wrote it,
+ * and its description.
+ * @param {{ title: string, level: number, subtitle: string, tint: boolean }} context
  */
-const buildTabGroup = (title, subtitle) => {
+const buildTabGroup = ({
+  title, level, subtitle, tint,
+}) => {
   const group = document.createElement('bd-tab-group');
-  if (title) group.appendChild(buildTitle(title, 'h3'));
+  // the brand wash behind the group, for a section styled to stand on blue
+  if (tint) group.setAttribute('background', 'tint');
+  if (title) group.appendChild(buildTitle(title, level));
   if (subtitle) {
     const bdP = document.createElement('bd-p');
     bdP.setAttribute('slot', 'description');
-    bdP.setAttribute('appearance', 'large');
     bdP.textContent = subtitle;
     group.appendChild(bdP);
   }
@@ -114,32 +135,32 @@ const addTab = (group, label) => {
   return panel;
 };
 
-const buildTabCol = (cells, isFirstOpen) => {
+/**
+ * A bd-feature-column: its title, icon and description, and an accordion
+ * that the rows under it fill.
+ * @param {HTMLElement[]} cells the row's title, icon and description cells
+ * @param {boolean} isFirstOpen
+ * @param {number} level the column title's heading level
+ */
+const buildTabCol = (cells, isFirstOpen, level) => {
   const [titleCell, iconCell, descCell] = cells;
   const heading = titleCell.querySelector('h1, h2, h3, h4, h5, h6');
 
   const col = document.createElement('bd-feature-column');
-  // 3.x's bd-features drew the column's title at h4
-  col.appendChild(buildTitle(heading?.textContent?.trim() || titleCell.textContent.trim(), 'h4'));
+  col.appendChild(buildTitle(heading?.textContent?.trim() || titleCell.textContent.trim(), level));
 
   const icon = buildColumnIcon(iconCell);
   if (icon) col.appendChild(icon);
 
-  if (descCell) {
-    const descText = descCell.textContent.trim();
-    if (descText) {
+  if (descCell?.textContent.trim()) {
+    // a bd-p per authored paragraph, or one for copy written straight in the cell
+    const paragraphs = [...descCell.querySelectorAll(':scope > p')].filter((p) => p.textContent.trim());
+    (paragraphs.length ? paragraphs : [descCell]).forEach((source) => {
       const bdP = document.createElement('bd-p');
       bdP.setAttribute('slot', 'description');
-      // 3.x's bd-features drew every description's text at regular, whatever
-      // the page wrote; 4.0 draws the page's bd-p as it is, so its paragraphs'
-      // words go in it, not the paragraphs
-      bdP.setAttribute('appearance', 'regular');
-      const paragraphs = [...descCell.querySelectorAll(':scope > p')];
-      bdP.innerHTML = paragraphs.length
-        ? paragraphs.map((p) => p.innerHTML).join(' ')
-        : descCell.innerHTML;
+      bdP.innerHTML = source.innerHTML;
       col.appendChild(bdP);
-    }
+    });
   }
 
   const accordion = document.createElement('bd-accordion');
@@ -149,6 +170,7 @@ const buildTabCol = (cells, isFirstOpen) => {
   col.accordion = accordion;
   col.isFirstOpen = isFirstOpen;
   col.firstItemAdded = false;
+  col.itemLevel = below(level);
 
   return col;
 };
@@ -159,8 +181,8 @@ const appendAccordionItem = (col, cells) => {
   if (!titleText) return;
 
   const item = document.createElement('bd-accordion-item');
-  // 3.x drew the item's title as plain text; 4.0 makes it a heading, at h3
-  item.appendChild(buildTitle(titleText, 'h3'));
+  // the item's question, a level under its column's title
+  item.appendChild(buildTitle(titleText, col.itemLevel));
 
   if (col.isFirstOpen && !col.firstItemAdded) {
     item.setAttribute('open', '');
@@ -187,11 +209,20 @@ const appendAccordionItem = (col, cells) => {
   col.accordion.appendChild(item);
 };
 
-const getSectionContext = (block) => {
+/**
+ * What the group takes from its section: the heading in the section's
+ * default content and the paragraph after it, the heading's level, and
+ * whether the section is styled to stand on blue (the `bg-blue` config row or
+ * the tabs-container-v2 style).
+ * @param {HTMLElement} block
+ * @param {object} [config] the block's config rows
+ */
+const getSectionContext = (block, config = {}) => {
   const section = block.closest('.section');
+  const content = getSectionContent(section);
   const wrapper = block.closest('.tabs-wrapper');
-  const defaultWrapper = wrapper?.parentElement === section
-    ? section.querySelector(':scope > .default-content-wrapper')
+  const defaultWrapper = content && wrapper?.parentElement === content
+    ? content.querySelector(':scope > .default-content-wrapper')
     : null;
   const titleEl = defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6') || null;
   const subtitleEl = titleEl?.nextElementSibling?.tagName === 'P'
@@ -200,12 +231,16 @@ const getSectionContext = (block) => {
   return {
     defaultWrapper,
     title: titleEl?.textContent?.trim() || '',
+    level: titleEl ? Number(titleEl.tagName[1]) : SECTION_LEVEL,
     subtitle: subtitleEl?.textContent?.trim() || '',
+    tint: 'bg-blue' in config || !!section?.classList.contains('tabs-container-v2'),
   };
 };
 
-const buildTabsFromBlock = (block, title, subtitle) => {
-  const tabsEl = buildTabGroup(title, subtitle);
+const buildTabsFromBlock = (block, context) => {
+  const tabsEl = buildTabGroup(context);
+  // the columns sit under the section's title: the tabs are not headings
+  const columnLevel = below(context.level);
 
   const isFirstOpen = block.classList.contains('first-open');
   let currentPanel = null;
@@ -226,14 +261,14 @@ const buildTabsFromBlock = (block, title, subtitle) => {
       currentCol = null;
     } else if (headingLevel !== null) {
       if (!currentPanel) {
-        // columns before the first tab's heading: a tab with no words, as 3.x drew it
+        // columns authored before the first tab's heading go in a tab with no words
         currentPanel = addTab(tabsEl, '');
       }
       if (!currentFeatures) {
         currentFeatures = document.createElement('bd-feature-columns');
         currentPanel.appendChild(currentFeatures);
       }
-      currentCol = buildTabCol(cells, isFirstOpen);
+      currentCol = buildTabCol(cells, isFirstOpen, columnLevel);
       currentFeatures.appendChild(currentCol);
     } else if (currentCol) {
       appendAccordionItem(currentCol, cells);
@@ -243,7 +278,7 @@ const buildTabsFromBlock = (block, title, subtitle) => {
   return tabsEl;
 };
 
-function buildTabsFromSections(config, title, subtitle) {
+function buildTabsFromSections(config, context) {
   const tabGroupName = config['tab-group'];
   const tabsSelector = tabGroupName
     ? `[data-tab-group="${tabGroupName}"][data-tab]`
@@ -252,12 +287,13 @@ function buildTabsFromSections(config, title, subtitle) {
   const sections = [...document.querySelectorAll(tabsSelector)];
   if (!sections.length) return null;
 
-  const bdTabs = buildTabGroup(title, subtitle);
-  if ('bg-blue' in config) bdTabs.setAttribute('background', 'tint');
+  const bdTabs = buildTabGroup(context);
 
   sections.forEach((section) => {
     const tabPanel = addTab(bdTabs, section.dataset.tab);
-    while (section.firstChild) tabPanel.appendChild(section.firstChild);
+    // the section's wrappers, out of its bd-section if a block already laid it out
+    const content = getSectionContent(section);
+    while (content.firstChild) tabPanel.appendChild(content.firstChild);
     section.remove();
   });
 
@@ -265,24 +301,23 @@ function buildTabsFromSections(config, title, subtitle) {
 }
 
 export default async function decorate(block) {
+  // the section on the design system's rhythm; the blocks decorated in its
+  // panels find this bd-section already there
+  wrapSectionInDsSection(block);
   const config = readBlockConfig(block);
 
   if ('tab-group' in config) {
     [...block.children].forEach((child) => child.remove());
 
-    const { defaultWrapper, title, subtitle } = getSectionContext(block);
-    if (defaultWrapper && title) defaultWrapper.remove();
+    const context = getSectionContext(block, config);
+    if (context.defaultWrapper && context.title) context.defaultWrapper.remove();
 
-    const bdTabs = buildTabsFromSections(config, title, subtitle);
+    const bdTabs = buildTabsFromSections(config, context);
     if (bdTabs) {
       block.replaceChildren(bdTabs);
 
       try {
         await loadBlocks(bdTabs);
-        // the accordion blocks' FAQ and terms looks (3.x's bd-accordion-bg)
-        // sit in a panel without the band's block padding
-        bdTabs.querySelectorAll('bd-accordion[appearance="faq"], bd-accordion[appearance="terms"]')
-          .forEach((el) => el.setAttribute('without-padding', ''));
         await load(bdTabs);
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -292,10 +327,10 @@ export default async function decorate(block) {
   } else {
     // the icons are SVG before slotIcon reads them
     await decorateIcons(block);
-    const { defaultWrapper, title, subtitle } = getSectionContext(block);
-    if (defaultWrapper && title) defaultWrapper.remove();
+    const context = getSectionContext(block);
+    if (context.defaultWrapper && context.title) context.defaultWrapper.remove();
 
-    const tabsEl = buildTabsFromBlock(block, title, subtitle);
+    const tabsEl = buildTabsFromBlock(block, context);
     try {
       await load(tabsEl);
     } catch (err) {

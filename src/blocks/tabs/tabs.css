@@ -1,5 +1,3 @@
-/* Tab presentation is provided by the bd-tab-group custom element. */
-
-.tabs-container-v2.tabs-container {
-    background-color: var(--color-blue-50);
-}
+/* Nothing of its own: bd-tab-group draws the tabs and their panels, and the
+   brand wash behind a section styled to stand on blue (background="tint");
+   bd-section spaces the section. */
