@@ -14,6 +14,44 @@ import {
 // the design system's lg (992): the cards go three across
 const DESKTOP = '(min-width: 992px)';
 
+/* the cue under the title where Section Metadata sets no Button-text:
+   bd-post-card draws no words of its own */
+const READ_MORE = 'Read more';
+
+const slotted = (tag, slot, words) => {
+  const el = document.createElement(tag);
+  el.slot = slot;
+  el.textContent = words;
+  return el;
+};
+
+const buildCard = ({
+  title, link, image, channel,
+}, readMore) => {
+  const card = document.createElement('bd-post-card');
+  card.setAttribute('href', link);
+  if (image) {
+    // the cover illustrates the title beside it
+    const cover = document.createElement('bd-img');
+    cover.slot = 'media';
+    [['src', image], ['alt', ''], ['loading', 'lazy']]
+      .forEach(([name, value]) => cover.setAttribute(name, value));
+    card.append(cover);
+  }
+  if (channel) {
+    // the feed's channel title over the cover, as the card's badge
+    const badge = slotted('bd-badge', 'badge', channel);
+    [['variant', 'info'], ['appearance', 'shade'], ['size', 'sm']]
+      .forEach(([name, value]) => badge.setAttribute(name, value));
+    card.append(badge);
+  }
+  // the h3 the card drew
+  const heading = slotted('bd-h', 'title', title);
+  heading.setAttribute('as', 'h3');
+  card.append(heading, slotted('span', 'read-more', readMore));
+  return card;
+};
+
 const readFeed = async (url) => {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`${url}: ${response.status}`);
@@ -37,9 +75,10 @@ async function decorateFeedCards(block) {
 
   // the section's heading, as bd-section-header
   const header = liftSectionHeader(block);
-  // by tag, not the tree, so the components load while the feeds do
+  // by tag, not the tree, so the components load while the feeds do: the
+  // grid, the cards and the atoms the cards' slots take
   const [modules, ...results] = await Promise.allSettled([
-    load(['bd-grid', 'bd-post-card']),
+    load(['bd-grid', 'bd-post-card', 'bd-img', 'bd-badge', 'bd-h']),
     ...feeds.map(readFeed),
   ]);
   if (modules.status === 'rejected') {
@@ -62,17 +101,7 @@ async function decorateFeedCards(block) {
     });
   }
 
-  const cards = posts.map(({
-    title, link, image, channel,
-  }) => {
-    const card = document.createElement('bd-post-card');
-    card.setAttribute('heading', title);
-    card.setAttribute('href', link);
-    if (channel) card.setAttribute('badge', channel);
-    if (image) card.setAttribute('image', image);
-    if (dataset.buttonText) card.setAttribute('read-more', dataset.buttonText);
-    return card;
-  });
+  const cards = posts.map((post) => buildCard(post, dataset.buttonText || READ_MORE));
 
   const grid = document.createElement('bd-grid');
   // the design system's page column (styles.css), on the hero's edges

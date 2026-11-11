@@ -45,8 +45,11 @@ const FEEDS = {
   ]),
 };
 
-async function renderFixture() {
-  const html = await readFile(path.join(__dirname, 'blog-news.mock.html'), 'utf-8');
+async function renderFixture({ buttonText } = {}) {
+  let html = await readFile(path.join(__dirname, 'blog-news.mock.html'), 'utf-8');
+  if (buttonText) {
+    html = html.replace('<div class="section-metadata">', `<div class="section-metadata"><div><div>Button-text</div><div>${buttonText}</div></div>`);
+  }
   document.body.innerHTML = `<main>${html}</main>`;
   const main = document.querySelector('main');
 
@@ -99,21 +102,62 @@ describe('blog-news block, multi-endpoint', () => {
   });
 
   it('takes the newest post of each feed, up to Articles-number', () => {
-    expect(cards.map((card) => card.getAttribute('heading'))).toEqual([
+    const titles = cards.map((card) => card.querySelector(':scope > bd-h[slot="title"]'));
+    expect(titles.map((title) => title.textContent)).toEqual([
       'Where to report a scam', 'Your attack surface is growing', 'The rise of Midnight Mimosa',
     ]);
+    // the h3 the 3.x card drew
+    expect(titles.every((title) => title.getAttribute('as') === 'h3')).toBe(true);
     expect(cards[0].getAttribute('href')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/report-a-scam/');
-    expect(cards[0].getAttribute('image')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/report-a-scam/cover.jpg');
+    const cover = cards[0].querySelector(':scope > bd-img[slot="media"]');
+    expect(cover.getAttribute('src')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/report-a-scam/cover.jpg');
+    // decorative and lazy, as the 3.x card drew its image
+    expect(cover.getAttribute('alt')).toBe('');
+    expect(cover.getAttribute('loading')).toBe('lazy');
+    // the copy is slotted, not set as 3.x's attributes
+    cards.forEach((card) => {
+      ['heading', 'image', 'badge', 'read-more'].forEach((name) => expect(card.hasAttribute(name)).toBe(false));
+    });
   });
 
   it('badges each card with its feed\'s channel title', () => {
-    expect(cards.map((card) => card.getAttribute('badge'))).toEqual([
+    const badges = cards.map((card) => card.querySelector(':scope > bd-badge[slot="badge"]'));
+    expect(badges.map((badge) => badge.textContent)).toEqual([
       'Consumer Insights', 'Business Insights Cybersecurity Blog by Bitdefender', 'Bitdefender Labs',
     ]);
+    // the badge the 3.x card drew from its badge attribute
+    badges.forEach((badge) => {
+      expect(badge.getAttribute('variant')).toBe('info');
+      expect(badge.getAttribute('appearance')).toBe('shade');
+      expect(badge.getAttribute('size')).toBe('sm');
+    });
+  });
+
+  it('writes the read-more cue 3.x drew by default where Button-text is unset', () => {
+    expect(cards.map((card) => card.querySelector(':scope > span[slot="read-more"]')?.textContent))
+      .toEqual(['Read more', 'Read more', 'Read more']);
   });
 
   it('lifts the section header', () => {
     const header = block.closest('.section').querySelector('bd-section-header');
-    expect(header.getAttribute('heading')).toBe('Latest cybersecurity insights');
+    const title = header.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('Latest cybersecurity insights');
+    expect(title.getAttribute('as')).toBe('h2');
+  });
+});
+
+describe('blog-news block, multi-endpoint with Button-text', () => {
+  afterAll(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('writes the section\'s Button-text as each card\'s read-more cue', async () => {
+    vi.spyOn(window, 'fetch').mockImplementation(async (url) => {
+      const feed = Object.keys(FEEDS).find((name) => String(url).includes(`/rss/${name}/`));
+      return new Response(FEEDS[feed], { status: 200, headers: { 'Content-Type': 'text/xml' } });
+    });
+    const block = await renderFixture({ buttonText: 'Read the story' });
+    const cues = [...block.querySelectorAll('bd-post-card > span[slot="read-more"]')];
+    expect(cues.map((cue) => cue.textContent)).toEqual(['Read the story', 'Read the story', 'Read the story']);
   });
 });
