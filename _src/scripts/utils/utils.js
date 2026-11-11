@@ -1285,7 +1285,8 @@ var wrapChildrenWithStoreContext = (element, { productId, devices, subscription,
 * which currentColor does not reach: complete-protection and online-privacy
 * would draw in black. An icon with its colours in its file keeps them.
 *
-* Its ink is the colour the page names for it, else the text's around it.
+* Its ink is the colour the page names for it, else the brand's text ink,
+* the colour the design system's own pages give a feature column's icon.
 * Its size is 2xl unless the caller passes a step: the step the design
 * system draws its own feature illustrations at (analysis, machine-learning).
 *
@@ -1308,7 +1309,7 @@ var slotIcon = (span, { color, size = "2xl" } = {}) => {
 	icon.slot = "icon";
 	icon.setAttribute("name", name);
 	icon.setAttribute("size", size);
-	if (color) icon.style.color = color;
+	icon.style.color = color || "var(--color-text-brand)";
 	const drawing = svg.outerHTML;
 	iconRegistry ??= import("../../vendor/repobit/dex-system-design/icons/registry.js");
 	iconRegistry.then(({ registerIcon }) => registerIcon(name, drawing)).catch((err) => {
