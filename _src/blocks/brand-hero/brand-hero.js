@@ -54,12 +54,10 @@ var readCopy = (row) => {
 var readIcon = (cell) => {
 	const icon = cell?.querySelector(".icon");
 	const name = icon && [...icon.classList].find((c) => c.startsWith("icon-"))?.substring(5);
-	if (name && DS_ICONS.includes(name)) {
-		const dsIcon = document.createElement("bd-icon");
-		dsIcon.setAttribute("name", name);
-		return dsIcon;
-	}
-	return icon ? icon.cloneNode(true) : null;
+	if (!name || !DS_ICONS.includes(name)) return null;
+	const dsIcon = document.createElement("bd-icon");
+	dsIcon.setAttribute("name", name);
+	return dsIcon;
 };
 /** A card row: [icon + eyebrow] [heading, description, link]; either cell may be missing. */
 var buildCard = (row) => {

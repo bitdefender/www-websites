@@ -11,7 +11,8 @@ import { splitAroundHeading, wrapSectionInDsSection } from '../../scripts/utils/
  * heading a bd-h and the lead or description a bd-p.
  */
 
-// the audience icons the design system draws; any other authored icon is kept as is
+// the audience icons the design system draws; the card's icon slot takes a bd-icon, so an
+// authored icon it does not draw is left out (the eyebrow already names the audience)
 const DS_ICONS = ['home', 'small-business', 'enterprise'];
 
 // a private-use character stands in for each <br> while the source whitespace collapses
@@ -72,12 +73,10 @@ const readIcon = (cell) => {
   const icon = cell?.querySelector('.icon');
   const name = icon && [...icon.classList]
     .find((c) => c.startsWith('icon-'))?.substring(5);
-  if (name && DS_ICONS.includes(name)) {
-    const dsIcon = document.createElement('bd-icon');
-    dsIcon.setAttribute('name', name);
-    return dsIcon;
-  }
-  return icon ? icon.cloneNode(true) : null;
+  if (!name || !DS_ICONS.includes(name)) return null;
+  const dsIcon = document.createElement('bd-icon');
+  dsIcon.setAttribute('name', name);
+  return dsIcon;
 };
 
 /** A card row: [icon + eyebrow] [heading, description, link]; either cell may be missing. */
@@ -93,7 +92,7 @@ const buildCard = (row) => {
   const card = document.createElement('bd-audience-card');
   const eyebrow = labelText(label);
   if (eyebrow) card.append(slotted('span', 'eyebrow', eyebrow));
-  // an h2, the level 3.x's card drew its heading at
+  // an h2: the cards are the first level under the hero's h1, whatever level the author wrote
   if (text(heading)) card.append(slotted('bd-h', 'title', text(heading), { as: 'h2' }));
   if (description) card.append(slotted('bd-p', 'description', text(description)));
   if (link) {
@@ -121,7 +120,7 @@ export default async function decorate(block) {
 
   const hero = document.createElement('bd-hero');
   if (eyebrow) hero.append(slotted('span', 'eyebrow', eyebrow));
-  // the page's one h1, whatever level the author gave the heading, as 3.x's hero drew it
+  // the hero's title is the page's one h1, whatever level the author gave the heading
   if (heading) hero.append(slotted('bd-h', 'title', heading, { as: 'h1' }));
   if (lead) hero.append(slotted('bd-p', 'description', lead));
 

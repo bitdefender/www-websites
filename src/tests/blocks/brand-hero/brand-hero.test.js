@@ -113,6 +113,28 @@ describe('brand-hero block', () => {
       'home', 'small-business', 'enterprise',
     ]);
   });
+
+  it('slots the copy as atoms the hero and the cards draw, with no look of their own', () => {
+    const atoms = [...hero.querySelectorAll('bd-h, bd-p')];
+    expect(atoms.length).toBeGreaterThan(0);
+    atoms.forEach((atom) => {
+      ['visual-level', 'color', 'font-weight', 'appearance']
+        .forEach((name) => expect(atom.hasAttribute(name)).toBe(false));
+    });
+  });
+});
+
+describe('brand-hero block with an icon the design system does not draw', () => {
+  it('leaves that card without an icon', async () => {
+    const block = await renderFixture((main) => {
+      main.querySelector('.brand-hero .icon-home').className = 'icon icon-rocket';
+    });
+    const cards = [...block.querySelectorAll('bd-audience-card')];
+
+    expect(cards[0].querySelector('[slot="icon"]')).toBeNull();
+    expect(cards[0].querySelector('.icon')).toBeNull();
+    expect(cards[1].querySelector('bd-icon[slot="icon"]')).not.toBeNull();
+  });
 });
 
 // DEX-29311 case 3: the author leaves the h1 out
