@@ -10,13 +10,13 @@ var buildColumn = (row) => {
 	column.className = "link-columns-item";
 	const title = document.createElement("bd-link");
 	title.setAttribute("href", link.getAttribute("href") || "");
-	title.setAttribute("variant", "bold");
+	title.setAttribute("appearance", "bold");
 	title.setAttribute("arrow", "");
 	title.textContent = text(link);
 	column.append(title);
 	if (description) {
 		const body = document.createElement("bd-p");
-		body.setAttribute("variant", "small");
+		body.setAttribute("appearance", "small");
 		body.textContent = text(description);
 		column.append(body);
 	}
