@@ -50,7 +50,7 @@ async function renderFixture(ctaHref) {
 
   const block = main.querySelector('.sticky-navigation');
   await decorate(block);
-  return block.querySelector('bd-anchor-nav bd-button[slot="cta"]');
+  return block.querySelector('bd-anchor-nav bd-button[slot="actions"]');
 }
 
 function click(element) {
@@ -72,6 +72,13 @@ describe('sticky-navigation CTA', () => {
     expect(cta.textContent).toBe('Try for free');
   });
 
+  it('draws the CTA in the accent appearance, 3.x\'s danger kind, without a section data-kind', async () => {
+    const cta = await renderFixture();
+
+    expect(cta.getAttribute('appearance')).toBe('accent');
+    expect(cta.hasAttribute('kind')).toBe(false);
+  });
+
   it('opens the fragment as a modal instead of navigating', async () => {
     const cta = await renderFixture();
 
@@ -90,5 +97,20 @@ describe('sticky-navigation CTA', () => {
     expect(cta.getAttribute('href')).toBe('/en-us/consumer/ultimate-security#buy');
     expect(event.defaultPrevented).toBe(false);
     expect(openModal).not.toHaveBeenCalled();
+  });
+});
+
+describe('sticky-navigation items', () => {
+  it('writes each section as an item whose words are its label, in a named nav', async () => {
+    await renderFixture();
+    const nav = document.querySelector('.sticky-navigation bd-anchor-nav');
+    const items = [...nav.querySelectorAll(':scope > bd-anchor-nav-item')];
+
+    expect(nav.getAttribute('aria-label')).toBe('Section navigation');
+    expect(items).toHaveLength(1);
+    expect(items[0].textContent).toBe('Live your digital life confidently');
+    expect(items[0].getAttribute('href')).toBe('#nav-section-1');
+    expect(document.getElementById('nav-section-1')).toBe(document.querySelectorAll('main > .section')[1]);
+    expect(items[0].hasAttribute('title')).toBe(false);
   });
 });

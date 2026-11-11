@@ -26,6 +26,27 @@ function extractAnchorId(href) {
   }
 }
 
+/**
+ * The appearance of a 3.x bd-button kind, the values a section's `data-kind`
+ * holds: the kinds 4.0 renamed, and plain, which 3.x drew as primary (4.0's
+ * plain is the text-only CTA). Any other kind is an appearance already.
+ */
+const APPEARANCE_OF_KIND = {
+  outline: 'ghost',
+  'primary-outline': 'tertiary',
+  danger: 'accent',
+  destructive: 'accent',
+  plain: 'primary',
+};
+
+/** A nav item: the link to a section, its words the label. */
+function buildNavItem(label, href) {
+  const navItem = document.createElement('bd-anchor-nav-item');
+  if (href) navItem.setAttribute('href', href);
+  navItem.textContent = label;
+  return navItem;
+}
+
 // ─── section items (mode B + fallback for mode A) ────────────────────────────
 
 function collectSectionItems(block) {
@@ -85,10 +106,7 @@ function buildFromAuthoredRows(anchorNav, block, activeLabel) {
       }
     }
 
-    const navItem = document.createElement('bd-anchor-nav-item');
-    navItem.setAttribute('title', label);
-    if (href) navItem.setAttribute('href', href);
-    anchorNav.appendChild(navItem);
+    anchorNav.appendChild(buildNavItem(label, href));
   });
 
   if (!activeLabel) return null;
@@ -106,16 +124,15 @@ function buildFromSections(anchorNav, block) {
       item.section.id = `nav-section-${index + 1}`;
     }
 
-    const navItem = document.createElement('bd-anchor-nav-item');
-    navItem.setAttribute('title', item.label);
-    navItem.setAttribute('href', `#${item.section.id}`);
-    anchorNav.appendChild(navItem);
+    anchorNav.appendChild(buildNavItem(item.label, `#${item.section.id}`));
   });
 
   // Optional CTA: shown when the block contains a link. `data-kind` on the
-  // section controls the button style; falls back to 'danger' when absent.
+  // section controls the button style; falls back to 'danger', the accent
+  // fill, when absent.
   const section = block.closest('.section');
   const ctaKind = section?.dataset.kind || 'danger';
+  const ctaAppearance = APPEARANCE_OF_KIND[ctaKind] || ctaKind;
   const ctaLink = block.querySelector('a');
   if (ctaLink) {
     // detectModalButtons moves a fragment link's href to `location` before blocks load
@@ -125,9 +142,9 @@ function buildFromSections(anchorNav, block) {
     const ctaLabel = ctaLink.textContent.trim();
 
     const buttonLink = document.createElement('bd-button');
-    buttonLink.setAttribute('slot', 'cta');
+    buttonLink.setAttribute('slot', 'actions');
     buttonLink.setAttribute('href', ctaHref);
-    buttonLink.setAttribute('kind', ctaKind);
+    buttonLink.setAttribute('appearance', ctaAppearance);
     buttonLink.setAttribute('size', 'md');
     buttonLink.textContent = ctaLabel;
     if (isModal && ctaHref) {
@@ -156,15 +173,17 @@ function buildAnchorNav(block) {
   const isAuthoredMode = authoredRows.length >= 2;
 
   const anchorNav = document.createElement('bd-anchor-nav');
+  // 3.x named the nav this where the page gave it no name; 4.0 gives none
+  anchorNav.setAttribute('aria-label', 'Section navigation');
 
   if (isAuthoredMode) {
     activeId = buildFromAuthoredRows(anchorNav, block, activeLabel);
 
-    // DS preventDefault blocks non-hash links — handle navigation manually.
+    // An item linking out of the page's sections: handle navigation manually.
     anchorNav.addEventListener('click', (e) => {
-      const bdLink = e.composedPath().find((el) => el.tagName === 'BD-LINK');
-      if (!bdLink) return;
-      const href = bdLink.getAttribute('href');
+      const navItem = e.composedPath().find((el) => el.localName === 'bd-anchor-nav-item');
+      if (!navItem) return;
+      const href = navItem.getAttribute('href');
       if (!href || href.startsWith('#')) return; // hash links handled by DS scrollspy
       const url = new URL(href, window.location.href);
       if (url.pathname === window.location.pathname) {
