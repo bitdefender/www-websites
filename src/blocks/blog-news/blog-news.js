@@ -11,9 +11,6 @@ import {
  * channel title, so it arrives translated with the feed.
  */
 
-// the design system's lg (992): the cards go three across
-const DESKTOP = '(min-width: 992px)';
-
 /* the cue under the title where Section Metadata sets no Button-text:
    bd-post-card draws no words of its own */
 const READ_MORE = 'Read more';
@@ -45,7 +42,7 @@ const buildCard = ({
       .forEach(([name, value]) => badge.setAttribute(name, value));
     card.append(badge);
   }
-  // the h3 the card drew
+  // h3: the posts are items under the section's h2
   const heading = slotted('bd-h', 'title', title);
   heading.setAttribute('as', 'h3');
   card.append(heading, slotted('span', 'read-more', readMore));
@@ -104,15 +101,11 @@ async function decorateFeedCards(block) {
   const cards = posts.map((post) => buildCard(post, dataset.buttonText || READ_MORE));
 
   const grid = document.createElement('bd-grid');
-  // the design system's page column (styles.css), on the hero's edges
+  // the design system's page column (styles.css), on the same edges as the sections around it
   grid.className = 'ds-page-column';
-  [['cols', '1'], ['cols-sm', '1'], ['cols-md', '1'], ['cols-lg', '3']]
+  // one post a row, three across from lg
+  [['cols', '1'], ['cols-sm', '1'], ['cols-md', '1'], ['cols-lg', '3'], ['gap', 'md']]
     .forEach(([name, value]) => grid.setAttribute(name, value));
-  // phone and tablet stack the posts 16 apart; the desktop row sets them 24 apart
-  const desktop = window.matchMedia?.(DESKTOP);
-  const setGap = () => grid.setAttribute('gap', !desktop || desktop.matches ? 'md' : 'sm');
-  setGap();
-  desktop?.addEventListener('change', setGap);
   grid.append(...cards);
 
   block.replaceChildren(grid);

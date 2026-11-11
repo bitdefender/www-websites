@@ -101,22 +101,32 @@ describe('blog-news block, multi-endpoint', () => {
     expect(grid.getAttribute('cols-lg')).toBe('3');
   });
 
+  it('spaces the cards by the grid\'s md gap at every width', () => {
+    expect(grid.getAttribute('gap')).toBe('md');
+    ['gap-sm', 'gap-md', 'gap-lg'].forEach((name) => expect(grid.hasAttribute(name)).toBe(false));
+  });
+
+  it('joins the section to the design system\'s rhythm', () => {
+    expect(block.closest('.section').querySelector(':scope > bd-section')).not.toBeNull();
+    expect(block.closest('bd-section')).not.toBeNull();
+  });
+
   it('takes the newest post of each feed, up to Articles-number', () => {
     const titles = cards.map((card) => card.querySelector(':scope > bd-h[slot="title"]'));
     expect(titles.map((title) => title.textContent)).toEqual([
       'Where to report a scam', 'Your attack surface is growing', 'The rise of Midnight Mimosa',
     ]);
-    // the h3 the 3.x card drew
+    // h3, under the section's h2
     expect(titles.every((title) => title.getAttribute('as') === 'h3')).toBe(true);
     expect(cards[0].getAttribute('href')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/report-a-scam/');
     const cover = cards[0].querySelector(':scope > bd-img[slot="media"]');
     expect(cover.getAttribute('src')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/report-a-scam/cover.jpg');
-    // decorative and lazy, as the 3.x card drew its image
+    // decorative, since the title beside it names the post, and lazy
     expect(cover.getAttribute('alt')).toBe('');
     expect(cover.getAttribute('loading')).toBe('lazy');
-    // the copy is slotted, not set as 3.x's attributes
+    // the copy is in the card's slots; the card carries only its link
     cards.forEach((card) => {
-      ['heading', 'image', 'badge', 'read-more'].forEach((name) => expect(card.hasAttribute(name)).toBe(false));
+      expect(card.getAttributeNames()).toEqual(['href']);
     });
   });
 
@@ -125,7 +135,7 @@ describe('blog-news block, multi-endpoint', () => {
     expect(badges.map((badge) => badge.textContent)).toEqual([
       'Consumer Insights', 'Business Insights Cybersecurity Blog by Bitdefender', 'Bitdefender Labs',
     ]);
-    // the badge the 3.x card drew from its badge attribute
+    // the feed in the card's badge look: info, shade, small
     badges.forEach((badge) => {
       expect(badge.getAttribute('variant')).toBe('info');
       expect(badge.getAttribute('appearance')).toBe('shade');
@@ -133,7 +143,7 @@ describe('blog-news block, multi-endpoint', () => {
     });
   });
 
-  it('writes the read-more cue 3.x drew by default where Button-text is unset', () => {
+  it('writes the read-more cue where Button-text is unset', () => {
     expect(cards.map((card) => card.querySelector(':scope > span[slot="read-more"]')?.textContent))
       .toEqual(['Read more', 'Read more', 'Read more']);
   });

@@ -1,7 +1,6 @@
 import { liftSectionHeader, matchHeights, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/blog-news/blog-news.js
-var DESKTOP = "(min-width: 992px)";
 var READ_MORE = "Read more";
 var slotted = (tag, slot, words) => {
 	const el = document.createElement(tag);
@@ -78,12 +77,9 @@ async function decorateFeedCards(block) {
 		["cols", "1"],
 		["cols-sm", "1"],
 		["cols-md", "1"],
-		["cols-lg", "3"]
+		["cols-lg", "3"],
+		["gap", "md"]
 	].forEach(([name, value]) => grid.setAttribute(name, value));
-	const desktop = window.matchMedia?.(DESKTOP);
-	const setGap = () => grid.setAttribute("gap", !desktop || desktop.matches ? "md" : "sm");
-	setGap();
-	desktop?.addEventListener("change", setGap);
 	grid.append(...cards);
 	block.replaceChildren(grid);
 	await header;
