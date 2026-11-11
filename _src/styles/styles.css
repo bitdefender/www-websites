@@ -1908,6 +1908,7 @@ main .section.blue p a.button.modal::after {
   bd-tooltip {
     --color-surface-inverse: var(--color-surface-info);
     --color-text-inverse: var(--color-text-secondary);
+    border-radius: var(--shape-radius-md)
   }
 }
 
