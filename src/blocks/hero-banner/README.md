@@ -68,12 +68,10 @@ card. Add `(product)` or `(card)` to the block name to choose.
   image has, and until then the CSS draws each one as it renders, so nothing moves (the
   `v4 gap:` rules: the design system draws nothing before an atom is defined). The token
   fallbacks are there for the same reason: the atoms install the tokens.
-- The dropdown is a native `<select>` inside `bd-select`. The atom's only name in 4.0.0 is
-  its `label` slot, which it draws above the field, and the design has no label, so the block
-  gives the select the description as its `aria-label`: write one when there is a dropdown.
-  dex-core PR #426 lets `bd-select` take `aria-label` itself; once it is released, the
-  block sets it there instead. A heading used as the description becomes a paragraph, and
-  Word's bold on it goes.
+- The dropdown is a `bd-select`. The design draws no label above it, so the block names it
+  with the description, through `aria-label` on the element, which `bd-select` passes to the
+  native `<select>`: write a description when there is a dropdown. A heading used as the
+  description becomes a paragraph, and Word's bold on it goes.
 - The signature is text, not `<bd-icon name="brand-signature">`: the mark is drawn in English.
 - Prices, discounts and buy links come from the store (`bd-context` per product).
 - Rollback for a page: rename the block back to `Hero Dropdown` and republish it.
