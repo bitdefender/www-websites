@@ -65,7 +65,7 @@ describe('partner-banner block', () => {
   });
 
   it('makes the bold link the white button and the plain one outline-white', () => {
-    const buttons = [...banner.querySelectorAll(':scope > bd-button-link[slot="actions"]')];
+    const buttons = [...banner.querySelectorAll(':scope > bd-button[slot="actions"]')];
     expect(buttons.map((button) => [button.textContent, button.getAttribute('variant')])).toEqual([
       ['Read more', 'white'],
       ['Watch the Ferrari story', 'outline-white'],

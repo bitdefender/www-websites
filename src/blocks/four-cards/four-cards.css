@@ -2,7 +2,7 @@
     padding: 0;
 }
 
-.four-cards bd-button-link {
+.four-cards bd-button {
     margin-bottom: 24px;
 }
 
@@ -11,7 +11,7 @@
     margin-top: 16px;
 }
 
-.four-cards bd-card-item[align="center"] .card-media {
+.four-cards bd-card[align="center"] .card-media {
     justify-content: center;
 }
 

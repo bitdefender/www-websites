@@ -50,7 +50,7 @@ const liftActions = async (block) => {
   actions.className = 'awards-spotlight-actions ds-page-column';
   const buttons = containers.map((container) => {
     const link = container.querySelector('a');
-    const button = document.createElement('bd-button-link');
+    const button = document.createElement('bd-button');
     button.setAttribute('variant', 'primary');
     button.setAttribute('href', link?.getAttribute('href') || '');
     button.textContent = text(link);
@@ -76,7 +76,7 @@ export default async function decorate(block) {
   const header = liftSectionHeader(block, { layout: 'centered' });
 
   // likely not defined yet: Lit keeps a property set before the upgrade
-  const spotlight = document.createElement('bd-awards-spotlight');
+  const spotlight = document.createElement('bd-awards');
   spotlight.awards = [...block.children].map(readAward).filter(Boolean);
   spotlight.setAttribute('autoplay', '');
   try {

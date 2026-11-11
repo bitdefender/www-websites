@@ -168,8 +168,8 @@ function buildPriceBox(product, details, settings) {
   box.insertAdjacentHTML('beforeend', `
     <div class="hero-banner__price">
       <div class="hero-banner__was" data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility">
-        <bd-p class="hero-banner__full" variant="regular" font-weight="medium" color="muted"><s data-store-render data-store-price="full"></s></bd-p>
-        <bd-badge class="hero-banner__badge" tone="success" variant="fill" size="lg"><span data-store-render data-store-discount="percentage"></span> ${settings.discounttext || 'OFF'}</bd-badge>
+        <bd-p class="hero-banner__full" appearance="regular" font-weight="medium" color="muted"><s data-store-render data-store-price="full"></s></bd-p>
+        <bd-badge class="hero-banner__badge" variant="success" appearance="fill" size="lg"><span data-store-render data-store-discount="percentage"></span> ${settings.discounttext || 'OFF'}</bd-badge>
       </div>
       <p class="hero-banner__final"><span data-store-render data-store-price="discounted||full"></span></p>
     </div>
@@ -413,7 +413,7 @@ export default function decorate(block) {
   }
 
   if (linksOpenInNewTab) {
-    block.querySelectorAll('bd-button-link.hero-banner__cta').forEach((cta) => {
+    block.querySelectorAll('bd-button.hero-banner__cta').forEach((cta) => {
       // leave anchors and store buy links as they are
       if (cta.href && !cta.href.includes('#')) cta.target = '_blank';
     });

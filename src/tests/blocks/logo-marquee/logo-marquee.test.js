@@ -107,7 +107,7 @@ describe('logo-marquee', () => {
   it('is still named by the section heading once an earlier block has lifted it', async () => {
     const block = setupMarquee({
       variant: 'awards',
-      header: '<bd-section-header heading="Proven by Independent Testing"></bd-section-header>',
+      header: '<bd-section-header><bd-h slot="title" as="h2">Proven by Independent Testing</bd-h></bd-section-header>',
       content: `<div><div>${logo('idc', 120, 48)}</div></div>`,
     });
 

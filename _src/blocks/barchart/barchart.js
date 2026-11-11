@@ -41,7 +41,7 @@ var buildCompareSection = (block) => {
 	const defaultWrapper = block.closest(".section")?.querySelector(":scope > .default-content-wrapper");
 	const sectionTitle = getHeadingText(defaultWrapper);
 	if (defaultWrapper && sectionTitle) defaultWrapper.remove();
-	const compareSection = document.createElement("bd-compare-section");
+	const compareSection = document.createElement("bd-bar-chart-grid");
 	if (sectionTitle) compareSection.setAttribute("title", sectionTitle);
 	const rows = Array.from(block.querySelectorAll(":scope > div"));
 	const isSingleCard = rows.filter((row) => row.children.length >= 2).length === 1;
@@ -66,7 +66,7 @@ var buildCompareSection = (block) => {
 			const footnoteCandidate = listEl?.nextElementSibling;
 			footnoteEl = footnoteCandidate?.tagName === "P" ? footnoteCandidate : null;
 		}
-		const card = document.createElement("compare-card");
+		const card = document.createElement("bd-bar-chart");
 		const cardTitle = titleEl?.textContent?.trim();
 		if (cardTitle) card.setAttribute("title", cardTitle);
 		const cardDescription = descriptionEl?.textContent?.trim();
@@ -89,7 +89,7 @@ var buildCompareSection = (block) => {
 			if (label && score) {
 				const isPrimaryBar = /bitdefender/i.test(label);
 				const parsedScale = parseScaleValue(listItems[i + 2]?.textContent?.trim());
-				const bar = document.createElement("compare-bar");
+				const bar = document.createElement("bd-bar-chart-item");
 				bar.setAttribute("label", label);
 				bar.setAttribute("score", normalizeScore(score));
 				bar.setAttribute("max-score", "6");
@@ -113,7 +113,7 @@ var buildCompareSection = (block) => {
 };
 var runBarsIntroAnimation = (compareSection) => {
 	if (compareSection.dataset.barchartAnimated === "true" || prefersReducedMotion()) return;
-	const secondaryBars = Array.from(compareSection.querySelectorAll("compare-bar")).filter((bar) => bar.getAttribute("variant") !== "primary");
+	const secondaryBars = Array.from(compareSection.querySelectorAll("bd-bar-chart-item")).filter((bar) => bar.getAttribute("variant") !== "primary");
 	if (!secondaryBars.length) return;
 	compareSection.dataset.barchartAnimated = "true";
 	const animationState = secondaryBars.map((bar) => {

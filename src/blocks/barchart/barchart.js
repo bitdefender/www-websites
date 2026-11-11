@@ -82,7 +82,7 @@ const buildCompareSection = (block) => {
     defaultWrapper.remove();
   }
 
-  const compareSection = document.createElement('bd-compare-section');
+  const compareSection = document.createElement('bd-bar-chart-grid');
   if (sectionTitle) {
     compareSection.setAttribute('title', sectionTitle);
   }
@@ -120,7 +120,7 @@ const buildCompareSection = (block) => {
       footnoteEl = footnoteCandidate?.tagName === 'P' ? footnoteCandidate : null;
     }
 
-    const card = document.createElement('compare-card');
+    const card = document.createElement('bd-bar-chart');
     const cardTitle = titleEl?.textContent?.trim();
     if (cardTitle) {
       card.setAttribute('title', cardTitle);
@@ -164,7 +164,7 @@ const buildCompareSection = (block) => {
         const isPrimaryBar = /bitdefender/i.test(label);
         const parsedScale = parseScaleValue(listItems[i + 2]?.textContent?.trim());
 
-        const bar = document.createElement('compare-bar');
+        const bar = document.createElement('bd-bar-chart-item');
         bar.setAttribute('label', label);
         bar.setAttribute('score', normalizeScore(score));
         bar.setAttribute('max-score', '6');
@@ -204,7 +204,7 @@ const runBarsIntroAnimation = (compareSection) => {
     return;
   }
 
-  const secondaryBars = Array.from(compareSection.querySelectorAll('compare-bar'))
+  const secondaryBars = Array.from(compareSection.querySelectorAll('bd-bar-chart-item'))
     .filter((bar) => bar.getAttribute('variant') !== 'primary');
 
   if (!secondaryBars.length) {

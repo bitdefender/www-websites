@@ -9,4 +9,4 @@ import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as
         preload=${this.preload||t}
         playsinline
       >${this._media}</video>
-    `}};s([i({type:String})],l.prototype,`src`,void 0),s([i({type:String})],l.prototype,`poster`,void 0),s([i({converter:{fromAttribute:e=>e!==`false`}})],l.prototype,`controls`,void 0),s([i({type:Boolean})],l.prototype,`muted`,void 0),s([i({type:Boolean})],l.prototype,`loop`,void 0),s([i({type:String})],l.prototype,`preload`,void 0),s([a()],l.prototype,`_media`,void 0),l=s([o(`bd-video`)],l);export{l as BdVideo};
+    `}};s([i({type:String,attribute:`src`})],l.prototype,`src`,void 0),s([i({type:String,attribute:`poster`})],l.prototype,`poster`,void 0),s([i({attribute:`controls`,converter:{fromAttribute:e=>e!==`false`}})],l.prototype,`controls`,void 0),s([i({type:Boolean,attribute:`muted`})],l.prototype,`muted`,void 0),s([i({type:Boolean,attribute:`loop`})],l.prototype,`loop`,void 0),s([i({type:String,attribute:`preload`})],l.prototype,`preload`,void 0),s([a()],l.prototype,`_media`,void 0),l=s([o(`bd-video`)],l);export{l as BdVideo};

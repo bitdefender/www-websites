@@ -32,14 +32,14 @@ var buildAccordion = (block) => {
 	const defaultWrapper = section?.querySelector(":scope > .default-content-wrapper");
 	const sectionTitle = getSectionTitle(block);
 	if (defaultWrapper && sectionTitle) defaultWrapper.remove();
-	const accordion = document.createElement("bd-accordion-bg");
+	const accordion = document.createElement("bd-accordion");
 	if (sectionTitle) accordion.setAttribute("title", sectionTitle);
 	const isFirstOpen = block.classList.contains("first-open");
 	Array.from(block.querySelectorAll(":scope > div")).forEach((row, index) => {
 		const [headerCell, contentCell] = row.children;
 		if (!headerCell) return;
 		const title = headerCell.querySelector("h1, h2, h3, h4, h5, h6, p")?.textContent?.trim() || headerCell.textContent.trim();
-		const item = document.createElement("bd-accordion-bg-item");
+		const item = document.createElement("bd-accordion-item");
 		item.setAttribute("title", title);
 		if (isFirstOpen && index === 0) item.setAttribute("open", "");
 		if (contentCell) {

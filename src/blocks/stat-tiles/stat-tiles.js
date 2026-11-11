@@ -54,7 +54,7 @@ const buildLead = (row) => {
   }
 
   if (link) {
-    const button = document.createElement('bd-button-link');
+    const button = document.createElement('bd-button');
     button.setAttribute('variant', 'primary');
     button.setAttribute('href', link.getAttribute('href') || '');
     if (link.target) button.setAttribute('target', link.target);
@@ -68,7 +68,7 @@ const buildLead = (row) => {
 const buildTile = (row) => {
   const [valueCell, captionCell] = row.children;
   const { value, label } = readValue(valueCell);
-  const tile = document.createElement('bd-stat-tile');
+  const tile = document.createElement('bd-stat');
   tile.setAttribute('value', value);
   if (text(captionCell)) tile.setAttribute('caption', text(captionCell));
   if (label) tile.setAttribute('label', label);

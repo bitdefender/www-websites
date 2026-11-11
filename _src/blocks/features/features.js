@@ -80,7 +80,7 @@ var getIconElement = (col) => {
 };
 var buildFeatureCol = (col, firstOpen) => {
 	const title = col.querySelector("h1, h2, h3")?.textContent?.trim() || "";
-	const featureCol = document.createElement("bd-feature-col");
+	const featureCol = document.createElement("bd-feature-column");
 	featureCol.setAttribute("title", title);
 	const iconEl = getIconElement(col);
 	if (iconEl) featureCol.appendChild(iconEl);
@@ -100,7 +100,7 @@ var buildFeatureCol = (col, firstOpen) => {
 		featureCol.appendChild(desc);
 	}
 	if (h4s.length) {
-		const accordionSection = document.createElement("bd-accordion-section");
+		const accordionSection = document.createElement("bd-accordion");
 		accordionSection.setAttribute("no-container", "");
 		h4s.forEach((h4, index) => {
 			const { title: itemTitle, pill } = getTitleAndPill(h4);
@@ -127,7 +127,7 @@ var buildFeatureCol = (col, firstOpen) => {
 async function decorate(block) {
 	await decorateIcons(block);
 	const firstOpen = block.classList.contains("first-open");
-	const featuresEl = document.createElement("bd-features");
+	const featuresEl = document.createElement("bd-feature-columns");
 	[...block.children].forEach((row) => {
 		[...row.children].forEach((col) => {
 			featuresEl.appendChild(buildFeatureCol(col, firstOpen));

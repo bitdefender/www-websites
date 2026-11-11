@@ -50,7 +50,7 @@ async function renderFixture(ctaHref) {
 
   const block = main.querySelector('.sticky-navigation');
   await decorate(block);
-  return block.querySelector('bd-anchor-nav bd-button-link[slot="cta"]');
+  return block.querySelector('bd-anchor-nav bd-button[slot="cta"]');
 }
 
 function click(element) {

@@ -29,7 +29,7 @@ async function decorate(block) {
 	if (lead) banner.setAttribute("lead", text(lead));
 	const buttons = links.map((p) => {
 		const link = p.querySelector("a");
-		const button = document.createElement("bd-button-link");
+		const button = document.createElement("bd-button");
 		button.setAttribute("slot", "actions");
 		const primary = p.querySelector("strong, b, a.button.primary");
 		button.setAttribute("variant", primary ? "white" : "outline-white");

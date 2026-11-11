@@ -1,5 +1,0 @@
-import{a as e}from"../../../../../lit/index.js";import{n as t,t as n}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import{t as r}from"./icon-element.js";var i=class extends r{static{this.defaultSize=`lg`}render(){return e`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M6 18H18V16.5H6V18ZM21.225 5.7L12.975 1.725C12.375 1.425 11.625 1.425 11.025 1.725L2.775 5.7C2.025 6.075 1.5 6.9 1.5 7.725V20.25C1.5 21.525 2.475 22.5 3.75 22.5H20.25C21.525 22.5 22.5 21.525 22.5 20.25V7.725C22.5 6.825 21.975 6.075 21.225 5.7ZM21 20.25C21 20.7 20.7 21 20.25 21H3.75C3.3 21 3 20.7 3 20.25V7.725C3 7.425 3.15 7.2 3.45 7.05L11.7 3.075C11.925 3 12.15 3 12.375 3.075L20.625 7.05C20.85 7.2 21.075 7.425 21.075 7.725V20.25H21Z" fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"/>
-      </svg>
-    `}};i=n([t(`bd-home-icon`)],i);

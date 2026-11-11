@@ -222,7 +222,7 @@
  * Until the atoms upgrade: each host drawn with the tokens the atom renders with
  * (dex-system-design 2.3.0), at their values, so nothing moves when it does.
  */
-.hero-banner :is(bd-h, bd-p, bd-custom-dropdown):not(:defined) {
+.hero-banner :is(bd-h, bd-p, bd-select):not(:defined) {
   display: block;
 }
 
@@ -273,7 +273,7 @@
 }
 
 /* the dropdown shows its first label, a light-DOM text the rendered atom has no slot for */
-.hero-banner bd-custom-dropdown:not(:defined) {
+.hero-banner bd-select:not(:defined) {
   box-sizing: border-box;
   height: var(--form-input-medium-height, 44px);
   padding: 11px 40px 11px var(--spacing-16, 16px);
@@ -287,7 +287,7 @@
   text-overflow: ellipsis;
 }
 
-.hero-banner bd-button-link:not(:defined) {
+.hero-banner bd-button:not(:defined) {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
@@ -299,12 +299,12 @@
   line-height: var(--typography-lineHeight-tight, 1.25);
 }
 
-.hero-banner bd-button-link[variant='accent']:not(:defined) {
+.hero-banner bd-button[variant='accent']:not(:defined) {
   background: var(--button-accent-background-default, #d60000);
   color: var(--button-accent-text-default, #fff);
 }
 
-.hero-banner bd-button-link[variant='tertiary']:not(:defined) {
+.hero-banner bd-button[variant='tertiary']:not(:defined) {
   box-shadow: inset 0 0 0 var(--border-width-2, 2px) var(--button-tertiary-border-default, #006dff);
   color: var(--button-tertiary-text-default, #0059d6);
 }
@@ -329,7 +329,7 @@
   }
 
   /* the atom's fullwidth makes the host a block: from md the buttons size to their label */
-  .hero-banner .hero-banner__ctas bd-button-link {
+  .hero-banner .hero-banner__ctas bd-button {
     display: inline-flex;
     width: auto;
   }

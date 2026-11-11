@@ -124,7 +124,7 @@ function buildFromSections(anchorNav, block) {
     const ctaHref = rawHref.replace(/\.html(?=#|$)/, '');
     const ctaLabel = ctaLink.textContent.trim();
 
-    const buttonLink = document.createElement('bd-button-link');
+    const buttonLink = document.createElement('bd-button');
     buttonLink.setAttribute('slot', 'cta');
     buttonLink.setAttribute('href', ctaHref);
     buttonLink.setAttribute('kind', ctaKind);

@@ -21,7 +21,7 @@ const buildTabCol = (cells, isFirstOpen, bgBlue) => {
   const [titleCell, iconCell, descCell] = cells;
   const heading = titleCell.querySelector('h1, h2, h3, h4, h5, h6');
 
-  const col = document.createElement('bd-feature-col');
+  const col = document.createElement('bd-feature-column');
   col.setAttribute('title', heading?.textContent?.trim() || titleCell.textContent.trim());
 
   // a plain wrapper for the authored icon: bd-features finds it by its slot.
@@ -55,7 +55,7 @@ const buildTabCol = (cells, isFirstOpen, bgBlue) => {
     }
   }
 
-  const accordionSection = document.createElement('bd-accordion-section');
+  const accordionSection = document.createElement('bd-accordion');
   accordionSection.setAttribute('no-container', '');
   if (bgBlue) accordionSection.setAttribute('bg-blue', '');
   col.appendChild(accordionSection);
@@ -118,7 +118,7 @@ const getSectionContext = (block) => {
 };
 
 const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
-  const tabsEl = document.createElement('bd-tabs');
+  const tabsEl = document.createElement('bd-tab-group');
   if (title) tabsEl.setAttribute('title', title);
   if (subtitle) tabsEl.setAttribute('subtitle', subtitle);
 
@@ -147,7 +147,7 @@ const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
         tabsEl.appendChild(currentPanel);
       }
       if (!currentFeatures) {
-        currentFeatures = document.createElement('bd-features');
+        currentFeatures = document.createElement('bd-feature-columns');
         currentPanel.appendChild(currentFeatures);
       }
       currentCol = buildTabCol(cells, isFirstOpen, bgBlue);
@@ -193,7 +193,7 @@ function buildTabsFromSections(config, title, subtitle) {
   const sections = [...document.querySelectorAll(tabsSelector)];
   if (!sections.length) return null;
 
-  const bdTabs = document.createElement('bd-tabs');
+  const bdTabs = document.createElement('bd-tab-group');
   if ('bg-blue' in config) bdTabs.setAttribute('bg-blue', '');
   if (title) bdTabs.setAttribute('title', title);
   if (subtitle) bdTabs.setAttribute('subtitle', subtitle);
@@ -257,7 +257,7 @@ export default async function decorate(block) {
       try {
         await loadBlocks(bdTabs);
         normalizeLoadingFeatureIcons(bdTabs);
-        bdTabs.querySelectorAll('bd-accordion-bg').forEach((el) => el.setAttribute('no-padding', ''));
+        bdTabs.querySelectorAll('bd-accordion').forEach((el) => el.setAttribute('no-padding', ''));
         await load(bdTabs);
         if (typeof bdTabs.requestUpdate === 'function') {
           bdTabs.requestUpdate();

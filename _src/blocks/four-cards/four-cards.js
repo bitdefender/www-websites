@@ -25,7 +25,7 @@ var buildCardItem = (row, shape) => {
 	const headings = [...row.querySelectorAll("h4, h3, h2, h1")];
 	const title = headings.map((h) => h.textContent.trim()).filter(Boolean).join(" ");
 	const titleHtml = headings.map((h) => h.innerHTML.trim()).filter(Boolean).join("<br>");
-	const item = document.createElement("bd-card-item");
+	const item = document.createElement("bd-card");
 	item.setAttribute("title", title);
 	if (titleHtml !== title) item.dataset.titleHtml = titleHtml;
 	const iconEl = getIconElement(row);
@@ -44,7 +44,7 @@ var buildCardItem = (row, shape) => {
 		if (p.querySelector("[class*=\"icon-\"]") || !p.textContent.trim()) return;
 		const link = p.querySelector("a");
 		if (link) {
-			const bdBtn = document.createElement("bd-button-link");
+			const bdBtn = document.createElement("bd-button");
 			bdBtn.setAttribute("kind", "danger");
 			bdBtn.setAttribute("href", link.getAttribute("href"));
 			bdBtn.setAttribute("slot", "cta");
@@ -78,14 +78,14 @@ async function decorate(block) {
 	const isCentered = sectionEl?.classList.contains("centered");
 	const isBlue = block.classList.contains("blue") || sectionEl?.classList.contains("blue");
 	const useSubgrid = block.classList.contains("use-subgrid") || sectionEl?.classList.contains("use-subgrid");
-	const cardSection = document.createElement("bd-card-section");
+	const cardSection = document.createElement("bd-card-grid");
 	if (useSubgrid) cardSection.setAttribute("align-rows", "");
 	if (sectionTitle) cardSection.setAttribute("title", sectionTitle);
 	cardRows.forEach((row) => {
 		const item = buildCardItem(row, shape);
 		if (isCentered) {
 			item.setAttribute("align", "center");
-			item.querySelector("bd-button-link[slot=\"cta\"]")?.setAttribute("align", "center");
+			item.querySelector("bd-button[slot=\"cta\"]")?.setAttribute("align", "center");
 		}
 		if (isBlue) item.setAttribute("bg-blue", "");
 		if (shape) item.setAttribute("shape", shape);
@@ -106,7 +106,7 @@ async function decorate(block) {
 		}
 		const link = wrapper.querySelector("a");
 		if (link) {
-			const bdBtn = document.createElement("bd-button-link");
+			const bdBtn = document.createElement("bd-button");
 			bdBtn.setAttribute("kind", "danger");
 			bdBtn.setAttribute("align", "center");
 			bdBtn.setAttribute("href", link.getAttribute("href"));
@@ -124,7 +124,7 @@ async function decorate(block) {
 		console.warn("four-cards: DSN import failed, continuing with native rendering", err);
 	}
 	block.replaceChildren(cardSection, ...buttons);
-	block.querySelectorAll("bd-card-item[data-title-html]").forEach((cardItem) => {
+	block.querySelectorAll("bd-card[data-title-html]").forEach((cardItem) => {
 		const bdH = cardItem.shadowRoot?.querySelector("bd-h");
 		if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
 	});

@@ -174,7 +174,7 @@ async function decorate(block) {
 	fetchAwardsData(block);
 	removeAwardsLinkFromDom(block);
 	window.addEventListener("accordion-bg:loaded", () => {
-		const accordionShadowRoot = block.querySelector("bd-accordion-bg").shadowRoot;
+		const accordionShadowRoot = block.querySelector("bd-accordion").shadowRoot;
 		if (accordionShadowRoot) {
 			const style = document.createElement("style");
 			style.textContent = `

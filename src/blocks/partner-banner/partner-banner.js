@@ -47,7 +47,7 @@ export default async function decorate(block) {
 
   const buttons = links.map((p) => {
     const link = p.querySelector('a');
-    const button = document.createElement('bd-button-link');
+    const button = document.createElement('bd-button');
     button.setAttribute('slot', 'actions');
     // bold is the primary action on the card, a plain link the secondary;
     // decorateButtons has already turned a bold link into a.button.primary

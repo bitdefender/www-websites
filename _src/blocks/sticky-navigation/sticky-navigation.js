@@ -84,7 +84,7 @@ function buildFromSections(anchorNav, block) {
 		const isModal = ctaLink.classList.contains("modal");
 		const ctaHref = (ctaLink.getAttribute("href") || ctaLink.getAttribute("location") || "").replace(/\.html(?=#|$)/, "");
 		const ctaLabel = ctaLink.textContent.trim();
-		const buttonLink = document.createElement("bd-button-link");
+		const buttonLink = document.createElement("bd-button");
 		buttonLink.setAttribute("slot", "cta");
 		buttonLink.setAttribute("href", ctaHref);
 		buttonLink.setAttribute("kind", ctaKind);

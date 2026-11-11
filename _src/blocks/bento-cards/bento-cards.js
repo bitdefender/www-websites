@@ -51,7 +51,7 @@ var buildCard = (row) => {
 	if (art) card.append(art);
 	paragraphs.filter(isLinkOnly).forEach((p) => {
 		const link = p.querySelector("a");
-		const cta = document.createElement("bd-button-link");
+		const cta = document.createElement("bd-button");
 		cta.setAttribute("variant", "outline-white");
 		cta.setAttribute("href", link.getAttribute("href") || "");
 		cta.textContent = link.textContent.trim();

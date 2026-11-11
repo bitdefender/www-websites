@@ -67,7 +67,7 @@ describe('bento-cards block', () => {
   });
 
   it('turns the link into an outline-white CTA at the responsive size', () => {
-    const cta = cards[0].querySelector(':scope > bd-button-link');
+    const cta = cards[0].querySelector(':scope > bd-button');
     expect(cta.getAttribute('variant')).toBe('outline-white');
     // no size: the design system's default is md below lg and lg from it
     expect(cta.hasAttribute('size')).toBe(false);
@@ -119,7 +119,7 @@ describe('bento-cards block without card headings', () => {
     cards.forEach((card) => expect(card.hasAttribute('title')).toBe(false));
     expect(cards[0].getAttribute('badge')).toBe('AI for Consumers');
     expect(cards[0].getAttribute('body')).toMatch(/^Smarter protection/);
-    expect(cards[0].querySelector('bd-button-link')).not.toBeNull();
+    expect(cards[0].querySelector('bd-button')).not.toBeNull();
     expect(cards[0].querySelector('bd-motion-art')).not.toBeNull();
   });
 });

@@ -122,7 +122,7 @@ const buildCtaSlot = (cell) => {
   const anchor = cell.querySelector('.button-container a');
   if (!anchor) return null;
 
-  const bdBtn = document.createElement('bd-button-link');
+  const bdBtn = document.createElement('bd-button');
   bdBtn.setAttribute('slot', 'cta');
   bdBtn.setAttribute('href', anchor.getAttribute('href') || '#');
   bdBtn.setAttribute('kind', anchor.classList.contains('secondary') ? 'secondary' : 'danger');

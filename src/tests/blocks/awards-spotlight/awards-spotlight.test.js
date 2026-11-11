@@ -43,7 +43,7 @@ describe('awards-spotlight block', () => {
   beforeAll(async () => {
     block = await renderFixture();
     section = block.closest('.section');
-    spotlight = block.querySelector(':scope > bd-awards-spotlight');
+    spotlight = block.querySelector(':scope > bd-awards[layout="spotlight"]');
   });
 
   afterAll(() => {
@@ -80,7 +80,7 @@ describe('awards-spotlight block', () => {
   it('turns the section button links into primary DS buttons under the header', () => {
     const wrapper = section.querySelector(':scope > bd-section > .default-content-wrapper');
     const actions = wrapper.querySelector(':scope > bd-section-header + .awards-spotlight-actions');
-    const buttons = [...actions.querySelectorAll('bd-button-link')];
+    const buttons = [...actions.querySelectorAll('bd-button')];
     expect(buttons.map((button) => [button.textContent, button.getAttribute('variant')])).toEqual([
       ['Consumer Recognition', 'primary'],
       ['Enterprise Recognition', 'primary'],

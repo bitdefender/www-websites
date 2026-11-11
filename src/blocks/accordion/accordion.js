@@ -40,7 +40,7 @@ const buildAccordion = (block) => {
     defaultWrapper.remove();
   }
 
-  const accordion = document.createElement('bd-accordion-bg');
+  const accordion = document.createElement('bd-accordion');
   if (sectionTitle) {
     accordion.setAttribute('title', sectionTitle);
   }
@@ -55,7 +55,7 @@ const buildAccordion = (block) => {
     const titleEl = headerCell.querySelector('h1, h2, h3, h4, h5, h6, p');
     const title = titleEl?.textContent?.trim() || headerCell.textContent.trim();
 
-    const item = document.createElement('bd-accordion-bg-item');
+    const item = document.createElement('bd-accordion-item');
     item.setAttribute('title', title);
 
     if (isFirstOpen && index === 0) {

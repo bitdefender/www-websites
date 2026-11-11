@@ -1,6 +1,6 @@
 /* Bar Chart Styles */
 
-.barchart-container-v2 bd-compare-section {
+.barchart-container-v2 bd-bar-chart-grid {
   /* stylelint-disable custom-property-pattern */
   --cs-gap: max(var(--spacing-32, 32px), calc(100% - 2 * 598px));
   --typography-heading-h4-fontSize: var(--typography-heading-h3-fontSize);

@@ -57,7 +57,7 @@ const appendButtons = (banner, cell, slot) => {
   if (!cell) return;
 
   cell.querySelectorAll('.button-container a, a.button').forEach((link, index) => {
-    const button = document.createElement('bd-button-link');
+    const button = document.createElement('bd-button');
     button.setAttribute('slot', slot);
     button.setAttribute('href', link.getAttribute('href') || '');
     button.setAttribute('label', link.textContent.trim());
@@ -77,7 +77,7 @@ export default async function decorate(block) {
   const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
   const { headingCell, descriptionCell } = getContentCells(block, heading);
   const description = getDescription(block, heading, descriptionCell);
-  const spotlightSection = document.createElement('bd-spotlight-section');
+  const spotlightSection = document.createElement('bd-spotlight');
   const title = heading?.textContent.trim();
 
   if (title) spotlightSection.setAttribute('title', title);

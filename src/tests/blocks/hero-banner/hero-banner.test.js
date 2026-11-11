@@ -101,7 +101,7 @@ async function setup(cellHtml, metadata = {}, blockClasses = '') {
   Object.assign(section.dataset, metadata);
   const block = document.querySelector('.hero-banner');
   await decorate(block);
-  await Promise.all([...block.querySelectorAll('bd-button-link, bd-custom-dropdown')]
+  await Promise.all([...block.querySelectorAll('bd-button, bd-select')]
     .map((atom) => atom.updateComplete));
   await Promise.resolve();
   return block;
@@ -145,7 +145,7 @@ describe('hero-banner', () => {
     });
 
     it('renders the dropdown atom with one option per product, named by the description', () => {
-      const dropdown = block.querySelector('bd-custom-dropdown.hero-banner__select');
+      const dropdown = block.querySelector('bd-select.hero-banner__select');
       expect(dropdown.options).toEqual(['Premium Security', 'Total Security', 'Ultimate Security']);
       expect(dropdown.value).toBe('Premium Security');
       expect(dropdown.shadowRoot.querySelector('select').getAttribute('aria-label'))
@@ -163,7 +163,7 @@ describe('hero-banner', () => {
     });
 
     it('shows the chosen product\'s offer when the dropdown changes', () => {
-      const select = block.querySelector('bd-custom-dropdown').shadowRoot.querySelector('select');
+      const select = block.querySelector('bd-select').shadowRoot.querySelector('select');
       select.value = 'Ultimate Security';
       select.dispatchEvent(new Event('change'));
       const offers = [...block.querySelectorAll('.hero-banner__offer')];
@@ -183,7 +183,7 @@ describe('hero-banner', () => {
     });
 
     it('makes the primary CTA an accent store buy link the store can see, and keeps the second button', () => {
-      const [buy, second] = visibleOffer(block).querySelectorAll('bd-button-link.hero-banner__cta');
+      const [buy, second] = visibleOffer(block).querySelectorAll('bd-button.hero-banner__cta');
       expect(buy.textContent).toBe('Get it now');
       expect(buy.getAttribute('variant')).toBe('accent');
       expect(buy.hasAttribute('data-bd-watch-shadow')).toBe(true);
@@ -245,7 +245,7 @@ describe('hero-banner', () => {
     });
 
     it('shows the price without a dropdown', () => {
-      expect(block.querySelector('bd-custom-dropdown')).toBeNull();
+      expect(block.querySelector('bd-select')).toBeNull();
       expect(block.querySelectorAll('.hero-banner__offer')).toHaveLength(1);
       expect(visibleOffer(block).querySelector('.hero-banner__details').textContent).toBe('5 team members');
     });
@@ -291,7 +291,7 @@ describe('hero-banner', () => {
         secondbuttonlink: '#plans',
       });
       expect(block.querySelector('.hero-banner__offer')).toBeNull();
-      const anchors = [...block.querySelectorAll('bd-button-link.hero-banner__cta')].map(anchorOf);
+      const anchors = [...block.querySelectorAll('bd-button.hero-banner__cta')].map(anchorOf);
       expect(anchors.map((a) => a.getAttribute('href')))
         .toEqual(['https://chromewebstore.google.com/detail/web-sage', '#plans']);
       expect(anchors[0].hasAttribute('data-store-buy-link')).toBe(false);
@@ -331,7 +331,7 @@ describe('hero-banner', () => {
 
     it('turns the authored button paragraphs into button atoms in the CTA row', () => {
       const authored = block.querySelector('.hero-banner__ctas--authored');
-      const ctas = [...authored.querySelectorAll('bd-button-link')];
+      const ctas = [...authored.querySelectorAll('bd-button')];
       expect(ctas.map((cta) => cta.textContent))
         .toEqual(['Compare Individual Plans', 'Compare Family Plans', 'See all plans']);
       expect(ctas.map((cta) => cta.getAttribute('variant'))).toEqual(['tertiary', 'accent', 'tertiary']);
@@ -341,7 +341,7 @@ describe('hero-banner', () => {
     });
 
     it('keeps a modal link the page already bound working, from its stored location', () => {
-      block.querySelectorAll('.hero-banner__ctas--authored bd-button-link')[2].click();
+      block.querySelectorAll('.hero-banner__ctas--authored bd-button')[2].click();
       expect(openModal).toHaveBeenCalledWith('/en-us/consumer/fragments/plans', true);
     });
 
@@ -368,7 +368,7 @@ describe('hero-banner', () => {
     });
 
     it('makes each link of a links-only paragraph a button: italic the outline one', () => {
-      const ctas = [...block.querySelectorAll('.hero-banner__ctas--authored bd-button-link')];
+      const ctas = [...block.querySelectorAll('.hero-banner__ctas--authored bd-button')];
       expect(ctas.map((cta) => cta.textContent)).toEqual(['Compare Individual Plans', 'Compare Family Plans']);
       expect(ctas.map((cta) => cta.getAttribute('variant'))).toEqual(['tertiary', 'tertiary']);
       expect(ctas.map((cta) => anchorOf(cta).getAttribute('href')))
@@ -377,7 +377,7 @@ describe('hero-banner', () => {
 
     it('leaves a paragraph with a bare URL in it as text', () => {
       expect(block.querySelector('.hero-banner__description').textContent).toContain('Buy Ultimate');
-      expect(block.querySelectorAll('.hero-banner__ctas--authored bd-button-link')).toHaveLength(2);
+      expect(block.querySelectorAll('.hero-banner__ctas--authored bd-button')).toHaveLength(2);
     });
 
     it('keeps the image after the h1 as the hero image and the award marks under the buttons', () => {
@@ -403,7 +403,7 @@ describe('hero-banner', () => {
     it('ignores malformed product codes', async () => {
       const block = await setup(`${PICTURE}<h1>Title</h1><p>{Dropdown}</p>`, { dropdown: 'ps_i/5/1, nonsense, , ts_i/5' });
       expect(block.querySelectorAll('.hero-banner__offer')).toHaveLength(1);
-      expect(block.querySelector('bd-custom-dropdown')).toBeNull();
+      expect(block.querySelector('bd-select')).toBeNull();
     });
 
     it('keeps the dropdown labels unique, so each maps back to its product', async () => {
@@ -411,7 +411,7 @@ describe('hero-banner', () => {
         dropdown: 'ps_i/5/1, ps_i/10/1',
         productnames: 'Premium Security | 5 Devices, Premium Security | 10 Devices',
       });
-      expect(block.querySelector('bd-custom-dropdown').options)
+      expect(block.querySelector('bd-select').options)
         .toEqual(['Premium Security', 'Premium Security - 10 Devices']);
     });
 
@@ -423,7 +423,7 @@ describe('hero-banner', () => {
         secondbuttonlink: '#plans',
         linksOpenInNewTab: 'true',
       });
-      const [external, anchor] = block.querySelectorAll('bd-button-link.hero-banner__cta');
+      const [external, anchor] = block.querySelectorAll('bd-button.hero-banner__cta');
       expect(external.target).toBe('_blank');
       expect(anchor.target).toBeUndefined();
     });

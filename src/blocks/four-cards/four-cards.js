@@ -33,7 +33,7 @@ const buildCardItem = (row, shape) => {
   const title = headings.map((h) => h.textContent.trim()).filter(Boolean).join(' ');
   const titleHtml = headings.map((h) => h.innerHTML.trim()).filter(Boolean).join('<br>');
 
-  const item = document.createElement('bd-card-item');
+  const item = document.createElement('bd-card');
   item.setAttribute('title', title);
   if (titleHtml !== title) item.dataset.titleHtml = titleHtml;
 
@@ -57,7 +57,7 @@ const buildCardItem = (row, shape) => {
 
     const link = p.querySelector('a');
     if (link) {
-      const bdBtn = document.createElement('bd-button-link');
+      const bdBtn = document.createElement('bd-button');
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('href', link.getAttribute('href'));
       bdBtn.setAttribute('slot', 'cta');
@@ -109,7 +109,7 @@ export default async function decorate(block) {
   // Opt-in until the subgrid layout is rolled out to every four-cards
   const useSubgrid = block.classList.contains('use-subgrid') || sectionEl?.classList.contains('use-subgrid');
 
-  const cardSection = document.createElement('bd-card-section');
+  const cardSection = document.createElement('bd-card-grid');
   // Subgrid layout: icon, title, each text/picture row and CTA line up across cards
   if (useSubgrid) cardSection.setAttribute('align-rows', '');
   if (sectionTitle) cardSection.setAttribute('title', sectionTitle);
@@ -118,7 +118,7 @@ export default async function decorate(block) {
     const item = buildCardItem(row, shape);
     if (isCentered) {
       item.setAttribute('align', 'center');
-      item.querySelector('bd-button-link[slot="cta"]')?.setAttribute('align', 'center');
+      item.querySelector('bd-button[slot="cta"]')?.setAttribute('align', 'center');
     }
     if (isBlue) item.setAttribute('bg-blue', '');
     if (shape) item.setAttribute('shape', shape);
@@ -152,7 +152,7 @@ export default async function decorate(block) {
     // renders below the cards grid rather than as a grid item inside it.
     const link = wrapper.querySelector('a');
     if (link) {
-      const bdBtn = document.createElement('bd-button-link');
+      const bdBtn = document.createElement('bd-button');
       bdBtn.setAttribute('kind', 'danger');
       bdBtn.setAttribute('align', 'center');
       bdBtn.setAttribute('href', link.getAttribute('href'));
@@ -177,7 +177,7 @@ export default async function decorate(block) {
   block.replaceChildren(cardSection, ...buttons);
 
   // Patch bd-h titles with raw HTML (preserves <br> from authored content)
-  block.querySelectorAll('bd-card-item[data-title-html]').forEach((cardItem) => {
+  block.querySelectorAll('bd-card[data-title-html]').forEach((cardItem) => {
     const bdH = cardItem.shadowRoot?.querySelector('bd-h');
     if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
   });

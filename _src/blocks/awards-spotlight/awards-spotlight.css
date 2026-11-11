@@ -9,6 +9,6 @@
   margin-top: var(--spacing-24, 24px);
 }
 
-.awards-spotlight-actions bd-button-link[fullwidth] {
+.awards-spotlight-actions bd-button[fullwidth] {
   flex-basis: 100%;
 }

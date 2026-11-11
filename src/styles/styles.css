@@ -836,7 +836,7 @@ main div.section:is(
       }
     }
 
-    &.accordion-container.container-v2 .accordion.faq bd-accordion-bg {
+    &.accordion-container.container-v2 .accordion.faq bd-accordion {
       --typography-heading-h2-fontSize: var(--typography-heading-h3-fontSize);
       --typography-heading-h2-fontWeight: var(--typography-heading-h3-fontWeight);
       --typography-heading-h2-lineHeight: var(--typography-heading-h3-lineHeight);

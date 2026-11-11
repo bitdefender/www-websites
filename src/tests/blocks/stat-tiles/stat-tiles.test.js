@@ -99,7 +99,7 @@ describe('stat-tiles block', () => {
     const copy = lead.querySelector('bd-p');
     expect(copy.textContent).toMatch(/^Through global ransomware operations/);
 
-    const cta = lead.querySelector('bd-button-link');
+    const cta = lead.querySelector('bd-button');
     expect(cta.getAttribute('variant')).toBe('primary');
     expect(cta.getAttribute('href')).toBe('https://www.bitdefender.com/en-us/company/');
     expect(cta.textContent).toBe('Learn Why Millions Trust Us');
@@ -110,7 +110,7 @@ describe('stat-tiles block', () => {
     expect(tiles.getAttribute('cols')).toBe('1');
     expect(tiles.getAttribute('cols-md')).toBe('2');
 
-    const items = [...tiles.querySelectorAll(':scope > bd-stat-tile')];
+    const items = [...tiles.querySelectorAll(':scope > bd-stat')];
     expect(items.map((t) => t.getAttribute('value'))).toEqual([
       '580+', '30+', '50%+', '30+', '50B+', '487+',
     ]);
@@ -118,7 +118,7 @@ describe('stat-tiles block', () => {
   });
 
   it('names a tile by its spoken form only where one is authored', () => {
-    const items = [...block.querySelectorAll('bd-stat-tile')];
+    const items = [...block.querySelectorAll('bd-stat')];
     expect(items[4].getAttribute('label')).toBe('50 billion plus');
     expect(items[0].hasAttribute('label')).toBe(false);
   });
@@ -133,7 +133,7 @@ describe('stat-tiles block without the highlight button', () => {
     });
 
     expect(block.querySelector('bd-stat-highlight')?.getAttribute('value')).toBe('$1.5B+');
-    expect(block.querySelector('bd-button-link')).toBeNull();
-    expect(block.querySelectorAll('bd-stat-tile')).toHaveLength(6);
+    expect(block.querySelector('bd-button')).toBeNull();
+    expect(block.querySelectorAll('bd-stat')).toHaveLength(6);
   });
 });

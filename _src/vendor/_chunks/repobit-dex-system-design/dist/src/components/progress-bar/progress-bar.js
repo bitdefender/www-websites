@@ -1,0 +1,14 @@
+import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import{t as s}from"../shared/prop-vocabulary.js";import{t as c}from"../shared/controller.slot.js";var l=r`:host{--bd-progress-fill:var(--status-info-accent);display:block}.track{width:100%;height:var(--spacing-8);appearance:none;background:var(--color-surface-muted);border-radius:var(--radius-full);border:none;display:block;overflow:clip}.track::-webkit-progress-bar{background:0 0}.track::-webkit-progress-value{background:var(--bd-progress-fill);border-radius:var(--radius-full);transition:inline-size var(--transition-duration-slow) var(--transition-easing-smooth)}.track::-moz-progress-bar{background:var(--bd-progress-fill);border-radius:var(--radius-full)}:host([variant=info]){--bd-progress-fill:var(--status-info-accent)}:host([variant=success]){--bd-progress-fill:var(--status-success-accent)}:host([variant=error]){--bd-progress-fill:var(--status-error-accent)}.label{margin-bottom:var(--spacing-4);font-family:var(--typography-caption-default-fontFamily);font-size:var(--typography-caption-default-fontSize);font-weight:var(--typography-caption-default-fontWeight);line-height:var(--typography-caption-default-lineHeight);letter-spacing:var(--typography-caption-default-letterSpacing);color:var(--typography-caption-default-color);justify-content:space-between;display:flex}.label[hidden]{display:none}@media (prefers-reduced-motion:reduce){.track::-webkit-progress-value{transition:none}}@media (forced-colors:active){.track{forced-color-adjust:none;border:var(--border-width-1) solid CanvasText;background:canvas}.track::-webkit-progress-value{background:highlight}.track::-moz-progress-bar{background:highlight}}`,u=[`info`,`success`,`error`],d=class extends n{constructor(...e){super(...e),this.value=0,this.max=100,this._slots=new c(this,{slots:[`label`]})}static{this.styles=[l]}willUpdate(e){e.has(`variant`)&&this.variant!=null&&!s(u,this.variant)&&(this.variant=void 0)}render(){let n=Number.isFinite(this.max)&&this.max>0?this.max:100,r=Number.isFinite(this.value)?Math.min(Math.max(this.value,0),n):0,i=r/n*100,a=this._slots.has(`label`);return e`
+      <span class="label" ?hidden=${!a}>
+        <span id="label"><slot name="label"></slot></span>
+        <span>${Math.round(i)}%</span>
+      </span>
+      <progress
+        id="bar"
+        class="track"
+        value=${r}
+        max=${n}
+        aria-labelledby=${a?`label`:t}
+        aria-label=${a?t:`Progress`}
+      ></progress>
+    `}};o([i({type:Number})],d.prototype,`value`,void 0),o([i({type:Number})],d.prototype,`max`,void 0),o([i({type:String,reflect:!0})],d.prototype,`variant`,void 0),d=o([a(`bd-progress-bar`)],d);export{d as BdProgressBar};
