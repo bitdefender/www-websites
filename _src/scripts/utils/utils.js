@@ -1392,10 +1392,12 @@ var toDescription = (p) => {
 * section is read too, its variant class giving the layout.
 *
 * @param {HTMLElement} block
-* @param {{ layout?: string }} [options] a layout that wins over the section's
+* @param {{ layout?: string, defaultLayout?: string }} [options] `layout` wins
+* over the section's; `defaultLayout` is the block's own, used when the section
+* names none
 * @returns {Promise<HTMLElement|null>} the header, or null when there is none
 */
-var liftSectionHeader = async (block, { layout } = {}) => {
+var liftSectionHeader = async (block, { layout, defaultLayout } = {}) => {
 	const section = block.closest(".section");
 	if (!section || section.dataset.headerLifted !== void 0) return null;
 	const content = getSectionContent(section);
@@ -1419,7 +1421,7 @@ var liftSectionHeader = async (block, { layout } = {}) => {
 	section.dataset.headerLifted = "";
 	const styleLayout = HEADER_LAYOUTS.find((name) => section.classList.contains(`section-header-${name}`));
 	const legacyLayout = legacy && HEADER_LAYOUTS.find((name) => legacy.classList.contains(name));
-	const requested = (layout || styleLayout || section.dataset.header || legacyLayout || "").trim().toLowerCase();
+	const requested = (layout || styleLayout || section.dataset.header || legacyLayout || defaultLayout || "").trim().toLowerCase();
 	const header = document.createElement("bd-section-header");
 	if (heading) {
 		const title = document.createElement("bd-h");

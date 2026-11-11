@@ -127,6 +127,15 @@ describe('barchart block', () => {
   });
 });
 
+describe('barchart block in a section that names a header layout', () => {
+  it('takes the section\'s layout over its own centred default', async () => {
+    const metadata = '<div class="section-metadata"><div><div>Style</div><div>Section-header-split</div></div></div>';
+    const block = await renderFixture((html) => html.replace('<div>', `<div>${metadata}`));
+    const header = block.closest('bd-section').querySelector('bd-section-header');
+    expect(header.getAttribute('layout')).toBe('split');
+  });
+});
+
 describe('barchart block without a section title', () => {
   it('renders the grid alone, with no region to name', async () => {
     const block = await renderFixture((html) => html.replace(/<h2[^>]*>.*<\/h2>/, ''));

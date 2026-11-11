@@ -333,7 +333,8 @@ const activateCompareAnimationsOnViewport = (compareSection) => {
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
   // the section's eyebrow, heading and lead, centred over the centred charts
-  const header = liftSectionHeader(block, { layout: 'centered' });
+  // unless the section's metadata names another layout
+  const header = liftSectionHeader(block, { defaultLayout: 'centered' });
 
   const grid = buildGrid(block);
   try {

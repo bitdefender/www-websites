@@ -205,7 +205,7 @@ var activateCompareAnimationsOnViewport = (compareSection) => {
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);
-	const header = liftSectionHeader(block, { layout: "centered" });
+	const header = liftSectionHeader(block, { defaultLayout: "centered" });
 	const grid = buildGrid(block);
 	try {
 		await load(grid);
