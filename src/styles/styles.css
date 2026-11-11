@@ -1869,7 +1869,30 @@ main .section.blue p a.button.modal::after {
 }
 
 .tag-light-blue {
-  background-color: var(--light-blue-tag);
+  background: #D0E4FF;
+  border-radius: 23px;
+  color: #006DFF;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 5px 10px;
+  text-decoration: none;
+  text-transform: none;
+  margin-bottom: 5px;
+  margin-left: 0;
+}
+
+/* A row of [{...}] pills in default content: center them as a wrapping row. */
+.default-content-wrapper p:has(> .tag-light-blue + .tag-light-blue) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+
+  .tag-light-blue {
+    margin-bottom: 0;
+  }
 }
 
 .tag-light-blue-round {

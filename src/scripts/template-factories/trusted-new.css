@@ -399,21 +399,6 @@ hr {
   margin-bottom: 0;
 }
 
-.trusted-new main .tag-light-blue {
-  background: #D0E4FF;
-  border-radius: 23px;
-  color: #006DFF;
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  padding: 5px 10px;
-  text-decoration: none;
-  text-transform: uppercase;
-  margin-bottom: 5px;
-  margin-left: 0;
-}
-
 .trusted-new main .button-container a.button {
   align-items: center;
   background: var(--trusted-blue);
