@@ -3,6 +3,17 @@ import { load } from '@repobit/dex-system-design/loader';
 const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
 const VIEWPORT_ANIMATION_MS = 1000;
 const EASE_OUT_CUBIC = (value) => 1 - ((1 - value) ** 3);
+const MAX_SCORE = '6';
+
+/* The English 3.x drew into every chart, which 4.0 leaves to the page: the
+   bars' group name, and the sr-only note the chart is described by, its
+   scale out of the max-score every bar here has. */
+const BARS_LABEL = 'Scores by brand';
+const SCALE_NOTE = `Bar lengths are scaled for visibility between brands. Use the announced scores for exact values; scale is out of ${MAX_SCORE}.`;
+// 3.x linked what follows it in a footnote, or the whole footnote without it
+const SOURCE = 'Source ';
+
+let regionCount = 0;
 
 const getHeadingText = (root) => root?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
 
@@ -65,6 +76,61 @@ const getCardIconSrc = (iconWrap) => {
 const getFallbackScale = (secondaryIndex) => DEFAULT_SECONDARY_SCALES[secondaryIndex]
   ?? DEFAULT_SECONDARY_SCALES[DEFAULT_SECONDARY_SCALES.length - 1];
 
+const slotted = (tag, slot, text) => {
+  const el = document.createElement(tag);
+  if (slot) el.slot = slot;
+  el.textContent = text;
+  return el;
+};
+
+/* The section's title, which 3.x's bd-compare-section drew centred over the
+   charts at h3 and named its region by: the grid draws no heading in 4.0, so
+   it is a bd-section-header before the grid, in a region named by it. */
+const buildRegion = (title, grid) => {
+  regionCount += 1;
+  const heading = slotted('bd-h', 'title', title);
+  heading.setAttribute('as', 'h3');
+  heading.id = `barchart-title-${regionCount}`;
+
+  const header = document.createElement('bd-section-header');
+  header.setAttribute('layout', 'centered');
+  header.append(heading);
+
+  const region = document.createElement('section');
+  region.setAttribute('aria-labelledby', heading.id);
+  region.append(header, grid);
+  return region;
+};
+
+// the 48px icon 3.x drew, 40 on the horizontal layout
+const buildIcon = (src, size) => {
+  const icon = document.createElement('bd-img');
+  icon.slot = 'icon';
+  icon.setAttribute('src', src);
+  icon.setAttribute('alt', '');
+  icon.setAttribute('width', size);
+  icon.setAttribute('height', size);
+  icon.setAttribute('fit', 'contain');
+  icon.setAttribute('loading', 'eager');
+  return icon;
+};
+
+const buildFootnote = (text, href) => {
+  const footer = slotted('bd-p', 'footer', href ? '' : text);
+  footer.setAttribute('appearance', 'xsmall');
+  if (!href) return footer;
+
+  const at = text.indexOf(SOURCE);
+  const link = slotted('bd-link', '', at === -1 ? text : text.slice(at + SOURCE.length));
+  link.setAttribute('href', href);
+  link.setAttribute('target', '_blank');
+  link.setAttribute('font-size', 'xs');
+  link.setAttribute('color', 'strong');
+  link.setAttribute('underline', '');
+  footer.append(...(at === -1 ? [link] : [text.slice(0, at + SOURCE.length), link]));
+  return footer;
+};
+
 const prefersReducedMotion = () => {
   try {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -83,9 +149,6 @@ const buildCompareSection = (block) => {
   }
 
   const compareSection = document.createElement('bd-bar-chart-grid');
-  if (sectionTitle) {
-    compareSection.setAttribute('title', sectionTitle);
-  }
   const rows = Array.from(block.querySelectorAll(':scope > div'));
   const validRows = rows.filter((row) => row.children.length >= 2);
   const isSingleCard = validRows.length === 1;
@@ -121,35 +184,28 @@ const buildCompareSection = (block) => {
     }
 
     const card = document.createElement('bd-bar-chart');
-    const cardTitle = titleEl?.textContent?.trim();
-    if (cardTitle) {
-      card.setAttribute('title', cardTitle);
-    }
-
-    const cardDescription = descriptionEl?.textContent?.trim();
-    if (cardDescription) {
-      card.setAttribute('description', cardDescription);
+    card.setAttribute('bars-label', BARS_LABEL);
+    card.setAttribute('scale-note', SCALE_NOTE);
+    if (isSingleCard) {
+      card.setAttribute('orientation', 'horizontal');
     }
 
     const iconSrc = getCardIconSrc(iconWrap);
     if (iconSrc) {
-      card.setAttribute('icon-src', iconSrc);
+      card.append(buildIcon(iconSrc, isSingleCard ? '40' : '48'));
     }
 
-    if (footnoteEl) {
-      const footnoteText = footnoteEl.textContent.trim();
-      if (footnoteText) {
-        card.setAttribute('footnote', footnoteText);
-      }
-
-      const footnoteLink = footnoteEl.querySelector('a');
-      if (footnoteLink?.href) {
-        card.setAttribute('footnote-href', footnoteLink.href);
-      }
+    const cardTitle = titleEl?.textContent?.trim();
+    if (cardTitle) {
+      // the levels 3.x drew: h4, h3 on the horizontal layout
+      const heading = slotted('bd-h', 'title', cardTitle);
+      heading.setAttribute('as', isSingleCard ? 'h3' : 'h4');
+      card.append(heading);
     }
 
-    if (isSingleCard) {
-      card.setAttribute('layout', 'horizontal');
+    const cardDescription = descriptionEl?.textContent?.trim();
+    if (cardDescription) {
+      card.append(slotted('bd-p', 'description', cardDescription));
     }
 
     const listItems = Array.from(listEl?.querySelectorAll('li') || []);
@@ -164,11 +220,11 @@ const buildCompareSection = (block) => {
         const isPrimaryBar = /bitdefender/i.test(label);
         const parsedScale = parseScaleValue(listItems[i + 2]?.textContent?.trim());
 
-        const bar = document.createElement('bd-bar-chart-item');
-        bar.setAttribute('label', label);
+        // the brand's name is the bar's text, and the meter's accessible name
+        const bar = slotted('bd-bar-chart-item', '', label);
         bar.setAttribute('score', normalizeScore(score));
-        bar.setAttribute('max-score', '6');
-        bar.setAttribute('variant', isPrimaryBar ? 'primary' : 'secondary');
+        bar.setAttribute('max-score', MAX_SCORE);
+        bar.setAttribute('appearance', isPrimaryBar ? 'primary' : 'secondary');
 
         if (parsedScale) {
           bar.setAttribute('scale', parsedScale);
@@ -189,14 +245,23 @@ const buildCompareSection = (block) => {
       }
     }
 
+    // the bars' own scale draws them, not the stretch mapping
     if (hasScaledBars) {
-      card.setAttribute('bar-stretch', 'false');
+      card.setAttribute('without-stretch', '');
+    }
+
+    const footnoteText = footnoteEl?.textContent.trim();
+    if (footnoteText) {
+      card.append(buildFootnote(footnoteText, footnoteEl.querySelector('a')?.href));
     }
 
     compareSection.appendChild(card);
   });
 
-  return compareSection;
+  return {
+    compareSection,
+    region: sectionTitle ? buildRegion(sectionTitle, compareSection) : compareSection,
+  };
 };
 
 const runBarsIntroAnimation = (compareSection) => {
@@ -205,7 +270,7 @@ const runBarsIntroAnimation = (compareSection) => {
   }
 
   const secondaryBars = Array.from(compareSection.querySelectorAll('bd-bar-chart-item'))
-    .filter((bar) => bar.getAttribute('variant') !== 'primary');
+    .filter((bar) => bar.getAttribute('appearance') !== 'primary');
 
   if (!secondaryBars.length) {
     return;
@@ -280,8 +345,8 @@ const activateCompareAnimationsOnViewport = (compareSection) => {
 };
 
 export default async function decorate(block) {
-  const compareSection = buildCompareSection(block);
-  await load(compareSection);
-  block.replaceChildren(compareSection);
+  const { compareSection, region } = buildCompareSection(block);
+  await load(region);
+  block.replaceChildren(region);
   activateCompareAnimationsOnViewport(compareSection);
 }

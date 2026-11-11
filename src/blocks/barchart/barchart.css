@@ -9,3 +9,9 @@
   --typography-heading-h4-letterSpacing: var(--typography-heading-h3-letterSpacing);
   /* stylelint-enable custom-property-pattern */
 }
+
+/* 3.x's bd-compare-section drew its title 40 above the charts; the header
+   the block writes before the grid keeps that gap */
+.barchart bd-section-header {
+  margin-bottom: var(--spacing-40);
+}
