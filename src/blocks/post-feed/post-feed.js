@@ -19,12 +19,15 @@ const slotted = (tag, slot, words) => {
   return el;
 };
 
-/* The cover, as the bd-img the card's media slot takes: the picture's image.
-   It illustrates the title beside it, so it has no alt of its own. */
+/* The cover, as the bd-img the card's media slot takes: the picture's image,
+   the one the browser already picked, else its webp, else its fallback. It
+   illustrates the title beside it, so it has no alt of its own. */
 const buildCover = (row) => {
-  const img = row.querySelector('picture img');
-  const src = img?.currentSrc || img?.getAttribute('src');
-  if (!src) return null;
+  const picture = row.querySelector('picture');
+  const img = picture?.querySelector('img');
+  const webp = picture?.querySelector('source[type="image/webp"]:not([media])')?.getAttribute('srcset');
+  const src = img?.currentSrc || webp || img?.getAttribute('src');
+  if (!img || !src) return null;
   const cover = document.createElement('bd-img');
   cover.slot = 'media';
   cover.setAttribute('src', src);

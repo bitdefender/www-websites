@@ -97,7 +97,8 @@ describe('post-feed block', () => {
   it('slots each cover as a decorative bd-img', () => {
     const covers = cards.map((card) => card.querySelector(':scope > bd-img[slot="media"]'));
     expect(covers.every(Boolean)).toBe(true);
-    expect(covers[0].getAttribute('src')).toBe('./media_157d690b013dc21e37092408680aec8b567468d8f.png?width=750&format=png&optimize=medium');
+    // the picture's webp, at the width the card shows it
+    expect(covers[0].getAttribute('src')).toBe('./media_157d690b013dc21e37092408680aec8b567468d8f.png?width=750&format=webply&optimize=medium');
     expect(covers[0].getAttribute('width')).toBe('366');
     expect(covers[0].getAttribute('height')).toBe('148');
     covers.forEach((cover) => {
