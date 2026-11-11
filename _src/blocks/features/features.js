@@ -63,33 +63,27 @@ var buildTitle = (text, as) => {
 	bdH.textContent = text;
 	return bdH;
 };
+/**
+* The column's icon, as bd-feature-column's icon slot takes it: the page's
+* inline SVG as a bd-icon (slotIcon), or its image as a 40px bd-img.
+* @param {HTMLElement} col the authored column
+* @returns {HTMLElement|null}
+*/
 var getIconElement = (col) => {
-	const icon = document.createElement("span");
-	icon.setAttribute("slot", "icon");
-	icon.setAttribute("size", "40");
 	const iconSpan = col.querySelector("span.icon");
 	if (iconSpan) {
 		const color = [...col.querySelectorAll("p")].map((p) => p.textContent.trim()).find((text) => /^#[0-9a-fA-F]{3,6}$/.test(text));
-		icon.appendChild(slotIcon(iconSpan, { color }));
-		return icon;
+		return slotIcon(iconSpan, { color });
 	}
 	const image = col.querySelector("img");
-	if (image) {
-		const clone = image.cloneNode(true);
-		clone.removeAttribute("slot");
-		clone.style.width = "40px";
-		clone.style.height = "40px";
-		clone.style.display = "block";
-		icon.appendChild(clone);
-		return icon;
-	}
-	const picture = col.querySelector("picture");
-	if (picture) {
-		const clone = picture.cloneNode(true);
-		icon.appendChild(clone);
-		return icon;
-	}
-	return null;
+	if (!image) return null;
+	const img = document.createElement("bd-img");
+	img.slot = "icon";
+	img.setAttribute("src", image.currentSrc || image.getAttribute("src") || "");
+	img.setAttribute("alt", "");
+	img.setAttribute("width", "40");
+	img.setAttribute("height", "40");
+	return img;
 };
 var buildFeatureCol = (col, firstOpen) => {
 	const title = col.querySelector("h1, h2, h3")?.textContent?.trim() || "";

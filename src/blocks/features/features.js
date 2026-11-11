@@ -69,13 +69,13 @@ const buildTitle = (text, as) => {
   return bdH;
 };
 
+/**
+ * The column's icon, as bd-feature-column's icon slot takes it: the page's
+ * inline SVG as a bd-icon (slotIcon), or its image as a 40px bd-img.
+ * @param {HTMLElement} col the authored column
+ * @returns {HTMLElement|null}
+ */
 const getIconElement = (col) => {
-  // a plain wrapper for the authored icon, which bd-feature-column slots as it
-  // is. Not bd-icon, which draws the design system's own glyphs.
-  const icon = document.createElement('span');
-  icon.setAttribute('slot', 'icon');
-  icon.setAttribute('size', '40');
-
   // the page's own inline SVG: decorate() waited for the icon pass
   const iconSpan = col.querySelector('span.icon');
   if (iconSpan) {
@@ -83,28 +83,19 @@ const getIconElement = (col) => {
     const color = [...col.querySelectorAll('p')]
       .map((p) => p.textContent.trim())
       .find((text) => /^#[0-9a-fA-F]{3,6}$/.test(text));
-    icon.appendChild(slotIcon(iconSpan, { color }));
-    return icon;
+    return slotIcon(iconSpan, { color });
   }
 
   const image = col.querySelector('img');
-  if (image) {
-    const clone = image.cloneNode(true);
-    clone.removeAttribute('slot');
-    clone.style.width = '40px';
-    clone.style.height = '40px';
-    clone.style.display = 'block';
-    icon.appendChild(clone);
-    return icon;
-  }
-
-  const picture = col.querySelector('picture');
-  if (picture) {
-    const clone = picture.cloneNode(true);
-    icon.appendChild(clone);
-    return icon;
-  }
-  return null;
+  if (!image) return null;
+  const img = document.createElement('bd-img');
+  img.slot = 'icon';
+  img.setAttribute('src', image.currentSrc || image.getAttribute('src') || '');
+  // it illustrates the title beside it
+  img.setAttribute('alt', '');
+  img.setAttribute('width', '40');
+  img.setAttribute('height', '40');
+  return img;
 };
 
 const buildFeatureCol = (col, firstOpen) => {
@@ -178,7 +169,7 @@ const buildFeatureCol = (col, firstOpen) => {
 };
 
 export default async function decorate(block) {
-  // the icons are SVG before slotIcon copies them
+  // the icons are SVG before slotIcon reads them
   await decorateIcons(block);
 
   const firstOpen = block.classList.contains('first-open');

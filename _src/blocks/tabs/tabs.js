@@ -10,9 +10,48 @@ var parseIconColor = (cell) => {
 	const match = cell?.textContent?.match(/#[0-9a-fA-F]{3,6}/);
 	return match ? match[0] : null;
 };
+/** The icon size the cell names (`size: 32`), in px, or null. */
 var parseIconSize = (cell) => {
 	const match = cell?.textContent?.match(/\bsize:?\s*(\d+)/i);
-	return match ? match[1] : "40";
+	return match ? Number(match[1]) : null;
+};
+var ICON_STEPS = [
+	["xs", 12],
+	["sm", 16],
+	["md", 20],
+	["lg", 24],
+	["xl", 32],
+	["2xl", 48],
+	["3xl", 64]
+];
+/** The step of the icon scale nearest a px size; between two, the larger. */
+var nearestIconStep = (px) => ICON_STEPS.reduce((best, step) => Math.abs(step[1] - px) <= Math.abs(best[1] - px) ? step : best)[0];
+/**
+* The column's icon, as bd-feature-column's icon slot takes it: the cell's
+* image as a bd-img, 40px wide unless the cell names a size, or its inline
+* SVG as a bd-icon (slotIcon), at the nearest step of the icon scale to the
+* size the cell names.
+* @param {HTMLElement} [iconCell]
+* @returns {HTMLElement|null}
+*/
+var buildColumnIcon = (iconCell) => {
+	const size = parseIconSize(iconCell);
+	const imageSrc = getImageSrc(iconCell);
+	if (imageSrc) {
+		const img = document.createElement("bd-img");
+		img.slot = "icon";
+		img.setAttribute("src", imageSrc);
+		img.setAttribute("alt", "");
+		img.setAttribute("width", String(size || 40));
+		img.setAttribute("height", String(size || 40));
+		return img;
+	}
+	const iconSpan = iconCell?.querySelector("span.icon");
+	if (!iconSpan) return null;
+	return slotIcon(iconSpan, {
+		color: parseIconColor(iconCell),
+		...size && { size: nearestIconStep(size) }
+	});
 };
 /**
 * A heading in a slot: the component around it draws it, the page picks its
@@ -70,19 +109,8 @@ var buildTabCol = (cells, isFirstOpen) => {
 	const heading = titleCell.querySelector("h1, h2, h3, h4, h5, h6");
 	const col = document.createElement("bd-feature-column");
 	col.appendChild(buildTitle(heading?.textContent?.trim() || titleCell.textContent.trim(), "h4"));
-	const icon = document.createElement("span");
-	icon.setAttribute("slot", "icon");
-	const imageSrc = getImageSrc(iconCell);
-	const iconSpan = !imageSrc && iconCell?.querySelector("span.icon");
-	if (imageSrc) {
-		const img = document.createElement("img");
-		img.src = imageSrc;
-		icon.appendChild(img);
-	} else if (iconSpan) icon.appendChild(slotIcon(iconSpan, {
-		color: parseIconColor(iconCell),
-		size: parseIconSize(iconCell)
-	}));
-	col.appendChild(icon);
+	const icon = buildColumnIcon(iconCell);
+	if (icon) col.appendChild(icon);
 	if (descCell) {
 		if (descCell.textContent.trim()) {
 			const bdP = document.createElement("bd-p");
@@ -179,27 +207,6 @@ function buildTabsFromSections(config, title, subtitle) {
 	});
 	return bdTabs;
 }
-function normalizeLoadingFeatureIcons(container) {
-	container.querySelectorAll([".features.block [class*=\"icon-\"] svg"].join(", ")).forEach((svg) => {
-		svg.style.width = "40px";
-		svg.style.height = "40px";
-		svg.style.maxWidth = "40px";
-		svg.style.maxHeight = "40px";
-		svg.style.display = "block";
-	});
-}
-function watchAndNormalizeFeatureIcons(container) {
-	const observer = new MutationObserver(() => {
-		normalizeLoadingFeatureIcons(container);
-	});
-	observer.observe(container, {
-		childList: true,
-		subtree: true,
-		attributes: true,
-		attributeFilter: ["data-block-status"]
-	});
-	return observer;
-}
 async function decorate(block) {
 	const config = readBlockConfig(block);
 	if ("tab-group" in config) {
@@ -209,16 +216,11 @@ async function decorate(block) {
 		const bdTabs = buildTabsFromSections(config, title, subtitle);
 		if (bdTabs) {
 			block.replaceChildren(bdTabs);
-			normalizeLoadingFeatureIcons(bdTabs);
-			const iconObserver = watchAndNormalizeFeatureIcons(bdTabs);
 			try {
 				await loadBlocks(bdTabs);
-				normalizeLoadingFeatureIcons(bdTabs);
 				bdTabs.querySelectorAll("bd-accordion[appearance=\"faq\"], bd-accordion[appearance=\"terms\"]").forEach((el) => el.setAttribute("without-padding", ""));
 				await load(bdTabs);
-				iconObserver.disconnect();
 			} catch (err) {
-				iconObserver.disconnect();
 				console.warn("DSN imports failed (Mode 1)", err);
 			}
 		}

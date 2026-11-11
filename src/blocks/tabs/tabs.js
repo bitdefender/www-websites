@@ -12,9 +12,48 @@ const parseIconColor = (cell) => {
   return match ? match[0] : null;
 };
 
+/** The icon size the cell names (`size: 32`), in px, or null. */
 const parseIconSize = (cell) => {
   const match = cell?.textContent?.match(/\bsize:?\s*(\d+)/i);
-  return match ? match[1] : '40';
+  return match ? Number(match[1]) : null;
+};
+
+// the icon scale's steps and the px each one's --icon-*-size resolves to
+const ICON_STEPS = [['xs', 12], ['sm', 16], ['md', 20], ['lg', 24], ['xl', 32], ['2xl', 48], ['3xl', 64]];
+
+/** The step of the icon scale nearest a px size; between two, the larger. */
+const nearestIconStep = (px) => ICON_STEPS.reduce(
+  (best, step) => (Math.abs(step[1] - px) <= Math.abs(best[1] - px) ? step : best),
+)[0];
+
+/**
+ * The column's icon, as bd-feature-column's icon slot takes it: the cell's
+ * image as a bd-img, 40px wide unless the cell names a size, or its inline
+ * SVG as a bd-icon (slotIcon), at the nearest step of the icon scale to the
+ * size the cell names.
+ * @param {HTMLElement} [iconCell]
+ * @returns {HTMLElement|null}
+ */
+const buildColumnIcon = (iconCell) => {
+  const size = parseIconSize(iconCell);
+  const imageSrc = getImageSrc(iconCell);
+  if (imageSrc) {
+    const img = document.createElement('bd-img');
+    img.slot = 'icon';
+    img.setAttribute('src', imageSrc);
+    // it illustrates the title beside it
+    img.setAttribute('alt', '');
+    img.setAttribute('width', String(size || 40));
+    img.setAttribute('height', String(size || 40));
+    return img;
+  }
+  // the page's own inline SVG: decorate() waited for the icon pass
+  const iconSpan = iconCell?.querySelector('span.icon');
+  if (!iconSpan) return null;
+  return slotIcon(iconSpan, {
+    color: parseIconColor(iconCell),
+    ...(size && { size: nearestIconStep(size) }),
+  });
 };
 
 /**
@@ -83,24 +122,8 @@ const buildTabCol = (cells, isFirstOpen) => {
   // 3.x's bd-features drew the column's title at h4
   col.appendChild(buildTitle(heading?.textContent?.trim() || titleCell.textContent.trim(), 'h4'));
 
-  // a plain wrapper for the authored icon, which bd-feature-column slots as it
-  // is. Not bd-icon, which draws the design system's own glyphs.
-  const icon = document.createElement('span');
-  icon.setAttribute('slot', 'icon');
-  const imageSrc = getImageSrc(iconCell);
-  // the page's own inline SVG: decorate() waited for the icon pass
-  const iconSpan = !imageSrc && iconCell?.querySelector('span.icon');
-  if (imageSrc) {
-    const img = document.createElement('img');
-    img.src = imageSrc;
-    icon.appendChild(img);
-  } else if (iconSpan) {
-    icon.appendChild(slotIcon(iconSpan, {
-      color: parseIconColor(iconCell),
-      size: parseIconSize(iconCell),
-    }));
-  }
-  col.appendChild(icon);
+  const icon = buildColumnIcon(iconCell);
+  if (icon) col.appendChild(icon);
 
   if (descCell) {
     const descText = descCell.textContent.trim();
@@ -241,35 +264,6 @@ function buildTabsFromSections(config, title, subtitle) {
   return bdTabs;
 }
 
-function normalizeLoadingFeatureIcons(container) {
-  const selectors = [
-    '.features.block [class*="icon-"] svg',
-  ];
-
-  container.querySelectorAll(selectors.join(', ')).forEach((svg) => {
-    svg.style.width = '40px';
-    svg.style.height = '40px';
-    svg.style.maxWidth = '40px';
-    svg.style.maxHeight = '40px';
-    svg.style.display = 'block';
-  });
-}
-
-function watchAndNormalizeFeatureIcons(container) {
-  const observer = new MutationObserver(() => {
-    normalizeLoadingFeatureIcons(container);
-  });
-
-  observer.observe(container, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['data-block-status'],
-  });
-
-  return observer;
-}
-
 export default async function decorate(block) {
   const config = readBlockConfig(block);
 
@@ -282,26 +276,21 @@ export default async function decorate(block) {
     const bdTabs = buildTabsFromSections(config, title, subtitle);
     if (bdTabs) {
       block.replaceChildren(bdTabs);
-      normalizeLoadingFeatureIcons(bdTabs);
-      const iconObserver = watchAndNormalizeFeatureIcons(bdTabs);
 
       try {
         await loadBlocks(bdTabs);
-        normalizeLoadingFeatureIcons(bdTabs);
         // the accordion blocks' FAQ and terms looks (3.x's bd-accordion-bg)
         // sit in a panel without the band's block padding
         bdTabs.querySelectorAll('bd-accordion[appearance="faq"], bd-accordion[appearance="terms"]')
           .forEach((el) => el.setAttribute('without-padding', ''));
         await load(bdTabs);
-        iconObserver.disconnect();
       } catch (err) {
-        iconObserver.disconnect();
         // eslint-disable-next-line no-console
         console.warn('DSN imports failed (Mode 1)', err);
       }
     }
   } else {
-    // the icons are SVG before slotIcon copies them
+    // the icons are SVG before slotIcon reads them
     await decorateIcons(block);
     const { defaultWrapper, title, subtitle } = getSectionContext(block);
     if (defaultWrapper && title) defaultWrapper.remove();

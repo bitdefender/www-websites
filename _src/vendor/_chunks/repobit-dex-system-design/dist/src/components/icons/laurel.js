@@ -1,4 +1,4 @@
-import{i as e}from"./registry.js";import"./icon.js";e(`laurel`,`
+import{registerIcon as e}from"../../../../../../repobit/dex-system-design/icons/registry.js";import"./icon.js";e(`laurel`,`
   <svg
     viewBox="0 0 80 80"
     fill="none"

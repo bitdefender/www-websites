@@ -1,4 +1,4 @@
-import{n as e}from"../registry.js";import"../mark.js";e(`av-comparatives`,`
+import{registerMark as e}from"../../../../../../../repobit/dex-system-design/icons/registry.js";import"../mark.js";e(`av-comparatives`,`
   <svg width="126" height="64" viewBox="0 0 126 64" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <rect width="126" height="64" fill="url(#pattern0_1882_9312)"/>
   <defs>

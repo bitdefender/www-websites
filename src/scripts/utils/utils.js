@@ -1381,36 +1381,55 @@ export const wrapChildrenWithStoreContext = (element, {
 };
 
 /**
- * An authored icon (span.icon, the page's inline SVG) readied for a design
- * system component's icon slot: a copy, sized, in the brand's colour unless
- * the page names one.
+ * An authored icon (span.icon, which decorateIcons fills with the icon's
+ * SVG) as the atom a design system component's icon slot takes: a bd-icon
+ * with `slot="icon"`.
  *
- * The component copies its slots into its shadow root once, when it renders,
- * where the page's CSS cannot follow; so the icon goes in as an SVG that is
- * already there, carrying its own colour. The icon set draws with
- * currentColor, which an <img> cannot pass in: shown as images,
- * complete-protection and online-privacy came out black beside performance,
- * whose blue is in its file. An icon with its colours in its file keeps them.
+ * The site's icons are drawn in currentColor, and bd-icon is the design
+ * system's atom for such a drawing: it shows the drawing registered under its
+ * `name`, in the ink of its CSS colour, at the height of `size`, a step of the
+ * icon scale (--icon-*-size). So the SVG is registered with the design
+ * system's registerIcon, under the icon's name with `site-` before it: the
+ * first drawing under a name is the one kept, and the design system's own
+ * glyphs (check, globe, plus…) stay theirs. bd-icon draws a drawing that
+ * registers after it has rendered. A bd-img would show the file as an <img>,
+ * which currentColor does not reach: complete-protection and online-privacy
+ * would draw in black. An icon with its colours in its file keeps them.
+ *
+ * Its ink is the colour the page names for it, else the text's around it.
+ * Its size is 2xl unless the caller passes a step: the step the design
+ * system draws its own feature illustrations at (analysis, machine-learning).
  *
  * The caller awaits decorateIcons (lib-franklin) on its block first. The
  * page's icon pass is not awaited, and that call queues behind it, so every
- * span.icon in the block holds its SVG by the time this copies it.
+ * span.icon in the block holds its SVG by the time this reads it.
+ *
+ * @param {HTMLElement} span the authored span.icon
+ * @param {{ color?: string, size?: string }} [options] a CSS colour the page
+ *   names for the icon; a step of the icon scale, xs to 3xl
+ * @returns {HTMLElement|null} the bd-icon, or null when the icon's file did not load
  */
-export const slotIcon = (span, { color, size = 40 } = {}) => {
-  const icon = span.cloneNode(true);
-  icon.style.display = 'block';
-  icon.style.width = `${size}px`;
-  icon.style.height = `${size}px`;
-  icon.style.color = color || 'var(--color-brand-500)';
-  const svg = icon.querySelector('svg');
-  if (svg) {
-    svg.style.display = 'block';
-    svg.style.width = '100%';
-    svg.style.height = '100%';
-  } else {
-    // an icon whose file did not load is filled with the text "undefined"
-    icon.replaceChildren();
-  }
+export const slotIcon = (span, { color, size = '2xl' } = {}) => {
+  const svg = span.querySelector('svg');
+  const file = [...span.classList].find((name) => name.startsWith('icon-'))?.slice(5);
+  // an icon whose file did not load holds the text "undefined" and no SVG
+  if (!svg || !file) return null;
+
+  const name = `site-${file}`;
+  const icon = document.createElement('bd-icon');
+  icon.slot = 'icon';
+  icon.setAttribute('name', name);
+  icon.setAttribute('size', size);
+  if (color) icon.style.color = color;
+
+  const drawing = svg.outerHTML;
+  // imported here, not at the top: utils.js is on every page
+  import('@repobit/dex-system-design/icons/registry')
+    .then(({ registerIcon }) => registerIcon(name, drawing))
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn(`slotIcon: the ${file} icon was not registered, its bd-icon draws a placeholder`, err);
+    });
   return icon;
 };
 

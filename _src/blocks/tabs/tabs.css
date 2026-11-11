@@ -3,11 +3,3 @@
 .tabs-container-v2.tabs-container {
     background-color: var(--color-blue-50);
 }
-
-/* The panels are the page's own elements in 4.0, so the page's rules reach
-   them; 3.x drew copies in its shadow root, which they did not. The global
-   .icon margin (styles.css) would put 14px under each column's icon, which
-   bd-feature-column already spaces from its title. */
-.tabs bd-feature-column > [slot='icon'] > .icon {
-    margin-block-end: 0;
-}

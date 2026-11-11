@@ -1,4 +1,4 @@
-import{i as e}from"./registry.js";import"./icon.js";e(`pause`,`
+import{registerIcon as e}from"../../../../../../repobit/dex-system-design/icons/registry.js";import"./icon.js";e(`pause`,`
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none">
     <rect x="4" y="3" width="3" height="10" rx="1" fill="currentColor"/>
     <rect x="9" y="3" width="3" height="10" rx="1" fill="currentColor"/>
