@@ -2,6 +2,13 @@
     padding: 0;
 }
 
+/* 3.x's card section stood 64 clear above and below whether or not it had a
+   title. 4.0's card grid pads only a titled grid, leaving an untitled one to a
+   bd-section's rhythm, which this block's section does not use. */
+.four-cards bd-card-grid:not(:has(> [slot='title'], > [slot='description'])) {
+    padding-block: var(--spacing-64);
+}
+
 .four-cards bd-button {
     margin-bottom: 24px;
 }

@@ -45,6 +45,7 @@ var buildRegion = (title, grid) => {
 	regionCount += 1;
 	const heading = slotted("bd-h", "title", title);
 	heading.setAttribute("as", "h3");
+	heading.setAttribute("visual-level", "h3");
 	heading.id = `barchart-title-${regionCount}`;
 	const header = document.createElement("bd-section-header");
 	header.setAttribute("layout", "centered");
