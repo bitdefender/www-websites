@@ -1321,7 +1321,7 @@ var decorateBadgeLists = (main) => {
 			const tag = li.querySelector(":scope > .tag-light-blue");
 			if (!tag) return;
 			const badge = document.createElement("bd-badge");
-			badge.setAttribute("tone", "info");
+			badge.setAttribute("tone", "brand");
 			badge.setAttribute("variant", "shade");
 			badge.setAttribute("size", "lg");
 			badge.textContent = tag.textContent.trim();
