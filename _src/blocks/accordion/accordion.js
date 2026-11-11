@@ -6,12 +6,38 @@ var getSectionTitle = (block) => {
 	if (!section || !accordionWrapper || accordionWrapper.parentElement !== section) return "";
 	return section.querySelector(":scope > .default-content-wrapper")?.querySelector("h1, h2, h3, h4, h5, h6")?.textContent?.trim() || "";
 };
+/**
+* The look the accordion takes from the nearest of the block and its
+* ancestors with a look's class: the terms look in .terms-of-use or
+* .system-requirements, else the FAQ look, which 3.x's bd-accordion-bg also
+* drew in .faq and with no class at all. 3.x detected it from these classes
+* itself; 4.0 reads only the appearance the page writes.
+* @param {HTMLElement} block
+* @returns {'faq'|'terms'}
+*/
+var getAppearance = (block) => {
+	const looks = block.closest(".faq, .terms-of-use, .system-requirements");
+	return looks && !looks.classList.contains("faq") ? "terms" : "faq";
+};
+/**
+* A heading in a slot: bd-accordion and bd-accordion-item draw it, the page
+* picks its level.
+* @param {string} text
+* @param {string} as the level, h1 to h6
+*/
+var buildTitle = (text, as) => {
+	const bdH = document.createElement("bd-h");
+	bdH.setAttribute("slot", "title");
+	bdH.setAttribute("as", as);
+	bdH.textContent = text;
+	return bdH;
+};
 var buildListItem = (li) => {
 	const bdLi = document.createElement("bd-li");
-	bdLi.setAttribute("kind", "none");
+	bdLi.setAttribute("appearance", "none");
 	bdLi.setAttribute("size", "md");
 	const bdP = document.createElement("bd-p");
-	bdP.setAttribute("kind", "small");
+	bdP.setAttribute("appearance", "small");
 	bdP.innerHTML = li.innerHTML;
 	bdLi.appendChild(bdP);
 	return bdLi;
@@ -20,7 +46,7 @@ var buildList = (list) => {
 	const bdList = document.createElement("bd-list");
 	bdList.setAttribute("type", list.tagName === "OL" ? "ordered" : "unordered");
 	bdList.setAttribute("spacing", "md");
-	bdList.setAttribute("variant", "default");
+	bdList.setAttribute("appearance", "default");
 	bdList.setAttribute("orientation", "vertical");
 	Array.from(list.querySelectorAll(":scope > li")).forEach((li) => {
 		bdList.appendChild(buildListItem(li));
@@ -32,15 +58,20 @@ var buildAccordion = (block) => {
 	const defaultWrapper = section?.querySelector(":scope > .default-content-wrapper");
 	const sectionTitle = getSectionTitle(block);
 	if (defaultWrapper && sectionTitle) defaultWrapper.remove();
+	const appearance = getAppearance(block);
 	const accordion = document.createElement("bd-accordion");
-	if (sectionTitle) accordion.setAttribute("title", sectionTitle);
+	accordion.setAttribute("appearance", appearance);
+	if (appearance === "faq") accordion.setAttribute("background", "none");
+	if (sectionTitle) accordion.appendChild(buildTitle(sectionTitle, appearance === "terms" ? "h6" : "h2"));
 	const isFirstOpen = block.classList.contains("first-open");
 	Array.from(block.querySelectorAll(":scope > div")).forEach((row, index) => {
 		const [headerCell, contentCell] = row.children;
 		if (!headerCell) return;
 		const title = headerCell.querySelector("h1, h2, h3, h4, h5, h6, p")?.textContent?.trim() || headerCell.textContent.trim();
 		const item = document.createElement("bd-accordion-item");
-		item.setAttribute("title", title);
+		if (appearance === "faq") item.setAttribute("background", "tint");
+		const itemTitle = buildTitle(title, "h3");
+		item.appendChild(itemTitle);
 		if (isFirstOpen && index === 0) item.setAttribute("open", "");
 		if (contentCell) {
 			const children = Array.from(contentCell.children);
@@ -55,11 +86,11 @@ var buildAccordion = (block) => {
 					if (el.tagName === "UL" || el.tagName === "OL") return buildList(el);
 					return el.cloneNode(true);
 				});
-				item.replaceChildren(...mapped);
+				item.replaceChildren(itemTitle, ...mapped);
 			} else {
 				const bdP = document.createElement("bd-p");
 				bdP.innerHTML = contentCell.innerHTML;
-				item.replaceChildren(bdP);
+				item.replaceChildren(itemTitle, bdP);
 			}
 		}
 		accordion.appendChild(item);
@@ -68,7 +99,7 @@ var buildAccordion = (block) => {
 	if (accordionWrapper && section && accordionWrapper.parentElement === section) section.querySelectorAll(":scope > .default-content-wrapper").forEach((wrapper) => {
 		Array.from(wrapper.querySelectorAll(":scope > p")).forEach((p) => {
 			const bdP = document.createElement("bd-p");
-			bdP.setAttribute("kind", "small");
+			bdP.setAttribute("appearance", "small");
 			bdP.setAttribute("slot", "footer");
 			bdP.innerHTML = p.innerHTML;
 			accordion.appendChild(bdP);
