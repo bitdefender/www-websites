@@ -1,7 +1,7 @@
 /**
  * Unit tests for the awards-spotlight block: the Proven section's carousel on
- * the design system's bd-awards-spotlight, under the section header, with the
- * section's two button links as primary bd-button-links. The fixture is
+ * the design system's <bd-awards layout="spotlight">, under the section header,
+ * with the section's two button links as primary bd-buttons. The fixture is
  * section 5 as authored on /en-us/. The design system modules are replaced by
  * an empty module, so these tests check the markup the block builds, not the
  * components' rendering.
@@ -19,6 +19,16 @@ import {
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// what a component's named slot holds, among its own children
+const inSlot = (host, slot) => host.querySelector(`:scope > [slot="${slot}"]`);
+
+// the default slot's text: the host's own text nodes
+const defaultText = (host) => [...host.childNodes]
+  .filter((node) => node.nodeType === Node.TEXT_NODE)
+  .map((node) => node.textContent)
+  .join('')
+  .trim();
 
 async function renderFixture() {
   const html = await readFile(path.join(__dirname, 'awards-spotlight.mock.html'), 'utf-8');
@@ -50,38 +60,56 @@ describe('awards-spotlight block', () => {
     vi.restoreAllMocks();
   });
 
-  it('replaces the authored rows with one autoplaying bd-awards-spotlight', () => {
+  it('replaces the authored rows with one autoplaying spotlight bd-awards', () => {
     expect(block.children).toHaveLength(1);
     expect(spotlight.hasAttribute('autoplay')).toBe(true);
   });
 
+  it('writes what 3.x\'s spotlight drew by default: its names and its 6s slide', () => {
+    expect(spotlight.getAttribute('autoplay-delay')).toBe('6000');
+    expect(spotlight.getAttribute('label')).toBe('Awards and recognition');
+    expect(spotlight.getAttribute('item-label')).toBe('Go to award');
+  });
+
   it('builds an award per row: title, body and its mark at the drawn size', () => {
-    expect(spotlight.awards.map((award) => award.title)).toEqual([
+    const awards = [...spotlight.children];
+    expect(awards.every((award) => award.localName === 'bd-award')).toBe(true);
+    expect(awards.map((award) => inSlot(award, 'title').textContent)).toEqual([
       'A Visionary',
       'Among PCMag’s 25 Best Tech Brands for 2026',
       'A Major Player in MDR',
       'Leadership in Best Protection & Performance',
       'An industry record for cybersecurity Product of the Year',
     ]);
-    const [gartner] = spotlight.awards;
-    expect(gartner.body).toMatch(/^Bitdefender received a dual recognition from Gartner/);
-    expect(gartner.logo).toContain('media_1e3210734fd12b3efe349f02aa23bbc7476b2bf79');
+    expect(awards.map((award) => inSlot(award, 'title').getAttribute('as')))
+      .toEqual(['h3', 'h3', 'h3', 'h3', 'h3']);
+    const [gartner] = awards;
+    expect(defaultText(gartner)).toMatch(/^Bitdefender received a dual recognition from Gartner/);
+    const logo = inSlot(gartner, 'media');
+    expect(logo.localName).toBe('bd-img');
+    expect(logo.getAttribute('src')).toContain('media_1e3210734fd12b3efe349f02aa23bbc7476b2bf79');
+    expect(logo.getAttribute('fit')).toBe('contain');
     // exported at 240 x 202, drawn at 160 wide
-    expect([gartner.logoWidth, gartner.logoHeight]).toEqual([160, 135]);
+    expect([logo.getAttribute('width'), logo.getAttribute('height')]).toEqual(['160', '135']);
   });
 
   it('lifts the section header, centred as every frame draws it', () => {
     const header = section.querySelector(':scope > bd-section > .default-content-wrapper > bd-section-header');
     expect(header.getAttribute('layout')).toBe('centered');
-    expect(header.getAttribute('heading')).toBe('Proven by Independent Testing and Industry Analysts');
-    expect(header.querySelector('[slot="lead"]').textContent).toMatch(/^Independent analysts/);
+    const title = inSlot(header, 'title');
+    expect(title.localName).toBe('bd-h');
+    expect(title.getAttribute('as')).toBe('h2');
+    expect(title.textContent).toBe('Proven by Independent Testing and Industry Analysts');
+    const description = inSlot(header, 'description');
+    expect(description.localName).toBe('bd-p');
+    expect(description.textContent).toMatch(/^Independent analysts/);
   });
 
   it('turns the section button links into primary DS buttons under the header', () => {
     const wrapper = section.querySelector(':scope > bd-section > .default-content-wrapper');
     const actions = wrapper.querySelector(':scope > bd-section-header + .awards-spotlight-actions');
     const buttons = [...actions.querySelectorAll('bd-button')];
-    expect(buttons.map((button) => [button.textContent, button.getAttribute('variant')])).toEqual([
+    expect(buttons.map((button) => [button.textContent, button.getAttribute('appearance')])).toEqual([
       ['Consumer Recognition', 'primary'],
       ['Enterprise Recognition', 'primary'],
     ]);
