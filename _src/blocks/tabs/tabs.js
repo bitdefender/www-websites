@@ -14,11 +14,62 @@ var parseIconSize = (cell) => {
 	const match = cell?.textContent?.match(/\bsize:?\s*(\d+)/i);
 	return match ? match[1] : "40";
 };
-var buildTabCol = (cells, isFirstOpen, bgBlue) => {
+/**
+* A heading in a slot: the component around it draws it, the page picks its
+* level.
+* @param {string} text
+* @param {string} as the level, h1 to h6
+*/
+var buildTitle = (text, as) => {
+	const bdH = document.createElement("bd-h");
+	bdH.setAttribute("slot", "title");
+	bdH.setAttribute("as", as);
+	bdH.textContent = text;
+	return bdH;
+};
+/**
+* The tab group with the section's title and subtitle, which 3.x's bd-tabs
+* drew at h3 and in a large paragraph.
+* @param {string} title
+* @param {string} subtitle
+*/
+var buildTabGroup = (title, subtitle) => {
+	const group = document.createElement("bd-tab-group");
+	if (title) group.appendChild(buildTitle(title, "h3"));
+	if (subtitle) {
+		const bdP = document.createElement("bd-p");
+		bdP.setAttribute("slot", "description");
+		bdP.setAttribute("appearance", "large");
+		bdP.textContent = subtitle;
+		group.appendChild(bdP);
+	}
+	return group;
+};
+/**
+* Adds a tab and the panel it shows to the group, paired by a name made from
+* the label, unique in the group.
+* @param {HTMLElement} group the bd-tab-group
+* @param {string} label the tab's words
+* @returns {HTMLElement} the bd-tab-panel
+*/
+var addTab = (group, label) => {
+	const slug = label.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "tab";
+	const taken = new Set([...group.querySelectorAll(":scope > bd-tab-panel")].map((panel) => panel.getAttribute("name")));
+	let name = slug;
+	for (let n = 2; taken.has(name); n += 1) name = `${slug}-${n}`;
+	const tab = document.createElement("bd-tab");
+	tab.setAttribute("panel", name);
+	tab.textContent = label;
+	const panel = document.createElement("bd-tab-panel");
+	panel.setAttribute("name", name);
+	group.append(tab, panel);
+	return panel;
+};
+var buildTabCol = (cells, isFirstOpen) => {
 	const [titleCell, iconCell, descCell] = cells;
 	const heading = titleCell.querySelector("h1, h2, h3, h4, h5, h6");
 	const col = document.createElement("bd-feature-column");
-	col.setAttribute("title", heading?.textContent?.trim() || titleCell.textContent.trim());
+	col.appendChild(buildTitle(heading?.textContent?.trim() || titleCell.textContent.trim(), "h4"));
 	const icon = document.createElement("span");
 	icon.setAttribute("slot", "icon");
 	const imageSrc = getImageSrc(iconCell);
@@ -36,16 +87,16 @@ var buildTabCol = (cells, isFirstOpen, bgBlue) => {
 		if (descCell.textContent.trim()) {
 			const bdP = document.createElement("bd-p");
 			bdP.setAttribute("slot", "description");
-			bdP.setAttribute("kind", "small");
-			bdP.innerHTML = descCell.innerHTML;
+			bdP.setAttribute("appearance", "regular");
+			const paragraphs = [...descCell.querySelectorAll(":scope > p")];
+			bdP.innerHTML = paragraphs.length ? paragraphs.map((p) => p.innerHTML).join(" ") : descCell.innerHTML;
 			col.appendChild(bdP);
 		}
 	}
-	const accordionSection = document.createElement("bd-accordion");
-	accordionSection.setAttribute("no-container", "");
-	if (bgBlue) accordionSection.setAttribute("bg-blue", "");
-	col.appendChild(accordionSection);
-	col.accordionSection = accordionSection;
+	const accordion = document.createElement("bd-accordion");
+	accordion.setAttribute("without-container", "");
+	col.appendChild(accordion);
+	col.accordion = accordion;
 	col.isFirstOpen = isFirstOpen;
 	col.firstItemAdded = false;
 	return col;
@@ -55,25 +106,25 @@ var appendAccordionItem = (col, cells) => {
 	const titleText = titleCell?.textContent?.trim();
 	if (!titleText) return;
 	const item = document.createElement("bd-accordion-item");
-	item.setAttribute("title", titleText);
+	item.appendChild(buildTitle(titleText, "h3"));
 	if (col.isFirstOpen && !col.firstItemAdded) item.setAttribute("open", "");
 	col.firstItemAdded = true;
 	if (contentCell) {
 		const children = Array.from(contentCell.children);
 		if (children.length) children.forEach((child) => {
 			const bdP = document.createElement("bd-p");
-			bdP.setAttribute("kind", "small");
+			bdP.setAttribute("appearance", "small");
 			bdP.innerHTML = child.innerHTML;
 			item.appendChild(bdP);
 		});
 		else {
 			const bdP = document.createElement("bd-p");
-			bdP.setAttribute("kind", "small");
+			bdP.setAttribute("appearance", "small");
 			bdP.innerHTML = contentCell.innerHTML;
 			item.appendChild(bdP);
 		}
 	}
-	col.accordionSection.appendChild(item);
+	col.accordion.appendChild(item);
 };
 var getSectionContext = (block) => {
 	const section = block.closest(".section");
@@ -86,10 +137,8 @@ var getSectionContext = (block) => {
 		subtitle: subtitleEl?.textContent?.trim() || ""
 	};
 };
-var buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
-	const tabsEl = document.createElement("bd-tab-group");
-	if (title) tabsEl.setAttribute("title", title);
-	if (subtitle) tabsEl.setAttribute("subtitle", subtitle);
+var buildTabsFromBlock = (block, title, subtitle) => {
+	const tabsEl = buildTabGroup(title, subtitle);
 	const isFirstOpen = block.classList.contains("first-open");
 	let currentPanel = null;
 	let currentFeatures = null;
@@ -101,62 +150,32 @@ var buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
 		const heading = firstCell.querySelector("h1, h2, h3, h4, h5, h6");
 		const headingLevel = heading ? parseInt(heading.tagName[1], 10) : null;
 		if (headingLevel !== null && headingLevel <= 3) {
-			currentPanel = document.createElement("bd-tab-panel");
-			currentPanel.setAttribute("title", heading.textContent.trim());
-			tabsEl.appendChild(currentPanel);
+			currentPanel = addTab(tabsEl, heading.textContent.trim());
 			currentFeatures = null;
 			currentCol = null;
 		} else if (headingLevel !== null) {
-			if (!currentPanel) {
-				currentPanel = document.createElement("bd-tab-panel");
-				tabsEl.appendChild(currentPanel);
-			}
+			if (!currentPanel) currentPanel = addTab(tabsEl, "");
 			if (!currentFeatures) {
 				currentFeatures = document.createElement("bd-feature-columns");
 				currentPanel.appendChild(currentFeatures);
 			}
-			currentCol = buildTabCol(cells, isFirstOpen, bgBlue);
+			currentCol = buildTabCol(cells, isFirstOpen);
 			currentFeatures.appendChild(currentCol);
 		} else if (currentCol) appendAccordionItem(currentCol, cells);
 	});
 	return tabsEl;
 };
-function suppressPanelMinHeight(bdTabs) {
-	const { shadowRoot } = bdTabs;
-	if (!shadowRoot) return;
-	let wrapperObs = null;
-	const attachToWrapper = () => {
-		const wrapper = shadowRoot.querySelector(".bd-panel-wrapper");
-		if (!wrapper) return;
-		if (wrapper.style.minHeight) wrapper.style.removeProperty("min-height");
-		if (wrapperObs) wrapperObs.disconnect();
-		wrapperObs = new MutationObserver(() => {
-			if (wrapper.style.minHeight) wrapper.style.removeProperty("min-height");
-		});
-		wrapperObs.observe(wrapper, {
-			attributes: true,
-			attributeFilter: ["style"]
-		});
-	};
-	const component = shadowRoot.querySelector(".bd-tabs-component");
-	if (component) new MutationObserver(attachToWrapper).observe(component, { childList: true });
-	attachToWrapper();
-}
 function buildTabsFromSections(config, title, subtitle) {
 	const tabGroupName = config["tab-group"];
 	const tabsSelector = tabGroupName ? `[data-tab-group="${tabGroupName}"][data-tab]` : "[data-tab]";
 	const sections = [...document.querySelectorAll(tabsSelector)];
 	if (!sections.length) return null;
-	const bdTabs = document.createElement("bd-tab-group");
-	if ("bg-blue" in config) bdTabs.setAttribute("bg-blue", "");
-	if (title) bdTabs.setAttribute("title", title);
-	if (subtitle) bdTabs.setAttribute("subtitle", subtitle);
+	const bdTabs = buildTabGroup(title, subtitle);
+	if ("bg-blue" in config) bdTabs.setAttribute("background", "tint");
 	sections.forEach((section) => {
-		const tabPanel = document.createElement("bd-tab-panel");
-		tabPanel.setAttribute("title", section.dataset.tab);
+		const tabPanel = addTab(bdTabs, section.dataset.tab);
 		while (section.firstChild) tabPanel.appendChild(section.firstChild);
 		section.remove();
-		bdTabs.appendChild(tabPanel);
 	});
 	return bdTabs;
 }
@@ -183,7 +202,6 @@ function watchAndNormalizeFeatureIcons(container) {
 }
 async function decorate(block) {
 	const config = readBlockConfig(block);
-	const bgBlue = "bg-blue" in config;
 	if ("tab-group" in config) {
 		[...block.children].forEach((child) => child.remove());
 		const { defaultWrapper, title, subtitle } = getSectionContext(block);
@@ -196,12 +214,9 @@ async function decorate(block) {
 			try {
 				await loadBlocks(bdTabs);
 				normalizeLoadingFeatureIcons(bdTabs);
-				bdTabs.querySelectorAll("bd-accordion").forEach((el) => el.setAttribute("no-padding", ""));
+				bdTabs.querySelectorAll("bd-accordion[appearance=\"faq\"], bd-accordion[appearance=\"terms\"]").forEach((el) => el.setAttribute("without-padding", ""));
 				await load(bdTabs);
-				if (typeof bdTabs.requestUpdate === "function") bdTabs.requestUpdate();
 				iconObserver.disconnect();
-				if (typeof bdTabs.updateComplete?.then === "function") await bdTabs.updateComplete;
-				suppressPanelMinHeight(bdTabs);
 			} catch (err) {
 				iconObserver.disconnect();
 				console.warn("DSN imports failed (Mode 1)", err);
@@ -211,7 +226,7 @@ async function decorate(block) {
 		await decorateIcons(block);
 		const { defaultWrapper, title, subtitle } = getSectionContext(block);
 		if (defaultWrapper && title) defaultWrapper.remove();
-		const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
+		const tabsEl = buildTabsFromBlock(block, title, subtitle);
 		try {
 			await load(tabsEl);
 		} catch (err) {
