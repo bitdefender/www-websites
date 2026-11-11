@@ -174,17 +174,7 @@ async function decorate(block) {
 	fetchAwardsData(block);
 	removeAwardsLinkFromDom(block);
 	window.addEventListener("accordion-bg:loaded", () => {
-		const accordionShadowRoot = block.querySelector("bd-accordion").shadowRoot;
-		if (accordionShadowRoot) {
-			const style = document.createElement("style");
-			style.textContent = `
-        .bd-accordion-bg-container {
-          padding-top: 0 !important;
-          padding-bottom: 12px !important;
-        }
-      `;
-			accordionShadowRoot.appendChild(style);
-		}
+		block.querySelector("bd-accordion")?.setAttribute("without-padding", "");
 		block.querySelectorAll(".accordion input").forEach((input) => {
 			input.addEventListener("click", handleFilterByYearCheckbox.bind(null, block));
 		});

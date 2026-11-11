@@ -227,18 +227,9 @@ export default async function decorate(block) {
 
   // add event listener only after system design modifies the elements
   window.addEventListener('accordion-bg:loaded', () => {
-    const accordionShadowRoot = block.querySelector('bd-accordion').shadowRoot;
-    if (accordionShadowRoot) {
-      const style = document.createElement('style');
-
-      style.textContent = `
-        .bd-accordion-bg-container {
-          padding-top: 0 !important;
-          padding-bottom: 12px !important;
-        }
-      `;
-      accordionShadowRoot.appendChild(style);
-    }
+    // the filter sits flush under the search box: the accordion's band pads nothing,
+    // and the 12px under it is this block's CSS
+    block.querySelector('bd-accordion')?.setAttribute('without-padding', '');
 
     const yearInputs = block.querySelectorAll('.accordion input');
     yearInputs.forEach((input) => {
