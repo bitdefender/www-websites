@@ -1,11 +1,24 @@
 import { load } from '@repobit/dex-system-design/loader';
+import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
+/*
+ * A two-column band on the design system's bd-spotlight. Authored as one
+ * row: [title heading, buttons] [logo, description, buttons]. The logo is
+ * the block's first picture, else an icon span or a :name: marker.
+ */
+
+const toImg = (src, alt) => {
+  const img = document.createElement('bd-img');
+  img.setAttribute('src', src);
+  img.setAttribute('alt', alt);
+  return img;
+};
+
+/** The logo, as a bd-img the band sizes. */
 const getIcon = (block) => {
-  const picture = block.querySelector('picture');
-  if (picture) return picture.cloneNode(true);
-
   const image = block.querySelector('img');
-  if (image) return image.cloneNode(true);
+  const src = image && (image.currentSrc || image.getAttribute('src'));
+  if (src) return toImg(src, image.getAttribute('alt') || '');
 
   const icon = block.querySelector('[class*="icon-"]');
   const iconName = icon && Array.from(icon.classList)
@@ -15,11 +28,7 @@ const getIcon = (block) => {
   const markerName = iconMarker?.[1];
 
   if (!iconName && !markerName) return null;
-
-  const iconImage = document.createElement('img');
-  iconImage.src = `/common/icons/${iconName || markerName}.svg`;
-  iconImage.alt = '';
-  return iconImage;
+  return toImg(`/common/icons/${iconName || markerName}.svg`, '');
 };
 
 const getContentCells = (block, heading) => {
@@ -53,6 +62,8 @@ const getDescription = (block, heading, descriptionCell) => {
     .trim();
 };
 
+/* A column's buttons, white on the band: the title column's first one
+   filled, the rest and the description column's outlined. */
 const appendButtons = (banner, cell, slot) => {
   if (!cell) return;
 
@@ -60,7 +71,6 @@ const appendButtons = (banner, cell, slot) => {
     const button = document.createElement('bd-button');
     button.setAttribute('slot', slot);
     button.setAttribute('href', link.getAttribute('href') || '');
-    button.setAttribute('label', link.textContent.trim());
     button.setAttribute(
       'appearance',
       slot === 'description-actions' || index > 0 || link.classList.contains('secondary')
@@ -68,12 +78,13 @@ const appendButtons = (banner, cell, slot) => {
         : 'white',
     );
     button.setAttribute('size', 'sm');
-    button.innerHTML = link.innerHTML;
+    button.textContent = link.textContent.trim();
     banner.append(button);
   });
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
   const { headingCell, descriptionCell } = getContentCells(block, heading);
   const description = getDescription(block, heading, descriptionCell);
@@ -81,7 +92,7 @@ export default async function decorate(block) {
   const title = heading?.textContent.trim();
 
   if (title) {
-    // the band's title, at the h2 bd-spotlight-section drew
+    // the band's title, a page section's h2; the band sets its size and ink
     const titleHeading = document.createElement('bd-h');
     titleHeading.slot = 'title';
     titleHeading.setAttribute('as', 'h2');
@@ -97,7 +108,7 @@ export default async function decorate(block) {
 
   const icon = getIcon(block);
   if (icon) {
-    icon.setAttribute('slot', 'icon');
+    icon.slot = 'icon';
     spotlightSection.append(icon);
   }
 

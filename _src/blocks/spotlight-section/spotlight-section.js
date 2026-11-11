@@ -1,18 +1,22 @@
+import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/spotlight-section/spotlight-section.js
+var toImg = (src, alt) => {
+	const img = document.createElement("bd-img");
+	img.setAttribute("src", src);
+	img.setAttribute("alt", alt);
+	return img;
+};
+/** The logo, as a bd-img the band sizes. */
 var getIcon = (block) => {
-	const picture = block.querySelector("picture");
-	if (picture) return picture.cloneNode(true);
 	const image = block.querySelector("img");
-	if (image) return image.cloneNode(true);
+	const src = image && (image.currentSrc || image.getAttribute("src"));
+	if (src) return toImg(src, image.getAttribute("alt") || "");
 	const icon = block.querySelector("[class*=\"icon-\"]");
 	const iconName = icon && Array.from(icon.classList).find((className) => className.startsWith("icon-"))?.substring(5);
 	const markerName = block.textContent.match(/:([a-z0-9-]+):/i)?.[1];
 	if (!iconName && !markerName) return null;
-	const iconImage = document.createElement("img");
-	iconImage.src = `/common/icons/${iconName || markerName}.svg`;
-	iconImage.alt = "";
-	return iconImage;
+	return toImg(`/common/icons/${iconName || markerName}.svg`, "");
 };
 var getContentCells = (block, heading) => {
 	const headingCell = heading && [...block.querySelectorAll("div")].find((cell) => cell.contains(heading) && cell.parentElement?.parentElement === block);
@@ -35,14 +39,14 @@ var appendButtons = (banner, cell, slot) => {
 		const button = document.createElement("bd-button");
 		button.setAttribute("slot", slot);
 		button.setAttribute("href", link.getAttribute("href") || "");
-		button.setAttribute("label", link.textContent.trim());
 		button.setAttribute("appearance", slot === "description-actions" || index > 0 || link.classList.contains("secondary") ? "outline-white" : "white");
 		button.setAttribute("size", "sm");
-		button.innerHTML = link.innerHTML;
+		button.textContent = link.textContent.trim();
 		banner.append(button);
 	});
 };
 async function decorate(block) {
+	wrapSectionInDsSection(block);
 	const heading = block.querySelector("h1, h2, h3, h4, h5, h6");
 	const { headingCell, descriptionCell } = getContentCells(block, heading);
 	const description = getDescription(block, heading, descriptionCell);
@@ -63,7 +67,7 @@ async function decorate(block) {
 	}
 	const icon = getIcon(block);
 	if (icon) {
-		icon.setAttribute("slot", "icon");
+		icon.slot = "icon";
 		spotlightSection.append(icon);
 	}
 	appendButtons(spotlightSection, headingCell, "actions");

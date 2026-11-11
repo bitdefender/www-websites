@@ -44,7 +44,17 @@ describe('spotlight-section', () => {
     expect(block.firstElementChild.tagName).toBe('BD-SPOTLIGHT');
   });
 
-  it('slots the title as a bd-h at the h2 3.x drew, and the description as a bd-p', async () => {
+  it('puts its section on the design system rhythm, in a bd-section', async () => {
+    const block = setupSpotlight();
+
+    await decorate(block);
+
+    const section = block.closest('.section');
+    expect(section.children).toHaveLength(1);
+    expect(section.firstElementChild.tagName).toBe('BD-SECTION');
+  });
+
+  it('slots the title as the section\'s h2 and the description as a bd-p, for the band to size', async () => {
     const block = setupSpotlight();
 
     await decorate(block);
@@ -53,21 +63,34 @@ describe('spotlight-section', () => {
     const title = spotlight.querySelector(':scope > bd-h[slot="title"]');
     expect(title.getAttribute('as')).toBe('h2');
     expect(title.textContent).toBe('Bitdefender joined the Global Anti-Scam Alliance');
+    ['visual-level', 'color', 'font-weight'].forEach((name) => expect(title.hasAttribute(name)).toBe(false));
     const description = spotlight.querySelector(':scope > bd-p[slot="description"]');
     expect(description.textContent)
       .toBe('The Global Anti-Scam Alliance unites organisations, experts and law enforcement.');
-    // the copy is slotted, not set as 3.x's attributes
-    expect(spotlight.hasAttribute('title')).toBe(false);
-    expect(spotlight.hasAttribute('description')).toBe(false);
   });
 
-  it('slots the logo above the description', async () => {
+  it('slots the logo above the description, as a bd-img', async () => {
     const block = setupSpotlight();
 
     await decorate(block);
 
-    const icon = block.querySelector('bd-spotlight > picture[slot="icon"]');
-    expect(icon.querySelector('img').getAttribute('alt')).toBe('GASA');
+    const icon = block.querySelector('bd-spotlight > bd-img[slot="icon"]');
+    expect(icon.getAttribute('src')).toBe('./media_gasa.png');
+    expect(icon.getAttribute('alt')).toBe('GASA');
+    expect(block.querySelector('bd-spotlight > picture, bd-spotlight > img')).toBeNull();
+  });
+
+  it('draws an icon span as the logo when there is no picture', async () => {
+    const block = setupSpotlight(AUTHORED.replace(
+      /<p><picture>.*<\/picture><\/p>/,
+      '<p><span class="icon icon-gasa-logo"></span></p>',
+    ));
+
+    await decorate(block);
+
+    const icon = block.querySelector('bd-spotlight > bd-img[slot="icon"]');
+    expect(icon.getAttribute('src')).toBe('/common/icons/gasa-logo.svg');
+    expect(icon.getAttribute('alt')).toBe('');
   });
 
   it('puts each cell\'s buttons under its column, white first and outline after', async () => {
@@ -80,13 +103,12 @@ describe('spotlight-section', () => {
     const [report] = spotlight.querySelectorAll(':scope > bd-button[slot="description-actions"]');
     expect(learn.getAttribute('href')).toBe('https://www.gasa.org/');
     expect(learn.getAttribute('appearance')).toBe('white');
-    expect(learn.getAttribute('label')).toBe('Learn more');
     expect(learn.getAttribute('size')).toBe('sm');
+    // the label is the button's text, which names it
     expect(learn.textContent).toBe('Learn more');
+    expect(learn.hasAttribute('label')).toBe(false);
+    expect(learn.children).toHaveLength(0);
     expect(report.getAttribute('href')).toBe('https://www.gasa.org/report');
     expect(report.getAttribute('appearance')).toBe('outline-white');
-    // 3.x's kind and its left/right button slots are gone
-    [learn, report].forEach((button) => expect(button.hasAttribute('kind')).toBe(false));
-    expect(spotlight.querySelector('[slot="left-buttons"], [slot="right-buttons"]')).toBeNull();
   });
 });
