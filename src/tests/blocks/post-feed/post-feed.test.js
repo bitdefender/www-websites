@@ -57,12 +57,23 @@ describe('post-feed block', () => {
     expect(grid.getAttribute('cols-lg')).toBe('3');
   });
 
+  it('spaces the cards by the grid\'s md gap at every width', () => {
+    expect(grid.getAttribute('gap')).toBe('md');
+    ['gap-sm', 'gap-md', 'gap-lg'].forEach((name) => expect(grid.hasAttribute(name)).toBe(false));
+  });
+
+  it('joins the section to the design system\'s rhythm', () => {
+    const section = block.closest('.section');
+    expect(section.querySelector(':scope > bd-section')).not.toBeNull();
+    expect(block.closest('bd-section')).not.toBeNull();
+  });
+
   it('builds a card per row: category badge, heading and the heading link', () => {
     const badges = cards.map((card) => card.querySelector(':scope > bd-badge[slot="badge"]'));
     expect(badges.map((badge) => badge.textContent)).toEqual([
       'Consumer Insights', 'Business Insights', 'Labs',
     ]);
-    // the badge the 3.x card drew from its badge attribute
+    // the category in the card's badge look: info, shade, small
     badges.forEach((badge) => {
       expect(badge.getAttribute('variant')).toBe('info');
       expect(badge.getAttribute('appearance')).toBe('shade');
@@ -72,20 +83,29 @@ describe('post-feed block', () => {
     expect(title.textContent).toBe('They Wear Our Faces: How Scammers Are Using AI to Swindle American Families');
     expect(cards[0].getAttribute('href')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/');
     expect(title.getAttribute('as')).toBe('h3');
-    // the copy is slotted, not set as 3.x's attributes
+    // the copy is in the card's slots; the card carries only its link
     cards.forEach((card) => {
-      ['heading', 'badge', 'as'].forEach((name) => expect(card.hasAttribute(name)).toBe(false));
+      expect(card.getAttributeNames()).toEqual(['href']);
     });
   });
 
-  it('writes the read-more cue 3.x drew by default on a linked card', () => {
+  it('writes the read-more cue on a linked card', () => {
     expect(cards.map((card) => card.querySelector(':scope > span[slot="read-more"]')?.textContent))
       .toEqual(['Read more', 'Read more', 'Read more']);
   });
 
-  it('slots each cover as decorative', () => {
-    const covers = cards.map((card) => card.querySelector(':scope > picture[slot="media"] img'));
-    expect(covers.every((img) => img && img.getAttribute('alt') === '')).toBe(true);
+  it('slots each cover as a decorative bd-img', () => {
+    const covers = cards.map((card) => card.querySelector(':scope > bd-img[slot="media"]'));
+    expect(covers.every(Boolean)).toBe(true);
+    expect(covers[0].getAttribute('src')).toBe('./media_157d690b013dc21e37092408680aec8b567468d8f.png?width=750&format=png&optimize=medium');
+    expect(covers[0].getAttribute('width')).toBe('366');
+    expect(covers[0].getAttribute('height')).toBe('148');
+    covers.forEach((cover) => {
+      expect(cover.getAttribute('alt')).toBe('');
+      expect(cover.getAttribute('loading')).toBe('lazy');
+    });
+    // no authored picture is slotted
+    expect(block.querySelector('bd-post-card > picture')).toBeNull();
   });
 
   it('lifts the section header', () => {

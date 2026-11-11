@@ -7,9 +7,6 @@ import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/u
  * h3 with the post's link], in any cell order.
  */
 
-// the design system's lg (992): the cards go three across
-const DESKTOP = '(min-width: 992px)';
-
 // the cue under the title; bd-post-card draws no words of its own
 const READ_MORE = 'Read more';
 
@@ -22,6 +19,22 @@ const slotted = (tag, slot, words) => {
   return el;
 };
 
+/* The cover, as the bd-img the card's media slot takes: the picture's image.
+   It illustrates the title beside it, so it has no alt of its own. */
+const buildCover = (row) => {
+  const img = row.querySelector('picture img');
+  const src = img?.currentSrc || img?.getAttribute('src');
+  if (!src) return null;
+  const cover = document.createElement('bd-img');
+  cover.slot = 'media';
+  cover.setAttribute('src', src);
+  ['width', 'height', 'loading'].forEach((name) => {
+    if (img.hasAttribute(name)) cover.setAttribute(name, img.getAttribute(name));
+  });
+  cover.setAttribute('alt', '');
+  return cover;
+};
+
 const buildCard = (row) => {
   const heading = row.querySelector('h1, h2, h3, h4, h5, h6');
   const link = heading?.querySelector('a') || row.querySelector('a');
@@ -31,6 +44,8 @@ const buildCard = (row) => {
 
   const card = document.createElement('bd-post-card');
   if (link) card.setAttribute('href', link.getAttribute('href') || '');
+  const cover = buildCover(row);
+  if (cover) card.append(cover);
   if (category) {
     // the category over the cover, as the card's badge
     const badge = slotted('bd-badge', 'badge', text(category));
@@ -38,7 +53,7 @@ const buildCard = (row) => {
       .forEach(([name, value]) => badge.setAttribute(name, value));
     card.append(badge);
   }
-  // the author's level, else the h3 the card drew
+  // the author's level, else h3: the posts are items under the section's h2
   const title = slotted('bd-h', 'title', text(heading || link));
   title.setAttribute('as', heading ? heading.tagName.toLowerCase() : 'h3');
   card.append(title);
@@ -47,35 +62,20 @@ const buildCard = (row) => {
   return card;
 };
 
-const addCover = (card, row) => {
-  const picture = row.querySelector('picture');
-  if (!picture) return;
-  picture.setAttribute('slot', 'media');
-  // the cover illustrates the title beside it
-  picture.querySelector('img')?.setAttribute('alt', '');
-  card.append(picture);
-};
-
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
   // the section's heading, as bd-section-header
   const header = liftSectionHeader(block);
 
   const grid = document.createElement('bd-grid');
-  // the design system's page column (styles.css), on the hero's edges
+  // the design system's page column (styles.css), on the same edges as the sections around it
   grid.className = 'ds-page-column';
-  [['cols', '1'], ['cols-sm', '1'], ['cols-md', '1'], ['cols-lg', '3']]
+  // one post a row, three across from lg
+  [['cols', '1'], ['cols-sm', '1'], ['cols-md', '1'], ['cols-lg', '3'], ['gap', 'md']]
     .forEach(([name, value]) => grid.setAttribute(name, value));
-  // phone and tablet stack the posts 16 apart; the desktop row sets them 24 apart
-  const desktop = window.matchMedia?.(DESKTOP);
-  const setGap = () => grid.setAttribute('gap', !desktop || desktop.matches ? 'md' : 'sm');
-  setGap();
-  desktop?.addEventListener('change', setGap);
-  const posts = [...block.children]
-    .map((row) => ({ row, card: buildCard(row) }))
-    .filter(({ card }) => card);
-  grid.append(...posts.map(({ card }) => card));
+  grid.append(...[...block.children].map(buildCard).filter(Boolean));
 
+  // the cards are built from copies, so the authored rows are whole until they replace them
   try {
     await load(grid);
   } catch (err) {
@@ -84,9 +84,6 @@ export default async function decorate(block) {
     await header;
     return;
   }
-
-  // the covers move only now, so a failed load leaves them in the authored rows
-  posts.forEach(({ row, card }) => addCover(card, row));
   block.replaceChildren(grid);
   await header;
 }
