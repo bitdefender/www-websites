@@ -96,7 +96,7 @@ var Constants = class {
 	static async #getVlaicuProductIdsMapping() {
 		try {
 			const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page_default.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
-			const baseUrl = window.location.href.includes("oaiusercontent") ? `https://www.bitdefender.com/common/vlaicuconfig/` : `${new URL(import.meta.url).origin}/common/vlaicuconfig/`;
+			const baseUrl = `${new URL(import.meta.url).origin}/common/vlaicuconfig/`;
 			const response = await fetch(`${baseUrl}${nameForVlaicuConfig}.json`);
 			if (!response.ok) {
 				console.error(`Failed to fetch data.`);
