@@ -1,34 +1,42 @@
+import { getSectionContent, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/accordion/accordion.js
-var getSectionTitle = (block) => {
-	const section = block.closest(".section");
+/**
+* The heading of the default content in the block's own section, or null
+* when the block is not directly in its section.
+* @param {HTMLElement} block
+* @returns {HTMLElement|null}
+*/
+var getSectionHeading = (block) => {
+	const content = getSectionContent(block.closest(".section"));
 	const accordionWrapper = block.closest(".accordion-wrapper");
-	if (!section || !accordionWrapper || accordionWrapper.parentElement !== section) return "";
-	return section.querySelector(":scope > .default-content-wrapper")?.querySelector("h1, h2, h3, h4, h5, h6")?.textContent?.trim() || "";
+	if (!content || !accordionWrapper || accordionWrapper.parentElement !== content) return null;
+	const heading = content.querySelector(":scope > .default-content-wrapper")?.querySelector("h1, h2, h3, h4, h5, h6");
+	return heading?.textContent?.trim() ? heading : null;
 };
 /**
-* The look the accordion takes from the nearest of the block and its
-* ancestors with a look's class: the terms look in .terms-of-use or
-* .system-requirements, else the FAQ look, which 3.x's bd-accordion-bg also
-* drew in .faq and with no class at all. 3.x detected it from these classes
-* itself; 4.0 reads only the appearance the page writes.
+* The look the author picked with a class on the block or its section: faq,
+* or terms in .terms-of-use or .system-requirements, whichever is nearest.
+* Without one the accordion keeps bd-accordion's own look, standard on its
+* container band.
 * @param {HTMLElement} block
-* @returns {'faq'|'terms'}
+* @returns {'faq'|'terms'|null}
 */
 var getAppearance = (block) => {
 	const looks = block.closest(".faq, .terms-of-use, .system-requirements");
-	return looks && !looks.classList.contains("faq") ? "terms" : "faq";
+	if (!looks) return null;
+	return looks.classList.contains("faq") ? "faq" : "terms";
 };
 /**
-* A heading in a slot: bd-accordion and bd-accordion-item draw it, the page
-* picks its level.
+* A heading in a slot: bd-accordion and bd-accordion-item set its size, the
+* page's outline its level.
 * @param {string} text
-* @param {string} as the level, h1 to h6
+* @param {number} level 1 to 6
 */
-var buildTitle = (text, as) => {
+var buildTitle = (text, level) => {
 	const bdH = document.createElement("bd-h");
 	bdH.setAttribute("slot", "title");
-	bdH.setAttribute("as", as);
+	bdH.setAttribute("as", `h${level}`);
 	bdH.textContent = text;
 	return bdH;
 };
@@ -54,15 +62,17 @@ var buildList = (list) => {
 	return bdList;
 };
 var buildAccordion = (block) => {
-	const section = block.closest(".section");
-	const defaultWrapper = section?.querySelector(":scope > .default-content-wrapper");
-	const sectionTitle = getSectionTitle(block);
-	if (defaultWrapper && sectionTitle) defaultWrapper.remove();
+	const content = getSectionContent(block.closest(".section"));
+	const defaultWrapper = content?.querySelector(":scope > .default-content-wrapper");
+	const sectionHeading = getSectionHeading(block);
+	if (defaultWrapper && sectionHeading) defaultWrapper.remove();
 	const appearance = getAppearance(block);
 	const accordion = document.createElement("bd-accordion");
-	accordion.setAttribute("appearance", appearance);
+	if (appearance) accordion.setAttribute("appearance", appearance);
 	if (appearance === "faq") accordion.setAttribute("background", "none");
-	if (sectionTitle) accordion.appendChild(buildTitle(sectionTitle, appearance === "terms" ? "h6" : "h2"));
+	const titleLevel = sectionHeading ? Number(sectionHeading.tagName[1]) : null;
+	const itemLevel = titleLevel ? Math.min(titleLevel + 1, 6) : 3;
+	if (sectionHeading) accordion.appendChild(buildTitle(sectionHeading.textContent.trim(), titleLevel));
 	const isFirstOpen = block.classList.contains("first-open");
 	Array.from(block.querySelectorAll(":scope > div")).forEach((row, index) => {
 		const [headerCell, contentCell] = row.children;
@@ -70,7 +80,7 @@ var buildAccordion = (block) => {
 		const title = headerCell.querySelector("h1, h2, h3, h4, h5, h6, p")?.textContent?.trim() || headerCell.textContent.trim();
 		const item = document.createElement("bd-accordion-item");
 		if (appearance === "faq") item.setAttribute("background", "tint");
-		const itemTitle = buildTitle(title, "h3");
+		const itemTitle = buildTitle(title, itemLevel);
 		item.appendChild(itemTitle);
 		if (isFirstOpen && index === 0) item.setAttribute("open", "");
 		if (contentCell) {
@@ -96,7 +106,7 @@ var buildAccordion = (block) => {
 		accordion.appendChild(item);
 	});
 	const accordionWrapper = block.closest(".accordion-wrapper");
-	if (accordionWrapper && section && accordionWrapper.parentElement === section) section.querySelectorAll(":scope > .default-content-wrapper").forEach((wrapper) => {
+	if (accordionWrapper && content && accordionWrapper.parentElement === content) content.querySelectorAll(":scope > .default-content-wrapper").forEach((wrapper) => {
 		Array.from(wrapper.querySelectorAll(":scope > p")).forEach((p) => {
 			const bdP = document.createElement("bd-p");
 			bdP.setAttribute("appearance", "small");
@@ -109,6 +119,7 @@ var buildAccordion = (block) => {
 	return accordion;
 };
 async function decorate(block) {
+	wrapSectionInDsSection(block);
 	const accordion = buildAccordion(block);
 	await load(accordion);
 	block.replaceChildren(accordion);

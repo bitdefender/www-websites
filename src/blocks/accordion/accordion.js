@@ -1,37 +1,52 @@
 import { load } from '@repobit/dex-system-design/loader';
+import { getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
-const getSectionTitle = (block) => {
-  const section = block.closest('.section');
+/*
+ * A bd-accordion. Authored one item a row: [question] [answer]. The heading
+ * in the section's default content is the group's title, and the paragraphs
+ * in the section's other default content its footer notes; neither is read
+ * when the block sits in something other than its own section (a tab panel).
+ */
+
+/**
+ * The heading of the default content in the block's own section, or null
+ * when the block is not directly in its section.
+ * @param {HTMLElement} block
+ * @returns {HTMLElement|null}
+ */
+const getSectionHeading = (block) => {
+  const content = getSectionContent(block.closest('.section'));
   const accordionWrapper = block.closest('.accordion-wrapper');
-  if (!section || !accordionWrapper || accordionWrapper.parentElement !== section) return '';
-  const defaultWrapper = section.querySelector(':scope > .default-content-wrapper');
-  return defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
+  if (!content || !accordionWrapper || accordionWrapper.parentElement !== content) return null;
+  const defaultWrapper = content.querySelector(':scope > .default-content-wrapper');
+  const heading = defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6');
+  return heading?.textContent?.trim() ? heading : null;
 };
 
 /**
- * The look the accordion takes from the nearest of the block and its
- * ancestors with a look's class: the terms look in .terms-of-use or
- * .system-requirements, else the FAQ look, which 3.x's bd-accordion-bg also
- * drew in .faq and with no class at all. 3.x detected it from these classes
- * itself; 4.0 reads only the appearance the page writes.
+ * The look the author picked with a class on the block or its section: faq,
+ * or terms in .terms-of-use or .system-requirements, whichever is nearest.
+ * Without one the accordion keeps bd-accordion's own look, standard on its
+ * container band.
  * @param {HTMLElement} block
- * @returns {'faq'|'terms'}
+ * @returns {'faq'|'terms'|null}
  */
 const getAppearance = (block) => {
   const looks = block.closest('.faq, .terms-of-use, .system-requirements');
-  return looks && !looks.classList.contains('faq') ? 'terms' : 'faq';
+  if (!looks) return null;
+  return looks.classList.contains('faq') ? 'faq' : 'terms';
 };
 
 /**
- * A heading in a slot: bd-accordion and bd-accordion-item draw it, the page
- * picks its level.
+ * A heading in a slot: bd-accordion and bd-accordion-item set its size, the
+ * page's outline its level.
  * @param {string} text
- * @param {string} as the level, h1 to h6
+ * @param {number} level 1 to 6
  */
-const buildTitle = (text, as) => {
+const buildTitle = (text, level) => {
   const bdH = document.createElement('bd-h');
   bdH.setAttribute('slot', 'title');
-  bdH.setAttribute('as', as);
+  bdH.setAttribute('as', `h${level}`);
   bdH.textContent = text;
   return bdH;
 };
@@ -60,23 +75,25 @@ const buildList = (list) => {
 };
 
 const buildAccordion = (block) => {
-  const section = block.closest('.section');
-  const defaultWrapper = section?.querySelector(':scope > .default-content-wrapper');
-  const sectionTitle = getSectionTitle(block);
+  const content = getSectionContent(block.closest('.section'));
+  const defaultWrapper = content?.querySelector(':scope > .default-content-wrapper');
+  const sectionHeading = getSectionHeading(block);
 
-  if (defaultWrapper && sectionTitle) {
+  if (defaultWrapper && sectionHeading) {
     defaultWrapper.remove();
   }
 
-  // the FAQ look draws no band, each item a card on the brand wash; the terms
-  // look keeps the group's band and draws its items flat
   const appearance = getAppearance(block);
   const accordion = document.createElement('bd-accordion');
-  accordion.setAttribute('appearance', appearance);
+  if (appearance) accordion.setAttribute('appearance', appearance);
+  // the FAQ look is no band, each item a card on the brand wash
   if (appearance === 'faq') accordion.setAttribute('background', 'none');
-  if (sectionTitle) {
-    // 3.x drew the title at h2, and at h6 on the terms look
-    accordion.appendChild(buildTitle(sectionTitle, appearance === 'terms' ? 'h6' : 'h2'));
+
+  // the title at the level the page wrote it, the questions a level under it
+  const titleLevel = sectionHeading ? Number(sectionHeading.tagName[1]) : null;
+  const itemLevel = titleLevel ? Math.min(titleLevel + 1, 6) : 3;
+  if (sectionHeading) {
+    accordion.appendChild(buildTitle(sectionHeading.textContent.trim(), titleLevel));
   }
 
   const isFirstOpen = block.classList.contains('first-open');
@@ -91,8 +108,7 @@ const buildAccordion = (block) => {
 
     const item = document.createElement('bd-accordion-item');
     if (appearance === 'faq') item.setAttribute('background', 'tint');
-    // 3.x drew the question as plain text; 4.0 makes it a heading, at h3
-    const itemTitle = buildTitle(title, 'h3');
+    const itemTitle = buildTitle(title, itemLevel);
     item.appendChild(itemTitle);
 
     if (isFirstOpen && index === 0) {
@@ -128,10 +144,10 @@ const buildAccordion = (block) => {
   });
 
   const accordionWrapper = block.closest('.accordion-wrapper');
-  const isDirectChild = accordionWrapper && section && accordionWrapper.parentElement === section;
+  const isDirectChild = accordionWrapper && content && accordionWrapper.parentElement === content;
 
   if (isDirectChild) {
-    section.querySelectorAll(':scope > .default-content-wrapper').forEach((wrapper) => {
+    content.querySelectorAll(':scope > .default-content-wrapper').forEach((wrapper) => {
       Array.from(wrapper.querySelectorAll(':scope > p')).forEach((p) => {
         const bdP = document.createElement('bd-p');
         bdP.setAttribute('appearance', 'small');
@@ -147,6 +163,9 @@ const buildAccordion = (block) => {
 };
 
 export default async function decorate(block) {
+  // the section on the design system's rhythm; in a tab panel the section is
+  // the tab group's, which already is
+  wrapSectionInDsSection(block);
   const accordion = buildAccordion(block);
   await load(accordion);
   block.replaceChildren(accordion);
