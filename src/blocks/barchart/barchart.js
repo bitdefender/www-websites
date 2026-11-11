@@ -90,6 +90,8 @@ const buildRegion = (title, grid) => {
   regionCount += 1;
   const heading = slotted('bd-h', 'title', title);
   heading.setAttribute('as', 'h3');
+  // the header draws a page section's title (h2); 3.x drew this one at h3
+  heading.setAttribute('visual-level', 'h3');
   heading.id = `barchart-title-${regionCount}`;
 
   const header = document.createElement('bd-section-header');
