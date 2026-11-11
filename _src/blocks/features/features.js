@@ -1,7 +1,9 @@
 import { decorateIcons } from "../../scripts/lib-franklin.js";
-import { slotIcon } from "../../scripts/utils/utils.js";
+import { slotIcon, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/features/features.js
+/** One level under `level`, h6 at most. */
+var below = (level) => Math.min(level + 1, 6);
 var parseTrailingGreenPill = (text) => {
 	const marker = text.match(/\[\$([^\]]+?)\$\]\s*$/);
 	if (marker) return {
@@ -35,31 +37,31 @@ var getTitleAndPill = (headingEl) => {
 	}
 	return parseTrailingGreenPill(headingEl.textContent.trim());
 };
+/**
+* The green pill an item's title carries, as bd-accordion-item's badge: the
+* success tone, filled and small, as the design system's Ultimate Security
+* page writes the badge beside a feature column item's title.
+* @param {string} pill
+*/
 var createGreenBadge = (pill) => {
-	const badge = document.createElement("span");
+	const badge = document.createElement("bd-badge");
 	badge.setAttribute("slot", "badge");
+	badge.setAttribute("variant", "success");
+	badge.setAttribute("appearance", "fill");
+	badge.setAttribute("size", "sm");
 	badge.textContent = pill;
-	badge.style.display = "inline-flex";
-	badge.style.alignItems = "center";
-	badge.style.padding = "2px 8px";
-	badge.style.borderRadius = "999px";
-	badge.style.background = "#0A7D39";
-	badge.style.color = "#fff";
-	badge.style.fontSize = "12px";
-	badge.style.fontWeight = "600";
-	badge.style.lineHeight = "1.2";
 	return badge;
 };
 /**
-* A heading in a slot: the component around it draws it, the page picks its
-* level.
+* A heading in a slot: the component around it sets its size, the page's
+* outline its level.
 * @param {string} text
-* @param {string} as the level, h1 to h6
+* @param {number} level 1 to 6
 */
-var buildTitle = (text, as) => {
+var buildTitle = (text, level) => {
 	const bdH = document.createElement("bd-h");
 	bdH.setAttribute("slot", "title");
-	bdH.setAttribute("as", as);
+	bdH.setAttribute("as", `h${level}`);
 	bdH.textContent = text;
 	return bdH;
 };
@@ -86,33 +88,32 @@ var getIconElement = (col) => {
 	return img;
 };
 var buildFeatureCol = (col, firstOpen) => {
-	const title = col.querySelector("h1, h2, h3")?.textContent?.trim() || "";
+	const heading = col.querySelector("h1, h2, h3");
+	const title = heading?.textContent?.trim() || "";
+	const level = heading ? Number(heading.tagName[1]) : 3;
 	const featureCol = document.createElement("bd-feature-column");
-	if (title) featureCol.appendChild(buildTitle(title, "h4"));
+	if (title) featureCol.appendChild(buildTitle(title, level));
 	const iconEl = getIconElement(col);
 	if (iconEl) featureCol.appendChild(iconEl);
 	const h4s = [...col.querySelectorAll("h4")];
 	const firstH4 = h4s[0] || null;
-	const descParts = [];
 	Array.from(col.children).some((child) => {
 		if (child === firstH4) return true;
-		if (child.tagName === "P" && !child.querySelector("[class*=\"icon-\"]") && child.textContent.trim() && !child.textContent.trim().match(/^#[0-9a-fA-F]{3,6}$/)) descParts.push(child.innerHTML);
+		if (child.tagName === "P" && !child.querySelector("[class*=\"icon-\"]") && child.textContent.trim() && !child.textContent.trim().match(/^#[0-9a-fA-F]{3,6}$/)) {
+			const desc = document.createElement("bd-p");
+			desc.setAttribute("slot", "description");
+			desc.innerHTML = child.innerHTML;
+			featureCol.appendChild(desc);
+		}
 		return false;
 	});
-	if (descParts.length) {
-		const desc = document.createElement("bd-p");
-		desc.setAttribute("slot", "description");
-		desc.setAttribute("appearance", "regular");
-		desc.innerHTML = descParts.join(" ");
-		featureCol.appendChild(desc);
-	}
 	if (h4s.length) {
 		const accordion = document.createElement("bd-accordion");
 		accordion.setAttribute("without-container", "");
 		h4s.forEach((h4, index) => {
 			const { title: itemTitle, pill } = getTitleAndPill(h4);
 			const item = document.createElement("bd-accordion-item");
-			item.appendChild(buildTitle(itemTitle || h4.textContent.trim(), "h3"));
+			item.appendChild(buildTitle(itemTitle || h4.textContent.trim(), below(level)));
 			if (index === 0 && firstOpen) item.setAttribute("open", "");
 			let next = h4.nextElementSibling;
 			while (next && next.tagName !== "H4") {
@@ -132,6 +133,7 @@ var buildFeatureCol = (col, firstOpen) => {
 	return featureCol;
 };
 async function decorate(block) {
+	wrapSectionInDsSection(block);
 	await decorateIcons(block);
 	const firstOpen = block.classList.contains("first-open");
 	const featuresEl = document.createElement("bd-feature-columns");
