@@ -1,60 +1,13 @@
-﻿main .section.sticky-navigation-container {
-  padding-top: 0;
+/* The bar sticks to the top of the viewport while the page scrolls past it.
+   bd-anchor-nav is sticky itself, but a sticky box stays inside its parent,
+   and the block around it is no taller than the bar, so the section sticks
+   instead. The section is the bar and nothing else: no inset of its own,
+   since the sections around it bring the page's rhythm, and nothing clipped,
+   since the bar's dropdown below md opens past its edge. */
+main .section.sticky-navigation-container {
   position: sticky;
   top: 0;
   z-index: 999;
   overflow: visible;
-  padding-bottom: 0;
+  padding-block: 0;
 }
-
-.sticky-navigation {
-  cursor: pointer;
-  background-color: var(--white-color);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-bottom: 1px solid var(--sticky-nav-border-color);
-}
-
-/* DS component takes all available horizontal space and aligns with site content width */
-.sticky-navigation bd-anchor-nav {
-  flex: 1 1 auto;
-  min-width: 0;
-
-  --layout-ensemble-inline-padding: var(--body-padding);
-  --layout-compare-grid-max: 100%;
-}
-
-main .section.sticky-navigation-v2 {
-  margin-top: var(--size-32);
-}
-
-.sticky-navigation-v2 .sticky-navigation bd-anchor-nav {
-  --bd-ensemble-max-width: none;
-  --bd-ensemble-inline-padding: var(--section-mobile-padding);
-}
-
-.trusted bd-anchor-nav::part(inner) {
-  gap: 0 !important;
-  min-height: 70px;
-}
-
-@media (min-width: 768px) {
-  .sticky-navigation-v2 .sticky-navigation bd-anchor-nav {
-    --bd-ensemble-inline-padding: var(--size-20);
-  }
-}
-
-@media (min-width: 992px) {
-  .sticky-navigation-v2 .sticky-navigation bd-anchor-nav {
-    --bd-ensemble-inline-padding: var(--section-large-desktop-padding);
-    --bd-ensemble-max-width: calc(1292px + 2 * var(--section-large-desktop-padding));
-  }
-}
-
-@media (min-width: 900px) {
-  .sticky-navigation bd-anchor-nav {
-    --layout-compare-grid-max: 1250px;
-  }
-}
-

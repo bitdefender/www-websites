@@ -23,9 +23,11 @@ function extractAnchorId(href) {
 	}
 }
 /**
-* The appearance of a 3.x bd-button kind, the values a section's `data-kind`
-* holds: the kinds 4.0 renamed, and plain, which 3.x drew as primary (4.0's
-* plain is the text-only CTA). Any other kind is an appearance already.
+* The bd-button appearance for a section's `data-kind`, which authors write
+* in the button's older names: outline, primary-outline, danger and
+* destructive, and plain, which the pages show as a primary button (the
+* design system's plain is the text-only CTA). Any other value is an
+* appearance already.
 */
 var APPEARANCE_OF_KIND = {
 	outline: "ghost",
@@ -102,7 +104,6 @@ function buildFromSections(anchorNav, block) {
 		buttonLink.setAttribute("slot", "actions");
 		buttonLink.setAttribute("href", ctaHref);
 		buttonLink.setAttribute("appearance", ctaAppearance);
-		buttonLink.setAttribute("size", "md");
 		buttonLink.textContent = ctaLabel;
 		if (isModal && ctaHref) buttonLink.addEventListener("click", (e) => {
 			e.preventDefault();

@@ -27,9 +27,11 @@ function extractAnchorId(href) {
 }
 
 /**
- * The appearance of a 3.x bd-button kind, the values a section's `data-kind`
- * holds: the kinds 4.0 renamed, and plain, which 3.x drew as primary (4.0's
- * plain is the text-only CTA). Any other kind is an appearance already.
+ * The bd-button appearance for a section's `data-kind`, which authors write
+ * in the button's older names: outline, primary-outline, danger and
+ * destructive, and plain, which the pages show as a primary button (the
+ * design system's plain is the text-only CTA). Any other value is an
+ * appearance already.
  */
 const APPEARANCE_OF_KIND = {
   outline: 'ghost',
@@ -128,8 +130,8 @@ function buildFromSections(anchorNav, block) {
   });
 
   // Optional CTA: shown when the block contains a link. `data-kind` on the
-  // section controls the button style; falls back to 'danger', the accent
-  // fill, when absent.
+  // section picks the button's appearance; without one it is accent, the
+  // conversion CTA's fill. Its size is bd-button's responsive default.
   const section = block.closest('.section');
   const ctaKind = section?.dataset.kind || 'danger';
   const ctaAppearance = APPEARANCE_OF_KIND[ctaKind] || ctaKind;
@@ -145,7 +147,6 @@ function buildFromSections(anchorNav, block) {
     buttonLink.setAttribute('slot', 'actions');
     buttonLink.setAttribute('href', ctaHref);
     buttonLink.setAttribute('appearance', ctaAppearance);
-    buttonLink.setAttribute('size', 'md');
     buttonLink.textContent = ctaLabel;
     if (isModal && ctaHref) {
       buttonLink.addEventListener('click', (e) => {
@@ -173,7 +174,7 @@ function buildAnchorNav(block) {
   const isAuthoredMode = authoredRows.length >= 2;
 
   const anchorNav = document.createElement('bd-anchor-nav');
-  // 3.x named the nav this where the page gave it no name; 4.0 gives none
+  // the nav's accessible name: bd-anchor-nav has no default
   anchorNav.setAttribute('aria-label', 'Section navigation');
 
   if (isAuthoredMode) {
@@ -200,6 +201,12 @@ function buildAnchorNav(block) {
   return { anchorNav, activeId };
 }
 
+/*
+ * The bar is not a content section, so it is not put in a bd-section: its
+ * section is the sticky element (sticky-navigation.css), and bd-section's
+ * inset above and below the bar would stick with it, a transparent band over
+ * the content scrolling under it. The sections around it keep the rhythm.
+ */
 export default async function decorate(block) {
   const { anchorNav, activeId } = buildAnchorNav(block);
   await load(anchorNav);

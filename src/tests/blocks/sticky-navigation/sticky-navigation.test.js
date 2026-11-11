@@ -72,11 +72,25 @@ describe('sticky-navigation CTA', () => {
     expect(cta.textContent).toBe('Try for free');
   });
 
-  it('draws the CTA in the accent appearance, 3.x\'s danger kind, without a section data-kind', async () => {
+  it('draws the CTA in the accent appearance, at bd-button\'s own size, without a section data-kind', async () => {
     const cta = await renderFixture();
 
     expect(cta.getAttribute('appearance')).toBe('accent');
-    expect(cta.hasAttribute('kind')).toBe(false);
+    expect(cta.hasAttribute('size')).toBe(false);
+  });
+
+  it('reads a section data-kind in the button\'s older names as an appearance', async () => {
+    document.body.innerHTML = `<main>${fixture}</main>`;
+    const main = document.querySelector('main');
+    decorateButtons(main);
+    decorateSections(main);
+    decorateBlocks(main);
+    main.querySelector('.sticky-navigation').closest('.section').dataset.kind = 'outline';
+
+    const block = main.querySelector('.sticky-navigation');
+    await decorate(block);
+
+    expect(block.querySelector('bd-button[slot="actions"]').getAttribute('appearance')).toBe('ghost');
   });
 
   it('opens the fragment as a modal instead of navigating', async () => {
@@ -97,6 +111,16 @@ describe('sticky-navigation CTA', () => {
     expect(cta.getAttribute('href')).toBe('/en-us/consumer/ultimate-security#buy');
     expect(event.defaultPrevented).toBe(false);
     expect(openModal).not.toHaveBeenCalled();
+  });
+});
+
+describe('sticky-navigation bar', () => {
+  it('keeps its section out of a bd-section: the section is the sticky bar', async () => {
+    await renderFixture();
+    const section = document.querySelector('.sticky-navigation').closest('.section');
+
+    expect(section.querySelector(':scope > bd-section')).toBeNull();
+    expect(section.querySelector(':scope > .sticky-navigation-wrapper > .sticky-navigation > bd-anchor-nav')).not.toBeNull();
   });
 });
 
