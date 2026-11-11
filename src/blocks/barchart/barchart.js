@@ -1,21 +1,27 @@
 import { load } from '@repobit/dex-system-design/loader';
+import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+
+/*
+ * Score comparisons on the design system's bd-bar-chart-grid. Authored one
+ * chart a row: [icon] [title heading, description, a list of brand and score
+ * pairs (and an optional scale for each bar), footnote]. A single row is one
+ * horizontal chart, its title, description and footnote in the first cell
+ * and the list in the second. The copy that opens the section is its
+ * bd-section-header, centred over the charts.
+ */
 
 const DEFAULT_SECONDARY_SCALES = ['0.93', '0.47'];
 const VIEWPORT_ANIMATION_MS = 1000;
 const EASE_OUT_CUBIC = (value) => 1 - ((1 - value) ** 3);
 const MAX_SCORE = '6';
 
-/* The English 3.x drew into every chart, which 4.0 leaves to the page: the
-   bars' group name, and the sr-only note the chart is described by, its
-   scale out of the max-score every bar here has. */
+/* What a screen reader hears of every chart: the bars' group name, and the
+   note the chart is described by, its scale out of the max-score every bar
+   here has. Neither is drawn. */
 const BARS_LABEL = 'Scores by brand';
 const SCALE_NOTE = `Bar lengths are scaled for visibility between brands. Use the announced scores for exact values; scale is out of ${MAX_SCORE}.`;
-// 3.x linked what follows it in a footnote, or the whole footnote without it
-const SOURCE = 'Source ';
 
 let regionCount = 0;
-
-const getHeadingText = (root) => root?.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim() || '';
 
 const getAdjacentParagraph = (element, fallbackRoot) => {
   const candidate = element?.nextElementSibling;
@@ -83,53 +89,43 @@ const slotted = (tag, slot, text) => {
   return el;
 };
 
-/* The section's title, which 3.x's bd-compare-section drew centred over the
-   charts at h3 and named its region by: the grid draws no heading in 4.0, so
-   it is a bd-section-header before the grid, in a region named by it. */
+/* The charts are a region named by the section's title, the bd-h the
+   section header holds. */
 const buildRegion = (title, grid) => {
   regionCount += 1;
-  const heading = slotted('bd-h', 'title', title);
-  heading.setAttribute('as', 'h3');
-  // the header draws a page section's title (h2); 3.x drew this one at h3
-  heading.setAttribute('visual-level', 'h3');
-  heading.id = `barchart-title-${regionCount}`;
-
-  const header = document.createElement('bd-section-header');
-  header.setAttribute('layout', 'centered');
-  header.append(heading);
-
+  if (!title.id) title.id = `barchart-title-${regionCount}`;
   const region = document.createElement('section');
-  region.setAttribute('aria-labelledby', heading.id);
-  region.append(header, grid);
+  region.setAttribute('aria-labelledby', title.id);
+  region.append(grid);
   return region;
 };
 
-// the 48px icon 3.x drew, 40 on the horizontal layout
-const buildIcon = (src, size) => {
+// the chart sizes its icon; the title beside it says what the chart is about
+const buildIcon = (src) => {
   const icon = document.createElement('bd-img');
   icon.slot = 'icon';
   icon.setAttribute('src', src);
   icon.setAttribute('alt', '');
-  icon.setAttribute('width', size);
-  icon.setAttribute('height', size);
   icon.setAttribute('fit', 'contain');
-  icon.setAttribute('loading', 'eager');
   return icon;
 };
 
-const buildFootnote = (text, href) => {
-  const footer = slotted('bd-p', 'footer', href ? '' : text);
+/* The footnote as authored, in the chart's footer: its links are inline
+   bd-links, underlined, since colour alone does not set a link apart from
+   the text around it (WCAG 1.4.1), and open the source in a new tab. */
+const buildFootnote = (paragraph) => {
+  const footer = slotted('bd-p', 'footer', '');
   footer.setAttribute('appearance', 'xsmall');
-  if (!href) return footer;
-
-  const at = text.indexOf(SOURCE);
-  const link = slotted('bd-link', '', at === -1 ? text : text.slice(at + SOURCE.length));
-  link.setAttribute('href', href);
-  link.setAttribute('target', '_blank');
-  link.setAttribute('font-size', 'xs');
-  link.setAttribute('color', 'strong');
-  link.setAttribute('underline', '');
-  footer.append(...(at === -1 ? [link] : [text.slice(0, at + SOURCE.length), link]));
+  footer.append(...paragraph.cloneNode(true).childNodes);
+  footer.querySelectorAll('a').forEach((a) => {
+    const link = document.createElement('bd-link');
+    link.setAttribute('href', a.getAttribute('href') || '');
+    link.setAttribute('target', '_blank');
+    link.setAttribute('inline', '');
+    link.setAttribute('underline', '');
+    link.append(...a.childNodes);
+    a.replaceWith(link);
+  });
   return footer;
 };
 
@@ -141,15 +137,7 @@ const prefersReducedMotion = () => {
   }
 };
 
-const buildCompareSection = (block) => {
-  const section = block.closest('.section');
-  const defaultWrapper = section?.querySelector(':scope > .default-content-wrapper');
-  const sectionTitle = getHeadingText(defaultWrapper);
-
-  if (defaultWrapper && sectionTitle) {
-    defaultWrapper.remove();
-  }
-
+const buildGrid = (block) => {
   const compareSection = document.createElement('bd-bar-chart-grid');
   const rows = Array.from(block.querySelectorAll(':scope > div'));
   const validRows = rows.filter((row) => row.children.length >= 2);
@@ -194,14 +182,14 @@ const buildCompareSection = (block) => {
 
     const iconSrc = getCardIconSrc(iconWrap);
     if (iconSrc) {
-      card.append(buildIcon(iconSrc, isSingleCard ? '40' : '48'));
+      card.append(buildIcon(iconSrc));
     }
 
     const cardTitle = titleEl?.textContent?.trim();
     if (cardTitle) {
-      // the levels 3.x drew: h4, h3 on the horizontal layout
+      // the charts are the items under the section's h2
       const heading = slotted('bd-h', 'title', cardTitle);
-      heading.setAttribute('as', isSingleCard ? 'h3' : 'h4');
+      heading.setAttribute('as', 'h3');
       card.append(heading);
     }
 
@@ -252,18 +240,14 @@ const buildCompareSection = (block) => {
       card.setAttribute('without-stretch', '');
     }
 
-    const footnoteText = footnoteEl?.textContent.trim();
-    if (footnoteText) {
-      card.append(buildFootnote(footnoteText, footnoteEl.querySelector('a')?.href));
+    if (footnoteEl?.textContent.trim()) {
+      card.append(buildFootnote(footnoteEl));
     }
 
     compareSection.appendChild(card);
   });
 
-  return {
-    compareSection,
-    region: sectionTitle ? buildRegion(sectionTitle, compareSection) : compareSection,
-  };
+  return compareSection;
 };
 
 const runBarsIntroAnimation = (compareSection) => {
@@ -347,8 +331,20 @@ const activateCompareAnimationsOnViewport = (compareSection) => {
 };
 
 export default async function decorate(block) {
-  const { compareSection, region } = buildCompareSection(block);
-  await load(region);
-  block.replaceChildren(region);
-  activateCompareAnimationsOnViewport(compareSection);
+  wrapSectionInDsSection(block);
+  // the section's eyebrow, heading and lead, centred over the centred charts
+  const header = liftSectionHeader(block, { layout: 'centered' });
+
+  const grid = buildGrid(block);
+  try {
+    await load(grid);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('barchart: DSN import failed, keeping the authored content', err);
+    await header;
+    return;
+  }
+  const title = (await header)?.querySelector(':scope > bd-h[slot="title"]');
+  block.replaceChildren(title ? buildRegion(title, grid) : grid);
+  activateCompareAnimationsOnViewport(grid);
 }

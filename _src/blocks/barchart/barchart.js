@@ -1,3 +1,4 @@
+import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/barchart/barchart.js
 var DEFAULT_SECONDARY_SCALES = ["0.93", "0.47"];
@@ -6,9 +7,7 @@ var EASE_OUT_CUBIC = (value) => 1 - (1 - value) ** 3;
 var MAX_SCORE = "6";
 var BARS_LABEL = "Scores by brand";
 var SCALE_NOTE = `Bar lengths are scaled for visibility between brands. Use the announced scores for exact values; scale is out of ${MAX_SCORE}.`;
-var SOURCE = "Source ";
 var regionCount = 0;
-var getHeadingText = (root) => root?.querySelector("h1, h2, h3, h4, h5, h6")?.textContent?.trim() || "";
 var getAdjacentParagraph = (element, fallbackRoot) => {
 	const candidate = element?.nextElementSibling;
 	if (candidate?.tagName === "P") return candidate;
@@ -43,41 +42,33 @@ var slotted = (tag, slot, text) => {
 };
 var buildRegion = (title, grid) => {
 	regionCount += 1;
-	const heading = slotted("bd-h", "title", title);
-	heading.setAttribute("as", "h3");
-	heading.setAttribute("visual-level", "h3");
-	heading.id = `barchart-title-${regionCount}`;
-	const header = document.createElement("bd-section-header");
-	header.setAttribute("layout", "centered");
-	header.append(heading);
+	if (!title.id) title.id = `barchart-title-${regionCount}`;
 	const region = document.createElement("section");
-	region.setAttribute("aria-labelledby", heading.id);
-	region.append(header, grid);
+	region.setAttribute("aria-labelledby", title.id);
+	region.append(grid);
 	return region;
 };
-var buildIcon = (src, size) => {
+var buildIcon = (src) => {
 	const icon = document.createElement("bd-img");
 	icon.slot = "icon";
 	icon.setAttribute("src", src);
 	icon.setAttribute("alt", "");
-	icon.setAttribute("width", size);
-	icon.setAttribute("height", size);
 	icon.setAttribute("fit", "contain");
-	icon.setAttribute("loading", "eager");
 	return icon;
 };
-var buildFootnote = (text, href) => {
-	const footer = slotted("bd-p", "footer", href ? "" : text);
+var buildFootnote = (paragraph) => {
+	const footer = slotted("bd-p", "footer", "");
 	footer.setAttribute("appearance", "xsmall");
-	if (!href) return footer;
-	const at = text.indexOf(SOURCE);
-	const link = slotted("bd-link", "", at === -1 ? text : text.slice(at + 7));
-	link.setAttribute("href", href);
-	link.setAttribute("target", "_blank");
-	link.setAttribute("font-size", "xs");
-	link.setAttribute("color", "strong");
-	link.setAttribute("underline", "");
-	footer.append(...at === -1 ? [link] : [text.slice(0, at + 7), link]);
+	footer.append(...paragraph.cloneNode(true).childNodes);
+	footer.querySelectorAll("a").forEach((a) => {
+		const link = document.createElement("bd-link");
+		link.setAttribute("href", a.getAttribute("href") || "");
+		link.setAttribute("target", "_blank");
+		link.setAttribute("inline", "");
+		link.setAttribute("underline", "");
+		link.append(...a.childNodes);
+		a.replaceWith(link);
+	});
 	return footer;
 };
 var prefersReducedMotion = () => {
@@ -87,10 +78,7 @@ var prefersReducedMotion = () => {
 		return false;
 	}
 };
-var buildCompareSection = (block) => {
-	const defaultWrapper = block.closest(".section")?.querySelector(":scope > .default-content-wrapper");
-	const sectionTitle = getHeadingText(defaultWrapper);
-	if (defaultWrapper && sectionTitle) defaultWrapper.remove();
+var buildGrid = (block) => {
 	const compareSection = document.createElement("bd-bar-chart-grid");
 	const rows = Array.from(block.querySelectorAll(":scope > div"));
 	const isSingleCard = rows.filter((row) => row.children.length >= 2).length === 1;
@@ -120,11 +108,11 @@ var buildCompareSection = (block) => {
 		card.setAttribute("scale-note", SCALE_NOTE);
 		if (isSingleCard) card.setAttribute("orientation", "horizontal");
 		const iconSrc = getCardIconSrc(iconWrap);
-		if (iconSrc) card.append(buildIcon(iconSrc, isSingleCard ? "40" : "48"));
+		if (iconSrc) card.append(buildIcon(iconSrc));
 		const cardTitle = titleEl?.textContent?.trim();
 		if (cardTitle) {
 			const heading = slotted("bd-h", "title", cardTitle);
-			heading.setAttribute("as", isSingleCard ? "h3" : "h4");
+			heading.setAttribute("as", "h3");
 			card.append(heading);
 		}
 		const cardDescription = descriptionEl?.textContent?.trim();
@@ -155,14 +143,10 @@ var buildCompareSection = (block) => {
 			} else i += 1;
 		}
 		if (hasScaledBars) card.setAttribute("without-stretch", "");
-		const footnoteText = footnoteEl?.textContent.trim();
-		if (footnoteText) card.append(buildFootnote(footnoteText, footnoteEl.querySelector("a")?.href));
+		if (footnoteEl?.textContent.trim()) card.append(buildFootnote(footnoteEl));
 		compareSection.appendChild(card);
 	});
-	return {
-		compareSection,
-		region: sectionTitle ? buildRegion(sectionTitle, compareSection) : compareSection
-	};
+	return compareSection;
 };
 var runBarsIntroAnimation = (compareSection) => {
 	if (compareSection.dataset.barchartAnimated === "true" || prefersReducedMotion()) return;
@@ -220,9 +204,18 @@ var activateCompareAnimationsOnViewport = (compareSection) => {
 	observer.observe(compareSection);
 };
 async function decorate(block) {
-	const { compareSection, region } = buildCompareSection(block);
-	await load(region);
-	block.replaceChildren(region);
-	activateCompareAnimationsOnViewport(compareSection);
+	wrapSectionInDsSection(block);
+	const header = liftSectionHeader(block, { layout: "centered" });
+	const grid = buildGrid(block);
+	try {
+		await load(grid);
+	} catch (err) {
+		console.warn("barchart: DSN import failed, keeping the authored content", err);
+		await header;
+		return;
+	}
+	const title = (await header)?.querySelector(":scope > bd-h[slot=\"title\"]");
+	block.replaceChildren(title ? buildRegion(title, grid) : grid);
+	activateCompareAnimationsOnViewport(grid);
 }
 export { decorate as default };

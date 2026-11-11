@@ -1,17 +1,6 @@
-/* Bar Chart Styles */
-
+/* On a v2 section the two charts of a row sit at the column's edges: the gap
+   between them takes whatever the column leaves beside two charts at the
+   grid's 598px column, and never less than the grid's own 32. */
 .barchart-container-v2 bd-bar-chart-grid {
-  /* stylelint-disable custom-property-pattern */
-  --cs-gap: max(var(--spacing-32, 32px), calc(100% - 2 * 598px));
-  --typography-heading-h4-fontSize: var(--typography-heading-h3-fontSize);
-  --typography-heading-h4-fontWeight: var(--typography-heading-h3-fontWeight);
-  --typography-heading-h4-lineHeight: var(--typography-heading-h3-lineHeight);
-  --typography-heading-h4-letterSpacing: var(--typography-heading-h3-letterSpacing);
-  /* stylelint-enable custom-property-pattern */
-}
-
-/* 3.x's bd-compare-section drew its title 40 above the charts; the header
-   the block writes before the grid keeps that gap */
-.barchart bd-section-header {
-  margin-bottom: var(--spacing-40);
+  --cs-gap: max(var(--spacing-32), calc(100% - 2 * 598px));
 }
