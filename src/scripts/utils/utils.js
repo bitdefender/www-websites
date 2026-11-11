@@ -1440,7 +1440,7 @@ export const wrapSectionInDsSection = (block) => {
   if (existing) return existing;
 
   const bdSection = document.createElement('bd-section');
-  // the Section Metadata style keeps its 3.x name; the attribute is v4's
+  // authors write the edge as a Section Metadata style; bd-section takes it as an attribute
   ['top', 'bottom'].forEach((edge) => {
     if (section.classList.contains(`no-padding-${edge}`)) bdSection.setAttribute(`without-padding-${edge}`, '');
   });

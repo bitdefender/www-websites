@@ -1418,7 +1418,10 @@ p a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.
   background-color: var(--link-hover-color);
 }
 
-.icon {
+/* An authored icon in the page's own content. One slotted into a design
+   system component is that component's to size and space, so the site's
+   size and margin stay off it; :where() keeps the specificity of .icon. */
+.icon:not(:where([slot], [slot] *)) {
   display: inline-block;
   height: 56px;
   width: 50px;
