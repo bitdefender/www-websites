@@ -227,8 +227,8 @@ export default async function decorate(block) {
 
   // add event listener only after system design modifies the elements
   window.addEventListener('accordion-bg:loaded', () => {
-    // the filter sits flush under the search box: the accordion's band pads nothing,
-    // and the 12px under it is this block's CSS
+    // the year filter is a control in the filter column, not a page section: it sits
+    // flush under the search box, so the accordion's band pads nothing
     block.querySelector('bd-accordion')?.setAttribute('without-padding', '');
 
     const yearInputs = block.querySelectorAll('.accordion input');

@@ -22,12 +22,6 @@ main .section .awards-search .award-search-filter-wrapper {
     margin-right: 0;
 }
 
-/* the year filter's bd-accordion, once the block has turned its band's
-   padding off: 12px under it, none above */
-main .section .awards-search bd-accordion[without-padding] {
-    padding-bottom: 12px;
-}
-
 .text-box-wrapper {
     height: 2.5rem;
     width: 16rem;
