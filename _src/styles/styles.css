@@ -1904,9 +1904,9 @@ main .section.blue p a.button.modal::after {
     }
   }
 
-  /* bd-tooltip has no light variant: give it pricing-card's light tooltip surface */
+  /* bd-tooltip has no light variant: give it the info surface */
   bd-tooltip {
-    --color-surface-inverse: var(--color-surface-container);
+    --color-surface-inverse: var(--color-surface-info);
     --color-text-inverse: var(--color-text-secondary);
   }
 }
