@@ -194,19 +194,6 @@ function buildPriceBox(product, details, settings) {
 }
 
 /*
- * The dropdown's accessible name. bd-select 4.0.0 is named only by its label slot, which it
- * draws above the field, and the design draws no label, so the native select in its shadow
- * root takes the description (or the h1) as its aria-label once it has rendered. dex-core
- * PR #426 adds aria-label on bd-select itself: once that is released, set it on the host and
- * delete this.
- */
-function nameSelect(dropdown, accessibleName) {
-  whenRendered(dropdown).then(() => {
-    dropdown.shadowRoot?.querySelector('select')?.setAttribute('aria-label', accessibleName);
-  });
-}
-
-/*
  * bd-select takes its options as bd-select-option children, each valued by its label, and
  * reports the chosen value, so the labels have to be unique to map back to a product.
  */
@@ -239,7 +226,9 @@ function buildSelector(products, names, accessibleName, boxes) {
     });
   });
 
-  if (accessibleName) nameSelect(dropdown, accessibleName);
+  // the design draws no label, so the description (or the h1) names the field;
+  // bd-select passes aria-label to the native select a screen reader focuses
+  if (accessibleName) dropdown.setAttribute('aria-label', accessibleName);
 
   const selector = createTag('div', { class: 'hero-banner__selector' });
   selector.append(dropdown);

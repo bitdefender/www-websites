@@ -188,8 +188,7 @@ describe('hero-banner', () => {
       expect(dropdown.value).toBe('Premium Security');
       // the field's own size
       expect(dropdown.hasAttribute('size')).toBe(false);
-      expect(dropdown.shadowRoot.querySelector('select').getAttribute('aria-label'))
-        .toBe('Explore and select the Individual plan');
+      expect(dropdown.getAttribute('aria-label')).toBe('Explore and select the Individual plan');
     });
 
     it('builds one offer per product in its own store context, and shows the first', () => {
