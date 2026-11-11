@@ -64,9 +64,11 @@ describe('wrapSectionInDsSection', () => {
     const top = wrapSectionInDsSection(first);
     const plain = wrapSectionInDsSection(second);
 
-    expect(top.hasAttribute('no-padding-top')).toBe(true);
-    expect(top.hasAttribute('no-padding-bottom')).toBe(false);
-    expect(plain.hasAttribute('no-padding-top')).toBe(false);
+    expect(top.hasAttribute('without-padding-top')).toBe(true);
+    expect(top.hasAttribute('without-padding-bottom')).toBe(false);
+    expect(plain.hasAttribute('without-padding-top')).toBe(false);
+    // 3.x's spelling, which 4.0 no longer observes
+    expect(top.hasAttribute('no-padding-top')).toBe(false);
   });
 
   it('still lets a block lift its section header', async () => {
@@ -76,7 +78,7 @@ describe('wrapSectionInDsSection', () => {
 
     const header = await liftSectionHeader(block);
 
-    expect(header?.getAttribute('heading')).toBe('AI Across Bitdefender');
+    expect(header?.querySelector(':scope > bd-h[slot="title"]')?.textContent).toBe('AI Across Bitdefender');
   });
 });
 

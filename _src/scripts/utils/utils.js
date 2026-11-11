@@ -1323,8 +1323,8 @@ var wrapSectionInDsSection = (block) => {
 	const existing = section.querySelector(":scope > bd-section");
 	if (existing) return existing;
 	const bdSection = document.createElement("bd-section");
-	["no-padding-top", "no-padding-bottom"].forEach((edge) => {
-		if (section.classList.contains(edge)) bdSection.setAttribute(edge, "");
+	["top", "bottom"].forEach((edge) => {
+		if (section.classList.contains(`no-padding-${edge}`)) bdSection.setAttribute(`without-padding-${edge}`, "");
 	});
 	bdSection.append(...section.children);
 	section.append(bdSection);
@@ -1366,9 +1366,9 @@ var splitAroundHeading = (root, paragraphs) => {
 		after: paragraphs.filter((p) => !before.includes(p))
 	};
 };
-var toLead = (p) => {
-	const lead = document.createElement("span");
-	lead.slot = "lead";
+var toDescription = (p) => {
+	const lead = document.createElement("bd-p");
+	lead.slot = "description";
 	lead.append(...p.childNodes);
 	lead.querySelectorAll("a").forEach((a) => {
 		const link = document.createElement("bd-link");
@@ -1422,13 +1422,21 @@ var liftSectionHeader = async (block, { layout } = {}) => {
 	const requested = (layout || styleLayout || section.dataset.header || legacyLayout || "").trim().toLowerCase();
 	const header = document.createElement("bd-section-header");
 	if (heading) {
-		header.setAttribute("heading", heading.textContent.trim());
-		header.setAttribute("as", heading.tagName.toLowerCase());
+		const title = document.createElement("bd-h");
+		title.slot = "title";
+		title.setAttribute("as", heading.tagName.toLowerCase());
+		title.textContent = heading.textContent.trim();
+		header.append(title);
 		if (heading.id) header.id = heading.id;
 	}
 	header.setAttribute("layout", HEADER_LAYOUTS.includes(requested) ? requested : "stacked");
-	if (eyebrow) header.setAttribute("eyebrow", eyebrow.textContent.trim());
-	if (lead) header.append(toLead(lead));
+	if (eyebrow) {
+		const text = document.createElement("span");
+		text.slot = "eyebrow";
+		text.textContent = eyebrow.textContent.trim();
+		header.append(text);
+	}
+	if (lead) header.append(toDescription(lead));
 	try {
 		const { load } = await import("../../vendor/repobit/dex-system-design/loader.js");
 		await load(header);
@@ -1447,15 +1455,15 @@ var liftSectionHeader = async (block, { layout } = {}) => {
 };
 /**
 * The homepage's phone frames run a section's CTAs across the column; from md
-* (768, the design system's) they hug their label. bd-button-link stretches
-* only through its own fullwidth attribute, so this sets it below md and keeps
-* it in step when the viewport crosses md.
+* (768, the design system's) they hug their label. bd-button stretches only
+* through its own full-width attribute, so this sets it below md and keeps it
+* in step when the viewport crosses md.
 *
-* @param {...HTMLElement} buttons bd-button-link (or bd-button) elements
+* @param {...HTMLElement} buttons bd-button elements
 */
 var fullWidthOnPhone = (...buttons) => {
 	const tablet = window.matchMedia?.("(min-width: 768px)");
-	const set = () => buttons.forEach((button) => button.toggleAttribute("fullwidth", !!tablet && !tablet.matches));
+	const set = () => buttons.forEach((button) => button.toggleAttribute("full-width", !!tablet && !tablet.matches));
 	set();
 	tablet?.addEventListener("change", set);
 };
