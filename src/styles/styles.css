@@ -755,12 +755,15 @@ main .grey-background {
   background-color: #F6F6F6 !important;
 }
 
+/* The v2 sections' own column and spacing. A section a design system block
+   has put on bd-section takes both from the design system instead, so these
+   leave it alone; :where() keeps the rules' specificity. */
 main div.section:is(
   .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
   .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
   .money-back-container-v2, .barchart-container-v2, .container-v2,
   .copilot-benefits-v2.columns-container
-) {
+):not(:where(:has(> bd-section:defined))) {
   --v2-section-spacing: var(--size-32);
   --v2-subtitle-gap: var(--size-16);
 
@@ -925,7 +928,7 @@ main div.section:is(
     .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
     .money-back-container-v2, .barchart-container-v2, .container-v2,
     .copilot-benefits-v2.columns-container
-  ) {
+  ):not(:where(:has(> bd-section:defined))) {
     --v2-section-spacing: var(--size-48);
     --v2-container-max-width: 100%;
     --v2-container-padding: var(--size-20);
@@ -1035,7 +1038,7 @@ main div.section:is(
     .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
     .money-back-container-v2, .barchart-container-v2, .container-v2,
     .copilot-benefits-v2.columns-container
-  ) {
+  ):not(:where(:has(> bd-section:defined))) {
     --v2-section-spacing: var(--size-64);
     --v2-subtitle-gap: var(--size-24);
     --v2-container-padding: var(--section-large-desktop-padding);
