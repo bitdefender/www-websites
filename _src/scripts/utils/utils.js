@@ -1307,6 +1307,40 @@ var slotIcon = (span, { color, size = 40 } = {}) => {
 */
 var getSectionContent = (section) => section?.querySelector(":scope > bd-section") || section;
 /**
+* A default-content list whose items are [{...}] tags becomes a row of
+* bd-badges. An item's nested list is the text of its badge's bd-tooltip.
+* Runs after decorateTags and before decorateSections.
+* @param {HTMLElement} main
+*/
+var decorateBadgeLists = (main) => {
+	const lists = [...main.querySelectorAll(":scope > div > ul")].filter((ul) => ul.querySelector(":scope > li > .tag-light-blue"));
+	if (!lists.length) return;
+	lists.forEach((ul) => {
+		ul.classList.add("badge-list");
+		[...ul.children].forEach((li) => {
+			const tag = li.querySelector(":scope > .tag-light-blue");
+			if (!tag) return;
+			const badge = document.createElement("bd-badge");
+			badge.setAttribute("tone", "info");
+			badge.setAttribute("variant", "shade");
+			badge.setAttribute("size", "lg");
+			badge.textContent = tag.textContent.trim();
+			const text = li.querySelector(":scope > ul")?.textContent.trim();
+			if (!text) {
+				li.replaceChildren(badge);
+				return;
+			}
+			const tooltip = document.createElement("bd-tooltip");
+			tooltip.setAttribute("text", text);
+			tooltip.append(badge);
+			li.replaceChildren(tooltip);
+		});
+	});
+	import("../../vendor/repobit/dex-system-design/loader.js").then(({ load }) => load(["bd-badge", "bd-tooltip"])).catch((err) => {
+		console.warn("decorateBadgeLists: DSN import failed", err);
+	});
+};
+/**
 * Puts the block's section on the design system's vertical rhythm: every
 * design system block calls it first, so its section's wrappers go into one
 * bd-section, which pads the section (24 below md, 32 from md) and sets its
@@ -1465,4 +1499,4 @@ function onCookiesAccepted(callback) {
 		if (window.adobeDataLayer.getState("ucCategory.functional")) callback();
 	});
 }
-export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };
+export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBadgeLists, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };

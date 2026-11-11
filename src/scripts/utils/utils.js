@@ -1423,6 +1423,48 @@ export const slotIcon = (span, { color, size = 40 } = {}) => {
 export const getSectionContent = (section) => section?.querySelector(':scope > bd-section') || section;
 
 /**
+ * A default-content list whose items are [{...}] tags becomes a row of
+ * bd-badges. An item's nested list is the text of its badge's bd-tooltip.
+ * Runs after decorateTags and before decorateSections.
+ * @param {HTMLElement} main
+ */
+export const decorateBadgeLists = (main) => {
+  const lists = [...main.querySelectorAll(':scope > div > ul')]
+    .filter((ul) => ul.querySelector(':scope > li > .tag-light-blue'));
+  if (!lists.length) return;
+
+  lists.forEach((ul) => {
+    ul.classList.add('badge-list');
+    [...ul.children].forEach((li) => {
+      const tag = li.querySelector(':scope > .tag-light-blue');
+      if (!tag) return;
+      const badge = document.createElement('bd-badge');
+      badge.setAttribute('tone', 'info');
+      badge.setAttribute('variant', 'shade');
+      badge.setAttribute('size', 'lg');
+      badge.textContent = tag.textContent.trim();
+
+      const text = li.querySelector(':scope > ul')?.textContent.trim();
+      if (!text) {
+        li.replaceChildren(badge);
+        return;
+      }
+      const tooltip = document.createElement('bd-tooltip');
+      tooltip.setAttribute('text', text);
+      tooltip.append(badge);
+      li.replaceChildren(tooltip);
+    });
+  });
+
+  import('@repobit/dex-system-design/loader')
+    .then(({ load }) => load(['bd-badge', 'bd-tooltip']))
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('decorateBadgeLists: DSN import failed', err);
+    });
+};
+
+/**
  * Puts the block's section on the design system's vertical rhythm: every
  * design system block calls it first, so its section's wrappers go into one
  * bd-section, which pads the section (24 below md, 32 from md) and sets its

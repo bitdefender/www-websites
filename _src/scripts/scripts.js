@@ -2,7 +2,7 @@ import page_default from "./page.js";
 import user_default from "./user.js";
 import { decorateBlocks, decorateButtons, decorateIcons, decorateSections, decorateTags, decorateTemplateAndTheme, getMetadata, loadBlocks, loadCSS, loadFooter, loadHeader, sampleRUM, waitForLCP } from "./lib-franklin.js";
 import { Constants } from "./libs/constants.js";
-import { GLOBAL_EVENTS, createTag, generateLDJsonSchema, getPageExperimentKey, pushTrialDownloadToDataLayer } from "./utils/utils.js";
+import { GLOBAL_EVENTS, createTag, decorateBadgeLists, generateLDJsonSchema, getPageExperimentKey, pushTrialDownloadToDataLayer } from "./utils/utils.js";
 import { adobeMcAppendVisitorId, target } from "./target.js";
 import { StoreProductLoadedEvent, handleFileDownloadedEvents, resolveNonProductsDataLayer } from "./libs/data-layer.js";
 import store_default from "./store.js";
@@ -115,6 +115,7 @@ function decorateMain(main) {
 	decorateButtons(main);
 	decorateIcons(main);
 	decorateTags(main);
+	decorateBadgeLists(main);
 	decorateLinkedPictures(main);
 	decorateSections(main);
 	decorateBlocks(main);

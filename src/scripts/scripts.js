@@ -41,6 +41,7 @@ import user from './user.js';
 
 import {
   createTag,
+  decorateBadgeLists,
   GLOBAL_EVENTS,
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
@@ -186,6 +187,7 @@ export function decorateMain(main) {
   decorateButtons(main);
   decorateIcons(main);
   decorateTags(main);
+  decorateBadgeLists(main);
   decorateLinkedPictures(main);
   decorateSections(main);
   decorateBlocks(main);

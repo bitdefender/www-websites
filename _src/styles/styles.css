@@ -1883,15 +1883,31 @@ main .section.blue p a.button.modal::after {
   margin-left: 0;
 }
 
-/* A row of [{...}] pills in default content: center them as a wrapping row. */
-.default-content-wrapper p:has(> .tag-light-blue + .tag-light-blue) {
+/* A list of [{...}] tags in default content, made bd-badges by decorateBadgeLists. */
+.default-content-wrapper ul.badge-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
 
-  .tag-light-blue {
-    margin-bottom: 0;
+  > li {
+    margin: 0;
+    padding: 0;
+    background: none;
+    list-style: none;
+
+    &::before {
+      content: none;
+    }
+  }
+
+  /* bd-tooltip has no light variant: give it pricing-card's light tooltip surface */
+  bd-tooltip {
+    --color-surface-inverse: var(--color-surface-container);
+    --color-text-inverse: var(--color-text-secondary);
   }
 }
 
