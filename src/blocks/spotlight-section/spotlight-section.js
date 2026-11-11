@@ -62,8 +62,8 @@ const appendButtons = (banner, cell, slot) => {
     button.setAttribute('href', link.getAttribute('href') || '');
     button.setAttribute('label', link.textContent.trim());
     button.setAttribute(
-      'kind',
-      slot === 'right-buttons' || index > 0 || link.classList.contains('secondary')
+      'appearance',
+      slot === 'description-actions' || index > 0 || link.classList.contains('secondary')
         ? 'outline-white'
         : 'white',
     );
@@ -80,8 +80,20 @@ export default async function decorate(block) {
   const spotlightSection = document.createElement('bd-spotlight');
   const title = heading?.textContent.trim();
 
-  if (title) spotlightSection.setAttribute('title', title);
-  if (description) spotlightSection.setAttribute('description', description);
+  if (title) {
+    // the band's title, at the h2 bd-spotlight-section drew
+    const titleHeading = document.createElement('bd-h');
+    titleHeading.slot = 'title';
+    titleHeading.setAttribute('as', 'h2');
+    titleHeading.textContent = title;
+    spotlightSection.append(titleHeading);
+  }
+  if (description) {
+    const descriptionText = document.createElement('bd-p');
+    descriptionText.slot = 'description';
+    descriptionText.textContent = description;
+    spotlightSection.append(descriptionText);
+  }
 
   const icon = getIcon(block);
   if (icon) {
@@ -89,8 +101,9 @@ export default async function decorate(block) {
     spotlightSection.append(icon);
   }
 
-  appendButtons(spotlightSection, headingCell, 'left-buttons');
-  appendButtons(spotlightSection, descriptionCell, 'right-buttons');
+  // the buttons under the title, then those under the description
+  appendButtons(spotlightSection, headingCell, 'actions');
+  appendButtons(spotlightSection, descriptionCell, 'description-actions');
 
   try {
     await load(spotlightSection);
