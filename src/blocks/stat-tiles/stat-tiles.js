@@ -12,9 +12,6 @@ import {
  * ("$1.5 billion plus" for "$1.5B+").
  */
 
-// the design system's md and lg (768, 992)
-const TABLET = '(min-width: 768px)';
-
 const text = (el) => el?.textContent.replace(/\s+/g, ' ').trim() || '';
 
 /** A value cell: the figure, and its spoken form from an <em> when there is one. */
@@ -109,10 +106,8 @@ export default async function decorate(block) {
   layout.className = 'stat-tiles-column ds-page-column';
   layout.setAttribute('gap', 'md');
   const tiles = grid(['1', '1', '2', '2']);
-  const tablet = window.matchMedia?.(TABLET);
-  const setGap = () => tiles.setAttribute('gap', !tablet || tablet.matches ? 'md' : 'sm');
-  setGap();
-  tablet?.addEventListener('change', setGap);
+  tiles.setAttribute('gap', 'sm');
+  tiles.setAttribute('gap-md', 'md');
   tiles.append(...rows.map(buildTile));
 
   if (leadRow) layout.append(buildLead(leadRow));

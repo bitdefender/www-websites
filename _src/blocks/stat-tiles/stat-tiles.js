@@ -1,7 +1,6 @@
 import { fullWidthOnPhone, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/stat-tiles/stat-tiles.js
-var TABLET = "(min-width: 768px)";
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
 /** A value cell: the figure, and its spoken form from an <em> when there is one. */
 var readValue = (cell) => {
@@ -92,10 +91,8 @@ async function decorate(block) {
 		"2",
 		"2"
 	]);
-	const tablet = window.matchMedia?.(TABLET);
-	const setGap = () => tiles.setAttribute("gap", !tablet || tablet.matches ? "md" : "sm");
-	setGap();
-	tablet?.addEventListener("change", setGap);
+	tiles.setAttribute("gap", "sm");
+	tiles.setAttribute("gap-md", "md");
 	tiles.append(...rows.map(buildTile));
 	if (leadRow) layout.append(buildLead(leadRow));
 	layout.append(tiles);

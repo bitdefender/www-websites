@@ -112,6 +112,9 @@ describe('stat-tiles block', () => {
     const tiles = layout.querySelector(':scope > bd-grid:not(.stat-tiles-column)');
     expect(tiles.getAttribute('cols')).toBe('1');
     expect(tiles.getAttribute('cols-md')).toBe('2');
+    // 16 apart on a phone, 24 from md: the grid's own breakpoints
+    expect(tiles.getAttribute('gap')).toBe('sm');
+    expect(tiles.getAttribute('gap-md')).toBe('md');
 
     const items = [...tiles.querySelectorAll(':scope > bd-stat')];
     expect(items.map((t) => t.querySelector(':scope > [slot="value"]').textContent)).toEqual([
