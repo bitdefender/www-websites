@@ -106,11 +106,6 @@ function buildPriceBox(product, details, settings) {
 	});
 	return box;
 }
-function nameSelect(dropdown, accessibleName) {
-	whenRendered(dropdown).then(() => {
-		dropdown.shadowRoot?.querySelector("select")?.setAttribute("aria-label", accessibleName);
-	});
-}
 function buildSelector(products, names, accessibleName, boxes) {
 	const labels = [];
 	products.forEach((product, index) => {
@@ -136,7 +131,7 @@ function buildSelector(products, names, accessibleName, boxes) {
 			box.hidden = index !== chosen;
 		});
 	});
-	if (accessibleName) nameSelect(dropdown, accessibleName);
+	if (accessibleName) dropdown.setAttribute("aria-label", accessibleName);
 	const selector = createTag("div", { class: "hero-banner__selector" });
 	selector.append(dropdown);
 	return selector;

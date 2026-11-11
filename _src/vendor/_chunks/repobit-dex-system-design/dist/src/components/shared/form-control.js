@@ -8,4 +8,4 @@ import{a as e,n as t}from"../../../../../lit/index.js";import{t as n}from"../../
     part="hint"
     class="form-help-text form-help-text--${n}"
     ?hidden=${!t.has(`hint`)}
-  >${r}</div>`}var p=e=>e.has(`hint`)?l:t;export{o as a,u as c,i,d as n,p as o,f as r,s,c as t};
+  >${r}</div>`}var p=e=>e.has(`hint`)?l:t;function m(e,t,n){return e.has(`label`)?``:t||[...n??[]].map(e=>e.textContent.trim()).filter(Boolean).join(` `)}export{m as a,s as c,i,u as l,d as n,o,f as r,p as s,c as t};

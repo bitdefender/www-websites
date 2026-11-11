@@ -72,6 +72,7 @@ async function decorate(block) {
 	}
 	const marquee = document.createElement("bd-logo-marquee");
 	marquee.setAttribute("gap", block.classList.contains("awards") ? GAPS.awards : GAPS.default);
+	marquee.toggleAttribute("without-pause-button", true);
 	const label = getLabel(block, textItem);
 	if (label) marquee.setAttribute("label", label);
 	marquee.append(...items);
@@ -81,11 +82,5 @@ async function decorate(block) {
 		console.warn("logo-marquee: DSN import failed, continuing with native rendering", err);
 	}
 	block.replaceChildren(marquee);
-	await marquee.updateComplete;
-	if (marquee.shadowRoot) {
-		const sheet = new CSSStyleSheet();
-		sheet.replaceSync(".toggle { display: none; }");
-		marquee.shadowRoot.adoptedStyleSheets = [...marquee.shadowRoot.adoptedStyleSheets, sheet];
-	}
 }
 export { decorate as default };
