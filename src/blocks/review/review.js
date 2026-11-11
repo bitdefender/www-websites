@@ -1,6 +1,6 @@
 import { load } from '@repobit/dex-system-design/loader';
 
-const buildReview = (cell, variant) => {
+const buildReview = (cell, background) => {
   const paragraphs = [...cell.querySelectorAll('p')].filter(
     (p) => !p.querySelector('[class*="icon-"]') && p.textContent.trim(),
   );
@@ -10,16 +10,16 @@ const buildReview = (cell, variant) => {
   if (!quoteP) return null;
 
   const review = document.createElement('bd-review');
-  review.setAttribute('variant', variant);
+  review.setAttribute('background', background);
 
+  // the quote is the review's own content, its default slot
   const quote = document.createElement('span');
-  quote.setAttribute('slot', 'quote');
   quote.innerHTML = quoteP.innerHTML;
   review.append(quote);
 
   if (source) {
     const sourceEl = document.createElement('span');
-    sourceEl.setAttribute('slot', 'source');
+    sourceEl.setAttribute('slot', 'caption');
     sourceEl.textContent = source.textContent.trim();
     review.append(sourceEl);
   }
@@ -40,14 +40,22 @@ export default async function decorate(block) {
   const heading = wrapper?.querySelector('h1, h2, h3, h4, h5, h6');
   const title = heading?.textContent.trim() || '';
 
-  const variant = block.classList.contains('neutral') ? 'neutral' : 'tint';
+  // the container ground, or the brand wash
+  const background = block.classList.contains('neutral') ? 'container' : 'tint';
 
   const reviewGrid = document.createElement('bd-review-grid');
-  if (title) reviewGrid.setAttribute('title', title);
+  if (title) {
+    // the level 3.x drew the grid's title at
+    const titleEl = document.createElement('bd-h');
+    titleEl.setAttribute('slot', 'title');
+    titleEl.setAttribute('as', 'h2');
+    titleEl.textContent = title;
+    reviewGrid.append(titleEl);
+  }
 
   const cells = [...block.querySelectorAll(':scope > div > div')];
   cells.forEach((cell) => {
-    const review = buildReview(cell, variant);
+    const review = buildReview(cell, background);
     if (review) reviewGrid.append(review);
   });
 
