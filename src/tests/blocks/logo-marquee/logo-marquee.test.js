@@ -119,30 +119,13 @@ describe('logo-marquee', () => {
       .toBe('Proven by Independent Testing');
   });
 
-  it('hides the marquee\'s pause button, by request', async () => {
-    /* a stand-in for the upgraded element: its shadow root, where the sheet
-       hiding the button is adopted */
-    customElements.define('bd-logo-marquee', class extends HTMLElement {
-      constructor() {
-        super();
-        this.attachShadow({ mode: 'open' }).adoptedStyleSheets = [];
-      }
-
-      // eslint-disable-next-line class-methods-use-this
-      get updateComplete() { return Promise.resolve(true); }
-    });
-    // jsdom has no constructable stylesheets; this one keeps the rule it is given
-    vi.stubGlobal('CSSStyleSheet', function CSSStyleSheet() {
-      this.replaceSync = (text) => { this.text = text; };
-    });
+  it('hides the marquee\'s pause button, by request, through its own attribute', async () => {
     const block = setupMarquee();
 
     await decorate(block);
-    vi.unstubAllGlobals();
 
     const marquee = block.querySelector('bd-logo-marquee');
-    expect(marquee.shadowRoot.adoptedStyleSheets.map((sheet) => sheet.text))
-      .toEqual(['.toggle { display: none; }']);
+    expect(marquee.hasAttribute('without-pause-button')).toBe(true);
     // hidden, not paused: the strip keeps moving
     expect(marquee.hasAttribute('paused')).toBe(false);
   });
