@@ -55,10 +55,23 @@ const createGreenBadge = (pill) => {
   return badge;
 };
 
+/**
+ * A heading in a slot: the component around it draws it, the page picks its
+ * level.
+ * @param {string} text
+ * @param {string} as the level, h1 to h6
+ */
+const buildTitle = (text, as) => {
+  const bdH = document.createElement('bd-h');
+  bdH.setAttribute('slot', 'title');
+  bdH.setAttribute('as', as);
+  bdH.textContent = text;
+  return bdH;
+};
+
 const getIconElement = (col) => {
-  // a plain wrapper for the authored icon: bd-features finds it by its slot.
-  // Not bd-individual-icon, which the loader would define as the design
-  // system's own glyph, drawn in place of the authored one.
+  // a plain wrapper for the authored icon, which bd-feature-column slots as it
+  // is. Not bd-icon, which draws the design system's own glyphs.
   const icon = document.createElement('span');
   icon.setAttribute('slot', 'icon');
   icon.setAttribute('size', '40');
@@ -99,7 +112,8 @@ const buildFeatureCol = (col, firstOpen) => {
   const title = heading?.textContent?.trim() || '';
 
   const featureCol = document.createElement('bd-feature-column');
-  featureCol.setAttribute('title', title);
+  // 3.x's bd-features drew the column's title at h4
+  if (title) featureCol.appendChild(buildTitle(title, 'h4'));
 
   const iconEl = getIconElement(col);
   if (iconEl) featureCol.appendChild(iconEl);
@@ -121,26 +135,29 @@ const buildFeatureCol = (col, firstOpen) => {
   if (descParts.length) {
     const desc = document.createElement('bd-p');
     desc.setAttribute('slot', 'description');
-    desc.setAttribute('kind', 'small');
+    // 3.x's bd-features drew every description's text at regular, whatever
+    // the page wrote; 4.0 draws the page's bd-p as it is
+    desc.setAttribute('appearance', 'regular');
     desc.innerHTML = descParts.join(' ');
     featureCol.appendChild(desc);
   }
 
   if (h4s.length) {
-    const accordionSection = document.createElement('bd-accordion');
-    accordionSection.setAttribute('no-container', '');
+    const accordion = document.createElement('bd-accordion');
+    accordion.setAttribute('without-container', '');
 
     h4s.forEach((h4, index) => {
       const { title: itemTitle, pill } = getTitleAndPill(h4);
       const item = document.createElement('bd-accordion-item');
-      item.setAttribute('title', itemTitle || h4.textContent.trim());
+      // 3.x drew the item's title as plain text; 4.0 makes it a heading, at h3
+      item.appendChild(buildTitle(itemTitle || h4.textContent.trim(), 'h3'));
       if (index === 0 && firstOpen) item.setAttribute('open', '');
 
       let next = h4.nextElementSibling;
       while (next && next.tagName !== 'H4') {
         if (next.textContent.trim()) {
           const bdP = document.createElement('bd-p');
-          bdP.setAttribute('kind', 'small');
+          bdP.setAttribute('appearance', 'small');
           bdP.innerHTML = next.innerHTML;
           item.appendChild(bdP);
         }
@@ -151,17 +168,17 @@ const buildFeatureCol = (col, firstOpen) => {
         item.appendChild(createGreenBadge(pill));
       }
 
-      accordionSection.appendChild(item);
+      accordion.appendChild(item);
     });
 
-    featureCol.appendChild(accordionSection);
+    featureCol.appendChild(accordion);
   }
 
   return featureCol;
 };
 
 export default async function decorate(block) {
-  // the icons are SVG before bd-features copies them (slotIcon)
+  // the icons are SVG before slotIcon copies them
   await decorateIcons(block);
 
   const firstOpen = block.classList.contains('first-open');

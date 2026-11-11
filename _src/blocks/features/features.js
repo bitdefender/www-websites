@@ -50,6 +50,19 @@ var createGreenBadge = (pill) => {
 	badge.style.lineHeight = "1.2";
 	return badge;
 };
+/**
+* A heading in a slot: the component around it draws it, the page picks its
+* level.
+* @param {string} text
+* @param {string} as the level, h1 to h6
+*/
+var buildTitle = (text, as) => {
+	const bdH = document.createElement("bd-h");
+	bdH.setAttribute("slot", "title");
+	bdH.setAttribute("as", as);
+	bdH.textContent = text;
+	return bdH;
+};
 var getIconElement = (col) => {
 	const icon = document.createElement("span");
 	icon.setAttribute("slot", "icon");
@@ -81,7 +94,7 @@ var getIconElement = (col) => {
 var buildFeatureCol = (col, firstOpen) => {
 	const title = col.querySelector("h1, h2, h3")?.textContent?.trim() || "";
 	const featureCol = document.createElement("bd-feature-column");
-	featureCol.setAttribute("title", title);
+	if (title) featureCol.appendChild(buildTitle(title, "h4"));
 	const iconEl = getIconElement(col);
 	if (iconEl) featureCol.appendChild(iconEl);
 	const h4s = [...col.querySelectorAll("h4")];
@@ -95,32 +108,32 @@ var buildFeatureCol = (col, firstOpen) => {
 	if (descParts.length) {
 		const desc = document.createElement("bd-p");
 		desc.setAttribute("slot", "description");
-		desc.setAttribute("kind", "small");
+		desc.setAttribute("appearance", "regular");
 		desc.innerHTML = descParts.join(" ");
 		featureCol.appendChild(desc);
 	}
 	if (h4s.length) {
-		const accordionSection = document.createElement("bd-accordion");
-		accordionSection.setAttribute("no-container", "");
+		const accordion = document.createElement("bd-accordion");
+		accordion.setAttribute("without-container", "");
 		h4s.forEach((h4, index) => {
 			const { title: itemTitle, pill } = getTitleAndPill(h4);
 			const item = document.createElement("bd-accordion-item");
-			item.setAttribute("title", itemTitle || h4.textContent.trim());
+			item.appendChild(buildTitle(itemTitle || h4.textContent.trim(), "h3"));
 			if (index === 0 && firstOpen) item.setAttribute("open", "");
 			let next = h4.nextElementSibling;
 			while (next && next.tagName !== "H4") {
 				if (next.textContent.trim()) {
 					const bdP = document.createElement("bd-p");
-					bdP.setAttribute("kind", "small");
+					bdP.setAttribute("appearance", "small");
 					bdP.innerHTML = next.innerHTML;
 					item.appendChild(bdP);
 				}
 				next = next.nextElementSibling;
 			}
 			if (pill) item.appendChild(createGreenBadge(pill));
-			accordionSection.appendChild(item);
+			accordion.appendChild(item);
 		});
-		featureCol.appendChild(accordionSection);
+		featureCol.appendChild(accordion);
 	}
 	return featureCol;
 };
