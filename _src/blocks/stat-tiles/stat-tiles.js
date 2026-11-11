@@ -25,19 +25,19 @@ var buildLead = (row) => {
 	const link = copyCell?.querySelector("a");
 	[...copyCell?.querySelectorAll("p") || []].filter((p) => text(p) && !p.contains(link)).forEach((p) => {
 		const paragraph = document.createElement("bd-p");
-		paragraph.setAttribute("variant", "large");
+		paragraph.setAttribute("appearance", "large");
 		paragraph.textContent = text(p);
 		lead.append(paragraph);
 	});
 	if (copyCell && !copyCell.querySelector("p") && text(copyCell)) {
 		const paragraph = document.createElement("bd-p");
-		paragraph.setAttribute("variant", "large");
+		paragraph.setAttribute("appearance", "large");
 		paragraph.textContent = text(copyCell);
 		lead.append(paragraph);
 	}
 	if (link) {
 		const button = document.createElement("bd-button");
-		button.setAttribute("variant", "primary");
+		button.setAttribute("appearance", "primary");
 		button.setAttribute("href", link.getAttribute("href") || "");
 		if (link.target) button.setAttribute("target", link.target);
 		button.textContent = text(link);
@@ -46,12 +46,19 @@ var buildLead = (row) => {
 	}
 	return lead;
 };
+/** A tile's words: a span in one of bd-stat's slots, which sets their type and ink. */
+var slotted = (slot, copy) => {
+	const span = document.createElement("span");
+	span.slot = slot;
+	span.textContent = copy;
+	return span;
+};
 var buildTile = (row) => {
 	const [valueCell, captionCell] = row.children;
 	const { value, label } = readValue(valueCell);
 	const tile = document.createElement("bd-stat");
-	tile.setAttribute("value", value);
-	if (text(captionCell)) tile.setAttribute("caption", text(captionCell));
+	tile.append(slotted("value", value));
+	if (text(captionCell)) tile.append(slotted("caption", text(captionCell)));
 	if (label) tile.setAttribute("label", label);
 	return tile;
 };

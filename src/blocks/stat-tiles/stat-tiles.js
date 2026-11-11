@@ -5,7 +5,7 @@ import {
 
 /*
  * The homepage's Why-trust figures, rendered with the design system's
- * bd-stat-highlight and bd-stat-tile. Authored as:
+ * bd-stat-highlight and bd-stat. Authored as:
  *   row 1        [highlight value, *spoken label*] [description, link]
  *   rows 2..n    a tile each: [value, *spoken label*] [caption]
  * The italic line is optional: it is what a screen reader says for the value
@@ -41,21 +41,21 @@ const buildLead = (row) => {
     .filter((p) => text(p) && !p.contains(link))
     .forEach((p) => {
       const paragraph = document.createElement('bd-p');
-      paragraph.setAttribute('variant', 'large');
+      paragraph.setAttribute('appearance', 'large');
       paragraph.textContent = text(p);
       lead.append(paragraph);
     });
   // copy authored straight in the cell, without a paragraph
   if (copyCell && !copyCell.querySelector('p') && text(copyCell)) {
     const paragraph = document.createElement('bd-p');
-    paragraph.setAttribute('variant', 'large');
+    paragraph.setAttribute('appearance', 'large');
     paragraph.textContent = text(copyCell);
     lead.append(paragraph);
   }
 
   if (link) {
     const button = document.createElement('bd-button');
-    button.setAttribute('variant', 'primary');
+    button.setAttribute('appearance', 'primary');
     button.setAttribute('href', link.getAttribute('href') || '');
     if (link.target) button.setAttribute('target', link.target);
     button.textContent = text(link);
@@ -65,12 +65,20 @@ const buildLead = (row) => {
   return lead;
 };
 
+/** A tile's words: a span in one of bd-stat's slots, which sets their type and ink. */
+const slotted = (slot, copy) => {
+  const span = document.createElement('span');
+  span.slot = slot;
+  span.textContent = copy;
+  return span;
+};
+
 const buildTile = (row) => {
   const [valueCell, captionCell] = row.children;
   const { value, label } = readValue(valueCell);
   const tile = document.createElement('bd-stat');
-  tile.setAttribute('value', value);
-  if (text(captionCell)) tile.setAttribute('caption', text(captionCell));
+  tile.append(slotted('value', value));
+  if (text(captionCell)) tile.append(slotted('caption', text(captionCell)));
   if (label) tile.setAttribute('label', label);
   return tile;
 };
