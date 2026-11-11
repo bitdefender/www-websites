@@ -9,6 +9,8 @@
 export default function decorate(block) {
   const parentSelector = block.closest('.section');
   const { type, topBackgroundColor, topTextColor } = parentSelector.dataset;
+  const noDropdownLogic = type === 'slider-no-load-bar';
+  if (noDropdownLogic) parentSelector.classList.add('no-dropdown-logic');
 
   // search for [] to replace with span greeenTag class
   const getFirstDivs = block.querySelectorAll('.dropdown-box-container .block > div > div:nth-child(1)');
@@ -17,14 +19,14 @@ export default function decorate(block) {
     item.innerHTML = item.innerHTML.replace(']', '</span>');
   });
 
-  // make slideUp slideDown functionality
-  const getFirstTabs = block.querySelectorAll('.dropdown-box-container .block > div:first-child');
-  getFirstTabs.forEach((tab) => {
-    tab.parentNode.classList.remove('inactive');
+  // Preserve authored open/closed states; static feature titles must not toggle.
+  block.classList.remove('inactive');
+  const tab = block.firstElementChild;
+  if (tab && !noDropdownLogic) {
     tab.addEventListener('click', () => {
-      tab.parentNode.classList.toggle('inactive');
+      block.classList.toggle('inactive');
     });
-  });
+  }
 
   if (block.children.length >= 2) {
     const childrenNr = block.children[1].children.length;
@@ -40,7 +42,10 @@ export default function decorate(block) {
   }
 
   // if it's slider
-  if (type === 'slider') {
+  const titleCell = block.children[0]?.children[0];
+  const contentCell = block.children[1]?.children[0];
+
+  if (type === 'slider' && titleCell && contentCell) {
     block.closest('.dropdown-box-container').classList.add('container', 'dropdown-slider', 'has-load-bar');
     const sliderBox = document.createElement('div');
     sliderBox.className = 'slider-box';
@@ -61,7 +66,7 @@ export default function decorate(block) {
   }
 
   // if it's slider
-  if (type === 'slider-no-load-bar') {
+  if (type === 'slider-no-load-bar' && titleCell && contentCell) {
     block.closest('.dropdown-box-container').classList.add('container', 'dropdown-slider', 'no-load-bar');
     const sliderBox = document.createElement('div');
     sliderBox.className = 'slider-box';
