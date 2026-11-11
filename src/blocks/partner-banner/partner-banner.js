@@ -6,17 +6,42 @@ import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
  *   row 1  the photo (a picture)
  *   row 2  [h2 + the partner lockup (a picture)] [quote, *attribution*, lead,
  *          a **bold** link (white button) and a plain link (outline-white)]
- * Read by role, not by position, so cells may move.
+ * Read by role, not by position, so cells may move. The copy is slotted as
+ * the banner asks: the heading a bd-h, the quote its default slot's text, the
+ * attribution a caption span and the lead a bd-p.
  */
 
 const text = (el) => el?.textContent.replace(/\s+/g, ' ').trim() || '';
 
-const slotted = (picture, slot) => {
+/** An element for one of the banner's slots, holding the copy. */
+const slotted = (tag, slot, copy, attributes = {}) => {
+  const el = document.createElement(tag);
+  el.slot = slot;
+  Object.entries(attributes).forEach(([name, value]) => el.setAttribute(name, value));
+  el.textContent = copy;
+  return el;
+};
+
+/** The photo, as the banner's media: the authored picture, which it cover-fits. */
+const asMedia = (picture) => {
   if (!picture) return null;
-  picture.setAttribute('slot', slot);
+  picture.setAttribute('slot', 'media');
   const img = picture.querySelector('img');
   if (img) img.setAttribute('alt', img.getAttribute('alt') || '');
   return picture;
+};
+
+/** The partner lockup, as the bd-img the banner's lockup slot takes: the picture's image. */
+const asLockup = (picture) => {
+  const img = picture?.querySelector('img');
+  if (!img) return null;
+  const lockup = document.createElement('bd-img');
+  lockup.slot = 'lockup';
+  ['src', 'width', 'height', 'loading'].forEach((name) => {
+    if (img.hasAttribute(name)) lockup.setAttribute(name, img.getAttribute(name));
+  });
+  lockup.setAttribute('alt', img.getAttribute('alt') || '');
+  return lockup;
 };
 
 export default async function decorate(block) {
@@ -39,11 +64,14 @@ export default async function decorate(block) {
   const [quote, lead] = prose.filter((p) => p !== attribution);
 
   const banner = document.createElement('bd-partner-banner');
-  if (heading) banner.setAttribute('heading', text(heading));
-  if (heading) banner.setAttribute('as', heading.tagName.toLowerCase());
-  if (quote) banner.setAttribute('quote', text(quote));
-  if (attribution) banner.setAttribute('attribution', text(attribution));
-  if (lead) banner.setAttribute('lead', text(lead));
+  const lockupImage = asLockup(lockup);
+  if (lockupImage) banner.append(lockupImage);
+  // the heading keeps the level the author gave it
+  if (heading) banner.append(slotted('bd-h', 'title', text(heading), { as: heading.tagName.toLowerCase() }));
+  // the quote is the default slot's text, which the banner sets in its blockquote
+  if (quote) banner.append(text(quote));
+  if (attribution) banner.append(slotted('span', 'caption', text(attribution)));
+  if (lead) banner.append(slotted('bd-p', 'description', text(lead)));
 
   const buttons = links.map((p) => {
     const link = p.querySelector('a');
@@ -52,7 +80,7 @@ export default async function decorate(block) {
     // bold is the primary action on the card, a plain link the secondary;
     // decorateButtons has already turned a bold link into a.button.primary
     const primary = p.querySelector('strong, b, a.button.primary');
-    button.setAttribute('variant', primary ? 'white' : 'outline-white');
+    button.setAttribute('appearance', primary ? 'white' : 'outline-white');
     button.setAttribute('href', link.getAttribute('href') || '');
     button.textContent = text(link);
     return button;
@@ -67,7 +95,8 @@ export default async function decorate(block) {
     return;
   }
 
-  // the pictures move only now, so a failed load leaves them in the authored rows
-  banner.prepend(...[slotted(photo, 'photo'), slotted(lockup, 'lockup')].filter(Boolean));
+  // the photo moves only now, so a failed load leaves it in the authored rows
+  const media = asMedia(photo);
+  if (media) banner.prepend(media);
   block.replaceChildren(banner);
 }
