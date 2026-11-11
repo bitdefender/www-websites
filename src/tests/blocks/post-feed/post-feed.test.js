@@ -58,21 +58,40 @@ describe('post-feed block', () => {
   });
 
   it('builds a card per row: category badge, heading and the heading link', () => {
-    expect(cards.map((card) => card.getAttribute('badge'))).toEqual([
+    const badges = cards.map((card) => card.querySelector(':scope > bd-badge[slot="badge"]'));
+    expect(badges.map((badge) => badge.textContent)).toEqual([
       'Consumer Insights', 'Business Insights', 'Labs',
     ]);
-    expect(cards[0].getAttribute('heading')).toBe('They Wear Our Faces: How Scammers Are Using AI to Swindle American Families');
+    // the badge the 3.x card drew from its badge attribute
+    badges.forEach((badge) => {
+      expect(badge.getAttribute('variant')).toBe('info');
+      expect(badge.getAttribute('appearance')).toBe('shade');
+      expect(badge.getAttribute('size')).toBe('sm');
+    });
+    const title = cards[0].querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('They Wear Our Faces: How Scammers Are Using AI to Swindle American Families');
     expect(cards[0].getAttribute('href')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/');
-    expect(cards[0].getAttribute('as')).toBe('h3');
+    expect(title.getAttribute('as')).toBe('h3');
+    // the copy is slotted, not set as 3.x's attributes
+    cards.forEach((card) => {
+      ['heading', 'badge', 'as'].forEach((name) => expect(card.hasAttribute(name)).toBe(false));
+    });
+  });
+
+  it('writes the read-more cue 3.x drew by default on a linked card', () => {
+    expect(cards.map((card) => card.querySelector(':scope > span[slot="read-more"]')?.textContent))
+      .toEqual(['Read more', 'Read more', 'Read more']);
   });
 
   it('slots each cover as decorative', () => {
-    const covers = cards.map((card) => card.querySelector(':scope > picture[slot="image"] img'));
+    const covers = cards.map((card) => card.querySelector(':scope > picture[slot="media"] img'));
     expect(covers.every((img) => img && img.getAttribute('alt') === '')).toBe(true);
   });
 
   it('lifts the section header', () => {
     const header = block.closest('.section').querySelector('bd-section-header');
-    expect(header.getAttribute('heading')).toBe('Latest cybersecurity insights');
+    const title = header.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('Latest cybersecurity insights');
+    expect(title.getAttribute('as')).toBe('h2');
   });
 });

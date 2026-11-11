@@ -10,7 +10,17 @@ import { liftSectionHeader, wrapSectionInDsSection } from '../../scripts/utils/u
 // the design system's lg (992): the cards go three across
 const DESKTOP = '(min-width: 992px)';
 
+// the cue under the title; bd-post-card draws no words of its own
+const READ_MORE = 'Read more';
+
 const text = (el) => el?.textContent.replace(/\s+/g, ' ').trim() || '';
+
+const slotted = (tag, slot, words) => {
+  const el = document.createElement(tag);
+  el.slot = slot;
+  el.textContent = words;
+  return el;
+};
 
 const buildCard = (row) => {
   const heading = row.querySelector('h1, h2, h3, h4, h5, h6');
@@ -20,17 +30,27 @@ const buildCard = (row) => {
     .find((p) => text(p) && !p.querySelector('picture') && !p.contains(link));
 
   const card = document.createElement('bd-post-card');
-  card.setAttribute('heading', text(heading || link));
-  if (heading) card.setAttribute('as', heading.tagName.toLowerCase());
   if (link) card.setAttribute('href', link.getAttribute('href') || '');
-  if (category) card.setAttribute('badge', text(category));
+  if (category) {
+    // the category over the cover, as the card's badge
+    const badge = slotted('bd-badge', 'badge', text(category));
+    [['variant', 'info'], ['appearance', 'shade'], ['size', 'sm']]
+      .forEach(([name, value]) => badge.setAttribute(name, value));
+    card.append(badge);
+  }
+  // the author's level, else the h3 the card drew
+  const title = slotted('bd-h', 'title', text(heading || link));
+  title.setAttribute('as', heading ? heading.tagName.toLowerCase() : 'h3');
+  card.append(title);
+  // drawn only with an href
+  if (link) card.append(slotted('span', 'read-more', READ_MORE));
   return card;
 };
 
 const addCover = (card, row) => {
   const picture = row.querySelector('picture');
   if (!picture) return;
-  picture.setAttribute('slot', 'image');
+  picture.setAttribute('slot', 'media');
   // the cover illustrates the title beside it
   picture.querySelector('img')?.setAttribute('alt', '');
   card.append(picture);

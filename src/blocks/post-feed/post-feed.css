@@ -18,7 +18,7 @@
 
 /* The card cover-fits the slotted <picture>; the <img> inside it is light DOM,
    out of the component's reach, so it fills the picture from here. */
-.post-feed bd-post-card > picture[slot="image"] img {
+.post-feed bd-post-card > picture[slot="media"] img {
   display: block;
   width: 100%;
   height: 100%;

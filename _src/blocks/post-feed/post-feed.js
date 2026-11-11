@@ -2,23 +2,40 @@ import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/u
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/post-feed/post-feed.js
 var DESKTOP = "(min-width: 992px)";
+var READ_MORE = "Read more";
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
+var slotted = (tag, slot, words) => {
+	const el = document.createElement(tag);
+	el.slot = slot;
+	el.textContent = words;
+	return el;
+};
 var buildCard = (row) => {
 	const heading = row.querySelector("h1, h2, h3, h4, h5, h6");
 	const link = heading?.querySelector("a") || row.querySelector("a");
 	if (!heading && !link) return null;
 	const category = [...row.querySelectorAll("p")].find((p) => text(p) && !p.querySelector("picture") && !p.contains(link));
 	const card = document.createElement("bd-post-card");
-	card.setAttribute("heading", text(heading || link));
-	if (heading) card.setAttribute("as", heading.tagName.toLowerCase());
 	if (link) card.setAttribute("href", link.getAttribute("href") || "");
-	if (category) card.setAttribute("badge", text(category));
+	if (category) {
+		const badge = slotted("bd-badge", "badge", text(category));
+		[
+			["variant", "info"],
+			["appearance", "shade"],
+			["size", "sm"]
+		].forEach(([name, value]) => badge.setAttribute(name, value));
+		card.append(badge);
+	}
+	const title = slotted("bd-h", "title", text(heading || link));
+	title.setAttribute("as", heading ? heading.tagName.toLowerCase() : "h3");
+	card.append(title);
+	if (link) card.append(slotted("span", "read-more", READ_MORE));
 	return card;
 };
 var addCover = (card, row) => {
 	const picture = row.querySelector("picture");
 	if (!picture) return;
-	picture.setAttribute("slot", "image");
+	picture.setAttribute("slot", "media");
 	picture.querySelector("img")?.setAttribute("alt", "");
 	card.append(picture);
 };
