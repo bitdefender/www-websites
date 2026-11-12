@@ -214,7 +214,7 @@
     <url>
         <loc>https://www.bitdefender.com/en-us/consumer/antivirus</loc>
         <priority>0.8</priority>
-        <lastmod>2026-10-12T13:56:52.000Z</lastmod>
+        <lastmod>2026-11-10T10:42:08.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/antivirus"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/antivirus"/>
@@ -600,7 +600,7 @@
     <url>
         <loc>https://www.bitdefender.com/en-us/consumer/mobile-security-ios</loc>
         <priority>0.8</priority>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-11-10T10:42:10.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/mobile-security-ios"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/mobile-security-ios"/>
@@ -945,7 +945,7 @@
     <url>
         <loc>https://www.bitdefender.com/en-us/consumer/small-business-security</loc>
         <priority>0.8</priority>
-        <lastmod>2026-11-05T11:09:54.000Z</lastmod>
+        <lastmod>2026-11-10T13:59:47.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/small-business-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/small-business-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/small-business-security"/>
@@ -1111,13 +1111,13 @@
     <url>
         <loc>https://www.bitdefender.com/en-us/deals/</loc>
         <priority>0.9</priority>
-        <lastmod>2026-10-27T12:16:51.000Z</lastmod>
+        <lastmod>2026-11-05T10:16:11.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/deals/"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-us/consumer/premium-security</loc>
         <priority>0.8</priority>
-        <lastmod>2026-10-12T13:56:52.000Z</lastmod>
+        <lastmod>2026-11-10T10:42:19.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/premium-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/premium-security"/>
@@ -1167,7 +1167,7 @@
     <url>
         <loc>https://www.bitdefender.com/en-us/consumer/total-security</loc>
         <priority>0.8</priority>
-        <lastmod>2026-10-12T13:56:52.000Z</lastmod>
+        <lastmod>2026-11-11T10:24:11.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/total-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/total-security"/>
@@ -1217,7 +1217,7 @@
     <url>
         <loc>https://www.bitdefender.com/en-us/consumer/ultimate-security</loc>
         <priority>0.8</priority>
-        <lastmod>2026-10-12T13:56:52.000Z</lastmod>
+        <lastmod>2026-11-10T10:42:23.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/consumer/ultimate-security"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/consumer/ultimate-security"/>
@@ -2144,5 +2144,10 @@
         <loc>https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/cybersecurity-for-telcos-ai-scams-old-threats-and-the-router-opportunity</loc>
         <lastmod>2026-11-02T10:01:37.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/cybersecurity-for-telcos-ai-scams-old-threats-and-the-router-opportunity"/>
+    </url>
+    <url>
+        <loc>https://www.bitdefender.com/en-us/consumer/mobile-security-duplicate</loc>
+        <lastmod>2026-11-12T10:50:34.000Z</lastmod>
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/consumer/mobile-security-duplicate"/>
     </url>
 </urlset>
