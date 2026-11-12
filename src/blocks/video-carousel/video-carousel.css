@@ -2,9 +2,12 @@
     background-color: #F4F4F4;
 }
 
+/* The scroller runs the page's full width; its start padding puts the first
+   video on the page column (at :root in styles.css), and the track starts
+   20px before it, the padding each item puts before its video. */
 .video-carousel {
     .carousel-container {
-        padding-left: 20px;
+        padding-left: var(--page-column-inset);
         padding-right: 0;
         display: flex;
         justify-content: right;
@@ -22,12 +25,13 @@
     }
 
     .carousel-track {
+        margin-left: -20px;
         display: grid;
         grid-auto-flow: column;
         justify-content: left;
         transition: transform 0.5s ease;
         min-height: 100%;
-        width: 100%;
+        width: calc(100% + 20px);
         height: 100%;
         overflow: visible;
     }
@@ -73,10 +77,12 @@
         color: #333;
     }
 
+    /* the dots, centred on the page column */
     .carousel-navigation {
         display: flex;
         justify-content: center;
         margin-top: 20px;
+        padding-inline: var(--page-column-inset);
     }
 
     .carousel-dot {
@@ -97,10 +103,6 @@
         .carousel-item{
             text-align: left;
             padding-right: 50px;
-        }
-
-        .carousel-container{
-            padding-left: 2%;
         }
 
         .carousel-item iframe {
@@ -124,10 +126,6 @@
     }
 
     @media (min-width:1020px){
-        .carousel-container{
-            padding-left: 3%;
-        }
-
         .carousel-item iframe{
             min-width: 400px;
             min-height: 280px;
@@ -135,30 +133,23 @@
     }
 
     @media (min-width:1200px) {
-        .carousel-container{
-            padding-left: 8%;
-        }
-
         .carousel-item iframe {
             min-width: 600px;
             height: 360px;
         }
     }
-
-    @media (min-width: 1750px) {
-        .carousel-container{
-            padding-left: 13%;
-        }
-    }
 }
 
+/* the grid, centred on the page column */
 .video-carousel.no-carousel{
     .carousel-container{
-        padding:20px;
+        padding: 20px var(--page-column-inset);
         justify-content: center;
     }
 
     .carousel-track{
+        margin-left: 0;
+        width: 100%;
         justify-self: center ;
         justify-content: space-around;
         grid-auto-flow: row;
@@ -191,7 +182,7 @@
         }
 
         .carousel-container{
-            padding:4%;
+            padding-block: 4%;
         }
 
         .carousel-item{
@@ -218,7 +209,7 @@
         }
 
         .carousel-container{
-            padding:5%;
+            padding-block: 5%;
         }
 
         .carousel-item{
@@ -233,10 +224,6 @@
     } 
 
     @media (min-width: 1200px){
-        .carousel-container{
-            padding:5% 10%;
-        }
-
         .carousel-item{
             width: 320px;
             font-size: 23px;
@@ -249,10 +236,6 @@
     }
 
     @media (min-width: 1400px){
-        .carousel-container{
-            padding:5% 10%;
-        }
-
         .carousel-item{
             width: 380px;
         }
@@ -264,10 +247,6 @@
     }
 
     @media (min-width: 1750px){
-        .carousel-container{
-            padding-left: 15%;
-        }
-
         .carousel-item{
             width: 440px;
             font-size: 23px;
