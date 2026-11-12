@@ -61,10 +61,11 @@ main .hero-dropdown-container>div {
   max-width: unset;
 }
 
+/* the section also carries the hero-dropdown class (and so the block's padding): put it back on
+   the page's section rhythm, so the hero sits a section padding below the bar like other heroes */
 main .hero-dropdown-container {
-  padding: 0;
+  padding: var(--page-section-padding) 0;
   margin: 0 auto;
-  margin-bottom: 20px;
 }
 
 main .hero-dropdown-container.blue-title .hero-dropdown-content>div {
@@ -830,6 +831,11 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 .hero-dropdown.small-business-banner {
   background-color: transparent;
 
+  /* no card behind the text: it starts on the page column's edge, like the sections below */
+  .hero-dropdown-content {
+    padding-inline: 0;
+  }
+
   p {
     font-size: 16px;
   }
@@ -840,16 +846,12 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
     margin-top: 12px;
   }
 
-  .signature {
+  .hero-dropdown-content .signature {
+    margin-top: 0;
     font-size: 24px;
     color: #016DFF;
     font-weight: bold;
     font-family: var(--body-font-family);
-    padding-left: 50px;
-
-    @media (max-width: 767px) {
-      padding-left: 20px;
-    }
   }
 
   .hero-dropdown-picture {

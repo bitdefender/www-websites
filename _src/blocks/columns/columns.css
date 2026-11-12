@@ -2995,6 +2995,7 @@ main .creators-banner .signature {
     padding: 28px 16px;
     background-color: #0853C5;
     color: #fff;
+    border-radius: 12px;
 
     .columns-title-col {
       display: flex;
@@ -4523,6 +4524,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+/* in a wide section the banner is the panel itself: it fills the page column, no panel inset */
+.columns-container.wide .columns-wrapper:has(> .columns.blue-banner) {
+  padding: 0;
+}
+
 /* below 768 the banner runs the page's full width (a wide section keeps its
    panel) and pads its content onto the page column */
 .columns-container.full-width-mobile {
@@ -4537,6 +4543,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
     &:not(.wide) .columns.blue-banner {
       padding-inline: var(--page-column-inset);
+      border-radius: 0;
     }
   }
 }

@@ -175,7 +175,7 @@ function decorate(block) {
 	if (signature) {
 		const signatureElement = createTag("div", { class: "signature" });
 		signatureElement.textContent = signature;
-		document.querySelector("div.hero-dropdown div div:first-child").prepend(signatureElement);
+		(block.querySelector(".hero-dropdown-content > div") || block).prepend(signatureElement);
 	}
 	if (contentsize) {
 		const content = block.querySelector(".hero-dropdown-content > div");
