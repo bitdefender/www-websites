@@ -634,23 +634,17 @@
   text-decoration: line-through;
 }
 
+/* save pill: the design system's bd-badge, tone success, variant shade, size lg (Figma) */
 .new-prod-boxes-container .prod-save {
-  color: #0B6A26;
-  background-color: #D1FADC;
-  border-radius: 8px;
-  font-weight: bold;
-  padding: 2px 8px;
-  display: inline-block;
-  margin-bottom: 10px;
-  margin-left: 5px;
-}
-
-.new-prod-boxes-container .new-prod-boxes.solutions .prod-save {
-  color: #0B6A26;
-  background-color: #D1FADC;
-  border-radius: 8px;
-  font-weight: bold;
-  padding: 2px 8px;
+  color: var(--status-success-text, #0b6a26);
+  background-color: var(--status-success-surface-strong, #d1fadc);
+  border-radius: var(--radius-full, 9999px);
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  /* stylelint-disable custom-property-pattern */
+  font-size: var(--typography-fontSize-sm, 0.875rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+  /* stylelint-enable custom-property-pattern */
   display: inline-block;
   margin-bottom: 10px;
   margin-left: 5px;

@@ -470,7 +470,14 @@
   font-family: var(--body-font-family);
 }
 
-.products.solutions .product-card tr {
+/* matchHeights gives every .featured.nanoblock the tallest one's height (the save badge):
+   keep the label centred when a pill is stretched */
+.product-card .featured.nanoblock {
+  display: inline-flex;
+  align-items: center;
+}
+
+.products.solutions .product-card tr { /* Figma "was + save": a centred row, spacing/8, as tall as the badge */
   display: inline-flex;
   gap: 10px;
 }
@@ -480,8 +487,18 @@
   align-items: center;
 }
 
-.products.solutions .product-card tr .nanoblock.featured {
-  font-weight: bold;
+/* save pill (the price row's .featured): the design system's bd-badge, tone success,
+   variant shade, size lg (Figma); the "Included in ..." .featured pill is not in a row */
+.product-card tr .nanoblock.featured {
+  color: var(--status-success-text, #0b6a26);
+  background-color: var(--status-success-surface-strong, #d1fadc);
+  border-radius: var(--radius-full, 9999px);
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  /* stylelint-disable custom-property-pattern */
+  font-size: var(--typography-fontSize-sm, 0.875rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+  /* stylelint-enable custom-property-pattern */
 }
 
 .product-card .button-text {
