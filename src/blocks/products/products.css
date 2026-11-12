@@ -113,9 +113,9 @@
   line-height: 16px;
 }
 
-.product-card hr {
+.product-card hr { /* Figma divider: 1px, in the card border colour */
   margin: 17px 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: var(--border-width-1, 1px) solid var(--color-border-container, #e1e3e5);
   width: 100%;
 }
 
@@ -593,7 +593,6 @@
 .products.compare .product-card hr {
   margin-top: 40px;
   margin-bottom: 50px;
-  border-bottom: 2px solid #e5e7eb;
 }
 
 .products.compare .product-card.featured hr {
