@@ -166,8 +166,21 @@ const buildAccordion = (block) => {
 export default async function decorate(block) {
   // the section on the design system's rhythm; in a tab panel the section is
   // the tab group's, which already is
-  wrapSectionInDsSection(block);
+  const bdSection = wrapSectionInDsSection(block);
   const accordion = buildAccordion(block);
+
+  // A terms band paints its own ground and pads inside it, so when it is all
+  // its section holds, the section adds no edge: the band meets what is above
+  // and below it, the footer included, with no strip of page white between,
+  // as 3.x's accordion section (no padding) had it. A tab group's section is
+  // the group's, and keeps its edges.
+  const wrapper = block.closest('.accordion-wrapper');
+  const holdsOnlyTheBand = bdSection && wrapper?.parentElement === bdSection
+    && [...bdSection.children].every((child) => child === wrapper);
+  if (accordion.getAttribute('appearance') === 'terms' && holdsOnlyTheBand) {
+    bdSection.setAttribute('without-padding-top', '');
+    bdSection.setAttribute('without-padding-bottom', '');
+  }
   await load(accordion);
   block.replaceChildren(accordion);
   document.dispatchEvent(new CustomEvent('accordion-bg:loaded', { bubbles: true }));
