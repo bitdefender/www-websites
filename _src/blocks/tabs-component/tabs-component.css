@@ -54,7 +54,11 @@
   margin: auto;
   text-align: center;
   margin-bottom: 27px;
-  font: normal normal bold 32px/37px var(--body-font-family);
+  font: normal normal var(--font-weight-bolder) 40px/46px var(--body-font-family); /* the section title: 600, like h2s */
+
+  :is(b, strong) {
+    font-weight: inherit;
+  }
 }
 
 .tabs-component-container .subtitle-class {

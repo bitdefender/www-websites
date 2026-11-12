@@ -261,7 +261,7 @@ button, input, select, textarea {
 h1, h2, h3,
 h4, h5, h6 {
   font-family: var(--heading-font-family);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bolder); /* headings are 600 at every size */
   line-height: 1.25;
   scroll-margin: calc(var(--nav-height) + 1em);
 }
@@ -269,7 +269,6 @@ h4, h5, h6 {
 h1 {
   font-size: 34px;
   line-height: 1.21;
-  font-weight: var(--font-weight-boldest);
   margin-bottom: 25px;
 }
 
@@ -357,6 +356,10 @@ p {
 
 b, strong {
   font-weight: var(--font-weight-boldest);
+}
+
+:is(h1, h2, h3, h4, h5, h6) :is(b, strong) { /* authored bold in a heading keeps the heading's 600 */
+  font-weight: inherit;
 }
 
 main input {
@@ -545,7 +548,7 @@ main .section.no-padding-top-bottom {
 
 main .section.wide h2 {
   font-size: var(--heading-font-size-l);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bolder);
 }
 
 main .section.table-align-top table {
@@ -948,7 +951,7 @@ main div.section:is(
 @media screen and (min-width: 992px) { /* desktop */
   main .section.wide h2 {
     font-size: var(--heading-font-size-xl);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bolder);
   }
 
   main div.section.wide > :not(:where(.store-section-context)),

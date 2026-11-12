@@ -1,3 +1,11 @@
 .section.accordion-container {
   padding: 0;
 }
+
+/* headings are 600: the design system's accordions draw their title as <bd-h fontWeight="bold">
+   (the only use of this token inside them), so bold is 600 here */
+/* stylelint-disable custom-property-pattern */
+.accordion :is(bd-accordion, bd-accordion-bg) {
+  --typography-fontWeight-bold: var(--font-weight-bolder, 600);
+}
+/* stylelint-enable custom-property-pattern */

@@ -501,7 +501,7 @@
   }
 
   .awards-component h3 {
-    font: normal normal bold 32px/38px var(--body-font-family);
+    font: normal normal 600 32px/38px var(--body-font-family);
     margin-bottom: 0;
   }
 

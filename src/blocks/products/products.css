@@ -165,7 +165,7 @@
 }
 
 .product-card h3 {
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
   flex: 1;
   font-size: var(--heading-font-size-m);
   margin-top: 0;
@@ -214,7 +214,7 @@
 }
 
 .products.compact .product-card h4, .products.plans .product-card h4 {
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
   font-size: var(--body-font-size-s);
   margin: 5px;
   color: var(--checkbox-label);

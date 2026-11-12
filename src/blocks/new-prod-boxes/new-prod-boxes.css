@@ -123,7 +123,7 @@
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 {
-  font-weight: bold;
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
   font-size: 20px;
   line-height: 25px;
   font-family: var(--body-font-family);

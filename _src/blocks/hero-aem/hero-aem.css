@@ -24,7 +24,7 @@
 .hero-aem-container .hero-aem h1 {
   color: #006DFF;
   font-size: 23px;
-  font-weight: normal;
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
   margin-top: 10px;
   line-height: 1.1;
   margin-bottom: 20px;
