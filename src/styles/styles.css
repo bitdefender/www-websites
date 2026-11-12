@@ -543,7 +543,7 @@ main .section.no-padding-top-bottom {
 
 .products-container h2 {
   font-weight: var(--font-weight-bolder);
-  font-size: var(--heading-font-size-m);
+  font-size: var(--heading-font-size-xl);
 }
 
 main .section.wide h2 {

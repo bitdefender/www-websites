@@ -258,7 +258,7 @@
   text-align: center;
   justify-content: center;
   cursor: pointer;
-  color: #006DFF;
+  color: #0059D6;
   background-color: transparent;
   border: 2px solid #006DFF;
   white-space: normal;
@@ -719,7 +719,7 @@
 
 .hero-aem-container .signature {
   font-size: 24px;
-  color: #016DFF;
+  color: #006DFF;
   font-weight: bold;
   font-family: var(--body-font-family);
 }
@@ -856,7 +856,7 @@
     flex-wrap: wrap;
 
     h1 {
-      font-size: 38px;
+      font-size: 48px;
     }
   }
 
