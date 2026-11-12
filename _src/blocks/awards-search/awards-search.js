@@ -104,30 +104,55 @@ function createAwardsResultContainer(block) {
 	createFiltersContainer(awardsResultsContainer);
 	block.appendChild(awardsResultsContainer);
 }
-function createFilterBySection(block, data) {
-	const filterByContent = document.createElement("div");
-	filterByContent.classList.add("accordion-item-content");
+/**
+* The filter's bd-accordion-item, once the accordion block has built it and
+* put it in the page. The accordion decorates on its own schedule, before or
+* after awards.json arrives, so whatever needs the item waits for it here.
+* @param {HTMLElement} block
+* @returns {Promise<HTMLElement>}
+*/
+function whenFilterItem(block) {
+	const find = () => block.querySelector(".accordion bd-accordion-item");
+	return new Promise((resolve) => {
+		const item = find();
+		if (item) {
+			resolve(item);
+			return;
+		}
+		const onLoaded = () => {
+			const found = find();
+			if (!found) return;
+			document.removeEventListener("accordion-bg:loaded", onLoaded);
+			resolve(found);
+		};
+		document.addEventListener("accordion-bg:loaded", onLoaded);
+	});
+}
+/**
+* A checkbox per year in the awards, in the filter's accordion item. They go
+* in once both the data and the item are there: written into the authored row
+* instead, they were lost whenever the accordion had already read that row.
+*/
+async function createFilterBySection(block, data, filterItem) {
 	const filterByYears = data.map((award) => award.Year);
-	[...new Set(filterByYears)].forEach((year) => {
+	const labels = [...new Set(filterByYears)].map((year) => {
 		const checkboxElement = document.createElement("input");
 		checkboxElement.setAttribute("type", "checkbox");
 		checkboxElement.setAttribute("value", year);
+		checkboxElement.addEventListener("click", handleFilterByYearCheckbox.bind(null, block));
 		const checkboxLabel = document.createElement("label");
 		checkboxLabel.append(checkboxElement);
 		checkboxLabel.append(year);
-		filterByContent.append(checkboxLabel);
+		return checkboxLabel;
 	});
-	const filterWrapperSection = block.querySelector(".accordion > div");
-	if (!filterWrapperSection) return;
-	if (window.window.innerWidth >= 768) filterWrapperSection.classList.add("expanded");
-	filterWrapperSection.appendChild(filterByContent);
+	(await filterItem).append(...labels);
 }
-async function fetchAwardsData(block) {
+async function fetchAwardsData(block, filterItem) {
 	const awardsLink = block.querySelector("a");
 	awardsData = [...(await (await fetch(awardsLink.href)).json()).data];
 	filteredAwards = [...awardsData];
-	createFilterBySection(block, awardsData);
 	renderAwards(block, filteredAwards);
+	await createFilterBySection(block, awardsData, filterItem);
 }
 function handleTextSearch(searchTextBox, block) {
 	const filterBy = searchTextBox.value;
@@ -171,13 +196,9 @@ function moveAccordionUnderFilterSection(block) {
 async function decorate(block) {
 	moveAccordionUnderFilterSection(block);
 	createAwardsResultContainer(block);
-	fetchAwardsData(block);
+	const filterItem = whenFilterItem(block);
+	fetchAwardsData(block, filterItem);
 	removeAwardsLinkFromDom(block);
-	window.addEventListener("accordion-bg:loaded", () => {
-		block.querySelector("bd-accordion")?.setAttribute("without-padding", "");
-		block.querySelectorAll(".accordion input").forEach((input) => {
-			input.addEventListener("click", handleFilterByYearCheckbox.bind(null, block));
-		});
-	});
+	filterItem.then((item) => item.closest("bd-accordion")?.setAttribute("without-padding", ""));
 }
 export { decorate as default };
