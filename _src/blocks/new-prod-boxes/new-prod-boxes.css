@@ -848,89 +848,68 @@
   padding-bottom: 45px;
 }
 
+/* the design system's content switcher (bd-tab-list appearance="switcher", Figma):
+   action/primary track, spacing/4 padding and gap; both options as wide as the longest label
+   (an auto-width inline grid of 1fr 1fr sizes both tracks to the widest) */
 .switchBox .switch {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  width: 302px;
-  min-height: 44px;
-  background-color: #016DFF;
-  border-radius: 22px;
+  box-sizing: border-box;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4, 4px);
+  max-width: 100%;
+  padding: var(--spacing-4, 4px);
+  border-radius: var(--radius-full, 9999px);
+  background-color: var(--color-action-primary, #006dff);
 }
 
 .switchBox .switch input {
   display: none;
 }
 
-.switchBox .slider {
+.switchBox .slider { /* the selected option's surface/default pill: (track - 2 x padding - gap) / 2 */
   position: absolute;
-  content: "";
-  min-height: calc(100% - 4px);
-  width: 150px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  border-radius: 20px;
-  transition: all 0.4s;
+  top: var(--spacing-4, 4px);
+  bottom: var(--spacing-4, 4px);
+  left: var(--spacing-4, 4px);
+  width: calc(50% - 6px);
+  border-radius: var(--radius-full, 9999px);
+  background-color: var(--color-surface-default, #fff);
+  transition: transform 0.4s;
 }
 
 .switchBox .switch input:checked + .slider {
-  transform: translateX(149px);
+  transform: translateX(calc(100% + var(--spacing-4, 4px)));
 }
 
-.switchBox .label {
+.switchBox .label { /* label/large: 16px, 500, 150%; spacing/12 x spacing/24 */
+  z-index: 1;
+  padding: var(--spacing-12, 12px) var(--spacing-24, 24px);
+  border-radius: var(--radius-full, 9999px);
   font-family: var(--body-font-family);
-  width: 50%;
+  /* stylelint-disable custom-property-pattern */
+  font-size: var(--typography-fontSize-base, 1rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  /* stylelint-enable custom-property-pattern */
+  line-height: 1.5;
   text-align: center;
-  font-weight: bold;
-  line-height: 34px;
-  font-size: 16px;
-  color: white;
+  white-space: nowrap;
+  color: var(--color-text-inverse, #fff);
   transition: color 0.4s;
   cursor: pointer;
-  min-height: 100%;
 }
 
-.switchBox .label.right {
-  z-index: 10;
-  color: black;
-}
-
-.switchBox .label.left {
-  z-index: 10;
+.switchBox .label.right, /* Individual, selected by default */
+.switchBox .switch input:checked ~ .label.left {
+  color: var(--color-text-primary, #151719);
 }
 
 .switchBox .switch input:checked ~ .label.right {
-  transition: color 0.4s;
-  color: white !important;
+  color: var(--color-text-inverse, #fff);
 }
 
-.switchBox .switch input ~ .label .icon {
-  position: relative;
-  margin-right: 10px;
-  top: 2px;
-}
-
-.switchBox .switch input ~ .label .icon svg {
-  width: 14px;
-  height: 16px;
-}
-
-.switchBox .switch input ~ .label.right .icon svg {
-  fill: #026DFF;
-}
-
-.switchBox .switch input:checked ~ .label.right .icon svg {
-  fill: white;
-}
-
-.switchBox .switch input:checked ~ .label.left {
-  transition: color 0.4s;
-  color: black;
-}
-
-.switchBox .switch input:checked ~ .label.left .icon svg {
-  fill: #026DFF;
+.switchBox .label .icon { /* the content switcher has no icons */
+  display: none;
 }
 
 .prod-box.individual-box {
