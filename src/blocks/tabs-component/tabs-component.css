@@ -1,16 +1,21 @@
-/* The block sits on the page column (at :root). The trusted variant is a
-   band: its ground and tab bar run full width and its rows hold the column. */
+/* The block sits on the page column (at :root), the same edges as the DS
+   sections. The trusted variant is a band: its ground and tab bar run full
+   width and its rows hold the column. */
 .tabs-component-container:not(.trusted) > .tabs-component-wrapper {
+  box-sizing: border-box;
   max-width: var(--page-column-max);
   margin-inline: auto;
   padding-inline: var(--page-column-gutter);
 }
 
-.tabs-component-container .tabs-component {
+.tabs-component-container .tabs-component { /* the section rhythm spaces it, not a margin */
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 48px;
+}
+
+.tabs-component-container .card-container :is(ul, li):last-child {
+  margin-bottom: 0;
 }
 
 .tabs-component-container.we-container {
@@ -29,8 +34,9 @@
   fill: #fff;
 }
 
-.tabs-component-container h3 {
-  font-size: 24px;
+.tabs-component-container h3 { /* panel title: the design system's h4 */
+  font-size: var(--ds-heading-h4-size);
+  line-height: 1.3;
   list-style: 24px;
   font-family: var(--body-font-family);
 }
@@ -53,7 +59,11 @@
   margin: auto;
   text-align: center;
   margin-bottom: 27px;
-  font: normal normal bold 32px/37px var(--body-font-family);
+  font: normal normal var(--font-weight-bolder) var(--ds-heading-h2-size)/1.25 var(--body-font-family); /* the section title: the design system's h2, 600 */
+
+  :is(b, strong) {
+    font-weight: inherit;
+  }
 }
 
 .tabs-component-container .subtitle-class {
@@ -174,7 +184,7 @@
   width: 100%;
 }
 
-.tabs-component-container .left {
+.tabs-component-container .left { /* phones: the full page column; narrower from 768px */
   width: 100%;
 }
 
@@ -396,6 +406,11 @@
 
   .tabs-component-container button strong {
     display: block !important;
+  }
+
+  .tabs-component-container .tabs-container .buttons-container { /* one tab row: the tabs share the underline */
+    flex-wrap: nowrap;
+    gap: 0;
   }
 
   .tabs-component-container .tabs-container button picture img {

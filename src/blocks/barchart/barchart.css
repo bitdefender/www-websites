@@ -4,3 +4,9 @@
 .barchart-container-v2 bd-bar-chart-grid {
   --cs-gap: max(var(--spacing-32), calc(100% - 2 * 598px));
 }
+
+/* A single chart is horizontal and spans both 598px grid columns: stretch the
+   gap so it fills the section width instead of stopping at 2 * 598 + gap. */
+.barchart bd-bar-chart-grid:has(> bd-bar-chart[orientation="horizontal"]) {
+  --cs-gap: max(var(--spacing-32), calc(100% - 2 * 598px));
+}

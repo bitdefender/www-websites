@@ -47,8 +47,9 @@
   margin: 0;
 }
 
-.awards-container h3 {
-  font-size: 32px;
+.awards-container h3 { /* the section title: the design system's h2 */
+  font-size: var(--ds-heading-h2-size);
+  line-height: 1.25;
   margin-bottom: 0;
 }
 
@@ -402,6 +403,17 @@
   }
 }
 
+@media (min-width: 580px) and (max-width: 991px) { /* tablets: logos keep their size and wrap */
+  .awards-component > div:nth-child(3) div {
+    flex-wrap: wrap;
+    gap: 16px 24px;
+  }
+
+  .awards-component > div:nth-child(3) div img {
+    height: 58px;
+  }
+}
+
 @media (min-width: 992px) {
   .awards-component > div:nth-child(3) {
     flex-wrap: nowrap;
@@ -500,7 +512,7 @@
   }
 
   .awards-component h3 {
-    font: normal normal bold 32px/38px var(--body-font-family);
+    font: normal normal 600 var(--ds-heading-h2-size)/1.25 var(--body-font-family);
     margin-bottom: 0;
   }
 
@@ -533,5 +545,17 @@
     max-width: 1332px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+/* Sit on the design system's page column, the same edges as the DS sections:
+   the wrapper takes it from the rule at the top, or on a .wide section from
+   styles.css's wide panels (the column's content edges). Scoped to the section
+   so it also replaces the .we-container gutter. */
+main .section.awards-container {
+  padding-inline: 0;
+
+  > .awards-wrapper { /* the block draws the card, so the .wide card padding is only space */
+    padding-block: 0;
   }
 }

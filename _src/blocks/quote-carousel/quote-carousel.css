@@ -260,8 +260,9 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
 }
 
 .quote-carousel-container.creators-carousel {
+  /* the wrapper is the card here: its edges sit on the DS page column's content edges */
   .quote-carousel-wrapper {
-    max-width: 1320px;
+    max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
     margin: auto;
     padding-left: 24px;
     padding-right: 24px;
@@ -338,8 +339,12 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
       }
     }
 
+  &.section.wide { /* the wrappers below carry the gutter, not the .wide section */
+    padding-inline: 0;
+  }
+
   &.section.wide > * { /* apply to all children wrapper */
-    max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
+    max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
   }
 
   &.section.wide img {

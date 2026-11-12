@@ -13,18 +13,20 @@
   margin-bottom: 20px;
 }
 
+/* the design system's page column, the same edges as the DS sections */
 .hero-aem-wrapper {
-  max-width: var(--section-desktop-max-width);
-  padding: 0 var(--section-desktop-padding);
+  box-sizing: border-box;
+  max-width: var(--page-column-max);
+  padding: 0 var(--page-column-gutter);
   margin: 0 auto;
 }
 
-.hero-aem-container .hero-aem h1 {
+.hero-aem-container .hero-aem h1 { /* page title: the design system's h1 */
   color: #006DFF;
-  font-size: 23px;
-  font-weight: normal;
+  font-size: var(--ds-heading-h1-size);
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
   margin-top: 10px;
-  line-height: 1.1;
+  line-height: 1.25;
   margin-bottom: 20px;
 }
 
@@ -251,7 +253,7 @@
   text-align: center;
   justify-content: center;
   cursor: pointer;
-  color: #006DFF;
+  color: #0059D6;
   background-color: transparent;
   border: 2px solid #006DFF;
   white-space: normal;
@@ -716,7 +718,7 @@
 
 .hero-aem-container .signature {
   font-size: 24px;
-  color: #016DFF;
+  color: #006DFF;
   font-weight: bold;
   font-family: var(--body-font-family);
 }
@@ -853,7 +855,7 @@
     flex-wrap: wrap;
 
     h1 {
-      font-size: 38px;
+      font-size: var(--ds-heading-h1-size);
     }
   }
 

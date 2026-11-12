@@ -53,7 +53,8 @@
   margin-top: 15px;
 }
 
-/* the boxes sit on the page column (at :root), as the section's default content does */
+/* the boxes sit on the page column (at :root), as the section's default content does:
+   the same edges as the DS sections */
 .new-prod-boxes-container > .new-prod-boxes-wrapper {
   box-sizing: border-box;
   max-width: var(--page-column-max);
@@ -120,14 +121,13 @@
   font-weight: bold;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 {
-  font-weight: bold;
-  font-size: 20px;
-  line-height: 25px;
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 { /* card title: the design system's h5 */
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
+  font-size: var(--ds-heading-h5-size);
+  line-height: 1.25;
   font-family: var(--body-font-family);
   margin-top: 0;
   margin-bottom: 4px;
-  width: 80%
 }
 
 .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 a {
@@ -203,8 +203,9 @@
   min-height: 30px;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box hr {
-  border: 1px solid #D1D1D1;
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box hr { /* Figma divider: 1px, in the card border colour */
+  border: 0;
+  border-bottom: var(--border-width-1, 1px) solid var(--color-border-container, #e1e3e5);
   margin: 10px 0;
 }
 
@@ -328,12 +329,10 @@
 }
 
 .new-prod-boxes-container {
-  padding-bottom: 0;
   font-family: var(--body-font-family);
-  margin: clamp(10px, 25px, 15px) 0;
 
   .new-prod-boxes {
-    margin: 0 auto;
+    margin: 0 auto -1em; /* the last box's margin is not spacing: the section rhythm is */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -631,23 +630,17 @@
   text-decoration: line-through;
 }
 
+/* save pill: the design system's bd-badge, tone success, variant shade, size lg (Figma) */
 .new-prod-boxes-container .prod-save {
-  color: #0B6A26;
-  background-color: #D1FADC;
-  border-radius: 8px;
-  font-weight: bold;
-  padding: 2px 8px;
-  display: inline-block;
-  margin-bottom: 10px;
-  margin-left: 5px;
-}
-
-.new-prod-boxes-container .new-prod-boxes.solutions .prod-save {
-  color: #0B6A26;
-  background-color: #D1FADC;
-  border-radius: 8px;
-  font-weight: bold;
-  padding: 2px 8px;
+  color: var(--status-success-text, #0b6a26);
+  background-color: var(--status-success-surface-strong, #d1fadc);
+  border-radius: var(--radius-full, 9999px);
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  /* stylelint-disable custom-property-pattern */
+  font-size: var(--typography-fontSize-sm, 0.875rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+  /* stylelint-enable custom-property-pattern */
   display: inline-block;
   margin-bottom: 10px;
   margin-left: 5px;
@@ -709,6 +702,15 @@
   width: fit-content;
   min-width: 144px;
   justify-content: center;
+}
+
+/* solutions cards: white, with the design system's container border (Figma: surface/default,
+   border-width/1, border/container) and no shadow, the highlighted one included;
+   fallbacks for pages without the DS tokens */
+.new-prod-boxes-container .new-prod-boxes.solutions .prod_box .inner_prod_box {
+  background-color: var(--color-surface-default, #fff);
+  border: var(--border-width-1, 1px) solid var(--color-border-container, #e1e3e5);
+  box-shadow: none;
 }
 
 .new-prod-boxes-container .new-prod-boxes.smallerbuttons.solutions .button.primary {
@@ -842,89 +844,68 @@
   padding-bottom: 45px;
 }
 
+/* the design system's content switcher (bd-tab-list appearance="switcher", Figma):
+   action/primary track, spacing/4 padding and gap; both options as wide as the longest label
+   (an auto-width inline grid of 1fr 1fr sizes both tracks to the widest) */
 .switchBox .switch {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  width: 302px;
-  min-height: 44px;
-  background-color: #016DFF;
-  border-radius: 22px;
+  box-sizing: border-box;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4, 4px);
+  max-width: 100%;
+  padding: var(--spacing-4, 4px);
+  border-radius: var(--radius-full, 9999px);
+  background-color: var(--color-action-primary, #006dff);
 }
 
 .switchBox .switch input {
   display: none;
 }
 
-.switchBox .slider {
+.switchBox .slider { /* the selected option's surface/default pill: (track - 2 x padding - gap) / 2 */
   position: absolute;
-  content: "";
-  min-height: calc(100% - 4px);
-  width: 150px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  border-radius: 20px;
-  transition: all 0.4s;
+  top: var(--spacing-4, 4px);
+  bottom: var(--spacing-4, 4px);
+  left: var(--spacing-4, 4px);
+  width: calc(50% - 6px);
+  border-radius: var(--radius-full, 9999px);
+  background-color: var(--color-surface-default, #fff);
+  transition: transform 0.4s;
 }
 
 .switchBox .switch input:checked + .slider {
-  transform: translateX(149px);
+  transform: translateX(calc(100% + var(--spacing-4, 4px)));
 }
 
-.switchBox .label {
+.switchBox .label { /* label/large: 16px, 500, 150%; spacing/12 x spacing/24 */
+  z-index: 1;
+  padding: var(--spacing-12, 12px) var(--spacing-24, 24px);
+  border-radius: var(--radius-full, 9999px);
   font-family: var(--body-font-family);
-  width: 50%;
+  /* stylelint-disable custom-property-pattern */
+  font-size: var(--typography-fontSize-base, 1rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  /* stylelint-enable custom-property-pattern */
+  line-height: 1.5;
   text-align: center;
-  font-weight: bold;
-  line-height: 34px;
-  font-size: 16px;
-  color: white;
+  white-space: nowrap;
+  color: var(--color-text-inverse, #fff);
   transition: color 0.4s;
   cursor: pointer;
-  min-height: 100%;
 }
 
-.switchBox .label.right {
-  z-index: 10;
-  color: black;
-}
-
-.switchBox .label.left {
-  z-index: 10;
+.switchBox .label.right, /* Individual, selected by default */
+.switchBox .switch input:checked ~ .label.left {
+  color: var(--color-text-primary, #151719);
 }
 
 .switchBox .switch input:checked ~ .label.right {
-  transition: color 0.4s;
-  color: white !important;
+  color: var(--color-text-inverse, #fff);
 }
 
-.switchBox .switch input ~ .label .icon {
-  position: relative;
-  margin-right: 10px;
-  top: 2px;
-}
-
-.switchBox .switch input ~ .label .icon svg {
-  width: 14px;
-  height: 16px;
-}
-
-.switchBox .switch input ~ .label.right .icon svg {
-  fill: #026DFF;
-}
-
-.switchBox .switch input:checked ~ .label.right .icon svg {
-  fill: white;
-}
-
-.switchBox .switch input:checked ~ .label.left {
-  transition: color 0.4s;
-  color: black;
-}
-
-.switchBox .switch input:checked ~ .label.left .icon svg {
-  fill: #026DFF;
+.switchBox .label .icon { /* the content switcher has no icons */
+  display: none;
 }
 
 .prod-box.individual-box {
@@ -1247,16 +1228,15 @@
 
   .new-prod-boxes-container .new-prod-boxes {
     flex-direction: row;
-    padding-bottom: 60px;
     align-items: initial;
-    margin: 0 auto;
+    margin: 0 auto -10px; /* the last row's 10px box margin, see above */
     display: grid;
     column-gap: 16px;
 
     /* four boxes still fit across the page column's 1200px at 1440 */
     grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
     justify-content: center;
-    min-width: min(700px, 100%);
+    min-width: min(700px, 100%); /* the DS page column is 656px at 768-991 */
     max-width: 100%;
     width: fit-content;
 
@@ -1270,6 +1250,7 @@
     grid-template-rows: subgrid;
     grid-row: span 50;
     margin-top: 10px;
+    max-width: none; /* the grid sizes the boxes, so two-up still fills the page column */
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
@@ -1339,14 +1320,15 @@
 }
 
 @media (width < 767px) {
-  .new-prod-boxes-container .new-prod-boxes .prod_box {
+  .new-prod-boxes-container .new-prod-boxes .prod_box { /* fill the page column */
     width: 100%;
+    max-width: none;
   }
 }
 
 @media screen and (width <= 525px) {
   .new-prod-boxes-container .new-prod-boxes {
-    padding-block: var(--body-padding);
+    padding-block: var(--body-padding); /* the wrapper carries the side gutter */
   }
 
   .new-prod-boxes-container .switchBox {
@@ -1482,5 +1464,36 @@
         background-color: var(--background-blue);
       }
     }
+  }
+}
+
+/* solutions buy zone, per Figma: was price + save badge in one row (spacing/8, 34px badge),
+   line heights price/was 150%, heading/h2 125%, body/small 145%; the badge keeps its own 125% */
+.new-prod-boxes-container .new-prod-boxes.solutions .oldprice-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-8, 8px);
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-save {
+  margin: 0;
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-oldprice {
+  line-height: 1.5;
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-newprice {
+  line-height: 1.25;
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod_box .inner_prod_box .billed {
+  line-height: 1.45;
+}
+
+@media (width >= 1200px) { /* four boxes fit one row in the page column: no row of three and one */
+  .new-prod-boxes-container .new-prod-boxes {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
 }
