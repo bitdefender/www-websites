@@ -31,7 +31,7 @@ const STEPS = [
 
 // the :root values styles.css sets at each step, carried forward as a cascade would
 const siteColumn = () => {
-  const blocks = [...styles.matchAll(/(?:@media \(width >= (\d+)px\) \{\s*)?:root \{([^}]*)\}/g)];
+  const blocks = [...styles.matchAll(/(?:@media \(width >= (\d+)px\) \{\s*)?:root(?:, :host)? \{([^}]*)\}/g)];
   const byStep = new Map();
   blocks.forEach(([, min, body]) => {
     const values = Object.fromEntries([...body.matchAll(/--(page-column-(?:max|gutter)):\s*([^;]+);/g)]

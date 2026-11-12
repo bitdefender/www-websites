@@ -127,19 +127,9 @@
   --size-full: 99999999999999999999;
 
   /* cta styles */
-  --cta-background-light-blue: var(--background-light-blue)
-}
+  --cta-background-light-blue: var(--background-light-blue);
 
-/* The page column every section's content sits on: the design system's (its
-   ensembleCSS, from the grid tokens --grid-container-max-* and
-   --grid-padding-*), so the site's own sections and the design system's
-   components share one pair of edges. The values are written out because a
-   page with no design system component on it never installs those tokens;
-   src/tests/styles/page-column.test.js holds them to the package's tokens.
-   --page-column-max includes the gutters, as the design system's does.
-   --page-section-padding is a section's inset above and below its content,
-   bd-section's (--spacing-24, --spacing-32 from md). */
-:root {
+  /* the page column, below 576 (its steps are after this block) */
   --page-column-max: 100%;
   --page-column-gutter: 16px;
   --page-section-padding: 24px;
@@ -151,15 +141,26 @@
   --page-column-inset: max(var(--page-column-gutter), calc((100% - var(--page-column-max)) / 2 + var(--page-column-gutter)));
 }
 
+/* The page column every section's content sits on: the design system's (its
+   ensembleCSS, from the grid tokens --grid-container-max-* and
+   --grid-padding-*), so the site's own sections and the design system's
+   components share one pair of edges. The values are written out because a
+   page with no design system component on it never installs those tokens;
+   src/tests/styles/page-column.test.js holds them to the package's tokens.
+   --page-column-max includes the gutters, as the design system's does.
+   --page-section-padding is a section's inset above and below its content,
+   bd-section's (--spacing-24, --spacing-32 from md). The base values are in
+   the first :root, :host block; each step is on :host too, as the site's other
+   variables are, for a block embedded in a shadow root with this stylesheet. */
 @media (width >= 576px) {
-  :root {
+  :root, :host {
     --page-column-max: 540px;
     --page-column-gutter: 24px;
   }
 }
 
 @media (width >= 768px) {
-  :root {
+  :root, :host {
     --page-column-max: 720px;
     --page-column-gutter: 32px;
     --page-section-padding: 32px;
@@ -167,26 +168,26 @@
 }
 
 @media (width >= 992px) {
-  :root {
+  :root, :host {
     --page-column-max: 960px;
     --page-column-gutter: 40px;
   }
 }
 
 @media (width >= 1200px) {
-  :root {
+  :root, :host {
     --page-column-max: 1140px;
   }
 }
 
 @media (width >= 1400px) {
-  :root {
+  :root, :host {
     --page-column-max: 1280px;
   }
 }
 
 @media (width >= 1600px) {
-  :root {
+  :root, :host {
     --page-column-max: 1372px;
   }
 }
@@ -590,8 +591,12 @@ main .section.rounded-corners { /* apply parent wrapper */
   border-radius: 20px;
 }
 
+/* a panel on the page column's content edges (see the painted wrappers below) */
 main .section.light-gray .default-content-wrapper {
   background-color: #fafafa;
+  width: calc(min(100%, var(--page-column-max)) - 2 * var(--page-column-gutter));
+  max-width: none;
+  margin-inline: auto;
 }
 
 main .section.light-gray-wide {
@@ -601,6 +606,16 @@ main .section.light-gray-wide {
 main .section.light-sky-blue > :not(:where(.store-section-context)),
 main .section.light-sky-blue :where(.store-section-content) { /* apply to authored content wrappers */
   background-color: var(--background-color-light-sky-blue);
+}
+
+/* A painted wrapper (these section styles paint the wrapper itself) is a panel
+   on the page column's content edges, as a wide section's are; the wrapper's
+   gutter is its inner inset. */
+main .section:is(.highlight, .light-sky-blue) > :not(:where(.store-section-context)),
+main .section:is(.highlight, .light-sky-blue) :where(.store-section-content) {
+  width: calc(min(100%, var(--page-column-max)) - 2 * var(--page-column-gutter));
+  max-width: none;
+  margin-inline: auto;
 }
 
 /* A wide section's panels stand on the page column's content edges, centred;
