@@ -4,13 +4,15 @@
   width: 100%;
   max-width: unset;
 
+  /* the page column (at :root in styles.css); the slides run on past its
+     edges, and the section clips them at the page's */
   .timeline-carousel-wrapper {
-    max-width: 1290px;
-    margin: auto;
+    box-sizing: border-box;
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding-inline: var(--page-column-gutter);
 
     .timeline-carousel {
-      padding: 0 24px;
-
       .slides-container {
         transform: translateX(var(--offset));
         transition: var(--transition);
@@ -281,11 +283,5 @@
 
   @media (min-width: 992px) {
     padding: 47px 0;
-
-    .timeline-carousel-wrapper {
-      .timeline-carousel {
-        padding: 0;
-      }
-    }
   }
 }
