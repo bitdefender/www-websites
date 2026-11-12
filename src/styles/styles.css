@@ -449,7 +449,8 @@ main .section:has(> bd-section:defined) {
   overflow: visible;
 }
 
-main .section:last-child > bd-section:defined {
+/* unless that edge is off: a band that meets the footer (without-padding-bottom) */
+main .section:last-child > bd-section:defined:not([without-padding-bottom]) {
   padding-block-end: calc(var(--bd-section-padding) * 2);
 }
 

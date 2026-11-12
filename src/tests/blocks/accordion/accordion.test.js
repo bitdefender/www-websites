@@ -103,6 +103,15 @@ describe('accordion block', () => {
     expect(titleOf(terms).getAttribute('as')).toBe('h2');
   });
 
+  it('lets a terms band meet its neighbours: its section adds no edge', () => {
+    const section = terms.closest('bd-section');
+    expect(section.hasAttribute('without-padding-top')).toBe(true);
+    expect(section.hasAttribute('without-padding-bottom')).toBe(true);
+    // the FAQ draws no band, so its section keeps the rhythm's edges
+    ['without-padding-top', 'without-padding-bottom']
+      .forEach((name) => expect(faq.closest('bd-section').hasAttribute(name)).toBe(false));
+  });
+
   it('writes the section\'s other paragraphs as footer notes', () => {
     const notes = [...terms.querySelectorAll(':scope > bd-p[slot="footer"]')];
     expect(notes.map((note) => note.textContent)).toEqual(['* Prices include VAT.']);
