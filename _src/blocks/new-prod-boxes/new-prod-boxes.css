@@ -35,7 +35,7 @@
 }
 
 .new-prod-boxes-container div.default-content-wrapper:last-of-type {
-  padding: 0;
+  padding-block: 0;
 }
 
 .new-prod-boxes-container div.default-content-wrapper:last-of-type * {
@@ -47,13 +47,18 @@
   text-decoration: underline;
 }
 
+/* the section runs full width (whatever another block's .we-container caps it at) */
 .new-prod-boxes-container.we-container {
   max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
   margin-top: 15px;
-  margin-left: auto;
-  margin-right: auto;
+}
+
+/* the boxes sit on the page column (at :root), as the section's default content does */
+.new-prod-boxes-container > .new-prod-boxes-wrapper {
+  box-sizing: border-box;
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
 }
 
 .new-prod-boxes-container .default-content-wrapper p:has(> a) {
@@ -990,9 +995,7 @@
 }
 
 .new-prod-boxes-container.new-prod-boxes-container-v2.we-container {
-  padding: var(--size-0) var(--section-mobile-padding);
   margin-bottom: 46px;
-  max-width: var(--section-large-desktop-max-width);
 
   .default-content-wrapper {
     padding-bottom: var(--size-32);
@@ -1249,9 +1252,11 @@
     margin: 0 auto;
     display: grid;
     column-gap: 16px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    /* four boxes still fit across the page column's 1200px at 1440 */
+    grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
     justify-content: center;
-    min-width: 700px;
+    min-width: min(700px, 100%);
     max-width: 100%;
     width: fit-content;
 
@@ -1306,11 +1311,6 @@
 }
 
 @media (min-width: 768px) {
-  .new-prod-boxes-container.new-prod-boxes-container-v2.we-container {
-    max-width: none;
-    padding-inline: var(--size-0);
-  }
-
   .new-prod-boxes-container.new-prod-boxes-container-v2.we-container .new-prod-boxes {
     --v2-boxes-max: 2;
     --v2-boxes-gap: var(--size-16);
@@ -1336,19 +1336,6 @@
   .new-prod-boxes-container.new-prod-boxes-container-v2.we-container .new-prod-boxes {
     --v2-boxes-max: 3;
   }
-
-  .new-prod-boxes-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .new-prod-boxes-container.we-container {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
 }
 
 @media (width < 767px) {
@@ -1359,7 +1346,7 @@
 
 @media screen and (width <= 525px) {
   .new-prod-boxes-container .new-prod-boxes {
-    padding: var(--body-padding);
+    padding-block: var(--body-padding);
   }
 
   .new-prod-boxes-container .switchBox {
