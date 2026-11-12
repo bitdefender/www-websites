@@ -673,3 +673,10 @@
         text-align: left;
     }
 }
+
+/* A section's rows (a slider's rows, or its boxes) are one part of it: they
+   stack as they always did, not two section paddings apart, as the section
+   rhythm spaces a section's separate parts (styles.css) */
+main .section.dropdown-box-container > :is(.slider-box, .dropdown-box-wrapper):not(:last-child) {
+  margin-bottom: 0;
+}
