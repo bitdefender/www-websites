@@ -155,10 +155,12 @@ main .hero .hero-picture {
   right: 0;
 }
 
+/* the copy sits on the page column (at :root); the hero's ground runs full width */
 main .hero .hero-content {
   display: flex;
   flex-direction: column;
-  padding: 17px var(--body-padding) 56px;
+  max-width: var(--page-column-max);
+  padding: 17px var(--page-column-gutter) 56px;
   margin: 0 auto;
   position: relative;
 }
@@ -227,12 +229,11 @@ main .hero-container.custom-buttons .hero .hero-content table a::after {
 }
 
 main .hero.new2024design {
-  max-width: 1200px;
   margin: auto;
 }
 
 main .hero.new2024design .hero-content:last-of-type {
-  padding: 0 2em;
+  padding-block: 0;
 }
 
 main .hero.new2024design .hero-picture {
@@ -268,7 +269,7 @@ main .hero .hero-content .right-col {
 }
 
 main .hero.black-background .hero-content {
-  padding: 17px var(--body-padding) 56px;
+  padding: 17px var(--page-column-gutter) 56px;
   display: flex;
   flex-direction: column;
   background: linear-gradient(90deg, #000 0%, #000 15%, #fff0 100%);
@@ -276,7 +277,7 @@ main .hero.black-background .hero-content {
 
 main .hero.comparison .hero-content {
   height: 100%;
-  padding: 40px;
+  padding-block: 40px;
   justify-content: center;
   flex-direction: column;
 }
@@ -414,6 +415,12 @@ main .hero a.button.central {
 
   main .hero.ferrari h1{
     max-width: 80%;
+  }
+
+  /* From here the illustration fits beside the copy, so it keeps its offset
+     from the page column's edge rather than the window's. */
+  main .hero.scamio .hero-picture picture img {
+    right: calc(var(--page-column-inset) - 75px);
   }
 }
 
@@ -618,7 +625,7 @@ main .hero.ferrari .hero-content{
   display: flex;
   flex-direction: column;
   color: #FFF;
-  padding: 20px;
+  padding-block: 20px;
 }
 
 main .hero.ferrari .hero-content img{
@@ -720,10 +727,16 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
 
 
+/* a grey band on a phone; once the picture shows, a card on the page column's
+   content edges, the picture filling its right side */
 .hero-container .hero.block.grey-background {
   width: 100%;
-  max-width: 1350px;
+  margin-inline: auto;
   border-bottom-left-radius: 20px;
+
+  @media (min-width: 769px) {
+    max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
+  }
 
   h3, strong {
     color: #000;
@@ -789,10 +802,8 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
 
   main .hero.ferrari .hero-content{
     flex-flow: column;
-    padding: 20px;
     text-align: center;
     color: #fff;
-    max-width: 85%;
   }
 
   main .hero.hero.ferrari .hero-content img{
@@ -897,17 +908,18 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
   }
 
   main .hero .hero-content {
-    max-width: var(--section-desktop-max-width);
     min-height: unset;
-    padding: 1em var(--section-desktop-padding) 1em var(--section-desktop-padding);
+    padding-block: 1em;
     display: flex;
     flex-direction: row;
   }
 
+  /* a card on the page column's content edges, the picture its ground */
+  main .hero.new2024design {
+    max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
+  }
+
   main .hero.black-background .hero-content {
-    max-width: var(--section-desktop-max-width);
-    padding-left: var(--section-desktop-padding);
-    padding-right: var(--section-desktop-padding);
     padding-top: 115px;
     display: flex;
     flex-direction: row;
@@ -1056,24 +1068,12 @@ main .hero-container.ferrari-migration .hero .hero-content a img{
     font-size: 14px;
   }
 
-  main .hero .hero-content {
-    max-width: var(--section-large-desktop-max-width);
-    padding-left: var(--section-large-desktop-padding);
-    padding-right: var(--section-large-desktop-padding);
-  }
-
   main .hero.ferrari .hero-content {
     min-height: 768px;
   }
 
   main .hero.ferrari h1 {
     max-width: 60%;
-  }
-
-  main .hero.black-background .hero-content {
-    max-width: var(--section-large-desktop-max-width);
-    padding-left: var(--section-large-desktop-padding);
-    padding-right: var(--section-large-desktop-padding);
   }
 }
 
