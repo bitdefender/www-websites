@@ -69,6 +69,13 @@
     background-color: #FAFAFA;
 }
 
+/* the block paints its light-gray section whole, so the section's wrappers are the
+   page column, not the panels on it that styles.css makes of a light-gray section's */
+main .section.trusted-teaser-impact-container.light-gray .default-content-wrapper {
+    width: 100%;
+    max-width: var(--page-column-max);
+}
+
 .trusted-new .trusted-teaser-impact .box-wrapper .box-item .subtitle {
     color: #696969 !important;
 }
