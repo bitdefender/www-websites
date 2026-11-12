@@ -1,11 +1,10 @@
 
 /* stylelint-disable  */
+/* a band: the ground runs full width and the card sits on the page column (at :root) */
 main .section.phone-number-checker-container {
-    padding: 20px;
+    padding-block: 50px;
+    padding-inline: var(--page-column-inset);
     background-color: #fff;
-    max-width: 1350px;
-    padding-top: 50px;
-    padding-bottom: 50px;
     display: flex;
     justify-content: center;
     overflow: visible;
