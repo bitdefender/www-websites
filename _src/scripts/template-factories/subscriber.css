@@ -163,7 +163,9 @@ main .subscriber .section {
     background: transparent;
 }
 
+/* the card stands on the page column's content edges; its content keeps its own inset */
 .subscriber .columnvideo > div.image-columns-wrapper {
+    max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
     background-color: black;
     border-radius: 16px;
     padding: 48px 36px 48px 86px;
@@ -266,7 +268,7 @@ main .subscriber .section {
 }
 
 .subscriber #has4columns .columns-wrapper {
-    padding: 0;
+    padding-block: 0;
 }
 
 .subscriber #has4columns .columns-wrapper .columns.with-box-shadow {
@@ -546,9 +548,10 @@ main .subscriber .section {
     background: #00439C;
 }
 
+/* the slider runs full width; its first card starts on the page column */
 .subscriber #blueSlider .block .carousel-container {
-    max-width: var(--section-large-desktop-max-width);
-    padding: 0;
+    max-width: none;
+    padding: 0 var(--page-column-inset);
 }
 
 .subscriber #blueSlider.animation .block .carousel-container {
@@ -658,8 +661,9 @@ main .subscriber .section {
     padding-top: 120px;
 }
 
+/* a narrower intro: an 858px measure inside the column's gutters, centred */
 .subscriber #multiColumns .default-content-wrapper {
-    width: 858px;
+    width: calc(858px + 2 * var(--page-column-gutter));
     text-align: center;
     margin-bottom: 64px;
 }
@@ -1305,10 +1309,6 @@ main .subscriber .section {
     right: 0;
 }
 
-.subscriber .multicontentslider .default-content-wrapper {
-    padding-right: 0;
-}
-
 .subscriber .multicontentslider .carousel-track {
     gap: 32px;
 }
@@ -1529,11 +1529,12 @@ main .subscriber .section {
 }
 
 .subscriber .section.multicontentvideoslider .carousel-container {
-    padding-left: 30em;
+    padding-left: var(--page-column-inset);
 }
 
+/* the slider runs to the page's edge; its first slide starts on the page column */
 .subscriber .multicontentslider .carousel-container {
-    padding-left: 2em;
+    padding-left: var(--page-column-inset);
 }
 
 .subscriber .multicontentslider#carouselLogosText .carousel-container {
@@ -1552,7 +1553,7 @@ main .subscriber .section {
 .subscriber .title-aligned-left .default-content-wrapper {
     max-width: var(--section-large-desktop-max-width);
     width: var(--section-large-desktop-max-width) !important;
-    padding: 0 0 0 20px;
+    padding: 0 var(--page-column-gutter);
     text-align: left !important;
     margin-bottom: 50px !important;
 }
@@ -1872,13 +1873,8 @@ main .subscriber .section {
 }
 
 @media (width >= 1300px) {
-    .subscriber .columns-wrapper, .subscriber .default-content-wrapper {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
     .subscriber #heroColumn .image-columns-wrapper {
-        padding: 0;
+        padding-block: 0;
     }
 }
 
@@ -1888,8 +1884,6 @@ main .subscriber .section {
     }
 
     .subscriber .multicontentslider .default-content-wrapper {
-        padding-left: var(--section-desktop-padding-vertical);
-        padding-right: var(--section-desktop-padding-vertical);
         margin-bottom: 0;
     }
 
@@ -1927,21 +1921,15 @@ main .subscriber .section {
     }
 
     .subscriber .columns-wrapper.tabs-slide {
-        padding: 0!important;
+        padding-block: 0!important;
     }
 
     .subscriber .columns-wrapper, .subscriber .multi-carousel-wrapper, .subscriber .columnvideo {
-        max-width: var(--section-desktop-max-width)!important;
-        padding: 0 var(--section-desktop-padding-vertical)!important;
+        padding-block: 0!important;
     }
 
     .subscriber .columnvideo2 {
         margin-bottom: 4em;
-    }
-
-    .subscriber .multi-carousel-wrapper {
-        max-width: unset!important;
-        padding: 0!important;
     }
 
     .subscriber .multivideosslider, .subscriber #multiColumns, .subscriber .accordion-container {
@@ -1984,10 +1972,6 @@ main .subscriber .section {
 
     .subscriber #blueSlider .carousel-arrows-container {
         display: none;
-    }
-
-    .subscriber #blueSlider .block .carousel-container {
-        padding-left: var(--section-desktop-padding);
     }
 
     .subscriber #blueSlider .block .carousel-container .carousel-item {
@@ -2040,12 +2024,8 @@ main .subscriber .section {
         justify-content: left;
     }
 
-    .subscriber .multicontentslider .carousel-container {
-        padding-left: 0;
-    }
-
     .subscriber .columns-wrapper, .subscriber .columnvideo {
-        padding: var(--body-padding)!important;
+        padding-block: var(--body-padding)!important;
     }
 
     .subscriber .multi-carousel-wrappe {
@@ -2111,10 +2091,6 @@ main .subscriber .section {
         right: -40%;
     }
 
-    .subscriber #blueSlider .block .carousel-container {
-        padding-left: 0;
-    }
-
     .subscriber .image-columns > div {
         row-gap: 64px;
     }
@@ -2129,7 +2105,7 @@ main .subscriber .section {
 
     .subscriber #has4columns .default-content-wrapper {
         margin: 64px auto 0;
-        padding: 0 1em;
+        padding: 0 var(--page-column-gutter);
     }
 
     .subscriber #multiColumns .default-content-wrapper p, .subscriber .subscriber-content p {
@@ -2276,7 +2252,7 @@ main .subscriber .section {
     }
 
     .subscriber .multicontentslider .default-content-wrapper, .subscriber .accordion-container {
-        padding: 0 var(--section-desktop-padding-vertical) !important;
+        padding-block: 0 !important;
     }
 
     .subscriber .accordion-wrapper {
@@ -2326,10 +2302,6 @@ main .subscriber .section {
         margin-bottom: 0;
     }
 
-    .subscriber .section.multicontentvideoslider .carousel-container {
-        padding-left: 0;
-    }
-
     .subscriber .multicontentslider .carousel-track {
         gap: 0;
     }
@@ -2341,7 +2313,7 @@ main .subscriber .section {
     .subscriber .multicontentvideoslider .carousel-item {
         height: 365px;
         width: 82vw;
-        margin: 0 2vw;
+        margin: 0 4vw 0 0;
         opacity: 1;
     }
 
@@ -2508,10 +2480,6 @@ main .subscriber .section {
         margin-top: 0;
         padding-bottom: 0 !important;
         padding-top: 0 !important;
-    }
-
-    .subscriber #carouselLogosText .carousel-item:first-of-type {
-        margin-left: -18px !important;
     }
 
     .subscriber #carouselLogosText .carousel-arrows-container {
@@ -2720,8 +2688,7 @@ main .subscriber .section {
     }
 
     .subscriber .columns-wrapper, .subscriber .multi-carousel-wrapper, .subscriber .columnvideo, .subscriber .multicontentslider .default-content-wrapper, .subscriber .accordion-container {
-        max-width: var(--body-max-width)!important;
-        padding: var(--body-padding)!important;
+        padding-block: var(--body-padding)!important;
     }
 
     .subscriber #has4columns .default-content-wrapper h3 {
@@ -2791,10 +2758,6 @@ main .subscriber .section {
 
     .subscriber #blueSlider .block .carousel-container .carousel-item {
         flex: 0 0 295px;
-    }
-
-    .subscriber .multi-carousel-wrapper {
-        padding-right: 0!important;
     }
 
     .subscriber .multivideosslider, .subscriber #multiColumns, .subscriber .accordion-container {
@@ -2882,10 +2845,6 @@ main .subscriber .section {
         padding-bottom: 0!important;
     }
 
-    .subscriber .section.multicontentvideoslider .carousel-container {
-        padding-left: 0;
-    }
-
     .subscriber .section.multicontentvideoslider .carousel-item {
         width: 81vw;
         height: 460px;
@@ -2940,9 +2899,5 @@ main .subscriber .section {
         height: 46px;
         width: auto!important;
         padding: 0 18px;
-    }
-
-    .subscriber #blueSlider .block .carousel-container {
-        padding-left: 0;
     }
 }
