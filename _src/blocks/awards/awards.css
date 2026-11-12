@@ -9,7 +9,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1290px;
+}
+
+/* the page column (at :root); a wide section's rule already sets its panels on it */
+.awards-container:not(.wide) > .awards-wrapper {
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
 }
 
 .awards-container.we-container {
@@ -274,9 +280,6 @@
 }
 
 .awards-container.awards-v2.section.wide {
-  padding-left: var(--section-mobile-padding);
-  padding-right: var(--section-mobile-padding);
-
   .block.awards-component {
     background-color: var(--color-blue-50);
   }
@@ -396,10 +399,6 @@
     .cards {
       grid-template-columns: 1fr 1fr;
     }
-  }
-
-  .awards-container.awards-v2.section.wide {
-    padding-inline: var(--size-0);
   }
 }
 
