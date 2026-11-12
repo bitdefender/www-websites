@@ -1,6 +1,11 @@
 /* stylelint-disable no-descending-specificity */
+
+/* the page column (at :root in styles.css) */
 .columns-wrapper {
-  padding: 0 var(--body-padding);
+  box-sizing: border-box;
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
 
   --background-badge: #1C7928;
   --blue-700: #006DFF;
@@ -554,18 +559,19 @@ main .creators-banner .signature {
 
 .columns-container.we-container {
   max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
   margin-top: 15px;
   margin-left: auto;
   margin-right: auto;
 }
 
+/* over a big-image section: a band the page's full width that pads its text
+   onto the page column, then (from 767) a card whose outer edge stands on it */
 .columns.highlight-text.black {
   background-color: var(--black-color);
-  padding: 25px 2pc 20px 30px;
+  padding: 25px var(--page-column-inset) 20px;
   text-align: left;
   position: absolute;
+  left: 0;
   width: 100%;
 }
 
@@ -967,6 +973,14 @@ main .creators-banner .signature {
 
 .section.grey-bck .columns-wrapper {
   background-color: #F5F5F7;
+}
+
+/* A section that paints the wrapper (grey-bck and baby-blue-bck above, and
+   light-sky-blue from styles.css under icon-corners) makes it a panel: the
+   panel stands on the page column's content edges and keeps the gutter as its
+   inset, as a wide section's panels do. */
+.columns-container:is(.grey-bck, .baby-blue-bck, .icon-corners) > .columns-wrapper {
+  max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
 }
 
 .section.radius-corners .columns-wrapper {
@@ -1672,7 +1686,7 @@ main .creators-banner .signature {
 }
 
 .narrow-section .columns-wrapper {
-  max-width: 1000px;
+  max-width: min(1000px, var(--page-column-max));
 }
 
 .columns-container.faded p{
@@ -1798,13 +1812,15 @@ main .creators-banner .signature {
 
   .columns.highlight-text.black {
     width: 520px;
-    right: 2.5%;
+    left: auto;
+    right: var(--page-column-inset);
     top: 15%;
+    padding-inline: 30px 2pc;
     border-radius: 5px;
   }
 
   .columns.highlight-text.black.imageleft {
-    left: 2.5%;
+    left: var(--page-column-inset);
   }
 
   .percent-table .columns table tr td:first-of-type {
@@ -1936,12 +1952,6 @@ main .creators-banner .signature {
 }
 
 @media (min-width: 992px) { /* desktop */
-  .columns-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-
   .columns-container.smaller-container .columns-wrapper {
     max-width: var(--section-desktop-smaller-max-width);
     padding: 0 var(--section-desktop-padding);
@@ -1971,20 +1981,8 @@ main .creators-banner .signature {
     order: unset;
   }
 
-
-  .columns-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
-  }
-
   .columns.highlight-text.black {
-    right: 10%;
     top: 10%;
-  }
-
-  .columns.highlight-text.black.imageleft {
-    left: 10%;
   }
 
   .section.subtitle-blue h2 {
@@ -2293,25 +2291,12 @@ main .creators-banner .signature {
 }
 
 @media (min-width: 1200px) {
-  .columns-container.we-container {
-    max-width: 1350px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
   .columns.awards > div > div {
     flex: 1;
   }
 
   .percent-table .columns table tr td:first-of-type {
     padding-right: 1.5em;
-  }
-}
-
-@media (min-width: 1600px) { /* large desktop */
-  .columns-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-    padding: 0 var(--section-large-desktop-padding);
   }
 }
 
@@ -2604,6 +2589,13 @@ main .creators-banner .signature {
       display: flex;
       overflow-x: auto;
       white-space: nowrap;
+
+      /* below 992 the scroller runs full width: its first card starts on the
+         page column and the rest scroll past it to the page's edge */
+      @media (width < 992px) {
+        max-width: none;
+        padding-inline: var(--page-column-inset);
+      }
 
       /* Firefox */
       scrollbar-width: none;
@@ -3000,7 +2992,6 @@ main .creators-banner .signature {
     }
 
     @media (width >= 767px) {
-      max-width: 1290px;
       margin: auto;
       padding: 36px 64px;
       border-radius: 20px;
@@ -3865,10 +3856,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 .columns-container.gasa {
-  padding: 24px;
+  padding: 24px 0;
 
   .columns-wrapper {
-    padding: 0;
+    padding-block: 0;
 
     .columns {
       background: linear-gradient(178.61deg, #006DFF 20.53%, #0C3451 79.47%);
@@ -3901,8 +3892,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     padding: 47px 0;
 
     .columns-wrapper {
-      max-width: 1290px;
-
       .columns {
         background: linear-gradient(87.6deg, #006DFF 0%, #0C3451 100%);
         padding: 48px;
@@ -3921,11 +3910,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       }
     }
   }
-}
-
-.columns-container.gasa-v2 {
-  padding-left: var(--section-mobile-padding);
-  padding-right: var(--section-mobile-padding);
 }
 
 .columns-container.responsible-ai {
@@ -3947,11 +3931,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .columns-wrapper {
-    max-width: 1290px;
-    padding: 0;
+    padding-block: 0;
 
     .columns {
-      padding: 0 24px;
       gap: 16px;
       display: flex;
       flex-direction: column;
@@ -4117,7 +4099,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     .columns-wrapper {
       .columns {
         gap: 32px;
-        padding: 0;
 
         > div {
           gap: 32px;
@@ -4147,15 +4128,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
-.columns-container.responsible-ai-v2 {
-  .columns-wrapper {
-    .columns {
-      padding-left: var(--section-mobile-padding);
-      padding-right: var(--section-mobile-padding);
-    }
-  }
-}
-
 .columns-container.columns-container-v2 .columns > div:last-child {
   margin-bottom: 0;
 }
@@ -4175,13 +4147,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 @media (max-width: 1399px) {
-  .columns-wrapper {
-    padding: 0 var(--section-large-desktop-padding);
-  }
-
   /* stylelint-disable-next-line selector-class-pattern */
   .v2_benefits .columns-wrapper {
-    padding: var(--section-mobile-padding-vertical);
+    padding-block: var(--section-mobile-padding-vertical);
   }
 
   .columns.video-presentation .button-container {
@@ -4305,7 +4273,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .columns.screenshots > div > .columns-img-col {
-    flex: 0 0 230px;
+    flex: 0 1 230px;
   }
 
   .columns-container.icon-corners {
@@ -4323,27 +4291,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       height: 300px;
     }
   }
-
-  .columns-container:is(.gasa-v2, .responsible-ai-v2) .columns-wrapper {
-    max-width: var(--v2-container-max-width);
-    margin-inline: auto;
-    padding-inline: var(--v2-container-padding);
-  }
-
-  .columns-container.responsible-ai-v2 .columns-wrapper .columns {
-    padding-inline: 0;
-  }
 }
 
 @media (max-width: 767px) {
   .columns-wrapper {
-    padding: var(--body-padding) var(--body-padding) 0;
-  }
-
-  .columns-container-v2 {
-    .columns-wrapper {
-      padding: var(--body-padding) var(--section-mobile-padding) 0;
-    }
+    padding-block-start: var(--body-padding);
   }
 
   .cta .columns-img-col picture {
@@ -4389,8 +4341,8 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 .columns-container.multi-blocks{
-  max-width: 1330px;
-  padding: 0 var(--section-desktop-padding);
+  max-width: var(--page-column-max);
+  padding: 0 var(--page-column-gutter);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -4483,9 +4435,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   @media (min-width: 991px) {
-    max-width: 1330px;
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
     display: flex;
     flex-direction: row;
     gap: 30px;
@@ -4512,13 +4461,20 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+/* below 768 the banner runs the page's full width (a wide section keeps its
+   panel) and pads its content onto the page column */
 .columns-container.full-width-mobile {
   @media (width < 768px) {
     padding-left: 0;
     padding-right: 0;
 
     .columns-wrapper {
+      max-width: none;
       padding: 0;
+    }
+
+    &:not(.wide) .columns.blue-banner {
+      padding-inline: var(--page-column-inset);
     }
   }
 }
@@ -4764,10 +4720,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 .section.copilot-benefits-v2.columns-container {
   font-size: 13px;
   line-height: 1.5;
-  padding-inline: var(--section-mobile-padding, var(--size-16));
 
   .default-content-wrapper.dex-see-all-see-less {
-    padding: var(--size-0);
+    padding-block: var(--size-0);
 
     p {
       display: flex;
