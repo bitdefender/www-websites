@@ -411,14 +411,14 @@
   z-index: 2;
 }
 
+.products.solutions .product-card .price .old-price { /* Figma price/was: 150% */
+  line-height: 1.5;
+}
+
 .products.plans .product-card .price .old-price {
   font-weight: normal;
   font-size: var(--body-font-size-xl);
   color: #666;
-}
-
-.products.solutions:not(:is(.products.compact, .products.plans)) .product-card .price .old-price {
-  margin-bottom: 10px;
 }
 
 .products .product-card .price del {
@@ -432,8 +432,15 @@
   justify-content: center;
 }
 
-.two-columns .columns .product-card hr {
-  border-color: #dedede;
+/* solutions buy zone: the same type as new-prod-boxes (price 35px bold, notes 12px regular) */
+.products.solutions .product-card .price strong {
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1.25; /* Figma heading/h2 */
+}
+
+.products.solutions .product-card .price em {
+  font-weight: 400;
 }
 
 .product-card .button-container ~ .button-container {
@@ -479,7 +486,15 @@
 
 .products.solutions .product-card tr { /* Figma "was + save": a centred row, spacing/8, as tall as the badge */
   display: inline-flex;
-  gap: 10px;
+  align-items: center;
+  gap: var(--spacing-8, 8px);
+  min-height: 34px;
+}
+
+/* matchHeights groups this was-price block with the big price below and gives it that price's
+   height as an inline min-height; the row above keeps the cards aligned instead */
+.products.solutions .product-card tr .price.nanoblock {
+  min-height: 0 !important;
 }
 
 .products.solutions .product-card tr .nanoblock {

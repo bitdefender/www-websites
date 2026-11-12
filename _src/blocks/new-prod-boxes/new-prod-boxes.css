@@ -1497,3 +1497,28 @@
     }
   }
 }
+
+/* solutions buy zone, per Figma: was price + save badge in one row (spacing/8, 34px badge),
+   line heights price/was 150%, heading/h2 125%, body/small 145%; the badge keeps its own 125% */
+.new-prod-boxes-container .new-prod-boxes.solutions .oldprice-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-8, 8px);
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-save {
+  margin: 0;
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-oldprice {
+  line-height: 1.5;
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod-newprice {
+  line-height: 1.25;
+}
+
+.new-prod-boxes-container .new-prod-boxes.solutions .prod_box .inner_prod_box .billed {
+  line-height: 1.45;
+}
