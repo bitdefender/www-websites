@@ -1659,9 +1659,8 @@ main .section.cta .right-col {
     width: 100%;
   }
 
+  /* the wrapper keeps the page column's gutters (the columns block's) */
   .cta .columns-wrapper {
-    padding-right: 0;
-    padding-left: 50px;
     display: flex;
   }
 
