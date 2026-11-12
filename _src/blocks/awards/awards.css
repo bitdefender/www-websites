@@ -404,6 +404,17 @@
   }
 }
 
+@media (min-width: 580px) and (max-width: 991px) { /* tablets: logos keep their size and wrap */
+  .awards-component > div:nth-child(3) div {
+    flex-wrap: wrap;
+    gap: 16px 24px;
+  }
+
+  .awards-component > div:nth-child(3) div img {
+    height: 58px;
+  }
+}
+
 @media (min-width: 992px) {
   .awards-component > div:nth-child(3) {
     flex-wrap: nowrap;

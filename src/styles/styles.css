@@ -535,6 +535,13 @@ main .section.images-floated .default-content-wrapper p.button-container {
   position: relative;
 }
 
+/* a section title authored one level down (an h3 leading default content that has no h1 or h2)
+   is still the section title: the design system's h2 */
+main .section > .default-content-wrapper:not(:has(h1, h2)) > h3:first-child {
+  font-size: var(--ds-heading-h2-size);
+  line-height: 1.25;
+}
+
 /* section lead (the paragraph right under a section title): the design system's section header
    lead, body regular (16px, 150%), body large (18px, 145%) from 992px, spacing/16 under the title */
 main .default-content-wrapper > h2:has(+ p) {

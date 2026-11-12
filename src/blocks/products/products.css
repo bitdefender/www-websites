@@ -955,7 +955,7 @@
    margin instead; mergeSplitTitle (JS) keeps the same items in every card */
 .products-wrapper .products.solutions.block {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(310px, 100%), 1fr));
+  grid-template-columns: 1fr;
   row-gap: 0;
   margin-bottom: -25px; /* the last row of cards' margin is not spacing: the section rhythm is */
 }
@@ -988,4 +988,31 @@
 
 .products-wrapper .products.solutions.compact.block .product-card .featured.nanoblock {
   justify-self: center;
+}
+
+
+/* solutions columns: one card per row on phones, two on tablets (a last card alone on its row is
+   centred at a card's width), then as many as fit from 992px, so three cards share one row */
+@media (width >= 768px) {
+  .products-wrapper .products.solutions.block {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .products-wrapper .products.solutions.block .product-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 12.5px);
+  }
+}
+
+@media (width >= 992px) {
+  .products-wrapper .products.solutions.block {
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  }
+
+  .products-wrapper .products.solutions.block .product-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    justify-self: stretch;
+    width: auto;
+  }
 }

@@ -1496,3 +1496,9 @@
 .new-prod-boxes-container .new-prod-boxes.solutions .prod_box .inner_prod_box .billed {
   line-height: 1.45;
 }
+
+@media (width >= 1200px) { /* four boxes fit one row in the page column: no row of three and one */
+  .new-prod-boxes-container .new-prod-boxes {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}

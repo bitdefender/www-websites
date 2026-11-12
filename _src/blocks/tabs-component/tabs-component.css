@@ -412,6 +412,11 @@
     display: block !important;
   }
 
+  .tabs-component-container .tabs-container .buttons-container { /* one tab row: the tabs share the underline */
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+
   .tabs-component-container .tabs-container button picture img {
     width: 30px;
   }

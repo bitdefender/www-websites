@@ -964,9 +964,33 @@ main .creators-banner .signature {
   line-height: var(--heading-font-size-l);
 }
 
-.columns-wrapper > div.grey-bck div.columns-text-col {
-  padding-left: 4em;
-  padding-right: 1em;
+.columns-wrapper > div.grey-bck div.columns-text-col { /* the same inset as the gasa banner card */
+  padding: var(--spacing-48, 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* the card's halves meet edge to edge (no column gap to overflow the card) and are as tall as
+   the card, so the image covers its half */
+.columns-wrapper > div.grey-bck > div:has(> .columns-img-col) {
+  gap: 0;
+  align-items: stretch;
+}
+
+.columns-wrapper > div.grey-bck .columns-img-col :is(picture, img) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .section.baby-blue-bck .columns-wrapper {
@@ -4307,7 +4331,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .columns-wrapper > div.grey-bck div.columns-text-col {
-    padding: 2em;
+    padding: var(--spacing-24, 24px);
   }
 }
 
