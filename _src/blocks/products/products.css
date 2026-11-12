@@ -922,3 +922,69 @@
     flex: 1 1 310px;
   }
 }
+
+/* solutions cards: no shadow, and the design system's container border (as on new-prod-boxes),
+   the compact featured cards included: it replaces their green border */
+.products.solutions .product-card,
+.products.compact.solutions .product-card.featured {
+  border: var(--border-width-1, 1px) solid var(--color-border-container, #e1e3e5);
+  box-shadow: none;
+}
+
+/* solutions buy zone, per Figma (as on new-prod-boxes): no badge margin (the row's gap spaces it);
+   line heights heading/h2 125%, body/small 145% (price/was 150% is set with .old-price above) */
+.products.solutions .product-card tr .nanoblock.featured {
+  margin: 0;
+}
+
+.products.solutions .product-card .price.condition em,
+.products.solutions .product-card .price.condition ~ p {
+  line-height: 1.45;
+}
+
+/* solutions product titles: the same type as the new-prod-boxes titles (20px, 600, 1.25) */
+.products-wrapper .products.solutions.block .product-card h3,
+.products-wrapper .products.solutions.block .product-card h3 :is(strong, b) {
+  font-size: 20px;
+  font-weight: var(--font-weight-bolder);
+  line-height: 1.25;
+}
+
+/* solutions cards share the block's rows (subgrid), so every row lines up across a row of cards.
+   A subgrid inherits the row gap between all its rows, so rows of cards are spaced by the card's
+   margin instead; mergeSplitTitle (JS) keeps the same items in every card */
+.products-wrapper .products.solutions.block {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(310px, 100%), 1fr));
+  row-gap: 0;
+}
+
+.products-wrapper .products.solutions.block .product-card {
+  display: grid;
+  grid-row: span 30;
+  grid-template-rows: subgrid;
+  width: auto;
+  margin: 0 0 25px;
+}
+
+.products-wrapper .products.solutions.block .product-card .featured.nanoblock {
+  justify-self: start;
+}
+
+/* the "Included in ..." pill (not the price row's save badge): the design system's bd-badge,
+   tone brand, variant shade, size lg (Figma) */
+.products-wrapper .products.solutions.block .product-card .featured.nanoblock:not(tr *) {
+  color: var(--status-brand-text, #0059d6);
+  background-color: var(--status-brand-surface, #f0f7ff);
+  border-radius: var(--radius-full, 9999px);
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  /* stylelint-disable custom-property-pattern */
+  font-size: var(--typography-fontSize-sm, 0.875rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+  /* stylelint-enable custom-property-pattern */
+}
+
+.products-wrapper .products.solutions.compact.block .product-card .featured.nanoblock {
+  justify-self: center;
+}
