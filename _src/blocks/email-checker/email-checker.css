@@ -1,9 +1,12 @@
 
 /* stylelint-disable  */
-/* a band: the ground runs full width and the card sits on the page column (at :root) */
+/* a panel on the page column (at :root), as it was a 1350px panel: the
+   patterned ground is the column's width and the card sits in its gutters */
 main .section.email-checker-container {
     padding-block: 50px;
-    padding-inline: var(--page-column-inset);
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding-inline: var(--page-column-gutter);
     background-color: #fff;
     display: flex;
     justify-content: center;
