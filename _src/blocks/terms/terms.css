@@ -67,11 +67,19 @@
     background-color: #f2f2f2;
 }
 
+/* The page column (at :root). Where the block is loaded on its own, without
+   styles.css, the column is undefined and the block's variables above stand in. */
+.terms-wrapper {
+    box-sizing: border-box;
+    max-width: var(--page-column-max, none);
+    margin-inline: auto;
+    padding-inline: var(--page-column-gutter, var(--body-padding));
+}
+
 @media (min-width: 992px) { /* desktop */
     .terms-wrapper {
-        max-width: var(--section-desktop-max-width);
-        padding: 15px var(--section-desktop-padding) 40px var(--section-desktop-padding);
-        margin: 0 auto;
+        max-width: var(--page-column-max, var(--section-desktop-max-width));
+        padding-block: 15px 40px;
     }
 }
 
@@ -97,13 +105,6 @@
     margin-top: 15px;
 }
 
-.terms-container.we-container {
-    max-width: 1332px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin: 0 auto;
-}
-
 .terms.border-on-top {
     border-top: 1px solid #dedede;
     padding-top: 20px;
@@ -111,34 +112,14 @@
 
 @media (max-width: 992px) { /* mobile/tablet */
     .terms-wrapper {
-        padding: var(--body-padding);
+        padding-block: var(--body-padding);
     }
 
-    .terms-container.we-container {
-        max-width: 1300px;
-        padding-left: 50px;
-        padding-right: 50px;
-    }
-
+    /* unscoped, so it reaches every section on the page: on the page column,
+       as styles.css's is, with its own vertical padding */
     .default-content-wrapper {
-        max-width: var(--section-desktop-max-width);
-        padding: 23px var(--section-desktop-padding);
+        max-width: var(--page-column-max, var(--section-desktop-max-width));
+        padding: 23px var(--page-column-gutter, var(--section-desktop-padding));
         border-radius: 0;
-    }
-}
-
-@media (min-width: 1200px) {
-    .terms-container.we-container {
-      max-width: 1332px;
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-}
-
-@media (min-width: 1600px) {
-    .terms-container.we-container {
-        max-width: 1332px;
-        padding-left: 20px;
-        padding-right: 20px;
     }
 }
