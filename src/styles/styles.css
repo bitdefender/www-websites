@@ -1927,6 +1927,14 @@ main .section.blue p a.button.modal::after {
   margin-left: 1em;
 }
 
+/* the heading and its buttons are one row: every button keeps the same margin
+   above and below, so neither the section lead rule (no margin above the first
+   paragraph under a title) nor the edge rule (none below the last part) moves
+   one button off the row */
+main .section.buttons-align-right .default-content-wrapper > p.button-container {
+  margin-block: 18px;
+}
+
 .buttons-align-right > div {
   display: flex;
   flex-direction: column;
@@ -2060,6 +2068,12 @@ main .section.blue p a.button.modal::after {
 .section.wide.awards h2 {
   font-weight: var(--font-weight-bold);
   margin-bottom: 0;
+}
+
+/* a lead under the title keeps the section lead's gap (spacing/16): the lead
+   rule takes the paragraph's top margin, so the title's must stay */
+.section.wide.awards h2:has(+ p) {
+  margin-bottom: var(--spacing-16, 16px);
 }
 
 .section.big-image {
