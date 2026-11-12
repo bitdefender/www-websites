@@ -130,6 +130,78 @@
   --cta-background-light-blue: var(--background-light-blue)
 }
 
+/* The page column every section's content sits on: the design system's (its
+   ensembleCSS, from the grid tokens --grid-container-max-* and
+   --grid-padding-*), so the site's own sections and the design system's
+   components share one pair of edges. The values are written out because a
+   page with no design system component on it never installs those tokens;
+   src/tests/styles/page-column.test.js holds them to the package's tokens.
+   --page-column-max includes the gutters, as the design system's does.
+   --page-section-padding is a section's inset above and below its content,
+   bd-section's (--spacing-24, --spacing-32 from md). */
+:root {
+  --page-column-max: 100%;
+  --page-column-gutter: 16px;
+  --page-section-padding: 24px;
+
+  /* The column's distance from the edge of a box as wide as the page, for a
+     block whose wrapper runs full width (a band) and pads its content in:
+     padding-inline: var(--page-column-inset). Its % is the box's own
+     containing block, as any padding's is. */
+  --page-column-inset: max(var(--page-column-gutter), calc((100% - var(--page-column-max)) / 2 + var(--page-column-gutter)));
+}
+
+@media (width >= 576px) {
+  :root {
+    --page-column-max: 540px;
+    --page-column-gutter: 24px;
+  }
+}
+
+@media (width >= 768px) {
+  :root {
+    --page-column-max: 720px;
+    --page-column-gutter: 32px;
+    --page-section-padding: 32px;
+  }
+}
+
+@media (width >= 992px) {
+  :root {
+    --page-column-max: 960px;
+    --page-column-gutter: 40px;
+  }
+}
+
+@media (width >= 1200px) {
+  :root {
+    --page-column-max: 1140px;
+  }
+}
+
+@media (width >= 1400px) {
+  :root {
+    --page-column-max: 1280px;
+  }
+}
+
+@media (width >= 1600px) {
+  :root {
+    --page-column-max: 1372px;
+  }
+}
+
+/* The site's older container, which many blocks size their content with
+   (max-width: --section-desktop-max-width, padding: 0 --section-desktop-padding,
+   and the large-desktop pair from 1600), is the page column inside main. The
+   header and footer, outside it, keep theirs. */
+main {
+  --section-desktop-max-width: var(--page-column-max);
+  --section-desktop-padding: var(--page-column-gutter);
+  --section-large-desktop-max-width: var(--page-column-max);
+  --section-large-desktop-padding: var(--page-column-gutter);
+}
+
 header,
 body > div:first-child {
   min-height: 64px;
@@ -432,10 +504,12 @@ body.no-scroll {
   overflow: hidden;
 }
 
+/* every section's inset above and below its content is the design system's
+   (--page-section-padding, at :root) */
 main .section {
   width: 100%;
   position: relative;
-  padding: var(--section-mobile-padding-vertical) 0;
+  padding: var(--page-section-padding) 0;
   overflow: hidden;
 }
 
@@ -478,11 +552,13 @@ main .section.images-floated .default-content-wrapper p.button-container {
   width: 100%;
 }
 
+/* the page column (at :root); --body-padding above and below on a phone */
 .default-content-wrapper {
+  box-sizing: border-box;
   width: 100%;
   margin: 0 auto;
-  max-width: var(--body-max-width);
-  padding: var(--body-padding);
+  max-width: var(--page-column-max);
+  padding: var(--body-padding) var(--page-column-gutter);
   position: relative;
 }
 
@@ -527,9 +603,18 @@ main .section.light-sky-blue :where(.store-section-content) { /* apply to author
   background-color: var(--background-color-light-sky-blue);
 }
 
+/* A wide section's panels stand on the page column's content edges, centred;
+   the content inside a panel keeps its own inset. */
 main .section.wide {
-  padding-left: var(--body-padding);
-  padding-right: var(--body-padding);
+  padding-inline: 0;
+}
+
+main div.section.wide > :not(:where(.store-section-context)),
+main div.section.wide :where(.store-section-content) {
+  box-sizing: border-box;
+  width: calc(min(100%, var(--page-column-max)) - 2 * var(--page-column-gutter));
+  max-width: none;
+  margin-inline: auto;
 }
 
 main .section.no-padding-top-bottom {
@@ -755,9 +840,10 @@ main .grey-background {
   background-color: #F6F6F6 !important;
 }
 
-/* The v2 sections' own column and spacing. A section a design system block
-   has put on bd-section takes both from the design system instead, so these
-   leave it alone; :where() keeps the rules' specificity. */
+/* The v2 sections' spacing, and the page column (at :root) on their wrappers,
+   which hold it for the design system components inside them. A section a
+   design system block has put on bd-section takes both from the design system
+   instead, so these leave it alone; :where() keeps the rules' specificity. */
 main div.section:is(
   .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
   .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
@@ -769,7 +855,12 @@ main div.section:is(
 
   > div {
     --bd-ensemble-max-width: none;
-    --bd-ensemble-inline-padding: var(--section-mobile-padding);
+    --bd-ensemble-inline-padding: 0;
+
+    box-sizing: border-box;
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding-inline: var(--page-column-gutter);
   }
 
   &:not(.hero-aem-v2) {
@@ -863,11 +954,6 @@ main div.section:is(
     display: block;
   }
 
-  main .section.wide {
-    padding-left: var(--section-desktop-padding-vertical);
-    padding-right: var(--section-desktop-padding-vertical);
-  }
-  
   main .section.blue-title h3 {
     font-size: 24px;
     margin: 0;
@@ -930,20 +1016,8 @@ main div.section:is(
     .copilot-benefits-v2.columns-container
   ):not(:where(:has(> bd-section:defined))) {
     --v2-section-spacing: var(--size-48);
-    --v2-container-max-width: 100%;
-    --v2-container-padding: var(--size-20);
 
     padding-inline: var(--size-0);
-
-    > div {
-      --bd-ensemble-max-width: none;
-      --bd-ensemble-inline-padding: 0;
-
-      box-sizing: border-box;
-      max-width: var(--v2-container-max-width);
-      margin-inline: auto;
-      padding-inline: var(--v2-container-padding);
-    }
   }
 }
 
@@ -955,12 +1029,7 @@ main div.section:is(
 
   main div.section.wide > :not(:where(.store-section-context)),
   main div.section.wide :where(.store-section-content) { /* apply to authored content wrappers */
-    max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
     padding-top: 1px; /* hack to handle margin of child paragraphs */
-  }
-
-  main .section {
-    padding: var(--section-desktop-padding-vertical) 0;
   }
 
   main .section.no-vertical-padding {
@@ -969,8 +1038,7 @@ main div.section:is(
   }
 
   .default-content-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding-vertical);
+    padding: 0 var(--page-column-gutter);
     border-radius: 0;
   }
 
@@ -1041,8 +1109,6 @@ main div.section:is(
   ):not(:where(:has(> bd-section:defined))) {
     --v2-section-spacing: var(--size-64);
     --v2-subtitle-gap: var(--size-24);
-    --v2-container-padding: var(--section-large-desktop-padding);
-    --v2-container-max-width: calc(1292px + 2 * var(--v2-container-padding));
   }
 }
 
@@ -1099,10 +1165,6 @@ main .section.mb-0, .mb-0 {
 }
 
 @media (min-width: 1400px) {
-  main .section {
-    padding: 60px 0;
-  }
-
   main .section.py-1 {
     padding: 1em 0;
   }
@@ -1168,16 +1230,6 @@ main .section.mb-0, .mb-0 {
     letter-spacing: normal;
   }
 
-  main div.section.wide > :not(:where(.store-section-context)),
-  main div.section.wide :where(.store-section-content) { /* apply to authored content wrappers */
-    max-width: calc(var(--section-large-desktop-max-width) - 2 * var(--section-large-desktop-padding));
-    padding-top: 1px; /* hack to handle margin of child paragraphs */
-  }
-
-  .default-content-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-    padding: 0 var(--section-large-desktop-padding);
-  }
 }
 
 ul {
@@ -2158,51 +2210,13 @@ body > div.header-with-language-banner {
   }
 }
 
-/* The design system's page column (its ensembleCSS) for a block's own light-DOM
-   layout, on the same edges as the DS sections around it */
+/* The page column (at :root) for a block's own light-DOM layout; inside a
+   column that already has its edges, the hooks a design system column sets
+   for its children collapse it, as they collapse a component's */
 .ds-page-column {
   box-sizing: border-box;
   width: 100%;
-  max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xs));
+  max-width: var(--bd-ensemble-max-width, var(--page-column-max));
   margin-inline: auto;
-  padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-xs));
-}
-
-@media (width >= 576px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-sm));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-sm));
-  }
-}
-
-@media (width >= 768px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-md));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-md));
-  }
-}
-
-@media (width >= 992px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-lg));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-lg));
-  }
-}
-
-@media (width >= 1200px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xl));
-  }
-}
-
-@media (width >= 1400px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxl));
-  }
-}
-
-@media (width >= 1600px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxxl));
-  }
+  padding-inline: var(--bd-ensemble-inline-padding, var(--page-column-gutter));
 }
