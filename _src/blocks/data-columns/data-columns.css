@@ -5,17 +5,18 @@
     }
 
     .default-content-wrapper {
-        padding: 0 24px;
-        max-width: 1338px;
+        padding-block: 0;
     }
 
+    /* the page column (at :root in styles.css) */
     .data-columns-wrapper {
-        margin: auto;
-        max-width: 1338px;
+        box-sizing: border-box;
+        max-width: var(--page-column-max);
+        margin-inline: auto;
+        padding-inline: var(--page-column-gutter);
 
         .data-columns {
             display: flex;
-            padding: 0 24px;
             flex-direction: column;
             gap: 16px;
 
