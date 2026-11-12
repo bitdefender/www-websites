@@ -94,9 +94,11 @@ main .hero-dropdown .hero-dropdown-content > div {
   width: 100%;
 }
 
+/* the block is a card on the page column's content edges (the column at :root);
+   its copy keeps its own inset inside it */
 main .hero-dropdown-container .hero-dropdown-wrapper {
-  padding: 0;
-  max-width: 1300px;
+  padding: 0 var(--page-column-gutter);
+  max-width: var(--page-column-max);
   margin: auto;
 }
 
@@ -219,7 +221,6 @@ main .hero-dropdown .hero-dropdown-content {
 }
 
 main .hero-dropdown.new2024design {
-  max-width: 1200px;
   margin: auto;
 }
 
@@ -779,7 +780,6 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 
 .hero-dropdown-container .hero-dropdown.block.grey-background {
   width: 100%;
-  max-width: 1350px;
   border-bottom-left-radius: 20px;
 
   h3, strong {
