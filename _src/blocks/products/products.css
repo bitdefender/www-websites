@@ -1,5 +1,9 @@
+/* the cards sit on the page column (at :root) */
 .products-wrapper {
-  padding: 0 var(--body-padding);
+  box-sizing: border-box;
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
 }
 
 .products {
@@ -719,12 +723,6 @@
 }
 
 @media (width >= 992px) {
-  .products-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
-  }
-
   .products.compact, .products.plans {
     --max-columns: 3;
   }
@@ -837,12 +835,6 @@
 
   .product-card .img-adjacent-text{
     width: 74%;
-  }
-}
-
-@media (width >= 1600px) {
-  .products-wrapper {
-    max-width: var(--section-large-desktop-max-width);
   }
 }
 
