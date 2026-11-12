@@ -47,10 +47,10 @@
   text-decoration: underline;
 }
 
-/* the section runs full width (whatever another block's .we-container caps it at) */
+/* the section runs full width (whatever another block's .we-container caps it at), and
+   the section rhythm spaces it, not a margin */
 .new-prod-boxes-container.we-container {
   max-width: 100%;
-  margin-top: 15px;
 }
 
 /* the boxes sit on the page column (at :root), as the section's default content does:
