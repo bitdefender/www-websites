@@ -13,9 +13,11 @@
   margin-bottom: 20px;
 }
 
+/* the design system's page column, the same edges as the DS sections */
 .hero-aem-wrapper {
-  max-width: var(--section-desktop-max-width);
-  padding: 0 var(--section-desktop-padding);
+  box-sizing: border-box;
+  max-width: var(--ds-page-column-max-width);
+  padding: 0 var(--ds-page-column-padding);
   margin: 0 auto;
 }
 
@@ -1217,11 +1219,6 @@
   }
 }
 
-@media (max-width: 1399px) {
-    .hero-aem-wrapper{
-        padding: 0 var(--section-large-desktop-padding);
-    }
-}
 
 @media (max-width: 1200px) {
   .hero-aem-container.bf25 .hero-aem .hero-aem__desktop-image {

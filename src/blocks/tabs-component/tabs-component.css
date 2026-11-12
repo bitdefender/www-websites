@@ -1,3 +1,11 @@
+/* the design system's page column, the same edges as the DS sections */
+.tabs-component-wrapper {
+  box-sizing: border-box;
+  max-width: var(--ds-page-column-max-width);
+  margin-inline: auto;
+  padding-inline: var(--ds-page-column-padding);
+}
+
 .tabs-component-container .tabs-component {
   display: flex;
   flex-direction: column;
@@ -168,8 +176,8 @@
   width: 100%;
 }
 
-.tabs-component-container .left {
-  width: 80%;
+.tabs-component-container .left { /* phones: the full page column; narrower from 768px */
+  width: 100%;
 }
 
 .tabs-component-container .left img {
@@ -180,7 +188,7 @@
 }
 
 .tabs-component-container .right {
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

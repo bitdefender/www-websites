@@ -1,5 +1,9 @@
+/* the design system's page column, the same edges as the DS sections */
 .products-wrapper {
-  padding: 0 var(--body-padding);
+  box-sizing: border-box;
+  max-width: var(--ds-page-column-max-width);
+  padding: 0 var(--ds-page-column-padding);
+  margin: 0 auto;
 }
 
 .products {
@@ -719,12 +723,6 @@
 }
 
 @media (width >= 992px) {
-  .products-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
-  }
-
   .products.compact, .products.plans {
     --max-columns: 3;
   }
@@ -840,11 +838,6 @@
   }
 }
 
-@media (width >= 1600px) {
-  .products-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-  }
-}
 
 @media (width <= 480px) {
   .product-card a.button::after {
@@ -853,8 +846,8 @@
 }
 
 @media (width >= 310px) and (width <= 768px) {
-  .product-card {
-    width: 310px;
+  .product-card { /* one card per row: fill the page column */
+    width: 100%;
     margin: 1em auto;
   }
 
@@ -878,7 +871,7 @@
   .products.plans .product-card {
     margin: 0 auto;
     max-width: unset;
-    width: 310px;
+    width: 100%;
   }
 }
 
@@ -892,8 +885,9 @@
     justify-content: center;
   }
 
-  .products.compact .product-card, .products.plans .product-card {
+  .products.compact .product-card, .products.plans .product-card { /* wrap at 310px, grow to fill the column */
     max-width: unset;
-    width: 310px;
+    width: auto;
+    flex: 1 1 310px;
   }
 }

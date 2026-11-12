@@ -47,10 +47,17 @@
   text-decoration: underline;
 }
 
+/* the section itself is the column here, so its default content adds no second gutter */
+.new-prod-boxes-container.we-container > .default-content-wrapper {
+  padding-inline: 0;
+}
+
+/* the design system's page column, the same edges as the DS sections */
 .new-prod-boxes-container.we-container {
-  max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
+  box-sizing: border-box;
+  max-width: var(--ds-page-column-max-width);
+  padding-left: var(--ds-page-column-padding);
+  padding-right: var(--ds-page-column-padding);
   margin-top: 15px;
   margin-left: auto;
   margin-right: auto;
@@ -1251,7 +1258,7 @@
     column-gap: 16px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     justify-content: center;
-    min-width: 700px;
+    min-width: min(700px, 100%); /* the DS page column is 656px at 768-991 */
     max-width: 100%;
     width: fit-content;
 
@@ -1265,6 +1272,7 @@
     grid-template-rows: subgrid;
     grid-row: span 50;
     margin-top: 10px;
+    max-width: none; /* the grid sizes the boxes, so two-up still fills the page column */
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
@@ -1336,30 +1344,18 @@
   .new-prod-boxes-container.new-prod-boxes-container-v2.we-container .new-prod-boxes {
     --v2-boxes-max: 3;
   }
-
-  .new-prod-boxes-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .new-prod-boxes-container.we-container {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
 }
 
 @media (width < 767px) {
-  .new-prod-boxes-container .new-prod-boxes .prod_box {
+  .new-prod-boxes-container .new-prod-boxes .prod_box { /* fill the page column */
     width: 100%;
+    max-width: none;
   }
 }
 
 @media screen and (width <= 525px) {
   .new-prod-boxes-container .new-prod-boxes {
-    padding: var(--body-padding);
+    padding-block: var(--body-padding); /* the section carries the side gutter */
   }
 
   .new-prod-boxes-container .switchBox {

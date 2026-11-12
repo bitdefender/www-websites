@@ -536,3 +536,16 @@
     padding-right: 20px;
   }
 }
+
+/* Sit on the design system's page column, the same edges as the DS sections.
+   Scoped to the section so it also replaces the .section.wide gutter and cap. */
+main .section.awards-container {
+  padding-inline: 0;
+
+  > .awards-wrapper {
+    box-sizing: border-box;
+    max-width: var(--ds-page-column-max-width);
+    margin-inline: auto;
+    padding-inline: var(--ds-page-column-padding);
+  }
+}

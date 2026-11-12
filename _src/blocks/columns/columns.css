@@ -1,6 +1,9 @@
 /* stylelint-disable no-descending-specificity */
-.columns-wrapper {
-  padding: 0 var(--body-padding);
+.columns-wrapper { /* the design system's page column, the same edges as the DS sections */
+  box-sizing: border-box;
+  max-width: var(--ds-page-column-max-width);
+  padding: 0 var(--ds-page-column-padding);
+  margin: 0 auto;
 
   --background-badge: #1C7928;
   --blue-700: #006DFF;
@@ -1982,12 +1985,6 @@ main .creators-banner .signature {
   }
 
 
-  .columns-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
-  }
-
   .columns.highlight-text.black {
     right: 10%;
     top: 10%;
@@ -2318,12 +2315,6 @@ main .creators-banner .signature {
   }
 }
 
-@media (min-width: 1600px) { /* large desktop */
-  .columns-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-    padding: 0 var(--section-large-desktop-padding);
-  }
-}
 
 /* Benefits columns (icon, text, description) */
 .columns.benefits > .icon {
@@ -3875,10 +3866,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 .columns-container.gasa {
-  padding: 24px;
+  padding: 24px 0;
 
   .columns-wrapper {
-    padding: 0;
+    max-width: var(--ds-page-column-max-width);
+    padding: 0 var(--ds-page-column-padding);
 
     .columns {
       background: linear-gradient(178.61deg, #006DFF 20.53%, #0C3451 79.47%);
@@ -3911,8 +3903,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     padding: 47px 0;
 
     .columns-wrapper {
-      max-width: 1290px;
-
       .columns {
         background: linear-gradient(87.6deg, #006DFF 0%, #0C3451 100%);
         padding: 48px;
@@ -3957,11 +3947,11 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .columns-wrapper {
-    max-width: 1290px;
-    padding: 0;
+    max-width: var(--ds-page-column-max-width);
+    padding: 0 var(--ds-page-column-padding);
 
     .columns {
-      padding: 0 24px;
+      padding: 0;
       gap: 16px;
       display: flex;
       flex-direction: column;
@@ -4185,10 +4175,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 @media (max-width: 1399px) {
-  .columns-wrapper {
-    padding: 0 var(--section-large-desktop-padding);
-  }
-
   /* stylelint-disable-next-line selector-class-pattern */
   .v2_benefits .columns-wrapper {
     padding: var(--section-mobile-padding-vertical);
@@ -4347,7 +4333,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 @media (max-width: 767px) {
   .columns-wrapper {
-    padding: var(--body-padding) var(--body-padding) 0;
+    padding: var(--body-padding) var(--ds-page-column-padding) 0;
   }
 
   .columns-container-v2 {

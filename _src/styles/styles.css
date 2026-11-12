@@ -478,11 +478,12 @@ main .section.images-floated .default-content-wrapper p.button-container {
   width: 100%;
 }
 
-.default-content-wrapper {
+.default-content-wrapper { /* on the design system's page column, like the blocks */
+  box-sizing: border-box;
   width: 100%;
   margin: 0 auto;
-  max-width: var(--body-max-width);
-  padding: var(--body-padding);
+  max-width: var(--ds-page-column-max-width);
+  padding: var(--body-padding) var(--ds-page-column-padding);
   position: relative;
 }
 
@@ -966,8 +967,7 @@ main div.section:is(
   }
 
   .default-content-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding-vertical);
+    padding-block: 0;
     border-radius: 0;
   }
 
@@ -1169,11 +1169,6 @@ main .section.mb-0, .mb-0 {
   main div.section.wide :where(.store-section-content) { /* apply to authored content wrappers */
     max-width: calc(var(--section-large-desktop-max-width) - 2 * var(--section-large-desktop-padding));
     padding-top: 1px; /* hack to handle margin of child paragraphs */
-  }
-
-  .default-content-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-    padding: 0 var(--section-large-desktop-padding);
   }
 }
 
@@ -2152,51 +2147,51 @@ body > div.header-with-language-banner {
   }
 }
 
-/* The design system's page column (its ensembleCSS) for a block's own light-DOM
-   layout, on the same edges as the DS sections around it */
-.ds-page-column {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xs));
-  margin-inline: auto;
-  padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-xs));
+/* The design system's page column (its ensembleCSS: --grid-container-max-* and
+   --grid-padding-*), with its values copied here so the edges hold on pages that
+   don't load the design system tokens */
+:root {
+  --ds-page-column-max-width: 100%;
+  --ds-page-column-padding: 16px;
 }
 
 @media (width >= 576px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-sm));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-sm));
+  :root {
+    --ds-page-column-max-width: 540px;
+    --ds-page-column-padding: 24px;
   }
 }
 
 @media (width >= 768px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-md));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-md));
+  :root {
+    --ds-page-column-max-width: 720px;
+    --ds-page-column-padding: 32px;
   }
 }
 
 @media (width >= 992px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-lg));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-lg));
+  :root {
+    --ds-page-column-max-width: 960px;
+    --ds-page-column-padding: 40px;
   }
 }
 
 @media (width >= 1200px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xl));
-  }
+  :root { --ds-page-column-max-width: 1140px; }
 }
 
 @media (width >= 1400px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxl));
-  }
+  :root { --ds-page-column-max-width: 1280px; }
 }
 
 @media (width >= 1600px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxxl));
-  }
+  :root { --ds-page-column-max-width: 1372px; }
+}
+
+.ds-page-column {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--bd-ensemble-max-width, var(--ds-page-column-max-width));
+  margin-inline: auto;
+  padding-inline: var(--bd-ensemble-inline-padding, var(--ds-page-column-padding));
 }
