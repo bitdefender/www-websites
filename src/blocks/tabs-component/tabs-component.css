@@ -1,3 +1,11 @@
+/* The block sits on the page column (at :root). The trusted variant is a
+   band: its ground and tab bar run full width and its rows hold the column. */
+.tabs-component-container:not(.trusted) > .tabs-component-wrapper {
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
+}
+
 .tabs-component-container .tabs-component {
   display: flex;
   flex-direction: column;
@@ -42,7 +50,6 @@
 }
 
 .tabs-component-container .title-class {
-  max-width: 80%;
   margin: auto;
   text-align: center;
   margin-bottom: 27px;
@@ -50,7 +57,6 @@
 }
 
 .tabs-component-container .subtitle-class {
-  max-width: 80%;
   margin: auto;
   text-align: center;
   margin-bottom: 24px;
@@ -169,7 +175,7 @@
 }
 
 .tabs-component-container .left {
-  width: 80%;
+  width: 100%;
 }
 
 .tabs-component-container .left img {
@@ -180,7 +186,7 @@
 }
 
 .tabs-component-container .right {
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -299,13 +305,15 @@
 
         .buttons-container {
           gap: 0;
-          max-width: 1232px;
+          max-width: var(--page-column-max);
+          padding-inline: var(--page-column-gutter);
         }
       }
 
       .card-container {
         width: 100%;
-        max-width: 1232px;
+        max-width: var(--page-column-max);
+        padding-inline: var(--page-column-gutter);
         gap: 0;
 
         p {
@@ -322,12 +330,6 @@
             em {
               font-style: normal;
             }
-          }
-        }
-
-        @media (min-width: 992px) and (max-width: 1299px) {
-          .left {
-            padding-left: 50px;
           }
         }
       }
