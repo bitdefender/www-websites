@@ -120,8 +120,14 @@ var buildAccordion = (block) => {
 	return accordion;
 };
 async function decorate(block) {
-	wrapSectionInDsSection(block);
+	const bdSection = wrapSectionInDsSection(block);
 	const accordion = buildAccordion(block);
+	const wrapper = block.closest(".accordion-wrapper");
+	const holdsOnlyTheBand = bdSection && wrapper?.parentElement === bdSection && [...bdSection.children].every((child) => child === wrapper);
+	if (accordion.getAttribute("appearance") === "terms" && holdsOnlyTheBand) {
+		bdSection.setAttribute("without-padding-top", "");
+		bdSection.setAttribute("without-padding-bottom", "");
+	}
 	await load(accordion);
 	block.replaceChildren(accordion);
 	document.dispatchEvent(new CustomEvent("accordion-bg:loaded", { bubbles: true }));
