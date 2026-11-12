@@ -9,3 +9,9 @@
   --typography-heading-h4-letterSpacing: var(--typography-heading-h3-letterSpacing);
   /* stylelint-enable custom-property-pattern */
 }
+
+/* A single card is horizontal and spans both 598px grid columns: stretch the
+   gap so it fills the section width instead of stopping at 2 * 598 + gap. */
+.barchart bd-compare-section:has(> compare-card[layout="horizontal"]) {
+  --cs-gap: max(var(--spacing-32, 32px), calc(100% - 2 * 598px));
+}
