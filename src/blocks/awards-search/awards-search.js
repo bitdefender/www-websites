@@ -131,42 +131,63 @@ function createAwardsResultContainer(block) {
   block.appendChild(awardsResultsContainer);
 }
 
-function createFilterBySection(block, data) {
-  const filterByContent = document.createElement('div');
-  filterByContent.classList.add('accordion-item-content');
+/**
+ * The filter's bd-accordion-item, once the accordion block has built it and
+ * put it in the page. The accordion decorates on its own schedule, before or
+ * after awards.json arrives, so whatever needs the item waits for it here.
+ * @param {HTMLElement} block
+ * @returns {Promise<HTMLElement>}
+ */
+function whenFilterItem(block) {
+  const find = () => block.querySelector('.accordion bd-accordion-item');
+  return new Promise((resolve) => {
+    const item = find();
+    if (item) {
+      resolve(item);
+      return;
+    }
+    // the accordion block announces each accordion it puts in the page
+    const onLoaded = () => {
+      const found = find();
+      if (!found) return;
+      document.removeEventListener('accordion-bg:loaded', onLoaded);
+      resolve(found);
+    };
+    document.addEventListener('accordion-bg:loaded', onLoaded);
+  });
+}
 
+/**
+ * A checkbox per year in the awards, in the filter's accordion item. They go
+ * in once both the data and the item are there: written into the authored row
+ * instead, they were lost whenever the accordion had already read that row.
+ */
+async function createFilterBySection(block, data, filterItem) {
   const filterByYears = data.map((award) => award.Year);
   const filterByYearsUniqueValue = [...new Set(filterByYears)];
 
-  filterByYearsUniqueValue.forEach((year) => {
+  const labels = filterByYearsUniqueValue.map((year) => {
     const checkboxElement = document.createElement('input');
     checkboxElement.setAttribute('type', 'checkbox');
     checkboxElement.setAttribute('value', year);
+    checkboxElement.addEventListener('click', handleFilterByYearCheckbox.bind(null, block));
     const checkboxLabel = document.createElement('label');
     checkboxLabel.append(checkboxElement);
     checkboxLabel.append(year);
-    filterByContent.append(checkboxLabel);
+    return checkboxLabel;
   });
 
-  const filterWrapperSection = block.querySelector('.accordion > div');
-  if (!filterWrapperSection) {
-    return;
-  }
-
-  if (window.window.innerWidth >= 768) {
-    filterWrapperSection.classList.add('expanded');
-  }
-  filterWrapperSection.appendChild(filterByContent);
+  (await filterItem).append(...labels);
 }
 
-async function fetchAwardsData(block) {
+async function fetchAwardsData(block, filterItem) {
   const awardsLink = block.querySelector('a');
   const data = await fetch(awardsLink.href);
   const awards = await data.json();
   awardsData = [...awards.data];
   filteredAwards = [...awardsData];
-  createFilterBySection(block, awardsData);
   renderAwards(block, filteredAwards);
+  await createFilterBySection(block, awardsData, filterItem);
 }
 
 function handleTextSearch(searchTextBox, block) {
@@ -222,18 +243,11 @@ function moveAccordionUnderFilterSection(block) {
 export default async function decorate(block) {
   moveAccordionUnderFilterSection(block);
   createAwardsResultContainer(block);
-  fetchAwardsData(block);
+  const filterItem = whenFilterItem(block);
+  fetchAwardsData(block, filterItem);
   removeAwardsLinkFromDom(block);
 
-  // add event listener only after system design modifies the elements
-  window.addEventListener('accordion-bg:loaded', () => {
-    // the year filter is a control in the filter column, not a page section: it sits
-    // flush under the search box, so the accordion's band pads nothing
-    block.querySelector('bd-accordion')?.setAttribute('without-padding', '');
-
-    const yearInputs = block.querySelectorAll('.accordion input');
-    yearInputs.forEach((input) => {
-      input.addEventListener('click', handleFilterByYearCheckbox.bind(null, block));
-    });
-  });
+  // the year filter is a control in the filter column, not a page section: it sits
+  // flush under the search box, so the accordion's band pads nothing
+  filterItem.then((item) => item.closest('bd-accordion')?.setAttribute('without-padding', ''));
 }
