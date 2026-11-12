@@ -1,7 +1,7 @@
 /**
  * Unit tests for the accordion block. The fixture is three sections modelled
  * on /en-us/consumer/antivirus: the FAQ under its heading, a system
- * requirements accordion with no heading and no look of its own, and a terms
+ * requirements accordion with no heading and no look class, and a terms
  * of use accordion with a note after it. The design system modules are
  * replaced by an empty module, so these tests check the markup the block
  * builds, not the components' rendering.
@@ -79,12 +79,12 @@ describe('accordion block', () => {
     expect(list.querySelectorAll(':scope > bd-li > bd-p')).toHaveLength(2);
   });
 
-  it('keeps bd-accordion\'s own look where the author picked none', () => {
-    expect(requirements.hasAttribute('appearance')).toBe(false);
-    expect(requirements.hasAttribute('background')).toBe(false);
+  it('draws the FAQ look where the author picked none, as 3.x\'s bd-accordion-bg did', () => {
+    expect(requirements.getAttribute('appearance')).toBe('faq');
+    expect(requirements.getAttribute('background')).toBe('none');
     expect(titleOf(requirements)).toBeNull();
     requirements.querySelectorAll(':scope > bd-accordion-item').forEach((item) => {
-      expect(item.hasAttribute('background')).toBe(false);
+      expect(item.getAttribute('background')).toBe('tint');
       expect(titleOf(item).getAttribute('as')).toBe('h3');
     });
   });
