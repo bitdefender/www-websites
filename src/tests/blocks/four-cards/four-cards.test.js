@@ -61,6 +61,11 @@ describe('four-cards block', () => {
     expect(grid.querySelector(':scope > [slot="title"], :scope > [slot="description"]')).toBeNull();
   });
 
+  it('centres the section header, as the cards\' section title was', () => {
+    const header = block.closest('bd-section').querySelector('bd-section-header');
+    expect(header.getAttribute('layout')).toBe('centered');
+  });
+
   it('builds a card per row, its title an h3 under the section h2', () => {
     expect(cards).toHaveLength(3);
     const titles = cards.map((card) => card.querySelector(':scope > bd-h[slot="title"]'));
@@ -147,5 +152,15 @@ describe('four-cards block with a title row and section styles', () => {
       expect(card.getAttribute('background')).toBe('tint');
     });
     block.querySelectorAll('bd-button').forEach((button) => expect(button.getAttribute('shape')).toBe('rounded'));
+  });
+
+  it('lets Section Metadata pick another header layout', async () => {
+    const block = await renderFixture((html) => html.replace(/<\/div>\s*$/, `
+      <div class="section-metadata">
+        <div><div>Style</div><div>section-header-stacked</div></div>
+      </div>
+    </div>`));
+    const header = block.closest('bd-section').querySelector('bd-section-header');
+    expect(header.getAttribute('layout')).toBe('stacked');
   });
 });

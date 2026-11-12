@@ -93,7 +93,7 @@ var hasMedia = (row) => !!row?.querySelector("picture, img, [class*=\"icon-\"]")
 var isTitleRow = (row) => !!row?.querySelector(HEADINGS) && !hasMedia(row) && ![...row.querySelectorAll("p")].some((p) => p.textContent.trim());
 async function decorate(block) {
 	wrapSectionInDsSection(block);
-	const header = liftSectionHeader(block);
+	const header = liftSectionHeader(block, { defaultLayout: "centered" });
 	const section = block.closest(".section");
 	const { shape } = section?.dataset || {};
 	const centered = section?.classList.contains("centered");
