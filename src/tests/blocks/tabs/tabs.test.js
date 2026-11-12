@@ -113,7 +113,8 @@ describe('tabs block, Tab group mode', () => {
     expect(column.querySelector(':scope > bd-icon[slot="icon"]').getAttribute('name')).toBe('site-complete-protection');
 
     const accordion = macos.querySelector('.accordion-wrapper > .accordion > bd-accordion');
-    expect(accordion.hasAttribute('appearance')).toBe(false);
+    // no look class: the faq look, as 3.x's bd-accordion-bg drew it in a panel too
+    expect(accordion.getAttribute('appearance')).toBe('faq');
     expect(accordion.hasAttribute('without-padding')).toBe(false);
     expect(accordion.querySelector('bd-accordion-item').hasAttribute('open')).toBe(true);
 

@@ -130,8 +130,9 @@ const isTitleRow = (row) => !!row?.querySelector(HEADINGS)
 
 export default async function decorate(block) {
   wrapSectionInDsSection(block);
-  // the section's eyebrow, heading and lead, as bd-section-header
-  const header = liftSectionHeader(block);
+  // the section's eyebrow, heading and lead, as bd-section-header: centred, as
+  // the cards' section title always was, unless Section Metadata picks a layout
+  const header = liftSectionHeader(block, { defaultLayout: 'centered' });
 
   const section = block.closest('.section');
   const { shape } = section?.dataset || {};

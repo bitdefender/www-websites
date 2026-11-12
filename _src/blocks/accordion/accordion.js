@@ -15,17 +15,18 @@ var getSectionHeading = (block) => {
 	return heading?.textContent?.trim() ? heading : null;
 };
 /**
-* The look the author picked with a class on the block or its section: faq,
-* or terms in .terms-of-use or .system-requirements, whichever is nearest.
-* Without one the accordion keeps bd-accordion's own look, standard on its
-* container band.
+* The look the author picked with a class on the block or its section: terms
+* in .terms-of-use or .system-requirements, whichever is nearest, and faq
+* otherwise. faq is the look 3.x's bd-accordion-bg drew for every accordion
+* without a terms class (a centred title over items that are cards on the
+* brand wash), so an accordion with no look class, first-open among them,
+* keeps it.
 * @param {HTMLElement} block
-* @returns {'faq'|'terms'|null}
+* @returns {'faq'|'terms'}
 */
 var getAppearance = (block) => {
 	const looks = block.closest(".faq, .terms-of-use, .system-requirements");
-	if (!looks) return null;
-	return looks.classList.contains("faq") ? "faq" : "terms";
+	return !looks || looks.classList.contains("faq") ? "faq" : "terms";
 };
 /**
 * A heading in a slot: bd-accordion and bd-accordion-item set its size, the
@@ -68,7 +69,7 @@ var buildAccordion = (block) => {
 	if (defaultWrapper && sectionHeading) defaultWrapper.remove();
 	const appearance = getAppearance(block);
 	const accordion = document.createElement("bd-accordion");
-	if (appearance) accordion.setAttribute("appearance", appearance);
+	accordion.setAttribute("appearance", appearance);
 	if (appearance === "faq") accordion.setAttribute("background", "none");
 	const titleLevel = sectionHeading ? Number(sectionHeading.tagName[1]) : null;
 	const itemLevel = titleLevel ? Math.min(titleLevel + 1, 6) : 3;
