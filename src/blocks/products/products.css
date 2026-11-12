@@ -942,10 +942,10 @@
   line-height: 1.45;
 }
 
-/* solutions product titles: the same type as the new-prod-boxes titles (20px, 600, 1.25) */
+/* solutions product titles: the same type as the new-prod-boxes titles (the design system's h5, 600, 1.25) */
 .products-wrapper .products.solutions.block .product-card h3,
 .products-wrapper .products.solutions.block .product-card h3 :is(strong, b) {
-  font-size: 20px;
+  font-size: var(--ds-heading-h5-size);
   font-weight: var(--font-weight-bolder);
   line-height: 1.25;
 }
@@ -957,6 +957,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(310px, 100%), 1fr));
   row-gap: 0;
+  margin-bottom: -25px; /* the last row of cards' margin is not spacing: the section rhythm is */
 }
 
 .products-wrapper .products.solutions.block .product-card {

@@ -954,6 +954,11 @@ main .creators-banner .signature {
   overflow: hidden;
 }
 
+.columns-wrapper > div.grey-bck h3 { /* banner headline: the design system's h3 */
+  font-size: var(--ds-heading-h3-size);
+  line-height: 1.3;
+}
+
 .columns-wrapper > div.grey-bck h5 {
   font-size: var(--heading-font-size-m);
   line-height: var(--heading-font-size-l);
@@ -2119,6 +2124,10 @@ main .creators-banner .signature {
     gap: 30px;
     margin-bottom: 30px;
     width: 100%;
+  }
+
+  .columns-container .columns.benefits-cards.scam-protection > div:last-child {
+    margin-bottom: 0; /* the section rhythm spaces the block */
   }
 
   .columns-container .columns.benefits-cards > div > div {
@@ -3865,9 +3874,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
-.columns-container.gasa {
-  padding: 24px 0;
-
+.columns-container.gasa { /* vertical spacing: the section rhythm (styles.css) */
   .columns-wrapper {
     max-width: var(--ds-page-column-max-width);
     padding: 0 var(--ds-page-column-padding);
@@ -3881,7 +3888,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
         gap: 24px;
 
         h2 {
-          font-size: 32px;
+          font-size: var(--ds-heading-h3-size); /* banner headline: the design system's h3 */
           color: #fff;
           font-weight: 600;
           margin: 0;
@@ -3900,8 +3907,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   @media (min-width: 992px) {
-    padding: 47px 0;
-
     .columns-wrapper {
       .columns {
         background: linear-gradient(87.6deg, #006DFF 0%, #0C3451 100%);
@@ -3911,7 +3916,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
           gap: 100px;
 
           h2 {
-            font-size: 44px;
+            font-size: var(--ds-heading-h3-size);
           }
 
           > div:first-of-type {
@@ -3936,13 +3941,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .default-content-wrapper {
     h2 {
       color: #006DFF;
-      font-size: 32px;
+      font-size: var(--ds-heading-h2-size); /* section title: the design system's h2 */
       font-weight: 600;
-      margin-bottom: 0;
-    }
-
-    p {
-      font-size: 16px;
+      margin-bottom: var(--spacing-16, 16px); /* the lead sits spacing/16 under it (styles.css) */
     }
   }
 
@@ -4115,8 +4116,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
             h3 {
               margin: 0 0 var(--spacing-8, 8px);
-              /* stylelint-disable-next-line custom-property-pattern */
-              font-size: var(--typography-fontSize-xl, 1.25rem);
+              font-size: var(--ds-heading-h5-size); /* card title: the design system's h5 */
               line-height: 1.4;
               font-weight: var(--font-weight-bolder);
               color: var(--color-text-brand, #0059d6);
@@ -4132,14 +4132,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   @media (min-width: 992px){
-    padding: 47px 0;
-
-    .default-content-wrapper {
-      padding-bottom: 64px;
-
+    .default-content-wrapper { /* its distance to the cards is the section rhythm's part gap */
       h2 {
         max-width: 75%;
-        font-size: 44px;
+        font-size: var(--ds-heading-h2-size);
       }
 
       p {
@@ -4366,7 +4362,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 
 @media (max-width: 767px) {
   .columns-wrapper {
-    padding: var(--body-padding) var(--ds-page-column-padding) 0;
+    padding: 0 var(--ds-page-column-padding); /* the section rhythm spaces it */
   }
 
   .columns-container-v2 {

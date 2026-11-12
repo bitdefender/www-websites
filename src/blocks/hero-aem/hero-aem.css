@@ -21,12 +21,12 @@
   margin: 0 auto;
 }
 
-.hero-aem-container .hero-aem h1 {
+.hero-aem-container .hero-aem h1 { /* page title: the design system's h1 */
   color: #006DFF;
-  font-size: 23px;
+  font-size: var(--ds-heading-h1-size);
   font-weight: var(--font-weight-bolder); /* headings are 600 */
   margin-top: 10px;
-  line-height: 1.1;
+  line-height: 1.25;
   margin-bottom: 20px;
 }
 
@@ -856,7 +856,7 @@
     flex-wrap: wrap;
 
     h1 {
-      font-size: 48px;
+      font-size: var(--ds-heading-h1-size);
     }
   }
 

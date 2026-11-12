@@ -58,7 +58,6 @@
   max-width: var(--ds-page-column-max-width);
   padding-left: var(--ds-page-column-padding);
   padding-right: var(--ds-page-column-padding);
-  margin-top: 15px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -122,10 +121,10 @@
   font-weight: bold;
 }
 
-.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 {
+.new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box h4 { /* card title: the design system's h5 */
   font-weight: var(--font-weight-bolder); /* headings are 600 */
-  font-size: 20px;
-  line-height: 25px;
+  font-size: var(--ds-heading-h5-size);
+  line-height: 1.25;
   font-family: var(--body-font-family);
   margin-top: 0;
   margin-bottom: 4px;
@@ -330,12 +329,10 @@
 }
 
 .new-prod-boxes-container {
-  padding-bottom: 0;
   font-family: var(--body-font-family);
-  margin: clamp(10px, 25px, 15px) 0;
 
   .new-prod-boxes {
-    margin: 0 auto;
+    margin: 0 auto -1em; /* the last box's margin is not spacing: the section rhythm is */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1233,9 +1230,8 @@
 
   .new-prod-boxes-container .new-prod-boxes {
     flex-direction: row;
-    padding-bottom: 60px;
     align-items: initial;
-    margin: 0 auto;
+    margin: 0 auto -10px; /* the last row's 10px box margin, see above */
     display: grid;
     column-gap: 16px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

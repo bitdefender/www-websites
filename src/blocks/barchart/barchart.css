@@ -10,8 +10,25 @@
   /* stylelint-enable custom-property-pattern */
 }
 
+/* the design system's compare section sizes its title from the h3 token (h4 below 768px) and its
+   cards' titles from h3: put the title on the section-title size and the card titles (below) on
+   the card-title size, like the rest of the page */
+.barchart bd-compare-section {
+  /* stylelint-disable custom-property-pattern */
+  --typography-heading-h3-fontSize: var(--ds-heading-h2-size);
+  --typography-heading-h4-fontSize: var(--ds-heading-h2-size);
+  /* stylelint-enable custom-property-pattern */
+}
+
 /* A single card is horizontal and spans both 598px grid columns: stretch the
    gap so it fills the section width instead of stopping at 2 * 598 + gap. */
 .barchart bd-compare-section:has(> compare-card[layout="horizontal"]) {
   --cs-gap: max(var(--spacing-32, 32px), calc(100% - 2 * 598px));
 }
+
+/* stylelint-disable custom-property-pattern */
+.barchart compare-card {
+  --typography-heading-h3-fontSize: var(--ds-heading-h5-size);
+  --typography-heading-h4-fontSize: var(--ds-heading-h5-size);
+}
+/* stylelint-enable custom-property-pattern */

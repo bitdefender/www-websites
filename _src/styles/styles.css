@@ -266,15 +266,15 @@ h4, h5, h6 {
   scroll-margin: calc(var(--nav-height) + 1em);
 }
 
-h1 {
-  font-size: 34px;
-  line-height: 1.21;
+h1 { /* page title: the design system's h1 */
+  font-size: var(--ds-heading-h1-size);
+  line-height: 1.25;
   margin-bottom: 25px;
 }
 
-h2 {
-  font-size: var(--heading-font-size-l);
-  line-height: 1.2;
+h2 { /* section title: the design system's h2 */
+  font-size: var(--ds-heading-h2-size);
+  line-height: 1.25;
   margin-bottom: 15px;
 }
 
@@ -316,12 +316,12 @@ hr {
   margin-bottom: 24px!important;
 }
 
-.py-0 {
+.py-0:not(.section) { /* sections follow the design system's rhythm, not padding utilities */
   padding-top: 0!important;
   padding-bottom: 0!important;
 }
 
-.py-md-0 {
+.py-md-0:not(.section) {
   @media (max-width: 768px) {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -435,11 +435,56 @@ body.no-scroll {
   overflow: hidden;
 }
 
+/* The design system's section rhythm (bd-section) for authored sections: a section pads
+   --ds-section-padding (spacing/24, spacing/32 from 768px) and its parts sit two paddings apart.
+   A section holding only a default content wrapper is a section heading authored on its own, and
+   this formula puts it exactly where a bd-section header would sit: its padding plus the next
+   section's equals the header-to-content gap. Padding utility classes no longer touch sections. */
+:root {
+  --ds-section-padding: var(--spacing-24, 24px);
+}
+
+@media (width >= 768px) {
+  :root {
+    --ds-section-padding: var(--spacing-32, 32px);
+  }
+}
+
 main .section {
   width: 100%;
   position: relative;
-  padding: var(--section-mobile-padding-vertical) 0;
+  padding: var(--ds-section-padding) 0;
   overflow: hidden;
+}
+
+/* a .wide section's parts are the pieces of one card (rounded top and bottom), so they join */
+main .section:not(.wide) > :not(:last-child, .default-content-wrapper:not(:has(*))),
+main .section:not(.wide) > .store-section-context > :not(:last-child, .default-content-wrapper:not(:has(*))) {
+  margin-bottom: calc(var(--ds-section-padding) * 2);
+}
+
+main .section:last-child { /* as bd-section: the last section pads twice before the footer */
+  padding-bottom: calc(var(--ds-section-padding) * 2);
+}
+
+/* full-bleed bands (the news bar, the terms of use) pad inside their own background: the section
+   adds none, so they meet the header and the footer, and their neighbours' padding spaces them */
+main .section:is(.news-bar-container, .accordion-container) {
+  padding-block: 0;
+}
+
+/* a part is only as tall as its content: no edge margins from authored paragraphs, and an empty
+   default content wrapper (left over from authoring) is not a part */
+main .section .default-content-wrapper > :first-child {
+  margin-top: 0;
+}
+
+main .section .default-content-wrapper > :last-child {
+  margin-bottom: 0;
+}
+
+main .section > .default-content-wrapper:not(:has(*)) {
+  display: none;
 }
 
 /* A section on the design system's rhythm: the bd-section inside pads it and
@@ -486,8 +531,27 @@ main .section.images-floated .default-content-wrapper p.button-container {
   width: 100%;
   margin: 0 auto;
   max-width: var(--ds-page-column-max-width);
-  padding: var(--body-padding) var(--ds-page-column-padding);
+  padding: 0 var(--ds-page-column-padding); /* the section rhythm spaces it, not its own padding */
   position: relative;
+}
+
+/* section lead (the paragraph right under a section title): the design system's section header
+   lead, body regular (16px, 150%), body large (18px, 145%) from 992px, spacing/16 under the title */
+main .default-content-wrapper > h2:has(+ p) {
+  margin-bottom: var(--spacing-16, 16px);
+}
+
+main .default-content-wrapper > h2 + p {
+  margin-top: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (width >= 992px) {
+  main .default-content-wrapper > h2 + p {
+    font-size: 1.125rem;
+    line-height: 1.45;
+  }
 }
 
 /* bd-section-header sets its own measure and gutters, as the blocks under it do */
@@ -543,11 +607,11 @@ main .section.no-padding-top-bottom {
 
 .products-container h2 {
   font-weight: var(--font-weight-bolder);
-  font-size: var(--heading-font-size-xl);
+  font-size: var(--ds-heading-h2-size);
 }
 
 main .section.wide h2 {
-  font-size: var(--heading-font-size-l);
+  font-size: var(--ds-heading-h2-size);
   font-weight: var(--font-weight-bolder);
 }
 
@@ -950,7 +1014,7 @@ main div.section:is(
 
 @media screen and (min-width: 992px) { /* desktop */
   main .section.wide h2 {
-    font-size: var(--heading-font-size-xl);
+    font-size: var(--ds-heading-h2-size);
     font-weight: var(--font-weight-bolder);
   }
 
@@ -960,14 +1024,6 @@ main div.section:is(
     padding-top: 1px; /* hack to handle margin of child paragraphs */
   }
 
-  main .section {
-    padding: var(--section-desktop-padding-vertical) 0;
-  }
-
-  main .section.no-vertical-padding {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
 
   .default-content-wrapper {
     padding-block: 0;
@@ -1078,15 +1134,7 @@ main .section.migration h2 {
   }
 }
 
-main .section.py-1 {
-  padding: 0;
-}
-
-main .section.pt-0 {
-  padding-top: 0;
-}
-
-main .section.pb-0, .pb-0 {
+.pb-0:not(.section) {
   padding-bottom: 0!important;
 }
 
@@ -1098,43 +1146,19 @@ main .section.mb-0, .mb-0 {
   margin-bottom: 0!important;
 }
 
-@media (min-width: 1400px) {
-  main .section {
-    padding: 60px 0;
-  }
-
-  main .section.py-1 {
-    padding: 1em 0;
-  }
-
-  main .section.pt-0 {
-    padding-top: 0;
-  }
-
-  main .section.less-padding {
-    padding: 1em 0;
-  }
-
-}
 
 @media (min-width: 596px) {
-  h1 { font-size: 38px }
   h3 { font-size: 22px }
 }
 
 @media (min-width: 768px) {
-  h1 { font-size: 42px }
-  h2 { font-size: 34px; }
   h3 { font-size: 24px; }
   h4 { font-size: var(--heading-font-size-s) }
   h5 { font-size: var(--heading-font-size-xs) }
 }
 
 @media (min-width: 992px) {
-  h1 { font-size: var(--heading-font-size-xxl) }
-
   h2 {
-    font-size: var(--heading-font-size-xl);
     margin-bottom: 22px;
   }
 
@@ -1157,14 +1181,12 @@ main .section.mb-0, .mb-0 {
 }
 
 @media (min-width: 1400px) {
-  h2 { font-size: var(--heading-font-size-xl) }
   h3 { font-size: var(--heading-font-size-l) }
   h4 { font-size: var(--heading-font-size-m) }
 }
 
 @media (min-width: 1600px) { /* large desktop */
   h1 {
-    font-size: 56px;
     letter-spacing: normal;
   }
 
@@ -2136,7 +2158,7 @@ body > div.header-with-language-banner {
 
 @media (max-width: 500px) {
   main .section.wide h2 {
-    font-size: var(--heading-font-size-l);
+    font-size: var(--ds-heading-h2-size);
   }
 
   main .section.blue a.button:any-link {
@@ -2189,6 +2211,17 @@ body > div.header-with-language-banner {
 
 @media (width >= 1600px) {
   :root { --ds-page-column-max-width: 1372px; }
+}
+
+/* The design system's type scale (its --typography-heading-hN-fontSize tokens), with its values
+   copied here so pages without the DS tokens get the same sizes; fluid from phone to desktop.
+   Roles: h1 page title, h2 section title, h3 banner headline, h4 panel title, h5 card title */
+:root {
+  --ds-heading-h1-size: clamp(1.875rem, calc(1.33929rem + 2.6786vw), 3rem);
+  --ds-heading-h2-size: clamp(1.6875rem, calc(1.41964rem + 1.3393vw), 2.25rem);
+  --ds-heading-h3-size: clamp(1.5rem, calc(1.2619rem + 1.1905vw), 2rem);
+  --ds-heading-h4-size: clamp(1.3125rem, calc(1.22321rem + 0.4464vw), 1.5rem);
+  --ds-heading-h5-size: clamp(1.125rem, calc(1.06548rem + 0.2976vw), 1.25rem);
 }
 
 .ds-page-column {
