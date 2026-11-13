@@ -379,10 +379,11 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
       }
     }
 
+    /* centred with insets + auto margins: Safari ignores justify-self on an abspos box */
     .slide .quote-image {
       top: -80px;
-      justify-self: center;
-      right: unset;
+      inset-inline: 0;
+      margin-inline: auto;
       width: 150px;
       height: 150px;
     }    
