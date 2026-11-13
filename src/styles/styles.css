@@ -536,13 +536,15 @@ main .section {
   overflow: hidden;
 }
 
-/* a .wide section's parts are the pieces of one card (rounded top and bottom), so they join */
-main .section:not(.wide) > :not(:last-child, .default-content-wrapper:not(:has(*))),
-main .section:not(.wide) > .store-section-context > :not(:last-child, .default-content-wrapper:not(:has(*))) {
+/* a .wide section's parts are the pieces of one card (rounded top and bottom), so they join.
+   Exception pages (the trusted-new template) keep their own spacing: :where() leaves them out
+   of this rule and the rhythm rules below without changing the rules' specificity. */
+:where(body:not(.trusted-new)) main .section:not(.wide) > :not(:last-child, .default-content-wrapper:not(:has(*))),
+:where(body:not(.trusted-new)) main .section:not(.wide) > .store-section-context > :not(:last-child, .default-content-wrapper:not(:has(*))) {
   margin-bottom: calc(var(--page-section-padding) * 2);
 }
 
-main .section:last-child { /* as bd-section: the last section pads twice before the footer */
+:where(body:not(.trusted-new)) main .section:last-child { /* as bd-section: the last section pads twice before the footer */
   padding-bottom: calc(var(--page-section-padding) * 2);
 }
 
@@ -556,11 +558,11 @@ main .section.news-bar-container {
 
 /* a part is only as tall as its content: no edge margins from authored paragraphs, and an empty
    default content wrapper (left over from authoring) is not a part */
-main .section .default-content-wrapper > :first-child {
+:where(body:not(.trusted-new)) main .section .default-content-wrapper > :first-child {
   margin-top: 0;
 }
 
-main .section .default-content-wrapper > :last-child {
+:where(body:not(.trusted-new)) main .section .default-content-wrapper > :last-child {
   margin-bottom: 0;
 }
 

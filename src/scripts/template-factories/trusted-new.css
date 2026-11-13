@@ -346,12 +346,87 @@ hr {
   font-family: var(--body-font-family);
 }
 
+
+.trusted-new main > .section:empty {
+  display: none;
+}
+
+/* An exception page: trusted keeps the site's section spacing and type from before the design
+   system rhythm (styles.css leaves this template out of its rhythm rules); only its widths
+   follow the page column. Sections pad 32px, 48px from 992px, 60px from 1400px; pt-0, pb-0
+   and py-0 take that padding off (:where() keeps pt-0 below the template's own paddings). */
 .trusted-new main > .section {
   box-sizing: border-box;
 }
 
-.trusted-new main > .section:empty {
-  display: none;
+/* :where() keeps these at main .section's specificity, under any section's own padding */
+.trusted-new main > :where(.section) {
+  padding-block: 32px;
+}
+
+@media (width >= 992px) {
+  .trusted-new main > :where(.section) {
+    padding-block: 48px;
+  }
+}
+
+@media (width >= 1400px) {
+  .trusted-new main > :where(.section) {
+    padding-block: 60px;
+  }
+}
+
+.trusted-new main > :where(.section.pt-0) {
+  padding-top: 0;
+}
+
+.trusted-new main > :where(.section.py-0) {
+  padding-top: 0 !important;
+}
+
+.trusted-new main > :where(.section.pb-0, .section.py-0) {
+  padding-bottom: 0 !important;
+}
+
+/* below desktop the parts keep their 20px inset above and below (above, for columns on mobile) */
+@media (width < 992px) {
+  .trusted-new main .default-content-wrapper {
+    padding-block: 20px;
+  }
+}
+
+@media (width < 768px) {
+  .trusted-new main .columns-wrapper {
+    padding-top: 20px;
+  }
+}
+
+/* headings keep the site's weights (500, authored bold in them stays bold) and h2's line height */
+:where(.trusted-new) :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: var(--font-weight-bold);
+}
+
+:where(.trusted-new) h2 {
+  line-height: 1.2;
+}
+
+:where(.trusted-new) :is(h1, h2, h3, h4, h5, h6) :is(b, strong) {
+  font-weight: var(--font-weight-boldest);
+}
+
+/* a block that wraps itself in the design system's bd-section (the FAQ) adds no padding of its own */
+.trusted-new main .section > bd-section {
+  padding-block: 0;
+}
+
+.trusted-new .tabs-component-container .title-class {
+  font: normal normal bold 32px/37px var(--body-font-family);
+}
+
+@media (width >= 992px) {
+  .trusted-new .columns-container .columns.benefits-cards.scam-protection > div:last-child {
+    margin-bottom: 30px;
+  }
 }
 
 /* the page column (at :root in styles.css) */
