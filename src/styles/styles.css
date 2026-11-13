@@ -350,6 +350,7 @@ h4, h5, h6 {
   font-family: var(--heading-font-family);
   font-weight: var(--font-weight-bolder); /* headings are 600 at every size */
   line-height: 1.25;
+  text-wrap: balance; /* lines of even length: no word left alone on the last line */
   scroll-margin: calc(var(--nav-height) + 1em);
 }
 
@@ -557,8 +558,10 @@ main .section.news-bar-container {
 }
 
 /* a part is only as tall as its content: no edge margins from authored paragraphs, and an empty
-   default content wrapper (left over from authoring) is not a part */
-:where(body:not(.trusted-new)) main .section .default-content-wrapper > :first-child {
+   default content wrapper (left over from authoring) is not a part. Except a part that follows
+   another in a wide section: the parts join into one panel, so its top margin is what spaces it
+   from the part above (a store badge under a product card). */
+:where(body:not(.trusted-new)) main .section .default-content-wrapper:where(:not(.section.wide > * + *, .section.wide > .store-section-context > * + *)) > :first-child {
   margin-top: 0;
 }
 
@@ -636,12 +639,18 @@ main .default-content-wrapper > h2:has(+ p) {
 
 main .default-content-wrapper > h2 + p {
   margin-top: 0;
+}
+
+/* every paragraph of the lead, not only the first, so they share one size */
+/* stylelint-disable-next-line no-descending-specificity */
+main .default-content-wrapper > h2 ~ p:where(:not(.button-container)) {
   font-size: 1rem;
   line-height: 1.5;
 }
 
 @media (width >= 992px) {
-  main .default-content-wrapper > h2 + p {
+  /* stylelint-disable-next-line no-descending-specificity */
+  main .default-content-wrapper > h2 ~ p:where(:not(.button-container)) {
     font-size: 1.125rem;
     line-height: 1.45;
   }
@@ -1551,6 +1560,7 @@ p a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.
   width: 100%;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .red_logo_svg p {
   color: transparent;
   background: url('../../_src/icons/b-logo-red.svg') no-repeat center transparent;
