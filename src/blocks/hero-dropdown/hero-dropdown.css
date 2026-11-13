@@ -887,6 +887,15 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
   a.button.modal {
     padding: 10px 26px 8px 30px;
   }
+
+  /* on mobile each button runs the text column's full width */
+  @media (width < 767px) {
+    a.button {
+      box-sizing: border-box;
+      width: 100%;
+      margin-right: 0;
+    }
+  }
 }
 
 @media(min-width: 767px) { /* tablet */
