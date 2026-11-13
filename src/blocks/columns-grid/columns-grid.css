@@ -2,9 +2,11 @@
 .columns-grid-container {
     padding: 0;
 
+    /* below 767 a band as wide as the page, its content padded onto the page
+       column (at :root in styles.css); from 767 a panel standing on the
+       column's content edges */
     .columns-grid-wrapper {
         display: flex;
-        max-width: 1290px;
         margin: auto;
         background: #0b1f41;
 
@@ -17,7 +19,7 @@
             min-width: 100%;
             margin: auto;
             gap: var(--gap);
-            padding: 24px;
+            padding: 24px var(--page-column-inset);
 
             > div {
                 max-width: 874px;
@@ -257,6 +259,7 @@
 
     @media (min-width: 767px) {
         .columns-grid-wrapper {
+            max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
             border-radius: 20px;
 
             .columns-grid {

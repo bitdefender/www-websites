@@ -1,7 +1,6 @@
 import { fullWidthOnPhone, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/stat-tiles/stat-tiles.js
-var TABLET = "(min-width: 768px)";
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
 /** A value cell: the figure, and its spoken form from an <em> when there is one. */
 var readValue = (cell) => {
@@ -25,19 +24,19 @@ var buildLead = (row) => {
 	const link = copyCell?.querySelector("a");
 	[...copyCell?.querySelectorAll("p") || []].filter((p) => text(p) && !p.contains(link)).forEach((p) => {
 		const paragraph = document.createElement("bd-p");
-		paragraph.setAttribute("variant", "large");
+		paragraph.setAttribute("appearance", "large");
 		paragraph.textContent = text(p);
 		lead.append(paragraph);
 	});
 	if (copyCell && !copyCell.querySelector("p") && text(copyCell)) {
 		const paragraph = document.createElement("bd-p");
-		paragraph.setAttribute("variant", "large");
+		paragraph.setAttribute("appearance", "large");
 		paragraph.textContent = text(copyCell);
 		lead.append(paragraph);
 	}
 	if (link) {
-		const button = document.createElement("bd-button-link");
-		button.setAttribute("variant", "primary");
+		const button = document.createElement("bd-button");
+		button.setAttribute("appearance", "primary");
 		button.setAttribute("href", link.getAttribute("href") || "");
 		if (link.target) button.setAttribute("target", link.target);
 		button.textContent = text(link);
@@ -46,12 +45,19 @@ var buildLead = (row) => {
 	}
 	return lead;
 };
+/** A tile's words: a span in one of bd-stat's slots, which sets their type and ink. */
+var slotted = (slot, copy) => {
+	const span = document.createElement("span");
+	span.slot = slot;
+	span.textContent = copy;
+	return span;
+};
 var buildTile = (row) => {
 	const [valueCell, captionCell] = row.children;
 	const { value, label } = readValue(valueCell);
-	const tile = document.createElement("bd-stat-tile");
-	tile.setAttribute("value", value);
-	if (text(captionCell)) tile.setAttribute("caption", text(captionCell));
+	const tile = document.createElement("bd-stat");
+	tile.append(slotted("value", value));
+	if (text(captionCell)) tile.append(slotted("caption", text(captionCell)));
 	if (label) tile.setAttribute("label", label);
 	return tile;
 };
@@ -85,10 +91,8 @@ async function decorate(block) {
 		"2",
 		"2"
 	]);
-	const tablet = window.matchMedia?.(TABLET);
-	const setGap = () => tiles.setAttribute("gap", !tablet || tablet.matches ? "md" : "sm");
-	setGap();
-	tablet?.addEventListener("change", setGap);
+	tiles.setAttribute("gap", "sm");
+	tiles.setAttribute("gap-md", "md");
 	tiles.append(...rows.map(buildTile));
 	if (leadRow) layout.append(buildLead(leadRow));
 	layout.append(tiles);

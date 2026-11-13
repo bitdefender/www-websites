@@ -1,6 +1,11 @@
 /* stylelint-disable no-descending-specificity */
+
+/* the page column (at :root in styles.css), the same edges as the DS sections */
 .columns-wrapper {
-  padding: 0 var(--body-padding);
+  box-sizing: border-box;
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
 
   --background-badge: #1C7928;
   --blue-700: #006DFF;
@@ -554,18 +559,19 @@ main .creators-banner .signature {
 
 .columns-container.we-container {
   max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
   margin-top: 15px;
   margin-left: auto;
   margin-right: auto;
 }
 
+/* over a big-image section: a band the page's full width that pads its text
+   onto the page column, then (from 767) a card whose outer edge stands on it */
 .columns.highlight-text.black {
   background-color: var(--black-color);
-  padding: 25px 2pc 20px 30px;
+  padding: 25px var(--page-column-inset) 20px;
   text-align: left;
   position: absolute;
+  left: 0;
   width: 100%;
 }
 
@@ -951,14 +957,48 @@ main .creators-banner .signature {
   overflow: hidden;
 }
 
+.columns-wrapper > div.grey-bck h3 { /* banner headline: the design system's h3 */
+  font-size: var(--ds-heading-h3-size);
+  line-height: 1.3;
+}
+
 .columns-wrapper > div.grey-bck h5 {
   font-size: var(--heading-font-size-m);
   line-height: var(--heading-font-size-l);
 }
 
-.columns-wrapper > div.grey-bck div.columns-text-col {
-  padding-left: 4em;
-  padding-right: 1em;
+.columns-wrapper > div.grey-bck div.columns-text-col { /* the same inset as the gasa banner card */
+  padding: var(--spacing-48, 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  > hr { /* its auto inline margins would shrink it to nothing in the flex column */
+    align-self: stretch;
+    margin-inline: 0;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* the card's halves meet edge to edge (no column gap to overflow the card) and are as tall as
+   the card, so the image covers its half */
+.columns-wrapper > div.grey-bck > div:has(> .columns-img-col) {
+  gap: 0;
+  align-items: stretch;
+}
+
+.columns-wrapper > div.grey-bck .columns-img-col :is(picture, img) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .section.baby-blue-bck .columns-wrapper {
@@ -967,6 +1007,14 @@ main .creators-banner .signature {
 
 .section.grey-bck .columns-wrapper {
   background-color: #F5F5F7;
+}
+
+/* A section that paints the wrapper (grey-bck and baby-blue-bck above, and
+   light-sky-blue from styles.css under icon-corners) makes it a panel: the
+   panel stands on the page column's content edges and keeps the gutter as its
+   inset, as a wide section's panels do. */
+.columns-container:is(.grey-bck, .baby-blue-bck, .icon-corners) > .columns-wrapper {
+  max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
 }
 
 .section.radius-corners .columns-wrapper {
@@ -1682,7 +1730,7 @@ main .creators-banner .signature {
 }
 
 .narrow-section .columns-wrapper {
-  max-width: 1000px;
+  max-width: min(1000px, var(--page-column-max));
 }
 
 .columns-container.faded p{
@@ -1808,13 +1856,15 @@ main .creators-banner .signature {
 
   .columns.highlight-text.black {
     width: 520px;
-    right: 2.5%;
+    left: auto;
+    right: var(--page-column-inset);
     top: 15%;
+    padding-inline: 30px 2pc;
     border-radius: 5px;
   }
 
   .columns.highlight-text.black.imageleft {
-    left: 2.5%;
+    left: var(--page-column-inset);
   }
 
   .percent-table .columns table tr td:first-of-type {
@@ -1946,12 +1996,6 @@ main .creators-banner .signature {
 }
 
 @media (min-width: 992px) { /* desktop */
-  .columns-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-
   .columns-container.smaller-container .columns-wrapper {
     max-width: var(--section-desktop-smaller-max-width);
     padding: 0 var(--section-desktop-padding);
@@ -1981,20 +2025,8 @@ main .creators-banner .signature {
     order: unset;
   }
 
-
-  .columns-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
-  }
-
   .columns.highlight-text.black {
-    right: 10%;
     top: 10%;
-  }
-
-  .columns.highlight-text.black.imageleft {
-    left: 10%;
   }
 
   .section.subtitle-blue h2 {
@@ -2122,6 +2154,10 @@ main .creators-banner .signature {
     gap: 30px;
     margin-bottom: 30px;
     width: 100%;
+  }
+
+  .columns-container .columns.benefits-cards.scam-protection > div:last-child {
+    margin-bottom: 0; /* the section rhythm spaces the block */
   }
 
   .columns-container .columns.benefits-cards > div > div {
@@ -2303,25 +2339,12 @@ main .creators-banner .signature {
 }
 
 @media (min-width: 1200px) {
-  .columns-container.we-container {
-    max-width: 1350px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
   .columns.awards > div > div {
     flex: 1;
   }
 
   .percent-table .columns table tr td:first-of-type {
     padding-right: 1.5em;
-  }
-}
-
-@media (min-width: 1600px) { /* large desktop */
-  .columns-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-    padding: 0 var(--section-large-desktop-padding);
   }
 }
 
@@ -2614,6 +2637,13 @@ main .creators-banner .signature {
       display: flex;
       overflow-x: auto;
       white-space: nowrap;
+
+      /* below 992 the scroller runs full width: its first card starts on the
+         page column and the rest scroll past it to the page's edge */
+      @media (width < 992px) {
+        max-width: none;
+        padding-inline: var(--page-column-inset);
+      }
 
       /* Firefox */
       scrollbar-width: none;
@@ -2970,6 +3000,7 @@ main .creators-banner .signature {
     padding: 28px 16px;
     background-color: #0853C5;
     color: #fff;
+    border-radius: 12px;
 
     .columns-title-col {
       display: flex;
@@ -3010,7 +3041,6 @@ main .creators-banner .signature {
     }
 
     @media (width >= 767px) {
-      max-width: 1290px;
       margin: auto;
       padding: 36px 64px;
       border-radius: 20px;
@@ -3874,11 +3904,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
-.columns-container.gasa {
-  padding: 24px;
-
+.columns-container.gasa { /* vertical spacing: the section rhythm (styles.css) */
   .columns-wrapper {
-    padding: 0;
+    padding-block: 0;
 
     .columns {
       background: linear-gradient(178.61deg, #006DFF 20.53%, #0C3451 79.47%);
@@ -3889,9 +3917,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
         gap: 24px;
 
         h2 {
-          font-size: 32px;
+          font-size: var(--ds-heading-h3-size); /* banner headline: the design system's h3 */
           color: #fff;
-          font-weight: 400;
+          font-weight: 600;
           margin: 0;
         }
 
@@ -3908,11 +3936,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   @media (min-width: 992px) {
-    padding: 47px 0;
-
     .columns-wrapper {
-      max-width: 1290px;
-
       .columns {
         background: linear-gradient(87.6deg, #006DFF 0%, #0C3451 100%);
         padding: 48px;
@@ -3921,7 +3945,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
           gap: 100px;
 
           h2 {
-            font-size: 44px;
+            font-size: var(--ds-heading-h3-size);
           }
 
           > div:first-of-type {
@@ -3933,11 +3957,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
-.columns-container.gasa-v2 {
-  padding-left: var(--section-mobile-padding);
-  padding-right: var(--section-mobile-padding);
-}
-
 .columns-container.responsible-ai {
   * {
     font-family: var(--body-font-family);
@@ -3946,22 +3965,17 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   .default-content-wrapper {
     h2 {
       color: #006DFF;
-      font-size: 32px;
-      font-weight: 400;
-      margin-bottom: 0;
-    }
-
-    p {
-      font-size: 16px;
+      font-size: var(--ds-heading-h2-size); /* section title: the design system's h2 */
+      font-weight: 600;
+      margin-bottom: var(--spacing-16, 16px); /* the lead sits spacing/16 under it (styles.css) */
     }
   }
 
   .columns-wrapper {
-    max-width: 1290px;
-    padding: 0;
+    padding-block: 0;
 
     .columns {
-      padding: 0 24px;
+      padding: 0;
       gap: 16px;
       display: flex;
       flex-direction: column;
@@ -4075,32 +4089,64 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     }
   }
 
+  /* Figma "Card item" (Solutions-Refresh): surface/info, radius/2xl, spacing/32, no border;
+     icon 48px + spacing/8, title font-size/xl 140% text/brand + spacing/8 (600, like all headings),
+     body/regular text/primary; cards sit grid/gutter apart. Fallbacks for pages without DS tokens */
   &.variant-b {
     .columns-wrapper {
       .columns {
         > div {
-          gap: 16px;
-  
-          > div, .card {
-            padding: 40px;
-            padding-top: 80px;
-            border: 2px solid #2E6BF6;
-            background-color: #f9fcff;
-            color: #000;
+          gap: var(--grid-gutter-xs, 16px);
 
-            h3 {
-              color: #2E6BF6;
-              margin-top: 60px;
-            }
+          @media (min-width: 992px) {
+            gap: var(--grid-gutter-md, 32px);
+          }
+
+          > div, .card {
+            justify-content: flex-start;
+            text-align: start; /* the section is .centered; the cards are not */
+            padding: var(--spacing-32, 32px);
+            border: 0;
+            border-radius: var(--card-radius, 16px);
+            background-color: var(--color-surface-info, #f0f7ff);
+            color: var(--color-text-primary, #151719);
 
             p {
-              color: #000;
+              /* stylelint-disable-next-line custom-property-pattern */
+              font-size: var(--typography-fontSize-base, 1rem);
+              line-height: 1.5;
+              color: var(--color-text-primary, #151719);
+            }
+
+            p:has(> .icon) {
+              margin-bottom: var(--spacing-8, 8px);
+              line-height: 0;
+            }
+
+            .icon {
+              display: block;
+              width: var(--dimension-48, 48px);
+              height: var(--dimension-48, 48px);
+              margin: 0;
             }
 
             svg {
               position: relative;
-              width: 65px;
-              height: 75px;
+              top: auto;
+              width: 100%;
+              height: 100%;
+            }
+
+            h3 {
+              margin: 0 0 var(--spacing-8, 8px);
+              font-size: var(--ds-heading-h5-size); /* card title: the design system's h5 */
+              line-height: 1.4;
+              font-weight: var(--font-weight-bolder);
+              color: var(--color-text-brand, #0059d6);
+
+              strong {
+                font-weight: inherit;
+              }
             }
           }
         }
@@ -4109,14 +4155,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   @media (min-width: 992px){
-    padding: 47px 0;
-
-    .default-content-wrapper {
-      padding-bottom: 64px;
-
+    .default-content-wrapper { /* its distance to the cards is the section rhythm's part gap */
       h2 {
         max-width: 75%;
-        font-size: 44px;
+        font-size: var(--ds-heading-h2-size);
       }
 
       p {
@@ -4127,7 +4169,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     .columns-wrapper {
       .columns {
         gap: 32px;
-        padding: 0;
 
         > div {
           gap: 32px;
@@ -4157,15 +4198,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
-.columns-container.responsible-ai-v2 {
-  .columns-wrapper {
-    .columns {
-      padding-left: var(--section-mobile-padding);
-      padding-right: var(--section-mobile-padding);
-    }
-  }
-}
-
 .columns-container.columns-container-v2 .columns > div:last-child {
   margin-bottom: 0;
 }
@@ -4185,13 +4217,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 @media (max-width: 1399px) {
-  .columns-wrapper {
-    padding: 0 var(--section-large-desktop-padding);
-  }
-
   /* stylelint-disable-next-line selector-class-pattern */
   .v2_benefits .columns-wrapper {
-    padding: var(--section-mobile-padding-vertical);
+    padding-block: var(--section-mobile-padding-vertical);
   }
 
   .columns.video-presentation .button-container {
@@ -4292,7 +4320,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .columns-wrapper > div.grey-bck div.columns-text-col {
-    padding: 2em;
+    padding: var(--spacing-24, 24px);
   }
 }
 
@@ -4315,7 +4343,7 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   .columns.screenshots > div > .columns-img-col {
-    flex: 0 0 230px;
+    flex: 0 1 230px;
   }
 
   .columns-container.icon-corners {
@@ -4333,28 +4361,10 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
       height: 300px;
     }
   }
-
-  .columns-container:is(.gasa-v2, .responsible-ai-v2) .columns-wrapper {
-    max-width: var(--v2-container-max-width);
-    margin-inline: auto;
-    padding-inline: var(--v2-container-padding);
-  }
-
-  .columns-container.responsible-ai-v2 .columns-wrapper .columns {
-    padding-inline: 0;
-  }
 }
 
 @media (max-width: 767px) {
-  .columns-wrapper {
-    padding: var(--body-padding) var(--body-padding) 0;
-  }
-
-  .columns-container-v2 {
-    .columns-wrapper {
-      padding: var(--body-padding) var(--section-mobile-padding) 0;
-    }
-  }
+  /* .columns-wrapper adds no padding above on a phone: the section rhythm spaces it */
 
   .cta .columns-img-col picture {
     width: 345px;
@@ -4399,8 +4409,8 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 }
 
 .columns-container.multi-blocks{
-  max-width: 1330px;
-  padding: 0 var(--section-desktop-padding);
+  max-width: var(--page-column-max);
+  padding: 0 var(--page-column-gutter);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -4493,9 +4503,6 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 
   @media (min-width: 991px) {
-    max-width: 1330px;
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
     display: flex;
     flex-direction: row;
     gap: 30px;
@@ -4522,13 +4529,26 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
   }
 }
 
+/* in a wide section the banner is the panel itself: it fills the page column, no panel inset */
+.columns-container.wide .columns-wrapper:has(> .columns.blue-banner) {
+  padding: 0;
+}
+
+/* below 768 the banner runs the page's full width (a wide section keeps its
+   panel) and pads its content onto the page column */
 .columns-container.full-width-mobile {
   @media (width < 768px) {
     padding-left: 0;
     padding-right: 0;
 
     .columns-wrapper {
+      max-width: none;
       padding: 0;
+    }
+
+    &:not(.wide) .columns.blue-banner {
+      padding-inline: var(--page-column-inset);
+      border-radius: 0;
     }
   }
 }
@@ -4774,10 +4794,9 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
 .section.copilot-benefits-v2.columns-container {
   font-size: 13px;
   line-height: 1.5;
-  padding-inline: var(--section-mobile-padding, var(--size-16));
 
   .default-content-wrapper.dex-see-all-see-less {
-    padding: var(--size-0);
+    padding-block: var(--size-0);
 
     p {
       display: flex;

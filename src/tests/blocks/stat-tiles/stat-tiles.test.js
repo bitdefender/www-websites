@@ -1,6 +1,6 @@
 /**
  * Unit tests for the stat-tiles block: the homepage's Why-trust figures,
- * rendered by the design system's bd-stat-highlight and bd-stat-tile, under the
+ * rendered by the design system's bd-stat-highlight and bd-stat, under the
  * section's header. The fixture is section 4 as authored on /en-us/: the header
  * as default content above the block, without Section Metadata yet. The design
  * system modules are
@@ -66,10 +66,12 @@ describe('stat-tiles block', () => {
   it('lifts the section header above the figures', () => {
     const section = block.closest('.section');
     const header = section.querySelector(':scope > bd-section > .default-content-wrapper > bd-section-header');
-    expect(header.getAttribute('eyebrow')).toBe('25 years of Cybersecurity Excellence');
-    expect(header.getAttribute('heading')).toBe('Why Millions Trust Bitdefender');
+    expect(header.querySelector(':scope > [slot="eyebrow"]').textContent).toBe('25 years of Cybersecurity Excellence');
+    const title = header.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('Why Millions Trust Bitdefender');
+    expect(title.getAttribute('as')).toBe('h2');
     expect(header.id).toBe('why-millions-trust-bitdefender');
-    expect(header.querySelector('[slot="lead"] bd-link').getAttribute('href'))
+    expect(header.querySelector(':scope > bd-p[slot="description"] bd-link').getAttribute('href'))
       .toBe('https://www.bitdefender.com/en-us/company/');
     // no Section Metadata yet: the helper's default
     expect(header.getAttribute('layout')).toBe('stacked');
@@ -98,9 +100,10 @@ describe('stat-tiles block', () => {
     const lead = layout.querySelector('.stat-tiles-lead');
     const copy = lead.querySelector('bd-p');
     expect(copy.textContent).toMatch(/^Through global ransomware operations/);
+    expect(copy.getAttribute('appearance')).toBe('large');
 
-    const cta = lead.querySelector('bd-button-link');
-    expect(cta.getAttribute('variant')).toBe('primary');
+    const cta = lead.querySelector('bd-button');
+    expect(cta.getAttribute('appearance')).toBe('primary');
     expect(cta.getAttribute('href')).toBe('https://www.bitdefender.com/en-us/company/');
     expect(cta.textContent).toBe('Learn Why Millions Trust Us');
   });
@@ -109,16 +112,19 @@ describe('stat-tiles block', () => {
     const tiles = layout.querySelector(':scope > bd-grid:not(.stat-tiles-column)');
     expect(tiles.getAttribute('cols')).toBe('1');
     expect(tiles.getAttribute('cols-md')).toBe('2');
+    // 16 apart on a phone, 24 from md: the grid's own breakpoints
+    expect(tiles.getAttribute('gap')).toBe('sm');
+    expect(tiles.getAttribute('gap-md')).toBe('md');
 
-    const items = [...tiles.querySelectorAll(':scope > bd-stat-tile')];
-    expect(items.map((t) => t.getAttribute('value'))).toEqual([
+    const items = [...tiles.querySelectorAll(':scope > bd-stat')];
+    expect(items.map((t) => t.querySelector(':scope > [slot="value"]').textContent)).toEqual([
       '580+', '30+', '50%+', '30+', '50B+', '487+',
     ]);
-    expect(items[0].getAttribute('caption')).toMatch(/^Patents filed/);
+    expect(items[0].querySelector(':scope > [slot="caption"]').textContent).toMatch(/^Patents filed/);
   });
 
   it('names a tile by its spoken form only where one is authored', () => {
-    const items = [...block.querySelectorAll('bd-stat-tile')];
+    const items = [...block.querySelectorAll('bd-stat')];
     expect(items[4].getAttribute('label')).toBe('50 billion plus');
     expect(items[0].hasAttribute('label')).toBe(false);
   });
@@ -133,7 +139,7 @@ describe('stat-tiles block without the highlight button', () => {
     });
 
     expect(block.querySelector('bd-stat-highlight')?.getAttribute('value')).toBe('$1.5B+');
-    expect(block.querySelector('bd-button-link')).toBeNull();
-    expect(block.querySelectorAll('bd-stat-tile')).toHaveLength(6);
+    expect(block.querySelector('bd-button')).toBeNull();
+    expect(block.querySelectorAll('bd-stat')).toHaveLength(6);
   });
 });

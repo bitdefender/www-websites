@@ -1,11 +1,12 @@
 import { load } from '@repobit/dex-system-design/loader';
 import { liftSectionHeader, splitAroundHeading, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
-// The attribute each bd-motion-art object reads its labels from.
+// Where each bd-motion-art object takes its labels: a "|"-separated list in an
+// attribute it parses, or, for geo-core's ring, the element's own text.
 const ART_LABELS = {
-  'mesh-globe': 'badges',
-  'layer-stack': 'labels',
-  'geo-core': 'label',
+  'mesh-globe': (art, labels) => art.setAttribute('badges', labels),
+  'layer-stack': (art, labels) => art.setAttribute('labels', labels),
+  'geo-core': (art, labels) => { art.textContent = labels; },
 };
 
 // a paragraph that is nothing but a link: the card's CTA
@@ -18,8 +19,15 @@ const buildArt = (cell) => {
   if (!cell) return null;
   const picture = cell.querySelector('picture');
   if (picture) {
-    picture.slot = 'media';
-    return picture;
+    // a bd-img, which the card stretches over its art box, cover-fitted
+    const img = picture.querySelector('img');
+    const src = img?.currentSrc || img?.getAttribute('src');
+    if (!src) return null;
+    const art = document.createElement('bd-img');
+    art.slot = 'media';
+    art.setAttribute('src', src);
+    art.setAttribute('alt', img.getAttribute('alt') || '');
+    return art;
   }
 
   const [name, ...rest] = [...cell.querySelectorAll('p')].map((p) => p.textContent.trim());
@@ -30,13 +38,20 @@ const buildArt = (cell) => {
   art.slot = 'media';
   art.setAttribute('object', object);
   const labels = rest.join('|').split('|').map((label) => label.trim()).filter(Boolean);
-  if (labels.length) art.setAttribute(ART_LABELS[object], labels.join('|'));
+  if (labels.length) ART_LABELS[object](art, labels.join('|'));
   return art;
 };
 
 /** The cell holding a card's art: a picture, or a bd-motion-art object's name. */
 const isArtCell = (cell) => !!cell.querySelector('picture')
   || !!ART_LABELS[(cell.querySelector('p')?.textContent || cell.textContent).trim().toLowerCase()];
+
+const slotted = (tag, slot, text) => {
+  const el = document.createElement(tag);
+  if (slot) el.slot = slot;
+  el.textContent = text;
+  return el;
+};
 
 const buildCard = (row) => {
   const cells = [...row.children];
@@ -49,26 +64,35 @@ const buildCard = (row) => {
   const { heading, before, after } = splitAroundHeading(copy, prose);
   if (!heading && !before.length && !after.length) return null;
 
+  // the homepage AI card: the brand fill, the art in `media`, the CTA in `actions`
   const card = document.createElement('bd-bento-item');
-  card.setAttribute('tone', 'brand');
-  if (heading) {
-    card.setAttribute('as', heading.tagName.toLowerCase());
-    card.setAttribute('title', heading.textContent.trim());
-  }
+  card.setAttribute('background', 'brand');
   const [badge] = before;
-  if (badge) card.setAttribute('badge', badge.textContent.trim());
+  if (badge) {
+    // the line above the title: an info badge over it
+    const label = slotted('bd-badge', 'badge', badge.textContent.trim());
+    label.setAttribute('variant', 'info');
+    label.setAttribute('appearance', 'shade');
+    label.setAttribute('size', 'sm');
+    card.append(label);
+  }
+  if (heading) {
+    // the author's level; the card draws it at the h3 role
+    const title = slotted('bd-h', 'title', heading.textContent.trim());
+    title.setAttribute('as', heading.tagName.toLowerCase());
+    card.append(title);
+  }
   const [body] = after;
-  if (body) card.setAttribute('body', body.textContent.trim());
+  if (body) card.append(slotted('bd-p', '', body.textContent.trim()));
 
   const art = buildArt(cells.find((cell) => cell !== copy));
   if (art) card.append(art);
 
   paragraphs.filter(isLinkOnly).forEach((p) => {
     const link = p.querySelector('a');
-    const cta = document.createElement('bd-button-link');
-    cta.setAttribute('variant', 'outline-white');
+    const cta = slotted('bd-button', 'actions', link.textContent.trim());
+    cta.setAttribute('appearance', 'outline-white');
     cta.setAttribute('href', link.getAttribute('href') || '');
-    cta.textContent = link.textContent.trim();
     card.append(cta);
   });
 

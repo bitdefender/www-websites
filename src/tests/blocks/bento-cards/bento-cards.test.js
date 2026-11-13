@@ -57,30 +57,44 @@ describe('bento-cards block', () => {
     expect(cards).toHaveLength(3);
   });
 
-  it('builds each card on the brand tone from its copy cell', () => {
+  it('builds each card on the brand ground from its copy cell', () => {
     const [consumer] = cards;
-    expect(consumer.getAttribute('tone')).toBe('brand');
-    expect(consumer.getAttribute('badge')).toBe('AI for Consumers');
-    expect(consumer.getAttribute('title')).toBe('AI for Digital Life Protection');
-    expect(consumer.getAttribute('as')).toBe('h3');
-    expect(consumer.getAttribute('body')).toMatch(/^Smarter protection for everyday digital life\. .* threats\.$/);
+    expect(consumer.getAttribute('background')).toBe('brand');
+
+    // the line above the title, as an info badge
+    const badge = consumer.querySelector(':scope > bd-badge[slot="badge"]');
+    expect(badge.textContent).toBe('AI for Consumers');
+    expect(badge.getAttribute('variant')).toBe('info');
+    expect(badge.getAttribute('appearance')).toBe('shade');
+    expect(badge.getAttribute('size')).toBe('sm');
+
+    const title = consumer.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('AI for Digital Life Protection');
+    expect(title.getAttribute('as')).toBe('h3');
+
+    // the body is the first thing in the default slot
+    const body = consumer.querySelector(':scope > :not([slot])');
+    expect(body.tagName).toBe('BD-P');
+    expect(body.textContent).toMatch(/^Smarter protection for everyday digital life\. .* threats\.$/);
   });
 
   it('turns the link into an outline-white CTA at the responsive size', () => {
-    const cta = cards[0].querySelector(':scope > bd-button-link');
-    expect(cta.getAttribute('variant')).toBe('outline-white');
+    const cta = cards[0].querySelector(':scope > bd-button[slot="actions"]');
+    expect(cta.getAttribute('appearance')).toBe('outline-white');
     // no size: the design system's default is md below lg and lg from it
     expect(cta.hasAttribute('size')).toBe(false);
     expect(cta.getAttribute('href')).toBe('https://www.bitdefender.com/en-us/consumer/ai/');
     expect(cta.textContent).toBe('Explore Consumer AI');
   });
 
-  it('maps each art name to the attribute its labels go in', () => {
+  it('maps each art name to where its labels go', () => {
     const art = cards.map((card) => card.querySelector(':scope > bd-motion-art[slot="media"]'));
     expect(art.map((el) => el.getAttribute('object'))).toEqual(['mesh-globe', 'layer-stack', 'geo-core']);
     expect(art[0].getAttribute('badges')).toBe('Scams|Child Safety|Fraud');
     expect(art[1].getAttribute('labels')).toBe('Manage|Respond|Prevent|AI Foundation');
-    expect(art[2].getAttribute('label')).toBe('LABS');
+    // geo-core's ring text is the element's own text
+    expect(art[2].textContent).toBe('LABS');
+    expect(art[2].hasAttribute('label')).toBe(false);
   });
 
   it('features the odd card out', () => {
@@ -91,8 +105,10 @@ describe('bento-cards block', () => {
     const section = block.closest('.section');
     const header = section.querySelector(':scope > bd-section > .default-content-wrapper > bd-section-header');
     expect(header.getAttribute('layout')).toBe('split');
-    expect(header.getAttribute('eyebrow')).toBe('15+ years of AI-driven security innovation');
-    expect(header.getAttribute('heading')).toBe('AI Across Bitdefender');
+    expect(header.querySelector(':scope > [slot="eyebrow"]').textContent).toBe('15+ years of AI-driven security innovation');
+    const title = header.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('AI Across Bitdefender');
+    expect(title.getAttribute('as')).toBe('h2');
     expect(header.id).toBe('ai-across-bitdefender');
     expect(section.querySelector('.section-header')).toBeNull();
   });
@@ -116,10 +132,10 @@ describe('bento-cards block without card headings', () => {
     const cards = [...block.querySelectorAll('bd-bento-item')];
 
     expect(cards).toHaveLength(3);
-    cards.forEach((card) => expect(card.hasAttribute('title')).toBe(false));
-    expect(cards[0].getAttribute('badge')).toBe('AI for Consumers');
-    expect(cards[0].getAttribute('body')).toMatch(/^Smarter protection/);
-    expect(cards[0].querySelector('bd-button-link')).not.toBeNull();
+    cards.forEach((card) => expect(card.querySelector('[slot="title"]')).toBeNull());
+    expect(cards[0].querySelector(':scope > bd-badge[slot="badge"]').textContent).toBe('AI for Consumers');
+    expect(cards[0].querySelector(':scope > bd-p:not([slot])').textContent).toMatch(/^Smarter protection/);
+    expect(cards[0].querySelector('bd-button[slot="actions"]')).not.toBeNull();
     expect(cards[0].querySelector('bd-motion-art')).not.toBeNull();
   });
 });

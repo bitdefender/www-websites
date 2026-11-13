@@ -1270,33 +1270,51 @@ var wrapChildrenWithStoreContext = (element, { productId, devices, subscription,
 	element.appendChild(bdContext);
 };
 /**
-* An authored icon (span.icon, the page's inline SVG) readied for a design
-* system component's icon slot: a copy, sized, in the brand's colour unless
-* the page names one.
+* An authored icon (span.icon, which decorateIcons fills with the icon's
+* SVG) as the atom a design system component's icon slot takes: a bd-icon
+* with `slot="icon"`.
 *
-* The component copies its slots into its shadow root once, when it renders,
-* where the page's CSS cannot follow; so the icon goes in as an SVG that is
-* already there, carrying its own colour. The icon set draws with
-* currentColor, which an <img> cannot pass in: shown as images,
-* complete-protection and online-privacy came out black beside performance,
-* whose blue is in its file. An icon with its colours in its file keeps them.
+* The site's icons are drawn in currentColor, and bd-icon is the design
+* system's atom for such a drawing: it shows the drawing registered under its
+* `name`, in the ink of its CSS colour, at the height of `size`, a step of the
+* icon scale (--icon-*-size). So the SVG is registered with the design
+* system's registerIcon, under the icon's name with `site-` before it: the
+* first drawing under a name is the one kept, and the design system's own
+* glyphs (check, globe, plus…) stay theirs. bd-icon draws a drawing that
+* registers after it has rendered. A bd-img would show the file as an <img>,
+* which currentColor does not reach: complete-protection and online-privacy
+* would draw in black. An icon with its colours in its file keeps them.
+*
+* Its ink is the colour the page names for it, else the brand's text ink,
+* the colour the design system's own pages give a feature column's icon.
+* Its size is 2xl unless the caller passes a step: the step the design
+* system draws its own feature illustrations at (analysis, machine-learning).
 *
 * The caller awaits decorateIcons (lib-franklin) on its block first. The
 * page's icon pass is not awaited, and that call queues behind it, so every
-* span.icon in the block holds its SVG by the time this copies it.
+* span.icon in the block holds its SVG by the time this reads it.
+*
+* @param {HTMLElement} span the authored span.icon
+* @param {{ color?: string, size?: string }} [options] a CSS colour the page
+*   names for the icon; a step of the icon scale, xs to 3xl
+* @returns {HTMLElement|null} the bd-icon, or null when the icon's file did not load
 */
-var slotIcon = (span, { color, size = 40 } = {}) => {
-	const icon = span.cloneNode(true);
-	icon.style.display = "block";
-	icon.style.width = `${size}px`;
-	icon.style.height = `${size}px`;
-	icon.style.color = color || "var(--color-brand-500)";
-	const svg = icon.querySelector("svg");
-	if (svg) {
-		svg.style.display = "block";
-		svg.style.width = "100%";
-		svg.style.height = "100%";
-	} else icon.replaceChildren();
+var iconRegistry;
+var slotIcon = (span, { color, size = "2xl" } = {}) => {
+	const svg = span.querySelector("svg");
+	const file = [...span.classList].find((name) => name.startsWith("icon-"))?.slice(5);
+	if (!svg || !file) return null;
+	const name = `site-${file}`;
+	const icon = document.createElement("bd-icon");
+	icon.slot = "icon";
+	icon.setAttribute("name", name);
+	icon.setAttribute("size", size);
+	icon.style.color = color || "var(--color-text-brand)";
+	const drawing = svg.outerHTML;
+	iconRegistry ??= import("../../vendor/repobit/dex-system-design/icons/registry.js");
+	iconRegistry.then(({ registerIcon }) => registerIcon(name, drawing)).catch((err) => {
+		console.warn(`slotIcon: the ${file} icon was not registered, its bd-icon draws a placeholder`, err);
+	});
 	return icon;
 };
 /**
@@ -1323,8 +1341,8 @@ var wrapSectionInDsSection = (block) => {
 	const existing = section.querySelector(":scope > bd-section");
 	if (existing) return existing;
 	const bdSection = document.createElement("bd-section");
-	["no-padding-top", "no-padding-bottom"].forEach((edge) => {
-		if (section.classList.contains(edge)) bdSection.setAttribute(edge, "");
+	["top", "bottom"].forEach((edge) => {
+		if (section.classList.contains(`no-padding-${edge}`)) bdSection.setAttribute(`without-padding-${edge}`, "");
 	});
 	bdSection.append(...section.children);
 	section.append(bdSection);
@@ -1366,9 +1384,9 @@ var splitAroundHeading = (root, paragraphs) => {
 		after: paragraphs.filter((p) => !before.includes(p))
 	};
 };
-var toLead = (p) => {
-	const lead = document.createElement("span");
-	lead.slot = "lead";
+var toDescription = (p) => {
+	const lead = document.createElement("bd-p");
+	lead.slot = "description";
 	lead.append(...p.childNodes);
 	lead.querySelectorAll("a").forEach((a) => {
 		const link = document.createElement("bd-link");
@@ -1392,10 +1410,12 @@ var toLead = (p) => {
 * section is read too, its variant class giving the layout.
 *
 * @param {HTMLElement} block
-* @param {{ layout?: string }} [options] a layout that wins over the section's
+* @param {{ layout?: string, defaultLayout?: string }} [options] `layout` wins
+* over the section's; `defaultLayout` is the block's own, used when the section
+* names none
 * @returns {Promise<HTMLElement|null>} the header, or null when there is none
 */
-var liftSectionHeader = async (block, { layout } = {}) => {
+var liftSectionHeader = async (block, { layout, defaultLayout } = {}) => {
 	const section = block.closest(".section");
 	if (!section || section.dataset.headerLifted !== void 0) return null;
 	const content = getSectionContent(section);
@@ -1419,16 +1439,24 @@ var liftSectionHeader = async (block, { layout } = {}) => {
 	section.dataset.headerLifted = "";
 	const styleLayout = HEADER_LAYOUTS.find((name) => section.classList.contains(`section-header-${name}`));
 	const legacyLayout = legacy && HEADER_LAYOUTS.find((name) => legacy.classList.contains(name));
-	const requested = (layout || styleLayout || section.dataset.header || legacyLayout || "").trim().toLowerCase();
+	const requested = (layout || styleLayout || section.dataset.header || legacyLayout || defaultLayout || "").trim().toLowerCase();
 	const header = document.createElement("bd-section-header");
 	if (heading) {
-		header.setAttribute("heading", heading.textContent.trim());
-		header.setAttribute("as", heading.tagName.toLowerCase());
+		const title = document.createElement("bd-h");
+		title.slot = "title";
+		title.setAttribute("as", heading.tagName.toLowerCase());
+		title.textContent = heading.textContent.trim();
+		header.append(title);
 		if (heading.id) header.id = heading.id;
 	}
 	header.setAttribute("layout", HEADER_LAYOUTS.includes(requested) ? requested : "stacked");
-	if (eyebrow) header.setAttribute("eyebrow", eyebrow.textContent.trim());
-	if (lead) header.append(toLead(lead));
+	if (eyebrow) {
+		const text = document.createElement("span");
+		text.slot = "eyebrow";
+		text.textContent = eyebrow.textContent.trim();
+		header.append(text);
+	}
+	if (lead) header.append(toDescription(lead));
 	try {
 		const { load } = await import("../../vendor/repobit/dex-system-design/loader.js");
 		await load(header);
@@ -1447,15 +1475,15 @@ var liftSectionHeader = async (block, { layout } = {}) => {
 };
 /**
 * The homepage's phone frames run a section's CTAs across the column; from md
-* (768, the design system's) they hug their label. bd-button-link stretches
-* only through its own fullwidth attribute, so this sets it below md and keeps
-* it in step when the viewport crosses md.
+* (768, the design system's) they hug their label. bd-button stretches only
+* through its own full-width attribute, so this sets it below md and keeps it
+* in step when the viewport crosses md.
 *
-* @param {...HTMLElement} buttons bd-button-link (or bd-button) elements
+* @param {...HTMLElement} buttons bd-button elements
 */
 var fullWidthOnPhone = (...buttons) => {
 	const tablet = window.matchMedia?.("(min-width: 768px)");
-	const set = () => buttons.forEach((button) => button.toggleAttribute("fullwidth", !!tablet && !tablet.matches));
+	const set = () => buttons.forEach((button) => button.toggleAttribute("full-width", !!tablet && !tablet.matches));
 	set();
 	tablet?.addEventListener("change", set);
 };

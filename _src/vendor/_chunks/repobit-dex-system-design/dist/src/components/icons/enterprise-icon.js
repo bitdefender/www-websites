@@ -1,5 +1,0 @@
-import{a as e}from"../../../../../lit/index.js";import{n as t,t as n}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import{t as r}from"./icon-element.js";var i=class extends r{static{this.defaultSize=`lg`}render(){return e`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M1.5 8.1V20.475C1.5 21.6 2.4 22.575 3.6 22.575H9V21.075H3.6C3.3 21.075 3 20.85 3 20.475V8.1C3 7.8 3.225 7.5 3.6 7.5H9V6H3.6C2.475 6 1.5 6.9 1.5 8.1ZM20.625 1.5H12.375C11.325 1.5 10.5 2.325 10.5 3.375V20.7C10.5 21.75 11.325 22.575 12.375 22.575H20.625C21.675 22.575 22.5 21.75 22.5 20.7V3.375C22.5 2.325 21.675 1.5 20.625 1.5ZM21 20.7C21 20.925 20.85 21.075 20.625 21.075H12.375C12.15 21.075 12 20.925 12 20.7V3.375C12 3.15 12.15 3 12.375 3H20.625C20.85 3 21 3.15 21 3.375V20.7ZM6 18H9V16.5H6V18ZM9 12H6V13.5H9V12ZM15 18H18V16.5H15V18ZM15 13.5H18V12H15V13.5ZM15 9H18V7.5H15V9Z" fill="currentColor"/>
-      </svg>
-    `}};i=n([t(`bd-enterprise-icon`)],i);

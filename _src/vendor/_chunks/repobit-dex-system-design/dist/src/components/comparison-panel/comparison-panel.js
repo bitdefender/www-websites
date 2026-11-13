@@ -1,52 +1,31 @@
-import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../heading/heading.js";import"../shared/token-scales.js";import"../paragraph/paragraph.js";import{t as s}from"../shared/ensemble.css.js";var c=r`:host{font-family:var(--typography-fontFamily-sans);background:var(--status-brand-surface);display:block}:host([variant=dark]){background:linear-gradient(160deg, var(--color-neutral-800) 0%, #0b1626 100%)}:host([variant=dark]) .bd-comparisonpanel-title{color:var(--color-text-inverse)}:host([variant=dark]) .bd-comparisonpanel-description{color:var(--color-text-muted-inverse)}:host([variant=dark]) .bd-comparisonpanel-column{background:color-mix(in srgb, var(--color-neutral-0) 3%, transparent);border-color:var(--color-border-container-inverse)}:host([variant=dark]) .bd-comparisonpanel-column-title{color:var(--color-text-muted-inverse);font-family:var(--typography-fontFamily-mono);text-transform:uppercase;letter-spacing:var(--typography-letterSpacing-widest);font-weight:var(--typography-fontWeight-bold);font-size:var(--typography-fontSize-xs)}:host([variant=dark]) .bd-comparisonpanel-text{color:var(--color-text-inverse)}.bd-comparisonpanel-wrapper{padding-block:var(--spacing-48);box-sizing:border-box}.bd-comparisonpanel-title{margin:0 0 var(--spacing-16)}.bd-comparisonpanel-description{margin:0 0 var(--spacing-48);color:var(--color-text-muted);max-width:var(--content-width-readable)}.bd-comparisonpanel-columns{gap:var(--spacing-24);grid-template-columns:1fr 1fr;display:grid}.bd-comparisonpanel-column{background:var(--color-surface-default);border:var(--border-width-1) solid var(--color-border-container);border-radius:var(--card-radius);padding:var(--card-padding);box-sizing:border-box}.bd-comparisonpanel-column-title{margin:0 0 var(--spacing-16)}.bd-comparisonpanel-list{gap:var(--spacing-16);flex-direction:column;margin:0;padding:0;list-style:none;display:flex}.bd-comparisonpanel-item{align-items:flex-start;gap:var(--spacing-12);display:flex}.bd-comparisonpanel-icon{width:var(--spacing-20);height:var(--spacing-20);border-radius:50%;flex-shrink:0;justify-content:center;align-items:center;margin-top:1px;display:flex}.bd-comparisonpanel-icon--positive{background:var(--status-success-fill)}.bd-comparisonpanel-icon--negative{background:var(--status-error-fill)}.bd-comparisonpanel-text{color:var(--color-text-primary);margin:0}@media (width<768px){.bd-comparisonpanel-columns{grid-template-columns:1fr}.bd-comparisonpanel-wrapper{padding:var(--spacing-32) var(--spacing-24)}.bd-comparisonpanel-column{padding:var(--card-padding-compact)}}`,l=class extends n{constructor(...e){super(...e),this.title=``,this.description=``,this.positiveTitle=``,this.negativeTitle=``,this.positiveItems=[],this.negativeItems=[],this.variant=`light`}static{this.styles=[s,c]}_renderColumn(n,r,i,a){let o=n===`positive`;return e`
-      <div class="bd-comparisonpanel-column">
-        ${r?e`
-              <bd-h as="h4" class="bd-comparisonpanel-column-title">
-                <slot name="${a}-title">${r}</slot>
-              </bd-h>
-            `:t}
-
-        <ul class="bd-comparisonpanel-list">
-          ${i.map(t=>e`
-              <li class="bd-comparisonpanel-item">
-                <span
-                  class="bd-comparisonpanel-icon ${o?`bd-comparisonpanel-icon--positive`:`bd-comparisonpanel-icon--negative`}"
-                  aria-hidden="true"
-                >
-                  ${o?e`
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                          <path d="M3 7.2l2.6 2.6L11 4.4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      `:e`
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                          <path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      `}
-                </span>
-                <bd-p variant="regular" class="bd-comparisonpanel-text">${t}</bd-p>
-              </li>
-            `)}
-        </ul>
-
-        <slot name="${a}"></slot>
-      </div>
-    `}render(){return e`
+import{a as e,t,u as n}from"../../../../../lit/index.js";import{n as r}from"../../../../../lit/decorators.js";import"../shared/token-scales.js";import{n as i,t as a}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import{t as o}from"../shared/prop-vocabulary.js";import"../p/p.js";import{t as s}from"../shared/controller.slot.js";import"../h/h.js";import{t as c}from"../shared/ensemble.css.js";import"../list/list-item/list-item.js";var l=n`:host{font-family:var(--typography-fontFamily-sans);background:var(--status-brand-surface);display:block}:host([appearance=dark]){background:linear-gradient(160deg, var(--color-neutral-800) 0%, #0b1626 100%);color-scheme:light}.bd-comparisonpanel-wrapper{padding-block:var(--spacing-48);box-sizing:border-box}.bd-comparisonpanel-title{margin:0 0 var(--spacing-16)}.bd-comparisonpanel-title ::slotted([slot=title]){--bd-heading-font-size:var(--typography-heading-h2-fontSize);--bd-heading-font-weight:var(--typography-heading-h2-fontWeight);--bd-heading-line-height:var(--typography-heading-h2-lineHeight);--bd-heading-letter-spacing:var(--typography-heading-h2-letterSpacing);--bd-heading-font-family:var(--typography-heading-h2-fontFamily)}:host([appearance=dark]) .bd-comparisonpanel-title ::slotted([slot=title]){--bd-heading-color:var(--color-text-inverse);--bd-paragraph-color:var(--color-text-inverse)}.bd-comparisonpanel-description{margin:0 0 var(--spacing-48);max-width:var(--content-width-readable)}.bd-comparisonpanel-description ::slotted([slot=description]){--bd-heading-color:var(--color-text-muted);--bd-paragraph-color:var(--color-text-muted)}.bd-comparisonpanel-description ::slotted(bd-p[slot=description]){--bd-paragraph-font-size:var(--typography-body-large-fontSize);--bd-paragraph-font-weight:var(--typography-body-large-fontWeight);--bd-paragraph-line-height:var(--typography-body-large-lineHeight);--bd-paragraph-letter-spacing:var(--typography-body-large-letterSpacing)}:host([appearance=dark]) .bd-comparisonpanel-description ::slotted([slot=description]){--bd-paragraph-color:var(--color-text-muted-inverse)}.bd-comparisonpanel-columns{gap:var(--spacing-24);grid-template-columns:1fr 1fr;display:grid}.bd-comparisonpanel-column{background:var(--color-surface-default);border:var(--border-width-1) solid var(--color-border-container);border-radius:var(--card-radius);padding:var(--card-padding);box-sizing:border-box}:host([appearance=dark]) .bd-comparisonpanel-column{background:color-mix(in srgb, var(--color-neutral-0) 3%, transparent);border-color:var(--color-border-container-inverse)}.bd-comparisonpanel-column-title{margin:0 0 var(--spacing-16)}.bd-comparisonpanel-column-title ::slotted([slot=positive-title]),.bd-comparisonpanel-column-title ::slotted([slot=negative-title]){--bd-heading-font-size:var(--typography-heading-h4-fontSize);--bd-heading-font-weight:var(--typography-heading-h4-fontWeight);--bd-heading-line-height:var(--typography-heading-h4-lineHeight);--bd-heading-letter-spacing:var(--typography-heading-h4-letterSpacing);--bd-heading-font-family:var(--typography-heading-h4-fontFamily)}:host([appearance=dark]) .bd-comparisonpanel-column-title ::slotted([slot=positive-title]),:host([appearance=dark]) .bd-comparisonpanel-column-title ::slotted([slot=negative-title]){--bd-heading-color:var(--color-text-muted-inverse);--bd-heading-font-family:var(--typography-fontFamily-mono);--bd-heading-letter-spacing:var(--typography-letterSpacing-widest);--bd-heading-font-weight:var(--typography-fontWeight-bold);--bd-heading-font-size:var(--typography-fontSize-xs);text-transform:uppercase}.bd-comparisonpanel-list{gap:var(--spacing-16);flex-direction:column;margin:0;padding:0;list-style:none;display:flex}.bd-comparisonpanel-list[hidden]{display:none}.bd-comparisonpanel-list ::slotted(bd-li){--bd-li-margin-bottom:0}:host([appearance=dark]) .bd-comparisonpanel-list ::slotted(bd-li){--bd-heading-color:var(--color-text-inverse);--bd-paragraph-color:var(--color-text-inverse)}@media (width<768px){.bd-comparisonpanel-columns{grid-template-columns:1fr}.bd-comparisonpanel-wrapper{padding:var(--spacing-32) var(--spacing-24)}.bd-comparisonpanel-column{padding:var(--card-padding-compact)}}`,u=[`light`,`dark`],d={positive:`check`,negative:`x`},f=[`title`,`description`,`positive-title`,`positive`,`negative-title`,`negative`],p=class extends t{constructor(...e){super(...e),this.appearance=`light`,this._slots=new s(this,{slots:f})}static{this.styles=[c,l]}willUpdate(e){e.has(`appearance`)&&!o(u,this.appearance)&&(this.appearance=`light`)}updated(){for(let e of Object.keys(d))for(let t of this._slots.elements(e))t.localName===`bd-li`&&t.getAttribute(`appearance`)!==d[e]&&t.setAttribute(`appearance`,d[e])}render(){let t=e=>this._slots.has(e);return e`
       <div class="bd-ensemble bd-comparisonpanel-wrapper">
-        ${this.title?e`
-              <bd-h as="h2" class="bd-comparisonpanel-title">
-                <slot name="title">${this.title}</slot>
-              </bd-h>
-            `:t}
+        <div class="bd-comparisonpanel-title" ?hidden=${!t(`title`)}>
+          <slot name="title"></slot>
+        </div>
 
-        ${this.description?e`
-              <bd-p variant="large" class="bd-comparisonpanel-description">
-                <slot name="description">${this.description}</slot>
-              </bd-p>
-            `:t}
+        <div class="bd-comparisonpanel-description" ?hidden=${!t(`description`)}>
+          <slot name="description"></slot>
+        </div>
 
         <div class="bd-comparisonpanel-columns">
-          ${this._renderColumn(`positive`,this.positiveTitle,this.positiveItems,`positive`)}
-          ${this._renderColumn(`negative`,this.negativeTitle,this.negativeItems,`negative`)}
+          <div class="bd-comparisonpanel-column bd-comparisonpanel-column--positive">
+            <div class="bd-comparisonpanel-column-title" ?hidden=${!t(`positive-title`)}>
+              <slot name="positive-title"></slot>
+            </div>
+            <ul class="bd-comparisonpanel-list" ?hidden=${!t(`positive`)}>
+              <slot name="positive"></slot>
+            </ul>
+          </div>
+
+          <div class="bd-comparisonpanel-column bd-comparisonpanel-column--negative">
+            <div class="bd-comparisonpanel-column-title" ?hidden=${!t(`negative-title`)}>
+              <slot name="negative-title"></slot>
+            </div>
+            <ul class="bd-comparisonpanel-list" ?hidden=${!t(`negative`)}>
+              <slot name="negative"></slot>
+            </ul>
+          </div>
         </div>
       </div>
-    `}};o([i({type:String})],l.prototype,`title`,void 0),o([i({type:String})],l.prototype,`description`,void 0),o([i({type:String,attribute:`positive-title`})],l.prototype,`positiveTitle`,void 0),o([i({type:String,attribute:`negative-title`})],l.prototype,`negativeTitle`,void 0),o([i({type:Array})],l.prototype,`positiveItems`,void 0),o([i({type:Array})],l.prototype,`negativeItems`,void 0),o([i({type:String,reflect:!0})],l.prototype,`variant`,void 0),l=o([a(`bd-comparison-panel`)],l);
+    `}};a([r({type:String,reflect:!0})],p.prototype,`appearance`,void 0),p=a([i(`bd-comparison-panel`)],p);export{p as BdComparisonPanel};

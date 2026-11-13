@@ -127,7 +127,94 @@
   --size-full: 99999999999999999999;
 
   /* cta styles */
-  --cta-background-light-blue: var(--background-light-blue)
+  --cta-background-light-blue: var(--background-light-blue);
+
+  /* the page column, below 576 (its steps are after this block) */
+  --page-column-max: 100%;
+  --page-column-gutter: 16px;
+  --page-section-padding: 24px;
+
+  /* The column's distance from the edge of a box as wide as the page, for a
+     block whose wrapper runs full width (a band) and pads its content in:
+     padding-inline: var(--page-column-inset). Its % is the box's own
+     containing block, as any padding's is. */
+  --page-column-inset: max(var(--page-column-gutter), calc((100% - var(--page-column-max)) / 2 + var(--page-column-gutter)));
+
+  /* The design system's type scale (its --typography-heading-hN-fontSize
+     tokens), written out so pages without the DS tokens get the same sizes;
+     fluid from phone to desktop. Roles: h1 page title, h2 section title, h3
+     banner headline, h4 panel title, h5 card title.
+     src/tests/styles/type-scale.test.js holds them to the package's tokens,
+     digit for digit. */
+  /* stylelint-disable number-max-precision */
+  --ds-heading-h1-size: clamp(1.875rem, calc(1.33929rem + 2.6786vw), 3rem);
+  --ds-heading-h2-size: clamp(1.6875rem, calc(1.41964rem + 1.3393vw), 2.25rem);
+  --ds-heading-h3-size: clamp(1.5rem, calc(1.2619rem + 1.1905vw), 2rem);
+  --ds-heading-h4-size: clamp(1.3125rem, calc(1.22321rem + 0.4464vw), 1.5rem);
+  --ds-heading-h5-size: clamp(1.125rem, calc(1.06548rem + 0.2976vw), 1.25rem);
+  /* stylelint-enable number-max-precision */
+}
+
+/* The page column every section's content sits on: the design system's (its
+   ensembleCSS, from the grid tokens --grid-container-max-* and
+   --grid-padding-*), so the site's own sections and the design system's
+   components share one pair of edges. The values are written out because a
+   page with no design system component on it never installs those tokens;
+   src/tests/styles/page-column.test.js holds them to the package's tokens.
+   --page-column-max includes the gutters, as the design system's does.
+   --page-section-padding is a section's inset above and below its content,
+   bd-section's (--spacing-24, --spacing-32 from md). The base values are in
+   the first :root, :host block; each step is on :host too, as the site's other
+   variables are, for a block embedded in a shadow root with this stylesheet. */
+@media (width >= 576px) {
+  :root, :host {
+    --page-column-max: 540px;
+    --page-column-gutter: 24px;
+  }
+}
+
+@media (width >= 768px) {
+  :root, :host {
+    --page-column-max: 720px;
+    --page-column-gutter: 32px;
+    --page-section-padding: 32px;
+  }
+}
+
+@media (width >= 992px) {
+  :root, :host {
+    --page-column-max: 960px;
+    --page-column-gutter: 40px;
+  }
+}
+
+@media (width >= 1200px) {
+  :root, :host {
+    --page-column-max: 1140px;
+  }
+}
+
+@media (width >= 1400px) {
+  :root, :host {
+    --page-column-max: 1280px;
+  }
+}
+
+@media (width >= 1600px) {
+  :root, :host {
+    --page-column-max: 1372px;
+  }
+}
+
+/* The site's older container, which many blocks size their content with
+   (max-width: --section-desktop-max-width, padding: 0 --section-desktop-padding,
+   and the large-desktop pair from 1600), is the page column inside main. The
+   header and footer, outside it, keep theirs. */
+main {
+  --section-desktop-max-width: var(--page-column-max);
+  --section-desktop-padding: var(--page-column-gutter);
+  --section-large-desktop-max-width: var(--page-column-max);
+  --section-large-desktop-padding: var(--page-column-gutter);
 }
 
 header,
@@ -261,21 +348,21 @@ button, input, select, textarea {
 h1, h2, h3,
 h4, h5, h6 {
   font-family: var(--heading-font-family);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bolder); /* headings are 600 at every size */
   line-height: 1.25;
+  text-wrap: balance; /* lines of even length: no word left alone on the last line */
   scroll-margin: calc(var(--nav-height) + 1em);
 }
 
-h1 {
-  font-size: 34px;
-  line-height: 1.21;
-  font-weight: var(--font-weight-boldest);
+h1 { /* page title: the design system's h1 */
+  font-size: var(--ds-heading-h1-size);
+  line-height: 1.25;
   margin-bottom: 25px;
 }
 
-h2 {
-  font-size: var(--heading-font-size-l);
-  line-height: 1.2;
+h2 { /* section title: the design system's h2 */
+  font-size: var(--ds-heading-h2-size);
+  line-height: 1.25;
   margin-bottom: 15px;
 }
 
@@ -317,12 +404,12 @@ hr {
   margin-bottom: 24px!important;
 }
 
-.py-0 {
+.py-0:not(.section) { /* sections follow the design system's rhythm, not padding utilities */
   padding-top: 0!important;
   padding-bottom: 0!important;
 }
 
-.py-md-0 {
+.py-md-0:not(.section) {
   @media (max-width: 768px) {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -357,6 +444,10 @@ p {
 
 b, strong {
   font-weight: var(--font-weight-boldest);
+}
+
+:is(h1, h2, h3, h4, h5, h6) :is(b, strong) { /* authored bold in a heading keeps the heading's 600 */
+  font-weight: inherit;
 }
 
 main input {
@@ -432,11 +523,54 @@ body.no-scroll {
   overflow: hidden;
 }
 
+/* The design system's section rhythm (bd-section) for authored sections: every
+   section's inset above and below its content is the design system's
+   (--page-section-padding, at :root) and its parts sit two paddings apart.
+   A section holding only a default content wrapper is a section heading
+   authored on its own, and this formula puts it exactly where a bd-section
+   header would sit: its padding plus the next section's equals the
+   header-to-content gap. Padding utility classes no longer touch sections. */
 main .section {
   width: 100%;
   position: relative;
-  padding: var(--section-mobile-padding-vertical) 0;
+  padding: var(--page-section-padding) 0;
   overflow: hidden;
+}
+
+/* a .wide section's parts are the pieces of one card (rounded top and bottom), so they join.
+   Exception pages (the trusted-new template) keep their own spacing: :where() leaves them out
+   of this rule and the rhythm rules below without changing the rules' specificity. */
+:where(body:not(.trusted-new)) main .section:not(.wide) > :not(:last-child, .default-content-wrapper:not(:has(*))),
+:where(body:not(.trusted-new)) main .section:not(.wide) > .store-section-context > :not(:last-child, .default-content-wrapper:not(:has(*))) {
+  margin-bottom: calc(var(--page-section-padding) * 2);
+}
+
+:where(body:not(.trusted-new)) main .section:last-child { /* as bd-section: the last section pads twice before the footer */
+  padding-bottom: calc(var(--page-section-padding) * 2);
+}
+
+/* a full-bleed band (the news bar) pads inside its own background: the section
+   adds none, so it meets the header, and its neighbours' padding spaces it. An
+   accordion's section is a bd-section, which spaces it (no-padding-top and
+   no-padding-bottom take its edges off). */
+main .section.news-bar-container {
+  padding-block: 0;
+}
+
+/* a part is only as tall as its content: no edge margins from authored paragraphs, and an empty
+   default content wrapper (left over from authoring) is not a part. Except a part that follows
+   another in a wide section: the parts join into one panel, so its top margin is what spaces it
+   from the part above (a store badge under a product card). */
+:where(body:not(.trusted-new)) main .section .default-content-wrapper:where(:not(.section.wide > * + *, .section.wide > .store-section-context > * + *)) > :first-child {
+  margin-top: 0;
+}
+
+:where(body:not(.trusted-new)) main .section .default-content-wrapper > :last-child {
+  margin-bottom: 0;
+}
+
+main .section > .default-content-wrapper:not(:has(*)) {
+  display: none;
 }
 
 /* A section on the design system's rhythm: the bd-section inside pads it and
@@ -449,7 +583,8 @@ main .section:has(> bd-section:defined) {
   overflow: visible;
 }
 
-main .section:last-child > bd-section:defined {
+/* unless that edge is off: a band that meets the footer (without-padding-bottom) */
+main .section:last-child > bd-section:defined:not([without-padding-bottom]) {
   padding-block-end: calc(var(--bd-section-padding) * 2);
 }
 
@@ -478,12 +613,47 @@ main .section.images-floated .default-content-wrapper p.button-container {
   width: 100%;
 }
 
+/* the page column (at :root), like the blocks; the section rhythm spaces it,
+   not its own padding */
 .default-content-wrapper {
+  box-sizing: border-box;
   width: 100%;
   margin: 0 auto;
-  max-width: var(--body-max-width);
-  padding: var(--body-padding);
+  max-width: var(--page-column-max);
+  padding: 0 var(--page-column-gutter);
   position: relative;
+}
+
+/* a section title authored one level down (an h3 leading default content that has no h1 or h2)
+   is still the section title: the design system's h2 */
+main .section > .default-content-wrapper:not(:has(h1, h2)) > h3:first-child {
+  font-size: var(--ds-heading-h2-size);
+  line-height: 1.25;
+}
+
+/* section lead (the paragraph right under a section title): the design system's section header
+   lead, body regular (16px, 150%), body large (18px, 145%) from 992px, spacing/16 under the title */
+main .default-content-wrapper > h2:has(+ p) {
+  margin-bottom: var(--spacing-16, 16px);
+}
+
+main .default-content-wrapper > h2 + p {
+  margin-top: 0;
+}
+
+/* every paragraph of the lead, not only the first, so they share one size */
+/* stylelint-disable-next-line no-descending-specificity */
+main .default-content-wrapper > h2 ~ p:where(:not(.button-container)) {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (width >= 992px) {
+  /* stylelint-disable-next-line no-descending-specificity */
+  main .default-content-wrapper > h2 ~ p:where(:not(.button-container)) {
+    font-size: 1.125rem;
+    line-height: 1.45;
+  }
 }
 
 /* bd-section-header sets its own measure and gutters, as the blocks under it do */
@@ -514,8 +684,12 @@ main .section.rounded-corners { /* apply parent wrapper */
   border-radius: 20px;
 }
 
+/* a panel on the page column's content edges (see the painted wrappers below) */
 main .section.light-gray .default-content-wrapper {
   background-color: #fafafa;
+  width: calc(min(100%, var(--page-column-max)) - 2 * var(--page-column-gutter));
+  max-width: none;
+  margin-inline: auto;
 }
 
 main .section.light-gray-wide {
@@ -527,9 +701,28 @@ main .section.light-sky-blue :where(.store-section-content) { /* apply to author
   background-color: var(--background-color-light-sky-blue);
 }
 
+/* A painted wrapper (these section styles paint the wrapper itself) is a panel
+   on the page column's content edges, as a wide section's are; the wrapper's
+   gutter is its inner inset. */
+main .section:is(.highlight, .light-sky-blue) > :not(:where(.store-section-context)),
+main .section:is(.highlight, .light-sky-blue) :where(.store-section-content) {
+  width: calc(min(100%, var(--page-column-max)) - 2 * var(--page-column-gutter));
+  max-width: none;
+  margin-inline: auto;
+}
+
+/* A wide section's panels stand on the page column's content edges, centred;
+   the content inside a panel keeps its own inset. */
 main .section.wide {
-  padding-left: var(--body-padding);
-  padding-right: var(--body-padding);
+  padding-inline: 0;
+}
+
+main div.section.wide > :not(:where(.store-section-context)),
+main div.section.wide :where(.store-section-content) {
+  box-sizing: border-box;
+  width: calc(min(100%, var(--page-column-max)) - 2 * var(--page-column-gutter));
+  max-width: none;
+  margin-inline: auto;
 }
 
 main .section.no-padding-top-bottom {
@@ -539,12 +732,12 @@ main .section.no-padding-top-bottom {
 
 .products-container h2 {
   font-weight: var(--font-weight-bolder);
-  font-size: var(--heading-font-size-m);
+  font-size: var(--ds-heading-h2-size);
 }
 
 main .section.wide h2 {
-  font-size: var(--heading-font-size-l);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--ds-heading-h2-size);
+  font-weight: var(--font-weight-bolder);
 }
 
 main .section.table-align-top table {
@@ -755,18 +948,27 @@ main .grey-background {
   background-color: #F6F6F6 !important;
 }
 
+/* The v2 sections' spacing, and the page column (at :root) on their wrappers,
+   which hold it for the design system components inside them. A section a
+   design system block has put on bd-section takes both from the design system
+   instead, so these leave it alone; :where() keeps the rules' specificity. */
 main div.section:is(
   .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
   .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
   .money-back-container-v2, .barchart-container-v2, .container-v2,
   .copilot-benefits-v2.columns-container
-) {
+):not(:where(:has(> bd-section:defined))) {
   --v2-section-spacing: var(--size-32);
   --v2-subtitle-gap: var(--size-16);
 
   > div {
     --bd-ensemble-max-width: none;
-    --bd-ensemble-inline-padding: var(--section-mobile-padding);
+    --bd-ensemble-inline-padding: 0;
+
+    box-sizing: border-box;
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding-inline: var(--page-column-gutter);
   }
 
   &:not(.hero-aem-v2) {
@@ -836,7 +1038,7 @@ main div.section:is(
       }
     }
 
-    &.accordion-container.container-v2 .accordion.faq bd-accordion-bg {
+    &.accordion-container.container-v2 .accordion.faq bd-accordion {
       --typography-heading-h2-fontSize: var(--typography-heading-h3-fontSize);
       --typography-heading-h2-fontWeight: var(--typography-heading-h3-fontWeight);
       --typography-heading-h2-lineHeight: var(--typography-heading-h3-lineHeight);
@@ -860,11 +1062,6 @@ main div.section:is(
     display: block;
   }
 
-  main .section.wide {
-    padding-left: var(--section-desktop-padding-vertical);
-    padding-right: var(--section-desktop-padding-vertical);
-  }
-  
   main .section.blue-title h3 {
     font-size: 24px;
     margin: 0;
@@ -925,49 +1122,25 @@ main div.section:is(
     .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
     .money-back-container-v2, .barchart-container-v2, .container-v2,
     .copilot-benefits-v2.columns-container
-  ) {
+  ):not(:where(:has(> bd-section:defined))) {
     --v2-section-spacing: var(--size-48);
-    --v2-container-max-width: 100%;
-    --v2-container-padding: var(--size-20);
 
     padding-inline: var(--size-0);
-
-    > div {
-      --bd-ensemble-max-width: none;
-      --bd-ensemble-inline-padding: 0;
-
-      box-sizing: border-box;
-      max-width: var(--v2-container-max-width);
-      margin-inline: auto;
-      padding-inline: var(--v2-container-padding);
-    }
   }
 }
 
 @media screen and (min-width: 992px) { /* desktop */
   main .section.wide h2 {
-    font-size: var(--heading-font-size-xl);
-    font-weight: var(--font-weight-bold);
+    font-size: var(--ds-heading-h2-size);
+    font-weight: var(--font-weight-bolder);
   }
 
   main div.section.wide > :not(:where(.store-section-context)),
   main div.section.wide :where(.store-section-content) { /* apply to authored content wrappers */
-    max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
     padding-top: 1px; /* hack to handle margin of child paragraphs */
   }
 
-  main .section {
-    padding: var(--section-desktop-padding-vertical) 0;
-  }
-
-  main .section.no-vertical-padding {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
   .default-content-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding-vertical);
     border-radius: 0;
   }
 
@@ -1035,11 +1208,9 @@ main div.section:is(
     .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
     .money-back-container-v2, .barchart-container-v2, .container-v2,
     .copilot-benefits-v2.columns-container
-  ) {
+  ):not(:where(:has(> bd-section:defined))) {
     --v2-section-spacing: var(--size-64);
     --v2-subtitle-gap: var(--size-24);
-    --v2-container-padding: var(--section-large-desktop-padding);
-    --v2-container-max-width: calc(1292px + 2 * var(--v2-container-padding));
   }
 }
 
@@ -1075,15 +1246,7 @@ main .section.migration h2 {
   }
 }
 
-main .section.py-1 {
-  padding: 0;
-}
-
-main .section.pt-0 {
-  padding-top: 0;
-}
-
-main .section.pb-0, .pb-0 {
+.pb-0:not(.section) {
   padding-bottom: 0!important;
 }
 
@@ -1095,43 +1258,18 @@ main .section.mb-0, .mb-0 {
   margin-bottom: 0!important;
 }
 
-@media (min-width: 1400px) {
-  main .section {
-    padding: 60px 0;
-  }
-
-  main .section.py-1 {
-    padding: 1em 0;
-  }
-
-  main .section.pt-0 {
-    padding-top: 0;
-  }
-
-  main .section.less-padding {
-    padding: 1em 0;
-  }
-
-}
-
 @media (min-width: 596px) {
-  h1 { font-size: 38px }
   h3 { font-size: 22px }
 }
 
 @media (min-width: 768px) {
-  h1 { font-size: 42px }
-  h2 { font-size: 34px; }
   h3 { font-size: 24px; }
   h4 { font-size: var(--heading-font-size-s) }
   h5 { font-size: var(--heading-font-size-xs) }
 }
 
 @media (min-width: 992px) {
-  h1 { font-size: var(--heading-font-size-xxl) }
-
   h2 {
-    font-size: var(--heading-font-size-xl);
     margin-bottom: 22px;
   }
 
@@ -1154,27 +1292,15 @@ main .section.mb-0, .mb-0 {
 }
 
 @media (min-width: 1400px) {
-  h2 { font-size: var(--heading-font-size-xl) }
   h3 { font-size: var(--heading-font-size-l) }
   h4 { font-size: var(--heading-font-size-m) }
 }
 
 @media (min-width: 1600px) { /* large desktop */
   h1 {
-    font-size: 56px;
     letter-spacing: normal;
   }
 
-  main div.section.wide > :not(:where(.store-section-context)),
-  main div.section.wide :where(.store-section-content) { /* apply to authored content wrappers */
-    max-width: calc(var(--section-large-desktop-max-width) - 2 * var(--section-large-desktop-padding));
-    padding-top: 1px; /* hack to handle margin of child paragraphs */
-  }
-
-  .default-content-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-    padding: 0 var(--section-large-desktop-padding);
-  }
 }
 
 ul {
@@ -1418,7 +1544,10 @@ p a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.
   background-color: var(--link-hover-color);
 }
 
-.icon {
+/* An authored icon in the page's own content. One slotted into a design
+   system component is that component's to size and space, so the site's
+   size and margin stay off it; :where() keeps the specificity of .icon. */
+.icon:not(:where([slot], [slot] *)) {
   display: inline-block;
   height: 56px;
   width: 50px;
@@ -1431,6 +1560,7 @@ p a.button.modal:hover::after, a.button.link-arrow-right:hover::after, a.button.
   width: 100%;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .red_logo_svg p {
   color: transparent;
   background: url('../../_src/icons/b-logo-red.svg') no-repeat center transparent;
@@ -1601,9 +1731,8 @@ main .section.cta .right-col {
     width: 100%;
   }
 
+  /* the wrapper keeps the page column's gutters (the columns block's) */
   .cta .columns-wrapper {
-    padding-right: 0;
-    padding-left: 50px;
     display: flex;
   }
 
@@ -1810,6 +1939,14 @@ main .section.blue p a.button.modal::after {
   margin-left: 1em;
 }
 
+/* the heading and its buttons are one row: every button keeps the same margin
+   above and below, so neither the section lead rule (no margin above the first
+   paragraph under a title) nor the edge rule (none below the last part) moves
+   one button off the row */
+main .section.buttons-align-right .default-content-wrapper > p.button-container {
+  margin-block: 18px;
+}
+
 .buttons-align-right > div {
   display: flex;
   flex-direction: column;
@@ -1943,6 +2080,12 @@ main .section.blue p a.button.modal::after {
 .section.wide.awards h2 {
   font-weight: var(--font-weight-bold);
   margin-bottom: 0;
+}
+
+/* a lead under the title keeps the section lead's gap (spacing/16): the lead
+   rule takes the paragraph's top margin, so the title's must stay */
+.section.wide.awards h2:has(+ p) {
+  margin-bottom: var(--spacing-16, 16px);
 }
 
 .section.big-image {
@@ -2138,7 +2281,7 @@ body > div.header-with-language-banner {
 
 @media (max-width: 500px) {
   main .section.wide h2 {
-    font-size: var(--heading-font-size-l);
+    font-size: var(--ds-heading-h2-size);
   }
 
   main .section.blue a.button:any-link {
@@ -2152,51 +2295,13 @@ body > div.header-with-language-banner {
   }
 }
 
-/* The design system's page column (its ensembleCSS) for a block's own light-DOM
-   layout, on the same edges as the DS sections around it */
+/* The page column (at :root) for a block's own light-DOM layout; inside a
+   column that already has its edges, the hooks a design system column sets
+   for its children collapse it, as they collapse a component's */
 .ds-page-column {
   box-sizing: border-box;
   width: 100%;
-  max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xs));
+  max-width: var(--bd-ensemble-max-width, var(--page-column-max));
   margin-inline: auto;
-  padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-xs));
-}
-
-@media (width >= 576px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-sm));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-sm));
-  }
-}
-
-@media (width >= 768px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-md));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-md));
-  }
-}
-
-@media (width >= 992px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-lg));
-    padding-inline: var(--bd-ensemble-inline-padding, var(--grid-padding-lg));
-  }
-}
-
-@media (width >= 1200px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xl));
-  }
-}
-
-@media (width >= 1400px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxl));
-  }
-}
-
-@media (width >= 1600px) {
-  .ds-page-column {
-    max-width: var(--bd-ensemble-max-width, var(--grid-container-max-xxxl));
-  }
+  padding-inline: var(--bd-ensemble-inline-padding, var(--page-column-gutter));
 }

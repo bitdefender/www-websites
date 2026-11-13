@@ -2,12 +2,38 @@ import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/partner-banner/partner-banner.js
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
-var slotted = (picture, slot) => {
+/** An element for one of the banner's slots, holding the copy. */
+var slotted = (tag, slot, copy, attributes = {}) => {
+	const el = document.createElement(tag);
+	el.slot = slot;
+	Object.entries(attributes).forEach(([name, value]) => el.setAttribute(name, value));
+	el.textContent = copy;
+	return el;
+};
+/** The photo, as the banner's media: the authored picture, which it cover-fits. */
+var asMedia = (picture) => {
 	if (!picture) return null;
-	picture.setAttribute("slot", slot);
+	picture.setAttribute("slot", "media");
 	const img = picture.querySelector("img");
 	if (img) img.setAttribute("alt", img.getAttribute("alt") || "");
 	return picture;
+};
+/** The partner lockup, as the bd-img the banner's lockup slot takes: the picture's image. */
+var asLockup = (picture) => {
+	const img = picture?.querySelector("img");
+	if (!img) return null;
+	const lockup = document.createElement("bd-img");
+	lockup.slot = "lockup";
+	[
+		"src",
+		"width",
+		"height",
+		"loading"
+	].forEach((name) => {
+		if (img.hasAttribute(name)) lockup.setAttribute(name, img.getAttribute(name));
+	});
+	lockup.setAttribute("alt", img.getAttribute("alt") || "");
+	return lockup;
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);
@@ -22,17 +48,18 @@ async function decorate(block) {
 	const attribution = prose.find((p) => p.querySelector("em, i") && text(p) === text(p.querySelector("em, i")));
 	const [quote, lead] = prose.filter((p) => p !== attribution);
 	const banner = document.createElement("bd-partner-banner");
-	if (heading) banner.setAttribute("heading", text(heading));
-	if (heading) banner.setAttribute("as", heading.tagName.toLowerCase());
-	if (quote) banner.setAttribute("quote", text(quote));
-	if (attribution) banner.setAttribute("attribution", text(attribution));
-	if (lead) banner.setAttribute("lead", text(lead));
+	const lockupImage = asLockup(lockup);
+	if (lockupImage) banner.append(lockupImage);
+	if (heading) banner.append(slotted("bd-h", "title", text(heading), { as: heading.tagName.toLowerCase() }));
+	if (quote) banner.append(text(quote));
+	if (attribution) banner.append(slotted("span", "caption", text(attribution)));
+	if (lead) banner.append(slotted("bd-p", "description", text(lead)));
 	const buttons = links.map((p) => {
 		const link = p.querySelector("a");
-		const button = document.createElement("bd-button-link");
+		const button = document.createElement("bd-button");
 		button.setAttribute("slot", "actions");
 		const primary = p.querySelector("strong, b, a.button.primary");
-		button.setAttribute("variant", primary ? "white" : "outline-white");
+		button.setAttribute("appearance", primary ? "white" : "outline-white");
 		button.setAttribute("href", link.getAttribute("href") || "");
 		button.textContent = text(link);
 		return button;
@@ -44,7 +71,8 @@ async function decorate(block) {
 		console.warn("partner-banner: DSN import failed, keeping the authored content", err);
 		return;
 	}
-	banner.prepend(...[slotted(photo, "photo"), slotted(lockup, "lockup")].filter(Boolean));
+	const media = asMedia(photo);
+	if (media) banner.prepend(media);
 	block.replaceChildren(banner);
 }
 export { decorate as default };

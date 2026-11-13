@@ -60,9 +60,11 @@ describe('logo-marquee', () => {
 
     const [text] = block.querySelector('bd-logo-marquee').children;
     expect(text.tagName).toBe('SPAN');
-    expect(text.querySelector('bd-display').getAttribute('variant')).toBe('md');
+    expect(text.querySelector('bd-display').getAttribute('appearance')).toBe('md');
+    expect(text.querySelector('bd-display').hasAttribute('variant')).toBe(false);
     expect(text.querySelector('bd-display').textContent).toBe('#1');
-    expect(text.querySelector('bd-p').getAttribute('variant')).toBe('small');
+    expect(text.querySelector('bd-p').getAttribute('appearance')).toBe('small');
+    expect(text.querySelector('bd-p').hasAttribute('variant')).toBe(false);
     expect(text.querySelector('bd-p').textContent.trim()).toBe('most awarded');
   });
 
@@ -89,7 +91,7 @@ describe('logo-marquee', () => {
     expect(block.querySelectorAll('bd-logo-marquee > picture')).toHaveLength(2);
   });
 
-  it('runs the awards variant faster and tighter, named by the section heading', async () => {
+  it('sets the awards strip\'s logos 24 apart, named by the section heading', async () => {
     const block = setupMarquee({
       variant: 'awards',
       header: '<h2>Proven by Independent Testing</h2>',
@@ -107,7 +109,7 @@ describe('logo-marquee', () => {
   it('is still named by the section heading once an earlier block has lifted it', async () => {
     const block = setupMarquee({
       variant: 'awards',
-      header: '<bd-section-header heading="Proven by Independent Testing"></bd-section-header>',
+      header: '<bd-section-header><bd-h slot="title" as="h2">Proven by Independent Testing</bd-h></bd-section-header>',
       content: `<div><div>${logo('idc', 120, 48)}</div></div>`,
     });
 
@@ -115,6 +117,17 @@ describe('logo-marquee', () => {
 
     expect(block.querySelector('bd-logo-marquee').getAttribute('label'))
       .toBe('Proven by Independent Testing');
+  });
+
+  it('hides the marquee\'s pause button, by request, through its own attribute', async () => {
+    const block = setupMarquee();
+
+    await decorate(block);
+
+    const marquee = block.querySelector('bd-logo-marquee');
+    expect(marquee.hasAttribute('without-pause-button')).toBe(true);
+    // hidden, not paused: the strip keeps moving
+    expect(marquee.hasAttribute('paused')).toBe(false);
   });
 
   it('empties the block when there is nothing to show', async () => {

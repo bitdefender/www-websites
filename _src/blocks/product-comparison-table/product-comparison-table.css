@@ -46,9 +46,11 @@ div[role="cell"] p {
     width: 10.5rem;
 }
 
+/* the page column (at :root) */
 .product-comparison-table-wrapper {
-    max-width: 100%;
-    padding: 0 var(--body-padding);
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding: 0 var(--page-column-gutter);
     overflow-y: scroll;
 }
 
@@ -314,7 +316,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 
 @media (width >= 580px) {
     .product-comparison-table-wrapper {
-        margin: 0 auto;
         overflow-y: visible;
     }
 
@@ -328,11 +329,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 }
 
 @media (width >= 992px) {
-    .product-comparison-table-wrapper {
-        max-width: var(--section-desktop-max-width);
-        padding: 0 var(--section-desktop-padding);
-    }
-
     .product-comparison-table div[role="columnheader"]:nth-child(1) {
         width: 25%;
         flex-basis: auto;
@@ -544,10 +540,6 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
 }
 
 @media (width <= 768px) {
-    .product-comparison-table-wrapper {
-        padding: 0;
-    }
-
     .product-comparison-table-wrapper div[role="row"] div[role="cell"]:first-of-type {
         min-width: 100% !important;
     }
@@ -575,7 +567,7 @@ div[role="row"].expandable-row div[role="cell"] p:first-of-type {
         left: 0;
         width: 100%;
         margin: 0;
-        padding: 0 1rem;
+        padding: 0;
         line-height: 1.2;
         z-index: 1;
     }

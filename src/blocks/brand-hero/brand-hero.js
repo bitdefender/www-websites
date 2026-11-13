@@ -3,13 +3,16 @@ import { splitAroundHeading, wrapSectionInDsSection } from '../../scripts/utils/
 
 /*
  * The homepage hero, rendered by the design system's bd-hero with the brand
- * sphere (bd-motion-art) in its media slot and the audience cards in its cards
- * slot. Authored as:
+ * sphere (bd-motion-art) in its media slot and the audience cards in its
+ * default slot. Authored as:
  *   row 1        eyebrow, h1, lead
  *   rows 2..n    an audience card each: [icon + eyebrow] [heading, description, link]
+ * The copy is slotted as the design system asks: the eyebrow a span, the
+ * heading a bd-h and the lead or description a bd-p.
  */
 
-// the audience icons the design system draws; any other authored icon is kept as is
+// the audience icons the design system draws; the card's icon slot takes a bd-icon, so an
+// authored icon it does not draw is left out (the eyebrow already names the audience)
 const DS_ICONS = ['home', 'small-business', 'enterprise'];
 
 // a private-use character stands in for each <br> while the source whitespace collapses
@@ -17,7 +20,7 @@ const BREAK = '';
 
 /**
  * The element's text on one line, except where the author wrote a <br>: that
- * becomes a newline, which bd-hero and bd-audience-card render as a break.
+ * becomes a newline, which slotted() writes back as a <br>.
  */
 const text = (el) => {
   if (!el) return '';
@@ -27,6 +30,21 @@ const text = (el) => {
     .map((line) => line.replace(/\s+/g, ' ').trim())
     .filter(Boolean)
     .join('\n');
+};
+
+/**
+ * An element for one of a component's slots, holding the copy: its lines,
+ * a <br> between each, as the author broke them.
+ */
+const slotted = (tag, slot, copy, attributes = {}) => {
+  const el = document.createElement(tag);
+  el.slot = slot;
+  Object.entries(attributes).forEach(([name, value]) => el.setAttribute(name, value));
+  copy.split('\n').forEach((line, index) => {
+    if (index) el.append(document.createElement('br'));
+    el.append(line);
+  });
+  return el;
 };
 
 /** The cell's text without its icon's, which decorateIcons may fill with markup. */
@@ -55,8 +73,10 @@ const readIcon = (cell) => {
   const icon = cell?.querySelector('.icon');
   const name = icon && [...icon.classList]
     .find((c) => c.startsWith('icon-'))?.substring(5);
-  if (name && DS_ICONS.includes(name)) return document.createElement(`bd-${name}-icon`);
-  return icon ? icon.cloneNode(true) : null;
+  if (!name || !DS_ICONS.includes(name)) return null;
+  const dsIcon = document.createElement('bd-icon');
+  dsIcon.setAttribute('name', name);
+  return dsIcon;
 };
 
 /** A card row: [icon + eyebrow] [heading, description, link]; either cell may be missing. */
@@ -71,12 +91,14 @@ const buildCard = (row) => {
 
   const card = document.createElement('bd-audience-card');
   const eyebrow = labelText(label);
-  if (eyebrow) card.setAttribute('eyebrow', eyebrow);
-  if (text(heading)) card.setAttribute('heading', text(heading));
-  if (description) card.setAttribute('description', text(description));
+  if (eyebrow) card.append(slotted('span', 'eyebrow', eyebrow));
+  // an h2: the cards are the first level under the hero's h1, whatever level the author wrote
+  if (text(heading)) card.append(slotted('bd-h', 'title', text(heading), { as: 'h2' }));
+  if (description) card.append(slotted('bd-p', 'description', text(description)));
   if (link) {
     card.setAttribute('href', link.getAttribute('href') || '');
     if (link.target) card.setAttribute('target', link.target);
+    // the arrow link's accessible name, which renders nowhere
     if (text(link)) card.setAttribute('label', text(link));
   }
 
@@ -91,15 +113,16 @@ const buildCard = (row) => {
 export default async function decorate(block) {
   // the hero's band starts under the site menu: its section keeps only the
   // inset below it, so the cards stand twice the inset clear of what follows
-  wrapSectionInDsSection(block)?.setAttribute('no-padding-top', '');
+  wrapSectionInDsSection(block)?.setAttribute('without-padding-top', '');
 
   const [copyRow, ...cardRows] = [...block.children];
   const { eyebrow, heading, lead } = readCopy(copyRow || block);
 
   const hero = document.createElement('bd-hero');
-  if (eyebrow) hero.setAttribute('eyebrow', eyebrow);
-  if (heading) hero.setAttribute('heading', heading);
-  if (lead) hero.setAttribute('lead', lead);
+  if (eyebrow) hero.append(slotted('span', 'eyebrow', eyebrow));
+  // the hero's title is the page's one h1, whatever level the author gave the heading
+  if (heading) hero.append(slotted('bd-h', 'title', heading, { as: 'h1' }));
+  if (lead) hero.append(slotted('bd-p', 'description', lead));
 
   const art = document.createElement('bd-motion-art');
   art.setAttribute('slot', 'media');
@@ -108,8 +131,8 @@ export default async function decorate(block) {
 
   const cards = cardRows.map(buildCard);
   if (cards.length) {
+    // the cards are the hero's default slot
     const grid = document.createElement('bd-grid');
-    grid.setAttribute('slot', 'cards');
     grid.setAttribute('cols', '1');
     grid.setAttribute('cols-sm', '1');
     grid.setAttribute('cols-md', '1');

@@ -2,26 +2,38 @@ import { fullWidthOnPhone, getSectionContent, liftSectionHeader, wrapSectionInDs
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/awards-spotlight/awards-spotlight.js
 var ASSET_SCALE = 1.5;
+var LABEL = "Awards and recognition";
+var ITEM_LABEL = "Go to award";
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
-var readAward = (row) => {
+/** A row as a bd-award: its mark the logo bd-img, its h3 the title, its paragraph the text. */
+var buildAward = (row) => {
 	const title = row.querySelector("h1, h2, h3, h4, h5, h6");
 	const img = row.querySelector("picture img, img");
 	const body = [...row.querySelectorAll("p")].find((p) => text(p) && !p.querySelector("picture, img"));
 	if (!title && !img) return null;
-	const award = {
-		title: text(title),
-		body: text(body)
-	};
+	const award = document.createElement("bd-award");
 	if (img) {
-		award.logo = img.currentSrc || img.src;
-		award.logoAlt = img.getAttribute("alt") || "";
+		const logo = document.createElement("bd-img");
+		logo.slot = "media";
+		logo.setAttribute("src", img.currentSrc || img.src);
+		logo.setAttribute("alt", img.getAttribute("alt") || "");
 		const width = Number(img.getAttribute("width"));
 		const height = Number(img.getAttribute("height"));
 		if (width && height) {
-			award.logoWidth = Math.round(width / ASSET_SCALE);
-			award.logoHeight = Math.round(height / ASSET_SCALE);
+			logo.setAttribute("width", String(Math.round(width / ASSET_SCALE)));
+			logo.setAttribute("height", String(Math.round(height / ASSET_SCALE)));
 		}
+		logo.setAttribute("fit", "contain");
+		award.append(logo);
 	}
+	if (text(title)) {
+		const heading = document.createElement("bd-h");
+		heading.slot = "title";
+		heading.setAttribute("as", "h3");
+		heading.textContent = text(title);
+		award.append(heading);
+	}
+	if (text(body)) award.append(text(body));
 	return award;
 };
 /**
@@ -36,8 +48,8 @@ var liftActions = async (block) => {
 	actions.className = "awards-spotlight-actions ds-page-column";
 	const buttons = containers.map((container) => {
 		const link = container.querySelector("a");
-		const button = document.createElement("bd-button-link");
-		button.setAttribute("variant", "primary");
+		const button = document.createElement("bd-button");
+		button.setAttribute("appearance", "primary");
 		button.setAttribute("href", link?.getAttribute("href") || "");
 		button.textContent = text(link);
 		return button;
@@ -56,9 +68,12 @@ var liftActions = async (block) => {
 async function decorate(block) {
 	wrapSectionInDsSection(block);
 	const header = liftSectionHeader(block, { layout: "centered" });
-	const spotlight = document.createElement("bd-awards-spotlight");
-	spotlight.awards = [...block.children].map(readAward).filter(Boolean);
+	const spotlight = document.createElement("bd-awards");
+	spotlight.setAttribute("layout", "spotlight");
 	spotlight.setAttribute("autoplay", "");
+	spotlight.setAttribute("label", LABEL);
+	spotlight.setAttribute("item-label", ITEM_LABEL);
+	spotlight.append(...[...block.children].map(buildAward).filter(Boolean));
 	try {
 		await load(spotlight);
 	} catch (err) {

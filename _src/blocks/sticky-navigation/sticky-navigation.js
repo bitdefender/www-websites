@@ -22,6 +22,27 @@ function extractAnchorId(href) {
 		return "";
 	}
 }
+/**
+* The bd-button appearance for a section's `data-kind`, which authors write
+* in the button's older names: outline, primary-outline, danger and
+* destructive, and plain, which the pages show as a primary button (the
+* design system's plain is the text-only CTA). Any other value is an
+* appearance already.
+*/
+var APPEARANCE_OF_KIND = {
+	outline: "ghost",
+	"primary-outline": "tertiary",
+	danger: "accent",
+	destructive: "accent",
+	plain: "primary"
+};
+/** A nav item: the link to a section, its words the label. */
+function buildNavItem(label, href) {
+	const navItem = document.createElement("bd-anchor-nav-item");
+	if (href) navItem.setAttribute("href", href);
+	navItem.textContent = label;
+	return navItem;
+}
 function collectSectionItems(block) {
 	const stickySection = block.closest(".section");
 	const sections = Array.from(document.querySelectorAll(".section")).filter((s) => s !== stickySection);
@@ -61,10 +82,7 @@ function buildFromAuthoredRows(anchorNav, block, activeLabel) {
 				href = `#${match.section.id}`;
 			}
 		}
-		const navItem = document.createElement("bd-anchor-nav-item");
-		navItem.setAttribute("title", label);
-		if (href) navItem.setAttribute("href", href);
-		anchorNav.appendChild(navItem);
+		anchorNav.appendChild(buildNavItem(label, href));
 	});
 	if (!activeLabel) return null;
 	const idx = rows.findIndex((p) => getRowLabel(p).toLowerCase() === activeLabel.toLowerCase());
@@ -73,22 +91,19 @@ function buildFromAuthoredRows(anchorNav, block, activeLabel) {
 function buildFromSections(anchorNav, block) {
 	collectSectionItems(block).forEach((item, index) => {
 		if (!item.section.id) item.section.id = `nav-section-${index + 1}`;
-		const navItem = document.createElement("bd-anchor-nav-item");
-		navItem.setAttribute("title", item.label);
-		navItem.setAttribute("href", `#${item.section.id}`);
-		anchorNav.appendChild(navItem);
+		anchorNav.appendChild(buildNavItem(item.label, `#${item.section.id}`));
 	});
 	const ctaKind = block.closest(".section")?.dataset.kind || "danger";
+	const ctaAppearance = APPEARANCE_OF_KIND[ctaKind] || ctaKind;
 	const ctaLink = block.querySelector("a");
 	if (ctaLink) {
 		const isModal = ctaLink.classList.contains("modal");
 		const ctaHref = (ctaLink.getAttribute("href") || ctaLink.getAttribute("location") || "").replace(/\.html(?=#|$)/, "");
 		const ctaLabel = ctaLink.textContent.trim();
-		const buttonLink = document.createElement("bd-button-link");
-		buttonLink.setAttribute("slot", "cta");
+		const buttonLink = document.createElement("bd-button");
+		buttonLink.setAttribute("slot", "actions");
 		buttonLink.setAttribute("href", ctaHref);
-		buttonLink.setAttribute("kind", ctaKind);
-		buttonLink.setAttribute("size", "md");
+		buttonLink.setAttribute("appearance", ctaAppearance);
 		buttonLink.textContent = ctaLabel;
 		if (isModal && ctaHref) buttonLink.addEventListener("click", (e) => {
 			e.preventDefault();
@@ -103,12 +118,13 @@ function buildAnchorNav(block) {
 	let activeId = null;
 	const isAuthoredMode = Array.from(block.querySelectorAll("p")).filter((p) => p.textContent.trim() !== "").length >= 2;
 	const anchorNav = document.createElement("bd-anchor-nav");
+	anchorNav.setAttribute("aria-label", "Section navigation");
 	if (isAuthoredMode) {
 		activeId = buildFromAuthoredRows(anchorNav, block, activeLabel);
 		anchorNav.addEventListener("click", (e) => {
-			const bdLink = e.composedPath().find((el) => el.tagName === "BD-LINK");
-			if (!bdLink) return;
-			const href = bdLink.getAttribute("href");
+			const navItem = e.composedPath().find((el) => el.localName === "bd-anchor-nav-item");
+			if (!navItem) return;
+			const href = navItem.getAttribute("href");
 			if (!href || href.startsWith("#")) return;
 			if (new URL(href, window.location.href).pathname === window.location.pathname) window.scrollTo({
 				top: 0,

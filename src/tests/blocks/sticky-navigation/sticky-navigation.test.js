@@ -50,7 +50,7 @@ async function renderFixture(ctaHref) {
 
   const block = main.querySelector('.sticky-navigation');
   await decorate(block);
-  return block.querySelector('bd-anchor-nav bd-button-link[slot="cta"]');
+  return block.querySelector('bd-anchor-nav bd-button[slot="actions"]');
 }
 
 function click(element) {
@@ -72,6 +72,27 @@ describe('sticky-navigation CTA', () => {
     expect(cta.textContent).toBe('Try for free');
   });
 
+  it('draws the CTA in the accent appearance, at bd-button\'s own size, without a section data-kind', async () => {
+    const cta = await renderFixture();
+
+    expect(cta.getAttribute('appearance')).toBe('accent');
+    expect(cta.hasAttribute('size')).toBe(false);
+  });
+
+  it('reads a section data-kind in the button\'s older names as an appearance', async () => {
+    document.body.innerHTML = `<main>${fixture}</main>`;
+    const main = document.querySelector('main');
+    decorateButtons(main);
+    decorateSections(main);
+    decorateBlocks(main);
+    main.querySelector('.sticky-navigation').closest('.section').dataset.kind = 'outline';
+
+    const block = main.querySelector('.sticky-navigation');
+    await decorate(block);
+
+    expect(block.querySelector('bd-button[slot="actions"]').getAttribute('appearance')).toBe('ghost');
+  });
+
   it('opens the fragment as a modal instead of navigating', async () => {
     const cta = await renderFixture();
 
@@ -90,5 +111,30 @@ describe('sticky-navigation CTA', () => {
     expect(cta.getAttribute('href')).toBe('/en-us/consumer/ultimate-security#buy');
     expect(event.defaultPrevented).toBe(false);
     expect(openModal).not.toHaveBeenCalled();
+  });
+});
+
+describe('sticky-navigation bar', () => {
+  it('keeps its section out of a bd-section: the section is the sticky bar', async () => {
+    await renderFixture();
+    const section = document.querySelector('.sticky-navigation').closest('.section');
+
+    expect(section.querySelector(':scope > bd-section')).toBeNull();
+    expect(section.querySelector(':scope > .sticky-navigation-wrapper > .sticky-navigation > bd-anchor-nav')).not.toBeNull();
+  });
+});
+
+describe('sticky-navigation items', () => {
+  it('writes each section as an item whose words are its label, in a named nav', async () => {
+    await renderFixture();
+    const nav = document.querySelector('.sticky-navigation bd-anchor-nav');
+    const items = [...nav.querySelectorAll(':scope > bd-anchor-nav-item')];
+
+    expect(nav.getAttribute('aria-label')).toBe('Section navigation');
+    expect(items).toHaveLength(1);
+    expect(items[0].textContent).toBe('Live your digital life confidently');
+    expect(items[0].getAttribute('href')).toBe('#nav-section-1');
+    expect(document.getElementById('nav-section-1')).toBe(document.querySelectorAll('main > .section')[1]);
+    expect(items[0].hasAttribute('title')).toBe(false);
   });
 });

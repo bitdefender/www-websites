@@ -26,6 +26,29 @@ function extractAnchorId(href) {
   }
 }
 
+/**
+ * The bd-button appearance for a section's `data-kind`, which authors write
+ * in the button's older names: outline, primary-outline, danger and
+ * destructive, and plain, which the pages show as a primary button (the
+ * design system's plain is the text-only CTA). Any other value is an
+ * appearance already.
+ */
+const APPEARANCE_OF_KIND = {
+  outline: 'ghost',
+  'primary-outline': 'tertiary',
+  danger: 'accent',
+  destructive: 'accent',
+  plain: 'primary',
+};
+
+/** A nav item: the link to a section, its words the label. */
+function buildNavItem(label, href) {
+  const navItem = document.createElement('bd-anchor-nav-item');
+  if (href) navItem.setAttribute('href', href);
+  navItem.textContent = label;
+  return navItem;
+}
+
 // ─── section items (mode B + fallback for mode A) ────────────────────────────
 
 function collectSectionItems(block) {
@@ -85,10 +108,7 @@ function buildFromAuthoredRows(anchorNav, block, activeLabel) {
       }
     }
 
-    const navItem = document.createElement('bd-anchor-nav-item');
-    navItem.setAttribute('title', label);
-    if (href) navItem.setAttribute('href', href);
-    anchorNav.appendChild(navItem);
+    anchorNav.appendChild(buildNavItem(label, href));
   });
 
   if (!activeLabel) return null;
@@ -106,16 +126,15 @@ function buildFromSections(anchorNav, block) {
       item.section.id = `nav-section-${index + 1}`;
     }
 
-    const navItem = document.createElement('bd-anchor-nav-item');
-    navItem.setAttribute('title', item.label);
-    navItem.setAttribute('href', `#${item.section.id}`);
-    anchorNav.appendChild(navItem);
+    anchorNav.appendChild(buildNavItem(item.label, `#${item.section.id}`));
   });
 
   // Optional CTA: shown when the block contains a link. `data-kind` on the
-  // section controls the button style; falls back to 'danger' when absent.
+  // section picks the button's appearance; without one it is accent, the
+  // conversion CTA's fill. Its size is bd-button's responsive default.
   const section = block.closest('.section');
   const ctaKind = section?.dataset.kind || 'danger';
+  const ctaAppearance = APPEARANCE_OF_KIND[ctaKind] || ctaKind;
   const ctaLink = block.querySelector('a');
   if (ctaLink) {
     // detectModalButtons moves a fragment link's href to `location` before blocks load
@@ -124,11 +143,10 @@ function buildFromSections(anchorNav, block) {
     const ctaHref = rawHref.replace(/\.html(?=#|$)/, '');
     const ctaLabel = ctaLink.textContent.trim();
 
-    const buttonLink = document.createElement('bd-button-link');
-    buttonLink.setAttribute('slot', 'cta');
+    const buttonLink = document.createElement('bd-button');
+    buttonLink.setAttribute('slot', 'actions');
     buttonLink.setAttribute('href', ctaHref);
-    buttonLink.setAttribute('kind', ctaKind);
-    buttonLink.setAttribute('size', 'md');
+    buttonLink.setAttribute('appearance', ctaAppearance);
     buttonLink.textContent = ctaLabel;
     if (isModal && ctaHref) {
       buttonLink.addEventListener('click', (e) => {
@@ -156,15 +174,17 @@ function buildAnchorNav(block) {
   const isAuthoredMode = authoredRows.length >= 2;
 
   const anchorNav = document.createElement('bd-anchor-nav');
+  // the nav's accessible name: bd-anchor-nav has no default
+  anchorNav.setAttribute('aria-label', 'Section navigation');
 
   if (isAuthoredMode) {
     activeId = buildFromAuthoredRows(anchorNav, block, activeLabel);
 
-    // DS preventDefault blocks non-hash links — handle navigation manually.
+    // An item linking out of the page's sections: handle navigation manually.
     anchorNav.addEventListener('click', (e) => {
-      const bdLink = e.composedPath().find((el) => el.tagName === 'BD-LINK');
-      if (!bdLink) return;
-      const href = bdLink.getAttribute('href');
+      const navItem = e.composedPath().find((el) => el.localName === 'bd-anchor-nav-item');
+      if (!navItem) return;
+      const href = navItem.getAttribute('href');
       if (!href || href.startsWith('#')) return; // hash links handled by DS scrollspy
       const url = new URL(href, window.location.href);
       if (url.pathname === window.location.pathname) {
@@ -181,6 +201,12 @@ function buildAnchorNav(block) {
   return { anchorNav, activeId };
 }
 
+/*
+ * The bar is not a content section, so it is not put in a bd-section: its
+ * section is the sticky element (sticky-navigation.css), and bd-section's
+ * inset above and below the bar would stick with it, a transparent band over
+ * the content scrolling under it. The sections around it keep the rhythm.
+ */
 export default async function decorate(block) {
   const { anchorNav, activeId } = buildAnchorNav(block);
   await load(anchorNav);

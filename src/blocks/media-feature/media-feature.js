@@ -1,4 +1,11 @@
 import { load } from '@repobit/dex-system-design/loader';
+import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+
+/*
+ * Copy beside media, a bd-features-tab a row: one cell holds a heading, the
+ * body and a button, the other a picture, a video or a YouTube link.
+ * `alternating` puts the media on alternate sides, `reverse` on the left.
+ */
 
 const VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
 const YOUTUBE_RE = /(?:youtube\.com|youtu\.be)/i;
@@ -37,10 +44,15 @@ const buildMediaSlot = (cell) => {
       const player = document.createElement('bd-video-player');
       player.setAttribute('slot', 'media');
       player.setAttribute('src', videoSrc);
+      // bd-video-player names nothing itself: the thumbnail's alt, the play and
+      // close controls, and the frame
       if (thumbImg) {
         player.setAttribute('thumb', thumbImg.src);
-        if (thumbImg.alt) player.setAttribute('thumb-alt', thumbImg.alt);
+        player.setAttribute('thumb-alt', thumbImg.alt || 'Video preview');
+        player.setAttribute('play-label', 'Play video');
+        player.setAttribute('close-label', 'Close video');
       }
+      if (YOUTUBE_RE.test(videoSrc)) player.setAttribute('video-title', 'Video player');
       return player;
     }
 
@@ -61,22 +73,21 @@ const buildMediaSlot = (cell) => {
   return null;
 };
 
-const buildHeadingSlot = (headingEl) => {
+// bd-features-tab sets its title's size and ink; the level is the author's
+const buildTitle = (headingEl) => {
   const bdH = document.createElement('bd-h');
-  bdH.setAttribute('slot', 'heading');
+  bdH.setAttribute('slot', 'title');
   bdH.setAttribute('as', headingEl.tagName.toLowerCase());
-  // a role name: 1.0.0 drops raw CSS values on bd-h
-  bdH.setAttribute('color', 'primary');
   bdH.innerHTML = headingEl.innerHTML;
   return bdH;
 };
 
 const buildListItem = (li) => {
   const bdLi = document.createElement('bd-li');
-  bdLi.setAttribute('kind', 'bullet');
+  bdLi.setAttribute('appearance', 'bullet');
   bdLi.setAttribute('size', 'md');
   const bdP = document.createElement('bd-p');
-  bdP.setAttribute('kind', 'regular');
+  bdP.setAttribute('appearance', 'regular');
   bdP.innerHTML = li.innerHTML;
   bdLi.appendChild(bdP);
   return bdLi;
@@ -86,7 +97,7 @@ const buildList = (listEl) => {
   const bdList = document.createElement('bd-list');
   bdList.setAttribute('type', listEl.tagName === 'OL' ? 'ordered' : 'unordered');
   bdList.setAttribute('spacing', 'md');
-  bdList.setAttribute('variant', 'default');
+  bdList.setAttribute('appearance', 'default');
   bdList.setAttribute('orientation', 'vertical');
   Array.from(listEl.querySelectorAll(':scope > li')).forEach((li) => {
     bdList.appendChild(buildListItem(li));
@@ -94,40 +105,40 @@ const buildList = (listEl) => {
   return bdList;
 };
 
-const buildContentSlot = (cell, headingEl) => {
-  const slot = document.createElement('div');
-  slot.setAttribute('slot', 'content');
+// the body: bd-features-tab's default slot takes its atoms as they are
+const buildContent = (cell, headingEl) => {
+  const atoms = [];
 
   Array.from(cell.children).forEach((child) => {
     if (headingEl && (child === headingEl || child.contains(headingEl))) return;
     if (child.classList.contains('button-container')) return;
 
     if (child.tagName === 'UL' || child.tagName === 'OL') {
-      slot.appendChild(buildList(child));
+      atoms.push(buildList(child));
       return;
     }
 
     if ((child.tagName === 'P' || child.tagName === 'DIV') && child.textContent.trim()) {
       const bdP = document.createElement('bd-p');
-      bdP.setAttribute('kind', 'regular');
+      bdP.setAttribute('appearance', 'regular');
       bdP.innerHTML = child.innerHTML;
-      slot.appendChild(bdP);
+      atoms.push(bdP);
     }
   });
 
-  return slot.children.length ? slot : null;
+  return atoms;
 };
 
-const buildCtaSlot = (cell) => {
+const buildActions = (cell) => {
   const anchor = cell.querySelector('.button-container a');
   if (!anchor) return null;
 
-  const bdBtn = document.createElement('bd-button-link');
-  bdBtn.setAttribute('slot', 'cta');
+  const bdBtn = document.createElement('bd-button');
+  bdBtn.setAttribute('slot', 'actions');
   bdBtn.setAttribute('href', anchor.getAttribute('href') || '#');
-  bdBtn.setAttribute('kind', anchor.classList.contains('secondary') ? 'secondary' : 'danger');
-  bdBtn.setAttribute('size', 'md');
-  bdBtn.setAttribute('strong', '');
+  // the accent fill a conversion CTA takes, unless the author made the button
+  // secondary; its size is bd-button's responsive default
+  bdBtn.setAttribute('appearance', anchor.classList.contains('secondary') ? 'secondary' : 'accent');
   bdBtn.textContent = anchor.textContent.trim();
 
   if (anchor.target === '_blank') {
@@ -158,12 +169,11 @@ const buildFeaturesTab = (row, shouldReverse) => {
   if (applyReverse) bdFT.setAttribute('reverse', '');
 
   const headingEl = contentCell.querySelector('h1, h2, h3, h4, h5, h6');
-  if (headingEl) bdFT.appendChild(buildHeadingSlot(headingEl));
+  if (headingEl) bdFT.appendChild(buildTitle(headingEl));
 
-  const contentSlot = buildContentSlot(contentCell, headingEl);
-  if (contentSlot) bdFT.appendChild(contentSlot);
+  bdFT.append(...buildContent(contentCell, headingEl));
 
-  const cta = buildCtaSlot(contentCell);
+  const cta = buildActions(contentCell);
   if (cta) bdFT.appendChild(cta);
 
   const mediaSlot = buildMediaSlot(mediaCell);
@@ -173,6 +183,7 @@ const buildFeaturesTab = (row, shouldReverse) => {
 };
 
 export default async function decorate(block) {
+  wrapSectionInDsSection(block);
   const isAlternating = block.classList.contains('alternating');
   const forceReverse = block.classList.contains('reverse') ? true : null;
 

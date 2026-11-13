@@ -63,18 +63,22 @@ describe('link-columns block', () => {
     ]);
     const [individuals] = columns;
     const link = individuals.querySelector('bd-link');
-    expect(link.getAttribute('variant')).toBe('bold');
+    expect(link.getAttribute('appearance')).toBe('bold');
+    expect(link.hasAttribute('variant')).toBe(false);
     expect(link.hasAttribute('arrow')).toBe(true);
     expect(link.getAttribute('href')).toBe('https://www.bitdefender.com/en-us/consumer/');
     const body = individuals.querySelector('bd-p');
-    expect(body.getAttribute('variant')).toBe('small');
+    expect(body.getAttribute('appearance')).toBe('small');
+    expect(body.hasAttribute('variant')).toBe(false);
     expect(body.textContent).toBe('AI-Powered security, privacy, and scam protection for everyday digital life.');
   });
 
   it('lifts the section header with its lead', () => {
     const header = block.closest('.section').querySelector('bd-section-header');
-    expect(header.getAttribute('heading')).toBe('Find the Bitdefender solution built for you');
-    expect(header.querySelector('[slot="lead"]').textContent).toMatch(/^Whether you are protecting personal devices/);
+    const title = header.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('Find the Bitdefender solution built for you');
+    expect(title.getAttribute('as')).toBe('h2');
+    expect(header.querySelector(':scope > bd-p[slot="description"]').textContent).toMatch(/^Whether you are protecting personal devices/);
   });
 });
 

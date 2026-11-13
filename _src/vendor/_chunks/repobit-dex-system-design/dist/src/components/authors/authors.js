@@ -1,0 +1,6 @@
+import{a as e,t,u as n}from"../../../../../lit/index.js";import{n as r,t as i}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import{t as a}from"../shared/controller.slot.js";import"../tag/tag.js";var o=n`:host{display:block}[hidden]{display:none!important}.authors__label{margin:0 0 var(--spacing-16);font-family:var(--typography-body-small-fontFamily);font-size:var(--typography-body-small-fontSize);font-weight:var(--typography-body-small-fontWeight);line-height:var(--typography-body-small-lineHeight);letter-spacing:var(--typography-body-small-letterSpacing);color:var(--color-text-primary)}.authors__list{gap:var(--spacing-8);flex-wrap:wrap;display:flex}`,s=class extends t{constructor(...e){super(...e),this._slots=new a(this,{slots:[`eyebrow`,``]})}static{this.styles=[o]}render(){return e`
+      <div class="authors" part="authors">
+        <p class="authors__label" part="label" ?hidden=${!this._slots.has(`eyebrow`)}><slot name="eyebrow"></slot></p>
+        <div class="authors__list" part="list" ?hidden=${!this._slots.has(``)}><slot></slot></div>
+      </div>
+    `}};s=i([r(`bd-authors`)],s);export{s as BdAuthors};

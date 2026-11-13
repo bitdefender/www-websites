@@ -9,6 +9,6 @@
   gap: var(--spacing-24);
 }
 
-.stat-tiles .stat-tiles-lead bd-button-link[fullwidth] {
+.stat-tiles .stat-tiles-lead bd-button[full-width] {
   align-self: stretch;
 }

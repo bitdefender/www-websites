@@ -55,17 +55,24 @@ card. Add `(product)` or `(card)` to the block name to choose.
 
 ## Notes
 
-- Text, controls and the badge are dex-system-design atoms: `bd-h` (title, product name),
-  `bd-p` (description, details, disclaimer), `bd-custom-dropdown`, `bd-button-link`
-  (`accent` buy button, `tertiary` second button) and `bd-badge`. The card, image, scrim
-  and price are this block's CSS, on the design-system tokens.
+- Text, controls and the badge are dex-system-design atoms, drawn by their own attributes:
+  `bd-h` (the title at its h1 level; the product name at the h4 role in brand ink, as
+  `bd-product-hero` draws it), `bd-p` (description, details, disclaimer), `bd-select` (one
+  `bd-select-option` per product), `bd-button` (`appearance="accent"` buy button,
+  `appearance="tertiary"` second button, at the button's responsive size, full width on a
+  phone) and `bd-badge`. The card, image, scrim, signature and price are this block's CSS,
+  on the design-system tokens.
+- The section is on the design system's rhythm (`bd-section`), and the hero on its page
+  column (`ds-page-column`), so it lines up with the design-system sections around it.
 - The hero is the LCP, so it draws without waiting for the atoms. They load once the hero
-  image has, and until then the CSS draws each one at the size it renders, so nothing moves.
-  The token fallbacks are there for the same reason: the atoms install the tokens.
-- The dropdown is a native `<select>` inside `bd-custom-dropdown`. The atom can't be named
-  from outside, so the block gives the select the description as its `aria-label`: write
-  one when there is a dropdown. A heading used as the description becomes a paragraph.
-- The signature is text, not `bd-brand-signature-icon`: the mark is drawn in English.
+  image has, and until then the CSS draws each one as it renders, so nothing moves (the
+  `v4 gap:` rules: the design system draws nothing before an atom is defined). The token
+  fallbacks are there for the same reason: the atoms install the tokens.
+- The dropdown is a `bd-select`. The design draws no label above it, so the block names it
+  with the description, through `aria-label` on the element, which `bd-select` passes to the
+  native `<select>`: write a description when there is a dropdown. A heading used as the
+  description becomes a paragraph, and Word's bold on it goes.
+- The signature is text, not `<bd-icon name="brand-signature">`: the mark is drawn in English.
 - Prices, discounts and buy links come from the store (`bd-context` per product).
 - Rollback for a page: rename the block back to `Hero Dropdown` and republish it.
 - Adobe Target slots are named after the block (`hero-banner-mbox`): a test running on a

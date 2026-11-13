@@ -1,5 +1,5 @@
 import page_default from "../../scripts/page.js";
-import { createTag, generatePageLoadStartedName, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
+import { createTag, fullWidthOnPhone, generatePageLoadStartedName, wrapChildrenWithStoreContext, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { openModal } from "../../scripts/scripts.js";
 import { UserAgent } from "../../vendor/repobit/dex-utils.js";
 import { AdobeDataLayerService, ButtonClickEvent } from "../../vendor/repobit/dex-data-layer.js";
@@ -40,13 +40,12 @@ function toAtom(tagName, source, attributes = {}) {
 	return atom;
 }
 function createCta({ text, href, primary, buyLink, trialDuration, keepModal = false }) {
-	const cta = createTag("bd-button-link", {
+	const cta = createTag("bd-button", {
 		class: `hero-banner__cta hero-banner__cta--${primary ? "primary" : "secondary"}`,
-		variant: primary ? "accent" : "tertiary",
-		size: "lg",
-		fullwidth: ""
+		appearance: primary ? "accent" : "tertiary"
 	});
 	cta.textContent = text;
+	fullWidthOnPhone(cta);
 	if (buyLink) {
 		cta.buyLink = true;
 		cta.setAttribute("data-bd-watch-shadow", "");
@@ -84,13 +83,13 @@ function buildPriceBox(product, details, settings) {
 	const box = createTag("div", { class: "hero-banner__offer await-loader" });
 	if (details) box.append(createTag("bd-p", {
 		class: "hero-banner__details",
-		variant: "small"
+		appearance: "small"
 	}, details));
 	box.insertAdjacentHTML("beforeend", `
     <div class="hero-banner__price">
       <div class="hero-banner__was" data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility">
-        <bd-p class="hero-banner__full" variant="regular" font-weight="medium" color="muted"><s data-store-render data-store-price="full"></s></bd-p>
-        <bd-badge class="hero-banner__badge" tone="success" variant="fill" size="lg"><span data-store-render data-store-discount="percentage"></span> ${settings.discounttext || "OFF"}</bd-badge>
+        <bd-p class="hero-banner__full" appearance="regular" font-weight="medium" color="muted"><s data-store-render data-store-price="full"></s></bd-p>
+        <bd-badge class="hero-banner__badge" variant="success" appearance="fill" size="lg"><span data-store-render data-store-discount="percentage"></span> ${settings.discounttext || "OFF"}</bd-badge>
       </div>
       <p class="hero-banner__final"><span data-store-render data-store-price="discounted||full"></span></p>
     </div>
@@ -116,23 +115,23 @@ function buildSelector(products, names, accessibleName, boxes) {
 		if (labels.includes(label)) label = `${label} (${index + 1})`;
 		labels.push(label);
 	});
-	const dropdown = createTag("bd-custom-dropdown", {
+	const dropdown = createTag("bd-select", {
 		class: "hero-banner__select",
-		name: "hero-banner-product",
-		size: "md"
+		name: "hero-banner-product"
 	});
-	dropdown.options = labels;
+	dropdown.append(...labels.map((label) => {
+		const option = createTag("bd-select-option", { value: label });
+		option.textContent = label;
+		return option;
+	}));
 	[dropdown.value] = labels;
-	[dropdown.textContent] = labels;
-	dropdown.addEventListener("bd-change", (e) => {
-		const chosen = labels.indexOf(e.detail.value);
+	dropdown.addEventListener("change", (e) => {
+		const chosen = labels.indexOf(e.target.value);
 		boxes.forEach((box, index) => {
 			box.hidden = index !== chosen;
 		});
 	});
-	if (accessibleName) whenRendered(dropdown).then(() => {
-		dropdown.shadowRoot?.querySelector("select")?.setAttribute("aria-label", accessibleName);
-	});
+	if (accessibleName) dropdown.setAttribute("aria-label", accessibleName);
 	const selector = createTag("div", { class: "hero-banner__selector" });
 	selector.append(dropdown);
 	return selector;
@@ -192,7 +191,12 @@ async function loadAtoms(block) {
 		console.warn("hero-banner: DSN import failed, continuing with native rendering", err);
 	}
 }
+function unbold(el) {
+	el.querySelectorAll("strong, b").forEach((bold) => bold.replaceWith(...bold.childNodes));
+	return el;
+}
 function decorate(block) {
+	wrapSectionInDsSection(block);
 	const settings = { ...block.closest(".section")?.dataset || {} };
 	const { signature, hardcodedLink, linksOpenInNewTab } = settings;
 	const content = readContent(block.querySelector(":scope > div > div") || block);
@@ -211,16 +215,11 @@ function decorate(block) {
 	}));
 	if (content.h1) copy.append(toAtom("bd-h", content.h1, {
 		class: "hero-banner__title",
-		as: "h1",
-		"visual-level": "h1"
+		as: "h1"
 	}));
 	if (content.description.length) {
 		const description = createTag("div", { class: "hero-banner__description" });
-		description.append(...content.description.map((el) => {
-			const paragraph = toAtom("bd-p", el, { variant: "regular" });
-			if (/^H[1-6]$/.test(el.tagName)) paragraph.dataset.authoredAs = "heading";
-			return paragraph;
-		}));
+		description.append(...content.description.map((el) => toAtom("bd-p", /^H[1-6]$/.test(el.tagName) ? unbold(el) : el)));
 		copy.append(description);
 	}
 	if (products.length) {
@@ -249,7 +248,7 @@ function decorate(block) {
 	if (content.disclaimer.length) {
 		const disclaimer = createTag("div", { class: "hero-banner__disclaimer" });
 		disclaimer.append(...content.disclaimer.map((el) => toAtom("bd-p", el, {
-			variant: "xsmall",
+			appearance: "xsmall",
 			color: "muted"
 		})));
 		copy.append(disclaimer);
@@ -259,7 +258,10 @@ function decorate(block) {
 		content.marks.forEach((paragraph) => marks.append(...paragraph.querySelectorAll("picture")));
 		copy.append(marks);
 	}
-	block.replaceChildren(copy, buildMedia(content.picture, signature, isProductLook));
+	block.classList.add("ds-page-column");
+	const panel = createTag("div", { class: "hero-banner__panel" });
+	panel.append(copy, buildMedia(content.picture, signature, isProductLook));
+	block.replaceChildren(panel);
 	const img = block.querySelector(".hero-banner__media img");
 	if (img && !img.complete) {
 		img.addEventListener("load", () => loadAtoms(block), { once: true });
@@ -271,7 +273,7 @@ function decorate(block) {
 		clickEvent.eventInfo = { page: generatePageLoadStartedName() };
 		AdobeDataLayerService.push(clickEvent);
 	});
-	if (linksOpenInNewTab) block.querySelectorAll("bd-button-link.hero-banner__cta").forEach((cta) => {
+	if (linksOpenInNewTab) block.querySelectorAll("bd-button.hero-banner__cta").forEach((cta) => {
 		if (cta.href && !cta.href.includes("#")) cta.target = "_blank";
 	});
 }

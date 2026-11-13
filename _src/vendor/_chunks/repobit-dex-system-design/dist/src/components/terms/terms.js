@@ -1,0 +1,8 @@
+import{a as e,t,u as n}from"../../../../../lit/index.js";import"../shared/token-scales.js";import{n as r,t as i}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../p/p.js";import{t as a}from"../shared/controller.slot.js";import"../h/h.js";import"../link/link.js";import{t as o}from"../shared/ensemble.css.js";import"../list/list-item/list-item.js";import"../list/list.js";var s=n`:host{background:var(--color-surface-subtle);display:block}.bd-terms-container{padding-block:var(--spacing-44);font-family:var(--typography-fontFamily-sans)}.bd-terms-wrapper{max-width:var(--content-width-readable);padding:var(--spacing-14) var(--spacing-20) var(--spacing-40) var(--spacing-20);margin-inline:auto}.title{padding-bottom:var(--spacing-16)}::slotted(bd-h[slot=title]),::slotted(bd-display[slot=title]){--bd-heading-font-size:var(--typography-heading-h3-fontSize);--bd-heading-font-weight:var(--typography-heading-h3-fontWeight);--bd-heading-line-height:var(--typography-heading-h3-lineHeight);--bd-heading-letter-spacing:var(--typography-heading-h3-letterSpacing);--bd-heading-font-family:var(--typography-heading-h3-fontFamily)}::slotted(bd-list){margin-bottom:var(--spacing-16);display:block}`,c=class extends t{constructor(...e){super(...e),this._slots=new a(this,{slots:[`title`]})}static{this.styles=[o,s]}render(){return e`
+      <div class="bd-ensemble bd-terms-container">
+        <div class="bd-terms-wrapper">
+          <div class="title" ?hidden=${!this._slots.has(`title`)}><slot name="title"></slot></div>
+          <slot></slot>
+        </div>
+      </div>
+    `}};c=i([r(`bd-terms`)],c);export{c as BdTerms};

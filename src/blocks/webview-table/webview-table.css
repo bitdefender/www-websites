@@ -445,9 +445,11 @@
     margin-bottom: 16px;
 }
 
+/* the page column (at :root), capped at the table's 1000px measure */
 .responsive .webview-table-wrapper {
-    max-width: 1000px;
-    padding: 0 18px;
+    box-sizing: border-box;
+    max-width: min(1000px, var(--page-column-max));
+    padding: 0 var(--page-column-gutter);
     height: unset;
     margin: auto;
 }

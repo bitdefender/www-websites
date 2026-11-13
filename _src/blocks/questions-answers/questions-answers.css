@@ -1,12 +1,13 @@
+/* the page column (at :root); --body-padding above and below until desktop */
 .questions-answers-wrapper {
-    padding: var(--body-padding);
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding: var(--body-padding) var(--page-column-gutter);
 }
 
 @media (min-width: 992px) { /* desktop */
     .questions-answers-wrapper {
-        max-width: 1330px;
-        padding: 0 var(--section-desktop-padding);
-        margin: 0 auto;
+        padding-block: 0;
     }
 }
 

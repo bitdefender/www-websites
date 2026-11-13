@@ -18,10 +18,12 @@
     border-radius: 16px;
 }    
 
+/* the columns sit on the page column (at :root) */
 .two-columns-wrapper {
-    max-width: 1300px;
-    margin: auto;
-    padding: 0 18px;
+    box-sizing: border-box;
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding-inline: var(--page-column-gutter);
 }
 
 .two-columns-wrapper p{

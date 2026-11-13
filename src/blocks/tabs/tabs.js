@@ -1,6 +1,25 @@
 import { load } from '@repobit/dex-system-design/loader';
-import { slotIcon } from '../../scripts/utils/utils.js';
+import { getSectionContent, slotIcon, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 import { readBlockConfig, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
+
+/*
+ * A bd-tab-group, built one of two ways:
+ *   Tab group   a `Tab group` row names the group; every section whose
+ *               Section Metadata has that `Tab group` and a `Tab` becomes a
+ *               panel, its blocks decorated inside it
+ *   table       rows with an h1-h3 start a tab; rows with an h4-h6 add a
+ *               bd-feature-column to it; the rows under a column are its
+ *               accordion's items
+ * The section's heading and the paragraph after it are the group's title and
+ * description, which bd-tab-group draws (heading-h3 and body-large, centred)
+ * and which name its tab strip.
+ */
+
+// the heading level a section title takes where the section has none
+const SECTION_LEVEL = 2;
+
+/** One level under `level`, h6 at most. */
+const below = (level) => Math.min(level + 1, 6);
 
 const getImageSrc = (iconCell) => {
   const image = iconCell?.querySelector('img');
@@ -12,57 +31,146 @@ const parseIconColor = (cell) => {
   return match ? match[0] : null;
 };
 
+/** The icon size the cell names (`size: 32`), in px, or null. */
 const parseIconSize = (cell) => {
   const match = cell?.textContent?.match(/\bsize:?\s*(\d+)/i);
-  return match ? match[1] : '40';
+  return match ? Number(match[1]) : null;
 };
 
-const buildTabCol = (cells, isFirstOpen, bgBlue) => {
+// the icon scale's steps and the px each one's --icon-*-size resolves to
+const ICON_STEPS = [['xs', 12], ['sm', 16], ['md', 20], ['lg', 24], ['xl', 32], ['2xl', 48], ['3xl', 64]];
+
+/** The step of the icon scale nearest a px size; between two, the larger. */
+const nearestIconStep = (px) => ICON_STEPS.reduce(
+  (best, step) => (Math.abs(step[1] - px) <= Math.abs(best[1] - px) ? step : best),
+)[0];
+
+/**
+ * The column's icon, as bd-feature-column's icon slot takes it: the cell's
+ * image as a bd-img, at the size the cell names or else 40px, the column
+ * icon of bd-feature-column's own examples; or its inline SVG as a bd-icon
+ * (slotIcon), at the step of the icon scale nearest the size the cell names.
+ * @param {HTMLElement} [iconCell]
+ * @returns {HTMLElement|null}
+ */
+const buildColumnIcon = (iconCell) => {
+  const size = parseIconSize(iconCell);
+  const imageSrc = getImageSrc(iconCell);
+  if (imageSrc) {
+    const img = document.createElement('bd-img');
+    img.slot = 'icon';
+    img.setAttribute('src', imageSrc);
+    // it illustrates the title beside it
+    img.setAttribute('alt', '');
+    img.setAttribute('width', String(size || 40));
+    img.setAttribute('height', String(size || 40));
+    return img;
+  }
+  // the page's own inline SVG: decorate() waited for the icon pass
+  const iconSpan = iconCell?.querySelector('span.icon');
+  if (!iconSpan) return null;
+  return slotIcon(iconSpan, {
+    color: parseIconColor(iconCell),
+    ...(size && { size: nearestIconStep(size) }),
+  });
+};
+
+/**
+ * A heading in a slot: the component around it sets its size, the page's
+ * outline its level.
+ * @param {string} text
+ * @param {number} level 1 to 6
+ */
+const buildTitle = (text, level) => {
+  const bdH = document.createElement('bd-h');
+  bdH.setAttribute('slot', 'title');
+  bdH.setAttribute('as', `h${level}`);
+  bdH.textContent = text;
+  return bdH;
+};
+
+/**
+ * The tab group with the section's title, at the level the page wrote it,
+ * and its description.
+ * @param {{ title: string, level: number, subtitle: string, tint: boolean }} context
+ */
+const buildTabGroup = ({
+  title, level, subtitle, tint,
+}) => {
+  const group = document.createElement('bd-tab-group');
+  // the brand wash behind the group, for a section styled to stand on blue
+  if (tint) group.setAttribute('background', 'tint');
+  if (title) group.appendChild(buildTitle(title, level));
+  if (subtitle) {
+    const bdP = document.createElement('bd-p');
+    bdP.setAttribute('slot', 'description');
+    bdP.textContent = subtitle;
+    group.appendChild(bdP);
+  }
+  return group;
+};
+
+/**
+ * Adds a tab and the panel it shows to the group, paired by a name made from
+ * the label, unique in the group.
+ * @param {HTMLElement} group the bd-tab-group
+ * @param {string} label the tab's words
+ * @returns {HTMLElement} the bd-tab-panel
+ */
+const addTab = (group, label) => {
+  const slug = label.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'tab';
+  const taken = new Set([...group.querySelectorAll(':scope > bd-tab-panel')]
+    .map((panel) => panel.getAttribute('name')));
+  let name = slug;
+  for (let n = 2; taken.has(name); n += 1) name = `${slug}-${n}`;
+
+  const tab = document.createElement('bd-tab');
+  tab.setAttribute('panel', name);
+  tab.textContent = label;
+  const panel = document.createElement('bd-tab-panel');
+  panel.setAttribute('name', name);
+  group.append(tab, panel);
+  return panel;
+};
+
+/**
+ * A bd-feature-column: its title, icon and description, and an accordion
+ * that the rows under it fill.
+ * @param {HTMLElement[]} cells the row's title, icon and description cells
+ * @param {boolean} isFirstOpen
+ * @param {number} level the column title's heading level
+ */
+const buildTabCol = (cells, isFirstOpen, level) => {
   const [titleCell, iconCell, descCell] = cells;
   const heading = titleCell.querySelector('h1, h2, h3, h4, h5, h6');
 
-  const col = document.createElement('bd-feature-col');
-  col.setAttribute('title', heading?.textContent?.trim() || titleCell.textContent.trim());
+  const col = document.createElement('bd-feature-column');
+  col.appendChild(buildTitle(heading?.textContent?.trim() || titleCell.textContent.trim(), level));
 
-  // a plain wrapper for the authored icon: bd-features finds it by its slot.
-  // Not bd-individual-icon, which the loader would define as the design
-  // system's own glyph, drawn in place of the authored one.
-  const icon = document.createElement('span');
-  icon.setAttribute('slot', 'icon');
-  const imageSrc = getImageSrc(iconCell);
-  // the page's own inline SVG: decorate() waited for the icon pass
-  const iconSpan = !imageSrc && iconCell?.querySelector('span.icon');
-  if (imageSrc) {
-    const img = document.createElement('img');
-    img.src = imageSrc;
-    icon.appendChild(img);
-  } else if (iconSpan) {
-    icon.appendChild(slotIcon(iconSpan, {
-      color: parseIconColor(iconCell),
-      size: parseIconSize(iconCell),
-    }));
-  }
-  col.appendChild(icon);
+  const icon = buildColumnIcon(iconCell);
+  if (icon) col.appendChild(icon);
 
-  if (descCell) {
-    const descText = descCell.textContent.trim();
-    if (descText) {
+  if (descCell?.textContent.trim()) {
+    // a bd-p per authored paragraph, or one for copy written straight in the cell
+    const paragraphs = [...descCell.querySelectorAll(':scope > p')].filter((p) => p.textContent.trim());
+    (paragraphs.length ? paragraphs : [descCell]).forEach((source) => {
       const bdP = document.createElement('bd-p');
       bdP.setAttribute('slot', 'description');
-      bdP.setAttribute('kind', 'small');
-      bdP.innerHTML = descCell.innerHTML;
+      bdP.innerHTML = source.innerHTML;
       col.appendChild(bdP);
-    }
+    });
   }
 
-  const accordionSection = document.createElement('bd-accordion-section');
-  accordionSection.setAttribute('no-container', '');
-  if (bgBlue) accordionSection.setAttribute('bg-blue', '');
-  col.appendChild(accordionSection);
+  const accordion = document.createElement('bd-accordion');
+  accordion.setAttribute('without-container', '');
+  col.appendChild(accordion);
 
-  col.accordionSection = accordionSection;
+  col.accordion = accordion;
   col.isFirstOpen = isFirstOpen;
   col.firstItemAdded = false;
+  col.itemLevel = below(level);
 
   return col;
 };
@@ -73,7 +181,8 @@ const appendAccordionItem = (col, cells) => {
   if (!titleText) return;
 
   const item = document.createElement('bd-accordion-item');
-  item.setAttribute('title', titleText);
+  // the item's question, a level under its column's title
+  item.appendChild(buildTitle(titleText, col.itemLevel));
 
   if (col.isFirstOpen && !col.firstItemAdded) {
     item.setAttribute('open', '');
@@ -85,26 +194,35 @@ const appendAccordionItem = (col, cells) => {
     if (children.length) {
       children.forEach((child) => {
         const bdP = document.createElement('bd-p');
-        bdP.setAttribute('kind', 'small');
+        bdP.setAttribute('appearance', 'small');
         bdP.innerHTML = child.innerHTML;
         item.appendChild(bdP);
       });
     } else {
       const bdP = document.createElement('bd-p');
-      bdP.setAttribute('kind', 'small');
+      bdP.setAttribute('appearance', 'small');
       bdP.innerHTML = contentCell.innerHTML;
       item.appendChild(bdP);
     }
   }
 
-  col.accordionSection.appendChild(item);
+  col.accordion.appendChild(item);
 };
 
-const getSectionContext = (block) => {
+/**
+ * What the group takes from its section: the heading in the section's
+ * default content and the paragraph after it, the heading's level, and
+ * whether the section is styled to stand on blue (the `bg-blue` config row or
+ * the tabs-container-v2 style).
+ * @param {HTMLElement} block
+ * @param {object} [config] the block's config rows
+ */
+const getSectionContext = (block, config = {}) => {
   const section = block.closest('.section');
+  const content = getSectionContent(section);
   const wrapper = block.closest('.tabs-wrapper');
-  const defaultWrapper = wrapper?.parentElement === section
-    ? section.querySelector(':scope > .default-content-wrapper')
+  const defaultWrapper = content && wrapper?.parentElement === content
+    ? content.querySelector(':scope > .default-content-wrapper')
     : null;
   const titleEl = defaultWrapper?.querySelector('h1, h2, h3, h4, h5, h6') || null;
   const subtitleEl = titleEl?.nextElementSibling?.tagName === 'P'
@@ -113,14 +231,16 @@ const getSectionContext = (block) => {
   return {
     defaultWrapper,
     title: titleEl?.textContent?.trim() || '',
+    level: titleEl ? Number(titleEl.tagName[1]) : SECTION_LEVEL,
     subtitle: subtitleEl?.textContent?.trim() || '',
+    tint: 'bg-blue' in config || !!section?.classList.contains('tabs-container-v2'),
   };
 };
 
-const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
-  const tabsEl = document.createElement('bd-tabs');
-  if (title) tabsEl.setAttribute('title', title);
-  if (subtitle) tabsEl.setAttribute('subtitle', subtitle);
+const buildTabsFromBlock = (block, context) => {
+  const tabsEl = buildTabGroup(context);
+  // the columns sit under the section's title: the tabs are not headings
+  const columnLevel = below(context.level);
 
   const isFirstOpen = block.classList.contains('first-open');
   let currentPanel = null;
@@ -136,21 +256,19 @@ const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
     const headingLevel = heading ? parseInt(heading.tagName[1], 10) : null;
 
     if (headingLevel !== null && headingLevel <= 3) {
-      currentPanel = document.createElement('bd-tab-panel');
-      currentPanel.setAttribute('title', heading.textContent.trim());
-      tabsEl.appendChild(currentPanel);
+      currentPanel = addTab(tabsEl, heading.textContent.trim());
       currentFeatures = null;
       currentCol = null;
     } else if (headingLevel !== null) {
       if (!currentPanel) {
-        currentPanel = document.createElement('bd-tab-panel');
-        tabsEl.appendChild(currentPanel);
+        // columns authored before the first tab's heading go in a tab with no words
+        currentPanel = addTab(tabsEl, '');
       }
       if (!currentFeatures) {
-        currentFeatures = document.createElement('bd-features');
+        currentFeatures = document.createElement('bd-feature-columns');
         currentPanel.appendChild(currentFeatures);
       }
-      currentCol = buildTabCol(cells, isFirstOpen, bgBlue);
+      currentCol = buildTabCol(cells, isFirstOpen, columnLevel);
       currentFeatures.appendChild(currentCol);
     } else if (currentCol) {
       appendAccordionItem(currentCol, cells);
@@ -160,31 +278,7 @@ const buildTabsFromBlock = (block, title, subtitle, bgBlue) => {
   return tabsEl;
 };
 
-function suppressPanelMinHeight(bdTabs) {
-  const { shadowRoot } = bdTabs;
-  if (!shadowRoot) return;
-
-  let wrapperObs = null;
-
-  const attachToWrapper = () => {
-    const wrapper = shadowRoot.querySelector('.bd-panel-wrapper');
-    if (!wrapper) return;
-    if (wrapper.style.minHeight) wrapper.style.removeProperty('min-height');
-    if (wrapperObs) wrapperObs.disconnect();
-    wrapperObs = new MutationObserver(() => {
-      if (wrapper.style.minHeight) wrapper.style.removeProperty('min-height');
-    });
-    wrapperObs.observe(wrapper, { attributes: true, attributeFilter: ['style'] });
-  };
-
-  const component = shadowRoot.querySelector('.bd-tabs-component');
-  if (component) {
-    new MutationObserver(attachToWrapper).observe(component, { childList: true });
-  }
-  attachToWrapper();
-}
-
-function buildTabsFromSections(config, title, subtitle) {
+function buildTabsFromSections(config, context) {
   const tabGroupName = config['tab-group'];
   const tabsSelector = tabGroupName
     ? `[data-tab-group="${tabGroupName}"][data-tab]`
@@ -193,93 +287,50 @@ function buildTabsFromSections(config, title, subtitle) {
   const sections = [...document.querySelectorAll(tabsSelector)];
   if (!sections.length) return null;
 
-  const bdTabs = document.createElement('bd-tabs');
-  if ('bg-blue' in config) bdTabs.setAttribute('bg-blue', '');
-  if (title) bdTabs.setAttribute('title', title);
-  if (subtitle) bdTabs.setAttribute('subtitle', subtitle);
+  const bdTabs = buildTabGroup(context);
 
   sections.forEach((section) => {
-    const tabPanel = document.createElement('bd-tab-panel');
-    tabPanel.setAttribute('title', section.dataset.tab);
-    while (section.firstChild) tabPanel.appendChild(section.firstChild);
+    const tabPanel = addTab(bdTabs, section.dataset.tab);
+    // the section's wrappers, out of its bd-section if a block already laid it out
+    const content = getSectionContent(section);
+    while (content.firstChild) tabPanel.appendChild(content.firstChild);
     section.remove();
-    bdTabs.appendChild(tabPanel);
   });
 
   return bdTabs;
 }
 
-function normalizeLoadingFeatureIcons(container) {
-  const selectors = [
-    '.features.block [class*="icon-"] svg',
-  ];
-
-  container.querySelectorAll(selectors.join(', ')).forEach((svg) => {
-    svg.style.width = '40px';
-    svg.style.height = '40px';
-    svg.style.maxWidth = '40px';
-    svg.style.maxHeight = '40px';
-    svg.style.display = 'block';
-  });
-}
-
-function watchAndNormalizeFeatureIcons(container) {
-  const observer = new MutationObserver(() => {
-    normalizeLoadingFeatureIcons(container);
-  });
-
-  observer.observe(container, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['data-block-status'],
-  });
-
-  return observer;
-}
-
 export default async function decorate(block) {
+  // the section on the design system's rhythm; the blocks decorated in its
+  // panels find this bd-section already there
+  wrapSectionInDsSection(block);
   const config = readBlockConfig(block);
-  const bgBlue = 'bg-blue' in config;
 
   if ('tab-group' in config) {
     [...block.children].forEach((child) => child.remove());
 
-    const { defaultWrapper, title, subtitle } = getSectionContext(block);
-    if (defaultWrapper && title) defaultWrapper.remove();
+    const context = getSectionContext(block, config);
+    if (context.defaultWrapper && context.title) context.defaultWrapper.remove();
 
-    const bdTabs = buildTabsFromSections(config, title, subtitle);
+    const bdTabs = buildTabsFromSections(config, context);
     if (bdTabs) {
       block.replaceChildren(bdTabs);
-      normalizeLoadingFeatureIcons(bdTabs);
-      const iconObserver = watchAndNormalizeFeatureIcons(bdTabs);
 
       try {
         await loadBlocks(bdTabs);
-        normalizeLoadingFeatureIcons(bdTabs);
-        bdTabs.querySelectorAll('bd-accordion-bg').forEach((el) => el.setAttribute('no-padding', ''));
         await load(bdTabs);
-        if (typeof bdTabs.requestUpdate === 'function') {
-          bdTabs.requestUpdate();
-        }
-        iconObserver.disconnect();
-        if (typeof bdTabs.updateComplete?.then === 'function') {
-          await bdTabs.updateComplete;
-        }
-        suppressPanelMinHeight(bdTabs);
       } catch (err) {
-        iconObserver.disconnect();
         // eslint-disable-next-line no-console
         console.warn('DSN imports failed (Mode 1)', err);
       }
     }
   } else {
-    // the icons are SVG before bd-features copies them (slotIcon)
+    // the icons are SVG before slotIcon reads them
     await decorateIcons(block);
-    const { defaultWrapper, title, subtitle } = getSectionContext(block);
-    if (defaultWrapper && title) defaultWrapper.remove();
+    const context = getSectionContext(block);
+    if (context.defaultWrapper && context.title) context.defaultWrapper.remove();
 
-    const tabsEl = buildTabsFromBlock(block, title, subtitle, bgBlue);
+    const tabsEl = buildTabsFromBlock(block, context);
     try {
       await load(tabsEl);
     } catch (err) {

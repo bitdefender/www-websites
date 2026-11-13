@@ -1,33 +1,13 @@
-import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../heading/heading.js";import"../shared/token-scales.js";import"../paragraph/paragraph.js";import{t as s}from"../shared/ensemble.css.js";var c=r`:host{font-family:var(--typography-fontFamily-sans);background:radial-gradient(1200px 600px at 78% -10%, var(--color-brand-400) 0%, transparent 55%), linear-gradient(160deg, var(--color-brand-500) 0%, var(--color-brand-700) 48%, var(--color-brand-950) 100%);display:block}.bd-ctabanner-container{padding-block:var(--spacing-64);box-sizing:border-box;text-align:center;align-items:center;gap:var(--spacing-16);flex-direction:column;display:flex}.bd-ctabanner-footer{margin-top:var(--spacing-24);align-items:center;gap:var(--spacing-8);text-align:center;flex-direction:column;display:flex}.bd-ctabanner-footer:not(:has(*)){display:none}.bd-ctabanner-title{max-width:800px;margin:0;display:block}.bd-ctabanner-description{margin:0 0 var(--spacing-16);max-width:640px;display:block}.bd-ctabanner-cta{justify-content:center;gap:var(--spacing-16);flex-wrap:wrap;display:flex}.bd-ctabanner-caption{margin:var(--spacing-8) 0 0;color:color-mix(in srgb, var(--color-brand-on-fill) 65%, transparent);display:block}@media (width<576px){.bd-ctabanner-container{padding-block:var(--spacing-48)}.bd-ctabanner-cta{flex-direction:column;width:100%}}`,l=class extends n{constructor(...e){super(...e),this.title=``,this.description=``,this.caption=``}static{this.styles=[s,c]}render(){return e`
+import{a as e,t,u as n}from"../../../../../lit/index.js";import"../shared/token-scales.js";import{n as r,t as i}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../p/p.js";import{t as a}from"../shared/controller.slot.js";import"../h/h.js";import{t as o}from"../shared/ensemble.css.js";var s=n`:host{isolation:isolate;font-family:var(--typography-fontFamily-sans);background:linear-gradient(160deg, var(--color-surface-brand) 0%, var(--color-brand-700) 48%, var(--color-brand-950) 100%);display:block;position:relative}:host:before{content:"";z-index:var(--z-below);pointer-events:none;background:radial-gradient(1200px 600px at 78% -10%, var(--color-brand-400) 0%, transparent 55%);position:absolute;inset:0}.bd-ctabanner-container{padding-block:var(--spacing-64);box-sizing:border-box;text-align:center;align-items:center;gap:var(--spacing-16);flex-direction:column;display:flex}.bd-ctabanner-footer{margin-top:var(--spacing-24);align-items:center;gap:var(--spacing-8);text-align:center;flex-direction:column;display:flex}.bd-ctabanner-title[hidden],.bd-ctabanner-description[hidden],.bd-ctabanner-cta[hidden],.bd-ctabanner-caption[hidden],.bd-ctabanner-footer[hidden]{display:none}.bd-ctabanner-title{max-width:800px}::slotted(bd-h[slot=title]),::slotted(bd-display[slot=title]){--bd-heading-font-size:var(--typography-heading-h2-fontSize);--bd-heading-font-weight:var(--typography-heading-h2-fontWeight);--bd-heading-line-height:var(--typography-heading-h2-lineHeight);--bd-heading-letter-spacing:var(--typography-heading-h2-letterSpacing);--bd-heading-font-family:var(--typography-heading-h2-fontFamily);--bd-heading-color:var(--color-brand-on-fill);--bd-paragraph-color:var(--color-brand-on-fill);margin:0}.bd-ctabanner-description{margin-bottom:var(--spacing-16);max-width:640px}::slotted(bd-p[slot=description]){--bd-paragraph-font-size:var(--typography-body-large-fontSize);--bd-paragraph-font-weight:var(--typography-body-large-fontWeight);--bd-paragraph-line-height:var(--typography-body-large-lineHeight);--bd-paragraph-letter-spacing:var(--typography-body-large-letterSpacing);--bd-heading-color:var(--color-brand-on-fill);--bd-paragraph-color:var(--color-brand-on-fill)}.bd-ctabanner-cta{justify-content:center;gap:var(--spacing-16);flex-wrap:wrap;display:flex}.bd-ctabanner-caption{margin:var(--spacing-8) 0 0;font-family:var(--typography-fontFamily-mono);font-size:var(--typography-body-small-fontSize);font-weight:var(--typography-body-small-fontWeight);line-height:var(--typography-body-small-lineHeight);letter-spacing:var(--typography-body-small-letterSpacing);color:var(--color-brand-on-fill)}@media (width<576px){.bd-ctabanner-container{padding-block:var(--spacing-48)}.bd-ctabanner-cta{flex-direction:column;width:100%}}`,c=class extends t{constructor(...e){super(...e),this._slots=new a(this,{slots:[`title`,`description`,`actions`,`caption`,`footer`]})}static{this.styles=[o,s]}render(){let t=e=>this._slots.has(e);return e`
       <div class="bd-ensemble bd-ctabanner-container">
-        ${this.title?e`
-              <bd-h as="h2" color="on-brand" class="bd-ctabanner-title">
-                <slot name="title">${this.title}</slot>
-              </bd-h>
-            `:t}
+        <div class="bd-ctabanner-title" ?hidden=${!t(`title`)}><slot name="title"></slot></div>
+        <div class="bd-ctabanner-description" ?hidden=${!t(`description`)}><slot name="description"></slot></div>
+        <div class="bd-ctabanner-cta" ?hidden=${!t(`actions`)}><slot name="actions"></slot></div>
+        <div class="bd-ctabanner-caption" ?hidden=${!t(`caption`)}><slot name="caption"></slot></div>
 
-        ${this.description?e`
-              <bd-p variant="large" color="on-brand" class="bd-ctabanner-description">
-                <slot name="description">${this.description}</slot>
-              </bd-p>
-            `:t}
-
-        <div class="bd-ctabanner-cta">
-          <slot name="primary-button"></slot>
-          <slot name="secondary-button"></slot>
-        </div>
-
-        ${this.caption?e`
-              <bd-p variant="small" font-family="mono" class="bd-ctabanner-caption">
-                <slot name="caption">${this.caption}</slot>
-              </bd-p>
-            `:t}
-
-        <!-- Freeform slot for extra content below the caption — contact
+        <!-- Freeform slot for extra content below the caption -- contact
              info, legal disclaimers, links, etc. Empty by default,
              collapses to nothing when unused. -->
-        <div class="bd-ctabanner-footer">
-          <slot name="footer"></slot>
-        </div>
+        <div class="bd-ctabanner-footer" ?hidden=${!t(`footer`)}><slot name="footer"></slot></div>
       </div>
-    `}};o([i({type:String})],l.prototype,`title`,void 0),o([i({type:String})],l.prototype,`description`,void 0),o([i({type:String})],l.prototype,`caption`,void 0),l=o([a(`bd-cta-banner`)],l);
+    `}};c=i([r(`bd-cta-banner`)],c);export{c as BdCtaBanner};

@@ -348,7 +348,7 @@ main .section.link-right a {
 }
 
 .trusted .box-carousel-container .default-content-wrapper {
-    padding: 50px;
+    padding-block: 50px;
 }
 
 .trusted .box-carousel-container.testimonials .carousel-item .subtitle-secondary {
@@ -878,7 +878,7 @@ main .section.link-right a {
 
 @media (max-width: 768px) {
     .trusted .default-content-wrapper {
-        padding: 1em;
+        padding-block: 1em;
     }
 
     .trusted main .hero em {
@@ -886,7 +886,7 @@ main .section.link-right a {
     }
 
     .trusted .box-carousel-container .default-content-wrapper {
-        padding: 0 1em;
+        padding-block: 0;
     }
 }
 

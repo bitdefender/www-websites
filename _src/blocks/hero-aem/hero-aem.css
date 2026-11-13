@@ -13,18 +13,20 @@
   margin-bottom: 20px;
 }
 
+/* the design system's page column, the same edges as the DS sections */
 .hero-aem-wrapper {
-  max-width: var(--section-desktop-max-width);
-  padding: 0 var(--section-desktop-padding);
+  box-sizing: border-box;
+  max-width: var(--page-column-max);
+  padding: 0 var(--page-column-gutter);
   margin: 0 auto;
 }
 
-.hero-aem-container .hero-aem h1 {
+.hero-aem-container .hero-aem h1 { /* page title: the design system's h1 */
   color: #006DFF;
-  font-size: 23px;
-  font-weight: normal;
+  font-size: var(--ds-heading-h1-size);
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
   margin-top: 10px;
-  line-height: 1.1;
+  line-height: 1.25;
   margin-bottom: 20px;
 }
 
@@ -169,14 +171,9 @@
   height: 100% !important;
 }
 
+/* the wrapper inside holds the page column, so the section adds no gutter or cap */
 .hero-aem-container.we-container {
-  max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
   margin-top: 15px;
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box;
 }
 
 .hero-aem-container .button.primary {
@@ -256,7 +253,7 @@
   text-align: center;
   justify-content: center;
   cursor: pointer;
-  color: #006DFF;
+  color: #0059D6;
   background-color: transparent;
   border: 2px solid #006DFF;
   white-space: normal;
@@ -617,10 +614,14 @@
     display: none;
   }
 
+  /* a grey band on a phone: the wrapper runs full width and pads its content
+     onto the page column */
   .hero-aem-wrapper {
     background-color: #F8F8F8;
+    max-width: none;
     padding-top: 24px;
     padding-bottom: 24px;
+    padding-inline: var(--page-column-inset);
   }
 
   .hero-aem__card__desktop div>h1 {
@@ -717,7 +718,7 @@
 
 .hero-aem-container .signature {
   font-size: 24px;
-  color: #016DFF;
+  color: #006DFF;
   font-weight: bold;
   font-family: var(--body-font-family);
 }
@@ -854,7 +855,7 @@
     flex-wrap: wrap;
 
     h1 {
-      font-size: 38px;
+      font-size: var(--ds-heading-h1-size);
     }
   }
 
@@ -1071,12 +1072,6 @@
 
 
 @media (min-width: 992px) {
-  .hero-aem-container.we-container {
-    max-width: 1300px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-
   .hero-aem-container .col-lg-6 {
     flex: 0 0 auto;
     width: 49%;
@@ -1187,12 +1182,6 @@
     width: 24%;
   }
 
-  .hero-aem-container.we-container {
-    max-width: 1350px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
   .hero-aem-container .hero-aem .hero-aem__desktop-image img {
     max-height: 600px;
   }
@@ -1215,12 +1204,6 @@
       font-size: 36px;
     }
   }
-}
-
-@media (max-width: 1399px) {
-    .hero-aem-wrapper{
-        padding: 0 var(--section-large-desktop-padding);
-    }
 }
 
 @media (max-width: 1200px) {

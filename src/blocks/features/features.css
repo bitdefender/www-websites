@@ -1,4 +1,2 @@
-/* features.css file */
-main .section.features-container > .features-wrapper {
-  --bd-features-padding-bottom: 0;
-}
+/* Nothing of its own: bd-feature-columns pads and lays out the columns, and
+   bd-section spaces the section. */

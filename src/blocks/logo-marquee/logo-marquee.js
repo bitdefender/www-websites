@@ -4,7 +4,8 @@ import { getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/u
 // The logo assets are exported at 1.5x the size Figma draws them.
 const ASSET_SCALE = 1.5;
 
-// The speed is bd-logo-marquee's own (35s for partners and awards alike).
+/* The space between two logos, the steps bd-logo-marquee names for each
+   strip; the speed is the component's own, 35s for both. */
 const GAPS = {
   default: '48',
   awards: '24',
@@ -39,14 +40,14 @@ const buildTextItem = (cell) => {
 
   if (figure) {
     const display = document.createElement('bd-display');
-    display.setAttribute('variant', 'md');
+    display.setAttribute('appearance', 'md');
     display.textContent = figure;
     item.append(display);
   }
 
   if (label.textContent.trim()) {
     const p = document.createElement('bd-p');
-    p.setAttribute('variant', 'small');
+    p.setAttribute('appearance', 'small');
     // one word a line, as Figma stacks "most / awarded"
     p.style.width = 'min-content';
     p.append(...label.childNodes);
@@ -60,8 +61,8 @@ const getLabel = (block, textItem) => {
   if (textItem) return textItem.textContent.replace(/\s+/g, ' ').trim();
   const section = block.closest('.section');
   const wrapper = section && getSectionContent(section).querySelector(':scope > .default-content-wrapper');
-  // a block earlier in the section may have lifted the heading into bd-section-header
-  const lifted = wrapper?.querySelector(':scope > bd-section-header')?.getAttribute('heading');
+  // a block earlier in the section may have lifted the heading into bd-section-header's title slot
+  const lifted = wrapper?.querySelector(':scope > bd-section-header > bd-h[slot="title"]')?.textContent.trim();
   return lifted || wrapper?.querySelector(':is(h1, h2, h3)')?.textContent.trim() || '';
 };
 
@@ -94,6 +95,10 @@ export default async function decorate(block) {
 
   const marquee = document.createElement('bd-logo-marquee');
   marquee.setAttribute('gap', block.classList.contains('awards') ? GAPS.awards : GAPS.default);
+  /* No pause button on the strips, by request (2026-10-26): they still hold
+     while the pointer or focus is on them, and stand still under reduced
+     motion. */
+  marquee.toggleAttribute('without-pause-button', true);
   const label = getLabel(block, textItem);
   if (label) marquee.setAttribute('label', label);
   marquee.append(...items);
@@ -105,13 +110,4 @@ export default async function decorate(block) {
     console.warn('logo-marquee: DSN import failed, continuing with native rendering', err);
   }
   block.replaceChildren(marquee);
-
-  /* No pause button on the strips, by request: they still pause on hover and
-     focus. The button has no part, so the rule goes into the shadow root. */
-  await marquee.updateComplete;
-  if (marquee.shadowRoot) {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync('.toggle { display: none; }');
-    marquee.shadowRoot.adoptedStyleSheets = [...marquee.shadowRoot.adoptedStyleSheets, sheet];
-  }
 }

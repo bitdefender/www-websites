@@ -108,8 +108,9 @@ main .section.wide .image-columns img{
   height: auto;
 } 
 
+/* the wrapper is a .default-content-wrapper (set in image-columns.js): the page column */
 .ferrari .image-columns-wrapper{
-  padding: 20px;
+  padding-block: 20px;
 }
 
 main .image-columns.quotes > div{
@@ -863,8 +864,7 @@ main .image-columns.quotes > div > .image-columns-img-col img {
   }
 
   .ferrari .image-columns-wrapper{
-    padding: 0;
-    max-width: 1292px;
+    padding-block: 0;
   }
 }
 
@@ -901,11 +901,5 @@ main .image-columns.quotes > div > .image-columns-img-col img {
         }
       }
     }
-  }
-}
-
-@media (min-width: 1600px) { /* large desktop */
-  .image-columns-wrapper {
-    max-width: var(--section-large-desktop-max-width);
   }
 }

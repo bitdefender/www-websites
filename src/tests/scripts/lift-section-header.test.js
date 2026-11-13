@@ -43,26 +43,30 @@ describe('liftSectionHeader', () => {
 
     const wrapper = document.querySelector('.default-content-wrapper');
     expect(wrapper.firstElementChild).toBe(header);
-    expect(header.getAttribute('eyebrow')).toBe('25 years');
-    expect(header.getAttribute('heading')).toBe('Proven by Independent Testing');
-    expect(header.getAttribute('as')).toBe('h2');
+    expect(header.querySelector(':scope > span[slot="eyebrow"]').textContent).toBe('25 years');
+    const title = header.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('Proven by Independent Testing');
+    expect(title.getAttribute('as')).toBe('h2');
+    expect(header.hasAttribute('as')).toBe(false);
+    expect(header.hasAttribute('heading')).toBe(false);
     expect(header.getAttribute('layout')).toBe('stacked');
     expect(header.id).toBe('proven');
     expect(wrapper.querySelector('h2')).toBeNull();
   });
 
-  it('slots the lead with its link as an underlined bd-link', async () => {
+  it('slots the lead as a bd-p description, its link an underlined bd-link', async () => {
     const [block] = setupSection({ content: PROVEN });
 
     const header = await liftSectionHeader(block);
 
-    const lead = header.querySelector(':scope > span[slot="lead"]');
+    expect(header.querySelector('[slot="lead"]')).toBeNull();
+    const lead = header.querySelector(':scope > bd-p[slot="description"]');
     expect(lead.textContent).toBe('Independent analysts recognize Bitdefender.');
     const link = lead.querySelector('bd-link');
     expect(link.getAttribute('href')).toBe('/awards/');
     expect(link.hasAttribute('inline')).toBe(true);
     expect(link.hasAttribute('underline')).toBe(true);
-    expect(header.hasAttribute('eyebrow')).toBe(false);
+    expect(header.querySelector('[slot="eyebrow"]')).toBeNull();
   });
 
   it('leaves the button links under the header', async () => {
@@ -108,9 +112,9 @@ describe('liftSectionHeader', () => {
 
     const header = await liftSectionHeader(block);
 
-    expect(header.hasAttribute('heading')).toBe(false);
-    expect(header.hasAttribute('eyebrow')).toBe(false);
-    expect(header.querySelector('[slot="lead"]').textContent).toBe('Just a paragraph');
+    expect(header.querySelector('[slot="title"]')).toBeNull();
+    expect(header.querySelector('[slot="eyebrow"]')).toBeNull();
+    expect(header.querySelector('[slot="description"]').textContent).toBe('Just a paragraph');
     expect(document.querySelector('.default-content-wrapper > p')).toBeNull();
   });
 
@@ -122,8 +126,8 @@ describe('liftSectionHeader', () => {
 
     const header = await liftSectionHeader(block);
 
-    expect(header.getAttribute('eyebrow')).toBe('15+ years of AI-driven security innovation');
-    expect(header.querySelector('[slot="lead"]').textContent).toBe('Bitdefender is applying AI.');
+    expect(header.querySelector('[slot="eyebrow"]').textContent).toBe('15+ years of AI-driven security innovation');
+    expect(header.querySelector('[slot="description"]').textContent).toBe('Bitdefender is applying AI.');
     expect(header.getAttribute('layout')).toBe('split');
   });
 
@@ -135,7 +139,7 @@ describe('liftSectionHeader', () => {
     const header = await liftSectionHeader(block);
     const wrapper = document.querySelector('.default-content-wrapper');
 
-    expect(header.querySelector('[slot="lead"]').textContent).toBe('Whatever you protect.');
+    expect(header.querySelector('[slot="description"]').textContent).toBe('Whatever you protect.');
     expect(wrapper.firstElementChild.querySelector('picture')).not.toBeNull();
     expect(wrapper.lastElementChild).toBe(header);
   });

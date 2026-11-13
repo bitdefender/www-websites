@@ -1,7 +1,40 @@
 import { liftSectionHeader, matchHeights, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/blog-news/blog-news.js
-var DESKTOP = "(min-width: 992px)";
+var READ_MORE = "Read more";
+var slotted = (tag, slot, words) => {
+	const el = document.createElement(tag);
+	el.slot = slot;
+	el.textContent = words;
+	return el;
+};
+var buildCard = ({ title, link, image, channel }, readMore) => {
+	const card = document.createElement("bd-post-card");
+	card.setAttribute("href", link);
+	if (image) {
+		const cover = document.createElement("bd-img");
+		cover.slot = "media";
+		[
+			["src", image],
+			["alt", ""],
+			["loading", "lazy"]
+		].forEach(([name, value]) => cover.setAttribute(name, value));
+		card.append(cover);
+	}
+	if (channel) {
+		const badge = slotted("bd-badge", "badge", channel);
+		[
+			["variant", "info"],
+			["appearance", "shade"],
+			["size", "sm"]
+		].forEach(([name, value]) => badge.setAttribute(name, value));
+		card.append(badge);
+	}
+	const heading = slotted("bd-h", "title", title);
+	heading.setAttribute("as", "h3");
+	card.append(heading, slotted("span", "read-more", readMore));
+	return card;
+};
 var readFeed = async (url) => {
 	const response = await fetch(url);
 	if (!response.ok) throw new Error(`${url}: ${response.status}`);
@@ -19,7 +52,13 @@ async function decorateFeedCards(block) {
 	const { dataset } = block.closest(".section");
 	const feeds = Object.keys(dataset).filter((key) => /^endpoint/.test(key) && dataset[key]).map((key) => dataset[key]);
 	const header = liftSectionHeader(block);
-	const [modules, ...results] = await Promise.allSettled([load(["bd-grid", "bd-post-card"]), ...feeds.map(readFeed)]);
+	const [modules, ...results] = await Promise.allSettled([load([
+		"bd-grid",
+		"bd-post-card",
+		"bd-img",
+		"bd-badge",
+		"bd-h"
+	]), ...feeds.map(readFeed)]);
 	if (modules.status === "rejected") console.warn("blog-news: DSN import failed", modules.reason);
 	const lists = results.map((result) => {
 		if (result.status === "fulfilled") return result.value;
@@ -31,27 +70,16 @@ async function decorateFeedCards(block) {
 	for (let round = 0; posts.length < count && lists.some((list) => list[round]); round += 1) lists.forEach((list) => {
 		if (list[round] && posts.length < count) posts.push(list[round]);
 	});
-	const cards = posts.map(({ title, link, image, channel }) => {
-		const card = document.createElement("bd-post-card");
-		card.setAttribute("heading", title);
-		card.setAttribute("href", link);
-		if (channel) card.setAttribute("badge", channel);
-		if (image) card.setAttribute("image", image);
-		if (dataset.buttonText) card.setAttribute("read-more", dataset.buttonText);
-		return card;
-	});
+	const cards = posts.map((post) => buildCard(post, dataset.buttonText || READ_MORE));
 	const grid = document.createElement("bd-grid");
 	grid.className = "ds-page-column";
 	[
 		["cols", "1"],
 		["cols-sm", "1"],
 		["cols-md", "1"],
-		["cols-lg", "3"]
+		["cols-lg", "3"],
+		["gap", "md"]
 	].forEach(([name, value]) => grid.setAttribute(name, value));
-	const desktop = window.matchMedia?.(DESKTOP);
-	const setGap = () => grid.setAttribute("gap", !desktop || desktop.matches ? "md" : "sm");
-	setGap();
-	desktop?.addEventListener("change", setGap);
 	grid.append(...cards);
 	block.replaceChildren(grid);
 	await header;

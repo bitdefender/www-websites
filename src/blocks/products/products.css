@@ -1,5 +1,9 @@
+/* the cards sit on the page column (at :root), the same edges as the DS sections */
 .products-wrapper {
-  padding: 0 var(--body-padding);
+  box-sizing: border-box;
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
 }
 
 .products {
@@ -109,9 +113,9 @@
   line-height: 16px;
 }
 
-.product-card hr {
+.product-card hr { /* Figma divider: 1px, in the card border colour */
   margin: 17px 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: var(--border-width-1, 1px) solid var(--color-border-container, #e1e3e5);
   width: 100%;
 }
 
@@ -161,7 +165,7 @@
 }
 
 .product-card h3 {
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
   flex: 1;
   font-size: var(--heading-font-size-m);
   margin-top: 0;
@@ -210,7 +214,7 @@
 }
 
 .products.compact .product-card h4, .products.plans .product-card h4 {
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-bolder); /* headings are 600 */
   font-size: var(--body-font-size-s);
   margin: 5px;
   color: var(--checkbox-label);
@@ -407,14 +411,14 @@
   z-index: 2;
 }
 
+.products.solutions .product-card .price .old-price { /* Figma price/was: 150% */
+  line-height: 1.5;
+}
+
 .products.plans .product-card .price .old-price {
   font-weight: normal;
   font-size: var(--body-font-size-xl);
   color: #666;
-}
-
-.products.solutions:not(:is(.products.compact, .products.plans)) .product-card .price .old-price {
-  margin-bottom: 10px;
 }
 
 .products .product-card .price del {
@@ -428,8 +432,15 @@
   justify-content: center;
 }
 
-.two-columns .columns .product-card hr {
-  border-color: #dedede;
+/* solutions buy zone: the same type as new-prod-boxes (price 35px bold, notes 12px regular) */
+.products.solutions .product-card .price strong {
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1.25; /* Figma heading/h2 */
+}
+
+.products.solutions .product-card .price em {
+  font-weight: 400;
 }
 
 .product-card .button-container ~ .button-container {
@@ -466,9 +477,24 @@
   font-family: var(--body-font-family);
 }
 
-.products.solutions .product-card tr {
+/* matchHeights gives every .featured.nanoblock the tallest one's height (the save badge):
+   keep the label centred when a pill is stretched */
+.product-card .featured.nanoblock {
   display: inline-flex;
-  gap: 10px;
+  align-items: center;
+}
+
+.products.solutions .product-card tr { /* Figma "was + save": a centred row, spacing/8, as tall as the badge */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8, 8px);
+  min-height: 34px;
+}
+
+/* matchHeights groups this was-price block with the big price below and gives it that price's
+   height as an inline min-height; the row above keeps the cards aligned instead */
+.products.solutions .product-card tr .price.nanoblock {
+  min-height: 0 !important;
 }
 
 .products.solutions .product-card tr .nanoblock {
@@ -476,8 +502,18 @@
   align-items: center;
 }
 
-.products.solutions .product-card tr .nanoblock.featured {
-  font-weight: bold;
+/* save pill (the price row's .featured): the design system's bd-badge, tone success,
+   variant shade, size lg (Figma); the "Included in ..." .featured pill is not in a row */
+.product-card tr .nanoblock.featured {
+  color: var(--status-success-text, #0b6a26);
+  background-color: var(--status-success-surface-strong, #d1fadc);
+  border-radius: var(--radius-full, 9999px);
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  /* stylelint-disable custom-property-pattern */
+  font-size: var(--typography-fontSize-sm, 0.875rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+  /* stylelint-enable custom-property-pattern */
 }
 
 .product-card .button-text {
@@ -589,7 +625,6 @@
 .products.compare .product-card hr {
   margin-top: 40px;
   margin-bottom: 50px;
-  border-bottom: 2px solid #e5e7eb;
 }
 
 .products.compare .product-card.featured hr {
@@ -719,12 +754,6 @@
 }
 
 @media (width >= 992px) {
-  .products-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
-  }
-
   .products.compact, .products.plans {
     --max-columns: 3;
   }
@@ -840,12 +869,6 @@
   }
 }
 
-@media (width >= 1600px) {
-  .products-wrapper {
-    max-width: var(--section-large-desktop-max-width);
-  }
-}
-
 @media (width <= 480px) {
   .product-card a.button::after {
     top: calc(50% - 10px);
@@ -853,8 +876,8 @@
 }
 
 @media (width >= 310px) and (width <= 768px) {
-  .product-card {
-    width: 310px;
+  .product-card { /* one card per row: fill the page column */
+    width: 100%;
     margin: 1em auto;
   }
 
@@ -878,7 +901,7 @@
   .products.plans .product-card {
     margin: 0 auto;
     max-width: unset;
-    width: 310px;
+    width: 100%;
   }
 }
 
@@ -892,8 +915,103 @@
     justify-content: center;
   }
 
-  .products.compact .product-card, .products.plans .product-card {
+  .products.compact .product-card, .products.plans .product-card { /* wrap at 310px, grow to fill the column */
     max-width: unset;
-    width: 310px;
+    width: auto;
+    flex: 1 1 310px;
+  }
+}
+
+/* solutions cards: no shadow, and the design system's container border (as on new-prod-boxes),
+   the compact featured cards included: it replaces their green border */
+.products.solutions .product-card,
+.products.compact.solutions .product-card.featured {
+  border: var(--border-width-1, 1px) solid var(--color-border-container, #e1e3e5);
+  box-shadow: none;
+}
+
+/* solutions buy zone, per Figma (as on new-prod-boxes): no badge margin (the row's gap spaces it);
+   line heights heading/h2 125%, body/small 145% (price/was 150% is set with .old-price above) */
+.products.solutions .product-card tr .nanoblock.featured {
+  margin: 0;
+}
+
+.products.solutions .product-card .price.condition em,
+.products.solutions .product-card .price.condition ~ p {
+  line-height: 1.45;
+}
+
+/* solutions product titles: the same type as the new-prod-boxes titles (the design system's h5, 600, 1.25) */
+.products-wrapper .products.solutions.block .product-card h3,
+.products-wrapper .products.solutions.block .product-card h3 :is(strong, b) {
+  font-size: var(--ds-heading-h5-size);
+  font-weight: var(--font-weight-bolder);
+  line-height: 1.25;
+}
+
+/* solutions cards share the block's rows (subgrid), so every row lines up across a row of cards.
+   A subgrid inherits the row gap between all its rows, so rows of cards are spaced by the card's
+   margin instead; mergeSplitTitle (JS) keeps the same items in every card */
+.products-wrapper .products.solutions.block {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 0;
+  margin-bottom: -25px; /* the last row of cards' margin is not spacing: the section rhythm is */
+}
+
+.products-wrapper .products.solutions.block .product-card {
+  display: grid;
+  grid-row: span 30;
+  grid-template-rows: subgrid;
+  width: auto;
+  margin: 0 0 25px;
+}
+
+.products-wrapper .products.solutions.block .product-card .featured.nanoblock {
+  justify-self: start;
+}
+
+/* the "Included in ..." pill (not the price row's save badge): the design system's bd-badge,
+   tone brand, variant shade, size lg (Figma) */
+.products-wrapper .products.solutions.block .product-card .featured.nanoblock:not(tr *) {
+  color: var(--status-brand-text, #0059d6);
+  background-color: var(--status-brand-surface, #f0f7ff);
+  border-radius: var(--radius-full, 9999px);
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  /* stylelint-disable custom-property-pattern */
+  font-size: var(--typography-fontSize-sm, 0.875rem);
+  font-weight: var(--typography-fontWeight-medium, 500);
+  line-height: var(--typography-lineHeight-tight, 1.25);
+  /* stylelint-enable custom-property-pattern */
+}
+
+.products-wrapper .products.solutions.compact.block .product-card .featured.nanoblock {
+  justify-self: center;
+}
+
+
+/* solutions columns: one card per row on phones, two on tablets (a last card alone on its row is
+   centred at a card's width), then as many as fit from 992px, so three cards share one row */
+@media (width >= 768px) {
+  .products-wrapper .products.solutions.block {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .products-wrapper .products.solutions.block .product-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 12.5px);
+  }
+}
+
+@media (width >= 992px) {
+  .products-wrapper .products.solutions.block {
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  }
+
+  .products-wrapper .products.solutions.block .product-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    justify-self: stretch;
+    width: auto;
   }
 }

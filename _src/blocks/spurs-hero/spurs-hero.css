@@ -50,7 +50,11 @@
     height: 48vw;
 }
 
+/* the copy: a band as wide as the page, laid over the image from 992, that
+   pads the copy onto the page column (at :root in styles.css) */
 .spurs-hero-container .default-content-wrapper {
+    max-width: none;
+    padding-inline: var(--page-column-inset);
     padding-top: 20px !important;
     z-index: 4;
     background-color: #006EFF;
@@ -167,6 +171,16 @@
         align-items: center;
         justify-content: center;
         background-color: #006EFF;
+    }
+
+    /* the logo centres in the page column's right half: the image keeps its
+       half of the hero (the padding would otherwise shrink the copy's half)
+       and pads its end by the column's inset, its blue ground running on to
+       the page's edge */
+    .spurs-hero-container:not(.hero-ferrari) .img-container {
+        flex-shrink: 0;
+        width: 50%;
+        padding-right: var(--page-column-inset);
     }
 
     .spurs-hero-container.hero-ferrari .img-container {

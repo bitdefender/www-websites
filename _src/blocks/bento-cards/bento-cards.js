@@ -2,9 +2,11 @@ import { liftSectionHeader, splitAroundHeading, wrapSectionInDsSection } from ".
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/bento-cards/bento-cards.js
 var ART_LABELS = {
-	"mesh-globe": "badges",
-	"layer-stack": "labels",
-	"geo-core": "label"
+	"mesh-globe": (art, labels) => art.setAttribute("badges", labels),
+	"layer-stack": (art, labels) => art.setAttribute("labels", labels),
+	"geo-core": (art, labels) => {
+		art.textContent = labels;
+	}
 };
 var isLinkOnly = (p) => {
 	const link = p.querySelector("a");
@@ -14,8 +16,14 @@ var buildArt = (cell) => {
 	if (!cell) return null;
 	const picture = cell.querySelector("picture");
 	if (picture) {
-		picture.slot = "media";
-		return picture;
+		const img = picture.querySelector("img");
+		const src = img?.currentSrc || img?.getAttribute("src");
+		if (!src) return null;
+		const art = document.createElement("bd-img");
+		art.slot = "media";
+		art.setAttribute("src", src);
+		art.setAttribute("alt", img.getAttribute("alt") || "");
+		return art;
 	}
 	const [name, ...rest] = [...cell.querySelectorAll("p")].map((p) => p.textContent.trim());
 	const object = (name || cell.textContent).trim().toLowerCase();
@@ -24,11 +32,17 @@ var buildArt = (cell) => {
 	art.slot = "media";
 	art.setAttribute("object", object);
 	const labels = rest.join("|").split("|").map((label) => label.trim()).filter(Boolean);
-	if (labels.length) art.setAttribute(ART_LABELS[object], labels.join("|"));
+	if (labels.length) ART_LABELS[object](art, labels.join("|"));
 	return art;
 };
 /** The cell holding a card's art: a picture, or a bd-motion-art object's name. */
 var isArtCell = (cell) => !!cell.querySelector("picture") || !!ART_LABELS[(cell.querySelector("p")?.textContent || cell.textContent).trim().toLowerCase()];
+var slotted = (tag, slot, text) => {
+	const el = document.createElement(tag);
+	if (slot) el.slot = slot;
+	el.textContent = text;
+	return el;
+};
 var buildCard = (row) => {
 	const cells = [...row.children];
 	const copy = cells.find((cell) => cell.querySelector("h1, h2, h3, h4, h5, h6")) || cells.find((cell) => !isArtCell(cell));
@@ -38,23 +52,29 @@ var buildCard = (row) => {
 	const { heading, before, after } = splitAroundHeading(copy, prose);
 	if (!heading && !before.length && !after.length) return null;
 	const card = document.createElement("bd-bento-item");
-	card.setAttribute("tone", "brand");
-	if (heading) {
-		card.setAttribute("as", heading.tagName.toLowerCase());
-		card.setAttribute("title", heading.textContent.trim());
-	}
+	card.setAttribute("background", "brand");
 	const [badge] = before;
-	if (badge) card.setAttribute("badge", badge.textContent.trim());
+	if (badge) {
+		const label = slotted("bd-badge", "badge", badge.textContent.trim());
+		label.setAttribute("variant", "info");
+		label.setAttribute("appearance", "shade");
+		label.setAttribute("size", "sm");
+		card.append(label);
+	}
+	if (heading) {
+		const title = slotted("bd-h", "title", heading.textContent.trim());
+		title.setAttribute("as", heading.tagName.toLowerCase());
+		card.append(title);
+	}
 	const [body] = after;
-	if (body) card.setAttribute("body", body.textContent.trim());
+	if (body) card.append(slotted("bd-p", "", body.textContent.trim()));
 	const art = buildArt(cells.find((cell) => cell !== copy));
 	if (art) card.append(art);
 	paragraphs.filter(isLinkOnly).forEach((p) => {
 		const link = p.querySelector("a");
-		const cta = document.createElement("bd-button-link");
-		cta.setAttribute("variant", "outline-white");
+		const cta = slotted("bd-button", "actions", link.textContent.trim());
+		cta.setAttribute("appearance", "outline-white");
 		cta.setAttribute("href", link.getAttribute("href") || "");
-		cta.textContent = link.textContent.trim();
 		card.append(cta);
 	});
 	return card;

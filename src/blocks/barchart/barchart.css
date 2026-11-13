@@ -1,11 +1,31 @@
-/* Bar Chart Styles */
+/* On a v2 section the two charts of a row sit at the column's edges: the gap
+   between them takes whatever the column leaves beside two charts at the
+   grid's 598px column, and never less than the grid's own 32. */
+.barchart-container-v2 bd-bar-chart-grid {
+  --cs-gap: max(var(--spacing-32), calc(100% - 2 * 598px));
+}
 
-.barchart-container-v2 bd-compare-section {
+/* A single chart is horizontal and spans both 598px grid columns: stretch the
+   gap so it fills the section width instead of stopping at 2 * 598 + gap. */
+.barchart bd-bar-chart-grid:has(> bd-bar-chart[orientation="horizontal"]) {
+  --cs-gap: max(var(--spacing-32), calc(100% - 2 * 598px));
+}
+
+/* The section title and the charts' titles on the page's type scale, as the
+   rest of the consumer page has them: the title at the section-title size,
+   600 and 1.3 like the site's headings, and each chart's title (the h3 role
+   horizontal, h4 vertical) at the card-title size. */
+.barchart-container bd-section-header {
   /* stylelint-disable custom-property-pattern */
-  --cs-gap: max(var(--spacing-32, 32px), calc(100% - 2 * 598px));
-  --typography-heading-h4-fontSize: var(--typography-heading-h3-fontSize);
-  --typography-heading-h4-fontWeight: var(--typography-heading-h3-fontWeight);
-  --typography-heading-h4-lineHeight: var(--typography-heading-h3-lineHeight);
-  --typography-heading-h4-letterSpacing: var(--typography-heading-h3-letterSpacing);
+  --typography-heading-h2-fontSize: var(--ds-heading-h2-size);
+  --typography-heading-h2-fontWeight: var(--typography-heading-h3-fontWeight);
+  --typography-heading-h2-lineHeight: var(--typography-heading-h3-lineHeight);
+  /* stylelint-enable custom-property-pattern */
+}
+
+.barchart bd-bar-chart {
+  /* stylelint-disable custom-property-pattern */
+  --typography-heading-h3-fontSize: var(--ds-heading-h5-size);
+  --typography-heading-h4-fontSize: var(--ds-heading-h5-size);
   /* stylelint-enable custom-property-pattern */
 }

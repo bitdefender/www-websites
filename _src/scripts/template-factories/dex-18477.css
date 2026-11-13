@@ -24,7 +24,6 @@
         }
 
         .hero-aem-wrapper {
-            max-width: 1200px;
             background-color: #F8F8F8;
             padding-top: 24px;
             padding-bottom: 24px;
@@ -105,9 +104,10 @@
         }
     }
 
+    /* a narrower measure, centred on the page column */
     .bitdef-vs-brands-wrapper {
         margin: auto;
-        max-width: 920px;
+        max-width: min(920px, var(--page-column-max));
 
         h2 {
             font-size: 17px;
@@ -792,18 +792,12 @@
         }
 
         .hero-aem-container {
-            .hero-aem {
-                max-width: 1200px;
-            }
-
             .hero-aem__terms {
                 font-size: 24px;
             }
 
             .hero-aem-wrapper {
                 background-color: unset;
-                padding-left: 50px;
-                padding-right: 50px;
             }
 
             .hero-aem .hero-aem__card__desktop > div {
@@ -814,14 +808,6 @@
         .bitdef-vs-brands-container {
             margin-top: 32px;
         }
-
-        .dex-review-section-heading {
-            .default-content-wrapper {
-                padding-left: 50px;
-                padding-right: 50px;
-            }
-        }
-
 
         .dex-cards-review {
             .columns {
@@ -959,13 +945,7 @@
         }
 
         .awards-container {
-            max-width: 1200px;
-            margin: auto;
-
             .awards-wrapper {
-                padding-left: 50px;
-                padding-right: 50px;
-
                 .awards {
                     padding-top: 48px;
                     padding-bottom: 48px;
@@ -1475,18 +1455,9 @@
             }
         }
 
-        .awards-container {
-            .awards-wrapper {
-                padding-left: 0;
-                padding-right: 0;
-            }
-        }
-
         .hero-aem-container {
             .hero-aem-wrapper {
                 background-color: unset;
-                padding-left: 0;
-                padding-right: 0;
                 padding-bottom: 0;
             }
 
@@ -1533,9 +1504,7 @@
         --section-large-desktop-padding: 0;
 
         .columns-wrapper {
-            padding: 0;
-
-            --section-desktop-max-width: 1200px;
+            padding-block: 0;
         }
 
         .dex-carousel-cards-individual,
@@ -1561,7 +1530,11 @@
 
 @media (max-width: 767px) {
     .dex-18477 {
-        .columns-wrapper, .features-wrapper, .bitdef-vs-brands-wrapper {
+        .columns-wrapper, .bitdef-vs-brands-wrapper {
+            padding-block: 0;
+        }
+
+        .features-wrapper {
             padding: 0 16px;
         }
     }

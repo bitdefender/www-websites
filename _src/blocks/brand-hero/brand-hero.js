@@ -9,13 +9,27 @@ var DS_ICONS = [
 var BREAK = "";
 /**
 * The element's text on one line, except where the author wrote a <br>: that
-* becomes a newline, which bd-hero and bd-audience-card render as a break.
+* becomes a newline, which slotted() writes back as a <br>.
 */
 var text = (el) => {
 	if (!el) return "";
 	const copy = el.cloneNode(true);
 	copy.querySelectorAll("br").forEach((br) => br.replaceWith(BREAK));
 	return copy.textContent.split(BREAK).map((line) => line.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n");
+};
+/**
+* An element for one of a component's slots, holding the copy: its lines,
+* a <br> between each, as the author broke them.
+*/
+var slotted = (tag, slot, copy, attributes = {}) => {
+	const el = document.createElement(tag);
+	el.slot = slot;
+	Object.entries(attributes).forEach(([name, value]) => el.setAttribute(name, value));
+	copy.split("\n").forEach((line, index) => {
+		if (index) el.append(document.createElement("br"));
+		el.append(line);
+	});
+	return el;
 };
 /** The cell's text without its icon's, which decorateIcons may fill with markup. */
 var labelText = (cell) => {
@@ -40,8 +54,10 @@ var readCopy = (row) => {
 var readIcon = (cell) => {
 	const icon = cell?.querySelector(".icon");
 	const name = icon && [...icon.classList].find((c) => c.startsWith("icon-"))?.substring(5);
-	if (name && DS_ICONS.includes(name)) return document.createElement(`bd-${name}-icon`);
-	return icon ? icon.cloneNode(true) : null;
+	if (!name || !DS_ICONS.includes(name)) return null;
+	const dsIcon = document.createElement("bd-icon");
+	dsIcon.setAttribute("name", name);
+	return dsIcon;
 };
 /** A card row: [icon + eyebrow] [heading, description, link]; either cell may be missing. */
 var buildCard = (row) => {
@@ -53,9 +69,9 @@ var buildCard = (row) => {
 	const description = [...content?.querySelectorAll("p") || []].find((p) => text(p) && !p.contains(link));
 	const card = document.createElement("bd-audience-card");
 	const eyebrow = labelText(label);
-	if (eyebrow) card.setAttribute("eyebrow", eyebrow);
-	if (text(heading)) card.setAttribute("heading", text(heading));
-	if (description) card.setAttribute("description", text(description));
+	if (eyebrow) card.append(slotted("span", "eyebrow", eyebrow));
+	if (text(heading)) card.append(slotted("bd-h", "title", text(heading), { as: "h2" }));
+	if (description) card.append(slotted("bd-p", "description", text(description)));
 	if (link) {
 		card.setAttribute("href", link.getAttribute("href") || "");
 		if (link.target) card.setAttribute("target", link.target);
@@ -69,13 +85,13 @@ var buildCard = (row) => {
 	return card;
 };
 async function decorate(block) {
-	wrapSectionInDsSection(block)?.setAttribute("no-padding-top", "");
+	wrapSectionInDsSection(block)?.setAttribute("without-padding-top", "");
 	const [copyRow, ...cardRows] = [...block.children];
 	const { eyebrow, heading, lead } = readCopy(copyRow || block);
 	const hero = document.createElement("bd-hero");
-	if (eyebrow) hero.setAttribute("eyebrow", eyebrow);
-	if (heading) hero.setAttribute("heading", heading);
-	if (lead) hero.setAttribute("lead", lead);
+	if (eyebrow) hero.append(slotted("span", "eyebrow", eyebrow));
+	if (heading) hero.append(slotted("bd-h", "title", heading, { as: "h1" }));
+	if (lead) hero.append(slotted("bd-p", "description", lead));
 	const art = document.createElement("bd-motion-art");
 	art.setAttribute("slot", "media");
 	art.setAttribute("object", "brand-surface");
@@ -83,7 +99,6 @@ async function decorate(block) {
 	const cards = cardRows.map(buildCard);
 	if (cards.length) {
 		const grid = document.createElement("bd-grid");
-		grid.setAttribute("slot", "cards");
 		grid.setAttribute("cols", "1");
 		grid.setAttribute("cols-sm", "1");
 		grid.setAttribute("cols-md", "1");

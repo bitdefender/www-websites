@@ -2,9 +2,10 @@
     background-color: #f5f7fa;
 }
 
+/* a narrower intro: a 585px measure inside the column's gutters, centred */
 .tabs-slide-container .default-content-wrapper {
     text-align: center;
-    width: 585px;
+    width: calc(585px + 2 * var(--page-column-gutter));
     margin-bottom: 2em;
 }
 
@@ -30,6 +31,14 @@
     letter-spacing: 0;
     text-align: center;
     color: #525252;
+}
+
+/* the block, which tabs-slide.js gives the columns wrapper's class, is the page column */
+.tabs-slide.columns-wrapper {
+    box-sizing: border-box;
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding-inline: var(--page-column-gutter);
 }
 
 .spp-slider {
@@ -174,7 +183,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
-    padding: 20px 20px 0;
+    padding: 20px 0 0;
     box-sizing: border-box;
 }
 
@@ -256,7 +265,7 @@
     }
 
     .spp-slider .card {
-        width: calc(100% - 10px);
+        width: 100%;
     }
 
     .tabs-slide-container .default-content-wrapper {
@@ -264,7 +273,7 @@
     }
 
     .spp-slider .content {
-        padding: 0 20px;
+        padding: 0;
     }
 }
 
