@@ -973,6 +973,11 @@ main .creators-banner .signature {
   flex-direction: column;
   justify-content: center;
 
+  > hr { /* its auto inline margins would shrink it to nothing in the flex column */
+    align-self: stretch;
+    margin-inline: 0;
+  }
+
   > :first-child {
     margin-top: 0;
   }
