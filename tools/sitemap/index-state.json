@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-13T08:35:29.844Z",
+  "generatedAt": "2026-11-13T13:32:37.724Z",
   "redirects": {
     "sha": "7d0bb45978188e1a321998fb64df18d4e2bd5df26dd1daac9729654590d7048d",
     "entries": 1
@@ -147,12 +147,12 @@
       "rows": 33
     },
     "fr-be": {
-      "sha": "f9cd094dfc28806175328863d3e023425533b04961a408631f45da2fff296233",
-      "rows": 44
+      "sha": "93d3b29ecdbe865e9ee3a3b026c1cbbd3a4dacbede35e99c05a0783d17950f0b",
+      "rows": 43
     },
     "fr-fr": {
-      "sha": "edd972028e8ed003167386d234352b6bcf4823090f522af9fcee537500256509",
-      "rows": 44
+      "sha": "761d909e548205d694f406f2763eaa9bfc110bf96dfd622f91325406e66a7fae",
+      "rows": 43
     },
     "it-it": {
       "sha": "8884d9b423de1f426fdf37781c2fdb1979c447a817b1ef85e423dfc0a842827a",
