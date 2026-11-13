@@ -143,6 +143,12 @@
     }
 
     @media (min-width: 992px) {
+        /* the svg-mode drawing hangs 64px below the banner and is taller than it, so it
+           reaches past the section's padding: the section pads 64px, or clips the icon */
+        &:has(.interactive-banner.svg-mode) {
+            padding-block: 64px;
+        }
+
         .interactive-banner-wrapper {
             .interactive-banner {
                 margin-top: 0;
