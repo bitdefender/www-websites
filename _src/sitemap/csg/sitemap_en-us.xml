@@ -1682,7 +1682,7 @@
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-us/</loc>
-        <lastmod>2026-09-23T18:29:24.000Z</lastmod>
+        <lastmod>2026-11-16T10:51:51.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/"/>
         <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/"/>
         <xhtml:link rel="alternate" hreflang="nl-nl" href="https://www.bitdefender.com/nl-nl/"/>
@@ -1845,6 +1845,7 @@
         <loc>https://www.bitdefender.com/en-us/partners/bundle-solutions/</loc>
         <lastmod>2026-10-26T14:23:38.000Z</lastmod>
         <xhtml:link rel="alternate" hreflang="en-us" href="https://www.bitdefender.com/en-us/partners/bundle-solutions/"/>
+        <xhtml:link rel="alternate" hreflang="ro-ro" href="https://www.bitdefender.com/ro-ro/partners/bundle-solutions/"/>
     </url>
     <url>
         <loc>https://www.bitdefender.com/en-us/partners/subscriber-protection-platform/resources/bitdefender-uses-ai-help-service-providers-protect-subscribers-seamlessly</loc>
