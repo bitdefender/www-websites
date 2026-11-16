@@ -6,6 +6,7 @@ import { GLOBAL_EVENTS, createTag, generateLDJsonSchema, getPageExperimentKey, p
 import { adobeMcAppendVisitorId, target } from "./target.js";
 import { StoreProductLoadedEvent, handleFileDownloadedEvents, resolveNonProductsDataLayer } from "./libs/data-layer.js";
 import store_default from "./store.js";
+import { addBlackFridayRibbon } from "./black-friday/ribbon.js";
 import { applyStructuralHooks, blockMboxNames, installBlockHooks, reportUnappliedHooks } from "./utils/block-hooks.js";
 import { AdobeDataLayerService, CdpEvent, FormEvent, PageLoadedEvent, WindowLoadStartedEvent, WindowLoadedEvent } from "../vendor/repobit/dex-data-layer.js";
 import { Cookies } from "../vendor/repobit/dex-utils.js";
@@ -482,6 +483,7 @@ async function loadEager(doc) {
 	if (main) {
 		applyStructuralHooks(main);
 		decorateMain(main);
+		addBlackFridayRibbon(main);
 		buildCtaSections(main);
 		buildTwoColumnsSection(main);
 		detectModalButtons(main);
