@@ -1,7 +1,12 @@
+import { isBlackFridayRibbon, renderBlackFridayRibbon } from "../../scripts/black-friday/ribbon.js";
 // src/blocks/news-bar/news-bar.js
-function decorate(block, options) {
+async function decorate(block, options) {
 	const { solutions, hideDate } = block.closest(".section").dataset;
 	if (options) block = block.querySelector(".block");
+	if (isBlackFridayRibbon(block)) {
+		await renderBlackFridayRibbon(block);
+		return;
+	}
 	if (solutions) block.closest(".section").classList.add("solutions");
 	const blockParent = block.closest(".section");
 	setTimeout(() => {
