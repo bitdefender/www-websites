@@ -1250,7 +1250,6 @@
     grid-template-rows: subgrid;
     grid-row: span 50;
     margin-top: 10px;
-    max-width: none; /* the grid sizes the boxes, so two-up still fills the page column */
   }
 
   .new-prod-boxes-container .new-prod-boxes .prod_box .inner_prod_box {
