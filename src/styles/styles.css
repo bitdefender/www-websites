@@ -565,7 +565,10 @@ main .section.news-bar-container {
   margin-top: 0;
 }
 
-:where(body:not(.trusted-new)) main .section .default-content-wrapper > :last-child {
+/* except in a .margin-0 section that a .margin-0 section continues (see .margin-0 below): the
+   last paragraph's margin is the gap to the part in the next section (a title's lead over its
+   row of award logos) */
+:where(body:not(.trusted-new)) main .section:where(:not(.margin-0:has(+ .section.margin-0))) .default-content-wrapper > :last-child {
   margin-bottom: 0;
 }
 
@@ -591,6 +594,18 @@ main .section:last-child > bd-section:defined:not([without-padding-bottom]) {
 main .section.margin-0 {
   padding-top: 0;
   padding-bottom: 0;
+}
+
+/* Consecutive .margin-0 sections are one part split across sections (a section title, then the
+   images-floated row of award logos): they join each other with no padding, but the group's
+   outer edges keep the section rhythm, as a single section's would, so it stands as far from its
+   neighbours as any section. A lone .margin-0 section keeps no padding at all. */
+:where(body:not(.trusted-new)) main .section.margin-0:has(+ .section.margin-0):not(.section.margin-0 + *) {
+  padding-top: var(--page-section-padding);
+}
+
+:where(body:not(.trusted-new)) main .section.margin-0 + .section.margin-0:not(:has(+ .section.margin-0)) {
+  padding-bottom: var(--page-section-padding);
 }
 
 main .section.link-right a {
