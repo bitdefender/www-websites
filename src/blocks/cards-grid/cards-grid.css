@@ -1,0 +1,7 @@
+/* The benefits figure in the brand's own step, 500, as the site drew it,
+   rather than the brand text role (600) bd-display's color="primary" names:
+   it is display type, 48 bold, which needs 3:1, and 500 measures 4.3:1 on the
+   card's container ground. */
+.cards-grid[data-variant="benefits"] bd-display {
+  --bd-heading-color: var(--color-brand-500);
+}
