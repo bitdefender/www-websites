@@ -2934,6 +2934,12 @@ main .creators-banner .signature {
     .columns>div {
       align-items: self-start;
     }
+
+    /* the questions are left-aligned over their answers: they fill the column and wrap as the
+       answer text does, rather than balancing (styles.css) into two short lines half its width */
+    .columns-text-col :is(h1, h2, h3, h4, h5, h6) {
+      text-wrap: pretty;
+    }
   }
 
   .columns.review-cards {
