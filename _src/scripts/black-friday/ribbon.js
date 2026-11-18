@@ -73,6 +73,19 @@ function getBlackFridayRibbon() {
 	return PAGES_WITH_STATIC_RIBBON.includes(page_default.name) ? { linked: false } : null;
 }
 var RIBBON_SECTION_CLASS = "bf-ribbon";
+var getFolder = () => `${window.hlx.codeBasePath}/scripts/black-friday`;
+var ribbonStyles;
+var loadRibbonStyles = () => {
+	ribbonStyles ??= Promise.all([loadCSS(`${window.hlx.codeBasePath}/blocks/news-bar/news-bar.css`), loadCSS(`${getFolder()}/ribbon.css`)]);
+	return ribbonStyles;
+};
+var preloadNewsBar = () => {
+	const link = document.createElement("link");
+	link.rel = "modulepreload";
+	link.href = `${window.hlx.codeBasePath}/blocks/news-bar/news-bar.js`;
+	document.head.append(link);
+	loadRibbonStyles();
+};
 /**
 * Picks the news bar that becomes the ribbon: the one at the top of the page, if the page starts
 * with one. Otherwise the page gets a new one at the top, in place of its blue top ribbon. Either
@@ -81,6 +94,7 @@ var RIBBON_SECTION_CLASS = "bf-ribbon";
 */
 function addBlackFridayRibbon(main) {
 	if (!getBlackFridayRibbon()) return;
+	preloadNewsBar();
 	const firstSection = main.querySelector(":scope > .section");
 	if (firstSection?.classList.contains("news-bar-container")) {
 		firstSection.classList.add(RIBBON_SECTION_CLASS);
@@ -105,12 +119,11 @@ var isBlackFridayRibbon = (block) => !!block.closest(`.section.${RIBBON_SECTION_
 * @param {Element} block the news-bar block, one isBlackFridayRibbon picked
 * @returns {Promise<void>} resolves once the ribbon's styles are loaded
 */
-function renderBlackFridayRibbon(block) {
+async function renderBlackFridayRibbon(block) {
 	const { linked } = getBlackFridayRibbon();
-	const folder = `${window.hlx.codeBasePath}/scripts/black-friday`;
 	const textArea = `
     <div class="bf-text-area">
-      <img class="bf-discount-logo" src="${`${folder}/images/ribbon-tag.png`}" width="20" height="23" alt="">
+      <img class="bf-discount-logo" src="${`${getFolder()}/images/ribbon-tag.png`}" width="20" height="23" alt="">
       <p class="bf-text">
         <strong>${MAIN_TEXT[page_default.language]}</strong>
         <span class="bf-subtext">${SUB_TEXT[page_default.language]}</span>
@@ -128,6 +141,6 @@ function renderBlackFridayRibbon(block) {
       </a>`;
 	}
 	block.closest(".section")?.classList.add("bf-25");
-	return loadCSS(`${folder}/ribbon.css`);
+	await loadRibbonStyles();
 }
 export { addBlackFridayRibbon, getBlackFridayRibbon, isBlackFridayRibbon, renderBlackFridayRibbon };
