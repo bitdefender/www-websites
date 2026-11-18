@@ -893,18 +893,6 @@
   }
 }
 
-@media (width <= 768px) {
-  .products.plans {
-    flex-direction: column;
-  }
-
-  .products.plans .product-card {
-    margin: 0 auto;
-    max-width: unset;
-    width: 100%;
-  }
-}
-
 @media (width <= 992px) {
   .products.compact, .products.plans {
     --max-columns: 2;
@@ -919,6 +907,21 @@
     max-width: unset;
     width: auto;
     flex: 1 1 310px;
+  }
+}
+
+/* after the 992px rules so it overrides them: in a column the 310px flex-basis above would be
+   the card's height, and with overflow: hidden it clips the buy button. Size cards by their content */
+@media (width <= 768px) {
+  .products.plans {
+    flex-direction: column;
+  }
+
+  .products.plans .product-card {
+    margin: 0 auto;
+    max-width: unset;
+    width: 100%;
+    flex: none;
   }
 }
 
