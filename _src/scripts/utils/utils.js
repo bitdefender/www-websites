@@ -1005,13 +1005,12 @@ var getCampaignBasedOnLocale = () => {
 	return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
 };
 /**
-* The REF a buy link carries: the campaign the API applied, which can differ from the one the
-* product was requested with. A product requested with 'ignore' has none. Before dex-store 2,
-* products have no requestedCampaign and their campaign is the requested one.
+* Returns the REF of a buy link: WEBSITES_ and the campaign the API applied, or N/A when there
+* is none or the product was requested with 'ignore'
 * @param {{ campaign?: string, requestedCampaign?: string }} product a store transformer's product
 * @returns {string}
 */
-var getBuyLinkRef = ({ campaign, requestedCampaign = campaign }) => campaign && requestedCampaign !== "ignore" ? `WEBSITES_${campaign}` : "N/A";
+var getBuyLinkRef = ({ campaign, requestedCampaign }) => campaign && requestedCampaign !== "ignore" ? `WEBSITES_${campaign}` : "N/A";
 function decorateBlockWithRegionId(element, id) {
 	if (element) element.id = id;
 }

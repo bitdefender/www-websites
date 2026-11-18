@@ -15,8 +15,7 @@ describe('getBuyLinkRef', () => {
     expect(getBuyLinkRef({})).toBe('N/A');
   });
 
-  it('reads the requested campaign from campaign on stores before dex-store 2', () => {
-    expect(getBuyLinkRef({ campaign: 'spring' })).toBe('WEBSITES_spring');
-    expect(getBuyLinkRef({ campaign: 'ignore' })).toBe('N/A');
+  it('names the campaign the API applied when none was requested', () => {
+    expect(getBuyLinkRef({ campaign: 'MCWEBBF26', requestedCampaign: '' })).toBe('WEBSITES_MCWEBBF26');
   });
 });
