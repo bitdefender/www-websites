@@ -56,7 +56,7 @@
     "@repobit/dex-launch": "^3.0.141",
     "@repobit/dex-store": "^2.0.0",
     "@repobit/dex-store-elements": "^3.0.0",
-    "@repobit/dex-system-design": "^4.1.0",
+    "@repobit/dex-system-design": "^4.3.0",
     "@repobit/dex-target": "^2.17.7",
     "@repobit/dex-utils": "^2.5.1",
     "@tsparticles/all": "^3.9.1",

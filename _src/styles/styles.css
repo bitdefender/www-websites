@@ -726,6 +726,13 @@ main .section:is(.highlight, .light-sky-blue) :where(.store-section-content) {
   margin-inline: auto;
 }
 
+/* a linked image opening a painted wrapper: its paragraph's top margin would collapse through
+   the wrapper and show as an unpainted strip above it, so keep that space inside as padding */
+main .section:is(.highlight, .light-sky-blue) .linked-image-container:first-child {
+  margin-top: 0;
+  padding-top: 1em;
+}
+
 /* A wide section's panels stand on the page column's content edges, centred;
    the content inside a panel keeps its own inset. */
 main .section.wide {
