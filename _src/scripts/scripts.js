@@ -7,6 +7,7 @@ import { adobeMcAppendVisitorId, target } from "./target.js";
 import { StoreProductLoadedEvent, handleFileDownloadedEvents, resolveNonProductsDataLayer } from "./libs/data-layer.js";
 import store_default from "./store.js";
 import { addBlackFridayRibbon } from "./black-friday/ribbon.js";
+import probeBlocker from "./utils/blocker-probe.js";
 import { applyStructuralHooks, blockMboxNames, installBlockHooks, reportUnappliedHooks } from "./utils/block-hooks.js";
 import { AdobeDataLayerService, CdpEvent, FormEvent, PageLoadedEvent, WindowLoadStartedEvent, WindowLoadedEvent } from "../vendor/repobit/dex-data-layer.js";
 import { Cookies } from "../vendor/repobit/dex-utils.js";
@@ -633,6 +634,7 @@ function setBFCacheListener() {
 	});
 }
 async function loadPage() {
+	if (page_default.environment === "prod") probeBlocker();
 	if (window.location.href.includes("oaiusercontent")) return;
 	setBFCacheListener();
 	initialiseSentry();
