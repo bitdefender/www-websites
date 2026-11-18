@@ -529,6 +529,12 @@ export default function decorate(block) {
     document.querySelector('div.creators-banner div div:first-child').prepend(signatureElement);
   }
 
+  if (block.classList.contains('trust-factors') && block.classList.contains('trust-factors2')) {
+    block.querySelectorAll('table tr').forEach((row) => {
+      matchHeights(row, 'td strong');
+    });
+  }
+
   matchHeights(block, 'h3');
   matchHeights(block, 'h4');
   if (parentSection.classList.contains('dex-carousel-cards')) {

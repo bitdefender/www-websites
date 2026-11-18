@@ -4977,3 +4977,90 @@ main .section.two-columns .right-col .products.plans a.button:any-link {
     gap: 0;
   }
 }
+
+@media (width >= 767px) {
+  .columns-container .columns.trust-factors.trust-factors2 table tr {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+}
+
+.columns-container .columns.trust-factors.trust-factors2 td {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  text-align: center;
+}
+
+.columns-container .columns.trust-factors.trust-factors2 td p {
+  display: contents;
+  font: inherit;
+}
+
+.columns-container .columns.trust-factors.trust-factors2 td br {
+  display: none;
+}
+
+.columns-container .columns.trust-factors.trust-factors2 td .icon {
+  display: block;
+  flex: 0 0 48px;
+  margin: 0;
+}
+
+.columns-container .columns.trust-factors.trust-factors2 td strong {
+  display: block;
+  width: 100%;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.columns-container.dex-discover-section .columns {
+  --discover-media-size: 42px;
+}
+
+.columns-container.dex-discover-section
+  .columns > div > div > p:first-child > picture {
+  display: block;
+  width: var(--discover-media-size);
+  height: var(--discover-media-size);
+  margin-inline: auto;
+}
+
+.columns-container.dex-discover-section
+  .columns > div > div > p:first-child > picture > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (width >= 992px) {
+  .columns-container.dex-discover-section .columns {
+    --discover-media-size: 64px;
+  }
+}
+
+.columns-container.dex-discover-section .columns-wrapper .columns {
+  padding-block: 26px;
+}
+
+.columns-container.dex-discover-section
+  .columns-wrapper .columns > div > div > :first-child,
+.columns-container.dex-discover-section
+  .columns-wrapper .columns > div > div > p:first-of-type {
+  margin-top: 0;
+}
+
+.columns-container.dex-discover-section
+  .columns-wrapper .columns > div > div > :last-child {
+  margin-bottom: 0;
+}
+
+@media (width >= 992px) {
+  .columns-container.dex-discover-section .columns-wrapper .columns {
+    padding-block: 48px;
+  }
+}
