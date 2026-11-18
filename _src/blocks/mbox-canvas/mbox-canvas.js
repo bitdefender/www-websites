@@ -2,6 +2,7 @@ import page_default from "../../scripts/page.js";
 import user_default from "../../scripts/user.js";
 import { decorateIcons, getMetadata, loadBlocks } from "../../scripts/lib-franklin.js";
 import { Constants } from "../../scripts/libs/constants.js";
+import { getBuyLinkRef } from "../../scripts/utils/utils.js";
 import { target } from "../../scripts/target.js";
 import { decorateMain, detectModalButtons } from "../../scripts/scripts.js";
 import { AdobeDataLayerService, WindowLoadStartedEvent } from "../../vendor/repobit/dex-data-layer.js";
@@ -122,7 +123,7 @@ async function decorate(block) {
 		transformers: { buyLink: async (param) => {
 			const { buyLink, product } = param;
 			const buyLinkURL = new URL(buyLink);
-			buyLinkURL.searchParams.set("REF", product.campaign && product.campaign !== "ignore" ? `WEBSITES_${product.campaign}` : "N/A");
+			buyLinkURL.searchParams.set("REF", getBuyLinkRef(product));
 			return target.appendVisitorIDsTo(buyLinkURL.href);
 		} },
 		locale: configMbox?.useGeoIpPricing ? (await user_default.locale)?.toLowerCase() : page_default.locale.toLowerCase(),

@@ -976,6 +976,16 @@ export const getCampaignBasedOnLocale = () => {
   return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
 };
 
+/**
+ * Returns the REF of a buy link: WEBSITES_ and the campaign the API applied, or N/A when there
+ * is none or the product was requested with 'ignore'
+ * @param {{ campaign?: string, requestedCampaign?: string }} product a store transformer's product
+ * @returns {string}
+ */
+export const getBuyLinkRef = ({ campaign, requestedCampaign }) => (
+  campaign && requestedCampaign !== 'ignore' ? `WEBSITES_${campaign}` : 'N/A'
+);
+
 export function decorateBlockWithRegionId(element, id) {
   // we could consider to use `element.setAttribute('s-object-region', id);` in the future
   if (element) element.id = id;

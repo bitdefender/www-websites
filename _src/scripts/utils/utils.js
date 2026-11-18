@@ -1004,6 +1004,13 @@ var getCampaignBasedOnLocale = () => {
 	if (!Constants.ZUROA_LOCALES.includes(page_default.locale)) return Constants.NO_PROMOTION;
 	return Constants.PRODUCT_ID_MAPPINGS?.campaign || Constants.NO_PROMOTION;
 };
+/**
+* Returns the REF of a buy link: WEBSITES_ and the campaign the API applied, or N/A when there
+* is none or the product was requested with 'ignore'
+* @param {{ campaign?: string, requestedCampaign?: string }} product a store transformer's product
+* @returns {string}
+*/
+var getBuyLinkRef = ({ campaign, requestedCampaign }) => campaign && requestedCampaign !== "ignore" ? `WEBSITES_${campaign}` : "N/A";
 function decorateBlockWithRegionId(element, id) {
 	if (element) element.id = id;
 }
@@ -1493,4 +1500,4 @@ function onCookiesAccepted(callback) {
 		if (window.adobeDataLayer.getState("ucCategory.functional")) callback();
 	});
 }
-export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };
+export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };
