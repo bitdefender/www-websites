@@ -48,6 +48,7 @@ import {
   generateLDJsonSchema,
   getPageExperimentKey,
 } from './utils/utils.js';
+import probeBlocker from './utils/blocker-probe.js';
 import { Constants } from './libs/constants.js';
 import {
   applyStructuralHooks,
@@ -875,6 +876,10 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
+  // Blocker share, counted by Cloudflare: only production traffic, so previews don't skew it.
+  // First, so visitors who leave before the page finishes loading are counted too.
+  if (page.environment === 'prod') probeBlocker();
+
   if (window.location.href.includes('oaiusercontent')) {
     return;
   }

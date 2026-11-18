@@ -28,7 +28,7 @@ const ORIGIN = 'https://www.bitdefender.com';
 const PAGE = `${ORIGIN}/en-us/consumer/total-security`;
 
 // The probe's own code has to load for the probe to run at all
-const PROBE_SCRIPTS = ['/_src/scripts/delayed.js', '/_src/scripts/utils/blocker-probe.js'];
+const PROBE_SCRIPTS = ['/_src/scripts/scripts.js', '/_src/scripts/utils/blocker-probe.js'];
 
 let engines;
 
