@@ -1,5 +1,5 @@
 import page_default from "./page.js";
-import { getCampaignBasedOnLocale, getMetadata, getUrlPromotion } from "./utils/utils.js";
+import { getBuyLinkRef, getCampaignBasedOnLocale, getMetadata, getUrlPromotion } from "./utils/utils.js";
 import { target } from "./target.js";
 import getTrialLinkMap from "./trialLinkMap.js";
 import { Store } from "../vendor/repobit/dex-store.js";
@@ -17,7 +17,7 @@ var store_default = new Store({
 			const monthsToYears = option.subscription / (option.subscription === 1 ? 1 : 12);
 			const targetOverride = products?.[product.alias]?.[`${option.devices}-${monthsToYears}`];
 			const buyLinkURL = new URL(targetOverride?.buyLink || buyLink);
-			buyLinkURL.searchParams.set("REF", product.campaign && product.campaign !== "ignore" ? `WEBSITES_${product.campaign}` : "N/A");
+			buyLinkURL.searchParams.set("REF", getBuyLinkRef(product));
 			targetOverride?.extraParameters?.forEach(({ key, value }) => {
 				buyLinkURL.searchParams.set(key, value);
 			});

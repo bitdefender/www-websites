@@ -1,7 +1,9 @@
 import { Store } from '@repobit/dex-store';
 import { target } from './target.js';
 import page from './page.js';
-import { getUrlPromotion, getMetadata, getCampaignBasedOnLocale } from './utils/utils.js';
+import {
+  getUrlPromotion, getMetadata, getCampaignBasedOnLocale, getBuyLinkRef,
+} from './utils/utils.js';
 import getTrialLinkMap from './trialLinkMap.js';
 
 const trialLinkMap = await getTrialLinkMap();
@@ -18,7 +20,7 @@ export default new Store({
       const targetOverride = products?.[product.alias]?.[`${option.devices}-${monthsToYears}`];
 
       const buyLinkURL = new URL(targetOverride?.buyLink || buyLink);
-      buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
+      buyLinkURL.searchParams.set('REF', getBuyLinkRef(product));
 
       // An override may set buyLink alone, without extraParameters.
       targetOverride?.extraParameters?.forEach(({ key, value }) => {
