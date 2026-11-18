@@ -81,6 +81,28 @@ export function getBlackFridayRibbon() {
 // the section of the news bar that becomes the ribbon
 const RIBBON_SECTION_CLASS = 'bf-ribbon';
 
+const getFolder = () => `${window.hlx.codeBasePath}/scripts/black-friday`;
+
+// The ribbon sits right above the LCP block, so waitForLCP loads it before the page shows, but
+// only once the LCP block has loaded. addBlackFridayRibbon requests the news bar's files and the
+// ribbon's styles at once instead, and the ribbon waits for the styles, so it never shows unstyled.
+let ribbonStyles;
+const loadRibbonStyles = () => {
+  ribbonStyles ??= Promise.all([
+    loadCSS(`${window.hlx.codeBasePath}/blocks/news-bar/news-bar.css`),
+    loadCSS(`${getFolder()}/ribbon.css`),
+  ]);
+  return ribbonStyles;
+};
+
+const preloadNewsBar = () => {
+  const link = document.createElement('link');
+  link.rel = 'modulepreload';
+  link.href = `${window.hlx.codeBasePath}/blocks/news-bar/news-bar.js`;
+  document.head.append(link);
+  loadRibbonStyles();
+};
+
 /**
  * Picks the news bar that becomes the ribbon: the one at the top of the page, if the page starts
  * with one. Otherwise the page gets a new one at the top, in place of its blue top ribbon. Either
@@ -89,6 +111,7 @@ const RIBBON_SECTION_CLASS = 'bf-ribbon';
  */
 export function addBlackFridayRibbon(main) {
   if (!getBlackFridayRibbon()) return;
+  preloadNewsBar();
 
   const firstSection = main.querySelector(':scope > .section');
   if (firstSection?.classList.contains('news-bar-container')) {
@@ -117,10 +140,9 @@ export const isBlackFridayRibbon = (block) => !!block.closest(`.section.${RIBBON
  * @param {Element} block the news-bar block, one isBlackFridayRibbon picked
  * @returns {Promise<void>} resolves once the ribbon's styles are loaded
  */
-export function renderBlackFridayRibbon(block) {
+export async function renderBlackFridayRibbon(block) {
   const { linked } = getBlackFridayRibbon();
-  const folder = `${window.hlx.codeBasePath}/scripts/black-friday`;
-  const tagIcon = `${folder}/images/ribbon-tag.png`;
+  const tagIcon = `${getFolder()}/images/ribbon-tag.png`;
   const textArea = `
     <div class="bf-text-area">
       <img class="bf-discount-logo" src="${tagIcon}" width="20" height="23" alt="">
@@ -147,5 +169,5 @@ export function renderBlackFridayRibbon(block) {
   }
 
   block.closest('.section')?.classList.add('bf-25');
-  return loadCSS(`${folder}/ribbon.css`);
+  await loadRibbonStyles();
 }
