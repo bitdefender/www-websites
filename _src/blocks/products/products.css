@@ -1012,9 +1012,15 @@
     grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
   }
 
-  .products-wrapper .products.solutions.block .product-card:last-child:nth-child(odd) {
+  .products-wrapper .products.solutions.block .product-card:last-child:nth-child(odd):not(:only-child) {
     grid-column: auto;
     justify-self: stretch;
     width: auto;
+  }
+
+  .products-wrapper .products.solutions.block .product-card:first-child:last-child {
+    box-sizing: border-box;
+    justify-self: start;
+    width: calc((100% - 25px) / 2);
   }
 }
