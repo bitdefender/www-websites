@@ -1,8 +1,8 @@
-import page_default from "../../page.js";
+import { target } from "../../target.js";
 import user_default from "../../user.js";
 import { Constants } from "../constants.js";
 import { GLOBAL_V2_LOCALES, getCampaignBasedOnLocale, getMetadata, getUrlPromotion, setUrlParams } from "../../utils/utils.js";
-import { target } from "../../target.js";
+import page_default from "../../page.js";
 // src/scripts/libs/store/store.js
 var ProductInfo = class {
 	/**

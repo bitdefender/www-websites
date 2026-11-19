@@ -1,7 +1,7 @@
 import page_default from "../../scripts/page.js";
 import user_default from "../../scripts/user.js";
-import { onCookiesAccepted } from "../../scripts/utils/utils.js";
 import { BotPrevention } from "../../scripts/utils/bot-prevention.js";
+import { onCookiesAccepted } from "../../scripts/utils/utils.js";
 import { UserAgent } from "../../vendor/repobit/dex-utils.js";
 // src/blocks/phone-number-checker/phone-number-checker.js
 var phoneUtil;

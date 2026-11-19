@@ -1,6 +1,6 @@
-import page_default from "../../scripts/page.js";
 import { decorateIcons, getMetadata } from "../../scripts/lib-franklin.js";
 import { matchHeights, renderTurnstile, submitWithTurnstile } from "../../scripts/utils/utils.js";
+import page_default from "../../scripts/page.js";
 import { AdobeDataLayerService, UserDetectedEvent, WindowLoadStartedEvent, WindowLoadedEvent } from "../../vendor/repobit/dex-data-layer.js";
 // src/blocks/scam-masters/scam-masters.js
 var correctAnswersText = /* @__PURE__ */ new Map();

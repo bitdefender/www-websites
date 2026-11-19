@@ -1,5 +1,5 @@
-import page_default from "../../scripts/page.js";
 import { BotPrevention } from "../../scripts/utils/bot-prevention.js";
+import page_default from "../../scripts/page.js";
 // src/blocks/link-checker-sandbox/link-checker-sandbox.js
 var StatusMessageFactory = class {
 	static createMessage(status, url, statusMessages) {

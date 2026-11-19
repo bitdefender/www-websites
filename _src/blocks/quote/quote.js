@@ -1,5 +1,5 @@
-import { decorateIcons } from "../../scripts/lib-franklin.js";
 import { createTag } from "../../scripts/utils/utils.js";
+import { decorateIcons } from "../../scripts/lib-franklin.js";
 // src/blocks/quote/quote.js
 function createQuote(item) {
 	const quote = Array.from(item.querySelectorAll("p")).find((paragraph) => {

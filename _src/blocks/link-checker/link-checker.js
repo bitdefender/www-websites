@@ -1,5 +1,5 @@
-import page_default from "../../scripts/page.js";
 import { BotPrevention } from "../../scripts/utils/bot-prevention.js";
+import page_default from "../../scripts/page.js";
 import { UserAgent } from "../../vendor/repobit/dex-utils.js";
 import { AdobeDataLayerService, UserDetectedEvent, WindowLoadStartedEvent, WindowLoadedEvent } from "../../vendor/repobit/dex-data-layer.js";
 // src/blocks/link-checker/link-checker.js

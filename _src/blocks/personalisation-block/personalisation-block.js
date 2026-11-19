@@ -1,7 +1,7 @@
-import page_default from "../../scripts/page.js";
-import { decorateIcons, loadBlocks } from "../../scripts/lib-franklin.js";
 import { target } from "../../scripts/target.js";
 import { decorateMain, detectModalButtons } from "../../scripts/scripts.js";
+import { decorateIcons, loadBlocks } from "../../scripts/lib-franklin.js";
+import page_default from "../../scripts/page.js";
 // src/blocks/personalisation-block/personalisation-block.js
 function decorateHTMLOffer(aemHeaderHtml) {
 	const newHtml = document.createElement("div");

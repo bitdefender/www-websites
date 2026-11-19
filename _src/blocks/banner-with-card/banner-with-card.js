@@ -1,5 +1,5 @@
-import { createNanoBlock, createTag, renderNanoBlocks } from "../../scripts/utils/utils.js";
 import { detectModalButtons } from "../../scripts/scripts.js";
+import { createNanoBlock, createTag, renderNanoBlocks } from "../../scripts/utils/utils.js";
 // src/blocks/banner-with-card/banner-with-card.js
 function renderBluePill(icon, text) {
 	return createTag("div", { class: "blue-pill-container" }, `<div class= "blue-pill">

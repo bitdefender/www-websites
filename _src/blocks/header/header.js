@@ -1,8 +1,8 @@
 import user_default from "../../scripts/user.js";
-import { decorateButtons, decorateIcons, decorateTags, getMetadata } from "../../scripts/lib-franklin.js";
-import { Constants } from "../../scripts/libs/constants.js";
-import { decorateBlockWithRegionId, decorateLinkWithLinkTrackingId, getAemFragmentLocale, makeImagePathsAbsolute } from "../../scripts/utils/utils.js";
 import { adobeMcAppendVisitorId, target } from "../../scripts/target.js";
+import { decorateButtons, decorateIcons, decorateTags, getMetadata } from "../../scripts/lib-franklin.js";
+import { decorateBlockWithRegionId, decorateLinkWithLinkTrackingId, getAemFragmentLocale, makeImagePathsAbsolute } from "../../scripts/utils/utils.js";
+import { Constants } from "../../scripts/libs/constants.js";
 // src/blocks/header/header.js
 /**
 * @param {string} username

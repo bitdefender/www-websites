@@ -1,5 +1,5 @@
-import { decorateIcons, loadBlocks, readBlockConfig } from "../../scripts/lib-franklin.js";
 import { getSectionContent, slotIcon, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { decorateIcons, loadBlocks, readBlockConfig } from "../../scripts/lib-franklin.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/tabs/tabs.js
 var SECTION_LEVEL = 2;

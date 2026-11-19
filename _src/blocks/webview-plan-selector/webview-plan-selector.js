@@ -1,6 +1,6 @@
+import { getLanguageCountryFromPath } from "../../scripts/scripts.js";
 import { decorateIcons } from "../../scripts/lib-franklin.js";
 import { adjustFontSizeUntilTargetHeight, createBdOption, createBdProduct } from "../../scripts/utils/utils.js";
-import { getLanguageCountryFromPath } from "../../scripts/scripts.js";
 // src/blocks/webview-plan-selector/webview-plan-selector.js
 var PRIVACY_POLICY_FALLBACK = "https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-home-users-solutions.html";
 function getLanguage() {

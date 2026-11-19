@@ -1,8 +1,8 @@
-import page_default from "./page.js";
 import user_default from "./user.js";
 import { sampleRUM } from "./lib-franklin.js";
-import { Constants } from "./libs/constants.js";
+import page_default from "./page.js";
 import { GLOBAL_EVENTS, generatePageLoadStartedName, getMetadata, shouldABTestsBeDisabled } from "./utils/utils.js";
+import { Constants } from "./libs/constants.js";
 import Target from "../vendor/repobit/dex-target.js";
 import { PageLoadStartedEvent } from "../vendor/repobit/dex-data-layer.js";
 // src/scripts/target.js

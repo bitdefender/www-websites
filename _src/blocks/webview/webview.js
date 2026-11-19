@@ -1,5 +1,5 @@
-import { wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
 import { getLanguageCountryFromPath } from "../../scripts/scripts.js";
+import { wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
 // src/blocks/webview/webview.js
 var URL_PARAMS = {
 	slots: "slots",

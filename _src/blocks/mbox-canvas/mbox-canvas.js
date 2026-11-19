@@ -1,10 +1,10 @@
-import page_default from "../../scripts/page.js";
-import user_default from "../../scripts/user.js";
-import { decorateIcons, getMetadata, loadBlocks } from "../../scripts/lib-franklin.js";
-import { Constants } from "../../scripts/libs/constants.js";
-import { getBuyLinkRef } from "../../scripts/utils/utils.js";
 import { target } from "../../scripts/target.js";
 import { decorateMain, detectModalButtons } from "../../scripts/scripts.js";
+import { decorateIcons, getMetadata, loadBlocks } from "../../scripts/lib-franklin.js";
+import page_default from "../../scripts/page.js";
+import { Constants } from "../../scripts/libs/constants.js";
+import { getBuyLinkRef } from "../../scripts/utils/utils.js";
+import user_default from "../../scripts/user.js";
 import { AdobeDataLayerService, WindowLoadStartedEvent } from "../../vendor/repobit/dex-data-layer.js";
 import { Store } from "../../vendor/repobit/dex-store.js";
 // src/blocks/mbox-canvas/mbox-canvas.js

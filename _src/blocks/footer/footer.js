@@ -1,8 +1,8 @@
 import { decorateIcons, getMetadata, loadBlocks } from "../../scripts/lib-franklin.js";
-import { Constants } from "../../scripts/libs/constants.js";
 import { getAemFragmentLocale, makeImagePathsAbsolute } from "../../scripts/utils/utils.js";
 import { adobeMcAppendVisitorId } from "../../scripts/target.js";
 import { decorateMain } from "../../scripts/scripts.js";
+import { Constants } from "../../scripts/libs/constants.js";
 // src/blocks/footer/footer.js
 function wrapImgsInLinks(container) {
 	container.querySelectorAll("picture").forEach((pic) => {

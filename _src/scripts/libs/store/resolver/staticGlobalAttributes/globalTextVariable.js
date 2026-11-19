@@ -1,5 +1,5 @@
-import { Constants } from "../../../constants.js";
 import { GlobalContext } from "../resolver.js";
+import { Constants } from "../../../constants.js";
 // src/scripts/libs/store/resolver/staticGlobalAttributes/globalTextVariable.js
 /**
 * @param {string} hideCondition

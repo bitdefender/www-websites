@@ -1,5 +1,5 @@
-import { loadBlocks } from "../../scripts/lib-franklin.js";
 import { decorateMain, getLanguageCountryFromPath } from "../../scripts/scripts.js";
+import { loadBlocks } from "../../scripts/lib-franklin.js";
 // src/blocks/fragment/fragment.js
 /**
 * Loads a fragment.

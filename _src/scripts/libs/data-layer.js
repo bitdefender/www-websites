@@ -1,5 +1,5 @@
-import page_default from "../page.js";
 import user_default from "../user.js";
+import page_default from "../page.js";
 import { generatePageLoadStartedName, getExperimentDetails, getProductFinding } from "../utils/utils.js";
 import { getTargetExperimentDetails } from "../target.js";
 import "../../vendor/repobit/dex-utils.js";

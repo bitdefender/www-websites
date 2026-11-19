@@ -1,5 +1,5 @@
-import { matchHeights, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
 import { getLanguageCountryFromPath } from "../../scripts/scripts.js";
+import { matchHeights, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
 import { UserAgent, debounce } from "../../vendor/repobit/dex-utils.js";
 // src/blocks/webview-table/webview-table.js
 var COLUMNS_COUNT = 0;

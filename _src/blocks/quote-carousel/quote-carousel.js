@@ -1,5 +1,5 @@
-import { decorateIcons } from "../../scripts/lib-franklin.js";
 import { createTag } from "../../scripts/utils/utils.js";
+import { decorateIcons } from "../../scripts/lib-franklin.js";
 // src/blocks/quote-carousel/quote-carousel.js
 var SLIDE_PREFIX = "carousel-slide-";
 var CONTROL_PREFIX = "carousel-control-";

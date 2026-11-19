@@ -1,6 +1,6 @@
+import { target } from "./target.js";
 import page_default from "./page.js";
 import { getBuyLinkRef, getCampaignBasedOnLocale, getMetadata, getUrlPromotion } from "./utils/utils.js";
-import { target } from "./target.js";
 import getTrialLinkMap from "./trialLinkMap.js";
 import { Store } from "../vendor/repobit/dex-store.js";
 // src/scripts/store.js
