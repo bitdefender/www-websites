@@ -22,6 +22,12 @@ var FINISHED = ["completed", "failed"];
 var GIVE_UP_AFTER = 36e4;
 var DEFAULT_RETRY_AFTER = 2;
 var TURNSTILE_ID = "realcheck-checker-turnstile";
+var TONES = [
+	"blue",
+	"red",
+	"orange",
+	"grey"
+];
 var TEXTS = {
 	placeholder: "Paste a public video link",
 	analyze: "Analyze",
@@ -238,6 +244,17 @@ function buildIntro(row) {
 		eyebrow,
 		intro
 	};
+}
+function setBands(block, parts) {
+	TONES.forEach((tone) => {
+		const img = parts[`band-${tone}`]?.querySelector("img");
+		if (!img?.src) return;
+		const url = new URL(img.src);
+		const width = img.getAttribute("width");
+		if (width) url.searchParams.set("width", width);
+		else url.searchParams.delete("width");
+		block.style.setProperty(`--rc-band-${tone}`, `url("${url}")`);
+	});
 }
 var PASTE_ICON = "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"6\" y=\"4\" width=\"12\" height=\"17\" rx=\"2\"/><path d=\"M9 4V3h6v1M9 10h6M9 14h6\"/></svg>";
 function buildForm(texts, parts) {
@@ -489,6 +506,7 @@ async function decorate(block) {
 		card.append(signature);
 	}
 	block.replaceChildren(band, card);
+	setBands(block, parts);
 	const useTurnstile = mock === null;
 	let widgetId;
 	if (useTurnstile) renderTurnstile(TURNSTILE_ID, { invisible: false }).then((widget) => {

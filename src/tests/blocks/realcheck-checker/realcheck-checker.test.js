@@ -197,6 +197,18 @@ describe('decorate', () => {
     expect(block.querySelector('.realcheck-checker__signature').textContent).toBe('Trusted. Always.');
   });
 
+  it('tiles each band with its authored picture at full size, and leaves a missing one flat', async () => {
+    await setup({
+      rows: `<div><div>Band blue</div><div><picture><img src="./media_blue.png?width=750&format=png&optimize=medium" width="440" height="440" alt=""></picture></div></div>
+        <div><div>Band red</div><div><picture><img src="./media_red.png?width=750&format=png" alt=""></picture></div></div>`,
+    });
+    const blue = block.style.getPropertyValue('--rc-band-blue');
+    expect(blue).toMatch(/^url\("http:\/\/[^"]+\/media_blue\.png\?width=440&format=png&optimize=medium"\)$/);
+    expect(block.style.getPropertyValue('--rc-band-red')).toMatch(/\/media_red\.png\?format=png"\)$/);
+    expect(block.style.getPropertyValue('--rc-band-orange')).toBe('');
+    expect(block.querySelector('img[src*="media_"]')).toBeNull();
+  });
+
   it('sends the Turnstile token, then resets the widget for the next check', async () => {
     await setup();
     expect(block.querySelector('#realcheck-checker-turnstile')).not.toBeNull();

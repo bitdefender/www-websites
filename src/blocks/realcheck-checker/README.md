@@ -28,6 +28,11 @@ Every other row is `key | content`. These rows take content the block can't writ
 | `App` | The app link for phones, e.g. `Try RealCheck Free` linking to the app's OneLink. `https://#os-dynamic-link` uses the section metadata `ios-link` / `android-link` / `default-link`; without them there is no button |
 | `QR` | The QR code picture, shown on desktop |
 | `Report` | The blurred report picture, the same for every result |
+| `Band blue` | The pattern tiled over the blue band (the form, the progress, verdict 0), shown at 220×220. Upload it at 440×440 |
+| `Band red` / `Band orange` / `Band grey` | The pattern for each verdict colour, shown at 320×320 |
+
+The band pictures are PNGs with a transparent background: the band's colour shows through.
+A band without its picture is a flat colour.
 
 Any text below can be replaced, for a translation, by a `key | text` row. The English is the
 default:
