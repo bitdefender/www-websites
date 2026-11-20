@@ -28,6 +28,11 @@ Every other row is `key | content`. These rows take content the block can't writ
 | `App` | The app link for phones, e.g. `Try RealCheck Free` linking to the app's OneLink. `https://#os-dynamic-link` uses the section metadata `ios-link` / `android-link` / `default-link`; without them there is no button |
 | `QR` | The QR code picture, shown on desktop |
 | `Report` | The blurred report picture, the same for every result |
+| `Band blue` | The pattern tiled over the blue band (the form, the progress, verdict 0), shown at 220×220. Upload it at 440×440 |
+| `Band red` / `Band orange` / `Band grey` | The pattern for each verdict colour, shown at 320×320 |
+
+The band pictures are PNGs with a transparent background: the band's colour shows through.
+A band without its picture is a flat colour.
 
 Any text below can be replaced, for a translation, by a `key | text` row. The English is the
 default:
@@ -57,7 +62,7 @@ Section metadata: `signature` (`Trusted. Always.`) is shown at the bottom of the
   user/password, no IP address, at most 2048 characters, and one of TikTok, YouTube,
   Instagram, Facebook or X.
 - One check at a time. It polls every `Retry-After` seconds (2 by default) and gives up after
-  5 minutes with the failed screen.
+  6 minutes with the failed screen.
 - Colours: verdict 0 is blue whatever the risk. Otherwise high is red, medium orange, low or
   benign grey; no risk is grey with no risk line.
 - A failed check shows `error <code>` if authored, else the API's message (in English).
@@ -73,5 +78,6 @@ Section metadata: `signature` (`Trusted. Always.`) is shown at the bottom of the
 
 - `2-high`, `1-medium`, `1-low`, `0-high`, `2-none`: a verdict and a risk
 - `failed-no_speech`, `failed-content_private`, …: a failed check with that code
-- `http-422-platform_not_supported`, `http-500-internal_error`, …: a refused request
-- `slow`: never finishes (gives up after 5 minutes)
+- `http-422-platform_not_supported`, `http-422-invalid_url`, `http-502-unavailable`: a refused request,
+  answered as the proxy does (`{ ok: false, code: 'REALCHECK_…' }`)
+- `slow`: never finishes (gives up after 6 minutes)

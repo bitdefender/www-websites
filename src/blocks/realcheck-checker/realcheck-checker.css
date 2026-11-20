@@ -14,7 +14,7 @@
   --rc-orange: #ff6a00;
   --rc-grey: #808080;
   --rc-tone: var(--rc-blue);
-  --rc-band: var(--rc-blue) url("../../images/realcheck/band-blue.svg") 0 0 / 220px 220px;
+  --rc-band: var(--rc-blue) var(--rc-band-blue, none) 0 0 / 220px 220px;
 
   position: relative;
   max-width: 1180px;
@@ -27,17 +27,17 @@
 
 .realcheck-checker[data-tone="red"] {
   --rc-tone: var(--rc-red);
-  --rc-band: #38080d url("../../images/realcheck/band-red.png") 0 0 / 320px 320px;
+  --rc-band: #38080d var(--rc-band-red, none) 0 0 / 320px 320px;
 }
 
 .realcheck-checker[data-tone="orange"] {
   --rc-tone: var(--rc-orange);
-  --rc-band: #381c08 url("../../images/realcheck/band-orange.png") 0 0 / 320px 320px;
+  --rc-band: #381c08 var(--rc-band-orange, none) 0 0 / 320px 320px;
 }
 
 .realcheck-checker[data-tone="grey"] {
   --rc-tone: var(--rc-grey);
-  --rc-band: #27292d url("../../images/realcheck/band-grey.png") 0 0 / 320px 320px;
+  --rc-band: #27292d var(--rc-band-grey, none) 0 0 / 320px 320px;
 }
 
 .realcheck-checker .realcheck-checker__band {

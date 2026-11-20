@@ -11,9 +11,10 @@ const PLATFORMS = ['youtube.com', 'youtu.be', 'x.com', 'twitter.com', 'instagram
   'tiktok.com', 'facebook.com', 'fb.watch'];
 const STEPS = ['queued', 'downloading', 'analyzing', 'intent'];
 const FINISHED = ['completed', 'failed'];
-const GIVE_UP_AFTER = 5 * 60 * 1000;
+const GIVE_UP_AFTER = 6 * 60 * 1000;
 const DEFAULT_RETRY_AFTER = 2;
 const TURNSTILE_ID = 'realcheck-checker-turnstile';
+const TONES = ['blue', 'red', 'orange', 'grey'];
 
 // English defaults; a localized page overrides any of them with a `key | text` row
 const TEXTS = {
@@ -122,6 +123,14 @@ async function readJson(response) {
   }
 }
 
+/*
+ * The proxy refuses with `{ ok: false, code: 'REALCHECK_PLATFORM_NOT_SUPPORTED', message }`:
+ * the API's code, upper-cased behind a prefix.
+ */
+const errorCode = (body, status) => (typeof body?.code === 'string'
+  ? body.code.replace(/^REALCHECK_/, '').toLowerCase()
+  : `http_${status}`);
+
 const retryAfter = (response) => {
   const seconds = Number(response.headers.get('Retry-After'));
   return seconds > 0 ? Math.min(seconds, 30) : DEFAULT_RETRY_AFTER;
@@ -160,8 +169,8 @@ export async function runCheck({
     response = await submit();
   }
   let check = await readJson(response);
-  if (response.status !== 202 || !check.id) {
-    throw new CheckFailed(check.error?.code || `http_${response.status}`);
+  if (response.status !== 202 || !check?.id) {
+    throw new CheckFailed(errorCode(check, response.status));
   }
 
   while (!FINISHED.includes(check.status)) {
@@ -233,6 +242,22 @@ function buildIntro(row) {
     return element;
   }));
   return { eyebrow, intro };
+}
+
+// Each tone tiles its band with the authored picture (`Band blue`, …) at the size CSS gives
+// it. Without one, that band is a flat colour.
+function setBands(block, parts) {
+  TONES.forEach((tone) => {
+    const img = parts[`band-${tone}`]?.querySelector('img');
+    if (!img?.src) return;
+    // the original size, not the page width the backend asks for. Absolute, because a
+    // relative url() in a custom property resolves against the stylesheet.
+    const url = new URL(img.src);
+    const width = img.getAttribute('width');
+    if (width) url.searchParams.set('width', width);
+    else url.searchParams.delete('width');
+    block.style.setProperty(`--rc-band-${tone}`, `url("${url}")`);
+  });
 }
 
 const PASTE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6"/></svg>';
@@ -451,6 +476,7 @@ export default async function decorate(block) {
     card.append(signature);
   }
   block.replaceChildren(band, card);
+  setBands(block, parts);
 
   // A visible Turnstile widget, as in booking-form. The mock has no proxy to check it.
   const useTurnstile = mock === null;

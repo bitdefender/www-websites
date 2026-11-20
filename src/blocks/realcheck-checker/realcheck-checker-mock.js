@@ -1,11 +1,13 @@
 /*
- * A stand-in for the RealCheck API, loaded only with `?realcheck-mock=<scenario>`, so every
- * screen can be seen and tested before the proxy exists. It answers like the contract:
- * 202 on submit, then the check object, one status further on each poll.
+ * A stand-in for the RealCheck proxy, loaded only with `?realcheck-mock=<scenario>`, so every
+ * screen can be seen and tested without it. It answers like the proxy: 202 on submit, then the
+ * check object, one status further on each poll, and a refusal as
+ * `{ ok: false, code: 'REALCHECK_<CODE>', message }`.
  *
  * Scenarios: `<verdict>-<risk>` (verdict 0, 1 or 2; risk high, medium, low, benign or none),
- * `failed-<error code>` (e.g. failed-no_speech), `http-<status>-<error code>`
- * (e.g. http-422-platform_not_supported), `slow` (never finishes).
+ * `failed-<error code>` (e.g. failed-no_speech), `http-<status>-<proxy code>`
+ * (http-422-invalid_url, http-422-platform_not_supported, http-502-unavailable),
+ * `slow` (never finishes).
  */
 const THUMBNAIL = 'https://i.ytimg.com/vi/aqz-KE-bpKQ/hqdefault.jpg';
 const TITLE = 'Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film';
@@ -16,16 +18,17 @@ const json = (status, body, headers = {}) => new Response(JSON.stringify(body), 
   headers: { 'Content-Type': 'application/json', 'Retry-After': '1', ...headers },
 });
 
+const refusal = (status, code) => json(status, {
+  ok: false, code: `REALCHECK_${code.toUpperCase()}`, message: code,
+}, { 'Retry-After': '' });
+
 export default function mockApi(scenario = '2-high') {
   const checks = new Map();
 
   return async (url, { method = 'GET', body } = {}) => {
     const http = scenario.match(/^http-(\d{3})-(\w+)$/);
     if (method === 'POST') {
-      if (http) {
-        const error = { code: http[2], message: http[2], retryable: false };
-        return json(Number(http[1]), { error });
-      }
+      if (http) return refusal(Number(http[1]), http[2]);
       const id = `mock_${Date.now()}`;
       checks.set(id, { polls: 0, url: JSON.parse(body).url });
       return json(202, {
@@ -35,7 +38,7 @@ export default function mockApi(scenario = '2-high') {
 
     const id = decodeURIComponent(url.split('/').pop());
     const check = checks.get(id);
-    if (!check) return json(404, { error: { code: 'check_not_found', message: 'Not found', retryable: false } });
+    if (!check) return refusal(404, 'check_not_found');
     check.polls += 1;
 
     const running = scenario === 'slow' || check.polls < STATUSES.length;

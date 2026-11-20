@@ -101,9 +101,14 @@ describe('runCheck', () => {
   });
 
   it('tries a server error once more before giving up', async () => {
-    const fetch = vi.fn(mockApi('http-503-service_unavailable'));
-    await expect(run(fetch)).rejects.toMatchObject({ code: 'service_unavailable' });
+    const fetch = vi.fn(mockApi('http-502-unavailable'));
+    await expect(run(fetch)).rejects.toMatchObject({ code: 'unavailable' });
     expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('names a refusal without a code by its HTTP status', async () => {
+    const fetch = () => Promise.resolve(new Response('<html>', { status: 403 }));
+    await expect(run(fetch)).rejects.toMatchObject({ code: 'http_403' });
   });
 
   it('keeps polling through a dropped connection', async () => {
@@ -129,8 +134,15 @@ describe('runCheck', () => {
     expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({ type: 'social_media', url: 'https://youtu.be/x', token: 'cf-token' });
   });
 
-  it('gives up after five minutes', async () => {
-    await expect(run(mockApi('slow'))).rejects.toMatchObject({ code: 'timeout' });
+  it('gives up after six minutes', async () => {
+    let failure;
+    runCheck({
+      endpoint: '/api', url: 'https://youtu.be/x', signal: new AbortController().signal, fetch: mockApi('slow'), onUpdate: vi.fn(),
+    }).catch((error) => { failure = error; });
+    await vi.advanceTimersByTimeAsync(5.5 * 60 * 1000);
+    expect(failure).toBeUndefined();
+    await vi.advanceTimersByTimeAsync(60 * 1000);
+    expect(failure).toMatchObject({ code: 'timeout' });
   });
 });
 
@@ -183,6 +195,18 @@ describe('decorate', () => {
     expect(block.querySelector('input').placeholder).toBe('Paste a public video link');
     expect(block.querySelector('.realcheck-checker__terms a').target).toBe('_blank');
     expect(block.querySelector('.realcheck-checker__signature').textContent).toBe('Trusted. Always.');
+  });
+
+  it('tiles each band with its authored picture at full size, and leaves a missing one flat', async () => {
+    await setup({
+      rows: `<div><div>Band blue</div><div><picture><img src="./media_blue.png?width=750&format=png&optimize=medium" width="440" height="440" alt=""></picture></div></div>
+        <div><div>Band red</div><div><picture><img src="./media_red.png?width=750&format=png" alt=""></picture></div></div>`,
+    });
+    const blue = block.style.getPropertyValue('--rc-band-blue');
+    expect(blue).toMatch(/^url\("http:\/\/[^"]+\/media_blue\.png\?width=440&format=png&optimize=medium"\)$/);
+    expect(block.style.getPropertyValue('--rc-band-red')).toMatch(/\/media_red\.png\?format=png"\)$/);
+    expect(block.style.getPropertyValue('--rc-band-orange')).toBe('');
+    expect(block.querySelector('img[src*="media_"]')).toBeNull();
   });
 
   it('sends the Turnstile token, then resets the widget for the next check', async () => {
@@ -283,6 +307,14 @@ describe('decorate', () => {
     await submit('youtu.be/x');
     expect(block.dataset.state).toBe('idle');
     expect(block.querySelector('.realcheck-checker__error').textContent).toMatch(/isn’t supported/);
+  });
+
+  it('turns a refused link back into the link error', async () => {
+    await setup();
+    fetch.mockImplementation(mockApi('http-422-invalid_url'));
+    await submit('youtu.be/x');
+    expect(block.dataset.state).toBe('idle');
+    expect(block.querySelector('.realcheck-checker__error').textContent).toMatch(/doesn’t look like a link/);
   });
 
   it('offers the app button instead of the QR code on a phone', async () => {
