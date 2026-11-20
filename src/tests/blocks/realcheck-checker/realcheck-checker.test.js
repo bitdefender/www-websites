@@ -134,8 +134,15 @@ describe('runCheck', () => {
     expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({ type: 'social_media', url: 'https://youtu.be/x', token: 'cf-token' });
   });
 
-  it('gives up after five minutes', async () => {
-    await expect(run(mockApi('slow'))).rejects.toMatchObject({ code: 'timeout' });
+  it('gives up after six minutes', async () => {
+    let failure;
+    runCheck({
+      endpoint: '/api', url: 'https://youtu.be/x', signal: new AbortController().signal, fetch: mockApi('slow'), onUpdate: vi.fn(),
+    }).catch((error) => { failure = error; });
+    await vi.advanceTimersByTimeAsync(5.5 * 60 * 1000);
+    expect(failure).toBeUndefined();
+    await vi.advanceTimersByTimeAsync(60 * 1000);
+    expect(failure).toMatchObject({ code: 'timeout' });
   });
 });
 

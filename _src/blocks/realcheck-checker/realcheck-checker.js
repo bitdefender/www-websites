@@ -19,7 +19,7 @@ var STEPS = [
 	"intent"
 ];
 var FINISHED = ["completed", "failed"];
-var GIVE_UP_AFTER = 3e5;
+var GIVE_UP_AFTER = 36e4;
 var DEFAULT_RETRY_AFTER = 2;
 var TURNSTILE_ID = "realcheck-checker-turnstile";
 var TEXTS = {

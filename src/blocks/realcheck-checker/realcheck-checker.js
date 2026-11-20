@@ -11,7 +11,7 @@ const PLATFORMS = ['youtube.com', 'youtu.be', 'x.com', 'twitter.com', 'instagram
   'tiktok.com', 'facebook.com', 'fb.watch'];
 const STEPS = ['queued', 'downloading', 'analyzing', 'intent'];
 const FINISHED = ['completed', 'failed'];
-const GIVE_UP_AFTER = 5 * 60 * 1000;
+const GIVE_UP_AFTER = 6 * 60 * 1000;
 const DEFAULT_RETRY_AFTER = 2;
 const TURNSTILE_ID = 'realcheck-checker-turnstile';
 

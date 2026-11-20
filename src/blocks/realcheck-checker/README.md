@@ -57,7 +57,7 @@ Section metadata: `signature` (`Trusted. Always.`) is shown at the bottom of the
   user/password, no IP address, at most 2048 characters, and one of TikTok, YouTube,
   Instagram, Facebook or X.
 - One check at a time. It polls every `Retry-After` seconds (2 by default) and gives up after
-  5 minutes with the failed screen.
+  6 minutes with the failed screen.
 - Colours: verdict 0 is blue whatever the risk. Otherwise high is red, medium orange, low or
   benign grey; no risk is grey with no risk line.
 - A failed check shows `error <code>` if authored, else the API's message (in English).
@@ -75,4 +75,4 @@ Section metadata: `signature` (`Trusted. Always.`) is shown at the bottom of the
 - `failed-no_speech`, `failed-content_private`, …: a failed check with that code
 - `http-422-platform_not_supported`, `http-422-invalid_url`, `http-502-unavailable`: a refused request,
   answered as the proxy does (`{ ok: false, code: 'REALCHECK_…' }`)
-- `slow`: never finishes (gives up after 5 minutes)
+- `slow`: never finishes (gives up after 6 minutes)
