@@ -15,19 +15,17 @@ var json = (status, body, headers = {}) => new Response(JSON.stringify(body), {
 		...headers
 	}
 });
+var refusal = (status, code) => json(status, {
+	ok: false,
+	code: `REALCHECK_${code.toUpperCase()}`,
+	message: code
+}, { "Retry-After": "" });
 function mockApi(scenario = "2-high") {
 	const checks = /* @__PURE__ */ new Map();
 	return async (url, { method = "GET", body } = {}) => {
 		const http = scenario.match(/^http-(\d{3})-(\w+)$/);
 		if (method === "POST") {
-			if (http) {
-				const error = {
-					code: http[2],
-					message: http[2],
-					retryable: false
-				};
-				return json(Number(http[1]), { error });
-			}
+			if (http) return refusal(Number(http[1]), http[2]);
 			const id = `mock_${Date.now()}`;
 			checks.set(id, {
 				polls: 0,
@@ -48,11 +46,7 @@ function mockApi(scenario = "2-high") {
 		}
 		const id = decodeURIComponent(url.split("/").pop());
 		const check = checks.get(id);
-		if (!check) return json(404, { error: {
-			code: "check_not_found",
-			message: "Not found",
-			retryable: false
-		} });
+		if (!check) return refusal(404, "check_not_found");
 		check.polls += 1;
 		const running = scenario === "slow" || check.polls < STATUSES.length;
 		const status = running ? STATUSES[Math.min(check.polls, STATUSES.length - 1)] : null;

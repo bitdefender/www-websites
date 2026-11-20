@@ -101,9 +101,14 @@ describe('runCheck', () => {
   });
 
   it('tries a server error once more before giving up', async () => {
-    const fetch = vi.fn(mockApi('http-503-service_unavailable'));
-    await expect(run(fetch)).rejects.toMatchObject({ code: 'service_unavailable' });
+    const fetch = vi.fn(mockApi('http-502-unavailable'));
+    await expect(run(fetch)).rejects.toMatchObject({ code: 'unavailable' });
     expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('names a refusal without a code by its HTTP status', async () => {
+    const fetch = () => Promise.resolve(new Response('<html>', { status: 403 }));
+    await expect(run(fetch)).rejects.toMatchObject({ code: 'http_403' });
   });
 
   it('keeps polling through a dropped connection', async () => {
@@ -283,6 +288,14 @@ describe('decorate', () => {
     await submit('youtu.be/x');
     expect(block.dataset.state).toBe('idle');
     expect(block.querySelector('.realcheck-checker__error').textContent).toMatch(/isn’t supported/);
+  });
+
+  it('turns a refused link back into the link error', async () => {
+    await setup();
+    fetch.mockImplementation(mockApi('http-422-invalid_url'));
+    await submit('youtu.be/x');
+    expect(block.dataset.state).toBe('idle');
+    expect(block.querySelector('.realcheck-checker__error').textContent).toMatch(/doesn’t look like a link/);
   });
 
   it('offers the app button instead of the QR code on a phone', async () => {

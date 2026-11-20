@@ -122,6 +122,14 @@ async function readJson(response) {
   }
 }
 
+/*
+ * The proxy refuses with `{ ok: false, code: 'REALCHECK_PLATFORM_NOT_SUPPORTED', message }`:
+ * the API's code, upper-cased behind a prefix.
+ */
+const errorCode = (body, status) => (typeof body?.code === 'string'
+  ? body.code.replace(/^REALCHECK_/, '').toLowerCase()
+  : `http_${status}`);
+
 const retryAfter = (response) => {
   const seconds = Number(response.headers.get('Retry-After'));
   return seconds > 0 ? Math.min(seconds, 30) : DEFAULT_RETRY_AFTER;
@@ -160,8 +168,8 @@ export async function runCheck({
     response = await submit();
   }
   let check = await readJson(response);
-  if (response.status !== 202 || !check.id) {
-    throw new CheckFailed(check.error?.code || `http_${response.status}`);
+  if (response.status !== 202 || !check?.id) {
+    throw new CheckFailed(errorCode(check, response.status));
   }
 
   while (!FINISHED.includes(check.status)) {

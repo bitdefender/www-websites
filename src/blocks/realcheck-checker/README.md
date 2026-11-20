@@ -73,5 +73,6 @@ Section metadata: `signature` (`Trusted. Always.`) is shown at the bottom of the
 
 - `2-high`, `1-medium`, `1-low`, `0-high`, `2-none`: a verdict and a risk
 - `failed-no_speech`, `failed-content_private`, …: a failed check with that code
-- `http-422-platform_not_supported`, `http-500-internal_error`, …: a refused request
+- `http-422-platform_not_supported`, `http-422-invalid_url`, `http-502-unavailable`: a refused request,
+  answered as the proxy does (`{ ok: false, code: 'REALCHECK_…' }`)
 - `slow`: never finishes (gives up after 5 minutes)

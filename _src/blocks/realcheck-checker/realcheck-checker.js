@@ -133,6 +133,7 @@ async function readJson(response) {
 		return {};
 	}
 }
+var errorCode = (body, status) => typeof body?.code === "string" ? body.code.replace(/^REALCHECK_/, "").toLowerCase() : `http_${status}`;
 var retryAfter = (response) => {
 	const seconds = Number(response.headers.get("Retry-After"));
 	return seconds > 0 ? Math.min(seconds, 30) : DEFAULT_RETRY_AFTER;
@@ -167,7 +168,7 @@ async function runCheck({ endpoint, url, signal, fetch: request = window.fetch.b
 		response = await submit();
 	}
 	let check = await readJson(response);
-	if (response.status !== 202 || !check.id) throw new CheckFailed(check.error?.code || `http_${response.status}`);
+	if (response.status !== 202 || !check?.id) throw new CheckFailed(errorCode(check, response.status));
 	while (!FINISHED.includes(check.status)) {
 		onUpdate(check);
 		if (Date.now() > deadline) throw new CheckFailed("timeout");
