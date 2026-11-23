@@ -87,6 +87,108 @@ await document.modelContext.registerTool({
 });
 ```
 
+## Writing Tool and Parameter Descriptions
+
+The agent already receives the full `inputSchema`, so the `description` only needs to say what the tool does and when to use it. **DO NOT** repeat parameter names, types, `enum` values, defaults, or limits in it; declare them in the schema (`enum`, `default`, `minimum`/`maximum`) instead. Parameter descriptions follow the same rule: say what the value means, not its type or allowed values.
+
+The browser does not validate arguments against `inputSchema` or apply `default` values, so do both in `execute`.
+
+```javascript
+const SORT_ORDERS = ["newest", "price_low_to_high"];
+
+await document.modelContext.registerTool({
+  name: "search_products",
+  // Don't list the sort orders here, even via SORT_ORDERS: `enum` already does.
+  description: "Searches the product catalog by keyword. Use when the user wants to find or compare products.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Words to search for." },
+      sort: { type: "string", enum: SORT_ORDERS, default: "newest", description: "Order of the results." },
+    },
+    required: ["query"],
+  },
+  async execute({ query, sort = "newest" }, { signal }) {
+    if (typeof query !== "string" || !SORT_ORDERS.includes(sort)) {
+      return { error: "Pass a search query and a supported sort order.", sortOrders: SORT_ORDERS };
+    }
+    return await productService.search({ query, sort }, { signal });
+  },
+  annotations: { readOnlyHint: true },
+});
+```
+
+## Declaring Return Values with `outputSchema`
+
+Since Chrome 159, a tool definition accepts an optional `outputSchema`: a JSON Schema object describing the value `execute` returns.
+
+* **Separate intent from structure**: Keep `description` focused on what the tool does and when to call it. **DO NOT** list returned property names, types, or chaining IDs in `description`; declare them in `outputSchema` instead.
+* **Use `outputSchema` selectively**: Add it to consolidated read or search tools that return multiple fields, to mutating actions that return updated state (e.g. `{ items, subtotal, total }` after a cart update), and to tools that return IDs consumed by other tools. Omit it on narrow reads with obvious outputs (e.g. a single number), actions that return only a status or confirmation, and UI navigation tools, since every schema costs prompt tokens.
+* **Keep `execute()` aligned with `outputSchema`**: Return a JSON-serializable value that matches the schema. Agents can validate results against `outputSchema` and send the model a tool error instead of the result when it doesn't match. This includes structured error payloads: if `execute` can return `{ error: "..." }`, allow that shape in `outputSchema` (e.g. with `anyOf`), or the agent may never see your error message.
+
+```javascript
+await document.modelContext.registerTool({
+  name: "search_flights",
+  // Say what the tool does and when to use it; the result shape lives in `outputSchema`.
+  description: "Searches available flights between two airports. Use before booking a flight.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      from: { type: "string", description: "Departure airport IATA code." },
+      to: { type: "string", description: "Arrival airport IATA code." },
+    },
+    required: ["from", "to"],
+  },
+  outputSchema: {
+    anyOf: [
+      {
+        type: "object",
+        properties: {
+          flights: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                // Declared here so the agent knows to pass it to `book_flight`.
+                flightId: { type: "string", description: "Pass to book_flight." },
+                departureTime: { type: "string", format: "date-time" },
+                price: { type: "number" },
+              },
+              required: ["flightId", "departureTime", "price"],
+            },
+          },
+        },
+        required: ["flights"],
+      },
+      // Allow the structured error payload so validation doesn't swallow it.
+      {
+        type: "object",
+        properties: { error: { type: "string" } },
+        required: ["error"],
+      },
+    ],
+  },
+  async execute({ from, to }, { signal }) {
+    if (typeof from !== "string" || typeof to !== "string") {
+      return { error: "Pass departure and arrival airport codes." };
+    }
+    try {
+      const flights = await flightService.search({ from, to }, { signal });
+      // Return only the declared fields, matching `outputSchema`.
+      return {
+        flights: flights.map(({ id, departureTime, price }) => ({ flightId: id, departureTime, price })),
+      };
+    } catch (err) {
+      // A cancelled execution is re-thrown, not returned as an error value.
+      if (signal.aborted) throw err;
+      // Matches the `{ error }` branch of `outputSchema`, so the agent sees the message.
+      return { error: err instanceof Error ? err.message : String(err) };
+    }
+  },
+  annotations: { readOnlyHint: true },
+});
+```
+
 ## Execution Patterns
 
 The `execute` callback always receives two arguments: the input object, and an options object carrying an `AbortSignal` — `execute(inputObject, { signal })`.
@@ -329,6 +431,40 @@ export function createInventoryTool(inventoryManager) {
 }
 ```
 
+## TypeScript Types
+
+In TypeScript projects, **DO NOT** hand-write declarations for `document.modelContext`. Install the official `webmcp-types` package (`npm install --save-dev webmcp-types`) and add it to `tsconfig.json`, since it is not picked up automatically:
+
+```jsonc
+{
+  "compilerOptions": {
+    "types": ["webmcp-types"]
+  }
+}
+```
+
+* `document.modelContext` is typed as optional, so guard it with `if (document.modelContext)` before use.
+* With an inline `inputSchema`, the `execute` input type is inferred from the schema.
+* Named types such as `WebMCP.ModelContextTool` are global (no import needed), useful for typing tool factories.
+
+## Framework support
+
+**MANDATORY:** If the app uses React, Angular, or Vue, register tools through that framework's official WebMCP integration, listed below. **DO NOT** call `document.modelContext.registerTool()` from components or write your own lifecycle wrapper. Each integration already handles feature detection, `AbortSignal` cleanup, and scoping tools to the component or injector lifecycle. These APIs are experimental, so before writing code, look up the current signature in the package's types or docs.
+
+| Framework | Package | API | Docs |
+|---|---|---|---|
+| React 18+ | `use-webmcp-tool` | `useWebMCP(options)`: one call per tool | npmjs.com/package/use-webmcp-tool |
+| Angular | `@angular/core`, `@angular/forms/signals` | `provideExperimentalWebMcpTools([...])` (app or route providers), `declareExperimentalWebMcpTool(...)` (inside services), `provideExperimentalWebMcpForms()` + the `experimentalWebMcpTool` option on Signal Forms | angular.dev/ai/webmcp |
+| Vue | `@vueuse/core` | `useWebMCP(options)` composable | vueuse.org/core/usewebmcp |
+
+All the rules in this guide still apply when you use these integrations:
+* Keep the tool definition shape the same: `name`, `description`, `inputSchema`, `execute(input, { signal })`, and `annotations`.
+* Follow the rules for descriptions and annotations.
+* Validate input and apply defaults inside `execute`.
+* Pass `signal` to long-running work.
+* To offer a tool only some of the time, pass `enabled` (React, Vue). **DO NOT** wrap the hook or composable call in a condition.
+* Integrations may wrap results and errors (for example as `{ content, isError }`). Check the integration's docs before relying on how errors reach the agent.
+
 ## API Notes
 
 *   **annotations**: (Optional) A dictionary for tool metadata.
@@ -341,6 +477,7 @@ export function createInventoryTool(inventoryManager) {
     *   **exposedTo**: (Optional) An array of secure origin strings controlling which documents in the document tree are allowed to discover and execute the tool across frame boundaries.
 *   **Tool Discovery Options (`ModelContextGetToolOptions`)**:
     *   **fromOrigins**: (Optional) An array of secure origin strings to query in accessible frames. Calling `getTools()` without `fromOrigins` queries only same-origin documents.
+*   **outputSchema**: (Optional, Chrome 159+) A JSON Schema object describing the value `execute` returns. Add it selectively to multi-field read/search tools, mutating actions that return updated state, and tools returning IDs for chaining.
 *   **Return Format**: The `execute` function can return any JSON-serializable value (object, array, string, number, boolean). The message of an exception thrown from `execute` is not forwarded to the agent, so return actionable errors as structured error payloads (e.g. `{ error: "..." }`) via the tool's return value so the agent can read and act on them.
 *   **Secure Context**: WebMCP requires HTTPS. All origins in `exposedTo` and `fromOrigins` must also be potentially trustworthy.
 *   **Deprecated/Removed**: `navigator.modelContext` (deprecated in Chromium 150), `unregisterTool()`, `provideContext()`, and `clearContext()` are no longer supported.

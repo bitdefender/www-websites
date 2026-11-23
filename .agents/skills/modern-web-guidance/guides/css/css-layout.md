@@ -49,12 +49,17 @@ body.centered  { display: grid; place-content: center; min-block-size: 100dvb; }
 
 ## 2 Flexbox
 
+Browser support for flex-wrap: balance: Limited availability.
+Supported by: Chrome 150 (Jun 2026) and Edge 150 (Jul 2026).
+Unsupported in: Firefox and Safari.
+
 One-dimensional layout — items flow along a single **main** axis with alignment on the **cross** axis. Reach for it for navbars, toolbars, item rows, and any single-row-or-column distribution.
 
 **Do:**
 
 - Establish a context with `display: flex` and set the main axis with `flex-direction` (`row` default).
 - Use `flex-wrap: wrap` whenever overflow is a possibility — `nowrap` without `overflow: auto/hidden` will spill on narrow viewports.
+- Layer `flex-wrap: balance` after `flex-wrap: wrap` on wrapped rows of compact items (such as tag clouds, filter pills, button groups, or navigation links) to distribute items evenly across lines and prevent a single orphaned item on the final row; browsers without support fall back to `wrap`.
 - Use the `flex` shorthand `<grow> <shrink> <basis>` (e.g., `flex: 1 1 250px`) on items rather than setting `flex-grow`/`flex-shrink`/`flex-basis` individually.
 - Use `gap` (or the `row-gap`/`column-gap` longhand) for spacing between items instead of child margins.
 - Prefix positional alignment with `safe` (e.g., `align-items: safe center`) so focusable content isn't clipped when the container is narrower than its content.
@@ -77,6 +82,7 @@ One-dimensional layout — items flow along a single **main** axis with alignmen
 .card-item        { flex: 1 1 250px; }                  /* grow, shrink, basis */
 .card-item-action { margin-inline-start: auto; }        /* Push to main-axis end. */
 .toolbar          { display: flex; align-items: safe center; }
+.tag-list         { display: flex; flex-wrap: wrap; flex-wrap: balance; gap: 0.5rem; }
 ```
 
 ## 3 Grid and subgrid
@@ -169,7 +175,7 @@ Query the size (or computed style) of an ancestor container rather than the view
 **Do:**
 
 - Establish a containment context with `container-type: inline-size` (width-only queries) or `container-type: size` (both axes) on a wrapper before its descendants can be queried.
-- Name containers with `container-name` (or the `container` shorthand: `container: inline-size card`) when nested contexts could collide.
+- Name containers with `container-name` (or the `container` shorthand: `container: card / inline-size`) when nested contexts could collide.
 - Include container query units in calculating fluid type and spacing: `cqi`/`cqb` (logical inline/block), `cqw`/`cqh` (physical), `cqmin`/`cqmax`.
 - Give the container a definite `block-size` whenever `container-type: size` is used — without one, descendants collapse because size containment forces the container to ignore its content.
 
@@ -183,7 +189,7 @@ Query the size (or computed style) of an ancestor container rather than the view
 
 ```css
 .card-wrapper {
-  container: inline-size / card; /* shorthand for container-type + container-name */
+  container: card / inline-size; /* shorthand for container-name / container-type */
 }
 
 @container card (inline-size > 400px) {
@@ -210,8 +216,8 @@ Baseline status for Popover: Newly available. It's been Baseline since 2025-01-2
 Supported by: Chrome 116 (Aug 2023), Edge 116 (Aug 2023), Firefox 125 (Apr 2024), Safari 17 (Sep 2023), and Safari iOS 18.3 (Jan 2025).
 
 Browser support for Anchor positioning: Limited availability.
-Supported by: Safari 27.
-Unsupported in: Chrome, Edge, and Firefox.
+Supported by: Chrome 157 (Nov 2026), Edge 157 (Nov 2026), and Safari 27 (Sep 2026).
+Unsupported in: Firefox.
 
 **When to use each overlay primitive:**
 
@@ -222,11 +228,11 @@ Unsupported in: Chrome, Edge, and Firefox.
 **Anchor positioning (spatial layout of overlays):**
 
 - Use `position-area` (or `anchor()` on insets) and `anchor-size()` to position and size an overlay relative to its trigger.
-- Use `position-try-fallbacks: flip-block` (or `flip-inline`) to let the browser reposition when the overlay overflows the viewport.
+- Use `position-try-fallbacks` to let the browser reposition when the overlay overflows the viewport. `flip-block, flip-inline, flip-block flip-inline` is a reasonable default, or define use-case specific fallbacks.
 - Don't mix physical and logical keywords in a single `position-area` value — pick one coordinate system.
 - Feature-detect with `@supports (anchor-name: --x)` and provide an absolute-position fallback.
 
-> For full implementation detail, polyfill strategies, and `popover` value reference, see `declarative-dialog-popover-control` (via `npx -y modern-web-guidance@latest retrieve "declarative-dialog-popover-control"`) and `position-aware-tooltips` (via `npx -y modern-web-guidance@latest retrieve "position-aware-tooltips"`). For anchor positioning applied to menus and tab indicators, see `resilient-context-menus-and-nested-dropdowns` (via `npx -y modern-web-guidance@latest retrieve "resilient-context-menus-and-nested-dropdowns"`) and `anchor-positioning-tab-underline` (via `npx -y modern-web-guidance@latest retrieve "anchor-positioning-tab-underline"`).
+> For full implementation detail, polyfill strategies, and `popover` value reference, see `declarative-dialog-popover-control` (via `npx -y modern-web-guidance@latest retrieve "declarative-dialog-popover-control"`) and `position-aware-tooltips` (via `npx -y modern-web-guidance@latest retrieve "position-aware-tooltips"`). For anchor positioning applied to dropdowns, flyouts, and tab indicators, see `viewport-aware-dropdowns` (via `npx -y modern-web-guidance@latest retrieve "viewport-aware-dropdowns"`) and `anchor-positioning-tab-underline` (via `npx -y modern-web-guidance@latest retrieve "anchor-positioning-tab-underline"`).
 
 ## 6 Overflow tracking and layout stability
 
@@ -242,8 +248,10 @@ Manage layout shifts, scrollbars, and clipping predictably.
 - Use `overflow: auto` so scrollbars appear only when content actually overflows.
 - Use `overflow: clip` to clip content **without** establishing a scroll container; opt into spillover with `overflow-clip-margin`.
 - Use `scrollbar-gutter: stable` to reserve space for scrollbars and prevent layout shifts when content grows.
-- Use `overscroll-behavior: contain` (or `none`) on scrollable containers to stop scroll chains from bubbling into the parent or document.
+- Use `overscroll-behavior: contain` (or `none`) on nested scroll regions (such as sidebars, modals, and lists) to stop scroll chains from bubbling into the page, or `overscroll-behavior: chain` on intermediate scroll wrappers (such as swipe-to-reveal tracks) when excess scroll should propagate to an ancestor scroller without triggering a local rubber-band bounce.
 - Use the `-webkit-line-clamp` + `display: -webkit-box` + `-webkit-box-orient: vertical` triad for multi-line truncation — despite the prefix, this pattern is fully specified and not deprecated. Declare the unprefixed `line-clamp` shorthand alongside it; browsers that don't yet support it ignore the property harmlessly.
+- For text that must stay on one line (labels, table cells, file names) see `single-line-overflow` (via `npx -y modern-web-guidance@latest retrieve "single-line-overflow"`) for techniques for truncating and revealing the full text on demand without UX friction.
+
 **Do not:**
 
 - Don't use `overflow: scroll` when `auto` will do — `scroll` forces scrollbars even when there's nothing to scroll.
@@ -266,7 +274,7 @@ Manage layout shifts, scrollbars, and clipping predictably.
 }
 ```
 
-> For `overflow: clip` and `overflow-clip-margin` in depth, see `overflow-clipping-control` (via `npx -y modern-web-guidance@latest retrieve "overflow-clipping-control"`). For scrollbar color, sizing, and theming, see `customize-scrollbar-color-and-thickness` (via `npx -y modern-web-guidance@latest retrieve "customize-scrollbar-color-and-thickness"`), `dark-mode` (via `npx -y modern-web-guidance@latest retrieve "dark-mode"`), and `adapt-scrollbar-to-contrast-preferences` (via `npx -y modern-web-guidance@latest retrieve "adapt-scrollbar-to-contrast-preferences"`).
+> For `overflow: clip` and `overflow-clip-margin` in depth, see `overflow-clipping-control` (via `npx -y modern-web-guidance@latest retrieve "overflow-clipping-control"`). For nested scroll handoff with `overscroll-behavior: chain` in swipe-to-reveal UI, see `swipe-to-reveal` (via `npx -y modern-web-guidance@latest retrieve "swipe-to-reveal"`). For scrollbar color, sizing, and theming, see `customize-scrollbar-color-and-thickness` (via `npx -y modern-web-guidance@latest retrieve "customize-scrollbar-color-and-thickness"`), `dark-mode` (via `npx -y modern-web-guidance@latest retrieve "dark-mode"`), and `adapt-scrollbar-to-contrast-preferences` (via `npx -y modern-web-guidance@latest retrieve "adapt-scrollbar-to-contrast-preferences"`).
 
 ## 7 Viewport mechanics and track distribution
 
@@ -281,11 +289,10 @@ Supported by: Chrome 108 (Nov 2022), Edge 108 (Dec 2022), Firefox 101 (May 2022)
 ## 8 Grid lanes (aka masonry)
 
 Browser support for Grid lanes: Limited availability.
-Supported by: Safari 26.4 (Mar 2026).
+Supported by: Safari 27.2 (Oct 2026).
 Unsupported in: Chrome, Edge, and Firefox.
 
-
-The spec is in development. The currently agreed-upon name is "grid lanes" (e.g., `display: grid-lanes`). Firefox ships `grid-template-rows: masonry` behind a flag; no other engines ship it in stable as of this writing.
+The specification is in development under the name "grid lanes" (e.g., `display: grid-lanes`), while earlier experimental prototypes used `grid-template-rows: masonry`.
 
 **Do:**
 
@@ -311,3 +318,4 @@ The spec is in development. The currently agreed-upon name is "grid lanes" (e.g.
   }
 }
 ```
+
