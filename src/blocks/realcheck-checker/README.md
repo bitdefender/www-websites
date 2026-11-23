@@ -4,15 +4,18 @@ The hero of the RealCheck product page (DEX-29094): the visitor pastes a public 
 and gets a free deepfake check. The block shows four screens: the form, the progress, the
 result, and a failed screen.
 
-It calls the RealCheck API through a proxy that adds the API key, which the browser must
-never see. The proxy's address is `ENDPOINT` in `realcheck-checker.js`.
+It calls the RealCheck API through a proxy that adds the API credentials, which the browser
+must never see. The proxy's address is `ENDPOINT` in `realcheck-checker.js`.
 A page can point elsewhere with the section metadata `realcheck-endpoint`.
 
 A visible Cloudflare Turnstile widget sits under the field, as in booking-form
-(`renderTurnstile` in `scripts/utils/utils.js`). Analyze waits for its token and sends it as
-`token` in the JSON body. The proxy must check it with `TURNSTILE_SECRET_KEY`, the same way
-locale-router's `/form` does, and strip it before calling the API. A token is good for one request,
-so the widget resets after each submit. `?realcheck-mock` skips the widget.
+(`renderTurnstile` in `scripts/utils/utils.js`). Analyze waits for its token and sends it in the
+`X-Turnstile-Token` header. locale-router checks it on the way to the proxy (the `/napi`
+Turnstile gate) and strips it: a missing or refused token comes back as 400/403
+`{ ok: false, code: 'TURNSTILE_…' }`, and the block goes back to the form with `error turnstile`.
+A token is good for one request, so the widget resets after each submit, and the retry after a
+server error waits up to 10 seconds for the next one. Polling sends no token.
+`?realcheck-mock` skips the widget.
 
 ## Authoring
 
@@ -80,4 +83,5 @@ Section metadata: `signature` (`Trusted. Always.`) is shown at the bottom of the
 - `failed-no_speech`, `failed-content_private`, …: a failed check with that code
 - `http-422-platform_not_supported`, `http-422-invalid_url`, `http-502-unavailable`: a refused request,
   answered as the proxy does (`{ ok: false, code: 'REALCHECK_…' }`)
+- `http-403-turnstile_failed`: the security check refused, answered as locale-router does
 - `slow`: never finishes (gives up after 6 minutes)

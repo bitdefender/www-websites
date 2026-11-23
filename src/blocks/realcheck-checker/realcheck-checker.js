@@ -14,6 +14,10 @@ const FINISHED = ['completed', 'failed'];
 const GIVE_UP_AFTER = 6 * 60 * 1000;
 const DEFAULT_RETRY_AFTER = 2;
 const TURNSTILE_ID = 'realcheck-checker-turnstile';
+// locale-router checks the token in this header before the request reaches the proxy
+const TURNSTILE_HEADER = 'X-Turnstile-Token';
+// how long a retry waits for the widget's next token
+const TOKEN_WAIT = 10 * 1000;
 const TONES = ['blue', 'red', 'orange', 'grey'];
 
 // English defaults; a localized page overrides any of them with a `key | text` row
@@ -125,7 +129,8 @@ async function readJson(response) {
 
 /*
  * The proxy refuses with `{ ok: false, code: 'REALCHECK_PLATFORM_NOT_SUPPORTED', message }`:
- * the API's code, upper-cased behind a prefix.
+ * the API's code, upper-cased behind a prefix. locale-router's Turnstile check refuses the same
+ * way, without the prefix (`TURNSTILE_FAILED`).
  */
 const errorCode = (body, status) => (typeof body?.code === 'string'
   ? body.code.replace(/^REALCHECK_/, '').toLowerCase()
@@ -138,26 +143,24 @@ const retryAfter = (response) => {
 
 /**
  * Submits the link and polls until the check finishes, reporting every state on the way.
- * Each submit sends a Turnstile token from `token()`, which the proxy checks and strips, as for
- * booking-form's `/form`.
+ * Each submit sends a Turnstile token from `token()` in `X-Turnstile-Token`, which locale-router
+ * checks and strips on its way to the proxy.
  * @param {{ endpoint: string, url: string, signal: AbortSignal, fetch: typeof fetch,
- *   token?: () => string, onUpdate: (check: object) => void }} options
+ *   token?: () => string | Promise<string>, onUpdate: (check: object) => void }} options
  * @returns {Promise<object>} The finished check
  */
 export async function runCheck({
   endpoint, url, signal, fetch: request = window.fetch.bind(window), token = () => '', onUpdate,
 }) {
   const deadline = Date.now() + GIVE_UP_AFTER;
-  const submit = () => {
-    const body = { type: 'social_media', url };
-    const turnstile = token();
-    if (turnstile) body.token = turnstile;
+  const submit = async () => {
+    const headers = { 'Content-Type': 'application/json' };
+    const turnstile = await token();
+    if (turnstile) headers[TURNSTILE_HEADER] = turnstile;
     return request(`${endpoint}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
+      headers,
+      body: JSON.stringify({ type: 'social_media', url }),
       signal,
     });
   };
@@ -488,16 +491,23 @@ export default async function decorate(block) {
       .catch(() => {});
   }
   const currentToken = () => (widgetId === undefined ? '' : window.turnstile?.getResponse(widgetId) || '');
-  // A token is good for one request: the widget gets a new one for the next submit
-  const takeToken = () => {
-    const token = currentToken();
+  let controller;
+  // A token is good for one request: the widget gets a new one for the next submit. A retry
+  // waits for it; without one, locale-router refuses and the visitor redoes the check.
+  const takeToken = async () => {
+    const deadline = Date.now() + TOKEN_WAIT;
+    let token = currentToken();
+    while (!token && Date.now() < deadline) {
+      // eslint-disable-next-line no-await-in-loop -- polling the widget
+      await wait(0.25, controller?.signal);
+      token = currentToken();
+    }
     if (token) window.turnstile.reset(widgetId);
     return token;
   };
 
   const input = form.querySelector('input');
   const error = form.querySelector('.realcheck-checker__error');
-  let controller;
   let stopScroll = () => {};
 
   const show = (state, tone = 'blue') => {
@@ -579,6 +589,9 @@ export default async function decorate(block) {
       if (failure.code === 'platform_not_supported' || failure.code === 'invalid_url') {
         show('idle');
         showError(failure.code === 'invalid_url' ? 'invalid' : 'unsupported');
+      } else if (failure.code === 'turnstile_required' || failure.code === 'turnstile_failed') {
+        show('idle');
+        showError('turnstile');
       } else if (!controller.signal.aborted) {
         showFailed(failure.code);
       }
