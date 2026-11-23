@@ -198,7 +198,9 @@ function collect(ctaSource) {
       const plan = ['product_id', 'payment_period'].map((p) => url.searchParams.get(p)).filter(Boolean).join(' ');
       return { kind: 'checkout', key: plan || `${url.host}${url.pathname}` };
     }
-    return { kind: 'page', key: `${url.host}${url.pathname}` };
+    // the site's own pages are one destination whichever host serves them (www, aem.page)
+    const ownSite = url.origin === location.origin || /(^|\.)bitdefender\.com$/.test(url.hostname);
+    return { kind: 'page', key: ownSite ? url.pathname.replace(/\/$/, '') : `${url.host}${url.pathname}` };
   };
 
   const elements = [];
