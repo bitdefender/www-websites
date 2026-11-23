@@ -1372,7 +1372,7 @@ const spokenText = (node) => [...node.childNodes].map((child) => {
  * read aria-label and skip aria-labelledby. Call it once the parts hold their final text.
  * @param {HTMLElement} element a CTA, or the container of a plan picker
  * @param {Array<HTMLElement|null|undefined>} parts elements naming the plan, in reading order;
- * missing, empty, repeated and enclosing ones are skipped
+ * missing, hidden, empty, repeated and enclosing ones are skipped
  * @param {object} [options]
  * @param {boolean} [options.withOwnText=true] start the name with the element's own text,
  * as a CTA's name has to
@@ -1386,7 +1386,9 @@ export function labelWithPlan(element, parts, { withOwnText = true, attribute = 
   const ownText = withOwnText ? normalize(spokenText(element)) : '';
   // "Get Bitdefender Premium VPN" already names its product
   const plan = [...new Set(parts)]
-    .filter((part) => part && !part.contains(element))
+    // a part hidden from readers says nothing either: new-prod-boxes keeps an aria-hidden
+    // "Invisible" subtitle to line boxes up
+    .filter((part) => part && !part.contains(element) && !part.closest('[aria-hidden="true"], [hidden]'))
     .map((part) => normalize(spokenText(part)))
     .filter((text) => text && !ownText.toLowerCase().includes(text.toLowerCase()));
   if (!plan.length) return;

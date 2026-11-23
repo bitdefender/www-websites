@@ -47,6 +47,20 @@ describe('labelWithPlan', () => {
     expect(cta.getAttribute('aria-label')).toBe('Buy Now Bitdefender Total Security');
   });
 
+  it('skips parts hidden from readers', () => {
+    const cta = document.querySelector('a');
+    const spacer = document.createElement('p');
+    spacer.setAttribute('aria-hidden', 'true');
+    spacer.innerHTML = '<span class="tag">Invisible</span>';
+    const hidden = document.createElement('p');
+    hidden.hidden = true;
+    hidden.textContent = 'Hidden';
+    document.querySelector('.card').append(spacer, hidden);
+    labelWithPlan(cta, [document.querySelector('h4'), spacer.firstElementChild, hidden]);
+
+    expect(cta.getAttribute('aria-label')).toBe('Buy Now Bitdefender Total Security');
+  });
+
   it('skips parts the CTA already says', () => {
     const cta = document.querySelector('a');
     cta.textContent = 'Buy Bitdefender Total Security';
