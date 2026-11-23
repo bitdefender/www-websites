@@ -152,6 +152,14 @@ describe('new-prod-boxes', () => {
     expect(new Set(names).size).toBe(8);
   });
 
+  it('makes the individual/family toggle a switch named after the family plans', () => {
+    const toggle = document.getElementById('switchCheckbox');
+
+    expect(toggle.getAttribute('role')).toBe('switch');
+    expect(toggle.getAttribute('aria-label'))
+      .toBe(document.querySelector('.switchBox .label.left').textContent.replace(/\s+/g, ' ').trim());
+  });
+
   it('creates benefits lists', () => {
     const benefitsLists = document.querySelectorAll('.benefitsLists');
     expect(benefitsLists.length).toBe(8);

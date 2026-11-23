@@ -146,7 +146,7 @@ function createPriceElement(options, card) {
 /**
  * Creates a plan switcher with radio buttons for different pricing options
  * @param {HTMLElement} radioButtons - Container with radio button labels
- * @param {number} cardNumber - Card index for unique naming
+ * @param {string} cardNumber - Block instance and card index, unique on the page
  * @param {Array} prodsNames - Array of product names
  * @param {Array} prodsUsers - Array of user counts
  * @param {Array} prodsYears - Array of year counts
@@ -179,7 +179,9 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
       radioText = radioText.replace('[checked]', '');
     }
 
-    const inputId = `${plan}-${productName.trim()}`;
+    // unique on the page, so each label checks its own radio even when two boxes, or two
+    // blocks, sell the same product
+    const inputId = `${plan}-${productName.trim()}-${cardNumber}`;
     const inputName = `${cardNumber}-${variant}`;
     const inputValue = `${cardNumber}-${plan}-${productName.trim()}`;
 
@@ -383,12 +385,15 @@ function createToggleSwitch(individualText, familyText) {
   switchBox.className = 'switchBox';
   switchBox.innerHTML = `
     <label class="switch">
-      <input type="checkbox" id="switchCheckbox">
+      <input type="checkbox" id="switchCheckbox" role="switch">
       <span class="slider round"></span>
       <span class="label right">${individualText}</span>
       <span class="label left">${familyText}</span>
     </label>
   `;
+  // on shows the family plans: a switch named after them reads "Family, off"
+  const familyName = switchBox.querySelector('.label.left').textContent.replace(/\s+/g, ' ').trim();
+  if (familyName) switchBox.querySelector('input').setAttribute('aria-label', familyName);
   return switchBox;
 }
 
@@ -1022,7 +1027,12 @@ function labelCardControls(productBox) {
  * Main block decoration function
  * @param {HTMLElement} block - Block element to decorate
  */
+// counts the blocks on the page, so their radios' ids and groups don't meet
+let instances = 0;
+
 export default async function decorate(block) {
+  const instance = instances;
+  instances += 1;
   const section = block.closest('.section');
   const {
     products,
@@ -1136,7 +1146,7 @@ export default async function decorate(block) {
         if (radioButtons && monthlyProducts) {
           planSwitcher = createPlanSwitcher(
             radioButtons,
-            key,
+            `${instance}-${key}`,
             [baseProdName, monthlyInfo[0], thirdButtonInfo[0]],
             [baseProdUsers, monthlyInfo[1], thirdButtonInfo[1]],
             [baseProdYears, monthlyInfo[2], thirdButtonInfo[2]],
@@ -1147,7 +1157,7 @@ export default async function decorate(block) {
         if (hasAddOn && addOnProducts && addOnMonthlyProducts) {
           planSwitcher2 = createPlanSwitcher(
             radioButtons,
-            key,
+            `${instance}-${key}`,
             [addOnInfo[0], addOnMonthlyInfo[0]],
             [addOnInfo[1], addOnMonthlyInfo[1]],
             [addOnInfo[2], addOnMonthlyInfo[2]],
