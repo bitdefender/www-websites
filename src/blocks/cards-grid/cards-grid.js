@@ -1,4 +1,5 @@
 import { load } from '@repobit/dex-system-design/loader';
+import { openModal } from '../../scripts/scripts.js';
 import {
   liftSectionHeader, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
@@ -14,12 +15,16 @@ import {
  *   responsible-ai  an icon, a title in brand ink and copy, on the brand wash,
  *                   under a centred section header
  *   benefits        a figure (the cell's first heading), a title and a line
- *   anchor          an eyebrow (the earlier heading), a title and the cell's
- *                   link: the whole card is the link (bd-audience-card)
+ *   anchor          an eyebrow (an h4 to h6), a title (an h1 to h3) and the
+ *                   cell's link: the whole card is the link (bd-audience-card)
  *   logo            a partner's logo, a title and paragraphs
  *
  * Every card is a subgrid of the row (bd-grid item-rows), so its parts start
  * on one line with its neighbours' however the words above them wrap.
+ *
+ * A link on its own line is a button at the card's foot, as Columns drew it:
+ * a plain link the red one, a bold one the black (grey on a picture), and a
+ * link to a fragment the text one that opens it as a modal.
  */
 
 const HEADINGS = 'h1, h2, h3, h4, h5, h6';
@@ -67,11 +72,40 @@ const copyOf = (cell) => [...cell.querySelectorAll('p')].filter((p) => p.textCon
 
 const paragraph = (p, appearance) => el('bd-p', { appearance }, ...p.childNodes);
 
-const linkOf = (cell) => cell.querySelector('a[href]');
+// detectModalButtons has already moved a fragment link's href to `location`
+const hrefOf = (link) => link.getAttribute('href') || link.getAttribute('location');
 
-const cta = (link) => link && el('bd-button', {
-  slot: 'actions', appearance: 'accent', href: link.getAttribute('href'),
-}, link.textContent.trim());
+const linkOf = (cell) => [...cell.querySelectorAll('a')].find(hrefOf);
+
+/* decorateButtons has made a link on its own line an a.button: bold is
+   .primary, bold italic .secondary, and a fragment's .modal */
+const appearanceOf = (link) => {
+  if (link.classList.contains('modal')) return 'plain';
+  if (link.matches('.primary, .secondary') || link.closest('strong, b')) return 'secondary';
+  return 'accent';
+};
+
+/** The cell's buttons, every link on its own line, in the order authored. */
+const ctas = (cell, surface = 'light') => [...cell.querySelectorAll('p')]
+  .map((p) => p.querySelector('a'))
+  .filter((link) => link && hrefOf(link)
+    && link.closest('p').textContent.trim() === link.textContent.trim())
+  .map((link) => {
+    const href = hrefOf(link);
+    const button = el('bd-button', {
+      slot: 'actions', appearance: appearanceOf(link), surface,
+    }, link.textContent.trim());
+    if (link.classList.contains('modal') || href.includes('/fragments/')) {
+      // the button's anchor is in its shadow root, out of detectModalButtons' sight
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(href, link.dataset.stopAutomaticModalRefresh === 'true');
+      });
+    } else {
+      button.setAttribute('href', href);
+    }
+    return button;
+  });
 
 /* === The variations: each builds one card from a cell, and says how many
    rows of the grid a card takes, which is the most any card in the row uses. */
@@ -85,8 +119,8 @@ const BUILDERS = {
     const heading = cell.querySelector(HEADINGS);
     if (heading) card.append(el('bd-h', { slot: 'title', as: 'h3' }, ...titleNodes(heading)));
     copyOf(cell).forEach((p) => card.append(paragraph(p)));
-    const button = cta(linkOf(cell));
-    if (button) card.append(button);
+    // on the picture's dark ground
+    card.append(...ctas(cell, 'dark'));
     return card;
   },
 
@@ -109,8 +143,7 @@ const BUILDERS = {
       }, ...titleNodes(heading)));
     }
     copyOf(cell).forEach((p) => card.append(paragraph(p)));
-    const button = cta(linkOf(cell));
-    if (button) card.append(button);
+    card.append(...ctas(cell));
     return card;
   },
 
@@ -125,17 +158,24 @@ const BUILDERS = {
         as: 'h3', 'visual-level': 'h5', 'font-weight': 'bold', padding: '24 0 8 0',
       }, ...titleNodes(title)));
     }
-    copyOf(cell).forEach((p) => card.append(paragraph(p, 'small')));
+    copyOf(cell).forEach((p, index) => {
+      const line = paragraph(p, 'small');
+      // without a title the line keeps the figure's 24 under it
+      if (!title && figure && index === 0) line.setAttribute('padding-top', '24');
+      card.append(line);
+    });
+    card.append(...ctas(cell));
     return card;
   },
 
   /* An eyebrow and a title; the whole card is the cell's link. */
   anchor: (cell) => {
     const link = linkOf(cell);
-    const card = el('bd-audience-card', { appearance: 'outline', href: link?.getAttribute('href') });
+    const card = el('bd-audience-card', { appearance: 'outline', href: link && hrefOf(link) });
+    // the heading's level says which it is, so either can be left out
     const headings = [...cell.querySelectorAll(HEADINGS)];
-    const title = headings.pop();
-    const eyebrow = headings.pop();
+    const title = headings.filter((h) => /^H[1-3]$/.test(h.tagName)).pop();
+    const eyebrow = headings.find((h) => /^H[4-6]$/.test(h.tagName));
     if (eyebrow) card.append(el('span', { slot: 'eyebrow' }, eyebrow.textContent.trim()));
     if (title) {
       card.append(el('bd-h', { slot: 'title', as: 'h3', 'font-weight': 'medium' }, ...titleNodes(title)));
@@ -157,8 +197,7 @@ const BUILDERS = {
       }, ...titleNodes(heading)));
     }
     copyOf(cell).forEach((p) => card.append(paragraph(p)));
-    const button = cta(linkOf(cell));
-    if (button) card.append(button);
+    card.append(...ctas(cell));
     return card;
   },
 };
@@ -175,11 +214,9 @@ const rowsOf = (card) => {
 /* Columns per screen step: one below md; from md two for the two-up
    variations; from lg every card of a short row, three to a row beyond four. */
 const columnsFor = (variant, count) => {
-  if (variant === 'anchor' || variant === 'logo') {
-    const two = String(Math.min(2, count));
-    return { md: two, lg: two };
-  }
-  return { md: '1', lg: String(count <= 4 ? count : 3) };
+  const lg = String(count <= 4 ? count : 3);
+  if (variant === 'anchor' || variant === 'logo') return { md: String(Math.min(2, count)), lg };
+  return { md: '1', lg };
 };
 
 export default async function decorate(block) {
