@@ -180,9 +180,9 @@ createNanoBlock('devices-users-text', renderDevicesUsersText);
 /**
  * hero-aem (diorama): the hero-diorama 3D city fills the banner behind the
  * card, the walker on the right. three.js is large, so it is imported only
- * here, after the banner has rendered. The desktop image stays until the
- * canvas has faded in, and for good when there is no WebGL 2 or the import
- * fails.
+ * here, after the banner has rendered. The authored images are hidden while
+ * the stage is there (CSS), so they come back only when the diorama can't
+ * run: no WebGL 2 (no canvas) or a failed import.
  * @param {HTMLElement} block the hero-aem block
  */
 async function mountDiorama(block) {
@@ -191,6 +191,7 @@ async function mountDiorama(block) {
   try {
     const { createDiorama } = await import('hero-diorama');
     createDiorama(stage, { focalPoint: { x: 0.75 } });
+    if (!stage.querySelector('canvas')) stage.remove();
   } catch (error) {
     stage.remove();
     // eslint-disable-next-line no-console

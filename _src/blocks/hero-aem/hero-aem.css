@@ -1301,6 +1301,15 @@
   isolation: isolate;
 }
 
+/* the diorama replaces the authored images; they return if it can't run */
+.hero-aem-container .hero-aem.diorama:has(.hero-aem__diorama) :is(.hero-aem__desktop-image, .hero-aem__mobile-image) {
+  visibility: hidden;
+}
+
+.hero-aem-container .hero-aem.diorama:has(.hero-aem__diorama) .hero-aem__mobile-image {
+  display: none;
+}
+
 .hero-aem-container .hero-aem.diorama .hero-aem__diorama {
   position: relative;
   height: 320px;
@@ -1316,10 +1325,5 @@
     z-index: -1;
     height: auto;
     border-radius: inherit;
-  }
-
-  /* the image is the poster until the canvas has faded in */
-  .hero-aem-container .hero-aem.diorama:has(.hero-aem__diorama canvas[data-revealed]) .hero-aem__desktop-image {
-    visibility: hidden;
   }
 }
