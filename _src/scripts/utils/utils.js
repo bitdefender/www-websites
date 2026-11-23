@@ -1242,6 +1242,62 @@ var createBdOption = ({ devices, subscription, storeEvent = "" }) => {
 	if (storeEvent) bdOptionElement.setAttribute("data-layer-event", storeEvent);
 	return bdOptionElement;
 };
+var BLOCK_TAGS = [
+	"DIV",
+	"P",
+	"LI",
+	"H1",
+	"H2",
+	"H3",
+	"H4",
+	"H5",
+	"H6",
+	"TD",
+	"TH"
+];
+/**
+* The text a reader hears: a <br> and block elements separate words, hidden icons and SVG
+* say nothing.
+* @param {Node} node
+* @returns {string}
+*/
+var spokenText = (node) => [...node.childNodes].map((child) => {
+	if (child.nodeType === Node.TEXT_NODE) return child.textContent;
+	if (child.nodeType !== Node.ELEMENT_NODE) return "";
+	if (child.tagName === "BR") return " ";
+	if ([
+		"SVG",
+		"svg",
+		"STYLE",
+		"SCRIPT"
+	].includes(child.tagName) || child.getAttribute("aria-hidden") === "true") return "";
+	return BLOCK_TAGS.includes(child.tagName) ? ` ${spokenText(child)} ` : spokenText(child);
+}).join("");
+/**
+* Names a purchase control after the plan it belongs to, for assistive tech and AI agents:
+* four "Buy Now" links read "Buy Now Bitdefender Total Security Family 5 members - up to 25
+* devices", and a plan switcher reads as that plan's radio group instead of a bare "Yearly".
+* The name is copied from visible text, so it is in the page's language. It is an aria-label,
+* not aria-labelledby: agents that build their own page tree (Claude in Chrome among them)
+* read aria-label and skip aria-labelledby. Call it once the parts hold their final text.
+* @param {HTMLElement} element a CTA, or the container of a plan picker
+* @param {Array<HTMLElement|null|undefined>} parts elements naming the plan, in reading order;
+* missing, empty, repeated and enclosing ones are skipped
+* @param {object} [options]
+* @param {boolean} [options.withOwnText=true] start the name with the element's own text,
+* as a CTA's name has to
+* @param {string} [options.attribute='aria-label'] where the name goes: a design-system
+* button (bd-button-link) takes `label` and names the control in its shadow root with it,
+* where an aria-label on the role-less host would be prohibited ARIA
+*/
+function labelWithPlan(element, parts, { withOwnText = true, attribute = "aria-label" } = {}) {
+	if (!element) return;
+	const normalize = (text) => text.replace(/\s+/g, " ").trim();
+	const ownText = withOwnText ? normalize(spokenText(element)) : "";
+	const plan = [...new Set(parts)].filter((part) => part && !part.contains(element)).map((part) => normalize(spokenText(part))).filter((text) => text && !ownText.toLowerCase().includes(text.toLowerCase()));
+	if (!plan.length) return;
+	element.setAttribute(attribute, [ownText, ...plan].filter(Boolean).join(" "));
+}
 /**
 * @param {HTMLElement} element
 * @param {object} storeProperties
@@ -1500,4 +1556,4 @@ function onCookiesAccepted(callback) {
 		if (window.adobeDataLayer.getState("ucCategory.functional")) callback();
 	});
 }
-export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };
+export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, labelWithPlan, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };

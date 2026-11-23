@@ -1,4 +1,4 @@
-import { createNanoBlock, matchHeights, renderNanoBlocks, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
+import { createNanoBlock, labelWithPlan, matchHeights, renderNanoBlocks, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
 // src/blocks/product-comparison-table/product-comparison-table.js
 createNanoBlock("priceComparison", (code, variant, label, block, productIndex, columnEl) => {
 	const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
@@ -177,6 +177,12 @@ function decorate(block) {
 	const priceRow = block.querySelector(".product-comparison-last-row-with-prices");
 	[...headerColumns, priceRow].forEach((item, idx) => {
 		if (item) renderNanoBlocks(item, void 0, idx, block);
+	});
+	headerColumns.forEach((column, idx) => {
+		const productName = [column.querySelector("h3"), column.querySelector(".paragraph-group")];
+		[column, priceRow?.children[idx + 1]].forEach((cell) => {
+			cell?.querySelectorAll(".button-container a").forEach((cta) => labelWithPlan(cta, productName));
+		});
 	});
 	matchHeights(block, "h3");
 	matchHeights(block, ".paragraph-group");

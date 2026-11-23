@@ -1,4 +1,4 @@
-import { checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, formatPrice } from "../../scripts/utils/utils.js";
+import { checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, formatPrice, labelWithPlan } from "../../scripts/utils/utils.js";
 import store_default from "../../scripts/store.js";
 // src/blocks/new-prod-boxes/new-prod-boxes.js
 var PRICE_ATTRIBUTES = {
@@ -721,6 +721,27 @@ function buildProductBox(config) {
 	return productBox;
 }
 /**
+* Names the box's CTAs and plan switchers after its plan (title, Individual/Family tag,
+* members and devices), so the boxes' identical "Buy Now" and "Yearly" read apart
+* @param {HTMLElement} productBox - Product box element
+*/
+function labelCardControls(productBox) {
+	const card = productBox.querySelector(".inner_prod_box");
+	if (!card) return;
+	const plan = [
+		"h4",
+		".blueTagsWrapper",
+		".subtitle"
+	].map((part) => card.querySelector(`:scope > ${part}`));
+	const addOnPlan = [...plan, card.querySelector(".add-on-product > h4")];
+	card.querySelectorAll(".hero-aem__prices a.button").forEach((cta) => labelWithPlan(cta, plan));
+	card.querySelectorAll(".hero-aem__prices__addon a.button").forEach((cta) => labelWithPlan(cta, addOnPlan));
+	card.querySelectorAll(".plan-switcher").forEach((switcher) => {
+		switcher.setAttribute("role", "radiogroup");
+		labelWithPlan(switcher, switcher.classList.contains("addon") ? addOnPlan : plan, { withOwnText: false });
+	});
+}
+/**
 * Main block decoration function
 * @param {HTMLElement} block - Block element to decorate
 */
@@ -846,6 +867,7 @@ async function decorate(block) {
 					}, block.children[key]);
 					block.children[key].querySelector(".hero-aem__prices__addon")?.appendChild(addOnPriceBox);
 				}
+				labelCardControls(block.children[key]);
 				const checkmark = block.children[key].querySelector(".checkmark");
 				if (checkmark) {
 					const checkmarkList = checkmark.closest("ul");

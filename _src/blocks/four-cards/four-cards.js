@@ -1,4 +1,4 @@
-import { getSectionContent, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { getSectionContent, labelWithPlan, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/four-cards/four-cards.js
 var HEADINGS = "h1, h2, h3, h4, h5, h6";
@@ -79,6 +79,7 @@ var buildCard = (row, shape) => {
 		if (link) {
 			const cta = buildCta(link, shape);
 			cta.slot = "actions";
+			labelWithPlan(cta, [...row.querySelectorAll(HEADINGS)], { attribute: "label" });
 			card.append(cta);
 			return;
 		}

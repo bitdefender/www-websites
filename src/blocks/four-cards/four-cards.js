@@ -1,6 +1,6 @@
 import { load } from '@repobit/dex-system-design/loader';
 import {
-  getSectionContent, liftSectionHeader, wrapSectionInDsSection,
+  getSectionContent, labelWithPlan, liftSectionHeader, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -110,6 +110,9 @@ const buildCard = (row, shape) => {
     if (link) {
       const cta = buildCta(link, shape);
       cta.slot = 'actions';
+      // several cards say "Try It Now": name each CTA after its card's title. bd-button
+      // puts `label` on the control in its shadow root, where the name has to be
+      labelWithPlan(cta, [...row.querySelectorAll(HEADINGS)], { attribute: 'label' });
       card.append(cta);
       return;
     }

@@ -314,6 +314,17 @@ export async function detectModalButtons(main) {
 
     link.removeAttribute('href');
     link.setAttribute('location', originalHref);
+
+    // without its href the link is neither focusable nor a control to assistive tech and AI
+    // agents, so it becomes a button: it opens the modal and still can't open a new tab
+    link.setAttribute('role', 'button');
+    link.setAttribute('aria-haspopup', 'dialog');
+    link.tabIndex = 0;
+    link.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      link.click();
+    });
   });
 }
 

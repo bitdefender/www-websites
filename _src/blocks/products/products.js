@@ -1,5 +1,5 @@
 import { decorateIcons } from "../../scripts/lib-franklin.js";
-import { checkIfNotProductPage, createNanoBlock, createTag, matchHeights, renderNanoBlocks, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
+import { checkIfNotProductPage, createNanoBlock, createTag, labelWithPlan, matchHeights, renderNanoBlocks, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
 // src/blocks/products/products.js
 var DISCOUNT_PERCENTAGE = "{{=it.option.discount.percentage}}";
 var DISCOUNT_VALUE = "{{=it.option.discount.value}}";
@@ -415,6 +415,8 @@ function decorate(block) {
 		const dynamicPriceTexts = metadata[`dynamicPriceTexts${idx + 1}`];
 		if (dynamicPriceTexts) setupDynamicPriceTexts(card, dynamicPriceTexts);
 		if (hasFeaturedCard && !card.classList.contains("featured")) addFeaturedPlaceholder(card);
+		const productName = [...card.querySelectorAll("h3")];
+		card.querySelectorAll(".button-container a").forEach((cta) => labelWithPlan(cta, productName));
 	});
 	decorateIcons(block);
 	MATCH_HEIGHTS_SELECTORS.forEach((selector) => matchHeights(block, selector));

@@ -1,4 +1,4 @@
-import { matchHeights, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
+import { labelWithPlan, matchHeights, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
 import { getLanguageCountryFromPath } from "../../scripts/scripts.js";
 import { UserAgent, debounce } from "../../vendor/repobit/dex-utils.js";
 // src/blocks/webview-table/webview-table.js
@@ -415,6 +415,20 @@ function buildTableHeader(block) {
 	});
 }
 /**
+* Names each column's CTA after the product in its header ("Buy now Bitdefender Scam
+* Protection Included in Bitdefender Total Security"), so the columns' "Buy now" read apart
+* @param {HTMLElement} block - The webview table block element
+*/
+function labelColumnCtas(block) {
+	const headers = [...block.querySelector("[role=\"columnheader\"]")?.parentElement.children || []];
+	block.querySelectorAll(".price-row").forEach((row) => {
+		[...row.children].forEach((cell, index) => {
+			const product = headers[index] ? [...headers[index].querySelectorAll(":scope > p")] : [];
+			cell.querySelectorAll(".button-container a").forEach((cta) => labelWithPlan(cta, product));
+		});
+	});
+}
+/**
 * Main decoration function that initializes the webview table component
 * @param {HTMLElement} block - The webview table block element to decorate
 * @returns {Promise<void>} Promise that resolves when decoration is complete
@@ -426,6 +440,7 @@ async function decorate(block) {
 	addAccesibilityRoles(block);
 	replaceTableTextToProperCheckmars(block);
 	renderPrices(block, metadata);
+	labelColumnCtas(block);
 	const url = new URL(window.location.href);
 	if (url.searchParams.has("theme") && url.searchParams.get("theme") === "light") block.classList.add("light-mode");
 	await Promise.all([realCheckPriceDecoration, checkAndReplacePrivacyPolicyLink(block)]);

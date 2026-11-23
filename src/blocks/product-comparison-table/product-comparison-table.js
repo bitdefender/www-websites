@@ -3,6 +3,7 @@ import {
   renderNanoBlocks,
   matchHeights,
   wrapChildrenWithStoreContext,
+  labelWithPlan,
 } from '../../scripts/utils/utils.js';
 
 createNanoBlock('priceComparison', (code, variant, label, block, productIndex, columnEl) => {
@@ -245,6 +246,15 @@ export default function decorate(block) {
     if (item) {
       renderNanoBlocks(item, undefined, idx, block);
     }
+  });
+
+  // every column has a "Buy Now", in its header and in the price row: name each after its
+  // product and its tags, which tell two columns of one product apart ("individual extended")
+  headerColumns.forEach((column, idx) => {
+    const productName = [column.querySelector('h3'), column.querySelector('.paragraph-group')];
+    [column, priceRow?.children[idx + 1]].forEach((cell) => {
+      cell?.querySelectorAll('.button-container a').forEach((cta) => labelWithPlan(cta, productName));
+    });
   });
 
   matchHeights(block, 'h3');

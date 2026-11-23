@@ -211,6 +211,14 @@ async function detectModalButtons(main) {
 		});
 		link.removeAttribute("href");
 		link.setAttribute("location", originalHref);
+		link.setAttribute("role", "button");
+		link.setAttribute("aria-haspopup", "dialog");
+		link.tabIndex = 0;
+		link.addEventListener("keydown", (e) => {
+			if (e.key !== "Enter" && e.key !== " ") return;
+			e.preventDefault();
+			link.click();
+		});
 	});
 }
 function populateColumns(section) {
