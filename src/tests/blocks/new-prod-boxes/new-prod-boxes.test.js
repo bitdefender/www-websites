@@ -132,6 +132,34 @@ describe('new-prod-boxes', () => {
     expect(buyButtons.length).toBe(8);
   });
 
+  it('names each buy button and plan switcher after its box', () => {
+    const normalize = (text) => text.replace(/\s+/g, ' ').trim();
+    const names = [...document.querySelectorAll('.hero-aem__prices [data-store-buy-link]')].map((cta) => {
+      const box = cta.closest('.inner_prod_box');
+      const name = cta.getAttribute('aria-label');
+      expect(name.startsWith(normalize(cta.textContent))).toBe(true);
+      expect(name).toContain(normalize(box.querySelector('.subtitle').textContent));
+
+      const switcher = box.querySelector(':scope > .plan-switcher');
+      if (switcher) {
+        expect(switcher.getAttribute('role')).toBe('radiogroup');
+        expect(name).toContain(switcher.getAttribute('aria-label'));
+      }
+      return name;
+    });
+
+    expect(names.length).toBe(8);
+    expect(new Set(names).size).toBe(8);
+  });
+
+  it('makes the individual/family toggle a switch named after the family plans', () => {
+    const toggle = document.getElementById('switchCheckbox');
+
+    expect(toggle.getAttribute('role')).toBe('switch');
+    expect(toggle.getAttribute('aria-label'))
+      .toBe(document.querySelector('.switchBox .label.left').textContent.replace(/\s+/g, ' ').trim());
+  });
+
   it('creates benefits lists', () => {
     const benefitsLists = document.querySelectorAll('.benefitsLists');
     expect(benefitsLists.length).toBe(8);

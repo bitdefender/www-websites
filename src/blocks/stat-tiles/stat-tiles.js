@@ -1,6 +1,6 @@
 import { load } from '@repobit/dex-system-design/loader';
 import {
-  fullWidthOnPhone, liftSectionHeader, wrapSectionInDsSection,
+  fullWidthOnPhone, liftSectionHeader, pointButtonAt, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -53,7 +53,7 @@ const buildLead = (row) => {
   if (link) {
     const button = document.createElement('bd-button');
     button.setAttribute('appearance', 'primary');
-    button.setAttribute('href', link.getAttribute('href') || '');
+    pointButtonAt(button, link);
     if (link.target) button.setAttribute('target', link.target);
     button.textContent = text(link);
     fullWidthOnPhone(button);

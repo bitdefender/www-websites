@@ -1,5 +1,5 @@
 import { load } from '@repobit/dex-system-design/loader';
-import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { pointButtonAt, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * The Ferrari section, on the design system's bd-partner-banner. Authored as:
@@ -81,7 +81,7 @@ export default async function decorate(block) {
     // decorateButtons has already turned a bold link into a.button.primary
     const primary = p.querySelector('strong, b, a.button.primary');
     button.setAttribute('appearance', primary ? 'white' : 'outline-white');
-    button.setAttribute('href', link.getAttribute('href') || '');
+    pointButtonAt(button, link);
     button.textContent = text(link);
     return button;
   });

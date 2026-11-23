@@ -1,6 +1,6 @@
 import { load } from '@repobit/dex-system-design/loader';
 import {
-  getSectionContent, liftSectionHeader, wrapSectionInDsSection,
+  getSectionContent, labelWithPlan, liftSectionHeader, pointButtonAt, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -69,7 +69,7 @@ const toMedia = (picture) => {
 const buildCta = (link, shape) => {
   const button = document.createElement('bd-button');
   button.setAttribute('appearance', 'accent');
-  button.setAttribute('href', link.getAttribute('href') || '');
+  pointButtonAt(button, link);
   if (shape) button.setAttribute('shape', shape);
   button.textContent = link.textContent.trim();
   return button;
@@ -110,6 +110,9 @@ const buildCard = (row, shape) => {
     if (link) {
       const cta = buildCta(link, shape);
       cta.slot = 'actions';
+      // several cards say "Try It Now": name each CTA after its card's title. bd-button
+      // puts `label` on the control in its shadow root, where the name has to be
+      labelWithPlan(cta, [...row.querySelectorAll(HEADINGS)], { attribute: 'label' });
       card.append(cta);
       return;
     }

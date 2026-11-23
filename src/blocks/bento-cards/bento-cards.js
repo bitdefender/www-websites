@@ -1,5 +1,7 @@
 import { load } from '@repobit/dex-system-design/loader';
-import { liftSectionHeader, splitAroundHeading, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import {
+  liftSectionHeader, pointButtonAt, splitAroundHeading, wrapSectionInDsSection,
+} from '../../scripts/utils/utils.js';
 
 // Where each bd-motion-art object takes its labels: a "|"-separated list in an
 // attribute it parses, or, for geo-core's ring, the element's own text.
@@ -92,7 +94,7 @@ const buildCard = (row) => {
     const link = p.querySelector('a');
     const cta = slotted('bd-button', 'actions', link.textContent.trim());
     cta.setAttribute('appearance', 'outline-white');
-    cta.setAttribute('href', link.getAttribute('href') || '');
+    pointButtonAt(cta, link);
     card.append(cta);
   });
 

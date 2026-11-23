@@ -6,6 +6,7 @@ import {
   matchHeights,
   checkIfNotProductPage,
   wrapChildrenWithStoreContext,
+  labelWithPlan,
 } from '../../scripts/utils/utils.js';
 
 const DISCOUNT_PERCENTAGE = '{{=it.option.discount.percentage}}';
@@ -575,6 +576,10 @@ export default function decorate(block) {
     if (hasFeaturedCard && !card.classList.contains('featured')) {
       addFeaturedPlaceholder(card);
     }
+
+    // every card has a "Buy now": name each after its product ("Bitdefender" + "Antivirus Plus")
+    const productName = [...card.querySelectorAll('h3')];
+    card.querySelectorAll('.button-container a').forEach((cta) => labelWithPlan(cta, productName));
   });
 
   decorateIcons(block);

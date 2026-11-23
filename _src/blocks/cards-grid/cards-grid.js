@@ -1,4 +1,4 @@
-import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { liftSectionHeader, pointButtonAt, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/cards-grid/cards-grid.js
 var HEADINGS = "h1, h2, h3, h4, h5, h6";
@@ -39,12 +39,16 @@ var iconName = (cell) => [...cell.querySelector(".icon")?.classList || []].find(
 /** The cell's paragraphs that are copy: not a picture, an icon or a link on its own. */
 var copyOf = (cell) => [...cell.querySelectorAll("p")].filter((p) => p.textContent.trim() && !p.querySelector("picture, .icon") && !(p.querySelector("a") && p.textContent.trim() === p.querySelector("a").textContent.trim()));
 var paragraph = (p, appearance) => el("bd-p", { appearance }, ...p.childNodes);
-var linkOf = (cell) => cell.querySelector("a[href]");
-var cta = (link) => link && el("bd-button", {
-	slot: "actions",
-	appearance: "accent",
-	href: link.getAttribute("href")
-}, link.textContent.trim());
+var linkOf = (cell) => cell.querySelector("a[href], a[location]");
+var cta = (link) => {
+	if (!link) return null;
+	const button = el("bd-button", {
+		slot: "actions",
+		appearance: "accent"
+	}, link.textContent.trim());
+	pointButtonAt(button, link);
+	return button;
+};
 var BUILDERS = {
 	media: (cell) => {
 		const card = el("bd-card", { appearance: "media" });

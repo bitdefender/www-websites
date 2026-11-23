@@ -8,6 +8,8 @@ helix-importer-ui
 .DS_Store
 
 tools/sitemap/node_modules/*
+tools/agent-audit/node_modules/*
+tools/agent-audit/reports/*
 
 .env
 

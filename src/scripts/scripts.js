@@ -47,8 +47,10 @@ import {
   pushTrialDownloadToDataLayer,
   generateLDJsonSchema,
   getPageExperimentKey,
+  watchPendingBuyLinks,
 } from './utils/utils.js';
 import probeBlocker from './utils/blocker-probe.js';
+import { decorateModalTriggers, listenForModalTriggers } from './utils/modal-triggers.js';
 import { Constants } from './libs/constants.js';
 import {
   applyStructuralHooks,
@@ -304,17 +306,14 @@ export async function openModal(href, stopAutomaticModalRefresh = false) {
   adobeMcAppendVisitorId('.modal-container');
 }
 
-export async function detectModalButtons(main) {
-  main.querySelectorAll('a.button.modal').forEach((link) => {
-    const originalHref = link.getAttribute('href');
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModal(originalHref, link.dataset.stopAutomaticModalRefresh === 'true');
-    });
-
-    link.removeAttribute('href');
-    link.setAttribute('location', originalHref);
-  });
+/**
+ * Turns the fragment links (a.button.modal) under root into buttons that open the fragment
+ * as a modal (see modal-triggers.js). Calling it again on the same links changes nothing.
+ * @param {ParentNode} root
+ */
+export async function detectModalButtons(root) {
+  listenForModalTriggers(openModal);
+  decorateModalTriggers(root);
 }
 
 function populateColumns(section) {
@@ -908,6 +907,8 @@ async function loadPage() {
   document.body.replaceChild(storeRoot, main);
   storeRoot.appendChild(main);
   storeRoot.store = store;
+  // buy links read as disabled until the store gives them a checkout URL (modals included)
+  watchPendingBuyLinks(storeRoot);
 
   registerContextNodes();
 

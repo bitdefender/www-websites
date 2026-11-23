@@ -1,4 +1,4 @@
-import { fullWidthOnPhone, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { fullWidthOnPhone, liftSectionHeader, pointButtonAt, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/stat-tiles/stat-tiles.js
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
@@ -37,7 +37,7 @@ var buildLead = (row) => {
 	if (link) {
 		const button = document.createElement("bd-button");
 		button.setAttribute("appearance", "primary");
-		button.setAttribute("href", link.getAttribute("href") || "");
+		pointButtonAt(button, link);
 		if (link.target) button.setAttribute("target", link.target);
 		button.textContent = text(link);
 		fullWidthOnPhone(button);

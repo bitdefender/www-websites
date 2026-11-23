@@ -1,4 +1,4 @@
-import { checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, formatPrice } from "../../scripts/utils/utils.js";
+import { checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, formatPrice, labelWithPlan } from "../../scripts/utils/utils.js";
 import store_default from "../../scripts/store.js";
 // src/blocks/new-prod-boxes/new-prod-boxes.js
 var PRICE_ATTRIBUTES = {
@@ -95,7 +95,7 @@ function createPriceElement(options, card) {
 /**
 * Creates a plan switcher with radio buttons for different pricing options
 * @param {HTMLElement} radioButtons - Container with radio button labels
-* @param {number} cardNumber - Card index for unique naming
+* @param {string} cardNumber - Block instance and card index, unique on the page
 * @param {Array} prodsNames - Array of product names
 * @param {Array} prodsUsers - Array of user counts
 * @param {Array} prodsYears - Array of year counts
@@ -120,7 +120,7 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
 		let radioText = radio.textContent;
 		const isChecked = radioText.includes("[checked]");
 		if (isChecked) radioText = radioText.replace("[checked]", "");
-		const inputId = `${plan}-${productName.trim()}`;
+		const inputId = `${plan}-${productName.trim()}-${cardNumber}`;
 		const inputName = `${cardNumber}-${variant}`;
 		const inputValue = `${cardNumber}-${plan}-${productName.trim()}`;
 		const input = document.createElement("input");
@@ -284,12 +284,14 @@ function createToggleSwitch(individualText, familyText) {
 	switchBox.className = "switchBox";
 	switchBox.innerHTML = `
     <label class="switch">
-      <input type="checkbox" id="switchCheckbox">
+      <input type="checkbox" id="switchCheckbox" role="switch">
       <span class="slider round"></span>
       <span class="label right">${individualText}</span>
       <span class="label left">${familyText}</span>
     </label>
   `;
+	const familyName = switchBox.querySelector(".label.left").textContent.replace(/\s+/g, " ").trim();
+	if (familyName) switchBox.querySelector("input").setAttribute("aria-label", familyName);
 	return switchBox;
 }
 /**
@@ -721,10 +723,34 @@ function buildProductBox(config) {
 	return productBox;
 }
 /**
+* Names the box's CTAs and plan switchers after its plan (title, Individual/Family tag,
+* members and devices), so the boxes' identical "Buy Now" and "Yearly" read apart
+* @param {HTMLElement} productBox - Product box element
+*/
+function labelCardControls(productBox) {
+	const card = productBox.querySelector(".inner_prod_box");
+	if (!card) return;
+	const plan = [
+		"h4",
+		".blueTagsWrapper",
+		".subtitle"
+	].map((part) => card.querySelector(`:scope > ${part}`));
+	const addOnPlan = [...plan, card.querySelector(".add-on-product > h4")];
+	card.querySelectorAll(".hero-aem__prices a.button").forEach((cta) => labelWithPlan(cta, plan));
+	card.querySelectorAll(".hero-aem__prices__addon a.button").forEach((cta) => labelWithPlan(cta, addOnPlan));
+	card.querySelectorAll(".plan-switcher").forEach((switcher) => {
+		switcher.setAttribute("role", "radiogroup");
+		labelWithPlan(switcher, switcher.classList.contains("addon") ? addOnPlan : plan, { withOwnText: false });
+	});
+}
+/**
 * Main block decoration function
 * @param {HTMLElement} block - Block element to decorate
 */
+var instances = 0;
 async function decorate(block) {
+	const instance = instances;
+	instances += 1;
 	const section = block.closest(".section");
 	const { products, familyProducts, monthlyProducts, addOnProducts, addOnMonthlyProducts, type, thirdRadioButtonProducts, saveText, addonProductName, trialDuration } = section.dataset;
 	section.classList.add("we-container");
@@ -770,7 +796,7 @@ async function decorate(block) {
 				if (buyLinkSelector) buyLinkSelector.classList.add("button", "primary");
 				else buyLinkSelector = buyLink?.querySelector("a");
 				let planSwitcher = document.createElement("div");
-				if (radioButtons && monthlyProducts) planSwitcher = createPlanSwitcher(radioButtons, key, [
+				if (radioButtons && monthlyProducts) planSwitcher = createPlanSwitcher(radioButtons, `${instance}-${key}`, [
 					baseProdName,
 					monthlyInfo[0],
 					thirdButtonInfo[0]
@@ -784,7 +810,7 @@ async function decorate(block) {
 					thirdButtonInfo[2]
 				]);
 				let planSwitcher2 = document.createElement("div");
-				if (hasAddOn && addOnProducts && addOnMonthlyProducts) planSwitcher2 = createPlanSwitcher(radioButtons, key, [addOnInfo[0], addOnMonthlyInfo[0]], [addOnInfo[1], addOnMonthlyInfo[1]], [addOnInfo[2], addOnMonthlyInfo[2]], "addon");
+				if (hasAddOn && addOnProducts && addOnMonthlyProducts) planSwitcher2 = createPlanSwitcher(radioButtons, `${instance}-${key}`, [addOnInfo[0], addOnMonthlyInfo[0]], [addOnInfo[1], addOnMonthlyInfo[1]], [addOnInfo[2], addOnMonthlyInfo[2]], "addon");
 				const productInfo = getCheckedProductInfo(planSwitcher, baseProdName, baseProdUsers, baseProdYears);
 				const addOnProductInfo = getCheckedProductInfo(planSwitcher2, addOnInfo[0], addOnInfo[1], addOnInfo[2]);
 				let billedText = billed?.children[0];
@@ -846,6 +872,7 @@ async function decorate(block) {
 					}, block.children[key]);
 					block.children[key].querySelector(".hero-aem__prices__addon")?.appendChild(addOnPriceBox);
 				}
+				labelCardControls(block.children[key]);
 				const checkmark = block.children[key].querySelector(".checkmark");
 				if (checkmark) {
 					const checkmarkList = checkmark.closest("ul");

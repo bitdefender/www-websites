@@ -1,4 +1,4 @@
-import { getSectionContent, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { getSectionContent, labelWithPlan, liftSectionHeader, pointButtonAt, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/four-cards/four-cards.js
 var HEADINGS = "h1, h2, h3, h4, h5, h6";
@@ -49,7 +49,7 @@ var toMedia = (picture) => {
 var buildCta = (link, shape) => {
 	const button = document.createElement("bd-button");
 	button.setAttribute("appearance", "accent");
-	button.setAttribute("href", link.getAttribute("href") || "");
+	pointButtonAt(button, link);
 	if (shape) button.setAttribute("shape", shape);
 	button.textContent = link.textContent.trim();
 	return button;
@@ -79,6 +79,7 @@ var buildCard = (row, shape) => {
 		if (link) {
 			const cta = buildCta(link, shape);
 			cta.slot = "actions";
+			labelWithPlan(cta, [...row.querySelectorAll(HEADINGS)], { attribute: "label" });
 			card.append(cta);
 			return;
 		}

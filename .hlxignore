@@ -8,3 +8,4 @@ test/*
 /src/
 skills-lock.json
 vite.config.mjs
+/tools/agent-audit/

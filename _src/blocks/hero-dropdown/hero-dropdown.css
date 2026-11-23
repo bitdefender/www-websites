@@ -739,8 +739,15 @@ main .hero-dropdown .custom-dropdown-item {
   padding: 12px 16px;
 }
 
-main .hero-dropdown .custom-dropdown-item:hover {
+main .hero-dropdown .custom-dropdown-item:hover,
+main .hero-dropdown .custom-dropdown-item:focus {
   background-color: #F1F5F9;
+}
+
+main .hero-dropdown .selected-option:focus-visible,
+main .hero-dropdown .custom-dropdown-item:focus-visible {
+  outline: 2px solid #006dff;
+  outline-offset: -2px;
 }
 
 main .hero-dropdown .custom-dropdown-item.active {

@@ -2,12 +2,13 @@ import page_default from "./page.js";
 import user_default from "./user.js";
 import { decorateBlocks, decorateButtons, decorateIcons, decorateSections, decorateTags, decorateTemplateAndTheme, getMetadata, loadBlocks, loadCSS, loadFooter, loadHeader, sampleRUM, waitForLCP } from "./lib-franklin.js";
 import { Constants } from "./libs/constants.js";
-import { GLOBAL_EVENTS, createTag, generateLDJsonSchema, getPageExperimentKey, pushTrialDownloadToDataLayer } from "./utils/utils.js";
+import { GLOBAL_EVENTS, createTag, generateLDJsonSchema, getPageExperimentKey, pushTrialDownloadToDataLayer, watchPendingBuyLinks } from "./utils/utils.js";
 import { adobeMcAppendVisitorId, target } from "./target.js";
 import { StoreProductLoadedEvent, handleFileDownloadedEvents, resolveNonProductsDataLayer } from "./libs/data-layer.js";
 import store_default from "./store.js";
 import { addBlackFridayRibbon } from "./black-friday/ribbon.js";
 import probeBlocker from "./utils/blocker-probe.js";
+import { decorateModalTriggers, listenForModalTriggers } from "./utils/modal-triggers.js";
 import { applyStructuralHooks, blockMboxNames, installBlockHooks, reportUnappliedHooks } from "./utils/block-hooks.js";
 import { AdobeDataLayerService, CdpEvent, FormEvent, PageLoadedEvent, WindowLoadStartedEvent, WindowLoadedEvent } from "../vendor/repobit/dex-data-layer.js";
 import { Cookies } from "../vendor/repobit/dex-utils.js";
@@ -202,16 +203,14 @@ async function openModal(href, stopAutomaticModalRefresh = false) {
 	});
 	adobeMcAppendVisitorId(".modal-container");
 }
-async function detectModalButtons(main) {
-	main.querySelectorAll("a.button.modal").forEach((link) => {
-		const originalHref = link.getAttribute("href");
-		link.addEventListener("click", (e) => {
-			e.preventDefault();
-			openModal(originalHref, link.dataset.stopAutomaticModalRefresh === "true");
-		});
-		link.removeAttribute("href");
-		link.setAttribute("location", originalHref);
-	});
+/**
+* Turns the fragment links (a.button.modal) under root into buttons that open the fragment
+* as a modal (see modal-triggers.js). Calling it again on the same links changes nothing.
+* @param {ParentNode} root
+*/
+async function detectModalButtons(root) {
+	listenForModalTriggers(openModal);
+	decorateModalTriggers(root);
 }
 function populateColumns(section) {
 	if (section.querySelectorAll(".columns div div").length === 2) {
@@ -654,6 +653,7 @@ async function loadPage() {
 	document.body.replaceChild(storeRoot, main);
 	storeRoot.appendChild(main);
 	storeRoot.store = store_default;
+	watchPendingBuyLinks(storeRoot);
 	registerContextNodes();
 	await loadEager(document);
 	const newsBarSectionSelector = [".news-bar-container", ".section.top_blue"].find((selector) => document.querySelector(selector));

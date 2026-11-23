@@ -531,6 +531,7 @@ exports[`products block - plans variant (antivirus-for-mac) > matches the render
               style="order: 10; min-height: 0px;"
             >
               <a
+                aria-label="Buy Now 1-Year Plan"
                 class="button"
                 data-store-buy-link=""
                 data-store-render=""
@@ -706,6 +707,7 @@ exports[`products block - plans variant (antivirus-for-mac) > matches the render
               style="order: 9; min-height: 0px;"
             >
               <a
+                aria-label="Buy Now 2-Years Plan"
                 class="button primary"
                 data-store-buy-link=""
                 data-store-render=""
@@ -881,6 +883,7 @@ exports[`products block - plans variant (antivirus-for-mac) > matches the render
               style="order: 9; min-height: 0px;"
             >
               <a
+                aria-label="Buy Now 3-Years Plan"
                 class="button primary"
                 data-store-buy-link=""
                 data-store-render=""
@@ -1123,6 +1126,7 @@ exports[`products block - product switching (synthetic) > matches the rendered s
               style="order: 10; min-height: 0px;"
             >
               <a
+                aria-label="Buy Now Total Security"
                 class="button"
                 data-store-buy-link="30"
                 data-store-render=""
@@ -1299,6 +1303,7 @@ exports[`products block - product switching (synthetic) > matches the rendered s
               style="order: 8; min-height: 0px;"
             >
               <a
+                aria-label="Buy Now Premium Security"
                 class="button"
                 data-store-buy-link="60"
                 data-store-render=""
@@ -1319,6 +1324,7 @@ exports[`products block - product switching (synthetic) > matches the rendered s
               style="order: 9;"
             >
               <a
+                aria-label="Find out more Premium Security"
                 class="button"
                 href="/en-us/consumer/premium-security"
                 title="Find out more"

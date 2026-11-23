@@ -4,6 +4,7 @@ import {
   createBdContext,
   createBdProduct,
   createBdOption,
+  labelWithPlan,
 } from '../../scripts/utils/utils.js';
 import store from '../../scripts/store.js';
 
@@ -145,7 +146,7 @@ function createPriceElement(options, card) {
 /**
  * Creates a plan switcher with radio buttons for different pricing options
  * @param {HTMLElement} radioButtons - Container with radio button labels
- * @param {number} cardNumber - Card index for unique naming
+ * @param {string} cardNumber - Block instance and card index, unique on the page
  * @param {Array} prodsNames - Array of product names
  * @param {Array} prodsUsers - Array of user counts
  * @param {Array} prodsYears - Array of year counts
@@ -178,7 +179,9 @@ function createPlanSwitcher(radioButtons, cardNumber, prodsNames, prodsUsers, pr
       radioText = radioText.replace('[checked]', '');
     }
 
-    const inputId = `${plan}-${productName.trim()}`;
+    // unique on the page, so each label checks its own radio even when two boxes, or two
+    // blocks, sell the same product
+    const inputId = `${plan}-${productName.trim()}-${cardNumber}`;
     const inputName = `${cardNumber}-${variant}`;
     const inputValue = `${cardNumber}-${plan}-${productName.trim()}`;
 
@@ -382,12 +385,15 @@ function createToggleSwitch(individualText, familyText) {
   switchBox.className = 'switchBox';
   switchBox.innerHTML = `
     <label class="switch">
-      <input type="checkbox" id="switchCheckbox">
+      <input type="checkbox" id="switchCheckbox" role="switch">
       <span class="slider round"></span>
       <span class="label right">${individualText}</span>
       <span class="label left">${familyText}</span>
     </label>
   `;
+  // on shows the family plans: a switch named after them reads "Family, off"
+  const familyName = switchBox.querySelector('.label.left').textContent.replace(/\s+/g, ' ').trim();
+  if (familyName) switchBox.querySelector('input').setAttribute('aria-label', familyName);
   return switchBox;
 }
 
@@ -998,10 +1004,35 @@ function buildProductBox(config) {
 }
 
 /**
+ * Names the box's CTAs and plan switchers after its plan (title, Individual/Family tag,
+ * members and devices), so the boxes' identical "Buy Now" and "Yearly" read apart
+ * @param {HTMLElement} productBox - Product box element
+ */
+function labelCardControls(productBox) {
+  const card = productBox.querySelector('.inner_prod_box');
+  if (!card) return;
+
+  const plan = ['h4', '.blueTagsWrapper', '.subtitle'].map((part) => card.querySelector(`:scope > ${part}`));
+  const addOnPlan = [...plan, card.querySelector('.add-on-product > h4')];
+
+  card.querySelectorAll('.hero-aem__prices a.button').forEach((cta) => labelWithPlan(cta, plan));
+  card.querySelectorAll('.hero-aem__prices__addon a.button').forEach((cta) => labelWithPlan(cta, addOnPlan));
+  card.querySelectorAll('.plan-switcher').forEach((switcher) => {
+    switcher.setAttribute('role', 'radiogroup');
+    labelWithPlan(switcher, switcher.classList.contains('addon') ? addOnPlan : plan, { withOwnText: false });
+  });
+}
+
+/**
  * Main block decoration function
  * @param {HTMLElement} block - Block element to decorate
  */
+// counts the blocks on the page, so their radios' ids and groups don't meet
+let instances = 0;
+
 export default async function decorate(block) {
+  const instance = instances;
+  instances += 1;
   const section = block.closest('.section');
   const {
     products,
@@ -1115,7 +1146,7 @@ export default async function decorate(block) {
         if (radioButtons && monthlyProducts) {
           planSwitcher = createPlanSwitcher(
             radioButtons,
-            key,
+            `${instance}-${key}`,
             [baseProdName, monthlyInfo[0], thirdButtonInfo[0]],
             [baseProdUsers, monthlyInfo[1], thirdButtonInfo[1]],
             [baseProdYears, monthlyInfo[2], thirdButtonInfo[2]],
@@ -1126,7 +1157,7 @@ export default async function decorate(block) {
         if (hasAddOn && addOnProducts && addOnMonthlyProducts) {
           planSwitcher2 = createPlanSwitcher(
             radioButtons,
-            key,
+            `${instance}-${key}`,
             [addOnInfo[0], addOnMonthlyInfo[0]],
             [addOnInfo[1], addOnMonthlyInfo[1]],
             [addOnInfo[2], addOnMonthlyInfo[2]],
@@ -1223,6 +1254,8 @@ export default async function decorate(block) {
           }, block.children[key]);
           block.children[key].querySelector('.hero-aem__prices__addon')?.appendChild(addOnPriceBox);
         }
+
+        labelCardControls(block.children[key]);
 
         // Setup checkmark/add-on functionality
         const checkmark = block.children[key].querySelector('.checkmark');

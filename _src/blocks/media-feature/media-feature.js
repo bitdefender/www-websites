@@ -1,4 +1,4 @@
-import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { pointButtonAt, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/media-feature/media-feature.js
 var VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
@@ -98,7 +98,7 @@ var buildActions = (cell) => {
 	if (!anchor) return null;
 	const bdBtn = document.createElement("bd-button");
 	bdBtn.setAttribute("slot", "actions");
-	bdBtn.setAttribute("href", anchor.getAttribute("href") || "#");
+	pointButtonAt(bdBtn, anchor);
 	bdBtn.setAttribute("appearance", anchor.classList.contains("secondary") ? "secondary" : "accent");
 	bdBtn.textContent = anchor.textContent.trim();
 	if (anchor.target === "_blank") {
