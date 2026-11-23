@@ -22,6 +22,8 @@ var FINISHED = ["completed", "failed"];
 var GIVE_UP_AFTER = 36e4;
 var DEFAULT_RETRY_AFTER = 2;
 var TURNSTILE_ID = "realcheck-checker-turnstile";
+var TURNSTILE_HEADER = "X-Turnstile-Token";
+var TOKEN_WAIT = 1e4;
 var TONES = [
 	"blue",
 	"red",
@@ -146,25 +148,25 @@ var retryAfter = (response) => {
 };
 /**
 * Submits the link and polls until the check finishes, reporting every state on the way.
-* Each submit sends a Turnstile token from `token()`, which the proxy checks and strips, as for
-* booking-form's `/form`.
+* Each submit sends a Turnstile token from `token()` in `X-Turnstile-Token`, which locale-router
+* checks and strips on its way to the proxy.
 * @param {{ endpoint: string, url: string, signal: AbortSignal, fetch: typeof fetch,
-*   token?: () => string, onUpdate: (check: object) => void }} options
+*   token?: () => string | Promise<string>, onUpdate: (check: object) => void }} options
 * @returns {Promise<object>} The finished check
 */
 async function runCheck({ endpoint, url, signal, fetch: request = window.fetch.bind(window), token = () => "", onUpdate }) {
 	const deadline = Date.now() + GIVE_UP_AFTER;
-	const submit = () => {
-		const body = {
-			type: "social_media",
-			url
-		};
-		const turnstile = token();
-		if (turnstile) body.token = turnstile;
+	const submit = async () => {
+		const headers = { "Content-Type": "application/json" };
+		const turnstile = await token();
+		if (turnstile) headers[TURNSTILE_HEADER] = turnstile;
 		return request(`${endpoint}`, {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(body),
+			headers,
+			body: JSON.stringify({
+				type: "social_media",
+				url
+			}),
 			signal
 		});
 	};
@@ -513,14 +515,19 @@ async function decorate(block) {
 		widgetId = widget.widgetId;
 	}).catch(() => {});
 	const currentToken = () => widgetId === void 0 ? "" : window.turnstile?.getResponse(widgetId) || "";
-	const takeToken = () => {
-		const token = currentToken();
+	let controller;
+	const takeToken = async () => {
+		const deadline = Date.now() + TOKEN_WAIT;
+		let token = currentToken();
+		while (!token && Date.now() < deadline) {
+			await wait(.25, controller?.signal);
+			token = currentToken();
+		}
 		if (token) window.turnstile.reset(widgetId);
 		return token;
 	};
 	const input = form.querySelector("input");
 	const error = form.querySelector(".realcheck-checker__error");
-	let controller;
 	let stopScroll = () => {};
 	const show = (state, tone = "blue") => {
 		block.dataset.state = state;
@@ -599,6 +606,9 @@ async function decorate(block) {
 			if (failure.code === "platform_not_supported" || failure.code === "invalid_url") {
 				show("idle");
 				showError(failure.code === "invalid_url" ? "invalid" : "unsupported");
+			} else if (failure.code === "turnstile_required" || failure.code === "turnstile_failed") {
+				show("idle");
+				showError("turnstile");
 			} else if (!controller.signal.aborted) showFailed(failure.code);
 		} finally {
 			controller = null;

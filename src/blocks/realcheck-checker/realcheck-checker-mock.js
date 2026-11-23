@@ -2,11 +2,13 @@
  * A stand-in for the RealCheck proxy, loaded only with `?realcheck-mock=<scenario>`, so every
  * screen can be seen and tested without it. It answers like the proxy: 202 on submit, then the
  * check object, one status further on each poll, and a refusal as
- * `{ ok: false, code: 'REALCHECK_<CODE>', message }`.
+ * `{ ok: false, code: 'REALCHECK_<CODE>', message }`, or locale-router's Turnstile refusal as
+ * `{ ok: false, code: 'TURNSTILE_<CODE>', message }`.
  *
  * Scenarios: `<verdict>-<risk>` (verdict 0, 1 or 2; risk high, medium, low, benign or none),
  * `failed-<error code>` (e.g. failed-no_speech), `http-<status>-<proxy code>`
- * (http-422-invalid_url, http-422-platform_not_supported, http-502-unavailable),
+ * (http-422-invalid_url, http-422-platform_not_supported, http-502-unavailable,
+ * http-403-turnstile_failed),
  * `slow` (never finishes).
  */
 const THUMBNAIL = 'https://i.ytimg.com/vi/aqz-KE-bpKQ/hqdefault.jpg';
@@ -19,7 +21,7 @@ const json = (status, body, headers = {}) => new Response(JSON.stringify(body), 
 });
 
 const refusal = (status, code) => json(status, {
-  ok: false, code: `REALCHECK_${code.toUpperCase()}`, message: code,
+  ok: false, code: `${code.startsWith('turnstile_') ? '' : 'REALCHECK_'}${code.toUpperCase()}`, message: code,
 }, { 'Retry-After': '' });
 
 export default function mockApi(scenario = '2-high') {

@@ -17,7 +17,7 @@ var json = (status, body, headers = {}) => new Response(JSON.stringify(body), {
 });
 var refusal = (status, code) => json(status, {
 	ok: false,
-	code: `REALCHECK_${code.toUpperCase()}`,
+	code: `${code.startsWith("turnstile_") ? "" : "REALCHECK_"}${code.toUpperCase()}`,
 	message: code
 }, { "Retry-After": "" });
 function mockApi(scenario = "2-high") {

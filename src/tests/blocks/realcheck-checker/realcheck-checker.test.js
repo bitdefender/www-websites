@@ -124,14 +124,32 @@ describe('runCheck', () => {
     expect(await run(fetch)).toMatchObject({ status: 'completed' });
   });
 
-  it('sends the Turnstile token with the link', async () => {
+  it('sends the Turnstile token in its header, not in the body', async () => {
     const fetch = vi.fn(mockApi('0-low'));
     const pending = runCheck({
       endpoint: '/api', url: 'https://youtu.be/x', signal: new AbortController().signal, fetch, token: () => 'cf-token', onUpdate: vi.fn(),
     });
     await vi.runAllTimersAsync();
     await pending;
-    expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({ type: 'social_media', url: 'https://youtu.be/x', token: 'cf-token' });
+    const [, { headers, body }] = fetch.mock.calls[0];
+    expect(headers['X-Turnstile-Token']).toBe('cf-token');
+    expect(JSON.parse(body)).toEqual({ type: 'social_media', url: 'https://youtu.be/x' });
+  });
+
+  it('asks for a new token for the retry', async () => {
+    const fetch = vi.fn(mockApi('http-502-unavailable'));
+    const token = vi.fn().mockReturnValueOnce('first').mockResolvedValueOnce('second');
+    const pending = runCheck({
+      endpoint: '/api', url: 'https://youtu.be/x', signal: new AbortController().signal, fetch, token, onUpdate: vi.fn(),
+    });
+    pending.catch(() => {});
+    await vi.runAllTimersAsync();
+    await expect(pending).rejects.toMatchObject({ code: 'unavailable' });
+    expect(fetch.mock.calls.map(([, { headers }]) => headers['X-Turnstile-Token'])).toEqual(['first', 'second']);
+  });
+
+  it('names locale-router\'s Turnstile refusal by its code', async () => {
+    await expect(run(mockApi('http-403-turnstile_failed'))).rejects.toMatchObject({ code: 'turnstile_failed' });
   });
 
   it('gives up after six minutes', async () => {
@@ -214,7 +232,7 @@ describe('decorate', () => {
     expect(block.querySelector('#realcheck-checker-turnstile')).not.toBeNull();
     fetch.mockImplementation(mockApi('0-low'));
     await submit('youtu.be/x');
-    expect(JSON.parse(fetch.mock.calls[0][1].body).token).toBe('cf-token');
+    expect(fetch.mock.calls[0][1].headers['X-Turnstile-Token']).toBe('cf-token');
     expect(window.turnstile.getResponse).toHaveBeenCalledWith('widget-1');
     expect(window.turnstile.reset).toHaveBeenCalledWith('widget-1');
   });
@@ -224,6 +242,29 @@ describe('decorate', () => {
     window.turnstile.getResponse.mockReturnValue('');
     await submit('youtu.be/x');
     expect(fetch).not.toHaveBeenCalled();
+    expect(block.dataset.state).toBe('idle');
+    expect(block.querySelector('.realcheck-checker__error').textContent).toBe('Please complete the security check.');
+  });
+
+  it('waits for the widget\'s next token before it retries', async () => {
+    await setup();
+    // after the reset, the widget takes a moment to issue the next token
+    window.turnstile.getResponse.mockReturnValueOnce('cf-token').mockReturnValueOnce('cf-token')
+      .mockReturnValueOnce('').mockReturnValueOnce('')
+      .mockReturnValue('cf-token-2');
+    const api = mockApi('0-low');
+    fetch.mockImplementationOnce(() => Promise.resolve(new Response('', { status: 502 })))
+      .mockImplementation(api);
+    await submit('youtu.be/x');
+    const posts = fetch.mock.calls.filter(([, options]) => options?.method === 'POST');
+    expect(posts.map(([, { headers }]) => headers['X-Turnstile-Token'])).toEqual(['cf-token', 'cf-token-2']);
+    expect(block.dataset.state).toBe('completed');
+  });
+
+  it('sends a refused security check back to the form', async () => {
+    await setup();
+    fetch.mockImplementation(mockApi('http-403-turnstile_failed'));
+    await submit('youtu.be/x');
     expect(block.dataset.state).toBe('idle');
     expect(block.querySelector('.realcheck-checker__error').textContent).toBe('Please complete the security check.');
   });
