@@ -261,6 +261,51 @@ function skipUnchanged() {
 }
 
 /**
+ * Files a bundled package loads at runtime with
+ * `new URL('./file', import.meta.url)`, relative to its package root. Library
+ * mode would inline them as base64 (hero-diorama's 520 KB walker model made
+ * its vendor bundle 1.5 MB), so the URL is kept as written and the file is
+ * copied to the same relative path next to the vendor entries, where it
+ * resolves.
+ */
+const PACKAGE_ASSETS = {
+  'hero-diorama': { from: 'dist', files: ['models/walker.glb'] },
+};
+
+/**
+ * Keeps PACKAGE_ASSETS out of the vendor bundle and copies them beside it.
+ * @returns {import('vite').Plugin}
+ */
+function packageAssets() {
+  const assets = Object.entries(PACKAGE_ASSETS).flatMap(([name, { from, files }]) => files
+    .map((file) => ({ name, file, source: path.join('node_modules', name, from, file) })));
+  return {
+    name: 'package-assets',
+    applyToEnvironment: (environment) => environment.name === 'vendor',
+    transform(code, id) {
+      const own = assets.filter(({ name }) => id.includes(`/node_modules/${name}/`));
+      if (!own.length) return null;
+      let result = code;
+      own.forEach(({ file }) => ['"', "'", '`'].forEach((quote) => {
+        const literal = `${quote}./${file}${quote}`;
+        result = result.split(`new URL(${literal}`).join(`new URL(/* @vite-ignore */ ${literal}`);
+      }));
+      return result === code ? null : { code: result, map: null };
+    },
+    writeBundle(options) {
+      assets.forEach(({ file, source }) => {
+        const dest = path.join(options.dir, 'vendor', file);
+        const copy = fs.existsSync(dest) && fs.statSync(dest);
+        const original = fs.statSync(source);
+        if (copy && copy.size === original.size && copy.mtimeMs >= original.mtimeMs) return;
+        fs.mkdirSync(path.dirname(dest), { recursive: true });
+        fs.copyFileSync(source, dest);
+      });
+    },
+  };
+}
+
+/**
  * The module build emits JavaScript only. An asset means Vite tried to
  * bundle a file that should have been copied (a `new URL(…, import.meta.url)`
  * without `@vite-ignore`, say), so fail loudly.
@@ -319,6 +364,7 @@ export default defineConfig({
     vendorImports(entries.dependencies),
     skipUnchanged(),
     copyVerbatim(entries.copied),
+    packageAssets(),
     summary(),
   ],
   environments: {

@@ -1295,3 +1295,31 @@
     top: 13em;
   }
 }
+
+/* hero-aem (diorama): the 3D city behind the banner (see mountDiorama) */
+.hero-aem-container .hero-aem.diorama {
+  isolation: isolate;
+}
+
+.hero-aem-container .hero-aem.diorama .hero-aem__diorama {
+  position: relative;
+  height: 320px;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .hero-aem-container .hero-aem.diorama .hero-aem__diorama {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    height: auto;
+    border-radius: inherit;
+  }
+
+  /* the image is the poster until the canvas has faded in */
+  .hero-aem-container .hero-aem.diorama:has(.hero-aem__diorama canvas[data-revealed]) .hero-aem__desktop-image {
+    visibility: hidden;
+  }
+}

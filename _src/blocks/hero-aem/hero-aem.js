@@ -127,6 +127,25 @@ function renderDevicesUsersText(text) {
 	return createTag("div", { class: "devices-years-text" }, `<span>${text}</span>`);
 }
 createNanoBlock("devices-users-text", renderDevicesUsersText);
+/**
+* hero-aem (diorama): the hero-diorama 3D city fills the banner behind the
+* card, the walker on the right. three.js is large, so it is imported only
+* here, after the banner has rendered. The desktop image stays until the
+* canvas has faded in, and for good when there is no WebGL 2 or the import
+* fails.
+* @param {HTMLElement} block the hero-aem block
+*/
+async function mountDiorama(block) {
+	const stage = createTag("div", { class: "hero-aem__diorama" });
+	block.prepend(stage);
+	try {
+		const { createDiorama } = await import("../../vendor/hero-diorama.js");
+		createDiorama(stage, { focalPoint: { x: .75 } });
+	} catch (error) {
+		stage.remove();
+		console.warn("hero-aem: could not start the diorama", error);
+	}
+}
 async function decorate(block, options) {
 	const { product, conditionText, saveText, MacOS, Windows, Android, IOS, alignContent, height, type, dropdownProducts, bluePillText, underPriceText, dropdownTag, circleDiscount, signature, trialDuration } = block.closest(".section").dataset;
 	renderNanoBlocks(block);
@@ -238,5 +257,6 @@ async function decorate(block, options) {
 		signatureElement.textContent = signature;
 		block.querySelector("h1")?.before(signatureElement);
 	}
+	if (block.classList.contains("diorama")) mountDiorama(block);
 }
 export { decorate as default };
